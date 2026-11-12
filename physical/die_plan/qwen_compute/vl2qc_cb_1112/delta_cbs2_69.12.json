@@ -1,0 +1,88 @@
+{
+ "base_sha256": "e4820bd9d97c1eb2efbdfdb49baf984a581f4a41c5f9c12055fbde3494c9c2bd",
+ "plan_sha256": "d38fdc87755bb35b83977eb3a04b754edddbcdafaa9d2abf0437f8eecfd0d1cd",
+ "D": 69.12,
+ "edits": [
+  {
+   "type": "cbf_q01_s2",
+   "inst": "u_t02",
+   "was": [
+    86.4,
+    77.76
+   ],
+   "now": [
+    86.4,
+    146.88
+   ],
+   "orient": "MY"
+  },
+  {
+   "type": "cbf_q01_s2",
+   "inst": "u_t12",
+   "was": [
+    691.2,
+    77.76
+   ],
+   "now": [
+    691.2,
+    146.88
+   ],
+   "orient": "MY"
+  },
+  {
+   "type": "cbf_q01_s2",
+   "inst": "u_t03",
+   "was": [
+    86.4,
+    1296.0
+   ],
+   "now": [
+    86.4,
+    1365.12
+   ],
+   "orient": "MY"
+  },
+  {
+   "type": "cbf_q01_s2",
+   "inst": "u_t13",
+   "was": [
+    691.2,
+    1296.0
+   ],
+   "now": [
+    691.2,
+    1365.12
+   ],
+   "orient": "R0"
+  }
+ ],
+ "moved_with_tile": [
+  "clock.landing_contract.collector_tree.core_resets[0].pin_um",
+  "clock.landing_contract.collector_tree.core_resets[1].pin_um",
+  "clock.landing_contract.collector_tree.core_resets[2].pin_um",
+  "clock.landing_contract.collector_tree.core_resets[3].pin_um",
+  "clock.landing_contract.collector_tree.relays[24].xy",
+  "clock.landing_contract.collector_tree.relays[25].xy",
+  "clock.landing_contract.collector_tree.relays[64].xy",
+  "clock.landing_contract.collector_tree.relays[65].xy",
+  "clock.landing_contract.collector_tree.relays[66].xy",
+  "clock.landing_contract.collector_tree.relays[67].xy",
+  "clock.landing_contract.collector_tree.relays[68].xy",
+  "clock.landing_contract.collector_tree.relays[69].xy",
+  "clock.landing_contract.collector_tree.relays[98].xy",
+  "clock.landing_contract.collector_tree.relays[122].xy",
+  "clock.landing_contract.collector_tree.relays[123].xy",
+  "clock.landing_contract.collector_tree.relays[124].xy",
+  "clock.landing_contract.collector_tree.relays[125].xy",
+  "clock.landing_contract.collector_tree.relays[143].xy",
+  "clock.landing_contract.collector_tree.relays[147].xy",
+  "clock.landing_contract.collector_tree.relays[148].xy",
+  "clock.taps[5].xy",
+  "clock.taps[6].xy",
+  "clock.taps[7].xy",
+  "clock.taps[8].xy",
+  "internal_stations[0].from_um",
+  "internal_stations[1].to_um"
+ ],
+ "xy_in_new_tile": []
+}

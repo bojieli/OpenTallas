@@ -1,0 +1,48 @@
+base 265 305 cand 265 348
+NEW WARN core_faces [G0C] type cbf_q11 core u_t32 port n_a: 514 pins on face E face away from its partner(s) u_t22.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbf_q11 core u_t33 port n_a: 514 pins on face E face away from its partner(s) u_t23.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q00__cld7bf7197 core u_t10 port n_a: 514 pins on face E face away from its partner(s) u_t00.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q01__clab6e67f2 core u_t13 port n_a: 514 pins on face E face away from its partner(s) u_t02.n_y: mean cos -0.43, 514 pins on the far side (re-pin to face S)
+NEW WARN core_faces [G0C] type cbn_q01__clab6e67f2 core u_t13 port n_b: 514 pins on face E face away from its partner(s) u_t03.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q01__cld9ff4c40 core u_t13 port n_a: 514 pins on face E face away from its partner(s) u_t02.n_y: mean cos -0.43, 514 pins on the far side (re-pin to face S)
+NEW WARN core_faces [G0C] type cbn_q01__cld9ff4c40 core u_t13 port n_b: 514 pins on face E face away from its partner(s) u_t03.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q01__cldd6ea846 core u_t02 port n_b: 514 pins on face W face away from its partner(s) u_t12.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face E)
+NEW WARN core_faces [G0C] type cbn_q01__cldd6ea846 core u_t13 port n_a: 514 pins on face E face away from its partner(s) u_t02.n_y: mean cos -0.43, 514 pins on the far side (re-pin to face S)
+NEW WARN core_faces [G0C] type cbn_q01__cldd6ea846 core u_t13 port n_b: 514 pins on face E face away from its partner(s) u_t03.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q11__cl49ae4555 core u_t32 port n_a: 514 pins on face E face away from its partner(s) u_t22.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q11__cl49ae4555 core u_t33 port n_a: 514 pins on face E face away from its partner(s) u_t23.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q11__cl5cc92dfe core u_t32 port n_a: 514 pins on face E face away from its partner(s) u_t22.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbn_q11__cl5cc92dfe core u_t33 port n_a: 514 pins on face E face away from its partner(s) u_t23.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbx_q10__cl89936551 core u_t31 port n_a: 514 pins on face E face away from its partner(s) u_t21.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN core_faces [G0C] type cbx_q10__cl94a12200 core u_t31 port n_a: 514 pins on face E face away from its partner(s) u_t21.t_out: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+NEW WARN hard_cores [G0C] type cbf_q00__cl1b5a6458 core u_t10 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbf_q00__cl870de686 core u_t10 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbf_q01 core u_t02 pin ck M5: x 315.3720 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbf_q01_s2 core u_t13 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbf_q11 core u_t32 pin ck M5: x 928.7880 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbf_q11 core u_t33 pin ck M5: x 928.7880 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q00__cl622f65d2 core u_t10 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q00__cld7bf7197 core u_t10 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q00__cldbcda913 core u_t10 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__clab6e67f2 core u_t02 pin ck M5: x 315.3720 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__clab6e67f2 core u_t03 pin ck M5: x 315.3480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__clab6e67f2 core u_t12 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__clab6e67f2 core u_t13 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cld9ff4c40 core u_t02 pin ck M5: x 315.3720 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cld9ff4c40 core u_t03 pin ck M5: x 315.3480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cld9ff4c40 core u_t12 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cld9ff4c40 core u_t13 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cldd6ea846 core u_t02 pin ck M5: x 315.3720 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cldd6ea846 core u_t03 pin ck M5: x 315.3480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cldd6ea846 core u_t12 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q01__cldd6ea846 core u_t13 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q11__cl49ae4555 core u_t32 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q11__cl49ae4555 core u_t33 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q11__cl5cc92dfe core u_t32 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbn_q11__cl5cc92dfe core u_t33 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbx_q10__cl89936551 core u_t30 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbx_q10__cl89936551 core u_t31 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbx_q10__cl94a12200 core u_t30 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+NEW WARN hard_cores [G0C] type cbx_q10__cl94a12200 core u_t31 pin ck M5: x 920.1480 off the plan track (offset 0.024, pitch 0.048) in the type frame
+GONE WARN core_faces [G0C] type cbx_q10__cl89936551 core u_t30 port tap: 508 pins on face E face away from its partner(s) face N (bc_o21), face N (bc_o31), face N (y_o21): mean cos -0.14, 508 pins on the far side (re-pin to face N)
+GONE WARN core_faces [G0C] type cbx_q10__cl94a12200 core u_t30 port tap: 508 pins on face E face away from its partner(s) face N (bc_o21), face N (bc_o31), face N (y_o21): mean cos -0.14, 508 pins on the far side (re-pin to face N)
