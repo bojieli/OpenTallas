@@ -873,6 +873,15 @@ class Binder:
             raise BindError(f"RESET_BOOT_CONTRACT {exc}") from exc
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
+        # HBM-HUB-RTL-1 11-11 (rd1): the elaborated parameters of the as-built TOP instances (type defaults + instance
+        # overrides), so a param_regen hook can check a parameter that lives above a netlist cut (e.g. hb_coll_q VM_RT
+        # inside the hb_coll_q.__cut_* cores).  Read only; nothing in the bind uses it.
+        _tm = yjs["modules"].get(self.ab["top"], {})
+        self.top_inst_params = {}
+        for _n, _c in (_tm.get("cells") or {}).items():
+            _ps = dict(yjs["modules"].get(_c.get("type"), {}).get("parameter_default_values", {}))
+            _ps.update(_c.get("parameters") or {})
+            self.top_inst_params[_n] = {k: E._pval(v)[0] for k, v in _ps.items()}
         # Yosys omits instance parameters when a leaf uses its declared defaults. Keep their
         # declarations for param_regen, without changing otherwise untouched leaf interfaces.
         # Key by both original Yosys type and RTL master so a substituted variant cannot

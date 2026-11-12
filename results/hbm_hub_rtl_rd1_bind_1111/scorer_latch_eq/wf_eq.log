@@ -1,0 +1,134 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/w/wf_eq.ys' --
+
+1. Executing Verilog-2005 frontend: /w/wf_eq.sv
+Parsing SystemVerilog input from `/w/wf_eq.sv' to AST representation.
+Generating RTLIL representation for module `\wf_old'.
+Generating RTLIL representation for module `\wf_new'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 5 switch rules as full_case in process $proc$/w/wf_eq.sv:12$39 in module wf_new.
+Marked 6 switch rules as full_case in process $proc$/w/wf_eq.sv:3$5 in module wf_old.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 4 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~11 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\wf_new.$proc$/w/wf_eq.sv:12$39'.
+     1/5: $5\wf[0:0]
+     2/5: $4\wf[0:0]
+     3/5: $3\wf[0:0]
+     4/5: $2\wf[0:0]
+     5/5: $1\wf[0:0]
+Creating decoders for process `\wf_old.$proc$/w/wf_eq.sv:3$5'.
+     1/7: $6\wf[0:0]
+     2/7: $5\wf[0:0]
+     3/7: $4\wf[0:0]
+     4/7: $3\wf[0:0]
+     5/7: $2\wf[0:0]
+     6/7: $1$fordecl_block$1.j[31:0]$7
+     7/7: $1\wf[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\wf_new.\wf' from process `\wf_new.$proc$/w/wf_eq.sv:12$39'.
+No latch inferred for signal `\wf_new.$fordecl_block$3.j' from process `\wf_new.$proc$/w/wf_eq.sv:12$39'.
+No latch inferred for signal `\wf_old.\wf' from process `\wf_old.$proc$/w/wf_eq.sv:3$5'.
+Warning: Latch inferred for signal `\wf_old.$fordecl_block$1.j [1:0]' from process `\wf_old.$proc$/w/wf_eq.sv:3$5': $auto$proc_dlatch.cc:543:proc_dlatch$138
+Warning: Latch inferred for signal `\wf_old.$fordecl_block$1.j [2]' from process `\wf_old.$proc$/w/wf_eq.sv:3$5': $auto$proc_dlatch.cc:545:proc_dlatch$141
+Warning: Latch inferred for signal `\wf_old.$fordecl_block$1.j [31:3]' from process `\wf_old.$proc$/w/wf_eq.sv:3$5': $auto$proc_dlatch.cc:543:proc_dlatch$144
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 5 empty switches in `\wf_new.$proc$/w/wf_eq.sv:12$39'.
+Removing empty process `wf_new.$proc$/w/wf_eq.sv:12$39'.
+Found and cleaned up 6 empty switches in `\wf_old.$proc$/w/wf_eq.sv:3$5'.
+Removing empty process `wf_old.$proc$/w/wf_eq.sv:3$5'.
+Cleaned up 11 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wf_new.
+Optimizing module wf_old.
+<suppressed ~11 debug messages>
+3 objects.
+0 objects.
+
+4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wf_new..
+Finding unused cells or wires in module \wf_old..
+Removed 3 unused cells and 45 unused wires.
+<suppressed ~5 debug messages>
+
+5. Executing MITER pass (creating miter circuit).
+Creating miter cell "miter" with gold cell "wf_old" and gate cell "wf_new".
+
+5.1. Executing FLATTEN pass (flatten design).
+<suppressed ~2 debug messages>
+
+5.2. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+
+6.1. Analyzing design hierarchy..
+Top module:  \miter
+
+6.2. Analyzing design hierarchy..
+Top module:  \miter
+Removing unused module `\wf_new'.
+Removing unused module `\wf_old'.
+Removed 2 unused modules.
+Module miter directly or indirectly contains formal properties -> setting "keep" attribute.
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Imported 88 cells to SAT database.
+Import proof for assert: $auto$miter.cc:241:create_miter_equiv$146 when 1'1.
+
+Solving problem with 9076 variables and 24938 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+Warnings: 3 unique messages, 3 total
+End of script. Logfile hash: 26317be695, time: 0.06s, user: 0.08s, system: 0.03s, MEM: 30.07 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 70% 1x sat (0 sec), 9% 1x opt_clean (0 sec), ...

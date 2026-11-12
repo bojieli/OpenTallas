@@ -4313,5 +4313,23 @@
     "source_commit": "02046aa040",
     "read_at_commit": true,
     "cts_delay_buffer_derate": 0
+  },
+  "ot_hgi_qdq_transport_ctl_r5": {
+    "top": "ot_hgi_qdq_transport_ctl_r5",
+    "files": [
+      "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv"
+    ],
+    "defines": [],
+    "params": {
+      "DL": 25,
+      "MUT": 0
+    },
+    "macros": [
+      "ot_sram_1r1w_256x64_m2_r0c0_g64",
+      "ot_sram_1r1w_64x16_m1"
+    ],
+    "source": "DIE-HBM-97-CTLR5 11-11: rd1 plan event QUANT ruling (B): ctl_r4 with ring A = 256 x 64 (physical/asap7_memory_macros_v2/ot_sram_1r1w_256x64_m2_r0c0_g64, 53.16 x 28.392) + commit ring ot_sram_1r1w_64x16_m1; rl_cfg 8 bits (RLI 2..254); params as the ctl_r4s kit (DL 25, MUT 0); closure = ot_hgi_qdq_transport_r5.sv only (ctl_s5 + ctl_r5 in one file)",
+    "source_commit": "3c56a517012a9fec3f6e29267a8ef07b4884969e",
+    "read_at_commit": false
   }
 }

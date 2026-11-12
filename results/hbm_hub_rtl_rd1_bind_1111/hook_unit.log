@@ -12,6 +12,8 @@ MODE off xr {}
   hb_idx__op_NW {}
   hcollrs_NE {}
   hcollgi_NE {}
+  hb_fvp_SE0 {}
+  u_mu_fused_0_ne {}
   check 10 18 bridge {'READ_RETURN': 26, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
 MODE on xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
   su_NE0.g_tap_r8b.u_tap {'READ_RETURN': 16, 'WRITE_RETURN': 12}
@@ -27,6 +29,8 @@ MODE on xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1':
   hb_idx__op_NW {'VM_RT_EXTRA': 174}
   hcollrs_NE {}
   hcollgi_NE {}
+  hb_fvp_SE0 {'BANK_RR': 7}
+  u_mu_fused_0_ne {'RR': 11}
   check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
 MODE cut xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
   su_NE0.g_tap_r8b.u_tap {'READ_RETURN': 16, 'WRITE_RETURN': 12}
@@ -42,5 +46,24 @@ MODE cut xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1'
   hb_idx__op_NW {'VM_RT_EXTRA': 174}
   hcollrs_NE {'BANK_RT': 8}
   hcollgi_NE {'VM_RT': 4}
+  hb_fvp_SE0 {'BANK_RR': 7}
+  u_mu_fused_0_ne {'RR': 11}
   check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
-  ERROR core pin cycles: hb_coll_NE.__cut_vm.vmasm_rd_il (hb_coll_NE__cut_vm) reads a moved bank pin (+[1]) and has no regenerable parameter (cut / unlisted reader)
+  ERROR core pin cycles: hb_coll_NE.__cut_vm sits in a netlist cut of hb_coll_NE; its VM_RT is set in the as-built top and must be 3 + 1 = 4, elaborated 3 (re-elaborate the as-built with hb_coll_NE .VM_RT(4))
+MODE cut4 xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
+  su_NE0.g_tap_r8b.u_tap {'READ_RETURN': 16, 'WRITE_RETURN': 12}
+  sfu_NE0 {'READ_RETURN': 20, 'WRITE_RETURN': 16}
+  hc_NE0 {'READ_RETURN': 24, 'WRITE_RETURN': 20}
+  hc_NE.u_q {'RD_CAPTURE': 33, 'GATHER_PHASE': 33, 'DONE_LAT': 28}
+  hb_idx__ctl {'VM_RT': 6, 'CR_RT': 6}
+  hb_idx__op_SW {'VM_RT_EXTRA': 12}
+  hb_dbk_NE {'RR_RT': 81}
+  xl_NE_ctl {'RD_LAT': 3399447232118598955}
+  hb_idx__op_NE {'VM_RT_EXTRA': 172}
+  hb_idx__nwsh {'BANK_RT': 55}
+  hb_idx__op_NW {'VM_RT_EXTRA': 174}
+  hcollrs_NE {'BANK_RT': 8}
+  hcollgi_NE {'VM_RT': 4}
+  hb_fvp_SE0 {'BANK_RR': 7}
+  u_mu_fused_0_ne {'RR': 11}
+  check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}

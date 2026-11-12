@@ -1,0 +1,11 @@
+HBM-HUB-RTL-1 11-12  SU g_inj.slot register form (DIE-HBM-100: mem2reg with EQ approved)
+Problem: a fresh elaboration of ot_hbm_su_static_pgslice_s leaves reg [161:0] slot[0:3] as $memwr_v2/$memrd (the cached Nov-8
+  as-built had it memory_map'd); a dissolved parent cannot carry those as glue (control bind: EMIT ... $memwr_v2 not supported).
+  (* mem2reg *) gave a $pmux read, also not carried.  Final form (lines 258/259/261, line count unchanged so remap src keys
+  stay aligned): 4 explicit registers slot0..3 written under sp==k, read by a 2:1 mux tree on rs.
+EQ: module ot_hbm_su_static_pgslice_s of the fresh elaboration (gate) vs the cached bind_e0 module (gold): su_alias.py names
+  gold $memory\g_inj.slot[k] Q as g_inj.slotK; async2sync; equiv_make; equiv_simple -seq 2; equiv_induct -seq 2;
+  equiv_status -assert: 187271 equiv cells proven, 0 unproven (su_eq_alias_tail.log).
+Idx scorer: the non-latching loop rewrite (b7a87b59cc) is reverted on this branch (file back to main): its new cells changed
+  the scorer partition crossings (UNPLANNED NE/NW_b0xx/b10x).  The bind recipe keeps prune_dead_latches.py (3 dead
+  $adlatch per quarter, fail-closed) instead; scorer_latch_eq/ stays as evidence of the alternative.

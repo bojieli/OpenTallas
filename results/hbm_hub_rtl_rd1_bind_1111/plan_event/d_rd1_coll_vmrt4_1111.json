@@ -1,0 +1,25 @@
+{
+ "name": "d_rd1_coll_vmrt4_1111",
+ "source": "HBM-HUB-RTL-1 11-12 rd1 (vecd4ae +1 read stage) bind-side event inputs: hb_coll VM_RT 4 + QUANT ctl_r5 RLI 127 top, rd1 pin cycles, manifest keys v2",
+ "base": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19",
+ "files": {
+  "corelat/cycles_vecd4ae_rd1_1111.tsv": {
+   "kind": "raw",
+   "op": "set",
+   "from": "/srv/opentallas-scratch2/claude/hbm-hub-rtl-1/rd1delta/files/cycles_vecd4ae_rd1_1111.tsv",
+   "sha256": "e4b108339fa6c313d1827fce935310c51a22c175f8403b36bf828be26fae1591"
+  },
+  "rd1/t11_top_rd1.sv": {
+   "kind": "raw",
+   "op": "set",
+   "from": "/srv/opentallas-scratch2/claude/hbm-hub-rtl-1/rd1delta/files/t11_top_rd1.sv",
+   "sha256": "7aa058d5a6c199adfd184a33b8499e814b9707fc295c5c40272bf48f64376660"
+  },
+  "rd1/asbuilt_keys_rd1.json": {
+   "kind": "raw",
+   "op": "set",
+   "from": "/srv/opentallas-scratch2/claude/hbm-hub-rtl-1/rd1delta/files/asbuilt_keys_rd1.json",
+   "sha256": "d16374aa3b182674f3695eb60865da6f83c44dda9a2eb37aaa1d24bfed91a2ec"
+  }
+ }
+}

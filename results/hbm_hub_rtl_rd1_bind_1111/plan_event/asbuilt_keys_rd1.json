@@ -1,0 +1,14 @@
+{
+ "schema": "hbm-hub-rtl-1.rd1.asbuilt_keys.v2",
+ "note": "asbuilt manifest keys for the rd1 plan event (DIE-HBM-100 composes them into the event manifest). netlist = rd1 t11_top: hb_coll_NE/NW .VM_RT(4) (lines 6526/6621) + hb_quant_NW__quant_NW_xp_ctl ot_hgi_qdq_transport_ctl_r4 -> _r5 with .rl_cfg(8'b01111111) (line 7364/7367), nothing else. param_regen.file/contract = the branch hook (core_pin_cycles + SHARES + STRAP_PINS QUANT guard). core_pin_cycles = vecd4ae rd1 rows (tsv path plan-dir relative: resolve when composing). dissolve_add = the 4 hb_coll masters the cached Nov-8 elaboration already carried flat. base RTL must carry the branch's ot_hgi_qdq_transport_r5.sv and the SU g_inj.slot register form.",
+ "set": {
+  "netlist": ["rd1/t11_top_rd1.sv"],
+  "param_regen.file": "physical/die_plan/hbm/bind/hbm_param_regen.py",
+  "param_regen.contract": "physical/die_plan/hbm/r8/hbm_lat_contract.json",
+  "core_pin_cycles": [{"tsv": "corelat/cycles_vecd4ae_rd1_1111.tsv", "core": "hnx_vms_bank_q0_faces__vecd4ae", "module": "hfd_vms_bank_native_q0_faces"}]
+ },
+ "dissolve_add": ["ot_hfd_coll_q2_hard_v8g_s", "ot_hfd_coll_q3_hard_v8x", "ot_hfd_coll_q_hard_v8g_body", "ot_hfd_coll_q_hard_v8g_body_s"],
+ "recipe": ["bind.py elab (fresh, manifest base)", "tools/hbm_b2/fused_lower_tree_splice.py splice", "prune_dead_latches.py (3 dead $adlatch per idx scorer quarter, fail-closed)", "remap_splits.py OLD=cached bind_e0 NEW=fresh elab over compose_t9_h95 / t5_map / r8_t10 landing (instance+type+src(basename)+params+widths by rank; 2nd pass by stem)", "map_fill.py: glue cells new in the fresh elab take the partition of the old cells on the same source line (+-8 lines), unique or fail", "bind.py bind --strict pass 1 -> hbm_lat_pads.py -> pass 2"],
+ "plan_type_change": {"inst": "u_hb_quant_Q__quant_Q_xp_ctl", "module": "ot_hgi_qdq_transport_ctl_r4 -> ot_hgi_qdq_transport_ctl_r5", "outline_um": [112.32, 60.48], "note": "re-kit; ring A macro ot_sram_1r1w_256x64_m2_r0c0_g64 53.16 x 28.39 um fits the slot"},
+ "requires": "claude/hbm-rd1-coll-1111 (see READY sha) on top of main a4c0a585fc84"
+}

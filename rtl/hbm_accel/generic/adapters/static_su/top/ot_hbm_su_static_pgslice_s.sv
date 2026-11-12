@@ -255,10 +255,10 @@ module ot_hbm_su_static_pgslice_s #(
   reg [1:0] sp; reg [1:0] sq;
   always @(posedge pg_clk or negedge bridge_rst_n) if(!bridge_rst_n) sp<=2'd0; else sp<=sp+2'd1;
   always @(posedge clk_ctl or negedge bridge_rst_n) if(!bridge_rst_n) sq<=2'd0; else sq<=(sq==2'd2)?2'd0:sq+2'd1;
-  reg [161:0] slot [0:3];
-  always @(posedge pg_clk) slot[sp] <= {inj_rd, inj_addr};
+  reg [161:0] slot0, slot1, slot2, slot3;   // HBM-HUB-RTL-1 11-12: 4 registers + 2:1 mux tree, not a memory ($memwr/$memrd) or $pmux (no glue in a dissolved parent)
+  always @(posedge pg_clk) begin if(sp==2'd0) slot0<={inj_rd, inj_addr}; if(sp==2'd1) slot1<={inj_rd, inj_addr}; if(sp==2'd2) slot2<={inj_rd, inj_addr}; if(sp==2'd3) slot3<={inj_rd, inj_addr}; end
   wire [1:0] rs = ((sq==2'd1)?2'd0:(sq==2'd2)?2'd1:2'd3) + ((MUT==8)?2'd1:2'd0);
-  wire [161:0] ij = slot[rs];
+  wire [161:0] ij = rs[1] ? (rs[0] ? slot3 : slot2) : (rs[0] ? slot1 : slot0);
   reg [3:0] v; reg [35:0] row; reg bad; integer k,gg;
   always @* begin
    v=0; row=0; bad=0;

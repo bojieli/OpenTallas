@@ -1,0 +1,9 @@
+read_verilog -sv /w/wf_eq.sv
+hierarchy -check
+proc
+tee -o /w/wf_latch_old.txt select -count wf_old/t:$*latch*
+tee -o /w/wf_latch_new.txt select -count wf_new/t:$*latch*
+opt_clean
+miter -equiv -flatten -make_assert wf_old wf_new miter
+hierarchy -top miter
+sat -verify -prove-asserts -set-init-zero miter

@@ -36,6 +36,8 @@ read from the bound sources of each consumer pin (default: no declaration -> X =
   xload RD_LAT (rr; per-bank vector: every element), n12 VM_RT_EXTRA reading banks directly.
   Any other consumer of a moved pin (a cut without parameters, e.g. hb_coll_q.__cut_vm behind a share) is a hook error:
   the bind fails rather than bind a torn read.  Diagnostic status pins (bank_status) are recorded only.
+  Strap pass-throughs (STRAP_PINS): QUANT LG rr_i -> hb_quant_q__quant_q_xp_ctl rl_cfg; the as-built netlist must tie
+  rl_cfg = 126 + X on a controller master that accepts it (ctl_r5 for 127+); else a hook error.
   Mixed X on one law (an rd1 and a non-rd1 bank in one LG pair / one share) is an error (loop pads are not modelled).
 Leaves that are netlist cuts without parameters (sfucore_q.__cut_ctl = the SFU VM bridge, sfucore_q.__cut_lane* = sp2
 lane RDX) cannot take a parameter: their required values are RECORDED (record.variant_values) for the parameterized
@@ -61,8 +63,30 @@ PIN_READERS = [(r"ot_hgi_dma_back_static_vp4_banks\w*", r"rr", "RR_RT"),
                (r"ot_hbm_idx_vm_share2_static\w*", r"vm_rr", "BANK_RT"),
                (r"ot_hgi_sm_xload\w*ctl\w*", r"rr", "RD_LAT"),
                (r"ot_hbm_idx_vm_query_static_n12", r"vm_rr", "VM_RT_EXTRA"),
-               (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT")]     # hcollgi_q behind hcollrs_q.b_rr
-SHARE = (r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr")  # a share's answer ports: their clients see the share's + X
+               (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT"),    # hcollgi_q behind hcollrs_q.b_rr
+               # hb_fvp_*: the FUSED pair's steer tag is BANK_RR + 2 edges from its mux; its a_rr/b_rr leave the die top
+               # (FUSED lanes, lane contract RR = BANK_RR + 4): the lane RR moves with it in the FUSED cores (re-kit).
+               (r"ot_hnx_fused_vm_pair\w*", r"rr0", "BANK_RR"),
+               (r"ot_hnx_fused_lane\w*", r"rr_(v|d)", "RR")]               # spliced FUSED lanes behind hb_fvp_*
+# Pass-through readers: (module, answer ports, the input port that reads the moved pin).  Their clients see the same
+# + X (VM shares: hb_idx__nwsh / hcollrs_q; FUSED pairs: hb_fvp_* -> the spliced u_mu_fused_* lanes, RR = BANK_RR + 4).
+SHARES = [(r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr", "vm_rr"),
+          (r"ot_hnx_fused_vm_pair\w*", r"(a|b)_rr_(v|d)", "rr0")]
+SHARE = SHARES[0]
+# Readers inside a netlist cut whose fixed latency is a parameter of the as-built TOP instance above the cut: the bind
+# cannot regenerate it, so an rd1 bind passes only when the elaborated as-built already carries base + X (the plan event
+# re-elaborates the top with the new value).  (cut leaf regex, top instance group, parameter, value at X = 0)
+# hb_coll_q VM_RT 3 = the d44v COLL VM budget behind hcollrs_q (BANK_RT 7): t11_top hb_coll_NE/NW .VM_RT(3).
+CUT_PARAMS = [(r"(hb_coll_N[EW])\.__cut_\w+", 1, "VM_RT", 3)]
+# Pass-through readers whose client takes the latency as a declared position STRAP (a constant leaf input, not a
+# parameter): the bind cannot regenerate a strap, so an rd1 bind passes only when the as-built netlist already ties the
+# client strap to base + X and the client master accepts it.  (reader leaf regex, reader port, client leaf template on
+# the reader's groups, client strap port, value at X = 0, {master: max strap})
+# QUANT (DIE-HBM-100 ruling (B) 11-11): hb_quant_q__quant_qk_lg (ot_hgi_qdq_lg_*) rr_i -> rr_o is a register
+# pass-through into hb_quant_q__quant_q_xp_ctl rr_v; the controller read round trip RLI is its rl_cfg strap (t11_top 126 =
+# ctl_r4's range end).  RLI 127+ needs ot_hgi_qdq_transport_ctl_r5 (256-entry ring A, 8-bit rl_cfg, RLI 2..254).
+STRAP_PINS = [(r"hb_quant_(N[EW])__quant_N[EW]\d_lg", r"rr_i", "hb_quant_{0}__quant_{0}_xp_ctl", "rl_cfg", 126,
+               {"ot_hgi_qdq_transport_ctl_r4": 126, "ot_hgi_qdq_transport_ctl_r5": 254})]
 DIAG_PORT = r"(bank_status|b\d_status|status)"            # diagnostic: recorded, never priced
 LAW_PINS = [(r"su_N[EW]\d\.g_tap_r8b\.u_tap", r"near_rr"), (r"hb_idx__ctl", r"vm_rr"),
             (r"hb_vms_\w+", r"(bk|b\d)_pr")]
@@ -182,7 +206,6 @@ def pin_cycles(ctx, rules):
     and {(sink leaf, sink port): {share leaf}} for the clients of the VM shares"""
     import core_pin_cycles as CPC
     F, out, clients = ctx.F, defaultdict(set), defaultdict(set)
-    share_rx = re.compile(SHARE[0])
     for (ci, pn, i), d in ctx.sinks.items():
         s = CPC.source_of(d)
         if s is None:
@@ -191,9 +214,70 @@ def pin_cycles(ctx, rules):
         x = CPC.added(rules, sc.path, sc.module, s[1], s[2])
         if x:
             out[(F.cells[ci].path, pn)].add(x)
-        elif re.fullmatch(SHARE[1], s[1]) and share_rx.fullmatch(sc.module or ""):
-            clients[(F.cells[ci].path, pn)].add(sc.path)
+        else:
+            for mrx, prx, ip in SHARES:
+                if re.fullmatch(prx, s[1]) and re.fullmatch(mrx, sc.module or ""):
+                    clients[(F.cells[ci].path, pn)].add((sc.path, ip))
     return out, clients
+
+
+def vlit(v):
+    """as-built parameter value -> int: 75, "75", 64'd75, 64'b1001..., 32'h4b (raises ValueError otherwise)"""
+    s = str(v).strip().strip('"').replace("_", "")
+    m = re.fullmatch(r"(?:\d+)?'s?([bdhoBDHO])([0-9a-fA-F]+)", s)
+    if m:
+        return int(m.group(2), {"b": 2, "d": 10, "h": 16, "o": 8}[m.group(1).lower()])
+    return int(s)
+
+
+def cut_guard(ctx, leaf, xs, single):
+    """None: not a guarded cut; "": the elaborated top parameter already carries base + X; else the error"""
+    for rx, grp, par, base in CUT_PARAMS:
+        m = re.fullmatch(rx, leaf)
+        if not m:
+            continue
+        top = m.group(grp)
+        x = single(f"{leaf} (cut, {top}.{par})", xs)
+        got = (getattr(ctx, "top_inst_params", None) or {}).get(top, {}).get(par)
+        try:
+            got = int(str(got).strip('"'))
+        except ValueError:
+            got = None
+        if got == base + x:
+            return ""
+        return (f"core pin cycles: {leaf} sits in a netlist cut of {top}; its {par} is set in the as-built top and must be "
+                f"{base} + {x} = {base + x}, elaborated {got} (re-elaborate the as-built with {top} .{par}({base + x}))")
+    return None
+
+
+def strap_value(ctx, path, port):
+    """as-built constant on a declared strap input of leaf `path` (bind sink ("strap", "0"/"1") per bit) -> int or None"""
+    ci = next((n for n, c in enumerate(ctx.F.cells) if c.path == path), None)
+    if ci is None:
+        return None
+    bits = {i: d[1] for (c, pn, i), d in ctx.sinks.items() if c == ci and pn == port and d}
+    if not bits or any(bits.get(i) not in ("0", "1") for i in range(max(bits) + 1)) or \
+            any(ctx.sinks[(ci, port, i)][0] != "strap" for i in bits):
+        return None
+    return sum(1 << i for i, b in bits.items() if b == "1")
+
+
+def strap_guard(ctx, leaf, port, xs, single):
+    """None: not a strap pass-through; "": the as-built client strap already carries base + X; else the error"""
+    for rx, prx, tmpl, sport, base, cap in STRAP_PINS:
+        m = re.fullmatch(rx, leaf)
+        if not m or not re.fullmatch(prx, port):
+            continue
+        cl = tmpl.format(*m.groups())
+        x = single(f"{leaf} {port} (strap {cl}.{sport})", xs)
+        mod = next((c.module for c in ctx.F.cells if c.path == cl), None)
+        got = strap_value(ctx, cl, sport)
+        need = base + x
+        if got == need and need <= cap.get(mod, -1):
+            return ""
+        return (f"core pin cycles: {leaf}.{port} is a pass-through into {cl}.{sport} (strap, {mod}); the as-built strap "
+                f"must be {base} + {x} = {need} on a master that accepts it ({cap}), as-built {got}")
+    return None
 
 
 def pin_plan(ctx, px, clients, params):
@@ -225,7 +309,7 @@ def pin_plan(ctx, px, clients, params):
         xr["CR"] = single("hb_vms_SW pr (CR_RT)", xs)
     law(r"hb_vms_\w+", r"(bk|b\d)_pr")             # other hubs: the response calendar (compiler) moves, recorded
     share_x = {}
-    for (s, p), xs in sorted(px.items()) + sorted((k, {max(px.get((sh, "vm_rr"), {0})) for sh in v} - {0})
+    for (s, p), xs in sorted(px.items()) + sorted((k, {max(px.get((sh, ip), {0})) for sh, ip in v} - {0})
                                                    for k, v in clients.items()):
         if (s, p) in seen or not xs:
             continue
@@ -240,17 +324,29 @@ def pin_plan(ctx, px, clients, params):
                 if s in params and par in params[s]:
                     break                          # an absolute law already carries it (VM_RT behind hb_idx__ctl)
                 try:
-                    asb = int(str(c.params.get(par)).strip('"').replace("64'd", "").replace("'d", ""))
+                    pv = c.params.get(par)
+                    if pv is None:                 # not overridden at the instance: the elaborated master default
+                        pv = (getattr(ctx, "param_defaults", None) or {}).get((getattr(c, "ytype", None), c.module), {}).get(par)
+                    asb = vlit(pv)
                 except ValueError:
-                    err.append(f"core pin cycles {s}.{par}: as-built value {c.params.get(par)!r} not an integer")
+                    err.append(f"core pin cycles {s}.{par}: as-built value {pv!r} not an integer")
                     break
                 v = CPC.plus(asb, x, par)
                 params[s][par] = v
                 regen_rows.append(dict(inst=s, param=par, asbuilt=asb, pin=x, bound=v))
-                if re.fullmatch(SHARE[0], c.module or ""):
+                if any(re.fullmatch(m, c.module or "") for m, _, _ in SHARES):
                     share_x[s] = x
                 break
         else:
+            guard = strap_guard(ctx, s, p, xs, single)
+            if guard is None:
+                guard = cut_guard(ctx, s, xs, single)
+            if guard is not None:
+                if guard:
+                    err.append(guard)
+                else:
+                    seen.add((s, p))
+                continue
             err.append(f"core pin cycles: {s}.{p} ({c.module if c else '?'}) reads a moved bank pin (+{sorted(xs)}) and "
                        "has no regenerable parameter (cut / unlisted reader)")
     rec = {f"{s}|{p}": max(xs) for (s, p), xs in px.items()}

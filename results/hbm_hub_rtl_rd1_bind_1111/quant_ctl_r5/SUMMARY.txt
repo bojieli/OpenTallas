@@ -1,0 +1,23 @@
+HBM-HUB-RTL-1 11-12  QUANT controller deepening (DIE-HBM-100 ruling (B)) for the rd1 plan event
+Problem: rd1 adds one edge at the VM bank read pins; hb_quant_NW__quant_NW{0..3}_lg rr_i -> rr_o is a register
+  pass-through into hb_quant_NW__quant_NW_xp_ctl (ot_hgi_qdq_transport_ctl_r4) rr_v, whose read round trip is the strap
+  rl_cfg = 7'b1111110 = 126 = ctl_r4's range end (ring A 128 x 64, NP = RLI + 2 <= 128).  rd1 needs RLI 127.
+RTL: rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv  ctl_s5 / ctl_r5 / split_r5 = r4 line for line except
+  rl_cfg 8 bit, NP 9 bit (RLI 2..254), ring A = ot_sram_1r1w_256x64_m2_r0c0_g64, wp/ra 8 bit.  ot_hgi_qdq_transport_r4.sv is
+  NOT edited: blob def4c3fb30 == main (byte-identical for every kit / bind that uses ctl_r4).
+SRAM: ot_sram_1r1w_256x64_m2_r0c0_g64 = existing mem-compiler master (tools/mem_compiler/sram_gen.py v1.0+aligned-v2,
+  physical/asap7_memory_macros_v2: .v/_bb.v/.lef/tt/ss/ff .lib), same one-edge registered read model as the 128x64
+  (behaviour diff = address width + scalar mask only).  53.16 x 28.39 um (128x64: 33.70 x 27.54); TT clk->q 329 ps
+  (+35 ps vs 294), min period 313 ps.  Analytical abstract, not a signed macro; no new generator run.
+Bench: tools/hgi_unit_tput/run_qdq_ctl_r5_lockstep.sh -> bench/results.tsv  ALL_EXPECTED (Verilator 5.050):
+  lockstep ctl_r4 vs ctl_r5, RLI 2,3,11,58,100,125,126 x 3 seeds, 3000 commands, random power-up rings/pointers:
+    every output cycle-equal; pass latency L = RLI exactly; L = RLI +-1 both fault on the same cycle.
+  deep ctl_r5 alone RLI 126,127,128,200,254 at L = RLI: PASS (decode order, beat/record counts).
+  rd1: RLI 127 L 127 PASS; controls L 126 (+0) FAULT@161, L 128 (+2) FAULT@162 (sticky checked every cycle).
+  range: RLI 255 and RLI 1 -> cfg_bad fault; MUT 3 (ring A read one entry late) -> FAULT.
+Yosys (elab_r5.ys/.log): ctl_r5 proc + check -assert clean; no latches, no inferred memories (macros only).
+Hook: physical/die_plan/hbm/bind/hbm_param_regen.py STRAP_PINS + strap_guard(): the LG rr_i +X passes only if the as-built
+  netlist ties hb_quant_q__quant_q_xp_ctl rl_cfg = 126 + X on a master that accepts it (ctl_r4 <= 126, ctl_r5 <= 254);
+  else a hook error.  tools/die_plan/test_hbm_strap_guard.py (5 cases incl. 3 negative) OK.
+Netlist delta (plan event): t11_top hb_quant_NW__quant_NW_xp_ctl: ot_hgi_qdq_transport_ctl_r4 -> _r5, .rl_cfg(7'b1111110)
+  -> .rl_cfg(8'b01111111).

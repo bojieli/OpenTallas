@@ -1,0 +1,35 @@
+COLL_VMRT PASS LAT3 VM_RT3 pairs1736 lanes_padded_to_budget
+COLL_VMRT mismatch out0 pair0 cyc24 exp_cyc24
+COLL_VMRT mismatch out1 pair1 cyc24 exp_cyc24
+COLL_VMRT mismatch out2 pair2 cyc24 exp_cyc24
+COLL_VMRT mismatch out3 pair3 cyc24 exp_cyc24
+COLL_VMRT mismatch out4 pair0 cyc25 exp_cyc25
+COLL_VMRT mismatch out5 pair1 cyc25 exp_cyc25
+COLL_VMRT mismatch out6 pair2 cyc25 exp_cyc25
+COLL_VMRT mismatch out7 pair3 cyc25 exp_cyc25
+COLL_VMRT mismatch out8 pair0 cyc28 exp_cyc26
+COLL_VMRT mismatch out9 pair1 cyc28 exp_cyc26
+COLL_VMRT FAIL MUT2 LAT4 VM_RT0 errors1232 protocol_fault_edges632 got1232 exp1736
+COLL_VMRT mismatch out0 pair0 cyc24 exp_cyc24
+COLL_VMRT mismatch out1 pair1 cyc24 exp_cyc24
+COLL_VMRT mismatch out2 pair2 cyc24 exp_cyc24
+COLL_VMRT mismatch out3 pair3 cyc24 exp_cyc24
+COLL_VMRT mismatch out4 pair0 cyc25 exp_cyc25
+COLL_VMRT mismatch out5 pair1 cyc25 exp_cyc25
+COLL_VMRT mismatch out6 pair2 cyc25 exp_cyc25
+COLL_VMRT mismatch out7 pair3 cyc25 exp_cyc25
+COLL_VMRT mismatch out8 pair0 cyc26 exp_cyc26
+COLL_VMRT mismatch out9 pair1 cyc26 exp_cyc26
+COLL_VMRT FAIL MUT1 LAT4 VM_RT3 errors1280 protocol_fault_edges629 got1280 exp1736
+COLL_VMRT PASS LAT4 VM_RT4 pairs1736 lanes_padded_to_budget
+COLL_VMRT mismatch out0 pair0 cyc25 exp_cyc24
+COLL_VMRT mismatch out1 pair1 cyc25 exp_cyc24
+COLL_VMRT mismatch out2 pair2 cyc25 exp_cyc24
+COLL_VMRT mismatch out3 pair3 cyc25 exp_cyc24
+COLL_VMRT mismatch out4 pair0 cyc26 exp_cyc25
+COLL_VMRT mismatch out5 pair1 cyc26 exp_cyc25
+COLL_VMRT mismatch out6 pair2 cyc26 exp_cyc25
+COLL_VMRT mismatch out7 pair3 cyc26 exp_cyc25
+COLL_VMRT mismatch out8 pair0 cyc27 exp_cyc26
+COLL_VMRT mismatch out9 pair1 cyc27 exp_cyc26
+COLL_VMRT FAIL MUT4 LAT4 VM_RT5 errors1280 protocol_fault_edges628 got1280 exp1736

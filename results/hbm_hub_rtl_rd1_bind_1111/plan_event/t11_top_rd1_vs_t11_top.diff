@@ -1,0 +1,16 @@
+6526c6526
+<   ot_hfd_coll_q2_hard_v8g_s #(.NLINK(2), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(3)) hb_coll_NE (
+---
+>   ot_hfd_coll_q2_hard_v8g_s #(.NLINK(2), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(4)) hb_coll_NE (
+6621c6621
+<   ot_hfd_coll_q3_hard_v8x #(.NLINK(3), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(3)) hb_coll_NW (
+---
+>   ot_hfd_coll_q3_hard_v8x #(.NLINK(3), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(4)) hb_coll_NW (
+7364c7364
+<   ot_hgi_qdq_transport_ctl_r4 #(.DL(25), .MUT(0)) hb_quant_NW__quant_NW_xp_ctl (
+---
+>   ot_hgi_qdq_transport_ctl_r5 #(.DL(25), .MUT(0)) hb_quant_NW__quant_NW_xp_ctl (
+7367c7367
+<     .rl_cfg(7'b1111110),
+---
+>     .rl_cfg(8'b01111111),

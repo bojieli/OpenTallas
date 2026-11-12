@@ -1,0 +1,18 @@
+HBM-HUB-RTL-1 11-12  rd1 plan event: private two-pass strict binds of t19 (DO_NOT_COUNT), epyc8 rd1plan/
+Recipe (bind_rd1.sh / ctl/bind_ctl.sh): bind.py elab (fresh, base = tip2 + branch RTL: SU slot regs, ctl_r5) ->
+  fused_lower_tree_splice.py splice -> prune_dead_latches.py -> remap_splits.py (old cached bind_e0 -> fresh names over
+  compose / map / r8 landing; src keys basename-normalized) -> map_fill.py (new-source glue cells: partition of same-line
+  old cells) -> bind --strict pass 1 -> hbm_lat_pads.py -> pass 2.
+rd1 (netlist t11_top_rd1.sv sha 7aa058d5: hb_coll VM_RT 4 + QUANT ctl_r5 rl_cfg 127; core_pin_cycles vecd4ae rd1; branch hook):
+  BIND partitions 90, crossings 420, n_errors 0; LC REGEN 38, errors 0 (bind_summary_rd1.json, run_rd1.out).
+  core_pin_regen: dbk RR_RT 80->81, fvp BANK_RR 6->7, ... ; QUANT strap guard passes (bound S_..._xp_ctl_rl_cfg = 8'b01111111).
+control (base netlist t11_top, no core_pin_cycles, same recipe): 90 / 420 / 0 errors (bind_summary_ctl.json).
+rd1 vs control bound RTL (cmp_rd1_vs_ctl.txt): 72 files identical; 12 differ only by the rd1 values (bound top 1 line, q_hub
+  ne/nw 19/23 lines, su00/11/20/31 5 lines each, root 1 line).
+control vs canonical hbm-cut-1111/bind_t19 (cmp_ctl_vs_bind_t19.txt, LOOSE renumber normalisation): 65 equal; differing:
+  (1) q_su* (SU slot register form, EQ above); (2) q_b000/b001/b010/b011 = cached elab used an older
+  rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv (11 lines shorter, pre RST_LOCAL / KITS-21) than the manifest base now holds;
+  (3) q_hub_ne/nw + bound top: the cached elab had the lower FUSED lanes wired into hb_fvp and pad_k/pad_b tied (strap
+  params), the repo splice leaves fvp_in__* die inputs and native_required pad straps (the closing step is not in the repo).
+  (2)/(3) are cached-vs-manifest drift, not rd1; both binds are clean with them.
+Delta: d_rd1_coll_vmrt4_1111.json + asbuilt_keys_rd1.json (v2: dissolve_add, recipe, plan_type_change ctl_r4 -> ctl_r5).
