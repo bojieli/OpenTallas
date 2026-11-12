@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 13:15 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 13:35 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -16,8 +16,7 @@ test_taps* test_die_sta_related test_street_rule* test_schema -> 188 passed 8 sk
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py) = branch HEAD.
 
 ## 3 Running jobs
-- epyc9 bash rt_leg.sh (nohup, started 21:10 UTC): HEAD routed balance check (ruling 3) of the 2.4 ps leg build
-  (copy dp/dc/head_leg_full); docker rf2rtleg-head-TT / -FF (48g, 8 cpu each); log dp/head/rtleg/CHAIN.log. Output dp/head/rtleg.
+None (rt_leg done 21:13 UTC; STA re-run in docker because epyc9 has no host sta/libs).
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -31,6 +30,9 @@ Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py) = 
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 13:3x HEAD ROUTED CHECK (posted): GRT overflow 0, M8/M9 0.06%, pad 5.53 m, worst gcell 13.06 mm M8 (fits);
+  routed spread 136.2 TT / 115.1 FF (model 2.4/4.2); landed damage 84.28/70.21 PASS (margin 334/346); FF contract 308 need 38.57.
+  Data epyc9 dp/head/rtleg (grt_<C>, pd_<C>), dp/head/rtleg_sta, arrivals dir dp/dc/head_rtleg.
 - 2026-11-12 13:2x FIXED-CYCLES (54d2a1ec4b, posted): sync_fixed_cycles (bus-station delta -> lane fixed_cycles, bind rule check,
   latency table refresh). S81 79e22ea61177 -> 2d689bfae217 (epyc8 plan_s81_r12ng/plan_rf_fc.json): dn_s_5S_L4 2->3, coll__lk_EN0/EN1 1->2,
   +23 cycles on 20 lanes, rule broken 0. HEAD sp3n2/srx3e and KV vN: 0 lanes changed.
@@ -57,8 +59,9 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. Collect rt_leg (routed spread TT/FF from pd_<C> sta + clock_report, GRT overflow from combo_<C>.log, pad_demand.json) -> RESULT.
-2. Merge lane: answer any ROOT-MERGE-60 question on claude/reach-fix-2-main-1112.
+1. Proposed (posted, starts unless COORD objects): regeq closed on routed arrivals (GRT+pads+sta per step, ~3 min, stop <=10 ps / no gain).
+   die_clock sta on epyc9 must run in docker orfs (PATH .../OpenROAD/bin, --libdir /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM).
+2. Merge lane: answer ROOT-MERGE-60 questions on claude/reach-fix-2-main-1112 @54d2a1ec4b.
 3. KV regeq after DIE-KV-99 vN2e tap-site event.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
