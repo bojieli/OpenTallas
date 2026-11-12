@@ -2433,7 +2433,34 @@ def _src_probe_cmd(trees, files):
         parts.append(f"echo T {q(t)} $(find {q(t.rstrip('/') + '/')} -maxdepth {SRC_PROBE_DEPTH} -type f 2>/dev/null "
                      "| wc -l)")
     parts += [f"test -e {q(f)} || echo M {q(f)}" for f in files]
+    # plan package manifest (plan_package.py PACKAGE.json) next to a probed plan: every listed file must exist, and match its
+    # sha256 up to 300 MB hashed per plan dir (KW-FIX-45 11-12 COORD: check the REQUIRED list, not the largest copy)
+    for t in trees:
+        parts.append(f"[ -f {q(t.rstrip('/') + '/PACKAGE.json')} ] && python3 -I -c {q(PKG_VERIFY_PY)} {q(t)} 2>/dev/null")
     return "; ".join(parts + ["true"])
+
+
+PKG_VERIFY_PY = r"""
+import json, os, sys, hashlib
+d = sys.argv[1]; budget = 300 * 2**20
+try:
+    m = json.load(open(os.path.join(d, "PACKAGE.json")))
+except Exception:
+    sys.exit(0)
+for rel, e in sorted((m.get("files") or {}).items()):
+    p = os.path.join(d, rel)
+    if not os.path.exists(p):
+        print("P", d, rel, "missing"); continue
+    b = e.get("bytes") or 0
+    if e.get("sha256") and b <= budget:
+        budget -= b
+        h = hashlib.sha256()
+        with open(p, "rb") as f:
+            for c in iter(lambda: f.read(1 << 20), b""):
+                h.update(c)
+        if h.hexdigest() != e["sha256"]:
+            print("P", d, rel, "sha256 differs")
+"""
 
 
 def src_incomplete(AP, cfg, run=None):
@@ -2444,12 +2471,22 @@ def src_incomplete(AP, cfg, run=None):
     hub = cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""
     if run is None:
         def run(h, cmd):
-            if h in (hub, "localhost"):
-                rc, o, _ = AP.sh(["bash", "-c", cmd], timeout=120)
-            else:
-                rc, o, _ = AP.sh(["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o",
-                                  "ControlPath=none", h, cmd], timeout=120)
-            return rc, o
+            # KW-FIX-45 11-12: the probe script (bind.f source lists, 500+ required files) exceeded the 128 KB single-argument
+            # limit of exec: ssh failed with 'Argument list too long', every probe returned 'unknown' and NO host was ever
+            # dropped (the S81 / QC rows launched on epyc4 / intel1 without their bind dirs).  The script goes over stdin.
+            try:
+                if h in (hub, "localhost"):
+                    p = subprocess.run(["bash", "-s"], input=cmd, capture_output=True, text=True, timeout=180)
+                else:
+                    for _try in range(3):                        # sshd MaxStartups resets ('Connection closed') are transient
+                        p = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h,
+                                            "bash -s"], input=cmd, capture_output=True, text=True, timeout=180)
+                        if p.returncode != 255:
+                            break
+                        time.sleep(3 + 4 * _try)
+            except subprocess.TimeoutExpired:
+                return 124, ""
+            return p.returncode, p.stdout
     need = {}
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict) or d.get("src_probe") is False:
@@ -2458,6 +2495,7 @@ def src_incomplete(AP, cfg, run=None):
             if h:
                 need.setdefault(h, set()).add(die)
     counts, missing, deep, nmiss, probed = {}, {}, {}, {}, {}
+    pkgbad = {}
     for h, ds in sorted(need.items()):
         trees = sorted({t for die in ds for t in src_inputs(cfg, die)[0]})
         files = sorted({f for die in ds for f in src_inputs(cfg, die)[1]})
@@ -2480,6 +2518,8 @@ def src_incomplete(AP, cfg, run=None):
                 deep[h].setdefault(f[1], f[2])
             elif len(f) == 3 and f[0] == "N":
                 nmiss[h].setdefault(f[1], set()).add(f[2])
+            elif len(f) == 4 and f[0] == "P":
+                pkgbad.setdefault(h, {}).setdefault(f[1], []).append(f"{f[2]} {f[3]}")
     # a second-level name counts only where another probed host has both the script and that path (KW-FIX-44 11-10)
     for h in nmiss:
         for p, subs in nmiss[h].items():
@@ -2495,8 +2535,13 @@ def src_incomplete(AP, cfg, run=None):
     for h in counts:
         for die in sorted(need[h]):
             trees, files = src_inputs(cfg, die)
-            why = [f"{t} {counts[h].get(t, 0)}/{best.get(t, 0)} files" for t in trees
-                   if best.get(t, 0) and counts[h].get(t, 0) < SRC_MIN_FRAC * best[t]]
+            # KW-FIX-45 11-12 (COORD): the REQUIRED list decides (bind.f sources, filelists, bind_report.json, the plan package
+            # manifest with its hashes); a host with extra files is never disqualified, and a host is not compared with the
+            # LARGEST copy (stray outputs on one host dropped epyc2/7/8/9 as KV gen hosts).  cfg src_count_check true restores
+            # the old file-count comparison.
+            why = ([f"{t} {counts[h].get(t, 0)}/{best.get(t, 0)} files" for t in trees
+                    if best.get(t, 0) and counts[h].get(t, 0) < SRC_MIN_FRAC * best[t]] if cfg.get("src_count_check") else [])
+            why += [f"package {t}: {'; '.join(v[:3])}" for t in trees for v in [pkgbad.get(h, {}).get(t)] if v]
             why += [f"{f} missing" for f in files if f in missing[h]]
             why += [f"{p} missing" if p in missing[h] else f"{p}: {deep[h][p]} missing"
                     for p in deep_inputs(cfg, die) if p in missing[h] or p in deep[h]]
@@ -2960,26 +3005,71 @@ def geom_verdicts():
 
 
 FORM_ENV_SKIP = {"OT_FLOW_TAG", "OT_PLACE_MAX_FANOUT"}
-FORM_KEYS = ("kit_rtl", "core_kit", "gen_args", "preflight_args", "canonical_topology_prepare", "cland_pinslot", "type_args",
+# kit_rtl (bind dir / as-built paths) and gen_args (sidecar paths) are bind-side inputs that follow the plan; a repoint changes
+# their PATHS without changing the type, so they are not part of the form (COORD 11-12: a die-wide repoint must not release a type
+# whose own block is unchanged).  Path-bearing values that stay are compared by file name only.
+FORM_KEYS = ("core_kit", "preflight_args", "canonical_topology_prepare", "cland_pinslot", "type_args",
              "prov_first_re", "relay_bay_re", "geom_waivers")
 _PLAN_SHA = {}
 
 
-def _plan_id(path, ref_mtime=None):
-    """content sha of a plan json (cached by mtime); for an old attempt whose plan file was rewritten after the attempt: 'rewritten'"""
+TYPEBLOCK_CACHE = "kit_wave_typeblocks.json"
+TYPEBLOCK_PY = r"""
+import json, sys, hashlib
+p = json.load(open(sys.argv[1]))
+t = p.get("partition_types") or {}
+print(json.dumps({k: hashlib.sha256(json.dumps(v, sort_keys=True, separators=(",", ":")).encode()).hexdigest() for k, v in t.items()}))
+"""
+
+
+def type_block_sha(path, tname, hosts, ref_mtime=None):
+    """COORD 11-12: the TYPE'S OWN plan block (outline, hard cores with positions / rotations, pins / ports, stations, ft slots,
+    clock taps / sink bins, cycle budgets: all keys of partition_types[type]) as a sha256, read from the plan file wherever it is
+    (hub or a gen host; one ssh per new plan version, cached in kit_wave_typeblocks.json by host:path:size:mtime).  A die-wide plan
+    change that leaves this block alone does not change it.  None = unknown (plan or type unreadable): never a hold."""
+    if not path or not tname:
+        return None
+    cpath = Path.home() / "coord" / "autopilot" / TYPEBLOCK_CACHE
     try:
-        mt = os.stat(path).st_mtime
-        if ref_mtime is not None and mt > ref_mtime + 1:
-            return "rewritten:" + str(path)
-        k = _PLAN_SHA.get(path)
-        if not k or k[0] != mt:
-            k = _PLAN_SHA[path] = (mt, hashlib.sha256(open(path, "rb").read()).hexdigest())
-        return k[1]
-    except OSError:
-        return "missing:" + str(path)
+        cache = json.loads(cpath.read_text()) if cpath.exists() else {}
+    except (OSError, ValueError):
+        cache = {}
+    cands = [None] + [h for h in hosts if h]            # None = the hub itself
+    for h in cands:
+        try:
+            if h is None:
+                if not os.path.exists(path):
+                    continue
+                st = os.stat(path); sig = f"hub:{path}:{st.st_size}:{int(st.st_mtime)}"; mt = st.st_mtime
+            else:
+                r = subprocess.run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=12", "-o", "ControlPath=none", h,
+                                    f"stat -c '%s %Y' {shlex.quote(path)}"], capture_output=True, text=True, timeout=40)
+                if r.returncode != 0 or len(r.stdout.split()) != 2:
+                    continue
+                sz, mt = r.stdout.split(); mt = float(mt); sig = f"{h}:{path}:{sz}:{int(mt)}"
+            if ref_mtime is not None and mt > ref_mtime + 1:
+                return "rewritten:" + sig
+            if sig not in cache:
+                if h is None:
+                    r = subprocess.run(["python3", "-I", "-c", TYPEBLOCK_PY, path], capture_output=True, text=True, timeout=300)
+                else:
+                    r = subprocess.run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=12", "-o", "ControlPath=none", h,
+                                        f"python3 -I -c {shlex.quote(TYPEBLOCK_PY)} {shlex.quote(path)}"],
+                                       capture_output=True, text=True, timeout=300)
+                if r.returncode != 0:
+                    continue
+                cache[sig] = json.loads(r.stdout.strip().splitlines()[-1])
+                try:
+                    cpath.write_text(json.dumps(cache))
+                except OSError:
+                    pass
+            return cache[sig].get(tname)
+        except (OSError, ValueError, subprocess.TimeoutExpired, IndexError):
+            continue
+    return None
 
 
-def form_fp(spec, spec_file):
+def form_fp(spec, spec_file, hosts=()):
     """COORD 11-12 'form fingerprint' = plan content sha + the type's kit recipe (kit_rtl, core_kit, gen args / env, preflight args).
     Process settings (OT_FLOW_TAG, OT_PLACE_MAX_FANOUT, kit_self_contained, hosts, memory, src tree path / tools) are NOT form."""
     ref = None
@@ -2995,10 +3085,15 @@ def form_fp(spec, spec_file):
             return {k: clean(x) for k, x in v.items() if k != "note"}
         if isinstance(v, (list, tuple)):
             return [clean(x) for x in v]
+        if isinstance(v, str) and v.startswith("/") and v.count("/") >= 2:
+            return os.path.basename(v)
         return v.replace(src, "<SRC>") if isinstance(v, str) and src else v
     body = {k: clean(spec.get(k)) for k in FORM_KEYS if spec.get(k) not in (None, "", {}, [])}
     body["gen_env"] = {k: v for k, v in (spec.get("gen_env") or {}).items() if k not in FORM_ENV_SKIP}
-    body["plan"] = _plan_id(spec.get("plan") or "", ref)
+    tb = type_block_sha(spec.get("plan") or "", spec.get("item") or "", list(hosts), ref)
+    if tb is None:
+        return None
+    body["type_block"] = tb
     return hashlib.sha256(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()
 
 
@@ -3017,7 +3112,9 @@ def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
         old = json.loads((old_dir / "spec.json").read_text())
         cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
                         kind=kind or rec.get("kind") or "type")
-        hold = form_fp(old, old_dir / "spec.json") == form_fp(cand, None)
+        gh = list((cfg["dies"][die].get("gen_hosts") or []))
+        fo, fc = form_fp(old, old_dir / "spec.json", gh), form_fp(cand, None, gh)
+        hold = fo is not None and fo == fc
         if hold:
             try:
                 with open(Path.home() / "coord" / "autopilot" / WAIT_FORM_LOG, "a") as f:
