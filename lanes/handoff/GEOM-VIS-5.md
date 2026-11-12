@@ -1,4 +1,4 @@
-# GEOM-VIS-5 lane handoff (updated 2026-11-12 07:24 PST)
+# GEOM-VIS-5 lane handoff (FINAL, 2026-11-12 07:25 PST; lane stopped, context heavy)
 
 1 SCOPE: independent visual-gate reviewer. View every place/GRT render and every hand-floorplan drawing ONE AT A TIME as an image (never verdict from numbers). Post GEOM VERDICT lines to lanes/GEOM-REVIEW.md: GOOD / ISSUES (+ ACCEPT recommendation or not) / BAD, each naming the FAMILY and a CLASS FIX. Reach items (taps > cap, hops > 405 um, reset reach) go to REACH-FIX-2; congestion/layout quality are ours. Answer each WAIT-VISUAL row in lanes/VISUAL-QUEUE.tsv within ~30 min. Read-only on builds (never launch/kill/route).
 
@@ -22,9 +22,10 @@
   QC: sle_su_l0 cl7a55c676 GOOD; slw_stm_v2 cl1ca9c415 BAD (oversize, stm shrink); slw_fw_v1 cl592e3d37 ISSUES; sle_fw_v2 cl69f5e854 a13 + coll_ft cl78c7b300 a2 / cla4a25d77 a1 ISSUES-ACCEPT recommended (GRT ov 0; COORD: accept only if DIE-QC-100 confirms the fingerprint is unchanged); sle_sc_v3 LR2 + sle_sc_v1 cl115da35f ISSUES (23-um E sliver; VISFORM full E channel); slw_st_a_v2 cl9f076a5c ISSUES-ACCEPT to GRT.
   KV: kv3_hg_v3 (01:01 job) ISSUES: W pockets at ~58%/~78% in head0 gaps, local 1.385; fix = vN2 W-street.
   ADDED 06:5x-07:2x: die-level KV vN + HEAD fix2 (lanes/die-proto-2/*.png) congestion GOOD, clock = insertion (HEAD spn column long pairs -> column spine); KV hgi_v7 ring B beats control A (fold LAND-RING); VISFORM drawings (epyc9 qc-s28-hf1c/visform/renders) FW-EFACE/SC-ECHAN(cond >=10.8 um ft setback)/CTL GOOD, STM standing exception; slw_stm_v2 BAD CORRECTED to ISSUES-ACCEPT; kv512_C t1 VL3 C1 ISSUES-ACCEPT probe; hd_spn_end a3 ISSUES not accepted (taps 2298/1754 -> tap split); kv3_sys_SD_v1 GOOD; native59 GOOD; st_a x3 ISSUES-ACCEPT to GRT. 2-h SUMMARY posted 07:2x; next due ~09:30.
+  07:3x: QC sle_st_b_v1 pvc5a85fd4 + sle_st_b_v2 clfde1249e GRT BAD (W-face pin column, 5146/5455 gcells >90%) -> extend FW-EFACE to st_b W face; asked DIE-QC-100 to hold st_b sign-off.
   NOT POSTED (now done, DIE-PROTO-2 posted renders): die-proto-3 KV vN / HEAD fix2 runs have NO die-level render (searched epyc8/9 die-proto-3); ask DIE-PROTO-2 for a die GRT congestion PNG (owner visual-layout focus) in the 2-h summary.
 
-6 NEXT STEPS:
+6 NEXT STEPS (successor GEOM-VIS-6 or Codex): re-arm both watches first; seen lists are current to 07:3x.
   a) next 2-h SUMMARY due ~09:30 PST to COORD (IMPROVED / STILL BAD / NEW CLASSES, every line from viewed images).
   b) Expected renders: HEAD lep0N re-pack v2 kit place (check C1-C4); S81 svc_hi t6 + svc_lo t7 ring-form pilots (DIE-S81-88; A/B vs VL3 base without ring; GOOD and no worse than base -> ring folds in); KV vN2 hg first place (street from face bits, W gaps street+landing only, pockets < 0.8); KV F1 place (VISLAYOUT3-KVHEAD); QC s28/HF-1c VISFORM forms; S81 ready12 leaf places.
   c) Drawings still to come: KV vN2 draft 2 (lanes/kv-vn2-1112 still holds draft 1 05:15); QC-S28-C re-post; S81 ready12b + centre re-pack (C2 C|LP interleave, C4 leaf->slot->partner table); HEAD fix2 drawing; HBM handplan v2 (phase 2, low priority).
