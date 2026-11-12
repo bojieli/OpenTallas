@@ -44042,3 +44042,18 @@ FAILED [AUTOPILOT 162aebc279a2] 2026-11-11 18:42:26 PST AUTOPILOT -> KIT-WAVE-1:
   - Turning off a check, a flow setting, a retry or an ECO is never the fix. It may run only in parallel as a fallback, never instead of the structural fix.
   - Lanes name the structural cause in every class line.
   - KV now: vE2 (bands widened) is the fix; vE only for a band that cannot be widened, with the reason.
+- 2026-11-11 18:48 PST ARCH [DIE-LAYOUT-HBM -> COORD, DIE-HBM-100; cc VISLAYOUT2-HBM, HBM-CORES-B] tag hbm-b1xx-arch. DO_NOT_COUNT. The q_b1xx idx/score slivers cannot get die width: band seams are window-pinned (see hbm-bank-formWp-redesign). They need a type-internal or architectural form. Data from t19/d49a, main route_supply and check.py.
+  Per type: outline um; macros (count, mm2, frac); cells; p99 and worst region; N-face pins/um; G0 by check.
+  - q_b102 (+pv1): 708x1555; 24 macros, 0.82 mm2, frac 0.75; 3.1 M cells; p99 29.5 (pv1 26.7), core_conns street V 10.8, face V 7.7; N face 6.8/um; G0 19 (stations 9, hops 4, faces 4).
+  - q_b103 (+pv1): 708x1555; 25 macros, 0.86 mm2, frac 0.78; 3.1 M cells; p99 12.0, face V; N face 3.7/um; G0 26 (stations 9, hops 8, ft_s0 4).
+  - q_b100 (+pv1): 734x1555; 24 macros, frac 0.72; 3.1 M cells; p99 10.8, street V; N face 6.8/um.
+  - q_b101 / q_b101_nw: 726x1555; frac 0.76; p99 3.1; already AT-RISK in FEAS-AUDIT.
+  - q_b111 (+pv1): 804x1555; frac 0.51; 1.43 M cells; p99 8.9 (pv1 5.0); N face 8.0/um; G0 18 (geometry 9: stations over macros).
+  - q_b110 (+pv1): 415x1555; frac 0.80; p99 4.0 (pv1 1.9); N face 9.9/um.
+  Through-traffic is a minor factor. Removing all non-bank FT from these types changes p99 only b111 8.9->2.2 and b110 4.0->1.9; b102 29.5->23.0, b103 and b100 unchanged.
+  Options, all inside today's outlines with no seam move:
+  - (A) Macro re-floor. Stack the idx/score SRAM pairs (2 high) or rotate them 90 deg to open one continuous V street of at least 150 um per type. Planned in the type by VISLAYOUT2-HBM with CPL-HBM-B1 inputs. Cost 0 cycles. It fixes core_conns only if the street demand fits; route_supply re-run per candidate.
+  - (B) Split each of b100/b102/b103 into two types on the same slot (idx half and score half, abutted inside the slot). That halves the cells per kit (3.1 M is over the 400k-per-run cap only after flattening; check the kit cell count). No die change; adds one seam and one port set.
+  - (C) +1 cycle on the worst crossing lanes (L1278, L5072, L5073, L8340, L7000: the 8 seam hops), so stations move off the macros. Pin cycles are cheap per owner rule, but this needs a TOK check.
+  - (D) Hub re-pin to free up to about 305 um (spu1 to 1163) + 149 um (spu0) for b102/b110/b113. This needs a q_hub_nw/q_hub_ne re-pin and rebuild. Not recommended alone.
+  RECOMMENDATION and DEFAULT: (A) for b102/b103/b100/b101 (VISLAYOUT2-HBM forms; I give each one die-side face data), with (C) for b111 and b110, whose problem is geometry and face pins. Build every changed type to full sign-off as each form lands.
