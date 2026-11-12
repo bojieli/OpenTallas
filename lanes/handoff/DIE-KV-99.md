@@ -34,3 +34,11 @@ none persistent (only in-session monitors). Helper: ssh retry /tmp/claude-1000/-
 - DIE-KV-98's /dev/shm/dkv98/hgex tree lacks hgclk_1030 view LEFs -> optimistic cut capacity; use dkv99/main only.
 - vN2 plan's kv3_head_eighth_e2 lef is an ABSOLUTE path (/srv/.../kv-plan-2/views_e2s): fix in packaging.
 - No git in /home/ubuntu/OpenTallas on intel2; no pkill.
+## UPDATE 07:25 PST
+- Confirming clean-checkout bind of 52a7 = RC 1 (CompositionError native_composite_hub_Eo_astk_ES). READY for 52a7 RETRACTED (queue 07:25). Fork root-causing: epyc8 dkv99/cleanbind/ (+ maybe new worktree wt/die-kv-99-cb). vN2 READY only on a clean-tree bind.
+- Item 5 merge: NOT exact for any group (fork report; epyc9 dkv99/merge/bind_m RC 1, 78 err). vN2 base strict bind RC 0 on old base: epyc9 dkv99/merge/bind_a. Recommended drop from vN2.
+- Item 3 cut DONE: epyc4 dkv99/cut/pkgB/plan_c.json md5 149f0939 (L2075_2 window +1036.8 um, re-site hgi_v3 ft27 + pv_v8 ft0, 0 cycles, worst hop 401.8 unchanged); G0 27 -> 27 (hgi_EN_0 gone, hgi_WN_0 unmasked). Scripts scratchpad cut_move.py / segload.py.
+- core_obs coverage checker (COORD approved (a)): fork on branch claude/kv99-coreobs-cov-1112 in epyc8 wt/die-kv-99(-obs); it posts its own READY.
+- Item 7 W street fork still running (epyc4 dkv99/wstreet/).
+- COORD 06:4x: insertion balance (REACH-FIX-2 generic clock tool) goes into vN2 at compose.
+- Hub push was blocked by someone's dirty CODEX-HANDOFF.md (posted FINDING 07:05); my commits are local until it clears.
