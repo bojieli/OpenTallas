@@ -947,6 +947,8 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif rec and cfg.get("hold_unchanged") and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = HOLD_UNCHANGED
+        elif rec and cfg.get("form_gate", True) and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+            why = WAIT_FORM
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
@@ -2245,12 +2247,57 @@ def src_inputs(cfg, die):
     kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
     files += [str(kr[k]) for k in ("asbuilt", "script") if str(kr.get(k) or "").startswith("/")]
     if str(kr.get("bind_out") or "").startswith("/"):
+        files += bind_named_sources(str(kr["bind_out"]), d.get("gen_hosts") or [])
+    return trees, files
+
+
+_BIND_NAMED_CACHE = {}
+
+
+def bind_named_sources(bind_out, hosts):
+    """KW-FIX-45 11-12 (COORD fail class 2 'HDL sources gone'): the absolute HDL sources a bind output names (bind.f, and the
+    .sv/.v/.vh paths in bind_report.json / provenance_bind.json).  Read on the hub; when the bind output exists only on a
+    source host (HBM t39w bind lived on epyc8 only: the OSError was swallowed and nothing was checked) read it over ssh from
+    the first gen host that has it.  Cached 10 min per bind_out.  A bind output that cannot be read anywhere logs once and
+    returns []."""
+    now = time.time()
+    hit = _BIND_NAMED_CACHE.get(bind_out)
+    if hit and now - hit[0] < 600:
+        return hit[1]
+    names = ("bind.f", "bind_report.json", "provenance_bind.json")
+    txt = {}
+    for n in names:
         try:
-            with open(os.path.join(str(kr["bind_out"]), "bind.f")) as f:
-                files += [ln.strip() for ln in f if ln.strip().startswith("/") and " " not in ln.strip()]
+            with open(os.path.join(bind_out, n), errors="replace") as f:
+                txt[n] = f.read()
         except OSError:
             pass
-    return trees, files
+    if "bind.f" not in txt:
+        for h in hosts:
+            try:
+                cmd = " ; ".join(f"echo '@@{n}'; cat {shlex.quote(os.path.join(bind_out, n))} 2>/dev/null" for n in names)
+                p = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h,
+                                    "bash -c " + shlex.quote(cmd)], capture_output=True, text=True, timeout=60)
+            except (OSError, subprocess.TimeoutExpired):
+                continue
+            cur = None
+            got = {}
+            for ln in (p.stdout or "").splitlines():
+                if ln.startswith("@@") and ln[2:] in names:
+                    cur = ln[2:]; got[cur] = []
+                elif cur:
+                    got[cur].append(ln)
+            if got.get("bind.f"):
+                txt = {k: "\n".join(v) for k, v in got.items()}
+                break
+    out = [ln.strip() for ln in txt.get("bind.f", "").splitlines() if ln.strip().startswith("/") and " " not in ln.strip()]
+    for n in ("bind_report.json", "provenance_bind.json"):
+        out += re.findall(r'"(/[^"\s]+\.(?:sv|v|vh))"', txt.get(n, ""))
+    out = sorted(set(out))
+    if "bind.f" not in txt:
+        print(f"KW_BIND_SOURCES_UNREADABLE {bind_out}: not on the hub or any gen host; bind-named sources are not checked", flush=True)
+    _BIND_NAMED_CACHE[bind_out] = (now, out)
+    return out
 
 
 # KW-FIX-35-RD 11-08 (COORD 09:4x RESTAGE-DEPS): 23 S81 rows restaged / generated on epyc6 failed kit_rtl with
@@ -2875,7 +2922,67 @@ def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
         return False
 
 
+def cfg_require_render(sp):
+    return sp.get("require_place_render", True) is not False
+
+
 HOLD_UNCHANGED = "no input change since this FAIL: redesign list, no P&R retry (OWNER 11-07)"
+WAIT_FORM = "WAIT-FORM: latest visual verdict BAD and the form fingerprint (type block, plan sha, kit recipe) is unchanged; releases when it changes (COORD 11-12)"
+WAIT_FORM_LOG = "kit_wave_wait_form.tsv"
+_GEOM_VERDICT_RE = re.compile(r"GEOM VERDICT \[GEOM-VIS-1 viewed\] (\S+)/(\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(BAD|ISSUES|OK)\b")
+_GEOM_CACHE = {"t": 0.0, "mtime": None, "v": {}}
+
+
+def geom_verdicts():
+    """{(die, item): (attempt, verdict)} = the LAST GEOM-VIS-1 viewed verdict line per type of lanes/GEOM-REVIEW.md (cached by mtime)"""
+    for p in (Path.home() / "coord" / "lanes" / "GEOM-REVIEW.md", Path.home() / "coord" / "GEOM-REVIEW.md"):
+        if p.exists():
+            break
+    else:
+        return {}
+    try:
+        mt = p.stat().st_mtime
+        if _GEOM_CACHE["mtime"] == (str(p), mt):
+            return _GEOM_CACHE["v"]
+        v = {}
+        for ln in p.read_text(errors="replace").splitlines():
+            m = _GEOM_VERDICT_RE.search(ln)
+            if m:
+                v[(m.group(1), m.group(2))] = (int(m.group(3)), m.group(4))
+        _GEOM_CACHE.update(mtime=(str(p), mt), v=v)
+        return v
+    except OSError:
+        return _GEOM_CACHE["v"]
+
+
+def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
+    """COORD 11-12 CONVERGENCE GATE (GEOM-VIS-1: 151 BAD of 249, re-runs of an unchanged form give an identical bad layout): True when
+    the type's latest viewed visual verdict is BAD at attempt N and the spec the next launch would build has the same fingerprint
+    (input_hash: type block / plan sha / kit recipe / src content) as attempt N's spec.json.  INFRA FAILs never held.  The row releases
+    by itself when any of those change."""
+    try:
+        v = geom_verdicts().get(({"qwen_kvsys": "qwen_kvsys", "qwen_compute": "qwen_compute"}.get(die, die), item))
+        if not v or v[1] != "BAD" or not rec:
+            return False
+        if str(rec.get("class") or "") == "INFRA":
+            return False
+        old_dir = Path(rec["dir"]).parent / f"a{v[0]}"
+        old = json.loads((old_dir / "spec.json").read_text())
+        cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
+                        kind=kind or rec.get("kind") or "type")
+        if not cand.get("src_overlay") or not old.get("src_overlay"):
+            old.pop("src_overlay", None); cand.pop("src_overlay", None)
+        d = cfg["dies"][die]
+        hold = input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
+        if hold:
+            try:
+                with open(Path.home() / "coord" / "autopilot" / WAIT_FORM_LOG, "a") as f:
+                    f.write(f"{time.strftime('%F %T')}\t{die}\t{item}\tverdict_a{v[0]}\tattempt{rec.get('attempt')}\n")
+            except OSError:
+                pass
+        return hold
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
 REDESIGN_FILE = "kit_wave_redesign.tsv"
 
 
@@ -3364,6 +3471,7 @@ def run_item(spec_path):
             print(f"KW_KIT_HOST {T}: sealed copy-back put the kit on {kh}, not the gen host {G}", flush=True)
 
         probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
+                 f"ls {q(K)}/run/layout_review/*.png {q(K)}/run/layout_review/*/*.png 2>/dev/null | head -1 | sed 's/^.*$/LAYOUT_PNG/'; "
                  f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
                  f"if [ -f {q(K)}/native_cell_count.json ]; then sed 's/^/NATIVE_CELL_COUNT /' {q(K)}/native_cell_count.json; fi; "
                  f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
@@ -3395,6 +3503,17 @@ def run_item(spec_path):
                     pass
         if rc or not odb:
             return fail("place", txt[-2000:] + "\n" + ptxt, f"{kh}:{K}")
+        if cfg_require_render(sp) and "LAYOUT_PNG" not in ptxt:
+            for _i in range(2):      # a spilled place copies its files back at the client's end: look again before failing
+                time.sleep(60)
+                _, _pt2 = run("place_render_probe", rem(f"ls {q(K)}/run/layout_review/*.png {q(K)}/run/layout_review/*/*.png 2>/dev/null | head -1 | sed 's/^.*$/LAYOUT_PNG/'"), idempotent=True)
+                if "LAYOUT_PNG" in _pt2:
+                    ptxt += "\nLAYOUT_PNG"
+                    break
+        if cfg_require_render(sp) and "LAYOUT_PNG" not in ptxt:
+            # COORD 11-12 (GEOM-VIS-1: 25 types had results and no renders): the place render (layout + density PNG) is a required step
+            return fail("place", "RENDER_MISSING: place finished (3_place.odb present) but run/layout_review has no PNG; "
+                        "the place render is required (visual review); relaunch renders it\n" + ptxt[-1500:], f"{kh}:{K}")
         if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
             return fail("cells", f"{res['cells']} cells", f"{kh}:{K}")
         olc = outline_cmd(K)
@@ -3473,6 +3592,28 @@ def run_item(spec_path):
 
     def place_async(K, prun, m, t):
         """launch (once per attempt: the descriptor is saved before systemd-run) and wait"""
+        if svc_file.exists():
+            # KW-FIX-45 11-12 (COORD "place exit 0 + FAIL"): a service of an EARLIER drive of this attempt dir that already
+            # ended with a terminal rc but whose placed kit is gone (cleanup, resume dir missing) is stale: place_wait would
+            # return its old KW_PLACE_RC=0 at once and after_place fail on the missing 3_place.odb.  Set it aside and launch fresh.
+            try:
+                _svc = json.loads(svc_file.read_text())
+                _lg = Path(_svc.get("log", ""))
+                _txt = _lg.read_text(errors="replace") if _lg.exists() else ""
+                _rcs = re.findall(r"(?m)^KW_PLACE_RC=(-?\d+)\s*$", _txt)
+                _act = subprocess.run(["systemctl", "--user", "is-active", _svc["unit"]], capture_output=True, text=True,
+                                      timeout=60).stdout.strip()
+                if _rcs and _act not in ("active", "activating", "reloading"):
+                    _kh = copy_back_host(_txt, G)
+                    _p = subprocess.run(remote_argv(_kh, hub, f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1"),
+                                        capture_output=True, text=True, timeout=120)
+                    if _p.returncode == 0 and not (_p.stdout or "").strip():
+                        print(f"KW_PLACE_STALE_SERVICE {_svc.get('unit')}: ended rc {_rcs[-1]} but {K} has no 3_place.odb; launching a fresh PLACE", flush=True)
+                        svc_file.replace(out / "place_service.stale.json")
+                        if _lg.exists():
+                            _lg.replace(_lg.with_name("place.stale.log"))
+            except (OSError, ValueError, KeyError, subprocess.TimeoutExpired):
+                pass
         if svc_file.exists():
             return place_wait(json.loads(svc_file.read_text()))
         if G in ("localhost", hub):                  # KW-FIX-45 11-12 hub guard: the kit's gen host is the hub
@@ -5317,11 +5458,76 @@ def infra_relaunch_due(cfg, rec):
             and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("event") == rec.get("event"))
 
 
+_VISUAL_RE = re.compile(r"GEOM VERDICT \[[^\]]*\] (\S+)/(\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(GOOD|OK|ISSUES-ACCEPT|BAD|ISSUES)\b")
+_VISUAL_CACHE = {"mtime": None, "v": {}}
+VISUAL_ACCEPT = ("GOOD", "OK", "ISSUES-ACCEPT")
+
+
+def visual_verdicts():
+    """{(die, item, attempt): verdict} of lanes/GEOM-REVIEW.md (the last line per row attempt wins), cached by mtime"""
+    for p in (Path.home() / "coord" / "lanes" / "GEOM-REVIEW.md", Path.home() / "coord" / "GEOM-REVIEW.md"):
+        if p.exists():
+            break
+    else:
+        return {}
+    try:
+        mt = (str(p), p.stat().st_mtime)
+        if _VISUAL_CACHE["mtime"] != mt:
+            v = {}
+            for ln in p.read_text(errors="replace").splitlines():
+                m = _VISUAL_RE.search(ln)
+                if m:
+                    v[(m.group(1), m.group(2), int(m.group(3)))] = m.group(4)
+            _VISUAL_CACHE.update(mtime=mt, v=v)
+    except OSError:
+        pass
+    return _VISUAL_CACHE["v"]
+
+
+def visual_hold(cfg, rec):
+    """COORD/OWNER 11-12 'stop repeating bad builds, manual visual placement and visual review before sign-off': a TYPE row
+    stops after place (place DB + renders kept, route resumes from it) until lanes/GEOM-REVIEW.md carries a verdict for that
+    attempt: GOOD / OK / ISSUES-ACCEPT release it; BAD sends it to WAIT-FORM (form_wait keeps the type from relaunching until its
+    form fingerprint changes); no verdict or ISSUES = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
+    if cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
+        return None
+    v = visual_verdicts().get((rec["die"], rec["item"], int(rec.get("attempt") or 0)))
+    if v in VISUAL_ACCEPT:
+        return None
+    if v == "BAD":
+        return "WAIT-FORM: visual verdict BAD for this attempt; the type relaunches when its form fingerprint changes"
+    return "WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt" + (f" (now {v})" if v else "")
+
+
+def visual_queue_publish(cfg, st):
+    """lanes/VISUAL-QUEUE.tsv = every WAIT-VISUAL / WAIT-FORM row (die type family attempt state render paths host), rewritten when it changes"""
+    rows = []
+    for rec in (st.get("items") or {}).values():
+        h = str(rec.get("route_hold") or "")
+        if rec.get("status") == "ROUTE-HELD" and h.startswith(("WAIT-VISUAL", "WAIT-FORM")):
+            k = rec.get("kit") or ""
+            rows.append("\t".join([rec["die"], rec["item"], kit_class(rec["die"], rec["item"]).split("|", 2)[2], str(rec.get("attempt")),
+                                   h.split(":")[0], f"{rec.get('kit_host') or rec.get('gen_host') or ''}:{k}/run/layout_review",
+                                   f"{rec.get('geom_dir') or ''}/auto_geom.png", str(rec.get("kit_host") or rec.get("gen_host") or "")]))
+    rows.sort()
+    body = "die\ttype\tfamily\tattempt\tstate\trender_dir\tauto_geom\thost\n" + "\n".join(rows) + ("\n" if rows else "")
+    p = Path.home() / "coord" / "lanes" / "VISUAL-QUEUE.tsv"
+    try:
+        if not p.exists() or p.read_text() != body:
+            p.write_text(body)
+            subprocess.run([str(Path.home() / "coord" / "bin" / "coord-commit.sh"), "KIT-WAVE VISUAL-QUEUE", "lanes/VISUAL-QUEUE.tsv"],
+                           capture_output=True, timeout=120, cwd=str(Path.home() / "coord"))
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return len(rows)
+
+
 def route_hold_reason(cfg, rec):
     """An optional die-owned hold on new ROUTE submissions, never on an admitted unit."""
     d = (cfg.get("dies") or {}).get(rec["die"]) or {}
-    return next((str(why) for pat, why in (d.get("route_hold_items") or {}).items()
-                 if why and fnmatch.fnmatchcase(rec["item"], pat)), None)
+    why = next((str(why) for pat, why in (d.get("route_hold_items") or {}).items()
+                if why and fnmatch.fnmatchcase(rec["item"], pat)), None)
+    return why or visual_hold(cfg, rec)
 
 
 # KW-FIX-36 11-08 (e): a kit generated from a composed source pins queue_src "a@s1+b@s2" (with or without spaces), which
@@ -5484,6 +5690,10 @@ def retry_enqueue(AP, cfg, st, notices):
             continue
         enqueue_pass(AP, cfg, st, rec, notices)
         n += 1
+    try:
+        visual_queue_publish(cfg, st)
+    except Exception as e:           # a publish problem never stops the wave
+        AP.log(f"KIT-WAVE VISUAL-QUEUE publish failed: {e}")
     return n
 
 
