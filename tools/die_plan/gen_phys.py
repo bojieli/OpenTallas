@@ -4958,6 +4958,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # station kits kept 2-27 max-slew pins on ~150 um single-driver M2/M3 segments the GRT estimate passed.
         cfg += [f"export OT_MAXWIRE_UM = {max_wire_um:g}"]
         shutil.copyfile(Path(__file__).with_name("grt_maxwire.tcl"), kd / "grt_maxwire.tcl")
+    # FT-HOP-M2-WIRE (GEN-CLASS-1 11-12, COORD plan (1)): every kit with ft slots gets a post-GRT repeater pitch on its
+    # ft-station hop nets only (ft_hop_maxwire.tcl; HEAD hd_spn_wshim_tx 120 sign-off slew pins = 200-um M2 hops).
+    # partition_types.<t>.ft_hop_maxwire_um overrides FT_HOP_MAXWIRE_UM (0 = off).  Buffers only, 0 cycles.
+    ftmw = t.get("ft_hop_maxwire_um", FT_HOP_MAXWIRE_UM)
+    if t.get("ft_slots") and ftmw:
+        cfg += [f"export OT_FT_MAXWIRE_UM = {float(ftmw):g}"]
+        shutil.copyfile(Path(__file__).with_name("ft_hop_maxwire.tcl"), kd / "ft_hop_maxwire.tcl")
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
@@ -6476,6 +6483,9 @@ def bound_parent_id_plan(raw, kit_rtl):
                 existing.setdefault(row["name"], row)
             target["id_straps"] = list(existing.values())
     return result
+
+
+FT_HOP_MAXWIRE_UM = 110.0   # FT-HOP-M2-WIRE: repeater pitch on ft-station hop nets (ft_hop_maxwire.tcl)
 
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
