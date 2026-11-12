@@ -43651,3 +43651,56 @@ vsN4 form A' build: running on epyc9 (past CTS). RESULT after sign-off.
     - cbn_q11__cl5cc92dfe y_o23 (depth 7, hop 475 -> 337): [79.37,215.21] [79.37,552.61] [79.37,890.0] [79.37,1227.39] [79.37,1564.79] [79.37,1902.18] [79.37,2239.58]
     - cbf_q11 y_o23 (depth 7, hop 484 -> 337): [70.73,206.57] [70.73,543.97] [70.73,881.36] [70.73,1218.75] [70.73,1556.15] [70.73,1893.54] [70.73,2230.94]
 - 2026-11-11 17:41 PST MERGED [ROOT-MERGE-59 -> KW-FIX-45, COORD] core GRT nonport hold claude/kw-fix-45-core-grt-nonport-1111@ef585c8b2ff1 (gen_core_kit_hbm --grt-nonport-hold, default off; test_grt_nonport_core.py, 7 tests with the pre-gpl test) -> main fc5cd3af6f17. hbm_arch_cores tests (54 files on main 65ef7507d251, 55 on the train): failure set IDENTICAL (1 on both). The REAL flag-off generation check the lane asked for PASSES: gen_core_kit_hbm_rw.py on the kshare core view ot_hbm_svc_vm_kshare_splitstrap__v8e478a@3d378bacc6c1 (KW-FIX-45's command, private overlay with tools/die_plan, hbm_arch_cores, common_flow and orfs_hold_mm from the same commit as each generator), main 65ef7507d251 vs main+branch, no flag: both rc 0, 90 files each, diff -r IDENTICAL (epyc7 /srv/opentallas-scratch2/claude/rm59/pgx5). Same caveat as before: both runs print 'generation provenance unqualified' (overlay is not a clean checkout), so this proves unchanged generator output, not provenance. Clean merge, union bad=0, HEAD == origin/main. Main now fc5cd3af6f17. STILL HELD: HEAD FREG event 1e6d71e1cc15 + cland-fregcheck (re-post with the two fixtures pending; I verify the delta from 1ece4481e79f is fixtures-only before landing, as COORD pre-approved).
+- 2026-11-11 17:41 PST READY [CPL-QC-NK-R0 -> DIE-QC-99, COORD, ROOT-MERGE-57] STAGE S2. Tag cpl-qc-nk-r0. DO_NOT_COUNT. QC NK quads: right-column NK/NL tiles turned MY -> R0 so their data pins face the middle channel. This is positions/orients only, EQ by construction.
+  BRANCH: claude/cpl-qc-nk-r0-1111@cb54a72e65faf931ae0df7db8566c2db9a8b5c17 (ls-remote read back).
+    - Built on CPL-QC-NK-OUT 36bd5fa24371 + origin/main 65ef7507d2, merge-clean.
+    - Adds physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s22_nkr0.json and cpl_qc_nk_r0_1111/ (make_s22.py, intent sheet + SVG, scorers, evidence). No tools/ change.
+  PLAN: sha256 587e484eda913392007b5ba8b67147e2bf0e7572558d70bc6a6e2ee75db86c5f = s21_nkout cce5cf63a7bd + 19 tiles in 14 types.
+    - Per tile only hard_cores[].orient MY -> R0 (same origin) and clock.taps[<inst>.ck] moved to the R0 ck pin (x +457.73).
+    - core_out_land_types is unchanged (the 14 types).
+    - 10 of the 19 old ck tap xy were already stale vs the MY pin (cbn_q11 x2, cbx x2, cbn_q00 x3, cbf_q01_s2). The new xy is the exact pin. Not changed: the stale cbn_q11 u_t23.ck tap xy (R0 site, core is MY).
+  (1) TRACK LEGALITY, CHECKED FIRST: R0 IS LEGAL.
+    - Every NK/NL pin is M4 (horizontal), at core x 0.096 (n_a/n_b/t_out/n_y) or x 457.824 (tap/ck/rst_n/tile_id).
+    - An MY <-> R0 flip mirrors x only. The pin y, the only M4 track coordinate, keeps its 0.012 mod 0.048 phase with track_offset [0, 0.012].
+    - MX/R180 would move y and are not used.
+    - Measured: check.py core_pins_off_track = 0 on s21 and s22 (451,119 pins, type frame + every MX/MY instance frame).
+  (2) INTENT (cbn_q11, from the bound RTL):
+    - na/nb_i22 (S) -> t22.
+    - L1 t22.t_out -D3-> t32.n_a.
+    - t32.t_out -D3+r8-> t32.n_b.
+    - L4 t32.n_y -D10-> t23.n_a.
+    - L2 t23.t_out -D3-> t33.n_a.
+    - t33 self.
+    - L3 t33.n_y -D3-> t23.n_b.
+    - t22/t23.n_y -> y_o22/23 (W).
+    - bc column (x 618-707) stations tap_d 508b -> t32/t33.tap.
+    - In s21 (t32/t33 MY), L1 crossed t22 AND t32 (one crossing forced onto a fabric hop: the -824 class). L2, L3 and L4 each crossed one macro.
+  (3) SELECTION RULE: flip a right-column MY tile only if no type face bus lands on it and the RTL NK-link macro-crossing score strictly improves.
+    - An all-right-column trial added 16 G0C core_faces WARNs, all on face-bus tiles (q00 t11 y_o11; q01 t12 y_o12/nb_i12), so those tiles are excluded.
+    - Flipped: cbn_q11 x2 + cbf_q11 t32/t33; cbx_q10 x2 t30(NL)/t31; cbf_q00 x2 + cbn_q00 x3 t10; cbn_q01 x3 t13; cbf_q01_s2 t13.
+    - Unchanged: cbf_q00_s2 (it would add 2 crossings) and cbf_q01 (no eligible tile).
+  BEFORE/AFTER. Columns: NK-link macro crossings (doubles) | RTL NK bit-mm | explorer bit-mm, max hop | route_supply p99, open_H, street_V.
+    - cbn_q11 x2: 5(1) -> 1(0) | 2372 -> 1431 | 4320 -> 3379, 1538 -> 1080 um | p99 1.741 = 1.741 (ring), open_H 0.484 -> 0.505, street_V 0.219 -> 0.242.
+    - cbf_q11: 5(1) -> 1(0) | 2407 -> 1466 | 4351 -> 3410, 1555 -> 1097 | p99 1.768 =, open_H 0.455 -> 0.467, street_V 0.222 -> 0.239.
+    - cbx_q10 x2: 3(0) -> 0 | 1821 -> 1115 | 2192 -> 1722 | p99 0.969/0.978 =, core_V 0.639 -> 0.613.
+    - q00 x5: 4(1) -> 4(0) | 2057-2061 = | explorer +235 (its core_conns model lacks L1, sees only the D10 link) | p99 =, open_H +0.02-0.03, need_free_M4 0.49 -> 0.33.
+    - cbn_q01 x3: 8(4) -> 6(1) | 3868 -> 3397 | 6542 -> 6307 | p99 1.128 -> 1.079.
+    - cbf_q01_s2: 4(0) -> 2(0) | 2909 -> 2438 | = | p99 2.06 =.
+    - route_supply p99 > 0.8 on every type is the pre-existing landing-ring region (ring_V/ring_H), unchanged by this delta. Core/street/open regions after are all <= 0.86, except cbf_q00_s2 (core_H 1.078, unchanged, not touched).
+  COST, ACCEPTED:
+    - Each flipped tile's tap 508b, ck, rst_n and tile_id edge moves to the 86-um E channel.
+    - The bc stations stay in the middle, so each flipped tile's tap_d crosses its own macro once. That is on an NK-INPUT hop (station reg -> NK pin), the hop class that fits one crossing (measured q -> t32.n_a over t32: +147..+248 TT).
+    - No crossing is left on a fabric->fabric hop in cbn_q11/cbf_q11/cbx.
+    - The core ck pin sits +458 um further from the glue tree (CTS absorbs it to the plan insertion).
+  GATES (epyc9 /srv/opentallas-scratch2/claude/cpl-qc-nk-r0, sidecar d26ec11a2a5f, tools = main 65ef7507d2 + the s21 schema key, check.py 343d0801494a, bind.py 1439e87bfa98):
+    - schema PASS 0 (s21 and s22). Pure main tools: 1 error on both plans = the pending s21 key budgets.core_out_land_types.
+    - G0: 265 = 265 errors, 296 = 296 WARN, 561 = 561 findings, 0 new.
+    - station_lint: 3 NONMONOTONE = 3.
+    - Strict bind s22: 0 errors, 377 partitions / 1921 crossings / 790393 bits (= s21).
+    - EQ: 14 type .sv files differ in reset-relay lines only (a +-1-9 relay re-site of the wavefront tree). bind_reset/bind_latency: depth K and every release cycle are equal; only core_resets pin/xy and relay counts change.
+    - bind_names, bind_latency_consumers and bind_core_resets are equal. RESET_ANCHOR re-picks are all within tol 405 (max 302.7 um, cbx).
+  Not run (optional): the cbn_q11 place+GRT probe. A kit with the new orients needs a gen_phys regen; recommend it as the S4 pilot.
+  STILL OPEN (not in this delta):
+    - cbn_q01 t12.t_out -> t02.n_b D3 still crosses both columns. Proposed form: left column t02/t03 -> MY, which takes crossings 6 -> 2 (separate S2).
+    - Kit rule (c) from CPL-QC-NK-OUT (r1..q stay at the source so the one L1 crossing is on the NK-input hop) is still needed.
+  PICTURES: branch cpl_qc_nk_r0_1111/intent_cbn_q11_nkr0.svg and evidence/explorer/<type>/type_<type>.png (before | after | supply before | after). Local copy: scratchpad/coreplace/cpl-qc-nk-r0/evidence/.
