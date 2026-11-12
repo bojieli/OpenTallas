@@ -1216,6 +1216,12 @@ SCHEMA = {
             # (100 % FIRM at the pin-facing band edge: sle_fw_v2 GRT-0116, 3 overflow edges in that top gcell row).
             cland_strip_rows={"type": "integer", "minimum": 1},
             cland_strip_rows_types={"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+            # LAND-RING-2 11-12 (opt-in, absent = unchanged kits): OT_CLAND_STRIP_DENS, the target FIRM ring flops per um2
+            # of the N/S-face ring_ff strip; landing_placement.tcl sets each ring's strip rows from its own density
+            # (clamped to the band depth).  cland_strip_density = plan-wide; _types = {type or base: target}, which wins;
+            # 0 opts a type out.  1.0 = the measured routable form (rows-1 strips are ~2.6 and jam GRT).
+            cland_strip_density={"type": "number", "minimum": 0},
+            cland_strip_density_types={"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
             # DIE-QC-97 11-10 opt-in (absent = unchanged plans): clock_landing_plan face-home re-sites these types' ring
             # bands that sit > 50 um from their own pin face or off their pin window (rehome_far_bands)
             cland_face_home_types={"type": "array", "uniqueItems": True, "items": _name},
