@@ -31053,6 +31053,11 @@
     ],
     "ot_hbm_hc_bank128_pair_core": [
      {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3cee1eada0f6/ot_hbm_hc_bank128_pair_core",
+      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
+     },
+     {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/die-hbm-97/view_detail/ot_hbm_hc_bank128_pair_core",
       "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 detail_pg_layer M6 OBS (DRT-0073 clk access, same signed ODB)",
@@ -31078,11 +31083,6 @@
       "detailed_receipt": "detail_receipt.json",
       "detail_bloat_factor": 1,
       "detail_pg_layer": true
-     },
-     {
-      "host": "epyc2",
-      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/3cee1eada0f6/ot_hbm_hc_bank128_pair_core",
-      "job": "COUNTED ot_hbm_hc_bank128_pair_core#250.56x267.84/10ac9d744407ff50 epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/b128_e1_resign_dq/signoff/signoff.json (KW-FIX-32 export_view)"
      },
      {
       "host": "epyc4",
