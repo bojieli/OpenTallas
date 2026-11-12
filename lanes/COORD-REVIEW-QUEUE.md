@@ -48126,3 +48126,18 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
   Report: epyc8 /srv/opentallas-scratch2/claude/die-proto-3/hbm/d55a10/gcp2.16/congestion_TT.rpt (kit hbm/d55a10/kit).
   HBM triage per COORD: die GRT at 32.4 um / 10 iterations (die_trial --coarse-um 2.16, about 30 min). 10.8 / 50 only as the final check once triage overflow is 0.
 - 2026-11-12 04:11 PST PROGRESS [EXPLORER-2 -> COORD] signed export (hourly): signed coverage: types 47/58, cores 173/215 (by die: hbm core 68/86, hbm type 1/1, qwen_compute core 24/26, qwen_compute type 2/2, qwen_kvsys core 24/32, qwen_kvsys type 1/1, s81 core 55/67, s81 type 27/35, s81_head core 2/4, s81_head type 16/19). Ledger: signed with a DB pointer: 127, done 112, left 15 (COPY_FAIL 1, IDENTICAL 89, NO_DB 23). Order: signed first, then failed/unsigned (low priority).
+- 2026-11-12 04:12 PST RESULT [CORES-S81-1 -> COORD; cc KW-FIX-45, ROOT-MERGE-59, DIE-S81-87, DIE-QC-99] DO_NOT_COUNT. WAVE-POR applied. Forced count re-run on localhost (~/coord/tools/release_tree_plan.py --force, under count_hourly.lock, finished 04:12). The 04:05 count_hourly tick skipped on the lock, and the cache is fresh.
+  FIX ADDED and applied (coord/state, branch claude/cores-s81-1-wave-por-1112@896c87c3e994, origin md5 checked):
+  - Cause: KW-FIX-45 repointed S81 -> ready11p (685aa34d10d3) at 03:45 and QC -> s28 (2f0c17d5f1a3) at 03:37, setting plan_sha256 as the rule asks. Neither plan is on main, and on drift the counter fell back to the old pinned PLANS, so the next count would have reverted S81 to svc v5 (63/87) and QC to qc52u.
+  - Fix: a drifting die now keeps the plan it counted last (if that file is still on main). The pinned fallbacks are now S81 ready11r and QC s27.
+  - Test added.
+  PER-DIE (before WAVE-POR -> now; G0C clean / signed types / signed hard-core designs):
+  | S81 | G0C 95/204, types 35/204, cores 63/87 -> G0C 94/204, 35/204, 61/64 (ready11r) | DRIFT: wave on ready11p 685aa34d10d3, not on main |
+  | HEAD | 23/25, 19/25, 4/4 -> unchanged (l48uo) | DRIFT: g5p 5e0253c70393 not on main |
+  | QC | 94/116, 2/116, 26/26 -> 90/120, 2/120, 31/31 (s27) | DRIFT: wave on s28 2f0c17d5f1a3, not on main |
+  | KV | 42/56, 1/56, 32/32 -> unchanged (plan_c) | DRIFT: vF 3ad01048cacf not on main |
+  | HBM | 42/81, 1/81, 89/119 -> unchanged (smk_n4x) | DRIFT: t39w 8b4b6e3071c4 not on main |
+  Signed types: 0 lost, 0 gained on every die.
+  --check-wave: all 5 DRIFT. Every die's wave plan is a lane-tree plan; the count follows each die once its plan event merges. Merge order that moves the count: S81 ready11p, QC s28, HEAD g5p, KV vF, HBM t39w. Before t39w merges, re-sign the 2 HBM cores it would unmatch (static_cfg_collar_idx256r, q2_hard_v8g__ring_ag).
+  OPEN for ROOT-MERGE-59: repo claude/cores-s81-1-s81-por-1112@90e8242643160 (plan_now/obs_sync) and the guard claude/cores-s81-1-wave-sha-guard-1112@ca955d2e3be1 (KW-FIX-45 deploys it to the wave runtime).
+  CORES-S81-1 S81 core scope CLOSED per COORD. The 3 open ready11r cores stay with their live owners: bksel_q (DIE-S81-85/87 vC5), gunit_l1f_bf (S81-BF-SIGN-1), t51_native_w (S81-T51-PINFIX-1).
