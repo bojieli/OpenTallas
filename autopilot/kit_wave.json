@@ -19646,7 +19646,12 @@
     "hd_lep0N@14",
     "hd_serdes@12",
     "hd_host@12",
-    "hd_host_w@3"
+    "hd_host_w@3",
+    "hd_st_n4@4",
+    "hd_st_n4@11",
+    "hd_host_e@2",
+    "hd_host_e@3",
+    "hd_spn_end@10"
    ],
    "pilot_max": 12,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -19761,7 +19766,10 @@
     "hd_lep0N@14": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
     "hd_serdes@12": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
     "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
-    "hd_host_w@3": "REDESIGN: HEAD FREG plan l48hp1_head_freg_1111 (main 58a264ab1ee1; COORD via HEAD-94 release 19:0x, hd_host_e/hd_st_n4/hd_mesh launched on it at 19:09)"
+    "hd_host_w@3": "REDESIGN: HEAD FREG plan l48hp1_head_freg_1111 (main 58a264ab1ee1; COORD via HEAD-94 release 19:0x, hd_host_e/hd_st_n4/hd_mesh launched on it at 19:09)",
+    "hd_spn@2": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)",
+    "hd_spn_end@2": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)",
+    "hd_spn_end@10": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)"
    },
    "gen_hosts": [
     "epyc9",
