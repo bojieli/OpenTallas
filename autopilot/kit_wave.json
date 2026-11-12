@@ -750,6 +750,7 @@
     "epyc9"
    ],
    "gen_hosts": [
+    "epyc7",
     "epyc8",
     "epyc9"
    ],
@@ -44133,5 +44134,5 @@
  "note_wb1": "WAVE-BALANCE-1 11-12 00:07 COORD approved c707e5f641a1: epyc8 added to gen_hosts of qwen_compute/hbm/s81_head (src staged, probe whole), gen_overflow_hosts ['epyc8'], wave_balance.enabled (waiter migration for KIT-WAVE autopilot jobs), submit guard gen_waiter_cap 20 default. Revert: gen_hosts <- gen_hosts_prev_wb1 per die, delete gen_overflow_hosts / wave_balance (or enabled false).",
  "restage_max_per_tick_prev_wb1": 30,
  "restage_min_wait_s_prev_wb1": 1800,
- "note_wb1b": "WAVE-BALANCE-1 11-12 00:48 COORD: epyc7 FIRST in gen_hosts of qwen_compute (src verified by the SRC probe: whole) and in gen_overflow_hosts; restage 8 per tick, min wait 300 s so unstarted worker waiters on epyc8/epyc9 move to epyc7. Revert: restage_*_prev_wb1, gen_hosts_prev_wb1."
+ "note_wb1b": "WAVE-BALANCE-1 11-12 00:57 COORD: epyc7 FIRST in gen_hosts of s81,qwen_kvsys (src verified by the SRC probe: whole) and in gen_overflow_hosts; restage 8 per tick, min wait 300 s so unstarted worker waiters on epyc8/epyc9 move to epyc7. Revert: restage_*_prev_wb1, gen_hosts_prev_wb1."
 }
