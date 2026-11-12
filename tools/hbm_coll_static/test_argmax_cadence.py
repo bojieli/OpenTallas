@@ -10,8 +10,8 @@ import parent_timing as PT  # noqa: E402
 LAYOUT = json.loads(A.LAYOUT.read_text())['fields']
 
 
-def compile_edges(vm_rt, P, cadence, rows=256):
-    A.set_rows(rows); A.set_npt(3); A.START_O = 0; A.set_arg_pr_source(False)
+def compile_edges(vm_rt, P, cadence, rows=256, start_reg=False, pr=False):
+    A.set_rows(rows); A.set_npt(3); A.START_O = -1 if start_reg else 0; A.set_arg_pr_source(pr)
     A.set_cadence(cadence); A.set_vm_rt(vm_rt)
     words, meta, info = A.compile_program(0, P)
     # expand the loop programme with the issuer counters (reuse unroll's walk) into the executed row stream
@@ -34,14 +34,16 @@ def get(w, k):
     return (w >> f['lsb']) & ((1 << f['width']) - 1)
 
 
+@pytest.mark.parametrize('start_reg,pr', [(False, False), (True, False), (False, True), (True, True)])
 @pytest.mark.parametrize('vm_rt', [0, 3, 81])
-def test_c2_edge_chain(vm_rt):
+def test_c2_edge_chain(vm_rt, start_reg, pr):
     if vm_rt % 2 == 0:
         with pytest.raises(SystemExit, match='odd fixed latency at C=2'):
-            compile_edges(vm_rt, 4, 2)
+            compile_edges(vm_rt, 4, 2, start_reg=start_reg, pr=pr)
+        A.START_O = 0; A.set_arg_pr_source(False)
         return
-    words, meta, info, rowsx = compile_edges(vm_rt, 4, 2)
-    par = PT.constants('hard_v8x_iss2e')['issue_pad_fields']
+    words, meta, info, rowsx = compile_edges(vm_rt, 4, 2, start_reg=start_reg, pr=pr)
+    par = PT.iss2e_variant(start_reg, pr)['issue_pad_fields']
     ev = {}                                   # name -> list of (edge, row index, bitvalue) ; edge = 2*row + pad parity
     for r, (pc, it) in enumerate(rowsx):
         w = words[pc]
@@ -56,6 +58,7 @@ def test_c2_edge_chain(vm_rt):
         if (ss >> 11) & 0xf: ev.setdefault('sink_vm', []).append(2 * r + par['sink_vm'])
         if (ss >> 3) & 1: ev.setdefault('sink_del', []).append(2 * r + par['sink_delivery'])
         if get(w, 'capture_arg'): ev.setdefault('carg', []).append(2 * r + par['capture_arg'])
+        if get(w, 'del_obase'): ev.setdefault('obase', []).append(2 * r + par['del_obase'])
     P = 4
     assert len(ev['start']) == P and len(ev['publish']) == P and len(ev['in']) == 24 * P
     assert len(ev['vm_rq']) == 24 * P and len(ev['capture']) == 24 * P
@@ -65,12 +68,13 @@ def test_c2_edge_chain(vm_rt):
     for a, b in zip(ev['sink_vm'], ev['in']): assert b - a == 2
     for p in range(P):
         ins = ev['in'][24 * p:24 * p + 24]
-        assert ins[0] - ev['start'][p] == 1                    # start one edge before the first input (v8)
+        assert ins[0] - ev['start'][p] == (2 if start_reg else 1)   # start 1 edge (tp192 start_reg: 2) before the first input
         assert all(y - x == 2 for x, y in zip(ins, ins[1:]))
         assert ev['flush'][p] - ins[-1] == 1                   # flush = last input + 1 (v8)
         assert ev['publish'][p] - ev['flush'][p] == 6          # fixed amerge flush + 6
-        assert ev['carg'][p] - ev['publish'][p] == 1 and ev['sink_del'][p] - ev['publish'][p] == 2
-        if p: assert ev['start'][p] - ev['publish'][p - 1] >= 2   # unit faults if start arrives while active
+        assert ev['carg'][p] - ev['publish'][p] == 1 + pr and ev['sink_del'][p] - ev['publish'][p] == 2 + pr
+        assert ev['obase'][p] - ev['publish'][p] == 3 + pr
+        if p: assert ev['start'][p] + start_reg - ev['publish'][p - 1] >= 1   # unit faults if start (start_reg: registered, +1) arrives while active
 
 
 def test_c1_off_is_identical_to_the_historical_compiler():
@@ -99,13 +103,19 @@ def test_c1_off_is_identical_to_the_historical_compiler():
 
 
 def test_pad_mask_literal_matches_taps():
-    lit = PT.pad_mask_literal(PT.constants('hard_v8x_iss2e'))
-    assert lit.startswith("1536'h") and lit.endswith('3c0000021e0') and int(lit[6:], 16) >> 705 == 0b111
+    lit = PT.pad_mask_literal(PT.iss2e_variant())
+    assert lit.startswith("1536'h") and lit.endswith('3c0000021e0') and (int(lit[6:], 16) >> 705) & 0b111 == 0b111
+    import iss2e_pad
+    assert iss2e_pad.hold_literal(iss2e_pad.arg_hold_bits()).endswith('0')
+    assert not set(iss2e_pad.arg_hold_bits()) & set(PT.iss2e_variant()['issue_pad_bits'])
 
 
-def test_c2_rejects_start_reg_and_pr_source():
-    A.set_arg_pr_source(True)
-    try:
-        with pytest.raises(SystemExit): A.set_cadence(2)
-    finally:
-        A.set_arg_pr_source(False); A.set_cadence(1)
+def test_variant_masks_have_no_parity_conflict_with_themselves():
+    base = PT.iss2e_variant(False, False)
+    assert 705 in base['issue_pad_bits'] and 712 not in base['issue_pad_bits']
+    sr = PT.iss2e_variant(True, False)
+    assert 705 not in sr['issue_pad_bits'] and 13 in sr['issue_pad_bits']
+    pr = PT.iss2e_variant(False, True)
+    assert 13 not in pr['issue_pad_bits'] and 712 in pr['issue_pad_bits'] and 874 in pr['issue_pad_bits']
+    both = PT.iss2e_variant(True, True)
+    assert 705 not in both['issue_pad_bits'] and 712 in both['issue_pad_bits']

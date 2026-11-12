@@ -34,6 +34,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 TB = ROOT / "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_hard_v5.sv"
 
 # host_v4 = the values every existing V4 receipt was compiled with (tools/uarch_model_hcoll_program_join.py).
@@ -82,6 +83,23 @@ ISS2E_PAD_FIELDS = dict(vm_rq=0, capture_slot=1, sink_vm=0, in_slot=0, start=1, 
 HARD_V8X_ISS2E = dict(HARD_V5, parent="hard_v8x_iss2e", issue_row_cadence_edges=2,
                       issue_pad_bits=list(ISS2E_PAD_BITS), issue_pad_fields=dict(ISS2E_PAD_FIELDS))
 PARENTS = {"host_v4": HOST_V4, "hard_v5": HARD_V5, "hard_v8x_iss2e": HARD_V8X_ISS2E}
+
+
+def iss2e_variant(start_reg: bool = False, pr_source: bool = False) -> dict:
+    """pad bits / per-field parity of hard_v8x_iss2e for the ARG variant the parent carries (all edges relative to in_slot, parity 0):
+      base (ot_hgi_coll_argmax_static):  start in-1 (1), capture_arg publish+1 (0), delivery sink publish+2 (1), del_obase publish+3 (0)
+      start_reg (argmax_m_tp192): start in-2 -> parity 0: bit 705 leaves the mask
+      pr_source (_pr, publish +1 edge): capture_arg publish+2 (1), delivery sink +3 (0), del_obase +4 (1)
+    The mask is ONE define per parent build, so a parent that runs several programmes needs the union of their bits and no
+    parity conflicts (row_gather_rows reports its own bits)."""
+    f = dict(ISS2E_PAD_FIELDS)
+    if start_reg:
+        f["start"] = 0
+    if pr_source:
+        f.update(capture_arg=1, sink_delivery=0, del_obase=1)
+    import iss2e_pad
+    bits = [b for b, p in iss2e_pad.arg_bit_parity(f).items() if p]
+    return dict(HARD_V8X_ISS2E, issue_pad_bits=sorted(bits), issue_pad_fields=f, issue_hold_bits=iss2e_pad.arg_hold_bits())
 
 
 def pad_mask_literal(c: dict) -> str:

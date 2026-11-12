@@ -32,6 +32,9 @@ import hashlib
 import json
 import math
 import pathlib
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LAYOUT = ROOT / 'rtl/hbm_accel/generic/collective/p2p/static_uop_layout_v4.json'
@@ -73,6 +76,40 @@ def stages(npt, wire, vm_rt=None):
     return st
 
 
+CADENCE = 1                                          # --issue-cadence: 2 = ISS2E issuer rows (one row every 2nd edge), q3 only
+ARG_VARIANT = (False, False)                         # (start_reg, pr_source) of the ARGMAX programme sharing the pad mask
+
+
+def stages_rows(npt, wire, vm_rt=None):
+    """cadence 2: stage ROW offsets.  Every v8 relative edge is kept; stage s sits at edge e_s - e_REQV (the VM request, parity 0
+    like the ARGMAX vm_rq) and the issuer pad delays the fields whose parity is 1 (iss2e_pad.gather_bit_parity): the row is
+    (edge - parity) / 2.  One flit per row = one flit per 2 edges."""
+    if npt != 3:
+        raise SystemExit('ROW_GATHER_ROWS_COMPILE FAIL --issue-cadence 2 is defined for the q3 (NLINK 3) parent only')
+    import iss2e_pad
+    e = stages(npt, wire, vm_rt)
+    _, par = iss2e_pad.gather_bit_parity(e, npt)
+    ref = e['REQV']
+    rows = {k: (v - ref - par[k]) // 2 for k, v in e.items()}
+    base = min(rows.values())
+    return {k: v - base for k, v in rows.items()}, par, e
+
+
+def pad_mask(npt, wire, vm_rt):
+    """union pad mask of this gather programme and the ARGMAX variant the parent also runs; raises on a bit conflict"""
+    import iss2e_pad, argmax_rows
+    sr, pr = ARG_VARIANT
+    save = (argmax_rows.START_O, argmax_rows.ARG_SOURCE_EXTRA)
+    try:
+        argmax_rows.START_O, argmax_rows.ARG_SOURCE_EXTRA = (-1 if sr else 0), int(pr)
+        fp = argmax_rows.field_parity(vm_rt)
+    finally:
+        argmax_rows.START_O, argmax_rows.ARG_SOURCE_EXTRA = save
+    mg, par = iss2e_pad.gather_bit_parity(stages(npt, wire, vm_rt), npt)
+    u = iss2e_pad.union(('ARGMAX', iss2e_pad.arg_bit_parity(fp, npt)), ('ROW_GATHER', mg))
+    return u, par
+
+
 def gidx(qid, k):
     """die-global rail number of quadrant qid rail k (q3 rails 0..2, q2 quadrants 1..3 rails 0..1)."""
     return k if qid == 0 else 3 + 2 * (qid - 1) + k
@@ -90,7 +127,7 @@ def compile_program(die, qid, P, R, wire, mutant=None):
     fields = json.loads(LAYOUT.read_text())['fields']
     npt = 3 if qid == 0 else 2
     N = P * R
-    st = stages(npt, wire)
+    st = stages_rows(npt, wire)[0] if CADENCE == 2 else stages(npt, wire)
     DEL = st['DADDR'] + 1
     last = DEL + N - 1                               # last delivery-visible instruction cycle
     halt = last + 1
@@ -264,17 +301,35 @@ def main():
     ap.add_argument('--R', type=int, default=R_PROD)
     ap.add_argument('--wire', type=int, default=453)
     ap.add_argument('--mutant', choices=('row_stride', 'link_step'))
+    ap.add_argument('--issue-cadence', type=int, default=1, choices=(1, 2), help='2 = ISS2E issuer rows (q3 only; needs the pad mask in '
+                    'the manifest); default 1 = unchanged')
+    ap.add_argument('--arg-start-reg', action='store_true', help='C2 mask check: the parent also runs ARGMAX with --start-reg')
+    ap.add_argument('--arg-pr-source', action='store_true', help='C2 mask check: the parent also runs ARGMAX with --arg-pr-source')
     ap.add_argument('--vm-rt', type=int, default=0, help='COLL parent VM_RT (extra VM read edges beyond P+10 capture)')
     a = ap.parse_args()
-    global VM_RT
+    global VM_RT, CADENCE, ARG_VARIANT
     VM_RT = a.vm_rt
+    CADENCE = a.issue_cadence
+    ARG_VARIANT = (a.arg_start_reg, a.arg_pr_source)
+    if CADENCE == 2:
+        try:
+            union_mask, par = pad_mask(3, a.wire, a.vm_rt)
+        except ValueError as ex:
+            raise SystemExit(f'ROW_GATHER_ROWS_COMPILE FAIL odd fixed latency / pad conflict at C=2: {ex}')
     a.out.mkdir(parents=True, exist_ok=True)
     man = dict(schema='hcoll.rows.row_gather.v1', P=a.P, R=a.R, wire=a.wire, mutant=a.mutant, vm_rt=a.vm_rt,
                shape=dict(G=G, max_owned_rows=M_OWNED, row_bytes=ROW_BYTES, rank_flits=RANK_FLITS, flits_per_position=FLITS_POS, rails_die=RAILS_DIE,
                           R_production=R_PROD, flit_bytes=FLIT_B, obase=OBASE, position_stride=RS),
                layout_sha256=hashlib.sha256(LAYOUT.read_bytes()).hexdigest(), parents={})
+    if CADENCE == 2:
+        import iss2e_pad
+        import parent_timing
+        man.update(issue_cadence=2, parent='hard_v8x_iss2e', issue_pad_mask=iss2e_pad.literal(union_mask),
+                   issue_hold_mask=iss2e_pad.hold_literal(parent_timing.iss2e_variant(*ARG_VARIANT)['issue_hold_bits']),
+                   stage_parity=par, arg_variant=dict(start_reg=a.arg_start_reg, pr_source=a.arg_pr_source),
+                   q2_programme='not compiled at C=2 (q3 only)')
     for die in range(2):
-        for qid in (0, 1):
+        for qid in ((0,) if CADENCE == 2 else (0, 1)):
             words, meta, plan, info = compile_program(die, qid, a.P, a.R, a.wire, a.mutant)
             name = f'd{die}q{qid}'
             (a.out / f'{name}.rows.hex').write_text(''.join(f'{w:0384x}\n' for w in words))
@@ -283,7 +338,7 @@ def main():
     (a.out / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
     p = man['parents']
     print(f"ROW_GATHER_ROWS_COMPILE PASS P={a.P} R={a.R} wire={a.wire} rows q3={p['d0q0']['rows']} "
-          f"q2={p['d0q1']['rows']} last_delivery_instr={p['d0q0']['last_delivery']} halt={p['d0q0']['halt']}")
+          f"q2={p['d0q1']['rows'] if 'd0q1' in p else 'n/a'} last_delivery_instr={p['d0q0']['last_delivery']} halt={p['d0q0']['halt']}")
 
 
 if __name__ == '__main__':

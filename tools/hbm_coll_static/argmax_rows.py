@@ -77,7 +77,9 @@ def set_vm_rt(v):
     else:
         parity_check(v)
         LEAD = (v + 13) // 2 - 1                                 # VM request row -> start row (in_slot row = start + 1)
-        T = dict(cap=1, snk=0, flush=M, pub=M + 3, carg=M + 4, dsnk=M + 4, obase=M + 5)
+        # _pr publication (+1 edge) moves capture_arg publish+1 -> +2, delivery sink +2 -> +3, obase +3 -> +4: with the row
+        # grid that is the same carg row and one row later delivery sink; obase stays at M+5 (its pad parity flips)
+        T = dict(cap=1, snk=0, flush=M, pub=M + 3, carg=M + 4, dsnk=M + 4 + ARG_SOURCE_EXTRA, obase=M + 5)
     LIFE = T['obase'] + 1                                        # last field row + 1
     W = LEAD + LIFE
     PEEL = W - II
@@ -95,18 +97,16 @@ def set_cadence(c):
     global CADENCE, II
     if c not in (1, 2):
         raise SystemExit('ARGMAX_ROWS_COMPILE FAIL --issue-cadence must be 1 or 2')
-    if c == 2:
-        if ARG_SOURCE_EXTRA or START_O:
-            raise SystemExit('ARGMAX_ROWS_COMPILE FAIL --issue-cadence 2 does not support --start-reg / --arg-pr-source '
-                             '(their 1-edge shifts are odd and have no pad-mask parity yet)')
     CADENCE, II = c, (II1 if c == 1 else II2)
 
 
-def field_parity(vm_rt):
+def field_parity(vm_rt, start_reg=None, pr=None):
     """edge parity (0 = issue-row edge, 1 = row edge + 1) every cadence-2 field needs, relative to the in_slot reservation
     edges (parity 0 by choice).  Derived from the v8 relative edges, see argmax_rows pos_fields."""
-    return dict(vm_rq=(13 + vm_rt) % 2, capture_slot=1, sink_vm=0, in_slot=0, start=1, flush=1, publish=1,
-                capture_arg=0, sink_delivery=1, del_obase=0)
+    start_reg = bool(START_O) if start_reg is None else start_reg
+    pr = bool(ARG_SOURCE_EXTRA) if pr is None else pr
+    return dict(vm_rq=(13 + vm_rt) % 2, capture_slot=1, sink_vm=0, in_slot=0, start=0 if start_reg else 1, flush=1,
+                publish=1, capture_arg=1 if pr else 0, sink_delivery=0 if pr else 1, del_obase=1 if pr else 0)
 
 
 def parity_check(vm_rt):
@@ -114,7 +114,7 @@ def parity_check(vm_rt):
     sys.path.insert(0, str(ROOT / 'tools/hbm_coll_static'))
     import parent_timing as PT
     need = field_parity(vm_rt)
-    have = PT.constants('hard_v8x_iss2e')['issue_pad_fields']        # field -> parity the issuer pad mask provides
+    have = PT.iss2e_variant(bool(START_O), bool(ARG_SOURCE_EXTRA))['issue_pad_fields']        # field -> parity the issuer pad mask provides
     bad = [f'{k}: needs parity {v}, issuer pad mask provides {have[k]}' for k, v in need.items() if have[k] != v]
     if bad:
         raise SystemExit('ARGMAX_ROWS_COMPILE FAIL odd fixed latency at C=2 (VM_RT %d): %s' % (vm_rt, '; '.join(bad)))
@@ -300,6 +300,13 @@ def compile_program(die, P, mutant=None):
     meta.append(enc_meta(len(meta), len(meta), halt=1))
     if len(words) > CAP_ROWS:
         raise ValueError('programme capacity')
+    if CADENCE == 2:                                             # every row with a padded action bit carries the level bits
+        import iss2e_pad
+        padbits = {b for b, p in iss2e_pad.arg_bit_parity(field_parity(VM_RT)).items() if p}
+        hold = iss2e_pad.arg_hold_bits()
+        for r, w in enumerate(words):
+            if any(w >> b & 1 for b in padbits) and not all(w >> b & 1 for b in hold[:1]):
+                raise ValueError(f'row {r}: padded action bits without ARG mode level bit 47 (HOLD mask would repeat nothing)')
     # independent unroll against the absolute schedule of all P positions
     if mutant is None:
         unroll(words, meta, fields, lambda c: fields_at(c, allp, rank_pub), halt)
@@ -374,9 +381,11 @@ def main():
         man.update(arg_source_publication_extra=1, source_contract='ot_hgi_coll_argmax_m_tp192_pr', source_adoption='compiler_only_actual_native_caller_pending')
     if a.issue_cadence == 2:
         import parent_timing as PT
-        c2 = PT.constants('hard_v8x_iss2e')
+        c2 = PT.iss2e_variant(bool(a.start_reg), bool(a.arg_pr_source))
+        import iss2e_pad
         man.update(issue_cadence=2, parent='hard_v8x_iss2e', II_rows=II, issue_pad_mask=PT.pad_mask_literal(c2),
-                   issue_pad_fields=c2['issue_pad_fields'], field_parity=field_parity(a.vm_rt))
+                   issue_hold_mask=iss2e_pad.hold_literal(c2['issue_hold_bits']),
+                   issue_pad_fields=c2['issue_pad_fields'], field_parity=field_parity(a.vm_rt, a.start_reg, a.arg_pr_source))
     halt_only = (1 << 44)
     for die in range(2):
         words, meta, info = compile_program(die, a.P, a.mutant)
