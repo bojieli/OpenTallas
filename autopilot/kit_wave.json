@@ -340,7 +340,12 @@
     "kv3_phy@12",
     "kv3_phy_v1@6",
     "kv3_pc_v3@10",
-    "kv3_sys_SD_v1@21"
+    "kv3_sys_SD_v1@21",
+    "kv3_io_cor@9",
+    "kv3_pc__cl5a95b461@21",
+    "kv3_pc_v1__cl23f6a148@20",
+    "kv3_pc_v1__cl4ea58a5c@16",
+    "kv3_pc_v1__cl7f648944@21"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -4171,15 +4176,15 @@
     "clock": "PASS",
     "evidence": "DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r11p/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch2/claude/s87bind/bsrc4_r12ng/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r11p",
-   "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+   "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc4_r12ng",
+   "src_sha": "590cbd5fd0",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r11p2",
-    "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87p2.json",
-    "note": "KW-FIX-45 11-12 DIE-S81-87 ready11p BIND CLEAN (strict rc 0, n_errors 0, plan 685aa34d10d3, = ready11r + col_h9/h10 r0 param split: 70 clones of 11 types); kit source bsrc3_r11p + svc closure overlay 4e1a842257cc"
+    "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r12ng",
+    "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87r12.json",
+    "note": "KW-FIX-46 11-12 COORD 06:3x (c): S81 wave on ready12 = ready12ng (DIE-S81-87 3d254c4a7973, strict bind rc 0, bind_report 42dc708ab529, plan 77cad171c6ee, asbuilt 28a2355ef1cb); tree bsrc4_r12ng = main 590cbd5fd0 + dead-input proof 341ccaa06f67 + landing ec8fcf58edc2 + psplit sidecar + svc closure 4e1a842257cc; revert = dies.s81.prev_kw46_r11p"
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -4187,7 +4192,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/s87bind/bsrc3_main_p/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit2.json"
+    "/srv/opentallas-scratch2/claude/s87bind/bsrc4_main/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json"
    ],
    "owner_lane": "S81 die owner (DIE-S81-87)",
    "lane": "KIT-WAVE-3",
@@ -5740,9 +5745,23 @@
     "eng__t1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST: per-item plan plan_h2_2249_c839 (CORE-CTAP-WIDE clock.taps/core_taps) + die bind out_r11r = KIT_TOPOLOGY_BIND_STALE; ready11r carries different eng__t1 taps, so dropping the override would revert the form. Lift when DIE-S81-87 folds c839 taps into the S81 event (with its bind) or names a matching bind.",
     "col_h*": "COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
     "ot_s81sl_leaf__*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): S81 leaf class on the old form; releases with the ready12b leaf floor",
-    "ot_s81sl_kv_leaf__*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): S81 kv leaf class on the old form; releases with the ready12b leaf floor"
+    "ot_s81sl_kv_leaf__*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): S81 kv leaf class on the old form; releases with the ready12b leaf floor",
+    "ot_s81sl_leaf__t1": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t1__*": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t8": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t8__*": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t12": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t12__*": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t55": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t55__*": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t58": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t58__*": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t72": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t72__*": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t75": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)",
+    "ot_s81sl_leaf__t75__*": "X-TIER-OTC type: not on ready12; folds into ready12b (COORD 06:3x (c), DIE-S81-88)"
    },
-   "queue_src": "main@7b84010b1c6e",
+   "queue_src": "main@590cbd5fd0",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
    "retry_fix": {
@@ -19970,7 +19989,7 @@
     "serdes__t2": "copy",
     "serdes__t15__cla2127225": "copy"
    },
-   "plan_sha256": "685aa34d10d3c164789822a633e5b80ca75f0125f8c07653ad5559889c74abde",
+   "plan_sha256": "77cad171c6ee5eb5ec87e805dd4fcc841fecf15bf50a5446119f1e47f39a908c",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
@@ -20004,7 +20023,28 @@
     "100",
     "--clock-landing",
     "/srv/opentallas-scratch2/claude/s87bind/base28/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
-   ]
+   ],
+   "prev_kw46_r11p": {
+    "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r11p",
+    "plan": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r11p/physical/die_plan/s81/plan_h2_2249.json",
+    "plan_sha256": "685aa34d10d3c164789822a633e5b80ca75f0125f8c07653ad5559889c74abde",
+    "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+    "queue_src": "main@7b84010b1c6e",
+    "kit_rtl": {
+     "mode": "bind",
+     "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r11p2",
+     "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87p2.json",
+     "note": "KW-FIX-45 11-12 DIE-S81-87 ready11p BIND CLEAN (strict rc 0, n_errors 0, plan 685aa34d10d3, = ready11r + col_h9/h10 r0 param split: 70 clones of 11 types); kit source bsrc3_r11p + svc closure overlay 4e1a842257cc"
+    },
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--max-wire-um",
+     "100",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/s87bind/bsrc3_main_p/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit2.json"
+    ]
+   }
   },
   "s81_head": {
    "enabled": true,
