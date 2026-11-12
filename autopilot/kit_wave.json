@@ -20837,15 +20837,15 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s26_9fc09952cd/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s26.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s27.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s26_9fc09952cd",
-   "src_sha": "9fc09952cdc4",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66",
+   "src_sha": "9024de9d66",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s26_9fc09952cd/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs26in/bind_plan_qc99_s26_v2",
-    "note": "KW-FIX-45 11-12 QC s26 plan_qc99_s26 779178a990b5 (qc-event-s26-1111@ca28bc4738dd on main 9fc09952cdc4), DIE-QC-99 strict bind rc 0 (377 parts/1921 crossings/0 err), bind_plan_qc99_s26_v2",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
+    "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
    "gen_args": [
@@ -20854,7 +20854,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/qcs26in/sidecar_pv_s26.json"
+    "/srv/opentallas-scratch2/claude/kw45/qcs27in/sidecar_pv_s27.json"
    ],
    "kinds": [
     "type"
@@ -20876,7 +20876,6 @@
    "note": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source missing physical/rom_host_ingest/rtl/dsfd_host.sv) and KV kit_topology (faecd src lacks tools/die_plan/kit_topology.py which the hub's canonical_topology_prepare specs need); relaunch the same rows | KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc_ringfall_1105 copied from src_2c705) on epyc5+epyc6; work_root -> root scratch3 lane kw21-wave-1106 (epyc5 scratch2 1 GB free); cfg ot_run = kw21 wrapper (kw10 wait logic) on fleet 230e562aa5c. INFRA relaunch: ENOSPC/ROOT-fs geom/no-dir kit_rtl/PLACE_LOST; native-C SIG11 rows @3 with OT_LEC_SLANG_UNROLL_LIMIT=32912 | KW-FIX-19 21:0x: src kw11/src_730 @7305773106e (main: I178 prdfo, I180 rootscr, I181 classretry, prdguard; kit diff vs 16b4 = prd_hook guard only); gen_hosts [epyc5, epyc6] (epyc4 scratch2 11 GB); GEN-HOST-DEPS relaunch 53 rows | KW-FIX-18 19:4x: tag flow-20261106-m-qc 16b4ea85026 (I177 ev76 HBM d44v, I178 prdfo, I179 q3e RXPRE) -> src kw11/src_16b; referenced files byte-same (8/8 sha256) | KW-FIX-17 18:4x: tag flow-20261106-l-qc e920ea3c22b (grtstall + leafitems + S81 TAPWIN-PORT plan ef4d951b60bf) -> src kw11/src_e92; referenced files byte-same except S81 plan_h2_2249.json (clock.tap_window per_port_ps only, COORD 18:20) | KW-FIX-17 18:2x: tag flow-20261106-k-qc 77b4b069dc3 (holdgaterr + ev75 + romq + wbqhd) -> src kw11/src_77b; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:3x: tag flow-20261106-j-qc 17dcf533a38 (resignlib + ev74f + provobs) -> src kw11/src_17d; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 17:1x: tag flow-20261106-i-qc 556ee1c5557 (dplfb + leafslew) -> src kw11/src_556; referenced plan/sidecar/asbuilt/kit_rtl files byte-same | KW-FIX-17 16:5x: tag flow-20261106-h-qc 76201bc074c (holdrr reg2reg hold stop, grtpost, placeretry) -> src kw11/src_m76; every referenced plan/sidecar/asbuilt/kit_rtl file byte-same (cmp CHECKED) | KW-FIX-16 13:5x tags e-head/g-qc/g-s81 = main a201f608d85 (I139 ecotrim + I140 g2setup, tools only vs src_r): src_t; plan/sidecar/asbuilt bytes unchanged [CHECKED cmp]. | KW-FIX-12 08:4x hold stop 7f4f20064d5: src_k main 714dd1ea120 (S81/HEAD plan bytes same; QC I102 coll_ft 2 keys). | KW-FIX-8 19:1x I57 writer guard class relaunch, src_w on epyc4+intel1. KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 16:4x COORD stale bind: hold hc1-3, stm, coll_ftm, su until DIE-QC-71 tip bind passes; then bind_out in one change | KW-FIX-8 14:1x I46 tag w-qc: src_s, W1 + R8 straps + coll_ucie event efdb36e864; W1 list from q70/ws_report.json added to only_items | KW-FIX-8 10:0x: src wt-qc2 488b89796f3 (common_flow class fix); 3 rows outside the event now; 13 of the 22 + su_c at event tag (COORD 09:59) | KW-FIX-8 09:1x COORD I35: src kw-fix-8/wt-qc 1a4f626d4a8 = rtl + physical 46029291c7f, tools main d3001422956 + reset dot ccb4065691e (not on main yet). QC 19 prov batch. | KW-FIX-8 08:3x COORD 08:34: PLACE steer epyc2 (admits 416 GB, 0 waiters; epyc4 memory-full, 32 waiters): hosts + epyc2, place_prefer epyc2, admit-gated; I take it out if epyc2 scratch < 60 GB. | KW-FIX-6 05:4x COORD 05:36 disk: place on epyc4 only; gen stays intel2 (plan + src there). | KW-FIX-6 05:1x COORD 05:07: src = rtl + physical of 46029291c7f + whole tools/ at main a4b44ffeac1 (I25, flow-20261104-d-qc), 28 type rows dq68-types-coreinst 780e4a72f74. | KW-FIX-5 01:2x COORD 01:20: overlay 66c713ed6a on src (46029291c7f); 12 SU + 14 CB holds lifted same tick; CB at gen is an honest class row | KW-FIX-5 00:1x: relay_bay 4 launched 23:58, one-tick allowlist removed | KW-FIX-5 23:5x: one-tick allowlist of the 4 relay_bay classes (parents ROUTING/REVIEW in OWNERS, outside take_states); restored after launch | KW-FIX-5: DPL class port f0ed37ff9a5 in fl-qc2, row predates it | KW-FIX-5: INFRA ENOSPC/no-host remainder (disks freed 20:54) | KW-FIX-5: relay_bay class a77a6d08a5c on main I10 bdc3e312436 (tool staged from hub) | KW-FIX-4 20:3x: fl-qc2 d85db82cddb = + bo",
    "pilot_mode": "queue",
    "hold_items": {
-    "slw_stm_v2__cl9beb65e6": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch",
     "sle_fw_v3": "RE-FORM KW-FIX-43 11-09 19:5x COORD route (5): routed-not-signed a37, setup WNS -334.6 ps (2687 endpoints), hold FF -64.7/-110 per COORD; not a near miss, attempt count high. Revert: delete this key.",
@@ -20885,17 +20884,7 @@
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "sle_stm_v1__cl27746664": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "sle_stm_v1__clbe630b9c": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "sle_stm_v2__cl55be2264": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "sle_stm_v2__cl7b3062fa": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "sle_stm_v3": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "slw_stm_v1__cl05fc43f7__cl2086fa2c": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "slw_stm_v1__cl05fc43f7__cl389df4e9": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "slw_stm_v1__cle34a73c3": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "slw_stm_v2__cl1ca9c415": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)",
-    "slw_stm_v3": "KW-FIX-45 11-12 02:0x DIE-QC-99/QC-VIS-RESITE: these 11 stm types build FRESH from s27 (plan_qc99_s27 820f14a689b7), replacing their s26 rows; held here until the s27 switch (no s26 build of them)"
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -21524,7 +21513,7 @@
     "slw_st_a_v2__cl9f076a5c@8",
     "slw_su_c__cl19bb38ef@6"
    ],
-   "queue_src": "main@9fc09952cdc4",
+   "queue_src": "claude/qc-s27-vis-1111@9024de9d66",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
