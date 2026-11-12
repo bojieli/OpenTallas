@@ -1,4 +1,4 @@
-# QC-NK-HOLD A+P (gen_phys core_input_place), PRE_DETAIL_PLACE at the end of face_flops_release.tcl: spread the zero-logic register chain
+# QC-NK-HOLD A+P (gen_phys core_input_place), PRE_RESIZE (after GPL, before repair_design buffers the new hops): spread the zero-logic register chain
 # that feeds each NK pipe register (u_pc_nk_*) evenly along a macro-avoiding Manhattan route from the chain head to
 # the pipe register.  pilot7 measured the class: GPL (wirelength only) left all 10 stages of e.g. u_d10_u_t_3_2_n_y
 # within 150 um of the head and paid 1350 um in the last hop (TT -1131 ps at u_pc D).  Same class as S81-RCK-4
@@ -115,7 +115,7 @@ proc nc_loads {inst} {
 }
 proc nc_dpin {inst} { foreach t [$inst getITerms] { if {[[$t getMTerm] getName] eq "D"} { return $t } }; return "" }
 proc nc_ctr {o} { set b [$o getBBox]; return [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] }
-set nc_chains 0; set nc_moved 0; set nc_l0 {}; set nc_l1 {}; set nc_rc {}
+set nc_corefix 0; set nc_chains 0; set nc_moved 0; set nc_l0 {}; set nc_l1 {}; set nc_rc {}
 foreach pc [$nc_blk getInsts] {
   if {![regexp {u_pc_nk_} [$pc getName]] || ![string match "DFF*" [[$pc getMaster] getName]]} continue
   # backward: hops {stage_inst bufs_on_its_D}, stages = movable fanout-1 zero-logic chain registers
@@ -135,7 +135,14 @@ foreach pc [$nc_blk getInsts] {
   }
   if {$head eq "" || ![llength $seq]} continue
   # head: driver flop/pin position; tail: the pipe register (anchored at the NK pin)
-  if {[[[$head getInst] getMaster] isBlock]} { lassign [nc_ctr $head] hx hy } else { lassign [nc_ctr [$head getInst]] hx hy }
+  if {[[[$head getInst] getMaster] isBlock]} {
+    # a hard-core output launches late (NK clk->out ~870 ps TT): its first stage stays where GPL put it, next to the
+    # pin (pilot8 moved it 1/5 along the route: TT -1441 at u_d3_*_t_out r[0]); the route starts at that stage
+    lassign [nc_ctr [lindex $seq 0]] hx hy
+    set seq [lrange $seq 1 end]
+    incr nc_corefix
+    if {![llength $seq]} continue
+  } else { lassign [nc_ctr [$head getInst]] hx hy }
   lassign [nc_ctr $pc] tx ty
   set route [nc_route $hx $hy $tx $ty]
   set hops [expr {[llength $seq] + 1}]
@@ -165,5 +172,5 @@ foreach pc [$nc_blk getInsts] {
   incr nc_chains
 }
 proc nc_pct {l p} { if {![llength $l]} { return na }; set l [lsort -real $l]; return [format %.0f [lindex $l [expr {min([llength $l]-1, int([llength $l]*$p))}]]] }
-puts "OT_NK_CHAIN chains $nc_chains stages_moved $nc_moved bends $nc_rc max_hop_um before p50 [nc_pct $nc_l0 0.5] p90 [nc_pct $nc_l0 0.9] max [nc_pct $nc_l0 1.0] after p50 [nc_pct $nc_l1 0.5] p90 [nc_pct $nc_l1 0.9] max [nc_pct $nc_l1 1.0]"
+puts "OT_NK_CHAIN chains $nc_chains core_head_kept $nc_corefix stages_moved $nc_moved bends $nc_rc max_hop_um before p50 [nc_pct $nc_l0 0.5] p90 [nc_pct $nc_l0 0.9] max [nc_pct $nc_l0 1.0] after p50 [nc_pct $nc_l1 0.5] p90 [nc_pct $nc_l1 0.9] max [nc_pct $nc_l1 1.0]"
 }
