@@ -85,13 +85,13 @@ def test_flat_window_reports_mode(monkeypatch):
 import taps as TP  # noqa: E402
 
 
-def _cap_run(monkeypatch, n, clock=None):
+def _cap_run(monkeypatch, n, clock=None, severity="error"):
     clock = clock or {}
     P = types.SimpleNamespace(types={"T": {"clock": clock, "outline_um": [600, 200]}})
     monkeypatch.setattr(S, "tap_grid", lambda P_, tn: TAPS)
     monkeypatch.setattr(TP, "sink_sites", lambda P_, tn: [(100.0, 100.0, 1.0)] * n + [(500.0, 100.0, 1.0)] * 10)
     R = C.Report()
-    return R, C.check_tap_sink_cap(P, R)
+    return R, C.check_tap_sink_cap(P, R, severity=severity)
 
 
 def test_tap_3001_error(monkeypatch):
@@ -120,3 +120,9 @@ def test_tap_uncomputable_not_guessed(monkeypatch):
     R = C.Report()
     s = C.check_tap_sink_cap(P, R)
     assert s["uncomputable"] == 1 and s["taps_over"] == 0 and not R.errors()
+
+
+def test_tap_cap_default_is_warn(monkeypatch):
+    R, s = _cap_run(monkeypatch, 3001, severity="warn")
+    assert s["taps_over"] == 1 and not R.errors()
+    assert any(i["level"] == "WARN" and "3001 clock sinks" in i["msg"] for i in R.items)

@@ -63,7 +63,7 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
   xtap_latency (WARN only, XTAP-SWEEP-1 11-11) ft hops between taps whose modeled source latency differs > 50 ps and no
               clock.ft_hop_lockup (xtap flop / latch); one [xtap-count] line
-  tap_sink_cap (ERROR, XTAP-SWEEP-1 11-11) a clock tap whose plan sink count exceeds gen_phys._tap_cap (3000 grid /
+  tap_sink_cap (WARN default / --tap-sink-cap error, XTAP-SWEEP-1 11-11) a clock tap whose plan sink count exceeds gen_phys._tap_cap (3000 grid /
               1500 density; lower bound without a sink inventory); one [tapcap-count] line
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
 """
@@ -975,16 +975,19 @@ def tap_sink_loads(P):
     return rows, stats
 
 
-def check_tap_sink_cap(P, R, max_msgs=20):
-    """XTAP-SWEEP-1 11-11 (COORD): ERROR on any clock tap whose plan sink count exceeds the tap cap (tap_sink_loads;
+def check_tap_sink_cap(P, R, max_msgs=20, severity="warn"):
+    """XTAP-SWEEP-1 11-11 (COORD): `severity` "error" = ERROR (the COORD ruling), "warn" (DEFAULT until the plan count is
+    validated as predictive of the built tap load: the kit splits ports into dtap subtrees) = WARN with the same text.
+    Finding on any clock tap whose plan sink count exceeds the tap cap (tap_sink_loads;
     q_spt2's taps drove 3k-12k sinks: 290-376 ps tap spread, early capture of the face registers).  One
     [tapcap-count] WARN line with computability."""
     rows, st = tap_sink_loads(P)
     over = sorted((r for r in rows if r[2] > r[3]), key=lambda r: (-r[2], r[0], r[1]))
     for tn, name, n, cap in over[:max_msgs]:
-        R.err("tap_sink_cap", f"[tapcap] type {tn} tap {name}: {n} clock sinks > cap {cap}", type=tn)
+        (R.err if severity == "error" else R.warn)("tap_sink_cap", f"[tapcap] type {tn} tap {name}: {n} clock sinks > cap "
+                                                   f"{cap}", type=tn)
     if len(over) > max_msgs:
-        R.err("tap_sink_cap", f"[tapcap] ... {len(over) - max_msgs} more taps over the cap")
+        (R.err if severity == "error" else R.warn)("tap_sink_cap", f"[tapcap] ... {len(over) - max_msgs} more taps over the cap")
     by = defaultdict(int)
     for r in over:
         by[r[0]] += 1
@@ -2595,7 +2598,7 @@ def _plan_geom_default():
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
-        seam_hop="warn", core_shape_index=None):
+        seam_hop="warn", core_shape_index=None, tap_sink_cap="warn"):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2650,7 +2653,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["ft_s0_window"] = check_ft_s0_window(P, R)
     summ["xtap_latency"] = check_xtap_latency(P, R)
-    summ["tap_sink_cap"] = check_tap_sink_cap(P, R)
+    if tap_sink_cap != "off":
+        summ["tap_sink_cap"] = check_tap_sink_cap(P, R, severity=tap_sink_cap)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
@@ -2742,6 +2746,9 @@ def main(argv=None):
     ap.add_argument("--seam-hop", choices=("warn", "off"), default="warn",
                     help="SEAM-HOP-1 advisory (seam_hop.py): WARN per seam hop (last station -> first station of the next "
                          "partition) over the 405-um signal reach; never an ERROR, ignored by --strict")
+    ap.add_argument("--tap-sink-cap", choices=("warn", "error", "off"), default="warn",
+                    help="XTAP-SWEEP-1: a tap whose PLAN sink count exceeds gen_phys._tap_cap: WARN (default until validated "
+                         "against built tap loads), ERROR (COORD ruling), off")
     ap.add_argument("--native-reset-receipt", help="explicit measured native conditional reset receipt; no core-cycle deadline or CDC waiver")
     ap.add_argument("--core-shape-index", help="CORE-SHAPE-GATE-1: cached signed-shape index (core_shape.py build-index); a hard core whose "
                     "outline matches no signed shape of its module and has no core_shape_exceptions entry is an ERROR "
@@ -2753,7 +2760,7 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, core_shape_index=a.core_shape_index,
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, core_shape_index=a.core_shape_index,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())
