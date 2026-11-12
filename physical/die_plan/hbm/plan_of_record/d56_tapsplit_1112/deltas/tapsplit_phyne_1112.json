@@ -1,0 +1,113 @@
+{
+ "name": "phyne_pitch",
+ "source": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t_tapsplit/comb3",
+ "base": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t_tapsplit/comb2",
+ "files": {
+  "die_plan.json": {
+   "kind": "json",
+   "ops": [
+    [
+     [
+      "partition_types",
+      "PHY_NE",
+      "clock",
+      "tap_mode"
+     ],
+     "set",
+     "grid+explicit"
+    ],
+    [
+     [
+      "partition_types",
+      "PHY_NE",
+      "clock",
+      "added_taps"
+     ],
+     "set",
+     [
+      {
+       "name": "clk_t1",
+       "xy": [
+        2937.6,
+        858.4
+       ]
+      },
+      {
+       "name": "clk_t2",
+       "xy": [
+        2937.6,
+        727.416
+       ]
+      },
+      {
+       "name": "clk_t3",
+       "xy": [
+        2937.6,
+        596.768
+       ]
+      },
+      {
+       "name": "clk_t4",
+       "xy": [
+        2937.6,
+        459.552
+       ]
+      },
+      {
+       "name": "clk_t5",
+       "xy": [
+        2937.6,
+        327.624
+       ]
+      },
+      {
+       "name": "clk_t6",
+       "xy": [
+        2937.6,
+        197.064
+       ]
+      },
+      {
+       "name": "clk_t7",
+       "xy": [
+        2937.6,
+        65.784
+       ]
+      },
+      {
+       "name": "clk_t8",
+       "xy": [
+        2937.6,
+        989.256
+       ]
+      }
+     ]
+    ],
+    [
+     [
+      "partition_types",
+      "PHY_NE",
+      "clock",
+      "tap_max_sinks"
+     ],
+     "set",
+     3000
+    ],
+    [
+     [
+      "partition_types",
+      "PHY_NE",
+      "clock",
+      "tap_radius_um"
+     ],
+     "set",
+     200.0
+    ]
+   ],
+   "base_sha256": "de3584d1e3d8946821f537b13524076c053217650ff5b2c06d7da10c43d9d656",
+   "new_sha256": "7f4896f364be72af94a6f3b7e3120b8815931d0338e53a9cbaba4628c285a547"
+  }
+ },
+ "bookkeeping_not_applied": [],
+ "file_base_override": {}
+}
