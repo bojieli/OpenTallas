@@ -369,3 +369,34 @@ def test_plan_trees_resite_opt_in_and_skip():
         raw["reset"]["relay_resite_crossing"] = flag
         raw["reset"]["relay_resite_skip_types"] = ["t0"]
         assert schema.validate(raw) == []
+
+
+def test_per_type_relay_reach_only_tightens():
+    # REACH-FIX-2 11-12 (HEAD-95 rp18, hd_spn_wshim_rx u_rrl_14 -> u_rrl_17 334.8 um): partition_types[t].reset.relay_um
+    # re-solves that type's relay tree at the tighter reach (every hop <= it, more relays); other types keep the die
+    # reach; a value above the die reach (or at the margin) is refused, never a looser rule
+    P0 = schema.Plan(piped(PAIR))
+    tn = max(P0.types, key=lambda t: RT.for_type(P0, t)["max_hop_um"])
+    other = [t for t in P0.types if t != tn]
+    T0 = RT.for_type(P0, tn)
+    assert T0["max_hop_um"] > 200.0
+    raw = piped(PAIR)
+    raw["partition_types"][tn].setdefault("reset", {})["relay_um"] = 200.0
+    assert schema.validate(raw) == []
+    P = schema.Plan(raw)
+    assert RT.relay_um(P, tn) == 200.0 and RT.relay_um(P) == 405.0
+    T = RT.for_type(P, tn)
+    assert RT.verify(T) == [] and T["max_hop_um"] <= 200.0 - RT.MARGIN_UM + 1e-6 and _hops_ok(T, 200.0)
+    assert len(T["relays"]) > len(T0["relays"])
+    for t in other:
+        assert RT.for_type(P, t)["max_hop_um"] == RT.for_type(P0, t)["max_hop_um"]
+    raw["partition_types"][tn]["reset"]["relay_um"] = 380.0
+    raw["reset"]["relay_um"] = 300.0
+    try:
+        RT.relay_um(schema.Plan(raw), tn)
+        raise AssertionError("a per-type reach above the die reach must be refused")
+    except RT.ResetError as e:
+        assert "must be in" in str(e)
+    bad = piped(PAIR)
+    bad["partition_types"][tn].setdefault("reset", {})["relay_um"] = 500.0
+    assert schema.validate(bad) != []

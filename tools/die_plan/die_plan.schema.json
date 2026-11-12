@@ -4363,6 +4363,11 @@
         "type": "integer",
         "minimum": 2
        },
+       "relay_um": {
+        "type": "number",
+        "exclusiveMinimum": 25,
+        "maximum": 405
+       },
        "obstacle_model": {
         "enum": [
          "canonical",
