@@ -1706,6 +1706,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="AUTOBUILD-PIPE-2 10-31 (opt-in; kit wave core_kit default on): clock-class M5 plan pins keep "
                          "their plan point (interior entry allowed, METHODOLOGY 12.8a) at 0.048 x 0.48 on the M5 track "
                          "(clock_entry_pin) instead of the nearest-face projection; off = io.tcl unchanged")
+    ap.add_argument("--clock-pin-landing", default="off", choices=["off", "on"],
+                    help="HBM-CORE-WBQ-1 11-12 (opt-in): keep the M6 tracks over every INTERIOR clock entry pin free of core "
+                         "routing during GRT/DRT (clock_pin_landing.py: route exclusion added pre-GRT, removed post-DRT) so the "
+                         "parent router has a VIA56 landing (ot_wbq_root_g0 fifo_clk: DRT-0073 with any view); off = unchanged")
     ap.add_argument("--core-macros", default=None, choices=["off", "auto"],
                     help="CLI overrides recipe core_macros (otherwise off): auto with no --macro-placement uses the "
                          "plan's core_macros.json KNOWN rects of this module are the static macro placement (the "
@@ -2750,6 +2754,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if a.grt_nonport_hold:
         cfg += grt_nonport_hold_setup(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
+    if a.clock_pin_landing == "on":
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import clock_pin_landing
+        flow["clock_pin_landing"] = clock_pin_landing.stage(kd, clks)
     flow["timing_modes"] = timing_modes_stage(kd, not a.single_mode_grt)
     # ROUTE-HOLD-PASS (DIE-HBM-97 11-10, COORD vecd-clkroot-r2 (a)): the declared in-flow routed-RCX hold pass is part of
     # the kit spec (freeze.json flow_defaults + config.mk), on or off for the whole build; eco_loop reads it from here.
