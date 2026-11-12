@@ -98,10 +98,64 @@ module ot_hbm_svc_pin_skid2_sr #(parameter integer WIDTH=1,SLW=64)(
     end
 endmodule
 
+// HBM-CORES-B 11-11 form C (OT_KSH_SRDL, v8e478a ksh_t19 TT: u_bin_g_kr_rdy -> u_d.out_data 64 endpoints -33.8 ps behind
+// selrep: the per-slice pop gate still fed a 2-gate enable cone then a 26-fanout buffer per 64-bit slice).  Same skid,
+// edge for edge (yosys EQ vs ot_hbm_svc_pin_skid2): 16-bit slices, and pop_s enters each head_data bit only as the LAST
+// mux select (both mux legs are pop-independent), so the face ready flop -> D path is gate copy + one mux.  u_d only.
+module ot_hbm_svc_pin_skid2_srl #(parameter integer WIDTH=1,SLW=16)(
+    input wire clk,rst_n,input wire in_v,output wire in_r,
+    input wire [WIDTH-1:0]in_data,output wire out_v,input wire out_r,
+    output wire [WIDTH-1:0]out_data
+);
+    localparam integer NS=(WIDTH+SLW-1)/SLW;
+    reg head_valid,tail_valid;
+    reg [WIDTH-1:0]head_data,tail_data;
+    wire push=in_v&&in_r,pop=out_v&&out_r;
+    assign in_r=!tail_valid;assign out_v=head_valid;assign out_data=head_data;
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n)begin head_valid<=0;tail_valid<=0;end
+        else begin
+            case({push,pop})
+                2'b10:begin
+                    if(!head_valid)head_valid<=1;
+                    else tail_valid<=1;
+                end
+                2'b01:begin
+                    head_valid<=tail_valid;tail_valid<=0;
+                end
+                2'b11:begin head_valid<=1;tail_valid<=0;end
+                default:;
+            endcase
+        end
+    end
+    for(genvar s=0;s<NS;s=s+1)begin:g_sl
+        localparam integer LO=s*SLW,HI=(WIDTH-1<LO+SLW-1)?WIDTH-1:LO+SLW-1;
+        wire pop_s;
+        ot_hbm_svc_skid_popg u_pg(.a(head_valid),.b(out_r),.y(pop_s));
+        // leg_p: next head when popping (push -> new beat, else tail if held, else unchanged)
+        // leg_n: next head when not popping (push into an empty head -> new beat, else unchanged)
+        wire[HI-LO:0]leg_p=push?in_data[HI:LO]:(tail_valid?tail_data[HI:LO]:head_data[HI:LO]);
+`ifdef OT_KSH_MUT_C
+        wire[HI-LO:0]leg_n=push?in_data[HI:LO]:head_data[HI:LO];   // bench negative control: overwrites a held head
+`else
+        wire[HI-LO:0]leg_n=(push&&!head_valid)?in_data[HI:LO]:head_data[HI:LO];
+`endif
+        always @(posedge clk) if(rst_n)begin
+            head_data[HI:LO]<=pop_s?leg_p:leg_n;
+            if(push&&head_valid&&!pop_s)tail_data[HI:LO]<=in_data[HI:LO];
+        end
+    end
+endmodule
+
 `ifdef OT_KSH_SELREP
 `define KSH_SKID ot_hbm_svc_pin_skid2_sr
 `else
 `define KSH_SKID ot_hbm_svc_pin_skid2
+`endif
+`ifdef OT_KSH_SRDL
+`define KSH_SKID_D ot_hbm_svc_pin_skid2_srl
+`else
+`define KSH_SKID_D `KSH_SKID
 `endif
 module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
@@ -171,10 +225,46 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wq3<={wb2,wt2,wcnt({sm_s,2'd3},wb2,we2,wt2),wcnt({sm_s,2'd2},wb2,we2,wt2),wcnt({sm_s,2'd1},wb2,we2,wt2),wcnt({sm_s,2'd0},wb2,we2,wt2)};
  end
  always @(posedge stream_clk or negedge srst_q)if(!srst_q)begin wv1<=0;wv2<=0;wv3<=0;end else begin wv1<=wbw_v;wv2<=wv1;wv3<=wv2;end
+ // HBM-CORES-B 11-11 form B (OT_KSH_WCNT2; ksh_t19 TT we2 -> wq3 17 endpoints -41.9 ps, v700685 sm_s/we2 -> wq3 15 at
+ // -36.2): the lane count is split over two stream edges.  Edge 3 registers, per lane, the pop-free pieces of wcnt
+ // (t==0, d==0, the three chunk overlaps, d[6:0]-1); edge 4 selects/sums them into the same 8-bit count.  wq4/wv4 is
+ // exactly wq3/wv3 one stream edge later (EQ_CYCLE_SHIFTED): WB window command -> u_wcmd write +1 stream edge.
+ wire wq_v;wire[WQW-1:0]wq_d;
+`ifdef OT_KSH_WCNT2
+ reg wv4;reg[29:0]wb3;reg[11:0]wt3;reg[3:0]wz3,wd3;reg[2:0]wa3[0:3],wb3o[0:3],wc3[0:3];reg[6:0]wm3[0:3];
+ function automatic [7:0] wsum(input z,input dz,input [2:0] oa,input [2:0] ob,input [2:0] oc,input [6:0] dm);
+`ifdef OT_KSH_MUT_B
+  reg[8:0]n;begin if(z)n=0;else if(dz)n=9'(ob);else n=9'(ob)+9'(oc)+{dm,2'b00};wsum=n[7:0];end   // bench negative control
+`else
+  reg[8:0]n;begin if(z)n=0;else if(dz)n=9'(oa);else n=9'(ob)+9'(oc)+{dm,2'b00};wsum=n[7:0];end
+`endif
+ endfunction
+ integer wl;
+ always @(posedge stream_clk)begin
+  wb3<=wb2;wt3<=wt2;
+  for(wl=0;wl<4;wl=wl+1)begin:g_w3
+   reg[4:0]gh,gt;reg[22:0]d;
+   gh={sm_s,2'(wl)}^wb2[11:7]^wb2[16:12];gt={sm_s,2'(wl)}^we2[11:7]^we2[16:12];d=we2[29:7]-wb2[29:7];
+   wz3[wl]<=wt2==0;wd3[wl]<=d==0;
+   wa3[wl]<=ov(gh,{1'b0,wb2[6:0]},{1'b0,we2[6:0]}+8'd1);
+   wb3o[wl]<=ov(gh,{1'b0,wb2[6:0]},8'd128);
+   wc3[wl]<=ov(gt,8'd0,{1'b0,we2[6:0]}+8'd1);
+   wm3[wl]<=d[6:0]-7'd1;
+  end
+ end
+ reg[WQW-1:0]wq4;
+ always @(posedge stream_clk)
+  wq4<={wb3,wt3,wsum(wz3[3],wd3[3],wa3[3],wb3o[3],wc3[3],wm3[3]),wsum(wz3[2],wd3[2],wa3[2],wb3o[2],wc3[2],wm3[2]),
+        wsum(wz3[1],wd3[1],wa3[1],wb3o[1],wc3[1],wm3[1]),wsum(wz3[0],wd3[0],wa3[0],wb3o[0],wc3[0],wm3[0])};
+ always @(posedge stream_clk or negedge srst_q)if(!srst_q)wv4<=0;else wv4<=wv3;
+ assign wq_v=wv4;assign wq_d=wq4;
+`else
+ assign wq_v=wv3;assign wq_d=wq3;
+`endif
  wire wf_wr_ready,wf_ov,wf_rd_valid,wf_un;wire[WQW-1:0]wf_rd_data;
  wire take_wb=wf_rd_valid&&all_norm&&!cf_rd_valid;
  ot_hbm_svc_async_fifo #(.WIDTH(WQW),.DEPTH(4)) u_wcmd(
-  .wr_clk(stream_clk),.wr_rst_n(srst_q),.wr_valid(wv3),.wr_ready(wf_wr_ready),.wr_data(wq3),.wr_overflow(wf_ov),
+  .wr_clk(stream_clk),.wr_rst_n(srst_q),.wr_valid(wq_v),.wr_ready(wf_wr_ready),.wr_data(wq_d),.wr_overflow(wf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hrst_q),.rd_valid(wf_rd_valid),.rd_ready(take_wb),.rd_data(wf_rd_data),.rd_underflow(wf_un));
  reg[WQW-1:0]wcmd_q;reg[30:0]wend_q;
  always @(posedge hbm_clk)if(take_wb)begin wcmd_q<=wf_rd_data;wend_q<={1'b0,wf_rd_data[WQW-1-:30]}+31'(wf_rd_data[43:32]);end
@@ -241,17 +331,48 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   end
   wire vm_phase=(st==ISSUE||st==WAIT)^(MUT==1&&st==PEND);
   wire d_r,f_r;
-  `KSH_SKID #(.WIDTH(RW)) u_d(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_v&&!vm_phase),.in_r(d_r),.in_data(c_d),
+  `KSH_SKID_D #(.WIDTH(RW)) u_d(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_v&&!vm_phase),.in_r(d_r),.in_data(c_d),
    .out_v(g_kr_v[l]),.out_r(g_kr_rdy[l]),.out_data({g_kr_tag[17*l+:17],g_kr_beat[4*l+:4],g_kr_data[256*l+:256]}));
-  assign c_r=vm_phase?f_r:d_r;
-  wire c_pop_grp=c_v&&!vm_phase&&d_r;
-  wire c_pop_vm=c_v&&vm_phase&&f_r;
   wire[16:0]rt=c_d[RW-1-:17];wire[3:0]rb=c_d[259:256];
+  wire c_pop_grp=c_v&&!vm_phase&&d_r;
+  wire c_pop_vm,f_wv,tag_bad;wire[FW-1:0]f_wd;
+`ifdef OT_KSH_VMSTG
+  // HBM-CORES-B 11-11 form A (OT_KSH_VMSTG; ksh_t19 TT ring rp(slice4) -> hf 3 / -> u_fill.mem 24 at -72.95, st ->
+  // u_fill.mem 38 at -25.5): one valid/ready register stage between the response ring and the VM CDC FIFO.  It takes a
+  // VM beat when empty or draining (no bubble at II=1), holds {f_d, rt[16:4], rb[3:2]} with the window's bank/epoch
+  // snapshot of the pop edge, and writes the FIFO only when wr_ready (no overflow); the tag check (hf) runs on the stage.
+  // Same beats, same order, each +1 hbm edge into u_fill (EQ_CYCLE_SHIFTED while the FIFO accepts; the stage is one
+  // extra slot under FIFO back-pressure).  st/got still count ring pops: the window may close with the last beat in the
+  // stage, which drains on its own (the snapshot keeps the next window's cmd_q out of it).
+  reg stg_v;reg[FW-1:0]stg_d;reg[12:0]stg_th;reg[1:0]stg_bh;
+  wire[FW-1:0]stg_in={cm_bank,cm_epoch,rt[3:0],rb[1:0],c_d[255:0]};
+  wire stg_rdy=!stg_v||f_r;
+  assign c_r=vm_phase?stg_rdy:d_r;
+  assign c_pop_vm=c_v&&vm_phase&&stg_rdy;
+  always @(posedge hbm_clk or negedge hrst_q)if(!hrst_q)stg_v<=1'b0;else stg_v<=c_pop_vm||(stg_v&&!f_r);
+  for(genvar s=0;s<(FW+63)/64;s=s+1)begin:g_stg
+   localparam integer LO=s*64,HI=(FW-1<LO+63)?FW-1:LO+63;
+   wire en_s;
+   ot_hbm_svc_skid_popg u_pg(.a(c_v&&vm_phase),.b(stg_rdy),.y(en_s));
+   always @(posedge hbm_clk)if(en_s)stg_d[HI:LO]<=stg_in[HI:LO];
+  end
+  always @(posedge hbm_clk)if(c_pop_vm)begin stg_th<=rt[16:4];stg_bh<=rb[3:2];end
+  assign f_wv=stg_v&&f_r;assign f_wd=stg_d;
+`ifdef OT_KSH_MUT_A
+  assign tag_bad=f_wv&&!(stg_th=={stg_d[FW-1],stg_d[FW-5-:12]}&&stg_bh==2'd0);   // bench negative control: epoch bits off by one
+`else
+  assign tag_bad=f_wv&&!(stg_th=={stg_d[FW-1],stg_d[FW-6-:12]}&&stg_bh==2'd0);
+`endif
+`else
+  assign c_r=vm_phase?f_r:d_r;
+  assign c_pop_vm=c_v&&vm_phase&&f_r;
   wire tag_ok=rt=={cm_bank,cm_epoch[11:0],rt[3:0]}&&rb<4;
-  wire[FW-1:0]f_d={cm_bank,cm_epoch,rt[3:0],rb[1:0],c_d[255:0]};
+  assign f_wv=c_pop_vm;assign f_wd={cm_bank,cm_epoch,rt[3:0],rb[1:0],c_d[255:0]};
+  assign tag_bad=c_pop_vm&&!tag_ok;
+`endif
   wire f_ov,f_un;
   ot_hbm_svc_async_fifo #(.WIDTH(FW),.DEPTH(8)) u_fill(
-   .wr_clk(hbm_clk),.wr_rst_n(hrst_q),.wr_valid(c_pop_vm),.wr_ready(f_r),.wr_data(f_d),.wr_overflow(f_ov),
+   .wr_clk(hbm_clk),.wr_rst_n(hrst_q),.wr_valid(f_wv),.wr_ready(f_r),.wr_data(f_wd),.wr_overflow(f_ov),
    .rd_clk(stream_clk),.rd_rst_n(srst_q),.rd_valid(rf_valid[l]),.rd_ready(rf_valid[l]),.rd_data(rf_data[FW*l+:FW]),.rd_underflow(f_un));
   wire[8:0]rd_beats=b_pop_grp&&!b_d[KW-1]?{5'd0,b_d[KW-1-30-1-:4]}:9'd0;
   wire drained=!b_v&&g_rd_out==0&&g_wr_out==0;
@@ -267,7 +388,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
     if(w_push)begin wsent<=wsent+1'b1;if(e_bad)hf<=1;end
     if(c_k_wr_done[l]&&wb_st)begin wdone<=wdone+1'b1;if(wdone==wsent)hf<=1;end
     if(c_pop_grp&&g_rd_out==0&&!(MUT==1))hf<=1;
-    if(c_pop_vm&&!tag_ok)hf<=1;
+    if(tag_bad)hf<=1;
     case(st)
      NORM:if(take_cmd)begin st<=PEND;j<=0;got<=0;end
           else if(take_wb)begin st<=WPEND;wsent<=0;wdone<=0;end
@@ -299,7 +420,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   else begin
    fill_v<=rf_valid;
    if(cv_q&&!cf_wr_ready)sbad<=1;
-   if(wv3&&!wf_wr_ready)sbad<=1;
+   if(wq_v&&!wf_wr_ready)sbad<=1;
    fault<=sbad||hfault_stream||cf_ov||wf_ov;
   end
  end

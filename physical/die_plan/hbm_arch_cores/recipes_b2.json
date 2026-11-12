@@ -1627,6 +1627,34 @@
     },
     "orfs_vars_why": "DIE-HBM-97/KSHARE 11-09: yosys opt_merge folded the 16 ot_reset_sync instances (4 lane u_fill, u_cmd, u_wcmd, fault_cdc; same clock, same async input) into one hbm-side and one stream-side 2-flop sync, so lane[0].u_fill.u_wr_reset.reset_pipe[1] drove 104 RESETN + every lane FIFO wr_ready (HBM-HARD-9 vK TT worst -40.21: lane[0] reset_pipe[1] -> lane[3].u_fill.mem; v700685 vK 100 TT endpoints).  keep on every reset_pipe flop (ot_keep_regs.tcl) leaves each FIFO its own sync: cycle-exact, no RTL change (ot_reset_sync.sv / ot_hbm_svc_async_fifo.sv stay byte-identical to their async_gray_fifo fingerprints).  EQ: physical/die_plan/hbm_arch_cores/kshare_keep_reset_eq/."
   },
+  "ot_hbm_svc_vm_kshare_splitstrap__v700685__wcnt2": {
+    "top": "ot_hbm_svc_vm_kshare_splitstrap",
+    "files": [
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+      "rtl/lib/ot_reset_sync.sv"
+    ],
+    "defines": [
+      "OT_KSH_WCNT2"
+    ],
+    "params": {
+      "MUT": 0,
+      "KRL1": 1
+    },
+    "macros": [],
+    "source": "HBM-CORES-B 11-11 (DIE-HBM-100 approval form B, DO_NOT_COUNT pilot): WB count over 2 stream edges (+1 stream edge WB window) | DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): pin-table variant of the kshare splitstrap core; generated pass-through wrapper | member recipe: r18h5 die view ot_hbm_svc_vm_kshare_splitstrap (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hd4g/gen2e2/syn/ot_hbm_svc_vm_kshare_splitstrap @ 6f783d0a1); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_vm_kshare_splitstrap)",
+    "source_commit": "d34578d6f",
+    "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+    "view_kind": "SYNTH",
+    "view_port_bits": 7343,
+    "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88",
+    "orfs_vars": {
+      "OT_KEEP_WIRES": "reset_pipe"
+    },
+    "orfs_vars_why": "DIE-HBM-97/KSHARE 11-09: yosys opt_merge folded the 16 ot_reset_sync instances (4 lane u_fill, u_cmd, u_wcmd, fault_cdc; same clock, same async input) into one hbm-side and one stream-side 2-flop sync, so lane[0].u_fill.u_wr_reset.reset_pipe[1] drove 104 RESETN + every lane FIFO wr_ready (HBM-HARD-9 vK TT worst -40.21: lane[0] reset_pipe[1] -> lane[3].u_fill.mem; v700685 vK 100 TT endpoints).  keep on every reset_pipe flop (ot_keep_regs.tcl) leaves each FIFO its own sync: cycle-exact, no RTL change (ot_reset_sync.sv / ot_hbm_svc_async_fifo.sv stay byte-identical to their async_gray_fifo fingerprints).  EQ: physical/die_plan/hbm_arch_cores/kshare_keep_reset_eq/."
+  },
   "ot_hbm_svc_vm_kshare_splitstrap__v8e478a": {
     "top": "ot_hbm_svc_vm_kshare_splitstrap",
     "files": [
@@ -4332,6 +4360,37 @@
     },
     "macros": [],
     "source": "HBM-CORES-B 11-11 (DIE-HBM-100 ruling a): DIE-HBM-53 10-31 (OWNER 07:1x NO_RECIPE events, plan d44n): pin-table variant of the kshare splitstrap core; generated pass-through wrapper | OT_KSH_SELREP: u_b/u_d skid data enables from per-64-bit-slice kept pop gates (c_k_rdy / g_kr_rdy), EQ vs the v8e478a recipe",
+    "source_commit": "d34578d6f",
+    "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
+    "view_kind": "SYNTH",
+    "view_port_bits": 7343,
+    "alias_of": "ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88",
+    "orfs_vars": {
+      "OT_KEEP_WIRES": "reset_pipe"
+    },
+    "orfs_vars_why": "DIE-HBM-97/KSHARE 11-09: yosys opt_merge folded the 16 ot_reset_sync instances (4 lane u_fill, u_cmd, u_wcmd, fault_cdc; same clock, same async input) into one hbm-side and one stream-side 2-flop sync, so lane[0].u_fill.u_wr_reset.reset_pipe[1] drove 104 RESETN + every lane FIFO wr_ready (HBM-HARD-9 vK TT worst -40.21: lane[0] reset_pipe[1] -> lane[3].u_fill.mem; v700685 vK 100 TT endpoints).  keep on every reset_pipe flop (ot_keep_regs.tcl) leaves each FIFO its own sync: cycle-exact, no RTL change (ot_reset_sync.sv / ot_hbm_svc_async_fifo.sv stay byte-identical to their async_gray_fifo fingerprints).  EQ: physical/die_plan/hbm_arch_cores/kshare_keep_reset_eq/."
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap__v8e478a__abc": {
+    "top": "ot_hbm_svc_vm_kshare_splitstrap",
+    "files": [
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+      "rtl/lib/ot_reset_sync.sv"
+    ],
+    "defines": [
+      "OT_KSH_SELREP",
+      "OT_KSH_VMSTG",
+      "OT_KSH_WCNT2",
+      "OT_KSH_SRDL"
+    ],
+    "params": {
+      "MUT": 0,
+      "KRL1": 1
+    },
+    "macros": [],
+    "source": "HBM-CORES-B 11-11 (DIE-HBM-100 approval A+B+C, DO_NOT_COUNT pilot): forms A VM response stage (+1 hbm edge fill_*), B WB count over 2 stream edges (+1 stream edge WB window), C u_d late-select skid (EQ) on top of selrep | OT_KSH_SELREP: u_b/u_d skid data enables from per-64-bit-slice kept pop gates (c_k_rdy / g_kr_rdy), EQ vs the v8e478a recipe",
     "source_commit": "d34578d6f",
     "view_cell": "ot_hbm_svc_vm_kshare_splitstrap",
     "view_kind": "SYNTH",
