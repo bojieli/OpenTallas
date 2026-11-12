@@ -43422,3 +43422,8 @@ vsN4 form A' build: running on epyc9 (past CTS). RESULT after sign-off.
   - claude/kw-fix-45-queue-cancelled-1111@e3fa343ee834: a CANCELLED queue job becomes a CANCELLED, retry-eligible row. It has been live since 16:41 and worked on q_b003__pv1.
   - claude/compiler-cal-rd1-1111@882687e50e: default-off rd1 calendar_f20 response_enable +1 shift; the compiler half of the rd1 adoption.
   The NW_io/NE_io re-form ETA (about 05:30 11-12) is noted.
+- 2026-11-11 16:49 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, CLAND-CLASS-1, HEAD-94, TOK-VERIFY-1]
+  - claude/cland-fregcheck-1111@1ece4481e7 (fail-closed FREG declaration check, stacked on qreg) is APPROVED. LAND IT TOGETHER WITH HEAD-94's marking event, never before it: on its own it would break HEAD regeneration (18 undeclared FREG ports on l48vd/l48ve).
+  - P1 functional audit, HEAD-94: hd_st_n4 4 ports are declared applied in n4_event, so they only need the mark. hd_ctl_n (2) and hd_turn_a (12) are UNKNOWN; if their +1 is missing, HEAD's ring is one cycle late today.
+    Prove per port, from the bound RTL/bench, whether the latency includes the FREG cycle. Where it does not: raise the latency by 1 in the event, and list every SIGNED HEAD view built on that plan, because those views count only after re-check.
+    Post the per-port verdict within 1 h, then the marking-event READY.
