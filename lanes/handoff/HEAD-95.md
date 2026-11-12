@@ -15,6 +15,10 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - wshim_tx: no ECO (COORD hold). Rebuild from the GEN-CLASS-1 FT-HOP-M2-WIRE branch when READY.
 - HEAD-94 routes (logs intel2 ~/head94log/*.log): lb_mesh_st/_eo, lbal_hd_mesh/_eo (epyc7), pf_ctl (epyc2), meshk sign-off (epyc8).
 
+- hd_ctl_n W10 RE-SIGN: ot-run epyc4, dir /srv/opentallas-scratch2/claude/head-95/ctln_w10 (kit copy, SDC -early clk_t6/t7/t9 -> -10, run -> signed dh86/ctln_eco1/i1/run), resign.py tag flow-20261112-lz-head, out ctln_w10/resign, log intel2 ~/head95log/ctln_w10_resign.log.
+- hd_spn_eshim_rx W10 BUILD (no signed DB existed): epyc9 /srv/opentallas-scratch2/claude/head-95/eshim_rx_w10 GOAL route, log intel2 ~/head95log/eshim_rx_w10_route.log; then sign-off.
+- Tool branch READY: claude/head-95-twf-1112@0e5ce1603c (worktree epyc4 wt/head-95-twf).
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
@@ -26,7 +30,7 @@ Posting helper: localhost scratchpad h95/post.sh.
 1. When the epyc8 place finishes: render the place layout (layout_render_hook / GEOM tools), post WAIT-VISUAL to GEOM-VIS-6. Route only after their verdict (route on epyc8/9).
 2. wshim_rx: verdict POSTED 07:5x = NOT SIGNED (1 slew pin u_cland_link_i dch[1] dsel = CLAND class; io_hold_parent needs the parent receipt). Re-sign after the CLAND fix.
 3. wshim_tx: rebuild from the GEN-CLASS-1 branch when READY (with tap_window floor W 10 on clk/clk_t1); then ask DIE-PROTO-2 for the seam re-measure.
-4. Re-sign hd_ctl_n and hd_spn_eshim_rx with the W 10 window (kit SDC change).
+4. W10 batch running (see 3): post the hd_ctl_n re-sign verdict; sign off eshim_rx after its route.
 5. The next HEAD form adopts balance (reach_fix.py balance / die_clock, claude/reach-fix-1112@dadcdf9535 once merged).
 6. Hourly STATE (next due 08:55 PST), times from `TZ=America/Los_Angeles date`.
 
