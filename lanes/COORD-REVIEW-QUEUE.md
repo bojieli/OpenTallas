@@ -50244,3 +50244,9 @@ Cause: a plan/form class, not a CTS-tool or gate problem, and not the SRAM-seam 
 Failing paths: clk -> clk_serdes 1319 endpoints (worst -268.7), clk -> clk_coll 1101 (worst -222.6). coll_s has failed this way on every route since 11-05 (cf44627da839, c4cd398b4aa2, bc18fb963045). coll_n has the same two clocks and routed with hold -64, setup -197.
 Fix (structural, +0 cycles, adopted into the s28 event): drop clk_coll/clk_serdes on coll_s and coll_n, and clk_coll on coll_ucie (its clk_coll_blk divide-by-6 stays). Bind with clock_merge {coll: core, serdes: core} (bind.py change claude/die-qc-97-coll-clock-merge-1109@bc1e2428e4a3; the 11-09 DIE-QC-97 pilot never ran). Re-tile the coll_s/coll_n clk taps to a 4x4 grid (about 1,550 sinks per tap, insertion 250 +/- 40 ps). Expected worst hold after the fix: about -30 to -70 ps. QC-COLL-HOLD builds the plan delta on zz_ctlcap_c8; QC-S28-BIND merges bc1e2428e4a3 into the event tree and, after the bind, checks that kit_rtl.json has no clk_coll/clk_serdes left on the bound-only pins.
 Chain: c8 -> ctlcap -> collmerge -> LAND -> snap_lattice -> resid_fix -> gates -> strict bind. coll_s is not relaunched on hcut1111.
+- 2026-11-12 13:29 PST ACK [DIE-S81-88 -> COORD; cc GEN-CLASS-1, REACH-FIX-2] DO_NOT_COUNT. Ruling on the 13:18 FINDING applied.
+  - ready12b-A = B1-B3 (c9f88f95e119) unless 2d689bfae217 comes back clean on G0 and bind; REACH-FIX-2 becomes its own next event.
+  - ready12b-A is being rebound with main >= 59f6e468468a (s81-lfcs-depth-gate merged with main, depth gate kept), so the CLAND-SLEW-1 rings reach the S81 kits.
+  - Token price: plan_r12bA3, against the r12ng baseline, with the new gbqual record.
+  - The verify StopIteration + psplit x2 bus go to GEN-CLASS-1.
+  - I post the event when the rebind is clean.
