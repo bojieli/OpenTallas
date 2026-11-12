@@ -4368,6 +4368,78 @@ def band_share_obs(P, regs, g=GCELL_UM, owner=False):
     return out
 
 
+BAND_SHARE_FORMS = ("stripe", "merge", "region")   # region: NOT capacity-equivalent in OpenROAD 26Q3 (see below); test only
+BAND_SHARE_FORM = "stripe"   # die_trial kit --band-share-form (DIE-PROTO-1 11-12, opt-in); stripe = the 10-25 form, unchanged
+
+
+def band_share_compact(stripes, form, layer_dir, g=GCELL_UM):
+    """DIE-PROTO-1 11-12 (HBM d55a: 1.03M band_share_obs stripes of 1.06M die obstructions): the same band share in fewer
+    GRT objects.  stripes = band_share_obs output [(L, x0, y0, x1, y1)]; layer_dir = {L: 'H' | 'V'}.
+      'stripe' -> (stripes, [])                 unchanged.
+      'merge'  -> (merged, [])                  collinear stripes of one layer with the same cross-direction extent that
+                                                touch or overlap along the layer direction become one rectangle: the
+                                                obstructed area is IDENTICAL (exact union, row phase kept), only the
+                                                object count drops.
+      'region' -> ([], [(L, x0, y0, x1, y1, f)]) every stripe is a gcell slice of fraction f = width / g inside ONE gcell
+                                                row (H) / column (V); stripes of one layer with the same f and the same
+                                                along-extent in consecutive gcells merge into one rectangle, emitted as
+                                                set_global_routing_region_adjustment f.  Capacity model, not geometry:
+                                                the row phase (which slice is kept) is not represented; die GRT capacity
+                                                is per gcell, so the die GRT sees the same reduction iff OpenROAD applies a
+                                                region adjustment like an obstruction of that fraction.
+    MEASURED 11-12 (HBM d55a combo TT, GRT-0053): merge = stripe capacity on every layer to the track (624,957 vs
+    1,032,762 objects), same runtime (initial route 163 vs 168 s); region is NOT equivalent: 52,170 region adjustments
+    gave M4 -145 % / M5 +378 % reduction (OpenROAD region adjustments do not compose like obstructions), so region must
+    not be used for capacity.  The die GRT time is congestion iterations, not obstruction count."""
+    if form == "stripe":
+        return list(stripes), []
+    if form not in BAND_SHARE_FORMS:
+        raise ValueError(f"band share form {form!r} not in {BAND_SHARE_FORMS}")
+    groups = {}
+    for L, x0, y0, x1, y1 in stripes:
+        h = layer_dir[L] == "H"
+        cross, along = ((y0, y1), (x0, x1)) if h else ((x0, x1), (y0, y1))
+        groups.setdefault((L, cross), []).append(along)
+    merged = []
+    for (L, (c0, c1)), iv in groups.items():
+        iv.sort()
+        cur = None
+        for a0, a1 in iv:
+            if cur is not None and a0 <= cur[1] + 1e-6:
+                cur[1] = max(cur[1], a1)
+                continue
+            if cur is not None:
+                merged.append((L, c0, c1, cur[0], cur[1]))
+            cur = [a0, a1]
+        if cur is not None:
+            merged.append((L, c0, c1, cur[0], cur[1]))
+
+    def rect(L, c0, c1, a0, a1):
+        return (L, a0, c0, a1, c1) if layer_dir[L] == "H" else (L, c0, a0, c1, a1)
+    if form == "merge":
+        return sorted(rect(*m) for m in merged), []
+    cols = {}
+    for L, c0, c1, a0, a1 in merged:
+        k = math.floor(c0 / g + 1e-6)
+        if math.floor(c1 / g - 1e-6) != k:
+            raise ValueError(f"band share stripe {L} {c0}-{c1} spans two gcells (g {g})")
+        f = round((c1 - c0) / g, 4)
+        cols.setdefault((L, f, round(a0, 3), round(a1, 3)), set()).add(k)
+    regions = []
+    for (L, f, a0, a1), ks in cols.items():
+        ks = sorted(ks)
+        k0 = prev = ks[0]
+        for k in ks[1:] + [None]:
+            if k is not None and k == prev + 1:
+                prev = k
+                continue
+            c0, c1 = round(k0 * g, 3), round((prev + 1) * g, 3)
+            regions.append(rect(L, c0, c1, a0, a1) + (f,))
+            if k is not None:
+                k0 = prev = k
+    return [], sorted(regions)
+
+
 PLACE_PROC = ("proc ot_place {n x y o} { set b [ord::get_db_block]; set i [$b findInst $n]; $i setOrient $o; "
               "set d [[$b getTech] getDbUnitsPerMicron]; set X [expr {round($x*$d)}]; set Y [expr {round($y*$d)}]; "
               "$i setLocation $X $Y; set bb [$i getBBox]; "
@@ -4422,8 +4494,12 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
     for L, a, b, c, d in reserve:
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
-    for L, a, b, c, d in band_share_obs(P, band_regs):   # die_ft_bands share stripes (band_share_obs)
+    sobs, sreg = band_share_compact(band_share_obs(P, band_regs), BAND_SHARE_FORM,
+                                    {L: P.layers[L]["dir"] for L in P.layers})
+    for L, a, b, c, d in sobs:   # die_ft_bands share stripes (band_share_obs; --band-share-form merge = exact union)
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
+    for L, a, b, c, d, f in sreg:   # --band-share-form region: the same share as per-region capacity adjustments
+        obs.append(f"set_global_routing_region_adjustment {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L} -adjustment {f:g}")
     (Path(out) / "obs.tcl").write_text("\n".join(obs) + "\n")
     return "\n".join(t) + "\n"
 
@@ -5629,6 +5705,9 @@ def main(argv=None):
     k.add_argument("--views")
     k.add_argument("--leaf-um", type=float, default=600.0)
     k.add_argument("--rep-um", type=float, default=450.0)
+    k.add_argument("--band-share-form", choices=BAND_SHARE_FORMS, default=BAND_SHARE_FORM,
+                   help="die_ft_bands share in the die GRT: stripe (one obstruction per gcell strip, default), merge "
+                        "(exact union of collinear stripes), region (per-region capacity adjustment); DIE-PROTO-1 11-12")
     k.add_argument("--htree-full-depth", action="store_true",
                    help="opt-in: bisect single-tap regions to --leaf-um (equal-depth leaves; FALLBACK-HEAD one-entry plans)")
     k.add_argument("--tree-site-legal", action="store_true",
@@ -5986,6 +6065,7 @@ def main(argv=None):
         print(json.dumps(dict(cell=die_sta.bhold_cell(a.tol_ps), types=len(tot), input_bits=sum(tot.values())), indent=1))
         return 0
     if a.cmd == "kit":
+        globals()["BAND_SHARE_FORM"] = a.band_share_form
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,
