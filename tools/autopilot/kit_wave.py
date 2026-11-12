@@ -773,6 +773,8 @@ def select(rows, cfg, die, state, plan_types=None):
             # including their live-job claims; do not synthesize a second owner.
             if item in known or item not in plan_types or any(item.startswith(k + "__") for k in known):
                 continue
+            if item in (d.get("plan_core_items") or []):     # KW-FIX-45 11-11: a plan core is a kind=core row (below), never a type row
+                continue
             rows.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT",
                              owner="KIT-WAVE", live_job="none", last_activity="",
                              next_step="adopted plan allowlist", evidence=d.get("plan", ""),
