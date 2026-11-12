@@ -149,6 +149,9 @@ REL_RE = re.compile(r"(?<![\w./-])(scratch\d*/claude/[^\s'\"<>|;,()\[\]{}`*?$\\]
 WORD_RE = re.compile(r"[A-Za-z0-9_.+-]{8,}")
 ATTEMPT_RE = re.compile(r"^(.*/items/[^/]+)/attempt_(\d+)(?=/|$)")
 ITEM_RE = re.compile(r"^(.*/items/[^/]+)(?=/|$)")
+VISUAL_DIRS = ("layout_review", "geom")      # FLEET-2 11-12: judged by GEOM-REVIEW before an attempt may go
+VISUAL_HOLD_S = 24 * 3600
+VISUAL_EXT = (".png", ".svg", ".html", ".jpg", ".jpeg", ".gif", ".webp")
 RESUME_S = 24 * 3600   # COORD 11-08: FAIL rows resume from their last valid stage
 XPATH_RE = re.compile(r"/kit-wave/([^/]+)/[^/]+/items/([^/]+)/attempt_(\d+)$")   # die, item, N (plan dir ignored)
 STAMP_RE = re.compile(r"(20\d\d-\d\d-\d\d) (\d\d:\d\d)(?::(\d\d))?")
@@ -998,6 +1001,12 @@ class Job:
         q = jl(os.path.join(snap, "queue.json"))
         self.queue = PathSet([(p, "queue post") for p in q["paths"]], deep=self.deep, canon=self.paths.canon)
         self.qwords = set(q["words"])
+        vh = os.path.join(snap, "visual_hold.txt")
+        self.visual_names = None
+        if os.path.exists(vh):
+            with open(vh) as fh:
+                self.visual_names = {self.paths.canon(x.strip()) if x.strip().startswith("/") else x.strip()
+                                     for x in fh if x.strip() and not x.startswith("#")}
         kw = os.path.join(snap, "kitwave.json")
         self.kitwave = None
         if os.path.exists(kw):
@@ -1454,10 +1463,14 @@ class Job:
             verdict = f"superseded by attempt_{self.kw_latest[m.group(1)]}"
         elif cur > int(m.group(2)):               # older attempt of a die|item now run from another plan dir
             verdict = f"superseded-xpath by attempt_{cur}"
-        elif aggr and not st:
-            verdict = "no kit-wave state row (aggressive)"
         else:
+            # FLEET-2 11-12 RUN-DIR LOSS: a row the kit-wave state does not know (lane run roots such as vislayout2-*,
+            # a state snapshot taken before the row was launched) is NEVER deleted, aggressive or not: only a terminal
+            # record or a later attempt of the same item may release an attempt
             return "kit-wave unknown", []
+        vh = self.visual_hold(d, c)
+        if vh:
+            return vh, []
         h = self.signed_set.hit(c)
         if h and not (aggr and self.stub_verified(c) is None):       # aggressive: a verified AGIdock copy lets the signed attempt go
             return "signed: " + h, []
@@ -1482,6 +1495,41 @@ class Job:
         finally:
             self._qn_skip = False
             self._attempt_mode = False
+
+    def visual_hold(self, d, c):
+        """FLEET-2 11-12: an attempt whose layout_review/ or geom/ is not yet judged keeps EVERYTHING (gen/, geom/,
+        layout_review/, renders): held while it is named in <snapshot>/visual_hold.txt (one path or item name per line,
+        written by the driver from lanes/GEOM-REVIEW.md WAIT-VISUAL attempts), and, with no such list, while its
+        layout_review/ or geom/ is younger than VISUAL_HOLD_S."""
+        try:
+            has = any(os.path.isdir(os.path.join(d, n)) for n in VISUAL_DIRS)
+        except OSError:
+            return "visual-hold: unreadable"
+        names = getattr(self, "visual_names", None)
+        if names is not None:
+            m = ATTEMPT_RE.match(c)
+            if c in names or d in names or (m and (m.group(1) in names or os.path.basename(m.group(1)) in names)):
+                return "visual-hold: WAIT-VISUAL attempt (visual_hold.txt)"
+        if not has:
+            return None
+        if names is None:
+            # no driver list: the renders a reviewer looks at (layout_review/ anything; geom/ images, svg, html) younger than 24 h;
+            # geom/auto_geom.json alone is a machine check, not a render, and does not hold
+            for n in VISUAL_DIRS:
+                p = os.path.join(d, n)
+                if not os.path.isdir(p):
+                    continue
+                newest = 0.0
+                for dp, _dn, fns in os.walk(p):
+                    for fn in fns:
+                        if n == "layout_review" or fn.lower().endswith(VISUAL_EXT):
+                            try:
+                                newest = max(newest, os.lstat(os.path.join(dp, fn)).st_mtime)
+                            except OSError:
+                                pass
+                if newest and self.now - newest < VISUAL_HOLD_S:
+                    return f"visual-hold: {n}/ render < 24 h and no visual_hold.txt"
+        return None
 
     # ---- recheck + delete
     def recheck(self, cls, path, files):
@@ -1624,6 +1672,10 @@ class Job:
                 return "kept: emergency hold (bind/src tree)"
         if c in keep or p in keep:
             return "kept: referenced / signed / git / keep"
+        if os.path.basename(c) in VISUAL_DIRS + ("gen",) and re.search(r"/items/[^/]+/attempt_\d+/", c + "/"):
+            return "kept: layout_review/geom/gen of an attempt (FLEET-2 11-12)"
+        if re.search(r"/(vislayout2?[^/]*|[^/]*-wave-[^/]*)/", c + "/") and os.path.isfile(os.path.join(p, ".keep")):
+            return "kept: lane run root .keep"
         for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave-keep", self.kwkeep),
                          ("local keep", self.localkeep_trim)):
             for f in self.paths.forms(p):
