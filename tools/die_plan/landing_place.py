@@ -245,28 +245,57 @@ def _native_role_config(tn, typ):
 
 def _local_chunk_config(typ, die_clock=None):
     """Only explicitly selected writer chunks or FREG ordering change placement.  DIE-QC-97: die_clock (the plan clock
-    block) applies the die ring fanout bound (clock.landing_ring_fanout_max) exactly as the ring generator does."""
+    block) applies the die ring fanout bound (clock.landing_ring_fanout_max) exactly as the ring generator does.
+    CLAND-SLEW-1 (GEN-CLASS-1 11-12): every soft band whose ring carries read-select copies (DSREP > 1: the generator's
+    reach rule clock_landings.ring_reach_select_copies, landing_ring_dsrep, or the wreg dsrep) gets a read-group row
+    (read = 64 / DSREP), so each kept copy g_srep.sr[r].u_sel/di is keyed at its own group instead of the START bit;
+    write 0 when the writer chunk is the legacy 64 (no change to the write side).  Bands without copies: no row."""
+    import clock_landings as CL
     clock = (typ or {}).get('clock', {})
     cfg = clock.get('landing_ring_wreg') or {}
     if cfg and die_clock:
-        import clock_landings as CL
         cfg = CL.ring_fanout_wreg_cfg(die_clock, cfg)
     wc = cfg.get('write_chunk', 64)
     numeric = cfg.get('freg_numeric_order', False) is True
-    if wc == 64 and not numeric:
-        return ''
-    rc = cfg.get('read_chunk') or 64 // cfg.get('dsrep', 1)
     tail = ' tail 1' if cfg.get('write_tail') else ''
+    bands = clock.get('landing_contract', {}).get('bands', {})
+    dcfg = clock.get('landing_ring_dsrep') or {}
+    hard_plan = dict(partition_types={'_': typ or {}})
+
+    def ring_w(bus, band):
+        for k in ('ring_width', 'width'):
+            if isinstance(band.get(k), int) and not isinstance(band.get(k), bool):
+                return band[k]
+        for b in (typ or {}).get('buses', []):
+            if b.get('name') == bus and isinstance(b.get('width'), int):
+                return b['width']
+        return 0
+
     rows = []
     for bus in cfg.get('buses', []):
-        band = clock.get('landing_contract', {}).get('bands', {}).get(bus, {})
+        band = bands.get(bus, {})
         prefix = band.get('instance', 'u_cland_' + bus)
+        ds = cfg.get('dsrep', 1)
+        if CL.hard_ring_params(hard_plan, '_', bus) is None and not band.get('hard_core'):
+            ds = max(ds, CL.ring_reach_select_copies(ring_w(bus, band), cfg.get('read_chunk', 0)))
+        rc = cfg.get('read_chunk') or 64 // ds
         if wc != 64:
             rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(wc) + ' read ' + str(rc) + tail + '}')
+        elif ds > 1 and not cfg.get('read_chunk'):
+            rows.append('dict set ::cland_local_chunks {' + prefix + '} {write 0 read ' + str(rc) + '}')
         if numeric:
             rows.append('dict set ::cland_numeric_freg_banks {' + prefix + '.g_freg.u_face} 1')
+    for bus, band in sorted(bands.items()):
+        if bus in cfg.get('buses', []) or band.get('hard_core') or CL.hard_ring_params(hard_plan, '_', bus) is not None:
+            continue
+        ds = dcfg.get('dsrep', 1) if bus in (dcfg.get('buses') or []) else 1
+        ds = max(ds, CL.ring_reach_select_copies(ring_w(bus, band)))
+        if ds > 1:
+            prefix = band.get('instance', 'u_cland_' + bus)
+            rows.append('dict set ::cland_local_chunks {' + prefix + '} {write 0 read ' + str(64 // ds) + '}')
+    if not rows and wc == 64 and not numeric:
+        return ''
     return 'set ::cland_local_chunks {}\nset ::cland_numeric_freg_banks {}\n' + '\n'.join(rows) + '\n'
-
 
 def _placement_source(active):
     source = Path(__file__).with_name('landing_placement.tcl').read_text()

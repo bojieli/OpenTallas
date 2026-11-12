@@ -20,8 +20,10 @@ class WriterOptinTests(unittest.TestCase):
         old = dict(depth=2, dsrep=8, freg=True)
         self.assertEqual(self.cfg(), old)
         self.assertEqual(self.cfg(write_chunk=64), old)
-        self.assertEqual(L._local_chunk_config(self.typ()), '')
-        self.assertEqual(L._local_chunk_config(self.typ(write_chunk=64)), '')
+        # CLAND-SLEW-1: no write rows (legacy 64), but the dsrep 8 select copies are keyed at their 8-bit read groups
+        self.assertIn('{u_cland_i} {write 0 read 8}', L._local_chunk_config(self.typ()))
+        self.assertIn('{u_cland_i} {write 0 read 8}', L._local_chunk_config(self.typ(write_chunk=64)))
+        self.assertNotIn("dict set ::cland_numeric_freg_banks", L._local_chunk_config(self.typ()))
 
     def test_chunk_does_not_implicitly_enable_numeric_freg(self):
         t = self.typ(write_chunk=8)

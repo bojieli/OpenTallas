@@ -94,7 +94,8 @@ def test_placement_chunks_follow_the_bound():
     _wreg(p)
     typ = p["partition_types"]["B"]
     assert _local_chunk_config(typ) == "" and _local_chunk_config(typ, {}) == ""
-    assert _local_chunk_config(typ, {"landing_ring_fanout_max": 32}) == ""        # write chunk 64: no rows
+    # write chunk 64 (no write rows); CLAND-SLEW-1: the dsrep 2 copies are keyed at their 32-bit read groups
+    assert "{write 0 read 32}" in _local_chunk_config(typ, {"landing_ring_fanout_max": 32})
     assert "{write 32 read 32}" in _local_chunk_config(typ, {"landing_ring_fanout_max": 32, "landing_ring_write_chunk": 32})
 
 

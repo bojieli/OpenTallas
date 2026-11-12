@@ -1,0 +1,5 @@
+W=65 normal: TB_DSREP_CA W=65 compared 2980 ready_cycles 2928 mismatches 0 fault 0 -> TB_DSREP_CA PASS
+W=65 mutant: TB_DSREP_CA W=65 compared 2980 ready_cycles 2928 mismatches 2211 fault 0 -> TB_DSREP_CA FAIL
+W=568 normal: TB_DSREP_CA W=568 compared 2980 ready_cycles 2928 mismatches 0 fault 0 -> TB_DSREP_CA PASS
+W=568 mutant: TB_DSREP_CA W=568 compared 2980 ready_cycles 2928 mismatches 2219 fault 0 -> TB_DSREP_CA FAIL
+BENCH rc=0

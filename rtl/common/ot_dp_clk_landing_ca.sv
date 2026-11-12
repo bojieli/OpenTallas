@@ -58,7 +58,10 @@ module ot_dp_clk_landing_ca #(
     // flop, so the long ring -> face wire gets its own cycle.  The ring, its window, K and ready/fault are unchanged;
     // q is the same word stream ONE clk later (+1 data cycle, declared by the plan key landing_output_qreg and counted
     // in the crossing's added_cycles).  Default 0 = identical logic.
-    parameter bit QREG = 0
+    parameter bit QREG = 0,
+    // CLAND-SLEW-1 (GEN-CLASS-1 11-12): read-select register copies per 64-bit chunk (ot_meso_ring_ca DSREP, as
+    // ot_dp_clk_landing_cas); appended for positional compatibility.  Default 1 = identical logic.
+    parameter int DSREP = 1
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -120,7 +123,8 @@ module ot_dp_clk_landing_ca #(
     localparam integer KNT = 1 << KTW;
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG), .GUARD_REG(GUARD_REG)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG), .GUARD_REG(GUARD_REG),
+                      .DSREP(DSREP)) u_ring (
         .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(1'b1), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
