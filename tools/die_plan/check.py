@@ -2426,7 +2426,7 @@ def _plan_geom_default():
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
-        seam_hop="warn"):
+        seam_hop="warn", core_shape_index=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2524,6 +2524,10 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["census"] = census_cov.coverage(P, plan_dir or ".", R)
     if clock_builds:
         summ["clock_mesh"] = check_clock_mesh(R, clock_builds)
+    if core_shape_index:
+        # CORE-SHAPE-GATE-1 (OWNER 11-11 CORE-SHAPE FREEZE, opt-in): outline of a signed RTL identity never changes silently
+        import core_shape
+        summ["core_shape"] = core_shape.check_core_shape(raw, R, core_shape_index)
     summ["known_errors"] = apply_known_errors(R, plan_dir, completeness)
     if png:
         import render
@@ -2568,6 +2572,9 @@ def main(argv=None):
                     help="SEAM-HOP-1 advisory (seam_hop.py): WARN per seam hop (last station -> first station of the next "
                          "partition) over the 405-um signal reach; never an ERROR, ignored by --strict")
     ap.add_argument("--native-reset-receipt", help="explicit measured native conditional reset receipt; no core-cycle deadline or CDC waiver")
+    ap.add_argument("--core-shape-index", help="CORE-SHAPE-GATE-1: cached signed-shape index (core_shape.py build-index); a hard core whose "
+                    "outline matches no signed shape of its module and has no core_shape_exceptions entry is an ERROR "
+                    "[core_shape_change] (default: check off)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
@@ -2575,7 +2582,7 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop,
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, core_shape_index=a.core_shape_index,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())
