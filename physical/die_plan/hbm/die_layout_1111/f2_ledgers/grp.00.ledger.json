@@ -1,0 +1,223 @@
+{
+ "summary": {
+  "slots": 9,
+  "resited": 1,
+  "kept": [
+   "q_b110/L1278x1",
+   "q_b111__physical_v1/L5072x2",
+   "q_b111__physical_v1/L5059x2",
+   "q_b111__physical_v1/L5073x2",
+   "q_b111__physical_v1/L5069x1",
+   "q_b112__physical_v1/L8350mx1",
+   "q_b113/L1269x2",
+   "q_b113/L1260x2"
+  ],
+  "added_cycles": {
+   "q_b112/L8350x1": 2
+  }
+ },
+ "limit_um": 364.5,
+ "slots": [
+  {
+   "type": "q_b110",
+   "slot": "L1278x1",
+   "width": 1483,
+   "stations_before": 4,
+   "hop_before_um": 590.2,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=4 jog=None: only0 legal sites for1 at(408.09000000000003, 1484.199999999987) within40.0um",
+    "k=4 jog=bits: only0 legal sites for1 at(408.09000000000003, 1484.2037493231473) within40.0um",
+    "k=5 jog=None: only0 legal sites for1 at(408.09000000000003, 1484.199999999987) within40.0um",
+    "k=5 jog=bits: only0 legal sites for1 at(408.09000000000003, 1484.2037493231473) within40.0um",
+    "k=6 jog=None: only0 legal sites for1 at(408.09000000000003, 1488.199999999987) within40.0um",
+    "k=6 jog=bits: only0 legal sites for1 at(408.09000000000003, 1488.157538877269) within40.0um",
+    "k=7 jog=None: only0 legal sites for1 at(300.39, 1116.199999999987) within40.0um",
+    "k=7 jog=bits: only0 legal sites for1 at(300.39, 1116.0749612660843) within40.0um"
+   ]
+  },
+  {
+   "type": "q_b111__physical_v1",
+   "slot": "L5072x2",
+   "width": 1087,
+   "stations_before": 8,
+   "hop_before_um": 1328.8,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=8 jog=None: only0 legal sites for1 at(287.13, 163.896) within40.0um",
+    "k=8 jog=48.211: only0 legal sites for1 at(287.13, 163.896) within40.0um",
+    "k=8 jog=189.631: only0 legal sites for1 at(287.13, 163.896) within40.0um",
+    "k=8 jog=331.05: only0 legal sites for1 at(287.13, 163.896) within40.0um",
+    "k=8 jog=472.47: only0 legal sites for1 at(287.13, 163.896) within40.0um",
+    "k=8 jog=613.889: only0 legal sites for1 at(287.13, 163.896) within40.0um",
+    "k=8 jog=755.309: only0 legal sites for1 at(287.13, 163.896) within40.0um",
+    "k=9 jog=None: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=9 jog=48.211: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=9 jog=189.631: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=9 jog=331.05: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=9 jog=472.47: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=9 jog=613.889: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=9 jog=755.309: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=10 jog=None: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=10 jog=48.211: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=10 jog=189.631: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=10 jog=331.05: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=10 jog=472.47: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=10 jog=613.889: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=10 jog=755.309: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=11 jog=None: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=11 jog=48.211: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=11 jog=189.631: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=11 jog=331.05: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=11 jog=472.47: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=11 jog=613.889: only0 legal sites for1 at(162.15, 49.12) within40.0um",
+    "k=11 jog=755.309: only0 legal sites for1 at(162.15, 49.12) within40.0um"
+   ]
+  },
+  {
+   "type": "q_b111__physical_v1",
+   "slot": "L5059x2",
+   "width": 585,
+   "stations_before": 6,
+   "hop_before_um": 546.5,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=6 jog=None: L5059x2: no chain within 364.5 um after tightening by 0 um",
+    "k=6 jog=bits: L5059x2: no chain within 364.5 um after tightening by 0 um",
+    "k=7 jog=None: only0 legal sites for1 at(157.53, 493.224) within40.0um",
+    "k=7 jog=bits: only0 legal sites for1 at(157.53, 493.224) within40.0um",
+    "k=8 jog=None: only0 legal sites for1 at(157.53, 493.224) within40.0um",
+    "k=8 jog=bits: only0 legal sites for1 at(157.53, 493.224) within40.0um",
+    "k=9 jog=None: only0 legal sites for1 at(157.53, 493.224) within40.0um",
+    "k=9 jog=bits: only0 legal sites for1 at(157.53, 493.224) within40.0um"
+   ]
+  },
+  {
+   "type": "q_b111__physical_v1",
+   "slot": "L5073x2",
+   "width": 490,
+   "stations_before": 6,
+   "hop_before_um": 1119.5,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=6 jog=None: only0 legal sites for1 at(572.25, 234.784) within40.0um",
+    "k=6 jog=48.211: L5073x2: no chain within 364.5 um after tightening by 0 um",
+    "k=6 jog=189.631: only0 legal sites for1 at(287.13, 194.04) within40.0um",
+    "k=6 jog=331.05: only0 legal sites for1 at(291.75, 823.7336487778232) within40.0um",
+    "k=6 jog=472.47: only0 legal sites for1 at(572.25, 234.784) within40.0um",
+    "k=6 jog=613.889: only0 legal sites for1 at(576.87, 568.4128291570386) within40.0um",
+    "k=6 jog=755.309: only0 legal sites for1 at(706.47, 476.27039159901733) within40.0um",
+    "k=7 jog=None: only0 legal sites for1 at(572.25, 234.784) within40.0um",
+    "k=7 jog=48.211: only0 legal sites for1 at(576.5411814214489, 234.784) within40.0um",
+    "k=7 jog=189.631: only0 legal sites for1 at(162.15, 522.3112588806805) within40.0um",
+    "k=7 jog=331.05: only0 legal sites for1 at(291.75, 885.7349623629659) within40.0um",
+    "k=7 jog=472.47: only0 legal sites for1 at(572.25, 234.784) within40.0um",
+    "k=7 jog=613.889: only0 legal sites for1 at(576.87, 672.7159641722891) within40.0um",
+    "k=7 jog=755.309: only0 legal sites for1 at(706.47, 505.27983253178115) within40.0um",
+    "k=8 jog=None: only0 legal sites for1 at(576.5883340122193, 234.784) within40.0um",
+    "k=8 jog=48.211: only0 legal sites for1 at(576.87, 234.784) within40.0um",
+    "k=8 jog=189.631: only0 legal sites for1 at(162.15, 494.76391634160984) within40.0um",
+    "k=8 jog=331.05: only0 legal sites for1 at(291.75, 1033.6865305280435) within40.0um",
+    "k=8 jog=472.47: only0 legal sites for1 at(572.25, 234.784) within40.0um",
+    "k=8 jog=613.889: only0 legal sites for1 at(576.87, 669.0045671128133) within40.0um",
+    "k=8 jog=755.309: only0 legal sites for1 at(706.47, 501.093178920136) within40.0um",
+    "k=9 jog=None: only0 legal sites for1 at(576.5883340122193, 234.784) within40.0um",
+    "k=9 jog=48.211: only0 legal sites for1 at(576.87, 234.784) within40.0um",
+    "k=9 jog=189.631: only0 legal sites for1 at(162.15, 790.1094242710794) within40.0um",
+    "k=9 jog=331.05: only0 legal sites for1 at(291.75, 1033.6865305280435) within40.0um",
+    "k=9 jog=472.47: only0 legal sites for1 at(572.25, 234.784) within40.0um",
+    "k=9 jog=613.889: only0 legal sites for1 at(576.87, 664.8969905248048) within40.0um",
+    "k=9 jog=755.309: only0 legal sites for1 at(706.47, 501.093178920136) within40.0um"
+   ]
+  },
+  {
+   "type": "q_b111__physical_v1",
+   "slot": "L5069x1",
+   "width": 429,
+   "stations_before": 5,
+   "hop_before_um": 726.8,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=5 jog=None: L5069x1: no chain within 364.5 um after tightening by 0 um",
+    "k=5 jog=bits: L5069x1: no chain within 364.5 um after tightening by 0 um",
+    "k=6 jog=None: only0 legal sites for1 at(576.87, 419.256) within40.0um",
+    "k=6 jog=bits: only0 legal sites for1 at(576.87, 419.256) within40.0um",
+    "k=7 jog=None: only0 legal sites for1 at(572.25, 680.1999999999964) within40.0um",
+    "k=7 jog=bits: only0 legal sites for1 at(576.87, 419.256) within40.0um",
+    "k=8 jog=None: only0 legal sites for1 at(576.87, 419.256) within40.0um",
+    "k=8 jog=bits: only0 legal sites for1 at(576.87, 419.256) within40.0um"
+   ]
+  },
+  {
+   "type": "q_b112",
+   "slot": "L8350x1",
+   "width": 1615,
+   "stations_before": 4,
+   "hop_before_um": 740.3,
+   "jog_um": "bits",
+   "stations_after": 6,
+   "added_cycles": 2,
+   "hop_after_um": 359.9,
+   "hops_um": [
+    229.6,
+    231.9,
+    359.9,
+    287.8,
+    309.2,
+    216.9
+   ],
+   "len_um": 1373.6,
+   "max_alloc_disp_um": 34.18
+  },
+  {
+   "type": "q_b112__physical_v1",
+   "slot": "L8350mx1",
+   "width": 1615,
+   "stations_before": 5,
+   "hop_before_um": 613.0,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=5 jog=None: L8350mx1: no chain within 364.5 um after tightening by 0 um",
+    "k=5 jog=bits: L8350mx1: no chain within 364.5 um after tightening by 0 um",
+    "k=6 jog=None: only0 legal sites for1 at(822.81, 579.0) within40.0um",
+    "k=6 jog=bits: only0 legal sites for1 at(822.81, 565.0057194157785) within40.0um",
+    "k=7 jog=None: only0 legal sites for1 at(822.81, 647.0) within40.0um",
+    "k=7 jog=bits: only0 legal sites for1 at(822.81, 643.0065103988118) within40.0um",
+    "k=8 jog=None: only0 legal sites for1 at(822.81, 527.0) within40.0um",
+    "k=8 jog=bits: only0 legal sites for1 at(822.81, 527.00533406507) within40.0um"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "slot": "L1269x2",
+   "width": 496,
+   "stations_before": 2,
+   "hop_before_um": 543.6,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=2 jog=None: same-face slot",
+    "k=3 jog=None: same-face slot",
+    "k=4 jog=None: same-face slot",
+    "k=5 jog=None: same-face slot"
+   ]
+  },
+  {
+   "type": "q_b113",
+   "slot": "L1260x2",
+   "width": 363,
+   "stations_before": 4,
+   "hop_before_um": 465.9,
+   "kept": "no chain within limit",
+   "tried": [
+    "k=4 jog=None: L1260x2: no chain within 364.5 um after tightening by 0 um",
+    "k=4 jog=bits: L1260x2: no chain within 364.5 um after tightening by 0 um",
+    "k=5 jog=None: L1260x2: no chain within 364.5 um after tightening by 0 um",
+    "k=5 jog=bits: L1260x2: no chain within 364.5 um after tightening by 0 um",
+    "k=6 jog=None: L1260x2: no chain within 364.5 um after tightening by 0 um",
+    "k=6 jog=bits: L1260x2: no chain within 364.5 um after tightening by 0 um",
+    "k=7 jog=None: L1260x2: no chain within 364.5 um after tightening by 0 um",
+    "k=7 jog=bits: L1260x2: no chain within 364.5 um after tightening by 0 um"
+   ]
+  }
+ ]
+}

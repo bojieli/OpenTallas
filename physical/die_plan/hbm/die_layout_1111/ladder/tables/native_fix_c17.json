@@ -1,0 +1,182 @@
+{
+ "moved": [
+  {
+   "lane": "L1253",
+   "extra": 2,
+   "part": "NW_b001",
+   "slot": "L1253y0",
+   "stations": [
+    8,
+    10
+   ],
+   "route_um": 2757
+  },
+  {
+   "lane": "L1275",
+   "extra": 11,
+   "part": "NW_b011",
+   "slot": "L1275y1",
+   "stations": [
+    8,
+    19
+   ],
+   "route_um": 2710
+  },
+  {
+   "lane": "L3006",
+   "extra": 2,
+   "part": "NW_b012",
+   "slot": "L3006y0",
+   "stations": [
+    8,
+    10
+   ],
+   "route_um": 2736
+  },
+  {
+   "lane": "L3007",
+   "extra": 1,
+   "part": "NW_b013",
+   "slot": "L3007y0",
+   "stations": [
+    8,
+    9
+   ],
+   "route_um": 2710
+  },
+  {
+   "lane": "L3008",
+   "extra": 1,
+   "part": "NW_b013",
+   "slot": "L3008y0",
+   "stations": [
+    7,
+    8
+   ],
+   "route_um": 2532
+  },
+  {
+   "lane": "L5055",
+   "extra": 2,
+   "part": "NE_b012",
+   "slot": "L5055y2",
+   "stations": [
+    7,
+    9
+   ],
+   "route_um": 2480
+  },
+  {
+   "lane": "L5093",
+   "extra": 9,
+   "part": "NE_su00",
+   "slot": "L5093x5",
+   "stations": [
+    9,
+    18
+   ],
+   "route_um": 3210
+  },
+  {
+   "lane": "L5094",
+   "extra": 24,
+   "part": "NE_su00",
+   "slot": "L5094x5",
+   "stations": [
+    7,
+    31
+   ],
+   "route_um": 2533
+  },
+  {
+   "lane": "L5095",
+   "extra": 14,
+   "part": "NE_b001",
+   "slot": "L5095y2",
+   "stations": [
+    5,
+    19
+   ],
+   "route_um": 1711
+  },
+  {
+   "lane": "L5096",
+   "extra": 13,
+   "part": "NE_b001",
+   "slot": "L5096y2",
+   "stations": [
+    5,
+    18
+   ],
+   "route_um": 1697
+  },
+  {
+   "lane": "L5099",
+   "extra": 14,
+   "part": "NE_b001",
+   "slot": "L5099y2",
+   "stations": [
+    5,
+    19
+   ],
+   "route_um": 1721
+  },
+  {
+   "lane": "L5100",
+   "extra": 15,
+   "part": "NE_b001",
+   "slot": "L5100y2",
+   "stations": [
+    5,
+    20
+   ],
+   "route_um": 1736
+  },
+  {
+   "lane": "L8006",
+   "extra": 4,
+   "part": "NE_b010",
+   "slot": "L8006y3",
+   "stations": [
+    7,
+    11
+   ],
+   "route_um": 2282
+  }
+ ],
+ "up": [
+  {
+   "lane": "L1252",
+   "fixed_was": 2,
+   "fixed_now": 3,
+   "cycles_up": 1
+  },
+  {
+   "lane": "L5054",
+   "fixed_was": 0,
+   "fixed_now": 3,
+   "cycles_up": 3
+  },
+  {
+   "lane": "L5056",
+   "fixed_was": 0,
+   "fixed_now": 3,
+   "cycles_up": 3
+  }
+ ],
+ "failed": [],
+ "cycles_changed": {
+  "L1252": [
+   20,
+   21
+  ],
+  "L5054": [
+   25,
+   28
+  ],
+  "L5056": [
+   26,
+   29
+  ]
+ }
+}

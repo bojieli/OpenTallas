@@ -1,0 +1,37 @@
+cuts	horizontal cut at 10000: NE_b001 segment carries 6668 bits on 9119 tracks = 0.73 > 0.6
+cuts	horizontal cut at 10250: NW_b001 segment carries 6759 bits on 8368 tracks = 0.81 > 0.6
+cuts	horizontal cut at 6250: NW_b010 segment carries 3796 bits on 5260 tracks = 0.72 > 0.6
+cuts	horizontal cut at 6500: NE_b000 segment carries 5278 bits on 8235 tracks = 0.64 > 0.6
+cuts	horizontal cut at 7250: NW_b010 segment carries 2960 bits on 4666 tracks = 0.63 > 0.6
+cuts	horizontal cut at 7750: NW_b010 segment carries 4184 bits on 5387 tracks = 0.78 > 0.6
+cuts	horizontal cut at 8000: NE_b011 segment carries 3101 bits on 4451 tracks = 0.70 > 0.6
+cuts	horizontal cut at 8250: NE_b000 segment carries 5830 bits on 8235 tracks = 0.71 > 0.6
+cuts	horizontal cut at 8500: NE_b000 segment carries 5391 bits on 8235 tracks = 0.65 > 0.6
+cuts	horizontal cut at 8750: NE_b000 segment carries 6501 bits on 8433 tracks = 0.77 > 0.6
+cuts	horizontal cut at 9000: NW_b001 segment carries 6097 bits on 8557 tracks = 0.71 > 0.6
+cuts	horizontal cut at 9500: NE_b001 segment carries 6668 bits on 9457 tracks = 0.71 > 0.6
+cuts	horizontal cut at 9750: NW_b001 segment carries 6094 bits on 7702 tracks = 0.79 > 0.6
+cuts	vertical cut at 24750: NE_b010 segment carries 9552 bits on 13439 tracks = 0.71 > 0.6
+cuts	vertical cut at 3750: NW_b001 segment carries 5624 bits on 8534 tracks = 0.66 > 0.6
+faces	NE_b000.E: 66 pins in the 10-um window at 6093.86 (6.60/um > 6)
+faces	NE_b001.N: 85 pins in the 10-um window at 24030.24 (8.50/um > 6)
+faces	NE_b001.W: 66 pins in the 10-um window at 8564.90 (6.60/um > 6)
+faces	NE_b003.N: 85 pins in the 10-um window at 27160.42 (8.50/um > 6)
+faces	NE_b010.S: 123 pins in the 10-um window at 24876.96 (12.30/um > 6)
+faces	NE_b010.W: 66 pins in the 10-um window at 6093.86 (6.60/um > 6)
+faces	NE_su00.S: 85 pins in the 10-um window at 24360.94 (8.50/um > 6)
+faces	NE_su01.S: 85 pins in the 10-um window at 27160.42 (8.50/um > 6)
+faces	NW_b000.W: 66 pins in the 10-um window at 6340.06 (6.60/um > 6)
+faces	NW_b001.E: 66 pins in the 10-um window at 8947.03 (6.60/um > 6)
+faces	NW_b001.N: 128 pins in the 10-um window at 4056.98 (12.80/um > 6)
+faces	NW_b002.N: 84 pins in the 10-um window at 2847.19 (8.40/um > 6)
+faces	NW_b010.E: 66 pins in the 10-um window at 6340.06 (6.60/um > 6)
+faces	NW_b011.S: 122 pins in the 10-um window at 3516.31 (12.20/um > 6)
+hops	lane L3003: normal FT NW_su00.L3003x1 real input bit 178 S0->S1 is 570 um > reach 405; regs_um[0] is not a native placement
+hops	lane L5056: normal FT NE_b103.L5056x1 real input bit 1 S0->S1 is 634 um > reach 405; regs_um[0] is not a native placement
+hops	lane L8300: normal FT NW_su00.L8300x4 real input bit 1 S0->S1 is 816 um > reach 405; regs_um[0] is not a native placement
+hops	lane L8300m: normal FT NE_su00.L8300mx4 real input bit 1 S0->S1 is 709 um > reach 405; regs_um[0] is not a native placement
+layers	port L7500_2: pin layer M9 not in NE_b002's face_layers[N] ['M7', 'M5']
+layers	port L7500_4: pin layer M9 not in NE_b013's face_layers[S] ['M7', 'M5']
+m89_signals	... 3 more signal uses of M8/M9 (counts in summary.m89_signals)
+m89_signals	port L7504_3: pin layers ['M8'] include M8/M9 (ruling 9.3: M8/M9 carry only the die clock spine, reset and PG)

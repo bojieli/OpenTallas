@@ -1,0 +1,3 @@
+G0C per type: 27/82 types clean (G3-eligible: 0); die-level {'die_io_plan': 1, 'street_die_leg': 23}; reported as WARN (run --completeness)
+G0 FAIL: 537 errors, 0 pending-view, 1826 warnings; 82 types / 90 partitions (8 in near-duplicate groups); worst cut {'ratio': 0.2093, 'at': 'vertical@4750'}, worst partition segment {'ratio': 0.8077, 'at': 'horizontal@10250:NW_b001'}; report /srv/opentallas-scratch3/claude/die-layout-hbm/ld/g0_c13/g0_report.json/g0_report.json
+rc 1

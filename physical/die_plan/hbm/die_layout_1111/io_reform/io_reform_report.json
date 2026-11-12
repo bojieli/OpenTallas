@@ -1,0 +1,78 @@
+{
+ "NW": {
+  "H": 1814.4,
+  "relay_h": 2505.6,
+  "L8007_slot": 7,
+  "L8007_hop": 399.1,
+  "L8008_slot": 7,
+  "L8008_hop": 371.6,
+  "L8007_window": [
+   502.184,
+   612.184
+  ],
+  "L8008_window": [
+   324.123,
+   434.123
+  ]
+ },
+ "NE": {
+  "H": 1425.6,
+  "relay_h": 2894.4,
+  "L8006_slot": 3,
+  "L8006_hop": 355.0,
+  "L8006_window": [
+   334.0006,
+   335.1674
+  ]
+ },
+ "NW_io_tap": {
+  "old": [
+   228.96,
+   1209.6
+  ],
+  "new": [
+   324.0,
+   1401.84
+  ]
+ },
+ "NE_io_tap": {
+  "old": [
+   453.6,
+   1118.88
+  ],
+  "new": [
+   324.0,
+   1380.24
+  ]
+ },
+ "L8007": {
+  "cycles": 70,
+  "stations": 53,
+  "boundary": 2,
+  "faces": 9,
+  "fixed": 15,
+  "natural": 70,
+  "pad": 0,
+  "param": "LAT_L8007"
+ },
+ "L8008": {
+  "cycles": 70,
+  "stations": 52,
+  "boundary": 2,
+  "faces": 9,
+  "fixed": 16,
+  "natural": 70,
+  "pad": 0,
+  "param": "LAT_L8008"
+ },
+ "L8006": {
+  "cycles": 66,
+  "stations": 54,
+  "boundary": 2,
+  "faces": 8,
+  "fixed": 10,
+  "natural": 66,
+  "pad": 0,
+  "param": "LAT_L8006"
+ }
+}

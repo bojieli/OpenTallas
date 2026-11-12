@@ -1,0 +1,17 @@
+base 624 new plan 537 new msgs 47 lost msgs 134
+13 cuts | horizontal cut at 6250: NW_b010 segment carries 3796 bits on 5260 tracks = 0.72 > 0.6
+4 faces | NW_b001.N: 128 pins in the 10-um window at 4056.98 (12.80/um > 6)
+4 faces | NW_b011.S: 122 pins in the 10-um window at 3516.31 (12.20/um > 6)
+4 m89_signals | port L7500_50: pin layers ['M9'] include M8/M9 (ruling 9.3: M8/M9 carry only the die clock spine, reset and PG)
+3 layers | port L7500_50: pin layer M9 not in NE_su00's face_layers[S] ['M7', 'M5']
+3 layers | port L7500_50: pin layer M9 not in NE_b002's face_layers[N] ['M7', 'M5']
+3 layers | port L7500_50: pin layer M9 above partition_signal_max M7 (allowed only via the type's face_layers)
+3 faces | NW_b000.W: 66 pins in the 10-um window at 6340.06 (6.60/um > 6)
+3 faces | NW_b010.E: 66 pins in the 10-um window at 6340.06 (6.60/um > 6)
+3 hops | lane L3003: normal FT NW_su00.L3003x1 real input bit 178 S0->S1 is 570 um > reach 405; regs_um[0] is not a native placement
+2 cuts | vertical cut at 3750: NW_b001 segment carries 5624 bits on 8534 tracks = 0.66 > 0.6
+1 m89_signals | ... 3 more signal uses of M8/M9 (counts in summary.m89_signals)
+1 hops | lane L8300m: normal FT NE_su00.L8300mx4 real input bit 1 S0->S1 is 709 um > reach 405; regs_um[0] is not a native placement
+--- lost by check Counter({'faces': 46, 'stations': 36, 'hops': 24, 'layers': 12, 'cuts': 11, 'm89_signals': 5})
+--- new by check Counter({'cuts': 15, 'faces': 14, 'layers': 9, 'm89_signals': 5, 'hops': 4})
+DONE

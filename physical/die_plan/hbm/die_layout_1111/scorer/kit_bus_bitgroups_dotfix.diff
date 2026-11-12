@@ -1,0 +1,8 @@
+89c89
+<             return v.split(".")[0]
+---
+>             return v.rsplit(".", 1)[0] if v.count(".") >= 2 else v.split(".")[0]
+97c97
+<         if re.search(rf"(?<![A-Za-z0-9]){re.escape(c)}(?![A-Za-z0-9])", text) and (best is None or len(c) > len(best)):
+---
+>         if re.search(rf"(?<![A-Za-z0-9]){re.escape(c.replace('.', '_'))}(?![A-Za-z0-9])", text) and (best is None or len(c) > len(best)):

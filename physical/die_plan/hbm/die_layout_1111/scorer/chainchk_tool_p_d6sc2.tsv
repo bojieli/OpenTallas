@@ -1,0 +1,11 @@
+type	bus	dir	bits	cores	depth	merged_max_core_hop	merged_bits>405	group_max_hop	unresolved_bits	mode
+q_b000	L14_o	out	4112	2	9	3156	1169 (28%)	359	0	AUTO-ON
+q_b000	L65_i	in	3934	1	7	1331	2810 (71%)	349	0	AUTO-ON
+q_b000__physical_v1	L14_o	out	4112	2	9	3141	1169 (28%)	359	0	AUTO-ON
+q_b000__physical_v1	L65_i	in	3934	1	7	1331	2810 (71%)	349	0	AUTO-ON
+q_b001	L15_o	out	4110	1	5	806	2058 (50%)	402	0	AUTO-ON
+q_b001	L14_i	in	4393	2	10	1898	1616 (36%)	367	1321	AUTO-ON
+q_b001	L71_i	in	3675	1	6	877	2612 (71%)	268	0	AUTO-ON
+q_b001__physical_v1	L15_o	out	4110	1	6	1365	3592 (87%)	261	0	AUTO-ON
+q_b001__physical_v1	L14_i	in	4393	2	10	1689	1616 (36%)	285	1321	AUTO-ON
+q_b001__physical_v1	L71_i	in	3675	1	6	973	2113 (57%)	209	0	AUTO-ON
