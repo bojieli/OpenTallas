@@ -4139,7 +4139,10 @@
     "epyc2"
    ],
    "plan_sha256": "3ad01048cacf6a1bd560ed3178ee3c06ffa98619dda7ae78eea1e485d8e27a75",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
+   "die_gen_env": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   }
   },
   "s81": {
    "enabled": true,
@@ -19842,7 +19845,10 @@
     "serdes__t15__cla2127225": "copy"
    },
    "plan_sha256": "db1da17a93abed83efe1961b340438716d32cd7cdac42284b5a52100d54e93b0",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
+   "die_gen_env": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -20977,7 +20983,10 @@
     "hd_serdes"
    ],
    "plan_sha256": "5e0253c7039325a561b576f3bdd3ebfd97b8266a07ab0460b3340bcb4b3150a1",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
+   "die_gen_env": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -20989,15 +20998,15 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s27.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66",
-   "src_sha": "9024de9d66",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef",
+   "src_sha": "88018018ef",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
-    "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs28in/bind_plan_qc99_s28",
+    "note": "KW-FIX-45 11-12 QC s28 item 1 (sink bins): plan_qc99_s28 2f0c17d5f1a3 (qc-event-s28-1111@88018018ef on s27), sidecar 38a30992accc, DIE-QC-99 strict bind rc 0 (bind_report 14318a0162a1); bind.f src28b/bind-dir paths rewritten to my tree (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
    },
@@ -21007,7 +21016,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/qcs27in/sidecar_pv_s27.json"
+    "/srv/opentallas-scratch2/claude/kw45/qcs28in/sidecar_pv_s28.json"
    ],
    "kinds": [
     "type"
@@ -21704,7 +21713,7 @@
     "slw_su_l0__cl1e5219ea@6",
     "slw_su_l0__cl76fb247e@9"
    ],
-   "queue_src": "claude/qc-s27-vis-1111@9024de9d66",
+   "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -22381,7 +22390,7 @@
     "epyc8",
     "intel2"
    ],
-   "cancel_superseded": true,
+   "cancel_superseded": false,
    "only_items": [
     "cbf_q01",
     "cbf_q01_s2",
@@ -29005,8 +29014,11 @@
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
-   "plan_sha256": "820f14a689b7ba62a16240a38e9e0bcbbef17bb21493c86f6ed0fd5ebafb2af9",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
+   "plan_sha256": "2f0c17d5f1a31e5a73baf57acd263c9924fc96c28e3fa4e8729bc7f1c9e7cf44",
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
+   "die_gen_env": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   }
   },
   "hbm": {
    "enabled": true,
