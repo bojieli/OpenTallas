@@ -1,0 +1,96 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s5_sc2_leaf_hab5fca",
+  "module": "qfd_dv_s5_sc2_leaf",
+  "plan_type": "slw_sc_v2",
+  "outline_um": [
+   244.56,
+   514.08
+  ],
+  "ref_tile": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/_spec/qfd_dv_s5_sc2_leaf",
+  "spec": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/_spec/qfd_dv_s5_sc2_leaf/spec.json",
+  "spec_sha256": "cd616cd3df19bb76ad909f3037aa369da58dfd7d1b6828e107ccea571df30630",
+  "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json",
+  "pins_sha256": "ab5fca2c0b6f950fb120003ba723e8d53774e16b12632958061c191b6faf19f2",
+  "pins": 572,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "02df2801b82c3d427a3682a0937c15d998fbf7a29151b4990ceb876e05db78cc",
+  "period_ps": 833.0,
+  "insertion_ps": 335.3,
+  "insertion_ff_ps": 287.3,
+  "insertion_basis": {
+   "tt": "plan early core tap 335.3 TT / 287.3 FF (parent_budget early tap 85.3 ps TT: ESTIMATE = Codex HARD1 standalone GRT readout epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_timing_readout + sc_buffer_replay: 572 pin-register means TT 335.32 / FF 287.28 ps (global RC, no CTS repair); re-measure from own kit view (12.28b))",
+   "ff": "plan early core tap 335.3 TT / 287.3 FF (parent_budget early tap 85.3 ps TT: ESTIMATE = Codex HARD1 standalone GRT readout epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_timing_readout + sc_buffer_replay: 572 pin-register means TT 335.32 / FF 287.28 ps (global RC, no CTS repair); re-measure from own kit view (12.28b))"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "df3c0b5671",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "a88907bee0469982f950c87a42d71c896ddbbc0aaeac52fcc32b5358351b4663",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "ec03ec9c725db315",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 335.3,
+   "ff": 287.3,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "ea1e232e7c0d35cf2defa37a74ccaaaea0301fd84dc325cba48732161ca27549",
+  "pins_placed_canon_sha256": "f1bf900a6c4ce528a27d651798383de7f853034bab3c5cd15682d08270353865",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/qfd_dv_s5_sc2_leaf_hab5fca",
+ "src_commit": null,
+ "flow_tag": "flow-20261108-ed-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T18:37:52+00:00",
+  "kit": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/qfd_dv_s5_sc2_leaf_hab5fca",
+  "base": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/qfd_dv_s5_sc2_leaf_hab5fca/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_hab5fca/base",
+  "signoff": "/srv/opentallas-scratch3/claude/dq92/resign_ed/qfd_dv_s5_sc2_leaf/signoff/signoff.json",
+  "signoff_sha256": "5a101fddc5a85a3c93dab9fe578379834ce1829bf579284addff18550d8d5cf5",
+  "signoff_generated": "2026-11-08T13:25:10+00:00",
+  "odb": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf/qfd_dv_s5_sc2_leaf_hab5fca/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_hab5fca/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child qfd_dv_s5_sc2_leaf",
+  "lib_basis": null,
+  "files_sha256": {
+   "pins.json": "57c9fa7fa79811123acfa0ff30fc3d7a7afd7469740464f74362aa30f6db8df3",
+   "qfd_dv_s5_sc2_leaf.lef": "7a90ce8f7fc2f1b5ce51303467380693734256d5b563e576e5c6be08c202e425",
+   "qfd_dv_s5_sc2_leaf_ff.lib": "a1522137be9349bf87b175d487d8ecf68017a2c2e8d7ca840796066fc6c6c114",
+   "qfd_dv_s5_sc2_leaf_tt.lib": "274dfad264467963fd1a5f291a2ae3907398822e03a97ff3ee2b9d6f5bc55084"
+  }
+ }
+}

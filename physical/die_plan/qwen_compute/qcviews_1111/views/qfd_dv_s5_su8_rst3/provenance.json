@@ -1,0 +1,105 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s5_su8_rst3_c",
+  "module": "qfd_dv_s5_su8_rst3",
+  "plan_type": "slw_su_c",
+  "outline_um": [
+   172.8,
+   129.6
+  ],
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_su8",
+  "spec": "physical/ref_tile/qfd_dv_s5_su8/spec.json",
+  "spec_sha256": "27d58bb8093f8d0917125908c391928f0baa7b62a059d847e74b7ebe9f651562",
+  "pins_file": "plan_pins.json",
+  "pins_sha256": "df60801fc70faf33db56beed05d0199438beff7aa40cad1aa4857dd3ca8407c4",
+  "pins": 1547,
+  "plan_lef": "physical/ref_tile/qfd_dv_s5_su8/views/qfd_dv_s5_su8_rst3/qfd_dv_s5_su8_rst3.lef",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "0c178daef1bce766cf65a6078fa77e3e72eb195c408e7ba84b2ddc18bb149179",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "45542ad6eaf",
+  "sdc_lint_sha256": "8f078d7aa1562fd08d2a272d2b74cd056279554d07bbb247d91f110c7b2e005b",
+  "face_guard_sha256": "22935b14d8e228555b21d5eebe618ad0dbbdba94e1311f748405faf3d804c56b",
+  "signoff_sha256": "145dc045f99531cbcca909f616e009ea829f04b29148787a418456c14f39b023",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "sha256": "0a1264c7a6a0ca0be7be4b92a2cdb0a7ec5f0d38e2dadaf11ec45695126c8ec7"
+   }
+  ],
+  "kit_hash": "3a9c05e21528b000",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "reset_contract": {
+   "edges": 64,
+   "module": "qfd_dv_s5_su8_rst3",
+   "die": "qwen_compute",
+   "contract": "/srv/opentallas-scratch2/claude/dq93/wt_phs/physical/die_plan/qwen_compute/reset_contract.json",
+   "contract_sha256": "1f98496c8c6ec67753bcb329040942c6fc0ffdd4ec1400ad8add9ceffb2de070",
+   "receipt_sha256": "1e1994ab1acd729ea8651944f6946a8a024b9b4878287e4eb7c47411d1212cad"
+  },
+  "pins_contract_lef": "physical/ref_tile/qfd_dv_s5_su8/views/qfd_dv_s5_su8_rst3/qfd_dv_s5_su8_rst3.lef",
+  "pins_contract_lef_sha256": "e56fadd2a9e778b425757ae897bf5de8c4b13bf8e83c94e610a1e3b7f24f4db4",
+  "pins_canon_sha256": "a832b058366015c5fcfceb29ebd203aafd151062d29a00e21e760e8a3452d799",
+  "pins_placed_canon_sha256": "a832b058366015c5fcfceb29ebd203aafd151062d29a00e21e760e8a3452d799",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_kit",
+ "src_commit": "2b4a2200e57",
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T06:53:31-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_kit",
+  "base": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_kit/run/results/asap7/qfd_dv_s5_su8_rst3/base",
+  "signoff": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_kit/signoff/signoff.json",
+  "signoff_sha256": "429b350f9cd289a3deb5499b5a2ae6d8bb62c47ce7a7edf15756189d0c94e231",
+  "signoff_generated": "2026-10-25T00:40:57-07:00",
+  "odb": "/srv/opentallas-scratch2/claude/dq93/su8_rst3_kit/run/results/asap7/qfd_dv_s5_su8_rst3/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "DIE-QC-93 per COORD 06:36: routed DB/libs = read-only copy of AGIdock /archive/opentallas-signed-1106/intel1/srv/opentallas-scratch2/claude/counted/qwen_compute/qfd_dv_s5_su8_rst3/closed_legacy (MD5SUMS all OK; tt/ff lib md5 = git results/qc_cores_1024/qfd_dv_s5_su8_rst3/views); LEF = git results view (= ref_tile lef_contract, md5 edc49045); pins.json/freeze.json/core.json REGENERATED from that same LEF contract by gen_core_kit_qc.py at main c303af45e5b (original kit su8_b deleted); no P&R, no re-sign",
+  "lib_basis": null,
+  "files_sha256": {
+   "pins.json": "1ae49cd468b78cbcd8906789a1a9133ae3a14fafcc7cfc5c80d57f2cd49b721c",
+   "qfd_dv_s5_su8_rst3.lef": "e56fadd2a9e778b425757ae897bf5de8c4b13bf8e83c94e610a1e3b7f24f4db4",
+   "qfd_dv_s5_su8_rst3_ff.lib": "49fd8fa0c22ccf9214f013b873c7cb26b2db497d9bf55fecf63bda77a09db0fc",
+   "qfd_dv_s5_su8_rst3_tt.lib": "2677b5c3456093681b16b125fabf41b4f1d06e7a1da2af446dcc1ca188ab7c92"
+  }
+ }
+}
