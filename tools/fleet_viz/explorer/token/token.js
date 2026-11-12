@@ -194,6 +194,11 @@ export async function mountTokenExplorer(el, opts = {}) {
     try { native = await loadRecord('/api/native/coverage?design=' + encodeURIComponent(covKey)); }
     catch (e) { native = { native_qualified: false, nodes: {}, operations: [], defects: [{ edge: 'live_source', reason: e.message }] }; }
     if (revision !== renderRevision) return;
+    // EXPLORER-2: which types / cores of the current plans run each step's class (token_design_map.py over the node index)
+    let dmap = null;
+    try { dmap = await loadRecord('/api/design/token/' + encodeURIComponent(covKey)); } catch (e) { dmap = null; }
+    if (revision !== renderRevision) return;
+    for (const n of data.nodes) n.design_hw = dmap && !dmap.error && dmap.classes[n.cls] ? Object.assign({ nodes_meta: dmap.nodes, record: dmap.record }, dmap.classes[n.cls]) : null;
     for (const n of data.nodes) n.native = native.nodes?.[n.id] || { native_qualified: false, operations: [], defects: [{ edge: 'token_node->operation', reason: 'CURRENT_PROGRAM_MAPPING_UNAVAILABLE' }] };
     const nativePanel = nativeProvenancePanel(native);
     const p = P(data);

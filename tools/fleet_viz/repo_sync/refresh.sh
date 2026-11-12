@@ -23,4 +23,5 @@ echo "trunk $(git log -1 --format='%h %cI' origin/main)"
 FLEET_VIZ_REPO=$R timeout 1500 nice -n 15 python3 "$H/plan_now.py"
 FLEET_VIZ_REPO=$R timeout 1500 nice -n 15 python3 "$H/plan_dataflow.py"
 FLEET_VIZ_REPO=$R timeout 600 nice -n 15 python3 "$H/design_index.py"   # the one node index (die/type/core) every explorer page reads
+FLEET_VIZ_REPO=$R timeout 300 nice -n 15 python3 "$H/token_design_map.py"   # token step class -> current type / core nodes
 tail -n 4000 "$LOG" > "$LOG.tmp" 2>/dev/null && mv "$LOG.tmp" "$LOG"

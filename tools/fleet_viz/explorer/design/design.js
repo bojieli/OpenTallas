@@ -11,8 +11,8 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const cssv = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const fmt = (n, d = 0) => (n == null || isNaN(n)) ? '—' : Number(n).toLocaleString('en-US', {minimumFractionDigits: d, maximumFractionDigits: d});
-const STC = {signed: '--s-signed', failed: '--s-failed', building: '--s-building', queued: '--s-queued', waiting: '--s-waiting', 'not built': '--s-notbuilt'};
-const STL = {signed: 'signed off', failed: 'failed', building: 'building', queued: 'queued', waiting: 'waiting', 'not built': 'not built'};
+const STC = {signed: '--s-signed', failed: '--s-failed', building: '--s-building', queued: '--s-queued', waiting: '--s-waiting', 'not built': '--s-notbuilt', 'hard ip': '--s-hardip'};
+const STL = {signed: 'signed off', failed: 'failed', building: 'building', queued: 'queued', waiting: 'waiting', 'not built': 'not built', 'hard ip': 'hard IP (not counted)'};
 const stcls = s => 'st-' + String(s || 'not built').replace(' ', '');
 const badge = st => `<span class="st ${stcls(st.state)}"><i></i>${esc(STL[st.state] || st.state)}</span>`;
 const ORS = new Set(['R90', 'R270', 'MXR90', 'MYR90']);
@@ -112,7 +112,8 @@ function layoutFacts(l){
   return `<dl class="kv"><dt>source</dt><dd>${esc(l.source || '')}${l.legacy ? ' (legacy view)' : ''}</dd><dt>stage</dt><dd>${esc(l.stage || '?')}</dd><dt>DB</dt><dd>${esc(db)}</dd>
     ${l.record ? `<dt>signed record</dt><dd>${esc(l.record.slice(0, 16))}…</dd>` : ''}${l.archive_odb ? `<dt>archive</dt><dd>AGIdock ${esc(l.archive_odb)}</dd>` : ''}
     ${l.odb_bytes ? `<dt>DB size</dt><dd>${fmt(l.odb_bytes / 1e6, 0)} MB</dd>` : ''}
-    <dt>exported</dt><dd>${s ? `${esc(s.verify || '?')} · ${fmt(s.shapes)} shapes · ${fmt(s.bytes / 1e6, 1)} MB · ${esc((s.made || '').slice(0, 16))}` : 'not yet (design_export.py backfill)'}</dd></dl>`;
+    <dt>exported</dt><dd>${s ? `${esc(s.verify || '?')} · ${fmt(s.shapes)} shapes · ${fmt(s.bytes / 1e6, 1)} MB · ${esc((s.made || '').slice(0, 16))}` : 'not yet (design_export.py backfill)'}</dd>
+    ${s ? `<dt>paths / clock</dt><dd>${s.timing ? (s.timing.sta ? `${s.timing.setup} setup + ${s.timing.hold} hold paths re-timed with the run's sign-off session (${esc((s.timing.corners || []).join(', ').toUpperCase())}) · clock tree ${fmt(s.timing.clock_leaves)} sinks` : `clock tree ${fmt(s.timing.clock_leaves)} sinks (topology only: the sign-off session is gone, no paths)`) : 'not exported'}</dd>` : ''}</dl>`;
 }
 function statusFacts(st){
   const m = st.metrics || {};
@@ -130,7 +131,7 @@ function renderFacts(){
     h = `<div class="sec"><h1>${esc(d.label)}</h1><p class="sub">${esc(d.target || '')} · plan of record drawn to scale. Click a slot to open its type.</p></div>
       <div class="sec"><h3>Plan</h3><dl class="kv"><dt>file</dt><dd>${esc(p.path)}</dd><dt>commit</dt><dd>${esc((p.commit || '').slice(0, 10))} ${esc((p.date || '').slice(0, 10))}</dd>
         <dt>subject</dt><dd>${esc(p.subject || '')}</dd><dt>outline</dt><dd>${fmt(p.outline[0], 1)} × ${fmt(p.outline[1], 1)} µm</dd><dt>period</dt><dd>${esc(p.period_ps)} ps</dd>
-        <dt>reach</dt><dd>${esc(p.reach_um)} µm/cycle</dd><dt>partitions</dt><dd>${p.partitions.length} (${d.children.length} types)</dd><dt>seams</dt><dd>${p.seams.length} abutting pairs with ports</dd>
+        <dt>reach</dt><dd>${esc(p.reach_um)} µm/cycle</dd><dt>partitions</dt><dd>${p.partitions.length} (${d.type_count ?? d.children.length} counted types${(d.hard_ip || []).length ? ` + ${d.hard_ip.length} hard IP: ${d.hard_ip.map(x => esc(x.split('.t.')[1])).join(', ')}, a reused macro with nothing to route (release-tree HARD-IP rule)` : ''})</dd><dt>seams</dt><dd>${p.seams.length} abutting pairs with ports</dd>
         <dt>clock</dt><dd>${esc(p.clock.topology || '?')} on ${esc((p.clock.layers || []).join('/'))}, root ${p.clock.root ? fmt(p.clock.root[0], 0) + ', ' + fmt(p.clock.root[1], 0) : '?'}</dd>
         <dt>PG domains</dt><dd>${p.pg_domains.length}</dd></dl>${p.release_header ? `<p class="note">${esc(p.release_header)}</p>` : ''}</div>
       <div class="sec"><h3>Sign-off</h3><p class="note">Types: ${S.idx.states.filter(s => d.counts.type[s]).map(s => `<b>${d.counts.type[s]}</b> ${STL[s]}`).join(' · ')}<br>Cores: ${S.idx.states.filter(s => d.counts.core[s]).map(s => `<b>${d.counts.core[s]}</b> ${STL[s]}`).join(' · ')}</p>
@@ -162,8 +163,16 @@ function renderFacts(){
 }
 
 /* ------------------------------------------------------------------ routed layout (lossless viewer) */
-function openLayout(n){
-  LayoutViewer.open({root: $('geo'), side: $('geoside'), nav: $('geonav'), el: n.id, d: null, E: null, safe: false,
+async function timingOf(n){
+  // worst setup / hold paths + clock tree with arrivals (design_export timing: or_export re-timed with the run's sign-off
+  // session, else the clock topology alone); one brotli object in the store, decoded by the browser (Content-Encoding br)
+  const t = ((n.layout || {}).store || {}).timing; if (!t || !t.object) return null;
+  try { const r = await fetch('/layout_store/objects/' + t.object.slice(0, 2) + '/' + t.object + '.br'); return r.ok ? await r.json() : null; }
+  catch (e) { return null; }
+}
+async function openLayout(n){
+  const d = await timingOf(n);
+  LayoutViewer.open({root: $('geo'), side: $('geoside'), nav: $('geonav'), el: n.id, d, E: null, safe: false, netKey: 'net',
     onFallback: () => setHash(Object.assign(parseHash(), {v: 'plan'}), true),
     onMacro: m => macroPick(n, m)});
 }

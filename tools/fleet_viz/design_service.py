@@ -5,6 +5,8 @@
   GET /api/design/index            dies with labels, plan facts and per-state counts (small)
   GET /api/design/die/<die>        the die node + every type and core node of that die
   GET /api/design/node/<id>        one node + its die summary + its child nodes (a type's cores)
+  GET /api/design/token/<design>   token step classes -> current type / core nodes (token_design_map.py), with each
+                                   node's status; the token page's "runs on" panel
   GET /api/design/resolve?q=<name> name (type, core module, partition, old element name) -> node ids, for the token,
                                    dataflow and coverage pages
 """
@@ -13,6 +15,7 @@ import gzip, json, os, pathlib, re, threading
 HERE = pathlib.Path(__file__).resolve().parent
 STATE = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz')))
 INDEX = pathlib.Path(os.environ.get('DESIGN_INDEX', STATE / 'design_index.json'))
+TOKEN_MAP = pathlib.Path(os.environ.get('TOKEN_DESIGN_MAP', INDEX.parent / 'token_design_map.json'))   # token_design_map.py
 PAGE_DIR = HERE / 'explorer' / 'design'
 TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
          '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png'}
@@ -50,7 +53,7 @@ class Service:
             if not n: continue
             p = n['plan']
             out.append(dict(id=d, label=n['label'], target=n.get('target'), counts=n['counts'], outline=p['outline'], partitions=len(p['partitions']),
-                            types=len(n['children']), plan=p['path'], plan_date=p.get('date'), release_header=p.get('release_header'),
+                            types=n.get('type_count', len(n['children'])), hard_ip=n.get('hard_ip') or [], plan=p['path'], plan_date=p.get('date'), release_header=p.get('release_header'),
                             exported=sum(1 for x in idx['nodes'].values() if x['die'] == d and (x.get('layout') or {}).get('store'))))
         return dict(schema=idx['schema'], generated=idx['generated'], states=idx['states'], dies=out, sources=idx.get('sources'))
 
@@ -67,6 +70,17 @@ class Service:
         places = [[p[0], p[2], p[3], p[4], p[5], p[6]] for p in d['plan']['partitions'] if p[1] == nid] if n['level'] == 'type' else []
         return dict(node=n, die=dict(id=d['id'], label=d['label'], outline=d['plan']['outline'], reach_um=d['plan'].get('reach_um')),
                     children=kids, users=users, placements=places, states=idx['states'], generated=idx['generated'])
+
+    def token(self, design):
+        idx = self.index()
+        try: m = json.loads(TOKEN_MAP.read_text())
+        except Exception: return dict(error='token design map not built yet (token_design_map.py)')
+        d = (m.get('designs') or {}).get(design)
+        if not d: return dict(error='no token design map for %s' % design)
+        ids = {i for c in d['classes'].values() for i in c['nodes']}
+        nodes = {i: dict(level=idx['nodes'][i]['level'], die=idx['nodes'][i]['die'], name=idx['nodes'][i]['name'], state=idx['nodes'][i]['status']['state'],
+                         layout=bool((idx['nodes'][i].get('layout') or {}).get('store'))) for i in ids if i in idx['nodes']}
+        return dict(d, steps=None, nodes=nodes, generated=m.get('generated'))
 
     def resolve(self, q):
         self.index()
@@ -96,6 +110,11 @@ class Service:
         if path == 'index': return self.send_json(h, 'index', self.summary)
         if path.startswith('die/'): d = path[4:]; return self.send_json(h, 'die:' + d, lambda: self.die(d))
         if path.startswith('node/'): n = path[5:]; return self.send_json(h, 'node:' + n, lambda: self.node(n))
+        if path.startswith('token/'):
+            k = path[6:]
+            try: mt = TOKEN_MAP.stat().st_mtime
+            except OSError: mt = 0
+            return self.send_json(h, 'token:%s:%s' % (k, mt), lambda: self.token(k))
         if path == 'resolve':
             names = [x for x in (q.get('q', [''])[0] or '').split(',') if x][:400]
             return h.send(200, json.dumps({n: self.resolve(n) for n in names}).encode(), 'application/json')

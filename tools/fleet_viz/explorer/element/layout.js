@@ -135,7 +135,7 @@ function saveUrl(){
     o.v = [Math.round(V.vs.target[0]), Math.round(V.vs.target[1]), V.vs.zoom.toFixed(2)].join(',');
     const hid = V.L.map((l, i) => l.vis ? '' : l.name).filter(Boolean); if (hid.length) o.h = hid.join('.'); else delete o.h;
     const kh = KINDS.filter(k => !V.kindVis[k[0]]).map(k => k[0]); if (kh.join(',') !== '14') o.k = kh.join('.'); else delete o.k;
-    if (V.hl) o.n = String(V.hl); else delete o.n;
+    const nk = V.netKey || 'n'; if (V.hl) o[nk] = String(V.hl); else delete o[nk];   // design explorer: its #n= is the node id, nets go to #net=
     const ov = Object.keys(V.ov).filter(k => V.ov[k]); if (ov.length) o.o = ov.join('.'); else delete o.o;
     if (V.lintSel != null) o.f = String(V.lintSel); else delete o.f;
     if (V.manifest && V.index && V.manifest.job !== V.index.latest) o.j = V.manifest.job; else delete o.j;
@@ -153,7 +153,7 @@ async function blobBuf(name){ const u = blobUrl(name); if (!u) throw new Error('
 
 function open(o){
   // o: {root, side, nav (optional: layers + overlay toggles go here, read-outs stay in side), el (store key: element or design node id), d (element JSON), E (elem.js prepped element or null), safe, onFallback, onMacro(macro, event) (optional)}
-  Object.assign(V, {open: true, root: o.root, side: o.side, nav: o.nav || null, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, onMacro: o.onMacro || null, base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
+  Object.assign(V, {open: true, root: o.root, side: o.side, nav: o.nav || null, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, onMacro: o.onMacro || null, netKey: o.netKey || 'n', base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
   if (V.loadedFor === o.el && deckgl){ V.root.hidden = false; V.side.hidden = false; if (V.nav) V.nav.hidden = false; renderSide(); requestUpdate(); return; }
   close(true);
   V.loadedFor = o.el;
@@ -229,7 +229,7 @@ async function start(){
   if (u.h) { const hid = new Set(u.h.split('.')); V.L.forEach(l => { if (hid.has(l.name)) l.vis = false; }); }
   if (u.k != null) { const kh = new Set(u.k.split('.').filter(Boolean).map(Number)); KINDS.forEach(k => V.kindVis[k[0]] = !kh.has(k[0])); }
   if (u.o) u.o.split('.').forEach(k => V.ov[k] = true);
-  V.hl = +u.n || 0; V.lintSel = u.f != null && u.f !== '' ? +u.f : null;
+  V.hl = +u[V.netKey || 'n'] || 0; V.lintSel = u.f != null && u.f !== '' ? +u.f : null;
   V.phys = V.L[nl + 1].vis;
   // layers a via / a std cell can put shapes on (a solo metal layer still needs the vias' enclosures and the cells' pins)
   V.viaLayers = [...new Set(H.vias.flatMap(v => v.boxes.map(b => b[0])))];

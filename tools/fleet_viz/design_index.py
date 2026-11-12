@@ -41,7 +41,7 @@ STATE_OF = {'signed off': 'signed', 'signed off (legacy view)': 'signed',
             'plan / geometry failure': 'failed', 'RTL / kit failure': 'failed',
             'routing / sign-off running': 'building', 'running (pre-route)': 'building', 'queued': 'queued',
             'waiting (dependency / plan delta)': 'waiting', 'cancelled': 'not built', 'not started': 'not built'}
-STATES = ['signed', 'failed', 'building', 'queued', 'waiting', 'not built']
+STATES = ['signed', 'failed', 'building', 'queued', 'waiting', 'not built', 'hard ip']
 
 
 def log(*a):
@@ -117,9 +117,25 @@ def store_entry(nid):
         i = json.loads((STORE / 'elements' / nid / 'index.json').read_text())
         m = json.loads((STORE / 'elements' / nid / (i['latest'] + '.json')).read_text())
         return dict(id=m['id'], job=i['latest'], bytes=m.get('bytes'), verify=(m.get('verify') or {}).get('verdict'),
-                    shapes=(m.get('verify') or {}).get('shapes'), stage=(m.get('design') or {}).get('stage'), made=m.get('made'))
+                    shapes=(m.get('verify') or {}).get('shapes'), stage=(m.get('design') or {}).get('stage'), made=m.get('made'),
+                    timing={k: v for k, v in (m.get('timing') or {}).items() if k in ('object', 'sta', 'corners', 'setup', 'hold', 'clock_leaves', 'errors')} or None)
     except Exception:
         return None
+
+
+def hard_ip_types(T):
+    """= release_tree_plan.hard_ip_types (HARD-IP, COORD DECIDES 2026-11-10): a partition type whose only contents are a
+    reused PHY macro (plan 'hard': true, every contents entry status 'reuse' with a committed lib, no hard_cores, ft_slots
+    or cells) has nothing to place or route: it is out of both the type numerator and denominator.  Same structural rule
+    here, so the die page and the release tree count the same types (S81: 205 plan types = 204 counted + phy__t1)."""
+    out = {}
+    for k, v in (T or {}).items():
+        c = v.get('contents') or []
+        if v.get('hard') is not True or not c: continue
+        if v.get('hard_cores') or v.get('ft_slots') or v.get('cells'): continue
+        if not all(isinstance(x, dict) and x.get('status') == 'reuse' and x.get('lib') for x in c): continue
+        out[k] = sorted({str(x.get('physical_master') or x.get('module')) for x in c})
+    return out
 
 
 def status_of(e):
@@ -202,6 +218,9 @@ def build(dies_filter=None):
                         children=sorted({tid(die, t) for t in inst_of}), counts={})
         nodes[die] = die_node
         core_users = collections.defaultdict(set); core_outline = {}
+        hip = hard_ip_types(pt)
+        die_node['type_count'] = sum(1 for t in inst_of if t not in hip)   # the release-tree denominator
+        die_node['hard_ip'] = sorted(tid(die, t) for t in hip if t in inst_of)
         for tname, t in pt.items():
             if not inst_of.get(tname): continue
             nid = tid(die, tname)
@@ -215,7 +234,10 @@ def build(dies_filter=None):
                 if mem: continue
                 core_users[c['module']].add(nid); core_outline.setdefault(c['module'], [r2(c['outline_um'][0]), r2(c['outline_um'][1])])
             ck = t.get('clock') or {}
-            nodes[nid] = dict(id=nid, level='type', die=die, name=tname, parent=die, status=status_of(e), layout=layout_of(e, srow),
+            st = status_of(e)
+            if tname in hip:
+                st = dict(state='hard ip', label='hard IP: reused macro %s, nothing to place or route; no sign-off, not counted' % ', '.join(hip[tname]))
+            nodes[nid] = dict(id=nid, level='type', die=die, name=tname, parent=die, status=st, layout=layout_of(e, srow),
                               vis=vis.get((die, tname)),
                               plan=dict(outline=[r2(v) for v in (t.get('outline_um') or [0, 0])[:2]], instances=inst_of[tname], hard=bool(t.get('hard')),
                                         landing_base=t.get('landing_base_type'), module=t.get('module'),

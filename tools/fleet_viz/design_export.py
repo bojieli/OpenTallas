@@ -35,6 +35,8 @@ import argparse, hashlib, json, os, pathlib, shlex, shutil, subprocess, sys, tim
 HERE = pathlib.Path(__file__).resolve().parent
 TOOLS = pathlib.Path(os.environ.get('LV_TOOLS', HERE.parent / 'layout_viewer'))
 DECODE = pathlib.Path(os.environ.get('LV_DECODE', HERE / 'explorer' / 'element' / 'lv_decode.js'))
+ELEM_TOOLS = pathlib.Path(os.environ.get('OR_EXPORT_TOOLS', HERE.parent / 'explorer_elem'))   # or_export.py (paths + clock tree)
+TIMING_VERSION = 'x1'
 IMAGE = os.environ.get('LV_IMAGE', 'openroad/orfs:asap7lock')
 OPENROAD = '/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad'
 EXTRACT_VERSION = 'e2'   # = layout_store.EXTRACT_VERSION
@@ -61,6 +63,16 @@ def cut(a):
     t = {}
     ver = lambda n: (w / n).read_text().strip() if (w / n).exists() else ''
     fresh = (w / 'raw/meta.json').exists() and (w / 'raw/meta.json').stat().st_mtime > db.stat().st_mtime
+    pack = w / (node + '.lvp')
+    try: done = json.loads((w / 'cut.json').read_text())
+    except Exception: done = {}
+    if (done.get('verify') == 'IDENTICAL' and pack.exists() and pack.stat().st_mtime > db.stat().st_mtime and ver('tile.version') == TILE_VERSION
+            and not (done.get('timing') or {}).get('file') and not a.no_timing):
+        # an IDENTICAL pack of this DB is already here (its raw extraction dropped): add only the paths / clock tree
+        log('%s: pack IDENTICAL already, timing only' % node)
+        done['timing'] = timing(a, db, w, mem)
+        (w / 'cut.json').write_text(json.dumps(done, indent=1))
+        sys.exit(0)
     t0 = time.time()
     if not (fresh and ver('ext.version') == EXTRACT_VERSION):
         for n in ('ext.version', 'tile.version'): (w / n).unlink(missing_ok=True)
@@ -103,9 +115,89 @@ def cut(a):
                verify=v['verdict'], shapes=v.get('shapes'), made=time.strftime('%Y-%m-%dT%H:%M:%S%z'), **t)
     (w / 'cut.json').write_text(json.dumps(rec, indent=1))
     log('%s: %s, pack %.1f MB, extract %.1f MB, %s shapes' % (node, v['verdict'], rec['pack_bytes'] / 1e6, raw / 1e6, v.get('shapes')))
+    if v['verdict'] == 'IDENTICAL' and not a.no_timing:
+        rec['timing'] = timing(a, db, w, mem)
+        (w / 'cut.json').write_text(json.dumps(rec, indent=1))
     if a.drop_raw and v['verdict'] == 'IDENTICAL':
         shutil.rmtree(w / 'raw', ignore_errors=True)   # the pack holds everything the viewer needs
     sys.exit(0 if v['verdict'] == 'IDENTICAL' else 3)
+
+
+# ------------------------------------------------------------------------------------------------ timing (build host)
+def sta_setup(session, db_name):
+    """the corner STA setup of a sign-off session.tcl (signoff.py writes one per corner): every line before read_db (the
+    exact-library procs + ot_lib_load), then the top-level read_* / set_* / source lines up to the first report.  The
+    PG audit loop and the 'so' report lines are left out; the DB line points at the cut's DB."""
+    head, tail, seen = [], [], False
+    for ln in session.splitlines():
+        s = ln.strip()
+        if not seen:
+            if s.startswith('read_db'): seen = True; tail.append('read_db /base/' + db_name); continue
+            head.append(ln); continue
+        if s.startswith('so CORNER') or s.startswith('report_') or s.startswith('puts '): break
+        if ln[:1].isspace() or not s or s.startswith('#') or s.startswith('so ') or s.startswith('foreach') or s.startswith('}'): continue
+        if s.split()[0] in ('read_spef', 'read_sdc', 'read_parasitics', 'set_propagated_clock', 'source', 'set_timing_derate',
+                            'set_clock_uncertainty', 'set_load', 'set_input_delay', 'set_output_delay', 'set_wire_rc', 'link_design'):
+            tail.append(s)
+    if not seen or not any(x.startswith('read_spef') for x in tail): return None
+    return '\n'.join(head + tail) + '\n'
+
+
+def timing(a, db, w, mem):
+    """worst setup / hold paths and the clock tree with per-sink arrival (or_export.py of the element page), re-timed with
+    the run's own sign-off setup when its signoff/<corner>/session.tcl is still there; else the clock topology alone
+    (OT_NOSTA: from the DB's CLOCK nets, no timing).  -> {file, sta, corners, seconds} and DIR/timing.json"""
+    t0 = time.time()
+    so = pathlib.Path(a.signoff) if a.signoff else None
+    if so is None and '/run/results/' in str(db):   # ORFS kit layout: <kit>/run/results/<platform>/<design>/base/<db>
+        cand = pathlib.Path(str(db).split('/run/results/')[0]) / 'signoff'
+        so = cand if cand.is_dir() else None
+    jobs = []
+    for c in ('tt', 'ff'):
+        sess = so / c / 'session.tcl' if so else None
+        cmdf = so / c / 'cmd.sh' if so else None
+        if not (sess and sess.is_file() and cmdf and cmdf.is_file()): continue
+        if not (db.parent / (db.stem + '.spef')).is_file(): continue   # a copied DB without its SPEF: topology only
+        txt = sta_setup(sess.read_text().replace('/base/6_final.spef', '/base/%s.spef' % db.stem), db.name)
+        if not txt: continue
+        jobs.append((c, txt, cmdf.read_text()))
+    sta = bool(jobs)
+    if not sta: jobs = [('tt', 'read_db /base/%s\n' % db.name, '')]
+    parts, errs = {}, []
+    for c, txt, cmd in jobs:
+        out = w / ('timing_' + c); out.mkdir(exist_ok=True)
+        (out / 'setup.tcl').write_text(txt)
+        (out / 'pre.tcl').write_text('source /out/setup.tcl\n')
+        vols = ['-v', '%s:/base:ro' % db.parent, '-v', '%s:/exp:ro' % ELEM_TOOLS, '-v', '%s:/out' % out.resolve()]
+        if sta:   # the same mounts the sign-off session ran with (kit as /work, its sdc dir, its config.mk), all read-only
+            import re as _re
+            for src, dst in _re.findall(r'-v (\S+?):(/work/config\.mk|/sdc|/work)(?::ro)?(?=\s|$)', cmd):
+                vols += ['-v', '%s:%s:ro' % (src, dst)]
+        env = ['-e', 'OT_PRE=/out/pre.tcl', '-e', 'OT_CORNER=' + c, '-e', 'OT_OUT=/out', '-e', 'OT_NPATH=40',
+               '-e', 'OT_NOSTA=%d' % int(not sta), '-e', 'HOME=/tmp']
+        dk = ['docker', 'run', '--rm', '--network=none', '--memory', '%dg' % mem, '--cpus', '2', '--user', '%d:%d' % (os.getuid(), os.getgid())] + vols + env + \
+             [IMAGE, OPENROAD, '-python', '-exit', '/exp/or_export.py']
+        log('%s: timing %s (%s)' % (a.node, c, 'sign-off STA' if sta else 'clock topology only'))
+        with open(out / 'export.log', 'w') as lg:
+            print(' '.join(dk), file=lg, flush=True)
+            r = subprocess.run(['nice', '-n', '19'] + dk, stdout=lg, stderr=subprocess.STDOUT)
+        f = out / (c + '.json')
+        if r.returncode or not f.exists(): errs.append('%s rc %d (%s)' % (c, r.returncode, out / 'export.log')); continue
+        parts[c] = json.loads(f.read_text())
+        for x in ('cells.bin', 'clk.bin'): (out / x).unlink(missing_ok=True)
+    tt, ff = parts.get('tt'), parts.get('ff')
+    if not tt: return dict(error='; '.join(errs) or 'no tt part', sta=sta, seconds=round(time.time() - t0, 1))
+    d = dict(schema='opentallas.design_explorer.timing.v1', node=a.node, version=TIMING_VERSION, sta=sta and not tt.get('nosta'),
+             source=('sign-off session %s' % so) if sta else 'DB clock nets (no STA: sign-off session not available)',
+             clocks=tt.get('clocks'), clock_roots=tt.get('clock_roots'), clock_tt=tt['clock_tree'],
+             clock_ff_leaves=ff and [l[3] for l in ff['clock_tree']['leaves']],
+             clock_ff_match=bool(ff and len(ff['clock_tree']['leaves']) == len(tt['clock_tree']['leaves'])),
+             setup_paths=tt['paths'] if sta else [], hold_paths=(ff or {}).get('paths') or [], errors=errs)
+    (w / 'timing.json').write_text(json.dumps(d, separators=(',', ':')))
+    for c in parts: shutil.rmtree(w / ('timing_' + c) / 'unused', ignore_errors=True)
+    return dict(file='timing.json', sta=d['sta'], corners=sorted(parts), setup=len(d['setup_paths']), hold=len(d['hold_paths']),
+                clock_nodes=len(d['clock_tt'].get('nodes') or []), clock_leaves=len(d['clock_tt'].get('leaves') or []),
+                errors=errs, seconds=round(time.time() - t0, 1))
 
 
 # ------------------------------------------------------------------------------------------------ publish (store host)
@@ -129,12 +221,20 @@ def publish(a):
     base = a.pack[:-len(node + '.lvp')]
     fetch(base + 'verify.json', vj); fetch(base + 'cut.json', cj)
     ver = json.loads(vj.read_text()); cutr = json.loads(cj.read_text())
+    tj = tmpd / (node + '.timing.json')
+    if (cutr.get('timing') or {}).get('file'):
+        try: fetch(base + 'timing.json', tj)
+        except SystemExit: tj.unlink(missing_ok=True)
     if ver.get('verdict') != 'IDENTICAL': sys.exit('%s: round trip %s, not published' % (node, ver.get('verdict')))
     idx = json.loads(pathlib.Path(a.index).read_text()) if a.index else {'nodes': {}}
     n = idx['nodes'].get(node) or {}
     pk = LS.Pack(pk_local)
     objs = {name: LS.put_object(pk.raw(name)) for name in pk.index}
     pk.close()
+    tim = None
+    if tj.exists():   # worst paths + clock tree for the viewer overlays: one brotli object beside the pack's
+        import brotli
+        tim = dict(cutr['timing'], object=LS.put_object(brotli.compress(tj.read_bytes(), quality=9)))
     hdr = json.loads(__import__('brotli').decompress(LS.obj_path(objs['header']).read_bytes()))
     job = '%s_%s' % (cutr.get('stage') or 'db', hashlib.sha256((cutr.get('db') or '').encode()).hexdigest()[:10])
     ident = hashlib.sha256(json.dumps(objs, sort_keys=True).encode()).hexdigest()[:16]
@@ -145,7 +245,7 @@ def publish(a):
                            cut_host=cutr.get('host'), cut_seconds=dict(extract=cutr.get('extract_s'), tile=cutr.get('tile_s'), verify=cutr.get('verify_s'))),
                closure=dict(job=job, status=(n.get('status') or {}).get('label'), host=cutr.get('host'), record=lay.get('record'), metrics=(n.get('status') or {}).get('metrics') or {}),
                db=hdr.get('db'), source='design_export', die=hdr.get('die'), dbu=hdr.get('dbu'), counts=hdr.get('counts'), lint=hdr.get('lint_summary'),
-               verify=ver, objects=objs, bytes=sum(LS.obj_path(h).stat().st_size for h in set(objs.values())))
+               verify=ver, objects=objs, timing=tim, bytes=sum(LS.obj_path(h).stat().st_size for h in set(objs.values())))
     edir = store / 'elements' / node
     LS.write_json(edir / (job + '.json'), man)
     try: ix = json.loads((edir / 'index.json').read_text())
@@ -154,7 +254,7 @@ def publish(a):
     for j in hist[HISTORY:]: (edir / (j + '.json')).unlink(missing_ok=True)
     hist = hist[:HISTORY]
     LS.write_json(edir / 'index.json', dict(element=node, latest=job, history=hist, updated=man['made'], manifests={j: j + '.json' for j in hist}))
-    for p in (pk_local, vj, cj): p.unlink(missing_ok=True)
+    for p in (pk_local, vj, cj, tj): p.unlink(missing_ok=True)
     log('%s: published %s (%.1f MB objects, %s shapes)' % (node, job, man['bytes'] / 1e6, ver.get('shapes')))
 
 
@@ -188,6 +288,8 @@ def main():
     c.add_argument('--stage', default='6_final'); c.add_argument('--job'); c.add_argument('--db-label')
     c.add_argument('--py', default=sys.executable); c.add_argument('--node-bin', default=shutil.which('node') or 'node'); c.add_argument('--mem', type=int)
     c.add_argument('--drop-raw', action='store_true')
+    c.add_argument('--signoff', help="the run's signoff/ dir (tt/ff session.tcl + cmd.sh): worst paths re-timed with its own setup")
+    c.add_argument('--no-timing', action='store_true', help='skip the paths / clock-tree export')
     p = sp.add_parser('publish'); p.add_argument('--node', required=True); p.add_argument('--pack', required=True); p.add_argument('--index')
     p.add_argument('--store', default=os.environ.get('LV_STORE', str(HERE / 'layout_store')))
     q = sp.add_parser('plan'); q.add_argument('--index', required=True); q.add_argument('--die'); q.add_argument('--node'); q.add_argument('--level', default='type,core')
