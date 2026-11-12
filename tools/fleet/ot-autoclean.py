@@ -1592,6 +1592,8 @@ class Job:
             return
 
         for r in self.roots:
+            if not re.fullmatch(r"/srv/[^/]+/claude", r) and not getattr(a, "d_any_root", False):
+                continue                                  # class d only prunes the fleet scratch roots, never a home / checkout root
             try:
                 lanes = sorted(os.listdir(r))
             except OSError:
@@ -2486,6 +2488,7 @@ def main(argv=None):
     r.add_argument("--aggressive", action="store_true",
                    help="OWNER 11-12 aggressive mode: keep only live jobs, kit-wave-referenced trees, unarchived signed units and the protected lists; "
                         "2 h grace, no queue-name/path holds on terminal attempts, attempts without a state row go, class d prunes lane trees")
+    r.add_argument("--d-any-root", action="store_true", help=argparse.SUPPRESS)
     r.add_argument("--keep-expire-h", type=float, default=0.0,
                    help="DISK-1111: a .keep file untouched for this many hours (168 = 7 days) no longer holds a unit; 0 = off")
     r.add_argument("--c-old-keep-h", type=float, default=0.0,

@@ -1087,7 +1087,7 @@ class TestAggressive(Base):
             age_tree(os.path.dirname(q))
         age_tree(os.path.join(lane, "sub"))
         self.prot.append((keepdb, "test protected"))
-        self.run_job("--classes", "d", "--aggressive")
+        self.run_job("--classes", "d", "--aggressive", "--d-any-root")
         self.assertTrue(os.path.exists(os.path.join(keepdb, "6_final.odb")))
         self.assertFalse(os.path.exists(junk))
         self.assertFalse(os.path.exists(os.path.join(lane, "other")))
@@ -1104,7 +1104,7 @@ class TestAggressive(Base):
         age_tree(os.path.dirname(junk))
         self.run_job("--classes", "d")
         self.assertTrue(os.path.exists(junk))                   # not aggressive: class d does nothing
-        self.run_job("--classes", "d", "--aggressive")
+        self.run_job("--classes", "d", "--aggressive", "--d-any-root")
         self.assertFalse(os.path.exists(junk))
         self.assertTrue(os.path.exists(os.path.join(lane, "wt/f.bin")))   # a git checkout is the worktree reaper's
 
