@@ -46804,3 +46804,16 @@ COORD asks (recommendation in each):
 - 2026-11-12 01:33 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-63): 4 event(s): slice_station__t29__cl2e5c855a FAIL PLAN (native source stage/reset realization differs: regenerate the canonical bind/kit @kit_topology: ValueError: KIT_TOPOLOGY_BIND_STALE: regenerate the canonical na) evid epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t29__cl2e5c855a/attempt_13; ot_s81sl_leaf__t45 LAUNCHED (kw-s81-ots81slleaft45-4-75991); ot_s81sl_leaf__t62 LAUNCHED (kw-s81-ots81slleaft62-2-75991); ot_s81sl_leaf__t66 LAUNCHED (kw-s81-ots81slleaft66-3-75991)
 - 2026-11-12 01:33 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-78): 7 event(s): kv3_hub_C unstarted waiter RESTAGED (epyc8 -> epyc7); kv3_hub_Eo unstarted waiter RESTAGED (epyc8 -> epyc7); kv3_pc__cl5a95b461 unstarted waiter RESTAGED (epyc8 -> epyc7); kv3_pc_v1__cl23f6a148 unstarted waiter RESTAGED (epyc8 -> epyc7); kv3_pc_v1__cl4ea58a5c unstarted waiter RESTAGED (epyc8 -> epyc7); kv3_pc_v1__cl7f648944 unstarted waiter RESTAGED (epyc8 -> epyc7); kv3_pc_v3 unstarted waiter RESTAGED (epyc8 -> epyc7)
 2026-11-12 01:34 PST STATE KW-FIX-44 -> die owners: GP-NOCONVERGE-REPORT, report only, nothing stopped; 1 of 12 live global placements show no overflow progress. Owner decides; stop by exact unit, a stop is FLOW/no-converge, keep the kit, no unchanged retry: q_b102__physical_v1 host intel2 unit q_b102__physical_v1-place-tolerant-swine-1246634-1794412966 owner KIT-WAVE-1 rows 9715 best 0.315 last 0.473.
+- 2026-11-12 01:35 PST STATE [VISLAYOUT2-HBM -> COORD, DIE-HBM-100] q_su11__physical_v1 S11 and q_su00__physical_v1 S00 are READY as positions-only forms and launched to sign-off. Private plan s1100 171a0134f39b = t36 + su31 G1b + both forms; private strict bind on epyc8, then run-item (gen epyc8, place epyc7/8), then trial.
+  - route_supply edge_outline, worst flagged p99 base -> form:
+    - S11: street_H 1.456 -> 0.998, street_V 1.773 -> 0.896, verdict ok. The plains/row A seam is now 34.56 um (hand 632 b vs 646 tracks incl. M6 over plains p3, 0.98).
+    - S00: street_V 3.727 -> 0.979, street_H 2.041 -> 0.448, verdict ok.
+      - The W seam opened from 8.6 to 129.6 um (0.94).
+      - Mid corridor 1.01 free, about 0.9 with M6.
+      - Top strip for L8300: 1.05 free, 0.78 with M6 over exp14.
+    - Margins are thin (one 1.25 bin at the plain0_3 edge in S00), so GRT is the judge. I'll view place/GRT en route.
+  - G0 vs t36g1b: 548 -> 546; 0 new errors, 3 new advisory G0C reach warnings (402/714/370 um).
+    - Gone: L8300 NW_su00 816 hop, su00 L8007x2 618 station, su00 L8300x4 816 station.
+    - The "L8300 815 NW_b113" line is not new. check.py reports one hops error per lane (the max slot); q_b113 L8300x3 815 was already in the base and was masked by su00's 816. It is still open under q_b113 (DIE-HBM-100 / triage-N partial form).
+  - Renders viewed: visual/round2/hbm/vt3c/form2_S11_q_su11__physical_v1.png and form2_S00_q_su00__physical_v1.png.
+  - In flight: 11. su31 G1 x2, G1b x2, G1c x2, SU2030 x3 (su30pv1/su30/su20pv1), S11/S00 x2.
