@@ -154,8 +154,104 @@ if {[info exists ::env(OT_DTAP_ALIGN_LEAD)] && $::env(OT_DTAP_ALIGN_LEAD) ne ""}
   dict for {k v} $ta_mlead { if {![dict exists $ta_seen $k]} {error "OT_DTAP_ALIGN_LEAD member $k is on no density tap"} }
   puts "OT_DTAP_ALIGN lead taps [dict size $ta_lead] members [dict size $ta_seen]"
 }
+# ---- OT_DTAP_ALIGN_ROBUST (HBM-CORES-B 11-12, default off; class hbm-dtap-pad-depth) ----------------------------------------
+# The default target is the r0 MAXIMUM tap mean over every tap of every root, so ONE late tap (v32e0 ot_dtap_700028 937 ps,
+# 210 ps over the next) sets the padding of all other taps (~14 BUFx12 each).  With OT_DTAP_ALIGN_ROBUST=1 the target is
+# the OT_DTAP_ALIGN_PCT percentile (default 90, nearest rank) of the tap means of the MAIN root (the root with the most
+# sinks) taps that are not lead taps and carry >= OT_DTAP_ALIGN_MINSINK (default 2) sinks; every other root still aligns to
+# that one target.  A tap later than target + OT_DTAP_OUTLIER_PS (default 40) is an OUTLIER: it is never padded to and gets
+# no cells.  OT_DTAP_ALIGN_OUTLIER=rehome additionally re-connects the outlier's isolation-cell input to the trunk net of the
+# nearest same-root non-outlier tap and keeps the move only if the tap mean drops by >= OT_DTAP_REHOME_MIN_PS (default 20),
+# else it is put back (receipt line OT_DTAP_OUTLIER).  Pure procs below (no odb) are replayed offline by test_dtap_robust.py.
+proc ta_root_of {n} {
+  if {![regexp {^ot_dtap_([0-9]+)$} $n -> id]} { return -1 }
+  scan $id %d idn
+  return [expr {int($idn / 100000)}]
+}
+proc ta_main_root {m} {
+  set sk [dict create]
+  dict for {n v} $m { set r [ta_root_of $n]; dict set sk $r [expr {([dict exists $sk $r] ? [dict get $sk $r] : 0) + [lindex $v 3]}] }
+  set best -1; set bs -1
+  dict for {r s} $sk { if {$s > $bs || ($s == $bs && $r > $best)} { set best $r; set bs $s } }
+  return $best
+}
+proc ta_robust_target {m lead pct minsink} {
+  set mr [ta_main_root $m]; set xs {}; set all {}
+  dict for {n v} $m {
+    if {[dict exists $lead $n]} continue
+    lappend all [lindex $v 0]
+    if {[ta_root_of $n] == $mr && [lindex $v 3] >= $minsink} { lappend xs [lindex $v 0] }
+  }
+  if {![llength $xs]} { set xs $all }
+  if {![llength $xs]} { return 0.0 }
+  set xs [lsort -real $xs]
+  set i [expr {int(ceil($pct / 100.0 * [llength $xs])) - 1}]
+  if {$i < 0} { set i 0 }
+  return [lindex $xs $i]
+}
+proc ta_outliers {m lead tgt outps} {
+  set out {}
+  dict for {n v} $m { if {![dict exists $lead $n] && [lindex $v 0] > $tgt + $outps} { lappend out $n } }
+  return $out
+}
+# predicted padding per root for target tgt: cells = ceil(deficit / step) per tap, deficit = max(0, goal - mean)
+proc ta_predict {m lead tgt step skip} {
+  set res [dict create]
+  dict for {n v} $m {
+    set r [ta_root_of $n]
+    set g [expr {$tgt - ([dict exists $lead $n] ? [dict get $lead $n] : 0.0)}]
+    set d [expr {$g - [lindex $v 0]}]
+    if {[lsearch -exact $skip $n] >= 0 || $d <= 0} { set d 0.0; set c 0 } else { set c [expr {int(ceil($d / $step))}] }
+    if {![dict exists $res $r]} { dict set res $r [list 0 0 0.0 0.0] }
+    lassign [dict get $res $r] nt cells sum mx
+    dict set res $r [list [expr {$nt + 1}] [expr {$cells + $c}] [expr {$sum + $d}] [expr {max($mx, $d)}]]
+  }
+  return $res
+}
 proc ta_goal {n} { global ta_tgt ta_lead; return [expr {$ta_tgt - ([dict exists $ta_lead $n] ? [dict get $ta_lead $n] : 0.0)}] }
 set ta_tgt 0.0; dict for {n v} $m { if {![dict exists $ta_lead $n]} { set ta_tgt [expr {max($ta_tgt, [lindex $v 0])}] } }
+set ta_rob [expr {[info exists ::env(OT_DTAP_ALIGN_ROBUST)] && $::env(OT_DTAP_ALIGN_ROBUST)}]
+if {$ta_rob} {
+  set ta_pct [expr {[info exists ::env(OT_DTAP_ALIGN_PCT)] ? $::env(OT_DTAP_ALIGN_PCT) : 90.0}]
+  set ta_minsink [expr {[info exists ::env(OT_DTAP_ALIGN_MINSINK)] ? $::env(OT_DTAP_ALIGN_MINSINK) : 2}]
+  set ta_outps [expr {[info exists ::env(OT_DTAP_OUTLIER_PS)] ? $::env(OT_DTAP_OUTLIER_PS) : 40.0}]
+  set ta_max_tgt $ta_tgt
+  set ta_tgt [ta_robust_target $m $ta_lead $ta_pct $ta_minsink]
+  set ta_out [ta_outliers $m $ta_lead $ta_tgt $ta_outps]
+  puts "OT_DTAP_ALIGN robust: main root [ta_main_root $m] p$ta_pct target [format %.1f $ta_tgt] (r0 max would be [format %.1f $ta_max_tgt]) outliers [llength $ta_out]"
+  foreach {tag tg sk} [list max $ta_max_tgt {} robust $ta_tgt $ta_out] {
+    dict for {r v} [ta_predict $m $ta_lead $tg 15.3 $sk] { lassign $v nt cells sum mx; puts "OT_DTAP_PRED $tag root $r taps $nt cells $cells pad_sum_ps [format %.0f $sum] pad_max_ps [format %.0f $mx]" }
+  }
+  set ta_rehome [expr {[info exists ::env(OT_DTAP_ALIGN_OUTLIER)] && $::env(OT_DTAP_ALIGN_OUTLIER) eq "rehome"}]
+  set ta_rmin [expr {[info exists ::env(OT_DTAP_REHOME_MIN_PS)] ? $::env(OT_DTAP_REHOME_MIN_PS) : 20.0}]
+  foreach n $ta_out {
+    set a0 [lindex [dict get $m $n] 0]
+    if {!$ta_rehome} { puts "OT_DTAP_OUTLIER $n mean [format %.1f $a0] target [format %.1f $ta_tgt] kept-unpadded"; continue }
+    set tapi [$ta_blk findInst $n]; set iso [$ta_blk findInst "${n}_al0_iso"]
+    if {$iso eq "NULL" || $iso eq ""} { puts "OT_DTAP_OUTLIER $n mean [format %.1f $a0] no isolation cell: kept-unpadded"; continue }
+    set isoA [$iso findITerm A]; set oldnet [$isoA getNet]
+    lassign [$tapi getLocation] tx ty; set best ""; set bd 1e18
+    dict for {c v} $m {
+      if {$c eq $n || [ta_root_of $c] != [ta_root_of $n] || [lsearch -exact $ta_out $c] >= 0 || [dict exists $ta_lead $c]} continue
+      if {[lindex $v 0] > $ta_tgt} continue
+      set ci [$ta_blk findInst "${c}_al0_iso"]; if {$ci eq "NULL" || $ci eq ""} continue
+      lassign [$ci getLocation] cx cy; set dd [expr {abs($cx - $tx) + abs($cy - $ty)}]
+      if {$dd < $bd} { set bd $dd; set best $c }
+    }
+    if {$best eq ""} { puts "OT_DTAP_OUTLIER $n mean [format %.1f $a0] no candidate trunk: kept-unpadded"; continue }
+    set newnet [[[$ta_blk findInst "${best}_al0_iso"] findITerm A] getNet]
+    $isoA disconnect; $isoA connect $newnet
+    set m2 [ta_measure]; set a1 [lindex [dict get $m2 $n] 0]
+    if {$a0 - $a1 >= $ta_rmin} {
+      puts "OT_DTAP_OUTLIER $n rehomed onto trunk of $best: mean [format %.1f $a0] -> [format %.1f $a1] ps (dist [format %.0f [expr {$bd / 1000.0}]] um)"
+      set m $m2
+    } else {
+      $isoA disconnect; $isoA connect $oldnet
+      puts "OT_DTAP_OUTLIER $n rehome onto $best gave [format %.1f $a0] -> [format %.1f $a1] ps (< $ta_rmin): put back, kept-unpadded"
+    }
+  }
+  if {$ta_rehome && [llength $ta_out]} { set m [ta_measure]; puts [ta_line "OT_DTAP_ALIGN r0b" $m] }
+}
 dict for {n v} $ta_lead { if {[lindex [dict get $m $n] 0] > [ta_goal $n] + $ta_tol} { puts "OT_DTAP_LEAD MISS $n r0 [format %.1f [lindex [dict get $m $n] 0]] already later than lead goal [format %.1f [ta_goal $n]]" } }
 set ta_stp [dict create]
 # safety: a tap never takes more than ceil(r0 deficit / 12 ps) + 1 cells in total, and a round whose measurement does
