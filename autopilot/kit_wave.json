@@ -30998,7 +30998,8 @@
     "q_su20__physical_v1@5",
     "q_b003__physical_v1@11",
     "q_b013__physical_v1@16",
-    "q_mcb_ne@1"
+    "q_mcb_ne@1",
+    "ot_svgr_top@1"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -34451,6 +34452,14 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-vsn-xtap-t40w/asbuilt_d12b.json"
      },
      "note": "KW-FIX-45 11-12 DIE-HBM-100: t40w (5129a5aab081 = t39w + l3011 ft_slots, q_hub_nw only), bind_report c05ea45bce68; every other type stays on t39w"
+    },
+    "ot_svgr_top": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+     "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
+    },
+    "ot_hgi_dma_back_static_vp4_banks_cp": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+     "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
