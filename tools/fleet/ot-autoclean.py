@@ -960,6 +960,16 @@ def tree_info(d):
     return newest, size, hl
 
 
+_TI = {}
+
+
+def tree_info_c(d):
+    """tree_info cached for this run: the same tree was walked three times (eval, size, delete)"""
+    if d not in _TI:
+        _TI[d] = tree_info(d)
+    return _TI[d]
+
+
 # ------------------------------------------------------------------ the host job
 class Job:
     def __init__(self, a):
@@ -1396,7 +1406,7 @@ class Job:
         for g in self.found["git"]:
             if g.startswith(d + "/"):
                 return "git inside " + g, []
-        newest, size, hl = tree_info(d)
+        newest, size, hl = tree_info_c(d)
         if self.now - newest < (GRACE_S if aggr else AGE_S):
             return "lt6h" if not aggr else "lt2h", []
         if hl and not aggr:                                          # aggressive: unlinking one name of a shared inode is safe
@@ -1442,13 +1452,38 @@ class Job:
                 return "SKIP", "recheck: " + w
         return None, None
 
+    def rm_tree(self, f):
+        """rm -rf --one-file-system of f; with --aggressive the grandchildren go in parallel (--rm-jobs, default 16): a
+        deep attempt tree is millions of small files and one rm walks them serially (the slow part of every run)"""
+        jobs = int(getattr(self.a, "rm_jobs", 1) or 1)
+        if jobs > 1 and os.path.isdir(f) and not os.path.islink(f):
+            try:
+                tg = []
+                for n in os.listdir(f):
+                    q = os.path.join(f, n)
+                    if os.path.isdir(q) and not os.path.islink(q):
+                        try:
+                            tg += [os.path.join(q, m) for m in os.listdir(q)] or [q]
+                        except OSError:
+                            tg.append(q)
+                    else:
+                        tg.append(q)
+                if len(tg) > 1:
+                    def one(q):
+                        return subprocess.run(["rm", "-rf", "--one-file-system", "--", q], capture_output=True, text=True, timeout=7200)
+                    errs = [x for x in run_pool(one, tg, jobs) if x.returncode]
+                    if errs:
+                        return errs[0]
+            except OSError:
+                pass
+        return subprocess.run(["rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True, timeout=7200)
+
     def delete(self, cls, files):
         freed = 0
         for f in files:
             if cls == "a":
-                _, size, _ = tree_info(f)
-                r = subprocess.run(["rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True,
-                                   timeout=7200)
+                _, size, _ = tree_info_c(f)
+                r = self.rm_tree(f)
                 if r.returncode and "ermission denied" in r.stderr and getattr(self.a, "aggressive", False) \
                         and os.path.realpath(f) == f and not os.path.islink(f):
                     # root-owned files from docker jobs: the same path, already approved by every guard, removed as root
@@ -1469,7 +1504,7 @@ class Job:
         size = 0
         for f in files:
             try:
-                size += (tree_info(f)[1] if cls == "a" else os.lstat(f).st_blocks * 512)
+                size += (tree_info_c(f)[1] if cls == "a" else os.lstat(f).st_blocks * 512)
             except OSError:
                 pass
         verdict = "SKIP" if why else ("WOULD" if not self.a.apply else "DELETE")
@@ -1568,7 +1603,7 @@ class Job:
                 pass
             size = 0
             if why is None:
-                newest, size, _hl = tree_info(p) if stat.S_ISDIR(st.st_mode) else (st.st_mtime, st.st_blocks * 512, None)
+                newest, size, _hl = tree_info_c(p) if stat.S_ISDIR(st.st_mode) else (st.st_mtime, st.st_blocks * 512, None)
                 if self.now - newest < GRACE_S:
                     why = "lt2h"
             verdict = "SKIP" if why else ("WOULD" if not a.apply else "DELETE")
@@ -2493,6 +2528,7 @@ def main(argv=None):
     r.add_argument("--aggressive", action="store_true",
                    help="OWNER 11-12 aggressive mode: keep only live jobs, kit-wave-referenced trees, unarchived signed units and the protected lists; "
                         "2 h grace, no queue-name/path holds on terminal attempts, attempts without a state row go, class d prunes lane trees")
+    r.add_argument("--rm-jobs", type=int, default=16, help="parallel rm workers per deleted tree (1 = serial)")
     r.add_argument("--d-any-root", action="store_true", help=argparse.SUPPRESS)
     r.add_argument("--keep-expire-h", type=float, default=0.0,
                    help="DISK-1111: a .keep file untouched for this many hours (168 = 7 days) no longer holds a unit; 0 = off")
