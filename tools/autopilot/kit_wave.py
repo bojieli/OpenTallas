@@ -4543,7 +4543,11 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if attempt > 1:
         # Preserve previous generation/geometry verdicts and run payloads.
         sp["work"] += f"/attempt_{attempt}"
-        if opt(cfg, die, "stage_resume") is not False and prev.get("dir"):
+        # KW-FIX-45 11-12 (COORD: DISK-1111 deleted the resume attempt dirs of 7 current rows): die option stage_resume_off
+        # [items] relaunches those items as a FRESH attempt (regenerated kit, no resume), and a resume source whose attempt
+        # dir is gone on the hub is never used
+        if (opt(cfg, die, "stage_resume") is not False and prev.get("dir") and Path(prev["dir"]).is_dir()
+                and r["item"] not in (cfg["dies"][die].get("stage_resume_off") or [])):
             sp["resume_from"] = resume_source(AP, prev)
         # FLOW-23 class D: a relaunch after an AUTO-GEOM FAIL plans soft region guides from that result (written only
         # when its r2r rule failed); die opt-out: region_guide false
