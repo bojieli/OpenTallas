@@ -3165,7 +3165,9 @@ def geom_verdicts():
         return _GEOM_CACHE["v"]
 
 
-FORM_ENV_SKIP = {"OT_FLOW_TAG", "OT_PLACE_MAX_FANOUT"}
+# OT_GRT_TRANSITION_MODE is the GRT halving arm's router setting (process, not form): an arm attempt and its sibling
+# build the same form (KW-FIX-46 11-12, hbm q_su21 a2 arm BAD -> a3 relaunch).
+FORM_ENV_SKIP = {"OT_FLOW_TAG", "OT_PLACE_MAX_FANOUT", "OT_GRT_TRANSITION_MODE"}
 # kit_rtl (bind dir / as-built paths) and gen_args (sidecar paths) are bind-side inputs that follow the plan; a repoint changes
 # their PATHS without changing the type, so they are not part of the form (COORD 11-12: a die-wide repoint must not release a type
 # whose own block is unchanged).  Path-bearing values that stay are compared by file name only.
@@ -3258,6 +3260,32 @@ def form_fp(spec, spec_file, hosts=()):
     return hashlib.sha256(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()
 
 
+def verdict_attempt_dir(st, die, item, rec, n):
+    """KW-FIX-46 11-12 (COORD, hbm q_su21: GEOM-VIS-8 rated a2 BAD at 11:58, the wave relaunched a3 at 12:01): the hub attempt
+    dir that holds attempt n's spec.json for this row.  Attempt numbers are shared by a row and its GRT halving arm
+    (<key>|grtarm-<mode>, dir <row dir>_grtarm-<mode>/a<n>), so the rated attempt can sit in the arm's dir; the old lookup read
+    only <row dir>/a<n>, missed it and released the row.  Search: the row's own dir, then every state record of the same die,
+    item and event (arms included).  Not found -> the row's newest own attempt <= n with a spec.json (the BAD is on a later
+    attempt of this item, so the row's last known form is what was rated unless it changed since, which form_fp then shows).
+    None only when the row has no spec at all."""
+    own = Path(rec["dir"]).parent
+    cands = [own / f"a{n}"]
+    for r2 in (st.get("items") or {}).values():
+        if r2 is rec or r2.get("die") != die or r2.get("item") != item or r2.get("event") != rec.get("event") or not r2.get("dir"):
+            continue
+        cands.append(Path(r2["dir"]).parent / f"a{n}")
+    cands += sorted(own.parent.glob(f"{own.name}_grtarm-*/a{n}"))
+    for c in cands:
+        if (c / "spec.json").is_file():
+            return c
+    older = []
+    for c in own.glob("a*"):
+        m = re.fullmatch(r"a(\d+)", c.name)
+        if m and int(m.group(1)) <= n and (c / "spec.json").is_file():
+            older.append((int(m.group(1)), c))
+    return max(older)[1] if older else None
+
+
 def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
     """COORD 11-12 CONVERGENCE GATE (GEOM-VIS-1: 151 BAD of 249, re-runs of an unchanged form give an identical bad layout): True when
     the type's latest viewed visual verdict is BAD at attempt N and the spec the next launch would build has the same fingerprint
@@ -3269,7 +3297,9 @@ def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
             return False
         if str(rec.get("class") or "") == "INFRA":
             return False
-        old_dir = Path(rec["dir"]).parent / f"a{v[0]}"
+        old_dir = verdict_attempt_dir(st, die, item, rec, v[0])
+        if old_dir is None:
+            return False
         old = json.loads((old_dir / "spec.json").read_text())
         cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
                         kind=kind or rec.get("kind") or "type")
