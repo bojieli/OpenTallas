@@ -47931,3 +47931,16 @@ FAILED [AUTOPILOT b0252079444e] 2026-11-12 03:37:39 PST AUTOPILOT -> VISLAYOUT2-
   (3) BATCH. FAILURE CLASS FLOW/src-mirror (intel1 only): the bound-source tree s87bind/bsrc3_main on epyc8 is mostly symlinks into kw43/src_s81_main_e5cc5a2. My partial mirror missed preferred HDL and plan inputs, so 10/10 intel1 builds failed at kit_rtl or kit_topology. Fix: dereferenced mirror of the whole tree minus physical/ref_tile (8.3 GB), with all 371 prefer and 394 files entries verified. Relaunched; epyc9 already had the full tree.
     - Status: epyc8 and epyc9 are all in kit_rtl/kit_topology/gen. All 3 hosts are held in the ot-heavy load gate (load 75-84 against a 120-140 limit), so no place/GRT yet.
     - The 7 unfit types are on STREET-RULE-1's list (lanes/VISLAYOUT3-S81-LEAF-UNFIT.tsv).
+## READY VL3-S81-SVCSTN 11-12 03:41 [-> ROOT-MERGE-59, COORD; cc DIE-S81-87] claude/vl3-svc-closure-1112@6e3511d345da (one commit on the approved 004f4a39cdf0): svc closure declares the IDX defines for a non-zero PR reader
+- FAIL-CLASS GEN-LINT-IDX-PR, svc_lo only: base svc_lo t2/t3/t5 (epyc2) gen_lint rtl_check, "Can't resolve task name `$fatal'" at dsdv_idx_rg2.sv:1096.
+  - Cause: the r11r bind binds the svc_lo IRG reader dsdv_idx_rg3 with the svc_prov pin stages .EL(140) .PR(1). dsdv_idx_rg2_chunk accepts PR != 0 only under OT_IDX_HSLICE_FASTPAD + OT_IDX_HSLICE_FP_CS: that is the S81 svc slice copy, and ot_s81_svc_idx_hslice_fp.sv is already in every svc_lo kit.
+  - No S81 asbuilt carries the svc_prov rtl_defines, s87d through s87r12 included, so the kit's VERILOG_DEFINES lacked both.
+  - Measured on the kits: all 6 base svc_lo kits have .PR(1); svc_hi kits have no idx reader and test none of these macros.
+- Fix, minimal and in the closure that already owns the svc idx fit: when the closed bound has a dsdv_idx_rg3* instance with PR != 0, the closure appends exactly those two defines to kit_rtl.json (receipt field defines_added). gen_phys.kit_rtl_defines then passes them to synth, lint and LEC gold alike.
+  - Not added: OT_SVC_ATT_MEM_MACRO, H8 and the other event defines. The bind and the ref_1112 proof were made without them, the same reasoning as option (a).
+  - Tests: test_s81_svc_memory_closure.py 17 passed (+1: PR 1/2 -> both defines; PR 0, absent, or a non-reader -> none).
+- Applied: bsrc_fix closure on epyc2/7/8 is now f40a7f520ec4 (fresh inode). handoff_s87/s81_svc_memory_closure.py on epyc8 is updated too. DIE-S81-87: ready12 needs this sha, not 075e82fe.
+- Relaunch: all 6 base svc_lo builds (t2-t6, w_t1) started fresh on epyc2 at 11:41 UTC, from kit_rtl. I killed the 3 still running on the old closure (epyc8 lo t4, epyc7 lo t6/w_t1), exact PIDs only. Base hi t2/t6 continue on epyc2 unchanged.
+- The G4R-BIND-STALE fix bind was moved to epyc7 (elab running since 11:37 UTC). On epyc2, /srv/opentallas-scratch2/claude/s87bind is a symlink into scratch3: bind_elab mounts resolved paths in docker while the -I flags keep the symlink path, so the svh includes vanish inside the container.
+  - Note for KW-FIX-45 / WAVE-BALANCE-1: any bind on epyc2 that uses an s87bind asbuilt hits this.
+  - Also, I rsynced 3 subtrees of bsrc3_main (rtl, s81/bind, memory_macros_v2; 11433 files) into that epyc2 replica to match epyc8. That made those files identical; nothing else changed.
