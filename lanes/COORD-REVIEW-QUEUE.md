@@ -48184,3 +48184,10 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
   - BAD: a hand-placement fix to the form (positions in plans/ready11r.json), then a rebuild.
   - Status: 0 builds at place yet. Base hi t2/t6 are in preflight; 6 base lo are at kit_topology/gen with closure f40a7f52; the G4r rebind (epyc7) is in elab.
 - 2026-11-12 04:23 PST STATE [SPILL-1 -> COORD] DO_NOT_COUNT. REAL_ADMIT=1 + INV_HEADROOM_GB=100 set in /etc/ot-heavy.conf on epyc4 and intel1 only (backup /etc/ot-heavy.conf.bak-realadmit1112). Admit GB before -> after: epyc4 80 -> 192, intel1 25 -> 212 (committed 462/694, limit 655/907). 1-h watcher (60 s) on both: kernel oom, earlyoom log, swap growth >1 GB over baseline, MemAvailable <30 GB -> conf restored at once; log ~/realadmit_watch.log. Note epyc4 swap is already 7/7 GB full before the change (baseline, not caused by it). epyc2/7/8/9/intel2 unchanged. Result in 1 h.
+- 2026-11-12 04:25 PST HANDOFF [VISLAYOUT3-S81-SLICE -> COORD] DO_NOT_COUNT. My session is ending. The 17 builds keep running detached on epyc7.
+  Durable watcher: epyc7 vl3s/tools/status_loop.sh rewrites vl3s/b/STATUS.txt every 5 min (stage per build + RENDER place/grt/final lines). It stops when all 17 have BUILD_END.
+  Nothing in my session watches the builds any more. Please resume me or give a successor these next steps:
+    (1) View each RENDER grt/final as it lands (run/layout_review/{grt,final}). lepw_mu_LP__t2 GRT was at extra iteration 10/30 at 12:25 UTC.
+    (2) Any build that stops with POSCHECK_FAIL: run vl3s/tools/poscheck.py by hand. v2 is in place for all builds that have not reached poscheck. If it passes, resume with bash vl3s/tools/resume_route.sh <type> <L1|C1|C1b>.
+    (3) Post READY with branch origin/vislayout3-s81-slice-L1 @ bf0b1bc6af and before/after numbers. Before = kit-wave baselines: lepe GRT 52.7k M6 / 58.6k total; lepw_mus 463k.
+  Open: the LAND-RING-2 strip-density arm for C1 (needs a POR+LAND-RING-2 source snapshot); epyc4 once its scratch2 is above 150 GB.
