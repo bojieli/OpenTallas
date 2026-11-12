@@ -16,7 +16,8 @@
 // Issue rate x0.5 (+1 clk per issued row); uop contents / order, fault and the pin interface unchanged.
 // Default-off variant module (ot_hgi_coll_issuer_m256v8 is unchanged): selected by -DOT_COLL_ISSUER256_ISS2E in
 // ot_hfd_coll_q3_hard_v8x_s.sv.  Mutants: OT_COLL_ISS8E_MUT_{RELOAD,SWAP,NOFWD} (as v8) and _ISS2E_{RCE,NOGATE,NOFR};
-// optional -DOT_COLL_ISS8E_BANK_RQREG = SF1 B early programme-bank read (mutant _RQREG_ADDR).
+// optional -DOT_COLL_ISS8E_BANK_RQREG = SF1 B early programme-bank read (mutant _RQREG_ADDR); -DOT_COLL_ISS8E_PAD_MASK /
+// _HOLD_MASK = per-field parity pad / level hold for the 2-edge grid (mutant _PADMASK).
 // Proof: tb_hgi_coll_issuer_v8r256_iss2e_lockstep.sv (lock-step vs ot_hgi_coll_issuer_m256v8, EQ_CYCLE_SHIFTED),
 // iss2e_split_eq.ys (f_cs + f_fin == f_take, all inputs), formal_iss2e.ys (k-induction of the split invariant).
 module ot_hgi_coll_issuer_m256v8e (
@@ -411,8 +412,25 @@ module ot_hgi_coll_issuer_m256v8e (
   if(!rcp[53])en_w2<=0;else for(integer g=0;g<8;g=g+1)en_w2[g]<=fw && cfg_bank==2'd2 && cfg_row[7:5]==g;
  // ---------------- outputs ----------------
  assign busy=busy_r | start_q;assign done=done_r;assign fault=fault_r;assign uop_v=uop_v_r;assign uop_pc=uop_pc_r;
+ wire [87:0] tap_steps_raw={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
+`ifdef OT_COLL_ISS8E_PAD_MASK
+ // Pad window: the ctl iteration products (ot_hgi_coll_iter_mul: free-running pipeline from tap_iteration / tap_steps,
+ // added to the inst fields at the field adders) must see the row's iteration and steps on the padded edge too, so a
+ // padded iteration-product field (del_obase, inj_*, lk_*) meets its own product.  On the ONE edge after a row
+ // (uop_v_r low, previous edge high) the taps repeat the row's values; every other edge is unchanged.
+ reg uop_v_q;reg [31:0] it_hq;reg [87:0] ts_hq;
+ always @(posedge clk)begin uop_v_q<=uop_v_r;if(uop_v_r)begin it_hq<=iteration;ts_hq<=tap_steps_raw;end end
+`ifdef OT_COLL_ISS8E_MUT_NOTAPREP
+ wire tap_rep=1'b0;                                                   // mutant: no tap repeat in the pad window
+`else
+ wire tap_rep=!uop_v_r && uop_v_q;
+`endif
+ assign tap_iteration=tap_rep ? it_hq : iteration;
+ assign tap_steps=tap_rep ? ts_hq : tap_steps_raw;
+`else
  assign tap_iteration=iteration;
- assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
+ assign tap_steps=tap_steps_raw;
+`endif
  // OT_COLL_ISS8E_PAD_MASK (path (c), DIE-HBM-100 11-11): per-field parity pad for the 2-edge issue grid.  The masked uop
  // bits are emitted one edge later than the rest of their row: rows are 2 edges apart and gap rows are all-zero, so a
  // padded field never overlaps the next row's field.  The mask is the compiler's (tools/hbm_coll_static parent
@@ -424,8 +442,16 @@ module ot_hgi_coll_issuer_m256v8e (
 `else
  localparam [1535:0] PADM=`OT_COLL_ISS8E_PAD_MASK;
 `endif
- reg [1535:0] uop_p;
- always @(posedge clk)begin uop_p<=uop & PADM;uop_d1<=(uop & ~PADM) | uop_p;end
+ // OT_COLL_ISS8E_HOLD_MASK: LEVEL bits (e.g. ar bit 47 ARG mode) that a padded field is checked against on its padded
+ // edge (ot_hgi_coll_ctl_v5.sv:316-318: start / flush / publish / in_slot with !arg_mode = protocol fault): emitted on
+ // the row edge AND repeated on the next edge (the gap edge).  Must not overlap PADM; only level bits belong here.
+`ifdef OT_COLL_ISS8E_HOLD_MASK
+ localparam [1535:0] HOLDM=`OT_COLL_ISS8E_HOLD_MASK;
+`else
+ localparam [1535:0] HOLDM=1536'd0;
+`endif
+ reg [1535:0] uop_p,uop_h;
+ always @(posedge clk)begin uop_p<=uop & PADM;uop_h<=uop & HOLDM;uop_d1<=(uop & ~PADM) | uop_p | uop_h;end
 `else
  always @(posedge clk)uop_d1<=uop;
 `endif

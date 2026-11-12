@@ -43,6 +43,7 @@ src=("$p/tb_hgi_coll_v8x_argmax.sv"
  "$M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" "$M/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
  "$M/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v" "$M/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
  "$M/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v" "$M/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v")
+[ -n "${ARG_TB:-}" ] && src[0]=$ARG_TB   # HBM-TAPS ISS2E: alternative tb (e.g. the _s parent copy)
 src+=(${ARG_VSRC:-})   # HBM-TAPS ISS2E: extra sources (e.g. ot_hgi_coll_issuer_m256v8e.sv), unset = unchanged
 sha256sum "${src[@]}" "$0" tools/hbm_coll_static/argmax_rows.py "$p/static_uop_layout_v4.json" > "$OUT/sources.sha256"
 "$V" --version > "$OUT/verilator.version"
