@@ -4137,7 +4137,9 @@
     "epyc8",
     "epyc7",
     "epyc2"
-   ]
+   ],
+   "plan_sha256": "3ad01048cacf6a1bd560ed3178ee3c06ffa98619dda7ae78eea1e485d8e27a75",
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "s81": {
    "enabled": true,
@@ -19838,7 +19840,9 @@
    "kit_self_contained_by_item": {
     "serdes__t2": "copy",
     "serdes__t15__cla2127225": "copy"
-   }
+   },
+   "plan_sha256": "db1da17a93abed83efe1961b340438716d32cd7cdac42284b5a52100d54e93b0",
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "s81_head": {
    "enabled": true,
@@ -20971,7 +20975,9 @@
    },
    "stage_resume_off": [
     "hd_serdes"
-   ]
+   ],
+   "plan_sha256": "5e0253c7039325a561b576f3bdd3ebfd97b8266a07ab0460b3340bcb4b3150a1",
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "qwen_compute": {
    "enabled": true,
@@ -28998,7 +29004,9 @@
     "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
-   }
+   },
+   "plan_sha256": "820f14a689b7ba62a16240a38e9e0bcbbef17bb21493c86f6ed0fd5ebafb2af9",
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "hbm": {
    "enabled": true,
@@ -43470,7 +43478,9 @@
     "q_spu1__physical_v1",
     "q_su30",
     "q_su30__physical_v1"
-   ]
+   ],
+   "plan_sha256": "8b4b6e3071c49dee3aa31bf8a0097a4415d617d6c56c0dde22dd70375124f540",
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.hbm.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   }
  },
  "place_prefer": [

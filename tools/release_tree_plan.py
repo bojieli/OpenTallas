@@ -76,6 +76,140 @@ PIN_ALIASES = {
 }
 
 
+# WAVE-POR (CORES-S81-1, COORD 11-12 03:2x): the counted plan per die FOLLOWS THE KIT WAVE.  PLANS above is only the
+# pinned fallback (plan dir, overlays, last plan of record).  Each refresh reads the plan the wave builds each die on
+# (autopilot/kit_wave.json dies.<die>: plan_sha256 when set, else the plan_sha of the die's newest plan_current rows
+# in autopilot/kit_wave_stages.tsv; that column is sha256[:12] of the wave's plan file) and counts the origin/main
+# file with that sha256 (index of plan-like files below physical/die_plan/<die top>, blob-sha cached).  The pinned
+# plan dir + overlays stay (plan-relative tables resolve as before), only the plan file changes.  A wave plan that
+# is NOT on origin/main is never counted (the counter reads no host): the pinned plan is counted and the die gets a
+# 'PLAN DRIFT' error until its plan event is merged.  ent['plan_sha'] / ent['wave_plan_sha'] / ent['plan_drift']
+# record it per plan; cache['plans_resolved'] is the list the other tools read through current_plans().
+COORD_DIR = pathlib.Path(os.environ.get('OT_COORD_DIR') or pathlib.Path(__file__).resolve().parent.parent)
+WAVE_CFG = pathlib.Path(os.environ.get('OT_COUNT_WAVE_CFG') or COORD_DIR / 'autopilot' / 'kit_wave.json')
+WAVE_STAGES = pathlib.Path(os.environ.get('OT_COUNT_WAVE_STAGES') or COORD_DIR / 'autopilot' / 'kit_wave_stages.tsv')
+PLAN_INDEX = pathlib.Path(os.environ.get('OT_COUNT_PLAN_INDEX') or CACHE.with_name('release_tree_plan_index.json'))
+PLAN_FILE_RE = re.compile(r'(^|/)(plan|source_plan|die_plan)[^/]*\.json(\.gz)?$')
+WAVE_WINDOW_S = 24 * 3600
+NO_WAVE = bool(os.environ.get('OT_COUNT_NO_WAVE'))   # private proof runs: count the pinned PLANS only
+
+
+def wave_plan_shas(cfg_path=None, stages_path=None, window_s=WAVE_WINDOW_S):
+    """{die: dict(sha=sha256[:12] or None, path=wave plan path, source, rows=...)} of the plan the kit wave builds each
+    die on.  The sha comes ONLY from kit_wave.json dies.<die>.plan_sha256 (written with every repoint): the stages
+    TSV plan_current votes flip between wave ticks (11-12 02:43 -> 03:04: 78 HBM t39w rows and 102 QC s27 rows lost
+    plan_current), so they are reported as a cross-check (rows) and never pick the counted plan."""
+    import csv, collections
+    out = {}
+    try: cfg = json.loads(pathlib.Path(cfg_path or WAVE_CFG).read_text())
+    except Exception: cfg = {}
+    votes = collections.defaultdict(collections.Counter)
+    try:
+        with open(stages_path or WAVE_STAGES, newline='') as f:
+            for r in csv.DictReader(f, delimiter='\t'):
+                if r.get('plan_current') == 'yes' and re.fullmatch(r'[0-9a-f]{12}', r.get('plan_sha') or ''):
+                    votes[r.get('die')][r['plan_sha']] += 1
+    except OSError: pass
+    for die, d in (cfg.get('dies') or {}).items():
+        exp = str((d or {}).get('plan_sha256') or '').lower()
+        sha = exp[:12] if re.fullmatch(r'[0-9a-f]{64}', exp) else None
+        out[die] = dict(sha=sha, path=(d or {}).get('plan'), rows=dict(votes[die].most_common(3)),
+                        source='kit_wave.json plan_sha256' if sha else 'kit_wave.json has no plan_sha256 for this die')
+    return out
+
+
+def _sha12(b, gz):
+    import gzip
+    if gz:
+        try: b = gzip.decompress(b)
+        except Exception: return None
+    return hashlib.sha256(b).hexdigest()[:12]
+
+
+def main_plan_index(tops, repo=None, rev='origin/main', index_path=None, min_bytes=20000):
+    """{sha256[:12] of the plan JSON: [repo paths]} over plan-like files on rev below physical/die_plan/<top>
+    (gz content unzipped); blob -> sha cached in index_path, so a refresh hashes only new blobs"""
+    repo = repo or REPO; ip = pathlib.Path(index_path or PLAN_INDEX)
+    try: cache = json.loads(ip.read_text())
+    except Exception: cache = {}
+    paths = ['physical/die_plan/' + t for t in sorted(set(tops))]
+    ls = subprocess.run(['git', '-C', str(repo), 'ls-tree', '-r', '-l', rev, '--'] + paths, capture_output=True, text=True, timeout=300)
+    if ls.returncode: raise RuntimeError('git ls-tree %s failed: %s' % (rev, ls.stderr.strip()[-200:]))
+    idx, seen = {}, {}
+    for line in ls.stdout.splitlines():
+        meta, path = line.split('\t', 1)
+        _, typ, blob, size = meta.split()
+        if typ != 'blob' or not PLAN_FILE_RE.search(path) or size == '-' or int(size) < min_bytes: continue
+        if blob not in cache:
+            b = subprocess.run(['git', '-C', str(repo), 'cat-file', 'blob', blob], capture_output=True, timeout=300).stdout
+            cache[blob] = _sha12(b, path.endswith('.gz'))
+        seen[blob] = cache[blob]
+        if cache[blob]: idx.setdefault(cache[blob], []).append(path)
+    try:
+        ip.parent.mkdir(parents=True, exist_ok=True)
+        t = ip.with_suffix('.tmp'); t.write_text(json.dumps(seen)); os.replace(t, ip)
+    except OSError: pass
+    return idx
+
+
+def resolve_plans(plans, wave, index):
+    """-> (resolved [(key, pdir, src, ovl, info)], drift [str]).  info = dict(wave_plan_sha, wave_plan_path,
+    wave_source, repointed_from, drift).  The plan file follows the wave when the wave's plan is on main
+    (same die top, preferring a path under the pinned plan dir); else the pinned plan with a drift note."""
+    out, drift = [], []
+    for key, pdir, src, ovl in plans:
+        w = wave.get(key)
+        info = dict(wave_plan_sha=(w or {}).get('sha'), wave_plan_path=(w or {}).get('path'), wave_source=(w or {}).get('source'))
+        top = 'physical/die_plan/' + pdir.split('/')[0] + '/'
+        if not w or not w.get('sha'):
+            info['drift'] = ('PLAN DRIFT %s: kit_wave.json dies.%s has no plan_sha256 (wave plan %s); counting the pinned %s'
+                             % (key, key, (w or {}).get('path') or '?', plan_label(src)))
+        else:
+            cand = [p for p in index.get(w['sha'], []) if p.startswith(top)]
+            if cand:
+                pref = 'physical/die_plan/' + pdir + '/'
+                cand.sort(key=lambda p: (p != src, not p.startswith(pref), len(p), p))
+                if cand[0] != src: info['repointed_from'] = src
+                src = cand[0]
+            else:
+                info['drift'] = ('PLAN DRIFT %s: the kit wave builds plan sha %s (%s) which is not on origin/main; counting the pinned %s '
+                                 'until that plan event is merged' % (key, w['sha'], w.get('path') or '?', plan_label(src)))
+        if info.get('drift'): drift.append(info['drift'])
+        out.append((key, pdir, src, ovl, info))
+    return out, drift
+
+
+def pick_plan_dir(root, src, pdir, overlays):
+    """(pdir, overlays) for a repointed plan file: the pinned plan dir (+ overlays) or the file's own dir, whichever
+    resolves more of the plan's hard-core pins files in the extracted tree root (tie: pinned).  S81 event plans name
+    inputs/core_pins/ of the die dir; an HBM plan_of_record/<event>/ dir carries its own cores/."""
+    import gzip
+    root = pathlib.Path(root); f = root / src
+    try:
+        b = f.read_bytes(); P = json.loads(gzip.decompress(b) if src.endswith('.gz') else b)
+    except Exception: return pdir, overlays
+    pfs = {h.get('pins_file') for v in (P.get('partition_types') or {}).values() for h in (v.get('hard_cores') or []) if h.get('pins_file')}
+    def score(d, ovs):
+        bases = [root / 'physical/die_plan' / x for x in (d,) + tuple(ovs)]
+        ok = lambda q: any((b_ / q).exists() or (b_ / (q + '.gz')).exists() or (b_ / 'cores' / pathlib.Path(q).name).exists() for b_ in bases)
+        return sum(1 for q in pfs if ok(q))
+    own = str(pathlib.PurePosixPath(src).parent)
+    own = own[len('physical/die_plan/'):] if own.startswith('physical/die_plan/') else None
+    if not own or own == pdir: return pdir, overlays
+    return (own, ()) if score(own, ()) > score(pdir, overlays) else (pdir, overlays)
+
+
+def current_plans(cache_path=None):
+    """[(key, pdir, src, ovl)] the counter counted last (cache 'plans_resolved'), else the pinned PLANS.  Read by
+    tools/fleet_viz/plan_now.py, tools/die_plan/obs_sync.py, lanes/plan-route-1/flags_cron.sh (route_supply_watch)."""
+    try:
+        c = json.loads(pathlib.Path(cache_path or CACHE).read_text())
+        rp = c.get('plans_resolved')
+        if rp: return [(r['die'], r['pdir'], r['src'], tuple(r.get('overlays') or ())) for r in rp]
+    except Exception: pass
+    return [tuple(p) for p in PLANS]
+
+
 def materialize_pin_aliases(plan_dir, aliases, rev='origin/main', read=None):
     """lay each alias target (repo path on rev) at plan_dir/<plan-relative path> when that path is absent; -> laid paths.
     read(repo path) -> bytes (default: git show rev:path); RuntimeError on a sha256 mismatch or a missing target."""
@@ -1338,16 +1472,35 @@ def refresh(log=lambda *a: None, old=None):
         r = subprocess.run(['tar', '-x', '-C', str(tmp)], stdin=p1.stdout, capture_output=True, timeout=600)
         p1.wait(60)
         if r.returncode or p1.returncode: raise RuntimeError('git archive origin/main failed')
+        # WAVE-POR: the plan file per die follows the kit wave when its plan is on main (the archive above already
+        # holds every die top, so a repointed file is in tmp); a wave plan not on main is a PLAN DRIFT error
+        if NO_WAVE:
+            active = [(k, pd, sr, ov, {}) for k, pd, sr, ov in PLANS]
+        else:
+            try:
+                wave = wave_plan_shas()
+                active, drift = resolve_plans(PLANS, wave, main_plan_index([pd.split('/')[0] for _, pd, _, _ in PLANS]))
+                errs.extend(drift)
+            except Exception as e:
+                errs.append('PLAN DRIFT check failed (%s); counting the pinned PLANS' % e)
+                active = [(k, pd, sr, ov, {}) for k, pd, sr, ov in PLANS]
+        for i, (k, pd, sr, ov, inf) in enumerate(active):
+            if inf.get('repointed_from'):
+                pd2, ov2 = pick_plan_dir(tmp, sr, pd, ov)
+                active[i] = (k, pd2, sr, tuple(ov2), inf)
+        res['plans_resolved'] = [dict(die=k, pdir=pd, src=sr, overlays=list(ov), **{x: y for x, y in inf.items() if y})
+                                 for k, pd, sr, ov, inf in active]
         design_rows = {}
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
             futs = {} if SIGNED_SOURCE == 'store' else {ex.submit(scan_host, h, known_paths(old, h)): h for h in HOSTS}
-            g0c_ex, g0c_jobs = cf.ThreadPoolExecutor(len(PLANS)), []
-            for key, pdir, src, ovl in PLANS:
+            g0c_ex, g0c_jobs = cf.ThreadPoolExecutor(len(active)), []
+            for key, pdir, src, ovl, inf in active:
                 d = plan_label(src)
-                ent = dict(plan=d, plan_src=src)
+                ent = dict(plan=d, plan_src=src, **{x: y for x, y in inf.items() if y})
                 try:
                     pj = materialize_plan(tmp, pdir, src, ovl)
+                    ent['plan_sha'] = hashlib.sha256(pj.read_bytes()).hexdigest()[:12]
                     ent['refs_fetched'] = len(fetch_results_refs(tmp, pj))
                     ent['pin_aliases'] = materialize_pin_aliases(pj.parent, PIN_ALIASES.get(key))
                     P = json.loads(pj.read_text())
@@ -1535,10 +1688,26 @@ G0C_FIELDS = ('g0c_verdict', 'g0c_errors', 'g0c_clean', 'g0c_types', 'g0c_die_le
               'check_s')
 
 
+def current_plans_of(cache):
+    rp = (cache or {}).get('plans_resolved')
+    return [(r['die'], r['pdir'], r['src'], tuple(r.get('overlays') or ())) for r in rp] if rp else [tuple(p) for p in PLANS]
+
+
+def wave_check(cache, wave=None):
+    """[(die, counted plan sha, wave plan sha, ok)] from a counter cache and the kit-wave state"""
+    wave = wave_plan_shas() if wave is None else wave
+    out = []
+    for r in (cache or {}).get('plans_resolved') or []:
+        ent = (cache.get('plans') or {}).get(plan_label(r['src'])) or {}
+        w = (wave.get(r['die']) or {}).get('sha')
+        out.append((r['die'], ent.get('plan_sha'), w, bool(w) and ent.get('plan_sha') == w))
+    return out
+
+
 def merge_with_cache(new, old):
     """keep the last good per-plan values when this refresh failed for a plan or for the SIGNED scan"""
     if not old: return new
-    cur = {plan_label(src) for _, _, src, _ in PLANS}
+    cur = {plan_label(src) for _, _, src, _ in current_plans_of(new)}
     for d, ent in (old.get('plans') or {}).items():
         if d not in cur: continue   # plan no longer of record (e.g. hbm_arch/B2n -> d41v): drop, never carry it forward
         n = new['plans'].get(d)
@@ -1644,7 +1813,19 @@ def die_counts(cache, key):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--force', action='store_true'); ap.add_argument('--print', action='store_true')
+    ap.add_argument('--plans-jsonl', action='store_true', help='print the counted plans as route_supply_watch.py input and exit')
+    ap.add_argument('--check-wave', action='store_true', help='per die: counted plan sha vs kit-wave plan sha (cache only); exit 1 on drift')
     a = ap.parse_args()
+    if a.plans_jsonl:
+        for k, pd, sr, ov in current_plans():
+            print(json.dumps({'die': k, 'plan': sr, 'refs': list(ov)}))
+        sys.exit(0)
+    if a.check_wave:
+        try: c = json.loads(CACHE.read_text())
+        except Exception as e: print('no cache: %s' % e); sys.exit(1)
+        rows = wave_check(c)
+        for d, cs, ws, ok in rows: print('%-13s counted %s wave %s %s' % (d, cs, ws, 'OK' if ok else 'DRIFT'))
+        sys.exit(0 if rows and all(x[3] for x in rows) else 1)
     c, err = load(a.force, log=lambda *x: print(*x, file=sys.stderr))
     if err: print('WARN', err, file=sys.stderr)
     if a.print:
