@@ -21,7 +21,18 @@ module ot_async_fifo #(
     // the entry commits, so an entry is never visible before it is written; fullness / emptiness / online logic are
     // unchanged.  Effect: +1 wr_clk of write-to-read visibility (asynchronous FIFO: not cycle-observable).
     parameter integer SEL_PIPE = 0,
-    parameter integer SEL_CHUNK = 64
+    parameter integer SEL_CHUNK = 64,
+    // SEL_RSTC (KV-TIMING-FORMS-1 11-12, default 0 = unchanged; needs SEL_PIPE 1): reset-cone relief of the registered
+    // select copies.  The kept wsel / rsel copies (NCH x DEPTH flops per domain) all took the domain reset
+    // (wr_domain_rst_n / rd_domain_rst_n, = one ot_reset_sync reset_pipe flop after synthesis merges the identical
+    // conditioners): kv3_sys_SD_v1 attempt_22 TT -81.8 ps u_crs.reset_pipe[1] -> g_c[5].wsel[3] RESETN, ~130 loads in one
+    // cycle.  SEL_RSTC = R > 0: one kept reset-copy flop per R chunks and domain (wrc / rrc), async-cleared by the domain
+    // reset (assertion unchanged, immediate) and released one clock later by D = 1; each copy resets only R x DEPTH
+    // select flops.  Release of the select copies is 1 clock later than the pointers, which is invisible: the first
+    // possible wr_fire / rd_fire is >= 2 clocks after the domain release (online rendezvous, rd_online_w2 / wr_online_r2
+    // are 2-flop chains in the opposite domain), and rsel's reset value equals what it would load with rd_fire = 0.
+    // Boot-only: zero throughput / data-latency effect.
+    parameter integer SEL_RSTC = 0
 `ifdef OT_VMFE_FCC_PIPE
     , parameter integer FIFO_PIPE = 0, parameter integer PIPE_CHUNK = 128
 `endif
@@ -172,6 +183,21 @@ module ot_async_fifo #(
         localparam integer NCH = (WIDTH + SEL_CHUNK - 1) / SEL_CHUNK;
         reg [WIDTH-1:0] sp_wd;
         reg [PTR_W-1:0] sp_pub_q;
+        localparam integer NRC = (SEL_RSTC > 0) ? ((NCH + SEL_RSTC - 1) / SEL_RSTC) : 1;
+        wire [NRC-1:0] wrc, rrc;                // reset copies; constant 1 (no flop) when SEL_RSTC = 0
+        if (SEL_RSTC > 0) begin : g_rc
+            (* keep = 1 *) reg [NRC-1:0] wrc_q;     // write-domain reset copies
+            (* keep = 1 *) reg [NRC-1:0] rrc_q;     // read-domain reset copies
+            always @(posedge wr_clk or negedge wr_domain_rst_n)
+                if (!wr_domain_rst_n) wrc_q <= {NRC{1'b0}}; else wrc_q <= {NRC{1'b1}};
+            always @(posedge rd_clk or negedge rd_domain_rst_n)
+                if (!rd_domain_rst_n) rrc_q <= {NRC{1'b0}}; else rrc_q <= {NRC{1'b1}};
+            assign wrc = wrc_q;
+            assign rrc = rrc_q;
+        end else begin : g_rc0
+            assign wrc = {NRC{1'b1}};
+            assign rrc = {NRC{1'b1}};
+        end
         wire [DEPTH-1:0] sp_wsel_d = {DEPTH{wr_fire}} & ({{(DEPTH-1){1'b0}},1'b1} << wr_bin[ADDR_W-1:0]);
         wire [DEPTH-1:0] sp_rsel_d = {{(DEPTH-1){1'b0}},1'b1} << rd_bin_next[ADDR_W-1:0];
         always @(posedge wr_clk) sp_wd <= wr_data;          // payload: reset-free, one load per bit
@@ -186,11 +212,21 @@ module ot_async_fifo #(
             // every gen.py kit) keeps each declared (* keep *) copy a real flop, so no select net fans out past a chunk
             (* keep = 1 *) reg [DEPTH-1:0] wsel;
             (* keep = 1 *) reg [DEPTH-1:0] rsel;
-            always @(posedge wr_clk or negedge wr_domain_rst_n)
-                if (!wr_domain_rst_n) wsel <= {DEPTH{1'b0}};
+`ifdef OT_SP_MUT_RC
+            wire wsel_rst_n = (SEL_RSTC > 0 && pc < SEL_RSTC) ? 1'b1 : (SEL_RSTC > 0) ? wrc[pc / SEL_RSTC] : wr_domain_rst_n;  // mutant: first copy group never cleared
+`else
+            wire wsel_rst_n = (SEL_RSTC > 0) ? wrc[pc / SEL_RSTC] : wr_domain_rst_n;
+`endif
+`ifdef OT_SP_MUT_RCR
+            wire rsel_rst_n = (SEL_RSTC > 0 && pc >= NCH - SEL_RSTC) ? 1'b1 : (SEL_RSTC > 0) ? rrc[pc / SEL_RSTC] : rd_domain_rst_n;  // mutant: last copy group never cleared
+`else
+            wire rsel_rst_n = (SEL_RSTC > 0) ? rrc[pc / SEL_RSTC] : rd_domain_rst_n;
+`endif
+            always @(posedge wr_clk or negedge wsel_rst_n)
+                if (!wsel_rst_n) wsel <= {DEPTH{1'b0}};
                 else wsel <= sp_wsel_d;
-            always @(posedge rd_clk or negedge rd_domain_rst_n)
-                if (!rd_domain_rst_n) rsel <= {{(DEPTH-1){1'b0}}, 1'b1};
+            always @(posedge rd_clk or negedge rsel_rst_n)
+                if (!rsel_rst_n) rsel <= {{(DEPTH-1){1'b0}}, 1'b1};
                 else rsel <= sp_rsel_d;
             reg [CW-1:0] smem [0:DEPTH-1];
             always @(posedge wr_clk) begin : p_w

@@ -16,9 +16,14 @@ module ot_qfd_serdes_112g_x6_phy_c45 #(parameter W=522) (
  // KV-TYPES-3 11-07 (COORD 22:0x (3)): 8-bit select chunks (66 copies per FIFO) instead of 64: SD_v1 PLACE worst
  // path was one 64-bit chunk write select spread over ~450 um of the S strip (8 buffer levels, -177.7 ps).
  localparam integer SEL_CHUNK = 8;
+ // KV-TIMING-FORMS-1 11-12 (COORD order, DIE-KV-98): one kept reset-copy flop per SEL_RSTC = 4 select chunks and domain
+ // (17 copies per domain, each resets 32 wsel/rsel flops).  kv3_sys_SD_v1 attempt_22: u_crs.reset_pipe[1] -> g_c[5].wsel[3]
+ // RESETN TT -81.8 ps, ~130 loads in one cycle (synthesis merges the identical per-FIFO reset conditioners into one
+ // reset_pipe).  Boot-only: the select copies release one clock after the pointers (see ot_async_fifo SEL_RSTC); 0 data cycles.
+ localparam integer SEL_RSTC = 4;
  wire p_rst_n, p_tx_v, p_rx_v, p_tx_up;
  wire [W-1:0] p_tx_d, p_rx_d;
- ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(SEL_PIPE), .SEL_CHUNK(SEL_CHUNK)) u_fdi_cdc (
+ ot_fdi_phy_cdc #(.W(W), .DEPTH(8), .SEL_PIPE(SEL_PIPE), .SEL_CHUNK(SEL_CHUNK), .SEL_RSTC(SEL_RSTC)) u_fdi_cdc (
   .clk(clk), .link_rst_n(rst_n), .c_tx_v(tx_v), .c_tx_d(tx_flit),
   .c_rx_v(rx_v), .c_rx_d(rx_flit), .c_tx_up(tx_up), .clk_phy(clk_phy),
   .p_rst_n(p_rst_n), .p_tx_v(p_tx_v), .p_tx_d(p_tx_d),

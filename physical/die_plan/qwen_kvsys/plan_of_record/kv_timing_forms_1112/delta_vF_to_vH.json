@@ -1,0 +1,15 @@
+{
+ "base_plan": "vF md5 b85b648476700cea99addc382b4560ac",
+ "new_plan_md5": "53651160576d81d18fbc5f225356e955",
+ "relay_sites_summary": {
+  "relay_sites keys ADDED kv3_phy": 7,
+  "relay_sites keys ADDED kv3_phy_v1": 10
+ },
+ "other_changed_fields": [
+  "/partition_types/kv3_io_cor/clock/landing_ring_wreg/dsrep CHANGED",
+  "/partition_types/kv3_io_cor_v1/clock/landing_ring_wreg/dsrep CHANGED",
+  "/partition_types/kv3_phy/reset/port_relays CHANGED",
+  "/partition_types/kv3_phy_v1/reset/port_relays ADDED"
+ ],
+ "gated": "EQ-gated: no bus, lane, outline, pin, latency-table or clock key changes; reset.port_relays rows + relay_sites (kv3_phy, kv3_phy_v1), clock.landing_ring_wreg.dsrep 1->8 (kv3_io_cor, kv3_io_cor_v1)"
+}

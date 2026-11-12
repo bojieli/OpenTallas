@@ -39,7 +39,10 @@ module ot_fdi_phy_cdc #(
     // KV-TYPES-3 11-07 (COORD 22:0x (3)): select-copy granularity of the SEL_PIPE form, passed to both FIFOs
     // (ot_async_fifo SEL_CHUNK; default 64 = unchanged).  Smaller = more registered write/read select copies, each
     // driving fewer storage bits over a shorter span of the PHY face strip; function and latency unchanged.
-    parameter integer SEL_CHUNK = 64
+    parameter integer SEL_CHUNK = 64,
+    // KV-TIMING-FORMS-1 11-12 (DIE-KV-98 reset_pipe fan-out, kv3_sys_SD / _v1): SEL_RSTC = R > 0 gives every R select-copy
+    // chunks of each FIFO one kept reset-copy flop (ot_async_fifo SEL_RSTC); default 0 = unchanged.  Needs SEL_PIPE 1.
+    parameter integer SEL_RSTC = 0
 ) (
     // core side (partition clock)
     input  wire         clk,
@@ -68,7 +71,7 @@ module ot_fdi_phy_cdc #(
     always @(posedge clk_phy or negedge p_rst_n) if (!p_rst_n) rq_v <= 1'b0; else rq_v <= p_rx_v;
     wire         rx_wr_rdy, rx_rd_v, rx_wovf, rx_rund;
     wire [W-1:0] rx_rd_d;
-    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH), .SEL_PIPE(SEL_PIPE), .SEL_CHUNK(SEL_CHUNK)) u_rx (
+    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH), .SEL_PIPE(SEL_PIPE), .SEL_CHUNK(SEL_CHUNK), .SEL_RSTC(SEL_RSTC)) u_rx (
         .wr_clk(clk_phy), .wr_rst_n(link_rst_n), .wr_valid(rq_v), .wr_ready(rx_wr_rdy), .wr_data(rq_d), .wr_overflow(rx_wovf),
         .rd_clk(clk), .rd_rst_n(link_rst_n), .rd_valid(rx_rd_v), .rd_ready(1'b1), .rd_data(rx_rd_d), .rd_underflow(rx_rund));
     always @(posedge clk) c_rx_d <= rx_rd_d;
@@ -76,7 +79,7 @@ module ot_fdi_phy_cdc #(
     // ---- TX: core -> PHY ----
     wire         tx_wr_rdy, tx_rd_v, tx_wovf, tx_rund;
     wire [W-1:0] tx_rd_d;
-    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH), .SEL_PIPE(SEL_PIPE), .SEL_CHUNK(SEL_CHUNK)) u_tx (
+    ot_async_fifo #(.WIDTH(W), .DEPTH(DEPTH), .SEL_PIPE(SEL_PIPE), .SEL_CHUNK(SEL_CHUNK), .SEL_RSTC(SEL_RSTC)) u_tx (
         .wr_clk(clk), .wr_rst_n(link_rst_n), .wr_valid(c_tx_v), .wr_ready(tx_wr_rdy), .wr_data(c_tx_d), .wr_overflow(tx_wovf),
         .rd_clk(clk_phy), .rd_rst_n(link_rst_n), .rd_valid(tx_rd_v), .rd_ready(1'b1), .rd_data(tx_rd_d), .rd_underflow(tx_rund));
     always @(posedge clk_phy) p_tx_d <= tx_rd_d;

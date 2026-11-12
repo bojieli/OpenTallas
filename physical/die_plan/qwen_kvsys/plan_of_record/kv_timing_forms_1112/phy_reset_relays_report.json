@@ -1,0 +1,146 @@
+{
+ "kv3_phy": {
+  "sinks": 28,
+  "unplaced": [],
+  "groups": [
+   {
+    "name": "rg0",
+    "depth": 1,
+    "centroid": [
+     797.34,
+     480.516
+    ],
+    "sinks": 8,
+    "path_len_um": 324.9,
+    "max_hop_um": 324.9,
+    "sink_radius_um": 205.7
+   },
+   {
+    "name": "rg1",
+    "depth": 2,
+    "centroid": [
+     471.936,
+     529.57
+    ],
+    "sinks": 8,
+    "path_len_um": 601.2,
+    "max_hop_um": 300.6,
+    "sink_radius_um": 236.0
+   },
+   {
+    "name": "rg2",
+    "depth": 1,
+    "centroid": [
+     602.624,
+     697.189
+    ],
+    "sinks": 4,
+    "path_len_um": 302.9,
+    "max_hop_um": 302.9,
+    "sink_radius_um": 142.8
+   },
+   {
+    "name": "rg3",
+    "depth": 2,
+    "centroid": [
+     389.973,
+     898.954
+    ],
+    "sinks": 6,
+    "path_len_um": 591.1,
+    "max_hop_um": 295.5,
+    "sink_radius_um": 236.8
+   },
+   {
+    "name": "rg4",
+    "depth": 1,
+    "centroid": [
+     775.12,
+     1054.483
+    ],
+    "sinks": 2,
+    "path_len_um": 361.4,
+    "max_hop_um": 361.4,
+    "sink_radius_um": 101.3
+   }
+  ]
+ },
+ "kv3_phy_v1": {
+  "sinks": 32,
+  "unplaced": [],
+  "groups": [
+   {
+    "name": "rg0",
+    "depth": 1,
+    "centroid": [
+     797.34,
+     480.516
+    ],
+    "sinks": 8,
+    "path_len_um": 324.9,
+    "max_hop_um": 324.9,
+    "sink_radius_um": 205.7
+   },
+   {
+    "name": "rg1",
+    "depth": 2,
+    "centroid": [
+     462.464,
+     496.908
+    ],
+    "sinks": 8,
+    "path_len_um": 643.3,
+    "max_hop_um": 321.7,
+    "sink_radius_um": 243.2
+   },
+   {
+    "name": "rg2",
+    "depth": 1,
+    "centroid": [
+     583.795,
+     686.151
+    ],
+    "sinks": 5,
+    "path_len_um": 332.8,
+    "max_hop_um": 332.8,
+    "sink_radius_um": 150.4
+   },
+   {
+    "name": "rg3",
+    "depth": 2,
+    "centroid": [
+     400.656,
+     911.883
+    ],
+    "sinks": 8,
+    "path_len_um": 593.3,
+    "max_hop_um": 296.7,
+    "sink_radius_um": 260.9
+   },
+   {
+    "name": "rg4",
+    "depth": 1,
+    "centroid": [
+     775.12,
+     1054.483
+    ],
+    "sinks": 2,
+    "path_len_um": 361.4,
+    "max_hop_um": 361.4,
+    "sink_radius_um": 101.3
+   },
+   {
+    "name": "rg5",
+    "depth": 3,
+    "centroid": [
+     431.972,
+     1519.64
+    ],
+    "sinks": 1,
+    "path_len_um": 1169.7,
+    "max_hop_um": 389.9,
+    "sink_radius_um": 1.0
+   }
+  ]
+ }
+}

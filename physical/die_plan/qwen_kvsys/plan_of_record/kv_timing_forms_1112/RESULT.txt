@@ -1,0 +1,43 @@
+KV-TIMING-FORMS-1 (DIE-KV-98) 2026-11-12.  Base main b35eaa100a, KV plan vF md5 b85b648476700cea99addc382b4560ac.
+
+FORM 1  kv3_sys_SD / kv3_sys_SD_v1  reset_pipe fan-out (attempt_22 TT -81.8: u_core.u_fdi_cdc.u_crs.reset_pipe[1] -> g_c[5].wsel[3] RESETN)
+  CAUSE (read from RTL, not measured on a netlist): ot_fdi_phy_cdc u_crs / u_prs and the four ot_reset_sync conditioners inside
+  the two ot_async_fifo (fifo_async_rst_n = link_rst_n) are identical flops; synthesis merges them, so ONE reset_pipe[1] per clock
+  drives the NCH x DEPTH kept wsel / rsel copies (SEL_CHUNK 8: 66 x 8 = 528 per FIFO and domain) plus pointer logic.
+  FIX: ot_async_fifo SEL_RSTC = R (default 0 = byte-identical logic).  One kept reset-copy flop (wrc / rrc) per R chunks and domain,
+  async-cleared by the domain reset, D = 1; the wsel / rsel of R chunks reset from their copy.  serdes_c45.sv sets SEL_RSTC = 4:
+  17 copies per FIFO domain, each resets 32 flops.  Release of the select copies is one clock later than the pointers; invisible
+  because the first possible wr_fire / rd_fire is >= 2 clocks after the domain release (online rendezvous) and rsel's reset value
+  equals what it loads with rd_fire = 0.  Reset only: 0 tok/s, 0 data cycles, no latency row.
+  GATES RUN: fdicdc_sp lock-step bench (iverilog, existing KV-FDICDC-1 bench + RC / RCR parameters), SC 64 RC 0 vs RC 2 and SC 8
+  RC 0 vs RC 4: nom521 / nom522 / txfast522 / rxfast522 PASS (err N0 0 N1 0 scoreboard 0); the existing mutants still FAIL
+  with identical counts for RC 0 and RC 2.  Elaboration of serdes_c45.sv with iverilog: only the PHY macro is unresolved.
+  NOT DONE / HONEST LIMITS: (a) the two new mutants OT_SP_MUT_RC / RCR (a reset copy that never clears) are NOT caught by the
+  bench: wsel / rsel are reloaded every clock, so their reset is functionally redundant after the first edge; the RC form is
+  evidenced as cycle-identical, its reset topology is by construction.  (b) no yosys / netlist run: the fan-out reduction is
+  not measured post-synthesis; no LEC.  (c) the bench row nomr522 (+ptx=40) FAILS (scoreboard 2, 6 words lost) on the UNCHANGED
+  SEL_PIPE 1 form at RC 0 as well, identical numbers at RC 2 / RC 4: pre-existing, not caused by this change, not investigated.
+  (d) the ring +1 on cland_origin -> dsel (sys_SD_v1 -63.6) is NOT built: see FORM 3.
+
+FORM 2  kv3_phy / kv3_phy_v1  arst_n -> station eq flops (hard wrappers: `wire rst_n = arst_n;`, no generated reset tree)
+  phy_reset_relays.py: reset.port_relays (KV-TYPES-5 mechanism, reset_port_relays.py) for all ot_dp_st sinks that still take the
+  delivered reset (kv3_phy 28, kv3_phy_v1 32; sites from plan internal_stations / ft_slots / relay_sites), clustered within 300 um,
+  one ot_dp_rrelay chain per cluster sited on the L path from reset.tap_um; every relay hop <= 396.9 um, last relay <= 261 um from
+  its sinks.  kv3_phy +5 rows / 7 relays, kv3_phy_v1 +6 rows / 10 relays, max depth 2 / 3.  Plan keys: reset.port_relays,
+  relay_sites only (script asserts everything else identical).  schema.py validate PASS 0 errors.  Tok/s: reset only, 0.
+  BENCH (vF bound RTL OLD vs NEW = same + port_relays, depth-0 lockstep, early and late start): NOT cycle identical.  The only
+  differences are the STATION EPOCH bits of the six PI buses (kv3_phy_v1 also ft0_o) for the 2-3 clocks after each reset
+  release (cycles 14-16 and 311-313), data bits equal.  That is the +depth reset-release boot offset at the PHY pins, the same
+  consequence phy_reset_reach_1105 priced (+3 boot cycles); it needs the die reset-offset table / host boot hold accounted by
+  the compiler (rst_n hold >= 64 clk covers it) and a COORD OK.  The bench has no pass criterion for that: errs counts 24-30.
+  NOT DONE: strict bind of vH (queued in ot-run behind the load gate), G0, kit run, the 6 kv3_pc types: they are SOFT
+  partitions with a generated reset relay tree (reset_tree.py), the 11-11 sweep proxy overstated them; no routed pc run exists, so
+  no plan change is proposed for them.
+
+FORM 3  landing ring (hub_Ei, io_cor, io_cor_v1, io_ft_v1, sys_SD_v1)
+  ring_dsrep_delta.py: clock.landing_ring_wreg.dsrep 1 -> 8 for kv3_io_cor and kv3_io_cor_v1 (vG field, 0 data cycles); output
+  differs from input in exactly those two fields (asserted).  Not prepared: kv3_hub_Ei (no landing_ring_wreg at all, needs a bus
+  list and FREG decision, FREG = +1 data cycle = latency row for TOK-VERIFY-1), kv3_io_ft_v1 (P-IN forwarded clock, parent window),
+  kv3_sys_SD_v1 cland_origin -> dsel (a +1 cycle there is a FREG / latency row; not derived).
+
+FORM 4  ft station chain hold: not started here (hold pads = kit hold step KW-FIX-45; re-site = VISLAYOUT3-KVHEAD positions).
