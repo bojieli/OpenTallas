@@ -1633,12 +1633,14 @@ def _dme_timed(site, tl, kw, rn=None):
     per region start/done (name, taps, seconds) plus a heartbeat line every DME_HEARTBEAT_S seconds inside a region,
     so slow regions can be named while a kit runs (log only; the tree is unchanged)"""
     if not dme_log_on():
-        return dme_region_tree(site, tl, **kw)
+        with region_bound(rn):
+            return dme_region_tree(site, tl, **kw)
     t0 = time.time()
     _DME_HB.update(region=rn, t0=t0, last=t0, merges=0, joins=0, detours=0, astar=0, fallbacks=0, bounded=0)
     print(f"[dme] start region={rn} taps={len(tl)} pid={os.getpid()}", file=sys.stderr, flush=True)
     try:
-        res = dme_region_tree(site, tl, **kw)
+        with region_bound(rn):
+            res = dme_region_tree(site, tl, **kw)
     finally:
         hb = dict(_DME_HB)
         _DME_HB["region"] = None
@@ -1786,7 +1788,8 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                     nodes[i]["route"] = [list(pa), list(best[1]), list(q)]
             for k in d["kids"]:
                 attach(k, i, (d.get("snakes") or {}).get(k))
-        attach(droot, e)
+        with region_bound(rn):
+            attach(droot, e)
         st[rn] = dict(merges=dst.get("merges"), imbalanced=dst.get("imbalanced"), spread=dst.get("spread_um"),
                       **({"early_taps": dst["early_taps"]} if dst.get("early_taps") else {}),
                       **({k: dst[k] for k in ("snakes", "snake_wire_um", "snake_buffers")} if sn else {}),
@@ -1988,6 +1991,46 @@ def chain_ps(pts):
 
 
 DME_ACTUAL_MAX_UM = None  # opt-in: one legal physical chain drives both DME cost and emitted buffers
+# HEAD-LEP0N-BAL opt-in --region-dme-actual-max-region REG:UM[,REG:UM] (with --region-dme-actual-max): the listed regions
+# build, price and emit their physical DME legs with stage bound UM instead of the die-wide bound.  Reason (HEAD FREG
+# die-proto 11-12): the stage model is fitted on <= ~150 um legs; a 300 um stage (repeaters snapped off a hard-core column)
+# routes +17..+31 ps slower than the model, so a region with long core crossings balances on the model and spreads on the
+# routed clock (lep0N 37 ps model vs 160 ps routed).  A tighter bound makes those crossings channel detours with stages
+# inside the fitted range.  Regions not listed are byte-identical (the cache key carries the bound).
+DME_ACTUAL_MAX_REGION = None    # {region: um}
+_REGION_BOUND = None            # bound of the region being built (set by region_bound)
+
+
+class region_bound:
+    """context: physical legs built inside use the --region-dme-actual-max-region bound of region rn, if listed"""
+    def __init__(self, rn):
+        self.v = (DME_ACTUAL_MAX_REGION or {}).get(rn)
+
+    def __enter__(self):
+        global _REGION_BOUND
+        self.old, _REGION_BOUND = _REGION_BOUND, (self.v if self.v is not None else _REGION_BOUND)
+        return self
+
+    def __exit__(self, *exc):
+        global _REGION_BOUND
+        _REGION_BOUND = self.old
+        return False
+
+
+def parse_region_um(spec):
+    """'REG:UM[,REG:UM]' -> {REG: float(UM)} (finite, positive)"""
+    out = {}
+    for item in (spec or "").split(","):
+        if not item.strip():
+            continue
+        rn, _, v = item.strip().rpartition(":")
+        if not rn:
+            raise ValueError(f"--region-dme-actual-max-region item {item!r}: REG:UM")
+        um = float(v)
+        if not math.isfinite(um) or um <= 0:
+            raise ValueError(f"--region-dme-actual-max-region {rn}: bound must be finite and positive")
+        out[rn] = um
+    return out
 
 
 def physical_leg(site, a, b, rep_um, points=None):
@@ -1996,7 +2039,7 @@ def physical_leg(site, a, b, rep_um, points=None):
     on inv2 legs. The same returned chain is stored on the node and emitted intact.
     """
     a, b = tuple(a), tuple(b)
-    bound = float(DME_ACTUAL_MAX_UM)
+    bound = float(_REGION_BOUND if _REGION_BOUND is not None else DME_ACTUAL_MAX_UM)
     if not math.isfinite(bound) or bound <= 0:
         raise ValueError("DME actual reach bound must be finite and positive")
     key = (a, b, float(rep_um), bool(EVEN_LEGS) if not _LEG_PAR else ("par", 1), bound, tuple(STAGE_1X_TT),
@@ -5756,6 +5799,9 @@ def main(argv=None):
     k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in coherent physical DME legs: price and emit one snapped reachable repeater chain; "
                         "geometry-derived paired detours before merge balancing, default unchanged")
+    k.add_argument("--region-dme-actual-max-region", default=None, metavar="REG:UM[,REG:UM]",
+                   help="HEAD-LEP0N-BAL opt-in (with --region-dme-actual-max): per-region physical stage bound for the "
+                        "listed regions (stages kept inside the fitted stage-model range); other regions unchanged")
     k.add_argument("--region-dme-snake", default=None, metavar="REGIONS",
                    help="DIE-QC-9 opt-in (with --region-dme delay, link_htree; COORD 10-28: standard zero-skew DME wire "
                         "elongation, plan-computed, part of the tree, not a residual ECO): comma list of DME regions "
@@ -5846,8 +5892,11 @@ def main(argv=None):
     e.add_argument("--prefix", default="", help="instance prefix in the routed design (e.g. ck_)")
     e.add_argument("--tap-slew", action="store_true")
     a = ap.parse_args(argv)
-    global DME_ACTUAL_MAX_UM
+    global DME_ACTUAL_MAX_UM, DME_ACTUAL_MAX_REGION
     DME_ACTUAL_MAX_UM = getattr(a, "region_dme_actual_max", None)
+    DME_ACTUAL_MAX_REGION = parse_region_um(getattr(a, "region_dme_actual_max_region", None)) or None
+    if DME_ACTUAL_MAX_REGION and DME_ACTUAL_MAX_UM is None:
+        raise SystemExit("--region-dme-actual-max-region needs --region-dme-actual-max")
     global DME_MODES_SEL, DME_PHYS_TOPK
     DME_PHYS_TOPK = getattr(a, "region_dme_physical_topk", None)
     if DME_PHYS_TOPK is not None and DME_PHYS_TOPK < 1:

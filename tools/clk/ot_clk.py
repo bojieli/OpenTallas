@@ -382,6 +382,13 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
             a += ["--region-dme-stage-cal", str(stage_cal_path)]
         if reg.get("actual_max") is not None:   # coherent physical DME legs: one snapped legal chain prices + emits each leg
             a += ["--region-dme-actual-max", _fmt(reg["actual_max"])]
+        amr = reg.get("actual_max_region")     # opt-in per-region physical stage bound, "REG:UM[,REG:UM]" or {REG: UM}
+        if amr:
+            if reg.get("actual_max") is None:
+                raise ConfigError("region.actual_max_region needs region.actual_max")
+            if isinstance(amr, dict):
+                amr = ",".join(f"{k}:{_fmt(v)}" for k, v in sorted(amr.items()))
+            a += ["--region-dme-actual-max-region", str(amr)]
         w = workers if workers is not None else reg.get("workers")
         if w and int(w) > 1:
             a += ["--region-dme-workers", str(int(w))]
