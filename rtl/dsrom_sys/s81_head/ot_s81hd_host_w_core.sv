@@ -20,12 +20,18 @@
 // (BOOT_HEADER_EDGE / BOOT_COMMIT_EDGE and the record date fields +1: the plan declares the lane0 ingress lane
 // fixed_cycles +1, so head_boot_recipe re-derives them); the lane0 RESULT TX path and the HOST receiver epoch
 // relative to its own records are unchanged.  L0_STAGE=0 = the DH56 form (bench reference only).
+// HEAD-94 11-11 (COORD 04:xx hd_host_w a3 TT -76, worst path l0s_v -> u_mux select fan-out (86/84) -> u_ctl_tx.oq_p, 860 ps, 11 gates,
+// not a core-core hop): TX_STAGE=1 registers the frame mux output {ctl_rx_v, ctl_rx_d} once before u_ctl_tx (valid reset, data unreset,
+// keep): +1 cycle on EVERY host276 h_rx_o frame (HFWD type 7, CSR type 6, fault STATUS type 8, all others); the lane0 ingress / HBC dates,
+// peer0/peer1 RX and the lane1 seam are unchanged.  The plan declares the cycle as fixed_cycles +1 on the host_rx lane (LAT_HD_HOST_RX +1).
+// TX_STAGE=0 = the DH58 circuit (bench reference); production default 1 after the lockstep bench passed (HEAD-94 11-11).
 module ot_s81hd_host_w_core #(
  parameter[1:0]CH_B=2'b11,
  parameter integer LOCAL_STAGE=255,LOCAL_RANK=4,PHASE_BOUND=0,
  parameter integer MUT=0,
  parameter integer SPLIT_MUT=0,
  parameter integer L0_STAGE=1,
+ parameter integer TX_STAGE=1,
  parameter[63:0]CLOCK_RESET_ID=0,
  parameter[47:0]BOOT_HEADER_EDGE=48'hffffffffffff,
  parameter[47:0]BOOT_COMMIT_EDGE=48'hffffffffffff
@@ -74,6 +80,7 @@ module ot_s81hd_host_w_core #(
   assign l1_tx_o={l1tx_v,l1tx_d};
  end endgenerate
  wire cv,crxf,ctxv;wire[552:0]cd,rxframe;wire rxv,crtxf;
+ wire rxv_m;wire[552:0]rxframe_m;   // u_mux output (before the optional TX stage)
  ot_s81hd_host276_rx u_ctl_rx(.ck(ck),.rn(rst_n),.lane(h_tx_i[275:0]),.v(cv),.frame(cd),.fault(crxf));
  ot_s81hd_host276_tx u_ctl_tx(.ck(ck),.rn(rst_n),.v(rxv),.frame(rxframe),.lane(h_rx_o),.fault(crtxf));
  wire[1103:0]from_prev,to_local,next_ro;
@@ -99,7 +106,16 @@ module ot_s81hd_host_w_core #(
  ot_s81hd_host_frame_mux #(.MUT(MUT))u_mux(.ck(ck),.rst_n(rst_n),.context_valid(ctxv),
   .host0_v(lv[0]),.host1_v(lv[1]),.host0_d(ld[552:0]),.host1_d(ld[1105:553]),
   .local_ring(to_local),.source_fault(source_fault),.ctl_v(cv),.ctl_d(cd),
-  .from_prev(from_prev),.ctl_rx_v(rxv),.ctl_rx_d(rxframe),
+  .from_prev(from_prev),.ctl_rx_v(rxv_m),.ctl_rx_d(rxframe_m),
   .lane_tx_v(txv),.lane_tx_d(txd),.fault(host_fault));
+
+ generate if(TX_STAGE!=0)begin:g_txs
+  (* keep="true" *)reg txs_v;(* keep="true" *)reg[552:0]txs_d;
+  always@(posedge ck or negedge rst_n)if(!rst_n)txs_v<=0;else txs_v<=rxv_m;
+  always@(posedge ck)txs_d<=rxframe_m;
+  assign rxv=txs_v;assign rxframe=txs_d;
+ end else begin:g_txd
+  assign rxv=rxv_m;assign rxframe=rxframe_m;
+ end endgenerate
 endmodule
 `default_nettype wire

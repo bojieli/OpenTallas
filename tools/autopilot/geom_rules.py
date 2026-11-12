@@ -546,11 +546,32 @@ def land_ring_captures(D, land, guard):
     return res
 
 
-def pin_reg_metrics(D, strap_re, clock_pins=frozenset(), land=None):
+SPARE_SCHEMA = "opentallas.kit_spare_out.v1"
+
+
+def spare_out_bits(path):
+    """KW-FIX-45 11-11 (DIE-HBM-100, pin_reg_metrics): the kit spare_out.json (gen_phys, from the bind's spare_out_bits) names
+    plan output bits the kit-rtl wrapper ties to a constant.  -> (frozenset of exact bit names, errors).  A missing,
+    unreadable or invalid file grants no exemption (empty set, error recorded)."""
+    if not path:
+        return frozenset(), []
+    try:
+        doc = json.loads(Path(path).read_text())
+    except (OSError, ValueError) as e:
+        return frozenset(), [f"spare_out: {type(e).__name__}"]
+    bits = doc.get("bits") if isinstance(doc, dict) else None
+    if not isinstance(doc, dict) or doc.get("schema") != SPARE_SCHEMA or not isinstance(bits, list) \
+            or len(set(bits)) != len(bits) or not all(isinstance(b, str) for b in bits):
+        return frozenset(), [f"spare_out: want schema {SPARE_SCHEMA} and unique string bits"]
+    return frozenset(bits), []
+
+
+def pin_reg_metrics(D, strap_re, clock_pins=frozenset(), land=None, spare=frozenset()):
     """pin -> first directional register through pure BUF/INV; visited nets bound cycles, not buffer count.
     land: {input pin: [slot flop ids]} of land_ring_captures (declared ring; judged at the farthest slot)."""
     land = land or {}
-    dist, unreg, macro, exempt = [], [], 0, 0
+    spare = frozenset(spare or ())            # KW-FIX-45 11-11: kit spare_out.json bits (TIELO-tied spare output pins)
+    dist, unreg, macro, exempt, spare_n = [], [], 0, 0, 0
     worst = []
     for p in D.pins:
         if p["sig"] in ("POWER", "GROUND"):
@@ -558,6 +579,9 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset(), land=None):
         if (p["sig"] == "CLOCK" or p["name"] in clock_pins or CLOCK_PIN_RE.search(p["name"])
                 or strap_re.search(p["name"])):
             exempt += 1
+            continue
+        if p["io"] == "OUTPUT" and p["name"] in spare:
+            spare_n += 1                       # declared constant spare output: no register to find (kit_rtl ties it)
             continue
         n = D.pin_net.get(p["k"])
         if n is None:
@@ -615,7 +639,7 @@ def pin_reg_metrics(D, strap_re, clock_pins=frozenset(), land=None):
         else:
             unreg.append(p["name"])
     worst.sort(reverse=True)
-    return dict(pins_registered=len(dist), pins_to_macro=macro, pins_exempt=exempt, pins_unregistered=len(unreg),
+    return dict(pins_registered=len(dist), pins_to_macro=macro, pins_exempt=exempt, pins_spare_out=spare_n, pins_unregistered=len(unreg),
                 pins_land_ring=sum(1 for p in D.pins if p["io"] == "INPUT" and p["name"] in land),
                 unregistered_sample=unreg[:8], pin_reg_p50=None if not dist else round(q(dist, .5), 2),
                 pin_reg_p90=None if not dist else round(q(dist, .9), 2),
@@ -1609,7 +1633,7 @@ def stage_of_odb(name, clock_cells=0):
 
 
 def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
-            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None):
+            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None, spare_out=None):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
@@ -1632,7 +1656,10 @@ def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=Non
         caps, ring_clocks = lr["caps"], frozenset(lr["clock_exports"])
         m["land_ring"] = dict(buses=lr["buses"], pins=len(caps), clock_exports=lr["clock_exports"], errors=lr["errors"],
                               rejected=len(lr["rejected"]), rejected_sample=lr["rejected"][:8])
-    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | infra_pins | ring_clocks, caps))
+    spare_bits, spare_err = spare_out_bits(spare_out)
+    if spare_out:
+        m["spare_out"] = dict(bits=len(spare_bits), errors=spare_err)
+    m.update(pin_reg_metrics(D, sr, frozenset(ck["tap_sinks"]) | infra_pins | ring_clocks, caps, spare_bits))
     if reset_capture_kit is not None or reset_capture_typed is not None:
         try:
             if reset_capture_kit is None or reset_capture_typed is None:
@@ -1687,11 +1714,12 @@ def main(argv=None):
     ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
     ap.add_argument("--land-slots", help="kit land_slots.json: declared landing ring (with --face-guard PASS) = registered capture")
     ap.add_argument("--face-guard", help="kit face_guard.json (verdict PASS) matching --land-slots")
+    ap.add_argument("--spare-out", help="kit spare_out.json (opentallas.kit_spare_out.v1): constant-tied spare output bits, exempt from pins_unregistered")
     ap.add_argument("--reset-capture-kit", help="opt-in BFQG source/capture review only; raw registration gates unchanged")
     ap.add_argument("--reset-capture-typed", help="actual pin-typed OpenDB graph for --reset-capture-kit; mandatory pair")
     a = ap.parse_args(argv)
     m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
-                a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed)
+                a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed, a.spare_out)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)

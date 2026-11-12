@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "scope": "BF-active as-built frame return composition; Q outputs held quiescent",
+  "clock_ps": 833,
+  "static_replay": true,
+  "controls_caught": true,
+  "trace_lockstep": true,
+  "native_family_hold": true,
+  "payload_skew_edges": 4,
+  "xo_forwarding_qualification": "CHECKED",
+  "tested_shapes": {
+    "full": {
+      "op": "attn.wo_a",
+      "nrows": 6,
+      "seg": 0,
+      "nseg": 4,
+      "field_phase": 106,
+      "die_frame": "u_f_0L01"
+    },
+    "tail": {
+      "op": "attn.wo_a",
+      "nrows": 5,
+      "seg": 3,
+      "nseg": 4,
+      "field_phase": 125,
+      "die_frame": "u_f_0L01"
+    },
+    "router": {
+      "op": "ffn.router",
+      "nrows": 1,
+      "seg": 4,
+      "nseg": 5,
+      "field_phase": 130,
+      "die_frame": "u_f_0L01"
+    }
+  },
+  "cases": {
+    "full": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=6 xo_checked=3061 fault=0"
+    },
+    "tail": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=5 xo_checked=3061 fault=0"
+    },
+    "router": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=1 xo_checked=3061 fault=0"
+    },
+    "descriptor_fault": {
+      "passed": false,
+      "errors": [
+        "PLAN_MISMATCH predicted 6 words, got 6; first diff ((421, 1, (0, 0, 4), 3165395540, 0), (422, 1, (0, 0, 4), 3165395540, 0))"
+      ],
+      "end": "END edges=3063 ret_words=6 xo_checked=3061 fault=0"
+    },
+    "payload_fault": {
+      "passed": false,
+      "errors": [
+        "MISMATCH edge 421 row 1 lo 0 k 0 got bb801a5a/0 want bcac1a54/0",
+        "MISMATCH edge 424 row 0 lo 0 k 0 got bcac1a54/0 want bb801a5a/0",
+        "PLAN_MISMATCH predicted 6 words, got 6; first diff ((421, 1, (0, 0, 4), 3165395540, 0), (421, 1, (0, 0, 4), 3145734746, 0))"
+      ],
+      "end": "END edges=3063 ret_words=6 xo_checked=3061 fault=0"
+    }
+  },
+  "production_enabled": false,
+  "added_cycles": 0
+}

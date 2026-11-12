@@ -57,7 +57,7 @@ def test_reserve_set_writes_file_and_logs(tmp_path, monkeypatch):
 
 
 def _gate(monkeypatch, me_die, rsv):
-    for k, v in dict(classify=lambda a: 'c', sizes=lambda: {}, admit_size=lambda m, c, t=None: None,
+    for k, v in dict(classify=lambda a: 'c', sizes=lambda: {}, admit_size=lambda m, c, t=None, argv=None: None,
                      meminfo=lambda: (1007.0, 600.0), read_units=lambda: [],
                      books=lambda *a, **k: dict(pending=0.0, young=0.0, settled_floor=0.0),
                      floor_gb=lambda t: 100.0, admissible=lambda *a: 400.0, invariant=lambda *a: {}, inv_cap=lambda c, i: c,

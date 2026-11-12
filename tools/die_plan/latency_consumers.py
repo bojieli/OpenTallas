@@ -18,6 +18,11 @@ groups (landed - as-built cycles per crossing member) and the die hook's param_r
       design_loop=N on a contract: the consumer was designed for N crossing stages round trip, so the report also gives
       required = landed loop - N (the "added" field stays landed minus as-built and understates it when the as-built
       depths were already outside the design).
+      Core pin cycles (HBM-HUB-RTL-1 11-11, tools/die_plan/core_pin_cycles.py): asbuilt.core_pin_cycles names hard-core
+      recipes that add edges at their own output pins (e.g. the vecd4ae rd1 bank read stage, rr*/pr +1).  Those edges
+      count on the response side of every consumer fed by such a pin (added += pin), so a bound rd1 bank makes each
+      unregenerated fixed-latency reader a FIXED_LATENCY_MISMATCH; a value the hook regenerated as "as-built + pin"
+      (record.core_pin_regen) must equal as-built + added, else FIXED_LATENCY_MISMATCH too.  No declaration: unchanged.
       Port lists are regexes (fullmatch).  A loop through several leaves is checked at the consumer leaf only; its
       inner hops are covered by (1).
   (3) Advisory census: undeclared latency-named parameters (*RETURN*, *_LAT, *_RT, *DELAY*) of leaves whose crossings
@@ -36,13 +41,20 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 REPO = HERE.parents[1]
+import core_pin_cycles as CPC  # noqa: E402
 
 # module -> [contract]; ports are fullmatch regexes; req = consumer outputs, resp = consumer inputs (DIE-HBM-92-FLAT)
 CONTRACTS = {
     "ot_hbm_vm_lg_pair_tap": [dict(param="READ_RETURN", req=["near_rq"], resp=["near_rr"]),
                               dict(param="WRITE_RETURN", req=["near_wq"], resp=["near_w_done"])],
     "ot_hbm_hc_q_static": [dict(param="DONE_LAT", req=["lg_wq"], resp=["lg_w_done"])],
-    "ot_hbm_idx_rootctl_static_am": [dict(param="CR_RT", req=["cq"], resp=["cr"])],
+    "ot_hbm_idx_rootctl_static_am": [dict(param="CR_RT", req=["cq"], resp=["cr"]),
+                                     dict(param="VM_RT", req=["vm_rq"], resp=["vm_rr"])],
+    # HBM-HUB-RTL-1 11-11 (rd1): the remaining fixed-latency readers of the VM bank read round trip
+    "ot_hgi_dma_back_static_vp4_banks_cp": [dict(param="RR_RT", req=["rq"], resp=["rr"])],
+    "ot_hbm_idx_vm_share2_static_r": [dict(param="BANK_RT", req=["vm_rq"], resp=["vm_rr"])],
+    "ot_hgi_sm_xload_cl2_ctlx": [dict(param="RD_LAT", req=["rq"], resp=["rr"])],
+    "ot_hgi_coll_gq_issue": [dict(param="VM_RT", req=["vm_rq_(lo|hi)"], resp=["vm_rr_(lo|hi)"])],
     "ot_hbm_idx_vm_query_static_n12": [dict(param="VM_RT_EXTRA", req=["vm_rq"], resp=["vm_rr"])],
     "ot_hbm_hc_root_static_s": [dict(param="XRD", req=["q[di]_.*"], resp=[]), dict(param="XRU", req=[], resp=["qps.*"])],
     "ot_hgi_sfu_lg_pair_tap_leaf": [dict(align=["c_rq", "local_read"]), dict(align=["c_wq", "local_write"])],
@@ -213,6 +225,11 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
             table[v["module"]] += parse_attr(a)
     ins, outs = _deltas(bg)
     ins_abs, outs_abs = _deltas(bg, absolute=True)
+    pins = core_pins(leaves, bg, ab, src_root)
+    for k, x in (pr.get("record", {}).get("core_pin_cycles") or {}).items():
+        s, _, pn = k.partition("|")
+        pins[(s, pn)] = max(pins.get((s, pn), 0), int(x))
+    pin_regen = {(r["inst"], r["param"]): r for r in pr.get("record", {}).get("core_pin_regen", [])}
     errors, rows = [], []
     for path, v in sorted(leaves.items()):
         seen = set()
@@ -231,22 +248,30 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
                                   f"different added delay {({k: sorted(x) for k, x in sorted(got.items())})}")
                 continue
             rq, rs = _pick(outs.get(path, {}), c["req"]), _pick(ins.get(path, {}), c["resp"])
-            if not rq and not rs:
+            pin = max([x for (s, pn), x in pins.items() if s == path and any(re.fullmatch(r, pn) for r in c["resp"])] or [0])
+            if not rq and not rs and not pin:
                 continue
             dq = sorted({d for x in rq.values() for d in x}) or [0]
             dr = sorted({d for x in rs.values() for d in x}) or [0]
-            added = dq[-1] + dr[-1]
+            added = dq[-1] + dr[-1] + pin
             asb = v["params"].get(c["param"])
             row = dict(inst=path, module=v["module"], param=c["param"], asbuilt=asb, added=added, req=dq, resp=dr,
                        torn=len(dq) > 1 or len(dr) > 1, src=c["src"])
+            if pin:
+                row["core_pin"] = pin
             if c.get("design_loop") is not None:
                 lq = sorted({d for x in _pick(outs_abs.get(path, {}), c["req"]).values() for d in x}) or [0]
                 lr = sorted({d for x in _pick(ins_abs.get(path, {}), c["resp"]).values() for d in x}) or [0]
                 row.update(landed_loop=lq[-1] + lr[-1], design_loop=c["design_loop"], required=lq[-1] + lr[-1] - c["design_loop"])
             if isinstance(asb, int):
-                row["needed"] = asb + row.get("required", added)
+                row["needed"] = CPC.plus(asb, row.get("required", added), c["param"])
             if added == 0 and row.get("required", 0) == 0:
                 row["verdict"] = "MATCH"
+            elif (path, c["param"]) in pin_regen and pin_regen[(path, c["param"])]["bound"] != CPC.plus(asb, added, c["param"]):
+                row.update(verdict="FIXED_LATENCY_MISMATCH", bound=pin_regen[(path, c["param"])]["bound"])
+                errors.append(f"FIXED_LATENCY_MISMATCH {path} ({v['module']}) {c['param']}: hook regenerated as-built + core pin "
+                              f"{pin_regen[(path, c['param'])]['pin']} = {row['bound']}, but the loop adds {added} "
+                              f"(request {dq} + response {dr} + core pin {pin}) -> needs {CPC.plus(asb, added, c["param"])}")
             elif (path, c["param"]) in regen:
                 value = regen[(path, c["param"])]["bound"]
                 row.update(verdict="REGEN", bound=value, needed=value,
@@ -312,6 +337,21 @@ def check(leaves, bg, param_regen=None, ab=None, raw=None, r8_opts=None, src_roo
                 contracts=[r for r in rows if r["verdict"] != "MATCH"], advisory=advisory)
 
 
+def core_pins(leaves, bg, ab, base=REPO):
+    """{(sink leaf, sink port): edges added inside the source cores} over the crossing members (asbuilt.core_pin_cycles)"""
+    rules = CPC.load(ab, base)
+    out = {}
+    if not rules or not bg:
+        return out
+    for g in bg["landing"]:
+        for m in g["members"]:
+            s, pn = m["source"].rsplit(".", 1)
+            x = CPC.added_port(rules, s, (leaves.get(s) or {}).get("module"), pn)
+            if x:
+                out[(g["sink"], m["sink_port"])] = max(out.get((g["sink"], m["sink_port"]), 0), x)
+    return out
+
+
 def r8_options(ab, base):
     """the die's own R8 options: landing table exempt / replica / bus (asbuilt.land_r8), land_r8_exempt, strap pads"""
     o = dict(exempt=list(ab.get("land_r8_exempt", [])), strap_pads=bool(ab.get("land_r8_strap_pads")))
@@ -359,7 +399,7 @@ def main(argv=None):
         raw = S.load(plan)
     yjs = _load(d / "asbuilt.json")
     res = check(yosys_leaves(yjs, ab.get("top")), _load(d / "bus_groups.json"), _load(d / "param_regen.json"), ab, raw,
-                r8_options(ab, a.base))
+                r8_options(ab, a.base), src_root=Path(a.base))
     res.update(bind_dir=str(d), plan=plan, manifest=man)
     if a.json:
         a.json.write_text(json.dumps(res, indent=1, default=str) + "\n")

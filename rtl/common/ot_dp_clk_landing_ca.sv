@@ -52,7 +52,13 @@ module ot_dp_clk_landing_ca #(
     // Default 0 = identical logic.
     parameter bit STATUS_REG = 0,
     parameter bit WFALL = 0, // DIE-HEAD-48 ring-write hold: writer on the falling edge of fclk (see wclk)
-    parameter bit GUARD_REG = 0 // GUARD-REG-1 (see ot_meso_ring_ca; needs STATUS_REG); default 0 = identical logic
+    parameter bit GUARD_REG = 0, // GUARD-REG-1 (see ot_meso_ring_ca; needs STATUS_REG); default 0 = identical logic
+    // CLAND-QREG-1 (COORD 11-11, KV hub_Ei ring readout -> boundary flop TT -159.5): QREG = 1 adds ONE rclk register
+    // stage on q (ot_meso_q_ff, kept, no reset: data only) between the ring readout flop and the receiver's boundary
+    // flop, so the long ring -> face wire gets its own cycle.  The ring, its window, K and ready/fault are unchanged;
+    // q is the same word stream ONE clk later (+1 data cycle, declared by the plan key landing_output_qreg and counted
+    // in the crossing's added_cycles).  Default 0 = identical logic.
+    parameter bit QREG = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -73,7 +79,11 @@ module ot_dp_clk_landing_ca #(
     localparam integer TCW = $clog2(TIMEOUT + 2);
     wire rv, lap_ok, glo_ok, ghi_ok;
     wire [RW-1:0] ring_q;
-    assign q = ring_q[W-1:0];
+    generate if (QREG) begin : g_qreg
+        ot_meso_q_ff #(.W(W)) u_qreg (.clk(clk), .d(ring_q[W-1:0]), .q(q));
+    end else begin : g_noqreg
+        assign q = ring_q[W-1:0];
+    end endgenerate
     // WFALL = 1: the whole writer (slots, count, tags) runs on the opposite fclk edge, so a word launched on the sender's
     // rising edge is held T/2 by structure (FLOW-16 05:48).  Default 0 = no inverter, identical logic.
     wire wclk = WFALL ? ~fclk : fclk;
@@ -184,7 +194,13 @@ module ot_dp_clk_landing_cas #(
     // (46-55 loads on an 18-chunk ring).  RP0 = 0 - strap_k is quasi-static (strap tied at the parent); the placement value
     // is read only by the align load, which runs inside the held reset, so a copy that follows RP0 one rclk edge later
     // holds the same value at every align edge.  q / ready / fault / data cycles unchanged.  0 = no copies, identical logic.
-    parameter bit PLACEREP = 0
+    parameter bit PLACEREP = 0,
+    // CLAND-QREG-1 (COORD 11-11, KV hub_Ei ring readout -> boundary flop TT -159.5): QREG = 1 adds ONE rclk register
+    // stage on q (ot_meso_q_ff, kept, no reset: data only) between the ring readout flop and the receiver's boundary
+    // flop, so the long ring -> face wire gets its own cycle.  The ring, its window, K and ready/fault are unchanged;
+    // q is the same word stream ONE clk later (+1 data cycle, declared by the plan key landing_output_qreg and counted
+    // in the crossing's added_cycles).  Default 0 = identical logic.
+    parameter bit QREG = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -207,7 +223,11 @@ module ot_dp_clk_landing_cas #(
     localparam integer TCW = $clog2(TIMEOUT + 2);
     wire rv, lap_ok, glo_ok, ghi_ok;
     wire [RW-1:0] ring_q;
-    assign q = ring_q[W-1:0];
+    generate if (QREG) begin : g_qreg
+        ot_meso_q_ff #(.W(W)) u_qreg (.clk(clk), .d(ring_q[W-1:0]), .q(q));
+    end else begin : g_noqreg
+        assign q = ring_q[W-1:0];
+    end endgenerate
     // WFALL = 1: the whole writer (slots, count, tags) runs on the opposite fclk edge, so a word launched on the sender's
     // rising edge is held T/2 by structure (FLOW-16 05:48).  Default 0 = no inverter, identical logic.
     wire wclk = WFALL ? ~fclk : fclk;

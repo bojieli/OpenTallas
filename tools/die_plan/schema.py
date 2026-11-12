@@ -1243,7 +1243,16 @@ SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
                    "types": {"type": "array", "items": {"type": "string"}}, "note": {"type": "string"},
                    # HBM-VSN-XTAP 11-11: cross-tap hops get a full-cycle hop flop instead (ft_xtap.py; ft_hop_xtap)
                    "xtap_flop": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
-                       "type": "array", "items": {"type": "integer", "minimum": 0}}}}}}
+                       "type": "array", "items": {"type": "integer", "minimum": 0}}}},
+                   # HBM-VSN-XTAP-2 11-11 form A' (DIE-HBM-100): per-hop latch tap and latch site (ft_hop_latch_tap /
+                   # ft_hop_latch_frac; gen_phys -> clock_taps.tcl OT_HOP_LATCH_CAPTURE_TAP, face_flops.tcl
+                   # OT_HOP_LATCH_FRAC_MAP).  Physical only: RTL, bind, latency and EQ unchanged.
+                   "tap": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
+                       "type": "object", "propertyNames": {"pattern": "^[0-9]+$"},
+                       "additionalProperties": {"enum": ["launch", "capture"]}}}},
+                   "latch_frac": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
+                       "type": "object", "propertyNames": {"pattern": "^[0-9]+$"},
+                       "additionalProperties": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}}}}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
@@ -1366,6 +1375,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # Legacy free-running landing input capture: one extra payload cycle on each
 # listed bus. Clock_landings validates bus membership, sidecar pricing and mode.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_input_freg"] = {
+    "type": "array", "minItems": 1, "uniqueItems": True,
+    "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
+# CLAND-QREG-1 (opt-in, default absent = byte-identical): one rclk register stage on the landing ring output q of
+# each listed input bus (legacy and count-aligned rings), +1 data cycle on that crossing (counted by clock_landings).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_output_qreg"] = {
     "type": "array", "minItems": 1, "uniqueItems": True,
     "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}}
 # DIE-HEAD-38 R2 (opt-in, default absent = byte-identical): registered 1-input status relays on ONE landed ring's
@@ -1753,6 +1767,26 @@ def _id_strap_errors(obj):
 
 
 # ------------------------------------------------------------------------------------------------------- loader
+def _ft_hop_map(raw, key, type_name):
+    lk = ((raw or {}).get("clock") or {}).get("ft_hop_lockup") or {}
+    return {s: {int(k): v for k, v in m.items()} for s, m in ((lk.get(key) or {}).get(type_name) or {}).items()}
+
+
+def ft_hop_latch_tap(raw, type_name):
+    """HBM-VSN-XTAP-2 11-11 form A' (DIE-HBM-100): {slot: {k: "launch"|"capture"}} the clock tap of the ft hop lockup
+    latch u_fl_<slot>_<face>_<k> of `type_name` (plan clock.ft_hop_lockup.tap).  "launch" = the default (clock_taps.tcl
+    follow-D pass); "capture" = hung on its capture station's tap.  Rule: the EARLIER tap of the pair (per-pair paper
+    check on routed STA), so latch -> capture gets T/2 + |skew|.  Absent = {} (no change)."""
+    return _ft_hop_map(raw, "tap", type_name)
+
+
+def ft_hop_latch_frac(raw, type_name):
+    """HBM-VSN-XTAP-2 11-11 form A': {slot: {k: f}} latch site launch + f * (capture - launch) of the ft hop lockup
+    latch (plan clock.ft_hop_lockup.latch_frac, 0 < f <= 1; face_flops.tcl).  f near 1 = capture-biased: the long wire
+    goes into the full-cycle launch -> latch leg (time borrow through the open latch).  Absent = {} (the midpoint)."""
+    return _ft_hop_map(raw, "latch_frac", type_name)
+
+
 def ft_hop_xtap(raw, type_name, slot):
     """HBM-VSN-XTAP 11-11 (COORD 04:18, tools/die_plan/ft_xtap.py): sorted hop indices k of ft slot `slot` of
     `type_name` whose hop k -> k+1 crosses clock taps and so carries a full-cycle hop flop u_fx_* (+1 register stage

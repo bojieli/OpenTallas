@@ -93,10 +93,10 @@ class V174Acceptance(unittest.TestCase):
         total, avail, rows, table = load("ot-epyc9", "17:44", 154.0, at1606)
         cls = "ref_gate_qfd_c_b#_rgx_c#_#-#.sh"
         seed = R.admit_size(192, cls, table)
-        self.assertIsNotNone(seed)
-        self.assertGreaterEqual(seed[0], 60, seed)
+        # CHARGEMAX_1111: no lowering below the declared 192 for an unmeasured class; the charge is the request itself
+        self.assertIsNone(seed)
         can, die, inv = capacity(total, avail, rows, table)
-        self.assertLess(can, seed[0], inv)
+        self.assertLess(can, 192, inv)                 # still refused: the compile-phase cap leaves less than the request
         os.environ["PHASE_MARGIN"] = "0"
         can_old, _, _ = capacity(total, avail, rows, table)
         self.assertGreater(can_old, can)               # the compile-phase cap is what binds
@@ -104,12 +104,14 @@ class V174Acceptance(unittest.TestCase):
 
 class V174Units(unittest.TestCase):
     def test_family_seed_siblings_then_family(self):
-        t = {f"ref_gate_qfd_c_k{i}.sh": dict(n=1, proved=0, peak_gb=float(p)) for i, p in enumerate((80, 90, 105, 120))}
-        t.update({f"ref_gate_x_y_z{i}.sh": dict(n=1, proved=0, peak_gb=float(p)) for i, p in enumerate((2, 3, 4))})
-        self.assertEqual(R.family_seed("ref_gate_qfd_c_new.sh", "ref_gate_", t)[0], 120)
-        self.assertEqual(R.family_seed("ref_gate_other_new.sh", "ref_gate_", t)[0], 120)    # family p90
-        self.assertEqual(R.admit_size(192, "ref_gate_qfd_c_new.sh", t)[0], 120)
-        self.assertIsNone(R.admit_size(64, "ref_gate_qfd_c_new.sh", t))                     # seed >= request
+        t = {f"ref_gate_qfd_c_k{i}.sh:g": dict(n=3, proved=0, peak_gb=float(p)) for i, p in enumerate((80, 90, 105, 120))}
+        t.update({f"ref_gate_x_y_z{i}.sh:g": dict(n=3, proved=0, peak_gb=float(p)) for i, p in enumerate((2, 3, 4))})
+        self.assertEqual(R.family_seed("ref_gate_qfd_c_new.sh:g", "ref_gate_", t)[0], 120)
+        self.assertEqual(R.family_seed("ref_gate_other_new.sh:g", "ref_gate_", t)[0], 120)    # family p90
+        # CHARGEMAX_1111 (COORD 11-11): an unmeasured class (n < CLASS_LOWER_MIN_N = 3) never LOWERS a declared request, so the
+        # family seed no longer lowers 192 to 120: the declared request stands
+        self.assertIsNone(R.admit_size(192, "ref_gate_qfd_c_new.sh:g", t))
+        self.assertIsNone(R.admit_size(64, "ref_gate_qfd_c_new.sh:g", t))
 
     def test_phase_target(self):
         t = {"b.sh": dict(n=1, proved=0, peak_gb=50.0)}

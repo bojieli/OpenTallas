@@ -150,7 +150,7 @@ FAST = re.compile(r"^(ref_gate_|view_export|run_case|relay_)")
 SEED = {"ref_gate_": 10}          # GB charged at first sight when the exact class has no measurement yet
 GB = 1 << 30
 WRAPPERS = {"bash", "sh", "dash", "tee", "tail", "time", "env", "timeout", "stdbuf", "nice", "cat", "sleep", "docker",
-            "tini", "docker-init", "ot-heavy-exit", "sort"}   # v17: ot-heavy-exit + its pid sampler sit in every scope
+            "docker.real", "bwrap", "tini", "docker-init", "ot-heavy-exit", "sort"}   # v17: ot-heavy-exit + its pid sampler sit in every scope
 BUILD = {"cc1plus", "cc1", "g++", "gcc", "c++", "clang", "clang++", "ld", "collect2", "lto1", "as", "ar", "make", "ninja",
          "cmake", "verilator", "verilator_bin", "iverilog", "ivl", "yosys", "yosys-abc", "abc"}
 DRY, VERBOSE = "--dry-run" in sys.argv, "--verbose" in sys.argv or "--dry-run" in sys.argv
@@ -266,7 +266,34 @@ def containers():
     return _containers
 
 
+# SEALDOCK_1111 (KW-FIX-44, COORD 11-11 03:2x URGENT): sealed jobs (ot-job + bwrap) start their container with the
+# client copy .ot-job/docker.real, so p["comm"] == "docker" never saw it: the unit measured at its wrapper (0.08 GiB for
+# HBM q_spt2 v2 whose openroad reached 44 GiB), --free lowered q_spu0 route 48 -> 5 GB with a 36.7 GiB container, and
+# earlyoom killed q_spt2 on epyc8 (03:12 UTC) and a 47 GiB detail route on epyc7 (02:18 UTC).  Any docker client
+# (docker, docker.real, by argv[0] or comm) running `run` counts, and a container is matched by its --name first.
+DOCKER_CLIENTS = ("docker", "docker.real")
+
+
+def is_docker_run(p):
+    a = p["argv"]
+    return (p["comm"] in DOCKER_CLIENTS or (a and os.path.basename(a[0]) in DOCKER_CLIENTS)) and "run" in a[1:4]
+
+
+def _run_name(argv):
+    for i, x in enumerate(argv):
+        if x == "--name" and i + 1 < len(argv):
+            return argv[i + 1]
+        if x.startswith("--name="):
+            return x[7:]
+    return None
+
+
 def match_container(argv):
+    name = _run_name(argv)
+    if name:
+        byname = [c for c in containers() if c.get("Name", "").lstrip("/") == name]
+        if len(byname) == 1:
+            return byname[0]
     hit = []
     for c in containers():
         cmd = (c["Config"].get("Entrypoint") or []) + (c["Config"].get("Cmd") or [])
@@ -330,7 +357,7 @@ def classify(argv):
     """command class for the size table: script basename + first plain argument, numbers and hashes normalised"""
     a = list(argv)
     norm = lambda s: re.sub(r"[0-9a-f]{7,}|\d+", "#", s)
-    if a and os.path.basename(a[0]) == "docker" and "run" in a[:3]:
+    if a and os.path.basename(a[0]) in DOCKER_CLIENTS and "run" in a[:4]:
         img = next((i for i, x in enumerate(a) if x.startswith("openroad/") or "orfs" in x), None)
         tail = [os.path.basename(x) for x in (a[img + 1:] if img is not None else a[-2:]) if not x.startswith("-")]
         script = next((x for x in reversed(tail) if "." in x), tail[-1] if tail else "?")
@@ -410,9 +437,45 @@ def capacity_sample_count(cls, entry):
     return entry.get("n", 0) + (0 if completion_only_class(cls) else entry.get("proved", 0))
 
 
-def admit_size(mem, cls, table=None):
-    """(GB charged, why) when a request is over 2x the measured peak of its class, else None"""
+def hard_capped(argv):
+    """True when the job's memory has a hard kernel cap at its request: every ot-heavy job runs in a scope with
+    MemoryMax = --mem, and a `docker run` found on PATH goes through the ot-heavy docker shim (--memory = --mem).  Only
+    a docker CLI named by path (/usr/bin/docker, a sealed docker.real) bypasses the shim: capped only by its own -m."""
+    if not argv:
+        return True
+    a = list(argv)
+    if not (os.path.basename(a[0]) in DOCKER_CLIENTS and "run" in a[1:4]) or a[0] == "docker":
+        return True
+    return any(x in ("-m", "--memory") or x.startswith(("--memory=", "-m=")) for x in a[1:])
+
+
+def specific_class(cls):
+    """a qualified class (script:target, e.g. lec.py:kit); a bare script class (lec.py, 54 jobs from 16 to 300 GB) is a
+    fleet-wide mix and never raises a charge"""
+    return bool(cls) and cls not in ("?", "cd") and ":" in cls
+
+
+def admit_size(mem, cls, table=None, argv=None):
+    """(GB charged, why) when a request is over 2x the measured peak of its class, else None.
+    CHARGEMAX_1111 (KW-FIX-44, COORD 11-11 ruling on DIE-S81-85 20:19: lec.py:kit n=1 peak 1.7 GB charged 10 GB against
+    --mem 96 on epyc7, the OOM mechanism again): the charge is max(--mem request, learned class peak) on every path; a
+    class (or family seed) with fewer than CLASS_LOWER_MIN_N (3) finished samples never lowers a declared request.
+    COORD 11-11 refinement: only the job's own SPECIFIC class (qualified, n >= 3) may raise the charge above the request,
+    and never above a hard cap (the scope's MemoryMax, or the container's --memory): the kernel enforces the cap, so
+    charging more only wastes a full fleet.  argv None (a waiter / report path) = capped."""
     e = (sizes() if table is None else table).get(cls)
+    r = _admit_size_lowered(mem, cls, table, e)
+    n = (e or {}).get("n", 0)
+    if r and r[0] < mem and n < conf("CLASS_LOWER_MIN_N"):
+        r = None                                       # too few samples: the declared request stands
+    pk = e.get("peak_gb", 0) if e and specific_class(cls) and n >= conf("CLASS_LOWER_MIN_N") else 0
+    if pk > mem and not hard_capped(argv) and (not r or r[0] < math.ceil(pk)):
+        return math.ceil(pk), (f"class '{cls}' measured peak {pk}G above the request {mem}G (n={n}), container has no "
+                               f"--memory cap: charge = max(request, peak)")
+    return r
+
+
+def _admit_size_lowered(mem, cls, table, e):
     if cls not in ("?", "cd") and (not e or capacity_sample_count(cls, e) < 1):
         for pre, gb in SEED.items():
             if cls.startswith(pre):
@@ -421,6 +484,13 @@ def admit_size(mem, cls, table=None):
                 if gb < mem:
                     return gb, f"family '{pre}*' seed {gb:g}G ({why}; class '{cls}' not measured yet)"
                 return None
+    if conf("REAL_ADMIT") and cls not in ("?", "cd") and e and capacity_sample_count(cls, e) >= 1 and e["peak_gb"] > 0:
+        # REALMEM_1110 (OWNER via COORD 11-10: epyc4 at load 95 of 256 with 31 waiters / 424 GB and 207 GB available):
+        # a request is charged its class's MEASURED peak (stage class, from finished runs), not the declared --mem
+        res = math.ceil(max(conf("REQ_PEAK_MULT") * e["peak_gb"], e["peak_gb"] + conf("REQ_PEAK_PAD_GB")))
+        if res >= mem:
+            return None
+        return res, f"REALMEM class '{cls}' measured peak {e['peak_gb']}G, n={e['n']}+{e.get('proved', 0)} proved"
     if cls in ("?", "cd") or not e or capacity_sample_count(cls, e) < 1 or mem <= 2 * e["peak_gb"]:
         return None
     res = math.ceil(max(1.5 * e["peak_gb"], e["peak_gb"] + 8))
@@ -490,6 +560,7 @@ def rebuild_sizes(st):
     t = {}
     rows = [ln.split("\t") for ln in rd(PEAKS).splitlines()]
     rows = [(r[2], float(r[4]), int(r[3]), "done" if completed_peak_qualified(r) else "partial") for r in rows if len(r) >= 5]
+    st = {u: s for u, s in st.items() if int(s.get("dock_miss", 0)) < 2}   # SEALDOCK_1111: wrapper-only measurements
     rows += [(s["cls"], s["peak"], s["launch"], "live") for s in st.values() if s.get("cls") and s.get("age", 0) > 1800]
     rows += [(s["cls"], s["peak"], s["launch"], "proved") for s in st.values() if s.get("cls") and s.get("past_peak") and not completion_only_class(s["cls"])]
     for cls, peak, req, kind in rows:
@@ -551,8 +622,12 @@ def main():
             if x[2] and isinstance(x[2][0], list):
                 x[2] = sorted({os.path.basename(k[0]) for k in x[2]})
         ps = procs(cg)
-        cs = [c for c in (match_container(p["argv"]) for p in ps if p["comm"] == "docker" and "run" in p["argv"][:3]) if c]
-        ndock = sum(1 for p in ps if p["comm"] == "docker" and "run" in p["argv"][:3])
+        drun = [p for p in ps if is_docker_run(p)]
+        cs = [c for c in (match_container(p["argv"]) for p in drun) if c]
+        ndock = len(drun)
+        # SEALDOCK_1111: a unit whose docker run had no container on two passes measured its wrapper only; its peak
+        # does not go into the class table (peaks.tsv / live / proved rows)
+        s["dock_miss"] = int(s.get("dock_miss", 0)) + (1 if ndock > len(cs) else 0)
         cdirs = [d for d in map(cdir, cs) if d]
         cps = [p for d in cdirs for p in procs(d)]
         allp = ps + cps
@@ -578,7 +653,7 @@ def main():
         # A step is one set of containers in one growth phase: a Verilator build that finished compiling and now
         # simulates (phase 'vl' -> '') or an ORFS step that left GRT starts a new step; its peak is not carried.
         ph, s["compiling"] = growth_phase(allp)
-        step = [sorted(cs), ph]
+        step = [sorted(c["Id"] for c in cs), ph]
         if s.get("step") != step:
             s["step"], s["step_rss_gb"] = step, 0.0
         s["phase"] = ph
@@ -648,7 +723,7 @@ def main():
         new = max(1, math.ceil(max(peak * 1.25, peak + 4 * GB) / GB))
         if (kind is None or new >= m) and s.get("lowered") is None and not s.get("no_class") and m == s["launch"]:
             a = admit_size(m, s["cls"], table)                # a full-size unit of an over-requested class
-            if a and rss <= 0.8 * a[0] * GB:
+            if a and a[0] < m and rss <= 0.8 * a[0] * GB:
                 if DRY or set_res(f, unit, m, a[0]):
                     freed += m - a[0]
                     log(f"LOWER {unit} {m} -> {a[0]} GB (class) [{s['cls']}]: {a[1]}; RSS {rss/GB:.2f} GiB; {why}")
@@ -666,7 +741,7 @@ def main():
         return
     for u in [u for u in st if u not in seen]:
         s = st.pop(u)
-        if s.get("cls") and s.get("age", 0) >= 240:       # finished: one row of history
+        if s.get("cls") and s.get("age", 0) >= 240 and int(s.get("dock_miss", 0)) < 2:  # finished: one row of history
             open(PEAKS, "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')}\t{u}\t{s['cls']}\t{s['launch']}\t{s['peak']}\t{int(s['age'])}\t{completion_status(u)}\n")
         try:
             os.unlink(f"{D}/use.{u}")
@@ -806,7 +881,8 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
-                PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
+                REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1016,12 +1092,19 @@ def invariant(rows, total, avail, b, table=None):
     # OWNER 2026-11-07: optionally discount historical peaks, retaining live usage,
     # full fresh reservations, measured growth and the physical headroom invariant.
     peak_factor = max(0.0, min(1.0, conf("INV_PAST_PEAK_FACTOR")))
+    # REALMEM_1110 (OWNER via COORD 11-10, epyc4: 207 GB available yet admits -6 from fresh 74 GB + peak reservations):
+    # with REAL_ADMIT=1 a running unit counts at its real memory now (no past-peak gap, no phase target, no running-growth
+    # reserve); only units younger than YOUNG_S (5 min) or admitted but not started keep their charge (fresh), and
+    # INV_HEADROOM_GB (32) is the MemAvailable floor.  Safety stays with the scope caps, swap and earlyoom.
+    real = bool(conf("REAL_ADMIT"))
+    if real:
+        peak_factor = 0.0
     base, extra = {}, {}
     for r in rows:
         if r["active"]:
             peak = max(r["now"], min(r.get("obs", r["now"]), r.get("req", r.get("obs", r["now"]))))
             h0 = peak if peak_factor == 1.0 else r["now"] + peak_factor * (peak - r["now"])
-            base[id(r)], extra[id(r)] = h0, max(0.0, phase_target(r, table) - h0)   # v17.4 (b)/(c): growth-phase units only
+            base[id(r)], extra[id(r)] = h0, (0.0 if real else max(0.0, phase_target(r, table) - h0))   # v17.4 (b)/(c): growth-phase units only
     tot_extra = sum(extra.values())
     pcap = conf("PHASE_CAP_AVAIL_FRAC") * max(avail, 0.0)
     scale = 1.0 if tot_extra <= pcap or tot_extra <= 0 else pcap / tot_extra
@@ -1042,14 +1125,15 @@ def invariant(rows, total, avail, b, table=None):
     # v16 reserve of the old running units (already capped at 25 % of available), minus what their peak gaps hold;
     # v17.1: the v13 settled floor is a safety pad and is NOT charged here -- INV_HEADROOM_GB (64) is the pad
     capped = max(0.0, b["grow"] - b.get("fresh_gb", 0.0) - b.get("settled_floor", 0.0))
-    reserve = max(0.0, min(capped, run_grow) - reserve_dup)
+    reserve = 0.0 if real else max(0.0, min(capped, run_grow) - reserve_dup)
     other = max(0.0, used - now)
     # = other + held when the units' memory.current is all in use; when it holds reclaimable page cache (now > what
     # MemAvailable says is in use) the cache is not counted twice: in use + every unit's peak above what it holds now
     committed = used + (held - now) + reserve + fresh
     limit = total - conf("INV_HEADROOM_GB")
     return dict(committed=committed, free=limit - committed, limit=limit, other=other, held=held, now=now, used=used,
-                reserve=reserve, fresh=fresh, phase_extra=scale * tot_extra, phase_raw=tot_extra, on=bool(conf("HARD_INVARIANT")))
+                reserve=reserve, fresh=fresh, phase_extra=scale * tot_extra, phase_raw=tot_extra, on=bool(conf("HARD_INVARIANT")),
+                real=real)
 
 
 def inv_cap(x, inv):
@@ -1060,7 +1144,8 @@ def inv_cap(x, inv):
 def inv_text(inv):
     return (f"invariant: committed {inv['committed']:.0f} GB (in use {inv['used']:.0f}, other {inv['other']:.0f}, units max(now, peak) {inv['held']:.0f}, "
             f"+ reserve {inv['reserve']:.0f} + fresh {inv['fresh']:.0f}) vs physical - {conf('INV_HEADROOM_GB'):g} = "
-            f"{inv['limit']:.0f} GB -> headroom {inv['free']:.0f} GB" + ("" if inv["on"] else " (HARD_INVARIANT=0: not enforced)"))
+            f"{inv['limit']:.0f} GB -> headroom {inv['free']:.0f} GB" + ("" if inv["on"] else " (HARD_INVARIANT=0: not enforced)")
+            + (" (REAL_ADMIT: units at real memory, fresh < 5 min)" if inv.get("real") else ""))
 
 
 def holds_admit_lock(fd=8):
@@ -1085,8 +1170,8 @@ def gate(mem, argv):
 def gate_locked(mem, argv):
     cls = classify(argv)
     table = sizes()
-    a = admit_size(mem, cls, table)
-    res, note = (a[0], a[1]) if a and a[0] < mem else (mem, "")
+    a = admit_size(mem, cls, table, argv)
+    res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a specific uncapped class peak may raise the charge
     total, avail = meminfo()
     rows = read_units()
     for r in rows:                                     # finished long ago: drop the reservation and its side files
@@ -1638,7 +1723,23 @@ def selftest():
     os.environ["PHASE_MARGIN"] = "1"      # default 0 since OWNER 10-22 20:10; the rule itself stays tested
     ft = {f"ref_gate_qfd_c_k{i}.sh": dict(n=1, proved=0, peak_gb=float(p)) for i, p in enumerate((80, 90, 105, 120))}
     chk("v17.4 seed: an unmeasured qfd ref_gate is charged its siblings' p75 (120), not 10 GB",
-        (admit_size(192, "ref_gate_qfd_c_new.sh", ft) or [0])[0], 120)
+        family_seed("ref_gate_qfd_c_new.sh", "ref_gate_", ft)[0], 120)
+    chk("CHARGEMAX_1111: a family seed never lowers the 192 GB request",
+        (admit_size(192, "ref_gate_qfd_c_new.sh", ft) or [192])[0], 192)
+    lec = {"lec.py:kit": dict(n=1, proved=0, peak_gb=1.7)}
+    chk("CHARGEMAX_1111: lec.py:kit n=1 peak 1.7 GB keeps --mem 96 (epyc7 OOM)", (admit_size(96, "lec.py:kit", lec) or [96])[0], 96)
+    chk("CHARGEMAX_1111: n=3 lowers 96 -> max(1.5 x 1.7, 1.7 + 8)",
+        (admit_size(96, "lec.py:kit", {"lec.py:kit": dict(n=3, proved=0, peak_gb=1.7)}) or [96])[0], 10)
+    big = {"lec.py:kit": dict(n=3, proved=0, peak_gb=20.4), "lec.py": dict(n=54, proved=0, peak_gb=178.1)}
+    dock = ["/usr/bin/docker", "run", "--rm", "img", "python3", "lec.py"]
+    chk("CHARGEMAX_1111: capped job (scope MemoryMax) is never charged above its request",
+        (admit_size(8, "lec.py:kit", big, ["python3", "/w/lec.py", "kit"]) or [8])[0], 8)
+    chk("CHARGEMAX_1111: uncapped container, specific class n=3 -> raised to its peak",
+        (admit_size(8, "lec.py:kit", big, dock) or [8])[0], 21)
+    chk("CHARGEMAX_1111: container with --memory is clamped at its cap",
+        (admit_size(8, "lec.py:kit", big, dock[:2] + ["--memory=8g"] + dock[2:]) or [8])[0], 8)
+    chk("CHARGEMAX_1111: a bare fleet class (lec.py, 178 GB) never raises",
+        (admit_size(96, "lec.py", big, dock) or [96])[0], 96)
     chk("v17.4 phase: settled unit -> no margin", phase_target(dict(cls="a", now=10.0, decl=160.0, phase=""), {}), 0.0)
     chk("v17.4 phase: compiling verilator, no class peak -> declared cap",
         phase_target(dict(cls="a", now=10.0, decl=160.0, phase="vl", compiling=True), {}), 160.0)

@@ -1,0 +1,101 @@
+{'plan': '/srv/opentallas-scratch2/claude/s81-bfasb-1111/root/physical/die_plan/s81/plan_h2_2249.json', 'plan_sha256': '0cedba41a5bd19fcc81707c4bf02e63464d7feb0a88732985f901cef19a2b4ca', 'seam_depths': {'u_s01': 11, 'u_s10': 2, 'u_s12': 6, 'u_s21': 2}, 'seam_extra_stages': {'u_s01': 9, 'u_s12': 4}, 'station_cell': 'tools/die_plan/bind.py', 'station_cell_sha256': '1439e87bfa989d5651ecdbf5078f96ff22864f09b2bd01fe6d7118ee5736e080'}
+BF_BENCH_LEAF_LATENCY FAIL col_h9 asb_x seams {'u_s01': 2, 'u_s10': 2, 'u_s12': 2, 'u_s21': 2} leaves 30 run_leaves 6
+  FAIL seam u_s01: bench 2 != schedule bound plan 11
+  FAIL seam u_s12: bench 2 != schedule bound plan 6
+  FAIL leaf e0.r0: bench return 96 != schedule leaf_path 105
+  FAIL leaf e0.r1: bench return 97 != schedule leaf_path 106
+  FAIL leaf e1.r0: bench return 93 != schedule leaf_path 102
+  FAIL leaf e1.r1: bench return 94 != schedule leaf_path 103
+  FAIL leaf e10.r0: bench return 103 != schedule leaf_path 107
+  FAIL leaf e10.r1: bench return 104 != schedule leaf_path 108
+  FAIL leaf e11.r0: bench return 100 != schedule leaf_path 104
+  FAIL leaf e11.r1: bench return 101 != schedule leaf_path 105
+  FAIL leaf e2.r0: bench return 96 != schedule leaf_path 105
+  FAIL leaf e2.r1: bench return 97 != schedule leaf_path 106
+  FAIL leaf e3.r0: bench return 93 != schedule leaf_path 102
+  FAIL leaf e3.r1: bench return 94 != schedule leaf_path 103
+  FAIL leaf e4e.r: bench return 90 != schedule leaf_path 99
+  FAIL leaf e4w.r: bench return 93 != schedule leaf_path 102
+  FAIL leaf e5.r0: bench return 100 != schedule leaf_path 109
+  FAIL leaf e5.r1: bench return 101 != schedule leaf_path 110
+  FAIL leaf e6.r0: bench return 96 != schedule leaf_path 105
+  FAIL leaf e6.r1: bench return 97 != schedule leaf_path 106
+  FAIL leaf e7.r0: bench return 99 != schedule leaf_path 108
+  FAIL leaf e7.r1: bench return 100 != schedule leaf_path 109
+  FAIL leaf e8e.r: bench return 95 != schedule leaf_path 99
+  FAIL leaf e8w.r: bench return 97 != schedule leaf_path 101
+  FAIL leaf e9.r0: bench return 96 != schedule leaf_path 100
+  FAIL leaf e9.r1: bench return 97 != schedule leaf_path 101
+  FAIL run col_h9_asb_x|E2|bseg1024 leaf e4e.r: measured return 90 != schedule leaf_path 99
+  FAIL run col_h9_asb_x|E2|bseg1024 leaf e4w.r: measured return 93 != schedule leaf_path 102
+  FAIL run col_h9_asb_x|E2|bseg1024 leaf e8e.r: measured return 95 != schedule leaf_path 99
+  FAIL run col_h9_asb_x|E2|bseg1024 leaf e8w.r: measured return 97 != schedule leaf_path 101
+LEAFLAT runs col_h9 asb_x rc=1
+BF_BENCH_LEAF_LATENCY PASS col_h9 asb_x seams {'u_s01': 11, 'u_s10': 2, 'u_s12': 6, 'u_s21': 2} leaves 30 run_leaves 6
+LEAFLAT runs2 col_h9 asb_x rc=0
+{'plan': '/srv/opentallas-scratch2/claude/s81-bfasb-1111/root/physical/die_plan/s81/plan_h2_2249.json', 'plan_sha256': '0cedba41a5bd19fcc81707c4bf02e63464d7feb0a88732985f901cef19a2b4ca', 'seam_depths': {'u_s01': 11, 'u_s10': 2, 'u_s12': 6, 'u_s21': 2}, 'seam_extra_stages': {'u_s01': 9, 'u_s12': 4}, 'station_cell': 'tools/die_plan/bind.py', 'station_cell_sha256': '1439e87bfa989d5651ecdbf5078f96ff22864f09b2bd01fe6d7118ee5736e080'}
+BF_BENCH_LEAF_LATENCY FAIL col_h9 asb_nx seams {'u_s01': 2, 'u_s10': 2, 'u_s12': 2, 'u_s21': 2} leaves 30 run_leaves 6
+  FAIL seam u_s01: bench 2 != schedule bound plan 11
+  FAIL seam u_s12: bench 2 != schedule bound plan 6
+  FAIL leaf e0.r0: bench return 96 != schedule leaf_path 105
+  FAIL leaf e0.r1: bench return 97 != schedule leaf_path 106
+  FAIL leaf e1.r0: bench return 93 != schedule leaf_path 102
+  FAIL leaf e1.r1: bench return 94 != schedule leaf_path 103
+  FAIL leaf e10.r0: bench return 103 != schedule leaf_path 107
+  FAIL leaf e10.r1: bench return 104 != schedule leaf_path 108
+  FAIL leaf e11.r0: bench return 100 != schedule leaf_path 104
+  FAIL leaf e11.r1: bench return 101 != schedule leaf_path 105
+  FAIL leaf e2.r0: bench return 96 != schedule leaf_path 105
+  FAIL leaf e2.r1: bench return 97 != schedule leaf_path 106
+  FAIL leaf e3.r0: bench return 93 != schedule leaf_path 102
+  FAIL leaf e3.r1: bench return 94 != schedule leaf_path 103
+  FAIL leaf e4e.r: bench return 90 != schedule leaf_path 99
+  FAIL leaf e4w.r: bench return 93 != schedule leaf_path 102
+  FAIL leaf e5.r0: bench return 100 != schedule leaf_path 109
+  FAIL leaf e5.r1: bench return 101 != schedule leaf_path 110
+  FAIL leaf e6.r0: bench return 96 != schedule leaf_path 105
+  FAIL leaf e6.r1: bench return 97 != schedule leaf_path 106
+  FAIL leaf e7.r0: bench return 99 != schedule leaf_path 108
+  FAIL leaf e7.r1: bench return 100 != schedule leaf_path 109
+  FAIL leaf e8e.r: bench return 95 != schedule leaf_path 99
+  FAIL leaf e8w.r: bench return 97 != schedule leaf_path 101
+  FAIL leaf e9.r0: bench return 96 != schedule leaf_path 100
+  FAIL leaf e9.r1: bench return 97 != schedule leaf_path 101
+  FAIL run col_h9_asb_nx|E2|bseg1024 leaf e4e.r: measured return 90 != schedule leaf_path 99
+  FAIL run col_h9_asb_nx|E2|bseg1024 leaf e4w.r: measured return 93 != schedule leaf_path 102
+  FAIL run col_h9_asb_nx|E2|bseg1024 leaf e8e.r: measured return 95 != schedule leaf_path 99
+  FAIL run col_h9_asb_nx|E2|bseg1024 leaf e8w.r: measured return 97 != schedule leaf_path 101
+LEAFLAT runs col_h9 asb_nx rc=1
+BF_BENCH_LEAF_LATENCY PASS col_h9 asb_nx seams {'u_s01': 11, 'u_s10': 2, 'u_s12': 6, 'u_s21': 2} leaves 30 run_leaves 6
+LEAFLAT runs2 col_h9 asb_nx rc=0
+{'plan': '/srv/opentallas-scratch2/claude/s81-bfasb-1111/root/physical/die_plan/s81/plan_h2_2249.json', 'plan_sha256': '0cedba41a5bd19fcc81707c4bf02e63464d7feb0a88732985f901cef19a2b4ca', 'seam_depths': {'u_s01': 11, 'u_s10': 2, 'u_s12': 6, 'u_s21': 2}, 'seam_extra_stages': {'u_s01': 9, 'u_s12': 4}, 'station_cell': 'tools/die_plan/bind.py', 'station_cell_sha256': '1439e87bfa989d5651ecdbf5078f96ff22864f09b2bd01fe6d7118ee5736e080'}
+BF_BENCH_LEAF_LATENCY FAIL col_h10 asb_x seams {'u_s01': 2, 'u_s10': 2, 'u_s12': 2, 'u_s21': 2} leaves 32 run_leaves 6
+  FAIL seam u_s01: bench 2 != schedule bound plan 11
+  FAIL seam u_s12: bench 2 != schedule bound plan 6
+  FAIL leaf e0.r0: bench return 96 != schedule leaf_path 105
+  FAIL leaf e0.r1: bench return 97 != schedule leaf_path 106
+  FAIL leaf e10w.r: bench return 97 != schedule leaf_path 101
+  FAIL leaf e12.r0: bench return 103 != schedule leaf_path 107
+  FAIL leaf e12.r1: bench return 104 != schedule leaf_path 108
+  FAIL leaf e1e.r: bench return 91 != schedule leaf_path 100
+  FAIL leaf e1w.r: bench return 94 != schedule leaf_path 103
+  FAIL leaf e2.r0: bench return 93 != schedule leaf_path 102
+  FAIL leaf e2.r1: bench return 94 != schedule leaf_path 103
+  FAIL leaf e3.r0: bench return 97 != schedule leaf_path 106
+  FAIL leaf e3.r1: bench return 98 != schedule leaf_path 107
+  FAIL leaf e4.r0: bench return 93 != schedule leaf_path 102
+  FAIL leaf e4.r1: bench return 94 != schedule leaf_path 103
+  FAIL leaf e5e.r: bench return 94 != schedule leaf_path 103
+  FAIL leaf e5w.r: bench return 97 != schedule leaf_path 106
+  FAIL leaf e6.r0: bench return 100 != schedule leaf_path 109
+  FAIL leaf e6.r1: bench return 101 != schedule leaf_path 110
+  FAIL leaf e7.r0: bench return 97 != schedule leaf_path 106
+  FAIL leaf e7.r1: bench return 98 != schedule leaf_path 107
+  FAIL run col_h10_asb_x|E2|bseg1024 leaf e10w.r: measured return 97 != schedule leaf_path 101
+  FAIL run col_h10_asb_x|E2|bseg1024 leaf e1e.r: measured return 91 != schedule leaf_path 100
+  FAIL run col_h10_asb_x|E2|bseg1024 leaf e1w.r: measured return 94 != schedule leaf_path 103
+  FAIL run col_h10_asb_x|E2|bseg1024 leaf e5e.r: measured return 94 != schedule leaf_path 103
+  FAIL run col_h10_asb_x|E2|bseg1024 leaf e5w.r: measured return 97 != schedule leaf_path 106
+LEAFLAT runs col_h10 asb_x rc=1
+BF_BENCH_LEAF_LATENCY PASS col_h10 asb_x seams {'u_s01': 11, 'u_s10': 2, 'u_s12': 6, 'u_s21': 2} leaves 32 run_leaves 6
+LEAFLAT runs2 col_h10 asb_x rc=0

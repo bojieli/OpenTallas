@@ -81,6 +81,8 @@ fi
 if [ -f "$KIT/land_slots.json" ] || [ -f "$KIT/face_guard.json" ]; then
   GA+=(--land-slots "$KIT/land_slots.json" --face-guard "$KIT/face_guard.json")
 fi
+# Kit spare_out.json (DIE-HBM-100 11-11): constant-tied spare output bits are not "unregistered" pins.
+[ -f "$KIT/spare_out.json" ] && GA+=(--spare-out "$KIT/spare_out.json")
 python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${RA[@]}"
 vrc=$?
 PA=(); [ "$GRT" = true ] && PA=(--cong "$OUT/cong.rpt")

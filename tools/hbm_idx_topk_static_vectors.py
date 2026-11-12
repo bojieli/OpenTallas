@@ -90,6 +90,13 @@ def make_records(rng, count):
 
 
 def main():
+    # --rd1-resp-shift N (default 0 = byte-identical images): rd1 hub response calendar +N, response edges only
+    resp_shift = 0
+    if '--rd1-resp-shift' in sys.argv:
+        k = sys.argv.index('--rd1-resp-shift')
+        resp_shift = int(sys.argv[k + 1])
+        assert resp_shift >= 0
+        del sys.argv[k:k + 2]
     out = Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
     cnt = int(sys.argv[2]) if len(sys.argv) > 2 else 24
     assert cnt <= 24, 'address plan fits 24 random records in one 64K-word slice'
@@ -156,7 +163,7 @@ def main():
                      f"{rec['has_r']} {rec['r']:05x} {rec['r_str']:05x}")
         rec.update(G=G, end=end, fault=fault)
         G = end
-    last = G + 4
+    last = G + 4 + resp_shift
     # calendar image, one word per edge: {resp_v, resp_seq2, pws8, hub8, rsel8}
     img = []
     for e in range(last + 1):

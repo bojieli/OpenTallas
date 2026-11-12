@@ -2712,6 +2712,28 @@ def _hop_latch_capture_tap(P):
     return None
 
 
+def _hop_latch_re(slot, k):
+    """regex of the bound ft hop latch cells u_fl_<slot>_<face>_<k> (bind.py u_fl_{obus}_{k}, obus = <slot>_<face>)"""
+    return f"u_fl_{slot}_[^_]+_{int(k)}[^0-9]"
+
+
+def _hop_latch_tap_cfg(P, tn):
+    """HBM-VSN-XTAP-2 11-11 form A': OT_HOP_LATCH_CAPTURE_TAP value = the die default / GEN env (_hop_latch_capture_tap)
+    plus the plan's per-hop capture-tap latches of `tn` (schema.ft_hop_latch_tap); None = no line."""
+    base = _hop_latch_capture_tap(P)
+    res = [_hop_latch_re(s, k) for s, m in sorted(S.ft_hop_latch_tap(P.raw, tn).items())
+           for k, v in sorted(m.items()) if v == "capture"]
+    v = " ".join(([base] if base else []) + res)
+    return v or None
+
+
+def _hop_latch_frac_cfg(P, tn):
+    """HBM-VSN-XTAP-2 11-11 form A': OT_HOP_LATCH_FRAC_MAP value 're=f ...' (schema.ft_hop_latch_frac); None = none."""
+    v = " ".join(f"{_hop_latch_re(s, k)}={float(f):g}" for s, m in sorted(S.ft_hop_latch_frac(P.raw, tn).items())
+                 for k, f in sorted(m.items()))
+    return v or None
+
+
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
@@ -3741,6 +3763,30 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 
+def grt_nonport_hold_chain(kd, tool_dir=None):
+    """KW-FIX-45 11-11 (DIE-HBM-100, opt-in OT_GRT_NONPORT_HOLD=1 in the gen environment / item_env): chain tools/grt_nonport_hold.tcl
+    (input-start hold exclusion during the FF GRT repair only) at the END of the kit's effective PRE_GLOBAL_ROUTE_TCL.
+    Reads the written config.mk, takes the LAST PRE_GLOBAL_ROUTE_TCL assignment as the base, writes /work/grt_pre_nonport.tcl
+    (source base; source /work/grt_nonport_hold.tcl) and appends the override plus OT_GRT_NONPORT_HOLD = 1.  Never called
+    without the opt-in, so other kits are byte-identical.  -> the base path chained."""
+    kd = Path(kd)
+    cfgp = kd / "config.mk"
+    base = None
+    for ln in cfgp.read_text().splitlines():
+        m = re.match(r"^(?:override\s+)?export\s+PRE_GLOBAL_ROUTE_TCL\s*:?=\s*(\S+)\s*$", ln)
+        if m:
+            base = m.group(1)
+    if base is None:
+        raise SystemExit("OT_GRT_NONPORT_HOLD=1: the kit config.mk sets no PRE_GLOBAL_ROUTE_TCL to chain")
+    hook = Path(tool_dir or Path(__file__).resolve().parent.parent) / "grt_nonport_hold.tcl"
+    shutil.copyfile(hook, kd / "grt_nonport_hold.tcl")
+    (kd / "grt_pre_nonport.tcl").write_text("# GENERATED (OT_GRT_NONPORT_HOLD=1): the kit's PRE_GLOBAL_ROUTE_TCL, then the shared nonport hold adapter\n"
+                                            f"source {base}\nsource /work/grt_nonport_hold.tcl\n")
+    with cfgp.open("a") as f:
+        f.write("override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_nonport.tcl\nexport OT_GRT_NONPORT_HOLD = 1\n")
+    return base
+
+
 def macro_ff_repair_stage(kd, macros, mlib):
     """Separate the requested FF repair stage from the original macro/CTS config."""
     import gzip
@@ -4700,7 +4746,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
-           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_capture_tap(P)}"] if _hop_latch_capture_tap(P) else []),
+           *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_tap_cfg(P, tn)}"] if _hop_latch_tap_cfg(P, tn) else []),
+           *([f"export OT_HOP_LATCH_FRAC_MAP = {_hop_latch_frac_cfg(P, tn)}"] if _hop_latch_frac_cfg(P, tn) else []),
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
            *(["export OT_EDGE_SPLIT_MACRO_PIN = 1"] if edge_split_ports(P, tn) and P.die.get("name") in EDGE_SPLIT_MACRO_PIN_DIES else []),
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
@@ -4834,6 +4881,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
+    if os.environ.get("OT_GRT_NONPORT_HOLD") == "1":      # opt-in; chained after any macro-FF wrapper written above
+        grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
