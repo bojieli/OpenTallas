@@ -1,6 +1,6 @@
 #!/bin/bash
 # PLAN-ROUTE-1 FLAGS watcher (ADVISORY ranking, never a gate; DO_NOT_COUNT).
-# Every 30 min: read the plans of record from ~/coord/tools/release_tree_plan.py (PLANS), and on epyc4 re-run
+# Every 30 min: read the plans of record from ~/coord/tools/release_tree_plan.py --plans-jsonl (current_plans), and on epyc4 re-run
 # route_supply.py for every die whose plan file sha changed on origin/main; append the rows to FLAGS-1110.tsv and
 # commit lanes/FLAGS-1110.tsv + one queue line through coord-commit.sh.  Heavy work runs niced on epyc4 only.
 # Disable: remove the "plan-route-1/flags_cron.sh" line from the localhost crontab.
@@ -13,16 +13,8 @@ LOCK=/home/ubuntu/.local/state/plan-route-1-flags.lock
 mkdir -p /home/ubuntu/.local/state
 exec 9>"$LOCK"; flock -n 9 || exit 0
 S="$(date '+%Y-%m-%d %H:%M %Z')"
-PL=$(python3 -I - <<'EOF'
-import ast, json
-src = open('/home/ubuntu/coord/tools/release_tree_plan.py').read()
-env = {'_HBM_POR': 'physical/die_plan/hbm/plan_of_record/'}
-for n in ast.parse(src).body:
-    if isinstance(n, ast.Assign) and any(getattr(t, 'id', '') == 'PLANS' for t in n.targets):
-        for die, _ref, plan, refs in eval(compile(ast.Expression(n.value), 'PLANS', 'eval'), env):
-            print(json.dumps({'die': die, 'plan': plan, 'refs': list(refs)}))
-EOF
-)
+# WAVE-POR 11-12: the plans the counter counted last (they follow the kit-wave declared plan_sha256), else PLANS
+PL=$(python3 -I /home/ubuntu/coord/tools/release_tree_plan.py --plans-jsonl 2>/dev/null)
 [ -n "$PL" ] || { echo "$S no PLANS parsed" >> "$LOG"; exit 0; }
 timeout 60 ssh -o ControlPath=none epyc4 "cat > $R/release_cache.json" < /home/ubuntu/.local/state/fleet-viz/release_tree_plan_cache.json
 OUT=$(echo "$PL" | timeout 1700 ssh -o ControlPath=none epyc4 "cd /; git -C $R/repo fetch -q origin main 2>/dev/null; \
