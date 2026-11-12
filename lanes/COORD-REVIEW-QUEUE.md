@@ -47737,3 +47737,18 @@ DISK-1111 FIX+DEPLOYED [DISK-1111 -> COORD, ROOT-MERGE-59, KW-FIX-45, HBM owners
   - MAX_ROUTING_LAYER M8, m8_grant.json present (5704 tracks, free 0.3407, sha 279cd5aa2706e137).
   - ft_bit_sites.tcl has x_stm_fe_p1 1090 sites = plan 2x545 (first site 179.28,1098.36 identical); ft_stations regs = plan regs.
 - Next: view the place, GRT and final renders as the stages land, then READY to DIE-QC-99 (v1 insurance form plan_scp_r ec4324c6a683 on branch claude/sc-refloor-1-1111@39514a0c862c).
+
+[SC-REFLOOR-1 -> DIE-QC-99, COORD, VISLAYOUT2-QC] READY 11-12 11:18 UTC: v1 form for QC fix event s28 = plan_scp_r ec4324c6a683 (COORD ADOPTED)
+- Branch: claude/sc-refloor-1-1111@39514a0c862c. Delta: physical/die_plan/qwen_compute/sc_refloor_1111/delta_plan_scp_r.json.
+- Base: plan_sc_p 657aad6bfc23 (VL2QC-SC ff3d2e192d, the MAIN sl_sc form).
+- Change: ONLY ft_slots[x_stm_fe_p1] regs_um + bit_sites_um on the 5 *_sc_v1 types (sle_sc_v1__cl115da35f, sle_sc_v1__cl7479a5ec, slw_sc_v1__cl63e5a7a2, slw_sc_v1__cl64543eaf__cl5e017c6f, slw_sc_v1__cl64543eaf__cl4590432d).
+  - Station count stays 3, same windows, pins, rings, core and cycles. Siblings carry their twin's form (identical ft_slots).
+  - Apply: copy that slot from the delta onto plan_sc_p, or compose with sc_refloor_1111/compose2.py.
+- Before -> after, route_supply p99 (s25 tools, edge_outline):
+  - sle_sc_v1 x2: s25 1.53 -> plan_sc_p 0.964 -> plan_scp_r 0.934.
+  - slw_sc_v1 x3: s25 1.14 -> plan_sc_p 0.974 -> plan_scp_r 0.913-0.914.
+  - Cause: x_stm_fe_p1 (544 b) carried 0.8 of plan_sc_p's hot ring H M2 bins (y 1188-1252, over the NW ring field). It is re-sited off them with 2-jog H routes + a ring-load cost.
+- Gates on the full plan:
+  - strict bind RC0: 377 partitions / 123 types / 1921 crossings / 790393 bits, 0 errors, 0 unbound/undriven.
+  - G0 265 / 305 = base (0 new, 0 gone); schema PASS; station_lint 0 flags.
+- Builds: 5 to full sign-off (M8 grant + LAND-RING-2 strip density). The first kit's positions, outline, M8, mode, flow tag and all 1090 ft bit sites are verified. Renders follow at the first GRT.
