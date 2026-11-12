@@ -29570,7 +29570,7 @@
     "q_su11*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply p99>1 (ft-chain packing); post-cut ft re-site",
     "q_su00__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child pgslice_lg__pretree/lane_exp has no routed abstract yet; release when signed/routed",
     "q_su10__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child lane_exp_x_core has no routed abstract yet (vec LEC fix landed); release when routed",
-    "NE_io": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1.0 and worse, no Steiner reason",
+    "NE_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event",
     "q_hub_ne": "KW-FIX-45 11-11 COORD 08:1x: q_hub_ne prov FAIL; HOLD until the d6 event (HUB-ARCH-2); also route_supply >1.0 and worse",
     "q_b102": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
     "q_b102__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
@@ -29600,7 +29600,8 @@
     "q_spb1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
-    "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept"
+    "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
+    "NW_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event"
    },
    "gen_hosts": [
     "epyc9"
@@ -41741,7 +41742,9 @@
     "q_spb1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
-    "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept"
+    "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
+    "NW_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event",
+    "NE_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event"
    }
   }
  },
