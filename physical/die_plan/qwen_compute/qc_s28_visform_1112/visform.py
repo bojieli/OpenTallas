@@ -288,12 +288,17 @@ def derive(a):
     plan = json.loads(Path(a.plan).read_text())
     side = json.loads(Path(a.side).read_text())
     ops, rep = [], {"SC-ECHAN": {}, "LAND-OVR": {}}
-    sc_echan(plan, ops, rep, a.sc_x)
-    fw_eface(plan, ops, rep)
-    ctl_ring(plan, ops, rep)
-    land_ovr(plan, side, ops, rep, a.repo)
+    cls = set(a.classes.split(","))
+    if "SC-ECHAN" in cls:
+        sc_echan(plan, ops, rep, a.sc_x)
+    if "FW-EFACE" in cls:
+        fw_eface(plan, ops, rep)
+    if "CTL-RING" in cls:
+        ctl_ring(plan, ops, rep)
+    if "LAND-OVR" in cls:
+        land_ovr(plan, side, ops, rep, a.repo)
     delta = dict(schema="qc_s28_visform.delta.v1", base_sha=hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(),
-                 note="QC-S28-VISFORM 11-12: SC-ECHAN, FW-EFACE, CTL-RING, LAND-OVR family forms", ops=ops)
+                 note="QC-S28-VISFORM 11-12 family forms: " + a.classes, ops=ops)
     Path(a.delta).write_text(json.dumps(delta, indent=1) + "\n")
     counts = {}
     for o in ops:
@@ -351,6 +356,8 @@ def main(argv=None):
     d.add_argument("--repo", default=".")
     d.add_argument("--sc-x", type=float, default=302.4)
     d.add_argument("--report")
+    d.add_argument("--classes", default="SC-ECHAN,FW-EFACE,CTL-RING,LAND-OVR",
+                   help="comma list; SC-ECHAN ships as its own delta until its crossing lanes are re-stationed")
     x = sp.add_parser("apply")
     x.add_argument("plan"); x.add_argument("delta"); x.add_argument("out")
     x.add_argument("--report")
