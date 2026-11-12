@@ -34,6 +34,8 @@ VERIFY_RULES = {
         {"module": "ot_dp_rrelay_nl", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
         # TYPE-SAFE-1 11-06 ft hop lockup latch (bind.ft_hop_lockup): transparent-low after a station flop = 0 cycles
         {"module": "ot_dp_lk", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 0},
+        # HOLDFORM-1 / T41-OUTPAD 11-12 hold pad (gen_rtl.ot_dp_hd, u_hdly_*): N kept HB4 per bit = a wire, 0 cycles
+        {"module": "ot_dp_hd", "map": {"y": "a"}, "drop_in": [], "stages": 0},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
         {"module": "ot_dp_rgate", "map": {"q": "d"}, "drop_in": ["clk", "run"], "stages": 1},
     ],
@@ -454,6 +456,12 @@ def cmd_verify(a):
     js = vdir / "bound.json"
     ylib = native_lib_stubs(lib, vdir)
     ylib += core_split_stubs(raw["asbuilt"], rep, (vdir / "lib_stubs.sv").read_text() if lib else "", vdir)
+    if "module ot_dp_hd" in (out / "rtl" / "bind_cells.sv").read_text():
+        # the native Yosys read defines SYNTHESIS, so ot_dp_hd instantiates the Liberty HB4 cell: give it an interface
+        # stub (blackboxed below with every other non-kept module; the transport rule maps y <- a)
+        hb = vdir / "hold_pad_stub.sv"
+        hb.write_text("module HB4xp67_ASAP7_75t_R (input wire A, output wire Y);\nendmodule\n")
+        ylib.append(str(hb))
     sc.write_text(E.yosys_script(ab, ab["netlist"], full, ylib, js, check=True, inc_files=lib))
     mounts = [out, E.REPO] + [Path(f).parent for f in lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)

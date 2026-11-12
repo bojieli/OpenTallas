@@ -172,6 +172,11 @@ def main(argv=None):
         table.append([s, f"{s} s{k2-1}", f"port {s}_o", f"{dist(ch[-1], B):.1f}", "", "", "", "", "", "",
                       "face (kit IO budget, unchanged)"])
         out.append(" ".join([s, str(k2), fin, fout] + [f"{v:.4f}" for p in sites for v in p]))
+        if k2 > k and re.search(rf"\bu_hdly_{s}_o \(", rtl):
+            # T41-OUTPAD (clock.ft_hold_pad out): the last station drives the hold pad, not the port; adding relay
+            # stations behind it would move the pad off the face.  Refuse instead of guessing.
+            print(f"FAIL_PREBUILD relay_bay: {T} lane {s}: output hold pad u_hdly_{s}_o (clock.ft_hold_pad) on a lane "
+                  f"that needs {k2 - k} more station(s); drop the pad or the extra stations in the plan"); return 2
         if k2 > k:
             m = re.search(rf"ot_dp_st #\(\.W\((\d+)\)\) u_ft_{s}_o_{k-1} \(([^;]*)\.q\({s}_o\[(\d+):0\]\), \.eq\({s}_o\[(\d+)\]\)\);", rtl)
             if not m:

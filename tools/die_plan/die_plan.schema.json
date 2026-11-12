@@ -6414,6 +6414,43 @@
       }
      }
     },
+    "ft_hold_pad": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "types"
+     ],
+     "properties": {
+      "types": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "in": {
+          "type": "object",
+          "additionalProperties": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 8
+          }
+         },
+         "out": {
+          "type": "object",
+          "additionalProperties": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 8
+          }
+         }
+        }
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "core_input_lockup": {
      "type": "object",
      "additionalProperties": false,

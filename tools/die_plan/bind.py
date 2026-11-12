@@ -3150,7 +3150,7 @@ class Binder:
                 and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         import gen_rtl
-        if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
+        if gen_rtl.uses_hold_hb4(self.plan) or gen_rtl.uses_ft_hold_pad(self.plan):   # HOLDFORM-1 / T41-OUTPAD pads
             cells += "\n" + gen_rtl.HOLD_CELLS
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
@@ -3711,17 +3711,27 @@ class Binder:
             n -= len(xt)                     # HBM-VSN-XTAP 11-11: plan stations; the hop flops are emitted between them
             ports.append(f"    input  wire [{W}:0] {i}   // ft {h['slot']} lane {L['lane']}: {L['src']} -> {L['dst']}")
             ports.append(f"    output wire [{W}:0] {o}   // ft {h['slot']}: {n} station(s)")
+            import gen_rtl
+            npi, npo = gen_rtl.ft_hold_pad(self.plan, tn, h["slot"], "in"), gen_rtl.ft_hold_pad(self.plan, tn, h["slot"], "out")
             if n == 0:
+                if npi or npo:
+                    raise BindError(f"clock.ft_hold_pad {tn} slot {h['slot']}: no station to pad (0-station pass-through)")
                 body.append(f"    assign {o} = {i};")
                 continue
             prev = i
+            if npi:                          # T41-OUTPAD: port -> N x HB4 per bit -> station 0 (data + epoch)
+                decl.append(f"    wire [{W}:0] {i}_hd;  // T41-OUTPAD ft input hold pad: {npi} x HB4 per bit")
+                body.append(f"    ot_dp_hd #(.W({W + 1}), .N({npi})) u_hdly_{i} (.a({i}), .y({i}_hd));")
+                prev = f"{i}_hd"
             lk = ft_hop_lockup(self.plan, tn)
             for k in range(n):
-                nxt = o if k == n - 1 else f"{o}_s{k}"
-                if k < n - 1:
-                    decl.append(f"    wire [{W}:0] {nxt};")
+                nxt = (f"{o}_hp" if npo else o) if k == n - 1 else f"{o}_s{k}"
+                if k < n - 1 or npo:
+                    decl.append(f"    wire [{W}:0] {nxt};" + ("  // T41-OUTPAD ft output hold pad input" if k == n - 1 else ""))
                 body.append(f"    ot_dp_st #(.W({W})) u_ft_{o}_{k} (.clk(clk), .rst_n(rst_n), .d({prev}[{W - 1}:0]), "
                             f".ea({prev}[{W}]), .q({nxt}[{W - 1}:0]), .eq({nxt}[{W}]));")
+                if k == n - 1 and npo:       # T41-OUTPAD: last station -> N x HB4 per bit -> port (data + epoch)
+                    body.append(f"    ot_dp_hd #(.W({W + 1}), .N({npo})) u_hdly_{o} (.a({nxt}), .y({o}));")
                 prev = nxt
                 if lk and k < n - 1 and k in xt:
                     # HBM-VSN-XTAP 11-11 cross-tap hop (schema.ft_hop_xtap): station k -> full-cycle flop -> station k+1

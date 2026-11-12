@@ -250,6 +250,30 @@ def uses_hold_hb4(raw):
                for t in ((raw or {}).get("partition_types") or {}).values() for b in t.get("buses", []))
 
 
+def ft_hold_pad(raw, tn, slot, side):
+    """T41-OUTPAD 11-12 (DIE-S81-87, COORD adopt of the slice_station__t41 conservative form): the number of kept HB4xp67
+    per bit (data + epoch) on ft slot `slot` of type tn, side "in" (port -> station 0) or "out" (last station -> port);
+    0 = none.  Plan clock.ft_hold_pad (absent = off, byte-identical RTL, cell files and kit hooks):
+    {"types": {"<type>": {"in": {"<slot>": N}, "out": {"<slot>": N}}}}.
+
+    Why: a vclk ft slot's face flop sits at its pin, so its port path is only the seam contract (in_min -40 / out_min 0
+    against vclk) plus a few um of wire.  t41 attempt_4 failed FF hold on 4,104 input-port starts (-66.78 ps); the
+    conservative form padded the 8 vclk input slots and signed off, and its one late ECO then put 137 of its 220 HB4 on
+    ft5_o (last station -> port, -6.87 ps) and 33 on ft15_o/ft8_o/ft1_o/ft16_o.  Same cells, instance and dont_touch as
+    HOLDFORM-1 (ot_dp_hd, u_hdly_<port bus>): cycle-neutral, LEC sees Liberty buffers, the sim model is a wire."""
+    cfg = (((raw or {}).get("clock") or {}).get("ft_hold_pad") or {}).get("types") or {}
+    return int((((cfg.get(tn) or {}).get(side)) or {}).get(slot) or 0)
+
+
+def uses_ft_hold_pad(raw):
+    """any partition type of the plan declares an ft_hold_pad count > 0 (T41-OUTPAD); a listed type the plan does not
+    have adds nothing (byte-same cell files)"""
+    cfg = (((raw or {}).get("clock") or {}).get("ft_hold_pad") or {}).get("types") or {}
+    have = set(((raw or {}).get("partition_types") or {}))
+    return any(int(n or 0) > 0 for tn, t in cfg.items() if tn in have
+               for side in ("in", "out") for n in ((t or {}).get(side) or {}).values())
+
+
 def hold_pad(n, src, width, N):
     """(decl lines, body lines, padded wire) for HOLDFORM-1: ot_dp_hd #(width, N) u_hdly_<n> on expression src."""
     w = f"{n}_hd"
@@ -580,11 +604,24 @@ def wrapper(P, tn, epochs, rtl_root=None):
         ep_o = epochs.get((tn, s["name"] + "_o"), True)
         r = rsel(s["name"] + "_i")
         d, ea = f"{n}_i[{W - 1}:0]", (f"{n}_i[{W}]" if ep_i else r)
+        npi, npo = ft_hold_pad(P.raw, tn, s["name"], "in"), ft_hold_pad(P.raw, tn, s["name"], "out")
+        if npi:                 # T41-OUTPAD: port -> N x HB4 per bit -> station 0 (data + epoch together)
+            wi = W + 1 if ep_i else W
+            hd, hb, hw = hold_pad(f"{n}_i", f"{n}_i[{wi - 1}:0]", wi, npi)
+            decl += hd
+            body += hb
+            d, ea = f"{hw}[{W - 1}:0]", (f"{hw}[{W}]" if ep_i else r)
         lk = ft_hop_lockup(P.raw, tn)
         xt = set(S.ft_hop_xtap(P.raw, tn, s["name"])) if lk else set()
         for j in range(k):
             last = j == k - 1
-            if last:
+            if last and npo:    # T41-OUTPAD: last station -> N x HB4 per bit -> port (data + epoch together)
+                wo = W + 1 if ep_o else W
+                decl.append(f"    wire [{wo - 1}:0] {n}_o_hp;  // T41-OUTPAD ft output hold pad: {npo} x HB4 per bit")
+                q, eq = f"{n}_o_hp[{W - 1}:0]", (f"{n}_o_hp[{W}]" if ep_o else f"{n}_s{j}_eq")
+                if not ep_o:
+                    decl.append(f"    wire {n}_s{j}_eq;")
+            elif last:
                 q, eq = f"{n}_o[{W - 1}:0]", (f"{n}_o[{W}]" if ep_o else f"{n}_s{j}_eq")
                 if not ep_o:
                     decl.append(f"    wire {n}_s{j}_eq;")
@@ -593,6 +630,9 @@ def wrapper(P, tn, epochs, rtl_root=None):
                 decl.append(f"    wire [{W - 1}:0] {q};\n    wire {eq};")
             body.append(f"    {st(ea)} #(.W({W})) u_ft_{n}_s{j} (.clk(clk), .rst_n({r if j == 0 else rsel(s['name'] + '_i', s['name'] + '_o', j / k)}), .d({d}), .ea({ea}), "
                         f".q({q}), .eq({eq}));")
+            if last and npo:
+                wo = W + 1 if ep_o else W
+                body.append(f"    ot_dp_hd #(.W({wo}), .N({npo})) u_hdly_{n}_o (.a({n}_o_hp), .y({n}_o[{wo - 1}:0]));")
             d, ea = q, eq
             if lk and not last and j in xt:
                 # HBM-VSN-XTAP 11-11 cross-tap hop (ft_hop_xtap): station j -> full-cycle hop flop (+1 cycle) -> j+1
@@ -859,7 +899,7 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
     (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
-                                        + (HOLD_CELLS if uses_hold_hb4(P.raw) else ""))
+                                        + (HOLD_CELLS if uses_hold_hb4(P.raw) or uses_ft_hold_pad(P.raw) else ""))
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):

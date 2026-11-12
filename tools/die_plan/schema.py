@@ -1279,6 +1279,16 @@ SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
 # QC-EVENT-S25 11-11 (QC-NK-HOLD ap2 claude/qc-nk-hold-ap2-1111@fc999610864d, COORD 17:10 APPROVED): plan
 # clock.core_input_lockup, read by bind.core_input_lockup / core_input_pipe and gen_phys.core_input_place (absent = off,
 # byte-identical kits).  The code read the key; the schema rejected it (clock additionalProperties false).
+# T41-OUTPAD 11-12 (DIE-S81-87; COORD adopt of the slice_station__t41 conservative form): structural ft slot hold pads
+# (gen_rtl.ft_hold_pad; absent = off, byte-identical).  N kept HB4xp67 per bit, port -> station 0 ("in") or last
+# station -> port ("out"), instance u_hdly_<port bus>, kept by gen_phys.hold_pad_dont_touch_tcl.
+_FT_PAD_N = {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 8}}
+SCHEMA["properties"]["clock"]["properties"]["ft_hold_pad"] = {
+    "type": "object", "additionalProperties": False, "required": ["types"],
+    "properties": {"types": {"type": "object", "additionalProperties": {
+                       "type": "object", "additionalProperties": False,
+                       "properties": {"in": _FT_PAD_N, "out": _FT_PAD_N}}},
+                   "note": {"type": "string"}}}
 SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
     "type": "object", "additionalProperties": False, "required": ["modules"],
     "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {

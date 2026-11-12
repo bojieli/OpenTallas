@@ -2383,6 +2383,10 @@ def hold_pad_dont_touch_tcl(P, tn):
     kit when the netlist lost any (N x width per bus, + N for an epoch bit).  "" for a type without hold_hb4 buses (byte-same)."""
     hb = [(int(b["hold_hb4"]), int(b["width"])) for b in P.types[tn].get("buses", [])
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
+    # T41-OUTPAD 11-12 (gen_rtl.ft_hold_pad): ft slot input / output pads, same cells and instance prefix
+    import gen_rtl
+    hb += [(gen_rtl.ft_hold_pad(P.raw, tn, s["name"], side), int(s["width"])) for s in P.types[tn].get("ft_slots", []) or []
+           for side in ("in", "out") if gen_rtl.ft_hold_pad(P.raw, tn, s["name"], side) > 0]
     if not hb:
         return ""
     lo, hi = sum(n * w for n, w in hb), sum(n * (w + 1) for n, w in hb)     # without / with the epoch bit
