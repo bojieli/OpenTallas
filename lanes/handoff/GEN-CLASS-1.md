@@ -59,3 +59,8 @@ FT-HOP-M2 READY pending proof. Answered COORD (07:5x): CLAND dch = cland-slew-11
 - S81 t45 proof is blocked. (a) The overlay src with a symlinked physical/ fails the dead-input repo-relative check. Use a cp -al copy of s87bind/bsrc4_r12ng with real tools/ and rtl/ instead. Never edit hard-linked files in place; replace them by rm plus copy. (b) The r12ng sidecar is stale: s_5N_L1 was retyped t44__clf6cf8492 -> t52 after compose, so the x2 bus is not in t52 local_sources. Asked DIE-S81-88 which stage did it.
 - Stopped my t45 place (my units and container only). The s81bind attempt at epyc9 gen-class-1/s81bind failed at the bind step (ELAB ok).
 - Next: resolve the sidecar, rebind r12ng with aee2a3f4707, t45 kit -> GRT. Get the HEAD bind recipe from HEAD-95 for a LOCAL wshim_rx proof. Then READY.
+
+## 2026-11-12 update: HEAD wshim_rx proof (WREG)
+- The wshim_rx link_i ring is cas (count-aligned), so LOCAL does not apply. The proof uses the plan field landing_ring_wreg {buses [link_i], dsrep 8, write_chunk 16}.
+- Tree: epyc4 /srv/opentallas-scratch2/claude/gen-class-1/tree (own blob:none sparse clone @aee2a3f4707, plus 7 head-93 prep links). Plan: gen-class-1/pd/rp16_wreg.json (pd/ siblings symlink head-95/pd).
+- Build: intel2 pid 732695, log ~/gc1log/wrx_wreg_route.log, kit epyc4 gen-class-1/proof/wrx_wreg/hd_spn_wshim_rx. Gate: SO SLEW_VIOL 0 TT/FF except the u_srl_17/u_rrl_17 hop (HEAD rp17).
