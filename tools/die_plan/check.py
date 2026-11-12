@@ -853,14 +853,13 @@ def xtap_latency_hops(P, thresh=XTAP_LAT_DELTA_PS):
     elif (tw.get("per_port_ps") or {}):
         mode = "per_port"
     else:
-        mode = "flat"
+        mode = "flat"            # one window W on every port
     stats = dict(hops_total=0, hops_unknown=0, latch_only=0, flat_xtap_hops=0, flat_window_ps=None,
                  per_port_types=len(((tw or {}).get("per_port_ps") or {})))
     out = []
     if mode == "none":
         return mode, out, stats
-    if mode == "flat":
-        stats["flat_window_ps"] = gen_phys.tap_window_ps(P)
+    stats["flat_window_ps"] = gen_phys.tap_window_ps(P)
     for tn in sorted(P.types):
         t = P.types[tn]
         slots = [s for s in (t.get("ft_slots") or []) if int(s.get("stations", 1)) >= 2]
@@ -888,10 +887,8 @@ def xtap_latency_hops(P, thresh=XTAP_LAT_DELTA_PS):
                     nb_ = ft_xtap._nearest(taps, *b[min(i, len(b) - 1)])
                     if na == nb_:
                         continue
-                    if mode == "flat":
-                        stats["flat_xtap_hops"] += 1
-                        break
-                    d = abs(gen_phys.port_window_ps(P, tn, na) - gen_phys.port_window_ps(P, tn, nb_))
+                    # COORD intent: a hop between different tap PORTS pays the full window (same port: CRPR credit)
+                    d = max(gen_phys.port_window_ps(P, tn, na), gen_phys.port_window_ps(P, tn, nb_))
                     if best is None or d > best[0]:
                         best = (d, na, nb_)
                 if best is None or best[0] <= thresh:
@@ -912,7 +909,7 @@ def check_xtap_latency(P, R, max_msgs=20):
     hops.sort(key=lambda h: (-h["delta_ps"], h["type"], h["slot"], h["hop"]))
     for h in hops[:max_msgs]:
         R.warn("xtap_latency", f"type {h['type']} slot {h['slot']} hop {h['hop']}->{h['hop'] + 1}: {h['launch_tap']} -> "
-               f"{h['capture_tap']} modeled source latency differs {h['delta_ps']:g} ps (> {XTAP_LAT_DELTA_PS:g}), no "
+               f"{h['capture_tap']} different tap ports, window {h['delta_ps']:g} ps (> {XTAP_LAT_DELTA_PS:g}), no "
                "clock.ft_hop_lockup (xtap flop / latch)", type=h["type"])
     if len(hops) > max_msgs:
         R.warn("xtap_latency", f"... {len(hops) - max_msgs} more unlocked cross-tap hops (see summary)")
@@ -921,10 +918,9 @@ def check_xtap_latency(P, R, max_msgs=20):
     for h in hops:
         tops[h["type"]] += 1
     if mode == "none":
-        note = "plan models no tap latency (no clock.tap_window)"
+        note = "NOT COMPUTABLE: plan models no tap latency (no clock.tap_window)"
     elif mode == "flat":
-        note = (f"flat tap window {st['flat_window_ps']:g} ps (equal on every port: per-port delta 0 by model; "
-                f"{st['flat_xtap_hops']} cross-tap hops pay the full window)")
+        note = f"flat tap window {st['flat_window_ps']:g} ps on every port"
     else:
         note = "per-port tap window"
     if hops:                       # a clean plan adds no item (counts stay in summ["xtap_latency"])

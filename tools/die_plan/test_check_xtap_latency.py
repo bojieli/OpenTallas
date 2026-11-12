@@ -47,7 +47,7 @@ def test_delta_160_no_lockup_listed(monkeypatch):
     R, s = _run(monkeypatch, _plan(_tw(160, 0)))
     assert s["hops"] == 1 and s["worst_delta_ps"] == 160 and s["mode"] == "per_port"
     assert [i["level"] for i in R.items] == ["WARN", "WARN"] and not R.errors()
-    assert "[xtap-count] 1 unlocked" in R.items[-1]["msg"] and "differs 160" in R.items[0]["msg"]
+    assert "[xtap-count] 1 unlocked" in R.items[-1]["msg"] and "window 160" in R.items[0]["msg"]
 
 
 def test_delta_160_with_lockup_not_listed(monkeypatch):
@@ -78,7 +78,7 @@ def test_no_tap_model(monkeypatch):
 
 def test_flat_window_reports_mode(monkeypatch):
     R, s = _run(monkeypatch, _plan({"window_ps": 160}))
-    assert s["mode"] == "flat" and s["hops"] == 0 and s["flat_xtap_hops"] == 1
+    assert s["mode"] == "flat" and s["hops"] == 1 and s["worst_delta_ps"] == 160
 
 
 # ---- tap sink cap (ERROR) ----
