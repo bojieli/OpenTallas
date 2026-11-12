@@ -52,3 +52,25 @@ def test_sink_on_other_reset_rejected():
     t = TXT.replace("u_bin_a (.clk(clk), .rst_n(rst_n)", "u_bin_a (.clk(clk), .rst_n(other)")
     with pytest.raises(R.PortRelayError, match="not the delivered rst_n"):
         R.apply(t, [dict(name="h", depth=1, sinks=["u_bin_a"])])
+
+
+IST_TXT = TXT.replace("    ot_dp_st #(.W(1)) u_bout_b",
+                      "    ot_dp_st #(.W(1)) u_ist_a_0 (.clk(clk), .rst_n(rst_n), .d(a_q), .ea(a_eq), .q(), .eq());\n    ot_dp_st #(.W(1)) u_bout_b")
+
+
+def test_relay_on_native_station_flop_binds():
+    # a u_ist_* station (kit_istations / native_istations output) is an ot_dp_st on rst_n: a relay row may name it
+    out, rec = R.apply(IST_TXT, [dict(name="s", depth=2, sinks=["u_ist_a_0"])])
+    assert "u_ist_a_0 (.clk(clk), .rst_n(prl_s_1)," in out
+    assert rec[0]["sinks"] == ["u_ist_a_0"]
+
+
+def test_relay_on_station_fails_before_materialization():
+    with pytest.raises(R.PortRelayError, match="not an emitted ot_dp_st"):
+        R.apply(TXT, [dict(name="s", depth=2, sinks=["u_ist_a_0"])])
+
+
+def test_bind_applies_port_relays_after_station_materialization():
+    import pathlib
+    src = (pathlib.Path(__file__).with_name("bind.py")).read_text()
+    assert src.index("native_istations.materialize(self, tn, f)") < src.index("reset_port_relays.apply(f.read_text(), port_relays)")
