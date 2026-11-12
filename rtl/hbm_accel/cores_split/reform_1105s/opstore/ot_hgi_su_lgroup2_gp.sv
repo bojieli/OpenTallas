@@ -18,6 +18,13 @@
 // without the wrap increment; 7 lane 3 not gated by its candidate check; 8 mask ignored on (lane 2, word 3);
 // 9 bank 11 read op one edge earlier than the writes (S2 bypass, read/write order breaks);
 // 10 lane 0 read network takes lane-candidate select only (not any bank).
+// OT_OPSG_E (HBM-CORES-B 11-11, opsbg form E, DIE-HBM-100 ruling; needs OT_OPSG_GP + OT_OPSG_ROT): every stage write (sw_v,
+// sw_addr, sw_mask, sw_d) takes ONE more edge, through kept per-consumer register copies: 16 per-bank copies of sw_v/sw_addr/
+// sw_mask for the write decode, 8 copies of each lane's rotate-select bit (32 of the 256 muxes each) and one copy of sw_d.
+// Cause: opsbg_C4A TT q_sa -> g_s1.q_wa 156 endpoints -135.75, q_sa -> g_s1.q_rot 1022 endpoints -97.09: one IREG flop per
+// address bit drove the 16 bank decodes / 768 rotate muxes through 9-12 buffer levels (293 / 676 ps of tree).  Declared
+// EQ_CYCLE_SHIFTED: the module equals the OT_OPSG_E-off module with sw_v/sw_addr/sw_mask/sw_d delayed one edge (writes, the
+// write-collision flt term and every write-side output +1 edge; reads rq/rr/ra unchanged).
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_su_lgroup2_gp #(
@@ -50,6 +57,28 @@ module ot_hgi_su_lgroup2_gp #(
         is_cand = (l == 0) && (MUT != 10);
         for (k = 0; k < NCAND; k = k + 1) if (cbank(l, k) == LN'(b)) is_cand = 1'b1;
     endfunction
+`ifdef OT_OPSG_E
+    localparam integer NRC = 8;            // rotate-select copies per lane address bit
+    wire [NS-1:0] ev [0:N-1]; wire [NS*LWB-1:0] ea [0:N-1]; wire [NS*8-1:0] em [0:N-1];
+    for (genvar b = 0; b < N; b = b + 1) begin : g_ec
+        (* keep *) reg [NS-1:0] q_v; (* keep *) reg [NS*LWB-1:0] q_a; (* keep *) reg [NS*8-1:0] q_m;
+        always @(posedge clk) begin q_v <= sw_v; q_a <= sw_addr; q_m <= sw_mask; end
+        assign ev[b] = q_v; assign ea[b] = q_a; assign em[b] = q_m;
+    end
+    wire [3*NRC-1:0] ea3 [0:NS-1];
+    for (genvar s = 0; s < NS; s = s + 1) begin : g_er
+        (* keep *) reg [3*NRC-1:0] q_s;
+        integer k_, c_;
+        always @(posedge clk) for (k_ = 0; k_ < 3; k_ = k_ + 1) for (c_ = 0; c_ < NRC; c_ = c_ + 1) q_s[k_*NRC + c_] <= sw_addr[s*LWB + k_];
+        assign ea3[s] = q_s;
+    end
+    wire [2047:0] ed;
+    if (1) begin : g_ed
+        (* keep *) reg [2047:0] q_d;
+        always @(posedge clk) q_d <= sw_d;
+        assign ed = q_d;
+    end
+`endif
     // ---- decode: lane candidate check, per-bank lane read select (LOWEST lane that hits gives the row)
     wire [N-1:0] lok;
     wire [LN-1:0] lbk [0:N-1]; wire [RB-1:0] lrw [0:N-1];
@@ -88,10 +117,16 @@ module ot_hgi_su_lgroup2_gp #(
     for (genvar b = 0; b < N; b = b + 1) begin : g_ws
         wire [NS-1:0] h, oh; wire [RB-1:0] rw [0:NS-1]; wire [2:0] o3 [0:NS-1];
         for (genvar s = 0; s < NS; s = s + 1) begin : g_h
+`ifdef OT_OPSG_E
+            wire [LWB-1:0] a = ea[b][s*LWB +: LWB];
+            wire hv = ev[b][s]; wire [7:0] hm = em[b][s*8 +: 8];
+`else
             wire [LWB-1:0] a = sw_addr[s*LWB +: LWB];
+            wire hv = sw_v[s]; wire [7:0] hm = sw_mask[s*8 +: 8];
+`endif
             wire [LN-1:0] off = LN'(b) - a[LN-1:0];
             assign o3[s] = off[2:0];
-            assign h[s] = sw_v[s] && off < LN'(8) && (sw_mask[s*8 + off[2:0]] || (MUT == 8 && s == 2 && off[2:0] == 3'd3));
+            assign h[s] = hv && off < LN'(8) && (hm[off[2:0]] || (MUT == 8 && s == 2 && off[2:0] == 3'd3));
             assign rw[s] = (MUT == 6 && b == 2) ? a[LWB-1:LN] : a[LWB-1:LN] + RB'(LN'(b) < a[LN-1:0]);
             if (MUT == 3 && b == 3) begin : g_ml
                 if (s == 0) begin : g_o0 assign oh[s] = h[s]; end else begin : g_on assign oh[s] = h[s] && !(|h[s-1:0]); end
@@ -120,11 +155,21 @@ module ot_hgi_su_lgroup2_gp #(
     // takes one of 8 lanes by the winner one-hot (4096 terms; a q_rot flop drives banks p and p+8 only).
     wire [2047:0] i_rot;
     for (genvar s = 0; s < NS; s = s + 1) begin : g_rot
+`ifdef OT_OPSG_E
+        // same rotation, bit i of each stage selected by copy i / 32 of its address bit
+        wire [255:0] r0 = ed[s*256 +: 256]; wire [255:0] r1, r2, r3;
+        for (genvar i = 0; i < 256; i = i + 1) begin : g_i
+            assign r1[i] = ea3[s][0*NRC + i/(256/NRC)] ? r0[(i + 224) % 256] : r0[i];
+            assign r2[i] = ea3[s][1*NRC + i/(256/NRC)] ? r1[(i + 192) % 256] : r1[i];
+            assign r3[i] = ea3[s][2*NRC + i/(256/NRC)] ? r2[(i + 128) % 256] : r2[i];
+        end
+`else
         wire [2:0]   a3 = sw_addr[s*LWB +: 3];
         wire [255:0] r0 = sw_d[s*256 +: 256];
         wire [255:0] r1 = a3[0] ? {r0[223:0], r0[255:224]} : r0;
         wire [255:0] r2 = a3[1] ? {r1[191:0], r1[255:192]} : r1;
         wire [255:0] r3 = a3[2] ? {r2[127:0], r2[255:128]} : r2;
+`endif
         assign i_rot[s*256 +: 256] = r3;
     end
     wire [N-1:0] s1_re, s1_we; wire [RB-1:0] s1_ra [0:N-1], s1_wa [0:N-1]; wire [NS-1:0] s1_oh [0:N-1]; wire [2047:0] s1_d;
@@ -147,7 +192,11 @@ module ot_hgi_su_lgroup2_gp #(
         (* keep *) reg [N-1:0] q_re, q_we; (* keep *) reg [N*RB-1:0] q_ra, q_wa; (* keep *) reg [N*NW-1:0] q_sel; (* keep *) reg [2047:0] q_d;
         integer b_;
         always @(posedge clk) begin
+`ifdef OT_OPSG_E
+            q_re <= i_re; q_we <= i_we; q_d <= ed;
+`else
             q_re <= i_re; q_we <= i_we; q_d <= sw_d;
+`endif
             for (b_ = 0; b_ < N; b_ = b_ + 1) begin q_ra[b_*RB +: RB] <= i_ra[b_]; q_wa[b_*RB +: RB] <= i_wa[b_]; q_sel[b_*NW +: NW] <= i_sel[b_]; end
         end
         for (genvar b = 0; b < N; b = b + 1) begin : g_o
