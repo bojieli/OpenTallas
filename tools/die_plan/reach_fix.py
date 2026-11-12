@@ -17,8 +17,10 @@ CLASSES (limits from the canonical rules; METHODOLOGY 12.1e / 12.8b, geom_rules 
                        landing groups, ring local-read flops) on the grid taps (clk, clk_t<i>) the kit exports.
   2 clock_tap_sinks    no tap above CAP_SINKS (800, see CAP_BASIS) under the same split.
   3 fwd_clock          every forwarded / incoming clock (clock.edge_clocks fclk_in_*, landing bands): farthest sink of
-                       the port <= one repeater span (450 um, owner repeater rule) from its driver, or the port carries
-                       a planned repeater chain clock.fwd_repeaters[port] with every leg <= 450 um.
+                       the port <= one repeater span (450 um, owner repeater rule) from its pin, else the port joins
+                       clock.edge_split_ports: the kit's clock_edge_split.tcl builds a repeater chain every 200 um from
+                       the pin to each sink group root (groups <= 1500 sinks / 300 um).  Class 2 also covers plain
+                       PHY-edge clocks the kit leaves as one tree (S81 clk_pma_rx 22k): they join the same list.
   4 signal_hop         every ft slot hop (in face -> stations -> out face) and internal station hop (from -> regs -> to)
                        <= REACH_UM (405, 12.1e); fixed by +k registers on the hop (STREET-RULE-1 lever 1, owner
                        approved 11-12: street_rule.add_ft_regs / hub_repack.route_station).
@@ -122,8 +124,22 @@ def tap_metrics(P, tn, G=None, cap=CAP_SINKS, radius=RADIUS_UM):
     sinks = [(float(x), float(y), float(w)) for x, y, w, _k in G["sinks"]]
     out = dict(taps=len(grid), sinks=round(sum(s[2] for s in sinks), 1),
                lower_bound=not (P.types[tn].get("clock") or {}).get("sink_bins_file"))
+    # tap sites: on a hard core / macro (GEOM-VIS-1 clock-tap-on-macro) and stacked taps (tap-pileup, < taps.SEP_UM)
+    try:
+        from placement_obstacles import placement_boxes
+        boxes = list(placement_boxes(P.types[tn], halo=0.0).values())
+    except Exception:  # noqa: BLE001
+        boxes = []
+    out["tap_on_macro"] = sorted(n for n, x, y in grid
+                                 if any(a + 1e-6 < x < c - 1e-6 and b + 1e-6 < y < d - 1e-6 for a, b, c, d in boxes))
+    pile = 0
+    for i in range(len(grid)):
+        for j in range(i + 1, len(grid)):
+            if _d(grid[i][1:], grid[j][1:]) < TP.SEP_UM - 1e-6:
+                pile += 1
+    out["tap_pileup"] = pile
     if not grid or not sinks:
-        out.update(c1=0, c1_max_um=0.0, c2=0, c2_max=0.0)
+        out.update(c1=len(out["tap_on_macro"]), c1_max_um=0.0, c2=pile, c2_max=0.0)
         return out, None
     load, far, own = TP.assign(grid, sinks, cap, radius)
     dist = [_d(s, (grid[j][1], grid[j][2])) for s, j in zip(sinks, own)]
@@ -131,10 +147,10 @@ def tap_metrics(P, tn, G=None, cap=CAP_SINKS, radius=RADIUS_UM):
     kinds = defaultdict(int)
     for i in over_r:
         kinds[re.split(r"[:(]", G["sinks"][i][3])[0]] += 1
-    out.update(c1=len(over_r), c1_weight=round(sum(sinks[i][2] for i in over_r), 1), c1_kinds=dict(kinds),
+    out.update(c1=len(over_r) + len(out["tap_on_macro"]), c1_weight=round(sum(sinks[i][2] for i in over_r), 1), c1_kinds=dict(kinds),
                c1_max_um=round(max(dist), 1),
                c1_worst=(grid[own[max(range(len(dist)), key=dist.__getitem__)]][0]),
-               c2=sum(1 for v in load if v > cap + 1e-6), c2_max=round(max(load), 1),
+               c2=sum(1 for v in load if v > cap + 1e-6) + pile, c2_max=round(max(load), 1),
                c2_worst=grid[max(range(len(load)), key=load.__getitem__)][0],
                load_min=round(min(load), 1))
     return out, dict(grid=grid, sinks=sinks, own=own, load=load, dist=dist,
@@ -178,23 +194,34 @@ def fwd_ports(P, tn, G=None):
 
 
 def fwd_metrics(P, tn, G=None, span=REPEATER_UM):
-    """class 3: per fclk port, farthest sink from its driver; a planned repeater chain (clock.fwd_repeaters[port]:
-    [[x, y], ...] driver -> r1 -> ... ) splits it into legs."""
+    """class 3: per fclk_in_* port, farthest band flop from the port pin.  OK when <= span, or when the port is in
+    clock.edge_split_ports: the kit's clock_edge_split.tcl then builds a repeater chain every OT_EDGE_SPLIT_SEG_UM
+    (200 um <= 450) from the pin to each group root (groups <= 1500 sinks, <= 300 um span)."""
     ck = P.types[tn].get("clock") or {}
-    plans = ck.get("fwd_repeaters") or {}
+    split = set(ck.get("edge_split_ports") or [])
     rows = []
     for port, xy, rects in fwd_ports(P, tn, G):
         if not rects:
             continue
         far = max(_rect_far(xy, r) for r in rects)
-        chain = [xy] + [tuple(map(float, p)) for p in (plans.get(port) or [])]
-        legs = [_d(a, b) for a, b in zip(chain, chain[1:])]
-        last = chain[-1]
-        tail = max(_rect_far(last, r) for r in rects) if len(chain) > 1 else far
-        ok = all(g <= span + 1e-6 for g in legs) and tail <= span + 1e-6
-        rows.append(dict(port=port, far_um=round(far, 1), repeaters=len(chain) - 1,
-                         max_leg_um=round(max(legs), 1) if legs else None, tail_um=round(tail, 1), ok=bool(ok)))
+        rows.append(dict(port=port, far_um=round(far, 1), split=port in split,
+                         ok=bool(far <= span + 1e-6 or port in split)))
     return rows
+
+
+def edge_unsplit(P, tn):
+    """class 2 (edge clocks, GEOM-VIS-1 overloaded single taps: S81 clk_pma_rx 22k, QC clk_d2d 22k): plain PHY-edge
+    clock ports (period x1, not forwarded, no source latency) that the kit leaves as ONE tree because neither the die
+    (gen_phys.EDGE_SPLIT_DIES) nor the type (clock.edge_split_ports) opts them into clock_edge_split.tcl."""
+    import gen_phys as GP
+    ck = P.types[tn].get("clock") or {}
+    try:
+        on = set(GP.edge_split_ports(P, tn))
+    except Exception:  # noqa: BLE001
+        return []
+    return sorted(e["port"] for e in ck.get("edge_clocks") or []
+                  if int(e.get("period_mult", 1)) == 1 and not str(e["port"]).startswith("fclk_in")
+                  and "source_latency_ps" not in e and e.get("cdc") is None and e["port"] not in on)
 
 
 def slot_ends(P, tn):
@@ -345,6 +372,10 @@ def type_row(P, tn, cap=CAP_SINKS, radius=RADIUS_UM, reach=REACH_UM, span=REPEAT
     if G is not None:
         tm, _ = tap_metrics(P, tn, G, cap, radius)
         row.update(tm)
+        eu = edge_unsplit(P, tn)
+        row["edge_unsplit"] = eu
+        row["c2_tap"] = row.get("c2") or 0
+        row["c2"] = row["c2_tap"] + len(eu)
         fw = fwd_metrics(P, tn, G, span)
         row["fwd"] = fw
         row["c3"] = sum(1 for r in fw if not r["ok"])
@@ -449,6 +480,10 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
     # then set the target (or restore the type's own value) once the table is final
     own = {k: ck.get(k) for k in ("tap_radius_um", "tap_max_sinks")}
     ck["tap_radius_um"], ck["tap_max_sinks"] = 1e6, 10 ** 9
+    try:
+        rec["legal_moves"] = _legalize_tap_table(plan_obj(Q, P.path), tn, ck, mode)
+    except Exception as e:  # noqa: BLE001
+        rec["legal_moves_error"] = "%s: %s" % (type(e).__name__, str(e)[:160])
     for rnd in range(max_rounds):
         PQ = plan_obj(Q, P.path)
         _reset_caches(PQ)
@@ -586,6 +621,22 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
     return rec
 
 
+def _legalize_tap_table(PQ, tn, ck, mode):
+    """street_rule._tap_legalize_table on the stored taps: every tap on a hard core / keepout / outline margin or
+    closer than TAP_CLEAR to another tap moves to the nearest legal site (taps on macros, stacked taps)."""
+    import schema as S
+    import street_rule as SR
+    if mode == "explicit":
+        tbl = [p for p in ck.get("taps") or [] if p.get("kind") != "core"]
+        clear = S.TAP_CLEAR_UM
+        ko = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in ck.get("keepouts_um", [])]
+        return SR._tap_legalize_table(PQ, tn, tbl, [(x, y) for _, x, y, _ in S.core_taps(PQ, tn)], ko)
+    tbl = ck.get("added_taps") or []
+    if not tbl:
+        return []
+    return SR._tap_legalize_table(PQ, tn, tbl, [(x, y) for _, x, y in S._grid_taps(PQ, tn)])
+
+
 def _reset_caches(PQ):
     import taps as TP
     TP._CACHE.clear()
@@ -655,42 +706,28 @@ def fix_hops(t, reach=REACH_UM, add_max=4, ends=None):
 
 
 def fix_fwd(P, Q, tn, span=REPEATER_UM):
-    """class 3: a repeater chain clock.fwd_repeaters[port] from the fclk driver toward the centre of its sink rects,
-    one buffer every <= span um on the L path (x then y), the last one inside the rect hull so the farthest sink is
-    <= span from it; sites legal by schema.tap_clear (off hard cores)."""
-    import schema as S
-    t = Q["partition_types"][tn]
-    ck = t.setdefault("clock", {})
-    rec = []
-    for port, xy, rects in fwd_ports(P, tn):
-        if not rects:
-            continue
-        far = max(_rect_far(xy, r) for r in rects)
-        if far <= span + 1e-6:
-            continue
-        x0 = min(r[0] for r in rects); y0 = min(r[1] for r in rects)
-        x1 = max(r[2] for r in rects); y1 = max(r[3] for r in rects)
-        tgt = ((x0 + x1) / 2, (y0 + y1) / 2)
-        L = _d(xy, tgt)
-        n = max(1, int(math.ceil(L / span)))
-        chain, taken = [], []
-        for m in range(1, n + 1):
-            d = L * m / n
-            dx = min(d, abs(tgt[0] - xy[0]))
-            px = xy[0] + (dx if tgt[0] >= xy[0] else -dx)
-            py = xy[1] + ((d - dx) if tgt[1] >= xy[1] else -(d - dx))
-            try:
-                q = S.tap_clear(t, px, py, taken, strict=True)
-            except Exception:  # noqa: BLE001
-                q = (px, py)
-            q = [round(round(q[0] / GRID) * GRID, 4), round(round(q[1] / GRID) * GRID, 4)]
-            chain.append(q)
-            taken.append(tuple(q))
-        tail = max(_rect_far(chain[-1], r) for r in rects)
-        ck.setdefault("fwd_repeaters", {})[port] = chain
-        rec.append(dict(port=port, far_um=round(far, 1), repeaters=len(chain), tail_um=round(tail, 1),
-                        hull_um=[round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1)]))
-    return rec
+    """class 3: every fclk_in_* port whose farthest band flop is > span joins clock.edge_split_ports (kit repeater
+    chain every 200 um + per-group roots, clock_edge_split.tcl).  Returns the ports added."""
+    ck = Q["partition_types"][tn].setdefault("clock", {})
+    lst = ck.setdefault("edge_split_ports", [])
+    out = []
+    for r in fwd_metrics(P, tn, None, span):
+        if not r["ok"] and r["port"] not in lst:
+            lst.append(r["port"])
+            out.append(dict(port=r["port"], far_um=r["far_um"]))
+    if not lst:
+        ck.pop("edge_split_ports")
+    return out
+
+
+def fix_edge(P, Q, tn):
+    """class 2 edge clocks: the unsplit plain edge ports join clock.edge_split_ports (the kit splits a port only when
+    it has more than one group, so a small domain is left alone)."""
+    ports = edge_unsplit(P, tn)
+    if ports:
+        lst = Q["partition_types"][tn].setdefault("clock", {}).setdefault("edge_split_ports", [])
+        lst += [p for p in ports if p not in lst]
+    return ports
 
 
 def fix_reset_local_taps(Q, tn, plan_path):
@@ -781,8 +818,10 @@ def fix_type(P, Q, tn, classes, base_row, cap, radius, reach, span, plan_path):
     t = Q["partition_types"][tn]
     if "4" in classes and base_row.get("c4"):
         rec["hops"] = fix_hops(t, reach, ends=slot_ends(P, tn))
-    if ("1" in classes or "2" in classes) and (base_row.get("c1") or base_row.get("c2")):
+    if ("1" in classes or "2" in classes) and (base_row.get("c1") or base_row.get("c2_tap", base_row.get("c2"))):
         rec["taps"] = fix_taps(P, Q, tn, cap, radius)
+        if base_row.get("edge_unsplit"):
+            rec["edge_split"] = fix_edge(P, Q, tn)
         rl = fix_reset_local_taps(Q, tn, plan_path)
         if rl:
             rec["reset_local_taps"] = rl
@@ -841,7 +880,7 @@ def _pool(fn, items, jobs):
 
 
 def summarize(rows):
-    s = dict(types=len(rows), types_viol=sum(1 for r in rows if r.get("viol")))
+    s = dict(types=len(rows), types_viol=sum(1 for r in rows if any(r.get("c" + c) for c in CLASSES)))
     for c in CLASSES:
         s["c" + c + "_types"] = sum(1 for r in rows if r.get("c" + c))
     s["errors"] = sum(1 for r in rows if r.get("error"))

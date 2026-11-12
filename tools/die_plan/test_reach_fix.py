@@ -81,23 +81,26 @@ def test_idempotent(tmp_path):
     assert out1.read_bytes() == out2.read_bytes()
 
 
-def test_class3_forwarded_clock_repeater_plan():
+def test_class3_forwarded_clock_split(monkeypatch):
     t = {"outline_um": [2400.0, 400.0], "hard_cores": [],
          "clock": {"edge_clocks": [{"port": "fclk_in_x", "tap_um": [10.0, 200.0]}],
                    "landing_contract": {"pins": [{"name": "fclk_in_x", "dir": "in", "kind": "clock",
                                                   "xy_um": [2.16, 200.0]}],
                                         "bands": {"x": {"rect_um": [2100.0, 150.0, 2200.0, 250.0],
                                                         "instance": "u_cland_x"}}}}}
-    P = _t.SimpleNamespace(types={"T": t}, raw={"partition_types": {"T": t}}, path=None)
+    P = _t.SimpleNamespace(types={"T": t}, path=None)
     rows = RF.fwd_metrics(P, "T")
     assert rows and not rows[0]["ok"] and rows[0]["far_um"] > RF.REPEATER_UM
     Q = {"partition_types": {"T": copy.deepcopy(t)}}
-    rec = RF.fix_fwd(P, Q, "T")
-    chain = Q["partition_types"]["T"]["clock"]["fwd_repeaters"]["fclk_in_x"]
-    assert rec and len(chain) >= 5
+    assert [r["port"] for r in RF.fix_fwd(P, Q, "T")] == ["fclk_in_x"]
     P2 = _t.SimpleNamespace(types=Q["partition_types"], path=None)
-    r2 = RF.fwd_metrics(P2, "T")[0]
-    assert r2["ok"] and r2["max_leg_um"] <= RF.REPEATER_UM and r2["tail_um"] <= RF.REPEATER_UM
+    assert RF.fwd_metrics(P2, "T")[0]["ok"]
+    assert RF.fix_fwd(P2, copy.deepcopy(Q), "T") == []                   # idempotent
+    # the kit consumer: gen_phys.edge_split_ports names the forwarded port on a die outside EDGE_SPLIT_DIES
+    import gen_phys as GP
+    P3 = _t.SimpleNamespace(types=Q["partition_types"], die={"name": "s81"}, grid=None, layers=None)
+    monkeypatch.setattr(GP, "edge_clock_pins", lambda PP, tn: [("fclk_in_x", 10.0, 200.0, 1)])
+    assert GP.edge_split_ports(P3, "T") == ["fclk_in_x"]
 
 
 def test_class5_raw_tap_reference_reselected(monkeypatch):
