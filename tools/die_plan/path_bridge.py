@@ -181,6 +181,7 @@ def run(raw, lanes, limit=405.0, pad=250.0):
                         break
                 if why is None:
                     pass
+            even_res = None
             if why is not None and banked:          # even chains of m = 1..5 stations, anchors on the packed column, hops measured
                 w, h = sl["bit_site_cell_um"]
                 nb = len(sl["bit_sites_um"][0]) if sl["bit_sites_um"] else sl["width"] + 1
@@ -208,7 +209,7 @@ def run(raw, lanes, limit=405.0, pad=250.0):
                         chain_ = [tp] + [tuple(c_) for c_ in cen] + [tq]
                         hs_ = [PR._man(a_, b_) for a_, b_ in zip(chain_, chain_[1:])]
                         if max(hs_[:-1] + [hs_[-1] + leg2]) <= limit - 2:
-                            pts_t, banks, ch, why, found = cen, bl, [tuple(c_) for c_ in cen], None, True
+                            even_res, found = (cen, bl), True
                             break
                     if found:
                         break
@@ -244,6 +245,8 @@ def run(raw, lanes, limit=405.0, pad=250.0):
                     why = None
                     break
                 why = "pack_moved_over_reach"
+            if even_res is not None and (why is not None or pts_t is None or len(pts_t) > len(even_res[0])):
+                pts_t, banks, ch, why = even_res[0], even_res[1], [tuple(c_) for c_ in even_res[0]], None
             if ch is None and why == "no chain":
                 t = raw2["partition_types"][tn]
                 box = (min(tp[0], tq[0]) - pad, min(tp[1], tq[1]) - pad, max(tp[0], tq[0]) + pad, max(tp[1], tq[1]) + pad)
