@@ -89,3 +89,22 @@ The strict bind of a533fc694fc2 and full-flow builds of BOTH types run on epyc7,
 preflight; route is refused on a FAIL). cld01bb4ae's base failure was an infra waiter. KW-FIX-45 has no named fix for this type. The only
 unmerged flow patch on record (gen_phys flow_tag / grt_transition_mode copy, 31b4aa4824 on claude/vislayout2-qc-1111) is
 not in src_t51f, so this build runs without it.
+
+## STATUS 2026-11-12: NOT FOR BUILD (station-bits model)
+COORD flagged a route_supply model gap. internal_stations entries without "bits" are routed as 1 bit, and
+station_face_dedupe then drops the face bus. The kit, however, pads the whole bus through those sites
+(u_lpad_<bus>.r[k][0..W-1]). Scored with that fixed locally (bus: stations carry the bus width):
+
+| plan | verdict / region / dir / p99 / max / hot |
+|---|---|
+| base | FLAG / face / H / 2.667 / 3.041 / 387 at (470, 5) |
+| v1b (this form) | FLAG / face / H / 2.636 / 2.993 / 317 at (848, 5) |
+| v1c: 5 frame_int_i1 regs re-sited to the y-229 street (resite_stn.py, equal arc 337 um, same ends, same count) | FLAG / street / H / 1.885 |
+| v1d: c-row midline y 273 | FLAG / street / H / 1.700 |
+| v1f: gap above the c rows y 321 | FLAG / mstreet / H / 1.757 |
+| v1e: two streets (y 229, e6/e7 street, y 568) | FLAG / street / V / 1.971 |
+
+The 1264-b frame_int_i1 relay chain (face -> bn6/bn7/bn8.rs, to_um (1296, 851)) has 3 of 5 regs on the S outline.
+Every interior H corridor in this floorplan is 20-32 um. The padded chain alone needs about 50 um, and one 337-um stage
+cannot hop a 536-um ROM pair on M6/M7. A positions-only form therefore cannot close it. The strict bind was stopped
+and no build was started. This needs a decision outside positions: what that station carries, or a frame_int_i1 trunk plan.
