@@ -647,16 +647,25 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
             if k[0] == "dummy":
                 continue
             gs = [max(g, 1.0) for _, _, g in segs]
-            # region equalisation by wire (pad=leg): a leaf's last-mile deficit (um, from STA) rides on its own leg
-            tgt = max(leg_tgt[k[0]], sum(gs)) + (leaf_pad.get(ncell(k), 0.0) if k[0] == D else 0.0)
-            lo_, hi_ = 0.0, max(tgt, max(gs))
-            for _ in range(60):
-                h_ = (lo_ + hi_) / 2
-                if sum(max(g, h_) for g in gs) < tgt:
-                    lo_ = h_
-                else:
-                    hi_ = h_
-            leg_pad[k] = [max(g, hi_) for g in gs]
+
+            def fill(gs_, tgt):
+                lo_, hi_ = 0.0, max(tgt, max(gs_))
+                for _ in range(60):
+                    h_ = (lo_ + hi_) / 2
+                    if sum(max(g, h_) for g in gs_) < tgt:
+                        lo_ = h_
+                    else:
+                        hi_ = h_
+                return [max(g, hi_) for g in gs_]
+            lp_ = fill(gs, max(leg_tgt[k[0]], sum(gs)))
+            # region equalisation by wire: a leaf's last-mile deficit (um, from STA) rides on its own leg, after the
+            # first segment (that one loads the parent's net, shared with the sibling leg)
+            ex = leaf_pad.get(ncell(k), 0.0) if k[0] == D else 0.0
+            if ex > 0:
+                tail = lp_[1:] if len(lp_) > 1 else lp_
+                tail = fill(tail, sum(tail) + ex)
+                lp_ = (lp_[:1] + tail) if len(lp_) > 1 else tail
+            leg_pad[k] = lp_
     children = defaultdict(list)                    # node cell -> [(child node cell, pad net, branch index)]
     for key in sorted(k for k in live if k[0] < D):
         lev, idx = key
