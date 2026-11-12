@@ -762,7 +762,11 @@ class TestKitwave(unittest.TestCase):
         self.assertTrue(at[f"epyc4:{A}/st/attempt_4"]["signed"])
         self.assertEqual(at[f"epyc4:{A}/st/attempt_2"]["terminal"], ["stage:SUPERSEDED"])
         self.assertEqual(out["latest"][f"epyc4:{A}/it"], 3)
-        self.assertIn(f"epyc4:{A}/it/attempt_2/gen/k/run_kit.sh", out["keep"])     # resume source of a running row
+        self.assertNotIn(f"epyc4:{A}/it/attempt_2/gen/k/run_kit.sh", out["keep"])  # OWNER 11-12: a running job is self contained
+        st["items"]["7"] = {"status": "QUEUED", "kit": f"epyc4:{A}/qq/attempt_3/gen/k",
+                            "resume": {"changed": [["synth", "runner", f"{A}/qq/attempt_2/gen/k/run_kit.sh"]]}}
+        out2 = ac.reduce_kitwave(st, rows)
+        self.assertIn(f"epyc4:{A}/qq/attempt_2/gen/k/run_kit.sh", out2["keep"])    # a QUEUED row still copies from it
         self.assertIn("epyc4:/srv/s2/claude/kw/src_x", out["keep"])
 
 
@@ -1038,6 +1042,75 @@ class TestExpiry(Base):
         self.assertEqual(sorted(u for u, _ in res), list(range(8)))
         self.assertGreater(peak[0], 1)
         self.assertEqual(ac.run_pool(work, [1, 2], 1), [(1, True), (2, True)])
+
+
+class TestAggressive(Base):
+    """OWNER 11-12 aggressive mode: only live jobs, referenced trees, unarchived signed units and protected lists stay"""
+    attempt = TestClasses.attempt
+
+    def test_no_state_row_attempt_and_queue_hold_go(self):
+        d = self.attempt("item_nr", 1)
+        self.kw = {"attempts": {}, "latest": {}, "keep": []}
+        self.qpaths = [d]
+        self.run_job("--classes", "a")
+        self.assertTrue(os.path.isdir(d))                      # default: unknown / queue hold keeps it
+        self.run_job("--classes", "a", "--aggressive")
+        self.assertFalse(os.path.exists(d), self.row(d))
+
+    def test_young_attempt_stays_for_grace_only(self):
+        d = self.attempt("item_yg", 1)
+        touch(os.path.join(d, "new.log"), mtime=time.time() - 3600)
+        self.kw = {"attempts": {"hx:" + d: {"active": False, "signed": False, "terminal": ["FAIL/None"]}}, "latest": {}, "keep": []}
+        self.run_job("--classes", "a", "--aggressive")
+        self.assertTrue(os.path.isdir(d))
+        self.assertEqual(self.row(d)[4], "lt2h")
+        age_tree(d)
+        self.run_job("--classes", "a", "--aggressive")
+        self.assertFalse(os.path.exists(d))
+
+    def test_active_and_kitwave_keep_attempts_stay(self):
+        act = self.attempt("item_ac", 1)
+        kp = self.attempt("item_kp", 1)
+        self.kw = {"attempts": {"hx:" + act: {"active": True, "signed": False, "terminal": []}},
+                   "latest": {}, "keep": ["hx:" + os.path.join(kp, "gen/item_kp_abc/run_kit.sh")]}
+        self.run_job("--classes", "a", "--aggressive")
+        self.assertTrue(os.path.isdir(act))
+        self.assertTrue(os.path.isdir(kp))
+
+    def test_class_d_prunes_lane_tree_but_keeps_protected_path(self):
+        lane = os.path.join(self.root, "oldlane")
+        keepdb = os.path.join(lane, "sub/results/d/base")
+        touch(os.path.join(keepdb, "6_final.odb"))
+        junk = os.path.join(lane, "sub/scratch/junk.bin")
+        touch(junk)
+        other = os.path.join(lane, "other/big.bin")
+        touch(other)
+        young = os.path.join(lane, "young/f.bin")
+        touch(young, mtime=time.time())
+        for q in (keepdb, junk, other):
+            age_tree(os.path.dirname(q))
+        age_tree(os.path.join(lane, "sub"))
+        self.prot.append((keepdb, "test protected"))
+        self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        self.assertTrue(os.path.exists(os.path.join(keepdb, "6_final.odb")))
+        self.assertFalse(os.path.exists(junk))
+        self.assertFalse(os.path.exists(os.path.join(lane, "other")))
+        self.assertTrue(os.path.exists(young))
+        self.assertIn("PROTECTED/COUNTED HITS AT RECHECK: 0", self.out)
+
+    def test_class_d_off_without_aggressive_and_keeps_git_and_never_touch(self):
+        lane = os.path.join(self.root, "gitlane")
+        touch(os.path.join(lane, "wt/.git"), n=10)
+        touch(os.path.join(lane, "wt/f.bin"))
+        age_tree(os.path.join(lane, "wt"))
+        junk = os.path.join(lane, "junk/f.bin")
+        touch(junk)
+        age_tree(os.path.dirname(junk))
+        self.run_job("--classes", "d")
+        self.assertTrue(os.path.exists(junk))                   # not aggressive: class d does nothing
+        self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        self.assertFalse(os.path.exists(junk))
+        self.assertTrue(os.path.exists(os.path.join(lane, "wt/f.bin")))   # a git checkout is the worktree reaper's
 
 
 if __name__ == "__main__":
