@@ -865,7 +865,14 @@ def xtap_latency_hops(P, thresh=XTAP_LAT_DELTA_PS):
         slots = [s for s in (t.get("ft_slots") or []) if int(s.get("stations", 1)) >= 2]
         if not slots:
             continue
-        taps = S.tap_grid(P, tn)
+        try:
+            taps = S.tap_grid(P, tn)
+        except Exception as ex:
+            stats["types_uncomputable"] = stats.get("types_uncomputable", 0) + 1
+            why = stats.setdefault("why", {})
+            k = f"{type(ex).__name__}: {str(ex)[:90]}"
+            why[k] = why.get(k, 0) + 1
+            continue
         if len(taps) < 2:
             continue
         lock = gen_rtl.ft_hop_lockup(P.raw, tn)
@@ -951,8 +958,11 @@ def tap_sink_loads(P):
             tp = S.tap_grid(P, tn)
             sinks = TP.sink_sites(P, tn)
             loads = TP.tap_loads([(x, y) for _n, x, y in tp], sinks)
-        except Exception:
+        except Exception as ex:
             stats["uncomputable"] += 1
+            why = stats.setdefault("why", {})
+            k = f"{type(ex).__name__}: {str(ex)[:90]}"
+            why[k] = why.get(k, 0) + 1
             continue
         stats["computed"] += 1
         ck = t.get("clock", {}) or {}
