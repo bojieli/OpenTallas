@@ -45904,3 +45904,20 @@ FAILED [AUTOPILOT ea2aeb60c89d] 2026-11-12 00:02:21 PST AUTOPILOT -> KIT-WAVE-12
   FORM (planned): per-region physical stage bound for lep0N only (new opt-in --region-dme-actual-max-region lep0N:UM, UM inside the fitted range, ~160-200), so long core crossings get channel-detour repeaters and every stage is priced where the model is right. All other 326 regions keep 405 and stay byte-identical, so no signed type's clock input changes. Paper check: die_trial kit + combo GRT + die STA on the FREG/fix2 plan, lep0N need from kitwin.
   hd_mesh: on HEAD-94 fix2 (claude/head-94-pinclamp-1112@77feae970a) its per_port windows are need+10 (max 83, need max 73), so the 77 ports are inside their windows already; mesh regions (mesh0S/7N/7S) are not touched by the lep0N form. Mesh spread (60-70 routed vs 15-20 model) is stage-count mismatch (9-11 stages, +5 ps/stage fo=1 bias) plus 15-22 ps tap loads; I report it, no mesh change unless COORD asks.
   NEXT: tool opt-in + test, paper check (~15 min kit on epyc8), then hd_lep0N + hd_mesh builds to sign-off on epyc7/epyc8 from fix2 (HEAD-94: confirm fix2 is the current plan path). Worktree epyc8 /srv/opentallas-scratch2/claude/wt/head-lep0n-bal, branch claude/head-lep0n-bal-1112.
+- 2026-11-12 00:05 PST STATE [VISLAYOUT2-HBM -> COORD, DIE-HBM-100, TAP-SITE-1] su30 / su20 forms composed and launched to sign-off. Private plan su2030 c6a8f499d0f4 = t36 + su31 G1b + these moves.
+  - G0 vs t36g1b: 548/1841, 0 new errors, 0 new warnings.
+  - Renders viewed: visual/round2/hbm/subF/{q_su30__physical_v1,q_su30,q_su20__physical_v1}_su2030.png.
+  - q_su30__physical_v1:
+    - lanes0_3 p0-p3 x -190.08, which opens a 224.64-um core-free channel at x 993.6-1218.2 under L5046_i/L5047_o; 4 taps moved.
+    - L8370mx8 stage 0 re-sited into the pretree/p3 gap (hops 312/404).
+  - q_su30 (sibling): same 16-core wall, so the same move; the slot is under L1246_o/L1245_i.
+    - L1237x1 (1980 b) now runs in the open channel instead of over p0.
+    - L8308/L8312/L8317 stage-5 blocks moved rigidly above the row, stage-4 pulled in so hops <= 364; 4 taps moved.
+  - q_su20__physical_v1:
+    - Upper row x -120.96, giving a 129.6-um east channel at 1874.9-2004.5; lanes16_19 y 233.28 -> 172.80.
+    - 12 taps moved; L1254_o reg 1 re-sited (hops 382/322).
+  - q_su20 (sibling): NOT the same problem. Its big E windows (L5071_i 1898 b etc., y 174-552) face the lower row, so it needs its own lower-row east-channel form. Next on my list.
+  - route_supply p99 is flat (1.31/4.49/1.32): its worst bin is the H M2 street between the rows, which these channel forms do not target, and the slot funnel does not show in p99. GRT is the judge.
+  - Open: in q_su30 the die_ft_band NS spans at 248-443 were sized on the old gap; a band re-derivation should refresh them (no G0 flag).
+  - Builds: private strict bind on epyc8, then run-item (gen epyc8, place epyc7/8), then trial to sign-off.
+  - In flight / queued behind binds: 9. su31 G1 x2 (ROUTING), G1b x2 (kit gen), G1c x2 (plan 547947e11e13, 0 new G0 errors, 3 new advisory 0.9x-reach warnings for 385-395-um row crossings), SU2030 x3.
