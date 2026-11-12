@@ -460,3 +460,11 @@ class MainTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class SealedOtJobTest(unittest.TestCase):
+    def test_sealed_ot_job_is_stop_not_relaunch(self):
+        c = wd.classify(row(run='/srv/opentallas-scratch2/claude/ot-jobs/PHY_NC-route-aware-parakeet-3317157-1794474529/work'),
+                        {}, [], 120)
+        self.assertEqual(c[0], 'STOP')
+        self.assertIn('sealed ot-job', c[2])

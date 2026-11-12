@@ -182,6 +182,10 @@ def classify(row, state, skip, idle_min, tail='', procs=()):
         return 'REPORT', step, 'listed in WATCHDOG.skip (%s)' % hit[1]
     if wave:
         return 'STOP', step, 'hung %s: stop; the kit-wave client retries or fails the row, no relaunch here' % stall_watch.hm(row['idle_s'])
+    if '/ot-jobs/' in paths:
+        # KW-FIX-46 11-12 (hbm PHY_NC): a sealed ot-job deletes its job dir when the command ends, so a relaunch in that dir
+        # (13:13 docker run -d dpkit-PHY_NC-3468881) is orphaned within a minute; the autopilot client classifies the stop
+        return 'STOP', step, 'hung %s in a sealed ot-job: stop, no relaunch here (the job dir dies with the command; the autopilot client decides)' % stall_watch.hm(row['idle_s'])
     if step in ('LEC', 'SYNTH'):
         return 'STOP', step, 'hung %s in %s: stop, no relaunch (the same run would hang again)' % (stall_watch.hm(row['idle_s']), step)
     hist = state.get(kit_key(row), {}).get('relaunches', [])
