@@ -92,3 +92,13 @@ def test_pick_plan_dir(tmp_path):
     (dp / 's81/events/e').mkdir(parents=True); (dp / 's81/inputs/core_pins').mkdir(parents=True)
     (dp / 's81/events/e/plan.json').write_text(json.dumps(plan2)); (dp / 's81/inputs/core_pins/c.json').write_text('{}')
     assert R.pick_plan_dir(tmp_path, 'physical/die_plan/s81/events/e/plan.json', 's81', ()) == ('s81', ())
+
+
+def test_drift_keeps_last_counted_plan_on_main():
+    idx = {'111111111111': ['physical/die_plan/s81/events/e1/plan_new.json.gz']}
+    prev = {'s81': ('s81', 'physical/die_plan/s81/events/e1/plan_new.json.gz', [])}
+    out, drift = R.resolve_plans(PL[:1], {'s81': dict(sha='999999999999', path='/lane/plan.json')}, idx, prev)
+    assert out[0][:4] == ('s81', 's81', 'physical/die_plan/s81/events/e1/plan_new.json.gz', ())
+    assert out[0][4]['kept_last'] and 'last counted' in drift[0]
+    out, drift = R.resolve_plans(PL[:1], {'s81': dict(sha='999999999999')}, {}, prev)   # last plan gone from main
+    assert out[0][:4] == PL[0] and 'pinned' in drift[0]
