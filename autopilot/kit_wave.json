@@ -769,7 +769,8 @@
     "epyc8",
     "epyc9",
     "epyc4",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "gen_hosts": [
     "epyc7",
@@ -6694,7 +6695,8 @@
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
    "hosts": [
     "epyc9",
-    "epyc8"
+    "epyc8",
+    "epyc2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -6767,6 +6769,7 @@
     ]
    },
    "place_prefer": [
+    "epyc2",
     "epyc9",
     "epyc8"
    ],
@@ -20228,10 +20231,12 @@
     "epyc8",
     "epyc9",
     "epyc4",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "live_claim_h": 0,
    "place_prefer": [
+    "epyc2",
     "epyc4",
     "intel1",
     "epyc9",
@@ -22275,10 +22280,12 @@
     "epyc8",
     "epyc9",
     "epyc4",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
+    "epyc2",
     "epyc4",
     "intel1",
     "epyc9",
@@ -29057,6 +29064,7 @@
     "NE_iorly"
    ],
    "place_prefer": [
+    "epyc2",
     "epyc7",
     "epyc4",
     "intel1",
@@ -30772,7 +30780,8 @@
     "epyc9",
     "epyc7",
     "epyc4",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "cancel_superseded": true,
    "plan_core_items": [
