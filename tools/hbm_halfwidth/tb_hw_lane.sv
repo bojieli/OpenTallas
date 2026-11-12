@@ -114,7 +114,7 @@ module tb_hw_lane;
 
     wire [W-1:0] vmask = ref_q[0] ? {W{1'b1}} : ~PM;     // payload compared only beside the valid
     reg [W-1:0] diff;
-    always @(negedge clk) if (rst_n && cyc > 20) begin
+    always @(negedge clk) if (rst_n && cyc > 20 + H + BEATS) begin
         diff = (q ^ ref_q) & ((HW != 0 && GARB) ? vmask : {W{1'b1}});
         cmp = cmp + 1;
         if (diff !== {W{1'b0}}) begin
