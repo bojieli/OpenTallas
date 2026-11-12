@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 13:35 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 14:10 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -30,6 +30,9 @@ None (rt_leg done 21:13 UTC; STA re-run in docker because epyc9 has no host sta/
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 14:0x ROUTED RE-BALANCE (posted + correction): step0 136.2 -> step1 42.1 TT / 36.9 FF -> step2 43.3 no gain; overflow 0 all steps;
+  landed margin 375.39/382.49 (step1); FF contract 308 -> 44 -> 33 (need 4.66). Stall = 41 leaves at the 1500 um cap (n10_694 needs 43.3 ps).
+  Proposed: 1 HB4xp67 at each capped leaf root (channel site) or lift cap ~2000 um; awaiting COORD. epyc9 rl/rloop.py, rl/rloop.json.
 - 2026-11-12 13:3x HEAD ROUTED CHECK (posted): GRT overflow 0, M8/M9 0.06%, pad 5.53 m, worst gcell 13.06 mm M8 (fits);
   routed spread 136.2 TT / 115.1 FF (model 2.4/4.2); landed damage 84.28/70.21 PASS (margin 334/346); FF contract 308 need 38.57.
   Data epyc9 dp/head/rtleg (grt_<C>, pd_<C>), dp/head/rtleg_sta, arrivals dir dp/dc/head_rtleg.
@@ -59,9 +62,9 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. Proposed (posted, starts unless COORD objects): regeq closed on routed arrivals (GRT+pads+sta per step, ~3 min, stop <=10 ps / no gain).
-   die_clock sta on epyc9 must run in docker orfs (PATH .../OpenROAD/bin, --libdir /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM).
-2. Merge lane: answer ROOT-MERGE-60 questions on claude/reach-fix-2-main-1112 @54d2a1ec4b.
+1. On COORD's pick: HB4 at the 41 capped leaf roots (realize --sites channel) or leaf cap 2000 -> one more routed step (rloop.py, start pads rl/rleafpad2.json).
+   rloop.py rebuilds with die_clock_leg2.py + rl/g5p plan (exact it2 repro); rt_leg.sh takes RUN= D= env.
+2. Merge lane: answer ROOT-MERGE-60 questions on claude/reach-fix-2-main-1112 @54d2a1ec4b. S81 re-price is DIE-S81-88's (2d689bfae217).
 3. KV regeq after DIE-KV-99 vN2e tap-site event.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
