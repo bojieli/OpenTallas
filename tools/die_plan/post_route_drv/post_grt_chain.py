@@ -47,7 +47,7 @@ FINAL_REPAIR_TAILS = (FINAL_REPAIR_TAIL, FINAL_REPAIR_TAIL[-1:])
 # + pinreg_pad.tcl (sourced by tapbal_grt) + the CTS-time clk_leaf_repeat hook.  The gates (grt_post.tcl) still run.
 CLOCK_EDIT_HOOKS = frozenset((
     "subtree_balance.tcl", "tap_balance.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
-    "clk_leaf_repeat.tcl", "clk_leaf_repeat_default.tcl",
+    "clk_leaf_repeat.tcl", "clk_leaf_repeat_default.tcl", "clk_pair_bal.tcl",
     "regional_taps.tcl", "regional_taps_balance.tcl", "core_density_taps.tcl", "core_tap_align.tcl",
     "f4_chain_leaf.tcl", "multiport_clock_stage_hold.tcl", "head_lane_taps.tcl", "astk_zone_taps.tcl",
     "astk_face_taps.tcl"))

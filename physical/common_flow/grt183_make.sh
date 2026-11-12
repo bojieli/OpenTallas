@@ -54,6 +54,19 @@ if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
     else echo "OT_CLK_LEAF_REPEAT grt inactive: no estimate_parasitics -global_routing in $S"; fi
   fi
 fi
+# OT_CLK_PAIR_BAL (HBM-TAPS 11-12, DIE-HBM-100; DEFAULT OFF): post-GRT hold-corner pair balance of clock subtrees
+# (physical/common_flow/clk_pair_bal.tcl, staged by core_flow.stage_grt183).  Sourced in the disposable global_route.tcl
+# copy right after the clk_leaf_repeat grt pass (it sees the final leaf tree; CLK-LEAF-BAL-1 11-12), else right after the
+# first 'estimate_parasitics -global_routing'; before repair_design / repair_timing, which run unchanged.  The Tcl returns
+# at once unless OT_CLK_PAIR_BAL=1 ('export OT_CLK_PAIR_BAL = 1' in config.mk).  No kit file = nothing patched.
+if [ -f "$W/clk_pair_bal.tcl" ] && [ -f "$S" ] && ! grep -qF "OT_CLK_PAIR_BAL" "$S"; then
+  PH="source /work/clk_pair_bal.tcl ;# OT_CLK_PAIR_BAL"
+  if grep -qF ";# OT_CLK_LEAF_REPEAT grt" "$S"; then
+    sed -i "0,\|^\( *\)\(.*;# OT_CLK_LEAF_REPEAT grt\)\$|s||&\n\1$PH|" "$S"
+  elif grep -q '^ *log_cmd estimate_parasitics -global_routing' "$S"; then
+    sed -i "0,\|^\( *\)log_cmd estimate_parasitics -global_routing.*|s||&\n\1$PH|" "$S"
+  else echo "OT_CLK_PAIR_BAL inactive: no estimate_parasitics -global_routing in $S"; fi
+fi
 # KW-FIX-35-F2 11-08 (FLOW class F follow-up, CTS DPL-0033): CTS-stage legalization uses the kit's own 3_5 legalizer.
 # ORFS erases DETAIL_PLACEMENT_ARGS outside the place stage, so stock cts.tcl (and clk_leaf_repeat) call a bare
 # detailed_placement = the negotiation legalizer, which stalled with residual overlaps where 3_5's diamond pass was 100 %

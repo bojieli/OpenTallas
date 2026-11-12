@@ -175,6 +175,7 @@ def binding(tt_ps, ff_ps=None, tol_ps=40.0, basis_tt="plan clock", basis_ff=None
 
 
 LEAF_REPEAT_SRC, LEAF_REPEAT_KIT = "clk_leaf_repeat.tcl", "clk_leaf_repeat_default.tcl"
+PAIR_BAL = "clk_pair_bal.tcl"
 LAYOUT_RENDER_FILES = ("layout_render_hook.sh", "layout_render.tcl", "layout_smells.py")
 
 
@@ -189,6 +190,9 @@ def stage_grt183(kd):
     # clk_leaf_repeat.tcl itself) and in global_route.tcl after the first GRT parasitics estimate (long-branch pass).
     # Opt out per kit: 'export OT_CLK_LEAF_REPEAT = 0' (both) / 'export OT_CLK_LEAF_GRT = 0' (GRT pass) in config.mk.
     shutil.copyfile(_common_flow_file(LEAF_REPEAT_SRC, TOOL.parents[1]), Path(kd) / LEAF_REPEAT_KIT)
+    # OT_CLK_PAIR_BAL (HBM-TAPS 11-12, DEFAULT OFF): post-GRT pair balance, hooked by grt183_make.sh after the leaf grt
+    # pass; inert unless 'export OT_CLK_PAIR_BAL = 1' in config.mk.
+    shutil.copyfile(_common_flow_file(PAIR_BAL, TOOL.parents[1]), Path(kd) / PAIR_BAL)
     # KW-FIX-25/AUTORENDER 11-06 (OWNER visual check + smells): advisory layout PNGs + smells.json after place, GRT, route.
     # grt183_make.sh hooks flow.sh's exit; reads stage ODBs only, writes run/layout_review, never fails a run.
     # Opt out per kit: 'export OT_LAYOUT_RENDER = 0' in config.mk.

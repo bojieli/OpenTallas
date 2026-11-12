@@ -79,6 +79,8 @@ GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "
 # KW-FIX-24/LEAFREP 11-06: grt183_make.sh (a gate root) sources clk_leaf_repeat_default.tcl inside the CTS and GRT
 # steps (clock-tree repeaters): a physical input read at cts, not a gate
 RUNNER_ROOTS["clk_leaf_repeat_default.tcl"] = "cts"
+# OT_CLK_PAIR_BAL (HBM-TAPS 11-12): sourced by grt183_make.sh inside the GRT step (clock delay cells): read at grt
+RUNNER_ROOTS["clk_pair_bal.tcl"] = "grt"
 # KW-FIX-25/AUTORENDER 11-06: advisory renders, read stage ODBs only and write run/layout_review; no stage output depends on them
 GATE_ROOTS |= {"layout_render_hook.sh", "layout_render.tcl", "layout_smells.py"}
 GATE_ROOTS |= {"grt_stall_resume.tcl"}   # KW-FIX-17 11-05 GRT-STALL: inert unless a 5_1_grt stage stalls in -end_incremental
