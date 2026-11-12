@@ -20,6 +20,9 @@ import argparse
 import hashlib
 import json
 import pathlib
+import sys
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 LAYOUT = ROOT / 'rtl/hbm_accel/generic/collective/p2p/static_uop_layout_v4.json'
@@ -30,6 +33,13 @@ ARG_SOURCE_EXTRA = 0         # opt-in _pr publication delay; engine command issu
 VM_RT = 0                    # HBM-BANKLAT-COLL 10-19: COLL parent VM_RT (VM capture n+10+VM_RT); set by --vm-rt
 LEAD = 12                    # VM request of input m at S - LEAD + m (capture +10+VM_RT, sink +11+VM_RT, ARG sees it
                              # +13+VM_RT): LEAD = 12 + VM_RT; the capture/sink/ARG offsets relative to S do not move
+CADENCE = 1                  # issue row cadence in edges (--issue-cadence): 1 = one row per edge (default, unchanged);
+                             # 2 = ISS2E issuer (ot_hgi_coll_issuer_m256v8e): one row every 2nd edge
+# Row offsets of a position's events relative to its START row (o).  Cadence 1 = the historical edge numbers.
+# Cadence 2 keeps every v8 relative EDGE (VM return 13+VM_RT, capture->sink 1, sink->in_slot 2, flush->publish 6, ...) with
+# issuer rows 2 edges apart: a field whose edge offset is odd is emitted one edge late by the issuer pad mask (parent_timing
+# issue_pad_mask); the row it lives in is then (edge - parity) / 2.  Input m: in_slot row m+1 (inputs 2 edges apart).
+II1, II2 = 32, 28            # rows per position: C1 start+24+flush+6; C2 start + 24 inputs + flush + 3 publish rows
 VB, VS = 0x0400, 0x0020      # VM operand sector base, per-position stride (32 sectors, 24 used)
 OBASE, DSTRIDE = 0x41000000, 0x40
 PEEL = 15                    # = W - II, W = LEAD + M + 11 = a position's lifetime in edges (48 - 1 at VM_RT 0):
@@ -58,14 +68,56 @@ def set_vm_rt(v):
     reference positions < 0) and an epilogue of PEEL + 1 rows (positions >= P), the body enters at row PEEL mod II of
     iteration PEEL // II. Programme rows = PEEL + II + (PEEL + 1) + halt = 64 + 2 VM_RT (VM_RT 0: 64, the closed issuer;
     VM_RT 74: 212 -> the 256-row issuer, coordinator HANDOFF 0kj)."""
-    global VM_RT, LEAD, PEEL
-    VM_RT, LEAD = v, 12 + v
-    W = LEAD + M + 11 + ARG_SOURCE_EXTRA
+    global VM_RT, LEAD, PEEL, LIFE, T
+    VM_RT = v
+    if CADENCE == 1:
+        LEAD = 12 + v
+        T = dict(cap=2, snk=1, flush=M + 1, pub=M + 7, carg=M + 8 + ARG_SOURCE_EXTRA, dsnk=M + 9 + ARG_SOURCE_EXTRA,
+                 obase=M + 10 + ARG_SOURCE_EXTRA)
+    else:
+        parity_check(v)
+        LEAD = (v + 13) // 2 - 1                                 # VM request row -> start row (in_slot row = start + 1)
+        T = dict(cap=1, snk=0, flush=M, pub=M + 3, carg=M + 4, dsnk=M + 4, obase=M + 5)
+    LIFE = T['obase'] + 1                                        # last field row + 1
+    W = LEAD + LIFE
     PEEL = W - II
     rows = 2 * PEEL + II + 2
     if rows > CAP_ROWS:
         raise SystemExit(f'ARGMAX_ROWS_COMPILE FAIL capacity VM_RT={v} LEAD={LEAD} lifetime={W} passes={-(-W // II)} '
                          f'peel={PEEL} rows={rows} > {CAP_ROWS} (--rows 256 = the deeper q3 programme memory)')
+
+
+T = dict(cap=2, snk=1, flush=M + 1, pub=M + 7, carg=M + 8, dsnk=M + 9, obase=M + 10)   # cadence 1 defaults
+LIFE = M + 11
+
+
+def set_cadence(c):
+    global CADENCE, II
+    if c not in (1, 2):
+        raise SystemExit('ARGMAX_ROWS_COMPILE FAIL --issue-cadence must be 1 or 2')
+    if c == 2:
+        if ARG_SOURCE_EXTRA or START_O:
+            raise SystemExit('ARGMAX_ROWS_COMPILE FAIL --issue-cadence 2 does not support --start-reg / --arg-pr-source '
+                             '(their 1-edge shifts are odd and have no pad-mask parity yet)')
+    CADENCE, II = c, (II1 if c == 1 else II2)
+
+
+def field_parity(vm_rt):
+    """edge parity (0 = issue-row edge, 1 = row edge + 1) every cadence-2 field needs, relative to the in_slot reservation
+    edges (parity 0 by choice).  Derived from the v8 relative edges, see argmax_rows pos_fields."""
+    return dict(vm_rq=(13 + vm_rt) % 2, capture_slot=1, sink_vm=0, in_slot=0, start=1, flush=1, publish=1,
+                capture_arg=0, sink_delivery=1, del_obase=0)
+
+
+def parity_check(vm_rt):
+    import sys
+    sys.path.insert(0, str(ROOT / 'tools/hbm_coll_static'))
+    import parent_timing as PT
+    need = field_parity(vm_rt)
+    have = PT.constants('hard_v8x_iss2e')['issue_pad_fields']        # field -> parity the issuer pad mask provides
+    bad = [f'{k}: needs parity {v}, issuer pad mask provides {have[k]}' for k, v in need.items() if have[k] != v]
+    if bad:
+        raise SystemExit('ARGMAX_ROWS_COMPILE FAIL odd fixed latency at C=2 (VM_RT %d): %s' % (vm_rt, '; '.join(bad)))
 
 
 def set_rows(r):
@@ -121,6 +173,8 @@ def pos_fields(p, o, rank_pub):
     """fields contributed by position p at offset o = cycle - S_p (S_p = LEAD + II p)."""
     d, ar = {}, 0
     m = o + LEAD
+    if CADENCE == 2:
+        return pos_fields_c2(p, o, rank_pub)
     if 0 <= m < M:                                               # VM request
         s = VB + p * VS + m
         d['vm_rq'] = sum(((1 << 16) | (s & 0xffff)) << (17 * b) for b in range(8))
@@ -150,6 +204,40 @@ def pos_fields(p, o, rank_pub):
     return d, ar
 
 
+def pos_fields_c2(p, o, rank_pub):
+    """cadence 2: row offsets o = row - START row; fields of the odd-parity class live in the row whose pad-delayed edge is
+    the required one (parent_timing issue_pad_fields)."""
+    d, ar = {}, 0
+    m = o + LEAD
+    if 0 <= m < M:                                               # VM request (parity 0)
+        s = VB + p * VS + m
+        d['vm_rq'] = sum(((1 << 16) | (s & 0xffff)) << (17 * b) for b in range(8))
+        d['vm_pair_select'] = sum((((2 * j + 1) << 3) | (2 * j)) << (6 * j) for j in range(4))
+        d['vm_meta'] = sum(((1 << 32) | (0xff << 24) | ((4 * m + j) << 16)) << (33 * j) for j in range(4))
+    if 0 <= o + T['cap'] < M:                                    # capture (parity 1, padded)
+        d['capture_slot'] = 0xf << (2 + NPT)
+    if 0 <= o + T['snk'] < M:                                    # VM sink (parity 0)
+        d['sink_slot'] = 0xf << (NPT + 8)
+        d['sink_select'] = sum((2 + NPT + j) << (4 * (NPT + 8 + j)) for j in range(4))
+    if o == 0:                                                   # start (parity 1)
+        ar |= 1 << 48
+        d.update(tkm_cfg_g=G, tkm_cfg_gbase=0)
+    if 1 <= o <= M:
+        ar |= 0xf << 51                                          # four-lane input reservation (parity 0)
+    if o == T['flush']:
+        ar |= 1 << 49
+    if o == T['pub']:
+        ar |= 1 << 50
+    if o == T['carg']:
+        d['capture_arg'] = 1
+    if o == T['dsnk']:
+        d['sink_slot'] = d.get('sink_slot', 0) | (1 << NPT)
+        d['sink_select'] = d.get('sink_select', 0) | ((NPT + 7) << (4 * NPT))
+    if o == T['obase']:
+        d['del_obase'] = OBASE + p * DSTRIDE
+    return d, ar
+
+
 def merge(ds):
     out, ar = {}, (1 << 47) | 0                                  # ARG mode in every row (TKM unused)
     for d, a in ds:
@@ -165,7 +253,7 @@ def fields_at(c, positions, rank_pub):
     ds = []
     for p in positions:
         o = c - (LEAD + II * p)
-        if -LEAD <= o <= M + 10 + ARG_SOURCE_EXTRA:
+        if -LEAD <= o <= LIFE - 1:
             ds.append(pos_fields(p, o, rank_pub))
     d, ar = merge(ds)
     ar |= (rank_pub & 0xff) << 23
@@ -177,7 +265,7 @@ def compile_program(die, P, mutant=None):
     fields = json.loads(LAYOUT.read_text())['fields']
     rank_pub = die
     allp = range(P)
-    halt = II * P + PEEL + 1                                     # one edge after S_{P-1} + 35, the last delivery
+    halt = II * P + PEEL + 1                                     # one row after the last position's last field row
 
     def pack(d):
         out = 0
@@ -190,7 +278,7 @@ def compile_program(die, P, mutant=None):
     words, meta = [], []
     BODY0, END = PEEL, PEEL + II - 1
     i0, entry = divmod(PEEL, II)                                 # body entered at row `entry` of iteration i0
-    K = -(-(LEAD + M + 11 + ARG_SOURCE_EXTRA) // II) + 1                            # positions a body row can reference (filtered)
+    K = -(-(LEAD + LIFE) // II) + 1                            # positions a body row can reference (filtered)
     steps = dict(iter_vm_step=0 if mutant == 'vm_step' else VS, iter_del_step=DSTRIDE)
     if P > i0:
         for r in range(PEEL):                                    # prologue: cycles 0..PEEL-1 (no position < 0)
@@ -215,7 +303,7 @@ def compile_program(die, P, mutant=None):
     # independent unroll against the absolute schedule of all P positions
     if mutant is None:
         unroll(words, meta, fields, lambda c: fields_at(c, allp, rank_pub), halt)
-    return words, meta, dict(P=P, rows=len(words), halt=halt, last_delivery=II * (P - 1) + LEAD + M + 11 + ARG_SOURCE_EXTRA,
+    return words, meta, dict(P=P, rows=len(words), halt=halt, last_delivery=II * (P - 1) + LEAD + LIFE,
                              II=II, body_rows=II, prologue=PEEL, epilogue=PEEL)
 
 
@@ -266,6 +354,8 @@ def main():
     ap.add_argument('--rows', type=int, default=64, help='q3 issuer programme rows (ROWS 64 | 128 | 256)')
     ap.add_argument('--start-reg', action='store_true', help='ARG unit registers start (argmax_m_tp192, d4g SW TP 192)')
     ap.add_argument('--arg-pr-source', action='store_true', help='actual q3 edge _pr ARG publication +1: capture and dependent delivery shift, II32 unchanged; needs >=66 rows at VM_RT0')
+    ap.add_argument('--issue-cadence', type=int, default=1, choices=(1, 2), help='issuer row cadence in edges: 2 = ISS2E '
+                    '(ot_hgi_coll_issuer_m256v8e, parent hard_v8x_iss2e; needs its pad mask), default 1 = unchanged')
     ap.add_argument('--npt', type=int, default=3, help='parent link ports NPT (v4 q3 / v8x NLINK 3: 3; d4g SW v8x NLINK 2: 2)')
     a = ap.parse_args()
     set_rows(a.rows)
@@ -273,6 +363,7 @@ def main():
     global START_O
     START_O = -1 if a.start_reg else 0
     set_arg_pr_source(a.arg_pr_source)
+    set_cadence(a.issue_cadence)
     set_vm_rt(a.vm_rt)
     a.out.mkdir(parents=True, exist_ok=True)
     man = dict(schema='hcoll.rows.argmax.v1', P=a.P, mutant=a.mutant, vm_rt=a.vm_rt, G=G, II=II, VB=VB, VS=VS, OBASE=OBASE,
@@ -281,6 +372,11 @@ def main():
         man.update(rows=a.rows, npt=a.npt, start_reg=a.start_reg)
     if a.arg_pr_source:
         man.update(arg_source_publication_extra=1, source_contract='ot_hgi_coll_argmax_m_tp192_pr', source_adoption='compiler_only_actual_native_caller_pending')
+    if a.issue_cadence == 2:
+        import parent_timing as PT
+        c2 = PT.constants('hard_v8x_iss2e')
+        man.update(issue_cadence=2, parent='hard_v8x_iss2e', II_rows=II, issue_pad_mask=PT.pad_mask_literal(c2),
+                   issue_pad_fields=c2['issue_pad_fields'], field_parity=field_parity(a.vm_rt))
     halt_only = (1 << 44)
     for die in range(2):
         words, meta, info = compile_program(die, a.P, a.mutant)

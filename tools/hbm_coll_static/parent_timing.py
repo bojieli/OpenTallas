@@ -69,7 +69,27 @@ def _hard_v5(sh: int, shp: int) -> dict:
 
 
 HARD_V5 = _hard_v5(5, 1)          # tb_hgi_coll_q_hard_v5.sv COLLPIN: SH=5, SHP=1, child fault +SH+1 (V6 SH=4; V5 5bb671b57 SH=3)
-PARENTS = {"host_v4": HOST_V4, "hard_v5": HARD_V5}
+# hard_v8x_iss2e = ot_hfd_coll_q3_hard_v8x_s with -DOT_COLL_ISSUER256_ISS2E (HBM-TAPS ISS2E issuer ot_hgi_coll_issuer_m256v8e): the
+# fetch loop advances at most every 2nd edge (row k issues at v8 first-row edge + 2k).  The issue-path edge constants are
+# the hard_v5/v8 ones (not independently re-proven here: HBM-TAPS owns them); only the row cadence and the issuer pad mask are
+# new.  The pad mask (-DOT_COLL_ISS8E_PAD_MASK, 1536 bits) delays the masked uop bits by one edge so a field with an odd v8
+# offset can sit on the 2-edge row grid.  Bits are static_uop_layout_v4.json positions (capture_slot 0..9, sink_slot 10..25,
+# sink_select 26..89, ar_high 688..711): capture_slot[5..8] (v8 capture, NPT 3), sink_slot[3] + sink_select nibble 3 (delivery sink),
+# ar_high bits 17..19 = ar start / flush / publish.
+ISS2E_PAD_BITS = (*range(5, 9), 13, *range(38, 42), 705, 706, 707)
+ISS2E_PAD_FIELDS = dict(vm_rq=0, capture_slot=1, sink_vm=0, in_slot=0, start=1, flush=1, publish=1, capture_arg=0,
+                        sink_delivery=1, del_obase=0)
+HARD_V8X_ISS2E = dict(HARD_V5, parent="hard_v8x_iss2e", issue_row_cadence_edges=2,
+                      issue_pad_bits=list(ISS2E_PAD_BITS), issue_pad_fields=dict(ISS2E_PAD_FIELDS))
+PARENTS = {"host_v4": HOST_V4, "hard_v5": HARD_V5, "hard_v8x_iss2e": HARD_V8X_ISS2E}
+
+
+def pad_mask_literal(c: dict) -> str:
+    """the issuer pad mask as the Verilog literal -DOT_COLL_ISS8E_PAD_MASK takes"""
+    v = 0
+    for b in c["issue_pad_bits"]:
+        v |= 1 << b
+    return f"1536'h{v:0384x}"
 
 
 def constants(parent: str = "host_v4") -> dict:
@@ -95,6 +115,10 @@ def check(parent: str, c: dict, tb: Path = TB) -> list:
     """failures of constants c for parent against the evidence (host_v4: the identity; hard_v5: the lockstep bench)"""
     if parent == "host_v4":
         return [f"{k}: {c.get(k)} != host_v4 {v}" for k, v in HOST_V4.items() if k != "parent" and c.get(k) != v]
+    if parent == "hard_v8x_iss2e":
+        ref = HARD_V8X_ISS2E
+        return [f"{k}: {c.get(k)} != {ref[k]}" for k in ("issue_row_cadence_edges", "issue_pad_bits", "issue_pad_fields")
+                if c.get(k) != ref[k]]
     if parent != "hard_v5":
         return [f"unknown parent {parent}"]
     e = tb_facts(tb)
