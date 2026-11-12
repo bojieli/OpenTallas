@@ -1,0 +1,5 @@
+read_verilog -sv -formal -DSYNTHESIS stub_fadd.v sram_beh.v pvm.sv miter.sv
+chparam -set RDMUT 0 miter
+hierarchy -top miter
+proc; flatten; opt_clean; memory -nomap; memory_map; opt -fast; async2sync
+sat -seq 24 -prove-asserts -set-init-zero -show-inputs -verify -timeout 14000

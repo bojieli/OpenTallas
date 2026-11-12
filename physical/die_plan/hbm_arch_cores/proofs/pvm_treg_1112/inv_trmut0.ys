@@ -1,0 +1,11 @@
+# HBM-CORES-B 11-12: TREG invariant - every registered turn-decode copy g_td[*].g_q.q equals the live decode of entry bp
+# (FORMAL asserts in the RTL), proved by k-induction from reset.  Outputs are dropped so only the decode cone remains.
+# TRMUT=0 (1 = negative control, must FAIL).
+read_verilog -sv -formal -DFORMAL -DOT_FP_DATA_NORST /srv/opentallas-scratch2/claude/hbm-cores-b/wt_pvm/rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv
+read_verilog -sv /srv/opentallas-scratch2/claude/hbm-cores-b/wt_pvm/physical/die_plan/hbm_arch_cores/proofs/pvm_treg_1112/../pvm_rdreg_1112/stub_fadd.v
+read_verilog -sv /srv/opentallas-scratch2/claude/hbm-cores-b/pvm_eq0/sram_stub.v
+chparam -set PUBLISH 1 -set RDREG 1 -set TREG 1 -set TRMUT 0 ot_hbm_sm_pv_merge
+hierarchy -top ot_hbm_sm_pv_merge
+proc; flatten; delete -output o:*; opt_clean; memory -nomap; memory_map; opt -fast; async2sync; dffunmap
+stat
+sat -tempinduct -prove-asserts -set-at 1 rst_n 0 -seq 1 -maxsteps 6 -show-ports -verify

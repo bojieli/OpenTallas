@@ -1,0 +1,30 @@
+run_m0_o0_s1.log RDREG_LOCKSTEP RDMUT=0 MODE=0 seed=1 cycles=300041 evs=44359 nodes=9977 pubs=4614 words=73824 folds=1677 first_lat_bad=0 mismatches=0 first=-1 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP PASS 
+run_m0_o0_s2.log RDREG_LOCKSTEP RDMUT=0 MODE=0 seed=2 cycles=300041 evs=45128 nodes=9945 pubs=4593 words=73488 folds=1598 first_lat_bad=0 mismatches=0 first=-1 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP PASS 
+run_m0_o0_s3.log RDREG_LOCKSTEP RDMUT=0 MODE=0 seed=3 cycles=300041 evs=44570 nodes=9989 pubs=4580 words=73280 folds=1698 first_lat_bad=0 mismatches=0 first=-1 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP PASS 
+run_m0_o1_s1.log RDREG_LOCKSTEP RDMUT=0 MODE=1 seed=1 cycles=300041 evs=44638 nodes=37 pubs=4624 words=0 folds=1697 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+run_m0_o1_s2.log RDREG_LOCKSTEP RDMUT=0 MODE=1 seed=2 cycles=300041 evs=44995 nodes=10 pubs=4576 words=0 folds=1671 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+run_m0_o1_s3.log RDREG_LOCKSTEP RDMUT=0 MODE=1 seed=3 cycles=300041 evs=44159 nodes=37 pubs=4605 words=112 folds=1712 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+run_m1_o0_s1.log RDREG_LOCKSTEP RDMUT=1 MODE=0 seed=1 cycles=300041 evs=44359 nodes=9977 pubs=4614 words=73824 folds=1677 first_lat_bad=0 mismatches=83793 first=288 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m1_o0_s2.log RDREG_LOCKSTEP RDMUT=1 MODE=0 seed=2 cycles=300041 evs=45128 nodes=9945 pubs=4593 words=73488 folds=1598 first_lat_bad=0 mismatches=83415 first=457 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m1_o0_s3.log RDREG_LOCKSTEP RDMUT=1 MODE=0 seed=3 cycles=300041 evs=44570 nodes=9989 pubs=4580 words=73280 folds=1698 first_lat_bad=0 mismatches=83250 first=328 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m1_o1_s1.log RDREG_LOCKSTEP RDMUT=1 MODE=1 seed=1 cycles=300041 evs=44638 nodes=37 pubs=4624 words=0 folds=1697 first_lat_bad=0 mismatches=493 first=290 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP FAIL 
+run_m1_o1_s2.log RDREG_LOCKSTEP RDMUT=1 MODE=1 seed=2 cycles=300041 evs=44995 nodes=10 pubs=4576 words=0 folds=1671 first_lat_bad=0 mismatches=206 first=449 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP FAIL 
+run_m1_o1_s3.log RDREG_LOCKSTEP RDMUT=1 MODE=1 seed=3 cycles=300041 evs=44159 nodes=37 pubs=4605 words=112 folds=1712 first_lat_bad=0 mismatches=973 first=313 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP FAIL 
+run_m2_o0_s1.log RDREG_LOCKSTEP RDMUT=2 MODE=0 seed=1 cycles=300041 evs=44359 nodes=9977 pubs=4614 words=73824 folds=1677 first_lat_bad=0 mismatches=69210 first=970 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m2_o0_s2.log RDREG_LOCKSTEP RDMUT=2 MODE=0 seed=2 cycles=300041 evs=45128 nodes=9945 pubs=4593 words=73488 folds=1598 first_lat_bad=0 mismatches=68895 first=992 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m2_o0_s3.log RDREG_LOCKSTEP RDMUT=2 MODE=0 seed=3 cycles=300041 evs=44570 nodes=9989 pubs=4580 words=73280 folds=1698 first_lat_bad=0 mismatches=68700 first=727 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m2_o1_s1.log RDREG_LOCKSTEP RDMUT=2 MODE=1 seed=1 cycles=300041 evs=44638 nodes=37 pubs=4624 words=0 folds=1697 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+run_m2_o1_s2.log RDREG_LOCKSTEP RDMUT=2 MODE=1 seed=2 cycles=300041 evs=44995 nodes=10 pubs=4576 words=0 folds=1671 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+run_m2_o1_s3.log RDREG_LOCKSTEP RDMUT=2 MODE=1 seed=3 cycles=300041 evs=44159 nodes=37 pubs=4605 words=112 folds=1712 first_lat_bad=0 mismatches=105 first=794 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP FAIL 
+run_m3_o0_s1.log RDREG_LOCKSTEP RDMUT=3 MODE=0 seed=1 cycles=300041 evs=186 nodes=44 pubs=3137 words=50192 folds=6 first_lat_bad=0 mismatches=50064 first=1618 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m3_o0_s2.log RDREG_LOCKSTEP RDMUT=3 MODE=0 seed=2 cycles=300041 evs=192 nodes=40 pubs=3096 words=49536 folds=6 first_lat_bad=0 mismatches=49184 first=1414 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m3_o0_s3.log RDREG_LOCKSTEP RDMUT=3 MODE=0 seed=3 cycles=300041 evs=113 nodes=28 pubs=3200 words=51200 folds=6 first_lat_bad=0 mismatches=51152 first=749 ref_fault=0 dut_fault=0 RDREG_LOCKSTEP FAIL 
+run_m3_o1_s1.log RDREG_LOCKSTEP RDMUT=3 MODE=1 seed=1 cycles=300041 evs=180 nodes=37 pubs=3126 words=0 folds=6 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+run_m3_o1_s2.log RDREG_LOCKSTEP RDMUT=3 MODE=1 seed=2 cycles=300041 evs=155 nodes=10 pubs=3106 words=0 folds=6 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+run_m3_o1_s3.log RDREG_LOCKSTEP RDMUT=3 MODE=1 seed=3 cycles=300041 evs=196 nodes=37 pubs=3218 words=112 folds=6 first_lat_bad=0 mismatches=0 first=-1 ref_fault=1 dut_fault=1 RDREG_LOCKSTEP PASS 
+pub_r0_m0.log: PASS shared real64x512 stack publication128words, fixed2edge first scalar, no bubbles PASS conflicting compiled merge/publication slot fails closed 
+pub_r0_m3.log: [269000] %Fatal: tb_hbm_sm_pv_publish.sv:33: Assertion failed in tb_hbm_sm_pv_publish: publication data/tag/order mismatch word=0 
+pub_r0_m4.log: PASS shared real64x512 stack publication128words, fixed2edge first scalar, no bubbles PASS conflicting compiled merge/publication slot fails closed 
+pub_r1_m0.log: PASS shared real64x512 stack publication128words, fixed2edge first scalar, no bubbles PASS conflicting compiled merge/publication slot fails closed 
+pub_r1_m3.log: [270000] %Fatal: tb_hbm_sm_pv_publish.sv:33: Assertion failed in tb_hbm_sm_pv_publish: publication data/tag/order mismatch word=0 
+pub_r1_m4.log: PASS shared real64x512 stack publication128words, fixed2edge first scalar, no bubbles PASS conflicting compiled merge/publication slot fails closed 
