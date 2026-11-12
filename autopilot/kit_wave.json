@@ -45391,5 +45391,9 @@
     ]
    }
   }
- }
+ },
+ "host_share": {
+  "epyc9": 3.0
+ },
+ "host_share_note": "KW-FIX-46 11-12 COORD: S81/HBM waiters on epyc7/epyc8 drain to epyc9 first (1.9 TB, 26/96); remove when epyc9 fills"
 }
