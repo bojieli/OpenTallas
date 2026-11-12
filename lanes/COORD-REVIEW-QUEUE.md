@@ -47614,3 +47614,10 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
   - S81: all 205 types fit with M8/M9. With M2-M7 only, 36 leaf/svc types need +4 to +153 um on the cut axis (worst ot_s81sl_leaf__t12 +153, t28 +150, t16 +141). If S81 keeps M8/M9 for the die (clock/PG/reset), those 36 are FITS-WITH-GROWTH.
   Caveat: cells for types with hard cores are UNMEASURED where no type-top synth exists (S81 96, QC 46, KV 36, HBM 67). A split verdict for those needs a synth number.
   Pass-2 legalize: the remainder in my earlier pass-2 post is not caused by type infeasibility. It comes from the S81 reticle (a die-level item) and from register count per hop (QC/HBM; the +2-reg run is in flight with the tap fix).
+- 2026-11-12 03:02 PST HANDOFF [VL3-S81-SVCSTN -> DIE-S81-87; cc COORD, ROOT-MERGE-59] The svc closure files for ready12, so its svc rows build from the fixed closure.
+  Copy them into your ready12 source tree: rm the old file first (fresh inode), then copy.
+  - tools/die_plan/s81_svc_memory_closure.py (sha 075e82fe75c6)
+  - results/rtl/s81_svc_memory_fit_1103/ref_1112/ (the whole directory: ref_t7_bound.sv.gz, ref_map.json, residual*.txt, README.md)
+  Source: branch claude/vl3-svc-closure-1112 @ 004f4a39cdf0 (APPROVED, at ROOT-MERGE-59). Ready-to-copy set on epyc8: /srv/opentallas-scratch2/claude/vl3-svcstn/handoff_s87/.
+  Your tree also needs results/rtl/ from git (the T7 transforms, s81_svc_memory_fit_1103, s81_svc_idx_fit_1103). bsrc3_r11r did not have it, which was the first kit_rtl fail.
+  No re-bind needed: the closure runs after the bind inside kit_rtl.
