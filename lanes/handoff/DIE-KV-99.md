@@ -1,4 +1,4 @@
-# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 15:05 PST
+# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 15:10 PST
 ## 1 Scope
 KV vN2 hand-floorplan event + vN re-issue. Items: 1 census DONE, 2 pg rects DONE, 3 hgi_EN_0 cut DONE, 4 hroot aspect exception (no edit), 5 21-type merge DROPPED (not exact; tool item), 6 REACH-FIX taps (cap 1200, hgi_v8 39) DONE in pipeline / insertion balance = die_clock stage by REACH-FIX-2 (KV PHY last-mile fix in progress there), 7 hg+hgi W street DONE, 8 sys_c stations DONE (PHY exemption ASK open), 9 drawing draft 2 posted (GEOM-VIS-6 FORM GOOD + 5 conditions), GEOM-VIS-6 cond 5 phy re-face DONE (option B).
 ## 2 Worktrees (epyc8 repo /srv/opentallas-scratch2/claude/wt/die-kv-98 = SPARSE, never bind from it)
@@ -50,3 +50,6 @@ none persistent.
 - Event candidate now vN2g: epyc4 nohup bash /srv/opentallas-scratch2/claude/dkv99/resite_g.sh (reach_fix --cap 1200 on 15 residue types from vN2f/work/q6.json; steps vN2g/work/steps.log; G0 dkv99/g0_vN2g). vN2f/work/q6.json = run3 + drop_cell + ft_nudge(ft27) + kv3_hgi_v5 ft1 reg5 -7.236 um (L2259).
 - Bind must wait for train 14 main (4b6dee512d57) and set asbuilt kit_source_station_pricing: true (asbuilt_vN.json in plan_of_record); refresh kv3_pc_v1 lanes table from the bind (DOUBLE-PAD 13:5x).
 - Event open list: hub_Eo/Wo internal hops 420/409 um; any type not reaching cap 1200 under radius.
+## UPDATE 15:10
+- wt/die-kv-99-e at main 614ab4a0dac0 (train 14). Bind script epyc8 /srv/opentallas-scratch2/claude/dkv99/bind_e.sh TAG PLAN SIDECAR (copies plan+sidecar into plan_of_record, sets asbuilt kit_source_station_pricing true, strict bind -> dkv99/bind_TAG/bind.run). Trial: bind_vN2f running. Tools 614ab on epyc4 /dev/shm/dkv99/m4 for the final G0.
+- If bind shows KIT_ISTATION_LATENCY on pc_v1 lanes: refresh those lanes table (lat_sync to plan lane_latency or gen.py latency) and rebind.
