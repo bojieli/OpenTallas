@@ -43155,3 +43155,22 @@ FAILED [AUTOPILOT cd5a9be84fbd] 2026-11-11 15:52:43 PST AUTOPILOT -> KIT-WAVE-3:
   ALSO ON MY LIST: hd_host_e and hd_st_n4 fix 57f33041467a is MERGED (cd5748bb2223) and approved for relaunch on source_plan_mesh_fix; KW-FIX-45 owns the one relaunch; precheck is wired by KW-FIX-45 as a pre-launch line. I read both place logs when they land.
 - 2026-11-11 16:19 PST RULING [COORD, owner delegated -> CLAND-CLASS-1, DIE-KV-98, DIE-QC-99, TOK-VERIFY-1] Landing-ring timing class (non-guard paths) is ASSIGNED to CLAND-CLASS-1. It has no owner today: GUARD_REG ce36f07 only fixes the guard path, and 4 KV rows fail elsewhere in the ring: kv3_hub_Ei read-select -> input flop -159.5, kv3_io_ft_v1 ft input -> ring write -158/-171, kv3_sys_SD_v1 origin -> read select -63.6, kv3_io_cor. Form per owner rule: a +1 pipeline cycle on the ring read/write leg (latency row, TOK price, EQ with the cycle declared), applied as a CLASS on every die that instantiates the ring (sweep QC/S81/HEAD for the same legs). READY target 2 h; if it misses KV's 20:18 post-cut event, it rides as a follow-up event on vD, not a wait.
 - 2026-11-11 16:19 PST RULING [COORD, owner delegated -> HEAD-94, TOK-VERIFY-1] hd_host_w a3 retime APPROVED: TX_STAGE=1 adds 554 flops between u_mux and u_ctl_tx (the 860-ps / 11-gate path with fanout-86/84 select nets; it also fixes the DRV slew). +1 cycle on lane0 RX -> host276 TX; TOK-VERIFY-1 prices it (owner rule <= 1%). Do it now: the host_w bench + EQ with the cycle declared, then READY in the next HEAD plan event. The 892 FF hold endpoints ride the ZLP kit hook.
+- 2026-11-11 16:20 PST READY [S81-FRAME-FIX-1 -> ROOT-MERGE-59, COORD, DIE-S81-87, TOK-VERIFY-1] S81 as-built BF measurement, corrected: claude/s81-asb-bfret-1111@db302c9bdf (base main da7b5980c6). Replaces the withdrawn a29d655ca4.
+  - Root cause: the extractor (frame_schedule_asb.py) was right and is unchanged. The bf_asbuilt bench lacked the bound-plan fint seam stages (u_s01 +9, u_s12 +4).
+  - Fix:
+    - prepare.py --bound-plan inserts depth-2 ot_dp_st stages per seam, the same cell the bind emits. It refuses if the plan sha or the seam depths differ from the schedule's bound_plan.
+    - The leaf_ret_corr branch is not on this branch (xs_bf unchanged). collect refuses any nonzero corr.
+  - Before/after (old = plain-seam bench, new = bound seams; corr old -9/-4 -> new {}):
+    - col_h9_asb_x/nx: pv e4 324->324, e8 336->345, e13 347->360. Return dates [414..442] -> [423..455].
+    - col_h10_asb_x: pv e1 321->321, e5 330->339, e10 339->348. Return dates [412..436] -> [421..449].
+    - The pv shifts come from the r1/r2 BF x/go inputs crossing u_s01/u_s12; the go_edge shifts match.
+  - Verified per shape:
+    - Walker self-check OK.
+    - Full, tail and router replays PASS. descriptor_fault and payload_fault controls caught.
+    - Native family PASS, with its control caught.
+    - qualify PASS on the new-kit root; refused on old and TYPE-SAFE-5 roots.
+  - New test test_bf_bench_leaf_latency.py: the bench per-leaf return latency (BF and q, 30-32 leaves) must equal the schedule leaf_path. It FAILS on the plain-seam bench (h9 e4e.r 90 vs 99) and PASSES on the fixed one.
+  - DIE-S81-87 NOTE: the ready5 plan (c665c54a2573) deepens col_h9 u_s01 from 11 to 12 (r0->r1 fi lanes fixed_cycles 9->10). col_h10 is unchanged.
+    - If the rebind uses ready5, col_h9 asb_x/nx must be re-extracted and re-measured (about 25 min per shape). prepare.py refuses a mismatch.
+    - Tell me which plan the rebind uses.
+  - Records are opt-in via OT_XS_BF_MEAS: results/rtl/s81_bf_asbuilt_1101/newkit_1111/asbuilt_bf_measure_1111.json. Base column form.
