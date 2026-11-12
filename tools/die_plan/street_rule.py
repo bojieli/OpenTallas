@@ -63,7 +63,7 @@ EPS = 1e-6
 DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, street_fill=0.6, abut_um=G,
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
-                reach_limit_um=405.0, grow_axes="xy")
+                reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
@@ -1024,6 +1024,47 @@ def die_growth(P, grown):
                 reticle_headroom_um=[round(hi[0] - lo[0], 1), round(hi[1] - lo[1], 1)])
 
 
+def reticle_overflow(d):
+    lo, hi = sorted(d["die_after"]), sorted(RETICLE_UM)
+    return max(0.0, lo[0] - hi[0]) + max(0.0, lo[1] - hi[1])
+
+
+def reticle_fit(P, Q, rows, log=print):
+    """greedy: while the die estimate overflows the reticle, revert the grown type whose revert cuts the overflow
+    most per hard violation it fixed (x instances); reverted types keep their base form (row applied=False,
+    reason 'reticle'). Returns the final die estimate and the reverted types."""
+    inst = collections.Counter(p["type"] for p in P.get("partitions") or [])
+    app = {r["type"]: r for r in rows if r.get("applied")}
+    grown = {n: tuple(r["outline_after"]) for n, r in app.items()}
+    d = die_growth(P, grown) if grown else dict(area_pct=0.0, die_after=list(P["die"]["outline_um"]))
+    reverted = []
+    while grown and reticle_overflow(d) > 1e-6:
+        ov = reticle_overflow(d)
+        best = None
+        for n, wh in grown.items():
+            if tuple(wh) == tuple(app[n]["outline_before"]):
+                continue
+            g2 = {k: v for k, v in grown.items() if k != n}
+            d2 = die_growth(P, g2) if g2 else dict(die_after=list(P["die"]["outline_um"]))
+            r = app[n]
+            fixed = sum(v for k, v in (r.get("violations_before") or {}).items() if k in HARD) - \
+                sum(v for k, v in (r.get("violations_after") or {}).items() if k in HARD)
+            score = (ov - reticle_overflow(d2)) / max(1.0, fixed * inst.get(n, 1))
+            key = (score, ov - reticle_overflow(d2), -fixed)
+            if best is None or key > best[0]:
+                best = (key, n, d2)
+        if best is None:
+            break
+        _, n, d2 = best
+        grown.pop(n)
+        Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
+        app[n].update(applied=False, reason="reticle: reverted to fit the die estimate in 26x33 mm")
+        reverted.append(n)
+        d = d2 if grown else dict(area_pct=0.0, die_after=list(P["die"]["outline_um"]), reticle_fits=True)
+        log("  reticle fit: reverted %s -> overflow %.1f um" % (n, reticle_overflow(d)))
+    return d, reverted
+
+
 # ------------------------------------------------------------------------------------------------ G0 hook
 def g0_check(raw, R, plan_dir, mode="warn", repo=None, ref_dirs=(), max_msgs=40, cfg=None):
     """check.py --street-rule warn|error: one finding per (type, kind) with the worst pairs; street / wall /
@@ -1164,24 +1205,40 @@ def cmd_legalize(a):
         rows.append(row)
         if tn is not None:
             Q["partition_types"][n] = tn
-    grown = {r["type"]: tuple(r["outline_after"]) for r in rows if r.get("applied")}
-    die_est = die_growth(P, grown) if grown else dict(area_pct=0.0)
-    out_sha = None
-    if a.out_plan:
+    def write_plan():
         txt = json.dumps(Q, indent=1) + "\n"
         if a.out_plan.endswith(".gz"):
             Path(a.out_plan).write_bytes(gzip.compress(txt.encode()))
         else:
             Path(a.out_plan).write_text(txt)
-        out_sha = hashlib.sha256(Path(a.out_plan).read_bytes()).hexdigest()
+        return hashlib.sha256(Path(a.out_plan).read_bytes()).hexdigest()
+
+    out_sha = None
+    rs_rev = []
+    if a.out_plan:
+        out_sha = write_plan()
+        grown = sorted(r["type"] for r in rows if r.get("applied"))
         if a.rs_halving != "off" and grown:
             outdir = Path(a.rs_out or Path(a.out_plan).parent / "rs")
-            types = sorted(grown)
-            rb = CP.rs_rows(plan, die, repo, types, a.ref_dirs, a.rs_halving, outdir / "before")
-            ra = CP.rs_rows(Path(a.out_plan).resolve(), die, repo, types, a.ref_dirs, a.rs_halving, outdir / "after")
+            rb = CP.rs_rows(plan, die, repo, grown, a.ref_dirs, a.rs_halving, outdir / "before")
+            ra = CP.rs_rows(Path(a.out_plan).resolve(), die, repo, grown, a.ref_dirs, a.rs_halving, outdir / "after")
             for r in rows:
                 if r["type"] in grown:
-                    r["route_supply"] = [CP.rs_summary(rb.get(r["type"])), CP.rs_summary(ra.get(r["type"]))]
+                    rs_ = r["route_supply"] = [CP.rs_summary(rb.get(r["type"])), CP.rs_summary(ra.get(r["type"]))]
+                    p0, p1 = rs_[0].get("p99"), rs_[1].get("p99")
+                    if p0 is not None and p1 is not None and p1 > p0 + cfg["rs_worse"]:
+                        # the advisory route model says the legal form routes worse: keep the base type
+                        Q["partition_types"][r["type"]] = copy.deepcopy(P["partition_types"][r["type"]])
+                        r.update(applied=False, reason="route_supply p99 worse %.2f -> %.2f" % (p0, p1))
+                        rs_rev.append(r["type"])
+    reverted = []
+    if cfg.get("reticle_fit", 1):
+        _, reverted = reticle_fit(P, Q, rows)
+    grown = {r["type"]: tuple(r["outline_after"]) for r in rows if r.get("applied")}
+    die_est = die_growth(P, grown) if grown else dict(area_pct=0.0)
+    die_est.update(reticle_reverted=reverted, rs_reverted=rs_rev)
+    if a.out_plan and (reverted or rs_rev):
+        out_sha = write_plan()
     rec = dict(schema=SCHEMA, mode="legalize", tool="tools/die_plan/street_rule.py", lane="STREET-RULE-1",
                advisory=True, base_plan=str(plan), base_plan_sha256=sha, plan_output=a.out_plan,
                plan_output_sha256=out_sha, die=die, cfg=cfg, die_estimate=die_est,

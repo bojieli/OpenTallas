@@ -214,3 +214,16 @@ def test_locked_axis_never_grows(tmp_path):
     Q = json.loads(out.read_text())["partition_types"]["toy"]
     for h in Q["hard_cores"]:
         assert h["origin_um"][0] + 100.0 <= Q["outline_um"][0] + 1e-6
+
+
+def test_reticle_fit_reverts_growth():
+    P = {"die": {"outline_um": [32990.0, 1000.0]},
+         "partition_types": {"A": {"outline_um": [400.0, 1000.0]}, "B": {"outline_um": [600.0, 1000.0]}},
+         "partitions": [{"name": "a", "type": "A", "origin_um": [0, 0]}, {"name": "b", "type": "B", "origin_um": [400, 0]}]}
+    import copy
+    Q = copy.deepcopy(P)
+    Q["partition_types"]["A"]["outline_um"] = [443.2, 1000.0]
+    rows = [{"type": "A", "applied": True, "outline_before": [400.0, 1000.0], "outline_after": [443.2, 1000.0],
+             "violations_before": {"street": 1}, "violations_after": {}}]
+    d, rev = SR.reticle_fit(P, Q, rows, log=lambda s: None)
+    assert rev == ["A"] and not rows[0]["applied"] and Q["partition_types"]["A"]["outline_um"] == [400.0, 1000.0]
