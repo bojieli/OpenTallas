@@ -162,3 +162,15 @@ def test_kit_rtl_missing_input_fails_and_names_it_without_fallback(monkeypatch, 
         c.main()
     assert str(e.value).startswith('closure inputs missing: ') and want in str(e.value)
     assert called == []
+
+
+def test_idx_pr_defines_only_for_nonzero_pr_reader():
+    """GEN-LINT-IDX-PR 11-12: a svc_lo IRG reader with .PR(1) needs FASTPAD + FP_CS; PR 0 / no reader adds nothing."""
+    pr1 = ("module b;\n    dsdv_idx_rg3_fit #(.DQR(24), .EL(140), .IH(0), .IQD(512), .KR(0), .PR(1), .RH(2), "
+           ".SRAM_MACRO(1'b1)) u_u_irg_02 (\n        .clk(ck));\nendmodule\n")
+    assert c.idx_pr_defines(pr1) == ['OT_IDX_HSLICE_FASTPAD', 'OT_IDX_HSLICE_FP_CS']
+    assert c.idx_pr_defines(pr1.replace('.PR(1)', '.PR(0)')) == []
+    assert c.idx_pr_defines(pr1.replace('.PR(1), ', '')) == []
+    assert c.idx_pr_defines("module b;\n    dsdv_svc_att #(.PR(1)) u_a (.clk(ck));\nendmodule\n") == []
+    nq = pr1.replace('dsdv_idx_rg3_fit', 'dsdv_idx_rg3_nq_fit').replace('.PR(1)', '.PR(2)')
+    assert c.idx_pr_defines(nq) == ['OT_IDX_HSLICE_FASTPAD', 'OT_IDX_HSLICE_FP_CS']

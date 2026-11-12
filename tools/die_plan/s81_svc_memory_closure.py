@@ -283,6 +283,23 @@ def applies(bound_text):
     return all(re.search(r'^\s*' + m + r'\b', bound_text, re.M) for m in NATIVE)
 
 
+# VL3-S81-SVCSTN 11-12 (gen_lint class GEN-LINT-IDX-PR, base svc_lo t2/t3/t5 rtl_check "Can't resolve task name
+# `$fatal'" at dsdv_idx_rg2.sv:1096): the svc_prov IRG pin stages (.PR(n), n != 0, svc_lo .EL(140) .PR(1)) exist only in
+# the S81 svc slice copy that OT_IDX_HSLICE_FASTPAD + OT_IDX_HSLICE_FP_CS select (dsdv_idx_rg2_chunk g_pr_bad guard).
+# The die bind does not carry the svc_prov rtl_defines, so a kit whose bound has such a reader declares exactly these
+# two (gen_phys.kit_rtl_defines passes them to VERILOG_DEFINES: synth, lint and LEC gold read the same design).
+IDX_PR_DEFINES = ('OT_IDX_HSLICE_FASTPAD', 'OT_IDX_HSLICE_FP_CS')
+RE_IDX_PR = re.compile(r'^\s*dsdv_idx_rg3\w*\s+#\(((?:[^()]|\([^()]*\))*)\)', re.M)
+
+
+def idx_pr_defines(closed):
+    """IDX_PR_DEFINES when a dsdv_idx_rg3* reader instance in the closed bound has a non-zero PR parameter, else []."""
+    for params in RE_IDX_PR.findall(closed):
+        m = re.search(r'\.PR\(\s*(\d+)\s*\)', params)
+        if m and int(m.group(1)): return list(IDX_PR_DEFINES)
+    return []
+
+
 def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
@@ -340,6 +357,10 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids + bbs
     if 'sim_files' in kr and str(bound) in kr['sim_files']:
         i = kr['sim_files'].index(str(bound)); kr['sim_files'][i + 1:i + 1] = kids + models
+    pr_defs = idx_pr_defines(closed)
+    if pr_defs:
+        kd = kr.get('defines') or []; kr['defines'] = kd + [d for d in pr_defs if d not in kd]
+        rep['defines_added'] = pr_defs
     edits[rtl / 'kit_rtl.json'] = json.dumps(kr, indent=1)
     for p, t in edits.items(): p.write_text(t)
     bound.write_text(closed)
