@@ -33,9 +33,9 @@ def _plan():
     return {"partition_types": {"col_x__t1": t}}
 
 
-def test_event_marks_only_wide_chains_on_the_outline():
+def test_event_edge_only_marks_only_wide_chains_on_the_outline():
     P = _plan()
-    rows = EV.mark(P)
+    rows = EV.mark(P, all_wide=False)
     st = P["partition_types"]["col_x__t1"]["internal_stations"]
     assert [r[1] for r in rows] == ["bus:frame_int_i0"]
     assert st[0]["sites"] == "float" and "WIDE-FLOAT-1" in st[0]["note"]
@@ -43,12 +43,13 @@ def test_event_marks_only_wide_chains_on_the_outline():
     assert "sites" not in st[2]          # 512 b but no site on the outline
 
 
-def test_event_all_wide_and_idempotent():
+def test_event_default_all_wide_and_idempotent():
     P = _plan()
-    EV.mark(P, all_wide=True)
+    rows = EV.mark(P)
     st = P["partition_types"]["col_x__t1"]["internal_stations"]
-    assert st[2]["sites"] == "float"
-    assert EV.mark(P, all_wide=True) == []
+    assert sorted(r[1] for r in rows) == ["bus:frame_int_i0", "bus:mid_i0"]
+    assert st[2]["sites"] == "float" and "sites" not in st[1]
+    assert EV.mark(P) == []
 
 
 def test_kit_chain_floats_needs_every_entry():

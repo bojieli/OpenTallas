@@ -2,10 +2,13 @@
 """WIDE-FLOAT-1 11-12 plan event: wide face-bus station chains that trace a relay path along the type outline get
 sites="float" (their stages keep the lane's cycle count but are placed by GPL toward the bus's data consumers).
 
-  wide_chain_float_event.py PLAN_IN PLAN_OUT [--min-bits 256] [--types REGEX] [--all-wide]
+  wide_chain_float_event.py PLAN_IN PLAN_OUT [--min-bits 256] [--types REGEX] [--edge-only]
 
-A chain is marked when its conn is bus:X, X is at least --min-bits wide (or the entry's own "bits" is), and at least
-one planned register site lies on the type outline (within 2 um); --all-wide marks every wide bus chain.  Positions
+A chain is marked when its conn is bus:X and X is at least --min-bits wide (or the entry's own "bits" is).  Default
+(11-12 b): every wide bus chain; --edge-only marks only chains with a planned register site on the type outline
+(within 2 um), the first form.  Evidence for the default: on h2_2249 the edge-only form left col_h10_r0_p4 at p99 6.30
+(its 1104-b x_i0 chain runs 13 um inside the E edge to u_cf) and col_h9_r0 at 1.21; all-wide gives 0.63 / 0.94, and
+24 of 26 col types <= 1.0.  Positions
 only in effect: no cycle, port, RTL, outline or core change.  Prints one line per marked chain.
 
 Why: col_* frame buses (1167-1264 b) are padded whole (u_lpad_<bus>, ot_dp_dly W+1 x D) at the sites of a
@@ -27,7 +30,7 @@ def on_outline(t, p, tol=2.0):
     return p[0] < tol or p[1] < tol or p[0] > W - tol or p[1] > H - tol
 
 
-def mark(P, min_bits=256, types=None, all_wide=False):
+def mark(P, min_bits=256, types=None, all_wide=True):
     out = []
     for tn, t in sorted(P["partition_types"].items()):
         if types and not re.search(types, tn):
@@ -64,10 +67,11 @@ def main():
     ap.add_argument("plan_in"); ap.add_argument("plan_out")
     ap.add_argument("--min-bits", type=int, default=256)
     ap.add_argument("--types")
-    ap.add_argument("--all-wide", action="store_true")
+    ap.add_argument("--edge-only", action="store_true")
+    ap.add_argument("--all-wide", action="store_true", help="(default; kept for old command lines)")
     a = ap.parse_args()
     P = json.load(open(a.plan_in))
-    rows = mark(P, a.min_bits, a.types, a.all_wide)
+    rows = mark(P, a.min_bits, a.types, not a.edge_only)
     for tn, cn, w, n in rows:
         print("WIDE-FLOAT", tn, cn, ("%d b" % w) if w else "(same chain)", "%d sites" % n)
     print("WIDE-FLOAT marked %d chain entries in %d types" % (len(rows), len({r[0] for r in rows})))
