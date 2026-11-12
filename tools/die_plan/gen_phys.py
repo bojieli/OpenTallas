@@ -166,6 +166,12 @@ def _relay_mid_fit(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _macros_all_plan_fixed(t):
+    """KW-FIX-45 11-12 (COORD ruling, PHY MPL-0006): a hard-wrapper type (type.hard) has every macro placed and fixed by the plan
+    (macro_place.tcl place_macro -exact), so rtl_macro_placer is skipped (macro_skip_rtlmp.tcl).  Other types: False."""
+    return bool(t.get("hard")) and bool(t.get("hard_cores"))
+
+
 def _gutter_block_um(budgets, tn):
     """S81-TYPES-5 11-07 NARROW-GUTTER class (gutter_block.tcl + gutter_release.tcl): the gap threshold in um, or None.
     GEN env OT_GUTTER_BLOCK_UM (kit-wave item_env) wins; else budgets.gutter_block_um, for every macro type, or only
@@ -4845,9 +4851,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # (forest_recluster.tcl; only kits whose sources hold ot_pl_land_reset_forest)
            *(["export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"] if forest else []),
            *([f"export ADDITIONAL_LEFS = {' '.join(mlef)}", f"export ADDITIONAL_LIBS = {' '.join(mlib)}",
-              "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
+              "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else []),
+           *(["export PRE_MACRO_PLACE_TCL = /work/macro_skip_rtlmp.tcl"] if macros and _macros_all_plan_fixed(t) else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+        if _macros_all_plan_fixed(t):       # KW-FIX-45 11-12: plan-fixed macros: rtl_macro_placer skipped
+            shutil.copyfile(Path(__file__).with_name("macro_skip_rtlmp.tcl"), kd / "macro_skip_rtlmp.tcl")
         if macro_moves:
             if set(macro_moves) - {m[0] for m in macros}:
                 raise ValueError(f"type {tn}: OT_MACRO_MOVES names no placed macro: {sorted(set(macro_moves) - {m[0] for m in macros})}")
