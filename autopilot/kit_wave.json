@@ -29992,7 +29992,8 @@
     "ot_hgi_coll_tkm_m_tp192__root": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
     "q_spb0__physical_v1": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
     "q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
-    "ot_hbm_su_pg_lane_exp_x_core": "KW-FIX-45 11-11: plan_items_from_allowlist is on for NW_iorly/NE_iorly; this only_items core had no OWNERS row and stays as it was (not launching)"
+    "ot_hbm_su_pg_lane_exp_x_core": "KW-FIX-45 11-11: plan_items_from_allowlist is on for NW_iorly/NE_iorly; this only_items core had no OWNERS row and stays as it was (not launching)",
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": "KW-FIX-45 11-11 20:5x DIE-HBM-97: launch only once DIE-HBM-100 accepts counting of the vecd4ae kit on this mixed src"
    },
    "gen_hosts": [
     "epyc9"
@@ -33418,8 +33419,8 @@
     },
     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": {
      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_rd1_nph",
-     "note": "KW-FIX-45 11-11 20:5x COORD vecd4ae counted kit after rd1 merge (52216309aa) + rd1 30-edge EQ SUCCESS (DIE-HBM-97): src_hbm_rd1_nph = src_hbm_nph_fc5cd3af6f + RTL (hfd_vms_bank_native_q0_faces, ot_vms_bank_q0_faces_core/body, ot_vms_ce_counter_pipe) at a918972c2004 + corelat cycles_vecd4ae_rd1_1111.tsv; recipes_b2.json vecd4ae source_commit a918972c, read_at_commit false (tree files authoritative; the src has no .git). NOT a pure main tree: mixed src, uncounted until DIE-HBM-100 accepts.",
-     "src_sha": "a918972c2004b4a82cd302843e11c8fc9cba1e81"
+     "note": "KW-FIX-45 11-11 20:5x COORD vecd4ae counted kit after rd1 merge (52216309aa) + rd1 30-edge EQ SUCCESS (DIE-HBM-97): src_hbm_rd1_nph = src_hbm_nph_fc5cd3af6f + RTL (hfd_vms_bank_native_q0_faces, ot_vms_bank_q0_faces_core/body, ot_vms_ce_counter_pipe) at a918972c2004 + corelat cycles_vecd4ae_rd1_1111.tsv; recipes_b2.json vecd4ae source_commit a918972c, read_at_commit false (tree files authoritative; the src has no .git). NOT a pure main tree: mixed src, uncounted until DIE-HBM-100 accepts. | 20:5x DIE-HBM-97: recipe source_commit re-pointed to the rd1 merge commit 52216309aab0 (body blob b18e3543f70e and corelat TSV 38a728e71c05 identical at a918972c and at the merge; faces_q0 diff empty).",
+     "src_sha": "52216309aab0d50140a66ea2fa6702f773b0b95f"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
