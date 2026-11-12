@@ -90,3 +90,16 @@ def test_cli_flag(tmp_path):
     new = json.loads((out / "g0_report.json").read_text())
     assert not any(i["check"] == "core_shape_change" for i in base["findings"])
     assert sum(i["check"] == "core_shape_change" for i in new["findings"]) == 1
+
+
+def test_variant_family(tmp_path):
+    # a module with no signed record of its own is checked against its base-name family (_bfp / _cs1 / __cdN): WARN, not ERROR
+    idx = _index(tmp_path, {"core_a": [(10.0, 20.0)], "dsdv_gunit_l1": [(5.0, 6.0)]})
+    assert not _errs(_plan((11.0, 20.0), module="core_a_bfp"), idx)          # not an ERROR
+    R, _ = check.run(_plan((11.0, 20.0), module="core_a_bfp"), completeness=True, core_shape_index=idx)
+    assert [i for i in R.items if i["check"] == "core_shape_change" and i["level"] == "WARN"]
+    R, _ = check.run(_plan((10.0, 20.0), module="core_a_cs1"), completeness=True, core_shape_index=idx)
+    assert not [i for i in R.items if i["check"] == "core_shape_change"]
+    # gunit pieces are different cores, never one family
+    assert not CS.violations(_plan((9.0, 6.0), module="dsdv_gunit_l1f_ba0"), CS.load_index(idx))
+    assert CS.base_name("ot_hbm_sm_attn_be__cd13") == "ot_hbm_sm_attn_be"

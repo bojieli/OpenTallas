@@ -43,6 +43,31 @@ def rec_keys(top, name):
     return ks
 
 
+_SUFFIX = re.compile(r"_(cs\d+|bfp|lfp|r\d+|c\d+|native(_[ew])?|pin)$")
+_PREFIX = re.compile(r"^(hbc_|kl_|dp_|kr_)")
+
+
+def base_name(m):
+    """module base name: build-variant tags stripped (__cd13 / __v700685 / __vecd4ae, _cs1, _bfp, _lfp, _rN, _cN, _native_e,
+    _pin; NOT dsdv_gunit_l1c / l1f_*, which are different cores).  COORD 11-11: closes the name-only gap."""
+    m = _PREFIX.sub("", m)
+    m = re.sub(r"__[a-z]*[0-9a-f]+$", "", m)
+    while True:
+        n = _SUFFIX.sub("", m)
+        if n == m:
+            break
+        m = n
+    return m
+
+
+def family(index):
+    """{base name: [outline_nm tuples]} of the index (all modules sharing a base name)"""
+    fam = {}
+    for k, v in index.get("modules", {}).items():
+        fam.setdefault(base_name(k), set()).update(tuple(s["outline_nm"]) for s in v)
+    return fam
+
+
 def build_index(store=None, coord_tools=None, log=lambda *a: None, main_tree=None):
     """-> index dict from the signed store (verdict SIGNED, outline known), minus retired / COUNT-REVOKED / DO_NOT_COUNT."""
     ct = coord_tools or os.path.expanduser("~/coord/tools")
@@ -145,8 +170,13 @@ def violations(raw, index, slots=True):
     mods = index.get("modules", {})
     exc = _exc_index(raw)
     seen, out = {}, []
+    fam = family(index)
     for tn, inst, m, wh, orient in cores(raw):
         sig = [tuple(s["outline_nm"]) for s in mods.get(m, [])]
+        via = "module"
+        if not sig:
+            sig = sorted(fam.get(base_name(m), ()))            # variant family (same base name)
+            via = "family " + base_name(m)
         if not sig:
             continue                                           # new RTL: nothing signed to preserve
         if any(_fit(wh, s) for s in sig):
@@ -165,7 +195,7 @@ def violations(raw, index, slots=True):
         v = dict(module=m, plan_nm=list(wh), orient=orient, closest_nm=list(near), signed_nm=sorted(list(s) for s in sig),
                  instances=1, where=["%s/%s" % (tn, inst)],
                  rotated_match=any(_fit((wh[1], wh[0]), s) for s in sig),
-                 declared_exception=bool(ex))
+                 declared_exception=bool(ex), via=via)
         seen[key] = v
         out.append(v)
     return out
@@ -174,7 +204,8 @@ def violations(raw, index, slots=True):
 def coverage(raw, index):
     """modules of the plan with a signed shape (checked) / without (new RTL, or signed with no readable DIE_AREA: not checked)"""
     mods = {c[2] for c in cores(raw)}
-    have = sorted(m for m in mods if index.get("modules", {}).get(m))
+    fam = family(index)
+    have = sorted(m for m in mods if index.get("modules", {}).get(m) or fam.get(base_name(m)))
     return dict(modules=len(mods), modules_signed_shape=len(have), modules_no_signed_shape=sorted(mods - set(have)))
 
 
@@ -183,7 +214,8 @@ def message(v):
             % (v["module"], _fmt([x / 1000 for x in v["plan_nm"]]),
                "[" + ", ".join(_fmt([x / 1000 for x in s]) for s in v["signed_nm"][:4]) + ("..." if len(v["signed_nm"]) > 4 else "") + "]",
                _fmt([x / 1000 for x in v["closest_nm"]]), ", the transpose of a signed shape" if v["rotated_match"] else "",
-               " x%d at %s" % (v["instances"], ",".join(v["where"])) if v["instances"] > 1 or v["where"] else ""))
+               " x%d at %s" % (v["instances"], ",".join(v["where"])) if v["instances"] > 1 or v["where"] else "")
+            + ("" if v.get("via") == "module" else " [signed shapes of the %s]" % v["via"]))
 
 
 def check_core_shape(raw, R, index_path):
@@ -191,7 +223,9 @@ def check_core_shape(raw, R, index_path):
     idx = load_index(index_path)
     vs = violations(raw, idx)
     for v in vs:
-        R.err("core_shape_change", message(v))
+        # exact module: ERROR.  Matched only through the base-name variant family (_bfp, _cs1, __cdN ...): WARN, the variant
+        # may be a different design with its own shape; S81-CORES-1 / the die owner confirms or declares an exception
+        (R.err if v["via"] == "module" else R.warn)("core_shape_change", message(v))
     return dict(index=str(index_path), index_generated=idx.get("generated"), cores=len(cores(raw)), violations=len(vs),
                 **coverage(raw, idx))
 
