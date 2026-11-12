@@ -99,6 +99,7 @@ def test_leafcell_one_hb4_per_capped_leaf_on_its_own_leg_in_a_channel(tmp_path):
     nj = {n["name"]: n for n in json.loads((out / "nets.json").read_text())["nets"]}
     b1, b2 = nj["w_r10_a"]["branches"][0], nj["w_lh_n10_a"]["branches"][0]
     assert b1[2] == "lh_n10_a" and b2[2] == "n10_a" and abs(b1[0] + b2[0] - 300.0) < 1e-6   # electrical length kept
+    assert abs(b2[0] - 150.0 * (1 - rep["rows"][0]["frac"])) < 0.2          # the cell drives only the physical rest
     assert nj["w_n10_b"] == nets[4] and nj["w_n9_a"] == nets[0]
     v = (out / "ctree.v").read_text()
     assert "HB4xp67_ASAP7_75t_R lh_n10_a (.A(w_r10_a), .Y(w_lh_n10_a));" in v and f"{BUF} n10_a (.A(w_lh_n10_a)" in v

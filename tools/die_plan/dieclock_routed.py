@@ -497,9 +497,11 @@ def cmd_leafcell(a):
             raise SystemExit("leafcell: %s already has a delay cell" % lf)
         cells[nm] = dict(x=round(x, 3), y=round(y, 3), kind="delay", level=cells[lf].get("level"), lib=a.cell)
         L, layer, load, geo = n["branches"][bi]
-        n["branches"][bi] = [L * f + d if L * f + d > 1.0 else 1.0, layer, nm, geo * f + d]
-        L2 = L * (1 - f) + d
-        nj["nets"].append(dict(name="w_" + nm, drv=nm, branches=[[max(L2, 1.0), layer, load, max(geo * (1 - f) + d, 1.0)]]))
+        # the weak cell drives only the physical rest of the segment (+ its detour); the segment's balance pad stays on
+        # the cell's INPUT side, driven by the leg's own BUFx24 (an HB4xp67 into ~1 mm of 4W pad measured +500 ps)
+        g2 = max(geo * (1 - f) + d, 1.0)
+        n["branches"][bi] = [max(L + 2 * d - g2, 1.0), layer, nm, max(geo * f + d, 1.0)]
+        nj["nets"].append(dict(name="w_" + nm, drv=nm, branches=[[g2, layer, load, g2]]))
         rows.append(dict(leaf=lf, site=[round(x, 3), round(y, 3)], detour_um=round(d, 1), on=n["name"], frac=round(f, 3)))
     (out / "nets.json").write_text(json.dumps(nj) + "\n")
     (out / "place.json").write_text(json.dumps(cells) + "\n")
