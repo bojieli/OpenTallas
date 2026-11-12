@@ -59,12 +59,14 @@ def main(argv=None):
     ap.add_argument("--no-collectors", action="store_true")
     ap.add_argument("--rebank", action="store_true", help="exact banks are regenerated (template = current bank shape) so stations may be added/moved there")
     ap.add_argument("--add-only", help="comma list of lanes: ADD-ONLY mode (ready9): only these lanes, stations of bank slots frozen, stations added only in bank-free slots")
+    ap.add_argument("--only", help="comma list of lanes: process only these (with --rebank: bank regeneration allowed)")
     ap.add_argument("--no-add", action="store_true")
     ap.add_argument("--limit", type=float, default=405.0)
     a = ap.parse_args(argv)
     raw = PR._load(a.inp)
     raw2, ops, rep = PR.run(copy.deepcopy(raw), a.limit, not a.no_add, collectors=not a.no_collectors, rebank=a.rebank,
-                              add_only_lanes=a.add_only.split(',') if a.add_only else None)
+                              add_only_lanes=a.add_only.split(',') if a.add_only else None,
+                              only_lanes=a.only.split(',') if a.only else None)
     bad = sorted({p for p in diff_paths(raw, raw2) if not any(re.fullmatch(d, p.lstrip("/")) for d in DECLARED)})
     if bad:
         print("stage touched undeclared keys:", bad[:10], file=sys.stderr)

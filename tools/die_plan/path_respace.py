@@ -459,15 +459,62 @@ def respace_collectors(raw2, ops, limit, P2=None):
     return rows
 
 
+def _type_site_rects(raw2, tn, skip=None):
+    """bounding rects of every existing bank stage of the type (all ft slots), slot `skip` excluded."""
+    out = []
+    t = raw2["partition_types"][tn]
+    for sl in t.get("ft_slots", []):
+        if sl is skip or "bit_sites_um" not in sl:
+            continue
+        w, h = sl["bit_site_cell_um"]
+        for st in sl["bit_sites_um"]:
+            xs = [x for x, _ in st]
+            ys = [y for _, y in st]
+            out.append((min(xs), min(ys), max(xs) + w, max(ys) + h))
+    return out
+
+
+def _pack_bank(raw2, tn, n, w, h, anchor, avoid, search=240.0, step=4.32):
+    """re-pack: lay n sites (cell w x h) row-major in a free block of R rows x C columns nearest `anchor` (type frame):
+    inside the outline, off the hard cores (+margin) and off every rect in `avoid` (other banks).  -> (sites, centre) or None."""
+    import math
+    W, H = raw2["partition_types"][tn]["outline_um"]
+    block = [(a - MARGIN, b - MARGIN, c + MARGIN, d + MARGIN) for a, b, c, d in
+             [(hc["origin_um"][0], hc["origin_um"][1], hc["origin_um"][0] + hc["outline_um"][0],
+               hc["origin_um"][1] + hc["outline_um"][1]) for hc in raw2["partition_types"][tn].get("hard_cores") or []]]
+    block += list(avoid)
+    cands = []
+    k = int(search / step)
+    for i in range(-k, k + 1):
+        for j in range(-k, k + 1):
+            cands.append((abs(i) + abs(j), i, j))
+    cands.sort()
+    for R in (2, 3, 4, 6, 8, 12):
+        C = math.ceil(n / R)
+        bw, bh = C * w, R * h
+        for _d, i, j in cands:
+            x0 = round((anchor[0] + i * step - bw / 2) / GRID_X) * GRID_X
+            y0 = round((anchor[1] + j * step - bh / 2) / GRID_Y) * GRID_Y
+            if x0 < 0 or y0 < 0 or x0 + bw > W or y0 + bh > H:
+                continue
+            if any(x0 < c and x0 + bw > a and y0 < d and y0 + bh > b for a, b, c, d in block):
+                continue
+            sites = [[round(x0 + (m % C) * w, 5), round(y0 + (m // C) * h, 5)] for m in range(n)]
+            return sites, [round(x0 + bw / 2, 3), round(y0 + bh / 2, 3)]
+    return None
+
+
 def _regen_bank(raw2, tn, sl, new_regs, search=(0.0, 4.32, 8.64, 17.28, 34.56, 69.12)):
     """re-bank: bit_sites_um for len(new_regs)-1 stages; stage j = the template stage min(j, old-1) bank translated rigidly
     (grid-snapped) to new_regs[j]; when that spot is blocked / off the outline the translation is searched on a small
-    ring (+-search um) for the nearest fit, and the station follows its bank.  -> (banks, adjusted regs) or an error string."""
+    ring (+-search um) for the nearest fit, then the bank is RE-PACKED (_pack_bank) in a free block near the station;
+    the station follows its bank.  -> (banks, adjusted regs) or an error string."""
     old = sl["regs_um"]
     bank0 = sl["bit_sites_um"]
     w, h = sl["bit_site_cell_um"]
     W, H = raw2["partition_types"][tn]["outline_um"]
     P2 = type("S", (), {"types": raw2["partition_types"]})
+    avoid = _type_site_rects(raw2, tn, skip=sl)
     banks, regs = [], [list(new_regs[0])]
     for j in range(1, len(new_regs)):
         t = min(j, len(old) - 1)
@@ -478,28 +525,36 @@ def _regen_bank(raw2, tn, sl, new_regs, search=(0.0, 4.32, 8.64, 17.28, 34.56, 6
                 dx = round((new_regs[j][0] + ox - old[t][0]) / GRID_X) * GRID_X
                 dy = round((new_regs[j][1] + oy - old[t][1]) / GRID_Y) * GRID_Y
                 bank = [[round(x + dx, 5), round(y + dy, 5)] for x, y in bank0[t - 1]]
-                if all(0 <= x and 0 <= y and x + w <= W and y + h <= H and _clear(P2, tn, (x + w / 2, y + h / 2)) for x, y in bank):
+                if all(0 <= x and 0 <= y and x + w <= W and y + h <= H and _clear(P2, tn, (x + w / 2, y + h / 2)) for x, y in bank) \
+                        and not _hit(bank, w, h, avoid):
                     got = (bank, [round(old[t][0] + dx, 3), round(old[t][1] + dy, 3)])
                     break
             if got:
                 break
         if not got:
-            return f"bank stage {j} off outline or on a blocker within {search[-1]:g} um"
+            pk = _pack_bank(raw2, tn, len(bank0[t - 1]), w, h, new_regs[j], avoid)
+            if pk is None:
+                return f"bank stage {j}: no free block within 240 um"
+            got = (pk[0], pk[1])
+        xs = [x for x, _ in got[0]]
+        ys = [y for _, y in got[0]]
+        avoid.append((min(xs), min(ys), max(xs) + w, max(ys) + h))
         banks.append(got[0])
         regs.append(got[1])
-    bbs = [(min(x for x, _ in b_), min(y for _, y in b_), max(x for x, _ in b_) + w, max(y for _, y in b_) + h) for b_ in banks]
-    for i in range(len(bbs)):
-        for k in range(i + 1, len(bbs)):
-            a_, b_ = bbs[i], bbs[k]
-            if a_[0] < b_[2] and b_[0] < a_[2] and a_[1] < b_[3] and b_[1] < a_[3]:
-                return f"bank stages {i + 1} and {k + 1} overlap"
     return banks, regs
 
 
-def run(raw, limit=405.0, allow_add=True, collectors=True, rebank=False, add_only_lanes=None):
+def _hit(bank, w, h, avoid):
+    xs = [x for x, _ in bank]
+    ys = [y for _, y in bank]
+    x0, y0, x1, y1 = min(xs), min(ys), max(xs) + w, max(ys) + h
+    return any(x0 < c and x1 > a and y0 < d and y1 > b for a, b, c, d in avoid)
+
+
+def run(raw, limit=405.0, allow_add=True, collectors=True, rebank=False, add_only_lanes=None, only_lanes=None):
     global FREE_BANKS, FREEZE_EXACT, ONLY_LANES
     FREEZE_EXACT = add_only_lanes is not None
-    ONLY_LANES = set(add_only_lanes) if add_only_lanes is not None else None
+    ONLY_LANES = set(add_only_lanes) if add_only_lanes is not None else (set(only_lanes) if only_lanes else None)
     FREE_BANKS = bool(rebank)
     P = S.Plan(raw)
     raw2 = copy.deepcopy(raw)
