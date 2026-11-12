@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-12 03:1x count 272 (flat since 11-11 08:05). Main d09b37890062 (12-branch X+Y: street rule, bus gear, S81 leaf R3-SPREAD, QC s27, die-proto). OWNER directive: one structural event per die by 11-14, checkpoints 11-19 50% / 11-26 90% / 12-12 dies closed. HEAD die clock gate PASS (+1.5 ps signed seam hold). New lanes CORES-HBM-1, CORES-S81-1 for the 54 open hard cores (44 HBM types wait on them).
+2026-11-12 03:44 PST count 272 (flat since 11-11 08:05; dry run on current plans: no signed types under-counted). Main 2ce08e7d69ef (6 trains today: phase-split gate, svc closure, autoclean bind-ref + live-lane guard, state guard, plan-package, bus gear, kv-hg split, fanout cap). OWNER: split release (phase 1 S81/HEAD/QC/KV by 12-12, HBM ~01-02); family fixes, reach by fixed script (REACH-FIX-1), congestion by visual review. Events by 11-14: S81 ready12 binding, KV vN packaged+binding, HEAD fix2 in train M, QC s28 composing. epyc2 now takes phase-1 work (waiters epyc8 245->157, epyc9 93->35).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
