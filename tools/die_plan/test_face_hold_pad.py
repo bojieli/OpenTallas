@@ -117,3 +117,38 @@ def test_parse_real_openroad_end_rows_with_master_column():
            "u_bound.u_cland_ft3_i/g_freg.u_face/q[508]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  224.48  194.15  -30.33 (VIOLATED)\n")
     assert F.parse_end_report(rep) == {"u_bound.u_cland_ft2_i/g_freg.u_face/q[217]$_DFF_P_": -96.93,
                                        "u_bound.u_cland_ft3_i/g_freg.u_face/q[508]$_DFF_P_": -30.33}
+
+
+PORT_ROWS = """\
+FHP p11046 u_bound.u_cland_ft2_i/g_freg.u_face/q[0]$_DFF_P_/D -96.93
+FHP p11047 u_bound.u_cland_ft2_i/g_freg.u_face/q[1]$_DFF_P_/D -30.33
+FHP p11048 u_bound.u_cland_ft3_i/g_freg.u_face/q[2]$_DFF_P_/D 25.0
+FHP NONE u_x/D nan
+FHP p11046 u_dup/D -50.0
+junk
+"""
+
+
+def test_port_rows_key_by_port_and_size():
+    s = F.parse_port_rows(PORT_ROWS)
+    assert s == {"p11046": -96.93, "p11047": -30.33, "p11048": 25.0}
+    spec = F.make_spec(s, by="port")
+    assert spec["by"] == "port" and spec["per_endpoint"] == {"p11046": 3, "p11047": 2}
+    assert "set ::ot_fp_by port" in F.tcl_dict(spec)
+    with pytest.raises(ValueError):
+        F.make_spec(s, by="net")
+
+
+def test_cli_size_port_rows_and_exclusive_inputs(tmp_path):
+    rows = tmp_path / "p.txt"
+    rows.write_text(PORT_ROWS)
+    out = tmp_path / "s.json"
+    assert F.main(["size", "--port-rows", str(rows), "--out", str(out)]) == 0
+    assert json.loads(out.read_text())["by"] == "port"
+    assert F.main(["size", "--out", str(out)]) == 2
+    assert F.main(["size", "--report", str(rows), "--port-rows", str(rows), "--out", str(out)]) == 2
+
+
+def test_hook_traces_port_for_by_port():
+    t = (Path(F.__file__).resolve().parent / "face_hold_pad.tcl").read_text()
+    assert "proc ::ot_fp_port" in t and "getBTerms" in t and '$::ot_fp_by eq "port"' in t
