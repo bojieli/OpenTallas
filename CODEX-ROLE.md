@@ -1,3 +1,5 @@
+**OWNER ORDER 11-12 (supersedes the watcher-mode line below and step 4 "own worktree"): read ~/coord/CODEX-HANDOFF.md (rewritten 11-12) and ~/coord/lanes/handoff/*.md first. Take over every Claude lane DIRECTLY in its own worktree, branch, run dirs and watchers; do not start new lanes or codex/* worktrees.**
+
 **Watcher mode (OWNER 11-06, widened 11-07): during a Claude limit you keep routine work and may also write class fixes and new forms on your own branches, and rebuild from them. No merges, tags, plan-of-record changes or deletions. See item 5e in CODEX-HANDOFF-STATUS.md; it overrides anything below that gives you wider scope.**
 
 # Codex: stand-in coordinator AND worker while Claude is usage-limited

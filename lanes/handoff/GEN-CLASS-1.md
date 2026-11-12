@@ -1,48 +1,50 @@
-# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~07:0x PST)
+# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~10:3x PST)
 
 ## 1 Scope
-Generator / legalize / preflight CLASS fixes (successor of CLAND-CLASS-1 + STREET-RULE-1). Done + APPROVED: CLAND-SLEW-1,
-LAND-OVERRIDE-STALE, legalize role match + FIXED-FACE flag. Open (COORD ~07:0x): (1) SIDECAR-COVERAGE preflight,
-(2) PLAN-SRC-MACRO preflight, (3) classify HEAD-95 hd_spn_wshim_tx slew violators when sent.
+Generator / legalize / preflight CLASS fixes. APPROVED to merge (ROOT-MERGE-60): land-override-stale-1112@cef99b3203,
+cland-slew-1112b@33e70e1695, street-fixedface-1112@a07f957bc5, preflight-sidecar-macro-1112@ad7c108277.
+ACTIVE: FT-HOP-M2-WIRE class fix (COORD-approved plan (1)): post-GRT repair_design -max_wire_length 110 limited to
+ft-station hop nets (other nets dont_touch, restored), 0 cycles. Do NOT do the guide-rewrite M4 floor unless (1)
+leaves violators (per-net layer range does not exist in OpenROAD 26Q3-1510).
 
 ## 2 Worktree
-intel2:/srv/opentallas-scratch2/claude/wt/gen-class-1 (git object store = hub mirror, remote "hub").
-Current branch claude/preflight-sidecar-macro-1112 = hub/main d767dc851b7, NO changes yet.
-Pushed branches (all on hub): claude/land-override-stale-1112@cef99b3203, claude/cland-slew-1112b@33e70e1695
-(ignore claude/cland-slew-1112@3375e6375c, truncated message), claude/street-fixedface-1112@a07f957bc5 (on top of
-street-rule-1112@3cca0a68ed). Scratch: intel2 /srv/opentallas-scratch2/claude/gen-class-1/ (plans/, msg*.txt, patches).
-Tests run with /srv/opentallas-scratch2/claude/rm-ai-1031/venv/bin/python -m pytest -p no:warnings
---basetemp=/srv/opentallas-scratch2/claude/gen-class-1/pt (no xdist).
+intel2:/srv/opentallas-scratch2/claude/wt/gen-class-1, branch claude/ft-hop-m2-1112 (from hub/main d767dc851b7),
+NOT yet committed: tools/die_plan/ft_hop_maxwire.tcl (new), grt_pre.tcl (sources it), gen_phys.py
+(FT_HOP_MAXWIRE_UM=110, armed when the type has ft_slots, partition_types.<t>.ft_hop_maxwire_um override, 0=off),
+schema.py (ft_hop_maxwire_um), test_ft_hop_maxwire.py (5 pass). Ignore the untracked ARCHIVED.json files (not mine).
+Commit when the suite run (below) shows only pre-existing failures.
 
 ## 3 Running jobs
-None on the fleet. (Only a read-only find for S00 logs from localhost; no need to re-run.)
+- wshim_tx proof (GRT->route->signoff, resumed from 4_cts): ot-run client intel2 pid 4002680, host epyc2,
+  kit epyc2:/srv/opentallas-scratch2/claude/gen-class-1/proof/wtx/hd_spn_wshim_tx (source copy wtx_src/), log intel2
+  ~/gc1log/wtx_ftmw.log. Check: tail the log; signoff at <kit>/signoff*/signoff.json; grep OT_FT_MAXWIRE
+  <kit>/run/logs/asap7/*/base/5_1_grt.log.
+- S81 slice_station__t45 GRT-only proof: client pid 3928829 (host epyc7, waiting on load gate), kit
+  epyc7:/srv/opentallas-scratch2/claude/gen-class-1/proof/t45/slice_station__t45, log intel2 ~/gc1log/t45_ftmw.log.
+  Expected no-op (S81 kits already OT_MAXWIRE_UM 62 -> 0 ft hop nets over 110).
+- pytest suite (227 gen_phys-related files) on intel2 in background (output local only; rerun if lost).
 
 ## 4 Watchers
 None.
 
 ## 5 Results not yet posted
-None. Affected list for CLAND-SLEW-1: ~/coord/lanes/gen-class-1/cland-slew-1-affected.tsv (HEAD 23, S81 227, QC 114,
-KV 54, HBM 0); COORD: no blanket re-sign, unsigned types pick it up at next kit.
+- Base GRT usage: wshim_tx M2 3.26 M3 0.02 M4 0.02 M5 0.01 %; t45 M2 4.14 M3 4.70 M4 2.67 M5 0.21 % (GRT-0096,
+  first full route). Compare fix with the same table + route.guide per-layer + 5_2_route per-layer wirelength.
+- S81 slice_station slew violators (t45 a14, 1158) are cland ring nets with fanout 128-160 (u_cland_ft*_i place
+  buffers), NOT ft hops: a CLAND fanout class, report to COORD with the READY.
 
 ## 6 Next steps
-a. SIDECAR-COVERAGE: KW-FIX-46 already has a LIVE kit_wave launch probe (skip reason SIDECAR_STALE,
-   test_kit_wave_sidecar_preflight.py, runtime kit_wave md5 99312e5a91a3; check whether it is in git).
-   Add the generator-side fail-closed check: where gen loads --clock-landing sidecar (grep "clock_landing" in
-   tools/die_plan/gen*.py / clock_landings.py), compare sidecar collector types vs plan partition types BEFORE gen_rtl,
-   raise "SIDECAR_STALE: sidecar <path> lacks N plan part types: ..." ; add kit_wave FAILURE class pattern; test.
-   Rule: if KW-FIX-46's probe is not in git, also land it (coordinate with KW-FIX-46, do not duplicate).
-b. PLAN-SRC-MACRO: HBM S00 (DIE-HBM-101) plan macros at u_fcore.u_core.u_l/u_s absent in src_hbm_main_9446d18f5d.
-   kit_preflight.py has macro_instances (vs bound netlist); make the check run at kit preflight for every die, name
-   the instance and the src, + test. Find S00 receipt first (ask DIE-HBM-101 for path if not found).
-c. When HEAD-95 posts wshim_tx violator names: classify (ring dsel = CLAND-SLEW-1; else name net family).
-d. Post READY per item to lanes/COORD-REVIEW-QUEUE.md via coord-commit.sh.
-
+a. When wshim_tx signoff done: count TT/FF slew pins (signoff/tt/sta.log "SO SLEW_VIOL"); expect 125 -> ~5 (the 5
+   non-ft relay nets); if ft hop violators remain -> report (then COORD decides on M4 guide floor).
+b. t45 GRT: confirm "OT_FT_MAXWIRE: 0 ft hop nets" or count, usage table vs base.
+c. Commit branch claude/ft-hop-m2-1112 (message file style, Co-Authored-By line), push hub, post READY with
+   numbers (slew before/after, buffers added, M2-M5 usage base/fix, +5 point rule), tell HEAD-95 the ECO can drop.
 ## 7 Open READY/ASK
-All 3 earlier READYs approved by COORD (merge lane ROOT-MERGE-60, queue 07:0x). Waiting on HEAD-95 violator names.
-
+FT-HOP-M2 READY pending proof. HEAD-95 informed via CLASS post.
 ## 8 Gotchas
-- ssh heredocs mangle quotes: scp python patch scripts / message files and run them; commit with git commit -F file.
+- ot-run is ~/.local/bin/ot-run (not on PATH in ssh); --dir must exist on the target host.
+- kit_resume manifest: copy the WHOLE kit except run/ (lec/, signoff/ too) or decide() says full rebuild.
+- Never write into a resumed kit's hardlinked files; replace by rm+cp.
+- ssh heredocs mangle quotes: scp python scripts; commit with git commit -F file.
 - Never git in /home/ubuntu/OpenTallas on intel2/localhost. ~/coord only via coord-commit.sh.
-- ot-run: no colons in paths, intel2 cannot ot-run to itself (use epyc8/epyc9); docker verilator needs HOME=/w CCACHE_DISABLE=1.
-- epyc4 kw45 src trees are self-symlinks (ELOOP): avoid epyc4.
-- 3 tests fail on main too: band_reserve band_spread_steps, landing_pin_sites qc52, gen_phys_bump_ports refuse_mismatch.
+- epyc8 load ~230: avoid for heavy runs; epyc2 lightest.

@@ -15,8 +15,12 @@ sr = sorted([h for h in hc if "g_sram" in h["inst"]], key=lambda h: h["inst"])
 TXW, TXH = 169.368, 29.16; RXW, RXH = 51.432, 20.808; SW, SH = 91.8, 39.432
 AB = 2.16; X0 = 69.12; YB = 509.76 + AB; YT = 665.28 - AB - TXH
 log = []
+LAT, Q = 8.64, 0.432   # macro lattice; sub-lattice shift in track_offset_um, quantised to 0.432 (= 9 x 0.048 = 8 x 0.054)
 def put(h, x, y, orient=None):
-    old = (h["origin_um"], h["orient"]); h["origin_um"] = [round(x, 3), round(y, 3)]
+    old = (h["origin_um"], h["orient"])
+    ax, ay = round(round(x / Q) * Q, 3), round(round(y / Q) * Q, 3)
+    ox, oy = round((ax // LAT) * LAT, 3), round((ay // LAT) * LAT, 3)
+    h["origin_um"] = [ox, oy]; h["track_offset_um"] = [round(ax - ox, 3), round(ay - oy, 3)]
     if orient: h["orient"] = orient
     log.append(f"{h['inst']} {old[0]} {old[1]} -> {h['origin_um']} {h['orient']}")
 for row, y in ((0, YB), (1, YT)):
@@ -35,7 +39,7 @@ for i in range(20):
 # reset local taps covered by a moved macro: move each vertically to the nearest side of that macro (+4.32 um),
 # staying out of every hard core; deterministic, nearest first (the reset tree re-solves from these sites)
 def rect(h):
-    x, y = h["origin_um"]; w, hh = h["outline_um"]
+    x, y = h["origin_um"]; dx, dy = h.get("track_offset_um", [0, 0]); x += dx; y += dy; w, hh = h["outline_um"]
     return x, y, x + w, y + hh
 R = [rect(h) for h in hc]
 def blocked(x, y, halo=2.16):
