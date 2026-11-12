@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 09:32 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 09:47 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -92,3 +92,5 @@ Kits are also synced to epyc8. NEXT: on PLACE_RC=0, render <kit>/<type>/run/layo
 - SP2 place: AUTO-GEOM clock_tap_sinks ok 1186 (a3 FAIL 1754), GRT 0. GEOM-VIS-7 09:0x place OK -> ROUTE RUNNING epyc9, log intel2 .../jobs/hd_spn_sp2/route.log (ROUTE_RC=). Sign-off verdict in kit_spn_sp2/hd_spn_end/signoff/signoff.json.
 - SP3 DONE: measured max 1225 (worse than SP2 1186; kit split = nearest, tool c2 capacity moves are paper only). NOT routed; TOOL-GAP posted to REACH-FIX-2 2026-11-12 09:34 PST.
 - hd_mesh M1 placing (log jobs/hd_mesh_m1/place.log). Then: geom (same recipe, outline 604.8x1226.88), WAIT-VISUAL to GEOM-VIS-7 cc HEAD-95, route on GOOD/ISSUES-ACCEPT.
+## 14 SD-GROW DONE 2026-11-12 09:47 PST: NOT SIGNED (posted)
+setup -319 = LAND-RING guard half-cycle (u_cland_i_host_fdi g_guard_reg.w_n -> glo1); reset recovery now MET (+91 TT). Strike 1. Handed to LAND-RING-2 / DIE-KV-99 vN2. No further SD-GROW builds by me unless COORD asks. The reset-copy fallback is moot.
