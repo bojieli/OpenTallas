@@ -300,7 +300,7 @@ endmodule
 //  KMUT 5 = hvn ignores pop, 6 = addr slice read pointer one edge late, 7 = addr sel_q of PC 5 one edge late, 8 = root_ready never seen.
 // KMUT (bench only, HREG=3): 1 = room ignores the in-flight word (store overflow), 2 = sel_q slice 2 of PC 5 takes the grant one edge late,
 //  3 = head_d read pointer copy slice 1 stays one edge late, 4 = control sees the word on the edge it is stored (stale entry PC).
-module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0, parameter integer SEL16=0, parameter integer RSYNC=0, parameter integer SCOPY=0, parameter integer MREG=0)(
+module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, parameter integer CRED=4, parameter [29:0] STACK_SECTORS=30'd703125000, parameter integer HREG=0, parameter integer GIN=0, parameter integer SEL16=0, parameter integer RSYNC=0, parameter integer SCOPY=0, parameter integer MREG=0, parameter integer DCHK=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
@@ -648,7 +648,7 @@ module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, paramete
      kd1[256*i+:256]=kd1[256*i+:256]|({256{sel[i][j]}}&hd_all[286*j+:256]);
      if(kv1[i]&&k_rdy[i]&&sel[i][j])pop1[j]=1;
     end
-    an1[i]=k_wr_done_q[i]&&(outstanding[i]!=0||(kv1[i]&&k_rdy[i]));
+    an1[i]=k_wr_done_q[i]&&(outstanding[i]!=0||(DCHK!=1&&kv1[i]&&k_rdy[i]));
    end
   end
   integer r;
@@ -673,7 +673,7 @@ module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, paramete
     k_v[pc]=1;k_addr[30*pc+:30]=head[selected_g[pc]][285:256];k_wdata[256*pc+:256]=head[selected_g[pc]][255:0];
     if(k_rdy[pc])pop[selected_g[pc]]=1;
    end
-   if(k_wr_done_q[pc]&&(outstanding[pc]!=0||(k_v[pc]&&k_rdy[pc])))ack_now[pc]=1;
+   if(k_wr_done_q[pc]&&(outstanding[pc]!=0||(DCHK!=1&&k_v[pc]&&k_rdy[pc])))ack_now[pc]=1;
   end
  end
  always @(posedge hbm_clk or negedge hrst)if(!hrst)ack_q<=0;else ack_q<=(meta_active&&!hbm_fault)?an_u:16'b0;
@@ -718,7 +718,7 @@ module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, paramete
       2'b01:if(outstanding[h]!=0)outstanding[h]<=outstanding[h]-1'b1;
       default:begin end
      endcase
-     if(k_wr_done_q[h]&&!(outstanding[h]!=0||(kv_u[h]&&k_rdy[h])))hbm_sticky<=1;
+     if(DCHK!=2&&k_wr_done_q[h]&&!(outstanding[h]!=0||(DCHK!=1&&kv_u[h]&&k_rdy[h])))hbm_sticky<=1;
     end
    if(ma0_g)begin
     if(ack_any_g)begin
@@ -743,7 +743,7 @@ module ot_wbq_sw #(parameter integer KMUT=0, parameter integer WOPEN=0, paramete
  endfunction
  generate if(HREG>=2)begin:g_f2
   reg setH;integer z;
-  always @*begin setH=0;for(z=0;z<16;z=z+1)if(k_wr_done_q[z]&&!(outstanding[z]!=0||(kv_u[z]&&k_rdy[z])))setH=1;end
+  always @*begin setH=0;for(z=0;z<16;z=z+1)if(DCHK!=2&&k_wr_done_q[z]&&!(outstanding[z]!=0||(DCHK!=1&&kv_u[z]&&k_rdy[z])))setH=1;end
   wire setO=ma0_w?setH:(|k_wr_done_q);
   wire setA=ma0_w&&ack_gt_s;
   wire fo_n=hbm_sticky||setO||sf1;
