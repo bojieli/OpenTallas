@@ -1,4 +1,4 @@
-# KW-FIX-46 lane handoff (refreshed 2026-11-12 12:50 PST)
+# KW-FIX-46 lane handoff (refreshed 2026-11-12 13:50 PST)
 
 ## 0 State at 11:56 (supersedes older lines below)
 - LIVE runtime /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot = main 9c8ff818ef19 tools/autopilot + host-gap patch; kit_wave.py md5 acea0a8097c8. Deployed 11:43 under kit_wave.lock (COORD approved). Full pre-deploy backup: rt/tools/autopilot.bak-kw46-predeploy-1112 (roll back = rsync it back under the lock). Dry decision diff old vs new: 0 different of 9.
@@ -8,6 +8,9 @@
 - Fleet fill 11:5x: wave capacity is not the limit (inflight 8/300, queue_fill on). Picks are few because rows are held by rulings (QC/S81/KV WAIT-FORM, S81 STA-2204 FLOW no-retry x11, HBM WAIT-CHILD on ot_pdie_serdes_rx_bm3_rest). Posted to COORD 11:5x.
 - 12:19 LIVE form-wait fix: kit_wave.py md5 e80c38ab368f (backup kit_wave.py.bak-kw46-formwait-1112); branch claude/kw-fix-46-formwait-1112 @ 0b0d2b5425fb (hub) = hostgap + verdict_attempt_dir (WAIT-FORM finds the rated attempt in arm/sibling dirs). READY for ROOT-MERGE-60. Worktree /srv/opentallas-scratch2/claude/wt/kw-fix-46-wf. Open: q_su21@3 unit kw-hbm-qsu21-3-13699 runs the BAD form, stop only on COORD word.
 - 12:3x STA2204-1: main gp_noconverge_gate.tcl (md5 8739596e35f3) in bsrc4_r12ng on epyc8/epyc9/intel1 (was hardlinked, replaced by mv, .bak-kw46-sta2204-1112 kept); retry 6 S81 rows committed 824ed7ca091, all launched 12:47. Next: watch them through place 3_4.
+- 13:4x: autopilot.py LIVE md5 6f10f7602534 (backup autopilot.py.bak-kw46-oom-1112): MAX_OOM_RESUBMITS=2 + watchdog STOP attribution by sealed ot-job dir. Re-enqueued hbm PHY_NC 2731c12447d5 a2 (--mem 48) and q_mcb_ne 58ab1566e512 a3 (--mem 108) at 13:40. q_su21@3 record CANCELLED/WAIT-FORM.
+- Branch claude/kw-fix-46-formwait-1112 @ 66d6df6af0ac READY (2 commits on main 59f6e468468a): OOM/watchdog + resign.py ff_vclk_args (STA2204-1 bound-ff replay, --source-record). watchdog.py and resign.py/auto_resign.py go live only via the merge. pytest venv: /srv/opentallas-scratch2/claude/rm-ai-1031/venv/bin/python.
+- Watching 6 S81 STA2204 rows to place 3_4: /tmp/kw46_watch6.sh on intel2 -> /tmp/kw46_watch6.final (attempts t2 27, t4 17, t13 26, t15cl 10, t16 18, kv512 34 after RESTAGE). Then report and stop.
 - Stopped per COORD 11:41. Next: ROOT-MERGE-60 merge of the hostgap branch; a class fix for s81 resize.tcl STA-2204 if COORD assigns it.
 
 ## 1 Scope
