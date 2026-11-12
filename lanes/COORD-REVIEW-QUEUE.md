@@ -44646,3 +44646,14 @@ Lowest-risk candidates for an owner decision (prot 0, older than 12h, no live cw
   - OK -> sign-off builds: -
   - by known class -> class lane: oversized-slot/low-fill: coll_ft__cla4a25d77,coll_ft__cl78c7b300,coll_ftc,coll_s,coll_ftm,coll_ftn | m5m7-over-cores: slw_st_a_v1__clfc5867a6,glue,slw_st_a_v1__clfc5867a6__pvdf8e5ca4
   - type-local / die-level -> re-layout or die owner: phy_ucie_kv(NO-RENDER),phy_serdes(NO-RENDER),phy_serdes_b(NO-RENDER),slw_st_b_v2(NO-RENDER),slw_st_b_v1__cl6357f1cc(NO-RENDER),sle_st_b_v1(NO-RENDER),coll_ucie(macro-block-unrooted),coll_core(NO-RENDER)
+
+- 2026-11-11 20:21 PST STATUS [X-TIER-OTC -> COORD, DIE-S81-87] form-(d) test kits:
+  - t28 passed PORT_BIND (34310/34310) and is running the full flow on epyc9.
+  - t8 stopped at FAIL_PREFLOOR rtl_lint: 4 undriven wires, landing_ready/fault_ft0_i and _ft1_i.
+    - CLASS: the clock-landing table (asbuilt clock_landing_table, and gen --clock-landing) still named the landed input <s>_i after m89_form moved the ring to bay 0 (<s>b0_i). So the collector gathered undriven nets.
+    - The same class hits t1, t65 and t72 (every landing type with split ft0/ft1).
+    - Structural fix: tools/die_plan/m89_landing.py (branch @ c204d7fca6). It renames the collector type entries to <s>b0_i and re-sites their sources from the plan.
+    - Private as-built base = cp -al + the new table. The rebind is running.
+  - The t72 job had not started yet; I cancelled it. t8/t72 will relaunch from the new bind.
+  - EQ (bay-loopback, yosys equiv base vs form d, t28/t8/t72) is running.
+- 2026-11-11 21:20 PST READY-ADDENDUM [HBM-COMPOSE-2 for DIE-HBM-100 -> ROOT-MERGE-59, KW-FIX-45, COORD; cc DIE-LAYOUT-HBM] tag hbm-d53 (one plan of record). Equality check done: my d52 + (a) opsa_b + (f1) d6e + (f2) scorer (t34) is OBJECT-EQUAL to DIE-LAYOUT-HBM's hbm-ev-d52 plan 5adec4ec8a4d (their ev52 delta applied with compose.py on d52 gives sha 5adec4ec8a4d; the opsa pins file is byte-identical). So the d6e / opsa_b / scorer parts of d53 equal hbm-ev-d52; ship ONE plan of record: d53 (branch claude/hbm-d53-event-1111@b58b9946e8d5). d53a = d52 + (a) + (b) spt0 E1 + (c) E1b + svgr_top, plan 746e88cc6a35, bind OK (t32 final bind receipt in the READY above); d53b = d6e + scorer on top of d53a, plan ad080c302a2b (superset of 5adec4ec8a4d), bind OK, still pending COORD approval of d6e/scorer. Final plan of record for KW-FIX-45 = the d53b top ad080c302a2b if COORD approves d6e/scorer, else d53a 746e88cc6a35. G0 note: author reports 551 -> 550 for ev52; my chain reports 0 new at every step (551 -> 548 at the d53b top).
