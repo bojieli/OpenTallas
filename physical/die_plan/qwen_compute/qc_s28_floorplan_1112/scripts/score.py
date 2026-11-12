@@ -8,7 +8,8 @@ for line in open('parts.tsv'):
     n,t,o,x0,y0,x1,y1=line.rstrip('\n').split('\t'); cur[n]=[float(x0),float(y0),float(x1),float(y1)]; typ[n]=t
 # --- hand floorplan HF-1 (slice band only; everything else unchanged)
 DY=34.56  # cbn_q00 row +34.56 (QC-S28-B gap) on bn_00/bn_10 and tn_00/tn_10 rows, absorbed inside the slice band
-SU=(10143.36+DY,11482.56+DY); MID=(11482.56+DY,13314.24+DY); CTL=(13314.24+DY,14653.44+DY); HC=(14653.44+DY,15431.04+DY)
+# HF-1b (DIEVIEW row re-pitch merged): su 1399.68, mid 1831.68, st/ctl 1339.2, hc 717.12
+SU=(10177.92,11577.60); MID=(11577.60,13409.28); CTL=(13409.28,14748.48); HC=(14748.48,15465.60)
 MIDW=[('fw',622.08),('stm',613.44),('sc',656.64),('fe',578.88)]
 def hand_rects():
     h=copy.deepcopy(cur)

@@ -114,3 +114,63 @@ The source is the release cache (plan_qc99_s27 counted). QC has 2 signed types a
 **Parent types that need a re-kit** (none signed today): 58 reshaped slice types, 3 cbn_q00 types, and 34 moved types. For the moved types the outline is the same, so they re-kit only for the tap/landing re-derive and the new neighbour pin windows. coll_ftc needs its E-window repack.
 
 **Net batch re-sign: 0 types, 0 cores** (at most 2 same-DB re-signs for plan-sha bookkeeping).
+
+## 7. HF-1b: DIEVIEW row re-pitch merged (supersedes the HF-1 row heights; drawings regenerated)
+
+DIEVIEW proposed content-natural rows: hc ~520 / fw-row ~1780 / st 1339 / su ~1400, a total of 5039 against 5357 today. Two things change the split:
+- the cbn_q00 rows need +2 x 34.56;
+- GEOM-VIS-2 saw the hc cell blob at about 436 x 466 (W hc fill 0.21 at 1339, i.e. ~0.54 at 520, which is above the 0.42 QC GRT-fail density).
+
+**Adopted rows** (die y, the same in all 12 columns, sum 5287.68 + 69.12 = 5356.8, no die growth):
+
+| row | y range | height | vs s28 | basis |
+|---|---|---|---|---|
+| bn_00/bn_10 (cbn_q00 +34.56) | 7611.84-10177.92 | 2566.08 | +34.56 | S28-B gap |
+| su | 10177.92-11577.60 | 1399.68 | +60.48 | DIEVIEW: macro-bound 1355 need; opens the su_l1 1.3-um street |
+| fw/stm/sc/fe | 11577.60-13409.28 | 1831.68 | +492.48 | DIEVIEW: pin-bound 1780 need (7.5 kb per E/W face); 51.8 um margin; covers FW-EFACE-BIN structurally |
+| st_a/ctl/st_b | 13409.28-14748.48 | 1339.2 | same shape, moved | DIEVIEW 1222 need: OK |
+| hc0-3 | 14748.48-15465.60 | 717.12 (aspect 0.85-0.87) | -622.08 | fill ~0.39 for W hc, under the 0.42 line; DIEVIEW's 520 is too dense for the observed blob |
+| tn_00/tn_10 (cbn_q00 +34.56) | 15465.60-18031.68 | 2566.08 | +34.56 | S28-B gap |
+
+Mid-row widths are unchanged from HF-1: fw 622.08 / stm 613.44 / sc 656.64 / fe 578.88. R1 and R2 are unchanged.
+
+**Scores current -> HF-1b:**
+- sc through ratio H 0.27 -> 0.15, V 0.24 -> 0.17.
+- stm through ratio H 0.18 -> 0.12, V 0.07 -> 0.14.
+- Highest seam: stm|ctl 0.67.
+- Bit-mm 1,855,138 -> 1,856,939.
+
+**Neighbour seams.**
+- The E/W faces of the strip rows meet only the next column (the fe(k)|fw(k+1) ring) and, for W5, the W strip.
+- S81, KV and HEAD meet QC only through the W-strip PHYs (serdes x3, ucie_kv, coll_ucie), whose rects and face windows do not change. **No neighbour-die seam moves.**
+- coll_ftc E-face ft windows must repack into local y >= 397.44, because W5 fw now starts at 11577.60: 470 um of windows into 639 um, which fits.
+- coll_ftn (signed) and coll_n faces: no lane crosses them toward W5 fw/st_a, so nothing changes.
+
+**Clock.**
+- The root (15608.16, 12821.76) is unchanged; it now lies inside the W0 fe slot (M8/M9 only).
+- The per-column trunks are unchanged.
+- tap_um and the landings are re-derived for all slice types by the generator.
+
+**Die event scope (HF-1b):**
+- Every slice-band partition changes rect: 168 parts in 4 rows x 14 families x 12 columns.
+  - Reshaped: su (36), mid (48), hc (48), 132 in total.
+  - Moved only: st/ctl (36).
+- Plus 24 cbn_q00 parts (+34.56 H), 24 filler strips beside cbx_q10, the coll_ftc window repack, and R1/R2.
+- 185 of 377 parts keep their rects: all other cb rows and the W strip.
+
+**Latency estimate:**
+- Lanes that cross the mid and su rows vertically get about +553 um, so about +1 station.
+- cws from hc gets net about +240 um.
+- The hc->tn FIRM chains lose about 1 station.
+- R1 saves about 5 c.
+- TOK-VERIFY is needed. Cycles are owner pre-approved.
+
+**Re-sign (updates section 6):** the signed QC types are still only coll_ft__cla4a25d77 and coll_ftn. Both are in the W strip, unchanged. **No signed type is in the slice band, so the re-pitch changes the outline of 0 signed types.**
+
+Signed cores inside re-pitched parents keep their views (core-shape freeze):
+- su_c cores x6, su lanes l0-l7, and the cland cores in slw_su_l1 (su row +60.48);
+- the sc2 leaf x3 variants (sc).
+
+Those parents re-kit fresh; none of them is signed.
+
+**Batch re-sign: 0 types and 0 cores.** At most 2 same-DB re-signs of the coll types if the counter keys on the plan sha.

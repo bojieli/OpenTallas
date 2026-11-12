@@ -137,13 +137,13 @@ def column(ax,rects,chains,title,col='E0',X0=None,Y=(7300,15900)):
 def column_fig():
     fig,axs=plt.subplots(1,2,figsize=(22,16)); fig.patch.set_facecolor('#0d1117')
     column(axs[0],cur,CH,'CURRENT s28 slots, column E0 (bn_00 row .. tn_00 row)\nseam label = lane bits crossing / (len x 12 pins/um)')
-    column(axs[1],hand,CHH,'HAND FLOORPLAN HF-1, column E0 (same for all 12 columns, W mirror)\nhc row 777.6 tall, mid row 1831.7 tall, sc 656.6 / fe 578.9 wide, cbn_q00 rows +34.56; R1+R2 re-routes')
+    column(axs[1],hand,CHH,'HAND FLOORPLAN HF-1b, column E0 (same for all 12 columns, W mirror)\nsu 1399.7 / mid 1831.7 / st 1339.2 / hc 717.1 tall, sc 656.6 / fe 578.9 wide, cbn_q00 rows +34.56; R1+R2 re-routes')
     fig.savefig('out/qc_floorplan_column_cur_vs_hand.png',dpi=100,facecolor=fig.get_facecolor(),bbox_inches='tight')
     fig.savefig('out/qc_floorplan_column_cur_vs_hand.svg',facecolor=fig.get_facecolor(),bbox_inches='tight'); plt.close(fig)
 def die_fig():
     fig,axs=plt.subplots(1,2,figsize=(26,11.5)); fig.patch.set_facecolor('#0d1117')
     DW,DH=p['die']['outline_um']
-    for ax,rects,title in ((axs[0],cur,'CURRENT s28 die (31.2 x 25.6 mm)'),(axs[1],hand,'HAND FLOORPLAN HF-1 die (outline unchanged; changed slots outlined red)')):
+    for ax,rects,title in ((axs[0],cur,'CURRENT s28 die (31.2 x 25.6 mm)'),(axs[1],hand,'HAND FLOORPLAN HF-1b die (outline unchanged; changed slots outlined red)')):
         for n,r in rects.items():
             ch = (r!=cur[n])
             ax.add_patch(Rectangle((r[0],r[1]),r[2]-r[0],r[3]-r[1],fc=color(n),ec='#e74c3c' if (ch and rects is hand) else '#17202a',lw=1.4 if ch and rects is hand else 0.3))
