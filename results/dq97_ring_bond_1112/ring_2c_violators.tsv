@@ -1,0 +1,14 @@
+grt_tt_slack_ps	launch	capture	main_launch_tap	main_capture_tap	ring_launch_tap	ring_capture_tap	ring_same_tap
+-38.92	u_bound.u_rrl_187/q$_DFF_P_	u_bound.u_cland_lrst_start_4/q$_DFF_P_	clk_t34	clk_t27	clk_t34	clk_t27	no
+-27.33	u_bound.u_rrl_5/q$_DFF_P_	u_bound.u_cland_lrst_start_0/q$_DFF_P_	clk_t14	clk_t13	clk_t14	clk_t13	no
+-17.16	u_bound.u_cland_arm_ei/u_ring.rp[5]$_DFF_P_	u_bound.u_cland_arm_ei/u_ring.g_tag.g_status_tag.rp_q[2]$_DFF_P_	clk_t13	clk_t12	clk_t13	clk_t13	yes
+-10.78	u_bound.u_cland_dd_ei/u_ring.dch[8].g_pl.u_pl/q[1]$_DFF_P_	u_bound.u_cland_dd_ei/u_ring.dch[8].u_dsel/g_srep.sr[1].u_sel/di[1]$_DFFE_PP_	clk_t19	clk_t17	clk_t19	clk_t19	yes
+-8.24	u_bound.u_cland_dd_ei/u_ring.dch[8].u_dsel/g_srep.sr[1].u_sel/di[3]$_DFFE_PP_	u_bound.u_cland_dd_ei/u_ring.dch[8].u_dsel/g_srep.sr[1].u_sel/di[0]$_DFFE_PP_	clk_t19	clk_t17	clk_t19	clk_t19	yes
+-7.9	u_bound.u_cland_dd_ei/u_ring.dch[8].g_pl.u_pl/q[1]$_DFF_P_	u_bound.u_cland_dd_ei/u_ring.dch[8].u_dsel/g_srep.sr[0].u_sel/di[1]$_DFFE_PP_	clk_t19	clk_t17	clk_t19	clk_t19	yes
+-3.02	u_bound.u_cland_dd_ei/u_ring.dch[8].g_pl.u_pl/q[1]$_DFF_P_	u_bound.u_cland_dd_ei/u_ring.dch[8].u_dsel/g_srep.sr[1].u_sel/di[2]$_DFFE_PP_	clk_t19	clk_t17	clk_t19	clk_t19	yes
+-1.71	u_bound.u_cland_x_su_l0_sc_i/u_fault_port/q$_SDFF_PN0_	u_bound.u_cland_collect_rst_n_t1/fault_o$_SDFF_PN0_	clk_t4	clk_t5	clk_t4	clk_t5	no
+-1.25	u_bound.u_cland_arl_ei/u_ring.rp[5]$_DFF_P_	u_bound.u_cland_arl_ei/u_ring.g_tag.g_status_tag.rp_q[2]$_DFF_P_	clk_t12	clk_t11	clk_t12	clk_t12	yes
+-0.92	u_bound.u_cland_st_ei/u_ring.dch[13].g_pl.u_pl/q[1]$_DFF_P_	u_bound.u_cland_st_ei/u_ring.dch[13].u_dsel/g_srep.sr[0].u_sel/di[1]$_DFFE_PP_	clk_t65	clk_t56	clk_t65	clk_t65	yes
+-0.1	u_bound.u_pd10_x_fw_p1_i_166.r[1]$_DFF_P_	u_bound.u_pd10_x_fw_p1_i_166.r[2]$_DFF_P_	clk_t48	clk_t48	clk_t48	clk_t48	yes
+-0.04	u_bound.u_cland_dd_ei/u_ring.dch[7].g_pl.u_pl/q[1]$_DFF_P_	u_bound.u_cland_dd_ei/u_ring.dch[7].u_dsel/g_srep.sr[1].u_sel/di[1]$_DFFE_PP_	clk_t19	clk_t17	clk_t19	clk_t19	yes
+-0.02	u_bound.u_cland_dd_ei/u_ring.dch[6].g_pl.u_pl/q[1]$_DFF_P_	u_bound.u_cland_dd_ei/u_ring.dch[6].u_dsel/g_srep.sr[1].u_sel/di[1]$_DFFE_PP_	clk_t19	clk_t17	clk_t19	clk_t19	yes

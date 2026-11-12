@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/qc-event-s25/tools_s25/die_plan/wstart_respace.py", line 208, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-event-s25/tools_s25/die_plan/wstart_respace.py", line 191, in main
+    rows = plan_rows(P, types)
+  File "/srv/opentallas-scratch2/claude/qc-event-s25/tools_s25/die_plan/wstart_respace.py", line 151, in plan_rows
+    old = [md(o, cs[0])] + [md(p, q) for p, q in zip(cs, cs[1:])] + ([md(cs[-1], face)] if face else [])
+           ~~^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/qc-event-s25/tools_s25/die_plan/wstart_respace.py", line 24, in <lambda>
+    md = lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1])
+                          ~^^^
+TypeError: 'NoneType' object is not subscriptable

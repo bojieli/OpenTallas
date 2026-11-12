@@ -1,0 +1,22 @@
+QC-EVENT-S26 v2 evidence summary (plan_qc99_s26 779178a990b5)
+gates (same tools: current main + bind-verify-readset dfe657faff + bind-strict-src 1028559501):
+  schema.validate  s25 0 | s26 0
+  G0               s25 265 err/296 warn | s26 265/296, 0 new (g0_diff_s25_s26.txt)
+  station_lint     3 NONMONOTONE advisory both, same rows
+  strict bind      s25 rc0 | s26 v2 rc0 (377 parts, 1921 crossings, 790,393 bits, 0 errors)
+  bus_groups       315252676904 s25 = s26; r8 571c5b26bb1f kept (regen differs only in bus_groups_digest)
+  bind RTL v2 == v1 byte-identical (bind_v1v2_diff.txt: bind.f source-root paths only)
+bind_verify (readset-fixed tool) s25 vs s26 v1 RTL:
+  s25: FAIL compared 2923126 matched 1887728 mismatched 1010688 glue_unmatched 24710 (pre-existing)
+  s26: FAIL compared 2923126 matched 1887728 mismatched 1010688 glue_unmatched 24710
+  -> identical counts; s26 adds 0 mismatches (EQ-neutral vs s25)
+ring-bond tests (claude/die-qc-97-ring-bond-1112@fd1477d9ce0b) on main 40e22dd vs main+ring-bond:
+  test_tap_pair_affinity test_clock_taps_groups test_schema test_gen_phys_clock_landing
+  test_gen_phys_plain_ring test_gen_phys_landing_ff: main 56 pass/3 skip, branch 62 pass/3 skip, 0 fail
+  test_ring_hold_window: 7/7 both
+  total main 63 pass, branch 69 pass, failure set empty on both
+12:00 event aa80315f8fd4 (plan_qc99_1111 7164829ac234) reconcile vs s26:
+  carried: stdir, s2_vis cbf, su_c, egap, s1reach, cb delta c913f7e32292
+  NOT carried (reverts stand; identical to s14 reverted geometry):
+    16 st_a/st_b + 11 stm (owner QC-VIS-RESITE); 9 sul1w sc types + cbn_q01 x3 (owner DIE-QC-99;
+    cbn_q01 differs only by later NK orient events s21-s23)

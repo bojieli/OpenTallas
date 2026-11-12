@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.qc_event_s25.latency_event.v1",
+ "event": "plan_qc99_s25 (QC-EVENT-S25, DIE-QC-99, 11-11)",
+ "items": {
+  "ap2_core_input_lockup": {
+   "plan_key": "clock.core_input_lockup {modules: {qfd_tile_nk_a0c, qfd_tile_nk_rp2_romleaf_rr (the bound NK leaf): [n_a, n_b, tap, rst_n]}, all: true, pipe: 1, pipe_except: [rst_n]}",
+   "cycles": "+1 rclk pipe register on n_a, n_b, tap at every qfd_tile_nk_a0c instance (bind u_pc_nk / u_lk_nk; table bind_core_input_pipe.json in the strict bind output); rst_n lockup only, no pipe",
+   "compiler_record": {
+    "taps": {
+     "before": [
+      3,
+      10,
+      17,
+      24
+     ],
+     "after": [
+      4,
+      11,
+      18,
+      25
+     ]
+    },
+    "rs_fabric": {
+     "before": 74,
+     "after": 79
+    },
+    "tok_delta_pct": -0.26
+   },
+   "eq": "bind_verify adds the declared D to the pipe sinks (bind_core_input_pipe.json); EQ RUNNING at READY time",
+   "bind": "strict bind v4: bind_core_input_pipe.json 186 entries = 62 NK x {n_a, n_b, tap} D=1 (sha 98a1c9167934); 248 lockup latches (62 x 4 incl rst_n); bus_groups unchanged by the pipe (declared separately)"
+  },
+  "cland_qreg": {
+   "plan_key": "partition_types.slw_fw_v3.clock.landing_output_qreg [x_ctl_i]",
+   "port": "sl_W5_ctl__x_ctl_fw__1",
+   "sidecar": {
+    "sched_lat": [
+     3,
+     4
+    ],
+    "K": [
+     20,
+     21
+    ],
+    "output_qreg": 1,
+    "added_cycles": "+1"
+   },
+   "plan_lane": {
+    "lane": "sl_W5_ctl__x_ctl_fw",
+    "cycles": [
+     10,
+     11
+    ],
+    "clock_landing": [
+     5,
+     6
+    ],
+    "count_aligned_cycles": "+1"
+   },
+   "r8_landing": {
+    "file": "runtime r8_sw2.json -> r8_sw2_s25.json (r8.py pads on the s25 strict-bind bus_groups; the s24 bus_groups reproduce the current r8_sw2.json 76cabd11016e member-for-member)",
+    "sha256_12": {
+     "before": "76cabd11016e",
+     "after": "571c5b26bb1f"
+    },
+    "delta": "only the W5 ctl->fw class: sl_W5_ctl__x_ctl_fw ag_own/cc_c/own_ch[0:570] bound 10->11 pad 0, landed 10->11; sl_W5_ctl__x_ctl_fw_p1 own_ch[571:1094]/st_c[0:106] bound 10 pad 0->1, landed 10->11 (+631 pad flops); all other 9045 members unchanged"
+   },
+   "tok": "pending TOK-VERIFY-1 (W5 ctl->fw landed 10 -> 11, one control-lane cycle on one slice)",
+   "not_taken": {
+    "sle_su_l0__cl086d85ba x_st_a_fe_i": "CA port with sched_lat 2: main clock_landings.Landings applies the legacy 'added_cycles must be 3 + qreg' row check to CA ports, strict bind refuses it (tool finding for CLAND-CLASS-1)"
+   }
+  },
+  "cland_freg": {
+   "taken": false,
+   "reason": "landing_ring_wreg.freg is one boolean per type; the 10 candidate types carry ~80 ring buses, 17 failing; the other ~63 extra cycles are unpriced"
+  },
+  "nl_idle_uck": {
+   "taken": false,
+   "reason": "sc_hard_params maps plan params to the as-built leaf by u_<rel> == inst and module; the NL leaf is u_u_t_3_0 / qfd_tile_nl_rp2_romleaf_rr -> PARAM_REGEN 'binds 0 leaves'. Bound RTL stays IDLE_UCK=0 as in s24; signed NL view is the IDLE_UCK=1 build (core LEC EQUIVALENT, COORD 11-07). Tool finding."
+  }
+ }
+}

@@ -218,7 +218,11 @@ def _cland_strip_density(budgets, tn):
     from budgets.cland_strip_density_types (type, then its unsplit base name) else budgets.cland_strip_density; None
     (absent or 0) = unchanged kit.  landing_placement.tcl derives each ring's strip row pitch from its own flop density
     (rows = max(asked rows, ceil(rows-1 density / target)), clamped to the band depth), so no per-type row list is
-    needed; an explicit cland_strip_rows(_types) still sets a floor."""
+    needed; an explicit cland_strip_rows(_types) still sets a floor.  A gen-environment OT_CLAND_STRIP_DENS (kit-wave
+    item_env, pilots) wins over the plan; 0 there opts the type out."""
+    ev = os.environ.get("OT_CLAND_STRIP_DENS")
+    if ev is not None and ev.strip() != "":
+        return float(ev) if float(ev) > 0 else None
     per = budgets.get("cland_strip_density_types") or {}
     v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
     if v is None:
@@ -2704,6 +2708,19 @@ def tap_pair_affinity_exports(t):
     chains = spec.get("chains", False)
     if not isinstance(chains, bool):
         raise ValueError("tap_pair_affinity chains must be a boolean")
+    # DIE-QC-97 11-12: ring_depth / ring_pair_um (default absent = off): inside one count-aligned landing ring a pair also
+    # bonds up to this comb depth / distance (tap_pair_plan.tcl RING; clock pins only)
+    ring = []
+    if "ring_depth" in spec:
+        rd = spec["ring_depth"]
+        if isinstance(rd, bool) or not isinstance(rd, int) or not 0 <= rd <= 4:
+            raise ValueError("tap_pair_affinity ring_depth must be an integer in [0, 4]")
+        ring.append(f"export OT_TAP_PAIR_RING_DEPTH = {rd}")
+    if "ring_pair_um" in spec:
+        ru = float(spec["ring_pair_um"])
+        if not 0 < ru <= 200:
+            raise ValueError("tap_pair_affinity ring_pair_um out of range")
+        ring.append(f"export OT_TAP_PAIR_RING_UM = {ru:g}")
     cap = min(1200, _tap_cap(t))
     if not 0 <= grow <= 0.5:
         raise ValueError("tap_pair_affinity overfull_grow must be in [0, 0.5]")
@@ -2720,7 +2737,24 @@ def tap_pair_affinity_exports(t):
             f"export OT_TAP_PAIR_UM = {pair_um:g}",
             f"export OT_TAP_PAIR_DEPTH = {depth}"] + \
         ([f"export OT_TAP_PAIR_OVERFULL_GROW = {grow:g}"] if grow > 0 else []) + \
-        (["export OT_TAP_PAIR_CHAINS = 1"] if chains else [])
+        (["export OT_TAP_PAIR_CHAINS = 1"] if chains else []) + ring
+
+
+def tap_post_merge_exports(t):
+    """QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"): clock.tap_post_merge_min_sinks
+    (default absent = off).  After every tap assignment / affinity pass a tap left with 0 < n < min sinks merges WHOLE
+    into its nearest tap with >= min sinks, room under the cap and every moved sink within clock.tap_radius_um
+    (clock_taps.tcl POST_MIN).  Clock pins only."""
+    clock = t.get("clock", {})
+    if "tap_post_merge_min_sinks" not in clock:
+        return []
+    pm = clock["tap_post_merge_min_sinks"]
+    if isinstance(pm, bool) or not isinstance(pm, int) or not 1 <= pm <= 1200:
+        raise ValueError("clock.tap_post_merge_min_sinks must be an integer in [1, 1200]")
+    r = float(clock.get("tap_radius_um", 200.))
+    if not 0 < r <= 400:
+        raise ValueError("clock.tap_post_merge_min_sinks needs 0 < clock.tap_radius_um <= 400")
+    return [f"export OT_TAP_POST_MIN_SINKS = {pm}", f"export OT_TAP_POST_MIN_UM = {r:g}"]
 
 
 # COORD 11-09 (HBM-CORES-B): HBM kits hang TYPE-SAFE-1 hop lockup latches (u_fl_rst_*) on their capture tap by
@@ -4931,6 +4965,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += rck_band_exports(P, tn)
     import pad_clock as PC

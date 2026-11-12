@@ -1,0 +1,35 @@
+{
+ "module": "qfd_tile_nl_a0c",
+ "plan_type": "cbx_q10",
+ "boundary_role": {
+  "ck": "clk",
+  "rst_n": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "parent": "actual119 two cbx_q10 types /48 u_t30 copies; parent earlytap balances intrinsic",
+  "io_reference_ps": {
+   "kind": "plan_declared",
+   "tt": 692.6,
+   "ff": 601.9,
+   "basis": "Current declared intrinsic means approved before unsignedICG0build; fixed matching IOreference before repair",
+   "source": "Root coordinator2026-10-29 HARDCORE disposition; intel2 codex-qc-1029/physical_event/plan_start_native_h800.json u_t30.ck insertion692.6/601.9"
+  }
+ },
+ "clock_latency_measured": {
+  "tt": {
+   "n": 1041,
+   "min": 183.57,
+   "mean": 774.38,
+   "max": 831.38,
+   "spread": 647.81
+  },
+  "ff": {
+   "n": 1041,
+   "min": 146.77,
+   "mean": 610.59,
+   "max": 650.34,
+   "spread": 503.57
+  }
+ }
+}

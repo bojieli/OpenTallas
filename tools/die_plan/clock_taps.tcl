@@ -388,6 +388,57 @@ if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) 
 if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1"} {
  source [file join [file dirname [info script]] tap_pair_affinity.tcl]
 }
+# QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"; ring bonding took clk_t84 from 116
+# sinks to 1): OT_TAP_POST_MIN_SINKS (opt-in, plan clock.tap_post_merge_min_sinks) re-runs the small-tap
+# merge AFTER the affinity passes.  A tap left with 0 < n < min sinks moves ALL its clock pins to the nearest tap that
+# has >= min sinks, room under the cap, and every moved sink within OT_TAP_POST_MIN_UM (default 200, = clock.tap_radius_um)
+# of that tap.  Whole-tap moves only: a same-tap pair or group stays same-tap, so no affinity bond is cut.  A tap that
+# carries a hard-core (block) clock pin, and the root port (OT_TAP_PORT, clk), are never emptied.  No legal target -> the tap stays (WARN).  The emptied tap is
+# then dropped like any tap without sinks.  Unset = no change.
+if {[llength $ct_taps] >= 2 && [info exists ::env(OT_TAP_POST_MIN_SINKS)] && $::env(OT_TAP_POST_MIN_SINKS) > 0} {
+  global ct_pk  ;# read by the lsort comparator (this file is sourced from inside an ORFS proc)
+  set ct_pmin $::env(OT_TAP_POST_MIN_SINKS)
+  set ct_prad [expr {([info exists ::env(OT_TAP_POST_MIN_UM)] ? $::env(OT_TAP_POST_MIN_UM) : 200.0) * $ct_dbu}]
+  set ct_pk {}; set ct_pblk {}
+  foreach tp $ct_taps {
+    set l {}; set b 0
+    foreach it [[lindex $tp 1] getITerms] {
+      if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+      lappend l $it
+      if {[string is true -strict [[[$it getInst] getMaster] isBlock]]} { set b 1 }
+    }
+    dict set ct_pk [lindex $tp 0] $l
+    dict set ct_pblk [lindex $tp 0] $b
+  }
+  set ct_pmerged {}; set ct_pkept {}
+  foreach tp [lsort -command {apply {{a b} {global ct_pk; set na [llength [dict get $ct_pk [lindex $a 0]]]; set nb [llength [dict get $ct_pk [lindex $b 0]]]; expr {$na != $nb ? $na - $nb : [string compare [lindex $a 0] [lindex $b 0]]}}}} $ct_taps] {
+    set nm [lindex $tp 0]
+    set its [dict get $ct_pk $nm]
+    set n [llength $its]
+    if {$n == 0 || $n >= $ct_pmin} continue
+    if {[dict get $ct_pblk $nm]} { lappend ct_pkept "${nm}($n):core"; continue }
+    if {$nm eq $ct_port} { lappend ct_pkept "${nm}($n):root"; continue }
+    set best ""; set bd 0
+    foreach t2 $ct_taps {
+      set n2 [llength [dict get $ct_pk [lindex $t2 0]]]
+      if {[lindex $t2 0] eq $nm || $n2 < $ct_pmin || $n2 + $n > $ct_cap} continue
+      set far 0
+      foreach it $its {
+        lassign [[$it getInst] getLocation] sx sy
+        if {abs($sx - [lindex $t2 2]) + abs($sy - [lindex $t2 3]) > $ct_prad} { set far 1; break }
+      }
+      if {$far} continue
+      set d [expr {abs([lindex $tp 2] - [lindex $t2 2]) + abs([lindex $tp 3] - [lindex $t2 3])}]
+      if {$best eq "" || $d < $bd} { set best $t2; set bd $d }
+    }
+    if {$best eq ""} { lappend ct_pkept "${nm}($n)"; continue }
+    foreach it $its { $it disconnect; $it connect [lindex $best 1] }
+    dict set ct_pk [lindex $best 0] [concat [dict get $ct_pk [lindex $best 0]] $its]
+    dict set ct_pk $nm {}
+    lappend ct_pmerged "${nm}($n)->[lindex $best 0]"
+  }
+  puts "OT_CLOCK_TAPS POST_MIN $ct_pmin sinks/tap (radius [expr {$ct_prad / $ct_dbu}] um): [llength $ct_pmerged] small taps merged [join $ct_pmerged { }]; kept [llength $ct_pkept] [join $ct_pkept { }]"
+}
 # TYPE-SAFE-1 11-06 (OWNER 18:5x, clock follows data): every ft hop lockup latch u_fl_* (gen_rtl.ft_hop_lockup) is
 # clocked from the tap of the station flop that drives its D (the LAUNCH station), after every other assignment pass
 # above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap

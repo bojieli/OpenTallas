@@ -1,0 +1,4522 @@
+{
+ "base": "plan_qc99_s24_views.json",
+ "base_sha256": "133f641fe01ba164bd19c22ba25fbac2f017cce446dee6abae37a4a54047c219",
+ "items": {
+  "1_ap2": {
+   "key": "clock.core_input_lockup",
+   "value": {
+    "modules": {
+     "qfd_tile_nk_a0c": [
+      "n_a",
+      "n_b",
+      "tap",
+      "rst_n"
+     ],
+     "qfd_tile_nk_rp2_romleaf_rr": [
+      "n_a",
+      "n_b",
+      "tap",
+      "rst_n"
+     ]
+    },
+    "all": true,
+    "pipe": 1,
+    "pipe_except": [
+     "rst_n"
+    ],
+    "note": "QC-EVENT-S25 11-11: QC-NK-HOLD ap2 fc999610864d (COORD 17:10 APPROVED): +1 DECLARED pipe register then the negative-level lockup latch on NK n_a/n_b/tap; rst_n latch only (pipe_except). TOK-VERIFY-1: tap 3/10/17/24 -> 4/11/18/25, rs_fabric 74 -> 79, 4403.2 -> 4391.6 tok/s (-0.26%, accepted under 12.21)."
+   },
+   "nk_types": [
+    "cbf_q00__cl1b5a6458",
+    "cbf_q00__cl870de686",
+    "cbf_q00_s2",
+    "cbf_q01",
+    "cbf_q01_s2",
+    "cbf_q11",
+    "cbn_q00__cl622f65d2",
+    "cbn_q00__cld7bf7197",
+    "cbn_q00__cldbcda913",
+    "cbn_q01__clab6e67f2",
+    "cbn_q01__cld9ff4c40",
+    "cbn_q01__cldd6ea846",
+    "cbn_q11__cl49ae4555",
+    "cbn_q11__cl5cc92dfe",
+    "cbx_q10__cl89936551",
+    "cbx_q10__cl94a12200"
+   ]
+  },
+  "2_3_cores": [
+   {
+    "type": "cbf_q00__cl1b5a6458",
+    "inst": "u_t00",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      656.652
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        656.517,
+        315.396,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        656.528,
+        315.451,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        656.268,
+        315.44,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00__cl1b5a6458",
+    "inst": "u_t10",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      656.652
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        656.517,
+        920.196,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        656.528,
+        920.251,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        656.268,
+        920.24,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00__cl1b5a6458",
+    "inst": "u_t01",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00__cl1b5a6458",
+    "inst": "u_t11",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        1883.397,
+        920.148,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        1883.408,
+        920.159,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        1883.148,
+        920.112,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00__cl870de686",
+    "inst": "u_t00",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      656.652
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        656.517,
+        315.396,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        656.528,
+        315.451,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        656.268,
+        315.44,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00__cl870de686",
+    "inst": "u_t10",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      656.652
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        656.517,
+        920.196,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        656.528,
+        920.251,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        656.268,
+        920.24,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00__cl870de686",
+    "inst": "u_t01",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00__cl870de686",
+    "inst": "u_t11",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        1883.397,
+        920.148,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        1883.408,
+        920.159,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        1883.148,
+        920.112,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00_s2",
+    "inst": "u_t00",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      656.652
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        656.517,
+        315.396,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        656.528,
+        315.451,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        656.268,
+        315.44,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00_s2",
+    "inst": "u_t10",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        1883.397,
+        315.396,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        1883.408,
+        315.451,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        1883.148,
+        315.44,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00_s2",
+    "inst": "u_t01",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      656.652
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        656.517,
+        920.148,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        656.528,
+        920.159,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        656.268,
+        920.112,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q00_s2",
+    "inst": "u_t11",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        1883.397,
+        920.148,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        1883.408,
+        920.159,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        1883.148,
+        920.112,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01",
+    "inst": "u_t02",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        647.877,
+        315.348,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        647.888,
+        315.359,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        647.628,
+        315.312,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01",
+    "inst": "u_t12",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        647.877,
+        920.148,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        647.888,
+        920.159,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        647.628,
+        920.112,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01",
+    "inst": "u_t03",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01",
+    "inst": "u_t13",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01_s2",
+    "inst": "u_t02",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      656.652
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        656.517,
+        315.348,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        656.528,
+        315.359,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        656.268,
+        315.312,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01_s2",
+    "inst": "u_t12",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      656.652
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        656.517,
+        920.148,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        656.528,
+        920.159,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        656.268,
+        920.112,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01_s2",
+    "inst": "u_t03",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1296.0
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1874.892
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1874.757,
+        315.348,
+        1874.916
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1874.768,
+        315.359,
+        1874.8
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1874.508,
+        315.312,
+        1875.276
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q01_s2",
+    "inst": "u_t13",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1296.0
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1964.088
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1874.892
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1874.757,
+        920.196,
+        1874.916
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1874.768,
+        920.251,
+        1874.8
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1874.508,
+        920.24,
+        1875.276
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q11",
+    "inst": "u_t22",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     77.76,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      306.784,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        306.732,
+        647.877,
+        306.756,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        306.721,
+        647.888,
+        306.811,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        306.768,
+        647.628,
+        306.8,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q11",
+    "inst": "u_t32",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     699.84,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1157.664,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      928.864,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        928.812,
+        647.877,
+        928.836,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        928.801,
+        647.888,
+        928.891,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        928.848,
+        647.628,
+        928.88,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q11",
+    "inst": "u_t23",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     77.76,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      306.656,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        306.684,
+        1883.397,
+        306.708,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        306.629,
+        1883.408,
+        306.719,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        306.64,
+        1883.148,
+        306.672,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbf_q11",
+    "inst": "u_t33",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     699.84,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1157.664,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      928.864,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        928.812,
+        1883.397,
+        928.836,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        928.801,
+        1883.408,
+        928.891,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        928.848,
+        1883.148,
+        928.88,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cl622f65d2",
+    "inst": "u_t00",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        647.877,
+        315.396,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        647.888,
+        315.451,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        647.628,
+        315.44,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cl622f65d2",
+    "inst": "u_t10",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        647.877,
+        920.196,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        647.888,
+        920.251,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        647.628,
+        920.24,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cl622f65d2",
+    "inst": "u_t01",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cl622f65d2",
+    "inst": "u_t11",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        1883.397,
+        920.148,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        1883.408,
+        920.159,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        1883.148,
+        920.112,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cld7bf7197",
+    "inst": "u_t00",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        647.877,
+        315.396,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        647.888,
+        315.451,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        647.628,
+        315.44,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cld7bf7197",
+    "inst": "u_t10",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        647.877,
+        920.196,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        647.888,
+        920.251,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        647.628,
+        920.24,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cld7bf7197",
+    "inst": "u_t01",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cld7bf7197",
+    "inst": "u_t11",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        1883.397,
+        920.148,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        1883.408,
+        920.159,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        1883.148,
+        920.112,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cldbcda913",
+    "inst": "u_t00",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        647.877,
+        315.396,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        647.888,
+        315.451,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        647.628,
+        315.44,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cldbcda913",
+    "inst": "u_t10",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        647.877,
+        920.196,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        647.888,
+        920.251,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        647.628,
+        920.24,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cldbcda913",
+    "inst": "u_t01",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q00__cldbcda913",
+    "inst": "u_t11",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        1883.397,
+        920.148,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        1883.408,
+        920.159,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        1883.148,
+        920.112,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__clab6e67f2",
+    "inst": "u_t02",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        647.877,
+        315.348,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        647.888,
+        315.359,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        647.628,
+        315.312,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__clab6e67f2",
+    "inst": "u_t12",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        647.877,
+        920.148,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        647.888,
+        920.159,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        647.628,
+        920.112,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__clab6e67f2",
+    "inst": "u_t03",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      86.496,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__clab6e67f2",
+    "inst": "u_t13",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cld9ff4c40",
+    "inst": "u_t02",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        647.877,
+        315.348,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        647.888,
+        315.359,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        647.628,
+        315.312,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cld9ff4c40",
+    "inst": "u_t12",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        647.877,
+        920.148,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        647.888,
+        920.159,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        647.628,
+        920.112,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cld9ff4c40",
+    "inst": "u_t03",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      86.496,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cld9ff4c40",
+    "inst": "u_t13",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cldd6ea846",
+    "inst": "u_t02",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        647.877,
+        315.348,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        647.888,
+        315.359,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        647.628,
+        315.312,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cldd6ea846",
+    "inst": "u_t12",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      691.296,
+      737.208
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.096,
+      648.012
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.124,
+        647.877,
+        920.148,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.069,
+        647.888,
+        920.159,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.08,
+        647.628,
+        920.112,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cldd6ea846",
+    "inst": "u_t03",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      86.496,
+      1972.728
+     ],
+     "orient": "MY",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q01__cldd6ea846",
+    "inst": "u_t13",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl49ae4555",
+    "inst": "u_t22",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        647.877,
+        315.396,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        647.888,
+        315.451,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        647.628,
+        315.44,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl49ae4555",
+    "inst": "u_t32",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        647.877,
+        920.196,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        647.888,
+        920.251,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        647.628,
+        920.24,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl49ae4555",
+    "inst": "u_t23",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl49ae4555",
+    "inst": "u_t33",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl5cc92dfe",
+    "inst": "u_t22",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     86.4,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.424,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.372,
+        647.877,
+        315.396,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        315.361,
+        647.888,
+        315.451,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        315.408,
+        647.628,
+        315.44,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl5cc92dfe",
+    "inst": "u_t32",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     69.12
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      737.208
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      648.012
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        647.877,
+        920.196,
+        648.036
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        647.888,
+        920.251,
+        647.92
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        647.628,
+        920.24,
+        648.396
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl5cc92dfe",
+    "inst": "u_t23",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbn_q11__cl5cc92dfe",
+    "inst": "u_t33",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl89936551",
+    "inst": "u_t20",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      656.652
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        656.517,
+        315.348,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        656.528,
+        315.359,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        656.268,
+        315.312,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl89936551",
+    "inst": "u_t30",
+    "module": "qfd_tile_nl_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nl_pins.json",
+     "cores/a0_nl_pins_ck1107.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 692.6,
+     "insertion_ff_ps": 601.9
+    },
+    "tap_now": {
+     "xy": [
+      920.16,
+      656.652
+     ],
+     "orient": "R0",
+     "insertion_ps": 774.38,
+     "insertion_ff_ps": 610.59
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        656.645,
+        920.196,
+        656.699
+       ]
+      ],
+      "M6": [
+       [
+        920.133,
+        656.656,
+        920.207,
+        656.688
+       ]
+      ],
+      "M7": [
+       [
+        920.144,
+        656.268,
+        920.176,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl89936551",
+    "inst": "u_t21",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl89936551",
+    "inst": "u_t31",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl94a12200",
+    "inst": "u_t20",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      656.652
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        656.517,
+        315.348,
+        656.676
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        656.528,
+        315.359,
+        656.56
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        656.268,
+        315.312,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl94a12200",
+    "inst": "u_t30",
+    "module": "qfd_tile_nl_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     77.76
+    ],
+    "pins_file": [
+     "cores/a0_nl_pins.json",
+     "cores/a0_nl_pins_ck1107.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      745.848
+     ],
+     "orient": "R0",
+     "insertion_ps": 692.6,
+     "insertion_ff_ps": 601.9
+    },
+    "tap_now": {
+     "xy": [
+      920.16,
+      656.652
+     ],
+     "orient": "R0",
+     "insertion_ps": 774.38,
+     "insertion_ff_ps": 610.59
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        656.645,
+        920.196,
+        656.699
+       ]
+      ],
+      "M6": [
+       [
+        920.133,
+        656.656,
+        920.207,
+        656.688
+       ]
+      ],
+      "M7": [
+       [
+        920.144,
+        656.268,
+        920.176,
+        657.036
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl94a12200",
+    "inst": "u_t21",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "MY",
+    "origin_um": [
+     86.4,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      535.584,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      315.296,
+      1883.532
+     ],
+     "orient": "MY",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        315.324,
+        1883.397,
+        315.348,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        315.269,
+        1883.408,
+        315.359,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        315.28,
+        1883.148,
+        315.312,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "cbx_q10__cl94a12200",
+    "inst": "u_t31",
+    "module": "qfd_tile_nk_a0c",
+    "orient": "R0",
+    "origin_um": [
+     691.2,
+     1304.64
+    ],
+    "pins_file": [
+     "cores/a0_nk_pins.json",
+     "cores/a0_nk_pins_ck1109.json"
+    ],
+    "tap_was": {
+     "xy": [
+      1149.024,
+      1972.728
+     ],
+     "orient": "R0",
+     "insertion_ps": 665.8,
+     "insertion_ff_ps": 576.5
+    },
+    "tap_now": {
+     "xy": [
+      920.224,
+      1883.532
+     ],
+     "orient": "R0",
+     "insertion_ps": 733.25,
+     "insertion_ff_ps": 586.0
+    },
+    "access": {
+     "pin": "ck",
+     "footprints_um": {
+      "M5": [
+       [
+        920.172,
+        1883.397,
+        920.196,
+        1883.556
+       ]
+      ],
+      "M6": [
+       [
+        920.161,
+        1883.408,
+        920.251,
+        1883.44
+       ]
+      ],
+      "M7": [
+       [
+        920.208,
+        1883.148,
+        920.24,
+        1883.916
+       ]
+      ]
+     }
+    },
+    "params": null,
+    "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib"
+   },
+   {
+    "type": "sle_su_c",
+    "inst": "u_suvm_u_vm8q_u_va",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_va (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "sle_su_c",
+    "inst": "u_suvm_u_vm8q_u_vb",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_vb (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "sle_su_c",
+    "inst": "u_suvm_u_vm8q_u_vc",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_vc (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "sle_su_c",
+    "inst": "u_suvm_u_vm8q_u_cl",
+    "module": "qfd_dv_s8_crh_rp1",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+     "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_cl (qfd_dv_s8_crh_rp1) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json"
+   },
+   {
+    "type": "sle_su_c",
+    "inst": "u_suvm_u_vm8q_u_ch",
+    "module": "qfd_dv_s8_crh_rp1",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+     "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_ch (qfd_dv_s8_crh_rp1) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl19bb38ef",
+    "inst": "u_suvm_u_vm8q_u_va",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_va (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl19bb38ef",
+    "inst": "u_suvm_u_vm8q_u_vb",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_vb (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl19bb38ef",
+    "inst": "u_suvm_u_vm8q_u_vc",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_vc (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl19bb38ef",
+    "inst": "u_suvm_u_vm8q_u_cl",
+    "module": "qfd_dv_s8_crh_rp1",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+     "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_cl (qfd_dv_s8_crh_rp1) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl19bb38ef",
+    "inst": "u_suvm_u_vm8q_u_ch",
+    "module": "qfd_dv_s8_crh_rp1",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+     "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_ch (qfd_dv_s8_crh_rp1) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl92142dac",
+    "inst": "u_suvm_u_vm8q_u_va",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_va (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl92142dac",
+    "inst": "u_suvm_u_vm8q_u_vb",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_vb (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl92142dac",
+    "inst": "u_suvm_u_vm8q_u_vc",
+    "module": "qfd_dv_s8x_vmr",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/proof.json",
+     "proof_sha256": "79471e0c7b906a4017099218ec73fcd4d406baea6923b62ef03b0752477dea0c",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_vc (qfd_dv_s8x_vmr) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl92142dac",
+    "inst": "u_suvm_u_vm8q_u_cl",
+    "module": "qfd_dv_s8_crh_rp1",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+     "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_cl (qfd_dv_s8_crh_rp1) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json"
+   },
+   {
+    "type": "slw_su_c__cl92142dac",
+    "inst": "u_suvm_u_vm8q_u_ch",
+    "module": "qfd_dv_s8_crh_rp1",
+    "lef": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1.lef",
+    "lib": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1_tt.lib",
+    "physical_ft": {
+     "proof": "physical/die_plan/qwen_compute/ft_physical_1106/crh/proof.json",
+     "proof_sha256": "263c3ff947adcc2ab5a03bc31d89f25b2a6be51dfaba43163e53bd0a384b9e72",
+     "unconsumed_outputs": [
+      "ft_ck_o",
+      "ft_rst_o"
+     ]
+    },
+    "native_port_adapter": {
+     "merge": {},
+     "cycles": 0,
+     "tie": {
+      "ft_ck_i": "1'b0",
+      "ft_rst_i": "1'b0"
+     },
+     "note": "DECLARED dead-pin tie (QC-EVENT-S25 11-11, DIE-QC-99, COORD ruling 11-11): core u_suvm_u_vm8q_u_ch (qfd_dv_s8_crh_rp1) pins ft_ck_i, ft_rst_i tied 1'b0; ft_ck_o, ft_rst_o unconsumed (physical_ft.unconsumed_outputs). Reason: METHODOLOGY 12.2a1 die-owned pushdown feed-through pins of the signed core, not used by this plan (no clock.mesh.core_islands / reset use). Unobservable: proof.json isolation graph, re-proved by core_ft_physical.isolation from the signed routed 6_final.v at every kit, = one unary buffer per arc (ot_isl_ckft / ot_isl_rstft) to its ft_*_o port, no other core port, state or load; the logical core header and the bound RTL are unchanged (the 4 ports exist only in the physical black-box header)."
+    },
+    "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json"
+   }
+  ]
+ }
+}

@@ -2047,8 +2047,22 @@
          },
          "chains": {
           "type": "boolean"
+         },
+         "ring_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+         },
+         "ring_pair_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
          }
         }
+       },
+       "tap_post_merge_min_sinks": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1200
        },
        "tap_max_sinks": {
         "type": "integer",
@@ -6397,6 +6411,63 @@
          }
         }
        }
+      }
+     }
+    },
+    "core_input_lockup": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "modules"
+     ],
+     "properties": {
+      "modules": {
+       "type": "object",
+       "minProperties": 1,
+       "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      },
+      "all": {
+       "type": "boolean"
+      },
+      "except": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "types": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "pipe": {
+       "type": "integer",
+       "minimum": 0,
+       "maximum": 4
+      },
+      "pipe_except": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "note": {
+       "type": "string"
       }
      }
     },
