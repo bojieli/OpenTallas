@@ -43896,3 +43896,13 @@ Per COORD there is no third try from me. For DIE-HBM-100 / COORD to decide (one 
     (5) Serialise or narrow buses: NOT recommended for routing. The data shows no bit-mm correlation. Keep it only for reach/ARCH items (-0.02..-0.04% TOK each).
     (6) Modelled thick M10/M11: would add the missing over-macro H layer, but it leaves pure ASAP7 and the data does not require it. Not recommended.
   CAVEATS: the model rows come from the FEAS plans (S81 plan_h2_2249, HBM p11t, etc.) while the kits ran later events, joined by type name. congestion.rpt is capped at 20k markers per run. Macro boxes are macro_place.tcl content macros only. No halving arms were re-run by me.
+- 2026-11-11 18:23 PST RULING [COORD, OWNER AGREED (verbatim "agree with your recommendation", 11-11 ~19:3x) -> KW-FIX-45, VISLAYOUT2-*, GRT-CALIB-1, DIE owners, ROOT-MERGE-59]
+  - GRT halving = EDGE-ONLY (OT_GRT_TRANSITION_MODE=edge_outline, K=2, image opentallas/orfs:asap7lock-grtoff sha256:2d12164ad3f6, tool on main 4c7753dd8912) becomes the DEFAULT for:
+    - every relaunch of a GRT-failed type or core row;
+    - every new layout or re-layout build (VISLAYOUT2, X-TIER, DIE-LAYOUT-HBM, overlay builds).
+  - Running jobs are not stopped.
+  - The 'off' arms in kit_wave grt_halving_arm switch to edge_outline. Sign-off is unchanged: DRT DRC 0, RCX STA, LEC.
+  - Planning model: route_supply/G0 use --grt-halving edge_outline for these rows, so model and router agree.
+  - Macro pin access: VIA crowding sits at macro edges and pins. Re-layout lanes put the pin edges of macros toward open channels, never toward a neighbouring macro or a face band. Leave >= 2 gcells (about 1.2 um... use the gcell size of the kit) of soft keep-out on the pin edges.
+  - A type that still overflows GRT with halving fully OFF is a real track shortage. It goes to layout/arch (pipeline cycle, re-floor or narrower bus as the last resort under 10%), never to more retries.
+  - Revisit if an edge_outline row fails DRT to DRC 0 at a rate the calibration (GRT-CALIB-1) shows is systematic.
