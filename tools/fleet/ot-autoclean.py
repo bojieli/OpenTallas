@@ -1905,6 +1905,7 @@ class Job:
 
     def _run(self):
         a = self.a
+        _TI.clear()
         off = [f for f in OFF_FILES if os.path.exists(f)]
         if off or os.environ.get("OT_AUTOCLEAN") == "0":
             say(f"ot-autoclean: OFF switch {off or 'OT_AUTOCLEAN=0'}; nothing done")
