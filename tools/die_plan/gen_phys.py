@@ -6535,6 +6535,13 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             raise ValueError(f"OT_FLOW_TAG {ft!r}: not a tag name")
         (out / "flow_tag").write_text(ft + "\n")
     write_grt_transition_mode(out)
+    # VISLAYOUT2-QC 11-11: run_kit.sh reads K/flow_tag and K/grt_transition_mode with K = the KIT dir (out/<type>), not
+    # out/, so both were silently dropped (docker env OT_FLOW_TAG= empty; stock router image on edge_outline / off arms).
+    # Copy them into every kit dir as well.
+    for k in kits:
+        for f in ("flow_tag", "grt_transition_mode"):
+            if (out / f).is_file():
+                (Path(k) / f).write_text((out / f).read_text())
     (out / "run_kit.sh").chmod(0o755)
     return kits
 
