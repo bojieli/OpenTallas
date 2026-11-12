@@ -7,7 +7,7 @@
 // No parent physical qualification is claimed. Pairwise child-clock spread,
 // routed reach and die-level calendar checks remain required before adoption.
 module ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72 #(
-    parameter integer MUT = 0,
+    parameter integer MUT = 0, parameter [19:0] LF_CS_HI_D = 20'h22222, parameter [19:0] LF_CS_HI_GS = 20'h22222, parameter [19:0] LF_CS_HO_D = 20'h22222, parameter [19:0] LF_CS_HO_GS = 20'h22222, parameter [19:0] LF_CS_H_G = 20'h44444, parameter [19:0] LF_CS_VNI_D = 20'h00000, parameter [19:0] LF_CS_VNO_D = 20'h00000, parameter [19:0] LF_CS_Y_D = 20'h00000, parameter [19:0] LF_CS_U_D = 20'h00000, parameter [19:0] LF_CS_SW_D = 20'h00000, parameter [19:0] LF_CS_SWR_D = 20'h00000, parameter [19:0] LF_CS_RA_D = 20'h00000, parameter [19:0] LF_CS_RAR_D = 20'h00000, parameter [19:0] LF_CS_VE_D = 20'h00000, parameter [19:0] LF_CS_VER_D = 20'h00000, parameter [19:0] LF_CS_PVS_D = 20'h00000, parameter [19:0] LF_CS_VSP_D = 20'h00000,
     // No production clock book is implied by physical source binding.
     // Enable only with the compiled identity, phase and return-arrival authority.
     parameter integer HBC_ENABLE=0,
@@ -120,7 +120,7 @@ module ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72 #(
     ot_s81_mu72_land #(.W(1106)) u_ml_ret (.ck_w(ck_ML),.ck_r(ck_K),
         .rs_w(lpr_c_u_land),.rs_r(lpr_K),.i({mf_ml,mrv_ml,mrd_ml}),.o({mf,mrv,mrd}));
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    ot_s81sl_slice_c1x_k8_cap5r_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
+    ot_s81sl_slice_c1x_k8_cap5r_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0), .LF_CS_HI_D(LF_CS_HI_D), .LF_CS_HI_GS(LF_CS_HI_GS), .LF_CS_HO_D(LF_CS_HO_D), .LF_CS_HO_GS(LF_CS_HO_GS), .LF_CS_H_G(LF_CS_H_G), .LF_CS_VNI_D(LF_CS_VNI_D), .LF_CS_VNO_D(LF_CS_VNO_D), .LF_CS_Y_D(LF_CS_Y_D), .LF_CS_U_D(LF_CS_U_D), .LF_CS_SW_D(LF_CS_SW_D), .LF_CS_SWR_D(LF_CS_SWR_D), .LF_CS_RA_D(LF_CS_RA_D), .LF_CS_RAR_D(LF_CS_RAR_D), .LF_CS_VE_D(LF_CS_VE_D), .LF_CS_VER_D(LF_CS_VER_D), .LF_CS_PVS_D(LF_CS_PVS_D), .LF_CS_VSP_D(LF_CS_VSP_D)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
         .ck_CAP_RT(ck_CAP_RT), .ck_CAP_CW(ck_CAP_CW), .ck_CAP_CE(ck_CAP_CE), .ck_CAP_RN(ck_CAP_RN), .ck_CAP_RS(ck_CAP_RS), .rst_n(lpr_c_u_sl), .sid(sid), .ri_w(lri__l_S), .ri_e(ri_e), .ro_e(ro_e), .ro_w(lro), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));   // region S, t = 0
     // Lane0 is part of regionKA; r4l already supplies its reach relays.
     assign n0lv=l0v;assign n0ld=l0d;assign l0r=n0lr;
