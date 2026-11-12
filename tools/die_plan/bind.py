@@ -5978,6 +5978,19 @@ def main(argv=None):
         s.add_argument("--allow-external-paths", action="store_true",
                        help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
     a = ap.parse_args(argv)
+    # KW-FIX-45 11-12 (COORD): a plan's sibling files (cores, cells, census, die_io.json, macro_pins, sink_bins, r8) resolve
+    # relative to the plan folder; links into other lanes' trees made binds depend on foreign files.  OT_BIND_PLAN_PACKAGE:
+    # require = refuse, warn (default) = one warning line, off.  Package a plan with tools/die_plan/plan_package.py.
+    if getattr(a, "plan", None) and a.cmd in ("elab", "bind", "verify", "all", "portbind", "kit-rtl"):
+        try:
+            import plan_package as _PP
+            _ok, _msg = _PP.gate(a.plan)
+        except (OSError, ValueError, ImportError):
+            _ok, _msg = True, ""
+        if _msg:
+            print(f"bind: PLAN-PACKAGE {'WARNING' if _ok else 'ERROR'} {_msg}")
+        if not _ok:
+            return 2
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
     try:
