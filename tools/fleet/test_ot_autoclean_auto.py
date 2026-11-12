@@ -1126,7 +1126,7 @@ class TestAggressive(Base):
         script = os.path.join(lane, "run.sh")
         touch(script, 10)
         age_tree(lane)
-        p = subprocess.Popen(["bash", "-c", "sleep 60", script])
+        p = subprocess.Popen(["bash", "-c", "sleep 60; true", script])
         try:
             self.run_job("--classes", "d", "--aggressive", "--d-any-root")
         finally:
