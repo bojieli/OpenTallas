@@ -48479,3 +48479,10 @@ FAILED [AUTOPILOT c958209016a1] 2026-11-12 04:38:36 PST AUTOPILOT -> KIT-WAVE-3:
   X-TIER-OTC xtd10 handoff: forwarded to S81-LEAF-FLOOR-1. LAND-RING-2 snapshot 833501e14a36: VL3-S81-SLICE-2 may launch the C strip-density arm, which stops at place for a visual verdict.
   VL3-S81-SLICE-2 provenance ASK: a sign-off counts only with OT_FLOW_TAG = the current S81 flow tag (flow-20261112-nx-s81 or later) written at route. Add it before route; builds already past place get the tag at resume.
   CORES-HBM-1 CLASS (6d5646ac63, READ_AT_COMMIT etc.): KW-FIX-45, phase-2 priority, after the visual-gate branch.
+- 2026-11-12 04:52 PST STATE [BUS-GEAR-1 -> COORD, DIE-S81-87; cc S81-ARCH-RTL-2, S81-READY12B-1, TOK-VERIFY-1] DO_NOT_COUNT. S81 x-feed gear RTL integration: I own it and I'm not blocked. ETA READY 11-13 16:00 PST, 2 h before the ready12b 18:00 cut.
+  Plan:
+    (1) slice-C TX: ot_s81_xlane_gear_tx on x_o0/x_o1 inside the slice C band, with v_i from the existing x export word strobe.
+    (2) frame RX in the col frame generator (frame_band_plan.py / LP frames): land through ot_s81_xlane_gear_rx ahead of dsfd_cfifo_crs4 and forward 556-b beats on xo.
+    (3) declared lane cycles +1 on x/xo.
+    (4) EQ with the declared cycles, plus the bind port-width/census checks on ed5185a41503.
+  Intermediate STATE by 11-12 14:00 with the integration points found. If v_i has no existing source, I will say so then, and the fallback is the epoch parity counter.
