@@ -20244,7 +20244,8 @@
     "hd_host_w@3": "REDESIGN: HEAD FREG plan l48hp1_head_freg_1111 (main 58a264ab1ee1; COORD via HEAD-94 release 19:0x, hd_host_e/hd_st_n4/hd_mesh launched on it at 19:09)"
    },
    "gen_hosts": [
-    "epyc9"
+    "epyc9",
+    "epyc8"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": true,
@@ -21049,6 +21050,9 @@
     "intel1",
     "intel2",
     "epyc2"
+   ],
+   "gen_hosts_prev_wb1": [
+    "epyc9"
    ]
   },
   "qwen_compute": {
@@ -22390,7 +22394,8 @@
     "slw_st_a_v2__cl9f076a5c@1": "KW-FIX-45 11-11 11:4x: QC cut launch list: relaunch the hcut1111 row on plan s15 (retry names the hcut1111 attempt; epoch re-armed)"
    },
    "gen_hosts": [
-    "epyc9"
+    "epyc9",
+    "epyc8"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -28657,6 +28662,9 @@
     "epyc2",
     "intel1",
     "intel2"
+   ],
+   "gen_hosts_prev_wb1": [
+    "epyc9"
    ]
   },
   "hbm": {
@@ -30174,7 +30182,8 @@
     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": "KW-FIX-45 11-12 HBM-CORES-B/DIE-HBM-100: rd1 body (fcd9b8dde26f7876) has a bare initial begin ... $fatal end that face_shell yosys read_verilog -sv cannot resolve; hold until the rd1 main source carries the body with the block wrapped in ifndef SYNTHESIS (HBM-COMPOSE-2 / DIE-HBM-97 apply it and restate EQ + bind provenance)"
    },
    "gen_hosts": [
-    "epyc9"
+    "epyc9",
+    "epyc8"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -43213,6 +43222,9 @@
    "gen_hosts_base_prev_kw45_nohub": [
     "intel1",
     "intel2"
+   ],
+   "gen_hosts_prev_wb1": [
+    "epyc9"
    ]
   }
  },
@@ -43947,5 +43959,13 @@
   "epyc2",
   "epyc8"
  ],
- "note_kw45_rebalance": "KW-FIX-45 11-12 COORD: epyc8 then epyc7 preferred for new place/route; epyc9 stays out until waiters < 10 (18 waiters at 80/96); epyc4 stays out until its scratch is above the 150 GB floor (55 GB at last check; add back then, EXPLORER-2 draining export holds)."
+ "note_kw45_rebalance": "KW-FIX-45 11-12 COORD: epyc8 then epyc7 preferred for new place/route; epyc9 stays out until waiters < 10 (18 waiters at 80/96); epyc4 stays out until its scratch is above the 150 GB floor (55 GB at last check; add back then, EXPLORER-2 draining export holds).",
+ "gen_overflow_hosts_prev_wb1": null,
+ "gen_overflow_hosts": [
+  "epyc8"
+ ],
+ "wave_balance": {
+  "enabled": true
+ },
+ "note_wb1": "WAVE-BALANCE-1 11-12 00:07 COORD approved c707e5f641a1: epyc8 added to gen_hosts of qwen_compute/hbm/s81_head (src staged, probe whole), gen_overflow_hosts ['epyc8'], wave_balance.enabled (waiter migration for KIT-WAVE autopilot jobs), submit guard gen_waiter_cap 20 default. Revert: gen_hosts <- gen_hosts_prev_wb1 per die, delete gen_overflow_hosts / wave_balance (or enabled false)."
 }
