@@ -1,0 +1,4 @@
+{"name": "r_svcrs_por", "why": "COORD 11-11 ruling: prov_1109 views never built; svc_rs types back to POR b05c29bb hard_cores/contents/clock",
+ "script": "physical/die_plan/s81/revert_svcrs_por_1111.py",
+ "argv": ["{in}", "{out}", "{report}", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/lineage/b05c29.json"],
+ "type_keys": ["hard_cores", "contents", "ft_slots", "clock"], "top_keys": []}

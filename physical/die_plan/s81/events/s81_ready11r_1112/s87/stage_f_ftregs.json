@@ -1,0 +1,20 @@
+{
+ "name": "f_ftregs",
+ "why": "S81-GEOM-3 FTREGS0LM c1 470fc60a (accepted COORD)",
+ "script": "physical/die_plan/s81/delta_s81_ftregs0lm_1111.py",
+ "argv": [
+  "{in}",
+  "{out}",
+  "{report}",
+  "--base-sha",
+  "{in_sha}"
+ ],
+ "type_keys": [
+  "ft_slots",
+  "clock"
+ ],
+ "top_keys": [
+  "clock.landing_network",
+  "ports"
+ ]
+}

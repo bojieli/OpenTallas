@@ -1,0 +1,899 @@
+{
+ "event": "FTREGS0LM-1111",
+ "base_plan_sha256": "454aa648a3890d78fef501904e88d0f07d6380db26cefa3fedefad671f028043",
+ "rule": "regs_um[0] > 5.0 um from the in window",
+ "slots": 18,
+ "touched_types": [
+  "dsdv_slice_c1x_C__t10",
+  "ot_s81sl_leaf__t43",
+  "ot_s81sl_leaf__t44__clf6cf8492",
+  "ot_s81sl_leaf__t52",
+  "ot_s81sl_leaf__t53__cl958451dd",
+  "ot_s81sl_leaf__t53__clb66fa5cb",
+  "ot_s81sl_leaf__t54__cl501e5681",
+  "ot_s81sl_leaf__t54__cl706d9749",
+  "ot_s81sl_leaf__t75",
+  "slice_station__t45"
+ ],
+ "lanes": [
+  "up_s_2N_L0",
+  "dn_s_2N_L0",
+  "up_s_4N_L0",
+  "dn_s_4N_L0"
+ ],
+ "reach_um": 405.0,
+ "lane_max_hop_um": {
+  "up_s_2N_L0": [
+   588.7,
+   402.8
+  ],
+  "dn_s_2N_L0": [
+   794.9,
+   402.8
+  ],
+  "up_s_4N_L0": [
+   746.9,
+   402.8
+  ],
+  "dn_s_4N_L0": [
+   612.2,
+   402.8
+  ]
+ },
+ "per_slot": {
+  "dsdv_slice_c1x_C__t10.dn_s_2N_L0x1": {
+   "lane": "dn_s_2N_L0",
+   "part": "s_1N_C",
+   "stations": 2,
+   "route_um": 801.7,
+   "regs0_off_window_um": 343.3,
+   "old_regs_um": [
+    [
+     1259.28,
+     822.96
+    ],
+    [
+     1254.96,
+     1220.4
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1441.88,
+     613.4334
+    ],
+    [
+     1347.6442,
+     921.0375
+    ]
+   ],
+   "max_slide_um": 392.05,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "dsdv_slice_c1x_C__t10.up_s_2N_L0x5": {
+   "lane": "up_s_2N_L0",
+   "part": "s_1N_C",
+   "stations": 2,
+   "route_um": 589.3,
+   "regs0_off_window_um": 166.3,
+   "old_regs_um": [
+    [
+     1388.88,
+     1060.56
+    ],
+    [
+     1436.4,
+     719.28
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1362.8887,
+     1225.88
+    ],
+    [
+     1413.8485,
+     874.9998
+    ]
+   ],
+   "max_slide_um": 178.27,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t43.dn_s_4N_L0x1": {
+   "lane": "dn_s_4N_L0",
+   "part": "s_4N_L1",
+   "stations": 4,
+   "route_um": 1184.9,
+   "regs0_off_window_um": 184.8,
+   "old_regs_um": [
+    [
+     807.84,
+     34.56
+    ],
+    [
+     600.48,
+     69.12
+    ],
+    [
+     432.0,
+     108.0
+    ],
+    [
+     64.8,
+     142.56
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1007.9587,
+     1.0
+    ],
+    [
+     889.92,
+     250.56
+    ],
+    [
+     570.24,
+     168.48
+    ],
+    [
+     280.8,
+     56.16
+    ]
+   ],
+   "max_slide_um": 136.16,
+   "sites_on": "zroute-tap+lattice",
+   "max_in_slot_hop_um": 401.8
+  },
+  "ot_s81sl_leaf__t43.up_s_4N_L0x4": {
+   "lane": "up_s_4N_L0",
+   "part": "s_4N_L1",
+   "stations": 4,
+   "route_um": 1506.2,
+   "regs0_off_window_um": 239.9,
+   "old_regs_um": [
+    [
+     892.08,
+     987.12
+    ],
+    [
+     982.8,
+     676.08
+    ],
+    [
+     1004.4,
+     295.92
+    ],
+    [
+     1116.72,
+     6.48
+    ]
+   ],
+   "new_regs_um": [
+    [
+     836.186,
+     1225.88
+    ],
+    [
+     838.08,
+     851.04
+    ],
+    [
+     976.32,
+     613.44
+    ],
+    [
+     1123.2,
+     375.84
+    ]
+   ],
+   "max_slide_um": 8.37,
+   "sites_on": "zroute-tap+lattice",
+   "max_in_slot_hop_um": 384.5
+  },
+  "ot_s81sl_leaf__t44__clf6cf8492.up_s_4N_L0x3": {
+   "lane": "up_s_4N_L0",
+   "part": "s_4N_L3",
+   "stations": 4,
+   "route_um": 1557.2,
+   "regs0_off_window_um": 289.4,
+   "old_regs_um": [
+    [
+     166.32,
+     542.16
+    ],
+    [
+     429.84,
+     403.92
+    ],
+    [
+     615.6,
+     187.92
+    ],
+    [
+     835.92,
+     6.48
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1.0,
+     721.0167
+    ],
+    [
+     138.24,
+     457.92
+    ],
+    [
+     285.12,
+     203.04
+    ],
+    [
+     522.72,
+     38.88
+    ]
+   ],
+   "max_slide_um": 345.6,
+   "sites_on": "path+lattice",
+   "max_in_slot_hop_um": 401.8
+  },
+  "ot_s81sl_leaf__t52.dn_s_4N_L0x2": {
+   "lane": "dn_s_4N_L0",
+   "part": "s_5N_L1",
+   "stations": 5,
+   "route_um": 1883.7,
+   "regs0_off_window_um": 149.1,
+   "old_regs_um": [
+    [
+     1412.64,
+     345.6
+    ],
+    [
+     1136.16,
+     470.88
+    ],
+    [
+     1028.16,
+     760.32
+    ],
+    [
+     889.92,
+     907.2
+    ],
+    [
+     738.72,
+     1157.76
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1441.88,
+     176.9053
+    ],
+    [
+     1179.36,
+     315.36
+    ],
+    [
+     1032.48,
+     570.24
+    ],
+    [
+     898.56,
+     838.08
+    ],
+    [
+     747.36,
+     1088.64
+    ]
+   ],
+   "max_slide_um": 198.72,
+   "sites_on": "path+lattice",
+   "max_in_slot_hop_um": 402.0
+  },
+  "ot_s81sl_leaf__t53__cl958451dd.dn_s_4N_L0x3": {
+   "lane": "dn_s_4N_L0",
+   "part": "s_5N_L3",
+   "stations": 4,
+   "route_um": 1502.2,
+   "regs0_off_window_um": 185.8,
+   "old_regs_um": [
+    [
+     596.16,
+     185.76
+    ],
+    [
+     561.6,
+     552.96
+    ],
+    [
+     414.72,
+     781.92
+    ],
+    [
+     388.8,
+     1157.76
+    ]
+   ],
+   "new_regs_um": [
+    [
+     609.1747,
+     1.0
+    ],
+    [
+     577.2615,
+     370.9268
+    ],
+    [
+     481.4283,
+     677.9336
+    ],
+    [
+     399.7429,
+     999.0882
+    ]
+   ],
+   "max_slide_um": 197.69,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t53__cl958451dd.up_s_4N_L0x2": {
+   "lane": "up_s_4N_L0",
+   "part": "s_5N_L3",
+   "stations": 4,
+   "route_um": 1510.8,
+   "regs0_off_window_um": 241.5,
+   "old_regs_um": [
+    [
+     641.52,
+     1129.68
+    ],
+    [
+     939.6,
+     1026.0
+    ],
+    [
+     1237.68,
+     922.32
+    ],
+    [
+     1436.4,
+     719.28
+    ]
+   ],
+   "new_regs_um": [
+    [
+     441.45,
+     1225.88
+    ],
+    [
+     728.526,
+     1111.116
+    ],
+    [
+     1018.7274,
+     998.4774
+    ],
+    [
+     1290.9658,
+     867.8758
+    ]
+   ],
+   "max_slide_um": 296.19,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb.dn_s_2N_L0x3": {
+   "lane": "dn_s_2N_L0",
+   "part": "s_1N_L3",
+   "stations": 4,
+   "route_um": 1391.0,
+   "regs0_off_window_um": 239.8,
+   "old_regs_um": [
+    [
+     1267.92,
+     239.76
+    ],
+    [
+     1337.04,
+     498.96
+    ],
+    [
+     1254.96,
+     818.64
+    ],
+    [
+     1254.96,
+     1220.4
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1255.3054,
+     1.0
+    ],
+    [
+     1312.0064,
+     346.139
+    ],
+    [
+     1291.0753,
+     677.9806
+    ],
+    [
+     1254.96,
+     1044.7054
+    ]
+   ],
+   "max_slide_um": 177.85,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb.up_s_2N_L0x3": {
+   "lane": "up_s_2N_L0",
+   "part": "s_1N_L3",
+   "stations": 4,
+   "route_um": 1227.0,
+   "regs0_off_window_um": 239.8,
+   "old_regs_um": [
+    [
+     1362.96,
+     987.12
+    ],
+    [
+     1362.96,
+     740.88
+    ],
+    [
+     1362.96,
+     408.24
+    ],
+    [
+     1362.96,
+     6.48
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1362.8887,
+     1225.88
+    ],
+    [
+     1362.9478,
+     824.0991
+    ],
+    [
+     1362.96,
+     421.2713
+    ],
+    [
+     1362.96,
+     18.4313
+    ]
+   ],
+   "max_slide_um": 83.23,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t54__cl501e5681.dn_s_4N_L0x4": {
+   "lane": "dn_s_4N_L0",
+   "part": "s_5N_L4",
+   "stations": 4,
+   "route_um": 1423.2,
+   "regs0_off_window_um": 239.8,
+   "old_regs_um": [
+    [
+     373.68,
+     239.76
+    ],
+    [
+     447.12,
+     498.96
+    ],
+    [
+     507.6,
+     840.24
+    ],
+    [
+     529.2,
+     1220.4
+    ]
+   ],
+   "new_regs_um": [
+    [
+     333.8627,
+     1.0
+    ],
+    [
+     401.3933,
+     297.5093
+    ],
+    [
+     463.5621,
+     591.7405
+    ],
+    [
+     512.6012,
+     928.2614
+    ]
+   ],
+   "max_slide_um": 308.74,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 385.6
+  },
+  "ot_s81sl_leaf__t54__cl501e5681.up_s_4N_L0x1": {
+   "lane": "up_s_4N_L0",
+   "part": "s_5N_L4",
+   "stations": 4,
+   "route_um": 1453.7,
+   "regs0_off_window_um": 300.2,
+   "old_regs_um": [
+    [
+     624.24,
+     926.64
+    ],
+    [
+     576.72,
+     589.68
+    ],
+    [
+     498.96,
+     352.08
+    ],
+    [
+     442.8,
+     6.48
+    ]
+   ],
+   "new_regs_um": [
+    [
+     668.282,
+     1225.88
+    ],
+    [
+     624.5893,
+     922.8127
+    ],
+    [
+     571.3353,
+     573.2267
+    ],
+    [
+     483.679,
+     258.043
+    ]
+   ],
+   "max_slide_um": 381.0,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t54__cl706d9749.dn_s_2N_L0x4": {
+   "lane": "dn_s_2N_L0",
+   "part": "s_1N_L4",
+   "stations": 4,
+   "route_um": 1227.6,
+   "regs0_off_window_um": 239.8,
+   "old_regs_um": [
+    [
+     1254.96,
+     239.76
+    ],
+    [
+     1254.96,
+     486.0
+    ],
+    [
+     1254.96,
+     818.64
+    ],
+    [
+     1254.96,
+     1220.4
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1255.3054,
+     1.0
+    ],
+    [
+     1255.0193,
+     402.5539
+    ],
+    [
+     1254.96,
+     805.3347
+    ],
+    [
+     1254.96,
+     1208.1746
+    ]
+   ],
+   "max_slide_um": 83.51,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t54__cl706d9749.up_s_2N_L0x2": {
+   "lane": "up_s_2N_L0",
+   "part": "s_1N_L4",
+   "stations": 4,
+   "route_um": 1227.0,
+   "regs0_off_window_um": 239.8,
+   "old_regs_um": [
+    [
+     1362.96,
+     987.12
+    ],
+    [
+     1362.96,
+     740.88
+    ],
+    [
+     1362.96,
+     408.24
+    ],
+    [
+     1362.96,
+     6.48
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1362.8887,
+     1225.88
+    ],
+    [
+     1362.9478,
+     824.0991
+    ],
+    [
+     1362.96,
+     421.2713
+    ],
+    [
+     1362.96,
+     18.4313
+    ]
+   ],
+   "max_slide_um": 83.23,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t75.dn_s_2N_L0x2": {
+   "lane": "dn_s_2N_L0",
+   "part": "s_1N_L1",
+   "stations": 4,
+   "route_um": 1227.6,
+   "regs0_off_window_um": 239.8,
+   "old_regs_um": [
+    [
+     1237.68,
+     239.76
+    ],
+    [
+     1254.96,
+     486.0
+    ],
+    [
+     1254.96,
+     818.64
+    ],
+    [
+     1254.96,
+     1220.4
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1255.3054,
+     1.0
+    ],
+    [
+     1255.0937,
+     297.8683
+    ],
+    [
+     1254.96,
+     700.5747
+    ],
+    [
+     1254.96,
+     1103.4146
+    ]
+   ],
+   "max_slide_um": 188.27,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "ot_s81sl_leaf__t75.up_s_2N_L0x4": {
+   "lane": "up_s_2N_L0",
+   "part": "s_1N_L1",
+   "stations": 4,
+   "route_um": 1287.5,
+   "regs0_off_window_um": 239.8,
+   "old_regs_um": [
+    [
+     1362.96,
+     987.12
+    ],
+    [
+     1362.96,
+     740.88
+    ],
+    [
+     1393.2,
+     378.0
+    ],
+    [
+     1362.96,
+     6.48
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1362.8887,
+     1225.88
+    ],
+    [
+     1362.9478,
+     824.0991
+    ],
+    [
+     1379.1545,
+     546.5458
+    ],
+    [
+     1376.6221,
+     174.3292
+    ]
+   ],
+   "max_slide_um": 182.59,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "slice_station__t45.dn_s_2N_L0x5": {
+   "lane": "dn_s_2N_L0",
+   "part": "s_1N_x06",
+   "stations": 5,
+   "route_um": 1807.0,
+   "regs0_off_window_um": 246.4,
+   "old_regs_um": [
+    [
+     1159.92,
+     200.88
+    ],
+    [
+     1060.56,
+     403.92
+    ],
+    [
+     874.8,
+     615.6
+    ],
+    [
+     676.08,
+     818.64
+    ],
+    [
+     676.08,
+     1220.4
+    ]
+   ],
+   "new_regs_um": [
+    [
+     1255.3054,
+     1.0
+    ],
+    [
+     1124.2618,
+     271.7965
+    ],
+    [
+     963.8032,
+     514.1778
+    ],
+    [
+     769.7347,
+     722.9493
+    ],
+    [
+     676.08,
+     1032.1346
+    ]
+   ],
+   "max_slide_um": 195.83,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  },
+  "slice_station__t45.up_s_2N_L0x1": {
+   "lane": "up_s_2N_L0",
+   "part": "s_1N_x06",
+   "stations": 6,
+   "route_um": 2051.1,
+   "regs0_off_window_um": 234.9,
+   "old_regs_um": [
+    [
+     654.48,
+     1051.92
+    ],
+    [
+     775.44,
+     874.8
+    ],
+    [
+     892.08,
+     702.0
+    ],
+    [
+     1013.04,
+     460.08
+    ],
+    [
+     1276.56,
+     321.84
+    ],
+    [
+     1362.96,
+     6.48
+    ]
+   ],
+   "new_regs_um": [
+    [
+     538.822,
+     1225.88
+    ],
+    [
+     700.7373,
+     985.9553
+    ],
+    [
+     862.8805,
+     745.2585
+    ],
+    [
+     1002.2073,
+     481.7453
+    ],
+    [
+     1255.9525,
+     332.6505
+    ],
+    [
+     1356.4357,
+     30.2937
+    ]
+   ],
+   "max_slide_um": 185.86,
+   "sites_on": "path",
+   "max_in_slot_hop_um": 402.8
+  }
+ },
+ "eq_gate": {
+  "positions_only": true,
+  "station_counts_identical": true,
+  "lane_natural_identical": true,
+  "changed_paths": [
+   "partition_types.dsdv_slice_c1x_C__t10.ft_slots[dn_s_2N_L0x1].regs_um",
+   "partition_types.dsdv_slice_c1x_C__t10.ft_slots[up_s_2N_L0x5].regs_um",
+   "partition_types.ot_s81sl_leaf__t43.ft_slots[dn_s_4N_L0x1].regs_um",
+   "partition_types.ot_s81sl_leaf__t43.ft_slots[up_s_4N_L0x4].regs_um",
+   "partition_types.ot_s81sl_leaf__t44__clf6cf8492.ft_slots[up_s_4N_L0x3].regs_um",
+   "partition_types.ot_s81sl_leaf__t52.ft_slots[dn_s_4N_L0x2].regs_um",
+   "partition_types.ot_s81sl_leaf__t53__cl958451dd.ft_slots[dn_s_4N_L0x3].regs_um",
+   "partition_types.ot_s81sl_leaf__t53__cl958451dd.ft_slots[up_s_4N_L0x2].regs_um",
+   "partition_types.ot_s81sl_leaf__t53__clb66fa5cb.ft_slots[dn_s_2N_L0x3].regs_um",
+   "partition_types.ot_s81sl_leaf__t53__clb66fa5cb.ft_slots[up_s_2N_L0x3].regs_um",
+   "partition_types.ot_s81sl_leaf__t54__cl501e5681.ft_slots[dn_s_4N_L0x4].regs_um",
+   "partition_types.ot_s81sl_leaf__t54__cl501e5681.ft_slots[up_s_4N_L0x1].regs_um",
+   "partition_types.ot_s81sl_leaf__t54__cl706d9749.ft_slots[dn_s_2N_L0x4].regs_um",
+   "partition_types.ot_s81sl_leaf__t54__cl706d9749.ft_slots[up_s_2N_L0x2].regs_um",
+   "partition_types.ot_s81sl_leaf__t75.ft_slots[dn_s_2N_L0x2].regs_um",
+   "partition_types.ot_s81sl_leaf__t75.ft_slots[up_s_2N_L0x4].regs_um",
+   "partition_types.slice_station__t45.ft_slots[dn_s_2N_L0x5].regs_um",
+   "partition_types.slice_station__t45.ft_slots[up_s_2N_L0x1].regs_um"
+  ]
+ },
+ "output_plan_sha256": "f665edbcd88f242d26aafb2c0253d6e3126f909a97e93540a26a9c2375360672"
+}
