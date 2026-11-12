@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 08:20 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 08:25 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -29,6 +29,10 @@ None. Realize loops (1x RC) were stopped on COORD's order; rz_try1 and rz are th
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 08:25 STRUCTURE RESULT (queue): realize BUFx24 18,733 = 99.5% inside types (hd_tile 17,117), +19.3% area, +5.9% cap.
+  HB4xp67 = 18.2 cells/ns, 1.85 um2/ns (vs BUFx24 45.9 / 20.1). Pure H-tree (die_clock build --aware-levels 0 --window 0)
+  model geometry: spread 1846 -> 881 TT, insertion max 5774 -> 4609, cells -34%; but region-root spread is 788 ps.
+  Data intel1 .../reach-fix-2/study/ (study.py cells|where|geom, study.sh, rzest.sh). Recommended B (H-tree fix + HB4 at roots).
 - Routed findings (posted 07:29 partly): die_clock balance = 5.73 m SPEF-only pads + 4W NDR on >520 um hops; combo GRT
   (1x RC) of the padded tree: tap spread 6.7 ns; no pads 2.9-4.0 ns. pads self-test exact (0.37 ps). Hence REALIZE.
 - HEAD realize it0: routed spread 3998 ps -> 47,207 BUFx24 delay cells on 12,453 branches (step 15 ps).
@@ -37,13 +41,12 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. HEAD realize pass 2 under NDR: epyc9: cd .../reach-fix-2/code/tools/die_plan; NDR=1 rt_grt.sh head KIT dp/head/rzn/clk1 ndr1
-   already done -> arr = intel1 .../ndr1/pd/arr_TT.txt (copy to epyc9); realize dp/head/rzn/clk1 ARR dp/head/rzn/clk2
-   (--step-ps 0 = measured); NDR=1 rt_grt.sh head KIT dp/head/rzn/clk2 ndr2 TT; pads --no-pads --route-ndr; replace
-   ctree.v with the realized netlist (module die_ctree); STA on intel1 (ndr1_sta.sh pattern). Rule: stop when TT spread
-   <= 30 ps over model or no gain; then dieclock_arrivals + dcsta.sh for the gate numbers, post.
-2. Same for KV (kit dp/kv/ref_vN_kit, run dp/dc/kv_vN, ref proof dp/kv/ref_vN_proof).
-3. Hourly STATE; keep this file current.
+WAIT for COORD's decision on A (realized BUFx24 tree) vs B (H-tree to region roots), posted 2026-11-12 08:25. KV NDR is queued behind it.
+If B: (a) diagnose the 788 ps region-root spread in die_clock --aware-levels 0 (leaf load imbalance, repeater/4W
+quantization); load-match leaves, target under 100 ps; (b) realize --sites channel: lift cells to the nearest channel ancestor, cell HB4xp67;
+(c) die STA FF for the cell-vs-wire corner term (wire FF/TT 0.83, cells 0.73-0.76).
+Old NDR realize pass-2 recipe (only if A): realize dp/head/rzn/clk1 ARR(intel1 ndr1/pd/arr_TT.txt) -> clk2, NDR=1 rt_grt.sh, pads --no-pads --route-ndr, STA.
+Hourly STATE; keep this file current.
 ## 7 Open
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
 ## 8 Gotchas
