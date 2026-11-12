@@ -1,0 +1,1634 @@
+{
+ "event": "QC-EVENT-S28 sink bins on the 31 density-tap types without clock.sink_bins_file",
+ "base": "physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s27.json",
+ "base_sha256": "820f14a689b7ba62a16240a38e9e0bcbbef17bb21493c86f6ed0fd5ebafb2af9",
+ "out": "/srv/opentallas-scratch2/claude/qc-event-s28/planq/s28_stage_a.json",
+ "out_sha256": "e1836dfd5c4195c2f3962c4a6f2969df187894bbbdbeb31560c2e0918b131a29",
+ "sidecar_in_sha256": "27b0eca895ef3221b033ea0c105582e6f3d1a749093e03e591f26e1a572b9af5",
+ "sidecar_out_sha256": "be2a643b4c353c9468bcf0921f787fc63ebfebbec68d96dce2ba5dc40136a1fc",
+ "rtl_change": false,
+ "data_cycles": 0,
+ "pin_cycles": 0,
+ "types": {
+  "sle_ctl__cl372cea1c": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "9b2c4b1cfee804cc4d7b97396cbad2656844eefd6fb310c493f08b8e0f57f761",
+   "bins_n": 63131,
+   "taps_before": 38,
+   "taps_after": 113,
+   "remap": {
+    "clk_t10": [
+     "clk_t37",
+     45.184
+    ],
+    "clk_t11": [
+     "clk_t35",
+     3.712
+    ],
+    "clk_t17": [
+     "clk_t51",
+     33.152
+    ],
+    "clk_t18": [
+     "clk_t68",
+     22.208
+    ],
+    "clk_t19": [
+     "clk_t77",
+     15.321
+    ],
+    "clk_t23": [
+     "clk_t84",
+     64.838
+    ],
+    "clk_t31": [
+     "clk_t110",
+     29.696
+    ],
+    "clk_t35": [
+     "clk_t112",
+     14.08
+    ],
+    "clk_t36": [
+     "clk_t106",
+     70.733
+    ],
+    "clk_t4": [
+     "clk_t2",
+     11.456
+    ],
+    "clk_t5": [
+     "clk_t10",
+     15.987
+    ],
+    "clk_t6": [
+     "clk_t4",
+     21.376
+    ],
+    "clk_t7": [
+     "clk_t11",
+     19.022
+    ],
+    "clk_t8": [
+     "clk_t12",
+     12.226
+    ]
+   },
+   "max_tap_move_um": 70.733,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    7,
+    7
+   ],
+   "relays": [
+    160,
+    375
+   ],
+   "relays_changed": 375
+  },
+  "sle_ctl__cl503337ff": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "dc59efc4ee08ae1d9d45d4f63174f193edb1944117c3e7444079aa17f7a62071",
+   "bins_n": 67305,
+   "taps_before": 38,
+   "taps_after": 131,
+   "remap": {
+    "clk_t10": [
+     "clk_t37",
+     1.984
+    ],
+    "clk_t11": [
+     "clk_t44",
+     46.912
+    ],
+    "clk_t17": [
+     "clk_t64",
+     0.704
+    ],
+    "clk_t18": [
+     "clk_t83",
+     0.576
+    ],
+    "clk_t19": [
+     "clk_t91",
+     18.306
+    ],
+    "clk_t23": [
+     "clk_t98",
+     130.509
+    ],
+    "clk_t31": [
+     "clk_t127",
+     18.944
+    ],
+    "clk_t35": [
+     "clk_t129",
+     46.464
+    ],
+    "clk_t36": [
+     "clk_t122",
+     53.692
+    ],
+    "clk_t4": [
+     "clk_t2",
+     11.456
+    ],
+    "clk_t5": [
+     "clk_t19",
+     21.896
+    ],
+    "clk_t6": [
+     "clk_t21",
+     14.315
+    ],
+    "clk_t7": [
+     "clk_t12",
+     48.384
+    ],
+    "clk_t8": [
+     "clk_t22",
+     36.996
+    ]
+   },
+   "max_tap_move_um": 130.509,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    7,
+    7
+   ],
+   "relays": [
+    152,
+    388
+   ],
+   "relays_changed": 388
+  },
+  "sle_fe_v3": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "b70a03cb1ab6532d701ddd903ee1ff5467fe91e4aaa1849904c7dea7bf07c962",
+   "bins_n": 12390,
+   "taps_before": 19,
+   "taps_after": 22,
+   "remap": {
+    "clk_t1": [
+     "clk_t2",
+     43.706
+    ],
+    "clk_t17": [
+     "clk_t19",
+     4.994
+    ],
+    "clk_t18": [
+     "clk_t21",
+     22.336
+    ]
+   },
+   "max_tap_move_um": 43.706,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    5,
+    5
+   ],
+   "relays": [
+    58,
+    66
+   ],
+   "relays_changed": 66
+  },
+  "sle_fw_v2__cl6740750e": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "9386a7cf63d0bd703dc4c7ce3170cfb29cec4cea55de77eb5094fe5a8c5f0dae",
+   "bins_n": 35529,
+   "taps_before": 35,
+   "taps_after": 65,
+   "remap": {
+    "clk_t11": [
+     "clk_t17",
+     51.835
+    ],
+    "clk_t17": [
+     "clk_t37",
+     34.048
+    ],
+    "clk_t21": [
+     "clk_t38",
+     34.048
+    ],
+    "clk_t23": [
+     "clk_t45",
+     65.762
+    ],
+    "clk_t32": [
+     "clk_t62",
+     53.504
+    ],
+    "clk_t34": [
+     "clk_t64",
+     13.376
+    ],
+    "clk_t4": [
+     "clk_t2",
+     41.792
+    ],
+    "clk_t6": [
+     "clk_t10",
+     33.856
+    ]
+   },
+   "max_tap_move_um": 65.762,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    87,
+    162
+   ],
+   "relays_changed": 162
+  },
+  "sle_sc_v2": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "b6c8e4f85a0a9a43d5f8f58c0664f0e0222d93fe6a99385235d72dddfa67f707",
+   "bins_n": 44411,
+   "taps_before": 63,
+   "taps_after": 68,
+   "remap": {
+    "clk_t2": [
+     "clk_t5",
+     2.56
+    ],
+    "clk_t22": [
+     "clk_t24",
+     4.006
+    ],
+    "clk_t25": [
+     "clk_t26",
+     9.783
+    ],
+    "clk_t37": [
+     "clk_t41",
+     11.2
+    ],
+    "clk_t41": [
+     "clk_t43",
+     6.128
+    ],
+    "clk_t53": [
+     "clk_t54",
+     3.556
+    ],
+    "clk_t55": [
+     "clk_t56",
+     15.872
+    ],
+    "clk_t8": [
+     "clk_t11",
+     2.712
+    ]
+   },
+   "max_tap_move_um": 15.872,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    151,
+    163
+   ],
+   "relays_changed": 163
+  },
+  "sle_sc_v3": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "9e5fcdbe285146ce53cfc4b47702d809e0736005a90be85a19366d43bf51aff5",
+   "bins_n": 37263,
+   "taps_before": 41,
+   "taps_after": 61,
+   "remap": {
+    "clk_t1": [
+     "clk_t5",
+     37.67
+    ],
+    "clk_t15": [
+     "clk_t22",
+     4.16
+    ],
+    "clk_t23": [
+     "clk_t36",
+     5.839
+    ],
+    "clk_t26": [
+     "clk_t38",
+     41.547
+    ],
+    "clk_t3": [
+     "clk_t7",
+     8.485
+    ],
+    "clk_t35": [
+     "clk_t49",
+     12.288
+    ],
+    "clk_t37": [
+     "clk_t55",
+     41.7
+    ],
+    "clk_t4": [
+     "clk_t6",
+     3.97
+    ]
+   },
+   "max_tap_move_um": 41.7,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    115,
+    153
+   ],
+   "relays_changed": 153
+  },
+  "sle_st_a_v2": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "f106394841bcdede5cf41e1371c184206b9e9cd85e96895de838f5d5ef54c0ca",
+   "bins_n": 76781,
+   "taps_before": 32,
+   "taps_after": 129,
+   "remap": {
+    "clk_t1": [
+     "clk_t2",
+     37.491
+    ],
+    "clk_t2": [
+     "clk_t1",
+     58.88
+    ],
+    "clk_t21": [
+     "clk_t65",
+     17.28
+    ],
+    "clk_t25": [
+     "clk_t80",
+     8.64
+    ],
+    "clk_t3": [
+     "clk_t4",
+     72.182
+    ]
+   },
+   "max_tap_move_um": 72.182,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    5,
+    5
+   ],
+   "relays": [
+    95,
+    317
+   ],
+   "relays_changed": 317
+  },
+  "sle_st_b_v1__pv0e7b1dcc": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "6fcd3965453e1e973fba592c18f1c0c10383ecd841cd50beff1f9f498b11653f",
+   "bins_n": 78719,
+   "taps_before": 20,
+   "taps_after": 124,
+   "remap": {
+    "clk_t1": [
+     "clk_t5",
+     10.937
+    ],
+    "clk_t10": [
+     "clk_t64",
+     21.129
+    ],
+    "clk_t2": [
+     "clk_t3",
+     35.136
+    ],
+    "clk_t3": [
+     "clk_t4",
+     34.409
+    ],
+    "clk_t6": [
+     "clk_t27",
+     20.493
+    ]
+   },
+   "max_tap_move_um": 35.136,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    5,
+    5
+   ],
+   "relays": [
+    65,
+    310
+   ],
+   "relays_changed": 310
+  },
+  "sle_st_b_v1__pvc5a85fd4": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "5e5365a3bfa6c7e3fd395d22a1d58272b4f8cdf2bd38d1adc601bbc398aafffc",
+   "bins_n": 78995,
+   "taps_before": 20,
+   "taps_after": 128,
+   "remap": {
+    "clk_t1": [
+     "clk_t2",
+     5.12
+    ],
+    "clk_t10": [
+     "clk_t66",
+     21.129
+    ],
+    "clk_t2": [
+     "clk_t4",
+     35.136
+    ],
+    "clk_t3": [
+     "clk_t5",
+     34.409
+    ],
+    "clk_t6": [
+     "clk_t27",
+     20.493
+    ]
+   },
+   "max_tap_move_um": 35.136,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    5,
+    5
+   ],
+   "relays": [
+    65,
+    318
+   ],
+   "relays_changed": 318
+  },
+  "sle_st_b_v2__cl14c98df5": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "718df88c28b5f5b0d75789c97bb6c921c7ac8affb6a808402a6d3bca022ab9fb",
+   "bins_n": 75012,
+   "taps_before": 20,
+   "taps_after": 123,
+   "remap": {
+    "clk_t11": [
+     "clk_t64",
+     13.406
+    ],
+    "clk_t13": [
+     "clk_t68",
+     24.399
+    ],
+    "clk_t2": [
+     "clk_t3",
+     28.032
+    ],
+    "clk_t3": [
+     "clk_t4",
+     50.26
+    ],
+    "clk_t6": [
+     "clk_t27",
+     19.435
+    ]
+   },
+   "max_tap_move_um": 50.26,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    5,
+    5
+   ],
+   "relays": [
+    67,
+    306
+   ],
+   "relays_changed": 306
+  },
+  "sle_st_b_v2__clfde1249e": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "2ab3c3a0df04b0d152f6c6debba54e172d3eb34fee6d9214c5937adae196d57b",
+   "bins_n": 74946,
+   "taps_before": 20,
+   "taps_after": 121,
+   "remap": {
+    "clk_t11": [
+     "clk_t66",
+     18.874
+    ],
+    "clk_t13": [
+     "clk_t70",
+     24.399
+    ],
+    "clk_t2": [
+     "clk_t3",
+     28.032
+    ],
+    "clk_t3": [
+     "clk_t4",
+     50.26
+    ],
+    "clk_t6": [
+     "clk_t29",
+     14.414
+    ]
+   },
+   "max_tap_move_um": 50.26,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    5,
+    5
+   ],
+   "relays": [
+    65,
+    302
+   ],
+   "relays_changed": 302
+  },
+  "sle_su_c": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "f615088ac60027e769c62ffde554873ee3383e34a60a3fa71ba6c1bb3df4ca44",
+   "bins_n": 39004,
+   "taps_before": 32,
+   "taps_after": 84,
+   "remap": {
+    "clk_t12": [
+     "clk_t39",
+     5.376
+    ],
+    "clk_t13": [
+     "clk_t52",
+     7.68
+    ],
+    "clk_t15": [
+     "clk_t61",
+     5.645
+    ],
+    "clk_t2": [
+     "clk_t3",
+     4.672
+    ],
+    "clk_t25": [
+     "clk_t75",
+     19.078
+    ],
+    "clk_t27": [
+     "clk_t76",
+     16.695
+    ],
+    "clk_t3": [
+     "clk_t4",
+     86.409
+    ],
+    "clk_t31": [
+     "clk_t80",
+     25.482
+    ],
+    "clk_t5": [
+     "clk_t11",
+     51.008
+    ],
+    "clk_t6": [
+     "clk_t15",
+     2.112
+    ]
+   },
+   "max_tap_move_um": 86.409,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    6,
+    6
+   ],
+   "relays": [
+    121,
+    288
+   ],
+   "relays_changed": 288
+  },
+  "sle_su_l0__cl086d85ba": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "72103324d5a3113d35cfc9fb52165c9bc1cc60de1034cdc6dfdec966ff174db2",
+   "bins_n": 23588,
+   "taps_before": 34,
+   "taps_after": 36,
+   "remap": {
+    "clk_t1": [
+     "clk_t3",
+     16.704
+    ],
+    "clk_t11": [
+     "clk_t16",
+     19.712
+    ],
+    "clk_t4": [
+     "clk_t5",
+     5.697
+    ]
+   },
+   "max_tap_move_um": 19.712,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    84,
+    94
+   ],
+   "relays_changed": 94
+  },
+  "sle_su_l0__cl7a55c676": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "d595a01949e73f9823ac64f5bf81cc4e55925c5dcb51d5dde83cdc4473487acd",
+   "bins_n": 23764,
+   "taps_before": 34,
+   "taps_after": 37,
+   "remap": {
+    "clk_t1": [
+     "clk_t3",
+     27.52
+    ],
+    "clk_t11": [
+     "clk_t12",
+     19.826
+    ],
+    "clk_t4": [
+     "clk_t6",
+     22.09
+    ]
+   },
+   "max_tap_move_um": 27.52,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    107,
+    107
+   ],
+   "relays_changed": 107
+  },
+  "sle_su_l1__cl5ea486db": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "896a0da074a9f71c7835fc24c4cfb64ca8329feaf63b77ec0cc98557b32edcd1",
+   "bins_n": 16149,
+   "taps_before": 37,
+   "taps_after": 36,
+   "remap": {
+    "clk_t10": [
+     "clk_t8",
+     58.173
+    ],
+    "clk_t11": [
+     "clk_t12",
+     66.624
+    ],
+    "clk_t18": [
+     "clk_t14",
+     41.536
+    ],
+    "clk_t19": [
+     "clk_t14",
+     36.132
+    ],
+    "clk_t4": [
+     "clk_t5",
+     49.15
+    ]
+   },
+   "max_tap_move_um": 66.624,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    6,
+    6
+   ],
+   "relays": [
+    134,
+    146
+   ],
+   "relays_changed": 146
+  },
+  "slw_fe_v2__clf110fab2": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "e4fcf1a3fbeb13c4c79e2b1b6489c7fdbb5b5291a452ad1c0bccbd1e24976991",
+   "bins_n": 43454,
+   "taps_before": 30,
+   "taps_after": 68,
+   "remap": {
+    "clk_t1": [
+     "clk_t3",
+     34.162
+    ],
+    "clk_t11": [
+     "clk_t24",
+     8.576
+    ],
+    "clk_t13": [
+     "clk_t33",
+     6.193
+    ],
+    "clk_t19": [
+     "clk_t48",
+     21.31
+    ],
+    "clk_t21": [
+     "clk_t54",
+     6.4
+    ],
+    "clk_t29": [
+     "clk_t64",
+     26.55
+    ],
+    "clk_t6": [
+     "clk_t12",
+     25.344
+    ],
+    "clk_t9": [
+     "clk_t17",
+     22.912
+    ]
+   },
+   "max_tap_move_um": 61.35,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    86,
+    178
+   ],
+   "relays_changed": 178
+  },
+  "slw_fw_v2__cl8f84514c": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "3f194c1ab4eac622f4805576aa044070cedd8a04208418d11008f5adf2b82dcb",
+   "bins_n": 32699,
+   "taps_before": 33,
+   "taps_after": 59,
+   "remap": {
+    "clk_t1": [
+     "clk_t4",
+     26.467
+    ],
+    "clk_t14": [
+     "clk_t29",
+     14.912
+    ],
+    "clk_t16": [
+     "clk_t32",
+     6.912
+    ],
+    "clk_t2": [
+     "clk_t5",
+     24.016
+    ],
+    "clk_t3": [
+     "clk_t6",
+     35.648
+    ],
+    "clk_t30": [
+     "clk_t52",
+     44.906
+    ],
+    "clk_t32": [
+     "clk_t54",
+     15.572
+    ],
+    "clk_t5": [
+     "clk_t9",
+     44.992
+    ],
+    "clk_t8": [
+     "clk_t15",
+     43.609
+    ]
+   },
+   "max_tap_move_um": 44.992,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    5,
+    5
+   ],
+   "relays": [
+    105,
+    158
+   ],
+   "relays_changed": 158
+  },
+  "slw_sc_v1__cl63e5a7a2": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "8ec47ab51d6846c975c9ae89f26ad992c1c7f32f5ca52cdb1f3b5489ad9cbb1f",
+   "bins_n": 46164,
+   "taps_before": 62,
+   "taps_after": 67,
+   "remap": {
+    "clk_t10": [
+     "clk_t12",
+     22.167
+    ],
+    "clk_t2": [
+     "clk_t3",
+     23.424
+    ],
+    "clk_t20": [
+     "clk_t24",
+     13.248
+    ],
+    "clk_t24": [
+     "clk_t27",
+     6.837
+    ],
+    "clk_t3": [
+     "clk_t4",
+     53.568
+    ],
+    "clk_t34": [
+     "clk_t36",
+     1.757
+    ],
+    "clk_t51": [
+     "clk_t55",
+     3.923
+    ],
+    "clk_t54": [
+     "clk_t56",
+     6.156
+    ],
+    "clk_t56": [
+     "clk_t60",
+     90.742
+    ],
+    "clk_t6": [
+     "clk_t7",
+     3.84
+    ]
+   },
+   "max_tap_move_um": 90.742,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    138,
+    158
+   ],
+   "relays_changed": 158
+  },
+  "slw_sc_v2": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "495f79e1292677c1e528e9dfabbcff71af908bc8d37959fe9740aab4283dbbeb",
+   "bins_n": 44778,
+   "taps_before": 60,
+   "taps_after": 67,
+   "remap": {
+    "clk_t2": [
+     "clk_t5",
+     17.664
+    ],
+    "clk_t24": [
+     "clk_t30",
+     3.999
+    ],
+    "clk_t3": [
+     "clk_t5",
+     58.304
+    ],
+    "clk_t34": [
+     "clk_t40",
+     36.325
+    ],
+    "clk_t43": [
+     "clk_t46",
+     28.426
+    ],
+    "clk_t53": [
+     "clk_t55",
+     54.631
+    ],
+    "clk_t55": [
+     "clk_t57",
+     14.547
+    ],
+    "clk_t6": [
+     "clk_t8",
+     3.648
+    ],
+    "clk_t9": [
+     "clk_t12",
+     8.345
+    ]
+   },
+   "max_tap_move_um": 58.304,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    139,
+    156
+   ],
+   "relays_changed": 154
+  },
+  "slw_sc_v3": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "13774d04fd1c582838d0bd0e5a2b5a90bc59fb63e5eaf57ca335f902c53b3cb7",
+   "bins_n": 44466,
+   "taps_before": 59,
+   "taps_after": 63,
+   "remap": {
+    "clk_t2": [
+     "clk_t5",
+     14.72
+    ],
+    "clk_t24": [
+     "clk_t29",
+     3.999
+    ],
+    "clk_t3": [
+     "clk_t6",
+     58.304
+    ],
+    "clk_t34": [
+     "clk_t39",
+     60.792
+    ],
+    "clk_t43": [
+     "clk_t46",
+     59.203
+    ],
+    "clk_t52": [
+     "clk_t51",
+     8.073
+    ],
+    "clk_t6": [
+     "clk_t9",
+     3.648
+    ],
+    "clk_t9": [
+     "clk_t12",
+     2.834
+    ]
+   },
+   "max_tap_move_um": 60.792,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    132,
+    156
+   ],
+   "relays_changed": 156
+  },
+  "slw_st_b_v1__cl6357f1cc__pv6ace3e48": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "de4ef2206386d47f0854d52e16095f1865736f0d2bc63945165f9cbe4032f88e",
+   "bins_n": 72361,
+   "taps_before": 21,
+   "taps_after": 122,
+   "remap": {
+    "clk_t11": [
+     "clk_t61",
+     34.235
+    ],
+    "clk_t15": [
+     "clk_t95",
+     16.97
+    ],
+    "clk_t2": [
+     "clk_t1",
+     19.136
+    ],
+    "clk_t7": [
+     "clk_t26",
+     19.528
+    ]
+   },
+   "max_tap_move_um": 34.235,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    59,
+    258
+   ],
+   "relays_changed": 258
+  },
+  "slw_st_b_v1__cl6357f1cc__pvffd43fdc": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "467728baf7241d95b58ffcae7476ad2f1b90300e772af8a4980b93f155e4bc84",
+   "bins_n": 72637,
+   "taps_before": 21,
+   "taps_after": 122,
+   "remap": {
+    "clk_t11": [
+     "clk_t62",
+     34.235
+    ],
+    "clk_t15": [
+     "clk_t95",
+     15.435
+    ],
+    "clk_t2": [
+     "clk_t1",
+     19.136
+    ],
+    "clk_t7": [
+     "clk_t29",
+     17.183
+    ]
+   },
+   "max_tap_move_um": 34.235,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    59,
+    264
+   ],
+   "relays_changed": 264
+  },
+  "slw_st_b_v1__cle6023ec2": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "101aebccddef85512ac8497d0e16db66dd50a6b58e55f5c43870ee20f2650d11",
+   "bins_n": 72235,
+   "taps_before": 21,
+   "taps_after": 120,
+   "remap": {
+    "clk_t11": [
+     "clk_t61",
+     24.935
+    ],
+    "clk_t15": [
+     "clk_t94",
+     6.171
+    ],
+    "clk_t2": [
+     "clk_t3",
+     19.136
+    ],
+    "clk_t7": [
+     "clk_t28",
+     2.127
+    ]
+   },
+   "max_tap_move_um": 24.935,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    57,
+    258
+   ],
+   "relays_changed": 258
+  },
+  "slw_st_b_v2__pva66d0f22": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "2441bd097dcfeb95bd962d3e44b0fa6c865d38531b9e7ace27db34cfebb54e7c",
+   "bins_n": 68847,
+   "taps_before": 20,
+   "taps_after": 108,
+   "remap": {
+    "clk_t1": [
+     "clk_t2",
+     43.2
+    ],
+    "clk_t11": [
+     "clk_t54",
+     45.2
+    ],
+    "clk_t13": [
+     "clk_t56",
+     34.656
+    ],
+    "clk_t15": [
+     "clk_t83",
+     17.928
+    ],
+    "clk_t2": [
+     "clk_t3",
+     35.136
+    ],
+    "clk_t7": [
+     "clk_t24",
+     16.133
+    ]
+   },
+   "max_tap_move_um": 45.2,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    54,
+    233
+   ],
+   "relays_changed": 233
+  },
+  "slw_st_b_v2__pvc2ec5bfb": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "f4628978eef59dc0e85bcb4d670526c59b26b27b3209588bd3429dcd8bcd6dfa",
+   "bins_n": 68571,
+   "taps_before": 20,
+   "taps_after": 116,
+   "remap": {
+    "clk_t1": [
+     "clk_t2",
+     32.384
+    ],
+    "clk_t11": [
+     "clk_t58",
+     11.083
+    ],
+    "clk_t13": [
+     "clk_t63",
+     24.399
+    ],
+    "clk_t15": [
+     "clk_t89",
+     17.928
+    ],
+    "clk_t2": [
+     "clk_t3",
+     35.136
+    ],
+    "clk_t7": [
+     "clk_t25",
+     19.73
+    ]
+   },
+   "max_tap_move_um": 35.136,
+   "sidecar_tree": "republished",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    54,
+    251
+   ],
+   "relays_changed": 251
+  },
+  "slw_su_l0__cl1a1c1f8f": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "07eed5ac88f301ad8518fe9a88b8482657f07697b1068e2cc9ef61612e5bd8b1",
+   "bins_n": 22270,
+   "taps_before": 33,
+   "taps_after": 41,
+   "remap": {
+    "clk_t1": [
+     "clk_t4",
+     29.632
+    ],
+    "clk_t3": [
+     "clk_t7",
+     24.256
+    ],
+    "clk_t7": [
+     "clk_t11",
+     20.164
+    ],
+    "clk_t8": [
+     "clk_t11",
+     25.72
+    ],
+    "clk_t9": [
+     "clk_t10",
+     45.528
+    ]
+   },
+   "max_tap_move_um": 45.528,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    91,
+    121
+   ],
+   "relays_changed": 121
+  },
+  "slw_su_l0__cl1e5219ea": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "3d5adb888163e3ba00ec10b8f1b3a84223cf3521085320732e836494644f8fec",
+   "bins_n": 22329,
+   "taps_before": 33,
+   "taps_after": 44,
+   "remap": {
+    "clk_t3": [
+     "clk_t6",
+     26.584
+    ],
+    "clk_t5": [
+     "clk_t7",
+     21.092
+    ],
+    "clk_t8": [
+     "clk_t10",
+     25.72
+    ],
+    "clk_t9": [
+     "clk_t11",
+     21.637
+    ]
+   },
+   "max_tap_move_um": 38.618,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    92,
+    123
+   ],
+   "relays_changed": 123
+  },
+  "slw_su_l0__cl76fb247e": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "328ce2f6247e97a8c1aef259a26730d89e2f9357493535673d9b3568fbe49d8e",
+   "bins_n": 22270,
+   "taps_before": 33,
+   "taps_after": 41,
+   "remap": {
+    "clk_t3": [
+     "clk_t6",
+     26.584
+    ],
+    "clk_t5": [
+     "clk_t8",
+     28.406
+    ],
+    "clk_t8": [
+     "clk_t11",
+     29.359
+    ],
+    "clk_t9": [
+     "clk_t11",
+     32.451
+    ]
+   },
+   "max_tap_move_um": 47.703,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    4,
+    4
+   ],
+   "relays": [
+    91,
+    117
+   ],
+   "relays_changed": 117
+  },
+  "slw_su_l1__cla2a78701": {
+   "changed": [
+    "clock.sink_bins_file",
+    "reset.wavefront_min_depth = 6 (bins tree depth 5)"
+   ],
+   "bins_sha256": "ddab1d3df8482b40cf0008fab00d6a03fef172b19d749a2f85128a6b7f5222c3",
+   "bins_n": 10660,
+   "taps_before": 35,
+   "taps_after": 28,
+   "remap": {
+    "clk_t15": [
+     "clk_t13",
+     51.232
+    ],
+    "clk_t16": [
+     "clk_t13",
+     48.086
+    ],
+    "clk_t2": [
+     "clk_t4",
+     4.736
+    ],
+    "clk_t5": [
+     "clk_t7",
+     56.712
+    ]
+   },
+   "max_tap_move_um": 56.712,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "own_depth",
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    6,
+    6
+   ],
+   "relays": [
+    94,
+    120
+   ],
+   "relays_changed": 120
+  },
+  "slw_su_l1__clcc9d0155": {
+   "changed": [
+    "clock.sink_bins_file"
+   ],
+   "bins_sha256": "bccbae1dc020a245bc18d363f64ca2ac8ad0fa927d3ac926cedfb09250c8c69c",
+   "bins_n": 10665,
+   "taps_before": 35,
+   "taps_after": 26,
+   "remap": {
+    "clk_t15": [
+     "clk_t13",
+     72.72
+    ],
+    "clk_t16": [
+     "clk_t13",
+     18.227
+    ],
+    "clk_t2": [
+     "clk_t4",
+     4.736
+    ],
+    "clk_t5": [
+     "clk_t6",
+     56.712
+    ],
+    "clk_t9": [
+     "clk_t7",
+     0.576
+    ]
+   },
+   "max_tap_move_um": 72.72,
+   "sidecar_tree": "kept: differed from the s27 plan tree already",
+   "tree_changed_keys": [
+    "tap_depth",
+    "taps",
+    "n_clock_taps",
+    "n_reset_consumers",
+    "core_resets"
+   ],
+   "reset_depth": [
+    6,
+    6
+   ],
+   "relays": [
+    95,
+    122
+   ],
+   "relays_changed": 122
+  }
+ }
+}

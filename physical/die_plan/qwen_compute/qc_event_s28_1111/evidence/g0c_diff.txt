@@ -1,0 +1,76 @@
+== ERR: base 365 cand 365 new 0 gone 0
+== WARN: base 571 cand 541 new 22 gone 52
+  NEW x1 [geom_clock_reach] [G0C-GEOM] type sle_st_a_v2: plan-time AUTO-GEOM clock_reach 237.25 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_296 (37.8, 308.2)
+  NEW x1 [geom_clock_reach] type sle_ctl__cl372cea1c: plan geometry not evaluable (ValueError: unknown, ambiguous or unsupported landing group override 'u_cland_collect_rst_n_t19')
+  NEW x1 [geom_clock_reach] type sle_ctl__cl503337ff: plan geometry not evaluable (ValueError: unknown, ambiguous or unsupported landing group override 'u_cland_collect_rst_n_t19')
+  NEW x1 [geom_clock_reach] type slw_fw_v2__cl8f84514c: plan geometry not evaluable (ValueError: unknown, ambiguous or unsupported landing group override 'u_cland_collect_rst_n_t14')
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_fw_v2__cl6740750e: plan-time AUTO-GEOM clock_tap_sinks 1930.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t4
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v2: plan-time AUTO-GEOM clock_tap_sinks 1819.1 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t17
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v3: plan-time AUTO-GEOM clock_tap_sinks 1625.3 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t28
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_st_a_v2: plan-time AUTO-GEOM clock_tap_sinks 1945.2 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t2
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_su_c: plan-time AUTO-GEOM clock_tap_sinks 1609.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t80
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_su_l1__cl5ea486db: plan-time AUTO-GEOM clock_tap_sinks 1829.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t31
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_fe_v2__clf110fab2: plan-time AUTO-GEOM clock_tap_sinks 1574.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t3
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v1__cl63e5a7a2: plan-time AUTO-GEOM clock_tap_sinks 1889.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t32
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v2: plan-time AUTO-GEOM clock_tap_sinks 1780.8 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t60
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v3: plan-time AUTO-GEOM clock_tap_sinks 1778.2 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t41
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_su_l0__cl1a1c1f8f: plan-time AUTO-GEOM clock_tap_sinks 1611.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t38
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_su_l0__cl76fb247e: plan-time AUTO-GEOM clock_tap_sinks 1611.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t38
+  NEW x1 [tap_sink_cap] [tapcap-count] 77 taps over cap in 39 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 107 with a sink inventory, 16 planned face/ft sinks only = lower bound)
+  NEW x1 [tap_sink_cap] [tapcap] ... 57 more taps over the cap
+  NEW x1 [tap_sink_cap] [tapcap] type sle_fw_v2__cl6740750e tap clk_t4: 1346 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_sc_v1__cl63e5a7a2 tap clk_t5: 1540 clock sinks > cap 1200
+  NEW x1 [xtap_latency] ... 674 more unlocked cross-tap hops (see summary)
+  NEW x1 [xtap_latency] [xtap-count] 694 unlocked hops with tap latency delta > 50 ps (worst 160 ps; 1824 hops, 1032 unknown sites, 0 latch-only); flat tap window 180 ps on every port
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type sle_ctl__cl372cea1c: plan-time AUTO-GEOM clock_reach 323.73 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_reader_start_cws2_i_3 (838.4, 1039.6)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type sle_ctl__cl503337ff: plan-time AUTO-GEOM clock_reach 323.73 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_reader_start_cws2_i_3 (838.4, 1039.6)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type sle_fw_v2__cl6740750e: plan-time AUTO-GEOM clock_reach 236.8 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_75 (320.0, 837.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type sle_st_a_v2: plan-time AUTO-GEOM clock_reach 332.65 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan_land_out (4.5, 1337.2)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type sle_su_c: plan-time AUTO-GEOM clock_reach 377.47 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_collect_rst_rl_93 (385.6, 837.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type sle_su_l1__cl5ea486db: plan-time AUTO-GEOM clock_reach 315.66 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan_land_out (13.5, 1337.2)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_fe_v2__clf110fab2: plan-time AUTO-GEOM clock_reach 293.28 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_reader_start_arl_ei_1 (339.6, 216.1)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_fw_v2__cl8f84514c: plan-time AUTO-GEOM clock_reach 253.54 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far landing:u_cland_collect_rst_rl_84 (323.3, 8.6)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_st_b_v1__cl6357f1cc__pv6ace3e48: plan-time AUTO-GEOM clock_reach 451.58 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far reset_root (613.0, 837.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_st_b_v1__cl6357f1cc__pvffd43fdc: plan-time AUTO-GEOM clock_reach 451.58 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far reset_root (613.0, 837.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_st_b_v1__cle6023ec2: plan-time AUTO-GEOM clock_reach 451.58 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far reset_root (613.0, 837.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_st_b_v2__pva66d0f22: plan-time AUTO-GEOM clock_reach 461.7 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far reset_root (613.0, 837.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_st_b_v2__pvc2ec5bfb: plan-time AUTO-GEOM clock_reach 461.7 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far reset_root (613.0, 837.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_su_l0__cl1a1c1f8f: plan-time AUTO-GEOM clock_reach 375.33 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_74 (566.8, 1322.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_su_l0__cl1e5219ea: plan-time AUTO-GEOM clock_reach 375.33 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_75 (566.8, 1322.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_su_l0__cl76fb247e: plan-time AUTO-GEOM clock_reach 375.33 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_74 (566.8, 1322.0)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_su_l1__cla2a78701: plan-time AUTO-GEOM clock_reach 351.38 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan_land_out (95.0, 1337.2)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type slw_su_l1__clcc9d0155: plan-time AUTO-GEOM clock_reach 351.38 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan_land_out (95.0, 1337.2)
+  GONE x1 [geom_partial_face] [G0C-GEOM] type slw_fw_v2__cl8f84514c: plan-time AUTO-GEOM partial_face 1 (limit <=0; tile-review-pin-clustering-1017 (pins on partial faces)) S:1547 pins on 46% of face at 5.3/um
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type sle_ctl__cl372cea1c: plan-time AUTO-GEOM pin_reg_max 413.54 (limit <=150.0; layout_review.py 150 backstop) 413.5 flt_hc2_i[1]
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type sle_ctl__cl503337ff: plan-time AUTO-GEOM pin_reg_max 413.54 (limit <=150.0; layout_review.py 150 backstop) 413.5 flt_hc2_i[1]
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type slw_fw_v2__cl8f84514c: plan-time AUTO-GEOM pin_reg_max 190.08 (limit <=150.0; layout_review.py 150 backstop) 190.1 rd_wi[9]
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type slw_fw_v2__cl8f84514c: plan-time AUTO-GEOM pin_reg_p90 92.88 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 190.1 rd_wi[9], 190.1 rd_wi[99]
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_ctl__cl372cea1c: plan-time AUTO-GEOM clock_tap_sinks 1995.1 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t3
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_ctl__cl503337ff: plan-time AUTO-GEOM clock_tap_sinks 1994.1 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t3
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_fe_v3: plan-time AUTO-GEOM clock_tap_sinks 1616.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t18
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_fw_v2__cl6740750e: plan-time AUTO-GEOM clock_tap_sinks 2304.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t32
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v2: plan-time AUTO-GEOM clock_tap_sinks 1524.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t1
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v3: plan-time AUTO-GEOM clock_tap_sinks 1867.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t24
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_st_a_v2: plan-time AUTO-GEOM clock_tap_sinks 2092.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t30
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_st_b_v1__pv0e7b1dcc: plan-time AUTO-GEOM clock_tap_sinks 1939.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t18
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_st_b_v1__pvc5a85fd4: plan-time AUTO-GEOM clock_tap_sinks 1939.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t18
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_st_b_v2__cl14c98df5: plan-time AUTO-GEOM clock_tap_sinks 1939.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t18
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_st_b_v2__clfde1249e: plan-time AUTO-GEOM clock_tap_sinks 1939.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t18
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_su_c: plan-time AUTO-GEOM clock_tap_sinks 2097.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t31
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_su_l1__cl5ea486db: plan-time AUTO-GEOM clock_tap_sinks 1580.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t35
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_fe_v2__clf110fab2: plan-time AUTO-GEOM clock_tap_sinks 1685.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t29
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_fw_v2__cl8f84514c: plan-time AUTO-GEOM clock_tap_sinks 2310.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t30
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v1__cl63e5a7a2: plan-time AUTO-GEOM clock_tap_sinks 1804.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t4
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v2: plan-time AUTO-GEOM clock_tap_sinks 1754.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t4
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v3: plan-time AUTO-GEOM clock_tap_sinks 1754.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t4
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_b_v1__cl6357f1cc__pv6ace3e48: plan-time AUTO-GEOM clock_tap_sinks 1986.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t19
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_b_v1__cl6357f1cc__pvffd43fdc: plan-time AUTO-GEOM clock_tap_sinks 1986.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t19
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_b_v1__cle6023ec2: plan-time AUTO-GEOM clock_tap_sinks 1936.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t19
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_b_v2__pva66d0f22: plan-time AUTO-GEOM clock_tap_sinks 1986.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t18
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_b_v2__pvc2ec5bfb: plan-time AUTO-GEOM clock_tap_sinks 1986.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t18
+  GONE x1 [tap_sink_cap] [tapcap-count] 70 taps over cap in 33 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 77 with a sink inventory, 46 planned face/ft sinks only = lower bound)
+  GONE x1 [tap_sink_cap] [tapcap] ... 50 more taps over the cap
+  GONE x1 [tap_sink_cap] [tapcap] type sle_sc_v3 tap clk_t30: 1462 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_su_l1__cl5ea486db tap clk_t24: 1367 clock sinks > cap 1200
+  GONE x1 [xtap_latency] ... 673 more unlocked cross-tap hops (see summary)
+  GONE x1 [xtap_latency] [xtap-count] 693 unlocked hops with tap latency delta > 50 ps (worst 160 ps; 1824 hops, 1032 unknown sites, 0 latch-only); flat tap window 180 ps on every port
