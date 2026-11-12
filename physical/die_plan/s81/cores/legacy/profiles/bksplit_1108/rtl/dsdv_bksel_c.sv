@@ -43,6 +43,9 @@ endmodule
 
 // S81U-BK3: the selector quarter leaf dsfd_selt_q2 (DM 4, SAFE, CMP_RETIME, PIPE2, QIO, ILD, FRPR: the closed s81b-selt_q2-frprildb
 // configuration)
+`ifndef OT_BKQ_HLAT_DEF
+`define OT_BKQ_HLAT_DEF 0   // bench hook only (layer benches instantiate dsdv_bksel_q without HLAT); kits pass HLAT
+`endif
 module dsdv_bksel_q #(
     parameter integer OLL = 0,  // RF-C/bk 11-03: 1 = negative-level lockup latch, 2 = negedge flop, on every output port (dsdv_bk_oll)
     // DIE-S81-51/RF-H 11-03 (S81-054 conservative form, OWNER 18:57): RFH 1 = every input pin (lane, f_c, f_cr, rst) lands
@@ -51,7 +54,13 @@ module dsdv_bksel_q #(
     // NO sender lockup latch); dsfd_selt_q_hq FACE 1 then registers the type-8 selects as kept copies (no raw-type
     // broadcast from s0) and relays the reset through posedge kept copies per consumer group (reset assert / release
     // +1 edge, synchronous both ways).  RFH 0 = the RF-C form (face flops unloaded, removed by synthesis).
-    parameter integer RFH = 0
+    parameter integer RFH = 0,
+    // S81-ARCH-RTL-2 11-12 (DIE-S81-87 / COORD bksel hold, structural): HLAT 1 = a NEGATIVE-level lockup latch
+    // (ot_s81ph_hlk u_fl_*, transparent while ck is LOW) on the launch side of the measured zero-logic intra-core hops
+    // (vC4r HOLD_SPLIT: x_* -> i0_*, c1_* -> c2_*, pend_d1 -> pend_eff, o0_m -> o_in / u_ofq wd).  0 cycles; the
+    // capture's hold window becomes ~T/2 - skew.  Legal only with the latch clocked from its launch flop's tap
+    // (regional_taps.tcl OT_RT_HLAT_FOLLOW_D 1).  HLAT 0 = byte-identical function and structure to the old form.
+    parameter integer HLAT = `OT_BKQ_HLAT_DEF
 ) (
     input  wire         ck,
     input  wire         rst,
@@ -90,7 +99,7 @@ module dsdv_bksel_q #(
 `ifndef OT_S81PH_SEL_HQ_MUT
 `define OT_S81PH_SEL_HQ_MUT 0
 `endif
-    dsfd_selt_q_hq #(.DM(4), .MUT(`OT_S81PH_SEL_HQ_MUT), .FACE(RFH != 0)) u_q (.ck(ck), .rst(rst_i), .lane(lane_i), .f_c(f_c_i),
+    dsfd_selt_q_hq #(.DM(4), .MUT(`OT_S81PH_SEL_HQ_MUT), .FACE(RFH != 0), .HLAT(HLAT)) u_q (.ck(ck), .rst(rst_i), .lane(lane_i), .f_c(f_c_i),
         .f_cr(f_cr_i), .t_s(t_s_f), .t_o(t_o_f));
 `else
     dsfd_selt_q2 #(.DM(4), .CMP_RETIME(1), .PIPE2(1), .QIO(1), .ILD(1), .FRPR(1)) u_q (.ck(ck), .rst(rst_i), .lane(lane_i),

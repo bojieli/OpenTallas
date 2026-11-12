@@ -36,6 +36,7 @@ module ot_s81ph_hq_slice #(
     parameter integer KW = 10,
     parameter integer CB = 11,
     parameter integer NP = 6,         // packer planes
+    parameter integer HLAT = 0,       // S81-ARCH-RTL-2 11-12: 1 = ot_s81ph_hlk lockup latches u_fl_* on the zero-logic hops
     parameter integer MUT = 0         // causal witnesses (each must FAIL the production bench): 1 r1_d memory select
                                       // copy 7 stuck 0; 2 mem_wdata ingest select of group 3 stuck 0; 3 every coarse bank
                                       // reads the wrong group; 4 o0 select copies of group 2 stuck 0
@@ -178,6 +179,10 @@ module ot_s81ph_hq_slice #(
     wire rp_acc = (sw_st == SW_RD) && sw_rp;
     assign in_ready = (init == 0) && !last_seen && (((ph == P_ING) && r_ing && !r_stop) || rp_acc);
     wire acc = in_valid && in_ready;
+    // HLAT: the beat-register (tile x_*) -> i0_* hop through one lockup latch (vC4r worst: in_idx -> i0_idx -129 ps)
+    wire in_last_l; wire [W-1:0] in_lv_l; wire [W*16-1:0] in_val_l; wire [W*IW-1:0] in_idx_l;
+    ot_s81ph_hlk #(.W(1 + W + W*16 + W*IW), .EN(HLAT)) u_fl_i0 (.clk(clk), .d({in_last, in_lv, in_val, in_idx}),
+        .q({in_last_l, in_lv_l, in_val_l, in_idx_l}));
     reg            i0_v, i0_last, i0_rp;
     reg [W-1:0]    i0_lv;
     reg [W*16-1:0] i0_val;
@@ -187,7 +192,7 @@ module ot_s81ph_hq_slice #(
         else i0_v <= acc;
     end
     always @(posedge clk) begin
-        i0_last <= in_last; i0_lv <= in_lv; i0_val <= in_val; i0_idx <= in_idx; i0_rp <= rp_acc;
+        i0_last <= in_last_l; i0_lv <= in_lv_l; i0_val <= in_val_l; i0_idx <= in_idx_l; i0_rp <= rp_acc;
     end
 
     // -- ingest: filter (CMP_RETIME, H8) ----------------------------------------------------------------------------
@@ -310,7 +315,9 @@ module ot_s81ph_hq_slice #(
             else begin rpb <= rpd; memb <= (MUT == 1 && gg == 7) ? 1'b0 : mbd; end
         assign rpb_v[gg] = rpb; assign memb_v[gg] = memb;
         reg [SW-1:0] q;
-        always @(posedge clk) q <= (i0_lane[LO +: SW] & {SW{rpb}}) | (mem_rdata[LO +: SW] & {SW{memb}});
+        wire rpb_l, memb_l;   // HLAT: rpb / memb -> q through one lockup latch
+        ot_s81ph_hlk #(.W(2), .EN(HLAT)) u_fl_r1s (.clk(clk), .d({rpb, memb}), .q({rpb_l, memb_l}));
+        always @(posedge clk) q <= (i0_lane[LO +: SW] & {SW{rpb_l}}) | (mem_rdata[LO +: SW] & {SW{memb_l}});
         assign r1_d[LO +: SW] = q;
     end endgenerate
     // tsw: the sweep bound, registered (PIPE2), with kept copies per 4-lane group
@@ -374,9 +381,15 @@ module ot_s81ph_hq_slice #(
             c1_v <= r1_v; c1_fl <= r1_fl; c2_v <= c1_v; c2_fl <= c1_fl; c3_v <= c2_v; c3_fl <= c2_fl;
         end
     end
+    // HLAT: g_r1 q (r1_d) -> c1_p through one lockup latch (vC4r: 58 endpoints, -43 ps)
+    wire [W*EW-1:0] r1_d_l;
+    ot_s81ph_hlk #(.W(W*EW), .EN(HLAT)) u_fl_r1 (.clk(clk), .d(r1_d), .q(r1_d_l));
+    // HLAT: c1_* -> c2_* through one lockup latch (vC4r: c1_p -> c2_p 344 endpoints, -94 ps)
+    wire [W-1:0] c1_gt_l, c1_eq_l; wire [W*EW-1:0] c1_p_l;
+    ot_s81ph_hlk #(.W(2*W + W*EW), .EN(HLAT)) u_fl_c1 (.clk(clk), .d({c1_gt, c1_eq, c1_p}), .q({c1_gt_l, c1_eq_l, c1_p_l}));
     always @(posedge clk) begin
-        c1_gt <= c1_gt_d; c1_eq <= c1_eq_d; c1_p <= r1_d;
-        c2_gt <= c1_gt; c2_eq <= c1_eq; c2_p <= c1_p;
+        c1_gt <= c1_gt_d; c1_eq <= c1_eq_d; c1_p <= r1_d_l;
+        c2_gt <= c1_gt_l; c2_eq <= c1_eq_l; c2_p <= c1_p_l;
         c2_pre <= {eq_inc[(LW+1)*(W-1)-1:0], {(LW+1){1'b0}}};
         c2_cnt <= eq_inc[(LW+1)*(W-1) +: LW+1];
     end
@@ -417,7 +430,7 @@ module ot_s81ph_hq_slice #(
     wire f_clr_x = r_fclr || (sw_start && p2q);
     wire [7:0] hc_clr = sc[NSC/2 +: 8];
     wire [7:0] hf_clr = sc[NSC/2 + 8 +: 8] | {8{f_clr_x}};
-    ot_s81ph_hq_hist #(.MUT((MUT == 3) ? 1 : 0)) u_hc (
+    ot_s81ph_hq_hist #(.MUT((MUT == 3) ? 1 : 0), .HLAT(HLAT)) u_hc (
         .clk(clk), .rst_n(rst_n), .clr(hc_clr), .i_v(i1_v), .i_en(i1_s_hc), .i_dg(hi_dg), .gsel_d(c_cgc),
         .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
     // fine input: i1_v ? {i1_fm, lo digits} : {p2_en, p2 digits}; valid = i1_v | (p2m & r1_v) (exact, see header)
@@ -428,7 +441,7 @@ module ot_s81ph_hq_slice #(
         localparam integer SW = (W + W*8 - LO < HB) ? (W + W*8 - LO) : HB;
         assign hf_x[LO +: SW] = (hf_a[LO +: SW] & {SW{hf_s1[gg]}}) | (hf_b[LO +: SW] & {SW{hf_s0[gg]}});
     end endgenerate
-    ot_s81ph_hq_hist u_hf (
+    ot_s81ph_hq_hist #(.HLAT(HLAT)) u_hf (
         .clk(clk), .rst_n(rst_n), .clr(hf_clr), .i_v(i1_v || (p2m && r1_v)), .i_en(hf_x[W*8 +: W]),
         .i_dg(hf_x[0 +: W*8]), .gsel_d(c_fgc), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
 
@@ -746,6 +759,8 @@ module ot_s81ph_hq_slice #(
     reg  [MW-1:0] pend_d1, pend_q;
     wire [MW-1:0] pend_eff;
     always @(posedge clk) pend_d1 <= ps_line;
+    wire [MW-1:0] pend_d1_l;   // HLAT: pend_d1 -> pend_eff (pend_q / o0_p) through one lockup latch
+    ot_s81ph_hlk #(.W(MW), .EN(HLAT)) u_fl_pend (.clk(clk), .d(pend_d1), .q(pend_d1_l));
     generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_pe
         localparam integer LO = gg * GB;
         localparam integer SW = (MW - LO < GB) ? (MW - LO) : GB;
@@ -753,7 +768,9 @@ module ot_s81ph_hq_slice #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin e1 <= 1'b0; e0 <= 1'b1; end
             else begin e1 <= cap_a; e0 <= !cap_b; end
-        assign pend_eff[LO +: SW] = (pend_d1[LO +: SW] & {SW{e1}}) | (pend_q[LO +: SW] & {SW{e0}});
+        wire e1_l, e0_l;      // HLAT: the pend selects -> pend_q / o0_p through one lockup latch
+        ot_s81ph_hlk #(.W(2), .EN(HLAT)) u_fl_pe (.clk(clk), .d({e1, e0}), .q({e1_l, e0_l}));
+        assign pend_eff[LO +: SW] = (pend_d1_l[LO +: SW] & {SW{e1_l}}) | (pend_q[LO +: SW] & {SW{e0_l}});
         always @(posedge clk) pend_q[LO +: SW] <= pend_eff[LO +: SW];
     end endgenerate
 
@@ -781,6 +798,10 @@ module ot_s81ph_hq_slice #(
         o0_m <= mem_rdata; o0_p <= pend_eff;
         o0_last <= em_a ? tq_last : d_push ? d_fin_push : 1'b1;
     end
+    wire [MW-1:0] o0_m_l;      // HLAT: o0_m -> o_in -> u_ofq wd through one lockup latch
+    ot_s81ph_hlk #(.W(MW), .EN(HLAT)) u_fl_o0m (.clk(clk), .d(o0_m), .q(o0_m_l));
+    wire [MW-1:0] o0_p_l;      // HLAT: o0_p (= pend_q after merge) -> o_in through one lockup latch
+    ot_s81ph_hlk #(.W(MW), .EN(HLAT)) u_fl_o0p (.clk(clk), .d(o0_p), .q(o0_p_l));
     wire [MW:0] o_in;
     assign o_in[MW] = o0_last;
     generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_o0
@@ -791,7 +812,9 @@ module ot_s81ph_hq_slice #(
             sm <= (MUT == 4 && gg == 2) ? 1'b0 : (gg % 2 == 0) ? em_a : em_b;
             sp <= (MUT == 4 && gg == 2) ? 1'b0 : (gg % 2 == 0) ? (!em_b && d_push_b) : (!em_a && d_push);
         end
-        assign o_in[LO +: SW] = (o0_m[LO +: SW] & {SW{sm}}) | (o0_p[LO +: SW] & {SW{sp}});
+        wire sm_l, sp_l;      // HLAT: the o0 selects -> o_in -> u_ofq wd through one lockup latch
+        ot_s81ph_hlk #(.W(2), .EN(HLAT)) u_fl_o0s (.clk(clk), .d({sm, sp}), .q({sm_l, sp_l}));
+        assign o_in[LO +: SW] = (o0_m_l[LO +: SW] & {SW{sm_l}}) | (o0_p_l[LO +: SW] & {SW{sp_l}});
     end endgenerate
     wire           o_push = o0_v;
     wire           o_pop  = (ocnt != 0) && out_ready;
@@ -829,4 +852,33 @@ module ot_s81ph_hq_slice #(
             assign out_ninf[gl]           = ln[EW-1] && (ln[IW +: 16] == 16'hFF80);
         end
     endgenerate
+endmodule
+
+// S81-ARCH-RTL-2 11-12 (DIE-S81-87 bksel hold, structural): zero-logic hop lockup latch.  EN 1 = NEGATIVE-level latch
+// (transparent while clk is LOW): the capture flop at the next rising edge sees exactly the launch flop's value (0
+// cycles), and the latch output moves only after the falling edge, so the capture's zero-logic hold window is ~T/2 minus
+// the launch -> capture clock skew.  The launch -> latch check must be intra-tap: the kit hangs every u_fl_* latch on its
+// D-driver flop's tap (regional_taps.tcl OT_RT_HLAT_FOLLOW_D).  EN 0 = wires.
+module ot_s81ph_hlk #(parameter integer W = 1, parameter integer EN = 0) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    generate if (EN != 0) begin : g_lat
+        reg [W-1:0] l;
+`ifdef OT_S81PH_HLK_MUT
+        always_latch if (clk) l <= d;     // bench mutant: positive-level latch (the hop passes in the high phase)
+`else
+        always_latch if (!clk) l <= d;
+`endif
+        assign q = l;
+`ifdef OT_S81PH_HLK_COV
+        // bench coverage only: count q changes (each latch must toggle under the layer traffic)
+        integer ntog = 0; reg [W-1:0] lq;
+        always @(negedge clk) begin #0.001 if (l !== lq) ntog = ntog + 1; lq = l; end
+        final $display("HLK_COV %m W %0d toggles %0d", W, ntog);
+`endif
+    end else begin : g_wire
+        assign q = d;
+    end endgenerate
 endmodule

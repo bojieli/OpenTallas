@@ -1,0 +1,6 @@
+      |                                                                ^~~
+%Warning-COMBDLY: physical/die_plan/s81/cores/legacy/profiles/bksplit_1108/rtl/ot_s81ph_hq_slice.sv:872:34: Non-blocking assignment '<=' in combinational logic process
+                                                                                                          : ... This will be executed as a blocking assignment '='!
+  872 |         always_latch if (!clk) l <= d;
+      |                                  ^~
+                  ... For warning description see https://verilator.org/warn/COMBDLY?v=5.050

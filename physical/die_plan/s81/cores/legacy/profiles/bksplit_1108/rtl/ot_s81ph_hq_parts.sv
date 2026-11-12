@@ -62,6 +62,7 @@ module ot_s81ph_hq_pack #(
 endmodule
 
 module ot_s81ph_hq_hist #(
+    parameter integer HLAT = 0,        // S81-ARCH-RTL-2 11-12: 1 = lockup latches u_fl_* on row -> bank stage and g1 -> s_g
     parameter integer MUT = 0          // 1: every bank counts its neighbour's bins (witness); 2: bank 3 never clears (witness)
 ) (
     input  wire          clk,
@@ -97,7 +98,11 @@ module ot_s81ph_hq_hist #(
         (* keep = "true" *) reg [15:0] en;
         (* keep = "true" *) reg [127:0] dg;
         always @(posedge clk) begin v <= i_v; rn <= rst_n; en <= i_en; dg <= i_dg; end
-        assign row_v[b] = v; assign row_rn[b] = rn; assign row_en[16*b +: 16] = en; assign row_dg[128*b +: 128] = dg;
+        // HLAT: the row stage (v / en / dg) -> per-bank pin stage (s_v / s_en / s_dg) through one lockup latch
+        // (vC4r: u_hf/u_hc g_row dg -> g_bank s_dg 377 endpoints to -66 ps, en -> s_en 44)
+        wire v_l; wire [15:0] en_l; wire [127:0] dg_l;
+        ot_s81ph_hlk #(.W(1 + 16 + 128), .EN(HLAT)) u_fl_row (.clk(clk), .d({v, en, dg}), .q({v_l, en_l, dg_l}));
+        assign row_v[b] = v_l; assign row_rn[b] = rn; assign row_en[16*b +: 16] = en_l; assign row_dg[128*b +: 128] = dg_l;
     end endgenerate
 `endif
     generate for (b = 0; b < 8; b = b + 1) begin : g_bank
@@ -109,6 +114,8 @@ module ot_s81ph_hq_hist #(
         wire       nc = (MUT == 2 && b == 3) ? 1'b0 : clr[b];
 `ifdef OT_BKQ_BSTG
         (* keep = "true" *) reg c1; (* keep = "true" *) reg [3:0] g1;
+        wire [3:0] g1_l;   // HLAT: g1 -> s_g (gsel pin stage) through one lockup latch (vC4r 79 endpoints)
+        ot_s81ph_hlk #(.W(4), .EN(HLAT)) u_fl_g1 (.clk(clk), .d(g1), .q(g1_l));
         (* keep = "true" *) reg s_v, s_rn;
         (* keep = "true" *) reg [15:0] s_en;
         (* keep = "true" *) reg [127:0] s_dg;
@@ -132,9 +139,9 @@ module ot_s81ph_hq_hist #(
             s_v <= row_v[b / 4]; s_en <= row_en[16*(b / 4) +: 16];
             c1 <= nc; g1 <= ng;
 `ifdef OT_BKQ_BSTG_MUT_G
-            s_clr <= {3{c1}}; s_g <= {g1, (b == 6) ? ng : g1};  // proof mutant: bank 6 low gsel copy one edge early
+            s_clr <= {3{c1}}; s_g <= {g1_l, (b == 6) ? ng : g1_l};  // proof mutant: bank 6 low gsel copy one edge early
 `else
-            s_clr <= {3{c1}}; s_g <= {2{g1}};
+            s_clr <= {3{c1}}; s_g <= {2{g1_l}};
 `endif
         end
 `endif

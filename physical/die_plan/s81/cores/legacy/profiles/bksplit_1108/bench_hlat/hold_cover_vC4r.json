@@ -1,0 +1,140 @@
+{
+ "violators": 1581,
+ "covered": 1247,
+ "left": 334,
+ "covered_by_hop": {
+  "u_fl_row hist row -> bank stage": {
+   "n": 424,
+   "wns": -66.24
+  },
+  "u_fl_c1 c1_* -> c2_*": {
+   "n": 350,
+   "wns": -94.42
+  },
+  "u_fl_g1 hist g1 -> s_g": {
+   "n": 79,
+   "wns": -64.67
+  },
+  "u_fl_pend pend_d1 -> pend_q/o0_p": {
+   "n": 77,
+   "wns": -77.92
+  },
+  "u_fl_i0 x_* -> i0_*": {
+   "n": 60,
+   "wns": -128.97
+  },
+  "u_fl_r1 r1 q -> c1_p": {
+   "n": 58,
+   "wns": -43.05
+  },
+  "u_fl_x  b_* -> x_*": {
+   "n": 46,
+   "wns": -33.2
+  },
+  "u_fl_o0p o0_p/pend_q -> ofq": {
+   "n": 45,
+   "wns": -37.07
+  },
+  "u_fl_o0s o0 sel -> ofq": {
+   "n": 36,
+   "wns": -79.96
+  },
+  "u_fl_r1s rpb/memb -> r1 q": {
+   "n": 34,
+   "wns": -41.96
+  },
+  "u_fl_o0m o0_m -> ofq": {
+   "n": 32,
+   "wns": -89.4
+  },
+  "u_fl_pe e1/e0 -> pend_q/o0_p": {
+   "n": 6,
+   "wns": -77.96
+  }
+ },
+ "left_wns": -108.57,
+ "left_wns_internal": -48.12,
+ "left_port_fcap": 18,
+ "left_top": {
+  "u_q.u_mem.q[][] -> u_q.u_s.o0_m[]": {
+   "n": 35,
+   "wns": -21.2
+  },
+  "u_q.u_s.u_ofq.wdata[] -> u_q.u_s.u_ofq.g_bank[].u_m": {
+   "n": 24,
+   "wns": -17.6
+  },
+  "u_q.m_wd0[] -> u_q.u_mem.g_b[].g_w[].u_m": {
+   "n": 18,
+   "wns": -19.67
+  },
+  "f_c_i[] -> u_q.cq0[]": {
+   "n": 17,
+   "wns": -23.46
+  },
+  "u_q.sq[] -> u_q.sqd[]": {
+   "n": 15,
+   "wns": -28.58
+  },
+  "u_q.sq2[] -> u_q.sq3[]": {
+   "n": 15,
+   "wns": -16.47
+  },
+  "u_q.cq_cg[] -> u_q.u_s.u_hc.g_bank[].g1[]": {
+   "n": 13,
+   "wns": -22.88
+  },
+  "u_q.cq_fg[] -> u_q.u_s.u_hf.g_bank[].g1[]": {
+   "n": 13,
+   "wns": -13.23
+  },
+  "u_q.sq3[] -> u_q.sq4[]": {
+   "n": 11,
+   "wns": -16.75
+  },
+  "u_q.u_s.u_hc.g_bank[].s_clr[] -> u_q.u_s.u_hc.g_bank[].u_bank": {
+   "n": 11,
+   "wns": -5.32
+  },
+  "lane_i[] -> u_q.u_in.s0[]": {
+   "n": 10,
+   "wns": -15.91
+  },
+  "u_q.u_s.g_hf[].r -> u_q.m_wd0[]": {
+   "n": 10,
+   "wns": -6.72
+  },
+  "u_q.h_k[] -> u_q.sq[]": {
+   "n": 9,
+   "wns": -6.3
+  },
+  "u_q.u_s.i0_val[] -> u_q.u_s.i1_k[]": {
+   "n": 8,
+   "wns": -32.1
+  },
+  "ot_rrs__u_q_rst_c_t__c7 -> u_q.sq[]": {
+   "n": 6,
+   "wns": -3.15
+  },
+  "u_q.sq[] -> u_q.sq1[]": {
+   "n": 6,
+   "wns": -22.56
+  },
+  "u_q.u_s.u_hc.g_bank[].c1 -> u_q.u_s.u_hc.g_bank[].s_clr[]": {
+   "n": 6,
+   "wns": -20.8
+  },
+  "u_q.u_mem.g_b1c[].r -> u_q.u_mem.g_oh[].oh0": {
+   "n": 5,
+   "wns": -25.91
+  },
+  "u_q.oq[] -> t_o_f[]": {
+   "n": 5,
+   "wns": -11.66
+  },
+  "u_q.u_s.i0_idx[] -> u_q.u_s.g_r1[].q[]": {
+   "n": 5,
+   "wns": -6.78
+  }
+ }
+}

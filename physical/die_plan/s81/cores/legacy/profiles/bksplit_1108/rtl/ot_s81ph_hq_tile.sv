@@ -230,6 +230,7 @@ module dsfd_selt_q_hq #(
     // through posedge kept copies, one per consumer group (lane decode, slice, pin / status / credit flops), so no net
     // from the pin or one flop spans the core; assert and release both one edge later (synchronous).  ot_s81ph_hq_in
     // FACE 1 = registered type-8 selects.  FACE 0 = the old form.
+    parameter integer HLAT = 0,        // S81-ARCH-RTL-2 11-12: ot_s81ph_hq_slice HLAT (zero-logic hop lockup latches)
     parameter integer FACE = 0
 ) (
     input  wire [0:0]            ck,
@@ -266,11 +267,15 @@ module dsfd_selt_q_hq #(
         .act_q(act_q), .e_fmt(e_fmt), .e_orphan(e_orphan), .e_link(e_link));
     // beat register in front of the slice (+ kept sign copies, one per key nibble)
     reg x_v, x_last; reg [15:0] x_lv; reg [255:0] x_val; reg [319:0] x_idx;
+    // HLAT (S81-ARCH-RTL-2 11-12): the ingest beat (u_in b_*) -> beat register x_* through one lockup latch
+    wire b_last_l; wire [15:0] b_lv_l; wire [255:0] b_val_l; wire [319:0] b_idx_l;
+    ot_s81ph_hlk #(.W(1 + 16 + 256 + 320), .EN(HLAT)) u_fl_x (.clk(ck[0]), .d({b_last, b_lv, b_val, b_idx}),
+        .q({b_last_l, b_lv_l, b_val_l, b_idx_l}));
     (* keep = "true" *) reg [W*4-1:0] x_sg;
     always @(posedge ck[0] or negedge rst_n) if (!rst_n) x_v <= 1'b0; else x_v <= b_v;
     integer xs;
     always @(posedge ck[0]) begin
-        x_last <= b_last; x_lv <= b_lv; x_val <= b_val; x_idx <= b_idx;
+        x_last <= b_last_l; x_lv <= b_lv_l; x_val <= b_val_l; x_idx <= b_idx_l;
         for (xs = 0; xs < W; xs = xs + 1) x_sg[4*xs +: 4] <= {4{b_val[16*xs + 15]}};
     end
     // command pin flops (QIO: two stages); control fields reset, data fields not
@@ -307,7 +312,7 @@ module dsfd_selt_q_hq #(
     wire [16*GW-1:0] s_gc, s_gf; wire [16*CB-1:0] s_bc, s_bf;
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd0, m_wd1, m_rd;
-    ot_s81ph_hq_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .MUT(MUT)) u_s (
+    ot_s81ph_hq_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .MUT(MUT), .HLAT(HLAT)) u_s (
         .clk(ck[0]), .rst_n(rst_n_s), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .in_sg(x_sg), .c_T(cq[15:0]), .c_Tc(cq_T), .c_Bt(cq[23:16]), .c_Btc(cq_Bt), .c_fclr(cq[24]),
         .c_cgc(cq_cg), .c_fgc(cq_fg), .c_ing(cq[33]), .c_stop(cq[34]), .c_p2(cq[35]), .c_p3(cq[36]), .c_rep(cq[37]),
