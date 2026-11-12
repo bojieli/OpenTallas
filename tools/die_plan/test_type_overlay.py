@@ -203,3 +203,25 @@ def test_type_positions_kit_changes_only_clock_files(plan, tmp_path):
                                                "type_positions": {"clock.tap_um": [432.0, 440.64]}})
     assert set(b) - set(a) == {"mid/type_overlay.json"}
     assert all(k.startswith("mid/") for k in a if a[k] != b[k])
+
+
+def test_ft_slots_regs_um_positions_roundtrip_and_shape_guard(plan, tmp_path):
+    t = plan["partition_types"]["mid"]
+    slot = t["ft_slots"][0]
+    slot["regs_um"] = [[100.0, 100.0], [200.0, 100.0], [300.0, 100.0]]      # slot fx: stations 3
+    regs = slot["regs_um"]
+    moved = [[x + 8.64, y] for x, y in regs]
+    new = TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "type_positions": {"ft_slots.0.regs_um": moved}})
+    assert new["partition_types"]["mid"]["ft_slots"][0]["regs_um"] == moved and slot["regs_um"] == regs
+    new["partition_types"]["mid"]["ft_slots"][0]["note"] = "moved"               # a row note rides along, ignored
+    ov = TO.overlay_from_plans(plan, new, "mid")
+    assert ov["type_positions"] == {"ft_slots.0.regs_um": moved} and "ft_slots" not in ov
+    with pytest.raises(TO.OverlayError, match="shape"):                        # station count is latency: plan event
+        TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "type_positions": {"ft_slots.0.regs_um": moved[:-1]}})
+    with pytest.raises(TO.OverlayError, match="rejected"):                     # other slot keys are not positions
+        TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "type_positions": {"ft_slots.0.stations": [1, 1]}})
+    # the kit follows: only the type's own files change
+    a = kit(plan, tmp_path / "a")
+    b = kit(plan, tmp_path / "b",
+            type_overlay={"format": TO.FORMAT, "type": "mid", "type_positions": {"ft_slots.0.regs_um": moved}})
+    assert set(b) - set(a) == {"mid/type_overlay.json"} and all(k.startswith("mid/") for k in a if a[k] != b[k])
