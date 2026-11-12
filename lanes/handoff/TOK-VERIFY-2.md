@@ -12,7 +12,7 @@ Git dir: intel1:/srv/opentallas-scratch2/claude/tok-verify-1/repo (origin = inte
 Run root: intel1:/srv/opentallas-scratch2/claude/tok-verify-2 (scripts s81tok.sh, s81tok_v2.sh; run dirs per name).
 
 ## 3 Running jobs
-- none (main_d767 finished, exit 0).
+- S81 check on main 8eeefa4716dd (train 60 part: qc-verify-gaps + taps hotfix): ot-run unit oth-ubuntu-1705981-1794496824 on intel1, run dir intel1:/srv/opentallas-scratch2/claude/tok-verify-2/main_8eeefa47, log intel2:~/tok-verify-2-logs/main_8eeefa47.otrun.log (REFCC = main_d767/cc). Worktree now detached at 8eeefa4716dd. main_d767 done.
   Run dir intel1:/srv/opentallas-scratch2/claude/tok-verify-2/main_d767 ; log intel2:~/tok-verify-2-logs/main_d767.otrun.log
   Check: `ssh intel2 'tail ~/tok-verify-2-logs/main_d767.otrun.log'` -> ends with DONE (or FSA/CC rc!=0, FROOT_FAIL).
 
