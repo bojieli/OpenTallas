@@ -1,0 +1,82 @@
+# VISLAYOUT3-S81-LEAF family table 2026-11-11 23:56 PST. DO_NOT_COUNT. Plan ready11q 4e0ee2a80ff4 (ready7b + S81-LEAF-CYC quad2). slots_lt40 = hard-core pairs <40 um apart with overlapping faces (min gap). rs = route_supply --grt-halving edge_outline p99 (worst region) on ready7b 4cf8fb2f1479 / ready11q (ready11q is inflated: quad2 per-lane plan stations counted at plan bits). last_row = latest kit-wave row. grt_own = last real GRT overflow seen (VIS-TRIAGE-S81). cells/fill = latest kit auto-geom.
+type	side	lane_cols	slots_lt40	min_slot_um	rs_r7b	rs_r11q	last_row	grt_own	cells	fill	form	status
+ot_s81sl_kv_leaf__t1	E	4	28	17.28	0.994 street	0.994 street	geom/CANCELLED/SUPERSEDED 11-09 06:52		251614	0.03	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_kv_leaf__t2	-	-	0	-	1.642 ring	1.642 ring	kit_topology/FAIL/PLAN 11-11 00:09				not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_kv_leaf__t3	E	2	28	15.12	0.853 street	0.853 street	geom/CANCELLED/SUPERSEDED 11-09 06:52		293610	0.0349	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_kv_leaf__t4	E	4	27	8.64	1.102 street	1.102 street	geom/CANCELLED/SUPERSEDED 11-09 06:52		279066	0.0323	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_kv_leaf__t5	W	2	27	8.64	1.267 street	1.267 street	geom/CANCELLED/SUPERSEDED 11-09 06:52		244000	0.0276	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_leaf__t1	E	7	34	8.64	1.749 ring	1.749 ring	geom/CANCELLED/SUPERSEDED 11-10 23:46	104323 (11-10)	154470	0.0247	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_leaf__t10	E	3	33	8.64	1.422 face	5.266 street	kit_topology/FAIL/PLAN 11-11 00:42		63676	0.0118	LANE-PAIR	paper
+ot_s81sl_leaf__t11	W	2	35	8.64	1.961 street	5.226 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		52598	0.0092	LANE-PAIR	paper
+ot_s81sl_leaf__t12	W	2	36	8.64	2.276 face	6.474 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		103726	0.0327	LANE-PAIR	paper
+ot_s81sl_leaf__t13	E	6	35	8.64	1.663 face	4.252 street	kit_topology/FAIL/PLAN 11-11 00:09		96899	0.0287	LANE-PAIR	paper
+ot_s81sl_leaf__t14	E	5	33	8.64	1.961 street	4.508 core	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		105010	0.0334	LANE-PAIR	paper
+ot_s81sl_leaf__t15	W	2	29	8.64	1.696 mstreet	4.025 core	kit_topology/FAIL/PLAN 11-11 00:54		52868	0.0089	LANE-PAIR	paper
+ot_s81sl_leaf__t16	W	3	27	8.64	2.024 mstreet	3.984 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40	15494 (11-09)	78451	0.0143	LANE-PAIR	paper
+ot_s81sl_leaf__t17	E	2	35	15.12	1.868 street	4.153 street	route/FAIL/ROUTING 11-10 01:50	157044 (11-10)	112509	0.017	LANE-PAIR	paper
+ot_s81sl_leaf__t2	E	2	35	8.64	2.717 street	2.717 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		159628	0.0448	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_leaf__t21	E	4	35	8.64	1.319 face	4.065 core	route/FAIL/TIMING 11-10 22:07	46945 (11-09)	49739	0.0126	LANE-PAIR	paper
+ot_s81sl_leaf__t22	E	2	35	8.64	2.658 street	6.277 street	geom/CANCELLED/SUPERSEDED 11-10 18:30		141432	0.0223	LANE-PAIR	paper
+ot_s81sl_leaf__t23	E	6	31	8.64	1.659 ring	4.24 street	kit_topology/FAIL/PLAN 11-11 00:20		133832	0.0201	LANE-PAIR	paper
+ot_s81sl_leaf__t24__cl2456157b	E	4	35	8.64	1.13 street	4.764 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		86007	0.0174	LANE-PAIR	paper
+ot_s81sl_leaf__t24__cl81374cd8	E	4	36	14.74	2.703 ring	5.095 street	kit_topology/FAIL/PLAN 11-11 00:20		85194	0.0182	LANE-PAIR	paper
+ot_s81sl_leaf__t25__cl431c660f	W	2	31	8.64	1.801 street	4.064 core	geom/CANCELLED/SUPERSEDED 11-10 23:46	0 (routed)	35451	0.0075	LANE-PAIR	paper
+ot_s81sl_leaf__t25__cl55642d17	W	3	36	8.64	1.784 street	3.721 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		35292	0.0073	LANE-PAIR	paper
+ot_s81sl_leaf__t26	W	2	34	8.64	1.911 street	5.157 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		57519	0.0101	LANE-PAIR	paper
+ot_s81sl_leaf__t27	E	4	33	8.64	1.161 mstreet	6.224 street	kit_topology/RETRY-INFRA/INFRA 11-11 00:45	0 (routed)	20816	0.0039	LANE-PAIR	paper
+ot_s81sl_leaf__t28	W	2	38	8.64	5.37 face	5.37 face	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		122555	0.0401	LANE-PAIR	paper
+ot_s81sl_leaf__t29	W	3	31	8.64	1.423 street	4.788 core	geom/CANCELLED/SUPERSEDED 11-10 18:30	31461 (11-08)	70181	0.0115	LANE-PAIR	paper
+ot_s81sl_leaf__t3	E	5	28	8.64	3.042 ring	3.042 ring	kit_topology/FAIL/PLAN 11-11 00:42		194459	0.03	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_leaf__t30	W	3	35	8.64	1.649 street	5.45 mstreet	route/RUNNING/ 11-11 20:16		24558	0.0049	LANE-PAIR	paper
+ot_s81sl_leaf__t31	E	3	30	8.64	1.006 ring	5.009 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		47889	0.0097	LANE-PAIR	paper
+ot_s81sl_leaf__t32	E	2	33	8.64	1.617 ring	6.721 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		116835	0.0201	LANE-PAIR	paper
+ot_s81sl_leaf__t33	E	6	28	8.64	3.236 face	6.296 street	geom/CANCELLED/SUPERSEDED 11-10 18:30		122729	0.0202	LANE-PAIR	paper
+ot_s81sl_leaf__t34	E	6	34	8.64	2.1 ring	4.72 street	route/FAIL/ROUTING 11-10 23:27		90225	0.02	LANE-PAIR	paper
+ot_s81sl_leaf__t35	W	2	34	8.64	1.798 street	4.11 core	geom/CANCELLED/SUPERSEDED 11-10 23:46		46021	0.0079	LANE-PAIR	paper
+ot_s81sl_leaf__t36	W	3	31	8.64	2.444 ring	5.148 street	kit_topology/FAIL/PLAN 11-11 00:54		85709	0.0138	LANE-PAIR	paper
+ot_s81sl_leaf__t37	M	6	39	8.64	1.266 core	5.45 mstreet	route/FAIL/ROUTING 11-10 21:46		43388	0.0092	LANE-PAIR	paper
+ot_s81sl_leaf__t38	E	2	31	8.64	1.788 street	4.162 street	geom/CANCELLED/SUPERSEDED 11-10 23:46		93351	0.0137	LANE-PAIR	paper
+ot_s81sl_leaf__t39	E	5	34	8.64	1.757 face	5.226 core	route/RUNNING/ 11-10 23:27		76634	0.0125	LANE-PAIR	paper
+ot_s81sl_leaf__t4	M	6	35	10.8	1.323 core	1.323 core	kit_topology/FAIL/PLAN 11-11 00:09		82395	0.0161	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_leaf__t40__cl86ea32b3	W	2	34	8.64	1.851 street	4.114 core	kit_topology/FAIL/PLAN 11-11 00:09		33574	0.0058	LANE-PAIR	paper
+ot_s81sl_leaf__t40__cl86ea32b3__sid5S	W	2	34	8.64	1.851 street	4.114 core	kit_topology/RETRY-INFRA/INFRA 11-11 01:32		33574	0.0059	LANE-PAIR	paper
+ot_s81sl_leaf__t40__clf8bbdae1	W	2	29	8.64	1.696 mstreet	4.025 core	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		49302	0.0082	LANE-PAIR	paper
+ot_s81sl_leaf__t41	W	3	27	8.64	1.966 mstreet	3.984 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		90845	0.0159	LANE-PAIR	paper
+ot_s81sl_leaf__t42	E	2	31	8.64	1.788 street	4.163 street	signoff/FAIL/ROUTING 11-10 19:07		20875	0.0053	LANE-PAIR	paper
+ot_s81sl_leaf__t43	E	3	36	8.64	1.879 face	4.945 mstreet	kit_topology/RETRY-INFRA/INFRA 11-11 01:32		122224	0.0392	LANE-PAIR	paper
+ot_s81sl_leaf__t44__clf4ea6d4b	M	5	36	8.64	1.664 ring	4.499 mem	gen_lint/FAIL/FLOW 11-10 19:29		77017	0.0114	LANE-PAIR	paper
+ot_s81sl_leaf__t44__clf6cf8492	M	5	35	8.64	1.633 ring	4.75 mem	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		114638	0.0247	LANE-PAIR	paper
+ot_s81sl_leaf__t45	E	5	33	8.64	1.611 face	4.715 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		55867	0.0235	LANE-PAIR	paper
+ot_s81sl_leaf__t46	E	4	27	8.64	2.727 ring	4.947 street	kit_topology/FAIL/PLAN 11-11 00:09		164349	0.0248	LANE-PAIR	paper
+ot_s81sl_leaf__t47	E	4	33	8.64	2.433 face	4.253 mstreet	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		137465	0.032	LANE-PAIR	paper
+ot_s81sl_leaf__t5	W	2	34	8.64	2.027 street	2.027 street	geom/CANCELLED/SUPERSEDED 11-10 18:30	17610 (11-07)	53192	0.0092	not in quad2; LANE-PAIR after the non-KV pilots	paper
+ot_s81sl_leaf__t50	W	2	34	8.64	1.807 street	4.002 core	kit_topology/FAIL/PLAN 11-11 00:09		45535	0.0093	LANE-PAIR	paper
+ot_s81sl_leaf__t51	M	5	36	8.64	1.462 face	4.94 mem	preflight/FAIL/FLOW 11-10 19:29		76548	0.0113	LANE-PAIR	paper
+ot_s81sl_leaf__t52	E	2	34	8.64	3.542 face	6.294 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		103684	0.0316	LANE-PAIR	paper
+ot_s81sl_leaf__t53__cl958451dd	W	2	29	8.64	1.408 mstreet	5.722 street	kit_topology/FAIL/PLAN 11-11 00:09		87869	0.0156	LANE-PAIR	paper
+ot_s81sl_leaf__t53__clb66fa5cb	W	2	29	8.64	1.408 mstreet	5.722 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		85837	0.0168	LANE-PAIR	paper
+ot_s81sl_leaf__t54__cl501e5681	W	2	31	8.64	1.802 street	3.692 core	gen/FAIL/FLOW 11-11 07:13		33230	0.0078	LANE-PAIR	paper
+ot_s81sl_leaf__t54__cl706d9749	W	2	34	8.64	1.817 street	4.179 core	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		48443	0.0092	LANE-PAIR	paper
+ot_s81sl_leaf__t55	W	3	30	8.64	1.852 street	3.999 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		96922	0.0163	LANE-PAIR	paper
+ot_s81sl_leaf__t56	E	3	27	8.64	1.719 street	4.864 core	route/FAIL/TIMING 11-10 22:46		141014	0.0215	LANE-PAIR	paper
+ot_s81sl_leaf__t57	E	2	32	8.64	2.025 street	3.88 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		122644	0.0202	LANE-PAIR	paper
+ot_s81sl_leaf__t58	E	6	32	8.64	1.094 street	4.146 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		104584	0.0276	LANE-PAIR	paper
+ot_s81sl_leaf__t59	W	2	30	8.64	1.653 street	3.797 core	route/FAIL/ROUTING 11-10 23:05		66292	0.0107	LANE-PAIR	paper
+ot_s81sl_leaf__t6	W	2	34	8.64	1.985 mstreet	5.157 street	geom/CANCELLED/SUPERSEDED 11-10 23:46		122894	0.0191	LANE-PAIR	paper
+ot_s81sl_leaf__t60	E	4	33	8.64	1.521 face	5.544 street	kit_topology/FAIL/PLAN 11-11 00:54		91000	0.0206	LANE-PAIR	paper
+ot_s81sl_leaf__t61	E	2	32	8.64	3.157 street	4.628 street	kit_topology/FAIL/PLAN 11-11 00:09		126063	0.0309	LANE-PAIR	paper
+ot_s81sl_leaf__t62	E	5	28	8.64	2.168 face	5.124 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		141111	0.0234	LANE-PAIR	paper
+ot_s81sl_leaf__t65	E	3	28	8.64	1.625 street	4.864 core	kit_topology/FAIL/PLAN 11-11 00:09		146169	0.0228	LANE-PAIR	paper
+ot_s81sl_leaf__t66	E	2	34	8.64	3.468 ring	5.292 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		153981	0.0254	LANE-PAIR	paper
+ot_s81sl_leaf__t67	E	6	30	8.64	3.246 ring	4.625 street	geom/CANCELLED/SUPERSEDED 11-10 18:30		185530	0.0299	LANE-PAIR	paper
+ot_s81sl_leaf__t68	E	4	36	15.12	1.134 street	4.847 street	kit_topology/RETRY-INFRA/INFRA 11-11 01:32		79500	0.0148	LANE-PAIR	paper
+ot_s81sl_leaf__t69	W	2	34	8.64	1.797 street	4.068 core	geom/CANCELLED/SUPERSEDED 11-10 23:46		42199	0.0078	LANE-PAIR	paper
+ot_s81sl_leaf__t7	M	6	39	15.12	1.541 face	5.036 mstreet	route/FAIL/ROUTING 11-10 21:04		94819	0.0188	LANE-PAIR	paper
+ot_s81sl_leaf__t70	W	3	25	8.64	2.271 mstreet	4.567 street	geom/CANCELLED/SUPERSEDED 11-10 23:46		120457	0.0195	LANE-PAIR	paper
+ot_s81sl_leaf__t71	E	6	34	8.64	2.374 ring	4.534 mstreet	kit_topology/FAIL/PLAN 11-11 00:09		85509	0.0208	LANE-PAIR	paper
+ot_s81sl_leaf__t72	E	3	33	8.64	4.013 ring	4.626 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		216372	0.0341	LANE-PAIR	paper
+ot_s81sl_leaf__t73	E	2	37	15.12	1.849 street	7.189 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 16:40		139741	0.0197	LANE-PAIR	paper
+ot_s81sl_leaf__t74	E	3	33	8.64	1.434 face	5.266 street	kit_rtl/RETRY-INFRA/INFRA 11-11 01:32		64050	0.0119	LANE-PAIR	paper
+ot_s81sl_leaf__t75	E	6	33	8.64	3.428 face	4.786 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 22:17		157248	0.025	LANE-PAIR	paper
+ot_s81sl_leaf__t8	E	2	37	8.64	3.799 face	4.594 street	route/FAIL/ROUTING 11-09 21:30		216811	0.0346	LANE-PAIR	paper
+ot_s81sl_leaf__t9	E	2	34	8.64	1.846 street	6.088 street	geom/CANCELLED/QUEUE-CANCELLED 11-11 22:17		139877	0.0334	LANE-PAIR	paper
