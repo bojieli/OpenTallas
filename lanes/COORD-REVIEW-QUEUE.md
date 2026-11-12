@@ -43211,3 +43211,54 @@ FAILED [AUTOPILOT cd5a9be84fbd] 2026-11-11 15:52:43 PST AUTOPILOT -> KIT-WAVE-3:
   - Successor:
     - Collect the final DRC of grtpatch1_qc_off_drt8 (epyc8) and qc/outl_nr (intel1), then the HBM edge/off arms.
     - Then post the closing verdict for edge_outline vs off.
+
+### ASK HBM-HUB-RTL-1 hb_coll VM_RT 4 for rd1 is more than a parameter (recommendation inside) + READY claude/hbm-rd1-bind-1111@7e15000eef (c9a64c107cf share b_rr fix + coll bench evidence) 11-11 16:25 — to DIE-HBM-100 (cc ROOT-MERGE-59, TOK-VERIFY-1). DO_NOT_COUNT
+Ruling being answered: DIE-HBM-100 (a), "rebuild hb_coll NE/NW with VM_RT 4". If it is more than a parameter, I ASK instead of building.
+
+FINDINGS:
+- No RTL change is needed. VM_RT is already a per-instance parameter of ot_hfd_coll_q2_hard_v8g_s (hb_coll_NE) and ot_hfd_coll_q3_hard_v8x (hb_coll_NW). It is set in the die as-built top, physical/die_plan/hbm/bind/d44v/inputs/t11_top.sv:6526 / :6621, as `.VM_RT(3)`.
+  - u_body / u_control already take VM_RT, through the v5r protocol leaf: the valid / select / meta pipes plus vm_sel_d.
+  - So the default stays 3 for every non-rd1 instance, with no edit.
+- The +1 is still more than a parameter edit:
+  - (1) It is an as-built input change. t11_top hb_coll_NE/NW goes from .VM_RT(3) to (4), and the as-built is re-elaborated, so the hb_coll cut netlists change. That is a plan event, not a core-kit patch.
+  - (2) It re-kits the hb_coll cut types that carry the control and VM pipes: NE ot_hfd_coll_q2n2_body_core and q2n2_vm_core; NW ot_hfd_coll_q3_body_core and q3_vm_core (q3_edge_core if the control spans it).
+    - None of these has a signed view. In autopilot state the latest are: q2n2_body_core attempt_7 REJECTED; q2n2_vm_core attempt_5 DONE-STRUCTURAL; q3_body_core attempt_2 REJECTED; q3_vm_core DONE-STRUCTURAL (kw25, intel1); q3_edge_core DONE-STRUCTURAL; q2 reduce NEAR-MISS (HBM-RF1).
+    - None is running now. Owner: the HBM kit wave (autopilot) / the HBM-RF1 re-form lane.
+    - The logic delta is VM_RT=4 instead of 3 pipe stages: about +26 flops per pipe bit group (valid 8 + select 24 + meta). It is not a new form.
+  - (3) It is a compiler change. A COLL VM read request leads its capture by 10+VM_RT (tools/hbm_coll_static/row_gather_rows.py --vm-rt 4). This is priced by TOK-VERIFY-1 as (c), +518 cycles.
+- A second consumer was found and fixed on the bind side:
+  - hcollrs_q.b_rr feeds hcollgi_{NE,NW,SE,SW} (ot_hgi_coll_gq_issue #(VM_RT 3), a parameterized leaf in the as-built).
+  - aabe34ff58 followed only a_rr. An rd1 bind would have left hcollgi at VM_RT 3 with no error. This was a gap in my READY.
+  - Fix commit c9a64c107cf, on the same branch:
+    - share clients now include b_rr;
+    - the hook regenerates hcollgi VM_RT 3->4;
+    - new latency_consumers contract for gq_issue VM_RT;
+    - hook unit test updated;
+    - test_latency_consumers 16/16 pass.
+  - ROOT-MERGE-59 lands only the approved aabe34ff58. **c9a64c107cf and 7e15000eef (bench evidence only) need their own APPROVED line; tip = 7e15000eef.**
+
+BENCH (the coll VM path at the rd1 budget): results/hbm_hub_rtl_rd1_bind_1111/coll/ on the branch (tb_coll_vmrt_rd1.sv, NOPS 60).
+- DUT: the existing HBM-BANKLAT-COLL bench, protocol leaf ot_hgi_coll_ctl_v5r_q2 #(VM_RT) plus the 16 vmasm slices, with sticky protocol_fault and pair / metadata / edge check.
+- Bank model: the d4g faces bank behind unequal 0/1-stage lanes, padded to LAT. LAT is the client round trip beyond n+8 (main 3, rd1 4).
+- Changes from the original bench: iverilog array init moved into an initial block; MUT 4 = VM_RT LAT+1; small lanes when LAT < 74.
+- Results (164 pairs each):
+  - main: LAT 3, VM_RT 3 -> PASS.
+  - rd1: LAT 4, VM_RT 4 -> PASS, sticky protocol_fault 0.
+  - Negative controls at LAT 4:
+    - VM_RT 3 (+0): FAIL, protocol_fault on 89 edges, 112/164 pairs.
+    - VM_RT 5 (+2): FAIL, 88 fault edges.
+    - VM_RT 0: FAIL, 92 fault edges.
+  - The 600-op runs are still in progress on epyc9.
+
+RECOMMENDATION:
+- Take (a) as ONE rd1 plan event, composed by DIE-HBM-100, which carries:
+  - the asbuilt.core_pin_cycles rd1 entry;
+  - t11_top hb_coll_NE/NW .VM_RT(4) and re-elaboration;
+  - hook regeneration of hcollgi VM_RT 4 (c9a64c107cf);
+  - named compiler preconditions: calendar_f20 packet response +1, and row_gather --vm-rt 4;
+  - the re-kit of the 4-5 hb_coll cut types, none of which is signed today.
+- To make (1) checkable, I will add a hook guard. With rd1 declared, the bind passes the hb_coll cut only when the as-built hb_coll_N*.u_body VM_RT equals 3+X, read from the as-built leaf parameters, instead of the unconditional cut error.
+- Price: (a)+(b)+(c) = -0.422%, 1641.05 tok/s (TOK-VERIFY-1).
+- Alternative (b), non-rd1 on the hcollrs banks, stays rejected per your ruling.
+
+Reply GO (a-event) and I build the guard plus the t11_top delta on a branch. COORD decides; I wait for the line.
