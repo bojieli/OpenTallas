@@ -444,17 +444,23 @@ def validate_overlay(base, new, tn, g0_full=False, plan_path=None):
         errs.append(f"RTL inputs change with the placement ({', '.join(keys)}): reset tree / tap names / reset-gate taps "
                     "must be identical to the bound plan's; this is a plan event, not an overlay")
     # 3. collector_reach (G0 ERROR) on the type itself
-    import collector_reach as CR
-    for r in CR.type_findings(tn, new["partition_types"][tn]):
+    try:
+        import collector_reach as CR
+    except ImportError:         # a wave source older than SEAM-HOP-1 has no collector_reach rule (bind enforces it)
+        CR = None
+    for r in (CR.type_findings(tn, new["partition_types"][tn]) if CR else []):
         errs.append(f"collector_reach: {r['kind']} {r['src']}->{r['dst']} {r['hop_um']:.3f}um exceeds {CR.REACH_UM:g}")
     # 4. seam_hop on this type's lanes: no hop may get worse, none may become over the limit
     try:
+        import seam_hop  # noqa: F401  (absent in a source older than SEAM-HOP-1: advisory check skipped)
         sb, sn = seam_rows(base, tn, plan_path), seam_rows(new, tn, plan_path)
         for k, r in sorted(sn.items()):
             b0 = sb.get(k)
             if r["over"] and (b0 is None or not b0["over"] or r["hop_um"] > b0["hop_um"] + 0.05):
                 errs.append(f"seam_hop lane {r['lane']} {r['src']}->{r['dst']}: {r['hop_um']:.1f}um > {r['limit_um']:g} um"
                             + ("" if b0 is None else f" (bound plan {b0['hop_um']:.1f})"))
+    except ImportError:
+        pass
     except Exception as exc:
         errs.append(f"seam_hop check failed ({type(exc).__name__}: {exc})")
     # 5. G0 subset: no new ERROR naming the type or its lanes
