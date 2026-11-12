@@ -1,0 +1,22 @@
+DIE before {'types': 123, 'inst': 377, 'p99_max': 2.06, 'p99_med': 0.86, 'p99_gt1': 40, 'p99_gt08': 77, 'taps_over': 25, 'max_sinks': 3738, 'hops': 16, 'stale': 71}
+DIE after  {'types': 123, 'inst': 377, 'p99_max': 2.06, 'p99_med': 0.856, 'p99_gt1': 31, 'p99_gt08': 75, 'taps_over': 23, 'max_sinks': 3738, 'hops': 16, 'stale': 71}
+19 types changed
+  cbx_q10__cl89936551: route_p99 0.969->0.738
+  cbx_q10__cl94a12200: route_p99 0.978->0.738
+  glue: taps 8->61, max_sinks_tap 1769->970, taps_over_cap 2->0
+  sle_sc_v1__cl115da35f: route_p99 1.53->0.934
+  sle_sc_v1__cl7479a5ec: route_p99 1.53->0.934
+  sle_sc_v2: route_p99 1.325->0.904
+  sle_sc_v3: route_p99 1.337->0.879
+  sle_st_b_v2__cl14c98df5: taps 123->124, max_sinks_tap 1053->1004, min_street_V 11.23->45.79
+  sle_st_b_v2__clfde1249e: taps 121->123, max_sinks_tap 1076->1021, min_street_V 11.23->45.79
+  slw_sc_v1__cl63e5a7a2: route_p99 1.152->0.914
+  slw_sc_v1__cl64543eaf__cl4590432d: route_p99 1.147->0.914
+  slw_sc_v1__cl64543eaf__cl5e017c6f: route_p99 1.147->0.914
+  slw_sc_v2: route_p99 1.145->0.884
+  slw_sc_v3: route_p99 1.145->0.882
+  slw_st_a_v1__clfc5867a6__pvdf8e5ca4: route_p99 1.233->1.243, max_sinks_tap 1197->1187
+  slw_st_a_v1__clfc5867a6__pvf82a6c28: route_p99 1.233->1.243, max_sinks_tap 1197->1187
+  slw_st_b_v1__cl6357f1cc__pv6ace3e48: route_p99 1.231->1.238, taps 122->121
+  slw_st_b_v1__cl6357f1cc__pvffd43fdc: route_p99 1.231->1.238, max_sinks_tap 1018->1082
+  slw_st_b_v2__pva66d0f22: taps 108->113, max_sinks_tap 1162->1141, min_street_V 11.23->45.79
