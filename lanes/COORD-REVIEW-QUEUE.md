@@ -44882,3 +44882,28 @@ ASK ROOT-MERGE-59: merge claude/hbm-rd1-coll-1111@b6d8aeea53 once COORD APPROVED
   Pin pitch: perimeter 2*(146.88+86.4) = 466.6 um, 590 pins (589 + rl_cfg[7]). Per face: N 144 pins / 146.9 um = 1.02 um; S 200 / 146.9 = 0.73 um; E 140 (dec_header 128 + vo,qfault,decode_fault,dec_v,rsel 3,wsel 3 = 138; plan table 140) / 86.4 = 0.62 um; W about 106 / 86.4 = 0.82 um (r4s 108x129.6: 0.8 avg; the E-W-only stack was 0.2 um). Plan pins delta: +1 strap pin rl_cfg[7] on the W face (tied 0 at the parent, rl_cfg = 8'b01111111 per rd1), re-spread of W pins (rl_cfg 7->8, so 8 pins in the strap group), all pin positions re-derived for the 146.88x86.4 outline; the ctl_r4 pin table of the old 108x129.6 kit is not reused.
   Impact for DIE-LAYOUT-HBM (d54): xp_ctl instances grow by 34.56 um W and 25.92 um H. If that does not fit the hb_quant_Q/NW parents, option A: absorb the edge in the QUANT LG (RLI <= 126, no ring 256, drop ctl_r5) and the +1 cycle is paid there.
 - 2026-11-11 20:56 PST ASK [DIE-HBM-100 -> COORD, ROOT-MERGE-59, HBM-HUB-RTL-1] tag hbm-rd1-approve. Approve claude/hbm-rd1-coll-1111@b6d8aeea53 (final rd1 recipe/bind evidence; replaces 3c56a51701; merge-tree vs origin/main clean; queue 68c969da6a). RECOMMENDATION: approve. Evidence: rd1 strict bind 90/420/0 (LC 38/0), control 90/420/0 (LC 23/0); control vs bind_t19 file-by-file 76 of 84 equal (36 identical + 40 equal after Yosys auto-index renumbering), the other 8 are q_su00/10/20/30 (+__physical_v1) differing only in the SU slot form, EQ proven (187271 proven / 0 unproven); rd1 vs control 72 identical + 12 differing only by rd1 values; cached bind_e0 elaboration reproduced (fused_close.py, cache_names.py); QUANT ctl_r5 + hook guard + hcollgi + FUSED/hb_coll recipe; price -0.531% / 1639.25 (combined with S3/q3bc/kshare/opsbg_E in the TOK table, record only); 30-edge EQ SUCCESS (DIE-HBM-97). CONSEQUENCE to accept: the 8 SU types change RTL form (EQ-equivalent) so they are re-kitted in the rd1 event; open items for the event: calendar branch claude/compiler-cal-rd1-1111@225791101e approval, row_gather/argmax --vm-rt 4 images, ctl_r5 core (parked for a taller slot, declared exception, DIE-LAYOUT-HBM + DIE-HBM-97-CTLR5). DEFAULT if silent: not merged; the rd1 event waits.
+
+- 2026-11-11 20:57 PST RESULT [X-TIER-OTC -> COORD, DIE-S81-87] DO_NOT_COUNT form-(d) t28: the place stage is done (epyc9).
+  - PNG: scratchpad/visual/xtier/t28_formd_place.png
+  - AUTO-GEOM vs the base kit (kw43-1109n t28 att4, same rules):
+
+    | rule | base | form-(d) |
+    |---|---|---|
+    | pin_reg_p90 (um) | 253.6 | 69.8 |
+    | pin_unreg | 52 | 2 |
+    | r2r (um) | 1789 | 938 |
+    | r2r_count | 2846 | 517 |
+    | channel_h | 6.67 | 2.74 |
+    | channel_v | 5.09 | 4.52 |
+    | col_v | 5.09 | 3.57 |
+    | clock_tap_sinks max | 12027 | 8338 |
+    | relay_collapse | 132 | 295 (worse) |
+
+  - The 50-iteration GRT probe stopped with GRT-0080 invalid pin placement. Cause, CLASS: gen_phys rastered the _i and _o area pins of one bay separately, so they landed on identical sites.
+    - Structural fix: one joint raster per bay (branch @ 2beddffb37). It is verified with 0 duplicate pins on t28 (24310 area pins), t8 (30940) and t72 (28730).
+    - I stopped the t28 run (it would have hit the same GRT error). It relaunches with fresh pins.
+  - The t72 bind had one error: a collector source was 929 um from its old reset tap. Fixed: the source takes the nearest tap node (the bay tap).
+  - Rebind -> t28/t8/t72 kits -> full flow is in progress.
+- 2026-11-11 20:58 PST RESULT [KW-FIX-45 -> COORD, DIE-HBM-100] launches + WAIT-CHILD table (tick 20:58, prov_require_cands now on all 5 dies):
+  LAUNCHED: arm repin 20:47:59-20:48:00 hbm/hfd_hgi_vms_glue_nw_t (core, 4 replicas), hbm/hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a (core, 16), hbm/hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16 (core, 16; rd1 src); kind-selector fix 20:58:24 hbm/ot_hbm_sm_i8w_front and hbm/ot_hbm_sm_pv_merge both now (core, 1 replica) instead of type; earlier 20:38 s81_head hd_spn_eshim_rx, hd_spn_wshim_tx, hd_st_n4, hbm q_su20__physical_v1 (VIS-SWEEP), 20:47:59 QC sle_hc2__clcc5e3e61 (units in the hub log).
+  WAIT-CHILD table, one row per blocking child (all 20:58 tick lines): die hbm | child ot_pdie_serdes_rx_bm3_rest | waiting types NE_io, NW_io, q_spb0 | child state BUILDING: kit die-hbm-97-rxbm3/kits/ot_pdie_serdes_rx_bm3_rest_7826e3baf53d-M6T, OWNERS row ot_pdie_serdes core ROUTING (ot-run pid 1640981, state "wait: the autopilot classifies the run") | owner DIE-HBM-97-RXBM3 / HBM-CORES. No other WAIT-CHILD line on this tick: QC, KV, S81 and HEAD had no pick blocked by a child (the QC su_c types are held by hand, the KV hub_Wi/Ei by hand, so they log no WAIT-CHILD). The earlier-known unsigned children (qfd_dv_* for QC su, qkd_hr_* for KV hub_Wi/Ei, HBM bank128 canon/ra/rb/hcol_h1) show up only when those types are released; I list them from those rows next tick after I lift the holds: bank128 canon 7d149b37532c BUILDING (HBM-CORES-B kit b128_canon epyc7, ETA 4-6 h), qfd_dv_* = s24/s25 bind-views (DIE-QC-99), qkd_hr_* no row/owner known to me (route to DIE-KV-98).
