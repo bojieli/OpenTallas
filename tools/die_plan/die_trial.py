@@ -4148,7 +4148,19 @@ def route_netlist(P, type_bits, channel_nets=True, landing_infra=False, reset_in
 # ------------------------------------------------------------------------------ die_ft_bands GRT capacity model
 # (DIE-FT-HBM 10-25 band stripes, DIE-FT 10-25 20:40 transition-layer fix; read against OpenROAD GlobalRouter.cpp
 # 26Q3: applyObstructionAdjustment / extendObstructions / adjustTransitionLayers)
+GCELL_PITCHES = 15       # OpenROAD GRT tile = 15 x the M1-M3 (coarse) track pitch
 GCELL_UM = 10.8          # OpenROAD die gcell here (15 x M3 pitch 0.72; congestion.rpt bboxes, origin 0; floor(W/g) tiles)
+
+
+def set_gcell_from_coarse(coarse):
+    """DIE-PROTO-1 coarse-gcell form: the die GRT gcell follows --coarse-um (gcell = 15 x coarse M1-M3 pitch), and every
+    gcell-snapped kit artefact (band_share strips, transition intervals, tile counts) uses the same GCELL_UM.
+    COORD 11-12: HBM triage die GRT at 32.4 um (--coarse-um 2.16), 10 iterations; 10.8 um stays the default."""
+    global GCELL_UM
+    if not (coarse > 0 and math.isfinite(coarse)):
+        raise ValueError(f"--coarse-um must be finite positive, got {coarse}")
+    GCELL_UM = round(GCELL_PITCHES * coarse, 6)
+    return GCELL_UM
 OBS_EXT_UM = 0.072       # macro OBS extension = largest SPACINGTABLE value of M4-M6 (asap7 1x tech LEF; findLayerExtensions)
 # OpenROAD halves ("fat via" transition, adjustTransitionLayers) the capacity of these layers in every gcell above a
 # macro OBS on the layer below, from the capacity BEFORE the die obstructions: measured 10-25 on a 216x216 test die
@@ -4273,16 +4285,18 @@ def _uncovered(W, H, rects):
     return out
 
 
-def _ngrid(L, g=GCELL_UM):
+def _ngrid(L, g=None):
     """OpenROAD tile count along a die side: integer DBU floor (float 216 // 10.8 is 19.0, OpenROAD has 20)."""
+    g = GCELL_UM if g is None else g
     return max(1, int(round(L * 1000)) // int(round(g * 1000)))
 
 
-def _gstrips(rects, vertical, W, H, g=GCELL_UM, eps=0.01):
+def _gstrips(rects, vertical, W, H, g=None, eps=0.01):
     """region rects -> strips one gcell thick across the layer direction (rows for an H layer, columns for a V layer),
     snapped to the gcell grid with upper edges pulled in by eps, so every gcell has exactly one owner.  H strips stop
     before the last tile column and V strips before the last tile row (capacity 0 there, no routing edge).
     -> [(x0, y0, x1, y1, *extra)]"""
+    g = GCELL_UM if g is None else g
     nx, ny = _ngrid(W, g), _ngrid(H, g)
     imax = nx - (0 if vertical else 1)
     jmax = ny - (1 if vertical else 0)
@@ -4354,11 +4368,12 @@ def band_region_adjust(P, share_adj, core_zero=None):
     return sorted(by), regs
 
 
-def transition_intervals(P, L, g=GCELL_UM, ext=OBS_EXT_UM):
+def transition_intervals(P, L, g=None, ext=OBS_EXT_UM):
     """{strip index: [(lo, hi)]} gcell intervals where OpenROAD halves transition layer L (adjustTransitionLayers):
     every gcell from the first to the last-but-one tile of each macro OBS rect on the layer below (extended by the
     spacing in that layer's cross direction).  Strip index = gcell row for an H layer, column for a V layer; the
     interval runs along the layer direction.  Empty for non-transition layers."""
+    g = GCELL_UM if g is None else g
     if L not in TRANSITION_LAYERS:
         return {}
     below = f"M{int(L[1:]) - 1}"
@@ -4404,7 +4419,7 @@ def band_phase_flip(P, layers):
     return out
 
 
-def band_share_obs(P, regs, g=GCELL_UM, owner=False):
+def band_share_obs(P, regs, g=None, owner=False):
     """die_ft_bands share as OBSTRUCTION stripes: in every one-gcell strip from band_region_adjust (kept fraction a)
     obstruct the top f of each gcell row (H layer) or the right f of each gcell column (V layer), f = 1 - a.
 
@@ -4431,6 +4446,7 @@ def band_share_obs(P, regs, g=GCELL_UM, owner=False):
     die-owned slice is the die's real capacity, at the same edge and inside the GRT map's free slice.  The old
     complement reserved 1 - fh = 0.5 + 0.5 a there (0.625 at a = 0.25, 0.75 in a 0.5 band) for 0.5 a of die use.
     -> [(layer, x0, y0, x1, y1)]"""
+    g = GCELL_UM if g is None else g
     trans = {L: transition_intervals(P, L, g) for L in sorted({r[0] for r in regs})}
     flip = band_phase_flip(P, {r[0] for r in regs})
     out = []
@@ -4472,7 +4488,7 @@ BAND_SHARE_FORMS = ("stripe", "merge", "region")   # region: NOT capacity-equiva
 BAND_SHARE_FORM = "stripe"   # die_trial kit --band-share-form (DIE-PROTO-1 11-12, opt-in); stripe = the 10-25 form, unchanged
 
 
-def band_share_compact(stripes, form, layer_dir, g=GCELL_UM):
+def band_share_compact(stripes, form, layer_dir, g=None):
     """DIE-PROTO-1 11-12 (HBM d55a: 1.03M band_share_obs stripes of 1.06M die obstructions): the same band share in fewer
     GRT objects.  stripes = band_share_obs output [(L, x0, y0, x1, y1)]; layer_dir = {L: 'H' | 'V'}.
       'stripe' -> (stripes, [])                 unchanged.
@@ -4491,6 +4507,7 @@ def band_share_compact(stripes, form, layer_dir, g=GCELL_UM):
     1,032,762 objects), same runtime (initial route 163 vs 168 s); region is NOT equivalent: 52,170 region adjustments
     gave M4 -145 % / M5 +378 % reduction (OpenROAD region adjustments do not compose like obstructions), so region must
     not be used for capacity.  The die GRT time is congestion iterations, not obstruction count."""
+    g = GCELL_UM if g is None else g
     if form == "stripe":
         return list(stripes), []
     if form not in BAND_SHARE_FORMS:
@@ -5110,6 +5127,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     if landing_infra:
         import landing_route
         landing = landing_route.network(P)
+    set_gcell_from_coarse(coarse)    # DIE-PROTO-1: kit gcell artefacts follow the GRT tile (15 x coarse)
     _kit_stage("abstracts")
     plan_dir = Path(plan_path).parent
     out = Path(out)
@@ -5227,7 +5245,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
              [(L, round(1 - ca.get(L, 0.6), 3)) for L in ("M8", "M9")]
     (out / "grt" / "grt.tcl").write_text(grt_tcl(P, out / "grt", coarse, lefs, reserve, adjust))
     meta["grt"] = dict(ft_bits=nft, ft_slot_instances=len(ft_nets(P)), reset_taps=len(P.parts),
-                       adjust=dict(adjust), coarse_m123_um=coarse, clock_reserve_rects=len(reserve),
+                       adjust=dict(adjust), coarse_m123_um=coarse, gcell_um=GCELL_UM, clock_reserve_rects=len(reserve),
                        pg_stripes=len(pg_stripes(P)))
     meta["grt"]["ft_layer_f1"] = ft_layer_audit(P)
     bl, br = band_region_adjust(P, dict(adjust).get("M4", 0.75))
