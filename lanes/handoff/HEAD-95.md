@@ -46,6 +46,10 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 - eshim_rx rp17 build: NOT SIGNED drv only (TT 124/FF 134, 122 on read-select copies g_srep.sr[*].u_sel); setup fixed by wreg (+4.28). Rebuild when CLAND read-copy locality fix lands on main.
 
+- DIE CLOCK FORM OF RECORD (rp17): epyc9 reach-fix-2/rp17/routed/it4 (ctree.v 2433b628b63c, pads.json 37517e5f3dc6, routed/kitwin.json 55daf79b71d8) + routed/leafpad4.json f0147100ea1f. Gate BLOCKED(kits) only.
+- rp18 items: wshim_rx reset.relay_um 300 after 8f61cd7a19 (train 15); hd_lep0N clk_t4/t6/t7 windows 93/90/90 from it4 kitwin (needs 83/80/80 > 71/69/61).
+- Die STA view feed: post every signed HEAD view to REACH-FIX-2 (hd_ctl_n rp17 sent); post when measured pair count rises. FF hold all-pair diag -62.2 intra / -15.0 seam (watch).
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.

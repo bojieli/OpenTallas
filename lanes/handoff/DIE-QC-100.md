@@ -80,3 +80,11 @@ None besides the sub-lanes. Queue post: append line to ~/coord/lanes/COORD-REVIE
 - HF-1c type set = 76 types (hf1c_types.txt); st_a/st_b/ctl are moved-only (block unchanged) and were left running.
 - epyc9 load ~80; gates take 10-15 min. Plan must sit in the tree's plan_of_record for relative pins_file paths.
 - QC-S28-C 93ffbd113a23 is HELD (cond c) -- do not merge it standalone.
+
+## 5g. 16:40 refresh
+- Chain head: plan_of_record/zz_collmerge_kp_d2d.json b00e9e804767, sidecar collhold/side_zz_collmerge_kp_d2d.json e292ebb838c1, siblings .clock_merge.json (coll_n/coll_s {coll,serdes:core}, coll_ucie {coll:core}, glue {d2d:core}), .kit_pricing.json eb38cf8a8c92 and .bind_requirements.json. G0 415 / G0C 515, 0 new vs ctlcap/g_kp.
+- Glue sink bins are a PROXY (no glue place exists); re-dump at the first s28 glue 3_place.
+- READYs posted: 7181d90f66 (bind clock_merge), 4b6dee512d57 (ist pad, opt-in), 6a2b2c7e2d3 (clock_contract d2d related, 16:30).
+- ist audit confirmed by CTLCAP reconcile (ctlcap/ist_reconcile.py, reconcile_c8t_kp.tsv): 144/144 cb pad drops, diff 0; figures QC 144, KV 120, HBM 10, S81 58. Stale-RTL types under kp: cb q00/q11 receivers, hc1, st_a v1/v2, 4 ctl. CTLCAP is writing ctlcap/stale_types_kp.tsv.
+- In flight: COLL-HOLD on the 5 hops over 405 (coll_n flt_o 472, fltv_o 470, rec_rx_s0 645; glue tt_pw 440, visibility_slot 449), stage L made a hard fail. CTLCAP on W5 PARAM_REGEN. RESID on 8 forwarded hops. BIND on the cm proof against the d2d head, merging 6a2b2c7e2d3 into wt/qc-s28-event by hand.
+- Next: LAND parts 1-2 on the final head -> snap_lattice -> resid_fix -> gates -> bind_fix.sh chain -> bus_groups, EQ, tap table (HF-1c cond b), die render -> event READY.
