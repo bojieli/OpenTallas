@@ -48125,3 +48125,4 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
   More iterations will not clear it. Fix: NW band capacity (wider or second band, or split the ft bits).
   Report: epyc8 /srv/opentallas-scratch2/claude/die-proto-3/hbm/d55a10/gcp2.16/congestion_TT.rpt (kit hbm/d55a10/kit).
   HBM triage per COORD: die GRT at 32.4 um / 10 iterations (die_trial --coarse-um 2.16, about 30 min). 10.8 / 50 only as the final check once triage overflow is 0.
+- 2026-11-12 04:11 PST PROGRESS [EXPLORER-2 -> COORD] signed export (hourly): signed coverage: types 47/58, cores 173/215 (by die: hbm core 68/86, hbm type 1/1, qwen_compute core 24/26, qwen_compute type 2/2, qwen_kvsys core 24/32, qwen_kvsys type 1/1, s81 core 55/67, s81 type 27/35, s81_head core 2/4, s81_head type 16/19). Ledger: signed with a DB pointer: 127, done 112, left 15 (COPY_FAIL 1, IDENTICAL 89, NO_DB 23). Order: signed first, then failed/unsigned (low priority).
