@@ -1219,6 +1219,10 @@ SCHEMA = {
             # DIE-QC-97 11-10 opt-in (absent = unchanged plans): clock_landing_plan face-home re-sites these types' ring
             # bands that sit > 50 um from their own pin face or off their pin window (rehome_far_bands)
             cland_face_home_types={"type": "array", "uniqueItems": True, "items": _name},
+            # CPL-QC-NK-OUT 11-11 opt-in (absent = unchanged kits): gen_phys exports OT_CORE_OUT_LAND=1 for these types,
+            # so core_out_land.tcl lands each single-load hard-core output flop FIRM at its pin before GPL (DIE-HEAD-69
+            # 11-05; QC NK clk->out ~885 ps leaves ~235 ps TT for the NK pin -> first stage hop).  Exact type names.
+            core_out_land_types={"type": "array", "uniqueItems": True, "items": _name},
             # DIE-KV-64 11-03 opt-in: these types (or unsplit base names) tie their plan-declared hard-core ID straps
             # inside the type (bind.emit_type; one value on every instance, else a bind gap); absent/empty = unchanged
             id_straps_in_type_types={"type": "array", "uniqueItems": True, "items": _name})},

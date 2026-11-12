@@ -91,3 +91,23 @@ def test_off_by_default():
     out = _run(False)
     assert "OT_CORE_OUT_LAND" not in out
     assert all(p == (1000.0, 1000.0, "PLACED") for p in _pos(out).values())
+
+
+def test_plan_budget_key_schema():
+    """CPL-QC-NK-OUT 11-11: budgets.core_out_land_types (the plan opt-in gen_phys reads) is a schema-valid list of names"""
+    import sys
+    sys.path.insert(0, str(HERE))
+    import schema
+    assert schema.SCHEMA["properties"]["budgets"]["properties"]["core_out_land_types"]["type"] == "array"
+    jsonschema = pytest.importorskip("jsonschema")
+    v = jsonschema.Draft202012Validator(schema.SCHEMA["properties"]["budgets"])
+    assert not list(v.iter_errors({"core_out_land_types": ["cbn_q11__cl49ae4555", "cbf_q11"]}))
+    assert list(v.iter_errors({"core_out_land_types": "cbf_q11"}))
+    assert list(v.iter_errors({"core_out_land_types": ["cbf_q11", "cbf_q11"]}))
+    assert list(v.iter_errors({"core_out_land_type": ["cbf_q11"]}))
+
+
+def test_gen_phys_reads_plan_key():
+    """gen_phys emits the config.mk opt-in from the same plan key the schema now admits"""
+    src = (HERE / "gen_phys.py").read_text()
+    assert 'P.budgets.get("core_out_land_types")' in src and "export OT_CORE_OUT_LAND = 1" in src
