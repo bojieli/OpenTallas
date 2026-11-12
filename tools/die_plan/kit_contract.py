@@ -1642,7 +1642,8 @@ def macro_instances(kd):
     for path, master in named:
         problem = _resolve(scopes, top[0], path.split("."), master)
         if problem:
-            err.append(f"placed macro {path}: {problem} (path from {top[0]})")
+            err.append(f"PLAN-SRC-MACRO placed macro {path}: {problem} (path from {top[0]}; the plan names a macro "
+                       f"path the kit RTL source does not have: point the kit at a source/bind matching the plan)")
     return err, dict(applies=True, placed=len(named), resolved=len(named) - len(err))
 
 
