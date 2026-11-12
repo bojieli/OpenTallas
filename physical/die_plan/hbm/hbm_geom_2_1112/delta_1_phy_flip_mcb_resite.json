@@ -1,0 +1,612 @@
+{
+ "schema": "hbm-geom-2.phy_flip.v2",
+ "tag": "hbm-phy-face-blocked",
+ "status": "COORD approved 11-12; for DIE-HBM-100 compose",
+ "base_plan_sha256": "de3584d1e3d8946821f537b13524076c053217650ff5b2c06d7da10c43d9d656",
+ "result_plan_sha256": "85bdf1053ce80e663a2d1fcffc586ef492e68f87f68aafa570b725dfc27f3406",
+ "ops": [
+  {
+   "op": "hard_core_pose",
+   "type": "PHY_NC",
+   "inst": "u_phy_Q",
+   "frm": {
+    "origin_um": [
+     0.0,
+     0.0
+    ],
+    "orient": "R0"
+   },
+   "to": {
+    "origin_um": [
+     0.0,
+     889.92
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "PHY_NW",
+   "inst": "u_phy_Q",
+   "frm": {
+    "origin_um": [
+     0.0,
+     0.0
+    ],
+    "orient": "R0"
+   },
+   "to": {
+    "origin_um": [
+     0.0,
+     889.92
+    ],
+    "orient": "MX"
+   }
+  },
+  {
+   "op": "ft_slot_window",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "key": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "ft_slot_window",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "key": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  },
+  {
+   "op": "ft_slot_window",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "key": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "ft_slot_window",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "key": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 2,
+   "bits": 3071,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 3,
+   "bits": 3071,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 4,
+   "bits": 3067,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 5,
+   "bits": 3071,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 6,
+   "bits": 3070,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 7,
+   "bits": 3068,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 8,
+   "bits": 3071,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 9,
+   "bits": 3066,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "station": 10,
+   "bits": 3071,
+   "window": "out_window_um",
+   "frm": [
+    467.937,
+    1016.952
+   ],
+   "to": [
+    387.0632,
+    847.483
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "station": 0,
+   "bits": 2556,
+   "window": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "station": 1,
+   "bits": 2558,
+   "window": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "station": 2,
+   "bits": 2561,
+   "window": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "station": 3,
+   "bits": 2561,
+   "window": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "station": 4,
+   "bits": 2561,
+   "window": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "station": 5,
+   "bits": 2558,
+   "window": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L21x1",
+   "station": 6,
+   "bits": 2556,
+   "window": "in_window_um",
+   "frm": [
+    0.496,
+    458.337
+   ],
+   "to": [
+    0.496,
+    384.454
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 3,
+   "bits": 211,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 4,
+   "bits": 208,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 5,
+   "bits": 211,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 6,
+   "bits": 211,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 7,
+   "bits": 209,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 8,
+   "bits": 211,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 9,
+   "bits": 207,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L63wx5",
+   "station": 10,
+   "bits": 211,
+   "window": "out_window_um",
+   "frm": [
+    1017.432,
+    1055.153
+   ],
+   "to": [
+    847.963,
+    879.5972
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "station": 0,
+   "bits": 11,
+   "window": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "station": 1,
+   "bits": 11,
+   "window": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "station": 2,
+   "bits": 11,
+   "window": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "station": 3,
+   "bits": 11,
+   "window": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "station": 4,
+   "bits": 11,
+   "window": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "station": 5,
+   "bits": 11,
+   "window": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  },
+  {
+   "op": "bit_sites_remap",
+   "type": "q_mcb_nw",
+   "slot": "L114wx1",
+   "station": 6,
+   "bits": 11,
+   "window": "in_window_um",
+   "frm": [
+    458.817,
+    467.457
+   ],
+   "to": [
+    384.934,
+    386.5832
+   ]
+  }
+ ],
+ "nw_face": {
+  "pins": 5854,
+  "span_um": [
+   0.54399999999805,
+   879.4320000000007
+  ],
+  "pins_per_um": 6.661,
+  "per_um_used": 6.67,
+  "budget_face_pins_per_um": 6
+ },
+ "note": "positions/orientation + NW W window re-lay only; no core shape, outline, bus width, lane or station change. NW_mcb (q_mcb_nw) E-face pins move with the PHY_NW W pins (same port windows).",
+ "bit_sites_remapped": 47293,
+ "bit_site_max_offset_um": 54.106
+}

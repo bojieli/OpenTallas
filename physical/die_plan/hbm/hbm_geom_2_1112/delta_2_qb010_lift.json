@@ -1,0 +1,347 @@
+{
+ "schema": "hbm-geom-2.qb010_lift.v1",
+ "tag": "hbm-phy-face-blocked",
+ "base_plan_sha256": "85bdf1053ce80e663a2d1fcffc586ef492e68f87f68aafa570b725dfc27f3406",
+ "result_plan_sha256": "0a6d5952bee673688314b99bd82ff6e24bb15fa7c3c9ce48671fc06af7384e73",
+ "dy_um": 17.28,
+ "group_top_um": 503.712,
+ "unresolved": [],
+ "ops": [
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c1_k3h0__ra",
+   "frm": [
+    1066.176,
+    196.128
+   ],
+   "to": [
+    1066.176,
+    213.408
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c1_k3h0__rb",
+   "frm": [
+    1178.496,
+    196.128
+   ],
+   "to": [
+    1178.496,
+    213.408
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c1_k3h1",
+   "frm": [
+    1066.176,
+    4.32
+   ],
+   "to": [
+    1066.176,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k0h0__ra",
+   "frm": [
+    66.528,
+    4.32
+   ],
+   "to": [
+    66.528,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k0h0__rb",
+   "frm": [
+    178.848,
+    4.32
+   ],
+   "to": [
+    178.848,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k0h1",
+   "frm": [
+    66.528,
+    298.944
+   ],
+   "to": [
+    66.528,
+    316.224
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k1h0__ra",
+   "frm": [
+    316.224,
+    4.32
+   ],
+   "to": [
+    316.224,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k1h0__rb",
+   "frm": [
+    428.544,
+    4.32
+   ],
+   "to": [
+    428.544,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k1h1",
+   "frm": [
+    316.224,
+    298.944
+   ],
+   "to": [
+    316.224,
+    316.224
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k2h0__ra",
+   "frm": [
+    566.784,
+    4.32
+   ],
+   "to": [
+    566.784,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k2h0__rb",
+   "frm": [
+    679.104,
+    4.32
+   ],
+   "to": [
+    679.104,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k2h1",
+   "frm": [
+    566.784,
+    298.944
+   ],
+   "to": [
+    566.784,
+    316.224
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k3h0__ra",
+   "frm": [
+    816.48,
+    4.32
+   ],
+   "to": [
+    816.48,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k3h0__rb",
+   "frm": [
+    928.8,
+    4.32
+   ],
+   "to": [
+    928.8,
+    21.6
+   ]
+  },
+  {
+   "op": "hard_core_pose",
+   "type": "q_b010",
+   "inst": "u_hb_idx__s_Q2_r0c2_k3h1",
+   "frm": [
+    816.48,
+    298.944
+   ],
+   "to": [
+    816.48,
+    316.224
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L5056y0",
+   "k": 1,
+   "frm": [
+    801.36,
+    270.0
+   ],
+   "to": [
+    801.36,
+    291.6
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L5056y0",
+   "k": 2,
+   "frm": [
+    630.72,
+    501.12
+   ],
+   "to": [
+    630.72,
+    509.76
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L5070y1",
+   "k": 8,
+   "frm": [
+    345.6,
+    492.48
+   ],
+   "to": [
+    330.0,
+    509.76
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L733y1",
+   "k": 2,
+   "frm": [
+    32.4,
+    494.64
+   ],
+   "to": [
+    32.4,
+    509.76
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L733y1",
+   "k": 3,
+   "frm": [
+    434.16,
+    494.64
+   ],
+   "to": [
+    430.0,
+    509.76
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L733y1",
+   "k": 4,
+   "frm": [
+    792.72,
+    451.44
+   ],
+   "to": [
+    792.72,
+    475.2
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L734y3",
+   "k": 2,
+   "frm": [
+    28.08,
+    494.64
+   ],
+   "to": [
+    28.08,
+    509.76
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L734y3",
+   "k": 3,
+   "frm": [
+    429.84,
+    494.64
+   ],
+   "to": [
+    426.0,
+    509.76
+   ]
+  },
+  {
+   "op": "slot_reg",
+   "type": "q_b010",
+   "slot": "L734y3",
+   "k": 4,
+   "frm": [
+    792.72,
+    455.76
+   ],
+   "to": [
+    792.72,
+    479.52
+   ]
+  },
+  {
+   "op": "istation_reg",
+   "type": "q_b010",
+   "conn": "bus:L20_o",
+   "k": 7,
+   "frm": [
+    192.24,
+    503.28
+   ],
+   "to": [
+    192.24,
+    509.76
+   ]
+  }
+ ],
+ "note": "positions only: no reshape, no outline, no pin/window change"
+}
