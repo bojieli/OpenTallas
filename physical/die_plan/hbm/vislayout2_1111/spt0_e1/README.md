@@ -33,3 +33,9 @@ Scope: positions only. Windows, outline, cores, register counts and cycles are u
 pv1 L5076x2 already fails G0 in d49a: S0->S1 is 759 um against a 405 um limit, and it is the remaining hot face bin at (761, 5).
 - Structural fix: add one station (+1 cycle on L5076, latency row owned by DIE-HBM).
 - With 5 registers on the y 140 row between the macros, hops are 343 um. That clears both the G0 error and the face hot spot. In a trial with L5076 lifted, pv1 p99 was 0.961.
+
+## E1b (adds the AMENDMENT 4 item, COORD approved 11-11 19:1x)
+`delta_e1b.json.gz` = E1 + pv1 L5076x2 +1 station (4 -> 5, y 140 row between the xcal macros, hops 343 um) and
+latency.lanes.L5076 cycles/stations/natural +1 (41 -> 42; DIE-HBM-100 owns the latency row).  Generator: `spt0_l5076.py`
+on the E1 plan, then ft_nudge.  route_supply p99: q_spt0 0.961, pv1 0.968.  G0 551 -> 549 (the two d49a L5076 reach
+errors are gone; no new finding).
