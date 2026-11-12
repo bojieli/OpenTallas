@@ -24,6 +24,19 @@ Laws (q = hub quadrant NW/NE, k = local group 0..3; N_k = L(N_rq_qk) + L(N_rr_qk
     VM_RT_EXTRA = 2 + VM_RT + L(IDXQ_rq) + L(IDXQ_rr)
   hb_argmax (r2 behind the share: VMX 5 + VM_RT; ACK 13 + its own echo 1 + L(cq) + L(cr))        [CHECK: owner look]
   hc_eng (ot_hbm_hc_root_static_s SYS_LAT = .. + 1 + XRD + 1 + .. + 1 + XRU + 1):  XRD = L(HCR_xrd)  XRU = L(HCR_xru)
+Core pin cycles (HBM-HUB-RTL-1 11-11, DIE-HBM-97 vecd rd1; tools/die_plan/core_pin_cycles.py): asbuilt.core_pin_cycles
+names bank recipes whose own read pins answer X edges later (rd1: rr0..rr4 and pr +1; *_done / eg / requests 0).  X is
+read from the bound sources of each consumer pin (default: no declaration -> X = 0, every law above unchanged):
+  read laws get + X (the faces-bank read constant): su/sfu/hc tap READ_RETURN, hc_q RD_CAPTURE / GATHER_PHASE (through
+  the hc tap READ_RETURN), the SFU bridge READ_RETURN (through the sfu tap), VM_RT + X(IDX_rr4) (so n12 VM_RT_EXTRA and
+  argmax VMX follow), CR_RT + X(the hub's bank pr); WRITE_RETURN / DONE_LAT stay (write done pins are not moved).
+  Readers with no absolute law here take as-built + X (record.core_pin_regen; latency_consumers.py checks the loop):
+  dma_back RR_RT (rr), VM share BANK_RT (vm_rr) and the share's clients on a_rr / b_rr (n12 VM_RT_EXTRA behind
+  hb_idx__nwsh, COLL gq issue hcollgi_q VM_RT behind hcollrs_q.b_rr),
+  xload RD_LAT (rr; per-bank vector: every element), n12 VM_RT_EXTRA reading banks directly.
+  Any other consumer of a moved pin (a cut without parameters, e.g. hb_coll_q.__cut_vm behind a share) is a hook error:
+  the bind fails rather than bind a torn read.  Diagnostic status pins (bank_status) are recorded only.
+  Mixed X on one law (an rd1 and a non-rd1 bank in one LG pair / one share) is an error (loop pads are not modelled).
 Leaves that are netlist cuts without parameters (sfucore_q.__cut_ctl = the SFU VM bridge, sfucore_q.__cut_lane* = sp2
 lane RDX) cannot take a parameter: their required values are RECORDED (record.variant_values) for the parameterized
 variants DIE-HBM-92-SU builds; the bridge law is supplied by asbuilt.param_regen.bridge = {read_k, write_k} once
@@ -42,6 +55,17 @@ HERE = Path(__file__).resolve().parent
 CONTRACT = HERE.parent / "r8" / "hbm_lat_contract.json"
 QS, KS = ("NW", "NE"), (0, 1, 2, 3)
 TAP_K = {"su": (11, 8), "sfu": (15, 12), "hc": (19, 16)}
+sys.path.insert(0, str(HERE.parents[3] / "tools" / "die_plan"))
+# (module regex, response port regex, parameter): fixed-latency readers without an absolute law here -> as-built + X
+PIN_READERS = [(r"ot_hgi_dma_back_static_vp4_banks\w*", r"rr", "RR_RT"),
+               (r"ot_hbm_idx_vm_share2_static\w*", r"vm_rr", "BANK_RT"),
+               (r"ot_hgi_sm_xload\w*ctl\w*", r"rr", "RD_LAT"),
+               (r"ot_hbm_idx_vm_query_static_n12", r"vm_rr", "VM_RT_EXTRA"),
+               (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT")]     # hcollgi_q behind hcollrs_q.b_rr
+SHARE = (r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr")  # a share's answer ports: their clients see the share's + X
+DIAG_PORT = r"(bank_status|b\d_status|status)"            # diagnostic: recorded, never priced
+LAW_PINS = [(r"su_N[EW]\d\.g_tap_r8b\.u_tap", r"near_rr"), (r"hb_idx__ctl", r"vm_rr"),
+            (r"hb_vms_\w+", r"(bk|b\d)_pr")]
 
 
 def legs_of(contract):
@@ -96,9 +120,10 @@ def rows_from_table(bg, landing):
     return rows
 
 
-def derive(L, legs, bridge=None):
-    """-> (params {leaf: {P: v}}, record, errors)"""
+def derive(L, legs, bridge=None, xr=None):
+    """-> (params {leaf: {P: v}}, record, errors); xr = core pin cycles {"N_{q}{k}" | "IDX" | "CR": X} (default 0)"""
     err, rec, params, variant = [], defaultdict(dict), defaultdict(dict), {}
+    xr = xr or {}
 
     def one(name):
         v = L(legs[name])
@@ -110,18 +135,21 @@ def derive(L, legs, bridge=None):
         rd_cap, done = {}, {}
         for k in KS:
             n = one(f"N_rq_{q}{k}") + one(f"N_rr_{q}{k}")
+            x = xr.get(f"N_{q}{k}", 0)
             rec["N"][f"{q}{k}"] = n
+            if x:
+                rec["X"][f"{q}{k}"] = x
             for unit, leaves in (("su", [f"su_{q}{k}.g_tap_r8b.u_tap", f"su_{q}{k}.u_slice.g_leaf[0].u_leaf",
                                           f"su_{q}{k}.u_slice.g_leaf[1].u_leaf"]),
                                  ("sfu", [f"sfu_{q}{k}"]), ("hc", [f"hc_{q}{k}"])):
                 kr, kw = TAP_K[unit]
                 for leaf in leaves:
-                    params[leaf].update(READ_RETURN=kr + n, WRITE_RETURN=kw + n)
+                    params[leaf].update(READ_RETURN=kr + n + x, WRITE_RETURN=kw + n)
             h = one(f"H_rq_{q}{k}") + one(f"H_rr_{q}{k}")
-            rd_cap[k] = 23 + (TAP_K["hc"][0] + n - 18) + h
+            rd_cap[k] = 23 + (TAP_K["hc"][0] + n + x - 18) + h
             done[k] = 19 + (TAP_K["hc"][1] + n - 15) + h
             c = one(f"C_rq_{q}{k}") + one(f"C_rr_{q}{k}")
-            variant[f"sfucore_{q}.__cut_ctl:LG{k}"] = dict(sfu_tap_read_return=TAP_K["sfu"][0] + n,
+            variant[f"sfucore_{q}.__cut_ctl:LG{k}"] = dict(sfu_tap_read_return=TAP_K["sfu"][0] + n + x,
                                                            sfu_tap_write_return=TAP_K["sfu"][1] + n, ctl_legs=c)
         for what, d in (("RD_CAPTURE", rd_cap), ("DONE_LAT", done)):
             if len(set(d.values())) != 1:
@@ -137,8 +165,8 @@ def derive(L, legs, bridge=None):
                 err.append(f"SFU bridge {q}: LG round trips differ read {rr} write {wr} (loop pads missing)")
             variant[f"sfucore_{q}.__cut_ctl"] = dict(READ_RETURN=max(rr.values()), WRITE_RETURN=max(wr.values()),
                                                      law=f"{bridge['read_k']}/{bridge['write_k']} + sfu tap + ctl legs")
-    vm_rt = 1 + one("IDX_rq4") + one("IDX_rr4")
-    cr_rt = 1 + one("IDX_cq") + one("IDX_cr")
+    vm_rt = 1 + one("IDX_rq4") + one("IDX_rr4") + xr.get("IDX", 0)
+    cr_rt = 1 + one("IDX_cq") + one("IDX_cr") + xr.get("CR", 0)
     params["hb_idx__ctl"].update(VM_RT=vm_rt, CR_RT=cr_rt)
     params["hb_idx__op_SW"].update(VM_RT_EXTRA=2 + vm_rt + one("IDXQ_rq") + one("IDXQ_rr"))
     rec["check"]["hb_argmax"] = dict(VMX=5 + vm_rt, ACK=13 + cr_rt,
@@ -147,6 +175,86 @@ def derive(L, legs, bridge=None):
     params["hc_eng"].update(XRD=one("HCR_xrd"), XRU=one("HCR_xru"))
     rec["variant_values"] = variant
     return dict(params), dict(rec), err
+
+
+def pin_cycles(ctx, rules):
+    """{(sink leaf, sink port): {X}} over every bound sink pin fed by a source pin core_pin_cycles names (X > 0 only),
+    and {(sink leaf, sink port): {share leaf}} for the clients of the VM shares"""
+    import core_pin_cycles as CPC
+    F, out, clients = ctx.F, defaultdict(set), defaultdict(set)
+    share_rx = re.compile(SHARE[0])
+    for (ci, pn, i), d in ctx.sinks.items():
+        s = CPC.source_of(d)
+        if s is None:
+            continue
+        sc = F.cells[s[0]]
+        x = CPC.added(rules, sc.path, sc.module, s[1], s[2])
+        if x:
+            out[(F.cells[ci].path, pn)].add(x)
+        elif re.fullmatch(SHARE[1], s[1]) and share_rx.fullmatch(sc.module or ""):
+            clients[(F.cells[ci].path, pn)].add(sc.path)
+    return out, clients
+
+
+def pin_plan(ctx, px, clients, params):
+    """-> (xr for derive, [core_pin_regen rows], {"leaf|port": X} record, errors)"""
+    import core_pin_cycles as CPC
+    err, xr, regen_rows, seen = [], {}, [], set()
+    cells = {c.path: c for c in ctx.F.cells}
+
+    def single(key, xs):
+        if len(xs) != 1:
+            err.append(f"core pin cycles {key}: sources answer {sorted(xs)} edges late (mixed rd1 / non-rd1 banks; "
+                       "loop pads not modelled)")
+        return max(xs)
+
+    def law(snk, prt):
+        hit = {(s, p) for (s, p) in px if re.fullmatch(snk, s) and re.fullmatch(prt, p)}
+        seen.update(hit)
+        return {x for k in hit for x in px[k]}
+    for q in QS:
+        for k in KS:
+            xs = law(rf"su_{q}{k}\.g_tap_r8b\.u_tap", "near_rr")
+            if xs:
+                xr[f"N_{q}{k}"] = single(f"su_{q}{k} near_rr", xs)
+    xs = law(r"hb_idx__ctl", "vm_rr")
+    if xs:
+        xr["IDX"] = single("hb_idx__ctl vm_rr", xs)
+    xs = law(r"hb_vms_SW", r"(bk|b\d)_pr")
+    if xs:
+        xr["CR"] = single("hb_vms_SW pr (CR_RT)", xs)
+    law(r"hb_vms_\w+", r"(bk|b\d)_pr")             # other hubs: the response calendar (compiler) moves, recorded
+    share_x = {}
+    for (s, p), xs in sorted(px.items()) + sorted((k, {max(px.get((sh, "vm_rr"), {0})) for sh in v} - {0})
+                                                   for k, v in clients.items()):
+        if (s, p) in seen or not xs:
+            continue
+        c = cells.get(s)
+        if re.fullmatch(DIAG_PORT, p):
+            seen.add((s, p))
+            continue
+        for mrx, prx, par in PIN_READERS:
+            if c is not None and re.fullmatch(mrx, c.module or "") and re.fullmatch(prx, p):
+                x = single(f"{s} {p}", xs)
+                seen.add((s, p))
+                if s in params and par in params[s]:
+                    break                          # an absolute law already carries it (VM_RT behind hb_idx__ctl)
+                try:
+                    asb = int(str(c.params.get(par)).strip('"').replace("64'd", "").replace("'d", ""))
+                except ValueError:
+                    err.append(f"core pin cycles {s}.{par}: as-built value {c.params.get(par)!r} not an integer")
+                    break
+                v = CPC.plus(asb, x, par)
+                params[s][par] = v
+                regen_rows.append(dict(inst=s, param=par, asbuilt=asb, pin=x, bound=v))
+                if re.fullmatch(SHARE[0], c.module or ""):
+                    share_x[s] = x
+                break
+        else:
+            err.append(f"core pin cycles: {s}.{p} ({c.module if c else '?'}) reads a moved bank pin (+{sorted(xs)}) and "
+                       "has no regenerable parameter (cut / unlisted reader)")
+    rec = {f"{s}|{p}": max(xs) for (s, p), xs in px.items()}
+    return xr, regen_rows, rec, err
 
 
 def regen(ctx):
@@ -158,7 +266,20 @@ def regen(ctx):
     rows = rows_from_binder(ctx, r"(vmb_\w+|su_N[EW]\d\.g_tap_r8b\.u_tap|sfu_N[EW]\d|hc_N[EW]\d?(\.u_q|\.u_cen\..*)?|"
                                  r"sfucore_N[EW]\.__cut_ctl|hb_idx__ctl|hb_idx__op_SW|hb_vms_SW|hb_argmax|hc_eng|"
                                  r"hb_router_ids)")
-    params, rec, err = derive(Landed(rows), legs, spec.get("bridge"))
+    import core_pin_cycles as CPC
+    rules = CPC.load(ctx.ab, Path(getattr(ctx, "base", CPC.REPO)))
+    px, clients = pin_cycles(ctx, rules) if rules else ({}, {})
+    xr = {}
+    if px:
+        # pass 1: the absolute-law X; pass 2 (after derive) the as-built + X readers
+        xr, _, _, _ = pin_plan(ctx, px, clients, defaultdict(dict))
+    params, rec, err = derive(Landed(rows), legs, spec.get("bridge"), xr)
+    if px:
+        params = defaultdict(dict, params)
+        _, regen_rows, pin_rec, perr = pin_plan(ctx, px, clients, params)
+        err += perr
+        rec.update(core_pin_cycles=pin_rec, core_pin_regen=regen_rows,
+                   core_pin_rules=[r["src"] for r in rules])
     if err:
         raise ValueError("; ".join(err[:6]))
     # The exact native composed cut variant exposes its intrinsic boundary

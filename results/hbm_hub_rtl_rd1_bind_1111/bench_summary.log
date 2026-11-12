@@ -1,0 +1,6 @@
+prerd1 pos RESULT RR=11 WR=8 fault=0 first_fault_t=-1 reads=12 returned=12 bad=0 wdone=8 bank_status=00000 VERDICT PASS 
+prerd1 neg-1 RESULT RR=10 WR=8 fault=1 first_fault_t=185 reads=12 returned=12 bad=11 wdone=8 bank_status=00000 VERDICT FAULT 
+prerd1 neg+1 RESULT RR=12 WR=8 fault=1 first_fault_t=189 reads=12 returned=12 bad=3 wdone=8 bank_status=00000 VERDICT FAULT 
+rd1 pos RESULT RR=12 WR=8 fault=0 first_fault_t=-1 reads=12 returned=12 bad=0 wdone=8 bank_status=00000 VERDICT PASS 
+rd1 neg+0 RESULT RR=11 WR=8 fault=1 first_fault_t=187 reads=12 returned=12 bad=11 wdone=8 bank_status=00000 VERDICT FAULT 
+rd1 neg+2 RESULT RR=13 WR=8 fault=1 first_fault_t=191 reads=12 returned=12 bad=3 wdone=8 bank_status=00000 VERDICT FAULT 
