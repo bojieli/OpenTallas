@@ -32,3 +32,15 @@ def test_die_without_a_retry_list_wipes_nothing():
     st["retry_seen"] = {"qwen_compute|hcut1111|x@2": 500.0}
     KW.prune_stale_retries(cfg([]), st, now=2000.0)
     assert st["retry_seen"] == {"qwen_compute|hcut1111|x@2": 500.0}
+
+
+def test_second_prune_in_one_pass_does_not_rearm_a_stale_entry():
+    """KW-FIX-46 11-12: the pass prunes twice; a stale entry dropped by the first call stays stale on the next tick"""
+    st = state(1000.0)
+    st["retry_seen"] = {"qwen_compute|hcut1111|x@2": 500.0}
+    c = cfg(["x@2"])
+    assert KW.prune_stale_retries(c, st, now=2000.0) == {"qwen_compute": ["x@2"]}
+    KW.prune_stale_retries(c, st, now=2000.0)                                  # second call of the same pass
+    assert st["retry_seen"]["qwen_compute|hcut1111|x@2"] == 500.0
+    c2 = cfg(["x@2"])                                                          # next tick: config reloaded
+    assert KW.prune_stale_retries(c2, st, now=2600.0) == {"qwen_compute": ["x@2"]} and c2["dies"]["qwen_compute"]["retry"] == []
