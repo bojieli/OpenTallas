@@ -1,0 +1,5 @@
+read_verilog -sv iss2e_split_eq.sv
+proc; opt
+miter -equiv -flatten -make_assert gold gate miter
+hierarchy -top miter
+sat -verify -prove-asserts -show-ports miter

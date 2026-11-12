@@ -71,7 +71,11 @@ module ot_hfd_coll_q3_body_s #(
  // lookahead, 2 x 256x256 per bank); ROWS 64/128 keep ot_hgi_coll_issuer_m (v6). Same ports and edges.
  generate if(ROWS>128)begin:g_iss256
  // Default-off source variant: true 256-row native32 leaf; same cfg37 and edge contract.
-`ifdef OT_COLL_ISSUER256_NATIVE32
+`ifdef OT_COLL_ISSUER256_ISS2E
+ // HBM-TAPS 11-12 ISS2E (q3bc cycle form, DIE-HBM-100 ruling): native32 issuer with the fetch loop advancing at most
+ // every 2nd edge (+1 clk per issued row, same uop / done sequence; bench run_issuer_v8r256_iss2e_lockstep.sh).
+ ot_hgi_coll_issuer_m256v8e
+`elsif OT_COLL_ISSUER256_NATIVE32
  ot_hgi_coll_issuer_m256v8
 `else
  ot_hgi_coll_issuer_m256

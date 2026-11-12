@@ -1,0 +1,13 @@
+# HBM-TAPS 11-12 ISS2E: k-induction (yosys sat) of the split-decision invariant on ot_hgi_coll_issuer_m256v8e:
+# on every advance edge the registered carry-save decision == the original one-edge f_take of the current fetch state
+# (both successors).  Macro outputs are free (sram cells deleted, undriven -> anyseq): the proof does not rely on
+# macro contents.  Run from a dir holding issuer_iss2e_formal.sv (= the issuer with the FORMAL block of
+# formal_iss2e_prop.sv inserted before endmodule).  Expect "Induction step proven: SUCCESS!" (length 3, 11-12).
+read_verilog -sv -formal -DFORMAL issuer_iss2e_formal.sv
+hierarchy -top ot_hgi_coll_issuer_m256v8e
+proc; flatten; opt_clean
+async2sync; dffunmap
+delete t:ot_sram_*
+setundef -undriven -anyseq
+opt -fast
+sat -tempinduct -prove-asserts -set-at 1 rst_n 0 -seq 1 -maxsteps 16
