@@ -3,7 +3,7 @@ import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, FancyArrowPatch
 p=json.load(open('in/plan_qc99_s28.json')); T=p['partition_types']
-R=json.load(open('rects.json')); cur=R['cur']; hand=R['hand']
+R=json.load(open('rects.json')); cur=R['cur']; hand={k:v for k,v in R['hand'].items() if not k.startswith('filler_')}; FILL={k:v for k,v in R['hand'].items() if k.startswith('filler_')}
 io=json.load(open('in/die_io.json'))
 typ={l.split('\t')[0]:l.split('\t')[1] for l in open('parts.tsv')}
 ori={l.split('\t')[0]:l.split('\t')[2] for l in open('parts.tsv')}
@@ -137,16 +137,18 @@ def column(ax,rects,chains,title,col='E0',X0=None,Y=(7300,15900)):
 def column_fig():
     fig,axs=plt.subplots(1,2,figsize=(22,16)); fig.patch.set_facecolor('#0d1117')
     column(axs[0],cur,CH,'CURRENT s28 slots, column E0 (bn_00 row .. tn_00 row)\nseam label = lane bits crossing / (len x 12 pins/um)')
-    column(axs[1],hand,CHH,'HAND FLOORPLAN HF-1b, column E0 (same for all 12 columns, W mirror)\nsu 1399.7 / mid 1831.7 / st 1339.2 / hc 717.1 tall, sc 656.6 / fe 578.9 wide, cbn_q00 rows +34.56; R1+R2 re-routes')
+    column(axs[1],hand,CHH,'HAND FLOORPLAN HF-1c, column E0 (same for all 12 columns, W mirror)\nsu 1399.7 / mid 1831.7 / st 1339.2 / hc 717.1 tall, s28 widths kept, cbn_q00 rows +34.56; R1+R2 re-routes')
     fig.savefig('out/qc_floorplan_column_cur_vs_hand.png',dpi=100,facecolor=fig.get_facecolor(),bbox_inches='tight')
     fig.savefig('out/qc_floorplan_column_cur_vs_hand.svg',facecolor=fig.get_facecolor(),bbox_inches='tight'); plt.close(fig)
 def die_fig():
     fig,axs=plt.subplots(1,2,figsize=(26,11.5)); fig.patch.set_facecolor('#0d1117')
     DW,DH=p['die']['outline_um']
-    for ax,rects,title in ((axs[0],cur,'CURRENT s28 die (31.2 x 25.6 mm)'),(axs[1],hand,'HAND FLOORPLAN HF-1b die (outline unchanged; changed slots outlined red)')):
+    for ax,rects,title in ((axs[0],cur,'CURRENT s28 die (31.2 x 25.6 mm)'),(axs[1],hand,'HAND FLOORPLAN HF-1c die (outline unchanged; changed slots outlined red)')):
         for n,r in rects.items():
             ch = (r!=cur[n])
             ax.add_patch(Rectangle((r[0],r[1]),r[2]-r[0],r[3]-r[1],fc=color(n),ec='#e74c3c' if (ch and rects is hand) else '#17202a',lw=1.4 if ch and rects is hand else 0.3))
+        if rects is hand:
+            for k,v in FILL.items(): ax.add_patch(Rectangle((v[0],v[1]),v[2]-v[0],v[3]-v[1],fc='#f1c40f',ec='none'))
         for m in io:
             x0,y0,x1,y1=m['rect_um']; ax.add_patch(Rectangle((x0,y0),x1-x0,y1-y0,fc='none',ec='#f1c40f',hatch='///',lw=1.2))
             ax.text((x0+x1)/2,(y0+y1)/2,m['part']+'\nFIXED seam',fontsize=6,color='#f1c40f',ha='center',va='center',rotation=90)

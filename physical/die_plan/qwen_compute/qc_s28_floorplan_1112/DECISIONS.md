@@ -174,3 +174,27 @@ Signed cores inside re-pitched parents keep their views (core-shape freeze):
 Those parents re-kit fresh; none of them is signed.
 
 **Batch re-sign: 0 types and 0 cores.** At most 2 same-DB re-signs of the coll types if the counter keys on the plan sha.
+
+## 8. HF-1c: DIEVIEW checks of HF-1 and HF-1b answered (the CURRENT proposal; drawings regenerated)
+
+DIEVIEW's checks of HF-1 and HF-1b were clean: 377/377 parts, 0 overlaps, all cores fit, and mid-row E/W pin density 3.2-4.1 b/um (it was 4.6-5.6). The flags are answered below.
+
+| # | flag | resolution |
+|---|---|---|
+| 1 | The cbx_q10 rect in the tn_10/bn_10 rows grew +34.56, which conflicts with "filler, type unchanged". | **A filler gap is not legal.** I tried it: 24 abutted hops (su_c/su_l0 <-> bn_10, hc2/hc3 <-> tn_10) become non-adjacent across the 34.56 strip. **Decision: an explicit row-variant type split.** The 24 cbx_q10 instances in tn_10/bn_10 become 2 new types (cbx_q10__cl89936551_h, cbx_q10__cl94a12200_h), 1235.52 x 2566.08, with the +34.56 used as street. The tf_10/bf_10 instances keep cbx_q10 at 2531.52. Cost: +2 types. Every cbx kit is fresh in s28 anyway (s28a views, s28c station). Fallback if the type count is vetoed: cbn_q00 keeps 2531.52 and fixes itself in-slot, and the band gets 69.12 back. |
+| 2 | fe 578.88 strands 8-11 landing bands and 10-28 taps. | **Widths reverted to s28** (fw 622.08 / stm 613.44 / sc 613.44 / fe 622.08): 0 x-stranding. The sc +43 bought little: with R1/R2, sc V is 0.18 (0.17 with the widening). Scores now: sc H 0.27 -> 0.16, V 0.24 -> 0.18; stm H 0.18 -> 0.12, V 0.07 -> 0.14. |
+| 3 | hc 717.12 strands 0-3 bands and 2-13 taps per type. | Re-site them in the same event: the clock generator re-derives the taps and the hc family re-sites its landing bands. They are listed in the event scope. |
+| 4 | su row height. | Closed: su is 1399.68. su_l1's 3 hops over 405 um (x_su_c_i 468, x_su_c_p1_i 444, flt 488) are re-sited in the su_l1 family delta, or +1 register (pre-approved). |
+| 5 | Mid-row N/S density (stm 5.51, sc 5.24, fw 4.8-5.2 b/um) is above gen_plan's 4.2. | **Residual, accepted.** It is under the 6/um/layer budget, and the worst seam is stm\|ctl at 0.67 of the 12 pins/um. Widening stm does not lengthen its ctl seam: ctl's x-range (622-1849 col-local) bounds it, and a wider stm only overlaps the st_a/sc sides. Keep the stm N window across the full 613-um ctl overlap. |
+| 6 | Mid-row aspect 2.7-3.0 with 2-6% fill. | **Declared in the event:** AUTO-GEOM aspect and empty-slot advisories on the 40 mid-row types are expected. These are face-bound slots, so GEOM-VIS should not hold them. |
+| - | DIEVIEW: hc fits 520 by area (46-57k um2 per type). | **I keep 717.12.** The binding limit for hc is pins and rings (about 370 needed), and the 197 um saved would go to the mid row's height, which does not help N/S density (that is face length). Taller rows also lengthen the vertical lanes, and a lower hc strands more taps and bands. The hc slack is room for rings and taps. If COORD prefers 520, mid becomes 2028.96 with no other change. |
+
+**HF-1c in short.** Rows su 1399.68 / mid 1831.68 / st 1339.2 / hc 717.12 at s28 widths. cbn_q00 and the cbx_q10 row variants are +34.56 in tn_00/10 and bn_00/10. R1/R2 as before. The die is unchanged and no neighbour-die seam moves.
+
+**Scope:**
+- 168 slice parts (132 reshaped, 36 moved);
+- 48 cb parts +34.56: 24 cbn_q00 (3 types) and 24 cbx_q10 row-variant (2 new types);
+- the coll_ftc E-window repack (local y >= 397.44);
+- R1/R2.
+
+**Batch re-sign: unchanged, 0 types and 0 cores.** cbx_q10 and cbn_q00 are not signed. The a0c nk/nl and cland cores keep their views.

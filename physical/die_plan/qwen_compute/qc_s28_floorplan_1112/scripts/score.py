@@ -10,7 +10,7 @@ for line in open('parts.tsv'):
 DY=34.56  # cbn_q00 row +34.56 (QC-S28-B gap) on bn_00/bn_10 and tn_00/tn_10 rows, absorbed inside the slice band
 # HF-1b (DIEVIEW row re-pitch merged): su 1399.68, mid 1831.68, st/ctl 1339.2, hc 717.12
 SU=(10177.92,11577.60); MID=(11577.60,13409.28); CTL=(13409.28,14748.48); HC=(14748.48,15465.60)
-MIDW=[('fw',622.08),('stm',613.44),('sc',656.64),('fe',578.88)]
+MIDW=[('fw',622.08),('stm',613.44),('sc',613.44),('fe',622.08)]  # HF-1c: s28 widths kept (no x stranding)
 def hand_rects():
     h=copy.deepcopy(cur)
     cols=sorted(set(re.match(r'sl_([EW]\d)_',n).group(1) for n in cur if n.startswith('sl_')))
@@ -25,10 +25,14 @@ def hand_rects():
         for f in ('hc0','hc1','hc2','hc3'):
             r=cur[f'sl_{c}_{f}']; h[f'sl_{c}_{f}']=[r[0],HC[0],r[2],HC[1]]
     for n in cur:
-        m=re.match(r'c_[EW]\d_(bn_00|bn_10)$',n)
-        if m: r=cur[n]; h[n]=[r[0],r[1],r[2],r[3]+DY]
-        m=re.match(r'c_[EW]\d_(tn_00|tn_10)$',n)
-        if m: r=cur[n]; h[n]=[r[0],r[1]-DY,r[2],r[3]]
+        m=re.match(r'c_([EW]\d)_(bn_00|bn_10)$',n)
+        if m:
+            r=cur[n]
+            h[n]=[r[0],r[1],r[2],r[3]+DY]   # bn_10 cbx_q10: explicit row-variant type split (+34.56), no filler gap
+        m=re.match(r'c_([EW]\d)_(tn_00|tn_10)$',n)
+        if m:
+            r=cur[n]
+            h[n]=[r[0],r[1]-DY,r[2],r[3]]
     return h
 hand=hand_rects()
 RER={ # R1/R2/R3 lane re-routes (plan ft chain), slice-relative family chains
@@ -85,7 +89,7 @@ def run(R,chains,tag):
             else: thruH[ch[i]]+=w/2; thruV[ch[i]]+=w/2
     rows={}
     for n in R:
-        if not n.startswith('sl_'): continue
+        if not n.startswith('sl_') or n not in typ: continue
         cH,cV=cap(n,R[n]); rows[n]=(thruH[n],cH,thruH[n]/cH,thruV[n],cV,thruV[n]/cV)
     return rows,bad,bm
 base=run(cur,C,'cur'); hf=run(hand,reroute(C),'hand'); hf0=run(hand,C,'hand_noreroute'); rr=run(cur,reroute(C),'cur_reroute')
@@ -100,5 +104,5 @@ for f in fams:
     a=agg(base);b=agg(hf);c=agg(rr);d=agg(hf0)
     print('%-6s | %5.0f/%4.2f %5.0f/%4.2f | %5.0f/%4.2f %5.0f/%4.2f | %4.2f %4.2f | %4.2f %4.2f'%(f,a[0],a[2],a[3],a[5],b[0],b[2],b[3],b[5],c[2],c[5],d[2],d[5]))
     out.write('\t'.join([f]+['%.0f'%a[0],'%.0f'%a[1],'%.3f'%a[2],'%.0f'%a[3],'%.0f'%a[4],'%.3f'%a[5],'%.0f'%b[0],'%.0f'%b[1],'%.3f'%b[2],'%.0f'%b[3],'%.0f'%b[4],'%.3f'%b[5],'%.3f'%c[2],'%.3f'%c[5],'%.3f'%d[2],'%.3f'%d[5]])+'\n')
-json.dump({'hand':hand,'cur':cur},open('rects.json','w'))
+json.dump({'hand':hand,'cur':cur,'note':'HF-1c; cbx_q10 in tn_10/bn_10 = row-variant split types (2566.08 tall); no filler strips'},open('rects.json','w'))
 json.dump([(l,c,w) for l,c,w in reroute(C)],open('lane_chains_hand.json','w'))
