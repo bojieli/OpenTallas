@@ -91,3 +91,23 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - dies.hbm.owner_lane is now DIE-HBM-101.
 - ap-2731c12447d5-a2 ended DONE-CRASH at 13:42 (the attempt_4 kit dir is gone): moot.
 - S81 STA2204 rows: 3 are past 3_4 and none shows STA-2204; the watcher /tmp/kw46_watch6.final on intel2 writes the final state.
+
+## 11-12 14:45 COORD rulings (whoever holds KW-FIX-46 runs these)
+- (a) GATED on ROOT-MERGE-60 posting MERGED with c87611d612d9. At 14:41 it was NOT in hub/main (main 3b73826c411). Once MERGED:
+  1. On every HBM gen host (epyc7, epyc9, epyc8, epyc2, intel1), replace src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/gen_phys.py with main's file as a new inode, the STA2204-1 method:
+     - check first that it is a regular file, not a link (`test -L`);
+     - record md5 and link count before (old md5 0b0884f5723f; 5 links on epyc9/epyc7, 10 on epyc8);
+     - back up to .bak-kw46-phycore-1112;
+     - write tmp, then mv -f (new inode, 1 link);
+     - check md5 after, and grep -c "reaches a die edge" >= 1.
+     The other hardlinked trees keep the old inode.
+  2. Under kit_wave.lock in kit_wave.json:
+     - delete these stale entries from dies.hbm.retry: PHY_NC@1 PHY_NC@2 PHY_NC@3 PHY_NE@1 PHY_NE@2 PHY_NE@3 PHY_NE@4 PHY_NW@1 PHY_NW@2 PHY_NW@3. COORD approved this; post the list.
+     - add PHY_NC@3 and PHY_NE@5 (the current FAIL attempts; check them in the state first);
+     - set dies.hbm.retry_fix {"PHY_NC@3": "FLOW-FIX: c87611d612d9", "PHY_NE@5": "FLOW-FIX: c87611d612d9"};
+     - remove hold_items.PHY_NC;
+     - commit with coord-commit.sh and post it.
+  3. PHY_NW (attempt 4, GRTM edge_outline) is a different class and goes to DIE-HBM-101, not to us.
+- (b) wdcpu 2885660ba67e landed in train 12 (main 3b73826c4114) and the watchdog timer reads it fresh: LIVE.
+- (c) pkill breach noted: exact PIDs only.
+- (d) Paired dry runs now use a private cache: /tmp/kw46_drytick.py sets TYPEBLOCK_CACHE and FLOW_REPEAT_LOG to the snapshot AP_DIR (backup /tmp/kw46_drytick.py.bak-1112). Never point a dry run at ~/coord/autopilot caches.
