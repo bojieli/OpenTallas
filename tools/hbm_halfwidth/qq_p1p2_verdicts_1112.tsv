@@ -57,3 +57,21 @@ L3001	4	499	NW_b113	NW_b110	sfucore_NW __cut_ctl control[432], store_a cmd0_Q[67
 L3002	2	267	NW_b113	NW_b110	sfucore_NW store_a/store_b cmd0_Q	-	FAIL	FAIL	C8
 L5059	4	585	NE_b113	NE_b110	sfucore_NE __cut_ctl control[585]	-	FAIL	FAIL	C7
 L5060	4	749	NE_b113	NE_b110	sfucore_NE __cut_ctl control[437], store_a/b cmd0_Q	-	FAIL	FAIL	C7 C8
+# --- HBM-QQBIND-1 extension 2026-11-12: hp1 / 03b4fb7dc4b6 beat lanes as they stand in plan hp3 (epyc8 die-proto-3/hbm/hp1lane/plans/hp3/die_plan.json sha 5d65d8af452b), same method and source keys; leaves from the t40w bind packing.
+#  C9b sfucore lane_vi_re / lane_kv_we: ot_su12_sfu_sp2.sv:382 vi_re<=live0&&.. every edge, :848 kv_we<=v6&&dst==KV per element; sfu_vector_calendar.py:61 emit on consecutive edges
+#  A1b hb_idx q/qctl/keybuf: qctl key_slot (ot_hbm_idx_qctl_static.sv:41) 171 consecutive key beats (hbm_idx_static_calendar.py:91-93, key_period 1); ql_v query emits query_period 1 default
+L1271	2	512	NW_su01	NW_hub	su_NW0 __cut_lane_exp*/lanes_plain* bank_read_data	-	FAIL	FAIL	C1 (no NE beat mirror in hp3)
+L183	2	569	NW_b010	NW_b002	hb_idx__s_SW.scorer.ge[0].gc[3].leaf E-pin regs (e_bus, g_qv, g_kv, g_aux)	FAIL	FAIL	FAIL	A1
+L183m	2	569	NE_b010	NE_b002	hb_idx__s_SE scorer leaf (same)	FAIL	FAIL	FAIL	A1
+L1241	4	1266	NW_b113	NW_b111	sfucore_NW __cut_ctl control[1022], store_a cmd0_Q[244]	-	FAIL	FAIL	C7 C8
+L5042	4	1266	NE_b113	NE_b111	sfucore_NE (same)	-	FAIL	FAIL	C7 C8
+L8002	4	911	NW_hub	NW_su00	pgp_NW command[712], sucore_NW rf_bcmd/rf_bword/rf_dsec	FAIL	FAIL	FAIL	S1 S7
+L8001	4	748	NE_hub	NE_su00	pgp_NE command[712], sucore_NE rf_bcmd	FAIL	FAIL	FAIL	S1 S7
+L1228	4	4986	NW_hub	NW_b100	hb_idx__q_NW ql_*, hb_idx__qctl_NW key_slot/key_index/nq, keybuf key_out x4	FAIL	FAIL	FAIL	A1b
+L5028	4	4988	NE_hub	NE_b100	NE mirror of L1228	FAIL	FAIL	FAIL	A1b
+L1250	4	698	NW_b113	NW_hub	sfucore_NW __cut_ctl u_core regs, lane14/15 kv_we/kv_*/vi_re/vi_addr, sfup_NW fault/active/done levels	FAIL	FAIL	FAIL	C9b (sfup levels rise on any cycle)
+L5051	4	698	NE_b113	NE_hub	NE mirror of L1250	FAIL	FAIL	FAIL	C9b
+L8300	4	1615	NW_hub	NW_sm0	svg_NW0 sm_command/sm_packet, xq_NW_p0_eg xw_addr/xw_data	FAIL	FAIL	FAIL	A3 (xq egress burst >= 8 consecutive edges)
+L8300m	4	1615	NE_hub	NE_sm0	svg_NW4, xq_NE_p0_eg (same)	FAIL	FAIL	FAIL	A3
+L1259	4	1457	NW_hub	NW_su00	calendar_NW, cic_NW, hb_coll_NW del_*, hc_NW lg_rq/lg_wq, pgp_NW command	FAIL	FAIL	FAIL	S1 S2 S3 S4 S5
+L5064	2	1091	NE_hub	NE_su00	pgp_NE command[1091] (NE lane on L1259's ends; not an exact mirror)	FAIL	FAIL	FAIL	S1
