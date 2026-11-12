@@ -7617,23 +7617,27 @@ def run_gold(env, kit, gold_fe, lib_bbs, out, log, rec):
 
 
 def run_side(env, script, out, side, log, rec):
-    """one side's AIG: one yosys run, or with clock gates phase A -> icg_to_enable -> phase B."""
-    try:
-        r = run_yosys(script, out / f"{side}.ys", log)
-    except Unproven as e:
-        if RENAME_ASSERT not in str(e):
-            raise
-        raise Unproven(rename_collision_reason(script, out, side, log, rec, str(e))) from None
-    if not split_seq(env):
-        return r
+    """one side's AIG: one yosys run, or with clock gates phase A -> icg_to_enable -> phase B.
+    DISK-1111: phase A's <side>.preicg.json and the rewritten <side>.icg.json are working files (about 3 GB for a QC
+    SU lane) that only phase B reads; they are removed on EVERY exit, so a failed or UNPROVEN side no longer leaves
+    them in the kit work dir (ot-run keeps that dir; the success path alone used to unlink them)."""
     pre = out / f"{side}"
-    rec.setdefault("clock_gates", {})[side] = icg_to_enable(f"{pre}.preicg.json", f"{pre}.icg.json", side)
-    if env.get("_LEC_LATCH"):
-        rec.setdefault("lockup_latches", {})[side] = latch_to_wire(f"{pre}.icg.json", f"{pre}.icg.json", side)
-    r = run_yosys(seq_tail_b(pre, out / "lecff.v"), out / f"{side}_b.ys", log)
-    for f in (f"{pre}.preicg.json", f"{pre}.icg.json"):
-        Path(f).unlink(missing_ok=True)
-    return r
+    try:
+        try:
+            r = run_yosys(script, out / f"{side}.ys", log)
+        except Unproven as e:
+            if RENAME_ASSERT not in str(e):
+                raise
+            raise Unproven(rename_collision_reason(script, out, side, log, rec, str(e))) from None
+        if not split_seq(env):
+            return r
+        rec.setdefault("clock_gates", {})[side] = icg_to_enable(f"{pre}.preicg.json", f"{pre}.icg.json", side)
+        if env.get("_LEC_LATCH"):
+            rec.setdefault("lockup_latches", {})[side] = latch_to_wire(f"{pre}.icg.json", f"{pre}.icg.json", side)
+        return run_yosys(seq_tail_b(pre, out / "lecff.v"), out / f"{side}_b.ys", log)
+    finally:
+        for f in (f"{pre}.preicg.json", f"{pre}.icg.json"):
+            Path(f).unlink(missing_ok=True)
 
 
 # `rename -wire` names each private flop after the register bit it drives; two flops driving ONE wire bit get the
