@@ -550,6 +550,7 @@ def strap_ties(ca, plan):
         # (results/dh58_turnb_1103/wreg_equiv: WREG ring == plain ring behind one t_rst_n flop; q(K+1) == q_plain(K)).
         import clock_landings as CL
         wreg = CL.ring_write_reg(plan, ptype[q], bus)
+        CL.check_ca_freg_declared(plan, ptype[q], bus, c, pid, BindError)   # FREG-DECL-1: the +1 must be declared
         inst_bus[q][bus] = dict(K=int(c["K"]) - reader_start_depth(plan, ptype[q])
                                 + writer_start_depth(plan, ptype[s["part"]], s["bus"]) + (wreg["depth"] if wreg else 0)
                                 - int(CL.output_qreg(plan, ptype[q], bus)),   # CLAND-QREG-1: stage outside the ring

@@ -268,6 +268,26 @@ def output_qreg(plan, tn, bus):
     return bus in cfg
 
 
+def check_ca_freg_declared(plan, tn, bus, c, pid, err=None):
+    """FREG-DECL-1 (COORD 11-11, fail closed): the count-aligned FREG face register (landing_ring_wreg.freg) delays data
+    AND writer start one fclk; strap_ties adds K + 2 (WREG + FREG), so q is ONE clk later than the plan's geometric
+    latency.  Neither the planner (count_align_plan lat_cycles) nor the generator adds that cycle: only a die event
+    that raises the sidecar sched_lat by 1 (HEAD n4_event convention) counts it.  Such a crossing must therefore DECLARE
+    it on its bind sidecar port: count_aligned.ports[pid]["freg"] = 1 ("this sched_lat includes the FREG cycle").
+    A FREG ring without the mark (cycle uncounted: the receiver is one cycle late) or a mark without FREG (stale sidecar)
+    is an error.  The legacy landing_input_freg needs no mark: its +1 is added here (crossing_cycles / Landings rows)
+    and a sidecar added_cycles that disagrees already fails."""
+    wreg = ring_write_reg(plan, tn, bus)
+    freg = bool(wreg and wreg.get("freg"))
+    if freg != bool(c.get("freg")):
+        msg = (f"count-aligned landing {pid} ({tn}.{bus}): " + (
+            "landing_ring_wreg.freg adds one data cycle but the bind sidecar port does not declare it; raise "
+            "count_aligned.ports[].sched_lat (and the source sidecar added_cycles) by 1 and set \"freg\": 1"
+            if freg else "bind sidecar declares \"freg\": 1 but the plan has no landing_ring_wreg.freg on this bus "
+            "(stale sidecar: lower sched_lat by 1 and drop the mark)"))
+        raise (err or LandingError)(msg)
+
+
 def crossing_cycles(plan, ca, pid):
     """The plan selects hardware; its explicit capture is counted exactly once."""
     p = next(p for p in plan["ports"] if p["id"] == pid)
@@ -724,6 +744,7 @@ class Landings:
                 import count_align_bind as CAB
                 reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"])
                 writer_depth = CAB.writer_start_depth(plan, self.parts[sp]["type"], sb)
+                check_ca_freg_declared(plan, self.parts[dp]["type"], db, c, pid)   # FREG-DECL-1
                 if bool(qreg) != bool(c.get("output_qreg")):
                     raise LandingError(f"count-aligned landing {pid}: plan landing_output_qreg and the bind sidecar "
                                        "output_qreg disagree (the event must raise sched_lat and K by 1 and mark the port)")
