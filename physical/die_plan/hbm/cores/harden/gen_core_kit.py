@@ -24,6 +24,7 @@ The kit (mount at /work; run with the plan tool's run_kit.sh through ot-run):
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -164,6 +165,22 @@ def _ms():
     return m
 
 
+GRT_TRANSITION_MODES = ("off", "edge", "edge_outline")
+
+
+def write_grt_transition_mode(kd, env=None):
+    """GRTM-RUNNERS-1 11-11 (COORD class bug VISLAYOUT2): the core-kit runner never applied the GRT transition mode, so
+    edge_outline arms ran the stock router.  Same contract as gen_core_kit_hbm.write_grt_transition_mode: the gen env
+    OT_GRT_TRANSITION_MODE (kit_wave item_env) becomes K/grt_transition_mode; unset = no file = stock run."""
+    m = (os.environ if env is None else env).get("OT_GRT_TRANSITION_MODE", "")
+    if not m:
+        return None
+    if m not in GRT_TRANSITION_MODES:
+        raise ValueError(f"OT_GRT_TRANSITION_MODE {m!r}: one of {GRT_TRANSITION_MODES}")
+    (Path(kd) / "grt_transition_mode").write_text(m + "\n")
+    return m
+
+
 def main():
     global TOOL
     ap = argparse.ArgumentParser()
@@ -272,6 +289,7 @@ def main():
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(TOOL / "face_flops_release.tcl", kd / "face_flops_release.tcl")
     shutil.copyfile(Path(__file__).with_name("pin_audit_core.py"), kd / "pin_audit.py")
+    write_grt_transition_mode(kd)       # GRTM-RUNNERS-1 11-11: gen env OT_GRT_TRANSITION_MODE -> K/grt_transition_mode
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     m = CORE_MARGIN_UM
     params = rec.get("params", {})
