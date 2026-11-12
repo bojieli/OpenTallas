@@ -1194,6 +1194,24 @@ def _start_relays(tr):
     return [r for r in rl if not st or r.get("role") in ("raw", "boot", "bootstrap_transport")]
 
 
+def _q_roles(tr):
+    """{net q: relay row with its emitted role} of a solved reset tree.  START trees (reset_tree.start_relays): a
+    consumer tap rst_n_t<i> of a mission type is GATED (reset AND run), its registered raw copy rr_t<i> is role raw
+    (emitted whenever the plan names it, reset_tree.start_raw_requests), plain tree relays rst_rl_* are raw.  Trees
+    without START: every relay is a plain registered relay (raw).  A re-select must keep the role: a gated relay where
+    a raw one was named fails gen-phys's reader-START check (HEAD-94 hd_st_n3_transit.u2_i, COORD 11-12)."""
+    if not tr.get("start"):
+        return {r["q"]: dict(r, role="raw") for r in tr.get("relays", [])}
+    import reset_tree as RT
+    out = {}
+    for r in RT.start_relays(tr):
+        out.setdefault(r["q"], r)
+        m = re.match(r"^rst_n_t(\d+)$", r["q"])
+        if m and r.get("role") == "gated":
+            out.setdefault("rr_t" + m.group(1), dict(r, name=r["name"] + "_r", q="rr_t" + m.group(1), role="raw"))
+    return out
+
+
 def reset_resel(P, Q, names, plan_path, near_um=25.0):
     """re-select the raw reset references of legalized types on their re-solved reset tree (COORD 11-12, HEAD-94
     hd_lep0N "raw reset source is not the recorded registered relay"; rule = HEAD mesh_resel.py / compose.py RAWSEL):
@@ -1244,9 +1262,10 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     n = shared[e["instance"]]
                 else:
                     c = [r for r in rb if r.get("role") == o.get("role") and r.get("depth") == o.get("depth")
-                         and r["name"] not in used] or [r for r in rb if r.get("depth") == o.get("depth")]
+                         and r["name"] not in used] or [r for r in rb if r.get("role") == o.get("role")
+                                                         and r.get("depth") == o.get("depth")]
                     if not c:
-                        rec["skipped"].append(e.get("instance"))
+                        rec["skipped"].append("%s: no same-role relay" % e.get("instance"))
                         continue
                     n = min(c, key=lambda r: math.dist(r["xy"], e.get("xy_um") or o["xy"]))
                     used.add(n["name"])
@@ -1259,9 +1278,11 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 if (e["instance"], e.get("net")) != (n["name"], n["q"]):
                     rec["exports"].append([e.get("port"), e["instance"], n["name"]])
                 e["instance"], e["net"], e["xy_um"] = n["name"], n["q"], list(n["xy"])
-            ra_q = {r["q"]: r for r in ta.get("relays", [])}
-            rb_all = tb.get("relays", [])
-            rb_q = {r["q"]: r for r in rb_all}
+            ra_q = _q_roles(ta)
+            rb_q = _q_roles(tb)
+            rb_all = list(rb_q.values())
+            # tree edges (D-chain) only over the solved plain relays
+            rb_plain = tb.get("relays", [])
             refs = []
             for key in ("landing_reader_start", "landing_writer_start"):
                 for bus, br in ((ck.get(key) or {}).get("branches") or {}).items():
@@ -1273,7 +1294,7 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
             # .py: "exactly one same-clk plain relay" per Q, each original's D = its parent): base -> nearest same-depth
             # relay to the old base, then each stage -> the child of the previous node nearest the stage xy
             kids = collections.defaultdict(list)
-            for r in rb_all:
+            for r in rb_plain:
                 if r.get("d"):
                     kids[r["d"]].append(r)
             for bi, br in enumerate(ck.get("landing_raw_branches") or []):
@@ -1281,7 +1302,8 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 if ob is None or rb_q.get(br.get("base"), {}).get("xy") == ob.get("xy"):
                     nb = rb_q.get(br.get("base"))
                 else:
-                    cand = [r for r in rb_all if r.get("depth") == ob.get("depth") and r.get("clk", "clk") == "clk"]
+                    cand = [r for r in rb_plain if r.get("depth") == ob.get("depth") and r.get("clk", "clk") == "clk"
+                            and (rb_q.get(r["q"]) or {}).get("role") == ob.get("role")]
                     nb = min(cand, key=lambda r: math.dist(r["xy"], ob["xy"])) if cand else None
                 if nb is None:
                     rec["skipped"].append("landing_raw_branches.%d.base" % bi)
@@ -1310,13 +1332,16 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                 if o is None:
                     continue
                 pt = obj.get("xy_um") or o["xy"]
-                cand = [r for r in rb_all if r.get("depth") == o.get("depth")]
+                same = [r for r in rb_all if r.get("depth") == o.get("depth") and r.get("role") == o.get("role")]
+                # same form first: a plain registered relay stays plain, a raw tap copy rr_t<i> stays a copy
+                cand = [r for r in same if r["q"].startswith("rr_t") == q.startswith("rr_t")] or same
                 if not cand:
-                    rec["skipped"].append(tag)
+                    rec["skipped"].append("%s: no same-role relay" % tag)
                     continue
                 n = min(cand, key=lambda r: math.dist(r["xy"], pt))
                 k = rb_q.get(q)
-                if k is not None and k.get("depth") == o.get("depth") and math.dist(k["xy"], pt) <= math.dist(n["xy"], pt) + near_um:
+                if k is not None and k.get("depth") == o.get("depth") and k.get("role") == o.get("role") and \
+                        math.dist(k["xy"], pt) <= math.dist(n["xy"], pt) + near_um:
                     continue
                 rec["raw"].append([tag, q, n["q"]])
                 obj[fld] = n["q"]
@@ -2075,7 +2100,7 @@ def reset_contract(P, Q, names, plan_path, rounds=4):
         rep = reattach_each(P, Q)
         bad = {n: str(rep["over"][n]) for n in rep.get("over") or {} if n in live}
         for n, v in rr.items():
-            if v.get("error") or any("chain ends" in str(x) for x in v.get("skipped", [])):
+            if v.get("error") or any("chain ends" in str(x) or "no same-role" in str(x) for x in v.get("skipped", [])):
                 bad.setdefault(n, str(v.get("error") or v.get("skipped")))
         nch = sum(len(v.get("exports", [])) + len(v.get("raw", [])) for v in rr.values())
         print("reset contract: %d types, %d refs re-selected, %d trees republished, %d collectors re-attached, "
