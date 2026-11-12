@@ -389,6 +389,9 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
             if isinstance(amr, dict):
                 amr = ",".join(f"{k}:{_fmt(v)}" for k, v in sorted(amr.items()))
             a += ["--region-dme-actual-max-region", str(amr)]
+        sg = reg.get("seam_groups")     # opt-in: path of a JSON {region: [[part/port, ...], ...]} (seam launch + capture tap groups)
+        if sg:
+            a += ["--region-dme-seam-groups", str(sg)]
         mp = reg.get("merge_parts")     # opt-in: regions whose partitions share ONE DME tree, "REG[,REG]" or a list
         if mp:
             if isinstance(mp, (list, tuple)):
