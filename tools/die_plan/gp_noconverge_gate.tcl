@@ -10,7 +10,7 @@
 # OT_GPL_NOCONV=0).  Unset / empty = unchanged.
 if {[info exists ::env(OT_PLACE_MAX_FANOUT)] && [string is integer -strict $::env(OT_PLACE_MAX_FANOUT)] && $::env(OT_PLACE_MAX_FANOUT) > 1} {
   set_max_fanout $::env(OT_PLACE_MAX_FANOUT) [current_design]
-  puts "PLACE-FANOUT set_max_fanout $::env(OT_PLACE_MAX_FANOUT) on [get_full_name [current_design]] (place repair_design)"
+  puts "PLACE-FANOUT set_max_fanout $::env(OT_PLACE_MAX_FANOUT) on design [current_design] (place repair_design)"
 }
 set gpnc_dir [file dirname [file normalize [info script]]]
 set gpnc_log [file join $::env(LOG_DIR) 3_3_place_gp.log]
