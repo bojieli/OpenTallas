@@ -80,6 +80,7 @@ LANDED_WINDOW_PS = 416.5   # S81 landing window (DIE-RECHECK-1 / DIE-S81-87 reac
 MEASURED = {}              # type -> [(x, y, 1.0)] placed clock sinks (tap_sinks_dump.tcl), replaces the plan sinks
 MIN_TAPS = {}              # type -> minimum tap count (die-owner input, e.g. KV hgi_v8 39)
 TAP_TABLE = False          # check --tap-table: keep per-tap rows
+REF = {}                   # --ref-plan: {"P": Plan before the die move}; raw-reference depths are checked against it
 
 
 def die_cap(name, cap=None):
@@ -422,6 +423,7 @@ def reset_metrics(P, tn, G=None, reach=REACH_UM):
         q = lr.get("raw")
         if q:
             refs.append(("landing_local_resets.%d" % i, _by_q(T, q), lr.get("xy_um"), q))
+    wref = _want_depths(P, tn) if REF.get("P") is not None else {}
     for tag, r, pt, net in refs:
         if r is None:
             out["raw_bad"] += 1
@@ -430,11 +432,31 @@ def reset_metrics(P, tn, G=None, reach=REACH_UM):
             out["raw_bad"] += 1
             out["raw_detail"].append("%s: %s %.0f um from its stage" % (tag, net, _d(r["xy"], pt)))
             out.setdefault("far_xy", []).append([round(float(pt[0]), 3), round(float(pt[1]), 3)])
+        elif tag in wref and r.get("q") == net and r.get("depth") != wref[tag]:
+            out["raw_bad"] += 1
+            out["raw_detail"].append("%s: %s depth %s != ref depth %s (release edge moved)" % (tag, net, r.get("depth"),
+                                                                                         wref[tag]))
         elif r.get("q") and net and net != r.get("q") and tag.startswith("export"):
             out["raw_bad"] += 1
             out["raw_detail"].append("%s: net %s != relay q %s" % (tag, net, r.get("q")))
     out["raw_refs"] = len(refs)
     return out
+
+
+def _ref_depths(tn):
+    """{relay q: depth} of type tn's reset tree in the --ref-plan (empty without one)."""
+    RP = REF.get("P")
+    if RP is None or tn not in RP.types:
+        return {}
+    key = ("depths", tn)
+    if key not in REF:
+        import reset_tree as RT
+        try:
+            T = RT.for_type(RP, tn)
+            REF[key] = {r["q"]: r.get("depth") for r in T.get("relays", [])}
+        except Exception:  # noqa: BLE001
+            REF[key] = {}
+    return REF[key]
 
 
 def _by_q(T, q):
@@ -924,6 +946,74 @@ def fix_reset_local_taps(Q, tn, plan_path):
     return drop
 
 
+def _stage_refs(t):
+    """[(tag, obj, field)] of every raw reset reference a type's landing contract carries (START stages, local resets)"""
+    ck = t.get("clock") or {}
+    refs = []
+    for key in ("landing_reader_start", "landing_writer_start"):
+        for bus, br in ((ck.get(key) or {}).get("branches") or {}).items():
+            for i, st in enumerate(br.get("stages", [])):
+                refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset"))
+    for i, lr in enumerate(ck.get("landing_local_resets") or []):
+        refs.append(("landing_local_resets.%d" % i, lr, "raw"))
+    return refs
+
+
+def _want_depths(P, tn):
+    """{tag: depth} the base plan's raw relay references release at (rst_rl_* / rst_n_t* only; --ref-plan depth
+    first): the cycle every consumer was built with.  A re-select (street_rule.reset_resel or this tool) must keep it."""
+    import reset_tree as RT
+    RP = REF.get("P")
+    if RP is not None and tn in (getattr(RP, "types", None) or {}):
+        key = ("want", tn)
+        if key not in REF:
+            REF[key] = _tag_depths(RP, tn, {})
+        return REF[key]
+    return _tag_depths(P, tn, _ref_depths(tn))
+
+
+def _tag_depths(P, tn, dref):
+    """{tag: depth} of the raw relay references of type tn in plan P (dref overrides by net)"""
+    import reset_tree as RT
+    t0 = (getattr(P, "types", None) or {}).get(tn)
+    if t0 is None:
+        return {}
+    try:
+        TA = RT.for_type(P, tn)
+    except Exception:  # noqa: BLE001
+        return {}
+    da = {r["q"]: r.get("depth") for r in TA.get("relays", [])}
+    out = {}
+    for tag, obj, fld in _stage_refs(t0):
+        q = obj.get(fld)
+        if isinstance(q, str) and not q.startswith("rr_t"):
+            d = dref.get(q, da.get(q))
+            if d is not None:
+                out[tag] = d
+    return out
+
+
+def depth_drift(P, Q, tn, plan_path):
+    """[[tag, net, depth, want]] raw relay references of Q whose depth differs from the base (release edge moved)"""
+    import reset_tree as RT
+    want = _want_depths(P, tn)
+    if not want:
+        return []
+    PQ = plan_obj(Q, plan_path)
+    _reset_caches(PQ)
+    try:
+        TB = RT.for_type(PQ, tn)
+    except Exception:  # noqa: BLE001
+        return []
+    db = {r["q"]: r.get("depth") for r in TB.get("relays", [])}
+    out = []
+    for tag, obj, fld in _stage_refs(Q["partition_types"][tn]):
+        q = obj.get(fld)
+        if tag in want and isinstance(q, str) and q in db and db[q] != want[tag]:
+            out.append([tag, q, db[q], want[tag]])
+    return out
+
+
 def fix_raw_tap_refs(P, Q, tn, plan_path, reach=REACH_UM):
     """raw START references to a tap's raw copy (rr_t<k>) after the taps changed: street_rule.reset_resel re-selects
     only rst_rl_* / rst_n_t* nets.  A landing reader/writer START stage or local reset whose rr_t<k> no longer exists
@@ -938,6 +1028,9 @@ def fix_raw_tap_refs(P, Q, tn, plan_path, reach=REACH_UM):
         TA, TB = RT.for_type(P, tn), RT.for_type(PQ, tn)
     except Exception:  # noqa: BLE001
         return []
+    # --ref-plan (the plan before the die move): depths of the raw references there are the release cycles the
+    # consumers were built with; a re-solve that shifts a relay's depth is DEPTH DRIFT (HEAD srx3 hd_tile tile_geo_3)
+    wantd = _want_depths(P, tn)
     leaf = re.compile(r"rst_n_t(\d+)$")
     # ROLE (COORD 11-12, HEAD-94 hd_st_n3_transit.u2_i picked the gated rst_n_t1 for a raw rst_rl_*): a re-select keeps
     # role AND depth (street_rule._q_roles: gated rst_n_t<i>, raw rst_rl_*, raw copy rr_t<i> of a gated leaf); no
@@ -952,28 +1045,23 @@ def fix_raw_tap_refs(P, Q, tn, plan_path, reach=REACH_UM):
     cand = [r for r in TB.get("relays", []) if leaf.match(r["q"])
             and (not TB.get("start") or role(r["q"]) == "gated")]      # rr_t<j> exists only for a gated leaf
     newq = {"rr_t" + leaf.match(r["q"]).group(1): r for r in cand}
-    refs = []
-    for key in ("landing_reader_start", "landing_writer_start"):
-        for bus, br in ((ck.get(key) or {}).get("branches") or {}).items():
-            for i, st in enumerate(br.get("stages", [])):
-                refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset"))
-    for i, lr in enumerate(ck.get("landing_local_resets") or []):
-        refs.append(("landing_local_resets.%d" % i, lr, "raw"))
     out = []
-    for tag, obj, fld in refs:
+    for tag, obj, fld in _stage_refs(t):
         q = obj.get(fld)
         pt = obj.get("xy_um")
         if isinstance(q, str) and not q.startswith("rr_t") and pt is not None:
             # a relay net (rst_rl_* / rst_n_t*) still > reach after street_rule.reset_resel: nearest same-depth relay
             o = next((r for r in TB.get("relays", []) if r["q"] == q), None)
-            if o is None or _d(o["xy"], pt) <= reach:
+            want = wantd.get(tag, _ref_depths(tn).get(q, o.get("depth") if o else None))
+            if o is None or (_d(o["xy"], pt) <= reach and o.get("depth") == want):
                 continue
-            c = [r for r in TB.get("relays", []) if r.get("depth") == o.get("depth") and role(r["q"]) == role(q)]
+            c = [r for r in TB.get("relays", []) if r.get("depth") == want and role(r["q"]) == role(q)
+                 and _d(r["xy"], pt) <= max(reach, _d(o["xy"], pt))]
             if not c:
-                out.append([tag, q, None, "no same-role relay at depth %s" % o.get("depth")])
+                out.append([tag, q, None, "no same-role relay at depth %s" % want])
                 continue
             n = min(c, key=lambda r: (_d(r["xy"], pt), r["q"]))
-            if n["q"] != q and _d(n["xy"], pt) < _d(o["xy"], pt):
+            if n["q"] != q and (_d(n["xy"], pt) < _d(o["xy"], pt) or o.get("depth") != want):
                 obj[fld] = n["q"]
                 out.append([tag, q, n["q"]])
             continue
@@ -1108,6 +1196,11 @@ def fix_type(P, Q, tn, classes, base_row, cap, radius, reach, span, plan_path):
             rec["reset_terminals"] = rt
     if "3" in classes and base_row.get("c3"):
         rec["fwd"] = fix_fwd(plan_obj(Q, plan_path), Q, tn, span)
+    # DEPTH contract (clock_landings: depth(raw)+1 == consumer reset depth, HEAD srx3 hd_host_e k2 rst_rl_23 d2 ->
+    # rst_rl_17 d1): a fix that leaves any raw reference at another release cycle than the base is not applied
+    dd = depth_drift(P, Q, tn, plan_path)
+    if dd:
+        rec["depth_drift"] = dd
     return rec
 
 
@@ -1335,7 +1428,11 @@ def _setup(a, P):
     m, bad = load_measured(a.sinks_dir, a.sinks, outl)
     MEASURED.update(m)
     TAP_TABLE = bool(getattr(a, "tap_table", None))
-    return dict(cap=a.cap, cap_source="--cap" if a.cap_given else "DIE_CAP[%s]" % P.name,
+    REF.clear()
+    if getattr(a, "ref_plan", None):
+        rr, _rsha = load_raw(a.ref_plan)
+        REF["P"] = plan_obj(rr, a.ref_plan)
+    return dict(ref_plan=getattr(a, "ref_plan", None), cap=a.cap, cap_source="--cap" if a.cap_given else "DIE_CAP[%s]" % P.name,
                 measured=sorted(m), measured_refused=bad, min_taps=dict(MIN_TAPS),
                 landed_hops=getattr(a, "landed_hops", None), landed_window_ps=a.landed_window)
 
@@ -1410,6 +1507,8 @@ def cmd_fix(a):
                     worse.append("c" + c)
             if after.get("error") and not b.get("error"):
                 worse.append("error")
+        if (rec or {}).get("depth_drift"):
+            worse.append("depth")    # a raw reset reference at another release cycle than the base: never applied
         ok = after is not None and not worse and tnew is not None and tnew != raw["partition_types"][tn]
         if ok:
             Q["partition_types"][tn] = tnew
@@ -1472,6 +1571,7 @@ def main(argv=None):
         p.add_argument("--min-taps", action="append", default=[], help="TYPE=N minimum tap count")
         p.add_argument("--landed-hops", default=None, help="reach_hops TSV (class 6, landed window)")
         p.add_argument("--landed-window", type=float, default=LANDED_WINDOW_PS)
+        p.add_argument("--ref-plan", default=None, help="plan before the die move: raw reset depths are kept from it")
         if name == "check":
             p.add_argument("--tap-table", default=None, help="TSV: one row per tap (sinks, max tap-to-sink um)")
         if name == "fix":

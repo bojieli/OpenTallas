@@ -287,3 +287,48 @@ def test_balance_residue_tsv_feeds_class6(tmp_path):
     rows = RF.landed_rows(raw, str(tsv))
     assert rows == [dict(lane="ab", k=1, over_ps=117.5, hops=["a->b"], cycles_before=2, fixed_before=None,
                          target=3, ok=False)]
+
+
+def test_reset_depth_drift_reselected_from_ref_plan(monkeypatch):
+    # HEAD srx3 hd_tile tile_geo_3: the die wavefront re-solve moved rst_rl_95 from depth 4 to 3, so the local copy
+    # (depth raw + 1) no longer matches its consumer. With --ref-plan the raw takes the nearest same-role relay at
+    # the REF depth (4), even though rst_rl_95 is within reach
+    import reset_tree
+    import street_rule as SR
+    rel = [dict(name="u95", q="rst_rl_95", d="rst_root_n", depth=3, xy=[100.0, 50.0]),
+           dict(name="u96", q="rst_rl_96", d="rst_root_n", depth=4, xy=[200.0, 50.0]),
+           dict(name="ut", q="rst_n_t2", d="rst_root_n", depth=4, xy=[101.0, 50.0])]
+    tree = dict(relays=rel, start=True)
+    monkeypatch.setattr(RF, "plan_obj", lambda raw, path: _t.SimpleNamespace(tag="x"))
+    monkeypatch.setattr(RF, "_reset_caches", lambda PQ: None)
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: tree)
+    monkeypatch.setattr(SR, "_q_roles", lambda tr: {"rst_rl_95": dict(role="raw"), "rst_rl_96": dict(role="raw"),
+                                                    "rst_n_t2": dict(role="gated")})
+    monkeypatch.setitem(RF.REF, "P", _t.SimpleNamespace(types={"x": {}}))
+    monkeypatch.setitem(RF.REF, ("depths", "x"), {"rst_rl_95": 4, "rst_rl_96": 5})
+    lr = dict(name="tile_geo_3", raw="rst_rl_95", xy_um=[100.0, 50.0], consumers=["u_cland_up_o"])
+    Q = {"partition_types": {"x": {"clock": {"landing_local_resets": [lr]}}}}
+    rec = RF.fix_raw_tap_refs(_t.SimpleNamespace(), Q, "x", None)
+    assert rec == [["landing_local_resets.0", "rst_rl_95", "rst_rl_96"]] and lr["raw"] == "rst_rl_96"
+
+
+def test_depth_drift_from_reselect_is_caught(monkeypatch):
+    # HEAD srx3 hd_host_e k2: the re-select moved a local reset raw from rst_rl_23 (depth 2) to rst_rl_17 (depth 1);
+    # the base depth is the contract (consumer depth = raw depth + 1), so the drift is reported and the raw re-picked
+    import reset_tree
+    import street_rule as SR
+    base = dict(relays=[dict(name="u23", q="rst_rl_23", d="x", depth=2, xy=[100.0, 0.0])], start=True)
+    new = dict(relays=[dict(name="u17", q="rst_rl_17", d="x", depth=1, xy=[90.0, 0.0]),
+                       dict(name="u24", q="rst_rl_24", d="x", depth=2, xy=[150.0, 0.0])], start=True)
+    lr0 = dict(name="k2", raw="rst_rl_23", xy_um=[100.0, 0.0], consumers=["u_cland_agg_3"])
+    P = _t.SimpleNamespace(types={"x": {"clock": {"landing_local_resets": [lr0]}}})
+    monkeypatch.setattr(RF, "plan_obj", lambda raw, path: _t.SimpleNamespace(tag="q"))
+    monkeypatch.setattr(RF, "_reset_caches", lambda PQ: None)
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: base if PP is P else new)
+    monkeypatch.setattr(SR, "_q_roles", lambda tr: {r["q"]: dict(role="raw") for r in tr["relays"]})
+    RF.REF.clear()
+    lr = dict(lr0, raw="rst_rl_17")
+    Q = {"partition_types": {"x": {"clock": {"landing_local_resets": [lr]}}}}
+    assert RF.depth_drift(P, Q, "x", None) == [["landing_local_resets.0", "rst_rl_17", 1, 2]]
+    rec = RF.fix_raw_tap_refs(P, Q, "x", None)
+    assert rec == [["landing_local_resets.0", "rst_rl_17", "rst_rl_24"]] and RF.depth_drift(P, Q, "x", None) == []
