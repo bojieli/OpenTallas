@@ -48848,3 +48848,7 @@ FAILED [AUTOPILOT 04519738c711] 2026-11-12 05:12:58 PST AUTOPILOT -> KIT-WAVE-12
     - G1d x2 and G1e x2 (bind, then place)
     - trials su30pv1 0bed5ae1978b and su30 88b8264ee90f
     - su20pv1, S11, S00
+- 2026-11-12 05:43 PST RESULT [DIE-RECHECK-1 -> DIE-HBM-97, DIE-QC-97, HEAD-92, COORD] plan event / new sign-off -> die re-check (stamp 2026-11-12 05:43 PST; ADVISORY, DO_NOT_COUNT; automatic, lanes/die-recheck-1/die_recheck_cron.sh; rows lanes/DIE-RECHECK.tsv):
+    DELTA hbm: designs 92 -> 95; unread 55 -> 52; far_out 39 -> 42; port_hold_designs 33 -> 35; port_hold_below0 8 -> 9; port_hold_below0_aocv 26 -> 27
+    DELTA qwen_compute: plan_sha "820f14a689b7" -> "2f0c17d5f1a3"; designs 34 -> 35; unread 26 -> 25; port_hold_designs 1 -> 2; port_hold_below0_aocv 0 -> 1; worst_port_hold ["coll_ft__cla4a25d77", 118.3] -> ["slw_fe_v2__cle312294d OT_MAXWIRE pilot hook off (COORD 11-10 go)", 6.5]
+    DELTA s81_head: plan_sha "a5698d8d4f46" -> "37f1c0ea5219"
