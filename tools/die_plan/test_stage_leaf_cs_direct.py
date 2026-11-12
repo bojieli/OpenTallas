@@ -26,6 +26,10 @@ def test_cs_within_reach_becomes_direct_and_other_classes_keep_their_registers()
     assert rows[0]["manhattan_um"] == 388.9 and rows[0]["regs_before"] == 1 and rows[0]["limit_um"] == 405.0
     want, _ = LCD.plan_depths(p["partition_types"]["ot_s81sl_leaf__t5"])
     assert want["cs"] == 0 and want["y"] == 1          # the strict gate then needs no cs register
+    # schema: internal_stations allow no extra keys -> provenance goes in note, once (idempotent re-stage)
+    assert set(st[0]) <= {"conn", "launch", "capture", "regs_um", "from_um", "to_um", "note"}
+    SD.stage(p, 405.0)
+    assert st[0]["note"].count("lf_cs_direct") == 1
 
 
 def test_cs_beyond_reach_fails_closed():

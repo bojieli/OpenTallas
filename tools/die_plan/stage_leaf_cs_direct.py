@@ -39,7 +39,9 @@ def stage(plan, reach):
                              from_um=e.get("from_um"), to_um=e.get("to_um"), manhattan_um=round(d, 2),
                              regs_before=len(e.get("regs_um") or []), limit_um=reach))
             e["regs_um"] = []
-            e["lf_cs_direct"] = "S81-LEAF-FLOOR-2 11-12: direct link (no RTL station), LF4 reach constraint"
+            tag = "lf_cs_direct: S81-LEAF-FLOOR-2 11-12, direct link (no RTL station), LF4 reach constraint"
+            if tag not in (e.get("note") or ""):
+                e["note"] = ((e.get("note") + "; ") if e.get("note") else "") + tag
     if over:
         raise SystemExit(f"cs links beyond {reach} um (need a register no RTL has): {over[:5]}")
     return rows
