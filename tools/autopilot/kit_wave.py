@@ -522,19 +522,56 @@ print(H.hexdigest())
 """ % (SRC_OVERLAY_SCOPE,)
 
 
-def src_overlay_hash(src, host, hub, timeout=90):
-    """content hash of the source scope on its gen host; '' when it cannot be read (the hold then compares as before)"""
+SRC_OVERLAY_SIG_SCRIPT = r"""
+import os, sys
+n = 0; m = 0; z = 0
+for r in %r:
+    for dp, dn, fn in os.walk(r):
+        dn[:] = [d for d in dn if d not in (".git", "__pycache__")]
+        for f in fn:
+            p = os.path.join(dp, f)
+            try:
+                st = os.lstat(p)
+            except OSError:
+                continue
+            n += 1; z += st.st_size
+            if st.st_mtime_ns > m: m = st.st_mtime_ns
+print("%%d:%%d:%%d" %% (n, m, z))
+""" % (SRC_OVERLAY_SCOPE,)
+SRC_OVERLAY_CACHE = {}                 # (host, src) -> (signature, hash); also persisted next to the kit_wave state
+SRC_OVERLAY_TIMEOUT_S = 420            # full content hash of a ~30k-file tree on a loaded gen host (was 90 s: S81 unreadable 27 ticks)
+SRC_OVERLAY_SIG_TIMEOUT_S = 150
+
+
+def _overlay_run(src, host, hub, script, timeout):
     remote = _ssh(host, hub)
     try:
         if remote:
-            r = subprocess.run(remote + [f"cd {shlex.quote(src)} && python3 -I -c {shlex.quote(SRC_OVERLAY_SCRIPT)}"],
+            r = subprocess.run(remote + [f"cd {shlex.quote(src)} && python3 -I -c {shlex.quote(script)}"],
                                capture_output=True, text=True, timeout=timeout)
         else:
-            r = subprocess.run(["python3", "-I", "-c", SRC_OVERLAY_SCRIPT], cwd=src, capture_output=True, text=True, timeout=timeout)
+            r = subprocess.run(["python3", "-I", "-c", script], cwd=src, capture_output=True, text=True, timeout=timeout)
     except (OSError, subprocess.SubprocessError):
-        return ""
-    out = r.stdout.strip()
-    return out if r.returncode == 0 and re.fullmatch(r"[0-9a-f]{64}", out) else ""
+        return None
+    return r.stdout.strip() if r.returncode == 0 else None
+
+
+def src_overlay_hash(src, host, hub, timeout=None):
+    """content hash of the source scope on its gen host; '' when it cannot be read.  KW-FIX-45 11-12 (COORD): cached per
+    tree (host, path) under a cheap signature (file count, newest mtime_ns, total size over the scope: an in-place edit
+    changes it, a top-dir mtime would not) so the full read runs only after a change, with a longer timeout; the caller
+    treats '' as CHANGED (never as 'no overlay to compare')."""
+    sig = _overlay_run(src, host, hub, SRC_OVERLAY_SIG_SCRIPT, SRC_OVERLAY_SIG_TIMEOUT_S)
+    key = (host, src)
+    hit = SRC_OVERLAY_CACHE.get(key)
+    if sig and hit and hit[0] == sig:
+        return hit[1]
+    out = _overlay_run(src, host, hub, SRC_OVERLAY_SCRIPT, timeout or SRC_OVERLAY_TIMEOUT_S)
+    if out and re.fullmatch(r"[0-9a-f]{64}", out):
+        if sig:
+            SRC_OVERLAY_CACHE[key] = (sig, out)
+        return out
+    return ""
 
 
 def merge_src_overlay(cfg, hub, log=None):
@@ -2754,7 +2791,12 @@ def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
         d = cfg["dies"][die]
         # Compared only when both sides have it: a kit built before the field existed, or a host that could not be read,
         # must neither release the row nor hold it on a value that was never measured.
-        if not (old.get("src_overlay") and cand.get("src_overlay")):
+        if not cand.get("src_overlay"):
+            # KW-FIX-45 11-12 (COORD): the content hash of the source could not be computed (unreadable tree, timeout): that is
+            # NOT 'no overlay to compare'.  The row is treated as CHANGED (released) and the gap is logged, never a silent hold.
+            print(f"KW_SRC_OVERLAY_UNREADABLE {die}/{item}: row treated as changed", flush=True)
+            return False
+        if not old.get("src_overlay"):                  # a kit built before the field existed: compare without it, as before
             old.pop("src_overlay", None); cand.pop("src_overlay", None)
         return input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
     except (OSError, ValueError, KeyError, TypeError):
