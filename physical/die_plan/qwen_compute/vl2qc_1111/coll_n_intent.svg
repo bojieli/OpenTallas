@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="649" height="669"><defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#c00"/></marker></defs>
+<rect width="100%" height="100%" fill="#fff"/>
+<rect x="0.0" y="0.0" width="629.0" height="629.0" fill="none" stroke="#333"/>
+<rect x="3.2" y="0.0" width="201.6" height="4.8" fill="#8cf" stroke="#333"/><text x="7.2" y="6.4" font-size="11">N: serdes rx/tx 597b (to io_serdes PHY)</text>
+<rect x="3.2" y="624.2" width="187.2" height="4.8" fill="#fc8" stroke="#333"/><text x="7.2" y="630.6" font-size="11">S: rec_rx_s0/rec_tx_s0_i 548b + flt (coll_ftn)</text>
+<rect x="89.9" y="476.9" width="137.0" height="62.2" fill="#ddd" stroke="#333"/><text x="93.9" y="512.0" font-size="11">codec b1</text>
+<rect x="89.9" y="400.9" width="137.0" height="62.2" fill="#ddd" stroke="#333"/><text x="93.9" y="436.0" font-size="11">codec b0</text>
+<rect x="89.9" y="324.8" width="137.0" height="62.2" fill="#ddd" stroke="#333"/><text x="93.9" y="360.0" font-size="11">codec b3</text>
+<rect x="89.9" y="248.8" width="137.0" height="62.2" fill="#ddd" stroke="#333"/><text x="93.9" y="283.9" font-size="11">codec b2</text>
+<rect x="89.9" y="170.2" width="142.9" height="64.8" fill="#cde" stroke="#333"/><text x="93.9" y="206.6" font-size="11">tx mem 64x546</text>
+<rect x="89.9" y="94.2" width="142.9" height="64.8" fill="#cde" stroke="#333"/><text x="93.9" y="130.6" font-size="11">rx mem 64x546</text>
+<rect x="240.0" y="77.0" width="376.0" height="480.0" fill="none" stroke="#333"/>
+<text x="264" y="109" font-size="12">E glue column (macro-free, straight N-S channel)</text>
+<circle cx="262.7" cy="311.0" r="5" fill="#090"/><text x="270.7" y="315.0" font-size="10" fill="#090">clk/rst tap + straps</text>
+<circle cx="262.7" cy="179.7" r="5" fill="#090"/><text x="270.7" y="183.7" font-size="10" fill="#090">clk_serdes tap</text>
+<circle cx="262.7" cy="159.0" r="5" fill="#090"/><text x="270.7" y="163.0" font-size="10" fill="#090">face_s0 core tap</text>
+<line x1="104.0" y1="6.4" x2="160.0" y2="117.0" stroke="#c00" stroke-width="3" marker-end="url(#a)"/><text x="137.0" y="61.7" font-size="11" fill="#c00">serdes rx</text>
+<line x1="240.0" y1="125.0" x2="336.0" y2="181.0" stroke="#c00" stroke-width="3" marker-end="url(#a)"/><text x="293.0" y="153.0" font-size="11" fill="#c00">rx->codec</text>
+<line x1="336.0" y1="213.0" x2="336.0" y2="437.0" stroke="#c00" stroke-width="3" marker-end="url(#a)"/><text x="341.0" y="325.0" font-size="11" fill="#c00">codec enc/dec</text>
+<line x1="264.0" y1="485.0" x2="160.0" y2="621.0" stroke="#c00" stroke-width="3" marker-end="url(#a)"/><text x="217.0" y="553.0" font-size="11" fill="#c00">rec_tx / fltv (short hop)</text>
+<line x1="48.0" y1="621.0" x2="48.0" y2="389.0" stroke="#06c" stroke-width="3" marker-end="url(#a)"/><text x="53.0" y="505.0" font-size="11" fill="#06c">rec_rx</text>
+<text x="10" y="659" font-size="11">coll_n plan_vl2_colln_c: one W macro column (pins W->112-um W channel, E->open glue column), taps in glue, rows in dataflow order</text></svg>
