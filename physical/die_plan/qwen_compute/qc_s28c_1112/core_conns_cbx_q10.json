@@ -1,0 +1,125 @@
+{
+ "cbx_q10__cl94a12200": {
+  "u_t20": {
+   "n_a": [
+    "core:u_t20.t_out"
+   ],
+   "n_b": [
+    "core:u_t30.t_out"
+   ],
+   "n_y": [
+    "core:u_t21.n_a"
+   ],
+   "t_out": [
+    "core:u_t20.n_a"
+   ],
+   "tap": [
+    "bus:bc_i20"
+   ]
+  },
+  "u_t30": {
+   "t_out": [
+    "core:u_t20.n_b"
+   ],
+   "tap": [
+    "bus:bc_i30"
+   ]
+  },
+  "u_t21": {
+   "n_a": [
+    "core:u_t20.n_y"
+   ],
+   "n_b": [
+    "core:u_t31.n_y"
+   ],
+   "n_y": [
+    "bus:y_o21"
+   ],
+   "t_out": [
+    "core:u_t31.n_a"
+   ],
+   "tap": [
+    "bus:bc_o21"
+   ]
+  },
+  "u_t31": {
+   "n_a": [
+    "core:u_t21.t_out"
+   ],
+   "n_b": [
+    "core:u_t31.t_out"
+   ],
+   "n_y": [
+    "core:u_t21.n_b"
+   ],
+   "t_out": [
+    "core:u_t31.n_b"
+   ],
+   "tap": [
+    "bus:bc_o31"
+   ]
+  }
+ },
+ "cbx_q10__cl89936551": {
+  "u_t20": {
+   "n_a": [
+    "core:u_t20.t_out"
+   ],
+   "n_b": [
+    "core:u_t30.t_out"
+   ],
+   "n_y": [
+    "core:u_t21.n_a"
+   ],
+   "t_out": [
+    "core:u_t20.n_a"
+   ],
+   "tap": [
+    "bus:bc_i20"
+   ]
+  },
+  "u_t30": {
+   "t_out": [
+    "core:u_t20.n_b"
+   ],
+   "tap": [
+    "bus:bc_i30"
+   ]
+  },
+  "u_t21": {
+   "n_a": [
+    "core:u_t20.n_y"
+   ],
+   "n_b": [
+    "core:u_t31.n_y"
+   ],
+   "n_y": [
+    "bus:y_o21"
+   ],
+   "t_out": [
+    "core:u_t31.n_a"
+   ],
+   "tap": [
+    "bus:bc_o21"
+   ]
+  },
+  "u_t31": {
+   "n_a": [
+    "core:u_t21.t_out"
+   ],
+   "n_b": [
+    "core:u_t31.t_out"
+   ],
+   "n_y": [
+    "core:u_t21.n_b"
+   ],
+   "t_out": [
+    "core:u_t31.n_b"
+   ],
+   "tap": [
+    "bus:bc_o31"
+   ]
+  }
+ },
+ "_source": "QC-S28-C 11-12: cbx_q10 core links read from bind_plan_qc99_s28/rtl/cbx_q10__cl94a12200.sv (ot_dp_dly chains); tap = bc column station fanout (approx. to its bc bus window)"
+}
