@@ -523,17 +523,28 @@ class Verification:
         start=self.start_net(pn,'u_cland_'+bus)
         rep=len(ring.ports.get('rst_xn',[]))
         cfg=self._tclock(pn).get('landing_reader_start')
+        reach=None
         if cfg is None:
-            if rep:self.fail(ring.path+': unpriced ring reset copies rst_xn without a reader START chain')
-            return start
-        stages=self._stages(pn,'landing_reader_start',bus,int(cfg.get('depth',-1)))
+            import clock_landings as CL
+            if (self.table.get('count_aligned') or {}).get('strap_form') and CL.reader_start_reach(self.raw,self.parts[pn]['type']):
+                # CLAND-RING-LOCALITY reach default (clock_landings.reader_start_reach, the rule the generator and
+                # strap K read): ONE stage on the ring's own registered reset (tap node, or its u_cland_rst_<bus> copy)
+                info=self.collector['types'][self.parts[pn]['type']]
+                reach=(self.ring_reset_node(pn,bus,info),'u_cland_rst_'+bus)
+                cfg=dict(depth=1)
+            else:
+                if rep:self.fail(ring.path+': unpriced ring reset copies rst_xn without a reader START chain')
+                return start
+        stages=[dict()] if reach else self._stages(pn,'landing_reader_start',bus,int(cfg.get('depth',-1)))
         if not stages:return ('missing',ident(pn)+'.u_cland_reader_start_'+ident(bus))
         prev=start;path=None
         for i,st in enumerate(stages):
             path=ident(pn)+f'.u_cland_reader_start_{ident(bus)}_{i}'
             c=self.instance(path,'ot_dp_landing_relay_rep' if rep and i==len(stages)-1 else 'ot_dp_landing_relay')
             if c:
-                self.clock(c,pn);self.equal_input(c,'d',[prev]);self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
+                self.clock(c,pn);self.equal_input(c,'d',[prev])
+                if reach:self.check_reset(c,pn,reach[0],reach[1],port='rst_raw_n',wave=True)
+                else:self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
             prev=self.output(path,'q')
         if rep:self.equal_input(ring,'rst_xn',[self.output(path,'qx',k) for k in range(rep)])
         return prev
