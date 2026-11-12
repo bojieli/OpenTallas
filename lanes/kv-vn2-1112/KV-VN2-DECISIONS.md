@@ -21,12 +21,13 @@ No new die channel is needed on these numbers.
 | item | numbers | decision | status |
 |---|---|---|---|
 | column order, hub band, io/sys row | 88% of bits inside the array classes | keep | decided |
-| clock taps | plan has 5,674 grid taps, needs 2,531 at 1,500/tap; 30 of 54 types have a worst tap over 1,500 (pv_v6n 4,786 / 161 taps; hgi_v8 6,046 / 16; pc_v1 2,811 / 12; hg_v1p6 2,256 / 16) | density-weighted re-site is a reach class: REACH-FIX-1's tool at compose, no hand-placed taps. hgi_v8 16 -> 39 taps is the input | COORD ruling 4 |
+| clock taps | cap is 1,200 sinks per tap (COORD 05:19). The plan has 5,674 grid taps and needs 3,130 at 1,200 (2,531 at 1,500); 46 of 54 types have a worst tap over 1,200, 30 over 1,500 (pv_v6n 4,786 / 161 taps; hgi_v8 6,046 / 16; pc_v1 2,811 / 12; hg_v1p6 2,256 / 16). Only hgi_v8 is short of taps: 16 against 32 needed at 1,200 | density-weighted re-site is a reach class: REACH-FIX-1's tool at compose, no hand-placed taps. hgi_v8 16 -> 39 taps is the input (39 meets 1,000) | COORD rulings 4 and 05:19 |
 | station cells on pv macros | 70 G0 errors, all in 12 pv types (v6, v6n, v12 10 each; v7 6; v2, v2n, v3, v3n, v5, v5n 5 each; v4, v4n 2 each) | ft_nudge.py --no-snap class fix (S81 t65 fix, 43023cc3ca). Trial: 70 slots re-sited, max bit move 6.48 um, no slide, RC 0 | G0 on the nudged plan running (epyc4 g0_nudge) |
 | dead forwarded-clock census | 31 census errors = 1,024 bits over 32 phy-pc pairs, by design | exemption line declared in the plan, no code change | to write |
-| hroot aspect | 4 x 1,901 x 838 um, aspect 2.27 | re-shape to two blocks of 950 x 1,676 um each side, no exception | COORD ruling 1; pin windows re-derived in compose |
+| hroot aspect | 4 x 1,901 x 838 um, aspect 2.27 | stays stacked under an ASPECT EXCEPTION; the hub band stays intact. Not re-shaped (COORD reversed the re-shape ruling after GEOM-VIS-3's review, 05:19) | decided |
 | sys_c aspect | 2,160 x 1,037, aspect 2.08 | aspect exception (strip height fixed by the io/sys row), unless COORD says re-shape | proposal |
 | stations inside PHY cores | 21 on io_phy_WS, 14 on io_phy_WN, 5 on sys_c keepouts | move lane stations to the pc side of the phy / pc cut | to build |
+| hgi west-face pin pockets | LAND-RING-2 baseline KV pilots: congestion in the W-face pin pockets (kv3_hgi_v1 ISSUES) | the pin-pocket fix applies to every hgi type in the event (11 hgi types, 32 instances) | COORD 05:19; fix design to do |
 | hg start-skew | 25 of 147 tree ports fail at TT; worst L1068_0 in hg_WS_1 67.3-99.2 ps vs 78.1 | rides with the tap re-site (REACH-FIX-1) and sync_dist | rows from DIE-PROTO-1 |
 | hgi_EN_0 cut y = 25,500 | 3,623 bits on 5,468 tracks = 0.66 > 0.6 | move about 350 bits (to 3,281) to the top io row, no M8 grant | COORD ruling 2 |
 | SerDes bump rects | 2 pg_domain errors (sys_SW, sys_SE) | re-derive the domain rect from the grown sys_SD_v1 outline | to build |
