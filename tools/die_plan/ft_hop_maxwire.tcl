@@ -10,6 +10,12 @@
 # u_ft_* at any hierarchy level, e.g. u_bound.u_ft_ft12_o_4/...) whose other pins are ft-station pins, repeaters
 # (BUF*/INV*/HB* masters: the repair chain of the hop, wherever repair_design named it) or ports, and pin bbox HPWL >
 # OT_FT_MAXWIRE_UM.
+# CLAND-RING-LOCALITY (GEN-CLASS-1 11-12, COORD: one class for HEAD wshim_rx/eshim_rx, S81 t45, KV kv3): a clock-landing
+# ring is FIRM in its band at the bus face while its capture (the ft station first stage, or the next landing stage) sits
+# inland; on HEAD wshim_rx_main every read bit crossed ~225 um in ONE hop (dch[k].u_dsel/y[k] -> repair BUFx3 -> 170 um ->
+# dsel INVx1 beside u_ft_link_s0/q[k]): 570 such BUFx3 fanout-1 nets of 170-205 um, the 154 TT / 134 FF slew pins
+# (u_cland_origin/s2 D the same shape, one 200-um hop).  So the anchor is a u_ft_* OR u_cland_* cell: the gap from a
+# landing ring to its capture gets the same repeater pitch, whatever the band/station geometry.
 # OT_FT_MAXWIRE_UM unset / 0 = off.  Composes with grt_maxwire.tcl and the GRT183 resume wrapper (same inner target).
 if {![info exists ::env(OT_FT_MAXWIRE_UM)] || $::env(OT_FT_MAXWIRE_UM) eq "" || $::env(OT_FT_MAXWIRE_UM) == 0} { return }
 
@@ -25,7 +31,7 @@ proc ot_ft_hop_nets {lim_um} {
     set ok 1; set ft 0; set xs {}; set ys {}
     foreach it $its {
       set inst [$it getInst]
-      if {[regexp {(^|[./])u_ft_} [$inst getName]]} {
+      if {[regexp {(^|[./])u_(ft|cland)_} [$inst getName]]} {
         set ft 1
       } elseif {![regexp {^(BUF|INV|HB)} [[$inst getMaster] getName]]} {
         set ok 0; break
@@ -49,7 +55,7 @@ proc ot_ft_hop_pass {} {
   set lim $::env(OT_FT_MAXWIRE_UM)
   set blk [ord::get_db_block]
   set hops [ot_ft_hop_nets $lim]
-  if {![llength $hops]} { puts "OT_FT_MAXWIRE: 0 ft hop nets over $lim um"; return }
+  if {![llength $hops]} { puts "OT_FT_MAXWIRE: 0 ft/cland hop nets over $lim um"; return }
   set keep [dict create]
   foreach n $hops { dict set keep [$n getId] 1 }
   set masked {}
@@ -62,7 +68,7 @@ proc ot_ft_hop_pass {} {
   if {[info exists ::env(SLEW_MARGIN)] && $::env(SLEW_MARGIN) ne ""} { lappend args -slew_margin $::env(SLEW_MARGIN) }
   if {[info exists ::env(MATCH_CELL_FOOTPRINT)] && $::env(MATCH_CELL_FOOTPRINT)} { lappend args -match_cell_footprint }
   set n0 [sta::network_leaf_instance_count]
-  puts "OT_FT_MAXWIRE repair_design $args on [llength $hops] ft hop nets ([llength $masked] other nets dont_touch)"
+  puts "OT_FT_MAXWIRE repair_design $args on [llength $hops] ft/cland hop nets ([llength $masked] other nets dont_touch)"
   set rc [catch {log_cmd repair_design {*}$args} err opts]
   foreach n $masked { $n setDoNotTouch 0 }
   puts "OT_FT_MAXWIRE leaf instances $n0 -> [sta::network_leaf_instance_count]"
