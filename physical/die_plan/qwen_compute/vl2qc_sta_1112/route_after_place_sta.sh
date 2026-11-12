@@ -1,12 +1,21 @@
 #!/bin/bash
 # VL2QC-STA: for each private item wait for the kit_wave run-item result.json; on PASS: (1) posguard.py on the kit
 # (plan core xy/orient, strap sites, grt mode/image, flow tag) on epyc9, (2) copy flow_tag/grt_transition_mode into K,
-# (3) rsync the gen dir epyc9 -> epyc7 (COORD 11-12: builds off epyc9), (4) route + sign-off there through ot-run-wave
-# (run_kit.sh K route 48 8). Logs: sta/route_after_place.log, sta/spec/<it>/{posguard.log,route.otrun.log}. Hub-side.
+# (3) rsync the gen dir epyc9 -> the item's route host, (4) route + sign-off there through ot-run-wave
+# (run_kit.sh K route 48 8). Route hosts (COORD 11-12): spread over epyc7/epyc8/intel1, epyc2 OUT (disk), not epyc9.
+# Host per item: RHMAP="item=host ..." entries win, else round-robin over RHS (default "epyc7 epyc8 intel1").
+# Logs: sta/route_after_place.log, sta/spec/<it>/{posguard.log,rsync.log,route.otrun.log}. Hub-side (intel2).
 set -u; cd /
-W=/srv/opentallas-scratch2/claude/vislayout2-qc; RH=${RH:-epyc7}
+W=/srv/opentallas-scratch2/claude/vislayout2-qc
+RHS=(${RHS:-epyc7 epyc8 intel1})
 ITEMS="$*"
-declare -A DONE=()
+declare -A DONE=() HOST=()
+i=0; for it in $ITEMS; do HOST[$it]=${RHS[$((i % ${#RHS[@]}))]}; i=$((i+1)); done
+for kv in ${RHMAP:-}; do HOST[${kv%%=*}]=${kv#*=}; done
+for it in $ITEMS; do
+  case ${HOST[$it]} in epyc2|epyc9) echo "refusing route host ${HOST[$it]} for $it" >&2; exit 2;; esac
+  echo "$(date '+%F %T %Z') $it route host ${HOST[$it]}" >> $W/sta/route_after_place.log
+done
 n=$(echo $ITEMS | wc -w)
 while [ ${#DONE[@]} -lt $n ]; do
   for it in $ITEMS; do
@@ -16,6 +25,7 @@ while [ ${#DONE[@]} -lt $n ]; do
     echo "$(date '+%F %T %Z') $it result $v" >> $W/sta/route_after_place.log
     DONE[$it]=1
     [ "$v" = PASS ] || continue
+    RH=${HOST[$it]}
     G=$W/sta/runs/a/items/$it/attempt_1/gen
     ssh -n -o ControlPath=none epyc9 "for f in flow_tag grt_transition_mode; do cp $G/\$f $G/$it/\$f; done; cd $W && python3 -I -B posguard.py sta/por/plan_vl2_sta_a.json $it $G/$it" > $W/sta/spec/$it/posguard.log 2>&1
     pg=$?
