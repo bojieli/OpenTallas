@@ -83,7 +83,10 @@ module ot_hfd_coll_q_hard_v8g_body #(
  // lookahead, 2 x 256x256 per bank); ROWS 64/128 keep ot_hgi_coll_issuer_m (v6). Same ports and edges.
  generate if(ROWS>128)begin:g_iss256
  // Default-off source variant: true 256-row native32 leaf; same cfg37 and edge contract.
-`ifdef OT_COLL_ISSUER256_NATIVE32
+`ifdef OT_COLL_ISSUER256_ISS2E
+ // HBM-TAPS 11-12 ISS2E (as ot_hfd_coll_q3_hard_v8x_s): 2-edge issue cadence issuer, default off (ARG bench parent).
+ ot_hgi_coll_issuer_m256v8e
+`elsif OT_COLL_ISSUER256_NATIVE32
  ot_hgi_coll_issuer_m256v8
 `else
  ot_hgi_coll_issuer_m256

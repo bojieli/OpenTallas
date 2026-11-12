@@ -43,9 +43,13 @@ src=("$p/tb_hgi_coll_v8x_argmax.sv"
  "$M/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" "$M/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
  "$M/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v" "$M/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v"
  "$M/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v" "$M/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v")
+src+=(${ARG_VSRC:-})   # HBM-TAPS ISS2E: extra sources (e.g. ot_hgi_coll_issuer_m256v8e.sv), unset = unchanged
 sha256sum "${src[@]}" "$0" tools/hbm_coll_static/argmax_rows.py "$p/static_uop_layout_v4.json" > "$OUT/sources.sha256"
 "$V" --version > "$OUT/verilator.version"
 VMRT=74; ROWS=256; DEF=(); CASES="6"; CARGS=(); EXPECT=fail
+# HBM-TAPS ISS2E (11-12): env ARG_VDEFS (extra verilator +define+...), ARG_CARGS (extra argmax_rows args, e.g.
+# --issue-cadence 2), ARG_VSRC (extra sources), ARG_VMRT / ARG_CASES / ARG_NOSR=1 override; all unset = unchanged.
+XDEF=(${ARG_VDEFS:-}); XCA=(${ARG_CARGS:-}); [ "${ARG_NOSR:-0}" = 1 ] && SR=()
 case $MODE in
  pass) CASES="1 2 3 6 16"; EXPECT=pass;;
  default) VMRT=0; ROWS=64; CASES="1 6"; EXPECT=pass;;
@@ -59,17 +63,18 @@ case $MODE in
  latespc) DEF=(+define+OT_PT_MUT_LATE_SPC);;
  *) echo "unknown mode $MODE"; exit 2;;
 esac
+[ -n "${ARG_VMRT:-}" ] && VMRT=$ARG_VMRT; [ -n "${ARG_CASES:-}" ] && CASES=$ARG_CASES
 echo "MODE $MODE NLINK $NLINK TP $TP VM_RT $VMRT ROWS $ROWS expect $EXPECT" | tee "$OUT/config.txt"
 "$V" --binary --timing -O1 -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTIDRIVEN \
  -Wno-TIMESCALEMOD -Wno-INITIALDLY -Wno-MULTITOP -Wno-BLKSEQ -Wno-WIDTHCONCAT --top-module tb_hgi_coll_v8x_argmax \
- -GNLINK=$NLINK -GTP=$TP -GVM_RT=$VMRT -GROWS=$ROWS "${DEF[@]}" --Mdir "$OUT/obj" -o tb "${src[@]}" > "$OUT/build.log" 2>&1 \
+ -GNLINK=$NLINK -GTP=$TP -GVM_RT=$VMRT -GROWS=$ROWS "${DEF[@]}" "${XDEF[@]}" --Mdir "$OUT/obj" -o tb "${src[@]}" > "$OUT/build.log" 2>&1 \
  || { tail -40 "$OUT/build.log"; echo "ARGMAX_V8X build FAIL"; exit 2; }
 rc=0
 for P in $CASES; do
  c=$OUT/P$P; crows=256; [ "$VMRT" = 0 ] && crows=64; [ "$MODE" = r128 ] && crows=128
  cvm=$VMRT; ca=("${CARGS[@]}")
  if [ "${ca[0]:-}" = --vm-rt-override ]; then cvm=${ca[1]}; ca=(); fi
- python3 tools/hbm_coll_static/argmax_rows.py "$c/prog" --P "$P" --vm-rt "$cvm" --rows "$crows" --npt "$NLINK" "${SR[@]}" "${ca[@]}" > "$c.compile.log" 2>&1 \
+ python3 tools/hbm_coll_static/argmax_rows.py "$c/prog" --P "$P" --vm-rt "$cvm" --rows "$crows" --npt "$NLINK" "${SR[@]}" "${ca[@]}" "${XCA[@]}" > "$c.compile.log" 2>&1 \
   || { cat "$c.compile.log"; echo "ARGMAX_V8X compile P$P FAIL"; rc=1; continue; }
  nr=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['parents']['d0q0']['rows'])" "$c/prog/manifest.json")
  set +e; "$OUT/obj/tb" +DIR="$c/prog" +P="$P" +NR="$nr" > "$c.log" 2>&1; set -e
