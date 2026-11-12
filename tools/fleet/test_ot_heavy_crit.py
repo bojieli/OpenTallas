@@ -97,11 +97,81 @@ class Heavy(unittest.TestCase):
 
 
     # LOADGATE_1110 (KW-FIX-44, COORD 11-10): EVERY job waits while load1 + fresh admits >= LOAD_GATE_FACTOR (1.25) x nproc
-    def test_gate_holds_a_crit_job_too(self):
-        (self.d / 'conf').write_text('')
+    # CRITGATE_1112 (COORD 11-12): a crit job passes the 1.25 gate up to LOAD_GATE_CRIT_FACTOR (2.0) x nproc, at most
+    # CRIT_BYPASS_MAX (4) such jobs per host.  nproc is 10 here: gate 12.5, crit gate 20.
+    def test_gate_lets_a_crit_job_through_below_the_crit_factor(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        r, a = self.run_('15', crit=True)
+        self.assertIsNotNone(a, r.stderr)
+        self.assertEqual(len(list((self.d / 'state').glob('critby.*'))), 1)
+
+    def test_crit_job_below_the_normal_gate_is_not_marked(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        r, a = self.run_('5', crit=True)
+        self.assertIsNotNone(a, r.stderr)
+        self.assertEqual(list((self.d / 'state').glob('critby.*')), [])
+
+    def test_gate_holds_a_crit_job_over_the_crit_factor(self):    # the 11-10 epyc8 load-507 class
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
         r, a = self.run_('500', crit=True)
         self.assertIsNone(a); self.assertEqual(r.returncode, 75)
-        self.assertIn('load gate', r.stderr)
+        self.assertIn('load gate', r.stderr); self.assertIn('over the crit load factor', r.stderr)
+
+    def _bypassers(self, n, live=True):
+        st = self.d / 'state'; st.mkdir(exist_ok=True)
+        for i in range(n):
+            (st / f'critby.fake{i}').write_text('')
+            if live:
+                (st / f'res.fake{i}').write_text(f'fake{i} 1\n')
+
+    def test_crit_bypass_cap_is_four_per_host(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        self._bypassers(4)
+        r, a = self.run_('15', crit=True)
+        self.assertIsNone(a); self.assertIn('crit load bypass cap: 4 of 4', r.stderr)
+
+    def test_three_live_bypassers_leave_room_for_a_fourth(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        self._bypassers(3)
+        r, a = self.run_('15', crit=True)
+        self.assertIsNotNone(a, r.stderr)
+
+    def test_finished_bypassers_are_not_counted_and_are_removed(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        self._bypassers(6, live=False)
+        r, a = self.run_('15', crit=True)
+        self.assertIsNotNone(a, r.stderr)
+        self.assertEqual(len(list((self.d / 'state').glob('critby.*'))), 1)
+
+    def test_crit_factor_zero_means_no_load_gate_but_the_cap_stays(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\nLOAD_GATE_CRIT_FACTOR=0\n')
+        r, a = self.run_('500', crit=True)
+        self.assertIsNotNone(a, r.stderr)
+
+    def test_crit_factor_1_25_restores_the_11_10_rule(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\nLOAD_GATE_CRIT_FACTOR=1.25\n')
+        r, a = self.run_('15', crit=True)
+        self.assertIsNone(a); self.assertIn('load gate', r.stderr)
+
+    def test_direct_job_uses_the_crit_factor(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        os.environ['OT_HEAVY_DIRECT'] = '1'
+        try:
+            r, a = self.run_('500')
+        finally:
+            os.environ.pop('OT_HEAVY_DIRECT', None)
+        self.assertIsNone(a)
+
+    def test_gate_still_holds_a_non_crit_job(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        r, a = self.run_('15')
+        self.assertIsNone(a); self.assertIn('load gate', r.stderr)
+
+    def test_crit_job_keeps_the_ram_admission(self):
+        (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
+        self.rec.write_text('#!/bin/bash\n[ "$1" = --is-die ] && exit 1; echo "NO 4 cls | need 4, available 1 GB"; exit 1\n')
+        r, a = self.run_('15', crit=True)
+        self.assertIsNone(a)
 
     def test_gate_threshold_is_1_25_x_nproc(self):
         (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')

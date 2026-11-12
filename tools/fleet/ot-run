@@ -42,6 +42,8 @@ Queue candidates must have enough total physical RAM after mandatory headroom fo
 --crit: a critical job (token sims, die GRT50, die clock runs; COORD 11-01): CPUWeight=1000 on its scope and cpu.weight
          ~1000 on its containers (default 100), and it bypasses the host load cap (non-crit jobs wait while load1 >=
          LOAD_CAP_FACTOR x nproc, default 1.5).  Same as OT_RUN_CRIT=1.  Memory admission is unchanged.
+         CRITGATE_1112: the load GATE (1.25 x nproc) holds a crit/direct job only above 2.0 x nproc, and ot-heavy lets at most 4
+         such bypassing crit jobs run per host (LOAD_GATE_CRIT_FACTOR, CRIT_BYPASS_MAX in /etc/ot-heavy.conf).
 --direct: a critical blocking job listed in ~/coord/lanes/NEAR-CLOSE.tsv (DIRECT_1107, OWNER 11-07): implies --crit, goes to the
          qualifying host with the most real free memory, and starts at once while real MemAvailable >= --mem + 32 GB, past the
          load cap, the past-peak/reservation charge and DIE-RESERVE.  Disk floors, held hosts and MemoryMax stay.  Running jobs
@@ -737,6 +739,9 @@ def reserved(h, r):
 
 
 LOAD_GATE_FACTOR = float(os.environ.get("OT_RUN_LOAD_GATE_FACTOR", "1.25"))   # = ot-heavy LOADGATE_1110 (0 = off)
+# CRITGATE_1112: a --crit / --direct job is held by the load gate only at LOAD_GATE_CRIT_FACTOR x nproc (= ot-heavy, default 2.0;
+# ot-heavy also caps the bypassing crit jobs at CRIT_BYPASS_MAX = 4 per host, which placement cannot see)
+LOAD_GATE_CRIT_FACTOR = float(os.environ.get("OT_RUN_LOAD_GATE_CRIT_FACTOR", "2.0"))
 
 
 def load_gated(r):
@@ -745,8 +750,11 @@ def load_gated(r):
     --free row count at THREADS each (as ratio()), nproc = the row's cores before HOST_RESERVE."""
     if LOAD_GATE_FACTOR <= 0:
         return False
+    gf = LOAD_GATE_CRIT_FACTOR if (crit_job() or direct_job()) else LOAD_GATE_FACTOR
+    if gf <= 0:
+        return False
     n = (r.get("ncpu") or 0) + (r.get("reserve_threads") or 0)
-    return n > 0 and load1(r) + THREADS * (r.get("fresh") or 0) >= LOAD_GATE_FACTOR * n
+    return n > 0 and load1(r) + THREADS * (r.get("fresh") or 0) >= gf * n
 
 
 def load_capped(r, mem, threads):
