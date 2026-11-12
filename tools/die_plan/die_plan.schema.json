@@ -5357,6 +5357,10 @@
      "ft_spread": {
       "type": "boolean"
      },
+     "ft_hop_maxwire_um": {
+      "type": "number",
+      "minimum": 0
+     },
      "landing_base_type": {
       "type": "string"
      },
