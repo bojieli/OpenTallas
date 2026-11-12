@@ -20,7 +20,7 @@ Method (one tracer for both frames, so every number is measured the same way):
      black-box output pin is a labelled source (elements: pv halves .r1 (MSB) / .r0 as frame_schedule.py; nodes:
      n<k>; cfifo: cf.<pin>; frame inputs: port name).  The cfg7 sequencer passes its lc label to its outputs with 0
      edges (frame_schedule.py's control rule: its fixed internal latency is the same in both frames).
-  3. read every end-point input pin: station x inputs / go / cfg_v of each element, node a / b, cfifo ri (root) and
+  3. read every end-point input pin: station x inputs / go / cfg_v / go_tag of each element, node a / b, cfifo ri (root) and
      the frame-boundary links (x -> cfifo lanes, x -> xo, cfifo rd -> ret).
 
 The schedule written is frame_schedule.v1 (plan_phase input). Return node and root link depths come directly
@@ -406,6 +406,9 @@ def trace(yjs, top, seam_extra=None):
     return mod, cells, kind, labels
 
 
+CONTROL_PINS = ('go', 'cfg_v', 'go_tag')   # station control pins, the same set as frame_schedule.py
+
+
 def inst_name(cn):
     """flattened Yosys cell name -> the frame-level instance name the LP schedule uses (u_e0 -> e0, band prefix
     u_r<k>. dropped: the as-built bands keep the flat frame's u_e<k> / u_n<k> / u_cf names)."""
@@ -436,7 +439,9 @@ def measure(yjs, top, seam_extra=None):
             for port in cells[cn]['connections']:
                 if port.startswith('xs_'):
                     ins[port] = sorted(pin_labels(cells, labels, cn, port))
-            ctl = {p: sorted(pin_labels(cells, labels, cn, p, -1)) for p in ('go', 'cfg_v')}
+            # go_tag (cfg7_seq -> element, derived per column from the go count, no qbank) is a control pin like go /
+            # cfg_v: frame_schedule.py traces it since c79a872d61, so the LP schedule names it and it must be measured here.
+            ctl = {p: sorted(pin_labels(cells, labels, cn, p, -1)) for p in CONTROL_PINS if p in cells[cn]['connections']}
             res['stations'][inst] = dict(inputs=ins, control=ctl)
             if m.endswith(('_gb', '_gb_split')):
                 res['stations'][inst]['go_boundary_edges'] = 1
@@ -649,6 +654,9 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
         dx = deltas.pop()
         control = {}
         for pin, cv in st['control'].items():
+            miss = [n_ for n_, m_ in (('LP twin', meas_v), ('twin head', meas_t), ('as-built', meas_ab))
+                    if pin not in m_['stations'][e]['control']]
+            assert not miss, ('LP schedule control pin not present on the traced element', e, pin, miss)
             v0, vt, va = (pick_src(m_['stations'][e]['control'][pin], cv['source'], f'{e}.{pin}')
                           for m_ in (meas_v, meas_t, meas_ab))
             assert {x[0] for x in meas_ab['stations'][e]['control'][pin]} == {cv['source']}, ('control source differs', e, pin)
