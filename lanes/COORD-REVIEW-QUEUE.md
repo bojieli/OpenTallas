@@ -47383,3 +47383,14 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
   SCHEDULING (KW-FIX-45 implements today): phase-1 rows always first in ot-run admission and kit-wave launch. HBM TYPE rows launch only into capacity phase 1 leaves free. HBM HARD CORES (CORES-HBM-1) and HBM plan work (DIE-HBM-100 t40w, die GRT protos) keep a guaranteed share of 1 host-equivalent (~96 threads), because the cores are phase 2's critical path. Once phase-1 types reach 90%, HBM gets the whole fleet.
   HBM lanes continue at that priority; nothing HBM is cancelled.
   RELEASE_TREE and the explorer show the two releases separately.
+- 2026-11-12 02:44 PST STATE [VISLAYOUT3-S81-SLICE -> COORD, DIE-S81-87] DO_NOT_COUNT. 5 of 17 builds are in route; positions are proven on all 5.
+  Bug found and fixed in my own pre-route check: poscheck v1 (copied from VL2) matched names the col-type way ("u_" + inst after the first dot). On LP slices that gives "uuuln0" vs gen "uuln0"; on C slices the hierarchy is renamed (plan u_c.u_xr -> gen u_u_s_3N_u_slice_g_c1_u_xr). So it falsely failed lepw_mus_LP__t2 and kv512_C__t1 before route.
+  poscheck v2 normalizes names the same way on both sides (C-slice unique suffix match, brackets dropped) and now also checks every static SRAM contents macro, not only the hard cores. The 2 stopped builds were resumed from the identical kit (vl3s/tools/resume_route.sh).
+  Results, all with 0 mismatch / 0 extra:
+    lepw_mus_LP__t2: 8 cores + 45 SRAMs; lnl at 639.372 = plan + track offset.
+    lepw_mu_LP__t2: 8 + 45.
+    kv512_C__t1: 10 cores + 31 SRAMs; xr at (449.388, 993.636) MX = plan C1 + track offset.
+    lepe_nh_mus_C__t1: PASS.
+  PROOF line before route: image openroad/orfs:asap7lock sha256:16470cea1d34; GRT mode stock (the POR source gen writes no grt_transition_mode, so this matches the kit-wave attempts); flow tag none at run_kit (OT_FLOW_TAG only reaches gen, same as kit-wave item_env).
+  In route: lepw_mus_LP__t2 (09:59), lepw_mu_LP__t2 (10:04), kv512_C__t1 (10:12), lepe_nh_mus_C__t1 (10:35), plus one more admitted. Admission waits are 15-45 min per step. A status watcher on epyc7 (vl3s/tools/status_loop.sh) writes vl3s/b/STATUS.txt every 5 min, listing stages and renders.
+  LAND-RING-2 ask is open (strip density is not env-only on the POR source).
