@@ -596,13 +596,19 @@ def snap_macro_placement(placements, tracks_tcl, lef_text_of, outline_um):
     return out, moves
 
 
-def macro_gap_blockages(placements, lef_pins_of, halo_um, gmax_um=30.0):
+def macro_gap_blockages(placements, lef_pins_of, halo_um, gmax_um=30.0, keep=()):
     """DIE-HBM-82-EP6 class fix (vms_bank_q0 vecd4ae GRT-0116 in the u_a/u_b bank gap, COORD/DIE-HBM-82 18:0x): a hard
     placement keep-out (rows cut) over every gap between two static macros whose FACING edges carry no signal pin, when the gap is
     wider than both halos (std-cell rows survive there) and <= gmax_um.  Such a gap is a routing channel, not a pin channel:
     cells placed in it take the only M2/M4 (stacked) or M3 (side by side) tracks that cross the macro field.  Pin-edge
     gaps are never blocked (their cells drive / capture the macro pins).  The box spans the facing overlap + one halo on
-    each end.  lef_pins_of(master) -> (w nm, h nm, rects) as lef_signal_pins.  Returns [(x0, y0, x1, y1) um]."""
+    each end.  lef_pins_of(master) -> (w nm, h nm, rects) as lef_signal_pins.  Returns [(x0, y0, x1, y1) um].
+    MGB-CLOCK-KEEP (VISLAYOUT2-HBM 11-11, COORD adopted): keep = clock keep windows [(x0, y0, x1, y1) um] (the plan
+    clock entry + room for the root buffer, clock_keep_windows).  A gap strip that overlaps a window is split around
+    it along the strip (x for a gap between stacked macros, y for side by side): the rows under the clock entry
+    survive, so CTS places the root buffer AT the entry and its wires leave along the gap to the open ends.  Without
+    it the cut sends the root buffer across a macro (vms_bank_q0 vecd4ae: clkbuf_0 at y 74 under u_a, the port net
+    over u_a on M5, GRT-0116 147/151 one-net overflow).  keep=() returns exactly the EP6 boxes."""
     boxes = []
     for p_ in placements:
         w, h, rects = lef_pins_of(p_["macro"])
@@ -625,13 +631,92 @@ def macro_gap_blockages(placements, lef_pins_of, halo_um, gmax_um=30.0):
             g = B[1] - A[3]
             if ox1 - ox0 > 0 and 2 * halo_um < g <= gmax_um and "N" not in A[4] and "S" not in B[4]:
                 if not any(C is not A and C is not B and C[0] < ox1 and C[2] > ox0 and C[1] < B[1] and C[3] > A[3] for C in boxes):
-                    out.append((round(ox0 - halo_um, 3), round(A[3], 3), round(ox1 + halo_um, 3), round(B[1], 3)))
+                    out.append(((round(ox0 - halo_um, 3), round(A[3], 3), round(ox1 + halo_um, 3), round(B[1], 3)), "x"))
             oy0, oy1 = max(A[1], B[1]), min(A[3], B[3])
             g = B[0] - A[2]
             if oy1 - oy0 > 0 and 2 * halo_um < g <= gmax_um and "E" not in A[4] and "W" not in B[4]:
                 if not any(C is not A and C is not B and C[1] < oy1 and C[3] > oy0 and C[0] < B[0] and C[2] > A[2] for C in boxes):
-                    out.append((round(A[2], 3), round(oy0 - halo_um, 3), round(B[0], 3), round(oy1 + halo_um, 3)))
-    return out
+                    out.append(((round(A[2], 3), round(oy0 - halo_um, 3), round(B[0], 3), round(oy1 + halo_um, 3)), "y"))
+    res = []
+    for box, ax in out:
+        pieces = [box]
+        for k in keep:
+            nxt = []
+            for b in pieces:
+                if k[0] >= b[2] or k[2] <= b[0] or k[1] >= b[3] or k[3] <= b[1]:
+                    nxt.append(b)
+                elif ax == "x":
+                    if k[0] > b[0]:
+                        nxt.append((b[0], b[1], round(k[0], 3), b[3]))
+                    if k[2] < b[2]:
+                        nxt.append((round(k[2], 3), b[1], b[2], b[3]))
+                else:
+                    if k[1] > b[1]:
+                        nxt.append((b[0], b[1], b[2], round(k[1], 3)))
+                    if k[3] < b[3]:
+                        nxt.append((b[0], round(k[3], 3), b[2], b[3]))
+            pieces = nxt
+        res += pieces
+    return res
+
+
+def clock_keep_windows(pins, clks, w, h, grow_um=8.64):
+    """MGB-CLOCK-KEEP: one keep window around the INTERIOR clock pins (the plan clock entry; face clock pins are not
+    interior): their bbox grown by grow_um (4.32 island half + 4.32 for the root buffer and its halo), clipped to the
+    outline.  [] when no clock pin is interior."""
+    cs = set(clks)
+    pts = [(float(p_["x"]), float(p_["y"])) for p_ in pins if p_["name"] in cs
+           and PIN_LEN_UM < float(p_["x"]) < w - PIN_LEN_UM and PIN_LEN_UM < float(p_["y"]) < h - PIN_LEN_UM]
+    if not pts:
+        return []
+    xs, ys = [x for x, _ in pts], [y for _, y in pts]
+    return [(round(max(0.0, min(xs) - grow_um), 3), round(max(0.0, min(ys) - grow_um), 3),
+             round(min(w, max(xs) + grow_um), 3), round(min(h, max(ys) + grow_um), 3))]
+
+
+def _free_run(boxes_um, x, y, sgn, axis, w, h):
+    """free length from (x, y) along axis ('x'/'y') in direction sgn to the next macro whose span covers the line, or
+    to the outline"""
+    if axis == "x":
+        lim = (w - x) if sgn > 0 else x
+        for b in boxes_um:
+            if b[1] < y < b[3]:
+                d = (b[0] - x) if sgn > 0 else (x - b[2])
+                if d >= -1e-6:
+                    lim = min(lim, d)
+    else:
+        lim = (h - y) if sgn > 0 else y
+        for b in boxes_um:
+            if b[0] < x < b[2]:
+                d = (b[1] - y) if sgn > 0 else (y - b[3])
+                if d >= -1e-6:
+                    lim = min(lim, d)
+    return round(max(lim, 0.0), 3)
+
+
+def clock_gap_ends(boxes_um, win, w, h, gmax_um=30.0, ch_um=10.8):
+    """MGB-CLOCK-KEEP (advisory, owner 11-03 targets-not-gates): a clock keep window that sits in a macro gap
+    (<= gmax_um between the two nearest macros on one axis) must have the gap OPEN AT BOTH ENDS: a free run >= ch_um
+    (the plan channel rule) beyond each end of the facing overlap, inside the outline.  Else the root buffer has a
+    single exit (dead end).  -> None when the window is not in a gap, else dict(axis, gap_um, ends, open)."""
+    cx, cy = (win[0] + win[2]) / 2, (win[1] + win[3]) / 2
+    lo = [b for b in boxes_um if b[0] < cx < b[2] and b[3] <= cy]
+    hi = [b for b in boxes_um if b[0] < cx < b[2] and b[1] >= cy]
+    if lo and hi:
+        A, B = max(lo, key=lambda b: b[3]), min(hi, key=lambda b: b[1])
+        if B[1] - A[3] <= gmax_um:
+            ox0, ox1 = max(A[0], B[0]), min(A[2], B[2])
+            ends = {"W": _free_run(boxes_um, ox0, cy, -1, "x", w, h), "E": _free_run(boxes_um, ox1, cy, 1, "x", w, h)}
+            return dict(axis="x", gap_um=round(B[1] - A[3], 3), ends=ends, open=all(v >= ch_um for v in ends.values()))
+    lf = [b for b in boxes_um if b[1] < cy < b[3] and b[2] <= cx]
+    rt = [b for b in boxes_um if b[1] < cy < b[3] and b[0] >= cx]
+    if lf and rt:
+        A, B = max(lf, key=lambda b: b[2]), min(rt, key=lambda b: b[0])
+        if B[0] - A[2] <= gmax_um:
+            oy0, oy1 = max(A[1], B[1]), min(A[3], B[3])
+            ends = {"S": _free_run(boxes_um, cx, oy0, -1, "y", w, h), "N": _free_run(boxes_um, cx, oy1, 1, "y", w, h)}
+            return dict(axis="y", gap_um=round(B[0] - A[2], 3), ends=ends, open=all(v >= ch_um for v in ends.values()))
+    return None
 
 
 def macro_reg_guide_spec(placements, lef_size_of, scope, grow_um, core_box):
@@ -2547,9 +2632,26 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         lines = (["foreach {inst master x y orient} {"] + rows +
                  ["} {", "  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact", "}"])
         if a.macro_gap_block == "on":
+            keep_ = clock_keep_windows(pins, clks, w, h)
             gaps = macro_gap_blockages(rec["macro_placement"],
                                        lambda m_: lef_signal_pins((kd / "macros" / f"{m_}.lef").read_text(), m_),
-                                       float(rec.get("macro_place_halo_um", 4.32)))
+                                       float(rec.get("macro_place_halo_um", 4.32)), keep=keep_)
+            if keep_:
+                # MGB-CLOCK-KEEP: rows under the clock entry survive the cut; advisory check that its gap is open at
+                # both ends (a dead-end clock gap is a plan core_macros / clock_entries finding for the die owner)
+                mb_ = []
+                for p_ in rec["macro_placement"]:
+                    mw_, mh_, _ = lef_signal_pins((kd / "macros" / f"{p_['macro']}.lef").read_text(), p_["macro"])
+                    if p_.get("orient", "R0") not in ("R0", "MX", "MY", "R180"):
+                        mw_, mh_ = mh_, mw_
+                    x_, y_ = (float(c) for c in p_["xy_um"])
+                    mb_.append((x_, y_, x_ + mw_ / 1000.0, y_ + mh_ / 1000.0))
+                ends_ = [clock_gap_ends(mb_, k_, w, h) for k_ in keep_]
+                rec["macro_gap_clock_keep"] = dict(windows=[list(k_) for k_ in keep_], gap_ends=ends_)
+                for e_ in ends_:
+                    if e_ and not e_["open"]:
+                        print(f"MGB_CLOCK_GAP_DEAD_END (advisory) {a.view}: clock entry gap {e_['gap_um']} um, ends "
+                              f"{e_['ends']} (< 10.8 um free at one end): plan core_macros / clock_entries item")
             if gaps:
                 rec["macro_gap_block"] = [list(b) for b in gaps]
                 # rows are cut (not a dbBlockage): tapcell runs after this file and would drop taps into a blockage
