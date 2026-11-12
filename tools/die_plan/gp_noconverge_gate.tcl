@@ -5,6 +5,13 @@
 # GPL-1010 and last overflow > OT_GPL_NOCONV_OVERFLOW (default 0.1) -> FAIL_PLACE_NOCONVERGE marker + Tcl error, so make
 # stops at 3_4 before repair_design.  No log, or the checker itself failing, leaves the flow unchanged (reported, no stop).
 # OT_GPL_NOCONV=0 turns the gate off.
+# KW-FIX-45 PLACE-FANOUT (COORD 11-12): OT_PLACE_MAX_FANOUT (kit config.mk, gen_phys.place_max_fanout) = the fanout
+# limit of the place-stage repair_design that runs right after this hook; independent of the gate below (also with
+# OT_GPL_NOCONV=0).  Unset / empty = unchanged.
+if {[info exists ::env(OT_PLACE_MAX_FANOUT)] && [string is integer -strict $::env(OT_PLACE_MAX_FANOUT)] && $::env(OT_PLACE_MAX_FANOUT) > 1} {
+  set_max_fanout $::env(OT_PLACE_MAX_FANOUT) [current_design]
+  puts "PLACE-FANOUT set_max_fanout $::env(OT_PLACE_MAX_FANOUT) on [get_full_name [current_design]] (place repair_design)"
+}
 set gpnc_dir [file dirname [file normalize [info script]]]
 set gpnc_log [file join $::env(LOG_DIR) 3_3_place_gp.log]
 set gpnc_ovf 0.1

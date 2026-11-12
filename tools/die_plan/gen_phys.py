@@ -5448,9 +5448,27 @@ def install_gp_noconverge_gate(kd, cfg):
         return []
     here = Path(__file__).resolve().parent
     shutil.copyfile(here / "gp_noconverge_gate.tcl", kd / "gp_noconverge_gate.tcl")
+    fo = place_max_fanout()
     shutil.copyfile(here.parent / "autopilot" / "gp_noconverge.py", kd / "gp_noconverge.py")
     return ["# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
-            "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"]
+            "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"] + (
+        [f"# KW-FIX-45 PLACE-FANOUT: place-stage repair_design limit (gp_noconverge_gate.tcl set_max_fanout)",
+         f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
+
+
+def place_max_fanout():
+    """KW-FIX-45 PLACE-FANOUT (COORD 11-12, VISLAYOUT2-QC coll_n): the gen environment's OT_PLACE_MAX_FANOUT (a positive
+    integer, e.g. 32 from the die's gen_env / item_env) -> the kit's place-stage fanout limit, else 0 = off (unchanged).
+    coll_n s25: codec bank-select flops (g_bank[*].u_store.hit_age*) fanned through placement buffers to 60+ loads, 209 TT
+    slew pins up to 397 ps (limit 320) at sign-off, whose FANOUT_MAX 64 is a WARN only.  The limit goes into the STA
+    session before the place repair_design (PRE_RESIZE gate), so repair_design splits the wide nets there; write_sdc
+    carries it to the later repair_design passes.  Sign-off reads the kit's own constraint.sdc: no gate changes."""
+    v = os.environ.get("OT_PLACE_MAX_FANOUT", "").strip()
+    if not v:
+        return 0
+    if not v.isdigit() or not 2 <= int(v) <= 1000:
+        raise ValueError(f"OT_PLACE_MAX_FANOUT must be an integer 2..1000, got {v!r}")
+    return int(v)
 
 
 RUN_KIT = r"""#!/bin/bash
