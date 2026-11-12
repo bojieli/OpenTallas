@@ -21265,7 +21265,9 @@
     "cbn_q00__*": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)",
     "coll_ftc": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)",
     "cbx_q10__*_h": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)",
-    "*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): QC old floor (events hcut1111 / s25 / s28 pre-HF-1c); releases at the HF-1c switch (DIE-QC-100)"
+    "*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): QC old floor (events hcut1111 / s25 / s28 pre-HF-1c); releases at the HF-1c switch (DIE-QC-100)",
+    "sle_st_b_*": "WAIT-FORM st_b W-face (COORD 11-12 07:2x via DIE-QC-100): GEOM-VIS-5 GRT BAD on sle_st_b_v1/v2, W-face pin column overflow; family fix folded into the s28 VISFORM delta; GEOM-VIS-6 views the re-place",
+    "slw_st_b_*": "WAIT-FORM st_b W-face (COORD 11-12 07:2x via DIE-QC-100): GEOM-VIS-5 GRT BAD on sle_st_b_v1/v2, W-face pin column overflow; family fix folded into the s28 VISFORM delta; GEOM-VIS-6 views the re-place"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
