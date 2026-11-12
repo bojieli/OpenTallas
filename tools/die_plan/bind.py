@@ -5501,7 +5501,7 @@ def cmd_kit_rtl(a):
         # QC-SLECTL-B 11-05: a hard core with param_wrap is one paramod instance of the bound module; the private kit copy
         # instantiates its generated named wrapper master instead (param_wrap.py; no logic, no cycles)
         import param_wrap
-        btxt, kit_param_wraps, kit_wrap_srcs = param_wrap.wrap_bound(btxt, t.get("hard_cores"))
+        btxt, kit_param_wraps, kit_wrap_srcs = param_wrap.wrap_bound(btxt, t.get("hard_cores"), raw.get("clock"))
         # DIE-QC-69: a hard core nested in a bound leaf (QC RED u_u_red.u_core) declares its physical_inst in the plan
         phys = {c["inst"]: c["physical_inst"] for c in t.get("hard_cores", []) or [] if c.get("physical_inst")}
         core_rows = [(r[0], phys.get(r[1], r[1])) + tuple(r[2:]) for r in (gen_phys.core_tap_rows(P, tn) if P else [])]

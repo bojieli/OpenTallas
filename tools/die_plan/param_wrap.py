@@ -39,14 +39,43 @@ def wrapper_sv(master, base, params):
             f"module {master} (\n{decl}\n);\n    {base} {param_text(params)} u_w ({conn});\nendmodule\n")
 
 
-def wrap_bound(bound, hard_cores):
-    """-> (bound, receipt, {master: wrapper text}): rename every planned param_wrap instance in the bound text."""
+RING_FIRST_OPT = ("W", "DEPTH", "K", "CONTROL_STATUS_COPY", "QREG", "STATUS_REG", "GUARD_REG")
+
+
+def landing_ring_params(base, params, clock):
+    """KW-FIX-45 11-12 (COORD ruling): the instantiation parameters the bound RTL really carries for a count-aligned landing
+    ring: clock_landings writes .STATUS_REG(1) (die-wide clock.landing_ring_status_reg) and .GUARD_REG(1) (clock.
+    landing_ring_guard_reg, which needs STATUS_REG) right after DEPTH/CONTROL_STATUS_COPY/QREG and before WFALL; the stored
+    param_wrap literal predates the die-wide flags.  Computed through the SAME predicates that write the RTL
+    (clock_landings.ring_status_reg_all / ring_guard_reg_all), inserted in the RTL order.  Other bases or no flag: unchanged."""
+    if not str(base).startswith("ot_dp_clk_landing_cas") or not clock:
+        return dict(params)
+    import clock_landings as CL
+    guard = CL.ring_guard_reg_all(clock)
+    status = CL.ring_status_reg_all(clock) or guard
+    extra = {k: 1 for k, on in (("STATUS_REG", status), ("GUARD_REG", guard)) if on and k not in params}
+    if not extra:
+        return dict(params)
+    out, done = {}, False
+    for k, v in params.items():
+        if not done and k not in RING_FIRST_OPT:
+            out.update(extra); done = True
+        out[k] = v
+    if not done:
+        out.update(extra)
+    return out
+
+
+def wrap_bound(bound, hard_cores, clock=None):
+    """-> (bound, receipt, {master: wrapper text}): rename every planned param_wrap instance in the bound text.
+    clock = the plan's clock dict: the expected ring parameters include the die-wide STATUS_REG / GUARD_REG the bind writes."""
     receipt, srcs = [], {}
     for hc in hard_cores or []:
         pw = hc.get("param_wrap")
         if not pw:
             continue
         master, base, params = hc.get("physical_master") or hc["module"], pw["base"], pw["params"]
+        params = landing_ring_params(base, params, clock)
         inst = (hc.get("physical_inst") or "").removeprefix("u_bound.")
         if not inst or "." in inst:
             raise ValueError(f"param_wrap {hc['inst']}: physical_inst must be u_bound.<local> (got {hc.get('physical_inst')})")
