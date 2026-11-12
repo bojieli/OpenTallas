@@ -57,6 +57,14 @@ def main():
     rec_by_mod = collections.defaultdict(list)
     for k in rec:
         rec_by_mod[re.sub(r"__[\d.]+x[\d.]+(@.*)?$", "", k)].append(k)
+    # CORES-HBM-1 11-12: gen_core_kit_hbm.main takes a recipes_b2.json entry keyed by the module FIRST (before the
+    # view recipe_keys), so a module with a recipes_b2 entry has a recipe.  Without this, every such view was labelled
+    # NO_RECIPE (t39w: 70+ views, e.g. ot_hfd_coll_q2n2_vm_core) although its kit generates.
+    b2 = HERE / "recipes_b2.json"
+    if b2.is_file():
+        for k, v in json.load(open(b2)).items():
+            if isinstance(v, dict) and "files" in v and k not in rec_by_mod[k]:
+                rec_by_mod[k].insert(0, k)
     views = {}
     no_pins = []
     tables = collections.defaultdict(set)

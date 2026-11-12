@@ -1250,8 +1250,9 @@
     ],
     "params": {},
     "macros": [],
-    "source": "HBM-CORES-R8 10-27: NE-hub q2n2 vm cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv @97b0810d61 (HBM-CORES-RTL, origin/claude/hbm-cores-rtl-1026, not on this base): gen_vm_core.py from ot_hfd_coll_q3_vm_core, members u_vmasm = ot_hgi_coll_vmasm_sliced_v7, u_writer = ot_hgi_coll_static_vmwrite_roots_v6_physical of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32; closure (yosys hierarchy -check: vm_core, vmasm_sliced_v7, vmasm_slice16, vmwrite_roots_v6_physical, vmwrite_roots_v6; no SRAM macros) = these 4 files, generic files identical at 97b0810d61 and this base; plan pins (40 buses, 8661 bits) == RTL ports",
-    "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9"
+    "source": "HBM-CORES-R8 10-27: NE-hub q2n2 vm cut rtl/hbm_accel/cores_split/ot_hfd_coll_q2n2_hard_v8g/ot_hfd_coll_q2n2_vm_core.sv @97b0810d61 (HBM-CORES-RTL, origin/claude/hbm-cores-rtl-1026, not on this base): gen_vm_core.py from ot_hfd_coll_q3_vm_core, members u_vmasm = ot_hgi_coll_vmasm_sliced_v7, u_writer = ot_hgi_coll_static_vmwrite_roots_v6_physical of ot_hfd_coll_q2_hard_v8g_s #(NLINK 2, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) -DOT_COLL_ISSUER256_NATIVE32; closure (yosys hierarchy -check: vm_core, vmasm_sliced_v7, vmasm_slice16, vmwrite_roots_v6_physical, vmwrite_roots_v6; no SRAM macros) = these 4 files, generic files identical at 97b0810d61 and this base; plan pins (40 buses, 8661 bits) == RTL ports | CORES-HBM-1 11-12: the cut file is now in the tree (byte-identical to 97b0810d61); the bound q_hub_ne parent (t39w bind) instantiates this core with ONE clock port clk (clock_entries q_hub_ne u_hb_coll_Q_vm merged_clock_ports = the 31 RTL clock bits), so the plan form is a one-clk pin table: hand wrapper wrappers/ot_hfd_coll_q2n2_vm_core.sv drives the 16 RTL clock ports (31 bits) from clk and the RTL top is renamed rename_top in the kit copy (same mechanism as the q3 vm_core recipe, DIE-HBM-53)",
+    "source_commit": "97b0810d615ae4f7847fed52d3a4a286456ee2a9",
+    "rename_top": "ot_hfd_coll_q2n2_vm_core__mc"
   },
   "ot_hfd_coll_q2n2_body_core": {
     "top": "ot_hfd_coll_q2n2_body_core",
