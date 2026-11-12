@@ -9,7 +9,7 @@
 // reference has no fault, and the DUT fault must equal the reference fault or the reference fault one edge earlier (a fold add
 // that faults issues one edge later).  RDMUT 1/2/3 are negative controls and must fail.
 module tb_hbm_sm_pv_rdreg;
-    parameter integer RDMUT=0, MODE=0;
+    parameter integer RDMUT=0, MODE=0, DREG=1, TREG=0, TRMUT=0;   // DUT RDREG / TREG / TRMUT (TREG form, 11-12)
     integer CYCLES=200000, seed=1;
     reg clk=0,rst_n=0,ev=0,pub_start=0,fold_start=0;
     reg [511:0] sum=0;
@@ -25,12 +25,15 @@ module tb_hbm_sm_pv_rdreg;
     ot_hbm_sm_pv_merge #(.PUBLISH(1),.RDREG(0)) u_ref(.clk,.rst_n,.ev,.sum,.tag_d,.pv_v(r_pv_v),.pv_y(r_pv_y),
         .pv_tag(r_pv_tag),.fault(r_fault),.pub_start,.pub_slot,.pub_v(r_pub_v),.pub_data(r_pub_data),.pub_word(r_pub_word),
         .pub_out_slot(r_pub_out_slot),.pub_tag(r_pub_tag),.fold_start,.fold_a,.fold_b);
-    ot_hbm_sm_pv_merge #(.PUBLISH(1),.RDREG(1),.RDMUT(RDMUT)) u_dut(.clk,.rst_n,.ev,.sum,.tag_d,.pv_v(d_pv_v),.pv_y(d_pv_y),
+    ot_hbm_sm_pv_merge #(.PUBLISH(1),.RDREG(DREG),.RDMUT(RDMUT),.TREG(TREG),.TRMUT(TRMUT)) u_dut(.clk,.rst_n,.ev,.sum,.tag_d,.pv_v(d_pv_v),.pv_y(d_pv_y),
         .pv_tag(d_pv_tag),.fault(d_fault),.pub_start,.pub_slot,.pub_v(d_pub_v),.pub_data(d_pub_data),.pub_word(d_pub_word),
         .pub_out_slot(d_pub_out_slot),.pub_tag(d_pub_tag),.fold_start,.fold_a,.fold_b);
     // reference publication stream delayed one edge
     reg q_v=0,q_fault=0; reg [31:0] q_data; reg [3:0] q_word; reg [2:0] q_slot; reg [15:0] q_tag;
     always @(posedge clk)begin q_v<=r_pub_v;q_data<=r_pub_data;q_word<=r_pub_word;q_slot<=r_pub_out_slot;q_tag<=r_pub_tag;q_fault<=r_fault;end
+    // expected DUT publication stream: reference delayed one edge when the DUT has RDREG 1, undelayed for DREG 0
+    wire e_v=DREG ? q_v : r_pub_v, e_fault=DREG ? q_fault : r_fault; wire [31:0] e_data=DREG ? q_data : r_pub_data;
+    wire [3:0] e_word=DREG ? q_word : r_pub_word; wire [2:0] e_slot=DREG ? q_slot : r_pub_out_slot; wire [15:0] e_tag=DREG ? q_tag : r_pub_tag;
     integer cyc=0,nodes=0,words=0,folds=0,pubs=0,evs=0,mism=0,first_mism=-1,reqc=-1,lat_bad=0;
     task automatic bad(input [255:0] what);
         begin mism=mism+1; if(first_mism<0)begin first_mism=cyc;$display("MISMATCH %0s cycle=%0d",what,cyc);end end
@@ -46,11 +49,11 @@ module tb_hbm_sm_pv_rdreg;
                 else if(r_pv_v && (d_pv_y!==r_pv_y || d_pv_tag!==r_pv_tag))bad("pv_y/tag");
                 if(r_pv_v)nodes=nodes+1;
             end
-            if(!q_fault)begin
-                if(d_pub_v!==q_v)bad("pub_v");
-                else if(q_v && (d_pub_data!==q_data || d_pub_word!==q_word || d_pub_out_slot!==q_slot || d_pub_tag!==q_tag))bad("pub data");
+            if(!e_fault)begin
+                if(d_pub_v!==e_v)bad("pub_v");
+                else if(e_v && (d_pub_data!==e_data || d_pub_word!==e_word || d_pub_out_slot!==e_slot || d_pub_tag!==e_tag))bad("pub data");
                 if(d_pub_v)words=words+1;
-                if(d_pub_v && words==1 && cyc-reqc!=3)lat_bad=lat_bad+1;
+                if(d_pub_v && words==1 && cyc-reqc!=2+DREG)lat_bad=lat_bad+1;
             end
             if(MODE==0 ? (d_fault!==r_fault) : !(d_fault===r_fault || d_fault===q_fault))bad("fault");
         end
@@ -110,8 +113,8 @@ module tb_hbm_sm_pv_rdreg;
         end
         @(negedge clk);ev=0;pub_start=0;fold_start=0;
         repeat(40)@(negedge clk);
-        $display("RDREG_LOCKSTEP RDMUT=%0d MODE=%0d seed=%0d cycles=%0d evs=%0d nodes=%0d pubs=%0d words=%0d folds=%0d first_lat_bad=%0d mismatches=%0d first=%0d ref_fault=%0d dut_fault=%0d",
-                 RDMUT,MODE,seed,cyc,evs,nodes,pubs,words,folds,lat_bad,mism,first_mism,r_fault,d_fault);
+        $display("RDREG_LOCKSTEP DREG=%0d TREG=%0d TRMUT=%0d RDMUT=%0d MODE=%0d seed=%0d cycles=%0d evs=%0d nodes=%0d pubs=%0d words=%0d folds=%0d first_lat_bad=%0d mismatches=%0d first=%0d ref_fault=%0d dut_fault=%0d",
+                 DREG,TREG,TRMUT,RDMUT,MODE,seed,cyc,evs,nodes,pubs,words,folds,lat_bad,mism,first_mism,r_fault,d_fault);
         if(mism==0 && lat_bad==0 && (MODE==1 || (nodes>0 && words>0 && folds>0)))$display("RDREG_LOCKSTEP PASS");
         else $display("RDREG_LOCKSTEP FAIL");
         $finish;
