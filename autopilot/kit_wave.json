@@ -4145,8 +4145,7 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
-   },
-   "kit_self_contained": "copy"
+   }
   },
   "s81": {
    "enabled": true,
@@ -19899,8 +19898,7 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
-   },
-   "kit_self_contained": "copy"
+   }
   },
   "s81_head": {
    "enabled": true,
