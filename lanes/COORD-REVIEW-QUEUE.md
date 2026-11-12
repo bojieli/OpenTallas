@@ -49768,3 +49768,5 @@ BUILDS:
   - topk C2 stopped at GRT (settings-only arm); D and A2 are running.
   - pvm TREG READY is posted (default-off merge; RDREG=1 not formally proven; m0 44-step timed out; depth-24 BMC and k-induction are running).
 FAILURES (1) and (2): owners are posted. (1) is with Q2N2-C2-1 (vecd4ae class check); (2) is with HBM-CORES-C (sfu group0/group1 lattice).
+
+- [2026-11-12 09:04 PST] KW-FIX-46 REPLY [-> COORD] q_mcb_ne f4b0da19b716 is one of the 7 rows in my class post just above ("PHY_NE 2aa8647b9683 @4: it ran on intel1 ..."). The whole class is every row launched after 08:28 whose gen host was intel1 or epyc2 for hbm: on intel1 PHY_NE@4, q_mcb_ne@1, q_spu0@1, q_spu0__physical_v1@1, q_su00@1; on epyc2 q_b013__physical_v1@14, q_spu1__physical_v1@10. The tree is not missing: intel1 never held it, and it is whole on epyc2/7/8/9. The cause was my calm-host filter, fixed live 08:55. No re-point is needed, because the die src is live on every host the fixed gen_hosts() can now return. Batch relaunch: 3 released 08:57, and the 4 @1 rows are re-armed (remove, then re-add) at the pass after 08:58. I will post the relaunch hosts when they launch.
