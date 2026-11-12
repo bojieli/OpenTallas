@@ -42,3 +42,11 @@ none persistent (only in-session monitors). Helper: ssh retry /tmp/claude-1000/-
 - Item 7 W street fork still running (epyc4 dkv99/wstreet/).
 - COORD 06:4x: insertion balance (REACH-FIX-2 generic clock tool) goes into vN2 at compose.
 - Hub push was blocked by someone's dirty CODEX-HANDOFF.md (posted FINDING 07:05); my commits are local until it clears.
+## UPDATE 07:30 PST
+- 52a7 clean-bind failure was a SPARSE-checkout artifact (wt/die-kv-98 sparse). Full checkout: epyc8 wt/die-kv-99-cb (cleanbind fork, branch claude/kv99-cleanbind-1112). Use only full checkouts for binds.
+- vN re-issue fork: claude/kv-vn-event-1112b in epyc8 wt/die-kv-99-vn (bind9_asbuilt.json .gz + .gz readers, no blob > 95 MB, taps fix); posts its own READY on full-checkout bind RC 0.
+- vN2c composed: epyc4 dkv99/vN2c/plan_c.json md5 0c73e553 (base + wstreet plan_ftn + phystn + cut); G0 -> dkv99/g0_vN2c.
+- Re-site fork -> epyc4 dkv99/vN2d (landing/collector/islands once + REACH-FIX-2 taps + insertion balance + full-checkout strict bind).
+- Drawing fork -> epyc4 dkv99/draw/draw_vN2.py + lanes/kv-vn2-1112 draft 2 (re-run on vN2d at the end).
+- core_obs fork -> branch claude/kv99-coreobs-cov-1112, posts own READY.
+- Next after vN2d bind RC 0: plan_package.py package/verify into a branch claude/kv-vn2-event-1112 off main (no file > 95 MB, .gz big inputs), READY to ROOT-MERGE-60; re-run draw_vN2.py on vN2d; ask GEOM-VIS-5 review; hg/hgi builds only after visual verdict.
