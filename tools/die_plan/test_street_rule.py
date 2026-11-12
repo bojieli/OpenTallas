@@ -388,3 +388,23 @@ def test_add_ft_regs_keeps_site_rows_aligned():
             f1["bit_sites_um"][j - 1][bit]                                  # taps.planned_sinks indexing
     (x, y), sites = f1["regs_um"][1][:2], f1["bit_sites_um"][0]
     assert sites == [[round(x, 4), round(y - 0.27, 4)], [round(x, 4), round(y + 0.27, 4)]]
+
+
+def test_sliver_rule_makes_slivers_streets(tmp_path):
+    """COORD 11-12: with sliver_rule=1 a sub-street gap between facing cores is an error whatever its pin count, and
+    legalize opens it to a full street (or keeps an abutment); the default keeps the WARN class."""
+    a = core("a", 0, 0, 100, 100, {})
+    b = core("b", 108.64, 0, 100, 100, {})                   # 8.64-um slot, no pins: the S81 leaf sliver
+    assert SR.pair_rule(a, b, CFG)["kind"] == "sliver"
+    on = dict(CFG, sliver_rule=1)
+    r = SR.pair_rule(a, b, on)
+    assert r["kind"] == "street" and r["need"] == 43.2 and r.get("sliver")
+    b["x"] = 100.0                                           # abutted: legal under the rule
+    assert SR.pair_rule(a, b, on)["kind"] == "abut"
+    b["x"] = 143.2                                           # a full street: legal
+    assert SR.pair_rule(a, b, on)["kind"] == "ok"
+    b["x"] = 108.64
+    V, c = SR.analyze(400.0, 200.0, [a, b], [[0], [1]], on)
+    assert c.get("street", 0) == 1 and "sliver" not in c
+    V, c = SR.analyze(400.0, 200.0, [a, b], [[0], [1]], CFG)
+    assert c.get("sliver", 0) == 1 and "street" not in c

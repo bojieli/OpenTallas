@@ -64,10 +64,13 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
-                add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="")
+                add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="", sliver_rule=0)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
+# SLIVER RULE (COORD 11-12, VISLAYOUT3-S81-LEAF): --set sliver_rule=1 makes "no two facing core edges closer than one
+# street" a hard rule: a core-core gap in [abut_um, street) is a STREET violation even when (almost) no pins face it,
+# so check counts it as an error and legalize widens it to need_um (>= street_min_um).  Default 0 keeps the WARN class.
 
 
 def need_um(pins, cfg):
@@ -155,7 +158,10 @@ def pair_rule(a, b, cfg):
     nd = need_um(pa + pb, cfg)
     r.update(need=nd, kind="ok" if gap >= nd - EPS else "street")
     if r["kind"] == "street" and pa + pb < cfg["pinface_min"]:
-        r["kind"] = "sliver"          # (almost) no pins into it: WARN only (tap-illegal / wasted area), never widened
+        if cfg.get("sliver_rule"):
+            r["sliver"] = True        # sliver rule on: a sub-street slot between facing cores is a street violation
+        else:
+            r["kind"] = "sliver"      # (almost) no pins into it: WARN only (tap-illegal / wasted area), never widened
     return r
 
 
