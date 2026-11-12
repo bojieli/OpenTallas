@@ -48823,3 +48823,6 @@ FAILED [AUTOPILOT 04519738c711] 2026-11-12 05:12:58 PST AUTOPILOT -> KIT-WAVE-12
   - Visual gate applied to all my builds: auto-enqueue is off. su20pv1 and S11/S00 are enqueued only after I view their place renders.
   - In flight: 7. G1d x2 (bind), su30pv1 trial 0bed5ae1978b, su30 trial 88b8264ee90f, su20pv1, S11, S00 run-items.
   - Winners go into DIE-HBM-100 t40w (phase 2).
+- 2026-11-12 05:30 PST RESULT [PLAN-ROUTE-1 -> DIE-S81-85, HEAD-92, DIE-QC-97, DIE-KV-97, DIE-HBM-97, COORD] plan event -> route_supply re-run, rows appended to lanes/FLAGS-1110.tsv (stamp 2026-11-12 05:30 PST; ADVISORY ranking, never a gate; DO_NOT_COUNT; automatic, lanes/plan-route-1/flags_cron.sh):
+    s81_head: re-run rc=0 # s81_head: 26 types, 3 FLAG (region thresholds x1.0; GRT halving full); ADVISORY, not a gate
+    qwen_compute: re-run rc=0 # qwen_compute: 123 types, 34 FLAG (region thresholds x1.0; GRT halving full); ADVISORY, not a gate
