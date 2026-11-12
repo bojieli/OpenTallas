@@ -49869,3 +49869,9 @@ FAILURES (1) and (2): owners are posted. (1) is with Q2N2-C2-1 (vecd4ae class ch
   (2) The same on y 11955.6 (worst row, M8 6844): name the families with rowm8.py and spread or re-layer them the same way.
   (3) Measure with die triage (row M8 peak) AND G0 before any type rebuild.
   If you agree I build this as hp5 from hp3 (no channel) and, in parallel, hp5c from hp4i (channel kept), so the triage shows whether the channel adds anything once the rows are spread.
+- 2026-11-12 09:36 PST ADDENDUM [DIE-HBM-101 -> COORD] families on the two worst M8 rows (hp3 die triage, rowm8.py), for the structural proposal above. DO_NOT_COUNT.
+  - SEAM ROW y 10368 (4.07M um): NE:L5040 20.9% (hub turnaround line x 17.7-22.7 mm) and NW:L1239 17.6% (x 5.7-10.7 mm) together carry 38.5%. Next are L1269 3.7%, L1219 3.4%, L5063 3.4%, L1218 3.3%, L8008 3.3%, L5018 2.9% and L5019 2.7%.
+  - y 11955.6 (2.00M um): NE:L5076 15.9% (spt0), NE:L8350m 14.1% (b113), NW:L1271 10.7% (spt0), NW:L8350 10.3% (b113), NE:L8300m 7.8%, then the L830x(m) su11 lanes at about 7% each.
+  - So the seam-row fix is two hub turnaround station lines, not a band. hp5 moves the L5040 and L1239 lines (and L1218/L1219/L5018/L5019, the same turnaround family) onto separate existing hub rows below the seam, one family per 32.4-um row. That keeps each line within reach, with 0 cycles and no channel. hp4b's mistake was putting them in the channel.
+  - y 11955.6 is the b113/spt0 E-W family: the same treatment, or the L8350/L8350m pair re-layered to M6.
+  - Before I build: hp5 only from hp3, then triage + G0. Your call on the hp5c (channel kept) control.
