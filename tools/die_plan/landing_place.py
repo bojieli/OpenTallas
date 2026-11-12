@@ -421,6 +421,12 @@ def _start_origin_xy(t):
     return _centre(rect) if rect is not None else None
 
 
+def _tcl_q(text):
+    """KW-FIX-45 11-12: a note inside a Tcl double-quoted string must not be evaluated: [x, y] (a Python list repr) is command
+    substitution ('invalid command name "72.38399999999999,"' at global_place.tcl); escape \\ " [ ] $ so the puts prints it."""
+    return "".join("\\" + c if c in '\\"[]$' else c for c in str(text))
+
+
 # CLAND-FACEWIN-1 11-11 (QC cbn_q01__cldd6ea846 kw43 hcut1111 3_3 "OT_CLAND no legal nonoverlapping row/site in
 # reserved band for u_bound.u_cland_fstart_rsf_o ... (writer-face:rsf_o)"): the final writer-face relay window is the
 # fstart pin +-4.32 um, drawn blind.  rsf_o's pin (237.09, 2.66) sat on the 64 FIRM FT bit sites of a00 stage 7
@@ -697,7 +703,7 @@ def tcl(P,tn,macro_moves=None):
                 x,y=s['xy_um'];i=s['index']
                 status.extend([(f'cland_dn_trained_{i}',x,y),(f'cland_dn_guard_{i}',x,y)])
     groups, override_check = _group_rect_overrides(P.types[tn], groups)
-    out=[f'puts "OT_CLAND face-window {n}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
+    out=[f'puts "OT_CLAND face-window {_tcl_q(n)}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     for p,r,tag in groups:
         # Optional raw copies only exist when the original START tap is gated.
         if tag=='raw-copy-optional':continue
@@ -724,7 +730,7 @@ def _dataflow_tcl(tn,c,t=None):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
     groups, override_check = _group_rect_overrides(t or {}, groups)
-    out=[f'puts "OT_CLAND face-window {n}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
+    out=[f'puts "OT_CLAND face-window {_tcl_q(n)}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     out+=['  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}' for p,r,tag in groups]
     out+=['}','set cland_optional_groups {','}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
