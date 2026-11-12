@@ -3138,6 +3138,25 @@
     "source_commit": "30d2553b62",
     "read_at_commit": true
   },
+  "ot_hgi_sfu_opsa_group1__sreg": {
+    "defines": [],
+    "params": {
+      "SREG": 1
+    },
+    "util": 0.45,
+    "macros": [
+      "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "source": "HBM-FORM-SPLIT d44v part 27: tile of ot_hgi_sfu_core_split3__opstore_a; bench results/die_hbm_1105/form_split/p27; HBM-REFORM-B9 log-depth lgroup2 selects (ot_hgi_su_lgroup2_lf, yosys equiv vs ot_hgi_su_lgroup2); HBM-REFORM-B9 RE-FORM lgroup2_lf BREG=1 (registered bank inputs, rd +1 edge); HBM-REFORM-B10 IREG+FREG (registered tile inputs + registered per-bank fault terms, rd +2 / flt +2); HBM-CORES-B 11-12 OPSA1 SREG: SREG=1 on ot_hgi_sfu_opsa_group1 (lgroup2_lf SREG: every bank access + select +1 edge, scalar response follows; rd_q +1 edge, flt +1 edge; SREG 0 == main, yosys equiv; proofs/opsa1_sreg_1112)",
+    "top": "ot_hgi_sfu_opsa_group1",
+    "files": [
+      "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_su_lgroup2_lf.sv",
+      "rtl/hbm_accel/cores_split/reform_1105s/opstore/ot_hgi_sfu_opsa_group.sv"
+    ],
+    "source_commit": "d8c51ee924",
+    "read_at_commit": true
+  },
   "ot_hgi_sfu_opsa_group0": {
     "defines": [],
     "params": {},
