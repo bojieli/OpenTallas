@@ -757,7 +757,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     # a legalised hop still longer than 1.15 rep_um (a cut that had to slide far off a macro) gets a local repeater at
     # its free midpoint; the STA balance pads every other path up by that one stage (pad=sta only)
     split = 0
-    if pad == "sta":
+    if pad in ("sta", "leg"):              # pad=leg: the extra stage is a regional residual, regeq closes it
         tap_xy = {"port:" + t["port"]: tuple(t["xy"]) for t in tap_rows}
         extra = defaultdict(list)
         for _ in range(3):
@@ -778,13 +778,14 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 if max(g1, g2) >= geo - 1e-3:
                     continue
                 hn = T.cell(f"h{split}_{n['drv']}", x, y, "rep", None)
-                n["branches"][0] = (max(g1, 1.0), layer, hn, g1)
+                hp = max(0.0, L - geo) / 2 if pad == "leg" else 0.0     # pad=leg: the leg pad stays on the hop
+                n["branches"][0] = (max(g1, 1.0) + hp, layer, hn, g1)
                 if load.startswith("port:"):            # the port net keeps its name on the last hop
-                    nets.append(dict(name=n["name"], drv=hn, branches=[(max(g2, 1.0), layer, load, g2)]))
+                    nets.append(dict(name=n["name"], drv=hn, branches=[(max(g2, 1.0) + hp, layer, load, g2)]))
                     n["name"] = f"w_{hn}"
                     extra[nets[-1]["name"]].append(n["name"])
                 else:
-                    nets.append(dict(name=f"w_{hn}", drv=hn, branches=[(max(g2, 1.0), layer, load, g2)]))
+                    nets.append(dict(name=f"w_{hn}", drv=hn, branches=[(max(g2, 1.0) + hp, layer, load, g2)]))
                     extra[n["name"]].append(f"w_{hn}")
                 split += 1
         for t in tap_rows:
