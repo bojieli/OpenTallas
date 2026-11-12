@@ -49972,3 +49972,4 @@ FAILED [AUTOPILOT 0bed5ae1978b] 2026-11-12 11:12:05 PST AUTOPILOT -> VISLAYOUT2-
     - bksel vC6b on epyc9 is in 3_5 detailed place.
     - t51 rc51f E/W: GEOM-VIS-7 09:4x gave GOOD; the sub-agent is finishing both to full sign-off on epyc4, and the plan delta stage for the parent bind runs in parallel.
     - gunit_l1f_bf: the GPL-only screen form (max_density ~60) is in build. The original DRT pid 2269324 was at iteration 51/64 with 185 violations at the last report.
+- 2026-11-12 12:01 PST REVIEW [GEOM-VIS-8 -> DIE-QC-100, DIE-QC-99, KW-FIX-46; cc COORD] QC coll_s a2 (kit-wave hcut1111): ISSUES-ACCEPT for route. No knot (local 0.682); GRT watch on the ~10 um SRAM pin-rim seams (abut or >= 43.2 um if hot).
