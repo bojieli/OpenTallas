@@ -1,0 +1,101 @@
+{
+ "base_sha256": "6391dea6a0b38710e0da6365e279d9bd3e89ab50f3777cc94c8765546ee06b71",
+ "new_sha256": "e9ae418c06ca08cbddb07d328746d63e5ffc25b85b8efe746eb39b1726abda57",
+ "changed_paths": 48,
+ "by_class": {
+  "clock": {
+   "n": 4,
+   "paths": [
+    "partition_types/NW_io/clock/tap_um/0",
+    "partition_types/NW_io/clock/tap_um/1",
+    "partition_types/NE_io/clock/tap_um/0",
+    "partition_types/NE_io/clock/tap_um/1"
+   ]
+  },
+  "ft_bands_windows": {
+   "n": 14,
+   "paths": [
+    "partition_types/NW_io/buses/name=L8007_o/window_um/0",
+    "partition_types/NW_io/buses/name=L8007_o/window_um/1",
+    "partition_types/NW_io/buses/name=L8008_i/window_um/0",
+    "partition_types/NW_io/buses/name=L8008_i/window_um/1",
+    "partition_types/NW_io/internal_stations",
+    "partition_types/NE_io/buses/name=L8006_o/face",
+    "partition_types/NE_io/buses/name=L8006_o/window_um/0",
+    "partition_types/NE_io/buses/name=L8006_o/window_um/1",
+    "partition_types/NE_io/buses/name=L8006_o/layers/0",
+    "partition_types/NE_io/buses/name=L8006_o/layers/1",
+    "partition_types/NE_io/internal_stations",
+    "latency/lanes/L8006/stations",
+    "latency/lanes/L8007/stations",
+    "latency/lanes/L8008/stations"
+   ]
+  },
+  "notes": {
+   "n": 5,
+   "paths": [
+    "partition_types/NW_io/note",
+    "partition_types/NE_io/note",
+    "lanes/id=L8007/note",
+    "lanes/id=L8008/note",
+    "lanes/id=L8006/note"
+   ]
+  },
+  "other": {
+   "n": 15,
+   "paths": [
+    "ports",
+    "lanes/id=L8007/ports",
+    "lanes/id=L8007/fixed_cycles",
+    "lanes/id=L8008/ports",
+    "lanes/id=L8008/fixed_cycles",
+    "lanes/id=L8006/ports",
+    "lanes/id=L8006/fixed_cycles",
+    "latency/lanes/L8006/faces",
+    "latency/lanes/L8006/fixed",
+    "latency/lanes/L8007/faces",
+    "latency/lanes/L8007/fixed",
+    "latency/lanes/L8008/cycles",
+    "latency/lanes/L8008/faces",
+    "latency/lanes/L8008/fixed",
+    "latency/lanes/L8008/natural"
+   ]
+  },
+  "outline": {
+   "n": 2,
+   "paths": [
+    "partition_types/NW_io/outline_um/1",
+    "partition_types/NE_io/outline_um/1"
+   ]
+  },
+  "reset": {
+   "n": 5,
+   "paths": [
+    "partition_types/NW_io/reset/tap_um/0",
+    "partition_types/NW_io/reset/tap_um/1",
+    "partition_types/NE_io/reset/tap_um/0",
+    "partition_types/NE_io/reset/tap_um/1",
+    "reset/relay_lockup/types"
+   ]
+  },
+  "type_split": {
+   "n": 3,
+   "paths": [
+    "partition_types/NW_iorly",
+    "partition_types/NE_iorly",
+    "partitions"
+   ]
+  }
+ },
+ "types_changed": [
+  "NE_io",
+  "NE_iorly",
+  "NW_io",
+  "NW_iorly"
+ ],
+ "types_removed": [],
+ "types_added": [
+  "NE_iorly",
+  "NW_iorly"
+ ]
+}
