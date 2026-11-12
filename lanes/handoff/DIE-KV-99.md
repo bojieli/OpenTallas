@@ -1,4 +1,4 @@
-# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 13:35 PST
+# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 13:40 PST
 ## 1 Scope
 KV vN2 hand-floorplan event + vN re-issue. Items: 1 census DONE, 2 pg rects DONE, 3 hgi_EN_0 cut DONE, 4 hroot aspect exception (no edit), 5 21-type merge DROPPED (not exact; tool item), 6 REACH-FIX taps (cap 1200, hgi_v8 39) DONE in pipeline / insertion balance = die_clock stage by REACH-FIX-2 (KV PHY last-mile fix in progress there), 7 hg+hgi W street DONE, 8 sys_c stations DONE (PHY exemption ASK open), 9 drawing draft 2 posted (GEOM-VIS-6 FORM GOOD + 5 conditions), GEOM-VIS-6 cond 5 phy re-face DONE (option B).
 ## 2 Worktrees (epyc8 repo /srv/opentallas-scratch2/claude/wt/die-kv-98 = SPARSE, never bind from it)
@@ -40,3 +40,7 @@ none persistent.
 - vN2e run 1 G0 = 7 errors (see queue 13:35). Run 2 RUNNING on epyc4: nohup bash /srv/opentallas-scratch2/claude/dkv99/resite_e2.sh (steps in vN2e/work/steps2.log; result G0 dkv99/g0_vN2e2, diff work/g0_slot2.txt). Inputs: work/p1b.json (p1 minus 8 stale bit_sites + ft_sites_unblock); work/ now has symlinks to all plan side dirs (pins/ etc.) -- REQUIRED or reach_fix silently skips the hg family.
 - lat_sync helper: /srv/opentallas-scratch2/claude/dkv99/lat_sync.py (latency.lanes cycles := plan for changed lanes only).
 - If run 2 G0 shows NEW errors: fix by class; else strict bind (wt/die-kv-99-cb overlay) -> package -> READY.
+## UPDATE 13:40
+- RUN 3 = event candidate: epyc4 nohup bash /srv/opentallas-scratch2/claude/dkv99/resite_f.sh (tools /dev/shm/dkv99/m3 = main 59f6e46846 + coreobs + phystn + REACH-FIX-2 54d2a1ec4b fixed_cycles; steps vN2f/work/steps3.log; plan vN2f/plan_c.json; G0 dkv99/g0_vN2f; diff vN2f/work/g0_slot3.txt). Run 2 (vN2e, lat_sync) is a cross-check only.
+- Bind/package tree: epyc8 /srv/opentallas-scratch2/claude/wt/die-kv-99-e (branch claude/kv-vn2-event-1112 at main 59f6e46846, near-full sparse). Overlay vN2f plan_c.json + eW_sidecar.json into physical/die_plan/qwen_kvsys/plan_of_record, strict bind (model: epyc8 dkv99/cleanbind/bind_vN.sh, asbuilt from inputs/bind9_asbuilt.json.gz), then plan_package.py, commit, push, READY + plan event (say which latency refresh was used).
+- If 54d2a1ec4b changes in train 11: re-run run 3 on the merged main.
