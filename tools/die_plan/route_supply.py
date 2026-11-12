@@ -91,6 +91,16 @@ CALIB_HALVING = "edge_outline"
 CALIB_HOTSPOT_FAIL = 1.0
 
 
+
+def _bin_lo(v, b):
+    """floor(v / b) robust to float error at bin edges (v on a multiple of b maps to that bin)."""
+    return int(math.floor(v / b + 1e-6))
+
+
+def _bin_hi(v, b):
+    """ceil(v / b) robust to float error at bin edges."""
+    return int(math.ceil(v / b - 1e-6))
+
 def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
     """GRT-PATCH-1 'edge_outline' image (OT_GRT_TRANSITION_MODE=edge_outline, grtT3 sha256:2d12164ad3f6): a stock-halved
     tile stays halved only within K gcells of the macro INSTANCE bbox boundary or within K of a macro SIGNAL pin (PG
@@ -1124,8 +1134,11 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         occm = macro_cov > 0.5
 
         def free_area(r):
-            a0, b0 = int(max(0, r[0]) // b), int(max(0, r[1]) // b)
-            a1, b1 = int(math.ceil(min(W, r[2]) / b)), int(math.ceil(min(H, r[3]) / b))
+            # bin index with a 1e-6 snap: float floor division (1393.2 // 10.8 == 128.0, 1382.4 // 10.8 == 128.0) made
+            # a one-bin W/S grow step add zero free area, so the ring never grew W/S past the first step and ran
+            # down the outline as a 50 um column (col_h9_r0 xo_i0 ring V 1.82 at the E edge)
+            a0, b0 = _bin_lo(max(0, r[0]), b), _bin_lo(max(0, r[1]), b)
+            a1, b1 = _bin_hi(min(W, r[2]), b), _bin_hi(min(H, r[3]), b)
             return float((~occm[b0:b1, a0:a1]).sum()) * b * b
 
         rr = [x0, y0, x1, y1]
@@ -1155,8 +1168,8 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         # ring_tracks_per_bit x bits wires cross every cut of the ring area, spread over the cut length
         g.area_density((x0, y0, x1, y1), cfg["ring_tracks_per_bit"] * bits / hgt,
                        cfg["ring_tracks_per_bit"] * bits / wid)
-        i0, i1 = int(x0 // b), int(math.ceil(x1 / b))
-        j0, j1 = int(y0 // b), int(math.ceil(y1 / b))
+        i0, i1 = _bin_lo(x0, b), _bin_hi(x1, b)
+        j0, j1 = _bin_lo(y0, b), _bin_hi(y1, b)
         ring_cells[j0:j1, i0:i1] = True
         ring_bits += bits
     DH, DV = g.demand()
