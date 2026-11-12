@@ -970,17 +970,14 @@
    "note_hosts_1105": "KW-FIX-10 2026-11-05 04:1x COORD disk rules: epyc2 out (root 507 <520), intel1 out (scratch2 48 <100). epyc2 back at root >=530 and scratch2 >=150; intel1 back at scratch2 >=100. Epyc4 new attempts via 1105e4 symlink to scratch3 stay; stop at root 540; back to scratch2 at >=250.",
    "hosts_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "place_prefer_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "gen_hosts_base": [
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "gen_host_base": "epyc7",
    "counted_items": [
@@ -3756,6 +3753,20 @@
     "intel1",
     "intel2",
     "epyc4"
+   ],
+   "hosts_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "place_prefer_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "gen_hosts_base_prev_kw45_nohub": [
+    "intel1",
+    "intel2"
    ]
   },
   "s81": {
@@ -6356,7 +6367,6 @@
    "hosts": [
     "epyc7",
     "epyc9",
-    "intel2",
     "epyc2"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
@@ -7211,13 +7221,11 @@
    },
    "hosts_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "place_prefer_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "gen_hosts_base": [
     "epyc2"
@@ -19945,6 +19953,22 @@
     "intel1",
     "intel2",
     "epyc4"
+   ],
+   "hosts_prev_kw45_nohub": [
+    "epyc7",
+    "epyc9",
+    "intel2",
+    "epyc2"
+   ],
+   "hosts_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "place_prefer_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
    ]
   },
   "s81_head": {
@@ -20417,17 +20441,14 @@
    },
    "hosts_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "place_prefer_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "gen_hosts_base": [
     "intel1",
-    "intel2",
     "epyc2"
    ],
    "gen_host_base": "epyc7",
@@ -21006,6 +21027,21 @@
     "intel1",
     "intel2",
     "epyc4",
+    "epyc2"
+   ],
+   "hosts_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "place_prefer_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "gen_hosts_base_prev_kw45_nohub": [
+    "intel1",
+    "intel2",
     "epyc2"
    ]
   },
@@ -22776,13 +22812,11 @@
    "note_recut_f": "KW-FIX-16 13:1x COORD 13:00 + 13:0x: one recut of QC rows not past GRT on tag f; cancel_superseded true stops live old-block rows (13:1x read: 60 live QC rows, 0 with 5_1_grt.odb); coll_s held (DIE-QC-79). COORD correction 13:1x: coll_s cut ONCE on tag f (RE-FORM build), hold removed; no further cuts of this form (no retry entry will be added).",
    "hosts_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "place_prefer_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "gen_hosts_base": [
     "epyc2"
@@ -28570,6 +28604,16 @@
     "intel1",
     "intel2",
     "epyc4"
+   ],
+   "hosts_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "place_prefer_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
    ]
   },
   "hbm": {
@@ -30459,17 +30503,14 @@
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
    "hosts_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "place_prefer_base": [
     "epyc2",
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "gen_hosts_base": [
-    "intel1",
-    "intel2"
+    "intel1"
    ],
    "gen_host_base": "epyc7",
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
@@ -43113,6 +43154,20 @@
     "intel1",
     "intel2",
     "epyc4"
+   ],
+   "hosts_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "place_prefer_base_prev_kw45_nohub": [
+    "epyc2",
+    "intel1",
+    "intel2"
+   ],
+   "gen_hosts_base_prev_kw45_nohub": [
+    "intel1",
+    "intel2"
    ]
   }
  },
@@ -43130,19 +43185,16 @@
  "note_substep_1105": "KW-FIX-14 COORD 11:2x: SUBSTEP-1 off until the hook reads the PROTECTED union (lanes/ + root PROTECTED-DBS.txt) | 11-05 11:2x KW-FIX-15: back on after protunion I122 (main 692b0ef4c36) on origin, COORD 11:17.",
  "hosts_base": [
   "epyc2",
-  "intel1",
-  "intel2"
+  "intel1"
  ],
  "place_prefer_base": [
   "epyc2",
-  "intel1",
-  "intel2"
+  "intel1"
  ],
  "note_hosts_kw17": "KW-FIX-17 15:4x COORD 15:3x: per-host disk exclusion; epyc4 (scratch2 93) and epyc2 (scratch2 96) out of place hosts, global stop lifted; *_base = full lists, watcher kw17/disk_hosts.sh restores a host at scratch2 >=100",
  "_kw17_ok": [
   "epyc2",
-  "intel1",
-  "intel2"
+  "intel1"
  ],
  "note_onboard_epyc56": "KW-FIX-18 2026-11-05 19:5x (COORD: epyc5/epyc6 LIVE in ot-run, ~677 GB admit, load 0/128; scratch2 1.7/0.8 TB): PLACE hosts += epyc5, epyc6 FIRST in place_prefer for every die (preferred over intel1). gen_hosts follow when the src_16b rsync from epyc4 lands there.",
  "note_mlpt_kw19": "KW-FIX-19 21:2x: max_launch_floor 40 (disk watcher kw17/disk_hosts.py no longer lowers the per-tick cap below it; its epyc4-disk limit predates gen on epyc5/epyc6). Set back to 0 when the GEN-HOST-DEPS batch is out.",
@@ -43823,5 +43875,21 @@
   "epyc8",
   "epyc9"
  ],
- "note_kw45_epyc9off": "KW-FIX-45 11-11 22:4x COORD: epyc9 40 waiters / 670 GB, load 136/96: no new gens/places to epyc9 until its waiters drop below 10; running jobs stay. Revert: hosts/place_prefer <- *_prev_kw45_epyc9off."
+ "note_kw45_epyc9off": "KW-FIX-45 11-11 22:4x COORD: epyc9 40 waiters / 670 GB, load 136/96: no new gens/places to epyc9 until its waiters drop below 10; running jobs stay. Revert: hosts/place_prefer <- *_prev_kw45_epyc9off.",
+ "hosts_base_prev_kw45_nohub": [
+  "epyc2",
+  "intel1",
+  "intel2"
+ ],
+ "place_prefer_base_prev_kw45_nohub": [
+  "epyc2",
+  "intel1",
+  "intel2"
+ ],
+ "_kw17_ok_prev_kw45_nohub": [
+  "epyc2",
+  "intel1",
+  "intel2"
+ ],
+ "note_kw45_nohub": "KW-FIX-45 11-12 COORD ruling 4 (TAP-SITE-1: a place job ran on the hub intel2): intel2 and localhost removed from every hosts / place_prefer / gen_hosts list (*_base and _kw17_ok included); prev copies *_prev_kw45_nohub. Code guard: branch kw-fix-45-hub-guard (ot-run --exclude-hosts, place refuses the hub)."
 }
