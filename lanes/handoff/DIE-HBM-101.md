@@ -1,4 +1,4 @@
-# DIE-HBM-101 lane handoff (HBM die owner, phase 2, ~96 threads). Updated 2026-11-12 07:10 PST.
+# DIE-HBM-101 lane handoff (HBM die owner, phase 2, ~96 threads). Updated 2026-11-12 07:45 PST.
 
 ## 1 Scope
 Single HBM owner for phase 2. Succeeds DIE-HBM-100, HBM-HANDPLAN-1, DIE-LAYOUT-HBM, VISLAYOUT2-HBM, CORES-HBM-1, HBM-CORES-B and the hub/root/stale lanes. HBM is at 1/81 types and 89/119 cores signed off.
@@ -20,7 +20,8 @@ Core builds (check with: intel2 `grep -a "ot-run: RAN\|SIGNOFF" ~/cores-hbm-1-lo
 - vp4_banks_cp vPose3G / vPose3GD: epyc7 .../cores-hbm-1/ot_hgi_dma_back_static_vp4_banks_cp/{vPose3G,vPose3GD}, detail route at 06:10; logs vp4cp_vPose3G(D).otrun.log
 - idx_topk D (chan_block + evac): epyc9 .../ot_hbm_idx_topk_link_static/genD/..-D, PAST DPL, CTS at 06:10; topk_D.otrun.log. A2 (CTS) and C2 (GRT) are settings fallbacks: if D signs off, cancel neither, just let them finish.
 - fused_lane_c S3C: epyc8 .../hnx_fused_lane_c/flc_S3C, GRT; flc_S3C.otrun.log
-- q2n2_vm_core A/B: epyc9 .../ot_hfd_coll_q2n2_vm_core/kit{A,B}/..., route; q2n2_{A,B}.otrun.log
+- q2n2_vm_core A ENDED NOT SIGNED (setup -280.6, hold -324.37, route render BAD: N-face pile; posted). B still in route (q2n2_B.otrun.log).
+- q2n2 FORM C (COORD ruling, parallel to B): kit epyc9 .../ot_hfd_coll_q2n2_vm_core/kitC/ot_hfd_coll_q2n2_vm_core_1dd834f4b149-die-hbm-101-C, GOAL=place, log q2n2_C.otrun.log. Pins pins_q2n2_formC.json from q2n2_repin_hbm101.py, gen script genC.sh (cd wt, git 6d5646ac63). RULES: when place lands, view run/layout_review/place/density.png and post the path to GEOM-VIS-5; after GOOD / ISSUES-ACCEPT resume with `bash ./run_kit_hbm.sh $K finish 48 8` through ot-run (same env as the launch line). If B signs off clean, cancel C (kill only its own ot-run unit). +1 cycle on writer_kq0-7 is DECLARED; the q_hub_ne pins/window update goes into t40w.
 - svgr_top A (epyc8 formA) / B (epyc9 formB): GRT; svgr_{A,B}.otrun.log
 - rxbm3 SA/SB: epyc7, queued on the load gate; rxbm3_S{A,B}.otrun.log
 VISLAYOUT2 (intel2 drivers under /srv/opentallas-scratch2/claude/vislayout2-hbm/kw/<item>/drv.log; the drivers STOP at place, and enqueue is manual after viewing the place density):
@@ -39,6 +40,9 @@ HBM-CORES-B (agent adf5204cb4034d7c1, LIVE, reports to DIE-HBM-101; its handoff 
 - kshare LCREP 1973ee13bd: HELD on LCREP=0 equivalence; the fork a99fe9538ce71ed45 is running eq0f (pairs the renamed shared regs). ksh_abcrl3 / ksh_pfrvl3 are building on epyc8. ksh_pfrvl2 ended NOT SIGNED (TT -4.69, FF hold -199.96, sdc -152.46, DRC 0); the core-owned vs port-start hold split is still open.
 - OPSA1 SREG d8c51ee924: READY already posted (by DIE-HBM-100). opsa1_SREG is building on epyc9 (760.32x233.28); on a GRT congestion fail, the outline-growth call is mine (pre-approved; size it from the GRT map).
 - b128_canonT / canonU (tie clone) on epyc7. Renders/verdicts due: opsbg_E, q3bc_ISS2EM, dtap_rb, opsa0_B.
+
+WBQ (HBM-WBQ-QUAL-1 reports to me; handoff ~/coord/lanes/handoff/WBQ.md): RULING posted 07:4x. ADOPT the RTL fix (a write-done with 0 matching outstanding writes faults within 2 fifo_clk). kit_g0_cpl ended NOT SIGNED (setup -38.07 on 2 endpoints, hold -85.59 on 1086, DRC 6). Next: WBQ-QUAL makes the RTL change + bench + mutant and posts READY; HBM-CORES-C builds the new g0 kit with --clock-pin-landing on, after classifying the cpl hold/DRC.
+HBM-CORES-B update 07:4x: RDREG=0 equivalence PROVEN (7092/7092, 8321/8321, u_stack cut). BMC m0/m2/m3 time out at about 08:50; m1 FAILED as required. If m0 times out: k-induction on the lock-step relation (my choice); stub-fadd BMC is second.
 
 ## 4 Watchers (re-arm)
 - `bash <scratch>/hbm/w101.sh` (background; exits with one line per new build end, VL2 driver end or trial end; seen file w101.seen). Re-run after each event.
