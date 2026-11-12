@@ -15,7 +15,8 @@
 //    a hold edge is issued once.  Outside fetching adv_x is 0 and nothing changes (no hold edges).
 // Issue rate x0.5 (+1 clk per issued row); uop contents / order, fault and the pin interface unchanged.
 // Default-off variant module (ot_hgi_coll_issuer_m256v8 is unchanged): selected by -DOT_COLL_ISSUER256_ISS2E in
-// ot_hfd_coll_q3_hard_v8x_s.sv.  Mutants: OT_COLL_ISS8E_MUT_{RELOAD,SWAP,NOFWD} (as v8) and _ISS2E_{RCE,NOGATE,NOFR}.
+// ot_hfd_coll_q3_hard_v8x_s.sv.  Mutants: OT_COLL_ISS8E_MUT_{RELOAD,SWAP,NOFWD} (as v8) and _ISS2E_{RCE,NOGATE,NOFR};
+// optional -DOT_COLL_ISS8E_BANK_RQREG = SF1 B early programme-bank read (mutant _RQREG_ADDR).
 // Proof: tb_hgi_coll_issuer_v8r256_iss2e_lockstep.sv (lock-step vs ot_hgi_coll_issuer_m256v8, EQ_CYCLE_SHIFTED),
 // iss2e_split_eq.ys (f_cs + f_fin == f_take, all inputs), formal_iss2e.ys (k-induction of the split invariant).
 module ot_hgi_coll_issuer_m256v8e (
@@ -188,8 +189,24 @@ module ot_hgi_coll_issuer_m256v8e (
  // ---------------- programme banks (data <= v1 ? word : 0 = the v7 uop_v mask) ----------------
  wire [1535:0] uop;
  wire [15:0] vmb[0:2];assign vmb[0]=vm0;assign vmb[1]=vm1;assign vmb[2]=vm2;
+ // OT_COLL_ISS8E_BANK_RQREG (HBM-CORES-B SF1 B form (b), patch_sf.py section B, carried into ISS2E): the bank macro
+ // reads one edge early (row = fetch_pc next state, ce = fv_c next state = rcp[1] && fch_c[0] && fr_q) and rd_out is
+ // registered once inside the bank, so the data register (AND vm) sees the same word on the same edge; uop_v / busy /
+ // done / uop_d1 timing unchanged.  An early read needs fch_c[0] (busy), a write needs !busy_r && !start_q: never both.
+`ifdef OT_COLL_ISS8E_BANK_RQREG
+`ifdef OT_COLL_ISS8E_MUT_RQREG_ADDR
+ wire [7:0] bank_row=fetch_pc;                                       // mutant: early read of the old row
+`else
+ wire [7:0] bank_row=fch_c[3] ? pc : fetch_pc;                       // fetch_pc next state
+`endif
+ wire bank_rv=rcp[1] && fch_c[0] && fr_q;                            // fv_c next state (all 3 banks)
+`endif
  for(genvar b=0;b<3;b=b+1)begin:g_mem
+`ifdef OT_COLL_ISS8E_BANK_RQREG
+  ot_hgi_coll_program_bank256me u_bank(.clk(clk),.read_v(bank_rv),.read_row(bank_row),.write_v(write_v[b]),
+`else
   ot_hgi_coll_program_bank256me u_bank(.clk(clk),.read_v(fv_c[b]),.read_row(fetch_pc),.write_v(write_v[b]),
+`endif
    .write_row(write_row),.write_data(assemble),.vm(vmb[b]),.data(uop[b*512+:512]));
  end
  // ---------------- loop counter reads ----------------
@@ -417,7 +434,14 @@ module ot_hgi_coll_program_bank256me(
   .clk(clk),.r_ce_in(read_v),.r_addr_in(read_row),.rd_out(rq_hi),
   .w_ce_in(write_v),.w_addr_in(write_row),.wd_in(write_data[511:256]),.w_mask_in({256{1'b1}}),
   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
- wire [511:0] rq={rq_hi,rq_lo};
+ wire [511:0] rq;
+`ifdef OT_COLL_ISS8E_BANK_RQREG
+ reg [255:0] rq_lo_r,rq_hi_r;                                        // SF1 B: the macro read registered once
+ always @(posedge clk)begin rq_lo_r<=rq_lo;rq_hi_r<=rq_hi;end
+ assign rq={rq_hi_r,rq_lo_r};
+`else
+ assign rq={rq_hi,rq_lo};
+`endif
  for(genvar j=0;j<16;j=j+1)begin:g_m
   always @(posedge clk)data[j*32+:32]<={32{vm[j]}} & rq[j*32+:32];
  end
