@@ -182,6 +182,13 @@ def _gutter_block_um(budgets, tn):
     return v
 
 
+def _row_sliver_um(budgets):
+    """KW-FIX-45 11-11 ROW-SLIVER class (row_sliver_block.tcl, q_b011 DPL-0033): the minimum free row-segment width in um below which a
+    placement blockage is created, or None (default).  GEN env OT_ROW_SLIVER_UM (kit-wave item_env) wins, else budgets.row_sliver_um."""
+    v = os.environ.get("OT_ROW_SLIVER_UM") or budgets.get("row_sliver_um")
+    return float(v) if v and float(v) > 0 else None
+
+
 def _gutter_block_min_span_um(budgets):
     """S81-TYPES-7-COLH 11-08 (class C ROM walls): only gaps whose facing span is >= this many um get a gutter
     blockage (GEN env OT_GUTTER_BLOCK_MIN_SPAN_UM wins, else budgets.gutter_block_min_span_um); None = every gap
@@ -4821,6 +4828,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
+           *([f"export OT_ROW_SLIVER_UM = {_row_sliver_um(P.budgets):g}"] if _row_sliver_um(P.budgets) else []),
            *([f"export OT_GUTTER_BLOCK_MIN_SPAN_UM = {_gutter_block_min_span_um(P.budgets)}"]
              if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_min_span_um(P.budgets) else []),
            # DIE-HEAD-69 11-05: core_out_land.tcl opt-in (GEN env OT_CORE_OUT_LAND=1 via wave item_env, or plan budgets list)
@@ -5136,6 +5144,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # reset.depth); its bound RTL carries its own reset form, so the kit gets no generated reset tree (no file).
     if P.reset.get("relay_driver"):
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
+    if _row_sliver_um(P.budgets):     # KW-FIX-45 11-11 ROW-SLIVER class (opt-in)
+        shutil.copyfile(Path(__file__).with_name("row_sliver_block.tcl"), kd / "row_sliver_block.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
         if _gutter_block_um(P.budgets, tn):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
