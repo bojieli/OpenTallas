@@ -83,6 +83,12 @@ GRT_GCELL_UM = 0.57    # MEASURED gcell of the ASAP7 tile runs (GRT-PATCH-1 11-1
 #  (3) the full-line cut is not a feasibility input (check.py --full-cut band keeps it as a die-band WARN).
 CALIB_FAIL_P99 = 1.0
 CALIB_HALVING = "edge_outline"
+# GRT-CALIB-2 11-12: per-macro hot spot (--macro-hotspot local, region mhot_H/V). Calibrated on the same corpus:
+# the 6 S81 macro-dense misses of --calib-1111 (col_h10_r2 x3, col_h9_r0_p4 x2, dsdv_slice_lepw_mus_LP__t2) read
+# 0.93-1.10 as the ratio of windowed sums (demand/supply) over the macro; every GRT-PASS type that --calib-1111 calls
+# OK reads <= 0.927. FAIL above 1.0 (demand > supply, the same physical line as CALIB_FAIL_P99, not a fitted value):
+# it catches col_h10_r2 x3 (missed 11 -> 8, 0 new false alarms). 0.93 would catch all 6 but has no margin.
+CALIB_HOTSPOT_FAIL = 1.0
 
 
 def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
@@ -1170,6 +1176,8 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     # along the macro run's height (plus margin_bins of free rows above/below) to cross it, so over macro bins the
     # H ratio is pooled over the full macro run in that column (V: the run in that row)
     occb = macro_cov > 0.5
+    # GRT-CALIB-2: local (unpooled) demand / supply windows for --macro-hotspot local (ratio of sums per macro)
+    hot_loc = ((box(DH, k, kd), box(supH, k, kd)), (box(DV, kd, k), box(supV, kd, k))) if cfg.get("macro_hotspot") else None
     rH = np.where(occb, run_pool(DH, supH, occb, 0, k, cfg["margin_bins"]), rH)
     rV = np.where(occb, run_pool(DV, supV, occb, 1, k, cfg["margin_bins"]), rV)
     # porous-abstract what-if (OWNER idea 11-10): signed cores with low cell fill leave most of M4/M5 inside their
@@ -1252,6 +1260,31 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
                 best = (key, c, d, int(ii), int(jj), hot)
     if best is None:
         return None
+    mh = cfg.get("macro_hotspot")
+    if mh:
+        # GRT-CALIB-2 (COORD 11-12): per-macro hot spot. The region p99 pools every core bin of the type, so one hot
+        # macro among many (S81 col: 50+ macros) stays under the 99th percentile; GRT overflowed over single macros
+        # (calib congestion maps). Per hard core over the bins it covers (> 0.5), max over the macros:
+        # local: windowed demand / windowed supply summed over the macro (ratio of sums: a bin with ~0 supply, e.g.
+        # under an M1-M7 view, cannot blow it up); pooled: mean of the macro-run pooled ratio.
+        # Reported as region mhot_H / mhot_V (p99 = that max), so --verdict-mode calib also reads it. Stats only:
+        # the worst-region choice and the default output do not change.
+        for di, (d, R) in enumerate((("H", rH), ("V", rV))):
+            top = None
+            for (cv, h) in cov:
+                m = cv > 0.5
+                if int(m.sum()) < cfg.get("hotspot_min_bins", 4):
+                    continue
+                if mh == "local":
+                    Dw, Sw = hot_loc[di]
+                    v = float(Dw[m].sum() / max(Sw[m].sum(), 1e-6))
+                else:
+                    v = float(R[m].mean())
+                if top is None or v > top[0]:
+                    top = (v, h.get("inst", "?"), float(R[m].max()), int(m.sum()))
+            if top:
+                stats[f"mhot_{d}"] = dict(p99=round(top[0], 3), max=round(top[2], 3), hot_bins=0, bins=top[3],
+                                         inst=top[1], mode=mh)
     (_, mx), c, d, ii, jj, hot = best[0], best[1], best[2], best[3], best[4], best[5]
     p99 = best[0][0]
     lay = [L for L in LAYERS if DIRN[L] == d]
@@ -1437,13 +1470,18 @@ def verdict(r, scale=1.0):
     return ("FLAG" if hits else "ok"), hits
 
 
-def calib_fail(r, fail_p99=CALIB_FAIL_P99):
+def calib_fail(r, fail_p99=CALIB_FAIL_P99, hotspot_fail=CALIB_HOTSPOT_FAIL):
     """GRT-CALIB-1 (1): (FAIL?, reason) -- worst track-region p99 > fail_p99, or soft-cell density >= FLAG_AT dens.
     The region thresholds of FLAG_AT (3.0 for face/open/ring/mem) are NOT used here: measured GRT fails at any
     region p99 > 1 (calib.tsv, 11-11)."""
     worst = None
+    hot = None
     for k, v in r["regions"].items():
         if k == "dens_A":
+            continue
+        if k.startswith("mhot_"):
+            if hot is None or v["p99"] > hot[1]:
+                hot = (k, v["p99"])
             continue
         if worst is None or v["p99"] > worst[1]:
             worst = (k, v["p99"])
@@ -1452,6 +1490,8 @@ def calib_fail(r, fail_p99=CALIB_FAIL_P99):
         return True, f"p99 {worst[1]:.3f} > {fail_p99:g} ({worst[0]})"
     if d is not None and d >= FLAG_AT["dens"]:
         return True, f"dens {d:.3f} >= {FLAG_AT['dens']} cells/um2"
+    if hot and hot[1] > hotspot_fail:
+        return True, f"macro hot spot {hot[1]:.3f} > {hotspot_fail:g} ({hot[0]} {r['regions'][hot[0]].get('inst', '')})"
     return False, (f"p99 {worst[1]:.3f} <= {fail_p99:g} ({worst[0]})" if worst else "no region")
 
 
@@ -1531,7 +1571,7 @@ def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=F
             r["verdict"] = "UNCHECKED"          # scored demand is under threshold but some core pins were not scored
         if cfg.get("verdict_mode") == "calib":
             # GRT-CALIB-1 (1): p99 > 1 (or dens) is the FAIL class; FLAG regions stay as the fix hint
-            fail, why = calib_fail(r, cfg.get("fail_p99", CALIB_FAIL_P99))
+            fail, why = calib_fail(r, cfg.get("fail_p99", CALIB_FAIL_P99), cfg.get("hotspot_fail", CALIB_HOTSPOT_FAIL))
             r["verdict_flag"] = r["verdict"]
             r["calib_reason"] = why
             r["verdict"] = "FAIL" if fail else ("UNCHECKED" if r["verdict"] == "UNCHECKED" else "ok")
@@ -1674,6 +1714,14 @@ def main(argv=None):
                     help="flag (default) = FLAG/ok by the FLAG_AT region thresholds; calib = FAIL when the worst "
                          "region p99 > --fail-p99 or dens_A >= %s (GRT-CALIB-1)" % FLAG_AT["dens"])
     ap.add_argument("--fail-p99", type=float, default=CALIB_FAIL_P99, help="--verdict-mode calib threshold")
+    ap.add_argument("--macro-hotspot", choices=("pooled", "local"), default=None,
+                    help="GRT-CALIB-2: add region mhot_H/V = max over hard cores of the windowed demand/supply over the macro "
+                         "(pooled = the macro-run pooled ratio, local = the detour-window box ratio)")
+    ap.add_argument("--hotspot-min-bins", type=int, default=4, help="--macro-hotspot: skip macros under this many bins")
+    ap.add_argument("--hotspot-fail", type=float, default=CALIB_HOTSPOT_FAIL,
+                    help="--verdict-mode calib: FAIL when mhot_H/V > this (GRT-CALIB-2: 1.0)")
+    ap.add_argument("--calib-1112", action="store_true",
+                    help="GRT-CALIB-2: --calib-1111 + --macro-hotspot local (per-macro hot spot FAIL > --hotspot-fail)")
     ap.add_argument("--over-macro-m67", action="store_true",
                     help="GRT-CALIB-1: over every hard core (kind core) M2-M5 carry nothing, only M6 H / M7 V")
     ap.add_argument("--grt-halving", choices=("full", "edge", "edge_outline", "none"), default=None,
@@ -1719,6 +1767,9 @@ def main(argv=None):
     ap.add_argument("--cells", default=str(Path(__file__).with_name("route_supply_cells.json")),
                     help="measured synth cells {die: {type: {cells, src}}}; else tools/die_plan/cells.py estimates")
     a = ap.parse_args(argv)
+    if a.calib_1112:
+        a.calib_1111 = True
+        a.macro_hotspot = a.macro_hotspot or "local"
     if a.calib_1111:
         a.verdict_mode = a.verdict_mode or "calib"
         a.over_macro_m67 = True
@@ -1753,6 +1804,11 @@ def main(argv=None):
     # GRT-CALIB-1 keys only when opted in, so the default cfg (and the JSON dump of it) stays byte-identical
     if a.over_macro_m67:
         cfg["over_macro_m67"] = True
+    if a.macro_hotspot:
+        cfg["macro_hotspot"] = a.macro_hotspot
+        cfg["hotspot_min_bins"] = a.hotspot_min_bins
+        if a.verdict_mode == "calib":
+            cfg["hotspot_fail"] = a.hotspot_fail
     if a.verdict_mode == "calib":
         cfg["verdict_mode"] = "calib"
         cfg["fail_p99"] = a.fail_p99
