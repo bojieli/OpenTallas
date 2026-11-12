@@ -1607,6 +1607,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["l
         "cf": {"type": "boolean"}, "relay": {"type": "boolean"}, "mem": {"type": "string", "minLength": 1},
         "relay_inst": {"type": "string", "minLength": 1}, "lane_re": {"type": "string", "minLength": 1}}}
 
+# KV-HG-SPLIT-1 11-12 (opt-in): soft instances of a module that is also a hard core master of the type get a kit-local
+# renamed exact copy (bind.py kit-rtl -> soft_clone.py; 0 added cycles); absent = byte-identical kits
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["soft_clones"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False,
+                               "required": ["physical_inst", "base", "master"],
+                               "properties": {"physical_inst": {"type": "string",
+                                                                "pattern": "^u_bound\\.[A-Za-z_][A-Za-z0-9_]*$"},
+                                              "base": {"type": "string", "minLength": 1},
+                                              "master": {"type": "string", "minLength": 1}}}}
 
 # Private opt-in actual-LEF entry geometry. No default OBS exemption.
 _CLOCK_ENTRY_ACCESS = {

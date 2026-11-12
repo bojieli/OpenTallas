@@ -1,0 +1,17 @@
+KV-HG-SPLIT-1 11-12 (epyc7, plan vH1 = vF + HG-EX cut, md5 in plan_md5.txt). VIEWED kv3_hg_v1 / kv3_hg_v3 vF vs vH1 renders.
+LOOK PASS-COND: the 3 hard EX (signed qkd_astk_ex_s_hg1101, 190.08x112.32, R0/MY/MY at x 371.52/665.28/984.96, y 561.6) fill the head-row street between head rows 1 and 2.
+Clearances: 8.64 um halo gap to the heads above and below, and to the ep SRAM column (W edge 570.24). No band, station, ft reg, tap or core under them.
+EX0 stays soft (band ft2_i/ft3_i over slot 0) as the kit-local exact clone qkd_astk_ex_s_soft.
+Reset/collector relays re-solved off the cores by reset_tree.for_type: same depth (7 / 6 on hg_v3), +3 core taps; collector reattach PASS, 0 sources moved, +0 cycles, max 366 um.
+5-7 die clock island rects per type under the new cores are removed and listed in hg_ex_vf_report.json resite[]; the die clock owner re-sites those die cells. The 3 new core taps per type are new die clock sinks (96 in total).
+Strict bind vH1 RC 0 (= vF on the same tools): 0 errors, 160 partitions, 2545 crossings. Bound HG RTL differs only in reset/collector relays and EX ck -> clk_c20..22.
+G0 130 E / 2280 W, both identical to vF.
+Cells: hg_v1 measured hierarchical generic 558,401 incl 4 x qkd_astk_ex_s 104,123 -> hg-minus about 246k generic (44%), about 214k native (kit-wave 486k x 0.44) < 400k.
+EQ chain:
+  (a) the bound vH1 HG module = the vF module with the same EX instances/nets (reset relay re-solve only);
+  (b) EX0 clone body sha256 == base (soft_clones_*.json);
+  (c) EX1..3 black box = SIGNED view with final-netlist EQ 20490/20490 (results/ex_closure_1131/F70_final_lec_equivalent.json).
+  Kit-level pre/post-route LEC still to run in the kit wave.
+Open:
+  - type kits to sign-off (kit-wave on vH1, needs main incl soft_clone);
+  - die clock island re-site + 96 new core tap sinks in the die tree (DIE-KV-98).

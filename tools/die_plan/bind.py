@@ -5534,6 +5534,9 @@ def cmd_kit_rtl(a):
         # instantiates its generated named wrapper master instead (param_wrap.py; no logic, no cycles)
         import param_wrap
         btxt, kit_param_wraps, kit_wrap_srcs = param_wrap.wrap_bound(btxt, t.get("hard_cores"))
+        # KV-HG-SPLIT-1 11-12: soft instances of a module that is also a hard core master here use a renamed exact copy
+        import soft_clone
+        btxt, kit_soft_clones = soft_clone.clone_bound(btxt, t.get("soft_clones"))
         # DIE-QC-69: a hard core nested in a bound leaf (QC RED u_u_red.u_core) declares its physical_inst in the plan
         phys = {c["inst"]: c["physical_inst"] for c in t.get("hard_cores", []) or [] if c.get("physical_inst")}
         core_rows = [(r[0], phys.get(r[1], r[1])) + tuple(r[2:]) for r in (gen_phys.core_tap_rows(P, tn) if P else [])]
@@ -5719,7 +5722,7 @@ def cmd_kit_rtl(a):
     except (ValueError, KeyError, OSError) as exc:
         raise BindError(f"kit-rtl HBM SPB {tn}: {exc}") from exc
     native_bound_source, native_bound_module = bfile, bmod
-    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_ln_rep or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
+    if bmod == mod or kit_core_swaps or kit_core_adapters or kit_param_wraps or kit_ln_rep or kit_soft_clones or kit_core_clocks.rtl_wired(kit_core_clock_rows):  # private kit-only source; source bind is immutable
         nb = bmod + "_bound" if bmod == mod else bmod + "_coreclk"
         (kd / f"{nb}.sv").write_text(re.sub(rf"\b(module|endmodule\s*:)\s+{bmod}\b", rf"\1 {nb}", btxt))
         bfile, bmod = kd / f"{nb}.sv", nb
@@ -5793,6 +5796,23 @@ def cmd_kit_rtl(a):
         for m in kit_wrap_srcs:
             idx[m] = [str(wf.resolve())]
         leafm = sorted(set(leafm) | {x["base"] for x in kit_param_wraps})
+    if kit_soft_clones:  # KV-HG-SPLIT-1: master = exact renamed text of the one non-sim definition of its base
+        def _clone_base(m):
+            fs = sorted({str(Path(f).resolve()) for f in idx.get(m, []) if not SIM_FILE.search(str(f))})
+            fs = [f for f in fs if any(Path(f) == Path(q).resolve() for q in prefer)] or fs
+            if len(fs) != 1:
+                raise ValueError(f"soft clone base {m}: {len(fs)} definitions {fs[:3]}")
+            return Path(fs[0]).read_text(), fs[0]
+        try:
+            clone_txt, kit_soft_clones = soft_clone.clone_sources(kit_soft_clones, _clone_base)
+        except ValueError as exc:
+            raise BindError(f"kit-rtl {tn}: {exc}") from exc
+        cf = kd / "soft_clone_cores.sv"
+        cf.write_text(clone_txt)
+        (kd / "soft_clones.json").write_text(json.dumps(dict(schema="opentallas.kit_soft_clones.v1", type=tn,
+                                                             rows=kit_soft_clones, cycles_changed=0), indent=1) + "\n")
+        for r in kit_soft_clones:
+            idx[r["master"]] = [str(cf.resolve())]
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks, views=views, wide=wide, widened=widened,
                                          defines=kit_defines)
     if widened:

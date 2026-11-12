@@ -1,0 +1,1046 @@
+{
+ "schema": "opentallas.kv.hg_ex_vf.v1",
+ "base_plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+ "hard": "1,2,3",
+ "soft_master": "qkd_astk_ex_s_soft",
+ "types": [
+  "kv3_hg",
+  "kv3_hg_v3",
+  "kv3_hg_v1",
+  "kv3_hg_v1p2",
+  "kv3_hg_v1p3",
+  "kv3_hg_v1p4",
+  "kv3_hg_v1p5",
+  "kv3_hg_v1p6"
+ ],
+ "resite": [
+  {
+   "type": "kv3_hg",
+   "kind": "collector_relay",
+   "name": "u_rrl_48",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "collector_relay",
+   "name": "u_rrl_54",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "collector_relay",
+   "name": "u_rrl_69",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.49,
+    441.288,
+    564.3
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.7,
+    760.968,
+    570.51
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.97,
+    760.968,
+    570.78
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_49",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_50",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_45",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_46",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_47",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_78",
+   "xy_um": [
+    669.32,
+    669.32,
+    669.32,
+    669.32
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_0",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_1",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_2",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_3",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_4",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_5",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_24",
+   "xy_um": [
+    1144.32,
+    669.32,
+    1144.32,
+    669.32
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_25",
+   "xy_um": [
+    1144.32,
+    669.32,
+    1144.32,
+    669.32
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_26",
+   "xy_um": [
+    1144.32,
+    669.32,
+    1144.32,
+    669.32
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "collector_relay",
+   "name": "u_rrl_77",
+   "xy_um": [
+    1049.32,
+    669.32,
+    1049.32,
+    669.32
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.49,
+    441.288,
+    564.3
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.7,
+    760.968,
+    570.51
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.97,
+    760.968,
+    570.78
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "collector_relay",
+   "name": "u_rrl_48",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "collector_relay",
+   "name": "u_rrl_54",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "collector_relay",
+   "name": "u_rrl_69",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.7,
+    760.968,
+    570.51
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "collector_relay",
+   "name": "u_rrl_48",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "collector_relay",
+   "name": "u_rrl_54",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "collector_relay",
+   "name": "u_rrl_69",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.7,
+    760.968,
+    570.51
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.97,
+    760.968,
+    570.78
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p2",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "collector_relay",
+   "name": "u_rrl_48",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "collector_relay",
+   "name": "u_rrl_54",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "collector_relay",
+   "name": "u_rrl_69",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.49,
+    441.288,
+    564.3
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.7,
+    760.968,
+    570.51
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p3",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "collector_relay",
+   "name": "u_rrl_48",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "collector_relay",
+   "name": "u_rrl_54",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "collector_relay",
+   "name": "u_rrl_69",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.49,
+    441.288,
+    564.3
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.7,
+    760.968,
+    570.51
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.97,
+    760.968,
+    570.78
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p4",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "collector_relay",
+   "name": "u_rrl_21",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "collector_relay",
+   "name": "u_rrl_55",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "collector_relay",
+   "name": "u_rrl_56",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "collector_relay",
+   "name": "u_rrl_57",
+   "xy_um": [
+    764.32,
+    574.32,
+    764.32,
+    574.32
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "collector_relay",
+   "name": "u_rrl_58",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.7,
+    760.968,
+    570.51
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p5",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "collector_relay",
+   "name": "u_rrl_39",
+   "xy_um": [
+    479.52,
+    570.24,
+    479.52,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_1__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "collector_relay",
+   "name": "u_rrl_41",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "collector_relay",
+   "name": "u_rrl_42",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "collector_relay",
+   "name": "u_rrl_43",
+   "xy_um": [
+    799.2,
+    570.24,
+    799.2,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_2__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "collector_relay",
+   "name": "u_rrl_75",
+   "xy_um": [
+    1118.88,
+    570.24,
+    1118.88,
+    570.24
+   ],
+   "core": "astk__u_strip_u_strip_g_ep_p__g_ex_3__u_ex"
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.22,
+    441.288,
+    564.03
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "die_clock_island",
+   "rect_um": [
+    438.588,
+    563.49,
+    441.288,
+    564.3
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "die_clock_island",
+   "rect_um": [
+    477.684,
+    646.92,
+    480.384,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "die_clock_island",
+   "rect_um": [
+    758.268,
+    569.97,
+    760.968,
+    570.78
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "die_clock_island",
+   "rect_um": [
+    798.336,
+    646.92,
+    801.036,
+    647.73
+   ]
+  },
+  {
+   "type": "kv3_hg_v1p6",
+   "kind": "die_clock_island",
+   "rect_um": [
+    1118.016,
+    646.92,
+    1120.716,
+    647.73
+   ]
+  }
+ ],
+ "republish": {
+  "kv3_hg": {
+   "relays_before": 86,
+   "relays_after": 94,
+   "relays_changed": 80
+  },
+  "kv3_hg_v3": {
+   "relays_before": 93,
+   "relays_after": 102,
+   "relays_changed": 88
+  },
+  "kv3_hg_v1": {
+   "relays_before": 86,
+   "relays_after": 94,
+   "relays_changed": 80
+  },
+  "kv3_hg_v1p2": {
+   "relays_before": 86,
+   "relays_after": 94,
+   "relays_changed": 80
+  },
+  "kv3_hg_v1p3": {
+   "relays_before": 86,
+   "relays_after": 94,
+   "relays_changed": 80
+  },
+  "kv3_hg_v1p4": {
+   "relays_before": 86,
+   "relays_after": 94,
+   "relays_changed": 80
+  },
+  "kv3_hg_v1p5": {
+   "relays_before": 79,
+   "relays_after": 95,
+   "relays_changed": 67
+  },
+  "kv3_hg_v1p6": {
+   "relays_before": 96,
+   "relays_after": 116,
+   "relays_changed": 104
+  }
+ },
+ "collector_reattach": {
+  "rc": 0,
+  "tail": "COLLECTOR_REATTACH PASS kv3_hg:moved0/+0cyc/max366.1um kv3_hg_v1:moved0/+0cyc/max366.1um kv3_hg_v1p2:moved0/+0cyc/max366.1um kv3_hg_v1p3:moved0/+0cyc/max366.1um kv3_hg_v1p4:moved0/+0cyc/max366.1um kv3_hg_v1p5:moved0/+0cyc/max366.1um kv3_hg_v1p6:moved0/+0cyc/max366.1um kv3_hg_v3:moved0/+0cyc/max332.1um sha 464483313ae8\n"
+ }
+}

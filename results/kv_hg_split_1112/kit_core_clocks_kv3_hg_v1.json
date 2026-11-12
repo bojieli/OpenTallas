@@ -1,0 +1,166 @@
+{
+ "rows": [
+  {
+   "port": "clk_c0",
+   "instance": "u_bound.u_ectl.u_cols.u_columns.u_q0",
+   "pin": "ck[0]",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c1",
+   "instance": "u_bound.u_ectl.u_cols.u_columns.u_q1",
+   "pin": "ck[0]",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c2",
+   "instance": "u_bound.u_ectl.u_cols.u_columns.u_q2",
+   "pin": "ck[0]",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c3",
+   "instance": "u_bound.u_ectl.u_cols.u_columns.u_q3",
+   "pin": "ck[0]",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c4",
+   "instance": "u_head0_e1",
+   "pin": "g_t_2_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c5",
+   "instance": "u_head0_e3",
+   "pin": "g_t_2_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c6",
+   "instance": "u_head0_e7",
+   "pin": "g_t_10_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c7",
+   "instance": "u_head1_e1",
+   "pin": "g_t_2_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c8",
+   "instance": "u_head1_e3",
+   "pin": "g_t_2_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c9",
+   "instance": "u_head1_e7",
+   "pin": "g_t_10_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c10",
+   "instance": "u_head0_e5",
+   "pin": "g_t_10_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c11",
+   "instance": "u_head1_e5",
+   "pin": "g_t_10_u_l8__clk[0]",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c12",
+   "instance": "u_bound.u_head0_e0",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c13",
+   "instance": "u_bound.u_head0_e2",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c14",
+   "instance": "u_bound.u_head0_e4",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c15",
+   "instance": "u_bound.u_head0_e6",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c16",
+   "instance": "u_bound.u_head1_e0",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c17",
+   "instance": "u_bound.u_head1_e2",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c18",
+   "instance": "u_bound.u_head1_e4",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c19",
+   "instance": "u_bound.u_head1_e6",
+   "pin": "*",
+   "previous_net": null,
+   "mode": "physical_tap"
+  },
+  {
+   "port": "clk_c20",
+   "instance": "u_astk_u_strip_u_strip_g_ep_p_g_ex_1_u_ex",
+   "pin": "ck",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c21",
+   "instance": "u_astk_u_strip_u_strip_g_ep_p_g_ex_2_u_ex",
+   "pin": "ck",
+   "previous_net": "clk",
+   "mode": "rtl"
+  },
+  {
+   "port": "clk_c22",
+   "instance": "u_astk_u_strip_u_strip_g_ep_p_g_ex_3_u_ex",
+   "pin": "ck",
+   "previous_net": "clk",
+   "mode": "rtl"
+  }
+ ],
+ "cycles_changed": 0
+}
