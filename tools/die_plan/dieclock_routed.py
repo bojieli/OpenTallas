@@ -445,6 +445,78 @@ def cmd_realize(a):
     return 0
 
 
+def cmd_leafcell(a):
+    """COORD 11-12 (HEAD routed re-balance): a leaf whose region equalisation needs more wire than the per-leaf cap gets
+    ONE placed delay cell (HB4xp67) in series on its OWN leg (parent node -> repeaters -> leaf node; the leg is not
+    shared, so the cell delays that leaf only).  Site = the point of the leg closest to a die channel (outside every
+    partition outline, never inside a type); the cell is spliced into the leg's segment there, with the detour from the
+    leg to the site on both sides.  A leaf whose leg passes no channel within --max-detour-um gets no cell (listed as
+    no_channel: its residual stays on wire).  RUN is a die_clock build dir (nets.json, place.json, tree.json); OUT gets
+    the same files with the cells + ctree.v + leafcell.json.  The wire trim follows on the next build's --leaf-pad."""
+    run, out = Path(a.run), Path(a.out)
+    leaves = json.loads(Path(a.leaves).read_text())
+    leaves = sorted(leaves) if isinstance(leaves, list) else sorted(k for k, v in leaves.items() if v >= a.cap_um - 0.1)
+    out.mkdir(parents=True, exist_ok=True)
+    nj = json.loads((run / "nets.json").read_text())
+    cells = json.loads((run / "place.json").read_text())
+    rects = type_rects(a.plan)
+    sites = ChannelSites(rects)
+    into = {}
+    for n in nj["nets"]:
+        for bi, b in enumerate(n["branches"]):
+            into[b[2]] = (n, bi)
+    rows, missing, no_ch = [], [], []
+    for lf in leaves:
+        if lf not in into or lf not in cells:
+            missing.append(lf)
+            continue
+        best, w, hops = None, lf, 0
+        while True:                                   # walk the leaf's own leg up to its parent node
+            n, bi = into[w]
+            u = n["drv"]
+            if u not in cells:
+                break
+            p, q = cells[u], cells[w]
+            L = abs(p["x"] - q["x"]) + abs(p["y"] - q["y"])
+            k = max(1, int(L / a.sample_um))
+            for j in range(k, -1, -1):                # leaf end first: ties keep the cell near the leaf
+                f = j / k
+                x, y, d = sites.snap(p["x"] + (q["x"] - p["x"]) * f, p["y"] + (q["y"] - p["y"]) * f)
+                if best is None or d < best[0] - 1e-9:
+                    best = (d, n, bi, f, x, y)
+            hops += 1
+            if cells[u].get("kind") == "node" or hops > 64:
+                break
+            w = u
+        if best is None or best[0] > a.max_detour_um:
+            no_ch.append([lf, None if best is None else round(best[0], 1)])
+            continue
+        d, n, bi, f, x, y = best
+        nm = "lh_" + lf
+        if nm in cells:
+            raise SystemExit("leafcell: %s already has a delay cell" % lf)
+        cells[nm] = dict(x=round(x, 3), y=round(y, 3), kind="delay", level=cells[lf].get("level"), lib=a.cell)
+        L, layer, load, geo = n["branches"][bi]
+        n["branches"][bi] = [L * f + d if L * f + d > 1.0 else 1.0, layer, nm, geo * f + d]
+        L2 = L * (1 - f) + d
+        nj["nets"].append(dict(name="w_" + nm, drv=nm, branches=[[max(L2, 1.0), layer, load, max(geo * (1 - f) + d, 1.0)]]))
+        rows.append(dict(leaf=lf, site=[round(x, 3), round(y, 3)], detour_um=round(d, 1), on=n["name"], frac=round(f, 3)))
+    (out / "nets.json").write_text(json.dumps(nj) + "\n")
+    (out / "place.json").write_text(json.dumps(cells) + "\n")
+    for fn in ("tree.json", "own.json", "pads.json"):
+        if (run / fn).exists():
+            shutil.copy(run / fn, out / fn)
+    if not (out / "pads.json").exists():
+        (out / "pads.json").write_text("[]\n")
+    DC.write_verilog(DC.load_tree(out), out / "ctree.v")
+    inside = sum(1 for r in rows if any(q[0] < r["site"][0] < q[2] and q[1] < r["site"][1] < q[3] for q in rects))
+    rep = dict(mode="leafcell", cell=a.cell, cells=len(rows), missing=missing, no_channel=no_ch, cells_inside_types=inside,
+               detour_um_max=max([r["detour_um"] for r in rows], default=0.0), rows=rows)
+    (out / "leafcell.json").write_text(json.dumps(rep, indent=1) + "\n")
+    print(json.dumps({k: v for k, v in rep.items() if k != "rows"}))
+    return 1 if (missing or inside) else 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
@@ -473,8 +545,18 @@ def main(argv=None):
     p.add_argument("--no-pads", action="store_true", help="no wire pads (physical tree netlist; with --route-ndr)")
     p.add_argument("--route-ndr", action="store_true",
                    help="scale the routed clock RC to die_clock's NDR width (2W2S R/2 C x1.1; 4W on long hops)")
+    p = sp.add_parser("leafcell")
+    p.add_argument("run", help="die_clock build dir (nets.json, place.json, tree.json)")
+    p.add_argument("out")
+    p.add_argument("--plan", required=True, help="die plan json (partition outlines: channel sites)")
+    p.add_argument("--leaves", required=True, help="JSON list of leaf node cells, or a leaf-pad JSON {leaf: um}: the "
+                   "leaves at --cap-um get a cell")
+    p.add_argument("--cap-um", type=float, default=1500.0)
+    p.add_argument("--cell", default="HB4xp67_ASAP7_75t_R")
+    p.add_argument("--max-detour-um", type=float, default=200.0, help="no cell when the leg passes no channel this close")
+    p.add_argument("--sample-um", type=float, default=5.0)
     a = ap.parse_args(argv)
-    return dict(prep=cmd_prep, pads=cmd_pads, realize=cmd_realize)[a.cmd](a)
+    return dict(prep=cmd_prep, pads=cmd_pads, realize=cmd_realize, leafcell=cmd_leafcell)[a.cmd](a)
 
 
 if __name__ == "__main__":
