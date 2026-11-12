@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """BUS-GEAR-2: static module closure for the x-gear EQ bench.
-usage: closure2.py REPO SEL_IN SEL_OUT   (SEL entries are repo-relative paths, plus tb_s81_xgear_eq.sv)
+usage: closure2.py REPO SEL_IN SEL_OUT [ASBUILT.json]   (SEL entries are repo-relative paths, plus tb_s81_xgear_eq.sv)
 Index = every module defined under rtl/ and physical/die_plan/s81/bind/models (first definition wins, preferring files
-already in SEL).  Adds the defining file of every identifier used as a module type in the selection until fixpoint."""
+already in SEL, then the as-built manifest's prefer + files lists = the bind's own source choice).  Adds the defining file of every identifier used as a module type in the selection until fixpoint."""
 import os, re, sys
 
 repo, sin, sout = sys.argv[1:4]
+ab = sys.argv[4] if len(sys.argv) > 4 else None
 sel = [l.strip() for l in open(sin) if l.strip()]
 MOD = re.compile(r'^\s*(?:module|macromodule)\s+(\w+)', re.M)
 INST = re.compile(r'^\s*(\w+)\s*(?:#\s*\(|\w+\s*(?:\[[^\]]*\]\s*)?\()', re.M)
@@ -26,6 +27,16 @@ idx = {}
 for f in sel:
     for m in MOD.findall(strip(open(path(f), errors='replace').read())):
         idx.setdefault(m, f)
+if ab:
+    import json
+    A = json.load(open(ab))
+    for rel in list(A.get('prefer', [])) + list(A.get('files', [])):
+        try:
+            txt = strip(open(os.path.join(repo, rel), errors='replace').read())
+        except OSError:
+            continue
+        for m in MOD.findall(txt):
+            idx.setdefault(m, rel)
 for root in ('rtl', 'physical/die_plan/s81/bind/models'):
     for dp, _, fs in os.walk(os.path.join(repo, root)):
         for fn in sorted(fs):

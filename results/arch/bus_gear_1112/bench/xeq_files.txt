@@ -61,7 +61,7 @@ rtl/hdc/ot_hdc_delay_rf.sv
 rtl/lib/ot_rst_relay.sv
 rtl/s81/ot_s81_bf_seam_roots.sv
 rtl/v41rom/ot_v41_bf16_lanes.sv
-rtl/v41rom/ot_v41_bf16_lanes2.sv
+rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv
 rtl/v41rom/ot_v41_bf_front_core_roots.sv
 rtl/v41rom/ot_v41_bmul2_rne_prepare.sv
 rtl/v41rom/ot_v41_bterm.sv
@@ -83,6 +83,5 @@ rtl/v41rom/ot_v41_segtree6.sv
 rtl/hdc/ot_hdc_fp32_mul_pipe.sv
 rtl/v41rom/ot_s81_so_label_q.sv
 rtl/v41rom/ot_v41_bf16_lanes3.sv
-rtl/v41rom/ot_v41_bmul2.sv
 rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv
 rtl/v41rom/ot_v41_fadd2.sv
