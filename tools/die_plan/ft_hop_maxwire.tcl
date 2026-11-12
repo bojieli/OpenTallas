@@ -69,8 +69,19 @@ proc ot_ft_hop_pass {} {
   if {$rc} { return -options $opts $err }
 }
 
+# grt_maxwire.tcl (OT_MAXWIRE_UM, S81 slice_station 62 / core 80-450) REPLACES repair_design_helper with one whole-design
+# repair_design -max_wire_length and never calls the helper it renamed, so a hook below it (ot_g183_orig_) is dead
+# there (t45 proof 11-12: "armed", never ran).  A design-wide limit <= ours already bounds every hop: say so, add nothing.
+# A larger one: wrap the outermost helper, so the pass runs after that repair.
+if {[info exists ::env(OT_MAXWIRE_UM)] && $::env(OT_MAXWIRE_UM) ne "" && $::env(OT_MAXWIRE_UM) > 0
+    && $::env(OT_MAXWIRE_UM) <= $::env(OT_FT_MAXWIRE_UM)} {
+  puts "OT_FT_MAXWIRE covered: OT_MAXWIRE_UM $::env(OT_MAXWIRE_UM) <= $::env(OT_FT_MAXWIRE_UM) um bounds every net; no ft hop pass"
+  return
+}
 set ot_ftmw_target repair_design_helper
-if {[llength [info commands ot_g183_orig_repair_design_helper]]} { set ot_ftmw_target ot_g183_orig_repair_design_helper }
+if {[info procs ot_orig_repair_design_helper] eq "" && [llength [info commands ot_g183_orig_repair_design_helper]]} {
+  set ot_ftmw_target ot_g183_orig_repair_design_helper
+}
 if {[info procs $ot_ftmw_target] eq ""} { error "ft_hop_maxwire.tcl: $ot_ftmw_target not defined (flow scripts changed)" }
 if {[info procs ot_ftmw_inner_repair_design_helper] eq ""} {
   rename $ot_ftmw_target ot_ftmw_inner_repair_design_helper

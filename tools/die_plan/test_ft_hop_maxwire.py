@@ -99,6 +99,27 @@ def test_off_when_zero(tmp_path):
     assert "ORIG_BASE" in out and "OT_FT_MAXWIRE" not in out
 
 
+# grt_maxwire.tcl shape: renames the current helper and REPLACES it (never calls ot_orig_)
+MAXWIRE = r"""
+rename repair_design_helper ot_orig_repair_design_helper
+proc repair_design_helper {} { puts "MAXWIRE_REPAIR $::env(OT_MAXWIRE_UM)" }
+"""
+
+
+@needs_tclsh
+def test_covered_by_design_wide_maxwire(tmp_path):
+    out = run(tmp_path, "set ::env(OT_MAXWIRE_UM) 62\n" + WRAP + MAXWIRE)
+    assert "MAXWIRE_REPAIR 62" in out and "OT_FT_MAXWIRE covered" in out
+    assert "OT_FT_MAXWIRE repair_design" not in out
+
+
+@needs_tclsh
+def test_runs_after_replacing_maxwire_helper(tmp_path):
+    out = run(tmp_path, "set ::env(OT_MAXWIRE_UM) 450\n" + WRAP + MAXWIRE)
+    assert "armed on repair_design_helper" in out                                  # not the dead ot_g183_orig_
+    assert out.index("MAXWIRE_REPAIR 450") < out.index("OT_FT_MAXWIRE repair_design")
+
+
 def _kit(tmp_path, raw, tn="mid"):
     import gen_phys as GP
     GP.write_phys(copy.deepcopy(raw), tmp_path / "k", trial=True, skip_ir=True, rc_cal=False, types=[tn])
