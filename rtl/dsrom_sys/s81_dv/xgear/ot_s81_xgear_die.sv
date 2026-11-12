@@ -5,19 +5,22 @@
 //
 // Slice side: ot_s81_xc_gear_tx sits in the slice C partition (bind map: u_xg_<slice> -> <slice>_C) between the slice's
 // xc port (NG groups x 4 lanes x 276 b; lane l of group g is launched on the slice's forwarded lane clock ck_xc[4g + l])
-// and the hop-0 relay station.  Each lane samples a word on alternate edges of its own lane clock: a parity flop set by
-// the slice reset makes the first edge after release a word edge.  COMPILER CONTRACT (x cadence 2): an x word leaves the
-// slice on an even edge counted from the slice C reset release; the contents of odd edges are not sent.  The TX beat
-// register is the new face flop of the slice x pins.  Groups with GEN[g] = 0 (no x lane in the plan) send nothing.
+// and the partition face (bind out-boundary flop / as-built hop-0 relay station).  Each lane takes a word on alternate
+// edges of its own lane clock: a parity flop set by the slice reset makes the first edge after release a word edge.
+// COMPILER CONTRACT (x cadence 2): an x word leaves the slice on an even edge counted from the slice C reset release; the
+// contents of odd edges are not sent.  BUS-GEAR-2 (11-12): beat 0 = xc[137:0] passes COMBINATIONALLY on the word edge
+// (the next flop is the partition's face flop, exactly where the ungeared word was captured) and only beat 1 =
+// xc[275:138] is held one edge in a datapath register, so the TX adds no stage.  Groups with GEN[g] = 0 (no x lane in the
+// plan) send nothing.
 //
 // Frame side: ot_s81_xframe_gear lands the 4 beat lanes on the frame r0 clock with ot_bus_gear_rx OGATE 0 (every pin
 // feeds a flop directly; the crs4 bundle markers x[0] / x[566] are in beat 0, so non-word edges land as bubbles) and
 // forwards the BEATS to the next frame through FW relay stages (= the frame's own x -> xo forward stages), so a frame
 // hop adds no edge.
 //
-// Word latency of every geared x lane: + 2 edges (TX face flop + second beat).  Declared on the plan lanes as DEC12
-// beats 2 / word_bits 1104 / beat_index_bits 4 (port 552 + 4 = 556; word_cycles = cycles + 1) plus the TX register
-// (+1 station cycle).
+// Word latency of every geared x / xo lane: + 1 edge (the second beat), the same at every frame of a chain.  Declared
+// on the plan lanes as DEC12 beats 2 / word_bits 1104 / beat_index_bits 4 (port 552 + 4 = 556; word_cycles = cycles + 1),
+// fixed_cycles unchanged (xgear_plan_decl.py).  EQ: results/arch/bus_gear_1112/bench/tb_s81_xgear_eq.sv.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_xc_gear_tx #(
     parameter integer NG = 4,
@@ -34,12 +37,13 @@ module ot_s81_xc_gear_tx #(
     generate for (g = 0; g < NG; g = g + 1) begin : g_g
         for (l = 0; l < 4; l = l + 1) begin : g_l
             if (GEN[g]) begin : g_on
+                localparam integer HB = LW - (BL - 1);   // beat 1 bits (138)
                 reg ph;                               // word-edge parity (control flop, reset)
+                reg [HB-1:0] hi;                      // beat 1 of the current word (datapath: no reset)
                 always @(posedge ck[4*g+l]) if (!rst_n) ph <= 1'b1; else ph <= ~ph;
-                /* verilator lint_off PINCONNECTEMPTY */   // spacing is 2 by construction, the fault cannot rise
-                ot_bus_gear_tx #(.W(LW), .BEATS(2)) u_tx (.clk(ck[4*g+l]), .rst_n(rst_n), .v_i(ph),
-                    .d_i(xc[LW*(4*g+l) +: LW]), .b_o(xb[BL*(4*g+l) +: BL-1]), .f_o(xb[BL*(4*g+l)+BL-1]), .fault_o());
-                /* verilator lint_on PINCONNECTEMPTY */
+                always @(posedge ck[4*g+l]) if (ph) hi <= xc[LW*(4*g+l)+BL-1 +: HB];
+                assign xb[BL*(4*g+l) +: BL-1] = ph ? xc[LW*(4*g+l) +: BL-1] : hi;
+                assign xb[BL*(4*g+l)+BL-1] = ph;
             end else begin : g_off
                 /* verilator lint_off UNUSEDSIGNAL */
                 wire [LW-1:0] unused = xc[LW*(4*g+l) +: LW];
