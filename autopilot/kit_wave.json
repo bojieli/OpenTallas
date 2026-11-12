@@ -43810,8 +43810,7 @@
   "intel2",
   "epyc4"
  ],
- "reap_dry_run": true,
- "note_kw45_reap": "KW-FIX-45 11-11 22:5x COORD: reap_stale_attempts deployed behind reap_dry_run (log the would-stop list for 2 ticks); remove reap_dry_run to enable",
+ "note_kw45_reap": "KW-FIX-45 11-12 COORD: reap_stale_attempts ENABLED after 2 clean dry ticks (22:35, 22:46: 14 would-stop lines, all CANCELLED wave rows, 0 superseded-by-newer); switch: reap_stale_attempts false",
  "hosts_prev_kw45_epyc9off": [
   "epyc7",
   "epyc2",
