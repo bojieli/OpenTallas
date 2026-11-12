@@ -49,6 +49,24 @@ class AbsPaths(unittest.TestCase):
             self.assertEqual(PP.verify(out), [])
             ok, msg = PP.gate(os.path.join(out, "die_plan.json"), "require"); self.assertTrue(ok, msg)
 
+    def test_asbuilt_and_sidecar_abs_paths_fail_verify_gate_and_package(self):
+        with tempfile.TemporaryDirectory() as d:
+            lane = os.path.join(d, "lane"); os.makedirs(lane)
+            plan = os.path.join(lane, "die_plan.json"); json.dump({"partition_types": {}}, open(plan, "w"))
+            json.dump({"files": ["/srv/opentallas-scratch2/claude/other/pads.json"]}, open(os.path.join(lane, "asbuilt_x.json"), "w"))
+            import gzip
+            with gzip.open(os.path.join(lane, "pv_comp.json.gz"), "wt") as g:
+                json.dump({"map": {"a": "/home/ubuntu/lane/asbuilt_map.json"}}, g)
+            ok, msg = PP.gate(plan, "require"); self.assertFalse(ok)
+            self.assertIn("asbuilt_x.json", msg); self.assertIn("pv_comp.json.gz", msg)
+            with self.assertRaises(SystemExit): PP.package(plan, os.path.join(d, "pkg"))
+            # package-relative values pass
+            json.dump({"files": ["pads.json"]}, open(os.path.join(lane, "asbuilt_x.json"), "w"))
+            with gzip.open(os.path.join(lane, "pv_comp.json.gz"), "wt") as g:
+                json.dump({"map": {"a": "asbuilt_map.json"}}, g)
+            ok, msg = PP.gate(plan, "require"); self.assertTrue(ok, msg)
+            out = os.path.join(d, "pkg"); PP.package(plan, out); self.assertEqual(PP.verify(out), [])
+
     def test_missing_abs_path_fails_package(self):
         with tempfile.TemporaryDirectory() as d:
             lane = os.path.join(d, "lane"); os.makedirs(lane)

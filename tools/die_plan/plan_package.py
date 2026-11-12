@@ -72,6 +72,32 @@ def abs_path_values(obj, _path="$"):
     return out
 
 
+MAX_JSON_BYTES = 300 * 2**20
+
+
+def package_abs_problems(d, plan_name=None):
+    """absolute paths in EVERY json / json.gz of the package folder (plan, as-built, sidecar, pads, composition ...), not just the
+    plan (KW-FIX-45 11-12 COORD: KV vN's as-built named 5 files outside the package; cleanup deleted two and killed a bind).
+    [(file:jsonpath, 'absolute path ...')]"""
+    import gzip
+    d = Path(d); out = []
+    for dp, dn, fn in os.walk(d, followlinks=False):
+        dn[:] = sorted(x for x in dn if x not in SKIP_DIRS)
+        for name in sorted(fn):
+            if name == "PACKAGE.json" or not name.endswith((".json", ".json.gz")):
+                continue
+            f = Path(dp) / name
+            try:
+                if f.stat().st_size > MAX_JSON_BYTES:
+                    continue
+                raw = json.loads(gzip.open(f, "rt").read() if name.endswith(".gz") else f.read_text())
+            except (OSError, ValueError, EOFError):
+                continue
+            rel = f.relative_to(d)
+            out += [(f"{rel}:{jp}", f"absolute path {v}") for jp, v in abs_path_values(raw)]
+    return out
+
+
 def plan_abs_problems(plan_file):
     try:
         raw = json.loads(Path(plan_file).read_text())
@@ -107,6 +133,10 @@ def package(plan, out):
     plan = Path(plan); src = plan.parent; out = Path(out)
     if out.exists() and any(out.iterdir()):
         raise SystemExit(f"plan_package: {out} is not empty")
+    other = [(r, w) for r, w in package_abs_problems(src) if not r.startswith(plan.name + ":")]
+    if other:
+        raise SystemExit(f"plan_package: {len(other)} absolute path(s) in the as-built / sidecar / other json of the package "
+                         f"(first {other[0][0]}: {other[0][1]}); make them package-relative at the source")
     files = {}
     for dp, dn, fn in os.walk(src, followlinks=True):
         dn[:] = sorted(d for d in dn if d not in SKIP_DIRS)
@@ -161,9 +191,7 @@ def verify(target):
         if sha256_file(p) != e["sha256"]:
             probs.append((rel, "sha256 differs from the package record"))
     probs += [(r, f"{k} -> {tg}") for r, k, tg in outside_entries(d)]
-    pf = d / meta.get("plan", "die_plan.json")
-    if pf.exists():
-        probs += plan_abs_problems(pf)
+    probs += package_abs_problems(d)
     return probs
 
 
@@ -173,7 +201,7 @@ def gate(plan, mode=None):
     if mode == "off":
         return True, ""
     d = os.path.dirname(os.path.abspath(plan))
-    bad = outside_entries(d) + [(r, "abs", w) for r, w in plan_abs_problems(Path(plan))]
+    bad = outside_entries(d) + [(r, "abs", w) for r, w in package_abs_problems(d)]
     if (Path(d) / "PACKAGE.json").exists():
         bad += [(r, w) for r, w in verify(d) if not any(r == b[0] for b in bad)]
         bad = [(b[0], b[1], b[2] if len(b) > 2 else "") for b in bad]
@@ -197,7 +225,7 @@ def main(argv=None):
         print("PLAN_PACKAGE_OK" if not probs else f"PLAN_PACKAGE_FAIL {len(probs)}")
         return 1 if probs else 0
     if len(a) == 2 and a[0] == "check":
-        bad = outside_entries(os.path.dirname(os.path.abspath(a[1]))) + [(r, "abs", w) for r, w in plan_abs_problems(Path(a[1]))]
+        bad = outside_entries(os.path.dirname(os.path.abspath(a[1]))) + [(r, "abs", w) for r, w in package_abs_problems(os.path.dirname(os.path.abspath(a[1])))]
         for r, k, t in bad[:40]:
             print(f"PLAN_PACKAGE_PROBLEM {r}: {k} {t}")
         print("PLAN_PACKAGE_OK" if not bad else f"PLAN_PACKAGE_FAIL {len(bad)}")
