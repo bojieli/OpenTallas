@@ -1,0 +1,12 @@
+{
+ "event": "hd_ctl setup form: one registered status relay on the lepk_i0 -> lepk_o0 fault/ready leg (COORD fail-watch hd_ctl 7d13b54a98b6, built 13:05, TT -88.05 / FF -19.59)",
+ "stage": "S3 plan delta (S5 class: TIMING, cland status collector)",
+ "classification": {
+  "setup": "NOT the coll_WN3 FREG crossings (those belong to hd_ctl_n; hd_ctl has no FREG and the failing build predates the FREG event). Worst path: u_cland_lepk_i0/u_fault_port/q (clk_t15 arrival 449) -> u_cland_up_lepk_o0/fault_o (clk_t31 arrival 410), data 849 ps: QN 91 (27.8 fF wire) + buf 118 + INV 75 + OR4 148 + OA21 41 + four place buffers 280 ps. It is the landing STATUS fault collector crossing the whole W strip (input ring leg to the output ring's up-collector), 28 endpoints.",
+  "hold": "FF -19.59 on 596 endpoints (review count; 375 in the autopilot line): zero-logic starts, worst u_bin_ctrl_i0/q[6] -> u_core.u_logic.rt_q[6] (pin boundary flop -> core flop, port-start class) and u_core.u_logic.u_rr group_r -> local_r (reset relay chain, -16.6). The zero-logic hold-pad class (kit hook tools/die_plan/kit_zl_hold_pad.py, OT_ZLP=1 and OT_ZLP_PORTS=1), not a pipeline-cycle problem: a pin cycle would add a flop in front of the same hold hop."
+ },
+ "form": "plan: clock.landing_status_input_stages {lepk_o0: {lepk_i0: [stage xy (54, 265)]}} (status observed one cycle later, 0 data cycles; gen accepts it, hd_ctl wrapper republished, kit_rtl export rc 0). kit: ZLP hold pads on the hd_ctl kit (OT_ZLP=1, OT_ZLP_PORTS=1) in the same relaunch, with start_q kept (verilog_defines).",
+ "result": {"file": "source_plan_ctl.json.gz", "sha256": "72d86efc67203ed72359be70a183e4eeb190784a2286afcec661b3f9380bdd5b", "base": "TX plan 479e8c2ed0a5 (main); the key is independent of the FREG marking event, re-run ctl_form_event.py on its result to combine"},
+ "gates": {"g0": "not rerun (one clock key on hd_ctl); gen bootstrap + export pass", "prepared": "epyc4:/srv/opentallas-scratch2/claude/head-94/tc1 (= tp1 + this key, hd_ctl wrapper republished; plan sha256 e3771662614a, path-dependent)"},
+ "status": "DO_NOT_COUNT"
+}
