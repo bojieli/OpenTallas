@@ -1,0 +1,116 @@
+{
+ "name": "hg2_3_m2_face_layer",
+ "source": "/srv/opentallas-scratch2/claude/hbm-geom-2/t40c/m2plan/die_plan.json",
+ "source_sha256": "72d85c0afd536b1084de3191c4696de2a2a5172bbe82000800f6f644ab6d4608",
+ "base": "/srv/opentallas-scratch2/claude/hbm-geom-2/qb010d/plan",
+ "files": {
+  "die_plan.json": {
+   "kind": "json",
+   "ops": [
+    [
+     [
+      "partition_types",
+      "PHY_NW",
+      "face_layers",
+      "W"
+     ],
+     "set",
+     [
+      "M6",
+      "M4",
+      "M2"
+     ]
+    ],
+    [
+     [
+      "partition_types",
+      "q_mcb_nw",
+      "face_layers",
+      "E"
+     ],
+     "set",
+     [
+      "M6",
+      "M4",
+      "M2"
+     ]
+    ],
+    [
+     [
+      "partition_types",
+      "q_mcb_nw",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L8x5"
+      },
+      "out_layers"
+     ],
+     "set",
+     [
+      "M6",
+      "M4",
+      "M2"
+     ]
+    ],
+    [
+     [
+      "partition_types",
+      "q_mcb_nw",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L21x1"
+      },
+      "in_layers"
+     ],
+     "set",
+     [
+      "M6",
+      "M4",
+      "M2"
+     ]
+    ],
+    [
+     [
+      "partition_types",
+      "q_mcb_nw",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L63wx5"
+      },
+      "out_layers"
+     ],
+     "set",
+     [
+      "M6",
+      "M4",
+      "M2"
+     ]
+    ],
+    [
+     [
+      "partition_types",
+      "q_mcb_nw",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L114wx1"
+      },
+      "in_layers"
+     ],
+     "set",
+     [
+      "M6",
+      "M4",
+      "M2"
+     ]
+    ]
+   ]
+  }
+ },
+ "bookkeeping_not_applied": [],
+ "outplan_other_diffs": 0,
+ "missing_top_keys_in_outplan": []
+}

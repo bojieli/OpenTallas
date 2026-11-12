@@ -1,0 +1,141 @@
+{
+ "name": "hg2_kshare_refc",
+ "source": "/srv/opentallas-scratch2/claude/hbm-geom-2/kshare/die_plan.json",
+ "source_sha256": "a94e58ce751415617715b130fcb8bc58c832ef91d93d662fa8e61046cff54664",
+ "base": "/srv/opentallas-scratch2/claude/hbm-geom-2/t40c/t40c",
+ "files": {
+  "die_plan.json": {
+   "kind": "json",
+   "ops": [
+    [
+     [
+      "partition_types",
+      "q_hub_nw",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q0"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_hub_nw",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q1"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v8e478a__445.824x506.304__hg2refc.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_hub_nw",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q2"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_hub_nw",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q3"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_hub_ne",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q0"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_hub_ne",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q1"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v8e478a__445.824x506.304__hg2refc.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_hub_ne",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q2"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_hub_ne",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_vmks_Q3"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json"
+    ]
+   ]
+  },
+  "cores/ot_hbm_svc_vm_kshare_splitstrap__v8e478a__445.824x506.304__hg2refc.json": {
+   "kind": "raw",
+   "op": "set",
+   "from": "/srv/opentallas-scratch2/claude/hbm-geom-2/kshare/ot_hbm_svc_vm_kshare_splitstrap__v8e478a__445.824x506.304__hg2refc.json",
+   "sha256": "fbe76b609ba84fbbab7dfd91e72a13f4cc7ce127217b33d920ef1bf5b59ce6be"
+  },
+  "cores/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json": {
+   "kind": "raw",
+   "op": "set",
+   "from": "/srv/opentallas-scratch2/claude/hbm-geom-2/kshare/ot_hbm_svc_vm_kshare_splitstrap__v700685__354.24x453.6__hg2refc.json",
+   "sha256": "15e905ba053578182ed3db22e8a7f7d9af0f5898fd5ad3ecc52db6a8d759fc66"
+  }
+ },
+ "bookkeeping_not_applied": [],
+ "outplan_other_diffs": 0,
+ "missing_top_keys_in_outplan": [],
+ "status": "DRAFT for the t40w event (DIE-HBM-100 kshare abcr + pfr); applies after hg2_t40w_chain_1112; both kshare cores re-harden on these pin files"
+}

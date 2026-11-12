@@ -1,0 +1,455 @@
+{
+ "name": "hg2_2_qb010_lift",
+ "source": "/srv/opentallas-scratch2/claude/hbm-geom-2/qb010d/plan/die_plan.json",
+ "source_sha256": "0a6d5952bee673688314b99bd82ff6e24bb15fa7c3c9ce48671fc06af7384e73",
+ "base": "/srv/opentallas-scratch2/claude/hbm-geom-2/phyflip5/plan",
+ "files": {
+  "die_plan.json": {
+   "kind": "json",
+   "ops": [
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L5056y0"
+      },
+      "regs_um",
+      1,
+      1
+     ],
+     "set",
+     291.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L5056y0"
+      },
+      "regs_um",
+      2,
+      1
+     ],
+     "set",
+     509.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L5070y1"
+      },
+      "regs_um",
+      8,
+      0
+     ],
+     "set",
+     330.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L5070y1"
+      },
+      "regs_um",
+      8,
+      1
+     ],
+     "set",
+     509.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L733y1"
+      },
+      "regs_um",
+      2,
+      1
+     ],
+     "set",
+     509.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L733y1"
+      },
+      "regs_um",
+      3,
+      0
+     ],
+     "set",
+     430.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L733y1"
+      },
+      "regs_um",
+      3,
+      1
+     ],
+     "set",
+     509.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L733y1"
+      },
+      "regs_um",
+      4,
+      1
+     ],
+     "set",
+     475.2
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L734y3"
+      },
+      "regs_um",
+      2,
+      1
+     ],
+     "set",
+     509.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L734y3"
+      },
+      "regs_um",
+      3,
+      0
+     ],
+     "set",
+     426.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L734y3"
+      },
+      "regs_um",
+      3,
+      1
+     ],
+     "set",
+     509.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "ft_slots",
+      {
+       "k": "name",
+       "v": "L734y3"
+      },
+      "regs_um",
+      4,
+      1
+     ],
+     "set",
+     479.52
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c1_k3h0__ra"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     213.408
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c1_k3h0__rb"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     213.408
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c1_k3h1"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k0h0__ra"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k0h0__rb"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k0h1"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     316.224
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k1h0__ra"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k1h0__rb"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k1h1"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     316.224
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k2h0__ra"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k2h0__rb"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k2h1"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     316.224
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k3h0__ra"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k3h0__rb"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     21.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_hb_idx__s_Q2_r0c2_k3h1"
+      },
+      "origin_um",
+      1
+     ],
+     "set",
+     316.224
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "internal_stations",
+      92,
+      "regs_um",
+      7,
+      1
+     ],
+     "set",
+     509.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_b010",
+      "note"
+     ],
+     "set",
+     "PATH-HBM-R11 hub-row growth: outline +604.8 um in y (N-face pins follow the N edge; cores unchanged; the strip is in-partition street with bays) | HBM-MU-QUAD-3 spanning die growth: +794.88 um at local y 3520.8 (content above moves; strip = street with pushdown stations) | DIE-HBM-38 d38r: re-station L28x2(5)/L36x2/L168mx1/L204mx1 to the 405-um reach | DIE-LAYOUT-HBM LADDER 11-11: outline 829.44x4320.0 -> 1304.64x2479.68 (bank block 2-row ladder, b000 column kept), 41 hard cores re-packed on 8 shelves (34.56 um streets) | die_ft_bands (36) dropped: their core layout is gone | CPL-HBM-B1 d6d 1111 (street-widened, on t19): idx frames + bank positions only (orients unchanged); register counts unchanged, covered ft/plan-station register sites re-sited (hops <= 405); every partition cut blocked length <= its t19 budget; route_supply p99 <= t19 | qb010-lift 11-12 (HBM-GEOM-2, COORD hbm-phy-face-blocked): bottom 15 idx macros +17.28 um, S std-cell band under the S face pins"
+    ]
+   ]
+  }
+ },
+ "bookkeeping_not_applied": [],
+ "outplan_other_diffs": 0,
+ "missing_top_keys_in_outplan": []
+}

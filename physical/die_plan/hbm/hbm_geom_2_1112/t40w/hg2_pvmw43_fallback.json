@@ -1,0 +1,6495 @@
+{
+ "name": "hg2_pvmw43_fallback",
+ "source": "/srv/opentallas-scratch2/claude/hbm-geom-2/pvmw43/die_plan.json",
+ "source_sha256": "3a94e866383d36b03d271d65a6d8e92a6e6b5675fe4927bee3d14afd496d0041",
+ "base": "/srv/opentallas-scratch2/claude/hbm-geom-2/t40c/t40c",
+ "files": {
+  "die_plan.json": {
+   "kind": "json",
+   "ops": [
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     570.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     328.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     570.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     328.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1287.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     760.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1045.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1287.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     760.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1045.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2004.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1477.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1762.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2004.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1477.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1762.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2721.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2194.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2479.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2721.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2194.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2479.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3438.72
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2911.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3196.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3438.72
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2911.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3196.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4155.84
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3628.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3913.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4155.84
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3628.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3913.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4872.96
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4345.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4631.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4872.96
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4345.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4631.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5590.08
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5063.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5348.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5590.08
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5063.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5348.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm0",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     535.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     293.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     535.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     293.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1252.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     725.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1010.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1252.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     725.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1010.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1969.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1442.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1728.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1969.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1442.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1728.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2687.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2160.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2445.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2687.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2160.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2445.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3404.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2877.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3162.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3404.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2877.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3162.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4121.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3594.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3879.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4121.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3594.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3879.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4838.4
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4311.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4596.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4838.4
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4311.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4596.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5555.52
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5028.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5313.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5555.52
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5028.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5313.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm1",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     570.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     328.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     570.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     328.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1287.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     760.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1045.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1287.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     760.32
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1045.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2004.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1477.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1762.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2004.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1477.44
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1762.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2721.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2194.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2479.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2721.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2194.56
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2479.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3438.72
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2911.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3196.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3438.72
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2911.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3196.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4155.84
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3628.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3913.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4155.84
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3628.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3913.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4872.96
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4345.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4631.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4872.96
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4345.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4631.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5590.08
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5063.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5348.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5590.08
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5063.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5348.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm2",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     535.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     293.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     535.68
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     293.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c0p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1252.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     725.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1010.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1252.8
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     725.76
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1010.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c1p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1969.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1442.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1728.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1969.92
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1442.88
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     1728.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c2p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2687.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2160.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2445.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2687.04
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2160.0
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2445.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c3p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3404.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2877.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3162.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3404.16
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     2877.12
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3162.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c4p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4121.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3594.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3879.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4121.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3594.24
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     3879.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c5p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4838.4
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4311.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4596.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4838.4
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4311.36
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     4596.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c6p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5555.52
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5028.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5313.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p0_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_bdc"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5555.52
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5028.48
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l0_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "origin_um",
+      0
+     ],
+     "set",
+     5313.6
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "outline_um",
+      0
+     ],
+     "set",
+     233.28
+    ],
+    [
+     [
+      "partition_types",
+      "q_sm3",
+      "hard_cores",
+      {
+       "k": "inst",
+       "v": "u_sm_c7p1_l1_merge"
+      },
+      "pins_file"
+     ],
+     "set",
+     "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json"
+    ]
+   ]
+  },
+  "cores/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json": {
+   "kind": "raw",
+   "op": "set",
+   "from": "/srv/opentallas-scratch2/claude/hbm-geom-2/pvmw/plan/cores_pvmw/ot_hbm_sm_pv_merge__233.28x198.72__pvmW.json",
+   "sha256": "ee36b9cd6c146f9adb7634253674e64cd627b6a348d79068e6e2a1bf4c6748da"
+  }
+ },
+ "bookkeeping_not_applied": [],
+ "outplan_other_diffs": 0,
+ "missing_top_keys_in_outplan": [],
+ "status": "FALLBACK, not in the t40w event (DIE-HBM-100 11-12); applies after hg2_t40w_chain_1112"
+}
