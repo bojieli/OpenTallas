@@ -7,6 +7,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[2]
 SL = REPO / "rtl/dsrom_sys/s81_dv/slice"
 DIE = REPO / "physical/die_plan/s81/bind/inputs/die_b178.v"
+PORTFIX = REPO / "physical/die_plan/s81/bind/source_modules/portfix178"   # the as-built's source copies (they win)
 CL = ["HI_D", "HI_GS", "HO_D", "HO_GS", "H_G", "VNI_D", "VNO_D", "Y_D", "U_D", "SW_D", "SWR_D", "RA_D", "RAR_D",
       "VE_D", "VER_D", "PVS_D", "VSP_D"]
 PL = r"#\((?P<p>(?:[^()]|\((?:[^()]|\([^()]*\))*\))*)\)"
@@ -18,7 +19,7 @@ def _strip(t):
 
 def _modules():
     mods = {}
-    for f in SL.rglob("*.sv"):
+    for f in sorted(SL.rglob("*.sv")) + sorted(PORTFIX.glob("*.sv")):
         if "/test/" in str(f):
             continue
         t = _strip(f.read_text(errors="replace"))
@@ -84,7 +85,8 @@ def test_every_die_slice_forwards_lf_cs_to_every_leaf():
     assert len(tops) >= 8, tops
     errs, seen = check(mods, tops)
     assert not errs, "\n".join(errs[:40])
-    assert {"ot_s81sl_slice_c1x_k8_cap5r_lp", "ot_s81sl_slice_c3x_k8_cap5r_lp_w3", "ot_s81sl_slice_w3"} <= seen
+    assert {"ot_s81sl_slice_c1x_k8_cap5r_lp_e6", "ot_s81sl_slice_c1x_k8_cap5r_lp_w3", "ot_s81sl_slice_c3x_k8_cap5r_lp_w3", "ot_s81sl_slice_w3"} <= seen
+    assert str(mods["ot_s81sl_slice_lepw_mab_hbc_prod_mu_72"][0]).startswith(str(PORTFIX))
 
 
 def test_a_hard_coded_leaf_depth_or_dropped_forward_is_caught():
