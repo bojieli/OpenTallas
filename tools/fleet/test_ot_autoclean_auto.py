@@ -19,6 +19,10 @@ spec = importlib.util.spec_from_file_location("ot_autoclean_auto", SCRIPT)
 ac = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ac)
 
+# FLEET-2 11-12: the cleaner protects every path inside a git worktree (git_locked: a .git FILE in an ancestor with an unreadable or
+# locked gitdir) and every checkout it finds, so a TMPDIR under claude/wt/<worktree>/ made class-d tests fail.  Tests make their own
+# temp roots outside any worktree, whatever TMPDIR says.
+HERMETIC_TMP = next((d for d in ("/tmp", "/var/tmp") if os.path.isdir(d) and os.access(d, os.W_OK)), None)
 OLD = time.time() - 10 * 3600
 
 
@@ -39,7 +43,7 @@ def age_tree(d, mtime=OLD):
 
 class Base(unittest.TestCase):
     def setUp(self):
-        self.t = os.path.realpath(tempfile.mkdtemp(prefix="acx"))
+        self.t = os.path.realpath(tempfile.mkdtemp(prefix="acx", dir=HERMETIC_TMP))
         os.environ["OT_AUTOCLEAN_OFF_FILES"] = os.path.join(self.t, "OFF")
         ac.OFF_FILES = (os.path.join(self.t, "OFF"),)
         self.root = os.path.join(self.t, "srv/scr/claude")
@@ -773,7 +777,7 @@ class TestKitwave(unittest.TestCase):
 class TestProtectedSources(unittest.TestCase):
     """COORD 2026-11-10 (AUTOCLEAN-13): lanes/prune/ARCHIVE-PROTECTED.tsv is the third protected list"""
     def setUp(self):
-        self.t = tempfile.mkdtemp(prefix="ac-src-")
+        self.t = tempfile.mkdtemp(prefix="ac-src-", dir=HERMETIC_TMP)
         self.coord = os.path.join(self.t, "coord")
         os.makedirs(os.path.join(self.coord, "lanes/prune"))
         with open(os.path.join(self.coord, "lanes/PROTECTED-DBS.txt"), "w") as f:
