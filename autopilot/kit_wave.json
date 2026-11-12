@@ -22543,7 +22543,8 @@
     },
     "slw_sc_v2": {
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GRT_TRANSITION_MODE": "edge_outline"
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "coll_ftn": {
      "OT_CONS_KIT": "1",
@@ -22676,7 +22677,8 @@
     },
     "sle_ctl__cla4f6f12f": {
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_GRT_TRANSITION_MODE": "edge_outline"
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "sle_sc_v1__cl115da35f": {
      "OT_KW42_CSTART": "9db0ec8d71e",
@@ -22727,7 +22729,8 @@
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_st_a_v2__cl9f076a5c": {
-     "OT_GRT_TRANSITION_MODE": "edge_outline"
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "slw_fw_v3": {
      "OT_GRT_TRANSITION_MODE": "edge_outline"
@@ -25319,7 +25322,26 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {},
+   "item_inputs": {
+    "sle_ctl__cla4f6f12f": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_lr2",
+     "src_sha": "188d464c712b9f471a0a0d0f529ad5900cc103f6",
+     "queue_src": "claude/land-ring-2-1111@188d464c712b",
+     "note": "KW-FIX-45 11-12 COORD: LAND-RING-2 QC pilot: src_qc_s25_lr2 = src_qc_s25_4e2764d237 + land-ring-2-1111@188d464c712b gen_phys.py + landing_placement.tcl (3-way merged, no conflicts); OT_CLAND_STRIP_DENS=1.0; DO_NOT_COUNT until land-ring-2 merges"
+    },
+    "slw_st_a_v2__cl9f076a5c": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_lr2",
+     "src_sha": "188d464c712b9f471a0a0d0f529ad5900cc103f6",
+     "queue_src": "claude/land-ring-2-1111@188d464c712b",
+     "note": "KW-FIX-45 11-12 COORD: LAND-RING-2 QC pilot: src_qc_s25_lr2 = src_qc_s25_4e2764d237 + land-ring-2-1111@188d464c712b gen_phys.py + landing_placement.tcl (3-way merged, no conflicts); OT_CLAND_STRIP_DENS=1.0; DO_NOT_COUNT until land-ring-2 merges"
+    },
+    "slw_sc_v2": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_lr2",
+     "src_sha": "188d464c712b9f471a0a0d0f529ad5900cc103f6",
+     "queue_src": "claude/land-ring-2-1111@188d464c712b",
+     "note": "KW-FIX-45 11-12 COORD: LAND-RING-2 QC pilot: src_qc_s25_lr2 = src_qc_s25_4e2764d237 + land-ring-2-1111@188d464c712b gen_phys.py + landing_placement.tcl (3-way merged, no conflicts); OT_CLAND_STRIP_DENS=1.0; DO_NOT_COUNT until land-ring-2 merges"
+    }
+   },
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
