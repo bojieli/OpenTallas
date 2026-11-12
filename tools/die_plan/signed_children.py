@@ -4,6 +4,13 @@ import hashlib
 import json
 import re
 from pathlib import Path
+
+
+def _tq(s):
+    """TCL-PUTS-QUOTE (GEN-CLASS-1 11-12, class of CLAND-PUTS-QUOTE 7fa736b945): a value written inside a generated Tcl
+    puts "..." is text, never code: escape [ ] $ \\ and the quote (an instance / port / net name with a bus index
+    [k] was command substitution)."""
+    return re.sub(r'([\[\]$"\\])', r'\\\1', str(s))
 REPO = Path(__file__).resolve().parents[2]
 CHILD_VIEW_FILES = ("{m}.lef", "{m}_tt.lib", "{m}_ff.lib", "provenance.json", "gates.json")
 
@@ -100,7 +107,7 @@ def hard_children_tcl(children):
                f"$i setLocation [expr {{round({c['at'][0]} * $dbu) - [$bb xMin]}}] "
                f"[expr {{round({c['at'][1]} * $dbu) - [$bb yMin]}}]",
                "$i setPlacementStatus FIRM",
-               f"puts \"hard child {c['inst']} -> [$i getName] {c['orient']} at {c['at'][0]} {c['at'][1]}\""]
+               f"puts \"hard child {_tq(c['inst'])} -> [$i getName] {c['orient']} at {c['at'][0]} {c['at'][1]}\""]
     mp.append(f"puts \"OT_HARD_CHILDREN placed {len(children)}\"")
     return "\n".join(mp) + "\n"
 
