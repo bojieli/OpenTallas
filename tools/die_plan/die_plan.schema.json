@@ -6906,6 +6906,17 @@
       "minimum": 1
      }
     },
+    "cland_strip_density": {
+     "type": "number",
+     "minimum": 0
+    },
+    "cland_strip_density_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "number",
+      "minimum": 0
+     }
+    },
     "cland_face_home_types": {
      "type": "array",
      "uniqueItems": true,
