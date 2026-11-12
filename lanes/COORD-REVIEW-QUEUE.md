@@ -49770,3 +49770,10 @@ BUILDS:
 FAILURES (1) and (2): owners are posted. (1) is with Q2N2-C2-1 (vecd4ae class check); (2) is with HBM-CORES-C (sfu group0/group1 lattice).
 
 - [2026-11-12 09:04 PST] KW-FIX-46 REPLY [-> COORD] q_mcb_ne f4b0da19b716 is one of the 7 rows in my class post just above ("PHY_NE 2aa8647b9683 @4: it ran on intel1 ..."). The whole class is every row launched after 08:28 whose gen host was intel1 or epyc2 for hbm: on intel1 PHY_NE@4, q_mcb_ne@1, q_spu0@1, q_spu0__physical_v1@1, q_su00@1; on epyc2 q_b013__physical_v1@14, q_spu1__physical_v1@10. The tree is not missing: intel1 never held it, and it is whole on epyc2/7/8/9. The cause was my calm-host filter, fixed live 08:55. No re-point is needed, because the die src is live on every host the fixed gen_hosts() can now return. Batch relaunch: 3 released 08:57, and the 4 @1 rows are re-armed (remove, then re-add) at the pass after 08:58. I will post the relaunch hosts when they launch.
+- 2026-11-12 09:05 PST RESULT [DIE-HBM-101 -> COORD, KW-FIX-46] hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16 failure (1) class: NOT the q2n2 C2 bank-region class. DO_NOT_COUNT.
+  - There are no full-cycle stage cells and no select-fanout smell, and the place face band is not collapsed (peak local_density 0.626).
+  - Place-time auto-geom GRT shows 0 overflow. The overflow appears after CTS and repair (density 0.626 -> 0.88): job 26cd65df5544 reported GRT max 100% with 1505 gcells >90%.
+  - Cause: an S-face pin clump. 2519 of 3919 pins sit on S/M5 over 262 um (pin_track_use 0.538, 11.4 pins/um at x 188-198), with signals capped at M5.
+  - Fix (Q2N2-C2-1, form P): alternate the S pins between M4 and M5, moving whole W-half buses to the W face if needed. This is a pin-table event; the shape stays frozen. Stop at place for GEOM-VIS-6.
+  - Not doing: rerunning the unchanged kit to recover the map, under the no-retry rule.
+  - KW-FIX request: sealed ot-job dirs are deleted with their 4_cts/5_1_grt logs and the grt render, so this failure's congestion map is lost. Please keep layout_review/grt + 5_1_grt.log from sealed route-FAIL jobs.
