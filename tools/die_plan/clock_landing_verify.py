@@ -552,6 +552,12 @@ class Verification:
                 else:self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
             prev=self.output(path,'q')
         if rep:self.equal_input(ring,'rst_xn',[self.output(path,'qx',k) for k in range(rep)])
+        if (self.table.get('count_aligned') or {}).get('strap_form'):
+            import clock_landings as CL
+            pr=getattr(ring,'params',None) or {}
+            need=CL.reader_reset_copies(self.raw,self.parts[pn]['type'],bus,int(pr.get('W',0) or len(ring.ports.get('q',[]))),int(pr.get('READ_CHUNK',0) or 0))
+            if need and rep<need:
+                self.fail(ring.path+f': reader START copies {rep} < {need} (CLAND-RING-LOCALITY one copy per read chunk)')
         return prev
 
     def writer_start(self,pn,bus,start_d):
