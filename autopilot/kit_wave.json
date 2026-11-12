@@ -20920,12 +20920,8 @@
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
     "sle_sc_v2": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch",
-    "cbn_q01__clab6e67f2": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a26 clock-landing band too small/blocked; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
-    "cbn_q01__cld9ff4c40": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a11 clock-landing band; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
-    "cbn_q01__cldd6ea846": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a16 clock-landing band; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
     "sle_fw_v3": "RE-FORM KW-FIX-43 11-09 19:5x COORD route (5): routed-not-signed a37, setup WNS -334.6 ps (2687 endpoints), hold FF -64.7/-110 per COORD; not a near miss, attempt count high. Revert: delete this key.",
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
-    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
     "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
     "cbf_q00__cl1b5a6458": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
@@ -25062,7 +25058,36 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {},
+   "item_inputs": {
+    "cbn_q01__clab6e67f2": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
+     },
+     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
+    },
+    "cbn_q01__cld9ff4c40": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
+     },
+     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
+    },
+    "cbn_q01__cldd6ea846": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
+     },
+     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
+    },
+    "cbf_q01": {
+     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
+     },
+     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
+    }
+   },
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
