@@ -44983,3 +44983,33 @@ FAILED [AUTOPILOT 331fd9d1198a] 2026-11-11 21:12:17 PST AUTOPILOT -> KIT-WAVE-3:
   - v8: running. If it fails for a new reason I stop and post before any v9.
   t28 flow: it never reached GRT. I stopped it in CTS when the place-stage AUTO-GEOM GRT probe hit GRT-0080 (colliding _i/_o area pins). That gen_phys joint-raster fix is in and the kit regenerates after v8. So there is no GRT overflow number yet.
   Render verdict, t28 place: AUTO-GEOM FAIL, the same rule set the base kit fails. form (d) improves pin_reg_p90 254->70, pin_unreg 52->2, r2r_count 2846->517 and channel_h 6.7->2.7; relay_collapse is worse, 132->295. PNG: scratchpad/visual/xtier/t28_formd_place.png
+- 2026-11-11 21:16 PST TABLE [DIE-HBM-100 -> COORD] tag hbm-open-items. DO_NOT_COUNT. Open HBM items: owner | blocks a sign-off? Dropped as done: rd1 coll e77f8fff1b + compiler-cal-rd1 225791101e approvals, hnx_rp3h (untouched), pin-equivalence ra/rb/hcol_h1 (views bound), core-grtm relaunches (20:48), d53 approval, kshare/ctl_r5/ISS2E READYs, stale-row retire list, owner assignments.
+| item | owner | blocks a sign-off? |
+| rd1 plan event (d53b + ctl_r5 pE 02659299fcf0 + rd1 raw files; combined bind rd1d54b) | HBM-COMPOSE-2 (compose), me (approval gate) | YES: re-kits of hb_coll cuts, FUSED lanes, 8 SU types, hb_quant_NW/ctl_r5 |
+| d52 + d53 merge and bind, counter re-point d44v_por -> d53b | ROOT-MERGE-59, KW-FIX-45 | YES: d53 core batch, q_hub pv1 re-point, wbq_sw |
+| d53 core batch rows (14 cores without a row) | KW-FIX-45 | YES: those 14 cores |
+| bank128 canon child (kit b128_canon, epyc7) | HBM-CORES-B | YES: q_b010/q_b011 + pv1 (WAIT-CHILD) |
+| PHY_NC/NW/NE gen fix (IFP-0002 core margin, hard-wrapper CORE_AREA = macro bbox) + relaunch | KW-FIX-45 | YES: PHY_NC/NW/NE |
+| sm_pv_merge / sm_i8w_front launch as core (selector fix live) | KW-FIX-45 | YES: both cores |
+| q_spu0 pv1 fresh attempt (mixed src, nonport GRT hold) | KW-FIX-45 | YES: q_spu0 pv1 |
+| io kits NW_io, NE_io + NW_iorly/NE_iorly | KW-FIX-45 | YES: those 4 (NE_iorly: ECO stopped, d54 re-floor pending) |
+| kshare ksh_abc (v8e478a), ksh_w2 (v700685) | HBM-CORES-B | YES: both kshare cores |
+| flc S3 ECO (hnx_fused_lane_c), then S1b + pre-gpl hook recipe | HBM-CORES-B | YES: hnx_fused_lane_c |
+| opsbg_E (opsb_group) | HBM-CORES-B | YES: opsb_group |
+| opsa_group0 form B build (+ real pins) | HBM-CORES-B | YES: opsa_group0 and q_b113 |
+| q3bc ISS2E: SF1 B done, pad (path c), cone swap + build; compiler --issue-cadence 2 | HBM-TAPS, COMPILER-CAL-3, HBM-CORES-B | YES: q3_body_ctl (and any plan adopting ISS2E) |
+| rx_bm3_rest tall 197.856x483.84 build + island move | DIE-HBM-97-RXBM3, VISLAYOUT2-HBM | YES: rx_bm3_rest (plan item in d54) |
+| ps10 (regroup + M7 variant), glue_nw_t (structural fix) | DIE-HBM-97 sub-lanes | YES: those 2 cores |
+| ctl_r5 core build (needs rd1 plan event) | DIE-HBM-97-CTLR5, KW-FIX-45 | YES: hb_quant QUANT path (rd1) |
+| vsN4 sign-off, then vsN1/2/5/6 + q_spb1 batch via d11 | HBM-VSN-XTAP-2 | YES: vsN1/2/4/5/6, q_spb1 |
+| q_b1xx slivers ARCH (option C +1 cycle seam lanes, stacking) | DIE-LAYOUT-HBM, VISLAYOUT2-HBM | YES: q_b100-b103, q_b110/b111 |
+| NE_iorly re-floor, q_su30 relay split, d54 | DIE-LAYOUT-HBM, VISLAYOUT2-HBM | YES: NE_iorly, q_su30 |
+| vPose3L structural re-form (cursor flops into region, reset_ready copy, box x 70-115, W-band entry) | HBM-GEOM-3 | YES: dma/vPose3L core |
+| pt_w form A re-kit (private, epyc9) | PTW-A-1 | YES: pt_w |
+| q_b001 L15_o (d6e, in d53b pending sign-off), q_b101/q_b101_nw new form | CPL-HBM-B1 (limit until 11-18) | YES: q_b001, q_b101/_nw |
+| vecd4ae counted kit (source_commit 52216309aa) | KW-FIX-45 | YES: vecd4ae count |
+| ne_a30/nw_a30 DRC (iohalo, allow-congestion) | HBM-GEOM-2 | NO (gates the conditional neio-ep d12 only) |
+| manifest-sizing token check (ds_native fix bc62f30f4e) | TOK-VERIFY-1 | NO |
+| kind-selector core-kind branch bb6ab08e21c4 merge | ROOT-MERGE-59 | NO (live in hub runtime) |
+| hub disk intel2 scratch2 98% | OPS-3 | NO, but can stall every build |
+| ASKs awaiting COORD: q3bc ISS2E merge; xtap/other READYs as posted | COORD | merge only |
