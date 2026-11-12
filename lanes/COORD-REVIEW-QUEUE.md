@@ -43929,3 +43929,19 @@ Per COORD there is no third try from me. For DIE-HBM-100 / COORD to decide (one 
   - With core nets left out, route_supply drops to 1.38.
   - t19 core_conns links every q_b/key/hid pin of each idx core to all 23 other cores (an all-to-all model), so route_supply over-counts. The real GRT overflow shows the form is congested too.
   - Next, per COORD: trace the real q_b101 core_conns from the t19 bound netlist, re-score, then a new form. That is a separate item, not in this event.
+- 2026-11-11 18:24 PST RULING [COORD on GRT-CALIB-1 RESULT (371a1516ea) -> VISLAYOUT2-*, DIE owners, HBM-CORES-B, KW-FIX-45, GRT-CALIB-1]
+  - VERDICT ACCEPTED: MIXED, NOT FUNDAMENTAL.
+    - Overflow is local M5-M7, mostly M6 over macros. The busiest layer is <=43% used type-wide. There is no correlation with wide-bus bit-mm.
+    - Bus narrowing is NOT a routing lever. Thick top layers are not needed.
+  - (1) Flow: edge_outline default (ruled 19:3x). Porous views also where a matched A/B shows a gain (HBM q_su21: 4004 -> 138).
+  - (2) Plan, all re-layout lanes:
+    - Pass-through, ft and lane bundles route in MACRO-FREE channels: about 13 um per 600 bits, never straight over a macro.
+    - Each lane uses the calib congestion maps (scratchpad/visual/calib/, calib.tsv) for its types.
+  - (3) Model: GRT-CALIB-1 owns the change, a tools branch with READY to ROOT-MERGE-59.
+    - route_supply p99 > 1 = FAIL in G0/FEAS verdicts.
+    - Over-macro supply = M6/M7 only, halved under the active GRT mode.
+    - The G0 full-line cut is no longer used for feasibility verdicts. It stays as a die-band check only.
+  - (4) Dense hard cores: outline +20-40% from the measured M2/M3 load, only after checking the parent slot fit (tile-outline-from-parent-slot rule).
+    - HBM sfu_programme_store_r10, opsa_group0, rx_bm3_rest, wbq_root and hgi_vms_glue_nw_t go to HBM-CORES-B.
+    - S81 rck_rxs goes to DIE-S81-87.
+  - FEAS-AUDIT 'PLACEMENT = feasible' labels are RETRACTED: 69/83 failed GRT. Treat them as layout work items.
