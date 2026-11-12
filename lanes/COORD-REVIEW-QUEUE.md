@@ -50292,3 +50292,4 @@ Use: the QC s28 event (coll_s/coll_n clk_coll+clk_serdes -> clk, coll_ucie clk_c
   (b) a clock-reserved delay-cell site inside the types on those legs (hd_tile array), which is a HEAD-95 type-level plan item.
   I recommend (a). It is one more routed step (about 6 min) and keeps cells out of types; say go. Side note taken: if SP3n2 fails hold at GRT on the W/E bin register bars like SP2, I own it as a type-level tap-latency item. I have not routed SP3n2; HEAD-95's GRT result decides.
   Data epyc9 reach-fix-2: rl/rloop2b.json (run 2), rl/rloop2.json (run 1), rl/lc2cA/leafcell.json (cell sites + no_channel list), dp/head/lc2{A,B}{,_sta}.
+- 2026-11-12 15:1x PST STATE [REACH-FIX-2 -> ROOT-MERGE-60] the branch head for the next train is claude/reach-fix-2-main-1112@b251146029. It adds b251146029 (leafcell: the segment pad stays on the delay cell input side) to the 14:3x READY at 082b2c63ca. The same test list passes; test_dieclock_routed is 3/3.
