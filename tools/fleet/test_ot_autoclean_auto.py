@@ -1098,6 +1098,42 @@ class TestAggressive(Base):
         self.assertTrue(os.path.exists(young))
         self.assertIn("PROTECTED/COUNTED HITS AT RECHECK: 0", self.out)
 
+    def test_class_d_skips_lane_with_running_process(self):
+        """COORD 11-12: a lane whose files are the cwd or argv script of a running process is not pruned at all"""
+        lane = os.path.join(self.root, "proto-lane")
+        script = os.path.join(lane, "proto_die.sh")
+        touch(script, 10)
+        touch(os.path.join(lane, "scripts/x.sh"))
+        touch(os.path.join(lane, "s81/y.bin"))
+        age_tree(lane)
+        other = os.path.join(self.root, "idle-lane/f.bin")
+        touch(other)
+        age_tree(os.path.dirname(other))
+        p = subprocess.Popen(["sleep", "60"], cwd=lane)
+        try:
+            self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        finally:
+            p.kill()
+            p.wait()
+        self.assertTrue(os.path.exists(script))
+        self.assertTrue(os.path.exists(os.path.join(lane, "scripts/x.sh")))
+        self.assertTrue(os.path.exists(os.path.join(lane, "s81/y.bin")))
+        self.assertFalse(os.path.exists(other))              # the idle lane still goes
+        self.assertIn("live lane", self.row(lane)[4])
+
+    def test_class_d_skips_lane_named_in_argv(self):
+        lane = os.path.join(self.root, "argv-lane")
+        script = os.path.join(lane, "run.sh")
+        touch(script, 10)
+        age_tree(lane)
+        p = subprocess.Popen(["bash", "-c", "sleep 60; true", script])
+        try:
+            self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        finally:
+            p.kill()
+            p.wait()
+        self.assertTrue(os.path.exists(script))
+
     def test_class_d_off_without_aggressive_and_keeps_git_and_never_touch(self):
         lane = os.path.join(self.root, "gitlane")
         touch(os.path.join(lane, "wt/.git"), n=10)

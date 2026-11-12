@@ -1647,6 +1647,27 @@ class Job:
                            capture_output=True, text=True, timeout=600)
         return bool(r.stdout.strip())
 
+    def live_lane_roots(self):
+        """OWNER/COORD 11-12 (class d deleted die-proto-3/{proto_die.sh,scripts,s81} under DIE-PROTO-1's running chains): every
+        */claude/<lane> root that holds the cwd, an open file, a docker bind-mount source or an absolute path in the argv of a
+        running process / container on this host.  Class d never touches such a lane."""
+        self.live.refresh()
+        paths = set(self.live.cwds) | set(self.live.fds) | set(self.live.mounts)
+        for c in self.live.cmds:
+            for m in re.findall(r"(/[^\s'\";:,)=]+/claude/[^\s'\";:,)=]+)", c):
+                paths.add(m)
+        lanes = set()
+        for q in paths:
+            q = q.split(" (deleted)")[0]
+            for cand in {q, os.path.realpath(q)}:
+                m = re.match(r"(.*?/srv/[^/]+/claude/[^/]+)", cand)
+                if m:
+                    lanes.add(m.group(1))
+                    lanes.add(os.path.realpath(m.group(1)))
+        for t in getattr(self.a, "d_live_extra", []) or []:
+            lanes.add(t)
+        return lanes
+
     def prune_lane_trees(self, gone):
         a = self.a
         keep, anc = self.d_keepset()
@@ -1706,6 +1727,7 @@ class Job:
                                   p, "<tree>", size, int(st.st_mtime)])
             return
 
+        live_lanes = self.live_lane_roots()
         for r in self.roots:
             if not re.fullmatch(r"/srv/[^/]+/claude", r) and not getattr(a, "d_any_root", False):
                 continue                                  # class d only prunes the fleet scratch roots, never a home / checkout root
@@ -1717,6 +1739,10 @@ class Job:
                 lp = os.path.join(r, lane)
                 if lane in D_SKIP_LANES or lane.startswith(("tok-", "kv-fn-")) or "tool" in lane or os.path.islink(lp) \
                         or not os.path.isdir(lp):
+                    continue
+                if os.path.realpath(lp) in live_lanes or lp in live_lanes:        # COORD 11-12: a running process / container works in this lane
+                    self.rows.append([time.strftime("%F %T"), self.host, "d", "SKIP", "live lane (cwd / argv / fd / docker mount)", lp,
+                                      "<tree>", 0, int(os.lstat(lp).st_mtime)])
                     continue
                 visit(lp, 1)
 
