@@ -752,7 +752,7 @@ def ft_hop_xtap(plan, tn, slot):
     return schema.ft_hop_xtap(plan, tn, slot)
 
 
-def core_input_pipe(plan, tn, module):
+def core_input_pipe(plan, tn, module, port=None):
     """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
     default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
     on the fabric clk.  The register gives the long fabric wire a full cycle (setup); the latch after it gives the
@@ -761,7 +761,13 @@ def core_input_pipe(plan, tn, module):
     declared); the compiler / TOK reschedule reads the same file.  Config key "pipe" (absent = 0, byte-identical)."""
     if not core_input_lockup(plan, tn, module):
         return 0
-    return int((((plan or {}).get("clock") or {}).get("core_input_lockup") or {}).get("pipe") or 0)
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    # pipe_except (COORD 11-11, pilot10 vs pilot10r): ports that keep the lockup latch but get NO pipe register, e.g. the
+    # NK rst_n.  A rising-edge stage cannot meet the core hold arc (pilot10r rst_n -262.4 ps); the latch alone can (pilot10
+    # +8.2) and reset needs no setup cycle.  Absent = every listed port gets the pipe.
+    if port is not None and port in set(cfg.get("pipe_except") or ()):
+        return 0
+    return int(cfg.get("pipe") or 0)
 
 
 def ft_hop_lockup_cell():
@@ -3934,7 +3940,7 @@ class Binder:
                     if pn in core_input_lockup(self.plan, tn, c.module):
                         lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
                         decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
-                        npipe = core_input_pipe(self.plan, tn, c.module)
+                        npipe = core_input_pipe(self.plan, tn, c.module, pn)
                         if npipe:
                             pq = short_id(f"pq_{sv_id(r)}_{pn}", 100)
                             decl.append(f"    wire [{len(bits) - 1}:0] {pq};")

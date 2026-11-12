@@ -67,5 +67,17 @@ class CoreInputPlace(unittest.TestCase):
         self.assertIn("ot_face_flops.txt", chain)   # face-anchored registers stay fixed
 
 
+class CoreInputPipeExcept(unittest.TestCase):
+    """pipe_except: the listed ports keep the latch but get no pipe register (NK rst_n, COORD 11-11)."""
+
+    def test_pipe_except(self):
+        mods = {"qfd_tile_nk_a0c": ["n_a", "n_b", "tap", "rst_n"]}
+        p = {"clock": {"core_input_lockup": {"modules": mods, "types": ["cbn_q11"], "pipe": 1, "pipe_except": ["rst_n"]}}}
+        self.assertEqual(bind.core_input_pipe(p, "cbn_q11", "qfd_tile_nk_a0c", "n_a"), 1)
+        self.assertEqual(bind.core_input_pipe(p, "cbn_q11", "qfd_tile_nk_a0c", "rst_n"), 0)
+        self.assertEqual(bind.core_input_pipe(p, "cbn_q11", "qfd_tile_nk_a0c"), 1)
+        self.assertIn("rst_n", bind.core_input_lockup(p, "cbn_q11", "qfd_tile_nk_a0c"))
+
+
 if __name__ == "__main__":
     unittest.main()
