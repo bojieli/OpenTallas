@@ -6384,7 +6384,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         if not types or list(types) != [ov.get("type")]:
             raise gen_rtl.GenError(f"type overlay for {ov.get('type')!r} requires exactly --types {ov.get('type')}")
         try:
-            raw, overlay_receipt = TO.apply_validated(raw, ov)
+            raw, overlay_receipt = TO.apply_validated(raw, ov, plan_path=plan_path)
         except TO.OverlayError as exc:
             raise gen_rtl.GenError(str(exc)) from exc
     if private_clock_mesh:

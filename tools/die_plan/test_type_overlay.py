@@ -126,7 +126,7 @@ def test_validation_is_scoped_to_the_type(plan, tmp_path):
 
 def test_rtl_projection_change_rejected(plan, monkeypatch):
     calls = []
-    monkeypatch.setattr(TO, "rtl_projection", lambda raw, tn: (calls.append(1), {"reset_gate_taps": {"u_hc": "t%d" % len(calls)}})[1])
+    monkeypatch.setattr(TO, "rtl_projection", lambda raw, tn, pp=None: (calls.append(1), {"reset_gate_taps": {"u_hc": "t%d" % len(calls)}})[1])
     with pytest.raises(TO.OverlayError, match="RTL inputs change"):
         TO.apply_validated(plan, OV)
 
@@ -141,7 +141,7 @@ def test_collector_reach_and_seam_hop_on_the_type(plan, monkeypatch):
     base_rows = TO.seam_rows(plan, "mid")
     worse = {k: dict(r, over=True, hop_um=r["hop_um"] + 500) for k, r in base_rows.items()}
     calls = []
-    monkeypatch.setattr(TO, "seam_rows", lambda raw, tn: base_rows if not calls.append(1) and len(calls) == 1 else worse)
+    monkeypatch.setattr(TO, "seam_rows", lambda raw, tn, pp=None: base_rows if not calls.append(1) and len(calls) == 1 else worse)
     if base_rows:
         with pytest.raises(TO.OverlayError, match="seam_hop"):
             TO.apply_validated(plan, OV)
@@ -157,3 +157,49 @@ def test_scope_errors_typed_drops_other_types_rows_the_old_scope_kept(plan):
     assert S.scope_errors(errs, ["mid"]) == [e for e in errs if e != "type sink: y"]
     assert S.scope_errors_typed(errs, ["mid"], plan) == [errs[4], errs[5], errs[7]]
     assert S.scope_errors_typed(errs, None, plan) == errs
+
+
+def test_type_positions_apply_roundtrip_and_reject(plan):
+    t = plan["partition_types"]["mid"]
+    assert t["clock"]["tap_um"] == [432.0, 432.0]
+    new = TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid",
+                                  "type_positions": {"clock.tap_um": [400.0, 440.0]}})
+    assert new["partition_types"]["mid"]["clock"]["tap_um"] == [400.0, 440.0] and t["clock"]["tap_um"] == [432.0, 432.0]
+    ov = TO.overlay_from_plans(plan, new, "mid")
+    assert ov["type_positions"] == {"clock.tap_um": [400.0, 440.0]} and TO.apply_overlay(plan, ov) == new
+    for key, val, match in (("clock.period_ps", [1.0, 2.0], "rejected"),            # not a site key
+                            ("clock.tap_um", [1.0], "shape"),
+                            ("clock.tap_um", [5000.0, 1.0], "outside the type outline"),
+                            ("clock.taps.9.xy", [1.0, 1.0], "no such site"),          # adding a site is a plan event
+                            ("clock.tap_um", ["a", "b"], "expected")):
+        with pytest.raises(TO.OverlayError, match=match):
+            TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "type_positions": {key: val}})
+
+
+def test_type_positions_note_ignored_and_other_type_rejected(plan):
+    new = copy.deepcopy(plan)
+    new["note"] = "x"
+    new["partition_types"]["mid"]["clock"]["tap_um"] = [400.0, 440.0]
+    assert TO.overlay_from_plans(plan, new, "mid")["type_positions"]
+    other = copy.deepcopy(new)
+    other["partition_types"]["sink"]["clock"]["tap_um"] = [1.0, 1.0]
+    with pytest.raises(TO.OverlayError, match="clock"):
+        TO.overlay_from_plans(plan, other, "mid")
+
+
+def test_type_positions_that_change_the_reset_tree_are_rejected(plan, monkeypatch):
+    """EQ guard also covers site coordinates: a projection that differs (reset relay names follow the tap) rejects."""
+    seen = []
+    monkeypatch.setattr(TO, "rtl_projection", lambda raw, tn, pp=None: {"reset_tree": raw["partition_types"][tn]["reset"].get("tap_um")})
+    plan["partition_types"]["mid"]["reset"] = {"tap_um": [432.0, 432.0]}
+    ov = {"format": TO.FORMAT, "type": "mid", "type_positions": {"reset.tap_um": [400.0, 400.0]}}
+    with pytest.raises(TO.OverlayError, match="RTL inputs change"):
+        TO.apply_validated(plan, ov)
+
+
+def test_type_positions_kit_changes_only_clock_files(plan, tmp_path):
+    a = kit(plan, tmp_path / "a")
+    b = kit(plan, tmp_path / "b", type_overlay={"format": TO.FORMAT, "type": "mid",
+                                               "type_positions": {"clock.tap_um": [432.0, 440.64]}})
+    assert set(b) - set(a) == {"mid/type_overlay.json"}
+    assert all(k.startswith("mid/") for k in a if a[k] != b[k])
