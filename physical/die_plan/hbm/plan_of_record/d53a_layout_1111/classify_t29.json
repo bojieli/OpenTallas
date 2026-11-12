@@ -1,0 +1,34 @@
+{
+ "base_sha256": "fb9e82d616169d1c41e0b275e843fce40158cf603f5ee1119dd51251fe6b2ac1",
+ "new_sha256": "746e88cc6a358d2f85244c55c020db0fdc5c5a8bbdad34524a8c116361e29817",
+ "changed_paths": 7,
+ "by_class": {
+  "ft_bands_windows": {
+   "n": 3,
+   "paths": [
+    "partition_types/q_spt0__physical_v1/ft_slots/name=L5076x2/stations",
+    "partition_types/q_spt0__physical_v1/ft_slots/name=L5076x2/regs_um",
+    "latency/lanes/L5076/stations"
+   ]
+  },
+  "notes": {
+   "n": 2,
+   "paths": [
+    "note",
+    "partition_types/q_spt0__physical_v1/ft_slots/name=L5076x2/note"
+   ]
+  },
+  "other": {
+   "n": 2,
+   "paths": [
+    "latency/lanes/L5076/cycles",
+    "latency/lanes/L5076/natural"
+   ]
+  }
+ },
+ "types_changed": [
+  "q_spt0__physical_v1"
+ ],
+ "types_removed": [],
+ "types_added": []
+}

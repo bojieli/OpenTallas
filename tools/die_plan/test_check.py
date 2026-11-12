@@ -171,6 +171,29 @@ def test_cut_overflow():
     assert any("vertical cut" in x for x in e)
 
 
+def test_full_cut_band_mode_keeps_segments_demotes_full_line():
+    """GRT-CALIB-1: --full-cut band moves the full-line cut to an advisory die-band WARN; segment cuts stay ERRORs;
+    the default (verdict) is unchanged."""
+    def m(p):
+        p["die"]["layer_budget"]["cut_avail"] = {"M8": 0.0, "M9": 0.0}
+        for t in p["partition_types"].values():
+            t["ft_track_frac"] = 0.0001
+    p0 = copy.deepcopy(EX)
+    m(p0)
+    R0, s0 = check.run(copy.deepcopy(p0), completeness=True)
+    R1, s1 = check.run(copy.deepcopy(p0), completeness=True, full_cut="band")
+    full0 = [i for i in R0.errors() if i["check"] == "cuts" and "segment" not in i["msg"]]
+    seg0 = [i for i in R0.errors() if i["check"] == "cuts" and "segment" in i["msg"]]
+    assert full0
+    assert not [i for i in R1.errors() if i["check"] == "cuts" and "segment" not in i["msg"] and "stations_in" not in i["msg"]]
+    assert [i["msg"] for i in R1.errors() if i["check"] == "cuts" and "segment" in i["msg"]] == [i["msg"] for i in seg0]
+    band = [i for i in R1.items if i["check"] == "cuts_full_band"]
+    assert len(band) == len(full0) and all(i["level"] == "WARN" for i in band)
+    assert s0["cuts"]["worst_full"] == s1["cuts"]["worst_full"]          # still measured and reported
+    R2, _ = check.run(copy.deepcopy(p0), completeness=True, full_cut="verdict")
+    assert [i["msg"] for i in R2.items] == [i["msg"] for i in R0.items]  # default = byte-identical findings
+
+
 def test_clock_reset_leaf():
     assert any("no clock method" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("clock")))
     assert any("no reset" in x for x in errs(lambda p: p["partition_types"]["mid"].pop("reset")))

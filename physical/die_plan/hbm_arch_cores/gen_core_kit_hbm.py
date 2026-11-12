@@ -1622,6 +1622,22 @@ def pre_gpl_extra_stage(kd, src):
                                            kit_file="pre_gpl_extra.tcl", chain="pre_gpl_chain.tcl")
 
 
+GRT_TRANSITION_MODES = ("off", "edge", "edge_outline")
+
+
+def write_grt_transition_mode(kd, env=None):
+    """KW-FIX-45 11-11 (COORD class bug VISLAYOUT2-HBM): core kits carried no grt_transition_mode, so run_kit_hbm.sh ran the
+    stock router on edge_outline arms.  Same contract as gen_phys.write_grt_transition_mode: the gen env
+    OT_GRT_TRANSITION_MODE (kit_wave item_env / auto edge_outline) becomes K/grt_transition_mode; unset = no file = stock run."""
+    m = (os.environ if env is None else env).get("OT_GRT_TRANSITION_MODE", "")
+    if not m:
+        return None
+    if m not in GRT_TRANSITION_MODES:
+        raise ValueError(f"OT_GRT_TRANSITION_MODE {m!r}: one of {GRT_TRANSITION_MODES}")
+    (Path(kd) / "grt_transition_mode").write_text(m + "\n")
+    return m
+
+
 def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--views", required=True)
@@ -2402,6 +2418,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     (kd / "face_flops.tcl").write_text(ff)
     pre_gpl_tcl, pre_gpl_rec = pre_gpl_extra_stage(kd, a.pre_gpl_extra)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
+    write_grt_transition_mode(kd)       # KW-FIX-45 11-11: gen env OT_GRT_TRANSITION_MODE -> K/grt_transition_mode (run_kit_hbm.sh)
     for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
               "hold_gate.tcl", "port_bind_core.py", "internal_core_guard.py"):
         shutil.copyfile(HERE / f, kd / f)

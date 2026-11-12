@@ -1,0 +1,24 @@
+{
+ "base_sha256": "12d4b63ae943f384b32be36e254fcb1e4e2ec6a89646d3f2f7b72d1e8397490e",
+ "new_sha256": "ad080c302a2bd80dc7a12e1258f4dedc129c3fcbd7715ec7b83a0f6a22375e50",
+ "changed_paths": 4,
+ "by_class": {
+  "ft_bands_windows": {
+   "n": 4,
+   "paths": [
+    "partition_types/q_b000/internal_stations",
+    "partition_types/q_b001/internal_stations",
+    "partition_types/q_b000__physical_v1/internal_stations",
+    "partition_types/q_b001__physical_v1/internal_stations"
+   ]
+  }
+ },
+ "types_changed": [
+  "q_b000",
+  "q_b000__physical_v1",
+  "q_b001",
+  "q_b001__physical_v1"
+ ],
+ "types_removed": [],
+ "types_added": []
+}

@@ -86,7 +86,8 @@ export const P = (data) => prepare(data)._prep;
 export function elementsOf(data, n) { return n.elements || (P(data).cls[n.cls] || {}).elements || []; }
 export function instancesOf(data, n) { return n.instances || (P(data).cls[n.cls] || {}).instances || []; }
 
-export function elementHref(name) { return '/explorer#element=' + encodeURIComponent(name); }
+// EXPLORER-2: a step's element -> its type / core node in the design explorer (resolved there; unresolved names say so)
+export function elementHref(name) { return '/explorer/design/#q=' + encodeURIComponent(name); }
 
 export function fmtCyc(c) {
   const a = Math.abs(c);
@@ -149,10 +150,20 @@ export function detail(data, n, { links = true } = {}) {
   if (n.reprice_10_08) rows.push(h('div', { class: 'tp-dm' }, 'includes re-price 10-08: ' + n.reprice_10_08.join('; ')));
   rows.push(h('div', { class: 'tp-src' }, n.src.record + (n.src.pointer ? ' · ' + n.src.pointer : '')));
   if (n.src.note) rows.push(h('div', { class: 'tp-note' }, n.src.note));
+  if (n.design_hw) {   // EXPLORER-2: the current plans' types / cores for this step's class, with their sign-off state
+    const dh = n.design_hw, box = h('div', { class: 'tp-els' },
+      h('div', { class: 'tp-dm' }, dh.nodes.length ? `runs on (current plans, ${dh.confidence} rule): ${dh.types} type${dh.types === 1 ? '' : 's'}, ${dh.cores} core${dh.cores === 1 ? '' : 's'} · ${dh.signed} signed off` : 'runs on: no type or core of the current plans (no rule for this class)'),
+      h('div', { class: 'tp-note' }, dh.why + ' · cycles are those of the ' + (dh.record || 'token') + ' record (2026-10-20), not re-priced'));
+    const ST = { signed: '✓', failed: '✗', building: '…', queued: '…', waiting: '·', 'not built': '·', 'hard ip': '■' };
+    if (links) dh.nodes.slice(0, 16).forEach((id) => { const m = (dh.nodes_meta || {})[id] || {};
+      box.append(h('a', { href: '/explorer/design/#n=' + encodeURIComponent(id) + (m.layout ? '&v=layout' : ''), class: 'tp-el', title: `${m.level || ''} ${m.state || ''}${m.layout ? ' · routed layout' : ''}` }, `${ST[m.state] || ''} ${m.name || id}`)); });
+    if (links && dh.nodes.length > 16) box.append(h('span', { class: 'tp-dm' }, ` +${dh.nodes.length - 16}`));
+    rows.push(box);
+  }
   if (links) {
     const els = elementsOf(data, n);
     if (els.length) {
-      const l = h('div', { class: 'tp-els' }, h('span', { class: 'tp-dm' }, 'elements: '));
+      const l = h('div', { class: 'tp-els' }, h('span', { class: 'tp-dm' }, 'October elements (record names): '));
       els.slice(0, 12).forEach((e) => l.append(h('a', { href: elementHref(e), class: 'tp-el' }, e)));
       if (els.length > 12) l.append(h('span', { class: 'tp-dm' }, ` +${els.length - 12}`));
       rows.push(l);

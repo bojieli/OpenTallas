@@ -51,6 +51,9 @@ class Base(unittest.TestCase):
                      for i in range(5)]
         self.qpaths, self.qwords = [], []
         self.kw = None
+        # DESIGN_EXPORT_1112 gate (default on): these tests run with the gate file present and no current design named
+        # (no holds); test_ot_autoclean_dx.py tests the gate itself
+        self.dx = {"names": [], "ledger": []}
         d = os.path.join(self.t, "docker")
         os.makedirs(d)
         open(os.path.join(d, "ids"), "w").close()
@@ -79,6 +82,12 @@ class Base(unittest.TestCase):
             f.write("".join(f"{p}\t{w}\n" for p, w in self.prot))
         with open(os.path.join(self.snap, "queue.json"), "w") as f:
             json.dump({"paths": self.qpaths, "words": self.qwords}, f)
+        gp = os.path.join(self.snap, "design_export.json")
+        if self.dx is not None:
+            with open(gp, "w") as f:
+                json.dump(self.dx, f)
+        elif os.path.exists(gp):
+            os.unlink(gp)
         kp = os.path.join(self.snap, "kitwave.json")
         if self.kw is not None:
             with open(kp, "w") as f:
@@ -842,8 +851,8 @@ class TestArchiveDriver(Base):
                 "--ssh", f"{sys.executable} -I {shim}", "--agidock-ssh", f"{sys.executable} -I {shim} agidock",
                 "--agidock-python", f"{sys.executable} -I {tools}/ot-autoclean.py", "--archive-root", arch,
                 "--compress", "zstd" if shutil.which("zstd") else "none", "--roots", self.root, "--tools-dir", tools,
-                "--remote-state", rstate,
-                f"--run-args=--roots {self.root} --docker '{self.docker}' --aliases {self.aliases} --min-protected 1 --wt-reaper ''"]
+                "--remote-state", rstate, "--design-export-hook", "",   # the export gate has its own tests (test_ot_autoclean_dx.py)
+                f"--run-args=--roots {self.root} --docker '{self.docker}' --aliases {self.aliases} --min-protected 1 --wt-reaper '' --design-export off"]
         env = dict(os.environ, OT_AUTOCLEAN_OFF_FILES=os.path.join(self.t, "OFF"))
         r = subprocess.run([sys.executable, "-I", SCRIPT] + base, capture_output=True, text=True, env=env, timeout=600)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)

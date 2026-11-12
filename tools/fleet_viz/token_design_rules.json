@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.fleet_viz.token_design_rules.v1",
+ "note": "EXPLORER-2 11-12: which types / hard cores of the CURRENT plans of record execute each operator class of the token-path records (explorer/token/data/<design>.json, token_path_export 2026-10-20). The October records name October elements and instance globs that no current plan has, so the class -> hardware join is re-made here on the current module families. Each rule is a regex over node names (type name or core module) of the listed dies. confidence 'named': the module family is named for the function (e.g. ot_dsrom_su_* = SU, *_kp4_* = KP4 FEC hop); 'inferred': read from plan notes / placement, to be confirmed by the die owner. A class with no rule says so on the page. Cycles stay those of the token record (not re-priced).",
+ "designs": {
+  "ds_rom": {
+   "dies": ["s81", "s81_head"],
+   "classes": {
+    "field": {"rules": [["s81", "^(ot_s81sl_(leaf|kv_leaf)(__.*)?|ot_s81sl_v.*|col_h(9|10)_.*|dsfd_qbank_.*|dsfd_node_.*|dsfd_bf_front_roots|dsfd_rstg)$"]], "confidence": "inferred",
+              "why": "ROM field = the slice leaves (ot_s81sl_*: vq / vn / ve / vs / vsw vector elements), the ROM columns col_h9/h10 (ot_rom_4096x72 macros) and the q banks / field nodes"},
+    "hbm": {"rules": [["s81", "^(svc_(hi|lo)_.*|dsdv_svc_.*|iqf(__.*)?|dsdv_idx_.*|seqhost(__.*)?)$"]], "confidence": "inferred",
+            "why": "HBM service column = the svc partitions (dsdv_svc_rs providers, svc band) beside phy__t1 (hard IP, not counted), plus the index / sequencer hosts"},
+    "su": {"rules": [["s81", "^(ot_dsrom_su_.*|dsfd_su_.*)$"]], "confidence": "named", "why": "SU / softmax / HC cores: ot_dsrom_su_* and dsfd_su_t_*"},
+    "select": {"rules": [["s81", "^(bk_sel(__.*)?|dsdv_bksel_.*|dsdv_bk_g)$"]], "confidence": "named", "why": "selector / collector band: bk_sel and its dsdv_bksel_* cores"},
+    "coll": {"rules": [["s81", "^(dsfd_coll_.*|dsfd_cfifo_.*|dsdv_slice_(c1x|c3x)_C(__.*)?)$"]], "confidence": "inferred",
+             "why": "TP4 collective: dsfd_coll_lane_* + collective FIFOs; the c1x/c3x slices carry the collective lanes"},
+    "hop": {"rules": [["s81", "^(serdes(__.*)?|ot_s81_kp4_.*)$"], ["s81_head", "^(hd_serdes(__.*)?|ot_s81_kp4_.*)$"]], "confidence": "named",
+            "why": "stage hop = SerDes partitions with the full-KP4 FEC (ot_s81_kp4_dchn)"},
+    "head": {"rules": [["s81_head", "^(hd_.*|ot_s81hd_.*)$"]], "confidence": "named", "why": "head die: hd_* partitions, LM-head elements ot_s81hd_elemA/B and lep pair"},
+    "embed": {"rules": [["s81", "^(eng(__.*)?|dsdv_eng_.*)$"]], "confidence": "inferred", "why": "Embed / Engram tables: the eng unit partition (dsdv_eng_rr)"}
+   }
+  },
+  "qwen_rom": {
+   "dies": ["qwen_compute", "qwen_kvsys"],
+   "classes": {
+    "me": {"rules": [["qwen_compute", "^(qfd_tile_.*|cb[fnx]_q\\d\\d(_s2)?(__.*)?|qfd_dv_s5_(sc2|red2)_leaf.*|sl[ew]_(fe|fw|sc|stm|st_a|st_b)_v\\d(__.*)?)$"]], "confidence": "inferred",
+           "why": "ROM tiles (matrix engine): qfd_tile_* cores in the cb* compute blocks and the slice fe/fw/sc/stm/st parts"},
+    "su": {"rules": [["qwen_compute", "^(sl[ew]_su_.*|qfd_qc_su_.*|qfd_dv_s5_su8_.*|sl[ew]_hc\\d(__.*)?)$"]], "confidence": "named", "why": "spine SU / SFU: sle/slw_su_* partitions and qfd_qc_su_lane_* cores"},
+    "kv": {"rules": [["qwen_kvsys", "^(kv3_.*|qkd_.*|ot_qwen_tp8_pv_join_t)$"], ["qwen_compute", "^phy_ucie_kv(__.*)?$"]], "confidence": "named", "why": "HBM KV: the KV/system die (kv3_* partitions, qkd_* cores) and the compute die's UCIe KV PHY"},
+    "link": {"rules": [["qwen_compute", "^(coll_.*|phy_serdes.*|ot_coll_fold_slice)$"]], "confidence": "named", "why": "TP4 collective: coll_* partitions, SerDes PHY partitions, ot_coll_fold_slice"},
+    "head": {"rules": [], "confidence": "none", "why": "LM head + argmax: no partition of the current Qwen plans is named for it (the October record ran it on the ROM tiles + spine SU)"},
+    "embed": {"rules": [], "confidence": "none", "why": "embedding ROM: no current partition named for it"}
+   }
+  },
+  "hbm_gen_qwen": {"same_as": "hbm_gen"},
+  "hbm_gen_ds": {"same_as": "hbm_gen"},
+  "hbm_gen": {
+   "dies": ["hbm"],
+   "classes": {
+    "SM": {"rules": [["hbm", "^(q_sm\\d(__.*)?|ot_hbm_sm_(i8w|vm_wr).*|ot_hbm_accel_smh_.*)$"]], "confidence": "named", "why": "SM.MATVEC: the q_sm* partitions, ot_hbm_sm_* and accel_smh cores"},
+    "ATT": {"rules": [["hbm", "^(ot_hbm_sm_(attn|pv|kv).*)$"]], "confidence": "named", "why": "attention tiles inside the SMs: ot_hbm_sm_attn_*, pv_merge, kv_line"},
+    "SU": {"rules": [["hbm", "^(q_su\\d\\d(__.*)?|ot_hbm_su_(pcol|static_(qcore|cxport|pgslice)).*|ot_hbm_su_pg_lane.*)$"]], "confidence": "named", "why": "SU.VOP: q_su* partitions and ot_hbm_su_* cores"},
+    "COLL": {"rules": [["hbm", "^(N[EW]_io(__.*)?|q_hub_n[ew](__.*)?)$"]], "confidence": "inferred", "why": "collective engine + SerDes: the NE/NW io partitions and hubs"},
+    "DMA": {"rules": [["hbm", "^(q_mc[ab](__.*)?|hfd_hgi_vm.*|hnx_vms_.*|ot_hbm_svc_vm_.*)$"]], "confidence": "inferred", "why": "record mover / VM: memory-controller partitions and vm cores"},
+    "FUSED": {"rules": [["hbm", "^hnx_fused_lane_.*$"]], "confidence": "named", "why": "quant block: hnx_fused_lane_*"},
+    "HC": {"rules": [["hbm", "^ot_hbm_hc_.*$"]], "confidence": "named", "why": "hyper-connection mixes: ot_hbm_hc_* cores"},
+    "IDX": {"rules": [["hbm", "^(ot_hbm_idx_.*|ot_hbm_static_cfg_collar_idx.*)$"]], "confidence": "named", "why": "indexer / top-k: ot_hbm_idx_* cores"},
+    "SFU": {"rules": [["hbm", "^(ot_hbm_su_pg_sfu_.*|ot_hbm_su_static_sfustore_.*)$"]], "confidence": "named", "why": "SFU.GLU: the SU's sfu cores"},
+    "ARGMAX": {"rules": [["hbm", "^ot_hbm_argmax_.*$"]], "confidence": "named", "why": "ARGMAX.LOCAL: ot_hbm_argmax_* cores"},
+    "CTL": {"rules": [["hbm", "^(root(__.*)?|ot_hbm_host_cp_.*|hfd_ep_.*|ot_hbm_svc_pc_ctrl_.*)$"]], "confidence": "inferred", "why": "command processor / host endpoints: root partition, host cp and ep cores"}
+   }
+  }
+ }
+}

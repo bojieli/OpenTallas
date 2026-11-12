@@ -231,9 +231,13 @@ function drawer() {
     g.why ? h('span', { class: 'chip dim', style: 'white-space:normal' }, g.why + (g.proposed ? ' → ' + g.proposed : '')) : null));
   if (c.live && c.live.length) {
     kids.push(h('div', { class: 'node' }, h('b', {}, 'Elements (live closure status)'),
-      ...c.live.map((e) => h('div', { style: 'font:11px ui-monospace,Menlo,monospace;color:#c3cbe0;margin:3px 0' }, h('a', { class: 'el', href: '/explorer/element/' + encodeURIComponent(e.element), title: 'open the element page' }, e.element),
+      ...c.live.map((e) => h('div', { style: 'font:11px ui-monospace,Menlo,monospace;color:#c3cbe0;margin:3px 0' }, h('a', { class: 'el', href: '/explorer/design/#q=' + encodeURIComponent(e.element), title: 'open its type / core in the design explorer' }, e.element),
         ` ${e.category}`, e.tt != null ? ` · TT ${e.tt >= 0 ? '+' : ''}${e.tt}` : '', e.ff != null ? ` FF ${e.ff >= 0 ? '+' : ''}${e.ff}` : '', e.live ? ` · ${e.live} live` : '', e.latest ? ` · latest ${e.latest}` : ''))));
-  } else if ((c.elements || []).length) kids.push(h('div', { class: 'node' }, h('b', {}, 'Elements'), ...c.elements.map((e) => h('a', { class: 'el', href: '/explorer/element/' + encodeURIComponent(e), title: 'open the element page' }, e))));
+  } else if ((c.elements || []).length) kids.push(h('div', { class: 'node' }, h('b', {}, 'Elements'), ...c.elements.map((e) => h('a', { class: 'el', href: '/explorer/design/#q=' + encodeURIComponent(e), title: 'open its type / core in the design explorer' }, e))));
+  if (c.design && c.design.length) kids.push(h('div', { class: 'node' }, h('b', {}, 'Designs (die / type / core, signed-store status)'),
+    ...c.design.map((d) => h('div', { style: 'font:11px ui-monospace,Menlo,monospace;color:#c3cbe0;margin:3px 0' }, d.element + ': ',
+      ...(d.nodes.length ? d.nodes.map((n) => h('a', { class: 'el', href: '/explorer/design/#n=' + encodeURIComponent(n.id), style: 'margin-right:8px' }, `${n.id} (${n.label})`))
+        : [h('span', { class: 'dim' }, 'not a type or core of any current die plan')])))));
   (c.nodes || []).forEach((id, i) => kids.push(h('div', { class: 'node' }, h('b', {}, id + ': '), (c.function || [])[i] || '',
     h('div', { class: 'kv' }, h('span', {}, 'element'), h('b', {}, (c.hw_element || [])[i] || '—'), h('span', {}, 'die'), h('b', {}, (c.die || [])[i] || '—'),
       h('span', {}, 'closure'), h('b', {}, (c.closure_text || [])[i] || '—'), h('span', {}, 'token path'), h('b', {}, String((c.in_token_path || [])[i] ?? '—'))),

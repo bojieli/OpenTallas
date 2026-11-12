@@ -40,6 +40,18 @@ if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resum
   fi
 fi
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
+# GRT-PATCH-1 / KW-FIX-45 11-11 (COORD class bug VISLAYOUT2-HBM; OWNER edge-only halving default): K/grt_transition_mode  # GRTM
+# (written at gen from the gen env OT_GRT_TRANSITION_MODE) or the host env selects the patched router image for the ORFS  # GRTM
+# main run ONLY (same block as gen_phys run_kit.sh); LEC, chown and sign-off keep $IMAGE.  No mode = the stock run.  # GRTM
+GIMAGE=$IMAGE; GRTD=(); GRTM=${OT_GRT_TRANSITION_MODE:-$(head -1 "$K/grt_transition_mode" 2>/dev/null)}  # GRTM
+if [ -n "$GRTM" ]; then  # GRTM
+  case "$GRTM" in off|edge|edge_outline) ;; *) echo "FAIL_PREFLOOR grt transition mode $GRTM (off|edge|edge_outline)" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # GRTM
+  GIMAGE=${OT_GRT_IMAGE:-opentallas/orfs:asap7lock-grtoff}  # GRTM
+  GID=$(${OT_DOCKER:-docker} image inspect --format "{{.Id}}" "$GIMAGE" 2>/dev/null) && [ -n "$GID" ] || { echo "FAIL_PREFLOOR grt transition image $GIMAGE missing on $(hostname)" | tee -a "$K/FAIL_PREFLOOR"; exit 10; }  # GRTM
+  GRTD=(-e OT_GRT_TRANSITION_MODE="$GRTM")  # GRTM
+  printf '{"mode": "%s", "image": "%s", "image_id": "%s", "goal": "%s"}\n' "$GRTM" "$GIMAGE" "$GID" "$GOAL" > "$K/grt_transition.json"  # GRTM
+  echo "GRTM mode $GRTM image $GIMAGE $GID"  # GRTM
+fi  # GRTM
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
 # Optional existing XOR SAT backend; async LEC uses docker exec in this same container.
 LECSOLVER=()
@@ -67,7 +79,7 @@ fi
 # Read the repair margin through Make: export/override and assignment precedence must match the flow.
 # An unset margin keeps the legacy no-explicit-repair path; malformed explicit values stop before GRT.
 $DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
-  -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e HUID=$(id -u) -e HGID=$(id -g) "${GRTD[@]}" -w /OpenROAD-flow-scripts/flow "$GIMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   if [ '${OT_GRT183_RESUME:-1}' != 0 ] && [ -f /work/grt183_make.sh ]; then M=\"bash /work/grt183_make.sh \$M\"; fi; \
   rc=0; if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; MM=\$(grep -c '^override export OT_HOLD_MM = 1' /work/config.mk); \
@@ -148,6 +160,9 @@ $DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" 
   fi; \
   if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+if [ -n "$GRTM" ] && [ $rc = 0 ] && [ "$GOAL" != post ]; then GL=$(ls "$K"/run/logs/asap7/*/base/5_1_grt.log 2>/dev/null | tail -1)  # GRTM
+  if [ -n "$GL" ] && ! grep -q "GRT-9103\] OT transition-layer mode $GRTM " "$GL"; then echo "FAIL_GRT_MODE $GRTM: $GL has no matching GRT-9103 (mode not applied)" | tee -a "$K/FAIL_GRT_MODE"; rc=1; fi  # GRTM
+fi  # GRTM
 [ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 3 "$NAME" "$GOAL")
 $DK run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"

@@ -12,6 +12,29 @@ REL = 'results/arch/coverage_20261008'
 CLOSED_CATS = ('closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)')
 INFLIGHT_CATS = ('first trial in flight', 'failed, re-running', 'revoked, re-running')
 
+_DS = None
+
+
+def design_join(elements):
+    """element names of a ledger cell -> [{element, nodes: [{id, level, state, label}]}] from the design node index
+    (design_service.py over design_index.json); None when the index is not built"""
+    global _DS
+    try:
+        if _DS is None:
+            import design_service
+            _DS = design_service.Service()
+        idx = _DS.index()
+        if idx is None: return None
+        out = []
+        for e in elements:
+            ids = _DS.resolve(e)
+            out.append(dict(element=e, nodes=[dict(id=i, level=idx['nodes'][i]['level'], state=idx['nodes'][i]['status']['state'],
+                                                   label=idx['nodes'][i]['status']['label']) for i in ids if i in idx['nodes']]))
+        return out
+    except Exception:
+        return None
+
+
 class Coverage:
     def __init__(self, repo, elements, token_dir, log=print, ref='origin/main', period=15):
         self.repo, self.elements, self.token_dir, self.log, self.ref, self.period = str(repo), elements, pathlib.Path(token_dir), log, ref, period
@@ -105,6 +128,11 @@ class Coverage:
                     els.append(dict(element=e, category=x.get('category'), tt=b.get('tt'), ff=b.get('ff'), ss=b.get('ss'), drc=b.get('drc'),
                                     live=x.get('live'), failed=x.get('failed'), owner=x.get('owner'), latest=lt.get('status'), latest_job=lt.get('job')))
                 c['live'] = els
+                dz = design_join(c.get('elements') or [])   # EXPLORER-2: signed-store / kit-wave status per design node
+                if dz is not None:
+                    c['design'] = dz
+                    ns = [n for d in dz for n in d['nodes']]
+                    if ns: c['design_summary'] = dict(signed=sum(1 for n in ns if n['state'] == 'signed'), total=len(ns))
                 if els:
                     nc = sum(1 for e in els if e['category'] in CLOSED_CATS)
                     nf = sum(1 for e in els if e['category'] in INFLIGHT_CATS)

@@ -1,0 +1,86 @@
+{
+ "base_sha256": "f638067aaf8320da170e8c8b05d0d6334defe4681c4c973ae9009852f625422f",
+ "new_sha256": "9a52537c5f067b1cf7ca33af831a7da77f1b13fefeb99e326b9123c6e69c0e52",
+ "changed_paths": 48,
+ "by_class": {
+  "ft_bands_windows": {
+   "n": 23,
+   "paths": [
+    "partition_types/root/internal_stations/79/to_um/0",
+    "partition_types/root/internal_stations/80/to_um/0",
+    "partition_types/q_hub_nw/ft_slots/name=L7001x1/regs_um/3/0",
+    "partition_types/q_hub_nw/ft_slots/name=L7001x1/regs_um/3/1",
+    "partition_types/q_hub_nw/ft_slots/name=L7001x1/regs_um/4/0",
+    "partition_types/q_hub_nw/ft_slots/name=L7001x1/regs_um/4/1",
+    "partition_types/q_hub_nw/ft_slots/name=L7001x1/regs_um/5/0",
+    "partition_types/q_hub_nw/internal_stations/381/to_um/1",
+    "partition_types/q_hub_nw/internal_stations/385/to_um/1",
+    "partition_types/q_hub_nw/internal_stations/387/to_um/1",
+    "partition_types/q_hub_nw/internal_stations/389/to_um/1",
+    "partition_types/q_hub_nw/internal_stations/554/to_um/1",
+    "partition_types/q_hub_nw/internal_stations/556/to_um/1",
+    "partition_types/q_hub_nw/internal_stations/563/to_um/1",
+    "partition_types/q_hub_nw/internal_stations/565/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/327/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/331/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/333/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/335/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/500/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/502/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/509/to_um/1",
+    "partition_types/q_hub_ne/internal_stations/511/to_um/1"
+   ]
+  },
+  "other": {
+   "n": 9,
+   "paths": [
+    "partition_types/q_su00/hard_cores/inst=u_su_Q0_lane_exp0__l/pins_file",
+    "partition_types/q_su10/hard_cores/inst=u_su_Q1_lane_exp0__l/pins_file",
+    "partition_types/root/hard_cores/inst=u_mu_fused_root/pins_file",
+    "partition_types/q_hub_nw/hard_cores/inst=u_wbk_Q__q0__sw/pins_file",
+    "partition_types/q_hub_nw/hard_cores/inst=u_wbk_Q__q1__sw/pins_file",
+    "partition_types/q_hub_ne/hard_cores/inst=u_wbk_Q__q0__sw/pins_file",
+    "partition_types/q_hub_ne/hard_cores/inst=u_wbk_Q__q1__sw/pins_file",
+    "partition_types/q_su00__physical_v1/hard_cores/inst=u_su_Q0_lane_exp0__l/pins_file",
+    "partition_types/q_su10__physical_v1/hard_cores/inst=u_su_Q1_lane_exp0__l/pins_file"
+   ]
+  },
+  "outline": {
+   "n": 10,
+   "paths": [
+    "partition_types/q_su00/hard_cores/inst=u_su_Q0_lane_exp0__l/outline_um/0",
+    "partition_types/q_su10/hard_cores/inst=u_su_Q1_lane_exp0__l/outline_um/0",
+    "partition_types/root/hard_cores/inst=u_mu_fused_root/outline_um/0",
+    "partition_types/root/hard_cores/inst=u_mu_fused_root/outline_um/1",
+    "partition_types/q_hub_nw/hard_cores/inst=u_wbk_Q__q0__sw/outline_um/0",
+    "partition_types/q_hub_nw/hard_cores/inst=u_wbk_Q__q1__sw/outline_um/0",
+    "partition_types/q_hub_ne/hard_cores/inst=u_wbk_Q__q0__sw/outline_um/0",
+    "partition_types/q_hub_ne/hard_cores/inst=u_wbk_Q__q1__sw/outline_um/0",
+    "partition_types/q_su00__physical_v1/hard_cores/inst=u_su_Q0_lane_exp0__l/outline_um/0",
+    "partition_types/q_su10__physical_v1/hard_cores/inst=u_su_Q1_lane_exp0__l/outline_um/0"
+   ]
+  },
+  "positions_orients": {
+   "n": 6,
+   "paths": [
+    "partition_types/q_hub_nw/hard_cores/inst=u_xl_Q_aqhi/origin_um/1",
+    "partition_types/q_hub_nw/hard_cores/inst=u_wbk_Q__q0__sw/origin_um/0",
+    "partition_types/q_hub_nw/hard_cores/inst=u_wbk_Q__q1__sw/origin_um/0",
+    "partition_types/q_hub_ne/hard_cores/inst=u_xl_Q_aqhi/origin_um/1",
+    "partition_types/q_hub_ne/hard_cores/inst=u_wbk_Q__q0__sw/origin_um/0",
+    "partition_types/q_hub_ne/hard_cores/inst=u_wbk_Q__q1__sw/origin_um/0"
+   ]
+  }
+ },
+ "types_changed": [
+  "q_hub_ne",
+  "q_hub_nw",
+  "q_su00",
+  "q_su00__physical_v1",
+  "q_su10",
+  "q_su10__physical_v1",
+  "root"
+ ],
+ "types_removed": [],
+ "types_added": []
+}
