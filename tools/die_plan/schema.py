@@ -2687,6 +2687,46 @@ def scope_errors(errs, types=None):
     return out
 
 
+_TYPE_ERR_ANY = re.compile(r"^(?:partition )?type (\S+?)(?::| slot )")
+_PATH_TYPE_ERR = re.compile(r"^\$\.partition_types\.([^.\[:]+)")
+
+
+def scope_errors_typed(errs, types, raw):
+    """KIT-OVERLAY-1: type-scoped validation for a per-type kit.  Keeps only the errors that belong to the selected
+    types (named "type X:", "partition type X:", "type X slot S:", the schema path $.partition_types.X..., a partition
+    of a selected type, a port with an end on one, a lane over such ports) and every error that names none of the above.
+    Errors that name another type, a partition of another type or a port/lane that touches no selected type are
+    dropped: one bad type elsewhere in the plan no longer stops this type's kit.  scope_errors (above) is unchanged and
+    remains the default."""
+    keep = set(types or ())
+    if not keep:
+        return errs
+    parts = {p.get("name"): p.get("type") for p in raw.get("partitions", [])}
+    in_part = {n for n, tn in parts.items() if tn in keep}
+    ports = {}
+    for pr in raw.get("ports", []):
+        ends = {(pr.get(k) or {}).get("part") for k in ("src", "dst")}
+        ports[pr.get("id")] = bool(ends & in_part)
+    lanes = {ln.get("id"): any(ports.get(x, False) for x in ln.get("ports", [])) for ln in raw.get("lanes", [])}
+    out = []
+    for e in errs:
+        m = _TYPE_ERR_ANY.match(e) or _PATH_TYPE_ERR.match(e)
+        if m is not None:
+            if m.group(1) in keep:
+                out.append(e)
+            continue
+        for pat, table in ((r"^partition (\S+?):", {n: n in in_part for n in parts}),
+                           (r"^port (\S+?):", ports), (r"^lane (\S+?):", lanes)):
+            m = re.match(pat, e)
+            if m is not None and m.group(1) in table:
+                if table[m.group(1)]:
+                    out.append(e)
+                break
+        else:
+            out.append(e)
+    return out
+
+
 def validate(raw):
     """Structure + references + local consistency.  Returns a list of error strings (empty = valid).
     Geometric / budget checks (abutment, cuts, faces, hops) are the G0 checker's job (check.py)."""

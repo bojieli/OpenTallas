@@ -204,6 +204,9 @@ def main(argv=None):
     a3.add_argument("--dpl-diamond", default="", metavar="TYPES",
                     help="comma list of types whose kits detail-place with the diamond legalizer (DETAIL_PLACEMENT_ARGS "
                          "-use_diamond_legalizer; negotiation DPL stalls beside large FIRM landing bands). Per-type opt-in")
+    a3.add_argument("--type-overlay", metavar="FILE", help="opt-in (KIT-OVERLAY-1): positions-only intra-type overlay "
+                    "(type_overlay.py) on this bound plan; requires exactly one --types type, validated for that type only; "
+                    "default none = unchanged")
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
@@ -254,7 +257,8 @@ def main(argv=None):
                                            hard_wrappers=[x for x in a.hard_wrappers.split(",") if x],
                                            cland_pinslot=[x for x in a.cland_pinslot.split(",") if x],
                                            private_clock_mesh=dict(x.split("=", 1) for x in a.private_hhp_clock_mesh),
-                                           region_guide=dict(x.split("=", 1) for x in a.region_guide))
+                                           region_guide=dict(x.split("=", 1) for x in a.region_guide),
+                                           type_overlay=a.type_overlay)
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
                                                 pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]
