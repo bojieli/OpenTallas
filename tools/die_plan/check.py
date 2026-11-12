@@ -1105,23 +1105,28 @@ def track_density(P, names, frac):
     return sum(frac / P.layers[n]["pitch_um"] for n in names if n in P.layers)
 
 
-def cut_interval_tracks(lo, hi, pitch, frac, blocked=(), bands=()):
+def cut_interval_tracks(lo, hi, pitch, frac, blocked=(), bands=(), derate=()):
     """Exact free tracks on a cut: OBS union wins; bands replace the base share.
 
     blocked=[(lo,hi)], bands=[(lo,hi,share)] are intervals on ONE layer.
     Integrating all boundaries avoids double-counting overlapping OBS or bands.
+    derate=[(lo,hi,cov)] (CORE-OBS-COV 11-12): a core whose LEF OBS covers cov <= 0.5 of the layer; the
+    tracks there are scaled by (1 - max cov) on top of the share.
     """
     points={float(lo),float(hi)}
     for a,b in blocked:
         points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
     for a,b,_ in bands:
         points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
+    for a,b,_ in derate:
+        points.update((max(lo,min(hi,a)),max(lo,min(hi,b))))
     points=sorted(points);tracks=0.0
     for a,b in zip(points,points[1:]):
         mid=(a+b)/2
         if b-a<=EPS or any(u<mid<v for u,v in blocked):continue
         shares=[share for u,v,share in bands if u<=mid<=v]
-        tracks+=(b-a)*(max(shares) if shares else frac)/pitch
+        dr=[cov for u,v,cov in derate if u<=mid<=v]
+        tracks+=(b-a)*(max(shares) if shares else frac)*(1.0-max(dr) if dr else 1.0)/pitch
     return tracks
 
 
@@ -1182,8 +1187,12 @@ def check_cuts(P, R, geo, full_cut="verdict"):
     # Same rectangles as the die-route capacity model: declared/routed core
     # obstructions (union), transformed through each instance orientation,
     # plus the explicitly reserved per-layer feedthrough bands.
-    from die_trial import die_core_rects, ft_band_rects
-    cores={L:die_core_rects(P,L) for L in {l for ls in PART_FT_LAYERS.values() for l in ls}}
+    from die_trial import die_core_cover, ft_band_rects
+    # CORE-OBS-COV (COORD 11-12): a core blocks a layer only where its LEF OBS covers > 50%; below that the
+    # layer is free minus the OBS share (derate).  Declared obs_max and LEF-less cores block as before.
+    _cov={L:die_core_cover(P,L) for L in {l for ls in PART_FT_LAYERS.values() for l in ls}}
+    cores={L:v[0] for L,v in _cov.items()}
+    partial={L:v[1] for L,v in _cov.items()}
     bands=ft_band_rects(P)
     B = P.budgets
     step = B["cut_step_um"]
@@ -1246,7 +1255,10 @@ def check_cuts(P, R, geo, full_cut="verdict"):
                     reserved=[(*((br[2],br[4]) if orient=="vertical" else (br[1],br[3])),br[5])
                               for br in bands if br[0]==L and
                               ((br[1]+EPS<c<br[3]-EPS) if orient=="vertical" else (br[2]+EPS<c<br[4]-EPS))]
-                    seg_cap+=cut_interval_tracks(lo,hi,P.layers[L]["pitch_um"],frac,obs,reserved)
+                    derate=[(*((cr[1],cr[3]) if orient=="vertical" else (cr[0],cr[2])),cr[4])
+                            for cr in partial[L] if cr[4]>0 and
+                            ((cr[0]+EPS<c<cr[2]-EPS) if orient=="vertical" else (cr[1]+EPS<c<cr[3]-EPS))]
+                    seg_cap+=cut_interval_tracks(lo,hi,P.layers[L]["pitch_um"],frac,obs,reserved,derate)
                 parts_cap+=seg_cap
                 sb = sum(w for y, w in hits if lo - EPS <= y <= hi + EPS)
                 if sb:
