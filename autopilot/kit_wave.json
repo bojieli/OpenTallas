@@ -7,7 +7,6 @@
   "epyc8",
   "epyc7",
   "epyc2",
-  "epyc4",
   "intel1"
  ],
  "work_root": "/srv/opentallas-scratch2/claude/kit-wave",
@@ -336,7 +335,10 @@
     "kv3_sys_c@13",
     "kv3_hgi_v8@17",
     "kv3_io_ft_v1@18",
-    "kv3_pc_v3@6"
+    "kv3_pc_v3@6",
+    "kv3_io_ft_v1@19",
+    "kv3_phy@12",
+    "kv3_phy_v1@6"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -782,7 +784,6 @@
    "hosts": [
     "epyc8",
     "epyc9",
-    "epyc4",
     "intel1",
     "epyc2",
     "intel2"
@@ -792,11 +793,9 @@
     "epyc8",
     "epyc9",
     "epyc2",
-    "epyc4",
     "intel1"
    ],
    "place_prefer": [
-    "epyc4",
     "intel1",
     "epyc9",
     "epyc8",
@@ -6800,7 +6799,6 @@
     "epyc8",
     "epyc9",
     "epyc2",
-    "epyc4",
     "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
@@ -20256,7 +20254,6 @@
     "epyc9",
     "epyc8",
     "epyc2",
-    "epyc4",
     "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -20416,7 +20413,6 @@
    "hosts": [
     "epyc8",
     "epyc9",
-    "epyc4",
     "intel1",
     "epyc2",
     "intel2"
@@ -20424,7 +20420,6 @@
    "live_claim_h": 0,
    "place_prefer": [
     "epyc2",
-    "epyc4",
     "intel1",
     "epyc9",
     "epyc8",
@@ -22658,14 +22653,12 @@
     "epyc9",
     "epyc8",
     "epyc2",
-    "epyc4",
     "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
     "epyc8",
     "epyc9",
-    "epyc4",
     "intel1",
     "epyc2",
     "intel2"
@@ -22673,7 +22666,6 @@
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
     "epyc2",
-    "epyc4",
     "intel1",
     "epyc9",
     "epyc8",
@@ -29744,7 +29736,6 @@
    "place_prefer": [
     "epyc2",
     "epyc7",
-    "epyc4",
     "intel1",
     "epyc9",
     "epyc8",
@@ -31031,7 +31022,13 @@
     "q_sm3@6",
     "q_spb1@5",
     "q_spb2@3",
-    "vsN1@3"
+    "vsN1@3",
+    "ot_hidx_s3_q@3",
+    "q_b013@14",
+    "q_spu1@7",
+    "q_spu1__physical_v1@9",
+    "q_su30@10",
+    "q_su30__physical_v1@11"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -31144,7 +31141,6 @@
     "epyc9",
     "epyc8",
     "epyc2",
-    "epyc4",
     "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -31495,7 +31491,6 @@
     "epyc8",
     "epyc9",
     "epyc7",
-    "epyc4",
     "intel1",
     "epyc2",
     "intel2"
@@ -44267,7 +44262,6 @@
   }
  },
  "place_prefer": [
-  "epyc4",
   "intel1",
   "epyc8",
   "epyc7",
@@ -45037,5 +45031,143 @@
   "thread_per_row": 8,
   "priority_items": [],
   "note": "KW-FIX-45 11-12 OWNER ruling via COORD: release split; phase 1 = s81, s81_head, qwen_compute, qwen_kvsys first; phase 2 = hbm behind it (type rows wait while a phase-1 die has picks); hard-core builds (kind core) and a 96-thread share of hbm are exempt. Release: phase_split.release true, enabled false, or phase1_done_pct (key or autopilot/phase1_done_pct.txt) >= release_pct."
+ },
+ "stash_epyc4_kw46_srcloss": {
+  "why": "COORD 11-12 06:2x: DISK-1111 swap destroyed 7 kw45 src trees on epyc4; FLEET-2 restoring; restore with e4out.py in",
+  "lists": {
+   "_top": {
+    "hosts": [
+     "epyc8",
+     "epyc7",
+     "epyc2",
+     "epyc4",
+     "intel1"
+    ],
+    "place_prefer": [
+     "epyc4",
+     "intel1",
+     "epyc8",
+     "epyc7",
+     "epyc2"
+    ]
+   },
+   "qwen_kvsys": {
+    "hosts": [
+     "epyc8",
+     "epyc9",
+     "epyc4",
+     "intel1",
+     "epyc2",
+     "intel2"
+    ],
+    "gen_hosts": [
+     "epyc7",
+     "epyc8",
+     "epyc9",
+     "epyc2",
+     "epyc4",
+     "intel1"
+    ],
+    "place_prefer": [
+     "epyc4",
+     "intel1",
+     "epyc9",
+     "epyc8",
+     "epyc7",
+     "epyc2",
+     "intel2"
+    ]
+   },
+   "s81": {
+    "gen_hosts": [
+     "epyc7",
+     "epyc8",
+     "epyc9",
+     "epyc2",
+     "epyc4",
+     "intel1"
+    ]
+   },
+   "s81_head": {
+    "hosts": [
+     "epyc8",
+     "epyc9",
+     "epyc4",
+     "intel1",
+     "epyc2",
+     "intel2"
+    ],
+    "gen_hosts": [
+     "epyc7",
+     "epyc9",
+     "epyc8",
+     "epyc2",
+     "epyc4",
+     "intel1"
+    ],
+    "place_prefer": [
+     "epyc2",
+     "epyc4",
+     "intel1",
+     "epyc9",
+     "epyc8",
+     "intel2"
+    ]
+   },
+   "qwen_compute": {
+    "hosts": [
+     "epyc8",
+     "epyc9",
+     "epyc4",
+     "intel1",
+     "epyc2",
+     "intel2"
+    ],
+    "gen_hosts": [
+     "epyc7",
+     "epyc9",
+     "epyc8",
+     "epyc2",
+     "epyc4",
+     "intel1"
+    ],
+    "place_prefer": [
+     "epyc2",
+     "epyc4",
+     "intel1",
+     "epyc9",
+     "epyc8",
+     "intel2"
+    ]
+   },
+   "hbm": {
+    "hosts": [
+     "epyc8",
+     "epyc9",
+     "epyc7",
+     "epyc4",
+     "intel1",
+     "epyc2",
+     "intel2"
+    ],
+    "gen_hosts": [
+     "epyc7",
+     "epyc9",
+     "epyc8",
+     "epyc2",
+     "epyc4",
+     "intel1"
+    ],
+    "place_prefer": [
+     "epyc2",
+     "epyc7",
+     "epyc4",
+     "intel1",
+     "epyc9",
+     "epyc8",
+     "intel2"
+    ]
+   }
+  }
  }
 }
