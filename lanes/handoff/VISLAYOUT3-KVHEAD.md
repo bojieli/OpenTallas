@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:43 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:50 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -80,3 +80,10 @@ NEXT for each: GEOM-VIS-7 form verdict GOOD -> kit (gen.py rtl+phys with the HEA
 ## 11 SD-GROW ROUTE RUNNING (2026-11-12 08:43 PST)
 ot-run-wave on intel2 -> epyc8, kit epyc8 /srv/opentallas-scratch2/claude/vislayout3-kvhead/pilots_kv3_sys_SD_v1_grow/items/kv3_sys_SD_v1/gen/kv3_sys_SD_v1. Log intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/kv3_sys_SD_v1_grow/route.log; it ends with ROUTE_RC=. Sign-off runs at the end of the route: verdict in <kit>/signoff/signoff.json. Next: view the route renders (run/layout_review/route) and post the sign-off verdict with numbers. If NOT SIGNED: one structural fix (fallback = reset-copy RTL), 2-strike rule.
 HEAD recipe (HEAD-95): cwd rfsr tree; gen.py phys PLAN --clock-landing pd/sidecar.json --types T --out KIT --rtl-root <rfsr>; then python3 -I /srv/opentallas-scratch2/claude/head-95/raw_patch.py PLAN KIT T; build: ot-run --hosts H --mem 64 --threads 16 --disk 40 --dir KIT -- bash KIT/run_kit.sh KIT/T place 64 16 (then route); flow tag flow-20261112-lz-head. Kits: epyc4 head/kit_mesh_m1, head/kit_spn_sp2 (ot-run syncs nothing: rsync the kit to the build host first).
+## 12 HEAD PLACES RUNNING (2026-11-12 08:50 PST, epyc9, ot-run from intel2)
+GEOM-VIS-7 08:4x: hd_mesh m1 FORM GOOD; hd_spn_end sp2 FORM GOOD (margin advice -> SP3 cap 1000).
+Jobs (log intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/{hd_mesh_m1,hd_spn_sp2,hd_spn_sp3}/place.log, ends with PLACE_RC=):
+- kit epyc9 .../head/kit_mesh_m1/hd_mesh
+- kit epyc9 .../head/kit_spn_sp2/hd_spn_end
+- kit epyc9 .../head/kit_spn_sp3/hd_spn_end
+Kits are also synced to epyc8. NEXT: on PLACE_RC=0, render <kit>/<type>/run/layout_review/place (layout/density.png), view, append a VISUAL-QUEUE row (die s81_head), post WAIT-VISUAL to GEOM-VIS-7. Route on GOOD/ISSUES-ACCEPT with the same ot-run line and goal route (sign-off at the end). Between SP2 and SP3 route only the better one (clock_tap_sinks / GRT).
