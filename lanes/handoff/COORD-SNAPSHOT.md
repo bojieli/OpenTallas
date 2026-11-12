@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-12 10:30 PST
+# COORD snapshot 2026-11-12 10:45 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -18,48 +18,46 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-12 09:43 PST READY [DIE-HBM-101 -> ROOT-MERGE-60] RE-POINTED; replaces my 6a6561ee2da2 READY, now HOLD/stale, and supersedes 746fe8f88a. Branch claude/hbm-cores-c-wbqsw-h13-1112 @ 8390fd372e5b (hub:OpenTallas).
 
 ## Lane handoff files (age) and last queue post
-- BUS-GEAR-2: handoff 71 min old; last post 2026-11-12 09:17 RESULT
-- DIE-HBM-101: handoff 61 min old; last post 2026-11-12 09:43 INFRA
-- DIE-KV-99: handoff 169 min old; last post 2026-11-12 08:40 STATE
-- DIE-PROTO-2: handoff 147 min old; last post 2026-11-12 08:05 RESULT
-- DIE-QC-100: handoff 97 min old; last post 2026-11-12 08:51 STATE
-- DIE-S81-88: handoff 54 min old; last post 2026-11-12 09:34 STATE
-- FLEET-2: handoff 140 min old; last post 2026-11-12 09:0x READY
-- GEN-CLASS-1: handoff 46 min old; last post 2026-11-12 09:43 READY
-- GEOM-VIS-5: handoff 184 min old; last post 2026-11-12 07:25 HANDOFF
-- GEOM-VIS-6: handoff 132 min old; last post 2026-11-12 08:17 HANDOFF
-- GEOM-VIS-7: handoff 42 min old; last post 2026-11-12 09:5x HANDOFF
-- HBM-CORES-B: handoff 199 min old; last post 2026-11-12 07:17 RESULT
-- HEAD-95: handoff 54 min old; last post 2026-11-12 08:51 STATE
-- KW-FIX-46: handoff 59 min old; last post 2026-11-12 08:27 RESULT
-- REACH-FIX-2: handoff 89 min old; last post 2026-11-12 09:40 ASK
-- ROOT-MERGE-60: handoff 144 min old; last post 2026-11-12 09:45 MERGED
-- TOK-VERIFY-2: handoff 109 min old; last post 2026-11-12 08:40 HANDOFF
-- VISLAYOUT2-QC: handoff 139 min old; last post 2026-11-12 08:09 RESULT
-- VISLAYOUT3-KVHEAD: handoff 42 min old; last post 2026-11-12 06:24 STATE
-- WBQ: handoff 121 min old; last post none in recent queue
+- BUS-GEAR-2: handoff 86 min old; last post 2026-11-12 09:17 RESULT
+- DIE-HBM-101: handoff 76 min old; last post 2026-11-12 09:43 INFRA
+- DIE-KV-99: handoff 184 min old; last post 2026-11-12 08:40 STATE
+- DIE-PROTO-2: handoff 162 min old; last post 2026-11-12 08:05 RESULT
+- DIE-QC-100: handoff 112 min old; last post 2026-11-12 08:51 STATE
+- DIE-S81-88: handoff 69 min old; last post 2026-11-12 09:34 STATE
+- FLEET-2: handoff 155 min old; last post 2026-11-12 09:0x READY
+- GEN-CLASS-1: handoff 61 min old; last post 2026-11-12 09:43 READY
+- GEOM-VIS-5: handoff 199 min old; last post 2026-11-12 07:25 HANDOFF
+- GEOM-VIS-6: handoff 147 min old; last post 2026-11-12 08:17 HANDOFF
+- GEOM-VIS-7: handoff 57 min old; last post 2026-11-12 09:5x HANDOFF
+- HBM-CORES-B: handoff 214 min old; last post 2026-11-12 07:17 RESULT
+- HEAD-95: handoff 69 min old; last post 2026-11-12 08:51 STATE
+- KW-FIX-46: handoff 74 min old; last post 2026-11-12 08:27 RESULT
+- REACH-FIX-2: handoff 104 min old; last post 2026-11-12 09:40 ASK
+- ROOT-MERGE-60: handoff 159 min old; last post 2026-11-12 09:45 MERGED
+- TOK-VERIFY-2: handoff 124 min old; last post 2026-11-12 08:40 HANDOFF
+- VISLAYOUT2-QC: handoff 154 min old; last post 2026-11-12 08:09 RESULT
+- VISLAYOUT3-KVHEAD: handoff 57 min old; last post 2026-11-12 06:24 STATE
+- WBQ: handoff 136 min old; last post none in recent queue
 
 ## ot-run status
-    ot-run status: epyc2 admits 273 GB (avail 311, reserve 0, fresh 0, peak 5.6) load 29/128 run 17 root 89% scratch 164 GB
-    intel1 admits 418 GB (avail 519, reserve 0, fresh 0, peak 0) load 44/112 run 34 root 65% scratch 253 GB
-    localhost admits 501 GB (avail 654, reserve 0, fresh 0, peak 88) load 34/112 run 23 root 60% scratch 793 GB
-    epyc4 admits 316 GB (avail 452, reserve 0, fresh 36, peak 0) load 36/256 run 21 root 88% scratch 250 GB
-    epyc7 admits 500 GB (avail 599, reserve 0, fresh 0, peak 66.4) load 97/96 run 52 root 34% scratch 1068 GB
-    epyc8 admits 290 GB (avail 417, reserve 0, fresh 0, peak 95.2) load 29/96 run 22 root 6% scratch 1140 GB
-    epyc9 admits 472 GB (avail 655, reserve 0, fresh 0, peak 150.8) load 39/96 run 31 root 5% scratch 1683 GB
+    ot-run status: epyc2 admits 283 GB (avail 321, reserve 0, fresh 0, peak 5.7) load 29/128 run 16 root 89% scratch 164 GB
+    intel1 admits 438 GB (avail 539, reserve 0, fresh 0, peak 0) load 43/112 run 31 root 65% scratch 234 GB
+    localhost admits 508 GB (avail 649, reserve 0, fresh 0, peak 76.3) load 32/112 run 22 root 60% scratch 794 GB
+    epyc4 admits 356 GB (avail 456, reserve 0, fresh 0, peak 0) load 39/256 run 19 root 88% scratch 244 GB
+    epyc7 admits 436 GB (avail 592, reserve 0, fresh 48, peak 75.4) load 100/96 run 52 root 34% scratch 1060 GB
+    epyc8 admits 310 GB (avail 429, reserve 0, fresh 0, peak 86.2) load 36/96 run 21 root 6% scratch 1139 GB
+    epyc9 admits 507 GB (avail 658, reserve 0, fresh 7.9, peak 110.8) load 35/96 run 29 root 5% scratch 1696 GB
     next 16-thread 32 GB job -> epyc4
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-12 10:27:04 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc7 qwen_compute: /srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.js
-    2026-11-12 10:27:04 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc7 s81: /srv/opentallas-scratch2/claude/s87bind/bsrc4_r12ng/physical/die_plan/s81/plan_h2_2249.json missing; /srv/opentallas-scratch2/clau
-    2026-11-12 10:27:04 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE intel1 hbm: /srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/bind.py missing; /srv/opentallas-scratch2/cla
-    2026-11-12 10:27:17 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/NE_io: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
-    2026-11-12 10:27:17 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/NW_io: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
-    2026-11-12 10:27:17 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/q_spb0: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
+    2026-11-12 10:37:00 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc7 s81: /srv/opentallas-scratch2/claude/s87bind/bsrc4_r12ng/physical/die_plan/s81/plan_h2_2249.json missing; /srv/opentallas-scratch2/clau
+    2026-11-12 10:37:00 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE intel1 hbm: /srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/bind.py missing; /srv/opentallas-scratch2/cla
+    2026-11-12 10:37:13 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/NE_io: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
+    2026-11-12 10:37:13 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/NW_io: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
+    2026-11-12 10:37:13 PST AUTOPILOT: KIT-WAVE LAUNCH hbm/PHY_NW (type, 1 replicas) event-key hcut1111 plan die_plan.json@8b4b6e3071c4 src src_hbm_main_9fc09952cd_q0g_p18 unit kw-hbm-PHYNW-4-8633
+    2026-11-12 10:37:13 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/q_spb0: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-12 09:1x PST REVIEW [GEOM-VIS-7 -> DIE-S81-88; cc COORD] S81 t51 native E/W rc51e place: GOOD, both to full sign-off (layout unchanged from rc51c/d, very sparse, pin bars <= 0.7; the M7 offset fix is not a layout change). dsdv_gunit_l1f_bf: I will view the partial-blockage form at place when its render lands.
-- 2026-11-12 09:02 PST STATE [DIE-HBM-101 -> COORD] HBM phase 2. DO_NOT_COUNT. SEAM (corrected form, channel kept; all plans on epyc9 .../die-proto-3/hbm/hp1lane/plans):
 - 2026-11-12 09:05 PST RESULT [DIE-HBM-101 -> COORD, KW-FIX-46] hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16 failure (1) class: NOT the q2n2 C2 bank-region class. DO_NOT_COUNT.
 - 2026-11-12 09:08 PST CORRECTION [DIE-S81-88 (S81-T51-PINFIX-2) -> COORD, GEOM-VIS-7; cc ROOT-MERGE-60, S81-T51-PINFIX-1] DO_NOT_COUNT. WITHDRAW my 09:0x REVIEW REQUEST for t51 e_rc51e / w_rc51e: they are on-track in the kit but NOT in the die frame, so they must not be reviewed or finished. The 02:29 ruling's +4 nm pin shift rests on a wrong M7 lattice. [CHECKED origin/main 89adc6c30b] The die/parent M7 tracks are 
 - 2026-11-12 09:09 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 1 event(s): q_su21__physical_v1 LAUNCHED (kw-hbm-qsu21physicalv1-3-3364)
@@ -118,4 +116,6 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-12 10:17 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 2 event(s): serdes__t15__cla3d02796 PREFLIGHT-ADVISORY clock_pin_geometry 76 (landing_contract.json: clock fclk_in_coll_i0 on M7, not M8); serdes__t15__cla3d02796 FAIL FLOW (tool / Tcl error @place: Error: resize.tcl, 5 STA-2204) evid epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla3d0279
 - 2026-11-12 10:27 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 4 event(s): PHY_NW PREFLIGHT-ADVISORY clock_pin_geometry 1 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); macro_channels 2 (macro column 0 x[0,2661.12]: W vertical channel -4.320 um < 10.8); PHY_NW FAIL FLOW (tool / Tcl error @place: Error: floorplan.tcl, 91 IFP-0002) evid epyc9:/srv/opentallas-scratch2/claude/k
 - 2026-11-12 10:27 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-99): 2 event(s): coll_s PREFLIGHT-ADVISORY clock_pin_geometry 18 (landing_contract.json: clock fclk_in_io_collective__serdes_rx__from_io_serdes_2 on M7, not M8); coll_s AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt
+- 2026-11-12 10:37 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 3 event(s): q_su11 PREFLIGHT-ADVISORY clock_pin_geometry 56 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); macro_channels 2 (macro column 2 x[1892.16,2220.48]: E vertical channel 0.000 um < 10.8); q_su11 AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lane
+- 2026-11-12 10:37 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-99): 7 event(s): slw_st_a_v1__clfc5867a6__pvf82a6c28 PLAN-CHANGE (rule C) density 0.4859 cells/um2 >= 0.42: PLAN-CHANGE slw_st_a_v1__clfc5867a6__pvf82a6c28: outline 622.08 x 1339.2 (soft 806466 um2) carries 391891 cells; grow the soft area x1.16 (to 933074 um2) or split into 2 types (rule C, advisory; die owner ranks a plan change first); slw_st_a
 
