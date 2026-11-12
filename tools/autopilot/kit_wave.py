@@ -5730,6 +5730,22 @@ def held_stop_reason(cfg, rec, res):
                  if fnmatch.fnmatchcase(rec.get("item") or "", pat)), "")
 
 
+HOST_GAP_WHY = ("tool input file missing", "KIT_NOT_SELF_CONTAINED")
+
+
+def host_input_gap(st, rec, spec_host):
+    """KW-FIX-46 11-12 (COORD 09:3x, hbm PHY_NE / q_su00 class): a FLOW 'tool input file missing' / KIT_NOT_SELF_CONTAINED
+    failure on a gen host that the LAST src probe listed as SRC-INCOMPLETE for this die (or for this item) is a host copy
+    gap, not a design verdict: '' or the probe's text.  (st src_incomplete_last is written by each tick's probe; collect
+    runs before this tick's probe.)"""
+    if not spec_host:
+        return ""
+    last = st.get("src_incomplete_last") or {}
+    hd = (last.get("dies") or {}).get(spec_host) or {}
+    hi = ((last.get("items") or {}).get(spec_host) or {}).get(rec.get("die")) or {}
+    return str(hd.get(rec.get("die")) or hi.get(rec.get("item")) or "")
+
+
 def collect(AP, cfg, st, notices):
     for key, rec in st["items"].items():
         if rec.get("status") != "RUNNING" or AP.unit_active(rec["unit"]):
@@ -5793,6 +5809,15 @@ def collect(AP, cfg, st, notices):
         cls, why = classify(res.get("stage", ""), (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
         if res.get("class"):                             # KW-RESUME-1 'nochange': the previous attempt's class stands
             cls, why = res["class"], (res.get("reason") or why)
+        if cls == "FLOW" and why.startswith(HOST_GAP_WHY):
+            try:
+                _gh = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
+            except (OSError, ValueError, KeyError, TypeError):
+                _gh = None
+            _gap = host_input_gap(st, rec, _gh)
+            if _gap:
+                cls, why = "INFRA", f"INFRA host input gap on {_gh} (SRC-INCOMPLETE: {_gap[:160]}): {why}"[:400]
+                AP.log(f"KIT-WAVE HOST-GAP {rec['die']}/{rec['item']}@{rec.get('attempt')} on {_gh}: FLOW -> INFRA")
         rec.update(status="FAIL", **{"class": cls}, reason=why)
         if cls == "INFRA" and NO_HOST.search(why):       # KW-FIX-37: a host shortage spends no infra attempt, the row waits
             rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
@@ -6775,6 +6800,8 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE spill-mark probe skipped: {e}")
     try:                                        # KW-FIX-24 stale-source class
         cfg["_src_incomplete"] = src_incomplete(AP, cfg)
+        st["src_incomplete_last"] = {"t": time.time(), "dies": cfg["_src_incomplete"],
+                                     "items": cfg.get("_item_incomplete") or {}}       # KW-FIX-46: read by host_input_gap()
         for h, ds in sorted(cfg["_src_incomplete"].items()):
             for die, why in sorted(ds.items()):
                 AP.log(f"KIT-WAVE SRC-INCOMPLETE {h} {die}: {why} (not a gen host for the die until its copy is whole)")
