@@ -1,4 +1,4 @@
-# DIE-QC-100 lane handoff (QC = qwen_compute die owner)  -- updated 2026-11-12 08:35 PST
+# DIE-QC-100 lane handoff (QC = qwen_compute die owner)  -- updated 2026-11-12 09:00 PST
 
 ## 1 Scope
 Finish QC s28 compose as ONE event: s28a + s28 items (B,C,D,E,F,W) + HF-1c delta (claude/qc-s28-floorplan-1112@ea7be452d3, APPROVED w/ GEOM-VIS-3 conditions a/b/c) + REACH-FIX taps; G0 + strict bind; READY with sha + drawings. Types go to P&R only after a GEOM-VIS-5 verdict. Hourly STATE on lanes/COORD-REVIEW-QUEUE.md. QC: 2/120 types, 31/31 cores signed off.
@@ -39,6 +39,13 @@ None besides the sub-lanes. Queue post: append line to ~/coord/lanes/COORD-REVIE
 - Pending deltas onto the chain: VISFORM delta_sc_fix (on zz_c5_st -> re-run fixup), LAND (land/; rebase on final chain).
 - QC-S28-BIND sub-lane (bind/, wt/qc-s28-event branch claude/qc-s28-event-1112): real event tree + r8 regen + cbx_h straps + slw_hc3 reset + reset reach + strict bind.
 - QC-CLASS-TRIAGE DONE (qc-class-triage/): LEC st_b = missing replica hints (F3 fixes slw); slw_hc3__cld86a7ad4 LEC 85 pts unknown -> KW-FIX-46; macro_channels -> F2; landing band OK on HF-1c.
+
+
+## 5d Compose (09:00) -- tool tree for gates = qc-s28-hf1c/visform/gtree (schema needs VISFORM tool files); run compose/gates_g.sh
+- zz_c5_st e7fb79028919 -> VISFORM delta_sc_fix f09979e10115 -> zz_c5b_scfix 47aa44ee2f52 -> fixup_qc100 -> zz_c6b_fix -> compose/snap_lattice.py (cluster-aware floor/ceil, cl_* landing views exempt) -> zz_c7b_lat 3d1f6c30cec4
+- gates out/c7b: schema 0; G0 611 (= c6b, 0 NEW); G0C 1448 -> 762 (686 hard_cores gone, 0 net new). vs s28a_bc: G0 NEW 385 = LAND classes (332 START/monitor, 42 latency=42 gone, 9 geom, 2 faces)
+- Residual HF-1c-origin G0C (cl_ landing views 38, u_t ck M5 x 10, su_l0 internal_stations 3, core_faces 31) -> sub-lane QC-S28-RESID (qc-s28-hf1c/resid/)
+- Final chain order: c6b + LAND delta + RESID script -> snap_lattice (last) -> gates -> BIND (QC-S28-BIND, bind/) -> bus_groups/EQ/tap table/render -> READY
 
 ## 6 NEXT STEPS
 1. Collect the 4 sub-lane deltas (each guarded on 55d318eece08). Compose order: LAND -> TAPS -> ROUTE -> VISFORM (each apply script refuses on from-value conflict; resolve by hand, keep both intents).
