@@ -2310,6 +2310,7 @@ def gen_hosts(cfg, die, item=None):
 SRC_PROBE_DEPTH = 3
 SRC_MIN_FRAC = 0.99
 SRC_REQUIRED = ("tools/die_plan/bind.py",)
+SRC_ITEM_REQUIRED = ("physical/common_flow", "tools/die_plan")   # KW-FIX-46: dirs a private item src must hold
 
 
 def src_inputs(cfg, die):
@@ -2431,6 +2432,12 @@ def item_inputs(cfg, die):
             # WAVE-OPS-1 11-10 (COORD, HBM-CORES-B q_hub_ne/epyc8): the plan's dir too (its pins_file / views are
             # relative to it); the deep probe samples one pins_file of each probed plan json (ckp)
             pl = v.get("plan") if key == "item_inputs" and isinstance(v, dict) else None
+            # KW-FIX-46 11-12 (COORD QC KIT_NOT_SELF_CONTAINED @gen common_flow/failfast_rules.py, 6 rows): an item's private
+            # src (qc-s28a/src28ap) was a 29.7k-file partial tree with no physical/common_flow on every host; only the tree dir
+            # was probed.  The die-src required files and dirs are required in an item src as well.
+            isrc = v.get("src") if key == "item_inputs" and isinstance(v, dict) else None
+            if isinstance(isrc, str) and isrc.startswith("/"):
+                ps += [os.path.join(isrc, r) for r in SRC_REQUIRED + SRC_ITEM_REQUIRED]
             if isinstance(pl, str) and pl.startswith("/") and pl.endswith((".json", ".json.gz")):
                 ps.append(os.path.dirname(pl))
             if ps:
