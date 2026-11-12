@@ -148,7 +148,71 @@ def run(raw, lanes, limit=405.0, pad=250.0):
             avoid = PR._type_site_rects(raw2, tn, skip=None)
             sites = _sites(raw2, tn, tp, tq, pad, avoid)
             ch, pts_t, banks, why = None, None, None, "no chain"
-            for reach in (limit - 10.0, limit - 30.0, limit - 60.0, limit - 100.0, limit - 150.0, limit - 200.0):
+            # minimum first: ONE station (ceil(hop/405)-1 = 1) tried on candidate sites ranked by hop balance, each with its
+            # bank packed and the hops re-measured from the packed station centre (no reach ladder, no uneven chain)
+            if sites is not None and len(sites) and PR._man(tp, tq) + leg2 > limit + EPS and PR._man(tp, tq) <= 2 * (limit - 10) - leg2:
+                dpv = np.abs(sites[:, 0] - tp[0]) + np.abs(sites[:, 1] - tp[1])
+                dqv = np.abs(sites[:, 0] - tq[0]) + np.abs(sites[:, 1] - tq[1]) + leg2
+                okm = (dpv <= limit - 5) & (dqv <= limit - 5)
+                idx = np.where(okm)[0]
+                idx = idx[np.argsort(np.abs(dpv[idx] - dqv[idx]))][:60]
+                cand = [[round(float(sites[ii][0]), 3), round(float(sites[ii][1]), 3)] for ii in idx]
+                if banked and len(idx):         # the packer shifts a bank sideways: retry anchors at the shifted x, y swept
+                    w0, h0 = sl["bit_site_cell_um"]
+                    nb0 = len(sl["bit_sites_um"][0]) if sl["bit_sites_um"] else sl["width"] + 1
+                    pk0 = PR._pack_bank(raw2, tn, nb0, w0, h0, cand[0], list(avoid))
+                    if pk0:
+                        ys_ = sorted({round(float(sites[ii][1]), 1) for ii in np.where(okm)[0]})
+                        ys_ = ys_[:: max(1, len(ys_) // 120)]
+                        cand = [[pk0[1][0], y_] for y_ in ys_] + cand
+                for c_ in cand:
+                    cen = [c_]
+                    bk = None
+                    if banked:
+                        w, h = sl["bit_site_cell_um"]
+                        nb = len(sl["bit_sites_um"][0]) if sl["bit_sites_um"] else sl["width"] + 1
+                        pk = PR._pack_bank(raw2, tn, nb, w, h, c_, list(avoid))
+                        if pk is None:
+                            continue
+                        bk, cen = [pk[0]], [pk[1]]
+                    hh = [PR._man(tp, cen[0]), PR._man(cen[0], tq) + leg2]
+                    if max(hh) <= limit - 2:
+                        pts_t, banks, ch, why = cen, bk, [tuple(cen[0])], None
+                        break
+                if why is None:
+                    pass
+            if why is not None and banked:          # even chains of m = 1..5 stations, anchors on the packed column, hops measured
+                w, h = sl["bit_site_cell_um"]
+                nb = len(sl["bit_sites_um"][0]) if sl["bit_sites_um"] else sl["width"] + 1
+                p0 = PR._pack_bank(raw2, tn, nb, w, h, [(tp[0] + tq[0]) / 2, (tp[1] + tq[1]) / 2], list(avoid))
+                xcol = p0[1][0] if p0 else (tp[0] + tq[0]) / 2
+                found = False
+                for m_ in range(1, 6):
+                    for dxs in (0.0, -40.0, 40.0, -80.0, 80.0):
+                        av = list(avoid)
+                        cen, bl, ok_ = [], [], True
+                        for k_ in range(1, m_ + 1):
+                            f_ = k_ / (m_ + 1)
+                            anc = [xcol + dxs, tp[1] + (tq[1] - tp[1]) * f_]
+                            pk = PR._pack_bank(raw2, tn, nb, w, h, anc, av)
+                            if pk is None:
+                                ok_ = False
+                                break
+                            xs = [x for x, _ in pk[0]]
+                            ys = [y for _, y in pk[0]]
+                            av.append((min(xs), min(ys), max(xs) + w, max(ys) + h))
+                            cen.append(pk[1])
+                            bl.append(pk[0])
+                        if not ok_:
+                            continue
+                        chain_ = [tp] + [tuple(c_) for c_ in cen] + [tq]
+                        hs_ = [PR._man(a_, b_) for a_, b_ in zip(chain_, chain_[1:])]
+                        if max(hs_[:-1] + [hs_[-1] + leg2]) <= limit - 2:
+                            pts_t, banks, ch, why, found = cen, bl, [tuple(c_) for c_ in cen], None, True
+                            break
+                    if found:
+                        break
+            for reach in (() if why is None and pts_t is not None else (limit - 10.0, limit - 30.0, limit - 60.0, limit - 100.0, limit - 150.0, limit - 200.0, limit - 250.0, limit - 300.0)):
                 ch = _chain(sites, tp, tq, reach, reach_last=reach - leg2)
                 if ch is None:
                     break

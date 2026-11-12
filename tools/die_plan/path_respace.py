@@ -496,7 +496,7 @@ def _type_site_rects(raw2, tn, skip=None):
     return out
 
 
-def _pack_bank(raw2, tn, n, w, h, anchor, avoid, search=240.0, step=4.32):
+def _pack_bank(raw2, tn, n, w, h, anchor, avoid, search=360.0, step=4.32):
     """re-pack: lay n sites (cell w x h) row-major in a free block of R rows x C columns nearest `anchor` (type frame):
     inside the outline, off the hard cores (+margin) and off every rect in `avoid` (other banks).  -> (sites, centre) or None."""
     import math
