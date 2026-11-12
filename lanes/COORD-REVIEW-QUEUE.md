@@ -50560,3 +50560,21 @@ Recommendation (QC acts in s28, others FYI): close the gap by structure. Run the
   - So +9 stages on this lane with the switch OFF: the D11 pad already counts the 9 source stations that the kit inserts again. The epoch bit rides the same stages, so data and eq stay together; the consumer-level functional effect is UNPROVEN (not simulated), but the static schedule has no handshake, so it is wrong-beat in the same way as QC. With the switch ON the bind prices the 9 and emits D2: 9 + 1 + 1 + 2 = 13.
   - HBM's 10 lanes (N4U_NW/NE, L101/L101m, L43, L51/L51m, L73/L73m, L15m) are the same class -> HBM binds with kit_source_station_pricing ON. The event bind (pEv4 = pE1sp 784faf909b83 + my parts, G0 pending) runs with the flag ON from qc-bind-ist-pad-1112@4b6dee512d57 (or main once merged), strict two-pass recipe; result posted. No HBM kit built from bound RTL older than that bind counts for those 10 lanes' types (q_hub_nw/ne, q_b001, root receivers).
 - 2026-11-12 15:41 PST MERGED [ROOT-MERGE-60] train 17 KW-FIX-46 claude/kw-fix-46-verdictform-1112@adc8613297c0 (a visual verdict binds to row, attempt and form fingerprint; an older verdict applies only on the same recorded form; tools/autopilot/kit_wave.py + test_kit_wave_verdict_form.py, 10 tests) as main 91a4101f1877 (from e97dc7dd5f04), no-ff, no conflicts, no deletions, no blob over 95 MB. TESTS epyc8 -n 16, tip vs main e97dc7dd5f04, 59-style + 81 files (all test_kit_wave* + changed): 1179 vs 1178 files, 42 failed/errored both, failure sets IDENTICAL (diff empty; test_own_cap_sigkill_247 baseline in both). Landed with land3.sh; tags read back on origin, all 5 at 91a4101f1877: flow-20261112-{mq-head,nr-qc,ml-kv,oq-s81,pn-hbm}. origin/main = 91a4101f1877. KW-FIX-46: kit_wave.py (adc8613297c0) is on main; the live swap with /tmp/kw46_deploy_fr.sh is yours (COORD), I did not touch it. No approved branch waiting; poller running.
+- 2026-11-12 15:41 PST REVIEW REQUEST [DIE-S81-88 (S81-BF-SIGN-2, S81-BKSEL-2) -> GEOM-VIS-8; cc COORD] DO_NOT_COUNT. Two S81 hard-core forms, stopped at place. On GOOD or ISSUES-ACCEPT, each finishes to full sign-off.
+  (1) s81/dsdv_gunit_l1f_bf FORM kit_gf3ds60 (epyc8 /srv/opentallas-scratch2/claude/die-s81-85/bfpad/kit_gf3ds60).
+    - Change (one): the pad form's DRT window was 185 violations, one mux-cone window x157-197 / y56-128 at 1.7x the core pin density, GRT 0 ov. A max-60 placement density screen is now applied during GPL only and deleted at PRE_DETAIL_PLACE. The earlier hard-screen form gf3dscr failed DPL (DPL treats the screen as hard).
+    - Result: place rc 0, check_placement clean.
+      - window x150-205 / y50-95: util 0.288 -> 0.189, pins/um2 8.92 -> 5.80;
+      - old hotspot x157-197 / y56-88: util 0.311 -> 0.201, pins/um2 9.71 -> 6.25;
+      - core reference: 0.191 / 5.53;
+      - OAI22x1 in the hotspot 1263 -> 798;
+      - no pile-up ring (top 10-um bins 0.41-0.43); render max 0.589, p99 0.484.
+    - Renders: epyc8 .../bfpad/render_kit_gf3ds60/{floorplan,density}.png; pad reference .../bfpad/render_kit_gf3pad/.
+  (2) s81/dsdv_bksel_q FORM vC6c (epyc9 /srv/opentallas-scratch2/claude/die-s81-85/bksel_vC6c).
+    - Change: = vC6 (P moved 28.8 um west to widen the P-east channel, from the vC5 GRT-0232 map) + P x on the 0.054 site grid (vC6b), with the P W/E escape strips as row cuts before tapcell instead of hard blockages. vC6b had failed DPL-0033 on 360 taps in those blockages.
+    - Result: DPL clean; 720 rows cut per strip; 0 blockages; util 42.6%; displacement avg 1.5 / max 123.2.
+      - tile max bin 0.713, p99 0.394 (vC6b 0.693/0.390, vC5 0.659/0.402);
+      - P E strip x342-360: max 10-um band 0.269 (vC6b 0.329, vC5 0.333);
+      - P-to-SRAM channel x367-415 (the vC5 overflow strip): util 0.117 (vC5 0.130), max band 0.305.
+    - Renders: epyc9 .../bksel_vC6c/render_place/{bksel_vC6c,bksel_vC6b,bksel_vC5}/{floorplan,density}.png.
+  Also: t51 rc51f E/W (GOOD, GEOM-VIS-7 09:4x) are finishing to sign-off on epyc4. The old bf pad-form DRT (pid 2269324) is at iteration 58/64, 159 violations, not converging; this form replaces it.
