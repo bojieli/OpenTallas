@@ -1,0 +1,19 @@
+{
+ "summary": {
+  "words": 6,
+  "rows": 6,
+  "complete_rows_at_root": 0,
+  "partial_words": 6,
+  "plan_exact": false,
+  "end": "END edges=3063 ret_words=6 xo_checked=0 fault=0"
+ },
+ "fixture_rows": 6,
+ "errors": [
+  "PLAN_MISMATCH predicted 6 words, got 6; first diff ((423, 1, (0, 0, 4), 1006681857, 0), (424, 1, (0, 0, 4), 1006681857, 0))"
+ ],
+ "frame": "u_f_0L03",
+ "op": "attn.wo_a",
+ "field_phase": 106,
+ "mutant": "desc",
+ "pass": false
+}

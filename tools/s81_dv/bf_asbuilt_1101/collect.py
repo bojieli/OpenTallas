@@ -43,8 +43,13 @@ def collect(run,extra_positive=()):
     if result['status']!='PASS':return 1
     measured=json.loads((run/'measure.json').read_text())
     hashes=dict(manifest['source_sha256'])
-    name='rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv'
-    hashes[name]=hashlib.sha256((source/name).read_bytes()).hexdigest()
+    # the canonical plan-kit path is a required pin (xs_bf.qualify_asbuilt_measurement); a frame root's schedule may
+    # name the kit by ext/<path> instead, and prepare.py then required both paths to hold the same bytes
+    for name in ('rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv',
+                 f'rtl/dsrom_sys/s81_dv/frame_lp/plan/{manifest["master"]}_l4_lp_plan_kit.sv'):
+        hashes[name]=hashlib.sha256((source/name).read_bytes()).hexdigest()
+    if manifest.get('plan_kit_sha256') not in (None,hashes[name]):
+        raise ValueError('plan kit changed since prepare: '+name)
     for line in (source/'tools/s81_dv/frame_bench.f').read_text().splitlines():
         line=line.strip()
         if line.startswith('+incdir+'):
@@ -55,14 +60,21 @@ def collect(run,extra_positive=()):
             continue
         if not line or line.startswith(('#','+')):continue
         hashes[line]=hashlib.sha256((source/line).read_bytes()).hexdigest()
+    # S81-FRAME-FIX-1 11-11: a --bound-plan schedule is measured only on a bench carrying the same seam depths
+    sched=json.loads(Path(manifest['schedule']).read_text())
+    bound=manifest.get('bound_plan')
+    if (sched.get('bound_plan') or {}).get('plan_sha256')!=(bound or {}).get('plan_sha256') or \
+            (bound is not None and bound['seam_depths']!=sched['bound_plan']['seam_depths']):
+        raise ValueError('bench seam depths differ from the schedule bound plan')
     for rec in measured.values():
+        if rec.get('leaf_ret_corr'):raise ValueError('as-built record carries a leaf return correction: '+rec['key'])
         rec['asbuilt_source_qualification']=dict(status='PASS_STATIC_REPLAY',clock_ps=833,
             payload_control_caught=not checks['payload_fault']['pass'],one_edge_control_caught=not checks['descriptor_fault']['pass'],
             source_sha256=hashes,schedule_sha256=hashlib.sha256(Path(manifest['schedule']).read_bytes()).hexdigest(),
             scope=result['scope'],trace_lockstep=True,cases=shapes,
             binding=manifest['hard_cfg_parameters'],idle_q_assumption=manifest['idle_q_assumption'],native_family_hold=True,
             payload_skew_edges=manifest['payload_skew_edges'],validated_ops=['attn.wo_a','ffn.router'],
-            xo_forwarding_qualification=result['xo_forwarding_qualification'])
+            xo_forwarding_qualification=result['xo_forwarding_qualification'],bound_plan=bound)
     (run/'candidate_measurements.json').write_text(json.dumps(measured,indent=2)+'\n')
     return 0
 

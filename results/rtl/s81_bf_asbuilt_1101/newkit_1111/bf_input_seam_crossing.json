@@ -1,0 +1,840 @@
+{
+ "note": "BF unit input pins whose arrival changes with the bound seam stages (u_s01 +9, u_s12 +4); frame_schedule_asb.trace on the schedule elaboration, plain vs bound",
+ "changed": {
+  "col_h9_l4_lp_asb_x": {
+   "u_r1.u_e8.cfg": {
+    "plain": [
+     [
+      "cf.cc",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.f_prog": {
+    "plain": [
+     [
+      "cf.cc",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.go": {
+    "plain": [
+     [
+      "cf.cc",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.x0": {
+    "plain": [
+     [
+      "cf.xa",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xa",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.x1": {
+    "plain": [
+     [
+      "cf.xb",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xb",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.xb_data": {
+    "plain": [
+     [
+      "cf.x2",
+      21
+     ],
+     [
+      "cf.xa",
+      21
+     ],
+     [
+      "cf.xb",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      30
+     ],
+     [
+      "cf.xa",
+      30
+     ],
+     [
+      "cf.xb",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.xb_meta": {
+    "plain": [
+     [
+      "cf.x2",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      30
+     ]
+    ]
+   },
+   "u_r2.u_e13.cfg": {
+    "plain": [
+     [
+      "cf.cc",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.f_prog": {
+    "plain": [
+     [
+      "cf.cc",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.go": {
+    "plain": [
+     [
+      "cf.cc",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.x0": {
+    "plain": [
+     [
+      "cf.xa",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xa",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.x1": {
+    "plain": [
+     [
+      "cf.xb",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xb",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.xb_data": {
+    "plain": [
+     [
+      "cf.x2",
+      32
+     ],
+     [
+      "cf.xa",
+      32
+     ],
+     [
+      "cf.xb",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      45
+     ],
+     [
+      "cf.xa",
+      45
+     ],
+     [
+      "cf.xb",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.xb_meta": {
+    "plain": [
+     [
+      "cf.x2",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      45
+     ]
+    ]
+   }
+  },
+  "col_h9_l4_lp_asb_nx": {
+   "u_r1.u_e8.cfg": {
+    "plain": [
+     [
+      "cf.cc",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.f_prog": {
+    "plain": [
+     [
+      "cf.cc",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.go": {
+    "plain": [
+     [
+      "cf.cc",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.x0": {
+    "plain": [
+     [
+      "cf.xa",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xa",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.x1": {
+    "plain": [
+     [
+      "cf.xb",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xb",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.xb_data": {
+    "plain": [
+     [
+      "cf.x2",
+      21
+     ],
+     [
+      "cf.xa",
+      21
+     ],
+     [
+      "cf.xb",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      30
+     ],
+     [
+      "cf.xa",
+      30
+     ],
+     [
+      "cf.xb",
+      30
+     ]
+    ]
+   },
+   "u_r1.u_e8.xb_meta": {
+    "plain": [
+     [
+      "cf.x2",
+      21
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      30
+     ]
+    ]
+   },
+   "u_r2.u_e13.cfg": {
+    "plain": [
+     [
+      "cf.cc",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.f_prog": {
+    "plain": [
+     [
+      "cf.cc",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.go": {
+    "plain": [
+     [
+      "cf.cc",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.x0": {
+    "plain": [
+     [
+      "cf.xa",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xa",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.x1": {
+    "plain": [
+     [
+      "cf.xb",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xb",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.xb_data": {
+    "plain": [
+     [
+      "cf.x2",
+      32
+     ],
+     [
+      "cf.xa",
+      32
+     ],
+     [
+      "cf.xb",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      45
+     ],
+     [
+      "cf.xa",
+      45
+     ],
+     [
+      "cf.xb",
+      45
+     ]
+    ]
+   },
+   "u_r2.u_e13.xb_meta": {
+    "plain": [
+     [
+      "cf.x2",
+      32
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      45
+     ]
+    ]
+   }
+  },
+  "col_h10_l4_lp_asb_x": {
+   "u_r1.u_e10.cfg": {
+    "plain": [
+     [
+      "cf.cc",
+      24
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      33
+     ]
+    ]
+   },
+   "u_r1.u_e10.f_prog": {
+    "plain": [
+     [
+      "cf.cc",
+      24
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      33
+     ]
+    ]
+   },
+   "u_r1.u_e10.go": {
+    "plain": [
+     [
+      "cf.cc",
+      24
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      33
+     ]
+    ]
+   },
+   "u_r1.u_e10.x0": {
+    "plain": [
+     [
+      "cf.xa",
+      24
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xa",
+      33
+     ]
+    ]
+   },
+   "u_r1.u_e10.x1": {
+    "plain": [
+     [
+      "cf.xb",
+      24
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xb",
+      33
+     ]
+    ]
+   },
+   "u_r1.u_e10.xb_data": {
+    "plain": [
+     [
+      "cf.x2",
+      24
+     ],
+     [
+      "cf.xa",
+      24
+     ],
+     [
+      "cf.xb",
+      24
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      33
+     ],
+     [
+      "cf.xa",
+      33
+     ],
+     [
+      "cf.xb",
+      33
+     ]
+    ]
+   },
+   "u_r1.u_e10.xb_meta": {
+    "plain": [
+     [
+      "cf.x2",
+      24
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      33
+     ]
+    ]
+   },
+   "u_r1.u_e5.cfg": {
+    "plain": [
+     [
+      "cf.cc",
+      15
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      24
+     ]
+    ]
+   },
+   "u_r1.u_e5.f_prog": {
+    "plain": [
+     [
+      "cf.cc",
+      15
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      24
+     ]
+    ]
+   },
+   "u_r1.u_e5.go": {
+    "plain": [
+     [
+      "cf.cc",
+      15
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      24
+     ]
+    ]
+   },
+   "u_r1.u_e5.x0": {
+    "plain": [
+     [
+      "cf.xa",
+      15
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xa",
+      24
+     ]
+    ]
+   },
+   "u_r1.u_e5.x1": {
+    "plain": [
+     [
+      "cf.xb",
+      15
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xb",
+      24
+     ]
+    ]
+   },
+   "u_r1.u_e5.xb_data": {
+    "plain": [
+     [
+      "cf.x2",
+      15
+     ],
+     [
+      "cf.xa",
+      15
+     ],
+     [
+      "cf.xb",
+      15
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      24
+     ],
+     [
+      "cf.xa",
+      24
+     ],
+     [
+      "cf.xb",
+      24
+     ]
+    ]
+   },
+   "u_r1.u_e5.xb_meta": {
+    "plain": [
+     [
+      "cf.x2",
+      15
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      24
+     ]
+    ]
+   },
+   "u_r2.u_e15.cfg": {
+    "plain": [
+     [
+      "cf.cc",
+      35
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      48
+     ]
+    ]
+   },
+   "u_r2.u_e15.f_prog": {
+    "plain": [
+     [
+      "cf.cc",
+      35
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      48
+     ]
+    ]
+   },
+   "u_r2.u_e15.go": {
+    "plain": [
+     [
+      "cf.cc",
+      35
+     ]
+    ],
+    "bound": [
+     [
+      "cf.cc",
+      48
+     ]
+    ]
+   },
+   "u_r2.u_e15.x0": {
+    "plain": [
+     [
+      "cf.xa",
+      35
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xa",
+      48
+     ]
+    ]
+   },
+   "u_r2.u_e15.x1": {
+    "plain": [
+     [
+      "cf.xb",
+      35
+     ]
+    ],
+    "bound": [
+     [
+      "cf.xb",
+      48
+     ]
+    ]
+   },
+   "u_r2.u_e15.xb_data": {
+    "plain": [
+     [
+      "cf.x2",
+      35
+     ],
+     [
+      "cf.xa",
+      35
+     ],
+     [
+      "cf.xb",
+      35
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      48
+     ],
+     [
+      "cf.xa",
+      48
+     ],
+     [
+      "cf.xb",
+      48
+     ]
+    ]
+   },
+   "u_r2.u_e15.xb_meta": {
+    "plain": [
+     [
+      "cf.x2",
+      35
+     ]
+    ],
+    "bound": [
+     [
+      "cf.x2",
+      48
+     ]
+    ]
+   }
+  }
+ },
+ "unchanged_instances": {
+  "col_h9_l4_lp_asb_x": [
+   "u_r0.u_e4",
+   "u_r0.u_e4e",
+   "u_r0.u_e4w",
+   "u_r1.u_e8e",
+   "u_r1.u_e8w",
+   "u_r2.u_e13e",
+   "u_r2.u_e13w"
+  ],
+  "col_h9_l4_lp_asb_nx": [
+   "u_r0.u_e4",
+   "u_r0.u_e4e",
+   "u_r0.u_e4w",
+   "u_r1.u_e8e",
+   "u_r1.u_e8w",
+   "u_r2.u_e13e",
+   "u_r2.u_e13w"
+  ],
+  "col_h10_l4_lp_asb_x": [
+   "u_r0.u_e1",
+   "u_r0.u_e1e",
+   "u_r0.u_e1w",
+   "u_r1.u_e10e",
+   "u_r1.u_e10w",
+   "u_r1.u_e5e",
+   "u_r1.u_e5w",
+   "u_r2.u_e15e",
+   "u_r2.u_e15w"
+  ]
+ }
+}
