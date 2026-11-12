@@ -215,6 +215,88 @@ endmodule
 `else
 `define KSH_SKID_D `KSH_SKID
 `endif
+// HBM-CORES-B 11-12 form RCMD (OT_KSH_RCMD; ksh_abc v8e478a TT -72.01, 174 endpoints: u_cmd.rd_gray -> same-cycle
+// Gray empty compare -> take_cmd -> 36-bit cmd_q enable across the die).  Copy of ot_hbm_svc_async_fifo whose read-side
+// empty flag is REGISTERED and cycle-exact: empty_q holds (rd_gray == wr_gray_r2) for the CURRENT state because it is
+// loaded with the NEXT values (rd_gray' = gray(rd_next), wr_gray_r2' = wr_gray_r1); reset 1 (both pointers 0).  Proven
+// by SAT induction (proofs/ksh_rcmd_1112): empty_q == (rd_gray == wr_gray_r2) on every reachable rd_clk state, so the
+// flag is never late (never reports non-empty while empty) and never early.  Write side and data path are unchanged.
+// Negative controls only: MUT=1 loads the CURRENT rd_gray, so after the last pop empty_q is one edge late (unsafe;
+// masked in the kshare system because every take leaves NORM, so it is shown by the SAT proof); MUT=2 compares the
+// STALE wr_gray_r2, so a new entry shows one rd edge late (safe but not cycle-exact; fails the exact lock-step bench).
+module ot_hbm_svc_async_fifo_re #(parameter integer WIDTH=32,DEPTH=8,MUT=0)(
+ input wire wr_clk,wr_rst_n,wr_valid,output wire wr_ready,
+ input wire [WIDTH-1:0] wr_data,output reg wr_overflow,
+ input wire rd_clk,rd_rst_n,output wire rd_valid,input wire rd_ready,
+ output wire [WIDTH-1:0] rd_data,output reg rd_underflow
+);
+ localparam integer AW=$clog2(DEPTH),PW=AW+1;
+ wire both_reset=wr_rst_n&&rd_rst_n;wire wr_reset,rd_reset;
+ ot_reset_sync u_wr_reset(.clk(wr_clk),.async_rst_n(both_reset),.sync_rst_n(wr_reset));
+ ot_reset_sync u_rd_reset(.clk(rd_clk),.async_rst_n(both_reset),.sync_rst_n(rd_reset));
+ reg [WIDTH-1:0] mem[0:DEPTH-1];
+ reg [PW-1:0] wr_bin,wr_gray,rd_bin,rd_gray;
+ (* async_reg="true" *)reg [PW-1:0] rd_gray_w1,rd_gray_w2,wr_gray_r1,wr_gray_r2;
+ reg wr_online,rd_online;
+ (* async_reg="true" *)reg rd_online_w1,rd_online_w2,wr_online_r1,wr_online_r2;
+ reg empty_q;
+ wire full=wr_gray=={~rd_gray_w2[PW-1:PW-2],rd_gray_w2[PW-3:0]};
+ assign wr_ready=wr_reset&&rd_online_w2&&!full;
+ assign rd_valid=rd_reset&&wr_online_r2&&!empty_q;
+ assign rd_data=mem[rd_bin[AW-1:0]];
+ wire wr_fire=wr_valid&&wr_ready,rd_fire=rd_valid&&rd_ready;
+ wire [PW-1:0] wr_next=wr_bin+wr_fire,rd_next=rd_bin+rd_fire;
+ wire [PW-1:0] rd_gray_next=(MUT==1)?rd_gray:((rd_next>>1)^rd_next);
+ always @(posedge wr_clk or negedge wr_reset)begin
+  if(!wr_reset)begin
+   wr_bin<=0;wr_gray<=0;rd_gray_w1<=0;rd_gray_w2<=0;
+   wr_online<=0;rd_online_w1<=0;rd_online_w2<=0;wr_overflow<=0;
+  end else begin
+   wr_online<=1;rd_online_w1<=rd_online;rd_online_w2<=rd_online_w1;
+   rd_gray_w1<=rd_gray;rd_gray_w2<=rd_gray_w1;
+   if(wr_valid&&!wr_ready)wr_overflow<=1;
+   if(wr_fire)begin mem[wr_bin[AW-1:0]]<=wr_data;wr_bin<=wr_next;wr_gray<=(wr_next>>1)^wr_next;end
+  end
+ end
+ always @(posedge rd_clk or negedge rd_reset)begin
+  if(!rd_reset)begin
+   rd_bin<=0;rd_gray<=0;wr_gray_r1<=0;wr_gray_r2<=0;empty_q<=1'b1;
+   rd_online<=0;wr_online_r1<=0;wr_online_r2<=0;rd_underflow<=0;
+  end else begin
+   rd_online<=1;wr_online_r1<=wr_online;wr_online_r2<=wr_online_r1;
+   wr_gray_r1<=wr_gray;wr_gray_r2<=wr_gray_r1;
+   empty_q<=(rd_gray_next==((MUT==2)?wr_gray_r2:wr_gray_r1));
+   if(rd_ready&&!rd_valid)rd_underflow<=1;
+   if(rd_fire)begin rd_bin<=rd_next;rd_gray<=(rd_next>>1)^rd_next;end
+  end
+ end
+`ifdef FORMAL
+ // the invariants the proof uses (rd_clk domain): pointer coding and the registered flag
+ always @* if(rd_reset)begin assert(rd_gray==((rd_bin>>1)^rd_bin)); assert(empty_q==(rd_gray==wr_gray_r2)); end
+`endif
+endmodule
+
+`ifdef OT_KSH_MUT_RCMD
+// bench negative control only
+module ot_hbm_svc_async_fifo_re_mut #(parameter integer WIDTH=32,DEPTH=8)(
+ input wire wr_clk,wr_rst_n,wr_valid,output wire wr_ready,input wire [WIDTH-1:0] wr_data,output wire wr_overflow,
+ input wire rd_clk,rd_rst_n,output wire rd_valid,input wire rd_ready,output wire [WIDTH-1:0] rd_data,output wire rd_underflow);
+`ifdef OT_KSH_MUT_RCMD2
+ ot_hbm_svc_async_fifo_re #(.WIDTH(WIDTH),.DEPTH(DEPTH),.MUT(2)) u(.*);
+`else
+ ot_hbm_svc_async_fifo_re #(.WIDTH(WIDTH),.DEPTH(DEPTH),.MUT(1)) u(.*);
+`endif
+endmodule
+`endif
+`ifdef OT_KSH_RCMD
+`ifdef OT_KSH_MUT_RCMD
+`define KSH_CFIFO ot_hbm_svc_async_fifo_re_mut
+`else
+`define KSH_CFIFO ot_hbm_svc_async_fifo_re
+`endif
+`else
+`define KSH_CFIFO ot_hbm_svc_async_fifo
+`endif
 module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
  // die strap (H-SM DEDUPE 2026-10-16, was parameter SM): the SM group k of this leaf, PCs 4k..4k+3.  One hardened master
@@ -258,7 +340,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  always @(posedge stream_clk or negedge srst_q)if(!srst_q)cv_q<=0;else cv_q<=vm_v;
  wire cf_wr_ready,cf_ov,cf_rd_valid,cf_un;wire[CMW-1:0]cf_rd_data;wire all_norm;
  wire take_cmd=cf_rd_valid&&all_norm;
- ot_hbm_svc_async_fifo #(.WIDTH(CMW),.DEPTH(4)) u_cmd(
+ `KSH_CFIFO #(.WIDTH(CMW),.DEPTH(4)) u_cmd(
   .wr_clk(stream_clk),.wr_rst_n(srst_q),.wr_valid(cv_q),.wr_ready(cf_wr_ready),.wr_data(cd_q),.wr_overflow(cf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hrst_q),.rd_valid(cf_rd_valid),.rd_ready(take_cmd),.rd_data(cf_rd_data),.rd_underflow(cf_un));
  reg[CMW-1:0]cmd_q;
@@ -321,7 +403,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
 `endif
  wire wf_wr_ready,wf_ov,wf_rd_valid,wf_un;wire[WQW-1:0]wf_rd_data;
  wire take_wb=wf_rd_valid&&all_norm&&!cf_rd_valid;
- ot_hbm_svc_async_fifo #(.WIDTH(WQW),.DEPTH(4)) u_wcmd(
+ `KSH_CFIFO #(.WIDTH(WQW),.DEPTH(4)) u_wcmd(
   .wr_clk(stream_clk),.wr_rst_n(srst_q),.wr_valid(wq_v),.wr_ready(wf_wr_ready),.wr_data(wq_d),.wr_overflow(wf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hrst_q),.rd_valid(wf_rd_valid),.rd_ready(take_wb),.rd_data(wf_rd_data),.rd_underflow(wf_un));
  reg[WQW-1:0]wcmd_q;reg[30:0]wend_q;
