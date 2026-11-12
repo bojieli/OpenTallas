@@ -548,9 +548,14 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
             if not active and not signed:
                 sl["terminal"].append(f"{rec.get('status')}/{rec.get('q_status')}")
         if active or signed:
+            own_att = ATTEMPT_RE.match(own[1]).group(0) if own and ATTEMPT_RE.match(own[1]) else None
+            queued = rec.get("status") in ("QUEUED", "PENDING-DEP", "WAIT-PARENT", "RETRY-INFRA", "ENQUEUED") or rec.get("q_status") in ("QUEUED", "WAIT-PARENT")
             for s in _json_strings(rec):
                 hp = _host_path(s, host)
                 if hp and hp[0]:
+                    ma = ATTEMPT_RE.match(hp[1])
+                    if ma and own_att and ma.group(0) != own_att and not queued:   # OWNER 11-12: a RUNNING row's job is self contained; only a QUEUED row still copies from other trees
+                        continue
                     keep.add(f"{hp[0]}:{hp[1]}")
             spec = read_spec(rec.get("dir")) if read_spec and rec.get("dir") else {}
             for f in ("src", "plan", "queue_src"):
@@ -2507,7 +2512,7 @@ def main(argv=None):
     kr.add_argument("--state-json", default=os.path.join(HOME, "coord/autopilot/kit_wave_state.json"))
     kr.add_argument("--stages-tsv", default=os.path.join(HOME, "coord/autopilot/kit_wave_stages.tsv"))
     dr = sub.add_parser("drive", help="localhost driver: snapshot -> push -> archive -> host runs -> collect")
-    dr.add_argument("--archive-jobs", type=int, default=4, help="DISK-1111: signed units archived in parallel per host (1 = old serial pace)")
+    dr.add_argument("--archive-jobs", type=int, default=8, help="DISK-1111: signed units archived in parallel per host (1 = old serial pace)")
     dr.add_argument("--hosts", default=",".join(HOSTS))
     dr.add_argument("--apply", action="store_true", help="really archive and pass --apply to the host runs")
     dr.add_argument("--no-archive", dest="archive", action="store_false")

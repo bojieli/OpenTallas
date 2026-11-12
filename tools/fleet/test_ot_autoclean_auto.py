@@ -762,7 +762,11 @@ class TestKitwave(unittest.TestCase):
         self.assertTrue(at[f"epyc4:{A}/st/attempt_4"]["signed"])
         self.assertEqual(at[f"epyc4:{A}/st/attempt_2"]["terminal"], ["stage:SUPERSEDED"])
         self.assertEqual(out["latest"][f"epyc4:{A}/it"], 3)
-        self.assertIn(f"epyc4:{A}/it/attempt_2/gen/k/run_kit.sh", out["keep"])     # resume source of a running row
+        self.assertNotIn(f"epyc4:{A}/it/attempt_2/gen/k/run_kit.sh", out["keep"])  # OWNER 11-12: a running job is self contained
+        st["items"]["7"] = {"status": "QUEUED", "kit": f"epyc4:{A}/qq/attempt_3/gen/k",
+                            "resume": {"changed": [["synth", "runner", f"{A}/qq/attempt_2/gen/k/run_kit.sh"]]}}
+        out2 = ac.reduce_kitwave(st, rows)
+        self.assertIn(f"epyc4:{A}/qq/attempt_2/gen/k/run_kit.sh", out2["keep"])    # a QUEUED row still copies from it
         self.assertIn("epyc4:/srv/s2/claude/kw/src_x", out["keep"])
 
 
