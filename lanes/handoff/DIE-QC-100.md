@@ -94,3 +94,12 @@ None besides the sub-lanes. Queue post: append line to ~/coord/lanes/COORD-REVIE
 - Re-source skew: fits at contract level (same tap group, insertion 250±40, kit window 30 ps, collhold/diag_ringmargin.py). WATCH: the ring-hold / clock-landing verify in the first s28 kits of coll_s, coll_n and glue confirms the built number.
 - Double-pad: the 15:1x withdrawal STANDS (COORD). CTLCAP is measuring one named lane per die: (a) stages, (b) table, (c) schedule consumer, delta, functional vs perf. I post one RESULT when it reports. W5 is paused until then.
 - d2d-related 6a2b2c7e2d3: COORD approved for merge.
+
+## 5i. 2026-11-12 15:49 PST (real clock; section stamps 16:xx-17:xx above were about 2 h fast)
+- Final event head: zz_collmerge_kprv_d2d_l405 eb9b70cf799c. Base kprv 705a1e9fe0b5 (W5 rv-pad: sl_W*_st_a__x_st_a_fe at 19), sidecar e292ebb838c1, siblings clock_merge f6219a3387b4, bind_requirements fcc229977deb, kit_pricing eb38cf8a8c92 (a flag file). Gates 0 new vs ctlcap/g_kprv. Priced lanes 379, ids same as kp.
+- COORD ruling: QC binds with kit_source_station_pricing ON from s28. No c8t-era-or-older cb/hc1/st_a/ctl kit counts. No signed QC item carries an affected cb lane. The QC token sim runs on bind-only RTL and cannot see kit u_ist, so as-built lane_proof is now a chain step in BIND.
+- BIND lane_proof on kp2_g1: 3 real mismatches on sle_fw_v3 receive-side u_ist (sl_E4_fe cmd/dr, sl_E5_ctl x_ctl_fw_p1) -> CTLCAP. 6 su types fail kit_istations rc 1 (a KIT BLOCKER: su_l0 x_su_c_p1_o width 450 vs face 369; slw_su_l1 cland port) -> CTLCAP. Landing to be measured via strap_k K+1 vs table. 21 hard-PHY lanes OK_HARD.
+- coll_n collector +1 cycle (depth 3 -> 4) is level-sensitive at the consumer (qkd_program_commit.sv:78,123, no counter), so it is harmless. Stale estimate: sidecar boot_budget.local_registered_depths.coll_n = 5 is not recomputed (ready_at_glue estimate 1256, at most 1257). Not a gate; regenerate at the next clock_landing_plan run.
+- Watch: glue sys_face tt_fab/tt_kok/tt_kwd hops 400.2/401.8/403.2 um on clk_t42 (2-5 um margin). Ring-hold verify on the first s28 kits of coll_s/coll_n/glue.
+- 6 st_a hcut1111 routes on epyc4: old-plan; KW-FIX-46 asked to stop them by exact container.
+- Waiting on: BIND final chain on the head, CTLCAP (fw_v3 + su), RESID 8 forwarded hops, then a re-run, tap table, render, event READY.
