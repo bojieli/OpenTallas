@@ -38,6 +38,10 @@ def main(argv=None):
     ap.add_argument("--libdir")
     ap.add_argument("--max-leaf-pad-um", type=float, default=1500.0,
                     help="a leaf needing more wire than this is STRUCTURAL (refused, listed): fix its last mile, not pad it")
+    ap.add_argument("--max-iter-mb", type=float, default=2048.0,
+                    help="abort when one iteration's output exceeds this (FLEET-2 11-12: a diverged loop wrote a 324 GB "
+                         "SPEF on intel1; the SPEF ladder grows with the pad wire)")
+    ap.add_argument("--max-leafpad-m", type=float, default=2.0, help="abort before a build whose total leaf pad exceeds this")
     ap.add_argument("--max-residual-ps", type=float, default=300.0,
                     help="refuse to equalise when the first-step tap spread exceeds this (pads would dominate insertion)")
     a, extra = ap.parse_known_args(argv)
@@ -48,8 +52,18 @@ def main(argv=None):
         d = out / f"it{it}"
         pf = out / f"leafpad{it}.json"
         pf.write_text(json.dumps(pad))
+        if sum(pad.values()) > a.max_leafpad_m * 1e6:
+            hist.append(dict(it=it, abort=f"leaf pad {sum(pad.values()) / 1e6:.2f} m > {a.max_leafpad_m} m"))
+            print(json.dumps(hist[-1]), flush=True)
+            break
         subprocess.run([sys.executable, "-B", str(HERE / "die_clock.py"), "build", a.plan, "--out", str(d), "--pad", "leg",
                         "--leaf-pad", str(pf)] + extra, check=True, capture_output=True)
+        mb = sum(f.stat().st_size for f in d.iterdir() if f.is_file()) / 2 ** 20
+        if mb > a.max_iter_mb:
+            (d / "ctree.spef").unlink(missing_ok=True)
+            hist.append(dict(it=it, abort=f"iteration output {mb:.0f} MB > {a.max_iter_mb} MB (SPEF deleted)"))
+            print(json.dumps(hist[-1]), flush=True)
+            break
         DC.cmd_sta(argparse.Namespace(dir=str(d), corner=["TT", "FF"], libdir=a.libdir))
         tree = json.loads((d / "tree.json").read_text())
         tarr = DC.read_arr(d / "arr_TT.txt")[0]
@@ -69,6 +83,9 @@ def main(argv=None):
                                 slowest_leaves=[[k, round(v, 1)] for k, v in slow])
             print(json.dumps(h["refused"]), flush=True)
             break
+        if len(hist) > 1 and h["TT"]["spread"] > 1.5 * min(r["TT"]["spread"] for r in hist[:-1]):
+            h["stop"] = "diverging (spread > 1.5 x best)"
+            break
         if len(hist) > 1 and h["TT"]["spread"] >= hist[-2]["TT"]["spread"] - 0.5:
             h["stop"] = "no gain"
             break
@@ -83,10 +100,17 @@ def main(argv=None):
         prev = (dict(lm), dict(pad))
         for k, dp in defi.items():
             pad[k] = min(a.max_leaf_pad_um, max(0.0, pad.get(k, 0.0) + 0.8 * dp / slope.get(k, 0.10)))
-    best = min(hist, key=lambda r: r["TT"]["spread"])
+    done = [r for r in hist if "TT" in r]
+    if not done:
+        (out / "regeq.json").write_text(json.dumps(dict(best_it=None, history=hist), indent=1) + "\n")
+        return 2
+    best = min(done, key=lambda r: r["TT"]["spread"])
+    for r in done:                                   # only the best iteration keeps its SPEF
+        if r["it"] != best["it"]:
+            (out / f"it{r['it']}" / "ctree.spef").unlink(missing_ok=True)
     (out / "regeq.json").write_text(json.dumps(dict(best_it=best["it"], history=hist), indent=1) + "\n")
     print("BEST it%d" % best["it"], json.dumps(best["TT"]))
-    return 0 if "refused" not in hist[-1] else 2
+    return 0 if not ({"refused", "abort"} & set(hist[-1])) else 2
 
 
 if __name__ == "__main__":
