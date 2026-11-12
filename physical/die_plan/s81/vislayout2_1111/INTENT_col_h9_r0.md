@@ -1,6 +1,6 @@
 # INTENT: col_h9_r0 family, form R0-LIFT (VISLAYOUT2-S81, 2026-11-11)
 
-Types (11): col_h9_r0_p1__t1, p2__t1__{cl0045af7b, cl9f71e63d}, p3__t1__{cl0cd90c0e, cl31d0dc4b, cl8ce97bcb},
+Types (10): col_h9_r0_p1__t1, p2__t1__{cl0045af7b, cl9f71e63d}, p3__t1__{cl0cd90c0e, cl31d0dc4b, cl8ce97bcb},
 p4__t1__{cl8ef405e8, clcb2fbfe8}, p5__t1, p6__t1. All share one floorplan (84 hard cores). Six variants have e1/e3 up to
 +16 um E; the form is written relative where it touches them.
 Outline 1442.88 x 1226.88 um, unchanged. Positions only: no cycle, port, RTL, outline, orient or core-shape change.
@@ -26,7 +26,7 @@ Outline 1442.88 x 1226.88 um, unchanged. Positions only: no cycle, port, RTL, ou
   1.40). cf sits 17 um above n4/rg2/t0p, so the street under cf is at 1.35.
 - A model bug hid this. route_supply's landing-ring growth floor-divided float um (1393.2 // 10.8 == 128.0), so the
   xo_i0 ring never grew W. It ran down the E outline as a 50 um column, and "ring V M3 1.70-1.82 at x 1420" was
-  reported in every variant. That is fixed on this branch (commit 3d0030cdc5); the numbers below use the fixed tool.
+  reported in every variant. The fix is on its own branch, claude/route-supply-ring-bins-1112 (884182314c + tests 2960b6ec53); the numbers below use the fixed tool.
 - The base stations already miss their registers: no-move run need_more_idx [1, 2, 3, 4, 7] on p4-p6, [3, 4] on
   p1-p3.
 
