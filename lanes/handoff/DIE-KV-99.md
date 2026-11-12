@@ -1,4 +1,4 @@
-# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 13:50 PST
+# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 15:05 PST
 ## 1 Scope
 KV vN2 hand-floorplan event + vN re-issue. Items: 1 census DONE, 2 pg rects DONE, 3 hgi_EN_0 cut DONE, 4 hroot aspect exception (no edit), 5 21-type merge DROPPED (not exact; tool item), 6 REACH-FIX taps (cap 1200, hgi_v8 39) DONE in pipeline / insertion balance = die_clock stage by REACH-FIX-2 (KV PHY last-mile fix in progress there), 7 hg+hgi W street DONE, 8 sys_c stations DONE (PHY exemption ASK open), 9 drawing draft 2 posted (GEOM-VIS-6 FORM GOOD + 5 conditions), GEOM-VIS-6 cond 5 phy re-face DONE (option B).
 ## 2 Worktrees (epyc8 repo /srv/opentallas-scratch2/claude/wt/die-kv-98 = SPARSE, never bind from it)
@@ -46,3 +46,7 @@ none persistent.
 - If 54d2a1ec4b changes in train 11: re-run run 3 on the merged main.
 ## UPDATE 13:50
 - Tool basis = main d0dc0b5307f2 (train 11; m3 tools/die_plan identical). wt/die-kv-99-e ff to d0dc0b5307f2. Before posting: vN2f/work/reach_event2.json rows must have 0 per-type error (train 12 fail-loud exits 3 on any).
+## UPDATE 15:05
+- Event candidate now vN2g: epyc4 nohup bash /srv/opentallas-scratch2/claude/dkv99/resite_g.sh (reach_fix --cap 1200 on 15 residue types from vN2f/work/q6.json; steps vN2g/work/steps.log; G0 dkv99/g0_vN2g). vN2f/work/q6.json = run3 + drop_cell + ft_nudge(ft27) + kv3_hgi_v5 ft1 reg5 -7.236 um (L2259).
+- Bind must wait for train 14 main (4b6dee512d57) and set asbuilt kit_source_station_pricing: true (asbuilt_vN.json in plan_of_record); refresh kv3_pc_v1 lanes table from the bind (DOUBLE-PAD 13:5x).
+- Event open list: hub_Eo/Wo internal hops 420/409 um; any type not reaching cap 1200 under radius.
