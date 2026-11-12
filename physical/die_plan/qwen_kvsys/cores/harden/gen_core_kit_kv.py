@@ -21,6 +21,7 @@ core origins sit on the 8.64 lattice, so the stripes line up with the partition 
 import argparse
 import hashlib
 import json
+import os
 import math
 import re
 import shutil
@@ -1139,6 +1140,22 @@ def macro_pin_layer(lef, layer):
     return re.sub(r"^\s*PIN\s+(\S+)\s*$.*?^\s*END\s+\1\s*$", pin, lef, flags=re.M | re.S)
 
 
+GRT_TRANSITION_MODES = ("off", "edge", "edge_outline")
+
+
+def write_grt_transition_mode(kd, env=None):
+    """GRTM-RUNNERS-1 11-11 (COORD class bug VISLAYOUT2): the core-kit runner never applied the GRT transition mode, so
+    edge_outline arms ran the stock router.  Same contract as gen_core_kit_hbm.write_grt_transition_mode: the gen env
+    OT_GRT_TRANSITION_MODE (kit_wave item_env) becomes K/grt_transition_mode; unset = no file = stock run."""
+    m = (os.environ if env is None else env).get("OT_GRT_TRANSITION_MODE", "")
+    if not m:
+        return None
+    if m not in GRT_TRANSITION_MODES:
+        raise ValueError(f"OT_GRT_TRANSITION_MODE {m!r}: one of {GRT_TRANSITION_MODES}")
+    (Path(kd) / "grt_transition_mode").write_text(m + "\n")
+    return m
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -1890,6 +1907,7 @@ def main():
         (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 64 for every repair_design (in-flow, not in the golden SDC)\n"
                                            "set_max_fanout 64 [current_design]\nputs \"KVCORES max_fanout 64\"\n")
     mcmm = flow_basis and (not lefs or all(libs_ff))
+    write_grt_transition_mode(kd)       # GRTM-RUNNERS-1 11-11: gen env OT_GRT_TRANSITION_MODE -> K/grt_transition_mode
     for f in ("corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
     # KV-CORES-PV2: main pin audit (interior pins = exact xy, scalar ports; the old KV copy had no interior case)

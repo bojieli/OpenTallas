@@ -24,5 +24,6 @@ for f in pair_skew.tcl; do test -f $KIT/$f || cp $VR/chain/so/tools/die_plan/$f 
 log "route start $KIT on $(hostname)"
 bash $KIT/run_kit_kv.sh $KIT route $MEM $CPUS; rc=$?
 v=$(python3 -c "import json; print(json.load(open(\"$KIT/signoff/signoff.json\")).get(\"verdict\"))" 2>/dev/null || echo "no signoff.json")
+log "grt transition: $(head -c 200 $KIT/grt_transition.json 2>/dev/null || echo none)"
 log "route rc=$rc verdict=$v (no ECO stage: NOT SIGNED -> review + structural fix)"
 exit $rc
