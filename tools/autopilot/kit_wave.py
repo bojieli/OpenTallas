@@ -3385,7 +3385,20 @@ def run_item(spec_path):
         rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:
             return fail("geom_cfg", txt)
-        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [kh]))
+        # KW-FIX-45 11-12 geom host has the src tree (COORD: hbm/hnx_fused_lane_c geom_run failed on a host without the HBM tree after
+        # gen_hosts was widened): geom_check.sh runs from the src tree, so run geom on a host that HAS it: the kit host if it does,
+        # else the gen host.  The kit's physical copy lives on the gen host after the place hand-off.
+        _gh = kh
+        try:
+            _r, _t = run("geom_src_" + kh, remote_argv(kh, hub, f"test -e {q(src)}/tools/autopilot/geom_check.sh && echo KW_SRC_OK || echo KW_SRC_MISSING"), idempotent=True)
+            if "KW_SRC_OK" not in _t and G != kh:
+                _gh = G
+                print(f"KW_GEOM_HOST src tree missing on {kh}: geom runs on the gen host {G}", flush=True)
+        except Exception as _e:
+            print(f"KW_GEOM_HOST check skipped: {_e}", flush=True)
+        if _gh != kh:                                    # the check config the stage wrote on the kit host must exist on the geom host too
+            run("geom_cfg_gh", remote_argv(_gh, hub, f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"), idempotent=True)
+        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [_gh]))
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
