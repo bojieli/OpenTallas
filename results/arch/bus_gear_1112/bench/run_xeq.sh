@@ -1,6 +1,6 @@
 #!/bin/bash
 # S81 x-gear EQ bench (Verilator 5.032, docker).  Usage: run_xeq.sh DIR [h9|h10]
-# DIR holds eq_sel.txt + the listed sources (tb_s81_xgear_eq.sv, the as-built models incl. s81_asb_xgear_models.sv from
+# DIR holds eq_sel.txt (= xeq_files.txt, from xeq_closure.py) + the listed sources (tb_s81_xgear_eq.sv, the as-built models incl. s81_asb_xgear_models.sv from
 # xgear_die.py, the col_h<9|10> plan kit and their closure).  Expect: H 2/3 MUT 0 = XEQ PASS (geared path identical to
 # the ungeared path delayed by the declared 1 edge, at frame A (x) and at frame B (nx, fed from the xo of A));
 # MUT 1 (no declared delay), MUT 2 (one lane corrupted on word edges) and MUT 3 (words on the wrong parity) = XEQ FAIL.

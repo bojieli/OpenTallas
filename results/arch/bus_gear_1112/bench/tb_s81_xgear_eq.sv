@@ -23,6 +23,16 @@ module ot_rom_4096x72_m8 #(parameter VIAMAP = "", parameter INSTANCE = "") (
                                                  ~addr_in, addr_in * 12'd7};
 endmodule
 
+// ASAP7 ICG behavioural model (same latch form as physical/die_plan/s81/bind/models/cells_used.v ICGx4), used by the
+// frame ROM elements; identical in G and R.
+module ICGx1_ASAP7_75t_R (input wire CLK, input wire ENA, input wire SE, output wire GCLK);
+    reg en_l;
+    /* verilator lint_off COMBDLY */
+    always_latch if (!CLK) en_l = ENA | SE;
+    /* verilator lint_on COMBDLY */
+    assign GCLK = CLK & en_l;
+endmodule
+
 module tb;
   parameter integer H = 2, MUT = 0, NE = 6000;
   localparam integer LW = 276, BL = 139;
