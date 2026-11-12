@@ -1,0 +1,113 @@
+type	link	depth	len_before_um	len_after_um	cross_before	cross_after
+cbf_q00__cl1b5a6458	u_t01.t_out->u_t01.n_a	D3+cnt<=4	201	201	0	0
+cbf_q00__cl1b5a6458	u_t11.t_out->u_t01.n_b	D3+cnt<=1	705	705	1	1
+cbf_q00__cl1b5a6458	u_t00.t_out->u_t10.n_a	D3+cnt<=4	806	806	1	1
+cbf_q00__cl1b5a6458	u_t10.t_out->u_t10.n_b	D3+cnt<=1	100	100	0	0
+cbf_q00__cl1b5a6458	u_t10.n_y->u_t11.n_a	D10	1383	1383	1	1
+cbf_q00__cl1b5a6458	u_t01.n_y->u_t11.n_b	D3	806	806	1	1
+cbf_q00__cl870de686	u_t01.t_out->u_t01.n_a	D3+cnt<=3	201	201	0	0
+cbf_q00__cl870de686	u_t11.t_out->u_t01.n_b	D3+cnt<=1	705	705	1	1
+cbf_q00__cl870de686	u_t00.t_out->u_t10.n_a	D3+cnt<=3	806	806	1	1
+cbf_q00__cl870de686	u_t10.t_out->u_t10.n_b	D3+cnt<=1	100	100	0	0
+cbf_q00__cl870de686	u_t10.n_y->u_t11.n_a	D10	1383	1383	1	1
+cbf_q00__cl870de686	u_t01.n_y->u_t11.n_b	D3	806	806	1	1
+cbf_q01	u_t02.t_out->u_t02.n_a	D3+cnt<=4	201	201	0	0
+cbf_q01	u_t12.t_out->u_t02.n_b	D3+cnt<=1	1163	705	2	1
+cbf_q01	u_t03.t_out->u_t03.n_a	D3+cnt<=4	201	201	0	0
+cbf_q01	u_t13.t_out->u_t03.n_b	D3+cnt<=1	247	247	0	0
+cbf_q01	u_t13.n_y->u_t12.n_a	D16	1995	1995	1	1
+cbf_q01	u_t02.n_y->u_t13.n_a	D10	1538	1081	1	0
+cbf_q01	u_t03.n_y->u_t13.n_b	D3	348	348	0	0
+cbf_q01_s2	u_t02.t_out->u_t02.n_a	D7	201	201	0	0
+cbf_q01_s2	u_t12.t_out->u_t02.n_b	D3	705	705	1	1
+cbf_q01_s2	u_t03.t_out->u_t03.n_a	D7	201	201	0	0
+cbf_q01_s2	u_t13.t_out->u_t03.n_b	D3	247	247	0	0
+cbf_q01_s2	u_t13.n_y->u_t12.n_a	D16	1978	1978	1	1
+cbf_q01_s2	u_t02.n_y->u_t13.n_a	D10	1063	1063	0	0
+cbf_q01_s2	u_t03.n_y->u_t13.n_b	D3	348	348	0	0
+cbf_q11	u_t32.n_y->u_t23.n_a	D10	1098	1098	0	0
+cbf_q11	u_t33.n_y->u_t23.n_b	D3	366	366	0	0
+cbf_q11	u_t22.t_out->u_t32.n_a	D3	823	823	1	1
+cbf_q11	u_t32.t_out->u_t32.n_b	D3+cnt<=5	100	100	0	0
+cbf_q11	u_t23.t_out->u_t33.n_a	D3	365	365	0	0
+cbf_q11	u_t33.t_out->u_t33.n_b	D3+cnt<=5	100	100	0	0
+cbn_q00__cl622f65d2	u_t01.t_out->u_t01.n_a	D3+cnt<=4	201	201	0	0
+cbn_q00__cl622f65d2	u_t11.t_out->u_t01.n_b	D3+cnt<=1	705	705	1	1
+cbn_q00__cl622f65d2	u_t00.t_out->u_t10.n_a	D3+cnt<=4	806	806	1	1
+cbn_q00__cl622f65d2	u_t10.t_out->u_t10.n_b	D3+cnt<=1	100	100	0	0
+cbn_q00__cl622f65d2	u_t10.n_y->u_t11.n_a	D10	1391	1391	1	1
+cbn_q00__cl622f65d2	u_t01.n_y->u_t11.n_b	D3	806	806	1	1
+cbn_q00__cld7bf7197	u_t01.t_out->u_t01.n_a	D7	201	201	0	0
+cbn_q00__cld7bf7197	u_t11.t_out->u_t01.n_b	D3	705	705	1	1
+cbn_q00__cld7bf7197	u_t00.t_out->u_t10.n_a	D7	806	806	1	1
+cbn_q00__cld7bf7197	u_t10.t_out->u_t10.n_b	D3	100	100	0	0
+cbn_q00__cld7bf7197	u_t10.n_y->u_t11.n_a	D10	1391	1391	1	1
+cbn_q00__cld7bf7197	u_t01.n_y->u_t11.n_b	D3	806	806	1	1
+cbn_q00__cldbcda913	u_t01.t_out->u_t01.n_a	D3+cnt<=3	201	201	0	0
+cbn_q00__cldbcda913	u_t11.t_out->u_t01.n_b	D3+cnt<=1	705	705	1	1
+cbn_q00__cldbcda913	u_t00.t_out->u_t10.n_a	D3+cnt<=3	806	806	1	1
+cbn_q00__cldbcda913	u_t10.t_out->u_t10.n_b	D3+cnt<=1	100	100	0	0
+cbn_q00__cldbcda913	u_t10.n_y->u_t11.n_a	D10	1391	1391	1	1
+cbn_q00__cldbcda913	u_t01.n_y->u_t11.n_b	D3	806	806	1	1
+cbn_q01__clab6e67f2	u_t02.t_out->u_t02.n_a	D3+cnt<=4	201	201	0	0
+cbn_q01__clab6e67f2	u_t12.t_out->u_t02.n_b	D3+cnt<=1	1163	705	2	1
+cbn_q01__clab6e67f2	u_t03.t_out->u_t03.n_a	D3+cnt<=4	201	201	0	0
+cbn_q01__clab6e67f2	u_t13.t_out->u_t03.n_b	D3+cnt<=1	705	247	1	0
+cbn_q01__clab6e67f2	u_t13.n_y->u_t12.n_a	D16	1995	1995	1	1
+cbn_q01__clab6e67f2	u_t02.n_y->u_t13.n_a	D10	1538	1081	1	0
+cbn_q01__clab6e67f2	u_t03.n_y->u_t13.n_b	D3	806	348	1	0
+cbn_q01__cld9ff4c40	u_t02.t_out->u_t02.n_a	D3+cnt<=3	201	201	0	0
+cbn_q01__cld9ff4c40	u_t12.t_out->u_t02.n_b	D3+cnt<=1	1163	705	2	1
+cbn_q01__cld9ff4c40	u_t03.t_out->u_t03.n_a	D3+cnt<=3	201	201	0	0
+cbn_q01__cld9ff4c40	u_t13.t_out->u_t03.n_b	D3+cnt<=1	705	247	1	0
+cbn_q01__cld9ff4c40	u_t13.n_y->u_t12.n_a	D16	1995	1995	1	1
+cbn_q01__cld9ff4c40	u_t02.n_y->u_t13.n_a	D10	1538	1081	1	0
+cbn_q01__cld9ff4c40	u_t03.n_y->u_t13.n_b	D3	806	348	1	0
+cbn_q01__cldd6ea846	u_t02.t_out->u_t02.n_a	D7	201	201	0	0
+cbn_q01__cldd6ea846	u_t12.t_out->u_t02.n_b	D3	1163	705	2	1
+cbn_q01__cldd6ea846	u_t03.t_out->u_t03.n_a	D7	201	201	0	0
+cbn_q01__cldd6ea846	u_t13.t_out->u_t03.n_b	D3	705	247	1	0
+cbn_q01__cldd6ea846	u_t13.n_y->u_t12.n_a	D16	1995	1995	1	1
+cbn_q01__cldd6ea846	u_t02.n_y->u_t13.n_a	D10	1538	1081	1	0
+cbn_q01__cldd6ea846	u_t03.n_y->u_t13.n_b	D3	806	348	1	0
+cbn_q11__cl49ae4555	u_t32.n_y->u_t23.n_a	D10	1081	1081	0	0
+cbn_q11__cl49ae4555	u_t33.n_y->u_t23.n_b	D3	348	348	0	0
+cbn_q11__cl49ae4555	u_t22.t_out->u_t32.n_a	D3	806	806	1	1
+cbn_q11__cl49ae4555	u_t32.t_out->u_t32.n_b	D3+cnt<=4	100	100	0	0
+cbn_q11__cl49ae4555	u_t23.t_out->u_t33.n_a	D3	348	348	0	0
+cbn_q11__cl49ae4555	u_t33.t_out->u_t33.n_b	D3+cnt<=4	100	100	0	0
+cbn_q11__cl5cc92dfe	u_t32.n_y->u_t23.n_a	D10	1081	1081	0	0
+cbn_q11__cl5cc92dfe	u_t33.n_y->u_t23.n_b	D3	348	348	0	0
+cbn_q11__cl5cc92dfe	u_t22.t_out->u_t32.n_a	D3	806	806	1	1
+cbn_q11__cl5cc92dfe	u_t32.t_out->u_t32.n_b	D3+cnt<=5	100	100	0	0
+cbn_q11__cl5cc92dfe	u_t23.t_out->u_t33.n_a	D3	348	348	0	0
+cbn_q11__cl5cc92dfe	u_t33.t_out->u_t33.n_b	D3+cnt<=5	100	100	0	0
+cbx_q10__cl89936551	u_t20.t_out->u_t20.n_a	D3	201	201	0	0
+cbx_q10__cl89936551	u_t30.t_out->u_t20.n_b	D3+cnt<=4	247	247	0	0
+cbx_q10__cl89936551	u_t20.n_y->u_t21.n_a	D13	925	925	0	0
+cbx_q10__cl89936551	u_t31.n_y->u_t21.n_b	D6	348	348	0	0
+cbx_q10__cl89936551	u_t21.t_out->u_t31.n_a	D3	348	348	0	0
+cbx_q10__cl89936551	u_t31.t_out->u_t31.n_b	D3+cnt<=4	100	100	0	0
+cbx_q10__cl94a12200	u_t20.t_out->u_t20.n_a	D3	201	201	0	0
+cbx_q10__cl94a12200	u_t30.t_out->u_t20.n_b	D3+cnt<=5	247	247	0	0
+cbx_q10__cl94a12200	u_t20.n_y->u_t21.n_a	D13	925	925	0	0
+cbx_q10__cl94a12200	u_t31.n_y->u_t21.n_b	D6	348	348	0	0
+cbx_q10__cl94a12200	u_t21.t_out->u_t31.n_a	D3	348	348	0	0
+cbx_q10__cl94a12200	u_t31.t_out->u_t31.n_b	D3+cnt<=5	100	100	0	0
+
+type	nk_bitmm_before	nk_bitmm_after	crossings_before	crossings_after
+cbf_q00__cl1b5a6458	2057	2057	4	4
+cbf_q00__cl870de686	2057	2057	4	4
+cbf_q01	2927	2456	4	2
+cbf_q01_s2	2438	2438	2	2
+cbf_q11	1466	1466	1	1
+cbn_q00__cl622f65d2	2061	2061	4	4
+cbn_q00__cld7bf7197	2061	2061	4	4
+cbn_q00__cldbcda913	2061	2061	4	4
+cbn_q01__clab6e67f2	3397	2456	6	2
+cbn_q01__cld9ff4c40	3397	2456	6	2
+cbn_q01__cldd6ea846	3397	2456	6	2
+cbn_q11__cl49ae4555	1431	1431	1	1
+cbn_q11__cl5cc92dfe	1431	1431	1	1
+cbx_q10__cl89936551	1115	1115	0	0
+cbx_q10__cl94a12200	1115	1115	0	0
