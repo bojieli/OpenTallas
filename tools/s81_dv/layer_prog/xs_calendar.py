@@ -231,19 +231,35 @@ def compile_phase(P, S, ph, slc, mutant=None, cad=None):
     return out
 
 
-def cadence_floor(P, S, phases, slc, floor, cad=None):
+def x_cadence_floor_rule():
+    """OT_XS_X_CADENCE_FLOOR: 'bound' (default, safe) or 'expected' -- see cadence_floor"""
+    import os
+    r = os.environ.get('OT_XS_X_CADENCE_FLOOR', 'bound')
+    if r not in ('bound', 'expected'):
+        raise ValueError(('OT_XS_X_CADENCE_FLOOR must be bound or expected', r))
+    return r
+
+
+def cadence_floor(P, S, phases, slc, floor, cad=None, rule=None):
     """TOK-VERIFY-2 11-12: DERIVED period floor of a field op at x cadence cad > 1, from its MEASURED cadence-1 floor.
     Each phase's last x word moves by d = ts[-1](cad) - ts[-1](1) edges (its stream lengthens by the cadence grid minus
-    the spine stalls the grid absorbs).  The cadence-1 floor is set by the frame element walk of the stream + drain /
-    cfg load behind it, so the derived floor = floor + max d, rounded up to a multiple of cad; the op's span tail moves
-    by the last phase's d.  Derived, not measured: the geared frame-bench P sweep confirms or replaces it.
+    the spine stalls the grid absorbs); the op's span tail moves by the last phase's d.
+      rule 'bound' (default): floor + max d -- the whole lengthening serial on the period (safe upper bound).
+      rule 'expected': max(floor + ceil(max d / 2), stream-port bound) -- the cfg load / swap of phase i waits the
+        drain of phase i - 2 (double-buffered banks: 2 P >= walk + DRAIN + cfg), so a longer walk costs half its
+        delta a period; the stream port needs P > the longest phase stream + ADDR_LEAD.
+    Both round up to a multiple of cad.  Derived, not measured: the geared frame-bench P sweep confirms or replaces it.
     Returns (floor_c, d_max, d_last, d per phase)."""
     cad = x_cadence() if cad is None else cad
     if cad == 1:
         return floor, 0, 0, [0] * len(phases)
-    d = [compile_phase(P, S, ph, slc, cad=cad)['ts'][-1] - compile_phase(P, S, ph, slc, cad=1)['ts'][-1]
-         for ph in phases]
-    f = floor + max(d)
+    rule = x_cadence_floor_rule() if rule is None else rule
+    c2 = [compile_phase(P, S, ph, slc, cad=cad)['ts'] for ph in phases]
+    d = [t[-1] - compile_phase(P, S, ph, slc, cad=1)['ts'][-1] for t, ph in zip(c2, phases)]
+    if rule == 'bound':
+        f = floor + max(d)
+    else:
+        f = max(floor + -(-max(d) // 2), max(t[-1] - t[0] for t in c2) + ADDR_LEAD + 1)
     return f + (-f % cad), max(d), d[-1], d
 
 

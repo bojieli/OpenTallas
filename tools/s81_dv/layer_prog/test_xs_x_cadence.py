@@ -111,6 +111,30 @@ class XCadence(unittest.TestCase):
             r = XF.record(c2)
             self.assertEqual(r['x_cadence'], 2)
 
+    def test_cadence2_expected_rule_between_measured_and_bound(self):
+        old = os.environ.get('OT_XS_X_CADENCE_FLOOR')
+        try:
+            for op in ('ffn.experts_gu', 'ffn.down', 'attn.wo_a'):
+                ph, st = XF._synthetic(op, 6, nb=40)
+                with _Cad(2):
+                    os.environ['OT_XS_X_CADENCE_FLOOR'] = 'bound'
+                    b = XF.op_calendar(op, ph, st, range(6))
+                    os.environ['OT_XS_X_CADENCE_FLOOR'] = 'expected'
+                    e = XF.op_calendar(op, ph, st, range(6))
+                self.assertLessEqual(e['floor'], b['floor'], op)
+                self.assertGreaterEqual(e['floor'], e['floor_c1_measured'], op)
+                self.assertEqual(e['floor'] % 2, 0)
+                self.assertIn('expected', e['x_cadence_floor_rule'])
+            os.environ['OT_XS_X_CADENCE_FLOOR'] = 'nope'
+            with _Cad(2):
+                with self.assertRaises(ValueError):
+                    XC.x_cadence_floor_rule()
+        finally:
+            if old is None:
+                os.environ.pop('OT_XS_X_CADENCE_FLOOR', None)
+            else:
+                os.environ['OT_XS_X_CADENCE_FLOOR'] = old
+
     def test_cadence2_odd_period_is_a_compile_fault(self):
         ph, st = XF._synthetic('ffn.experts_gu', 6)
         with _Cad(2):

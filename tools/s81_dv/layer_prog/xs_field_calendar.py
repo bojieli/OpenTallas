@@ -194,9 +194,9 @@ def op_calendar(op, phase, stream, phases, slc=0, period=None, cfg_lead=CFG_LEAD
         tail += d_last
         cal.update(span_tail=tail, x_cadence=cad, floor_c1_measured=floor_c1, x_stream_delta_max=d_max,
                    x_stream_delta_last=d_last,
-                   x_cadence_floor_rule=('DERIVED: measured cadence-1 floor + max phase last-x-word delta, rounded up to '
-                                         'the cadence; tail + last phase delta (xs_calendar.cadence_floor); the geared '
-                                         'frame-bench P sweep confirms'))
+                   x_cadence_floor_rule=(f'DERIVED ({XC.x_cadence_floor_rule()}, xs_calendar.cadence_floor) from the '
+                                         'measured cadence-1 floor; tail + last phase delta; the geared frame-bench P '
+                                         'sweep confirms'))
     cal['predicted_span'] = (len(per) - 1) * P + tail
     return cal
 
