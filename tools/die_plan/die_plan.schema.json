@@ -6356,6 +6356,63 @@
       }
      }
     },
+    "core_input_lockup": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "modules"
+     ],
+     "properties": {
+      "modules": {
+       "type": "object",
+       "minProperties": 1,
+       "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      },
+      "all": {
+       "type": "boolean"
+      },
+      "except": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "types": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "pipe": {
+       "type": "integer",
+       "minimum": 0,
+       "maximum": 4
+      },
+      "pipe_except": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "cohort": {
      "type": "object",
      "required": [
@@ -6824,6 +6881,52 @@
      "type": "array",
      "uniqueItems": true,
      "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    }
+   }
+  },
+  "core_shape_exceptions": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "core",
+     "old",
+     "new",
+     "reason",
+     "measured_by"
+    ],
+    "properties": {
+     "core": {
+      "type": "string",
+      "minLength": 1
+     },
+     "old": {
+      "type": "array",
+      "items": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "new": {
+      "type": "array",
+      "items": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "reason": {
+      "type": "string",
+      "minLength": 1
+     },
+     "measured_by": {
       "type": "string",
       "minLength": 1
      }

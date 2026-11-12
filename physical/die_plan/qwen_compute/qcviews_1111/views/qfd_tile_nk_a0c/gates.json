@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:f73e270e6f50",
+ "die": "qwen_compute",
+ "type": "qfd_tile_nk_a0c",
+ "src": "/srv/opentallas-scratch2/claude/dq96/nk_vr7n_eco2/i1",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "LOCAL_PASS_NEEDS_PARENT",
+ "signoff_record": "/srv/opentallas-scratch2/claude/dq97/nk_eco2_resign_fc/signoff/signoff.json",
+ "tt_wns_ps": 8.05,
+ "ff_wns_ps": -41.25,
+ "gates": {},
+ "routed_lec": "EQUIVALENT",
+ "routed_lec_all_shown": true,
+ "routed_lec_record": "/srv/opentallas-scratch2/claude/dq97/nk_eco2_resign_fc/lec/lec.json",
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": false,
+ "view_problems": [
+  "signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED"
+ ]
+}

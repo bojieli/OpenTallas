@@ -81,3 +81,23 @@ class CoreInputPipeExcept(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CoreInputLockupSchema(unittest.TestCase):
+    """QC-EVENT-S25 11-11: the schema accepts the ap2 adoption form (DIE-QC-99 plan event) and rejects typos."""
+
+    def test_schema(self):
+        import schema
+        try:
+            import jsonschema
+        except ImportError:
+            self.skipTest("jsonschema not installed")
+        v = jsonschema.Draft202012Validator(schema.SCHEMA["properties"]["clock"])
+        good = {"modules": {"qfd_tile_nk_a0c": ["n_a", "n_b", "tap", "rst_n"]}, "all": True, "pipe": 1,
+                "pipe_except": ["rst_n"]}
+        self.assertFalse(list(v.iter_errors({"core_input_lockup": good})))
+        self.assertTrue(list(v.iter_errors({"core_input_lockup": dict(good, pipes=1)})))
+        self.assertTrue(list(v.iter_errors({"core_input_lockup": dict(good, pipe=-1)})))
+        self.assertTrue(list(v.iter_errors({"core_input_lockup": {"all": True}})))
+        self.assertTrue(list(v.iter_errors({"core_input_lockup": dict(good, modules={"m": []})})))
+

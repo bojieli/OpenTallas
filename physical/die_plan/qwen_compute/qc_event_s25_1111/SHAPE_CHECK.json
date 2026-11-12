@@ -1,0 +1,314 @@
+{
+ "schema": "opentallas.qc_event_s25.shape_check.v1",
+ "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s25.json",
+ "tol_um": 0.02,
+ "rows": [
+  {
+   "module": "qfd_tile_nk_a0c",
+   "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "pins_file": "cores/a0_nk_pins_ck1109.json",
+   "n_entries": 62,
+   "types": [
+    "cbf_q00__cl1b5a6458",
+    "cbf_q00__cl870de686",
+    "cbf_q00_s2",
+    "cbf_q01",
+    "cbf_q01_s2",
+    "cbf_q11",
+    "cbn_q00__cl622f65d2",
+    "cbn_q00__cld7bf7197",
+    "cbn_q00__cldbcda913",
+    "cbn_q01__clab6e67f2",
+    "cbn_q01__cld9ff4c40",
+    "cbn_q01__cldd6ea846",
+    "cbn_q11__cl49ae4555",
+    "cbn_q11__cl5cc92dfe",
+    "cbx_q10__cl89936551",
+    "cbx_q10__cl94a12200"
+   ],
+   "lef_size": [
+    457.92,
+    1157.76
+   ],
+   "plan_outline": [
+    457.92,
+    1157.76
+   ],
+   "outline_equal": true,
+   "plan_pins": 2584,
+   "lef_pins": 2584,
+   "missing_in_lef": [],
+   "extra_in_lef": [],
+   "layer_mismatch": [],
+   "outside_lef_rect": [],
+   "max_dev_um": 0.012,
+   "ck": {
+    "plan": [
+     "M5",
+     228.972,
+     578.88
+    ],
+    "lef": [
+     [
+      "M5",
+      228.948,
+      578.64,
+      228.996,
+      579.12
+     ]
+    ]
+   },
+   "equal": true
+  },
+  {
+   "module": "qfd_tile_nl_a0c",
+   "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef",
+   "pins_file": "cores/a0_nl_pins_ck1107.json",
+   "n_entries": 2,
+   "types": [
+    "cbx_q10__cl89936551",
+    "cbx_q10__cl94a12200"
+   ],
+   "lef_size": [
+    457.92,
+    1157.76
+   ],
+   "plan_outline": [
+    457.92,
+    1157.76
+   ],
+   "outline_equal": true,
+   "plan_pins": 1042,
+   "lef_pins": 1042,
+   "missing_in_lef": [],
+   "extra_in_lef": [],
+   "layer_mismatch": [],
+   "outside_lef_rect": [],
+   "max_dev_um": 0.012,
+   "ck": {
+    "plan": [
+     "M5",
+     228.972,
+     578.88
+    ],
+    "lef": [
+     [
+      "M5",
+      228.948,
+      578.64,
+      228.996,
+      579.12
+     ]
+    ]
+   },
+   "equal": true
+  },
+  {
+   "module": "qfd_dv_s8x_vmr",
+   "lef": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/qfd_dv_s8x_vmr.lef",
+   "pins_file": "cores/su/signed/qfd_dv_s8x_vmr_pins.json",
+   "n_entries": 9,
+   "types": [
+    "sle_su_c",
+    "slw_su_c__cl19bb38ef",
+    "slw_su_c__cl92142dac"
+   ],
+   "lef_size": [
+    250.56,
+    216.0
+   ],
+   "plan_outline": [
+    250.56,
+    216.0
+   ],
+   "outline_equal": true,
+   "plan_pins": 1509,
+   "lef_pins": 1513,
+   "missing_in_lef": [],
+   "extra_in_lef": [
+    "ft_ck_i",
+    "ft_ck_o",
+    "ft_rst_i",
+    "ft_rst_o"
+   ],
+   "layer_mismatch": [],
+   "outside_lef_rect": [],
+   "max_dev_um": 0.0,
+   "ck": {
+    "plan": [
+     "M5",
+     125.292,
+     108.0
+    ],
+    "lef": [
+     [
+      "M5",
+      125.28,
+      107.808,
+      125.304,
+      108.192
+     ]
+    ]
+   },
+   "ft_declared": [
+    "ft_ck_i",
+    "ft_ck_o",
+    "ft_rst_i",
+    "ft_rst_o"
+   ],
+   "extra_equals_declared_ft": true,
+   "core_ft_physical_load": {
+    "ok": true,
+    "isolation": [
+     {
+      "source": "ft_ck_i",
+      "sink": "ft_ck_o",
+      "kind": "clock",
+      "cells": [
+       "ot_isl_ckft"
+      ],
+      "nets": [
+       "ft_ck_i",
+       "ft_ck_o"
+      ]
+     },
+     {
+      "source": "ft_rst_i",
+      "sink": "ft_rst_o",
+      "kind": "reset",
+      "cells": [
+       "ot_isl_rstft"
+      ],
+      "nets": [
+       "ft_rst_i",
+       "ft_rst_o"
+      ]
+     }
+    ],
+    "ports": [
+     {
+      "name": "ft_ck_i",
+      "direction": "INPUT"
+     },
+     {
+      "name": "ft_ck_o",
+      "direction": "OUTPUT"
+     },
+     {
+      "name": "ft_rst_i",
+      "direction": "INPUT"
+     },
+     {
+      "name": "ft_rst_o",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "equal": true
+  },
+  {
+   "module": "qfd_dv_s8_crh_rp1",
+   "lef": "physical/die_plan/qwen_compute/ft_physical_1106/crh/qfd_dv_s8_crh_rp1.lef",
+   "pins_file": "cores/su/signed/qfd_dv_s8_crh_rp1_pins.json",
+   "n_entries": 6,
+   "types": [
+    "sle_su_c",
+    "slw_su_c__cl19bb38ef",
+    "slw_su_c__cl92142dac"
+   ],
+   "lef_size": [
+    250.56,
+    216.0
+   ],
+   "plan_outline": [
+    250.56,
+    216.0
+   ],
+   "outline_equal": true,
+   "plan_pins": 998,
+   "lef_pins": 1002,
+   "missing_in_lef": [],
+   "extra_in_lef": [
+    "ft_ck_i",
+    "ft_ck_o",
+    "ft_rst_i",
+    "ft_rst_o"
+   ],
+   "layer_mismatch": [],
+   "outside_lef_rect": [],
+   "max_dev_um": 0.0,
+   "ck": {
+    "plan": [
+     "M5",
+     125.292,
+     108.0
+    ],
+    "lef": [
+     [
+      "M5",
+      125.28,
+      107.808,
+      125.304,
+      108.192
+     ]
+    ]
+   },
+   "ft_declared": [
+    "ft_ck_i",
+    "ft_ck_o",
+    "ft_rst_i",
+    "ft_rst_o"
+   ],
+   "extra_equals_declared_ft": true,
+   "core_ft_physical_load": {
+    "ok": true,
+    "isolation": [
+     {
+      "source": "ft_ck_i",
+      "sink": "ft_ck_o",
+      "kind": "clock",
+      "cells": [
+       "ot_isl_ckft"
+      ],
+      "nets": [
+       "ft_ck_i",
+       "ft_ck_o"
+      ]
+     },
+     {
+      "source": "ft_rst_i",
+      "sink": "ft_rst_o",
+      "kind": "reset",
+      "cells": [
+       "ot_isl_rstft"
+      ],
+      "nets": [
+       "ft_rst_i",
+       "ft_rst_o"
+      ]
+     }
+    ],
+    "ports": [
+     {
+      "name": "ft_ck_i",
+      "direction": "INPUT"
+     },
+     {
+      "name": "ft_ck_o",
+      "direction": "OUTPUT"
+     },
+     {
+      "name": "ft_rst_i",
+      "direction": "INPUT"
+     },
+     {
+      "name": "ft_rst_o",
+      "direction": "OUTPUT"
+     }
+    ]
+   },
+   "equal": true
+  }
+ ],
+ "all_equal": true
+}

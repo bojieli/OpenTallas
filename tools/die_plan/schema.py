@@ -1253,6 +1253,18 @@ SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
                    "latch_frac": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
                        "type": "object", "propertyNames": {"pattern": "^[0-9]+$"},
                        "additionalProperties": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}}}}}}
+# QC-EVENT-S25 11-11 (QC-NK-HOLD ap2 claude/qc-nk-hold-ap2-1111@fc999610864d, COORD 17:10 APPROVED): plan
+# clock.core_input_lockup, read by bind.core_input_lockup / core_input_pipe and gen_phys.core_input_place (absent = off,
+# byte-identical kits).  The code read the key; the schema rejected it (clock additionalProperties false).
+SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
+    "type": "object", "additionalProperties": False, "required": ["modules"],
+    "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {
+                       "type": "array", "minItems": 1, "uniqueItems": True, "items": _name}},
+                   "all": {"type": "boolean"}, "except": {"type": "array", "uniqueItems": True, "items": _name},
+                   "types": {"type": "array", "uniqueItems": True, "items": _name},
+                   "pipe": {"type": "integer", "minimum": 0, "maximum": 4},
+                   "pipe_except": {"type": "array", "uniqueItems": True, "items": _name},
+                   "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}

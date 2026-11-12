@@ -1,0 +1,60 @@
+{
+ "item": "5_qreg",
+ "sidecar_base_sha256": "d26ec11a2a5fda0c651987dce6324a254dc8ed7a84a01176935d1b0c46836021",
+ "sidecar_s25_sha256": "9f6e6f721b611335aaf8cb19ebaf6d43cc154a51b9bef56aef01d0436befdb90",
+ "ports": [
+  {
+   "type": "slw_fw_v3",
+   "bus": "x_ctl_i",
+   "port": "sl_W5_ctl__x_ctl_fw__1",
+   "lane": "sl_W5_ctl__x_ctl_fw",
+   "was": {
+    "sched_lat": 3,
+    "K": 20,
+    "added_cycles": 3,
+    "cac": 3
+   },
+   "now": {
+    "sched_lat": 4,
+    "K": 21,
+    "added_cycles": 4,
+    "cac": 4,
+    "output_qreg": 1
+   }
+  }
+ ],
+ "lane_latency": [
+  {
+   "lane": "sl_W5_ctl__x_ctl_fw",
+   "stored": {
+    "cycles": [
+     10,
+     11
+    ],
+    "natural": [
+     10,
+     11
+    ],
+    "clock_landing": [
+     5,
+     6
+    ]
+   },
+   "derived": {
+    "cycles": [
+     12,
+     13
+    ],
+    "natural": [
+     12,
+     13
+    ],
+    "clock_landing": [
+     5,
+     6
+    ]
+   }
+  }
+ ],
+ "plan_s25_sha256": "e4820bd9d97c1eb2efbdfdb49baf984a581f4a41c5f9c12055fbde3494c9c2bd"
+}
