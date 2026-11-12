@@ -46559,3 +46559,19 @@ SAME CLASS found by access_report over all 149 plan LEFs in the repo (bonus): S8
     - ASK: rule whether a DIE re-floor lane should own it. Default: no, because plan_scp_r/c1 already score under plan_sc_p at no die cost.
 - BUILDS: 10 queued as soon as the strict binds of plan_scp_c1 / plan_scp_r finish (running on epyc8, ~10 min under load 110). That is 5 v1 types x {c1, pr}, gen epyc8, place epyc8/epyc7. Units will be scrf1-{c1,pr}-*.
 - Branch: claude/sc-refloor-1-1111@39514a0c862c (generator --only, grow_n2, die_shift, compose2, port_m8, deltas).
+- 2026-11-12 01:14 PST ASK [DIE-LAYOUT-HBM -> COORD, DIE-HBM-100, HBM-CORES-B] tag hbm-pvmerge-form. ot_hbm_sm_pv_merge (198.72 x 198.72, 128 instances in q_sm0-3) STRUCTURAL FORM. Evidence from attempt_8 (epyc9 hcut1111/items/ot_hbm_sm_pv_merge/attempt_8: congestion-15.rpt, auto_geom.png, macro LEF, plan pins):
+  The macro u_fcore.u_stack (ot_sram_1r1w_64x512, 171.29 x 77.78, R0 at 8.64,8.65; OBS M1-M4) fills the bottom 40% of the core. Its pins are all M4 SIDE pins:
+  - W edge: rd_out 512 + wd_in 266 + addr/ce 14 = 792.
+  - E edge: w_mask_in 512 + wd_in 246 + cr/rr 34 = 792.
+  - That is about 10 pins/um on each 78-um edge.
+  They face side channels of only 8.64 um (W) and 18.0 um (E). The core's own data pins (W sum 512, E pv_y 512, M4) span y 2.2-196.5, so 226 + 226 of them also land beside the macro.
+  GRT overflow by region: V 34,217 = over the macro (x 20-180, y < 88) 27,385 + W channel 5,703 + E channel 1,069. H 9,253 = W channel 5,516 + over-macro 3,427. Above the macro (the logic band, 36% fill): 370 total.
+  So the choke is about 1,600 macro side-pin nets that must climb from the macro's side edges to the logic band, through 8.6/18-um channels or over the macro on M5/M7 only. The horizontal M8 grant cannot help: the overflow is 79% vertical, and the escape layer is M4 at the macro's sides.
+  FORM pvm_W (recommended; core grows in width only, cycles and logic unchanged):
+  (1) Outline 233.28 x 198.72 (+34.56). Macro at x 25.92 (W channel 25.9 um, E channel 35.9 um). Each channel then carries about 792 nets at <= 50% of M3/M5/M7 vertical supply (about 64 tracks/um, half-derated = 32/um -> >= 24.8 um needed per side).
+  (2) Core data pins W sum 512 / E pv_y 512 moved into y 92-196 (the logic band): 4.9 pins/um = 24% of M4 tracks. They no longer enter the macro channels.
+  (3) M8 grant on top, as already in the wave.
+  Plan impact: in q_sm0-3 the l0/l1 pairs sit 8.64 apart at a 207.36 pitch, with >= 328 um free between pairs. Each pair grows +69.12: l1 shifts +34.56, so the gap stays 8.64. The facing neighbour pins (l0 pv_y <-> l1 sum) move into the same y band. Nothing else moves, no station changes cycles, no die change.
+  Fallback pvm_P (no shape change): only (2) + M8. It removes the channel share (about 12.2k overflow) but not the over-macro vertical (27.4k), so I expect it to fail. F1 (MX flip, 29.8k) supports the same reading.
+  Recommend pvm_W. Default if no ruling in 1 h: draft pvm_W as a compose delta (q_sm0-3 core moves + provisional pins file) and hand it to HBM-CORES-B for the build, with no apply to the event.
+  IN-FLIGHT (DIE-LAYOUT-HBM): (a) q_hub_nw L3011x2 re-space: G0 + strict bind running (pH d9b8f8569dab). (b) q_b103/pv1 tap-street core move: core_place --seed --no-search running. Audit on the seed: 0 sinks without a legal tap site within 400 um, was 28.4k / q_b103 and pv1, max distance 242 um. (c) Tap-legality audit for q_b111/pv1, q_b102pv1, PHY_NC/NW and root: running. (d) gnw_ccw pin window: waiting on HBM-CORES-B's pin path. (e) pvm_W: this ASK.
