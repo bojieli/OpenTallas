@@ -76,7 +76,7 @@ def add_bay_taps(raw, types=None):
             new.append((s["name"], xy))
         n0 = len(grid) + len(table)
         for i, (_, xy) in enumerate(new):
-            table.append({"name": f"clk_t{n0 + i}", "xy": [xy[0], xy[1]], "note": f"m89 bay tap {new[i][0]}"})
+            table.append({"name": f"clk_t{n0 + i}", "xy": [xy[0], xy[1]]})
         # drop empty new taps (bay sinks not counted as tap sinks, e.g. a pure landing bay); re-number the tail
         for _ in range(len(new) + 1):
             P = _plan(raw)
