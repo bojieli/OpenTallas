@@ -40,7 +40,8 @@ def input_shas(t, root):
     ck = t.get("clock") or {}
     bins = "none"
     if ck.get("sink_bins_file"):
-        p = Path(root) / ck["sink_bins_file"]
+        import taps as _taps
+        p = _taps.input_path(ck["sink_bins_file"], root=root)
         bins = hashlib.sha256(p.read_bytes()).hexdigest() if p.is_file() else "missing"
     taps = {k: v for k, v in ck.items() if k == "taps" or k.startswith("tap_")}
     return dict(sink_bins=bins, ft_slots=_sha(t.get("ft_slots") or []), taps=_sha(taps))

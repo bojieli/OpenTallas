@@ -280,6 +280,29 @@ def _root():
     return Path(__file__).resolve().parents[2]
 
 
+PLAN_DIR = None  # set by bind.py to the folder of the plan being bound (KW-FIX-45 11-12, COORD: plan-relative inputs)
+
+
+def input_path(rel, plan_dir=None, root=None):
+    """A plan input file (clock.sink_bins_file ...): an absolute path as given; else the PLAN folder first
+    (<plan dir>/<rel>, or <plan dir>/sink_bins/<name> for a repo path that names a sink_bins/ file), then the repo root.
+    Never the tool tree first: a plan packaged with its sink_bins/ binds against its own bytes."""
+    from pathlib import Path
+    p = Path(rel)
+    if p.is_absolute():
+        return p
+    pd = plan_dir or PLAN_DIR
+    if pd:
+        pd = Path(pd)
+        cands = [pd / rel]
+        if "sink_bins/" in str(rel):
+            cands.append(pd / "sink_bins" / str(rel).split("sink_bins/", 1)[1])
+        for c in cands:
+            if c.is_file():
+                return c
+    return Path(root or _root()) / rel
+
+
 def sink_sites(P, tn, control=True):
     """[(x, y, weight)] type-frame clock sinks for clock.tap_mode "density": the FIRM planned sinks (planned_sinks,
     weight 1) plus the plan's internal sink inventory -- clock.sink_sites_um ([x, y] or [x, y, n] rows) -- or, with
@@ -301,7 +324,9 @@ def sink_sites(P, tn, control=True):
     if ck.get("sink_bins_file"):
         # a placed netlist's inventory already holds the face / ft registers: the planned ones are not added again
         import json
-        rows += json.loads((_root() / ck["sink_bins_file"]).read_text())["bins"]
+        from pathlib import Path
+        _pp = getattr(P, "path", None)
+        rows += json.loads(input_path(ck["sink_bins_file"], Path(_pp).parent if _pp else None).read_text())["bins"]
         out = []
     else:
         out = [(x, y, 1.0) for x, y, _ in planned_sinks(P, tn, bit_sites=ck.get("tap_model") != "frozen_anchor")]

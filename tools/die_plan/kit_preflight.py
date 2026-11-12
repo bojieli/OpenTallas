@@ -261,10 +261,13 @@ def check(kit, plan_dir=None, contract=False):
     # OWNER 11-03 07:0x (rules are design targets, only sign-off blocks; KW-FIX-4): even when binding, only the checks
     # in kit_contract.TOOL_FAIL_CHECKS (a certain tool failure later in the flow) block; every other contract check
     # (macro_channels, clock_entry_clear, pins_canonical, ...) is reported in contract_advisory and never fails the kit.
+    # PLAN-SRC-MACRO (GEN-CLASS-1 11-12, DIE-HBM-101 S00 on src_hbm_main_9446d18f5d): a TOOL_FAIL check is a certain
+    # tool failure on ANY kit (place_macro on an instance the RTL does not have; Yosys re-definition), so it blocks
+    # partition / tile kits too, not only core kits or --contract runs (HEAD runs preflight_args [] = no --contract).
     binding = contract or kit_contract.is_core_kit(kit)
     advisory = {}
     for name, row in kit_contract.run_all(kit, plan_dir).items():
-        if binding and name in kit_contract.TOOL_FAIL_CHECKS:
+        if name in kit_contract.TOOL_FAIL_CHECKS:
             checks[name] = row
             issues.extend(f'{name}: {error}' for error in row['errors'])
         else:

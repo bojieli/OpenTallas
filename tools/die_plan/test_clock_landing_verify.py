@@ -230,3 +230,169 @@ def test_out_relay_tap_copy_mutants_fail():
     # a _t name at a tap that is not an out-relay tap, or a _t copy with the wrong parent -> FAIL
     assert any('b.u_cland_y' in e and 'reset-parent/depth' in e for e in vehicle('outcopy_not_out')['errors'])
     assert any('b.u_cland_y' in e and 'reset-parent/depth' in e for e in vehicle('outcopy_wrong_d')['errors'])
+
+
+# QC-VERIFY-GAPS (QC s26 / baseline verify, 26,329 / 26,328 CLOCK_LANDING errors): the verifier did not model the
+# as-built START transport rules of clock_landings: reader START chains (landing_reader_start), writer START chains
+# (landing_writer_start, reuse_relay_origin), same-cycle local reset copies (landing_local_resets), relay-partition
+# FSTART face flops (landing_relay_start_copy) and the strap K re-reference (count_align_bind.strap_ties).
+
+def _reader_vehicle(mutant=None):
+    """the 'ca' vehicle with B's ring reset through a 1-stage reader START chain and B's origin on a local copy"""
+    g=globals();orig=g['Verification']
+    class Hook(orig):
+        def __init__(self,F,G,raw,table,names,**kw):
+            byname={c.path:c for c in F.cells};n=iter(range(20000,30000))
+            def out(c,p):
+                c.ports[p]=[next(n)];G.drv[c.ports[p][0]].append((F.cells.index(c),p,0));return c.ports[p][0]
+            def cell(path,module,ins,outs):
+                c=N(path=path,module=module,ports=dict(ins),kind='leaf',ytype=None,params={});F.cells.append(c)
+                for p in outs:out(c,p)
+                byname[path]=c;return c
+            ring,bo,bt,br=byname['b.u_cland_y'],byname['b.u_cland_origin'],byname['b.u_rrl_0'],byname['b.u_rst_in']
+            bclk=ring.ports['clk']
+            st=cell('b.u_cland_reader_start_y_0','ot_dp_landing_relay',
+                    {'clk':bclk,'d':bo.ports['start'] if mutant!='reader_d' else bt.ports['q'],
+                     'rst_raw_n':bt.ports['q'] if mutant!='reader_raw' else br.ports['q']},['q'])
+            ring.ports['rst_n']=st.ports['q'] if mutant!='reader_skip' else bo.ports['start']
+            lr=cell('b.u_cland_lrst_s0','ot_dp_rrelay',{'clk':bclk,'d':br.ports['q'] if mutant!='lrst_d' else bt.ports['q']},['q'])
+            bo.ports['rst_raw_n']=lr.ports['q']
+            raw['partition_types']['B']['clock']=dict(
+                landing_reader_start=dict(depth=1,branches=dict(y=dict(stages=[dict(xy_um=[0,0],raw_reset='rst_n_t0')]))),
+                landing_local_resets=[dict(name='s0',raw='rst_root_n' if mutant!='lrst_depth' else 'rst_n_t0',
+                                           xy_um=[0,0],consumers=['u_cland_origin'])])
+            super().__init__(F,G,raw,table,names,**kw)
+    g['Verification']=Hook
+    try:return vehicle('ca',reset_tree=_plan_tree)
+    finally:g['Verification']=orig
+
+
+def test_reader_start_chain_and_local_reset_copy_verified():
+    assert _reader_vehicle()['errors']==[]
+
+
+def test_reader_start_chain_and_local_reset_mutants_fail():
+    for m,frag in (('reader_d','u_cland_reader_start_y_0.d'),('reader_raw','u_cland_reader_start_y_0: raw reset'),
+                   ('reader_skip','u_cland_y.rst_n'),('lrst_d','u_cland_lrst_s0: local reset copy D'),
+                   ('lrst_depth','depth')):
+        errs=_reader_vehicle(m)['errors']
+        assert any(frag in e for e in errs),(m,errs)
+
+
+def _strap_unit(parts_role=None,relay_copy=False,writer=None,lrst=False,mut=None):
+    """a strap-form sender a (origin a.u_cland_origin, or relay a.u_cland_rstart_rx) with FSTART face flop on bus x;
+    -> (Verification without _check_all, the fstart cell path)"""
+    from collections import defaultdict
+    cells=[];drv=defaultdict(list);n=iter(range(100,10000))
+    def cell(path,module,ins,outs):
+        c=N(path=path,module=module,ports={**ins,**{p:[next(n)] for p in outs}},kind='leaf',ytype=None,params={})
+        cells.append(c)
+        for p in outs:drv[c.ports[p][0]].append((len(cells)-1,p,0))
+        return c
+    clk,rst=1,3
+    ar=cell('a.u_rst_in','ot_dp_rrelay',{'clk':[clk],'d':[rst]},['q']);at=cell('a.u_rrl_0','ot_dp_rrelay',{'clk':[clk],'d':ar.ports['q']},['q'])
+    if parts_role=='relay':
+        o=cell('a.u_cland_rstart_rx','ot_dp_landing_relay',{'clk':[clk],'rst_raw_n':at.ports['q'],'d':[7]},['q'])
+        start,start_d=o.ports['q'],[7]
+    else:
+        o=cell('a.u_cland_origin','ot_dp_landing_origin_s',{'clk':[clk],'rst_raw_n':at.ports['q']},['start','start_d'])
+        start,start_d=o.ports['start'],o.ports['start_d']
+    d=start if writer and writer.get('reuse_relay_origin') else start_d
+    cfgw=None
+    if writer:
+        k=writer['depth']-int(bool(writer.get('reuse_relay_origin')))
+        for i in range(k):
+            s=cell(f'a.u_cland_writer_start_x_{i}','ot_dp_landing_relay',{'clk':[clk],'d':d,'rst_raw_n':at.ports['q'] if mut!='wraw' else ar.ports['q']},['q'])
+            d=s.ports['q']
+        cfgw=dict(writer,branches=dict(x=dict(stages=[dict(xy_um=[0,0],raw_reset='rst_n_t0')]*k)))
+    raw_n=at.ports['q']
+    clock={}
+    if cfgw:clock['landing_writer_start']=cfgw
+    if lrst:
+        lr=cell('a.u_cland_lrst_f0','ot_dp_rrelay',{'clk':[clk],'d':ar.ports['q'] if mut!='lrst_extra' else at.ports['q']},['q'])
+        raw_n=lr.ports['q']
+        clock['landing_local_resets']=[dict(name='f0',raw='rst_root_n',xy_um=[0,0],consumers=['u_cland_fstart_x'])]
+    cell('a.u_cland_fstart_x','ot_dp_landing_relay',{'clk':[clk],'d':d if mut!='wskip' else start_d,'rst_raw_n':raw_n},['q'])
+    F=N(cells=cells);G=N(drv=drv,top_in={clk:('clk_region_h0',0),rst:('rst_n',0),7:('cland_rstart_in_net',0)},loads={})
+    raw=dict(partitions=[dict(name='a',type='A',origin_um=[0,0])],ports=[],
+             partition_types=dict(A=dict(outline_um=[10,10],clock=clock,**({'landing_relay_start_copy':True} if relay_copy else {}))))
+    ca=dict(strap_form=True,ports={},regions={},**({'parts':dict(a=dict(role='relay',region='h0',src='z',stages=2))} if parts_role else {}))
+    v=object.__new__(Verification)
+    v.F,v.G,v.raw,v.table,v.names=F,G,raw,dict(count_aligned=ca,collector=dict(types=dict(A=dict(tree=None)))),{}
+    v.errors,v.expected,v.memo,v.checks,v._fstart_checked=[],set(),{},0,set()
+    v.byname={c.path:c for c in cells};v.parts={'a':raw['partitions'][0]};v.region={'a':'h0'}
+    v.collector=v.table['collector'];v._plan_trees={};v._reset_tree_fn=_plan_tree;v.plan_path=None
+    v._strap=dict(instances={},types={})
+    return v
+
+
+def test_writer_start_chain_and_fstart_local_copy_verified():
+    v=_strap_unit(writer=dict(depth=2),lrst=True);v.fstart_net('a','x')
+    assert v.errors==[] and {'a.u_cland_fstart_x','a.u_cland_writer_start_x_0','a.u_cland_writer_start_x_1'}<=v.expected
+    for mut,frag in (('wraw','writer_start_x_0: raw reset'),('wskip','u_cland_fstart_x.d'),('lrst_extra','release')):
+        v=_strap_unit(writer=dict(depth=2),lrst=True,mut=mut);v.fstart_net('a','x')
+        assert any(frag in e for e in v.errors),(mut,v.errors)
+
+
+def test_relay_start_copy_face_flop_verified():
+    """a relay partition with landing_relay_start_copy forwards its own FSTART face flop (d = the rx D, raw = the rx
+    raw reset; writer START reuse_relay_origin starts from the rx q)"""
+    v=_strap_unit(parts_role='relay',relay_copy=True,writer=dict(depth=2,reuse_relay_origin=True))
+    assert v.fstart_net('a','x')==('pin','a.u_cland_fstart_x','q',0)
+    assert v.errors==[] and {'a.u_cland_fstart_x','a.u_cland_writer_start_x_0'}<=v.expected
+    v=_strap_unit(parts_role='relay',relay_copy=False);v.fstart_net('a','x')
+    assert 'a.u_cland_fstart_x' not in v.expected      # no copy declared: the face flop stays unpriced (FAIL in _check_all)
+
+
+def test_strap_k_carries_reader_writer_wreg_and_qreg_adjustment():
+    v=object.__new__(Verification)
+    raw=dict(partitions=[dict(name='s',type='S'),dict(name='d',type='D')],
+             partition_types=dict(S=dict(clock=dict(landing_writer_start=dict(depth=3,branches=dict(o=dict(stages=[]))))),
+                                  D=dict(clock=dict(landing_reader_start=dict(depth=2,branches={}),
+                                                    landing_ring_wreg=dict(buses=['i'],dsrep=1)))))
+    v.raw=raw;v.parts={p['name']:p for p in raw['partitions']}
+    pr=dict(src=dict(part='s',bus='o'),dst=dict(part='d',bus='i'))
+    assert v.strap_k(dict(dst='d'),pr,dict(K=5))==5-2+3+1
+    raw['partition_types']['S']['clock']={}
+    assert v.strap_k(dict(dst='d'),pr,dict(K=5))==5-2+1
+
+
+def _stale_collector_vehicle(plan_tree):
+    """the plain vehicle with B's landing_contract collector tree copy naming another relay for rst_n_t0 than the
+    bound wavefront tree (QC cbf_q01 after a tap re-bin): the as-built relays follow the wavefront tree"""
+    g=globals();orig=g['Verification']
+    class Hook(orig):
+        def __init__(self,F,G,raw,table,names,**kw):
+            stale=dict(root=[0,0],sync_stages=2,relays=[dict(name='u_rrl_7',q='rst_n_t0',d='rst_root_n',xy=[1,0])])
+            table['collector']['types']['B']=dict(table['collector']['types']['B'],tree=stale)
+            super().__init__(F,G,raw,table,names,**kw)
+    g['Verification']=Hook
+    try:return vehicle(reset_tree=plan_tree)
+    finally:g['Verification']=orig
+
+
+def test_stale_collector_tree_copy_checked_on_the_bound_wavefront_tree():
+    assert _stale_collector_vehicle(_plan_tree)['errors']==[]
+    # MUTANT: the bound tree names the other relay too -> the exact parent/depth contract fails as before
+    bad=lambda tn:dict(root=[0,0],sync_stages=2,relays=[dict(name='u_rrl_9',q='rst_n_t0',d='rst_root_n',xy=[1,0])])
+    errs=_stale_collector_vehicle(bad)['errors']
+    assert any('b.u_cland_collect_rst_n_t0' in e and 'reset-parent/depth' in e for e in errs),errs
+
+
+def test_reset_anchor_names_are_repicked_onto_the_bound_tree(monkeypatch):
+    """RELAY-ANCHOR as built (bind.cmd_bind -> reset_anchor.resolve_plan): an anchored START raw name whose relay was
+    renumbered is re-picked by depth + site on the verifier's own plan copy; the input plan is never edited"""
+    tree=dict(root=[0,0],sync_stages=2,relays=[dict(name='u_rrl_9',q='rst_rl_9',d='rst_root_n',xy=[1.0,0.0],depth=1)])
+    def raw(site):
+        st=dict(xy_um=[0,0],raw_reset='rst_rl_5')
+        return dict(partitions=[],ports=[],partition_types=dict(T=dict(clock=dict(
+            landing_reader_start=dict(depth=1,branches=dict(i=dict(stages=[st]))),
+            reset_tree_anchor=dict(tol_um=5,inputs={},relays=dict(rst_rl_5=dict(depth=1,xy=site)))))))
+    import reset_tree as RT
+    monkeypatch.setattr(RT,'rtl_lines',lambda t:[])     # no rst_o port relays in this one-relay tree
+    v=object.__new__(Verification);v._reset_tree_fn=lambda tn:tree;v.plan_path=None;v.errors=[]
+    r0=raw([1.0,0.0]);r1=v._anchored(r0)
+    assert v.errors==[] and r1['partition_types']['T']['clock']['landing_reader_start']['branches']['i']['stages'][0]['raw_reset']=='rst_rl_9'
+    assert r0['partition_types']['T']['clock']['landing_reader_start']['branches']['i']['stages'][0]['raw_reset']=='rst_rl_5'
+    v.errors=[];v._anchored(raw([400.0,0.0]))
+    assert any('RESET_ANCHOR' in e for e in v.errors),v.errors

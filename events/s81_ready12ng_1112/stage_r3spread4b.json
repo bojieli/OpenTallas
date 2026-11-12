@@ -1,0 +1,17 @@
+{
+ "name": "r3spread4b",
+ "why": "VISLAYOUT3-S81-LEAF R3-SPREAD stage4b (64 types, no kv_leaf t3/t4/t5)",
+ "script": "physical/die_plan/s81/apply_leaf_sidecars_1111.py",
+ "argv": [
+  "{in}",
+  "{out}",
+  "{report}",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/src/r3spread4b/physical/die_plan/s81/cleanslate_1111/r3spread4b"
+ ],
+ "type_keys": [
+  "hard_cores",
+  "internal_stations",
+  "clock"
+ ],
+ "top_keys": []
+}

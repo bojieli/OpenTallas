@@ -1329,6 +1329,9 @@ RULES = [
     # AUTOBUILD-PIPE-2: core-kit mode (HBM gen_core_kit_hbm): a view the plan names with no harden recipe / an
     # ambiguous pin->port map / several pin tables under one wave item is the plan / core-recipe owner's
     ("PLAN", None, r"NO_RECIPE |MAP_AMBIGUOUS|CORE_VIEW FAIL", "core view has no recipe / unambiguous port map in the plan"),
+    # SIDECAR-COVERAGE (GEN-CLASS-1 11-12): gen's clock-landing sidecar was composed for another plan
+    ("PLAN", None, r"SIDECAR_STALE", "clock-landing sidecar does not cover the plan types (point --clock-landing at the "
+     "sidecar composed with this plan)"),
     ("PLAN", None, r"PLAN_CORE_MACROS ", "macro core has no KNOWN macro rects in the plan core_macros.json"),
     # AUTOBUILD-PIPE-2 (KV kv3_hg_v1 00:1x): a preflight whose ONLY issues are placed macro paths the bound RTL does not
     # have = the plan names the macro by another name than the netlist (plans elsewhere carry u_bound.<path>; hg_v1
