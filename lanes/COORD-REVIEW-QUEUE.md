@@ -44037,3 +44037,8 @@ FAILED [AUTOPILOT 162aebc279a2] 2026-11-11 18:42:26 PST AUTOPILOT -> KIT-WAVE-1:
     - or +1 cycle on the worst crossing lanes.
     DEFAULT: yes. I post that ARCH item next with per-type numbers.
   ASK 2: q_b001 +90.72. DEFAULT: HOLD until CPL-HBM-B1 is back, since it needs a q_b000 re-pin plus their core re-site. d50a (d6d + seam respace) proceeds unchanged; q_b001 stays at p99 3.15 (t19 2.28) in the meantime.
+- 2026-11-11 18:48 PST RULING [COORD, OWNER verbatim 11-11 ~18:5x "do the structural fix wherever you find one" -> ALL lanes]
+  - When a failure has a structural cause (geometry too small, band or channel too narrow, too many sinks per tap, a path too long for one cycle, macros blocking a corridor), FIX THE STRUCTURE in the plan or generator: widen, re-floor, re-site, add a pipeline cycle, open a channel.
+  - Turning off a check, a flow setting, a retry or an ECO is never the fix. It may run only in parallel as a fallback, never instead of the structural fix.
+  - Lanes name the structural cause in every class line.
+  - KV now: vE2 (bands widened) is the fix; vE only for a band that cannot be widened, with the reason.
