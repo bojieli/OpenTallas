@@ -24,7 +24,7 @@ def touch(p, text="x" * 4096, mtime=OLD):
 
 class T(unittest.TestCase):
     def setUp(self):
-        self.t = tempfile.mkdtemp(prefix="ac")
+        self.t = tempfile.mkdtemp(prefix="ac", dir=next((d for d in ("/tmp", "/var/tmp") if os.path.isdir(d) and os.access(d, os.W_OK)), None))
         self.root = os.path.join(os.path.realpath(self.t), "srv", "scr", "claude")
         os.makedirs(self.root)
         self.prot_kit = self.kit("lane0/protkit")
