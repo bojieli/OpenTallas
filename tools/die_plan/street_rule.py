@@ -1204,6 +1204,14 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
     import math
     import schema as SC
     import reset_tree as RT
+    def has(t):
+        ck = t.get("clock") or {}
+        return bool(t.get("reset_start_raw_exports") or ck.get("landing_local_resets") or ck.get("landing_raw_branches")
+                    or (ck.get("landing_contract") or {}).get("collector_tree") or any(
+                        (ck.get(k) or {}).get("branches") for k in ("landing_reader_start", "landing_writer_start")))
+    names = [n for n in names if has(Q["partition_types"][n])]
+    if not names:
+        return {}
     try:
         PA, PB = SC.Plan(P, Path(plan_path)), SC.Plan(Q, Path(plan_path))
     except Exception as e:  # noqa: BLE001
@@ -1212,13 +1220,17 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
     for tn in names:
         t = Q["partition_types"][tn]
         ck = t.get("clock") or {}
-        has = t.get("reset_start_raw_exports") or ck.get("landing_local_resets") or any(
-            (ck.get(k) or {}).get("branches") for k in ("landing_reader_start", "landing_writer_start"))
-        if not has:
-            continue
         rec = dict(exports=[], raw=[], skipped=[])
         try:
             ta, tb = RT.for_type(PA, tn), RT.for_type(PB, tn)
+            lc = ck.get("landing_contract") or {}
+            if lc.get("collector_tree") is not None:
+                # the published collector_tree = the tree the bind re-solves (added_tap_recentre.republish rule); the
+                # collector sources / children are re-attached after this (collector_reattach.reattach_plan)
+                new = json.loads(json.dumps(tb))
+                if json.dumps(new, sort_keys=True) != json.dumps(lc["collector_tree"], sort_keys=True):
+                    rec["tree_republished"] = [len(lc["collector_tree"].get("relays") or []), len(new.get("relays") or [])]
+                    lc["collector_tree"] = new
             ra = {r["name"]: r for r in _start_relays(ta)}
             rb = _start_relays(tb)
             pins = {x["name"]: x for x in ((ck.get("landing_contract") or {}).get("pins") or [])}
@@ -1257,6 +1269,41 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                         refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset"))
             for i, lr in enumerate(ck.get("landing_local_resets") or []):
                 refs.append(("landing_local_resets.%d" % i, lr, "raw"))
+            # landing_raw_branches: base + stage originals must be a D-chain of the re-solved tree (landing_raw_branches
+            # .py: "exactly one same-clk plain relay" per Q, each original's D = its parent): base -> nearest same-depth
+            # relay to the old base, then each stage -> the child of the previous node nearest the stage xy
+            kids = collections.defaultdict(list)
+            for r in rb_all:
+                if r.get("d"):
+                    kids[r["d"]].append(r)
+            for bi, br in enumerate(ck.get("landing_raw_branches") or []):
+                ob = ra_q.get(br.get("base"))
+                if ob is None or rb_q.get(br.get("base"), {}).get("xy") == ob.get("xy"):
+                    nb = rb_q.get(br.get("base"))
+                else:
+                    cand = [r for r in rb_all if r.get("depth") == ob.get("depth") and r.get("clk", "clk") == "clk"]
+                    nb = min(cand, key=lambda r: math.dist(r["xy"], ob["xy"])) if cand else None
+                if nb is None:
+                    rec["skipped"].append("landing_raw_branches.%d.base" % bi)
+                    continue
+                chain, prev, ok = [], nb, True
+                for st in br.get("stages") or []:
+                    c = kids.get(prev["q"]) or []
+                    if not c:
+                        ok = False
+                        break
+                    keep = [r for r in c if r["q"] == st.get("original")]
+                    nxt = keep[0] if keep else min(c, key=lambda r: math.dist(r["xy"], st.get("xy_um") or r["xy"]))
+                    chain.append(nxt)
+                    prev = nxt
+                if not ok:
+                    rec["skipped"].append("landing_raw_branches.%d (%s): chain ends" % (bi, br.get("name")))
+                    continue
+                if br.get("base") != nb["q"] or [st.get("original") for st in br["stages"]] != [r["q"] for r in chain]:
+                    rec["raw"].append(["landing_raw_branches.%d" % bi, br.get("base"), nb["q"]])
+                br["base"] = nb["q"]
+                for st, r in zip(br["stages"], chain):
+                    st["original"] = r["q"]
             for tag, obj, fld in refs:
                 q = obj.get(fld)
                 o = ra_q.get(q)
@@ -1894,14 +1941,16 @@ def cmd_legalize(a):
     # the taps feed the relay siting), same pass as the rect / bins / taps fix (COORD 11-12)
     still = [r["type"] for r in rows if r.get("applied")]
     if still and cfg.get("reset_resel", 1):
-        rr = reset_resel(P, Q, still, plan)
-        nch = 0
+        rr, rep, reverted = reset_contract(P, Q, still, plan)
         for r in rows:
-            if r["type"] in rr:
-                r["reset_resel"] = rr[r["type"]]
-                nch += len(rr[r["type"]].get("exports", [])) + len(rr[r["type"]].get("raw", []))
-        print("reset re-select: %d types with raw reset refs, %d refs re-selected, %d errors" % (
-            len(rr), nch, sum(1 for v in rr.values() if v.get("error"))), flush=True)
+            n = r["type"]
+            if n in rr:
+                r["reset_resel"] = rr[n]
+            if n in (rep.get("reattached") or {}):
+                r["collector_reattach"] = rep["reattached"][n]
+            if n in reverted:
+                r["applied"] = False
+                r["reason"] = "reset contract: %s" % reverted[n][:160]
     def write_plan():
         txt = json.dumps(Q, indent=1) + "\n"
         if a.out_plan.endswith(".gz"):
@@ -1989,8 +2038,121 @@ def main(argv=None):
             s.add_argument("--rs-halving", choices=("full", "edge_outline", "none", "off"), default="edge_outline")
             s.add_argument("--rs-out")
             s.add_argument("--jobs", type=int, default=1)
+    s = sub.add_parser("sidecar", help="carry a legalized plan's republished collector trees + reattached sources into "
+                       "an asbuilt clock_landing_table sidecar (the strict bind reads sources from the sidecar)")
+    s.add_argument("base_plan")
+    s.add_argument("new_plan")
+    s.add_argument("sidecar_in")
+    s.add_argument("sidecar_out")
+    s = sub.add_parser("resetfix", help="run only the reset-contract step (re-select, collector_tree republish, source "
+                       "re-attach, revert on failure) on an already legalized plan")
+    s.add_argument("base_plan")
+    s.add_argument("new_plan")
+    s.add_argument("out_plan")
+    s.add_argument("--repo", default=".")
     a = ap.parse_args(argv)
+    if a.cmd == "resetfix":
+        return cmd_resetfix(a)
+    if a.cmd == "sidecar":
+        return cmd_sidecar(a)
     return cmd_check(a) if a.cmd == "check" else cmd_legalize(a)
+
+
+def reset_contract(P, Q, names, plan_path, rounds=4):
+    """reset contract of the moved / grown types, in place on Q: raw reset refs re-selected + published collector_tree
+    republished (reset_resel), collector sources / children re-attached (reattach_each).  A type whose re-select fails,
+    whose raw-branch chain ends, or whose sources find no same-depth relay within 405 um is reverted to its base form;
+    the reset wavefront is die-wide, so after a revert every other type restarts from its pre-step form and the step
+    repeats.  -> (rr, reattach report, {type: reason})"""
+    names = list(names)
+    snap = {n: copy.deepcopy(Q["partition_types"][n]) for n in names}
+    reverted = {}
+    for _ in range(rounds):
+        live = [n for n in names if n not in reverted]
+        for n in live:
+            Q["partition_types"][n] = copy.deepcopy(snap[n])
+        rr = reset_resel(P, Q, live, plan_path)
+        rep = reattach_each(P, Q)
+        bad = {n: str(rep["over"][n]) for n in rep.get("over") or {} if n in live}
+        for n, v in rr.items():
+            if v.get("error") or any("chain ends" in str(x) for x in v.get("skipped", [])):
+                bad.setdefault(n, str(v.get("error") or v.get("skipped")))
+        nch = sum(len(v.get("exports", [])) + len(v.get("raw", [])) for v in rr.values())
+        print("reset contract: %d types, %d refs re-selected, %d trees republished, %d collectors re-attached, "
+              "%d reverted" % (len(rr), nch, sum(1 for v in rr.values() if v.get("tree_republished")),
+                               len(rep.get("reattached") or {}), len(bad)), flush=True)
+        if not bad:
+            break
+        for n, why in bad.items():
+            reverted[n] = why
+            Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
+    return rr, rep, reverted
+
+
+def reattach_each(P, Q, reach_um=405):
+    """collector_reattach.reattach_plan, one type at a time: a type whose sources find no same-depth relay within
+    reach lands in over[] (with the error) instead of aborting the whole plan"""
+    import collector_reattach as CRA
+    rep = {"reattached": {}, "over": {}}
+    for tn in sorted(Q.get("partition_types") or {}):
+        if CRA._lc(Q, tn) is None:
+            continue
+        sub_p = {"partition_types": {tn: P["partition_types"][tn]}} if tn in P.get("partition_types", {}) else {
+            "partition_types": {}}
+        sub_q = {"partition_types": {tn: Q["partition_types"][tn]}}
+        try:
+            r = CRA.reattach_plan(sub_p, sub_q, reach_um)
+        except ValueError as e:
+            rep["over"][tn] = [str(e)]
+            continue
+        rep["reattached"].update(r["reattached"])
+        rep["over"].update(r["over"])
+    return rep
+
+
+def cmd_resetfix(a):
+    P, _ = load_plan(Path(a.base_plan))
+    Q, _ = load_plan(Path(a.new_plan))
+    norm = lambda o: json.dumps(o, sort_keys=True)  # noqa: E731
+    moved = [n for n, t in Q["partition_types"].items()
+             if n in P["partition_types"] and norm(t) != norm(P["partition_types"][n])]
+    rr, rep, reverted = reset_contract(P, Q, moved, Path(a.base_plan))
+    txt = json.dumps(Q, indent=1) + "\n"
+    Path(a.out_plan).write_bytes(gzip.compress(txt.encode()) if a.out_plan.endswith(".gz") else txt.encode())
+    print(json.dumps(dict(changed_types=len(moved), reverted=reverted,
+                          sha256=hashlib.sha256(Path(a.out_plan).read_bytes()).hexdigest())))
+    return 0
+
+
+def cmd_sidecar(a):
+    """for every type whose landing collector_tree differs between BASE and NEW: the sidecar's collector.types[tn].tree
+    becomes NEW's tree (only where the sidecar copy equals BASE's, else refused), then the sources / children node/tap
+    are synced (collector_reattach.sync_sidecar).  Other types / keys unchanged."""
+    import collector_reattach as CRA
+    B, _ = load_plan(Path(a.base_plan))
+    N, _ = load_plan(Path(a.new_plan))
+    raw_side = Path(a.sidecar_in).read_bytes()
+    side = json.loads(gzip.decompress(raw_side) if a.sidecar_in.endswith(".gz") else raw_side)
+    st = ((side.get("collector") or {}).get("types") or {})
+    norm = lambda o: json.dumps(o, sort_keys=True)  # noqa: E731
+    changed, refused = [], []
+    for tn, t in N["partition_types"].items():
+        lc = ((t.get("clock") or {}).get("landing_contract") or {})
+        blc = (((B["partition_types"].get(tn) or {}).get("clock") or {}).get("landing_contract") or {})
+        if lc.get("collector_tree") is None or norm(lc["collector_tree"]) == norm(blc.get("collector_tree")):
+            continue
+        if tn not in st:
+            continue
+        if norm(st[tn].get("tree")) != norm(blc.get("collector_tree")):
+            refused.append(tn)
+            continue
+        st[tn]["tree"] = json.loads(json.dumps(lc["collector_tree"]))
+        changed.append(tn)
+    n = CRA.sync_sidecar(N, side, changed) if changed else {}
+    txt = json.dumps(side, separators=(",", ":"))
+    Path(a.sidecar_out).write_bytes(gzip.compress(txt.encode()) if a.sidecar_out.endswith(".gz") else txt.encode())
+    print(json.dumps(dict(trees_replaced=changed, sources_synced=n, refused_stale_sidecar=refused)))
+    return 1 if refused else 0
 
 
 if __name__ == "__main__":

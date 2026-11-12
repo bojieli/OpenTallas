@@ -342,17 +342,23 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     import types as _t
     trees = {
         "base": dict(relays=[dict(name="r_a", q="qa", depth=2, role="raw", xy=[100.0, 50.0]),
-                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0])]),
+                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0]),
+                             dict(name="s1", q="s1", d="qa", depth=3, xy=[100.0, 90.0])]),
         "new": dict(relays=[dict(name="r_a2", q="qa2", depth=2, role="raw", xy=[130.0, 50.0]),
                             dict(name="r_x", q="qx", depth=2, role="raw", xy=[400.0, 50.0]),
-                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0])]),
+                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0]),
+                            dict(name="s1n", q="s1n", d="qa2", depth=3, xy=[130.0, 92.0]),
+                            dict(name="s1x", q="s1x", d="qx", depth=3, xy=[100.0, 90.0])]),
     }
     import schema
     import reset_tree
     monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
     monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
     t = {"reset_start_raw_exports": [dict(port="rst_o", instance="r_a", net="qa", xy_um=[100.0, 50.0])],
-         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")]},
+         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")],
+                                        "collector_tree": json.loads(json.dumps(trees["base"]))},
+                   "landing_raw_branches": [dict(name="o", base="qa", stages=[dict(original="s1", xy_um=[100.0, 90.0])],
+                                                 consumers=["origin"])],
                    "landing_local_resets": [dict(raw="qa", xy_um=[100.0, 50.0]), dict(raw="qb", xy_um=[200.0, 50.0])]}}
     P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
     Q = {"tag": "new", "partition_types": {"x": t}}
@@ -364,6 +370,11 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     assert pn["source_instance"] == "r_a2" and pn["xy_um"] == [131.0, 49.0]           # pin offset kept
     lr = t["clock"]["landing_local_resets"]
     assert lr[0]["raw"] == "qa2" and lr[1]["raw"] == "qb"     # gone -> nearest same depth; surviving Q kept
+    # the published collector_tree is the re-solved one; raw branches follow it as a D-chain (not nearest-by-xy:
+    # s1x sits exactly at the old stage xy but hangs off another base)
+    assert t["clock"]["landing_contract"]["collector_tree"] == trees["new"] and rec["tree_republished"] == [3, 5]
+    br = t["clock"]["landing_raw_branches"][0]
+    assert br["base"] == "qa2" and br["stages"][0]["original"] == "s1n"
 
 
 def test_add_ft_regs_keeps_site_rows_aligned():
