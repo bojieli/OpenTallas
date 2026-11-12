@@ -44192,3 +44192,80 @@ FAILED [AUTOPILOT bd829dec084e] 2026-11-11 19:02:38 PST AUTOPILOT -> KIT-WAVE-3:
     - sle_stm_v1__clbe630b9c (place);
     - slw_hc2__cl6bcaba89 (started; bind_e strict 0 errors).
   - COORD approval of 2421da29be noted; sign-off numbers go in CLEANSLATE2-QC.
+- 2026-11-11 19:07 PST RESULT (first) [LAYER-BUDGET-1 -> COORD (for OWNER); cc POROUS-ALL-1, GRT-CALIB-1, DIE-PROTO-2, DIE-S81-87, DIE-KV-98, DIE-QC-99, DIE-HBM-100, HEAD-93, KW-FIX-45] M8 grant + macro OBS audit. DO_NOT_COUNT, read-only on runs and plans. GRT what-if numbers follow in a second RESULT (running on epyc9, ETA ~4-6 h).
+  SHORT ANSWER: (1) M8 over the hot S81 types is 76-86% free today, but only S81 and HEAD have a die run on a recent plan, and NO die has real frozen PG/clock/reset/die-top geometry per §11.4. (2) What an M8 grant buys is being measured; the analytic estimate is about 2.7x the horizontal supply over hard cores, where 61% of S81 type overflow sits. (3) "OBS to M4" is ALREADY true for every generated SRAM/ROM. The M5 OBS sits on hard-core P&R abstracts, which really use M5. The honest form of B is porous real-shape core views (POROUS-ALL-1, in flight), not cutting OBS. (4) Recommendation: B' now. A only after a freeze-first die step, which no die can do before its plan freezes.
+  (1) DIE M8/M9 OVER HOT TYPES. ASAP7 tech LEF: M8 HORIZONTAL, M9 VERTICAL, pitch 0.08, width 0.04, spacing 0.04 (0.5 when the wire is >=0.5 wide). M6 is H at 0.064, M7 V at 0.064.
+   - S81, MEASURED on the DIE-PROTO-2 S81 A die_trial (epyc8 die-proto-1/in/s81_kit + s81/A/grt_st_TT, plan_h2_2249 e596e9588e72, 11-11 03:30). Die PG = the plan grid written as M8/M9 obstructions (0.48@8.64 VDD+VSS, one stripe every 4.32). Die clock = ot_clk tree, GRT guides on M8/M9 (536k M8 / 186k M9 boxes).
+     - Over 398 type footprints, M8 PG takes 13.9-14.5% of tracks (spacing included). Clock median 0.1%, max 22.4% (one footprint at the clock root). Median M8 free 85.7%, min 63%. M9: PG 14%, clock max 27%, median free 85.8%.
+     - All 59 GRT-FAIL S81 types sit under M8 that is >=76% free: t8 76.0%, t58 76.9%, t65 79.7%, col_h9_r0_p* 81-86%, everything else 85-86%. The lowest values are the leaves on the clock-root rows.
+     - The die_trial ALSO derates M8/M9 by 0.4 (set_global_routing_layer_adjustment). That is the die's margin for die-top signals, not geometry. An M8 grant would spend from it.
+     - Per type: layerbudget/s81_hot_m8.tsv. Map: layerbudget/s81_m8m9_free_map.png (red edge = FAIL type).
+   - Other dies, PLAN ESTIMATE ONLY (die.pg.grid from each wave's plan, blocked tracks incl. spacing; no die clock on these plans):
+     - QC (plan_qc53v4nS..pv): M8 0.48@8.64 -> 14% PG, M9 0.672@8.64 -> 18%; cut_avail M8/M9 0.6. CAVEAT: under the A0 75-um bump field, option (c) puts dense M8/M9 PG over the cb rows, so that region needs a PG strap audit before any grant.
+     - KV (kvr2 plan_c): M8 0.48@4.32 -> 28% PG, M9 12.96@39.96 -> 65%. The plan sets layer_budget.cut_avail M8/M9 = 0.0, so as written KV has no M8 to give.
+     - HBM (plan_p11t_taps_cyc): M8 0.48@4.32 -> 28%, M9 12.96@34.56 -> 76%; cut_avail 0.6. HBM abstracts already carry M8/M9 signal pins (q_b003: 1555 M8 + 1555 M9 shapes; DIE-PROTO-2 GRT-0029).
+     - HEAD (l48hp1): same grid as HBM, 28% / 76%. DIE-PROTO-2 hp1d usage M8 0.04%, M9 0.04%.
+     So M8 is mostly free over types on every die: about 86% on S81/QC, about 72% on KV/HBM/HEAD before clock. M9 is not free on KV/HBM/HEAD.
+   - Hot types it can help: those whose overflow is H on M6 over hard cores, namely S81 leaves/cols/slices (M6 42-97% of overflow), kv3_pv/kv3_pv_v8 (M6 63%) and kv3_hgi_* (M6 36-47%).
+   - It will not help: q_spt0 (HBM; M3 33%, face/glue), sle_su_l0 (QC; M3 63%), or the M5/M7 vertical share on sle_sc_v2/v3. M8 is horizontal; vertical relief would need M9, which is mostly PG on KV/HBM/HEAD.
+  (2) WHAT AN M8 GRANT BUYS. MEASURING now, GRT-only what-if on epyc9, DO_NOT_COUNT marker in /srv/opentallas-scratch2/claude/layer-budget-1.
+   - Setup: private copies of the kit 4_cts.odb for col_h9_r0_p6__t1 (S81, M6 93% of its 186,017) and sle_sc_v2 (QC, 227,299; M5/M7 heavy, so a control case).
+   - Arms, same image (asap7lock), same 0.25 adjustment, pin_access, 30 iterations: ctl M2-M7 vs M2-M8. The M8 arm carries the die PG stripes as M8 obstructions (0.48 + 0.04 spacing pad at the die 4.32 phase). The die clock is <0.1% over these footprints and is left out.
+   - Analytic estimate until the numbers land. Over a hard core with M1-M5 OBS, horizontal supply is M6 only, and halved by the transition rule: about 15.6 tr/um x 0.82 (type PG) x 0.75 x 0.5 = 4.8 tr/um. M8 adds 12.5 x 0.86 x 0.75 = 8.1 tr/um, not halved because M7 is not OBS. That is about 2.7x over cores.
+     - Caveat: vertical over cores stays M7 only, and every M8 segment needs a V7 + V6 stack that costs M7/M6 capacity at the ends.
+     - Earlier evidence (DIE-S81-85, 11-10): col_h9_r2 with M8 open only OUTSIDE macros cleared M4 but not M6 (26,102 total). Opening M8 OVER the cores, as here, is the untested part.
+   - WHAT THE DIE LOSES:
+     - (a) Die-top reach: S81 X-TIER m89 bays need about 0.18 of M8 per L1/L2 half-row cut (41015). A grant that takes more than about 0.6 of the free M8 over those rows collides with them. KV's plan already leaves 0.
+     - (b) PG IR headroom: M8 can no longer be widened later. HEAD needed M9 12.96@34.56 + 70-um pads to pass 35 mV, and the QC A0 bump field needs dense M8/M9, so any IR re-fix after the grant becomes a type re-sign.
+     - (c) Clock NDR: die M8/M9 clock is NDR + shield (12.4d). Type wires must keep the NDR spacing (about 0.08-0.12 um each side), and die skew must be re-run with type M8 aggressors.
+  (3) MACRO OBS AUDIT, measured on generator code and kit LEFs.
+   - tools/mem_compiler/asap7.py METAL obs_layers = [M1, M2, M3, M4]; views.py writes the OBS from it. sram_gen/rom_gen: pins on M4, VDD/VSS as M4 straps, M5+ free for the parent PG and over-macro routing. Example: the t8 kit's ot_sram_1r1w_512x128_m4_r0c0.lef has OBS M1-M4 only.
+   - hbm_phy_gen / build_aligned_v2 PHY views: OBS M1-M4 plus M5 over the body minus a 0.4 um pin strip, because the signal pins ARE on M5. That M5 OBS is honest.
+   - Published ASAP7 views match ours exactly. The ORFS image's platforms/asap7/lef/fakeram7_*.lef (128x64, 2048x39, 256x256, 256x32) have OBS M1-M4 with pins on M4 (read from openroad/orfs:asap7lock).
+   - TILOS MacroPlacement uses FakeRAM2.0 for ASAP7 and notes that memory macros block "till metal four" (SKY130HD page): https://tilos-ai-institute.github.io/MacroPlacement/Enablements/ASAP7 and https://tilos-ai-institute.github.io/MacroPlacement/Enablements/SKY130HD
+   - Commercial 7-nm SRAM compilers commonly block up to M4/M5 and allow over-the-macro routing above it. That is general practice; I did not find a citable public source.
+   - So B ("OBS stop at M4") is ALREADY the state for every generated macro and buys 0.
+   - The M1-M5 blanket OBS is on HARD CORES: their P&R abstracts, built with M5 ceilings and M5 PG pins. Over-macro overflow is 100% over hard cores on t15 and 87% on col_h9 (DIE-S81-85 06:01 11-10). Cutting their OBS to M4 would hide real M5 metal, which is NOT honest.
+   - The honest form is B' = real-shape (porous) abstracts from the signed views. It is already measured (-63% to -79% on S81 leaves t15/t24/t50/t53/t70) and adopted for 109 S81 types (POROUS-TYPES-s81.tsv). It is neutral or negative where no A/B gain exists (t50 stock +8%; QC/KV/HBM/HEAD no A/B, kit views).
+   - B' needs merged-view sign-off items: parent RC with core M4/M5 coupling, boundary DRC/LVS and antenna. Those are listed by DIE-S81-85 17:19 11-10.
+  (4) RECOMMENDATION (costs and honesty).
+   - D (neither): no cost, no gain. Leaves the M6-over-core class on placement/porous/plan forms.
+   - B (OBS to M4): ALREADY DONE for generated macros. On hard cores it would be dishonest (hides real M5 routes and PG). REJECT as stated; take B' = porous views (pure ASAP7; sign-off stays honest if parent extraction and merged DRC see the real core shapes).
+   - A (M8 grant in free corridors): pure ASAP7 (M8 is an ASAP7 layer with tech rules and RC). Sign-off stays honest ONLY IF:
+     - the type routes in the TRUE leftover (die M8 shapes + NDR spacing exported as OBS into the type kit);
+     - the type's own M8 use is exported back as OBS in its abstract;
+     - merged die DRC/LVS and coupling-aware RC run (type M8 next to die PG/clock).
+     Cost: the freeze-first die step below (days per die, needs a frozen plan), plus re-sign of every granted type on any die M8 change.
+   - C (A + B'): the most capacity, the most sign-off surface.
+   - MY CALL: B' now (in flight), plus D for M8 until (a) the epyc9 what-if shows a real M6 drop and (b) a die has frozen geometry. Then A only on S81 rows outside the clock-root and X-TIER m89 corridors, as a per-type budgeted grant.
+  COORD ADDITIONS, freeze-first order (OWNER 18:4x).
+   - STATUS TODAY, per die. No die has §11.4 FIXED pre-routes; everything is GRT guides plus PG modelled as obstructions.
+     - S81: die_trial GRT on plan_h2_2249 (epyc8 die-proto-1/s81/A, 11-11 03:29): PG = plan stripes as obstructions, clock = GRT guides, signals M4-M7 GRT 0 overflow. Not detail-routed. Older than the 12:00 cut. The newest die clock attempt (DIE-RECHECK-1, plan 4b5e9a, 14:14) stopped at rc=1. X-TIER m89 bays are not expressible in the plan schema yet ('unknown key m89_bays').
+     - HEAD: die_trial hp1d (intel1 die-proto-1/head/hp1d, l48hp1 7322511ff22a, 11-11 03:42) and ca1/ca2 (epyc8, 13:27): GRT 0 overflow, STA FAIL. Not detail-routed; the 12:00 lepB event changes the plan.
+     - QC: last die GRT incl clock is gen52b (plan_qc52, 10-31) and QC-66 (11-03). The DIE-PROTO-2 QC Ac run on the current plan failed FLOW and was then cancelled (11-11). Nothing exists on the current plan.
+     - KV: die GRT incl clock 10-29/10-30 on event28w_c. On the current plan the DIE-PROTO-2 KV vA chain failed at PROOF rc=1. Nothing exists on the current plan.
+     - HBM: never a die GRT with clock on any plan (DIE-HBM-44 10-30). DIE-PROTO-2 HBM A failed GRT-0029 (M8/M9 abstract pins); B was cancelled 11-11 14:07. HBM plan unfrozen (owner 11-02).
+     - Reset: in the plans (reset section, relays), routed in no die DB.
+   - FREEZE-FIRST STEPS per die:
+     - (1) frozen plan;
+     - (2) die PG by pdngen as special nets M8/M9 (+ M7 vias), IR re-checked;
+     - (3) die clock H-tree/mesh DETAIL-routed on M8/M9 with NDR, skew gate;
+     - (4) reset relays routed;
+     - (5) die-level inter-type signals detail-routed on M4-M9 over abstracts;
+     - (6) write a die DEF of fixed wires.
+   - ESTIMATE (UNCHECKED: OpenROAD has never detail-routed a 25-32 mm die here):
+     - steps 2-4: 0.5-1 day per die;
+     - step 5: 1-3 days per die, if DRT scales at all at 0.4-0.5 M die nets (S81 GRT alone is 18 GB, 6 min; DRT is the risk; split per region).
+     - Total about 2-4 days per die after the plan freezes.
+   - WHAT IT BLOCKS: any M8 grant on that die; any type re-build that takes the grant. Every die plan event after the freeze re-opens it.
+   - PUSH-DOWN DESIGN:
+     - (a) A die export tool clips the frozen die M8/M9 wires and special nets to each type footprint (in type coordinates, orientation-aware). It pads PG by +0.04 um and clock NDR nets by their NDR spacing (+ shield track). It writes die_m8_obs_<type>.json with sha + die DEF sha.
+     - (b) The type kit gets MAX_ROUTING_LAYER=M8 plus a PRE_GLOBAL_ROUTE hook that creates M8 obstructions from that json (the same mechanism as the what-if). The type PDN stays M1-M7.
+     - (c) The type abstract export adds OBS on M8 exactly where the type routed, real shapes, so the die sees it.
+     - (d) LOCK: the plan records per granted type {die_def_sha, obs_sha, type_m8_obs_sha}. A die gate (G0-class, blocking for counted types) re-clips after every die event and FAILS if any die M8/M9 shape or NDR halo intersects a signed type's M8 OBS, or if the clip sha changed. The resolution is that the die reroutes, or the type re-signs. Re-sign is automatic via DIE-RECHECK.
+     - (e) Sign-off checks:
+       - merged die DRC + LVS (type routed DEF/GDS + die DEF);
+       - type RC extraction with the die M8 shapes as fixed neighbours (coupling into type nets);
+       - die clock skew re-run with type M8 wires as aggressors;
+       - antenna on the merged M8 stacks.
+  FILES: localhost scratchpad visual/layerbudget/ (s81_occ.tsv per footprint, s81_hot_m8.tsv, s81_m8m9_free_map.png, scripts/m89occ.py, pgsum.py, grt_whatif.tcl). Measurement copy epyc8 /srv/opentallas-scratch2/claude/layer-budget-1/s81_occ.tsv. What-if epyc9 /srv/opentallas-scratch2/claude/layer-budget-1/{h9p6,sc}/{M7,M8}/grt.log (containers lb1-*).
