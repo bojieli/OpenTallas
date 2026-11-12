@@ -62,7 +62,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore #(
     // Default OFF. Conservative local-R14-model 833ps profile; same clock/CDC.
     // Paired PC row/column phase alignment and bootreload144..252 are required.
     // This is not licensed PHY timing signoff.
-    parameter integer TIMING_833=0
+    parameter integer TIMING_833=0,
+    // WGB=2 (BUS-GEAR-1 2026-11-12, default 1 = unchanged; needs OREG=1): the 288-b write payload {col_strb, col_data}
+    // leaves as two 144-b beats from ot_bus_gear_tx (which replaces the OREG payload flops): beat 0 on the col_we edge,
+    // beat 1 on the next edge.  Port col_data then carries beat bits [127:0] and col_strb beat bits [143:128]
+    // (CDW 128 / CSW 16); col_we is the first-beat flag.  The controller runs W_GAP=2 (no write column on the edge
+    // after a write column), so the beats never overlap.  The PHY-side ot_bus_gear_rx re-assembles the word and
+    // delays the 40 command bits by one edge (whole bundle +1, relative DRAM timing unchanged).
+    parameter integer WGB=1,
+    localparam integer CDW=(WGB>1)?128:256,
+    localparam integer CSW=(WGB>1)?16:32
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -75,7 +84,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore #(
     output reg k_wr_done,
     output wire row_v,output wire[2:0]row_op,output wire[4:0]row_bank,output wire[18:0]row_row,
     output wire col_v,col_we,output wire[4:0]col_bank,col_col,
-    output wire[255:0]col_data,output wire[31:0]col_strb,
+    output wire[CDW-1:0]col_data,output wire[CSW-1:0]col_strb,
     input wire dram_rvalid,input wire[255:0]dram_rdata,
     output reg pc_fault,
     output reg [5:0] owner_fault_split   // H9b: pin copies, one edge after the internal sticky classes
@@ -187,17 +196,31 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore #(
         .out_v(kr_v),.out_r((RMUT==2)?kr_rdy:kr_rdy_q),.out_data({kr_tag,kr_beat_low,kr_data}));
     assign kr_beat={2'b00,kr_beat_low[1:0]};
     wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
+    wire gb_fault;   // BUS-GEAR-1 WGB=2: write beats overlapped (cannot happen under W_GAP=2; sticky class 5)
+    initial if(WGB>1&&OREG==0)$fatal(1,"WGB>1 needs OREG=1");
     generate if(OREG!=0)begin:g_oreg
-        reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
+        reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;
+        /* verilator lint_off UNUSEDSIGNAL */   // WGB=2: the payload flops below are dead (the gearbox beat register drives the pins)
+        reg[255:0]q_cd;reg[31:0]q_cs;
+        /* verilator lint_on UNUSEDSIGNAL */
         always @(posedge clk)
             if(!reset_regions[2])begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
         always @(posedge clk)begin q_rop<=r_op;q_rbank<=r_bank;q_rrow<=r_row;q_cb<=cb;q_cc<=cc;q_cd<=head[255:0];q_cs<=head[287:256];end
         assign row_v=q_rv;assign row_op=q_rop;assign row_bank=q_rbank;assign row_row=q_rrow;
-        assign col_v=q_cv;assign col_we=q_cwe;assign col_bank=q_cb;assign col_col=q_cc;assign col_data=q_cd;assign col_strb=q_cs;
+        assign col_v=q_cv;assign col_we=q_cwe;assign col_bank=q_cb;assign col_col=q_cc;
+        if(WGB>1)begin:g_wgb
+            // payload flops = the gearbox beat register (same edge as q_cwe for beat 0)
+            wire[143:0]gb_beat;
+            ot_bus_gear_tx #(.W(288),.BEATS(2)) u_wgb(.clk(clk),.rst_n(reset_regions[2]),.v_i(cwe),
+                .d_i(head[287:0]),.b_o(gb_beat),.f_o(),.fault_o(gb_fault));
+            assign col_data=gb_beat[127:0];assign col_strb=gb_beat[143:128];
+        end else begin:g_nowgb
+            assign col_data=q_cd;assign col_strb=q_cs;assign gb_fault=1'b0;
+        end
     end else begin:g_comb
         assign row_v=r_v;assign row_op=r_op;assign row_bank=r_bank;assign row_row=r_row;
         assign col_v=cv;assign col_we=cwe;assign col_bank=cb;assign col_col=cc;
-        assign col_data=head[255:0];assign col_strb=head[287:256];
+        assign col_data=head[255:0];assign col_strb=head[287:256];assign gb_fault=1'b0;
     end endgenerate
     generate if(WPAY!=0)begin:g_wpay
         // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
@@ -224,7 +247,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore #(
       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
       .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
       .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10),
-      .WP_REG(1)) controller(   // DIE-HBM-61 RE-FORM 2026-11-03: registered write pointer / not-full, zero latency
+      .WP_REG(1),.W_GAP((WGB>1)?2:1)) controller(   // DIE-HBM-61 RE-FORM 2026-11-03: registered write pointer / not-full, zero latency
         .reset_regions(reset_regions),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .clk(clk),.rst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
@@ -287,7 +310,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore #(
     assign ofs_set[2]=cv&&(WPAY!=0 && cwe && fresh_v && fresh_slot==rp);
     assign ofs_set[3]=(cv&&!cwe&&pending_count>=32)||(ret_v&&(pending_count==0 || (response_count>=32&&!response_take)));
     assign ofs_set[4]=response_take&&(read_reserved==0||response_count==0);
-    assign ofs_set[5]=(read_reserved>32||pending_count>32||response_count>32)||kq_fault||krq_fault;
+    assign ofs_set[5]=(read_reserved>32||pending_count>32||response_count>32)||kq_fault||krq_fault||gb_fault;
     wire sticky_n=sticky||(|ofs_set);
     always @(posedge clk) if(!reset_regions[3]) sticky_q<=1'b0; else sticky_q<=sticky_n;
     assign sticky=(STKREG!=0)?sticky_q:(|ofs);
@@ -366,7 +389,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__fcore #(
                 response_rp<=response_rp+1'b1;
             end
             if(read_reserved>32||pending_count>32||response_count>32)ofs[5]<=1;
-            if(kq_fault||krq_fault)ofs[5]<=1;   // H9b ring overflow/underflow
+            if(kq_fault||krq_fault||gb_fault)ofs[5]<=1;   // H9b ring overflow/underflow; BUS-GEAR-1 beat overlap
         end
     end
 endmodule

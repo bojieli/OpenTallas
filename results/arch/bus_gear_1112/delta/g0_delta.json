@@ -1,0 +1,59 @@
+{
+ "hbm": {
+  "base_plan_sha256_12": "ad080c302a2b",
+  "base_errors": 545,
+  "gear_errors": 545,
+  "added": [],
+  "removed": []
+ },
+ "s81": {
+  "base_plan_sha256_12": "64eb2c89c94c",
+  "base_errors": 87,
+  "gear_errors": 111,
+  "added": [
+   "census|census[0]: 13152 as-built inter-partition bits dropped over 24 pairs",
+   "census|census[0]: s_0N -> xch_fW5_p1_fW5_p2_fW5_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_0N -> xch_fW5_p4_fW5_p5_fW5_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_0S -> xch_fW0_p1_fW0_p2_fW0_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_0S -> xch_fW0_p4_fW0_p5_fW0_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_1N -> xch_fW3_p1_fW3_p2_fW3_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_1S -> xch_fW2_p1_fW2_p2_fW2_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_2N -> xch_fW4_p1_fW4_p2_fW4_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_2N -> xch_fW4_p4_fW4_p5_fW4_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_2S -> xch_fW1_p1_fW1_p2_fW1_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_2S -> xch_fW1_p4_fW1_p5_fW1_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_3N -> xch_fW3_p4_fW3_p5_fW3_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_3S -> xch_fW2_p4_fW2_p5_fW2_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_4N -> xch_fE3_p4_fE3_p5_fE3_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_4S -> xch_fE2_p4_fE2_p5_fE2_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_5N -> xch_fE4_p1_fE4_p2_fE4_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_5N -> xch_fE4_p4_fE4_p5_fE4_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_5S -> xch_fE1_p1_fE1_p2_fE1_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_5S -> xch_fE1_p4_fE1_p5_fE1_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_6N -> xch_fE3_p1_fE3_p2_fE3_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_6S -> xch_fE2_p1_fE2_p2_fE2_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_7N -> xch_fE5_p1_fE5_p2_fE5_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_7N -> xch_fE5_p4_fE5_p5_fE5_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_7S -> xch_fE0_p1_fE0_p2_fE0_p3: as-built 1104 bits, planned 556 (dropped 548)",
+   "census|census[0]: s_7S -> xch_fE0_p4_fE0_p5_fE0_p6: as-built 1104 bits, planned 556 (dropped 548)",
+   "cuts|horizontal cut at 10500: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "geometry|type ot_s81sl_leaf__t14 slot ft0: 117 actual-bit station cells/sites intersect physical macros (stage 3, bit 0, macro u_lf.u_vn.u_b)",
+   "geometry|type ot_s81sl_leaf__t14 slot ft5: 226 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro u_lf.u_vn.u_b)",
+   "geometry|type ot_s81sl_leaf__t46 slot ft2: 3 actual-bit station cells/sites intersect physical macros (stage 2, bit 539, macro u_lf.u_vsw)",
+   "geometry|type ot_s81sl_leaf__t65 slot ft1: 371 actual-bit station cells/sites intersect physical macros (stage 5, bit 0, macro u_lf.u_vsw)",
+   "geometry|type ot_s81sl_leaf__t65 slot ft3: 1015 actual-bit station cells/sites intersect physical macros (stage 3, bit 0, macro u_lf.u_vsw)",
+   "geometry|type ot_s81sl_leaf__t65 slot ft4: 146 actual-bit station cells/sites intersect physical macros (stage 3, bit 411, macro u_lf.u_vq)"
+  ],
+  "removed": [
+   "cuts|horizontal cut at 10500: s_5S_L0 segment carries 4406 bits on 6895 tracks = 0.64 > 0.6",
+   "cuts|horizontal cut at 19250: s_2N_L1 segment carries 5434 bits on 7562 tracks = 0.72 > 0.6",
+   "geometry|type ot_s81sl_leaf__t14 slot ft0: 233 actual-bit station cells/sites intersect physical macros (stage 3, bit 0, macro u_lf.u_vn.u_b)",
+   "geometry|type ot_s81sl_leaf__t14 slot ft5: 449 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro u_lf.u_vn.u_b)",
+   "geometry|type ot_s81sl_leaf__t46 slot ft2: 4 actual-bit station cells/sites intersect physical macros (stage 2, bit 1060, macro u_lf.u_vsw)",
+   "geometry|type ot_s81sl_leaf__t65 slot ft1: 737 actual-bit station cells/sites intersect physical macros (stage 5, bit 0, macro u_lf.u_vsw)",
+   "geometry|type ot_s81sl_leaf__t65 slot ft3: 2016 actual-bit station cells/sites intersect physical macros (stage 3, bit 0, macro u_lf.u_vsw)",
+   "geometry|type ot_s81sl_leaf__t65 slot ft4: 288 actual-bit station cells/sites intersect physical macros (stage 3, bit 817, macro u_lf.u_vq)"
+  ]
+ },
+ "note": "check.py from claude/bus-gear-1-1112 tree, same environment for base and gear; S81 run from physical/die_plan/s81 (census sidecars). S81 added = 25 census rows (as-built RTL still 1104 b; clears when the gear RTL is in the bind) + the same 6 macro-overlap slots with halved bit counts + the same horizontal cut at 10500 (0.64 -> 0.63, worst segment moved)."
+}

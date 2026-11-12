@@ -1,0 +1,302 @@
+{
+ "die": "hbm",
+ "base": "plans/hbm.json.gz",
+ "note": "BUS-GEAR-1 2:1 gear; +1 word edge per geared lane (RX lands the word one edge after beat 0); ft slot windows kept (pin pitch doubles; the die owner may narrow them)",
+ "lanes": [
+  {
+   "lane": "L8",
+   "old": 3070,
+   "new": 1630,
+   "ports": 6,
+   "word_extra_cycles": 1
+  },
+  {
+   "lane": "L9",
+   "old": 1842,
+   "new": 978,
+   "ports": 5,
+   "word_extra_cycles": 1
+  },
+  {
+   "lane": "L8m",
+   "old": 3070,
+   "new": 1630,
+   "ports": 6,
+   "word_extra_cycles": 1
+  },
+  {
+   "lane": "L9m",
+   "old": 1842,
+   "new": 978,
+   "ports": 5,
+   "word_extra_cycles": 1
+  }
+ ],
+ "ports": [
+  {
+   "port": "L8_0",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8_1",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8_2",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8_3",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8_4",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8_5",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L9_0",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9_1",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9_2",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9_3",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9_4",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L8m_0",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8m_1",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8m_2",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8m_3",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8m_4",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L8m_5",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "port": "L9m_0",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9m_1",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9m_2",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9m_3",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "port": "L9m_4",
+   "old": 1842,
+   "new": 978
+  }
+ ],
+ "type_buses": [
+  {
+   "type": "PHY_NC",
+   "bus": "L9_i",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "PHY_NC",
+   "bus": "L9m_i",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "PHY_NE",
+   "bus": "L8m_i",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "PHY_NW",
+   "bus": "L8_i",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_hub_ne",
+   "bus": "L8_o",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_hub_ne",
+   "bus": "L9_o",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "q_hub_nw",
+   "bus": "L8_o",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_hub_nw",
+   "bus": "L9_o",
+   "old": 1842,
+   "new": 978
+  }
+ ],
+ "ft_slots": [
+  {
+   "type": "q_mcb_ne",
+   "slot": "L8x5",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_mcb_nw",
+   "slot": "L8x5",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_spt0",
+   "slot": "L8x2",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_spt0__physical_v1",
+   "slot": "L8x2",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_spt1",
+   "slot": "L8x3",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_spt2",
+   "slot": "L8x4",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L8x1",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "q_spu0__physical_v1",
+   "slot": "L8x1",
+   "old": 3070,
+   "new": 1630
+  },
+  {
+   "type": "root",
+   "slot": "L9mx1",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "root",
+   "slot": "L9x1",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "vsN4",
+   "slot": "L9mx2",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "vsN4",
+   "slot": "L9x2",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "vsN5",
+   "slot": "L9mx3",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "vsN5",
+   "slot": "L9x3",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "vsN6",
+   "slot": "L9mx4",
+   "old": 1842,
+   "new": 978
+  },
+  {
+   "type": "vsN6",
+   "slot": "L9x4",
+   "old": 1842,
+   "new": 978
+  }
+ ],
+ "summary": {
+  "lanes": 4,
+  "ports": 22,
+  "type_buses": 8,
+  "ft_slots": 16,
+  "bits_saved_on_ports": 25920
+ }
+}
