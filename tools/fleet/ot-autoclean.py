@@ -80,6 +80,21 @@ NEVER_TOUCH_PATHS = (os.path.join(HOME, ".codex"), os.path.join(HOME, "OpenTalla
                      os.path.join(HOME, ".claude"))
 LOCAL_WT_IDLE_H = 12.0
 LOCAL_RESCUE_DIR = "/srv/opentallas-scratch/claude/rescue"   # wt-reaper default (scratch2/claude/rescue) is not writable on localhost
+# DESIGN_EXPORT_1112 (EXPLORER-2, COORD 11-11 "every signed run is cut before deletion"): with <snapshot>/design_export.json
+# (fleet_viz/design_export_hook.py snapshot) a host run HOLDS a finished class a attempt / class s signed unit while it
+# holds a routed ODB of a current design whose layout pack is not in the explorer ledger; one DXREQ line per ODB.
+# Holds only add refusals; no file = gate off.
+DX_FILE = "design_export.json"
+DX_ODB_RE = re.compile(r"/results/[^/]+/([^/]+)/(?:base/)?([0-9]_[0-9a-z_]+)\.odb$")
+
+
+def dx_norm(name):
+    """= design_export_hook.norm: results design dir -> plan name"""
+    n = re.sub(r"^(kl|dp|hbc|hd|ds)_", "", name or "")
+    n = re.sub(r"(__cl[0-9a-f]{8})+$", "", n)
+    return re.sub(r"_(rt\w+|cv\w+|r\d\w*)$", "", n)
+
+
 STORE_INDEX = "store.json"   # snapshot: signed-store index {sha256(signoff.json): {"archive", "locs"}} (SRCCOPY_1111)
 
 
@@ -956,6 +971,36 @@ class Job:
                                   canon=self.paths.canon)
         else:
             self.kwkeep = PathSet()
+        self.dx, self.dx_sent = None, set()
+        dxf = os.path.join(snap, DX_FILE)
+        if os.path.exists(dxf):
+            d = jl(dxf)
+            self.dx = dict(ledger=set(d["ledger"]), paths=set(d.get("ledger_paths") or []), names=set(d["names"]),
+                           stages=list(d.get("stages") or ["6_final", "5_2_route", "5_1_grt"]))
+
+    def dx_hold(self, unit):
+        """DESIGN_EXPORT_1112: None, or why the unit is held until the design explorer has cut its routed ODB(s)"""
+        if not self.dx:
+            return None
+        best = {}
+        for dp, dn, fn in os.walk(unit):
+            for f in fn:
+                m = DX_ODB_RE.search(os.path.join(dp, f))
+                if not m or m.group(2) not in self.dx["stages"] or dx_norm(m.group(1)) not in self.dx["names"]:
+                    continue
+                k, rank = os.path.dirname(os.path.join(dp, f)), self.dx["stages"].index(m.group(2))
+                if k not in best or rank < best[k][0]:
+                    best[k] = (rank, os.path.join(dp, f), m.group(1), m.group(2))
+        pend = []
+        for _r, f, design, stage in best.values():
+            label = f"{self.host}:{f}"
+            if label in self.dx["ledger"] or f in self.dx["paths"] or os.path.realpath(f) in self.dx["paths"]:
+                continue
+            pend.append(f)
+            if label not in self.dx_sent:
+                self.dx_sent.add(label)
+                say(f"DXREQ\t{label}\t{dx_norm(design)}\t{stage}")
+        return f"design-export pending ({len(pend)} ODB): {pend[0]}" if pend else None
 
     def load_protected(self):
         rows = []
@@ -1279,6 +1324,10 @@ class Job:
             return "lt6h", []
         if hl:
             return "hardlink " + hl, []
+        if verdict.startswith("finished"):   # the newest attempt of a design: its ODB is the one the explorer shows
+            h = self.dx_hold(d)
+            if h:
+                return h, []
         self._attempt_note = verdict
         # --queuename-skip-superseded: a bare item NAME in a queue post protects the item's current attempt, not
         # older attempts the state has superseded (an exact queue PATH still protects them)
@@ -1448,7 +1497,7 @@ class Job:
         why = self.stub_verified(unit)
         if why:
             return why, [], {}
-        why = self.stub_unit_hold(unit)
+        why = self.stub_unit_hold(unit) or self.dx_hold(unit)
         if why:
             return why, [], {}
         w = self.live.why(self.paths.forms(unit))
@@ -1979,6 +2028,10 @@ class Driver:
                 fh.write(kw)
         else:
             say("snapshot: kit-wave state unavailable; hosts skip class a")
+        if a.design_export_hook:   # DESIGN_EXPORT_1112: failure leaves the gate off (no file), never blocks the drive
+            r = subprocess.run([sys.executable, "-I", a.design_export_hook, "snapshot", "--out", os.path.join(out, DX_FILE)]
+                               + shlex.split(a.design_export_args), capture_output=True, text=True, timeout=600)
+            say(f"snapshot: design export gate rc {r.returncode} {(r.stdout or r.stderr).strip()[-200:]}")
         n_store = write_store_index(a.coord, os.path.join(out, STORE_INDEX))
         say(f"snapshot: signed-store index {n_store} entries")
         with open(os.path.join(out, "meta.json"), "w") as fh:
@@ -2137,6 +2190,11 @@ class Driver:
                                        f"--wt-reaper {shlex.quote(self.tools + '/wt-reaper.py')}"
                                        f"{' --apply' if a.apply else ''} {extra}", timeout=a.run_timeout + 120)
                     out = r.stdout
+                    dxreq = "".join(ln + "\n" for ln in out.splitlines() if ln.startswith("DXREQ\t"))
+                    if dxreq and a.design_export_hook:
+                        q = subprocess.run([sys.executable, "-I", a.design_export_hook, "enqueue"], input=dxreq,
+                                           capture_output=True, text=True, timeout=120)
+                        say(f"{h}: {(q.stdout or q.stderr).strip()[-200:]}")
                     for ln in out.splitlines():
                         if ln.startswith(("TOTAL", "SKIPS", "PROTECTED", "controls", "ALERT", "wt-reaper")):
                             say(f"{h}: {ln}")
@@ -2229,6 +2287,9 @@ def main(argv=None):
     dr.add_argument("--remote-state", default=STATE)
     dr.add_argument("--timeout", type=int, default=21600)
     dr.add_argument("--run-timeout", type=int, default=10800)
+    dr.add_argument("--design-export-hook", default="", help="fleet_viz/design_export_hook.py: hold units until the design "
+                    "explorer has cut their routed ODBs (DESIGN_EXPORT_1112; '' = off)")
+    dr.add_argument("--design-export-args", default="", help="extra args for its snapshot, one string (--index/--store)")
     dr.add_argument("--run-args", default="", help="extra args for the host run, one string (--run-args='--classes b')")
     a = ap.parse_args(argv)
     if a.cmd == "run":
