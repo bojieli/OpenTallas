@@ -1,0 +1,33 @@
+# CLAND-QREG-1 evidence 2026-11-12 00:42 UTC, epyc8 via ot-run --threads 8 (base origin/main 0fb43e98a6)
+## run.sh (verilator lock-step: QREG=1 q == QREG=0 q delayed exactly 1 clk; ready/fault identical; 20 forms x 11 phases)
+QREG_PASS phase=0 shift=1 ready_word_checks=46646
+QREG_PASS phase=41 shift=1 ready_word_checks=44160
+QREG_PASS phase=83 shift=1 ready_word_checks=44160
+QREG_PASS phase=125 shift=1 ready_word_checks=44160
+QREG_PASS phase=208 shift=1 ready_word_checks=44160
+QREG_PASS phase=400 shift=1 ready_word_checks=44160
+QREG_PASS phase=416 shift=1 ready_word_checks=44160
+QREG_PASS phase=433 shift=1 ready_word_checks=46526
+QREG_PASS phase=624 shift=1 ready_word_checks=46526
+QREG_PASS phase=791 shift=1 ready_word_checks=46526
+QREG_PASS phase=830 shift=1 ready_word_checks=46526
+NEG controls (expected to FAIL): shift0 mismatch lines 126558, shift2 126308, OT_MESO_MUTANT_QREG_BYPASS 126548
+## eq.sh (yosys equiv_simple+equiv_induct -seq 4)
+A_* = QREG default vs origin/main (identical logic); B_* = QREG=1 vs QREG=0 + one declared clk register on q; NEG_* = B with the bypass mutant (must not prove)
+A_ca_d4 Of those cells 1468 are proven and 0 are unproven
+A_cas_d4 Of those cells 1549 are proven and 0 are unproven
+A_cas_d8 Of those cells 2403 are proven and 0 are unproven
+A_plain Of those cells 1526 are proven and 0 are unproven
+A_plain_wneg Of those cells 1525 are proven and 0 are unproven
+B_cas_d4_sreg_wfall_wreg Of those cells 1563 are proven and 0 are unproven
+B_cas_d8 Of those cells 2418 are proven and 0 are unproven
+B_plain Of those cells 1595 are proven and 0 are unproven
+B_plain_wneg Of those cells 1594 are proven and 0 are unproven
+NEG_cas_d4_sreg_wfall_wreg Of those cells 1561 are proven and 2 are unproven
+NEG_cas_d8 Of those cells 2416 are proven and 2 are unproven
+NEG_plain Of those cells 1531 are proven and 64 are unproven
+NEG_plain_wneg Of those cells 1530 are proven and 64 are unproven
+LINT ot_dp_clk_landing QREG=0 warnings=6
+LINT ot_dp_clk_landing QREG=1 warnings=6
+LINT ot_dp_clk_landing_cas QREG=0 warnings=10
+LINT ot_dp_clk_landing_cas QREG=1 warnings=10

@@ -12,7 +12,13 @@ module ot_dp_clk_landing #(
     parameter integer SETTLE = 16,
     parameter bit     WNEG = 0,    // S81-RINGHOLD-3: falling forwarded-clock write
     parameter bit     FREG = 0,    // optional rising-fclk input capture: +1 data cycle
-    parameter integer DSREP = 1    // DIE-S81-85 11-09: ring read-select copies per 64-bit chunk (ot_meso_dsel SREP); 1 = identical logic
+    parameter integer DSREP = 1,   // DIE-S81-85 11-09: ring read-select copies per 64-bit chunk (ot_meso_dsel SREP); 1 = identical logic
+    // CLAND-QREG-1 (COORD 11-11, KV hub_Ei ring readout -> boundary flop TT -159.5): QREG = 1 adds ONE rclk register
+    // stage on q (ot_meso_q_ff, kept, no reset: data only) between the ring readout flop and the receiver's boundary
+    // flop, so the long ring -> face wire gets its own cycle.  The ring, its window, K and ready/fault are unchanged;
+    // q is the same word stream ONE clk later (+1 data cycle, declared by the plan key landing_output_qreg and counted
+    // in the crossing's added_cycles).  Default 0 = identical logic.
+    parameter bit     QREG = 0
 ) (
     input wire fclk,
     input wire clk,
@@ -86,7 +92,11 @@ module ot_dp_clk_landing #(
     wire [RW-1:0] ring_d = {{(RW-W){1'b0}}, d_write};
 `endif
     wire [RW-1:0] ring_q;
-    assign q = ring_q[W-1:0];
+    generate if (QREG) begin : g_qreg
+        ot_meso_q_ff #(.W(W)) u_qreg (.clk(clk), .d(ring_q[W-1:0]), .q(q));
+    end else begin : g_noqreg
+        assign q = ring_q[W-1:0];
+    end endgenerate
     reg [2:0] arm;
     reg fault_state;
     wire trip = arm[2] && (!rv || !lap_ok || !glo_ok || !ghi_ok);
@@ -181,4 +191,19 @@ module ot_dp_landing_face (
     output reg q
 );
     always @(posedge clk) q <= d;
+endmodule
+
+// CLAND-QREG-1 ring output stage (rclk): kept so synthesis does not retime it back into the ring readout or merge it
+// with the receiver boundary flop; the placer puts it between the ring and the face register.
+(* keep_hierarchy, keep *)
+module ot_meso_q_ff #(parameter integer W = 1) (
+    input wire clk,
+    input wire [W-1:0] d,
+    (* keep *) output reg [W-1:0] q
+);
+`ifdef OT_MESO_MUTANT_QREG_BYPASS
+    always @(*) q = d;                  // MUTANT: stage bypassed (declared cycle missing)
+`else
+    always @(posedge clk) q <= d;
+`endif
 endmodule
