@@ -31,6 +31,20 @@ class T(unittest.TestCase):
         out, note = kw.phase_split_apply(CFG, {"items": {}}, [rows("s81", 0), rows("hbm", 6)])
         self.assertEqual(len(out[1]), 6); self.assertEqual(note, "")
 
+    def test_waiting_phase1_rows_block_hbm_type_rows(self):
+        cfg = dict(CFG, dies={"hbm": {"hosts": ["epyc8", "epyc9"], "gen_hosts": ["epyc9"]}})
+        cfg["phase_split"] = dict(CFG["phase_split"], reserved_threads=0)
+        # no phase-1 picks this tick, but 3 phase-1 rows already wait on epyc9: hbm type rows stay held, cores run
+        pd = [rows("s81", 0), rows("hbm", 4) + rows("hbm", 1, kind="core", prefix="c")]
+        out, note = kw.phase_split_apply(cfg, {"items": {}}, pd, waiting={"epyc9": 3})
+        self.assertEqual([r["item"] for _, r in out[1]], ["c0"])
+        self.assertIn("3 phase-1 waiters", note)
+        # waiters on a host the hbm die cannot use do not block
+        out, _ = kw.phase_split_apply(cfg, {"items": {}}, [rows("s81", 0), rows("hbm", 4)], waiting={"epyc2": 9})
+        self.assertEqual(len(out[1]), 4)
+        out, _ = kw.phase_split_apply(cfg, {"items": {}}, [rows("s81", 0), rows("hbm", 4)], waiting={})
+        self.assertEqual(len(out[1]), 4)
+
     def test_release_switch(self):
         for ps in ({"enabled": True, "release": True}, {"enabled": True, "phase1_done_pct": 91}, {"enabled": False}):
             out, _ = kw.phase_split_apply({"phase_split": ps}, {"items": {}}, [rows("s81", 5), rows("hbm", 6)])

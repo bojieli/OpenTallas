@@ -4282,6 +4282,13 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
     per_die, _ps_note = phase_split_apply(cfg, st, per_die)         # KW-FIX-45 11-12: phase 1 first, HBM (phase 2) behind it
     if _ps_note:
         print(f"KIT-WAVE PHASE-SPLIT {_ps_note}", flush=True)
+    if (cfg.get("phase_split") or {}).get("enabled"):              # visible in a file: a tick's stdout is not in log.txt
+        try:
+            with open(os.path.expanduser("~/coord/autopilot/kit_wave_phase_split.log"), "a") as _f:
+                _f.write(time.strftime("%Y-%m-%d %H:%M:%S ") + (_ps_note or "no hold") + " | picks " + " ".join(
+                    f"{(q[0][0] if q else '-')}={len(q)}" for q in per_die) + "\n")
+        except OSError:
+            pass
     room = max(0, min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st),
                       int(cfg.get("max_launch_per_tick", DEFAULTS["max_launch_per_tick"]))))
     # queued volume (pilot_mode queue) goes after every die's pilots and other picks, so it queues behind them
@@ -5064,7 +5071,27 @@ def infra_used(rec):
     return int(rec.get("attempt") or 0) - int(rec.get("infra_base") or 0)
 
 
-def phase_split_apply(cfg, st, per_die):
+def phase1_waiting(cfg, st):
+    """KW-FIX-45 11-12 (COORD: ~350 phase-1 rows are already waiters, the same-tick pick count was the wrong condition):
+    {host: n} of phase-1 (non-low) die rows whose current ot-run stage still WAITS for admission (RUNNING, volume not started),
+    by the host of their spec (gen host)"""
+    low = set(((cfg.get("phase_split") or {}).get("low_dies") or ["hbm"]))
+    out = {}
+    for r in (st.get("items") or {}).values():
+        if r.get("die") in low or r.get("status") not in ("RUNNING", "LAUNCHING") or r.get("arm"):
+            continue
+        try:
+            if volume_started(r):
+                continue
+            g = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("gen_host")
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        if g:
+            out[g] = out.get(g, 0) + 1
+    return out
+
+
+def phase_split_apply(cfg, st, per_die, waiting=None):
     """KW-FIX-45 11-12 (OWNER ruling via COORD): the release is split, phase 1 = S81/HEAD/QC/KV, phase 2 = HBM.  Launch side:
     while a phase-1 die still has picks this tick, the low dies' (default hbm) TYPE rows wait; phase-1 rows take the slots
     first.  Exempt: hard-core builds (kind core, or items matching phase_split.priority_items: CORES-HBM-1 / HBM-CORES) and,
@@ -5087,6 +5114,14 @@ def phase_split_apply(cfg, st, per_die):
     pri = list(ps.get("priority_items") or [])
     die_of = lambda q: q[0][0] if q else None
     p1_pending = sum(len(q) for q in per_die if q and die_of(q) not in low)
+    if waiting is None:
+        waiting = phase1_waiting(cfg, st)
+    # COORD 11-12: a low-die TYPE row waits while ANY phase-1 row is already waiting for admission on a host it could run on
+    # (its die's hosts / gen_hosts), not only when phase 1 still has picks this tick
+    def _blocked(d):
+        dd = (cfg.get("dies") or {}).get(d) or {}
+        hs = set(dd.get("hosts") or []) | set(dd.get("gen_hosts") or []) | ({dd["gen_host"]} if dd.get("gen_host") else set())
+        return sum(n for h, n in waiting.items() if h in hs)
     inflight_thr = {}
     for r in (st.get("items") or {}).values():
         if r.get("die") in low and r.get("status") in ("RUNNING", "LAUNCHING"):
@@ -5095,7 +5130,8 @@ def phase_split_apply(cfg, st, per_die):
     out = []; held = 0
     for q in per_die:
         d = die_of(q)
-        if not q or d not in low or p1_pending == 0:
+        p1_wait = _blocked(d) if q and d in low else 0
+        if not q or d not in low or (p1_pending == 0 and p1_wait == 0):
             out.append(q); continue
         share = max(0, (reserved - inflight_thr.get(d, 0)) // int(ps.get("thread_per_row", 8)))
         keep = []
@@ -5108,7 +5144,7 @@ def phase_split_apply(cfg, st, per_die):
             else:
                 held += 1
         out.append(keep)
-    return out, (f"phase split: {held} {'/'.join(sorted(low))} type rows wait behind {p1_pending} phase-1 picks" if held else "")
+    return out, (f"phase split: {held} {'/'.join(sorted(low))} type rows wait behind {p1_pending} phase-1 picks and {sum(waiting.values())} phase-1 waiters" if held else "")
 
 
 def rotate_dies(rows, die_of, pass_n):
