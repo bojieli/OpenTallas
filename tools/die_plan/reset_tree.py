@@ -90,8 +90,21 @@ def pipelined(P):
     return P.reset.get("release") == "pipelined"
 
 
-def relay_um(P):
-    return float(P.reset.get("relay_um", REACH_UM))
+def relay_um(P, tn=None):
+    """die reset relay reach (reset.relay_um, default 405); with tn, partition_types[tn].reset.relay_um may only
+    TIGHTEN it for that type (REACH-FIX-2 11-12, HEAD-95 rp18: hd_spn_wshim_rx u_rrl_14 -> u_rrl_17 334.8 um on a
+    380-um plan reach -> 250 puts one more relay on that hop; reach is set by this fixed script, not by hand)"""
+    die = float(P.reset.get("relay_um", REACH_UM))
+    if tn is None:
+        return die
+    t = (P.types.get(tn) or {}).get("reset") or {}
+    v = t.get("relay_um")
+    if v is None:
+        return die
+    v = float(v)
+    if not (MARGIN_UM < v <= die):
+        raise ResetError(f"type {tn}: reset.relay_um {v:g} must be in ({MARGIN_UM:g}, die relay_um {die:g}]")
+    return v
 
 
 def sync_stages(P, tn=None):
@@ -1066,7 +1079,7 @@ def part_depth(P):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     if "K" not in cache:
         reach = relay_um(P)
-        cache["K"] = max([_type_tree(P, tn, None, reach)["own_depth"] for tn, t in P.types.items()
+        cache["K"] = max([_type_tree(P, tn, None, relay_um(P, tn))["own_depth"] for tn, t in P.types.items()
                           if not t.get("hard")] or [1])
     return cache["K"]
 
@@ -1079,7 +1092,7 @@ def for_type(P, tn, reach=None):
     if native:
         import copy
         return copy.deepcopy(native["tree"])
-    reach = float(reach or relay_um(P))
+    reach = float(reach or relay_um(P, tn))
     boot_buses, boot_contents = bootstrap_consumers(P, tn)
     if wavefront(P):
         if P.types[tn].get("hard"):
@@ -1709,7 +1722,7 @@ def core_reset_targets(P, tn):
             site = push_off(pin, boxes, (CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM))
             if not _free(site, boxes, (CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM)):
                 raise ResetError(f"type {tn}: no legal reset relay site for {c['inst']}.{name}")
-            if _man(pin, site) > relay_um(P) - MARGIN_UM:
+            if _man(pin, site) > relay_um(P, tn) - MARGIN_UM:
                 raise ResetError(f"type {tn}: reset relay -> {c['inst']}.{name} exceeds reach ({_man(pin, site):g} um)")
             if domain_contract is not None:
                 roots={root for (inst,module,_),root in domain_contract['macro_pins'].items()
@@ -1754,7 +1767,7 @@ def _wf_type_tree(P, tn):
         for k, c in enumerate(core_rst):
             c["tap"] = len(pts)
             pts.append((f"core_rst{k}", *c["xy"]))
-        topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
+        topo = topology(pts, in_pin(P, tn), reach=relay_um(P, tn), boxes=blockages(t),
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")))
         T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),

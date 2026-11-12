@@ -817,6 +817,8 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # per-type reset relay reach (reset_tree.relay_um): only tightens the die reset.relay_um
+                        "relay_um": {"type": "number", "exclusiveMinimum": 25, "maximum": 405},
                         # reset relay obstacle model (reset_tree.blockages): default canonical placed union;
                         # "lef_origin" = the frozen pre-11-02 model a published relay graph was solved with
                         "obstacle_model": {"enum": ["canonical", "lef_origin"]},

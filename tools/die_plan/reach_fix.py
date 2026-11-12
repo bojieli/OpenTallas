@@ -406,6 +406,12 @@ def reset_metrics(P, tn, G=None, reach=REACH_UM):
         xy[r["q"]] = tuple(r["xy"])
     hops = [_d(xy[r["d"]], r["xy"]) for r in T.get("relays", []) if r["d"] in xy]
     out["hop_max_um"] = round(max(hops), 1) if hops else 0.0
+    try:                                     # per-type reset reach (reset_tree.relay_um: only tightens)
+        reach = min(reach, RT.relay_um(P, tn))
+    except Exception as e:  # noqa: BLE001
+        out["error"] = "%s: %s" % (type(e).__name__, str(e)[:160])
+        return out
+    out["reach_um"] = reach
     out["hops_over"] = sum(1 for h in hops if h > reach + 1e-6)
     allr = []
     if T.get("start"):
