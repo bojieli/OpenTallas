@@ -1,0 +1,4 @@
+bind start Thu Nov 12 08:15:52 UTC 2026 plan=9415f798348c sidecar=9f6e6f721b61 bind.py=e3878483c29b
+{"partitions": 377, "types": 123, "crossings": 1921, "crossing_bits": 790393, "errors": 1, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0}
+   EMIT sle_stm_v1__clbe630b9c: sle_stm_v1__clbe630b9c: forwarded clock source clk_t72 is not a planned physical tap input
+BIND_RC=1 wall=421 s end Thu Nov 12 08:22:53 UTC 2026

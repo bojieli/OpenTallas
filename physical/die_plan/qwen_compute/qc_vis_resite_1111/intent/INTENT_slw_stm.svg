@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="1124" font-family="sans-serif" font-size="11">
+<defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#c0392b"/></marker><marker id="g" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#7f8c8d"/></marker></defs>
+<rect x="0" y="0" width="100%" height="100%" fill="white"/>
+<rect x="60.0" y="60.0" width="460.1" height="1004.4" fill="none" stroke="black" stroke-width="1.5"/>
+<text x="60" y="20" font-size="14">slw_stm INTENT (hand layout, legalised by core_place --no-search): slw_stm_v3</text>
+<rect x="335.5" y="73.0" width="67.1" height="76.1" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="400.2" y="170.2" width="6.5" height="63.2" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="404.3" y="73.0" width="81.8" height="69.7" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="485.8" y="165.3" width="6.5" height="63.2" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="442.3" y="748.5" width="64.8" height="79.1" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="440.7" y="593.2" width="66.4" height="78.1" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="439.1" y="975.6" width="68.0" height="75.8" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="440.7" y="237.8" width="66.4" height="77.2" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="445.6" y="430.6" width="61.6" height="6.7" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="130.8" y="996.4" width="12.2" height="55.1" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="143.7" y="968.8" width="29.6" height="82.6" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<rect x="174.1" y="968.8" width="29.6" height="82.6" fill="#e8daef" stroke="#a569bd" stroke-width="0.5"/>
+<line x1="63.2" y1="60.0" x2="334.8" y2="60.0" stroke="#2e86c1" stroke-width="5"/>
+<text x="199.0" y="54.0" fill="#1b4f72" text-anchor="start">b_tw_data_ctl_o 2103b</text>
+<line x1="60.0" y1="439.1" x2="60.0" y2="368.4" stroke="#2e86c1" stroke-width="5"/>
+<text x="56.0" y="403.8" fill="#1b4f72" text-anchor="end">x_fw_o 544b</text>
+<line x1="60.0" y1="295.7" x2="60.0" y2="225.2" stroke="#2e86c1" stroke-width="5"/>
+<text x="56.0" y="260.4" fill="#1b4f72" text-anchor="end">x_fw_p1_o 543b</text>
+<line x1="520.1" y1="393.1" x2="520.1" y2="315.7" stroke="#2e86c1" stroke-width="5"/>
+<text x="526.1" y="354.4" fill="#1b4f72" text-anchor="start">x_fe_o 544b</text>
+<line x1="520.1" y1="237.1" x2="520.1" y2="159.9" stroke="#2e86c1" stroke-width="5"/>
+<text x="526.1" y="198.5" fill="#1b4f72" text-anchor="start">x_fe_p1_o 544b</text>
+<line x1="486.8" y1="60.0" x2="491.2" y2="60.0" stroke="#2e86c1" stroke-width="5"/>
+<text x="489.0" y="54.0" fill="#1b4f72" text-anchor="start">x_ctl_i 34b</text>
+<line x1="60.0" y1="367.7" x2="60.0" y2="296.4" stroke="#2e86c1" stroke-width="5"/>
+<text x="56.0" y="332.1" fill="#1b4f72" text-anchor="end">x_fw_i 549b</text>
+<line x1="60.0" y1="224.5" x2="60.0" y2="153.3" stroke="#2e86c1" stroke-width="5"/>
+<text x="56.0" y="188.9" fill="#1b4f72" text-anchor="end">x_fw_p1_i 548b</text>
+<line x1="520.1" y1="1058.2" x2="520.1" y2="982.4" stroke="#2e86c1" stroke-width="5"/>
+<text x="526.1" y="1020.3" fill="#1b4f72" text-anchor="start">x_fe_i 544b</text>
+<line x1="520.1" y1="315.0" x2="520.1" y2="237.8" stroke="#2e86c1" stroke-width="5"/>
+<text x="526.1" y="276.4" fill="#1b4f72" text-anchor="start">x_fe_p1_i 544b</text>
+<line x1="143.7" y1="1064.4" x2="173.4" y2="1064.4" stroke="#2e86c1" stroke-width="5"/>
+<text x="158.6" y="1078.4" fill="#1b4f72" text-anchor="start">x_su_l0_i 228b</text>
+<line x1="174.1" y1="1064.4" x2="203.7" y2="1064.4" stroke="#2e86c1" stroke-width="5"/>
+<text x="188.9" y="1078.4" fill="#1b4f72" text-anchor="start">x_su_l1_i 228b</text>
+<line x1="60.0" y1="1061.2" x2="60.0" y2="1060.9" stroke="#2e86c1" stroke-width="5"/>
+<text x="56.0" y="1061.0" fill="#1b4f72" text-anchor="end">flt_o 1b</text>
+<line x1="403.3" y1="60.0" x2="403.6" y2="60.0" stroke="#2e86c1" stroke-width="5"/>
+<text x="403.4" y="54.0" fill="#1b4f72" text-anchor="start">flt_ctl_i 1b</text>
+<rect x="154.0" y="216.9" width="91.4" height="47.2" fill="#aed6f1" stroke="#1f618d"/>
+<text x="155.0" y="243.5" font-size="8">m0 MX</text>
+<rect x="273.8" y="155.3" width="91.4" height="47.2" fill="#aed6f1" stroke="#1f618d"/>
+<text x="274.8" y="182.0" font-size="8">m1 MX</text>
+<rect x="115.1" y="291.4" width="91.4" height="47.2" fill="#aed6f1" stroke="#1f618d"/>
+<text x="116.1" y="318.0" font-size="8">m2 MX</text>
+<rect x="154.0" y="74.3" width="91.4" height="47.2" fill="#aed6f1" stroke="#1f618d"/>
+<text x="155.0" y="101.0" font-size="8">m3 R180</text>
+<line x1="199.7" y1="240.5" x2="199.0" y2="60.0" stroke="#c0392b" stroke-width="2" marker-end="url(#a)"/>
+<text x="202.3" y="147.3" fill="#c0392b" font-size="9">rd_out 266b -> join -> tw</text>
+<line x1="319.5" y1="179.0" x2="199.0" y2="60.0" stroke="#c0392b" stroke-width="2" marker-end="url(#a)"/>
+<text x="262.3" y="116.5" fill="#c0392b" font-size="9">rd_out 266b -> join -> tw</text>
+<line x1="160.8" y1="315.0" x2="199.0" y2="60.0" stroke="#c0392b" stroke-width="2" marker-end="url(#a)"/>
+<text x="182.9" y="184.5" fill="#c0392b" font-size="9">rd_out 266b -> join -> tw</text>
+<line x1="199.7" y1="98.0" x2="199.0" y2="60.0" stroke="#c0392b" stroke-width="2" marker-end="url(#a)"/>
+<text x="202.3" y="76.0" fill="#c0392b" font-size="9">rd_out 266b -> join -> tw</text>
+<line x1="199.7" y1="240.5" x2="160.8" y2="315.0" stroke="#7f8c8d" stroke-width="1" marker-end="url(#g)"/>
+<text x="183.2" y="274.8" fill="#7f8c8d" font-size="9">addr/ce pair</text>
+<line x1="319.5" y1="179.0" x2="199.7" y2="98.0" stroke="#7f8c8d" stroke-width="1" marker-end="url(#g)"/>
+<text x="262.6" y="135.5" fill="#7f8c8d" font-size="9">addr/ce pair</text>
+<text x="540.1" y="60.0" font-size="10">red: data flow (face window -> cores -> face window)</text>
+<text x="540.1" y="74.0" font-size="10">grey: control / fault-ring / bt_q links</text>
+<text x="540.1" y="88.0" font-size="10">blue bars: plan face windows; purple: landing bands</text>
+<text x="540.1" y="102.0" font-size="10">dashed green: region (one bit-slice, own clock root)</text>
+</svg>
