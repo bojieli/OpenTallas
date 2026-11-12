@@ -242,21 +242,76 @@ proc clr_bal_groups {} {
     if {![clr_is_rep $i]} continue
     set pn [clr_in_net $i]
     if {$pn eq "NULL"} continue
-    set d [clr_net_drv $pn]; set key [$pn getName]
+    set d [clr_net_drv $pn]; set key [$pn getName]; set lvl [$pn getName]
     if {$d ne "NULL" && [clr_is_rep $d]} {
       set nested($key) 1
     } elseif {$d ne "NULL"} {
       set gn [clr_in_net $d]
-      if {$gn ne "NULL"} { set key "[$gn getName] (grandparent)" }
+      if {$gn ne "NULL"} { set key "[$gn getName] (grandparent)"; set lvl [$gn getName] }
     }
-    if {![info exists grp($key)]} { lappend keys $key }
+    if {![info exists grp($key)]} { lappend keys $key; set lnet($key) $lvl }
     lappend grp($key) [$i getName]
   }
   set outer {}; set inner {}
-  foreach k $keys { if {[info exists nested($k)]} { lappend inner [list $k $grp($k)] } else { lappend outer [list $k $grp($k)] } }
+  foreach k $keys {
+    if {[info exists nested($k)]} { lappend inner [list $k $grp($k) $lnet($k) 1] } else { lappend outer [list $k $grp($k) $lnet($k) 0] }
+  }
   return [concat $outer $inner]
 }
-# groups: clr_bal_groups.  Nested groups first, then outer.  Returns the number of repeaters whose master changed.
+# every leaf of one balance level (odb iterms): nested group = the loads of the repeater-driven parent net; outer group =
+# the loads of every clock-buffer net fed from the grandparent net, repeated or NOT (the un-repeated cousin leaf nets
+# set the level's insertion too), through the clkleafrep repeaters
+proc clr_level_leaves {lnet nested} {
+  set out {}
+  if {$nested} { set nets [list $lnet] } else {
+    set nets {}
+    foreach it [$lnet getITerms] {
+      if {![$it isInputSignal] || ![clr_is_clkcell [$it getInst]]} continue
+      set on [clr_out_net [$it getInst]]
+      if {$on ne "NULL" && $on ne ""} { lappend nets $on }
+    }
+  }
+  foreach n $nets {
+    foreach it [$n getITerms] {
+      if {![$it isInputSignal]} continue
+      if {[clr_is_rep [$it getInst]]} { lappend out {*}[clr_rep_leaves [$it getInst]] } else { lappend out $it }
+    }
+  }
+  return $out
+}
+# balance target {Tmax Tmin} of a group: OT_CLK_LEAF_BAL_TARGET=mean (default) = the mean leaf arrival of the whole
+# level (clr_level_leaves); max = the slowest member (equalises the repeaters among themselves but lifts a repeated
+# subtree above its un-repeated neighbours: b128_canon routed, that moved the worst hold to the tree top, -44.8 ps)
+proc clr_level_target {g} {
+  set mode [expr {[info exists ::env(OT_CLK_LEAF_BAL_TARGET)] ? [string trim $::env(OT_CLK_LEAF_BAL_TARGET)] : "mean"}]
+  if {$mode ne "mean" || [llength $g] < 4} { return "" }
+  set ln [[ord::get_db_block] findNet [lindex $g 2]]
+  if {$ln eq "" || $ln eq "NULL"} { return "" }
+  set amax 0.0; set amin 0.0; set n 0
+  foreach it [clr_level_leaves $ln [lindex $g 3]] {
+    set pp [clr_sta_pin $it]
+    if {$pp eq "" || $pp eq "NULL"} continue
+    set a [clr_clk_arr $pp max]; set b [clr_clk_arr $pp min]
+    if {$a eq "" || $b eq ""} continue
+    set amax [expr {$amax + $a}]; set amin [expr {$amin + $b}]; incr n
+  }
+  if {!$n} { return "" }
+  return [list [expr {$amax / $n}] [expr {$amin / $n}]]
+}
+# re-estimates the parasitics after master swaps.  An odb swapMaster DROPS the estimated parasitics of the touched nets
+# (b128_canon 4_cts, placement RC: clkleafrep_367660 leaf arrival 219.7 ps -> swap to BUFx2 and back -> 202.1 ps until
+# re-estimated; routed SPEF parasitics survive a swap).  cts: placement estimate, grt: GRT estimate, else
+# ::clr_bal_reest_cmd when set (the report tool), else nothing.
+proc clr_bal_reest {stage} {
+  if {$stage eq "cts"} { estimate_parasitics -placement
+  } elseif {$stage eq "grt"} { estimate_parasitics -global_routing
+  } elseif {[info exists ::clr_bal_reest_cmd] && $::clr_bal_reest_cmd ne ""} { uplevel #0 $::clr_bal_reest_cmd }
+  clr_sta_refresh
+}
+# groups: clr_bal_groups.  Two rounds; each round measures every group, then evaluates the candidate masters in BATCH
+# (all members that may take master c are swapped to c together, one re-estimate, every member measured: members of
+# different groups do not interact, siblings only through the parent load, which round 2 corrects), and gives each
+# member its best admissible master.  Returns the number of repeaters whose master changed.
 proc clr_balance {groups stage} {
   set tol [expr {[info exists ::env(OT_CLK_LEAF_BAL_TOL_PS)] ? double($::env(OT_CLK_LEAF_BAL_TOL_PS)) : 3.0}]
   set slim 80.0
@@ -266,9 +321,11 @@ proc clr_balance {groups stage} {
   set ideal {}
   foreach c [all_clocks] { if {[llength [get_property $c sources]] && ![get_property $c is_propagated]} { lappend ideal $c } }
   if {[llength $ideal]} { set_propagated_clock $ideal }
-  clr_sta_refresh
-  set nsw 0; set ngrp 0; set wb 0.0; set wa 0.0
+  array set orig {}
+  set ngrp 0; set wb 0.0; set wa 0.0
   for {set rnd 1} {$rnd <= 2} {incr rnd} {
+    clr_bal_reest $stage
+    set todo {}
     foreach g [lreverse $groups] {
       set rows {}
       foreach nm [lindex $g 1] {
@@ -279,33 +336,53 @@ proc clr_balance {groups stage} {
       }
       if {[llength $rows] < 2} continue
       set rows [lsort -real -decreasing -index 1 $rows]
-      lassign [lindex $rows 0] - tmax tmin
-      if {$rnd == 1} { incr ngrp; set wb [expr {max($wb, $tmax - [lindex [lindex $rows end] 1])}] }
-      foreach row [lrange $rows 1 end] {
+      if {$rnd == 1} { incr ngrp; set wb [expr {max($wb, [lindex [lindex $rows 0] 1] - [lindex [lindex $rows end] 1])}] }
+      set tg [clr_level_target $g]
+      if {$tg ne ""} { lassign $tg tmax tmin; set mem $rows } else { lassign [lindex $rows 0] - tmax tmin; set mem [lrange $rows 1 end] }
+      foreach row $mem {
         lassign $row i d0max d0min s0
         set cost0 [expr {max(abs($d0max - $tmax), abs($d0min - $tmin))}]
-        if {$cost0 <= $tol} continue
-        set lim [expr {max($slim, $s0)}]
-        set m0 [$i getMaster]; set best $m0; set bestc $cost0
-        foreach cm [clr_bal_masters [$m0 getName]] {
-          if {$cm eq $m0} continue
-          $i swapMaster $cm
-          clr_sta_refresh
-          set mm [clr_rep_meas $i]
-          if {$mm eq ""} continue
-          lassign $mm dmax dmin smax
-          set c [expr {max(abs($dmax - $tmax), abs($dmin - $tmin))}]
-          if {$smax <= $lim && $c < $bestc} { set best $cm; set bestc $c }
-        }
-        if {[$i getMaster] ne $best} { $i swapMaster $best; clr_sta_refresh }
-        if {$best ne $m0} {
-          incr nsw
-          puts [format "OT_CLK_LEAF_BALANCE %s round %d %s %s -> %s: leaf arrival %.1f/%.1f ps vs ref %.1f/%.1f (max/min), cost %.1f -> %.1f ps" \
-                  $stage $rnd [$i getName] [$m0 getName] [$best getName] $d0max $d0min $tmax $tmin $cost0 $bestc]
-        }
+        # sizing only slows a member down: one at or above the target keeps its master
+        if {$cost0 <= $tol || $d0max >= $tmax} continue
+        if {![info exists orig($i)]} { set orig($i) [$i getMaster] }
+        lappend todo [list $i [$i getMaster] $tmax $tmin [expr {max($slim, $s0)}] $cost0 $d0max $d0min]
+      }
+    }
+    if {![llength $todo]} break
+    set cands {}
+    foreach t $todo { foreach cm [clr_bal_masters [[lindex $t 1] getName]] { if {[lsearch -exact $cands $cm] < 0} { lappend cands $cm } } }
+    array unset best; array unset bestc
+    foreach t $todo { set best([lindex $t 0]) [lindex $t 1]; set bestc([lindex $t 0]) [lindex $t 5] }
+    foreach cm $cands {
+      set sw {}
+      foreach t $todo {
+        lassign $t i m0
+        if {$cm eq $m0 || [lsearch -exact [clr_bal_masters [$m0 getName]] $cm] < 0} continue
+        $i swapMaster $cm; lappend sw $t
+      }
+      if {![llength $sw]} continue
+      clr_bal_reest $stage
+      foreach t $sw {
+        lassign $t i m0 tmax tmin lim
+        set mm [clr_rep_meas $i]
+        if {$mm eq ""} continue
+        lassign $mm dmax dmin smax
+        set c [expr {max(abs($dmax - $tmax), abs($dmin - $tmin))}]
+        if {$smax <= $lim && $c < $bestc($i)} { set best($i) $cm; set bestc($i) $c }
+      }
+    }
+    foreach t $todo {
+      lassign $t i m0 tmax tmin lim cost0 d0max d0min
+      if {[$i getMaster] ne $best($i)} { $i swapMaster $best($i) }
+      if {$best($i) ne $m0} {
+        puts [format "OT_CLK_LEAF_BALANCE %s round %d %s %s -> %s: leaf arrival %.1f/%.1f ps vs target %.1f/%.1f (max/min), cost %.1f -> %.1f ps" \
+                $stage $rnd [$i getName] [$m0 getName] [$best($i) getName] $d0max $d0min $tmax $tmin $cost0 $bestc($i)]
       }
     }
   }
+  clr_bal_reest $stage
+  set nsw 0
+  foreach i [array names orig] { if {[$i getMaster] ne $orig($i)} { incr nsw } }
   foreach g $groups {
     set v {}
     foreach nm [lindex $g 1] {
@@ -456,7 +533,6 @@ uplevel #0 {
     check_placement -verbose
     # CLK-LEAF-BAL-1 (a): delay-aware sizing on the legal tree, then the resized cells are legalised again
     if {[clr_bal_on]} {
-      estimate_parasitics -placement
       if {[clr_balance [clr_bal_groups] cts]} {
         detailed_placement {*}[clr_dpl_args]
         if {[catch {check_placement}]} {
@@ -464,6 +540,7 @@ uplevel #0 {
           detailed_placement {*}[clr_dpl_args 1]
         }
         check_placement -verbose
+        estimate_parasitics -placement
       }
     }
   } elseif {[catch {check_placement}]} {

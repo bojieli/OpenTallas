@@ -20,6 +20,8 @@ set_propagated_clock [all_clocks]
 if {[info exists ::env(OT_SR_SPEF)] && $::env(OT_SR_SPEF) ne ""} { read_spef $::env(OT_SR_SPEF); set par spef
 } elseif {[info exists ::env(OT_SR_GUIDE)] && $::env(OT_SR_GUIDE) ne ""} { read_guides $::env(OT_SR_GUIDE); estimate_parasitics -global_routing; set par grt
 } else { estimate_parasitics -placement; set par placement }
+# clr_balance re-estimates after its swaps (swapMaster drops estimated parasitics; SPEF ones survive)
+set ::clr_bal_reest_cmd [dict get {spef {} grt {estimate_parasitics -global_routing} placement {estimate_parasitics -placement}} $par]
 clr_sta_refresh
 set out $::env(OT_SR_OUT)
 set mode [expr {[info exists ::env(OT_SR_MODE)] ? $::env(OT_SR_MODE) : "report"}]

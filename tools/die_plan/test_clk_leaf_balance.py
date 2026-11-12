@@ -53,8 +53,9 @@ def test_cts_balance_runs_after_legal_tree(tmp_path):
     # so no second legalization
     assert "OT_CLK_LEAF_BALANCE cts done: 0 groups, 0 repeaters resized" in out
     tail = log[next(k for k, x in enumerate(log) if x.startswith("insert_buffer")):]
-    assert [x for x in tail if x.startswith(("dpl", "check_placement", "est"))][-4:] == \
-        ["dpl", "check_placement", "check_placement", "est -placement"], log
+    # the balance re-estimates (swapMaster drops estimated parasitics): start of round 1 + final
+    assert [x for x in tail if x.startswith(("dpl", "check_placement", "est"))][-5:] == \
+        ["dpl", "check_placement", "check_placement", "est -placement", "est -placement"], log
 
 
 def test_grt_balance_without_groups_is_silent(tmp_path):
@@ -130,6 +131,19 @@ def test_within_tolerance_keeps_masters(tmp_path):
     assert n == 0 and set(m.values()) == {"BUFx24"} and "swap" not in out
 
 
+def test_mean_target_slows_only_members_below_it(tmp_path):
+    # OT_CLK_LEAF_BAL_TARGET=mean (default): the level mean (here 40.5 / 36.45 from the leaves of the whole level,
+    # un-repeated cousins included) is the target; ra (53) is above it and keeps BUFx24, rb (28) -> BUFx4 (40 / 36)
+    d = ("mkrep ra 50 BUFx24; mkrep rb 25 BUFx24\nset ::groups {{g {ra rb} gnet 0}}\n"
+         "proc clr_level_target {g} { return {40.5 36.45} }")
+    out, n, m = algo(tmp_path, d)
+    assert n == 1 and m == {"ra": "BUFx24", "rb": "BUFx4"}, out
+    # max mode ignores the level target (slowest member = reference)
+    d2 = d.replace("proc clr_level_target {g} { return {40.5 36.45} }", "")
+    out, n, m = algo(tmp_path, d2, env={"OT_CLK_LEAF_BAL_TARGET": "max"})
+    assert m["rb"] == "HB4", out
+
+
 def test_three_members_each_sized_to_reference(tmp_path):
     out, n, m = algo(tmp_path, "mkrep ra 60 BUFx24; mkrep rb 48 BUFx24; mkrep rc 40 BUFx24\nset ::groups {{g {rb ra rc}}}")
     # ref ra 63: rb 48 + 15 (BUFx4) = 63; rc 40 + 25 (HB4) = 65 (cost 2 at max, 1.8 at min)
@@ -142,22 +156,28 @@ namespace eval ord {}; namespace eval sta {}
 set ::env(OT_CLK_LEAF_REPEAT) 0
 source @CLR@
 # objects: inst name -> {in net, out net}; nets: name -> {driver inst, load insts}
-proc mkinst {name in out} {
+proc mkinst {name in out {m BUFx4_ASAP7_75t_R}} {
   set ::io($name) [list $in $out]
-  proc $name {op args} "switch \$op { getName { return $name } getITerms { return {it_${name}_i it_${name}_o} } }"
+  proc m_$m {op args} "return $m"
+  proc $name {op args} "switch \$op { getName { return $name } getMaster { return m_$m } getITerms { return {it_${name}_i it_${name}_o} } }"
   proc it_${name}_i {op args} "switch \$op { isInputSignal { return 1 } isOutputSignal { return 0 } getNet { return \[expr {\"$in\" eq {} ? {NULL} : \"n_$in\"}\] } getInst { return $name } }"
   proc it_${name}_o {op args} "switch \$op { isInputSignal { return 0 } isOutputSignal { return 1 } getNet { return n_$out } getInst { return $name } }"
 }
 proc mknet {name} { proc n_$name {op args} "switch \$op { getName { return $name } getITerms { return \[netits $name\] } }" }
 proc netits {n} { set o {}; foreach i [array names ::io] { lassign $::io($i) a b; if {$a eq $n} { lappend o it_${i}_i }; if {$b eq $n} { lappend o it_${i}_o } }; return $o }
-foreach n {root g p1 p2 o1 o2 o3 o4 lone} { mknet $n }
+foreach n {root g p1 p2 p3 o1 o2 o3 o4 q3 lone} { mknet $n }
 mkinst top root g
 mkinst d1 g p1; mkinst d2 g p2
 mkinst clkleafrep_1 p1 o1; mkinst clkleafrep_3 p1 o3; mkinst clkleafrep_2 p2 o2
 mkinst clkleafrep_4 o1 o4
-proc blk {op args} { return {top d1 d2 clkleafrep_1 clkleafrep_2 clkleafrep_3 clkleafrep_4} }
+mkinst d3 g p3; mkinst ff3 p3 q3 DFFHQNx1_ASAP7_75t_R
+mkinst lb1 o3 lone; mkinst lb2 o2 lone; mkinst lb4 o4 lone
+proc blk {op args} { return {top d1 d2 d3 ff3 lb1 lb2 lb4 clkleafrep_1 clkleafrep_2 clkleafrep_3 clkleafrep_4} }
 proc ord::get_db_block {} { return blk }
-foreach g [clr_bal_groups] { puts "G [lindex $g 0] | [lsort [lindex $g 1]]" }
+foreach g [clr_bal_groups] {
+  puts "G [lindex $g 0] | [lsort [lindex $g 1]] | [lrange $g 2 3]"
+  puts "L [lsort [lmap it [clr_level_leaves n_[lindex $g 2] [lindex $g 3]] {$it getInst}]]"
+}
 """
 
 
@@ -170,5 +190,9 @@ def test_groups_are_cousins_and_nested_last(tmp_path):
     p = subprocess.run(["tclsh", str(t)], env=e, capture_output=True, text=True)
     assert p.returncode == 0, p.stdout + p.stderr
     g = [ln[2:] for ln in p.stdout.splitlines() if ln.startswith("G ")]
+    lv = [ln[2:] for ln in p.stdout.splitlines() if ln.startswith("L ")]
     # clkleafrep_1/_3 (parent p1) and _2 (parent p2) share grandparent g; _4 sits under _1 -> its own group, last
-    assert g == ["g (grandparent) | clkleafrep_1 clkleafrep_2 clkleafrep_3", "o1 | clkleafrep_4"], p.stdout
+    assert g == ["g (grandparent) | clkleafrep_1 clkleafrep_2 clkleafrep_3 | g 0", "o1 | clkleafrep_4 | o1 1"], p.stdout
+    # level leaves of g: through the repeaters (lb1 via _3, lb2 via _2, lb4 via _1 -> _4) AND the un-repeated cousin
+    # leaf net p3 (ff3); the nested level o1 holds lb4 only
+    assert lv == ["ff3 lb1 lb2 lb4", "lb4"], p.stdout
