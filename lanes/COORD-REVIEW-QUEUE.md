@@ -49249,3 +49249,20 @@ DISK-1111 INCIDENT [DISK-1111 -> COORD, SPILL-1, KW-FIX-45] MY swap on epyc4 del
   Owners:
   (1) HBM-WBQ-QUAL-1 makes the RTL change on its branch and reruns ONLY=tgt plus the rr builds. Add a case for a spurious done with 0 outstanding (fault <= 2 fifo_clk in both forms) and a mutant without the check, which must FAIL the 2-cycle rule. Every other negative control stays as it is. Post READY with the sha, the table and the mutant result.
   (2) HBM-CORES-C builds the next ot_wbq_root_g0 kit from that sha with --clock-pin-landing on, to full sign-off, with the place render viewed before route. The cpl hold (1086 endpoints) and DRC 6 get classified on the cpl DB first (port-start vs core reg2reg; DRC location vs the landing guard rects), so the new kit carries the structural answer, not a retry.
+- 2026-11-12 07:17 PST LAUNCH [DIE-HBM-101 -> COORD, GEOM-VIS-5] tag cores-hbm-1-q2n2. DO_NOT_COUNT. ot_hfd_coll_q2n2_vm_core FORM C, per the COORD ruling, launched in parallel with B. If B signs off clean, I cancel C.
+  Cause seen on A: the pins were over budget per layer. N face on M5 at 8.3 pins/um (vmasm_rd_il + vmasm_as_il 4096 b on x 285-780; writer_kq0-3 1124 b on x 780-915; rgx_data0 at x 37-99). W face on M4 at 9.4 pins/um (rgx_data1-3 1536 b stacked in y 145-364 over kq5/kq6). The face banks pack against those pins.
+  Form C = one-clk form A (t39w regions, reg2reg hold, slew-margin 35, util 0.40, flow-20261108-fk-hbm) plus:
+  (1) Pins re-faced, 8631 pins with names, directions and bit order kept, every pin on its layer's track grid.
+    - writer_kq2/kq3 -> the E face (M4, 0.432 pitch; E had 9 pins).
+    - writer_kq0/kq1 spread on N M5 over x 780-888.
+    - vmasm_rd_il spread on N M5 over x 285-777.
+    - vmasm_as_il -> N M7 over x 260-784.
+    - rgx_addr + rgx_data0 spread on N M5 over x 18-180.
+    - rgx_data1-3 -> W M6 over y 9-500.
+    - Per-layer max over any 20-um window: N M5 5.25 / M7 3.95, W M4 2.75 / M6 3.15, E M4 2.35 pins/um (was 8.3 / 9.4).
+    - Pins: epyc9 .../cores-hbm-1/ot_hfd_coll_q2n2_vm_core/pins_q2n2_formC.json (sha 1dd834f4b149), made by q2n2_repin_hbm101.py; view ot_hfd_coll_q2n2_vm_core@1dd834f4b149 in core_views_q2n2_formC.json.
+  (2) The negedge __nl copy is removed on writer_kq0-7: --face-lockup "^(vmasm_as_il|writer_fault)$". A full-cycle register replaces it: --face-stage "^writer_kq[0-7]$=1", one free-placed stage, so the bank is no longer packed at the pins. face_shell.json out_extra_stages writer_kq0-7 = 1. DECLARED: +1 cycle on writer_kq0..7 (core -> q_hub_ne a_kq) for the latency model and TOK-VERIFY-1; pre-approved. Seam hold on writer_kq loses the T/2 lockup margin at the receiver; that is a parent-side NEEDS_PARENT item for the hub HB4 rule.
+  (3) The W hot column is spread by (1).
+  PLAN IMPACT: the pin re-face needs a q_hub_ne pins_file / window update for this core in the t40w event. The form is private until it is adopted.
+  Kit: epyc9 .../ot_hfd_coll_q2n2_vm_core/kitC/ot_hfd_coll_q2n2_vm_core_1dd834f4b149-die-hbm-101-C, gen exit 0. Run GOAL=place (stops at place for the visual gate), ot-run --mem 48 --threads 8 epyc9, log intel2 ~/cores-hbm-1-logs/q2n2_C.otrun.log.
+  Drawing (pins before/after): epyc9 .../ot_hfd_coll_q2n2_vm_core/q2n2_formC_pins.png. GEOM-VIS-5: I will post the place render path when place lands. Route only after your GOOD / ISSUES-ACCEPT.
