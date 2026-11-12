@@ -25,5 +25,25 @@ class T(unittest.TestCase):
             rows = [l for l in r.stdout.splitlines() if l.startswith("SELFCONT\t")]
             self.assertEqual(len(rows), 1); self.assertTrue(rows[0].endswith("/srv/opentallas-scratch2/claude/other/y.lef"))
 
+    def test_copy_in(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            K = os.path.join(d, "kit"); os.makedirs(K)
+            ext = os.path.join(d, "outside.lef"); open(ext, "w").write("LEF\n")
+            # paths must start with /srv or /home for the scanner: use a fake root under /srv only if it exists; else test the rewrite on a symlinked name
+            fake = "/srv/opentallas-scratch2/claude/__ksc_test_" + os.path.basename(d) + ".lef"
+            try:
+                open(fake, "w").write("LEF\n")
+            except OSError:
+                self.skipTest("no writable /srv")
+            try:
+                open(os.path.join(K, "config.mk"), "w").write("export L = %s\nexport M = /srv/nowhere/missing.v\n" % fake)
+                r = subprocess.run([sys.executable, "-I", "-c", kw.SELFCONT_PY, K, d, "copy"], capture_output=True, text=True)
+                self.assertIn("\tCOPIED\t", r.stdout); self.assertIn("\tMISSING\t", r.stdout); self.assertIn("BAD 1", r.stdout)
+                cfg = open(os.path.join(K, "config.mk")).read()
+                self.assertNotIn(fake, cfg); self.assertIn(K + "/_ext/", cfg)
+            finally:
+                os.remove(fake)
+
 if __name__ == "__main__":
     unittest.main()

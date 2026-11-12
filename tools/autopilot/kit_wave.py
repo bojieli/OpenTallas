@@ -206,11 +206,43 @@ def kit_not_self_contained(text):
 
 
 SELFCONT_PY = r"""
-import os, re, sys
-K, W = sys.argv[1], sys.argv[2]
-pat = re.compile(r"(?<![\w./-])(/(?:srv|home)/[^\s'\"\\);:,<>|]+)")
-skip = {"run", "results", "logs", "objects"}
-out = []
+import os, re, sys, shutil, hashlib
+K, W = os.path.realpath(sys.argv[1]), sys.argv[2]
+MODE = sys.argv[3] if len(sys.argv) > 3 else "list"
+MAXF, MAXD = 600 * 2**20, 200 * 2**20          # copy a file up to 600 MB, a directory up to 200 MB
+pat = re.compile(r"(?<![\w./-])(/(?:srv|home)/[^\s'\"\\);:,<>|$]+)")
+skip = {"run", "results", "logs", "objects", "_ext"}
+EXT = os.path.join(K, "_ext")
+copied = {}                                        # outside path -> in-kit path
+rows = []
+
+def dsize(p):
+    n = 0
+    for r, _, fs in os.walk(p):
+        for f in fs:
+            try: n += os.path.getsize(os.path.join(r, f))
+            except OSError: pass
+            if n > MAXD: return n
+    return n
+
+def copy_in(a):
+    if a in copied: return copied[a]
+    if not os.path.exists(a): return None
+    h = hashlib.sha1(a.encode()).hexdigest()[:8]
+    dst = os.path.join(EXT, h + "_" + os.path.basename(a))
+    try:
+        if os.path.isdir(a):
+            if dsize(a) > MAXD: return "BIGDIR"
+            if not os.path.exists(dst): shutil.copytree(a, dst, symlinks=False)
+        else:
+            if os.path.getsize(a) > MAXF: return "BIGFILE"
+            os.makedirs(EXT, exist_ok=True)
+            if not os.path.exists(dst): shutil.copy2(a, dst)
+    except OSError as e:
+        return "ERR " + str(e)[:80]
+    copied[a] = dst
+    return dst
+
 for root, dirs, files in os.walk(K):
     dirs[:] = [d for d in dirs if d not in skip]
     for f in files:
@@ -218,22 +250,33 @@ for root, dirs, files in os.walk(K):
             continue
         p = os.path.join(root, f)
         try:
-            if os.path.getsize(p) > 2_000_000:
-                continue
-            for n, ln in enumerate(open(p, errors="replace"), 1):
-                for m in pat.finditer(ln):
-                    a = m.group(1).rstrip("/")
-                    if a.startswith(K.rstrip("/")) or a.startswith(W.rstrip("/")):
-                        continue
-                    out.append((os.path.relpath(p, K), n, a))
+            if os.path.getsize(p) > 2_000_000: continue
+            txt = open(p, errors="replace").read()
         except OSError:
-            pass
+            continue
+        new, changed = txt, False
+        for m in sorted(set(pat.findall(txt)), key=len, reverse=True):
+            a = m.rstrip("/")
+            if a.startswith(K.rstrip("/")) or a.startswith(W.rstrip("/")): continue
+            if MODE != "copy":
+                rows.append((os.path.relpath(p, K), "OUTSIDE", a)); continue
+            r = copy_in(a)
+            if r is None:
+                rows.append((os.path.relpath(p, K), "MISSING", a))
+            elif r in ("BIGDIR", "BIGFILE") or r.startswith("ERR"):
+                rows.append((os.path.relpath(p, K), "IMPOSSIBLE " + r, a))
+            else:
+                new = new.replace(m, r + ("/" if m.endswith("/") else "")); changed = True
+                rows.append((os.path.relpath(p, K), "COPIED", a + " -> " + r))
+        if changed:
+            tmp = p + ".sc"
+            open(tmp, "w").write(new); shutil.copystat(p, tmp); os.replace(tmp, p)
 seen = set()
-for f, n, a in out:
-    if (f, a) in seen:
-        continue
-    seen.add((f, a)); print(f"SELFCONT\t{f}\t{n}\t{a}")
-print(f"SELFCONT_COUNT {len(seen)}")
+for f, st, a in rows:
+    if (f, st, a) in seen: continue
+    seen.add((f, st, a)); print("SELFCONT\t%s\t%s\t%s" % (f, st, a))
+bad = sum(1 for f, st, a in seen if st == "MISSING" or st.startswith("IMPOSSIBLE"))
+print("SELFCONT_COUNT %d BAD %d" % (len(seen), bad))
 """
 # KW-FIX-45 11-11 (COORD 23:5x): the hub-guard --exclude-hosts flag made ot-run print its usage text and NOT RUN; 29 attempts of
 # 12 QC rows were charged to RETRY-INFRA although no command ran.  An ot-run / ot-heavy 'NOT RUN' (admission refusal, usage text,
@@ -1754,6 +1797,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "cland_pinslot": cland_pinslot_arg(d),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": place_mem_gb(cfg, die, item), "place_threads": int(opt(cfg, die, "place_threads")),
+            "kit_self_contained": str((d.get("kit_self_contained_by_item") or {}).get(item) or opt(cfg, die, "kit_self_contained") or cfg.get("kit_self_contained") or "list"),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "geom_grt_wall_s": int(opt(cfg, die, "geom_grt_wall_s")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
             # A measured large elaboration can override its own lint container
             # and matching ot-run admission without raising every kit's budget.
@@ -3701,12 +3745,13 @@ def run_item(spec_path):
         try:
             _sc = str(sp.get("kit_self_contained") or "list")
             if _sc != "off":
-                _rc, _t = run("selfcontained", remote(f"python3 -I -c {q(SELFCONT_PY)} {q(K)} {q(W)}"), idempotent=True)
+                _rc, _t = run("selfcontained", remote(f"python3 -I -c {q(SELFCONT_PY)} {q(K)} {q(W)} {q('copy' if _sc in ('copy', 'copy-strict') else 'list')}"), idempotent=True)
                 _rows = [ln for ln in (_t or "").splitlines() if ln.startswith("SELFCONT\t")]
                 (out / "selfcontained.tsv").write_text("\n".join(_rows) + "\n")
-                res["selfcontained_outside"] = len(_rows)
-                if _rows and _sc == "fail":
-                    return fail("selfcontained", "KIT_NOT_SELF_CONTAINED: kit names absolute paths outside its folder:\n" + "\n".join(_rows[:40]))
+                _bad = [ln for ln in _rows if "\tMISSING\t" in ln or "\tIMPOSSIBLE" in ln]
+                res["selfcontained_outside"] = len(_rows); res["selfcontained_bad"] = len(_bad)
+                if (_sc in ("copy", "copy-strict") and _bad) or (_sc == "fail" and _rows):
+                    return fail("selfcontained", "KIT_NOT_SELF_CONTAINED: a path outside the kit could not be copied in:\n" + "\n".join((_bad or _rows)[:40]))
         except Exception as _e:
             print(f"KW_SELFCONT_SKIP {_e}", flush=True)
         asy = False
