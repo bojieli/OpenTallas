@@ -1,0 +1,180 @@
+{
+ "type": "q_b011__physical_v1",
+ "illegal": [],
+ "unplaced": [],
+ "h0h1_max": 299.4,
+ "h0h1_over405": [],
+ "reach_viol": [],
+ "ft_changes": [
+  {
+   "slot": "L1254y0",
+   "moved": 2,
+   "max_hop": 401.8,
+   "first": 352.0,
+   "last": 54.8
+  },
+  {
+   "slot": "L1252y1",
+   "moved": 6,
+   "max_hop": 401.8,
+   "first": 399.6,
+   "last": 34.9
+  },
+  {
+   "slot": "L73y2",
+   "moved": 1,
+   "max_hop": 311.0,
+   "first": 374.1,
+   "last": 343.8
+  },
+  {
+   "slot": "L1268y2",
+   "moved": 1,
+   "max_hop": 397.4,
+   "first": 331.3,
+   "last": 28.0
+  },
+  {
+   "slot": "L3006y1",
+   "moved": 1,
+   "max_hop": 302.4,
+   "first": 335.6,
+   "last": 357.2
+  },
+  {
+   "slot": "L1275y1",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 50.8,
+   "last": 10.7
+  }
+ ],
+ "st_changes": [
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.weight_we0",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.weight_we1",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.write_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.write_data",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.x_write",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.weight_we0",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.weight_we1",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.x_write",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.write_data",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair4.weight_we0",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair4.weight_we1",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair4.write_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair4.write_data",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair4.x_write",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L11_o",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair5.fault",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair5.weight_we0",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair5.weight_we1",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair5.write_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair5.write_data",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair5.x_write",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair6.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair6.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair7.write_data",
+   "moved": 5
+  }
+ ],
+ "moved": 14
+}

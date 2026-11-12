@@ -43,6 +43,7 @@ import schema as S  # noqa: E402
 EPS = 1e-6
 MARGIN = 4.32          # landing_place._clear_of_hard_cores margin
 GRID_X, GRID_Y = 0.054, 0.27
+FREE_BANKS = False
 SLACK = 1.0            # a placement must leave every hop <= limit - SLACK
 
 
@@ -253,6 +254,8 @@ def plan_lane(P, lane, limit, allow_add, decided):
         return dict(status="ok", before=max(h0))
     ks = [c["k"] for c in cross]
     exact = {idx for idx, c in enumerate(cross) if "bit_sites_um" in (P.slot(c["part"], c["slot"]) or {})}
+    if FREE_BANKS:           # re-bank PROPOSAL mode (rebank_proposal.py): bank geometry is regenerated, so it does not limit
+        exact = set()
     from ft_full_stage import load
     for c in cross:
         if c["slot"] in load(P, c["tn"]):
@@ -441,9 +444,10 @@ def respace_collectors(raw2, ops, limit, P2=None):
     return rows
 
 
-def run(raw, limit=405.0, allow_add=True):
+def run(raw, limit=405.0, allow_add=True, collectors=True):
     P = S.Plan(raw)
     raw2 = copy.deepcopy(raw)
+    work = copy.deepcopy(raw)        # accepted slot changes applied lane by lane, for the real-input S0->S1 re-check
     lanes = {lid: Lane(P, lid) for lid in P.lanes}
     report = dict(lanes={}, replica_conflicts=[], skipped=[])
     decided = {}          # (tn, slot) -> [type pts]
@@ -487,6 +491,36 @@ def run(raw, limit=405.0, allow_add=True):
             report["lanes"][lid] = res
             report["replica_conflicts"].append(lid)
             continue
+        # normal slots: the REAL input pins fix S0 -> S1 (G0 stations / hops "real normal input"); re-check on the moved plan
+        import die_hop_scan as DHS
+        from ft_full_stage import load as _full
+        touched = []
+        for c, pts in res["new"].items():
+            cr = lane.cross[c]
+            if DHS.normal_slot(P, cr["tn"], cr["slot"], full=_full(P, cr["tn"])):
+                sl = next(s_ for s_ in work["partition_types"][cr["tn"]]["ft_slots"] if s_["name"] == cr["slot"])
+                touched.append((sl, dict(regs_um=sl.get("regs_um"), stations=sl.get("stations"), bit_sites_um=sl.get("bit_sites_um")), c, cr))
+                sl["regs_um"] = [[round(x, 3) for x in P.to_type(cr["part"], p)] for p in pts]
+                sl["stations"] = len(pts)
+                if (cr["tn"], cr["slot"]) in banks_of:
+                    sl["bit_sites_um"] = banks_of[(cr["tn"], cr["slot"])]
+        if touched:
+            Pt = S.Plan(work)
+            worst = 0.0
+            for sl, _save, c, cr in touched:
+                slot_now = next(s_ for s_ in Pt.types[cr["tn"]]["ft_slots"] if s_["name"] == cr["slot"])
+                rows_ = DHS.first_internal_hops(Pt, cr["tn"], slot_now, pins=DHS.pin_table(Pt, cr["tn"]))
+                worst = max([worst] + [d for _b, d in rows_])
+            if worst > limit + EPS:
+                for sl, save, _c, _cr in touched:
+                    for k_, v_ in save.items():
+                        if v_ is None:
+                            sl.pop(k_, None)
+                        else:
+                            sl[k_] = v_
+                res["status"], res["why"] = "normal_slot_s0s1", f"real input S0->S1 {worst:.0f} um after the move"
+                report["lanes"][lid] = {k: v for k, v in res.items() if k not in ("new", "old")}
+                continue
         for c, pts in res["new"].items():
             cr = lane.cross[c]
             decided[(cr["tn"], cr["slot"])] = [[round(x, 3) for x in P.to_type(cr["part"], p)] for p in pts]
@@ -561,7 +595,7 @@ def run(raw, limit=405.0, allow_add=True):
             else:
                 internal.append(dict(type=tn, index=i, conn=e.get("conn"), worst=round(worst, 1), status="blocked"))
     report["internal_stations"] = internal
-    report["collector_chains"] = respace_collectors(raw2, ops, limit)
+    report["collector_chains"] = respace_collectors(raw2, ops, limit) if collectors else []
     report["latency_changed"] = {l: dict(v, groups=groups.get(l, [])) for l, v in plus.items()}
     st = defaultdict(int)
     for r in report["lanes"].values():

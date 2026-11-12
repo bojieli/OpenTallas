@@ -1,0 +1,10 @@
+worst_rank	id	class	bits	directed	driver	sinks	stages	length_um	max_hop_um	bit_mm	status	static	bypass_n	bypassed	note	pipeline
+1	u_t23.n_a>u_t32.n_y	core-core	514	0	u_t23.n_a	u_t32.n_y		1080.2	1080.2	555.2	over		0			0>1
+2	bus:nb_i22>u_t22.n_b	core-face	514	1	.bus:nb_i22	u_t22.n_b		1061.3	1061.3	545.5	over		0			face>0
+3	u_t22.t_out>u_t32.n_a	core-core	514	1	u_t22.t_out	u_t32.n_a		806.1	806.1	414.4	over		0			0>1
+4	u_t23.n_y>bus:y_o23	core-face	514	1	u_t23.n_y	.bus:y_o23		678.7	678.7	348.8	over		0			0>face
+5	stn:bus:nb_i22	internal-station	515	1	.	u_t22.n_b	2	1156.5	388.8	595.6	relay		0			face>0
+6	u_t23.n_b>u_t33.n_y	core-core	514	0	u_t23.n_b	u_t33.n_y		349.2	349.2	179.5	ok		0			0>1
+7	u_t23.t_out>u_t33.n_a	core-core	514	1	u_t23.t_out	u_t33.n_a		348.4	348.4	179.1	ok		0			0>1
+8	stn:bus:na_i22	internal-station	515	1	.	u_t22.n_a	2	876.4	293.8	451.3	relay		0			face>0
+9	u_t22.n_y>bus:y_o22	core-face	514	1	u_t22.n_y	.bus:y_o22		212.3	212.3	109.1	ok		0			0>face

@@ -1,0 +1,555 @@
+{
+ "type": "q_b001",
+ "illegal": [],
+ "unplaced": [],
+ "h0h1_max": 330.5,
+ "h0h1_over405": [],
+ "reach_viol": [
+  {
+   "bus": "L168m_i",
+   "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair6",
+   "regs": 2,
+   "bits": 514,
+   "L1": 1585,
+   "lim": 1215.0,
+   "ok": false
+  },
+  {
+   "bus": "L168m_i",
+   "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair7",
+   "regs": 2,
+   "bits": 514,
+   "L1": 1270,
+   "lim": 1215.0,
+   "ok": false
+  },
+  {
+   "bus": "L168m_i",
+   "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair5",
+   "regs": 2,
+   "bits": 364,
+   "L1": 1900,
+   "lim": 1215.0,
+   "ok": false
+  },
+  {
+   "bus": "L168m_i",
+   "core": "u_hcb_Q1.ot_hbm_hc_bank128_pair0",
+   "regs": 4,
+   "bits": 2,
+   "L1": 2255,
+   "lim": 2025.0,
+   "ok": false
+  }
+ ],
+ "ft_changes": [
+  {
+   "slot": "L28y2",
+   "moved": 6,
+   "max_hop": 401.8,
+   "first": 400.2,
+   "last": 399.2
+  },
+  {
+   "slot": "L5063y1",
+   "moved": 2,
+   "max_hop": 401.8,
+   "first": 392.8,
+   "last": 410.8
+  },
+  {
+   "slot": "L5064y3",
+   "moved": 5,
+   "max_hop": 401.8,
+   "first": 403.3,
+   "last": 249.7
+  },
+  {
+   "slot": "L5065y0",
+   "moved": 1,
+   "max_hop": 401.8,
+   "first": 392.4,
+   "last": 387.8
+  },
+  {
+   "slot": "L42y1",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 392.5,
+   "last": 257.8
+  },
+  {
+   "slot": "L5060y0",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 400.2,
+   "last": 137.2
+  },
+  {
+   "slot": "L5066y0",
+   "moved": 7,
+   "max_hop": 401.8,
+   "first": 400.6,
+   "last": 179.4
+  },
+  {
+   "slot": "L5059y0",
+   "moved": 6,
+   "max_hop": 401.8,
+   "first": 401.3,
+   "last": 396.7
+  },
+  {
+   "slot": "L5056y2",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 372.2,
+   "last": 41.0
+  },
+  {
+   "slot": "L5054y0",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 395.7,
+   "last": 29.2
+  },
+  {
+   "slot": "L5055y0",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 401.5,
+   "last": 29.2
+  },
+  {
+   "slot": "L5067y0",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 402.1,
+   "last": 74.4
+  },
+  {
+   "slot": "L5077y1",
+   "moved": 2,
+   "max_hop": 401.8,
+   "first": 391.7,
+   "last": 317.0
+  },
+  {
+   "slot": "L5096y2",
+   "moved": 11,
+   "max_hop": 216.0,
+   "first": 99.2,
+   "last": 16.7
+  },
+  {
+   "slot": "L5079y2",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 398.0,
+   "last": 11.1
+  },
+  {
+   "slot": "L5099y2",
+   "moved": 9,
+   "max_hop": 241.9,
+   "first": 94.5,
+   "last": 13.7
+  },
+  {
+   "slot": "L5095y2",
+   "moved": 9,
+   "max_hop": 250.6,
+   "first": 91.3,
+   "last": 12.7
+  },
+  {
+   "slot": "L5100y2",
+   "moved": 12,
+   "max_hop": 241.9,
+   "first": 88.0,
+   "last": 10.2
+  },
+  {
+   "slot": "L732y1",
+   "moved": 5,
+   "max_hop": 401.8,
+   "first": 401.3,
+   "last": 37.1
+  },
+  {
+   "slot": "L204my1",
+   "moved": 2,
+   "max_hop": 397.4,
+   "first": 334.0,
+   "last": 13.1
+  }
+ ],
+ "st_changes": [
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair0.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.fault",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.sum_out",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair1.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.fault",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.sum_out",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair2.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.fault",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.go",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.lane_valid",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.square",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.sum_in",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.weight_addr",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.weight_read",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.x_addr",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair3.x_read",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.fault",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.sum_in",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair4.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.go",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.lane_valid",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.square",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.sum_out",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.weight_read",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair5.x_read",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.fault",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.go",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.lane_valid",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.square",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.sum_out",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.weight_read",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.weight_we0",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.weight_we1",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.x_addr",
+   "moved": 3
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.x_read",
+   "moved": 4
+  },
+  {
+   "conn": "bus:L71_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair6.x_write",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.go",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.lane_valid",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.square",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L15_o",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.sum_out",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.weight_addr",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.weight_read",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.x_addr",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L14_i",
+   "cap": "u_hcb_Q1.ot_hbm_hc_bank128_pair7.x_read",
+   "moved": 2
+  }
+ ],
+ "moved": 40
+}

@@ -1,0 +1,32 @@
+CPL-QC-NK-R0 11-11 INTENT ADDENDUM s23 (S2, DO_NOT_COUNT), DIE-QC-99 follow-up on KIT-NK-SRCPIN (queue c0b4759cfc)
+Base: plan_qc99_s22_nkr0 (587e484eda91, on main).  Probe finding: only 0 macro crossings close an NK link.
+
+A. t22 -> MY (DIE-QC-99 proposal), measured as a trial only (plan_qc99_s23_trial_t22, 29768c7a228f), NOT adopted.
+   t23 is already MY in s22 (it is MY in s20/s21/s22).
+   t22 carries three face buses and two R3-INTERNAL station chains: y_o22 (n_y -> u_bout -> W face, window y 1202-1292),
+   na_i22 (S window x 4-93, 2 FIRM stations at x 34.56) and nb_i22 (S window x 184-273, 2 FIRM stations at x 34.56).
+   Flipping t22 to MY:
+     + L1 t22.t_out -> t32.n_a: 1 crossing -> 0, 806 -> 348 um; cbn_q11 NK bit-mm 1431 -> 1195 (cbf_q11 1466 -> 1231).
+     - G0: +9 G0C core_faces WARN (3 types x n_a, n_b, n_y "face away, 514 pins on the far side", cos -0.96/-0.97/-0.47).
+     - y_o22: 212 -> 670 um (pins in the middle channel, route via the inter-row strip to the W window), over reach 405.
+     - na_i22 / nb_i22: the pins move to x 544 (middle); the plan station chains end at x 34.56 (W channel), so the last
+       hop would cross t22.  Re-sited around the macro (S strip, then middle channel) the routes are ~1314 / ~1236 um
+       with 2 FIRM stations = 3 hops of ~438 / ~412 um > the 360-um internal station rule: +1 station each, i.e. a
+       latency change, not an orient-only (EQ) event.  The S windows are a die-level face (S1).
+     - route_supply core_H 0.719 -> 0.808 (> 0.8), street_H 0.211 -> 0.266.
+   Verdict: t22 cannot flip under the s22 rule; closing L1 at 0 crossings needs an S1 die-level change (move na_i22 /
+   nb_i22 S windows into the middle channel next to bc_i32, and y_o22 to a face reachable from the middle channel),
+   or +1 cycle on na_i22 / nb_i22 with re-sited stations.
+
+B. q01 left column R0 -> MY (adopted as s23_nkl): t02/t03 have no face bus and no internal station.
+   cbn_q01 x3: t02, t03 -> MY.  cbf_q01: t02 -> MY (t03 is already MY).  cbf_q01_s2: left column already MY.
+   NK links (RTL-traced): cbn_q01 crossings 6 -> 2, bit-mm 3397 -> 2456; cbf_q01 4 -> 2, 2927 -> 2456.
+     t12.t_out -> t02.n_b D3: 2 -> 1 (t12 carries y_o12 / nb_i12, cannot flip: the last single crossing in q01).
+     t13.t_out -> t03.n_b, t02.n_y -> t13.n_a, t03.n_y -> t13.n_b: 1 -> 0.   t13.n_y -> t12.n_a D16: 1 (unchanged).
+   Tap: the q01 left bc column is on the W side (bc_i02 S / bc_o03 N windows x 4-94); MY puts the t02/t03 tap edge on
+   the W channel next to it, removing the tap crossing those tiles had in R0.
+   Pins: M4 only, x mirror, on-track (core_pins_off_track 0).
+
+C. All 14 NK types after s23 (NK-link crossings): cbn_q11 x2 / cbf_q11 1 (L1, needs A's S1 change); cbx_q10 x2 0;
+   q00 x5 4 (t00 and t11 carry face buses: no eligible flip improves); cbn_q01 x3 2, cbf_q01 2, cbf_q01_s2 2
+   (t12 carries face buses).
