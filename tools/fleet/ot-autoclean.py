@@ -601,6 +601,29 @@ def kitwave_reduce_main(a):
         except (OSError, ValueError):
             return {}
     out = reduce_kitwave(state, rows, read_spec)
+    # KW-SRCGONE-1 (COORD 11-12): the CURRENT sources of a die (die src, src_base, plan, kit_rtl bind dir / as-built, item_inputs src /
+    # plan / bind, prov_view_sources dirs) are referenced by the wave config, not only by the specs of rows that are active now:
+    # hd_host_e and hnx_fused_lane_c failed on `cd` into src trees (src_head_main_m8w1_*, src_hbm_main_*_p18) that autoclean removed
+    # while no row of the die was running.  Keep every absolute path in those config fields on every host the die uses.
+    try:
+        cfgj = jl(a.config_json) if getattr(a, "config_json", "") and os.path.exists(a.config_json) else {}
+        extra = set()
+        for die, d in (cfgj.get("dies") or {}).items():
+            if not isinstance(d, dict) or d.get("enabled") is False:
+                continue
+            hosts = {h for h in list(d.get("gen_hosts") or []) + list(d.get("hosts") or []) + [d.get("gen_host")] if h}
+            paths = set()
+            for k in ("src", "src_base", "plan", "kit_rtl", "item_inputs", "prov_view_sources", "core_kit"):
+                for sv in _json_strings(d.get(k)):
+                    if sv.startswith(("/srv/", "/home/")) and sv.count("/") >= 4 and " " not in sv:
+                        paths.add(sv.rstrip("/"))
+            for h in hosts:
+                for pth in paths:
+                    extra.add(f"{HOSTNAME_ALIAS.get(h, h)}:{pth}")
+                    extra.add(f"{h}:{pth}")
+        out["keep"] = sorted(set(out["keep"]) | extra)
+    except (OSError, ValueError, TypeError):
+        pass
     out["created"] = now_s()
     out["source"] = f"{socket.gethostname()}:{a.state_json} mtime {int(os.path.getmtime(a.state_json))}"
     json.dump(out, sys.stdout)
@@ -2652,6 +2675,7 @@ def main(argv=None):
     kr = sub.add_parser("kitwave-reduce")
     kr.add_argument("--state-json", default=os.path.join(HOME, "coord/autopilot/kit_wave_state.json"))
     kr.add_argument("--stages-tsv", default=os.path.join(HOME, "coord/autopilot/kit_wave_stages.tsv"))
+    kr.add_argument("--config-json", default=os.path.join(HOME, "coord/autopilot/kit_wave.json"))
     dr = sub.add_parser("drive", help="localhost driver: snapshot -> push -> archive -> host runs -> collect")
     dr.add_argument("--archive-jobs", type=int, default=8, help="DISK-1111: signed units archived in parallel per host (1 = old serial pace)")
     dr.add_argument("--hosts", default=",".join(HOSTS))
