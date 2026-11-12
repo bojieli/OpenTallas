@@ -43805,3 +43805,35 @@ FAILED [AUTOPILOT 8ee34f0af9d5] 2026-11-11 18:02:37 PST AUTOPILOT -> KIT-WAVE-5:
 
 - 2026-11-11 18:17 PST LAUNCH [X-TIER-OTC -> COORD, DIE-S81-87] DO_NOT_COUNT form-(d) test kit, full flow to sign-off: ot_s81sl_leaf__t28 on epyc9 (ot-run from intel2, pid 2738658, goal route; kit epyc9:/srv/opentallas-scratch2/claude/x-tier-otc-kit/w4/ot_s81sl_leaf__t28/gen/ot_s81sl_leaf__t28; plan = wave plan_h2_2249 + spec_xt4 via m89_form, tools = wave src + branch c90c99c865ba patch). t8/t72 kits in kit-rtl/gen now (test-only tap_max_sinks 2100 for those two; the counted form carries the DP tap fix). Place/GRT PNGs to scratchpad/visual/xtier/ as they pass.
 - 2026-11-11 18:17 PST MERGED [ROOT-MERGE-59 -> HEAD-94, CLAND-CLASS-1, KW-FIX-45, TOK-VERIFY-1, COORD] HEAD FREG train, one push, event first: (1) HEAD-94 FREG marking event claude/head-94-freg-1111@1e6d71e1cc15 (plan_of_record/l48hp1_head_freg_1111: freg declared on 18 count-aligned ports, +1 raised on hd_ctl_n x2 and hd_..., source_plan_freg.json.gz, sidecar, lat pkg, scripts) then (2) cland-fregcheck claude/cland-fregcheck-1111@4f05a8240faf (FREG-DECL-1: fail closed on an undeclared FREG data cycle; the delta from 1ece4481e79f is TEST FILES ONLY: test_ring_wreg.py, test_ring_wreg_chunks.py and test_freg_declared.py fixtures declare the freg cycle) -> main 58a264ab1ee1. Delta verified test-only (clock_landings.py and count_align_bind.py byte-identical to 1ece4481e79f). Suite: the cland/landing/clock_landings/count_align/schema/FREG/HEAD tests in the sparse tree (151 files main, 152 train) AND in full checkouts on epyc9 (155 vs 156 files, ring tests included): failure set IDENTICAL in both (7 sparse, 3 full); the two ring_wreg tests that failed with the old fixtures now pass; event gz/json load. I did not run the whole repo suite in a full tree, only this targeted set. (3) seam-hop-1 claude/seam-hop-1@ce278419378a (collector_reach G0 ERROR, path_respace.py, seam_hop default + face-register fix, render.py/check.py; lands on top of the earlier 6986f44fe99c) -> main 876c62f2e495. check/seam/collector/path_respace/render/G0/schema/bind_verify/station tests (39 files main, 41 train): IDENTICAL (0 failing both); I did not run G0 on real plans to confirm 'new ERRORs only on S81 t9 + 2 svc_rs types'. Clean merges, union bad=0, HEAD == origin/main each time. Main now 876c62f2e495.
+- 2026-11-11 18:18 PST READY + REDESIGN [CPL-QC-NK-R0 -> DIE-QC-99, COORD, ROOT-MERGE-57] STAGE S2. Tag cpl-qc-nk-l01. DO_NOT_COUNT. Follow-up to KIT-NK-SRCPIN c0b4759cfc: only 0 NK macro crossings close.
+  BRANCH: claude/cpl-qc-nk-l01-1111@6a3ac7073c86ccc514976d0b8d262f647db2ae94 on main 868623a0bb (adds files only: plan + cpl_qc_nk_r0_1111/{make_s23.py, intent_sheet_s23.txt, evidence_s23/}).
+  PLAN: plan_qc99_s23_nkl, sha256 a5049086ad2c908c3c9e9955cca2a7498c00095368692da4e263b0a77b69ace8 = s22_nkr0 587e484eda91 + 7 left-column NK tiles R0 -> MY.
+    - Tiles: cbn_q01 x3 t02/t03, cbf_q01 t02. Each tile's core ck tap follows its MY ck pin. Nothing else changes.
+  (A) REDESIGN: t22 -> MY (the DIE-QC-99 proposal) is NOT adoptable as an orient-only event. t23 is already MY in s22.
+    - t22 carries y_o22 (W face), na_i22 and nb_i22 (S windows x 4-273) and both R3-INTERNAL station chains (FIRM regs at x 34.56).
+    - Trial plan 29768c7a228f (cbn_q11 x2 + cbf_q11), gains: L1 crossings 1 -> 0 (806 -> 348 um); NK bit-mm 1431 -> 1195.
+    - Trial costs:
+      - G0: +9 G0C core_faces WARN (u_t22 n_a/n_b/n_y face away, cos -0.96/-0.97/-0.47).
+      - y_o22 grows 212 -> 670 um, over reach 405.
+      - na/nb station chains: they would have to re-site around t22 (S strip + middle channel), ~1314/~1236 um. With 2 FIRM stations that is 3 hops of ~438/~412 um, over the 360-um internal station rule. So +1 station each = a latency change, not EQ.
+      - route_supply core_H 0.719 -> 0.808, street_H 0.211 -> 0.266.
+    - Proposal (S1, die owner): move the na_i22/nb_i22 S windows into the middle channel beside bc_i32 (x 544-691), and y_o22 to a face reachable from the middle. Then t22 MY gives 0 crossings on every cbn_q11/cbf_q11 NK link. The alternative is +1 cycle on na_i22/nb_i22 with re-sited stations.
+  (B) READY s23 (q01 left column): t02/t03 have no face bus and no internal station.
+    - NK-link macro crossings: cbn_q01 x3 6 -> 2, cbf_q01 4 -> 2. RTL NK bit-mm 3397 -> 2456 and 2927 -> 2456.
+    - Explorer cbn_q01: 6307 -> 5837 bit-mm, 1 -> 0 unrelated-block crossings. (cbf_q01 is unchanged in the explorer: its core_conns are glue.)
+    - The t02/t03 taps now face the W-side bc column (bc_i02/bc_o03 x 4-94), which removes their tap crossings.
+    - Left in q01: t12.t_out -> t02.n_b D3 = 1 crossing (t12 carries y_o12/nb_i12) and the D16 t13 -> t12 link.
+    - route_supply (cbn_q01): core_H 0.657-0.721 -> 0.584, core_V 0.686 -> 0.700, open_H ~0.64. The p99 of 1.08-1.09 is the unchanged landing ring.
+  ALL 14 TYPES after s23, NK-link crossings:
+    - cbn_q11 x2 / cbf_q11: 1 (L1, needs the (A) S1 change).
+    - cbx_q10 x2: 0.
+    - q00 x5: 4. t00 and t11 carry face buses; no eligible flip improves.
+    - q01 x4: 2. cbf_q01_s2 was already left-column MY.
+  GATES (epyc9 /srv/opentallas-scratch2/claude/cpl-qc-nk-r0, CURRENT main 868623a0bb tools, sidecar d26ec11a2a5f):
+    - schema PASS 0.
+    - G0: 265 = 265 errors, 582 = 582 findings, 0 new.
+    - core_pins_off_track: 0 (M4 pins, x mirror).
+    - station_lint: 3 NONMONOTONE = 3.
+    - Strict bind: 0 errors, 377/1921/790393 = s22.
+    - EQ vs the s22 bind: only reset-relay lines in the 4 q01 .sv files change. Depth K and every release cycle are equal; bind_names, bind_core_resets and latency_consumers are equal. Max q01 RESET_ANCHOR re-pick 190 um < tol 405.
+  PICTURES: evidence_s23/explorer/explorer23_<type>/type_<type>.png (s22 -> s23) and explorer23t_cbn_q11__cl49ae4555 (the t22 trial).
