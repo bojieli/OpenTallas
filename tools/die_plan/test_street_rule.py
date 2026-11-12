@@ -441,3 +441,56 @@ def test_add_ft_regs_keeps_site_rows_aligned():
             f1["bit_sites_um"][j - 1][bit]                                  # taps.planned_sinks indexing
     (x, y), sites = f1["regs_um"][1][:2], f1["bit_sites_um"][0]
     assert sites == [[round(x, 4), round(y - 0.27, 4)], [round(x, 4), round(y + 0.27, 4)]]
+
+
+def test_legalize_face_anchor_west_growth_fixed_east(tmp_path):
+    """FIXED-FACE (GEN-CLASS-1, HEAD-95): the type grows WEST; its E face abuts a FIXED partition and keeps die-x of
+    its N / S windows, ... here: the N face abuts a FIXED partition, the S face a moved one.  The instance origin moves
+    by -dW, the N window keeps its die x (local +dW), the S window keeps its local x; legacy (no anchor) unchanged."""
+    plan, P = _toy_plan(tmp_path)
+    t = P["partition_types"]["toy"]
+    t["outline_um"] = [8.64 + 100 + 15.12 + 100 + 8.64, 302.4]
+    t["hard_cores"][0]["origin_um"] = [8.64, 86.4]
+    t["hard_cores"][1]["origin_um"] = [8.64 + 100 + 15.12, 86.4]
+    t["ft_slots"] = []
+    t["clock"] = {"landing_contract": {"pins": [{"name": "fclk_in_n", "xy_um": [50.0, 300.0]},
+                                                {"name": "fclk_in_s", "xy_um": [50.0, 2.0]}],
+                                       "bands": {"n_i": {"rect_um": [40.0, 280.0, 60.0, 300.0]}}}}
+    t["buses"] = [{"name": "n_i", "face": "N", "window_um": [40.0, 60.0], "width": 8},
+                  {"name": "s_i", "face": "S", "window_um": [40.0, 60.0], "width": 8}]
+    P["die"]["outline_um"] = [2000.0, 302.4]
+    P["partitions"][0]["origin_um"] = [1000.0, 0.0]
+    plan.write_text(json.dumps(P))
+    fa = tmp_path / "fa.json"
+    fa.write_text(json.dumps({"toy": {"grow": {"x": "W"}, "fixed_faces": ["N"]}}))
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+             "--event", str(ev), "--rs-halving", "off", "--face-anchor", str(fa)])
+    row = json.loads(ev.read_text())["rows"][0]
+    assert row["applied"], row["reason"]
+    dW = row["outline_after"][0] - row["outline_before"][0]
+    assert dW > 0
+    assert row["face_anchor"]["origin_shift_um"] == [round(-dW, 4), 0.0]
+    Q = json.loads(out.read_text())
+    q = Q["partition_types"]["toy"]
+    ox = Q["partitions"][0]["origin_um"][0]
+    assert abs(ox - (1000.0 - dW)) < 1e-6
+    bn = {b["name"]: b for b in q["buses"]}
+    # N (fixed neighbour): die x kept
+    assert abs(ox + bn["n_i"]["window_um"][0] - 1040.0) < 1e-6 and abs(ox + bn["n_i"]["window_um"][1] - 1060.0) < 1e-6
+    # S (moved neighbour): local x kept
+    assert bn["s_i"]["window_um"] == [40.0, 60.0]
+    lc = q["clock"]["landing_contract"]
+    assert abs(ox + lc["pins"][0]["xy_um"][0] - 1050.0) < 1e-6
+    assert abs(ox + lc["bands"]["n_i"]["rect_um"][0] - 1040.0) < 1e-6
+    # E edge keeps its die position
+    assert abs(ox + q["outline_um"][0] - (1000.0 + row["outline_before"][0])) < 1e-6
+
+
+def test_face_anchor_cfg_rejects_bad():
+    import pytest
+    assert SR.face_anchor_cfg(None, "x") is None
+    assert SR.face_anchor_cfg({}, "x") == dict(grow=dict(x="E", y="N"), origin_shift_um=[0.0, 0.0], fixed_faces=[])
+    for bad in ({"grow": {"x": "N"}}, {"fixed_faces": ["Q"]}, {"origin_shift_um": [1]}, {"other": 1}):
+        with pytest.raises(ValueError):
+            SR.face_anchor_cfg(bad, "x")

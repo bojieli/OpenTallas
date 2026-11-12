@@ -277,6 +277,119 @@ def type_windows(t):
     return dict(out)
 
 
+FACE_ALONG = dict(N=0, S=0, E=1, W=1)     # along-face coordinate index (x on N/S, y on E/W)
+
+
+def face_anchor_cfg(fa, name):
+    """validated FIXED-FACE config of one type (legalize --face-anchor FILE: {type: cfg}); None = legacy (every window
+    keeps its local coordinate, the instance origin stays).  cfg keys:
+      grow          {"x": "E"|"W", "y": "N"|"S"}: the side the outline grows on (default E / N: origin kept).  W / S:
+                    every instance origin moves by -dW / -dH, so the E / N edge keeps its die position.
+      origin_shift_um [dx, dy]: an extra die-level move of every instance of the type (e.g. a pushed neighbour); 0, 0.
+      fixed_faces   faces that abut FIXED partitions: their windows (buses, ft slots, landing pins and bands of the
+                    face's buses, outline link ends) keep their DIE coordinate along the face.  Every other face abuts a
+                    moved (or no) partition and keeps its LOCAL windows."""
+    if fa is None:
+        return None
+    if not isinstance(fa, dict) or set(fa) - {"grow", "origin_shift_um", "fixed_faces"}:
+        raise ValueError("%s: face anchor needs only grow / origin_shift_um / fixed_faces" % name)
+    g = fa.get("grow") or {}
+    if not isinstance(g, dict) or g.get("x", "E") not in ("E", "W") or g.get("y", "N") not in ("N", "S") or set(g) - {"x", "y"}:
+        raise ValueError("%s: face anchor grow must be {x: E|W, y: N|S}" % name)
+    sh = fa.get("origin_shift_um", [0.0, 0.0])
+    if not isinstance(sh, list) or len(sh) != 2 or any(isinstance(v, bool) or not isinstance(v, (int, float)) for v in sh):
+        raise ValueError("%s: face anchor origin_shift_um must be [dx, dy]" % name)
+    ff = fa.get("fixed_faces", [])
+    if not isinstance(ff, list) or any(f not in FACE_ALONG for f in ff):
+        raise ValueError("%s: face anchor fixed_faces must list N/S/E/W" % name)
+    return dict(grow=dict(x=g.get("x", "E"), y=g.get("y", "N")), origin_shift_um=[float(sh[0]), float(sh[1])],
+                fixed_faces=sorted(set(ff)))
+
+
+def _on_face(x, y, W, H, tol=8.64):
+    """outline faces within tol of a point (a landing pin sits a few um inside its face)."""
+    return [f for f, d in (("W", x), ("E", W - x), ("S", y), ("N", H - y)) if abs(d) <= tol]
+
+
+def face_anchor(tnew, M, WH0, WH1, fa, t0=None):
+    """FIXED-FACE (GEN-CLASS-1 11-12, HEAD-95 west growth): legalize grows the outline on E / N in LOCAL coordinates.
+    With fa (face_anchor_cfg) the instance origin moves by shift = origin_shift_um + (-dW if grow x W) / (-dH if grow
+    y S); a window on a FIXED face then moves by -shift along that face so its die coordinate (the fixed neighbour's
+    pins) is unchanged, while windows on every other face keep their local coordinates (their neighbours move with
+    the type).  Pins and bands on a fixed face take their BASE (t0) position + the shift (the free-space remap of
+    an interior stretch does not apply to a coordinate held by a fixed neighbour).  Moved on a fixed face: buses[].window_um, ft_slots in/out_window_um, landing_contract pins on the face,
+    the landing bands (rect_um / rects_um / ff_rect_um) of the face's buses, and the outline end points of M.L links on
+    the face.  Returns (record, errors); errors = a moved window outside the outline (the type is then not applied)."""
+    W0, H0 = WH0
+    W1, H1 = WH1
+    sx, sy = fa["origin_shift_um"]
+    if fa["grow"]["x"] == "W":
+        sx -= W1 - W0
+    if fa["grow"]["y"] == "S":
+        sy -= H1 - H0
+    d = (-sx, -sy)
+    rec = dict(origin_shift_um=[round(sx, 4), round(sy, 4)], fixed_faces=fa["fixed_faces"], moved=[])
+    errs = []
+    L = (W1, H1)
+    for face in fa["fixed_faces"]:
+        a = FACE_ALONG[face]
+        da = round(d[a], 4)
+        if not da:
+            continue
+        buses = set()
+        for b in tnew.get("buses") or []:
+            if b.get("face") == face and isinstance(b.get("window_um"), list):
+                b["window_um"] = [round(v + da, 4) for v in b["window_um"][:2]] + b["window_um"][2:]
+                buses.add(b.get("name"))
+                rec["moved"].append("bus %s" % b.get("name"))
+                if b["window_um"][0] < -EPS or b["window_um"][1] > L[a] + EPS:
+                    errs.append("bus %s window %s outside the %s face" % (b.get("name"), b["window_um"][:2], face))
+        for f in tnew.get("ft_slots") or []:
+            for fk, wk, sfx in (("in_face", "in_window_um", "_i"), ("out_face", "out_window_um", "_o")):
+                if f.get(fk) == face and isinstance(f.get(wk), list):
+                    f[wk] = [round(v + da, 4) for v in f[wk][:2]] + f[wk][2:]
+                    buses.add(f.get("name", "") + sfx)
+                    rec["moved"].append("ft %s.%s" % (f.get("name"), wk))
+                    if f[wk][0] < -EPS or f[wk][1] > L[a] + EPS:
+                        errs.append("ft %s %s outside the %s face" % (f.get("name"), wk, face))
+        lc = (tnew.get("clock") or {}).get("landing_contract") or {}
+        lc0 = ((t0 or tnew).get("clock") or {}).get("landing_contract") or {}
+        pins0 = lc0.get("pins") or []
+        for i, pin in enumerate(lc.get("pins") or []):
+            xy = pin.get("xy_um")
+            b0 = pins0[i].get("xy_um") if t0 is not None and i < len(pins0) else None
+            ref = b0 if isinstance(b0, list) and len(b0) == 2 else xy
+            if isinstance(xy, list) and len(xy) == 2 and face in _on_face(xy[0], xy[1], W1, H1):
+                xy[a] = round(ref[a] + da, 4)
+        bands0 = lc0.get("bands") or {}
+        for bus, band in (lc.get("bands") or {}).items():
+            if bus not in buses:
+                continue
+            if t0 is not None and bus in bands0:
+                band0 = copy.deepcopy(bands0[bus])
+                for k in ("rect_um", "ff_rect_um", "rects_um"):
+                    if k in band0:
+                        band[k] = band0[k]
+            for k in ("rect_um", "ff_rect_um"):
+                if isinstance(band.get(k), list) and len(band[k]) == 4:
+                    band[k][a] = round(band[k][a] + da, 4)
+                    band[k][a + 2] = round(band[k][a + 2] + da, 4)
+            for r in band.get("rects_um") or []:
+                r[a] = round(r[a] + da, 4)
+                r[a + 2] = round(r[a + 2] + da, 4)
+            rec["moved"].append("band %s" % bus)
+        for q, (ea, eb, wb, kind) in enumerate(M.L):
+            ends = []
+            for e in (ea, eb):
+                if e[0] is None and face in _on_face(e[1][0], e[1][1], W1, H1, tol=1.0):
+                    xy = list(e[1])
+                    xy[a] += da
+                    e = (None, tuple(xy))
+                ends.append(e)
+            M.L[q] = (ends[0], ends[1], wb, kind)
+    return rec, errs
+
+
 def core_models(M, partners):
     """core dicts for analyze() from a core_place.TypeModel at its current state."""
     cores = []
@@ -769,6 +882,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     on_core0 = lambda p: M.owner(p, tol=-0.01) is not None   # noqa: E731
 
     lmeta = link_meta(M, conns) if cfg["add_regs"] > 0 else {}
+    fanc = face_anchor_cfg((cfg.get("_face_anchor") or {}).get(name), name)
 
     def attempt(fixed_k, fix_ft=False):
         grow_ax = cfg.get("grow_axes", "xy")
@@ -827,6 +941,9 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
                 ends.append(e)
             M.L[q] = (ends[0], ends[1], wb, kind)
         tnew["outline_um"] = [round(W, 4), round(H, 4)]
+        fa_rec, fa_err = None, []
+        if fanc is not None:
+            fa_rec, fa_err = face_anchor(tnew, M, (W0, H0), (W, H), fanc, t)
         added_st, added_ft = [], []
         if cfg["add_regs"] > 0:
             added_st = add_station_regs(M, tnew, srep.get("need_more_idx") or [], ccfg["reach"], int(cfg["add_regs"]))
@@ -891,9 +1008,11 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             reasons.append("band clearance short %d" % len(bshort))
         if gA > cfg["max_growth_pct"]:
             reasons.append("growth %.1f%% > %.0f%%" % (gA, cfg["max_growth_pct"]))
+        if fa_err:
+            reasons.append("fixed-face windows %s" % fa_err[:3])
         ok = not reasons
         relaxed = relaxed_n
-        return dict(ok=ok, reasons=reasons, tnew=tnew, added_st=added_st, added_ft=added_ft, added_ln=added_ln, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
+        return dict(ok=ok, reasons=reasons, tnew=tnew, face_anchor=fa_rec, added_st=added_st, added_ft=added_ft, added_ln=added_ln, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
                     srep=srep, nov=nov, new_over=new_over, longer=longer, under=under, fthop=fthop, eqbad=eqbad,
                     acc=acc, items=items, blocked=blocked, relaxed=relaxed,
                     timing_over=[dict(kind=M.L[q][3], bits=M.L[q][2], len_um=round(M.llen(q), 1),
@@ -945,6 +1064,8 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
                                           note="direct links already > 405 um in the base (registered elsewhere)"),
                points_under_base=under0, eq_violations=R_["eqbad"],
                items_moved=sum(1 for a_ in R_["acc"] if a_[0] or a_[1]), items=len(R_["items"]))
+    if R_.get("face_anchor") is not None:
+        row["face_anchor"] = R_["face_anchor"]
     log("  %s: %s viol %s -> %s  outline %.2fx%.2f -> %.2fx%.2f (+%.1f%%)  moved %d  %s" % (
         name, "APPLIED" if ok else "not applied", c0, c1, W0, H0, W, H, gA, moved, row["reason"]))
     return row, (tnew if ok else None)
@@ -1897,12 +2018,35 @@ def _one(n):
         return dict(type=n, changed=False, applied=False, reason="error %s: %s" % (type(e).__name__, e)), None
 
 
+def face_anchor_origins(Q, rows):
+    """FIXED-FACE: every R0 instance of an applied type with a face anchor moves by its origin_shift_um (the W / S
+    growth and the declared die move); a type with a non-R0 instance and a non-zero shift is not applied (its base
+    stays: rotated frames are not handled)."""
+    for r in rows:
+        fa = r.get("face_anchor")
+        if not r.get("applied") or not fa or not any(fa["origin_shift_um"]):
+            continue
+        insts = [p for p in Q.get("partitions") or [] if p.get("type") == r["type"]]
+        if any(p.get("orient", "R0") != "R0" for p in insts):
+            r["applied"] = False
+            r["reason"] = "fixed-face origin shift needs R0 instances"
+            continue
+        for p in insts:
+            p["origin_um"] = [round(p["origin_um"][0] + fa["origin_shift_um"][0], 4),
+                              round(p["origin_um"][1] + fa["origin_shift_um"][1], 4)]
+        fa["instances_moved"] = [p["name"] for p in insts]
+
+
 def cmd_legalize(a):
     repo, plan, P, sha, die, die_dir, rs_cfg, conns, names, cfg = setup(a)
     Q = copy.deepcopy(P)
     rows = []
     global _JOB
     cfg["_bins_dir"] = "physical/die_plan/%s/street_rule_bins" % die
+    if getattr(a, "face_anchor", None):
+        cfg["_face_anchor"] = json.loads(Path(a.face_anchor).read_text())
+        for n in cfg["_face_anchor"]:
+            face_anchor_cfg(cfg["_face_anchor"][n], n)
     _JOB = (P, die_dir, repo, conns, cfg, rs_cfg)
     if a.jobs > 1 and len(names) > 1:
         import multiprocessing as mp
@@ -1914,6 +2058,7 @@ def cmd_legalize(a):
         rows.append(row)
         if tn is not None:
             Q["partition_types"][n] = tn
+    face_anchor_origins(Q, rows)
     # export dry run of the clock taps (schema.tap_grid = what gen phys / kit_rtl derives; density taps re-derive
     # from the remapped sinks, every sink <= tap_radius_um): a type whose legalized form fails where its base passes
     # keeps its base form (COORD 11-12, HEAD-94 hd_lep0N "no legal clock tap within 200 um")
@@ -2063,6 +2208,8 @@ def main(argv=None):
             s.add_argument("--rs-halving", choices=("full", "edge_outline", "none", "off"), default="edge_outline")
             s.add_argument("--rs-out")
             s.add_argument("--jobs", type=int, default=1)
+            s.add_argument("--face-anchor", help="JSON {type: {grow: {x: E|W, y: N|S}, origin_shift_um: [dx, dy], "
+                           "fixed_faces: [..]}}: faces abutting FIXED partitions keep die windows, others local")
     s = sub.add_parser("sidecar", help="carry a legalized plan's republished collector trees + reattached sources into "
                        "an asbuilt clock_landing_table sidecar (the strict bind reads sources from the sidecar)")
     s.add_argument("base_plan")
