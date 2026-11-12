@@ -31046,7 +31046,9 @@
     "q_b01[01]*": "KW-FIX-45 11-11 22:0x COORD loop-gap: q_b010/q_b011 (+physical_v1) wait for the bank128 canon child (b128_canonS) to sign; until then they would be placed against the weight_E pins (prov_view one view per module; guard 9b0926fd8f63 approved, not merged/deployed)",
     "hfd_hgi_vms_glue_nw_t": "structural re-form pending (DIE-HBM-97-B4 + plan event): GEOM-REVIEW (COORD/DIE-HBM-100 11-11 22:4x): attempt 15 is a structurally bad form (778x1636, fill 0.029, one clock root on 46474 sinks, no taps, 11700 M4 + 8460 M5 pins on the E face); no further retry or relaunch for any reason",
     "q_b001": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides",
-    "q_b001__physical_v1": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides"
+    "q_b001__physical_v1": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides",
+    "ot_wbq_root_g0": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept",
+    "ot_wbq_root_g1": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept"
    },
    "gen_hosts": [
     "epyc7",
@@ -32900,6 +32902,15 @@
       "host": "intel2",
       "dir": "/srv/opentallas-scratch2/claude/autopilot/closed/hbm/ot_hbm_idx_qctl_static__e96f241822/kit/views",
       "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 registration ask 11-12): abstract LEF + tt/ff libs, SHA256SUMS in dir; pin-equivalence by the routed-pin-box check; ABSTRACT view only (no detail view registered)"
+     }
+    ],
+    "hfd_hgi_vm_calendar_f20": [
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/cal_views/views",
+      "job": "HBM-CORES-C 11-12 signed core view export (DIE-HBM-100 ask): abstract + detail, 558 pins, 4 clock pins with stack landings; SHA256SUMS in dir",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json"
      }
     ]
    },
