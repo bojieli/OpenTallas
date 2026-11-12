@@ -1,0 +1,283 @@
+{
+ "reattached": {
+  "glue": {
+   "added_collector_cycles": 1,
+   "max_source_hop_um": 149.39199999999988,
+   "moved": [
+    {
+     "name": "coll_flt_i",
+     "old_node": "rst_n_t1",
+     "node": "rst_n_t2",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 125.08000000000007
+    },
+    {
+     "name": "coll_fltv_i",
+     "old_node": "rst_n_t1",
+     "node": "rst_n_t2",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 116.67200000000008
+    },
+    {
+     "name": "ctlm_flt_i",
+     "old_node": "rst_n_t6",
+     "node": "rst_n_t58",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 61.24800000000005
+    },
+    {
+     "name": "d2d_rom__native_tx_payload",
+     "old_node": "rst_n_t6",
+     "node": "rst_n_t57",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 36.335999999999885
+    },
+    {
+     "name": "d2d_rom__native_tx_v",
+     "old_node": "rst_n_t6",
+     "node": "rst_n_t57",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 81.63999999999989
+    },
+    {
+     "name": "d2d_rom__obs_native",
+     "old_node": "rst_n_t6",
+     "node": "rst_n_t57",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 88.9039999999999
+    },
+    {
+     "name": "d2d_rom__x3",
+     "old_node": "rst_n_t6",
+     "node": "rst_n_t59",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 34.40000000000009
+    },
+    {
+     "name": "d2d_rom__x3_generation",
+     "old_node": "rst_n_t6",
+     "node": "rst_n_t59",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 55.936000000000035
+    },
+    {
+     "name": "d2d_rom__x3_identity",
+     "old_node": "rst_n_t6",
+     "node": "rst_n_t59",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 63.32800000000003
+    },
+    {
+     "name": "embed_prov__core_start",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t59",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 70.61600000000004
+    },
+    {
+     "name": "embed_prov__core_token",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t56",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 67.75999999999993
+    },
+    {
+     "name": "embed_prov__embed_code_addr",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t56",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 62.391999999999996
+    },
+    {
+     "name": "embed_prov__embed_code_re",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t56",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 146.32800000000003
+    },
+    {
+     "name": "embed_prov__embed_scale_addr",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t56",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 149.39199999999988
+    },
+    {
+     "name": "embed_prov__embed_scale_re",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t52",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 145.6400000000001
+    },
+    {
+     "name": "sys_face__head_descriptor_generation",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t52",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 111.64800000000014
+    },
+    {
+     "name": "sys_face__head_descriptor_tag",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t52",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 104.22400000000005
+    },
+    {
+     "name": "sys_face__head_descriptor_v",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t52",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 108.34400000000005
+    },
+    {
+     "name": "sys_face__io_cmd_free",
+     "old_node": "rst_n_t1",
+     "node": "rst_n_t2",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 108.26400000000007
+    },
+    {
+     "name": "sys_face__io_fault",
+     "old_node": "rst_n_t1",
+     "node": "rst_n_t2",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 106.90400000000008
+    },
+    {
+     "name": "sys_face__native_fault",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 93.14400000000012
+    },
+    {
+     "name": "sys_face__seq_cfg_image_ready",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 87.84800000000007
+    },
+    {
+     "name": "sys_face__seq_dc",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 80.86400000000015
+    },
+    {
+     "name": "sys_face__seq_descriptor_obs",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 66.928
+    },
+    {
+     "name": "sys_face__seq_program_obs",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 23.752000000000066
+    },
+    {
+     "name": "sys_face__tt_command_stage",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 33.34400000000005
+    },
+    {
+     "name": "sys_face__tt_control_stores_ready",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 35.20799999999997
+    },
+    {
+     "name": "sys_face__tt_layer_context_v",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 40.888000000000034
+    },
+    {
+     "name": "sys_face__tt_native_pos",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 43.952
+    },
+    {
+     "name": "sys_face__tt_native_tok",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 48.72000000000003
+    },
+    {
+     "name": "sys_face__tt_program_obs",
+     "old_node": "rst_n_t7",
+     "node": "rst_n_t60",
+     "old_depth": 5,
+     "depth": 6,
+     "max_source_hop_um": 59.51200000000006
+    },
+    {
+     "name": "child0",
+     "old_node": "rst_root_n",
+     "node": "rst_rl_149",
+     "old_depth": 0,
+     "depth": 1,
+     "max_source_hop_um": 102.08000000000004
+    }
+   ],
+   "rerooted": {
+    "old_node": "rst_n_t2",
+    "node": "rst_n_t17",
+    "shift_um": 64.784,
+    "site_um": [
+     194.4,
+     550.8
+    ],
+    "depth": 6
+   }
+  }
+ },
+ "over": {},
+ "sidecar_changed": {
+  "glue": 64
+ },
+ "sidecar_sha256": "4ad925a263bad2f152ca1ef0217ea694b66d6f698710709feeb7f08f166a864f",
+ "sha256": "277e908d1240432126d2efb48c09676ca561aa67a1d03e3ba2e450a7162f8379",
+ "verdict": "PASS"
+}
