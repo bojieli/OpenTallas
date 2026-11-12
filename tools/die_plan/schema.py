@@ -650,6 +650,9 @@ SCHEMA = {
                                            "chains": {"type": "boolean"},
                                            "ring_depth": {"type": "integer", "minimum": 0, "maximum": 4},
                                            "ring_pair_um": _pos}},
+                        # Default-off (QC-EVENT-S26 11-11): a tap left with fewer sinks after the affinity passes
+                        # merges whole into its nearest tap within tap_radius_um (clock_taps.tcl POST_MIN).
+                        "tap_post_merge_min_sinks": {"type": "integer", "minimum": 1, "maximum": 1200},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         "tap_target_sinks": {"type": "integer", "minimum": 1},
                         "tap_min_sinks": {"type": "integer", "minimum": 1},

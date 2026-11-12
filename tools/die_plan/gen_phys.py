@@ -2723,6 +2723,23 @@ def tap_pair_affinity_exports(t):
         (["export OT_TAP_PAIR_CHAINS = 1"] if chains else []) + ring
 
 
+def tap_post_merge_exports(t):
+    """QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"): clock.tap_post_merge_min_sinks
+    (default absent = off).  After every tap assignment / affinity pass a tap left with 0 < n < min sinks merges WHOLE
+    into its nearest tap with >= min sinks, room under the cap and every moved sink within clock.tap_radius_um
+    (clock_taps.tcl POST_MIN).  Clock pins only."""
+    clock = t.get("clock", {})
+    if "tap_post_merge_min_sinks" not in clock:
+        return []
+    pm = clock["tap_post_merge_min_sinks"]
+    if isinstance(pm, bool) or not isinstance(pm, int) or not 1 <= pm <= 1200:
+        raise ValueError("clock.tap_post_merge_min_sinks must be an integer in [1, 1200]")
+    r = float(clock.get("tap_radius_um", 200.))
+    if not 0 < r <= 400:
+        raise ValueError("clock.tap_post_merge_min_sinks needs 0 < clock.tap_radius_um <= 400")
+    return [f"export OT_TAP_POST_MIN_SINKS = {pm}", f"export OT_TAP_POST_MIN_UM = {r:g}"]
+
+
 # COORD 11-09 (HBM-CORES-B): HBM kits hang TYPE-SAFE-1 hop lockup latches (u_fl_rst_*) on their capture tap by
 # default (clock_taps.tcl OT_HOP_LATCH_CAPTURE_TAP).  Only a latch whose capture tap differs moves; RTL unchanged.
 # Other dies stay opt-in until the first HBM sign-off with it.
@@ -4913,6 +4930,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_PREGRT_FF_HOLD = 1")
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += rck_band_exports(P, tn)
     import pad_clock as PC
