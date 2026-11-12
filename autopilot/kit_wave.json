@@ -5459,7 +5459,9 @@
     "col_h9_r0_p3__t1__cl31d0dc4b@17",
     "ot_s81sl_leaf__t7@6",
     "ot_s81sl_leaf__t34@3",
-    "ot_s81sl_leaf__t59@6"
+    "ot_s81sl_leaf__t59@6",
+    "slice_station__t29__cl2e5c855a@13",
+    "slice_station__t36@6"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -5573,7 +5575,8 @@
     "dsdv_slice_lepw_mus_C__t1": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "dsdv_slice_lepw_mus_LP__t2": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "serdes__t14": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
-    "dsdv_bksel_q*": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)"
+    "dsdv_bksel_q*": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "eng__t1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST: per-item plan plan_h2_2249_c839 (CORE-CTAP-WIDE clock.taps/core_taps) + die bind out_r11r = KIT_TOPOLOGY_BIND_STALE; ready11r carries different eng__t1 taps, so dropping the override would revert the form. Lift when DIE-S81-87 folds c839 taps into the S81 event (with its bind) or names a matching bind."
    },
    "queue_src": "main@7b84010b1c6e",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -10023,20 +10026,22 @@
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
     "slice_station__t27": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/kit_rtl_ftlk.sh"
      },
      "note": "KW-FIX-43 11-10 17:1x COORD APPROVED FTLOCK-S81 go-live (DIE-S81-85 READY 16:58): ft_hop_lockup per-item event plan 9c9ac92a70d1 + kit_rtl_ftlk.sh 63001268efc1 (strict bind_ftlk rc 0, errors 0; staged sha-checked epyc7/epyc2/epyc4/epyc8); row keys unchanged, input hash changes only t27/t49 (dry run 271 rows). DO_NOT_COUNT until signed.",
-     "plan_prev_kw43ftlk2": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json"
+     "plan_prev_kw43ftlk2": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t49": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/kit_rtl_ftlk.sh"
      },
      "note": "KW-FIX-43 11-10 17:1x COORD APPROVED FTLOCK-S81 go-live (DIE-S81-85 READY 16:58): ft_hop_lockup per-item event plan 9c9ac92a70d1 + kit_rtl_ftlk.sh 63001268efc1 (strict bind_ftlk rc 0, errors 0; staged sha-checked epyc7/epyc2/epyc4/epyc8); row keys unchanged, input hash changes only t27/t49 (dry run 271 rows). DO_NOT_COUNT until signed.",
-     "plan_prev_kw43ftlk2": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json"
+     "plan_prev_kw43ftlk2": "/srv/opentallas-scratch2/claude/die-s81-85/ftlock/s81/plan_ftlk_9c9ac92a70d1.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "col_h10_r1__t1__cld01bb4ae": {
      "kit_rtl": {
@@ -10097,18 +10102,20 @@
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
      "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "ot_s81sl_leaf__t5": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
      "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t51": {
      "kit_rtl": {
@@ -10117,219 +10124,262 @@
      "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
     },
     "dsdv_slice_lepw_mu_LP__t2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "gunit__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "ot_s81sl_kv_leaf__t2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "seqhost__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "serdes__t1__clb45db5be": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t14": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t17": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t18": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t21": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t22": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t24__cl64811a5d": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t24__cl66b71008": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t24__cleece78ec": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t25": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t26": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t28": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t29__cl2e5c855a": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t29__clc7772371": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t30__cl1653104c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t30__cl6a190133": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t30__clcedefe91": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t31": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t36": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t37": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t38": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t40__cl1ea9de02": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t40__clc8fb2c8c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t42__cl4bd1432c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t42__clcf44e680": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t43": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t44": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t46": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t47": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t48": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t50__cl39451317": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t50__cld84c9e24": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t52": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t6__cl0755c26e": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t6__cl54a9ceeb": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t7__cl362204c4": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t7__cl503f4913": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t7__cl945bc067": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "slice_station__t8": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "svc_hi_dsdv_svc_pvso_entry__t1": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
@@ -10342,29 +10392,34 @@
      "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
     },
     "ot_s81sl_kv_leaf__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "ot_s81sl_kv_leaf__t3": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "ot_s81sl_kv_leaf__t4": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "ot_s81sl_kv_leaf__t5": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     },
     "col_h10_r2__t1__cl1f5d6c2a": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
+     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json",
+     "plan_prev_kvbr1": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1."
     }
    },
    "item_inputs_prev_kw43ctap": {
@@ -19701,7 +19756,8 @@
     "epyc8",
     "epyc4",
     "intel1"
-   ]
+   ],
+   "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1. Applied to 52 items; 12 with a different type block left as they are (11 already held, eng__t1 held here)."
   },
   "s81_head": {
    "enabled": true,
