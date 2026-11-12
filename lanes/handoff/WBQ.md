@@ -7,8 +7,10 @@ Parent-in-the-loop qualification of the WBQ root S7 form (CBREG=1, SSTOPREG=1, G
 epyc7 /srv/opentallas-scratch2/claude/hbm-wbq-qual-1/repo (sparse clone), branch claude/hbm-wbq-qual-1-1112 @ d4ac56ce5c, pushed to hub:OpenTallas. Nothing uncommitted. Files: results/die_hbm_1112/wbq_qual/ (RESULTS.md = table), rtl/hbm_accel/counted_1109/ot_wbq_root_g1/, proposed ot_wbq_root_g1 entry in physical/die_plan/hbm_arch_cores/recipes_b2.json (not built via recipe path).
 Scratch outputs: /srv/opentallas-scratch2/claude/hbm-wbq-qual-1/{out_full2,out_t3,out_rrf}.
 
-## 3 Running jobs
-None. Final: out_full2 142 jobs, out_t3 target rerun 43/43 PASS (F3 absorb rule fixed).
+## 3 Running jobs (step: RTL fix DCHK)
+DIE-HBM-101 ruled ADOPT: a K write-done with no matching outstanding write raises the fault within 2 hbm_clk. Change made in the SHARED parent file reform_1105b/ot_wbq_split.sv (ot_wbq_sw, new parameter DCHK, default 0 = byte-identical behaviour): DCHK=1 removes the same-cycle-push term (kv&&k_rdy) from the done-matching in 4 places (sticky check, ack_now, an1, setH); DCHK=2 = mutant without the check. NOTE the done check lives in ot_wbq_sw, not in the S7 root file: the g0 kit (root) does not change; the fix needs recipes ot_wbq_sw with params {HREG:2, DCHK:1} (HBM-CORES-C/DIE-HBM-101 to decide).
+Running: full regression out_fix (DCHK=1 default, SCALE=0.5 J=4), log /srv/opentallas-scratch2/claude/hbm-wbq-qual-1/fix.log, results out_fix/results.tsv, ends with TOTAL line. Uncommitted: sw change, tb_qual.sv/qual_comp.sv/run_qual.py (rule (a), first-raise deltas). Pre-fix logs: prefix_logs/ (DCHK=0, F3 deltas up to 1275 fifo_clk).
+Evidence so far: DCHK=0 fails rule (a) (4 to 33 violations per 2400-case job); DCHK=2 mutant fails; DCHK=1 pending in out_fix. Arrivals with a write already outstanding on that PC are inherently indistinguishable by count, exempt but counted; they can still show large first-raise deltas (up to ~370 fifo_clk) and must be reported.
 
 ## 4 Findings so far
 - S7 with CBREG/SSTOPREG/GREG all off equals the old root exactly (0 done-lag, 0 write delta).
