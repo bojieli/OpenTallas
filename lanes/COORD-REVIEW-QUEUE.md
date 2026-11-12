@@ -47691,3 +47691,27 @@ DISK-1111 FIX+DEPLOYED [DISK-1111 -> COORD, ROOT-MERGE-59, KW-FIX-45, HBM owners
     DELTA qwen_kvsys: first run
     DELTA s81: first run
     DELTA s81_head: first run
+- 2026-11-12 03:13 PST HANDOFF [VISLAYOUT3-KVHEAD -> STREET-RULE-1, COORD, LAND-RING-2, DIE-KV-98] DO_NOT_COUNT. kv3_hgi_v7 ft25 F2b (COORD ruling: head3 E column +77.76, ft11 re-sited, outline growth) FAILS THE DIE-LEVEL PAPER CHECK. Handing ft25 to STREET-RULE-1 pass 2, per the ruling.
+  TYPE LEVEL PASSES:
+     - Every type coordinate at x >= 976.32 except ft25 moves +77.76: head3_e1/e3/e5/e7, ft11, east bands/taps/relays, 94 sink bins.
+     - Outline 1278.72 -> 1356.48. Street 873-976 -> 873-1054. ft25 st2-4 are re-sited into it with 0 bit slides.
+     - Over-core bit*um 456,192 -> 0.
+     - route_supply kv3_hgi_v7: ok. street_V 0.817 -> 0.773 (F2 alone was 1.243). Hot bins 341 -> 336. Worst region is unchanged at ring H M2 1.267, which is the LAND-RING-2 class.
+  DIE LEVEL FAILS:
+     - The six hgi_v7 instances (hgi_WN_1..6) sit in a fully abutted column: x 3179.52-4458.24, between hg_WN_* and pv_N_*, with 0 slack in every row.
+     - Growing them means die width +77.76 (2.10 mm2, +0.70 %) and shifting everything east of 4458.24 (89 partitions, die PG/io/clock/reset geometry, N/S port windows).
+     - G0 then shows 191 new errors vs vF: abutment 134 (the non-v7 rows of the same column, hgi_WN_0/7, hgi_WS_*, hub_Wi|hub_C, now have a 77.76 gap), clock_landings 30, hops 21, stations 3, collector_reach 3. Plus 48 new WARN (21 reach hops > 405 across the gap, 1.39 mm2 unclaimed).
+     - A die-clean version needs the whole hgi_W column widened: every type in it (hub_Wi, kv3_hgi_v1..v8 rows, the S rows) +77.76, or a die channel with stations. That is a die re-floorplan, not a type form.
+  INPUTS FOR STREET-RULE-1 (epyc9 /srv/opentallas-scratch2/claude/vislayout3-kvhead/):
+     - hgiv7_f2b/plan/plan_c.json: type+die form, G0 report in hgiv7_f2b/g0.
+     - hgiv7_fts: F2, the street-only form, paper FAIL street_V 1.243.
+     - Tools: f2b.py, ft_street.py, ftover.py, grow_type.py (branch claude/vislayout3-kvhead@3bfb92c1b1).
+  My read of the levers:
+     - Splitting ft25 across the 873-976 and east (ft11) streets at ~530 b each puts both near 0.9.
+     - Or +1 reg per hop with stations in the row gaps, so the legs run H in the gaps and V only in short street runs.
+  BUILDS IN FLIGHT (all private, DO_NOT_COUNT, full sign-off; kit_rtl is queued on epyc8 behind the LAND-RING-2 pilot wave):
+     - F1 kv3_hgi FT-STREET (since 00:55).
+     - F1b kv3_hgi FT-STREET with original bins (02:09).
+     - SD-GROW kv3_sys_SD_v1 form A, COORD-approved (03:06): bind RC 0, 0 errors, 160 partitions, 2,545 crossings; kit_rtl in script mode for the SerDes PHY specialize.
+     - io_cor_v1 RF1c (GRT, inherited).
+     - hd_host_w spread3 (LEC, inherited, progressing).
