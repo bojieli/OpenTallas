@@ -36,6 +36,7 @@ core generators, claude/flow-fix-1025b):
 import argparse
 import hashlib
 import json
+import os
 import math
 import re
 import shutil
@@ -318,6 +319,18 @@ if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resum
   fi
 fi
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
+# GRT-PATCH-1 / GRTM-RUNNERS-1 11-11 (COORD class bug VISLAYOUT2; contract = run_kit_hbm.sh KW-FIX-45): K/grt_transition_mode  # GRTM
+# (written at gen from the gen env OT_GRT_TRANSITION_MODE) or the host env selects the patched router image for the ORFS  # GRTM
+# main run ONLY; LEC, chown and sign-off keep $IMAGE.  No mode = the stock run (no file, no env, same image).  # GRTM
+GIMAGE=$IMAGE; GRTD=(); GRTM=${OT_GRT_TRANSITION_MODE:-$(head -1 "$K/grt_transition_mode" 2>/dev/null)}  # GRTM
+if [ -n "$GRTM" ]; then  # GRTM
+  case "$GRTM" in off|edge|edge_outline) ;; *) echo "FAIL_PREFLOOR grt transition mode $GRTM (off|edge|edge_outline)" | tee -a "$K/FAIL_PREFLOOR"; exit 10;; esac  # GRTM
+  GIMAGE=${OT_GRT_IMAGE:-opentallas/orfs:asap7lock-grtoff}  # GRTM
+  GID=$(${OT_DOCKER:-docker} image inspect --format "{{.Id}}" "$GIMAGE" 2>/dev/null) && [ -n "$GID" ] || { echo "FAIL_PREFLOOR grt transition image $GIMAGE missing on $(hostname)" | tee -a "$K/FAIL_PREFLOOR"; exit 10; }  # GRTM
+  GRTD=(-e OT_GRT_TRANSITION_MODE="$GRTM")  # GRTM
+  printf '{"mode": "%s", "image": "%s", "image_id": "%s", "goal": "%s"}\n' "$GRTM" "$GIMAGE" "$GID" "$GOAL" > "$K/grt_transition.json"  # GRTM
+  echo "GRTM mode $GRTM image $GIMAGE $GID"  # GRTM
+fi  # GRTM
 DOCKER=${OT_DOCKER:-docker}
 NAME=klegacy-$(basename "$K")-$$
 TOP=$(sed -n 's/^export DESIGN_NAME = //p' "$K/config.mk")
@@ -325,7 +338,7 @@ SKIP=$(cat "$K/face_guard_skip.txt")
 echo "image $IMAGE $($DOCKER image inspect --format '{{.Id}}' $IMAGE) host $(hostname) start $(date -Is)" > "$K/image.txt"
 @LECA_START@
 $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
-  -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e HUID=$(id -u) -e HGID=$(id -g) "${GRTD[@]}" -w /OpenROAD-flow-scripts/flow "$GIMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; if [ '${OT_GRT183_RESUME:-1}' != 0 ] && [ -f /work/grt183_make.sh ]; then M=\"bash /work/grt183_make.sh \$M\"; fi; rc=0; \
   @LINT_STEP@\
   if [ \$rc = 0 ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; fi; \
@@ -349,6 +362,9 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   if [ -n \"\$F\" ]; then for c in TT FF; do OT_CORNER=\$c DESIGN_NAME=$TOP ODB=\$F SPEF=\${F%.odb}.spef openroad -exit /work/corners.tcl > /work/sta_\$c.log 2>&1; done; fi; \
   chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
+if [ -n "$GRTM" ] && [ $rc = 0 ] && [ "$GOAL" != post ]; then GL=$(ls "$K"/run/logs/asap7/*/base/5_1_grt.log 2>/dev/null | tail -1)  # GRTM
+  if [ -n "$GL" ] && ! grep -q "GRT-9103\] OT transition-layer mode $GRTM " "$GL"; then echo "FAIL_GRT_MODE $GRTM: $GL has no matching GRT-9103 (mode not applied)" | tee -a "$K/FAIL_GRT_MODE"; rc=1; fi  # GRTM
+fi  # GRTM
 @LECA_FINISH@
 $DOCKER run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 echo "end $(date -Is) rc $rc" >> "$K/image.txt"
@@ -409,6 +425,11 @@ LECA_START = '# FLOW-21 / COORD 11-01 05:1x: the pre-route LEC runs beside place
 LECA_FINISH = '[ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 1 "$NAME" "$GOAL")\n'
 
 
+def grtm_strip(t):
+    """GRTM-RUNNERS-1 11-11: drop the GRT transition-mode lines (every one ends in '# GRTM') for the legacy-flow runner."""
+    t = "".join(l for l in t.splitlines(True) if not l.rstrip().endswith("# GRTM"))
+    return t.replace('"${GRTD[@]}" -w /OpenROAD-flow-scripts/flow "$GIMAGE" bash -lc', '-w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc')
+
 def run_kit(modern):
     """run_kit.sh text: modern = rtl_lint first, reg_fanout after face_guard, FF-only GRT hold step before the goal
     (core_flow); legacy = the pre-10-25 script bit for bit."""
@@ -429,6 +450,8 @@ def run_kit(modern):
         t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)
         t = t.replace("2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; fi; ",
                       "2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; ", 1)
+    if not modern:   # GRTM-RUNNERS-1: the pre-10-25 script stays bit for bit (no transition-mode support)
+        t = grtm_strip(t)
     assert "@" not in t.split("bash -lc", 1)[1].split("> \"$K/run_$GOAL.log\"", 1)[0], "RUN_KIT placeholder left"
     return t
 
@@ -1643,6 +1666,22 @@ def timing_modes_stage(kd, want=None):
                 default=want is None)
 
 
+GRT_TRANSITION_MODES = ("off", "edge", "edge_outline")
+
+
+def write_grt_transition_mode(kd, env=None):
+    """GRTM-RUNNERS-1 11-11 (COORD class bug VISLAYOUT2): the core-kit runner never applied the GRT transition mode, so
+    edge_outline arms ran the stock router.  Same contract as gen_core_kit_hbm.write_grt_transition_mode: the gen env
+    OT_GRT_TRANSITION_MODE (kit_wave item_env) becomes K/grt_transition_mode; unset = no file = stock run."""
+    m = (os.environ if env is None else env).get("OT_GRT_TRANSITION_MODE", "")
+    if not m:
+        return None
+    if m not in GRT_TRANSITION_MODES:
+        raise ValueError(f"OT_GRT_TRANSITION_MODE {m!r}: one of {GRT_TRANSITION_MODES}")
+    (Path(kd) / "grt_transition_mode").write_text(m + "\n")
+    return m
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -2178,6 +2217,7 @@ def main():
     # (custom body) keeps the old chain.
     (kd / "post_grt_drv.tcl").write_text(POST_GRT + "".join(rec.get("post_grt_extra", [])))
     grt_post_drv = ["/work/post_grt_drv.tcl"] if (a.post_grt_drv or rec.get("post_grt_extra")) else []
+    write_grt_transition_mode(kd)       # GRTM-RUNNERS-1 11-11: gen env OT_GRT_TRANSITION_MODE -> K/grt_transition_mode
     (kd / "run_kit.sh").write_text(run_kit(modern))
     (kd / "run_kit.sh").chmod(0o755)
     flow_cfg = []
