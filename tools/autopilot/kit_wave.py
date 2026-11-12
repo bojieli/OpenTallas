@@ -258,6 +258,7 @@ for root, dirs, files in os.walk(K):
         for m in sorted(set(pat.findall(txt)), key=len, reverse=True):
             a = m.rstrip("/")
             if a.startswith(K.rstrip("/")) or a.startswith(W.rstrip("/")): continue
+            if re.search(r"[*?\[]", a) or re.fullmatch(r"/(?:srv|home)/[^/]+(?:/claude)?", a) or a.rstrip("/").endswith("/claude"): continue   # globs / roots of the script's own search, not files
             if MODE != "copy":
                 rows.append((os.path.relpath(p, K), "OUTSIDE", a)); continue
             r = copy_in(a)
@@ -2248,6 +2249,9 @@ def src_inputs(cfg, die):
     files += [str(kr[k]) for k in ("asbuilt", "script") if str(kr.get(k) or "").startswith("/")]
     if str(kr.get("bind_out") or "").startswith("/"):
         files += bind_named_sources(str(kr["bind_out"]), d.get("gen_hosts") or [])
+        # KW-FIX-45 11-12 (COORD fail class KIT_NOT_SELF_CONTAINED at the bind stage): the bind step reads bind_out/bind_report.json
+        # itself; a gen host without the bind dir (S81 s87bind/out_r11p2 on epyc4) must not be chosen
+        files.append(os.path.join(str(kr["bind_out"]), "bind_report.json"))
     return trees, files
 
 
@@ -2860,7 +2864,7 @@ def counted_now(cfg, st, die, item, block=None):
 # source tree, so a new source counts as a change for every row of the die.
 # src_base (KW-FIX-44 11-10, COORD): the commit a wave source tree actually started from; src_sha names the commit its
 # switch inputs came from, and the tree was never at it.  A record of provenance, so not an input.
-INPUT_SKIP = {"src_base", "die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
+INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items"}
@@ -2929,7 +2933,7 @@ def cfg_require_render(sp):
 HOLD_UNCHANGED = "no input change since this FAIL: redesign list, no P&R retry (OWNER 11-07)"
 WAIT_FORM = "WAIT-FORM: latest visual verdict BAD and the form fingerprint (type block, plan sha, kit recipe) is unchanged; releases when it changes (COORD 11-12)"
 WAIT_FORM_LOG = "kit_wave_wait_form.tsv"
-_GEOM_VERDICT_RE = re.compile(r"GEOM VERDICT \[GEOM-VIS-1 viewed\] (\S+)/(\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(BAD|ISSUES|OK)\b")
+_GEOM_VERDICT_RE = re.compile(r"GEOM VERDICT \[[^\]]*viewed\] (\w+)[/ ](\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(BAD|ISSUES|OK|GOOD)\b")
 _GEOM_CACHE = {"t": 0.0, "mtime": None, "v": {}}
 
 
@@ -2955,6 +2959,49 @@ def geom_verdicts():
         return _GEOM_CACHE["v"]
 
 
+FORM_ENV_SKIP = {"OT_FLOW_TAG", "OT_PLACE_MAX_FANOUT"}
+FORM_KEYS = ("kit_rtl", "core_kit", "gen_args", "preflight_args", "canonical_topology_prepare", "cland_pinslot", "type_args",
+             "prov_first_re", "relay_bay_re", "geom_waivers")
+_PLAN_SHA = {}
+
+
+def _plan_id(path, ref_mtime=None):
+    """content sha of a plan json (cached by mtime); for an old attempt whose plan file was rewritten after the attempt: 'rewritten'"""
+    try:
+        mt = os.stat(path).st_mtime
+        if ref_mtime is not None and mt > ref_mtime + 1:
+            return "rewritten:" + str(path)
+        k = _PLAN_SHA.get(path)
+        if not k or k[0] != mt:
+            k = _PLAN_SHA[path] = (mt, hashlib.sha256(open(path, "rb").read()).hexdigest())
+        return k[1]
+    except OSError:
+        return "missing:" + str(path)
+
+
+def form_fp(spec, spec_file):
+    """COORD 11-12 'form fingerprint' = plan content sha + the type's kit recipe (kit_rtl, core_kit, gen args / env, preflight args).
+    Process settings (OT_FLOW_TAG, OT_PLACE_MAX_FANOUT, kit_self_contained, hosts, memory, src tree path / tools) are NOT form."""
+    ref = None
+    if spec_file is not None:
+        try:
+            ref = os.stat(spec_file).st_mtime
+        except OSError:
+            ref = None
+    src = str(spec.get("src") or "")
+
+    def clean(v):
+        if isinstance(v, dict):
+            return {k: clean(x) for k, x in v.items() if k != "note"}
+        if isinstance(v, (list, tuple)):
+            return [clean(x) for x in v]
+        return v.replace(src, "<SRC>") if isinstance(v, str) and src else v
+    body = {k: clean(spec.get(k)) for k in FORM_KEYS if spec.get(k) not in (None, "", {}, [])}
+    body["gen_env"] = {k: v for k, v in (spec.get("gen_env") or {}).items() if k not in FORM_ENV_SKIP}
+    body["plan"] = _plan_id(spec.get("plan") or "", ref)
+    return hashlib.sha256(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()
+
+
 def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
     """COORD 11-12 CONVERGENCE GATE (GEOM-VIS-1: 151 BAD of 249, re-runs of an unchanged form give an identical bad layout): True when
     the type's latest viewed visual verdict is BAD at attempt N and the spec the next launch would build has the same fingerprint
@@ -2970,10 +3017,7 @@ def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
         old = json.loads((old_dir / "spec.json").read_text())
         cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
                         kind=kind or rec.get("kind") or "type")
-        if not cand.get("src_overlay") or not old.get("src_overlay"):
-            old.pop("src_overlay", None); cand.pop("src_overlay", None)
-        d = cfg["dies"][die]
-        hold = input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
+        hold = form_fp(old, old_dir / "spec.json") == form_fp(cand, None)
         if hold:
             try:
                 with open(Path.home() / "coord" / "autopilot" / WAIT_FORM_LOG, "a") as f:
