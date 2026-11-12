@@ -1,6 +1,6 @@
-# HBM-CORES-B lane handoff (HBM hard cores, lane B). Updated 2026-11-12 07:05 PST.
+# HBM-CORES-B lane handoff (HBM hard cores, lane B). Updated 2026-11-12 07:10 PST.
 
-Owner: DIE-HBM-101 (was DIE-HBM-100). Rules: safe/structural forms, two strikes -> re-form, one ECO on a near miss only,
+Owner: DIE-HBM-101 = agent abd6f9b7deeb98ed8 (was DIE-HBM-100). Owner rules 11-12: sha only on 0 unproven + bmc_m0 PASS + m2/m3 FAIL; opsa1 GRT fail -> send congestion render + overflow per layer; second form failure -> re-form (owner approves); no new arms. Rules: safe/structural forms, two strikes -> re-form, one ECO on a near miss only,
 NO --crit for core builds, no --owner-override, DO_NOT_COUNT until signed off, FF hold >= 0, renders before counts.
 
 ## 1 Scope
@@ -22,8 +22,9 @@ Builds (kits under <host>:/srv/opentallas-scratch2/claude/hbm-cores-b/kits/<name
 - b128_canonT (tie clone) / b128_canonU (+SLEW_MARGIN 50 fallback) epyc7.
 - opsbg_E, q3bc_ISS2EM, dtap_rb, opsa0_B (renders + verdict when they land).
 Formal (epyc2, docker names hbmcb_*):
-- RDREG equivalence vs main: pvm_eq0/eq_p0d, eq_p1d (SRAM blackbox on both sides). Earlier p0/p0b/p0c/p1/p1c left cells
-  unproven only downstream of the unpaired SRAM rd_out (ma/mb/fold_a_data/pub_buffer); source at RDREG=0 is line-identical.
+- RDREG equivalence vs main: pvm_eq0/eq_p0e, eq_p1e (u_stack deleted, st_rd a shared input, macro inputs exposed as outputs:
+  sound cut). Earlier p0/p0b/p0c/p1/p1c left cells unproven only behind the unpaired SRAM rd_out (ma/mb/fold_a_data/pub_buffer);
+  p0d/p1d (blackbox) errored: no SAT model for a blackbox cell. Source at RDREG=0 is line-identical.
 - RDREG BMC: pvm_rdreg_fm/bmc_m0 (must PASS), m1..m3 RDMUT mutants (must FAIL; m1 FAILED as required).
 - OPSA1 SREG MUT0 tempinduct: wt_sreg/.../proofs/opsa1_sreg_1112/eq_m0.{log,rc} (3 h timeout).
 - Lane-local watcher: localhost scratchpad watch11.sh (not needed by a successor; grep the logs).
@@ -43,4 +44,7 @@ shared regs so they pair; the sound fix), backups eq0e (mem2reg) and eq0m (bound
 
 ## 6 Open items
 - pvm hold class (F2s): 101/105 reg2reg in g_madd FF->INV->FF, worst -6.20 (structural; after TREG).
-- ksh_pfrvl2 hold split (core-owned vs port-start) not yet done.
+- ksh_pfrvl2 split DONE (RESULT posted): 3727 port-start NEEDS_PARENT + 11 core worst -5.69; new class = face-stage slew on
+  u_bin_g_k_wdata/u_bin_c_kr_data (worst -250 ps). DIE-HBM-101 rule: if ksh_pfrvl3/abcrl3 repeat it -> split replicated face
+  register as a FAMILY fix (abcr+pfr); bring the form (replication, fanout/copy, pin/outline impact, LEC plan) first; growth
+  pre-approved. If l3 does not repeat it, keep the l3 form.
