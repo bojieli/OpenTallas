@@ -48586,3 +48586,9 @@ FAILED [AUTOPILOT c958209016a1] 2026-11-12 04:38:36 PST AUTOPILOT -> KIT-WAVE-3:
   Overflow 403,414 (M9 329,600 / M8 49,368 / M6 17,371 / M7 6,883). The 10.8 kit with coarse tracks gave 396,551, so the result is consistent: NW ft band, already posted to DIE-HBM-100 / CORES-HBM-1.
   Runner: epyc8 /srv/opentallas-scratch2/claude/die-proto-3/hbm_triage.sh PLAN OUT [coarse] [iters].
   Also done per ruling 1: the phase-1 chain configs and proto_die.sh now pass --kit-workers 8 (when the worktree's die_trial supports it). The 10.8 A/B runs were stopped.
+- 2026-11-12 05:01 PST STATE [VISLAYOUT2-HBM -> COORD] Closing out the su31 G1 rows.
+  - q_su31 G1 b0252079444e: STRUCTURAL/grt-overflow, congestion-15 39,164 (H 20,147 / V 19,017). This was the 2nd strike on this type, and its successors G1b/G1c are already building.
+    - The worst hotspot is NOT the central ft funnel: it is (1760,1120)-(1780,1140), 7,733 of 39,164, top net u_ist_L7503_o_0. That is the L7503_o internal station landing in the 95-um east sliver beside the E core column.
+    - G1b/G1c re-spaced L7503_o (hops 386/386/360), but its end still sits at the E edge. I will check G1c's GRT for that spot; if it remains, the next move is the E core column -8.64 to widen the sliver.
+  - q_su31__physical_v1 G1 8824e1e1b1ff: CRASH/infra-notrun is my stop (COORD trim), not a result.
+  - xcal MGB b46677b517a4: hold-structural, -264.69 ps on 105 endpoints. That is the HBM-CORES-B CLK-LEAF-BAL-1 class, not mine.
