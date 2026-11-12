@@ -408,14 +408,33 @@ def _reader_start_groups(t):
     return groups
 
 
+def _start_origin_xy(t):
+    """Centre of the START origin home (the source of every writer START chain: u_cland_origin start_d drives stage 0):
+    landing_writer_start / landing_reader_start origin_rect_um (cleared like the origin group) or landing_origin_rect_um.
+    None when the plan pins no origin home."""
+    ck = (t or {}).get('clock', {})
+    for k in ('landing_writer_start', 'landing_reader_start'):
+        rect = (ck.get(k) or {}).get('origin_rect_um')
+        if rect is not None:
+            return _centre(_clear_of_hard_cores(t, rect))
+    rect = ck.get('landing_origin_rect_um')
+    return _centre(rect) if rect is not None else None
+
+
 def _writer_start_groups(t):
-    """W1 writer START relays at declared sites (DIE-HEAD-38), same FIRM packing; [] when absent."""
+    """W1 writer START relays at declared sites (DIE-HEAD-38), same FIRM packing; [] when absent.
+    CLAND-WSTART-1 (11-11, QC cbn_q11 NK pilot TT -1065.5 / base -667: u_cland_origin start_d -> writer_start_y_o23_0
+    1163 um, one cycle): the chain is anchored at the START origin home like the reader chain.  Without the anchor the
+    hard-core relocation minimised only the hops BETWEEN stages and moved y_o23 stages 0-2 (planned 305-um hops from
+    the origin) onto the north core edge, 30 um apart, leaving the whole distance on the origin -> stage-0 hop.
+    A chain with no stage inside a hard core is unchanged (one window per stage)."""
     cfg = (t or {}).get('clock', {}).get('landing_writer_start')
     if cfg is None:
         return []
     groups = []
+    origin_xy = _start_origin_xy(t)
     for bus, branch in sorted(cfg['branches'].items()):
-        for i, rect in enumerate(_chain_clear_of_hard_cores(t, None, branch['stages'])):
+        for i, rect in enumerate(_chain_clear_of_hard_cores(t, origin_xy, branch['stages'])):
             groups.append((f'u_cland_writer_start_{safe(bus)}_{i}', rect, 'writer-start:'+bus))
         # The last face relay contains a synchronous-reset AND as well as Q.
         # Keeping only Q at the pin let GPL drag its AND to the distant origin
