@@ -22,3 +22,9 @@ Data: ready12f plan (398 partitions), S81-DIEREVIEW-1 family table and data flow
 4. svc: 13 internal hops over 405 stay a type-level fix (svc lane); the region placement is unchanged.
 5. Re-sign batch: every centre type moves. Wing types are unchanged except for pins on the face toward the channel. List them in the KEEP/RESIGN table.
 6. REACH-FIX-1 runs at compose (taps <=800 sinks, fclk repeaters, hops, reset).
+
+## v2 (COORD, 11-12 05:3x): answers to GEOM-VIS-3's 4 blocking CHANGES. Drawing: hfp_s81_1v2.png
+1. **Leaf-to-slice distance.** The centre now has THREE slice rows (S1 LEP C+LP pairs; S2 c1x/iq/kv512; S3 c3x/c1x + iqf/eng/seqhost) between 10 leaf rows in a 2-S1-3-S2-3-S3-2 pattern. Every leaf is at most 2 rows (2.45 mm, about 6 hops at 405 um) from a slice row, which fits the 6-8 cycle leaf<->C budget. Total centre height is unchanged.
+2. **Channel width.** It follows a formula, not a fixed 300 um: width_um = max(300, 1.25 x Vbits / 12.7), with 12.7 b/um being M8+M9 at ~1.9k bits per 300 um per layer. Vbits = the vertical lane bits per old station column (6 and 15), summed by S81-DIEREVIEW-1 from the ready12f lanes. The die still shrinks while Vbits < 14.6k per column. Above that, the excess vertical lanes move into the wings' own vertical streets, so the channel never widens back to a full tile.
+3. **Row heights.** Every leaf and slice row is one 1226.88 tile row. The only other heights are the two svc rows (2851.2 / 2747.5) and the channels (150).
+4. **phy_hbm.** It stays at its OLD die x (11.66 mm from the west edge, bottom edge), so the HBM-side bump and PHY alignment is unchanged. SerDes and SD fill the rest of the bottom centre row.
