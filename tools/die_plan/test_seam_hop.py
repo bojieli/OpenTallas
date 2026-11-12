@@ -31,18 +31,18 @@ def _far(raw, xs):
 def test_default_tiny_has_no_long_seam_hop():
     P, geo = _geo(copy.deepcopy(EX))
     rows = seam_hop.seam_hops(P, geo)
-    assert len(rows) == 2 and not any(r["over"] for r in rows)       # lanes x and r, 288 um each
-    assert {round(r["hop_um"]) for r in rows} == {288}
+    assert len(rows) == 6 and not any(r["over"] for r in rows)       # lanes x and r, 3 seams each
+    assert sorted(round(r["hop_um"]) for r in rows) == [0, 0, 288, 288, 288, 288]
     R, summ = check.run(copy.deepcopy(EX), completeness=True)
     assert not [i for i in R.items if i["check"] == "seam_hop"]
-    assert summ["seam_hops"]["over"] == 0 and summ["seam_hops"]["hops"] == 2
+    assert summ["seam_hops"]["over"] == 0 and summ["seam_hops"]["hops"] == 6
 
 
 def test_long_seam_hop_is_a_warning_and_changes_no_error_count():
     p = _far(EX, [100.0, 200.0, 300.0])       # last station 564 um before pm1 east edge; the first pm2 station is the input site
     P, geo = _geo(p)
     rows = seam_hop.seam_hops(P, geo)
-    x = next(r for r in rows if r["lane"] == "x")
+    x = next(r for r in rows if r["lane"] == "x" and r["src"] == "pm1.fx[2]")
     assert x["over"] and abs(x["hop_um"] - 564) < 2 and x["src"] == "pm1.fx[2]" and x["dst"] == "pm2.fx[0]"
     R, summ = check.run(copy.deepcopy(p), completeness=True)
     warn = [i for i in R.items if i["check"] == "seam_hop"]
@@ -56,12 +56,13 @@ def test_long_seam_hop_is_a_warning_and_changes_no_error_count():
 
 def test_limit_parameter():
     P, geo = _geo(copy.deepcopy(EX))
-    assert all(r["over"] for r in seam_hop.seam_hops(P, geo, limit=100))
+    assert sum(r["over"] for r in seam_hop.seam_hops(P, geo, limit=100)) == 4
     assert not any(r["over"] for r in seam_hop.seam_hops(P, geo, limit=288))
 
 
-def test_lane_end_uses_the_sink_internal_station():
-    """t19 NW_io case: the last station of the source side sits at the seam pin, the sink's first station is inside."""
+def test_lane_end_is_the_face_register_unless_internal_first():
+    """Default: the sink-side flop of a lane end is the u_bin face register at the pin (leg 0); the internal_stations
+    chain runs behind it (kit_istations) and is R3-INTERNAL's job.  internal_first=True counts the first station."""
     p = copy.deepcopy(EX)
     P, geo = _geo(p)
     last = P.ports[P.lanes["x"]["ports"][-1]]["dst"]
@@ -69,15 +70,17 @@ def test_lane_end_uses_the_sink_internal_station():
     pin = P.port_point(P.lanes["x"]["ports"][-1])
     po = P.parts[last["part"]]["origin_um"]
     near = [pin[0] - po[0], pin[1] - po[1]]
-    assert not [r for r in seam_hop.seam_hops(P, geo) if r["dst"].startswith(last["part"])]   # no declared station
-    for dx, want in ((300.0, 300.0), (800.0, 800.0)):
+    base = next(r for r in seam_hop.seam_hops(P, geo) if r["dst"].startswith(last["part"]))
+    assert base["dst"].endswith("[face reg]") and base["dst_leg_um"] == 0 and base["hop_um"] == base["src_leg_um"]
+    assert not [r for r in seam_hop.seam_hops(P, geo, internal_first=True) if r["dst"].startswith(last["part"])]
+    for dx in (300.0, 800.0):
         q = copy.deepcopy(p)
         q["partition_types"][ptype]["internal_stations"] = [dict(
             conn=f"bus:{last['bus']}", from_um=near, to_um=[near[0] - 900, near[1]], regs_um=[[near[0] - dx, near[1]]],
             bits=1)]
         P2, geo2 = _geo(q)
-        r = next(r for r in seam_hop.seam_hops(P2, geo2) if r["dst"].startswith(last["part"]))
-        assert r["src"].startswith("pm2.") and r["dst"].endswith("[internal]")
-        to_pin = abs(r["src_xy"][0] - r["pin_xy"][0]) + abs(r["src_xy"][1] - r["pin_xy"][1])
-        assert abs(r["hop_um"] - (to_pin + want)) < 1.0                  # last station -> pin -> internal station
-        assert r["over"] == (r["hop_um"] > 405) and (dx < 800 or r["over"])
+        r0 = next(r for r in seam_hop.seam_hops(P2, geo2) if r["dst"].startswith(last["part"]))
+        assert r0["hop_um"] == base["hop_um"]                              # internal stations do not change it
+        r = next(r for r in seam_hop.seam_hops(P2, geo2, internal_first=True) if r["dst"].startswith(last["part"]))
+        assert r["dst"].endswith("[internal]") and abs(r["hop_um"] - (r["src_leg_um"] + dx)) < 1.0
+        assert r["over"] == (r["hop_um"] > 405)

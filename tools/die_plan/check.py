@@ -27,6 +27,9 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  collector_reach (ERROR, SEAM-HOP-1, collector_reach.py) every ACTIVE reverse-collector edge (reset relay -> parent on the path
+              from a collector source tap to the root) and source -> tap hop <= 405 um: the rule landing_collector.build_local
+              enforces at bind ("EMIT <type>: reverse collector a->b: N um exceeds 405")
   seam_hop    (advisory, SEAM-HOP-1, seam_hop.py) per lane, the hop from the last station inside one partition to the first
               station of the next one (through the seam pin, Manhattan) over the 405-um signal reach: WARN only, off with
               --seam-hop off, ignored by --strict
@@ -2492,6 +2495,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     check_clock_reset(P, R)
     summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
     summ["reset"] = check_reset(P, R)
+    import collector_reach as CRH      # SEAM-HOP-1: the bind's reverse-collector reach rule, plan-only (ERROR)
+    summ["collector_reach"] = CRH.check_collector_reach(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
     # PLAN-TOOL5 cross-die G0C rules (COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e))

@@ -12,7 +12,7 @@ import schema as S  # noqa: E402
 import gen_phys  # noqa: E402
 
 
-def render(P, geo, R, out_png, title=None):
+def render(P, geo, R, out_png, title=None, extra=None, view=None):
     import warnings
     warnings.filterwarnings("ignore", message="Unable to import Axes3D")
     import matplotlib
@@ -98,8 +98,10 @@ def render(P, geo, R, out_png, title=None):
             sc.append(col)
     ax.add_collection(LineCollection(segs, linewidths=lws, colors=cols, alpha=0.7, zorder=3))
     ax.scatter(sx, sy, s=4 if len(sx) < 2000 else 1, c=sc, zorder=4, linewidths=0)
-    ax.set_xlim(-0.02 * W, 1.02 * W)
-    ax.set_ylim(-0.02 * H, 1.02 * H)
+    if extra:
+        extra(ax)                  # SEAM-HOP-1: caller overlay (seam_hop_render.py); default None = unchanged
+    ax.set_xlim(*(view[0] if view else (-0.02 * W, 1.02 * W)))
+    ax.set_ylim(*(view[1] if view else (-0.02 * H, 1.02 * H)))
     ax.set_aspect("equal")
     ne = len(R.errors()) if R else 0
     ax.set_title(title or f"{P.name}: {len(P.parts)} partitions / {len(P.types)} types, {len(P.ports)} ports, "
