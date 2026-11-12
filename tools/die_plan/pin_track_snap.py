@@ -102,6 +102,17 @@ def shift_io_tcl(text, layer, rx, dnm):
     return "\n".join(out), n
 
 
+def shift_clock_roots(d, layer, rx, dnm):
+    """clock_roots.json entries[].plan_xy_um = [x, y, layer] of the root pins (kit CTS root map)"""
+    n = 0
+    for e in d.get("entries") or []:
+        xy = e.get("plan_xy_um")
+        if xy and xy[2] == layer and rx.search(e.get("pin", "")):
+            xy[0] = round(xy[0] + dnm / 1000.0, 4)
+            n += 1
+    return n
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("kit")
@@ -112,9 +123,17 @@ def main(argv=None):
     ap.add_argument("--outline", nargs=2, type=float, required=True)
     ap.add_argument("--orient", default="R0")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--roots-only-shift-nm", type=int, default=None,
+                    help="only patch clock_roots.json by this shift (kits already snapped by an older version)")
     a = ap.parse_args(argv)
     kit = Path(a.kit)
     rx = re.compile(a.names)
+    if a.roots_only_shift_nm is not None:
+        cr = json.loads((kit / "clock_roots.json").read_text())
+        n = shift_clock_roots(cr, a.layer, rx, a.roots_only_shift_nm)
+        (kit / "clock_roots.json").write_text(json.dumps(cr, indent=1) + "\n")
+        print(f"pin_track_snap: clock_roots.json entries {n}")
+        return 0
     pins = json.loads((kit / "pins.json").read_text())
     shift, res = derive_shift(pins, a.layer, rx, a.origin, a.offset, a.outline, a.orient)
     axis = TRACKS[a.layer][0]
@@ -131,7 +150,12 @@ def main(argv=None):
         dc.write_text(json.dumps(d, indent=1) + "\n")
     t, n3 = shift_io_tcl((kit / "io.tcl").read_text(), a.layer, rx, shift)
     (kit / "io.tcl").write_text(t)
-    print(f"pin_track_snap: pins.json {n1}, declared_pin_contract {n2}, io.tcl boxes {n3}")
+    n4 = 0
+    if (kit / "clock_roots.json").is_file():
+        cr = json.loads((kit / "clock_roots.json").read_text())
+        n4 = shift_clock_roots(cr, a.layer, rx, shift)
+        (kit / "clock_roots.json").write_text(json.dumps(cr, indent=1) + "\n")
+    print(f"pin_track_snap: pins.json {n1}, declared_pin_contract {n2}, io.tcl boxes {n3}, clock_roots entries {n4}")
     if not (n1 == n3 and (n2 in (0, n1))):
         raise SystemExit("snap counts disagree")
     return 0

@@ -40,3 +40,9 @@ def test_mixed_residues_refused():
     pins = [PIN, dict(PIN, bus="clk_t2", x=23.34)]
     with pytest.raises(SystemExit):
         pts.derive_shift(pins, "M7", RX, [639.36, 8.64], [0.108, 0.012], [794.88, 1209.6])
+
+
+def test_clock_roots_entries_shift():
+    d = {"entries": [dict(pin="clk_t19", plan_xy_um=[23.328, 338.592, "M7"]), dict(pin="clk_x", plan_xy_um=[1.0, 2.0, "M5"])]}
+    assert pts.shift_clock_roots(d, "M7", RX, 4) == 1
+    assert d["entries"][0]["plan_xy_um"][0] == 23.332 and d["entries"][1]["plan_xy_um"][0] == 1.0
