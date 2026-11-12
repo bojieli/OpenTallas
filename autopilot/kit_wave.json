@@ -29546,8 +29546,6 @@
     "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
     "hnx_rp3h_xs": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a8 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
     "ot_hbm_idx_selector_static_sel": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
-    "q_b010": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b010__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_b110": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b110__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b111": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
@@ -29556,16 +29554,11 @@
     "q_b112__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
     "q_b113": "replan-missing-stations: KW-FIX-43 11-11 DIE-HBM-98: bind has 7 core-core links (7.3 kb, 445-808 um) with no plan station, 2 landing on combinational capture pins; VIS-TRIAGE-HBM re-plans q_b113 in the post-cut correction event; not in the 12:00 batch",
     "q_b113__physical_v1": "replan-missing-stations: KW-FIX-43 11-11 DIE-HBM-98: bind has 7 core-core links (7.3 kb, 445-808 um) with no plan station, 2 landing on combinational capture pins; VIS-TRIAGE-HBM re-plans q_b113 in the post-cut correction event; not in the 12:00 batch",
-    "q_b003": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
     "root": "DIE-HBM-98 11-10 23:2x: split-rebind class, DIE-HBM-98 (bind sub-type lane)",
     "q_mcb": "DIE-HBM-98 11-11: per-instance param; plan splits q_mcb -> q_mcb_ne/q_mcb_nw in the hbm-channels-plan event; relaunch the two new types on that READY. Lift = delete this key.",
-    "q_b001": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b001__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b001*": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1",
     "q_spt0*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1 and worse; child xcal_rel_t PROVISIONAL view; prov_views fail until lane1p_core/sfu_s_core routed",
     "q_spb2*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): child ot_hbm_svc_sm_xcal_rel_t PROVISIONAL contract view (DRT-0073); wait for its signed view",
-    "q_b002*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): PDN-0179 class; post-cut PDN channel item",
     "q_b102*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply >1",
     "q_b113*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold",
     "q_su11*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply p99>1 (ft-chain packing); post-cut ft re-site",
@@ -29575,8 +29568,6 @@
     "q_hub_ne": "KW-FIX-45 11-11 COORD 08:1x: q_hub_ne prov FAIL; HOLD until the d6 event (HUB-ARCH-2); also route_supply >1.0 and worse",
     "q_b102": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
     "q_b102__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
-    "q_b011": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b011__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_b101": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
     "q_b101_nw": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
     "q_b103": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
@@ -29587,12 +29578,6 @@
     "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
     "q_su01": "KW-FIX-45 11-11 (COORD fail-watch): q_su01 PLAN-failed at 12:55, children ot_hbm_su_pg_lane1p_core, lane_exp_x_core, sfu_s_core have no routed/provisional view; parked until all 3 sign off",
     "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)",
-    "q_b012": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b012__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b013": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b013__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b002": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_b002__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "vsN1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "vsN2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "vsN4": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
@@ -32435,7 +32420,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b001__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32443,7 +32431,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b002": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32451,7 +32442,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b002__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32459,7 +32453,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b003__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32467,7 +32464,7 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 PILOT (COORD 15:0x): cp -al of src_hbm_main_fe0002fac6 + real copies of tools/die_plan/kit_istations.py (blob 2c63f916b8d9) and kit_bus_bitgroups.py (blob c930b5f309c4) from claude/tools2-istations-bitgroups-2@efdab72dbc13; DO_NOT_COUNT; route held",
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
@@ -32478,7 +32475,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b011__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32486,7 +32486,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b012": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32494,7 +32497,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b012__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32502,7 +32508,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b013": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32510,7 +32519,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b013__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32518,7 +32530,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b100__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32614,7 +32629,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b000": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32726,7 +32744,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b010__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -32734,7 +32755,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t19",
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
+     "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
     "q_b100": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t19/die_plan.json",
@@ -41756,7 +41780,99 @@
     "FIX",
     "REVIEW",
     "KIT-PLACED"
-   ]
+   ],
+   "hold_items_prev_kw45_bank": {
+    "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
+    "ot_hbm_su_pg_lane1_core": "KW-FIX-43 11-10 23:0x: row source added (COORD 22:49 NO-ROW-SOURCE); no P&R relaunch: HBM-TAPS ROW 21:43 (c) tap-only core -> die STA + re-sign on the routed DB. Lift = delete this key.",
+    "ot_hgi_sfu_split3_lane_core_bk": "KW-FIX-43 11-10 23:0x: row source added (COORD 22:49 NO-ROW-SOURCE); no build ruling for this core yet (not in the taps/ftres rows); held so the row source does not start an unruled P&R. Lift = delete this key.",
+    "ot_hgi_sfu_split3_lane_core_ex": "KW-FIX-43 11-10 23:0x: row source added (COORD 22:49 NO-ROW-SOURCE); no P&R relaunch: HBM-TAPS ROW 21:43 (c) tap-only core -> die STA + re-sign on the routed DB. Lift = delete this key.",
+    "ot_hgi_sfu_split3_lane_core_fr": "KW-FIX-43 11-10 23:0x: row source added (COORD 22:49 NO-ROW-SOURCE); no P&R relaunch: HBM-TAPS ROW 21:43 (c) tap-only core -> die STA + re-sign on the routed DB. Lift = delete this key.",
+    "ot_hbm_idx_query_static": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
+    "ot_hbm_idx_score_hcol_h1": "KW-FIX-5 01:1x HBM-STAGE dry run: PORT_MISMATCH mp_isl; DIE-HBM-61 20:51 counts q7b2 with no rebuild; no re-gen",
+    "hfd_ep_static": "CODEX CLOSED: actualSIGNEDview epyc2:/srv/opentallas-scratch2/claude/ss27/resign/ep_k/signoff/signoff.json matchesplannedpins; oldECOliveownershipnoteobsolete. PreserveSIGNEDview; no rebuild.",
+    "ot_hnx_fused_host_program": "COORD 11-04: signed off (ss29/resign/fhp_i); I62 part 14 only makes the plan match that build; no wave relaunch",
+    "ot_hbm_su_programme_pslice_c5": "I61 part 8 removes this core; stopped per DIE-HBM-66, RM-31 21:03",
+    "ot_hbm_su_pcol_h": "I61: signed kit exists, plan matches its 769 pins; no rebuild, re-sign by SS29",
+    "ot_hfd_coll_q3_edge_core": "KW-FIX-8 21:4x: DIE-HBM-66 form q3e13 builds it on the part 13 outline",
+    "ot_hgi_dma_back_static_vp4_banks_cp": "KW-FIX-8 21:4x: DIE-HBM-66 form dma13 builds it on the part 13 outline",
+    "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": "KW-FIX-8 21:4x: key moved at d44v11; held by form per DIE-HBM-63 03:59; no wave relaunch unless owner asks",
+    "ot_hgi_sfu_core_split3__ctl": "KW-FIX-8 21:4x: key moved at d44v11; held by form per DIE-HBM-63 03:59; no wave relaunch unless owner asks",
+    "tailx_sk_step0": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
+    "tailx_sk_steady": "KW-FIX-8 23:2x DIE-HBM-66: Sinkhorn A event, do not requeue",
+    "ot_hgi_sfu_core_split3__opstore_b": "KW-FIX-11 07:0x COORD 07:01: stopped 06:51 by ruling, part 27 replaces (HBM-FORM-SPLIT 06:51); autopilot revived it on exit 137; no relaunch",
+    "ot_hgi_sfu_core_split3__opstore_a": "KW-FIX-11 07:0x COORD 07:01: part 27 opsa_group0+group1+rest replaces (HBM-FORM-SPLIT 06:51); no relaunch",
+    "ot_hfd_coll_q3_vm_core": "KW-FIX-35-B 2026-11-08 08:31 PST: held at the die-wide plan_hbm_1108d switch (SU batch) - 1108d re-picks this core outside the SU batch; release = delete this key when DIE-HBM-92 / HBM-HARD-6 wants it built on 1108d",
+    "q_hub_nw": "KW-FIX-41 2026-11-09 00:2x (DIE-HBM-95 00:17 (1)): held until the hub rebind bind_F3b dry passes; DIE-HBM-96 releases",
+    "q_sm1": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
+    "q_sm2": "KW-FIX-42 02:25 COORD 02:19: PROVISIONAL smh kids; hold until HBM-SM-KIDS-2 posts views for the children",
+    "q_sm3": "KW-FIX-42 02:5x COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1/q_sm2; hold until HBM-SM-KIDS-2 posts views",
+    "q_sm0": "KW-FIX-42 03:05 COORD NEWFAIL: same smh-kids PROVISIONAL as q_sm1-3; hold until HBM-SM-KIDS-2 posts views",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "KW-FIX-42 2026-11-09 06:59 PST COORD 07:0x: wave row superseded by HBM-HARD-9 separate re-sign of h9b; no wave relaunch on the stale codex path",
+    "hnx_rp3h_xs": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a8 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "ot_hbm_idx_selector_static_sel": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a3 DPL-0033 (place legalization); no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
+    "q_b010": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b010__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b110": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b110__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b111": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b111__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b112": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b112__physical_v1": "WAIT DIE-HBM-97 split rebind, KW-FIX-43 11-09 20:0x COORD ruling (2): p11t places split hard cores u_sfucore_Q_lane*.u_fcore.u_core.u_{bk,ex,fr}; bind_p11t_vK5d_c12 binds the lanes soft (KIT_PREFLIGHT macro_instances). Revert: delete this key.",
+    "q_b113": "replan-missing-stations: KW-FIX-43 11-11 DIE-HBM-98: bind has 7 core-core links (7.3 kb, 445-808 um) with no plan station, 2 landing on combinational capture pins; VIS-TRIAGE-HBM re-plans q_b113 in the post-cut correction event; not in the 12:00 batch",
+    "q_b113__physical_v1": "replan-missing-stations: KW-FIX-43 11-11 DIE-HBM-98: bind has 7 core-core links (7.3 kb, 445-808 um) with no plan station, 2 landing on combinational capture pins; VIS-TRIAGE-HBM re-plans q_b113 in the post-cut correction event; not in the 12:00 batch",
+    "q_b003": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_su11__physical_v1": "KW-FIX-44 2026-11-10 16:55 PST COORD 16:5x: same class as q_b003, max_displacement {2359 1573}; 2 watchdog stops in 3_5 detailed placement (diamond legalizer, kit DETAIL_PLACEMENT_ARGS -max_displacement {553 4320}), watchdog-stopped twice; held until DIE-HBM-97 lands the bounded-displacement kit-spec batch for every HBM kit with {553 4320}; then resume at place (3_1-3_4 reused). Lift = delete this key.",
+    "root": "DIE-HBM-98 11-10 23:2x: split-rebind class, DIE-HBM-98 (bind sub-type lane)",
+    "q_mcb": "DIE-HBM-98 11-11: per-instance param; plan splits q_mcb -> q_mcb_ne/q_mcb_nw in the hbm-channels-plan event; relaunch the two new types on that READY. Lift = delete this key.",
+    "q_b001": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b001__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b001*": "ARCH/REDESIGN (PD-PROCESS S0/S2 not passed): KW-FIX-43 11-11 COORD 02:3x: 4127-bit L14_i broadcast; @15be2a05 PDN-0179 01:41, @706ec04b51c1 PDN Error 247 02:01; no launch until S0/S2 pass and DIE-HBM-98 posts the q_b001 redesign READY naming q_b001/pv1",
+    "q_spt0*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): route_supply >1 and worse; child xcal_rel_t PROVISIONAL view; prov_views fail until lane1p_core/sfu_s_core routed",
+    "q_spb2*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): child ot_hbm_svc_sm_xcal_rel_t PROVISIONAL contract view (DRT-0073); wait for its signed view",
+    "q_b002*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): PDN-0179 class; post-cut PDN channel item",
+    "q_b102*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply >1",
+    "q_b113*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold",
+    "q_su11*": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): S2 hold route_supply p99>1 (ft-chain packing); post-cut ft re-site",
+    "q_su00__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child pgslice_lg__pretree/lane_exp has no routed abstract yet; release when signed/routed",
+    "q_su10__physical_v1": "KW-FIX-45 11-11 cut hold (DIE-HBM-100 S2 list + COORD fail_watch 07:34): prov_views: child lane_exp_x_core has no routed abstract yet (vec LEC fix landed); release when routed",
+    "NE_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event",
+    "q_hub_ne": "KW-FIX-45 11-11 COORD 08:1x: q_hub_ne prov FAIL; HOLD until the d6 event (HUB-ARCH-2); also route_supply >1.0 and worse",
+    "q_b102": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
+    "q_b102__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
+    "q_b011": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b011__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b101": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b101_nw": "KW-FIX-45 11-11 DIE-HBM-100: ra-child PDN batch waits for the q_b100 proof (detail view of hcol_h0_ra staged, no DRT-0073 at Start pin access); then ONE release batch with fresh gens",
+    "q_b103": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
+    "q_b103__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 13:4x): HOLD until the q_b10x redesign event (A + B1 + r1): current plan has 190 over-reach hops, max 1373 um; not-started attempts are superseded",
+    "q_b000": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_b000__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_b100": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_b100__physical_v1": "KW-FIX-45 11-11 COORD fail_watch: q_b100__physical_v1 hit DRT-0073 on hcol_h0_ra clk again; every hcol_h0_ra-child HBM type back on HOLD until DIE-HBM-100's fix is proven (no relaunch loop)",
+    "q_su01": "KW-FIX-45 11-11 (COORD fail-watch): q_su01 PLAN-failed at 12:55, children ot_hbm_su_pg_lane1p_core, lane_exp_x_core, sfu_s_core have no routed/provisional view; parked until all 3 sign off",
+    "q_su01__physical_v1": "KW-FIX-45 11-11: parked with q_su01 (same child cores)",
+    "q_b012": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b012__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b013": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b013__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b002": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "q_b002__physical_v1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
+    "vsN1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "vsN2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "vsN4": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "vsN5": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "vsN6": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "q_spb1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "q_spt1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "q_spt2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
+    "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
+    "NW_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event",
+    "ot_hgi_coll_tkm_m_tp192__root": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+    "q_spb0__physical_v1": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+    "q_su20__physical_v1": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+    "q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it"
+   }
   }
  },
  "place_prefer": [
