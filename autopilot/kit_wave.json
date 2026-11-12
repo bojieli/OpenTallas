@@ -29075,7 +29075,8 @@
     "NEEDS-KIT",
     "FIX",
     "REVIEW",
-    "KIT-PLACED"
+    "KIT-PLACED",
+    "GEOM-REQ"
    ],
    "lane": "KIT-WAVE-3",
    "die_max_inflight": 60,
@@ -29601,7 +29602,11 @@
     "q_spt1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
-    "NW_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event"
+    "NW_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event",
+    "ot_hgi_coll_tkm_m_tp192__root": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+    "q_spb0__physical_v1": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+    "q_su20__physical_v1": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+    "q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it"
    },
    "gen_hosts": [
     "epyc9"
@@ -41745,7 +41750,13 @@
     "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
     "NW_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event",
     "NE_io": "KW-FIX-45 11-11 (COORD GEOM 16:3x, DIE-HBM-100): NW_io a3 3_place BAD (648x4320, fill 0.0074, glue in one clump, clock_on_macro 1, pin_unreg 3), route stopped; NW_io and NE_io held, no relaunch until the re-form plan event"
-   }
+   },
+   "take_states_prev_kw45_pilot": [
+    "NEEDS-KIT",
+    "FIX",
+    "REVIEW",
+    "KIT-PLACED"
+   ]
   }
  },
  "place_prefer": [
