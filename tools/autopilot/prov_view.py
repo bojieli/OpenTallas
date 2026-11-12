@@ -106,6 +106,23 @@ def needed(plan, tn):
     return out
 
 
+def module_pin_tables(plan, tn, plan_dir):
+    """KW-FIX-45 11-11 (DIE-HBM-100, q_b010/q_b011 canon vs weight_E): {module: {pin-table digest: [inst, ...]}} over EVERY waiting
+    instance of type tn.  The provisional view is built once per MODULE (needed()) and stamped onto all its instances
+    (stamp_views()), but its pins are checked against the FIRST instance's table only, so instances whose pins_file differs
+    (same module, other pin side/layer) would be stamped with the wrong view.  Instances without a readable table
+    are left out (no table to compare)."""
+    import hashlib
+    out = {}
+    for c, _kind in waiting(plan, tn):
+        pins = plan_pins(c, plan_dir)
+        if not pins:
+            continue
+        key = hashlib.sha256(json.dumps(sorted((x["name"], str(x.get("layer")), str(x.get("x")), str(x.get("y"))) for x in pins)).encode()).hexdigest()[:12]
+        out.setdefault(str(c.get("module") or c.get("inst")), {}).setdefault(key, []).append(c.get("inst"))
+    return out
+
+
 def stamp_views(plan, tn, children):
     """overlay plan: only type tn's waiting entries change (lef when missing, lib = provisional TT view).
     DIE-QC-69 11-04: every instance, not one per module: an unstamped repeat of a module has no site in macro_place.tcl,
@@ -780,6 +797,11 @@ def make(a):
     vroot = os.path.join(out, "views")
     os.makedirs(vroot, exist_ok=True)
     children, errors = {}, []
+    for _m, _tabs in sorted(module_pin_tables(plan, tn, plan_dir).items()):
+        if len(_tabs) > 1:     # one view per module cannot serve instances with different pin tables: fail loudly, never stamp it
+            errors.append(f"{_m}: instances carry {len(_tabs)} different pin tables " +
+                          "; ".join(f"{k}: {len(v)} inst" for k, v in sorted(_tabs.items())) +
+                          " (one provisional view per module cannot serve them)")
     for entry, kind in needed(plan, tn):
         m = str(entry.get("module") or entry.get("inst"))
         ppins = plan_pins(entry, plan_dir)
