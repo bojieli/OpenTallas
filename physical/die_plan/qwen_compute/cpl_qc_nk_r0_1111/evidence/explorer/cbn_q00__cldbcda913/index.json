@@ -1,0 +1,109 @@
+{
+ "schema": "opentallas.dataflow.links_index.v1",
+ "records": [
+  {
+   "id": "type_cbn_q00__cldbcda913__after",
+   "file": "type_cbn_q00__cldbcda913__after.links.json.gz",
+   "label": "cbn_q00__cldbcda913 (cbn_q00__cldbcda913)",
+   "design": "cbn_q00__cldbcda913",
+   "token_designs": [],
+   "revision": "plan_qc99_s21_nkout.json",
+   "role": "inspection",
+   "candidate": null,
+   "scope": "partition type cbn_q00__cldbcda913 of /srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/plan_qc99_s21_nkout.json; after = /srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/plan_qc99_s22_nkr0.json",
+   "coverage": {
+    "links": 8,
+    "placed": 8,
+    "unplaced": 0,
+    "width_known": 8,
+    "directed": 6,
+    "pin_ends": 16,
+    "box_ends": 0,
+    "unplaced_ends": 0,
+    "stages_known": 4,
+    "bypass": 4,
+    "blocks": 9,
+    "bits_total": 4115,
+    "bit_um_total": 7107833,
+    "metrics": {
+     "sum_width_length_bit_um": 7107758,
+     "sum_bit_um_hops": 7107833,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 1542,
+     "relays": 23,
+     "relay_bit_stages": 11835,
+     "needed_relay_bit_stages_lower_bound": 14918,
+     "worst_cut": 0.3754,
+     "cut_windows_over_limit": 0
+    }
+   },
+   "inputs": [
+    {
+     "path": "/srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/plan_qc99_s21_nkout.json",
+     "sha256": "cce5cf63a7bdb1402bbf0412ab2cce5a653dbc1f2c2775db42a335956391eef6"
+    },
+    {
+     "path": "/srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/plan_qc99_s22_nkr0.json",
+     "sha256": "587e484eda913392007b5ba8b67147e2bf0e7572558d70bc6a6e2ee75db86c5f"
+    },
+    {
+     "path": "/srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/core_conns.json",
+     "sha256": "59c7577c0930594e52a99c361ad59cadf92cf3cd9d701b27a47329f4dfb3b1ab"
+    }
+   ],
+   "generated": "2026-11-12T01:31:00+00:00",
+   "bytes": 5961
+  },
+  {
+   "id": "type_cbn_q00__cldbcda913__before",
+   "file": "type_cbn_q00__cldbcda913__before.links.json.gz",
+   "label": "cbn_q00__cldbcda913 (cbn_q00__cldbcda913)",
+   "design": "cbn_q00__cldbcda913",
+   "token_designs": [],
+   "revision": "plan_qc99_s21_nkout.json",
+   "role": "inspection",
+   "candidate": null,
+   "scope": "partition type cbn_q00__cldbcda913 of /srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/plan_qc99_s21_nkout.json",
+   "coverage": {
+    "links": 8,
+    "placed": 8,
+    "unplaced": 0,
+    "width_known": 8,
+    "directed": 6,
+    "pin_ends": 16,
+    "box_ends": 0,
+    "unplaced_ends": 0,
+    "stages_known": 4,
+    "bypass": 4,
+    "blocks": 9,
+    "bits_total": 4115,
+    "bit_um_total": 6872561,
+    "metrics": {
+     "sum_width_length_bit_um": 6872501,
+     "sum_bit_um_hops": 6872561,
+     "sum_traffic_length": null,
+     "traffic_links": 0,
+     "over_reach_bits": 1542,
+     "relays": 23,
+     "relay_bit_stages": 11835,
+     "needed_relay_bit_stages_lower_bound": 14404,
+     "worst_cut": 0.3754,
+     "cut_windows_over_limit": 0
+    }
+   },
+   "inputs": [
+    {
+     "path": "/srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/plan_qc99_s21_nkout.json",
+     "sha256": "cce5cf63a7bdb1402bbf0412ab2cce5a653dbc1f2c2775db42a335956391eef6"
+    },
+    {
+     "path": "/srv/opentallas-scratch2/claude/cpl-qc-nk-r0/planq/core_conns.json",
+     "sha256": "59c7577c0930594e52a99c361ad59cadf92cf3cd9d701b27a47329f4dfb3b1ab"
+    }
+   ],
+   "generated": "2026-11-12T01:31:00+00:00",
+   "bytes": 5700
+  }
+ ]
+}

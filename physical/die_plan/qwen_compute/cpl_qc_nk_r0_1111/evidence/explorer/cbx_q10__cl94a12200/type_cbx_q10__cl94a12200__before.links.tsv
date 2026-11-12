@@ -1,0 +1,6 @@
+worst_rank	id	class	bits	directed	driver	sinks	stages	length_um	max_hop_um	bit_mm	status	static	bypass_n	bypassed	note	pipeline
+1	ft:a22	ft	514	1	.ft_in	.ft_out	1	1314.5	1314.5	675.7	over		0		1 stations (station 0 = in-face flop), interior sites: spread	face>face
+2	u_t21.n_a>u_t20.n_y	core-core	514	0	u_t21.n_a	u_t20.n_y		924.4	924.4	475.2	over		0			0>0
+3	u_t21.n_b>u_t31.n_y	core-core	514	0	u_t21.n_b	u_t31.n_y		806.9	806.9	414.8	over		0			0>1
+4	u_t21.t_out>u_t31.n_a	core-core	514	1	u_t21.t_out	u_t31.n_a		806.1	806.1	414.4	over		0			0>1
+5	stn:bus:y_o21	internal-station	515	1	u_t21.n_y	.	1	411.9	209.3	212.1	relay		0			0>face

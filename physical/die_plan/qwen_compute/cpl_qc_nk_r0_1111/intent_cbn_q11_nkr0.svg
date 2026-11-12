@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="820" font-family="sans-serif">
+<defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#333"/></marker></defs>
+<rect width="900" height="820" fill="white"/>
+<text x="40" y="30" font-size="15" font-weight="bold">BEFORE s21: cbn_q11 (t32/t33 MY)</text>
+<rect x="40.0" y="60.0" width="345.9456" height="711.2448" fill="#f7f7f2" stroke="#333"/>
+<rect x="212.9728" y="60.0" width="24.97040000000002" height="711.2448" fill="#dfe9f7" opacity="0.6"/>
+<text x="196.8" y="417.0448" font-size="9">bc column (bc_i32 S / bc_o33 N), stations u_xstn32/33</text>
+<rect x="64.19200000000001" y="427.7184" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="64.19200000000001" y1="555.8912" x2="64.19200000000001" y2="443.05120000000005" stroke="#c0392b" stroke-width="5"/>
+<line x1="192.40960000000004" y1="594.8112" x2="192.40960000000004" y2="562.8912" stroke="#2c6fbb" stroke-width="5"/>
+<text x="106.19200000000001" y="639.8912" font-size="13">u_t22 R0</text>
+<rect x="233.53600000000003" y="427.7184" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="361.75360000000006" y1="555.8912" x2="361.75360000000006" y2="443.05120000000005" stroke="#c0392b" stroke-width="5"/>
+<line x1="233.53600000000003" y1="594.8112" x2="233.53600000000003" y2="562.8912" stroke="#2c6fbb" stroke-width="5"/>
+<text x="275.53600000000006" y="639.8912" font-size="13">u_t32 MY</text>
+<rect x="64.19200000000001" y="81.77279999999993" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="192.40960000000004" y1="209.94559999999996" x2="192.40960000000004" y2="97.10559999999987" stroke="#c0392b" stroke-width="5"/>
+<line x1="64.19200000000001" y1="248.86559999999994" x2="64.19200000000001" y2="216.94559999999996" stroke="#2c6fbb" stroke-width="5"/>
+<text x="106.19200000000001" y="293.94559999999996" font-size="13">u_t23 MY</text>
+<rect x="233.53600000000003" y="81.77279999999993" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="361.75360000000006" y1="209.94559999999996" x2="361.75360000000006" y2="97.10559999999987" stroke="#c0392b" stroke-width="5"/>
+<line x1="233.53600000000003" y1="248.86559999999994" x2="233.53600000000003" y2="216.94559999999996" stroke="#2c6fbb" stroke-width="5"/>
+<text x="275.53600000000006" y="293.94559999999996" font-size="13">u_t33 MY</text>
+<line x1="64.21888000000001" y1="485.61120000000005" x2="361.72672000000006" y2="541.8912" stroke="#c0392b" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="216.97280000000003" y="509.75120000000004" font-size="10" fill="#c0392b">t22.t_out&#8594;t32.n_a D3 x2</text>
+<line x1="361.72672000000006" y1="457.3312" x2="192.38272000000003" y2="195.94559999999987" stroke="#d68910" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="281.05472000000003" y="322.63839999999993" font-size="10" fill="#d68910">t32.n_y&#8594;t23.n_a D10 x1</text>
+<line x1="192.38272000000003" y1="139.66559999999987" x2="361.72672000000006" y2="195.94559999999987" stroke="#d68910" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="281.05472000000003" y="163.80559999999986" font-size="10" fill="#d68910">t23.t_out&#8594;t33.n_a D3 x1</text>
+<line x1="361.72672000000006" y1="111.38559999999987" x2="192.38272000000003" y2="167.66559999999987" stroke="#d68910" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="281.05472000000003" y="135.52559999999988" font-size="10" fill="#d68910">t33.n_y&#8594;t23.n_b D3 x1</text>
+<line x1="361.72672000000006" y1="485.61120000000005" x2="361.72672000000006" y2="513.6112" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="365.72672000000006" y="495.61120000000005" font-size="10" fill="#1e8449">t32.t_out&#8594;t32.n_b D3+r8 x0</text>
+<line x1="361.72672000000006" y1="139.66559999999987" x2="361.72672000000006" y2="167.66559999999987" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="365.72672000000006" y="149.66559999999987" font-size="10" fill="#1e8449">t33.t_out&#8594;t33.n_b D3+r8 x0</text>
+<line x1="225.36" y1="581.0912000000001" x2="233.56288000000004" y2="581.0912000000001" stroke="#2c6fbb" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+<text x="236.00000000000003" y="593.0912000000001" font-size="9" fill="#2c6fbb">xstn tap_d 508b x0</text>
+<line x1="225.36" y1="235.14559999999994" x2="233.56288000000004" y2="235.14559999999994" stroke="#2c6fbb" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+<text x="236.00000000000003" y="247.14559999999994" font-size="9" fill="#2c6fbb">xstn tap_d 508b x0</text>
+<text x="480" y="30" font-size="15" font-weight="bold">AFTER s22: t32/t33 R0</text>
+<rect x="480.0" y="60.0" width="345.9456" height="711.2448" fill="#f7f7f2" stroke="#333"/>
+<rect x="652.9728" y="60.0" width="24.97040000000002" height="711.2448" fill="#dfe9f7" opacity="0.6"/>
+<text x="636.8" y="417.0448" font-size="9">bc column (bc_i32 S / bc_o33 N), stations u_xstn32/33</text>
+<rect x="504.192" y="427.7184" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="504.192" y1="555.8912" x2="504.192" y2="443.05120000000005" stroke="#c0392b" stroke-width="5"/>
+<line x1="632.4096000000001" y1="594.8112" x2="632.4096000000001" y2="562.8912" stroke="#2c6fbb" stroke-width="5"/>
+<text x="546.192" y="639.8912" font-size="13">u_t22 R0</text>
+<rect x="673.5360000000001" y="427.7184" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="673.5360000000001" y1="555.8912" x2="673.5360000000001" y2="443.05120000000005" stroke="#c0392b" stroke-width="5"/>
+<line x1="801.7536" y1="594.8112" x2="801.7536" y2="562.8912" stroke="#2c6fbb" stroke-width="5"/>
+<text x="715.5360000000001" y="639.8912" font-size="13">u_t32 R0</text>
+<rect x="504.192" y="81.77279999999993" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="632.4096000000001" y1="209.94559999999996" x2="632.4096000000001" y2="97.10559999999987" stroke="#c0392b" stroke-width="5"/>
+<line x1="504.192" y1="248.86559999999994" x2="504.192" y2="216.94559999999996" stroke="#2c6fbb" stroke-width="5"/>
+<text x="546.192" y="293.94559999999996" font-size="13">u_t23 MY</text>
+<rect x="673.5360000000001" y="81.77279999999993" width="128.2176" height="324.17280000000005" fill="#e8d9c4" stroke="#7a5a30"/>
+<line x1="673.5360000000001" y1="209.94559999999996" x2="673.5360000000001" y2="97.10559999999987" stroke="#c0392b" stroke-width="5"/>
+<line x1="801.7536" y1="248.86559999999994" x2="801.7536" y2="216.94559999999996" stroke="#2c6fbb" stroke-width="5"/>
+<text x="715.5360000000001" y="293.94559999999996" font-size="13">u_t33 R0</text>
+<line x1="504.21888" y1="485.61120000000005" x2="673.5628800000001" y2="541.8912" stroke="#d68910" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="592.89088" y="509.75120000000004" font-size="10" fill="#d68910">t22.t_out&#8594;t32.n_a D3 x1</text>
+<line x1="673.5628800000001" y1="457.3312" x2="632.3827200000001" y2="195.94559999999987" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="656.9728" y="322.63839999999993" font-size="10" fill="#1e8449">t32.n_y&#8594;t23.n_a D10 x0</text>
+<line x1="632.3827200000001" y1="139.66559999999987" x2="673.5628800000001" y2="195.94559999999987" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="656.9728" y="163.80559999999986" font-size="10" fill="#1e8449">t23.t_out&#8594;t33.n_a D3 x0</text>
+<line x1="673.5628800000001" y1="111.38559999999987" x2="632.3827200000001" y2="167.66559999999987" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="656.9728" y="135.52559999999988" font-size="10" fill="#1e8449">t33.n_y&#8594;t23.n_b D3 x0</text>
+<line x1="673.5628800000001" y1="485.61120000000005" x2="673.5628800000001" y2="513.6112" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="677.5628800000001" y="495.61120000000005" font-size="10" fill="#1e8449">t32.t_out&#8594;t32.n_b D3+r8 x0</text>
+<line x1="673.5628800000001" y1="139.66559999999987" x2="673.5628800000001" y2="167.66559999999987" stroke="#1e8449" stroke-width="2.5" marker-end="url(#ah)"/>
+<text x="677.5628800000001" y="149.66559999999987" font-size="10" fill="#1e8449">t33.t_out&#8594;t33.n_b D3+r8 x0</text>
+<line x1="665.36" y1="581.0912000000001" x2="801.7267200000001" y2="581.0912000000001" stroke="#2c6fbb" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+<text x="676.0" y="593.0912000000001" font-size="9" fill="#2c6fbb">xstn tap_d 508b x1</text>
+<line x1="665.36" y1="235.14559999999994" x2="801.7267200000001" y2="235.14559999999994" stroke="#2c6fbb" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+<text x="676.0" y="247.14559999999994" font-size="9" fill="#2c6fbb">xstn tap_d 508b x1</text>
+<text x="40" y="800" font-size="11">red edge = NK data pins (n_a/n_b/t_out/n_y), blue edge = tap/ck/rst_n/tile_id. Arrow colour/xN = NK macro widths crossed (green 0, orange 1, red 2). Dashed = station tap feed.</text>
+</svg>

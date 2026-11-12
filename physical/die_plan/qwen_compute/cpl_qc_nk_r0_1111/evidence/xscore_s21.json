@@ -1,0 +1,2222 @@
+{
+ "cbf_q00__cl1b5a6458": {
+  "eligible": [
+   "u_t10"
+  ],
+  "pick": [
+   "u_t10"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=4",
+    1
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    1
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t00": "R0",
+   "u_t10": "MY",
+   "u_t01": "MY",
+   "u_t11": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=4",
+    2
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    0
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur_doubles": 2,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbf_q00__cl870de686": {
+  "eligible": [
+   "u_t10"
+  ],
+  "pick": [
+   "u_t10"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t00.n_a->u_t00.n_a D0",
+    0
+   ],
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=3",
+    1
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    1
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t00": "R0",
+   "u_t10": "MY",
+   "u_t01": "MY",
+   "u_t11": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t00.n_a->u_t00.n_a D0",
+    0
+   ],
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=3",
+    2
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    0
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur_doubles": 2,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbf_q00_s2": {
+  "eligible": [
+   "u_t01"
+  ],
+  "pick": [],
+  "pick_doubles": 1,
+  "pick_total": 2,
+  "pick_rows": [
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t00": "R0",
+   "u_t10": "R0",
+   "u_t01": "MY",
+   "u_t11": "MY"
+  },
+  "cur_rows": [
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur_doubles": 1,
+  "cur_total": 2,
+  "best": [
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 1
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "R0",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 1
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 1
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "R0",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 1
+   }
+  ],
+  "links_found": false
+ },
+ "cbf_q01": {
+  "eligible": [],
+  "pick": [],
+  "pick_doubles": 1,
+  "pick_total": 4,
+  "pick_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    1
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    1
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    0
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t02": "R0",
+   "u_t12": "MY",
+   "u_t03": "MY",
+   "u_t13": "R0"
+  },
+  "cur_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    1
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    1
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    0
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur_doubles": 1,
+  "cur_total": 4,
+  "best": [
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "R0",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "R0",
+     "u_t12": "R0",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "R0",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbf_q01_s2": {
+  "eligible": [
+   "u_t13"
+  ],
+  "pick": [
+   "u_t13"
+  ],
+  "pick_doubles": 0,
+  "pick_total": 2,
+  "pick_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D7",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3",
+    1
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D7",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3",
+    0
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    1
+   ],
+   [
+    "u_t12.n_b->u_t12.n_b D0",
+    0
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    0
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    0
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t02": "MY",
+   "u_t12": "MY",
+   "u_t03": "MY",
+   "u_t13": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D7",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3",
+    1
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D7",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3",
+    1
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    0
+   ],
+   [
+    "u_t12.n_b->u_t12.n_b D0",
+    0
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    1
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    1
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur_doubles": 0,
+  "cur_total": 4,
+  "best": [
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "R0",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "R0",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbf_q11": {
+  "eligible": [
+   "u_t32",
+   "u_t33"
+  ],
+  "pick": [
+   "u_t32",
+   "u_t33"
+  ],
+  "pick_doubles": 0,
+  "pick_total": 2,
+  "pick_rows": [
+   [
+    "u_t32.n_y->u_t23.n_a D10",
+    0
+   ],
+   [
+    "u_t33.n_y->u_t23.n_b D3",
+    0
+   ],
+   [
+    "u_t22.t_out->u_t32.n_a D3",
+    1
+   ],
+   [
+    "u_t32.t_out->u_t32.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "u_t23.t_out->u_t33.n_a D3",
+    0
+   ],
+   [
+    "u_t33.t_out->u_t33.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "bus y_o22 out u_t22.n_y face W",
+    0
+   ],
+   [
+    "bus na_i22 in u_t22.n_a face S",
+    0
+   ],
+   [
+    "bus y_o23 out u_t23.n_y face W",
+    1
+   ],
+   [
+    "bus nb_i22 in u_t22.n_b face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t22": "R0",
+   "u_t32": "MY",
+   "u_t23": "MY",
+   "u_t33": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t32.n_y->u_t23.n_a D10",
+    1
+   ],
+   [
+    "u_t33.n_y->u_t23.n_b D3",
+    1
+   ],
+   [
+    "u_t22.t_out->u_t32.n_a D3",
+    2
+   ],
+   [
+    "u_t32.t_out->u_t32.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "u_t23.t_out->u_t33.n_a D3",
+    1
+   ],
+   [
+    "u_t33.t_out->u_t33.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "bus y_o22 out u_t22.n_y face W",
+    0
+   ],
+   [
+    "bus na_i22 in u_t22.n_a face S",
+    0
+   ],
+   [
+    "bus y_o23 out u_t23.n_y face W",
+    1
+   ],
+   [
+    "bus nb_i22 in u_t22.n_b face S",
+    0
+   ]
+  ],
+  "cur_doubles": 1,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t22": "MY",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 3
+   },
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "R0",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q00__cl622f65d2": {
+  "eligible": [
+   "u_t10"
+  ],
+  "pick": [
+   "u_t10"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=4",
+    1
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    1
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t00": "R0",
+   "u_t10": "MY",
+   "u_t01": "MY",
+   "u_t11": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=4",
+    2
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    0
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur_doubles": 2,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 3
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 5
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 5
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 5
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q00__cld7bf7197": {
+  "eligible": [
+   "u_t10"
+  ],
+  "pick": [
+   "u_t10"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t00.n_a->u_t00.n_a D0",
+    0
+   ],
+   [
+    "u_t01.t_out->u_t01.n_a D7",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D7",
+    1
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    1
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t00": "R0",
+   "u_t10": "MY",
+   "u_t01": "MY",
+   "u_t11": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t00.n_a->u_t00.n_a D0",
+    0
+   ],
+   [
+    "u_t01.t_out->u_t01.n_a D7",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D7",
+    2
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    0
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur_doubles": 2,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 3
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 5
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 5
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 5
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q00__cldbcda913": {
+  "eligible": [
+   "u_t10"
+  ],
+  "pick": [
+   "u_t10"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=3",
+    1
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    1
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t00": "R0",
+   "u_t10": "MY",
+   "u_t01": "MY",
+   "u_t11": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t01.t_out->u_t01.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t11.t_out->u_t01.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t00.t_out->u_t10.n_a D3+cnt<=3",
+    2
+   ],
+   [
+    "u_t10.t_out->u_t10.n_b D3+cnt<=1",
+    0
+   ],
+   [
+    "u_t10.n_y->u_t11.n_a D10",
+    0
+   ],
+   [
+    "u_t01.n_y->u_t11.n_b D3",
+    1
+   ],
+   [
+    "bus na_i00 in u_t00.n_a face N",
+    0
+   ],
+   [
+    "bus y_o11 out u_t11.n_y face E",
+    0
+   ],
+   [
+    "bus nb_i00 in u_t00.n_b face N",
+    2
+   ],
+   [
+    "bus y_o00 out u_t00.n_y face S",
+    0
+   ]
+  ],
+  "cur_doubles": 2,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 3
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 5
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "R0",
+     "u_t01": "MY",
+     "u_t11": "MY"
+    },
+    "doubles": 0,
+    "total": 5
+   },
+   {
+    "orients": {
+     "u_t00": "MY",
+     "u_t10": "MY",
+     "u_t01": "MY",
+     "u_t11": "R0"
+    },
+    "doubles": 0,
+    "total": 5
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q01__clab6e67f2": {
+  "eligible": [
+   "u_t13"
+  ],
+  "pick": [
+   "u_t13"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    1
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    1
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    1
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t02": "R0",
+   "u_t12": "MY",
+   "u_t03": "R0",
+   "u_t13": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    0
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    2
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    2
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur_doubles": 4,
+  "cur_total": 8,
+  "best": [
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "R0",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "R0",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q01__cld9ff4c40": {
+  "eligible": [
+   "u_t13"
+  ],
+  "pick": [
+   "u_t13"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3+cnt<=1",
+    1
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    1
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    1
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    1
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t02": "R0",
+   "u_t12": "MY",
+   "u_t03": "R0",
+   "u_t13": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D3+cnt<=3",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3+cnt<=1",
+    2
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    0
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    2
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    2
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur_doubles": 4,
+  "cur_total": 8,
+  "best": [
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "R0",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "R0",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q01__cldd6ea846": {
+  "eligible": [
+   "u_t13"
+  ],
+  "pick": [
+   "u_t13"
+  ],
+  "pick_doubles": 1,
+  "pick_total": 6,
+  "pick_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D7",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D7",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3",
+    1
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    1
+   ],
+   [
+    "u_t12.n_b->u_t12.n_b D0",
+    0
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    1
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    1
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t02": "R0",
+   "u_t12": "MY",
+   "u_t03": "R0",
+   "u_t13": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t02.t_out->u_t02.n_a D7",
+    0
+   ],
+   [
+    "u_t12.t_out->u_t02.n_b D3",
+    2
+   ],
+   [
+    "u_t03.t_out->u_t03.n_a D7",
+    0
+   ],
+   [
+    "u_t13.t_out->u_t03.n_b D3",
+    2
+   ],
+   [
+    "u_t13.n_y->u_t12.n_a D16",
+    0
+   ],
+   [
+    "u_t12.n_b->u_t12.n_b D0",
+    0
+   ],
+   [
+    "u_t02.n_y->u_t13.n_a D10",
+    2
+   ],
+   [
+    "u_t03.n_y->u_t13.n_b D3",
+    2
+   ],
+   [
+    "bus y_o12 out u_t12.n_y face S",
+    0
+   ],
+   [
+    "bus nb_i12 in u_t12.n_b face E",
+    0
+   ]
+  ],
+  "cur_doubles": 4,
+  "cur_total": 8,
+  "best": [
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "R0",
+     "u_t03": "MY",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "R0",
+     "u_t13": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t02": "MY",
+     "u_t12": "MY",
+     "u_t03": "MY",
+     "u_t13": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q11__cl49ae4555": {
+  "eligible": [
+   "u_t32",
+   "u_t33"
+  ],
+  "pick": [
+   "u_t32",
+   "u_t33"
+  ],
+  "pick_doubles": 0,
+  "pick_total": 2,
+  "pick_rows": [
+   [
+    "u_t32.n_y->u_t23.n_a D10",
+    0
+   ],
+   [
+    "u_t33.n_y->u_t23.n_b D3",
+    0
+   ],
+   [
+    "u_t22.t_out->u_t32.n_a D3",
+    1
+   ],
+   [
+    "u_t32.t_out->u_t32.n_b D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t23.t_out->u_t33.n_a D3",
+    0
+   ],
+   [
+    "u_t33.t_out->u_t33.n_b D3+cnt<=4",
+    0
+   ],
+   [
+    "bus y_o22 out u_t22.n_y face W",
+    0
+   ],
+   [
+    "bus na_i22 in u_t22.n_a face S",
+    0
+   ],
+   [
+    "bus y_o23 out u_t23.n_y face W",
+    1
+   ],
+   [
+    "bus nb_i22 in u_t22.n_b face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t22": "R0",
+   "u_t32": "MY",
+   "u_t23": "MY",
+   "u_t33": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t32.n_y->u_t23.n_a D10",
+    1
+   ],
+   [
+    "u_t33.n_y->u_t23.n_b D3",
+    1
+   ],
+   [
+    "u_t22.t_out->u_t32.n_a D3",
+    2
+   ],
+   [
+    "u_t32.t_out->u_t32.n_b D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t23.t_out->u_t33.n_a D3",
+    1
+   ],
+   [
+    "u_t33.t_out->u_t33.n_b D3+cnt<=4",
+    0
+   ],
+   [
+    "bus y_o22 out u_t22.n_y face W",
+    0
+   ],
+   [
+    "bus na_i22 in u_t22.n_a face S",
+    0
+   ],
+   [
+    "bus y_o23 out u_t23.n_y face W",
+    1
+   ],
+   [
+    "bus nb_i22 in u_t22.n_b face S",
+    0
+   ]
+  ],
+  "cur_doubles": 1,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t22": "MY",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 3
+   },
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "R0",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbn_q11__cl5cc92dfe": {
+  "eligible": [
+   "u_t32",
+   "u_t33"
+  ],
+  "pick": [
+   "u_t32",
+   "u_t33"
+  ],
+  "pick_doubles": 0,
+  "pick_total": 2,
+  "pick_rows": [
+   [
+    "u_t32.n_y->u_t23.n_a D10",
+    0
+   ],
+   [
+    "u_t33.n_y->u_t23.n_b D3",
+    0
+   ],
+   [
+    "u_t22.t_out->u_t32.n_a D3",
+    1
+   ],
+   [
+    "u_t32.t_out->u_t32.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "u_t23.t_out->u_t33.n_a D3",
+    0
+   ],
+   [
+    "u_t33.t_out->u_t33.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "bus y_o22 out u_t22.n_y face W",
+    0
+   ],
+   [
+    "bus na_i22 in u_t22.n_a face S",
+    0
+   ],
+   [
+    "bus y_o23 out u_t23.n_y face W",
+    1
+   ],
+   [
+    "bus nb_i22 in u_t22.n_b face S",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t22": "R0",
+   "u_t32": "MY",
+   "u_t23": "MY",
+   "u_t33": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t32.n_y->u_t23.n_a D10",
+    1
+   ],
+   [
+    "u_t33.n_y->u_t23.n_b D3",
+    1
+   ],
+   [
+    "u_t22.t_out->u_t32.n_a D3",
+    2
+   ],
+   [
+    "u_t32.t_out->u_t32.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "u_t23.t_out->u_t33.n_a D3",
+    1
+   ],
+   [
+    "u_t33.t_out->u_t33.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "bus y_o22 out u_t22.n_y face W",
+    0
+   ],
+   [
+    "bus na_i22 in u_t22.n_a face S",
+    0
+   ],
+   [
+    "bus y_o23 out u_t23.n_y face W",
+    1
+   ],
+   [
+    "bus nb_i22 in u_t22.n_b face S",
+    0
+   ]
+  ],
+  "cur_doubles": 1,
+  "cur_total": 6,
+  "best": [
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t22": "MY",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 3
+   },
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "MY",
+     "u_t33": "MY"
+    },
+    "doubles": 0,
+    "total": 4
+   },
+   {
+    "orients": {
+     "u_t22": "R0",
+     "u_t32": "R0",
+     "u_t23": "R0",
+     "u_t33": "R0"
+    },
+    "doubles": 0,
+    "total": 4
+   }
+  ],
+  "links_found": true
+ },
+ "cbx_q10__cl89936551": {
+  "eligible": [
+   "u_t30",
+   "u_t31"
+  ],
+  "pick": [
+   "u_t30",
+   "u_t31"
+  ],
+  "pick_doubles": 0,
+  "pick_total": 0,
+  "pick_rows": [
+   [
+    "u_t20.t_out->u_t20.n_a D3",
+    0
+   ],
+   [
+    "u_t30.t_out->u_t20.n_b D3+cnt<=4",
+    0
+   ],
+   [
+    "u_t20.n_y->u_t21.n_a D13",
+    0
+   ],
+   [
+    "u_t31.n_y->u_t21.n_b D6",
+    0
+   ],
+   [
+    "u_t21.t_out->u_t31.n_a D3",
+    0
+   ],
+   [
+    "u_t31.t_out->u_t31.n_b D3+cnt<=4",
+    0
+   ],
+   [
+    "bus y_o21 out u_t21.n_y face N",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t20": "MY",
+   "u_t30": "MY",
+   "u_t21": "MY",
+   "u_t31": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t20.t_out->u_t20.n_a D3",
+    0
+   ],
+   [
+    "u_t30.t_out->u_t20.n_b D3+cnt<=4",
+    1
+   ],
+   [
+    "u_t20.n_y->u_t21.n_a D13",
+    0
+   ],
+   [
+    "u_t31.n_y->u_t21.n_b D6",
+    1
+   ],
+   [
+    "u_t21.t_out->u_t31.n_a D3",
+    1
+   ],
+   [
+    "u_t31.t_out->u_t31.n_b D3+cnt<=4",
+    0
+   ],
+   [
+    "bus y_o21 out u_t21.n_y face N",
+    0
+   ]
+  ],
+  "cur_doubles": 0,
+  "cur_total": 3,
+  "best": [
+   {
+    "orients": {
+     "u_t20": "MY",
+     "u_t30": "R0",
+     "u_t21": "MY",
+     "u_t31": "R0"
+    },
+    "doubles": 0,
+    "total": 0
+   },
+   {
+    "orients": {
+     "u_t20": "MY",
+     "u_t30": "MY",
+     "u_t21": "MY",
+     "u_t31": "R0"
+    },
+    "doubles": 0,
+    "total": 1
+   },
+   {
+    "orients": {
+     "u_t20": "MY",
+     "u_t30": "R0",
+     "u_t21": "MY",
+     "u_t31": "MY"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t20": "R0",
+     "u_t30": "R0",
+     "u_t21": "MY",
+     "u_t31": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   }
+  ],
+  "links_found": true
+ },
+ "cbx_q10__cl94a12200": {
+  "eligible": [
+   "u_t30",
+   "u_t31"
+  ],
+  "pick": [
+   "u_t30",
+   "u_t31"
+  ],
+  "pick_doubles": 0,
+  "pick_total": 0,
+  "pick_rows": [
+   [
+    "u_t20.t_out->u_t20.n_a D3",
+    0
+   ],
+   [
+    "u_t30.t_out->u_t20.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "u_t20.n_y->u_t21.n_a D13",
+    0
+   ],
+   [
+    "u_t31.n_y->u_t21.n_b D6",
+    0
+   ],
+   [
+    "u_t21.t_out->u_t31.n_a D3",
+    0
+   ],
+   [
+    "u_t31.t_out->u_t31.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "bus y_o21 out u_t21.n_y face N",
+    0
+   ]
+  ],
+  "cur": {
+   "u_t20": "MY",
+   "u_t30": "MY",
+   "u_t21": "MY",
+   "u_t31": "MY"
+  },
+  "cur_rows": [
+   [
+    "u_t20.t_out->u_t20.n_a D3",
+    0
+   ],
+   [
+    "u_t30.t_out->u_t20.n_b D3+cnt<=5",
+    1
+   ],
+   [
+    "u_t20.n_y->u_t21.n_a D13",
+    0
+   ],
+   [
+    "u_t31.n_y->u_t21.n_b D6",
+    1
+   ],
+   [
+    "u_t21.t_out->u_t31.n_a D3",
+    1
+   ],
+   [
+    "u_t31.t_out->u_t31.n_b D3+cnt<=5",
+    0
+   ],
+   [
+    "bus y_o21 out u_t21.n_y face N",
+    0
+   ]
+  ],
+  "cur_doubles": 0,
+  "cur_total": 3,
+  "best": [
+   {
+    "orients": {
+     "u_t20": "MY",
+     "u_t30": "R0",
+     "u_t21": "MY",
+     "u_t31": "R0"
+    },
+    "doubles": 0,
+    "total": 0
+   },
+   {
+    "orients": {
+     "u_t20": "MY",
+     "u_t30": "MY",
+     "u_t21": "MY",
+     "u_t31": "R0"
+    },
+    "doubles": 0,
+    "total": 1
+   },
+   {
+    "orients": {
+     "u_t20": "MY",
+     "u_t30": "R0",
+     "u_t21": "MY",
+     "u_t31": "MY"
+    },
+    "doubles": 0,
+    "total": 2
+   },
+   {
+    "orients": {
+     "u_t20": "R0",
+     "u_t30": "R0",
+     "u_t21": "MY",
+     "u_t31": "R0"
+    },
+    "doubles": 0,
+    "total": 2
+   }
+  ],
+  "links_found": true
+ }
+}
