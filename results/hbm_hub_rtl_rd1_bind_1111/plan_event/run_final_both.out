@@ -1,0 +1,51 @@
+===RD1
+{"splits": 0, "renamed": 0, "unchanged": 4250, "miss": 40, "miss_first": [["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[0][0][0]$71906", "7 old vs 0 new"], ["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[1][0][0]$71912", "7 old vs 0 new"], ["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[2][0][0]$71918", "7 old vs 0 new"], ["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[3][0][0]$71922", "7 old vs 0 new"], ["su_NE0.u_slice.$procdff$67158", "2 old vs 0 new"]], "miss_by": [[["su_NE0", "memory\\g_inj.slot", "cnt"], 4]
+{"added": 136, "by": [[["su_NE0.u_slice", "ot_hbm_su_static_pgslice_s.sv:248"], 2], [["su_NE0.u_slice", "ot_hbm_su_static_pgslice_s.sv:259"], 12], [["su_NE0.u_slice", "ot_hbm_su_static_pgslice_s.sv:261"], 3], [["su_NE1.u_slice", "ot_hbm_su_static_pgslice_s.sv:248"], 2], [["su_NE1.u_slice", "ot_hbm_su_static_pgslice_s.sv:259"], 12], [["su_NE1.u_slice", "ot_hbm_su_static_pgslice_s.sv:261"], 3], [["s
+ELAB hb_coll_NE {'VM_RT': '00000000000000000000000000000100'} None
+ELAB hb_coll_NW {'VM_RT': '00000000000000000000000000000100'} None
+ELAB hcollgi_NE {'VM_RT': '00000000000000000000000000000000'} 00000000000000000000000000000011
+PASS1 rc 1 stale=30 other=0
+PADS rc 0
+BIND {"partitions": 90, "crossings": 420, "n_errors": 0}
+LC {"leaves": 1505, "contract_modules": 19, "instances_checked": 38, "verdicts": {"REGEN": 38}, "advisory_families": 0, "errors": 0}
+PIN_REGEN [{"inst": "hb_dbk_NE", "param": "RR_RT", "asbuilt": 80, "pin": 1, "bound": 81}, {"inst": "hb_dbk_NW", "param": "RR_RT", "asbuilt": 80, "pin": 1, "bound": 81}, {"inst": "hb_dbk_SE", "param": "RR_RT", "asbuilt": 80, "pin": 1, "bound": 81}, {"inst": "hb_dbk_SW", "param": "RR_RT", "asbuilt": 80, "pin": 1, "bound": 81}, {"inst": "hb_fvp_SE0", "param": "BANK_RR", "asbuilt": 6, "pin": 1, "bound": 7}, {"inst": "hb_fvp_SE1", "param": "BANK_RR", "asbuilt": 6, "pin": 1, "bound": 7}, {"inst": "hb_
+CHANGED 63 [{"inst": "su_NW0.g_tap_r8b.u_tap", "param": "READ_RETURN", "asbuilt": "25", "bound": 82}, {"inst": "su_NW0.u_slice.g_leaf[0].u_leaf", "param": "READ_RETURN", "asbuilt": "25", "bound": 82}, {"inst": "su_NW0.u_slice.g_leaf[1].u_leaf", "param": "READ_RETURN", "asbuilt": "25", "bound": 82}, {"inst": "sfu_NW0", "param": "READ_RETURN", "asbuilt": "29", "bound": 86}, {"inst": "hc_NW0", "param": "READ_RETURN", "asbuilt": "33", "bound": 90}, {"inst": "su_NW1.g_tap_r8b.u_tap", "param": "READ_R
+BIND_OK
+===CTL
+{"splits": 0, "renamed": 0, "unchanged": 4250, "miss": 40, "miss_first": [["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[0][0][0]$71906", "7 old vs 0 new"], ["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[1][0][0]$71912", "7 old vs 0 new"], ["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[2][0][0]$71918", "7 old vs 0 new"], ["su_NE0.u_slice.$memory\\g_inj.slot$wrmux[3][0][0]$71922", "7 old vs 0 new"], ["su_NE0.u_slice.$procdff$67158", "2 old vs 0 new"]], "miss_by": [[["su_NE0", "memory\\g_inj.slot", "cnt"], 4]
+{"added": 136, "by": [[["su_NE0.u_slice", "ot_hbm_su_static_pgslice_s.sv:248"], 2], [["su_NE0.u_slice", "ot_hbm_su_static_pgslice_s.sv:259"], 12], [["su_NE0.u_slice", "ot_hbm_su_static_pgslice_s.sv:261"], 3], [["su_NE1.u_slice", "ot_hbm_su_static_pgslice_s.sv:248"], 2], [["su_NE1.u_slice", "ot_hbm_su_static_pgslice_s.sv:259"], 12], [["su_NE1.u_slice", "ot_hbm_su_static_pgslice_s.sv:261"], 3], [["s
+ELAB hb_coll_NE {'VM_RT': '00000000000000000000000000000011'} None
+ELAB hb_coll_NW {'VM_RT': '00000000000000000000000000000011'} None
+ELAB hcollgi_NE {'VM_RT': '00000000000000000000000000000000'} 00000000000000000000000000000011
+PASS1 rc 1 stale=30 other=0
+PADS rc 0
+BIND {"partitions": 90, "crossings": 420, "n_errors": 0}
+LC {"leaves": 1505, "contract_modules": 19, "instances_checked": 23, "verdicts": {"REGEN": 23}, "advisory_families": 0, "errors": 0}
+PIN_REGEN null
+CHANGED 23 [{"inst": "su_NW0.g_tap_r8b.u_tap", "param": "READ_RETURN", "asbuilt": "25", "bound": 81}, {"inst": "su_NW0.u_slice.g_leaf[0].u_leaf", "param": "READ_RETURN", "asbuilt": "25", "bound": 81}, {"inst": "su_NW0.u_slice.g_leaf[1].u_leaf", "param": "READ_RETURN", "asbuilt": "25", "bound": 81}, {"inst": "sfu_NW0", "param": "READ_RETURN", "asbuilt": "29", "bound": 85}, {"inst": "hc_NW0", "param": "READ_RETURN", "asbuilt": "33", "bound": 89}, {"inst": "su_NW2.g_tap_r8b.u_tap", "param": "READ_R
+BIND_OK
+{"IDENTICAL": 36, "SAME_AFTER_RENUMBER": 40, "DIFF": 8}
+hbm_arch_q_su00.sv DIFF 71/91 
+hbm_arch_q_su00__physical_v1.sv DIFF 71/91 
+hbm_arch_q_su10.sv DIFF 71/91 
+hbm_arch_q_su10__physical_v1.sv DIFF 71/91 
+hbm_arch_q_su20.sv DIFF 71/91 
+hbm_arch_q_su20__physical_v1.sv DIFF 71/91 
+hbm_arch_q_su30.sv DIFF 71/91 
+hbm_arch_q_su30__physical_v1.sv DIFF 71/91 
+{"IDENTICAL": 36, "DIFF": 26, "SAME_AFTER_RENUMBER": 22}
+{"IDENTICAL": 72, "DIFF": 12}
+hbm_arch_B2o_bound_top.sv DIFF 1/1 
+hbm_arch_q_hub__q_hub_ne.sv DIFF 35/35 
+hbm_arch_q_hub__q_hub_nw.sv DIFF 39/39 
+hbm_arch_q_su00.sv DIFF 5/5 
+hbm_arch_q_su00__physical_v1.sv DIFF 5/5 
+hbm_arch_q_su11.sv DIFF 5/5 
+hbm_arch_q_su11__physical_v1.sv DIFF 5/5 
+hbm_arch_q_su20.sv DIFF 5/5 
+hbm_arch_q_su20__physical_v1.sv DIFF 5/5 
+hbm_arch_q_su31.sv DIFF 5/5 
+hbm_arch_q_su31__physical_v1.sv DIFF 5/5 
+hbm_arch_root.sv DIFF 1/1 
+
+[exited with code 0]
