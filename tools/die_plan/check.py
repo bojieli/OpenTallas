@@ -27,6 +27,9 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  seam_hop    (advisory, SEAM-HOP-1, seam_hop.py) per lane, the hop from the last station inside one partition to the first
+              station of the next one (through the seam pin, Manhattan) over the 405-um signal reach: WARN only, off with
+              --seam-hop off, ignored by --strict
   r8          COORD R8 bus-coherent latency on BINDER2's as-built bus groups (--groups bus_groups.json, else
               PLANDIR/{r8,bind}/bus_groups.json): one added delay per as-built bus, equal across replicated consumers, no
               as-built order inversion, one landing pad per site of a replicated type (r8.py); depth = the R8 landing
@@ -2419,7 +2422,8 @@ def _plan_geom_default():
 
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
-        clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None):
+        clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
+        seam_hop="warn"):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2498,6 +2502,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["die_io"]["source"] = io_src
     summ["cut_lines"] = xdie.check_cut_lines(P, R, geo)
     summ["reach"] = xdie.check_reach(P, R, geo)
+    if seam_hop != "off":
+        import seam_hop as SH      # SEAM-HOP-1: advisory WARN only, never an ERROR
+        summ["seam_hops"] = SH.check_seam_hops(P, R, geo)
     summ["face_tracks"] = xdie.check_face_tracks(P, R, fp)
     summ["ft_budget"] = xdie.check_ft_budget(P, R, fp)
     _st = []
@@ -2552,6 +2559,9 @@ def main(argv=None):
     ap.add_argument("--strict-core-pg", action="store_true",
                     help="core_pg: a type placing hard-core macros without core_pg_connect, or a macro LEF with no "
                          "connectable PG geometry, is an ERROR (default WARN until the dies regenerate their kits)")
+    ap.add_argument("--seam-hop", choices=("warn", "off"), default="warn",
+                    help="SEAM-HOP-1 advisory (seam_hop.py): WARN per seam hop (last station -> first station of the next "
+                         "partition) over the 405-um signal reach; never an ERROR, ignored by --strict")
     ap.add_argument("--native-reset-receipt", help="explicit measured native conditional reset receipt; no core-cycle deadline or CDC waiver")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
@@ -2560,12 +2570,13 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt,
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())
     nw = len(R.items) - ne - npv
-    ok = ne == 0 and not (a.strict and nw)
+    n_adv = sum(1 for i in R.items if i["check"] == "seam_hop")        # advisory: not a --strict failure
+    ok = ne == 0 and not (a.strict and nw - n_adv)
     verdict = ("PENDING-VIEW" if npv else "PASS") if ok else "FAIL"   # PENDING-VIEW is never PASS
     rep = dict(schema="opentallas.die_plan.g0.v1", plan=str(Path(a.plan).resolve()), verdict=verdict, pending_view=npv,
                mode="G0C" if a.completeness else "G0",
