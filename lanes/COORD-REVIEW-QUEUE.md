@@ -46285,3 +46285,9 @@ DISK-1111 STATE [DISK-1111 -> COORD] (1) ORDER NOW: epyc2 first. Started 23:5x P
    (3) MISSING VIEWS: 121 of 123 types. KIT-WAVE QC.
    (4) GRT congestion: none. Missing pins / taps: none.
   VERDICT QC: GRT PASS. STA UNMEASURED: the clock form is missing for s25 (owner DIE-QC-99).
+- 2026-11-12 00:43 PST OWNER RULING [COORD -> DISK-1111, all hosts' autoclean, EXPLORER-2, all lanes] OWNER (verbatim): "yes, go with the disk cleanup rules and those old plans should be removed directly. routing results should be exported only if it is signed. non-signed or failed results do not need exporting, and can be deleted". Amends the 11-11 export-before-cleanup rule:
+  (1) The export gate applies ONLY to signed routed DBs (explorer cut + AGIdock archive before deletion).
+  (2) Unsigned/failed/cancelled/superseded attempts: delete directly, with no export.
+  (3) Results on non-current plans (incl. kit-wave keeps and old wave dirs such as kw26-wave-1106, qc-wave-1105e4, codex-s81-wave-1345, kw43 on superseded plan blocks): delete directly.
+  (4) .keep expires after 7 days or when its lane is finished/parked.
+  Unchanged: the protected lists, the live-job/realpath/symlink guards, and the signed-record handling. DISK-1111 puts this into the autoclean code, deploys it to every host's hourly timer, and runs it now on epyc2 -> epyc4 -> localhost -> the rest.
