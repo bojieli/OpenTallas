@@ -1,0 +1,77 @@
+corner	src	dst	pairs	setup	hold_all	skew	measured	hold_measured	hold_status	kit_contract	need	W	missing
+TT	sp0	sp0_xw_o_shim	168	690.93	-6.47	41.86	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp0_bw_i_shim	sp0	714	767.25	-117.84	81.19	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp0	sp0_xe_o_shim	168	680.52	3.47	52.77	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp0_be_i_shim	sp0	210	698.69	-26.75	49.91	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp1	sp1_xw_o_shim	168	689.84	-4.58	42.95	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp1_bw_i_shim	sp1	714	750.15	-99.05	62.4	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp1	sp1_xe_o_shim	168	689.15	-5.04	44.13	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp1_be_i_shim	sp1	210	721.41	-47.87	44.66	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp2	sp2_xw_o_shim	168	679.64	3.35	53.15	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp2_bw_i_shim	sp2	714	741.18	-115.55	78.9	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp2	sp2_xe_o_shim	168	722.39	-34.18	44.06	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp2_be_i_shim	sp2	210	728.6	-55.62	52.41	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp3	sp3_xw_o_shim	168	688.53	-4.53	44.26	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp3_bw_i_shim	sp3	714	746.33	-91.93	55.28	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp3	sp3_xe_o_shim	168	690.23	-12.81	43.05	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp3_be_i_shim	sp3	210	713.06	-40.63	37.42	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp4	sp4_xw_o_shim	168	696.82	-16.63	35.98	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp4_bw_i_shim	sp4	714	737.4	-85.28	48.63	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp4	sp4_xe_o_shim	168	733.97	-53.91	63.79	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp4_be_i_shim	sp4	210	699.0	-31.34	49.6	0	None	BLOCKED(kits)	None	None	None	type:hd_spn
+TT	sp5	sp5_xw_o_shim	132	748.17	-45.67	24.67	132	-45.67	FAIL	None	None	None	
+TT	sp5_bw_i_shim	sp5	561	701.07	-29.46	47.42	561	-29.46	FAIL	None	None	None	
+TT	sp5	sp5_xe_o_shim	132	734.53	-32.51	30.32	132	-32.51	FAIL	None	None	None	
+TT	sp5_be_i_shim	sp5	165	672.16	18.15	42.89	165	18.15	PASS	None	None	None	
+TT	ctl	ctl_estrip	136	674.15	22.89	50.73	0	None	BLOCKED(kits)	None	None	None	type:hd_ctl
+TT	ctl_estrip	ctl	136	746.91	-47.65	50.73	0	None	BLOCKED(kits)	None	None	None	type:hd_ctl
+TT	ctl	ctl_nstrip	476	656.09	16.96	70.7	0	None	BLOCKED(kits)	None	None	None	type:hd_ctl
+TT	ctl_nstrip	ctl	476	740.99	-65.72	70.7	0	None	BLOCKED(kits)	None	None	None	type:hd_ctl
+TT	host_nstrip	host_w	108	762.8	-92.62	43.03	0	None	BLOCKED(kits)	None	None	None	type:hd_host_w
+TT	host_w	host_nstrip	108	629.18	38.77	43.03	0	None	BLOCKED(kits)	None	None	None	type:hd_host_w
+TT	mesh7N_estrip	mesh7N	316	685.28	-29.35	54.85	0	None	BLOCKED(kits)	None	None	None	type:hd_mesh
+TT	mesh7N	mesh7N_estrip	316	692.45	-38.75	54.85	0	None	BLOCKED(kits)	None	None	None	type:hd_mesh
+TT	mesh0S_estrip	mesh0S	316	722.79	-47.99	53.25	0	None	BLOCKED(kits)	None	None	None	type:hd_mesh
+TT	mesh0S	mesh0S_estrip	316	673.82	-1.24	53.25	0	None	BLOCKED(kits)	None	None	None	type:hd_mesh
+TT	mesh7S_estrip	mesh7S	316	719.38	-49.7	54.95	0	None	BLOCKED(kits)	None	None	None	type:hd_mesh
+TT	mesh7S	mesh7S_estrip	316	672.11	-4.65	54.95	0	None	BLOCKED(kits)	None	None	None	type:hd_mesh
+TT	host_e	host_w	120	678.06	-19.35	56.53	0	None	BLOCKED(kits)	None	None	None	type:hd_host_e;type:hd_host_w
+TT	host_w	host_e	120	704.62	-45.92	56.53	0	None	BLOCKED(kits)	None	None	None	type:hd_host_e;type:hd_host_w
+FF	sp0	sp0_xw_o_shim	168	690.09	17.05	37.27	0	None	BLOCKED(kits)	69.8	20.2	90.0	type:hd_spn
+FF	sp0_bw_i_shim	sp0	714	822.07	-144.85	68.98	0	None	BLOCKED(kits)	21.02	68.98	90.0	type:hd_spn
+FF	sp0	sp0_xe_o_shim	168	681.59	27.62	47.12	0	None	BLOCKED(kits)	81.72	8.28	90.0	type:hd_spn
+FF	sp0_be_i_shim	sp0	210	764.26	-73.34	49.96	0	None	BLOCKED(kits)	66.99	23.01	90.0	type:hd_spn
+FF	sp1	sp1_xw_o_shim	168	692.17	17.75	35.19	0	None	BLOCKED(kits)	70.5	19.5	90.0	type:hd_spn
+FF	sp1_bw_i_shim	sp1	714	805.74	-128.7	52.82	0	None	BLOCKED(kits)	37.18	52.82	90.0	type:hd_spn
+FF	sp1	sp1_xe_o_shim	168	692.94	18.15	35.77	0	None	BLOCKED(kits)	72.26	17.74	90.0	type:hd_spn
+FF	sp1_be_i_shim	sp1	210	784.69	-89.13	38.79	0	None	BLOCKED(kits)	51.21	38.79	90.0	type:hd_spn
+FF	sp2	sp2_xw_o_shim	168	680.27	22.19	47.09	0	None	BLOCKED(kits)	74.94	15.06	90.0	type:hd_spn
+FF	sp2_bw_i_shim	sp2	714	799.12	-148.58	72.71	0	None	BLOCKED(kits)	17.29	72.71	90.0	type:hd_spn
+FF	sp2	sp2_xe_o_shim	168	719.23	-10.75	46.64	0	None	BLOCKED(kits)	43.36	46.64	90.0	type:hd_spn
+FF	sp2_be_i_shim	sp2	210	789.13	-98.31	47.98	0	None	BLOCKED(kits)	42.02	47.98	90.0	type:hd_spn
+FF	sp3	sp3_xw_o_shim	168	695.08	15.3	32.29	0	None	BLOCKED(kits)	68.05	21.95	90.0	type:hd_spn
+FF	sp3_bw_i_shim	sp3	714	806.03	-122.17	46.29	0	None	BLOCKED(kits)	43.71	46.29	90.0	type:hd_spn
+FF	sp3	sp3_xe_o_shim	168	694.38	14.29	34.33	0	None	BLOCKED(kits)	68.39	21.61	90.0	type:hd_spn
+FF	sp3_be_i_shim	sp3	210	777.57	-81.8	36.65	0	None	BLOCKED(kits)	58.53	31.47	90.0	type:hd_spn
+FF	sp4	sp4_xw_o_shim	168	702.95	-0.39	37.64	0	None	BLOCKED(kits)	52.36	37.64	90.0	type:hd_spn
+FF	sp4_bw_i_shim	sp4	714	790.03	-110.68	49.73	0	None	BLOCKED(kits)	55.19	34.81	90.0	type:hd_spn
+FF	sp4	sp4_xe_o_shim	168	736.22	-30.19	66.09	0	None	BLOCKED(kits)	23.91	66.09	90.0	type:hd_spn
+FF	sp4_be_i_shim	sp4	210	758.63	-72.28	55.59	0	None	BLOCKED(kits)	68.05	21.95	90.0	type:hd_spn
+FF	sp5	sp5_xw_o_shim	132	773.63	-46.58	28.21	132	-46.58	FAIL	61.79	28.21	90.0	
+FF	sp5_bw_i_shim	sp5	561	738.65	-36.02	43.82	561	-36.02	FAIL	71.66	18.34	90.0	
+FF	sp5	sp5_xe_o_shim	132	761.73	-32.62	22.79	132	-32.62	FAIL	77.11	12.89	90.0	
+FF	sp5_be_i_shim	sp5	165	716.39	-0.24	40.53	165	-0.24	FAIL	81.9	8.1	90.0	
+FF	ctl	ctl_estrip	136	681.07	45.99	38.85	0	None	BLOCKED(kits)	91.3	0.0	90.0	type:hd_ctl
+FF	ctl_estrip	ctl	136	812.18	-85.84	38.85	0	None	BLOCKED(kits)	51.15	38.85	90.0	type:hd_ctl
+FF	ctl	ctl_nstrip	476	663.12	36.24	65.47	0	None	BLOCKED(kits)	90.23	0.0	90.0	type:hd_ctl
+FF	ctl_nstrip	ctl	476	802.44	-103.79	65.47	0	None	BLOCKED(kits)	24.53	65.47	90.0	type:hd_ctl
+FF	host_nstrip	host_w	108	825.5	-123.22	32.55	0	None	BLOCKED(kits)	57.45	32.55	90.0	type:hd_host_w
+FF	host_w	host_nstrip	108	643.69	59.31	32.55	0	None	BLOCKED(kits)	60.94	29.06	90.0	type:hd_host_w
+FF	mesh7N_estrip	mesh7N	316	751.74	-66.84	58.74	0	None	BLOCKED(kits)	69.75	20.25	90.0	type:hd_mesh
+FF	mesh7N	mesh7N_estrip	316	700.08	-14.45	58.74	0	None	BLOCKED(kits)	31.26	58.74	90.0	type:hd_mesh
+FF	mesh0S_estrip	mesh0S	316	783.31	-78.99	32.4	0	None	BLOCKED(kits)	57.6	32.4	90.0	type:hd_mesh
+FF	mesh0S	mesh0S_estrip	316	687.92	17.12	32.4	0	None	BLOCKED(kits)	62.83	27.17	90.0	type:hd_mesh
+FF	mesh7S_estrip	mesh7S	316	779.95	-78.33	31.73	0	None	BLOCKED(kits)	58.27	31.73	90.0	type:hd_mesh
+FF	mesh7S	mesh7S_estrip	316	688.59	13.76	31.73	0	None	BLOCKED(kits)	59.47	30.53	90.0	type:hd_mesh
+FF	host_e	host_w	120	722.33	-32.61	43.82	0	None	BLOCKED(kits)	59.82	30.18	90.0	type:hd_host_e;type:hd_host_w
+FF	host_w	host_e	120	735.97	-46.25	43.82	0	None	BLOCKED(kits)	46.18	43.82	90.0	type:hd_host_e;type:hd_host_w
