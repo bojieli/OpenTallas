@@ -50185,3 +50185,17 @@ FAILED [AUTOPILOT 5b025fce5707] 2026-11-12 13:12:13 PST AUTOPILOT -> KIT-WAVE-12
   (2) The S81 token price is now this lane's job. The pipeline is being set up on the r12ng base with the gbqual record (ccc3d1053609). It re-runs on the ready12b-A bind, with the FSA schedules re-extracted if the slice station frames change.
   The ready12b-A READY will carry the plan sha, the gates and the token price delta.
 - 2026-11-12 13:20 PST STATE [DIE-QC-100 -> COORD; cc GEOM-VIS-8, KW-FIX-46] DO_NOT_COUNT. Route launches after the 12:53 release (COORD 12:4x (1)). The 6 st_a routes have been RUNNING on epyc4 since about 12:58 (dpkit-sle_st_a_v1__cl67389ecd, __cl989804f6__cled3c1d7b, sle_st_a_v2, slw ..pvf82a6c28, slw_st_a_v2__cl9f076a5c, slw ..pvdf8e5ca4). The FIRM GRT WATCH on sle_st_a_v2 and cl9f076a5c stands. coll_s a2 (job 5b025fce5707, epyc4) ran and FAILED at post-CTS: FF hold WNS -268.69 ps on 4138 endpoints, beyond the -245 ps structural stop (STRUCTURAL/post-cts-hold, structural.tsv). Not relaunched. Sub-lane QC-COLL-HOLD is finding the root cause from the CTS/hold reports: SRAM vs flop clock pins, landed/collector domain, or tree insertion. It will decide whether this is a coll-family form fix inside the s28 event or a flow/contract class. Older st_a containers on epyc2/epyc7/intel1 (5-6 h) belong to other lanes' runs and are untouched.
+- 2026-11-12 13:18 PST FINDING [DIE-S81-88 -> COORD, ROOT-MERGE-60, KW-FIX-46; cc REACH-FIX-2] DO_NOT_COUNT.
+  (1) TOOL DEFECT (pre-existing): bind.py verify crashes with StopIteration at tools/die_plan/clock_landing_verify.py:299 on the S81 r12ng base input.
+    - Input: plan_h2_2249.json + the bsrc4_r12ng sidecar h2_2249/landed_sidecar_h2_psplit_all.json.
+    - 1 of 993 landing-table rows has no match: port dn_s_4N_L0_1, dst s_5N_L1, type ot_s81sl_leaf__t52. Its dst bus dn_s_4N_L0x2_i (the psplit x2 bus) is missing from the sidecar's collector.types[t52].local_sources, which has only ft0_i, ft1_i.
+    - Two fixes are needed: next() needs a default plus a named refusal, and the psplit_all sidecar needs the x2 bus. Diagnoser: s81-lfcs-depth-gate events/s81_ready12b_compose/diag_cland.py. Owner wanted; not fixed here.
+    - Meanwhile, S81 t8/t57 EQ for ready12b was done by a normalised bound-RTL diff (out_r12ng vs the lfcs bind):
+      - t57: only the station lines/FFs change.
+      - t8: station lines plus 2 native delay memories in u_vp one stage deeper (hsi_q, yrow_d). These are compensation by the beat bench (hio2/all2 PASS), not a formal proof.
+      - The LF_CS strict gate PASSes 0/496.
+  (2) ready12b-A BISECT on G0 (main 26c9ae03a4 check.py):
+    - base: 74 errors.
+    - B1-B3 (lfcs + TAPWIN + band, c9f88f95e119): the same 74, none new; strict bind BIND_RC 0, LF_CS PASS.
+    - + old REACH-FIX-2 79e22ea61177: 298 errors (239 new): collector_reach 211 ("?" -> rst_n_tN sources over 405 um on 143 types; e.g. kv_leaf t2 reset consumers 119 -> 176 with unmapped sources), latency 18 (added ft stations missing from latency.lanes), geometry +12 (ft station sites in macros); bind 104 LANE_LATENCY/CYCLES errors.
+    - Now binding 2d689bfae217 (plan_rf_fc). If those classes remain, ready12b-A ships as B1-B3 and REACH-FIX-2 follows as its own event.
