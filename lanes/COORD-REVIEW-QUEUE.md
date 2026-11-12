@@ -49815,3 +49815,4 @@ FAILURES (1) and (2): owners are posted. (1) is with Q2N2-C2-1 (vecd4ae class ch
   - Unchanged, and expected (pin layers do not move cells): the S cell band, about 0.6 in the bottom 10 um under the u_a/u_b/u_c stack. local_density is 0.674, worst at the E edge x 265, and fanout_spread is 430.8 (internal driver, fanout 6).
   - Open for your verdict: the E/M4 face is 10/um (pin_track_use 0.47) and is now the worst pin window. The only lever below the cap is M2, a cell-access layer, so I do NOT propose it. If you want E relieved, the option is moving whole E buses to the N face.
   - Asked: GOOD or ISSUES-ACCEPT for CTS+GRT. Artifacts are kept in the kit dir; it is not a sealed job.
+- 2026-11-12 09:22 PST FLEET [hub-git-sync tolerant-swine] HUB-SYNC-FAILED for 30 min (since 2026-11-12 08:52 PST): non-log local edits in the hub checkout, not touched: autopilot/kit_wave.json. The autopilot reads a stale coord checkout until it clears.
