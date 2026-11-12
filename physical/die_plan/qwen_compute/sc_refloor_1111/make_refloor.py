@@ -50,6 +50,7 @@ ap.add_argument("--vcol", default="", help="slot=x: the slot's V run is forced o
 ap.add_argument("--side", default="", help="slot=E|W: corner/detour lanes forced to one side of the core")
 ap.add_argument("--tries", type=int, default=12)
 ap.add_argument("--bit-hop", type=float, default=394.9, help="per-bit hop limit = ft_spread budget 405 x .98 - 2")
+ap.add_argument("--only", default="", help="re-site only these slots (all others kept as in BASE)")
 ap.add_argument("--keep-sites", default="", help="slots whose plan sites/regs are kept unchanged")
 a = ap.parse_args()
 SRC = Path(a.src)
@@ -71,6 +72,7 @@ names = [n for n in T if a.match in n and len(T[n].get("hard_cores") or []) == 1
 if a.types:
     names = [n for n in names if n in a.types.split(",")]
 keep = set(filter(None, a.keep_sites.split(",")))
+ONLY = set(filter(None, a.only.split(",")))
 SIDE = dict(kv.split("=") for kv in filter(None, a.side.split(",")))
 VCOL = {k: float(v) for k, v in (kv.split("=") for kv in filter(None, a.vcol.split(",")))}
 
@@ -215,8 +217,9 @@ for tn in names:
     m = CORE_MARGIN
     alloc = RowAllocator((m, m, W - m, H - m), blocked=boxes, cell_size=CELL, column_pitch=2.16, row_pitch=.27,
                          origin=(m, m))
+    keep_ = keep | (({s_["name"] for s_ in t["ft_slots"]} - ONLY) if ONLY else set())
     for s in t["ft_slots"]:
-        if s["name"] in keep and s.get("bit_sites_um"):
+        if s["name"] in keep_ and s.get("bit_sites_um"):
             cw_, ch_ = s.get("bit_site_cell_um") or CELL
             for st in s["bit_sites_um"]:
                 for x, y in st:
@@ -224,7 +227,7 @@ for tn in names:
     colload = np.zeros(int(math.ceil(W)) + 1)        # V bits per um column (1-um bins)
     rowload = np.zeros(int(math.ceil(H)) + 1)
     rep = []
-    order = sorted([s for s in t["ft_slots"] if s["name"] not in keep], key=lambda s: -int(s["width"]))
+    order = sorted([s for s in t["ft_slots"] if s["name"] not in keep_], key=lambda s: -int(s["width"]))
     for s in order:
         nm, wd, k = s["name"], int(s["width"]), int(s.get("stations", 1))
         try:
