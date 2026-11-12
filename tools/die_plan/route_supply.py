@@ -101,6 +101,21 @@ def _bin_hi(v, b):
     """ceil(v / b) robust to float error at bin edges."""
     return int(math.ceil(v / b - 1e-6))
 
+
+def station_bits(t, s):
+    """Bits carried by one internal_stations chain. An explicit "bits" wins. A face-bus chain (conn bus:X) without one
+    carries the whole bus: the kit pads every bit of X through the chain's register sites (u_lpad_X.r[k][*]), and
+    station_face_dedupe removes X as a separate face net, so falling back to 1 bit hid the bus from the model."""
+    if s.get("bits") is not None:
+        return s["bits"]
+    cn = str(s.get("conn", ""))
+    if cn.startswith("bus:"):
+        name = cn[4:].split("|", 1)[0]
+        for b in t.get("buses") or []:
+            if isinstance(b, dict) and b.get("name") == name and b.get("width"):
+                return int(b["width"])
+    return 1
+
 def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
     """GRT-PATCH-1 'edge_outline' image (OT_GRT_TRANSITION_MODE=edge_outline, grtT3 sha256:2d12164ad3f6): a stock-halved
     tile stays halved only within K gcells of the macro INSTANCE bbox boundary or within K of a macro SIGNAL pin (PG
@@ -882,7 +897,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     if cfg.get("station_face_dedupe", True):
         for s_ in t.get("internal_stations", []) or []:
             cn = str(s_.get("conn", ""))
-            if not cn.startswith("bus:"):
+            if not cn.startswith("bus:") or s_.get("sites") == "float":
                 continue
             for end in (s_.get("launch", ""), s_.get("capture", "")):
                 e_ = str(end)
@@ -1099,9 +1114,12 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     # lanes is a 17-pin net, not 16 two-pin nets); later hops are per link
     fan = defaultdict(list)
     for s in t.get("internal_stations", []) or []:
+        if s.get("sites") == "float":
+            continue        # WIDE-FLOAT-1: unpinned stages; the bus is scored as its face net (not deduped below)
         pts = [tuple(s["from_um"])] + [tuple(r) for r in s.get("regs_um", [])] + [tuple(s["to_um"])]
-        fan[(str(s.get("launch")), tuple(round(v, 1) for v in s["from_um"]))].append((pts, s.get("bits", 1)))
-        st_bits += s.get("bits", 1)
+        nb = station_bits(t, s)
+        fan[(str(s.get("launch")), tuple(round(v, 1) for v in s["from_um"]))].append((pts, nb))
+        st_bits += nb
     sp = cfg["detour_um"] if cfg.get("station_spread", False) else 0.0
     for (_la, _), lst in fan.items():
         bits = max(n for _, n in lst)

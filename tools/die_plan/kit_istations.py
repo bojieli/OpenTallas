@@ -1210,6 +1210,15 @@ def check_core_delay(tn, bus, txt, chains, k, q):
                                  f"{'' if inst in tags[tag] else ', not a core of that chain'}): wrong delay")
 
 
+def chain_floats(t, conn):
+    """WIDE-FLOAT-1 11-12: True when every internal_stations entry of this bus chain says sites="float".  The chain keeps
+    its stage count (the lane's cycles) but its stages get no FIRM site: GPL places them toward the bus's real data
+    consumers.  For wide face-bus chains whose planned sites trace a narrow relay path (col_* frame buses: 1167-1264 b
+    pinned along the outline toward a 1-bit u_bn*.rs capture while the data feeds soft u_lpl_* seams)."""
+    es = [e for e in t.get("internal_stations", []) if e.get("conn") == conn]
+    return bool(es) and all(e.get("sites") == "float" for e in es)
+
+
 def bus_entries(t):
     """Station entries of a type's buses, one per bus.  The planner lists one entry per capture group, but a bus has one
     chain (bind face register -> leaf): its depth is the deepest entry, stage j at the bits-weighted centroid of the
@@ -1275,18 +1284,27 @@ def main(argv):
             raise SystemExit(f"kit_istations: {tn}: internal station on unknown bus {bus}")
         W = bound_bus_width(tn, b, txt, man)
         exact = exact_banks(e, W)
+        floating = chain_floats(t, conn)
+        if floating and (exact is not None or e.get("bit_route") or "bit_sites_um" in e or "face_bit_sites_um" in e):
+            raise SystemExit(f"kit_istations: {tn} {bus}: sites=float is a whole-chain form only "
+                             "(no exact bank / bit_route / bit sites)")
         packed=packed_input_delay(tn,b,txt,W,len(regs))
         if packed:
             if exact is not None:
                 raise ValueError(f'{tn}.{bus}: packed data+epoch delay requires complete packed bit sites; unsupported exact bank')
             sites=packed_sites(regs,packed['depth'])
             for j,k in sites:
+                if floating:
+                    break
                 x,y=regs[k]
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
                 tcl.append(f'is_place {{{pattern}}} {x} {y} ist:{bus}')
             row=dict(conn=conn,planned=len(regs),bound_pads=packed['depth'],inserted=0,
                      stations=packed['stage_registers'],packed_delay=packed,
                      plan_width=b['width'],bound_width=W)
+            if floating:
+                row.update(sites="float")
+                print(f"kit_istations: {tn} {bus}: sites=float, {packed['depth']} packed stages left to placement")
             if packed['depth']<len(regs):
                 pts=[p for p in [e.get('from_um')]+[regs[k] for _,k in sites]+[e.get('to_um')] if p]
                 row.update(respread_sites=[k for _,k in sites],
@@ -1393,6 +1411,8 @@ def main(argv):
             tcl.extend(BG.tcl_lines(names, bgrp, regs, bus))
             print(f"kit_istations: {tn} {bus}: per-bit-group sites for {len(bgrp['groups'])} cores (max planned hop "
                   f"{max(g['hop_um'] for g in bgrp['groups'].values())} um, {bgrp['unresolved_bits']} bits keep the merged site)")
+        elif floating:
+            print(f"kit_istations: {tn} {bus}: sites=float, {len(names)} stages left to placement")
         else:
             for (x, y), nm in zip(regs, names):
                 tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
