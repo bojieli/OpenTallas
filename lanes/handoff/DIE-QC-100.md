@@ -1,4 +1,4 @@
-# DIE-QC-100 lane handoff (QC = qwen_compute die owner)  -- updated 2026-11-12 13:00 PST
+# DIE-QC-100 lane handoff (QC = qwen_compute die owner)  -- updated 2026-11-12 15:55 PST
 
 ## 1 Scope
 Finish QC s28 compose as ONE event: s28a + s28 items (B,C,D,E,F,W) + HF-1c delta (claude/qc-s28-floorplan-1112@ea7be452d3, APPROVED w/ GEOM-VIS-3 conditions a/b/c) + REACH-FIX taps; G0 + strict bind; READY with sha + drawings. Types go to P&R only after a GEOM-VIS-5 verdict. Hourly STATE on lanes/COORD-REVIEW-QUEUE.md. QC: 2/120 types, 31/31 cores signed off.
@@ -55,6 +55,15 @@ None besides the sub-lanes. Queue post: append line to ~/coord/lanes/COORD-REVIE
 - LAND died at limit (last 16:42 UTC, face pack worst 69 > 64); resumed on c8 (part 1 START/mon/geom, part 2 faces).
 - BIND at event tree fa7cad9b3a (wt/qc-s28-event); scripts bind/bind_fix.sh (r8 derive, fix_h_straps, reset_pad, reach_fix class 5).
 - 'other flow error' owner table re-posted 12:58 (with triage).
+
+
+## 5f 15:55 -- chain + bind status
+- FIRST CLEAN STRICT BIND: zz_c8_resid 0f0dbf06115f -> chain c8t -> plan_final 7ea8c9c61c2a, BIND_RC=0, bus_groups f5c931ea8494, r8 7f56f61bfc8d. Event tree epyc9 wt/qc-s28-event 0e7f05581b -> 3b3a3de8ff (+ist-pad), local.
+- READYs posted: claude/qc-coll-clock-merge-1112@7181d90f66 (bind clock_merge); claude/qc-bind-ist-pad-1112@4b6dee512d57 (lane_pad source-station double count, opt-in kit_source_station_pricing). Pending: QC-COLL-HOLD clock_contract d2d related branch.
+- Chain order (final): c8_resid -> ctlcap_kp 2fb778fc4fa5 (+ .kit_pricing.json) -> collmerge on kp (+ .clock_merge.json incl glue d2d) -> glue d2d merge -> LAND delta -> forwarded-hop fixes (RESID) -> snap_lattice -> resid_fix -> gates -> bind_fix.sh chain (straps/pad/repick/local_copy_fix/tap_ident/cm_inject/kp_inject) -> bus_groups/EQ/tap table/render -> READY.
+- Sub-lanes: QC-S28-BIND (bind/), QC-S28-CTLCAP (ctlcap/, done), QC-COLL-HOLD (collhold/: coll merge c8b, d2d merge, census done), QC-S28-RESID (resid/: forwarded hops), QC-S28-HF1C-LAND (land/: part 1 START/mon/geom, part 2 faces).
+- Routes: 6 st_a running on epyc4 since 12:58 (GRT watch sle_st_a_v2, cl9f076a5c); coll_s a2 FAIL post-CTS hold -268.69 (root cause = 3 CTS trees, fixed in event, not relaunched on hcut1111).
+- Cross-die notices: CLOCK-SPLIT census (only QC coll + glue d2d); ist double-pad today: KV 120 lanes, HBM 10, S81 58 (owners decide).
 
 ## 6 NEXT STEPS
 1. Collect the 4 sub-lane deltas (each guarded on 55d318eece08). Compose order: LAND -> TAPS -> ROUTE -> VISFORM (each apply script refuses on from-value conflict; resolve by hand, keep both intents).

@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 15:45 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 16:15 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -8,7 +8,7 @@ re-select, 6 landed window (+k cycles from a hops TSV). COORD classes: RESET-WAV
 INSERTION-BALANCE all dies (priority; proven on HEAD fix2 + KV vN in DIE-PROTO-2's die STA with die_clock ladder RC).
 
 ## 2 Worktree
-epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD b251146029 (pushed, clean; + c81d837870 FAIL-LOUD, 082b2c63ca/b251146029 leafcell) =
+epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD bd0bf92f81 (pushed, clean; + c81d837870 FAIL-LOUD, 082b2c63ca/b251146029 leafcell, bd0bf92f81 regeq --routed) =
 main d3f85cdf01 + 7 cherry-picked REACH-FIX-2 commits (5e19ca2647..72e2c1295a) + FIXED-CYCLES 54d2a1ec4b. READY posted 13:00
 (ROOT-MERGE-60) and 13:2x (adds 54d2a1ec4b). Old branch claude/reach-fix-1112 (370eac82bd) is superseded by it.
 Tests (epyc7 repo root, --basetemp under reach-fix-2/pyt): test_reach_fix (20) test_dieclock_routed test_die_clock*.py
@@ -30,6 +30,7 @@ None (rt_leg done 21:13 UTC; STA re-run in docker because epyc9 has no host sta/
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 16:1x READY dieclock_regeq --routed + dieclock_route_step (bd0bf92f81); smoke on rl/rb3 = 25.3/25.4 overflow 0 (rl/smoke).
 - 2026-11-12 15:4x CAP-2000 STEP (posted): 25.3 TT / 25.4 FF, landed 397.88/395.89 PASS, overflow 0, FF contract 37 need 5.57 -> gate FAIL.
   All 37 = 0-5 ps plan per_port_ps on early-side ports of hd_ctl_n / hd_spn_eshim_rx / hd_spn_wshim_tx; asked HEAD-95 to re-derive
   (kitwin dp/head/rloop3_sta/kitwin.json + 10). S81 fail-loud type svc_lo_dsdv_svc_rs__t7 told to DIE-S81-88 (hbm_i0 rect_um != rects_um[0]).
@@ -69,11 +70,11 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. Fold rl/rloop*.py (routed re-balance: build -> rt_leg chain -> die STA -> leaf pad, cap 1500 / 2000 on capped leaves) into
-   dieclock_regeq --routed on the branch + test; READY.
-2. HEAD-95 rp17: when they post the frozen plan path, run leg build + model regeq + routed loop as a tool output.
-3. If HEAD-95 SP3n2 fails GRT hold on the W/E bin register bars: mine (type-level tap latency).
-4. Merge lane questions on @b251146029. KV regeq after DIE-KV-99 vN2e.
+1. HEAD-95 rp17 frozen plan path -> run on epyc9 (code_rt = branch tools; needs rp17 die_trial signal kit for --routed):
+   die_clock build leg args; dieclock_regeq model; dieclock_regeq --routed KIT --start-pad best --cap2-um 2000 --sta-plan PLAN.
+   HEAD-95 re-derives per_port_ps of hd_ctl_n/hd_spn_eshim_rx/hd_spn_wshim_tx from dp/head/rloop3_sta/kitwin.json (+10).
+2. SP3n2 GRT hold on W/E bin register bars, if it fails like SP2: mine.
+3. Merge lane questions on @bd0bf92f81. KV regeq after DIE-KV-99 vN2e.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.

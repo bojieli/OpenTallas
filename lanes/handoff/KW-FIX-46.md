@@ -83,3 +83,31 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - GOTCHA: an ssh `timeout` kills the local client but NOT the remote loop. Kill your own remote loop by exact PID.
 - 09:3x: p6_relay (505 files) copied epyc7 -> epyc2/epyc9/intel2; manifests match; 0 wave rows needed relaunch. epyc9 load posted (09:29: 74/96, run 42). The calm class is relaunched: q_mcb_ne/q_spu0/q_spu0__physical_v1 @2 and PHY_NE@5, q_su00@2 are all on epyc9. q_b013__physical_v1@14 and q_spu1__physical_v1@10 wait on OWNERS state GEOM-REQ/REVIEW. Their state records were reclassified to INFRA, with class_was_kw46 kept.
 - OPEN (do AFTER ROOT-MERGE-60 lands edf6623be211, so the tip stays the one under test): at collect, a FLOW "tool input file missing" or KIT_NOT_SELF_CONTAINED on a host that the same tick's probe lists as SRC-INCOMPLETE for the die -> INFRA (hold_unchanged otherwise holds the retry). Also: rebase kw43-rootreal ot-run on the main backend (ASK 08:31).
+
+## 11-12 14:4x update
+- LIVE kit_wave.py md5 b34e97d7404c = claude/kw-fix-46-flowrepeat-1112@6e8bc43d6ef3 (FLOW-REPEAT hold + retry-epoch re-arm fix), deployed 14:29; backup kit_wave.py.bak-kw46-flowrepeat-1112. READY to ROOT-MERGE-60 (merges clean on main and with the wdcpu branch).
+- Branch claude/kw-fix-46-wdcpu-1112@2885660ba67e (watchdog idle = no log AND no CPU) is READY but not live (watchdog.py is in the owner checkout and goes live only through the merge).
+- hbm PHY_NC is held in kit_wave.json hold_items (coord ec5dfc851b5). Cause: c87611d612d9 (phy-core-area) was approved but never landed, so the src src_hbm_main_9fc09952cd_q0g_p18 lacks it. To release: land it, replace gen_phys.py on the HBM gen hosts as a new inode (it is hardlinked), set retry PHY_NC@3 with retry_fix "FLOW-FIX: c87611d612d9", and drop the hold_items entry.
+- dies.hbm.owner_lane is now DIE-HBM-101.
+- ap-2731c12447d5-a2 ended DONE-CRASH at 13:42 (the attempt_4 kit dir is gone): moot.
+- S81 STA2204 rows: 3 are past 3_4 and none shows STA-2204; the watcher /tmp/kw46_watch6.final on intel2 writes the final state.
+
+## 11-12 14:45 COORD rulings (whoever holds KW-FIX-46 runs these)
+- (a) GATED on ROOT-MERGE-60 posting MERGED with c87611d612d9. At 14:41 it was NOT in hub/main (main 3b73826c411). Once MERGED:
+  1. On every HBM gen host (epyc7, epyc9, epyc8, epyc2, intel1), replace src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/gen_phys.py with main's file as a new inode, the STA2204-1 method:
+     - check first that it is a regular file, not a link (`test -L`);
+     - record md5 and link count before (old md5 0b0884f5723f; 5 links on epyc9/epyc7, 10 on epyc8);
+     - back up to .bak-kw46-phycore-1112;
+     - write tmp, then mv -f (new inode, 1 link);
+     - check md5 after, and grep -c "reaches a die edge" >= 1.
+     The other hardlinked trees keep the old inode.
+  2. Under kit_wave.lock in kit_wave.json:
+     - delete these stale entries from dies.hbm.retry: PHY_NC@1 PHY_NC@2 PHY_NC@3 PHY_NE@1 PHY_NE@2 PHY_NE@3 PHY_NE@4 PHY_NW@1 PHY_NW@2 PHY_NW@3. COORD approved this; post the list.
+     - add PHY_NC@3 and PHY_NE@5 (the current FAIL attempts; check them in the state first);
+     - set dies.hbm.retry_fix {"PHY_NC@3": "FLOW-FIX: c87611d612d9", "PHY_NE@5": "FLOW-FIX: c87611d612d9"};
+     - remove hold_items.PHY_NC;
+     - commit with coord-commit.sh and post it.
+  3. PHY_NW (attempt 4, GRTM edge_outline) is a different class and goes to DIE-HBM-101, not to us.
+- (b) wdcpu 2885660ba67e landed in train 12 (main 3b73826c4114) and the watchdog timer reads it fresh: LIVE.
+- (c) pkill breach noted: exact PIDs only.
+- (d) Paired dry runs now use a private cache: /tmp/kw46_drytick.py sets TYPEBLOCK_CACHE and FLOW_REPEAT_LOG to the snapshot AP_DIR (backup /tmp/kw46_drytick.py.bak-1112). Never point a dry run at ~/coord/autopilot caches.
