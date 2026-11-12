@@ -260,7 +260,15 @@ SCHEMA = {
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}},
                     # layers a lane hop routes on (reach.py), <= M7 only (M8/M9 = G0 ERROR m89_signals)
-                    "ft_route_layers": {"type": "array", "items": _layer, "minItems": 1}}},
+                    "ft_route_layers": {"type": "array", "items": _layer, "minItems": 1},
+                    # LAYER-BUDGET-1 (OWNER 11-11 "grant the leftover M8 for all dies", m8_grant.py): types route
+                    # M8 on the tracks the die does not use over them (die PG + cut_avail reserve + die route);
+                    # true = every placed type whose ceiling is below M8; object: enable, types (subset), guide
+                    # (die-route write_guides file, relative to the plan dir), ndr (die clock NDR, default 4w)
+                    "type_m8_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
+                        "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
+                        "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
+                        "note": {"type": "string"}}}}},
                 # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
                 # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
                 # `sites` signal bumps/pads, and lists the @die ports it carries (bits <= sites).

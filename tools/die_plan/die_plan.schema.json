@@ -317,6 +317,37 @@
         "pattern": "^M[1-9]$"
        },
        "minItems": 1
+      },
+      "type_m8_grant": {
+       "type": [
+        "boolean",
+        "object"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "enable": {
+         "type": "boolean"
+        },
+        "types": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "guide": {
+         "type": "string"
+        },
+        "ndr": {
+         "enum": [
+          "2w",
+          "4w",
+          "8w"
+         ]
+        },
+        "note": {
+         "type": "string"
+        }
+       }
       }
      }
     },

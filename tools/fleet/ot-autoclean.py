@@ -80,6 +80,24 @@ NEVER_TOUCH_PATHS = (os.path.join(HOME, ".codex"), os.path.join(HOME, "OpenTalla
                      os.path.join(HOME, ".claude"))
 LOCAL_WT_IDLE_H = 12.0
 LOCAL_RESCUE_DIR = "/srv/opentallas-scratch/claude/rescue"   # wt-reaper default (scratch2/claude/rescue) is not writable on localhost
+# DESIGN_EXPORT_1112 (EXPLORER-2; OWNER 11-12 "export before cleanup ... export to web views is the most important
+# deliverable"): DEFAULT ON.  A host run HOLDS every class a attempt (finished or superseded), class b trim and class s
+# stub-trim whose unit holds a routed / CTS ODB (6_final .. 4_cts) not yet in the design explorer's ledger of published
+# cuts (<snapshot>/design_export.json, fleet_viz/design_export_hook.py snapshot), and prints one DXREQ line per ODB for
+# the drive to enqueue.  The file names the current designs; one that names none ("all": true, or the file missing)
+# holds every such ODB.  Holds only add refusals.  --design-export off (explicit) is the only way to open the gate.
+DX_FILE = "design_export.json"
+DX_STAGES = ["6_final", "5_3_fillcell", "5_2_route", "5_1_grt", "5_route", "6_1_fill", "4_1_cts", "4_cts"]
+DX_ODB_RE = re.compile(r"/results/[^/]+/([^/]+)/(?:base/)?([0-9]_[0-9a-z_]+)\.odb$")
+
+
+def dx_norm(name):
+    """= design_export_hook.norm: results design dir -> plan name"""
+    n = re.sub(r"^(kl|dp|hbc|hd|ds)_", "", name or "")
+    n = re.sub(r"(__cl[0-9a-f]{8})+$", "", n)
+    return re.sub(r"_(rt\w+|cv\w+|r\d\w*)$", "", n)
+
+
 STORE_INDEX = "store.json"   # snapshot: signed-store index {sha256(signoff.json): {"archive", "locs"}} (SRCCOPY_1111)
 
 
@@ -956,6 +974,39 @@ class Job:
                                   canon=self.paths.canon)
         else:
             self.kwkeep = PathSet()
+        self.dx, self.dx_sent = None, set()
+        if getattr(a, "design_export", "on") != "off":
+            dxf = os.path.join(snap, DX_FILE)
+            d = jl(dxf) if os.path.exists(dxf) else {"all": True, "ledger": []}   # no gate file: hold every routed DB
+            names = None if d.get("all") or d.get("names") is None else set(d["names"])
+            self.dx = dict(ledger=set(d.get("ledger") or []), paths=set(d.get("ledger_paths") or []), names=names,
+                           stages=list(DX_STAGES))
+
+    def dx_hold(self, unit, kind="newest"):
+        """DESIGN_EXPORT_1112: None, or why the unit is held until the design explorer has cut its routed ODB(s)"""
+        if not self.dx or "/_ot_autoclean_ctl/" in unit + "/":   # the run's own control fixture is never a design
+            return None
+        best = {}
+        for dp, dn, fn in os.walk(unit):
+            for f in fn:
+                m = DX_ODB_RE.search(os.path.join(dp, f))
+                if not m or m.group(2) not in self.dx["stages"]:
+                    continue
+                if self.dx["names"] is not None and dx_norm(m.group(1)) not in self.dx["names"]:
+                    continue
+                k, rank = os.path.dirname(os.path.join(dp, f)), self.dx["stages"].index(m.group(2))
+                if k not in best or rank < best[k][0]:
+                    best[k] = (rank, os.path.join(dp, f), m.group(1), m.group(2))
+        pend = []
+        for _r, f, design, stage in best.values():
+            label = f"{self.host}:{f}"
+            if label in self.dx["ledger"] or f in self.dx["paths"] or os.path.realpath(f) in self.dx["paths"]:
+                continue
+            pend.append(f)
+            if label not in self.dx_sent:
+                self.dx_sent.add(label)
+                say(f"DXREQ\t{label}\t{dx_norm(design)}\t{stage}\t{kind}")
+        return f"design-export pending ({len(pend)} ODB): {pend[0]}" if pend else None
 
     def load_protected(self):
         rows = []
@@ -1179,6 +1230,10 @@ class Job:
             r = self.resume_hold(d)
             if r:
                 return r, kit, files
+        if cls == "b":   # the trims sit beside 6_final: held until that results dir's 6_final is cut
+            h = self.dx_hold(d)
+            if h:
+                return h, kit, files
         qn_ok = cls == "c" and bool(getattr(self.a, "queuename_skip_trim_c", False))
         self._trim_cls = cls
         try:
@@ -1279,6 +1334,9 @@ class Job:
             return "lt6h", []
         if hl:
             return "hardlink " + hl, []
+        h = self.dx_hold(d, "newest" if verdict.startswith("finished") else "superseded")
+        if h:
+            return h, []
         self._attempt_note = verdict
         # --queuename-skip-superseded: a bare item NAME in a queue post protects the item's current attempt, not
         # older attempts the state has superseded (an exact queue PATH still protects them)
@@ -1448,7 +1506,7 @@ class Job:
         why = self.stub_verified(unit)
         if why:
             return why, [], {}
-        why = self.stub_unit_hold(unit)
+        why = self.stub_unit_hold(unit) or self.dx_hold(unit)
         if why:
             return why, [], {}
         w = self.live.why(self.paths.forms(unit))
@@ -1953,6 +2011,35 @@ class Driver:
         self.rstate = a.remote_state
         self.py = f"python3 -I {shlex.quote(self.tools + '/ot-autoclean.py')}"
 
+    def dx_snapshot(self, out):
+        """DESIGN_EXPORT_1112 gate file for the hosts; any failure -> HOLD ALL (default on, never blocks the drive)"""
+        a = self.a
+        dxf = os.path.join(out, DX_FILE)
+        if a.design_export_hook and os.path.exists(a.design_export_hook):
+            try:
+                r = subprocess.run([sys.executable, "-I", a.design_export_hook, "snapshot", "--out", dxf]
+                                   + shlex.split(a.design_export_args), capture_output=True, text=True, timeout=600)
+                say(f"snapshot: design export gate rc {r.returncode} {(r.stdout or r.stderr).strip()[-200:]}")
+            except (OSError, subprocess.SubprocessError) as e:
+                say(f"snapshot: design export gate failed {e!r}")
+        if not os.path.exists(dxf):   # DESIGN_EXPORT_1112 default ON: no ledger -> hosts hold every routed DB
+            with open(dxf, "w") as fh:
+                json.dump({"all": True, "ledger": [], "why": "design export snapshot unavailable"}, fh)
+            say("snapshot: design export gate HOLD ALL (no ledger)")
+
+    def dx_drain(self):
+        """DESIGN_EXPORT_1112: start the hook's drain (cut + publish the held DBs under ot-run) detached, so the holds
+        this run placed are released by a later run; one drain at a time (its own lock), never blocks the drive"""
+        a = self.a
+        if not (a.design_export_hook and os.path.exists(a.design_export_hook) and a.design_export_drain > 0):
+            return
+        log = os.path.join(STATE, "design_export_drain.log")
+        os.makedirs(STATE, exist_ok=True)
+        with open(log, "a") as fh:
+            subprocess.Popen([sys.executable, "-I", a.design_export_hook, "drain", "--max", str(a.design_export_drain)],
+                             stdin=subprocess.DEVNULL, stdout=fh, stderr=subprocess.STDOUT, start_new_session=True)
+        say(f"design export drain started (max {a.design_export_drain}; log {log})")
+
     def build_snapshot(self, out):
         a = self.a
         os.makedirs(out, exist_ok=True)
@@ -1979,6 +2066,7 @@ class Driver:
                 fh.write(kw)
         else:
             say("snapshot: kit-wave state unavailable; hosts skip class a")
+        self.dx_snapshot(out)
         n_store = write_store_index(a.coord, os.path.join(out, STORE_INDEX))
         say(f"snapshot: signed-store index {n_store} entries")
         with open(os.path.join(out, "meta.json"), "w") as fh:
@@ -2137,12 +2225,18 @@ class Driver:
                                        f"--wt-reaper {shlex.quote(self.tools + '/wt-reaper.py')}"
                                        f"{' --apply' if a.apply else ''} {extra}", timeout=a.run_timeout + 120)
                     out = r.stdout
+                    dxreq = "".join(ln + "\n" for ln in out.splitlines() if ln.startswith("DXREQ\t"))
+                    if dxreq and a.design_export_hook:
+                        q = subprocess.run([sys.executable, "-I", a.design_export_hook, "enqueue"], input=dxreq,
+                                           capture_output=True, text=True, timeout=120)
+                        say(f"{h}: {(q.stdout or q.stderr).strip()[-200:]}")
                     for ln in out.splitlines():
                         if ln.startswith(("TOTAL", "SKIPS", "PROTECTED", "controls", "ALERT", "wt-reaper")):
                             say(f"{h}: {ln}")
                     say(f"{h}: run rc {r.returncode}{' ' + r.stderr.strip()[-200:] if r.returncode else ''}")
                 if a.collect:
                     written += self.collect(h, prune)
+            self.dx_drain()
             if written:
                 say("collected " + " ".join(written))
             written += [os.path.join(a.coord, x) for x in self.store_new]
@@ -2162,6 +2256,8 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
     r = sub.add_parser("run", help="host job (dry unless --apply)")
     r.add_argument("--apply", action="store_true")
+    r.add_argument("--design-export", choices=("on", "off"), default="on",
+                   help="DESIGN_EXPORT_1112 export-before-delete gate (default on; off only by explicit owner/COORD call)")
     r.add_argument("--host", default="")
     r.add_argument("--state", default=STATE)
     r.add_argument("--snapshot", default=os.path.join(STATE, "snapshot"))
@@ -2229,6 +2325,11 @@ def main(argv=None):
     dr.add_argument("--remote-state", default=STATE)
     dr.add_argument("--timeout", type=int, default=21600)
     dr.add_argument("--run-timeout", type=int, default=10800)
+    dr.add_argument("--design-export-hook", default=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(SELF))),
+                    "fleet_viz", "design_export_hook.py"), help="fleet_viz/design_export_hook.py (DESIGN_EXPORT_1112, default ON: "
+                    "hosts hold units until the design explorer has cut their routed ODBs; missing or failing = hold all)")
+    dr.add_argument("--design-export-drain", type=int, default=20, help="DBs the detached drain cuts per drive (0 = no drain)")
+    dr.add_argument("--design-export-args", default="", help="extra args for its snapshot, one string (--index/--store)")
     dr.add_argument("--run-args", default="", help="extra args for the host run, one string (--run-args='--classes b')")
     a = ap.parse_args(argv)
     if a.cmd == "run":

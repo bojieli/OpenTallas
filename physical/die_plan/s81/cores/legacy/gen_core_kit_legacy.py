@@ -1658,6 +1658,9 @@ def main():
     ap.add_argument("--suffix", default=None, help="kit suffix (variant), default recipe suffix or c")
     ap.add_argument("--post-grt-drv", action="store_true",
                     help="KW-FIX-17 opt-in: chain the generated post_grt_drv.tcl repair pass after GRT (old form; default off: the GRT stage already repairs, DIE-QC-80 stall class)")
+    ap.add_argument("--face-hold-pad", default=None, metavar="SPEC.json",
+                    help="S81-CORES-1 11-11 opt-in (recipe key face_hold_pad): port-scope hold pad for forwarded-clock capture flops; "
+                         "per-endpoint HB4 counts from the measured FF hold (tools/die_plan/face_hold_pad.py size); PRE_CTS hook")
     MS = _ms()
     MS.add_args(ap)   # 12.7c: --master-slice DIR (opt-in), --trial
     a = ap.parse_args()
@@ -2063,6 +2066,11 @@ def main():
             "if {![llength [info commands kr_default_repair_timing_helper]]} {\n"
             " rename repair_timing_helper kr_default_repair_timing_helper\n"
             " proc repair_timing_helper {args} {kr_default_repair_timing_helper -max_buffer_percent 100 {*}$args}\n}\n")
+    _fhp = a.face_hold_pad or rec.get("face_hold_pad")
+    if _fhp:                                    # S81-CORES-1 11-11: port-start hold the nonport GRT repair never fixes
+        import face_hold_pad
+        print("face_hold_pad: " + json.dumps(face_hold_pad.stage(kd, REPO / _fhp if not Path(str(_fhp)).is_absolute() else _fhp)),
+              file=sys.stderr)
     land = rec.get("land_slots") or {}
     if land:
         payload,fgc=land_slot_contract(rec,buses_in)
