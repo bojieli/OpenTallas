@@ -1732,6 +1732,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                                         else {}),
                                      **({"street_pair": True} if (DME_STREET_PAIR and rn in DME_STREET_PAIR) else {}),
                                      **({"split": DME_SPLIT[rn]} if (DME_SPLIT and rn in DME_SPLIT) else {}),
+                                     **({"merge_parts": True} if (DME_MERGE_PARTS and rn in DME_MERGE_PARTS) else {}),
                                      **({"vgap": True} if (DME_VGAP == "all" or (DME_VGAP and rn in DME_VGAP)) else {}),
                                      **({"vgap_avoid": DME_VGAP_AVOID[rn]} if (DME_VGAP_AVOID and rn in DME_VGAP_AVOID)
                                         else {}))))
@@ -1990,6 +1991,7 @@ def chain_ps(pts):
     return s
 
 
+DME_MERGE_PARTS = None   # HEAD-94 opt-in --region-dme-merge-parts REGIONS: {region}; one DME tree over all its partitions
 DME_ACTUAL_MAX_UM = None  # opt-in: one legal physical chain drives both DME cost and emitted buffers
 # HEAD-LEP0N-BAL opt-in --region-dme-actual-max-region REG:UM[,REG:UM] (with --region-dme-actual-max): the listed regions
 # build, price and emit their physical DME legs with stage bound UM instead of the die-wide bound.  Reason (HEAD FREG
@@ -2503,7 +2505,7 @@ def _street_columns(site, taps, pos, gap_um, pair=False):
 
 def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
                     early=None, snake=False, early_mode="hang", street=False, street_pair=False, split=None,
-                    vgap=False, vgap_avoid=None):
+                    vgap=False, vgap_avoid=None, merge_parts=False):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -2712,6 +2714,13 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     if late and not byp:
         byp[late[0][0]] = late
         late = []
+    if merge_parts and not street and len(byp) > 1:
+        # HEAD-94 opt-in --region-dme-merge-parts: ONE DME tree over every partition of the region (sink identities and
+        # the per-tap partition name are untouched; only the topology grouping changes).  A seam launch flop and its
+        # capture flop in a sibling partition (strip / o_shim) then merge at the lowest geometric node of one tree
+        # instead of meeting only at the partition-root cut, so CRPR cancels the shared branch.
+        byp = {"+".join(sorted(byp)): [t for k_ in sorted(byp) for t in byp[k_]]}
+        modes = tuple(m for m in modes if m == "greedy") or tuple(modes)   # nearest-pair merging keeps a seam pair together
     if street:          # HBM-CLKLOC-4 --region-dme-street: one street-topology tree over the whole region (no partitions)
         byp = {"street": [t for v in byp.values() for t in v]}
         modes = ("street",)
@@ -5799,6 +5808,10 @@ def main(argv=None):
     k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in coherent physical DME legs: price and emit one snapped reachable repeater chain; "
                         "geometry-derived paired detours before merge balancing, default unchanged")
+    k.add_argument("--region-dme-merge-parts", default=None, metavar="REGIONS",
+                   help="HEAD-94 opt-in (with --region-dme): comma list of DME regions whose partitions are embedded as ONE "
+                        "tree (seam launch and capture taps of sibling partitions share the lowest merge node); unlisted "
+                        "regions unchanged")
     k.add_argument("--region-dme-actual-max-region", default=None, metavar="REG:UM[,REG:UM]",
                    help="HEAD-LEP0N-BAL opt-in (with --region-dme-actual-max): per-region physical stage bound for the "
                         "listed regions (stages kept inside the fitted stage-model range); other regions unchanged")
@@ -5925,6 +5938,9 @@ def main(argv=None):
         DME_VGAP_AVOID = {k: tuple(v) for k, v in DME_VGAP_AVOID.items()}
     _vg = getattr(a, "region_dme_vgap", None)
     DME_VGAP = None if not _vg else ("all" if _vg == "all" else {x.strip() for x in _vg.split(",") if x.strip()})
+    global DME_MERGE_PARTS
+    _mp = getattr(a, "region_dme_merge_parts", None)
+    DME_MERGE_PARTS = {x.strip() for x in _mp.split(",") if x.strip()} if _mp else None
     _sp = getattr(a, "region_dme_street_pair", None)
     DME_STREET_PAIR = {x.strip() for x in _sp.split(",") if x.strip()} if _sp else None
     _sl = getattr(a, "region_dme_split", None)

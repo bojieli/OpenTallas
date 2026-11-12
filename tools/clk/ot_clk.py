@@ -389,6 +389,11 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
             if isinstance(amr, dict):
                 amr = ",".join(f"{k}:{_fmt(v)}" for k, v in sorted(amr.items()))
             a += ["--region-dme-actual-max-region", str(amr)]
+        mp = reg.get("merge_parts")     # opt-in: regions whose partitions share ONE DME tree, "REG[,REG]" or a list
+        if mp:
+            if isinstance(mp, (list, tuple)):
+                mp = ",".join(sorted(str(x) for x in mp))
+            a += ["--region-dme-merge-parts", str(mp)]
         w = workers if workers is not None else reg.get("workers")
         if w and int(w) > 1:
             a += ["--region-dme-workers", str(int(w))]
