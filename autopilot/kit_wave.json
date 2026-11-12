@@ -30308,7 +30308,9 @@
     "ot_hgi_sfu_opsa_group0@3",
     "ot_hgi_sfu_programme_store_r10@12",
     "q_su10__physical_v1@2",
-    "q_su00__physical_v1@2"
+    "q_su00__physical_v1@2",
+    "q_su11@1",
+    "q_su11__physical_v1@1"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -43975,7 +43977,7 @@
      "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
     }
    },
-   "note_hg2p18": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2). | retry +q_su10__physical_v1@2 +q_su00__physical_v1@2; removed ['q_su11@1', 'q_su11__physical_v1@1'] for a fresh re-arm next pass (KW-FIX-45 11-11 re-arm rule); q_su01/q_su01pv1 keep their KW-FIX-45 hold (child views)."
+   "note_hg2p18": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2). | retry +q_su10__physical_v1@2 +q_su00__physical_v1@2; removed ['q_su11@1', 'q_su11__physical_v1@1'] for a fresh re-arm next pass (KW-FIX-45 11-11 re-arm rule); q_su01/q_su01pv1 keep their KW-FIX-45 hold (child views). | 02:17 re-added q_su11@1 q_su11__physical_v1@1 (absent at the 02:12 pass -> fresh release; both still RUNNING on the pre-p18 bind and will fail KIT_PREFLIGHT, then relaunch @2 on rd1p18)."
   }
  },
  "place_prefer": [
