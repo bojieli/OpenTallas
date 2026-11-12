@@ -24,6 +24,19 @@ Clock / tap / landing-strip keys only: no RTL, no cycles, no core moves or core-
      ring bond makes exist only after placement, so the merge is a kit-time rule set per type in the plan.  Set on the
      29 pair-affinity types plus every other type whose PLANNED taps predict a merge (mergesim on taps.density_taps).
 
+ (4) TAP CHAINS + RING-BOND ON EVERY QC LANDING TYPE (COORD 11-12 00:01 ruling on the DIE-QC-98 pilot 2b/2c ask):
+     every type with landing-contract bands gets clock.tap_pair_affinity {chains: true, pair_um 64, ring_depth 3,
+     ring_pair_um 70} (pilot 2c e799b4c2611a = pair + chains on slw_fe_v2__cle312294d) and, where absent,
+     clock.tap_chain_affinity {max_group 128, radius_um 200} (the pilot kit's OT_TAP_CHAIN_* values); pair_um 64 (from
+     60) takes the two ~63-um ready/fault -> collect_rst_n pairs (63.1 um fault port) that are not in a ring.  The POST_MIN
+     merge (3) is set on the same types.  NOT carried: the 2 reset-relay -> lrst_start pairs (tap_pair never moves
+     reset_taps-owned relays; needs a reset-tap tool change), clock.landing_ring_fanout_max 32 (pilot 2c's die-level
+     place-reg: an RTL change on every ring, not in the ruling).
+ (5) sle_ctl__cla4f6f12f (COORD 22:14 + DIE-QC-99 relay of the strip-density ruling): budgets.cland_strip_density_types
+     {sle_ctl__cla4f6f12f: 1.0} (claude/land-ring-2-1111@506b5064f28d, merged in this branch) and its
+     cland_strip_rows_types entry (3, inherited from aace4c2668fc) removed = rows 1, what its 2489-overflow kit used
+     (LAND-RING-2 23:11: "none/1"); the density rule then derives the rows with the explicit entry as floor elsewhere.
+
     make_s26.py REPO PLAN_S25.json SIDECAR_S25.json OUT_DIR [--merge-types a,b,...]
 """
 import argparse
@@ -35,13 +48,17 @@ import sys
 from pathlib import Path
 
 RING = {"ring_depth": 3, "ring_pair_um": 70}
+LANDING_PAIR = {"chains": True, "pair_um": 64}
+CHAIN_DEFAULT = {"max_group": 128, "radius_um": 200.0}
+DENS_TYPES = {"sle_ctl__cla4f6f12f": 1.0}
 POST_MIN = 16
 PASSES = [dict(bases=("sle_hc2", "slw_hc2"), rows=3, widen_face=True, keep_band=False),
           dict(bases=("sle_hc1", "slw_hc1"), rows=4, widen_face=True, keep_band=True)]
 NOTE = (" | s26 (QC-EVENT-S26 11-11, DIE-QC-99 event, COORD 21:46 + 22:14): s25 + (1) ring-bond clock.tap_pair_affinity "
-        "ring_depth 3 / ring_pair_um 70 on the 29 pair-affinity types + (2) hc1/hc2 density form (derive_hc_cland_1111 "
+        "ring_depth 3 / ring_pair_um 70 + (2) hc1/hc2 density form (derive_hc_cland_1111 "
         "88e2ccc103ea: hc2 rows 3 widen, hc1 rows 4 widen keep-band; b_hw_i windows widened, sle_ctl partners mapped, "
-        "hc2 bands re-sited) + (3) clock.tap_post_merge_min_sinks 16 (kit POST_MIN merge within tap_radius_um)")
+        "hc2 bands re-sited) + (3) clock.tap_post_merge_min_sinks 16 (kit POST_MIN merge within tap_radius_um) + (4) tap chains "
+        "+ pair_um 64 + ring-bond on every landing type (COORD 11-12 00:01) + (5) sle_ctl__cla4f6f12f strip density 1.0, rows 1")
 
 
 def sha(b):
@@ -67,9 +84,22 @@ def main():
         rep["passes"].append(dict(args={k: (list(v) if isinstance(v, tuple) else v) for k, v in ps.items()},
                                   moved=moved, widen=wrep, sidecar_changed=n))
     T = raw["partition_types"]
+    tpa0 = sorted(t for t in T if "tap_pair_affinity" in T[t].get("clock", {}))
+    landing = sorted(t for t in T if ((T[t].get("clock") or {}).get("landing_contract") or {}).get("bands"))
+    added_chain = []
+    for t in landing:
+        ck = T[t]["clock"]
+        ck.setdefault("tap_pair_affinity", {}).update(LANDING_PAIR)
+        if "tap_chain_affinity" not in ck:
+            ck["tap_chain_affinity"] = dict(CHAIN_DEFAULT)
+            added_chain.append(t)
     tpa = sorted(t for t in T if "tap_pair_affinity" in T[t].get("clock", {}))
     for t in tpa:
         T[t]["clock"]["tap_pair_affinity"].update(RING)
+    bud = raw["budgets"]
+    for t in DENS_TYPES:
+        bud["cland_strip_rows_types"].pop(t, None)
+    bud.setdefault("cland_strip_density_types", {}).update(DENS_TYPES)
     extra = sorted(x for x in a.merge_types.split(",") if x)
     bad = [x for x in extra if x not in T]
     if bad:
@@ -83,7 +113,10 @@ def main():
     so = json.dumps(side).encode()
     (out / "plan_qc99_s26.json").write_bytes(pb)
     (out / "sidecar_pv_s26.json").write_bytes(so)
-    rep.update(ring_bond=dict(keys=RING, types=tpa), post_merge=dict(key="clock.tap_post_merge_min_sinks",
+    rep.update(landing_chains=dict(keys=LANDING_PAIR, types=landing, pair_affinity_before=tpa0,
+                                   tap_chain_affinity_added=added_chain, tap_chain_default=CHAIN_DEFAULT),
+               strip_density_types=bud["cland_strip_density_types"],
+               ring_bond=dict(keys=RING, types=tpa), post_merge=dict(key="clock.tap_post_merge_min_sinks",
                value=POST_MIN, types=merge, extra_types=extra),
                strip_rows=raw["budgets"]["cland_strip_rows_types"],
                plan_out_sha256=sha(pb), sidecar_out_sha256=sha(so))
