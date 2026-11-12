@@ -64,8 +64,13 @@ PIN_READERS = [(r"ot_hgi_dma_back_static_vp4_banks\w*", r"rr", "RR_RT"),
                (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT"),    # hcollgi_q behind hcollrs_q.b_rr
                # hb_fvp_*: the FUSED pair's steer tag is BANK_RR + 2 edges from its mux; its a_rr/b_rr leave the die top
                # (FUSED lanes, lane contract RR = BANK_RR + 4): the lane RR moves with it in the FUSED cores (re-kit).
-               (r"ot_hnx_fused_vm_pair\w*", r"rr0", "BANK_RR")]
-SHARE = (r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr")  # a share's answer ports: their clients see the share's + X
+               (r"ot_hnx_fused_vm_pair\w*", r"rr0", "BANK_RR"),
+               (r"ot_hnx_fused_lane\w*", r"rr_(v|d)", "RR")]               # spliced FUSED lanes behind hb_fvp_*
+# Pass-through readers: (module, answer ports, the input port that reads the moved pin).  Their clients see the same
+# + X (VM shares: hb_idx__nwsh / hcollrs_q; FUSED pairs: hb_fvp_* -> the spliced u_mu_fused_* lanes, RR = BANK_RR + 4).
+SHARES = [(r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr", "vm_rr"),
+          (r"ot_hnx_fused_vm_pair\w*", r"(a|b)_rr_(v|d)", "rr0")]
+SHARE = SHARES[0]
 # Readers inside a netlist cut whose fixed latency is a parameter of the as-built TOP instance above the cut: the bind
 # cannot regenerate it, so an rd1 bind passes only when the elaborated as-built already carries base + X (the plan event
 # re-elaborates the top with the new value).  (cut leaf regex, top instance group, parameter, value at X = 0)
@@ -190,7 +195,6 @@ def pin_cycles(ctx, rules):
     and {(sink leaf, sink port): {share leaf}} for the clients of the VM shares"""
     import core_pin_cycles as CPC
     F, out, clients = ctx.F, defaultdict(set), defaultdict(set)
-    share_rx = re.compile(SHARE[0])
     for (ci, pn, i), d in ctx.sinks.items():
         s = CPC.source_of(d)
         if s is None:
@@ -199,8 +203,10 @@ def pin_cycles(ctx, rules):
         x = CPC.added(rules, sc.path, sc.module, s[1], s[2])
         if x:
             out[(F.cells[ci].path, pn)].add(x)
-        elif re.fullmatch(SHARE[1], s[1]) and share_rx.fullmatch(sc.module or ""):
-            clients[(F.cells[ci].path, pn)].add(sc.path)
+        else:
+            for mrx, prx, ip in SHARES:
+                if re.fullmatch(prx, s[1]) and re.fullmatch(mrx, sc.module or ""):
+                    clients[(F.cells[ci].path, pn)].add((sc.path, ip))
     return out, clients
 
 
@@ -253,7 +259,7 @@ def pin_plan(ctx, px, clients, params):
         xr["CR"] = single("hb_vms_SW pr (CR_RT)", xs)
     law(r"hb_vms_\w+", r"(bk|b\d)_pr")             # other hubs: the response calendar (compiler) moves, recorded
     share_x = {}
-    for (s, p), xs in sorted(px.items()) + sorted((k, {max(px.get((sh, "vm_rr"), {0})) for sh in v} - {0})
+    for (s, p), xs in sorted(px.items()) + sorted((k, {max(px.get((sh, ip), {0})) for sh, ip in v} - {0})
                                                    for k, v in clients.items()):
         if (s, p) in seen or not xs:
             continue
@@ -278,7 +284,7 @@ def pin_plan(ctx, px, clients, params):
                 v = CPC.plus(asb, x, par)
                 params[s][par] = v
                 regen_rows.append(dict(inst=s, param=par, asbuilt=asb, pin=x, bound=v))
-                if re.fullmatch(SHARE[0], c.module or ""):
+                if any(re.fullmatch(m, c.module or "") for m, _, _ in SHARES):
                     share_x[s] = x
                 break
         else:

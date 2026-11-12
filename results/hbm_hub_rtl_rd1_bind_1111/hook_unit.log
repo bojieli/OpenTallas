@@ -13,6 +13,7 @@ MODE off xr {}
   hcollrs_NE {}
   hcollgi_NE {}
   hb_fvp_SE0 {}
+  u_mu_fused_0_ne {}
   check 10 18 bridge {'READ_RETURN': 26, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
 MODE on xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
   su_NE0.g_tap_r8b.u_tap {'READ_RETURN': 16, 'WRITE_RETURN': 12}
@@ -29,6 +30,7 @@ MODE on xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1':
   hcollrs_NE {}
   hcollgi_NE {}
   hb_fvp_SE0 {'BANK_RR': 7}
+  u_mu_fused_0_ne {'RR': 11}
   check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
 MODE cut xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
   su_NE0.g_tap_r8b.u_tap {'READ_RETURN': 16, 'WRITE_RETURN': 12}
@@ -45,6 +47,7 @@ MODE cut xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1'
   hcollrs_NE {'BANK_RT': 8}
   hcollgi_NE {'VM_RT': 4}
   hb_fvp_SE0 {'BANK_RR': 7}
+  u_mu_fused_0_ne {'RR': 11}
   check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
   ERROR core pin cycles: hb_coll_NE.__cut_vm sits in a netlist cut of hb_coll_NE; its VM_RT is set in the as-built top and must be 3 + 1 = 4, elaborated 3 (re-elaborate the as-built with hb_coll_NE .VM_RT(4))
 MODE cut4 xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
@@ -62,4 +65,5 @@ MODE cut4 xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1
   hcollrs_NE {'BANK_RT': 8}
   hcollgi_NE {'VM_RT': 4}
   hb_fvp_SE0 {'BANK_RR': 7}
+  u_mu_fused_0_ne {'RR': 11}
   check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
