@@ -403,6 +403,18 @@ class TypeModel:
     def need(self, pins):
         return pins * PIN_UM
 
+    def req_gap(self, gap, pa, pb):
+        """facing-face gap: --gap-pinface HI:LO:PINS (R3, COORD 11-11: no side pins facing a neighbour within 40 um)
+        = HI when either facing face carries more than PINS pins, else LO; without it the uniform --gap."""
+        pf = self.cfg.get("gap_pinface")
+        if pf:
+            return max(pf[0] if max(pa, pb) > pf[2] else pf[1], self.need(pa + pb))
+        return max(gap, self.need(pa + pb))
+
+    def diag_gap(self, gap):
+        pf = self.cfg.get("gap_pinface")
+        return pf[1] if pf else gap
+
     def legal(self, k, x, y, ignore=(), fl=None):
         if self.cfix[k]:
             return False
@@ -428,19 +440,19 @@ class TypeModel:
             # facing pairs: projections overlap on the other axis
             if gy < -EPS:      # side by side in x
                 if X0 >= x + w - EPS:
-                    req = max(gap, self.need(fc["E"] + fj["W"]))
+                    req = self.req_gap(gap, fc["E"], fj["W"])
                 else:
-                    req = max(gap, self.need(fc["W"] + fj["E"]))
+                    req = self.req_gap(gap, fc["W"], fj["E"])
                 if gx < req - EPS:
                     return False
             elif gx < -EPS:    # stacked in y
                 if Y0 >= y + h - EPS:
-                    req = max(gap, self.need(fc["N"] + fj["S"]))
+                    req = self.req_gap(gap, fc["N"], fj["S"])
                 else:
-                    req = max(gap, self.need(fc["S"] + fj["N"]))
+                    req = self.req_gap(gap, fc["S"], fj["N"])
                 if gy < req - EPS:
                     return False
-            elif max(gx, gy) < gap - EPS:
+            elif max(gx, gy) < self.diag_gap(gap) - EPS:
                 return False
         if len(self.FP):
             F, Hh = self.FP, self.FPH
@@ -481,19 +493,19 @@ class TypeModel:
             # facing pairs: projections overlap on the other axis
             if gy < -EPS:      # side by side in x
                 if X0 >= x + w - EPS:
-                    req = max(gap, self.need(fc["E"] + fj["W"]))
+                    req = self.req_gap(gap, fc["E"], fj["W"])
                 else:
-                    req = max(gap, self.need(fc["W"] + fj["E"]))
+                    req = self.req_gap(gap, fc["W"], fj["E"])
                 if gx < req - EPS:
                     return 'rule4 %s' % (locals().get('j', ''),)
             elif gx < -EPS:    # stacked in y
                 if Y0 >= y + h - EPS:
-                    req = max(gap, self.need(fc["N"] + fj["S"]))
+                    req = self.req_gap(gap, fc["N"], fj["S"])
                 else:
-                    req = max(gap, self.need(fc["S"] + fj["N"]))
+                    req = self.req_gap(gap, fc["S"], fj["N"])
                 if gy < req - EPS:
                     return 'rule5 %s' % (locals().get('j', ''),)
-            elif max(gx, gy) < gap - EPS:
+            elif max(gx, gy) < self.diag_gap(gap) - EPS:
                 return 'rule6 %s' % (locals().get('j', ''),)
         if len(self.FP):
             F, Hh = self.FP, self.FPH
@@ -1470,6 +1482,9 @@ def main(argv=None):
     ap.add_argument("--no-search", action="store_true", help="score the seed / base only")
     ap.add_argument("--gap", default="auto", help="min cluster gap um; auto = min(34.56, the base's own min "
                     "cluster gap floored to 4.32) so a packed type is not illegal at its own placement")
+    ap.add_argument("--gap-pinface", default="", metavar="HI:LO:PINS",
+                    help="R3 face rule: facing faces keep >= HI um when either carries > PINS pins, else >= LO um "
+                         "(diagonal neighbours LO); overrides --gap for core-core spacing")
     ap.add_argument("--sweeps", type=int, default=12)
     ap.add_argument("--topk", type=int, default=4)
     ap.add_argument("--lam", type=float, default=4.0)
@@ -1508,6 +1523,7 @@ def main(argv=None):
     cfg = dict(gap=a.gap, sweeps=a.sweeps, topk=a.topk, lam=a.lam, reach=a.reach, grid_um=a.grid_um,
                grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg,
                flips_only=a.flips_only,
+               gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
                face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
