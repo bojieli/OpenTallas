@@ -394,7 +394,8 @@
     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
     "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
     "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
-    "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)"
+    "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+    "kv3_hg_v1p*": "WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
