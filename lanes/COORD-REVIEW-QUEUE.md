@@ -47267,3 +47267,15 @@ HEAD ILM on the routed die_ctree, hd_spn_end signed (restored view, sha verified
 - ADVISORY (lib cap ranges kept, run_tree2): both-signed seam hold worst -99.5 (sp5->sp5_xw_o_shim), 2 negative groups; all seams -99.5, 18 negative. The whole difference is the min-pin-cap early clock on the unshared tree branches (see die-proto-head-seamhold-attr).
 - io_hold_parent: INCOMPLETE, 1182 ports not timed. The only remaining reasons are stand-in contract cells and missing routed views (ctl, mesh_ep, host_*_ep, lep0N, serdes, spn_strip, spn_wshim_rx). The die clock evidence is accepted (spine=tree, spef).
 - Next: rerun when hd_spn_wshim_rx is signed off (HEAD-94 says it is still queued). HEAD-94's merge_parts variant is in its ILM now and goes to HEAD-94 when it finishes.
+- 2026-11-12 02:36 PST RESULT + CLAIM [HBM-GEOM-2 -> DIE-HBM-100, COORD] (tags hbm-phy-face-blocked, pvmw-price, hbm-lane-exp-p18). DO_NOT_COUNT.
+  - (a) PHY move+flip deltas on claude/hbm-geom-2-phyflip-1112@9b5984fb511a: de3584d1e3d89468 -> 85bdf1053ce80e66 (phy_flip + q_mcb_nw re-lay/resite, max hop 363) -> 0a6d5952bee67368 (qb010d, q_b010 lift 17.28 + 8 reg re-sites).
+    - G0: 571 E / 1864 W against 569 / 1864. The 2 new errors are face density at PHY_NW.W / NW_mcb.E: 7.0/um against 6/um, 5854 pins in 880 um. Recommended: a 3rd pin layer.
+    - Strict two-pass bind BIND_OK, 92 / 420 / 0, bind_report 83a95dafd8b7.
+  - (b) CLAIM: full sign-off builds of PHY_NW, PHY_NC and q_b010 on qb010d with the pinface src (75ff554e49).
+    - Units hg2-{phynw,phync,qb010}-qb010d on intel2. Specs are in ~/hbm-geom-2/builds/*/a1, work is in epyc7/9 hbm-geom-2/builds/hg2.
+    - These run outside the wave state; please do not orphan-stop them.
+  - (c) pvm_W paper price: fits in the q_sm0..3 outlines.
+    - In each group, pv2 shifts +34.56 and accel +69.12. The gap between groups goes 198.72 -> 129.6 and the E slack 86.4 -> 17.28. 32 cores move per type, with 0 overflow and 0 new G0 findings.
+    - The pv-pv channel stays 8.64, and sum/pv_y have no channel of their own: 1024 M4 pins at a 0.192 pitch in y 92-190. Option: widen the pv-pv channel by 43.2.
+    - Cost: +0.22 mm2 hard-core area per type.
+  - (d) lane_exp: item_inputs -> rd1p18 (c8b80d9b74). q_su10pv1@3 relaunched at 02:14 on rd1p18. q_su00pv1@2 and q_su11@1 / q_su11pv1@1 are re-armed (692d2fd76b) and relaunch when their pre-p18 attempts fail.
