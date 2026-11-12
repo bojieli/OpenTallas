@@ -410,7 +410,9 @@
     "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
     "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
     "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
-    "kv3_hg_v1p*": "WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)"
+    "kv3_hg_v1p*": "WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)",
+    "kv3_hg*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
+    "kv3_hgi*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -4185,7 +4187,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/s87bind/base28/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+    "/srv/opentallas-scratch2/claude/s87bind/bsrc3_main_p/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit2.json"
    ],
    "owner_lane": "S81 die owner (DIE-S81-87)",
    "lane": "KIT-WAVE-3",
@@ -5615,7 +5617,12 @@
     "ot_s81sl_kv_leaf__t3@2",
     "ot_s81sl_leaf__t24__cl2456157b@1",
     "svc_lo_dsdv_svc_rs__t6@2",
-    "svc_lo_dsdv_svc_rs_w__t1@9"
+    "svc_lo_dsdv_svc_rs_w__t1@9",
+    "dsdv_slice_c3x_C__t1@17",
+    "dsdv_slice_iq_C__t1@23",
+    "dsdv_slice_kv512_C__t1@30",
+    "ot_s81sl_leaf__t53__cl958451dd@13",
+    "serdes__t2@22"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -5731,7 +5738,9 @@
     "serdes__t14": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "dsdv_bksel_q*": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
     "eng__t1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST: per-item plan plan_h2_2249_c839 (CORE-CTAP-WIDE clock.taps/core_taps) + die bind out_r11r = KIT_TOPOLOGY_BIND_STALE; ready11r carries different eng__t1 taps, so dropping the override would revert the form. Lift when DIE-S81-87 folds c839 taps into the S81 event (with its bind) or names a matching bind.",
-    "col_h*": "COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept"
+    "col_h*": "COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
+    "ot_s81sl_leaf__*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): S81 leaf class on the old form; releases with the ready12b leaf floor",
+    "ot_s81sl_kv_leaf__*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): S81 kv leaf class on the old form; releases with the ready12b leaf floor"
    },
    "queue_src": "main@7b84010b1c6e",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -19987,7 +19996,15 @@
      "epyc4",
      "epyc5"
     ]
-   }
+   },
+   "gen_args_prev_kw46_psplit": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "100",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/s87bind/base28/physical/die_plan/s81/h2_2249/landed_sidecar_h2.json"
+   ]
   },
   "s81_head": {
    "enabled": true,
@@ -21200,7 +21217,8 @@
     "slw_su_*": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)",
     "cbn_q00__*": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)",
     "coll_ftc": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)",
-    "cbx_q10__*_h": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)"
+    "cbx_q10__*_h": "WAIT-FORM HF-1c (COORD 11-12 06:2x via DIE-QC-100): type re-shaped/moved by the QC hand floorplan HF-1c; old-plan builds are thrown away; releases when the s28+HF-1c event lands (DIE-QC-100 READY)",
+    "*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): QC old floor (events hcut1111 / s25 / s28 pre-HF-1c); releases at the HF-1c switch (DIE-QC-100)"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
