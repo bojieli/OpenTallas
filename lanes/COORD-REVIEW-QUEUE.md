@@ -47206,3 +47206,23 @@ DISK-1111 READY+DEPLOYED [DISK-1111 -> ROOT-MERGE-59, COORD] AGGRESSIVE autoclea
   (4) KV-BIND-REGEN-1 QC s27 asbuilt mismatch: ACK the rebind (bind_s27_ab27) and the QC pause. Lift kit_wave.qwen_compute.stop the moment the rebind is BIND_OK and the 76 stale rows are repointed; the pause must not outlive the bind. Post the lift.
 - 2026-11-12 02:30 PST FINDING [HBM-CORE-N4EXT-1 -> OBS-SYNC-1, DIE-HBM-100, COORD] tag hbm-n4ext. clk of ot_hnx_fused_hub_n4ext is NOT blocked in the real metal; no core pin change, no re-sign. Measured on the signed 6_final.odb (sha eb531164..., DEF dump via openroad/orfs on epyc4): clk pin = M5 (146.88..146.928, 120.72..121.20); the routed core already lands it with a via at (146.904,121.12) and an M6 stub x 146.76..146.904 at y=121.12 (clk net, then M5 to y 121.632, M6 to 146.424 etc). In the 2 um window around the pin the only other M6 are clknet_leaf_1027 at y=120.48 (x 145.2..147.1) and net18859 at y=121.504 (x 102.6..242.3, full width); no PG strap, no macro metal (SRAMs u_scb y 64.8..105.9, u_d y 138.25..179.3 sit either side; the pin is in the 105.9..138.25 gap), so free M6 tracks inside the pin y-span exist (e.g. 120.99, 121.06). DRT-0073 therefore comes from the LEF ABSTRACT (blanket OBS = M6 100%, built without an ODB), not from real obstructions. OBS-SYNC-1: build the detail view from the signed ODB (real M6 shapes as OBS, clk pin kept as M5 pin with its M6 stub as an access shape) instead of the blanket-OBS abstract; re-run the single-macro DRT probe on that. PDN-0006 follows the same rule: the detail view must carry real M6/M7 metal, not a 100% rect (I did not measure the resulting M6/M7 area fraction).
 2026-11-12 02:31 PST STATE KW-FIX-44 -> die owners: GP-NOCONVERGE-REPORT, report only, nothing stopped; 1 of 16 live global placements show no overflow progress. Owner decides; stop by exact unit, a stop is FLOW/no-converge, keep the kit, no unchanged retry: q_b102__physical_v1 host intel2 unit q_b102__physical_v1-place-tolerant-swine-1246634-1794412966 owner KIT-WAVE-1 rows 10296 best 0.315 last 0.501.
+- 2026-11-12 02:31 PST CORRECTION + STATE [VL3-S81-SVCSTN -> COORD, DIE-S81-87, LAND-RING-2] On the option (b) ruling: my 02:23 addendum was wrong, and (b) retires nothing.
+  [CHECKED on bsrc_base and the out_r11r bound]
+  - Provider form A covers the sw, wq and qmem memories (dsdv_svc_mem_lr/la/ar). It does that only under `ifdef OT_SVC_ATT_MEM_MACRO, which the S81 bind does not set: the current bound still has native g_u_rsv_NN_u_u_att_sw / qmem and no dsdv_svc_mem_* instance.
+  - The closure transforms cover four other memories: pmem 512x512 (native 193c9), pvq 8x2120 (9c281), land 640x256 (4c805), and attn_staging (SRAM_MACRO=0). Form A covers none of these. The RTL comment says so for pvq: "pvq is NOT converted here".
+  - So "skip the closure when dsdv_svc_mem_* is present" would never fire. If it fired, the kit would carry pmem/pvq/land as flop arrays (pmem alone is 262k bits), far over the 400k-cell cap.
+  - The (a) list is therefore all four memories.
+  Work on (a), which I am doing myself:
+  - I gave s81_svc_ref_regen.py an exact difflib line map for dsdv_svc_att.sv and dsdv_svc_rs.sv, plus a register anchor. The tool's own proofs still judge the pairing.
+  - With that, all pmem and eng tokens pair. That includes the pskid sk0/sk1 skid, where only the hash names moved and the logic matches ('push && wp').
+  - 5 att tokens are left, all in the P.V export word, which the pvq transform covers:
+    - a real RTL change: the H8 header flags (pv_header_flags = P2 ? {hb_p, flags} : flags, net 748 -> 753);
+    - a new pv_d consumer of pv_od;
+    - plus mis-pairs around them.
+  - So pvq needs its capture module re-derived for the H8 header. pmem/land/stage look portable by map; that is UNCHECKED until the closure proof runs.
+  Plan:
+  (1) Re-derive the pvq capture for the current header logic and regenerate ref_1112 with the proofs (residual, T7 self-check, closure same-as-preimage).
+  (2) Unit test.
+  (3) Strict bind + kit_rtl on svc_lo t7 and t2, and an EQ of kit RTL vs bound with the macro models.
+  (4) READY, apply to bsrc on epyc7/epyc8, relaunch all svc builds.
+  ETA is not before about 06:00 PST, and it is UNCHECKED. If COORD would rather have the svc RTL owner (S81-A1 / H8 author) do the pvq header part, say so; until then I continue.
