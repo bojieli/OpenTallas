@@ -21019,15 +21019,15 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s22_nkr0.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s25.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f",
-   "src_sha": "1ceef0310887d9273a69e82099a1b95289b3c164",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237",
+   "src_sha": "4e2764d237d8",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s22",
-    "note": "KW-FIX-43 2026-11-09 10:23 PST: QC base plan_pv 72b74c858d8e (COORD 09:02) + bind_pv + asbuilt_sw2_pv | KW-FIX-42 11-09 03:57 PST: QC FINAL switch (COORD 03:5x revised ruling (1), no PROOF wait): plan_qc53v4nS_mem9_vml 282ca18ef6cc + sw2/bind2 + asbuilt_sw2 761f50fa423b; src_qcsw2 = kw41/src_lfq_cl (landing e5db9d4d) + switch_src_delta.tar 0474b3d6276f (41 files, new files); plan+bind2 sha256-verified same path on epyc7/intel1/epyc4/intel2; revert *_prev_kw42qc | KW-FIX-39 2026-11-08 22:05 PST: QC switch plan_qc53v4nS 7e4789251637 + bind_v4nS + src_lfq (src_lf + st_a gsafe); revert *_prev_kw38q",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s25",
+    "note": "KW-FIX-45 11-11 21:4x COORD: QC s25 plan_qc99_s25 e4820bd9d97c (branch qc-event-s25-1111@4e2764d237d8), DIE-QC-99 clean strict bind rc 0 (377/1921/0; bind_report 527b89d4da1c, epyc9 qc-event-s25/gate/bind_plan_qc99_s25 copied), sidecar_pv 9f6e6f721b61 + r8_sw2 571c5b26bb1f in the tree runtime; src_qc_s25_4e2764d237 = git archive of the branch head + 31b4aa482459 + 054e07a4c17b + grtm-qc 482a760a76; rows count only after EQ passes (bind_verify read-set issue pre-existing)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
    "gen_args": [
@@ -21036,7 +21036,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar_pv.json"
+    "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar_pv.json"
    ],
    "kinds": [
     "type"
@@ -21063,16 +21063,11 @@
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch",
     "sle_fw_v3": "RE-FORM KW-FIX-43 11-09 19:5x COORD route (5): routed-not-signed a37, setup WNS -334.6 ps (2687 endpoints), hold FF -64.7/-110 per COORD; not a near miss, attempt count high. Revert: delete this key.",
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
-    "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
     "cbf_q00__cl1b5a6458": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
-    "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "sle_su_c": "KW-FIX-45 11-11 20:5x COORD fail_watch: su_c types wait for the qfd_dv_* children (s24/s25 bind-views set) until s25 launches; PROVISIONAL child views missing",
-    "slw_su_c__cl19bb38ef": "KW-FIX-45 11-11 20:5x COORD fail_watch: su_c types wait for the qfd_dv_* children (s24/s25 bind-views set) until s25 launches; PROVISIONAL child views missing",
-    "slw_su_c__cl92142dac": "KW-FIX-45 11-11 20:5x COORD fail_watch: su_c types wait for the qfd_dv_* children (s24/s25 bind-views set) until s25 launches; PROVISIONAL child views missing"
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -21645,9 +21640,26 @@
     "slw_hc1__cl68f9248e__cle683a076@1",
     "slw_su_c__cl92142dac@1",
     "cbn_q01__cldd6ea846@1",
-    "cbn_q01__clab6e67f2@1"
+    "cbn_q01__clab6e67f2@1",
+    "cbf_q01@10",
+    "cbf_q01_s2@8",
+    "cbf_q11@19",
+    "cbn_q00__cl622f65d2@20",
+    "cbn_q00__cld7bf7197@20",
+    "cbn_q00__cldbcda913@25",
+    "cbn_q01__clab6e67f2@26",
+    "cbn_q01__cld9ff4c40@11",
+    "cbn_q01__cldd6ea846@16",
+    "cbn_q11__cl49ae4555@14",
+    "cbn_q11__cl5cc92dfe@12",
+    "cbx_q10__cl89936551@26",
+    "cbx_q10__cl94a12200@23",
+    "sle_su_c@15",
+    "slw_fw_v3@11",
+    "slw_su_c__cl19bb38ef@19",
+    "slw_su_c__cl92142dac@32"
    ],
-   "queue_src": "main@1ceef0310887",
+   "queue_src": "claude/qc-event-s25-1111@4e2764d237d8",
    "type_args": {
     "sle_fw_v2__cl69f5e854": [
      "--gpl-plain",
@@ -22368,7 +22380,16 @@
     "slw_su_c__cl19bb38ef",
     "slw_sc_v1__cl63e5a7a2",
     "slw_sc_v1__cl64543eaf__cl5e017c6f",
-    "slw_sc_v1__cl64543eaf__cl4590432d"
+    "slw_sc_v1__cl64543eaf__cl4590432d",
+    "cbf_q01_s2",
+    "cbf_q11",
+    "cbn_q00__cl622f65d2",
+    "cbn_q00__cld7bf7197",
+    "cbn_q00__cldbcda913",
+    "cbn_q11__cl49ae4555",
+    "cbn_q11__cl5cc92dfe",
+    "cbx_q10__cl89936551",
+    "cbx_q10__cl94a12200"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -22390,7 +22411,8 @@
     "cbf_q11": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_su_c__cl92142dac": {
      "OT_CONS_KIT": "1",
@@ -22438,12 +22460,14 @@
     },
     "cbn_q11__cl49ae4555": {
      "OT_CONS_KIT": "1",
-     "OT_KW41_CLAND": "0b305f2395"
+     "OT_KW41_CLAND": "0b305f2395",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbx_q10__cl89936551": {
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW43_FIX": "pvschema-0409748de8de"
+     "OT_KW43_FIX": "pvschema-0409748de8de",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_fe_v2__clf110fab2": {
      "OT_CONS_KIT": "1"
@@ -22501,11 +22525,13 @@
     "cbn_q00__cl622f65d2": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbn_q00__cldbcda913": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
-     "OT_KW43_FIX": "ccf792c10b63"
+     "OT_KW43_FIX": "ccf792c10b63",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_su_l1__clcc9d0155": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
@@ -22520,7 +22546,8 @@
      "OT_KW41_CLAND": "aa8acb1988e"
     },
     "cbn_q00__cld7bf7197": {
-     "OT_KW41_CLAND": "aa8acb1988e"
+     "OT_KW41_CLAND": "aa8acb1988e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbn_q01__cldd6ea846": {
      "OT_KW41_CLAND": "aa8acb1988e",
@@ -22535,7 +22562,8 @@
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbn_q11__cl5cc92dfe": {
-     "OT_KW41_CLAND": "0b305f2395"
+     "OT_KW41_CLAND": "0b305f2395",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_stm_v1__cl05fc43f7__cl389df4e9": {
      "OT_KW41_CLAND": "0b305f2395",
@@ -22563,7 +22591,8 @@
     "cbx_q10__cl94a12200": {
      "OT_KW41_CLAND": "0b305f2395",
      "OT_KW43_FIX": "pvnlck-b1de436a870a",
-     "OT_KW44_LEF_OVERRIDE": "qfd_tile_nl_a0c-c0a1da19"
+     "OT_KW44_LEF_OVERRIDE": "qfd_tile_nl_a0c-c0a1da19",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_stm_v2__cl1ca9c415": {
      "OT_KW41_CLAND": "0b305f2395",
@@ -22712,6 +22741,9 @@
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "cbf_q01_s2": {
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
@@ -25231,36 +25263,7 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {
-    "cbn_q01__clab6e67f2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
-     },
-     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
-    },
-    "cbn_q01__cld9ff4c40": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
-     },
-     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
-    },
-    "cbn_q01__cldd6ea846": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
-     },
-     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
-    },
-    "cbf_q01": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_fc5cd3af6f/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s23_nkl.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s23"
-     },
-     "note": "KW-FIX-45 11-11 18:4x COORD: QC s23 plan_qc99_s23_nkl a5049086ad2c strict bind 0 errors (bind_report 8175353a46c1), s22 batch already launched -> these 4 rows only"
-    }
-   },
+   "item_inputs": {},
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
