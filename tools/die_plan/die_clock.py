@@ -411,8 +411,9 @@ def route_domain_tree(T, tree, P, clear_um=8.64, rep_um=450.0):
 
 
 def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None,
-          pad="sta", domain_corridors=False, domain_clear_um=8.64):
+          pad="sta", domain_corridors=False, domain_clear_um=8.64, leaf_pad=None):
     W, H = float(P.W), float(P.H)
+    leaf_pad = leaf_pad or {}
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
     taps = plan_taps(P) if taps is None else taps
@@ -633,6 +634,29 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     nets.append(dict(name=f"ntr{len(trunk)}" if prev_cell else "root", drv=prev_cell or "port:root",
                      branches=[(1e-3, "M8", ncell((0, 0)), 0.0)]))
     path_of = {(0, 0): [f"tr{k}" for k in range(len(trunk))] + [ncell((0, 0))]}
+    # pad=leg (REACH-FIX-2 11-12, COORD decision B): a level's legs are equal in delay when equal in length with the same
+    # cut count, so each live leg is padded to the level's longest legalised leg; the pad goes to its shortest segments
+    # first (water-fill), which keeps the quadratic RC term even.  A dummy first stage takes the live first-stage length.
+    leg_pad = {}
+    if pad == "leg":
+        leg_tgt = defaultdict(float)
+        for k, segs in legs.items():
+            if k[0] != "dummy":
+                leg_tgt[k[0]] = max(leg_tgt[k[0]], sum(g for _, _, g in segs))
+        for k, segs in legs.items():
+            if k[0] == "dummy":
+                continue
+            gs = [max(g, 1.0) for _, _, g in segs]
+            # region equalisation by wire (pad=leg): a leaf's last-mile deficit (um, from STA) rides on its own leg
+            tgt = max(leg_tgt[k[0]], sum(gs)) + (leaf_pad.get(ncell(k), 0.0) if k[0] == D else 0.0)
+            lo_, hi_ = 0.0, max(tgt, max(gs))
+            for _ in range(60):
+                h_ = (lo_ + hi_) / 2
+                if sum(max(g, h_) for g in gs) < tgt:
+                    lo_ = h_
+                else:
+                    hi_ = h_
+            leg_pad[k] = [max(g, hi_) for g in gs]
     children = defaultdict(list)                    # node cell -> [(child node cell, pad net, branch index)]
     for key in sorted(k for k in live if k[0] < D):
         lev, idx = key
@@ -649,17 +673,19 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 names = [f"r{ck[0]}_{ck[1]}_{k}" for k in range(len(segs) - 1)] + [ncell(ck)]
                 for k, (x, y, geo) in enumerate(segs):
                     T.cell(names[k], x, y, "node" if k == len(segs) - 1 else "rep", lev + 1)
-                branches.append((el(segs[0][2]), layer, names[0], segs[0][2]))
+                lp = leg_pad.get(ck)
+                branches.append((lp[0] if lp else el(segs[0][2]), layer, names[0], segs[0][2]))
                 for k in range(1, len(segs)):
                     nets.append(dict(name=f"w_{names[k - 1]}", drv=names[k - 1],
-                                     branches=[(el(segs[k][2]), layer, names[k], segs[k][2])]))
+                                     branches=[(lp[k] if lp else el(segs[k][2]), layer, names[k], segs[k][2])]))
                 path_of[ck] = path_of[key] + names
                 children[ncell(key)].append((ncell(ck), [[f"w_{ncell(key)}", len(branches) - 1]] +
                                              [[f"w_{names[k - 1]}", 0] for k in range(1, len(segs))]))
             else:                                   # pruned branch: dummy first stage (the identical load)
                 x, y, geo = legs[("dummy",) + ck][0]
                 dn = T.cell(f"d{ck[0]}_{ck[1]}", x, y, "dummy", lev + 1)
-                branches.append((el(geo), layer, dn, geo))
+                sib = leg_pad.get((lev + 1, 2 * idx + 1 - c))
+                branches.append((sib[0] if (pad == "leg" and sib) else el(geo), layer, dn, geo))
         nets.append(dict(name=f"w_{ncell(key)}", drv=ncell(key), branches=branches))
     tap_rows = []
     for key in leaf_keys:
@@ -688,14 +714,14 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 if k == len(cuts) - 1:
                     geo = abs(X - prevpt[0]) + abs(Y - prevpt[1])
                     nets.append(dict(name=out, drv=prev, branches=[(max(std[k], geo), layer, "port:" + out, geo)],
-                                     ck=k, cut=chain_std[k] - std[k]))
+                                     ck=k, cut=chain_std[k] - std[k], lf=key[1]))
                 else:
                     a, b = ((lx, ly), corner) if layer == "M8" else (corner, (X, Y))
                     xx, yy, side = _slide((x, y), a, b, K)
                     geo = abs(xx - prevpt[0]) + abs(yy - prevpt[1]) + side
                     cn = T.cell(f"c_{sv(part)}__{port}_{k}", xx, yy, "chain", D + 2 + k)
                     nets.append(dict(name=f"w_{cn}", drv=prev, branches=[(max(std[k], geo), layer, cn, geo)],
-                                     ck=k, cut=chain_std[k] - std[k]))
+                                     ck=k, cut=chain_std[k] - std[k], lf=key[1]))
                     cells.append(cn)
                     prev, prevpt = cn, (xx, yy)
             if not cuts:
@@ -706,15 +732,19 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     # chain standard per segment index = the longest legalised chain segment of that index (balance by construction);
     # a core-early chain keeps its cut below the standard
     cmax = defaultdict(float)
+    rmax = defaultdict(float)                       # pad=leg: per region (leaf) and chain index
     for n in nets:
         if "ck" in n:
             cmax[n["ck"]] = max(cmax[n["ck"]], n["branches"][0][3])
+            rmax[(n["lf"], n["ck"])] = max(rmax[(n["lf"], n["ck"])], n["branches"][0][3])
     for n in nets:
         if "ck" in n:
             L, layer, load, geo = n["branches"][0]
-            std_k = max(chain_std[n["ck"]], cmax[n["ck"]]) if pad == "level" else max(geo, 1.0)
+            std_k = (max(chain_std[n["ck"]], cmax[n["ck"]]) if pad == "level" else
+                     max(rmax[(n["lf"], n["ck"])], 1.0) if pad == "leg" else max(geo, 1.0))
             n["branches"][0] = (max(1.0, std_k - n.pop("cut")), layer, load, geo)
             n.pop("ck")
+            n.pop("lf")
     # a legalised hop still longer than 1.15 rep_um (a cut that had to slide far off a macro) gets a local repeater at
     # its free midpoint; the STA balance pads every other path up by that one stage (pad=sta only)
     split = 0
@@ -972,7 +1002,8 @@ def cmd_build(a):
     t0 = time.time()
     T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad,
                     domain_corridors=getattr(a,"domain_corridors",False),
-                    domain_clear_um=getattr(a,"domain_clear_um",8.64))
+                    domain_clear_um=getattr(a,"domain_clear_um",8.64),
+                    leaf_pad=json.loads(Path(a.leaf_pad).read_text()) if getattr(a, "leaf_pad", None) else None)
     write_verilog(T, out / "ctree.v")
     write_spef(T, out / "ctree.spef")
     import hashlib
@@ -1474,7 +1505,9 @@ def main(argv=None):
     b.add_argument("--rep-um", type=float, default=450.0)
     b.add_argument("--core-early", choices=("off", "pad"), default="off")
     b.add_argument("--window", type=float, default=SPLIT_WINDOW)
-    b.add_argument("--pad", choices=("sta", "level"), default="sta")
+    b.add_argument("--leaf-pad", help="pad=leg: JSON {leaf node cell: extra um on its own leg} (region equalisation)")
+    b.add_argument("--pad", choices=("sta", "level", "leg"), default="sta",
+                   help="leg = wire balance by construction: every H-tree leg padded to its level's longest leg (water-fill over its segments), last mile padded to the longest chain of its OWN region (local balance)")
     b.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     b.add_argument("--domain-clear-um", type=float, default=8.64)
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
@@ -1487,7 +1520,7 @@ def main(argv=None):
     u.add_argument("--rep-um", type=float, default=450.0)
     u.add_argument("--core-early", choices=("off", "pad"), default="off")
     u.add_argument("--window", type=float, default=SPLIT_WINDOW)
-    u.add_argument("--pad", choices=("sta", "level"), default="sta")
+    u.add_argument("--pad", choices=("sta", "level", "leg"), default="sta")
     u.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     u.add_argument("--domain-clear-um", type=float, default=8.64)
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
