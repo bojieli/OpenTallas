@@ -739,46 +739,60 @@
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_hgi_v6": {
-     "OT_HOLD_STOP_PS": "-300"
+     "OT_HOLD_STOP_PS": "-300",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hg": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hg_v1": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hg_v3": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v1__cl141fc26e": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v1__cl42bc8b12": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v2__cl2862d491": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v2__cle0015330": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v3": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v4": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v5": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v7": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hgi_v8": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hroot": {
      "OT_HOLD_STOP_PS": "-200"
@@ -902,6 +916,27 @@
     },
     "kv3_sys_c": {
      "OT_HOLD_STOP_PS": "-200"
+    },
+    "kv3_hgi_v1": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "kv3_hgi_v2": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "kv3_hg_v1p2": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "kv3_hg_v1p3": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "kv3_hg_v1p4": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "kv3_hg_v1p5": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "kv3_hg_v1p6": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
    "prov_first_re": "^(kv3_pc|kv3_hub_C)",
@@ -3143,7 +3178,7 @@
     "items": [
      "kv3_hgi_v3"
     ],
-    "mode": "off",
+    "mode": "edge_outline",
     "gen_host": "epyc8",
     "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43)."
    },
@@ -6477,7 +6512,8 @@
     },
     "dsdv_slice_c1x_C__t7": {
      "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
-     "OT_NATIVE_RESET_SCOPE": "selected"
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "ot_s81sl_leaf__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -22181,7 +22217,8 @@
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
     "coll_ftm": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "sle_fw_v3": {
      "OT_CONS_KIT": "1"
@@ -22191,7 +22228,8 @@
      "OT_KW41_CLAND": "0b305f2395"
     },
     "sle_st_a_v1__cl989804f6__cl18eece69": {
-     "OT_GRT_ALLOW_CONGESTION": "1"
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbf_q11": {
      "OT_CONS_KIT": "1",
@@ -22214,11 +22252,13 @@
      "OT_CONS_KIT": "1",
      "OT_KW41_CLAND": "aa8acb1988e",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_CONS_MAX_LAYER": "M7"
+     "OT_CONS_MAX_LAYER": "M7",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "sle_su_l0__cl7a55c676": {
      "OT_CONS_KIT": "1",
-     "OT_CONS_MAX_LAYER": "M7"
+     "OT_CONS_MAX_LAYER": "M7",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "sle_su_l1__cl5ea486db": {
      "OT_CONS_KIT": "1",
@@ -22227,14 +22267,17 @@
      "OT_CONS_MAX_LAYER": "M7"
     },
     "slw_su_l0__cl1a1c1f8f": {
-     "OT_CONS_KIT": "1"
+     "OT_CONS_KIT": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_su_l0__cl1e5219ea": {
-     "OT_CONS_KIT": "1"
+     "OT_CONS_KIT": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_su_l0__cl76fb247e": {
      "OT_CONS_KIT": "1",
-     "OT_CONS_MAX_LAYER": "M7"
+     "OT_CONS_MAX_LAYER": "M7",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbn_q11__cl49ae4555": {
      "OT_CONS_KIT": "1",
@@ -22261,7 +22304,8 @@
      "OT_KW42_CSTART": "9db0ec8d71e"
     },
     "coll_ftn": {
-     "OT_CONS_KIT": "1"
+     "OT_CONS_KIT": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "coll_ft__cl78c7b300": {
      "OT_CONS_KIT": "1",
@@ -22287,10 +22331,12 @@
      "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slw_fw_v1__cl51d45468": {
-     "OT_GRT_ALLOW_CONGESTION": "1"
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_fw_v1__clf51c11d8__cl592e3d37": {
-     "OT_GRT_ALLOW_CONGESTION": "1"
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbn_q00__cl622f65d2": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
@@ -22317,14 +22363,16 @@
      "OT_KW41_CLAND": "aa8acb1988e"
     },
     "cbn_q01__cldd6ea846": {
-     "OT_KW41_CLAND": "aa8acb1988e"
+     "OT_KW41_CLAND": "aa8acb1988e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_fe_v1__clfe325744__cldb4efe33": {
      "OT_KW41_CLAND": "aa8acb1988e"
     },
     "cbn_q01__clab6e67f2": {
      "OT_KW41_CLAND": "0b305f2395",
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbn_q11__cl5cc92dfe": {
      "OT_KW41_CLAND": "0b305f2395"
@@ -22334,7 +22382,8 @@
      "OT_KW42_CSTART": "9db0ec8d71e"
     },
     "cbn_q01__cld9ff4c40": {
-     "OT_KW41_CLAND": "0b305f2395"
+     "OT_KW41_CLAND": "0b305f2395",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "sle_sc_v1__cl7479a5ec": {
      "OT_KW41_CLAND": "0b305f2395"
@@ -22379,7 +22428,8 @@
      "OT_KW42_CSTART": "9db0ec8d71e"
     },
     "sle_ctl__cla4f6f12f": {
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "sle_sc_v1__cl115da35f": {
      "OT_KW42_CSTART": "9db0ec8d71e",
@@ -22393,6 +22443,105 @@
     },
     "slw_st_a_v1__clb036e152": {
      "OT_KW43_FIX": "pvschema-0409748de8de"
+    },
+    "coll_ftc": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "coll_n": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_fe_v2": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_fw_v1__cl9d029624": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_hc0__cl929603c0__cl38badc56": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_hc1__cl22c1ff36": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_hc1__cl7d360508": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_hc2__cl9c4c4509__cl3edce1b8": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_hc2__cl9c4c4509__clf60c5152": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_hc2__clcc5e3e61": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_fw_v1__clf51c11d8__clc7ddab13": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_st_a_v2__cl9f076a5c": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_fw_v3": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_ctl__cl503337ff": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_fe_v1__cl1cbb7497": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_st_a_v1__cl67389ecd": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_st_a_v2": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_st_b_v1__pv0e7b1dcc": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_st_b_v1__pvc5a85fd4": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_st_b_v2__cl14c98df5": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_st_b_v2__clfde1249e": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_stm_v1__cl27746664": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "sle_stm_v1__clbe630b9c": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_fe_v1__clfe325744__cl08d14f0d": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_hc1__cl3449ea95": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_hc1__cl68f9248e__cl144ee7b3": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_hc1__cl68f9248e__cle683a076": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_hc2__cl6bcaba89": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_hc2__cla3497502__cldc737267": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_hc3__clccfc3e6b": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_hc3__cld86a7ad4": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "cbf_q01": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -27518,7 +27667,7 @@
    "note_kw43qcnk": "KW-FIX-43 11-11 COORD 00:3x (DIE-QC-97 RESULT 23:55): cb* rows on plan 72b74c858d whose NK child was the PROVISIONAL contract LEF f922482c11b9 (spec had 0 NK candidates: launched 11-09 11:16..11-10 05:18, before prov_view_sources.qfd_tile_nk_a0c = nk_p1 signed view, detail_view.lef sha256 53a7be5c8092, 4 hosts checked) superseded and relaunched: cbf_q00_s2@22 cbn_q11__cl5cc92dfe@11 cbn_q11__cl49ae4555@13 cbx_q10__cl94a12200@21. Every attempt launched since picks the signed view (cbx_q10__cl89936551 a26, cbn_q00__cl622f65d2 a20, cbf_q11 a19, cbn_q00__cldbcda913 a25). cbn_q01__clab6e67f2 a26 (contract) stays on its RE-FORM hold.",
    "grt_halving_arm": {
     "items": [],
-    "mode": "off",
+    "mode": "edge_outline",
     "gen_host": "epyc8",
     "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43).",
     "items_prev_kw45_1111": [
@@ -32153,13 +32302,15 @@
      "OT_POROUS_VIEWS": "all"
     },
     "NW_io": {
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "q_spt0__physical_v1": {
      "OT_POROUS_VIEWS": "all"
     },
     "NE_io": {
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "q_b000": {
      "OT_POROUS_VIEWS": "all"
@@ -32307,6 +32458,15 @@
     },
     "q_mca": {
      "OT_POROUS_VIEWS": "all"
+    },
+    "NW_iorly": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "NE_iorly": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "hfd_hgi_vms_glue_nw_t": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
    "retry_prev_kw37h_added": [
@@ -40496,7 +40656,7 @@
      "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a",
      "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16"
     ],
-    "mode": "off",
+    "mode": "edge_outline",
     "gen_host": "epyc8",
     "note": "KW-FIX-44 2026-11-11 01:36 PST (COORD 01:0x, OWNER halving-off rollout): one halving-off arm per row (asap7lock-grtoff, ORFS main run only), first sign-off counts; GRT-PATCH-1 READY 848b4e2031cc rows. S81 3 rows not listed: DIE-S81-85 clean-slate held + canonical rebind pending (KW-FIX-43)."
    },
