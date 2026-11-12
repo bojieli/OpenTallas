@@ -1,0 +1,2677 @@
+{
+ "stage": "S81-LEAF-CYC quad2",
+ "rtl": "claude/s81-leaf-cyc2-1111@63676d718d59",
+ "kv_excluded": [
+  "ot_s81sl_leaf__t1",
+  "ot_s81sl_leaf__t2",
+  "ot_s81sl_leaf__t3",
+  "ot_s81sl_leaf__t4",
+  "ot_s81sl_leaf__t5"
+ ],
+ "types": {
+  "ot_s81sl_leaf__t10": {
+   "perm": [
+    8,
+    13,
+    14,
+    1,
+    6,
+    9,
+    4,
+    3,
+    2,
+    10,
+    15,
+    5,
+    12,
+    11,
+    7,
+    0
+   ],
+   "lanes_moved": 15,
+   "entries_added": 232,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 410,
+    "far": 388
+   },
+   "quad_reach_after": {
+    "last": 166,
+    "far": 530
+   },
+   "worst_hop_um": {
+    "vn_m": 235.0,
+    "m_q": 235.0,
+    "q_lane": 213.1
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t11": {
+   "perm": [
+    7,
+    6,
+    11,
+    13,
+    15,
+    3,
+    9,
+    12,
+    10,
+    0,
+    2,
+    1,
+    4,
+    5,
+    14,
+    8
+   ],
+   "lanes_moved": 15,
+   "entries_added": 164,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 437,
+    "far": 731
+   },
+   "quad_reach_after": {
+    "last": 201,
+    "far": 793
+   },
+   "worst_hop_um": {
+    "vn_m": 390.0,
+    "m_q": 390.0,
+    "q_lane": 210.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t12": {
+   "perm": [
+    7,
+    1,
+    15,
+    0,
+    14,
+    8,
+    13,
+    12,
+    9,
+    11,
+    10,
+    6,
+    2,
+    3,
+    5,
+    4
+   ],
+   "lanes_moved": 14,
+   "entries_added": 200,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 510,
+    "far": 643
+   },
+   "quad_reach_after": {
+    "last": 153,
+    "far": 711
+   },
+   "worst_hop_um": {
+    "vn_m": 359.5,
+    "m_q": 359.5,
+    "q_lane": 179.1
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t13": {
+   "perm": [
+    10,
+    13,
+    6,
+    4,
+    12,
+    2,
+    3,
+    15,
+    5,
+    8,
+    7,
+    14,
+    9,
+    11,
+    0,
+    1
+   ],
+   "lanes_moved": 16,
+   "entries_added": 223,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 527,
+    "far": 397
+   },
+   "quad_reach_after": {
+    "last": 207,
+    "far": 482
+   },
+   "worst_hop_um": {
+    "vn_m": 203.1,
+    "m_q": 203.1,
+    "q_lane": 263.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t14": {
+   "perm": [
+    3,
+    0,
+    12,
+    8,
+    6,
+    11,
+    1,
+    5,
+    7,
+    4,
+    10,
+    15,
+    2,
+    13,
+    14,
+    9
+   ],
+   "lanes_moved": 13,
+   "entries_added": 218,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 431,
+    "far": 552
+   },
+   "quad_reach_after": {
+    "last": 181,
+    "far": 494
+   },
+   "worst_hop_um": {
+    "vn_m": 215.0,
+    "m_q": 215.0,
+    "q_lane": 230.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t15": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 121.344,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t16": {
+   "perm": [
+    5,
+    8,
+    0,
+    7,
+    10,
+    11,
+    6,
+    13,
+    9,
+    14,
+    2,
+    4,
+    1,
+    12,
+    15,
+    3
+   ],
+   "lanes_moved": 15,
+   "entries_added": 183,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 530,
+    "far": 566
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 778
+   },
+   "worst_hop_um": {
+    "vn_m": 389.1,
+    "m_q": 389.1,
+    "q_lane": 192.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t17": {
+   "perm": [
+    11,
+    12,
+    4,
+    9,
+    10,
+    5,
+    6,
+    1,
+    0,
+    7,
+    3,
+    2,
+    14,
+    13,
+    8,
+    15
+   ],
+   "lanes_moved": 12,
+   "entries_added": 187,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 502,
+    "far": 757
+   },
+   "quad_reach_after": {
+    "last": 140,
+    "far": 761
+   },
+   "worst_hop_um": {
+    "vn_m": 380.1,
+    "m_q": 380.1,
+    "q_lane": 175.8
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t21": {
+   "perm": [
+    2,
+    13,
+    7,
+    14,
+    10,
+    15,
+    9,
+    4,
+    11,
+    5,
+    1,
+    6,
+    0,
+    3,
+    8,
+    12
+   ],
+   "lanes_moved": 16,
+   "entries_added": 223,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 529,
+    "far": 522
+   },
+   "quad_reach_after": {
+    "last": 207,
+    "far": 517
+   },
+   "worst_hop_um": {
+    "vn_m": 246.0,
+    "m_q": 246.0,
+    "q_lane": 216.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t22": {
+   "perm": [
+    12,
+    9,
+    11,
+    8,
+    10,
+    1,
+    13,
+    6,
+    4,
+    3,
+    14,
+    2,
+    0,
+    7,
+    5,
+    15
+   ],
+   "lanes_moved": 15,
+   "entries_added": 201,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 471,
+    "far": 606
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 709
+   },
+   "worst_hop_um": {
+    "vn_m": 357.8,
+    "m_q": 357.8,
+    "q_lane": 179.2
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t23": {
+   "perm": [
+    11,
+    10,
+    15,
+    0,
+    8,
+    7,
+    5,
+    4,
+    13,
+    6,
+    14,
+    1,
+    9,
+    2,
+    3,
+    12
+   ],
+   "lanes_moved": 16,
+   "entries_added": 197,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 652,
+    "far": 546
+   },
+   "quad_reach_after": {
+    "last": 272,
+    "far": 677
+   },
+   "worst_hop_um": {
+    "vn_m": 335.0,
+    "m_q": 335.0,
+    "q_lane": 208.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t24__cl2456157b": {
+   "perm": [
+    6,
+    9,
+    13,
+    8,
+    14,
+    1,
+    15,
+    2,
+    4,
+    7,
+    3,
+    10,
+    11,
+    5,
+    12,
+    0
+   ],
+   "lanes_moved": 16,
+   "entries_added": 230,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 427,
+    "far": 415
+   },
+   "quad_reach_after": {
+    "last": 166,
+    "far": 524
+   },
+   "worst_hop_um": {
+    "vn_m": 235.0,
+    "m_q": 235.0,
+    "q_lane": 203.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t24__cl81374cd8": {
+   "perm": [
+    6,
+    9,
+    13,
+    8,
+    14,
+    1,
+    15,
+    2,
+    4,
+    7,
+    3,
+    10,
+    11,
+    5,
+    12,
+    0
+   ],
+   "lanes_moved": 16,
+   "entries_added": 230,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 427,
+    "far": 415
+   },
+   "quad_reach_after": {
+    "last": 166,
+    "far": 524
+   },
+   "worst_hop_um": {
+    "vn_m": 235.0,
+    "m_q": 235.0,
+    "q_lane": 203.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t25__cl431c660f": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 140.784,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t25__cl55642d17": {
+   "perm": [
+    15,
+    13,
+    7,
+    11,
+    4,
+    0,
+    8,
+    6,
+    3,
+    1,
+    10,
+    5,
+    2,
+    9,
+    14,
+    12
+   ],
+   "lanes_moved": 13,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 593,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 230,
+    "far": 787
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 285.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t26": {
+   "perm": [
+    7,
+    6,
+    11,
+    13,
+    15,
+    3,
+    9,
+    12,
+    10,
+    0,
+    2,
+    1,
+    4,
+    5,
+    14,
+    8
+   ],
+   "lanes_moved": 15,
+   "entries_added": 164,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 437,
+    "far": 731
+   },
+   "quad_reach_after": {
+    "last": 201,
+    "far": 793
+   },
+   "worst_hop_um": {
+    "vn_m": 390.0,
+    "m_q": 390.0,
+    "q_lane": 210.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t27": {
+   "perm": [
+    6,
+    13,
+    12,
+    8,
+    10,
+    3,
+    7,
+    2,
+    0,
+    1,
+    11,
+    4,
+    5,
+    9,
+    14,
+    15
+   ],
+   "lanes_moved": 14,
+   "entries_added": 229,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 455,
+    "far": 513
+   },
+   "quad_reach_after": {
+    "last": 173,
+    "far": 546
+   },
+   "worst_hop_um": {
+    "vn_m": 246.6,
+    "m_q": 246.6,
+    "q_lane": 203.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t28": {
+   "perm": [
+    7,
+    10,
+    3,
+    2,
+    8,
+    4,
+    15,
+    12,
+    13,
+    6,
+    5,
+    9,
+    1,
+    0,
+    14,
+    11
+   ],
+   "lanes_moved": 15,
+   "entries_added": 166,
+   "h_entries": 288,
+   "local_pin_spread_um": 0.0,
+   "quad_reach_before": {
+    "last": 477,
+    "far": 581
+   },
+   "quad_reach_after": {
+    "last": 203,
+    "far": 789
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 207.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t29": {
+   "perm": [
+    11,
+    10,
+    7,
+    14,
+    9,
+    13,
+    15,
+    2,
+    8,
+    3,
+    1,
+    6,
+    0,
+    12,
+    4,
+    5
+   ],
+   "lanes_moved": 15,
+   "entries_added": 199,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 572,
+    "far": 522
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 707
+   },
+   "worst_hop_um": {
+    "vn_m": 351.7,
+    "m_q": 351.7,
+    "q_lane": 200.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t30": {
+   "perm": [
+    4,
+    8,
+    0,
+    6,
+    11,
+    2,
+    15,
+    14,
+    13,
+    9,
+    10,
+    12,
+    5,
+    7,
+    1,
+    3
+   ],
+   "lanes_moved": 14,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 267.84,
+   "quad_reach_before": {
+    "last": 577,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 245,
+    "far": 787
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 279.1
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t31": {
+   "perm": [
+    2,
+    6,
+    3,
+    12,
+    15,
+    8,
+    13,
+    0,
+    9,
+    1,
+    11,
+    10,
+    7,
+    4,
+    14,
+    5
+   ],
+   "lanes_moved": 15,
+   "entries_added": 226,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 612,
+    "far": 474
+   },
+   "quad_reach_after": {
+    "last": 199,
+    "far": 504
+   },
+   "worst_hop_um": {
+    "vn_m": 237.3,
+    "m_q": 237.3,
+    "q_lane": 195.3
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t32": {
+   "perm": [
+    12,
+    9,
+    11,
+    8,
+    10,
+    1,
+    13,
+    6,
+    4,
+    3,
+    14,
+    2,
+    0,
+    7,
+    5,
+    15
+   ],
+   "lanes_moved": 15,
+   "entries_added": 201,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 473,
+    "far": 606
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 709
+   },
+   "worst_hop_um": {
+    "vn_m": 357.8,
+    "m_q": 357.8,
+    "q_lane": 175.3
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t33": {
+   "perm": [
+    4,
+    14,
+    3,
+    11,
+    2,
+    15,
+    9,
+    6,
+    8,
+    1,
+    10,
+    13,
+    0,
+    5,
+    7,
+    12
+   ],
+   "lanes_moved": 14,
+   "entries_added": 172,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 499,
+    "far": 591
+   },
+   "quad_reach_after": {
+    "last": 247,
+    "far": 786
+   },
+   "worst_hop_um": {
+    "vn_m": 365.0,
+    "m_q": 365.0,
+    "q_lane": 309.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t34": {
+   "perm": [
+    11,
+    13,
+    5,
+    14,
+    9,
+    3,
+    4,
+    0,
+    7,
+    8,
+    2,
+    12,
+    10,
+    15,
+    6,
+    1
+   ],
+   "lanes_moved": 16,
+   "entries_added": 229,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 487,
+    "far": 447
+   },
+   "quad_reach_after": {
+    "last": 172,
+    "far": 491
+   },
+   "worst_hop_um": {
+    "vn_m": 232.9,
+    "m_q": 232.9,
+    "q_lane": 202.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t35": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 120.96,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t36": {
+   "perm": [
+    7,
+    6,
+    11,
+    13,
+    15,
+    3,
+    9,
+    12,
+    10,
+    0,
+    2,
+    1,
+    4,
+    5,
+    14,
+    8
+   ],
+   "lanes_moved": 15,
+   "entries_added": 164,
+   "h_entries": 288,
+   "local_pin_spread_um": 131.376,
+   "quad_reach_before": {
+    "last": 437,
+    "far": 731
+   },
+   "quad_reach_after": {
+    "last": 201,
+    "far": 793
+   },
+   "worst_hop_um": {
+    "vn_m": 390.0,
+    "m_q": 390.0,
+    "q_lane": 210.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t37": {
+   "perm": [
+    12,
+    2,
+    7,
+    9,
+    14,
+    11,
+    5,
+    13,
+    10,
+    8,
+    15,
+    1,
+    0,
+    4,
+    6,
+    3
+   ],
+   "lanes_moved": 16,
+   "entries_added": 219,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 496,
+    "far": 412
+   },
+   "quad_reach_after": {
+    "last": 202,
+    "far": 454
+   },
+   "worst_hop_um": {
+    "vn_m": 218.5,
+    "m_q": 218.5,
+    "q_lane": 240.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t38": {
+   "perm": [
+    11,
+    12,
+    4,
+    9,
+    10,
+    5,
+    6,
+    1,
+    0,
+    7,
+    3,
+    2,
+    14,
+    13,
+    8,
+    15
+   ],
+   "lanes_moved": 12,
+   "entries_added": 187,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 502,
+    "far": 757
+   },
+   "quad_reach_after": {
+    "last": 140,
+    "far": 761
+   },
+   "worst_hop_um": {
+    "vn_m": 380.1,
+    "m_q": 380.1,
+    "q_lane": 175.8
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t39": {
+   "perm": [
+    12,
+    2,
+    3,
+    10,
+    9,
+    4,
+    15,
+    8,
+    11,
+    7,
+    6,
+    14,
+    13,
+    5,
+    0,
+    1
+   ],
+   "lanes_moved": 16,
+   "entries_added": 236,
+   "h_entries": 288,
+   "local_pin_spread_um": 0.0,
+   "quad_reach_before": {
+    "last": 499,
+    "far": 410
+   },
+   "quad_reach_after": {
+    "last": 211,
+    "far": 480
+   },
+   "worst_hop_um": {
+    "vn_m": 216.4,
+    "m_q": 216.4,
+    "q_lane": 211.3
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t40__clf8bbdae1": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 121.344,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t41": {
+   "perm": [
+    5,
+    8,
+    0,
+    7,
+    10,
+    11,
+    6,
+    13,
+    9,
+    14,
+    2,
+    4,
+    1,
+    12,
+    15,
+    3
+   ],
+   "lanes_moved": 15,
+   "entries_added": 183,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 530,
+    "far": 566
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 778
+   },
+   "worst_hop_um": {
+    "vn_m": 389.1,
+    "m_q": 389.1,
+    "q_lane": 192.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t42": {
+   "perm": [
+    11,
+    12,
+    4,
+    9,
+    10,
+    5,
+    6,
+    1,
+    0,
+    7,
+    3,
+    2,
+    14,
+    13,
+    8,
+    15
+   ],
+   "lanes_moved": 12,
+   "entries_added": 187,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 502,
+    "far": 757
+   },
+   "quad_reach_after": {
+    "last": 140,
+    "far": 761
+   },
+   "worst_hop_um": {
+    "vn_m": 380.1,
+    "m_q": 380.1,
+    "q_lane": 175.8
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t43": {
+   "perm": [
+    3,
+    7,
+    13,
+    0,
+    12,
+    11,
+    5,
+    14,
+    15,
+    10,
+    2,
+    9,
+    4,
+    1,
+    8,
+    6
+   ],
+   "lanes_moved": 16,
+   "entries_added": 217,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 421,
+    "far": 455
+   },
+   "quad_reach_after": {
+    "last": 177,
+    "far": 522
+   },
+   "worst_hop_um": {
+    "vn_m": 250.0,
+    "m_q": 250.0,
+    "q_lane": 207.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t44__clf4ea6d4b": {
+   "perm": [
+    1,
+    10,
+    13,
+    15,
+    3,
+    4,
+    6,
+    0,
+    11,
+    14,
+    5,
+    8,
+    2,
+    7,
+    9,
+    12
+   ],
+   "lanes_moved": 15,
+   "entries_added": 219,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 614,
+    "far": 504
+   },
+   "quad_reach_after": {
+    "last": 177,
+    "far": 503
+   },
+   "worst_hop_um": {
+    "vn_m": 239.3,
+    "m_q": 239.3,
+    "q_lane": 178.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t44__clf6cf8492": {
+   "perm": [
+    1,
+    10,
+    13,
+    15,
+    3,
+    4,
+    6,
+    0,
+    11,
+    14,
+    5,
+    8,
+    2,
+    7,
+    9,
+    12
+   ],
+   "lanes_moved": 15,
+   "entries_added": 219,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 614,
+    "far": 507
+   },
+   "quad_reach_after": {
+    "last": 177,
+    "far": 503
+   },
+   "worst_hop_um": {
+    "vn_m": 239.3,
+    "m_q": 239.3,
+    "q_lane": 173.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t45": {
+   "perm": [
+    12,
+    13,
+    0,
+    2,
+    1,
+    3,
+    8,
+    7,
+    15,
+    5,
+    10,
+    11,
+    6,
+    9,
+    4,
+    14
+   ],
+   "lanes_moved": 13,
+   "entries_added": 232,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 547,
+    "far": 439
+   },
+   "quad_reach_after": {
+    "last": 190,
+    "far": 498
+   },
+   "worst_hop_um": {
+    "vn_m": 233.9,
+    "m_q": 233.9,
+    "q_lane": 241.3
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t46": {
+   "perm": [
+    0,
+    4,
+    8,
+    11,
+    15,
+    9,
+    5,
+    6,
+    14,
+    10,
+    2,
+    12,
+    3,
+    1,
+    7,
+    13
+   ],
+   "lanes_moved": 15,
+   "entries_added": 172,
+   "h_entries": 288,
+   "local_pin_spread_um": 162.0,
+   "quad_reach_before": {
+    "last": 537,
+    "far": 549
+   },
+   "quad_reach_after": {
+    "last": 257,
+    "far": 778
+   },
+   "worst_hop_um": {
+    "vn_m": 389.0,
+    "m_q": 389.0,
+    "q_lane": 277.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t47": {
+   "perm": [
+    10,
+    2,
+    15,
+    9,
+    8,
+    4,
+    6,
+    1,
+    7,
+    3,
+    13,
+    0,
+    11,
+    12,
+    14,
+    5
+   ],
+   "lanes_moved": 14,
+   "entries_added": 217,
+   "h_entries": 288,
+   "local_pin_spread_um": 123.12,
+   "quad_reach_before": {
+    "last": 434,
+    "far": 457
+   },
+   "quad_reach_after": {
+    "last": 179,
+    "far": 530
+   },
+   "worst_hop_um": {
+    "vn_m": 255.0,
+    "m_q": 255.0,
+    "q_lane": 208.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t50": {
+   "perm": [
+    14,
+    2,
+    12,
+    9,
+    10,
+    7,
+    13,
+    11,
+    15,
+    5,
+    3,
+    1,
+    8,
+    4,
+    6,
+    0
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 651
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 789
+   },
+   "worst_hop_um": {
+    "vn_m": 389.3,
+    "m_q": 389.3,
+    "q_lane": 212.6
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t51": {
+   "perm": [
+    15,
+    3,
+    1,
+    10,
+    13,
+    11,
+    5,
+    8,
+    7,
+    2,
+    9,
+    12,
+    6,
+    4,
+    14,
+    0
+   ],
+   "lanes_moved": 15,
+   "entries_added": 219,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 544,
+    "far": 446
+   },
+   "quad_reach_after": {
+    "last": 232,
+    "far": 459
+   },
+   "worst_hop_um": {
+    "vn_m": 220.8,
+    "m_q": 220.8,
+    "q_lane": 215.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t52": {
+   "perm": [
+    0,
+    14,
+    12,
+    2,
+    13,
+    8,
+    3,
+    7,
+    1,
+    11,
+    10,
+    4,
+    6,
+    9,
+    5,
+    15
+   ],
+   "lanes_moved": 12,
+   "entries_added": 172,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 530,
+    "far": 611
+   },
+   "quad_reach_after": {
+    "last": 199,
+    "far": 798
+   },
+   "worst_hop_um": {
+    "vn_m": 390.0,
+    "m_q": 390.0,
+    "q_lane": 212.1
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t53__cl958451dd": {
+   "perm": [
+    13,
+    14,
+    6,
+    2,
+    8,
+    11,
+    15,
+    4,
+    9,
+    7,
+    10,
+    3,
+    1,
+    0,
+    5,
+    12
+   ],
+   "lanes_moved": 15,
+   "entries_added": 194,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 514,
+    "far": 453
+   },
+   "quad_reach_after": {
+    "last": 164,
+    "far": 726
+   },
+   "worst_hop_um": {
+    "vn_m": 361.0,
+    "m_q": 361.0,
+    "q_lane": 178.2
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t53__clb66fa5cb": {
+   "perm": [
+    13,
+    14,
+    6,
+    2,
+    8,
+    11,
+    15,
+    4,
+    9,
+    7,
+    10,
+    3,
+    1,
+    0,
+    5,
+    12
+   ],
+   "lanes_moved": 15,
+   "entries_added": 194,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 514,
+    "far": 453
+   },
+   "quad_reach_after": {
+    "last": 164,
+    "far": 726
+   },
+   "worst_hop_um": {
+    "vn_m": 361.0,
+    "m_q": 361.0,
+    "q_lane": 178.2
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t54__cl501e5681": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 140.784,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 210.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t54__cl706d9749": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t55": {
+   "perm": [
+    5,
+    8,
+    0,
+    7,
+    10,
+    11,
+    6,
+    13,
+    9,
+    14,
+    2,
+    4,
+    1,
+    12,
+    15,
+    3
+   ],
+   "lanes_moved": 15,
+   "entries_added": 183,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 530,
+    "far": 566
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 778
+   },
+   "worst_hop_um": {
+    "vn_m": 389.1,
+    "m_q": 389.1,
+    "q_lane": 192.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t56": {
+   "perm": [
+    11,
+    1,
+    0,
+    3,
+    12,
+    7,
+    10,
+    5,
+    8,
+    15,
+    13,
+    9,
+    6,
+    4,
+    14,
+    2
+   ],
+   "lanes_moved": 12,
+   "entries_added": 187,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 577,
+    "far": 595
+   },
+   "quad_reach_after": {
+    "last": 149,
+    "far": 770
+   },
+   "worst_hop_um": {
+    "vn_m": 383.7,
+    "m_q": 383.7,
+    "q_lane": 192.8
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t57": {
+   "perm": [
+    0,
+    14,
+    12,
+    2,
+    13,
+    8,
+    3,
+    7,
+    1,
+    11,
+    10,
+    4,
+    6,
+    9,
+    5,
+    15
+   ],
+   "lanes_moved": 12,
+   "entries_added": 172,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 530,
+    "far": 609
+   },
+   "quad_reach_after": {
+    "last": 199,
+    "far": 796
+   },
+   "worst_hop_um": {
+    "vn_m": 386.9,
+    "m_q": 386.9,
+    "q_lane": 216.1
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t58": {
+   "perm": [
+    3,
+    7,
+    8,
+    15,
+    12,
+    1,
+    10,
+    4,
+    2,
+    6,
+    5,
+    9,
+    11,
+    14,
+    13,
+    0
+   ],
+   "lanes_moved": 16,
+   "entries_added": 199,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 567,
+    "far": 403
+   },
+   "quad_reach_after": {
+    "last": 282,
+    "far": 635
+   },
+   "worst_hop_um": {
+    "vn_m": 290.0,
+    "m_q": 290.0,
+    "q_lane": 226.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t59": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 123.504,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 210.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t6": {
+   "perm": [
+    7,
+    6,
+    11,
+    13,
+    15,
+    3,
+    9,
+    12,
+    10,
+    0,
+    2,
+    1,
+    4,
+    5,
+    14,
+    8
+   ],
+   "lanes_moved": 15,
+   "entries_added": 164,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 437,
+    "far": 731
+   },
+   "quad_reach_after": {
+    "last": 201,
+    "far": 793
+   },
+   "worst_hop_um": {
+    "vn_m": 390.0,
+    "m_q": 390.0,
+    "q_lane": 210.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t60": {
+   "perm": [
+    2,
+    0,
+    7,
+    14,
+    10,
+    15,
+    9,
+    4,
+    11,
+    5,
+    1,
+    6,
+    3,
+    13,
+    8,
+    12
+   ],
+   "lanes_moved": 15,
+   "entries_added": 223,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 529,
+    "far": 517
+   },
+   "quad_reach_after": {
+    "last": 207,
+    "far": 517
+   },
+   "worst_hop_um": {
+    "vn_m": 246.0,
+    "m_q": 246.0,
+    "q_lane": 263.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t61": {
+   "perm": [
+    6,
+    0,
+    2,
+    10,
+    5,
+    14,
+    4,
+    7,
+    13,
+    9,
+    8,
+    1,
+    12,
+    11,
+    3,
+    15
+   ],
+   "lanes_moved": 11,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 0.0,
+   "quad_reach_before": {
+    "last": 635,
+    "far": 585
+   },
+   "quad_reach_after": {
+    "last": 214,
+    "far": 793
+   },
+   "worst_hop_um": {
+    "vn_m": 387.6,
+    "m_q": 387.6,
+    "q_lane": 232.0
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t62": {
+   "perm": [
+    14,
+    13,
+    2,
+    9,
+    8,
+    5,
+    4,
+    7,
+    0,
+    15,
+    10,
+    11,
+    12,
+    6,
+    1,
+    3
+   ],
+   "lanes_moved": 10,
+   "entries_added": 197,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 630,
+    "far": 547
+   },
+   "quad_reach_after": {
+    "last": 240,
+    "far": 570
+   },
+   "worst_hop_um": {
+    "vn_m": 270.0,
+    "m_q": 270.0,
+    "q_lane": 270.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t65": {
+   "perm": [
+    11,
+    1,
+    0,
+    3,
+    12,
+    7,
+    10,
+    5,
+    8,
+    15,
+    13,
+    9,
+    6,
+    4,
+    14,
+    2
+   ],
+   "lanes_moved": 12,
+   "entries_added": 187,
+   "h_entries": 288,
+   "local_pin_spread_um": 122.736,
+   "quad_reach_before": {
+    "last": 577,
+    "far": 595
+   },
+   "quad_reach_after": {
+    "last": 149,
+    "far": 770
+   },
+   "worst_hop_um": {
+    "vn_m": 383.7,
+    "m_q": 383.7,
+    "q_lane": 192.8
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t66": {
+   "perm": [
+    0,
+    14,
+    12,
+    2,
+    13,
+    8,
+    3,
+    7,
+    1,
+    11,
+    10,
+    4,
+    6,
+    9,
+    5,
+    15
+   ],
+   "lanes_moved": 12,
+   "entries_added": 172,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 530,
+    "far": 609
+   },
+   "quad_reach_after": {
+    "last": 199,
+    "far": 796
+   },
+   "worst_hop_um": {
+    "vn_m": 386.9,
+    "m_q": 386.9,
+    "q_lane": 216.1
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t67": {
+   "perm": [
+    6,
+    1,
+    3,
+    12,
+    0,
+    11,
+    15,
+    13,
+    2,
+    10,
+    9,
+    14,
+    7,
+    5,
+    4,
+    8
+   ],
+   "lanes_moved": 15,
+   "entries_added": 197,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 650,
+    "far": 546
+   },
+   "quad_reach_after": {
+    "last": 274,
+    "far": 540
+   },
+   "worst_hop_um": {
+    "vn_m": 269.8,
+    "m_q": 269.8,
+    "q_lane": 278.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t68": {
+   "perm": [
+    6,
+    9,
+    13,
+    8,
+    14,
+    1,
+    15,
+    2,
+    4,
+    7,
+    3,
+    10,
+    11,
+    5,
+    12,
+    0
+   ],
+   "lanes_moved": 16,
+   "entries_added": 230,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 427,
+    "far": 415
+   },
+   "quad_reach_after": {
+    "last": 166,
+    "far": 524
+   },
+   "worst_hop_um": {
+    "vn_m": 235.0,
+    "m_q": 235.0,
+    "q_lane": 203.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t69": {
+   "perm": [
+    12,
+    2,
+    9,
+    14,
+    7,
+    10,
+    13,
+    11,
+    15,
+    1,
+    5,
+    3,
+    0,
+    6,
+    4,
+    8
+   ],
+   "lanes_moved": 16,
+   "entries_added": 167,
+   "h_entries": 288,
+   "local_pin_spread_um": 131.76,
+   "quad_reach_before": {
+    "last": 582,
+    "far": 654
+   },
+   "quad_reach_after": {
+    "last": 210,
+    "far": 791
+   },
+   "worst_hop_um": {
+    "vn_m": 388.1,
+    "m_q": 388.1,
+    "q_lane": 211.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t7": {
+   "perm": [
+    5,
+    9,
+    2,
+    11,
+    10,
+    8,
+    13,
+    1,
+    3,
+    0,
+    4,
+    6,
+    12,
+    7,
+    15,
+    14
+   ],
+   "lanes_moved": 14,
+   "entries_added": 219,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 453,
+    "far": 514
+   },
+   "quad_reach_after": {
+    "last": 232,
+    "far": 473
+   },
+   "worst_hop_um": {
+    "vn_m": 206.9,
+    "m_q": 206.9,
+    "q_lane": 283.3
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t70": {
+   "perm": [
+    2,
+    11,
+    1,
+    3,
+    15,
+    10,
+    6,
+    12,
+    7,
+    0,
+    8,
+    13,
+    14,
+    4,
+    9,
+    5
+   ],
+   "lanes_moved": 14,
+   "entries_added": 155,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 633,
+    "far": 701
+   },
+   "quad_reach_after": {
+    "last": 294,
+    "far": 809
+   },
+   "worst_hop_um": {
+    "vn_m": 385.5,
+    "m_q": 385.5,
+    "q_lane": 331.4
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t71": {
+   "perm": [
+    11,
+    4,
+    12,
+    1,
+    9,
+    15,
+    6,
+    5,
+    10,
+    13,
+    3,
+    2,
+    0,
+    7,
+    8,
+    14
+   ],
+   "lanes_moved": 15,
+   "entries_added": 229,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 437,
+    "far": 446
+   },
+   "quad_reach_after": {
+    "last": 202,
+    "far": 520
+   },
+   "worst_hop_um": {
+    "vn_m": 241.1,
+    "m_q": 241.1,
+    "q_lane": 213.6
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t72": {
+   "perm": [
+    14,
+    2,
+    6,
+    13,
+    9,
+    5,
+    3,
+    0,
+    12,
+    7,
+    8,
+    11,
+    10,
+    1,
+    4,
+    15
+   ],
+   "lanes_moved": 13,
+   "entries_added": 166,
+   "h_entries": 288,
+   "local_pin_spread_um": 0.0,
+   "quad_reach_before": {
+    "last": 536,
+    "far": 634
+   },
+   "quad_reach_after": {
+    "last": 253,
+    "far": 804
+   },
+   "worst_hop_um": {
+    "vn_m": 390.0,
+    "m_q": 390.0,
+    "q_lane": 255.3
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t73": {
+   "perm": [
+    12,
+    9,
+    11,
+    8,
+    10,
+    1,
+    13,
+    6,
+    4,
+    3,
+    14,
+    2,
+    0,
+    7,
+    5,
+    15
+   ],
+   "lanes_moved": 15,
+   "entries_added": 201,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 471,
+    "far": 608
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 711
+   },
+   "worst_hop_um": {
+    "vn_m": 360.0,
+    "m_q": 360.0,
+    "q_lane": 180.5
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t74": {
+   "perm": [
+    8,
+    13,
+    14,
+    1,
+    6,
+    9,
+    4,
+    3,
+    2,
+    10,
+    15,
+    5,
+    12,
+    11,
+    7,
+    0
+   ],
+   "lanes_moved": 15,
+   "entries_added": 232,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 410,
+    "far": 388
+   },
+   "quad_reach_after": {
+    "last": 166,
+    "far": 530
+   },
+   "worst_hop_um": {
+    "vn_m": 235.0,
+    "m_q": 235.0,
+    "q_lane": 213.1
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t75": {
+   "perm": [
+    7,
+    5,
+    14,
+    8,
+    9,
+    11,
+    1,
+    0,
+    10,
+    2,
+    4,
+    13,
+    15,
+    3,
+    6,
+    12
+   ],
+   "lanes_moved": 16,
+   "entries_added": 218,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 514,
+    "far": 406
+   },
+   "quad_reach_after": {
+    "last": 206,
+    "far": 459
+   },
+   "worst_hop_um": {
+    "vn_m": 204.2,
+    "m_q": 204.2,
+    "q_lane": 262.7
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t8": {
+   "perm": [
+    3,
+    9,
+    0,
+    5,
+    12,
+    11,
+    7,
+    8,
+    10,
+    1,
+    4,
+    15,
+    2,
+    13,
+    14,
+    6
+   ],
+   "lanes_moved": 14,
+   "entries_added": 166,
+   "h_entries": 288,
+   "local_pin_spread_um": 0.0,
+   "quad_reach_before": {
+    "last": 533,
+    "far": 634
+   },
+   "quad_reach_after": {
+    "last": 253,
+    "far": 804
+   },
+   "worst_hop_um": {
+    "vn_m": 390.0,
+    "m_q": 390.0,
+    "q_lane": 255.3
+   },
+   "over": []
+  },
+  "ot_s81sl_leaf__t9": {
+   "perm": [
+    12,
+    9,
+    11,
+    8,
+    10,
+    1,
+    13,
+    6,
+    4,
+    3,
+    14,
+    2,
+    0,
+    7,
+    5,
+    15
+   ],
+   "lanes_moved": 15,
+   "entries_added": 201,
+   "h_entries": 288,
+   "local_pin_spread_um": 114.48,
+   "quad_reach_before": {
+    "last": 471,
+    "far": 608
+   },
+   "quad_reach_after": {
+    "last": 160,
+    "far": 711
+   },
+   "worst_hop_um": {
+    "vn_m": 360.0,
+    "m_q": 360.0,
+    "q_lane": 180.5
+   },
+   "over": []
+  }
+ },
+ "n_types": 70,
+ "collector_reach_leaf_before": [],
+ "collector_reach_leaf_after": [],
+ "hops_over_405": 0
+}

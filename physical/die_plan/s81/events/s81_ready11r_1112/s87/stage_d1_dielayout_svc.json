@@ -1,0 +1,18 @@
+{
+ "name": "d1_dielayout_svc",
+ "why": "DIE-LAYOUT-S81 0526f88c33 svc ft re-site",
+ "script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/repo/physical/die_plan/s81/stage_s1_dielayout_1111.py",
+ "argv": [
+  "{in}",
+  "{out}",
+  "{report}",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/delta_s1_svc_resite_only.json"
+ ],
+ "type_keys": [
+  "ft_slots"
+ ],
+ "top_keys": [
+  "partitions",
+  "die.channels"
+ ]
+}

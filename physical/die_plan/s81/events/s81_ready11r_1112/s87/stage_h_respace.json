@@ -1,0 +1,1 @@
+{"name":"h_respace","why":"SEAM-HOP-1 path_respace stage (claude/seam-hop-1@0d73dc057e00; COORD: first S81 event after ready7): 14 lanes 0-cycle respace, collector relays re-sited","script":"tools/die_plan/path_respace_stage.py","argv":["{in}","{out}","{report}"],"type_keys":["ft_slots","internal_stations","clock"],"top_keys":["latency"]}

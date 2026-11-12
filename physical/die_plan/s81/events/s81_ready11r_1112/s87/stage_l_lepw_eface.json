@@ -1,0 +1,4 @@
+{"name": "l_lepw_eface", "why": "LEPW-EFACE-1111 (ds85-lepw-eface-1111 7f6774e5; COORD default for the LP-W window), applied by slot identity from report.json of plan c3d22064f68c",
+ "script": "physical/die_plan/s81/apply_lepw_eface_1111.py",
+ "argv": ["{in}", "{out}", "{report}"],
+ "type_keys": ["buses"], "top_keys": ["ports"]}

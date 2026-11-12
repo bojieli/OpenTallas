@@ -1,0 +1,15 @@
+{
+ "name": "z_dead",
+ "why": "S81-BIND-2 dead-input re-proof 2122a3c72d (last)",
+ "script": "physical/die_plan/s81/dead_wrap_1111.py",
+ "argv": [
+  "{in}",
+  "{out}",
+  "{report}"
+ ],
+ "type_keys": [
+  "dead_inputs",
+  "note"
+ ],
+ "top_keys": []
+}
