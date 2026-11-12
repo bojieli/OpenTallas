@@ -71,7 +71,8 @@ AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i 
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
 # COORD 11-12 emergency hold (autoclean emptied die-hbm-92-su/ab on 3 hosts; live HBM binds named it): never deleted, any class
-EMERGENCY_HOLD_RE = re.compile(r"/claude/die-hbm-[^/]+/ab(?:/|$)|/claude/[^/]+/src_[^/]+(?:/|$)")
+EMERGENCY_HOLD_RE = re.compile(r"/claude/die-hbm-[^/]+/ab(?:/|$)")      # src_* trees are held by reference (kit-wave keep + bind refs + live lane), not by name (COORD 11-12 epyc2)
+CTIME_GRACE = True          # a src_* copy keeps the source's old mtimes: its inode change time says when it landed
 EMERGENCY_ANC_RE = re.compile(r"/claude/die-hbm-[^/]+/ab/|/claude/[^/]+/src_[^/]+/")
 GRACE_S = 2 * 3600          # --aggressive (OWNER 11-12): the only age wait, after a job ends
 D_SKIP_LANES = {"autopilot", "ot-jobs", "explorer-2-work", "explorer-2", "restore-head", "signed-keep", "_ot_autoclean_ctl", "hub-coord"}
@@ -1643,7 +1644,7 @@ class Job:
 
     def holds_emergency_below(self, p):
         """a bind / src tree (die-hbm-*/ab, src_*) lies within 6 levels below p: p is never deleted whole"""
-        r = subprocess.run(["find", "-P", p, "-maxdepth", "6", "(", "-path", "*/claude/die-hbm-*/ab", "-o", "-name", "src_*", ")", "-print", "-quit"],
+        r = subprocess.run(["find", "-P", p, "-maxdepth", "6", "-path", "*/claude/die-hbm-*/ab", "-print", "-quit"],
                            capture_output=True, text=True, timeout=600)
         return bool(r.stdout.strip())
 
@@ -1700,6 +1701,8 @@ class Job:
             size = 0
             if why is None:
                 newest, size, _hl = tree_info_c(p) if stat.S_ISDIR(st.st_mode) else (st.st_mtime, st.st_blocks * 512, None)
+                if CTIME_GRACE and stat.S_ISDIR(st.st_mode) and os.path.basename(p).startswith("src_"):
+                    newest = max(newest, st.st_ctime)
                 if self.now - newest < GRACE_S:
                     why = "lt2h"
             verdict = "SKIP" if why else ("WOULD" if not a.apply else "DELETE")
