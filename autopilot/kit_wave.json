@@ -21634,7 +21634,9 @@
     "slw_sc_v3@6",
     "slw_st_a_v2__cl9f076a5c@8",
     "slw_su_c__cl19bb38ef@6",
-    "sle_fe_v1__cl8210183c@2"
+    "sle_fe_v1__cl8210183c@2",
+    "cbn_q00__cl622f65d2@10",
+    "cbn_q00__cldbcda913@3"
    ],
    "queue_src": "claude/qc-s27-vis-1111@9024de9d66",
    "type_args": {
@@ -22624,14 +22626,16 @@
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_KW45_PW": "781ab754df73"
     },
     "cbn_q00__cldbcda913": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
      "OT_KW43_FIX": "ccf792c10b63",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_KW45_PW": "781ab754df73"
     },
     "slw_su_l1__clcc9d0155": {
      "OT_KW40_LANDING_EV": "dd955394dd0",
@@ -32176,6 +32180,16 @@
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/lane1p_l1phs_eco1_lef/views",
       "job": "HBM-CORES-B 11-12 signed view lane1p_l1phs_eco1 + LEF (LOCAL_PASS_NEEDS_PARENT, DO_NOT_COUNT)"
+     }
+    ],
+    "ot_hnx_fused_hub_n4ext": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/hbmstage/ot_hnx_fused_hub_n4ext",
+      "job": "SIGNED ot_hnx_fused_hub_n4ext + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 class: blanket M6/M7 over M5 PG)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      }
     ]
    },
