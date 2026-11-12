@@ -3,6 +3,7 @@ import shutil
 import subprocess
 import sys
 import pytest
+import re
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from qc_su_lane_cut import cut
 
@@ -82,3 +83,29 @@ def test_memory_read_extra_binds_mem9_head():
     assert report["memory_read_extra"] == 9
     rtl0, _, report0 = cut(source, 0, memory_alignment=3, kv_wr_pipe=1)
     assert "qfd_dv_lane_h_safe2" in rtl0 and report0["memory_read_extra"] == 0
+
+
+def test_one_bit_vector_keeps_its_range():
+    """QC-VERIFY-GAPS (QC s26 verify lint, 29-30 errors per lane module): a bound [0:0] wire selected as n[0] by a leaf
+    body was declared 'wire n;' in the cut (Illegal bit select).  The cut keeps the declared range on every one-bit
+    vector, its c_i/c_o wiring and the frame concatenation; scalar wires stay scalar."""
+    source = fixture().replace('    wire [7:0] x_q;\n', '    wire [7:0] x_q;\n    wire [0:0] p_v;\n    wire s_q;\n    assign s_q=x[0];\n')
+    source = source.replace('        .x(w_u_exp0_y),\n', '        .x(w_u_exp0_y),\n        .v(p_v[0]),\n')
+    source = source.replace('        .x(x_q),\n', '        .x(x_q),\n        .s(s_q),\n')
+    source = source.replace('    assign y=w_u_lrly0_y;', '    assign y=w_u_lrly0_y;\n    assign p_v[0]=x[1];')
+    rtl, frame, report = cut(source, 0)
+    assert '    wire [0:0] p_v;' in rtl and '    wire p_v;' not in rtl
+    assert '    wire s_q;' in rtl and 'assign s_q = c_i[' in rtl
+    assert re.search(r'assign p_v\[0\] = c_i\[\d+\];', rtl) and re.search(r'\.c_i\(\{[^}]*\bp_v\[0\]', frame)
+    assert report['added_cycles'] == 0
+    v = shutil.which('verilator')
+    if v:
+        p = Path(__file__).parent / '.lane_cut_lint_tmp.sv'
+        try:
+            p.write_text('module leaf(input clk,rst_n,input [7:0] x,input v,input s,output [7:0] y);\n'
+                         '  assign y=x^{7\'d0,v^s};\nendmodule\n' + rtl)
+            r = subprocess.run([v, '--lint-only', '-Wno-fatal',
+                                '--top-module', report['module'], str(p)], capture_output=True, text=True)
+            assert '%Error' not in r.stderr, r.stderr
+        finally:
+            p.unlink(missing_ok=True)

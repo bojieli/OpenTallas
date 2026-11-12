@@ -71,8 +71,14 @@ def refs(text, widths):
     return result
 
 
-def concat(bits):
-    return '{' + ', '.join(f'{n}[{b}]' if w > 1 else n for n, b, w in reversed(bits)) + '}'
+def concat(bits, vectors=()):
+    return '{' + ', '.join(f'{n}[{b}]' if w > 1 or n in vectors else n for n, b, w in reversed(bits)) + '}'
+
+
+def vector_names(source):
+    """Names the bound source declares with a range, including one-bit [0:0] vectors: the cut keeps that range so
+    every n[0] select copied from the leaf bodies stays legal (QC-VERIFY-GAPS: 'wire n;' + n[0] = Verilator error)."""
+    return {name for hi, name in WIRE.findall(source) if hi}
 
 
 def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0, memory_read_extra=0):
@@ -80,6 +86,7 @@ def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0, memory_r
     if len(re.findall(r'\bendmodule\b', source)) != 1:
         raise ValueError('expected one bound partition module')
     widths = {name: int(hi) + 1 if hi else 1 for hi, name in WIRE.findall(source)}
+    vectors = vector_names(source)
     # bind.py scalar clock/reset inputs need not have local wire declarations.
     widths.update(clk=1, rst_n=1)
     all_leaves = list(LEAF.finditer(source))
@@ -112,18 +119,18 @@ def cut(source, lane, module=None, memory_alignment=None, kv_wr_pipe=0, memory_r
     def ordered(mapping):
         return [(n, b, widths[n]) for n in sorted(mapping) for b in sorted(mapping[n])]
     ib, ob = ordered(inputs), ordered(outputs)
-    decls = ['    wire ' + (f'[{widths[n]-1}:0] ' if widths[n] > 1 else '') + n + ';'
+    decls = ['    wire ' + (f'[{widths[n]-1}:0] ' if widths[n] > 1 or n in vectors else '') + n + ';'
              for n in sorted(selected) if n not in ('clk', 'rst_n', reset_source)]
     # The bit assignments are wiring only, and never tie an unused bit or add a register.
-    assigns = [f'    assign {n}[{b}] = c_i[{i}];' if w > 1 else f'    assign {n} = c_i[{i}];'
+    assigns = [f'    assign {n}[{b}] = c_i[{i}];' if w > 1 or n in vectors else f'    assign {n} = c_i[{i}];'
                for i, (n, b, w) in enumerate(ib)]
-    assigns += [f'    assign c_o[{i}] = {n}[{b}];' if w > 1 else f'    assign c_o[{i}] = {n};'
+    assigns += [f'    assign c_o[{i}] = {n}[{b}];' if w > 1 or n in vectors else f'    assign c_o[{i}] = {n};'
                 for i, (n, b, w) in enumerate(ob)]
     rtl = '\n'.join(['// Generated exact grouping of five bind.py leaves; zero added cycles.', '`default_nettype none',
                      f'module {module} (input wire clk, input wire rst_n,',
                      f'    input wire [{len(ib)-1}:0] c_i, output wire [{len(ob)-1}:0] c_o);',
                      *decls, *assigns, re.sub(r'\b'+re.escape(reset_source)+r'\b','rst_n',body), 'endmodule', '`default_nettype wire', ''])
-    replacement = f'    {module} u_lane{lane} (.clk(clk), .rst_n({reset_source}), .c_i({concat(ib)}), .c_o({concat(ob)}));\n'
+    replacement = f'    {module} u_lane{lane} (.clk(clk), .rst_n({reset_source}), .c_i({concat(ib, vectors)}), .c_o({concat(ob, vectors)}));\n'
     frame = remainder.replace('endmodule', replacement + 'endmodule')
     # Remove only wires fully private to the cut; external wires retain their original declaration.
     private = owned - outputs.keys()
