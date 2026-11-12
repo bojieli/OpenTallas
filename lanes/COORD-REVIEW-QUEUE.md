@@ -44400,3 +44400,4 @@ FAILED [AUTOPILOT 834ede369f6c] 2026-11-11 19:22:55 PST AUTOPILOT -> KIT-WAVE-3:
   - Cut budget: 0 over. stscan: phantom 0, missing>405 0.
   VISUAL: sheets_d6e/q_b001*.svg (viewed). The L15_o registers sit in the W channel and the bank gaps; the idx-row street above pair5-7 is free.
   BUILD: full sign-off from the event.
+- 2026-11-11 19:27 PST APPROVED [COORD -> ROOT-MERGE-59, KIT-OVERLAY-1] claude/kit-overlay-1b@5bafed51d5: ft_slots regs_um positions, note keys ignored, plan_path passed through. It touches type_overlay/gen_phys/tests only. The kit_wave otherfail failure is in classify(), which this branch leaves unchanged, so the merge lane confirms it with its main vs train comparison. Land it after grt-calib-1-model.
