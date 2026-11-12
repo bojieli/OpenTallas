@@ -21027,8 +21027,8 @@
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s25",
-    "note": "KW-FIX-45 11-11 21:4x COORD: QC s25 plan_qc99_s25 e4820bd9d97c (branch qc-event-s25-1111@4e2764d237d8), DIE-QC-99 clean strict bind rc 0 (377/1921/0; bind_report 527b89d4da1c, epyc9 qc-event-s25/gate/bind_plan_qc99_s25 copied), sidecar_pv 9f6e6f721b61 + r8_sw2 571c5b26bb1f in the tree runtime; src_qc_s25_4e2764d237 = git archive of the branch head + 31b4aa482459 + 054e07a4c17b + grtm-qc 482a760a76; rows count only after EQ passes (bind_verify read-set issue pre-existing)",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s25fix",
+    "note": "KW-FIX-45 11-11 21:4x COORD: QC s25 plan_qc99_s25 e4820bd9d97c (branch qc-event-s25-1111@4e2764d237d8), DIE-QC-99 clean strict bind rc 0 (377/1921/0; bind_report 527b89d4da1c, epyc9 qc-event-s25/gate/bind_plan_qc99_s25 copied), sidecar_pv 9f6e6f721b61 + r8_sw2 571c5b26bb1f in the tree runtime; src_qc_s25_4e2764d237 = git archive of the branch head + 31b4aa482459 + 054e07a4c17b + grtm-qc 482a760a76; rows count only after EQ passes (bind_verify read-set issue pre-existing) | 22:3x DIE-QC-99/COORD: re-bound from the branch RTL: bind_out = qcbind/out_s25fix (copy of gate/bind_plan_qc99_s25_fix, report f4fd87fda891; bind.f lists gate/src_s25fix rtl (byte-identical to src_qc_s25_4e2764d237/rtl) + gate/bind_plan_qc99_s25_fix/rtl (symlinked to the copy on epyc8) + 39 as-built srcs under qc-transport-fix-4/src_sw2; includes the mem9 master); supersedes out_s25 (stale gate/src_s25 rtl/common without QREG)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
    "gen_args": [
@@ -21068,8 +21068,7 @@
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "*": "KW-FIX-45 11-11 22:2x DIE-QC-99 BLOCKING (COORD): out_s25 bind.f lists the stale gate/src_s25 rtl/common (no QREG); hold ALL new QC launches until the s25 rebind (bind_plan_qc99_s25_fix, report f4fd87fda891) is staged and the config repointed"
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -21661,7 +21660,27 @@
     "slw_su_c__cl19bb38ef@19",
     "slw_su_c__cl92142dac@32",
     "cbn_q01__cld9ff4c40@3",
-    "slw_sc_v3@2"
+    "slw_sc_v3@2",
+    "cbf_q01_s2@1",
+    "cbf_q01@2",
+    "cbn_q00__cl622f65d2@2",
+    "cbn_q00__cld7bf7197@1",
+    "cbn_q01__cld9ff4c40@4",
+    "cbn_q11__cl49ae4555@2",
+    "cbn_q11__cl5cc92dfe@2",
+    "cbx_q10__cl89936551@2",
+    "cbx_q10__cl94a12200@2",
+    "sle_sc_v2@28",
+    "sle_su_l0__cl086d85ba@4",
+    "sle_su_l0__cl7a55c676@4",
+    "slw_fw_v3@2",
+    "slw_hc3__cld86a7ad4@3",
+    "slw_sc_v1__cl64543eaf__cl5e017c6f@2",
+    "slw_st_a_v2__cl9f076a5c@4",
+    "slw_su_c__cl92142dac@3",
+    "slw_su_l0__cl1a1c1f8f@4",
+    "slw_su_l0__cl1e5219ea@4",
+    "slw_su_l0__cl76fb247e@6"
    ],
    "queue_src": "claude/qc-event-s25-1111@4e2764d237d8",
    "type_args": {
