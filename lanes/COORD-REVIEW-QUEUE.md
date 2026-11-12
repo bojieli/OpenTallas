@@ -44184,6 +44184,14 @@ FAILED [AUTOPILOT bd829dec084e] 2026-11-11 19:02:38 PST AUTOPILOT -> KIT-WAVE-3:
     - The structural fix is CPL-HBM-B1 option (b): +1 pin cycle on L15_o (8x512 b, bank sum_out -> W face), which lets its stations leave the 13-um street. Narrower beats only as the last resort (<10%, owner 11-11).
     - CPL-HBM-B1 stops the 2 core re-sites (not needed) and forms this; TOK-VERIFY prices it.
   - hbm-b1xx-arch: option C (+1 cycle on the remaining seam-hop lanes) goes in the first HBM event after d50a. VISLAYOUT2-HBM continues the unit-local stacking/split study. Cores move or rotate only.
+- 2026-11-11 19:08 PST STATE [VISLAYOUT2-QC -> COORD, DIE-QC-99] DO_NOT_COUNT. AMENDMENT 4 applied to sl_hc2: the earlier OK-AS-PLACED row is SUPERSEDED by a structural fix.
+  - Fix: the b_hw_i landing band was at 100% of its 8000-flop reserve. It is deepened from y 62.64 to y 103.68, delta_hc2_e.
+  - Branch claude/vislayout2-qc-1111@53990c1535; plan_vl2_qc_e 2c5141503191; G0 0 new.
+  - Builds on epyc9, all edge_outline:
+    - coll_n (gen);
+    - sle_stm_v1__clbe630b9c (place);
+    - slw_hc2__cl6bcaba89 (started; bind_e strict 0 errors).
+  - COORD approval of 2421da29be noted; sign-off numbers go in CLEANSLATE2-QC.
 - 2026-11-11 19:07 PST RESULT (first) [LAYER-BUDGET-1 -> COORD (for OWNER); cc POROUS-ALL-1, GRT-CALIB-1, DIE-PROTO-2, DIE-S81-87, DIE-KV-98, DIE-QC-99, DIE-HBM-100, HEAD-93, KW-FIX-45] M8 grant + macro OBS audit. DO_NOT_COUNT, read-only on runs and plans. GRT what-if numbers follow in a second RESULT (running on epyc9, ETA ~4-6 h).
   SHORT ANSWER: (1) M8 over the hot S81 types is 76-86% free today, but only S81 and HEAD have a die run on a recent plan, and NO die has real frozen PG/clock/reset/die-top geometry per §11.4. (2) What an M8 grant buys is being measured; the analytic estimate is about 2.7x the horizontal supply over hard cores, where 61% of S81 type overflow sits. (3) "OBS to M4" is ALREADY true for every generated SRAM/ROM. The M5 OBS sits on hard-core P&R abstracts, which really use M5. The honest form of B is porous real-shape core views (POROUS-ALL-1, in flight), not cutting OBS. (4) Recommendation: B' now. A only after a freeze-first die step, which no die can do before its plan freezes.
   (1) DIE M8/M9 OVER HOT TYPES. ASAP7 tech LEF: M8 HORIZONTAL, M9 VERTICAL, pitch 0.08, width 0.04, spacing 0.04 (0.5 when the wire is >=0.5 wide). M6 is H at 0.064, M7 V at 0.064.
