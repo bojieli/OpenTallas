@@ -41,7 +41,7 @@ proc mknet {name id insts bterms sig dt} {
     getITerms { return [list $its] } getBTerms { return [list $bts] } isDoNotTouch { return \$::NET($name,dt) }
     setDoNotTouch { set ::NET($name,dt) \[lindex \$args 0\] } }"
 }
-proc blk {m args} { switch $m { getDbUnitsPerMicron { return 1000 } getNets { return {hop face short other keep} } } }
+proc blk {m args} { switch $m { getDbUnitsPerMicron { return 1000 } getNets { return {hop face short other keep ring} } } }
 mkinst u_ft_link_s0/q_reg 10 50 DFFHQNx1_ASAP7_75t_R
 mkinst place4070 148 50 BUFx3_ASAP7_75t_R
 mkinst u_bound.u_ft_ft12_o_4/_0894_ 349 50 INVx1_ASAP7_75t_R
@@ -54,6 +54,9 @@ mknet face 2 {u_ft_link_s0/q_reg} {{200 50}} SIGNAL 0
 mknet short 3 {u_ft_link_s1/a u_ft_link_s1/b} {} SIGNAL 0
 mknet other 4 {u_core/u_alu u_core/u_out} {} SIGNAL 0
 mknet keep 5 {u_core/u_alu place4070} {} SIGNAL 1
+mkinst u_cland_link_i/u_ring.dch8.u_dsel/place5129 20 709 BUFx3_ASAP7_75t_R
+mkinst u_cland_link_i/u_ring.dch8.u_dsel/_138_ 191 709 INVx1_ASAP7_75t_R
+mknet ring 6 {u_cland_link_i/u_ring.dch8.u_dsel/place5129 u_cland_link_i/u_ring.dch8.u_dsel/_138_} {} SIGNAL 0
 """
 BASE = "proc repair_design_helper {} { puts ORIG_BASE }\n"
 WRAP = r"""
@@ -78,13 +81,13 @@ def run(tmp_path, body, env_lim="110"):
 def test_only_ft_hop_nets_are_repaired_and_dont_touch_is_restored(tmp_path):
     out = run(tmp_path, BASE)
     assert out.index("ORIG_BASE") < out.index("OT_FT_MAXWIRE repair_design")      # after the flow's own repair
-    assert "on 2 ft hop nets" in out                                               # hop (repeater chain) + face port
+    assert "on 3 ft/cland hop nets" in out                     # hop (repeater chain) + face port + cland ring->capture
     log = next(l for l in out.splitlines() if l.startswith("LOG repair_design"))
     assert "-max_wire_length 110" in log
     assert "hop=0" in log and "face=0" in log                                      # the ft hops are repairable
     assert "short=1" in log and "other=1" in log and "keep=1" in log              # everything else frozen
     after = out.splitlines()[-1]
-    assert after == "AFTER hop 0 face 0 short 0 other 0 keep 1"                # restored; prior dont_touch kept
+    assert after == "AFTER hop 0 face 0 short 0 other 0 keep 1 ring 0"                # restored; prior dont_touch kept
 
 
 @needs_tclsh
@@ -144,3 +147,19 @@ def test_gen_phys_type_opt_out_and_no_ft(tmp_path):
     assert not raw["partition_types"]["src"].get("ft_slots")
     kd, cfg = _kit(tmp_path / "b", raw, "src")                       # a type without ft slots is not armed
     assert "OT_FT_MAXWIRE_UM" not in cfg and not (kd / "ft_hop_maxwire.tcl").exists()
+
+
+@needs_tclsh
+def test_cland_ring_to_capture_hop_is_repaired(tmp_path):
+    out = run(tmp_path, BASE)
+    log = next(l for l in out.splitlines() if l.startswith("LOG repair_design"))
+    assert "ring=0" in log and "other=1" in log                # the 171-um ring read hop is repairable, core logic frozen
+
+
+def test_gen_phys_arms_landing_band_types():
+    import gen_phys as GP
+    band = {"clock": {"landing_contract": {"bands": {"x_i": {"rect_um": [0, 0, 5, 5]}}}}}
+    assert GP.ft_hop_maxwire_um(band) == GP.FT_HOP_MAXWIRE_UM          # landing bands alone arm it
+    assert GP.ft_hop_maxwire_um({"ft_slots": [{"name": "a"}]}) == GP.FT_HOP_MAXWIRE_UM
+    assert GP.ft_hop_maxwire_um(dict(band, ft_hop_maxwire_um=0)) == 0    # type opt-out
+    assert GP.ft_hop_maxwire_um({}) == 0                                 # no ft, no landing: off

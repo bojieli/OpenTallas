@@ -4961,8 +4961,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FT-HOP-M2-WIRE (GEN-CLASS-1 11-12, COORD plan (1)): every kit with ft slots gets a post-GRT repeater pitch on its
     # ft-station hop nets only (ft_hop_maxwire.tcl; HEAD hd_spn_wshim_tx 120 sign-off slew pins = 200-um M2 hops).
     # partition_types.<t>.ft_hop_maxwire_um overrides FT_HOP_MAXWIRE_UM (0 = off).  Buffers only, 0 cycles.
-    ftmw = t.get("ft_hop_maxwire_um", FT_HOP_MAXWIRE_UM)
-    if t.get("ft_slots") and ftmw:
+    ftmw = ft_hop_maxwire_um(t)
+    if ftmw:
         cfg += [f"export OT_FT_MAXWIRE_UM = {float(ftmw):g}"]
         shutil.copyfile(Path(__file__).with_name("ft_hop_maxwire.tcl"), kd / "ft_hop_maxwire.tcl")
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
@@ -6486,6 +6486,14 @@ def bound_parent_id_plan(raw, kit_rtl):
 
 
 FT_HOP_MAXWIRE_UM = 110.0   # FT-HOP-M2-WIRE: repeater pitch on ft-station hop nets (ft_hop_maxwire.tcl)
+
+
+def ft_hop_maxwire_um(t):
+    """OT_FT_MAXWIRE_UM of type t (ft_hop_maxwire.tcl), 0 = off: types with ft slots (FT-HOP-M2-WIRE) or clock-landing
+    bands (CLAND-RING-LOCALITY 11-12: the ring -> capture hop); partition_types.<t>.ft_hop_maxwire_um overrides."""
+    if not (t.get("ft_slots") or ((t.get("clock") or {}).get("landing_contract") or {}).get("bands")):
+        return 0
+    return t.get("ft_hop_maxwire_um", FT_HOP_MAXWIRE_UM)
 
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None,
