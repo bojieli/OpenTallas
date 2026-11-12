@@ -3054,6 +3054,17 @@ def near_count_hit(near, die, *names):
     return any((d, n) in near for n in names if n for d in (die, "*"))
 
 
+def target_hosts(hosts, hub, allow_hub=False):
+    """KW-FIX-45 11-12 (COORD: intel2 is a capped build host again for place/route, never gen): the ot-run --hosts list of a
+    heavy stage.  Default: the hub and 'localhost' (ot-run's name for the hub) are dropped.  allow_hub (place stage only): the
+    hub stays, spelled 'localhost' once, last; the host's own cap (ot-run HOST_RESERVE, scratch floor) bounds the load."""
+    names = (hub, "localhost")
+    if not allow_hub:
+        return [h for h in hosts if h not in names]
+    out = [h for h in hosts if h not in names]
+    return out + (["localhost"] if any(h in names for h in hosts) else [])
+
+
 def hub_names(sp):
     """KW-FIX-45 11-12 (COORD ruling 4, TAP-SITE-1: a place job ran on the hub): the hub and 'localhost' (ot-run's name for it)"""
     return sorted({"localhost", str(sp.get("hub") or "")} - {""})
@@ -3310,8 +3321,8 @@ def run_item(spec_path):
     def remote(cmd):                                     # ssh joins argv with spaces: send ONE quoted command
         return _ssh(G, hub) + ["bash -c " + shlex.quote(cmd)] if _ssh(G, hub) else ["bash", "-c", cmd]
 
-    def otrun(mem, thr, d, cmd, hosts):                  # ot-run names the hub itself 'localhost'
-        hosts = [h for h in hosts if h not in (hub, "localhost")]       # KW-FIX-45 11-12: a heavy stage never targets the hub
+    def otrun(mem, thr, d, cmd, hosts, allow_hub=False):  # ot-run names the hub itself 'localhost'
+        hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
         return [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
@@ -3806,7 +3817,7 @@ def run_item(spec_path):
             if ok:
                 phosts = ok
         prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
-        rc, txt = run("place", otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts))
+        rc, txt = run("place", otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts, allow_hub=True))
         ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
         res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
         if h and h != G and not (on_hub and h == hub):
