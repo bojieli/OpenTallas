@@ -44,6 +44,23 @@ def _code(s):
     return re.sub(r'\s+','',re.sub(r'//[^\n]*','',s))
 
 
+def register_masters(binder,source,grouped):
+    """A group may bind a member to a successor master that the as-built leaves do not use (QC-MEM9: the lane head
+    qfd_dv_lane_h_safe2 -> qfd_dv_lane_h_su_mem9, rtl/physical).  Its source is part of the bound design: record it in
+    binder.extra_lib (bind_report extra_lib -> bind_verify's yosys interface set and lint closure); before this it was
+    in neither the as-built lib nor extra_lib and bind_verify stopped with 'Module ... is not part of the design'."""
+    import qc_su_lane_cut as C
+    from pathlib import Path
+    old={m['module'] for m in C.LEAF.finditer(source)}
+    now=set(re.findall(r'^    (\w+)(?: #\([^\n]*?\))? u_u_(?:exp|rsq|head|rcp|lrly)\d+ \(',grouped,re.M))
+    for m in sorted(now-old):
+        f=Path(binder.base)/'rtl/physical'/(m+'.sv')
+        if not f.is_file():
+            raise BoundGroupError(f'group member master {m} has no source {f}')
+        if str(f) not in binder.extra_lib:
+            binder.extra_lib.append(str(f))
+
+
 def materialize(binder, tn, frame):
     from pathlib import Path
     import reset_tree as RT
@@ -70,6 +87,7 @@ def materialize(binder, tn, frame):
         reference=Path(binder.base)/'rtl/physical'/(hc['module']+'.sv')
         if not reference.is_file() or _code(reference.read_text())!=_code(rtl):
             raise BoundGroupError(f'{hc["inst"]}: grouped source differs from committed actual module')
+        register_masters(binder,text,rtl)
         out=frame.parent/(hc['module']+'.sv')
         if out.exists() and _code(out.read_text())!=_code(rtl):
             raise BoundGroupError('group module has inconsistent source across types '+hc['module'])
