@@ -162,9 +162,9 @@ class SshRetry(unittest.TestCase):
                 return P(1, "ot-run: NOT RUN: no host qualifies (intel1: SSH probe exit 255: Connection reset)")
             return P(1, "ValueError: type t: macros have LEF but no timing liberty: u (m)\not-run: RAN on intel1 (unit u): exit 1")
         with tempfile.TemporaryDirectory() as d:
-            spec = {"die": "s81", "item": "t", "event": "e", "plan": "/p/plan.json", "gen_host": "intel2", "hub": "intel2",
+            spec = {"die": "s81", "item": "t", "event": "e", "plan": "/p/plan.json", "gen_host": "intel1", "hub": "intel2",
                     "src": "/src", "root": "/w", "work": "/w/items/t", "kit_rtl": {}, "gen_args": [], "preflight_args": [],
-                    "hosts": ["intel2"], "place_prefer": [], "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
+                    "hosts": ["intel1"], "place_prefer": [], "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
                     "gen_mem_gb": 16, "bind_mem_gb": 24, "ot_run": "/bin/ot-run", "start_delay_s": 0}
             (Path(d) / "spec.json").write_text(json.dumps(spec))
             old_run, old_sleep = KW.subprocess.run, KW.time.sleep
