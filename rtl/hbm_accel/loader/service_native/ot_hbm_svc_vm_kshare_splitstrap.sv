@@ -54,6 +54,55 @@
 //   so the async_gray_fifo kit profile sees no input shared by two clock domains.  The die ties both to the same SM index.
 //   The KRL1 response ring is ot_hbm_svc_ring_h9b_ff (explicit flops, same behaviour as ot_hbm_svc_ring_h9b).
 //   Extra bench mutants: MUT 8 = stream-side strap ignored, MUT 7 = hbm-side strap ignored (MUT 5 both, MUT 6 KRL1 depth 2).
+// HBM-CORES-B 11-11 (OT_KSH_SELREP, v8e478a TT -67.98: u_bin_c_k_rdy -> u_b head_data 103 endpoints, u_bin_g_kr_rdy -> u_d
+// 72): ot_hbm_svc_pin_skid2 with the ready-dependent DATA load enables taken from one kept gate copy of pop = head_valid &&
+// out_r per 64-bit slice (the face ready flop then drives the valid logic plus one gate per slice, not every data enable
+// through one buffer tree).  Same logic, same ports, edge for edge (yosys EQ vs ot_hbm_svc_pin_skid2); valid/count state is
+// the original.  Used for u_b and u_d only, behind `OT_KSH_SELREP; default off = the kit is unchanged.
+(* keep_hierarchy, keep *) module ot_hbm_svc_skid_popg (input wire a, input wire b, output wire y); assign y = a & b; endmodule
+module ot_hbm_svc_pin_skid2_sr #(parameter integer WIDTH=1,SLW=64)(
+    input wire clk,rst_n,input wire in_v,output wire in_r,
+    input wire [WIDTH-1:0]in_data,output wire out_v,input wire out_r,
+    output wire [WIDTH-1:0]out_data
+);
+    localparam integer NS=(WIDTH+SLW-1)/SLW;
+    reg head_valid,tail_valid;
+    reg [WIDTH-1:0]head_data,tail_data;
+    wire push=in_v&&in_r,pop=out_v&&out_r;
+    assign in_r=!tail_valid;assign out_v=head_valid;assign out_data=head_data;
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n)begin head_valid<=0;tail_valid<=0;end
+        else begin
+            case({push,pop})
+                2'b10:begin
+                    if(!head_valid)head_valid<=1;
+                    else tail_valid<=1;
+                end
+                2'b01:begin
+                    head_valid<=tail_valid;tail_valid<=0;
+                end
+                2'b11:begin head_valid<=1;tail_valid<=0;end
+                default:;
+            endcase
+        end
+    end
+    for(genvar s=0;s<NS;s=s+1)begin:g_sl
+        localparam integer LO=s*SLW,HI=(WIDTH-1<LO+SLW-1)?WIDTH-1:LO+SLW-1;
+        wire pop_s;
+        ot_hbm_svc_skid_popg u_pg(.a(head_valid),.b(out_r),.y(pop_s));
+        always @(posedge clk) if(rst_n)begin
+            if(push&&(!head_valid||pop_s))head_data[HI:LO]<=in_data[HI:LO];
+            else if(!push&&pop_s&&tail_valid)head_data[HI:LO]<=tail_data[HI:LO];
+            if(push&&head_valid&&!pop_s)tail_data[HI:LO]<=in_data[HI:LO];
+        end
+    end
+endmodule
+
+`ifdef OT_KSH_SELREP
+`define KSH_SKID ot_hbm_svc_pin_skid2_sr
+`else
+`define KSH_SKID ot_hbm_svc_pin_skid2
+`endif
 module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
  // die strap (H-SM DEDUPE 2026-10-16, was parameter SM): the SM group k of this leaf, PCs 4k..4k+3.  One hardened master
@@ -165,7 +214,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   assign e_r=w_more&&b_in_r;
   wire w_push=wb_st&&b_in_v&&b_in_r;
   assign a_r=st==NORM&&b_in_r;
-  ot_hbm_svc_pin_skid2 #(.WIDTH(KW)) u_b(.clk(hbm_clk),.rst_n(hrst_q),.in_v(b_in_v),.in_r(b_in_r),.in_data(b_in_d),
+  `KSH_SKID #(.WIDTH(KW)) u_b(.clk(hbm_clk),.rst_n(hrst_q),.in_v(b_in_v),.in_r(b_in_r),.in_data(b_in_d),
    .out_v(b_v),.out_r(c_k_rdy[l]),.out_data(b_d));
   assign c_k_v[l]=b_v;
   assign {c_k_we[l],c_k_addr[30*l+:30],c_k_len[4*l+:4],c_k_tag[17*l+:17],c_k_wstrb[32*l+:32],c_k_wdata[256*l+:256]}=b_d;
@@ -192,7 +241,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   end
   wire vm_phase=(st==ISSUE||st==WAIT)^(MUT==1&&st==PEND);
   wire d_r,f_r;
-  ot_hbm_svc_pin_skid2 #(.WIDTH(RW)) u_d(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_v&&!vm_phase),.in_r(d_r),.in_data(c_d),
+  `KSH_SKID #(.WIDTH(RW)) u_d(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_v&&!vm_phase),.in_r(d_r),.in_data(c_d),
    .out_v(g_kr_v[l]),.out_r(g_kr_rdy[l]),.out_data({g_kr_tag[17*l+:17],g_kr_beat[4*l+:4],g_kr_data[256*l+:256]}));
   assign c_r=vm_phase?f_r:d_r;
   wire c_pop_grp=c_v&&!vm_phase&&d_r;
