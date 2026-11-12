@@ -353,7 +353,8 @@ def pad_landing(tn, t, bus_name, entry, txt, man, tcl, rep, bound_bus_width):
         rs = " ".join("{%d %d %0.9g %0.9g}" % r for r in BG._runs(per, len(sets[j])))
         if rs:
             tcl.append(f"is_place_bits {{*u_ist_{n}_{j}[./]*}} {{0 0}} ist:{bus_name} {{{rs}}}")
-    rep.append(dict(conn="bus:" + bus_name, planned=k, bound_pads=have, inserted=len(names), stations=names,
+    pad_names = [f"u_b{'in' if in_bus else 'out'}_{n}_pad{p}" for p in pads]
+    rep.append(dict(conn="bus:" + bus_name, planned=k, bound_pads=have, inserted=len(names), stations=pad_names + names,
                     plan_width=b["width"], bound_width=W,
                     pad_landing=dict(dir=b["dir"], stages=S, stage_widths=[len(s) for s in sets],
                                      bit_depth=compress_runs(dl), data_flops_single_chain=W * k,
@@ -575,7 +576,8 @@ def station_tree(tn, t, entry, txt, man, tcl, rep, bound_bus_width):
                     plan_width=b["width"], bound_width=W,
                     station_tree=dict(dir=b["dir"], nodes=len(nb), node_widths={i: len(S[i]) for i in order},
                                       data_flops=sum(len(S[i]) for i in nb), data_flops_single_chain=W * (k - have),
-                                      readers=[a["name"] for a in atts])))
+                                      readers=[a["name"] for a in atts],
+                                      reader_stations=[depth[a["node"]] + have for a in atts])))
     return txt
 
 

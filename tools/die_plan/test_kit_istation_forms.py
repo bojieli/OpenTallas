@@ -414,3 +414,41 @@ def test_derive_cli(tmp_path):
     out = json.loads(r.stdout)
     # rows are 500 um long: reach_need = ceil(500/360) - 1 = 1 for both owner cores
     assert out["bit_depth"] == [[0, 5, 1]] and out["owners_resolved"] == 6 and out["data_flops"] == 6
+
+
+def _census(plan, kd):
+    import kit_topology
+    return kit_topology.source_census(plan, "t", kd)
+
+
+def test_kit_topology_accepts_pad_landing_and_tree(tmp_path):
+    # out bus pad landing with an extension stage (S = 6 > K = 4)
+    kd = kit(tmp_path, OUT_BOUND)
+    plan = out_plan([[0, 2, 4], [3, 5, 6]])
+    assert run_ist(tmp_path, plan, kd).returncode == 0
+    c = _census(plan, kd)
+    assert c["problems"] == [] and len(c["emitted_bus_stages"]["bus:o"]) == 6 and c["planned_bus_stages"]["bus:o"] == 4
+    # a missing station is still caught
+    sv = (kd / "t_part_bound.sv").read_text()
+    (kd / "t_part_bound.sv").write_text(sv.replace("u_ist_o_5 ", "u_xx_o_5 "))
+    assert _census(plan, kd)["problems"]
+    # in bus pad landing with a bind pad
+    bound = PLAIN_IN.replace("    assign y = i_q;", "    wire [5:0] i_p0_q;\n    wire i_p0_eq;\n"
+                             "    ot_dp_st #(.W(6)) u_bin_i_pad0 (.clk(clk), .rst_n(rst_n), .d(i_q), .ea(i_eq), .q(i_p0_q), .eq(i_p0_eq));\n"
+                             "    assign y = i_p0_q;").replace("assign ye = i_eq;", "assign ye = i_p0_eq;")
+    kd2 = kit(tmp_path, bound, "kit2")
+    plan2 = in_plan(3, dict(pad_landing=[dict(bus="i", bit_depth=[[0, 1, 1], [2, 5, 3]])]))
+    assert run_ist(tmp_path, plan2, kd2).returncode == 0
+    c = _census(plan2, kd2)
+    assert c["problems"] == [] and len(c["emitted_bus_stages"]["bus:i"]) == 3
+    # tree
+    kd3 = kit(tmp_path, IN_BOUND, "kit3")
+    plan3 = tree_plan(NODES, [dict(node="t2", core="A"), dict(node="t3", core="B")])
+    assert run_ist(tmp_path, plan3, kd3).returncode == 0
+    c = _census(plan3, kd3)
+    assert c["problems"] == [] and len(c["emitted_bus_stages"]["bus:i"]) == 4
+    # a reader at the wrong depth in the receipt is reported
+    man = json.loads((kd3 / "kit_rtl.json").read_text())
+    man["kit_istations"][0]["station_tree"]["reader_stations"] = [3, 2]
+    (kd3 / "kit_rtl.json").write_text(json.dumps(man))
+    assert any("bus latency is 3" in p for p in _census(plan3, kd3)["problems"])
