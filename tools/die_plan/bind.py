@@ -4476,6 +4476,8 @@ def cmd_bind(a):
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.src_key = E.stage_src_key(B.base, out, B.ab.get("stage_hash_roots"))
     B.source_plan = Path(a.plan).resolve()
+    import taps as _taps_pd
+    _taps_pd.PLAN_DIR = str(B.source_plan.parent)   # KW-FIX-45 11-12 (COORD): sink_bins/ resolve under the PLAN folder first
     B.strict_types = bool(getattr(a, "strict", False))
     B.collect_gaps = bool(getattr(a, "all_gaps", False))
     # RELAY-ANCHOR (DIE-QC-97 11-10): plan START/local reset names anchored by site are re-picked onto the tree this

@@ -1297,7 +1297,7 @@ def sink_points(t, repo=None):
     sites = [list(r) for r in ck.get("sink_sites_um") or []]
     bins = []
     if ck.get("sink_bins_file") and repo:
-        bins = json.loads((Path(repo) / ck["sink_bins_file"]).read_text()).get("bins") or []
+        bins = json.loads(__import__("taps").input_path(ck["sink_bins_file"], root=repo).read_text()).get("bins") or []
     return sites + [list(r) for r in bins], sum(float(r[2]) if len(r) > 2 else 1.0 for r in sites + bins)
 
 
