@@ -240,6 +240,36 @@ RING_FF_PACK=1.05   # row-end allowance: first-fit leaves <= one widest reserved
 # 1/spread of the reserve density. A band that does not fit at S (macro-free, every corner within reach of the bus pin)
 # steps S down by 0.05 to 1.0 (the plain ring_ff band); the grid-scan fallback is only used at 1.0.
 BAND_SPREAD=1.0
+# CLAND-CLASS-1 11-11 (KV kv3_hg/hgi ft0_i/ft1_i 3_3_place_gp "OT_CLAND no legal nonoverlapping row/site in reserved
+# band"): the live/padded modes size a narrow band from the PRE-CA ring; landing_placement.tcl reserves every ring cell
+# ceil(w/0.40/site) sites, so the band must hold the MAPPED count-aligned ring at that 40 % reserve. Measured on mapped
+# netlists (cell widths from the ASAP7 LEF, reserve = sum ceil(w/0.4/0.054)*0.054*0.27):
+#   KV kv3_hgi_v1 cas W=2 153 ff 739 cells 100.2 um2 -> 253.0 (band 223.9); W=16 209 ff 977 cells 130.0 -> 327.9
+#   (band 261.3, the failing band); W=1057 5525 ff 23615 cells 3068.0 -> 7732.6; HEAD hd_tile ca W=567 -> 4177.4.
+# ca_ring_reserve40_um2(W) = 5.36 W + 114 ceil(W/64) + 130 covers all four (0 to +0.4 %; W = plan width + epoch = RTL W).
+# A ring_place "ff" band (DIE-HEAD-13: only the ring FLOPS are FIRM, the logic is left to GPL) reserves the flops only:
+# ca_ring_flops(W) = 4 W + 72 ceil(W/64) + 73 (KV 153/209/5525 exact, HEAD 2949 -> 2989) x 0.729 um2 per flop
+# (DFFHQNx1 1.08 um -> ceil(1.08/0.4/0.054) = 50 sites x 0.27; measured 111.5/152.4/4027.7 um2 = 0.729/flop).
+# BAND_USE_MAX (compose(band_use_max=), resize_undersized_bands(use_max=)): every ring band is at least
+# reserve40 x RING_FF_PACK / BAND_USE_MAX, i.e. the ring reserve uses <= BAND_USE_MAX of the band (0.5 -> cell area
+# <= ~20 % of the band) whatever the band_reserve mode; a band that does not fit at 0.5 steps the use up by 0.05 to
+# 1.0 (the bare reserve, the smallest band the placer can fill), then falls back to the mode area (recorded
+# band_use > 1, advisory). None (module default) keeps _storage_band byte-identical for direct callers.
+BAND_USE_MAX=None
+CA_RESERVE40=(5.36,114.0,130.0)
+CA_FLOPS=(4,72,73)
+FF_RESERVE40_UM2=0.729
+def ca_ring_flops(width,has_epoch=True):
+    wl=int(width)+int(has_epoch);a,b,c=CA_FLOPS
+    return a*wl+b*math.ceil(wl/64)+c
+def ca_ring_reserve40_um2(width,has_epoch=True,ring_place="all"):
+    """FIRM footprint landing_placement.tcl reserves for the mapped CA ring: all cells, or the flops only (ring_place ff)"""
+    if ring_place=="ff":return ca_ring_flops(width,has_epoch)*FF_RESERVE40_UM2
+    wl=int(width)+int(has_epoch);a,b,c=CA_RESERVE40
+    return a*wl+b*math.ceil(wl/64)+c
+def band_use(width,area_um2,has_epoch=True,ring_place="all"):
+    """reserved-footprint use of a ring band: ca_ring_reserve40 x RING_FF_PACK / band area (> 1: the ring cannot fit)"""
+    return ca_ring_reserve40_um2(width,has_epoch,ring_place)*RING_FF_PACK/max(float(area_um2),1e-9)
 # DIE-HEAD-13 10-28 (opt-in compose(band_ring="ff"), ring_ff only): the band records ring_place="ff"; landing_place.py
 # emits ring:<bus>[@spread]+ff and landing_placement.tcl places only the ring FLOPS FIRM in bit-major order at the spread
 # that fills the band, leaving the ring logic to global placement (DIE-HEAD-12 probe B: -97 % GRT overflow on hd_tile vs
@@ -362,7 +392,7 @@ def face_distance(t,bus,rect):
     return {"S":rect[1],"N":h-rect[3],"W":rect[0],"E":w-rect[2]}[f]
 
 
-def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()):
+def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=(),_use=None):
     if resets:
         try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale,phy=phy)
         except ValueError:b=None
@@ -378,10 +408,16 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
         b=_storage_band(t,bus,width,list(used)+[list(o) for o in phy],has_epoch=has_epoch,_scale=_scale)
         b["phy_supply_blockage_um"]=[list(o) for o in phy]
         return b
+    if _use is None and BAND_USE_MAX is not None:
+        uses=[round(BAND_USE_MAX+0.05*k,4) for k in range(int(round((1.0-BAND_USE_MAX)/0.05))+1)]+[-1]
+        for k,u in enumerate(uses):
+            try:return _storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale,_use=u)
+            except ValueError:
+                if k==len(uses)-1:raise
     if _scale is None and BAND_RESERVE=="ring_ff" and BAND_SPREAD>1:
         steps=[round(BAND_SPREAD-0.05*k,4) for k in range(int(round((BAND_SPREAD-1)/0.05))+1)]
         for k,sc in enumerate(steps):
-            try:return _storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=sc)
+            try:return _storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=sc,_use=_use)
             except ValueError:
                 if k==len(steps)-1:raise
     scale=1.0 if _scale is None else _scale
@@ -401,6 +437,12 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
         wl=width+int(has_epoch)
         area=((4*(wl+3)+124)*.2916 + 612*math.ceil(wl/64)*.0729)/.40
     reserve=area;area=reserve*scale   # DIE-HEAD-12 band_spread: band area = spread x reserve (scale 1.0 = unchanged)
+    r40=ca_ring_reserve40_um2(width,has_epoch,BAND_RING)
+    # CLAND-CLASS-1 band-use floor.  The floor IS the band area (the mapped CA ring model), not max(mode area, floor):
+    # the ring_ff mode area (padded 5*rw+160 flops) is >= the 0.5 floor for W < ~64 and would pin every step at the padded
+    # area, so the 0.55..1.0 steps could never shrink (KV ft10/ft19/ft24 resize: 84.24-um macro-free depth at every
+    # step).  An explicit band_spread target (_scale) still sets a larger band.
+    if _use is not None and _use>0:area=max(r40*RING_FF_PACK/_use,reserve*scale if _scale is not None else 0.0)
     depth=math.ceil(max(8.64,area/length)/2.16)*2.16
     obstacles=RT.blockages(t)+used
     if BAND_RESERVE=="ring_ff":
@@ -477,7 +519,9 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
                     max_pin_to_band_hop_um=round(max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3])),3),
                     area_reserve_um2=round(reserve,3),placement="PROPOSED legal macro-free band; mapped anchoring pending",
                     **({} if _scale is None else dict(spread=round((box[2]-box[0])*(box[3]-box[1])/reserve,4),band_spread_target=BAND_SPREAD)),
-                    **({} if BAND_RING=="all" else dict(ring_place=BAND_RING)))
+                    **({} if BAND_RING=="all" else dict(ring_place=BAND_RING)),
+                    **({} if _use is None else dict(ca_reserve40_um2=round(r40,3),band_use_target=_use if _use>0 else None,
+                       band_use=round(r40*RING_FF_PACK/((box[2]-box[0])*(box[3]-box[1])),4))))
     raise ValueError(f"no macro-free clock landing storage band for{bus}, required depth{depth:.2f}um")
 
 
@@ -935,8 +979,15 @@ def clear_generated_landing_infra(raw):
     raw.get('clock',{}).pop('landing_network',None)
 
 
-def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
-            forward_source="tap",band_order_by_type=None,band_multi_rect=False):
+def compose(*a,**k):
+    global BAND_USE_MAX
+    saved=BAND_USE_MAX
+    try:return _compose(*a,**k)
+    finally:BAND_USE_MAX=saved
+
+
+def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
+            forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
@@ -949,7 +1000,9 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
     band_order_by_type (opt-in): base-type -> "largest_first" reserves wide rings before narrow rings that can
     otherwise occupy their only legal corridor. The default name order and every area/reach guard are unchanged.
     band_multi_rect (opt-in, DIE-S81-47): a ring bus with no legal single band takes a multi-rect band (_storage_rects)
-    instead of placement FAIL; default False keeps every compose byte-identical."""
+    instead of placement FAIL; default False keeps every compose byte-identical.
+    band_use_max (CLAND-CLASS-1 11-11, default 0.5): every ring band holds the mapped CA ring reserve at <= this use
+    (ca_ring_reserve40 x pack / band area), stepping up to 1.0 only where a band cannot fit; None = the old mode area."""
     if band_order_by_type is not None and (not isinstance(band_order_by_type,dict) or
             any(order not in ("name","largest_first") for order in band_order_by_type.values())):
         raise ValueError("band_order_by_type must map base types to name or largest_first")
@@ -962,8 +1015,10 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         raise ValueError(f"band_spread {band_spread} needs band_reserve=ring_ff and 1 < spread <= 4")
     if band_ring not in ("all","ff") or (band_ring=="ff" and band_reserve!="ring_ff"):
         raise ValueError(f"band_ring {band_ring} must be all or ff (ff needs band_reserve=ring_ff)")
-    global BAND_RESERVE,BAND_SPREAD,BAND_RING
+    if band_use_max is not None and not 0.1<=float(band_use_max)<=1.0:raise ValueError(f"band_use_max {band_use_max} not in [0.1,1]")
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX
     BAND_RESERVE=band_reserve;BAND_SPREAD=float(band_spread);BAND_RING=band_ring
+    BAND_USE_MAX=None if band_use_max is None else float(band_use_max)
     if observer is not None or monitor=="reset":
         observer=dict(QC_OBSERVER if observer is None else observer)
         missing=[k for k in ("module","instance_suffix","fault_port","ready_port") if not observer.get(k)]
@@ -1297,10 +1352,14 @@ def ring_ff_reserve_um2(width,has_epoch=True):
     return (5*rw+160)*RING_FF_RESERVE_UM2*RING_FF_PACK
 
 
-def resize_undersized_bands(plan,sidecar,types):
-    global BAND_RESERVE,BAND_SPREAD,BAND_RING
+def resize_undersized_bands(plan,sidecar,types,use_max=None):
+    """use_max (CLAND-CLASS-1 11-11, opt-in; None = byte-identical): a band is undersized also when its CA ring reserve
+    use (band_use) exceeds use_max, and is re-searched with the same band-use floor as compose(band_use_max=)."""
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX
     geoms=sidecar["collector"]["types"];out=copy.deepcopy(plan);report=[]
-    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING)
+    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING);saved_use=BAND_USE_MAX
+    if use_max is not None and not 0.1<=float(use_max)<=1.0:raise ValueError(f"use_max {use_max} not in [0.1,1]")
+    BAND_USE_MAX=None if use_max is None else float(use_max)
     global FACE_CROSSING
     saved_fc=FACE_CROSSING
     BAND_RESERVE,BAND_SPREAD,BAND_RING,FACE_CROSSING="ring_ff",1.0,"all",True
@@ -1321,6 +1380,8 @@ def resize_undersized_bands(plan,sidecar,types):
                 b=bands[bus]
                 if bus.startswith("monitor_") or not b.get("rect_um"):continue
                 x0,y0,x1,y1=b["rect_um"];need=ring_ff_reserve_um2(b["width"])
+                if use_max is not None:   # CLAND-CLASS-1: the band-use floor replaces the padded ring_ff need
+                    need=ca_ring_reserve40_um2(b["width"],ring_place=b.get("ring_place","all"))*RING_FF_PACK/float(use_max)
                 inphy=any(_rect_overlap(b["rect_um"],o) for o in phy)   # DIE-KV-42: inside a hard PHY supply region
                 inrst=any(_rect_overlap(b["rect_um"],o) for o in resets)   # FLOW-7: over a reset relay/collector site
                 if (x1-x0)*(y1-y0)+1e-6>=need and not inphy and not inrst:continue
@@ -1330,16 +1391,28 @@ def resize_undersized_bands(plan,sidecar,types):
                 b=bands[bus];x0,y0,x1,y1=b["rect_um"];need,inphy,inrst=todo[bus]
                 used=[list(o["rect_um"]) for k,o in bands.items()
                       if k!=bus and o.get("rect_um") and (k not in todo or k in done)]
-                nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
+                BAND_RING=b.get("ring_place","all") if use_max is not None else "all"   # CLAND-CLASS-1: floor per ring form
+                try:nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
+                except ValueError as e:
+                    if use_max is None:raise
+                    # CLAND-CLASS-1: no legal band even at use 1.0 -> the band stays byte-identical, reported (advisory)
+                    report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
+                                       new_rect_um=None,band_use=round(band_use(b["width"],(x1-x0)*(y1-y0),
+                                       ring_place=b.get("ring_place","all")),4),band_use_target=None,error=str(e)))
+                    done.add(bus);continue
+                finally:BAND_RING="all"
                 # DIE-QC-97 11-09: the search runs with BAND_RING="all", so carry the band's own ring_place (DIE-HEAD-13
                 # "ff") forward; dropping it silently changed the landing placement form of the resized band (plan_pv hc1)
                 if "ring_place" in b:nb["ring_place"]=b["ring_place"]
                 nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
                           resize="DIE-KV-42 band overlapped a PHY supply-region hard blockage (pdn.tcl)" if inphy else
                           "FLOW-7 band overlapped a reset relay/collector site (landing_place collector box)" if inrst else
-                          "DIE-KV-32 ring_ff reserve (undersized for the CA ring)")
+                          "DIE-KV-32 ring_ff reserve (undersized for the CA ring)" if use_max is None else
+                          f"CLAND-CLASS-1 CA ring reserve use > {use_max} (band-use floor)")
                 report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
-                                   new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"]))
+                                   new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"],
+                                   **({} if use_max is None else dict(band_use=nb.get("band_use"),
+                                                                      band_use_target=nb.get("band_use_target")))))
                 bands[bus]=nb;done.add(bus)
             # DIE-QC-97 11-09 (cbf_q00__cl870de686 GRT-0116): a wide ring band that covers less than half of its own pin
             # window (most bits run along the face to reach it) is searched again with every other band as obstacle;
@@ -1363,8 +1436,26 @@ def resize_undersized_bands(plan,sidecar,types):
                                    crossing_bits=[round(dm0,1),round(dm1,1)]))
                 bands[bus]=nb
     finally:
-        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved;FACE_CROSSING=saved_fc
+        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved;FACE_CROSSING=saved_fc;BAND_USE_MAX=saved_use
     return out,report
+
+
+compose.__doc__=_compose.__doc__
+
+
+def band_use_report(plan,use_max=0.5):
+    """advisory (CLAND-CLASS-1 11-11): every ring band of every type with its CA ring reserve use; over = use > use_max"""
+    rows=[]
+    for tn,t in sorted((plan.get("partition_types") or {}).items()):
+        for bus,b in sorted((((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}).items()):
+            if bus.startswith("monitor_") or b.get("width") is None:continue
+            rs=b.get("rects_um") or ([b["rect_um"]] if b.get("rect_um") else [])
+            if not rs:continue
+            rp=b.get("ring_place","all");a=sum((r[2]-r[0])*(r[3]-r[1]) for r in rs);u=band_use(b["width"],a,ring_place=rp)
+            rows.append(dict(type=tn,bus=bus,width=int(b["width"]),ring_place=rp,area_um2=round(a,1),
+                             reserve40_um2=round(ca_ring_reserve40_um2(b["width"],ring_place=rp),1),use=round(u,3),over=u>use_max+1e-9,
+                             reserve_fits=u<=1.0+1e-9))
+    return rows
 
 
 def face_home_types(plan):
@@ -1514,10 +1605,19 @@ if __name__=="__main__":
     import argparse
     ap=argparse.ArgumentParser(description="fix-only: re-size undersized landing storage bands (resize-bands) or fill "
                                "FAIL bands with multi-rect bands (fill-bands)")
-    ap.add_argument("cmd",choices=["resize-bands","fill-bands","face-home"]);ap.add_argument("plan");ap.add_argument("sidecar")
+    ap.add_argument("cmd",choices=["resize-bands","fill-bands","face-home","band-use"]);ap.add_argument("plan");ap.add_argument("sidecar")
     ap.add_argument("--types",help="comma list (face-home default: budgets.cland_face_home_types)");ap.add_argument("--out",required=True)
     ap.add_argument("--band-reserve",default="padded",choices=BAND_MODES,help="fill-bands: reserve mode (default padded)")
+    ap.add_argument("--use-max",type=float,default=None,help="resize-bands: band-use floor (CLAND-CLASS-1, e.g. 0.5); band-use: report threshold")
     a=ap.parse_args()
+    if a.cmd=="band-use":
+        rows=band_use_report(json.load(open(a.plan)),a.use_max or 0.5)
+        open(a.out,"w").write(json.dumps(rows,indent=1))
+        for r in rows:
+            if r["over"]:print("OT_BAND_USE",json.dumps(r))
+        nover=sum(r["over"] for r in rows)
+        print(f"OT_BAND_USE {nover}/{len(rows)} ring bands over use {a.use_max or 0.5}")
+        raise SystemExit(0)
     if a.cmd=="face-home":
         new,rep=rehome_far_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(",") if a.types else None)
         open(a.out,"w").write(json.dumps(new,indent=1))
@@ -1531,7 +1631,8 @@ if __name__=="__main__":
         for r in rep:print("OT_BAND_FILL",json.dumps(r))
         print(f"OT_BAND_FILL {len(rep)} FAIL bands filled in {a.types}")
         raise SystemExit(0)
-    new,rep=resize_undersized_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","))
+    new,rep=resize_undersized_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","),a.use_max)
     open(a.out,"w").write(json.dumps(new,indent=1))
     for r in rep:print("OT_BAND_RESIZE",json.dumps(r))
-    print(f"OT_BAND_RESIZE {len(rep)} bands re-sized in {a.types}")
+    kept=sum(r.get("new_rect_um") is None for r in rep)
+    print(f"OT_BAND_RESIZE {len(rep)-kept} bands re-sized, {kept} kept (no legal band at use <= 1.0) in {a.types}")

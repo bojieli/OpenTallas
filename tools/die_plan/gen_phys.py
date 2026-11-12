@@ -4541,6 +4541,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                     f"-pin_size {{{pw:.4f} {ph:.4f}}}   ;# interior: hard-IP line side (bump) on the macro pin\n")
     (kd / "io.tcl").write_text(io_text)
     top = P.type_top_layer(tn)
+    import m8_grant as MG
+    m8g = MG.kit_grant(P, tn)        # LAYER-BUDGET-1: leftover-M8 grant (None = off, kit unchanged)
+    if m8g is not None and int(top[1:]) < 8:
+        top = "M8"
     pdn = PDN
     if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
         # face_layers raised this type to M8: keep its own M8 wiring off the die M8 PG bands (schema.PART_PG_BANDS),
@@ -4549,6 +4553,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         smax = int(P.layer_budget["partition_signal_max"][1:])
         for li in range(smax + 1, int(top[1:]) + 1):
             ln = f"M{li}"
+            if ln == MG.LAYER and m8g is not None:
+                obs.append(MG.obstruction_tcl(m8g))   # die PG + die tracks from the plan grid, not the default band
+                continue
             pitch, cen, half = S.PART_PG_BANDS[ln]
             horiz = P.layers[ln]["dir"] == "H"       # H layer: stripes along x -> y bands; V layer -> x bands
             ext, oth = (h, w) if horiz else (w, h)
@@ -4587,6 +4594,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         if bad:
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     (kd / "pdn.tcl").write_text(pdn)
+    if m8g is not None:
+        (kd / "m8_grant.json").write_text(json.dumps(m8g, indent=1) + "\n")
+        shutil.copyfile(Path(__file__).with_name("m8_grant.py"), kd / "m8_grant.py")
     pg_cuts = pg_island_cuts(P, tn, root)
     if pg_cuts:
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
@@ -5852,6 +5862,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr != 0 ]; then echo \"FAIL_POSTPLACE clock-gate copy LEC exit \$lr (lec_post/lec.json): copies not proved equivalent\" | tee -a /work/FAIL_POSTCTS; rc=5; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -f /work/m8_grant.json ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then for L in /work/run/results/asap7/*/base/*.lef; do [ -f \"\$L\" ] && python3 -I /work/m8_grant.py fixlef --grant /work/m8_grant.json \"\$L\"; done; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != grt ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
   if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
@@ -6397,7 +6408,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         if not types or list(types) != [ov.get("type")]:
             raise gen_rtl.GenError(f"type overlay for {ov.get('type')!r} requires exactly --types {ov.get('type')}")
         try:
-            raw, overlay_receipt = TO.apply_validated(raw, ov)
+            raw, overlay_receipt = TO.apply_validated(raw, ov, plan_path=plan_path)
         except TO.OverlayError as exc:
             raise gen_rtl.GenError(str(exc)) from exc
     if private_clock_mesh:
@@ -6548,6 +6559,13 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             raise ValueError(f"OT_FLOW_TAG {ft!r}: not a tag name")
         (out / "flow_tag").write_text(ft + "\n")
     write_grt_transition_mode(out)
+    # VISLAYOUT2-QC 11-11: run_kit.sh reads K/flow_tag and K/grt_transition_mode with K = the KIT dir (out/<type>), not
+    # out/, so both were silently dropped (docker env OT_FLOW_TAG= empty; stock router image on edge_outline / off arms).
+    # Copy them into every kit dir as well.
+    for k in kits:
+        for f in ("flow_tag", "grt_transition_mode"):
+            if (out / f).is_file():
+                (Path(k) / f).write_text((out / f).read_text())
     (out / "run_kit.sh").chmod(0o755)
     return kits
 
