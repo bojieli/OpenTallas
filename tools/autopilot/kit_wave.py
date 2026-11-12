@@ -192,6 +192,29 @@ SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_
                       r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
 NO_HOST = re.compile(r"no host qualifies|@unit: OSError: \[Errno 28\]")              # ot-run placed nothing: fleet disk or memory, not the design
 NO_HOST_RETRY_S = 900
+# KW-FIX-45 11-11 (COORD 23:5x): the hub-guard --exclude-hosts flag made ot-run print its usage text and NOT RUN; 29 attempts of
+# 12 QC rows were charged to RETRY-INFRA although no command ran.  An ot-run / ot-heavy 'NOT RUN' (admission refusal, usage text,
+# held host) means the command never started: such an attempt is no attempt.  The row waits NO_HOST_RETRY_S and is relaunched;
+# NOT_RUN_FREE_MAX bounds the free tries of one row, then the budget is charged as before (a permanent tool fault still ends).
+NOT_RUN_LINE = re.compile(r"(?m)^\s*(?:ot-run|ot-heavy): NOT RUN\b|^\s*(?:usage|Usage): ot-run\b|ot-run: unknown option|ot-run: unrecognized")
+NOT_RUN_FREE_MAX = 8
+
+
+def tool_not_run(text):
+    """True when the output shows ot-run / ot-heavy refusing to start the command and no 'ot-run: RAN on' line (it never ran)"""
+    t = text or ""
+    return bool(NOT_RUN_LINE.search(t)) and "ot-run: RAN on" not in t
+
+
+def free_not_run(rec, text, now=None):
+    """charge-free requeue of a tool-side NOT RUN: infra_base +1 (the attempt does not count), paced by no_host_at.  True when applied"""
+    if rec.get("class") != "INFRA" or not tool_not_run(text) or int(rec.get("notrun_free") or 0) >= NOT_RUN_FREE_MAX:
+        return False
+    rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
+    rec["notrun_free"] = int(rec.get("notrun_free") or 0) + 1
+    rec["no_host_at"] = now if now is not None else time.time()
+    rec["status"] = "RETRY-INFRA"
+    return True
 STATE_FILE = "kit_wave_state.json"
 LOAD_CAP_FACTOR = 1.5                                    # = ot-heavy LOAD_CAP_FACTOR (read here, set there)
 
@@ -4849,6 +4872,8 @@ def collect(AP, cfg, st, notices):
             rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
             rec["no_host_at"] = time.time()
             rec["status"] = "RETRY-INFRA"
+        elif cls == "INFRA":
+            free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
         if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
