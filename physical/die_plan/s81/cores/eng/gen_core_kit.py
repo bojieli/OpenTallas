@@ -13,6 +13,7 @@ Adapted from CORE-HBM physical/die_plan/hbm/cores/harden/gen_core_kit.py (claude
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 from pathlib import Path
@@ -135,6 +136,22 @@ def _ms():
     return m
 
 
+GRT_TRANSITION_MODES = ("off", "edge", "edge_outline")
+
+
+def write_grt_transition_mode(kd, env=None):
+    """GRTM-RUNNERS-1 11-11 (COORD class bug VISLAYOUT2): the core-kit runner never applied the GRT transition mode, so
+    edge_outline arms ran the stock router.  Same contract as gen_core_kit_hbm.write_grt_transition_mode: the gen env
+    OT_GRT_TRANSITION_MODE (kit_wave item_env) becomes K/grt_transition_mode; unset = no file = stock run."""
+    m = (os.environ if env is None else env).get("OT_GRT_TRANSITION_MODE", "")
+    if not m:
+        return None
+    if m not in GRT_TRANSITION_MODES:
+        raise ValueError(f"OT_GRT_TRANSITION_MODE {m!r}: one of {GRT_TRANSITION_MODES}")
+    (Path(kd) / "grt_transition_mode").write_text(m + "\n")
+    return m
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cores", default=str(HERE / "cores_eng.json"))
@@ -201,6 +218,7 @@ def main():
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")
     shutil.copyfile(HERE / "pin_audit_core.py", kd / "pin_audit.py")
+    write_grt_transition_mode(kd)       # GRTM-RUNNERS-1 11-11: gen env OT_GRT_TRANSITION_MODE -> K/grt_transition_mode
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     # macro sites: snap y so the macro's M4 pins sit on the core M4 tracks (0.012 + k 0.048)
     # PINBAND-1 11-06 (COORD 17:4x, QC-A0C-B6 class, default-on; OT_PINBAND_SITE=0 = check only): a macro whose signal
