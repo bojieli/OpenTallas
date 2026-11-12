@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 06:51 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:12 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -16,7 +16,7 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
 - Work dir: /srv/opentallas-scratch2/claude/vislayout3-kvhead on epyc9 (master copies, tools/), epyc8 (kits) and epyc2 (binds). Subdirs: hgi_fts, hgi_fts_b, sd_grow, hgiv7_fts, hgiv7_f2b, base_vF, tools.
 
 ## 3 Running jobs
-- F1 kv3_hgi: intel2 pid 2221253 (`kit_wave.py run-item /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/kv3_hgi_fts/spec.json`).
+- F1 kv3_hgi: DONE place+geom (AP_RC=0, PASS-COND); WAIT-VISUAL row + post 08:12; NO route. Was intel2 pid 2221253 (`kit_wave.py run-item /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/kv3_hgi_fts/spec.json`).
   - Kit: epyc8 /srv/opentallas-scratch2/claude/vislayout3-kvhead/pilots/items/kv3_hgi/gen/kv3_hgi.
   - Log: intel2 .../jobs/kv3_hgi_fts/unit.log (KW_STAGE lines). Check with `grep -E 'KW_STAGE |AP_RC' unit.log | tail`.
   - Ends after place+GEOM, writing result.json in the job dir. run-item never routes.
@@ -26,7 +26,7 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
   - kit_rtl runs in script mode via sd_grow/kit_rtl_wrap.sh (SerDes PHY specialize).
 - None on epyc9/epyc2. F1b failed at kit_rtl (plan only on epyc2, not epyc8) and is DROPPED: evidence only, vN2 replaces it. Do not relaunch.
 
-## 4 Watchers (Claude background tasks; Codex re-arms as plain loops)
+## 4 Watchers (F1 watchers ended; only SD-GROW remains) (Claude background tasks; Codex re-arms as plain loops)
 - Wait for AP_RC: `until grep -q AP_RC intel2:.../jobs/<job>/unit.log; do sleep 60; done` for jobs kv3_hgi_fts and kv3_sys_SD_v1_grow.
 - Position proof right after kit gen (already PASS for F1): `python3 -I /srv/opentallas-scratch2/claude/vislayout3-kvhead/tools/ftposcheck.py PLAN TYPE KIT` (epyc8).
 
@@ -36,7 +36,7 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
 - F1 proof after kit gen: PASS (6,643/6,643 ft sites, 16/16 cores, flow-20261108-dv-kv, edge_outline, asap7lock-grtoff). Posted 06:24.
 
 ## 6 NEXT STEPS (in order)
-1. When F1 place lands (unit.log shows KW_STAGE_RC place 0 or geom):
+1. (done 08:12) F1 place posted to VISUAL-QUEUE; only action left: relay GEOM-VIS-5 verdict to DIE-KV-99. Old step: when F1 place lands (unit.log shows KW_STAGE_RC place 0 or geom):
    - Copy epyc8 kit run/layout_review/place/{layout,density}.png and W/geom/auto_geom.png, then VIEW them.
    - Append a row to intel2 ~/coord/lanes/VISUAL-QUEUE.tsv (cols: die type family attempt state render_dir auto_geom host): `qwen_kvsys kv3_hgi kv3_hgi vl3_fts WAIT-VISUAL <kit>/run/layout_review/place <W>/geom/auto_geom.json epyc8`. Commit with coord-commit.sh lanes/VISUAL-QUEUE.tsv.
    - Post the verdict ask to GEOM-VIS-5.
