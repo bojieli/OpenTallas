@@ -44,6 +44,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 - 2026-11-12 14:46: PLAN OF RECORD = rp17 FROZEN epyc4 head-95/pd/rp17.json 501a3ad70cc107d1 (copy on epyc9). Main worktree epyc4 wt/head-95-main now at 3b73826c4114. Jobs on rp17: hd_ctl_n re-sign DONE + RECORDED (ctln_w17/resign/PROVENANCE.json, LOCAL_PASS_NEEDS_PARENT); eshim_rx + wshim_tx full builds epyc9 head-95/k17_<type> (logs ~/head95log/k17_<type>_route.log); SP3n2 route epyc4; wshim_rx = GEN-CLASS-1 proof build. rp18 items: wshim_rx reset hop (needs REACH-FIX-2 per-type reset reach).
 
+- eshim_rx rp17 build: NOT SIGNED drv only (TT 124/FF 134, 122 on read-select copies g_srep.sr[*].u_sel); setup fixed by wreg (+4.28). Rebuild when CLAND read-copy locality fix lands on main.
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
