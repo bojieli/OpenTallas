@@ -26020,250 +26020,7 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {
-    "cbf_q00__cl1b5a6458": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbf_q00__cl870de686": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbf_q00_s2": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbf_q01": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbf_q01_s2": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbf_q11": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q00__cl622f65d2": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q00__cld7bf7197": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q00__cldbcda913": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q01__clab6e67f2": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q01__cld9ff4c40": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q01__cldd6ea846": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q11__cl49ae4555": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "cbn_q11__cl5cc92dfe": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "coll_n": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "sle_st_b_v1__pv0e7b1dcc": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "sle_st_b_v1__pvc5a85fd4": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "sle_st_b_v2__cl14c98df5": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "sle_st_b_v2__clfde1249e": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "slw_st_b_v1__cl6357f1cc__pvffd43fdc": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "slw_st_b_v2__pva66d0f22": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    },
-    "slw_st_b_v2__pvc2ec5bfb": {
-     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
-     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
-     "src_sha": "23d5388aa8",
-     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
-      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
-    }
-   },
+   "item_inputs": {},
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
@@ -29639,6 +29396,250 @@
      "epyc4",
      "epyc5"
     ]
+   },
+   "item_inputs_retired_kw46": {
+    "cbf_q00__cl1b5a6458": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q00__cl870de686": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q00_s2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q01": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q01_s2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbf_q11": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q00__cl622f65d2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q00__cld7bf7197": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q00__cldbcda913": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q01__clab6e67f2": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q01__cld9ff4c40": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q01__cldd6ea846": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q11__cl49ae4555": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "cbn_q11__cl5cc92dfe": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "coll_n": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v1__pv0e7b1dcc": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v1__pvc5a85fd4": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v2__cl14c98df5": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "sle_st_b_v2__clfde1249e": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "slw_st_b_v1__cl6357f1cc__pvffd43fdc": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "slw_st_b_v2__pva66d0f22": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    },
+    "slw_st_b_v2__pvc2ec5bfb": {
+     "plan": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+     "src": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap",
+     "src_sha": "23d5388aa8",
+     "queue_src": "claude/qc-s28a-1112@23d5388aa8",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/qc-s28a/bind_s28ap",
+      "asbuilt": "/srv/opentallas-scratch2/claude/qc-s28a/src28ap/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+     },
+     "note": "KW-FIX-45 11-12 DIE-QC-99 s28a-only launch: s28 + QC-S28-A delta 23d5388aa8 + paramwrap clock_landings c2c7db7fa972 + land_r8 f6d2f5e120f4 + manifest 81735fe95d68 + staged a0c views; strict bind rc 0, 0 R8_STALE, bind_report 93533d22d858; cbx_q10__cl89936551/cl94a12200 held for QC-S28-C"
+    }
    }
   },
   "hbm": {
@@ -45395,5 +45396,9 @@
  "host_share": {
   "epyc9": 3.0
  },
- "host_share_note": "KW-FIX-46 11-12 COORD: S81/HBM waiters on epyc7/epyc8 drain to epyc9 first (1.9 TB, 26/96); remove when epyc9 fills"
+ "host_share_note": "KW-FIX-46 11-12 COORD: S81/HBM waiters on epyc7/epyc8 drain to epyc9 first (1.9 TB, 26/96); remove when epyc9 fills",
+ "src_retired": [
+  "/srv/opentallas-scratch2/claude/qc-s28a/src28ap"
+ ],
+ "src_retired_note": "KW-FIX-46 11-12 COORD: qc-s28a/src28ap RETIRED (mixed tree after a KW-FIX-46 rsync wrote through its links on epyc8/9; see its KW46_INCIDENT_README.txt). Never a source for a new row; rows use the die s28 event src."
 }
