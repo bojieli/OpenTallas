@@ -581,3 +581,29 @@ def test_flags_tsv_marks_calib_fail(tmp_path):
     rf.main([str(tmp_path / "out"), "--tsv", str(tsv)])
     row = tsv.read_text().splitlines()[1].split("\t")
     assert row[6] == "fail"
+
+
+def test_macro_hotspot_region_opt_in(tmp_path):
+    """GRT-CALIB-2: --macro-hotspot adds mhot_H/V (max over hard cores of the windowed demand/supply over the macro); the default
+    output has no mhot region and the worst region is unchanged."""
+    plan(tmp_path, n=2500)
+    _, r0, t0 = run(tmp_path)
+    assert not any(k.startswith("mhot") for k in r0["regions"])
+    for mode in ("pooled", "local"):
+        _, r1, _ = run(tmp_path, "--macro-hotspot", mode)
+        mh = r1["regions"]["mhot_H"]
+        assert mh["mode"] == mode and mh["inst"] in ("u_a", "u_b", "u_m") and mh["p99"] <= mh["max"] + 1e-9
+        assert r1["worst"] == r0["worst"]
+    _, r2, _ = run(tmp_path, "--macro-hotspot", "pooled", "--hotspot-min-bins", "100000")
+    assert "mhot_H" not in r2["regions"]
+    r = {"regions": {"core_H": {"p99": 0.8}, "mhot_H": {"p99": 1.3, "inst": "u_x"}}}
+    assert rs.calib_fail(r, hotspot_fail=1.4)[0] is False   # mhot is judged by its own line, not the p99 > 1 rule
+    assert rs.calib_fail(r)[0] is True                       # default line 1.0
+    r["regions"]["mhot_H"]["p99"] = 0.9
+    assert rs.calib_fail(r)[0] is False
+    r["regions"]["mhot_H"]["p99"] = 1.6
+    assert rs.calib_fail(r)[0] is True and "u_x" in rs.calib_fail(r)[1]
+    _, r3, _ = run(tmp_path, "--calib-1112")
+    d3 = json.loads((tmp_path / "out" / "route_supply_tst.json").read_text())
+    assert d3["cfg"]["macro_hotspot"] == "local" and d3["cfg"]["hotspot_fail"] == rs.CALIB_HOTSPOT_FAIL
+    assert "mhot_H" in r3["regions"] and r3["verdict"] in ("FAIL", "ok", "UNCHECKED")
