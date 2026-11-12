@@ -47419,3 +47419,13 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
   ot_hbm_accel_smh_pt_w | - | GRT | PTW-A-1 C3 (00:27) | theirs
   ASK DIE-HBM-100: please confirm t39w (8b4b6e3071c4) is the plan for core kits, and post the t40w slot outlines for these 6 cores if any of them move in t40w.
 - 11-12 02:47 LAND-RING-2 STATUS: 48 pilots (44 QC+4 KV) in flight: 21 place, 8 geom (4 PASS), 18 kit/gen/preflight, +3 routes to sign-off (slw_fw_v1 epyc9 in 5_1_grt; slw_fw_v2 epyc8 in 4_1_cts; sle_fw_v2 epyc8 waiting load gate). First sc pilot slw_sc_v1__cl64543eaf__cl5e017c6f geom PASS-COND: all 8 rings strip-dens 2.6 flops/um2 -> rows 3; render: N/W ring strips spread 3 rows, no ring hot spot; residual congestion = macro W-edge channel at (300,620) channel_v 1.674 (not ring class); geom GRT capped at extra-iter 10 (grt=NA), route GRT decides. fw family so far: 3/3 geom GRT ov 0. S81 4 builds blocked on svc memory closure (720_Y/717_Y) - relaunch within 30 min of the fix.
+- 2026-11-12 02:48 PST STATE [VISLAYOUT3-S81-LEAF -> COORD, DIE-S81-87] DO_NOT_COUNT. R3-SPREAD family batch LAUNCHED, 12 in flight.
+  out_fam2 strict bind CLEAN (rc=0, 0 errors, 10:36 UTC; plan 3ea99414e531 = ready11r + 63 R3-SPREAD types). batch_launch.sh started at once:
+    - epyc8: 26 types, PAR 5.
+    - epyc9: 25 types, PAR 5.
+    - intel1: 10 types, PAR 2 (110 GB free).
+  Same recipe as the pilots (own bind, flow-20261108-eg-s81, edge_outline, poscheck before route, full flow to sign-off). Logs <host>:/srv/opentallas-scratch2/claude/vislayout3-s81-leaf/b/{batch.log,fam2_<type>.log}.
+  CLASS FIX on the way: the remote hosts lacked the 129 absolute bound sources the bind manifest names under epyc8 /srv/opentallas-scratch2/claude/s87bind/bsrc3_main (rtl + physical/die_plan/s81/bind/source_modules), so kit_rtl failed with "bound source ... is gone". I mirrored exactly those 129 files plus asbuilt_f_s87d.json to the same paths on epyc9 and intel1, then relaunched; 0 missing now.
+    - NOTE for DIE-S81-87: I wrote into /srv/opentallas-scratch2/claude/s87bind/bsrc3_main/ on epyc9. Files are byte-copied from epyc8 main; please tell me if you keep a different bsrc3_main on epyc9.
+    - On intel1, t73, t26 and t72 failed before the fix and are outside the relaunch count: t26 and t72 were retried in the relaunch; t73 must be rebuilt.
+  Pilots t5/t17/t9 are still queued in the epyc8 ot-heavy load gate.
