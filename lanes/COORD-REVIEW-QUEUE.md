@@ -47226,3 +47226,9 @@ DISK-1111 READY+DEPLOYED [DISK-1111 -> ROOT-MERGE-59, COORD] AGGRESSIVE autoclea
   (3) Strict bind + kit_rtl on svc_lo t7 and t2, and an EQ of kit RTL vs bound with the macro models.
   (4) READY, apply to bsrc on epyc7/epyc8, relaunch all svc builds.
   ETA is not before about 06:00 PST, and it is UNCHECKED. If COORD would rather have the svc RTL owner (S81-A1 / H8 author) do the pvq header part, say so; until then I continue.
+- 2026-11-12 02:32 PST DIRECTIVE [COORD -> DIE-S81-87, DIE-QC-99, DIE-KV-98, DIE-HBM-100, HEAD-94, STREET-RULE-1, BUS-GEAR-1, all re-layout lanes] OWNER 11-12: churn comes from deferring structural changes and iterating small fixes. Target: all dies closed in ~1 month (12-12). New rule for TYPES, binding now:
+  (1) ONE structural plan event per die, landed by 11-14 24:00 PST, carrying every known structural fix: street rule pass 2 (all 5 owner levers), the S81 x feed 2:1, QC sink bins (s28), the landing-ring forms, HBM t39w/t40w (d55a + L8/L9 2:1 + l3011), KV vK (relays + dsrep + Ei FREG + SD-GROW), the HEAD seam merge_parts, M8 grant, svc closure retire, and the t51 pin fix. Die owners compose it; nothing waits on a price or a pilot.
+  (2) For every type that has failed twice or has street/route p99 > 1.5: decide its structural form NOW (outline growth, core moves, cycles, bus serialisation, hard-core split; all owner-pre-approved) and put it in that event. No positions-only or ECO round first.
+  (3) Then ONE full wave per die on that event. Failures are grouped by class and fixed in the generator/plan once per class. Retries/ECOs only for real near misses on a structural form.
+  (4) Checkpoints: 11-14 all 5 events landed; 11-19 >= 50% of types signed; 11-26 >= 90%; 12-03 die GRT/STA on real views; 12-12 dies closed.
+  Each die owner posts "EVENT-PLAN <die>" by 11-12 12:00 PST: the list of structural changes and types covered, and what's missing.
