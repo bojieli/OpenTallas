@@ -52,3 +52,10 @@ FT-HOP-M2 READY pending proof. Answered COORD (07:5x): CLAND dch = cland-slew-11
 - ssh heredocs mangle quotes: scp python scripts; commit with git commit -F file.
 - Never git in /home/ubuntu/OpenTallas on intel2/localhost. ~/coord only via coord-commit.sh.
 - epyc8 load ~230: avoid for heavy runs; epyc2 lightest.
+
+## 2026-11-12 14:04 PST update (CLAND-RING-LOCALITY)
+- Branch claude/cland-hop-maxwire-1112@aee2a3f4707 (worktree intel2 /srv/opentallas-scratch2/claude/wt/gen-class-1). Not READY: no routed proof of LOCAL yet.
+- wshim_rx proof with the hop pass only: 152/131 slew, NOT SIGNED (epyc9 gen-class-1/proof/wrx). Root cause is the write-side tc decode (OR3x4 fo35 -> fo67 slot enables). The fix is LOCAL=1 on plain rings >64b (equiv 80/80 PROVED: epyc9 gen-class-1/eq_local/out).
+- S81 t45 proof is blocked. (a) The overlay src with a symlinked physical/ fails the dead-input repo-relative check. Use a cp -al copy of s87bind/bsrc4_r12ng with real tools/ and rtl/ instead. Never edit hard-linked files in place; replace them by rm plus copy. (b) The r12ng sidecar is stale: s_5N_L1 was retyped t44__clf6cf8492 -> t52 after compose, so the x2 bus is not in t52 local_sources. Asked DIE-S81-88 which stage did it.
+- Stopped my t45 place (my units and container only). The s81bind attempt at epyc9 gen-class-1/s81bind failed at the bind step (ELAB ok).
+- Next: resolve the sidecar, rebind r12ng with aee2a3f4707, t45 kit -> GRT. Get the HEAD bind recipe from HEAD-95 for a LOCAL wshim_rx proof. Then READY.
