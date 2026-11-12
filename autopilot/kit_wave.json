@@ -20105,7 +20105,8 @@
     "hd_host@11": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
     "hd_lep0N@14": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
     "hd_serdes@12": "KW-FIX-35-H 2026-11-08 07:12 PST: DIE-HEAD-87 READY 05:03 classfix 95df6810481 (gen_phys OT_FSM_NONE_WIRES=hunt for s81 link gearbox kits + landing_placement resize-family footprint reserve): kit gen inputs change -> FRESH kit; last attempt stopped unstarted at kit_rtl 05:19:59 11-07 (DIE-HEAD-80 OWNER no-retry cancel), earlier ones by KIT-WAVE RESTAGE",
-    "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides"
+    "hd_host@12": "KW-FIX-37 2026-11-08 19:20 PST (COORD 19:1x): REDESIGN: legacy G2 stop is advisory now; G2 setup WNS -72.56 ps at GRT is not a large miss; resume after CTS, routed sign-off decides",
+    "hd_host_w@3": "REDESIGN: HEAD FREG plan l48hp1_head_freg_1111 (main 58a264ab1ee1; COORD via HEAD-94 release 19:0x, hd_host_e/hd_st_n4/hd_mesh launched on it at 19:09)"
    },
    "gen_hosts": [
     "epyc9"
