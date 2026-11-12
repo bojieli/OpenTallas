@@ -1,0 +1,31 @@
+die	family	wmax	hops	open_types	types	dens	content	duty	verdict	open_list
+s81	x_*_in	1104	64	54	60	4.82	slice C x_o -> leaf ft x3-5 -> station -> frame x_i (4 x 276-b V-format fragments, fwd clk xk)	LOW: x beats per frame op << frame op cycles (ffn.down 2889, wo_a 4224, FGU 3680)	CANDIDATE B 2:1 (2 x 276 lanes, 2 beats)	col_h10_r0_p1__t1,col_h9_r0_p1__t1,dsdv_slice_c1x_C__t1,dsdv_slice_c1x_C__t10,dsdv_slice_c1x_C__t3,dsdv_slice_c1x_C__t4
+s81	x_*_out	1104	108	65	71	4.82	slice C x_o1 -> leaf ft -> frame p1..p3 ft -> frame p4 x_i	LOW (as x_in)	CANDIDATE B 2:1	col_h10_r0_p1__t1,col_h10_r0_p4__t1,col_h9_r0_p1__t1,col_h9_r0_p2__t1,col_h9_r0_p3__t1,col_h9_r0_p4__t1
+s81	up_s	668	142	88	88	4.86	leaf leafup_o -> slice C (leaf gather up)	per leaf op return; not read yet	study	dsdv_slice_c1x_C__t1,dsdv_slice_c1x_C__t10,dsdv_slice_c1x_C__t3,dsdv_slice_c1x_C__t4,dsdv_slice_c1x_C__t5,dsdv_slice_c1x_C__t6
+s81	dn_s	597	142	88	88	4.87	slice C leafdn_o -> leaf (leaf scatter)	per leaf op; not read yet	study	dsdv_slice_c1x_C__t1,dsdv_slice_c1x_C__t10,dsdv_slice_c1x_C__t3,dsdv_slice_c1x_C__t4,dsdv_slice_c1x_C__t5,dsdv_slice_c1x_C__t6
+s81	attn__svc	4015	42	16	16	5.66	cut through ONE svc engine (dsdv_svc_rs, "not bit-sliceable")	n/a (internal netlist cut)	NO: not a transaction bus; needs svc RTL re-partition	svc_hi_dsdv_svc_pvso_entry__t1,svc_hi_dsdv_svc_pvso_entry__t2,svc_hi_dsdv_svc_rs__t1,svc_hi_dsdv_svc_rs__t2,svc_hi_dsdv_svc_rs__t3,svc_hi_dsdv_svc_rs__t4
+s81	attnh__svc	2133	11	14	14	8.03	svc hi<->lo cut, 8.03 pins/um	n/a (internal cut)	NO (as attn)	svc_hi_dsdv_svc_pvso_entry__t1,svc_hi_dsdv_svc_pvso_entry__t2,svc_hi_dsdv_svc_rs__t1,svc_hi_dsdv_svc_rs__t2,svc_hi_dsdv_svc_rs__t3,svc_hi_dsdv_svc_rs__t4
+s81	fi_*_p*_r0r1	1264	72	10	10	4.67	frame_int: 3017 1-bit LANDED nets of the flat col_h9_l4 netlist (lp.py), 1167-1264 b	n/a (arbitrary internal nets, no valid/beat)	NO: no transaction semantics; M8 grant (B) path	col_h10_r0_p1__t1,col_h10_r0_p4__t1,col_h10_r1__t1,col_h9_r0_p1__t1,col_h9_r0_p2__t1,col_h9_r0_p3__t1
+s81	hbmrd__phy_hbm__svc_*	1120	10	10	10	4.68	PHY -> svc HBM read data 1120 b	HIGH during attention KV read	NO	eng__t1,phy__t1,svc_lo_dsdv_svc_rs__t1,svc_lo_dsdv_svc_rs__t2,svc_lo_dsdv_svc_rs__t3,svc_lo_dsdv_svc_rs__t4
+s81	hbm__svc	682	16	16	16	5.67	svc HBM req/wdata 682 b	LOW (writes/requests)	maybe (small)	svc_hi_dsdv_svc_pvso_entry__t1,svc_hi_dsdv_svc_pvso_entry__t2,svc_hi_dsdv_svc_rs__t1,svc_hi_dsdv_svc_rs__t2,svc_hi_dsdv_svc_rs__t3,svc_hi_dsdv_svc_rs__t4
+hbm	L8	3070	12	10	12	0.0	hub u_ctl_Q_p00..09 -> PHY_N: row/col cmd 40 b + col_data 256 + col_strb 32 per PC (x10)	LOW: col_data/strb only valid on col_we (writes = KV append / spill)	CANDIDATE A 2:1 on col_data+strb (-144 b/PC)	PHY_NE,PHY_NW,q_hub_ne,q_hub_nw,q_spt0,q_spt0__physical_v1
+hbm	L9	1842	10	7	7	5.59	hub u_ctl_Q_p10..15 -> PHY_NC via vsN4-6/root: same as L8 (x6)	LOW (writes only)	CANDIDATE A 2:1	PHY_NC,q_hub_ne,q_hub_nw,root,vsN4,vsN5
+hbm	L21	2560	12	10	12	0.0	PHY_N -> hub dram_rdata/rvalid (x10 PCs)	HIGH: weight + KV read stream	NO	PHY_NE,PHY_NW,q_hub_ne,q_hub_nw,q_spt0,q_spt0__physical_v1
+hbm	L22	1536	10	7	7	5.59	PHY_NC -> hub dram_rdata (x6)	HIGH	NO	PHY_NC,q_hub_ne,q_hub_nw,root,vsN4,vsN5
+hbm	L160	4986	2	4	4	0.0	hub -> q_b000 idx-score quarter input (4986 b)	IDX scan stream	cost = IDX stretch (priced below)	q_b000,q_b000__physical_v1,q_hub_ne,q_hub_nw
+hbm	L1228	4986	1	2	2	0.0	hub -> q_b100 idx-score quarter input (4986 b)	IDX scan stream	cost = IDX stretch	q_b100,q_hub_nw
+hbm	L161	4512	2	4	4	0.0	q_b000 -> q_b010 idx quarter cut 4512 b	IDX	cost = IDX stretch	q_b000,q_b000__physical_v1,q_b010,q_b010__physical_v1
+hbm	L10	4401	2	4	4	0.0	q_b002 -> q_b003 u_hcb sum_out chain 4401 b	IDX/FUSED scorer chain	cost = IDX stretch	q_b002,q_b002__physical_v1,q_b003,q_b003__physical_v1
+hbm	L11	4401	2	4	4	0.0	q_b011 -> q_b010 4401 b	IDX	cost = IDX stretch	q_b010,q_b010__physical_v1,q_b011,q_b011__physical_v1
+hbm	L15	4128	2	4	4	0.0	q_b001 -> q_b002 u_hcb sum_in 4128 b	IDX	cost = IDX stretch	q_b001,q_b001__physical_v1,q_b002,q_b002__physical_v1
+hbm	L1220	2776	3	4	4	0.0	q_b100 -> q_b110 -> q_spu1 (ft, E face 8 pins/um) -> q_b102: re-broadcast of the hub idx stream	IDX scan stream	CANDIDATE C 2:1 only if IDX stretch is cheap	q_b100,q_b102,q_b110,q_spu1
+hbm	L1201	3332	2	3	3	0.0	q_b102 -> q_b111 -> q_b103 3332 b re-broadcast	IDX	as L1220	q_b102,q_b103,q_b111
+hbm	L8300	1615	11	12	12	0.0	idx return 1615 b chain over q_b000..b011	per-token IDX result	study	q_b000,q_b000__physical_v1,q_b001,q_b001__physical_v1,q_b010,q_b010__physical_v1
+hbm	L1204	4448	1	2	2	0.0	q_su21 -> q_su20 pretree_ro_v/x 4448 b	SU pretree (per SU op)	study	q_su20__physical_v1,q_su21
+hbm	L33	1615	6	7	7	0.0	hub -> q_spu1 -> q_spb2 -> sm2 data 1615 b	SM load	study	q_hub_ne,q_hub_nw,q_sm2,q_spb2,q_spb2__physical_v1,q_spu1
+hbm	L156	4796	1	2	2	4.38	hub -> root idx return 4796 b (cr 274 + argmax 274 + index_rq 136 + vm_rr 8x257)	once per IDX record	maybe 2:1	q_hub_nw,root
+qc	sl_*_stm__b_tw_data_stm_ctl	2103	12	7	7	0.0	stm -> ctl tw_data 2103 b	not read yet	study	sle_ctl,sle_stm_v1,sle_stm_v2,sle_stm_v3,slw_stm_v1,slw_stm_v2
+qc	sl_*_ctl__b_hw_ctl_hc0	1573	24	7	7	0.0	ctl -> hc0 hw 1573 b	not read yet	study	sle_ctl,sle_hc0,sle_st_a_v1,sle_st_a_v2,slw_hc0,slw_st_a_v1
+qc	sl_*_fw__x_fw_ctl_p2	536	60	28	28	0.0	fw -> ctl x data 536 b (sl_sc ft, 9.1-9.4k ft bits per sl_sc)	not read yet	sl_sc re-floor READY p99<1 (VL2QC-SC 00:48)	sle_ctl,sle_fe_v1,sle_fe_v2,sle_fe_v3,sle_fw_v1,sle_fw_v2
+qc	sl_*_fw__x_fw_fe	539	36	23	23	0.0	fw -> fe x 539 b (x3 phases)	not read yet	as above	sle_fe_v1,sle_fe_v2,sle_fe_v3,sle_fw_v1,sle_fw_v2,sle_fw_v3
+kv	L363	1559	1	2	2	12.49	kv3_hg -> kv3_hgi i_ectl 1559 b x32 at 12.49 pins/um	KV attention stream	study	kv3_hg_v1p2,kv3_hgi_v4
