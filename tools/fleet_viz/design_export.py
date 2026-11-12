@@ -50,7 +50,7 @@ def log(*a):
 
 
 def mem_for(size):
-    return int(min(160, max(8, -(-(8 * size) // 10 ** 9) + 6)))   # layout_store.mem_for (2.95 GB DB within 31 GB)
+    return int(min(160, max(16, -(-(8 * size) // 10 ** 9) + 6)))   # layout_store.mem_for (2.95 GB DB within 31 GB); floor 16: a 0.34 GB 4_1_cts DB hit the old 9 GB cap
 
 
 # ------------------------------------------------------------------------------------------------ cut (build host)
@@ -209,6 +209,20 @@ def fetch(src, dst):
         shutil.copy(src, dst)
 
 
+def ledger_add(store, label, rec):
+    """<store>/cuts.json {db label (host:path): {verdict, node, job, made}}: the export-before-delete gate's ledger
+    (design_export_hook.py snapshot ships it to ot-autoclean, which releases a held unit once its DBs are in it)"""
+    if not label: return
+    import fcntl
+    with open(store / 'cuts.lock', 'w') as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        f = store / 'cuts.json'
+        try: d = json.loads(f.read_text())
+        except Exception: d = {}
+        d[label] = rec
+        tmp = f.with_suffix('.tmp'); tmp.write_text(json.dumps(d, sort_keys=True)); os.replace(tmp, f)
+
+
 def publish(a):
     sys.path.insert(0, str(HERE))
     os.environ['LV_STORE'] = a.store
@@ -255,6 +269,7 @@ def publish(a):
     hist = hist[:HISTORY]
     LS.write_json(edir / 'index.json', dict(element=node, latest=job, history=hist, updated=man['made'], manifests={j: j + '.json' for j in hist}))
     for p in (pk_local, vj, cj, tj): p.unlink(missing_ok=True)
+    ledger_add(store, cutr.get('db'), dict(verdict=ver.get('verdict'), node=node, job=job, made=man['made']))
     log('%s: published %s (%.1f MB objects, %s shapes)' % (node, job, man['bytes'] / 1e6, ver.get('shapes')))
 
 
