@@ -94,7 +94,12 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
   // buffer tree -> wq_older): with PHYS_WACT != 0 the write pointer is a REGISTERED one-hot (== 1 << (rp + n))
   // and not-full is a REGISTERED per-slot replica (== wq_n != WQ), loaded from the exact next-state values, so
   // each slot's push enable is wr_v & two local flops.  Zero latency: same edges, same decisions (lockstep tb).
-  parameter integer WP_REG = 0
+  parameter integer WP_REG = 0,
+  // W_GAP = 2 (BUS-GEAR-1 2026-11-12, default 1 = unchanged): a WRITE column command (col_we) is never issued on the
+  // edge right after another write column command, so the 288-b write data/strobe can cross to the PHY as two
+  // 144-b beats (ot_bus_gear_tx/rx, 2:1).  Reads and access-queue reads are not gated.  The K side is elastic, so
+  // only the write issue cycle moves; the DRAM timing counters are unchanged (the gated write simply issues later).
+  parameter integer W_GAP = 1
 )(
   input wire [7:0] reset_regions,
     input  wire        clk, rst_n,
@@ -394,8 +399,17 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     wire wr_bank_rdy = wq_ne && |(hb_oh & open & ~stale & (AQ ? rcd_z : rcdw_z) & ~blk & ~pre_fl);   // AQ: every access-queue head waits full tRCD (no hr on this path)
     wire rd_ok_base = running && streaming && ccds_ready && column_slot && !rd_block && |(rd_oh & open & ~stale & rcd_z & ~blk) &&
                       |(rd_bgoh & ccdl_z) && cred_nz;
+    // W_GAP 2: we_last = a write column command left on the previous edge; it blocks only a true write head
+    wire wgap_blk;
+    if (W_GAP > 1) begin : g_wgap
+      reg we_last;
+      always @(posedge clk) if (!reset_regions[0]) we_last <= 1'b0; else we_last <= col_we;
+      assign wgap_blk = we_last && !(AQ && hr);
+    end else begin : g_nowgap
+      assign wgap_blk = 1'b0;
+    end
     assign wr_ok = ccds_ready && column_slot && wr_bank_rdy && ccdl_z[hb[1:0]] && ((AQ && hr) ? (wtr_c == 0) : (rtw_c == 0)) && !rd_block &&
-                   (head_prio || !rd_ok_base);
+                   !wgap_blk && (head_prio || !rd_ok_base);
     assign rd_ok = rd_ok_base && !(W && ((wr_bank_rdy && head_prio) || wtr_c != 0));
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);

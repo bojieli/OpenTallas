@@ -52,7 +52,7 @@ module ot_bus_gear_tx #(
             b_o <= {BW{1'b0}};
         end
     end
-    always @(posedge clk or negedge rst_n) begin
+    always @(posedge clk) begin           // synchronous reset (METHODOLOGY 4.5)
         if (!rst_n) begin
             left <= {CW{1'b0}}; f_o <= 1'b0; fault_o <= 1'b0;
         end else begin
@@ -89,11 +89,11 @@ module ot_bus_gear_rx #(
     generate
         if (D == 1) begin : g_h1
             always @(posedge clk) held <= b_i;
-            always @(posedge clk or negedge rst_n)
+            always @(posedge clk)
                 if (!rst_n) fpipe <= 1'b0; else fpipe <= f_i;
         end else begin : g_hn
             always @(posedge clk) held <= {b_i, held[BW*D-1:BW]};
-            always @(posedge clk or negedge rst_n)
+            always @(posedge clk)
                 if (!rst_n) fpipe <= {D{1'b0}}; else fpipe <= {fpipe[D-2:0], f_i};
         end
     endgenerate
