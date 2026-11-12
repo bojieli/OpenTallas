@@ -1,4 +1,4 @@
-# STALE (stale_list.py, 2026-11-11 19:25 PST): unsigned plan item, no live job, no kit-wave row change >= 6 h
+# STALE (stale_list.py, 2026-11-11 20:25 PST): unsigned plan item, no live job, no kit-wave row change >= 6 h
 die	kind	item	last_status	last_stage	last_class	last_time	age_h	owner	owner_state	last_item
 s81	core	ot_s81_su_sml_fold2#103.68x276.48/913f1499eda6e6f6	no kit-wave row					unowned		
 s81	core	ot_s81_svc_merge_h4#103.68x276.48/1a715a333ecc3d30	no kit-wave row					unowned		
@@ -23,164 +23,164 @@ s81	core	ot_s81_su_smc#120.96x259.2/c0c0f8388a0e6c9c	no kit-wave row					unowned
 s81	core	ot_s81_su_smr#120.96x259.2/8ff39b6f3a0632e1	no kit-wave row					unowned		
 s81	core	s81p_slice_station__t51_ot_s81_station_t51_native_w	no kit-wave row					DIE-S81-85	COORD-ROUTED COORD 11-10 22:31	
 s81	core	dsdv_bksel_q	no kit-wave row					DIE-S81-85	COORD-ROUTED COORD 11-10 23:2x	
-s81	type	col_h10_r0_p4__t1	FAIL	gen	FLOW	2026-11-11 07:13	12.2	KIT-WAVE-1	REVIEW	col_h10_r0_p4__t1
-s81	type	col_h9_r0_p5__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 02:24	17.0	KIT-WAVE-1	REVIEW	col_h9_r0_p5__t1
-s81	type	col_h9_r0_p6__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 02:24	17.0	KIT-WAVE-1	REVIEW	col_h9_r0_p6__t1
-s81	type	serdes__t16	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	FIX	serdes__t16
-s81	type	serdes__t3	FAIL	kit_topology	PLAN	2026-11-10 23:59	19.4	KIT-WAVE-1	FIX	serdes__t3
-s81	type	serdes__t4	FAIL	kit_topology	PLAN	2026-11-10 23:59	19.4	KIT-WAVE-1	REVIEW	serdes__t4
-s81	type	serdes__t12	CANCELLED	geom	SUPERSEDED	2026-11-10 23:32	19.9	KIT-WAVE-1	GEOM-REQ	serdes__t12
-s81	type	serdes__t13	RETRY-INFRA	kit_rtl	INFRA	2026-11-11 01:44	17.7	KIT-WAVE-1	REVIEW	serdes__t13
-s81	type	iqf__t1	FAIL	signoff	TIMING	2026-11-10 21:26	22.0	KIT-WAVE-1	REVIEW	iqf__t1
-s81	type	svc_lo_dsdv_svc_rs_w__t1	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs_w__t1
-s81	type	svc_hi_dsdv_svc_rs__t1	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t1
-s81	type	svc_lo_dsdv_svc_rs__t1	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t1
-s81	type	svc_hi_dsdv_svc_rs__t2	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t2
-s81	type	svc_lo_dsdv_svc_rs__t2	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t2
-s81	type	svc_hi_dsdv_svc_pvso_entry__t1	FAIL	kit_topology	PLAN	2026-11-10 23:59	19.4	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_pvso_entry__t1
-s81	type	svc_lo_dsdv_svc_rs__t3	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t3
-s81	type	svc_hi_dsdv_svc_rs__t3	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t3
-s81	type	svc_lo_dsdv_svc_rs__t4	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t4
-s81	type	svc_hi_dsdv_svc_rs__t4	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t4
-s81	type	svc_lo_dsdv_svc_rs__t5	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t5
-s81	type	svc_hi_dsdv_svc_pvso_entry__t2	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_pvso_entry__t2
-s81	type	svc_lo_dsdv_svc_rs__t6	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t6
-s81	type	svc_hi_dsdv_svc_rs__t5	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t5
-s81	type	svc_lo_dsdv_svc_rs__t7	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t7
-s81	type	svc_hi_dsdv_svc_rs__t6	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	33.8	KIT-WAVE-1	KIT-PLACED	svc_hi_dsdv_svc_rs__t6
-s81	type	slice_station__t49	CANCELLED	gen	SUPERSEDED	2026-11-10 23:53	19.5	KIT-WAVE-1	REVIEW	slice_station__t49
-s81	type	slice_station__t36	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:54	17.5	KIT-WAVE-1	FIX	slice_station__t36
-s81	type	slice_station__t37	FAIL	kit_topology	PLAN	2026-11-10 23:48	19.6	KIT-WAVE-1	REVIEW	slice_station__t37
-s81	type	dsdv_slice_lepw_mus_LP__t2	FAIL	route	ROUTING	2026-11-10 02:02	41.4	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mus_LP__t2
-s81	type	dsdv_slice_lepw_mus_C__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mus_C__t1
-s81	type	ot_s81sl_leaf__t3	FAIL	kit_topology	PLAN	2026-11-11 00:42	18.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t3
-s81	type	ot_s81sl_leaf__t4	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t4
-s81	type	ot_s81sl_leaf__t5	CANCELLED	geom	SUPERSEDED	2026-11-10 18:30	24.9	KIT-WAVE-1	FIX	ot_s81sl_leaf__t5
-s81	type	dsdv_slice_lepw_mu_LP__t2	CANCELLED	geom	SUPERSEDED	2026-11-10 23:32	19.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mu_LP__t2
-s81	type	slice_station__t43	FAIL	kit_topology	PLAN	2026-11-10 23:59	19.4	KIT-WAVE-1	REVIEW	slice_station__t43
-s81	type	ot_s81sl_leaf__t6	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t6
-s81	type	ot_s81sl_leaf__t7	FAIL	route	ROUTING	2026-11-10 21:04	22.4	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t7
-s81	type	dsdv_slice_lepw_mu_C__t1	RETRY-INFRA	kit_rtl	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mu_C__t1
-s81	type	ot_s81sl_leaf__t8	FAIL	route	ROUTING	2026-11-09 21:30	45.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t8
-s81	type	ot_s81sl_leaf__t10	FAIL	kit_topology	PLAN	2026-11-11 00:42	18.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t10
-s81	type	ot_s81sl_leaf__t13	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	GEOM-REQ	ot_s81sl_leaf__t13
-s81	type	dsdv_slice_c1x_C__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 00:45	18.7	KIT-WAVE-1	NEEDS-KIT	dsdv_slice_c1x_C__t1
-s81	type	ot_s81sl_leaf__t15	FAIL	kit_topology	PLAN	2026-11-11 00:54	18.5	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t15
-s81	type	ot_s81sl_leaf__t17	FAIL	route	ROUTING	2026-11-10 01:50	41.6	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t17
-s81	type	dsdv_slice_c1x_C__t10	RETRY-INFRA	gen_lint	INFRA	2026-11-11 00:45	18.7	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t10
-s81	type	ot_s81sl_leaf__t21	FAIL	route	TIMING	2026-11-10 22:07	21.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t21
-s81	type	dsdv_slice_c1x_C__t3	RETRY-INFRA	kit_topology	INFRA	2026-11-11 00:45	18.7	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t3
-s81	type	ot_s81sl_leaf__t23	FAIL	kit_topology	PLAN	2026-11-11 00:20	19.1	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t23
-s81	type	dsdv_slice_c1x_C__t4	RETRY-INFRA	preflight	INFRA	2026-11-11 02:35	16.8	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t4
-s81	type	ot_s81sl_leaf__t29	CANCELLED	geom	SUPERSEDED	2026-11-10 18:30	24.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t29
-s81	type	ot_s81sl_leaf__t30	ROUTE-HELD	geom		2026-11-11 07:59	11.4	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t30
-s81	type	ot_s81sl_leaf__t33	CANCELLED	geom	SUPERSEDED	2026-11-10 18:30	24.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t33
-s81	type	ot_s81sl_leaf__t35	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t35
-s81	type	ot_s81sl_kv_leaf__t1	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	60.6	KIT-WAVE-1	REVIEW	ot_s81sl_kv_leaf__t1
-s81	type	ot_s81sl_kv_leaf__t2	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	NEEDS-KIT	ot_s81sl_kv_leaf__t2
-s81	type	ot_s81sl_kv_leaf__t3	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	60.6	KIT-WAVE-1	REVIEW	ot_s81sl_kv_leaf__t3
-s81	type	ot_s81sl_kv_leaf__t4	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	60.6	KIT-WAVE-1	REVIEW	ot_s81sl_kv_leaf__t4
-s81	type	ot_s81sl_kv_leaf__t5	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	60.6	KIT-WAVE-1	FIX	ot_s81sl_kv_leaf__t5
-s81	type	ot_s81sl_leaf__t36	FAIL	kit_topology	PLAN	2026-11-11 00:54	18.5	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t36
-s81	type	ot_s81sl_leaf__t37	FAIL	route	ROUTING	2026-11-10 21:46	21.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t37
-s81	type	ot_s81sl_leaf__t38	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t38
-s81	type	ot_s81sl_leaf__t42	FAIL	signoff	ROUTING	2026-11-10 19:07	24.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t42
-s81	type	ot_s81sl_leaf__t43	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t43
-s81	type	dsdv_slice_c1x_C__t6	FAIL	place	RTL	2026-11-10 01:18	42.1	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t6
-s81	type	ot_s81sl_leaf__t50	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t50
-s81	type	ot_s81sl_leaf__t51	FAIL	preflight	FLOW	2026-11-10 19:29	23.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t51
-s81	type	dsdv_slice_c1x_C__t7	FAIL	place	STRUCTURAL	2026-11-10 03:50	39.6	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t7
-s81	type	ot_s81sl_leaf__t56	FAIL	route	TIMING	2026-11-10 22:46	20.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t56
-s81	type	dsdv_slice_c1x_C__t8	FAIL	place	RTL	2026-11-09 21:08	46.3	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t8
-s81	type	ot_s81sl_leaf__t59	FAIL	route	ROUTING	2026-11-10 23:05	20.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t59
-s81	type	ot_s81sl_leaf__t61	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	GEOM-REQ	ot_s81sl_leaf__t61
-s81	type	dsdv_slice_c1x_C__t9	RETRY-INFRA	preflight	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t9
-s81	type	ot_s81sl_leaf__t65	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t65
-s81	type	dsdv_slice_lepe_nh_mus_C__t1	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepe_nh_mus_C__t1
-s81	type	ot_s81sl_leaf__t68	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t68
-s81	type	ot_s81sl_leaf__t69	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t69
-s81	type	slice_station__t27	CANCELLED	geom	SUPERSEDED	2026-11-10 23:53	19.5	KIT-WAVE-1	REVIEW	slice_station__t27
-s81	type	dsdv_slice_lepe_nh_mus_LP__t1	FAIL	route	ROUTING	2026-11-10 21:04	22.4	KIT-WAVE-1	REVIEW	dsdv_slice_lepe_nh_mus_LP__t1
-s81	type	ot_s81sl_leaf__t70	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t70
-s81	type	ot_s81sl_leaf__t71	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t71
-s81	type	dsdv_slice_lepe_mu_C__t1	RETRY-INFRA	gen	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	FIX	dsdv_slice_lepe_mu_C__t1
-s81	type	ot_s81sl_leaf__t74	RETRY-INFRA	kit_rtl	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t74
-s81	type	slice_station__t52	FAIL	kit_topology	PLAN	2026-11-11 00:54	18.5	KIT-WAVE-1	REVIEW	slice_station__t52
-s81	type	bk_sel__t2	FAIL	route	FLOW	2026-11-08 08:20	83.1	KIT-WAVE-1	REVIEW	bk_sel__t2
-s81	type	col_h10_r2__t1__clac068e56	RETRY-INFRA	gen	INFRA	2026-11-11 02:24	17.0	KIT-WAVE-1	REVIEW	col_h10_r2__t1__clac068e56
-s81	type	col_h10_r2__t1__cl8b686b3e	ROUTE-HELD	geom		2026-11-11 07:23	12.0	KIT-WAVE-1	REVIEW	col_h10_r2__t1__cl8b686b3e
-s81	type	col_h10_r2__t1__cl99efd374	ROUTE-HELD	geom		2026-11-11 06:40	12.8	KIT-WAVE-1	REVIEW	col_h10_r2__t1__cl99efd374
-s81	type	col_h10_r2__t1__cl1f5d6c2a	FAIL	route	INFRA	2026-11-10 21:04	22.4	KIT-WAVE-1	REVIEW	col_h10_r2__t1__cl1f5d6c2a
-s81	type	col_h9_r1__t1__cl49d7a23e	RETRY-INFRA	preflight	INFRA	2026-11-11 02:35	16.8	KIT-WAVE-1	REVIEW	col_h9_r1__t1__cl49d7a23e
-s81	type	col_h9_r1__t1__clf32cde8d	RETRY-INFRA	kit_topology	INFRA	2026-11-11 02:24	17.0	KIT-WAVE-1	REVIEW	col_h9_r1__t1__clf32cde8d
-s81	type	col_h9_r0_p4__t1__cl8ef405e8	ROUTE-HELD	geom		2026-11-11 05:25	14.0	KIT-WAVE-1	REVIEW	col_h9_r0_p4__t1__cl8ef405e8
-s81	type	col_h9_r0_p4__t1__clcb2fbfe8	RETRY-INFRA	gen	INFRA	2026-11-11 00:45	18.7	KIT-WAVE-1	REVIEW	col_h9_r0_p4__t1__clcb2fbfe8
-s81	type	serdes__t15__cla2127225	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:54	17.5	KIT-WAVE-1	NEEDS-KIT	serdes__t15__cla2127225
-s81	type	serdes__t15__cla3d02796	FAIL	kit_topology	PLAN	2026-11-10 23:48	19.6	KIT-WAVE-1	NEEDS-KIT	serdes__t15__cla3d02796
-s81	type	slice_station__t6__cl0755c26e	FAIL	kit_topology	PLAN	2026-11-11 01:06	18.3	KIT-WAVE-1	REVIEW	slice_station__t6__cl0755c26e
-s81	type	slice_station__t42__clcf44e680	FAIL	kit_topology	PLAN	2026-11-10 23:59	19.4	KIT-WAVE-1	REVIEW	slice_station__t42__clcf44e680
-s81	type	ot_s81sl_leaf__t53__cl958451dd	FAIL	kit_topology	PLAN	2026-11-11 00:09	19.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t53__cl958451dd
-s81	type	ot_s81sl_leaf__t54__cl501e5681	FAIL	gen	FLOW	2026-11-11 07:13	12.2	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t54__cl501e5681
-s81	type	ot_s81sl_leaf__t24__cl81374cd8	FAIL	kit_topology	PLAN	2026-11-11 00:20	19.1	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t24__cl81374cd8
-s81	type	ot_s81sl_leaf__t25__cl431c660f	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t25__cl431c660f
-s81	type	ot_s81sl_leaf__t40__cl86ea32b3	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	17.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t40__cl86ea32b3__sid5S
-s81	type	ot_s81sl_leaf__t40__cl86ea32b3__sid5S	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	17.9	unowned		ot_s81sl_leaf__t40__cl86ea32b3__sid5S
-s81	type	ot_s81sl_leaf__t44__clf4ea6d4b	FAIL	gen_lint	FLOW	2026-11-10 19:29	23.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t44__clf4ea6d4b
-s81	type	slice_station__t24__cl64811a5d	FAIL	kit_topology	PLAN	2026-11-10 23:48	19.6	KIT-WAVE-1	REVIEW	slice_station__t24__cl64811a5d
-s81_head	type	hd_spn	FAIL	signoff	TIMING	2026-11-09 12:07	55.3	KIT-WAVE-1	FIX	hd_spn
-s81_head	type	hd_serdes	RETRY-INFRA	place	INFRA	2026-11-10 01:07	42.3	KIT-WAVE-1	FIX	hd_serdes
-qwen_compute	type	slw_stm_v3	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 17:51	49.6	KIT-WAVE-1	REVIEW	slw_stm_v3
-qwen_compute	type	slw_st_b_v2	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 21:29	45.9	KIT-WAVE-1	REVIEW	slw_st_b_v2__pva66d0f22
-qwen_compute	type	sle_stm_v3	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 02:37	64.8	KIT-WAVE-1	REVIEW	sle_stm_v3
-qwen_compute	type	coll_s	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 08:36	58.8	KIT-WAVE-1	REVIEW	coll_s
-qwen_compute	type	coll_ftm	WAIT-PARENT	queue		2026-11-07 23:55	91.5	KIT-WAVE-1	SIGNED-UNVERSIONED	coll_ftm
-qwen_compute	type	coll_ucie	SUPERSEDED	route	SUPERSEDED	2026-11-08 10:30	80.9	KIT-WAVE-1	REVIEW	coll_ucie
-qwen_compute	type	native59	FAIL	queue	RTL	2026-11-09 13:33	53.9	KIT-WAVE-1	REVIEW	native59
-qwen_compute	type	tt_ctlm	FAIL	route	TIMING	2026-11-10 02:13	41.2	KIT-WAVE-1	REVIEW	tt_ctlm
-qwen_compute	type	slw_st_b_v1__cl6357f1cc	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 20:07	47.3	KIT-WAVE-1	REVIEW	slw_st_b_v1__cl6357f1cc__pvffd43fdc
-qwen_compute	type	slw_st_b_v1__cle6023ec2	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 08:36	58.8	KIT-WAVE-1	REVIEW	slw_st_b_v1__cle6023ec2
-qwen_compute	type	slw_stm_v1__cle34a73c3	CANCELLED	geom	SUPERSEDED	2026-11-11 07:59	11.4	KIT-WAVE-1	REVIEW	slw_stm_v1__cle34a73c3
-qwen_compute	type	coll_ft__cl78c7b300	FAIL	gen	FLOW	2026-11-11 08:21	11.1	KIT-WAVE-1	REVIEW	coll_ft__cl78c7b300
-qwen_compute	type	slw_stm_v1__cl05fc43f7__cl2086fa2c	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 14:38	52.8	DIE-QC-97	COORD-ROUTED COORD 11-10 22:31 lineage batch	slw_stm_v1__cl05fc43f7__cl2086fa2c
-qwen_compute	type	slw_stm_v1__cl05fc43f7__cl389df4e9	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 15:36	51.8	DIE-QC-97	COORD-ROUTED COORD 11-10 22:31 lineage batch	slw_stm_v1__cl05fc43f7__cl389df4e9
-qwen_compute	type	sle_hc2__cl9c4c4509__clf60c5152	CANCELLED	place	ARM-REPIN	2026-11-11 08:48	10.6	DIE-QC-97	COORD-ROUTED COORD 11-10 22:31 lineage batch	sle_hc2__cl9c4c4509__clf60c5152
-qwen_kvsys	type	kv3_hg	SUPERSEDED	place	SUPERSEDED	2026-11-11 13:25	6.0	KIT-WAVE-1	REVIEW	kv3_hg
-qwen_kvsys	type	kv3_hgi_v3	SUPERSEDED	gen	SUPERSEDED	2026-11-11 05:15	14.2	KIT-WAVE-1	REVIEW	kv3_hgi_v3
-qwen_kvsys	type	kv3_hgi_v4	SUPERSEDED	route	SUPERSEDED	2026-11-05 17:42	145.7	KIT-WAVE-1	FIX	kv3_hgi_v4
-qwen_kvsys	type	kv3_hgi_v5	SUPERSEDED	route	SUPERSEDED	2026-11-09 14:57	52.5	KIT-WAVE-1	REVIEW	kv3_hgi_v5
-qwen_kvsys	type	kv3_hgi_v6	SUPERSEDED	gen	SUPERSEDED	2026-11-10 13:25	30.0	KIT-WAVE-1	FIX	kv3_hgi_v6
-qwen_kvsys	type	kv3_hgi_v8	RETRY-INFRA	kit_rtl	INFRA	2026-11-06 22:42	116.7	KIT-WAVE-1	PLAN-STRUCTURAL	kv3_hgi_v8
-qwen_kvsys	type	kv3_io_cor_v1	FAIL	signoff	TIMING	2026-11-11 11:45	7.7	KIT-WAVE-1	REVIEW	kv3_io_cor_v1
-qwen_kvsys	type	kv3_io_ft_v1	FAIL	signoff	TIMING	2026-11-10 08:37	34.8	KIT-WAVE-1	REVIEW	kv3_io_ft_v1
-qwen_kvsys	type	kv3_phy	FAIL	signoff	TIMING	2026-11-11 11:25	8.0	KIT-WAVE-1	REVIEW	kv3_phy
-qwen_kvsys	type	kv3_phy_v1	FAIL	signoff	TIMING	2026-11-11 11:16	8.2	KIT-WAVE-1	REVIEW	kv3_phy_v1
-qwen_kvsys	type	kv3_pv_v4	SUPERSEDED	place	SUPERSEDED	2026-11-10 00:56	42.5	KIT-WAVE-1	FIX	kv3_pv_v4
-qwen_kvsys	type	kv3_pv_v8	FAIL	gen	FLOW	2026-11-11 11:16	8.2	KIT-WAVE-1	REVIEW	kv3_pv_v8
-qwen_kvsys	type	kv3_sys_SD	SUPERSEDED	route	SUPERSEDED	2026-11-09 18:56	48.5	KIT-WAVE-1	REVIEW	kv3_sys_SD
-qwen_kvsys	type	kv3_pv_v3	SUPERSEDED	place	SUPERSEDED	2026-11-10 00:56	42.5	KIT-WAVE-1	REVIEW	kv3_pv_v3
-qwen_kvsys	type	kv3_pv_v5	FAIL	gen	FLOW	2026-11-11 11:06	8.3	KIT-WAVE-1	FIX	kv3_pv_v5
+s81	type	col_h10_r0_p4__t1	FAIL	gen	FLOW	2026-11-11 07:13	13.2	KIT-WAVE-1	REVIEW	col_h10_r0_p4__t1
+s81	type	col_h9_r0_p5__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 02:24	18.0	KIT-WAVE-1	REVIEW	col_h9_r0_p5__t1
+s81	type	col_h9_r0_p6__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 02:24	18.0	KIT-WAVE-1	REVIEW	col_h9_r0_p6__t1
+s81	type	serdes__t16	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	FIX	serdes__t16
+s81	type	serdes__t3	FAIL	kit_topology	PLAN	2026-11-10 23:59	20.4	KIT-WAVE-1	FIX	serdes__t3
+s81	type	serdes__t4	FAIL	kit_topology	PLAN	2026-11-10 23:59	20.4	KIT-WAVE-1	REVIEW	serdes__t4
+s81	type	serdes__t12	CANCELLED	geom	SUPERSEDED	2026-11-10 23:32	20.9	KIT-WAVE-1	GEOM-REQ	serdes__t12
+s81	type	serdes__t13	RETRY-INFRA	kit_rtl	INFRA	2026-11-11 01:44	18.7	KIT-WAVE-1	REVIEW	serdes__t13
+s81	type	iqf__t1	FAIL	signoff	TIMING	2026-11-10 21:26	23.0	KIT-WAVE-1	REVIEW	iqf__t1
+s81	type	svc_lo_dsdv_svc_rs_w__t1	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs_w__t1
+s81	type	svc_hi_dsdv_svc_rs__t1	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t1
+s81	type	svc_lo_dsdv_svc_rs__t1	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t1
+s81	type	svc_hi_dsdv_svc_rs__t2	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t2
+s81	type	svc_lo_dsdv_svc_rs__t2	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t2
+s81	type	svc_hi_dsdv_svc_pvso_entry__t1	FAIL	kit_topology	PLAN	2026-11-10 23:59	20.4	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_pvso_entry__t1
+s81	type	svc_lo_dsdv_svc_rs__t3	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t3
+s81	type	svc_hi_dsdv_svc_rs__t3	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t3
+s81	type	svc_lo_dsdv_svc_rs__t4	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t4
+s81	type	svc_hi_dsdv_svc_rs__t4	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t4
+s81	type	svc_lo_dsdv_svc_rs__t5	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t5
+s81	type	svc_hi_dsdv_svc_pvso_entry__t2	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_pvso_entry__t2
+s81	type	svc_lo_dsdv_svc_rs__t6	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t6
+s81	type	svc_hi_dsdv_svc_rs__t5	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_hi_dsdv_svc_rs__t5
+s81	type	svc_lo_dsdv_svc_rs__t7	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	NEEDS-KIT	svc_lo_dsdv_svc_rs__t7
+s81	type	svc_hi_dsdv_svc_rs__t6	CANCELLED	kit_rtl	RULING	2026-11-10 09:40	34.8	KIT-WAVE-1	KIT-PLACED	svc_hi_dsdv_svc_rs__t6
+s81	type	slice_station__t49	CANCELLED	gen	SUPERSEDED	2026-11-10 23:53	20.5	KIT-WAVE-1	REVIEW	slice_station__t49
+s81	type	slice_station__t36	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:54	18.5	KIT-WAVE-1	FIX	slice_station__t36
+s81	type	slice_station__t37	FAIL	kit_topology	PLAN	2026-11-10 23:48	20.6	KIT-WAVE-1	REVIEW	slice_station__t37
+s81	type	dsdv_slice_lepw_mus_LP__t2	FAIL	route	ROUTING	2026-11-10 02:02	42.4	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mus_LP__t2
+s81	type	dsdv_slice_lepw_mus_C__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mus_C__t1
+s81	type	ot_s81sl_leaf__t3	FAIL	kit_topology	PLAN	2026-11-11 00:42	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t3
+s81	type	ot_s81sl_leaf__t4	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t4
+s81	type	ot_s81sl_leaf__t5	CANCELLED	geom	SUPERSEDED	2026-11-10 18:30	25.9	KIT-WAVE-1	FIX	ot_s81sl_leaf__t5
+s81	type	dsdv_slice_lepw_mu_LP__t2	CANCELLED	geom	SUPERSEDED	2026-11-10 23:32	20.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mu_LP__t2
+s81	type	slice_station__t43	FAIL	kit_topology	PLAN	2026-11-10 23:59	20.4	KIT-WAVE-1	REVIEW	slice_station__t43
+s81	type	ot_s81sl_leaf__t6	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	20.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t6
+s81	type	ot_s81sl_leaf__t7	FAIL	route	ROUTING	2026-11-10 21:04	23.4	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t7
+s81	type	dsdv_slice_lepw_mu_C__t1	RETRY-INFRA	kit_rtl	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepw_mu_C__t1
+s81	type	ot_s81sl_leaf__t8	FAIL	route	ROUTING	2026-11-09 21:30	46.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t8
+s81	type	ot_s81sl_leaf__t10	FAIL	kit_topology	PLAN	2026-11-11 00:42	19.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t10
+s81	type	ot_s81sl_leaf__t13	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	GEOM-REQ	ot_s81sl_leaf__t13
+s81	type	dsdv_slice_c1x_C__t1	RETRY-INFRA	gen_lint	INFRA	2026-11-11 00:45	19.7	KIT-WAVE-1	NEEDS-KIT	dsdv_slice_c1x_C__t1
+s81	type	ot_s81sl_leaf__t15	FAIL	kit_topology	PLAN	2026-11-11 00:54	19.5	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t15
+s81	type	ot_s81sl_leaf__t17	FAIL	route	ROUTING	2026-11-10 01:50	42.6	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t17
+s81	type	dsdv_slice_c1x_C__t10	RETRY-INFRA	gen_lint	INFRA	2026-11-11 00:45	19.7	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t10
+s81	type	ot_s81sl_leaf__t21	FAIL	route	TIMING	2026-11-10 22:07	22.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t21
+s81	type	dsdv_slice_c1x_C__t3	RETRY-INFRA	kit_topology	INFRA	2026-11-11 00:45	19.7	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t3
+s81	type	ot_s81sl_leaf__t23	FAIL	kit_topology	PLAN	2026-11-11 00:20	20.1	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t23
+s81	type	dsdv_slice_c1x_C__t4	RETRY-INFRA	preflight	INFRA	2026-11-11 02:35	17.8	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t4
+s81	type	ot_s81sl_leaf__t29	CANCELLED	geom	SUPERSEDED	2026-11-10 18:30	25.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t29
+s81	type	ot_s81sl_leaf__t33	CANCELLED	geom	SUPERSEDED	2026-11-10 18:30	25.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t33
+s81	type	ot_s81sl_leaf__t35	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	20.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t35
+s81	type	ot_s81sl_kv_leaf__t1	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	61.6	KIT-WAVE-1	REVIEW	ot_s81sl_kv_leaf__t1
+s81	type	ot_s81sl_kv_leaf__t2	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	NEEDS-KIT	ot_s81sl_kv_leaf__t2
+s81	type	ot_s81sl_kv_leaf__t3	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	61.6	KIT-WAVE-1	REVIEW	ot_s81sl_kv_leaf__t3
+s81	type	ot_s81sl_kv_leaf__t4	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	61.6	KIT-WAVE-1	REVIEW	ot_s81sl_kv_leaf__t4
+s81	type	ot_s81sl_kv_leaf__t5	CANCELLED	geom	SUPERSEDED	2026-11-09 06:52	61.6	KIT-WAVE-1	FIX	ot_s81sl_kv_leaf__t5
+s81	type	ot_s81sl_leaf__t36	FAIL	kit_topology	PLAN	2026-11-11 00:54	19.5	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t36
+s81	type	ot_s81sl_leaf__t37	FAIL	route	ROUTING	2026-11-10 21:46	22.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t37
+s81	type	ot_s81sl_leaf__t38	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	20.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t38
+s81	type	ot_s81sl_leaf__t42	FAIL	signoff	ROUTING	2026-11-10 19:07	25.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t42
+s81	type	ot_s81sl_leaf__t43	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t43
+s81	type	dsdv_slice_c1x_C__t6	FAIL	place	RTL	2026-11-10 01:18	43.1	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t6
+s81	type	ot_s81sl_leaf__t50	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t50
+s81	type	ot_s81sl_leaf__t51	FAIL	preflight	FLOW	2026-11-10 19:29	24.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t51
+s81	type	dsdv_slice_c1x_C__t7	FAIL	place	STRUCTURAL	2026-11-10 03:50	40.6	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t7
+s81	type	ot_s81sl_leaf__t56	FAIL	route	TIMING	2026-11-10 22:46	21.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t56
+s81	type	dsdv_slice_c1x_C__t8	FAIL	place	RTL	2026-11-09 21:08	47.3	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t8
+s81	type	ot_s81sl_leaf__t59	FAIL	route	ROUTING	2026-11-10 23:05	21.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t59
+s81	type	ot_s81sl_leaf__t61	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	GEOM-REQ	ot_s81sl_leaf__t61
+s81	type	dsdv_slice_c1x_C__t9	RETRY-INFRA	preflight	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	dsdv_slice_c1x_C__t9
+s81	type	ot_s81sl_leaf__t65	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t65
+s81	type	dsdv_slice_lepe_nh_mus_C__t1	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	dsdv_slice_lepe_nh_mus_C__t1
+s81	type	ot_s81sl_leaf__t68	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t68
+s81	type	ot_s81sl_leaf__t69	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	20.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t69
+s81	type	slice_station__t27	CANCELLED	geom	SUPERSEDED	2026-11-10 23:53	20.5	KIT-WAVE-1	REVIEW	slice_station__t27
+s81	type	dsdv_slice_lepe_nh_mus_LP__t1	FAIL	route	ROUTING	2026-11-10 21:04	23.4	KIT-WAVE-1	REVIEW	dsdv_slice_lepe_nh_mus_LP__t1
+s81	type	ot_s81sl_leaf__t70	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	20.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t70
+s81	type	ot_s81sl_leaf__t71	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t71
+s81	type	dsdv_slice_lepe_mu_C__t1	RETRY-INFRA	gen	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	FIX	dsdv_slice_lepe_mu_C__t1
+s81	type	ot_s81sl_leaf__t74	RETRY-INFRA	kit_rtl	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t74
+s81	type	slice_station__t52	FAIL	kit_topology	PLAN	2026-11-11 00:54	19.5	KIT-WAVE-1	REVIEW	slice_station__t52
+s81	type	bk_sel__t2	FAIL	route	FLOW	2026-11-08 08:20	84.1	KIT-WAVE-1	REVIEW	bk_sel__t2
+s81	type	col_h10_r2__t1__clac068e56	RETRY-INFRA	gen	INFRA	2026-11-11 02:24	18.0	KIT-WAVE-1	REVIEW	col_h10_r2__t1__clac068e56
+s81	type	col_h10_r2__t1__cl8b686b3e	ROUTE-HELD	geom		2026-11-11 07:23	13.0	KIT-WAVE-1	REVIEW	col_h10_r2__t1__cl8b686b3e
+s81	type	col_h10_r2__t1__cl99efd374	ROUTE-HELD	geom		2026-11-11 06:40	13.8	KIT-WAVE-1	REVIEW	col_h10_r2__t1__cl99efd374
+s81	type	col_h10_r2__t1__cl1f5d6c2a	FAIL	route	INFRA	2026-11-10 21:04	23.4	KIT-WAVE-1	REVIEW	col_h10_r2__t1__cl1f5d6c2a
+s81	type	col_h9_r1__t1__cl49d7a23e	RETRY-INFRA	preflight	INFRA	2026-11-11 02:35	17.8	KIT-WAVE-1	REVIEW	col_h9_r1__t1__cl49d7a23e
+s81	type	col_h9_r1__t1__clf32cde8d	RETRY-INFRA	kit_topology	INFRA	2026-11-11 02:24	18.0	KIT-WAVE-1	REVIEW	col_h9_r1__t1__clf32cde8d
+s81	type	col_h9_r2__t1__clc9ad8f7e	FAIL	route	FLOW	2026-11-10 22:07	22.3	KIT-WAVE-1	REVIEW	col_h9_r2__t1__clc9ad8f7e
+s81	type	col_h9_r2__t1__clce45cab5	RETRY-INFRA	kit_rtl	INFRA	2026-11-10 23:29	20.9	KIT-WAVE-1	REVIEW	col_h9_r2__t1__clce45cab5
+s81	type	col_h9_r2__t1__clb8d86cd5	RETRY-INFRA	preflight	INFRA	2026-11-11 02:35	17.8	KIT-WAVE-1	REVIEW	col_h9_r2__t1__clb8d86cd5
+s81	type	col_h9_r2__t1__cl87f3ff59	FAIL	route	ROUTING	2026-11-09 08:57	59.5	KIT-WAVE-1	REVIEW	col_h9_r2__t1__cl87f3ff59
+s81	type	col_h9_r2__t1__cl774acf45	ROUTE-HELD	geom		2026-11-11 02:32	17.9	KIT-WAVE-1	REVIEW	col_h9_r2__t1__cl774acf45
+s81	type	serdes__t15__cla2127225	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:54	18.5	KIT-WAVE-1	NEEDS-KIT	serdes__t15__cla2127225
+s81	type	serdes__t15__cla3d02796	FAIL	kit_topology	PLAN	2026-11-10 23:48	20.6	KIT-WAVE-1	NEEDS-KIT	serdes__t15__cla3d02796
+s81	type	slice_station__t6__cl0755c26e	FAIL	kit_topology	PLAN	2026-11-11 01:06	19.3	KIT-WAVE-1	REVIEW	slice_station__t6__cl0755c26e
+s81	type	slice_station__t42__clcf44e680	FAIL	kit_topology	PLAN	2026-11-10 23:59	20.4	KIT-WAVE-1	REVIEW	slice_station__t42__clcf44e680
+s81	type	ot_s81sl_leaf__t53__cl958451dd	FAIL	kit_topology	PLAN	2026-11-11 00:09	20.3	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t53__cl958451dd
+s81	type	ot_s81sl_leaf__t54__cl501e5681	FAIL	gen	FLOW	2026-11-11 07:13	13.2	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t54__cl501e5681
+s81	type	ot_s81sl_leaf__t24__cl81374cd8	FAIL	kit_topology	PLAN	2026-11-11 00:20	20.1	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t24__cl81374cd8
+s81	type	ot_s81sl_leaf__t25__cl431c660f	CANCELLED	geom	SUPERSEDED	2026-11-10 23:46	20.7	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t25__cl431c660f
+s81	type	ot_s81sl_leaf__t40__cl86ea32b3	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	18.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t40__cl86ea32b3__sid5S
+s81	type	ot_s81sl_leaf__t40__cl86ea32b3__sid5S	RETRY-INFRA	kit_topology	INFRA	2026-11-11 01:32	18.9	unowned		ot_s81sl_leaf__t40__cl86ea32b3__sid5S
+s81	type	ot_s81sl_leaf__t44__clf4ea6d4b	FAIL	gen_lint	FLOW	2026-11-10 19:29	24.9	KIT-WAVE-1	REVIEW	ot_s81sl_leaf__t44__clf4ea6d4b
+s81	type	slice_station__t24__cl64811a5d	FAIL	kit_topology	PLAN	2026-11-10 23:48	20.6	KIT-WAVE-1	REVIEW	slice_station__t24__cl64811a5d
+s81_head	type	hd_spn	FAIL	signoff	TIMING	2026-11-09 12:07	56.3	KIT-WAVE-1	FIX	hd_spn
+s81_head	type	hd_serdes	RETRY-INFRA	place	INFRA	2026-11-10 01:07	43.3	KIT-WAVE-1	FIX	hd_serdes
+qwen_compute	type	slw_stm_v3	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 17:51	50.6	KIT-WAVE-1	REVIEW	slw_stm_v3
+qwen_compute	type	slw_st_b_v2	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 21:29	46.9	KIT-WAVE-1	REVIEW	slw_st_b_v2__pva66d0f22
+qwen_compute	type	sle_stm_v3	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 02:37	65.8	KIT-WAVE-1	REVIEW	sle_stm_v3
+qwen_compute	type	coll_s	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 08:36	59.8	KIT-WAVE-1	REVIEW	coll_s
+qwen_compute	type	coll_ftm	WAIT-PARENT	queue		2026-11-07 23:55	92.5	KIT-WAVE-1	SIGNED-UNVERSIONED	coll_ftm
+qwen_compute	type	coll_ucie	SUPERSEDED	route	SUPERSEDED	2026-11-08 10:30	81.9	KIT-WAVE-1	REVIEW	coll_ucie
+qwen_compute	type	native59	FAIL	queue	RTL	2026-11-09 13:33	54.9	KIT-WAVE-1	REVIEW	native59
+qwen_compute	type	tt_ctlm	FAIL	route	TIMING	2026-11-10 02:13	42.2	KIT-WAVE-1	REVIEW	tt_ctlm
+qwen_compute	type	slw_st_b_v1__cl6357f1cc	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 20:07	48.3	KIT-WAVE-1	REVIEW	slw_st_b_v1__cl6357f1cc__pvffd43fdc
+qwen_compute	type	slw_st_b_v1__cle6023ec2	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 08:36	59.8	KIT-WAVE-1	REVIEW	slw_st_b_v1__cle6023ec2
+qwen_compute	type	slw_stm_v1__cle34a73c3	CANCELLED	geom	SUPERSEDED	2026-11-11 07:59	12.4	KIT-WAVE-1	REVIEW	slw_stm_v1__cle34a73c3
+qwen_compute	type	coll_ft__cl78c7b300	FAIL	gen	FLOW	2026-11-11 08:21	12.1	KIT-WAVE-1	REVIEW	coll_ft__cl78c7b300
+qwen_compute	type	slw_stm_v1__cl05fc43f7__cl2086fa2c	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 14:38	53.8	DIE-QC-97	COORD-ROUTED COORD 11-10 22:31 lineage batch	slw_stm_v1__cl05fc43f7__cl2086fa2c
+qwen_compute	type	slw_stm_v1__cl05fc43f7__cl389df4e9	SUPERSEDED	signoff	SUPERSEDED	2026-11-09 15:36	52.8	DIE-QC-97	COORD-ROUTED COORD 11-10 22:31 lineage batch	slw_stm_v1__cl05fc43f7__cl389df4e9
+qwen_compute	type	sle_hc2__cl9c4c4509__clf60c5152	CANCELLED	place	ARM-REPIN	2026-11-11 08:48	11.6	DIE-QC-97	COORD-ROUTED COORD 11-10 22:31 lineage batch	sle_hc2__cl9c4c4509__clf60c5152
+qwen_kvsys	type	kv3_hg	SUPERSEDED	place	SUPERSEDED	2026-11-11 13:25	7.0	KIT-WAVE-1	REVIEW	kv3_hg
+qwen_kvsys	type	kv3_hgi_v3	SUPERSEDED	gen	SUPERSEDED	2026-11-11 05:15	15.2	KIT-WAVE-1	REVIEW	kv3_hgi_v3
+qwen_kvsys	type	kv3_hgi_v4	SUPERSEDED	route	SUPERSEDED	2026-11-05 17:42	146.7	KIT-WAVE-1	FIX	kv3_hgi_v4
+qwen_kvsys	type	kv3_hgi_v5	SUPERSEDED	route	SUPERSEDED	2026-11-09 14:57	53.5	KIT-WAVE-1	REVIEW	kv3_hgi_v5
+qwen_kvsys	type	kv3_hgi_v6	SUPERSEDED	gen	SUPERSEDED	2026-11-10 13:25	31.0	KIT-WAVE-1	FIX	kv3_hgi_v6
+qwen_kvsys	type	kv3_hgi_v8	RETRY-INFRA	kit_rtl	INFRA	2026-11-06 22:42	117.7	KIT-WAVE-1	PLAN-STRUCTURAL	kv3_hgi_v8
+qwen_kvsys	type	kv3_io_cor_v1	FAIL	signoff	TIMING	2026-11-11 11:45	8.7	KIT-WAVE-1	REVIEW	kv3_io_cor_v1
+qwen_kvsys	type	kv3_io_ft_v1	FAIL	signoff	TIMING	2026-11-10 08:37	35.8	KIT-WAVE-1	REVIEW	kv3_io_ft_v1
+qwen_kvsys	type	kv3_phy	FAIL	signoff	TIMING	2026-11-11 11:25	9.0	KIT-WAVE-1	REVIEW	kv3_phy
+qwen_kvsys	type	kv3_phy_v1	FAIL	signoff	TIMING	2026-11-11 11:16	9.2	KIT-WAVE-1	REVIEW	kv3_phy_v1
+qwen_kvsys	type	kv3_pv_v2	SUPERSEDED	place	SUPERSEDED	2026-11-10 00:44	43.7	KIT-WAVE-1	FIX	kv3_pv_v2
+qwen_kvsys	type	kv3_pv_v4	SUPERSEDED	place	SUPERSEDED	2026-11-10 00:56	43.5	KIT-WAVE-1	FIX	kv3_pv_v4
+qwen_kvsys	type	kv3_pv_v6	FAIL	gen	FLOW	2026-11-11 11:16	9.2	KIT-WAVE-1	FIX	kv3_pv_v6
+qwen_kvsys	type	kv3_pv_v7	SUPERSEDED	gen_lint	SUPERSEDED	2026-11-11 07:13	13.2	KIT-WAVE-1	REVIEW	kv3_pv_v7
+qwen_kvsys	type	kv3_pv_v8	FAIL	gen	FLOW	2026-11-11 11:16	9.2	KIT-WAVE-1	REVIEW	kv3_pv_v8
+qwen_kvsys	type	kv3_sys_SD	SUPERSEDED	route	SUPERSEDED	2026-11-09 18:56	49.5	KIT-WAVE-1	REVIEW	kv3_sys_SD
+qwen_kvsys	type	kv3_pv_v3	SUPERSEDED	place	SUPERSEDED	2026-11-10 00:56	43.5	KIT-WAVE-1	REVIEW	kv3_pv_v3
+qwen_kvsys	type	kv3_pv_v5	FAIL	gen	FLOW	2026-11-11 11:06	9.3	KIT-WAVE-1	FIX	kv3_pv_v5
 hbm	core	ot_pdie_serdes_rx_bm3_rest	no kit-wave row					unowned		
-hbm	core	ot_hgi_sfu_opsa_group0	FAIL	route	ROUTING	2026-11-10 21:57	21.5	unowned		ot_hgi_sfu_opsa_group0
+hbm	core	ot_hgi_sfu_opsa_group0	FAIL	route	ROUTING	2026-11-10 21:57	22.5	unowned		ot_hgi_sfu_opsa_group0
 hbm	core	ot_hgi_sfu_opsb_group	no kit-wave row					HBM-CORES-B	lanes/HBM-CORES-B.md	
 hbm	core	ot_hgi_sfu_split3_ctl_rest_1c	no kit-wave row					HBM-CORES-B	lanes/HBM-CORES-B.md	
-hbm	core	ot_hgi_sfu_programme_store_r10	FAIL	route	ROUTING	2026-11-09 16:40	50.8	KIT-WAVE-1	REVIEW	ot_hgi_sfu_programme_store_r10
-hbm	core	ot_hbm_svc_vm_kshare_splitstrap__v700685	FAIL	signoff	TIMING	2026-11-09 09:07	58.3	KIT-WAVE-1	REVIEW	ot_hbm_svc_vm_kshare_splitstrap__v700685
-hbm	core	hnx_fused_lane_c	FAIL	signoff	TIMING	2026-11-10 22:07	21.3	unowned		hnx_fused_lane_c
+hbm	core	ot_hgi_sfu_programme_store_r10	FAIL	route	ROUTING	2026-11-09 16:40	51.8	KIT-WAVE-1	REVIEW	ot_hgi_sfu_programme_store_r10
+hbm	core	ot_hbm_svc_vm_kshare_splitstrap__v700685	FAIL	signoff	TIMING	2026-11-09 09:07	59.3	KIT-WAVE-1	REVIEW	ot_hbm_svc_vm_kshare_splitstrap__v700685
+hbm	core	ot_hbm_svc_vm_kshare_splitstrap__v8e478a	FAIL	signoff	TIMING	2026-11-09 08:04	60.4	KIT-WAVE-1	REVIEW	ot_hbm_svc_vm_kshare_splitstrap__v8e478a
+hbm	core	hnx_fused_lane_c	FAIL	signoff	TIMING	2026-11-10 22:07	22.3	unowned		hnx_fused_lane_c
 hbm	core	ot_wbq_sw	no kit-wave row					HBM-CORES-B	lanes/HBM-CORES-B.md	
 hbm	core	ot_q2nf_rest	no kit-wave row					HBM-CORES-B	lanes/HBM-CORES-B.md	
-hbm	core	ot_hfd_coll_q2n2_vm_core	FAIL	route	TIMING	2026-11-03 17:21	194.1	KIT-WAVE-1	FIX	ot_hfd_coll_q2n2_vm_core
-hbm	core	ot_hgi_dma_back_static_vp4_banks_cp	SUPERSEDED	route	SUPERSEDED	2026-11-04 08:58	178.5	KIT-WAVE-1	FIX	ot_hgi_dma_back_static_vp4_banks_cp
+hbm	core	ot_hfd_coll_q2n2_vm_core	FAIL	route	TIMING	2026-11-03 17:21	195.1	KIT-WAVE-1	FIX	ot_hfd_coll_q2n2_vm_core
+hbm	core	ot_hgi_dma_back_static_vp4_banks_cp	SUPERSEDED	route	SUPERSEDED	2026-11-04 08:58	179.5	KIT-WAVE-1	FIX	ot_hgi_dma_back_static_vp4_banks_cp
 hbm	core	ot_hfd_coll_q3_body_ctl	no kit-wave row					HBM-CORES-B	lanes/HBM-CORES-B.md	
-hbm	core	ot_hbm_sm_pv_merge	FAIL	geom_run	FLOW	2026-11-11 12:16	7.2	unowned		ot_hbm_sm_pv_merge
 hbm	core	ot_hbm_sm_kv_line	no kit-wave row					HBM-CORES-B	lanes/HBM-CORES-B.md	
-hbm	core	ot_hbm_sm_i8w_front	FAIL	place	FLOW	2026-11-11 05:15	14.2	unowned		ot_hbm_sm_i8w_front
 hbm	core	ot_hbm_su_pg_lane1p_core	no kit-wave row					AUTO-RESIGN	COORD-ROUTED COORD 11-10 22:31 (COUNT-ARCHIVE-3)	
-hbm	core	ot_hgi_coll_tkm_m_tp192__root	SUPERSEDED	queue	SUPERSEDED	2026-11-07 11:17	104.1	KIT-WAVE-1	GEOM-REQ	ot_hgi_coll_tkm_m_tp192__root
-hbm	core	ot_hbm_idx_topk_link_static	FAIL	place	FLOW	2026-11-07 19:38	95.8	KIT-WAVE-1	NEEDS-KIT	ot_hbm_idx_topk_link_static
-hbm	type	PHY_NC	FAIL	gen	FLOW	2026-11-11 07:34	11.9	DIE-HBM-98	COORD-ROUTED COORD 11-10 23:2x	PHY_NC
-hbm	type	PHY_NE	FAIL	gen	FLOW	2026-11-11 07:45	11.7	DIE-HBM-98	COORD-ROUTED COORD 11-10 23:2x	PHY_NE
-hbm	type	PHY_NW	FAIL	gen	FLOW	2026-11-11 07:34	11.9	DIE-HBM-98	COORD-ROUTED COORD 11-10 23:2x	PHY_NW
-hbm	type	q_mcb	SUPERSEDED	kit_rtl	SUPERSEDED	2026-11-10 23:59	19.4	DIE-HBM-98	COORD-ROUTED COORD 11-10 23:2x	q_mcb
-hbm	type	q_spu0__physical_v1	FAIL	route	FLOW	2026-11-10 13:55	29.5	KIT-WAVE-1	REVIEW	q_spu0__physical_v1
-hbm	type	vsN5	FAIL	signoff	TIMING	2026-11-10 11:56	31.5	KIT-WAVE-1	REVIEW	vsN5
-hbm	type	vsN6	FAIL	signoff	TIMING	2026-11-10 20:52	22.6	KIT-WAVE-1	REVIEW	vsN6
+hbm	core	ot_hgi_coll_tkm_m_tp192__root	SUPERSEDED	queue	SUPERSEDED	2026-11-07 11:17	105.1	KIT-WAVE-1	GEOM-REQ	ot_hgi_coll_tkm_m_tp192__root
+hbm	core	ot_hbm_idx_topk_link_static	FAIL	place	FLOW	2026-11-07 19:38	96.8	KIT-WAVE-1	NEEDS-KIT	ot_hbm_idx_topk_link_static
+hbm	type	q_mcb	SUPERSEDED	kit_rtl	SUPERSEDED	2026-11-10 23:59	20.4	DIE-HBM-98	COORD-ROUTED COORD 11-10 23:2x	q_mcb
+hbm	type	vsN5	FAIL	signoff	TIMING	2026-11-10 11:56	32.5	KIT-WAVE-1	REVIEW	vsN5
+hbm	type	vsN6	FAIL	signoff	TIMING	2026-11-10 20:52	23.6	KIT-WAVE-1	REVIEW	vsN6
