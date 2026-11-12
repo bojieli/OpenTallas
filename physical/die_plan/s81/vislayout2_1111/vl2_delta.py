@@ -21,6 +21,8 @@ if sys.argv[1] == "make":
             if p["xy"] != ba.get(p["name"]): ed.append({"kind": "added_tap", "name": p["name"], "was": ba.get(p["name"]), "now": p["xy"]})
         for k in DER:
             if bt["clock"].get(k) != nt["clock"].get(k): ed.append({"kind": "clock_derived", "key": k, "now": nt["clock"].get(k)})
+        if bt.get("internal_stations") != nt.get("internal_stations"):
+            ed.append({"kind": "internal_stations", "now": nt.get("internal_stations")})
         d["types"][T] = ed
     json.dump(d, open(out, "w"), indent=1)
     print({T: len(e) for T, e in d["types"].items()}, d["plan_sha256"][:12])
@@ -35,6 +37,8 @@ else:
                 assert hc[e["inst"]]["origin_um"] == e["was"], (T, e["inst"]); hc[e["inst"]]["origin_um"] = e["now"]
             elif e["kind"] == "added_tap":
                 assert at[e["name"]]["xy"] == e["was"], (T, e["name"]); at[e["name"]]["xy"] = e["now"]
+            elif e["kind"] == "internal_stations":
+                t["internal_stations"] = copy.deepcopy(e["now"])
             else:
                 t["clock"][e["key"]] = copy.deepcopy(e["now"])
     json.dump(B, open(out, "w"), indent=1)
