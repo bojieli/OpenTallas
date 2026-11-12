@@ -609,19 +609,81 @@ print(H.hexdigest())
 """ % (SRC_OVERLAY_SCOPE,)
 
 
-def src_overlay_hash(src, host, hub, timeout=90):
-    """content hash of the source scope on its gen host; '' when it cannot be read (the hold then compares as before)"""
+SRC_OVERLAY_SIG_SCRIPT = r"""
+import os, sys
+n = 0; m = 0; z = 0
+for r in %r:
+    for dp, dn, fn in os.walk(r):
+        dn[:] = [d for d in dn if d not in (".git", "__pycache__")]
+        for f in fn:
+            p = os.path.join(dp, f)
+            try:
+                st = os.lstat(p)
+            except OSError:
+                continue
+            n += 1; z += st.st_size
+            if st.st_mtime_ns > m: m = st.st_mtime_ns
+print("%%d:%%d:%%d" %% (n, m, z))
+""" % (SRC_OVERLAY_SCOPE,)
+SRC_OVERLAY_CACHE = {}                 # (host, src) -> (signature, hash); persisted in OVERLAY_CACHE_FILE (a tick is a new process)
+OVERLAY_CACHE_FILE = os.environ.get("KW_OVERLAY_CACHE") or os.path.expanduser("~/coord/autopilot/kit_wave_overlay_cache.json")
+_OVL_LOADED = [False]
+
+
+def _overlay_cache_load():
+    if _OVL_LOADED[0]:
+        return
+    _OVL_LOADED[0] = True
+    try:
+        for k, v in json.loads(open(OVERLAY_CACHE_FILE).read()).items():
+            h, _, src = k.partition("|")
+            SRC_OVERLAY_CACHE.setdefault((h, src), (v[0], v[1]))
+    except (OSError, ValueError, IndexError, TypeError):
+        pass
+
+
+def _overlay_cache_save():
+    try:
+        tmp = OVERLAY_CACHE_FILE + ".tmp"
+        open(tmp, "w").write(json.dumps({f"{h}|{s}": list(v) for (h, s), v in SRC_OVERLAY_CACHE.items()}))
+        os.replace(tmp, OVERLAY_CACHE_FILE)
+    except OSError:
+        pass
+SRC_OVERLAY_TIMEOUT_S = 420            # full content hash of a ~30k-file tree on a loaded gen host (was 90 s: S81 unreadable 27 ticks)
+SRC_OVERLAY_SIG_TIMEOUT_S = 150
+
+
+def _overlay_run(src, host, hub, script, timeout):
     remote = _ssh(host, hub)
     try:
         if remote:
-            r = subprocess.run(remote + [f"cd {shlex.quote(src)} && python3 -I -c {shlex.quote(SRC_OVERLAY_SCRIPT)}"],
+            r = subprocess.run(remote + [f"cd {shlex.quote(src)} && python3 -I -c {shlex.quote(script)}"],
                                capture_output=True, text=True, timeout=timeout)
         else:
-            r = subprocess.run(["python3", "-I", "-c", SRC_OVERLAY_SCRIPT], cwd=src, capture_output=True, text=True, timeout=timeout)
+            r = subprocess.run(["python3", "-I", "-c", script], cwd=src, capture_output=True, text=True, timeout=timeout)
     except (OSError, subprocess.SubprocessError):
-        return ""
-    out = r.stdout.strip()
-    return out if r.returncode == 0 and re.fullmatch(r"[0-9a-f]{64}", out) else ""
+        return None
+    return r.stdout.strip() if r.returncode == 0 else None
+
+
+def src_overlay_hash(src, host, hub, timeout=None):
+    """content hash of the source scope on its gen host; '' when it cannot be read.  KW-FIX-45 11-12 (COORD): cached per
+    tree (host, path) under a cheap signature (file count, newest mtime_ns, total size over the scope: an in-place edit
+    changes it, a top-dir mtime would not) so the full read runs only after a change, with a longer timeout; the caller
+    treats '' as CHANGED (never as 'no overlay to compare')."""
+    _overlay_cache_load()
+    sig = _overlay_run(src, host, hub, SRC_OVERLAY_SIG_SCRIPT, SRC_OVERLAY_SIG_TIMEOUT_S)
+    key = (host, src)
+    hit = SRC_OVERLAY_CACHE.get(key)
+    if sig and hit and hit[0] == sig:
+        return hit[1]
+    out = _overlay_run(src, host, hub, SRC_OVERLAY_SCRIPT, timeout or SRC_OVERLAY_TIMEOUT_S)
+    if out and re.fullmatch(r"[0-9a-f]{64}", out):
+        if sig:
+            SRC_OVERLAY_CACHE[key] = (sig, out)
+            _overlay_cache_save()
+        return out
+    return ""
 
 
 def merge_src_overlay(cfg, hub, log=None):
@@ -882,6 +944,8 @@ def select(rows, cfg, die, state, plan_types=None):
             # Existing parent rows already expand into these plan classes,
             # including their live-job claims; do not synthesize a second owner.
             if item in known or item not in plan_types or any(item.startswith(k + "__") for k in known):
+                continue
+            if item in (d.get("plan_core_items") or []):     # KW-FIX-45 11-11: a plan core is a kind=core row (below), never a type row
                 continue
             rows.append(dict(die=die, item=item, kind="type", state="NEEDS-KIT",
                              owner="KIT-WAVE", live_job="none", last_activity="",
@@ -1745,7 +1809,10 @@ def topology_env_prefix(sp):
 
 def item_env(d, item):
     """die item_env[item] -> {OT_*: value} (validated: OT_ names, shell-safe values; anything else raises)"""
-    env = dict((d.get("item_env") or {}).get(item) or {})
+    # KW-FIX-45 11-12 (COORD class fix: drive failures from fanout over 64): die option die_gen_env {OT_*: value} is the default
+    # env of EVERY item of the die (no per-type opt-in); the item's own item_env wins
+    env = dict(d.get("die_gen_env") or {})
+    env.update((d.get("item_env") or {}).get(item) or {})
     for k, v in env.items():
         capture_path = (k == "OT_NATIVE_PRODUCER_CONTEXT" and isinstance(v, str)
                         and re.fullmatch(r"/[A-Za-z0-9_./-]+", v))
@@ -2964,7 +3031,12 @@ def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
         d = cfg["dies"][die]
         # Compared only when both sides have it: a kit built before the field existed, or a host that could not be read,
         # must neither release the row nor hold it on a value that was never measured.
-        if not (old.get("src_overlay") and cand.get("src_overlay")):
+        if not cand.get("src_overlay"):
+            # KW-FIX-45 11-12 (COORD): the content hash of the source could not be computed (unreadable tree, timeout): that is
+            # NOT 'no overlay to compare'.  The row is treated as CHANGED (released) and the gap is logged, never a silent hold.
+            print(f"KW_SRC_OVERLAY_UNREADABLE {die}/{item}: row treated as changed", flush=True)
+            return False
+        if not old.get("src_overlay"):                  # a kit built before the field existed: compare without it, as before
             old.pop("src_overlay", None); cand.pop("src_overlay", None)
         return input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
     except (OSError, ValueError, KeyError, TypeError):
@@ -3166,7 +3238,10 @@ def restage_waiters(AP, cfg, st, notices):
     stt, hub = cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
     cap, n = int(cfg.get("restage_max_per_tick", 60)), 0
     row = lambda h: stt.get("localhost" if h == hub else h)
-    for die, d in (cfg.get("dies") or {}).items():
+    # KW-FIX-45 11-12 phase 1 waiters move first (COORD capacity gap: epyc2 load 39/128 while epyc7/8/9 hold 100+ waiters):
+    # phase_split.low_dies (hbm) are restaged last, so the per-tick move cap goes to S81/HEAD/QC/KV
+    _low = set(((cfg.get("phase_split") or {}).get("low_dies") or ["hbm"])) if (cfg.get("phase_split") or {}).get("enabled") else set()
+    for die, d in sorted((cfg.get("dies") or {}).items(), key=lambda kv: kv[0] in _low):
         if not isinstance(d, dict) or d.get("restage_waiters") is False:
             continue
         multi = len(gen_hosts(cfg, die)) >= 2 and bool(stt)
@@ -3667,7 +3742,20 @@ def run_item(spec_path):
         rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:
             return fail("geom_cfg", txt)
-        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [kh]))
+        # KW-FIX-45 11-12 geom host has the src tree (COORD: hbm/hnx_fused_lane_c geom_run failed on a host without the HBM tree after
+        # gen_hosts was widened): geom_check.sh runs from the src tree, so run geom on a host that HAS it: the kit host if it does,
+        # else the gen host.  The kit's physical copy lives on the gen host after the place hand-off.
+        _gh = kh
+        try:
+            _r, _t = run("geom_src_" + kh, remote_argv(kh, hub, f"test -e {q(src)}/tools/autopilot/geom_check.sh && echo KW_SRC_OK || echo KW_SRC_MISSING"), idempotent=True)
+            if "KW_SRC_OK" not in _t and G != kh:
+                _gh = G
+                print(f"KW_GEOM_HOST src tree missing on {kh}: geom runs on the gen host {G}", flush=True)
+        except Exception as _e:
+            print(f"KW_GEOM_HOST check skipped: {_e}", flush=True)
+        if _gh != kh:                                    # the check config the stage wrote on the kit host must exist on the geom host too
+            run("geom_cfg_gh", remote_argv(_gh, hub, f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"), idempotent=True)
+        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [_gh]))
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
@@ -3731,30 +3819,41 @@ def run_item(spec_path):
                 return 0, txt, r
             time.sleep(PLACE_POLL_S)
 
+    def set_aside_stale_service(K):
+        """KW-FIX-45/46 11-12 (COORD "place exit 0 + FAIL", 20+ rows 05:2x-06:0x): a place service of an EARLIER drive of this
+        attempt dir that already ended with a terminal KW_PLACE_RC, while the kit it placed has no 3_place.odb any more
+        (cleanup, epyc5 retired, resume dir gone), is stale: place_wait would return its old KW_PLACE_RC=0 at once and
+        after_place fail 'unclassified @place KW_PLACE_RC=0'.  Set it aside (place_service.stale.json, place.stale.log) so the
+        drive launches a fresh PLACE.  A live unit, an unreadable probe or a present checkpoint keeps the service.  -> True when
+        set aside"""
+        if not svc_file.exists():
+            return False
+        try:
+            _svc = json.loads(svc_file.read_text())
+            _lg = Path(_svc.get("log", ""))
+            _txt = _lg.read_text(errors="replace") if _lg.exists() else ""
+            _rcs = re.findall(r"(?m)^KW_PLACE_RC=(-?\d+)\s*$", _txt)
+            _act = subprocess.run(["systemctl", "--user", "is-active", _svc["unit"]], capture_output=True, text=True,
+                                  timeout=60).stdout.strip()
+            if not _rcs or _act in ("active", "activating", "reloading"):
+                return False
+            _kh = copy_back_host(_txt, G)
+            _p = subprocess.run(remote_argv(_kh, hub, f"ls {q(K or _svc.get('kit', ''))}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; echo KW_PROBE_OK"),
+                                capture_output=True, text=True, timeout=120)
+            _o = _p.stdout or ""
+            if _p.returncode == 0 and "KW_PROBE_OK" in _o and "3_place.odb" not in _o:
+                print(f"KW_PLACE_STALE_SERVICE {_svc.get('unit')}: ended rc {_rcs[-1]} but {K or _svc.get('kit')} has no 3_place.odb; launching a fresh PLACE", flush=True)
+                svc_file.replace(out / "place_service.stale.json")
+                if _lg.exists():
+                    _lg.replace(_lg.with_name("place.stale.log"))
+                return True
+        except (OSError, ValueError, KeyError, subprocess.TimeoutExpired):
+            pass
+        return False
+
     def place_async(K, prun, m, t):
         """launch (once per attempt: the descriptor is saved before systemd-run) and wait"""
-        if svc_file.exists():
-            # KW-FIX-45 11-12 (COORD "place exit 0 + FAIL"): a service of an EARLIER drive of this attempt dir that already
-            # ended with a terminal rc but whose placed kit is gone (cleanup, resume dir missing) is stale: place_wait would
-            # return its old KW_PLACE_RC=0 at once and after_place fail on the missing 3_place.odb.  Set it aside and launch fresh.
-            try:
-                _svc = json.loads(svc_file.read_text())
-                _lg = Path(_svc.get("log", ""))
-                _txt = _lg.read_text(errors="replace") if _lg.exists() else ""
-                _rcs = re.findall(r"(?m)^KW_PLACE_RC=(-?\d+)\s*$", _txt)
-                _act = subprocess.run(["systemctl", "--user", "is-active", _svc["unit"]], capture_output=True, text=True,
-                                      timeout=60).stdout.strip()
-                if _rcs and _act not in ("active", "activating", "reloading"):
-                    _kh = copy_back_host(_txt, G)
-                    _p = subprocess.run(remote_argv(_kh, hub, f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1"),
-                                        capture_output=True, text=True, timeout=120)
-                    if _p.returncode == 0 and not (_p.stdout or "").strip():
-                        print(f"KW_PLACE_STALE_SERVICE {_svc.get('unit')}: ended rc {_rcs[-1]} but {K} has no 3_place.odb; launching a fresh PLACE", flush=True)
-                        svc_file.replace(out / "place_service.stale.json")
-                        if _lg.exists():
-                            _lg.replace(_lg.with_name("place.stale.log"))
-            except (OSError, ValueError, KeyError, subprocess.TimeoutExpired):
-                pass
+        set_aside_stale_service(K)
         if svc_file.exists():
             return place_wait(json.loads(svc_file.read_text()))
         if G in ("localhost", hub):                  # KW-FIX-45 11-12 hub guard: the kit's gen host is the hub
@@ -3800,6 +3899,8 @@ def run_item(spec_path):
         if why:
             return fail("lec_tools_preflight", "KW_FUTURE_LEC FAIL " + why)
     time.sleep(max(0.0, float(sp.get("start_delay_s") or 0)))   # stagger a tick's burst of items (gen-host sshd)
+    if svc_file.exists() and set_aside_stale_service(None):
+        pass                                             # stale service of an earlier drive: regenerate below
     if svc_file.exists():
         # a restarted worker of this attempt: the saved PLACE service owns W/gen (and maybe a live proof);
         # never regenerate, delete or relaunch it -- resume waiting on the same client / receipt
@@ -4127,7 +4228,10 @@ def run_item(spec_path):
             stt = parse_otrun_status(p.stdout if p.returncode == 0 else "")
             ok = [h for h in pref if (stt.get("localhost" if h == hub else h) or {}).get("admit", 0) >= m]
             if ok:
-                phosts = ok
+                # KW-FIX-45 11-12 place_prefer is an ORDER, not a pin: pinning --hosts to the preferred hosts alone made ot-run
+                # answer NOT RUN when the preferred host refused (epyc2 scratch2 dipping under its 50 GB floor: 9 HBM rows
+                # RETRY-INFRA at 02:51-03:01).  The preferred hosts go first, every other host stays allowed.
+                phosts = ok + [h for h in phosts if h not in ok]
         prun = (runner.format(kit=K, work=W) if core else f"{W}/gen/run_kit.sh")
         rc, txt = run("place", otrun(m, t, K, f"bash {q(prun)} {q(K)} place {m} {t}", phosts, allow_hub=True))
         ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
@@ -4583,6 +4687,77 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     return out
 
 
+# KW-FIX-46 11-12 (COORD, PSPLIT-SIDECAR-STALE): S81 switched plan/bind to the param-split ready11p while gen_args
+# --clock-landing still named the UNSPLIT sidecar (70 split part types missing from collector.types): every S81 gen died in
+# clock_landings.Landings with KeyError '<type>__pv...'.  Before launch, the die's gen sidecar must cover every part type of
+# the plan the row builds on; a sidecar that does not is a stale config, and those rows are not launched (fail closed).
+PROBE_SIDECAR = r"""
+import json, sys
+a = json.loads(sys.argv[1])
+try:
+    p = json.load(open(a["plan"]))
+    need = sorted({x["type"] for x in (p.get("partitions") or []) if isinstance(x, dict) and x.get("type")})
+    sc = json.load(open(a["sidecar"]))
+    col = sc.get("collector") if isinstance(sc, dict) else None
+    out = {"missing": [t for t in need if t not in ((col or {}).get("types") or {})] if col else [], "n": len(need)}
+except Exception as e:
+    out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
+print("AP_JSON " + json.dumps(out))
+"""
+SIDECAR_PREFLIGHT_TTL_S = 1800
+
+
+def gen_sidecar(args):
+    """the --clock-landing path of a gen_args list ('' when absent)"""
+    args = list(args or [])
+    for i, x in enumerate(args):
+        if x == "--clock-landing" and i + 1 < len(args):
+            return str(args[i + 1])
+        if str(x).startswith("--clock-landing="):
+            return str(x).split("=", 1)[1]
+    return ""
+
+
+def sidecar_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
+    """{item: why} for type rows whose plan has part types that the gen --clock-landing sidecar's collector.types lacks.
+    One probe per (plan, sidecar) on the die gen_host, cached SIDECAR_PREFLIGHT_TTL_S; an unreadable input = unknown =
+    launch.  Die option sidecar_preflight false turns it off."""
+    d = cfg["dies"][die]
+    if d.get("sidecar_preflight") is False:
+        return {}
+    now = time.time() if now is None else float(now)
+    rpy = rpy or AP.rpy
+    groups = {}
+    for r in rows:
+        if (r.get("kind") or "type") != "type":
+            continue
+        ii = (d.get("item_inputs") or {}).get(r["item"]) or {}
+        sc = gen_sidecar(ii.get("gen_args") if ii.get("gen_args") is not None else d.get("gen_args"))
+        plan = ii.get("plan") or d.get("plan")
+        if sc and plan:
+            groups.setdefault((plan, sc), []).append(r["item"])
+    cache = st.setdefault("sidecar_preflight", {})
+    for k in [k for k, v in cache.items() if now - float(v.get("t") or 0) > SIDECAR_PREFLIGHT_TTL_S]:
+        del cache[k]
+    out = {}
+    for (plan, sc), items in groups.items():
+        key = plan + "|" + sc
+        c = cache.get(key)
+        if not c:
+            pr = rpy(d.get("gen_host"), PROBE_SIDECAR, {"plan": plan, "sidecar": sc}, timeout=300)
+            if not isinstance(pr, dict) or pr.get("error") or not isinstance(pr.get("missing"), list):
+                if AP:
+                    AP.log(f"KIT-WAVE sidecar preflight {die} skipped (unknown = launch): "
+                           f"{(pr or {}).get('error') if isinstance(pr, dict) else pr}"[:400])
+                continue
+            c = cache[key] = {"t": now, "missing": pr["missing"][:50], "n_missing": len(pr["missing"])}
+        if c.get("n_missing"):
+            for item in items:
+                out[item] = (f"SIDECAR_STALE preflight: gen --clock-landing {sc} lacks {c['n_missing']} part type(s) of plan "
+                             f"{plan} (e.g. {', '.join(c['missing'][:3])}); point gen_args at the sidecar of this plan/asbuilt")
+    return out
+
+
 def plan_sha_mismatch(d, pn):
     """WAVE-POR guard (CORES-S81-1, COORD 11-12): dies.<die>.plan_sha256 is the declared sha256 of dies.<die>.plan that
     the release-tree counter counts; a plan file that no longer has it (edited in place, or repointed without
@@ -4717,6 +4892,18 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                                 skip.setdefault(stale[r["item"]], []).append(r["item"])
                         go = [r for r in go if r["item"] not in stale]
                         AP.log(f"KIT-WAVE BIND-STALE {die}: {len(stale)} row(s) not launched: " + " ".join(sorted(stale)[:40]))
+                if AP and go and d.get("gen_args") is not None:
+                    try:
+                        scst = sidecar_preflight(AP, cfg, st, die, go)
+                    except Exception as e:                 # a diagnostic probe never stops the plan
+                        scst = {}
+                        AP.log(f"KIT-WAVE sidecar preflight {die} skipped: {e}")
+                    if scst:
+                        for r in go:
+                            if r["item"] in scst:
+                                skip.setdefault(scst[r["item"]], []).append(r["item"])
+                        go = [r for r in go if r["item"] not in scst]
+                        AP.log(f"KIT-WAVE SIDECAR-STALE {die}: {len(scst)} row(s) not launched: " + " ".join(sorted(scst)[:40]))
                 per_die.append([(die, r) for r in go[:n]])
         out.append((die, ok, why, picks, skip))
     # AUTOBUILD-PIPE-2 10-30: round-robin the tick's launches across dies.  Alphabetical fill let S81 (72 queued) take
@@ -4867,10 +5054,20 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if miss:           # KW-FIX-45 11-11 (COORD, hbm q_su01 PLAN): wait for the child cores, no attempt consumed
             AP.log(f"KIT-WAVE WAIT-CHILD {die}/{r['item']}: no routed PROVISIONAL source yet for child core(s) {' '.join(miss)} (prov_require_cands)")
             return None
+    if (not arm and prev.get("grt_overflow") and opt(cfg, die, "auto_grt_edge") is not False
+            and "OT_GRT_TRANSITION_MODE" not in sp["gen_env"]):
+        # KW-FIX-45 11-11 (COORD/OWNER "edge-only halving default"): a row whose last attempt failed on GRT overflow relaunches
+        # with edge_outline (ORFS main run on the asap7lock-grtoff image); item_env or die option auto_grt_edge false wins.
+        sp["gen_env"] = dict(sp["gen_env"], OT_GRT_TRANSITION_MODE="edge_outline")
+        AP.log(f"KIT-WAVE GRT-EDGE auto {die}/{r['item']}: previous attempt failed on GRT overflow -> OT_GRT_TRANSITION_MODE=edge_outline")
     if attempt > 1:
         # Preserve previous generation/geometry verdicts and run payloads.
         sp["work"] += f"/attempt_{attempt}"
-        if opt(cfg, die, "stage_resume") is not False and prev.get("dir"):
+        # KW-FIX-45 11-12 (COORD: DISK-1111 deleted the resume attempt dirs of 7 current rows): die option stage_resume_off
+        # [items] relaunches those items as a FRESH attempt (regenerated kit, no resume), and a resume source whose attempt
+        # dir is gone on the hub is never used
+        if (opt(cfg, die, "stage_resume") is not False and prev.get("dir") and Path(prev["dir"]).is_dir()
+                and r["item"] not in (cfg["dies"][die].get("stage_resume_off") or [])):
             sp["resume_from"] = resume_source(AP, prev)
         # FLOW-23 class D: a relaunch after an AUTO-GEOM FAIL plans soft region guides from that result (written only
         # when its r2r rule failed); die opt-out: region_guide false
@@ -4932,6 +5129,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
 # route/sign-off verdict) is final and never relaunched; only an INFRA failure before any verdict uses the infra budget.
 # Class stop: top-level grt_halving_arm_stop, die option stop, or AP_DIR/grt_halving_arm.stop launches no new arm and
 # stops every live arm (CANCELLED ARM-STOP).  No option anywhere = no arm and the tick is unchanged.
+GRT_OVERFLOW_RE = re.compile(r"GRT-0116|GRT-0[0-9]{3}.*(overflow|congest)|overflow|congest|global.?rout", re.I)
 GRT_ARM_MODES = ("off", "edge", "edge_outline")
 GRT_ARM_STOP_FILE = "grt_halving_arm.stop"
 GRT_ARM_GEN_MARK = "def write_grt_transition_mode"
@@ -5417,6 +5615,16 @@ def reap_dead(AP, cfg, st, notices, now=None):
     return n
 
 
+def held_stop_reason(cfg, rec, res):
+    """KW-FIX-46 11-12: the hold_items reason when a row's unit ended without result.json (stage 'unit': stopped from outside)
+    and its item is held in the die config now; '' otherwise (a crash of an unheld row stays a FAIL)"""
+    if (res or {}).get("stage") != "unit":
+        return ""
+    d = ((cfg.get("dies") or {}).get(rec.get("die")) or {})
+    return next((str(why) or "held" for pat, why in (d.get("hold_items") or {}).items()
+                 if fnmatch.fnmatchcase(rec.get("item") or "", pat)), "")
+
+
 def collect(AP, cfg, st, notices):
     for key, rec in st["items"].items():
         if rec.get("status") != "RUNNING" or AP.unit_active(rec["unit"]):
@@ -5467,6 +5675,16 @@ def collect(AP, cfg, st, notices):
         for k in ("resume", "stage_fp"):
             if res.get(k):
                 rec[k] = res[k]
+        _hold = held_stop_reason(cfg, rec, res)
+        if _hold:
+            # KW-FIX-46 11-12 (COORD 06:2x: ~12 QC rows stopped by DIE-QC-100 for HF-1c showed FAIL '@unit'): a unit that ended
+            # WITHOUT a result (stopped from outside) while its item is in the die's hold_items is a deliberate stop, not a crash:
+            # CANCELLED, class WAIT-FORM when the hold says so, else HELD-STOP; it never spends a design or infra attempt.
+            rec.update(status="CANCELLED", **{"class": "WAIT-FORM" if "WAIT-FORM" in _hold else "HELD-STOP"},
+                       reason=f"stopped while held (hold_items): {_hold[:300]}")
+            notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} STOPPED-HELD ({_hold[:120]})")
+            AP.log(f"KIT-WAVE STOPPED-HELD {rec['die']}/{rec['item']}@{rec.get('attempt')}: {_hold[:200]}")
+            continue
         cls, why = classify(res.get("stage", ""), (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
         if res.get("class"):                             # KW-RESUME-1 'nochange': the previous attempt's class stands
             cls, why = res["class"], (res.get("reason") or why)
@@ -5956,6 +6174,8 @@ def follow_queue(st, ap_dir, notices, stops=None):
         cls, why = leafslew_plan_route(rec, status, cls, why)
         old = (rec.get("q_status"), rec.get("q_class"))
         rec.update(q_id=j.get("id"), q_stage=stage, q_status=status, q_class=cls, q_reason=why)
+        if status == "FAIL":                       # KW-FIX-45 11-11 (COORD/OWNER): the fail class is kept per row
+            rec["grt_overflow"] = bool(GRT_OVERFLOW_RE.search(f"{why} {stage}"))
         if status == "CANCELLED":
             # KW-FIX-45 11-11 (COORD option (a), orphaned q_b003__physical_v1 pilot): a queue job that was cancelled (ot-run
             # --cancel / cancel-dir, a stopped route) is a stopped attempt, not a failure and not a superseded block: the
@@ -6200,6 +6420,97 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     return n
 
 
+REAP_LIVE_Q = ("RUNNING", "QUEUED", "STARTING", "WAIT-GEOM", "WAITING")
+
+
+def _row_live(r, jobs):
+    """a wave row that still holds compute: a RUNNING/LAUNCHING unit, or an ENQUEUED kit whose queue job is not terminal"""
+    if r.get("status") in ("RUNNING", "LAUNCHING"):
+        return True
+    return r.get("status") == "ENQUEUED" and bool(r.get("q_id")) and (jobs.get(r["q_id"]) or {}).get("status") in REAP_LIVE_Q
+
+
+def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
+    """KW-FIX-45 11-11 (COORD, epyc4 leaf t9 ran four times; 369 zombie ot-job/container instances found across the fleet):
+    when the wave replaces or cancels an attempt it must also stop that attempt's started work on the gen host and drop its
+    queued respawn.  Two cases, both idempotent:
+      1. SUPERSEDED BY A NEWER ATTEMPT: an older attempt of the same (die, item) that is still live (RUNNING unit, or queue
+         job RUNNING / WAIT-GEOM / QUEUED) while a later attempt of that item that started after it is live too, is
+         stopped (hub unit + detached place client + `ot-run --cancel-dir` so the queue cannot respawn it) and marked
+         CANCELLED class SUPERSEDED.
+      2. CANCELLED ROWS: every CANCELLED row of the last 6 h gets one fleet-wide stop of containers/scopes mounting its
+         attempt root (wave_jobs.stop_on_fleet, exact names) plus `ot-run --cancel-dir` for its kit, once (rec['reaped']).
+    Die option or global reap_stale_attempts false = off; at most reap_max_per_tick (default 40) rows per tick."""
+    if cfg.get("reap_stale_attempts") is False:
+        return 0
+    ap_dir = ap_dir or AP.AP_DIR
+    try:
+        jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+    except (OSError, ValueError):
+        jobs = {}
+    cap = int(cfg.get("reap_max_per_tick") or 40)
+    items = st.get("items") or {}
+    now = time.time()
+    by = {}
+    for k, r in items.items():
+        by.setdefault((r.get("die"), r.get("item")), []).append(r)
+    todo, n = [], 0
+    for (die, item), rows in by.items():
+        if (((cfg.get("dies") or {}).get(die) or {}).get("reap_stale_attempts")) is False:
+            continue
+        live = [r for r in rows if _row_live(r, jobs)]
+        if len(live) > 1:
+            live.sort(key=lambda r: (float(r.get("started") or 0), int(r.get("attempt") or 0)))
+            for r in live[:-1]:
+                if float(r.get("started") or 0) < float(live[-1].get("started") or 0):
+                    todo.append((r, f"superseded by attempt {live[-1].get('attempt')} of the same item", True))
+        for r in rows:
+            if r.get("status") == "CANCELLED" and not r.get("reaped") and now - float(r.get("updated") or 0) < 6 * 3600:
+                todo.append((r, "row CANCELLED", False))
+    roots, seen = [], set()
+    for r, why, supersede in todo:
+        if n >= cap:
+            AP.log(f"KIT-WAVE REAP cap {cap} reached; the rest next tick")
+            break
+        if id(r) in seen:
+            continue
+        seen.add(id(r))
+        units = []
+        if supersede and r.get("status") in ("RUNNING", "LAUNCHING"):
+            units.append(r.get("unit"))
+            try:
+                units.append(json.loads((Path(r["dir"]) / "place_service.json").read_text())["unit"])
+            except (OSError, ValueError, KeyError, TypeError):
+                pass
+        j = jobs.get(r.get("q_id")) or {}
+        if j.get("unit") and j.get("status") in REAP_LIVE_Q:
+            units.append(j["unit"])
+        kit = (r.get("kit") or "").partition(":")[2]
+        if AP.DRY or cfg.get("reap_dry_run"):       # reap_dry_run true: log the would-stop list only (staged enable)
+            AP.log(f"KIT-WAVE REAP would stop {r.get('die')}/{r.get('item')}@{r.get('attempt')} [{r.get('status')}] kit {r.get('kit')}: {why}")
+            continue
+        for u in units:
+            if u:
+                AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+        if kit:                                      # ends the autopilot record so the queue cannot respawn the job
+            AP.sh([OT_RUN, "--cancel-dir", kit, "--reason", "KW-FIX-45 reap: " + why], timeout=60)
+        root = attempt_root(r)
+        if root:
+            roots.append(root)
+        if supersede:
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=now,
+                     reason=f"{why}: its units, containers and queue job stopped (KW-FIX-45 reap)")
+            notices.setdefault(r.get("die"), []).append(f"{r.get('item')}@{r.get('attempt')} SUPERSEDED: {why}")
+        r["reaped"] = now
+        AP.log(f"KIT-WAVE REAP {r.get('die')}/{r.get('item')}@{r.get('attempt')}: {why}; units {units}")
+        n += 1
+    if roots:
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
+        AP.log(f"KIT-WAVE REAP remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+               + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
+    return n
+
+
 def step(AP, ap_dir=None):
     """one wave pass; a non-blocking lock keeps two passes (tick + CLI step) from double-launching"""
     import fcntl
@@ -6254,6 +6565,7 @@ def _step(AP, ap_dir):
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    reap_stale_attempts(AP, cfg, st, notices, ap_dir)      # KW-FIX-45: stop the gen-host work of replaced/cancelled attempts
     try:                                        # KW-FIX-44 GRTARM_1111: arm arbitration / stop rule / class stop
         grt_arm_step(AP, cfg, st, notices, ap_dir)
     except Exception as e:                      # an arm problem never stops the wave
