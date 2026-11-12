@@ -32,6 +32,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - hd_mesh M1 TAKEN OVER from VISLAYOUT3 (parked): route epyc9 kit vislayout3-kvhead/head/kit_mesh_m1, log ~/head95log/mesh_m1_route.log. Also own the sign-off of SP2 route (vislayout3-kvhead/jobs/hd_spn_sp2/route.log).
 - hd_spn_wshim_rx FRESH kit from main 26c9ae03a493 (worktree epyc4 wt/head-95-main, sparse + head-93 prep links): epyc9 head-95/wshim_rx_main GOAL route, log ~/head95log/wshim_rx_main_route.log. raw_patch.py now takes OT_ROOT=<tree>.
 
+- lep0N v3: GEOM-VIS-8 GOOD 11:51; ROUTE epyc9 head-95/lep0N_v3, log ~/head95log/lep0N_v3_route.log (sign-off at end).
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
