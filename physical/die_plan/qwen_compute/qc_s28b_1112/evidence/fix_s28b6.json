@@ -1,0 +1,231 @@
+{
+ "start_pins": [
+  {
+   "type": "sle_sc_v3",
+   "pin": "cland_tstart_in",
+   "cand": [
+    146.25,
+    167.392
+   ],
+   "base": [
+    156.0,
+    167.392
+   ]
+  },
+  {
+   "type": "tt_ctlm",
+   "pin": "cland_tstart_in",
+   "cand": [
+    219.533,
+    129.568
+   ],
+   "base": [
+    196.064,
+    129.568
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "pin": "cland_tstart_in",
+   "cand": [
+    146.25,
+    167.392
+   ],
+   "base": [
+    156.0,
+    167.392
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "pin": "cland_tstart_in",
+   "cand": [
+    146.25,
+    167.392
+   ],
+   "base": [
+    156.0,
+    167.392
+   ]
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "pin": "cland_tstart_in",
+   "cand": [
+    146.25,
+    167.392
+   ],
+   "base": [
+    156.0,
+    167.392
+   ]
+  }
+ ],
+ "reverted": [
+  "slw_st_b_v1__cle6023ec2",
+  "slw_st_b_v2__pvc2ec5bfb",
+  "sle_stm_v2__cl55be2264"
+ ],
+ "snapped": [
+  {
+   "type": "sle_sc_v3",
+   "core": "u_core",
+   "cand": [
+    324.0,
+    648.0
+   ],
+   "snapped": [
+    319.68,
+    648.0
+   ],
+   "base": [
+    345.6,
+    648.0
+   ]
+  },
+  {
+   "type": "coll_s",
+   "core": "u_bound.u_g_face_4_u_face.u_tx.u_mem",
+   "cand": [
+    557.28,
+    449.28
+   ],
+   "snapped": [
+    561.6,
+    449.28
+   ],
+   "base": [
+    518.4,
+    449.28
+   ]
+  },
+  {
+   "type": "tt_ctlm",
+   "core": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+   "cand": [
+    505.44,
+    181.44
+   ],
+   "snapped": [
+    509.76,
+    181.44
+   ],
+   "base": [
+    483.84,
+    181.44
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "core": "u_core",
+   "cand": [
+    324.0,
+    648.0
+   ],
+   "snapped": [
+    319.68,
+    648.0
+   ],
+   "base": [
+    345.6,
+    648.0
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "core": "u_core",
+   "cand": [
+    324.0,
+    648.0
+   ],
+   "snapped": [
+    319.68,
+    648.0
+   ],
+   "base": [
+    345.6,
+    648.0
+   ]
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "core": "u_core",
+   "cand": [
+    324.0,
+    648.0
+   ],
+   "snapped": [
+    319.68,
+    648.0
+   ],
+   "base": [
+    345.6,
+    648.0
+   ]
+  },
+  {
+   "type": "slw_stm_v2__cl1ca9c415",
+   "core": "u_bound.u_core.u_tload.u_ld.m2",
+   "cand": [
+    263.52,
+    1054.08
+   ],
+   "snapped": [
+    267.84,
+    1054.08
+   ],
+   "base": [
+    250.56,
+    1054.08
+   ]
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "core": "u_core",
+   "cand": [
+    324.0,
+    648.0
+   ],
+   "snapped": [
+    319.68,
+    648.0
+   ],
+   "base": [
+    345.6,
+    648.0
+   ]
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "core": "u_core",
+   "cand": [
+    324.0,
+    648.0
+   ],
+   "snapped": [
+    319.68,
+    648.0
+   ],
+   "base": [
+    345.6,
+    648.0
+   ]
+  },
+  {
+   "type": "sle_stm_v2__cl7b3062fa",
+   "core": "u_bound.u_core.u_tload.u_ld.m0",
+   "cand": [
+    298.08,
+    1054.08
+   ],
+   "snapped": [
+    302.4,
+    1054.08
+   ],
+   "base": [
+    276.48,
+    1054.08
+   ]
+  }
+ ]
+}
