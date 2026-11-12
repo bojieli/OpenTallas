@@ -2741,9 +2741,25 @@ def _hop_latch_tap_cfg(P, tn):
     """HBM-VSN-XTAP-2 11-11 form A': OT_HOP_LATCH_CAPTURE_TAP value = the die default / GEN env (_hop_latch_capture_tap)
     plus the plan's per-hop capture-tap latches of `tn` (schema.ft_hop_latch_tap); None = no line."""
     base = _hop_latch_capture_tap(P)
-    res = [_hop_latch_re(s, k) for s, m in sorted(S.ft_hop_latch_tap(P.raw, tn).items())
-           for k, v in sorted(m.items()) if v == "capture"]
-    v = " ".join(([base] if base else []) + res)
+    tapm = S.ft_hop_latch_tap(P.raw, tn)
+    res = [_hop_latch_re(s, k) for s, m in sorted(tapm.items()) for k, v in sorted(m.items()) if v == "capture"]
+    toks = base.split() if base else []
+    launch = {(s, int(k)) for s, m in tapm.items() for k, v in m.items() if v == "launch"}
+    if launch:
+        # HBM-VSN-XTAP-2 11-12: a plan "launch" hop wins over a die-default capture regex (e.g. u_fl_L201x): the token
+        # that would catch it is replaced, for this type only, by per-hop regexes of every other hop it caught.
+        import re as _re
+        sample = lambda s, k: f"u_bound.u_fl_{s}_o_{k}/"   # noqa: E731  bound name u_fl_<obus>_<k> (obus <slot>_o)
+        keep = []
+        for tok in toks:
+            if not any(_re.search(tok, sample(s, k)) for s, k in launch):
+                keep.append(tok)
+                continue
+            hops = [(s["name"], k) for s in P.types[tn].get("ft_slots", []) for k in range(int(s.get("stations", 1)) - 1)]
+            res += [_hop_latch_re(s, k) for s, k in hops
+                    if (s, k) not in launch and _re.search(tok, sample(s, k)) and _hop_latch_re(s, k) not in res]
+        toks = keep
+    v = " ".join(toks + res)
     return v or None
 
 

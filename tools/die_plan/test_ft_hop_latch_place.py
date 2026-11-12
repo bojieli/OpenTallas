@@ -72,6 +72,23 @@ def test_gen_phys_cfg(monkeypatch):
     assert gen_phys._hop_latch_tap_cfg(P, "T") == "u_fl_L22x3_[^_]+_1[^0-9] u_fl_L9mx2_[^_]+_2[^0-9]"
 
 
+def test_launch_overrides_die_default_capture(monkeypatch):
+    """11-12: a plan "launch" hop on a slot the die default hangs on capture (u_fl_L201x) leaves that hop on its launch
+    tap; the slot's other hops stay on capture (explicit per-hop regexes); other tokens and types unchanged."""
+    monkeypatch.delenv("OT_HOP_LATCH_CAPTURE_TAP", raising=False)
+    tap = {"T": {"L201x1": {"0": "launch", "2": "launch"}}}
+    P = types.SimpleNamespace(raw=_raw(tap=tap), die={"name": "hbm_arch"},
+                              types={"T": {"ft_slots": [{"name": "L201x1", "stations": 5}, {"name": "L9x2", "stations": 3}]}})
+    v = gen_phys._hop_latch_tap_cfg(P, "T")
+    assert v == "u_fl_rst_ u_fl_L201x1_[^_]+_1[^0-9] u_fl_L201x1_[^_]+_3[^0-9]", v
+    toks = v.split()
+    hit = lambda n: any(re.search(t, n) for t in toks)  # noqa: E731
+    assert not hit("u_bound.u_fl_L201x1_o_0/q[0]$_DLATCH_N_") and not hit("u_bound.u_fl_L201x1_o_2/q[5]$_DLATCH_N_")
+    assert hit("u_bound.u_fl_L201x1_o_1/q[0]$_DLATCH_N_") and hit("u_bound.u_fl_L201x1_o_3/q[9]$_DLATCH_N_")
+    assert hit("u_bound.u_fl_rst_3/q") and not hit("u_bound.u_fl_L9x2_o_0/q[0]$_DLATCH_N_")
+    assert gen_phys._hop_latch_tap_cfg(P, "U") == "u_fl_rst_ u_fl_L201x"
+
+
 NAMES = ["u_bound.u_fl_L22x3_o_1/q[0]$_DLATCH_N_", "u_bound.u_fl_L22x3_o_10/q[3]$_DLATCH_N_",
          "u_bound.u_fl_L22x3_o_11/q[3]$_DLATCH_N_", "u_bound.u_fl_L22mx3_o_1/q[0]$_DLATCH_N_",
          "u_bound.u_fl_L22x3w_o_1/q[0]$_DLATCH_N_", "u_bound.u_fl_L22x3_o_3/q[1]$_DLATCH_N_",

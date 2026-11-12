@@ -1775,7 +1775,8 @@ def _ft_hop_map(raw, key, type_name):
 def ft_hop_latch_tap(raw, type_name):
     """HBM-VSN-XTAP-2 11-11 form A' (DIE-HBM-100): {slot: {k: "launch"|"capture"}} the clock tap of the ft hop lockup
     latch u_fl_<slot>_<face>_<k> of `type_name` (plan clock.ft_hop_lockup.tap).  "launch" = the default (clock_taps.tcl
-    follow-D pass); "capture" = hung on its capture station's tap.  Rule: the EARLIER tap of the pair (per-pair paper
+    follow-D pass; it also overrides a die-default capture regex such as u_fl_L201x, 11-12); "capture" = hung on its
+    capture station's tap.  Rule: the EARLIER tap of the pair (per-pair paper
     check on routed STA), so latch -> capture gets T/2 + |skew|.  Absent = {} (no change)."""
     return _ft_hop_map(raw, "tap", type_name)
 
