@@ -20,9 +20,9 @@ Rules (config key, default; env wins over `export KEY = value` in the kit's conf
       From completed iteration OT_FF_DRT_ITER: stop when the violation count is above OT_FF_DRT_MAX_VIOL and over the last
       OT_FF_DRT_WINDOW iterations it fell by less than OT_FF_DRT_MIN_DROP_PCT % per iteration (compound: v_last >
       v_before * (1 - pct/100) ** window).
-  (c) HOLD_STRUCTURAL   OT_FF_HOLD=1  OT_FF_HOLD_CAPS=2
-      Hold repair that reports the buffer cap (RSZ-0060) OT_FF_HOLD_CAPS times in this run's CTS + GRT logs, or an
-      OT_HOLD_STALL NEEDS_RTL line: the run ends as hold-structural instead of continuing to route.  A kit with
+  (c) HOLD_STRUCTURAL   OT_FF_HOLD=1  OT_FF_HOLD_CAPS=0 (COORD 11-11: cap clause OFF by default; N > 0 = stop at N cap hits)
+      An OT_HOLD_STALL NEEDS_RTL line, or (only when OT_FF_HOLD_CAPS > 0) hold repair that reports the buffer cap (RSZ-0060)
+      OT_FF_HOLD_CAPS times in this run's CTS + GRT logs: the run ends as hold-structural instead of continuing to route.  A kit with
       'export OT_HOLD_STRUCTURAL_ADVISORY = 1' is exempt (owner: advisory kits keep going).
 Classes (the first token of the stop line, read by tools/autopilot/autopilot.py):
   OT_GRT_NO_PROGRESS stage=grt ...  carries the last overflow per layer (H / V split and every named layer of the report)
@@ -41,7 +41,7 @@ DEFAULTS = {
     "OT_FAILFAST": 1,
     "OT_FF_GRT": 1, "OT_FF_GRT_MAX": 1000, "OT_FF_GRT_MIN_DROP_PCT": 10, "OT_FF_GRT_ROUNDS": 2, "OT_FF_GRT_ROUND_ITERS": 30,
     "OT_FF_DRT": 1, "OT_FF_DRT_ITER": 20, "OT_FF_DRT_MAX_VIOL": 10000, "OT_FF_DRT_MIN_DROP_PCT": 5, "OT_FF_DRT_WINDOW": 3,
-    "OT_FF_HOLD": 1, "OT_FF_HOLD_CAPS": 2,
+    "OT_FF_HOLD": 1, "OT_FF_HOLD_CAPS": 0,
 }
 
 ITER_RE = re.compile(r"\[INFO GRT-0102\] Start extra iteration (\d+)/(\d+)")
@@ -224,7 +224,7 @@ def hold_decide(caps, stall, c, config_text=""):
         return None
     if stall:
         return {"rule": "HOLD_STRUCTURAL", "why": "OT_HOLD_STALL: " + stall[:200]}
-    if caps >= c["OT_FF_HOLD_CAPS"]:
+    if c["OT_FF_HOLD_CAPS"] > 0 and caps >= c["OT_FF_HOLD_CAPS"]:
         return {"rule": "HOLD_STRUCTURAL", "why": "hold repair hit the buffer cap (RSZ-0060) %d times (limit %d)" % (caps, c["OT_FF_HOLD_CAPS"])}
     return None
 
