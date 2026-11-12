@@ -90,5 +90,5 @@ Kits are also synced to epyc8. NEXT: on PLACE_RC=0, render <kit>/<type>/run/layo
 - HEAD-95 08:51: HEAD plan of record = rp15 (epyc4 head-95/pd/rp15.json 7931b5662082; rp14 + lep0N only). HEAD-95 merges m1 + sp2/sp3 onto rp15 once the renders pass GEOM-VIS-7. cc HEAD-95 on every GEOM-VIS-7 verdict. The hd_spn_end raw-port count 14 = 19 exports - 5 existing_port: consistent. Confirm port_bind missing 0 in the place log.
 ## 13 2026-11-12 09:32 PST
 - SP2 place: AUTO-GEOM clock_tap_sinks ok 1186 (a3 FAIL 1754), GRT 0. GEOM-VIS-7 09:0x place OK -> ROUTE RUNNING epyc9, log intel2 .../jobs/hd_spn_sp2/route.log (ROUTE_RC=). Sign-off verdict in kit_spn_sp2/hd_spn_end/signoff/signoff.json.
-- SP3 placed; GEOM-VIS-7 09:1x OK. AUTO-GEOM epyc9 head/geom_spn_sp3 (launch: ot-run --stage <tools/autopilot> --stage <kit run/results>; without --stage ot-run REFUSES with isolation). Route it if measured max <= 1000.
+- SP3 DONE: measured max 1225 (worse than SP2 1186; kit split = nearest, tool c2 capacity moves are paper only). NOT routed; TOOL-GAP posted to REACH-FIX-2 2026-11-12 09:34 PST.
 - hd_mesh M1 placing (log jobs/hd_mesh_m1/place.log). Then: geom (same recipe, outline 604.8x1226.88), WAIT-VISUAL to GEOM-VIS-7 cc HEAD-95, route on GOOD/ISSUES-ACCEPT.
