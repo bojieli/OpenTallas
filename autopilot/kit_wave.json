@@ -21728,7 +21728,15 @@
     "slw_sc_v1__cl64543eaf__cl4590432d@3",
     "slw_sc_v1__cl64543eaf__cl5e017c6f@3",
     "slw_sc_v2@4",
-    "slw_st_a_v2__cl9f076a5c@6"
+    "slw_st_a_v2__cl9f076a5c@6",
+    "sle_sc_v2@31",
+    "sle_st_a_v2@6",
+    "sle_su_l0__cl7a55c676@8",
+    "slw_hc2__cl6bcaba89@6",
+    "slw_sc_v1__cl64543eaf__cl5e017c6f@5",
+    "slw_sc_v3@6",
+    "slw_st_a_v2__cl9f076a5c@8",
+    "slw_su_c__cl19bb38ef@6"
    ],
    "queue_src": "claude/qc-event-s25-1111@4e2764d237d8",
    "type_args": {
@@ -30161,7 +30169,9 @@
     "q_hub_ne__physical_v1": "KW-FIX-45 11-11 DIE-HBM-100: hold until the d53 merge + bind, then re-point to d53b (ad080c302a2b); currently on the older plan_p9_wsw_r",
     "q_hub_nw__physical_v1": "KW-FIX-45 11-11 DIE-HBM-100: hold until the d53 merge + bind, then re-point to d53b (ad080c302a2b); currently on the older plan_p9_wsw_r",
     "q_b01[01]*": "KW-FIX-45 11-11 22:0x COORD loop-gap: q_b010/q_b011 (+physical_v1) wait for the bank128 canon child (b128_canonS) to sign; until then they would be placed against the weight_E pins (prov_view one view per module; guard 9b0926fd8f63 approved, not merged/deployed)",
-    "hfd_hgi_vms_glue_nw_t": "structural re-form pending (DIE-HBM-97-B4 + plan event): GEOM-REVIEW (COORD/DIE-HBM-100 11-11 22:4x): attempt 15 is a structurally bad form (778x1636, fill 0.029, one clock root on 46474 sinks, no taps, 11700 M4 + 8460 M5 pins on the E face); no further retry or relaunch for any reason"
+    "hfd_hgi_vms_glue_nw_t": "structural re-form pending (DIE-HBM-97-B4 + plan event): GEOM-REVIEW (COORD/DIE-HBM-100 11-11 22:4x): attempt 15 is a structurally bad form (778x1636, fill 0.029, one clock root on 46474 sinks, no taps, 11700 M4 + 8460 M5 pins on the E face); no further retry or relaunch for any reason",
+    "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a": "KW-FIX-45 11-12 HBM-CORES-B/DIE-HBM-100: rd1 body (fcd9b8dde26f7876) has a bare initial begin ... $fatal end that face_shell yosys read_verilog -sv cannot resolve; hold until the rd1 main source carries the body with the block wrapped in ifndef SYNTHESIS (HBM-COMPOSE-2 / DIE-HBM-97 apply it and restate EQ + bind provenance)",
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": "KW-FIX-45 11-12 HBM-CORES-B/DIE-HBM-100: rd1 body (fcd9b8dde26f7876) has a bare initial begin ... $fatal end that face_shell yosys read_verilog -sv cannot resolve; hold until the rd1 main source carries the body with the block wrapped in ifndef SYNTHESIS (HBM-COMPOSE-2 / DIE-HBM-97 apply it and restate EQ + bind provenance)"
    },
    "gen_hosts": [
     "epyc9"
