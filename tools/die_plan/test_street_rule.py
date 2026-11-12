@@ -334,3 +334,33 @@ def test_legalize_moves_sinks_with_cores(tmp_path):
                     yield from rects(v, key)
     for r in rects(t):
         assert r[0] <= r[2] and r[1] <= r[3], r                   # every rect stays valid
+
+
+def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
+    """COORD 11-12 (HEAD-94 hd_lep0N): raw reset exports / landing pin sources / stage raw refs are re-selected on the
+    re-solved reset tree of a legalized type (mesh_resel rule)."""
+    import types as _t
+    trees = {
+        "base": dict(relays=[dict(name="r_a", q="qa", depth=2, role="raw", xy=[100.0, 50.0]),
+                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0])]),
+        "new": dict(relays=[dict(name="r_a2", q="qa2", depth=2, role="raw", xy=[130.0, 50.0]),
+                            dict(name="r_x", q="qx", depth=2, role="raw", xy=[400.0, 50.0]),
+                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0])]),
+    }
+    import schema
+    import reset_tree
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    t = {"reset_start_raw_exports": [dict(port="rst_o", instance="r_a", net="qa", xy_um=[100.0, 50.0])],
+         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")]},
+                   "landing_local_resets": [dict(raw="qa", xy_um=[100.0, 50.0]), dict(raw="qb", xy_um=[200.0, 50.0])]}}
+    P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
+    Q = {"tag": "new", "partition_types": {"x": t}}
+    rec = SR.reset_resel(P, Q, ["x"], tmp_path / "plan.json")["x"]
+    assert "error" not in rec, rec
+    e = t["reset_start_raw_exports"][0]
+    assert (e["instance"], e["net"], e["xy_um"]) == ("r_a2", "qa2", [130.0, 50.0])     # same role+depth, nearest
+    pn = t["clock"]["landing_contract"]["pins"][0]
+    assert pn["source_instance"] == "r_a2" and pn["xy_um"] == [131.0, 49.0]           # pin offset kept
+    lr = t["clock"]["landing_local_resets"]
+    assert lr[0]["raw"] == "qa2" and lr[1]["raw"] == "qb"     # gone -> nearest same depth; surviving Q kept

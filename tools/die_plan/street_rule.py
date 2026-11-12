@@ -1183,6 +1183,98 @@ def tap_repair(Q, names, plan_path, log=print):
     return out
 
 
+def _start_relays(tr):
+    st = bool(tr.get("start"))
+    import reset_tree as RT
+    rl = RT.start_relays(tr) if st else tr.get("relays", [])
+    return [r for r in rl if not st or r.get("role") in ("raw", "boot", "bootstrap_transport")]
+
+
+def reset_resel(P, Q, names, plan_path, near_um=25.0):
+    """re-select the raw reset references of legalized types on their re-solved reset tree (COORD 11-12, HEAD-94
+    hd_lep0N "raw reset source is not the recorded registered relay"; rule = HEAD mesh_resel.py / compose.py RAWSEL):
+    every reset_start_raw_exports entry -> the new start relay of the same role + depth nearest its old xy (entries
+    sharing an old instance share the new one), its landing_contract pin source follows (pin offset kept); every
+    landing_{reader,writer}_start stage raw_reset and landing_local_resets raw keeps its Q if that relay survives at
+    the same depth within near_um of the best, else the nearest relay of that depth.  Returns {type: record}."""
+    import math
+    import schema as SC
+    import reset_tree as RT
+    try:
+        PA, PB = SC.Plan(P, Path(plan_path)), SC.Plan(Q, Path(plan_path))
+    except Exception as e:  # noqa: BLE001
+        return {n: dict(error="plan load: %s" % e) for n in names}
+    out = {}
+    for tn in names:
+        t = Q["partition_types"][tn]
+        ck = t.get("clock") or {}
+        has = t.get("reset_start_raw_exports") or ck.get("landing_local_resets") or any(
+            (ck.get(k) or {}).get("branches") for k in ("landing_reader_start", "landing_writer_start"))
+        if not has:
+            continue
+        rec = dict(exports=[], raw=[], skipped=[])
+        try:
+            ta, tb = RT.for_type(PA, tn), RT.for_type(PB, tn)
+            ra = {r["name"]: r for r in _start_relays(ta)}
+            rb = _start_relays(tb)
+            pins = {x["name"]: x for x in ((ck.get("landing_contract") or {}).get("pins") or [])}
+            shared, used = {}, set()
+            for e in t.get("reset_start_raw_exports") or []:
+                o = ra.get(e.get("instance"))
+                if o is None:
+                    rec["skipped"].append(e.get("instance"))
+                    continue
+                if e["instance"] in shared:
+                    n = shared[e["instance"]]
+                else:
+                    c = [r for r in rb if r.get("role") == o.get("role") and r.get("depth") == o.get("depth")
+                         and r["name"] not in used] or [r for r in rb if r.get("depth") == o.get("depth")]
+                    if not c:
+                        rec["skipped"].append(e.get("instance"))
+                        continue
+                    n = min(c, key=lambda r: math.dist(r["xy"], e.get("xy_um") or o["xy"]))
+                    used.add(n["name"])
+                    shared[e["instance"]] = n
+                pn = pins.get(e.get("port"))
+                if pn is not None and e.get("xy_um") and pn.get("xy_um"):
+                    off = [pn["xy_um"][0] - e["xy_um"][0], pn["xy_um"][1] - e["xy_um"][1]]
+                    pn["source_instance"], pn["source_copy_from_net"] = n["name"], n["q"]
+                    pn["xy_um"] = [round(n["xy"][0] + off[0], 4), round(n["xy"][1] + off[1], 4)]
+                if (e["instance"], e.get("net")) != (n["name"], n["q"]):
+                    rec["exports"].append([e.get("port"), e["instance"], n["name"]])
+                e["instance"], e["net"], e["xy_um"] = n["name"], n["q"], list(n["xy"])
+            ra_q = {r["q"]: r for r in ta.get("relays", [])}
+            rb_all = tb.get("relays", [])
+            rb_q = {r["q"]: r for r in rb_all}
+            refs = []
+            for key in ("landing_reader_start", "landing_writer_start"):
+                for bus, br in ((ck.get(key) or {}).get("branches") or {}).items():
+                    for i, st in enumerate(br.get("stages", [])):
+                        refs.append(("%s.%s.%d" % (key, bus, i), st, "raw_reset"))
+            for i, lr in enumerate(ck.get("landing_local_resets") or []):
+                refs.append(("landing_local_resets.%d" % i, lr, "raw"))
+            for tag, obj, fld in refs:
+                q = obj.get(fld)
+                o = ra_q.get(q)
+                if o is None:
+                    continue
+                pt = obj.get("xy_um") or o["xy"]
+                cand = [r for r in rb_all if r.get("depth") == o.get("depth")]
+                if not cand:
+                    rec["skipped"].append(tag)
+                    continue
+                n = min(cand, key=lambda r: math.dist(r["xy"], pt))
+                k = rb_q.get(q)
+                if k is not None and k.get("depth") == o.get("depth") and math.dist(k["xy"], pt) <= math.dist(n["xy"], pt) + near_um:
+                    continue
+                rec["raw"].append([tag, q, n["q"]])
+                obj[fld] = n["q"]
+        except Exception as e:  # noqa: BLE001
+            rec["error"] = "%s: %s" % (type(e).__name__, str(e)[:300])
+        out[tn] = rec
+    return out
+
+
 def sinks_under_cores(t, repo=None):
     R = _core_rects(t)
     pts, _ = sink_points(t, repo)
@@ -1779,6 +1871,18 @@ def cmd_legalize(a):
                 break
         print("tap check: %d applied, %d fail after (%d also fail in base) -> %d reverted" % (
             len(applied), len(bad1), len(bad0), len([n for n in bad1 if n not in bad0])), flush=True)
+    # raw reset references follow the re-solved reset trees of every type still applied (after the tap re-derivation:
+    # the taps feed the relay siting), same pass as the rect / bins / taps fix (COORD 11-12)
+    still = [r["type"] for r in rows if r.get("applied")]
+    if still and cfg.get("reset_resel", 1):
+        rr = reset_resel(P, Q, still, plan)
+        nch = 0
+        for r in rows:
+            if r["type"] in rr:
+                r["reset_resel"] = rr[r["type"]]
+                nch += len(rr[r["type"]].get("exports", [])) + len(rr[r["type"]].get("raw", []))
+        print("reset re-select: %d types with raw reset refs, %d refs re-selected, %d errors" % (
+            len(rr), nch, sum(1 for v in rr.values() if v.get("error"))), flush=True)
     def write_plan():
         txt = json.dumps(Q, indent=1) + "\n"
         if a.out_plan.endswith(".gz"):
