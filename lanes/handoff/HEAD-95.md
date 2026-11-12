@@ -1,4 +1,4 @@
-# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 08:49 PST
+# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 11:54 PST
 
 ## 1 Scope
 HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (CLOSED 08:33, fallback taken), HB4 seam shims, wshim_rx DRV ECO, visual gate via GEOM-VIS-5, route on epyc8/9 (not epyc2), hourly STATE.
@@ -23,6 +23,10 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - Kit-gen recipe sent to VISLAYOUT3-KVHEAD (a8e402dfc900a5ca8): gen.py phys + raw_patch.py (needed for port_bind), run_kit.sh place/route.
 
 - hd_mesh (M1 m1_final e9c3c429) + hd_spn_end (SP2 6ef4172a = chosen form, routing epyc9; SP3 44a11562 dropped: kit tap split 1225 > SP2 1186) are owned by VISLAYOUT3-KVHEAD (a8e402dfc900a5ca8): kits placing on epyc9 vislayout3-kvhead/head/kit_*, renders go to GEOM-VIS-7. Do NOT build these here; after the GEOM-VIS-7 verdicts, merge their deltas onto rp15 (G0 + gen). Raw-port count explained: 19 declared, 5 reuse rst_o_1..5 (existing_port), so 14 new ports is correct; port_bind confirmation pending from VISLAYOUT3.
+
+- 2026-11-12 11:54: lep0N v3 PLACE DONE (epyc8, rc 0); REVIEW REQUEST to GEOM-VIS-8 posted (renders lanes/head-95-west-1112/lep0N_v3_place_*.png). On GOOD/ISSUES-ACCEPT: ot-run --hosts epyc9 route (copy epyc8 head-95/lep0N_v3 to epyc9 first).
+- rp16 (epyc4 head-95/pd/rp16.json f3655867deef) = rp15 + hd_mesh from VL3 m1_final + hd_spn_end from VL3 sp2. G0 0 NEW vs rp15; gen hd_mesh rc 0; hd_spn_end/lep0N gen results in epyc4 head-95/rp16.out (RP16_DONE). Becomes plan of record when all three pass.
+- VL3 hd_mesh M1: place GOOD (GEOM-VIS-7) but NO route launched; asked COORD who launches it.
 
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
