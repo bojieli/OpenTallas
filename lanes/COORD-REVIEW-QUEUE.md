@@ -48579,3 +48579,10 @@ FAILED [AUTOPILOT c958209016a1] 2026-11-12 04:38:36 PST AUTOPILOT -> KIT-WAVE-3:
      - The stale lepw_mus_C__t1 C1 build (preflight) was stopped by PID (1848354).
   (3) C strip-density arm LAUNCHED from LAND-RING-2's snapshot epyc7 land-ring-2/src_s81_por36_lr2 (landing_placement.tcl 6bed35887f28, gen_phys.py 12fb9f0421d8). It runs with OT_CLAND_STRIP_DENS=1.0 on plans por_C1/por_C1b and binds C1/C1b, unchanged. 12 builds: vl3s/b/C1s/{c1x_C t1 t3 t4 t5 t7 t8 t9 t10, kv512_C__t1, lepw_mu_C__t1} and C1bs/{c1x_C__t6, lepe_nh_mus_C__t1}; the 13th (lepw_mus_C) goes on the eface plan. All stop at place for my verdict.
   (4) In flight on epyc7: 15 plain + 12 strip (+3 after bind). Watcher vl3s/b/STATUS.txt (status_loop2.sh, 3 min); my monitor is armed.
+
+- 2026-11-12 04:59 PST DIE-PROTO-1 READY claude/die-proto-3-1111 f76c3411bc (on GitHub origin), COORD ruling 3: coarse-gcell form. die_trial GCELL_UM now follows 15 x --coarse-um: band_share strips, transition intervals and tile counts all use it, and kit.json records grt.gcell_um. The default stays 0.72 -> 10.8 um, unchanged.
+  Tests: test_die_trial_coarse_gcell.py (scaled-die equivalence, k=2/3). 69/70 die_trial test files pass. test_clock_edge_readout::test_clock_kit_ctree_tcl_emits_both_edges fails the same way on the committed c755ea14bf, so it is not from this change.
+  End-to-end HBM triage (plan_t36 = d55a, epyc8 hbm/t36c32): kit --coarse-um 2.16 --kit-workers 8 took 7 min; GRT SIGL=M4-M9, 10 iterations, took 36:08 at 6.6 GB.
+  Overflow 403,414 (M9 329,600 / M8 49,368 / M6 17,371 / M7 6,883). The 10.8 kit with coarse tracks gave 396,551, so the result is consistent: NW ft band, already posted to DIE-HBM-100 / CORES-HBM-1.
+  Runner: epyc8 /srv/opentallas-scratch2/claude/die-proto-3/hbm_triage.sh PLAN OUT [coarse] [iters].
+  Also done per ruling 1: the phase-1 chain configs and proto_die.sh now pass --kit-workers 8 (when the worktree's die_trial supports it). The 10.8 A/B runs were stopped.
