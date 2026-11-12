@@ -9,6 +9,8 @@ Endpoints (bind 127.0.0.1:8765 by default):
   /                 the page            /api/fleet   JSON snapshot
   /replay?from=&to=&speed=   the same page playing a recorded window (/api/replay serves the data)
   /api/elements     per-element (block) closure status table (elements.py; share-safe: summary counts only)
+  /explorer/design/          die -> type -> core pages (design_service.py over design_index.json)
+  /api/design/...            node index API: index, die/<die>, node/<id>, resolve?q=
   /api/layout/<element>/...  routed-geometry tiles for the element page's Layout tab (layout_service.py)
   /api/fleetjobs    every job on every host: loop routes, ot-heavy/ot-run units, other containers, waiters
   /api/stream       server-sent events (latest history point only; /api/fleet
@@ -21,7 +23,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance, fleet_discover, kit_verdicts
+import recorder, elements, explorer, coverage, landing, elem_shell, layout_service, native_provenance, fleet_discover, kit_verdicts, design_service
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -754,6 +756,8 @@ def elem_body(path, safe, gz):
 LANDING_DIR = HERE / 'landing'
 # /api/layout/...: the routed-geometry layout viewer (layout_service.py; packs cut on the fleet host holding each DB)
 LAYOUT = layout_service.Service(log=log)
+# /explorer/design/ + /api/design/...: die -> type -> core pages over the one node index (design_index.py, EXPLORER-2)
+DESIGN = design_service.Service(log=log)
 LANDING = landing.Landing(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), log=log)
 
 def with_sent(body):
@@ -895,6 +899,11 @@ class H(BaseHTTPRequestHandler):
             return self.dataflow(u.path[len('/explorer/dataflow'):].lstrip('/') or 'index.html')
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
+        if u.path == '/explorer/design' or u.path.startswith('/explorer/design/'):
+            if u.path == '/explorer/design': return self.redirect('/explorer/design/')
+            return DESIGN.page(self, u.path[len('/explorer/design/'):])
+        if u.path.startswith('/api/design/'):
+            return DESIGN.handle(self, u.path[len('/api/design/'):], q)
         if u.path.startswith('/layout_store/'):
             return LAYOUT.static(self, u.path[len('/layout_store/'):], safe)
         if u.path.startswith('/api/layout/'):
