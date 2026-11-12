@@ -1,0 +1,19 @@
+read_verilog -sv eq0_stub.v $SU/ot_hgi_su_unit.sv $OLD/ot_hgi_su_lgroup2_lf.sv $OLD/ot_hgi_sfu_opsa_group.sv
+hierarchy -top ot_hgi_sfu_opsa_group1
+proc; flatten; opt -purge; memory_collect; async2sync
+rename ot_hgi_sfu_opsa_group1 gold
+design -stash gold
+read_verilog -sv eq0_stub.v $SU/ot_hgi_su_unit.sv $NEW/ot_hgi_su_lgroup2_lf.sv $NEW/ot_hgi_sfu_opsa_group.sv
+hierarchy -top ot_hgi_sfu_opsa_group1
+proc; flatten; opt -purge; memory_collect; async2sync
+rename ot_hgi_sfu_opsa_group1 gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate eq
+hierarchy -top eq
+# no equiv_struct: try4 merged unrelated q_ra bits (gold [349] vs gate [61])
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status
+equiv_status -assert

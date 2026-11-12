@@ -1,0 +1,9 @@
+SREG_RAND MUT=0 SEED=1 cycles 200000 mismatches rd 0 sr_d 0 sr_rv 0 flt 0 first_edge -1
+SREG_RAND MUT=0 SEED=2 cycles 200000 mismatches rd 0 sr_d 0 sr_rv 0 flt 0 first_edge -1
+SREG_RAND MUT=0 SEED=3 cycles 200000 mismatches rd 0 sr_d 0 sr_rv 0 flt 0 first_edge -1
+SREG_RAND MUT=1 SEED=1 cycles 200000 mismatches rd 197933 sr_d 178023 sr_rv 65823 flt 1 first_edge 3
+SREG_RAND MUT=1 SEED=2 cycles 200000 mismatches rd 197845 sr_d 177316 sr_rv 65384 flt 1 first_edge 3
+SREG_RAND MUT=1 SEED=3 cycles 200000 mismatches rd 197975 sr_d 177476 sr_rv 65317 flt 1 first_edge 3
+SREG_RAND MUT=2 SEED=1 cycles 200000 mismatches rd 196434 sr_d 36097 sr_rv 0 flt 0 first_edge 6
+SREG_RAND MUT=2 SEED=2 cycles 200000 mismatches rd 196312 sr_d 35773 sr_rv 0 flt 0 first_edge 5
+SREG_RAND MUT=2 SEED=3 cycles 200000 mismatches rd 196419 sr_d 35724 sr_rv 0 flt 0 first_edge 4

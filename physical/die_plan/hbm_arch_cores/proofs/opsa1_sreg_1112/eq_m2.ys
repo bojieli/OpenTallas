@@ -1,0 +1,5 @@
+read_verilog -formal -sv /r/ot_hgi_su_unit.sv /r/ot_hgi_su_lgroup2_lf.sv /p/miter.sv
+hierarchy -top miter -chparam MUT 2
+proc; flatten; memory -nomap; memory_map; opt_clean -purge
+async2sync
+sat -tempinduct -prove-asserts -set-init-zero -maxsteps 10

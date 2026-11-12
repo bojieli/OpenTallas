@@ -17,6 +17,12 @@
 // RREG (HBM-FORM-SPLIT-13-OPSB 11-06, opsb_output N32 vB/vC TT -452/-483: SRAM rd_out -> 16:1 sector select -> 700 um haul
 // -> face reg in one cycle): RREG >= 1 registers every bank's rd next to its macro (and delays the network selects with it),
 // RREG = 2 also registers the network output; the response (rd / sr_d / sr_rv) moves RREG edges later, nothing else changes.
+// SREG = 1 (HBM-CORES-B 11-12, OPSA1 third physical form GRT overflow 12400: every bank's 64:1 stage-write select reads
+// all 2048 stage bits, so the broadcast spans the tile): each bank's selected op (re/ra/we/wa/wd) is registered at the
+// select outputs before the BREG stage, so the long hop carries 16 x ~45 b point to point with a whole edge.  ALL bank
+// ops, the response network selects, sr_rv and the fault terms move +1 edge together (order kept, no write-only skew):
+// rd / sr_d / sr_rv / flt +1 edge.  Proof: proofs/opsa1_sreg_1112 (EQ_CYCLE_SHIFTED vs the SREG = 0 core on inputs
+// delayed one edge; SREG_MUT 1/2 negative controls fail).  SREG = 0 is the unchanged netlist.
 `timescale 1ns/1ps
 `default_nettype none
 module ot_hgi_su_lgroup2_lf #(
@@ -28,8 +34,13 @@ module ot_hgi_su_lgroup2_lf #(
     parameter integer NS = 1,              // sector lanes: NS independent 8-word stage writes / drain reads an edge
     parameter integer BREG = 0,            // 1 = registered bank inputs (+1 edge on rd / sr_d / sr_rv)
     parameter integer FREG = 0,            // 1 = registered fault terms (per bank row check next to the bank): flt +1 edge
-    parameter integer RREG = 0             // HBM-FORM-SPLIT-13-OPSB: 1 = bank-local read register on every bank rd (rd / sr_d /
+    parameter integer RREG = 0,            // HBM-FORM-SPLIT-13-OPSB: 1 = bank-local read register on every bank rd (rd / sr_d /
                                            // sr_rv +1 edge); 2 = also the registered read-network output (+2 edges); flt unchanged
+    parameter integer SREG = 0,            // HBM-CORES-B 11-12 (OPSA1 arch, hbm-opsa1-arch): 1 = register every bank op at the
+                                           // select outputs (face side) before the BREG/bank stage: ALL bank ops +1 edge
+                                           // together (rd / sr_d / sr_rv / flt +1 edge); requires FREG = 1
+    parameter integer SREG_MUT = 0         // proof negative controls only: 1 = writes only +1 (reads/network/flt not delayed);
+                                           // 2 = network selects not delayed
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -141,13 +152,27 @@ module ot_hgi_su_lgroup2_lf #(
     // the response valid and the network selects follow the banks' latency (LAT mutants move the data, valid and
     // selects together, so a valid-driven reader stays exact and a fixed-latency one does not)
     localparam integer NLAT = (BREG != 0) ? 1 : LAT;   // network latency mode (BREG = a 2-edge bank)
-    wire [NS-1:0] sr_rv_m = (NLAT == 1) ? srv2 : (NLAT == 2) ? sr_v : srv1;
+    wire [NS-1:0] sr_rv_m0 = (NLAT == 1) ? srv2 : (NLAT == 2) ? sr_v : srv1;
+    wire [NS-1:0] sr_rv_m;
+    if (SREG != 0 && SREG_MUT != 1) begin : g_rvd
+        reg [NS-1:0] q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) q <= {NS{1'b0}}; else q <= sr_rv_m0;
+        assign sr_rv_m = q;
+    end else begin : g_rv0
+        assign sr_rv_m = sr_rv_m0;
+    end
     wire [LN-1:0] lb_s [0:N-1];
     // RREG: the network reads m_rd (the bank rd, registered next to the bank when RREG >= 1) with selects lb_m / sr_m
     // delayed by the same edge; its outputs rd_m / sr_d_m are registered once more when RREG = 2
     wire [31:0] m_rd [0:N-1]; wire [LN-1:0] lb_m [0:N-1]; wire [N*32-1:0] rd_m; wire [NS*256-1:0] sr_d_m;
     for (genvar gs_ = 0; gs_ < N; gs_ = gs_ + 1) begin : g_ls
-        assign lb_s[gs_] = (NLAT == 1) ? lb_q2[gs_] : (NLAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
+        if (SREG != 0 && SREG_MUT != 1 && SREG_MUT != 2) begin : g_sd
+            // SREG: the bank answers one edge later, so the network select follows it one edge later too
+            reg [LN-1:0] q; always @(posedge clk) q <= (NLAT == 1) ? lb_q2[gs_] : (NLAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
+            assign lb_s[gs_] = q;
+        end else begin : g_s0
+            assign lb_s[gs_] = (NLAT == 1) ? lb_q2[gs_] : (NLAT == 2) ? ra[gs_*AW +: LN] : lb_q[gs_];
+        end
     end
     // the data network: a lane takes its bank among its candidates (lane 0: any bank)
     genvar gl, gj, gk;
@@ -167,7 +192,13 @@ module ot_hgi_su_lgroup2_lf #(
         end
     end
     for (gk = 0; gk < NS; gk = gk + 1) begin : g_srl
-        wire [LN-1:0] sr_s = (NLAT == 1) ? sr_lo2[gk] : (NLAT == 2) ? sr_addr[gk*LWB +: LN] : sr_lo[gk];
+        wire [LN-1:0] sr_s0 = (NLAT == 1) ? sr_lo2[gk] : (NLAT == 2) ? sr_addr[gk*LWB +: LN] : sr_lo[gk];
+        wire [LN-1:0] sr_s;
+        if (SREG != 0 && SREG_MUT != 1 && SREG_MUT != 2) begin : g_ssd
+            reg [LN-1:0] q; always @(posedge clk) q <= sr_s0; assign sr_s = q;
+        end else begin : g_ss0
+            assign sr_s = sr_s0;
+        end
         reg [LN-1:0] sr_s_q; always @(posedge clk) sr_s_q <= sr_s;
         wire [LN-1:0] sr_m = (RREG >= 1) ? sr_s_q : sr_s;
         for (gj = 0; gj < 8; gj = gj + 1) begin : g_sr
@@ -294,10 +325,18 @@ module ot_hgi_su_lgroup2_lf #(
     assign fterm[2*N] = srv_q; assign fterm[2*N+1] = wcoll_q;
     reg [N+N+1:0] fq;
     always @(posedge clk) fq <= fterm;
+    // SREG: the fault terms take one more edge with the bank ops (no reset, like fq)
+    wire [N+N+1:0] fq_f;
+    if (SREG != 0 && SREG_MUT != 1) begin : g_fqd
+        if (FREG == 0) begin : g_bad initial $fatal(1, "ot_hgi_su_lgroup2_lf: SREG = 1 requires FREG = 1"); end
+        reg [N+N+1:0] q; always @(posedge clk) q <= fq; assign fq_f = q;
+    end else begin : g_fq0
+        assign fq_f = fq;
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) flt <= 1'b0;
         else if (FREG != 0) begin
-            if (|fq) flt <= 1'b1;
+            if (|fq_f) flt <= 1'b1;
         end else begin
             if (srv_q || wcoll_q) flt <= 1'b1;
             for (l = 0; l < N; l = l + 1)
@@ -315,13 +354,23 @@ module ot_hgi_su_lgroup2_lf #(
     genvar gb;
     for (gb = 0; gb < N; gb = gb + 1) begin : g_bank
         wire k_re, k_we; wire [RB-1:0] k_ra, k_wa; wire [31:0] k_wd;
+        // SREG: every bank op registered at the select outputs (face side) first; no reset, like BREG
+        wire p_re, p_we; wire [RB-1:0] p_ra, p_wa; wire [31:0] p_wd;
+        if (SREG != 0) begin : g_sreg
+            reg s_re, s_we; reg [RB-1:0] s_ra, s_wa; reg [31:0] s_wd;
+            always @(posedge clk) begin s_re <= b_re[gb]; s_we <= b_we[gb]; s_ra <= b_ra[gb]; s_wa <= b_wa[gb]; s_wd <= b_wd[gb]; end
+            assign p_we = s_we; assign p_wa = s_wa; assign p_wd = s_wd;
+            assign p_re = (SREG_MUT == 1) ? b_re[gb] : s_re; assign p_ra = (SREG_MUT == 1) ? b_ra[gb] : s_ra;
+        end else begin : g_nosreg
+            assign p_re = b_re[gb]; assign p_we = b_we[gb]; assign p_ra = b_ra[gb]; assign p_wa = b_wa[gb]; assign p_wd = b_wd[gb];
+        end
         if (BREG != 0) begin : g_breg
             reg q_re, q_we; reg [RB-1:0] q_ra, q_wa; reg [31:0] q_wd;
             // no reset: the uncut bank takes every op issued before a reset edge, so the delayed op must land too
-            always @(posedge clk) begin q_re <= b_re[gb]; q_we <= b_we[gb]; q_ra <= b_ra[gb]; q_wa <= b_wa[gb]; q_wd <= b_wd[gb]; end
+            always @(posedge clk) begin q_re <= p_re; q_we <= p_we; q_ra <= p_ra; q_wa <= p_wa; q_wd <= p_wd; end
             assign k_re = q_re; assign k_we = q_we; assign k_ra = q_ra; assign k_wa = q_wa; assign k_wd = q_wd;
         end else begin : g_nobreg
-            assign k_re = b_re[gb]; assign k_we = b_we[gb]; assign k_ra = b_ra[gb]; assign k_wa = b_wa[gb]; assign k_wd = b_wd[gb];
+            assign k_re = p_re; assign k_we = p_we; assign k_ra = p_ra; assign k_wa = p_wa; assign k_wd = p_wd;
         end
 `ifdef OT_OPSB_N32   // HBM-FORM-SPLIT-13-OPSB opt-in: 2048x32 narrow-macro bank (ot_hgi_su_lbank_n32.sv)
         ot_hgi_su_lbank_n32 #(.RB(RB), .MACRO(MACRO), .LAT(LAT)) u_b (.clk(clk), .re(k_re), .ra(k_ra), .rd(b_rd[gb]),

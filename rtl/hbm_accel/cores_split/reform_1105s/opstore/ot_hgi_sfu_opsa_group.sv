@@ -4,7 +4,8 @@
 // scalar read path, rd_q mux, lgroup2) plus scalar_data_q[G]. Every input is an uncut-core pin, so the shell's +1/+1 keeps every read and stage date.
 `timescale 1ns/1ps
 `default_nettype none
-module ot_hgi_sfu_opsa_gblock #(parameter [1:0] G = 2'd0, parameter integer IREG = 1) (
+module ot_hgi_sfu_opsa_gblock #(parameter [1:0] G = 2'd0, parameter integer IREG = 1, parameter integer SREG = 0,
+    parameter integer SREG_MUT = 0) (
     input  wire          clk, rst_n,
     input  wire          scalar_load, scalar_enable,
     input  wire [31:0]   scalar_data,
@@ -67,13 +68,22 @@ module ot_hgi_sfu_opsa_gblock #(parameter [1:0] G = 2'd0, parameter integer IREG
         for (integer l = 0; l < 16; l = l + 1)
             if (rd_re_i[l] && scalar_enable_i) scalar_read[32*l +: 32] <= scalar_data_q;
     end
+    // HBM-CORES-B 11-12 SREG (lgroup2_lf SREG = 1): the bank response is one edge later, so the scalar response follows it
+    wire scalar_selected_o; wire [511:0] scalar_read_o;
+    if (SREG != 0 && SREG_MUT != 1) begin : g_ssreg
+        reg ss3; reg [511:0] sr3;
+        always @(posedge clk) begin ss3 <= scalar_selected2; sr3 <= scalar_read2; end
+        assign scalar_selected_o = ss3; assign scalar_read_o = sr3;
+    end else begin : g_snoreg
+        assign scalar_selected_o = scalar_selected2; assign scalar_read_o = scalar_read2;
+    end
 `endif
     for (genvar l = 0; l < 16; l = l + 1) begin : g_lane
         assign req[l] = rd_re_i[l] && rd_src_i[2*l +: 2] == 2'd0 && !scalar_enable_i;
 `ifdef OT_OPSG_GP
         assign rd_q[32*l +: 32] = q_ssel[l] ? scalar_read2[32*l +: 32] : data[32*l +: 32];
 `else
-        assign rd_q[32*l +: 32] = scalar_selected2 ? scalar_read2[32*l +: 32] : data[32*l +: 32];
+        assign rd_q[32*l +: 32] = scalar_selected_o ? scalar_read_o[32*l +: 32] : data[32*l +: 32];
 `endif
     end
     for (genvar b = 0; b < 8; b = b + 1) begin : g_stage
@@ -83,7 +93,8 @@ module ot_hgi_sfu_opsa_gblock #(parameter [1:0] G = 2'd0, parameter integer IREG
     ot_hgi_su_lgroup2_gp u_g (.clk(clk), .rst_n(rst_n), .rq(req), .rr(req), .ra(rd_addr_i), .rd(data),
         .sw_v(sw), .sw_addr(stage_addr_i), .sw_mask(64'hffffffffffffffff), .sw_d(stage_data_i), .flt(flt));
 `else
-    ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1),.FREG(1)) u_g (
+    ot_hgi_su_lgroup2_lf #(.N(16),.M(16),.LWB(15),.AW(24),.NLW(0),.MACRO(1),.MUT_XBAR(0),.NS(8),.BREG(1),.FREG(1),
+        .SREG(SREG),.SREG_MUT(SREG_MUT)) u_g (
         .clk(clk), .rst_n(rst_n), .rq(req), .rr(req), .ra(rd_addr_i), .rd(data),
         .sr_v(8'd0), .sr_addr(120'd0), .sr_d(), .sr_rv(),
         .sw_v(sw), .sw_addr(stage_addr_i), .sw_mask(64'hffffffffffffffff), .sw_d(stage_data_i),
@@ -95,9 +106,9 @@ module ot_hgi_sfu_opsa_group0 (
     output wire [511:0] rd_q, input wire [7:0] stage_v, input wire [15:0] stage_group, input wire [119:0] stage_addr, input wire [2047:0] stage_data, output wire flt);
     ot_hgi_sfu_opsa_gblock #(.G(2'd0)) u_t (.*);
 endmodule
-module ot_hgi_sfu_opsa_group1 (
+module ot_hgi_sfu_opsa_group1 #(parameter integer SREG = 0) (
     input  wire clk, rst_n, scalar_load, scalar_enable, input wire [31:0] scalar_data, input wire [15:0] rd_re, input wire [383:0] rd_addr, input wire [31:0] rd_src,
     output wire [511:0] rd_q, input wire [7:0] stage_v, input wire [15:0] stage_group, input wire [119:0] stage_addr, input wire [2047:0] stage_data, output wire flt);
-    ot_hgi_sfu_opsa_gblock #(.G(2'd1)) u_t (.*);
+    ot_hgi_sfu_opsa_gblock #(.G(2'd1),.SREG(SREG)) u_t (.*);
 endmodule
 `default_nettype wire

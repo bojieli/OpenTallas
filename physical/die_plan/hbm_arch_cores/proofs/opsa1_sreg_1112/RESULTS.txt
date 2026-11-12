@@ -1,0 +1,16 @@
+OPSA1 SREG (HBM-CORES-B 2026-11-12): ot_hgi_su_lgroup2_lf SREG / SREG_MUT (default 0) + ot_hgi_sfu_opsa_gblock / group1 SREG
+pass-through (scalar response delayed with the bank response). SREG 1 = every bank access and select one edge later, so
+rd_q, the scalar read and flt are +1 edge (EQ_CYCLE_SHIFTED against SREG 0 with every input one edge late).
+
+1. SREG 0 == origin/main 7b84010b1c (ot_hgi_sfu_opsa_group1, full size, MACRO banks as identical registered stubs
+   eq0_stub.v, async2sync, equiv_make / equiv_simple -seq 2 / equiv_induct -seq 2, no equiv_struct): PASS,
+   22963 $equiv cells proven, 0 unproven, equiv_status -assert rc 0 (eq0.ys, eq0_summary.txt).
+   (An equiv_struct -fwd -icells run left 126 cells unproven that pair different bits, gold q_ra[349] vs gate q_ra[61]:
+   a structural-merge artefact, not a difference; removed.)
+2. Miter (miter.sv, reduced N=16 M=16 NS=2, behavioural banks; N=8 is degenerate, see header): sat -tempinduct
+   MUT 1 (writes only +1): counterexample at base case 3 -> negative control detected
+   MUT 2 (selects not delayed): counterexample at base case 5 -> negative control detected
+   MUT 0: no counterexample through the base cases reached so far (run still open at commit time; result follows).
+3. Lock-step random bench (tb_rand.sv, run_rand.sh; 3 seeds x 200k edges, rand_results.txt):
+   MUT 0: 0 mismatches on rd / sr_d / sr_rv / flt; MUT 1 and MUT 2: ~196k-198k rd mismatches (detected).
+No kit build until the owner answers ASK hbm-opsa1-arch. DO_NOT_COUNT.
