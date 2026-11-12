@@ -43,6 +43,7 @@ import schema as S  # noqa: E402
 EPS = 1e-6
 MARGIN = 4.32          # landing_place._clear_of_hard_cores margin
 GRID_X, GRID_Y = 0.054, 0.27
+FREE_BANKS = False
 SLACK = 1.0            # a placement must leave every hop <= limit - SLACK
 
 
@@ -253,6 +254,8 @@ def plan_lane(P, lane, limit, allow_add, decided):
         return dict(status="ok", before=max(h0))
     ks = [c["k"] for c in cross]
     exact = {idx for idx, c in enumerate(cross) if "bit_sites_um" in (P.slot(c["part"], c["slot"]) or {})}
+    if FREE_BANKS:           # re-bank PROPOSAL mode (rebank_proposal.py): bank geometry is regenerated, so it does not limit
+        exact = set()
     from ft_full_stage import load
     for c in cross:
         if c["slot"] in load(P, c["tn"]):
@@ -441,7 +444,7 @@ def respace_collectors(raw2, ops, limit, P2=None):
     return rows
 
 
-def run(raw, limit=405.0, allow_add=True):
+def run(raw, limit=405.0, allow_add=True, collectors=True):
     P = S.Plan(raw)
     raw2 = copy.deepcopy(raw)
     lanes = {lid: Lane(P, lid) for lid in P.lanes}
@@ -561,7 +564,7 @@ def run(raw, limit=405.0, allow_add=True):
             else:
                 internal.append(dict(type=tn, index=i, conn=e.get("conn"), worst=round(worst, 1), status="blocked"))
     report["internal_stations"] = internal
-    report["collector_chains"] = respace_collectors(raw2, ops, limit)
+    report["collector_chains"] = respace_collectors(raw2, ops, limit) if collectors else []
     report["latency_changed"] = {l: dict(v, groups=groups.get(l, [])) for l, v in plus.items()}
     st = defaultdict(int)
     for r in report["lanes"].values():
