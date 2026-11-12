@@ -126,3 +126,114 @@ def test_class5_raw_tap_reference_reselected(monkeypatch):
     assert rec == [["landing_reader_start.b.0", "rr_t3", "rr_t5"]]          # same depth, nearest
     assert st["raw_reset"] == "rr_t5"
     assert RF.fix_raw_tap_refs(P, Q, "x", None) == []                        # idempotent
+
+
+# ---------------------------------------------------------------------------------------------- REACH-FIX-2 (11-12)
+def test_die_cap_per_die():
+    # COORD 05:19: S81 800 plan sinks, QC / KV 1200; HEAD / HBM 1200 (METHODOLOGY 3.3); --cap overrides
+    assert RF.die_cap("s81") == 800 and RF.die_cap("qwen_compute") == 1200 and RF.die_cap("qwen_kvsys") == 1200
+    assert RF.die_cap("s81_head") == 1200 and RF.die_cap("hbm") == 1200
+    assert RF.die_cap("qwen_kvsys", 900) == 900 and RF.die_cap("tiny") == RF.CAP_SINKS
+
+
+def test_wkmedians_density_weighted():
+    # two weighted clusters: the heavy one pulls its centre, k = 2 separates them, deterministic
+    pts = [(10.0, 10.0, 50.0), (12.0, 10.0, 1.0), (500.0, 500.0, 5.0), (502.0, 500.0, 5.0)]
+    cen, groups = RF._wkmedians(pts, 2)
+    assert sorted(len(g) for g in groups) == [2, 2]
+    assert (10.0, 10.0) in cen
+    assert RF._wkmedians(pts, 2) == (cen, groups)
+
+
+def test_measured_sinks_split_and_refused(tmp_path):
+    # placed sinks (tap_sinks_dump.tcl) replace the plan sinks; 3,000 registers in one block overload a tap; the fix
+    # splits it by weighted k-medians; a dump with a sink outside the outline (another form) is refused
+    good = [[300.0 + 1.0 * (i % 60), 300.0 + 1.0 * (i // 60)] for i in range(3000)]
+    (tmp_path / "sinks").mkdir()
+    (tmp_path / "sinks" / "mid.json").write_text(json.dumps(good))
+    (tmp_path / "sinks" / "src.json").write_text(json.dumps([[5000.0, 5.0]]))
+    base = _write(tmp_path, copy.deepcopy(EX))
+    chk = tmp_path / "chk.json"
+    assert RF.main(["check", str(base), "--sinks-dir", str(tmp_path / "sinks"), "--json", str(chk)]) == 0
+    rec = json.loads(chk.read_text())
+    assert rec["inputs"]["measured"] == ["mid"] and "src" in rec["inputs"]["measured_refused"]
+    b = {r["type"]: r for r in rec["rows"]}["mid"]
+    # the kit split caps a tap at 800 and pushes the rest beyond the radius: the debt shows as class 1
+    assert b["sink_source"] == "measured" and b["c1"] > 0 and b["c2_max"] >= RF.CAP_SINKS
+    out, ev = _fix(tmp_path, base, "fm", "--sinks-dir", str(tmp_path / "sinks"))
+    assert RF.main(["check", str(out), "--sinks-dir", str(tmp_path / "sinks"), "--json", str(chk)]) == 0
+    a = {r["type"]: r for r in json.loads(chk.read_text())["rows"]}["mid"]
+    assert a["c2"] == 0 and a["c1"] == 0 and a["taps"] >= b["taps"] + 3, a      # 3000 / 800 -> >= 4 taps there
+
+
+def test_min_taps_input(tmp_path):
+    # die-owner minimum tap count (KV hgi_v8 16 -> 39 class): a type short of taps gets split to the count
+    base = _write(tmp_path, copy.deepcopy(EX))
+    b = _rows(tmp_path, base)["mid"]
+    n = b["taps"] + 3
+    chk = tmp_path / "c.json"
+    assert RF.main(["check", str(base), "--min-taps", "mid=%d" % n, "--json", str(chk)]) == 0
+    assert {r["type"]: r for r in json.loads(chk.read_text())["rows"]}["mid"]["taps_short"] == 3
+    out, _ev = _fix(tmp_path, base, "mt", "--min-taps", "mid=%d" % n)
+    assert RF.main(["check", str(out), "--min-taps", "mid=%d" % n, "--json", str(chk)]) == 0
+    a = {r["type"]: r for r in json.loads(chk.read_text())["rows"]}["mid"]
+    assert a["taps"] >= n and not a.get("taps_short"), a
+
+
+def test_tap_table(tmp_path):
+    # QC HF-1c condition (b): one row per tap with sinks and max tap-to-sink distance
+    base = _write(tmp_path, copy.deepcopy(EX))
+    tt = tmp_path / "taps.tsv"
+    assert RF.main(["check", str(base), "--tap-table", str(tt), "--json", str(tmp_path / "c.json")]) == 0
+    lines = tt.read_text().splitlines()
+    assert lines[0].startswith("type\ttap\tx_um\ty_um\tsinks\tmax_tap_to_sink_um")
+    mids = [ln.split("\t") for ln in lines[1:] if ln.startswith("mid\t")]
+    assert mids and max(float(r[5]) for r in mids) > RF.RADIUS_UM                # the 261.5-um class-1 fixture
+    assert "tap_rows" not in json.loads((tmp_path / "c.json").read_text())["rows"][0]
+
+
+def test_reset_relay_reselect_keeps_role(monkeypatch):
+    # HEAD-94 hd_st_n3_transit.u2_i: a raw rst_rl_* reference > 405 um from its stage must take the nearest RAW relay
+    # of the same depth (rst_rl_26), never the closer GATED consumer leaf rst_n_t1
+    import reset_tree
+    import street_rule as SR
+    rel = [dict(name="u_rl25", q="rst_rl_25", d="rst_root_n", depth=2, xy=[900.0, 50.0]),
+           dict(name="u_rl26", q="rst_rl_26", d="rst_root_n", depth=2, xy=[300.0, 50.0]),
+           dict(name="u_t1", q="rst_n_t1", d="rst_root_n", depth=2, xy=[110.0, 50.0])]
+    tree = dict(relays=rel, start=True)
+    monkeypatch.setattr(RF, "plan_obj", lambda raw, path: _t.SimpleNamespace(tag="x"))
+    monkeypatch.setattr(RF, "_reset_caches", lambda PQ: None)
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: tree)
+    monkeypatch.setattr(SR, "_q_roles", lambda tr: {"rst_rl_25": dict(role="raw"), "rst_rl_26": dict(role="raw"),
+                                                    "rst_n_t1": dict(role="gated"), "rr_t1": dict(role="raw")})
+    st = dict(raw_reset="rst_rl_25", xy_um=[100.0, 50.0])
+    Q = {"partition_types": {"x": {"clock": {"landing_reader_start": {"branches": {"b": {"stages": [st]}}}}}}}
+    rec = RF.fix_raw_tap_refs(_t.SimpleNamespace(), Q, "x", None)
+    assert rec == [["landing_reader_start.b.0", "rst_rl_25", "rst_rl_26"]] and st["raw_reset"] == "rst_rl_26"
+    # the only same-role relay at its depth is itself: unchanged, the closer gated leaf is never taken
+    st2 = dict(raw_reset="rst_rl_25", xy_um=[100.0, 50.0])
+    rel[1]["depth"] = 3
+    Q2 = {"partition_types": {"x": {"clock": {"landing_reader_start": {"branches": {"b": {"stages": [st2]}}}}}}}
+    rec2 = RF.fix_raw_tap_refs(_t.SimpleNamespace(), Q2, "x", None)
+    assert st2["raw_reset"] == "rst_rl_25" and rec2 == []
+
+
+def test_class6_landed_window(tmp_path):
+    # S81 ready12b: a landed hop over the 416.5-ps window by 500 ps -> k = 2 cycles on every lane of that part pair;
+    # idempotent (target from latency.lanes); unmapped pairs reported
+    raw = {"ports": [{"id": "p0", "src": {"part": "a"}, "dst": {"part": "b"}},
+                     {"id": "p1", "src": {"part": "b"}, "dst": {"part": "a"}}],
+           "lanes": [{"id": "ab", "ports": ["p0"], "fixed_cycles": None}, {"id": "ba", "ports": ["p1"]}],
+           "latency": {"lanes": {"ab": {"cycles": 3}, "ba": {"cycles": 2}}}}
+    tsv = tmp_path / "hops.tsv"
+    tsv.write_text("# header\nover_ps\tcorner\tlane_tag\tlaunch_part\tcapture_part\n"
+                   "500.0\tTT\ta->b\ta\tb\n10.0\tTT\tx->y\tx\ty\n")
+    rows = RF.landed_rows(raw, str(tsv))
+    by = {r["lane"]: r for r in rows}
+    assert by["ab"]["k"] == 2 and by["ab"]["target"] == 5 and not by["ab"]["ok"]
+    assert by[None]["reason"].startswith("no plan lane") and "ba" not in by
+    Q = copy.deepcopy(raw)
+    assert RF.fix_landed(Q, rows) == {"ab": [None, 5]}
+    assert Q["lanes"][0]["fixed_cycles"] == 5 and "fixed_cycles" not in Q["lanes"][1]
+    rows2 = RF.landed_rows(Q, str(tsv))
+    assert {r["lane"]: r for r in rows2}["ab"]["ok"] and RF.fix_landed(Q, rows2) == {}

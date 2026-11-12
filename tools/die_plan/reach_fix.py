@@ -28,6 +28,15 @@ CLASSES (limits from the canonical rules; METHODOLOGY 12.1e / 12.8b, geom_rules 
                        reader/writer START stages, landing_local_resets) names a relay of the re-solved reset tree at its
                        depth within 405 um; fixed by street_rule.reset_resel (STREET-RULE-1 d94ec4b983).
 
+  6 landed_window      (die level, only with --landed-hops TSV) a landed crossing launch_part -> capture_part over the
+                       landing window by over_ps gets k = ceil(over_ps / window) cycles on every lane of that part pair
+                       (lanes[].fixed_cycles = latency cycles + k; owner-approved +1 register per over-reach hop).
+
+INPUTS (REACH-FIX-2): cap per die (DIE_CAP: S81 800, QC / KV / HEAD / HBM 1200; --cap overrides); --sinks-dir D /
+--sinks T=F placed sinks (tap_sinks_dump.tcl JSON) replace the plan sinks of those types (a dump outside the outline is
+refused); --min-taps T=N die-owner tap counts; check --tap-table TSV = one row per tap (sinks, max tap-to-sink um).
+Over-cap taps split by DENSITY-WEIGHTED k-medians (k = ceil(load / 0.875 cap)); reset re-selects keep ROLE + depth.
+
 FIX ORDER (each a stage of the same pass, deterministic): 4 signal hops -> 1+2 taps (tap parameters + added taps at the
 weighted median of every over-cap / over-radius cluster, legal by schema.tap_clear; the reset tree then re-solves from the
 taps) -> 5 reset re-select -> 3 forwarded-clock repeater plan.  A type is APPLIED only if its export taps load
@@ -60,7 +69,71 @@ REACH_UM = 405.0           # METHODOLOGY 12.1e registered hop
 REPEATER_UM = 450.0        # METHODOLOGY 12.1e repeaters <= 450 um (owner repeater rule 10-23)
 GRID = 4.32
 CLASSES = ("1", "2", "3", "4", "5")
-CLASS_NAME = {"1": "clock_tap_radius", "2": "clock_tap_sinks", "3": "fwd_clock", "4": "signal_hop", "5": "reset_reach"}
+CLASS_NAME = {"1": "clock_tap_radius", "2": "clock_tap_sinks", "3": "fwd_clock", "4": "signal_hop", "5": "reset_reach",
+              "6": "landed_window"}
+# REACH-FIX-2 (COORD 11-12 05:19 rulings): sinks-per-tap cap per die.  S81 keeps 800 plan sinks (CAP_BASIS: plan sinks
+# are a lower bound there); QC and KV 1200 (measured bins); HEAD / HBM 1200 = METHODOLOGY 3.3 (~1000-1500 per tap),
+# 12 names no number.  --cap overrides.
+DIE_CAP = {"s81": 800, "qwen_compute": 1200, "qwen_kvsys": 1200, "s81_head": 1200, "hbm": 1200}
+SPLIT_FRAC = 0.875         # an over-cap tap splits into ceil(load / (0.875 cap)) k-medians groups (X-TIER-OTC 700/800)
+LANDED_WINDOW_PS = 416.5   # S81 landing window (DIE-RECHECK-1 / DIE-S81-87 reach_hops tables)
+MEASURED = {}              # type -> [(x, y, 1.0)] placed clock sinks (tap_sinks_dump.tcl), replaces the plan sinks
+MIN_TAPS = {}              # type -> minimum tap count (die-owner input, e.g. KV hgi_v8 39)
+TAP_TABLE = False          # check --tap-table: keep per-tap rows
+
+
+def die_cap(name, cap=None):
+    return int(cap) if cap else DIE_CAP.get(str(name), CAP_SINKS)
+
+
+def load_measured(dirs=(), specs=(), outlines=None):
+    """placed sinks: --sinks-dir D (D/<type>.json) and --sinks TYPE=FILE, JSON [[x, y], ...] (tap_sinks_dump.tcl).
+    A file with a sink outside the type outline (form changed since that place) is refused: {type: reason}."""
+    files = {}
+    for d in dirs or ():
+        for f in sorted(Path(d).glob("*.json")):
+            files[f.stem] = f
+    for s in specs or ():
+        tn, f = s.split("=", 1)
+        files[tn] = Path(f)
+    out, bad = {}, {}
+    for tn, f in sorted(files.items()):
+        pts = [(float(p[0]), float(p[1]), 1.0) for p in json.loads(Path(f).read_text())]
+        ol = (outlines or {}).get(tn)
+        if ol is None and outlines is not None:
+            continue
+        if ol and any(not (-1.0 <= x <= ol[0] + 1.0 and -1.0 <= y <= ol[1] + 1.0) for x, y, _w in pts):
+            bad[tn] = "sink outside outline %s: placed DB of another form" % (ol,)
+            continue
+        if pts:
+            out[tn] = pts
+    return out, bad
+
+
+def _wkmedians(pts, k, iters=25):
+    """weighted k-medians (L1) of [(x, y, w)]: farthest-first seeds from the weighted median, nearest assignment,
+    weighted-median centres.  Deterministic.  Returns (centres, groups)."""
+    import taps as TP
+    pts = [p if p[2] > 0 else (p[0], p[1], 1.0) for p in pts]
+    c0 = (TP._wmedian(pts, 0), TP._wmedian(pts, 1))
+    cen = [c0]
+    dmin = [_d(p, c0) for p in pts]
+    while len(cen) < k:
+        i = max(range(len(pts)), key=lambda j: (dmin[j] * pts[j][2], -j))
+        if dmin[i] <= 0:
+            break
+        cen.append((pts[i][0], pts[i][1]))
+        dmin = [min(d, _d(p, cen[-1])) for d, p in zip(dmin, pts)]
+    asg = None
+    for _ in range(iters):
+        new = [min(range(len(cen)), key=lambda c: (_d(p, cen[c]), c)) for p in pts]
+        if new == asg:
+            break
+        asg = new
+        groups = [[p for p, a in zip(pts, asg) if a == c] for c in range(len(cen))]
+        cen = [(TP._wmedian(g, 0), TP._wmedian(g, 1)) if g else c for g, c in zip(groups, cen)]
+    groups = [[p for p, a in zip(pts, asg) if a == c] for c in range(len(cen))]
+    return cen, groups
 
 
 # ------------------------------------------------------------------------------------------------------- loading
@@ -120,10 +193,13 @@ def tap_metrics(P, tn, G=None, cap=CAP_SINKS, radius=RADIUS_UM):
             dup[key] -= 1
             continue
         rows.append((x, y, w, k))
+    if tn in MEASURED:                     # placed sinks (tap_sinks_dump.tcl): the real kit registers, not the plan
+        rows = [(x, y, w, "measured") for x, y, w in MEASURED[tn]]
     G = dict(G, sinks=rows)
     sinks = [(float(x), float(y), float(w)) for x, y, w, _k in G["sinks"]]
     out = dict(taps=len(grid), sinks=round(sum(s[2] for s in sinks), 1),
-               lower_bound=not (P.types[tn].get("clock") or {}).get("sink_bins_file"))
+               sink_source="measured" if tn in MEASURED else "plan",
+               lower_bound=tn not in MEASURED and not (P.types[tn].get("clock") or {}).get("sink_bins_file"))
     # tap sites: on a hard core / macro (GEOM-VIS-1 clock-tap-on-macro) and stacked taps (tap-pileup, < taps.SEP_UM)
     try:
         from placement_obstacles import placement_boxes
@@ -153,6 +229,15 @@ def tap_metrics(P, tn, G=None, cap=CAP_SINKS, radius=RADIUS_UM):
                c2=sum(1 for v in load if v > cap + 1e-6) + pile, c2_max=round(max(load), 1),
                c2_worst=grid[max(range(len(load)), key=load.__getitem__)][0],
                load_min=round(min(load), 1))
+    if MIN_TAPS.get(tn) and len(grid) < MIN_TAPS[tn]:
+        out["taps_short"] = MIN_TAPS[tn] - len(grid)
+        out["c2"] += 1
+    if TAP_TABLE:
+        far = defaultdict(float)
+        for d, j in zip(dist, own):
+            far[j] = max(far[j], d)
+        out["tap_rows"] = [[n, round(x, 3), round(y, 3), round(load[j], 1), round(far[j], 1)]
+                           for j, (n, x, y) in enumerate(grid)]
     return out, dict(grid=grid, sinks=sinks, own=own, load=load, dist=dist,
                      kinds=[re.split(r"[:(]", k)[0] for _x, _y, _w, k in G["sinks"]])
 
@@ -465,6 +550,8 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                 # (deterministic 10 % steps, floor 0.5 cap) so the leaves split finer
                 tgt = int(ck.get("tap_target_sinks") or int(0.8 * float(ck.get("tap_max_sinks", cap))))
                 nt = max(int(0.5 * cap), int(tgt * 0.9))
+                if row.get("taps_short"):        # die-owner minimum tap count: target = sinks / min taps
+                    nt = min(nt, max(1, int(row["sinks"] / MIN_TAPS[tn])))
                 if nt < tgt:
                     rec["changes"].append(["tap_target_sinks", tgt, nt])
                     ck["tap_target_sinks"] = nt
@@ -514,7 +601,11 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
             axes = None
         snap = lambda x, y: gen_phys._snap_tap(PQ, x, y, pg_legal=True)  # noqa: E731
         new = []
+        tgt = SPLIT_FRAC * cap
+        if row.get("taps_short"):
+            tgt = min(tgt, max(1.0, sum(s[2] for s in sinks) / MIN_TAPS[tn]))
         bad = sorted({j for j, v in enumerate(load) if v > cap + 1e-6} |
+                     ({j for j, v in enumerate(load) if v > tgt + 1e-6} if row.get("taps_short") else set()) |
                      {own[i] for i, d in enumerate(dist) if d > radius + 1e-6},
                      key=lambda j: (-load[j], j))
         for j in bad:
@@ -539,27 +630,24 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                     if q not in all_xy and q not in new:
                         new.append(q)
                 continue
-            else:
-                cl.sort(key=lambda sd: (-sd[1], sd[0][0], sd[0][1]))
-                acc, pts = 0.0, []
-                half = sum(s[2] for s, _ in cl) / 2.0
-                for s, _ in cl:
-                    if acc >= half:
-                        break
-                    pts.append(s)
-                    acc += s[2]
-            pts = [p if p[2] > 0 else (p[0], p[1], 1.0) for p in pts]
-            if not pts:
-                continue
-            x, y = TP._wmedian(pts, 0), TP._wmedian(pts, 1)
-            try:
-                q = S.tap_clear(t, x, y, core + all_xy + new, strict=True, pin_snap=snap, legal_axes=axes)
-            except Exception:  # noqa: BLE001
-                continue
-            q = (round(q[0], 4), round(q[1], 4))
-            if q in all_xy or q in new:
-                continue
-            new.append(q)
+            # density-weighted re-site (REACH-FIX-2, X-TIER-OTC tap_split fold-in): the over-cap tap's own sinks split
+            # into k = ceil(load / target) weighted k-medians groups; the group nearest the tap keeps it, every other
+            # group gets a tap at its weighted median (legal site: schema.tap_clear strict)
+            pts = [s for s, _d_ in cl]
+            k = max(2, int(math.ceil(load[j] / tgt - 1e-9)))
+            cen, groups = _wkmedians(pts, k)
+            keep = min(range(len(cen)), key=lambda c: (_d(cen[c], (grid[j][1], grid[j][2])), c))
+            for c, (x, y) in enumerate(cen):
+                if c == keep or not groups[c]:
+                    continue
+                try:
+                    q = S.tap_clear(t, x, y, core + all_xy + new, strict=True, pin_snap=snap, legal_axes=axes)
+                except Exception:  # noqa: BLE001
+                    continue
+                q = (round(q[0], 4), round(q[1], 4))
+                if q in all_xy or q in new:
+                    continue
+                new.append(q)
         if not new:
             rec["unfixed"] = dict(c1=row["c1"], c2=row["c2"], reason="no legal tap site reduces the debt")
             break
@@ -811,8 +899,18 @@ def fix_raw_tap_refs(P, Q, tn, plan_path, reach=REACH_UM):
     except Exception:  # noqa: BLE001
         return []
     leaf = re.compile(r"rst_n_t(\d+)$")
+    # ROLE (COORD 11-12, HEAD-94 hd_st_n3_transit.u2_i picked the gated rst_n_t1 for a raw rst_rl_*): a re-select keeps
+    # role AND depth (street_rule._q_roles: gated rst_n_t<i>, raw rst_rl_*, raw copy rr_t<i> of a gated leaf); no
+    # same-role relay -> the reference is left as is and reported
+    import street_rule as SR
+    try:
+        rolb = {q: r.get("role") for q, r in SR._q_roles(TB).items()}
+    except Exception:  # noqa: BLE001
+        rolb = {}
+    role = lambda q: rolb.get(q, "raw" if not TB.get("start") else None)  # noqa: E731
     da = {"rr_t" + leaf.match(r["q"]).group(1): r for r in TA.get("relays", []) if leaf.match(r["q"])}
-    cand = [r for r in TB.get("relays", []) if leaf.match(r["q"])]
+    cand = [r for r in TB.get("relays", []) if leaf.match(r["q"])
+            and (not TB.get("start") or role(r["q"]) == "gated")]      # rr_t<j> exists only for a gated leaf
     newq = {"rr_t" + leaf.match(r["q"]).group(1): r for r in cand}
     refs = []
     for key in ("landing_reader_start", "landing_writer_start"):
@@ -830,7 +928,10 @@ def fix_raw_tap_refs(P, Q, tn, plan_path, reach=REACH_UM):
             o = next((r for r in TB.get("relays", []) if r["q"] == q), None)
             if o is None or _d(o["xy"], pt) <= reach:
                 continue
-            c = [r for r in TB.get("relays", []) if r.get("depth") == o.get("depth")]
+            c = [r for r in TB.get("relays", []) if r.get("depth") == o.get("depth") and role(r["q"]) == role(q)]
+            if not c:
+                out.append([tag, q, None, "no same-role relay at depth %s" % o.get("depth")])
+                continue
             n = min(c, key=lambda r: (_d(r["xy"], pt), r["q"]))
             if n["q"] != q and _d(n["xy"], pt) < _d(o["xy"], pt):
                 obj[fld] = n["q"]
@@ -879,6 +980,67 @@ def fix_type(P, Q, tn, classes, base_row, cap, radius, reach, span, plan_path):
     if "3" in classes and base_row.get("c3"):
         rec["fwd"] = fix_fwd(plan_obj(Q, plan_path), Q, tn, span)
     return rec
+
+
+def landed_rows(raw, tsv, window=LANDED_WINDOW_PS):
+    """class 6 landed_window (die level, S81 ready12b): a landed crossing launch_part -> capture_part whose clock damage
+    exceeds the landing window by over_ps (reach_hops TSV of DIE-RECHECK-1 / DIE-S81-87 / the die STA residue after the
+    balanced die clock) takes k = ceil(over_ps / window) more cycles on every plan lane carrying that part pair
+    (owner-approved +1 register per over-reach hop).  Lever: lanes[].fixed_cycles = latency.lanes[id].cycles + k (the
+    composer pads the lane with k registers).  Returns one row per lane."""
+    import csv
+    with open(tsv) as fh:
+        hops = list(csv.DictReader((ln for ln in fh if not ln.startswith("#")), delimiter="\t"))
+    ports = {p["id"]: p for p in raw.get("ports") or []}
+    by = defaultdict(set)
+    for ln in raw.get("lanes") or []:
+        for pid in ln.get("ports") or []:
+            p = ports.get(pid)
+            if p:
+                by[((p.get("src") or {}).get("part"), (p.get("dst") or {}).get("part"))].add(ln["id"])
+    need = {}
+    for h in hops:
+        over = float(h.get("over_ps") or 0.0)
+        if over <= 0:
+            continue
+        k = int(math.ceil(over / window - 1e-9))
+        for lid in by.get((h.get("launch_part"), h.get("capture_part"))) or [None]:
+            key = lid or "%s->%s" % (h.get("launch_part"), h.get("capture_part"))
+            o = need.setdefault(key, dict(lane=lid, k=0, over_ps=0.0, hops=[]))
+            o["k"] = max(o["k"], k)
+            o["over_ps"] = max(o["over_ps"], over)
+            o["hops"].append(h.get("lane_tag") or key)
+    lat = (raw.get("latency") or {}).get("lanes") or {}
+    lanes = {ln["id"]: ln for ln in raw.get("lanes") or []}
+    out = []
+    for key in sorted(need):
+        o = need[key]
+        lid = o["lane"]
+        if lid is None:
+            out.append(dict(o, ok=False, reason="no plan lane carries this part pair"))
+            continue
+        cyc = (lat.get(lid) or {}).get("cycles")
+        fx = lanes[lid].get("fixed_cycles")
+        if cyc is None:
+            out.append(dict(o, fixed_before=fx, ok=False, reason="no latency.lanes cycles"))
+            continue
+        tgt = int(cyc) + o["k"]
+        out.append(dict(o, cycles_before=int(cyc), fixed_before=fx, target=tgt, ok=fx is not None and int(fx) >= tgt))
+    return out
+
+
+def fix_landed(Q, rows):
+    """apply class 6 to plan dict Q: lanes[].fixed_cycles = target.  Idempotent (target is computed from
+    latency.lanes, which the fix does not touch).  Returns {lane: [before, after]}."""
+    lanes = {ln["id"]: ln for ln in Q.get("lanes") or []}
+    done = {}
+    for r in rows:
+        if r.get("ok") or r.get("target") is None or r.get("lane") not in lanes:
+            continue
+        ln = lanes[r["lane"]]
+        done[r["lane"]] = [ln.get("fixed_cycles"), r["target"]]
+        ln["fixed_cycles"] = r["target"]
+    return done
 
 
 # ------------------------------------------------------------------------------------------------------- driver
@@ -942,16 +1104,58 @@ def tsv_line(r, tag=""):
 TSV_HEAD = "tag\ttype\ttap_mode\ttaps\tc1 n/max_um\tc2 n/max_sinks\tc3 n/max_um\tc4 n/max_um\tc5 n/hop_max/raw_bad\terror"
 
 
+def _setup(a, P):
+    """per-die cap, measured sinks, minimum tap counts, tap table flag (globals; the fork pool inherits them)."""
+    global TAP_TABLE
+    a.cap = die_cap(P.name, a.cap)
+    MIN_TAPS.clear()
+    MEASURED.clear()
+    for s in a.min_taps or []:
+        tn, n = s.split("=", 1)
+        MIN_TAPS[tn] = int(n)
+    outl = {tn: P.types[tn].get("outline_um") for tn in P.types}
+    m, bad = load_measured(a.sinks_dir, a.sinks, outl)
+    MEASURED.update(m)
+    TAP_TABLE = bool(getattr(a, "tap_table", None))
+    return dict(cap=a.cap, cap_source="--cap" if a.cap_given else "DIE_CAP[%s]" % P.name,
+                measured=sorted(m), measured_refused=bad, min_taps=dict(MIN_TAPS),
+                landed_hops=getattr(a, "landed_hops", None), landed_window_ps=a.landed_window)
+
+
+def _landed_summary(lr):
+    return dict(c6_lanes=sum(1 for r in lr if not r.get("ok")),
+                c6_unmapped=sum(1 for r in lr if r.get("lane") is None or r.get("target") is None),
+                c6_cycles=sum(r["k"] for r in lr if not r.get("ok") and r.get("target") is not None))
+
+
+def write_tap_table(path, rows, cap, radius):
+    head = "type\ttap\tx_um\ty_um\tsinks\tmax_tap_to_sink_um\tover_cap\tover_radius\tsink_source"
+    out = [head]
+    for r in rows:
+        for n, x, y, ld, far in r.get("tap_rows") or []:
+            out.append("\t".join(str(v) for v in (r["type"], n, x, y, ld, far, int(ld > cap + 1e-6),
+                                                   int(far > radius + 1e-6), r.get("sink_source", ""))))
+    Path(path).write_text("\n".join(out) + "\n")
+
+
 def cmd_check(a):
     set_repo(a.repo)
     raw, sha = load_raw(a.plan)
     P = plan_obj(raw, a.plan)
+    inputs = _setup(a, P)
     names = soft_types(P, a.types)
     _JOB.update(P=P, a=a)
     rows = _pool(_row_job, names, a.jobs)
-    rec = dict(schema=SCHEMA, mode="check", plan=str(a.plan), plan_sha256=sha, die=P.name,
+    rec = dict(schema=SCHEMA, mode="check", plan=str(a.plan), plan_sha256=sha, die=P.name, inputs=inputs,
                limits=dict(radius_um=a.radius, cap_sinks=a.cap, cap_basis=CAP_BASIS, reach_um=a.reach,
                            repeater_um=a.span), summary=summarize(rows), rows=rows)
+    if a.landed_hops:
+        rec["landed"] = landed_rows(raw, a.landed_hops, a.landed_window)
+        rec["summary"].update(_landed_summary(rec["landed"]))
+    if a.tap_table:
+        write_tap_table(a.tap_table, rows, a.cap, a.radius)
+        for r in rows:
+            r.pop("tap_rows", None)
     if a.json:
         Path(a.json).write_text(json.dumps(rec, indent=1, default=str) + "\n")
     lines = [TSV_HEAD] + [tsv_line(r, "base") for r in rows]
@@ -965,6 +1169,7 @@ def cmd_fix(a):
     set_repo(a.repo)
     raw, sha = load_raw(a.plan)
     P = plan_obj(raw, a.plan)
+    inputs = _setup(a, P)
     names = soft_types(P, a.types)
     _JOB.update(P=P, a=a, raw=raw)
     base_rows = _pool(_row_job, names, a.jobs)
@@ -972,7 +1177,9 @@ def cmd_fix(a):
     todo = [r["type"] for r in base_rows if r.get("viol")]
     _JOB["base"] = base
     res = _pool(_fix_job, todo, a.jobs)
-    Q = copy.deepcopy(raw) if res else raw
+    lr = landed_rows(raw, a.landed_hops, a.landed_window) if a.landed_hops and "6" in a.classes.split(",") else []
+    Q = copy.deepcopy(raw) if (res or any(not r.get("ok") and r.get("target") is not None for r in lr)) else raw
+    landed_done = fix_landed(Q, lr) if lr else {}
     rows = []
     for tn, rec, after, tnew in res:
         b = base[tn]
@@ -1005,9 +1212,12 @@ def cmd_fix(a):
     if a.out_plan:
         Path(a.out_plan).write_text(out_txt)
     ev = dict(schema=SCHEMA, mode="fix", base_plan=str(a.plan), base_sha256=sha, out_plan=a.out_plan,
-              out_sha256=new_sha, die=P.name, classes=a.classes,
+              out_sha256=new_sha, die=P.name, classes=a.classes, inputs=inputs,
               limits=dict(radius_um=a.radius, cap_sinks=a.cap, cap_basis=CAP_BASIS, reach_um=a.reach, repeater_um=a.span),
               summary_before=summarize(base_rows), summary_after=summarize(after_rows),
+              landed=dict(rows=lr, applied=landed_done, before=_landed_summary(lr),
+                          after=_landed_summary([dict(r, ok=r.get("ok") or r.get("lane") in landed_done) for r in lr]))
+              if lr else None,
               applied=sum(1 for r in rows if r["applied"]), rows=rows,
               cycles_added={r["type"]: r["fix"].get("hops", {}).get("cycles_added") for r in rows
                             if r["applied"] and (r["fix"].get("hops") or {}).get("cycles_added")})
@@ -1016,8 +1226,9 @@ def cmd_fix(a):
     if a.tsv:
         Path(a.tsv).write_text("\n".join([TSV_HEAD] + [tsv_line(r, "before") for r in base_rows]
                                          + [tsv_line(r, "after") for r in after_rows]) + "\n")
-    print(json.dumps(dict(die=P.name, base=sha[:12], out=new_sha[:12], applied=ev["applied"],
-                          before=ev["summary_before"], after=ev["summary_after"])))
+    print(json.dumps(dict(die=P.name, base=sha[:12], out=new_sha[:12], applied=ev["applied"], cap=a.cap,
+                          measured=len(MEASURED), before=ev["summary_before"], after=ev["summary_after"],
+                          landed_lanes=len(landed_done))))
     return 0
 
 
@@ -1032,15 +1243,25 @@ def main(argv=None):
         p.add_argument("--json")
         p.add_argument("--tsv")
         p.add_argument("-j", "--jobs", type=int, default=1)
-        p.add_argument("--cap", type=int, default=CAP_SINKS)
+        p.add_argument("--cap", type=int, default=None, help="sinks per tap (default per die: %s)" % DIE_CAP)
         p.add_argument("--radius", type=float, default=RADIUS_UM)
         p.add_argument("--reach", type=float, default=REACH_UM)
         p.add_argument("--span", type=float, default=REPEATER_UM)
+        p.add_argument("--sinks-dir", action="append", default=[], help="dir of <type>.json placed sinks")
+        p.add_argument("--sinks", action="append", default=[], help="TYPE=placed sinks JSON [[x, y], ...]")
+        p.add_argument("--min-taps", action="append", default=[], help="TYPE=N minimum tap count")
+        p.add_argument("--landed-hops", default=None, help="reach_hops TSV (class 6, landed window)")
+        p.add_argument("--landed-window", type=float, default=LANDED_WINDOW_PS)
+        if name == "check":
+            p.add_argument("--tap-table", default=None, help="TSV: one row per tap (sinks, max tap-to-sink um)")
         if name == "fix":
             p.add_argument("--out-plan")
             p.add_argument("--event")
-            p.add_argument("--classes", default="1,2,3,4,5")
+            p.add_argument("--classes", default="1,2,3,4,5,6")
     a = ap.parse_args(argv)
+    a.cap_given = a.cap is not None
+    if a.cmd == "fix":
+        a.tap_table = None
     return cmd_check(a) if a.cmd == "check" else cmd_fix(a)
 
 
