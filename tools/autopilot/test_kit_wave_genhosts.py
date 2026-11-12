@@ -786,3 +786,19 @@ def test_src_base_is_recorded_but_is_not_an_input(tmp_path):
     c["dies"]["s81"]["src_base"] = "685b58b80c3"
     assert K.spec_for(dict(c, _otrun_status={}), "s81", "t1", "")["src_base"] == "685b58b80c3"
     assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # naming the base releases nothing
+
+
+def test_item_inputs_type_overlay_reaches_spec_and_probe_for_listed_item_only(tmp_path):
+    """KIT-OVERLAY-1: item_inputs {item: {type_overlay: path}} -> spec (path + sha) and the host input probe"""
+    ov = tmp_path / "ov.json"
+    ov.write_text('{"format": "type-overlay-1"}')
+    c = cfg(gen_host="epyc5", gen_hosts=["epyc5"], work_root=WR)
+    c["dies"]["s81"].update(plan="/p/final2.json", src="/s", event="e",
+                            item_inputs={"t1": {"type_overlay": str(ov)}})
+    sp = K.spec_for(c, "s81", "t1", "hub")
+    assert sp["type_overlay"] == str(ov) and len(sp["type_overlay_sha"]) == 64 and sp["plan"] == "/p/final2.json"
+    assert str(ov) in K.item_inputs(c, "s81")["t1"]
+    other = K.spec_for(c, "s81", "t2", "hub")
+    assert "type_overlay" not in other
+    assert any(i["role"] == "type_overlay" for i in K.ks_inputs(sp, sp["plan"]))
+    assert not any(i["role"] == "type_overlay" for i in K.ks_inputs(other, other["plan"]))

@@ -21,6 +21,8 @@ What a positions-only delta may touch (and nothing else; every other key is REJE
     partition_types[T].hard_cores[*].{origin_um, orient, track_offset_um}
     partition_types[T].contents[*].{origin_um, orient}
     partition_types[T].internal_stations[i].{regs_um, bit_sites_um, leaf_um}   (same number of stations and banks)
+    partition_types[T] clock.tap_um, reset.tap_um, clock.taps[i].xy, clock.edge_clocks[i].tap_um, collector relay xy,
+      count_straps[i].sites_um (key "type_positions": {dotted path: value}; same shape, inside the outline)
 These feed only physical code (gen_phys placement/pins/clock taps, kit_istations FIRM sites, G0 geometry, the reset
 relay SITES).  bind.py / gen_rtl.py read hard_cores[].origin_um in one place (the CORE_SPLIT reset gate picks the
 wavefront tap nearest the core centre) and reset_tree.for_type reads core boxes as obstacles; `rtl_projection` therefore
@@ -43,7 +45,13 @@ if str(HERE) not in sys.path:
 import schema as S  # noqa: E402
 
 FORMAT = "type-overlay-1"
-TOP_KEYS = {"format", "type", "base_plan_sha256", "hard_cores", "contents", "internal_stations", "note"}
+TOP_KEYS = {"format", "type", "base_plan_sha256", "hard_cores", "contents", "internal_stations", "type_positions", "note"}
+# Type-local site coordinates (dotted path inside partition_types[T]); every one is physical only, and the rtl_projection
+# check proves the bind inputs derived from them (reset tree incl. relay names, tap names, gate taps) did not move.
+import re  # noqa: E402
+POS_PATHS = re.compile(r"^(clock\.tap_um|reset\.tap_um|clock\.edge_clocks\.\d+\.tap_um|clock\.taps\.\d+\.xy"
+                       r"|clock\.landing_contract\.collector_tree\.relays\.\d+\.xy|count_straps\.\d+\.sites_um)$")
+POS_LEAF = ("tap_um", "xy", "sites_um")
 HC_KEYS = ("origin_um", "orient", "track_offset_um")
 CONTENT_KEYS = ("origin_um", "orient")
 STATION_KEYS = ("regs_um", "bit_sites_um", "leaf_um")
@@ -162,6 +170,32 @@ def apply_overlay(raw, ov):
 
     place("hard_core", "hard_cores", HC_KEYS, ov.get("hard_cores") or {})
     place("content", "contents", CONTENT_KEYS, ov.get("contents") or {})
+    for dotted, val in sorted((ov.get("type_positions") or {}).items()):
+        if not POS_PATHS.match(dotted):
+            errs.append(f"type_positions {dotted!r} rejected (allowed: tap_um / taps[].xy / edge_clocks[].tap_um / collector "
+                        "relay xy / count_straps[].sites_um / reset.tap_um)")
+            continue
+        node, ok = t, True
+        parts = [int(x) if x.isdigit() else x for x in dotted.split(".")]
+        for k in parts[:-1]:
+            try:
+                node = node[k]
+            except (KeyError, IndexError, TypeError):
+                ok = False
+                break
+        if not ok or not isinstance(node, dict) or parts[-1] not in node:
+            errs.append(f"type_positions {dotted!r}: the plan has no such site (adding one is a plan event)")
+            continue
+        if _shape_of(val) != _shape_of(node[parts[-1]]):
+            errs.append(f"type_positions {dotted!r}: shape {_shape_of(val)} != plan {_shape_of(node[parts[-1]])}")
+            continue
+        pts = list(_points(val))
+        if not all(_xy(p, f"type_positions {dotted!r}", errs) for p in pts):
+            continue
+        if any(not (-EPS <= p[0] <= W + EPS and -EPS <= p[1] <= H + EPS) for p in pts):
+            errs.append(f"type_positions {dotted!r}: point outside the type outline {W:g}x{H:g}")
+            continue
+        node[parts[-1]] = copy.deepcopy(val)
     sts = ov.get("internal_stations") or {}
     if not isinstance(sts, dict):
         errs.append("internal_stations: expected {index: {...}}")
@@ -224,6 +258,28 @@ def _diff(a, b, path=()):
         yield path
 
 
+def pk_parts(dotted):
+    return [int(x) if x.isdigit() else x for x in dotted.split(".")]
+
+
+def _get(raw, path):
+    for k in path:
+        raw = raw[k]
+    return raw
+
+
+def pos_key(path, tn):
+    """dotted type_positions key covering a changed-leaf `path`, or None"""
+    if len(path) < 4 or path[0] != "partition_types" or path[1] != tn:
+        return None
+    tail = path[2:]
+    for i, k in enumerate(tail):
+        if k in POS_LEAF:
+            d = ".".join(str(x) for x in tail[:i + 1])
+            return d if POS_PATHS.match(d) else None
+    return None
+
+
 def _category(path):
     if not path:
         return "plan"
@@ -236,9 +292,15 @@ def _category(path):
 
 def overlay_from_plans(base, new, tn):
     """The overlay equivalent to `new` against `base`; OverlayError listing every changed path outside the allowlist."""
-    errs, hc, ct, st = [], {}, {}, {}
+    errs, hc, ct, st, tp = [], {}, {}, {}, {}
     for path in _diff(base, new):
         ok = False
+        if path == ("note",):           # the plan's free-text note: documentation, no kit input
+            continue
+        pk = pos_key(path, tn)
+        if pk:
+            tp[pk] = _get(new, ("partition_types", tn) + tuple(pk_parts(pk)))
+            continue
         if len(path) >= 5 and path[0] == "partition_types" and path[1] == tn and isinstance(path[3], int):
             t = base["partition_types"][tn]
             kind, i, k = path[2], path[3], path[4]
@@ -256,7 +318,7 @@ def overlay_from_plans(base, new, tn):
     if errs:
         raise OverlayError(errs)
     ov = {"format": FORMAT, "type": tn, "base_plan_sha256": plan_sha(base)}
-    for k, v in (("hard_cores", hc), ("contents", ct), ("internal_stations", st)):
+    for k, v in (("hard_cores", hc), ("contents", ct), ("internal_stations", st), ("type_positions", tp)):
         if v:
             ov[k] = v
     return ov
@@ -343,7 +405,7 @@ def g0_errors(raw, tn, full=False):
 def validate_overlay(base, new, tn, g0_full=False):
     """All type-scoped checks of the overlaid plan `new` against the bound plan `base`; list of error strings."""
     errs = [f"changed outside the allowlist: {'.'.join(map(str, p))}" for p in _diff(base, new)
-            if not (len(p) >= 5 and p[0] == "partition_types" and p[1] == tn and isinstance(p[3], int)
+            if p != ("note",) and not pos_key(p, tn) and not (len(p) >= 5 and p[0] == "partition_types" and p[1] == tn and isinstance(p[3], int)
                     and p[4] in HC_KEYS + CONTENT_KEYS + STATION_KEYS)]
     if errs:
         return errs
@@ -396,7 +458,7 @@ def apply_validated(raw, ov, g0_full=False):
     errs = validate_overlay(raw, new, tn, g0_full)
     if errs:
         raise OverlayError(errs)
-    changed = {k: sorted(ov[k]) for k in ("hard_cores", "contents", "internal_stations") if ov.get(k)}
+    changed = {k: sorted(ov[k]) for k in ("hard_cores", "contents", "internal_stations", "type_positions") if ov.get(k)}
     return new, {"format": FORMAT, "type": tn, "base_plan_sha256": plan_sha(raw), "overlaid_plan_sha256": plan_sha(new),
                  "changed": changed, "checks": ["allowlist", "schema(type-scoped)", "rtl_projection", "collector_reach",
                                                 "seam_hop", "g0_full" if g0_full else "g0_subset"]}
