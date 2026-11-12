@@ -47163,3 +47163,6 @@ DISK-1111 STATE+READY [DISK-1111 -> COORD, ROOT-MERGE-59, KW-FIX-45] AGGRESSIVE 
   DIE-HBM-98 1: HBM t q_mcb (FAIL 11-10 23:59)
   DIE-KV-97 1: KV t kv3_pv_v2n (SUPERSEDED 11-10 00:31)
   COORD (unowned) 4: HBM c hnx_fused_lane_c (FAIL 11-10 22:07); KV t kv3_pv_v1n (SUPERSEDED 11-10 17:47); KV t kv3_pv_v3n (SUPERSEDED 11-10 17:47); KV t kv3_pv_v4n (SUPERSEDED 11-10 17:47)
+- 2026-11-12 02:25 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 1 event(s): serdes__t13 FAIL FLOW (unclassified failure @kit_rtl (see log): bind: ERROR kit-rtl: /srv/opentallas-scratch2/claude/s87bind/bsrc3_main/rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv: `incl) evid epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t13/attempt_29
+- 2026-11-12 02:25 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-99): 1 event(s): slw_fw_v3 LAUNCHED (kw-qwenco-slwfwv3-5-79138)
+- 2026-11-12 02:25 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 7 event(s): ot_hgi_sfu_opsa_group0 LAUNCHED (kw-hbm-othgisfuopsagroup0-5-79138); PHY_NE LAUNCHED (kw-hbm-PHYNE-7-79138); q_b002 LAUNCHED (kw-hbm-qb002-2-79138); q_b003 LAUNCHED (kw-hbm-qb003-2-79139); q_b003__physical_v1 LAUNCHED (kw-hbm-qb003physicalv1-4-79139); q_b012 LAUNCHED (kw-hbm-qb012-3-79139); q_b012__physical_v1 LAUNCHED (kw-hbm-qb012physicalv1-3-79140)
