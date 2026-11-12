@@ -1,0 +1,51 @@
+{
+ "schema": "dieproto3.kit_model.v1",
+ "type": "hd_st_n4",
+ "verdict": "LOCAL_PASS_NEEDS_PARENT",
+ "store_verdict": "LOCAL_PASS_NEEDS_PARENT",
+ "ref": "epyc2:/srv/opentallas-scratch3/claude/dh79/rs/out/hd_st_n4_eco_i2__flow-20261106-cj-head/signoff/signoff.json",
+ "store": "/home/ubuntu/coord/signed-store/records/bf/bf44d3923cefad6de0793f587ed6571fe8665db48cff17fccf5f2f9078ee18a7.json.gz",
+ "src_commit": "0290971a0fdf1867a58dc882b71e9ec63f089cbc",
+ "flow_tag": "flow-20261106-cj-head",
+ "top": "ot_s81hd_st_n4",
+ "basis": "lat = signed signoff insertion_pinflops min/max per corner; clkq/setup/hold = declared ASAP7 DFF arcs (die_sta_related REG at the corner; record carries no register arcs)",
+ "signoff_checks": {
+  "antenna": null,
+  "clock": null,
+  "drc": null,
+  "drv": null,
+  "face_guard": null,
+  "fanout": null,
+  "hold_ff": 0.01,
+  "io_hold_parent": null,
+  "lec_superset": null,
+  "pg": null,
+  "sdc_lint": null,
+  "setup_tt": 77.47,
+  "timing_modes": null,
+  "unconstrained": null
+ },
+ "corners": {
+  "TT": {
+   "lat_min_ps": 445.45,
+   "lat_max_ps": 445.45,
+   "clkq_max_ps": 86.563,
+   "clkq_min_ps": 54.22,
+   "setup_ps": 13.832,
+   "hold_ps": 18.472,
+   "pinflops_n": 3185,
+   "pinflops_mean": 445.45
+  },
+  "FF": {
+   "lat_min_ps": 339.32,
+   "lat_max_ps": 339.32,
+   "clkq_max_ps": 60.9,
+   "clkq_min_ps": 38.499,
+   "setup_ps": 7.443,
+   "hold_ps": 13.368,
+   "pinflops_n": 3185,
+   "pinflops_mean": 339.32
+  }
+ },
+ "variant": "mean: lat_min = lat_max = pin-flop mean (nominal per-type insertion)"
+}

@@ -1,0 +1,249 @@
+{
+ "hd_ctl_e": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   422.6,
+   476.83
+  ],
+  "lat_FF": [
+   319.51,
+   345.69
+  ],
+  "ref": "epyc2:/srv/opentallas-scratch2/claude/dh75/resign/out_ctl_e/signoff/signoff.json"
+ },
+ "hd_ctl_n": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   324.55,
+   477.38
+  ],
+  "lat_FF": [
+   253.32,
+   367.28
+  ],
+  "ref": "epyc4:/srv/opentallas-scratch2/claude/dh86/ctln_resign_ds/signoff/signoff.json"
+ },
+ "hd_host_n": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   325.55,
+   448.67
+  ],
+  "lat_FF": [
+   244.93,
+   346.03
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/dh64/resign/host_n/signoff/signoff.json"
+ },
+ "hd_mesh_e": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   424.36,
+   484.81
+  ],
+  "lat_FF": [
+   321.34,
+   351.64
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/ss24/meshe_w_head/signoff/signoff.json"
+ },
+ "hd_spn_end": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   347.5,
+   462.68
+  ],
+  "lat_FF": [
+   272.49,
+   351.16
+  ],
+  "ref": "epyc6:/srv/opentallas-scratch2/claude/die-head-91/spnm/kit/resign_ex/signoff/signoff.json"
+ },
+ "hd_spn_eshim_rx": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   417.85,
+   467.96
+  ],
+  "lat_FF": [
+   317.28,
+   343.99
+  ],
+  "ref": "epyc5:/srv/opentallas-scratch3/claude/auto-resign/s81_head/hd_spn_eshim_rx__flow-20261106-ar-head__d0c48e5a/signoff/signoff.json"
+ },
+ "hd_spn_eshim_tx": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   417.88,
+   465.49
+  ],
+  "lat_FF": [
+   321.95,
+   356.75
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/ss25/resign/eshim_tx_x/signoff/signoff.json"
+ },
+ "hd_spn_wshim_rx": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   376.7,
+   482.36
+  ],
+  "lat_FF": [
+   283.97,
+   345.22
+  ],
+  "ref": "epyc5:/srv/opentallas-scratch3/claude/auto-resign/s81_head/hd_spn_wshim_rx__flow-20261106-cj-head__ca6a1f88/signoff/signoff.json"
+ },
+ "hd_spn_wshim_tx": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   407.35,
+   462.92
+  ],
+  "lat_FF": [
+   308.33,
+   356.22
+  ],
+  "ref": "epyc4:/srv/opentallas-scratch2/claude/dh76/wsC/resign_cd2/signoff/signoff.json"
+ },
+ "hd_st_k5": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   419.01,
+   495.77
+  ],
+  "lat_FF": [
+   316.62,
+   359.91
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/ss24/hd_k5_w_head_v/signoff/signoff.json"
+ },
+ "hd_st_m": {
+  "status": "OK",
+  "verdict": "SIGNED",
+  "lat_TT": [
+   426.47,
+   484.53
+  ],
+  "lat_FF": [
+   322.75,
+   350.96
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/dh56/iohp/stm/resign_rhead/signoff/signoff.json"
+ },
+ "hd_st_n3_transit": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   421.22,
+   469.57
+  ],
+  "lat_FF": [
+   326.32,
+   357.77
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/dh64/resign/n3_transit/signoff/signoff.json"
+ },
+ "hd_st_n3_turn": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   414.15,
+   481.72
+  ],
+  "lat_FF": [
+   314.37,
+   367.64
+  ],
+  "ref": "epyc2:/srv/opentallas-scratch2/claude/ss29/resign/n3_turn_k/signoff/signoff.json"
+ },
+ "hd_st_n4": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   422.92,
+   475.4
+  ],
+  "lat_FF": [
+   319.57,
+   361.44
+  ],
+  "ref": "epyc2:/srv/opentallas-scratch3/claude/dh79/rs/out/hd_st_n4_eco_i2__flow-20261106-cj-head/signoff/signoff.json"
+ },
+ "hd_st_str": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   424.5,
+   479.39
+  ],
+  "lat_FF": [
+   320.46,
+   362.53
+  ],
+  "ref": "epyc2:/srv/opentallas-scratch2/claude/dh75/resign/out_st_str/signoff/signoff.json"
+ },
+ "hd_st_turn": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   410.92,
+   471.88
+  ],
+  "lat_FF": [
+   312.35,
+   346.46
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/ss24/hd_turn_w_head_v/signoff/signoff.json"
+ },
+ "hd_tile": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   351.62,
+   519.7
+  ],
+  "lat_FF": [
+   275.62,
+   412.79
+  ],
+  "ref": "intel1:/srv/opentallas-scratch2/claude/die-head-91/tile_vh12a_resign_fb_copy/signoff/signoff.json"
+ },
+ "hd_turn_a": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   423.08,
+   462.65
+  ],
+  "lat_FF": [
+   321.24,
+   343.88
+  ],
+  "ref": "intel2:/srv/opentallas-scratch2/claude/dh64/resign/turn_a/signoff/signoff.json"
+ },
+ "hd_turn_b": {
+  "status": "OK",
+  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+  "lat_TT": [
+   423.57,
+   475.49
+  ],
+  "lat_FF": [
+   319.38,
+   345.19
+  ],
+  "ref": "epyc2:/srv/opentallas-scratch2/claude/dh75/resign/out_turn_b/signoff/signoff.json"
+ }
+}
