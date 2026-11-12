@@ -17,6 +17,8 @@ Knob OT_XS_X_CADENCE (1 default = byte-identical; 2 = geared). Files: tools/s81_
 
 ## 3 Running jobs
 - xcad_c2e: OT_XS_X_CADENCE=2 OT_XS_X_CADENCE_FLOOR=expected on 5460102b71; run dir intel1:.../tok-verify-2/xcad_c2e, log intel2:~/tok-verify-2-logs/xcad_c2e.otrun.log.
+- main_adf10c27 (S81 check, main adf10c2724821 = train 60 part 2) on intel1: run dir .../tok-verify-2/main_adf10c27, log intel2 ~/tok-verify-2-logs/main_adf10c27.otrun.log. Worktree wt/tok-verify-2 now at adf10c27.
+- GEAR A/B on epyc9 (script epyc9 /srv/opentallas-scratch2/claude/tok-verify-2/s81tok_v3.sh, inputs copied to .../tok-verify-2/v1): gear_twin (c1, s87bind r12ng), gear_xg_bound / gear_xg_expected (c2, bus-gear-2 r12ng asbuilt_xg/out_bind/bsrc_xg). Code tree epyc9 wt/tok-verify-2-gear @096abb5649 (xcad2 + bus-gear 877cfc14f1, local merge, not pushed). Logs intel2 ~/tok-verify-2-logs/gear_*.otrun.log. After all 3: `python3 -I v1/cdiff.py gear_twin/cc gear_xg_<rule>/cc` + field-end deltas -> RESULT.
 - DONE: main_8eeefa47 PASS (posted), xcad_c1 gate-1 PASS (posted), xcad_c2 bound price (posted: AR 615.4 -20.0% / MTP 2219.9 -17.8%).
 - S81 check on main 8eeefa4716dd (train 60 part: qc-verify-gaps + taps hotfix): ot-run unit oth-ubuntu-1705981-1794496824 on intel1, run dir intel1:/srv/opentallas-scratch2/claude/tok-verify-2/main_8eeefa47, log intel2:~/tok-verify-2-logs/main_8eeefa47.otrun.log (REFCC = main_d767/cc). Worktree now detached at 8eeefa4716dd. main_d767 done.
   Run dir intel1:/srv/opentallas-scratch2/claude/tok-verify-2/main_d767 ; log intel2:~/tok-verify-2-logs/main_d767.otrun.log
