@@ -1,4 +1,4 @@
-# KW-FIX-46 lane handoff (refreshed 2026-11-12 07:36 PST)
+# KW-FIX-46 lane handoff (refreshed 2026-11-12 07:49 PST)
 
 ## 1 Scope
 Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission, autoclean/reaper keep lists. Fix FAIL classes once per class, hold and retry rows in ~/coord/autopilot/kit_wave.json. The sidecar-coverage preflight now belongs to GEN-CLASS-1 (COORD 11-12), not this lane.
@@ -53,3 +53,4 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
   (d) run ONE dry tick (AP.DRY / no launches) and diff its decisions (launch/retry/hold/restage/FAIL classes) against the last live tick in ~/coord/autopilot/log.txt; post the diff;
   (e) only then allow real ticks; on any NEW FAIL class, roll back from the .bak.
 - SRC-INCOMPLETE class copies (epyc8:~/kw46_srccopy.log): small trees done and verified. bsrc4_r12ng->intel1, bsrc4_main->epyc9 and bsrc4_main->intel1 are in progress. Then run the manifest (/tmp/kw46_manifest.sh on epyc8/epyc9/intel1, compare), check the next tick for SRC-INCOMPLETE on intel1/epyc9 s81, confirm epyc8 S81 waiters restage to them, and post with `date`.
+- SRC-INCOMPLETE class (07:48 RESULT): the 3 named trees are done and manifest-verified. intel1 and epyc9 take S81, and epyc8->intel1 restages have started. Remaining same-class gaps are listed in that post (epyc2/7 s81 r12ng, epyc2 hbm t39w, intel1 hbm p18, epyc7 qc s28 plan, epyc2/9 kv-types-6 composed_rtl, epyc2 qc-transport-fix-4). A copy proposal waits on COORD. Copy tool: epyc8 /tmp/kw46_srccopy.sh pattern; verify with /tmp/kw46_manifest.sh <relpath> on both hosts.
