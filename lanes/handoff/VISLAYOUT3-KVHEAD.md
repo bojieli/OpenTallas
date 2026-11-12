@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:13 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:39 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -43,7 +43,7 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
    - Decision rule: NEVER route F1 (vN2 replaces it). If place shows the ft6 street congestion gone (no GRT hot column at x 650-880), post that as evidence to DIE-KV-99.
 2. SD-GROW place DONE (PASS-COND, GRT ov 0), WAIT-VISUAL posted 2026-11-12 08:13 PST. Then:
    - View place renders and post to WAIT-VISUAL the same way.
-   - Route only after the GEOM-VIS-6 verdict is not BAD AND DIE-KV-99 has not said vN2 cannot carry the die-width change. Command: on epyc8, `ot-run-wave --mem 96 --threads 16 --dir <W> --hosts epyc8 -- bash <W>/gen/run_kit.sh <K> route 96 16`, with the kit's flow_tag/grt_transition_mode files present.
+   - Route only after the GEOM-VIS-6 verdict is GOOD or ISSUES-ACCEPT (COORD 08:2x; NOT merely not-BAD) AND DIE-KV-99 has not said vN2 cannot carry the die-width change. Command: on epyc8, `ot-run-wave --mem 96 --threads 16 --dir <W> --hosts epyc8 -- bash <W>/gen/run_kit.sh <K> route 96 16`, with the kit's flow_tag/grt_transition_mode files present.
    - Before route, run ftposcheck (cores n/a; check flow_tag + mode).
    - If NOT SIGNED with reset recovery still worst: fallback = per-chunk reset copy RTL in ot_async_fifo g_sp (COORD-approved fallback, not built).
    - 2-strike rule applies.
@@ -66,3 +66,9 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
 - kv3_sys_SD_v1 kit_rtl must use script mode (kit_rtl.sh -> specialize_serdes_phy), not bind mode.
 - epyc9 tail is a Rust tail: use `tail -n N` with one file. epyc8 queue ~130 waiters, so kit_rtl waits 10-30 min.
 - route_supply caps core OBS at M5, so it cannot see ft legs over cores. Use ftover.py.
+
+## 9 HEAD forms (COORD 08:2x order; HEAD-95 owns the plan, I build; claim posted)
+Work dir epyc4 /srv/opentallas-scratch2/claude/vislayout3-kvhead/head. pd/ holds my plans plus symlinks to HEAD-95 pd side files. Tools: hpipe.sh, mesh_trunk.py, code_rf2 (REACH-FIX-2 branch reach_fix copy). Kit tree = /srv/opentallas-scratch2/claude/wt/head-95-rfsr; repo = /srv/opentallas-scratch3/claude/head-94/wtM8.
+(a) hd_mesh M1 = pd/m1_final.json e9c3c4292ef67077: small-macro column of each array E +17.28, seam 17.26 -> 34.54. G0 0 NEW, gen rc 0. Drawing intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/forms/hd_mesh_m1_draw.png, WAIT-FORM posted.
+(b) hd_spn_end SP2 = pd/sp2.json 6ef4172a38c8f21a: reach_fix (code_rf2) --sinks hd_spn_end=sinks/hd_spn_end.json (measured, a3 geom.tsv via tools/tapsinks.py) --min-taps hd_spn_end=40. 64 taps, max 1189, c1/c2/c5 0. G0 0 NEW, gen rc 0 on rfsr. Do NOT run street_rule resetfix after it: it breaks depth. Drawing forms/hd_spn_end_sp2_draw.png, WAIT-FORM posted.
+NEXT for each: GEOM-VIS-6 form verdict GOOD -> kit (gen.py rtl+phys with the HEAD-95 recipe and flow tag; asked HEAD-95) -> place on epyc8/9 via ot-run -> WAIT-VISUAL -> route on GOOD/ISSUES-ACCEPT -> sign-off. 2-strike rule.
