@@ -22,7 +22,7 @@ def freg_vehicle():
 def declare(t, pids):
     for q in pids:
         c = t['count_aligned']['ports'][q]
-        c.update(sched_lat=int(c['sched_lat']) + 1, K=int(c['K']) + 1, freg=1)
+        c.update(sched_lat=int(c['sched_lat']) + 1, freg=1)   # logical K unchanged: strap_ties applies K + 2
 
 
 def test_undeclared_freg_cycle_fails_in_generator_and_binder():
@@ -40,7 +40,13 @@ def test_declared_freg_cycle_passes_and_counts_once():
     lb, lo = base.manifest()['lane_added_cycles'], on.manifest()['lane_added_cycles']
     assert sum(lo.values()) - sum(lb.values()) == len(pids)          # the FREG cycle, exactly once per crossing
     assert '.FREG(1)' in on.type_rtl('B', __import__('test_clock_landings').B_BODY)
-    CAB.strap_ties(t['count_aligned'], p)
+    p1, t1 = strap_vehicle()
+    k0 = CAB.strap_ties(t1['count_aligned'], p1)['instances']
+    k1 = CAB.strap_ties(t['count_aligned'], p)['instances']
+    for inst, v in k1.items():                                         # WREG + FREG: physical K + 2, not + 3
+        for port, val in v['values'].items():
+            if port.startswith('strap_ca_k_') and val != k0[inst]['values'][port]:
+                assert (val - k0[inst]['values'][port]) % 64 == 2
 
 
 def test_stale_mark_without_freg_fails():
