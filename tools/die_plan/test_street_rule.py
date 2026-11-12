@@ -1,0 +1,229 @@
+"""STREET-RULE-1: street-or-abut rule (pure geometry), the compactor / expander on a synthetic type, die estimate."""
+import json
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import street_rule as SR  # noqa: E402
+
+CFG = dict(SR.DEFAULTS)
+
+
+def core(inst, x, y, w, h, pins=None, partners=None, has_conns=True):
+    return dict(inst=inst, x=x, y=y, w=w, h=h, pins=pins or {}, partners=partners or {}, has_conns=has_conns)
+
+
+def face(n, lo, hi, bus="d"):
+    step = (hi - lo) / max(n, 1)
+    return [(lo + step * (k + 0.5), bus) for k in range(n)]
+
+
+def test_need_calibration():
+    assert SR.need_um(0, CFG) == 43.2                       # minimum street
+    assert SR.need_um(320, CFG) == 43.2                     # LANE-PAIR: 160 + 160 pins at 43.2
+    assert SR.need_um(1620, CFG) == 43.2                    # 1,620 facing pins fill 43.2
+    assert SR.need_um(3349, CFG) == 90.72                   # lepe_nh_mus_LP 3,349 pins (15 um slot) -> 90.72
+    assert abs(SR.need_um(1700, CFG) / SR.G - round(SR.need_um(1700, CFG) / SR.G)) < 1e-9   # on the 4.32 lattice
+
+
+def test_pair_kinds():
+    a = core("a", 0, 0, 100, 100, {"E": face(500, 0, 100)})
+    b = core("b", 115, 0, 100, 100, {"W": face(100, 0, 100)})
+    r = SR.pair_rule(a, b, CFG)
+    assert r["kind"] == "street" and r["axis"] == "x" and r["pins"] == [500, 100] and r["need"] == 43.2
+    b["x"] = 100 + 43.2
+    assert SR.pair_rule(a, b, CFG)["kind"] == "ok"
+    b["x"] = 100.0                                           # abutted, small faces: legal
+    assert SR.pair_rule(a, b, CFG)["kind"] == "abut"
+    a["pins"]["E"] = face(1600, 0, 100)                     # > 1500-pin face abutting a pin face: WALL
+    assert SR.pair_rule(a, b, CFG)["kind"] == "wall"
+    b["pins"] = {}                                           # pinless facing face: abutment allowed
+    assert SR.pair_rule(a, b, CFG)["kind"] == "abut"
+    c = core("c", 300, 300, 10, 10)                          # diagonal / not facing: no rule
+    assert SR.pair_rule(a, c, CFG) is None
+
+
+def test_straight_across_and_sliver():
+    a = core("a", 0, 0, 100, 100, {"E": face(400, 0, 100, "x")}, {"x": {"b"}})
+    b = core("b", 115, 0, 100, 100, {})
+    r = SR.pair_rule(a, b, CFG)
+    assert r["pins"] == [0, 0] and r["kind"] == "sliver"     # pins go straight across: no street demand, WARN only
+    # types without core_conns: aligned pins on both faces cross the seam (native split, t51)
+    a2 = core("a", 0, 0, 100, 100, {"E": face(200, 0, 100)}, has_conns=False)
+    b2 = core("b", 117.28, 0, 100, 100, {"W": face(200, 0, 100)}, has_conns=False)
+    b3 = core("b", 117.28, 0, 100, 100, {"W": face(100, 0, 100)}, has_conns=False)
+    assert SR.pair_rule(a2, b3, CFG)["pins"] == [100, 0]   # one-to-one: 100 of 200 pair up
+    assert SR.pair_rule(a2, b2, CFG)["kind"] == "sliver"
+
+
+def test_outline_rule_windows_and_margin():
+    c = core("a", 8.64, 50, 100, 100, {"W": face(300, 0, 100)})
+    v = SR.outline_rule(c, 1000, 1000, CFG)
+    assert [x["face"] for x in v] == ["W"] and v[0]["kind"] == "street"
+    # the same pins inside a type bus window on the W face go straight out
+    assert SR.outline_rule(c, 1000, 1000, CFG, {"W": [(40, 160)]}) == []
+    c2 = core("b", 8.64, 50, 100, 100)                      # pinless at the 8.64 edge margin: legal
+    assert SR.outline_rule(c2, 1000, 1000, CFG) == []
+
+
+def test_analyze_tap_street():
+    # one cluster boxed in on all sides by 8.64 gaps, no outline face: tap_street WARN
+    cs = [core("m", 100, 100, 50, 50), core("w", 41.36, 80, 50, 90), core("e", 158.64, 80, 50, 90),
+          core("s", 90, 41.36, 70, 50), core("n", 90, 158.64, 70, 50)]
+    V, cnt = SR.analyze(400, 400, cs, [[0], [1], [2], [3], [4]], CFG)
+    assert any(v["kind"] == "tap_street" and v["a"] == "m" for v in V)
+
+
+def test_die_growth_push():
+    P = {"die": {"outline_um": [1000.0, 500.0]},
+         "partition_types": {"A": {"outline_um": [400.0, 500.0]}, "B": {"outline_um": [600.0, 500.0]}},
+         "partitions": [{"name": "a", "type": "A", "origin_um": [0, 0]}, {"name": "b", "type": "B", "origin_um": [400, 0]}]}
+    d = SR.die_growth(P, {"A": (443.2, 500.0)})
+    assert d["dW"] == 43.2 and d["dH"] == 0.0 and abs(d["area_pct"] - 4.32) < 1e-6
+
+
+def test_eq_struct():
+    t0 = {"outline_um": [10, 10], "hard_cores": [{"inst": "a", "origin_um": [1, 1], "outline_um": [2, 2]}],
+          "buses": [{"name": "x", "face": "N"}]}
+    t1 = json.loads(json.dumps(t0))
+    t1["outline_um"] = [14.32, 10]
+    t1["hard_cores"][0]["origin_um"] = [5.32, 1]
+    assert SR.eq_struct(t0, t1) == []
+    t1["hard_cores"][0]["outline_um"] = [3, 2]
+    assert SR.eq_struct(t0, t1)                              # a core shape change is never allowed
+    t2 = json.loads(json.dumps(t0))
+    t2["buses"][0]["face"] = "S"
+    assert SR.eq_struct(t0, t2)
+
+
+def _toy_plan(tmp_path, gap=15.12):
+    """two 100x100 cores, 400 pins facing each other across a 15.12-um slot, an ft register in the slot row."""
+    pins = tmp_path / "pins"
+    pins.mkdir()
+    pa = [{"name": "o[%d]" % k, "x": 100.0, "y": 0.25 * k + 0.1} for k in range(400)]
+    pb = [{"name": "i[%d]" % k, "x": 0.0, "y": 0.25 * k + 0.1} for k in range(400)]
+    (pins / "a.json").write_text(json.dumps({"pins": pa}))
+    (pins / "b.json").write_text(json.dumps({"pins": pb}))
+    x_b = 60.48 + 100 + gap
+    t = {"outline_um": [604.8, 302.4], "module": "toy",
+         "hard_cores": [{"inst": "u_a", "module": "A", "origin_um": [60.48, 86.4], "outline_um": [100.0, 100.0],
+                         "orient": "R0", "pins_file": "pins/a.json"},
+                        {"inst": "u_b", "module": "B", "origin_um": [x_b, 86.4], "outline_um": [100.0, 100.0],
+                         "orient": "R0", "pins_file": "pins/b.json"}],
+         "ft_slots": [{"name": "ft0", "in_face": "W", "out_face": "E", "width": 4, "in_window_um": [130, 140],
+                       "out_window_um": [130, 140], "regs_um": [[400.0, 135.0]]}],
+         "clock": {"tap_um": [480.0, 250.0]}}
+    P = {"die": {"name": "toy", "outline_um": [604.8, 302.4]}, "partition_types": {"toy": t},
+         "partitions": [{"name": "p0", "type": "toy", "origin_um": [0, 0]}]}
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(P))
+    # core_conns: the two faces talk to the type faces, not to each other (so their pins run along the slot)
+    (tmp_path / "core_conns.json").write_text(json.dumps({"toy": {"u_a": {"o": ["face:E"]}, "u_b": {"i": ["face:W"]}}}))
+    return plan, P
+
+
+def test_legalize_opens_street(tmp_path):
+    plan, P = _toy_plan(tmp_path)
+    out = tmp_path / "new.json"
+    ev = tmp_path / "ev.json"
+    rc = SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+                  "--event", str(ev), "--rs-halving", "off"])
+    assert rc == 0
+    E = json.loads(ev.read_text())
+    row = E["rows"][0]
+    assert row["violations_before"].get("street") == 1
+    assert row["applied"], row["reason"]
+    Q = json.loads(out.read_text())
+    t = Q["partition_types"]["toy"]
+    a, b = t["hard_cores"]
+    gap = b["origin_um"][0] - (a["origin_um"][0] + 100.0)
+    assert gap >= SR.need_um(800, SR.DEFAULTS) - 1e-6       # 400 + 400 facing pins -> street
+    assert a["outline_um"] == [100.0, 100.0] and b["outline_um"] == [100.0, 100.0]   # never a core shape change
+    # displacements on the 4.32 lattice; relative order kept
+    for h0, h1 in zip(P["partition_types"]["toy"]["hard_cores"], t["hard_cores"]):
+        d = h1["origin_um"][0] - h0["origin_um"][0]
+        assert abs(d / SR.G - round(d / SR.G)) < 1e-6
+    assert a["origin_um"][0] < b["origin_um"][0]
+    assert t["outline_um"] == P["partition_types"]["toy"]["outline_um"]   # free area absorbed it: no growth
+    # the ft register in the slot row is never under a core
+    assert SR.points_under_cores(t) == []
+    # the rule check on the new plan is clean
+    ck = tmp_path / "ck.json"
+    SR.main(["check", str(out), "--die", "toy", "--repo", str(tmp_path), "--out", str(ck)])
+    assert json.loads(ck.read_text())["types_with_violations"] == 0
+
+
+def test_legalize_grows_outline_when_full(tmp_path):
+    plan, P = _toy_plan(tmp_path)
+    t = P["partition_types"]["toy"]
+    t["outline_um"] = [8.64 + 100 + 15.12 + 100 + 8.64, 302.4]   # no free width: the street needs growth
+    t["hard_cores"][0]["origin_um"] = [8.64, 86.4]
+    t["hard_cores"][1]["origin_um"] = [8.64 + 100 + 15.12, 86.4]
+    t["ft_slots"] = []
+    t["clock"] = {}
+    P["die"]["outline_um"] = list(t["outline_um"])
+    plan.write_text(json.dumps(P))
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+             "--event", str(ev), "--rs-halving", "off"])
+    row = json.loads(ev.read_text())["rows"][0]
+    assert row["applied"], row["reason"]
+    W0, W1 = row["outline_before"][0], row["outline_after"][0]
+    assert W1 > W0 and abs((W1 - W0) / 8.64 - round((W1 - W0) / 8.64)) < 1e-6
+    assert json.loads(ev.read_text())["die_estimate"]["dW"] == round(W1 - W0, 2)
+
+
+def test_g0_hook(tmp_path):
+    import check as CK
+    plan, P = _toy_plan(tmp_path)
+    R = CK.Report()
+    summ = SR.g0_check(P, R, tmp_path, "error", repo=tmp_path)
+    assert summ["types_with_errors"] == 1 and summ["counts"]["street"] == 1
+    errs = [i for i in R.items if i["level"] == "ERROR" and i["check"] == "street_gap"]
+    assert len(errs) == 1 and "u_a|u_b" in errs[0]["msg"]
+    R2 = CK.Report()
+    SR.g0_check(P, R2, tmp_path, "warn", repo=tmp_path)
+    assert not R2.errors() and any(i["check"] == "street_gap" for i in R2.items)
+
+
+def test_hub_repack_escape_boxed_in_terminates():
+    # a station end inside a core that is flush with the outline and boxed in by a neighbour: escape() used to
+    # recurse forever (q_b102__physical_v1); it now returns a lattice point
+    import hub_repack as HR
+    R = HR.Raster(200.0, 100.0, [(0.0, 0.0, 100.0, 100.0), (104.0, 0.0, 200.0, 100.0)])
+    q = HR.escape(R, (50.0, 50.0))
+    assert len(q) == 2
+
+
+def test_locked_axis_never_grows(tmp_path):
+    # die at the reticle: grow_axes=y keeps W; the street that needs W stays residual, nothing crosses the outline
+    plan, P = _toy_plan(tmp_path)
+    t = P["partition_types"]["toy"]
+    t["outline_um"] = [8.64 + 100 + 15.12 + 100 + 8.64, 302.4]
+    t["hard_cores"][0]["origin_um"] = [8.64, 86.4]
+    t["hard_cores"][1]["origin_um"] = [8.64 + 100 + 15.12, 86.4]
+    t["ft_slots"] = []
+    t["clock"] = {}
+    plan.write_text(json.dumps(P))
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+             "--event", str(ev), "--rs-halving", "off", "--set", "grow_axes=y"])
+    row = json.loads(ev.read_text())["rows"][0]
+    assert abs(row["outline_after"][0] - row["outline_before"][0]) < 1e-6
+    Q = json.loads(out.read_text())["partition_types"]["toy"]
+    for h in Q["hard_cores"]:
+        assert h["origin_um"][0] + 100.0 <= Q["outline_um"][0] + 1e-6
+
+
+def test_reticle_fit_reverts_growth():
+    P = {"die": {"outline_um": [32990.0, 1000.0]},
+         "partition_types": {"A": {"outline_um": [400.0, 1000.0]}, "B": {"outline_um": [600.0, 1000.0]}},
+         "partitions": [{"name": "a", "type": "A", "origin_um": [0, 0]}, {"name": "b", "type": "B", "origin_um": [400, 0]}]}
+    import copy
+    Q = copy.deepcopy(P)
+    Q["partition_types"]["A"]["outline_um"] = [443.2, 1000.0]
+    rows = [{"type": "A", "applied": True, "outline_before": [400.0, 1000.0], "outline_after": [443.2, 1000.0],
+             "violations_before": {"street": 1}, "violations_after": {}}]
+    d, rev = SR.reticle_fit(P, Q, rows, log=lambda s: None)
+    assert rev == ["A"] and not rows[0]["applied"] and Q["partition_types"]["A"]["outline_um"] == [400.0, 1000.0]
