@@ -887,7 +887,7 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     if cfg.get("station_face_dedupe", True):
         for s_ in t.get("internal_stations", []) or []:
             cn = str(s_.get("conn", ""))
-            if not cn.startswith("bus:"):
+            if not cn.startswith("bus:") or s_.get("sites") == "float":
                 continue
             for end in (s_.get("launch", ""), s_.get("capture", "")):
                 e_ = str(end)
@@ -1104,6 +1104,8 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
     # lanes is a 17-pin net, not 16 two-pin nets); later hops are per link
     fan = defaultdict(list)
     for s in t.get("internal_stations", []) or []:
+        if s.get("sites") == "float":
+            continue        # WIDE-FLOAT-1: unpinned stages; the bus is scored as its face net (not deduped below)
         pts = [tuple(s["from_um"])] + [tuple(r) for r in s.get("regs_um", [])] + [tuple(s["to_um"])]
         nb = station_bits(t, s)
         fan[(str(s.get("launch")), tuple(round(v, 1) for v in s["from_um"]))].append((pts, nb))
