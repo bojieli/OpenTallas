@@ -1,0 +1,679 @@
+{
+ "schema": "opentallas.core_place.v1",
+ "tool": "tools/die_plan/core_place.py",
+ "lane": "CORE-PLACE-1",
+ "advisory": true,
+ "eq_by_construction": "positions/orients only; eq_gate per type",
+ "base_plan": "/srv/opentallas-scratch2/claude/vislayout2-hbm/w/s31q.json",
+ "base_plan_sha256": "0a02c9f70188f1d9be7879491452e7fa9da30bc26502eeff902b29baaf9e6f5d",
+ "plan_output": "/srv/opentallas-scratch2/claude/vislayout2-hbm/w/s31qc.json",
+ "plan_output_sha256": "b9d6e83f81d3b9359bef99687eee8aea4575ad8906dedc5c181543ab5320c68e",
+ "cfg": {
+  "gap": 34.56,
+  "sweeps": 12,
+  "topk": 4,
+  "lam": 4.0,
+  "reach": 480.0,
+  "grid_um": 21.6,
+  "grt_halving": "full",
+  "fixed_re": "",
+  "flips_only": false,
+  "face_clear": []
+ },
+ "rows": [
+  {
+   "type": "q_su31",
+   "cores": 16,
+   "clusters": 4,
+   "links": 2,
+   "stations": 2,
+   "model": "none",
+   "intrinsic": {
+    "H": {
+     "worst": 0.062,
+     "rows": [
+      {
+       "at_um": 366.3,
+       "min_bits": 14,
+       "ft_bits": 13,
+       "tracks_no_macro": 52248,
+       "ratio": 0.0
+      },
+      {
+       "at_um": 549.5,
+       "min_bits": 1629,
+       "ft_bits": 1628,
+       "tracks_no_macro": 52248,
+       "ratio": 0.031
+      },
+      {
+       "at_um": 732.7,
+       "min_bits": 3244,
+       "ft_bits": 3243,
+       "tracks_no_macro": 52248,
+       "ratio": 0.062
+      },
+      {
+       "at_um": 915.8,
+       "min_bits": 1628,
+       "ft_bits": 1628,
+       "tracks_no_macro": 52248,
+       "ratio": 0.031
+      },
+      {
+       "at_um": 1099.0,
+       "min_bits": 13,
+       "ft_bits": 13,
+       "tracks_no_macro": 52248,
+       "ratio": 0.0
+      },
+      {
+       "at_um": 1282.2,
+       "min_bits": 13,
+       "ft_bits": 13,
+       "tracks_no_macro": 52248,
+       "ratio": 0.0
+      },
+      {
+       "at_um": 1465.3,
+       "min_bits": 13,
+       "ft_bits": 13,
+       "tracks_no_macro": 52248,
+       "ratio": 0.0
+      }
+     ]
+    },
+    "V": {
+     "worst": 0.049,
+     "rows": [
+      {
+       "at_um": 311.0,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 466.6,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 622.1,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 777.6,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 933.1,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 1088.6,
+       "min_bits": 3242,
+       "ft_bits": 3241,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 1244.2,
+       "min_bits": 3231,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      }
+     ]
+    },
+    "verdict": "fits",
+    "worst_ratio": 0.062
+   },
+   "seeded": true,
+   "seed_legalised": 2,
+   "face_clear_moved": 0,
+   "face_clear_failed": [],
+   "face_clear_end": [],
+   "timing_over": [],
+   "base_violations": 4,
+   "moved_cores": 16,
+   "moves": {},
+   "lam": {},
+   "bit_mm": [
+    554.9,
+    588.4,
+    6.0
+   ],
+   "rudy_ovf_H": [
+    99096,
+    87860
+   ],
+   "rudy_ovf_V": [
+    1670061,
+    815040
+   ],
+   "cut_H": [
+    {
+     "worst_ratio": 0.142,
+     "at_um": 777.6,
+     "bits": 4859,
+     "tracks": 34242,
+     "cuts_over_1": 0
+    },
+    {
+     "worst_ratio": 0.095,
+     "at_um": 712.8,
+     "bits": 3244,
+     "tracks": 34242,
+     "cuts_over_1": 0
+    }
+   ],
+   "cut_V": [
+    {
+     "worst_ratio": 0.142,
+     "at_um": 1252.8,
+     "bits": 3746,
+     "tracks": 26442,
+     "cuts_over_1": 0
+    },
+    {
+     "worst_ratio": 0.142,
+     "at_um": 1252.8,
+     "bits": 3746,
+     "tracks": 26442,
+     "cuts_over_1": 0
+    }
+   ],
+   "timing_violations_end": 0,
+   "stations_report": {
+    "stations": 2,
+    "moved": 2,
+    "regs_old": 7,
+    "regs_new": 7,
+    "rerouted": 2,
+    "kept_old_regs": 0,
+    "need_more_regs": 0,
+    "failed": 0,
+    "need_more_idx": []
+   },
+   "eq_violations": [],
+   "overlaps": 0,
+   "applied": true,
+   "cores_after": {
+    "u_su_Q3_lanes4_7__p0": {
+     "origin_um": [
+      1550.88,
+      233.28
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes4_7__p1": {
+     "origin_um": [
+      1360.8,
+      233.28
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes4_7__p2": {
+     "origin_um": [
+      1170.72,
+      233.28
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes4_7__p3": {
+     "origin_um": [
+      980.64,
+      233.28
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes12_15__p0": {
+     "origin_um": [
+      8.64,
+      233.28
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes12_15__p1": {
+     "origin_um": [
+      198.72,
+      233.28
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes12_15__p2": {
+     "origin_um": [
+      388.8,
+      233.28
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes12_15__p3": {
+     "origin_um": [
+      578.88,
+      233.28
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p0": {
+     "origin_um": [
+      980.64,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p1": {
+     "origin_um": [
+      1170.72,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p2": {
+     "origin_um": [
+      1360.8,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p3": {
+     "origin_um": [
+      1550.88,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes28_31__p0": {
+     "origin_um": [
+      578.88,
+      1010.88
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes28_31__p1": {
+     "origin_um": [
+      388.8,
+      1010.88
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes28_31__p2": {
+     "origin_um": [
+      198.72,
+      1010.88
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes28_31__p3": {
+     "origin_um": [
+      8.64,
+      1010.88
+     ],
+     "orient": "MY"
+    }
+   },
+   "route_supply_full": [
+    {
+     "verdict": "FLAG",
+     "worst": "street_V",
+     "p99": 1.259,
+     "core_H": 0.338,
+     "core_V": 0.495,
+     "street_H": 0.218,
+     "street_V": 1.259,
+     "hot_bins": 563
+    },
+    {
+     "verdict": "ok",
+     "worst": "open_V",
+     "p99": 1.036,
+     "core_H": 0.338,
+     "core_V": 0.375,
+     "street_H": null,
+     "street_V": null,
+     "hot_bins": 206
+    }
+   ],
+   "schema_new_errors": []
+  },
+  {
+   "type": "q_su31__physical_v1",
+   "cores": 16,
+   "clusters": 4,
+   "links": 3,
+   "stations": 3,
+   "model": "none",
+   "intrinsic": {
+    "H": {
+     "worst": 0.071,
+     "rows": [
+      {
+       "at_um": 366.3,
+       "min_bits": 491,
+       "ft_bits": 490,
+       "tracks_no_macro": 52248,
+       "ratio": 0.009
+      },
+      {
+       "at_um": 549.5,
+       "min_bits": 2106,
+       "ft_bits": 2105,
+       "tracks_no_macro": 52248,
+       "ratio": 0.04
+      },
+      {
+       "at_um": 732.7,
+       "min_bits": 3721,
+       "ft_bits": 3720,
+       "tracks_no_macro": 52248,
+       "ratio": 0.071
+      },
+      {
+       "at_um": 915.8,
+       "min_bits": 2106,
+       "ft_bits": 2105,
+       "tracks_no_macro": 52248,
+       "ratio": 0.04
+      },
+      {
+       "at_um": 1099.0,
+       "min_bits": 523,
+       "ft_bits": 490,
+       "tracks_no_macro": 52248,
+       "ratio": 0.01
+      },
+      {
+       "at_um": 1282.2,
+       "min_bits": 523,
+       "ft_bits": 490,
+       "tracks_no_macro": 52248,
+       "ratio": 0.01
+      },
+      {
+       "at_um": 1465.3,
+       "min_bits": 490,
+       "ft_bits": 490,
+       "tracks_no_macro": 52248,
+       "ratio": 0.009
+      }
+     ]
+    },
+    "V": {
+     "worst": 0.058,
+     "rows": [
+      {
+       "at_um": 311.0,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 466.6,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 622.1,
+       "min_bits": 3527,
+       "ft_bits": 3527,
+       "tracks_no_macro": 65899,
+       "ratio": 0.054
+      },
+      {
+       "at_um": 777.6,
+       "min_bits": 3824,
+       "ft_bits": 3824,
+       "tracks_no_macro": 65899,
+       "ratio": 0.058
+      },
+      {
+       "at_um": 933.1,
+       "min_bits": 3230,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      },
+      {
+       "at_um": 1088.6,
+       "min_bits": 3592,
+       "ft_bits": 3592,
+       "tracks_no_macro": 65899,
+       "ratio": 0.055
+      },
+      {
+       "at_um": 1244.2,
+       "min_bits": 3231,
+       "ft_bits": 3230,
+       "tracks_no_macro": 65899,
+       "ratio": 0.049
+      }
+     ]
+    },
+    "verdict": "fits",
+    "worst_ratio": 0.071
+   },
+   "seeded": true,
+   "seed_legalised": 0,
+   "face_clear_moved": 0,
+   "face_clear_failed": [],
+   "face_clear_end": [],
+   "timing_over": [],
+   "base_violations": 4,
+   "moved_cores": 16,
+   "moves": {},
+   "lam": {},
+   "bit_mm": [
+    573.9,
+    609.5,
+    6.2
+   ],
+   "rudy_ovf_H": [
+    4432,
+    2216
+   ],
+   "rudy_ovf_V": [
+    1897024,
+    979767
+   ],
+   "cut_H": [
+    {
+     "worst_ratio": 0.156,
+     "at_um": 777.6,
+     "bits": 5336,
+     "tracks": 34242,
+     "cuts_over_1": 0
+    },
+    {
+     "worst_ratio": 0.109,
+     "at_um": 712.8,
+     "bits": 3721,
+     "tracks": 34242,
+     "cuts_over_1": 0
+    }
+   ],
+   "cut_V": [
+    {
+     "worst_ratio": 0.149,
+     "at_um": 1015.2,
+     "bits": 3952,
+     "tracks": 26442,
+     "cuts_over_1": 0
+    },
+    {
+     "worst_ratio": 0.149,
+     "at_um": 1015.2,
+     "bits": 3952,
+     "tracks": 26442,
+     "cuts_over_1": 0
+    }
+   ],
+   "timing_violations_end": 0,
+   "stations_report": {
+    "stations": 3,
+    "moved": 3,
+    "regs_old": 7,
+    "regs_new": 7,
+    "rerouted": 3,
+    "kept_old_regs": 0,
+    "need_more_regs": 0,
+    "failed": 0,
+    "need_more_idx": []
+   },
+   "eq_violations": [],
+   "overlaps": 0,
+   "applied": true,
+   "cores_after": {
+    "u_su_Q3_lanes4_7__p0": {
+     "origin_um": [
+      1550.88,
+      241.92
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes4_7__p1": {
+     "origin_um": [
+      1360.8,
+      241.92
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes4_7__p2": {
+     "origin_um": [
+      1170.72,
+      241.92
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes4_7__p3": {
+     "origin_um": [
+      980.64,
+      241.92
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes12_15__p0": {
+     "origin_um": [
+      8.64,
+      241.92
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes12_15__p1": {
+     "origin_um": [
+      198.72,
+      241.92
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes12_15__p2": {
+     "origin_um": [
+      388.8,
+      241.92
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes12_15__p3": {
+     "origin_um": [
+      578.88,
+      241.92
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p0": {
+     "origin_um": [
+      980.64,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p1": {
+     "origin_um": [
+      1170.72,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p2": {
+     "origin_um": [
+      1360.8,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes20_23__p3": {
+     "origin_um": [
+      1550.88,
+      1010.88
+     ],
+     "orient": "R0"
+    },
+    "u_su_Q3_lanes28_31__p0": {
+     "origin_um": [
+      578.88,
+      1010.88
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes28_31__p1": {
+     "origin_um": [
+      388.8,
+      1010.88
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes28_31__p2": {
+     "origin_um": [
+      198.72,
+      1010.88
+     ],
+     "orient": "MY"
+    },
+    "u_su_Q3_lanes28_31__p3": {
+     "origin_um": [
+      8.64,
+      1010.88
+     ],
+     "orient": "MY"
+    }
+   },
+   "route_supply_full": [
+    {
+     "verdict": "FLAG",
+     "worst": "open_V",
+     "p99": 1.263,
+     "core_H": 0.36,
+     "core_V": 0.534,
+     "street_H": 0.509,
+     "street_V": 1.259,
+     "hot_bins": 729
+    },
+    {
+     "verdict": "ok",
+     "worst": "open_V",
+     "p99": 1.093,
+     "core_H": 0.36,
+     "core_V": 0.396,
+     "street_H": 0.16,
+     "street_V": 0.131,
+     "hot_bins": 430
+    }
+   ],
+   "schema_new_errors": []
+  }
+ ]
+}
