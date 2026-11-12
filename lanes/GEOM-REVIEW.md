@@ -6381,3 +6381,12 @@ GEOM REVIEW [S81-GEOM-3 2026-11-11 05:07 PST] col_h9_r2 ROM he M6 hotspot, DO_NO
   - Taps: clk_t18 4109 / t14 3121 / t9 2633 vs most taps 1-30.
   - The 16 hard cores' rows are fine; the glue has no anchor between the rows.
   - HOLD routing. To DIE-HBM-100: (a) why 568 pins are unregistered (missing pin cycles or a port-to-port path); (b) the same tap-assignment class as q_b003.
+- 2026-11-11 16:32 PST GEOM [COORD hourly] hbm/q_b012__physical_v1 attempt_2 3_place (epyc8 kw43 hcut1111): BAD, the bank-chain class again (third of the 14 held types seen).
+  - 1028x2532, fill 0.033; relay_collapse 1622; wedges into the hard-core streets around the lower row.
+  - Taps clk_t4 17221 / t5 14412 / t8 8565 vs t19 95; the farthest sink is 3198 um from its driver.
+  - It was launched before the bank hold. Stop its route; it reruns with istations-2 after the q_b003__pv1 pilot is clean.
+- 2026-11-11 16:32 PST GEOM [COORD hourly] hbm/NW_io attempt_3 3_place (epyc9): BAD.
+  - 648x4320 (aspect 6.67), fill 0.0074. All glue sits in one clump at (60-250, 1700-2000) beside clk_t8 (5636 sinks); the upper 2.3 mm has only the station stubs.
+  - clock_on_macro FAIL 1; pin_unreg 3; the farthest sink is 3663 um from its driver.
+  - The bottom 1 mm holds only the PMA macros, so the outline is far too tall for the logic.
+  - HOLD routing. To DIE-HBM-100: it pairs with the open NE_io decision (ne_a30). Re-form as an outline cut to logic + macro height, with the stations as a relay column on the face, not inside the io type.
