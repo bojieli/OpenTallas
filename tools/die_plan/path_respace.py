@@ -57,13 +57,35 @@ def _man(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
+_BOX_CACHE = {}
+
+
+def type_boxes(t):
+    """placed macro / core boxes of a type the way check.check_ft_macro_sites sees them (S.placed_macro_boxes +
+    placement_obstacles.probe_blockages): the rects a station / bank must stay off.  (x0, y0, x1, y1) list."""
+    key = id(t)
+    if key not in _BOX_CACHE:
+        from placement_obstacles import probe_blockages
+        try:
+            boxes = S.placed_macro_boxes(t)
+        except ValueError:
+            boxes = {}
+        for c in probe_blockages(t):
+            x, y = c["origin_um"]
+            w, h = c["outline_um"]
+            boxes.setdefault(c["inst"], (x, y, x + w, y + h))
+        r = [tuple(v) for v in boxes.values()]
+        for h_ in t.get("hard_cores") or []:
+            r.append((h_["origin_um"][0], h_["origin_um"][1], h_["origin_um"][0] + h_["outline_um"][0],
+                      h_["origin_um"][1] + h_["outline_um"][1]))
+        _BOX_CACHE[key] = (t, r)
+    return _BOX_CACHE[key][1]
+
+
 def _blockers(P, tn, cache={}):
     key = (id(P), tn)
     if key not in cache:
-        t = P.types[tn]
-        r = [(h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0],
-              h["origin_um"][1] + h["outline_um"][1]) for h in t.get("hard_cores") or []]
-        cache[key] = r
+        cache[key] = type_boxes(P.types[tn])
     return cache[key]
 
 
@@ -479,9 +501,7 @@ def _pack_bank(raw2, tn, n, w, h, anchor, avoid, search=240.0, step=4.32):
     inside the outline, off the hard cores (+margin) and off every rect in `avoid` (other banks).  -> (sites, centre) or None."""
     import math
     W, H = raw2["partition_types"][tn]["outline_um"]
-    block = [(a - MARGIN, b - MARGIN, c + MARGIN, d + MARGIN) for a, b, c, d in
-             [(hc["origin_um"][0], hc["origin_um"][1], hc["origin_um"][0] + hc["outline_um"][0],
-               hc["origin_um"][1] + hc["outline_um"][1]) for hc in raw2["partition_types"][tn].get("hard_cores") or []]]
+    block = [(a - MARGIN, b - MARGIN, c + MARGIN, d + MARGIN) for a, b, c, d in type_boxes(raw2["partition_types"][tn])]
     block += list(avoid)
     cands = []
     k = int(search / step)
@@ -577,6 +597,28 @@ def tap_guard(raw_before, raw_after):
                 k1 = [sl.get("stations") for sl in t.get("ft_slots", [])]
                 out.append((tn, str(e)[:160], k0 != k1))
     return out
+
+
+def geo_guard(raw_before, raw_after):
+    """G0 geometry rule 'station cells/sites intersect physical macros' (check.check_ft_macro_sites) before vs after:
+    -> [(type, message)] of NEW findings."""
+    import check
+
+    class Rp:
+        def __init__(self):
+            self.m = []
+
+        def err(self, c, msg, **k):
+            self.m.append((k.get("type"), msg))
+
+        warn = err
+
+    def msgs(raw):
+        r = Rp()
+        check.check_ft_macro_sites(S.Plan(raw), r)
+        return r.m
+    b = {m for _t, m in msgs(raw_before)}
+    return [(t, m) for t, m in msgs(raw_after) if m not in b]
 
 
 def revert_types(raw_before, raw_after, types):

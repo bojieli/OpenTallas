@@ -37,10 +37,8 @@ GRID = 10.8
 
 
 def _blockers(raw, tn, avoid):
-    t = raw["partition_types"][tn]
-    cores = [(h["inst"], h["origin_um"][0] - PR.MARGIN, h["origin_um"][1] - PR.MARGIN,
-              h["origin_um"][0] + h["outline_um"][0] + PR.MARGIN, h["origin_um"][1] + h["outline_um"][1] + PR.MARGIN)
-             for h in t.get("hard_cores") or []]
+    cores = [("box", a - PR.MARGIN, b - PR.MARGIN, c + PR.MARGIN, d + PR.MARGIN)
+             for a, b, c, d in PR.type_boxes(raw["partition_types"][tn])]
     return cores
 
 
@@ -274,6 +272,12 @@ def main(argv=None):
     import re
     raw = PR._load(a.inp)
     raw2, ops, rep = run(raw, a.lanes.split(","), a.limit, a.pad)
+    geo = PR.geo_guard(raw, raw2)
+    if geo:
+        print("geometry guard FAIL (new station/bank vs macro):", geo[:4], file=sys.stderr)
+        rep["geo_guard_failed"] = geo
+        Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
+        return 3
     guard = PR.tap_guard(raw, raw2)
     if guard:
         print("tap guard FAIL (added stations break the kit tap rule):", guard, file=sys.stderr)

@@ -69,6 +69,10 @@ def main(argv=None):
                               only_lanes=a.only.split(',') if a.only else None)
     # tap guard (DIE-S81-87 ready9 bind failure: explicit tap lost its sink stations): types whose moved stations break the
     # kit tap rule are reverted when only sites moved; a +cycle type that breaks it fails the stage closed.
+    geo = PR.geo_guard(raw, raw2)
+    if geo:
+        print("geometry guard FAIL:", geo[:4], file=sys.stderr)
+        return 3
     guard = PR.tap_guard(raw, raw2)
     if any(g[2] for g in guard):
         print("tap guard: station count changed on a type that breaks the tap rule:", [g for g in guard if g[2]], file=sys.stderr)
