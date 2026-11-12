@@ -1,0 +1,242 @@
+{
+ "base_sha256": "e4820bd9d97c1eb2efbdfdb49baf984a581f4a41c5f9c12055fbde3494c9c2bd",
+ "plan_sha256": "9d1f151e68a12fa98db2f6dc7aa50a8b46fdaec6fe9414ff9bda7be4493450da",
+ "edits": [
+  {
+   "kind": "core",
+   "inst": "u_bound.u_core.u_rx.u_mem",
+   "was": [
+    60.48,
+    432.0
+   ],
+   "now": [
+    112.32,
+    587.52
+   ]
+  },
+  {
+   "kind": "core",
+   "inst": "u_bound.u_core.u_tx.u_mem",
+   "was": [
+    259.2,
+    432.0
+   ],
+   "now": [
+    112.32,
+    492.48
+   ]
+  },
+  {
+   "kind": "core",
+   "inst": "u_bound.u_core.g_codec.u_codec.g_bank[0].u_store.u_sram",
+   "was": [
+    17.28,
+    527.04
+   ],
+   "now": [
+    112.32,
+    207.36
+   ]
+  },
+  {
+   "kind": "core",
+   "inst": "u_bound.u_core.g_codec.u_codec.g_bank[1].u_store.u_sram",
+   "was": [
+    276.48,
+    527.04
+   ],
+   "now": [
+    112.32,
+    112.32
+   ]
+  },
+  {
+   "kind": "core",
+   "inst": "u_bound.u_core.g_codec.u_codec.g_bank[2].u_store.u_sram",
+   "was": [
+    60.48,
+    622.08
+   ],
+   "now": [
+    112.32,
+    397.44
+   ]
+  },
+  {
+   "kind": "core",
+   "inst": "u_bound.u_core.g_codec.u_codec.g_bank[3].u_store.u_sram",
+   "was": [
+    259.2,
+    622.08
+   ],
+   "now": [
+    112.32,
+    302.4
+   ]
+  },
+  {
+   "kind": "clock.tap_um",
+   "was": [
+    388.8,
+    397.44
+   ],
+   "now": [
+    328.32,
+    397.44
+   ]
+  },
+  {
+   "kind": "reset.tap_um",
+   "was": [
+    388.8,
+    397.44
+   ],
+   "now": [
+    328.32,
+    397.44
+   ]
+  },
+  {
+   "kind": "tap u_coll_face_s0.ck",
+   "was": [
+    267.84,
+    587.52
+   ],
+   "now": [
+    328.32,
+    587.52
+   ]
+  },
+  {
+   "kind": "tap glue",
+   "was": [
+    397.44,
+    397.44
+   ],
+   "now": [
+    336.96,
+    397.44
+   ]
+  },
+  {
+   "kind": "count_strap strap_ca_efall",
+   "was": [
+    [
+     388.8,
+     397.44
+    ]
+   ],
+   "now": [
+    [
+     328.32,
+     397.44
+    ]
+   ]
+  },
+  {
+   "kind": "count_strap strap_ca_k_rec_tx_s0_i",
+   "was": [
+    [
+     384.48,
+     397.44
+    ],
+    [
+     388.8,
+     393.12
+    ],
+    [
+     388.8,
+     401.76
+    ],
+    [
+     393.12,
+     397.44
+    ],
+    [
+     380.16,
+     397.44
+    ],
+    [
+     384.48,
+     393.12
+    ]
+   ],
+   "now": [
+    [
+     324.0,
+     397.44
+    ],
+    [
+     328.32,
+     393.12
+    ],
+    [
+     328.32,
+     401.76
+    ],
+    [
+     332.64,
+     397.44
+    ],
+    [
+     319.68,
+     397.44
+    ],
+    [
+     324.0,
+     393.12
+    ]
+   ]
+  },
+  {
+   "kind": "count_strap strap_ca_pad",
+   "was": [
+    [
+     384.48,
+     401.76
+    ]
+   ],
+   "now": [
+    [
+     324.0,
+     401.76
+    ]
+   ]
+  },
+  {
+   "path": "clock.landing_contract.collector_tree.relays",
+   "was": [
+    196.56,
+    380.16
+   ],
+   "now": [
+    196.56,
+    388.8
+   ],
+   "why": "b3/b2 row gap"
+  },
+  {
+   "kind": "edge clk_coll",
+   "was": [
+    406.08,
+    406.08
+   ],
+   "now": [
+    345.6,
+    406.08
+   ]
+  },
+  {
+   "kind": "edge clk_serdes",
+   "was": [
+    423.36,
+    406.08
+   ],
+   "now": [
+    328.32,
+    561.6
+   ]
+  }
+ ],
+ "inside_box_xy": []
+}
