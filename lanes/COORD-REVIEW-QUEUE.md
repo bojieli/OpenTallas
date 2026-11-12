@@ -43725,3 +43725,13 @@ FAILED [AUTOPILOT 4a9c3879c32f] 2026-11-11 17:32:11 PST AUTOPILOT -> KIT-WAVE-3:
     - SEAM-HOP-1 then corrects the tool and re-sweeps.
     - REAL hops go into the next plan event: an added station, or +1 cycle where reach needs it.
     - HBM: re-check L8007 655 / L8006 515 against the 399/355 per-bit numbers from the io re-form READY.
+- 2026-11-11 17:49 PST RULING [COORD, owner delegated -> KW-FIX-45, DIE-QC-99, ROOT-MERGE-59, DIE-HBM-100, HBM-CORES-B, OPS-3]
+  - P0 QC: the kit-wave QC rows still run on plan_qc99_1111, which fails gen for EVERY type: 191 su macro-clear errors, and gen validates the whole plan. That is why most QC re-laid types never placed.
+    - KW-FIX-45: switch the QC kit-wave plan to s21 (plan_qc99_s21_nkout cce5cf63a7bd, on main, 0 errors) NOW. Relaunch the 23 'plan invalid' rows plus every other current QC row that has no live job, as ONE batch, in the next tick.
+    - s22 (R0) and the wstart re-space follow as the next QC event. Do not wait for them.
+  - epyc8 waiters: (a) keep the 4 sealed jobs, so no placed work is lost.
+    - All NEW private kits (HBM-CORES-B, HBM-COLLECT-1) go to epyc9 from now on. epyc9 is not reserved for PTW-A-1 alone; it has about 650 GB admit.
+    - X-TIER-OTC's form (d) test builds also go to epyc9.
+  - APPROVED claude/hbm-io-reform-event-1111@d7abde77473e: plan event d49a (data only), plan e9ae418c06ca. KW-FIX-45 switches HBM to d49a after it merges, so NW_io/NE_io/iorly rebuild on it.
+  - APPROVED claude/cpl-qc-nk-r0-1111@cb54a72e65fa (s22: positions/orients only, EQ by construction). It goes into the next QC event.
+  - S81-LEAF-CYC: the +1 stage at vn->quad is accepted (all hops <= 390 um). READY in about 60 min; t11/t42 follow at once.
