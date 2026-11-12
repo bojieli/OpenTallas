@@ -238,6 +238,66 @@ def cmd_pads(a):
 CELL_RE = re.compile(r"^\s*(\w+)\s+(\w+)\s*\((.*)\);\s*$")
 
 
+def type_rects(plan):
+    """partition outlines (x0, y0, x1, y1, part, type) of a die plan json; R90/R270 swap w/h"""
+    raw = json.loads(Path(plan).read_text())
+    ty = raw["partition_types"]
+    out = []
+    for p in raw["partitions"]:
+        w, h = ty[p["type"]]["outline_um"][:2]
+        if p.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+            w, h = h, w
+        x, y = p["origin_um"]
+        out.append((x, y, x + w, y + h, p["name"], p["type"]))
+    return out
+
+
+class ChannelSites:
+    """legal delay-cell sites = outside every partition outline (die channels).  snap(x, y) -> nearest channel point
+    (Manhattan), searched as the 4 points just past each containing outline's edges (abutted outlines chain on), to depth 24,
+    pruned by the best distance found."""
+    EPS = 0.54
+
+    def __init__(self, rects, grid=50.0):
+        self.rects, self.grid, self.bins = rects, grid, defaultdict(list)
+        for i, r in enumerate(rects):
+            for gx in range(int(r[0] // grid), int(r[2] // grid) + 1):
+                for gy in range(int(r[1] // grid), int(r[3] // grid) + 1):
+                    self.bins[(gx, gy)].append(i)
+
+    def inside(self, x, y):
+        for i in self.bins.get((int(x // self.grid), int(y // self.grid)), ()):
+            r = self.rects[i]
+            if r[0] < x < r[2] and r[1] < y < r[3]:
+                return r
+        return None
+
+    def snap(self, x, y):
+        if self.inside(x, y) is None:
+            return x, y, 0.0
+        best, front, seen = None, [(x, y)], set()
+        for _ in range(24):
+            nxt = []
+            for px, py in front:
+                r = self.inside(px, py)
+                if r is None:
+                    d = abs(px - x) + abs(py - y)
+                    if best is None or d < best[2]:
+                        best = (px, py, d)
+                    continue
+                for q in ((r[0] - self.EPS, py), (r[2] + self.EPS, py), (px, r[1] - self.EPS), (px, r[3] + self.EPS)):
+                    k = (round(q[0], 2), round(q[1], 2))
+                    if k not in seen and (best is None or abs(q[0] - x) + abs(q[1] - y) < best[2]):
+                        seen.add(k)
+                        nxt.append(q)
+            front = nxt
+            if not front:
+                break
+        if best is None:
+            raise ValueError("no channel site near (%.1f, %.1f)" % (x, y))
+        return best
+
+
 def cmd_realize(a):
     """balance realized as PLACED DELAY CELLS (CTS-style), from measured (routed) arrivals: on every branch point the
     faster kids get k = round(deficit / step) delay buffers in series (placed at the branch point), where deficit =
@@ -245,6 +305,8 @@ def cmd_realize(a):
     cells in front of a load; every existing cell and site is kept, so the step can iterate route -> STA -> realize.
     -> OUT/ctree.v (module ctree), OUT/ctree_ck89.tcl, OUT/tree.json, OUT/realize.json"""
     src, out = Path(a.clkdir), Path(a.out)
+    if a.sites == "channel" and not a.plan:
+        raise SystemExit("realize --sites channel needs --plan (partition outlines)")
     out.mkdir(parents=True, exist_ok=True)
     lines = (src / "ctree.v").read_text().splitlines()
     cells, ports = {}, set()
@@ -319,11 +381,16 @@ def cmd_realize(a):
                     ins.append((u, k, n))
         stack += [k for k in ks if not k.startswith("port:")]
     new_cells, edits, z = [], {}, 0
+    sites = ChannelSites(type_rects(a.plan)) if a.sites == "channel" else None
+    moved = []
     for u, k, n in ins:
         net = cells[u][2]
         names = ["dlyg%d_%d_%d" % (gen, z, j) for j in range(n)]
         z += 1
         x, y = place.get(u, (0.0, 0.0))
+        if sites is not None:                           # never inside a type: nearest die-channel point
+            x, y, d = sites.snap(x, y)
+            moved.append(d)
         src_net = net
         if k.startswith("port:"):                       # u drives the port net itself: u -> chain -> port
             src_net = "w_dlyg%din%d" % (gen, z)
@@ -367,7 +434,12 @@ def cmd_realize(a):
     t = [v_ for k_, v_ in arr.items() if k_ in ports]
     rep = dict(mode="realize", arr=str(a.arr), generation=gen, step_ps=round(step, 2), step_measured=len(dd), cell=a.cell, taps=len(t),
                spread_in_ps=round(max(t) - min(t), 1) if t else None, branches=len(ins),
-               delay_cells=len(new_cells), cells_before=len(cells))
+               delay_cells=len(new_cells), cells_before=len(cells), sites=a.sites)
+    if sites is not None:
+        mv = sorted(moved)
+        rep.update(chains_moved=sum(1 for d in mv if d > 0), move_um_p50=round(mv[len(mv) // 2], 1) if mv else 0.0,
+                   move_um_max=round(mv[-1], 1) if mv else 0.0,
+                   cells_inside_types=sum(1 for c in new_cells if sites.inside(c[3], c[4]) is not None))
     (out / "realize.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps(rep))
     return 0
@@ -386,7 +458,11 @@ def main(argv=None):
     p.add_argument("out")
     p.add_argument("--step-ps", type=float, default=0.0,
                    help="delay per inserted cell; 0 (default) = measured on earlier generations' chains, else 15")
-    p.add_argument("--cell", default="BUFx24_ASAP7_75t_R")
+    p.add_argument("--cell", default="HB4xp67_ASAP7_75t_R",
+                   help="delay cell (COORD 11-12: HB4xp67; BUFx24 rejected)")
+    p.add_argument("--sites", choices=("branch", "channel"), default="channel",
+                   help="channel (default) = never inside a partition outline (needs --plan); branch = at the branch point")
+    p.add_argument("--plan", help="die plan json (partition outlines) for --sites channel")
     p = sp.add_parser("pads")
     p.add_argument("run")
     p.add_argument("spef")
