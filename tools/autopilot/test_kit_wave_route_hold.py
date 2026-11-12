@@ -22,7 +22,8 @@ class RouteHold(unittest.TestCase):
         self.rec = dict(die="qc", item="cbf_q01", event="event", attempt=10, status="RUNNING",
                         unit="unit", dir=str(self.jd))
         self.st = dict(items={"key": self.rec})
-        self.cfg = dict(enabled=True, hosts=["intel2"], geom_sample=1, dies=dict(qc=dict(src_sha="abc123")))
+        self.cfg = dict(enabled=True, hosts=["intel2"], geom_sample=1, wait_visual=False,   # die-owned holds only; visual gate: own tests
+                        dies=dict(qc=dict(src_sha="abc123")))
         self.calls, self.logs, self.notices = [], [], {}
         def sh(argv, **kw):
             self.calls.append((argv, kw))

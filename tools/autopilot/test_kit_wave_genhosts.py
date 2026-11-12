@@ -368,19 +368,20 @@ def _failrec(tmp_path, cfgd, **over):
 
 
 def test_unchanged_fail_holds_same_inputs_only(tmp_path):
-    c = cfg(); r = _failrec(tmp_path, c, **{"class": "FLOW"})
+    # KW-FIX-45 11-12 (COORD): an unreadable source overlay hash releases the row, so the fixture measures one on both sides
+    c = cfg(); c["dies"]["s81"]["_src_overlay"] = "a" * 64; r = _failrec(tmp_path, c, **{"class": "FLOW"})
     assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # same inputs
     assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, **{"class": "INFRA"}))     # an infra failure is not a design retry
     assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, status="CANCELLED"))
     assert not K.unchanged_fail(c, {}, "s81", "t1", dict(r, dir=str(tmp_path / "gone")))
     assert not K.unchanged_fail(c, {"leafslew": {"k": {"die": "s81", "item": "t1", "attempt": 1}}}, "s81", "t1", r)
-    c2 = cfg(); c2["dies"]["s81"]["src_sha"] = "new"                                    # new source
+    c2 = cfg(); c2["dies"]["s81"].update(src_sha="new", _src_overlay="a" * 64)          # new source
     assert not K.unchanged_fail(c2, {}, "s81", "t1", r)
-    c3 = cfg(); c3["dies"]["s81"]["gen_args"] = ["--form", "x"]                         # new arguments
+    c3 = cfg(); c3["dies"]["s81"].update(gen_args=["--form", "x"], _src_overlay="a" * 64)   # new arguments
     assert not K.unchanged_fail(c3, {}, "s81", "t1", r)
-    c4 = cfg(); c4["dies"]["s81"]["_prov_keys"] = {"t1": "views2"}                      # new child views
+    c4 = cfg(); c4["dies"]["s81"].update(_prov_keys={"t1": "views2"}, _src_overlay="a" * 64)   # new child views
     assert not K.unchanged_fail(c4, {}, "s81", "t1", dict(r, prov_key="views1"))
-    c5 = cfg(gen_hosts=["epyc4"], place_mem_gb=999)                                     # where it runs is no input
+    c5 = cfg(gen_hosts=["epyc4"], place_mem_gb=999, _src_overlay="a" * 64)             # where it runs is no input
     assert K.unchanged_fail(c5, {}, "s81", "t1", r)
 
 
@@ -753,7 +754,7 @@ def test_unchanged_fail_sees_source_overlay_only_when_both_sides_measured(tmp_pa
     c["dies"]["s81"]["_src_overlay"] = "b" * 64
     assert not K.unchanged_fail(c, {}, "s81", "t1", r)                                # overlaid in place: changed
     c["dies"]["s81"]["_src_overlay"] = ""
-    assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # unreadable now: compares as before
+    assert not K.unchanged_fail(c, {}, "s81", "t1", r)          # unreadable now: treated as changed (KW-FIX-45 11-12, never a silent hold)
 
 
 def test_unchanged_fail_old_kit_without_overlay_field_stays_held(tmp_path):
@@ -782,7 +783,7 @@ def test_src_overlay_hash_is_content_only(tmp_path):
 
 
 def test_src_base_is_recorded_but_is_not_an_input(tmp_path):
-    c = cfg(); r = _failrec(tmp_path, c, **{"class": "FLOW"})
+    c = cfg(); c["dies"]["s81"]["_src_overlay"] = "a" * 64; r = _failrec(tmp_path, c, **{"class": "FLOW"})
     c["dies"]["s81"]["src_base"] = "685b58b80c3"
     assert K.spec_for(dict(c, _otrun_status={}), "s81", "t1", "")["src_base"] == "685b58b80c3"
     assert K.unchanged_fail(c, {}, "s81", "t1", r)                                    # naming the base releases nothing

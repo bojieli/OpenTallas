@@ -30,9 +30,11 @@ class FlowTagIdentity(unittest.TestCase):
         self.assertNotEqual(KW.input_hash(base), KW.input_hash(dict(base, src_sha="new")))
 
     def test_actual_failed_row_remains_held_for_tag_only_change_on_either_side(self):
+        # KW-FIX-45/46 11-12: an UNREADABLE source overlay hash now counts as changed (released), so the test pins a readable one
         with tempfile.TemporaryDirectory() as td:
             for old_tag in (None, "flow-20261107-cu-kv"):
                 c = cfg()
+                c["dies"]["qwen_kvsys"]["_src_overlay"] = "0" * 64     # a readable source overlay (both sides)
                 old = KW.spec_for(c, "qwen_kvsys", "kv3_pc", "intel2")
                 if old_tag:
                     old["gen_env"]["OT_FLOW_TAG"] = old_tag

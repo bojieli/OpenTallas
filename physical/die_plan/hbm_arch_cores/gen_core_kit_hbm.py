@@ -943,9 +943,15 @@ def fetch(f, commit, dst, at_commit=False):
         data = src.read_bytes()
     else:
         r = subprocess.run(["git", "-C", str(REPO), "show", f"{commit}:{f}"], capture_output=True)
-        if r.returncode:
+        # KW-FIX-46 11-12 (CORES-HBM-1 READ_AT_COMMIT): a wave src is a plain copy, not a git tree; the wave stages the pinned
+        # files at REPO/.kw_at_commit/<commit>/<file> (git show of that commit), read when git cannot answer
+        pinned = REPO / ".kw_at_commit" / str(commit) / f
+        if r.returncode and pinned.is_file():
+            data = pinned.read_bytes()
+        elif r.returncode:
             raise SystemExit(f"rtl file {f} missing in tree and at {commit}")
-        data = r.stdout
+        else:
+            data = r.stdout
     if dst.exists() and dst.read_bytes() != data:
         raise SystemExit(f"rtl name clash {dst.name}")
     dst.write_bytes(data)
