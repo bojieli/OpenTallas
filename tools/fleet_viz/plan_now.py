@@ -64,8 +64,10 @@ def plans_of_record():
     try:
         spec = importlib.util.spec_from_file_location('release_tree_plan', COORD / 'tools' / 'release_tree_plan.py')
         m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
-        out = [(p[0], p[2]) for p in m.PLANS]
-        if out: return out, 'release_tree_plan.PLANS'
+        # WAVE-POR 11-12: the plans the counter counted last (they follow the kit wave), else its pinned PLANS
+        cur = getattr(m, 'current_plans', None)
+        out = [(p[0], p[2]) for p in (cur() if cur else m.PLANS)]
+        if out: return out, 'release_tree_plan.current_plans' if cur else 'release_tree_plan.PLANS'
     except Exception as e:
         log('PLANS import failed, fallback list: %s' % e)
     return FALLBACK_PLANS, 'fallback list (WEBVIEW-1 11-03)'
