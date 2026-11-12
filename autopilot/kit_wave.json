@@ -29912,7 +29912,8 @@
     "PHY_NC@1",
     "PHY_NE@1",
     "PHY_NW@1",
-    "q_spu0__physical_v1@6"
+    "q_spu0__physical_v1@6",
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16@12"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -32644,6 +32645,9 @@
     },
     "PHY_NW": {
      "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
    "retry_prev_kw37h_added": [
@@ -33411,6 +33415,11 @@
      "src_sha": "98823e93c3a389113b1a27e0c0a0e37841f99a82",
      "queue_src": "claude/kw-fix-45-hbm-opsg-comp-1111@98823e93c3a3",
      "note": "COORD 13:5x approved per-item private src (cp -al + real copies of 5 named files of main 1b4ef2e1ce97); needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
+    },
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_rd1_nph",
+     "note": "KW-FIX-45 11-11 20:5x COORD vecd4ae counted kit after rd1 merge (52216309aa) + rd1 30-edge EQ SUCCESS (DIE-HBM-97): src_hbm_rd1_nph = src_hbm_nph_fc5cd3af6f + RTL (hfd_vms_bank_native_q0_faces, ot_vms_bank_q0_faces_core/body, ot_vms_ce_counter_pipe) at a918972c2004 + corelat cycles_vecd4ae_rd1_1111.tsv; recipes_b2.json vecd4ae source_commit a918972c, read_at_commit false (tree files authoritative; the src has no .git). NOT a pure main tree: mixed src, uncounted until DIE-HBM-100 accepts.",
+     "src_sha": "a918972c2004b4a82cd302843e11c8fc9cba1e81"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
