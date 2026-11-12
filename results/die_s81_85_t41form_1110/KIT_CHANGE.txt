@@ -55,3 +55,19 @@ Sign-off 11-12 05:23 (signoff_t41form.json, DO_NOT_COUNT measurement, host paths
        out_min 0 vs vclk) and 2 reg-reg (worst u_rrl_11 -> u_rrl_12 -1.76).  No input-port or vclk ft-slot violator: the
        hold pads closed the original failing class.  io_hold_parent NEEDS_PARENT.  Insertion band PASS.
        No relaunch/retry (owner of record DIE-S81-87); a one-iteration post-route hold ECO is the die owner's call.
+
+Late ECO 11-12 (DIE-S81-87 decision, owner ECO rule 11-07/11-08; COORD moved it to epyc2): ONE iteration of
+       tools/die_plan/eco_loop.py @ 9446d18f5d (route mode, variant b5, hold margin 5, --lec, no --owner-override), via
+       ot-run on epyc2 (unit oth-ubuntu-62457-1794461823), 13,592 s, from the routed DB copied epyc8 -> epyc2 (sha manifest
+       identical, 17631 files).  The queued epyc8 unit (otrun-ubuntu-4146868-461416249) was cancelled unstarted; a first
+       epyc2 start stopped in tool staging (physical/common_flow missing from the sparse tool tree; staged from the same
+       commit) before any P&R.
+       Result eco_loop PASS: sign-off LOCAL_PASS_NEEDS_PARENT (local SIGNED): TT setup +98.09 (unchanged), FF hold -6.87 ->
+       +3.04 (0 violators), DRV/fanout 0, DRC 0, antenna 0, PG/clock/sdc_lint/face_guard PASS; io_hold_parent NEEDS_PARENT.
+       Post-route LEC EQUIVALENT (lec_postroute_t41form_eco1.json).  repair_timing -hold inserted 220 HB4xp67 (padcount.log):
+       ft5_o last station u_ft_ft5_o_6 133 + 4 on ft5_o port buffers; u_ft_ft15_o_4 14; u_ft_ft8_o_0 14; u_ft_ft1_o_5 3;
+       u_ft_ft16_o_4 2; cland input rings 40 (ft3 8, ft6 7, ft18 6, ft4 6, ft5 4, ft13 3, ft2 2, ft16 2, ft15 1, ft17 1);
+       cland_collect_rst 2; cland_monitor_0 1; u_rrl reset relays 7.
+       Structural note: the generator form should carry hold pads on the output ft stations (ft5_o first) like the input
+       vclk ft pads; the ECO is the fallback.  Result dir (host, not a counted record): epyc2
+       /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1.  COORD has not approved the form.

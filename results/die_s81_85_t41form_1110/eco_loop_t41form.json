@@ -1,0 +1,134 @@
+{
+ "schema": "opentallas.eco_loop.v1",
+ "kind": "eco",
+ "tool": "tools/die_plan/eco_loop.py",
+ "kit": "/srv/opentallas-scratch2/claude/die-s81-85/t41form/gen/slice_station__t41",
+ "root": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop",
+ "mem_requested_gb": 96,
+ "mem_gb": 96,
+ "kit_peak_gb": 44.43,
+ "mem_factor": 1.5,
+ "base_signoff": "/srv/opentallas-scratch2/claude/die-s81-85/t41form/gen/slice_station__t41/signoff/signoff.json",
+ "base_routed_db": "/srv/opentallas-scratch2/claude/die-s81-85/t41form/gen/slice_station__t41/run/results/asap7/dp_slice_station__t41/base/6_final.odb",
+ "base_metrics": {
+  "verdict": "NOT SIGNED",
+  "signed": false,
+  "tt": 98.09,
+  "ff": -6.87,
+  "drv": 0,
+  "drc": 0,
+  "drv_tt": 0,
+  "drv_ff": 0,
+  "fails": [
+   "hold_ff"
+  ],
+  "vclk_tt": 267.895633,
+  "vclk_ff": 206.76129
+ },
+ "max_iter": 1,
+ "hold_margin_ps": 5,
+ "started": 1794461824.1845584,
+ "iterations": [
+  {
+   "n": 1,
+   "dir": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1",
+   "source": "/srv/opentallas-scratch2/claude/die-s81-85/t41form/gen/slice_station__t41",
+   "mode": "route",
+   "variant": "b5",
+   "started": 1794461824.6182303,
+   "commands": [
+    "bash /srv/opentallas-scratch2/claude/die-s81-85/t41eco/tools/die_plan/post_route_drv/prd_mk.sh /srv/opentallas-scratch2/claude/die-s81-85/t41form/gen/slice_station__t41 /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1 b5 /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/so",
+    "bash /srv/opentallas-scratch2/claude/die-s81-85/t41eco/tools/die_plan/post_route_drv/prd_run.sh /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1 16 96 1",
+    "bash -c 'set -uo pipefail\nD=$1; CPUS=$2; MEM=$3; IMAGE=$4; DK=$5; MM=$6\nPATCH=true; [ \"$MM\" = 1 ] && PATCH=\"python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9\"\n[ -f \"$D/kwrs_busfit.py\" ] && PATCH=\"python3 -I /work/kwrs_busfit.py patch /OpenROAD-flow-scripts/flow/scripts/util.tcl; $PATCH\"\n$DK run --rm --name eco-abs-$$ --cpus=\"$CPUS\" --memory=\"${MEM}g\" --memory-swap=\"${MEM}g\" -v \"$D\":/work -w /OpenROAD-flow-scripts/flow \\\n  \"$IMAGE\" bash -lc \"source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \\\n  make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-generate_abstract\" > \"$D/run_eco_abstract.log\" 2>&1\nrc=$?\n$DK run --rm -v \"$D\":/work \"$IMAGE\" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1\nexit $rc\n' eco_abstract /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1 16 96 openroad/orfs:asap7lock docker 0",
+    "/usr/bin/python3 -I /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/signoff.py run --run-dir /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/run --kit /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1 --out /srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/signoff --image openroad/orfs:asap7lock --corners tt,ff"
+   ],
+   "rc": {
+    "prd_mk": 0,
+    "prd_run": 0,
+    "abstract": 0,
+    "signoff": 1
+   },
+   "pass_dirs": [
+    "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1"
+   ],
+   "repair_rc": "auto",
+   "eco_vclk_ps": {
+    "b5": 206.76129
+   },
+   "signoff": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/signoff/signoff.json",
+   "base": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/run/results/asap7/dp_slice_station__t41/base",
+   "metrics": {
+    "verdict": "LOCAL_PASS_NEEDS_PARENT",
+    "signed": true,
+    "tt": 98.09,
+    "ff": 3.04,
+    "drv": 0,
+    "drc": 0,
+    "drv_tt": 0,
+    "drv_ff": 0,
+    "fails": [],
+    "vclk_tt": 267.898321,
+    "vclk_ff": 206.76348
+   },
+   "status": "SIGNED",
+   "reason": "",
+   "finished": 1794475416.517582,
+   "wall_s": 13591.9,
+   "trimmed": [
+    "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/run/results/asap7/dp_slice_station__t41/base/5_route.odb",
+    "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/run/results/asap7/dp_slice_station__t41/base/5_3_fillcell.odb",
+    "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/run/results/asap7/dp_slice_station__t41/base/6_1_fill.odb"
+   ]
+  }
+ ],
+ "flow": {
+  "tools_sha256": "b1a0c8af069491680503bec401936f4f16bfc148060dc5fe008e60134e758218"
+ },
+ "host": "dear-crayfish",
+ "eligibility": "ECO class: hold_ff",
+ "route_hold_form": {
+  "requested": false,
+  "declared": false
+ },
+ "near_miss": {
+  "near": true,
+  "beyond": [],
+  "advisory": [
+   "hold scored on core-owned only: 4 endpoint(s) at -6.87 ps; the rest start at input ports or end at output ports, the parent's (older census: count bounded, wns unsplit; re-sign for the exact split)"
+  ],
+  "owner_override": false,
+  "route_hold_form": false
+ },
+ "best": {
+  "n": 1,
+  "dir": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1",
+  "signoff": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/signoff/signoff.json",
+  "base": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/run/results/asap7/dp_slice_station__t41/base",
+  "metrics": {
+   "verdict": "LOCAL_PASS_NEEDS_PARENT",
+   "signed": true,
+   "tt": 98.09,
+   "ff": 3.04,
+   "drv": 0,
+   "drc": 0,
+   "drv_tt": 0,
+   "drv_ff": 0,
+   "fails": [],
+   "vclk_tt": 267.898321,
+   "vclk_ff": 206.76348
+  }
+ },
+ "best_trimmed": 3,
+ "verdict": "PASS",
+ "reason": "signed off after 1 ECO iteration(s)",
+ "finished": 1794475417.7412353,
+ "wall_s": 13593.6,
+ "lec": {
+  "tool": "/srv/opentallas-scratch2/claude/die-s81-85/t41form/gen/slice_station__t41/lec.py",
+  "netlist": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/run/results/asap7/dp_slice_station__t41/base/6_final.v",
+  "record": "/srv/opentallas-scratch2/claude/die-s81-85/t41eco/loop/i1/lec_postroute_4m1e27b4/lec.json",
+  "exit": 0,
+  "verdict": "EQUIVALENT",
+  "all_shown": true
+ }
+}
