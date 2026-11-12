@@ -91,3 +91,26 @@ These are the ring-class p99 values above 1.5:
 - cbn_q00 1.66
 
 They are A0 M6/M7 over-core and landing-ring forms (S28-A views, S28-D cb, the su_l1 monitor ring). The cb lattice cannot grow in x, so no die room exists there. Form d (M8/M9) for rsf/cws/serdes trunks stays an option once the PG strap audit over the A0 75-um bump field is done.
+
+## 6. BATCH RE-SIGN LIST (OWNER ruling 11-12: signed slots are not constraints)
+
+The source is the release cache (plan_qc99_s27 counted). QC has 2 signed types and 31 signed core designs. HF-1 was drawn for die closure only. No slot was kept because it was signed, and none needed to be.
+
+**Signed types**
+
+| signed type | slots | what HF-1 changes | re-sign scope |
+|---|---|---|---|
+| coll_ft__cla4a25d77 | coll_f1, coll_f2 | nothing (W strip; rect, faces, windows and neighbours the same) | none. If the counter keys on the plan sha, RE-SIGN on the same routed DB only |
+| coll_ftn | coll_f5 | rect and windows the same. Its E neighbour becomes W5 fw (taller) instead of fw + st_a. No lane crosses that face | same as above: same-DB re-sign only if the counter needs it |
+
+**Signed cores** (31 designs; core-shape freeze, pins the same):
+
+- sc2 leaf x3 variants. They sit inside the 9 reshaped sc types and may move or flip inside the slot. The view is unchanged: no core re-sign. The parent sc types need a fresh kit (they are unsigned today).
+- su_c cores x6 and su lanes l0-l7. Their su row only moves +34.56: no change.
+- cland cores in slw_su_l1: no change.
+- a0c nk/nl. cbn_q00 grows 34.56 in H, and the core positions inside the slot may shift. The view is unchanged: no core re-sign.
+- cland w515/w517 cores in cbn_q00. In-slot position only: no core re-sign.
+
+**Parent types that need a re-kit** (none signed today): 58 reshaped slice types, 3 cbn_q00 types, and 34 moved types. For the moved types the outline is the same, so they re-kit only for the tap/landing re-derive and the new neighbour pin windows. coll_ftc needs its E-window repack.
+
+**Net batch re-sign: 0 types, 0 cores** (at most 2 same-DB re-signs for plan-sha bookkeeping).
