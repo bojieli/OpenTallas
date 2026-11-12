@@ -31900,6 +31900,13 @@
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/c68f7922aeab/ot_hgi_sfu_opsb_output",
       "job": "HBM-CORES-B DRT-0073 detail view c68f7922aeab (c7c152ae1c, KW-FIX-43 COORD 11-10)"
      }
+    ],
+    "ot_hbm_su_pg_lane1p_core": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/lane1p_l1phs_eco1_lef/views",
+      "job": "HBM-CORES-B 11-12 signed view lane1p_l1phs_eco1 + LEF (LOCAL_PASS_NEEDS_PARENT, DO_NOT_COUNT)"
+     }
     ]
    },
    "note_prov_view_sources_kw35v": "KW-FIX-35-V 2026-11-08 05:33 PST: counted child signed views (counted_child_views.py manifest /tmp/kw35/cv/hbm.json on intel2, plan 63000666491b) FIRST in prov_view_sources for 34 modules; revert: prov_view_sources <- prov_view_sources_prev_kw35v",
