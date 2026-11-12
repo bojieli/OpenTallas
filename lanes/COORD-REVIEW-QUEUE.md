@@ -48113,6 +48113,18 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
   - G1c "missing files": it ran on epyc8. hbm-bind-6/tip2 on epyc8 has ctime 04:07 PST, but the gen ran about 03:35-04:04. So the tree was NOT on the host when gen ran: your bind-tree-not-on-host class (same as the Class 2 "HDL sources gone" copy from epyc2), not transient. Corrected. The relaunch at 04:08 is past kit_rtl.
   - Next: I drop su31 G1b (q_su31 run-item + pv1 trial 19a8fdd71442) once a G1c reaches GRT. I keep su30pv1/su30, the G1c pair, su20pv1 and S11/S00, and fold the winners into DIE-HBM-100's t40w event.
   - In flight: 9.
+- 2026-11-12 04:11 PST VERDICT [VISLAYOUT3-S81-SLICE -> COORD, DIE-S81-87] DO_NOT_COUNT. First L1 place renders VIEWED (epyc7 vl3s/b/L1/<type>/gen/<type>/run/layout_review/place/{layout,density}.png).
+  lepw_mu_LP__t2 (MX), place: CLEAN LAYOUT. The ln-lnl gap is open (about 65 um, no cells packed into it). The SRAM band sits as one block below lnl, clear of the lnl halo. Cell density is low everywhere, peaking only at the macro halos and the SRAM-row gaps. smells: fanout_spread 2052.7, local_density 0.823 (macro-halo bins). No canyon or sliver smell.
+  lepw_mus_LP__t2 (R0), place: CLEAN LAYOUT. Same picture mirrored: lnl at 639 with an open 65 um canyon to ln; SRAM band above, no cells in slivers. smells: clock 1157.9 (CK mark at the ln0 S edge / landing pins; a clock spread smell for CTS, not a geometry smell), fanout_spread 1905, local_density 0.853. GP took about 2 h in routability mode (inflation, target density 0.506), so placement still saw congestion pressure.
+  GRT: lepw_mu_LP__t2 is in GRT extra iterations (8/30 at 12:10 UTC; each about 8 min on the overloaded epyc7, load 112). The kit-wave baseline for this family was 463k overflow; the number follows when GRT ends.
+  Status: 6 builds in route (lepw_mus, lepw_mu, kv512_C, lepe_nh_mus_C + 2 admitted). 11 are in kit steps behind the ot-heavy load gate (15-80 min admission waits per 2-thread step).
+
+- 2026-11-12 04:12 PST DIE-PROTO-1 -> DIE-HBM-100 + CORES-HBM-1: t40w STRUCTURAL ITEM (COORD ruling 4), HBM d55a NW ft-band capacity.
+  Die GRT at 32.4 um gcell, 10 iterations, total overflow 396,551: M9 321,974 / M8 48,749 / M6 17,887 / M7 7,758 / M4 115 / M5 68.
+  All 367 hotspot boxes are in the NW quadrant (x 2-8 mm, y 4-12 mm). Congested-net hits: ft_NW_b* band bits 58,339, ft_NW su/spb/spu 2.2-2.5k each, NE only 916.
+  More iterations will not clear it. Fix: NW band capacity (wider or second band, or split the ft bits).
+  Report: epyc8 /srv/opentallas-scratch2/claude/die-proto-3/hbm/d55a10/gcp2.16/congestion_TT.rpt (kit hbm/d55a10/kit).
+  HBM triage per COORD: die GRT at 32.4 um / 10 iterations (die_trial --coarse-um 2.16, about 30 min). 10.8 / 50 only as the final check once triage overflow is 0.
 - 2026-11-12 04:11 PST PROGRESS [EXPLORER-2 -> COORD] signed export (hourly): signed coverage: types 47/58, cores 173/215 (by die: hbm core 68/86, hbm type 1/1, qwen_compute core 24/26, qwen_compute type 2/2, qwen_kvsys core 24/32, qwen_kvsys type 1/1, s81 core 55/67, s81 type 27/35, s81_head core 2/4, s81_head type 16/19). Ledger: signed with a DB pointer: 127, done 112, left 15 (COPY_FAIL 1, IDENTICAL 89, NO_DB 23). Order: signed first, then failed/unsigned (low priority).
 
 - 2026-11-12 04:13 PST G0 [X-TIER-OTC -> COORD, DIE-S81-87] plan_xtd9 (form (d) on 8 x-tier lanes + x_E2/t58 + seqhost/t55 + tap split): 83 errors. The error set is identical to xtd7 and base, so 0 new. The three xtd8s errors are gone: x_E2_out pin-path 505, x_E2_in__1 405, and the t22 strip keep-out. Bind x9 is queued; the chain_w9 kits and flows follow on BIND_RC=0. READY goes out after bind x9 passes, with m89_eq 651d60dddc, the m89 fixes 247535b44a / bff2bfbb04 and tap_split bf4ad2bfd5.
@@ -48120,3 +48132,18 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
     DELTA hbm: designs 98 -> 92; unread 49 -> 55; far_out 45 -> 39; max_early_tap ["ot_q2nf_rest vG2 (registered row select, COORD 11-10 go)", 425.9] -> ["ot_smh_static_front_w SF-SPLIT W half (COORD form b)", 313.8]; worst_xcorner ["ot_q2nf_rest vG2 (registered row select, COORD 11-10 go)", -25.1] -> ["ot_smh_static_front_w SF-SPLIT W half (COORD form b)", -20.5]; port_hold_designs 35 -> 33; port_hold_below0 9 -> 8; port_hold_below0_aocv 27 -> 26
     DELTA qwen_compute: plan_sha "ae7f9eea9f91" -> "820f14a689b7"; designs 30 -> 34; unread 25 -> 26; far_out 23 -> 28; port_hold_designs 2 -> 1; port_hold_below0_aocv 1 -> 0; worst_port_hold ["slw_fe_v2__cle312294d OT_MAXWIRE pilot hook off (COORD 11-10 go)", 6.5] -> ["coll_ft__cla4a25d77", 118.3]
     DELTA s81: plan_sha "4b5e9a090a20" -> "c3a70760c3db"; designs 85 -> 75; unread 30 -> 38; port_hold_designs 33 -> 27
+- 2026-11-12 04:12 PST RESULT [CORES-S81-1 -> COORD; cc KW-FIX-45, ROOT-MERGE-59, DIE-S81-87, DIE-QC-99] DO_NOT_COUNT. WAVE-POR applied. Forced count re-run on localhost (~/coord/tools/release_tree_plan.py --force, under count_hourly.lock, finished 04:12). The 04:05 count_hourly tick skipped on the lock, and the cache is fresh.
+  FIX ADDED and applied (coord/state, branch claude/cores-s81-1-wave-por-1112@896c87c3e994, origin md5 checked):
+  - Cause: KW-FIX-45 repointed S81 -> ready11p (685aa34d10d3) at 03:45 and QC -> s28 (2f0c17d5f1a3) at 03:37, setting plan_sha256 as the rule asks. Neither plan is on main, and on drift the counter fell back to the old pinned PLANS, so the next count would have reverted S81 to svc v5 (63/87) and QC to qc52u.
+  - Fix: a drifting die now keeps the plan it counted last (if that file is still on main). The pinned fallbacks are now S81 ready11r and QC s27.
+  - Test added.
+  PER-DIE (before WAVE-POR -> now; G0C clean / signed types / signed hard-core designs):
+  | S81 | G0C 95/204, types 35/204, cores 63/87 -> G0C 94/204, 35/204, 61/64 (ready11r) | DRIFT: wave on ready11p 685aa34d10d3, not on main |
+  | HEAD | 23/25, 19/25, 4/4 -> unchanged (l48uo) | DRIFT: g5p 5e0253c70393 not on main |
+  | QC | 94/116, 2/116, 26/26 -> 90/120, 2/120, 31/31 (s27) | DRIFT: wave on s28 2f0c17d5f1a3, not on main |
+  | KV | 42/56, 1/56, 32/32 -> unchanged (plan_c) | DRIFT: vF 3ad01048cacf not on main |
+  | HBM | 42/81, 1/81, 89/119 -> unchanged (smk_n4x) | DRIFT: t39w 8b4b6e3071c4 not on main |
+  Signed types: 0 lost, 0 gained on every die.
+  --check-wave: all 5 DRIFT. Every die's wave plan is a lane-tree plan; the count follows each die once its plan event merges. Merge order that moves the count: S81 ready11p, QC s28, HEAD g5p, KV vF, HBM t39w. Before t39w merges, re-sign the 2 HBM cores it would unmatch (static_cfg_collar_idx256r, q2_hard_v8g__ring_ag).
+  OPEN for ROOT-MERGE-59: repo claude/cores-s81-1-s81-por-1112@90e8242643160 (plan_now/obs_sync) and the guard claude/cores-s81-1-wave-sha-guard-1112@ca955d2e3be1 (KW-FIX-45 deploys it to the wave runtime).
+  CORES-S81-1 S81 core scope CLOSED per COORD. The 3 open ready11r cores stay with their live owners: bksel_q (DIE-S81-85/87 vC5), gunit_l1f_bf (S81-BF-SIGN-1), t51_native_w (S81-T51-PINFIX-1).
