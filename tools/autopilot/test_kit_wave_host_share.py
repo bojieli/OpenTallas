@@ -25,5 +25,13 @@ class HostShare(unittest.TestCase):
         self.assertEqual(K.pick_gen_host(c2, "s81"), "epyc9")
 
 
+class NoLoadCapPick(unittest.TestCase):
+    def test_load_hold_off_skips_capped(self):
+        c = {"load_hold": False, "dies": {"hbm": {"gen_host": "epyc8", "gen_hosts": ["epyc8", "epyc9"]}}, "_hub": "intel2",
+             "_otrun_status": {"epyc8": {"admit": 2000, "cores": 96, "load": 148, "wait_gb": 0},
+                               "epyc9": {"admit": 300, "cores": 96, "load": 25, "wait_gb": 0}}}
+        self.assertEqual(K.pick_gen_host(c, "hbm"), "epyc9")
+
+
 if __name__ == "__main__":
     unittest.main()

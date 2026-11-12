@@ -2309,6 +2309,9 @@ def gen_hosts(cfg, die, item=None):
     # load_hold() holds the die's new rows
     low = cfg.get("_workroot_low") or {}
     imiss = cfg.get("_item_incomplete") or {}
+    ch = (cfg.get("_phase_calm_hosts") or {}).get(die)
+    if ch:
+        hs = [h for h in hs if h in ch] or hs          # KW-FIX-46: phase split calm hosts (see phase_split_apply)
     if item:
         hs = [h for h in hs if item not in (imiss.get(h) or {}).get(die, {})
               and core_module(item) not in (imiss.get(h) or {}).get(die, {})] or hs   # WAVE-OPS-1: core_kit.item_args
@@ -2968,8 +2971,11 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         fits = [h for h in room if sc(h) >= max(take, 1)]
         # WAVE-BALANCE-1 11-11 (COORD 23:4x): among hosts that fit, the one with the most (free cores x admits), not the
         # lowest load fraction or a fixed list order (epyc9 97/96 with 30 waiters while epyc2 sat at 26/128)
+        # KW-FIX-46 11-12 (COORD 08:2x (d): never restage / gen onto a LOADCAP host while an uncapped one stays; with
+        # load_hold false 'room' is empty and the score alone sent HBM rows to epyc8 at 148/96 while epyc9 sat at 25/96)
+        uncapped = [h for h in hs if key(h) and not over_load_cap(key(h))]
         best = (max(fits, key=lambda h: (host_capacity(key(h)) * host_share(cfg, h), -hs.index(h))) if fits
-                else max(room or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
+                else max(room or uncapped or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
     alt_charge(cfg, best)
@@ -3354,7 +3360,7 @@ def restage_waiters(AP, cfg, st, notices):
             if multi and not young and not mobile:
                 best = pick_gen_host(cfg, die, item=r.get("item"))       # KW-FIX-35-RD: a target with its inputs
                 v = row(best) or {}
-                if best != g and (host_room(v, die_disk_low(cfg, die, best, v) if v else None)
+                if best != g and v and not over_load_cap(v) and (host_room(v, die_disk_low(cfg, die, best, v) if v else None)
                                   or cfg.get("load_hold") is False) and (
                         die_score(cfg, die, best, v) * host_share(cfg, best)
                         - die_score(cfg, die, g, row(g)) * host_share(cfg, g) >= wsize(row(g), mem)):
@@ -3395,6 +3401,14 @@ def restage_waiters(AP, cfg, st, notices):
             r["restage_n"] = int(r.get("restage_n") or 0) + 1
             notices.setdefault(die, []).append(f"{r['item']} unstarted waiter RESTAGED ({why})")
             AP.log(f"KIT-WAVE RESTAGE {die}/{r['item']} unit {r['unit']} ({why})")
+            try:        # KW-FIX-46 11-12 diagnostic (COORD: epyc9 idle while waiters restage elsewhere): the candidates seen
+                _hs0 = gen_hosts(cfg, die, r.get("item")); _hs1 = waiter_guard(cfg, die, _hs0, stt, hub)
+                AP.log("KIT-WAVE RESTAGE-PICK " + f"{die}/{r['item']} gen_hosts={_hs0} guard={_hs1} " + " ".join(
+                    f"{h}:room={int(host_room(row(h), die_disk_low(cfg, die, h, row(h))) if row(h) else 0)}"
+                    f",cap={round(host_capacity(row(h)))},sc={round(die_score(cfg, die, h, row(h)) if row(h) else 0)}"
+                    f",w={(row(h) or {}).get('wait_n')},ld={(row(h) or {}).get('load')}" for h in _hs0))
+            except Exception as _e:
+                AP.log(f"KIT-WAVE RESTAGE-PICK diag failed: {_e}")
             n += 1
     return n
 
@@ -5875,7 +5889,26 @@ def phase_split_apply(cfg, st, per_die, waiting=None):
     inflight_thr = {}
     for r in (st.get("items") or {}).values():
         if r.get("die") in low and r.get("status") in ("RUNNING", "LAUNCHING"):
-            inflight_thr[r["die"]] = inflight_thr.get(r["die"], 0) + int(ps.get("thread_per_row", 8))
+            # KW-FIX-46 11-12 (COORD: HBM within its CPU share): a row still waiting for admission uses no CPU
+            try:
+                busy = volume_started(r) or r.get("status") == "LAUNCHING"
+            except Exception:
+                busy = True
+            if busy:
+                inflight_thr[r["die"]] = inflight_thr.get(r["die"], 0) + int(ps.get("thread_per_row", 8))
+    # KW-FIX-46 11-12 (COORD ruling by INTENT on 08:21 (e)): a low-die row yields only to phase-1 work that could run on its
+    # target host.  Phase-1 waiters are host-local (ot-run keeps data locality), so a gen host of the low die with no
+    # phase-1 waiter and under its load cap is CALM: with no phase-1 picks this tick, the low die's type rows go there (gen
+    # host choice limited to the calm hosts via cfg _phase_calm_hosts), still within the reserved CPU share.
+    stt = cfg.get("_otrun_status") or {}
+    hub = cfg.get("_hub") or ""
+    calm = {}
+    for d in low:
+        dd = (cfg.get("dies") or {}).get(d) or {}
+        hs = list(dict.fromkeys((dd.get("gen_hosts") or []) + ([dd["gen_host"]] if dd.get("gen_host") else [])))
+        calm[d] = [h for h in hs if not waiting.get(h) and (stt.get("localhost" if h == hub else h))
+                   and not over_load_cap(stt.get("localhost" if h == hub else h))]
+    cfg.setdefault("_phase_calm_hosts", {})
     reserved = int(ps.get("reserved_threads", 96))
     out = []; held = 0
     for q in per_die:
@@ -5884,6 +5917,8 @@ def phase_split_apply(cfg, st, per_die, waiting=None):
         if not q or d not in low or (p1_pending == 0 and p1_wait == 0):
             out.append(q); continue
         share = max(0, (reserved - inflight_thr.get(d, 0)) // int(ps.get("thread_per_row", 8)))
+        if p1_pending == 0 and calm.get(d):
+            cfg["_phase_calm_hosts"][d] = calm[d]        # the waiters sit elsewhere: launch on the calm hosts only
         keep = []
         for (dd, r) in q:
             core = r.get("kind") == "core" or any(fnmatch.fnmatchcase(r.get("item", ""), x) for x in pri)
@@ -5894,7 +5929,9 @@ def phase_split_apply(cfg, st, per_die, waiting=None):
             else:
                 held += 1
         out.append(keep)
-    return out, (f"phase split: {held} {'/'.join(sorted(low))} type rows wait behind {p1_pending} phase-1 picks and {sum(waiting.values())} phase-1 waiters" if held else "")
+    _c = "; calm " + ",".join(f"{d}:{'/'.join(calm.get(d) or []) or '-'}" for d in sorted(low)) + \
+         " inflight " + ",".join(f"{d}:{inflight_thr.get(d, 0)}/{reserved}" for d in sorted(low))
+    return out, (f"phase split: {held} {'/'.join(sorted(low))} type rows wait behind {p1_pending} phase-1 picks and {sum(waiting.values())} phase-1 waiters{_c}" if held else "")
 
 
 def rotate_dies(rows, die_of, pass_n):
