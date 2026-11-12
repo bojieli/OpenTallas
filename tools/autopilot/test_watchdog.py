@@ -311,7 +311,7 @@ class MainTest(unittest.TestCase):
             calls = self.run_main([row(stage='5_1_grt')], dict(VERIFY_OK, cpu_error='no pid'), True, d)
             self.assertEqual(len(calls), 2)
 
-    def test_cpu_sample_requested_for_grt_only(self):
+    def test_cpu_sample_requested_for_grt_and_place(self):
         seen = []
         wd.ssh_py = lambda host, script, args, timeout=120: (seen.append((args, timeout)), [dict(VERIFY_OK, log_mtime=time.time()) for _ in args['jobs']])[1]
         wd.ssh_sh = lambda host, sh, timeout=300: (0, '')
@@ -325,18 +325,19 @@ class MainTest(unittest.TestCase):
         self.assertGreaterEqual(seen[0][1], 180)
         # KW-FIX-25: VERIFY gets the sample length, and sleeps only if it finds a process to sample (PLACE: only an async LEC)
         self.assertEqual(seen[1][0]['cpu_sample_s'], 60)
-        self.assertFalse(seen[1][0]['jobs'][0]['sample'])
+        self.assertTrue(seen[1][0]['jobs'][0]['sample'])     # KW-FIX-46 11-12: PLACE is sampled too
 
     def test_no_openroad_not_acted(self):
         with tempfile.TemporaryDirectory() as d:
             calls = self.run_main([row()], dict(VERIFY_OK, openroad=False), True, d)
             self.assertEqual(calls, [])
 
-    def test_busy_grt_past_limit_is_hung(self):
+    def test_busy_grt_past_limit_is_not_hung(self):
+        # KW-FIX-46 11-12 (COORD): hung = no log AND no CPU; a CPU-busy GRT is reported, never stopped (PHY_NC 6h18)
         with tempfile.TemporaryDirectory() as d:
-            r = row(stage='5_1_grt', idle_s=13 * H, age_s=20 * H)  # past the 12 h cap
+            r = row(stage='5_1_grt', idle_s=13 * H, age_s=20 * H)  # past the old 12 h cap
             calls = self.run_main([r], dict(VERIFY_OK, cpu_delta_s=59.5, cpu_pids=[42], progress_n=20), True, d)
-            self.assertEqual(len(calls), 2)
+            self.assertEqual(calls, [])
 
     MAXWIRE_V = dict(VERIFY_OK, cpu_delta_s=59.5, cpu_pids=[42], progress_n=9)
 
@@ -349,15 +350,16 @@ class MainTest(unittest.TestCase):
         self.assertEqual(self._maxwire_calls(7, maxwire=True), [])
         self.assertEqual(self._maxwire_calls(11.5, maxwire=True), [])
 
-    def test_busy_maxwire_repair_stops_past_12_h(self):
-        self.assertTrue(self._maxwire_calls(13, maxwire=True))
+    def test_busy_maxwire_repair_kept_past_12_h(self):
+        self.assertEqual(self._maxwire_calls(13, maxwire=True), [])     # KW-FIX-46 11-12: CPU-busy is never hung
 
     def test_maxwire_idle_cpu_still_stops(self):
         self.assertTrue(self._maxwire_calls(7, maxwire=True, cpu_delta_s=0.0))
 
-    def test_other_grt_and_drt_keep_their_limit(self):
-        self.assertTrue(self._maxwire_calls(7, maxwire=False))
-        self.assertTrue(self._maxwire_calls(7, stage='5_2_route.tmp', maxwire=True))
+    def test_other_grt_and_drt_busy_not_stopped_idle_stopped(self):
+        self.assertEqual(self._maxwire_calls(7, maxwire=False), [])
+        self.assertEqual(self._maxwire_calls(7, stage='5_2_route.tmp', maxwire=True), [])
+        self.assertTrue(self._maxwire_calls(7, maxwire=False, cpu_delta_s=0.0))
 
     LEC_V = dict(VERIFY_OK, openroad=False, tool=True, tail='', procs=['123 python3 -I /work/lec.py /work', '124 /tools/yosys-abc -f x'])
 
@@ -460,3 +462,33 @@ class MainTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class SealedOtJobTest(unittest.TestCase):
+    def test_sealed_ot_job_is_stop_not_relaunch(self):
+        c = wd.classify(row(run='/srv/opentallas-scratch2/claude/ot-jobs/PHY_NC-route-aware-parakeet-3317157-1794474529/work'),
+                        {}, [], 120)
+        self.assertEqual(c[0], 'STOP')
+        self.assertIn('sealed ot-job', c[2])
+
+
+class CpuBusyIsNotHungTest(unittest.TestCase):
+    """KW-FIX-46 11-12: PHY_NC GRT 6h18 silent, container 12h48m CPU in 12h wall, was stopped by the busy cap"""
+
+    def test_busy_grt_past_every_limit_is_report(self):
+        H = 3600
+        r = wd.cpu_busy_reason('GRT', 59.0, 30, 60, 6.3 * H, wd.BUSY_MIN_S, [123], 23)
+        self.assertIsNotNone(r)
+        self.assertIn('not stopped', r)
+        self.assertIn('silent past', r)
+        self.assertIsNotNone(wd.cpu_busy_reason('GRT', 59.0, 30, 60, 30 * H, wd.BUSY_CAP_S))
+
+    def test_no_cpu_progress_or_unread_is_not_busy(self):
+        self.assertIsNone(wd.cpu_busy_reason('GRT', 2.0, 30, 60, 3 * 3600, wd.BUSY_MIN_S))
+        self.assertIsNone(wd.cpu_busy_reason('GRT', None, 30, 60, 3 * 3600, wd.BUSY_MIN_S))
+        self.assertIsNone(wd.cpu_busy_reason('GRT', 59.0, 30, 0, 3 * 3600, wd.BUSY_MIN_S))
+
+    def test_place_cts_count_cpu_too(self):
+        self.assertIsNotNone(wd.cpu_busy_reason('PLACE', 59.0, 30, 60, 3 * 3600, wd.BUSY_MIN_S))
+        self.assertIsNotNone(wd.cpu_busy_reason('CTS', 59.0, 30, 60, 3 * 3600, wd.BUSY_MIN_S))
+        self.assertIsNone(wd.cpu_busy_reason(None, 59.0, 30, 60, 3 * 3600, wd.BUSY_MIN_S))

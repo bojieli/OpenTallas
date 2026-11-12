@@ -689,6 +689,8 @@ def job_argv(AP, c, p, d, out, tag, bc, mem, anyhost=False):
     note = "%s; %s" % (c.get("lane") or c.get("source"), c.get("note") or "")
     if anyhost:                                        # ARHOST_1111: placed like any ot-run job, inputs staged
         stage = [d, p["kit"], p["orfs"], out] + ([p["odb"]] if not str(p["odb"]).startswith(str(p["orfs"]).rstrip("/") + "/") else [])
+        if p.get("record") and not any(str(p["record"]).startswith(str(x).rstrip("/") + "/") for x in stage):
+            stage.append(p["record"])                  # resign --source-record reads its FF reference (KW-FIX-46)
         place = ["--stage", ",".join(stage)]
     else:
         place = ["--hosts", host, "--no-spill"]
@@ -696,7 +698,8 @@ def job_argv(AP, c, p, d, out, tag, bc, mem, anyhost=False):
             "--dir", d, "--priority", "die", "--crit", "--", "python3", "-I", d + "/resign_driver.py", "run",
             "--auto", "--kit", p["kit"], "--run-dir", p["orfs"], "--routed-db", p["odb"], "--tag", tag,
             "--repo", d + "/tag_manifest.json", "--tools", d + "/tools/die_plan", "--out", out, "--build-commit", bc,
-            "--lane", LANE, "--note", note[:300], "--lec-mem", "%dg" % mem]
+            "--lane", LANE, "--note", note[:300], "--lec-mem", "%dg" % mem] + (
+            ["--source-record", p["record"]] if p.get("record") else [])
 
 
 def classify(client, res, tag):

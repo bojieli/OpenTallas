@@ -60,7 +60,7 @@ ORFS_STEP = [(re.compile(r'^1_'), 'SYNTH'), (re.compile(r'^3_'), 'PLACE'), (re.c
              (re.compile(r'^5_2_route'), 'DRT'), (re.compile(r'^5_'), 'ROUTE')]
 LEC_LOG = re.compile(r'/lec[^/]*/|/[^/]*lec[^/]*\.log$')
 # OpenROAD message prefixes in a log tail (custom tcl scripts: die GRT, ECO DRT, ...)
-CPU_STEPS = ('GRT', 'DRT', 'ROUTE', 'SYNTH', 'LEC')   # silent long iterations or passes: CPU progress re-check before any stop
+CPU_STEPS = ('GRT', 'DRT', 'ROUTE', 'SYNTH', 'LEC', 'PLACE', 'CTS')   # CPU progress re-check before any stop; KW-FIX-46 11-12: every watched step (hung = no log AND no CPU)
 TAIL_STEP = [('DRT-', 'DRT'), ('GRT-', 'GRT'), ('CTS-', 'CTS'), ('DPL-', 'PLACE'), ('GPL-', 'PLACE'),
              ('detailed_route', 'DRT'), ('global_route', 'GRT'), ('clock_tree_synthesis', 'CTS'),
              ('detailed_placement', 'PLACE'), ('global_placement', 'PLACE')]
@@ -182,6 +182,10 @@ def classify(row, state, skip, idle_min, tail='', procs=()):
         return 'REPORT', step, 'listed in WATCHDOG.skip (%s)' % hit[1]
     if wave:
         return 'STOP', step, 'hung %s: stop; the kit-wave client retries or fails the row, no relaunch here' % stall_watch.hm(row['idle_s'])
+    if '/ot-jobs/' in paths:
+        # KW-FIX-46 11-12 (hbm PHY_NC): a sealed ot-job deletes its job dir when the command ends, so a relaunch in that dir
+        # (13:13 docker run -d dpkit-PHY_NC-3468881) is orphaned within a minute; the autopilot client classifies the stop
+        return 'STOP', step, 'hung %s in a sealed ot-job: stop, no relaunch here (the job dir dies with the command; the autopilot client decides)' % stall_watch.hm(row['idle_s'])
     if step in ('LEC', 'SYNTH'):
         return 'STOP', step, 'hung %s in %s: stop, no relaunch (the same run would hang again)' % (stall_watch.hm(row['idle_s']), step)
     hist = state.get(kit_key(row), {}).get('relaunches', [])
@@ -196,6 +200,19 @@ def silent_limit_s(age_s, progress_n):
     if not age_s or not progress_n:
         return BUSY_CAP_S
     return min(BUSY_CAP_S, max(BUSY_MIN_S, 3.0 * age_s / progress_n))
+
+
+def cpu_busy_reason(step, cpu_delta_s, cpu_min_s, cpu_sample_s, idle_s, limit_s, pids=None, progress_n='?'):
+    """KW-FIX-46 11-12 (COORD; hbm PHY_NC 2731c12447d5): the OWNER 12.22 2-h rule stops HUNG jobs, not quiet ones.  A job in a
+    CPU step whose sampled openroad / tool CPU grew by >= cpu_min_s is progressing: report only, at any silence.  The old
+    busy cap (silent > BUSY_MIN..CAP = hung even while computing) killed PHY_NC's single-thread FastRoute at extra iteration
+    23/30, 6h18 silent, while its container had used 12h48m CPU in 12h00m wall.  -> REPORT reason, or None (not busy)."""
+    if step not in CPU_STEPS or not cpu_sample_s or cpu_delta_s is None or cpu_delta_s < cpu_min_s:
+        return None
+    over = ' (silent past the %s progress-line estimate: owner lane may look)' % stall_watch.hm(limit_s) \
+        if limit_s is not None and idle_s >= limit_s else ''
+    return ('progressing, CPU active, log silent: openroad +%.0f s CPU in %g s (pids %s), %s progress lines; '
+            'not stopped (hung = no log AND no CPU)%s' % (cpu_delta_s, cpu_sample_s, pids, progress_n, over))
 
 
 def busy_limit_s(step, age_s, progress_n, maxwire=False):
@@ -568,11 +585,9 @@ def main(argv=None):
                                                  'for a flat log (KW-FIX-25), owner lane judges'
                                                  % (v.get('cpu_delta_s', 'unread'), a.cpu_sample_s,
                                                     ', tool processes changed' if v.get('tool_churn') else '', v.get('cpu_pids')))
-                elif busy and r['idle_s'] < limit:
-                    verdict, reason = 'REPORT', ('progressing, CPU active, log silent: openroad +%.0f s CPU in %g s (pids %s), '
-                                                 '%s progress lines, limit %s; not stopped'
-                                                 % (v['cpu_delta_s'], a.cpu_sample_s, v.get('cpu_pids'), v.get('progress_n', '?'),
-                                                    stall_watch.hm(limit)))
+                elif busy:
+                    verdict, reason = 'REPORT', cpu_busy_reason(step, v['cpu_delta_s'], a.cpu_min_s, a.cpu_sample_s,
+                                                                r['idle_s'], limit, v.get('cpu_pids'), v.get('progress_n', '?'))
                 elif not v.get('tool', v.get('openroad')):
                     verdict, reason = 'REPORT', 'no tool process alive in the job (%s)' % (v.get('procs') or ['-'])[0][:80]
                 elif verdict == 'ACT' and job_handles(r)[0] and not names_kit(v, kit_key(r)):
