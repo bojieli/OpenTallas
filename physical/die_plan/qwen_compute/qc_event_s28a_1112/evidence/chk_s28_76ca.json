@@ -1,0 +1,102 @@
+{
+ "cmd": "check",
+ "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json",
+ "bus_groups": "/srv/opentallas-scratch2/claude/qc-event-s28/bind_plan_qc99_s28/bus_groups.json",
+ "bus_groups_digest": "af1d7e589d069bdc",
+ "options": {
+  "replica": "all",
+  "bus": "part",
+  "exempt": [],
+  "landed": [],
+  "window": 4,
+  "stage_cycles": 0.5,
+  "over": "keep"
+ },
+ "summary": {
+  "members": 9050,
+  "classes": 1491,
+  "replica_links": 609,
+  "padded_members": 2250,
+  "padded_bits": 152577,
+  "pad_flops": 962867,
+  "max_pad": 24,
+  "max_depth_before": 52,
+  "max_depth_after": 52,
+  "max_offset_before": 29,
+  "max_offset_after": 29,
+  "binder_landed_max": 52,
+  "landed_bundles": 0,
+  "landed_over_margin": 0
+ },
+ "diff": {
+  "equal": false,
+  "members_old": 9050,
+  "members_new": 9050,
+  "added": 0,
+  "removed": 0,
+  "changed": 5,
+  "lanes": {
+   "sl_W5_ctl__x_ctl_fw": 3,
+   "sl_W5_ctl__x_ctl_fw_p1": 2
+  },
+  "added_ids": [],
+  "removed_ids": [],
+  "changed_members": [
+   {
+    "id": "dvs_W5.u_core.u_sub.u_fdn.ag_own[0:9]<-dvs_W5.u_core.u_sub.u_ctl.ag_own@0",
+    "bound": [
+     10,
+     11
+    ],
+    "landed": [
+     10,
+     11
+    ]
+   },
+   {
+    "id": "dvs_W5.u_core.u_sub.u_fdn.cc_c[0:49]<-dvs_W5.u_core.u_sub.u_ctl.cc_o@0",
+    "bound": [
+     10,
+     11
+    ],
+    "landed": [
+     10,
+     11
+    ]
+   },
+   {
+    "id": "dvs_W5.u_core.u_sub.u_fdn.own_ch[0:570]<-dvs_W5.u_core.u_sub.u_ctl.own_ch@0",
+    "bound": [
+     10,
+     11
+    ],
+    "landed": [
+     10,
+     11
+    ]
+   },
+   {
+    "id": "dvs_W5.u_core.u_sub.u_fdn.own_ch[571:1094]<-dvs_W5.u_core.u_sub.u_ctl.own_ch@0",
+    "pad": [
+     0,
+     1
+    ],
+    "landed": [
+     10,
+     11
+    ]
+   },
+   {
+    "id": "dvs_W5.u_core.u_sub.u_fdn.st_c[0:106]<-dvs_W5.u_core.u_sub.u_ctl.st@0",
+    "pad": [
+     0,
+     1
+    ],
+    "landed": [
+     10,
+     11
+    ]
+   }
+  ]
+ }
+}

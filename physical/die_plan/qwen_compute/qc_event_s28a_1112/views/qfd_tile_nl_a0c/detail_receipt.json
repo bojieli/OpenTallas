@@ -1,0 +1,39 @@
+{
+ "base": "base.lef",
+ "base_sha256": "c324040b27a9452c9467eb6e4aa6a6c9fc6fe65fda74ad8c69e2c22d24b9a954",
+ "detail": "detail.lef",
+ "out": "detail_view.lef",
+ "out_sha256": "44371cf0bf061922e9c062988b76c37331067cdc974eb2757fed5230f1853b8b",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 22641,
+  "M7": 11035
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "pin_window": {
+  "margin_um": 1.0,
+  "top_layer": "M7",
+  "clear_um": 0.05,
+  "windows": {},
+  "cut": {},
+  "window_detail": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/views/qfd_tile_nl_a0c/detail.lef",
+  "window_detail_sha256": "cd49093ce057cc3558c728c328f83f9dc9f97340e26c3dd78053e055c590b335",
+  "window_detail_pins_equal_base": true
+ },
+ "bloat_factor": 0
+}

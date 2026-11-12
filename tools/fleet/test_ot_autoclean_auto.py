@@ -1098,6 +1098,19 @@ class TestAggressive(Base):
         self.assertTrue(os.path.exists(young))
         self.assertIn("PROTECTED/COUNTED HITS AT RECHECK: 0", self.out)
 
+    def test_recent_src_copy_and_referenced_src_stay(self):
+        lane = os.path.join(self.root, "lane9")
+        fresh = os.path.join(lane, "src_fresh/tools/t.py")        # old mtimes, just landed (ctime now): kept by the ctime grace
+        refd = os.path.join(lane, "src_used/tools/t.py")          # named by a live row's keep path: kept
+        touch(fresh)
+        touch(refd)
+        age_tree(os.path.join(lane, "src_fresh"))
+        age_tree(os.path.join(lane, "src_used"))
+        self.kw = {"attempts": {}, "latest": {}, "keep": ["hx:" + os.path.join(lane, "src_used")]}
+        self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        self.assertTrue(os.path.exists(fresh))
+        self.assertTrue(os.path.exists(refd))
+
     def test_class_d_skips_lane_with_running_process(self):
         """COORD 11-12: a lane whose files are the cwd or argv script of a running process is not pruned at all"""
         lane = os.path.join(self.root, "proto-lane")
@@ -1176,12 +1189,17 @@ class TestBindRefs(Base):
         age_tree(os.path.join(self.root, "die-hbm-9"))
         age_tree(os.path.join(self.root, "lane7"))
         self.kw = {"attempts": {}, "latest": {}, "keep": ["hx:" + bind]}
-        self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        saved = ac.CTIME_GRACE
+        ac.CTIME_GRACE = False                      # test files are all created now; real src copies are judged by ctime too
+        try:
+            self.run_job("--classes", "d", "--aggressive", "--d-any-root")
+        finally:
+            ac.CTIME_GRACE = saved
         self.assertTrue(os.path.exists(os.path.join(src, "a.sv")), "bind.f named dir must stay")
         self.assertTrue(os.path.exists(os.path.join(src, "b.sv")))
         self.assertFalse(os.path.exists(junk), "unreferenced sibling goes")
         self.assertTrue(os.path.exists(ab), "die-hbm-*/ab emergency hold")
-        self.assertTrue(os.path.exists(srct), "src_* emergency hold")
+        self.assertFalse(os.path.exists(srct), "an unreferenced old src_* tree goes (COORD 11-12)")
         self.assertFalse(os.path.exists(other), "rest of the lane goes")
         self.assertIn("bind/filelist/manifest files parsed", self.out)
 

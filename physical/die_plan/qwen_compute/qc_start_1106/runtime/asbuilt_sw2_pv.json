@@ -362,7 +362,7 @@
   ],
   "note": "QC-P5-TIE plan e3f313354: 12 template-less treq edges beside cmd (COORD 18:4x)"
  },
- "land_r8_note": "TOK-QC-2 10-28: r8 table re-derived (tools/die_plan/r8.py pads, defaults) from the TOK-QC-2 bind2 bus_groups on the ev_qc23pg CA event (main table was derived on an older plan: stale CB16 member + CS_RXV seam offset lost) | QC-TYPES-9/REACH 11-08: r8_reach.json = r8.py pads (defaults) on the plan_qc53v4w bind bus_groups; vs r8.json only the 36 cw_n members change (bound/landed +3, pad 0) | QC-TRANSPORT-FIX-4 11-09: r8.py pads on the final second-switch bind (plan 282ca18ef6cc + fabric/station pads)",
+ "land_r8_note": "TOK-QC-2 10-28: r8 table re-derived (tools/die_plan/r8.py pads, defaults) from the TOK-QC-2 bind2 bus_groups on the ev_qc23pg CA event (main table was derived on an older plan: stale CB16 member + CS_RXV seam offset lost) | QC-TYPES-9/REACH 11-08: r8_reach.json = r8.py pads (defaults) on the plan_qc53v4w bind bus_groups; vs r8.json only the 36 cw_n members change (bound/landed +3, pad 0) | QC-TRANSPORT-FIX-4 11-09: r8.py pads on the final second-switch bind (plan 282ca18ef6cc + fabric/station pads) | QC-S28-A 11-12 (COORD s28 item 0b): land_r8 (r8_sw2.json) is DERIVED, never carried: compose step tools/die_plan/land_r8_derive.py derive <plan> <bind bus_groups.json> --like r8_sw2.json --out r8_sw2.json on a bind of THIS manifest (st_b substitute_inst included) and the event plan; land_r8_derive.py check is the compose gate. The s25..s28 branch trees carried the s24 table 76cabd11016e (the s25 W5 ctl->fw qreg table 571c5b26bb1f went out only as a package); that, not the st_b substitution, gave the 30 dvs_W5 R8_STALE of the s27-tree bind",
  "lint_split": true,
  "lint_jobs": 2,
  "param_regen": {

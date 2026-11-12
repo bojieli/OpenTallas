@@ -1,0 +1,3 @@
+G0C per type: 4/123 types clean (G3-eligible: 4); die-level {}; ERRORs
+G0C FAIL: 365 errors, 0 pending-view, 571 warnings; 123 types / 377 partitions (95 in near-duplicate groups); worst cut {'ratio': 0.2151, 'at': 'horizontal@12500'}, worst partition segment {'ratio': 0.5223, 'at': 'vertical@1750:c_W5_bf_01'}; report /srv/opentallas-scratch2/claude/qc-event-s28/out/plan_qc99_s27/g0c/g0_report.json
+rc=1

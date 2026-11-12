@@ -1,0 +1,38 @@
+# DIE-PROTO-1 11-12 (COORD): KV die clock of record form (DIE-KV-58/61 kv58: link_htree inv r150 + region DME pv_S_6/pv_S_7/sys_SW/sys_SE, stage inv_ndr_kv21_treeb) on plan vF b85b6484; no residual pad (pad_kv20 predates phytap2).
+# DIE-KV-61/grt 2026-11-02: kv58.yaml (DIE-KV-58 tree_kv58 config) on main a8b1824c67c plan_c 5fe0aa1743b8; inputs from the repo.
+# DIE-KV-47-SD option (b) what-if: sd47 + region DME (legal-site, no re-slide) also on sys_SW/sys_SE
+# ot-clk config: KV die clock = tree c (COORD ruling A 10-29: early core taps dropped) on plan event26a (= Codex event26/bind26b with
+# clock.core_taps early->internal on 45 types). Tree form = DIE-KV-21 tree c (link_htree + region DME on pv_S_6/pv_S_7, KV inverter
+# stage model fitted on routed tree-b legs). 1920 taps / 15296 cells; ctree.v byte-identical to tree c (kit_repc).
+schema: ot_clk_config/1
+die: kv
+event:
+  name: dieproto3_kv_vF_kv61form
+  host: intel2
+  source: results/die_kv_26_1029 (DIE-KV-26 kit.sh e26a = die_trial kit, main 2b90210bd)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-proto-3/kv/ref_none
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-proto-3/kv/plan_vF/plan_c.json
+  region_map: /srv/opentallas-scratch2/claude/wt/die-proto-3/results/locality_1027/kv_land128_regions.json
+  feed: /srv/opentallas-scratch2/claude/wt/die-proto-3/results/die_kv_14_1028/clock_fishbone/feed_fishbone.json
+stack:
+  cell: inv
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 150
+  site_legal: true
+  site_slide: true
+region:
+  form: dme
+  dme_mode: delay
+  only:
+    - pv_S_6
+    - pv_S_7
+    - sys_SW
+    - sys_SE
+stage_model:
+  entry: inv_ndr_kv21_treeb
+  corners: [TT, FF]
+  edge: rise

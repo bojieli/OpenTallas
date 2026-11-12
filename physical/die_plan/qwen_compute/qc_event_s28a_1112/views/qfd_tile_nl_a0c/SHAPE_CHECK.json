@@ -1,0 +1,77 @@
+{
+ "module": "qfd_tile_nl_a0c",
+ "ok": true,
+ "problems": [],
+ "size": [
+  "457.92",
+  "BY",
+  "1157.76"
+ ],
+ "pins": 1044,
+ "pin": "ck",
+ "pin_signed": [
+  [
+   "DIRECTION INPUT",
+   "USE SIGNAL"
+  ],
+  [
+   [
+    "M5",
+    [
+     228.948,
+     578.64,
+     228.996,
+     579.12
+    ]
+   ]
+  ]
+ ],
+ "pin_view": [
+  [
+   "DIRECTION INPUT",
+   "USE SIGNAL"
+  ],
+  [
+   [
+    "M5",
+    [
+     228.948,
+     578.64,
+     228.996,
+     579.12
+    ]
+   ]
+  ]
+ ],
+ "pin_equal": true,
+ "obs_layers_signed": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_layers_view": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5",
+  "M6",
+  "M7",
+  "RVTN",
+  "RVTP"
+ ],
+ "obs_frac": {
+  "signed_M6": 0.9926,
+  "view_M6": 0.1316,
+  "signed_M7": 0.9926,
+  "view_M7": 0.0095
+ },
+ "signed_sha256": "c324040b27a9452c9467eb6e4aa6a6c9fc6fe65fda74ad8c69e2c22d24b9a954",
+ "view_sha256": "44371cf0bf061922e9c062988b76c37331067cdc974eb2757fed5230f1853b8b"
+}

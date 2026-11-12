@@ -61,6 +61,29 @@ class LoadGate(unittest.TestCase):
         self.assertTrue(self.m.load_capped(r, 48, 8))
         self.assertTrue(self.m.load_capped(r, 48, 8, True) if self.m.load_capped.__code__.co_argcount > 3 else True)
 
+    def test_crit_job_is_not_gated(self):            # CRITGATE_1112
+        os.environ["OT_RUN_CRIT"] = "1"
+        try:
+            self.assertFalse(self.m.load_gated(row(150.0, 96)))      # 150 < 2.0 x 96 = 192
+            self.assertFalse(self.m.load_capped(row(150.0, 96), 48, 8))
+            self.assertTrue(self.m.load_gated(row(507.0, 96)))       # epyc8 11-10 still gated
+            self.m.LOAD_GATE_CRIT_FACTOR = 0
+            self.assertFalse(self.m.load_gated(row(507.0, 96)))
+        finally:
+            os.environ.pop("OT_RUN_CRIT")
+
+    def test_direct_job_is_not_gated(self):
+        os.environ["OT_RUN_DIRECT"] = "1"
+        try:
+            self.assertFalse(self.m.load_gated(row(150.0, 96)))
+            self.assertTrue(self.m.load_gated(row(507.0, 96)))
+        finally:
+            os.environ.pop("OT_RUN_DIRECT")
+
+    def test_non_crit_job_still_gated(self):
+        os.environ.pop("OT_RUN_CRIT", None)
+        self.assertTrue(self.m.load_gated(row(507.0, 96)))
+
     def test_row_without_ncpu_is_not_gated(self):
         self.assertFalse(self.m.load_gated({"cpu_load1": 999.0, "load1": 999.0}))
 

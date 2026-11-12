@@ -124,6 +124,14 @@ while :; do
   # it waits while load1 + the declared threads of jobs admitted here in the last LOAD_FRESH_S (default 300 s, the
   # DIRECT_FRESH_S window, so a direct burst is counted before load1 shows it) >= LOAD_GATE_FACTOR (default 1.25) x nproc.
   # Running jobs are never touched.  LOAD_GATE_FACTOR=0 (/etc/ot-heavy.conf or env) disables it.
+  # LOADGATE_1110 + CRITGATE_1112 (COORD 11-12, owner 11-07 "critical bypass": blocking builds start at once, but the 11-10
+  # epyc8 load-507 incident must not recur): a --crit / --direct job (OT_HEAVY_CPU=crit / OT_HEAVY_DIRECT=1) that the normal
+  # gate (LOAD_GATE_FACTOR, 1.25) would hold is still admitted while load1 + fresh admits < LOAD_GATE_CRIT_FACTOR (default
+  # 2.0) x nproc AND fewer than CRIT_BYPASS_MAX (default 4) crit jobs admitted that way are still running on this host
+  # (critby.<unit> marks, counted only while res.<unit> exists).  LOAD_GATE_CRIT_FACTOR=0 = no load gate for crit at all
+  # (cap still applies), =1.25 restores the 11-10 rule.  RAM and disk admission above is unchanged.
+  _crit=0
+  { [ "${OT_HEAVY_CPU:-}" = crit ] || [ "${OT_HEAVY_DIRECT:-}" = 1 ]; } && _crit=1
   if [ "$V" = OK ] && [ "${LOAD_GATE_FACTOR:-1.25}" != 0 ]; then
     _now=$(date +%s); _fr=0
     for _f in "$D"/thr.*; do
@@ -133,13 +141,32 @@ while :; do
       case "$_t" in ''|*[!0-9]*) continue;; esac
       _fr=$(( _fr + _t ))
     done
-    _gl=$(awk -v f="${LOAD_GATE_FACTOR:-1.25}" -v n="$(nproc)" -v x="$_fr" \
-      'NR==1{l=$1+x; c=f*n; printf "%s %.1f %.0f", (l < c ? "OK" : "NO"), $1, c}' /proc/loadavg)
+    _gate() { awk -v f="$1" -v n="$(nproc)" -v x="$_fr" \
+      'NR==1{l=$1+x; c=f*n; printf "%s %.1f %.0f", (l < c ? "OK" : "NO"), $1, c}' /proc/loadavg; }
+    _gl=$(_gate "${LOAD_GATE_FACTOR:-1.25}"); _gf="${LOAD_GATE_FACTOR:-1.25}"; _why_extra="every job waits, crit/direct/short too up to the crit factor"
+    if [ "${_gl%% *}" = NO ] && [ "$_crit" = 1 ]; then
+      _cf="${LOAD_GATE_CRIT_FACTOR:-2.0}"
+      if [ "$_cf" = 0 ]; then _cl="OK 0 0"; else _cl=$(_gate "$_cf"); fi
+      if [ "${_cl%% *}" = OK ]; then
+        _nb=0
+        for _f in "$D"/critby.*; do
+          [ -e "$_f" ] || continue
+          if [ -e "$D/res.${_f##*/critby.}" ]; then _nb=$(( _nb + 1 )); else rm -f "$_f"; fi
+        done
+        if [ "$_nb" -lt "${CRIT_BYPASS_MAX:-4}" ]; then
+          _gl="OK ${_cl#* }"; touch "$D/critby.$UNIT"
+        else
+          _gl="NO ${_cl#* }"; _gf="$_cf"; _why_extra="crit load bypass cap: $_nb of ${CRIT_BYPASS_MAX:-4} bypassing crit jobs already run here"
+        fi
+      else
+        _gl="$_cl"; _gf="$_cf"; _why_extra="over the crit load factor"
+      fi
+    fi
     if [ "${_gl%% *}" = NO ]; then
       _g=(${_gl})
       [ "$_short" = 1 ] && { exec 9>&-; _short=0; }
       [ "${OT_HEAVY_DIRECT:-}" = 1 ] && rm -f "$D/direct.$UNIT"
-      V=NO; WHY="load gate: load1 ${_g[1]} + fresh admits ${_fr} threads >= ${LOAD_GATE_FACTOR:-1.25} x $(nproc) = ${_g[2]} (every job waits, crit/direct/short too; running jobs untouched)"
+      V=NO; WHY="load gate: load1 ${_g[1]} + fresh admits ${_fr} threads >= ${_gf} x $(nproc) = ${_g[2]} (${_why_extra}; running jobs untouched)"
     fi
   fi
   [ "$RES" != "$MEM" ] && [ "$RES" != "$LASTRES" ] && echo "ot-heavy: request ${MEM}G is charged ${RES}G (${WHY##*; }); the cap stays ${MEM}G" >&2

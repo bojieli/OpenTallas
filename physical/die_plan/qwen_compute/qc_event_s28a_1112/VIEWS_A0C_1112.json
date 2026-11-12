@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.view_bind_by_sha.v1",
+ "lane": "QC-S28-A",
+ "date": "2026-11-12",
+ "rule": "COORD 11-11 19:25: later view binds go by path+sha, not git. The plan hard_cores[].lef names PATH; the bytes are NOT in git; a kit/gate tree must hold exactly SHA256 at PATH (stage: python3 -I physical/die_plan/qwen_compute/qc_event_s28a_1112/apply_s28a.py stage <tree> VIEWS_A0C_1112.json --from <one of sources>); a missing file fails the kit at gen (cores.resolve finds no git blob), never a silent fallback to the signed blanket LEF.",
+ "why": "OBS-SYNC-1 11-12 01:10/01:28/02:08: a0c ck DRT-0073 on cbx_q10 (fd8954e928ba, 41a8d0519eda): ck (M5, interior) under blanket M1-M7 OBS; the clock_entry_access cuts were too small for DRT. Fix = exact-metal window-form detail of the SAME signed ODB: abstract_detail.py splice --pin-window-um 1.0 --top-layer M7, bloat 0 (counted_child_views.view_detail recipe). DRT single-macro probe rc 0, 0 DRT-0073 at R0 and MY, incl. the staged clock_entry_access form (nk); nl final probe rc 0.",
+ "modules": {
+  "qfd_tile_nk_a0c": {
+   "path": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "sha256": "0f95628d4a934e800b3d07f190ee680d0a2d50effd7715bc5f1af7202abc8ef2",
+   "bytes": 6390403,
+   "replaces": {
+    "path": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+    "sha256": "103f6e68f7032cd7172d39c298383cf2194ba7a8f85bb842ff072fe88a0cf326"
+   },
+   "lib_unchanged": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c_tt.lib",
+   "source_odb": "signed-store dq96/nk_vr7n_eco2 kq_qfd_tile_nk_a0c_vR7 6_final.odb",
+   "receipt": {
+    "file": "detail_receipt.json",
+    "sha256": "f1b50c5b6264d31fb5fa1f42c3668b517072c6e96bac136a9204e0897c0ef173",
+    "check_ok": true,
+    "detail_pins_equal_base": true,
+    "bloat_factor": 0,
+    "layers_detailed": [
+     "M6",
+     "M7"
+    ],
+    "pin_window": {
+     "margin_um": 1.0,
+     "top_layer": "M7"
+    }
+   },
+   "shape_check": {
+    "ok": true,
+    "pin_equal": true,
+    "pins": 2586,
+    "size": "457.92 BY 1157.76",
+    "ck_pin": [
+     [
+      "DIRECTION INPUT",
+      "USE SIGNAL"
+     ],
+     [
+      [
+       "M5",
+       [
+        228.948,
+        578.64,
+        228.996,
+        579.12
+       ]
+      ]
+     ]
+    ],
+    "obs_frac": {
+     "signed_M6": 0.9926,
+     "view_M6": 0.1491,
+     "signed_M7": 0.9926,
+     "view_M7": 0.0533
+    }
+   },
+   "drt_probe": "OBS-SYNC-1 epyc8 obs-sync-1-a0c final_qfd_tile_nk_a0c.out: rc=0 DRT0073=0 done=1",
+   "sources": [
+    {
+     "host": "epyc9",
+     "dir": "/srv/opentallas-scratch2/claude/qc-s28a/views_1112"
+    },
+    {
+     "host": "epyc8",
+     "dir": "/srv/opentallas-scratch2/claude/qc-s28a/views_1112"
+    },
+    {
+     "host": "epyc7",
+     "dir": "/srv/opentallas-scratch2/claude/qc-s28a/views_1112"
+    },
+    {
+     "host": "epyc9",
+     "dir": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qcviews_1111/views",
+     "note": "OBS-SYNC-1 install in the s27 kit tree under the OLD name <module>.lef"
+    }
+   ]
+  },
+  "qfd_tile_nl_a0c": {
+   "path": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef",
+   "sha256": "44371cf0bf061922e9c062988b76c37331067cdc974eb2757fed5230f1853b8b",
+   "bytes": 1718775,
+   "replaces": {
+    "path": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef",
+    "sha256": "c324040b27a9452c9467eb6e4aa6a6c9fc6fe65fda74ad8c69e2c22d24b9a954"
+   },
+   "lib_unchanged": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c_tt.lib",
+   "source_odb": "signed-store kq_qfd_tile_nl_a0c_vB2 6_final.odb (dq90_nl resign_idleuck)",
+   "receipt": {
+    "file": "detail_receipt.json",
+    "sha256": "de842c3244b80b633ea72b57ac57ac1f36e5e27f927e399fcbc7b204eb94b3e1",
+    "check_ok": true,
+    "detail_pins_equal_base": true,
+    "bloat_factor": 0,
+    "layers_detailed": [
+     "M6",
+     "M7"
+    ],
+    "pin_window": {
+     "margin_um": 1.0,
+     "top_layer": "M7"
+    }
+   },
+   "shape_check": {
+    "ok": true,
+    "pin_equal": true,
+    "pins": 1044,
+    "size": "457.92 BY 1157.76",
+    "ck_pin": [
+     [
+      "DIRECTION INPUT",
+      "USE SIGNAL"
+     ],
+     [
+      [
+       "M5",
+       [
+        228.948,
+        578.64,
+        228.996,
+        579.12
+       ]
+      ]
+     ]
+    ],
+    "obs_frac": {
+     "signed_M6": 0.9926,
+     "view_M6": 0.1316,
+     "signed_M7": 0.9926,
+     "view_M7": 0.0095
+    }
+   },
+   "drt_probe": "OBS-SYNC-1 epyc8 obs-sync-1-a0c final_qfd_tile_nl_a0c.out: rc=0 DRT0073=0 done=1",
+   "sources": [
+    {
+     "host": "epyc9",
+     "dir": "/srv/opentallas-scratch2/claude/qc-s28a/views_1112"
+    },
+    {
+     "host": "epyc8",
+     "dir": "/srv/opentallas-scratch2/claude/qc-s28a/views_1112"
+    },
+    {
+     "host": "epyc7",
+     "dir": "/srv/opentallas-scratch2/claude/qc-s28a/views_1112"
+    },
+    {
+     "host": "epyc9",
+     "dir": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qcviews_1111/views",
+     "note": "OBS-SYNC-1 install in the s27 kit tree under the OLD name <module>.lef"
+    }
+   ]
+  }
+ }
+}

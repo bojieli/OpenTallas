@@ -364,3 +364,47 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     assert pn["source_instance"] == "r_a2" and pn["xy_um"] == [131.0, 49.0]           # pin offset kept
     lr = t["clock"]["landing_local_resets"]
     assert lr[0]["raw"] == "qa2" and lr[1]["raw"] == "qb"     # gone -> nearest same depth; surviving Q kept
+
+
+def test_add_ft_regs_keeps_site_rows_aligned():
+    """the usual ft form: station 0 at the in pin has no bit-site row (bit_sites_um = stations 1..k-1). An added stage
+    gets its own row, so taps.planned_sinks' bit_sites_um[j - 1][bit] for j < stations stays in range (COORD 11-12)."""
+    import copy
+    f = {"name": "ft0", "in_face": "W", "out_face": "E", "in_window_um": [130, 140], "out_window_um": [130, 140],
+         "width": 2, "stations": 2, "regs_um": [[2.0, 135.0], [300.0, 135.0]],
+         "bit_sites_um": [[[300.0, 134.73], [300.0, 135.27]]]}
+    t0 = {"outline_um": [604.8, 302.4], "ft_slots": [f]}
+    t1 = copy.deepcopy(t0)
+    t1["outline_um"] = [829.44, 302.4]
+    t1["ft_slots"][0]["regs_um"][1] = [440.64, 135.0]
+    t1["ft_slots"][0]["bit_sites_um"] = [[[440.64, 134.73], [440.64, 135.27]]]
+    M = _FakeM(829.44, 302.4, [(100.0, 200.0, 50.0, 50.0)])
+    add = SR.add_ft_regs(M, t0, t1, 405.0, 1)
+    assert add and add[0]["added"] == 1
+    f1 = t1["ft_slots"][0]
+    assert f1["stations"] == 3 and len(f1["regs_um"]) == 3 and len(f1["bit_sites_um"]) == 2
+    for j in range(1, f1["stations"]):
+        for bit in range(2):
+            f1["bit_sites_um"][j - 1][bit]                                  # taps.planned_sinks indexing
+    (x, y), sites = f1["regs_um"][1][:2], f1["bit_sites_um"][0]
+    assert sites == [[round(x, 4), round(y - 0.27, 4)], [round(x, 4), round(y + 0.27, 4)]]
+
+
+def test_sliver_rule_makes_slivers_streets(tmp_path):
+    """COORD 11-12: with sliver_rule=1 a sub-street gap between facing cores is an error whatever its pin count, and
+    legalize opens it to a full street (or keeps an abutment); the default keeps the WARN class."""
+    a = core("a", 0, 0, 100, 100, {})
+    b = core("b", 108.64, 0, 100, 100, {})                   # 8.64-um slot, no pins: the S81 leaf sliver
+    assert SR.pair_rule(a, b, CFG)["kind"] == "sliver"
+    on = dict(CFG, sliver_rule=1)
+    r = SR.pair_rule(a, b, on)
+    assert r["kind"] == "street" and r["need"] == 43.2 and r.get("sliver")
+    b["x"] = 100.0                                           # abutted: legal under the rule
+    assert SR.pair_rule(a, b, on)["kind"] == "abut"
+    b["x"] = 143.2                                           # a full street: legal
+    assert SR.pair_rule(a, b, on)["kind"] == "ok"
+    b["x"] = 108.64
+    V, c = SR.analyze(400.0, 200.0, [a, b], [[0], [1]], on)
+    assert c.get("street", 0) == 1 and "sliver" not in c
+    V, c = SR.analyze(400.0, 200.0, [a, b], [[0], [1]], CFG)
+    assert c.get("sliver", 0) == 1 and "street" not in c

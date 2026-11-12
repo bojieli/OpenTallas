@@ -1,0 +1,14 @@
+bus_groups.json s28=315252676904 s28a=315252676904 p1=315252676904
+bind_latency.json s28=8167b6d6563f s28a=8167b6d6563f p1=8167b6d6563f
+bind_clock_landings.json s28=8e89087a7841 s28a=8e89087a7841 p1=8e89087a7841
+bind_reset.json s28=007b34bf3485 s28a=007b34bf3485 p1=007b34bf3485
+bind_sinks.json s28=90f381b4b756 s28a=90f381b4b756 p1=90f381b4b756
+rtl .sv differing s28 bind vs s28a bind (excluding reset_tree.json path-only provenance):
+sle_st_b_v1__pv0e7b1dcc.sv
+sle_st_b_v1__pvc5a85fd4.sv
+sle_st_b_v2__cl14c98df5.sv
+sle_st_b_v2__clfde1249e.sv
+slw_st_b_v1__cl6357f1cc__pvffd43fdc.sv
+slw_st_b_v2__pva66d0f22.sv
+slw_st_b_v2__pvc2ec5bfb.sv
+bind.f outside-tree paths: 0

@@ -115,6 +115,26 @@ def ring_reset_copies(clock, w, depth, dsrep=1, read_chunk=0):
     return 1 + -(-nch // cpc)
 
 
+HARD_RING_BASES = ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas")
+RING_FANOUT_KNOBS = ("landing_ring_fanout_max", "landing_ring_write_chunk")   # die-wide, soft rings only
+
+
+def hard_ring_params(plan, tn, bus, key=None):
+    """QC-PARAMWRAP 11-12: the exact parameters of a count-aligned ring that the plan realises as a SIGNED hard child
+    (partition_types[tn].hard_cores[] with param_wrap {base: ot_dp_clk_landing_ca/_cas} at physical_inst
+    u_bound.u_cland_<bus>), else None.  The child master (rtl/physical/.../<master>.sv, param_wrap.wrapper_sv) is built
+    and signed from exactly these parameters, so the bound ring must carry them verbatim: die-wide ring knobs
+    (clock.landing_ring_status_reg / _guard_reg / _fanout_max) apply to soft rings only and never re-parameterise a
+    hard child (param_wrap.wrap_bound fails closed on any difference)."""
+    for t in (tn, key):
+        for hc in (plan or {}).get("partition_types", {}).get(t, {}).get("hard_cores", []) or []:
+            pw = hc.get("param_wrap") or {}
+            if (pw.get("base") in HARD_RING_BASES
+                    and (hc.get("physical_inst") or "").removeprefix("u_bound.") == f"u_cland_{bus}"):
+                return dict(pw["params"])
+    return None
+
+
 def ring_place_copies(clock, w, read_chunk=0):
     """DIE-QC-97 PLACEREP-1: True when clock.landing_ring_fanout_max F > 0 and the ring (W = w before the cas 64-bit padding,
     read_chunk = the wreg READ_CHUNK, 0 = 64-bit chunks) has more than one read chunk: every read chunk then keeps its own
@@ -1420,6 +1440,16 @@ class Landings:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
                 reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head)
+                # QC-PARAMWRAP 11-12: a ring realised by a signed hard child keeps the child's exact parameters; the
+                # die-wide STATUS_REG / GUARD_REG / RSTREP / PLACEREP knobs only re-parameterise soft rings
+                hard = hard_ring_params(self.plan, tn, b, key)
+                b_status, b_guard = status_reg, guard_reg
+                if hard is not None:
+                    b_status, b_guard = bool(hard.get("STATUS_REG")), bool(hard.get("GUARD_REG"))
+                    for flag, on in (("landing_status_reg", b_status), ("landing_guard_reg", b_guard)):
+                        if self.types[key].get(flag, False) and not on:
+                            raise LandingError(f"{tn}.{b}: {flag} asks for a ring parameter the signed hard child "
+                                               f"u_cland_{b} does not carry (param_wrap {hard})")
                 if cat.get("straps"):
                     kw = cat["rings"][b]["kw"]
                     extra += [f"    input wire [{kw-1}:0] strap_ca_k_{b}"]
@@ -1437,11 +1467,11 @@ class Landings:
                 if output_qreg(self.plan, key, b) or output_qreg(self.plan, tn, b):
                     ring_mod = ring_mod[:-1] + ", .QREG(1))"   # CLAND-QREG-1: +1 data cycle (row output_qreg_cycles)
                     self.reset_placements[tn][b].update(output_qreg=True, output_qreg_added_data_cycles=1)
-                if status_reg:
+                if b_status:
                     ring_mod = ring_mod[:-1] + ", .STATUS_REG(1))"
                     self.reset_placements[tn][b].update(status_reg=True, status_reg_added_data_cycles=0,
                                                         status_reg_added_fault_cycles=1)
-                if guard_reg:
+                if b_guard:
                     ring_mod = ring_mod[:-1] + ", .GUARD_REG(1))"
                     self.reset_placements[tn][b].update(guard_reg=True, guard_reg_added_cycles=0)
                 # HEAD-RINGHOLD-1 (COORD 10-31 14:4x (3), option A): write_edge "fall" -> the count-aligned writer
@@ -1450,7 +1480,10 @@ class Landings:
                     ring_mod = ring_mod[:-1] + ", .WFALL(1))"
                 # WREG-1 (DIE-HEAD-58 TURNB): registered writer start + per-(slot, chunk) write-enable flops; strap form
                 # only (the strap K carries the +1, count_align_bind.strap_ties)
-                wreg = ring_write_reg(self.plan, key, b) or ring_write_reg(self.plan, tn, b)
+                # a hard child's ring is built without the die-wide fanout knobs (DSREP / WRITE_CHUNK raise)
+                wplan = self.plan if hard is None else dict(self.plan, clock={
+                    k: v for k, v in (self.plan.get("clock") or {}).items() if k not in RING_FANOUT_KNOBS})
+                wreg = ring_write_reg(wplan, key, b) or ring_write_reg(wplan, tn, b)
                 dsrep = ring_read_select_copies(self.plan, key, b)
                 if dsrep is None:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
@@ -1473,7 +1506,7 @@ class Landings:
                     self.reset_placements[tn][b].update(ring_dsrep=dsrep, ring_dsrep_added_cycles=0)
                 # RSTREP-1 (DIE-QC-97 (d)): the last reader-START stage becomes 1 + N kept same-D relay copies at its
                 # site (ot_dp_landing_relay_rep, same instance name, 0 cycles) and the ring splits its reset loads
-                if reader_start != "cland_start" and cat.get("straps"):
+                if reader_start != "cland_start" and cat.get("straps") and (hard is None or "RSTREP" in hard):
                     nrep = ring_reset_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
                                              int(cat["rings"][b]["depth"]),
                                              wreg["dsrep"] if wreg else (dsrep or 1), (wreg or {}).get("read_chunk", 0))
@@ -1495,10 +1528,19 @@ class Landings:
                 # PLACEREP-1 (DIE-QC-97): under clock.landing_ring_fanout_max every strap-form ring gets one kept copy of the
                 # reader placement value per read chunk (ot_dp_clk_landing_cas PLACEREP; rings with one chunk keep none).
                 # The value is 0 - strap_k, read only by the align load inside the held reset: 0 cycles, same q/ready/fault.
-                if cat.get("straps") and ring_place_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
-                                                           (wreg or {}).get("read_chunk", 0)):
+                if cat.get("straps") and (hard is None or "PLACEREP" in hard) and ring_place_copies(
+                        self.plan.get("clock"), w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)):
                     ring_mod = ring_mod[:-1] + ", .PLACEREP(1))"
                     self.reset_placements[tn][b].update(ring_place_copies=True, ring_place_copies_added_cycles=0)
+                if hard is not None:
+                    # fail at bind, not at kit-rtl: the bound ring must be the signed child's exact paramod
+                    got = ring_mod.format(w=w + 2 if self.dataflow else w)
+                    want = ("ot_dp_clk_landing_cas" if cat.get("straps") else "ot_dp_clk_landing_ca") + " #(" + ", ".join(
+                        f".{k}({int(v)})" for k, v in hard.items()) + ")"
+                    if re.sub(r"\s", "", got) != re.sub(r"\s", "", want):
+                        raise LandingError(f"{tn}.{b}: bound ring {got} differs from its signed hard child param_wrap "
+                                           f"{want}: fix the plan param_wrap (re-sign the child) or the ring knobs")
+                    self.reset_placements[tn][b].update(hard_child_params=dict(hard))
                 self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring

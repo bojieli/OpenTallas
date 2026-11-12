@@ -3867,6 +3867,14 @@ def run_item(spec_path):
         if kr.get("bind_out"):
             # the die's strict bind of record: read-only, never rebuilt here; it must report 0 errors
             bind = kr["bind_out"]
+            # KW-SELFCONT-2 (COORD 11-12): a gen host that lacks the bind dir of record gets it copied in (same absolute path, so the
+            # recipe's reference is unchanged) from the first other host of the die that holds it, <= 4 GB, before the report check
+            _oth = " ".join(shlex.quote(h) for h in (sp.get("hosts") or []) if h not in (G, "localhost", hub))
+            _fetch = (f"B={q(bind)}; if [ ! -f \"$B/bind_report.json\" ]; then for h in {_oth}; do "
+                      f"if ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 $h \"test -f $B/bind_report.json\"; then "
+                      f"kb=$(ssh -o BatchMode=yes -o ControlPath=none $h \"du -sk $B | cut -f1\"); "
+                      f"if [ \"${{kb:-0}}\" -le 4194304 ]; then mkdir -p \"$B\" && rsync -a -e \"ssh -o BatchMode=yes -o ControlPath=none\" $h:$B/ $B/ && echo KW_BIND_COPIED $h $kb KB; fi; break; fi; done; fi; ")
+            rcf, tf = run("bind_fetch", remote(_fetch + "true"), idempotent=True)
             chk = (f"python3 -c \"import json,sys;r=json.load(open('{bind}/bind_report.json'));e=r.get('errors');"
                    f"n=len(e) if isinstance(e,list) else e;print('BIND errors', n);sys.exit(0 if n == 0 else 3)\"")
             rc, txt = run("bind", remote(chk))
@@ -4575,6 +4583,18 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     return out
 
 
+def plan_sha_mismatch(d, pn):
+    """WAVE-POR guard (CORES-S81-1, COORD 11-12): dies.<die>.plan_sha256 is the declared sha256 of dies.<die>.plan that
+    the release-tree counter counts; a plan file that no longer has it (edited in place, or repointed without
+    updating plan_sha256) stops the die's tick instead of building on an undeclared plan.  -> reason or None"""
+    want = str((d or {}).get("plan_sha256") or "").lower()
+    got = str((pn or {}).get("plan_sha") or "").lower()
+    if not want or not got or want == got:
+        return None
+    return (f"PLAN_SHA_MISMATCH: dies.plan {d.get('plan')} has sha256 {got[:12]} but plan_sha256 declares {want[:12]}; "
+            f"update plan_sha256 with the repoint (the release-tree counter counts the declared plan)")
+
+
 def ensure_plan_view(AP, st, d):
     """The INFRA relaunch loop runs before plan_dies, on a fresh config: a launch there saw no _plan_flags, so a type
     with planned child cores got no provisional views and its kit tried the child bodies (11-04, 16 QC cb rows + the
@@ -4584,7 +4604,7 @@ def ensure_plan_view(AP, st, d):
     if "_plan_flags" in d:
         return True
     pn = plan_names(AP, st, d)
-    if pn.get("error"):
+    if pn.get("error") or plan_sha_mismatch(d, pn):
         return False
     d["_plan_sha"] = pn.get("plan_sha")
     d["_plan_flags"] = pn.get("flags") or {}
@@ -4640,6 +4660,9 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                 pn = plan_names(AP, st, d)
                 if pn.get("error"):
                     ok, why = False, f"plan of record unreadable: {pn['error'][:200]}"
+                elif plan_sha_mismatch(d, pn):
+                    ok, why = False, plan_sha_mismatch(d, pn)
+                    AP.log(f"KIT-WAVE {die}: {why}")
                 else:
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
@@ -5202,7 +5225,12 @@ def grt_arm_launches(AP, cfg, st, notices, ap_dir, nl=0, stagger=0.0):
                 AP.log(f"KIT-WAVE GRT-ARM {die}/{item}: not an item of the current plan; no arm")
                 continue
             base = item_key(die, d["event"], item, blocks[item])
-            ak = grt_arm_key(base, o["mode"])
+            # KW-FIX-45 11-12 (DIE-HBM-100: q_su21 4,004 stock / 4,208 edge_outline / 105 halving OFF): option modes {item: mode}
+            # sets the arm mode of one item (the die mode stays the default for the others)
+            imode = str((o.get("modes") or {}).get(item) or o["mode"])
+            if imode not in GRT_ARM_MODES:
+                continue
+            ak = grt_arm_key(base, imode)
             brec = (st.get("items") or {}).get(base)
             if (ak in st["items"] and not (st["items"][ak].get("arm") or {}).get("repin")) or not brec or grt_arm_signed(brec) or counted_now(cfg, st, die, item, blocks[item]):
                 continue
@@ -5215,11 +5243,11 @@ def grt_arm_launches(AP, cfg, st, notices, ap_dir, nl=0, stagger=0.0):
                 continue
             r = {"item": item, "kind": brec.get("kind") or "type", "parent_item": brec.get("parent_item"),
                  "block_sha": blocks[item], "replicas": brec.get("replicas"),
-                 "arm": {"of": base, "key": ak, "mode": o["mode"], "gen_host": o.get("gen_host")}}
+                 "arm": {"of": base, "key": ak, "mode": imode, "gen_host": o.get("gen_host")}}
             rec = launch_safe(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=(nl + n) * stagger)
             if rec:
                 n += 1
-                notices.setdefault(die, []).append(f"{item} GRT-ARM[{o['mode']}] LAUNCHED ({rec['unit']}, beside "
+                notices.setdefault(die, []).append(f"{item} GRT-ARM[{imode}] LAUNCHED ({rec['unit']}, beside "
                                                    f"{brec.get('item')}@{brec.get('attempt')} {brec.get('status')})")
     return n
 

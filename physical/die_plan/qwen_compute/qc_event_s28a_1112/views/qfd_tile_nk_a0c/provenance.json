@@ -1,0 +1,313 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_tile_nk_a0c_a0nk14icg2r1",
+  "module": "qfd_tile_nk_a0c",
+  "plan_type": "cbf_q00",
+  "outline_um": [
+   457.92,
+   1157.76
+  ],
+  "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nk",
+  "spec": "physical/die_plan/qwen_compute/cores/a0/parent/nk/spec.json",
+  "spec_sha256": "68d469e5684687e512b1a39934fcfc0f19f57540b77a581dfe7da59ee02fc5ca",
+  "pins_file": "cores/a0/parent/a0_nk_pins_dir.json",
+  "pins_sha256": "9bf64434d0dcaef7cfbb3532e6d8de1dae6c4b5ba0da6cf2853ae580c8c8bdc6",
+  "pins": 2584,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "ff330c3cc7cbb7c894ac218b161e08e37d255d3214a08f540fa56c23b4bbc47c",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "12.3 common core latency 250 TT / 202.5 FF kit frame (KIT_PREFLIGHT ff_binding); the die taps the A0 centre entry EARLY by (routed trunk insertion - frame): DIE-QC-17 routed trunk 716/623 TT/FF (nk t5), COORD 14:21",
+   "ff": "12.3 common core latency 250 TT / 202.5 FF kit frame (KIT_PREFLIGHT ff_binding); the die taps the A0 centre entry EARLY by (routed trunk insertion - frame): DIE-QC-17 routed trunk 716/623 TT/FF (nk t5), COORD 14:21"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "7946a8448d0",
+  "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+  "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+  "signoff_sha256": "89929556eba9a21b4f74b5d9710188d7391535eac95a5698e0a56b12284e86a2",
+  "macros": {},
+  "hard_children": [
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     9.288,
+     22.176
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     9.288,
+     152.352
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     9.288,
+     282.528
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     9.288,
+     542.88
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     9.288,
+     412.704
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     261.408,
+     22.176
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     261.408,
+     152.352
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     261.408,
+     282.528
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     261.408,
+     542.88
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     261.408,
+     412.704
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_ndh.u_node",
+    "master": "ot_qwen_tile_node",
+    "at": [
+     15.12,
+     688.656
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_node"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     325.94,
+     673.92
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     325.94,
+     837.696
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     325.94,
+     994.944
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     199.8,
+     830.208
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     199.8,
+     994.944
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     73.44,
+     673.92
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     73.44,
+     830.208
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     73.44,
+     998.208
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   }
+  ],
+  "sram_pincol_halo": [],
+  "rtl_patches": [
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+    "why": "Inactive REGROOT>=8 arm must have in-bounds twin index when REGROOT3 NSPC27. Select offset0 in inactive arm, same expression when REGROOT>=8; active fallback unchanged. Actual expression lockstep20000 + active-twin mutant caught; zero cycles.",
+    "sha256": "097cb048f8b31dbd5af154d7ae6ef40aa6fa1a55ee7e4414b0862dde23268d96"
+   },
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+    "why": "One shared local output-reset delivery stage for W t_out and n_y header clamps. Explicit +1 boot release/assert phase under existing reset/START model, steady/data0. Actualfirstplacement exposed836um root-to-n_y path; same existing relay now feeds both guards, no second added stage. Root sample shiftedwithin150um pin allowance; fullplacement/source proof required.",
+    "sha256": "71e04c176f76a6b4f922e7e23f310051e1d2ea39a259c5b7ac024be81633785f"
+   }
+  ],
+  "kit_hash": "e4e10bfd3daabd49",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5
+  },
+  "master_plan": {
+   "slice_sha256": "9e67411b947b33552f676722706887274c7b563515f2c524df7896021bfc0695",
+   "master_plan_sha256": "a0-child-contract:qc-cores-1027-a0clk-r3@f217587b2 (no frozen QC master plan yet)",
+   "type": "qfd_tile_nk_a0c",
+   "frozen": false
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "a6ce09e606f8c6964328da08a1bd9605df6bbcba2384a0852386bc67a953c7fd",
+  "pins_placed_canon_sha256": "50cce0fd0ce2b1caefb4eb3bd20c2ec9746b68828032fb0d4b84846ee786410b",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict LOCAL_PASS_NEEDS_PARENT; routed LEC EQUIVALENT)",
+ "views_status": "incomplete: signoff.json verdict 'LOCAL_PASS_NEEDS_PARENT' is not SIGNED",
+ "src": "/srv/opentallas-scratch2/claude/dq96/nk_vr7n_eco2/i1",
+ "src_commit": null,
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-10T06:04:50-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/dq96/nk_vr7n_eco2/i1",
+  "base": "/srv/opentallas-scratch2/claude/dq96/nk_vr7n_eco2/i1/run/results/asap7/kq_qfd_tile_nk_a0c_vR7/base",
+  "signoff": "/srv/opentallas-scratch2/claude/dq97/nk_eco2_resign_fc/signoff/signoff.json",
+  "signoff_sha256": "f73e270e6f50bff90cba7aa47a6724984f3f1466f7bcb5ead09b99fe580f5f58",
+  "signoff_generated": "2026-11-09T10:01:07+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/dq96/nk_vr7n_eco2/i1/run/results/asap7/kq_qfd_tile_nk_a0c_vR7/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/dq97/nk_eco2_resign_fc/lec/lec.json",
+  "note": "KW-FIX-43 11-10 COORD/DIE-QC-97: counted NK record dq97/nk_eco2_resign_fc (PROVENANCE SIGNED, ARCHIVED)",
+  "lib_basis": {
+   "qfd_tile_nk_a0c_tt.lib": "base qfd_tile_nk_a0c_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "qfd_tile_nk_a0c_ff.lib": "base qfd_tile_nk_a0c_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "235f7874fd42779693dd16359143e1b94f7c8b647d11f987d2fd269ce38494e3",
+   "qfd_tile_nk_a0c.lef": "103f6e68f7032cd7172d39c298383cf2194ba7a8f85bb842ff072fe88a0cf326",
+   "qfd_tile_nk_a0c_ff.lib": "300ceb9c866aca53694ae464f4ef8d283beba9eeef1bb76606b805f519fc6630",
+   "qfd_tile_nk_a0c_tt.lib": "fd32d49a8c8883aa8f0e7d62ef928bd1060f767c8ca734504ad624051c292913"
+  }
+ },
+ "detail_view": {
+  "note": "OBS-SYNC-1 11-12: DRT-0073 fix, exact-metal M6/M7 detail of the same signed ODB; the signed abstract is qfd_tile_nk_a0c.signed.lef",
+  "lef_sha256": "0f95628d4a934e800b3d07f190ee680d0a2d50effd7715bc5f1af7202abc8ef2",
+  "signed_lef_sha256": "103f6e68f7032cd7172d39c298383cf2194ba7a8f85bb842ff072fe88a0cf326",
+  "receipt": "detail_receipt.json"
+ }
+}

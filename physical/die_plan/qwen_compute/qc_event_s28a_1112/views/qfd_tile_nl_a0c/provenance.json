@@ -1,0 +1,310 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_tile_nl_a0c_a0nl14icg2r1",
+  "module": "qfd_tile_nl_a0c",
+  "plan_type": "cbx_q10",
+  "outline_um": [
+   457.92,
+   1157.76
+  ],
+  "ref_tile": "physical/die_plan/qwen_compute/cores/a0/parent/nl",
+  "spec": "physical/die_plan/qwen_compute/cores/a0/parent/nl/spec.json",
+  "spec_sha256": "814be07b81c1a8992b8e42260cb94b89b17bb649af0cf1b0ae63bc7a0dca6248",
+  "pins_file": "cores/a0/parent/a0_nl_pins_dir.json",
+  "pins_sha256": "4fa02e0b690f396e41b7b3780d6f357b03f982e5e64d33e17fd3652756367574",
+  "pins": 1042,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "f8f65a45bc05daeb7585f74f061c01c6b524944873860b531fb6c9cf6d09e03d",
+  "period_ps": 833.0,
+  "insertion_ps": 692.6,
+  "insertion_ff_ps": 601.9,
+  "insertion_basis": {
+   "tt": "Root approved prebuild typed hard_core_latency: current119 declared NL mean692.6TT/601.9FF, parent common250/202.5 softtap early442.6/399.4. New intrinsic characterization must join atomic119event before final fixed reference/repair. No period/uncertainty change.",
+   "ff": "Root approved prebuild typed hard_core_latency: current119 declared NL mean692.6TT/601.9FF, parent common250/202.5 softtap early442.6/399.4. New intrinsic characterization must join atomic119event before final fixed reference/repair. No period/uncertainty change."
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "7946a8448d0",
+  "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+  "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+  "signoff_sha256": "89929556eba9a21b4f74b5d9710188d7391535eac95a5698e0a56b12284e86a2",
+  "macros": {},
+  "hard_children": [
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     22.488,
+     22.176
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     22.488,
+     152.352
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     22.488,
+     282.528
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     22.488,
+     542.88
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     22.488,
+     412.704
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     268.32,
+     22.176
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     268.32,
+     152.352
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     268.32,
+     282.528
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     268.32,
+     542.88
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+    "master": "ot_qwen_tile_romleaf",
+    "at": [
+     268.32,
+     412.704
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_romleaf"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     268.32,
+     673.92
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     268.32,
+     834.432
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     268.32,
+     994.944
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     142.152,
+     834.432
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     142.152,
+     994.944
+    ],
+    "orient": "MY",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     15.984,
+     673.92
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     15.984,
+     834.432
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   },
+   {
+    "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf",
+    "master": "ot_qwen_tile_lsl_rawfault_m3",
+    "at": [
+     15.984,
+     994.944
+    ],
+    "orient": "R0",
+    "view": "results/codex_qc_a0_2340/views/ot_qwen_tile_lsl_rawfault_m3"
+   }
+  ],
+  "sram_pincol_halo": [],
+  "rtl_patches": [
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+    "why": "NL wrapper names undeclared ck_rqr2/3 despite exposing only existing north/south return clocks0/1. Map east half to the same declared group clocks; actual recipe GLUE_HARD=0 never elaborates ck_rqre consumers. No state/cycle change; compare against parser-repaired original in native parent LEC. Candidate redundant output reset mux removal: inner tf and tv are already asynchronously zero under same reset_q; full native proof required. Zero added cycles or reset release offset.",
+    "sha256": "3463aa411dfc0291e025ea97263a726409cc0d310cc482177c99a5cfbeb3d4b7"
+   },
+   {
+    "file": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+    "why": "Inactive REGROOT>=8 arm must have in-bounds twin index when REGROOT3 NSPC27. Select offset0 in inactive arm, same expression when REGROOT>=8; active fallback unchanged. Actual expression lockstep20000 + active-twin mutant caught; zero cycles.",
+    "sha256": "097cb048f8b31dbd5af154d7ae6ef40aa6fa1a55ee7e4414b0862dde23268d96"
+   }
+  ],
+  "kit_hash": "a6bf58c875702619",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 692.6,
+   "ff": 601.9
+  },
+  "master_plan": {
+   "slice_sha256": "630aaa4587d0d157b67f79c0c2ef7b141113eafa16bb561c6f23fe6ecbfbece1",
+   "master_plan_sha256": "a0-child-contract:qc-cores-1027-a0clk-r3@f217587b2 (no frozen QC master plan yet)",
+   "type": "qfd_tile_nl_a0c",
+   "frozen": false
+  },
+  "io_reference_ps": {
+   "kind": "plan_declared",
+   "tt": 692.6,
+   "ff": 601.9,
+   "basis": "Current declared intrinsic means approved before unsignedICG0build; fixed matching IOreference before repair",
+   "source": "Root coordinator2026-10-29 HARDCORE disposition; intel2 codex-qc-1029/physical_event/plan_start_native_h800.json u_t30.ck insertion692.6/601.9"
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "f10abec10577dbdf567ee3f9444f5e57c00c4e87c2fcdd3304a6d6b5da51d9ff",
+  "pins_placed_canon_sha256": "ad30fda628edb471ee77ee8849534cccafb9fbbaf96db0f73c6692c222898a1f",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/out_once/i1",
+ "src_commit": null,
+ "flow_tag": "flow-20261107-cv-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T10:43:19-08:00",
+  "kit": "/srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/out_once/i1",
+  "base": "/srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/out_once/i1/run/results/asap7/kq_qfd_tile_nl_a0c_vB2/base",
+  "signoff": "/srv/opentallas-scratch3/claude/dq90_nl/resign_idleuck/signoff/signoff.json",
+  "signoff_sha256": "5799265f54a1f7bbe7c5df71cabe30f023feeb5b64cd76e1f5e13318d4f291e5",
+  "signoff_generated": "2026-11-07T11:06:55-08:00",
+  "odb": "/srv/opentallas-scratch3/claude/codex-qc-ecow3-1107/out_once/i1/run/results/asap7/kq_qfd_tile_nl_a0c_vB2/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child qfd_tile_nl_a0c",
+  "lib_basis": {
+   "qfd_tile_nl_a0c_tt.lib": "base qfd_tile_nl_a0c_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "qfd_tile_nl_a0c_ff.lib": "base qfd_tile_nl_a0c_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "f71627cbc36e2e417940db0a7e86fb55824f2dbb65c1a17a7e8cfa131cc37c67",
+   "qfd_tile_nl_a0c.lef": "c324040b27a9452c9467eb6e4aa6a6c9fc6fe65fda74ad8c69e2c22d24b9a954",
+   "qfd_tile_nl_a0c_ff.lib": "1628ec94c8cdd750e8be0e644b55887cad8af585387b290d13fec25e1ed69aef",
+   "qfd_tile_nl_a0c_tt.lib": "5177024ecff63f06ad2620eb0d4419b731a04802c6522aaf2e25a09d1668bfc5"
+  }
+ },
+ "detail_view": {
+  "note": "OBS-SYNC-1 11-12: DRT-0073 fix, exact-metal M6/M7 detail of the same signed ODB; the signed abstract is qfd_tile_nl_a0c.signed.lef",
+  "lef_sha256": "44371cf0bf061922e9c062988b76c37331067cdc974eb2757fed5230f1853b8b",
+  "signed_lef_sha256": "c324040b27a9452c9467eb6e4aa6a6c9fc6fe65fda74ad8c69e2c22d24b9a954",
+  "receipt": "detail_receipt.json"
+ }
+}

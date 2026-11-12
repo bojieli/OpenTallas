@@ -1,0 +1,45 @@
+{
+ "cmd": "derive",
+ "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+ "bus_groups": "../bind_p1/bus_groups.json",
+ "bus_groups_digest": "af1d7e589d069bdc",
+ "options": {
+  "replica": "all",
+  "bus": "part",
+  "exempt": [],
+  "landed": [],
+  "window": 4,
+  "stage_cycles": 0.5,
+  "over": "keep"
+ },
+ "summary": {
+  "members": 9050,
+  "classes": 1491,
+  "replica_links": 609,
+  "padded_members": 2250,
+  "padded_bits": 152577,
+  "pad_flops": 962867,
+  "max_pad": 24,
+  "max_depth_before": 52,
+  "max_depth_after": 52,
+  "max_offset_before": 29,
+  "max_offset_after": 29,
+  "binder_landed_max": 52,
+  "landed_bundles": 0,
+  "landed_over_margin": 0
+ },
+ "diff": {
+  "equal": true,
+  "members_old": 9050,
+  "members_new": 9050,
+  "added": 0,
+  "removed": 0,
+  "changed": 0,
+  "lanes": {},
+  "added_ids": [],
+  "removed_ids": [],
+  "changed_members": []
+ },
+ "out": "physical/die_plan/qwen_compute/qc_start_1106/runtime/r8_sw2.json",
+ "out_sha256": "f6d2f5e120f4357bd3257d1810aae5de4202250849d6168a70192c6afcec1069"
+}
