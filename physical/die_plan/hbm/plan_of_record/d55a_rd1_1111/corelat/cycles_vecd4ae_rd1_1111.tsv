@@ -1,0 +1,5 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+hnx_vms_bank_q0_faces__vecd4ae	bank	rr0,rr1,rr2,rr3,rr4	port	1	DIE-HBM-97 11-11 vecd-rd1 (COORD fallback ruling after fp2s setup -312 ps c_mir_s -> d_flip: 160-um A/C mux wire + syndrome in one edge): new read stage E registers the c_mir-selected dat/ck, syndrome/d_flip from E; every read response one edge later, value exact (latency-shifted EQ vs main 37893dfc)
+hnx_vms_bank_q0_faces__vecd4ae	bank	pr	port	1	packet read response AND packet write echo both +1 (ew_v/ew_tag), so one packet op per edge on pr still holds
+hnx_vms_bank_q0_faces__vecd4ae	bank	status[16:0]	port	1	ue + ce counter follow d_v (+1); diagnostic status only, not priced
+hnx_vms_bank_q0_faces__vecd4ae	bank	status[17],eg,wq_done,dq_done,kq_done,xq_done,xq2_done,rq,wq,dq,kq,xq,xq2,pq	port	0	unchanged (flt, egress and every write done stay on their edge)
