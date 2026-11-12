@@ -2,7 +2,8 @@
 
 1 SCOPE: independent visual-gate reviewer. View every place/GRT render and every hand-floorplan drawing ONE AT A TIME as an image (never verdict from numbers). Post GEOM VERDICT lines to lanes/GEOM-REVIEW.md: GOOD / ISSUES (+ ACCEPT recommendation or not) / BAD, each naming the FAMILY and a CLASS FIX. Reach items (taps > cap, hops > 405 um, reset reach) go to REACH-FIX-2; congestion/layout quality are ours. Answer each WAIT-VISUAL row in lanes/VISUAL-QUEUE.tsv within ~30 min. Read-only on builds (never launch/kill/route).
 
-2 WORKTREE: none (review lane; no git branch, no uncommitted code). Hub writes only via coord-commit.sh. Local tools are on host ubuntu (localhost of the Claude session) in /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad :
+2 WORKTREE: tool copies also on intel2 ~/coord/lanes/handoff/geom-vis-5-tools/ (set S to a dir holding v2/ v4/ v5/ with these files).
+   none (review lane; no git branch, no uncommitted code). Hub writes only via coord-commit.sh. Local tools are on host ubuntu (localhost of the Claude session) in /tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad :
   v5/post.sh <geom.md> <queue.md> "<msg>"  appends to GEOM-REVIEW.md + COORD-REVIEW-QUEUE.md on intel2 and commits; prints origin counts of "GEOM-VIS-5 viewed" / "GEOM-VIS-5 ->".
   v2/fetch_lr.sh <S> <key> <host:/.../run>  copies layout_review/*/*.png, smells.one, summary.txt and ../../../geom/auto_geom.png into v2/vis/<key>/.
   v2/poll2.sh + v2/scan_remote.sh  scan epyc2/4/7/8/9/intel1 for new layout_review dirs (unseen vs v2/seen2.txt) and pull VISUAL-QUEUE.tsv to v2/vq.tsv.
