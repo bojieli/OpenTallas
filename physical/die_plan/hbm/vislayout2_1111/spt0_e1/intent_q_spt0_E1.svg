@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 940 820" font-family="monospace" font-size="12">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#c00"/></marker>
+<marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#06c"/></marker></defs>
+<!-- scale 0.5 px/um, y flipped: y_px = 752 - y_um*0.5 -->
+<rect x="0" y="0" width="890" height="752" fill="none" stroke="#000" stroke-width="2"/>
+<text x="5" y="-5">q_spt0 1779.84 x 1503.36 um  (form E1, VISLAYOUT2-HBM 11-11)</text>
+<rect x="39" y="627" width="300" height="112" fill="#ddd" stroke="#555"/><text x="60" y="690">u_xc_Q0 (xcal)</text>
+<rect x="730" y="627" width="150" height="112" fill="#ddd" stroke="#555"/><text x="740" y="690">u_xc_Q1</text>
+<rect x="178" y="0" width="275" height="752" fill="#e8f0ff" opacity="0.6"/><text x="190" y="380">L8x2 3070b N-S transit</text>
+<rect x="472" y="0" width="229" height="752" fill="#e8f0ff" opacity="0.6"/><text x="480" y="400">L21x4 2560b</text>
+<line x1="0" y1="542" x2="890" y2="542" stroke="#0a0" stroke-dasharray="6,4"/><text x="560" y="536" fill="#0a0">macro-free row y=420</text>
+<line x1="0" y1="682" x2="890" y2="682" stroke="#0a0" stroke-dasharray="2,3"/><text x="400" y="678" fill="#0a0">y=140 (pv1 L5076, +1 stn)</text>
+<!-- before: edge row -->
+<line x1="10" y1="748" x2="880" y2="748" stroke="#c00" stroke-width="4" opacity="0.5"/><text x="300" y="770" fill="#c00">BEFORE: L41_o/L88_o/L50_i/L84_i chains + L1271x8 all on S edge row (GRT 963k ov, 44% face)</text>
+<!-- after: L41_o chain -->
+<path d="M813,752 L813,542 L57,542 L57,739" fill="none" stroke="#06c" stroke-width="3" marker-end="url(#b)"/>
+<text x="600" y="560" fill="#06c">L41_o 1064b: Q0 -> face (up, along row, down)</text>
+<path d="M100,752 L100,542 L750,542 L750,739" fill="none" stroke="#06c" stroke-width="2" stroke-dasharray="8,3" marker-end="url(#b)"/>
+<text x="110" y="520" fill="#06c">L50_i 618b: face -> Q1</text>
+<path d="M16,752 L16,542 L723,542 L723,752" fill="none" stroke="#c00" stroke-width="2" marker-end="url(#a)"/>
+<text x="20" y="600" fill="#c00">L1271x8 512b S->S, 8 regs</text>
+<text x="5" y="800">AFTER: route_supply p99 q_spt0 2.87 -> 0.96; pv1 3.04 -> 1.94 (L5076 +1 station -> 0.96). G0 no new errors.</text>
+</svg>
