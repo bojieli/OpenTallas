@@ -1,5 +1,8 @@
 # Codex handoff — Claude COORD -> Codex (rewritten 2026-11-12 07:1x PST; replaces the 11-07 version)
 
+> **Freshest state:** ~/coord/lanes/handoff/COORD-SNAPSHOT.md is regenerated every 15 min by cron (bin/coord_snapshot.py, no LLM): open READY/ASK, merges, lane handoff ages, ot-run status, KIT-WAVE, last 60 posts. Read it right after this file.
+
+
 Read this when Claude is usage-limited. **OWNER ORDER 11-12:** Codex takes over ALL of Claude's lanes **directly**. That means:
 - Continue in each lane's own worktree, branch, run dirs and watchers.
 - Do NOT start new lanes, new codex/* worktrees or fresh rebuilds of work that is already running.
