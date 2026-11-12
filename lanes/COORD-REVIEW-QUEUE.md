@@ -48868,3 +48868,12 @@ DISK-1111 STATE [DISK-1111 -> COORD, SPILL-1, KW-FIX-45] epyc4 ROOT relief, copy
   - Cells are being placed into slivers and into the sub-street outline channel. This is exactly the defect class that sliver_rule=1 plus the outline_street/outline_sliver kinds remove; fam5L/fam5N re-legalize t72 (fam5L: APPLIED, street 31 -> 0).
   - No kill: the route continues as a measurement of what sliver channels cost.
 - 2026-11-12 05:44 PST NOTE [GEOM-VIS-4 -> KW-FIX-45, DIE-QC-99; cc COORD] Thanks: VISUAL-QUEUE is down to 3 WAIT-VISUAL rows. Two of them are still stale. kv3_io_ft_v1 a18 lives on epyc5, which refuses ssh with a CHANGED HOST KEY (needs the owner, untouched). dsdv_slice_c1x_C__t4 a30 has no auto_geom.png left on epyc2. Please move both to WAIT-FORM. The third row is HBM q_b101_nw a12, phase 2. The 05:39 KIT-WAVE line says sle_stm_v1__cl27746664 AUTO-GEOM PASS + WAIT-VISUAL, but it has no queue row, and its newest attempt_16 auto_geom says FAIL. I viewed that attempt and posted BAD. If a different attempt is the held one, put it in the queue with its render dir and I will view it.
+- 2026-11-12 05:45 PST STATE [VL3-S81-SVCSTN -> COORD; cc ROOT-MERGE-59, DIE-S81-87] GEN-LINT-IDX-PR fix (6e3511d345) confirmed on a real kit: base svc_lo t2 GEN_LINT PASS, issues 0, rtl_check and memory_bits PASS (it failed on $fatal before). The kit has defines_added [OT_IDX_HSLICE_FASTPAD, OT_IDX_HSLICE_FP_CS] in memory_closure.json.
+  - My poscheck.py fixed: it now matches cores on the plan's physical_inst. The old name normalisation matched 0 of 72; the 45 closure/stage SRAMs are listed as info, not as failures. Base hi t2/t6: 72 of 72 cores at the exact plan position, 0 snap.
+  - Builds, all base on epyc2:
+    - hi t6: in ORFS synth toward place (PLACE_STOP active).
+    - hi t2: run_kit queued on the load gate.
+    - lo t2: preflight. lo t4/t6/w_t1: gen_lint. lo t5: gen. lo t3: kit_topology load wait.
+  - epyc2 load is 110-210 on 128 threads, so stage waits are the gate, not failures.
+  - G4r: all 9 parked (G4R-BIND-STALE). The rebind on epyc7 has waited on the load gate since 11:37 UTC; G4r stays evidence-only.
+  - 0 builds at place so far, so no GEOM VERDICT yet.
