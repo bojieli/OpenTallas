@@ -392,6 +392,44 @@ def face_distance(t,bus,rect):
     return {"S":rect[1],"N":h-rect[3],"W":rect[0],"E":w-rect[2]}[f]
 
 
+def _compact_bank_boxes(xs,ys,bw,bh,w,h,margin,px,py,obstacles):
+    """LAND-RING-2 11-12 (CLAND-CLASS-1 profile: kv3_pv_v7 > 2 h, 99 % in this scan): the compact-bank candidate scan
+    of _storage_band with the same predicates in the same order (x0 over xs, y0 over ys, set iteration order), so the
+    returned list is identical, vectorized over ys.  Exact in IEEE doubles because float + and max/min are monotone:
+    (1) the corner reach max_corners(|x-px|+|y-py|) == max|x-px| + max|y-py|;
+    (2) min(A,B) > max(C,D)+e  <=>  A>C+e and A>D+e and B>C+e and B>D+e, so a box [x0,x1]x[y0,y1] is blocked by an
+        obstacle o iff x1>o0+e, o2>x0+e, o2>o0+e, x1>x0+e and the same in y; per x0 the x-blocking obstacles are sorted
+        by o1+e and a prefix max of o3 answers "some o has o1+e < y1 and o3 > y0+e" for every y0 at once."""
+    import numpy as np
+    R=405-2.16;out=[]
+    yv=[y0 for y0 in ys if not (y0<margin or y0+bh>h-margin)]
+    if not yv:return out
+    Y0=np.array(yv,dtype=float);Y1=Y0+bh;Y0e=Y0+1e-6
+    DY=np.maximum(np.abs(Y0-py),np.abs(Y1-py))
+    ybox=Y1>Y0e
+    O=np.array(obstacles,dtype=float).reshape(-1,4)
+    O0e=O[:,0]+1e-6;O1e=O[:,1]+1e-6
+    ok=(O[:,2]>O0e)&(O[:,3]>O1e)
+    for x0 in xs:
+        x1=x0+bw
+        if x0<margin or x1>w-margin:continue
+        dx=max(abs(x0-px),abs(x1-px))
+        if dx>R:continue
+        keep=(dx+DY)<=R
+        if not keep.any():continue
+        if x1>x0+1e-6 and len(O):
+            m=ok&(x1>O0e)&(O[:,2]>x0+1e-6)
+            if m.any():
+                order=np.argsort(O1e[m],kind="stable")
+                a=O1e[m][order];pm=np.maximum.accumulate(O[m][order,3])
+                k=np.searchsorted(a,Y1,side="left")
+                blocked=(k>0)&(pm[np.maximum(k-1,0)]>Y0e)&ybox
+                keep&=~blocked
+        for i in np.flatnonzero(keep).tolist():
+            out.append([x0,yv[i],x1,yv[i]+bh])
+    return out
+
+
 def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=(),_use=None):
     if resets:
         try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale,phy=phy)
@@ -491,13 +529,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
         ys={margin,h-bh-margin,max(margin,min(h-bh-margin,py-bh/2))}
         for o in obstacles:
             xs.update((o[0]-bw-2.16,o[2]+2.16));ys.update((o[1]-bh-2.16,o[3]+2.16))
-        for x0 in xs:
-            for y0 in ys:
-                box=[x0,y0,x0+bw,y0+bh]
-                if x0<margin or y0<margin or box[2]>w-margin or box[3]>h-margin:continue
-                if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:continue
-                if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
-                candidates.append(box)
+        candidates += _compact_bank_boxes(xs,ys,bw,bh,w,h,margin,px,py,obstacles)
     if FACE_CROSSING and not any(face_crossing(t,bus,c,width)[0]<0.5 for c in candidates):
         wide=_face_wide_boxes(t,b,w,h,obstacles,margin,px,py,area,depth,length,lo,hi)
         if not wide and FACE_HOME:wide=_face_clamped_boxes(t,b,w,h,obstacles,margin,px,py,area)
