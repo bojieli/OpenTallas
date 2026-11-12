@@ -33,7 +33,9 @@ class Fake:
         elif "run_kit.sh" in s:
             out = "ot-run: RAN on epyc2 (unit oth-1): exit 0\n"
         elif "3_place.odb" in s:
-            out = "/w/gen/T/run/results/asap7/x/base/3_place.odb\nNumber of cells: 1000\n"
+            out = "/w/gen/T/run/results/asap7/x/base/3_place.odb\nNumber of cells: 1000\n" + ("LAYOUT_PNG\n" if "layout_review" in s else "")
+        elif "layout_review" in s:                     # KW-FIX-45 required place render (place_render_probe)
+            out = "LAYOUT_PNG\n"
         elif "geom_check.sh" in s:
             out = "AP_AUTO_GEOM AUTO-GEOM PASS T fill=ok(0.5)\n"
         return SimpleNamespace(returncode=rc, stdout=out, stderr="")

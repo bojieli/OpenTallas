@@ -1,0 +1,39 @@
+ot_hbm_sm_pv_merge RDREG (HBM-CORES-B 2026-11-12, DIE-HBM-100 pv_merge event form F2 + macro-output register)
+
+Why: the routed F2 build (pvm_F2s, M7+M7T PDN, GRT0 0 overflow, DRC 0) failed TT setup -56.40 ps / 473 endpoints on
+u_stack rd_out (clk-to-q 310 ps) -> BUFx6f -> 8-level operand mux -> fadd A1 cut (u_ca); 40 TT slew pins in the dense
+band above the macro. RDREG 1 puts one flop on every rd_out bit; the mux + A1 then start from a register.
+Why not a 2-stage reduce split: an extra adder cut makes ALAT 8 and breaks the 8-entry barrel (ALAT+1 = 8 turns); the
+merge would then need a 9-entry barrel or a stall. RDREG keeps the merge cadence untouched.
+
+Contract (EQ_CYCLE_SHIFTED), RDREG 1 vs RDREG 0, same inputs on the same cycles:
+  ev / sum / tag_d -> pv_v / pv_y / pv_tag      +0 edges (read issued two turns ahead, entry bp+2)
+  pub_start -> pub_v / pub_data / pub_word / pub_out_slot / pub_tag   +1 edge (first scalar 3 edges after request,
+                                                 stream seamless; request rules incl. word14 prefetch unchanged)
+  fold_start -> sum written                      F+3+ALAT (was F+2+ALAT); next ev / publication / fold touching the
+                                                 folded entry one edge later (node_pending one edge longer)
+  fault                                          same cycle, except an adder fault raised by a fold add is +1 edge
+RDREG 0 is the main RTL (equivalence below). RDMUT 1/2/3 are negative controls (need RDREG 1).
+
+Results:
+  lockstep_results.txt  tb_hbm_sm_pv_rdreg, 3 seeds x 300k cycles (Verilator 5.050):
+    RDMUT 0 MODE 0: PASS, 0 mismatches (~44.6k ev, ~9.97k merged nodes, ~4.6k publications / ~73.5k words, ~1.66k folds)
+    RDMUT 1 / 2 / 3 MODE 0: FAIL (83k / 69k / 50k mismatches)  <- negative controls detected
+    MODE 1 (full-range finite FP, adders overflow -> fault onset): RDMUT 0 PASS; fault relation holds
+  publication bench tb_hbm_sm_pv_publish: RDREG 0 and 1 PASS (RDREG 1 first scalar 3 edges, no bubbles); MUT 3 fails both.
+
+Formal (HBM-CORES-B 2026-11-12 09:0x PST):
+  RDREG 0 == main (eq/eq_rdreg0_pub{0,1}.ys; gold = main bf14f7dda7 RTL, gate = 5ee32d7cc6 RTL; yosys equiv_make /
+    equiv_simple / equiv_induct -undef -seq 3, read -mem2reg, identical fadd stubs, no equiv_struct):
+    PUBLISH 0: 7092 / 7092 proven, 0 unproven.                                              PASS
+    PUBLISH 1: 8321 / 8321 proven, 0 unproven.                                              PASS
+    Method: u_stack is cut on both sides (delete u_stack; st_rd a shared primary input; stack_read_addr /
+    stack_write_en / stack_write_addr / stack_write_data exposed as checked outputs).  Sound: the macro is a
+    deterministic function of its input history, and its inputs are proven equal every cycle.  Earlier runs left
+    cells unproven only behind the unpaired macro output (no $equiv for rd_out); a (* blackbox *) form errors
+    (no SAT model for a blackbox cell).
+  RDREG 1 vs RDREG 0 shifted (miter.sv, bmc_m*.ys, sram_beh.v behavioural 1R1W, stub adder, -set-init-zero):
+    m0 (RDMUT 0), 44 steps: TIMEOUT at 14000 s, no result.                                   UNPROVEN
+    m1 / m2 (RDMUT 1 / 2): model found.                                                     negative controls FAIL as required
+    m3 (RDMUT 3), 52 steps: running.  Bounded 24-step reruns (bmc24_m*.ys) and a k-induction on the lock-step
+    relation are the follow-ups; RDREG 1 behaviour rests on the lock-step bench until one of them lands.

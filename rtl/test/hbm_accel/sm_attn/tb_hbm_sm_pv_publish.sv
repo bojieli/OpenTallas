@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb_hbm_sm_pv_publish;
     parameter integer MUT=0;
+    parameter integer RDREG=0;                    // HBM-CORES-B 11-12: RDREG 1 publishes one edge later
     reg clk=0,rst_n=0,ev=0,pub_start=0;
     reg [511:0] sum=0;
     reg [15:0] tag_d=0;
@@ -13,7 +14,7 @@ module tb_hbm_sm_pv_publish;
     wire [3:0] pub_word;
     wire [2:0] pub_out_slot;
     always #0.5 clk=~clk;
-    ot_hbm_sm_pv_merge #(.PUBLISH(1),.MUT(MUT)) u_dut(.*);
+    ot_hbm_sm_pv_merge #(.PUBLISH(1),.MUT(MUT),.RDREG(RDREG)) u_dut(.*);
     function automatic [31:0] word(input integer slot,input integer lane);
         word=32'h40000000+32'((slot*16+lane)*8192);
     endfunction
@@ -30,7 +31,7 @@ module tb_hbm_sm_pv_publish;
                 if(pub_out_slot !== 3'(seen/16) || pub_word !== 4'(seen%16) ||
                    pub_tag[2:0] !== 3'(seen/16) || pub_data !== word(seen/16,seen%16))
                     $fatal(1,"publication data/tag/order mismatch word=%0d",seen);
-                if(seen==0 && cyc-first_request!=2)$fatal(1,"first scalar must arrive2edges after request");
+                if(seen==0 && cyc-first_request!=2+RDREG)$fatal(1,"first scalar must arrive 2+RDREG edges after request");
                 if(seen>0 && cyc!=previous_output+1)$fatal(1,"unexpected publication bubble");
                 previous_output=cyc;seen=seen+1;
             end

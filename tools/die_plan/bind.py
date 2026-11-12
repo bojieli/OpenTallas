@@ -1435,9 +1435,12 @@ class Binder:
             cnt["crossing"] += 1
             return ("x", sp, sci, spn, sb, st, p)
         if k == "clock":
-            self.clk_dom[p].add(s[1])
+            # asbuilt.clock_merge {part: {domain: domain}} (DIE-QC-97 11-09, EDGE-CLOCK-LATE): die clock roots of one
+            # source and frequency (contract: related, phase 0) that this partition takes from one clock family.
+            d = (self.ab.get("clock_merge") or {}).get(p, {}).get(s[1], s[1])
+            self.clk_dom[p].add(d)
             cnt["clock"] += 1
-            return ("clk", s[1])
+            return ("clk", d)
         if k == "reset":
             cnt["reset"] += 1
             self.reset_age[p].append(s[2])
@@ -4482,6 +4485,18 @@ def cmd_elab(a):
     return 0
 
 
+def load_asbuilt_netlist(out):
+    """the elaborated as-built netlist of a bind dir: OUT/asbuilt.json, else OUT/asbuilt.json.gz (a packaged cached
+    elaboration ships gzipped: GitHub rejects files > 100 MB; the KV bind9_asbuilt netlist is 262 MB raw)"""
+    import gzip
+    out = Path(out)
+    for q in (out / "asbuilt.json", out / "asbuilt.json.gz"):
+        if q.is_file():
+            with (gzip.open(q, "rt") if q.suffix == ".gz" else open(q)) as f:
+                return json.load(f)
+    raise BindError(f"{out}: no asbuilt.json or asbuilt.json.gz (run bind.py elab, or stage the packaged cached elaboration)")
+
+
 def cmd_bind(a):
     raw = load_plan(a.plan)
     _write_provenance(a, "bind")
@@ -4489,7 +4504,7 @@ def cmd_bind(a):
     (out / "native_topology.json").unlink(missing_ok=True)
     import kit_topology
     input_topology = kit_topology.native_contract(raw,getattr(a, "asbuilt",None),a.plan)
-    yjs = json.loads((out / "asbuilt.json").read_text())
+    yjs = load_asbuilt_netlist(out)
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.src_key = E.stage_src_key(B.base, out, B.ab.get("stage_hash_roots"))
     B.source_plan = Path(a.plan).resolve()

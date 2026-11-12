@@ -1,0 +1,5 @@
+read_verilog -sv -formal -DSYNTHESIS stub_fadd.v ../../../../asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v ../../../../../rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv miter.sv
+chparam -set RDMUT 2 miter
+hierarchy -top miter
+proc; flatten; opt_clean; memory -nomap; memory_map; opt -fast; async2sync
+sat -seq 44 -prove-asserts -set-init-zero -show-inputs ev,pub_start,fold_start,pub_slot,fold_a,fold_b,tag_d -verify -timeout 14000

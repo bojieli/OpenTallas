@@ -92,6 +92,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+
+def _tq(s):
+    """TCL-PUTS-QUOTE (GEN-CLASS-1 11-12, class of CLAND-PUTS-QUOTE 7fa736b945): a value written inside a generated Tcl
+    puts "..." is text, never code: escape [ ] $ \\ and the quote (an instance / port / net name with a bus index
+    [k] was command substitution)."""
+    return re.sub(r'([\[\]$"\\])', r'\\\1', str(s))
+
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1] if len(HERE.parents) > 1 else HERE  # standalone /work kit copy
 sys.path.insert(0, str(HERE))
@@ -1063,7 +1070,7 @@ def ft_char_tcl(decl, env=None):
         # (QC-SU-F4D: OpenSTA path ENDS have no "arrival" / "data_arrival_time" property -> the F4A rp1 session stopped
         # here and every corner check read NOT RUN.  The last path POINT carries arrival, already in display units (ps),
         # so no so_ps re-conversion; probed on the F4A rp1 6_final: ft_ck_i->ft_ck_o min 21.20 / max 24.12 ps.)
-        L.append(f"puts \"SO_FT_ARC {s_} {d_} $so_ft_v(min) $so_ft_v(max)\"")
+        L.append(f"puts \"SO_FT_ARC {_tq(s_)} {_tq(d_)} $so_ft_v(min) $so_ft_v(max)\"")
     return "\n".join(L) + "\n"
 
 

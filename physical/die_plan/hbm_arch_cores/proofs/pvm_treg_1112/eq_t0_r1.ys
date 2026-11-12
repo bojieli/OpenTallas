@@ -1,0 +1,22 @@
+# HBM-CORES-B 11-12: TREG 0 is unchanged logic - gold = RDREG branch RTL (5ee32d7cc6), gate = TREG branch RTL with TREG 0;
+# both at RDREG 1, PUBLISH 1; identical fadd and SRAM stubs on both sides. No equiv_struct (false merges seen on 11-12).
+read_verilog -sv -DSYNTHESIS -DOT_FP_DATA_NORST /srv/opentallas-scratch2/claude/hbm-cores-b/wt_pvm/physical/die_plan/hbm_arch_cores/proofs/pvm_treg_1112/../pvm_rdreg_1112/stub_fadd.v /srv/opentallas-scratch2/claude/hbm-cores-b/pvm_eq0/sram_stub.v /srv/opentallas-scratch2/claude/hbm-cores-b/pvm_treg_fm/src/rdreg_5ee32d7.sv
+chparam -set PUBLISH 1 -set RDREG 1 ot_hbm_sm_pv_merge
+hierarchy -top ot_hbm_sm_pv_merge
+proc; flatten; opt_clean; opt -purge; memory -nomap; memory_map; opt -purge; async2sync
+rename ot_hbm_sm_pv_merge gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS -DOT_FP_DATA_NORST /srv/opentallas-scratch2/claude/hbm-cores-b/wt_pvm/physical/die_plan/hbm_arch_cores/proofs/pvm_treg_1112/../pvm_rdreg_1112/stub_fadd.v /srv/opentallas-scratch2/claude/hbm-cores-b/pvm_eq0/sram_stub.v /srv/opentallas-scratch2/claude/hbm-cores-b/pvm_treg_fm/src/treg.sv
+chparam -set PUBLISH 1 -set RDREG 1 -set TREG 0 ot_hbm_sm_pv_merge
+hierarchy -top ot_hbm_sm_pv_merge
+proc; flatten; opt_clean; opt -purge; memory -nomap; memory_map; opt -purge; async2sync
+rename ot_hbm_sm_pv_merge gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status
+equiv_status -assert

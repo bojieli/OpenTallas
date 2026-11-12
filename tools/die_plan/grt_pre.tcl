@@ -6,6 +6,8 @@ set gp_dir [file dirname [file normalize [info script]]]
 if {[file exists [file join $gp_dir grt_layers.tcl]]} { source [file join $gp_dir grt_layers.tcl] }
 source [file join $gp_dir vclk_corner.tcl]
 if {[info exists ::env(OT_MAXWIRE_UM)] && $::env(OT_MAXWIRE_UM) ne ""} { source [file join $gp_dir grt_maxwire.tcl] }
+# FT-HOP-M2-WIRE 11-12: repeater pitch on the ft-station hop nets only (ft_hop_maxwire.tcl, OT_FT_MAXWIRE_UM)
+if {[info exists ::env(OT_FT_MAXWIRE_UM)] && $::env(OT_FT_MAXWIRE_UM) ne "" && [file exists [file join $gp_dir ft_hop_maxwire.tcl]]} { source [file join $gp_dir ft_hop_maxwire.tcl] }
 # FLOW-23 11-02 HOLD-GUARD-GRT: progress/time bound for the single-mode GRT hold repair (hold_guard_grt.tcl; OT_HOLD_GUARD=0 off)
 if {[file exists [file join $gp_dir hold_guard_grt.tcl]]} { source [file join $gp_dir hold_guard_grt.tcl] }
 # DIE-HBM-97 11-09 HOPLATCH-HOLD (COORD; qmca_vSR3: 85 hop latches re-hung on their capture tap, setup 0 viol, but FF hold
