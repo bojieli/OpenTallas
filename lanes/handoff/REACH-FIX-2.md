@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 12:57 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 13:15 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -8,16 +8,16 @@ re-select, 6 landed window (+k cycles from a hops TSV). COORD classes: RESET-WAV
 INSERTION-BALANCE all dies (priority; proven on HEAD fix2 + KV vN in DIE-PROTO-2's die STA with die_clock ladder RC).
 
 ## 2 Worktree
-epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-1112, HEAD 7ed95e4f02 (pushed), clean.
-dadcdf9535 APPROVED by COORD (own merge train). 310e03fb32 + 7ed95e4f02 = dieclock_routed.py (prep/pads/realize); READY posted 08:20.
-Commits e603275bfb, 7d874717a0, e37db65694 (balance), dadcdf9535 (depth contract + dieclock_arrivals.py).
-Tests (epyc7, repo root): python3 -m pytest -p no:cacheprovider --basetemp=/srv/opentallas-scratch2/claude/reach-fix-1/pyt3
-tools/die_plan/test_reach_fix.py tools/die_plan/test_street_rule.py tools/die_plan/test_landing_raw_branches.py
-tools/die_plan/test_schema.py tools/die_plan/test_landing_group_rects.py -> 82 pass. READY posted 07:21 (not merged).
-Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, dieclock_arrivals.py) = branch HEAD.
+epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD 54d2a1ec4b (pushed, clean) =
+main d3f85cdf01 + 7 cherry-picked REACH-FIX-2 commits (5e19ca2647..72e2c1295a) + FIXED-CYCLES 54d2a1ec4b. READY posted 13:00
+(ROOT-MERGE-60) and 13:2x (adds 54d2a1ec4b). Old branch claude/reach-fix-1112 (370eac82bd) is superseded by it.
+Tests (epyc7 repo root, --basetemp under reach-fix-2/pyt): test_reach_fix (20) test_dieclock_routed test_die_clock*.py
+test_taps* test_die_sta_related test_street_rule* test_schema -> 188 passed 8 skipped.
+Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py) = branch HEAD.
 
 ## 3 Running jobs
-None.
+- epyc9 bash rt_leg.sh (nohup, started 21:10 UTC): HEAD routed balance check (ruling 3) of the 2.4 ps leg build
+  (copy dp/dc/head_leg_full); docker rf2rtleg-head-TT / -FF (48g, 8 cpu each); log dp/head/rtleg/CHAIN.log. Output dp/head/rtleg.
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -26,9 +26,15 @@ None.
   dump_landed.py, mk_combo_kv.py), dieclock_arrivals.py, dcsta.sh DIE TAG PLAN (die_sta_related on dieclock proof).
 - epyc4 genchk2.sh CODE RTL PLAN SIDE TYPES; CODE for HEAD = .../reach-fix-2/code_head_gen (branch tools + wtM8 links +
   branch physical/common_flow/failfast_rules.py overlay); mkgen.sh rebuilds it and reruns srx3e.
+- epyc9 reach-fix-2/rt_leg.sh + rtleg.py (NDR 8W levels<=10 / 4W per net, pads --route-ndr with 4w+wide10 globals).
+- epyc8/epyc4 reach-fix-2/reprice.py CODE EVENT OUT: FIXED-CYCLES sync on an existing reach_fix output.
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 13:2x FIXED-CYCLES (54d2a1ec4b, posted): sync_fixed_cycles (bus-station delta -> lane fixed_cycles, bind rule check,
+  latency table refresh). S81 79e22ea61177 -> 2d689bfae217 (epyc8 plan_s81_r12ng/plan_rf_fc.json): dn_s_5S_L4 2->3, coll__lk_EN0/EN1 1->2,
+  +23 cycles on 20 lanes, rule broken 0. HEAD sp3n2/srx3e and KV vN: 0 lanes changed.
+- 2026-11-12 13:00 KV PHY tap-site ASK posted to DIE-KV-99 (vN2e event).
 - 2026-11-12 12:57 TAP-CAP PROVEN (posted): SP3n2 kit placed (epyc4 reach-fix-2/kit_sp3n2), nearest busiest tap 958 <= 1000, 68 taps.
 - 2026-11-12 12:40 TAP-CAP (b) (370eac82bd): class 2 on the nearest split + anchor sinks; SP3 placed sinks 1225 -> 964 (plan 3ac13457f663).
 - 0c2348e9e2 regeq caps (the 324 GB SPEF in s4/best/it6 was my diverged scratch run; I removed it).
@@ -51,9 +57,9 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. TAP-CAP done (placed only; HEAD-95 decides the form). Branch head 370eac82bd -> READY post for the merge lane still to do.
-2. DIE-S81-88 12:29 FINDING: an added station must bump lanes[].fixed_cycles (reach_fix class 4).
-3. KV last mile (PHY leaves) before KV regeq; HEAD step 2 routed check waits on COORD.
+1. Collect rt_leg (routed spread TT/FF from pd_<C> sta + clock_report, GRT overflow from combo_<C>.log, pad_demand.json) -> RESULT.
+2. Merge lane: answer any ROOT-MERGE-60 question on claude/reach-fix-2-main-1112.
+3. KV regeq after DIE-KV-99 vN2e tap-site event.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
