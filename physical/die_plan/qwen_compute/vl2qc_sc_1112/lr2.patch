@@ -1,0 +1,66 @@
+diff --git a/tools/die_plan/gen_phys.py b/tools/die_plan/gen_phys.py
+index f6272a9780..7f85ef6d28 100644
+--- a/tools/die_plan/gen_phys.py
++++ b/tools/die_plan/gen_phys.py
+@@ -213,6 +213,23 @@ def _cland_strip_rows(budgets, tn):
+     return int(v) if v and int(v) > 1 else None
+ 
+ 
++def _cland_strip_density(budgets, tn):
++    """LAND-RING-2 11-12 opt-in: OT_CLAND_STRIP_DENS (FIRM ring flops per um2 of the N/S ring_ff face strip) of type tn
++    from budgets.cland_strip_density_types (type, then its unsplit base name) else budgets.cland_strip_density; None
++    (absent or 0) = unchanged kit.  landing_placement.tcl derives each ring's strip row pitch from its own flop density
++    (rows = max(asked rows, ceil(rows-1 density / target)), clamped to the band depth), so no per-type row list is
++    needed; an explicit cland_strip_rows(_types) still sets a floor.  A gen-environment OT_CLAND_STRIP_DENS (kit-wave
++    item_env, pilots) wins over the plan; 0 there opts the type out."""
++    ev = os.environ.get("OT_CLAND_STRIP_DENS")
++    if ev is not None and ev.strip() != "":
++        return float(ev) if float(ev) > 0 else None
++    per = budgets.get("cland_strip_density_types") or {}
++    v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
++    if v is None:
++        v = budgets.get("cland_strip_density")
++    return float(v) if v and float(v) > 0 else None
++
++
+ def _cland_pinslot_dense(budgets, tn):
+     """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
+     y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
+@@ -4719,6 +4736,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
+            *(["export OT_CLAND_PINSLOT_DENSE = 1"] if _cland_pinslot_dense(P.budgets, tn) else []),
+            # DIE-QC-97 11-09 opt-in budgets.cland_strip_rows(_types): thin the N/S ring_ff face strip (conservative kit wins)
+            *([f"export OT_CLAND_STRIP_ROWS = {_cland_strip_rows(P.budgets, tn)}"] if _cland_strip_rows(P.budgets, tn) else []),
++           # LAND-RING-2 11-12 opt-in budgets.cland_strip_density(_types): strip rows from each ring's own flop density
++           *([f"export OT_CLAND_STRIP_DENS = {_cland_strip_density(P.budgets, tn):g}"] if _cland_strip_density(P.budgets, tn) else []),
+            "export LEC_CHECK = 0",
+            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
+            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
+diff --git a/tools/die_plan/landing_placement.tcl b/tools/die_plan/landing_placement.tcl
+index 2f84f61429..0b84e66587 100644
+--- a/tools/die_plan/landing_placement.tcl
++++ b/tools/die_plan/landing_placement.tcl
+@@ -852,6 +852,24 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
+   set rows [expr {max($rows,min($::env(OT_CLAND_STRIP_ROWS),$fit))}]
+   puts "OT_CLAND strip rows $tag: $rows (asked $::env(OT_CLAND_STRIP_ROWS), band fits $fit, $nc columns, $n flops)"
+  }
++ # LAND-RING-2 11-12 (opt-in OT_CLAND_STRIP_DENS=<FIRM ring flops per um2 of strip>, plan budgets.cland_strip_density
++ # (_types); unset = unchanged): the strip row pitch follows the ring's own flop density instead of a per-type row list.
++ # At rows 1 the strip is ceil(1.15 n/C)+1 rows deep at one flop per column pitch = ~2.6 FIRM flops/um2 for every ring
++ # (QC census 11-12: 16 rings at 2.58-2.63), and the ring logic (3.3 cells per flop) is left to GPL beside it; every
++ # rows-1 strip whose kit reached GRT carried the type's overflow within 20 um of its band (sle_ctl__cla4f6f12f
++ # b_tw_data_i 2478 of 2489, sle_hc1/slw_hc1 b_hw_i 16-31k, sle_hc2/slw_hc2 4.5-5.1k, slw_st_a_v2 x_fw_ctl_i 200 of 200),
++ # while the same rings at rows 2-3 routed (sle_ctl__cl67434795 b_tw_data_i rows 3: GRT 0; 2721-flop cws rings rows 2/3:
++ # GRT 0).  rows = max(asked, min(ceil(density at rows 1 / target), what the band depth fits)).
++ if {[info exists ::env(OT_CLAND_STRIP_DENS)] && $::env(OT_CLAND_STRIP_DENS) > 0} {
++  set q [expr {int(ceil(double($h0)/$ff_rh))*$ff_rh}]
++  set d1 [expr {(int(ceil(1.15*$n/$nc))+1)*$q}]
++  set dens [expr {double($n)*$ff_dbu*$ff_dbu/(double($nc)*$rw*$d1)}]
++  set need [expr {int(ceil($dens/double($::env(OT_CLAND_STRIP_DENS))-1e-9))}]
++  set fit [expr {max(1,($byd-$ayd)/$d1)}]
++  set r0 $rows
++  set rows [expr {max($rows,min($need,$fit))}]
++  puts "OT_CLAND strip density $tag: [format %.2f $dens] flops/um2 at rows 1, target $::env(OT_CLAND_STRIP_DENS) -> rows $rows (was $r0, needs $need, band fits $fit, $nc columns, $n flops)"
++ }
+  set rh [expr {$rows*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
+  # cland_put_column reserves ceil(h/0.4*spread) rows; its column-capacity reduce takes it down to this pitch
+  set red [expr {max(0,int(ceil(double($h0)/0.4*$psp/$ff_rh))-$rh/$ff_rh)}]
