@@ -413,7 +413,22 @@ module ot_hgi_coll_issuer_m256v8e (
  assign busy=busy_r | start_q;assign done=done_r;assign fault=fault_r;assign uop_v=uop_v_r;assign uop_pc=uop_pc_r;
  assign tap_iteration=iteration;
  assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
+ // OT_COLL_ISS8E_PAD_MASK (path (c), DIE-HBM-100 11-11): per-field parity pad for the 2-edge issue grid.  The masked uop
+ // bits are emitted one edge later than the rest of their row: rows are 2 edges apart and gap rows are all-zero, so a
+ // padded field never overlaps the next row's field.  The mask is the compiler's (tools/hbm_coll_static parent
+ // hard_v8x_iss2e, emitted in the programme manifest).  tap_iteration / tap_steps are unchanged (tap_steps reads uop
+ // before the pad).  Undefined = no pad (byte-identical).
+`ifdef OT_COLL_ISS8E_PAD_MASK
+`ifdef OT_COLL_ISS8E_MUT_PADMASK
+ localparam [1535:0] PADM=(`OT_COLL_ISS8E_PAD_MASK) ^ 1536'h1e0;      // mutant: pad of capture_slot bits 5..8 flipped
+`else
+ localparam [1535:0] PADM=`OT_COLL_ISS8E_PAD_MASK;
+`endif
+ reg [1535:0] uop_p;
+ always @(posedge clk)begin uop_p<=uop & PADM;uop_d1<=(uop & ~PADM) | uop_p;end
+`else
  always @(posedge clk)uop_d1<=uop;
+`endif
 endmodule
 
 // 512-b programme bank, v8: two ot_sram_1r1w_256x256_m2_r2c2 (bits 255:0 / 511:256), macro read at the fetch

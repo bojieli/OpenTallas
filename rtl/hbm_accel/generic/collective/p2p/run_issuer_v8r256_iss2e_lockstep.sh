@@ -3,7 +3,8 @@
 #   run_issuer_v8r256_iss2e_lockstep.sh OUT MODE [SEED] [PROGS]
 # MODE pos: lock-step bench vs the unchanged ot_hgi_coll_issuer_m256v8 (EQ_CYCLE_SHIFTED: same uop (pc, iteration,
 #   uop_d1) / done event sequence, sticky fault raised at most one event later); exit 0 on ISS2E_LOCKSTEP PASS.
-# ISS2E_DEFS (env): extra defines, e.g. -DOT_COLL_ISS8E_BANK_RQREG (SF1 B); mutant rqreg_addr needs it.
+# ISS2E_DEFS (env): extra defines, e.g. -DOT_COLL_ISS8E_BANK_RQREG (SF1 B; mutant rqreg_addr needs it) or
+#   -DOT_COLL_ISS8E_PAD_MASK=1536'h... (per-field parity pad; mutant padmask needs it: flips the pad of bits 5..8).
 # MODE reload|nofwd|swap|iss2e_rce|iss2e_nogate|iss2e_nofr|rqreg_addr: negative controls (OT_COLL_ISS8E_MUT_*, DUT only); exit 1
 #   printing ISS2E_LOCKSTEP_MUTANT_REJECTED when the compare rejects the mutant, exit 0 + SURVIVED otherwise.
 # MODE split: yosys miter, f_cs + f_fin == f_take for all inputs.  MODE formal[_nogate]: yosys k-induction of the split
@@ -33,7 +34,7 @@ src=("$p/tb_hgi_coll_issuer_v8r256_iss2e_lockstep.sv" "$p/ot_hgi_coll_issuer_m25
 sha256sum "${src[@]}" "$0" "$p/compare_iss2e_lockstep.py" > "$OUT/sources.sha256"
 D=()
 [ -n "${ISS2E_DEFS:-}" ] && D=($ISS2E_DEFS)   # e.g. ISS2E_DEFS=-DOT_COLL_ISS8E_BANK_RQREG
-case $MODE in pos) ;; reload|nofwd|swap|iss2e_rce|iss2e_nogate|iss2e_nofr|rqreg_addr) D+=(-DOT_COLL_ISS8E_MUT_${MODE^^});;
+case $MODE in pos) ;; reload|nofwd|swap|iss2e_rce|iss2e_nogate|iss2e_nofr|rqreg_addr|padmask) D+=(-DOT_COLL_ISS8E_MUT_${MODE^^});;
  *) echo "unknown mode $MODE"; exit 2;; esac
 iverilog -g2012 "${D[@]}" -o "$OUT/sim_$MODE" "${src[@]}"
 vvp -n "$OUT/sim_$MODE" +seed=$SEED +progs=$PROGS +log_ref="$OUT/$MODE.ref.log" +log_dut="$OUT/$MODE.dut.log" > "$OUT/$MODE.log"

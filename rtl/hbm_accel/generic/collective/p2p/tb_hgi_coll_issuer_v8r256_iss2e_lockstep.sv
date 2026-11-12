@@ -27,12 +27,24 @@ module tb;
     for (i = 0; i < 48; i = i + 1) h32 = (h32 ^ x[i*32 +: 32]) * 32'h01000193; end endfunction
   // event loggers: uop issued (uop_d1 is valid one edge after uop_v), done pulse, fault rise
   reg r_uv1 = 0, d_uv1 = 0, r_f1 = 0, d_f1 = 0; reg [7:0] r_pc1, d_pc1; reg [31:0] r_it1, d_it1;
+`ifdef OT_COLL_ISS8E_PAD_MASK
+  localparam [1535:0] PADM_TB = `OT_COLL_ISS8E_PAD_MASK;     // the intended mask (the DUT mutant flips its own copy)
+`endif
+  reg d_uv2 = 0, d_done1 = 0; reg [7:0] d_pc2; reg [31:0] d_it2; reg [1535:0] d_d1q;
+  always @(posedge clk) begin d_uv2 <= d_uv1; d_pc2 <= d_pc1; d_it2 <= d_it1; d_d1q <= d_d1; d_done1 <= d_done; end
   always @(posedge clk) begin
     r_uv1 <= r_uv; r_pc1 <= r_pc; r_it1 <= r_it;
     d_uv1 <= d_uv; d_pc1 <= d_pc; d_it1 <= d_it;
     if (r_uv1) begin $fdisplay(fr, "U %0d %0d %08x", r_pc1, r_it1, h32(r_d1)); nuop_r = nuop_r + 1; end
+`ifdef OT_COLL_ISS8E_PAD_MASK
+    // pad: masked bits arrive one edge after the row; DUT events are logged one edge later with the row's word rebuilt
+    // from the two edges (unmasked bits from the row edge, masked bits from the next edge)
+    if (d_uv2) begin $fdisplay(fd, "U %0d %0d %08x", d_pc2, d_it2, h32((d_d1q & ~PADM_TB) | (d_d1 & PADM_TB))); nuop_d = nuop_d + 1; end
+    if (r_done) $fdisplay(fr, "D"); if (d_done1) $fdisplay(fd, "D");
+`else
     if (d_uv1) begin $fdisplay(fd, "U %0d %0d %08x", d_pc1, d_it1, h32(d_d1)); nuop_d = nuop_d + 1; end
     if (r_done) $fdisplay(fr, "D"); if (d_done) $fdisplay(fd, "D");
+`endif
     r_f1 <= r_fault; d_f1 <= d_fault;
     if (r_fault && !r_f1) $fdisplay(fr, "F"); if (d_fault && !d_f1) $fdisplay(fd, "F");
   end
