@@ -1388,11 +1388,12 @@ def _raster(M):
     return HR.Raster(M.W, M.H, rects)
 
 
-def add_station_regs(M, tnew, idx, reach, add_max):
+def add_station_regs(M, tnew, idx, reach, add_max, raster=None):
     """COORD 11-12 (cycles owner-pre-approved): a station that needs more registers after the move gets them, up to
-    add_max extra per station; returns [(station idx, conn, launch, capture, regs before, regs after)]."""
+    add_max extra per station; returns [(station idx, conn, launch, capture, regs before, regs after)].
+    raster: a hub_repack.Raster of the cores instead of M (REACH-FIX-1 calls it without a TypeModel)."""
     import hub_repack as HR
-    R = _raster(M)
+    R = raster if raster is not None else _raster(M)
     st = tnew.get("internal_stations") or []
     out = []
     for si in idx:
@@ -1475,11 +1476,14 @@ def add_link_stations(M, tnew, qs, meta, reach, add_max):
     return out
 
 
-def add_ft_regs(M, t0, tnew, reach, add_max):
+def add_ft_regs(M, t0, tnew, reach, add_max, raster=None, use_base=True, ends=None):
     """an ft hop stretched past reach by a widened street gets ceil(len / reach) - 1 (<= add_max) new register stages on
     its Manhattan path (bit-site pattern copied from the nearest stage, translated; never under a core). Returns the
-    added stages; hops it cannot fix are left (the type is then not applied)."""
-    R = _raster(M)
+    added stages; hops it cannot fix are left (the type is then not applied).
+    REACH-FIX-1: raster = a hub_repack.Raster instead of M; use_base=False splits EVERY hop > reach (not only the ones a
+    move stretched past their base length); ends = {slot index: (in pin xy, out pin xy)} replaces the face mid-points
+    (the real bit pins of gen_phys.type_pins)."""
+    R = raster if raster is not None else _raster(M)
     W, H = tnew["outline_um"]
     out = []
     for k, (f0, f) in enumerate(zip(t0.get("ft_slots") or [], tnew.get("ft_slots") or [])):
@@ -1490,13 +1494,15 @@ def add_ft_regs(M, t0, tnew, reach, add_max):
         hops0 = ft_hops(dict(t0, ft_slots=[f0]))[0]
         a = RS.face_point(W, H, f.get("in_face", "W"), f.get("in_window_um"))
         b = RS.face_point(W, H, f.get("out_face", "E"), f.get("out_window_um"))
+        if ends and k in ends:
+            a, b = ends[k]
         j = 0
         changed = False
         while j <= len(regs):
             ch = [a] + [tuple(r[:2]) for r in regs] + [b]
             p, q = ch[j], ch[j + 1]
             L = abs(p[0] - q[0]) + abs(p[1] - q[1])
-            base = hops0[j] if j < len(hops0) else 0.0
+            base = hops0[j] if (use_base and j < len(hops0)) else 0.0
             if L <= max(base, reach) + 0.01:
                 j += 1
                 continue
