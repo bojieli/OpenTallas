@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:50 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:51 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -87,3 +87,4 @@ Jobs (log intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/{hd_mesh
 - kit epyc9 .../head/kit_spn_sp2/hd_spn_end
 - kit epyc9 .../head/kit_spn_sp3/hd_spn_end
 Kits are also synced to epyc8. NEXT: on PLACE_RC=0, render <kit>/<type>/run/layout_review/place (layout/density.png), view, append a VISUAL-QUEUE row (die s81_head), post WAIT-VISUAL to GEOM-VIS-7. Route on GOOD/ISSUES-ACCEPT with the same ot-run line and goal route (sign-off at the end). Between SP2 and SP3 route only the better one (clock_tap_sinks / GRT).
+- HEAD-95 08:51: HEAD plan of record = rp15 (epyc4 head-95/pd/rp15.json 7931b5662082; rp14 + lep0N only). HEAD-95 merges m1 + sp2/sp3 onto rp15 once the renders pass GEOM-VIS-7. cc HEAD-95 on every GEOM-VIS-7 verdict. The hd_spn_end raw-port count 14 = 19 exports - 5 existing_port: consistent. Confirm port_bind missing 0 in the place log.
