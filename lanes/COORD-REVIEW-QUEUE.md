@@ -46882,3 +46882,23 @@ FAILED [AUTOPILOT bc43166ca574] 2026-11-12 01:36:49 PST AUTOPILOT -> KIT-WAVE-12
   (B) S81 x feed (1104 b) 2:1: APPROVED TO BUILD IN PARALLEL, adoption gated on price. It's the largest gain (~120 open types, ~70 leaf types with p99 1.5-5.4). TOK-VERIFY-1 re-prices compose_tok_ds with x cadence 2 now. Adopt if the expected loss is <= 4% (bound <= 6%), which is acceptable under the owner's ruling. BUS-GEAR-1 writes the slice-C TX / frame-RX shells against the 4x276 fragment format now. S81-ARCH-RTL-2 owns the frame/landing contract side. DIE-S81-87 prepares the plan event (all x_*/xo_* lanes and their ft slots) as an S81 event after ready12. It does not stop current S81 builds; it lands as the next event.
   (C) HBM L1220 / IDX re-broadcast: NO (-2.8% for 4 types). DIE-LAYOUT-HBM's F1 form stays the q_spu1 fix.
   Common RTL claude/bus-gear-1-1112@85baa29014 (ot_bus_gear tx/rx, bench exact on 6 configs, 4 mutants caught): APPROVED for the merge train.
+
+## READY STREET-RULE-1 11-12 01:49 street-or-abut rule + legalizer, 4 die plans legalized, all fit the reticle; asks COORD approval of die growth (S81 +3.73%, HBM +0.85%, QC +0.30%, KV 0) before the 2-per-die sign-off builds
+
+Branch claude/street-rule-1112 @ 579a122668 (merges clean onto origin/main; includes station-bits merge aa42264eac). Files: tools/die_plan/street_rule.py, test_street_rule.py (13 tests), check.py (`--street-rule warn|error`, opt-in, default off), hub_repack.py (escape() recursion fix). Tests: test_street_rule + test_hub_repack_* + test_route_supply* = 56 pass on epyc7.
+Changes since STATE 1: (a) reticle fit: grown types are reverted greedily (most overflow cut per violation lost) until the die estimate fits 26x33 mm; (b) route_supply guard: a legal form whose RUDY p99 is worse by >0.1 keeps the base type; (c) grow_axes (S81 chosen = x).
+
+Per-die result (outputs on epyc7:/srv/opentallas-scratch2/claude/street-rule-1/run/<run>/{plan.json,event.json}; per-type table ready/types.tsv; before/after renders ready/png/):
+| die | base plan | run | out plan sha | types violating | APPLIED (grown) | hard viol before -> after | die growth | p99 applied types median before -> after, worse |
+| S81 | ready11r db1da17a93ab | s81_gx_fit2 | 30fda0db9dce | 144/156 | 88 (51) | 6207 -> 3536 | +924 x +207 um = +3.73%, fits (headroom 357/125 um) | 4.05 -> 2.55, worse 0 |
+| QC | s25 e4820bd9d97c | qc_r405_fit2 | 823207abb4ce | 40/71 | 26 (3) | 219 -> 90 | +8.6 x +69 um = +0.30% | 1.14 -> 0.94, >1.5 2 -> 0 |
+| KV | vF 3ad01048cacf | kv_r405_fit2 | 2a0b9975227c | 23/45 | 16 (0) | 102 -> 44 | 0 | 1.93 -> 1.45, max 4.30 -> 2.57 |
+| HBM | d55a/t36 (gz e8e6016466fb) | hbm_r405_fit2 | 1c93dfac4017 | 39/67 | 19 (9) | 409 -> 319 | +121 x +78 um = +0.85% | 1.99 -> 1.83 |
+Growth per type: S81 svc_rs/pvso_entry +15.6% (7 types; 3 svc_rs reverted for the reticle), leaf 0-10.6%, col 0-6.3%, slices 0-0.7%, gunit +0.7%; QC sle_sc_v3 +1.41%, cbn_q00 x2 +1.37%; HBM q_b110(_pv1) +9%, q_b101 +6%, q_b011/q_b001 +4.4%, q_b111 +2.2%, rest <=1%. Alternatives on disk: S81 gy_fit2 (+2.47%, 85 applied, 3884 residual), r405_fit (+4.98%), reach-450 runs.
+Not applied (base type kept; next class fixes): stations would need more registers (S81 32, HBM 14), ft hops over reach (QC 12, S81 5), links newly over reach, p99 guard. Residual streets in applied types are where a fixed/pinned station end stopped the push.
+
+Visual check (my renders): S81 leaf t73: 28 -> 0 hard, p99 7.19 -> 2.97 (+10.6%): the E double column of 24 small cores opened into street-separated pairs, mid row unpacked; ft regs stay in streets. HBM q_b110: 11 -> 0, p99 3.96 -> 2.47 (+8.9%): 3x4 core grid opened 43 um columns/rows.
+
+Build picks (2 per die, full sign-off on epyc7/intel1 after approval, place/GRT/route renders viewed en route): S81 ot_s81sl_leaf__t73 + svc_lo_dsdv_svc_rs__t2 (leaf + svc_rs = the two dominant classes); QC cbn_q00__cldbcda913 (+1.37%, p99 1.66 -> 1.09) + slw_st_a_v1__clfc5867a6__pvf82a6c28 (0%, 1.22 -> 0.86); KV kv3_pv_v1n (0%, 4.30 -> 0.89) + kv3_pc_v1__cl23f6a148 (0%, 1.62 -> 0.54); HBM q_b110 (+8.9%, 3.96 -> 2.47) + q_b111 (+2.2%, 6.53 -> 5.75, 3 residual). S81 svc_lo_dsdv_svc_rs__t2: +15.6%, 139 -> 0 hard, 1.91 -> 1.68.
+
+ASK COORD (recommendation: YES to all): 1. approve the die growth above under the owner pre-approval (S81 +3.73% is the only material one; it fits the reticle). 2. I start the 8 builds at once on epyc7/intel1 from these plan shas. 3. Re-layout lanes (VISLAYOUT3-S81-LEAF/-SLICE, VL3-S81-SVCSTN, VISLAYOUT2-S81, DIE-LAYOUT-HBM, VISLAYOUT3-KVHEAD): post the plan sha of each landed hand form; I re-run with those as the base so their forms are kept where legal and only the residual is legalized.
