@@ -1,0 +1,364 @@
+{
+ "event": "DIE-LAYOUT-HBM SCORER 11-11",
+ "base_plan": "/srv/opentallas-scratch3/claude/die-layout-hbm/d51/sc/p_e/die_plan.json",
+ "types": {
+  "q_b001": {
+   "internal_stations_add": [
+    {
+     "conn": "bus:L14_i",
+     "from_um": [
+      1874.88,
+      842.5353
+     ],
+     "to_um": [
+      1564.704,
+      1313.28
+     ],
+     "regs_um": [
+      [
+       1874.88,
+       913.528
+      ],
+      [
+       1874.88,
+       984.521
+      ],
+      [
+       1874.88,
+       1055.514
+      ],
+      [
+       1874.88,
+       1126.506
+      ],
+      [
+       1874.88,
+       1197.499
+      ],
+      [
+       1874.88,
+       1268.492
+      ],
+      [
+       1848.675,
+       1313.28
+      ],
+      [
+       1777.682,
+       1313.28
+      ],
+      [
+       1706.69,
+       1313.28
+      ],
+      [
+       1635.697,
+       1313.28
+      ]
+     ],
+     "bits": 2777,
+     "launch": "face bus L14_i",
+     "capture": "hb_idx_s_SE_scorer_ge_1_gc_0_leaf.d",
+     "note": "DIE-LAYOUT-HBM SCORER 11-11: soft scorer group hb_idx_s_SE_scorer_ge_1_gc_0_leaf (2777 b of L14_i, bound RTL trace); site = face-nearest point of the box of the 8 reached hard cores [596.2,1313.3,1564.7,1821.3] (+2 halo); 10 station(s) = bus depth (unchanged), max hop 71 um; positions only"
+    }
+   ]
+  },
+  "q_b001__physical_v1": {
+   "internal_stations_add": [
+    {
+     "conn": "bus:L14_i",
+     "from_um": [
+      1667.52,
+      712.0873
+     ],
+     "to_um": [
+      1660.608,
+      1300.32
+     ],
+     "regs_um": [
+      [
+       1660.608,
+       759.279
+      ],
+      [
+       1660.608,
+       813.383
+      ],
+      [
+       1660.608,
+       867.487
+      ],
+      [
+       1660.608,
+       921.592
+      ],
+      [
+       1660.608,
+       975.696
+      ],
+      [
+       1660.608,
+       1029.8
+      ],
+      [
+       1660.608,
+       1083.904
+      ],
+      [
+       1660.608,
+       1138.008
+      ],
+      [
+       1660.608,
+       1192.112
+      ],
+      [
+       1660.608,
+       1246.216
+      ]
+     ],
+     "bits": 2777,
+     "launch": "face bus L14_i",
+     "capture": "hb_idx_s_SW_scorer_ge_1_gc_0_leaf.d",
+     "note": "DIE-LAYOUT-HBM SCORER 11-11: soft scorer group hb_idx_s_SW_scorer_ge_1_gc_0_leaf (2777 b of L14_i, bound RTL trace); site = face-nearest point of the box of the 8 reached hard cores [624.7,1300.3,1660.6,1782.4] (+2 halo); 10 station(s) = bus depth (unchanged), max hop 54 um; positions only"
+    }
+   ]
+  },
+  "q_b000": {
+   "internal_stations_add": [
+    {
+     "conn": "bus:L14_o",
+     "from_um": [
+      0.0,
+      3322.2153
+     ],
+     "to_um": [
+      237.6,
+      3248.075
+     ],
+     "regs_um": [
+      [
+       0.0,
+       3291.041
+      ],
+      [
+       0.0,
+       3259.867
+      ],
+      [
+       15.996,
+       3248.075
+      ],
+      [
+       17.222,
+       3248.075
+      ],
+      [
+       123.704,
+       3248.075
+      ],
+      [
+       124.93,
+       3248.075
+      ],
+      [
+       127.732,
+       3248.075
+      ],
+      [
+       128.958,
+       3248.075
+      ],
+      [
+       236.666,
+       3248.075
+      ]
+     ],
+     "bits": 2777,
+     "launch": "face bus L14_o",
+     "capture": "hb_idx_s_SE_scorer.q",
+     "note": "DIE-LAYOUT-HBM SCORER 11-11: soft scorer group hb_idx_s_SE_scorer (2777 b of L14_o, bound RTL trace); site = midpoint of source bus L160m_i face and L14_o face (no hard core reached); 9 station(s) = bus depth (unchanged), max hop 108 um; positions only"
+    }
+   ]
+  },
+  "q_b000__physical_v1": {
+   "internal_stations_add": [
+    {
+     "conn": "bus:L14_o",
+     "from_um": [
+      0.0,
+      3243.6073
+     ],
+     "to_um": [
+      237.6,
+      3208.771
+     ],
+     "regs_um": [
+      [
+       15.607,
+       3243.607
+      ],
+      [
+       16.444,
+       3243.607
+      ],
+      [
+       124.095,
+       3243.607
+      ],
+      [
+       124.931,
+       3243.607
+      ],
+      [
+       127.578,
+       3243.607
+      ],
+      [
+       128.902,
+       3243.607
+      ],
+      [
+       236.065,
+       3243.607
+      ],
+      [
+       237.389,
+       3243.607
+      ],
+      [
+       237.6,
+       3236.015
+      ]
+     ],
+     "bits": 2777,
+     "launch": "face bus L14_o",
+     "capture": "hb_idx_s_SW_scorer.q",
+     "note": "DIE-LAYOUT-HBM SCORER 11-11: soft scorer group hb_idx_s_SW_scorer (2777 b of L14_o, bound RTL trace); site = midpoint of source bus L160_i face and L14_o face (no hard core reached); 9 station(s) = bus depth (unchanged), max hop 108 um; positions only"
+    }
+   ]
+  }
+ },
+ "report": [
+  {
+   "type": "q_b001",
+   "bus": "L14_i",
+   "group": "hb_idx_s_SE_scorer_ge_1_gc_0_leaf",
+   "bits": 2777,
+   "runs": [
+    [
+     0,
+     2776
+    ]
+   ],
+   "site": [
+    1564.704,
+    1313.28
+   ],
+   "centroid": [
+    1564.7,
+    1313.28
+   ],
+   "how": "face-nearest point of the box of the 8 reached hard cores [596.2,1313.3,1564.7,1821.3] (+2 halo)",
+   "depth": 10,
+   "max_hop_um": 71.0
+  },
+  {
+   "type": "q_b001",
+   "bus": "L14_i",
+   "group": "hb_idx_s_SE_scorer_ge_1_gc_1_leaf",
+   "bits": 1,
+   "skipped": "< 16 bits"
+  },
+  {
+   "type": "q_b001",
+   "bus": "L14_i",
+   "group": "hb_idx_s_SE_scorer_ge_1_gc_2_leaf",
+   "bits": 1,
+   "skipped": "< 16 bits"
+  },
+  {
+   "type": "q_b001__physical_v1",
+   "bus": "L14_i",
+   "group": "hb_idx_s_SW_scorer_ge_1_gc_0_leaf",
+   "bits": 2777,
+   "runs": [
+    [
+     0,
+     2776
+    ]
+   ],
+   "site": [
+    1660.608,
+    1300.32
+   ],
+   "centroid": [
+    1660.61,
+    1300.32
+   ],
+   "how": "face-nearest point of the box of the 8 reached hard cores [624.7,1300.3,1660.6,1782.4] (+2 halo)",
+   "depth": 10,
+   "max_hop_um": 54.1
+  },
+  {
+   "type": "q_b001__physical_v1",
+   "bus": "L14_i",
+   "group": "hb_idx_s_SW_scorer_ge_1_gc_1_leaf",
+   "bits": 1,
+   "skipped": "< 16 bits"
+  },
+  {
+   "type": "q_b001__physical_v1",
+   "bus": "L14_i",
+   "group": "hb_idx_s_SW_scorer_ge_1_gc_2_leaf",
+   "bits": 1,
+   "skipped": "< 16 bits"
+  },
+  {
+   "type": "q_b000",
+   "bus": "L14_o",
+   "group": "hb_idx_s_SE_scorer",
+   "bits": 2777,
+   "runs": [
+    [
+     0,
+     2776
+    ]
+   ],
+   "site": [
+    237.6,
+    3248.075
+   ],
+   "centroid": [
+    228.96,
+    3248.08
+   ],
+   "how": "midpoint of source bus L160m_i face and L14_o face (no hard core reached)",
+   "depth": 9,
+   "max_hop_um": 107.7
+  },
+  {
+   "type": "q_b000__physical_v1",
+   "bus": "L14_o",
+   "group": "hb_idx_s_SW_scorer",
+   "bits": 2777,
+   "runs": [
+    [
+     0,
+     2776
+    ]
+   ],
+   "site": [
+    237.6,
+    3208.771
+   ],
+   "centroid": [
+    228.96,
+    3208.77
+   ],
+   "how": "midpoint of source bus L160_i face and L14_o face (no hard core reached)",
+   "depth": 9,
+   "max_hop_um": 107.7
+  }
+ ]
+}
