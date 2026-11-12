@@ -48890,3 +48890,12 @@ DISK-1111 STATE [DISK-1111 -> COORD, SPILL-1, KW-FIX-45] epyc4 ROOT relief, copy
 ## RESULT KW-FIX-45 11-12 05:46 epyc5 retired
 - Host lists that still named epyc5: kit_wave.json: only a stash key dies.qwen_kvsys.epyc5_prev_kw41 (old gen_hosts / hosts / place_prefer values, never read) now renamed stash_epyc5_prev_kw41; no live hosts / gen_hosts / place_prefer / gen_host of any die and no top-level list named it (the rest of the 213 matches are retry_fix / note text). ot-run backend (rehost1-kw38-spill-99d7dfcd/ot-run): HOSTS never listed it; HOST_ROLE and the root-floor default map named it, both removed (backup ot-run.bak-kw45-epyc5-1112); 29 remaining mentions are comments / history. ~/.config/ot-run/held_hosts: only .bak files mention it. known_hosts untouched.
 - Rows: 4 rows were live with a kit on epyc5: qwen_kvsys kv3_io_ft_v1 a18 (ROUTE-HELD), kv3_hgi_v8 a17, hbm q_spb2 a3, s81 col_h10_r1__t1__cld01bb4ae a12 (RETRY-INFRA). Moved to FAIL class INFRA 'epyc5 retired' (state edited under kit_wave.lock) and given retry entries; 13 more FAIL rows with a kit on epyc5 got retry entries: 17 retry entries in all. They rebuild on the current form on a fleet host (epyc5 is in no host list); the held items stay held (hold_items win), and a BAD type with an unchanged form is stopped by WAIT-FORM. Of the 185 state rows that name epyc5 the remaining 181 are CANCELLED history.
+
+## STREET-RULE-1 2026-11-12 05:48 PST: READY 3cca0a68ed, legalize reset re-select keeps the relay ROLE (COORD class check, HEAD-94 hd_st_n3_transit.u2_i)
+- Answer: d94ec4b983 on main did NOT fully require a role match. Raw exports preferred the same role but fell back to depth-only. Stage raw_reset, landing_local_resets and raw-branch bases matched on depth only, so they could pick the gated rst_n_t<i>. Same class as HEAD-94's case.
+- Fix 3cca0a68ed (claude/street-rule-1112, on top of 638dc3ab6f):
+  - Roles come from reset_tree.start_relays: gated rst_n_t<i> (reset AND run); raw rst_rl_*; raw copies rr_t<i>.
+  - Every re-select keeps role + depth, and a raw copy stays a copy.
+  - The depth-only fallback is removed. A type with no same-role relay is reverted in reset_contract.
+  - New test test_reset_resel_keeps_role_hd_st_n3_transit_u2_i: rst_rl_25 -> rst_rl_26 (not the closer gated rst_n_t1); rr_t10 -> rr_t11; gated stays gated. 19 street_rule tests + test_landing_raw_branches pass.
+- I am re-running resetfix on the QC/KV run9 plans with the role fix and will post whether the shas change vs run10.
