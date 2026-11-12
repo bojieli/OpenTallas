@@ -1,0 +1,102 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "ot_coll_fold_slice_vA",
+  "module": "ot_coll_fold_slice",
+  "plan_type": "coll_core",
+  "outline_um": [
+   190.08,
+   211.68
+  ],
+  "ref_tile": "/home/ubuntu/scratch-root/claude/qc-fold-1/kits/_spec/ot_coll_fold_slice",
+  "spec": "/home/ubuntu/scratch-root/claude/qc-fold-1/kits/_spec/ot_coll_fold_slice/spec.json",
+  "spec_sha256": "26019297bada8b7a36d7fb9eddbe5434a504a11911b08a5964e3c05ab14864fa",
+  "pins_file": "cores/coll/ot_coll_fold_slice_pins.json",
+  "pins_sha256": "01b4f5c4c78c0782140fb441b71ec96054dcd142c6fc7a7ecca2bc7763720ca0",
+  "pins": 645,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "f427867690cbc0d641cbaf8688af0ce6e87093cf4b817e5881ef1d095e6bc9d2",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan early core tap 250 TT / 202.5 FF (DIE-QC-75/FOLD-1105: target 250/202.5 ESTIMATE, re-measure from the core's own kit (12.28b))",
+   "ff": "plan early core tap 250 TT / 202.5 FF (DIE-QC-75/FOLD-1105: target 250/202.5 ESTIMATE, re-measure from the core's own kit (12.28b))"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "16b4ea8502",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "6f0b9e8124d2b014adfb5bf855a5127272fda92c84f94062a7010967958b487f",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [
+   {
+    "file": "rtl/rom/ot_coll_rst_leaf.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal). ot_coll_rst_leaf (fold slice u_rs).",
+    "sha256": "066d09c651c4846c71c9b275e67ad7792df1a25ba4cd5bea1aba148b29e2383e"
+   }
+  ],
+  "kit_hash": "e3f0bc62c9b63d25",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "013bf2eab538e4e44c9d6246332c8cf704ac28550f11ae7248c301dbe32635fd",
+  "pins_placed_canon_sha256": "359d909936ddeea1ace1c7feef4683e7deaed3177aa982ed69a8cc9c3e2ae3ae",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/home/ubuntu/scratch-root/claude/qc-fold-1/kits/ot_coll_fold_slice_vA",
+ "src_commit": null,
+ "flow_tag": "flow-20261106-m-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T10:37:48-08:00",
+  "kit": "/home/ubuntu/scratch-root/claude/qc-fold-1/kits/ot_coll_fold_slice_vA",
+  "base": "/home/ubuntu/scratch-root/claude/qc-fold-1/kits/ot_coll_fold_slice_vA/run/results/asap7/kq_ot_coll_fold_slice_vA/base",
+  "signoff": "/srv/opentallas-scratch3/claude/qc-fold-2/resign_vA/signoff/signoff.json",
+  "signoff_sha256": "1b9a9f5bd1854cafc02406011a64fd36d65c47fd220ed91f9d066eb59936f5d3",
+  "signoff_generated": "2026-11-05T20:47:31-08:00",
+  "odb": "/home/ubuntu/scratch-root/claude/qc-fold-1/kits/ot_coll_fold_slice_vA/run/results/asap7/kq_ot_coll_fold_slice_vA/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child ot_coll_fold_slice",
+  "lib_basis": null,
+  "files_sha256": {
+   "ot_coll_fold_slice.lef": "6d84231f62ee3a86d02926636d8fd62380e2cda533854224138eedfe9c2c2cee",
+   "ot_coll_fold_slice_ff.lib": "7c481c21fb1faa9237c82c25aa916632a67e478568dae990315371816520174b",
+   "ot_coll_fold_slice_tt.lib": "37cfc2b802cce1efb5a7b116f94006b1d0e2075227d49a4da202a94f21e5b3bf",
+   "pins.json": "6a86ce647a65e66037f3a856223789db6d4bc5bb4533b65dca0387ce28e64002"
+  }
+ }
+}

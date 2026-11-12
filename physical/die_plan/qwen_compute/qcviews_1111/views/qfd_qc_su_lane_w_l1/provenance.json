@@ -1,0 +1,156 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_qc_su_lane_w_l1_w0e61bf",
+  "module": "qfd_qc_su_lane_w_l1",
+  "plan_type": "slw_su_l0__cl76fb247e",
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "ref_tile": "/srv/opentallas-scratch2/claude/codex-qc-su-trials/l1_template/_spec/qfd_qc_su_lane_w_l1",
+  "spec": "/srv/opentallas-scratch2/claude/codex-qc-su-trials/l1_template/_spec/qfd_qc_su_lane_w_l1/spec.json",
+  "spec_sha256": "99fbcf7a7a074affb7812fcbd61c06fa288c3d2bc690f1af146bef230adac07f",
+  "pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
+  "pins_sha256": "0e61bf6aa3ecd8648903a107e6527f97450acf81b94f154191fc119455f4da55",
+  "pins": 1010,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "36e583a748565c1931595f8ae0c2d034556956dca29d86addfb1a932d90f7a5b",
+  "period_ps": 833.0,
+  "insertion_ps": 392.5,
+  "insertion_ff_ps": 321.0,
+  "insertion_basis": {
+   "tt": "plan early core tap 392.5 TT / 321 FF (parent_budget early tap 142.5 ps TT: MEASURED DIE-QC-58S CTS-only probe, l1 pilot kit qfd_qc_su_lane_w_l1_w0e61bf 3_place, boundary pin-register mean TT 392.45 / FF 320.95 ps (epyc2:/srv/opentallas-scratch2/claude/die-qc-58s/probe_cts.out))",
+   "ff": "plan early core tap 392.5 TT / 321 FF (parent_budget early tap 142.5 ps TT: MEASURED DIE-QC-58S CTS-only probe, l1 pilot kit qfd_qc_su_lane_w_l1_w0e61bf 3_place, boundary pin-register mean TT 392.45 / FF 320.95 ps (epyc2:/srv/opentallas-scratch2/claude/die-qc-58s/probe_cts.out))"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "2969e602396",
+  "sdc_lint_sha256": "9f4cb15408b946d7da4440c0c4430a013a311c295e504fa3deb4709349e9a1cb",
+  "face_guard_sha256": "da1b8ce4bb693991e33dcff378abb65121af213cbc8aa4655e94ed3375e5f67e",
+  "signoff_sha256": "e32413a9ca340f9817edcdf5c6f62b9914037200e87ec060e1c0c46c91061b04",
+  "macros": {
+   "ot_sram_1r1w2c_128x64_m1": [
+    [
+     190.08,
+     99.744,
+     "R0"
+    ],
+    [
+     190.08,
+     138.144,
+     "R0"
+    ]
+   ]
+  },
+  "sram_pincol_halo": [
+   [
+    223.8,
+    93.45,
+    230.874,
+    117.582
+   ],
+   [
+    183.006,
+    93.45,
+    190.08,
+    117.582
+   ],
+   [
+    223.8,
+    131.85,
+    230.874,
+    155.982
+   ],
+   [
+    183.006,
+    131.85,
+    190.08,
+    155.982
+   ]
+  ],
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal). qfd_dv_s5_rst2 (lrly u_rlz).",
+    "sha256": "d02b209b861bc98340f212e14e6510c2acba91164af2c556d95cbbfe148e6d74"
+   },
+   {
+    "file": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal). qfd_dv_s1_rst_land (head face landing).",
+    "sha256": "066d09c651c4846c71c9b275e67ad7792df1a25ba4cd5bea1aba148b29e2383e"
+   }
+  ],
+  "kit_hash": "cf65ace6dd6c29e0",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 392.5,
+   "ff": 321.0,
+   "default": false
+  },
+  "reset_contract": {
+   "edges": 64,
+   "module": "qfd_qc_su_lane_w_l1",
+   "die": "qwen_compute",
+   "contract": "/srv/opentallas-scratch2/claude/wt/codex-qc-su-trials/physical/die_plan/qwen_compute/reset_contract.json",
+   "contract_sha256": "1f98496c8c6ec67753bcb329040942c6fc0ffdd4ec1400ad8add9ceffb2de070",
+   "receipt_sha256": "1e1994ab1acd729ea8651944f6946a8a024b9b4878287e4eb7c47411d1212cad"
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "70341544373205160ed4e4b9c284fdd011c8ed781831b13df8e5916934c36a28",
+  "pins_placed_canon_sha256": "912e94be4a084897ae5abb168205822759d695e691e4e8d012c848409367ecc4",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1",
+ "src_commit": null,
+ "flow_tag": "flow-20261103-s-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T18:41:06+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1",
+  "base": "/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1/run/results/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base",
+  "signoff": "/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1/resign_s_qc/signoff/signoff.json",
+  "signoff_sha256": "03304c118ca1ae0fca0dfd67bfea06b395d95aab8778180243f98870c39c53b3",
+  "signoff_generated": "2026-11-04T08:36:12+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1/run/results/asap7/kq_qfd_qc_su_lane_w_l1_w0e61bf/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child qfd_qc_su_lane_w_l1",
+  "lib_basis": {
+   "qfd_qc_su_lane_w_l1_tt.lib": "base qfd_qc_su_lane_w_l1_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "qfd_qc_su_lane_w_l1_ff.lib": "base qfd_qc_su_lane_w_l1_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "fa2ef976a33dd2da8f141b09ff2056c337ad617f544a1313ba5dd9abd44440ce",
+   "qfd_qc_su_lane_w_l1.lef": "a5e35584e4fe41326b0ba55cb2581e2f774fe11920e71c4c735e783173bb89da",
+   "qfd_qc_su_lane_w_l1_ff.lib": "02d81208a6320df37fdc3b1171cbbf9dc8809ce1cf34371072f3339e6b1321a4",
+   "qfd_qc_su_lane_w_l1_tt.lib": "38aedbdff18c7a57a01d3c1a624faaf246fa08e4d9797a1456f9da6731041b54"
+  }
+ }
+}

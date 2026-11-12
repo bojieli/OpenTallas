@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.resign_qualification.v1",
+ "kind": "resign",
+ "verdict": "SIGNED",
+ "src_commit": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
+ "flow_tag": "flow-20261108-dy-qc",
+ "routed_db": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/routed_inputs/sle_cland_w515_n_300_hcbn1106/run/results/asap7/kq_sle_cland_w515_n_300_hcbn1106/base/6_final.odb",
+ "build_commit": "d319ab16c92dd5ff892bc386ac368d7e5db2c2f2",
+ "lec": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_300/lec/lec.json",
+ "lec_verdict": "EQUIVALENT",
+ "resign_signoff": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/resign_dy/sle_cland_w515_n_300/signoff/signoff.json",
+ "kit": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/routed_inputs/sle_cland_w515_n_300_hcbn1106",
+ "original_signoff": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/routed_inputs/sle_cland_w515_n_300_hcbn1106/signoff/signoff.json",
+ "name": "kq_sle_cland_w515_n_300_hcbn1106",
+ "rule": "COORD ruling (3b) 2026-10-30 02:03 / OWNER 12.20: RE-SIGN on the same routed DB with flow-tag tools, no new checks",
+ "writer": "tools/die_plan/resign.py",
+ "host": "eager-sunfish",
+ "created": "2026-11-08 10:55 UTC",
+ "routed_db_sha256": "2e19de443f80d83ecef14debda3c24a258557380e8d81eb98bc06ecbec927481",
+ "tag_tools": {
+  "dir": "/srv/opentallas-scratch2/claude/codex-qct-providers-0222/repo_dy/tools/die_plan",
+  "sha256": {
+   "signoff.py": "c2d5d8392660671058fda8412a17b0b064ee31ad3252f00c45cef86764b6f5bc",
+   "lec.py": "970197e590deaf522586251ab1c71b3e080465490bb0532be054c8a943bd438d"
+  },
+  "checked": "byte-identical to flow-20261108-dy-qc"
+ },
+ "lane": "CODEX-QC-TYPES-0222",
+ "as_run_note": "Recovered exact existing signed ring; original source and failure records preserved; current-tag routed re-sign"
+}
