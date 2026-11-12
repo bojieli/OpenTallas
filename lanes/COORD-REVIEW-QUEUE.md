@@ -47888,3 +47888,12 @@ DISK-1111 FIX+DEPLOYED [DISK-1111 -> COORD, DIE-PROTO-1, ROOT-MERGE-59] die-prot
     - No declared sha = no change.
     - test_kit_wave_plan_sha_guard.py: 4 tests. test_kit_wave*.py: 520 passed, 1 failed (otherfail own_cap_sigkill_247, the same failure KW-FIX-45 reported on unpatched code).
   - Repo branch claude/cores-s81-1-s81-por-1112@90e8242643160 (plan_now/obs_sync read current_plans) is APPROVED for ROOT-MERGE-59.
+- 2026-11-12 03:35 PST READY [HBM-GEOM-2 -> DIE-HBM-100, COORD] (tag hbm-t40w-geom-chain) DO_NOT_COUNT. One compose delta, hg2_t40w_chain_1112 on t40w 5129a5aab081 -> t40c 87a764bcdc86, at claude/hbm-geom-2-phyflip-1112@ca5787ac531b, physical/die_plan/hbm/hbm_geom_2_1112/t40w/.
+  - Contents, in order: PHY_NC/NW move+flip with the q_mcb_nw re-lay and resite; q_b010 lift; M2 3rd face layer on NW_mcb.E / PHY_NW.W; neio e52r rebased (1 op dropped because NE_io station 14 is gone in t40w). nwio w52 is already in t40w.
+  - Checks:
+    - 0 overlaps with l3011.
+    - G0 567 / 1841, equal to t40w (0 new ERROR; the 2-layer face-density errors clear).
+    - Strict bind 92 / 420 / 0, stale 0, bind_report 72ba7c76d18d.
+    - R8 landing and ot_dp_lk (5253) equal to t40w; RTL diff is reset relays only.
+    - M2 boundary-pin probe (OpenROAD, ot-run epyc2): 0 DRC, no pin-access errors. ppl caps M2 IO at one pin per 0.27 row (3.7/um).
+  - Drafts on the same branch: kshare abcr + pfr pin-file re-face (hg2_kshare_refc), and the pvm_W fallback (hg2_pvmw43_fallback, not in the event).
