@@ -28,7 +28,7 @@ INSET = {'E': (-1, 0), 'W': (1, 0), 'N': (0, -1), 'S': (0, 1)}
 def input_site(pin):
     """Legacy face-placement target of a real input pin; never regs_um[0]."""
     x, y, face = pin
-    dx, dy = INSET[face]
+    dx, dy = INSET.get(face, (0, 0))      # an AREA pin (S.AREA_FACE): the site is the pin itself
     return x + dx, y + dy
 
 
@@ -45,6 +45,9 @@ def normal_slot(P, tn, sn, *, full=None):
     Exact native full-stage packets retain their named-cell coordinates.
     Registered landing inputs retain their separate, legacy post-ring model.
     """
+    sl = next((s for s in P.types[tn].get("ft_slots", []) if s["name"] == sn), {})
+    if "m89" in (sl.get("in_route"), sl.get("out_route")):
+        return False                          # form (d): stations sit in the bay (regs_um), no face S0 constructor
     if full is None:
         from ft_full_stage import load
         full = load(P, tn)

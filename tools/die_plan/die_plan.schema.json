@@ -276,6 +276,53 @@
     "streets": {
      "type": "object"
     },
+    "m89": {
+     "type": "object",
+     "additionalProperties": false,
+     "properties": {
+      "free_frac": {
+       "type": "number",
+       "exclusiveMinimum": 0,
+       "maximum": 1
+      },
+      "max_use": {
+       "type": "number",
+       "exclusiveMinimum": 0,
+       "maximum": 1
+      },
+      "pin_limit": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "gcell_um": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "tap_clear_um": {
+       "type": "number",
+       "minimum": 0
+      },
+      "core_overlap_max": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 1
+      },
+      "keepouts_um": {
+       "type": "array",
+       "items": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 4,
+        "maxItems": 4
+       }
+      },
+      "note": {
+       "type": "string"
+      }
+     }
+    },
     "layer_budget": {
      "type": "object",
      "additionalProperties": false,
@@ -298,7 +345,8 @@
          "clock_spine",
          "pg",
          "ft_reserved",
-         "reset"
+         "reset",
+         "die_top_signal"
         ]
        }
       },
@@ -1253,6 +1301,23 @@
           "lsb_high"
          ]
         },
+        "route": {
+         "enum": [
+          "face",
+          "m89"
+         ]
+        },
+        "bay_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        },
+        "entry_layer": {
+         "type": "string"
+        },
         "hold_hb4": {
          "type": "integer",
          "minimum": 0,
@@ -1683,6 +1748,26 @@
           "lsb_low",
           "lsb_high"
          ]
+        },
+        "in_route": {
+         "enum": [
+          "face",
+          "m89"
+         ]
+        },
+        "out_route": {
+         "enum": [
+          "face",
+          "m89"
+         ]
+        },
+        "bay_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
         },
         "note": {
          "type": "string"
@@ -5569,6 +5654,12 @@
      },
      "epoch": {
       "type": "boolean"
+     },
+     "route": {
+      "enum": [
+       "abut",
+       "m89"
+      ]
      },
      "segments": {
       "type": "array",

@@ -158,6 +158,22 @@ def planned_sinks(P, tn, bit_sites=False):
             s = slots[base]
             if base in full:
                 continue
+            if "m89" in (s.get("in_route"), s.get("out_route")) and s.get("bay_um"):
+                # form (d) (X-TIER-OTC 11-11): bay stations; bit b of each bay station on the bay raster site b
+                # (schema.area_pin_sites); a face in end keeps station 0 at its pin; a face out end (lane-end
+                # station cell) keeps its stations at regs_um
+                import schema as _S
+                k = int(s.get("stations", 1))
+                regs = s.get("regs_um", [])
+                site = _S.area_pin_sites(s["bay_um"], int(s["width"]) + 1)[min(bit, int(s["width"]))]
+                for j in range(k):
+                    if j == 0 and s.get("in_route", "face") == "face":
+                        out.append(_inset(x, y, face, w, h) + ("ft_s0",))
+                    elif s.get("out_route", "face") == "face" and len(regs) >= k:
+                        out.append((float(regs[j][0]), float(regs[j][1]), f"ft_s{j}"))
+                    else:
+                        out.append((site[2], site[3], f"ft_s{j}"))
+                continue
             out.append(_inset(x, y, face, w, h) + ("ft_s0",))
             k = int(s.get("stations", 1))
             o = at.get((base + "_o", bit))

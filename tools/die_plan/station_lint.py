@@ -158,6 +158,31 @@ def lint_type(tn, t):
                             to_um=e.get("to_um"), regs=len(eff), why="; ".join(why)))
     for f in t.get("ft_slots") or []:
         regs = [p for p in (_pt(r) for r in f.get("regs_um") or []) if p]
+        ir, orr, bay = f.get("in_route", "face"), f.get("out_route", "face"), f.get("bay_um")
+        if "m89" in (ir, orr):
+            # M89_OFF_BAY (X-TIER-OTC 11-11, form d): an m89 slot's stations sit in its bay (12.2b) — every station
+            # when both ends are m89, all but the face-site station 0 when the in end is a face, and the first
+            # station (next to the m89 entry field, one gcell slack) when the out end is a face
+            if not bay or not regs:
+                continue
+            g = 10.8
+            if ir == "m89" and orr == "m89":
+                chk = list(enumerate(regs))
+            elif ir == "face":
+                chk = list(enumerate(regs))[1:]
+            else:
+                chk = [(0, regs[0])]
+            slack = 0.0 if orr == "m89" else g
+            off = [(k, p) for k, p in chk if not (bay[0] - slack - 1e-6 <= p[0] <= bay[2] + slack + 1e-6 and
+                                                  bay[1] - slack - 1e-6 <= p[1] <= bay[3] + slack + 1e-6)]
+            if off:
+                k, p = off[0]
+                out.append(dict(type=tn, kind="M89_OFF_BAY", chain="ft_slot", name=str(f.get("name")), index=k,
+                                launch=f"{ir} {f.get('in_face')}", capture=f"{orr} {f.get('out_face')}",
+                                from_um=list(p), to_um=list(bay), regs=len(regs),
+                                why=f"{len(off)} station(s) outside bay_um {bay} (first: station {k} at "
+                                    f"({p[0]:.1f}, {p[1]:.1f}))"))
+            continue
         d = _face_dist(f.get("in_face"), W, H)
         if len(regs) < 2 or d is None:
             continue

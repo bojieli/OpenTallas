@@ -419,6 +419,12 @@ def type_pins(P, tn):
         for side in ("src", "dst"):
             if pr[side]["part"] != inst:
                 continue
+            if S.is_m89(pr):
+                # AREA PINS (X-TIER-OTC 11-11): entry pins inside the bus's bay, type frame, face tag S.AREA_FACE
+                b = P.buses(inst).get(pr[side]["bus"]) or {}
+                for bit, ln, x, y in S.area_pin_sites(b["bay_um"], S.port_pins_count(pr), b.get("entry_layer", "M7")):
+                    out.append((pr[side]["bus"], bit, ln, x, y, S.AREA_FACE))
+                continue
             df = pr["face"] if (side == "src" or pr["src"]["part"] == DIE_PART) else S.OPP[pr["face"]]
             tf = P.type_face(inst, df)
             w, h = P.ptype(inst)["outline_um"]

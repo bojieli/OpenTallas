@@ -72,9 +72,12 @@ def check_cut_lines(P, R, geo, max_msgs=20):
     # ruling 9.3: the die layers carry no signals, so they add no face-line capacity (cut_avail ignored)
     # ft / die route segments
     sx0, sy0, sx1, sy1, sw = [], [], [], [], []
-    for lid, (pts, _, _) in geo.items():
+    for lid, (pts, _, xs_) in geo.items():
         w = P.ports[P.lanes[lid]["ports"][0]]["width"]
-        for p, q in zip(pts, pts[1:]):
+        top = {i for x in xs_ or [] if x.get("m89") and x.get("segs") for i in range(*x["segs"])}
+        for i, (p, q) in enumerate(zip(pts, pts[1:])):
+            if i in top:
+                continue        # die-top (route m89) hop on M8/M9: check.check_m89
             sx0.append(p[0]); sy0.append(p[1]); sx1.append(q[0]); sy1.append(q[1]); sw.append(w)
     sx0, sy0, sx1, sy1, sw = map(np.asarray, (sx0, sy0, sx1, sy1, sw))
     if sw.size == 0:
@@ -82,7 +85,7 @@ def check_cut_lines(P, R, geo, max_msgs=20):
     # abutted port bits per face line
     on_line = {"vertical": defaultdict(int), "horizontal": defaultdict(int)}
     for pid, pr in P.ports.items():
-        if DIE_PART in (pr["src"]["part"], pr["dst"]["part"]) or P.channel_of(pid):
+        if DIE_PART in (pr["src"]["part"], pr["dst"]["part"]) or P.channel_of(pid) or S.is_m89(pr):
             continue
         x0, y0, x1, y1 = P.rect(pr["src"]["part"])
         f = pr["face"]

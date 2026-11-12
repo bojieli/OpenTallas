@@ -252,10 +252,27 @@ SCHEMA = {
                     "properties": {"name": _layer, "dir": {"enum": ["H", "V"]}, "pitch_um": _pos,
                                    "offset_um": _nonneg}}},
                 "streets": {"type": "object"},   # 12.10c street rule config (streets.config: reach/width/raster/clock/hold/ft/fill, mode, enforce, note)
+                # X-TIER-OTC 11-11 (die-agnostic): budget of the declared die-top nets (ports route "m89") on the
+                # leftover M8 (H) / M9 (V).  free_frac = share of M8/M9 tracks left after PG + clock + reset (default
+                # from die.pg.grid); max_use = corridor track use (12.7b, default 0.6); pin_limit = M7 entry pins per
+                # gcell (default master_plan.entry_pin_limit form: floor(0.6 x 0.5 x min(free M7, M8, M9) tracks));
+                # keepouts_um = die rects no m89 bay / route may use (HBM: bump landing pads, PHY escape corridors);
+                # tap_clear_um = bay clearance from clock taps and the reset in-site (12.7a on-ramps beside a bay)
+                "m89": {"type": "object", "additionalProperties": False, "properties": {
+                    "free_frac": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+                    "max_use": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+                    "pin_limit": {"type": "integer", "minimum": 1},
+                    "gcell_um": _pos, "tap_clear_um": _nonneg, "core_overlap_max": {"type": "number", "minimum": 0,
+                                                                                    "maximum": 1},
+                    "keepouts_um": {"type": "array", "items": _rect},
+                    "note": {"type": "string"}}},
                 "layer_budget": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_signal_max": _layer,
                     "die_layers": {"type": "array", "items": _layer},
-                    "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset"]}},
+                    # die_top_signal (METHODOLOGY 12.1c, X-TIER-OTC 11-11): declared die-top nets (ports route "m89")
+                    # may use the M8/M9 left after PG / clock / reset; every other signal stays <= M7 (G0 m89_signals)
+                    "die_use": {"type": "array", "items": {"enum": ["clock_spine", "pg", "ft_reserved", "reset",
+                                                                    "die_top_signal"]}},
                     "cut_avail": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                             "maximum": 1}},
                     # layers a lane hop routes on (reach.py), <= M7 only (M8/M9 = G0 ERROR m89_signals)
@@ -450,6 +467,13 @@ SCHEMA = {
                                        # of the type, in any orient, derives its die window from it)
                                        "face": {"enum": list(FACES)}, "window_um": _win, "layers": _lays,
                                        "order": _order,
+                                       # AREA PINS (X-TIER-OTC 11-11, COORD; S81 first, then QC ctl/su_c, HBM):
+                                       # route "m89" = a non-face entry through the type's AREA: the die-top net
+                                       # comes down M8/M9 to entry pins on entry_layer (default M7) inside bay_um
+                                       # (type frame); its port is route "m89" (no face / window / layers).  Any
+                                       # plain bus may be an area-pin bus (an ft slot end uses in_route/out_route)
+                                       "route": {"enum": ["face", "m89"]}, "bay_um": _rect,
+                                       "entry_layer": {"type": "string"},
                                        # DIE-QC-97 HOLDFORM-1 11-10 (opt-in, in buses only; absent / 0 = no change):
                                        # N kept HB4xp67 delay cells per bit (data + epoch) in front of the in-boundary
                                        # flop (gen_rtl.ot_dp_hd, instance u_hdly_<bus>, dont_touch in the kit), the
@@ -548,6 +572,12 @@ SCHEMA = {
                                        "layers": _lays, "order": _order,
                                        "in_layers": _lays, "out_layers": _lays,
                                        "in_order": _order, "out_order": _order,
+                                       # X-TIER-OTC 11-11 (form d, METHODOLOGY 12.1c/e, 12.2b, 12.7a): in_route /
+                                       # out_route "m89" = that end is an M7 entry-pin field inside bay_um (type
+                                       # frame) carrying a die-top M8/M9 net (port route "m89"); the slot's
+                                       # stations sit in the bay (no in-partition lane wire).  Default "face".
+                                       "in_route": {"enum": ["face", "m89"]}, "out_route": {"enum": ["face", "m89"]},
+                                       "bay_um": _rect,
                                        "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
@@ -935,6 +965,10 @@ SCHEMA = {
                            "layers": {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3},
                            "window_um": {"type": "array", "items": _num, "minItems": 2, "maxItems": 2},
                            "order": {"enum": ["lsb_low", "lsb_high"]}, "epoch": {"type": "boolean"},
+                           # X-TIER-OTC 11-11: "m89" = a declared die-top net on leftover M8/M9 between two m89 bus
+                           # ends (no face / window / layers; may join two buses of ONE partition: bay -> bay);
+                           # default "abut" (face pins on a shared edge, or a planned die channel)
+                           "route": {"enum": ["abut", "m89"]},
                            # KV-PLAN-DELTA-9 (COORD 10-27 20:04 ruling (ii)): a MULTI-WINDOW hop.  One port (one
                            # bus, one lane hop, unchanged latency) whose pins are split over several windows on the
                            # SAME face, in pin order: segment k carries the next `pins` pin indices (bit 0 first,
@@ -1949,9 +1983,11 @@ class Plan:
         out = {b["name"]: dict(b) for b in t.get("buses", [])}
         for s in t.get("ft_slots", []):
             out[s["name"] + "_i"] = dict(name=s["name"] + "_i", dir="in", width=s["width"], kind="data",
-                                         slot=s["name"], face=s["in_face"])
+                                         slot=s["name"], face=s["in_face"], route=s.get("in_route", "face"),
+                                         bay_um=s.get("bay_um"))
             out[s["name"] + "_o"] = dict(name=s["name"] + "_o", dir="out", width=s["width"], kind="data",
-                                         slot=s["name"], face=s["out_face"])
+                                         slot=s["name"], face=s["out_face"], route=s.get("out_route", "face"),
+                                         bay_um=s.get("bay_um"))
         return out
 
     def slot(self, part, name):
@@ -1966,6 +2002,8 @@ class Plan:
         pins computed in that type's frame and transformed to the die: the pin table is a property of the type, so
         every instance (any orient, any lattice origin) carries the identical hardened pins."""
         pr = self.ports[pid]
+        if is_m89(pr):
+            return []           # die-top net: M7 entry-pin fields inside the bays, no face pins (m89_bay_point)
         side = pr.get("_geom_from")
         if not side:
             return pin_positions(pr, self.layers)
@@ -1983,12 +2021,31 @@ class Plan:
         return sorted((b, ln, round(base + (ext - c if flip else c), 6)) for b, ln, c in pin_positions(tp, self.layers))
 
     def port_point(self, pid):
-        """centre of the port window on its face, die frame."""
+        """centre of the port window on its face, die frame.  An m89 port: the centre of its SOURCE bay (the hop
+        to the destination bay is the lane's next segment, so lane reach / hop checks see the real M8/M9 hop)."""
         pr = self.ports[pid]
+        if is_m89(pr):
+            side = "src" if pr["src"]["part"] != DIE_PART else "dst"
+            return self.m89_bay_point(pr[side]["part"], pr[side]["bus"])
         x0, y0, x1, y1 = self.rect(self.face_part(pid))
         f = pr["face"]
         c = (pr["window_um"][0] + pr["window_um"][1]) / 2.0
         return {"E": (x1, c), "W": (x0, c), "N": (c, y1), "S": (c, y0)}[f]
+
+    def m89_bay(self, part, bus):
+        """die-frame bay rect of an m89 bus end of `part`, or None."""
+        b = self.buses(part).get(bus) or {}
+        r = b.get("bay_um")
+        if not r:
+            return None
+        (a, c), (e, f) = self.to_die(part, (r[0], r[1])), self.to_die(part, (r[2], r[3]))
+        return (min(a, e), min(c, f), max(a, e), max(c, f))
+
+    def m89_bay_point(self, part, bus):
+        r = self.m89_bay(part, bus)
+        if r is None:
+            raise KeyError(f"{part}.{bus}: m89 end without bay_um")
+        return ((r[0] + r[2]) / 2.0, (r[1] + r[3]) / 2.0)
 
     def face_part(self, pid):
         """the partition whose face `face` names: src, or dst when src is the die boundary."""
@@ -2438,12 +2495,36 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=N
                      f"clearance {clear} um, {len(boxes)} keepouts")
 
 
+def is_m89(port):
+    """X-TIER-OTC 11-11: a declared die-top net on M8/M9 (ports[].route == "m89")."""
+    return (port or {}).get("route") == "m89"
+
+
 def has_epoch(port):
     """a lane bundle carries one in-band reset epoch bit (bit index `width`, the MSB of the generated port) unless it is
     a clock/reset port, a die-IO port, or `epoch` is set false."""
     if "epoch" in port:
         return bool(port["epoch"])
     return port.get("kind", "data") in ("data", "ctl") and DIE_PART not in (port["src"]["part"], port["dst"]["part"])
+
+
+AREA_FACE = "A"     # face tag of an area pin (gen_phys.type_pins): not a type edge; consumers that need an edge skip it
+
+
+def area_pin_sites(bay, n, layer="M7", pitch=None):
+    """X-TIER-OTC 11-11 AREA PINS: n entry pins on `layer` inside bay (type frame [x0, y0, x1, y1]), row-major raster
+    with equal spacing (bit 0 at the lower-left), at most one pin per pitch.  [(bit, layer, x, y)].  The kit snaps each
+    to the nearest legal M7 track off the PG straps; the die route drops each M8/M9 bit onto its pin with one via
+    stack (12.7a)."""
+    x0, y0, x1, y1 = (float(v) for v in bay)
+    w, h = max(x1 - x0, 1e-6), max(y1 - y0, 1e-6)
+    s = (w * h / max(n, 1)) ** 0.5
+    if pitch:
+        s = max(s, float(pitch))
+    nx = max(1, int(w // s))
+    ny = -(-n // nx)
+    sx, sy = w / nx, h / max(ny, 1)
+    return [(b, layer, round(x0 + sx * (b % nx + 0.5), 4), round(y0 + sy * (b // nx + 0.5), 4)) for b in range(n)]
 
 
 def port_pins_count(port):
@@ -2663,13 +2744,33 @@ def validate(raw):
         dup = {n for n in names if names.count(n) > 1}
         if dup:
             errs.append(f"type {tn}: bus names defined twice: {sorted(dup)}")
+        for b in t.get("buses", []):
+            if b.get("route") == "m89":     # area pins
+                r = b.get("bay_um")
+                if not r:
+                    errs.append(f"type {tn} bus {b['name']}: area pins (route m89) need bay_um")
+                elif not (0 <= r[0] < r[2] <= t["outline_um"][0] + 1e-6 and
+                          0 <= r[1] < r[3] <= t["outline_um"][1] + 1e-6):
+                    errs.append(f"type {tn} bus {b['name']}: area-pin bay_um {r} outside the outline")
+                if any(k in b for k in ("face", "window_um", "layers")):
+                    errs.append(f"type {tn} bus {b['name']}: area pins carry no face / window_um / layers")
+                el = b.get("entry_layer", "M7")
+                if el in P.layers and el in P.layer_budget.get("die_layers", []):
+                    errs.append(f"type {tn} bus {b['name']}: entry_layer {el} is a die layer (entry pins sit "
+                                "<= partition_signal_max)")
         for s in t.get("ft_slots", []):
             from ft_bit_sites import validate_slot
             try:
                 validate_slot(s)
             except ValueError as exc:
                 errs.append(f"type {tn} slot {s['name']}: {exc}")
-            if s["in_face"] == s["out_face"]:
+            if s.get("in_route") == "m89" or s.get("out_route") == "m89":
+                if not s.get("bay_um"):
+                    errs.append(f"type {tn} slot {s['name']}: an m89 end needs bay_um")
+                elif not (0 <= s["bay_um"][0] < s["bay_um"][2] <= t["outline_um"][0] + 1e-6 and
+                          0 <= s["bay_um"][1] < s["bay_um"][3] <= t["outline_um"][1] + 1e-6):
+                    errs.append(f"type {tn} slot {s['name']}: bay_um {s['bay_um']} outside the outline")
+            elif s["in_face"] == s["out_face"]:
                 if not s.get("turnaround", False):
                     errs.append(f"type {tn} slot {s['name']}: in_face == out_face")
                 else:
@@ -2733,6 +2834,25 @@ def validate(raw):
                 errs.append(f"port {pid}: width {pr['width']} != {side} bus '{e['bus']}' width {b['width']}")
         if pr["src"]["part"] == DIE_PART and pr["dst"]["part"] == DIE_PART:
             errs.append(f"port {pid}: both ends on {DIE_PART}")
+        if is_m89(pr):
+            for side in ("src", "dst"):
+                e = pr[side]
+                if e["part"] == DIE_PART:
+                    errs.append(f"port {pid}: m89 die-top net with a {DIE_PART} end (die IO stays on its window)")
+                    continue
+                b = P.buses(e["part"]).get(e["bus"]) or {}
+                if b.get("route") != "m89" or not b.get("bay_um"):
+                    errs.append(f"port {pid}: route m89 but {side} bus {e['part']}.{e['bus']} is not an m89 end "
+                                "with bay_um (slot in_route/out_route m89, or bus route m89)")
+            if any(k in pr for k in ("face", "window_um", "layers", "segments")):
+                errs.append(f"port {pid}: route m89 carries no face/window_um/layers/segments")
+            continue
+        for side in ("src", "dst"):
+            e = pr[side]
+            b = P.buses(e["part"]).get(e["bus"]) if e["part"] != DIE_PART else None
+            if b and b.get("route") == "m89":
+                errs.append(f"port {pid}: {side} bus {e['part']}.{e['bus']} is an m89 end but the port is not "
+                            "route m89")
         if pr["src"]["part"] == pr["dst"]["part"]:
             errs.append(f"port {pid}: src and dst are the same partition")
         rp = P.ports[pid]

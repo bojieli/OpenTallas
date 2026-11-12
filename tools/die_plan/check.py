@@ -449,6 +449,8 @@ def check_abutment(P, R):
     type_tables = defaultdict(dict)    # type -> {inst: {(bus, bit): (layer, tface, coord)}}
     smax = lnum(P.layer_budget["partition_signal_max"])
     for pid, pr in P.ports.items():
+        if S.is_m89(pr):
+            continue            # die-top net (route m89): no face pins; judged by check_m89
         f = pr["face"]
         # per-face layer sets (COORD 10-23): a type may list face_layers[type face]; then every pin layer on that
         # face must be in the set, and a layer above partition_signal_max is allowed only when EVERY partition end
@@ -617,6 +619,8 @@ def check_faces(P, R, face_pins):
             R.err("faces", f"{part}.{df}: {mx} pins in the {win:g}-um window at {at:.2f} "
                   f"({mx / win:.2f}/um > {per:g})", part=part)
     for pid, pr in P.ports.items():
+        if S.is_m89(pr):
+            continue
         if len(pr["layers"]) > B["face_pin_layers"]:
             ends = [(pr[k]["part"], pr["face"] if k == "src" else OPP[pr["face"]]) for k in ("src", "dst")
                     if pr[k]["part"] != DIE_PART]
@@ -686,7 +690,10 @@ def lane_geometry(P, lid):
         k = int(s.get("stations", 1))
         from ft_full_stage import load, centre
         full = load(P, P.parts[part]["type"])
-        if slot in full:
+        m89 = S.is_m89(P.ports.get(a))
+        if (s.get("in_route") == "m89" or s.get("out_route") == "m89") and s.get("regs_um"):
+            st = [P.to_die(part, tuple(r)) for r in s["regs_um"]]      # form (d): stations in the bay
+        elif slot in full:
             st = [P.to_die(part, centre(full[slot][j,0])) for j in range(k)]
         elif s.get("regs_um"):
             st = [P.to_die(part, tuple(r)) for r in s["regs_um"]]
@@ -698,7 +705,9 @@ def lane_geometry(P, lid):
         else:
             st = [point_at(seg, L * j / k) for j in range(k)]
         regs.extend(st)
-        xs.append(dict(part=part, slot=slot, len_um=round(L, 1), stations=k))
+        i0 = len(pts) - 1
+        xs.append(dict(part=part, slot=slot, len_um=round(L, 1), stations=k, m89=m89,
+                       segs=(i0, i0 + len(seg) - 1)))
         pts.extend(seg[1:])
     regs.append(P.port_point(ln["ports"][-1]))
     return pts, regs, xs
@@ -997,6 +1006,160 @@ def cut_child_ports(P):
     return out
 
 
+def m89_segment_ids(xs):
+    """segment indices of a lane polyline that are die-top (route m89) hops (lane_geometry xs[].segs)."""
+    out = set()
+    for x in xs or []:
+        if x.get("m89") and x.get("segs"):
+            out.update(range(*x["segs"]))
+    return out
+
+
+def check_m89(P, R, geo, max_msgs=40):
+    """X-TIER-OTC 11-11 (COORD ruling: form d / area pins, die-agnostic): declared die-top nets (ports route m89).
+    reach: every m89 hop (source bay -> destination bay, Manhattan) <= the 405-um registered-hop rule (12.1e);
+    pins/cell: M7 entry pins of each bay <= die.m89.pin_limit per gcell; bay placement: inside the outline, hard-core
+    overlap <= core_overlap_max, >= tap_clear_um from clock taps / landing collector root + relays, outside
+    die.m89.keepouts_um (die frame); M8/M9 use: bits crossing each cut line inside any reach-long window <= max_use x
+    free tracks (free_frac of the die-layer tracks in the wire direction); identical pins: every instance of a type
+    with m89 ends connects the same ends."""
+    cfg = dict(P.die.get("m89") or {})
+    used = [pid for pid, pr in P.ports.items() if S.is_m89(pr)]
+    if not used:
+        return dict(ports=0)
+    lb = P.layer_budget
+    if "die_top_signal" not in lb.get("die_use", []):
+        R.err("m89", "route m89 ports but layer_budget.die_use does not list die_top_signal")
+    reach = min(station_max(P), S.SIGNAL_REACH_UM)
+    lim = int(cfg.get("pin_limit", 34))
+    G = float(cfg.get("gcell_um", 10.8))
+    clear = float(cfg.get("tap_clear_um", 21.6))
+    ovmax = float(cfg.get("core_overlap_max", 0.15))
+    free = float(cfg.get("free_frac", 0.8))
+    umax = float(cfg.get("max_use", 0.6))
+    kos = [tuple(r) for r in cfg.get("keepouts_um", [])]
+    n = [0]
+
+    def err(msg, **k):
+        n[0] += 1
+        if n[0] <= max_msgs:
+            R.err("m89", msg, **k)
+    worst = dict(hop=0.0, pins_per_gcell=0.0, use=0.0)
+    for pid in used:
+        pr = P.ports[pid]
+        a = P.m89_bay_point(pr["src"]["part"], pr["src"]["bus"])
+        b = P.m89_bay_point(pr["dst"]["part"], pr["dst"]["bus"])
+        h = abs(a[0] - b[0]) + abs(a[1] - b[1])
+        worst["hop"] = max(worst["hop"], h)
+        if h > reach + EPS:
+            err(f"port {pid}: die-top hop {h:.0f} um bay->bay > {reach:g} (12.1e)", port=pid)
+    # per type: bay pins / placement (type frame, once per type)
+    for tn, t in P.types.items():
+        bays = defaultdict(int)
+        for b in P._type_buses(tn).values():
+            if b.get("route") == "m89" and b.get("bay_um"):
+                bays[tuple(b["bay_um"])] += int(b["width"])
+        if not bays:
+            continue
+        ck = t.get("clock") or {}
+        pts = ([tuple(ck["tap_um"])] if ck.get("tap_um") else []) + \
+            [tuple(x["xy"]) for x in ck.get("taps", []) if x.get("xy")]
+        ct = (ck.get("landing_contract") or {}).get("collector_tree") or {}
+        pts += [tuple(ct["root"])] if ct.get("root") else []
+        rel = [tuple(r["xy"]) for r in ct.get("relays", []) if r.get("xy")]
+        mb = S.placed_macro_boxes(t)
+        boxes = [tuple(bx[:4]) for bx in (mb.values() if isinstance(mb, dict) else mb)]
+        for r, pins in bays.items():
+            area = (r[2] - r[0]) * (r[3] - r[1])
+            gc = max(area / (G * G), 1e-9)
+            d = pins / gc
+            worst["pins_per_gcell"] = max(worst["pins_per_gcell"], d)
+            if d > lim + EPS:
+                err(f"type {tn}: bay {list(r)} {pins} entry pins on {gc:.1f} gcells = {d:.1f}/gcell > {lim}",
+                    type=tn)
+            ov = 0.0
+            for bx in boxes:
+                ox = max(0.0, min(r[2], bx[2]) - max(r[0], bx[0])) * max(0.0, min(r[3], bx[3]) - max(r[1], bx[1]))
+                ov += ox
+            if ov / area > ovmax + EPS:
+                err(f"type {tn}: bay {list(r)} {ov / area:.0%} on hard cores > {ovmax:.0%}", type=tn)
+            for (x, y) in pts:
+                if r[0] - clear < x < r[2] + clear and r[1] - clear < y < r[3] + clear:
+                    err(f"type {tn}: bay {list(r)} within {clear:g} um of clock tap / landing collector root "
+                        f"({x:g}, {y:g})", type=tn)
+                    break
+            # landing collector relays are single flops re-sited by reset_tree from the tap geometry: reported
+            near = [q for q in rel if r[0] - clear < q[0] < r[2] + clear and r[1] - clear < q[1] < r[3] + clear]
+            if near:
+                worst["relays_near_bays"] = worst.get("relays_near_bays", 0) + len(near)
+                R.warn("m89", f"type {tn}: bay {list(r)} has {len(near)} landing collector relay(s) within "
+                       f"{clear:g} um (re-site with reset_tree)", type=tn)
+    # die keep-outs + identical pins over replicas
+    ends = defaultdict(set)
+    for pid in used:
+        pr = P.ports[pid]
+        for side in ("src", "dst"):
+            e = pr[side]
+            ends[e["part"]].add(e["bus"])
+            r = P.m89_bay(e["part"], e["bus"])
+            for k in kos:
+                if r and r[0] < k[2] and k[0] < r[2] and r[1] < k[3] and k[1] < r[3]:
+                    err(f"port {pid}: bay of {e['part']}.{e['bus']} in die keep-out {list(k)}", port=pid)
+    by_type = defaultdict(dict)
+    for part, p in P.parts.items():
+        tn = p["type"]
+        decl = {b for b, v in P._type_buses(tn).items() if v.get("route") == "m89"}
+        if decl:
+            by_type[tn][part] = frozenset(ends.get(part, set()) & decl)
+    for tn, m in by_type.items():
+        if len(set(m.values())) > 1:
+            err(f"type {tn}: replicas connect different m89 ends ({len(set(m.values()))} variants); the bays are "
+                "type geometry, so every instance must use the same set", type=tn)
+    # M8/M9 use per cut line (die-top segments only), windows one reach long
+    segs = []
+    for lid, (pts_, _, xs_) in geo.items():
+        w = int(P.ports[P.lanes[lid]["ports"][0]]["width"])
+        for i in m89_segment_ids(xs_):
+            segs.append((pts_[i], pts_[i + 1], w))
+    die_l = [x for x in lb.get("die_layers", []) if x in P.layers]
+    step = float(P.budgets.get("cut_step_um", 50.0))
+    for orient, D in (("vertical", P.W), ("horizontal", P.H)):
+        wd = "H" if orient == "vertical" else "V"
+        tpu = sum(1.0 / P.layers[x]["pitch_um"] for x in die_l if P.layers[x]["dir"] == wd) * free
+        if tpu <= 0:
+            continue
+        k = 1
+        while k * step < D - EPS:
+            c = k * step
+            k += 1
+            hits = []
+            for p, q, w in segs:
+                lo, hi = (p[0], q[0]) if orient == "vertical" else (p[1], q[1])
+                if min(lo, hi) < c - EPS and max(lo, hi) > c + EPS:
+                    hits.append((p[1] if orient == "vertical" else p[0], w))
+            if not hits:
+                continue
+            hits.sort()
+            j, run = 0, 0
+            for i_, (y, w) in enumerate(hits):
+                run += w
+                while hits[j][0] < y - reach:
+                    run -= hits[j][1]
+                    j += 1
+                u = run / (reach * tpu)
+                if u > worst["use"]:
+                    worst["use"] = u
+                if u > umax + EPS:
+                    err(f"M8/M9 {orient} cut at {c:g} um: {run} die-top bits in {reach:g} um near {y:.0f} = "
+                        f"{u:.2f} of the free tracks > {umax:g}")
+                    break
+    if n[0] > max_msgs:
+        R.err("m89", f"... {n[0] - max_msgs} more m89 findings")
+    return dict(ports=len(used), errors=n[0], limits=dict(reach_um=reach, pin_limit=lim, max_use=umax,
+                                                          free_frac=free), worst={k: round(v, 3)
+                                                                                  for k, v in worst.items()})
+
+
 def check_cuts(P, R, geo):
     # Same rectangles as the die-route capacity model: declared/routed core
     # obstructions (union), transformed through each instance orientation,
@@ -1013,11 +1176,13 @@ def check_cuts(P, R, geo):
     # segment list: (x0, y0, x1, y1, bits)
     segs = []
     owned = cut_owned_segments(P, geo)
-    for lid, (pts, _, _) in geo.items():
+    for lid, (pts, _, xs_) in geo.items():
         w = P.ports[P.lanes[lid]["ports"][0]]["width"]
         tags = owned.get(lid) or {}
+        top = m89_segment_ids(xs_)
         for i, (p, q) in enumerate(zip(pts, pts[1:])):
-            segs.append((p, q, w, tags.get(i)))
+            if i not in top:
+                segs.append((p, q, w, tags.get(i)))
     carried = {}
     rects = {n: P.rect(n) for n in P.parts}
     worst_full, worst_loc = (0, None), (0, None)
@@ -2172,6 +2337,9 @@ def check_seams(P, R):
         a, b = pr["src"]["part"], pr["dst"]["part"]
         if DIE_PART in (a, b):
             continue
+        if S.is_m89(pr):
+            pairs["|".join(sorted((a, b)))].setdefault("m89", 0)
+            pairs["|".join(sorted((a, b)))]["m89"] += int(pr["width"])
         for side in ("src", "dst"):
             e = pr[side]
             seen[(e["part"], e["bus"])].append(pid)
@@ -2179,6 +2347,8 @@ def check_seams(P, R):
             if bus.get("kind", "data") not in ("data", "ctl"):
                 R.err("seams", f"port {pid}: {e['part']}.{e['bus']} is kind {bus.get('kind')}; a seam carries only "
                       "registered data / ctl (clock and reset come from the die spine taps)", port=pid)
+        if S.is_m89(pr):
+            continue
         n = S.port_pins_count(pr)
         key = "|".join(sorted((a, b)))
         pairs[key]["channel" if P.channel_of(pid) else "abutted"] += n
@@ -2474,6 +2644,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["ft_s0_window"] = check_ft_s0_window(P, R)
     summ["cuts"] = check_cuts(P, R, geo)
+    summ["m89"] = check_m89(P, R, geo)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
     rp = check_registered_pins(P, R, plan_dir)

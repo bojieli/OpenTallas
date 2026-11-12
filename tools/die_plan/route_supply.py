@@ -160,6 +160,8 @@ DEFAULTS = dict(
     window=3,                  # box filter, bins (router detour)
     core_ceiling="M5",         # 12.1a new-tile default ceiling; measured kit LEFs M1-M5
     cell_fill=0.25,            # background cell wiring share of M2-M5 outside macros (calibrated, see --calib)
+    m89_pin_track_um=1.5,      # X-TIER-OTC form (d): per M7 entry pin of an m89 bay (VIA78 + M7->M1 stack + pin->flop stub)
+    m89_flop_track_um=2.0,     # per bay station flop (local chain / clock stub)
     ring_tracks_per_bit=2.5,   # calibrated: signed S81 stations (1,104-bit rings) <= ~1; KV ft27 squeezed street measured 4.7
     ring_um2_per_flop=10.0,    # calibrated on signed stations; KV ft27 squeezed: ~232 x 104 um for 5,440 flops (4.4)
     street_um=60.0,
@@ -801,9 +803,16 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         notes.append("no core pin files found")
     bus_pt = {}
     bus_win = {}
+    m89_bays = []                        # (bay rect, entry pins, flops): X-TIER-OTC die-top net bays / area pins
     bus_dir = defaultdict(list)          # "in"/"out" -> face bus names (stale bus names fall back to these)
     for bu in t.get("buses", []) or []:
-        if bu.get("face"):
+        if bu.get("route") == "m89" and bu.get("bay_um"):
+            # AREA PINS: the bus enters through its bay (M8/M9 -> M7 entry pins), not a face
+            r_ = bu["bay_um"]
+            bus_dir[str(bu.get("dir", ""))].append(bu["name"])
+            bus_pt[bu["name"]] = ((r_[0] + r_[2]) / 2.0, (r_[1] + r_[3]) / 2.0)
+            m89_bays.append((tuple(r_), int(bu.get("width", 1)), 0))
+        elif bu.get("face"):
             bus_dir[str(bu.get("dir", ""))].append(bu["name"])
             bus_pt[bu["name"]] = face_point(W, H, bu["face"], bu.get("window_um"))
             if bu.get("window_um") and cfg.get("face_spread", True):
@@ -1029,6 +1038,27 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
             ft_internal_slots.add(str(f.get("name", "")))
             continue
         regs = [tuple(r) for r in (f.get("regs_um") or [])]
+        ir_, or_ = f.get("in_route", "face"), f.get("out_route", "face")
+        if "m89" in (ir_, or_) and f.get("bay_um"):
+            # form (d): the m89 end(s) are entry-pin fields in the bay; stations sit in the bay; the lane wire
+            # between bays is a die-top net on M8/M9 (no partition demand).  Face legs only for a face end.
+            r_ = tuple(f["bay_um"])
+            bc = ((r_[0] + r_[2]) / 2.0, (r_[1] + r_[3]) / 2.0)
+            ns = int(f.get("stations", 1))
+            m89_bays.append((r_, wbits * ((ir_ == "m89") + (or_ == "m89")),
+                             wbits * (ns - (1 if ir_ == "face" else 0))))
+            if ir_ == "face":
+                a_ = regs[0] if regs else face_point(W, H, f.get("in_face", "W"), f.get("in_window_um"))
+                g.net([face_point(W, H, f.get("in_face", "W"), f.get("in_window_um")), a_], n=wbits)
+                g.net([a_, bc], n=wbits)
+            if or_ == "face":
+                # in end m89 (e.g. a lane-end station cell): bay entry field -> kept stations -> out face
+                pts_ = [bc] + [tuple(r) for r in regs] + [face_point(W, H, f.get("out_face", "E"),
+                                                                      f.get("out_window_um"))]
+                for a_, c_ in zip(pts_, pts_[1:]):
+                    g.net([a_, c_], n=wbits)
+            ft_bits += wbits
+            continue
         sites = f.get("bit_sites_um") or []
         chain = []
         if sites and isinstance(sites[0], list) and sites[0] and isinstance(sites[0][0], list):
@@ -1139,6 +1169,12 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         j0, j1 = int(y0 // b), int(math.ceil(y1 / b))
         ring_cells[j0:j1, i0:i1] = True
         ring_bits += bits
+    g.cur = "m89bay"
+    for r_, pins_, flops_ in m89_bays:
+        x0, y0, x1, y1 = r_
+        a_ = max((x1 - x0) * (y1 - y0), 1e-6)
+        dd = (cfg.get("m89_pin_track_um", 1.5) * pins_ + cfg.get("m89_flop_track_um", 2.0) * flops_) / a_
+        g.area_density((x0, y0, min(W, x1), min(H, y1)), dd, dd)
     DH, DV = g.demand()
     g.cur = "cell"
     # background cell wiring outside macros
