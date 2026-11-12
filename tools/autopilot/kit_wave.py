@@ -5153,6 +5153,18 @@ def follow_queue(st, ap_dir, notices):
         cls, why = leafslew_plan_route(rec, status, cls, why)
         old = (rec.get("q_status"), rec.get("q_class"))
         rec.update(q_id=j.get("id"), q_stage=stage, q_status=status, q_class=cls, q_reason=why)
+        if status == "CANCELLED":
+            # KW-FIX-45 11-11 (COORD option (a), orphaned q_b003__physical_v1 pilot): a queue job that was cancelled (ot-run
+            # --cancel / cancel-dir, a stopped route) is a stopped attempt, not a failure and not a superseded block: the
+            # wave row becomes CANCELLED (class QUEUE-CANCELLED) so a retry entry item@attempt relaunches it (select()
+            # relaunches a CANCELLED row only when its retry entry names the attempt; resume_source allows a re-gen of a
+            # CANCELLED attempt)
+            rec.update(status="CANCELLED", **{"class": "QUEUE-CANCELLED"}, updated=time.time(),
+                       reason=f"queue job {j.get('id')} cancelled: {str(why)[:160]}")
+            notices.setdefault(rec["die"], []).append(f"{rec['item']} queue job {j.get('id')} CANCELLED -> row CANCELLED "
+                                                      f"(retry {rec['item']}@{rec.get('attempt')} relaunches)")
+            n += 1
+            continue
         so = j.get("signoff") if isinstance(j.get("signoff"), dict) else {}
         if status == "FAIL" and so.get("path"):
             # KW-FIX-17: where the routed sign-off of this attempt lives (leafslew_step reads its TT sta.log)
