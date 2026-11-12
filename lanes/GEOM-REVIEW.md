@@ -6399,3 +6399,14 @@ GEOM REVIEW [S81-GEOM-3 2026-11-11 05:07 PST] col_h9_r2 ROM he M6 hotspot, DO_NO
 - 2026-11-11 17:56 PST GEOM REQ [KIT-WAVE-1 sample qwen_compute/slw_fw_v1__cl51d45468] 3_place epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/slw_fw_v1__cl51d45468/attempt_2/gen/slw_fw_v1__cl51d45468 (event hcut1111); AUTO-GEOM PASS epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/slw_fw_v1__cl51d45468/attempt_2/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
 - 2026-11-11 18:16 PST GEOM REQ [KIT-WAVE-1 sample hbm/NE_iorly] 3_place epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/NE_iorly/gen/NE_iorly (event hcut1111); AUTO-GEOM PASS epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/NE_iorly/geom/auto_geom.{json,png}; 1-in-5 independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it
 - 2026-11-11 18:21 PST GEOM REVIEW [HBM-GEOM-2/S5] dma vPose3L routed (/tmp/claude-1000/-home-ubuntu-OpenTallas/c228d9e1-f423-4eaf-829b-3bad2a9c2331/scratchpad/coreplace/HBM-GEOM-2/dma_vpose3c_vs_3l.png): FAIL. Gap channel lighter than vPose3C, but the vertical band W of the W bank column stays the single entry (now full height), the W field stays thin, and there is a new NW-corner hot spot. Cursor-pose FIRM flops left at x 126-134 split from their region-moved fanout (reset recovery class 30 ep -106). Details in RESULT tag dma-vpose3l.
+
+## 2026-11-11 18:31 PST COORD hourly view (2 renders, placed, current kit-wave)
+- hbm/q_su30__physical_v1 (hcut1111 a2, epyc9). AUTO-GEOM FAIL, 2065x1555, fill 0.012. VERDICT: BAD.
+  - Two macro rows (8 top, 8 bottom) with an empty 400-um middle band and an empty east strip; the logic is nearly invisible.
+  - The 24 clock taps sit on a uniform grid, not at the sinks: t12 3397, t20 2468, t6 1700 against many taps at 1-37.
+  - The outline is about 2x the need. -> VISLAYOUT2-HBM: shrink the outline/middle band, site taps at sink clusters.
+- qwen_kvsys/kv3_sys_c (event28w_c a11, epyc9). AUTO-GEOM FAIL, 2160x1037, fill 0.018, GRT ov 0. VERDICT: ISSUES.
+  - One big central macro; the logic is a dense cloud west of the macro (x 200-650); the east half is nearly empty.
+  - Taps: t9 6862 and t34 4502 sinks, against the 1500 target.
+  - Host/kvs pins crowd the W face. -> VISLAYOUT2-KVHEAD.
+- CLASS (both): tap sites come from a uniform grid, so loads are 1 to 6862 per tap. Generator rule: site taps at sink clusters, <= 1500 per tap. Owner rule 11-10 is taps = ceil(sinks/3000), so the count is right but the placement is not.
