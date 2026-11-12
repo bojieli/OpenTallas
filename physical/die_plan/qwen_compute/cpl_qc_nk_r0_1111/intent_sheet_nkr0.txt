@@ -1,0 +1,71 @@
+CPL-QC-NK-R0 11-11 INTENT SHEET (S2 type floorplan, DO_NOT_COUNT) -- QC CB16 NK quads, orient-only delta
+Base plan_qc99_s21_nkout (cce5cf63a7bd) -> plan_qc99_s22_nkr0.  Positions unchanged, orients + core ck tap xy only.
+
+0. GEOMETRY (all 16 NK types, outline 1235.52 x 2540.16 / 2531.52)
+   Four A0 tiles (qfd_tile_nk_a0c, cbx: one qfd_tile_nl_a0c), 457.92 x 1157.76, 2 columns x 2 rows:
+   left column x 86.4 (cbf_q11 77.76), right column x 691.2 (cbf_q11 699.84).
+   Channels: W 86 um, MIDDLE 147 um (x 544..691), E 86 um; S strip 69-78 um, inter-row strip 78 um.
+   NK/NL pins (cores/a0_nk_pins.json, a0_nl_pins.json): ALL M4.
+     core W edge (x 0.096): n_a, n_b, t_out, n_y   (514 b each; NL: t_out only)
+     core E edge (x 457.824): tap 508 b, ck, rst_n, tie_hi/lo, tile_id 16 b
+   R0 -> data pins on the tile's W edge; MY -> data pins on its E edge.
+   PIN TRACK LEGALITY (checked first): every pin is M4 (horizontal); an MY <-> R0 flip mirrors x only, the pin y (the
+   only M4 track coordinate) is unchanged, so R0 is on-track exactly where MY is (0.012 mod 0.048 phase kept by
+   track_offset_um [0, 0.012]).  MX / R180 would move y and are NOT used.  Measured: check.py taps_cores
+   core_pins_off_track = 0 on s21 and on s22 (451,119 core pins, type frame + every placed MX/MY instance frame).
+
+1. DATAFLOW CHAIN (traced from the bound s21 RTL, ot_dp_dly / ot_dp_dly_cnt depths; 514 b + epoch each)
+   cbn_q11 / cbf_q11 (quad (1,1), t<row><col>):
+     S face na_i22 (pad D2 + r8 bank) -> t22.n_a ; S face nb_i22 (pad D3) -> t22.n_b        [input: point-to-point]
+     t22.t_out --D3--> t32.n_a                          L1  systolic pass-through, row 2 -> row 3
+     t32.t_out --D3+cnt<=4/5--> t32.n_b                 L5  INNER r8 strap-site self loop
+     t32.n_y   --D10--> t23.n_a                         L4  wrap to the next column
+     t23.t_out --D3--> t33.n_a                          L2  systolic pass-through
+     t33.t_out --D3+cnt--> t33.n_b                      L6  INNER r8 self loop
+     t33.n_y   --D3--> t23.n_b                          L3  partial-sum return
+     t22.n_y -> u_bout -> y_o22 (W face) ; t23.n_y -> u_bout -> y_o23 (W face)  [output ring, forwarded clock]
+     bc column: bc_i32 (S, x 618-707) -> u_xstn32 -> D6 -> u_xstn33 -> bc_o33 (N); tap_d 508 b -> t32/t33.tap
+   cbx_q10: t20.t_out->t20.n_a D3 ; t30(NL).t_out->t20.n_b D3+cnt ; t20.n_y->t21.n_a D13 ; t31.n_y->t21.n_b D6 ;
+            t21.t_out->t31.n_a D3 ; t31.t_out->t31.n_b D3+cnt ; t21.n_y -> y_o21 (N face)
+   q00 types (cbf_q00__cl*, cbn_q00__cl*): t00.t_out->t10.n_a D3 (D7 in cld7bf7197) ; t10 self ; t10.n_y->t11.n_a D10 ;
+            t01 self ; t11.t_out->t01.n_b D3 ; t01.n_y->t11.n_b D3 ; faces: na_i00/nb_i00 -> t00, t00.n_y->y_o00, t11.n_y->y_o11 (E)
+   q01 types (cbn_q01__cl*, cbf_q01*): t02/t03 self ; t12.t_out->t02.n_b D3 ; t13.t_out->t03.n_b D3 ; t13.n_y->t12.n_a D16 ;
+            t02.n_y->t13.n_a D10 ; t03.n_y->t13.n_b D3 ; faces: t12.n_y->y_o12 (S, E end), nb_i12 (E) -> t12.n_b
+
+2. TIMING-CRITICAL PAIRS (CPL-QC-NK-OUT RESULT 69b23ec5e4, a14 4_cts replay + OT_CORE_OUT_LAND pilot)
+   - NK pin -> first stage: ~235 ps TT window; closes at 0 cycles only with the first stage AT the pin (s21 landing).
+   - A crossing of one 458-um NK costs ~600-680 ps of wire.  Fits on the NK-INPUT hop (last stage -> NK n_a/n_b/tap,
+     lib setup arc, ~630-790 ps; measured q -> t32.n_a over t32: +147..+248 TT).  Does NOT fit on a fabric->fabric
+     hop (~587 ps; measured r0 -> r1 over t22: -11..-404 TT).  A register cannot sit over the core.
+   - So a D3 link crossing TWO macros (L1 in s21: t22 W pins -> t32 E pins) must put one crossing on a fabric hop: FAILS
+     whatever the cycle count.  A link crossing ONE macro closes with landing + the crossing on its last hop.
+
+3. ARRANGEMENT (hand-drawn: intent_cbn_q11_nkr0.svg; explorer before/after: evidence/explorer/<type>/type_<type>.png)
+   Rule: turn a right-column MY tile to R0 when (a) no type face bus lands on it (else its face bus turns away from its
+   face: the all-right-column trial added 16 G0C core_faces WARNs, all on t11 y_o11 / t12 y_o12, nb_i12) and (b) the
+   RTL-link macro-crossing score improves (fewest double crossings, then fewest crossings).
+     cbn_q11 x2, cbf_q11 : t32, t33 -> R0   crossings 5 -> 1, double 1 -> 0; L2/L3/L4 cross nothing, L1 crosses t22 only
+     cbx_q10 x2          : t30 (NL), t31 -> R0   crossings 3 -> 0
+     q00 x5              : t10 -> R0 (t11 keeps MY: y_o11)   L1 double -> single; t10.n_y->t11.n_a D10 gains one crossing
+                           (10 stages, last hop is an NK-input hop; the inter-row strip carries its stations)
+     cbn_q01 x3          : t13 -> R0 (t12 keeps MY: y_o12/nb_i12)   crossings 8 -> 6, doubles 4 -> 1
+     cbf_q01_s2          : t13 -> R0   crossings 4 -> 2
+     unchanged           : cbf_q00_s2 (would add 2 crossings), cbf_q01 (t12 has the face buses, t13 is already R0)
+   COST (accepted): each flipped tile's tap (508 b) / ck / rst_n / tile_id edge moves to the 86-um E channel.  The bc
+   column stations stay in the middle channel (bc windows x 618-737), so each flipped tile's tap_d now crosses its own
+   macro once -- on an NK-INPUT hop (station register -> NK tap pin), the hop class that fits one crossing.  Net macro
+   crossings of 508-514-b links in cbn_q11: 5 x 514 data -> 1 x 514 data + 2 x 508 tap; no remaining crossing sits
+   on a fabric->fabric hop.  The core ck tap moves +458 um east (insertion from the parent tree grows; CTS balances to
+   the plan insertion 665.8 ps); the reset wavefront depth K is unchanged on every type (bind reset trees re-solved).
+
+4. REMAINING (not this delta): cbn_q01 t12.t_out -> t02.n_b D3 still crosses both columns (needs the LEFT column t02/t03
+   -> MY: crossings 6 -> 2; left-column tap edge to the W channel; separate S2 form).  q00 nb_i00 N window at the E end
+   feeds t00 (W column): pre-existing double on a 9-stage pad lane.  Kit rule (c) from CPL-QC-NK-OUT (NK->NK chain stages
+   r1..q kept at the source side so the one crossing lands on the NK-input hop) is still needed for L1.
+
+5. RATIONALE (CLEANSLATE note): the NK systolic links run t_out -> n_a / n_y -> n_b between the four tiles of a quad;
+   with the right tiles mirrored (MY) their data pins sat on the outer E channel, so the quad's inner links crossed one
+   or two 458-um macros and L1 crossed two (a crossing forced onto a fabric hop: the -824 ps class).  Facing every
+   data edge that has no face bus toward the middle channel makes the chain local (cbn_q11 NK bit-mm 2372 -> 1431,
+   explorer 4320 -> 3379) and leaves at most one crossing per link, on an NK-input hop.  Pins stay on track (M4, x
+   mirror), positions, buses, lanes, latency and reset depth are unchanged.

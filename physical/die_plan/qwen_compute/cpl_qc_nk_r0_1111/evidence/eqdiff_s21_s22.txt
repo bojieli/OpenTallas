@@ -1,0 +1,54 @@
+only A [] only B [] common 491
+identical 318 differ after path/plan/sha normalisation 47
+DIFF bind_clock_landings.json {}
+DIFF bind_latency.json {}
+DIFF bind_reset.json {}
+DIFF bind_reset_anchor.json {}
+DIFF native_topology.json {}
+DIFF rtl/cbf_q00__cl1b5a6458.reset_tree.json {}
+DIFF rtl/cbf_q00__cl1b5a6458.reset_tree.tcl {}
+DIFF rtl/cbf_q00__cl1b5a6458.sv {"lines": 864, "reset_lines": 864, "other": []}
+DIFF rtl/cbf_q00__cl870de686.reset_tree.json {}
+DIFF rtl/cbf_q00__cl870de686.reset_tree.tcl {}
+DIFF rtl/cbf_q00__cl870de686.sv {"lines": 2122, "reset_lines": 2118, "other": ["+    wire rr_t104;", "+    wire rn_rr_t104;", "-    wire rr_t104;", "-    wire rn_rr_t104;"]}
+DIFF rtl/cbn_q00__cl622f65d2.reset_tree.json {}
+DIFF rtl/cbn_q00__cl622f65d2.reset_tree.tcl {}
+DIFF rtl/cbn_q00__cl622f65d2.sv {"lines": 900, "reset_lines": 900, "other": []}
+DIFF rtl/cbn_q00__cld7bf7197.reset_tree.json {}
+DIFF rtl/cbn_q00__cld7bf7197.reset_tree.tcl {}
+DIFF rtl/cbn_q00__cld7bf7197.sv {"lines": 2194, "reset_lines": 2194, "other": []}
+DIFF rtl/cbn_q00__cldbcda913.reset_tree.json {}
+DIFF rtl/cbn_q00__cldbcda913.reset_tree.tcl {}
+DIFF rtl/cbn_q00__cldbcda913.sv {"lines": 408, "reset_lines": 408, "other": []}
+DIFF rtl/cbn_q01__clab6e67f2.reset_tree.json {}
+DIFF rtl/cbn_q01__clab6e67f2.reset_tree.tcl {}
+DIFF rtl/cbn_q01__clab6e67f2.sv {"lines": 460, "reset_lines": 460, "other": []}
+DIFF rtl/cbn_q01__cld9ff4c40.reset_tree.json {}
+DIFF rtl/cbn_q01__cld9ff4c40.reset_tree.tcl {}
+DIFF rtl/cbn_q01__cld9ff4c40.sv {"lines": 1400, "reset_lines": 1400, "other": []}
+DIFF rtl/cbn_q01__cldd6ea846.reset_tree.json {}
+DIFF rtl/cbn_q01__cldd6ea846.reset_tree.tcl {}
+DIFF rtl/cbn_q01__cldd6ea846.sv {"lines": 264, "reset_lines": 264, "other": []}
+DIFF rtl/cbn_q11__cl49ae4555.reset_tree.json {}
+DIFF rtl/cbn_q11__cl49ae4555.reset_tree.tcl {}
+DIFF rtl/cbn_q11__cl49ae4555.sv {"lines": 362, "reset_lines": 362, "other": []}
+DIFF rtl/cbn_q11__cl5cc92dfe.reset_tree.json {}
+DIFF rtl/cbn_q11__cl5cc92dfe.reset_tree.tcl {}
+DIFF rtl/cbn_q11__cl5cc92dfe.sv {"lines": 948, "reset_lines": 948, "other": []}
+DIFF rtl/cbx_q10__cl89936551.reset_tree.json {}
+DIFF rtl/cbx_q10__cl89936551.reset_tree.tcl {}
+DIFF rtl/cbx_q10__cl89936551.sv {"lines": 410, "reset_lines": 410, "other": []}
+DIFF rtl/cbx_q10__cl94a12200.reset_tree.json {}
+DIFF rtl/cbx_q10__cl94a12200.reset_tree.tcl {}
+DIFF rtl/cbx_q10__cl94a12200.sv {"lines": 784, "reset_lines": 784, "other": []}
+DIFF rtl/qfd_qc_cb_f_q01__cbf_q01_s2.reset_tree.json {}
+DIFF rtl/qfd_qc_cb_f_q01__cbf_q01_s2.reset_tree.tcl {}
+DIFF rtl/qfd_qc_cb_f_q01__cbf_q01_s2.sv {"lines": 306, "reset_lines": 306, "other": []}
+DIFF rtl/qfd_qc_cb_f_q11.reset_tree.json {}
+DIFF rtl/qfd_qc_cb_f_q11.reset_tree.tcl {}
+DIFF rtl/qfd_qc_cb_f_q11.sv {"lines": 1796, "reset_lines": 1796, "other": []}
+bind_latency.json DIFFERS
+bind_names.json equal
+bind_latency_consumers.json equal
+bind_parent_id_straps.json equal
+bind_core_resets.json equal

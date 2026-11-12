@@ -1,0 +1,12 @@
+worst_rank	id	class	bits	directed	driver	sinks	stages	length_um	max_hop_um	bit_mm	status	static	bypass_n	bypassed	note	pipeline
+1	bus:nb_i00>u_t00.n_b	core-face	514	1	.bus:nb_i00	u_t00.n_b		2712.6	2712.6	1394.3	over		2	u_t01,u_t11		face>0
+2	bus:na_i00>u_t00.n_a	core-face	514	1	.bus:na_i00	u_t00.n_a		1765.0	1765.0	907.2	over		1	u_t01		face>0
+3	u_t00.t_out>u_t10.n_a	core-core	514	1	u_t00.t_out	u_t10.n_a		1263.9	1263.9	649.6	over		0			0>1
+4	u_t11.n_a>u_t10.n_y	core-core	514	0	u_t11.n_a	u_t10.n_y		933.1	933.1	479.6	over		0			0>1
+5	u_t11.n_b>u_t01.n_y	core-core	514	0	u_t11.n_b	u_t01.n_y		806.9	806.9	414.8	over		0			0>1
+6	u_t11.t_out>u_t01.n_b	core-core	514	1	u_t11.t_out	u_t01.n_b		705.9	705.9	362.8	over		0			0>1
+7	stn:bus:y_o00	internal-station	515	1	u_t00.n_y	.	2	1187.0	397.4	611.3	relay		0			0>face
+8	stn:bus:na_i00	internal-station	515	1	.	u_t00.n_a	4	1843.0	388.8	949.1	relay		1	u_t01		face>0
+9	stn:bus:nb_i00	internal-station	515	1	.	u_t00.n_b	7	2790.5	362.9	1437.1	relay		1	u_t01		face>0
+10	ft:rsf	ft	514	1	.ft_in	.ft_out	10	2873.9	319.7	1477.2	relay		1	u_t01	10 stations (station 0 = in-face flop), interior sites: reg	face>face
+11	u_t11.n_y>bus:y_o11	core-face	514	1	u_t11.n_y	.bus:y_o11		212.3	212.3	109.1	ok		0			0>face
