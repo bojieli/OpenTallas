@@ -1,0 +1,11 @@
+QC-S28-D gates, epyc9 2026-11-12 12:33-12:42 UTC (DO_NOT_COUNT). s28 = 2f0c17d5f1a3, s28d = s28 + delta_s28d = 59b3b2c97da3
+schema.validate (src28m): s28 PASS 0 errors | s28d PASS 0 errors
+G0 (src28m check.py): s28 265 err / s28d 265 err, new 0, gone 0 (pre-existing FAIL is base)
+G0C (--completeness): s28 365 err / s28d 365 err, new 0, gone 0
+station_lint: identical (3 NONMONOTONE ADVISORY sle_sc_*, base)
+strict bind from src28b (bind.py bind --strict, MemoryMax=48G): BIND_RC=0, 436 s; errors 0 unbound 0 tied 0 undriven 0 multiply_bound 0, 1921 crossings / 790393 bits (= s28)
+bus_groups.json sha 315252676904 = s28; bound rtl identical except reset_tree.json plan-path string (120 files)
+kit_istations.relay_sites_lines smoke: all 8 types emit relay_sites Tcl (11342 keys cbn, 10584 cbf), rc 0
+route_supply (epyc4) s28 vs s28d: IDENTICAL (relay_sites not modelled); worst = ring band all 8 types (1.127-2.06)
+explorer type --after-plan: identical before/after (2-8 links, max hop 389-397, 0 hop>reach)
+EQ: 0 cycles, no netlist change (relay_sites only place existing flops)
