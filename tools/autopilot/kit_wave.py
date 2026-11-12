@@ -2041,6 +2041,14 @@ def host_score(v, disk_low=None):
     return s * 0.25 if (busy and s > 0) else s
 
 
+def host_capacity(v):
+    """WAVE-BALANCE-1: free cores x free admits (admits minus the GB already waiting there) of an ot-run status row"""
+    if not v:
+        return 0.0
+    return (max(0.0, int(v.get("cores") or 0) - float(v.get("load", 0)))
+            * max(0.0, float(v.get("admit", 0)) - float(v.get("wait_gb", 0))))
+
+
 def gen_hosts(cfg, die, item=None):
     """KW-FIX-4 11-03 (COORD epyc4 fill): die option gen_hosts = hosts that hold the die's src/plan/kit_rtl inputs at
     the SAME paths; a new attempt generates, stages and (async) PLACEs on the one with the most free ot-run admits, so
@@ -2531,12 +2539,35 @@ def load_hold(cfg, die, *names):
         + (f" work_root {low[h][die]} GB" if die in low.get(h, {}) else "") for h, v in rows)
 
 
+GEN_WAITER_CAP = 20
+
+
+def waiter_guard(cfg, die, hs, stt, hub):
+    """WAVE-BALANCE-1 11-11 (COORD 23:5x): a host with more than gen_waiter_cap (20) ot-run waiters takes no new kit gen
+    while another candidate stays.  Candidates = the die's gen hosts, then cfg gen_overflow_hosts (hosts with big
+    scratch that hold the die's inputs: not SRC-INCOMPLETE, not under the work_root floor) when every gen host is over the cap.
+    Option gen_waiter_cap 0 turns it off; with no status or no calm host the list is unchanged."""
+    cap = int(cfg.get("gen_waiter_cap", GEN_WAITER_CAP))
+    if cap <= 0 or not stt or not hs:
+        return hs
+    w = lambda h: int((stt.get("localhost" if h == hub else h) or {}).get("wait_n", 0))
+    row = lambda h: stt.get("localhost" if h == hub else h)
+    calm = [h for h in hs if row(h) and w(h) <= cap and not gen_disk_low(row(h))]
+    if calm:
+        return calm
+    bad, low = cfg.get("_src_incomplete") or {}, cfg.get("_workroot_low") or {}
+    over = [h for h in (cfg.get("gen_overflow_hosts") or []) if h not in hs and h in stt and w(h) <= cap
+            and die not in bad.get(h, {}) and die not in low.get(h, {})]
+    return over or hs
+
+
 def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
     GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used.
     SCHED-1 11-07: only hosts with room (host_room) while one exists, the least loaded one whose admits minus queue fit
     take, else the best host_score; threads = load charged to the pick, so one tick's burst stops at the cap."""
     hs, stt, hub = gen_hosts(cfg, die, item), cfg.get("_otrun_status") or {}, cfg.get("_hub") or ""
+    hs = waiter_guard(cfg, die, hs, stt, hub)
     if not stt:
         d = cfg["dies"][die]
         return d["gen_host"] if (d["gen_host"] in hs or not hs) else hs[0]      # KW-FIX-35-RD: item inputs
@@ -2556,8 +2587,9 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         room = [h for h in hs if host_room(key(h), die_disk_low(cfg, die, h, key(h))) and die not in low.get(h, {})] if on else []
         sc = lambda h: die_score(cfg, die, h, key(h))
         fits = [h for h in room if sc(h) >= max(take, 1)]
-        frac = lambda h: round(float(key(h).get("load", 0)) / max(1, int(key(h).get("cores") or 1)), 1)
-        best = (min(fits, key=lambda h: (frac(h), -sc(h), hs.index(h))) if fits
+        # WAVE-BALANCE-1 11-11 (COORD 23:4x): among hosts that fit, the one with the most (free cores x admits), not the
+        # lowest load fraction or a fixed list order (epyc9 97/96 with 30 waiters while epyc2 sat at 26/128)
+        best = (max(fits, key=lambda h: (host_capacity(key(h)), -hs.index(h))) if fits
                 else max(room or hs, key=lambda h: (sc(h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)

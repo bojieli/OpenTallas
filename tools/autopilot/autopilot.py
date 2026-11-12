@@ -59,6 +59,7 @@ import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
 import kit_wave as KW  # noqa: E402
+import wave_balance as WB  # noqa: E402
 import auto_resign as AR  # noqa: E402
 import wave_jobs as WJ  # noqa: E402
 
@@ -2858,6 +2859,12 @@ def tick(args):
     retry_unversioned(st)
     submitted = admit_new(st, rows)
     save_state(st)
+    if os.environ.get("AP_WAVE_BALANCE", "1") != "0":   # WAVE-BALANCE-1 11-11: inert unless kit_wave.json wave_balance.enabled
+        try:
+            WB.step(sys.modules[__name__], st)
+            save_state(st)
+        except Exception as e:                         # a balance pass must never stop the chain
+            log(f"WAVE-BALANCE failed: {type(e).__name__}: {e}")
     if os.environ.get("AP_KIT_WAVE", "1") != "0":      # KIT-WAVE-1 (owner 10-30 (A)); inert without autopilot/kit_wave.json
         try:
             KW.step(sys.modules[__name__])
