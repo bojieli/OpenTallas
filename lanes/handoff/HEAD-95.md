@@ -42,7 +42,7 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 - rp17 CANDIDATE epyc4 head-95/pd/rp17wr.json 3d2929bfcc2b = rp16 + windows (kitwin rloop3, 11 ports, max 16) + landing_ring_wreg on wshim_rx/eshim_rx. G0 0 NEW. Freeze adds SP3n2 (3ac13457f663) on its sign-off; reset hop needs REACH-FIX-2 per-type reset reach knob (asked) else rp18. After freeze: send path to REACH-FIX-2; re-sign ctl_n/eshim_rx/wshim_tx (window-only).
 
-- 2026-11-12 14:46: PLAN OF RECORD = rp17 FROZEN epyc4 head-95/pd/rp17.json 501a3ad70cc107d1 (copy on epyc9). Main worktree epyc4 wt/head-95-main now at 3b73826c4114. Jobs on rp17: hd_ctl_n re-sign epyc4 head-95/ctln_w17 (log ~/head95log/ctln_w17_resign.log); eshim_rx + wshim_tx full builds epyc9 head-95/k17_<type> (logs ~/head95log/k17_<type>_route.log); SP3n2 route epyc4; wshim_rx = GEN-CLASS-1 proof build. rp18 items: wshim_rx reset hop (needs REACH-FIX-2 per-type reset reach).
+- 2026-11-12 14:46: PLAN OF RECORD = rp17 FROZEN epyc4 head-95/pd/rp17.json 501a3ad70cc107d1 (copy on epyc9). Main worktree epyc4 wt/head-95-main now at 3b73826c4114. Jobs on rp17: hd_ctl_n re-sign DONE + RECORDED (ctln_w17/resign/PROVENANCE.json, LOCAL_PASS_NEEDS_PARENT); eshim_rx + wshim_tx full builds epyc9 head-95/k17_<type> (logs ~/head95log/k17_<type>_route.log); SP3n2 route epyc4; wshim_rx = GEN-CLASS-1 proof build. rp18 items: wshim_rx reset hop (needs REACH-FIX-2 per-type reset reach).
 
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
