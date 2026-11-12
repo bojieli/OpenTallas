@@ -41,3 +41,7 @@ step moved into the repo)? That would re-sign unrelated cores, so it is outside 
 The 8 SU types q_su00/q_su10/q_su20/q_su30 (+ __physical_v1) differ from bind_t19 in the SU slot form (registers + mux,
 EQ proven) and join the rd1 re-kit list, together with the rd1-value types (hb_coll cut cores, FUSED lane cores at RR 11,
 QUANT ctl_r5 + hb_quant_NW parent).
+Exact SU type list (11-12 correction, two different comparisons):
+- slot form vs bind_t19 (cmp_final_ctl_vs_t19_loose.txt): q_su00, q_su10, q_su20, q_su30 (+ __physical_v1)
+- rd1 values vs control (cmp_final_rd1_vs_ctl.txt, READ_RETURN +1): q_su00, q_su11, q_su20, q_su31 (+ __physical_v1)
+- rd1 SU re-kit list = union, 6 types x 2 = 12: q_su00, q_su10, q_su11, q_su20, q_su30, q_su31 (+ __physical_v1 each).
