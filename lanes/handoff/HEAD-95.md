@@ -1,4 +1,4 @@
-# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 11:54 PST
+# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 12:02 PST
 
 ## 1 Scope
 HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (CLOSED 08:33, fallback taken), HB4 seam shims, wshim_rx DRV ECO, visual gate via GEOM-VIS-5, route on epyc8/9 (not epyc2), hourly STATE.
@@ -27,6 +27,10 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - 2026-11-12 11:54: lep0N v3 PLACE DONE (epyc8, rc 0); REVIEW REQUEST to GEOM-VIS-8 posted (renders lanes/head-95-west-1112/lep0N_v3_place_*.png). On GOOD/ISSUES-ACCEPT: ot-run --hosts epyc9 route (copy epyc8 head-95/lep0N_v3 to epyc9 first).
 - rp16 (epyc4 head-95/pd/rp16.json f3655867deef) = rp15 + hd_mesh from VL3 m1_final + hd_spn_end from VL3 sp2. G0 0 NEW vs rp15; gen hd_mesh rc 0; hd_spn_end/lep0N gen results in epyc4 head-95/rp16.out (RP16_DONE). Becomes plan of record when all three pass.
 - VL3 hd_mesh M1: place GOOD (GEOM-VIS-7) but NO route launched; asked COORD who launches it.
+
+- 2026-11-12 12:02: PLAN OF RECORD = rp16 epyc4 head-95/pd/rp16.json f3655867deef (PLAN EVENT posted; G0 0 NEW, gen rc 0 mesh/spn_end/lep0N).
+- hd_mesh M1 TAKEN OVER from VISLAYOUT3 (parked): route epyc9 kit vislayout3-kvhead/head/kit_mesh_m1, log ~/head95log/mesh_m1_route.log. Also own the sign-off of SP2 route (vislayout3-kvhead/jobs/hd_spn_sp2/route.log).
+- hd_spn_wshim_rx FRESH kit from main 26c9ae03a493 (worktree epyc4 wt/head-95-main, sparse + head-93 prep links): epyc9 head-95/wshim_rx_main GOAL route, log ~/head95log/wshim_rx_main_route.log. raw_patch.py now takes OT_ROOT=<tree>.
 
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
