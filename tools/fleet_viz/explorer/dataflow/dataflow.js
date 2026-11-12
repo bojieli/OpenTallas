@@ -100,7 +100,33 @@ export async function mountDataflow(root, opts) {
   let m = null, map = null, cmAll = null, lcut = null, win = null, wholeWin = null, cur = -1, activeCache = new Map(), stageId = null;
 
   // ---------------------------------------------------------------------------------------------- loading
+  // EXPLORER-2: every block of a plan-of-record record is a partition (-> its type node) or partition/inst (-> its core
+  // node) of the one design index (/api/design); the old /explorer#element= card is retired
+  let DZ = null;
+  async function loadDesign(row) {
+    DZ = null;
+    const die = (row.id || '').startsWith('plan_') ? row.id.slice(5) : null; if (!die) return;
+    try { const r = await fetch('/api/design/die/' + encodeURIComponent(die)); if (r.ok) { const d = await r.json(); DZ = { die, nodes: d.nodes, part: Object.fromEntries(d.die.plan.partitions.map((q) => [q[0], q[1]])) }; } } catch (e) { DZ = null; }
+  }
+  function designOf(bk) {
+    if (!DZ) return [];
+    const nm = m.bname[bk] || '', k = nm.indexOf('/'), part = k < 0 ? nm : nm.slice(0, k), t = DZ.nodes[DZ.part[part]];
+    if (!t) return [];
+    if (k < 0) return [t];
+    const inst = nm.slice(k + 1), h = t.plan.hard_cores.find((x) => x[0] === inst);
+    const c = h && h[1] && DZ.nodes[h[1]];
+    return c ? [c, t] : [t];
+  }
+  const STL = { signed: 'signed off', failed: 'failed', building: 'building', queued: 'queued', waiting: 'waiting', 'not built': 'not built' };
+  function designLinks(bk) {
+    const ns = designOf(bk);
+    if (!ns.length) return H('div', { class: 'df-kv dim' }, DZ ? 'no design node for this block in the current plan index' : 'design index: only plan-of-record records map to types and cores');
+    return H('div', { class: 'df-sec' }, H('h4', {}, 'Design Explorer'), ...ns.map((n) => H('div', { class: 'df-kv' },
+      H('a', { href: '/explorer/design/#n=' + encodeURIComponent(n.id) + (n.level === 'core' && ns[1] ? '&from=' + encodeURIComponent(ns[1].id) : ''), class: 'df-a' }, `${n.level} ${n.name} →`),
+      ` ${STL[n.status.state] || n.status.state}${(n.layout || {}).store ? ' · routed layout' : ''}`)));
+  }
   async function load(row) {
+    loadDesign(row);
     S.row = row; floorEl.classList.add('busy'); side.replaceChildren(H('div', { class: 'df-loading' }, `Loading ${row.label}…`));
     m = await loadModel(row, opts.base || DATA_BASE);
     if (S.row !== row) return;
@@ -364,7 +390,7 @@ export async function mountDataflow(root, opts) {
         H('div', { class: 'df-kv' }, `${m.bmaster[bk] || 'master unknown'} · ${m.bkind[bk] || ''}${m.bgroup[bk] ? ' · ' + m.bgroup[bk] : ''}`),
         H('div', { class: 'df-kv' }, `${(m.bw[bk]).toFixed(1)} × ${(m.bh[bk]).toFixed(1)} µm at (${m.bx[bk].toFixed(0)}, ${m.by[bk].toFixed(0)})${keys.length ? ' · token classes: ' + keys.join(', ') : ''}`),
         H('div', { class: 'df-kv' }, `${inc.length} incident link${inc.length === 1 ? '' : 's'}${inc.length > 60 ? ' (60 largest shown)' : ''}`), tb,
-        H('a', { href: '/explorer#element=' + encodeURIComponent(m.bmaster[bk] || m.bname[bk]), class: 'df-a' }, 'element card →')));
+        designLinks(bk)));
       return;
     }
     if (s.kind === 'dag' || s.kind === 'bundle') {

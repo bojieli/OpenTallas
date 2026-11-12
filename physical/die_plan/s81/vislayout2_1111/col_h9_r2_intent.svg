@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 700" font-family="sans-serif" font-size="11">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b0003a"/></marker></defs>
+<rect x="0" y="0" width="760" height="700" fill="#fff"/>
+<text x="10" y="18" font-size="14" font-weight="bold">col_h9_r2 R2-APRON intent (1442.88 x 1226.88 um, N up; scale 0.5 px/um)</text>
+<g transform="translate(20,660) scale(0.5,-0.5)">
+ <rect x="0" y="0" width="1442.88" height="1226.88" fill="none" stroke="#000" stroke-width="3"/>
+ <!-- S window -->
+ <rect x="6" y="-14" width="324" height="12" fill="#1f5fd0"/>
+ <!-- row 1 ROM pairs -->
+ <rect x="20" y="300" width="390" height="165" fill="#f5e3a6" stroke="#555"/><rect x="460" y="300" width="390" height="165" fill="#f5e3a6" stroke="#555"/>
+ <!-- row 2 -->
+ <rect x="20" y="660" width="390" height="165" fill="#d8c8f8" stroke="#555"/><rect x="460" y="660" width="390" height="165" fill="#d8c8f8" stroke="#555"/>
+ <!-- top e13 + ROMs -->
+ <rect x="200" y="1000" width="600" height="150" fill="#f4b6c2" stroke="#555"/>
+ <!-- aprons -->
+ <rect x="20" y="180" width="830" height="110" fill="#e6f6e6" stroke="#2a8" stroke-dasharray="8,6"/>
+ <rect x="20" y="540" width="830" height="110" fill="#e6f6e6" stroke="#2a8" stroke-dasharray="8,6"/>
+ <!-- cells -->
+ <rect x="60" y="43" width="60" height="30" fill="#8cd"/><rect x="181" y="43" width="60" height="30" fill="#f96"/>
+ <rect x="285" y="26" width="384" height="40" fill="#f3c6f3" stroke="#a5a"/><rect x="440" y="43" width="20" height="40" fill="#cc4"/>
+ <rect x="380" y="121" width="60" height="25" fill="#555"/><rect x="829" y="121" width="60" height="25" fill="#555"/>
+ <rect x="199" y="441" width="60" height="15" fill="#777"/><rect x="769" y="441" width="60" height="15" fill="#777"/>
+ <rect x="1123" y="43" width="40" height="60" fill="#c9f"/>
+ <!-- arrows -->
+ <g stroke="#b0003a" stroke-width="6" fill="none" marker-end="url(#a)">
+  <path d="M120,0 L95,40"/><path d="M220,0 L210,40"/>
+  <path d="M210,75 C300,250 450,450 520,550"/>
+  <path d="M520,650 C540,800 520,900 500,995"/>
+  <path d="M410,150 L215,295"/><path d="M410,150 L410,295"/>
+  <path d="M859,150 L655,295"/><path d="M859,150 L850,295"/>
+ </g>
+ <g stroke="#2a8" stroke-width="4" fill="none" marker-end="url(#a)"><path d="M1000,200 L1000,650"/></g>
+</g>
+<g font-size="11">
+ <text x="20" y="690">blue = S window frame_int_i0 (x 6-330); t6/t6p sit over it (window bits go N, not E under the c10 row)</text>
+ <text x="380" y="40">green dashed = macro-free aprons (row 1 +77.76, row 2 +120.96 um): xs_q 549-b bank fans run here</text>
+ <text x="380" y="56">black = bs10 / bs11 under their ROM-pair junctions (bs11 was 300 um E, in the corner)</text>
+ <text x="380" y="72">grey = bn10 / bn11 (N pins); pink row = c10 ROMs E of window, s10 (yellow) mid-row</text>
+ <text x="380" y="88">red = data path window -> t6 -> t7 -> t8 -> e13 and bank broadcasts</text>
+ <text x="380" y="104">violet E = n23 in the freed E corner (n-tree -> frame_int_o0)</text>
+</g>
+</svg>

@@ -182,7 +182,7 @@ def stage_grt183(kd):
     """FLOW-28 11-04: every kit carries the GRT-0183 fresh-process re-run its runner's make goes through (grt183_make.sh,
     grt183_resume.tcl, ROOT 10-15).  Inert unless an incremental GRT-0183 kills stage 5_1_grt.  KW-FIX-24: + the
     default-on clk_leaf_repeat (clk_leaf_repeat_default.tcl), which the same wrapper hooks into CTS and GRT."""
-    for f in ("grt183_make.sh", "grt183_resume.tcl", "grt_stall_resume.tcl"):   # KW-FIX-17 11-05: + GRT-STALL resume
+    for f in ("grt183_make.sh", "grt183_resume.tcl", "grt_stall_resume.tcl", "failfast_rules.py"):   # KW-FIX-17 11-05: + GRT-STALL resume; FAILFAST-1 11-11: + progress stops
         shutil.copyfile(_common_flow_file(f, TOOL.parents[1]), Path(kd) / f)
     # KW-FIX-24/LEAFREP 11-06 (COORD 20:0x (5) / 20:2x (6)): clk_leaf_repeat default-on.  grt183_make.sh (the make
     # wrapper above) sources this copy in the container's cts.tcl before POST_CTS (skipped when the kit hooks

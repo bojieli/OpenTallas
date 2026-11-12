@@ -1,0 +1,1116 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/w/results/hbm_hub_rtl_rd1_bind_1111/quant_ctl_r5/elab_r5.ys' --
+
+1. Executing Verilog-2005 frontend: /w/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v
+Parsing SystemVerilog input from `/w/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_64x16_m1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /w/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v
+Parsing SystemVerilog input from `/w/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x64_m1_p192'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /w/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x64_m2_r0c0_g64/ot_sram_1r1w_256x64_m2_r0c0_g64_bb.v
+Parsing SystemVerilog input from `/w/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x64_m2_r0c0_g64/ot_sram_1r1w_256x64_m2_r0c0_g64_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_256x64_m2_r0c0_g64'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv
+Parsing SystemVerilog input from `/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_s4'.
+Warning: Replacing memory \wbl with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:143
+Warning: Replacing memory \dst with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:139
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_r4'.
+Warning: Replacing memory \src_lo_q with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:195
+Generating RTLIL representation for module `\ot_hgi_qdq_static_transport_split_r4'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv
+Parsing SystemVerilog input from `/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_s5'.
+Warning: Replacing memory \wbl with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:135
+Warning: Replacing memory \dst with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:131
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_r5'.
+Warning: Replacing memory \src_lo_q with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:187
+Generating RTLIL representation for module `\ot_hgi_qdq_static_transport_split_r5'.
+Successfully finished Verilog frontend.
+
+6. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \DL = 25
+
+7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_ctl_r5'.
+Parameter \DL = 25
+Generating RTLIL representation for module `$paramod\ot_hgi_qdq_transport_ctl_r5\DL=s32'00000000000000000000000000011001'.
+Warning: Replacing memory \src_lo_q with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:187
+
+7.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_transport_ctl_r5
+Used module:     \ot_hgi_qdq_transport_ctl_s5
+Parameter \DL = 25
+Parameter \MUT = 0
+
+7.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_ctl_s5'.
+Parameter \DL = 25
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5'.
+Warning: Replacing memory \wbl with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:135
+Warning: Replacing memory \dst with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:131
+
+7.3. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_transport_ctl_r5
+Used module:     $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5
+
+7.4. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_transport_ctl_r5
+Used module:     $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5
+Removing unused module `\ot_hgi_qdq_static_transport_split_r5'.
+Removing unused module `$paramod\ot_hgi_qdq_transport_ctl_r5\DL=s32'00000000000000000000000000011001'.
+Removing unused module `\ot_hgi_qdq_transport_ctl_s5'.
+Removing unused module `\ot_hgi_qdq_static_transport_split_r4'.
+Removing unused module `\ot_hgi_qdq_transport_ctl_r4'.
+Removing unused module `\ot_hgi_qdq_transport_ctl_s4'.
+Removed 6 unused modules.
+
+8. Executing PROC pass (convert processes to netlists).
+
+8.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:137$618'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:137$618'.
+Cleaned up 1 empty switch.
+
+8.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 16 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:87$524 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 12 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:56$456 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:53$452 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:48$450 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:174$431 in module ot_hgi_qdq_transport_ctl_r5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:177$433 in module ot_hgi_qdq_transport_ctl_r5.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:184$435 in module ot_hgi_qdq_transport_ctl_r5.
+Removed a total of 0 dead cases.
+
+8.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 22 redundant assignments.
+Promoted 123 assignments to connections.
+
+8.4. Executing PROC_INIT pass (extract init attributes).
+
+8.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n [2] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+Found async reset \rst_n [2] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531'.
+Found async reset \rst_n [1] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:87$524'.
+Found async reset \rst_n [0] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:56$456'.
+Found async reset \rst_n [0] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:53$452'.
+Found async reset \rst_n [2] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:48$450'.
+Found async reset \rst_n in `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:174$431'.
+Found async reset \rst_l1 in `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:177$433'.
+Found async reset \rn [3] in `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:184$435'.
+
+8.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~31 debug messages>
+
+8.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+     1/11: $0\wq_v[7:0]
+     2/11: $1$fordecl_block$224.k[31:0]$613
+     3/11: $7\rq[135:135]
+     4/11: $6\rq[118:118]
+     5/11: $5\rq[101:101]
+     6/11: $4\rq[84:84]
+     7/11: $3\rq[67:67]
+     8/11: $2\rq[50:50]
+     9/11: $1\rq[33:33]
+    10/11: $0\rq[16:16]
+    11/11: $1$fordecl_block$222.k[31:0]$612
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+     1/32: $8\wm_next[63:56]
+     2/32: $8\wa_next[127:112]
+     3/32: $8\wv_next[7:7]
+     4/32: $8\rq_next[135:119]
+     5/32: $7\wm_next[55:48]
+     6/32: $7\wa_next[111:96]
+     7/32: $7\wv_next[6:6]
+     8/32: $7\rq_next[118:102]
+     9/32: $6\wm_next[47:40]
+    10/32: $6\wa_next[95:80]
+    11/32: $6\wv_next[5:5]
+    12/32: $6\rq_next[101:85]
+    13/32: $5\wm_next[39:32]
+    14/32: $5\wa_next[79:64]
+    15/32: $5\wv_next[4:4]
+    16/32: $5\rq_next[84:68]
+    17/32: $4\wm_next[31:24]
+    18/32: $4\wa_next[63:48]
+    19/32: $4\wv_next[3:3]
+    20/32: $4\rq_next[67:51]
+    21/32: $3\wm_next[23:16]
+    22/32: $3\wa_next[47:32]
+    23/32: $3\wv_next[2:2]
+    24/32: $3\rq_next[50:34]
+    25/32: $2\wm_next[15:8]
+    26/32: $2\wa_next[31:16]
+    27/32: $2\wv_next[1:1]
+    28/32: $2\rq_next[33:17]
+    29/32: $1\wm_next[7:0]
+    30/32: $1\wa_next[15:0]
+    31/32: $1\wv_next[0:0]
+    32/32: $1\rq_next[16:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531'.
+     1/3: $0\record_done[0:0]
+     2/3: $0\beat_done[0:0]
+     3/3: $0\fault[0:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:94$527'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:90$526'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:87$524'.
+     1/2: $0\dec_v[0:0]
+     2/2: $0\dv[25:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469'.
+     1/16: $8\bad[0:0]
+     2/16: $7\bad[0:0]
+     3/16: $6\bad[0:0]
+     4/16: $5\bad[0:0]
+     5/16: $4\bad[0:0]
+     6/16: $3\bad[0:0]
+     7/16: $2\bad[0:0]
+     8/16: $1\bad[0:0]
+     9/16: $4\expected[7:0]
+    10/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:83$442[31:0]$506
+    11/16: $3\expected[7:0]
+    12/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:83$441[31:0]$496
+    13/16: $2\expected[7:0]
+    14/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:83$440[31:0]$486
+    15/16: $1\expected[7:0]
+    16/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:83$439[31:0]$476
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:67$467'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:62$462'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:56$456'.
+     1/2: $0\warm_b[0:0]
+     2/2: $0\warm_a[0:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:53$452'.
+     1/1: $0\cnt[7:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:48$450'.
+     1/3: $0\decode_fault_q[0:0]
+     2/3: $0\qfault_q[0:0]
+     3/3: $0\vo_q[0:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:47$449'.
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:174$431'.
+     1/2: $0\rst_l1[0:0]
+     2/2: $0\rst_l0[0:0]
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:177$433'.
+     1/1: $0\rn[3:0]
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:184$435'.
+     1/1: $0\cv_q[0:0]
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+
+8.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wv_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wa_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wm_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\kr' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\kw' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$220.b' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\expected' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\bad' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$216.t' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$218.t' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469'.
+
+8.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [15:0]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$769' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [32:17]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$770' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [49:34]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$771' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [66:51]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$772' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [83:68]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$773' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [100:85]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$774' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [117:102]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$775' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [134:119]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$776' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wq_addr' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$777' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wq_mask' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$778' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rsel' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$779' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wsel' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$780' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dec_header' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$781' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\gd' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$782' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[0]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$783' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[1]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$784' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[2]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$785' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[3]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$786' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[4]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$787' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[5]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$788' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[6]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$789' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[7]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$790' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[8]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$791' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[9]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$792' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[10]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$793' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[11]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$794' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[12]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$795' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[13]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$796' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[14]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$797' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[15]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$798' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[16]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$799' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[17]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$800' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[18]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$801' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[19]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$802' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[20]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$803' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[21]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$804' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[22]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$805' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[23]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$806' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[24]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$807' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dst[25]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$808' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[0]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$809' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[1]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$810' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[2]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$811' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[3]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$812' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[4]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$813' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[5]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$814' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[6]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$815' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wbl[7]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$816' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$226.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$817' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$228.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$818' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$230.b' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+  created $dff cell `$procdff$819' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [16]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$824' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [33]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$829' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [50]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$834' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [67]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$839' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [84]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$844' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [101]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$849' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [118]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$854' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rq [135]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$859' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wq_v' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$864' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$222.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $adff cell `$procdff$869' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$fordecl_block$224.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+  created $dff cell `$procdff$876' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\beat_done' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531'.
+  created $adff cell `$procdff$881' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\record_done' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531'.
+  created $adff cell `$procdff$886' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\fault' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531'.
+  created $adff cell `$procdff$891' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rb' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:94$527'.
+  created $dff cell `$procdff$892' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\gl' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:90$526'.
+  created $dff cell `$procdff$893' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dl' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:90$526'.
+  created $dff cell `$procdff$894' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dec_v' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:87$524'.
+  created $adff cell `$procdff$899' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\dv' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:87$524'.
+  created $adff cell `$procdff$904' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\m1' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:67$467'.
+  created $dff cell `$procdff$905' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\m2' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:67$467'.
+  created $dff cell `$procdff$906' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\wp' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:62$462'.
+  created $dff cell `$procdff$907' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\ra' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:62$462'.
+  created $dff cell `$procdff$908' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\warm_a' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:56$456'.
+  created $adff cell `$procdff$913' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\warm_b' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:56$456'.
+  created $adff cell `$procdff$918' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\cnt' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:53$452'.
+  created $adff cell `$procdff$923' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\vo_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:48$450'.
+  created $adff cell `$procdff$928' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\qfault_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:48$450'.
+  created $adff cell `$procdff$933' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\decode_fault_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:48$450'.
+  created $adff cell `$procdff$938' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.\rr_v_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:47$449'.
+  created $dff cell `$procdff$939' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\rst_l0' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:174$431'.
+  created $adff cell `$procdff$944' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\rst_l1' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:174$431'.
+  created $adff cell `$procdff$949' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\rn' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:177$433'.
+  created $adff cell `$procdff$954' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\cv_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:184$435'.
+  created $adff cell `$procdff$959' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\op_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$960' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\blk_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$961' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$962' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\dst_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$963' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\last_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$964' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\rl_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$965' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\wc_q' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$966' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[0]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$967' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[1]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$968' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[2]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$969' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[3]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$970' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[4]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$971' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[5]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$972' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[6]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$973' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.\src_lo_q[7]' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$974' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r5.$fordecl_block$232.b' using process `\ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+  created $dff cell `$procdff$975' with positive edge clock.
+
+8.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+8.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:126$614'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:123$608'.
+Found and cleaned up 16 empty switches in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:114$558'.
+Found and cleaned up 2 empty switches in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:98$531'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:94$527'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:90$526'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:87$524'.
+Found and cleaned up 12 empty switches in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:81$469'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:67$467'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:62$462'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:56$456'.
+Found and cleaned up 1 empty switch in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:53$452'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:53$452'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:48$450'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:47$449'.
+Removing empty process `ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:174$431'.
+Removing empty process `ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:177$433'.
+Removing empty process `ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:184$435'.
+Removing empty process `ot_hgi_qdq_transport_ctl_r5.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv:186$437'.
+Cleaned up 31 empty switches.
+
+8.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5.
+<suppressed ~52 debug messages>
+Optimizing module ot_hgi_qdq_transport_ctl_r5.
+<suppressed ~8 debug messages>
+
+9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5..
+Finding unused cells or wires in module \ot_hgi_qdq_transport_ctl_r5..
+Removed 49 unused cells and 345 unused wires.
+<suppressed ~51 debug messages>
+
+10. Executing CHECK pass (checking for obvious problems).
+Checking module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5...
+Checking module ot_hgi_qdq_transport_ctl_r5...
+Found and reported 0 problems.
+
+11. Printing statistics.
+
+=== $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      228 wires
+     2928 wire bits
+       93 public wires
+     1712 public wire bits
+       26 ports
+      575 port bits
+      251 cells
+       30   $add
+       20   $adff
+        3   $and
+       56   $dff
+        4   $eq
+        2   $ge
+        1   $gt
+        7   $logic_and
+        1   $logic_not
+       10   $logic_or
+       18   $lt
+       47   $mux
+       12   $ne
+        7   $neg
+        3   $not
+        3   $or
+        7   $shift
+       18   $sub
+        1   ot_sram_1r1w_256x64_m2_r0c0_g64
+        1   ot_sram_1r1w_64x16_m1
+
+=== ot_hgi_qdq_transport_ctl_r5 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       45 wires
+      665 wire bits
+       45 public wires
+      665 public wire bits
+       25 ports
+      549 port bits
+       19 cells
+        4   $adff
+       15   $dff
+        1 submodules
+        1   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      270 ot_hgi_qdq_transport_ctl_r5
+      251 $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5
+
+        +----------Count including submodules.
+        | 
+      273 wires
+     3593 wire bits
+      138 public wires
+     2377 public wire bits
+       51 ports
+     1124 port bits
+        - memories
+        - memory bits
+        - processes
+      270 cells
+       30   $add
+       24   $adff
+        3   $and
+       71   $dff
+        4   $eq
+        2   $ge
+        1   $gt
+        7   $logic_and
+        1   $logic_not
+       10   $logic_or
+       18   $lt
+       47   $mux
+       12   $ne
+        7   $neg
+        3   $not
+        3   $or
+        7   $shift
+       18   $sub
+        1   ot_sram_1r1w_256x64_m2_r0c0_g64
+        1   ot_sram_1r1w_64x16_m1
+        1 submodules
+        1   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s5
+
+12. Executing Verilog-2005 frontend: /w/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v
+Parsing SystemVerilog input from `/w/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_64x16_m1'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: /w/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v
+Parsing SystemVerilog input from `/w/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x64_m1_p192'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv
+Parsing SystemVerilog input from `/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_s4'.
+Warning: Replacing memory \wbl with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:143
+Warning: Replacing memory \dst with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:139
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_r4'.
+Warning: Replacing memory \src_lo_q with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:195
+Generating RTLIL representation for module `\ot_hgi_qdq_static_transport_split_r4'.
+Successfully finished Verilog frontend.
+
+15. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \DL = 25
+
+16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_ctl_r4'.
+Parameter \DL = 25
+Generating RTLIL representation for module `$paramod\ot_hgi_qdq_transport_ctl_r4\DL=s32'00000000000000000000000000011001'.
+Warning: Replacing memory \src_lo_q with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:195
+
+16.1. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_transport_ctl_r4
+Used module:     \ot_hgi_qdq_transport_ctl_s4
+Parameter \DL = 25
+Parameter \MUT = 0
+
+16.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_ctl_s4'.
+Parameter \DL = 25
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4'.
+Warning: Replacing memory \wbl with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:143
+Warning: Replacing memory \dst with list of registers. See /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:139
+
+16.3. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_transport_ctl_r4
+Used module:     $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4
+
+16.4. Analyzing design hierarchy..
+Top module:  \ot_hgi_qdq_transport_ctl_r4
+Used module:     $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4
+Removing unused module `\ot_hgi_qdq_static_transport_split_r4'.
+Removing unused module `$paramod\ot_hgi_qdq_transport_ctl_r4\DL=s32'00000000000000000000000000011001'.
+Removing unused module `\ot_hgi_qdq_transport_ctl_s4'.
+Removed 3 unused modules.
+
+17. Executing PROC pass (convert processes to netlists).
+
+17.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:145$1378'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:145$1378'.
+Cleaned up 1 empty switch.
+
+17.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:182$1191 in module ot_hgi_qdq_transport_ctl_r4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:185$1193 in module ot_hgi_qdq_transport_ctl_r4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:192$1195 in module ot_hgi_qdq_transport_ctl_r4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Marked 16 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:95$1284 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Marked 12 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:64$1216 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:61$1212 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Marked 1 switch rules as full_case in process $proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:56$1210 in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+Removed a total of 0 dead cases.
+
+17.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 22 redundant assignments.
+Promoted 123 assignments to connections.
+
+17.4. Executing PROC_INIT pass (extract init attributes).
+
+17.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:182$1191'.
+Found async reset \rst_l1 in `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:185$1193'.
+Found async reset \rn [3] in `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:192$1195'.
+Found async reset \rst_n [2] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+Found async reset \rst_n [2] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291'.
+Found async reset \rst_n [1] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:95$1284'.
+Found async reset \rst_n [0] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:64$1216'.
+Found async reset \rst_n [0] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:61$1212'.
+Found async reset \rst_n [2] in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:56$1210'.
+
+17.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~31 debug messages>
+
+17.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:182$1191'.
+     1/2: $0\rst_l1[0:0]
+     2/2: $0\rst_l0[0:0]
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:185$1193'.
+     1/1: $0\rn[3:0]
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:192$1195'.
+     1/1: $0\cv_q[0:0]
+Creating decoders for process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+     1/11: $0\wq_v[7:0]
+     2/11: $1$fordecl_block$984.k[31:0]$1372
+     3/11: $7\rq[135:135]
+     4/11: $6\rq[118:118]
+     5/11: $5\rq[101:101]
+     6/11: $4\rq[84:84]
+     7/11: $3\rq[67:67]
+     8/11: $2\rq[50:50]
+     9/11: $1\rq[33:33]
+    10/11: $0\rq[16:16]
+    11/11: $1$fordecl_block$982.k[31:0]$1373
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+     1/32: $8\wm_next[63:56]
+     2/32: $8\wa_next[127:112]
+     3/32: $8\wv_next[7:7]
+     4/32: $8\rq_next[135:119]
+     5/32: $7\wm_next[55:48]
+     6/32: $7\wa_next[111:96]
+     7/32: $7\wv_next[6:6]
+     8/32: $7\rq_next[118:102]
+     9/32: $6\wm_next[47:40]
+    10/32: $6\wa_next[95:80]
+    11/32: $6\wv_next[5:5]
+    12/32: $6\rq_next[101:85]
+    13/32: $5\wm_next[39:32]
+    14/32: $5\wa_next[79:64]
+    15/32: $5\wv_next[4:4]
+    16/32: $5\rq_next[84:68]
+    17/32: $4\wm_next[31:24]
+    18/32: $4\wa_next[63:48]
+    19/32: $4\wv_next[3:3]
+    20/32: $4\rq_next[67:51]
+    21/32: $3\wm_next[23:16]
+    22/32: $3\wa_next[47:32]
+    23/32: $3\wv_next[2:2]
+    24/32: $3\rq_next[50:34]
+    25/32: $2\wm_next[15:8]
+    26/32: $2\wa_next[31:16]
+    27/32: $2\wv_next[1:1]
+    28/32: $2\rq_next[33:17]
+    29/32: $1\wm_next[7:0]
+    30/32: $1\wa_next[15:0]
+    31/32: $1\wv_next[0:0]
+    32/32: $1\rq_next[16:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291'.
+     1/3: $0\record_done[0:0]
+     2/3: $0\beat_done[0:0]
+     3/3: $0\fault[0:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:102$1287'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:98$1286'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:95$1284'.
+     1/2: $0\dec_v[0:0]
+     2/2: $0\dv[25:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229'.
+     1/16: $8\bad[0:0]
+     2/16: $7\bad[0:0]
+     3/16: $6\bad[0:0]
+     4/16: $5\bad[0:0]
+     5/16: $4\bad[0:0]
+     6/16: $3\bad[0:0]
+     7/16: $2\bad[0:0]
+     8/16: $1\bad[0:0]
+     9/16: $4\expected[7:0]
+    10/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:91$1202[31:0]$1266
+    11/16: $3\expected[7:0]
+    12/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:91$1201[31:0]$1256
+    13/16: $2\expected[7:0]
+    14/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:91$1200[31:0]$1246
+    15/16: $1\expected[7:0]
+    16/16: $1$bitselwrite$pos$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:91$1199[31:0]$1236
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:75$1227'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:70$1222'.
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:64$1216'.
+     1/2: $0\warm_b[0:0]
+     2/2: $0\warm_a[0:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:61$1212'.
+     1/1: $0\cnt[7:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:56$1210'.
+     1/3: $0\decode_fault_q[0:0]
+     2/3: $0\qfault_q[0:0]
+     3/3: $0\vo_q[0:0]
+Creating decoders for process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:55$1209'.
+
+17.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wv_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wa_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wm_next' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\kr' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\kw' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$980.b' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\expected' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\bad' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$978.t' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229'.
+No latch inferred for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$976.t' from process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229'.
+
+17.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\rst_l0' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:182$1191'.
+  created $adff cell `$procdff$1533' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\rst_l1' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:182$1191'.
+  created $adff cell `$procdff$1538' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\rn' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:185$1193'.
+  created $adff cell `$procdff$1543' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\cv_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:192$1195'.
+  created $adff cell `$procdff$1548' with positive edge clock and positive level reset.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\op_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1549' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\blk_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1550' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1551' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\dst_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1552' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\last_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1553' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\rl_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1554' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\wc_q' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1555' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[0]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1556' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[1]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1557' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[2]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1558' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[3]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1559' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[4]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1560' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[5]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1561' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[6]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1562' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.\src_lo_q[7]' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1563' with positive edge clock.
+Creating register for signal `\ot_hgi_qdq_transport_ctl_r4.$fordecl_block$992.b' using process `\ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+  created $dff cell `$procdff$1564' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [15:0]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1565' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [32:17]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1566' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [49:34]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1567' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [66:51]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1568' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [83:68]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1569' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [100:85]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1570' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [117:102]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1571' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [134:119]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1572' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wq_addr' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1573' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wq_mask' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1574' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rsel' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1575' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wsel' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1576' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dec_header' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1577' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\gd' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1578' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[0]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1579' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[1]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1580' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[2]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1581' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[3]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1582' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[4]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1583' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[5]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1584' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[6]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1585' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[7]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1586' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[8]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1587' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[9]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1588' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[10]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1589' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[11]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1590' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[12]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1591' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[13]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1592' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[14]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1593' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[15]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1594' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[16]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1595' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[17]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1596' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[18]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1597' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[19]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1598' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[20]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1599' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[21]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1600' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[22]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1601' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[23]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1602' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[24]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1603' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dst[25]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1604' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[0]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1605' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[1]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1606' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[2]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1607' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[3]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1608' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[4]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1609' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[5]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1610' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[6]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1611' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wbl[7]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1612' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$990.b' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1613' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$988.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1614' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$986.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+  created $dff cell `$procdff$1615' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [16]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1620' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [33]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1625' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [50]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1630' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [67]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1635' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [84]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1640' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [101]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1645' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [118]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1650' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rq [135]' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1655' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wq_v' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1660' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$984.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $dff cell `$procdff$1667' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$fordecl_block$982.k' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+  created $adff cell `$procdff$1672' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\beat_done' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291'.
+  created $adff cell `$procdff$1677' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\record_done' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291'.
+  created $adff cell `$procdff$1682' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\fault' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291'.
+  created $adff cell `$procdff$1687' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rb' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:102$1287'.
+  created $dff cell `$procdff$1688' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\gl' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:98$1286'.
+  created $dff cell `$procdff$1689' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dl' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:98$1286'.
+  created $dff cell `$procdff$1690' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dec_v' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:95$1284'.
+  created $adff cell `$procdff$1695' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\dv' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:95$1284'.
+  created $adff cell `$procdff$1700' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\m1' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:75$1227'.
+  created $dff cell `$procdff$1701' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\m2' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:75$1227'.
+  created $dff cell `$procdff$1702' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\wp' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:70$1222'.
+  created $dff cell `$procdff$1703' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\ra' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:70$1222'.
+  created $dff cell `$procdff$1704' with positive edge clock.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\warm_a' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:64$1216'.
+  created $adff cell `$procdff$1709' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\warm_b' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:64$1216'.
+  created $adff cell `$procdff$1714' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\cnt' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:61$1212'.
+  created $adff cell `$procdff$1719' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\vo_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:56$1210'.
+  created $adff cell `$procdff$1724' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\qfault_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:56$1210'.
+  created $adff cell `$procdff$1729' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\decode_fault_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:56$1210'.
+  created $adff cell `$procdff$1734' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.\rr_v_q' using process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:55$1209'.
+  created $dff cell `$procdff$1735' with positive edge clock.
+
+17.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+17.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:182$1191'.
+Removing empty process `ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:185$1193'.
+Removing empty process `ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:192$1195'.
+Removing empty process `ot_hgi_qdq_transport_ctl_r4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:194$1197'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:134$1374'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:131$1368'.
+Found and cleaned up 16 empty switches in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:122$1318'.
+Found and cleaned up 2 empty switches in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:106$1291'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:102$1287'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:98$1286'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:95$1284'.
+Found and cleaned up 12 empty switches in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:89$1229'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:75$1227'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:70$1222'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:64$1216'.
+Found and cleaned up 1 empty switch in `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:61$1212'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:61$1212'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:56$1210'.
+Removing empty process `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.$proc$/w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:55$1209'.
+Cleaned up 31 empty switches.
+
+17.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hgi_qdq_transport_ctl_r4.
+<suppressed ~8 debug messages>
+Optimizing module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4.
+<suppressed ~52 debug messages>
+
+18. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hgi_qdq_transport_ctl_r4..
+Finding unused cells or wires in module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4..
+Removed 49 unused cells and 345 unused wires.
+<suppressed ~51 debug messages>
+
+19. Executing CHECK pass (checking for obvious problems).
+Checking module ot_hgi_qdq_transport_ctl_r4...
+Checking module $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4...
+Found and reported 0 problems.
+
+20. Printing statistics.
+
+=== ot_hgi_qdq_transport_ctl_r4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       45 wires
+      663 wire bits
+       45 public wires
+      663 public wire bits
+       25 ports
+      548 port bits
+       19 cells
+        4   $adff
+       15   $dff
+        1 submodules
+        1   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4
+
+=== $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      228 wires
+     2920 wire bits
+       93 public wires
+     1708 public wire bits
+       26 ports
+      574 port bits
+      251 cells
+       30   $add
+       20   $adff
+        3   $and
+       56   $dff
+        4   $eq
+        2   $ge
+        1   $gt
+        7   $logic_and
+        1   $logic_not
+       10   $logic_or
+       18   $lt
+       47   $mux
+       12   $ne
+        7   $neg
+        3   $not
+        3   $or
+        7   $shift
+       18   $sub
+        1   ot_sram_1r1w_128x64_m1_p192
+        1   ot_sram_1r1w_64x16_m1
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+      270 ot_hgi_qdq_transport_ctl_r4
+      251 $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4
+
+        +----------Count including submodules.
+        | 
+      273 wires
+     3583 wire bits
+      138 public wires
+     2371 public wire bits
+       51 ports
+     1122 port bits
+        - memories
+        - memory bits
+        - processes
+      270 cells
+       30   $add
+       24   $adff
+        3   $and
+       71   $dff
+        4   $eq
+        2   $ge
+        1   $gt
+        7   $logic_and
+        1   $logic_not
+       10   $logic_or
+       18   $lt
+       47   $mux
+       12   $ne
+        7   $neg
+        3   $not
+        3   $or
+        7   $shift
+       18   $sub
+        1   ot_sram_1r1w_128x64_m1_p192
+        1   ot_sram_1r1w_64x16_m1
+        1 submodules
+        1   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4
+
+Warnings: 6 unique messages, 15 total
+End of script. Logfile hash: ce51277b59, time: 0.44s, user: 0.46s, system: 0.03s, MEM: 28.59 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 70% 12x read_verilog (0 sec), 14% 2x hierarchy (0 sec), ...

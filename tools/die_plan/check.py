@@ -61,6 +61,10 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               geom_partial_face (plan pin table); granted exceptions kept (plan_geom.EXCEPTIONS)
   G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
+  xtap_latency (WARN only, XTAP-SWEEP-1 11-11) ft hops between taps whose modeled source latency differs > 50 ps and no
+              clock.ft_hop_lockup (xtap flop / latch); one [xtap-count] line
+  tap_sink_cap (WARN default / --tap-sink-cap error, XTAP-SWEEP-1 11-11) a clock tap whose plan sink count exceeds gen_phys._tap_cap (3000 grid /
+              1500 density; lower bound without a sink inventory); one [tapcap-count] line
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
 """
 import argparse
@@ -825,6 +829,174 @@ def ft_s0_window_um(t, slot):
     else:
         e, a = abs((0.0 if face == "S" else h) - y), x
     return e + max(lo - a, 0.0, a - hi), e + max(abs(a - lo), abs(a - hi))
+
+
+XTAP_LAT_DELTA_PS = 50.0     # XTAP-SWEEP-1 11-11: hop tap-latency difference above which an unlocked hop is listed
+
+
+def xtap_latency_hops(P, thresh=XTAP_LAT_DELTA_PS):
+    """XTAP-SWEEP-1 11-11 (COORD, NW_iorly hold): ft station-chain hops k -> k+1 (ft_slots, per type) whose two stations
+    hang on kit clock taps whose MODELED source latency differs by more than `thresh` ps.  Modeled latency of a tap port
+    p = -D_p, the early source latency the kit SDC gives it (plan clock.tap_window.per_port_ps via
+    gen_phys.port_window_ps; late 0 on every port), so delta = |D_a - D_b| (bit with the largest delta decides).
+    Stations map to taps the way ft_xtap.predict_slot does (nearest grid tap by Manhattan distance); the kit's cap /
+    merge passes can still move sinks.  A hop is COVERED when its type is on clock.ft_hop_lockup (latch u_fl_*) and
+    either the hop is on clock.ft_hop_lockup.xtap_flop (full-cycle hop flop) or carries a latch tap / latch_frac entry;
+    a hop of a lockup type with neither is `latch_only` (counted, not listed).  Types / hops with no site data count
+    as unknown (never listed).  Returns (mode, hops, stats): mode "per_port" | "flat" | "none"."""
+    import ft_xtap
+    import gen_phys
+    import gen_rtl
+    tw = (P.raw.get("clock") or {}).get("tap_window")
+    if not tw:
+        mode = "none"
+    elif (tw.get("per_port_ps") or {}):
+        mode = "per_port"
+    else:
+        mode = "flat"            # one window W on every port
+    stats = dict(hops_total=0, hops_unknown=0, latch_only=0, flat_xtap_hops=0, flat_window_ps=None,
+                 per_port_types=len(((tw or {}).get("per_port_ps") or {})))
+    out = []
+    if mode == "none":
+        return mode, out, stats
+    stats["flat_window_ps"] = gen_phys.tap_window_ps(P)
+    for tn in sorted(P.types):
+        t = P.types[tn]
+        slots = [s for s in (t.get("ft_slots") or []) if int(s.get("stations", 1)) >= 2]
+        if not slots:
+            continue
+        try:
+            taps = S.tap_grid(P, tn)
+        except Exception as ex:
+            stats["types_uncomputable"] = stats.get("types_uncomputable", 0) + 1
+            why = stats.setdefault("why", {})
+            k = f"{type(ex).__name__}: {str(ex)[:90]}"
+            why[k] = why.get(k, 0) + 1
+            continue
+        if len(taps) < 2:
+            continue
+        lock = gen_rtl.ft_hop_lockup(P.raw, tn)
+        for s in slots:
+            st, _nb = ft_xtap.station_sites(P, tn, s)
+            xt = set(S.ft_hop_xtap(P.raw, tn, s["name"])) if lock else set()
+            ltap = S.ft_hop_latch_tap(P.raw, tn).get(s["name"], {}) if lock else {}
+            lfrac = S.ft_hop_latch_frac(P.raw, tn).get(s["name"], {}) if lock else {}
+            for k in range(len(st) - 1):
+                a, b = st[k], st[k + 1]
+                stats["hops_total"] += 1
+                if not a or not b:
+                    stats["hops_unknown"] += 1
+                    continue
+                m = max(len(a), len(b))
+                best = None
+                for i in range(m):
+                    na = ft_xtap._nearest(taps, *a[min(i, len(a) - 1)])
+                    nb_ = ft_xtap._nearest(taps, *b[min(i, len(b) - 1)])
+                    if na == nb_:
+                        continue
+                    # COORD intent: a hop between different tap PORTS pays the full window (same port: CRPR credit)
+                    d = max(gen_phys.port_window_ps(P, tn, na), gen_phys.port_window_ps(P, tn, nb_))
+                    if best is None or d > best[0]:
+                        best = (d, na, nb_)
+                if best is None or best[0] <= thresh:
+                    continue
+                covered = lock and (k in xt or k in ltap or k in lfrac)
+                if lock and not covered:
+                    stats["latch_only"] += 1
+                if not lock:
+                    out.append(dict(type=tn, slot=s["name"], hop=k, delta_ps=best[0], launch_tap=best[1],
+                                    capture_tap=best[2]))
+    return mode, out, stats
+
+
+def check_xtap_latency(P, R, max_msgs=20):
+    """XTAP-SWEEP-1 11-11: ADVISORY (WARN, never ERROR) list of ft hops between taps with modeled latency difference
+    > XTAP_LAT_DELTA_PS and no lockup (xtap_latency_hops).  Always one count line."""
+    mode, hops, st = xtap_latency_hops(P)
+    hops.sort(key=lambda h: (-h["delta_ps"], h["type"], h["slot"], h["hop"]))
+    for h in hops[:max_msgs]:
+        R.warn("xtap_latency", f"type {h['type']} slot {h['slot']} hop {h['hop']}->{h['hop'] + 1}: {h['launch_tap']} -> "
+               f"{h['capture_tap']} different tap ports, window {h['delta_ps']:g} ps (> {XTAP_LAT_DELTA_PS:g}), no "
+               "clock.ft_hop_lockup (xtap flop / latch)", type=h["type"])
+    if len(hops) > max_msgs:
+        R.warn("xtap_latency", f"... {len(hops) - max_msgs} more unlocked cross-tap hops (see summary)")
+    worst = max((h["delta_ps"] for h in hops), default=0.0)
+    tops = defaultdict(int)
+    for h in hops:
+        tops[h["type"]] += 1
+    if mode == "none":
+        note = "NOT COMPUTABLE: plan models no tap latency (no clock.tap_window)"
+    elif mode == "flat":
+        note = f"flat tap window {st['flat_window_ps']:g} ps on every port"
+    else:
+        note = "per-port tap window"
+    if hops:                       # a clean plan adds no item (counts stay in summ["xtap_latency"])
+        R.warn("xtap_latency", f"[xtap-count] {len(hops)} unlocked hops with tap latency delta > {XTAP_LAT_DELTA_PS:g} ps "
+               f"(worst {worst:g} ps; {st['hops_total']} hops, {st['hops_unknown']} unknown sites, {st['latch_only']} "
+               f"latch-only); {note}")
+    return dict(mode=mode, hops=len(hops), worst_delta_ps=worst, top_types=sorted(tops.items(), key=lambda kv: -kv[1])[:5],
+                **st)
+
+
+def tap_sink_loads(P):
+    """XTAP-SWEEP-1 11-11 (COORD): per-tap clock sink counts from the PLAN, [(type, tap, sinks, cap)] + stats.
+    Cap = gen_phys._tap_cap (clock.tap_max_sinks, else 3000 grid / 1500 density = the kit's OT_TAP_MAX_SINKS; the same
+    value plan_gen_rules.tap_cap / clock_taps.tcl use; no second constant here).  Sinks of a tap = the plan's sink
+    inventory of the type (taps.sink_sites: the firm-planned face registers + ft stations + control sinks, plus
+    clock.sink_sites_um and clock.sink_bins_file when the plan carries them, weights summed) assigned to the type's
+    taps (schema.tap_grid) by the kit's nearest-tap rule (taps.tap_loads, no cap re-assignment, so an overloaded tap
+    shows).  Without a sink_bins_file / sink_sites_um inventory this is a LOWER BOUND (interior synthesized flops are
+    not in the plan): a tap over the cap is certain, a tap under it is not proven.  A type whose inventory cannot be
+    built is counted `uncomputable` (never guessed)."""
+    import gen_phys
+    import taps as TP
+    rows, stats = [], dict(types=0, computed=0, uncomputable=0, inventory_types=0, bound_types=0, taps=0, max_sinks=0)
+    for tn in sorted(P.types):
+        t = P.types[tn]
+        stats["types"] += 1
+        try:
+            tp = S.tap_grid(P, tn)
+            sinks = TP.sink_sites(P, tn)
+            loads = TP.tap_loads([(x, y) for _n, x, y in tp], sinks)
+        except Exception as ex:
+            stats["uncomputable"] += 1
+            why = stats.setdefault("why", {})
+            k = f"{type(ex).__name__}: {str(ex)[:90]}"
+            why[k] = why.get(k, 0) + 1
+            continue
+        stats["computed"] += 1
+        ck = t.get("clock", {}) or {}
+        stats["inventory_types" if (ck.get("sink_bins_file") or ck.get("sink_sites_um")) else "bound_types"] += 1
+        cap = gen_phys._tap_cap(t)
+        for (name, _x, _y), (n, _far) in zip(tp, loads):
+            stats["taps"] += 1
+            stats["max_sinks"] = max(stats["max_sinks"], int(round(n)))
+            rows.append((tn, name, int(round(n)), cap))
+    return rows, stats
+
+
+def check_tap_sink_cap(P, R, max_msgs=20, severity="warn"):
+    """XTAP-SWEEP-1 11-11 (COORD): `severity` "error" = ERROR (the COORD ruling), "warn" (DEFAULT until the plan count is
+    validated as predictive of the built tap load: the kit splits ports into dtap subtrees) = WARN with the same text.
+    Finding on any clock tap whose plan sink count exceeds the tap cap (tap_sink_loads;
+    q_spt2's taps drove 3k-12k sinks: 290-376 ps tap spread, early capture of the face registers).  One
+    [tapcap-count] WARN line with computability."""
+    rows, st = tap_sink_loads(P)
+    over = sorted((r for r in rows if r[2] > r[3]), key=lambda r: (-r[2], r[0], r[1]))
+    for tn, name, n, cap in over[:max_msgs]:
+        (R.err if severity == "error" else R.warn)("tap_sink_cap", f"[tapcap] type {tn} tap {name}: {n} clock sinks > cap "
+                                                   f"{cap}", type=tn)
+    if len(over) > max_msgs:
+        (R.err if severity == "error" else R.warn)("tap_sink_cap", f"[tapcap] ... {len(over) - max_msgs} more taps over the cap")
+    by = defaultdict(int)
+    for r in over:
+        by[r[0]] += 1
+    if over:
+        R.warn("tap_sink_cap", f"[tapcap-count] {len(over)} taps over cap in {len(by)} types (max {st['max_sinks']} "
+               f"sinks/tap; {st['computed']}/{st['types']} types computed, {st['uncomputable']} not computable; "
+               f"{st['inventory_types']} with a sink inventory, {st['bound_types']} planned face/ft sinks only = lower bound)")
+    return dict(taps_over=len(over), types_over=len(by), worst=max((r[2] for r in over), default=0),
+                top_types=sorted(by.items(), key=lambda kv: -kv[1])[:5], **st)
 
 
 def check_ft_s0_window(P, R, max_msgs=40):
@@ -2433,7 +2605,7 @@ def _plan_geom_default():
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
-        seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict"):
+        seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn"):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2487,6 +2659,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["m89_signals"] = check_m89_signals(P, R)
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["ft_s0_window"] = check_ft_s0_window(P, R)
+    summ["xtap_latency"] = check_xtap_latency(P, R)
+    if tap_sink_cap != "off":
+        summ["tap_sink_cap"] = check_tap_sink_cap(P, R, severity=tap_sink_cap)
     summ["cuts"] = check_cuts(P, R, geo, full_cut)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
@@ -2582,6 +2757,9 @@ def main(argv=None):
     ap.add_argument("--seam-hop", choices=("warn", "off"), default="warn",
                     help="SEAM-HOP-1 advisory (seam_hop.py): WARN per seam hop (last station -> first station of the next "
                          "partition) over the 405-um signal reach; never an ERROR, ignored by --strict")
+    ap.add_argument("--tap-sink-cap", choices=("warn", "error", "off"), default="warn",
+                    help="XTAP-SWEEP-1: a tap whose PLAN sink count exceeds gen_phys._tap_cap: WARN (default until validated "
+                         "against built tap loads), ERROR (COORD ruling), off")
     ap.add_argument("--full-cut", choices=("verdict", "band"), default="verdict",
                     help="full-line cut over cut_ratio_max: verdict (default) = ERROR; band = GRT-CALIB-1 die-band WARN "
                          "[cuts_full_band], advisory, ignored by --strict (partition-segment cuts stay ERRORs)")
@@ -2599,7 +2777,7 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, core_shape_index=a.core_shape_index,
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, core_shape_index=a.core_shape_index,
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
                   full_cut=a.full_cut,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)

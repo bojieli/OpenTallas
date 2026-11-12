@@ -356,6 +356,14 @@ body.nol #lcol,body.nor #rcol{visibility:hidden;border:0}
 <script src="/explorer/element/elem.js"></script>
 <script src="/fv_flow.js"></script>
 <script>(function(){ var m = location.pathname.match(/^\/explorer\/element\/([^/]+)$/), q = new URLSearchParams(location.search);
-  var el = m && m[1] !== "index.html" ? decodeURIComponent(m[1]) : q.get("e"); if (window.FVFlow) FVFlow.mount("flowside", {element: el}); })();</script>
+  var el = m && m[1] !== "index.html" ? decodeURIComponent(m[1]) : q.get("e"); if (window.FVFlow) FVFlow.mount("flowside", {element: el});
+  // EXPLORER-2: elements are retired in favour of the die -> type -> core node index; point at the node(s) or say it has none
+  if (el) fetch("/api/design/resolve?q=" + encodeURIComponent(el)).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d) return; var ids = d[el] || [], b = document.createElement("div");
+    b.setAttribute("role", "note"); b.style.cssText = "padding:6px 14px;font:12px ui-monospace,Menlo,monospace;background:var(--warn-bg,#fff4d6);color:var(--ink,#222);border-bottom:1px solid #d9b44a";
+    b.innerHTML = "Legacy element page (October element index). " + (ids.length ? "Current design" + (ids.length > 1 ? "s" : "") + ": " + ids.map(function (i) { return '<a href="/explorer/design/#n=' + encodeURIComponent(i) + '">' + i.replace(/[<&>]/g, "") + "</a>"; }).join(", ")
+      : "This name is not a type or core of any current die plan: <a href=\"/explorer/design/\">open the design explorer</a>.");
+    var top = document.getElementById("topbar"); top.parentNode.insertBefore(b, top.nextSibling);
+  }).catch(function () {}); })();</script>
 </body>
 </html>

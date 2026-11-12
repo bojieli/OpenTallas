@@ -1,0 +1,12 @@
+read_verilog -sv /w/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v /w/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v /w/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x64_m2_r0c0_g64/ot_sram_1r1w_256x64_m2_r0c0_g64_bb.v
+read_verilog -sv /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r5.sv
+hierarchy -top ot_hgi_qdq_transport_ctl_r5 -chparam DL 25
+proc; opt_clean; check -assert
+select -assert-none t:$dlatch t:$adlatch t:$mem* t:$memwr_v2
+stat
+design -reset
+read_verilog -sv /w/physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v /w/physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v
+read_verilog -sv /w/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv
+hierarchy -top ot_hgi_qdq_transport_ctl_r4 -chparam DL 25
+proc; opt_clean; check -assert
+stat

@@ -32,13 +32,20 @@ xl = cell("xl_NE_ctl", "ot_hgi_sm_xload_cl2_ctlx", RD_LAT=3327107059280522282); 
 opne = cell("hb_idx__op_NE", "ot_hbm_idx_vm_query_static_n12", VM_RT_EXTRA=171); wire(banks["NE", 2], "rr4", opne, "vm_rr")
 nwsh = cell("hb_idx__nwsh", "ot_hbm_idx_vm_share2_static_r", BANK_RT=54); wire(banks["NW", 3], "rr3", nwsh, "vm_rr")
 opnw = cell("hb_idx__op_NW", "ot_hbm_idx_vm_query_static_n12", VM_RT_EXTRA=173); wire(nwsh, "a_rr", opnw, "vm_rr")
-cut = sys.argv[2] == "cut"
+fvp = cell("hb_fvp_SE0", "ot_hnx_fused_vm_pair"); cells[fvp].ytype = "ot_hnx_fused_vm_pair"   # BANK_RR not overridden
+wire(banks["SE", 0], "rr0", fvp, "rr0", 3)
+lane = cell("u_mu_fused_0_ne", "ot_hnx_fused_lane", D=5120, KX=4, RR=10)
+wire(fvp, "a_rr_v", lane, "rr_v"); wire(fvp, "a_rr_d", lane, "rr_d", 2)
+cut = sys.argv[2] in ("cut", "cut4")
 if cut:
     cr = cell("hcollrs_NE", "ot_hbm_idx_vm_share2_static_r", BANK_RT=7); wire(banks["NE", 4], "rr3", cr, "vm_rr")
     cc = cell("hb_coll_NE.__cut_vm", "hb_coll_NE__cut_vm"); wire(cr, "a_rr", cc, "vmasm_rd_il")
     gi = cell("hcollgi_NE", "ot_hgi_coll_gq_issue", VM_RT=3); wire(cr, "b_rr", gi, "vm_rr_lo"); wire(cr, "b_rr", gi, "vm_rr_hi")
 ab = {"core_pin_cycles": [dict(tsv=TSV, core="hnx_vms_bank_q0_faces__vecd4ae", module=BANK)]} if sys.argv[2] != "off" else {}
-ctx = NS(F=NS(cells=cells), sinks=sinks, ab=ab, base=W)
+vmrt = "4" if sys.argv[2] == "cut4" else "3"      # elaborated t11_top hb_coll_N* VM_RT
+ctx = NS(F=NS(cells=cells), sinks=sinks, ab=ab, base=W,
+         param_defaults={("ot_hnx_fused_vm_pair", "ot_hnx_fused_vm_pair"): {"BANK_RR": "6"}},
+         top_inst_params={"hb_coll_NE": {"VM_RT": vmrt}, "hb_coll_NW": {"VM_RT": vmrt}})
 rules = CPC.load(ab, W)
 px, clients = H.pin_cycles(ctx, rules) if rules else ({}, {})
 xr = H.pin_plan(ctx, px, clients, defaultdict(dict))[0] if px else {}
@@ -50,7 +57,7 @@ if px:
     _, rows, prec, perr = H.pin_plan(ctx, px, clients, params); err += perr
     rec["core_pin_regen"] = rows
 pick = ["su_NE0.g_tap_r8b.u_tap", "sfu_NE0", "hc_NE0", "hc_NE.u_q", "hb_idx__ctl", "hb_idx__op_SW", "hb_dbk_NE", "xl_NE_ctl",
-        "hb_idx__op_NE", "hb_idx__nwsh", "hb_idx__op_NW", "hcollrs_NE", "hcollgi_NE"]
+        "hb_idx__op_NE", "hb_idx__nwsh", "hb_idx__op_NW", "hcollrs_NE", "hcollgi_NE", "hb_fvp_SE0", "u_mu_fused_0_ne"]
 print("MODE", sys.argv[2], "xr", xr)
 for p in pick:
     print(" ", p, dict(params.get(p, {})))

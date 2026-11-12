@@ -637,6 +637,8 @@ if ("TT global-routing insertion gate failed: PASS exit 1" in marker
 # KW-FIX-44 11-10 (COORD (3)): grt183_make.sh OT_GRT_CONGESTED_FAIL (full GRT ended congested, overflow over the floor)
 # is the congestion class; OT_GRT_TIMECAP (post-route repair over the stage cap) is its own TIMING kind
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*|OT_GRT_CONGESTED_FAIL[^\n]*",
+       # FAILFAST-1 11-11: failfast_rules.py progress stops (GRT / DRT no progress); a hold stop prints OT_HOLD_STRUCTURAL
+       "grt_no_progress": r"OT_GRT_NO_PROGRESS[^\n]*", "drt_no_progress": r"OT_DRT_NO_PROGRESS[^\n]*",
        "grt_timecap": r"OT_GRT_TIMECAP[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
        "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
@@ -1027,6 +1029,11 @@ def classify(c, client):
         return "STRUCTURAL", "post-cts-hold", "FAIL_POSTCTS " + c["FAIL_POSTCTS"]
     if c.get("hold_structural"):
         return "STRUCTURAL", "hold-structural", c["hold_structural"]
+    if c.get("grt_no_progress"):
+        # FAILFAST-1 11-11: class GRT_NO_PROGRESS (kit-wave class ROUTING; the line carries rounds, trend, last overflow per layer)
+        return "STRUCTURAL", "grt-no-progress", c["grt_no_progress"]
+    if c.get("drt_no_progress"):
+        return "STRUCTURAL", "drt-no-progress", c["drt_no_progress"]
     if c.get("congestion"):
         return "STRUCTURAL", "grt-overflow", c["congestion"]
     if c.get("grt_timecap"):
