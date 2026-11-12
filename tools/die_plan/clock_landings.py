@@ -1600,6 +1600,14 @@ class Landings:
                     if reach_ds > int(rp.get("DSREP", 1)):
                         rp["DSREP"] = reach_ds
                         self.reset_placements.setdefault(tn, {}).setdefault(b, {})["ring_dsrep_reach"] = reach_ds
+                    # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12): the same reach rule localises the WRITE side and training
+                    # controls of a plain ring wider than one chunk (ot_dp_clk_landing LOCAL = the S81 CLAND_WCHK +
+                    # CLAND_LOCAL_ON pair, per instance): slot-index copy per chunk, one local reset register, per-chunk
+                    # on/align copies.  HEAD wshim_rx: tc decode OR3x4 fo 35 -> 67 AO21 slot enables along the ring
+                    # column was the 152/131 slew class left after the hop pass.  ready +1 clk; data latency unchanged.
+                    if r["module"] == "ot_dp_clk_landing" and reach_ds > 1 and "LOCAL" not in rp:
+                        rp["LOCAL"] = 1
+                        self.reset_placements.setdefault(tn, {}).setdefault(b, {})["ring_local"] = 1
                 rpar = "".join(f", .{k}({v})" for k, v in sorted(rp.items()))
                 rpin = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_ports", {}).items()))
                 ring_mod = r["module"] + " #(.W({w})" + rpar.replace("{", "{{").replace("}", "}}") + ")"

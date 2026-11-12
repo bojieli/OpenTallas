@@ -391,7 +391,14 @@ class Verification:
             if c:
                 self.clock(c,r['dst']);self.clock(c,r['src'],'fclk')
                 info=self.collector['types'][self.parts[r['dst']]['type']]
-                local=next(x for x in info['local_sources'] if x['name']==bus)
+                # CLAND-SIDECAR-LOCAL-1 (GEN-CLASS-1 11-12, DIE-S81-88 13:18: StopIteration on S81 r12ng t52 dn_s_4N_L0x2_i):
+                # a landing whose bus has no collector.types[].local_sources row is a stale sidecar, refused by name
+                local=next((x for x in info.get('local_sources',[]) if x['name']==bus),None)
+                if local is None:
+                    self.fail(f"{path}: CLAND_SIDECAR_LOCAL_SOURCE_MISSING: port {r['port']} lands on bus {bus} of type "
+                              f"{self.parts[r['dst']]['type']}, whose sidecar collector.types[].local_sources has no {bus} row "
+                              f"(has {[x['name'] for x in info.get('local_sources',[])]}): regenerate the clock-landing sidecar "
+                              f"for this plan")
                 if ca:
                     cfg=ca['ports'][r['port']]
                     params=getattr(c,'params',{})

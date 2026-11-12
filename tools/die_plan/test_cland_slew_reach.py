@@ -90,3 +90,22 @@ def test_placement_keys_copies_at_their_group():
     typ = dict(buses=[dict(name="link_i", width=566)],
                clock=dict(landing_contract=dict(bands=dict(link_i=dict(instance="u_cland_link_i")))))
     assert "{u_cland_link_i} {write 0 read 8}" in _local_chunk_config(typ)            # width from the bus declaration
+
+
+def test_plain_wide_ring_gets_local_write_side():
+    # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12): a plain ring wider than one chunk gets LOCAL = 1 (WCHKC slot-index copy per
+    # chunk + local reset/on/align copies) next to its DSREP read copies; one-chunk rings and count-aligned rings unchanged
+    from test_clock_landings import vehicle
+    p, t = vehicle()
+    body = _wide(p, t, 63)
+    narrow = _ring_line(Landings(p, t).type_rtl("B", body))
+    assert narrow.startswith("    ot_dp_clk_landing #(.W(64)") and "LOCAL" not in narrow and "DSREP" not in narrow
+    p, t = vehicle()
+    body = _wide(p, t, 567)
+    lg = Landings(p, t)
+    line = _ring_line(lg.type_rtl("B", body))
+    assert line == "    ot_dp_clk_landing #(.W(568), .DSREP(8), .LOCAL(1)) u_cland_y (", line
+    assert lg.reset_placements["B"]["y"]["ring_local"] == 1
+    p, t = ca_vehicle()
+    body = _wide(p, t, 567)
+    assert "LOCAL" not in _ring_line(Landings(p, t).type_rtl("B", body))
