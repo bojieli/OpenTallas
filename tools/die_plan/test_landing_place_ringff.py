@@ -54,7 +54,7 @@ def test_default_tags_take_the_unchanged_path():
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
 def test_ffkey_sorts_bit_major():
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[10\]$_DFFE_PP_",
              r"u/u_ring.s_d\[1\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_", "u/u_ring.s_d[2][9]$_DFFE_PP_"]
     body = proc + "set l {}\nforeach n {" + " ".join("{" + n + "}" for n in names) + "} { lappend l [list [cland_ffkey $n] $n] }\n" \
@@ -86,12 +86,12 @@ def test_lsb_high_bus_gets_reversed_ff_tag_only():
     # the placer takes the +ffr tag down the flop-only path
     assert "if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]}" in TCL
     assert "set rev [string match {ring:*+ffr} $tag]" in TCL
-    assert "[cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups]" in TCL
+    assert "[cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups $wcw]" in TCL
 
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
 def test_ffkey_rev_sorts_bits_descending_slots_ascending():
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[10\]$_DFFE_PP_",
              r"u/u_ring.s_d\[1\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_", "u/u_ring.s_d[2][565]$_DFFE_PP_"]
     def order(rev):
@@ -105,7 +105,7 @@ def test_ffkey_rev_sorts_bits_descending_slots_ascending():
 
 
 def _keyed_order(names, rev):
-    procs = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0) + \
+    procs = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0) + \
         re.search(r"proc cland_dsel_wch \{names\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     body = procs + "set ns {" + " ".join("{" + n + "}" for n in names) + "}\nset w [cland_dsel_wch $ns]\nputs W=$w\n" \
         "set l {}\nforeach n $ns { lappend l [list [cland_ffkey $n %d $w] $n] }\n" % rev + \
@@ -140,7 +140,7 @@ def test_band_without_chunked_registers_keeps_old_keys():
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.rp\[0\]$_DFF_P_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_"]
     w, out = _keyed_order(names, 0)
     assert w == "W=0"
-    old = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    old = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     body = old + "foreach n {" + " ".join("{" + n + "}" for n in names) + "} { puts [cland_ffkey $n 0] }\n"
     keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
     assert keys == ["u/u_ring.s_d|000000009|000000003|$_DFFE_PP_", r"u/u_ring.rp\[0\]$_DFF_P_",
@@ -151,7 +151,7 @@ def test_band_without_chunked_registers_keeps_old_keys():
 def test_status_bits_above_bus_width_keep_raw_key():
     # HEAD st_str d ring: word bits 512..514 (above the 512-bit d_i bus) feed the plan-sited status stage at the band's
     # low corner; they keep the raw-name key instead of following bit 514 to the band's far end (r2r 537.8)
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     names = [r"u/u_ring.dch\[8\].u_dsel/y\[2\]$_DFF_P_", r"u/u_ring.dch\[7\].u_dsel/y\[63\]$_DFF_P_"]
     body = proc + "foreach n {" + " ".join("{" + n + "}" for n in names) + "} { puts [cland_ffkey $n 0 64 512] }\n"
     keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
@@ -163,7 +163,7 @@ def test_status_bits_above_bus_width_keep_raw_key():
 def test_tail_group_read_selector_stays_on_last_payload_bit():
     # l48vd READ_CHUNK/WRITE_TAIL (opt-in tail_groups): a short last read chunk keeps its di selector at the last payload
     # bit (slot range 999999970+) instead of falling back to the raw-name key; tail_groups=0 is unchanged.
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     nm = r"u/u_ring.dch\[8\].u_dsel/di\[0\]$_DFFE_PP_"
     body = proc + "puts [cland_ffkey {%s} 0 64 520 0 64 0]\nputs [cland_ffkey {%s} 0 64 520 0 64 1]\n" % (nm, nm)
     keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
@@ -192,7 +192,7 @@ def test_chunk_wire_storage_names_key_as_their_slot_and_bit():
     _, rev = _keyed_order(names, 1)
     assert [re.sub(r"\\|u/u_ring\.|\$_DFF\w*", "", o) for o in rev][:3] == \
         ["dch[1].sd_c[1]", "dch[1].sd_c[3]", "dch[1].u_dsel/y[1]"]
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     nm = r"u/u_ring.dch\[1\].sd_c\[3\]$_DFFE_NP_"
     pad = r"u/u_ring.dch\[1\].sd_c\[1\]$_DFFE_NP_"
     body = proc + "puts [cland_ffkey {%s} 0 0]\nputs [cland_ffkey {%s} 0 2 3]\nputs [cland_ffkey {%s} 0 2 3]\n" % (nm, pad, nm)
@@ -203,3 +203,23 @@ def test_chunk_wire_storage_names_key_as_their_slot_and_bit():
     k2 = subprocess.run(["tclsh"], input=proc + "puts [cland_ffkey {%s} 0 2 3]\n" % nm2, capture_output=True, text=True,
                         check=True).stdout.split()
     assert k2 == ["u/u_ring.s_d|000000002|000000001|$_DFFE_NP_"]
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_wchkc_writer_storage_keyed_like_s_d():
+    # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12): LOCAL ring storage g_wcc.wcc[c].u_wcc/m[slot][k] keys as s_d[slot][c*16+k],
+    # the chunk slot copy tcc at its chunk centre; the plain s_d form keys exactly as before
+    procs = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\} \{wwc 0\} \{rwc 0\} \{tail_groups 0\} \{wcw 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0) + \
+        re.search(r"proc cland_wcc_w \{names\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    p = "u_cland_y/u_ring.genblk1.g_wcc.wcc\\[%d\\].u_wcc/%s"
+    names = [p % (1, "m\\[0\\]\\[3\\]$_DFFE_NP_"), p % (0, "m\\[2\\]\\[15\\]$_DFFE_NP_"), p % (1, "tcc\\[0\\]$_DFF_P_"),
+             p % (0, "m\\[0\\]\\[3\\]$_DFFE_NP_")]
+    body = procs + "set ns {" + " ".join("{" + n + "}" for n in names) + "}\nset w [cland_wcc_w $ns]\nputs $w\n" \
+        "foreach n $ns { puts [cland_ffkey $n 0 0 64 0 0 0 $w] }\nputs [cland_ffkey {u_cland_y/u_ring.s_d\\[1\\]\\[19\\]$_DFF_N_}]\n"
+    out = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split("\n")
+    assert out[0] == "16"
+    assert out[1] == "u_cland_y/u_ring.s_d|000000019|000000000|$_DFFE_NP_"
+    assert out[2] == "u_cland_y/u_ring.s_d|000000015|000000002|$_DFFE_NP_"
+    assert out[3] == "u_cland_y/u_ring.s_d|000000024|999999960|\\[0\\]$_DFF_P_"
+    assert out[4] == "u_cland_y/u_ring.s_d|000000003|000000000|$_DFFE_NP_"
+    assert out[5] == "u_cland_y/u_ring.s_d|000000019|000000001|$_DFF_N_"

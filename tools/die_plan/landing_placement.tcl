@@ -553,10 +553,29 @@ set cland_ff_fill 0.90
 set cland_cursor {}
 # DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
 # band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
-proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0}} {
+proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {wcw 0}} {
  if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} {
   if {$rev} { set i [expr {999999999-$i}] }
   return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t]
+ }
+ # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12): a LOCAL / CLAND_WCHK ring (ot_meso_ring WCHKC) holds its slots in the
+ # per-chunk writers g_wcc.wcc[c].u_wcc/m[slot][k] (word bit c*WCW+k) next to the chunk slot-index copy tcc: key them
+ # exactly as the unchunked s_d[slot][bit] and the copy at its chunk centre, so storage keeps its pin order and each
+ # copy sits by its own WCW bits (raw names would pack every chunk storage by ASCII order).  wcw 0 = no such cells.
+ if {$wcw > 0 && [regexp {^(.*[/.])(genblk[0-9]+[./])?g_wcc[./]wcc\\?\[([0-9]+)\\?\][./]u_wcc[./](m|tcc)(.*)$} $nm -> b gb c kind t]} {
+  regsub {genblk[0-9]+[./]$} $b {} b
+  if {$kind eq "m" && [regexp {^\\?\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $t -> sl k tail]} {
+   set bit [expr {$c*$wcw+$k}]
+   if {$rev} { set bit [expr {999999999-$bit}] }
+   return [format {%s|%09d|%09d|%s} "${b}s_d" $bit $sl $tail]
+  }
+  if {$kind eq "tcc"} {
+   set bit [expr {$c*$wcw+$wcw/2}]
+   if {$nbits <= 0 || $bit < $nbits} {
+    if {$rev} { set bit [expr {999999999-$bit}] }
+    return [format {%s|%09d|%09d|%s} "${b}s_d" $bit 999999960 $t]
+   }
+  }
  }
  # FLOW-10 10-30 (HEAD st_str / wshim_rx r2r 510): the read-side registers of a chunked ring (ot_meso_dsel per 64-bit
  # chunk: dch[c].u_dsel/y[i] = word bit c*WCH+i, dch[c].u_dsel/di[k] = the chunk's one-hot selects) have no adjacent
@@ -651,6 +670,14 @@ proc cland_freg_rekey {ffs base nbb rev} {
   } else { set pr }
  }]
  return [list $nf $out]
+}
+# CLAND-RING-LOCALITY: chunk width WCW of a band WCHKC ring writers (max m[slot][k] index + 1), 0 when none
+proc cland_wcc_w {names} {
+ set w 0
+ foreach nm $names {
+  if {[regexp {[./]g_wcc[./]wcc\\?\[[0-9]+\\?\][./]u_wcc[./]m\\?\[[0-9]+\\?\]\\?\[([0-9]+)\\?\]} $nm -> k]} { set w [expr {max($w,$k+1)}] }
+ }
+ return $w
 }
 proc cland_dsel_wch {names} {
  set w 0
@@ -963,7 +990,9 @@ proc cland_place_ff {prefix rect tag} {
  if {[info exists ::cland_local_chunks] && [dict exists $::cland_local_chunks $prefix tail]} {
   set tail_groups [dict get $::cland_local_chunks $prefix tail]
  }
- set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups] [lindex $pr 1]}]
+ set wcw [cland_wcc_w [lmap pr $ffs {lindex $pr 0}]]
+ if {$wcw} { puts "OT_CLAND ring_place=ff $prefix: WCHKC writer storage keyed to its word bits (writer chunk $wcw)" }
+ set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups $wcw] [lindex $pr 1]}]
  # DIE-HEAD-43 c3 (FLOW-11 shared): ring CONTROL registers (raw-name key: counters/ctl/oh/rp/tmo/ready/fault) and
  # status/s_tag keys are keyed right after the bus bit whose pin is nearest the ring's START pin (cland_fstart_in_<bus>)
  # instead of packing first at the band's low corner (HEAD wshim_rx origin->arm_cnt r2r 488 -> 378).  Bands without a

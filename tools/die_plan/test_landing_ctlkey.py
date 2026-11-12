@@ -58,7 +58,7 @@ def test_lsb_high_bus_reverses_bit_keys():
 def test_only_bands_with_a_start_pin_and_storage_are_rekeyed():
     assert 'if {$bn eq $start_name} { set sx [list $cx $cy] }' in TCL
     assert "if {[llength $sx] && [llength $bxy] && $base ne {}} {" in TCL
-    i = TCL.index(" set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups] [lindex $pr 1]}]")
+    i = TCL.index(" set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits $wwc $rwc $tail_groups $wcw] [lindex $pr 1]}]")
     assert i < TCL.index("lassign [cland_ctl_rekey $ffs $base $kb $nbb $rev] nc ffs") < TCL.index("set ordered [lsort -dictionary -index 0 $ffs]")
 
 
