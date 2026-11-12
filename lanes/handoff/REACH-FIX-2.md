@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 08:25 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 08:43 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -17,6 +17,7 @@ tools/die_plan/test_schema.py tools/die_plan/test_landing_group_rects.py -> 82 p
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, dieclock_arrivals.py) = branch HEAD.
 
 ## 3 Running jobs
+- intel1 ot-run s4.sh: regeq.py (region equalisation by wire, up to 7 build+STA iterations) -> .../reach-fix-2/s4/best/ (best.log, regeq.json).
 None. Realize loops (1x RC) were stopped on COORD's order; rz_try1 and rz are their partial outputs.
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
@@ -29,6 +30,9 @@ None. Realize loops (1x RC) were stopped on COORD's order; rz_try1 and rz are th
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 08:43 STEP-1 (decision B, posted): die_clock --pad leg (commit eed85b641c): root spread 788 -> 15.6 TT; best = aware 0, window 0,
+  --wide-levels 10 --ndr 4w: tap spread 109 TT (region last-mile residual), insertion 3880/3945 TT; seam OCV5 386 ps (unc 3829).
+  Channel-only HB4: median 1.37 mm to a channel (HEAD is 90.6% type area; the tree's own cells are 90% inside types) -> residual by wire (regeq.py).
 - 2026-11-12 08:25 STRUCTURE RESULT (queue): realize BUFx24 18,733 = 99.5% inside types (hd_tile 17,117), +19.3% area, +5.9% cap.
   HB4xp67 = 18.2 cells/ns, 1.85 um2/ns (vs BUFx24 45.9 / 20.1). Pure H-tree (die_clock build --aware-levels 0 --window 0)
   model geometry: spread 1846 -> 881 TT, insertion max 5774 -> 4609, cells -34%; but region-root spread is 788 ps.
@@ -41,13 +45,13 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-WAIT for COORD's decision on A (realized BUFx24 tree) vs B (H-tree to region roots), posted 2026-11-12 08:25. KV NDR is queued behind it.
-If B: (a) diagnose the 788 ps region-root spread in die_clock --aware-levels 0 (leaf load imbalance, repeater/4W
-quantization); load-match leaves, target under 100 ps; (b) realize --sites channel: lift cells to the nearest channel ancestor, cell HB4xp67;
-(c) die STA FF for the cell-vs-wire corner term (wire FF/TT 0.83, cells 0.73-0.76).
-Old NDR realize pass-2 recipe (only if A): realize dp/head/rzn/clk1 ARR(intel1 ndr1/pd/arr_TT.txt) -> clk2, NDR=1 rt_grt.sh, pads --no-pads --route-ndr, STA.
-Hourly STATE; keep this file current.
+COORD decision B (11-12): H-tree to region roots; A (BUFx24 realize) REJECTED; KV NDR waits until HEAD converges.
+1. Read s4/best.log. If TT spread <= ~20 ps: dieclock_arrivals.py s4/best/itN -> proof, then dcsta.sh (die_sta_related nominal) and post
+   seam/intra pair slack + OCV5. Code on intel1: code_bal_head_g5p/tools/die_plan (die_clock_leg.py = branch die_clock.py).
+2. Routed check: dieclock_routed prep --no-pads + rt_grt.sh NDR=1 (needs the 8W/4W NDR on levels: extend create_ndr) + pads --route-ndr.
+3. Then KV vN with the same flags. Hourly STATE; keep this file current.
 ## 7 Open
+- Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
 ## 8 Gotchas
 - Routed gate must use NDR (rt_grt.sh NDR=1 + pads --route-ndr); 1x GRT RC alone adds ~2 ns spread on HEAD.
