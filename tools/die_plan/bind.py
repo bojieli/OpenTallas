@@ -1851,6 +1851,7 @@ class Binder:
 
         import native_istations
         native_istations.annotate(self)
+        native_istations.annotate_kit(self)     # QC-BIND-IST-PAD 11-12: kit-built source stations are not padded twice
 
     def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
@@ -4208,7 +4209,7 @@ class Binder:
         rh = getattr(self, "_reg_hard", None) or {}
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("internal_kit_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -5929,10 +5930,12 @@ def cmd_kit_rtl(a):
 
 
 def lane_pad(L):
-    """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
+    """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations + source stations
+    realised natively or by the source kit + clock landing), when positive"""
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
-    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
+    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0))
+               - int(L.get("internal_kit_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
 
 
 def _reset_latency_meta(out, wavefront):
