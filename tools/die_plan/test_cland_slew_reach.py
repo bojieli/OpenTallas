@@ -79,7 +79,9 @@ def test_wreg_ring_raised_never_lowered():
 def test_placement_keys_copies_at_their_group():
     band = lambda w, **kw: dict(instance="u_cland_link_i", ring_width=w, **kw)          # noqa: E731
     typ = dict(clock=dict(landing_contract=dict(bands=dict(link_i=band(576)))))
-    assert "dict set ::cland_local_chunks {u_cland_link_i} {write 0 read 8}" in _local_chunk_config(typ)
+    assert "dict set ::cland_local_chunks {u_cland_link_i} {write 16 read 8}" in _local_chunk_config(typ)  # reach WREG
+    typ = dict(clock=dict(landing_ring_wreg=dict(buses=[], reach=False), landing_contract=dict(bands=dict(link_i=band(576)))))
+    assert "{u_cland_link_i} {write 0 read 8}" in _local_chunk_config(typ)            # explicit opt-out
     typ = dict(clock=dict(landing_contract=dict(bands=dict(link_i=band(64)))))
     assert _local_chunk_config(typ) == ""                                             # one chunk: no row, as before
     typ = dict(clock=dict(landing_contract=dict(bands=dict(link_i=band(576, hard_core=True)))))
@@ -89,7 +91,7 @@ def test_placement_keys_copies_at_their_group():
     assert "{u_cland_link_i} {write 8 read 8}" in _local_chunk_config(typ)            # same copies as the ring RTL
     typ = dict(buses=[dict(name="link_i", width=566)],
                clock=dict(landing_contract=dict(bands=dict(link_i=dict(instance="u_cland_link_i")))))
-    assert "{u_cland_link_i} {write 0 read 8}" in _local_chunk_config(typ)            # width from the bus declaration
+    assert "{u_cland_link_i} {write 16 read 8}" in _local_chunk_config(typ)           # width from the bus declaration
 
 
 def test_plain_wide_ring_gets_local_write_side():
@@ -109,3 +111,51 @@ def test_plain_wide_ring_gets_local_write_side():
     p, t = ca_vehicle()
     body = _wide(p, t, 567)
     assert "LOCAL" not in _ring_line(Landings(p, t).type_rtl("B", body))
+
+
+def _wide_band(p, n):
+    p["partition_types"]["B"].setdefault("clock", {})["landing_contract"] = dict(bands=dict(y=dict(ring_width=n + 1)))
+
+
+def test_wide_soft_strap_ring_gets_reach_wreg_and_k_plus_one():
+    # CLAND-RING-LOCALITY (COORD-approved family rule): ONE shared rule (ring_wreg_reach) gives RTL and strap K
+    p, t = strap_vehicle()
+    k0 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    lg = Landings(p, t)
+    rtl = lg.type_rtl("B", body)
+    line = _ring_line(rtl)
+    # WREG (writer) + reach reader START: RSTREP 1 + 9 chunks, PLACEREP copies per chunk
+    assert line.endswith(", .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(10), .PLACEREP(1)) u_cland_y ("), line
+    assert lg.reset_placements["B"]["y"]["ring_wreg"] == 1 and lg.reset_placements["B"]["y"]["strap_k_delta"] == 1
+    rs = lg.reset_placements["B"]["y"]["reader_start"]
+    assert rs["reach"] and rs["depth"] == 1 and rs["K_adjustment"] == -1 and rs["ring_reset_copies"] == 10
+    assert "ot_dp_landing_relay_rep #(.N(10)) u_cland_reader_start_y_0 (.clk(clk), .rst_raw_n(" in rtl
+    assert ".d(cland_start), .q(cland_reader_start_y_0), .qx(cland_reader_start_y_0_x));" in rtl
+    assert ".rst_n(cland_reader_start_y_0)" in line or ".rst_n(cland_reader_start_y_0)" in rtl
+    k1 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
+    assert k1 == k0 % 64                                            # WREG +1 and reader START -1: net strap K unchanged
+    assert CAB.reader_start_depth(p, "B") == 1 and CAB.reader_start_depth(p, "B", strap=False) == 0
+    assert ring_write_reg(p, "B", "y") == dict(depth=1, dsrep=8, freg=False, write_chunk=16, reach=True)
+
+
+def test_reach_wreg_opt_out_narrow_and_non_strap_unchanged():
+    p, t = strap_vehicle()
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    p["partition_types"]["B"]["clock"]["landing_ring_wreg"] = dict(buses=[], reach=False)
+    p["partition_types"]["B"]["clock"]["landing_reader_start_reach"] = False
+    line = _ring_line(Landings(p, t).type_rtl("B", body))
+    assert "WREG" not in line and "RSTREP" not in line                              # explicit opt-outs
+    assert CAB.reader_start_depth(p, "B") == 0
+    p, t = strap_vehicle()
+    body = _wide(p, t, 63)
+    _wide_band(p, 63)
+    assert "WREG" not in _ring_line(Landings(p, t).type_rtl("B", body))            # one chunk
+    assert ring_write_reg(p, "B", "y") is None
+    p, t = ca_vehicle()
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    line = _ring_line(Landings(p, t).type_rtl("B", body))
+    assert "WREG" not in line and line.endswith(", .DSREP(8)) u_cland_y (")      # non-strap: no K carrier, no WREG

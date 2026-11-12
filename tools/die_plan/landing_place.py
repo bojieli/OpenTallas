@@ -311,9 +311,16 @@ def _local_chunk_config(typ, die_clock=None):
             continue
         ds = dcfg.get('dsrep', 1) if bus in (dcfg.get('buses') or []) else 1
         ds = max(ds, CL.ring_reach_select_copies(ring_w(bus, band)))
+        # CLAND-RING-LOCALITY: the same shared reach rule as the ring RTL and the strap K (clock_landings.ring_wreg_reach):
+        # the registered write enables of a wide soft strap ring are keyed at their own writer chunk (a plain or
+        # non-strap ring has no such cells, so there the row only restates the read groups)
+        rw = CL.ring_wreg_reach(hard_plan, '_', bus, clock.get('landing_ring_wreg'))
+        if rw and die_clock:
+            rw = CL.ring_fanout_wreg_cfg(die_clock, rw)
+        wr = rw.get('write_chunk', 64) if rw else 64
         if ds > 1:
             prefix = band.get('instance', 'u_cland_' + bus)
-            rows.append('dict set ::cland_local_chunks {' + prefix + '} {write 0 read ' + str(64 // ds) + '}')
+            rows.append('dict set ::cland_local_chunks {' + prefix + '} {write ' + str(0 if wr == 64 else wr) + ' read ' + str(64 // ds) + '}')
     if not rows and wc == 64 and not numeric:
         return ''
     return 'set ::cland_local_chunks {}\nset ::cland_numeric_freg_banks {}\n' + '\n'.join(rows) + '\n'

@@ -167,6 +167,86 @@ def ring_place_copies(clock, w, read_chunk=0):
     return nch > 1
 
 
+RING_WREG_REACH_CHUNK = 16    # writer chunk of the reach-default registered writer (64 / 16 = 4 enables per slot)
+
+
+def plan_ring_width(plan, tn, bus):
+    """the ring W the plan gives receiver type tn's landing on bus (landing_contract band ring_width, else band width + 1,
+    else the type bus width + 1: the in-band epoch bit), 0 when unknown.  Plan-only, so every consumer agrees."""
+    pt = (plan or {}).get("partition_types", {})
+    t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
+    band = (((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}).get(bus) or {}
+    ok = lambda v: isinstance(v, int) and not isinstance(v, bool) and v > 0          # noqa: E731
+    if ok(band.get("ring_width")):
+        return band["ring_width"]
+    if ok(band.get("width")):
+        return band["width"] + 1
+    for b in t.get("buses", []) or []:
+        if b.get("name") == bus and ok(b.get("width")):
+            return b["width"] + 1
+    return 0
+
+
+def ring_wreg_reach(plan, tn, bus, cfg=None):
+    """CLAND-RING-LOCALITY (GEN-CLASS-1 11-12; HEAD hd_spn_wshim_rx link_i 568 b: ONE writer slot decode, OR3x4 fo 35 ->
+    BUFx10 fo 67 -> AO21 slot enables along the ~200-um ring column, TT/FF slew 154/134).  The registered writer
+    (WREG-1: t_rst_n flop + one write-enable flop per (slot, RING_WREG_REACH_CHUNK bits), K + 1 by strap_ties, word
+    stream unchanged) is the default on every SOFT count-aligned strap ring wider than one 64-bit chunk (same reach
+    test as the CLAND-SLEW-1 read copies).  -> the landing_ring_wreg cfg dict, or None for: a narrow ring, a signed hard
+    child (hard_ring_params / band hard_core: built from its own params), and a type whose landing_ring_wreg says
+    "reach": false (explicit opt-out; explicit "buses" entries keep their own cfg).  Non-strap rings never build WREG
+    (the generator applies it on the strap form only; strap_ties / strap_k only run for the strap form)."""
+    if isinstance(cfg, dict) and cfg.get("reach") is False:
+        return None
+    if hard_ring_params(plan, tn, bus) is not None:
+        return None
+    pt = (plan or {}).get("partition_types", {})
+    t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
+    band = (((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {}).get(bus) or {}
+    if band.get("hard_core"):
+        return None
+    w = plan_ring_width(plan, tn, bus)
+    if ring_reach_select_copies(w) <= 1:
+        return None
+    return dict(buses=[bus], dsrep=ring_reach_select_copies(w), write_chunk=RING_WREG_REACH_CHUNK, reach=True)
+
+
+def _soft_wide_bands(plan, tn):
+    """landing_contract bands of type tn that are soft (no hard child / hard_core) and wider than one 64-bit chunk"""
+    pt = (plan or {}).get("partition_types", {})
+    t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
+    bands = (((t.get("clock") or {}).get("landing_contract") or {}).get("bands") or {})
+    return [b for b, band in sorted(bands.items()) if not band.get("hard_core") and hard_ring_params(plan, tn, b) is None
+            and ring_reach_select_copies(plan_ring_width(plan, tn, b)) > 1]
+
+
+def reader_start_reach(plan, tn):
+    """CLAND-RING-LOCALITY part 3 (COORD-approved; HEAD hd_spn_eshim_rx rp17 with WREG: 122/124 slew pins on the read
+    copies' INPUTS, one cland_start net from the same-partition origin -> BUFx10 fo 94 into ~70 select copies along the
+    column).  A type whose count-aligned rings take cland_start straight (no clock.landing_reader_start) and that has a
+    wide soft band gets ONE reader-START relay stage per input ring (the existing landing_reader_start form: K - 1 via
+    count_align_bind.reader_start_depth, boot +1, data unchanged) whose last stage is RSTREP with one copy per 64-bit
+    chunk (ring_reset_copies_reach).  -> 1 or 0.  0 for: an explicit landing_reader_start (its own depth), a type with
+    any signed hard-child ring (its K is fixed in the child), no wide soft band, or clock.landing_reader_start_reach
+    false (opt-out).  Plan-only: the generator, strap K (strap_ties / verify strap_k) and the table K read this."""
+    pt = (plan or {}).get("partition_types", {})
+    t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
+    c = t.get("clock") or {}
+    if c.get("landing_reader_start") is not None or c.get("landing_reader_start_reach") is False:
+        return 0
+    if any((hc.get("param_wrap") or {}).get("base") in HARD_RING_BASES for hc in t.get("hard_cores", []) or []):
+        return 0
+    return 1 if _soft_wide_bands(plan, tn) else 0
+
+
+def ring_reset_copies_reach(w, read_chunk=0):
+    """RSTREP count of a reach-default reader START (reader_start_reach): 1 (oh) + one copy per read chunk, 0 for a
+    single-chunk ring"""
+    rw = -(-int(w) // 64) * 64
+    nch = -(-rw // int(read_chunk)) if read_chunk else rw // 64
+    return 1 + nch if nch > 1 else 0
+
+
 def ring_write_reg(plan, tn, bus):
     """WREG-1 (DIE-HEAD-58 TURNB 11-03): {"depth": 1, "dsrep": n} when receiver type tn opts bus into the registered
     ring writer (partition_types[tn].clock.landing_ring_wreg = {"buses": [...], "dsrep": n}; a split copy
@@ -177,13 +257,16 @@ def ring_write_reg(plan, tn, bus):
     pt = plan.get("partition_types", {})
     t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
     cfg = (t.get("clock") or {}).get("landing_ring_wreg")
-    if not cfg:
-        return None
-    if not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list):
+    if cfg and (not isinstance(cfg, dict) or not isinstance(cfg.get("buses"), list)):
         raise ValueError(f"{tn}: clock.landing_ring_wreg must be {{\"buses\": [...], \"dsrep\": n}}")
+    if not cfg or bus not in cfg["buses"]:
+        # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12, COORD-approved family rule): a wide soft ring gets the registered
+        # writer by default.  The ONE shared rule (ring_wreg_reach) is read by every WREG consumer (generator, strap
+        # K in count_align_bind.strap_ties and clock_landing_verify.strap_k, placement rows), so K and RTL agree.
+        cfg = ring_wreg_reach(plan, tn, bus, cfg)
+        if not cfg:
+            return None
     cfg = ring_fanout_wreg_cfg(plan.get("clock"), cfg)   # DIE-QC-97: die fanout bound (0 = cfg unchanged)
-    if bus not in cfg["buses"]:
-        return None
     dsrep = cfg.get("dsrep", 1)
     if isinstance(dsrep, bool) or not isinstance(dsrep, int) or dsrep < 1 or 64 % dsrep:
         raise ValueError(f"{tn}: landing_ring_wreg.dsrep must divide 64")
@@ -208,6 +291,8 @@ def ring_write_reg(plan, tn, bus):
     if not isinstance(write_tail, bool):
         raise ValueError(f"{tn}: landing_ring_wreg.write_tail must be a boolean")
     out = dict(depth=1 + int(freg), dsrep=dsrep, freg=freg)
+    if cfg.get("reach"):
+        out["reach"] = True          # CLAND-RING-LOCALITY default (ring_wreg_reach), not a plan opt-in
     if write_chunk != 64:
         out["write_chunk"] = write_chunk
     if read_chunk:
@@ -795,7 +880,7 @@ class Landings:
                 if int(c["depth"]) not in (4, 8, 16):
                     raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8/16")
                 import count_align_bind as CAB
-                reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"])
+                reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"], strap=self.strap)
                 writer_depth = CAB.writer_start_depth(plan, self.parts[sp]["type"], sb)
                 check_ca_freg_declared(plan, self.parts[dp]["type"], db, c, pid)   # FREG-DECL-1
                 if bool(qreg) != bool(c.get("output_qreg")):
@@ -1129,12 +1214,18 @@ class Landings:
         graph = getattr(self, "_raw_graphs", {}).get(tn)
         return graph.raw_for(role, default) if graph is not None else default
 
-    def _reader_start_rtl(self, tn, bus, body, logic, type_key=None, head=""):
+    def _reader_start_rtl(self, tn, bus, body, logic, type_key=None, head="", default_raw=None, default_xy=None):
         """Transport the mature origin to one reader; mission/writer START stay unchanged. Returns (ring reset, body)."""
         key = type_key or tn
         cfg = self.types[key].get("clock", {}).get("landing_reader_start")
         if cfg is None:
-            return "cland_start", body
+            if not (self.strap and reader_start_reach(self.plan, key)):
+                return "cland_start", body
+            # CLAND-RING-LOCALITY reach default: one stage at the ring's own registered reset relay site, on that relay
+            if not default_raw or default_xy is None:
+                raise LandingError(f"{tn}.{bus}: reach reader START needs the ring reset relay and its site")
+            cfg = dict(depth=1, branches={bus: dict(stages=[dict(xy_um=list(default_xy), raw_reset=default_raw)])},
+                       reach=True)
         # FLOW-6 10-30 (DIE-HEAD-37 R2 attempt 1, st_str u_rrl_42 / n3_transit u_rrl_38 / st_m u_rrl_18): a plan raw
         # reset whose relay Q also drives an output port (assign rst_o_0 = rr_t7) makes that port flop feed internal
         # logic, which face_guard FAILs as 'shared' at kit synth. Such a relay becomes the existing private-RAW cell
@@ -1143,7 +1234,7 @@ class Landings:
         outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
         private = {}
         import count_align_bind as CAB
-        depth = CAB.reader_start_depth(self.plan, key)
+        depth = CAB.reader_start_depth(self.plan, key, strap=self.strap)
         branch = cfg["branches"][bus]
         stages = branch.get("stages", []) if isinstance(branch, dict) else []
         if len(stages) != depth:
@@ -1191,7 +1282,7 @@ class Landings:
                                 stage=i, control_cycles_added=depth, steady_data_cycles_added=0))
             prev = net
         self.reset_placements.setdefault(tn, {})[bus]["reader_start"] = dict(
-            depth=depth, stages=records, ring_reset=prev, K_adjustment=-depth,
+            depth=depth, stages=records, ring_reset=prev, K_adjustment=-depth, **({"reach": True} if cfg.get("reach") else {}),
             boot_extra_cycles=depth, steady_data_cycles_added=0,
             qualification="local raw-reset release and actual placed hops require plan timing",
             **({"private_raw_copies": private} if private else {}))
@@ -1472,7 +1563,8 @@ class Landings:
             if cat and b in cmask["inputs"]:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
-                reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head)
+                reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head,
+                    default_raw=reset, default_xy=self.reset_placements.get(tn, {}).get(b, {}).get("xy_um"))
                 # QC-PARAMWRAP 11-12: a ring realised by a signed hard child keeps the child's exact parameters; the
                 # die-wide STATUS_REG / GUARD_REG / RSTREP / PLACEREP knobs only re-parameterise soft rings
                 hard = hard_ring_params(self.plan, tn, b, key)
@@ -1517,6 +1609,8 @@ class Landings:
                 wplan = self.plan if hard is None else dict(self.plan, clock={
                     k: v for k, v in (self.plan.get("clock") or {}).items() if k not in RING_FANOUT_KNOBS})
                 wreg = ring_write_reg(wplan, key, b) or ring_write_reg(wplan, tn, b)
+                if wreg and wreg.get("reach") and not cat.get("straps"):
+                    wreg = None          # CLAND-RING-LOCALITY reach default: strap form only (no K carrier otherwise)
                 dsrep = ring_read_select_copies(self.plan, key, b)
                 if dsrep is None:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
@@ -1553,6 +1647,9 @@ class Landings:
                     nrep = ring_reset_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
                                              int(cat["rings"][b]["depth"]),
                                              wreg["dsrep"] if wreg else (dsrep or 1), (wreg or {}).get("read_chunk", 0))
+                    if self.reset_placements[tn][b]["reader_start"].get("reach") and hard is None:
+                        nrep = max(nrep, ring_reset_copies_reach(w + 2 if self.dataflow else w,
+                                                                 (wreg or {}).get("read_chunk", 0)))
                     if nrep:
                         rx = re.compile(r'^(    \(\* keep = "true" \*\) )ot_dp_landing_relay (u_cland_reader_start_\w+) '
                                         r'(\(.*\.q\(' + re.escape(reader_start) + r'\))\);$')
@@ -1571,8 +1668,10 @@ class Landings:
                 # PLACEREP-1 (DIE-QC-97): under clock.landing_ring_fanout_max every strap-form ring gets one kept copy of the
                 # reader placement value per read chunk (ot_dp_clk_landing_cas PLACEREP; rings with one chunk keep none).
                 # The value is 0 - strap_k, read only by the align load inside the held reset: 0 cycles, same q/ready/fault.
-                if cat.get("straps") and (hard is None or "PLACEREP" in hard) and ring_place_copies(
-                        self.plan.get("clock"), w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)):
+                if cat.get("straps") and (hard is None or "PLACEREP" in hard) and (ring_place_copies(
+                        self.plan.get("clock"), w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)) or (
+                        hard is None and reader_start_reach(self.plan, key)       # CLAND-RING-LOCALITY: same rule
+                        and ring_reach_select_copies(w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)) > 1)):
                     ring_mod = ring_mod[:-1] + ", .PLACEREP(1))"
                     self.reset_placements[tn][b].update(ring_place_copies=True, ring_place_copies_added_cycles=0)
                 if hard is not None:
