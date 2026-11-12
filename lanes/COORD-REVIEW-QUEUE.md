@@ -47752,3 +47752,7 @@ DISK-1111 FIX+DEPLOYED [DISK-1111 -> COORD, ROOT-MERGE-59, KW-FIX-45, HBM owners
   - strict bind RC0: 377 partitions / 123 types / 1921 crossings / 790393 bits, 0 errors, 0 unbound/undriven.
   - G0 265 / 305 = base (0 new, 0 gone); schema PASS; station_lint 0 flags.
 - Builds: 5 to full sign-off (M8 grant + LAND-RING-2 strip density). The first kit's positions, outline, M8, mode, flow tag and all 1090 ft bit sites are verified. Renders follow at the first GRT.
+
+## RESULT KW-FIX-45 11-12 03:19 QC wave release after the asbuilt fix
+- RELEASED: 133 QC rows. (a) 64 FAIL rows (kit_topology FLOW / BIND_STALE class, plus the kit_rtl param_wrap cbn_q00 rows): retry entries written, 35 of them new (29 already present); the stage text of the restored rows was lost, so I took every restored QC FAIL row whose stage is kit_topology or kit_rtl together with the ones whose reason names BIND_STALE. (b) 69 restored CANCELLED QC rows converted to FAIL class INFRA with infra_base = attempt - 1 (one relaunch try each), so the INFRA path relaunches them. Config on origin (QC retry list 661 entries). Phase-1 first: the phase-split gate still holds HBM type rows while phase-1 rows wait.
+- Caveat: some of the 69 restored rows sit on old plan blocks; the supersede logic will cancel any that launch there (bounded churn). I watch the next tick for QC LAUNCH counts against live units to catch a double launch.
