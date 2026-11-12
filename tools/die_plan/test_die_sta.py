@@ -434,3 +434,19 @@ def test_stitch_die_spef_segment(tmp_path):
         ref = _ref_numbers(tmp_path, False, corner, die_seg=True)
         s = res["corners"][corner]["seams"]["u0->u1/a_i"]
         assert abs(s["max"]["worst"] - ref["max"]) < 0.01 and abs(s["min"]["worst"] - ref["min"]) < 0.01
+
+
+def test_ilm_escaped_bracket_scalar(tmp_path):
+    """an escaped scalar net named like a bus bit (\\fl_d[0] ) stays escaped in the ILM netlist; real bus bits do not."""
+    from types import SimpleNamespace
+    nl = SimpleNamespace(name="m", wires=[("bus", 1, 0), ("fl_d[0]", None, None), ("n1", None, None)])
+    red = SimpleNamespace(ports=[("input", "clk", None, None), ("output", "o", 1, 0)], assigns=[("o[0]", "bus[0]")],
+                          insts=[("BUFx2_ASAP7_75t_R", "b0", [("A", ["fl_d[0]"]), ("Y", ["bus[0]"])]),
+                                 ("BUFx2_ASAP7_75t_R", "b1", [("A", ["n1"]), ("Y", ["fl_d[0]"])]),
+                                 ("BUFx2_ASAP7_75t_R", "b2", [("A", ["clk"]), ("Y", ["o[1]"])])])
+    D.write_ilm_verilog(nl, red, {"bus", "fl_d[0]", "n1"}, tmp_path / "m.v")
+    v = (tmp_path / "m.v").read_text()
+    assert "wire \\fl_d[0] ;" in v and "wire [1:0] bus;" in v
+    assert ".A(\\fl_d[0] )" in v and ".Y(bus[0])" in v and ".Y(o[1])" in v and "assign o[0] = bus[0];" in v
+    back = D.read_verilog(tmp_path / "m.v")["m"]
+    assert {i: dict(c) for _, i, c in back.insts}["b0"]["A"] == ["fl_d[0]"]

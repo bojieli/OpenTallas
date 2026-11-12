@@ -640,11 +640,23 @@ def write_ilm_verilog(nl, red, wires, path):
          f"module {_vid(nl.name)} (" + ",\n    ".join(_vid(p[1]) for p in red.ports) + ");"]
     for d, n, msb, lsb in red.ports:
         L.append(f"  {d} {'' if msb is None else f'[{msb}:{lsb}] '}{_vid(n)};")
+    # 'x[3]' is a bit of bus x only when x is a declared bus; otherwise it is the escaped scalar \\x[3] (OpenROAD
+    # writes such nets, e.g. yosys latch d-nets) and must stay escaped, or the ILM netlist does not parse.
+    buses = set(bw) | {n for _, n, msb, _ in red.ports if msb is not None}
+
+    def vref(b):
+        m = re.fullmatch(r"(.+)\[\d+\]", b)
+        if m and m.group(1) not in buses:
+            return "\\" + b + " "
+        return _vid(b)
     for w in sorted(wires):
-        L.append(f"  wire [{bw[w][0]}:{bw[w][1]}] {_vid(w)};" if w in bw else f"  wire {_vid(w)};")
+        m = re.fullmatch(r"(.+)\[\d+\]", w)
+        if w not in bw and m and m.group(1) in buses:
+            continue                                   # a bit of a declared bus needs no declaration of its own
+        L.append(f"  wire [{bw[w][0]}:{bw[w][1]}] {_vid(w)};" if w in bw else f"  wire {vref(w)};")
 
     def ex(b):
-        return b if "'" in b else _vid(b)
+        return b if "'" in b else vref(b)
     for lhs, rhs in red.assigns:
         L.append(f"  assign {ex(lhs)} = {ex(rhs)};")
     for cell, inst, conns in red.insts:
