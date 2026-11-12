@@ -35,7 +35,7 @@ def test_off_is_identical(tmp_path, body, slew):
 def test_every_balance_call_is_gated():
     src = CLR.read_text().splitlines()
     calls = [k for k, ln in enumerate(src) if "[clr_balance " in ln and not ln.lstrip().startswith(("#", "proc "))]
-    assert len(calls) == 2
+    assert len(calls) == 1                                       # CTS pass only (no GRT-pass balance)
     for k in calls:
         assert any("[clr_bal_on]" in src[j] for j in range(k - 3, k)), src[k]
 

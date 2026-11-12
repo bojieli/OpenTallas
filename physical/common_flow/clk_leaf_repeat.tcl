@@ -59,16 +59,19 @@
 #   Balance group = the clkleafrep repeaters whose parent net is driven from one common net (cousins + siblings: same
 #   grandparent net; a repeater nested under another repeater is grouped with its siblings only).  Delay of a member =
 #   mean propagated rising-edge clock arrival at its leaf loads (through nested repeaters), at the max and the min scene.
-#   The slowest member is the reference; every other member takes the clock buffer master (BUF* / HB* of its own
-#   name suffix = site / VT) whose leaf arrival comes closest to the reference at BOTH scenes
+#   Target T = the mean leaf arrival of the whole level, un-repeated cousin leaf nets included (OT_CLK_LEAF_BAL_TARGET=
+#   max: the slowest member, which lifts repeated subtrees above their un-repeated neighbours).  Every member faster
+#   than T takes the clock buffer master (BUF* / HB* of its own name suffix = site / VT) whose leaf arrival comes
+#   closest to T at BOTH scenes
 #   (cost max(|dmax-Tmax|, |dmin-Tmin|)), never one whose worst load slew exceeds max(OT_CLK_LEAF_SLEW_PS or 80 ps, the
 #   member's own slew before).  A weaker repeater spends in its own drive the delay its short / light group lacks in
 #   wire RC.  Two rounds (sizes change the parent loads).  Position is not the lever: the Elmore delay of driver ->
 #   repeater -> group is minimal near the midpoint and grows only quadratically off it, too little on short branches.
-#   Runs (a) in the CTS pass after the leaf repeaters are legal (placement RC, the kit's set_wire_rc), resized cells
-#   legalised again, and (b) in the GRT pass right after the first GRT parasitics estimate (GRT RC ~ routed RCX, before
-#   repair_design / hold repair) on every clkleafrep group in the DB, resized cells legalised + incremental GRT
-#   (OT_CLK_LEAF_GRT=0 skips (b)).  OT_CLK_LEAF_BAL_TOL_PS (default 3 ps): a member within it keeps its master.
+#   Runs in the CTS pass after the leaf repeaters are legal (placement RC, the kit's set_wire_rc); resized cells are
+#   legalised again and the placement parasitics re-estimated.  NOT in the GRT pass: swaps there sit outside the
+#   incremental-GRT window and ORFS repair_design then stops on EST-0104 (inconsistent parasitics state; b128_bal resume
+#   11-12); measured on b128_canon the GRT-RC decision was neutral on the routed DB anyway (1 resize in the resume).
+#   OT_CLK_LEAF_BAL_TOL_PS (default 3 ps): a member within it keeps its master.
 #   Log lines: OT_CLK_LEAF_BALANCE ...  Measured with physical/common_flow/clk_leaf_sibling_report.tcl.
 proc clr_is_clkcell {inst} {
   set m [[$inst getMaster] getName]
@@ -686,18 +689,6 @@ uplevel #0 {
     estimate_parasitics -global_routing
   }
   if {$clr_g_bufs} { check_placement -verbose }
-  # CLK-LEAF-BAL-1 (b): delay-aware sizing of every clkleafrep group on the GRT parasitics (before repair_design / hold
-  # repair), resized cells legalised + incremental GRT
-  if {[clr_bal_on]} {
-    set clr_g_bgroups [clr_bal_groups]
-    if {[llength $clr_g_bgroups] && [clr_balance $clr_g_bgroups grt]} {
-      global_route -start_incremental
-      detailed_placement
-      global_route -end_incremental
-      estimate_parasitics -global_routing
-      check_placement -verbose
-    }
-  }
   puts [format "OT_CLK_LEAF_REPEAT grt done: %d nets repeated, %d repeaters (%d long / over-macro nets kept: GRT est slew <= gate), longest routed branch %.1f um" \
           $clr_g_nets $clr_g_bufs $clr_g_skip $clr_g_worst]
 }
