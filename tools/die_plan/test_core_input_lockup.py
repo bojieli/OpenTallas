@@ -38,6 +38,26 @@ class CoreInputLockup(unittest.TestCase):
         self.assertIn("bind_core_input_pipe.json", src)
         self.assertIn('{"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"}', src)
 
+    def test_pipe_declared_on_every_instance_of_the_type(self):
+        """QC-EQ-TRIAGE 11-12: the type module (with its ot_dp_dly pipe) is emitted once from the first partition but
+        instantiated by every partition of the type: bind_core_input_pipe.json must name every instance's leaf."""
+        from types import SimpleNamespace as NS
+        cells = [NS(path="c16_E0_0.u_t_0_0"), NS(path="c16_E0_0.u_t_0_1"),
+                 NS(path="c16_W5_1.u_t_0_0"), NS(path="c16_W5_1.u_t_0_1"), NS(path="c99_X.u_t_0_0")]
+        B = bind.Binder.__new__(bind.Binder)
+        B.F = NS(cells=cells)
+        B.members = {"c16_E0_0": [0, 1], "c16_W5_1": [2, 3], "c99_X": [4]}
+        B.by_type = {"cbn_q11": ["c16_E0_0", "c16_W5_1"], "other": ["c99_X"]}
+        B.local, B.cpart = {}, {0: "c16_E0_0", 1: "c16_E0_0", 2: "c16_W5_1", 3: "c16_W5_1", 4: "c99_X"}
+        B.root = {"c16_E0_0": "c16_E0_0", "c16_W5_1": "c16_W5_1", "c99_X": "c99_X"}
+        B.declare_core_input_pipe("cbn_q11", "c16_E0_0", 1, "n_a", 1)
+        self.assertEqual(B.core_input_pipe, {"c16_E0_0.u_t_0_1.n_a": 1, "c16_W5_1.u_t_0_1.n_a": 1})
+        B.members["c16_W5_1"] = [2]           # a partition without that leaf: fail closed, never under-declare
+        with self.assertRaises(bind.BindError):
+            B.declare_core_input_pipe("cbn_q11", "c16_E0_0", 1, "n_b", 1)
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bind.py")).read()
+        self.assertNotIn('setdefault("core_input_pipe", {})[f"{c.path}.{pn}"]', src)
+
     def test_cell_text_is_negative_level_latch(self):
         t = bind.ft_hop_lockup_cell()
         self.assertIn("module ot_dp_lk", t)
