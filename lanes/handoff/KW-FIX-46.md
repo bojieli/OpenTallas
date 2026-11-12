@@ -111,3 +111,10 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - (b) wdcpu 2885660ba67e landed in train 12 (main 3b73826c4114) and the watchdog timer reads it fresh: LIVE.
 - (c) pkill breach noted: exact PIDs only.
 - (d) Paired dry runs now use a private cache: /tmp/kw46_drytick.py sets TYPEBLOCK_CACHE and FLOW_REPEAT_LOG to the snapshot AP_DIR (backup /tmp/kw46_drytick.py.bak-1112). Never point a dry run at ~/coord/autopilot caches.
+
+## 11-12 15:2x: phy-core-area steps DONE (train 13, main 850367dbc41c)
+- Step 1: gen_phys.py in src_hbm_main_9fc09952cd_q0g_p18 = src file + c87611d612d9 hunk only (md5 0b0884f5723f -> 2366e938e9e6). New inode on epyc7/9/8; on epyc2 at the resolved scratch3 path (scratch2/claude/kw45 is a dir link to scratch3). intel1 has no copy. Backups gen_phys.py.bak-kw46-phycore-1112.
+- Steps 2-4: coord 6f14b4ba03d. Removed the 10 stale PHY retries; added PHY_NC@3 and PHY_NE@5 with FLOW-FIX retry_fix; hold_items.PHY_NC lifted.
+- Result: PHY_NC a4 and PHY_NE a6 placed, geom PASS-COND. PHY_NC is in ROUTE-HOLD WAIT-FORM on the 01:20 BAD (same form; next step is the HBM-GEOM-2 phy_flip plan delta, DIE-HBM-101's call). PHY_NE's wave decision was still pending at 15:2x.
+- q_mcb_ne held (coord 67f9387f16f): 1.07M inst > 400k cap. Autopilot job 58ab1566e512 is DONE-CRASH with the OOM budget used; no resubmit.
+- Open class item (offered to COORD, not started): the visual verdict lookup is keyed by attempt number, so an attempt that reuses an old number inherits the old verdict.
