@@ -63,7 +63,13 @@ window.addEventListener('hashchange', () => {
   const esc = (x) => String(x ?? '').replace(/[&<>"']/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
   const day = (t) => t ? new Date(t * 1000).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : '?';
   try {
-    const d = await fetch('/api/plan_now', {cache: 'no-store'}).then((r) => r.json()); const t = d.token || {};
+    const r = await fetch('/api/plan_now', {cache: 'no-store'});
+    let d = null; try { d = r.ok ? await r.json() : null; } catch (_) { d = null; }
+    if (!d || !d.token) {   // no plan_now.json on this server (or not JSON): say so plainly, not as a parse error
+      document.querySelector('#now summary').textContent = 'Current token-pass state: no token-pass run recorded on this server' + (r.ok ? '' : ` (/api/plan_now HTTP ${r.status})`) + ' — the token-path model below is the analytic record, not a token pass';
+      return;
+    }
+    const t = d.token;
     const old = (t.models || []).map((m) => m.mtime); const newest = old.length ? Math.max(...old) : 0;
     document.querySelector('#now summary').textContent = `Current token-pass state · release tree ${day(t.release_mtime)} · trunk ${d.repo && d.repo.origin_main} — the token-path model below is the analytic record of ${day(newest)}, not a token pass`;
     document.getElementById('nowBody').innerHTML = '<ul>' + (t.release_lines || []).map((l) => `<li>${esc(l)}</li>`).join('') + '</ul>' +

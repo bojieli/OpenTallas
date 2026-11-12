@@ -42,6 +42,11 @@ class H(BaseHTTPRequestHandler):
         if u.path in ('/', '/explorer', '/explorer/', '/explorer/design'):
             self.send_response(302); self.send_header('Location', '/explorer/design/'); self.send_header('Content-Length', '0'); self.end_headers(); return
         if u.path.startswith('/explorer/design/'): return DS.page(self, u.path[len('/explorer/design/'):])
+        if u.path == '/api/plan_now':   # same contract as server.py: plan_now.json, or a JSON 404 when none is recorded
+            import json
+            f = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz'))) / 'plan_now.json'
+            try: return self.send(200, f.read_bytes(), 'application/json')
+            except OSError: return self.send(404, json.dumps(dict(error='no plan_now.json (no token-pass state recorded)')).encode(), 'application/json')
         if u.path.startswith('/api/design/'): return DS.handle(self, u.path[len('/api/design/'):], q)
         if u.path.startswith('/layout_store/'): return LS.static(self, u.path[len('/layout_store/'):], False)
         if u.path.startswith('/api/layout/'): return LS.handle(self, u.path[len('/api/layout/'):], q, False)
