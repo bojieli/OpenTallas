@@ -31105,7 +31105,7 @@
     "q_su00@1"
    ],
    "pilot_max": 12,
-   "owner_lane": "HBM die owner (DIE-HBM-100)",
+   "owner_lane": "HBM die owner (DIE-HBM-101)",
    "pilot_mode": "queue",
    "queue_src": "main@9fc09952cdc4",
    "hold_items": {
@@ -31208,7 +31208,8 @@
     "q_b001": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides",
     "q_b001__physical_v1": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides",
     "ot_wbq_root_g0": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept",
-    "ot_wbq_root_g1": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept"
+    "ot_wbq_root_g1": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept",
+    "PHY_NC": "KW-FIX-46 11-12 COORD URGENT: IFP-0002 repeat (floorplan.tcl, 91 IFP-0002 at place on a1 13:37, a2 13:57, a3 14:16; u_phy_Q 3188.16 um wide does not fit the 4.32-um inset core). Hold until the generator fix c87611d612d9 (phy-core-area, approved 11-11 21:27, never landed) is in the HBM src or the form changes"
    },
    "gen_hosts": [
     "epyc7",
