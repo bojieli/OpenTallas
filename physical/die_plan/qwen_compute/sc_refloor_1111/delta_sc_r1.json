@@ -1,0 +1,34 @@
+{
+ "tool": "SC-REFLOOR-1 compose.py",
+ "base_sha256": "e4820bd9d97c1eb2efbdfdb49baf984a581f4a41c5f9c12055fbde3494c9c2bd",
+ "plan_sha256": "3ca1274ba8dee2c2952f29875c4e76ac2cb1e0ad6e47c57045e9aaa90c2b8863",
+ "types": [
+  {
+   "type": "slw_sc_v2",
+   "source": "/srv/opentallas-scratch2/claude/sc-refloor-1/planq/plan_rf_t1.json",
+   "source_sha256": "760f0eaf7c8526d08c0c8fc65074142a8a0ff9dad043c080d9074242a5f4d473",
+   "changed": [
+    "ft_slots"
+   ],
+   "clock_changed": []
+  },
+  {
+   "type": "sle_sc_v2",
+   "source": "/srv/opentallas-scratch2/claude/sc-refloor-1/planq/plan_rf_t1.json",
+   "source_sha256": "760f0eaf7c8526d08c0c8fc65074142a8a0ff9dad043c080d9074242a5f4d473",
+   "changed": [
+    "ft_slots"
+   ],
+   "clock_changed": []
+  },
+  {
+   "type": "sle_sc_v3",
+   "source": "/srv/opentallas-scratch2/claude/sc-refloor-1/planq/plan_rf_t4.json",
+   "source_sha256": "741f8d661db8346d73df75d96bb44b84cce3b8eb2be291cc5af60b42b6cefa75",
+   "changed": [
+    "ft_slots"
+   ],
+   "clock_changed": []
+  }
+ ]
+}
