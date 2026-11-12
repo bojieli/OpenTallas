@@ -1,10 +1,10 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-12 14:0x PST count 276 (cores 218: S81 61/64, HEAD 4/5, QC 31/31, KV 33/34, HBM 89/119; types 58: S81 35/204, HEAD 19/26, QC 2/120, KV 1/56, HBM 1/81; flat). Main 59f6e468468a (train 10); train 11 (reach-fix fixed_cycles + FLEET-2 autoclean + S81 gbqual) on final check; train 12 approved (QC coll clock-merge, KW-FIX-46 OOM/watchdog, reach-fix fail-loud). HEAD die clock: routed re-balance 136->43 ps, delay cells failed (FF tracking), 2000 um cap on 41 leaves running. QC coll_s hold = one clock split into 3 CTS trees, fixed by clock_merge in s28; all-die sweep running. Rule: every next plan event rebinds on main >= 59f6e468468a (CLAND rings are emitted at bind). Plan events pending: S81 ready12b-A, KV vN2f, HBM hp5/tiers, QC s28.
+2026-11-12 15:0x PST count 276 (cores 218: S81 61/64, HEAD 4/5, QC 31/31, KV 33/34, HBM 89/119; types 58: S81 35/204, HEAD 19/26, QC 2/120, KV 1/56, HBM 1/81; flat). Main 850367dbc41c (train 13: reach-fix --routed, PHY core area, FLOW-REPEAT); train 14 (bind double-pad fix) in gate. HEAD rp17 FROZEN 501a3ad70cc1: hd_ctl_n re-signed on wider windows; eshim_rx/wshim_tx full builds; die clock gate on rp17 with REACH-FIX-2 (routed 25 ps on rp16 base). S81 ready12b-A rebind clean (bind 0, depth 496/496, G0 74 = base, token spans unchanged 842.8 AR); waits on 2 verifies. DOUBLE-PAD class: KV 120 / HBM 10 / S81 58 lanes have real latency > table; each next plan event sets kit_source_station_pricing.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
-## FAILURES · unsigned cores and types by class (auto, 2026-11-12 13:55 PST)
+## FAILURES · unsigned cores and types by class (auto, 2026-11-12 14:55 PST)
 - [ ] FAIL.S81.CORES 61/64 signed · open: no kit-wave row 2 (dsdv_gunit_l1f_bf, s81p_slice_station__t51_s81_station_t51_native_w) · running, no result 1 (dsdv_bksel_q)
 - [ ] FAIL.S81.TYPES 35/204 signed · kit rows: cancelled (superseded) 23 (s81sl_kv_leaf__t1, +22) · other flow error 22 (dsdv_slice_c1x_C__t10, +21) · timing after route 10 (slice_station__t24__cleece78ec, +9) · running 7 · waits on child core 2 · SETUP-AT-GRT 1 (seqhost__t1) · stopped (ruling/infra) 1 (serdes__t1__clfe1f0815)
 - [ ] FAIL.HEAD.CORES 4/5 signed · open: no kit-wave row 1 (s81hd_he_epc)
@@ -13,240 +13,250 @@ Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19
 - [ ] FAIL.QC.TYPES 2/120 signed · kit rows: other flow error 57 (cbf_q00_s2, +56) · infra (relaunch queued) 14 (cbf_q01_s2, +13) · kit_rtl 13 (sle_fe_v3, +12) · running 7 · port mismatch 6 (sle_ctl__cl372cea1c, +5) · cancelled (superseded) 2 (slw_st_b_v1__cl6357f1cc__pv6ace3e48, +1) · hold after CTS 1 (coll_s) · running (>150k advisory) 1 (sle_fw_v3)
 - [ ] FAIL.KV.CORES 33/34 signed · open: no kit-wave row 1 (qkd_astk_ex_s)
 - [ ] FAIL.KV.TYPES 1/56 signed · kit rows: kit_rtl 12 (kv3_hg_v1, +11) · other flow error 9 (kv3_hgi_v1__cl141fc26e, +8) · infra (relaunch queued) 4 (kv3_hg, +3) · cancelled (superseded) 3 (kv3_hroot, +2) · waits on child core 2 · timing after route 1 (kv3_hub_Ei)
-- [ ] FAIL.HBM.CORES 89/119 signed · open: no kit-wave row 14 (accel_smh_pt_w, hfd_coll_q3_body_ctl, hgi_sfu_opsa_group1, +9) · running, no result 9 (hfd_coll_q2n2_vm_core, hfd_hgi_vms_glue_nw_t, hgi_coll_tkm_m_tp192__root, +6) · congestion 3 (hnx_vms_bank_q0_faces__vecd4ae, sm_pv_merge) · other flow error 1 (hgi_sfu_opsa_group0) · detail_place 1 (svgr_top) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp) · running 1
+- [ ] FAIL.HBM.CORES 89/119 signed · open: no kit-wave row 14 (accel_smh_pt_w, hfd_coll_q3_body_ctl, hgi_sfu_opsa_group1, +9) · running, no result 9 (hfd_coll_q2n2_vm_core, hfd_hgi_vms_glue_nw_t, hgi_coll_tkm_m_tp192__root, +6) · congestion 4 (hnx_vms_bank_q0_faces__vecd4ae, sm_i8w_front, sm_pv_merge) · other flow error 1 (hgi_sfu_opsa_group0) · detail_place 1 (svgr_top) · shape: over cells/util/congestion 1 (hgi_dma_back_static_vp4_banks_cp)
 - [ ] FAIL.HBM.TYPES 1/81 signed · kit rows: waits on child core 44 · other flow error 25 (NE_iorly, +24) · timing after route 3 (q_spb1, +2) · running 2 · kit_rtl 1 (q_b013__physical_v1) · macro placement 1 (PHY_NE) · running (>150k advisory) 1 (q_spt1)
-### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 247 (live check: ps/systemd/docker on all hosts, NOT SEEN: intel2; wave state: local copy 11-12 13:47; full list lanes/STALE.tsv)
-- [ ] STALE.S81 115 (cores 3, types 112) · by owner: KIT-WAVE-1 111, DIE-S81-85 3, unowned 1
+### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= 6 h: 266 (live check: ps/systemd/docker on all hosts, NOT SEEN: intel2; wave state: local copy 11-12 14:47; full list lanes/STALE.tsv)
+- [ ] STALE.S81 121 (cores 3, types 118) · by owner: KIT-WAVE-1 117, DIE-S81-85 3, unowned 1
   - core dsdv_bksel_q · no kit-wave row · owner DIE-S81-85
   - core dsdv_gunit_l1f_bf · no kit-wave row · owner DIE-S81-85
   - core s81p_slice_station__t51_ot_s81_station_t51_native_w · no kit-wave row · owner DIE-S81-85
-  - type slice_station__t43 · FAIL signoff TIMING @ 2026-11-04 12:22 (193.6h) · owner KIT-WAVE-1
-  - type slice_station__t36 · FAIL signoff TIMING @ 2026-11-04 12:39 (193.3h) · owner KIT-WAVE-1
-  - type slice_station__t37 · FAIL signoff TIMING @ 2026-11-05 05:59 (175.9h) · owner KIT-WAVE-1
-  - type slice_station__t49 · FAIL signoff TIMING @ 2026-11-05 13:49 (168.1h) · owner KIT-WAVE-1
-  - type svc_hi_dsdv_svc_rs__t4 · SUPERSEDED place SUPERSEDED @ 2026-11-07 05:18 (128.6h) · owner KIT-WAVE-1
-  - type slice_station__t6__cl0755c26e · CANCELLED geom SUPERSEDED @ 2026-11-07 15:16 (118.7h) · owner KIT-WAVE-1
-  - type slice_station__t42__clcf44e680 · CANCELLED geom SUPERSEDED @ 2026-11-07 18:05 (115.8h) · owner KIT-WAVE-1
-  - type slice_station__t24__cl64811a5d · CANCELLED geom SUPERSEDED @ 2026-11-07 18:15 (115.7h) · owner KIT-WAVE-1
-  - type svc_hi_dsdv_svc_rs__t1 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (109.5h) · owner KIT-WAVE-1
-  - type svc_hi_dsdv_svc_rs__t3 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (109.5h) · owner KIT-WAVE-1
-  - type svc_hi_dsdv_svc_rs__t5 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (109.5h) · owner KIT-WAVE-1
-  - type svc_lo_dsdv_svc_rs__t1 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (109.5h) · owner KIT-WAVE-1
-  - type svc_lo_dsdv_svc_rs__t7 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (109.5h) · owner KIT-WAVE-1
-  - type slice_station__t52 · FAIL signoff TIMING @ 2026-11-08 05:50 (104.1h) · owner KIT-WAVE-1
-  - type bk_sel__t2 · SUPERSEDED route SUPERSEDED @ 2026-11-08 08:20 (101.6h) · owner KIT-WAVE-1
-  - type serdes__t1__clfe1f0815 · FAIL route INFRA @ 2026-11-08 22:51 (87.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_kv_leaf__t1 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (79.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_kv_leaf__t3 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (79.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_kv_leaf__t4 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (79.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_kv_leaf__t5 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (79.1h) · owner KIT-WAVE-1
-  - type col_h9_r2__t1__cl87f3ff59 · SUPERSEDED route SUPERSEDED @ 2026-11-09 08:57 (77h) · owner KIT-WAVE-1
-  - type slice_station__t41 · FAIL signoff TIMING @ 2026-11-09 10:46 (75.2h) · owner KIT-WAVE-1
-  - type col_h9_r2__t1__clb8d86cd5 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:34 (72.4h) · owner KIT-WAVE-1
-  - type col_h9_r2__t1__clc9ad8f7e · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:34 (72.4h) · owner KIT-WAVE-1
-  - type col_h9_r2__t1__clce45cab5 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:34 (72.4h) · owner KIT-WAVE-1
-  - type col_h9_r2__t1__cl774acf45 · SUPERSEDED route SUPERSEDED @ 2026-11-09 14:38 (71.3h) · owner KIT-WAVE-1
-  - type dsdv_slice_lepe_nh_mus_LP__t1 · SUPERSEDED route SUPERSEDED @ 2026-11-09 17:22 (68.6h) · owner KIT-WAVE-1
-  - type col_h9_r0_p5__t1 · SUPERSEDED route SUPERSEDED @ 2026-11-09 17:52 (68.1h) · owner KIT-WAVE-1
-  - type svc_hi_dsdv_svc_pvso_entry__t1 · RETRY-INFRA kit_rtl INFRA @ 2026-11-09 17:53 (68h) · owner KIT-WAVE-1
-  - type svc_hi_dsdv_svc_pvso_entry__t2 · RETRY-INFRA kit_rtl INFRA @ 2026-11-09 17:53 (68h) · owner KIT-WAVE-1
-  - type col_h9_r0_p2__t1__cl0045af7b · RETRY-INFRA kit_rtl INFRA @ 2026-11-09 18:56 (67h) · owner KIT-WAVE-1
-  - type col_h9_r0_p2__t1__cl9f71e63d · RETRY-INFRA place INFRA @ 2026-11-09 18:57 (67h) · owner KIT-WAVE-1
-  - type col_h9_r0_p3__t1__cl0cd90c0e · SUPERSEDED kit_rtl SUPERSEDED @ 2026-11-09 18:56 (67h) · owner KIT-WAVE-1
-  - type col_h9_r0_p3__t1__cl31d0dc4b · SUPERSEDED kit_rtl SUPERSEDED @ 2026-11-09 18:56 (67h) · owner KIT-WAVE-1
-  - type col_h9_r0_p3__t1__cl8ce97bcb · RETRY-INFRA place INFRA @ 2026-11-09 18:57 (67h) · owner KIT-WAVE-1
-  - type col_h9_r0_p1__t1 · RETRY-INFRA place INFRA @ 2026-11-09 19:00 (66.9h) · owner KIT-WAVE-1
-  - type dsdv_slice_lepw_mus_LP__t2 · RETRY-INFRA geom INFRA @ 2026-11-09 19:00 (66.9h) · owner KIT-WAVE-1
-  - type col_h10_r0_p4__t1 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type col_h10_r1__t1__cl95b37463 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type col_h9_r0_p4__t1__cl8ef405e8 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type col_h9_r0_p4__t1__clcb2fbfe8 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type dsdv_slice_lepw_mus_C__t1 · SUPERSEDED gen_lint SUPERSEDED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type serdes__t1__clb45db5be · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type col_h10_r1__t1__cld01bb4ae · SUPERSEDED geom SUPERSEDED @ 2026-11-12 05:46 (8.2h) · owner KIT-WAVE-1
-  - type slice_station__t27 · CANCELLED kit_topology SUPERSEDED @ 2026-11-12 05:48 (8.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t53__cl958451dd · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:03 (7.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t24__cl81374cd8 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t5 · FAIL gen FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t15 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:29 (7.4h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t24__cl2456157b · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:29 (7.4h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t32 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:29 (7.4h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t13 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t17 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t25__cl431c660f · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t34 · ROUTE-HELD geom @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t37 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t40__clf8bbdae1 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t44__clf4ea6d4b · ROUTE-HELD geom @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t52 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t54__cl501e5681 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t69 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t10 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t12 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t16 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t21 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t22 · FAIL gen FLOW @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t23 · FAIL gen FLOW @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t33 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t36 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t42 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t43 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t44__clf6cf8492 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t54__cl706d9749 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t56 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t6 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t62 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t68 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t7 · FAIL gen FLOW @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t73 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t74 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type ot_s81sl_kv_leaf__t2 · FAIL gen FLOW @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t25__cl55642d17 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t27 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t29 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t3 · FAIL gen FLOW @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t30 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t35 · ROUTE-HELD geom @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t41 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t46 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t47 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t50 · FAIL gen FLOW @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t53__clb66fa5cb · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t55 · ROUTE-HELD geom @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t58 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t65 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t67 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t71 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t75 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t9 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type serdes__t12 · FAIL gen FLOW @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type serdes__t3 · FAIL gen FLOW @ 2026-11-12 06:59 (6.9h) · owner KIT-WAVE-1
-  - type iqf__t1 · FAIL gen FLOW @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t26 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t31 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t4 · FAIL gen FLOW @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t40__cl86ea32b3 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (6.8h) row ot_s81sl_leaf__t40__cl86ea32b3__sid5S · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t40__cl86ea32b3__sid5S · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (6.8h) · owner unowned
-  - type ot_s81sl_leaf__t60 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t38 · ROUTE-HELD geom @ 2026-11-12 07:17 (6.6h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t70 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:17 (6.6h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t59 · ROUTE-HELD geom @ 2026-11-12 07:26 (6.5h) · owner KIT-WAVE-1
-  - type ot_s81sl_leaf__t51 · ROUTE-HELD geom @ 2026-11-12 07:55 (6h) · owner KIT-WAVE-1
+  - type slice_station__t43 · FAIL signoff TIMING @ 2026-11-04 12:22 (194.6h) · owner KIT-WAVE-1
+  - type slice_station__t36 · FAIL signoff TIMING @ 2026-11-04 12:39 (194.3h) · owner KIT-WAVE-1
+  - type slice_station__t37 · FAIL signoff TIMING @ 2026-11-05 05:59 (176.9h) · owner KIT-WAVE-1
+  - type slice_station__t49 · FAIL signoff TIMING @ 2026-11-05 13:49 (169.1h) · owner KIT-WAVE-1
+  - type svc_hi_dsdv_svc_rs__t4 · SUPERSEDED place SUPERSEDED @ 2026-11-07 05:18 (129.6h) · owner KIT-WAVE-1
+  - type slice_station__t6__cl0755c26e · CANCELLED geom SUPERSEDED @ 2026-11-07 15:16 (119.7h) · owner KIT-WAVE-1
+  - type slice_station__t42__clcf44e680 · CANCELLED geom SUPERSEDED @ 2026-11-07 18:05 (116.8h) · owner KIT-WAVE-1
+  - type slice_station__t24__cl64811a5d · CANCELLED geom SUPERSEDED @ 2026-11-07 18:15 (116.7h) · owner KIT-WAVE-1
+  - type svc_hi_dsdv_svc_rs__t1 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (110.5h) · owner KIT-WAVE-1
+  - type svc_hi_dsdv_svc_rs__t3 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (110.5h) · owner KIT-WAVE-1
+  - type svc_hi_dsdv_svc_rs__t5 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (110.5h) · owner KIT-WAVE-1
+  - type svc_lo_dsdv_svc_rs__t1 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (110.5h) · owner KIT-WAVE-1
+  - type svc_lo_dsdv_svc_rs__t7 · SUPERSEDED unit SUPERSEDED @ 2026-11-08 00:26 (110.5h) · owner KIT-WAVE-1
+  - type slice_station__t52 · FAIL signoff TIMING @ 2026-11-08 05:50 (105.1h) · owner KIT-WAVE-1
+  - type bk_sel__t2 · SUPERSEDED route SUPERSEDED @ 2026-11-08 08:20 (102.6h) · owner KIT-WAVE-1
+  - type serdes__t1__clfe1f0815 · FAIL route INFRA @ 2026-11-08 22:51 (88.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_kv_leaf__t1 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (80.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_kv_leaf__t3 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (80.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_kv_leaf__t4 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (80.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_kv_leaf__t5 · CANCELLED geom SUPERSEDED @ 2026-11-09 06:52 (80.1h) · owner KIT-WAVE-1
+  - type col_h9_r2__t1__cl87f3ff59 · SUPERSEDED route SUPERSEDED @ 2026-11-09 08:57 (78h) · owner KIT-WAVE-1
+  - type slice_station__t41 · FAIL signoff TIMING @ 2026-11-09 10:46 (76.2h) · owner KIT-WAVE-1
+  - type col_h9_r2__t1__clb8d86cd5 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:34 (73.4h) · owner KIT-WAVE-1
+  - type col_h9_r2__t1__clc9ad8f7e · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:34 (73.4h) · owner KIT-WAVE-1
+  - type col_h9_r2__t1__clce45cab5 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:34 (73.4h) · owner KIT-WAVE-1
+  - type col_h9_r2__t1__cl774acf45 · SUPERSEDED route SUPERSEDED @ 2026-11-09 14:38 (72.3h) · owner KIT-WAVE-1
+  - type dsdv_slice_lepe_nh_mus_LP__t1 · SUPERSEDED route SUPERSEDED @ 2026-11-09 17:22 (69.6h) · owner KIT-WAVE-1
+  - type col_h9_r0_p5__t1 · SUPERSEDED route SUPERSEDED @ 2026-11-09 17:52 (69.1h) · owner KIT-WAVE-1
+  - type svc_hi_dsdv_svc_pvso_entry__t1 · RETRY-INFRA kit_rtl INFRA @ 2026-11-09 17:53 (69h) · owner KIT-WAVE-1
+  - type svc_hi_dsdv_svc_pvso_entry__t2 · RETRY-INFRA kit_rtl INFRA @ 2026-11-09 17:53 (69h) · owner KIT-WAVE-1
+  - type col_h9_r0_p3__t1__cl0cd90c0e · SUPERSEDED kit_rtl SUPERSEDED @ 2026-11-09 18:56 (68h) · owner KIT-WAVE-1
+  - type col_h9_r0_p3__t1__cl31d0dc4b · SUPERSEDED kit_rtl SUPERSEDED @ 2026-11-09 18:56 (68h) · owner KIT-WAVE-1
+  - type col_h9_r0_p3__t1__cl8ce97bcb · RETRY-INFRA place INFRA @ 2026-11-09 18:57 (68h) · owner KIT-WAVE-1
+  - type col_h9_r0_p6__t1 · RETRY-INFRA kit_rtl INFRA @ 2026-11-09 18:57 (68h) · owner KIT-WAVE-1
+  - type col_h9_r0_p1__t1 · RETRY-INFRA place INFRA @ 2026-11-09 19:00 (67.9h) · owner KIT-WAVE-1
+  - type dsdv_slice_lepw_mu_C__t1 · RETRY-INFRA place INFRA @ 2026-11-09 19:00 (67.9h) · owner KIT-WAVE-1
+  - type dsdv_slice_lepw_mus_LP__t2 · RETRY-INFRA geom INFRA @ 2026-11-09 19:00 (67.9h) · owner KIT-WAVE-1
+  - type col_h10_r0_p4__t1 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type col_h10_r1__t1__cl95b37463 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type col_h9_r0_p4__t1__cl8ef405e8 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type col_h9_r0_p4__t1__clcb2fbfe8 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type dsdv_slice_c1x_C__t1 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type dsdv_slice_c1x_C__t3 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type dsdv_slice_c1x_C__t9 · SUPERSEDED unit SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type dsdv_slice_lepw_mus_C__t1 · SUPERSEDED gen_lint SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type serdes__t1__clb45db5be · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type col_h10_r1__t1__cld01bb4ae · SUPERSEDED geom SUPERSEDED @ 2026-11-12 05:46 (9.2h) · owner KIT-WAVE-1
+  - type slice_station__t27 · CANCELLED kit_topology SUPERSEDED @ 2026-11-12 05:48 (9.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t53__cl958451dd · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:03 (8.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t24__cl81374cd8 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t5 · FAIL gen FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t15 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:29 (8.4h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t24__cl2456157b · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:29 (8.4h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t32 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:29 (8.4h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t13 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t17 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t25__cl431c660f · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t34 · ROUTE-HELD geom @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t37 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t40__clf8bbdae1 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t44__clf4ea6d4b · ROUTE-HELD geom @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t52 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t54__cl501e5681 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t69 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t10 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t12 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t16 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t21 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t22 · FAIL gen FLOW @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t23 · FAIL gen FLOW @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t33 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t36 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t42 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t43 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t44__clf6cf8492 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t54__cl706d9749 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t56 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t6 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t62 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t68 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t7 · FAIL gen FLOW @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t73 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t74 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type dsdv_slice_c1x_C__t10 · FAIL gen FLOW @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_kv_leaf__t2 · FAIL gen FLOW @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t25__cl55642d17 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t27 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t29 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t3 · FAIL gen FLOW @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t30 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t35 · ROUTE-HELD geom @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t41 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t46 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t47 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t50 · FAIL gen FLOW @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t53__clb66fa5cb · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t55 · ROUTE-HELD geom @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t58 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t65 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t67 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t71 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t75 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t9 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type serdes__t12 · FAIL gen FLOW @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type serdes__t3 · FAIL gen FLOW @ 2026-11-12 06:59 (7.9h) · owner KIT-WAVE-1
+  - type iqf__t1 · FAIL gen FLOW @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t26 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t31 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t4 · FAIL gen FLOW @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t40__cl86ea32b3 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (7.8h) row ot_s81sl_leaf__t40__cl86ea32b3__sid5S · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t40__cl86ea32b3__sid5S · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (7.8h) · owner unowned
+  - type ot_s81sl_leaf__t60 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t38 · ROUTE-HELD geom @ 2026-11-12 07:17 (7.6h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t70 · SUPERSEDED gen SUPERSEDED @ 2026-11-12 07:17 (7.6h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t59 · ROUTE-HELD geom @ 2026-11-12 07:26 (7.5h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t51 · ROUTE-HELD geom @ 2026-11-12 07:55 (7h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t39 · SUPERSEDED place SUPERSEDED @ 2026-11-12 08:06 (6.8h) · owner KIT-WAVE-1
+  - type ot_s81sl_leaf__t61 · ROUTE-HELD geom @ 2026-11-12 08:16 (6.7h) · owner KIT-WAVE-1
 - [ ] STALE.HEAD 5 (cores 1, types 4) · by owner: unowned 3, KIT-WAVE-1 2
   - core ot_s81hd_he_epc · no kit-wave row · owner unowned
-  - type hd_host_w · FAIL signoff TIMING @ 2026-11-09 12:52 (73.1h) · owner unowned
-  - type hd_ctl · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type hd_serdes · FAIL gen FLOW @ 2026-11-12 06:03 (7.9h) · owner KIT-WAVE-1
-  - type hd_host_e · FAIL kit_rtl FLOW @ 2026-11-12 06:50 (7.1h) · owner unowned
-- [ ] STALE.QC 76 (cores 0, types 76) · by owner: KIT-WAVE-1 59, unowned 11, DIE-QC-97 6
-  - type slw_hc3__clccfc3e6b · SUPERSEDED signoff SUPERSEDED @ 2026-11-05 01:36 (180.3h) · owner KIT-WAVE-1
-  - type slw_hc3__cld86a7ad4 · SUPERSEDED signoff SUPERSEDED @ 2026-11-07 00:07 (133.8h) · owner KIT-WAVE-1
-  - type coll_ftm · WAIT-PARENT queue @ 2026-11-07 23:55 (110h) · owner KIT-WAVE-1
-  - type coll_core · CANCELLED geom SUPERSEDED @ 2026-11-08 10:30 (99.4h) · owner KIT-WAVE-1
-  - type coll_ucie · SUPERSEDED route SUPERSEDED @ 2026-11-08 10:30 (99.4h) · owner KIT-WAVE-1
-  - type slw_hc1__cl3449ea95 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (72.4h) · owner KIT-WAVE-1
-  - type slw_hc2__cl6bcaba89 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (72.4h) · owner KIT-WAVE-1
-  - type slw_hc2__cla3497502__cl16607c7a · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (72.4h) · owner DIE-QC-97
-  - type slw_hc2__cla3497502__cldc737267 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (72.4h) · owner DIE-QC-97
-  - type slw_hc1__cl68f9248e__cl144ee7b3 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:54 (72h) · owner unowned
-  - type slw_hc1__cl68f9248e__cle683a076 · SUPERSEDED route SUPERSEDED @ 2026-11-09 14:15 (71.7h) · owner unowned
-  - type cbf_q00__cl1b5a6458 · RETRY-INFRA prov_views INFRA @ 2026-11-09 17:46 (68.2h) · owner KIT-WAVE-1
-  - type cbf_q00__cl870de686 · RETRY-INFRA prov_views INFRA @ 2026-11-09 17:46 (68.2h) · owner KIT-WAVE-1
-  - type cbn_q00__cl622f65d2 · FAIL unit PLAN @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type cbn_q00__cld7bf7197 · FAIL gen FLOW @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type cbn_q00__cldbcda913 · FAIL unit PLAN @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type coll_ftc · FAIL unit PLAN @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type sle_fe_v1__cl1cbb7497 · FAIL unit FLOW @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type sle_fe_v2 · FAIL unit PLAN @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type sle_fe_v3 · FAIL unit FLOW @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type slw_su_l1__clcc9d0155 · FAIL gen FLOW @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type sle_hc1__cl22c1ff36 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_hc1__cl7d360508 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_hc2__cl9c4c4509__cl3edce1b8 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner DIE-QC-97
-  - type sle_hc2__cl9c4c4509__clf60c5152 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner DIE-QC-97
-  - type sle_hc2__clcc5e3e61 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_sc_v1__cl115da35f · RETRY-INFRA gen INFRA @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_sc_v1__cl7479a5ec · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_sc_v2 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_stm_v1__cl27746664 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_stm_v1__clbe630b9c · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_stm_v2__cl55be2264 · FAIL unit PLAN @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_stm_v2__cl7b3062fa · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_stm_v3 · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_su_l0__cl086d85ba · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_su_l0__cl7a55c676 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_su_l1__cl5ea486db · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type sle_su_l1__clc6d66f5b · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_fe_v1__clfe325744__cl08d14f0d · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner unowned
-  - type slw_fe_v2__cle312294d · FAIL kit_topology PLAN @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_fw_v3 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_sc_v1__cl63e5a7a2 · SUPERSEDED unit SUPERSEDED @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_sc_v1__cl64543eaf__cl4590432d · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner unowned
-  - type slw_sc_v1__cl64543eaf__cl5e017c6f · FAIL unit PLAN @ 2026-11-12 06:18 (7.6h) · owner unowned
-  - type slw_sc_v2 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_sc_v3 · FAIL bind FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_stm_v1__cl05fc43f7__cl2086fa2c · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner DIE-QC-97
-  - type slw_stm_v1__cl05fc43f7__cl389df4e9 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner DIE-QC-97
-  - type slw_stm_v1__cle34a73c3 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_stm_v2__cl1ca9c415 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_stm_v2__cl9beb65e6 · FAIL kit_topology PLAN @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_stm_v3 · FAIL kit_topology PLAN @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_su_l0__cl1a1c1f8f · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_su_l0__cl1e5219ea · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_su_l0__cl76fb247e · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type slw_su_l1__cla2a78701 · FAIL unit FLOW @ 2026-11-12 06:18 (7.6h) · owner KIT-WAVE-1
-  - type coll_ft__cl78c7b300 · ROUTE-HELD geom @ 2026-11-12 06:29 (7.4h) · owner KIT-WAVE-1
-  - type sle_st_b_v1__pv0e7b1dcc · FAIL gen FLOW @ 2026-11-12 06:50 (7.1h) · owner unowned
-  - type sle_st_b_v2__cl14c98df5 · FAIL gen FLOW @ 2026-11-12 06:50 (7.1h) · owner KIT-WAVE-1
-  - type cbf_q01_s2 · RETRY-INFRA gen INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type cbf_q11 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type cbn_q01__cld9ff4c40 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type cbn_q01__cldd6ea846 · RETRY-INFRA gen INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type cbn_q11__cl49ae4555 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type cbn_q11__cl5cc92dfe · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type coll_n · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type sle_st_b_v2__clfde1249e · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (7h) · owner KIT-WAVE-1
-  - type slw_st_b_v1__cl6357f1cc__pvffd43fdc · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:53 (7h) · owner unowned
-  - type slw_st_b_v2__pva66d0f22 · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:53 (7h) · owner unowned
-  - type slw_st_b_v2__pvc2ec5bfb · RETRY-INFRA gen INFRA @ 2026-11-12 06:53 (7h) · owner unowned
-  - type sle_st_b_v1__pvc5a85fd4 · FAIL gen FLOW @ 2026-11-12 06:59 (6.9h) · owner unowned
-  - type cbf_q00_s2 · FAIL gen FLOW @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type cbf_q01 · FAIL gen FLOW @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type cbn_q01__clab6e67f2 · FAIL gen FLOW @ 2026-11-12 07:08 (6.8h) · owner KIT-WAVE-1
-  - type slw_st_b_v1__cl6357f1cc__pv6ace3e48 · CANCELLED unit WAIT-FORM @ 2026-11-12 07:36 (6.3h) · owner unowned
-  - type slw_st_b_v1__cle6023ec2 · CANCELLED unit WAIT-FORM @ 2026-11-12 07:36 (6.3h) · owner KIT-WAVE-1
-- [ ] STALE.KV 30 (cores 1, types 29) · by owner: KIT-WAVE-1 23, unowned 6, DIE-KV-97 1
+  - type hd_host_w · FAIL signoff TIMING @ 2026-11-09 12:52 (74.1h) · owner unowned
+  - type hd_ctl · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type hd_serdes · FAIL gen FLOW @ 2026-11-12 06:03 (8.9h) · owner KIT-WAVE-1
+  - type hd_host_e · FAIL kit_rtl FLOW @ 2026-11-12 06:50 (8.1h) · owner unowned
+- [ ] STALE.QC 79 (cores 0, types 79) · by owner: KIT-WAVE-1 62, unowned 11, DIE-QC-97 6
+  - type slw_hc3__clccfc3e6b · SUPERSEDED signoff SUPERSEDED @ 2026-11-05 01:36 (181.3h) · owner KIT-WAVE-1
+  - type slw_hc3__cld86a7ad4 · SUPERSEDED signoff SUPERSEDED @ 2026-11-07 00:07 (134.8h) · owner KIT-WAVE-1
+  - type coll_ftm · WAIT-PARENT queue @ 2026-11-07 23:55 (111h) · owner KIT-WAVE-1
+  - type coll_core · CANCELLED geom SUPERSEDED @ 2026-11-08 10:30 (100.4h) · owner KIT-WAVE-1
+  - type coll_ucie · SUPERSEDED route SUPERSEDED @ 2026-11-08 10:30 (100.4h) · owner KIT-WAVE-1
+  - type slw_hc1__cl3449ea95 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (73.4h) · owner KIT-WAVE-1
+  - type slw_hc2__cl6bcaba89 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (73.4h) · owner KIT-WAVE-1
+  - type slw_hc2__cla3497502__cl16607c7a · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (73.4h) · owner DIE-QC-97
+  - type slw_hc2__cla3497502__cldc737267 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:33 (73.4h) · owner DIE-QC-97
+  - type slw_hc1__cl68f9248e__cl144ee7b3 · SUPERSEDED route SUPERSEDED @ 2026-11-09 13:54 (73h) · owner unowned
+  - type slw_hc1__cl68f9248e__cle683a076 · SUPERSEDED route SUPERSEDED @ 2026-11-09 14:15 (72.7h) · owner unowned
+  - type cbf_q00__cl1b5a6458 · RETRY-INFRA prov_views INFRA @ 2026-11-09 17:46 (69.2h) · owner KIT-WAVE-1
+  - type cbf_q00__cl870de686 · RETRY-INFRA prov_views INFRA @ 2026-11-09 17:46 (69.2h) · owner KIT-WAVE-1
+  - type cbn_q00__cl622f65d2 · FAIL unit PLAN @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type cbn_q00__cld7bf7197 · FAIL gen FLOW @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type cbn_q00__cldbcda913 · FAIL unit PLAN @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type coll_ftc · FAIL unit PLAN @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type sle_ctl__cl503337ff · FAIL gen FLOW @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type sle_fe_v1__cl1cbb7497 · FAIL unit FLOW @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type sle_fe_v2 · FAIL unit PLAN @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type sle_fe_v3 · FAIL unit FLOW @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type slw_su_l1__clcc9d0155 · FAIL gen FLOW @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type sle_hc1__cl22c1ff36 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_hc1__cl7d360508 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_hc2__cl9c4c4509__cl3edce1b8 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner DIE-QC-97
+  - type sle_hc2__cl9c4c4509__clf60c5152 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner DIE-QC-97
+  - type sle_hc2__clcc5e3e61 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_sc_v1__cl115da35f · RETRY-INFRA gen INFRA @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_sc_v1__cl7479a5ec · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_sc_v2 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_stm_v1__cl27746664 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_stm_v1__clbe630b9c · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_stm_v2__cl55be2264 · FAIL unit PLAN @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_stm_v2__cl7b3062fa · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_stm_v3 · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_su_l0__cl086d85ba · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_su_l0__cl7a55c676 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_su_l1__cl5ea486db · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type sle_su_l1__clc6d66f5b · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_fe_v1__clfe325744__cl08d14f0d · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner unowned
+  - type slw_fe_v2__cle312294d · FAIL kit_topology PLAN @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_fw_v3 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_sc_v1__cl63e5a7a2 · SUPERSEDED unit SUPERSEDED @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_sc_v1__cl64543eaf__cl4590432d · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner unowned
+  - type slw_sc_v1__cl64543eaf__cl5e017c6f · FAIL unit PLAN @ 2026-11-12 06:18 (8.6h) · owner unowned
+  - type slw_sc_v2 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_sc_v3 · FAIL bind FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_stm_v1__cl05fc43f7__cl2086fa2c · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner DIE-QC-97
+  - type slw_stm_v1__cl05fc43f7__cl389df4e9 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner DIE-QC-97
+  - type slw_stm_v1__cle34a73c3 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_stm_v2__cl1ca9c415 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_stm_v2__cl9beb65e6 · FAIL kit_topology PLAN @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_stm_v3 · FAIL kit_topology PLAN @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_su_l0__cl1a1c1f8f · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_su_l0__cl1e5219ea · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_su_l0__cl76fb247e · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type slw_su_l1__cla2a78701 · FAIL unit FLOW @ 2026-11-12 06:18 (8.6h) · owner KIT-WAVE-1
+  - type coll_ft__cl78c7b300 · ROUTE-HELD geom @ 2026-11-12 06:29 (8.4h) · owner KIT-WAVE-1
+  - type sle_ctl__cl372cea1c · FAIL gen FLOW @ 2026-11-12 06:29 (8.4h) · owner KIT-WAVE-1
+  - type sle_st_b_v1__pv0e7b1dcc · FAIL gen FLOW @ 2026-11-12 06:50 (8.1h) · owner unowned
+  - type sle_st_b_v2__cl14c98df5 · FAIL gen FLOW @ 2026-11-12 06:50 (8.1h) · owner KIT-WAVE-1
+  - type cbf_q01_s2 · RETRY-INFRA gen INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type cbf_q11 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type cbn_q01__cld9ff4c40 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type cbn_q01__cldd6ea846 · RETRY-INFRA gen INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type cbn_q11__cl49ae4555 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type cbn_q11__cl5cc92dfe · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type coll_n · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type sle_st_b_v2__clfde1249e · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:53 (8h) · owner KIT-WAVE-1
+  - type slw_st_b_v1__cl6357f1cc__pvffd43fdc · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:53 (8h) · owner unowned
+  - type slw_st_b_v2__pva66d0f22 · RETRY-INFRA kit_topology INFRA @ 2026-11-12 06:53 (8h) · owner unowned
+  - type slw_st_b_v2__pvc2ec5bfb · RETRY-INFRA gen INFRA @ 2026-11-12 06:53 (8h) · owner unowned
+  - type sle_st_b_v1__pvc5a85fd4 · FAIL gen FLOW @ 2026-11-12 06:59 (7.9h) · owner unowned
+  - type cbf_q00_s2 · FAIL gen FLOW @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type cbf_q01 · FAIL gen FLOW @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type cbn_q01__clab6e67f2 · FAIL gen FLOW @ 2026-11-12 07:08 (7.8h) · owner KIT-WAVE-1
+  - type slw_st_b_v1__cl6357f1cc__pv6ace3e48 · CANCELLED unit WAIT-FORM @ 2026-11-12 07:36 (7.3h) · owner unowned
+  - type slw_st_b_v1__cle6023ec2 · CANCELLED unit WAIT-FORM @ 2026-11-12 07:36 (7.3h) · owner KIT-WAVE-1
+  - type tt_ctlm · FAIL place FLOW @ 2026-11-12 08:55 (6h) · owner KIT-WAVE-1
+- [ ] STALE.KV 31 (cores 1, types 30) · by owner: KIT-WAVE-1 24, unowned 6, DIE-KV-97 1
   - core qkd_astk_ex_s · no kit-wave row · owner unowned
-  - type kv3_hgi_v4 · SUPERSEDED route SUPERSEDED @ 2026-11-05 17:42 (164.2h) · owner KIT-WAVE-1
-  - type kv3_pv_v5 · CANCELLED unit FLOW @ 2026-11-09 03:32 (82.4h) · owner KIT-WAVE-1
-  - type kv3_pv_v6 · CANCELLED unit FLOW @ 2026-11-09 03:32 (82.4h) · owner KIT-WAVE-1
-  - type kv3_hgi_v3 · SUPERSEDED route SUPERSEDED @ 2026-11-09 05:13 (80.7h) · owner KIT-WAVE-1
-  - type kv3_hgi_v6 · CANCELLED geom_run SUPERSEDED @ 2026-11-09 08:16 (77.7h) · owner KIT-WAVE-1
-  - type kv3_pv_v8 · SUPERSEDED route SUPERSEDED @ 2026-11-09 12:32 (73.4h) · owner KIT-WAVE-1
-  - type kv3_hgi_v5 · SUPERSEDED route SUPERSEDED @ 2026-11-09 14:57 (71h) · owner KIT-WAVE-1
-  - type kv3_hg_v1p3 · SUPERSEDED route SUPERSEDED @ 2026-11-09 15:57 (70h) · owner unowned
-  - type kv3_pv_v1 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (68.9h) · owner KIT-WAVE-1
-  - type kv3_pv_v12 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (68.9h) · owner KIT-WAVE-1
-  - type kv3_pv_v2 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (68.9h) · owner KIT-WAVE-1
-  - type kv3_pv_v3 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (68.9h) · owner KIT-WAVE-1
-  - type kv3_pv_v4 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (68.9h) · owner KIT-WAVE-1
-  - type kv3_pv_v2n · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:22 (68.6h) · owner DIE-KV-97
-  - type kv3_pv_v3n · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:22 (68.6h) · owner unowned
-  - type kv3_pv_v4n · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:22 (68.6h) · owner unowned
-  - type kv3_pv_v6n · FAIL kit_topology PLAN @ 2026-11-09 17:22 (68.6h) · owner unowned
-  - type kv3_sys_SD · SUPERSEDED route SUPERSEDED @ 2026-11-09 18:56 (67h) · owner KIT-WAVE-1
-  - type kv3_pv_v1n · SUPERSEDED place SUPERSEDED @ 2026-11-12 05:18 (8.6h) · owner unowned
-  - type kv3_pv_v7 · SUPERSEDED gen_lint SUPERSEDED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
-  - type kv3_hgi_v8 · SUPERSEDED kit_rtl SUPERSEDED @ 2026-11-12 05:46 (8.2h) · owner KIT-WAVE-1
-  - type kv3_io_ft_v1 · FAIL place FLOW @ 2026-11-12 06:03 (7.9h) · owner KIT-WAVE-1
-  - type kv3_io_cor_v1 · FAIL place FLOW @ 2026-11-12 06:16 (7.7h) · owner KIT-WAVE-1
-  - type kv3_hgi · FAIL kit_rtl FLOW @ 2026-11-12 06:29 (7.4h) · owner KIT-WAVE-1
-  - type kv3_io_cor · FAIL kit_rtl FLOW @ 2026-11-12 06:29 (7.4h) · owner KIT-WAVE-1
-  - type kv3_hgi_v2__cle0015330 · FAIL kit_rtl FLOW @ 2026-11-12 06:39 (7.3h) · owner KIT-WAVE-1
-  - type kv3_hgi_v2__cl2862d491 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:41 (7.2h) · owner KIT-WAVE-1
-  - type kv3_hgi_v7 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:41 (7.2h) · owner KIT-WAVE-1
-  - type kv3_hgi_v1__cl141fc26e · ROUTE-HELD geom @ 2026-11-12 07:46 (6.2h) · owner KIT-WAVE-1
-- [ ] STALE.HBM 21 (cores 14, types 7) · by owner: KIT-WAVE-1 13, HBM-CORES-B 7, AUTO-RESIGN 1
+  - type kv3_hgi_v4 · SUPERSEDED route SUPERSEDED @ 2026-11-05 17:42 (165.2h) · owner KIT-WAVE-1
+  - type kv3_pv_v5 · CANCELLED unit FLOW @ 2026-11-09 03:32 (83.4h) · owner KIT-WAVE-1
+  - type kv3_pv_v6 · CANCELLED unit FLOW @ 2026-11-09 03:32 (83.4h) · owner KIT-WAVE-1
+  - type kv3_hgi_v3 · SUPERSEDED route SUPERSEDED @ 2026-11-09 05:13 (81.7h) · owner KIT-WAVE-1
+  - type kv3_hgi_v6 · CANCELLED geom_run SUPERSEDED @ 2026-11-09 08:16 (78.7h) · owner KIT-WAVE-1
+  - type kv3_pv_v8 · SUPERSEDED route SUPERSEDED @ 2026-11-09 12:32 (74.4h) · owner KIT-WAVE-1
+  - type kv3_hgi_v5 · SUPERSEDED route SUPERSEDED @ 2026-11-09 14:57 (72h) · owner KIT-WAVE-1
+  - type kv3_hg_v1p3 · SUPERSEDED route SUPERSEDED @ 2026-11-09 15:57 (71h) · owner unowned
+  - type kv3_pv_v1 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (69.9h) · owner KIT-WAVE-1
+  - type kv3_pv_v12 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (69.9h) · owner KIT-WAVE-1
+  - type kv3_pv_v2 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (69.9h) · owner KIT-WAVE-1
+  - type kv3_pv_v3 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (69.9h) · owner KIT-WAVE-1
+  - type kv3_pv_v4 · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:01 (69.9h) · owner KIT-WAVE-1
+  - type kv3_pv_v2n · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:22 (69.6h) · owner DIE-KV-97
+  - type kv3_pv_v3n · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:22 (69.6h) · owner unowned
+  - type kv3_pv_v4n · SUPERSEDED kit_topology SUPERSEDED @ 2026-11-09 17:22 (69.6h) · owner unowned
+  - type kv3_pv_v6n · FAIL kit_topology PLAN @ 2026-11-09 17:22 (69.6h) · owner unowned
+  - type kv3_sys_SD · SUPERSEDED route SUPERSEDED @ 2026-11-09 18:56 (68h) · owner KIT-WAVE-1
+  - type kv3_pv_v1n · SUPERSEDED place SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner unowned
+  - type kv3_pv_v7 · SUPERSEDED gen_lint SUPERSEDED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - type kv3_hgi_v8 · SUPERSEDED kit_rtl SUPERSEDED @ 2026-11-12 05:46 (9.2h) · owner KIT-WAVE-1
+  - type kv3_io_ft_v1 · FAIL place FLOW @ 2026-11-12 06:03 (8.9h) · owner KIT-WAVE-1
+  - type kv3_io_cor_v1 · FAIL place FLOW @ 2026-11-12 06:16 (8.7h) · owner KIT-WAVE-1
+  - type kv3_hgi · FAIL kit_rtl FLOW @ 2026-11-12 06:29 (8.4h) · owner KIT-WAVE-1
+  - type kv3_io_cor · FAIL kit_rtl FLOW @ 2026-11-12 06:29 (8.4h) · owner KIT-WAVE-1
+  - type kv3_hgi_v2__cle0015330 · FAIL kit_rtl FLOW @ 2026-11-12 06:39 (8.3h) · owner KIT-WAVE-1
+  - type kv3_hgi_v2__cl2862d491 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:41 (8.2h) · owner KIT-WAVE-1
+  - type kv3_hgi_v7 · RETRY-INFRA kit_rtl INFRA @ 2026-11-12 06:41 (8.2h) · owner KIT-WAVE-1
+  - type kv3_hgi_v1__cl141fc26e · ROUTE-HELD geom @ 2026-11-12 07:46 (7.2h) · owner KIT-WAVE-1
+  - type kv3_hgi_v1__cl42bc8b12 · ROUTE-HELD geom @ 2026-11-12 08:55 (6h) · owner KIT-WAVE-1
+- [ ] STALE.HBM 30 (cores 23, types 7) · by owner: KIT-WAVE-1 13, HBM-CORES-B 7, VISLAYOUT2-HBM 5, unowned 4, AUTO-RESIGN 1
   - core ot_hbm_sm_kv_line · no kit-wave row · owner HBM-CORES-B
   - core ot_hbm_su_pg_lane1p_core · no kit-wave row · owner AUTO-RESIGN
   - core ot_hfd_coll_q3_body_ctl · no kit-wave row · owner HBM-CORES-B
@@ -255,19 +265,28 @@ Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19
   - core ot_hgi_sfu_split3_ctl_rest_1c · no kit-wave row · owner HBM-CORES-B
   - core ot_q2nf_rest · no kit-wave row · owner HBM-CORES-B
   - core ot_wbq_sw · no kit-wave row · owner HBM-CORES-B
-  - core ot_hfd_coll_q2n2_vm_core · FAIL route TIMING @ 2026-11-03 17:21 (212.6h) · owner KIT-WAVE-1
-  - core ot_hgi_dma_back_static_vp4_banks_cp · SUPERSEDED route SUPERSEDED @ 2026-11-04 08:58 (197h) · owner KIT-WAVE-1
-  - core ot_hgi_coll_tkm_m_tp192__root · SUPERSEDED queue SUPERSEDED @ 2026-11-07 11:17 (122.6h) · owner KIT-WAVE-1
-  - core ot_hbm_idx_topk_link_static · FAIL place FLOW @ 2026-11-07 19:38 (114.3h) · owner KIT-WAVE-1
-  - type vsN2 · FAIL signoff TIMING @ 2026-11-09 00:01 (85.9h) · owner KIT-WAVE-1
-  - type vsN6 · SUPERSEDED signoff SUPERSEDED @ 2026-11-09 00:26 (85.5h) · owner KIT-WAVE-1
-  - type q_spt2 · CANCELLED geom SUPERSEDED @ 2026-11-09 00:40 (85.3h) · owner KIT-WAVE-1
-  - type q_spb1 · FAIL signoff TIMING @ 2026-11-09 01:06 (84.8h) · owner KIT-WAVE-1
-  - type vsN1 · FAIL signoff TIMING @ 2026-11-09 01:20 (84.6h) · owner KIT-WAVE-1
-  - core ot_hbm_svc_vm_kshare_splitstrap__v8e478a · FAIL signoff TIMING @ 2026-11-09 08:04 (77.9h) · owner KIT-WAVE-1
-  - core ot_hbm_svc_vm_kshare_splitstrap__v700685 · FAIL signoff TIMING @ 2026-11-09 09:07 (76.8h) · owner KIT-WAVE-1
-  - type vsN4 · SUPERSEDED signoff SUPERSEDED @ 2026-11-09 09:07 (76.8h) · owner KIT-WAVE-1
-  - type vsN5 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (8.6h) · owner KIT-WAVE-1
+  - core ot_hfd_coll_q2n2_vm_core · FAIL route TIMING @ 2026-11-03 17:21 (213.6h) · owner KIT-WAVE-1
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b95ff4f969a6c0ba · SUPERSEDED route SUPERSEDED @ 2026-11-03 21:37 (209.3h) row hnx_vms_bank_q0_faces__vecd4ae__v39c3624d7cc9 · owner VISLAYOUT2-HBM
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/d4e89c75b4a66b6e · SUPERSEDED route SUPERSEDED @ 2026-11-04 00:13 (206.7h) row hnx_vms_bank_q0_faces__vecd4ae__v5d4099d7f96c · owner VISLAYOUT2-HBM
+  - core ot_hgi_dma_back_static_vp4_banks_cp · SUPERSEDED route SUPERSEDED @ 2026-11-04 08:58 (198h) · owner KIT-WAVE-1
+  - core ot_hgi_coll_tkm_m_tp192__root · SUPERSEDED queue SUPERSEDED @ 2026-11-07 11:17 (123.6h) · owner KIT-WAVE-1
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/b7314a95f9eb7d23 · SUPERSEDED gen SUPERSEDED @ 2026-11-07 18:05 (116.8h) row hnx_vms_bank_q0_faces__vecd4ae__v796f3e53bd3f · owner VISLAYOUT2-HBM
+  - core ot_hbm_idx_topk_link_static · FAIL place FLOW @ 2026-11-07 19:38 (115.3h) · owner KIT-WAVE-1
+  - type vsN2 · FAIL signoff TIMING @ 2026-11-09 00:01 (86.9h) · owner KIT-WAVE-1
+  - type vsN6 · SUPERSEDED signoff SUPERSEDED @ 2026-11-09 00:26 (86.5h) · owner KIT-WAVE-1
+  - type q_spt2 · CANCELLED geom SUPERSEDED @ 2026-11-09 00:40 (86.3h) · owner KIT-WAVE-1
+  - type q_spb1 · FAIL signoff TIMING @ 2026-11-09 01:06 (85.8h) · owner KIT-WAVE-1
+  - type vsN1 · FAIL signoff TIMING @ 2026-11-09 01:20 (85.6h) · owner KIT-WAVE-1
+  - core ot_hbm_svc_vm_kshare_splitstrap__v8e478a · FAIL signoff TIMING @ 2026-11-09 08:04 (78.9h) · owner KIT-WAVE-1
+  - core ot_hbm_svc_vm_kshare_splitstrap__v700685 · FAIL signoff TIMING @ 2026-11-09 09:07 (77.8h) · owner KIT-WAVE-1
+  - type vsN4 · SUPERSEDED signoff SUPERSEDED @ 2026-11-09 09:07 (77.8h) · owner KIT-WAVE-1
+  - type vsN5 · CANCELLED geom QUEUE-CANCELLED @ 2026-11-12 05:18 (9.6h) · owner KIT-WAVE-1
+  - core ot_hbm_sm_i8w_front · FAIL route ROUTING @ 2026-11-12 08:06 (6.8h) · owner unowned
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/430f68dee83dc012 · FAIL route ROUTING @ 2026-11-12 08:16 (6.7h) row hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16 · owner VISLAYOUT2-HBM
+  - core hnx_fused_lane_c · FAIL signoff TIMING @ 2026-11-12 08:35 (6.3h) · owner unowned
+  - core hnx_vms_bank_q0_faces__vecd4ae#270x403.92/6d132375c20a740b · FAIL route ROUTING @ 2026-11-12 08:35 (6.3h) row hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a · owner VISLAYOUT2-HBM
+  - core ot_hgi_sfu_opsa_group0 · FAIL gen FLOW @ 2026-11-12 08:35 (6.3h) · owner unowned
+  - core ot_svgr_top · FAIL place PLAN @ 2026-11-12 08:55 (6h) · owner unowned
 <!-- BREAKDOWN END -->
 <!-- BREAKDOWN END -->
 
