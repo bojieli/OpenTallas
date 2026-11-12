@@ -84,8 +84,8 @@ def m_corner(kd):      # single-mode tc+bc session with an unconditional global 
     (kd / "grt_pre.tcl").write_text("set_clock_latency -source 202.5 [get_clocks vclk]\n")
 
 
-def m_ff(kd):          # sdc_lint FF reference off the 12.3 contract
-    (kd / "sdc_lint.json").write_text(json.dumps(dict(insertion_ps=250.0, insertion_ff_ps=260.95)))
+def m_ff(kd):          # clock_binding FF insertion off the plan reference (sdc_lint.json is the plan's own value since HEAD-94 11-11)
+    (kd / "clock_binding.json").write_text(json.dumps(dict(insertion_ps=dict(tt=250.0, ff=260.95))))
 
 
 def m_clock_pin(kd):   # core_infra_impl-style proc places the entry 0.032x0.192, off the M5 track (c15b DRT-0255)

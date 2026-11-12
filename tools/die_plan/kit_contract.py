@@ -119,6 +119,33 @@ def _hook_files(kd, cfg):
     return list(seen)
 
 
+def _plan_reference(kd):
+    """HEAD-94 11-11 (COORD): the (tt, ff) vclk latency the kit's PLAN assigns, from the kit's own sdc_lint.json (plan
+    clock.insertion_ps / insertion_ff_ps as gen_phys wrote them) else clock_binding.json insertion_ps; None when the plan
+    gives none (then the 12.3 default TT_PS / FF_PS applies).  Compared with the same TOL as before: the plan's
+    insertion_tol_ps is the seam-hold window, not an equality tolerance, and is not used here."""
+    kd = Path(kd)
+    tt = ff = None
+    lint = kd / "sdc_lint.json"
+    if lint.is_file():
+        try:
+            d = json.loads(lint.read_text())
+            tt, ff = _num(d.get("insertion_ps")), _num(d.get("insertion_ff_ps"))
+        except (ValueError, TypeError):
+            tt = ff = None
+    if tt is None:
+        cb = kd / "clock_binding.json"
+        if cb.is_file():
+            try:
+                ins = json.loads(cb.read_text()).get("insertion_ps") or {}
+                tt, ff = _num(ins.get("tt")), _num(ins.get("ff"))
+            except (ValueError, TypeError, AttributeError):
+                tt = ff = None
+    if tt is None:
+        return None
+    return tt, (ff if ff is not None else FF_PS if _eq(tt, TT_PS) else tt)
+
+
 # ---------------------------------------------------------------------------------------------- 1 corner modes
 def corner_modes(kd):
     kd = Path(kd)
@@ -128,7 +155,7 @@ def corner_modes(kd):
         reference = CIR.load(kd)
     except ValueError as ex:
         return [str(ex)], dict(applies=True)
-    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (TT_PS, FF_PS)
+    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (_plan_reference(kd) or (TT_PS, FF_PS))
     sdc = kd / "constraint.sdc"
     if not sdc.is_file():
         return ["constraint.sdc missing"], dict(applies=True)
@@ -187,7 +214,7 @@ def ff_binding(kd):
         reference = CIR.load(kd)
     except ValueError as ex:
         return [str(ex)], dict(applies=True)
-    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (TT_PS, FF_PS)
+    tt_ps, ff_ps = (reference["tt"], reference["ff"]) if reference else (_plan_reference(kd) or (TT_PS, FF_PS))
     if reference:
         err += CIR.binding_errors(kd, reference)
     vals = dict(OT_VCLK_TT=_num(cfg.get("OT_VCLK_TT")), OT_VCLK_FF=_num(cfg.get("OT_VCLK_FF")))
