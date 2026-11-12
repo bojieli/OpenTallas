@@ -1,0 +1,8 @@
+7364c7364
+<   ot_hgi_qdq_transport_ctl_r4 #(.DL(25), .MUT(0)) hb_quant_NW__quant_NW_xp_ctl (
+---
+>   ot_hgi_qdq_transport_ctl_r5 #(.DL(25), .MUT(0)) hb_quant_NW__quant_NW_xp_ctl (
+7367c7367
+<     .rl_cfg(7'b1111110),
+---
+>     .rl_cfg(8'b01111111),

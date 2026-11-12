@@ -70,12 +70,12 @@ module ot_hbm_idx_score_quarter_static_h #(parameter integer TP=96,RANK_W=(TP<=1
  // ---------------- W glue (cluster W glue on the registered inputs; this quarter's 4 key lines)
  wire[19:0]g0=20'(8*TP)*20'(fo_r)+20'(8)*20'(rk_r)+20'(16*TP)*20'(bi_r);
  reg wf;
- // HBM-HUB-RTL-1 11-12: the loop runs on every evaluation (bv_r gates each term), so its variable is assigned on all
- // paths and yosys infers no latch for it (it used to latch j while bv_r was low). Same wf function.
  always @* begin
   wf=0;
-  if(bv_r&&(nk_r>2736||bi_r>170))wf=1;
-  for(integer j=0;j<4;j=j+1)if(bv_r&&(!kl_r[j*1099]||kl_r[j*1099+1+:10]!==10'((4*int'(h_r)+j)*128+int'(bi_r))))wf=1;
+  if(bv_r)begin
+   if(nk_r>2736||bi_r>170)wf=1;
+   for(integer j=0;j<4;j=j+1)if(!kl_r[j*1099]||kl_r[j*1099+1+:10]!==10'((4*int'(h_r)+j)*128+int'(bi_r)))wf=1;
+  end
  end
  wire[1:0]ev,efault,wf_d;wire[7:0]kv,fl;wire[127:0]val;wire[159:0]idx;wire[1:0]last;
  genvar e,c,l;
