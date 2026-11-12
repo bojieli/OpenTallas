@@ -31240,7 +31240,7 @@
      {
       "host": "epyc2",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/588abcb6d72d/ot_hbm_idx_score_hcol_h1",
-      "job": "COUNTED ot_hbm_idx_score_hcol_h1 epyc2:/srv/opentallas-scratch3/claude/ss23/hcol_w90_r_hbm/signoff/signoff.json (KW-FIX-32 export_view)"
+      "job": "COUNTED ot_hbm_idx_score_hcol_h1 epyc2:/srv/opentallas-scratch3/claude/ss23/hcol_w90_r_hbm/signoff/signoff.json (KW-FIX-32 export_view) | KW-FIX-45 11-11 20:4x PIN-EQUIVALENT to plan pins (ot_hbm_idx_score_hcol_h1, pineq.py EQUIVALENT, independent re-run on the signed kit host, 0 mismatch / 0 kit-only; COORD+DIE-HBM-100 accepted) DO_NOT_COUNT"
      }
     ],
     "ot_hbm_idx_tail_native": [
@@ -31547,6 +31547,11 @@
     "ot_hbm_idx_score_hcol_h0_ra": [
      {
       "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e235cf889fbe/ot_hbm_idx_score_hcol_h0_ra",
+      "job": "COUNTED ot_hbm_idx_score_hcol_h0_ra epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json (KW-FIX-32 export_view) | KW-FIX-45 11-11 20:4x PIN-EQUIVALENT to plan pins (ot_hbm_idx_score_hcol_h0_ra, pineq.py EQUIVALENT, independent re-run on the signed kit host, 0 mismatch / 0 kit-only; COORD+DIE-HBM-100 accepted) DO_NOT_COUNT"
+     },
+     {
+      "host": "epyc2",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
       "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)",
       "detailed_lef": "detail_view.lef",
@@ -31578,11 +31583,6 @@
       "detail_bloat_factor": 0
      },
      {
-      "host": "epyc2",
-      "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/e235cf889fbe/ot_hbm_idx_score_hcol_h0_ra",
-      "job": "COUNTED ot_hbm_idx_score_hcol_h0_ra epyc2:/srv/opentallas-scratch3/claude/die-hbm-85/eco/ra_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
-     },
-     {
       "host": "epyc9",
       "dir": "/srv/opentallas-scratch2/claude/hbm-cores-b/view_detail_1110/ra/ot_hbm_idx_score_hcol_h0_ra",
       "job": "HBM-CORES-B DRT-0073 detail view ra (c7c152ae1c, KW-FIX-43 COORD 11-10)",
@@ -31595,7 +31595,7 @@
      {
       "host": "epyc4",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/hbm/d2a951a399f5/ot_hbm_idx_score_hcol_h0_rb",
-      "job": "COUNTED ot_hbm_idx_score_hcol_h0_rb epyc4:/srv/opentallas-scratch3/claude/die-hbm-85/eco/rb_e1_resign/signoff/signoff.json (KW-FIX-32 export_view)"
+      "job": "COUNTED ot_hbm_idx_score_hcol_h0_rb epyc4:/srv/opentallas-scratch3/claude/die-hbm-85/eco/rb_e1_resign/signoff/signoff.json (KW-FIX-32 export_view) | KW-FIX-45 11-11 20:4x PIN-EQUIVALENT to plan pins (ot_hbm_idx_score_hcol_h0_rb, pineq.py EQUIVALENT, independent re-run on the signed kit host, 0 mismatch / 0 kit-only; COORD+DIE-HBM-100 accepted) DO_NOT_COUNT"
      }
     ],
     "ot_hbm_su_pg_lane_exp_x_core": [
