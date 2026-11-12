@@ -33270,7 +33270,7 @@
       "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-45 11-11 19:5x DIE-HBM-100 approved: fresh attempt on src = HBM wave src + tools/ of main fc5cd3af6f17 (grt_nonport_hold_chain), OT_GRT_NONPORT_HOLD=1 + edge_outline. KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43.",
+     "note": "KW-FIX-45 11-11 19:5x DIE-HBM-100 approved: fresh attempt on src = HBM wave src + tools/ of main fc5cd3af6f17 (grt_nonport_hold_chain), OT_GRT_NONPORT_HOLD=1 + edge_outline. KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43. | PROVENANCE (mixed src, DO_NOT_COUNT, ask DIE-HBM-100 before counting): epyc9:/srv/opentallas-scratch2/claude/kw45/src_hbm_nph_fc5cd3af6f.provenance.txt sha256 0f419bea303a: tools/ = main fc5cd3af6f173e623db98dd8b35cf94ac7c8327a, rest = src_hbm_bitgrp_fe0002fac6_efdab72dbc13; diff-vs-both file lists in that file.",
      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_nph_fc5cd3af6f",
      "src_sha": "fc5cd3af6f173e623db98dd8b35cf94ac7c8327a",
      "queue_src": "main@fc5cd3af6f17"
