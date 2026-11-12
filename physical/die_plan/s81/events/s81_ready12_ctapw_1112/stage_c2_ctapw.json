@@ -1,0 +1,18 @@
+{
+ "name": "c2_ctapw",
+ "why": "early core taps (ENG-CTAP-1109 eng__t1 + CORE-CTAP-WIDE-1109 9 slice types) for the 10 types KW-FIX-43 pinned to old plan c839; JSON-level, entries re-derived on the event plan",
+ "script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/ctapw/ctapw_fold_1112.py",
+ "argv": [
+  "{in}",
+  "{out}",
+  "{report}",
+  "--entries",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/ctapw/entries_ctapw_c1x_lepw.json",
+  "--repo",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/repo"
+ ],
+ "type_keys": [
+  "clock"
+ ],
+ "top_keys": []
+}

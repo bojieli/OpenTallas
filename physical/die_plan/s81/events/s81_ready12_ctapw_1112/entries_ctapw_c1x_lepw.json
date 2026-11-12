@@ -1,0 +1,436 @@
+{
+ "event": "CORE-CTAP-WIDE-1109",
+ "plan": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/out/s87_ready12w/plan.json",
+ "rule_ps": 210.0,
+ "types": {
+  "dsdv_slice_c1x_C__t1": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      252.744
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_c1x_C__t3": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      252.744
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_c1x_C__t4": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      15.27,
+      946.104
+     ],
+     "pin_xy": [
+      26.07,
+      946.104
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      191.997,
+      732.295
+     ],
+     "pin_xy": [
+      191.997,
+      743.095
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_c1x_C__t5": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      246.264
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_c1x_C__t7": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      246.264
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_c1x_C__t8": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      252.744
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_c1x_C__t9": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      246.264
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_lepw_mu_C__t1": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      252.744
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  },
+  "dsdv_slice_lepw_mus_C__t1": {
+   "add": [
+    {
+     "name": "u_c.u_cap.ck_cw",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      23.91,
+      246.264
+     ],
+     "pin_xy": [
+      34.71,
+      246.264
+     ],
+     "insertion_ps": 210.6,
+     "insertion_ff_ps": 169.9,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 210.6,
+     "kit_tap_was": "grid"
+    },
+    {
+     "name": "u_c.u_cap.ck_rn",
+     "module": "ot_s81sl_capc5r",
+     "xy": [
+      200.637,
+      460.073
+     ],
+     "pin_xy": [
+      200.637,
+      449.273
+     ],
+     "insertion_ps": 271.4,
+     "insertion_ff_ps": 221.1,
+     "basis": "pin_register_mean",
+     "src": "physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/insertion.json",
+     "kit_row_ps": 271.4,
+     "kit_tap_was": "grid"
+    }
+   ],
+   "fix": [],
+   "core_taps_was": "early",
+   "mode_was": {
+    "mean_contract": true,
+    "require_signed": false
+   }
+  }
+ },
+ "census": {
+  "note": "filtered from entries_full_ready12w.json (derive on out/s87_ready12w plan 6a39ca9bf8d0); 142 types in the full set"
+ },
+ "hard_cores_sha": {
+  "dsdv_slice_c1x_C__t1": "620b2a28e7fe1ddf",
+  "dsdv_slice_c1x_C__t3": "4edaafacc7717f9b",
+  "dsdv_slice_c1x_C__t4": "0b48f062c6c9ae56",
+  "dsdv_slice_c1x_C__t5": "60518589d11a15b3",
+  "dsdv_slice_c1x_C__t7": "60518589d11a15b3",
+  "dsdv_slice_c1x_C__t8": "81bfe4da70870db3",
+  "dsdv_slice_c1x_C__t9": "6a907b36203e212f",
+  "dsdv_slice_lepw_mu_C__t1": "60518589d11a15b3",
+  "dsdv_slice_lepw_mus_C__t1": "60518589d11a15b3"
+ },
+ "delta_script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/repo/physical/die_plan/s81/delta_core_ctap_wide_1109.py"
+}
