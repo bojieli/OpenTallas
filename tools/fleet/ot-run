@@ -1037,7 +1037,9 @@ def cancel_dir(path, reason=""):
     why = " ".join((reason or "client already gone").split())[:200]
     # the sender text names this command itself ("ot-run --cancel-dir"), not whatever argv this process was started with, so the
     # line is accepted by autopilot.signals_cancel() whether this runs from the CLI or as a library
-    who = f"pid {os.getpid()} (ot-run --cancel-dir {p}; invoked by {sender(os.getppid())})"
+    # one physical line: the parent command line may hold newlines (a heredoc or a multi-line ssh command), and signals_cancel()
+    # reads signals.log line by line, so a split record would never match
+    who = " ".join(f"pid {os.getpid()} (ot-run --cancel-dir {p}; invoked by {sender(os.getppid())})".split())
     log_signal(f"signal 15 from {who} -> ot-run pid 0 host - tag cancel-dir DEAD-CLIENT dir {p}: {why}")
     print(f"ot-run --cancel-dir: wrote the cancel record for {p} to {SIGNAL_LOG}; the autopilot classifies the job CANCELLED at its next poll")
     return 0

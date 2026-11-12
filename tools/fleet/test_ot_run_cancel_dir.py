@@ -77,6 +77,15 @@ class CancelDir(unittest.TestCase):
         self.assertEqual(self.m.cancel_dir(KIT, "x"), 2)
         self.assertFalse(os.path.exists(self.log))                       # nothing written
 
+    def test_a_multiline_parent_command_still_makes_one_accepted_line(self):
+        # found live 16:07: the invoking ssh command held a heredoc, the record was split over two lines and signals_cancel() never matched
+        self.m.sender = lambda pid: f"pid {pid} (bash -c python3 - <<EOF\nimport json\nprint('x')\nEOF\nmore; parent 1 (sshd))"
+        self.assertEqual(self.m.cancel_dir(KIT, "multi-line parent"), 0)
+        lines = open(self.log).read().splitlines()
+        self.assertEqual(len(lines), 1, lines)
+        ap = load_autopilot(self.log)
+        self.assertIsNotNone(ap.signals_cancel({"path": KIT, "started": time.time() - 3600}))
+
     def test_relative_path_is_refused(self):
         self.assertEqual(self.m.cancel_dir("q_x/attempt_2", "x"), 2)
         self.assertFalse(os.path.exists(self.log))
