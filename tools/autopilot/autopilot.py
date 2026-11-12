@@ -1528,6 +1528,18 @@ def wave_superseded(j):
     return v[1] if v and v[0] == "STOP" else ""
 
 
+def stop_cancelled(j, why):
+    """FAILFAST-1 11-12 (orphan leak: containers ran 24-70 h after their rows went CANCELLED): a job that goes CANCELLED stops its
+    containers by exact name on every host and records which (j['stopped_containers'] + the log).  Never raises."""
+    try:
+        names, errs = WJ.stop_row_containers(sh, HUB_NAME, [j.get("path")], dry=DRY)
+    except Exception as e:                           # noqa: a cancel is recorded even when the stop could not run
+        names, errs = "", "; stop failed: %r" % (e,)
+    j["stopped_containers"] = {"at": now_s(), "names": names, "why": why[:120], "errors": errs[:300]}
+    log(f"CANCEL-STOP {j['id']} {j['die']}/{j['type']} ({why[:80]}): containers [{names or 'none running'}]{errs}")
+    return names
+
+
 def stop_survivors(j):
     """one flow container per kit (WATCHDOG-1 11-03): a resubmit resumes the run dir, and the previous attempt's container may
     still run, on any host, after its ot-run client was lost (ot-run leaves a started command running)"""
@@ -2464,6 +2476,7 @@ def poll_running(st):
             j.update(cls="CANCELLED", kind="cancelled", reasons=client["cancelled"][:600], finished=time.time())
             log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> CANCELLED (explicit ot-run --cancel; not resubmitted): "
                 f"{client['cancelled'][:240]}")
+            stop_cancelled(j, "explicit cancel")
             set_status(st, j, "CANCELLED", f"cancelled: {client['cancelled'][:200]}")
             continue
         if "ap_rc" not in client and not client.get("not_completed"):
@@ -2525,6 +2538,7 @@ def finish(st, j, c, client):
         if why:
             j.update(cls="CANCELLED", kind="cancelled")
             log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> CANCELLED (not resubmitted): {why[:240]}")
+            stop_cancelled(j, "wave no longer wants it")
             set_status(st, j, "CANCELLED", f"wave no longer wants it: {why[:200]}")
             return
         notrun = kind == "infra-notrun"

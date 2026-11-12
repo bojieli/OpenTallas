@@ -52,7 +52,7 @@ def test_config_precedence():
     assert R.config_values({}, "export OT_FF_GRT_MAX = 500\n")["OT_FF_GRT_MAX"] == 500
     assert R.config_values({"OT_FF_GRT_MAX": "700"}, "export OT_FF_GRT_MAX = 500\n")["OT_FF_GRT_MAX"] == 700
     assert R.config_values({"OT_FF_GRT_MAX": "x"}, "")["OT_FF_GRT_MAX"] == 1000                     # malformed: default
-    assert C["OT_FF_GRT_MAX"] == 1000 and C["OT_FF_DRT_ITER"] == 20 and C["OT_FF_HOLD_CAPS"] == 2
+    assert C["OT_FF_GRT_MAX"] == 1000 and C["OT_FF_DRT_ITER"] == 20 and C["OT_FF_HOLD_CAPS"] == 0
 
 
 # ---------------------------------------------------------------------------------------------------- (a) GRT
@@ -199,8 +199,10 @@ STALL = "OT_HOLD_STALL NEEDS_RTL (hold repair over 3 h): R2R=6544@-101 -> /x/ot_
 def test_hold_two_caps_or_stall():
     s = R.scan_lines([CAP % 1, "[ERROR RSZ-0060] Max buffer count reached", "x", CAP % 2])
     assert s["caps"] == 2                                                       # the caught tool error itself is not a second hit
-    assert R.hold_decide(1, None, C) is None
-    d = R.hold_decide(2, None, C)
+    assert R.hold_decide(9, None, C) is None                                    # cap clause off by default (COORD 11-11)
+    C2 = R.config_values({"OT_FF_HOLD_CAPS": "2"})
+    assert R.hold_decide(1, None, C2) is None
+    d = R.hold_decide(2, None, C2)
     assert d["rule"] == "HOLD_STRUCTURAL" and "2 times" in d["why"]
     assert R.hold_decide(0, R.scan_lines([STALL])["stall"], C)["why"].startswith("OT_HOLD_STALL")
     assert R.hold_line(d, "cts", stamp=False).startswith("OT_HOLD_STRUCTURAL stage=cts failfast class=HOLD_STRUCTURAL")
@@ -218,10 +220,11 @@ def test_judge_hold_counts_cts_and_grt_of_this_run_only(tmp_path):
     lg.mkdir(parents=True)
     (lg / "4_1_cts.log").write_text(CAP % 1 + "\n")
     (lg / "5_1_grt.tmp.log").write_text("x\n" + CAP % 1 + "\n")
-    out = R.judge(str(k), 0, None, env={})
+    assert R.judge(str(k), 0, None, env={}) == []                                # default: cap clause off
+    out = R.judge(str(k), 0, None, env={"OT_FF_HOLD_CAPS": "2"})
     assert len(out) == 1 and out[0].startswith("OT_HOLD_STRUCTURAL stage=grt failfast")
     os.utime(lg / "4_1_cts.log", (100, 100))                                 # the CTS log belongs to an earlier run
-    assert R.judge(str(k), time.time() - 5, None, env={}) == []
+    assert R.judge(str(k), time.time() - 5, None, env={"OT_FF_HOLD_CAPS": "2"}) == []
 
 
 # ---------------------------------------------------------------------------------------------------- autopilot / kit-wave class

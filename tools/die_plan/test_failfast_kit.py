@@ -72,7 +72,9 @@ def test_hold_structural_at_cts(tmp_path):
     k, r, l, s = with_rules(tmp_path)
     body = ("cat > $L/4_1_cts.log <<'EOF'\nOT_HOLD_GUARD chunk 1: buffer cap 4000 reached (RSZ-0060), continuing\n"
             "OT_HOLD_GUARD chunk 2: buffer cap 4000 reached (RSZ-0060), continuing\nEOF\nsleep 60\n")
-    p = run(k, s, fake(tmp_path, body), "cts", env=FAST)
+    p = run(k, s, fake(tmp_path, body.replace("sleep 60", "sleep 4")), "cts", env=FAST)
+    assert p.returncode == 0 and "OT_HOLD_STRUCTURAL" not in p.stdout          # cap clause off by default
+    p = run(k, s, fake(tmp_path, body), "cts", env=dict(FAST, OT_FF_HOLD_CAPS="2"))
     assert p.returncode == 21, p.stdout + p.stderr
     assert any(x.startswith("OT_HOLD_STRUCTURAL stage=cts failfast class=HOLD_STRUCTURAL") for x in p.stdout.splitlines())
     assert "OT_GRT_STOP hold_structural" in p.stdout
@@ -89,13 +91,13 @@ def test_opt_outs_and_no_rules_file(tmp_path):
     hold = ("cat > $L/4_1_cts.log <<'EOF'\nOT_HOLD_GUARD chunk 1: buffer cap 4000 reached (RSZ-0060), continuing\n"
             "OT_HOLD_GUARD chunk 2: buffer cap 4000 reached (RSZ-0060), continuing\nEOF\nsleep 4\n")
     k, r, l, s = with_rules(tmp_path / "env")
-    p = run(k, s, fake(tmp_path / "env", hold), "cts", env=dict(FAST, OT_FAILFAST="0"))
+    p = run(k, s, fake(tmp_path / "env", hold), "cts", env=dict(FAST, OT_FAILFAST="0", OT_FF_HOLD_CAPS="2"))
     assert p.returncode == 0 and "OT_HOLD_STRUCTURAL" not in p.stdout
     k, r, l, s = with_rules(tmp_path / "cfg", "export OT_FF_HOLD = 0\n")
-    p = run(k, s, fake(tmp_path / "cfg", hold), "cts", env=FAST)
+    p = run(k, s, fake(tmp_path / "cfg", hold), "cts", env=dict(FAST, OT_FF_HOLD_CAPS="2"))
     assert p.returncode == 0 and "OT_HOLD_STRUCTURAL" not in p.stdout
     k, r, l, s = kit(tmp_path / "old")                                          # a kit built before FAILFAST-1: no rules file
-    p = run(k, s, fake(tmp_path / "old", hold), "cts", env=FAST)
+    p = run(k, s, fake(tmp_path / "old", hold), "cts", env=dict(FAST, OT_FF_HOLD_CAPS="2"))
     assert p.returncode == 0 and "OT_HOLD_STRUCTURAL" not in p.stdout
 
 
