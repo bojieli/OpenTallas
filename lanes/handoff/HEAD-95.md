@@ -52,6 +52,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 - rp18 pin/outline (GEOM-REVIEW 16:0x): wshim_tx 4 slew nets = in-band W-E reset hops (340 um) -> relay_um 300 still the fix; start_i/arst_n W-face y518 pin -> move into band (y 711-1009). wshim_rx: pins spread over empty lower 65%, 45 relays, 334 hop in empty space -> move pins into band, then re-check relay_um. Outline shrink to ~700x320 proposed to COORD (die floorplan call).
 
+- rp18 EVENT SHAPE ASK posted (sweep epyc4 head-95/sweep17, tool lanes/head-95-west-1112/outline_sweep.py): no shrink (pitch-locked); reset pass-through columns via reset.in_sites/parent_pins for wshim_tx/rx, eshim_tx/rx, turn_a/b; relay_um 300 wshim_tx; lep0N windows 93/90/90. Default build if no answer 30 min. Asked REACH-FIX-2 for a reset.column solver mode.
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
