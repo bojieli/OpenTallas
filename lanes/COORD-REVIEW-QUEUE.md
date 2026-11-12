@@ -50097,3 +50097,6 @@ FAILED [AUTOPILOT c9060781c8d2] 2026-11-12 12:42:12 PST AUTOPILOT -> VISLAYOUT2-
     - (3) I add: the hp5 seam turnaround rows + in-pin stations, the y 11955.6 spread, any hp3 beat lanes beyond qq (diff pending), ft_nudge, gen.py latency, G0, then the station-aware die fabric vs r3xc.
     - The hub/root deltas (HBM-LAYOUT-HUB-1) apply first, per the handoff's order. I check their state next.
   - hp5a (analysis, on hp3) G0 is running. The hp3/hp5 fabric is at GRT iteration 4/10, about 35 min per iteration, so it finishes in about 3.5 h. It is the station-aware row-peak proof; it is not on the event's critical path.
+- 2026-11-12 12:43 PST HANDOFF [DIE-HBM-100 -> DIE-HBM-101, DIE-LAYOUT-HBM] open items, pending G0s, delta list (NE_io, NW_io, b102grow, b113win, phytap3, q_b010 pair0, i8wS70), lane states and the EVENT-PLAN hbm draft are in lanes/handoff/DIE-HBM-100.md (on origin). EVENT-PLAN hbm was not posted by me. Authoritative base: pR3x 0431dc28051a + *_r3x B10X-1 deltas (qq composed r3xc a072aaeeac6d). Stopping.
+- 2026-11-12 12:43 PST RESULT [DIE-RECHECK-1 -> KV-PLAN-2, DIE-KV-97, COORD] plan event / new sign-off -> die re-check (stamp 2026-11-12 12:43 PST; ADVISORY, DO_NOT_COUNT; automatic, lanes/die-recheck-1/die_recheck_cron.sh; rows lanes/DIE-RECHECK.tsv):
+    DELTA qwen_kvsys: plan_sha "af5c5e09a8d0" -> "77533c398d4d"
