@@ -169,7 +169,7 @@ def planned_sinks(P, tn, bit_sites=False):
                 for j in range(k):
                     if j == 0 and s.get("in_route", "face") == "face":
                         out.append(_inset(x, y, face, w, h) + ("ft_s0",))
-                    elif s.get("out_route", "face") == "face" and len(regs) >= k:
+                    elif s.get("out_route", "face") == "face" and len(regs) >= k and j > 0:
                         out.append((float(regs[j][0]), float(regs[j][1]), f"ft_s{j}"))
                     else:
                         out.append((site[2], site[3], f"ft_s{j}"))

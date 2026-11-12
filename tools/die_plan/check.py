@@ -1056,9 +1056,13 @@ def check_m89(P, R, geo, max_msgs=40):
     # per type: bay pins / placement (type frame, once per type)
     for tn, t in P.types.items():
         bays = defaultdict(int)
+        regs_bay = set()        # bays that hold station registers (pin-only entry fields hold none)
         for b in P._type_buses(tn).values():
             if b.get("route") == "m89" and b.get("bay_um"):
                 bays[tuple(b["bay_um"])] += int(b["width"])
+        for s in t.get("ft_slots", []):
+            if s.get("bay_um") and s.get("out_route") == "m89":
+                regs_bay.add(tuple(s["bay_um"]))
         if not bays:
             continue
         ck = t.get("clock") or {}
@@ -1085,8 +1089,14 @@ def check_m89(P, R, geo, max_msgs=40):
                 err(f"type {tn}: bay {list(r)} {ov / area:.0%} on hard cores > {ovmax:.0%}", type=tn)
             for (x, y) in pts:
                 if r[0] - clear < x < r[2] + clear and r[1] - clear < y < r[3] + clear:
-                    err(f"type {tn}: bay {list(r)} within {clear:g} um of clock tap / landing collector root "
-                        f"({x:g}, {y:g})", type=tn)
+                    if r in regs_bay:
+                        err(f"type {tn}: bay {list(r)} within {clear:g} um of clock tap / landing collector root "
+                            f"({x:g}, {y:g})", type=tn)
+                    else:
+                        # a pin-only entry field (lane end; it replaces face pins that sat beside the same tap):
+                        # the kit keeps tap_clear_um around the tap when it rasters the entry pins
+                        R.warn("m89", f"type {tn}: entry field {list(r)} covers tap / collector root ({x:g}, {y:g}); "
+                               f"entry pins keep {clear:g} um from it", type=tn)
                     break
             # landing collector relays are single flops re-sited by reset_tree from the tap geometry: reported
             near = [q for q in rel if r[0] - clear < q[0] < r[2] + clear and r[1] - clear < q[1] < r[3] + clear]

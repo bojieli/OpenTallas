@@ -1275,13 +1275,19 @@ class Landings:
                 geom=collector_info.get("bus_geometry",{}).get(b)
             if geom is None:
                 slot = next((x for x in t.get("ft_slots", []) if x["name"] + "_i" == b), None)
-                if slot:
+                if slot and slot.get("in_route") == "m89" and slot.get("bay_um"):
+                    geom = dict(face="A", bay_um=slot["bay_um"])      # X-TIER-OTC form (d): the ring lands in its bay
+                elif slot:
                     geom = dict(face=slot["in_face"], window_um=slot["in_window_um"])
             if geom is None:
                 raise LandingError(f"{tn}.{b}: receiver face geometry not found")
-            face = geom["face"]; at = sum(geom["window_um"]) / 2
+            face = geom["face"]
             tw, th = t["outline_um"]
-            x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
+            if face == "A":
+                x0, y0, x1, y1 = geom["bay_um"]; x, y = (x0 + x1) / 2, (y0 + y1) / 2
+            else:
+                at = sum(geom["window_um"]) / 2
+                x, y = (0 if face == "W" else tw, at) if face in "EW" else (at, 0 if face == "S" else th)
             hard_tree = collector_info and (collector_info.get("tree") or {}).get("hard")
             taps = ring_taps(self.plan, key)
             if hard_tree:
