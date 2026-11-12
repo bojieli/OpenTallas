@@ -198,8 +198,9 @@ def compose(F, rules, spec, Cell, split=None, base='.'):
                     if sub['module'] not in mods: mods[sub['module']]=SP.load(sub,base)
                     conn,rec=SP.bind_sub(sub,mods[sub['module']],roles,term_expr,term_net,nterms,pnets)
                     name=sub['name'].format(k=k)
+                    if sub.get('emit_module'): rec['emit']=SP.check_emit(sub,mods[sub['module']],base)
                     cx=', '.join(f'.{ident(p)}('+'{'+', '.join(reversed(v))+'})' for p,v in sorted(conn.items()))
-                    body.append(f'    {ident(sub["module"])} {name} ({cx});')
+                    body.append(f'    {ident(sub.get("emit_module") or sub["module"])} {name} ({cx});')
                     for w in rec.pop('tie0'):
                         if not re.fullmatch(r'n\d+',w): raise CompositionError(f'{path}: dropped export {w} is not a cut wire')
                         body.append(f"    assign {w} = 1'b0;  // dropped export of {name}: {sub.get('drop_reason','')}")
@@ -270,7 +271,8 @@ def apply(binder, spec_path):
         # sub-core sources (the hard cores' own RTL) join the bind library so verify / kit-rtl resolve the masters
         for r in split:
             for sub in r['subs']:
-                for f in sub.get('sources',[]):
+                # a re-formed sub-core instantiates emit_module: only its sources join (the reference is proof only)
+                for f in (sub.get('emit_sources',[]) if sub.get('emit_module') else sub.get('sources',[])):
                     p=f if Path(f).is_absolute() else str(Path(binder.base)/f)
                     if p not in binder.extra_lib: binder.extra_lib.append(p)
     binder.composition_alias,binder.composition_cells=port_alias(spec,widths)
