@@ -2504,7 +2504,48 @@ def _src_probe_cmd(trees, files):
     # sha256 up to 300 MB hashed per plan dir (KW-FIX-45 11-12 COORD: check the REQUIRED list, not the largest copy)
     for t in trees:
         parts.append(f"[ -f {q(t.rstrip('/') + '/PACKAGE.json')} ] && python3 -I -c {q(PKG_VERIFY_PY)} {q(t)} 2>/dev/null")
+    # KW-FIX-46 11-12 (COORD fail class 'No module named bind_elab' @kit_rtl, 7 KV rows on intel1 06:50): the import closure of
+    # the src tools kit_rtl runs (SRC_IMPORT_ROOTS) must resolve on the host; a module that does not resolve is reported as a
+    # package problem of that tree ('P <tree> import <name>'), so the host is no gen host for the die (preflight, not kit_rtl)
+    for t in trees:
+        if SRC_IMPORT_ROOTS:
+            roots = " ".join(q(r) for r in SRC_IMPORT_ROOTS)
+            parts.append(f"[ -f {q(t.rstrip('/') + '/' + SRC_IMPORT_ROOTS[0])} ] && python3 -I -c {q(IMPORT_PROBE_PY)} {q(t)} {roots} 2>/dev/null")
     return "; ".join(parts + ["true"])
+
+
+SRC_IMPORT_ROOTS = ("tools/die_plan/bind.py",)
+IMPORT_PROBE_PY = r"""
+import ast, importlib.util, os, sys
+t, roots = sys.argv[1], sys.argv[2:]
+seen, todo, bad = set(), [os.path.join(t, r) for r in roots], []
+while todo:
+    f = todo.pop()
+    if f in seen or not os.path.isfile(f):
+        continue
+    seen.add(f)
+    try:
+        tree = ast.parse(open(f, encoding="utf-8", errors="replace").read(), f)
+    except SyntaxError:
+        print("P", t, "import", os.path.relpath(f, t) + ":syntax"); continue
+    d = os.path.dirname(f)
+    path = [d, os.path.dirname(d)] + sys.path[1:]
+    for n in tree.body:                      # module level only: imports in try/if/def are optional or lazy
+        names = [a.name.split(".")[0] for a in n.names] if isinstance(n, ast.Import) else (
+            [n.module.split(".")[0]] if isinstance(n, ast.ImportFrom) and n.module and not n.level else [])
+        for m in names:
+            loc = [os.path.join(x, m + ".py") for x in (d, os.path.dirname(d)) if os.path.isfile(os.path.join(x, m + ".py"))]
+            if loc:
+                todo.append(loc[0]); continue
+            if m in sys.builtin_module_names or any(os.path.isdir(os.path.join(x, m)) for x in (d, os.path.dirname(d))):
+                continue
+            try:
+                ok = importlib.util.find_spec(m) is not None
+            except (ImportError, ValueError):
+                ok = False
+            if not ok and m not in bad:
+                bad.append(m); print("P", t, "import", m)
+"""
 
 
 PKG_VERIFY_PY = r"""
