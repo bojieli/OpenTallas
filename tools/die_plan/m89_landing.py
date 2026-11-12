@@ -4,9 +4,18 @@ and the landing ring moves to bay 0 (<s>b0_i), so every whole-word <s>_i token o
 (local_sources name/ready/fault, bands, bus_geometry, mask) becomes <s>b0_i.  Nothing else changes.
   python3 m89_landing.py FORM_D_PLAN TABLE_IN TABLE_OUT"""
 import json, re, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 plan, tin, tout = sys.argv[1:4]
 P = json.load(open(plan)); D = json.load(open(tin))
 types = (D.get("collector") or {}).get("types", {})
+import schema as S, taps as TP
+_P = S.Plan(P); _P.path = str(Path(plan).resolve())
+tap_sites = {}
+for tn in types:
+    ck = (P["partition_types"].get(tn) or {}).get("clock") or {}
+    if ck.get("tap_mode") == "grid+explicit":
+        tap_sites[tn] = TP.grid_explicit_sites(_P, tn)
 rep = {}
 for tn, ent in types.items():
     pt = P["partition_types"].get(tn)
@@ -31,6 +40,12 @@ for tn, ent in types.items():
                 for k in ("xy_um", "pin_xy_um", "band", "tap", "status_pins_xy_um"):
                     if k in p: src[k] = p[k]
                     elif k in src and k == "status_pins_xy_um": src.pop(k)
+                # the collector source hangs on the reset node of the nearest clock tap (the bay tap, bay_taps.py)
+                xy = src.get("xy_um")
+                if xy and tap_sites.get(tn):
+                    i, _, d = min(((i, n, abs(x - xy[0]) + abs(y - xy[1])) for i, (n, x, y) in enumerate(tap_sites[tn])),
+                                  key=lambda r: r[2])
+                    src["tap"] = i; src.pop("node", None)
                 moved += 1
         types[tn] = e; rep[tn] = dict(slots=split, tokens=n0, sources_resited=moved)
 json.dump(D, open(tout, "w"))

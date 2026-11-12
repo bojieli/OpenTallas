@@ -415,15 +415,35 @@ def type_pins(P, tn):
     instance (G0 proves every instance identical)."""
     inst = next(n for n, p in P.parts.items() if p["type"] == tn)
     out = []
+    # AREA PINS (X-TIER-OTC 11-11): every m89 end of this type takes entry pins inside its bus's bay (type frame, face
+    # tag S.AREA_FACE).  All ends that share a bay (the slot's _i and _o) get ONE joint raster, so no two pins of a
+    # bay coincide (GRT-0080 invalid pin placement); a site already taken by an overlapping bay moves up one M7 row.
+    area = {}
+    for pid, pr in P.ports.items():
+        if not S.is_m89(pr):
+            continue
+        for side in ("src", "dst"):
+            if pr[side]["part"] == inst:
+                b = P.buses(inst).get(pr[side]["bus"]) or {}
+                key = (tuple(float(v) for v in b["bay_um"]), b.get("entry_layer", "M7"))
+                area.setdefault(key, []).append((pr[side]["bus"], S.port_pins_count(pr)))
+    taken = set()
+    for (bay, layer), ends in sorted(area.items()):
+        ends = sorted(set(ends))
+        sites = S.area_pin_sites(list(bay), sum(n for _, n in ends), layer)
+        k = 0
+        for bus, n in ends:
+            for bit in range(n):
+                _, ln, x, y = sites[k]; k += 1
+                while (round(x, 2), round(y, 2)) in taken and y + 0.4 < bay[3]:
+                    y = round(y + 0.4, 4)
+                taken.add((round(x, 2), round(y, 2)))
+                out.append((bus, bit, ln, x, y, S.AREA_FACE))
     for pid, pr in P.ports.items():
         for side in ("src", "dst"):
             if pr[side]["part"] != inst:
                 continue
             if S.is_m89(pr):
-                # AREA PINS (X-TIER-OTC 11-11): entry pins inside the bus's bay, type frame, face tag S.AREA_FACE
-                b = P.buses(inst).get(pr[side]["bus"]) or {}
-                for bit, ln, x, y in S.area_pin_sites(b["bay_um"], S.port_pins_count(pr), b.get("entry_layer", "M7")):
-                    out.append((pr[side]["bus"], bit, ln, x, y, S.AREA_FACE))
                 continue
             df = pr["face"] if (side == "src" or pr["src"]["part"] == DIE_PART) else S.OPP[pr["face"]]
             tf = P.type_face(inst, df)
