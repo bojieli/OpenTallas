@@ -5,6 +5,13 @@ from math import isfinite
 import re
 
 
+
+def _tcl_quote(s):
+    """CLAND-PUTS-QUOTE 11-12 (QC sle_su_c s27 place rc 2: global_place.tcl 'invalid command name
+    "72.38399999999999,"'): a face-window note carries python lists [x0, y0, ...]; inside a Tcl "..." string
+    [ ] is command substitution, so escape [ ] $ \\ and the quote."""
+    return re.sub(r'([\[\]$"\\])', r'\\\1', str(s))
+
 def safe(s):return re.sub(r'\W','_',s)
 
 
@@ -697,7 +704,7 @@ def tcl(P,tn,macro_moves=None):
                 x,y=s['xy_um'];i=s['index']
                 status.extend([(f'cland_dn_trained_{i}',x,y),(f'cland_dn_guard_{i}',x,y)])
     groups, override_check = _group_rect_overrides(P.types[tn], groups)
-    out=[f'puts "OT_CLAND face-window {n}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
+    out=[f'puts "OT_CLAND face-window {_tcl_quote(n)}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     for p,r,tag in groups:
         # Optional raw copies only exist when the original START tap is gated.
         if tag=='raw-copy-optional':continue
@@ -724,7 +731,7 @@ def _dataflow_tcl(tn,c,t=None):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
     groups, override_check = _group_rect_overrides(t or {}, groups)
-    out=[f'puts "OT_CLAND face-window {n}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
+    out=[f'puts "OT_CLAND face-window {_tcl_quote(n)}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     out+=['  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}' for p,r,tag in groups]
     out+=['}','set cland_optional_groups {','}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
