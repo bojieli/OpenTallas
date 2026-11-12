@@ -32346,8 +32346,8 @@
     "ot_q2nf_qout": [
      {
       "host": "intel2",
-      "dir": "/srv/opentallas-scratch2/claude/codex-hbm-open-1113/qout_export/ot_q2nf_qout",
-      "job": "COUNTED QOUT exact qout_resign_fa_i2; native LEF from same final DB, routed LEC EQ42882; existing LOCAL_PASS_NEEDS_PARENT rule"
+      "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/qout_views/views",
+      "job": "HBM-CORES-C 11-12 signed ot_q2nf_qout (DIE-HBM-92 re-sign 11-08 b1284d74fe, LOCAL_PASS_NEEDS_PARENT) + abstract LEF via write_abstract_lef, pins match t39w (10,890, 0 diff)"
      }
     ],
     "ot_hgi_sfu_opsb_output": [
