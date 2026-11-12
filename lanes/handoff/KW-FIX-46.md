@@ -1,13 +1,13 @@
-# KW-FIX-46 lane handoff (refreshed 2026-11-12 07:05 PST)
+# KW-FIX-46 lane handoff (refreshed 2026-11-12 07:47 PST)
 
 ## 1 Scope
 Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission, autoclean/reaper keep lists. Fix FAIL classes once per class, hold and retry rows in ~/coord/autopilot/kit_wave.json. The sidecar-coverage preflight now belongs to GEN-CLASS-1 (COORD 11-12), not this lane.
 
 ## 2 Worktrees (all on intel2)
-- /srv/opentallas-scratch2/claude/wt/kw-fix-46, branch claude/kw-fix-46-live-kitwave-1112, HEAD 4e1726ea9342 (pushed, clean). Holds the live runtime hunks merged onto main, plus: stale place-service set-aside, held_stop_reason (stopped held rows go to WAIT-FORM), sidecar_preflight, and VISUAL-QUEUE stale filter (visual_gate_since). New tests: test_kit_wave_held_stop.py, test_kit_wave_sidecar_preflight.py, test_kit_wave_visual_stale.py; test_kit_wave_flow_tag.py was fixed.
+- /srv/opentallas-scratch2/claude/wt/kw-fix-46, branch claude/kw-fix-46-live-kitwave-1112, HEAD 3ed2a56b106 (pushed, clean; + src import-closure probe, test_kit_wave_import_probe.py). Holds the live runtime hunks merged onto main, plus: stale place-service set-aside, held_stop_reason (stopped held rows go to WAIT-FORM), sidecar_preflight, and VISUAL-QUEUE stale filter (visual_gate_since). New tests: test_kit_wave_held_stop.py, test_kit_wave_sidecar_preflight.py, test_kit_wave_visual_stale.py; test_kit_wave_flow_tag.py was fixed.
 - /srv/opentallas-scratch2/claude/wt/kw-fix-46-rac, branch claude/kw-fix-46-read-at-commit-1112, HEAD f4224a7f4900 (pushed, clean). gen_core_kit_hbm.fetch() reads REPO/.kw_at_commit/<commit>/<file> when git show fails (a wave src is a plain copy). Test: physical/die_plan/hbm_arch_cores/test_fetch_at_commit_store.py.
 - Base for test comparison: /srv/opentallas-scratch2/claude/wt/kw-fix-46-base (origin/main).
-- LIVE runtime: /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/kit_wave.py, md5 ecdbaed922d5. It is patched in place. Backups are kit_wave.py.bak-kw46-{stalesvc,heldstop,sidecar,vq}-1112. The runtime lags main: it lacks FAILFAST-1 stop_cancelled_rows, type_overlay, bind_preflight and plan_sha_mismatch. Do NOT deploy main's tools/autopilot without COORD approval.
+- LIVE runtime: /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/kit_wave.py, md5 83925c990434. It is patched in place. Backups are kit_wave.py.bak-kw46-{stalesvc,heldstop,sidecar,vq,imports}-1112. The runtime lags main: it lacks FAILFAST-1 stop_cancelled_rows, type_overlay, bind_preflight and plan_sha_mismatch. Do NOT deploy main's tools/autopilot without COORD approval.
 
 ## 3 Running jobs
 - intel2 nohup /tmp/kw46_all_tests.sh -> /tmp/kw46_all_tests.log. Runs the unittest comparison of base vs branch. Check: `pgrep -f kw46_all_tests.sh`, then diff the per-file lines (format: "<wt> <file> Ran.. OK/FAILED").
@@ -27,8 +27,8 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 ## 6 Next steps (in order)
 1. Read /tmp/kw46_all_tests.log. If the branch has no new FAILED relative to base, post READY for claude/kw-fix-46-live-kitwave-1112 (4e1726ea9342) and claude/kw-fix-46-read-at-commit-1112 (f4224a7f4900) with the test table. If a test regressed, fix it on the branch first.
 2. Watch the ot_svgr_top@1 relaunch (`grep ot_svgr_top ~/coord/autopilot/log.txt | tail`). If gen passes, post RESULT. If it fails with a new "missing" message, add the file to the store and rerun at_commit.py.
-3. epyc4: when the ~/f2_*.log on epyc4 shows LINKED lines for the 4 restored trees, put epyc4 back in the KV/HEAD/S81 host lists from cfg `stash_epyc4_kw46_srcloss`. Keep it off rows that use src_qc_s27_9024de9d66 or the two hbm p18 trees, which will not be restored there. Relaunch src-loss rows (kv3_sys_SD_v1, hd_serdes etc.) as INFRA retries.
-4. intel1 as restage_waiters target: enable only after FLEET-2 posts that its copy is complete.
+3. epyc4 (07:30 URGENT): EVERY die src there is a self-loop (scratch2/claude/kw45 -> scratch3/claude/kw45, entries link to themselves), qc_s28 included; FLEET-2 restore logs show only "start", no rsync. Do NOT touch the links (FLEET-2/DISK-1111). After a LINKED line, re-run the inventory (scratchpad e4inv.py + readlink -f per tree) and add epyc4 back from cfg stash_epyc4_kw46_srcloss only for dies whose trees resolve to real dirs; keep it off rows on src_qc_s27_9024de9d66 and both hbm p18 trees. Relaunch src-loss rows as INFRA retries.
+4. intel1: FLEET-2 ALLDONE 06:48; it is in every die gen_hosts list, so it is a restage target already (done).
 5. Post the face_guard / landing_evidence gen class (QC slw_su_l1: face_guard.json only on intel1; landing_evidence is in-repo under physical/ref_tile/qc_sul1_split_1106/views/<m>/landing_evidence) to GEN-CLASS-1.
 6. Visual-gate READY with WAIT-FORM per-type dry-run counts (kit_wave_wait_form.tsv).
 7. Hourly: FAIL-class scan, a STATE post, and a refresh of this file.
@@ -43,3 +43,5 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - NO MANUAL DELETES (COORD 11-12): deletes only via autoclean (keep-list aware) or ot_safe_swap.sh; an ARCHIVE-PROTECTED path is never deleted without an export check, even unreferenced. The 06:4x manual wave-src/20261111 delete broke this (RESULT 07:15).
 - The wt kw-fix-46 sparse checkout is tools + physical/common_flow only. kw-fix-46-rac needs tools/ for its imports (sdc_lint).
 - epyc4 ssh resets intermittently; retry.
+- KV bind_elab class (06:50, 7 rows on intel1, during the FLEET-2 pull): batch retry posted 07:45. Watch `grep "kv3_hub_C\|kv3_phy\|kv3_sys_c" ~/coord/autopilot/log.txt | tail`.
+- Test comparison: background on intel2. When it ends, read /tmp/kw46_all_tests.log and then post READY (step 6.1).
