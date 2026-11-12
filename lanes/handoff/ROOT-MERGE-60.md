@@ -87,3 +87,7 @@ NO OPEN BRANCHES. Seen but NOT approved (do not merge until COORD posts APPROVED
 ## NEWEST 2 (main 614ab4a0dac0) -- trains 13 and 14 landed
 Train 13 -> 850367dbc41c (reach-fix-2 bd0bf92f81, phy-core-area c87611d612d9, flowrepeat 6e8bc43d6ef3). Train 14 -> 614ab4a0dac0a60282becb43d4efb98f59738828 (qc-bind-ist-pad 4b6dee512d57). Tags read back OK (mm-head,nn-qc,mh-kv,om-s81,pj-hbm / mn-head,no-qc,mi-kv,on-s81,pk-hbm). Next free tags: mo-head,np-qc,mj-kv,oo-s81,pl-hbm.
 No open approved branches. Known pre-existing main failures in baseline (not mine): test_bind_structural_bridge_event.py (2), test_kit_wave_otherfail own_cap_sigkill_247, ~42 total. Ticket answered. Keep the queue poller running; land any new APPROVED line as its own train with the same recipe (merge in rm60c on current main, gate list = tests touched + related + 59-style, tip vs main in rm60-main, solo reruns for tip-only singles, land3.sh, tags readback, MERGED post, handoff).
+
+## NEWEST 3 (main bebef8cb73d8) -- train 15 landed
+Train 15 -> bebef8cb73d88180575d38051132f079f9eee303 (reach-fix-2-main 8f61cd7a19: per-type reset.relay_um). Tags read back OK: flow-20261112-{mo-head,np-qc,mj-kv,oo-s81,pl-hbm}. NEXT FREE TAGS: mp-head,nq-qc,mk-kv,op-s81,pm-hbm (ls-remote first).
+In progress: train 16 = DIE-QC-100 qc-d2d-related-1112@6a2b2c7e2d3 (approved), gate tools/qwen_split tests + test_die_sta* + 59-style, tip vs main bebef8cb73d8. If this handoff shows nothing newer, check wt/t21-*.fails / origin/main.
