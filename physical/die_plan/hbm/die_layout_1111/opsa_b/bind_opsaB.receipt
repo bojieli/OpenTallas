@@ -1,0 +1,19 @@
+ot-run: epyc8          admits   102 GB (avail 205, reserve 0, fresh 47.5, peak 23.6, headroom 0, waiters 2/174 GB) load 61/96 running 25 disk 3579 GB 
+ot-run: -> epyc8
+ot-heavy: waiting for memory on outgoing-giraffe: need 0.7 x 48 = 34 GB, admissible 38 GB: available 205 GB, growth charged 112 GB (v16 measured reserve (legacy figure, not the admission: see the v17 invariant), running growth cap 0 % of available, settled floor 0 GB; pending 112 GB at x1), young 80 GB, floor 50 GB; invariant: committed 938 GB (in use 803, other 349, units max(now, peak) 477, + reserve 0 + fresh 111) vs physical - 32 = 976 GB -> headroom 38 GB
+ot-heavy: admitted on outgoing-giraffe as oth-ubuntu-1964529-1794452317 after 20 s
+plan sha e4ae695c7698363da64195af71ed89e3e2dfc8fcfd915b035d0b41499cf14aa9
+PASS1 rc 1 stale=30 other=0
+PADS rc 0
+LOOP SFU_VM_NW: rt_added [119] LG0=119[35, 18, 52, 14] LG1=119[35, 2, 2, 80] LG2
+LOOP SFU_VM_NE: rt_added [131] LG0=131[34, 27, 55, 15] LG1=131[34, 2, 2, 93] LG2
+LOOP HC_Q_NW: rt_added [137] LG0=137[35, 18, 52, 32] LG1=137[35, 2, 2, 98] LG2=1
+LOOP HC_Q_NE: rt_added [150] LG0=150[34, 27, 55, 34] LG1=150[34, 2, 2, 112] LG2=
+BIND {"partitions": 92, "crossings": 420, "n_errors": 0}
+stale 0 uncovered 0 pad_flops 945867
+9288acd1e48a1ab9d54075fdef1588b36f175ab001a2a7a52f657533b050f806  /srv/opentallas-scratch2/claude/die-layout-hbm/bind/bind_opsaB/SHA256SUMS
+9b99dd5d84c54d44e94f972f87ee1ac1a5695f197ea715c58d11a84991c4c804  /srv/opentallas-scratch2/claude/die-layout-hbm/bind/bind_opsaB/bind_report.json
+d19a47ecda904267da229a293baf483e9882fe4a64c514bb32927a692307c8af  /srv/opentallas-scratch2/claude/die-layout-hbm/bind/asbuilt_opsaB.json
+1b515d7e8370161479a0c16e9aff38dd114578db4c8f33fafb077e6d952f20a1  /srv/opentallas-scratch2/claude/die-layout-hbm/bind/r8_opsaB/hbm_arch_B2o_r8_landing.json
+BIND_OK
+ot-run: RAN on epyc8 (unit oth-ubuntu-1964529-1794452317): exit 0
