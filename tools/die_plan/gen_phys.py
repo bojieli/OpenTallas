@@ -218,7 +218,11 @@ def _cland_strip_density(budgets, tn):
     from budgets.cland_strip_density_types (type, then its unsplit base name) else budgets.cland_strip_density; None
     (absent or 0) = unchanged kit.  landing_placement.tcl derives each ring's strip row pitch from its own flop density
     (rows = max(asked rows, ceil(rows-1 density / target)), clamped to the band depth), so no per-type row list is
-    needed; an explicit cland_strip_rows(_types) still sets a floor."""
+    needed; an explicit cland_strip_rows(_types) still sets a floor.  A gen-environment OT_CLAND_STRIP_DENS (kit-wave
+    item_env, pilots) wins over the plan; 0 there opts the type out."""
+    ev = os.environ.get("OT_CLAND_STRIP_DENS")
+    if ev is not None and ev.strip() != "":
+        return float(ev) if float(ev) > 0 else None
     per = budgets.get("cland_strip_density_types") or {}
     v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
     if v is None:

@@ -83,7 +83,8 @@ def test_asked_strip_rows_is_a_floor(monkeypatch):
     assert int(m.group(1)) == int(m.group(2)) >= 2
 
 
-def test_gen_phys_budget_resolution():
+def test_gen_phys_budget_resolution(monkeypatch):
+    monkeypatch.delenv("OT_CLAND_STRIP_DENS", raising=False)
     assert GP._cland_strip_density({}, "sle_ctl__cla4f6f12f") is None
     assert GP._cland_strip_density({"cland_strip_density": 0}, "t") is None
     assert GP._cland_strip_density({"cland_strip_density": 1}, "t") == 1.0
@@ -98,3 +99,13 @@ def test_schema_declares_the_knobs():
     props = S.SCHEMA["properties"]["budgets"]["properties"]
     assert props["cland_strip_density"] == {"type": "number", "minimum": 0}
     assert props["cland_strip_density_types"]["additionalProperties"]["minimum"] == 0
+
+
+def test_gen_env_item_env_wins(monkeypatch):
+    monkeypatch.setenv("OT_CLAND_STRIP_DENS", "1.0")
+    assert GP._cland_strip_density({}, "slw_sc_v2") == 1.0
+    assert GP._cland_strip_density({"cland_strip_density": 2}, "slw_sc_v2") == 1.0
+    monkeypatch.setenv("OT_CLAND_STRIP_DENS", "0")
+    assert GP._cland_strip_density({"cland_strip_density": 2}, "slw_sc_v2") is None
+    monkeypatch.setenv("OT_CLAND_STRIP_DENS", "")
+    assert GP._cland_strip_density({"cland_strip_density": 2}, "slw_sc_v2") == 2.0
