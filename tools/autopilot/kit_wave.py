@@ -4077,6 +4077,82 @@ def plan_names(AP, st, d):
     return p
 
 
+# KV-BIND-REGEN-1 11-12: the exact kit_topology.bind_matches test, run before submit.  A KV vF re-pin moved the die
+# kit_rtl.bind_out but left 19 item_inputs on the old bind; 14 rows then waited 30-70 min for admission and kit_rtl only
+# to fail KIT_TOPOLOGY_BIND_STALE at kit_topology.  Same code and inputs as prepare-stations (src kit_topology, spec plan
+# as native plan, kit_rtl asbuilt, item OT_NATIVE_RESET_SCOPE / producer context), so it never adds a stricter reading.
+PROBE_BIND = r"""
+import json, os, sys
+from pathlib import Path
+a = json.loads(sys.argv[1])
+try:
+    if a.get("scope"):
+        os.environ["OT_NATIVE_RESET_SCOPE"] = a["scope"]
+    if a.get("producer"):
+        os.environ["OT_NATIVE_PRODUCER_CONTEXT"] = a["producer"]
+    sys.path.insert(0, str(Path(a["src"]) / "tools" / "die_plan"))
+    import kit_topology as kt
+    raw = json.loads(Path(a["plan"]).read_text())
+    ab = a.get("asbuilt") or None
+    out = {"stale": [t for t in a["types"] if t in (raw.get("partition_types") or {}) and kt.has_topology(raw, t, ab)
+                     and not kt.bind_matches(raw, t, a["bind_out"], ab, a["plan"])]}
+except Exception as e:
+    out = {"error": (type(e).__name__ + ": " + str(e))[:300]}
+print("AP_JSON " + json.dumps(out))
+"""
+BIND_PREFLIGHT_TTL_S = 1800
+
+
+def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
+    """{item: why} for type rows whose kit_topology prepare-stations would raise KIT_TOPOLOGY_BIND_STALE (kit_rtl mode
+    bind, canonical topology preparation on).  One probe per (src, plan, bind_out, asbuilt, reset scope) on the die's
+    gen_host, cached in st for BIND_PREFLIGHT_TTL_S; a probe error or an unreadable input = unknown = launch (fail open).
+    Die option bind_preflight false turns it off."""
+    d = cfg["dies"][die]
+    if d.get("bind_preflight") is False or d.get("canonical_topology_prepare", True) is False:
+        return {}
+    now = time.time() if now is None else float(now)
+    rpy = rpy or AP.rpy
+    groups = {}
+    for r in rows:
+        if (r.get("kind") or "type") != "type":
+            continue
+        item = r["item"]
+        ii = (d.get("item_inputs") or {}).get(item) or {}
+        kr = dict(d.get("kit_rtl") or {}, **(ii.get("kit_rtl") or {}))
+        if kr.get("mode") != "bind" or not kr.get("bind_out"):
+            continue
+        try:
+            env = item_env(d, item)
+        except ValueError:
+            continue
+        g = dict(src=ii.get("src") or d.get("src"), plan=ii.get("plan") or d.get("plan"), bind_out=kr["bind_out"],
+                 asbuilt=kr.get("asbuilt") or "", scope=env.get("OT_NATIVE_RESET_SCOPE") or "",
+                 producer=env.get("OT_NATIVE_PRODUCER_CONTEXT") or "")
+        if not g["src"] or not g["plan"]:
+            continue
+        groups.setdefault(json.dumps(g, sort_keys=True), (g, []))[1].append(item)
+    cache = st.setdefault("bind_preflight", {})
+    for k in [k for k, v in cache.items() if now - float(v.get("t") or 0) > BIND_PREFLIGHT_TTL_S]:
+        del cache[k]
+    out = {}
+    for key, (g, items) in groups.items():
+        c = cache.get(key)
+        if not c or not set(items) <= set(c.get("checked") or ()):
+            p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=sorted(set(items))), timeout=600)
+            if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
+                if AP:
+                    AP.log(f"KIT-WAVE bind preflight {die} skipped (unknown = launch): "
+                           f"{(p or {}).get('error') if isinstance(p, dict) else p}"[:400])
+                continue
+            c = cache[key] = {"t": now, "checked": sorted(set(items)), "stale": p["stale"]}
+        for item in items:
+            if item in c["stale"]:
+                out[item] = (f"KIT_TOPOLOGY_BIND_STALE preflight: bind {g['bind_out']} does not match plan {g['plan']} "
+                             f"(kit_topology.bind_matches); regenerate the canonical bind or repoint kit_rtl.bind_out")
+    return out
+
+
 def ensure_plan_view(AP, st, d):
     """The INFRA relaunch loop runs before plan_dies, on a fresh config: a launch there saw no _plan_flags, so a type
     with planned child cores got no provisional views and its kit tried the child bodies (11-04, 16 QC cb rows + the
@@ -4184,6 +4260,18 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                 go = [r for r in picks if not load_hold(cfg, die, r["item"], r.get("parent_item"), core_module(r["item"]))]
                 if len(go) < len(picks):
                     skip.setdefault(load_hold(cfg, die), []).extend(r["item"] for r in picks if r not in go)
+                if AP and probe and go:
+                    try:
+                        stale = bind_preflight(AP, cfg, st, die, go)
+                    except Exception as e:                 # a diagnostic probe never stops the plan
+                        stale = {}
+                        AP.log(f"KIT-WAVE bind preflight {die} skipped: {e}")
+                    if stale:
+                        for r in go:
+                            if r["item"] in stale:
+                                skip.setdefault(stale[r["item"]], []).append(r["item"])
+                        go = [r for r in go if r["item"] not in stale]
+                        AP.log(f"KIT-WAVE BIND-STALE {die}: {len(stale)} row(s) not launched: " + " ".join(sorted(stale)[:40]))
                 per_die.append([(die, r) for r in go[:n]])
         out.append((die, ok, why, picks, skip))
     # AUTOBUILD-PIPE-2 10-30: round-robin the tick's launches across dies.  Alphabetical fill let S81 (72 queued) take
