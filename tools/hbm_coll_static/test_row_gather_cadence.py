@@ -68,3 +68,17 @@ def test_c1_off_identical_to_base():
                                capture_output=True, cwd=str(HERE))
                 outs.append({p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(o.iterdir())})
             assert outs[0] == outs[1], (P, vm_rt, extra)
+
+
+@pytest.mark.parametrize('cadence', [1, 2])
+def test_rows256_loop_ids_below_32_and_unroll_on_renamed_meta(cadence):
+    old = (R.ROWS, R.CADENCE, R.VM_RT)
+    R.ROWS, R.CADENCE, R.VM_RT = 256, cadence, 81
+    try:
+        words, meta, plan, info = R.compile_program(0, 0, 6, R.R_PROD, 453)      # runs unroll() on the renamed metadata
+        ids = {A.dec_meta(m)['lid'] for m in meta}
+        assert max(ids) < 32 and len(ids) <= 32
+        assert A.PW == 8
+    finally:
+        R.ROWS, R.CADENCE, R.VM_RT = old
+        A.set_rows(64)

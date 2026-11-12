@@ -76,6 +76,7 @@ def stages(npt, wire, vm_rt=None):
     return st
 
 
+ROWS = 64                                            # issuer programme rows (--rows 64 | 128 | 256); 256 = issuer v7 (NL 32 counters, dense loop ids)
 CADENCE = 1                                          # --issue-cadence: 2 = ISS2E issuer rows (one row every 2nd edge), q3 only
 ARG_VARIANT = (False, False)                         # (start_reg, pr_source) of the ARGMAX programme sharing the pad mask
 
@@ -110,6 +111,17 @@ def pad_mask(npt, wire, vm_rt):
     return u, par
 
 
+def _argmax_meta():
+    """rows 128/256: the issuer metadata encoder of argmax_rows (wider next/target fields; 256 = issuer v7, loop ids renamed
+    densely in order of first use because the v7 counters are NL 32 addressed by id: an id >= 32 faults while programming).
+    None = the historical 64-row v6 encoding (byte-identical default)."""
+    if ROWS == 64:
+        return None
+    import argmax_rows
+    argmax_rows.set_rows(ROWS)
+    return argmax_rows
+
+
 def gidx(qid, k):
     """die-global rail number of quadrant qid rail k (q3 rails 0..2, q2 quadrants 1..3 rails 0..1)."""
     return k if qid == 0 else 3 + 2 * (qid - 1) + k
@@ -125,6 +137,8 @@ def vm_meta(die):
 
 def compile_program(die, qid, P, R, wire, mutant=None):
     fields = json.loads(LAYOUT.read_text())['fields']
+    if ROWS != 64:
+        _argmax_meta().LIDS.clear()                  # dense loop ids are per programme
     npt = 3 if qid == 0 else 2
     N = P * R
     st = stages_rows(npt, wire)[0] if CADENCE == 2 else stages(npt, wire)
@@ -214,20 +228,21 @@ def compile_program(die, qid, P, R, wire, mutant=None):
     for pc, (s, e) in enumerate(segs):
         d = fields_at(s)
         L = e - s
+        AM = _argmax_meta()
         if s == halt:
-            m = (63 << 45) | (1 << 44) | (pc << 6) | pc
+            m = (63 << 45) | (1 << 44) | (pc << 6) | pc if AM is None else AM.enc_meta(pc, pc, halt=1)
         elif L > 1:
             d.update(steps)
-            m = (pc << 45) | (L << 12) | (pc << 6) | ((pc + 1) & 63)
+            m = (pc << 45) | (L << 12) | (pc << 6) | ((pc + 1) & 63) if AM is None else AM.enc_meta(pc + 1, pc, L, pc)
         else:
-            m = (63 << 45) | ((pc + 1) & 63)
+            m = (63 << 45) | ((pc + 1) & 63) if AM is None else AM.enc_meta(pc + 1)
         if s == 0:
-            m = (63 << 45) | 1                       # epoch row: single visit
+            m = (63 << 45) | 1 if AM is None else AM.enc_meta(1)    # epoch row: single visit
         words.append(pack(d))
         meta.append(m)
         plan.append(dict(pc=pc, start=s, visits=L if s != halt else 1))
-    if len(words) > 64:
-        raise ValueError(f'programme capacity: {len(words)} rows > 64')
+    if len(words) > ROWS:
+        raise ValueError(f'programme capacity: {len(words)} rows > {ROWS}')
     # independent unroll of the issuer metadata ISA against a fresh per-cycle schedule (iteration arithmetic as
     # ot_hgi_coll_q_static_ctl_v4 computes it); the row_stride mutant is checked against its own schedule
     unroll(words, meta, fields, fields_at, halt, npt)
@@ -240,10 +255,11 @@ def unroll(words, meta, fields, fields_at, halt, npt):
     def get(w, k):
         f = fields[k]
         return (w >> f['lsb']) & ((1 << f['width']) - 1)
-    pc, counters, c = 0, [0] * 64, 0
+    AM = _argmax_meta()
+    pc, counters, c = 0, [0] * (64 if AM is None else 256), 0
     while True:
         m, w = meta[pc], words[pc]
-        it = counters[(m >> 45) & 63]
+        it = counters[(m >> 45) & 63] if AM is None else counters[AM.dec_meta(m)['lid']]
         exp = fields_at(c)
         for k in fields:
             if k.startswith('iter_') or k in ('ar_high', 'capture_arg', 'reduce_clear'):
@@ -283,14 +299,18 @@ def unroll(words, meta, fields, fields_at, halt, npt):
             if c != halt:
                 raise AssertionError(('halt', c, halt))
             return
-        count, lid = (m >> 12) & 0xffffffff, (m >> 45) & 63
+        if AM is None:
+            count, lid, tgt, nxt = (m >> 12) & 0xffffffff, (m >> 45) & 63, (m >> 6) & 63, m & 63
+        else:
+            f = AM.dec_meta(m)
+            count, lid, tgt, nxt = f['count'], f['lid'], f['target'], f['next']
         if count and counters[lid] < count - 1:
             counters[lid] += 1
-            pc = (m >> 6) & 63
+            pc = tgt
         else:
             if count:
                 counters[lid] = 0
-            pc = m & 63
+            pc = nxt
         c += 1
 
 
@@ -303,12 +323,15 @@ def main():
     ap.add_argument('--mutant', choices=('row_stride', 'link_step'))
     ap.add_argument('--issue-cadence', type=int, default=1, choices=(1, 2), help='2 = ISS2E issuer rows (q3 only; needs the pad mask in '
                     'the manifest); default 1 = unchanged')
+    ap.add_argument('--rows', type=int, default=64, choices=(64, 128, 256), help='issuer programme rows; 256 = v7 issuer '
+                    '(dense loop ids <= 32), required for the ROWS 256 q3bc parent; default 64 = unchanged')
     ap.add_argument('--arg-start-reg', action='store_true', help='C2 mask check: the parent also runs ARGMAX with --start-reg')
     ap.add_argument('--arg-pr-source', action='store_true', help='C2 mask check: the parent also runs ARGMAX with --arg-pr-source')
     ap.add_argument('--vm-rt', type=int, default=0, help='COLL parent VM_RT (extra VM read edges beyond P+10 capture)')
     a = ap.parse_args()
-    global VM_RT, CADENCE, ARG_VARIANT
+    global VM_RT, CADENCE, ARG_VARIANT, ROWS
     VM_RT = a.vm_rt
+    ROWS = a.rows
     CADENCE = a.issue_cadence
     ARG_VARIANT = (a.arg_start_reg, a.arg_pr_source)
     if CADENCE == 2:
@@ -321,6 +344,8 @@ def main():
                shape=dict(G=G, max_owned_rows=M_OWNED, row_bytes=ROW_BYTES, rank_flits=RANK_FLITS, flits_per_position=FLITS_POS, rails_die=RAILS_DIE,
                           R_production=R_PROD, flit_bytes=FLIT_B, obase=OBASE, position_stride=RS),
                layout_sha256=hashlib.sha256(LAYOUT.read_bytes()).hexdigest(), parents={})
+    if ROWS != 64:
+        man['rows'] = ROWS
     if CADENCE == 2:
         import iss2e_pad
         import parent_timing
