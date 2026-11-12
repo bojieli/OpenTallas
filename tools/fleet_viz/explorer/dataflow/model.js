@@ -226,20 +226,24 @@ const globs = new Map();
 function glob(p) { if (!globs.has(p)) globs.set(p, new RegExp('^' + p.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$')); return globs.get(p); }
 
 /** Token operators -> die blocks. A node maps through its own instance globs / element masters when it lists any,
- *  else through its class. Each distinct mapping is one key (bit); blocks carry the OR of the keys that claim them. */
-export function tokenMapping(m, data) {
+ *  else through its class. Each distinct mapping is one key (bit); blocks carry the OR of the keys that claim them.
+ *  cur (EXPLORER-2, plan-of-record records): Map cls -> Set(block) from the current plan's class rules; a class it names
+ *  maps through those blocks (one key per class) and the October globs serve only classes it does not name. */
+export function tokenMapping(m, data, cur = null) {
   const classes = new Map(data.classes.map((c) => [c.id, c]));
   const keyOf = new Map(), keys = [], nodeKey = new Map();
   for (const n of data.nodes) {
     const c = classes.get(n.cls) || {};
     const ins = n.instances?.length ? n.instances : c.instances || [], els = n.elements?.length ? n.elements : c.elements || [];
-    const k = (n.instances?.length || n.elements?.length) ? `${n.cls}|${ins.join(',')}|${els.join(',')}` : `cls:${n.cls}`;
-    if (!keyOf.has(k)) { keyOf.set(k, keys.length); keys.push({ key: k, cls: n.cls, ins, els, blocks: 0 }); }
+    const cb = cur && cur.get(n.cls);
+    const k = cb ? `cur:${n.cls}` : (n.instances?.length || n.elements?.length) ? `${n.cls}|${ins.join(',')}|${els.join(',')}` : `cls:${n.cls}`;
+    if (!keyOf.has(k)) { keyOf.set(k, keys.length); keys.push({ key: k, cls: n.cls, ins: cb ? [] : ins, els: cb ? [] : els, cur: cb || null, blocks: 0 }); }
     nodeKey.set(n.id, keyOf.get(k));
   }
   const nk = Math.min(keys.length, 31), bmask = new Int32Array(m.nb);
   keys.forEach((k, ki) => {
     if (ki >= 31) return;
+    if (k.cur) { for (const b of k.cur) { bmask[b] |= 1 << ki; k.blocks++; } return; }
     const re = k.ins.map(glob), els = new Set(k.els);
     for (let b = 0; b < m.nb; b++) if ((m.bmaster[b] && els.has(m.bmaster[b])) || re.some((r) => r.test(m.bname[b]))) { bmask[b] |= 1 << ki; k.blocks++; }
   });
@@ -256,7 +260,7 @@ export function tokenMapping(m, data) {
   const covered = keys.filter((k) => k.blocks > 0);
   const tot = Object.values(clsCycles).reduce((a, b) => a + b, 0) || 1;
   const coveredCycles = data.nodes.reduce((a, n) => a + (keys[nodeKey.get(n.id)].blocks > 0 ? n.cycles || 0 : 0), 0);
-  return { keys, nk, nodeKey, bmask, dmask, smask, coverage: coveredCycles / tot, unmapped: keys.filter((k) => !k.blocks).map((k) => k.cls),
+  return { keys, nk, nodeKey, bmask, dmask, smask, coverage: coveredCycles / tot, current: keys.some((k) => k.cur), unmapped: keys.filter((k) => !k.blocks).map((k) => k.cls),
     mappedLinks: (() => { let c = 0; for (let i = 0; i < m.nl; i++) if (dmask[i] && smask[i]) c++; return c; })() };
 }
 

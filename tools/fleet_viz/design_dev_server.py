@@ -13,7 +13,14 @@ from urllib.parse import urlparse, parse_qs
 
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-import design_service, layout_service
+import design_service, layout_service, coverage, json, time
+
+
+class _NoElements:   # the October element table (server.py ELEMENTS) is retired on the design pages: coverage joins the node index
+    def snapshot(self, legacy=False): return {'rows': []}
+
+
+COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', str(HERE.parents[1])), _NoElements(), HERE / 'explorer' / 'token', log=lambda *a: None)
 
 DS = design_service.Service()
 LS = layout_service.Service(log=lambda *a: None)
@@ -42,8 +49,14 @@ class H(BaseHTTPRequestHandler):
         if u.path in ('/', '/explorer', '/explorer/', '/explorer/design'):
             self.send_response(302); self.send_header('Location', '/explorer/design/'); self.send_header('Content-Length', '0'); self.end_headers(); return
         if u.path.startswith('/explorer/design/'): return DS.page(self, u.path[len('/explorer/design/'):])
+        if u.path == '/fv_stale.js': return self.send(200, (HERE / 'fv_stale.js').read_bytes(), 'text/javascript; charset=utf-8')
+        if u.path in ('/api/coverage', '/api/coverage/version', '/api/coverage/token'):   # server.py's coverage routes
+            if u.path == '/api/coverage/version': o = COVERAGE.version()
+            elif u.path == '/api/coverage/token': o = COVERAGE.token(q.get('design', [''])[0])
+            else:
+                now = time.time(); o = dict(COVERAGE.api(), generated_at=now, sent_at=now)
+            return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/plan_now':   # same contract as server.py: plan_now.json, or a JSON 404 when none is recorded
-            import json
             f = pathlib.Path(os.environ.get('FLEET_VIZ_STATE', os.path.expanduser('~/.local/state/fleet-viz'))) / 'plan_now.json'
             try: return self.send(200, f.read_bytes(), 'application/json')
             except OSError: return self.send(404, json.dumps(dict(error='no plan_now.json (no token-pass state recorded)')).encode(), 'application/json')
