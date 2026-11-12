@@ -1266,7 +1266,11 @@ SCHEMA["properties"]["clock"]["properties"]["ft_hop_lockup"] = {
                        "additionalProperties": {"enum": ["launch", "capture"]}}}},
                    "latch_frac": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
                        "type": "object", "propertyNames": {"pattern": "^[0-9]+$"},
-                       "additionalProperties": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}}}}}}
+                       "additionalProperties": {"type": "number", "exclusiveMinimum": 0, "maximum": 1}}}},
+                   # HBM-VSN-XTAP-2 11-12 (DIE-HBM-100, option B): per-hop latch list; a type listed here latches only
+                   # the listed hops k -> k+1 (ft_hop_latched); absent type = every hop (TYPE-SAFE-1).  RTL / EQ visible.
+                   "hops": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": {
+                       "type": "array", "items": {"type": "integer", "minimum": 0}}}}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
@@ -1789,7 +1793,8 @@ def _ft_hop_map(raw, key, type_name):
 def ft_hop_latch_tap(raw, type_name):
     """HBM-VSN-XTAP-2 11-11 form A' (DIE-HBM-100): {slot: {k: "launch"|"capture"}} the clock tap of the ft hop lockup
     latch u_fl_<slot>_<face>_<k> of `type_name` (plan clock.ft_hop_lockup.tap).  "launch" = the default (clock_taps.tcl
-    follow-D pass); "capture" = hung on its capture station's tap.  Rule: the EARLIER tap of the pair (per-pair paper
+    follow-D pass; it also overrides a die-default capture regex such as u_fl_L201x, 11-12); "capture" = hung on its
+    capture station's tap.  Rule: the EARLIER tap of the pair (per-pair paper
     check on routed STA), so latch -> capture gets T/2 + |skew|.  Absent = {} (no change)."""
     return _ft_hop_map(raw, "tap", type_name)
 
@@ -1799,6 +1804,21 @@ def ft_hop_latch_frac(raw, type_name):
     latch (plan clock.ft_hop_lockup.latch_frac, 0 < f <= 1; face_flops.tcl).  f near 1 = capture-biased: the long wire
     goes into the full-cycle launch -> latch leg (time borrow through the open latch).  Absent = {} (the midpoint)."""
     return _ft_hop_map(raw, "latch_frac", type_name)
+
+
+def ft_hop_latch_hops(raw, type_name):
+    """HBM-VSN-XTAP-2 11-12 (DIE-HBM-100 option B): {slot: [k]} the ONLY ft hops k -> k+1 of `type_name` that carry the
+    ft_hop_lockup latch (plan clock.ft_hop_lockup.hops[type]); None = the type is not listed = every hop (TYPE-SAFE-1).
+    For types whose type-level latch would push the kit past the cell cap: the paper check lists the cross-tap hops."""
+    lk = ((raw or {}).get("clock") or {}).get("ft_hop_lockup") or {}
+    m = (lk.get("hops") or {}).get(type_name)
+    return None if m is None else {s: sorted({int(k) for k in ks}) for s, ks in m.items()}
+
+
+def ft_hop_latched(raw, type_name, slot, k):
+    """True when hop k -> k+1 of ft slot `slot` of a lockup type carries the latch (ft_hop_latch_hops; None = all)."""
+    m = ft_hop_latch_hops(raw, type_name)
+    return m is None or int(k) in m.get(slot, [])
 
 
 def ft_hop_xtap(raw, type_name, slot):
