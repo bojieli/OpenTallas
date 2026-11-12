@@ -1,0 +1,6 @@
+== ERR: base 365 cand 365 new 0 gone 0
+== WARN: base 541 cand 539 new 1 gone 3
+  NEW x1 [tap_sink_cap] [tapcap-count] 77 taps over cap in 39 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 108 with a sink inventory, 15 planned face/ft sinks only = lower bound)
+  GONE x1 [geom_clock_reach] [G0C-GEOM] type glue: plan-time AUTO-GEOM clock_reach 371.4 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far plan (4.6, 2.0)
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type glue: plan-time AUTO-GEOM clock_tap_sinks 3280.8 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t6
+  GONE x1 [tap_sink_cap] [tapcap-count] 77 taps over cap in 39 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 107 with a sink inventory, 16 planned face/ft sinks only = lower bound)

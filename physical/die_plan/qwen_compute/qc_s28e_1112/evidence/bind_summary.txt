@@ -1,0 +1,7 @@
+bind start Thu Nov 12 12:37:46 UTC 2026 plan=277e908d1240 sidecar=4ad925a263ba bind.py=cb732e489ee0 r8=571c5b26bb1f
+{"partitions": 377, "types": 123, "crossings": 1921, "crossing_bits": 790393, "errors": 0, "unbound": 0, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 11568, "plan_driven": 0}
+BIND_RC=0 wall=384 s end Thu Nov 12 12:44:10 UTC 2026
+315252676904913272409c242a8d1e18a5fc8ad74947d8cabcccef341175016d  bind_plan_qc99_s28e/bus_groups.json
+3f1ec85c7a8be6116843d731f9841920efdca0ba1f21b67ca256c2113e6865a5  bind_plan_qc99_s28e/bind_latency.json
+b314607d38bd5fbba6571e455c1d2e472a4cd9b6580a79ec8b7298362ec5048f  bind_plan_qc99_s28e/bind_report.json
+base s28: bus_groups 315252676904 bind_latency 8167b6d6563f; latency diff: reset/types/glue depth_K 5->6, release_after_pin 6->7, relays 26->207, max_hop 378.0->404.4; reset/parts/glue release 123->124 (only)
