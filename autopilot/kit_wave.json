@@ -30377,7 +30377,9 @@
     "q_su10__physical_v1@2",
     "q_su00__physical_v1@2",
     "q_su11@1",
-    "q_su11__physical_v1@1"
+    "q_su11__physical_v1@1",
+    "q_su10__physical_v1@5",
+    "q_su30@5"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -33161,17 +33163,20 @@
     "q_su10__physical_v1": {
      "OT_POROUS_VIEWS": "all",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_KW45_PATHS": "die-hbm-92-su restored 11-12 03:06 PST"
     },
     "q_su11": {
      "OT_POROUS_VIEWS": "all",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_KW45_PATHS": "die-hbm-92-su restored 11-12 03:06 PST"
     },
     "q_su11__physical_v1": {
      "OT_POROUS_VIEWS": "all",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_KW45_PATHS": "die-hbm-92-su restored 11-12 03:06 PST"
     },
     "q_su20": {
      "OT_POROUS_VIEWS": "all",
@@ -33194,7 +33199,8 @@
     "q_su30": {
      "OT_POROUS_VIEWS": "all",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_KW45_PATHS": "die-hbm-92-su restored 11-12 03:06 PST"
     },
     "q_su30__physical_v1": {
      "OT_POROUS_VIEWS": "all",
