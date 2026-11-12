@@ -1598,6 +1598,31 @@ def build_slice_spine_tree(P, taps, regions, leaf_um=600.0, site=None, top_leaf_
     return nodes, info
 
 
+KIT_WORKERS = 1     # DIE-PROTO-1 opt-in --kit-workers: per-type abstracts + STA stand-ins in a fork pool (same bytes, order kept)
+_KIT_POOL = None
+
+
+def _kit_pool_job(k):
+    fn, args, kw = _KIT_POOL[k]
+    return fn(*args, **kw)
+
+
+def kit_map(calls):
+    """[(fn, args, kw)] -> [fn(*args, **kw)] in order.  KIT_WORKERS > 1 runs them in a fork pool: abstract_lef and
+    standin_netlist are per-type pure functions of the loaded plan, so results are identical to the serial loop
+    (test_die_trial_kit_workers checks byte equality)."""
+    global _KIT_POOL
+    if KIT_WORKERS <= 1 or len(calls) <= 1:
+        return [fn(*args, **kw) for fn, args, kw in calls]
+    import multiprocessing as mp
+    _KIT_POOL = list(calls)
+    try:
+        with mp.get_context("fork").Pool(min(KIT_WORKERS, len(calls))) as pool:
+            return pool.map(_kit_pool_job, range(len(calls)), chunksize=1)
+    finally:
+        _KIT_POOL = None
+
+
 DME_WORKERS = 1     # DIE-QC-20 opt-in --region-dme-workers: region DME trees computed in parallel (fork pool), attached in order
 _DME_POOL_JOBS = None
 
@@ -5048,6 +5073,11 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                        sites_outside_partitions=sum(1 for r in irec if not r["parts"]))
         (out / "island_windows.json").write_text(json.dumps(dict(schema="ot_island_windows/1", meta=meta_iw,
                                                                  windows=iw, sites=irec), indent=1) + "\n")
+    _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
+                                                   reset_infra=reset_infra)))
+                  for tn, t in sorted(P.types.items())
+                  if not (views and (Path(views) / tn / f"{t['module']}.lef").is_file())]
+    _abs = dict(zip([tn for tn, _ in _abs_calls], kit_map([c for _, c in _abs_calls])))
     for tn, t in sorted(P.types.items()):
         v = Path(views) / tn / f"{t['module']}.lef" if views else None
         if v and v.is_file():
@@ -5060,7 +5090,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
             ab[tn] = dict(source="closed view", path=str(v))
         else:
-            txt, st = abstract_lef(P, tn, islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra, reset_infra=reset_infra)
+            txt, st = _abs[tn]
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
             ab[tn] = dict(source="plan abstract", **st)
         ab[tn]["physical_module"] = smod[tn]
@@ -5177,10 +5207,11 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     # sta stand-ins
     _kit_stage("sta stand-ins")
     nff = 0
+    _sin = dict(zip(sorted(P.types), kit_map([(standin_netlist, (P, tn), {}) for tn in sorted(P.types)])))
     for tn, t in sorted(P.types.items()):
         d = out / "sta" / "parts" / smod[tn]
         d.mkdir(parents=True, exist_ok=True)
-        v, k = standin_netlist(P, tn)
+        v, k = _sin[tn]
         if smod[tn] != t["module"]:
             v = v.replace(f"module {t['module']} (", f"module {smod[tn]} (", 1)
         (d / "6_final.v").write_text(v)
@@ -5784,6 +5815,8 @@ def main(argv=None):
                         "fitted on routed legs of the clock cell (TT ps); replaces the BUFx24 1x-ladder STAGE_1X_TT in the "
                         "DME delay model and adds kf at every binary merge node (two-leg load). --region-dme-early RATIOs "
                         "are then measured/calibrated-model (about 1.0 TT). Default: uncalibrated model")
+    k.add_argument("--kit-workers", type=int, default=1, metavar="N",
+                   help="DIE-PROTO-1: per-type abstracts + STA stand-ins in N fork workers (identical output)")
     k.add_argument("--region-dme-workers", type=int, default=1, metavar="N",
                    help="DIE-QC-20 opt-in: compute the region DME trees in N fork workers (same trees, attached in the "
                         "same order; default 1 = serial)")
@@ -5993,8 +6026,9 @@ def main(argv=None):
         raise SystemExit("--region-dme-street-vlayer needs --region-dme-street-column")
     if DME_ACTUAL_MAX_UM is not None and (not math.isfinite(DME_ACTUAL_MAX_UM) or DME_ACTUAL_MAX_UM <= 0):
         raise ValueError("--region-dme-actual-max needs finite positive reach")
-    global DME_WORKERS
+    global DME_WORKERS, KIT_WORKERS
     DME_WORKERS = max(1, int(getattr(a, "region_dme_workers", 1) or 1))
+    KIT_WORKERS = max(1, int(getattr(a, "kit_workers", 1) or 1))
     if getattr(a, "region_dme_stage_cal", None):
         load_stage_cal(a.region_dme_stage_cal)
     global DME_SNAKE_CAP_UM
