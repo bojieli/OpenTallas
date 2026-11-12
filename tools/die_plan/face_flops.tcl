@@ -149,6 +149,31 @@ proc ff_from_out {net depth} {
 # CP1 r6: yosys merges identical boundary flops of DIFFERENT buses (u_bout_x_o0.q[718] also drove frame_int_o0[892]
 # on the N face; the W-face x path then ran 1 mm, TT -90 ps).  A pin register already claimed by another port is
 # duplicated with its pure buffer/inverter chain, and this port moves onto the copy (logically identical: same D / clock).
+# HBM-CORES-B 11-12 OT_FF_TIE_CLONE (default 0 = unchanged, byte for byte): a clone input that is a constant (net driven by a TIEHI / TIELO
+# cell) gets its OWN tie cell instead of sharing the original's tie net.  The clone sits at a face, the original's tie next to the
+# original flop: b128_canonS lf$_DFF_PN0__otdup1/SETN ran 349 um from a TIEHIx1 (slew 360 ps vs 320).  Global placement puts the new
+# tie cell next to its flop.
+set ff_ntie 0
+proc ff_tie_local {net c} {
+  global ff_blk ff_ntie
+  if {![info exists ::env(OT_FF_TIE_CLONE)] || $::env(OT_FF_TIE_CLONE) ne "1"} { return $net }
+  set tinst ""
+  foreach d [$net getITerms] {
+    if {[[$d getMTerm] getIoType] ne "OUTPUT"} continue
+    if {[regexp {^TIE(HI|LO)} [[[$d getInst] getMaster] getName]]} { set tinst [$d getInst] }
+  }
+  if {$tinst eq ""} { return $net }
+  incr ff_ntie
+  set t [odb::dbInst_create $ff_blk [$tinst getMaster] "[$c getName]_ottie$ff_ntie"]
+  set nn [odb::dbNet_create $ff_blk "ottie_net$ff_ntie"]
+  puts "OT_FF_TIE_CLONE [$t getName] [[$tinst getMaster] getName] clone [$c getName] was [$tinst getName]"
+  foreach d [$tinst getITerms] {
+    set mt [$d getMTerm]
+    if {[$mt getSigType] in {POWER GROUND}} continue
+    if {[$mt getIoType] eq "OUTPUT"} { [$t findITerm [$mt getName]] connect $nn }
+  }
+  return $nn
+}
 set ff_ndup 0
 proc ff_clone_for {bt chain} {
   global ff_blk ff_ndup
@@ -163,7 +188,7 @@ proc ff_clone_for {bt chain} {
       set ct [$c findITerm [$mt getName]]
       if {[$mt getIoType] eq "INPUT"} {
         # a face latch copy takes the chain on D only; its CLK stays on the original clock net
-        if {$prev ne "" && ![ff_is_ff $i] && !([ff_is_latch $i] && [$mt getName] ne "D")} { $ct connect $prev } elseif {[$it getNet] ne "NULL"} { $ct connect [$it getNet] }
+        if {$prev ne "" && ![ff_is_ff $i] && !([ff_is_latch $i] && [$mt getName] ne "D")} { $ct connect $prev } elseif {[$it getNet] ne "NULL"} { $ct connect [ff_tie_local [$it getNet] $c] }
       } elseif {[$mt getIoType] eq "OUTPUT"} {
         # the signal output of the chain (a flop has QN only in this library)
         if {[$it getNet] ne "NULL"} { $ct connect $onet }
