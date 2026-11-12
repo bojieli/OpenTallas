@@ -366,6 +366,16 @@ def escape(R, p, tol=0.5):
         q = (min(max(q[0], 0.0), fl(R.W)), min(max(q[1], 0.0), fl(R.H)))
         if R.free(*q):
             return q
+    if tol < 0:
+        # STREET-RULE-1: the retry is already strict (a core flush with the outline and boxed in on its free sides
+        # recursed forever, q_b102__physical_v1): nearest free lattice point by a square-ring search instead
+        x, y = sn(p[0]), sn(p[1])
+        for d in range(1, 400):
+            for dx in range(-d, d + 1):
+                for dy in (-d, d) if abs(dx) != d else range(-d, d + 1):
+                    if R.free(x + dx * G, y + dy * G):
+                        return (x + dx * G, y + dy * G)
+        return (x, y)
     return escape(R, (sn(p[0]), sn(p[1])), tol=-1)
 
 

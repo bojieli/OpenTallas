@@ -63,7 +63,7 @@ EPS = 1e-6
 DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, street_fill=0.6, abut_um=G,
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
-                reach_limit_um=405.0)
+                reach_limit_um=405.0, grow_axes="xy")
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
@@ -420,7 +420,7 @@ def _cluster_rects(M, k, pos):
     return out
 
 
-def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=False):
+def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=False, grow=True):
     """1-D two-sided compaction along axis ('x' -> index 0): difference constraints from the facing pairs, ASAP from
     the W/S outline, ALAP from the E/N outline; the outline grows only by the shortfall max(ASAP - ALAP); every node
     takes its old coordinate clamped into [ASAP, ALAP].  Returns (new cluster pos, new W or H, item shifts, blocked)."""
@@ -468,30 +468,32 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
                     else:   # street / wall
                         req = r["need"]
                     edges[k].append([l_, oi + si + req - oj, oi + si + gap - oj])   # [to, delta, relaxed delta]
-    # cluster - item (both directions)
-    for k in range(M.m):
-        for (i, xi, yi, wi, hi) in rects[k]:
-            oi = (xi - pos[k][0]) if ax == 0 else (yi - pos[k][1])
-            si = wi if ax == 0 else hi
-            for q, it in enumerate(items):
-                x0, y0, x1, y1 = it.rect
-                hlo = it.halo
-                if ax == 0:
-                    if not ov(yi - hlo, yi + hi + hlo, y0, y1 + EPS) and not (y0 == y1 and yi - hlo < y0 < yi + hi + hlo):
-                        continue
-                    a0, a1, b0 = xi, xi + wi, x0
-                    b1 = x1
-                else:
-                    if not ov(xi - hlo, xi + wi + hlo, x0, x1 + EPS) and not (x0 == x1 and xi - hlo < x0 < xi + wi + hlo):
-                        continue
-                    a0, a1, b0 = yi, yi + hi, y0
-                    b1 = y1
-                if b0 >= a1 - EPS:            # item after the core
-                    req = min(hlo, b0 - a1)
-                    edges[k].append([M.m + q, oi + si + req, oi + si + req])
-                elif b1 <= a0 + EPS:          # item before the core
-                    req = min(hlo, a0 - b1)
-                    edges[M.m + q].append([k, (b1 - b0) + req - oi, (b1 - b0) + req - oi])
+    # cluster - item (both directions), vectorised over the items
+    if items:
+        import numpy as np
+        IR = np.array([it.rect[:4] for it in items], float)
+        IH = np.array([it.halo for it in items], float)
+        lo_o, hi_o = (IR[:, 1], IR[:, 3]) if ax == 0 else (IR[:, 0], IR[:, 2])   # other-axis extent
+        lo_a, hi_a = (IR[:, 0], IR[:, 2]) if ax == 0 else (IR[:, 1], IR[:, 3])   # this-axis extent
+        pt_o = lo_o == hi_o
+        for k in range(M.m):
+            for (i, xi, yi, wi, hi) in rects[k]:
+                oi = (xi - pos[k][0]) if ax == 0 else (yi - pos[k][1])
+                si = wi if ax == 0 else hi
+                c0o, c1o = (yi, yi + hi) if ax == 0 else (xi, xi + wi)
+                a0, a1 = (xi, xi + wi) if ax == 0 else (yi, yi + hi)
+                facing = ((np.minimum(c1o + IH, hi_o + EPS) - np.maximum(c0o - IH, lo_o) > EPS) & ~pt_o) | \
+                    (pt_o & (c0o - IH < lo_o) & (lo_o < c1o + IH))
+                after = facing & (lo_a >= a1 - EPS)
+                before = facing & (hi_a <= a0 + EPS)
+                for q in np.nonzero(after)[0]:
+                    req = min(IH[q], lo_a[q] - a1)
+                    d_ = oi + si + req
+                    edges[k].append([M.m + int(q), d_, d_])
+                for q in np.nonzero(before)[0]:
+                    req = min(IH[q], a0 - hi_a[q])
+                    d_ = (hi_a[q] - lo_a[q]) + req - oi
+                    edges[M.m + int(q)].append([k, d_, d_])
     # point-like items keep their order inside each lattice row (x pass) / column (y pass): never stacked on each other
     nb = 1 - ax
     rows = collections.defaultdict(list)
@@ -631,6 +633,41 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
             u = v
         if not done:
             break
+    if not grow:
+        # outline locked on this axis (die at the reticle): relax the first widened street on the critical chain of
+        # every node that would cross the far outline, until the chain fits; relaxed streets stay residual
+        for _ in range(4 * nN + 8):
+            A, wa = asap()
+            bad = [u for u in range(nN) if not fixed[u] and A[u] + tail[u] > L + EPS]
+            if not bad:
+                break
+            u0 = max(bad, key=lambda u: A[u] + tail[u])
+            if tail[u0] > tail_rx[u0] + EPS and A[u0] + tail_rx[u0] <= L + EPS:
+                tail[u0] = tail_rx[u0]
+                relaxed += 1
+                continue
+            v, done, seen = u0, False, set()
+            while v not in seen:
+                seen.add(v)
+                if wa[v] is None:
+                    if src[v] > src_rx[v] + EPS:
+                        src[v] = src_rx[v]
+                        relaxed += 1
+                        done = True
+                    break
+                w_, e = wa[v]
+                if e[1] > e[2] + EPS:
+                    e[1] = e[2]
+                    relaxed += 1
+                    done = True
+                    break
+                v = w_
+            if not done:
+                if tail[u0] > tail_rx[u0] + EPS:
+                    tail[u0] = tail_rx[u0]
+                    relaxed += 1
+                    continue
+                break
     A, _ = asap()
     B, _ = alap(L)
     short = max([A[u] - B[u] for u in range(nN) if not fixed[u]] + [0.0])
@@ -711,6 +748,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     on_core0 = lambda p: M.owner(p, tol=-0.01) is not None   # noqa: E731
 
     def attempt(fixed_k, fix_ft=False):
+        grow_ax = cfg.get("grow_axes", "xy")
         M.reset_state()
         M.L[:] = list(L_base)
         M.W, M.H = W0, H0
@@ -723,7 +761,8 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
         relaxed_n = 0
         for rnd in range(cfg["rounds"]):
             for axis in ("x", "y"):
-                newpos, newL, shifts, bl = one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows, fix_ft)
+                newpos, newL, shifts, bl = one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows, fix_ft,
+                                                    grow=axis in grow_ax)
                 blocked += bl
                 relaxed_n += one_pass.relaxed
                 ax = 0 if axis == "x" else 1
@@ -1070,7 +1109,10 @@ def setup(a):
     cfg = dict(DEFAULTS)
     for kv in a.set or []:
         k, _, v = kv.partition("=")
-        cfg[k] = type(DEFAULTS[k])(float(v)) if k in DEFAULTS else float(v)
+        if k in DEFAULTS and isinstance(DEFAULTS[k], str):
+            cfg[k] = v
+        else:
+            cfg[k] = type(DEFAULTS[k])(float(v)) if k in DEFAULTS else float(v)
     return repo, plan, P, sha, die, die_dir, rs_cfg, conns, names, cfg
 
 

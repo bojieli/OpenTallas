@@ -185,3 +185,32 @@ def test_g0_hook(tmp_path):
     R2 = CK.Report()
     SR.g0_check(P, R2, tmp_path, "warn", repo=tmp_path)
     assert not R2.errors() and any(i["check"] == "street_gap" for i in R2.items)
+
+
+def test_hub_repack_escape_boxed_in_terminates():
+    # a station end inside a core that is flush with the outline and boxed in by a neighbour: escape() used to
+    # recurse forever (q_b102__physical_v1); it now returns a lattice point
+    import hub_repack as HR
+    R = HR.Raster(200.0, 100.0, [(0.0, 0.0, 100.0, 100.0), (104.0, 0.0, 200.0, 100.0)])
+    q = HR.escape(R, (50.0, 50.0))
+    assert len(q) == 2
+
+
+def test_locked_axis_never_grows(tmp_path):
+    # die at the reticle: grow_axes=y keeps W; the street that needs W stays residual, nothing crosses the outline
+    plan, P = _toy_plan(tmp_path)
+    t = P["partition_types"]["toy"]
+    t["outline_um"] = [8.64 + 100 + 15.12 + 100 + 8.64, 302.4]
+    t["hard_cores"][0]["origin_um"] = [8.64, 86.4]
+    t["hard_cores"][1]["origin_um"] = [8.64 + 100 + 15.12, 86.4]
+    t["ft_slots"] = []
+    t["clock"] = {}
+    plan.write_text(json.dumps(P))
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+             "--event", str(ev), "--rs-halving", "off", "--set", "grow_axes=y"])
+    row = json.loads(ev.read_text())["rows"][0]
+    assert abs(row["outline_after"][0] - row["outline_before"][0]) < 1e-6
+    Q = json.loads(out.read_text())["partition_types"]["toy"]
+    for h in Q["hard_cores"]:
+        assert h["origin_um"][0] + 100.0 <= Q["outline_um"][0] + 1e-6
