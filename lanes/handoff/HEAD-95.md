@@ -1,4 +1,4 @@
-# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 07:56 PST
+# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 08:39 PST
 
 ## 1 Scope
 HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (CLOSED 08:33, fallback taken), HB4 seam shims, wshim_rx DRV ECO, visual gate via GEOM-VIS-5, route on epyc8/9 (not epyc2), hourly STATE.
@@ -10,13 +10,13 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - Work dir: /srv/opentallas-scratch2/claude/head-95/ : pd/ = prep dir (plans must sit in it: side files resolve relative to the plan dir; symlinks to HEAD-94 srx_pd). Plans: pd/k1_plan.json (base, = HEAD-94 k1, G0 153 errors), pd/srx3_plan.json (HEAD-94 west move), pd/wp1*.json (west pass, abandoned), pd/rp1/rp2/rp3*.json (re-pack fallback). Scripts: west_pass.py, repack_lep.py, relocate_empty_taps.py, genchk.sh (gen phys --trial per type), g0diff.py. Copies of scripts + drawings: intel2 ~/coord/lanes/head-95-west-1112/.
 
 ## 3 Running jobs
-- hd_lep0N v2 KIT PLACE: epyc8 /srv/opentallas-scratch2/claude/head-95/lep0N_v2b (run_kit.sh hd_lep0N place 64 16), ot-run launched from intel2 at 07:5x, log intel2 ~/head95log/lep0N_v2b_place.log (queued on the epyc8 memory gate at launch). Kit from plan epyc4 head-95/pd/rp14.json df181b8d64d0 = rp13 418072d26cc1 (v2 form + landing-band trim, GEOM-VIS-6 07:44 FORM GOOD) + tap_window floor. Kit source copy: epyc4 head-95/kit_lep0N_v2b.
+- hd_lep0N v2 KIT PLACE: v2b FAILED port_bind (gen phys lacks rst_start_raw ports); v2c = v2b + raw_patch.py (kit_rtl alias+private patches) queued on epyc8 /srv/opentallas-scratch2/claude/head-95/lep0N_v2c, log ~/head95log/lep0N_v2c_place.log. Old: epyc8 /srv/opentallas-scratch2/claude/head-95/lep0N_v2b (run_kit.sh hd_lep0N place 64 16), ot-run launched from intel2 at 07:5x, log intel2 ~/head95log/lep0N_v2b_place.log (queued on the epyc8 memory gate at launch). Kit from plan epyc4 head-95/pd/rp14.json df181b8d64d0 = rp13 418072d26cc1 (v2 form + landing-band trim, GEOM-VIS-6 07:44 FORM GOOD) + tap_window floor. Kit source copy: epyc4 head-95/kit_lep0N_v2b.
 - wshim_rx ECO: prd_run DONE 07:14 PST (pass 2: TT slew 1, FF slew 1, cap 0, clk-freeze rc 0, finish rc 0; post_runner '-' = die owner signs off). SIGN-OFF job: ot-run epyc4 signoff.py run --run-dir pass_t10r_p2/run --kit pass_t10r_p2 --out pass_t10r_p2/signoff, log intel2 ~/head95log/wshim_rx_p2_signoff.log.
 - wshim_tx: no ECO (COORD hold). Rebuild from the GEN-CLASS-1 FT-HOP-M2-WIRE branch when READY.
 - HEAD-94 routes (logs intel2 ~/head94log/*.log): lb_mesh_st/_eo, lbal_hd_mesh/_eo (epyc7), pf_ctl (epyc2), meshk sign-off (epyc8).
 
-- hd_ctl_n W10 RE-SIGN: ot-run epyc4, dir /srv/opentallas-scratch2/claude/head-95/ctln_w10 (kit copy, SDC -early clk_t6/t7/t9 -> -10, run -> signed dh86/ctln_eco1/i1/run), resign.py tag flow-20261112-lz-head, out ctln_w10/resign, log intel2 ~/head95log/ctln_w10_resign.log.
-- hd_spn_eshim_rx W10 BUILD (no signed DB existed): epyc9 /srv/opentallas-scratch2/claude/head-95/eshim_rx_w10 GOAL route, log intel2 ~/head95log/eshim_rx_w10_route.log; then sign-off.
+- hd_ctl_n W10 RE-SIGN DONE + RECORDED 08:39 (ctln_w10/resign/PROVENANCE.json, LOCAL_PASS_NEEDS_PARENT, LEC EQ). Was: ot-run epyc4, dir /srv/opentallas-scratch2/claude/head-95/ctln_w10 (kit copy, SDC -early clk_t6/t7/t9 -> -10, run -> signed dh86/ctln_eco1/i1/run), resign.py tag flow-20261112-lz-head, out ctln_w10/resign, log intel2 ~/head95log/ctln_w10_resign.log.
+- hd_spn_eshim_rx W10 BUILD routed, NOT SIGNED (TT -10.59, slew 194/190; same as pre-W10: RE-FORM item, CLAND-SLEW-1 likely for drv). Was: epyc9 /srv/opentallas-scratch2/claude/head-95/eshim_rx_w10 GOAL route, log intel2 ~/head95log/eshim_rx_w10_route.log; then sign-off.
 - Tool branch READY: claude/head-95-twf-1112@0e5ce1603c (worktree epyc4 wt/head-95-twf).
 
 ## 4 Watchers
