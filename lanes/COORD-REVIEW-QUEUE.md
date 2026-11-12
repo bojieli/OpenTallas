@@ -47346,3 +47346,23 @@ HEAD die clock gate evidence (COORD 11-12 ruling: PASS on the die clock). Routed
 - Signed-pair seam FF hold: worst +1.5 ps over 7 groups (sp5->sp5_xw_o_shim/link_i), 0 negative. Seam TT setup worst +508.3.
 - Evidence: GitHub origin claude/die-proto-3-1111 @ce9068cd4a67, results/die_proto_3_1111/head/ilm/ (ilm_seam_rows_tree2n.tsv, io_hold_parent_tree2n.json, ilm_head_tree2n.sh). Run dir epyc8:/srv/opentallas-scratch2/claude/die-proto-3/head/ilm/run_tree2n (routed DB kept).
 - Still open, waiting on real views: 58 seam groups with stand-in ends, UNMEASURED (worst -7.4, sp4->sp4_xe_o_shim). Next re-run is on the hd_spn_wshim_rx sign-off.
+
+## STREET-RULE-1 -> COORD 11-12 02:39 PASS 2 COUNTS (levers a,b,c,d all on): KV 44 -> 0, QC 90 -> 70, HBM 319 -> 173, S81 3536 -> 2599 (S81 limit = reticle, not the rule); remainder by cause; feasibility bound next
+
+Code claude/street-rule-1112 @ 362b5a2cfc (+ route_supply after-run fix, see CORRECTION). Plans on epyc7:/srv/opentallas-scratch2/claude/street-rule-1/run/<run>/plan.json; per-violation causes cls/p2_<die>.json.
+| die | run | plan sha | types violating | APPLIED | hard violations left (was) | cycles added (types) | die growth | >25% types |
+| S81 | s81_p2nox (x growth, no x-feed) | 50623b8943bc | 144 | 123 | 2599 (3536) | 1311 (108) | +1045 x +432 um = +5.03%, fits | 0 |
+| S81 | s81_p2gx (x growth + 2:1 x-feed) | c22326883466 | 144 | 53 | 4300 | 626 (45) | +4.71%, fits | 0 |
+| S81 | s81_p2xy (xy growth + x-feed) | b568133b50a0 | 144 | 38 | 4921 | 301 (30) | +4.12%, fits | 0 |
+| QC | qc_p2 | 132b0c25fd95 | 40 | 33 | 70 (90) | 23 (9) | +0.44% | 0 |
+| KV | kv_p2 | 1d04a1798052 | 23 | 23 | 0 (44) | 16 (7) | 0 | 0 |
+| HBM | hbm_p2 | 3d8fa4c764e7 | 39 | 33 | 173 (319) | 141 (23) | +2.28% | 0 |
+Remaining by cause:
+- S81 (nox): kept old because the type would not fit the reticle 1831; no room on the locked y axis 297; points under cores 193; compactor limit 101; overlaps 86; ft hop still over reach 51; core pinned 39; pin face too dense 1.
+- QC: all 70 = ft hop still over reach after +1 stage (7 types; they need 2+ stages per hop).
+- HBM: 162 stations needing 2+ more regs (6 types); 7 ft stages held; 2 compactor; 2 pinned.
+Findings:
+1. With levers (a)-(c), every S81 type has a legal form: 138 of 144 legal before the reticle fit. The die cannot hold them all: the pre-fit estimate is +2532 um on the long axis (+9.8% area) against 1049 um headroom. S81's remaining violations are a die-floorplan item, not a type item.
+2. Lever (d), the 2:1 x feed, does NOT shrink S81: most S81 streets are already at the 43.2 um minimum (svc_rs: 127 -> 126 street violations with the feed), so halving pins leaves the widths unchanged. Its runs end worse only because the greedy reticle fit reverts more types. The lever that would shrink S81 is a narrower minimum street (43.2 = LANE-PAIR/L1 calibration), or a die re-floorplan putting the grown types where the long-axis push does not stack.
+3. The p99 guard is off in pass 2 (lever c); no type exceeded 25% growth.
+Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/HBM, allow +2 regs per hop (pre-approved cycles) -> expect QC 0 / HBM ~10; (3) S81: a die-level ask for the owner (re-floorplan vs 43.2 minimum) with numbers.
