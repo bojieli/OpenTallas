@@ -30998,7 +30998,9 @@
     "q_su20__physical_v1@5",
     "q_b003__physical_v1@11",
     "q_b013__physical_v1@16",
-    "q_mcb_ne@1"
+    "q_mcb_ne@1",
+    "ot_svgr_top@1",
+    "ot_hgi_dma_back_static_vp4_banks_cp@4"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -31069,10 +31071,8 @@
     "q_spb1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
-    "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
     "ot_hgi_coll_tkm_m_tp192__root": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
     "q_spb0__physical_v1": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
-    "q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
     "ot_hbm_su_pg_lane_exp_x_core": "KW-FIX-45 11-11: plan_items_from_allowlist is on for NW_iorly/NE_iorly; this only_items core had no OWNERS row and stays as it was (not launching)",
     "hnx_rp3lp3h_n": "SUPERSEDED KW-FIX-45 11-11 DIE-HBM-100 queue tag hbm-stale-rows (COORD fail_watch): stale d44v-era core row, not in the current plan's core set; counted variants kept",
     "hnx_rp3lp3h_s": "SUPERSEDED KW-FIX-45 11-11 DIE-HBM-100 queue tag hbm-stale-rows (COORD fail_watch): stale d44v-era core row, not in the current plan's core set; counted variants kept",
@@ -34451,6 +34451,14 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-vsn-xtap-t40w/asbuilt_d12b.json"
      },
      "note": "KW-FIX-45 11-12 DIE-HBM-100: t40w (5129a5aab081 = t39w + l3011 ft_slots, q_hub_nw only), bind_report c05ea45bce68; every other type stays on t39w"
+    },
+    "ot_svgr_top": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+     "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
+    },
+    "ot_hgi_dma_back_static_vp4_banks_cp": {
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+     "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
     }
    },
    "note_kw38h": "KW-FIX-38 2026-11-08 20:11 PST: COORD 20:1x + DIE-HBM-93 19:58: plan_final3 + bind_F3 + asbuilt vK for the 11 listed types ONLY via item_inputs; die plan stays plan_final2 + bind vJ + asbuilt vJ. src_mclk = src_1dea_lf + adc4b6a6fa44 (2 files, die-wide tool fix). Revert *_prev_kw38h",
@@ -41873,7 +41881,9 @@
    "grt_halving_arm": {
     "items": [
      "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a",
-     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16"
+     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16",
+     "q_su21",
+     "q_su21__physical_v1"
     ],
     "mode": "edge_outline",
     "gen_host": "epyc8",
@@ -41882,7 +41892,11 @@
      "hfd_hgi_vms_glue_nw_t",
      "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a",
      "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16"
-    ]
+    ],
+    "modes": {
+     "q_su21": "off",
+     "q_su21__physical_v1": "off"
+    }
    },
    "hold_items_kw43qb001_added": [
     "q_b001",
@@ -44216,7 +44230,9 @@
    ],
    "plan_sha256": "8b4b6e3071c49dee3aa31bf8a0097a4415d617d6c56c0dde22dd70375124f540",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.hbm.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
-   "kit_self_contained": "copy"
+   "kit_self_contained": "copy",
+   "hold_items_prev_q_su21_q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+   "hold_items_prev_q_su21_q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept"
   }
  },
  "place_prefer": [
