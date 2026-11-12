@@ -3763,6 +3763,30 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 
+def grt_nonport_hold_chain(kd, tool_dir=None):
+    """KW-FIX-45 11-11 (DIE-HBM-100, opt-in OT_GRT_NONPORT_HOLD=1 in the gen environment / item_env): chain tools/grt_nonport_hold.tcl
+    (input-start hold exclusion during the FF GRT repair only) at the END of the kit's effective PRE_GLOBAL_ROUTE_TCL.
+    Reads the written config.mk, takes the LAST PRE_GLOBAL_ROUTE_TCL assignment as the base, writes /work/grt_pre_nonport.tcl
+    (source base; source /work/grt_nonport_hold.tcl) and appends the override plus OT_GRT_NONPORT_HOLD = 1.  Never called
+    without the opt-in, so other kits are byte-identical.  -> the base path chained."""
+    kd = Path(kd)
+    cfgp = kd / "config.mk"
+    base = None
+    for ln in cfgp.read_text().splitlines():
+        m = re.match(r"^(?:override\s+)?export\s+PRE_GLOBAL_ROUTE_TCL\s*:?=\s*(\S+)\s*$", ln)
+        if m:
+            base = m.group(1)
+    if base is None:
+        raise SystemExit("OT_GRT_NONPORT_HOLD=1: the kit config.mk sets no PRE_GLOBAL_ROUTE_TCL to chain")
+    hook = Path(tool_dir or Path(__file__).resolve().parent.parent) / "grt_nonport_hold.tcl"
+    shutil.copyfile(hook, kd / "grt_nonport_hold.tcl")
+    (kd / "grt_pre_nonport.tcl").write_text("# GENERATED (OT_GRT_NONPORT_HOLD=1): the kit's PRE_GLOBAL_ROUTE_TCL, then the shared nonport hold adapter\n"
+                                            f"source {base}\nsource /work/grt_nonport_hold.tcl\n")
+    with cfgp.open("a") as f:
+        f.write("override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_nonport.tcl\nexport OT_GRT_NONPORT_HOLD = 1\n")
+    return base
+
+
 def macro_ff_repair_stage(kd, macros, mlib):
     """Separate the requested FF repair stage from the original macro/CTS config."""
     import gzip
@@ -4857,6 +4881,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
+    if os.environ.get("OT_GRT_NONPORT_HOLD") == "1":      # opt-in; chained after any macro-FF wrapper written above
+        grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
