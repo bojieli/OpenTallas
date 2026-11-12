@@ -4579,9 +4579,21 @@ def cmd_bind(a):
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
+    strict_info = None
+    if B.strict_types:
+        # BIND-STRICT-SRC: bind.f inside the declared source tree, group masters listed, no unknown parameter overrides
+        import bind_strict_src
+        roots = bind_strict_src.allowed_roots(E.REPO, out, a.plan, B.base, B.ab, getattr(a, "allow_src_root", None) or [])
+        serrs, strict_info = bind_strict_src.check(fl, [str(f) for f in srcs.get("lib", [])], B.extra_lib,
+                                                   [str(f) for f in files], getattr(B, "bound_group_products", []), roots)
+        strict_info["allowed_roots"] = [str(r) for r in roots]
+        strict_info["allow_src_root_flag"] = list(getattr(a, "allow_src_root", None) or [])
+        B.errors.extend(serrs)
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
+    if strict_info is not None:
+        rep["strict_src"] = strict_info
     rep["parent_variants"] = B.F.parent_variants
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
@@ -5997,6 +6009,9 @@ def main(argv=None):
                        help="report every EMIT plan/source gap (core reset leaf, parent ID, glue) in one run instead of "
                             "stopping at the first; no new checks; the bound top is not emitted while gaps remain")
         s.add_argument("--asbuilt", help="as-built binding section in its own file (overrides the plan's `asbuilt`)")
+        s.add_argument("--allow-src-root", action="append", default=[], metavar="PATH",
+                       help="strict bind: also allow bind.f paths under PATH (a legitimate external source root; "
+                            "recorded in bind_report strict_src; plan key asbuilt.external_roots is the durable form)")
         s.add_argument("--allow-external-paths", action="store_true",
                        help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
     a = ap.parse_args(argv)
