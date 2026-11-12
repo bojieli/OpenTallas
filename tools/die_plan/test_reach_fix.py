@@ -332,3 +332,35 @@ def test_depth_drift_from_reselect_is_caught(monkeypatch):
     assert RF.depth_drift(P, Q, "x", None) == [["landing_local_resets.0", "rst_rl_17", 1, 2]]
     rec = RF.fix_raw_tap_refs(P, Q, "x", None)
     assert rec == [["landing_local_resets.0", "rst_rl_17", "rst_rl_24"]] and RF.depth_drift(P, Q, "x", None) == []
+
+
+def test_tap_cap_priced_on_nearest_split(tmp_path):
+    # TAP-CAP (b) (COORD 11-12, VL3 hd_spn_end SP3: cap 1000 on paper, 1225 at place): a placed register bank the
+    # planner inventory does not list sits on one tap.  Class 2 is priced on the NEAREST split (what AUTO-GEOM measures
+    # at place), not on the pre-CTS capacity moves; the fix re-sites taps until the nearest split meets the cap, and the
+    # new taps survive the planner's empty-tap check (anchor sinks).
+    import taps as TP
+    bank = [[300.0 + 1.0 * (i % 80), 300.0 + 0.4 * (i // 80)] for i in range(2400)]
+    (tmp_path / "sinks").mkdir()
+    (tmp_path / "sinks" / "mid.json").write_text(json.dumps(bank))
+    base = _write(tmp_path, copy.deepcopy(EX))
+    sd = ["--sinks-dir", str(tmp_path / "sinks"), "--cap", "1000"]
+    chk = tmp_path / "chk.json"
+    for mode in ("kit", "nearest"):
+        assert RF.main(["check", str(base), "--json", str(chk), "--assign", mode] + sd) == 0
+        r = {x["type"]: x for x in json.loads(chk.read_text())["rows"]}["mid"]
+        if mode == "kit":
+            kit_max = r["c2_max"]
+        else:
+            assert r["c2"] >= 1 and r["c2_max"] > kit_max and r["c2_max"] > 1000, (kit_max, r)
+    out, _ev = _fix(tmp_path, base, "fcap", *sd)
+    assert RF.main(["check", str(out), "--json", str(chk)] + sd) == 0
+    a = {x["type"]: x for x in json.loads(chk.read_text())["rows"]}["mid"]
+    assert a["c2"] == 0 and a["c2_max"] <= 1000, a
+    # independent of the tool's pricing: the plain nearest split on the fixed plan's taps
+    import plan_geom as PG
+    import geom_rules as GR
+    PQ = RF.plan_obj(json.loads(out.read_text()), out)
+    grid = [(n, x, y) for n, x, y in PG.type_sites(PQ, "mid")["entries"] if GR.GRID_TAP_RE.match(n)]
+    load, _f, _o = TP.assign(grid, [(x, y, 1.0) for x, y in bank], float("inf"), 0.0)
+    assert max(load) <= 1000, max(load)

@@ -80,6 +80,13 @@ LANDED_WINDOW_PS = 416.5   # S81 landing window (DIE-RECHECK-1 / DIE-S81-87 reac
 MEASURED = {}              # type -> [(x, y, 1.0)] placed clock sinks (tap_sinks_dump.tcl), replaces the plan sinks
 MIN_TAPS = {}              # type -> minimum tap count (die-owner input, e.g. KV hgi_v8 39)
 TAP_TABLE = False          # check --tap-table: keep per-tap rows
+# TAP-CAP (COORD 11-12, VISLAYOUT3-KVHEAD hd_spn_end SP3: cap 1000 on paper, 1225 measured at place): class 2 is
+# priced on the NEAREST-tap split (Voronoi), the split AUTO-GEOM measures at place.  The kit's cap pass (clock_taps.tcl
+# OT_TAP_MAX_SINKS) runs only at pre-CTS and its move bound is half OT_TAP_PITCH_UM (50 mm in density kits), so pricing
+# the capacity moves let a tap sit over cap at place and pushed sinks past the reach radius at CTS.  Fix (b): taps are
+# placed so the nearest split itself meets the cap; the kit cap pass then has nothing to move.  --assign kit restores
+# the old pricing (nearest + capacity moves <= radius) for A/B.
+ASSIGN = ["nearest"]
 REF = {}                   # --ref-plan: {"P": Plan before the die move}; raw-reference depths are checked against it
 
 
@@ -218,7 +225,10 @@ def tap_metrics(P, tn, G=None, cap=CAP_SINKS, radius=RADIUS_UM):
     if not grid or not sinks:
         out.update(c1=len(out["tap_on_macro"]), c1_max_um=0.0, c2=pile, c2_max=0.0)
         return out, None
-    load, far, own = TP.assign(grid, sinks, cap, radius)
+    if ASSIGN[0] == "nearest":
+        load, far, own = TP.assign(grid, sinks, float("inf"), 0.0)       # no capacity moves: pure Voronoi split
+    else:
+        load, far, own = TP.assign(grid, sinks, cap, radius)
     dist = [_d(s, (grid[j][1], grid[j][2])) for s, j in zip(sinks, own)]
     over_r = [i for i, d in enumerate(dist) if d > radius + 1e-6]
     kinds = defaultdict(int)
@@ -714,6 +724,19 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                 mine.add((float(nw[0]), float(nw[1])))
         if mv:
             rec["changes"].append(["legal_moves", rnd, mv])
+        if tn in MEASURED:
+            # TAP-CAP (b): a re-site tap for MEASURED sinks (a placed register bank the planner inventory does not list)
+            # is empty to the planner's export check and was dropped every round (VL3 hd_spn_end SP3 W bar: 1225 at
+            # place).  One inventory sink at the tap's final site keeps it; tap_metrics prices the measured sinks.
+            fin = {(float(o[0]), float(o[1])): (float(w[0]), float(w[1])) for _n, o, w in mv}
+            keep_s = []
+            for q in new:
+                x_, y_ = fin.get((float(q[0]), float(q[1])), (float(q[0]), float(q[1])))
+                keep_s.append([round(x_, 4), round(y_, 4), 1.0])
+            if keep_s:
+                ck.setdefault("sink_sites_um", []).extend(keep_s)
+                ck.setdefault("reach_fix_sinks", []).extend(keep_s)
+                rec["changes"].append(["tap_anchor_sinks+", rnd, len(keep_s)])
         for _k in range(len(new) + len(mv)):
             err = _export_ok(Q, P.path, tn)
             m = (re.search(r"tap (clk_t\d+) load=0/.*empty=True", err or "")
@@ -1428,6 +1451,7 @@ def _setup(a, P):
     m, bad = load_measured(a.sinks_dir, a.sinks, outl)
     MEASURED.update(m)
     TAP_TABLE = bool(getattr(a, "tap_table", None))
+    ASSIGN[0] = getattr(a, "assign", None) or "nearest"
     REF.clear()
     if getattr(a, "ref_plan", None):
         rr, _rsha = load_raw(a.ref_plan)
@@ -1564,6 +1588,9 @@ def main(argv=None):
         p.add_argument("-j", "--jobs", type=int, default=1)
         p.add_argument("--cap", type=int, default=None, help="sinks per tap (default per die: %s)" % DIE_CAP)
         p.add_argument("--radius", type=float, default=RADIUS_UM)
+        p.add_argument("--assign", choices=("nearest", "kit"), default="nearest",
+                       help="class-2 split: nearest (default, = AUTO-GEOM at place; taps placed so it meets the cap) or "
+                            "kit (nearest + capacity moves <= radius, the pre-CTS cap pass; A/B only)")
         p.add_argument("--reach", type=float, default=REACH_UM)
         p.add_argument("--span", type=float, default=REPEATER_UM)
         p.add_argument("--sinks-dir", action="append", default=[], help="dir of <type>.json placed sinks")
