@@ -129,10 +129,15 @@ def transform(raw, spec):
             raise FormError(f"type {tn} slot {sn}: bay 0 marked landing but the type has no band {sn}_i")
     # every other reference to a renamed bus inside its type (clock landing pins / edge clocks / landing entries /
     # ring instance names / reset) follows the new name; their point coordinates move to the bay entry field
-    bayc = {}
+    bayc, bayk = {}, {}
     for e in spec["slots"]:
         bayc[(e["type"], busmap[(e["type"], e["slot"] + "_i")])] = centre(e["bays"][0]["rect_um"])
         bayc[(e["type"], busmap[(e["type"], e["slot"] + "_o")])] = centre(e["bays"][-1]["rect_um"])
+        # a PORT pin of the bay (edge clock: the forwarded ring write clock fclk_in_<s>b0_i) sits on the bay's lower-left
+        # corner: off the joint area-pin raster (gen_phys.type_pins, sites strictly inside the bay), so it never shares
+        # a site with an entry pin (GRT-0080 invalid pin placement, S81 t8/t72 11-12)
+        bayk[(e["type"], busmap[(e["type"], e["slot"] + "_i")])] = [round(v, 4) for v in e["bays"][0]["rect_um"][:2]]
+        bayk[(e["type"], busmap[(e["type"], e["slot"] + "_o")])] = [round(v, 4) for v in e["bays"][-1]["rect_um"][:2]]
     moved = 0
     for tn in {k[0] for k in busmap}:
         pairs = [(ob, nb) for (t_, ob), nb in busmap.items() if t_ == tn and ob != nb]
@@ -157,7 +162,7 @@ def transform(raw, spec):
                          else spec_by[(tn, hit[0])].get("out_route", "m89") == "m89"):
                     for k in ("xy_um", "pin_xy_um", "tap_um"):
                         if k in o and isinstance(o[k], list) and len(o[k]) == 2:
-                            o[k] = list(bayc[(tn, hit[0])])
+                            o[k] = list(bayk[(tn, hit[0])] if (k == "tap_um" and "port" in o) else bayc[(tn, hit[0])])
                             moved += 1
                 for v in o.values():
                     walk(v)
