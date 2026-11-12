@@ -107,6 +107,26 @@ def pdn_text(top_layer="M5", macros=False):
     return text + (PDN_MACRO if macros else "")
 
 
+def pre_gpl_extra_setup(kd, files):
+    """KW-FIX-45 11-11 (DIE-HBM-100 / HBM-CORES-B, opt-in --pre-gpl-extra FILE): extra Tcl hooks sourced at PRE_GLOBAL_PLACE
+    AFTER the kit's face_flops.tcl (e.g. flc_wd_split.tcl).  Each FILE is copied into the kit dir (so /work/<name> exists in
+    the container) and a pre_gpl_chain.tcl sources face_flops.tcl then every file in order; the config exports
+    PRE_GLOBAL_PLACE_TCL = /work/pre_gpl_chain.tcl.  -> (config lines, freeze record).  Never called without the flag, so
+    a kit without it is byte-identical."""
+    kd = Path(kd)
+    lines, rec = ["source /work/face_flops.tcl"], []
+    for i, f in enumerate(files):
+        src = Path(f)
+        if not src.is_file():
+            raise SystemExit(f"--pre-gpl-extra {f}: no such file")
+        name = f"pre_gpl_extra_{i}_{src.name}"
+        shutil.copy2(src, kd / name)
+        lines.append(f"source /work/{name}")
+        rec.append(dict(file=str(src), name=name, sha256=hashlib.sha256(src.read_bytes()).hexdigest()))
+    (kd / "pre_gpl_chain.tcl").write_text("# KW-FIX-45: face_flops.tcl, then the --pre-gpl-extra hooks in order\n" + "\n".join(lines) + "\n")
+    return ["export PRE_GLOBAL_PLACE_TCL = /work/pre_gpl_chain.tcl"], rec
+
+
 def dpl_cfg_lines(mode, orfs_vars):
     """HBM core kits legalise with the diamond DPL by default (DIE-HBM-100 11-11, COORD 06:xx; ot_svgr_top 5b1b2d476ef8:
     NegotiationLegalizer DPL-0701 did not converge, then detail_place.tcl 'bad optional access', the 11-09 class that type kits
@@ -1697,6 +1717,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                          "phys --max-wire-um.  Without it the kit is unchanged.")
     ap.add_argument("--dpl-legalizer", choices=["diamond", "default"], default="diamond",
                     help="detail-placement legalizer: diamond (default, matches the type kits) or default (ORFS negotiation, item opt-out)")
+    ap.add_argument("--pre-gpl-extra", action="append", default=[], metavar="FILE", help="opt-in extra Tcl hook sourced at PRE_GLOBAL_PLACE after face_flops.tcl (repeatable, in order); copied into the kit; absent = byte-identical kit")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
@@ -2661,6 +2682,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 f"export OT_RELAY_LINE_DEPTH = {relay_line(a)[1]}"]
     cfg += dpl_cfg_lines(a.dpl_legalizer, a.orfs_var)
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
+    pre_gpl_rec = []
+    if a.pre_gpl_extra:
+        _pg_lines, pre_gpl_rec = pre_gpl_extra_setup(kd, a.pre_gpl_extra)
+        cfg += _pg_lines
     if a.prects_estimate:
         flow["prects_estimate"] = prects_phase_hooks(kd, cfg, clks, ins)
     if a.final_ff_hold:
@@ -2749,6 +2774,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
               pins_canon_sha256=pins_canon,
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
+              **({"pre_gpl_extra": pre_gpl_rec} if pre_gpl_rec else {}),
               sdc_lint="PASS (gen)", macros=rec.get("macros", []),
               **({"io_hold": dict(mode="sender_min", ports=in_min_ports, parent_obligation=True)} if in_min_ports else {}),
               face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
