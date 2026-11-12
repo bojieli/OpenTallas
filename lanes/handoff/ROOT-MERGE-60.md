@@ -39,3 +39,10 @@ None posted by me. COORD answers merge approvals; nothing pending from COORD exc
 - No foreground sleep; use Monitor or background waits. SSH: timeout N ssh -n -o ControlPath=none <host>.
 - Worktree creation on epyc8 full checkout is slow (~10+ min); reuse rm60/rm60-main (git checkout --detach <sha>) instead of making new ones.
 - Kill only exact pids. Hub intel2 ~/coord changes only via coord-commit.sh.
+
+## UPDATE 06:58 PST
+- LANDED hotfix ae71bf887a8f as main (ff, MERGED posted, tags flow-20261112-{ma-head,nb-qc,lv-kv,oa-s81,ox-hbm}). origin/main = ae71bf887a8f.
+- LANDING PROCEDURE (main is checked out on hub, direct push is rejected): copy of /srv/opentallas-scratch3/claude/rm55/land2.sh at intel2 /srv/opentallas-scratch2/claude/rm60-land2.sh. Usage on intel2: bash rm60-land2.sh <new-tip> <old-main-sha> <shas-to-verify...>. It flocks ~/coord/merge.lock, needs tip objects in the hub repo (git push the tip to hub as a branch first, e.g. from epyc8 wt: git push origin <tip>:refs/heads/claude/rm60-train-<x>), ff-only merges, pushes to GitHub origin. Tag push from epyc8 worktree: git push origin <tags>.
+- Train 60 tip 3d65e863df is based on d767dc851b70; must be re-merged onto ae71bf887a8f (no taps.py conflict expected): in rm60 (after wide2 rerun done) git merge --no-ff ae71bf887a8f into a fresh detached HEAD at ae71bf887a8f then merge 52a724781a52 and 2132a3e0d660 again; rerun touched tests (kv/qc bind tests) and land.
+- Wide first run: 6 extra FAILED in test_partition_ft_reserve.py on tip (die_sta pollution, passes alone both); rerun of tip wide list: wt/rm60.wide2.{raw,fails,done}; monitor bxqj7qvr2. Rule: if wide2 has no partition_ft_reserve failures, treat as flake.
+- Added to the post-hotfix train by COORD: vl2qc-fanout-cap-1112@4f3117a95b (2 commits beyond main: 90b3fc7310 tap_group schema, 4f3117a95b leaf_aff async; tests test_place_fanout_cap.py test_schema_tap_group.py test_leaf_aff_async.py). The HEAD-94 gp_noconverge get_full_name fix (8e14620b54) is ALREADY on main (checked gate tcl), no extra branch needed.
