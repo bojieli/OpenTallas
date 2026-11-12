@@ -102,11 +102,25 @@ def under(p):
         if p.startswith(r + '/') and not p[len(r) + 1:].startswith('attempt_'):   # attempt 1's root holds the later attempts
             return True
     return False
+def origins(c):
+    # FAILFAST-1 11-12 (orphan leak): an ot-job isolated copy mounts <ot-jobs>/<tag>/work, which is under no kit root, so a stop by
+    # mount source never found it (q_su31 a11, col_h10_r1 a11, sle_fe_v1 a9 ... ran 60-70 h after their rows were CANCELLED).
+    # The job spec names the ORIGINAL kit the wave / autopilot row points at (work.at, return.to): match on that too.
+    out = []
+    for m in c.get('Mounts', []):
+        if m.get('Destination') == '/work' and m.get('Source'):
+            try:
+                spec = json.load(open(os.path.join(os.path.dirname(m['Source'].rstrip('/')), '.ot-job', 'job.json'))).get('spec') or {}
+            except (OSError, ValueError, AttributeError):
+                continue
+            out += [(spec.get('work') or {}).get('at'), (spec.get('return') or {}).get('to')]
+    return [o for o in out if o]
 ids = subprocess.run(['docker', 'ps', '-q', '--no-trunc'], capture_output=True, text=True, timeout=60).stdout.split()
 names = []
 if ids:
     for c in json.loads(subprocess.run(['docker', 'inspect'] + ids, capture_output=True, text=True, timeout=120).stdout or '[]'):
-        if any(m.get('Type') == 'bind' and m.get('RW', True) and under(m['Source']) for m in c.get('Mounts', [])):
+        if any(m.get('Type') == 'bind' and m.get('RW', True) and under(m['Source']) for m in c.get('Mounts', [])) or \
+                any(under(o) for o in origins(c)):
             names.append(c['Name'].lstrip('/'))
 scopes = set()
 for pid in filter(str.isdigit, os.listdir('/proc')):
@@ -151,6 +165,17 @@ def stop_on_fleet(sh, hub, roots, hosts=None, dry=False):
     hosts = list(hosts or FLEET)
     with ThreadPoolExecutor(max(1, len(hosts))) as ex:
         return dict(ex.map(one, hosts))
+
+
+def stop_row_containers(sh, hub, roots, hosts=None, dry=False):
+    """FAILFAST-1 11-12: what a cancel does to its row's running containers, in one call.  -> (names 'host:container ...', errors text)
+    Exact names only (stop_on_fleet); the caller stores both on the row and logs them."""
+    roots = sorted({r for r in roots if r})
+    if not roots:
+        return '', ''
+    res = stop_on_fleet(sh, hub, roots, hosts, dry)
+    errs = ''.join('; %s not checked: %s' % (h, v['error']) for h, v in sorted(res.items()) if v.get('error'))
+    return ' '.join(stopped_names(res)), errs
 
 
 def stopped_names(res):

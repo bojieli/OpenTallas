@@ -4497,6 +4497,7 @@ def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices):
     if root and (units or s == "ENQUEUED"):
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [root])
         stopped = " ".join(WJ.stopped_names(res))[:300]
+    rec["stopped_containers"] = {"at": time.time(), "names": stopped, "why": why[:120], "root": root or ""}
     try:
         gh = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
     except (OSError, ValueError, KeyError, TypeError):
@@ -5158,7 +5159,7 @@ def queue_class(j):
     return "queue", stt, "", why
 
 
-def follow_queue(st, ap_dir, notices):
+def follow_queue(st, ap_dir, notices, stops=None):
     """join ENQUEUED wave items with their autopilot queue job (same kit path); a new terminal queue state is reported
     once to the die owner's grouped notice"""
     try:
@@ -5192,6 +5193,8 @@ def follow_queue(st, ap_dir, notices):
                        reason=f"queue job {j.get('id')} cancelled: {str(why)[:160]}")
             notices.setdefault(rec["die"], []).append(f"{rec['item']} queue job {j.get('id')} CANCELLED -> row CANCELLED "
                                                       f"(retry {rec['item']}@{rec.get('attempt')} relaunches)")
+            if stops is not None:                    # FAILFAST-1 11-12: the cancel also stops the container (step() does it, once)
+                stops.append((rec, attempt_root(rec)))
             n += 1
             continue
         so = j.get("signoff") if isinstance(j.get("signoff"), dict) else {}
@@ -5320,6 +5323,23 @@ def cancel_class_volume(AP, cfg, st, notices):
     return n
 
 
+def stop_cancelled_rows(AP, stops, why="queue job cancelled"):
+    """FAILFAST-1 11-12 (orphan leak): rows that went CANCELLED stop their containers by exact name (one fleet pass for all rows)
+    and record rec['stopped_containers'] + a log line.  [(rec, root)] -> number of containers stopped."""
+    stops = [(r, root) for r, root in stops if root]
+    if not stops:
+        return 0
+    try:
+        names, errs = WJ.stop_row_containers(AP.sh, AP.HUB_NAME, [root for _r, root in stops], dry=AP.DRY)
+    except Exception as e:                           # noqa: the cancel stands; the next tick's census shows a miss
+        names, errs = "", "; stop failed: %r" % (e,)
+    for r, root in stops:
+        mine = " ".join(x for x in names.split() if r.get("item", "") in x)
+        r["stopped_containers"] = {"at": time.time(), "names": mine, "why": why, "root": root, "errors": errs[:300]}
+    AP.log(f"KIT-WAVE CANCEL-STOP ({why}) {len(stops)} row(s): containers [{names or 'none running'}]{errs}")
+    return len(names.split())
+
+
 def attempt_root(r):
     """the attempt's dir on its host (spec.json work), else its kit path; '' when neither is known"""
     try:
@@ -5446,7 +5466,9 @@ def _step(AP, ap_dir):
     except Exception as e:                              # a sweep never stops the tick
         AP.log(f"KIT-WAVE REAP-DEAD skipped: {type(e).__name__}: {e}")
     retry_enqueue(AP, cfg, st, notices)
-    follow_queue(st, ap_dir, notices)
+    stops = []
+    follow_queue(st, ap_dir, notices, stops)
+    stop_cancelled_rows(AP, stops)
     auto_rejudge(AP, cfg, st, notices)
     try:
         release_pending(cfg, st, parse_pending(AP.read_coord(PENDING_FILE)), _merged(AP, cfg), notices)
