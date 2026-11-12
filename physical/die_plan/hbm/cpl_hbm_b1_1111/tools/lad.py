@@ -35,6 +35,60 @@ def fsize(form):
     return {"V1L": (H1[0], H1[1] + GAP + RA[1]), "V1H": (H1[0], H1[1] + GAP + RA[1]), "H": (RBDX + RA[0] + GAP + H1[0], RA[1]),
             "HR": (RBDX + RA[0] + GAP + H1[0], RA[1]), "RAB": (H1[0], RA[1]), "RABV": (RA[0], 2 * RA[1] + GAP), "H1": H1}[form]
 
+BIN = 10.8
+
+
+def _slits(boxes):
+    """narrow facing gaps (< one route_supply bin) holding a bin centre: route_supply classes that bin a street with
+    little supply (model artifact for a 4-9 um slit, which no router uses as a channel)"""
+    out = []
+    ks = list(boxes)
+    for a in range(len(ks)):
+        A = boxes[ks[a]]
+        for c in range(len(ks)):
+            if a == c: continue
+            B = boxes[ks[c]]
+            for lo0, hi0, lo1, hi1, g0, g1 in ((A[0], A[2], B[0], B[2], A[3], B[1]), (A[1], A[3], B[1], B[3], A[2], B[0])):
+                if min(hi0, hi1) - max(lo0, lo1) > 1e-6 and 0 < g1 - g0 < BIN:
+                    k = math.ceil((g0 - BIN / 2) / BIN - 1e-9)
+                    cc = BIN / 2 + k * BIN
+                    if g0 + 1e-6 < cc < g1 - 1e-6: out.append((ks[a], ks[c]))
+    return out
+
+
+def deslit(hc, legal, fixed=(), max_steps=7):
+    """greedy: shift whole units (an idx stack, or a bank) by multiples of 0.864 so no slit holds a bin centre"""
+    units = collections.defaultdict(list)
+    for i in hc:
+        m = re.search(r"(r\dc\d_k\d)h", i)
+        units[m.group(1) if m else i].append(i)
+    unit_of = {i: u for u, l in units.items() for i in l}
+    def bx(i): h = hc[i]; return (h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0], h["origin_um"][1] + h["outline_um"][1])
+    steps = sorted({(dx, dy) for dx in range(-max_steps, max_steps + 1) for dy in range(-max_steps, max_steps + 1)} - {(0, 0)}, key=lambda d: (abs(d[0]) + abs(d[1]), d))
+    shifted = {}
+    for _ in range(80):
+        boxes = {i: bx(i) for i in hc}
+        sl = _slits(boxes)
+        if not sl: break
+        n0 = len(sl); best = None
+        for u in sorted(({unit_of[a] for a, b in sl} | {unit_of[b] for a, b in sl}) - set(fixed)):
+            for dx, dy in steps:
+                ddx, ddy = dx * G, dy * G
+                nb = dict(boxes)
+                for i in units[u]:
+                    b = boxes[i]; nb[i] = (b[0] + ddx, b[1] + ddy, b[2] + ddx, b[3] + ddy)
+                if not legal(nb): continue
+                n1 = len(_slits(nb))
+                if n1 < n0 and (best is None or (n1, abs(dx) + abs(dy)) < best[:2]):
+                    best = (n1, abs(dx) + abs(dy), u, ddx, ddy)
+                    break
+        if not best: break
+        _, _, u, ddx, ddy = best
+        for i in units[u]:
+            hc[i]["origin_um"] = [snap(hc[i]["origin_um"][0] + ddx), snap(hc[i]["origin_um"][1] + ddy)]
+        p = shifted.get(u, (0.0, 0.0)); shifted[u] = (round(p[0] + ddx, 3), round(p[1] + ddy, 3))
+    return dict(shifted=shifted, slits_left=len(_slits({i: bx(i) for i in hc})))
+
 
 def main():
     plan, tn, specf, outf = sys.argv[1:5]
@@ -79,6 +133,25 @@ def main():
         hc[i]["origin_um"] = n
     boxes = {i: (h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0], h["origin_um"][1] + h["outline_um"][1]) for i, h in hc.items()}
     halo = {i: (h.get("halo_um") or 0.0) for i, h in hc.items()}
+    deslit_rep = None
+    if __import__("os").environ.get("SLIT") == "1":
+        def legal(bx):
+            for i, b in bx.items():
+                m = halo[i]
+                if b[0] - m < -1e-6 or b[1] - m < -1e-6 or b[2] + m > W + 1e-6 or b[3] + m > H + 1e-6 or b[0] < 4.32 - 1e-6 or b[1] < 4.32 - 1e-6 or b[2] > W - 4.32 + 1e-6 or b[3] > H - 4.32 + 1e-6: return False
+                if b[0] - 4.32 < tap[0] < b[2] + 4.32 and b[1] - 4.32 < tap[1] < b[3] + 4.32: return False
+            ks = list(bx)
+            for a in range(len(ks)):
+                for c in range(a + 1, len(ks)):
+                    A, B = bx[ks[a]], bx[ks[c]]; mm = max(halo[ks[a]], halo[ks[c]]) + 4.32
+                    if halo[ks[a]] == 0 and halo[ks[c]] == 0: mm = 4.32 - 0.01
+                    if not (A[2] + mm <= B[0] + 1e-6 or B[2] + mm <= A[0] + 1e-6 or A[3] + mm <= B[1] + 1e-6 or B[3] + mm <= A[1] + 1e-6): return False
+            return True
+        fixed = S.get("deslit_fixed", [])
+        deslit_rep = deslit(hc, legal, fixed)
+        for i, h in hc.items():
+            if h["origin_um"] != list(old[i]): moved[i] = (h["origin_um"][0] - old[i][0], h["origin_um"][1] - old[i][1])
+        boxes = {i: (h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0], h["origin_um"][1] + h["outline_um"][1]) for i, h in hc.items()}
     bad = []
     for i, b in boxes.items():
         m = halo[i]
@@ -268,7 +341,7 @@ def main():
                h0h1_over405=sorted(k for k, v in d01.items() if v > R), reach_viol=[r for r in reach if not r["ok"]],
                ft_changes=rep["ft"], st_changes=rep["st"], moved=len(moved))
     json.dump(T, open(outf, "w"))
-    print(json.dumps(dict(type=tn, illegal=bad[:12], n_illegal=len(bad), unplaced=unplaced, h0h1_max=out["h0h1_max"], h0h1_over405=out["h0h1_over405"],
+    print(json.dumps(dict(deslit=deslit_rep, type=tn, illegal=bad[:12], n_illegal=len(bad), unplaced=unplaced, h0h1_max=out["h0h1_max"], h0h1_over405=out["h0h1_over405"],
                           reach_viol=[(r["bus"], r["core"][-22:], r["regs"], r["L1"]) for r in out["reach_viol"]],
                           ft_fail=[r for r in rep["ft"] if "issue" in r], st_fail=[r for r in rep["st"] if "issue" in r],
                           ft_moved=sum(r.get("moved", 0) for r in rep["ft"]), st_moved=sum(r.get("moved", 0) for r in rep["st"]),
