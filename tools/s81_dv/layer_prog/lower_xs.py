@@ -371,6 +371,18 @@ def gb_provider_record(record_dir, source_root, schedule, master):
     el = rec['element']
     if schedule['source_sha256'].get(el['source']) != el['sha256']:
         raise ValueError(f'GB provider qualification element {el["source"]} is not the schedule\'s own ({master})')
+    # DIE-S81-88 11-12: an X age is added_edges over the schedule's LP calendar, so a record's ages mean the bench's
+    # delays only on the calendar basis it was made for: age_basis.station_depth (check_native_go_split.py
+    # --lp-schedule), or, without age_basis, the pre-FIX-1 calendar (no station_depth; x_age = dd + 2).
+    want = (rec.get('age_basis') or {}).get('station_depth')
+    lp = (schedule.get('asbuilt') or {}).get('lp_schedule')
+    if lp is not None or want is not None:
+        if lp is None or lp not in schedule['source_sha256']:
+            raise ValueError(f'GB provider qualification X ages need the schedule\'s bound LP calendar ({master})')
+        got = json.loads((Path(source_root) / lp).read_text()).get('station_depth')
+        if got != want:
+            raise ValueError(f'GB provider qualification X ages are on another LP calendar basis than {lp} '
+                             f'(record station_depth {want}, calendar {got}) ({master})')
     return rec, hashlib.sha256(raw).hexdigest()
 
 
