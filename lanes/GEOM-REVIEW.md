@@ -6390,3 +6390,9 @@ GEOM REVIEW [S81-GEOM-3 2026-11-11 05:07 PST] col_h9_r2 ROM he M6 hotspot, DO_NO
   - clock_on_macro FAIL 1; pin_unreg 3; the farthest sink is 3663 um from its driver.
   - The bottom 1 mm holds only the PMA macros, so the outline is far too tall for the logic.
   - HOLD routing. To DIE-HBM-100: it pairs with the open NE_io decision (ne_a30). Re-form as an outline cut to logic + macro height, with the stations as a relay column on the face, not inside the io type.
+
+## 2026-11-11 17:34 PST COORD hourly
+- hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16 attempt_11 (epyc8) **OK, re-viewed**. 270x404, GRT ov 0. Glue sits in a band along the south pin face plus thin E/W edge columns.
+  - The clock root is in the slot between the two macro rows. The farthest sink is 370 um away, at the NE corner.
+  - The fill, empty and channel FAILs are advisory, from low fill (0.087) around the 3 macros. No glue on macros, pin_unreg 0. It waits on the rd1 merge before the counted kit.
+- No other new kit-wave place render since the 16:3x review: the newest are NW_io a3 and q_b012 a2/pv1 a2, all reviewed BAD. q_b003__physical_v1 attempt_3 (epyc9, istations-2 pilot) has no geom yet, so it is the first render to view at the next check.
