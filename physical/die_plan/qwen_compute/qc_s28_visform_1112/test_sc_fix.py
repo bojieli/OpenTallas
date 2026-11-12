@@ -27,12 +27,25 @@ def run(t):
     return out["partition_types"]["sle_sc_v9"]["ft_slots"][0], rows
 
 
-def test_flank_station_moves_into_e_channel():
+def test_flank_station_is_resited_within_target():
     s, rows = run(sc_type())
     assert rows[0]["action"] == "move" and rows[0]["cur_max"] > F.LIMIT
-    last = s["regs_um"][-1]
-    assert last[0] > 302.4 + 244.56            # E of the core
     assert rows[0]["new_max"] <= F.TARGET
+    last, prev = s["regs_um"][-1], s["regs_um"][-2]
+    a, b = F.legs(prev, last, 613.44, 1415.0)
+    assert max(a, b) == rows[0]["new_max"] or abs(max(a, b) - rows[0]["new_max"]) < 0.1
+
+
+def test_unreachable_window_is_kept_not_half_moved():
+    # out window far N of the chain: no legal spot brings both legs under LIMIT -> slot left as is, no ops
+    t = sc_type(win=(1700.0, 1800.0))
+    s, rows = run(t)
+    assert rows[0]["action"] == "keep"
+    assert s == sc_type(win=(1700.0, 1800.0))["ft_slots"][0]
+
+
+def test_moved_block_clear_of_core_and_complete():
+    s, rows = run(sc_type())
     core = (302.4 - V.HALO, 980.8 - V.HALO, 547.0 + V.HALO, 1494.9 + V.HALO)
     assert not any(V.inside(p, core, 0.0) for p in s["bit_sites_um"][-1])
     assert len(s["bit_sites_um"][-1]) == 40 and s["regs_um"][:-1] == sc_type()["ft_slots"][0]["regs_um"][:-1]
