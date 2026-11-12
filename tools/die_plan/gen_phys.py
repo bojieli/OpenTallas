@@ -4860,6 +4860,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread), then
            # FLOW 10-25 F4: zero-logic register pairs onto one leaf (leaf_affinity.tcl; OT_LEAF_AFFINITY=0 = off)
            "export POST_CTS_TCL = /work/cts_post.tcl",
+           # KW-FIX-45 11-12: OT_LEAF_AFF_ASYNC=1 in the gen env -> leaf_affinity.tcl also groups reset-release flops
+           # with the registers they release (async pins), one leaf per group; unset = unchanged
+           *(["export OT_LEAF_AFF_ASYNC = 1"] if os.environ.get("OT_LEAF_AFF_ASYNC", "").strip() == "1" else []),
            # DIE-HEAD-17 reg_spine: the plan balances the spine taps and sizes the core early-tap branches, so the
            # flow tap_balance pass (incl. its core re-hang pass) only reports
            *(["export OT_TAP_REPORT_ONLY = 1"] if reg_spine_spec(P, tn) else []),

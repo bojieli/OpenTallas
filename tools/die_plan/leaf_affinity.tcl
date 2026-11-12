@@ -23,6 +23,11 @@ set la_maxg [la_env OT_LEAF_AFF_MAX_GROUP 24]
 set la_slack [la_env OT_LEAF_AFF_SLACK 4]
 set la_depth [la_env OT_LEAF_AFF_DEPTH 4]
 set la_ronly [la_env OT_LEAF_AFF_REPORT_ONLY 0]
+# KW-FIX-45 11-12 (COORD, QC coll_n): OT_LEAF_AFF_ASYNC=1 keeps async set/reset pins as zero-logic successors, so a
+# reset-release flop and the registers it releases (Q -> buf/inv -> CLR/SET) hang on ONE leaf of their common clock:
+# coll_n s25 ECO left 4 removal checks u_rx.r_rst_n -> u_rxcal.u_rc.c[*] at -22 ps (same clk_coll edge tree, two
+# leaves).  Default 0 = unchanged (async pins dropped as before).
+set la_async [la_env OT_LEAF_AFF_ASYNC 0]
 set la_blk [ord::get_db_block]
 set la_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 
@@ -51,7 +56,11 @@ foreach p [all_registers -data_pins] {
 foreach p [all_registers -async_pins] {
   set it [sta::sta_to_db_pin $p]
   if {$it eq "NULL" || $it eq ""} continue
-  dict unset la_d [$it getInst]:[[$it getMTerm] getName]
+  if {$la_async} {
+    dict set la_d [$it getInst]:[[$it getMTerm] getName] 1
+  } else {
+    dict unset la_d [$it getInst]:[[$it getMTerm] getName]
+  }
 }
 proc la_is_bufinv {inst} { regexp {^(BUF|INV|HB|CKINV|CKBUF)} [[$inst getMaster] getName] }
 proc la_outs {inst} {
