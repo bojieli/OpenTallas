@@ -1097,7 +1097,9 @@ def tap_check(Q, names, plan_path):
         try:
             SC.tap_grid(PQ, n)
         except Exception as e:  # noqa: BLE001
-            bad[n] = str(e)[:300]
+            import traceback
+            tb = traceback.extract_tb(e.__traceback__)[-1]
+            bad[n] = "%s: %s [%s:%d]" % (type(e).__name__, str(e)[:260], Path(tb.filename).name, tb.lineno)
     return bad
 
 
@@ -1177,7 +1179,9 @@ def tap_repair(Q, names, plan_path, log=print):
                 SC.tap_grid(PQ, n)
                 rec["after"] = None
         except Exception as e:  # noqa: BLE001
+            import traceback
             rec["after"] = "%s: %s" % (type(e).__name__, str(e)[:300])
+            rec["where"] = traceback.format_exc().strip().splitlines()[-3:]
         ATR.S_reset_cache(PQ)
         out[n] = rec
     return out
@@ -1500,7 +1504,17 @@ def add_ft_regs(M, t0, tnew, reach, add_max):
             if n < 1 or n > add_max:
                 j += 1
                 continue
-            ref = min(j, len(regs) - 1)          # nearest existing stage: bit-site pattern source
+            # per-bit sites: row i - off belongs to regs[i] (off = 1 when station 0 at the in pin has no row, the
+            # usual form; 0 when every stage has one).  A new stage needs a site row, so the pattern source is the
+            # nearest stage that has one (COORD 11-12: an added stage without its row broke taps.planned_sinks)
+            off = (len(regs) - len(sites)) if isinstance(sites, list) and sites else None
+            if off is not None and off not in (0, 1):
+                j += 1
+                continue
+            ref = min(max(j, off or 0), len(regs) - 1)          # nearest existing stage with a site row
+            if off is not None and j < off:
+                j += 1
+                continue
             new = []
             for m in range(1, n + 1):
                 d = L * m / (n + 1)
@@ -1514,9 +1528,9 @@ def add_ft_regs(M, t0, tnew, reach, add_max):
                         xx, yy = x + ddx * G, y + ddy * G
                         if not (0 <= xx <= W and 0 <= yy <= H) or not R.free(xx, yy):
                             continue
-                        if isinstance(sites, list) and len(sites) == len(regs):
+                        if off is not None:
                             rx, ry = regs[ref][:2]
-                            pat = [[round(sx - rx + xx, 4), round(sy - ry + yy, 4)] for sx, sy in sites[ref]]
+                            pat = [[round(sx - rx + xx, 4), round(sy - ry + yy, 4)] for sx, sy in sites[ref - off]]
                             if not all(R.free(*pp) for pp in pat):
                                 continue
                         else:
@@ -1535,7 +1549,7 @@ def add_ft_regs(M, t0, tnew, reach, add_max):
             for m, (xx, yy, pat) in enumerate(new):
                 regs.insert(j + m, [xx, yy] + list(regs[ref][2:]))
                 if pat is not None:
-                    sites.insert(j + m, pat)
+                    sites.insert(j + m - off, pat)
             out.append(dict(slot=k, name=f.get("name"), hop=j, len_um=round(L, 1), added=len(new)))
             changed = True
             j += len(new) + 1
@@ -1837,12 +1851,17 @@ def cmd_legalize(a):
         if bad1:
             # re-derive the taps of the failing types, then re-check every applied type (a child type's taps can
             # fail a parent's export)
-            rep = tap_repair(Q, sorted(bad1), plan)
-            for r in rows:
-                if r["type"] in rep:
-                    r["tap_repair"] = rep[r["type"]]
             n1 = len(bad1)
-            bad1 = tap_check(Q, applied, plan)
+            for rnd in range(3):
+                # a parent's check reads its child types: repeat until no type improves (children fixed first)
+                rep = tap_repair(Q, sorted(bad1), plan)
+                for r in rows:
+                    if r["type"] in rep:
+                        r["tap_repair"] = rep[r["type"]]
+                prev = len(bad1)
+                bad1 = tap_check(Q, applied, plan)
+                if not bad1 or len(bad1) >= prev:
+                    break
             print("tap repair: %d failing -> %d after re-derivation" % (n1, len(bad1)), flush=True)
         bad0 = tap_check(P, sorted(bad1), plan) if bad1 else {}
         for it in range(3):

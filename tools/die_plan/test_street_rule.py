@@ -364,3 +364,27 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     assert pn["source_instance"] == "r_a2" and pn["xy_um"] == [131.0, 49.0]           # pin offset kept
     lr = t["clock"]["landing_local_resets"]
     assert lr[0]["raw"] == "qa2" and lr[1]["raw"] == "qb"     # gone -> nearest same depth; surviving Q kept
+
+
+def test_add_ft_regs_keeps_site_rows_aligned():
+    """the usual ft form: station 0 at the in pin has no bit-site row (bit_sites_um = stations 1..k-1). An added stage
+    gets its own row, so taps.planned_sinks' bit_sites_um[j - 1][bit] for j < stations stays in range (COORD 11-12)."""
+    import copy
+    f = {"name": "ft0", "in_face": "W", "out_face": "E", "in_window_um": [130, 140], "out_window_um": [130, 140],
+         "width": 2, "stations": 2, "regs_um": [[2.0, 135.0], [300.0, 135.0]],
+         "bit_sites_um": [[[300.0, 134.73], [300.0, 135.27]]]}
+    t0 = {"outline_um": [604.8, 302.4], "ft_slots": [f]}
+    t1 = copy.deepcopy(t0)
+    t1["outline_um"] = [829.44, 302.4]
+    t1["ft_slots"][0]["regs_um"][1] = [440.64, 135.0]
+    t1["ft_slots"][0]["bit_sites_um"] = [[[440.64, 134.73], [440.64, 135.27]]]
+    M = _FakeM(829.44, 302.4, [(100.0, 200.0, 50.0, 50.0)])
+    add = SR.add_ft_regs(M, t0, t1, 405.0, 1)
+    assert add and add[0]["added"] == 1
+    f1 = t1["ft_slots"][0]
+    assert f1["stations"] == 3 and len(f1["regs_um"]) == 3 and len(f1["bit_sites_um"]) == 2
+    for j in range(1, f1["stations"]):
+        for bit in range(2):
+            f1["bit_sites_um"][j - 1][bit]                                  # taps.planned_sinks indexing
+    (x, y), sites = f1["regs_um"][1][:2], f1["bit_sites_um"][0]
+    assert sites == [[round(x, 4), round(y - 0.27, 4)], [round(x, 4), round(y + 0.27, 4)]]
