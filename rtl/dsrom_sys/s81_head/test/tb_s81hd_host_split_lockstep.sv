@@ -21,9 +21,9 @@
 //   record date fields [289:242] +1; the body and its CRC32C are unchanged -- gen_vectors.py CRCs the body only).
 //   MODE 0 also checks the DUT HBC receiver_edge / context_valid equal the REF ones one cycle earlier (the whole
 //   receiver timeline is shifted by exactly W0X).  SPLIT_MUT 5 (stage dropped) must FAIL.
-module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter integer MODE=0);
+module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter integer MODE=0, parameter integer TX_STAGE=0, parameter integer TX_EXP=0);
  reg ck=0,rn=0,start=0;always #0.4165 ck=~ck;
- localparam integer E2W=4, W2E=4, P1X=1, W0X=1;
+ localparam integer E2W=4, W2E=4, P1X=1, W0X=1, TXX=TX_EXP;   // TXX: HEAD-94 TX_STAGE, +1 on every h_rx_o frame
  // ---------------- shared stimulus
  reg[1:0]pv=0;reg[552:0]pd0=0,pd0d=0,pd1=0;reg flip1=0;
  // ---------------- REF system
@@ -43,7 +43,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
  assign seam_rx=wb_rx1;assign seam_tx=wb_tx1;
  ot_s81hd_mesh_lane dp0(.ck(ck),.rst_n(rn),.chb(1'b1),.rx({2'b10,dh_tx0}),.tx(dp_tx0),.tx_v(pv[0]),.tx_d(pd0d),.rx_v(dprv[0]),.rx_d(dprd0),.flt(dpf0));
  ot_s81hd_mesh_lane dp1(.ck(ck),.rst_n(rn),.chb(1'b1),.rx({2'b10,dh_tx1}),.tx(dp_tx1),.tx_v(pv[1]),.tx_d(pd1),.rx_v(dprv[1]),.rx_d(dprd1),.flt(dpf1));
- ot_s81hd_host_w_core #(.SPLIT_MUT(SPLIT_MUT),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.CLOCK_RESET_ID(64'h5381C7C0DE1021),
+ ot_s81hd_host_w_core #(.SPLIT_MUT(SPLIT_MUT),.TX_STAGE(TX_STAGE),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.CLOCK_RESET_ID(64'h5381C7C0DE1021),
   .BOOT_HEADER_EDGE(48'd501+W0X),.BOOT_COMMIT_EDGE(48'd511+W0X))dut_w(.ck(ck),.rst_n(rn),.start_i(start),
   .coll_i0({2'b10,dp_tx0}),.coll_o0(dh_tx0),.h_tx_i(d_htx),.h_rx_o(d_hrx),.l1_rx_i(seam_rx),.l1_tx_o(seam_tx_w));
  ot_s81hd_host_e_core dut_e(.ck(ck),.rst_n(rn),.coll_i1({2'b10,dp_tx1^{511'd0,flip1}}),.coll_o1(dh_tx1),.l1_rx_o(seam_rx_e),.l1_tx_i(seam_tx));
@@ -81,7 +81,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
  int n_l1=0,n_hrx=0,n_p0=0,n_p1=0,n_t6=0,n_t7=0,n_t8=0,n_err=0;
  int c=0;reg[3:0]ref_lf1_q[0:E2W-1];reg ref_ctxv_q=0;reg[47:0]ref_re_q=0;initial foreach(ref_lf1_q[k])ref_lf1_q[k]=0;
  function automatic int hrx_off(input logic[552:0]f);
-  case(f[3:0])4'd7:return W0X;4'd6:return E2W;default:return -1;endcase
+  case(f[3:0])4'd7:return W0X+TXX;4'd6:return E2W+TXX;default:return -1;endcase
  endfunction
  task automatic fail(input string m);$display("LOCKSTEP MISMATCH cyc%0d: %s",c,m);n_err++;if(n_err>4)$fatal(1,"HEAD_HOST_SPLIT LOCKSTEP FAIL");endtask
  task automatic expect_rx(ref rec_t q[$],input logic[552:0]f,input string nm,input int lo,input int hi);
@@ -137,7 +137,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
   // ---------- scoreboards (sampled after the posedge settled)
   if(rn)begin
    if(rdv)begin
-    if(hrx_off(rdd)>=0)q_hrx.push_back('{c+hrx_off(rdd),rdd});else q_hrx.push_back('{c,rdd});
+    if(hrx_off(rdd)>=0)q_hrx.push_back('{c+hrx_off(rdd),rdd});else q_hrx.push_back('{c+TXX,rdd});
     n_hrx++;if(rdd[3:0]==6)n_t6++;else if(rdd[3:0]==7)n_t7++;else n_t8++;
    end
    if(rprv[0])begin q_p0.push_back('{c,rprd0});n_p0++;end
@@ -147,7 +147,7 @@ module tb_s81hd_host_split_lockstep #(parameter integer SPLIT_MUT=0, parameter i
    if(dprv[0])expect_rx(q_p0,dprd0,"peer0_rx",0,0);
    if(dprv[1])expect_rx(q_p1,dprd1,"peer1_rx",-1,1);
    if(dut_e.u_lane1.tx_v)expect_rx(q_l1,dut_e.u_lane1.tx_d,"lane1_tx_in",0,0);
-   foreach(q_hrx[k])if(q_hrx[k].date+E2W<c)begin fail("h_rx_o REF frame never seen at DUT");q_hrx.delete(k);break;end
+   foreach(q_hrx[k])if(q_hrx[k].date+E2W+TXX<c)begin fail("h_rx_o REF frame never seen at DUT");q_hrx.delete(k);break;end
    foreach(q_p0[k])if(q_p0[k].date<c)begin fail("peer0 REF frame never seen at DUT");q_p0.delete(k);break;end
    foreach(q_l1[k])if(q_l1[k].date<c)begin fail("lane1 TX input REF frame never seen at DUT");q_l1.delete(k);break;end
    foreach(q_p1[k])if(q_p1[k].date+1<c)begin fail("peer1 REF frame never seen at DUT");q_p1.delete(k);break;end
