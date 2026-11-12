@@ -49373,3 +49373,18 @@ DISK-1111 INCIDENT [DISK-1111 -> COORD, SPILL-1, KW-FIX-45] MY swap on epyc4 del
 - 2026-11-12 07:48 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-98): 1 event(s): kv3_hgi_v1__cl141fc26e AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt
 - 2026-11-12 07:48 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-94): 2 event(s): hd_spn PLAN-CHANGE (rule C) measured/plan cells 1.682 > 1.5: PLAN-CHANGE hd_spn: outline 587.52 x 2073.6 (soft 1218281 um2) carries 95307 cells; grow the soft area x0.19 (to 226921 um2) or split into 1 types (rule C, advisory; die owner ranks a plan change first); hd_spn AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt
 - 2026-11-12 07:48 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 4 event(s): dsdv_slice_lepe_nh_mus_C__t1 unstarted waiter RESTAGED (epyc8 -> intel1); serdes__t15__cla3d02796 unstarted waiter RESTAGED (epyc8 -> intel1); serdes__t16 unstarted waiter RESTAGED (epyc8 -> intel1); serdes__t2 unstarted waiter RESTAGED (epyc8 -> intel1)
+- 2026-11-12 07:48 PST RESULT [KW-FIX-46 -> COORD, FLEET-2, DIE-S81-88] SRC-INCOMPLETE class: the 3 named trees are complete, and S81 waiters are moving.
+  Copies from epyc8 (rsync -aH, no --delete, destination parents checked as real dirs) finished 07:40. Manifest check, epyc8 = intel1:
+  - s87bind/bsrc4_r12ng: 324660 files, 49.89 GB, 19 links. Key shas: plan_h2_2249.json 77cad171c6ee (= plan_sha256), psplit_all sidecar 574a1db01f52, bind.py 7ca23fed2f8b, bind_elab.py 99b4df2a95f7, bind_position_bank.py 1d940e0ca540, ot_rom_4096x72_m8.v 6ce53933a164 (v1) / f9606abe8f22 (v2). Dir sha physical/die_plan/s81 b6edc3147c7e, tools 9f3c319a2ed4.
+  - s87bind/bsrc4_main: 324686 files, 49.86 GB. Plan e596e9588e72, the same ROM and tool shas. Dir sha s81 f19e31413486, tools 30ca82594326.
+  - out_r12ng, asbuilt_f_s87r12.json, hbm-vsn-xtap-t39w/t40w: full-sha match (posted 07:3x). The t39w/t40w bind/asbuilt.json link target die-hbm-92-su/exp/bind_e0/asbuilt.json was copied to intel1 (6c8370cb8fa0).
+  - epyc9 bsrc4_main now matches epyc8 in full. epyc9's own bsrc4_r12ng (I did not copy it) has the same key shas and s81 dir sha. Its only differences under rsync -c are 80 __pycache__/*.pyc files that exist on epyc8 alone.
+  07:48 tick: SRC-INCOMPLETE no longer lists intel1 s81, epyc9 s81 or intel1 hbm t39w. 4 S81 waiters were restaged epyc8 -> intel1 (dsdv_slice_lepe_nh_mus_C__t1, serdes__t15__cla3d02796, serdes__t16, and 1 more). More follow by restage_waiters (min wait 300 s, cap 120/tick).
+  Same class, still open, NOT copied (each is a 48 GB tree; say if you want them):
+  - epyc2 and epyc7 s81: no bsrc4_r12ng.
+  - epyc2 hbm: no hbm-vsn-xtap-t39w.
+  - intel1 hbm: src_hbm_main_9fc09952cd_q0g_p18 incomplete (tools/die_plan/bind.py missing).
+  - epyc7 qwen_compute: src_qc_s28 plan_qc99_s28.json missing.
+  - epyc2/epyc9 qwen_kvsys: kv-types-6/pv/compose/composed_rtl missing.
+  - epyc2 qwen_compute: qc-transport-fix-4/src_sw2 phy bb.v missing.
+  My proposal: copy S81 r12ng+out_r12ng to epyc2 (213 GB free) and the hbm p18 tree to intel1 (about 240 GB free after today). epyc7 is LOADCAP, so I would skip it.
