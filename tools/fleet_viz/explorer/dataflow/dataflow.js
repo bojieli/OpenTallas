@@ -107,6 +107,21 @@ export async function mountDataflow(root, opts) {
     DZ = null;
     const die = (row.id || '').startsWith('plan_') ? row.id.slice(5) : null; if (!die) return;
     try { const r = await fetch('/api/design/die/' + encodeURIComponent(die)); if (r.ok) { const d = await r.json(); DZ = { die, nodes: d.nodes, part: Object.fromEntries(d.die.plan.partitions.map((q) => [q[0], q[1]])) }; } } catch (e) { DZ = null; }
+    // operator class -> current type / core nodes (token_design_map.py rules): the replay maps onto THIS plan, not October globs
+    if (DZ && data) try {
+      const r = await fetch('/api/design/token/' + encodeURIComponent(design)); const t = r.ok ? await r.json() : null;
+      if (t && t.classes) DZ.tok = new Map(Object.entries(t.classes).filter(([, c]) => c.nodes.length).map(([k, c]) => [k, new Set(c.nodes)]));
+    } catch (e) { /* no class rules: October globs only */ }
+  }
+  /** cls -> Set(block index) on this plan: a block belongs to a class when its type node or core node is in the class's rule */
+  function currentClassBlocks() {
+    if (!DZ || !DZ.tok) return null;
+    const out = new Map([...DZ.tok.keys()].map((k) => [k, new Set()]));
+    for (let b = 0; b < m.nb; b++) {
+      const ids = designOf(b).map((n) => n.id); if (!ids.length) continue;
+      for (const [k, set] of DZ.tok) if (ids.some((i) => set.has(i))) out.get(k).add(b);
+    }
+    return out;
   }
   function designOf(bk) {
     if (!DZ) return [];
@@ -126,12 +141,13 @@ export async function mountDataflow(root, opts) {
       ` ${STL[n.status.state] || n.status.state}${(n.layout || {}).store ? ' · routed layout' : ''}`)));
   }
   async function load(row) {
-    loadDesign(row);
+    const dz = loadDesign(row);
     S.row = row; floorEl.classList.add('busy'); side.replaceChildren(H('div', { class: 'df-loading' }, `Loading ${row.label}…`));
     m = await loadModel(row, opts.base || DATA_BASE);
     if (S.row !== row) return;
+    await dz; if (S.row !== row) return;
     floorEl.classList.remove('busy');
-    map = data ? tokenMapping(m, data) : null;
+    map = data ? tokenMapping(m, data, currentClassBlocks()) : null;
     if (data && !S.chosen && map.mappedLinks === 0) {   // canonical revision carries none of this token's links: use the next one
       const alt = rows.find((r) => r !== row && !S.tried.has(r.id));
       S.tried.add(row.id);
@@ -169,7 +185,7 @@ export async function mountDataflow(root, opts) {
     const c = m.rec.coverage;
     const parts = [`${c.links.toLocaleString()} links · ${c.blocks.toLocaleString()} blocks · ${c.pin_ends ? 'pin centroids' : 'block outlines (pins not published)'}${c.unplaced ? ` · ${c.unplaced} unplaced` : ''}`,
       `cut max ${cmAll.max.toFixed(2)} (${cmAll.over} window${cmAll.over === 1 ? '' : 's'} > ${cmAll.limit})`];
-    if (map) parts.push(`token mapping: ${(map.coverage * 100).toFixed(1)} % of operator cycles land on blocks of this die${map.unmapped.length ? `; not on this die: ${[...new Set(map.unmapped)].join(', ')}` : ''}; ${map.mappedLinks.toLocaleString()} links join mapped blocks`);
+    if (map) parts.push(`token mapping${map.current ? ' (current plan: operator class -> its types / cores, token_design_rules.json)' : ' (October instance globs)'}: ${(map.coverage * 100).toFixed(1)} % of operator cycles land on blocks of this die${map.unmapped.length ? `; not on this die: ${[...new Set(map.unmapped)].join(', ')}` : ''}; ${map.mappedLinks.toLocaleString()} links join mapped blocks`);
     cov.textContent = (S.note ? S.note + ' ' : '') + parts.join(' · ');
   }
 
