@@ -1758,6 +1758,8 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                                      **({"street_pair": True} if (DME_STREET_PAIR and rn in DME_STREET_PAIR) else {}),
                                      **({"split": DME_SPLIT[rn]} if (DME_SPLIT and rn in DME_SPLIT) else {}),
                                      **({"merge_parts": True} if (DME_MERGE_PARTS and rn in DME_MERGE_PARTS) else {}),
+                                     **({"seam_groups": DME_SEAM_GROUPS[rn]} if (DME_SEAM_GROUPS and rn in DME_SEAM_GROUPS)
+                                        else {}),
                                      **({"vgap": True} if (DME_VGAP == "all" or (DME_VGAP and rn in DME_VGAP)) else {}),
                                      **({"vgap_avoid": DME_VGAP_AVOID[rn]} if (DME_VGAP_AVOID and rn in DME_VGAP_AVOID)
                                         else {}))))
@@ -2016,6 +2018,7 @@ def chain_ps(pts):
     return s
 
 
+DME_SEAM_GROUPS = None   # HEAD-94 opt-in --region-dme-seam-groups FILE.json: {region: [[part/port, part/port, ...], ...]}
 DME_MERGE_PARTS = None   # HEAD-94 opt-in --region-dme-merge-parts REGIONS: {region}; one DME tree over all its partitions
 DME_ACTUAL_MAX_UM = None  # opt-in: one legal physical chain drives both DME cost and emitted buffers
 # HEAD-LEP0N-BAL opt-in --region-dme-actual-max-region REG:UM[,REG:UM] (with --region-dme-actual-max): the listed regions
@@ -2530,7 +2533,7 @@ def _street_columns(site, taps, pos, gap_um, pair=False):
 
 def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MODES, rep_um=None, delay_rep_um=None,
                     early=None, snake=False, early_mode="hang", street=False, street_pair=False, split=None,
-                    vgap=False, vgap_avoid=None, merge_parts=False):
+                    vgap=False, vgap_avoid=None, merge_parts=False, seam_groups=None):
     """DIE-QC-3 opt-in (--region-dme): a region clock tree built ON legal sites, so nothing slides after balancing.
     Embedding: bottom-up DME with Manhattan length as the delay proxy (repeated 1x line: delay ~ linear in length);
     every merge point is the legal zero-skew point from merge_point() (no slide, no snake; an elongated merge point is
@@ -2739,6 +2742,26 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
     if late and not byp:
         byp[late[0][0]] = late
         late = []
+    if seam_groups and not street:
+        # HEAD-94 opt-in --region-dme-seam-groups: each group ["part/port", ...] (a seam launch tap and its capture tap in a
+        # sibling partition) is lifted out of its partition tree into its OWN small DME subtree, joined at the region
+        # partition-root cut like any partition root, so the pair shares every clock node above its subtree (CRPR cancels it)
+        # and its non-common path is the subtree only.  Everything else keeps its per-partition tree.
+        for gi, grp in enumerate(seam_groups):
+            want = [tuple(g.split("/", 1)) for g in grp]
+            mem = [t for pn in sorted(byp) for t in byp[pn]
+                   if any(t[0] == wp and (str(t[1]) == wt or str(t[1]).endswith("__" + wt)) for wp, wt in want)]
+            if len(mem) < 2 or len({t[0] for t in mem}) < 2:
+                # a declared group that does not match is a plan/tap-name error, never a silent no-op
+                raise ValueError(f"--region-dme-seam-groups group {grp}: matched {len(mem)} tap(s) in "
+                                 f"{len({t[0] for t in mem})} partition(s) of this region (need >= 2 taps in >= 2 partitions)")
+            if True:
+                ids = {id(t) for t in mem}
+                for pn in list(byp):
+                    byp[pn] = [t for t in byp[pn] if id(t) not in ids]
+                    if not byp[pn]:
+                        del byp[pn]
+                byp[f"seam#{gi}"] = mem
     if merge_parts and not street and len(byp) > 1:
         # HEAD-94 opt-in --region-dme-merge-parts: ONE DME tree over every partition of the region (sink identities and
         # the per-tap partition name are untouched; only the topology grouping changes).  A seam launch flop and its
@@ -5920,6 +5943,10 @@ def main(argv=None):
     k.add_argument("--region-dme-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in coherent physical DME legs: price and emit one snapped reachable repeater chain; "
                         "geometry-derived paired detours before merge balancing, default unchanged")
+    k.add_argument("--region-dme-seam-groups", default=None, metavar="FILE.json",
+                   help="HEAD-94 opt-in (with --region-dme): JSON {region: [[\"part/port\", ...], ...]}; each group's taps "
+                        "(a seam launch tap and its capture tap in a sibling partition) form their own DME subtree; "
+                        "unlisted regions and taps unchanged")
     k.add_argument("--region-dme-merge-parts", default=None, metavar="REGIONS",
                    help="HEAD-94 opt-in (with --region-dme): comma list of DME regions whose partitions are embedded as ONE "
                         "tree (seam launch and capture taps of sibling partitions share the lowest merge node); unlisted "
@@ -6050,6 +6077,9 @@ def main(argv=None):
         DME_VGAP_AVOID = {k: tuple(v) for k, v in DME_VGAP_AVOID.items()}
     _vg = getattr(a, "region_dme_vgap", None)
     DME_VGAP = None if not _vg else ("all" if _vg == "all" else {x.strip() for x in _vg.split(",") if x.strip()})
+    global DME_SEAM_GROUPS
+    _sg = getattr(a, "region_dme_seam_groups", None)
+    DME_SEAM_GROUPS = {k: [list(g) for g in v] for k, v in json.load(open(_sg)).items()} if _sg else None
     global DME_MERGE_PARTS
     _mp = getattr(a, "region_dme_merge_parts", None)
     DME_MERGE_PARTS = {x.strip() for x in _mp.split(",") if x.strip()} if _mp else None
