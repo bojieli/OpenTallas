@@ -12,7 +12,7 @@ Git dir: intel1:/srv/opentallas-scratch2/claude/tok-verify-1/repo (origin = inte
 Run root: intel1:/srv/opentallas-scratch2/claude/tok-verify-2 (scripts s81tok.sh, s81tok_v2.sh; run dirs per name).
 
 ## 3 Running jobs
-- S81 token check on main d767dc851b: ot-run client on intel2 (nohup, launched 06:5x), unit oth-ubuntu-1047818-1794494842 on intel1.
+- none (main_d767 finished, exit 0).
   Run dir intel1:/srv/opentallas-scratch2/claude/tok-verify-2/main_d767 ; log intel2:~/tok-verify-2-logs/main_d767.otrun.log
   Check: `ssh intel2 'tail ~/tok-verify-2-logs/main_d767.otrun.log'` -> ends with DONE (or FSA/CC rc!=0, FROOT_FAIL).
 
@@ -20,7 +20,7 @@ Run root: intel1:/srv/opentallas-scratch2/claude/tok-verify-2 (scripts s81tok.sh
 None on hosts. (Local Claude-side waits only.) Codex: just poll the log above.
 
 ## 5 Results not yet posted
-None yet. Reference: TOK-VERIFY-1 S81 baseline AR 769.02 / MTP 2691.86 (dfaf, re-confirmed 0 delta on ef870e b2).
+Posted 07:4x RESULT main d767 PASS: compile identical to b2, compose AR 769.6 / MTP 2700.0 (new reference, run dir main_d767). Older reference: TOK-VERIFY-1 S81 baseline AR 769.02 / MTP 2691.86 (dfaf, re-confirmed 0 delta on ef870e b2).
 Prior b2 compile on ef870e: CC rc 0 all; L0 65 ops (PARTIAL 41 LOWERED 24) rows 949; L2 83 ops rows 1271; L14 92 ops rows 955; L20 84 ops rows 951; HEAD 8 ops rows 98.
 
 ## 6 Next steps
