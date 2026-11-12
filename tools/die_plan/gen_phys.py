@@ -1353,6 +1353,14 @@ def tap_pins(P, tn):
         rs = tuple(RT.in_pin(P, tn))
     else:
         rs = tuple(tap_points(P, tn)[1])
+    # HEAD-94 11-12 (hd_st_n4 GRT-0209 'Pin arst_n is completely outside the die area'): a plan reset.in_sites site left outside a
+    # CROPPED outline (lepB 1123.2 -> 993.6, in_site x 1115.04) must still give a legal pin.  Clamp ONLY the physical pin into the
+    # type outline; the reset-tree solver keeps its own (unclamped) IN site, so no reset depth / relay changes anywhere in the die
+    # (moving the site itself re-solved the signed hd_tile tree).  Inside sites are untouched (byte-identical kits).
+    _ow, _oh = P.types[tn]["outline_um"]
+    _m = 2 * PIN_LEN_UM
+    if not (0.0 <= rs[0] <= _ow and 0.0 <= rs[1] <= _oh):
+        rs = (min(max(rs[0], _m), _ow - _m), min(max(rs[1], _m), _oh - _m))
     st = [("start_i",) + tuple(RT.start_in_pin(P, tn))] if RT.start_broadcast(P) and not P.types[tn].get("hard") else []
     base_clocks = clock_pins(P, tn) + core_tap_pins(P, tn)
     edge_clocks = [e[:3] for e in edge_clock_pins(P, tn)]
