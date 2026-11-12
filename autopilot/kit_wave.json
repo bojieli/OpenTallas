@@ -5273,19 +5273,6 @@
     "svc_lo_dsdv_svc_rs__t7": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
     "svc_lo_dsdv_svc_rs_w__t1": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
     "bk_sel__t2": "REDESIGN reach: q<->c / g->q pin-to-pin links up to 1530 um with no relay (CPL-S81-MISC), FIRM stations + pin cycles after 12:00 (KW-FIX-43 11-11 DIE-S81-85); out of the 12:00 S81 batch",
-    "col_h10_r0_p1__t1__cl574cc59d": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h10_r0_p1__t1__cl911743eb": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h10_r0_p4__t1": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p1__t1": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p2__t1__cl0045af7b": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p2__t1__cl9f71e63d": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p3__t1__cl0cd90c0e": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p3__t1__cl31d0dc4b": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p3__t1__cl8ce97bcb": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p4__t1__cl8ef405e8": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p4__t1__clcb2fbfe8": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p5__t1": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
-    "col_h9_r0_p6__t1": "KW-FIX-45 11-11 20:2x DIE-S81-87 correction: frame col kits in out_r7b are stale (go_bf skew); hold until the rebind out_r7c (asbuilt_f_s87b.json) is clean, then launch from out_r7c",
     "dsdv_slice_c1x_C__t9": "DIE-S81-87 HOLD list (c1x_C t9): stays held (COORD S81 PAUSE LIFT); re-held by KW-FIX-45 after the VIS-SWEEP batch included it"
    },
    "queue_src": "main@c6c0f5cf65d2",
@@ -9474,107 +9461,134 @@
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
     "col_h10_r0_p1__t1__cl574cc59d": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h10_r0_p1__t1__cl911743eb": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "prev_kw43six": {
-      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-      "kit_rtl": {
-       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-      },
-      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h10_r0_p4__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "prev_kw43six": {
-      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-      "kit_rtl": {
-       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-      },
-      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p1__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p2__t1__cl0045af7b": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p2__t1__cl9f71e63d": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p3__t1__cl0cd90c0e": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p3__t1__cl31d0dc4b": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "prev_kw43six": {
-      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-      "kit_rtl": {
-       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-      },
-      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p3__t1__cl8ce97bcb": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p4__t1__cl8ef405e8": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p4__t1__clcb2fbfe8": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p5__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "col_h9_r0_p6__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
+     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
+     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+     "queue_src": "main@c6c0f5cf65d2",
      "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
+      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
+      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
      },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
+     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
     },
     "dsdv_slice_c1x_C__t1": {
      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
