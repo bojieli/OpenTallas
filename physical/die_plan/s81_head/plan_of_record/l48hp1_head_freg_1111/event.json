@@ -1,0 +1,27 @@
+{
+ "event": "HEAD FREG-DECL-1 marking event (COORD P1 'land the check together with HEAD-94's marking event'), HEAD-94 11-11",
+ "stage": "S3 plan + bind-sidecar event",
+ "audit": "queue RESULT 'P1 FREG audit, per-port verdict' (hd_st_n4 x4 counted, hd_ctl_n x2 and hd_turn_a x12 not counted)",
+ "base": {"plan": "l48hp1_head_tx_1111/source_plan_tx.json.gz (on main, 479e8c2ed0a5)", "sidecar": "l48hp1/source_sidecar.json.gz (on main)"},
+ "result": {
+  "plan": "source_plan_freg.json.gz sha256 e5cc216807021c7fb76182efd8fef7204412bde80a793c40d8ab13163b0dd1b8",
+  "sidecar": "source_sidecar_freg.json.gz (uncompressed sha256 dc30c710b8d114fd9d64e6c808f5edc32edb94488f0ae7b87fd6022945d7c796)",
+  "lat": "lat/s81_head_lat_pkg.sv, lat/s81_head_latency.json (regenerated with gen.write_latency)"
+ },
+ "apply": [
+  "python3 -I freg_mark_event.py REPO BASE_PLAN SIDECAR OUT   (asserts 18 FREG ports = 4 st_n4 + 14 others, and plan count_aligned_cycles == sidecar sched_lat == source added_cycles before touching them)",
+  "prepare_cut.py as in l48hp1_head_cut1111, then apply_sidecar.py PREP OUT/source_sidecar.json (refreshes wave_prepare sidecar_sha256), then republish.py"
+ ],
+ "changes": {
+  "mark_only": "hd_st_n4: coll_WN1_u__1, coll_WN1_d__0, coll_WN2_u__3, coll_WN2_d__0 -> count_aligned.ports[pid].freg = 1",
+  "raise_and_mark": "hd_ctl_n: coll_WN3_u__0, coll_WN3_d__0; hd_turn_a: chE0..5_t__0, chW0..5_t__0 -> sched_lat +1 (2 -> 3), stored K +1, source sidecar ports[].added_cycles +1, plan clock.landing_network.count_aligned_cycles +1, freg = 1",
+  "lanes": "coll_WN3_u/d 12 -> 13, chE0..5_t / chW0..5_t 13 -> 14 (cycles, natural, clock_landing); nothing else changes"
+ },
+ "cycles_declared": "+1 data cycle on 14 crossings: the row-pair chain U-turn t_i (12) and the WN3 collector into hd_ctl_n (2). TOK-VERIFY-1 prices (owner rule <= 1% per die).",
+ "gates": {
+  "g0": "153 -> 153, 0 new",
+  "fregcheck": "claude/cland-fregcheck-1111@1ece4481e7 applied on the tree: old sidecar FAILS in the generator ('landing_ring_wreg.freg adds one data cycle but the bind sidecar port does not declare it', coll_WN2_d__0) = negative control; new sidecar: kit_rtl export rc 0 for hd_st_n4 and hd_turn_a (published wrappers republished for st_n4), hd_ctl_n rc 0 on the unrepublished wrapper (token-identical)",
+  "signed_views": "hd_turn_a and hd_ctl_n: the export compares the regenerated wrapper against the published (signed) wrapper token by token and passes with the new sidecar and the unchanged published wrapper, so the receiver RTL and K ring parameters of the signed views are unchanged; only the schedule ledger (sched_lat, lane latency) moves. They count again after the parent re-check. hd_st_n4 is rebuilt under lepB anyway."
+ },
+ "status": "DO_NOT_COUNT"
+}
