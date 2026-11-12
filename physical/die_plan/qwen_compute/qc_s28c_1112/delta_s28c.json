@@ -1,0 +1,54 @@
+{
+ "partition_types": {
+  "cbx_q10__cl89936551": {
+   "internal_stations": [
+    {
+     "conn": "bus:y_o21",
+     "from_um": [
+      228.552,
+      2531.52
+     ],
+     "to_um": [
+      544.224,
+      2356.871
+     ],
+     "regs_um": [
+      [
+       557.28,
+       2496.96
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t21.n_y",
+     "capture": "face flop",
+     "note": "QC-S28-C 11-12: re-sited for the s22 orient of u_t21 (n_y pins on its centre-street face); was to (77.856, 2356.871) / reg (34.56, 2522.88) = pre-s22 R0 W-face site in the NW landing corner; 1 FIRM station, same count, +0 cycles (EQ by construction); hops 153.1 / 363.3 um <= 405"
+    }
+   ]
+  },
+  "cbx_q10__cl94a12200": {
+   "internal_stations": [
+    {
+     "conn": "bus:y_o21",
+     "from_um": [
+      228.552,
+      2531.52
+     ],
+     "to_um": [
+      544.224,
+      2356.871
+     ],
+     "regs_um": [
+      [
+       557.28,
+       2496.96
+      ]
+     ],
+     "bits": 515,
+     "launch": "u_t21.n_y",
+     "capture": "face flop",
+     "note": "QC-S28-C 11-12: re-sited for the s22 orient of u_t21 (n_y pins on its centre-street face); was to (77.856, 2356.871) / reg (34.56, 2522.88) = pre-s22 R0 W-face site in the NW landing corner; 1 FIRM station, same count, +0 cycles (EQ by construction); hops 153.1 / 363.3 um <= 405"
+    }
+   ]
+  }
+ }
+}
