@@ -108,13 +108,20 @@ def kit_windows(kd):
     return next(_find(json.loads((Path(kd) / "sdc_lint.json").read_text()), "tap_window_port_ps"))
 
 
+def kit_landed(kd):
+    """the kit's generated landed_clock_inputs (sdc_lint.json)"""
+    return next(_find(json.loads((Path(kd) / "sdc_lint.json").read_text()), "landed_clock_inputs"))
+
+
 def sync_profile(prof, roots_doc, sources):
     """B3b-class profile desync: add to root_profile.json exactly the roots native_root_pins.json declares and the
     profile lacks, each value from its source table {side: (label, {root: ps})}.  Fail-closed: existing values are
     never changed, and a source that disagrees with one or lacks a missing root refuses.  -> (doc, receipt)"""
     doc = copy.deepcopy(prof)
     rec = {}
-    for side, (label, table) in sorted(sources.items()):
+    for side, src in sorted(sources.items()):
+        label, table = src[0], src[1]
+        kit_landed = src[2] if len(src) > 2 else None
         key = ROOTKEY[side]
         ch = doc["children"][key]
         pw = ch["tap_window_port_ps"]
@@ -130,22 +137,38 @@ def sync_profile(prof, roots_doc, sources):
         if lack:
             raise SystemExit(f"root_profile {key}: {label} has no window for {lack}")
         added = {k: float(table[k]) for k in missing}
+        landed_added = []
+        if kit_landed is not None:
+            # landed_clock_inputs: add only roots declared, landed in the kit and fclk_in_* (profile_check's rule);
+            # every existing entry must be landed in the kit too and stays where it is
+            pl = list(ch.get("landed_clock_inputs", []))
+            gone = sorted(set(pl) - set(kit_landed))
+            if gone:
+                raise SystemExit(f"root_profile {key}: {label} does not land existing landed roots {gone[:6]}")
+            odd = sorted(k for k in kit_landed if k not in declared or not k.startswith("fclk_in_"))
+            if odd:
+                raise SystemExit(f"root_profile {key}: {label} lands undeclared or non-fclk_in_ roots {odd[:6]}")
+            landed_added = sorted(set(kit_landed) - set(pl))
+            if landed_added:
+                ch["landed_clock_inputs"] = pl + landed_added
         pw.update(added)
         ch["tap_window_port_ps"] = dict(sorted(pw.items()))
         old_n = ch.get("roots")
         if "roots" in ch:
             ch["roots"] = len(declared)
-        if added:
+        pending = sorted(set(added) | set(landed_added))
+        if pending:
             # profile_check.py's inputs (--source-sdc / --abi abi_map.json / --source-sync) are not in the repo, so the
             # lint is not re-run: the old verdict is scoped to the roots it saw and the added ones are lint_pending
             for f in ("lint", "mutants"):
                 if f in ch:
                     ch[f] = f"{ch[f]} [11-06 profile_check run (57f24fbed1): {old_n} roots only; not re-run]"
-            ch["lint_pending"] = sorted(added)
-            ch["lint_pending_reason"] = ("window added by S81-T51-PINFIX-2 root_profile sync from " + label +
+            ch["lint_pending"] = pending
+            ch["lint_pending_reason"] = ("window / landed entry added by S81-T51-PINFIX-2 root_profile sync from " + label +
                                          "; profile_check.py inputs (source SDC, abi_map.json, source_sync) not in repo")
         rec[side] = dict(added={k: dict(ps=v, source=f"{label}:tap_window_port_ps[{k}]") for k, v in added.items()},
-                         unchanged=len(pw) - len(added), roots=[old_n, ch.get("roots")])
+                         unchanged=len(pw) - len(added), roots=[old_n, ch.get("roots")],
+                         landed_added={k: f"{label}:landed_clock_inputs" for k in landed_added})
     return doc, rec
 
 
@@ -213,7 +236,8 @@ def stage(plan_p, repo, out, window_kits=None):
     if window_kits:
         prof = json.loads((repo / PROFILE).read_text())
         doc, rec["root_profile_sync"] = sync_profile(
-            prof, roots_doc, {s: (f"{Path(k).name}/sdc_lint.json", kit_windows(k)) for s, k in window_kits.items()})
+            prof, roots_doc, {s: (f"{Path(k).name}/sdc_lint.json", kit_windows(k), kit_landed(k))
+                              for s, k in window_kits.items()})
         # reported, not synced: landed_clock_inputs of the profile vs the kit's lint context
         for s_, k in window_kits.items():
             kl = next(_find(json.loads((Path(k) / "sdc_lint.json").read_text()), "landed_clock_inputs"))

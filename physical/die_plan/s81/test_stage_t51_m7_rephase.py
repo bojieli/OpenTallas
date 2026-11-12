@@ -109,3 +109,31 @@ def test_profile_sync_fail_closed(table, msg):
     prof, roots = _prof()
     with pytest.raises(SystemExit, match=msg):
         st.sync_profile(prof, roots, {"e": ("kE", table)})
+
+
+def _prof_landed():
+    roots = {"ot_s81_station_t51_native_w": {"ports": {"clk_t1": {}, "fclk_in_ft2_i": {}, "fclk_in_cland_dn_0": {}}},
+             "ot_s81_station_t51_native_e": {"ports": {}}}
+    prof = {"children": {"ot_s81_station_t51_native_w": {
+        "tap_window_port_ps": {"clk_t1": 33.0, "fclk_in_ft2_i": 140.0, "fclk_in_cland_dn_0": 140.0},
+        "landed_clock_inputs": ["fclk_in_ft2_i"], "roots": 3, "lint": "PASS"}}}
+    return prof, roots
+
+
+def test_profile_sync_adds_kit_landed_fclk_root():
+    prof, roots = _prof_landed()
+    tab = prof["children"]["ot_s81_station_t51_native_w"]["tap_window_port_ps"]
+    doc, rec = st.sync_profile(prof, roots, {"w": ("kW", tab, ["fclk_in_ft2_i", "fclk_in_cland_dn_0"])})
+    w = doc["children"]["ot_s81_station_t51_native_w"]
+    assert w["landed_clock_inputs"] == ["fclk_in_ft2_i", "fclk_in_cland_dn_0"]
+    assert w["lint_pending"] == ["fclk_in_cland_dn_0"] and rec["w"]["landed_added"] == {"fclk_in_cland_dn_0": "kW:landed_clock_inputs"}
+
+
+@pytest.mark.parametrize("landed, msg", [(["fclk_in_cland_dn_0"], "does not land existing"),
+                                         (["fclk_in_ft2_i", "clk_t1"], "non-fclk_in_"),
+                                         (["fclk_in_ft2_i", "fclk_in_zz"], "undeclared")])
+def test_profile_sync_landed_fail_closed(landed, msg):
+    prof, roots = _prof_landed()
+    tab = prof["children"]["ot_s81_station_t51_native_w"]["tap_window_port_ps"]
+    with pytest.raises(SystemExit, match=msg):
+        st.sync_profile(prof, roots, {"w": ("kW", tab, landed)})
