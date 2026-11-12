@@ -53,7 +53,7 @@ def test_delta_160_no_lockup_listed(monkeypatch):
 def test_delta_160_with_lockup_not_listed(monkeypatch):
     R, s = _run(monkeypatch, _plan(_tw(160, 0), {"types": ["T"], "xtap_flop": {"T": {"ft5": [0]}}}))
     assert s["hops"] == 0 and s["latch_only"] == 0
-    assert "[xtap-count] 0 unlocked" in R.items[-1]["msg"]
+    assert R.items == []            # clean plan: no item, counts stay in the summary
 
 
 def test_latch_only_counted_not_listed(monkeypatch):
@@ -79,3 +79,44 @@ def test_no_tap_model(monkeypatch):
 def test_flat_window_reports_mode(monkeypatch):
     R, s = _run(monkeypatch, _plan({"window_ps": 160}))
     assert s["mode"] == "flat" and s["hops"] == 0 and s["flat_xtap_hops"] == 1
+
+
+# ---- tap sink cap (ERROR) ----
+import taps as TP  # noqa: E402
+
+
+def _cap_run(monkeypatch, n, clock=None):
+    clock = clock or {}
+    P = types.SimpleNamespace(types={"T": {"clock": clock, "outline_um": [600, 200]}})
+    monkeypatch.setattr(S, "tap_grid", lambda P_, tn: TAPS)
+    monkeypatch.setattr(TP, "sink_sites", lambda P_, tn: [(100.0, 100.0, 1.0)] * n + [(500.0, 100.0, 1.0)] * 10)
+    R = C.Report()
+    return R, C.check_tap_sink_cap(P, R)
+
+
+def test_tap_3001_error(monkeypatch):
+    R, s = _cap_run(monkeypatch, 3001)
+    assert s["taps_over"] == 1 and s["worst"] == 3001
+    e = R.errors()
+    assert len(e) == 1 and "type T tap clk: 3001 clock sinks > cap 3000" in e[0]["msg"]
+
+
+def test_tap_3000_clean(monkeypatch):
+    R, s = _cap_run(monkeypatch, 3000)
+    assert s["taps_over"] == 0 and not R.errors()
+
+
+def test_tap_cap_from_plan_and_density(monkeypatch):
+    R, s = _cap_run(monkeypatch, 1600, {"tap_mode": "density"})
+    assert s["taps_over"] == 1                       # density cap 1500 (gen_phys._tap_cap)
+    R, s = _cap_run(monkeypatch, 1600, {"tap_max_sinks": 2000})
+    assert s["taps_over"] == 0
+
+
+def test_tap_uncomputable_not_guessed(monkeypatch):
+    P = types.SimpleNamespace(types={"T": {"clock": {}}})
+    monkeypatch.setattr(S, "tap_grid", lambda P_, tn: TAPS)
+    monkeypatch.setattr(TP, "sink_sites", lambda P_, tn: (_ for _ in ()).throw(ValueError("no sidecar")))
+    R = C.Report()
+    s = C.check_tap_sink_cap(P, R)
+    assert s["uncomputable"] == 1 and s["taps_over"] == 0 and not R.errors()
