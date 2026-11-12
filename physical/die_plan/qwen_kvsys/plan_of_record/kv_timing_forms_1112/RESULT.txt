@@ -41,3 +41,6 @@ FORM 3  landing ring (hub_Ei, io_cor, io_cor_v1, io_ft_v1, sys_SD_v1)
   kv3_sys_SD_v1 cland_origin -> dsel (a +1 cycle there is a FREG / latency row; not derived).
 
 FORM 4  ft station chain hold: not started here (hold pads = kit hold step KW-FIX-45; re-site = VISLAYOUT3-KVHEAD positions).
+
+UPDATE 11-12 (later): vK2 = vJ c4a97b63 + phy relays WITH u_ist sinks (needs bind.py applying port_relays after station materialization, branch claude/bind-relay-after-ist-1112) + dsrep 8 (io_cor, io_cor_v1) + hub_Ei FREG (hubei_freg_event.py; lane L754 24 -> 25).  vK2 plan md5 c7f584193cb990b0fff834d789ac2167, sidecar 530a93c06c7db03f090cca13bc51796a, G0 slot-keyed 130 -> 130 0 new.  phy_reset_relays.py skips u_ist_* unless --include-ist.
+Form 1 LEC (yosys, W=66, SEL_CHUNK 8, SEL_RSTC 4 vs 0, eq_chunk.py renaming): 3195 of 3231 equiv cells proven, 36 UNPROVEN, equiv_status -assert fails = NOT an equivalence proof (unidentified). Full W=522 run exceeded 1800 s. Default-parameter compare vs main (plain script lec.sh) left 8353 unproven = naming setup, inconclusive.

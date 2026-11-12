@@ -18,6 +18,7 @@ REACH = 405.0
 HOP = REACH * 0.98
 CLUSTER_R = 300.0
 TYPES = ("kv3_phy", "kv3_phy_v1")
+INCLUDE_IST = "--include-ist" in sys.argv
 
 
 def man(a, b):
@@ -35,6 +36,8 @@ def sinks_of(t, d, txt):
         n, body = m[2], m[3]
         if not re.search(r"\.rst_n\(rst_n\)", body):
             continue
+        if n.startswith("u_ist_") and not INCLUDE_IST:
+            continue   # bind applies port_relays BEFORE kit_istations adds u_ist_*; not an emitted ot_dp_st at that stage
         p = None
         mm = re.fullmatch(r"u_ist_(\w+?)_(\d+)", n)
         if mm and mm[1] in ist:
@@ -142,7 +145,7 @@ def apply(plan, bound_dir):
 
 
 if __name__ == "__main__":
-    a = [x for x in sys.argv[1:] if not x.startswith("--")]
+    a = [x for x in sys.argv[1:] if x != "--include-ist" and not x.startswith("--")]
     rp = sys.argv[sys.argv.index("--report") + 1] if "--report" in sys.argv else None
     if rp:
         a = [x for x in a if x != rp]

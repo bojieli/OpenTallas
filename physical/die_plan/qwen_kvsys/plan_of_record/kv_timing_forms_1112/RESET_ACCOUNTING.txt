@@ -1,0 +1,8 @@
+KV reset accounting, KV-TIMING-FORMS-1 2026-11-12 (COORD ruling relayed by DIE-KV-98: form-2 relay boot offset APPROVED).
+kv3_phy: port_relays rows rg0..rg4 (depth 1,2,1,2,1) in addition to hrst (depth 2): sinks release 1-2 clocks after the rest of the wrapper.
+kv3_phy_v1: rows rg0..rg5 (depth 1,2,1,2,1,3): sinks release 1-3 clocks later.
+Observable effect (lockstep bench vF bound RTL, early and late start): station epoch bits of the six PI buses (and ft0_o of kv3_phy_v1)
+stay 0 for up to 3 clocks longer after each reset release; data bits equal.  Covered by the boot hold rst_n >= 64 clk (OWNER 10-29):
+no stage reads those epochs before the start broadcast.  Reset-only: 0 tok/s, 0 data cycles, no latency-table row.
+kv3_sys_SD / _v1 (SEL_RSTC=4): wsel/rsel copies release 1 clock after the FIFO pointers; unobservable (first wr_fire/rd_fire >= 2 clocks after release).
+Compiler/bench consumers: treat PHY-pin epoch release as release(type) + max relay depth (kv3_phy +2, kv3_phy_v1 +3).
