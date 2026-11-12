@@ -140,6 +140,8 @@ def main():
     for idx, rec in enumerate(recs):
         G = G + 2
         ev, end, legal = schedule(rec, G, pin_in)
+        if legal:
+            end += resp_shift         # rd1: ack/end window follows the response edge (+N)
         # golden (hgi_sim.machine.u_idx_topk semantics): rows in order against the CURRENT VM (earlier records'
         # writes included); a NaN row faults the record and it and later rows write nothing, earlier rows stand.
         mem = mirror_mem if rec['am'] else expect
