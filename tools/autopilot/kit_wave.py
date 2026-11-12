@@ -6131,6 +6131,18 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
             continue
         latest[k] = max(latest.get(k, 0.0), t)
     dropped = {}
+    # KW-FIX-45 11-11 (su_l0 @2 and the HBM pilot stayed stale after remove + re-add): a retry entry that is ABSENT from the
+    # config at this pass loses its first-seen record, so re-adding it later is a fresh release (the documented re-arm).
+    # Limited to dies that still carry a retry list, so an empty/unsynced list of a die never wipes anything.
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("retry"):
+            continue
+        ev = d.get("event") or ""
+        present = {retry_seen_key(die, ev, ia) for ia in d["retry"]}
+        pre = f"{die}|{ev}|" if ev else f"{die}|"
+        for tab in (seen, st.setdefault("retry_stale_logged", {})):
+            for k in [k for k in tab if k.startswith(pre) and k not in present]:
+                del tab[k]
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict) or not d.get("retry"):
             continue
