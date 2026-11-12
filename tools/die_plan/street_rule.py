@@ -64,7 +64,7 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
-                add_regs=0)
+                add_regs=0, pin_reorder=0, x_pin_factor=1.0)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
@@ -135,11 +135,19 @@ def pair_rule(a, b, cfg):
     else:
         return None
     pa, pb = face_count(a, fa, lo, hi, b["inst"]), face_count(b, fb, lo, hi, a["inst"])
+    reorder = 0
     if not a.get("has_conns") and not b.get("has_conns") and pa and pb:
         # no core_conns for either core (native split seams): one-to-one aligned pin pairs cross the gap straight
         m = aligned_pairs(face_pos(a, fa, lo, hi), face_pos(b, fb, lo, hi))
+        if cfg.get("pin_reorder"):
+            # lever (b), owner 11-12: the two faces carry the same nets -> pin order matched so they go straight across
+            reorder = min(pa, pb) - m
+            m = min(pa, pb)
         pa, pb = pa - m, pb - m
-    r = dict(axis=axis, gap=round(gap, 4), pins=[pa, pb], faces=[fa, fb], span=round(hi - lo, 2))
+    if axis == "x" and cfg.get("x_pin_factor", 1.0) != 1.0:
+        # lever (d), owner 11-12: S81 BUS-GEAR (B) 2:1 x feed halves the facing E/W pins
+        pa, pb = int(-(-pa * cfg["x_pin_factor"] // 1)), int(-(-pb * cfg["x_pin_factor"] // 1))
+    r = dict(axis=axis, gap=round(gap, 4), pins=[pa, pb], faces=[fa, fb], span=round(hi - lo, 2), pin_reorder=reorder)
     if gap < cfg["abut_um"] - EPS:
         big = max(pa, pb) > cfg["wall_pins"] and min(pa, pb) >= cfg["pinface_min"]
         r.update(kind="wall" if big else "abut", need=cfg["wall_min_um"] if big else 0.0)
@@ -158,6 +166,8 @@ def outline_rule(c, W, H, cfg, windows=None):
         if gap < cfg["abut_um"] - EPS:
             continue
         p = face_count(c, face, lo, hi, windows=windows)
+        if face in "WE" and cfg.get("x_pin_factor", 1.0) != 1.0:
+            p = int(-(-p * cfg["x_pin_factor"] // 1))
         nd = need_um(p, cfg)
         if p < cfg["pinface_min"] and gap <= cfg["outline_margin_um"] + EPS:
             continue          # the plan's standard edge margin, no pins into it
@@ -748,6 +758,8 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     L_base = list(M.L)
     on_core0 = lambda p: M.owner(p, tol=-0.01) is not None   # noqa: E731
 
+    lmeta = link_meta(M, conns) if cfg["add_regs"] > 0 else {}
+
     def attempt(fixed_k, fix_ft=False):
         grow_ax = cfg.get("grow_axes", "xy")
         M.reset_state()
@@ -815,15 +827,24 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
         new_over = [q for q in range(len(M.L)) if M.L[q][3] != "station" and M.llen(q) > reach_ + 0.01 and len0[q] <= reach_ + 0.01]
         longer = [(M.llen(q) - len0[q]) for q in range(len(M.L)) if M.L[q][3] != "station" and len0[q] > reach_ + 0.01
                   and M.llen(q) > len0[q] + 0.01]
+        added_ln = []
+        if cfg["add_regs"] > 0 and new_over:
+            added_ln = add_link_stations(M, tnew, new_over, lmeta, ccfg["reach"], int(cfg["add_regs"]))
+            done_q = {d["link"] for d in added_ln}
+            new_over = [q for q in new_over if q not in done_q]
         tviol = len(new_over)
         under = points_under_cores(tnew)
         fthop = ft_hop_check_added(t, tnew, cfg["reach_limit_um"]) if added_ft else ft_hop_check(t, tnew, cfg["reach_limit_um"])
         t_eq = t
-        if added_st or added_ft:
+        if added_st or added_ft or added_ln:
             # the added stages are the only allowed structural change: compare against the base with those lists
             t_eq = copy.deepcopy(t)
             for d in added_st:
                 t_eq["internal_stations"][d["station"]]["regs_um"] = tnew["internal_stations"][d["station"]]["regs_um"]
+        if added_ln:
+            t_eq = copy.deepcopy(t_eq)
+            n0 = len(t.get("internal_stations") or [])
+            t_eq.setdefault("internal_stations", []).extend(copy.deepcopy(tnew["internal_stations"][n0:]))
             for k in {d["slot"] for d in added_ft}:
                 for key in ("regs_um", "bit_sites_um", "stations", "note"):
                     if key in tnew["ft_slots"][k]:
@@ -852,7 +873,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             reasons.append("growth %.1f%% > %.0f%%" % (gA, cfg["max_growth_pct"]))
         ok = not reasons
         relaxed = relaxed_n
-        return dict(ok=ok, reasons=reasons, tnew=tnew, added_st=added_st, added_ft=added_ft, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
+        return dict(ok=ok, reasons=reasons, tnew=tnew, added_st=added_st, added_ft=added_ft, added_ln=added_ln, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
                     srep=srep, nov=nov, new_over=new_over, longer=longer, under=under, fthop=fthop, eqbad=eqbad,
                     acc=acc, items=items, blocked=blocked, relaxed=relaxed,
                     timing_over=[dict(kind=M.L[q][3], bits=M.L[q][2], len_um=round(M.llen(q), 1),
@@ -888,9 +909,10 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     ok, reasons, tnew, W, H = R_["ok"], R_["reasons"], R_["tnew"], R_["W"], R_["H"]
     gW, gH, gA, c1, left, moved = R_["gW"], R_["gH"], R_["gA"], R_["c1"], R_["left"], R_["moved"]
     row.update(changed=True, applied=ok, attempts=att + 1, pinned=[M.inst[M.CL[k][0]] for k in sorted(pinned)],
-               ft_fixed=fix_ft, cycles_added=dict(stations=R_["added_st"], ft=R_["added_ft"],
+               ft_fixed=fix_ft, cycles_added=dict(stations=R_["added_st"], ft=R_["added_ft"], new_link_stations=R_["added_ln"],
                                                   total=sum(d["regs_after"] - d["regs_before"] for d in R_["added_st"])
-                                                  + sum(d["added"] for d in R_["added_ft"])),
+                                                  + sum(d["added"] for d in R_["added_ft"])
+                                                  + sum(d["regs"] for d in R_["added_ln"])),
                streets_relaxed_at_pins=R_["relaxed"],
                reason="; ".join(reasons) or ("clean" if not left else "residual %d" % len(left)),
                outline_after=[W, H], growth_pct=dict(W=round(gW, 2), H=round(gH, 2), area=round(gA, 2)),
@@ -986,6 +1008,72 @@ def add_station_regs(M, tnew, idx, reach, add_max):
                      "owner pre-approved)" % (r["length_um"], n0, len(r["regs"]), len(r["regs"]) - n0))
         out.append(dict(station=si, conn=s.get("conn"), launch=s.get("launch"), capture=s.get("capture"),
                         regs_before=n0, regs_after=len(r["regs"]), length_um=r["length_um"]))
+    return out
+
+
+def link_meta(M, conns):
+    """{link index q: (inst, bus, dest, bits)} for the core_conns links of M.L (same walk as TypeModel._links)."""
+    out = {}
+    W, H = M.W, M.H
+    cc_key = next((k for k in (M.name, re.sub(r"__cl[0-9a-f]{8}.*$", "", M.name), re.sub(r"__.*$", "", M.name))
+                   if conns.get(k)), None)
+    cc = conns.get(cc_key) if cc_key else None
+    if not cc:
+        return out
+    bus_pt = {bu["name"]: 1 for bu in M.t.get("buses", []) or [] if bu.get("face")}
+    q = 0
+    st_pairs = set()
+    for s_ in M.t.get("internal_stations", []) or []:
+        la = str(s_.get("launch", ""))
+        if la.startswith("core:"):
+            A, _, bus_ = la[5:].rpartition(".")
+            st_pairs.add((A, bus_, str(s_.get("capture", ""))))
+            st_pairs.add((A, bus_, str(s_.get("capture", "")).rsplit(".", 1)[0]))
+    for inst, ports in cc.items():
+        if inst not in M.idx:
+            continue
+        i = M.idx[inst]
+        for bus, dl in (ports or {}).items():
+            pg = M.lpins[i].get(bus)
+            if not pg or not dl:
+                continue
+            for d in dl:
+                k, _, val = str(d).partition(":")
+                if k == "core":
+                    if val not in M.idx and val.rpartition(".")[0] in M.idx:
+                        val = val.rpartition(".")[0]
+                    if val not in M.idx or (inst, bus, val) in st_pairs:
+                        continue
+                elif not ((k == "bus" and val in bus_pt) or (k == "face" and val in "NSEW")):
+                    continue
+                out[q] = (inst, bus, str(d), int(pg[0]))
+                q += 1
+    del W, H
+    return out
+
+
+def add_link_stations(M, tnew, qs, meta, reach, add_max):
+    """lever (a) for direct links: a core / bus / face link a widened street pushed past reach gets a new internal
+    station with the fewest registers (<= add_max) that bring every hop under reach."""
+    import hub_repack as HR
+    R = _raster(M)
+    out = []
+    for q in qs:
+        if q not in meta:
+            continue
+        inst, bus, dest, bits = meta[q]
+        a_, b_ = M.pt(M.L[q][0]), M.pt(M.L[q][1])
+        r = HR.route_station(R, tuple(a_), tuple(b_), 0, reach)
+        if r is None or not r["regs"] or len(r["regs"]) > add_max:
+            continue
+        tnew.setdefault("internal_stations", []).append(dict(
+            conn=dest, from_um=[round(a_[0], 4), round(a_[1], 4)], to_um=[round(b_[0], 4), round(b_[1], 4)],
+            regs_um=[list(p) for p in r["regs"]], launch="core:%s.%s" % (inst, bus),
+            capture=dest[5:] if dest.startswith("core:") else dest, bits=bits,
+            note="STREET-RULE-1 pass 2: link %s um > reach after the street, +%d cycle(s) (owner pre-approved 11-12)"
+                 % (r["length_um"], len(r["regs"]))))
+        out.append(dict(link=q, launch="core:%s.%s" % (inst, bus), dest=dest, bits=bits, regs=len(r["regs"]),
+                        length_um=r["length_um"]))
     return out
 
 

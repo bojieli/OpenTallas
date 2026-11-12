@@ -260,3 +260,17 @@ def test_add_ft_regs_inserts_stage_on_overlong_hop():
     # the new stage's bit sites are the neighbour's pattern, translated
     (x, y), sites = f1["regs_um"][0][:2], f1["bit_sites_um"][0]
     assert sites == [[round(x, 4), round(y - 0.27, 4)], [round(x, 4), round(y + 0.27, 4)]]
+
+
+def test_pass2_levers_reorder_and_xfeed():
+    cfg = dict(SR.DEFAULTS, pin_reorder=1)
+    a = core("a", 0, 0, 100, 100, {"E": face(20, 0, 100)}, has_conns=False)
+    b = core("b", 117.28, 0, 100, 100, {"W": face(20, 2.5, 102.5)}, has_conns=False)
+    assert SR.pair_rule(a, b, CFG)["kind"] == "street"          # misaligned pins: a street
+    r = SR.pair_rule(a, b, cfg)
+    assert r["pins"] == [0, 0] and r["pin_reorder"] == 20 and r["kind"] == "sliver"   # (b) reordered straight across
+    cfg2 = dict(SR.DEFAULTS, x_pin_factor=0.5)
+    a2 = core("a", 0, 0, 100, 100, {"E": face(1800, 0, 100)})
+    b2 = core("b", 140, 0, 100, 100, {"W": face(1800, 0, 100)})
+    assert SR.pair_rule(a2, b2, CFG)["need"] > SR.pair_rule(a2, b2, cfg2)["need"]   # (d) 2:1 x feed halves the need
+    assert SR.pair_rule(a2, b2, cfg2)["pins"] == [900, 900]
