@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 15:15 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 15:45 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -30,6 +30,9 @@ None (rt_leg done 21:13 UTC; STA re-run in docker because epyc9 has no host sta/
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 15:4x CAP-2000 STEP (posted): 25.3 TT / 25.4 FF, landed 397.88/395.89 PASS, overflow 0, FF contract 37 need 5.57 -> gate FAIL.
+  All 37 = 0-5 ps plan per_port_ps on early-side ports of hd_ctl_n / hd_spn_eshim_rx / hd_spn_wshim_tx; asked HEAD-95 to re-derive
+  (kitwin dp/head/rloop3_sta/kitwin.json + 10). S81 fail-loud type svc_lo_dsdv_svc_rs__t7 told to DIE-S81-88 (hbm_i0 rect_um != rects_um[0]).
 - 2026-11-12 15:0x DELAY-CELL STEP (posted): gate FAIL. 17/41 capped leaves have a channel on their own leg; 24 are 0.25-6.4 mm inside types.
   HB4 measured 51-81 ps TT (125-269 with 126-154 um detours), FF/TT 0.55-0.60 -> ~25 ps FF tracking error per cell. Run2 B: 122.9 TT /
   59.3 FF, landed 316.85/377.24, FF contract 61. Best form still wire step 2. Proposed (a) leaf cap 2000 um on the 41 leaves; awaiting COORD.
@@ -66,10 +69,11 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. On COORD go for (a): rloop variant with per-leaf cap 2000 on rl/lc_leaves.json leaves, from rl/rleafpad2.json (one routed step, rt_leg.sh RUN= D=).
-   If the gate passes -> emit as tool output for HEAD-95 rp17 (no hand edit).
-2. If HEAD-95 SP3n2 fails GRT hold on W/E bin register bars (u_bin_bw_i/u_bin_be_i, like SP2 -110 ps): mine, type-level tap latency item.
-3. Merge lane questions on @b251146029. S81 re-price = DIE-S81-88. KV regeq after DIE-KV-99 vN2e.
+1. Fold rl/rloop*.py (routed re-balance: build -> rt_leg chain -> die STA -> leaf pad, cap 1500 / 2000 on capped leaves) into
+   dieclock_regeq --routed on the branch + test; READY.
+2. HEAD-95 rp17: when they post the frozen plan path, run leg build + model regeq + routed loop as a tool output.
+3. If HEAD-95 SP3n2 fails GRT hold on the W/E bin register bars: mine (type-level tap latency).
+4. Merge lane questions on @b251146029. KV regeq after DIE-KV-99 vN2e.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
