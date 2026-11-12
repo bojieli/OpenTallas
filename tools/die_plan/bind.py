@@ -849,6 +849,23 @@ def instance_path_params(cells, defaults, rules):
 
 
 class Binder:
+    def declare_core_input_pipe(self, tn, p, ci, pn, npipe):
+        """Record the declared +npipe core-input cycles of leaf ci / port pn for EVERY die instance of type tn.
+
+        emit_type writes a type's module once, from its first partition p, and every partition of the type instantiates
+        that module, so every instance carries the ot_dp_dly pipe.  The record (bind_core_input_pipe.json, read by
+        bind_verify / compiler / TOK) is keyed by as-built leaf path; keying it by p's leaf only declared the cycle on the
+        representative partition and bind_verify counted the other instances' +1 as mismatches (QC-EQ-TRIAGE 11-12:
+        plan_qc99_s25/s26 1,010,688 mismatches = 658 NK tiles x (n_a+n_b+tap) of the non-representative partitions)."""
+        r = self.rel_of(ci)
+        rec = self.__dict__.setdefault("core_input_pipe", {})
+        for q in (getattr(self, "by_type", {}) or {}).get(tn) or [p]:
+            hit = [cq for cq in self.members[q] if self.rel_of(cq) == r]
+            if len(hit) != 1:
+                raise BindError(f"core_input_lockup pipe {tn}: leaf {r} found {len(hit)}x in partition {q} "
+                                f"(type members must match its first partition {p})")
+            rec[f"{self.F.cells[hit[0]].path}.{pn}"] = npipe
+
     def sub_core_leaf_of(self, hc):
         """The bound leaf holding plan sub-core hc, or None (not a sub-core, or not in asbuilt.sub_core_leaf)."""
         # DIE-QC-75 11-05: a hard core nested in a leaf at a path without u_fcore names its parent exactly.
@@ -3963,7 +3980,7 @@ class Binder:
                             body.append(f"    ot_dp_dly #(.W({len(bits)}), .D({npipe})) "
                                         f"{short_id('u_pc_nk_' + sv_id(r) + '_' + pn, 100)} (.clk(clk), .d({_concat(e)}), "
                                         f".q({pq}));  // core_input_lockup pipe: +{npipe} DECLARED cycle(s)")
-                            self.__dict__.setdefault("core_input_pipe", {})[f"{c.path}.{pn}"] = npipe
+                            self.declare_core_input_pipe(tn, p, ci, pn, npipe)
                             e = [pq]
                         body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
                                     f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
