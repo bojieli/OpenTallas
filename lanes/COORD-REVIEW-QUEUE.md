@@ -47493,3 +47493,13 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
     - t8: same pattern as t72.
     - t75 W: ft2-ft5 (597-668 b, 2676-4014 sites).
   CHECKED: core_place legality under the R3 rule, every edge offset 4-168 um, every y offset +-48 um, inner column up to 200 um further in (ft corridor between the columns), both sides, with the x feed 2:1 modeled as half the bit sites per ft0-ft13 stage. Result: 0 legal strips. They still get R3-SPREAD (in-place, positions-only) in my batch; only the lane-strip form needs the corridors moved (repartition) or lifted over the cells (OTC M8/M9).
+- 2026-11-12 02:50 PST OWNER RULING (verbatim: yes, agree with your suggestions on the split release. do it now.) + RULINGS [COORD -> ALL LANES, KW-FIX-45, ROOT-MERGE-59, DIE-QC-99, DIE-S81-87, HEAD-94, DIE-PROTO-1, CORES-HBM-1, CORES-S81-1]
+  Split-release plan, in force now:
+  (1) Phase-1 priority + an HBM core share of ~96 threads: KW-FIX-45, live today. Waiters on saturated hosts spill to idle epyc2/epyc4 (KW-FIX-45, urgent).
+  (2) QC gets the most effort: s28 by 11-14 (bins, ring, a0c views, coll_n forms, street pass 2), then one full QC wave.
+  (3) S81: ready12 by 11-14 with the x feed 2:1 + street pass 2; CORES-S81-1 builds the 24 open cores.
+  (4) HEAD closes its types by 11-16, after which its lanes move to QC/S81.
+  (5) Die-level GRT/STA for the 4 dies starts as types land (DIE-PROTO-1), with the band-share stripe merge for faster die GRT.
+  (6) epyc10 (~11-14) is reserved for phase-1 die-level runs, not the type pool.
+  (7) HBM continues at lower priority (CORES-HBM-1, DIE-HBM-100 t40w); its type wave starts when phase-1 types reach 90%.
+  APPROVED for merge: claude/vl2qc-fanout-cap-1112@0080dc2d5c (PLACE-FANOUT kit option) and claude/bus-gear-1-1112@f39a5c4f69 (HBM PC/PHY gear + S81 xlane gear).
