@@ -36,6 +36,10 @@ VERIFY_RULES = {
         {"module": "ot_dp_lk", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 0},
         # decision 13c consumer-tap relay: reset traced through d; the START (run) leg is checked by the lockstep tests
         {"module": "ot_dp_rgate", "map": {"q": "d"}, "drop_in": ["clk", "run"], "stages": 1},
+        # HBM-QQBIND-1 bind-beat lane RX: word bit q[i] = the paired ot_hbm_hw_lane_tx d[i] (bind.Graph._beat_rx_source:
+        # b_i / f_i must be that TX's b_o / f_o over transport; stages + 1 TX beat register + BEATS - 1)
+        {"module": "ot_hbm_hw_lane_rx", "map": {"q": "b_i"}, "drop_in": ["clk", "rst_n", "f_i"], "beat_rx": True,
+         "stages": 0},
     ],
     "reducers": [{"module": "ot_dp_or", "out": "y"}, {"module": "ot_dp_and", "out": "y", "op": "and"}],
     "sources": [{"module": "ot_reset_sync|ot_dp_rsync_s[23]", "kind": "reset", "outputs": {"sync_rst_n": "low"},

@@ -444,6 +444,33 @@ class Graph:
     def pin(self, ci, pn):
         return f"{self.F.cells[ci].path}.{pn}"
 
+    def _beat_rx_source(self, c, bit, depth):
+        """HBM-QQBIND-1 verify rule beat_rx: word bit q[bit] of an ot_hbm_hw_lane_rx is word bit d[bit] of the
+        ot_hbm_hw_lane_tx whose b_o drives its b_i over transport only (the lane's stations), + 1 (the TX beat
+        register) + BEATS - 1 (the word lands with its last beat).  Exactness of the beat split itself is the
+        bench / miter of ot_hbm_hw_lane.sv plus the lane's declared P1/P2 classes; this rule proves the wiring."""
+        bi, fi = c.ports.get("b_i", []), c.ports.get("f_i", [])
+        if not bi or len(fi) != 1:
+            return ("undriven",)
+        ups = [self.source(b, depth + 1) for b in bi] + [self.source(fi[0], depth + 1)]
+        tci = ups[0][1] if ups[0][0] == "pin" else None
+        tx = self.F.cells[tci] if tci is not None else None
+        want = [("b_o", k) for k in range(len(bi))] + [("f_o", 0)]
+        if tx is None or "ot_hbm_hw_lane_tx" not in tx.module or \
+                any(u[0] != "pin" or u[1] != tci or (u[2], u[3]) != w or u[4] != ups[0][4] for u, w in zip(ups, want)):
+            self.err.append(f"BEAT_RX {c.path}: b_i/f_i are not one ot_hbm_hw_lane_tx b_o/f_o over equal transport")
+            return ("undriven",)
+        try:
+            bt = int(str(c.params.get("BEATS", "2")).strip('"'))
+            bt_tx = int(str(tx.params.get("BEATS", "2")).strip('"'))
+        except ValueError:
+            bt, bt_tx = -1, -2
+        d = tx.ports.get("d", [])
+        if bt != bt_tx or bit >= len(d) or len(d) != len(c.ports.get("q", [])):
+            self.err.append(f"BEAT_RX {c.path}: BEATS / word width differ from {tx.path}")
+            return ("undriven",)
+        return _add_stages(self.source(d[bit], depth + 1), ups[0][4] + 1 + bt - 1)
+
     def _constant_glue(self, cell, bit, depth):
         """Exact combinational constants only; runtime/X inputs keep their source."""
         def constant(net):
@@ -517,7 +544,9 @@ class Graph:
             ci, pn, bit = ds[0]
             k = self.kind[ci]
             c = self.F.cells[ci]
-            if k == "transport":
+            if k == "transport" and self.spec[ci].get("beat_rx"):
+                res = self._beat_rx_source(c, bit, depth)
+            elif k == "transport":
                 sp = self.spec[ci]
                 ip = _tmap(sp, pn)
                 if ip is None:
@@ -1589,13 +1618,66 @@ class Binder:
             st = sum(f["stations"] for f in ft)
             if L and int(L.get("stations", st)) != st:
                 self.errors.append(f"LANE_LATENCY {ln['id']}: ft slot stations {st} != latency table {L.get('stations')}")
+            cap = min(int(x["width"]) for x in hp)
+            beat = {}
+            if ln.get("beat_endpoint") == "bind":
+                beat = self._bind_beats(ln, cap)
+                if beat.get("beats", 1) > 1:
+                    cap = beat["word_bits"]      # logical capacity: one word of word_bits per beats cycles
             by_pair[(a["src"]["part"], b["dst"]["part"])].append(dict(
                 id=ln["id"], src=a["src"]["part"], dst=b["dst"]["part"], oname=a["src"]["bus"], iname=b["dst"]["bus"],
-                cap=min(int(x["width"]) for x in hp), sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
+                cap=cap, sleaf=sb.get("leaf", ""), dleaf=db.get("leaf", ""), ft=ft,
                 hops=[(x["src"]["part"], x["src"]["bus"], x["dst"]["part"], x["dst"]["bus"]) for x in hp],
                 cycles=int(L.get("cycles", 2 + st)), clock_landing_cycles=landing,
-                param=L.get("param"), kind=a.get("kind", "data")))
+                param=L.get("param"), kind=a.get("kind", "data"), **beat))
         return by_pair
+
+    def _bind_beats(self, ln, port_w):
+        """HBM-QQBIND-1 11-12: a plan lane with beat_endpoint "bind" carries a word of word_bits in `beats` (2 | 4)
+        beats through bind-emitted ot_hbm_hw_lane_tx / _rx (rtl/hbm_accel/generic/transport/ot_hbm_hw_lane.sv).  The
+        bundle has no valid pin, so the lane must declare its bit classes (beat_classes {control, payload}: regexes
+        over the as-built driver pin path.port; every other bit is a LEVEL) after the P1/P2 schedule premises were
+        settled for it.  A lane without beat_endpoint keeps the DEC12 meaning (endpoint leaf RTL serialises) and binds
+        exactly as before.  -> {} (error recorded) or dict(beats, word_bits, beat_classes, phys_cap)."""
+        lid = ln["id"]
+        bt, wb = int(ln.get("beats", 1)), int(ln.get("word_bits", 0))
+        if bt not in (2, 4) or wb < 1:
+            self.errors.append(f"LANE_BEATS {lid}: beat_endpoint bind needs beats 2 | 4 and word_bits >= 1 "
+                               f"(got beats {bt}, word_bits {wb})")
+            return {}
+        need = -(-wb // bt) + 1                  # ceil(word / beats) data + the first-beat flag f
+        if need > port_w:
+            self.errors.append(f"LANE_BEATS {lid}: {bt} beats of {wb} b need port width {need}, plan has {port_w}")
+            return {}
+        bc = ln.get("beat_classes")
+        if not isinstance(bc, dict) or set(bc) - {"control", "payload", "evidence"}:
+            self.errors.append(f"LANE_BEAT_CLASSES {lid}: beat_endpoint bind needs beat_classes "
+                               "{control: [regex], payload: [regex]} (P1/P2 classification of the bundle)")
+            return {}
+        try:
+            cls = {k: [re.compile(x) for x in bc.get(k, [])] for k in ("control", "payload")}
+        except re.error as exc:
+            self.errors.append(f"LANE_BEAT_CLASSES {lid}: {exc}")
+            return {}
+        return dict(beats=bt, word_bits=wb, beat_classes=cls, phys_cap=port_w)
+
+    def beat_origin(self, it):
+        """the as-built driver (cell, port, bit) of lane item `it` (forwarded items followed to their leaf)"""
+        while it[0] == "fwd":
+            it = it[1]["items"][it[2]]
+        return it[1], it[2], it[3]
+
+    def beat_masks(self, L):
+        """(CONTROL_MASK, PAYLOAD_MASK) integers over L's items (bit k = lane item k), from L's beat_classes"""
+        cm = pm = 0
+        for k, it in enumerate(L["items"]):
+            ci, pn, _b = self.beat_origin(it)
+            pin = f"{self.F.cells[ci].path}.{pn}"
+            if any(rx.fullmatch(pin) for rx in L["beat_classes"]["control"]):
+                cm |= 1 << k
+            elif any(rx.fullmatch(pin) for rx in L["beat_classes"]["payload"]):
+                pm |= 1 << k
+        return cm, pm
 
     @staticmethod
     def _norm(s):
@@ -1660,7 +1742,8 @@ class Binder:
             k = len(L["items"]) - 1
             L["carried"][key] = k
             L["left"] -= 1
-            recv.setdefault((L["dst"],) + key, (L, k, st + L["cycles"]))
+            # a bind-beat lane (HBM-QQBIND-1) delivers the word beats - 1 cycles after its first beat (word_cycles)
+            recv.setdefault((L["dst"],) + key, (L, k, st + L["cycles"] + L.get("beats", 1) - 1))
             holders[key].add(L["dst"])
             return k
         direct = []
@@ -1782,6 +1865,9 @@ class Binder:
                 L.update(width=len(L["items"]), lane=L["id"],
                          stages=sorted({st for it in L["items"] if it[0] == "leaf"
                                         for st in self.cross_stages.get((L["src"], L["dst"], it[1], it[2]), [])} or {0}))
+                if L.get("beats", 1) > 1:
+                    # HBM-QQBIND-1: the physical lane = ceil(items / beats) beat bits + the first-beat flag (MSB)
+                    L["pw"] = -(-L["width"] // L["beats"]) + 1
                 self.links.append(L)
         for sp, dp in sorted(self.unplanned):
             self.errors.append(f"UNPLANNED {sp} -> {dp}: {self.unplanned[(sp, dp)]} as-built crossing bits with no plan lane "
@@ -1924,10 +2010,10 @@ class Binder:
                     row.append(self._rel_desc(p, d, inst_vals, (r, pn, i), nm))
                 conns[(r, pn)] = tuple(row)
         obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((nm(it[1]), it[2], it[3]) if it[0] == "leaf" else
-                                         ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
+                                         ("fwd", it[1]["iname"], it[2]) for it in L["items"])) + _beat_sig(self, L)
                       for L in self.out_bus[p])
-        ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
-        ft = sorted((h["ibus"], h["obus"], L["width"], h["stations"]) for L, h in self.ft_bus[p])
+        ibus = sorted((L["iname"], L["width"], lane_pad(L)) + _beat_sig(self, L) for L in self.in_bus[p])  # source outside
+        ft = sorted((h["ibus"], h["obus"], bus_w(L), h["stations"]) for L, h in self.ft_bus[p])
         sig = dict(leaves=leaves, conns=conns, obus=obus, ibus=ibus, ft=ft,
                    clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
         if self.ab.get("io_roles"):
@@ -3639,6 +3725,35 @@ class Binder:
                 decl.append(f"    wire [{W - 1}:0] {n}_q;")
                 body.append(f"    ot_dp_rsync #(.W({W}), .S({L['cycles']})) u_rs_{n} (.clk(clk), .a({n}), .q({n}_q));")
                 continue
+            if "pw" in L:
+                # HBM-QQBIND-1 bind-beat lane: in-boundary flop (+ hold pads / lane pad) on the pw beat bits + epoch,
+                # then ot_hbm_hw_lane_rx rebuilds the W-bit word as {n}_q
+                if reg:
+                    raise BindError(f"registered_pins {p}: bind-beat lane {L['lane']} needs the in-boundary flop")
+                Wl, W = W, L["pw"]
+                ports.append(f"    input  wire [{W}:0] {n}   // {W} beat ({L['beats']} x {W - 1} + f) + epoch [{W}]: "
+                             f"{_bus_note(L, 'in')}")
+                decl.append(f"    wire [{Wl - 1}:0] {n}_q;\n    wire {n}_eq;\n    wire [{W - 1}:0] {n}_bq;")
+                din, dea = f"{n}[{W - 1}:0]", f"{n}[{W}]"
+                import gen_rtl
+                nhb = gen_rtl.hold_hb4(t, n)
+                if nhb:
+                    hd, hb, w = gen_rtl.hold_pad(n, f"{n}[{W}:0]", W + 1, nhb)
+                    decl += hd
+                    body += hb
+                    din, dea = f"{w}[{W - 1}:0]", f"{w}[{W}]"
+                pad = lane_pad(L)
+                if pad > 0:
+                    decl.append(f"    wire [{W - 1}:0] {n}_b;\n    wire {n}_eb;")
+                    body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
+                                f".q({n}_b), .eq({n}_eb));")
+                    body.append(f"    ot_dp_dly #(.W({W + 1}), .D({pad})) u_lpad_{n} (.clk(clk), .d({{{n}_eb, {n}_b}}), "
+                                f".q({{{n}_eq, {n}_bq}}));  // lane pad: latency table {L['cycles']} cycles")
+                else:
+                    body.append(f"    ot_dp_st #(.W({W})) u_bin_{n} (.clk(clk), .rst_n(rst_n), .d({din}), .ea({dea}), "
+                                f".q({n}_bq), .eq({n}_eq));")
+                body.append(beat_tx_rx(self, L, "i", n, b=f"{n}_bq"))
+                continue
             ports.append(f"    input  wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'in')}")
             if reg:
                 decl.append(f"    wire [{W - 1}:0] {n}_q;")
@@ -3700,6 +3815,22 @@ class Binder:
         obus_tree = []
         for L in obus:
             n, W = L["oname"], L["width"]
+            if "pw" in L:
+                # HBM-QQBIND-1 bind-beat lane: ot_hbm_hw_lane_tx's registered beat (b_o, f_o) IS the out-boundary
+                # register (so the word lands at word_cycles = cycles + beats - 1); the epoch keeps its own ot_dp_st
+                if reg or L.get("spine") or L.get("plan") or getattr(self, "ptree", None) is not None:
+                    raise BindError(f"{p}: bind-beat lane {L['lane']} on a registered-pin / spine / plan-cell / "
+                                    "PAD_TREE bus is not supported")
+                pw = L["pw"]
+                ports.append(f"    output wire [{pw}:0] {n}   // {pw} beat ({L['beats']} x {pw - 1} + f) + epoch "
+                             f"[{pw}]: {_bus_note(L, 'out')}")
+                d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
+                             for it in L["items"]])
+                decl.append(f"    wire {n}_bflt;")
+                body.append(beat_tx_rx(self, L, "o", n, d=d))
+                body.append(f"    ot_dp_st #(.W(1)) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(rst_n), .ea(rst_n), "
+                            f".q(), .eq({n}[{pw}]));  // epoch only")
+                continue
             ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
             if L.get("spine"):
                 ports[-1] = f"    output wire [{W - 1}:0] {n}   // reset spine: {_bus_note(L, 'out')}"
@@ -3726,7 +3857,7 @@ class Binder:
                         f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
         # plan feedthrough slots: the lane's stations in this partition (reset-less data + epoch), no leaf touches them
         for L, h in sorted(self.ft_bus[p], key=lambda x: x[1]["ibus"]):
-            W, i, o, n = L["width"], h["ibus"], h["obus"], h["stations"]
+            W, i, o, n = bus_w(L), h["ibus"], h["obus"], h["stations"]
             xt = set(h.get("xtap") or ())
             n -= len(xt)                     # HBM-VSN-XTAP 11-11: plan stations; the hop flops are emitted between them
             ports.append(f"    input  wire [{W}:0] {i}   // ft {h['slot']} lane {L['lane']}: {L['src']} -> {L['dst']}")
@@ -4104,8 +4235,9 @@ class Binder:
             hops = L.get("hops") or [(L["src"], L["oname"], L["dst"], L["iname"])]
             for sp, sb, dp, db in hops:
                 nm = short_id(f"x_{sp}__{sb}__{dp}", 120)
-                wires.append(f"    wire [{L['width'] - (1 if L.get('spine') else 0)}:0] {nm};" +
-                             (f"  // lane {L['lane']}" if L.get("lane") else "  // reset spine" if L.get("spine") else ""))
+                wires.append(f"    wire [{bus_w(L) - (1 if L.get('spine') else 0)}:0] {nm};" +
+                             (f"  // lane {L['lane']}" if L.get("lane") else "  // reset spine" if L.get("spine") else "") +
+                             (f" ({L['beats']}-beat word of {L['width']} b)" if "pw" in L else ""))
                 conn[sp].append((sb, nm))
                 conn[dp].append((db, nm))
         for p in sorted(self.members):
@@ -4214,6 +4346,10 @@ class Binder:
                             leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
+            if "pw" in L:
+                cm, pm = self.beat_masks(L)
+                lat[-1].update(beats=L["beats"], port_width=L["pw"], word_cycles=bound + L["beats"] - 1,
+                               beat_control_bits=bin(cm).count("1"), beat_payload_bits=bin(pm).count("1"))
             if L["src"] in rh or L["dst"] in rh:
                 # the macro's registered pin is that end's boundary stage (bound_stages unchanged, 1:1)
                 lat[-1]["macro_pin_reg_ends"] = [e for e in ("src", "dst") if L[e] in rh]
@@ -4558,6 +4694,10 @@ def cmd_bind(a):
     if getattr(B, "r8sp", None) or getattr(B, "isp", None):
         # OWNER 10-28 R8 strap pads: the strap-count bank master (rtl/common, LEC'd per used constant)
         B.extra_lib.append(str(Path(B.base).resolve() / "rtl/common/ot_dp_dly_cnt.sv"))
+    if any("pw" in L for L in B.links):
+        # HBM-QQBIND-1 bind-beat lanes: the lane endpoints and their beat engine (absent = file list unchanged)
+        B.extra_lib += [str(Path(E.REPO).resolve() / f) for f in ("rtl/common/ot_bus_gear.sv",
+                                                                   "rtl/hbm_accel/generic/transport/ot_hbm_hw_lane.sv")]
     if B.ab.get("land_pad_tree"):
         B.pad_trees()
     files = []
@@ -5926,6 +6066,34 @@ def cmd_kit_rtl(a):
                           spare_out=sum(x["bits"] for x in spare), narrow=len(narrow), unbound=len(missing),
                           bound_only=[x["port"] for x in extra])))
     return 0
+
+
+def bus_w(L):
+    """physical data width of a bound bus (without the epoch bit): the beat width + f of a bind-beat lane, else width"""
+    return L.get("pw", L["width"])
+
+
+def _beat_sig(B, L):
+    """type-signature suffix of a bind-beat lane (beats + bit classes); () for every other bus (signatures unchanged)"""
+    if "pw" not in L:
+        return ()
+    return (("beats", L["beats"]) + B.beat_masks(L),)
+
+
+def beat_tx_rx(B, L, side, n, d=None, b=None):
+    """HBM-QQBIND-1 11-12: the ot_hbm_hw_lane_tx (side "o": d = W-bit word expr, drives port n[pw-1:0]) or
+    ot_hbm_hw_lane_rx (side "i": b = pw-bit beat wire, drives n_q) instance text of bind-beat lane L"""
+    W, bt, pw = L["width"], L["beats"], L["pw"]
+    cm, pm = B.beat_masks(L)
+    lit = lambda v: f"{W}'h{v:x}"
+    if side == "o":
+        return (f"    ot_hbm_hw_lane_tx #(.W({W}), .HW(1), .BEATS({bt}), .CONTROL_MASK({lit(cm)}), "
+                f".PAYLOAD_MASK({lit(pm)})) u_btx_{n} (.clk(clk), .rst_n(rst_n), .d({d}), .b_o({n}[{pw - 2}:0]), "
+                f".f_o({n}[{pw - 1}]), .fault_o({n}_bflt));  // lane {L['lane']}: {bt}-beat word of {W} b "
+                f"(the TX beat register is the out-boundary register; fault = P1 guard, observation only)")
+    return (f"    ot_hbm_hw_lane_rx #(.W({W}), .HW(1), .BEATS({bt}), .CONTROL_MASK({lit(cm)})) u_brx_{n} (.clk(clk), "
+            f".rst_n(rst_n), .b_i({b}[{pw - 2}:0]), .f_i({b}[{pw - 1}]), .q({n}_q));  // lane {L['lane']}: word "
+            f"lands beats - 1 = {bt - 1} cycle(s) after its first beat (word_cycles)")
 
 
 def lane_pad(L):

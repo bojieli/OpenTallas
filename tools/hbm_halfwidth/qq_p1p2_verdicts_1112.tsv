@@ -1,0 +1,59 @@
+# HBM-QQBIND-1 2026-11-12: P1/P2 schedule premises for the 34 qq lanes (delta qq_b10x_1112_r3x 2737efc9dcdb, plan r3xc a072aaeeac6d).
+# Method: structural RTL read at main d3f85cdf01 (no sim). Source leaves = bind packing of the t40w bind (hbm-vsn-xtap-t40w/bind/bind_latency.json, same lane ids and word widths as qq).
+# P1 = pulses only on slot0 (t0 + kB); P2 = levels change only on slot0. FAIL = a reachable source update/pulse spacing of 1 cycle (not a multiple of B) under the shipped RTL / compiler.
+# No source on any lane is gated by a fixed period-2/4 enable; every listed producer steps one programme/calendar row (or one stream element) per edge.
+# Source keys: S1 pgp command: ot_hbm_su_programme.sv:343-344 "Subsequent lines every edge", :358-360 pc<=pc+1 per edge
+#  S2 VM calendar lg_local_read/write: ot_vms_calendar_static_xcap.sv:66,89-96 one row per edge, host period limit-base (any 1..1024)
+#  S3 cic inj_rd/inj_addr: copy of ot_hgi_coll_ctl_v5.sv:246,276; issuer ot_hgi_coll_static_issuer_v5.sv:97,106-112 one uop per edge (1-row loops)
+#  S4 hb_coll del_valid/del_flit/hgi_del_obase: ot_hfd_coll_q_hard_v8g.sv:433-434; ot_hgi_coll_ctl_v5.sv:252 per edge, obase steps per loop iteration
+#  S5 hc u_q.lg_rq: ot_hbm_hc_q_static.sv:142-143; ot_hgi_hc_residual_vm_static.sv:41-43 fire=active for 320*npos consecutive edges
+#  S7 sucore rf_bcmd/rf_bword/rf_dsec: ot_hbm_su_static_qcore_r13.sv:264-266 reload every edge from the pgp read command
+#  S8 vmb rr0 (rr_v pulse + rr_d): ot_vms_bank_q0_faces_body.sv:22-24 one read per bank per cycle, :484-486 rr_v<=d_v per edge
+#  S9 vmb wq_done0: ot_vms_bank_q0_faces_body.sv:386-387 one write per bank per cycle
+#  C1 su bank_read_data (no valid on the lane): ot_hbm_su_static_pinned_bank.sv:44 read_data<=raw_data every edge; su_top_compile.py:145 emit 64 consecutive edges
+#  C2 pretree_tree_o: ot_hbm_su_red_pretree.sv:66,102; su_pretree_lower.py:10 "even blocks emitted on consecutive edges"
+#  C3 near_rq/near_wq: ot_hbm_vm_lg_static_bank.sv:70-71,97-98; su_top_compile.py:123-127 fill reads every port every edge (1024 edges)
+#  C4 u_slice slice_x[32]: ot_hbm_su_static_pgslice_s.sv:386 slice_x<=ro_x[..] every edge
+#  C5 cxdl fault: ot_hbm_su_static_cxport_split.sv:107 sticky level rising on any cycle
+#  C6 c_rr/c_w_done: ot_hgi_sfu_lg_pair_leaf.sv:36-39 one return per local read (HC residual reader fires every edge; sfu_NE2 qswiglu image bank-4 spacing 1,3)
+#  C7 sfucore __cut_ctl arithmetic flop = control: ot_hgi_sfu_static_quarter_sp2.sv:37-39 control<=compiler_control every edge; sfu_vector_calendar.py:60-62
+#  C8 sfucore store_a/b cmd0_Q (inferred = store rd_q): ot_hgi_sfu_static_operand_store_sp2.sv:46-49 rd_q<=rd_q_s no enable
+#  C9 sfucore lane_rd_re/vm_we/ro_v + addr/data: ot_su12_sfu_sp2.sv:478-487,847-857; sfu_vector_calendar.py:61 emit on consecutive edges
+#  A1 hb_idx scorer E-pin regs (e_bus,g_qv,g_q,g_kv,g_kkv,g_key,g_aux): ot_hbm_idx_score_quarter_static_h.sv:21,33-37 reload every clock; key_slot ot_hbm_idx_qctl_static.sv:41; tools/hbm_idx_static_calendar.py:91-93 171 key beats key_period=1 (consecutive)
+#  A2 sm u_qs_b_out (rv,rrow,rdata,fault): ot_hbm_accel_smh_attn.sv:190,202 relay every clock; sm_mv_unit.py:15-17,243 8 last-lines on consecutive cycles -> rv back-to-back
+#  A3 xq pegress xw_en/xw_grp/xw_data: ot_hgi_sm_xload_static_xql.sv:139-147; ot_hgi_sm_xload_static_cl2.sv:380-389,406 em_on held >= 8 consecutive edges, eb steps per edge
+lane	beats	word_bits	src	dst	source_leaves	p1	p2	verdict	decisive
+L1201	4	3332	NW_b102	NW_b103	hb_idx__s_NW.scorer.ge[1].gc[1].leaf E-pin regs	FAIL	FAIL	FAIL	A1 g_kv high 171 consecutive cycles
+L5001	4	3332	NE_b102	NE_b103	hb_idx__s_NE (same module/params)	FAIL	FAIL	FAIL	A1
+L8307	2	268	NW_sm2	NW_hub	sm_NW2.g_qs_out.u_qs_b_out.q	FAIL	FAIL	FAIL	A2 rv on 8 consecutive cycles
+L8307m	2	268	NE_sm2	NE_hub	sm_NW6.g_qs_out.u_qs_b_out.q	FAIL	FAIL	FAIL	A2
+L8340	4	1615	NW_hub	NW_sm2	xq_NW_p1_eg.xw_data/xw_en/xw_grp	FAIL	FAIL	FAIL	A3 xw_en >= 8 consecutive cycles
+L8340m	4	1615	NE_hub	NE_sm2	xq_NE_p1_eg (same module/params)	FAIL	FAIL	FAIL	A3
+L1265	4	601	NW_hub	NW_su20	calendar_NW lg_local_*, cic_NW inj_*, hb_coll_NW del_flit	FAIL	FAIL	FAIL	S2 S3 S4
+L5068	4	663	NE_hub	NE_su20	calendar_NE, cic_NE, hb_coll_NE (q2_hard_v8g_s, same ctl family)	FAIL	FAIL	FAIL	S2 S3 S4
+L1266	2	492	NW_hub	NW_su20	hb_coll_NW del_flit/del_valid/obase, hc_NW lg_rq/lg_wq	FAIL	FAIL	FAIL	S5 S4
+L5069	2	429	NE_hub	NE_su20	NE mirror of L1266	FAIL	FAIL	FAIL	S5 S4
+L1267	2	486	NW_hub	NW_su20	hc_NW lg_wq, pgp_NW command	FAIL	FAIL	FAIL	S1
+L3005	4	899	NW_hub	NW_su21	pgp_NW command, vmb_NW5 rr0/wq_done0	FAIL	FAIL	FAIL	S1 S8
+L5071	4	1898	NE_hub	NE_su20	pgp_NE command, sucore_NE rf_*	FAIL	FAIL	FAIL	S1 S7
+L8003	2	323	NW_hub	NW_su20	sucore_NW rf_dsec, vmb_NW4 rr0	FAIL	FAIL	FAIL	S7 S8
+L8003m	2	568	NE_hub	NE_su20	sucore_NE rf_dsec, vmb_NE4 rr0/wq_done0, vmb_NE5 rr0	FAIL	FAIL	FAIL	S7 S8
+L8004	2	245	NW_hub	NW_su20	vmb_NW4 rr0/wq_done0, vmb_NW5 rr0	FAIL	FAIL	FAIL	S8
+L1270	2	585	NW_hub	NW_su01	pgp_NW command	FAIL	FAIL	FAIL	S1
+L1272	2	281	NW_hub	NW_su21	pgp_NW command	FAIL	FAIL	FAIL	S1
+L1273	2	374	NW_hub	NW_su21	pgp_NW command	FAIL	FAIL	FAIL	S1
+L1278	4	1483	NW_hub	NW_su20	pgp_NW command, sucore_NW rf_bcmd/rf_bword	FAIL	FAIL	FAIL	S1 S7
+L3004	4	739	NW_hub	NW_su01	pgp_NW command, 2 b fwd from L1234, vmb_NW0/NW1 rr0/wq_done0	FAIL	FAIL	FAIL	S1 S8 (2 fwd bits not traced)
+L5075	2	256	NE_hub	NE_su01	pgp_NE command	FAIL	FAIL	FAIL	S1
+L7000	2	338	NW_su21	NW_hub	su_NW2 bank_read_data x3	-	FAIL	FAIL	C1
+L7501	2	512	NE_su21	NE_hub	su_NE2 bank_read_data x4	-	FAIL	FAIL	C1
+L5072	4	1087	NE_su20	NE_hub	cxdl fault, hc_NE2 c_rr/c_w_done, su_NE2 bank_read_data x4, pretree_tree_o	FAIL	FAIL	FAIL	C6 C1 C2 (C5)
+L5073	2	490	NE_su20	NE_hub	pretree_tree_o, near_rq/near_wq	FAIL	FAIL	FAIL	C3 C2
+L1280	4	746	NW_su20	NW_hub	cxdl fault, hc_NW2 c_rr/c_w_done, su_NW2 bank_read_data x2	FAIL	FAIL	FAIL	C6 C1 (C5)
+L1281	4	978	NW_su20	NW_hub	su_NW2 bank_read_data x3, pretree_tree_o, near_rq/near_wq, slice_x	FAIL	FAIL	FAIL	C1 C3 C4
+L5056	2	516	NE_su20	NE_b113	sfu_NE2 c_rr/c_w_done	FAIL	FAIL	FAIL	C6
+L5058	4	798	NE_b110	NE_b113	sfucore_NE __cut_lane0..3 lane_*	FAIL	FAIL	FAIL	C9
+L3001	4	499	NW_b113	NW_b110	sfucore_NW __cut_ctl control[432], store_a cmd0_Q[67]	-	FAIL	FAIL	C7
+L3002	2	267	NW_b113	NW_b110	sfucore_NW store_a/store_b cmd0_Q	-	FAIL	FAIL	C8
+L5059	4	585	NE_b113	NE_b110	sfucore_NE __cut_ctl control[585]	-	FAIL	FAIL	C7
+L5060	4	749	NE_b113	NE_b110	sfucore_NE __cut_ctl control[437], store_a/b cmd0_Q	-	FAIL	FAIL	C7 C8
