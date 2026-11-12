@@ -227,3 +227,36 @@ def test_reticle_fit_reverts_growth():
              "violations_before": {"street": 1}, "violations_after": {}}]
     d, rev = SR.reticle_fit(P, Q, rows, log=lambda s: None)
     assert rev == ["A"] and not rows[0]["applied"] and Q["partition_types"]["A"]["outline_um"] == [400.0, 1000.0]
+
+
+class _FakeM:
+    def __init__(self, W, H, rects):
+        import numpy as np
+        self.W, self.H, self.n = W, H, len(rects)
+        self._o = [(x, y) for x, y, _, _ in rects]
+        self.dim = np.array([[w, h] for _, _, w, h in rects], float)
+
+    def core_origin(self, i):
+        return self._o[i]
+
+
+def test_add_ft_regs_inserts_stage_on_overlong_hop():
+    import copy
+    f = {"name": "ft0", "in_face": "W", "out_face": "E", "in_window_um": [130, 140], "out_window_um": [130, 140],
+         "stations": 1, "regs_um": [[300.0, 135.0]],
+         "bit_sites_um": [[[300.0, 134.73], [300.0, 135.27]]]}
+    t0 = {"outline_um": [604.8, 302.4], "ft_slots": [f]}
+    t1 = copy.deepcopy(t0)
+    t1["outline_um"] = [829.44, 302.4]
+    t1["ft_slots"][0]["regs_um"] = [[440.64, 135.0]]          # the street push stretched hop 0 to ~440 um
+    t1["ft_slots"][0]["bit_sites_um"] = [[[440.64, 134.73], [440.64, 135.27]]]
+    M = _FakeM(829.44, 302.4, [(100.0, 200.0, 50.0, 50.0)])
+    assert SR.ft_hop_check(t0, t1, 405.0)
+    add = SR.add_ft_regs(M, t0, t1, 405.0, 1)
+    assert add and add[0]["added"] == 1
+    f1 = t1["ft_slots"][0]
+    assert len(f1["regs_um"]) == 2 and f1["stations"] == 2 and len(f1["bit_sites_um"]) == 2
+    assert not SR.ft_hop_check_added(t0, t1, 405.0)
+    # the new stage's bit sites are the neighbour's pattern, translated
+    (x, y), sites = f1["regs_um"][0][:2], f1["bit_sites_um"][0]
+    assert sites == [[round(x, 4), round(y - 0.27, 4)], [round(x, 4), round(y + 0.27, 4)]]

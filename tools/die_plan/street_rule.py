@@ -63,7 +63,8 @@ EPS = 1e-6
 DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, street_fill=0.6, abut_um=G,
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
-                reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1)
+                reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
+                add_regs=0)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
@@ -801,6 +802,13 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
                 ends.append(e)
             M.L[q] = (ends[0], ends[1], wb, kind)
         tnew["outline_um"] = [round(W, 4), round(H, 4)]
+        added_st, added_ft = [], []
+        if cfg["add_regs"] > 0:
+            added_st = add_station_regs(M, tnew, srep.get("need_more_idx") or [], ccfg["reach"], int(cfg["add_regs"]))
+            fixed_si = {d["station"] for d in added_st}
+            srep = dict(srep, need_more_idx=[i for i in srep.get("need_more_idx") or [] if i not in fixed_si])
+            srep["need_more_regs"] = len(srep["need_more_idx"])
+            added_ft = add_ft_regs(M, t, tnew, cfg["reach_limit_um"], int(cfg["add_regs"]))
         V1, c1 = analyze(W, H, core_models(M, partners), M.CL, cfg, windows)
         nov = CP.overlaps(M)
         reach_ = cfg["reach_limit_um"]
@@ -809,8 +817,18 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
                   and M.llen(q) > len0[q] + 0.01]
         tviol = len(new_over)
         under = points_under_cores(tnew)
-        fthop = ft_hop_check(t, tnew, cfg["reach_limit_um"])
-        eqbad = eq_struct(t, tnew)
+        fthop = ft_hop_check_added(t, tnew, cfg["reach_limit_um"]) if added_ft else ft_hop_check(t, tnew, cfg["reach_limit_um"])
+        t_eq = t
+        if added_st or added_ft:
+            # the added stages are the only allowed structural change: compare against the base with those lists
+            t_eq = copy.deepcopy(t)
+            for d in added_st:
+                t_eq["internal_stations"][d["station"]]["regs_um"] = tnew["internal_stations"][d["station"]]["regs_um"]
+            for k in {d["slot"] for d in added_ft}:
+                for key in ("regs_um", "bit_sites_um", "stations", "note"):
+                    if key in tnew["ft_slots"][k]:
+                        t_eq["ft_slots"][k][key] = tnew["ft_slots"][k][key]
+        eqbad = eq_struct(t_eq, tnew)
         moved = sum(1 for i in range(M.n) if tuple(M.core_origin(i)) != tuple(M.org0[i]))
         gW, gH = 100.0 * (W / W0 - 1), 100.0 * (H / H0 - 1)
         gA = 100.0 * (W * H / (W0 * H0) - 1)
@@ -834,7 +852,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             reasons.append("growth %.1f%% > %.0f%%" % (gA, cfg["max_growth_pct"]))
         ok = not reasons
         relaxed = relaxed_n
-        return dict(ok=ok, reasons=reasons, tnew=tnew, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
+        return dict(ok=ok, reasons=reasons, tnew=tnew, added_st=added_st, added_ft=added_ft, W=W, H=H, gW=gW, gH=gH, gA=gA, c1=c1, left=left, moved=moved,
                     srep=srep, nov=nov, new_over=new_over, longer=longer, under=under, fthop=fthop, eqbad=eqbad,
                     acc=acc, items=items, blocked=blocked, relaxed=relaxed,
                     timing_over=[dict(kind=M.L[q][3], bits=M.L[q][2], len_um=round(M.llen(q), 1),
@@ -870,7 +888,9 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     ok, reasons, tnew, W, H = R_["ok"], R_["reasons"], R_["tnew"], R_["W"], R_["H"]
     gW, gH, gA, c1, left, moved = R_["gW"], R_["gH"], R_["gA"], R_["c1"], R_["left"], R_["moved"]
     row.update(changed=True, applied=ok, attempts=att + 1, pinned=[M.inst[M.CL[k][0]] for k in sorted(pinned)],
-               ft_fixed=fix_ft,
+               ft_fixed=fix_ft, cycles_added=dict(stations=R_["added_st"], ft=R_["added_ft"],
+                                                  total=sum(d["regs_after"] - d["regs_before"] for d in R_["added_st"])
+                                                  + sum(d["added"] for d in R_["added_ft"])),
                streets_relaxed_at_pins=R_["relaxed"],
                reason="; ".join(reasons) or ("clean" if not left else "residual %d" % len(left)),
                outline_after=[W, H], growth_pct=dict(W=round(gW, 2), H=round(gH, 2), area=round(gA, 2)),
@@ -938,6 +958,128 @@ def ft_hop_check(t0, t1, reach=405.0):
         for j, (a, b) in enumerate(zip(h0, h1)):
             if b > max(a, reach) + 0.01:
                 bad.append(dict(slot=k, hop=j, before=round(a, 1), after=round(b, 1)))
+    return bad
+
+
+def _raster(M):
+    import hub_repack as HR
+    rects = [(M.core_origin(i)[0], M.core_origin(i)[1], M.core_origin(i)[0] + M.dim[i, 0],
+              M.core_origin(i)[1] + M.dim[i, 1]) for i in range(M.n)]
+    return HR.Raster(M.W, M.H, rects)
+
+
+def add_station_regs(M, tnew, idx, reach, add_max):
+    """COORD 11-12 (cycles owner-pre-approved): a station that needs more registers after the move gets them, up to
+    add_max extra per station; returns [(station idx, conn, launch, capture, regs before, regs after)]."""
+    import hub_repack as HR
+    R = _raster(M)
+    st = tnew.get("internal_stations") or []
+    out = []
+    for si in idx:
+        s = st[si]
+        n0 = len(s.get("regs_um") or [])
+        r = HR.route_station(R, tuple(s["from_um"]), tuple(s["to_um"]), n0, reach)
+        if r is None or len(r["regs"]) <= n0 or len(r["regs"]) > n0 + add_max:
+            continue
+        s["regs_um"] = [list(q) for q in r["regs"]]
+        s["note"] = (s.get("note", "") + " | STREET-RULE-1 street widened the path to %s um: %d -> %d regs (+%d cycle(s), "
+                     "owner pre-approved)" % (r["length_um"], n0, len(r["regs"]), len(r["regs"]) - n0))
+        out.append(dict(station=si, conn=s.get("conn"), launch=s.get("launch"), capture=s.get("capture"),
+                        regs_before=n0, regs_after=len(r["regs"]), length_um=r["length_um"]))
+    return out
+
+
+def add_ft_regs(M, t0, tnew, reach, add_max):
+    """an ft hop stretched past reach by a widened street gets ceil(len / reach) - 1 (<= add_max) new register stages on
+    its Manhattan path (bit-site pattern copied from the nearest stage, translated; never under a core). Returns the
+    added stages; hops it cannot fix are left (the type is then not applied)."""
+    R = _raster(M)
+    W, H = tnew["outline_um"]
+    out = []
+    for k, (f0, f) in enumerate(zip(t0.get("ft_slots") or [], tnew.get("ft_slots") or [])):
+        regs = [list(r) for r in (f.get("regs_um") or [])]
+        sites = f.get("bit_sites_um")
+        if not regs or not isinstance(regs[0], list):
+            continue
+        hops0 = ft_hops(dict(t0, ft_slots=[f0]))[0]
+        a = RS.face_point(W, H, f.get("in_face", "W"), f.get("in_window_um"))
+        b = RS.face_point(W, H, f.get("out_face", "E"), f.get("out_window_um"))
+        j = 0
+        changed = False
+        while j <= len(regs):
+            ch = [a] + [tuple(r[:2]) for r in regs] + [b]
+            p, q = ch[j], ch[j + 1]
+            L = abs(p[0] - q[0]) + abs(p[1] - q[1])
+            base = hops0[j] if j < len(hops0) else 0.0
+            if L <= max(base, reach) + 0.01:
+                j += 1
+                continue
+            n = int(-(-L // reach)) - 1
+            if n < 1 or n > add_max:
+                j += 1
+                continue
+            ref = min(j, len(regs) - 1)          # nearest existing stage: bit-site pattern source
+            new = []
+            for m in range(1, n + 1):
+                d = L * m / (n + 1)
+                dx = min(d, abs(q[0] - p[0]))
+                x = p[0] + (dx if q[0] >= p[0] else -dx)
+                y = p[1] + (d - dx if q[1] >= p[1] else -(d - dx))
+                x, y = round(round(x / G) * G, 4), round(round(y / G) * G, 4)
+                ok = None
+                for r_ in range(0, 30):
+                    for ddx, ddy in ((0, 0),) if r_ == 0 else ((r_, 0), (-r_, 0), (0, r_), (0, -r_)):
+                        xx, yy = x + ddx * G, y + ddy * G
+                        if not (0 <= xx <= W and 0 <= yy <= H) or not R.free(xx, yy):
+                            continue
+                        if isinstance(sites, list) and len(sites) == len(regs):
+                            rx, ry = regs[ref][:2]
+                            pat = [[round(sx - rx + xx, 4), round(sy - ry + yy, 4)] for sx, sy in sites[ref]]
+                            if not all(R.free(*pp) for pp in pat):
+                                continue
+                        else:
+                            pat = None
+                        ok = (xx, yy, pat)
+                        break
+                    if ok:
+                        break
+                if not ok:
+                    new = None
+                    break
+                new.append(ok)
+            if not new:
+                j += 1
+                continue
+            for m, (xx, yy, pat) in enumerate(new):
+                regs.insert(j + m, [xx, yy] + list(regs[ref][2:]))
+                if pat is not None:
+                    sites.insert(j + m, pat)
+            out.append(dict(slot=k, name=f.get("name"), hop=j, len_um=round(L, 1), added=len(new)))
+            changed = True
+            j += len(new) + 1
+        if changed:
+            f["regs_um"] = regs
+            if isinstance(f.get("stations"), int):
+                f["stations"] = len(regs)
+            f["note"] = (f.get("note", "") + " | STREET-RULE-1 +%d ft stage(s) (owner pre-approved cycles)"
+                         % (len(regs) - len(f0.get("regs_um") or [])))
+    return out
+
+
+def ft_hop_check_added(t0, t1, reach=405.0):
+    """after added ft stages the hop lists differ in length: each new hop must be <= reach or <= the longest base hop
+    of its slot."""
+    bad = []
+    for k, (h0, h1) in enumerate(zip(ft_hops(t0), ft_hops(t1))):
+        if len(h0) == len(h1):
+            for j, (a, b) in enumerate(zip(h0, h1)):
+                if b > max(a, reach) + 0.01:
+                    bad.append(dict(slot=k, hop=j, before=round(a, 1), after=round(b, 1)))
+        else:
+            lim = max([reach] + h0)
+            for j, b in enumerate(h1):
+                if b > lim + 0.01:
+                    bad.append(dict(slot=k, hop=j, before=None, after=round(b, 1)))
     return bad
 
 
@@ -1243,7 +1385,10 @@ def cmd_legalize(a):
                advisory=True, base_plan=str(plan), base_plan_sha256=sha, plan_output=a.out_plan,
                plan_output_sha256=out_sha, die=die, cfg=cfg, die_estimate=die_est,
                summary=dict(types=len(rows), violating=sum(1 for r in rows if r.get("changed")),
-                            applied=len(grown)), rows=rows)
+                            applied=len(grown),
+                            cycles_added=sum((r.get("cycles_added") or {}).get("total", 0) for r in rows if r.get("applied")),
+                            types_with_cycles_added=sorted(r["type"] for r in rows if r.get("applied")
+                                                           and (r.get("cycles_added") or {}).get("total"))), rows=rows)
     if a.event:
         Path(a.event).write_text(json.dumps(rec, indent=1) + "\n")
     hdr = ["type", "applied", "W0", "H0", "W1", "H1", "growth_area_pct", "moved", "viol_before", "viol_after",
