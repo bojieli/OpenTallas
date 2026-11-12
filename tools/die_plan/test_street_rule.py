@@ -274,3 +274,40 @@ def test_pass2_levers_reorder_and_xfeed():
     b2 = core("b", 140, 0, 100, 100, {"W": face(1800, 0, 100)})
     assert SR.pair_rule(a2, b2, CFG)["need"] > SR.pair_rule(a2, b2, cfg2)["need"]   # (d) 2:1 x feed halves the need
     assert SR.pair_rule(a2, b2, cfg2)["pins"] == [900, 900]
+
+
+def test_legalize_moves_sinks_with_cores(tmp_path):
+    """COORD 11-12 (HEAD-94 hd_lep0N): every off-core coordinate follows the moved cores -- sink sites, sink bins,
+    keepouts -- the sink total is unchanged and no sink ends inside a core."""
+    plan, P = _toy_plan(tmp_path)
+    t0 = P["partition_types"]["toy"]
+    x_b = t0["hard_cores"][1]["origin_um"][0]
+    # sites: in the old slot, just E of core b (b moves E onto it), on core a (rides with a)
+    t0["clock"]["sink_sites_um"] = [[60.48 + 100 + 7.0, 136.0, 2], [x_b + 104.0, 136.0, 3], [100.0, 120.0, 5]]
+    t0["clock"]["keepouts_um"] = [[x_b + 102.0, 90.0, x_b + 110.0, 180.0]]
+    bins = [[x_b + 105.3, 135.0, 7], [x_b + 106.0, 140.0, 1], [100.0, 120.0, 11], [20.0, 20.0, 4], [500.0, 280.0, 6]]
+    bf = Path("physical/die_plan/toy/bins/toy.json")
+    (tmp_path / bf).parent.mkdir(parents=True)
+    (tmp_path / bf).write_text(json.dumps({"bin_um": 10.8, "bins": bins}))
+    t0["clock"]["sink_bins_file"] = str(bf)
+    plan.write_text(json.dumps(P))
+    _, tot0 = SR.sink_points(t0, tmp_path)
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    assert SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+                    "--event", str(ev), "--rs-halving", "off"]) == 0
+    row = json.loads(ev.read_text())["rows"][0]
+    assert row["applied"], row["reason"]
+    t = json.loads(out.read_text())["partition_types"]["toy"]
+    b1 = t["hard_cores"][1]["origin_um"][0]
+    assert b1 > x_b + 1.0                                         # core b moved E (the street opened)
+    pts, tot1 = SR.sink_points(t, tmp_path)
+    assert tot1 == tot0                                           # sink total preserved (sites + merged bins)
+    # nothing new inside a core: only the sinks that sat on core a in the base (and ride with it) are on a core
+    assert sorted(SR.sinks_under_cores(t, tmp_path)) == sorted(SR.sinks_under_cores(t0, tmp_path)) == [[100.0, 120.0]] * 2
+    assert t["clock"]["sink_bins_file"] != str(bf)                # a new bins file, the base one untouched
+    assert json.loads((tmp_path / bf).read_text())["bins"] == bins
+    s = t["clock"]["sink_sites_um"]
+    assert s[1][0] >= b1 + 100.0 and s[1][2] == 3                 # E of b stays E of b, weight kept
+    assert s[2] == [100.0, 120.0, 5]                              # on core a (not moved): unchanged
+    k = t["clock"]["keepouts_um"][0]
+    assert k[0] >= b1 + 100.0 - 1e-6                              # the keepout E of b followed it

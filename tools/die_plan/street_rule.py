@@ -764,7 +764,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     M.init_limits()
     len0 = [M.llen(q) for q in range(len(M.L))]
     nov0 = CP.overlaps(M)
-    under0 = len(points_under_cores(t))
+    under0 = len(points_under_cores(t)) + len(sinks_under_cores(t, repo))
     L_base = list(M.L)
     on_core0 = lambda p: M.owner(p, tol=-0.01) is not None   # noqa: E731
 
@@ -812,6 +812,9 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
         for q, it in enumerate(items):
             if acc[q][0] or acc[q][1]:
                 it.apply(acc[q][0], acc[q][1])
+        # every other off-core coordinate (sink sites / bins, die islands, keepouts, relays, landing pins, reset
+        # taps, ...) follows the stretch of its row / column band; nothing is left inside a moved core (COORD 11-12)
+        free_remap(t, tnew, M, (W0, H0), (W, H), cfg, repo)
         # link end points on the E / N outline (type bus windows, faces) follow the outline growth
         for q, (ea, eb, wb, kind) in enumerate(M.L):
             ends = []
@@ -843,7 +846,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             done_q = {d["link"] for d in added_ln}
             new_over = [q for q in new_over if q not in done_q]
         tviol = len(new_over)
-        under = points_under_cores(tnew)
+        under = points_under_cores(tnew) + [("sink", p) for p in sinks_under_cores(tnew, repo)]
         fthop = ft_hop_check_added(t, tnew, cfg["reach_limit_um"]) if added_ft else ft_hop_check(t, tnew, cfg["reach_limit_um"])
         t_eq = t
         if added_st or added_ft or added_ln:
@@ -858,6 +861,11 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
         if added_ln:
             n0 = len(t.get("internal_stations") or [])
             t_eq.setdefault("internal_stations", []).extend(copy.deepcopy(tnew["internal_stations"][n0:]))
+        bf1 = (tnew.get("clock") or {}).get("sink_bins_file")
+        if bf1 != (t.get("clock") or {}).get("sink_bins_file"):
+            # the remapped sink bins file (same sinks, moved with the cores) is an allowed change
+            t_eq = copy.deepcopy(t_eq) if t_eq is t else t_eq
+            t_eq["clock"]["sink_bins_file"] = bf1
         eqbad = eq_struct(t_eq, tnew)
         moved = sum(1 for i in range(M.n) if tuple(M.core_origin(i)) != tuple(M.org0[i]))
         gW, gH = 100.0 * (W / W0 - 1), 100.0 * (H / H0 - 1)
@@ -940,6 +948,171 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     log("  %s: %s viol %s -> %s  outline %.2fx%.2f -> %.2fx%.2f (+%.1f%%)  moved %d  %s" % (
         name, "APPLIED" if ok else "not applied", c0, c1, W0, H0, W, H, gA, moved, row["reason"]))
     return row, (tnew if ok else None)
+
+
+# ------------------------------------------------------------------------------------------ free-space remap
+# keys whose *_um / xy lists are sizes or lengths, not points (never remapped)
+SIZE_KEYS = {"cell_wh_um", "bit_site_cell_um", "kit_core_margins_um", "legs_um", "track_offset_um", "outline_um",
+             "resized_from_um", "resited_from_um"}
+SINK_BIN_UM = 10.8
+
+
+def _band_map(v, lo, hi, knots, L0, L1):
+    """monotone piecewise-linear old -> new coordinate along one axis from the (old, new) edges of the cores whose
+    span on the other axis covers [lo, hi] (falls back to all cores) plus the outline ends 0 -> 0, L0 -> L1."""
+    ks = [(o, n) for (a, b, o, n) in knots if a < hi + 1e-6 and b > lo - 1e-6] or [(o, n) for (_, _, o, n) in knots]
+    pts = sorted(set([(0.0, 0.0), (float(L0), float(L1))] + ks))
+    mono = []
+    for o, n in pts:
+        if mono and (o <= mono[-1][0] + 1e-9 or n < mono[-1][1] - 1e-9):
+            continue
+        mono.append((o, n))
+    if v <= mono[0][0]:
+        return v + (mono[0][1] - mono[0][0])
+    for (o0, n0), (o1, n1) in zip(mono, mono[1:]):
+        if v <= o1:
+            return n0 + (v - o0) * (n1 - n0) / (o1 - o0)
+    return v + (mono[-1][1] - mono[-1][0])
+
+
+def _push_out(x, y, rects, W, H, margin=0.54):
+    """a point strictly inside a core box moves to the nearest face of that box (+ margin), inside the outline."""
+    for _ in range(4):
+        hit = [r for r in rects if r[0] + 1e-6 < x < r[2] - 1e-6 and r[1] + 1e-6 < y < r[3] - 1e-6]
+        if not hit:
+            break
+        x0, y0, x1, y1 = hit[0]
+        c = sorted([(x - x0, x0 - margin, y), (x1 - x, x1 + margin, y), (y - y0, x, y0 - margin), (y1 - y, x, y1 + margin)])
+        for _, nx, ny in c:
+            if 0 <= nx <= W and 0 <= ny <= H:
+                x, y = nx, ny
+                break
+    return x, y
+
+
+def make_free_map(R0, R1, WH0, WH1):
+    """f(x, y) -> new (x, y) for an off-core point: x by the x edges of the cores in its y band, y likewise."""
+    kx = [(r0[1], r0[3], r0[0], r1[0]) for r0, r1 in zip(R0, R1)] + [(r0[1], r0[3], r0[2], r1[2]) for r0, r1 in zip(R0, R1)]
+    ky = [(r0[0], r0[2], r0[1], r1[1]) for r0, r1 in zip(R0, R1)] + [(r0[0], r0[2], r0[3], r1[3]) for r0, r1 in zip(R0, R1)]
+    W1, H1 = WH1
+
+    def f(x, y):
+        nx = _band_map(x, y, y, kx, WH0[0], WH1[0])
+        ny = _band_map(y, x, x, ky, WH0[1], WH1[1])
+        nx, ny = _push_out(nx, ny, R1, W1, H1)
+        return [round(min(max(nx, 0.0), W1), 4), round(min(max(ny, 0.0), H1), 4)]
+    return f
+
+
+def _inside(p, rects):
+    return any(r[0] + 1e-6 < p[0] < r[2] - 1e-6 and r[1] + 1e-6 < p[1] < r[3] - 1e-6 for r in rects)
+
+
+def _remap_walk(x0, x1, f, R0, key=None):
+    """x0: base value, x1: the legalized copy. Leaves the legalizer already moved (core-riding points, items) keep
+    their value; unchanged off-core points / rects are remapped with f."""
+    if isinstance(x0, dict) and isinstance(x1, dict):
+        for k in x1:
+            if k in CP.SKIP_KEYS or k in SIZE_KEYS or k not in x0:
+                continue
+            x1[k] = _remap_walk(x0[k], x1[k], f, R0, k)
+        return x1
+    if isinstance(x0, list) and isinstance(x1, list):
+        if x1 and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in x1):
+            if x1 != x0 or not key:
+                return x1
+            if len(x1) == 4 and key not in ("xy", "root", "outs", "start_in"):   # rect (rect_um, keepouts, islands)
+                a, b = x1[:2], x1[2:4]
+                if _inside(a, R0) or _inside(b, R0):
+                    return x1
+                a, b = f(*a), f(*b)
+                return [min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])]
+            if len(x1) >= 2 and (key.endswith("_um") or key in ("xy", "root", "outs", "start_in")):
+                if _inside(x1, R0):
+                    return x1
+                return f(*x1[:2]) + list(x1[2:])
+            return x1
+        if len(x0) == len(x1):
+            return [_remap_walk(a, b, f, R0, key) for a, b in zip(x0, x1)]
+    return x1
+
+
+def remap_bins(rows, fol_core, f, R0, R1, b=SINK_BIN_UM):
+    """sink bins [[x, y, n]]: a bin inside an old core box rides with that core, a glue bin follows the free map
+    (pushed out of a moved core), then bins sharing a b-um cell merge.  The sink total is unchanged."""
+    acc = collections.OrderedDict()
+    for r in rows:
+        x, y = float(r[0]), float(r[1])
+        n = float(r[2]) if len(r) > 2 else 1.0
+        q = fol_core([x, y]) if _inside((x, y), R0) else None
+        nx, ny = q if q else f(x, y)          # f pushes a glue bin out of a moved core; a riding bin stays on it
+        key = (int(nx // b), int(ny // b), bool(q))
+        e = acc.setdefault(key, [0.0, 0.0, 0.0])
+        e[0] += nx * n
+        e[1] += ny * n
+        e[2] += n
+    out = []
+    for (i, j, ride), (sx, sy, n) in acc.items():
+        cx, cy = (i + 0.5) * b, (j + 0.5) * b
+        if ride or _inside((cx, cy), R1):   # a riding bin, or a glue cell centre on a core: the weighted mean
+            cx, cy = sx / n, sy / n
+        out.append([round(cx, 3), round(cy, 3), int(n) if float(n).is_integer() else round(n, 6)])
+    return out
+
+
+def free_remap(t0, tnew, M, WH0, WH1, cfg, repo):
+    R0, R1 = _core_rects(t0), _core_rects(tnew)
+    f = make_free_map(R0, R1, WH0, WH1)
+    for k in list(tnew):
+        if k in CP.SKIP_KEYS or k in SIZE_KEYS or k not in t0:
+            continue
+        tnew[k] = _remap_walk(t0[k], tnew[k], f, R0, k)
+    ck = tnew.get("clock") or {}
+    bf = ck.get("sink_bins_file")
+    if bf and cfg.get("_bins_dir"):
+        src = Path(repo) / bf
+        js = json.loads(src.read_text())
+        rows = remap_bins(js.get("bins") or [], CP.follow_fn(M), f, R0, R1, float(js.get("bin_um") or SINK_BIN_UM))
+        if rows != js.get("bins"):
+            nj = dict(js, bins=rows, source=bf, note="STREET-RULE-1 legalize: bins follow moved cores / stretched bands")
+            txt = json.dumps(nj, separators=(",", ":")) + "\n"
+            h = hashlib.sha256(txt.encode()).hexdigest()[:10]
+            rel = Path(cfg["_bins_dir"]) / ("%s__%s.json" % (Path(bf).stem, h))
+            (Path(repo) / rel).parent.mkdir(parents=True, exist_ok=True)
+            (Path(repo) / rel).write_text(txt)
+            ck["sink_bins_file"] = str(rel)
+
+
+def tap_check(Q, names, plan_path):
+    """{type: error} of schema.tap_grid on plan dict Q (the taps gen phys exports)."""
+    import schema as SC
+    try:
+        PQ = SC.Plan(Q, Path(plan_path))
+    except Exception as e:  # noqa: BLE001  (a plan that does not load fails every type)
+        return {n: "plan load: %s" % e for n in names}
+    bad = {}
+    for n in names:
+        try:
+            SC.tap_grid(PQ, n)
+        except Exception as e:  # noqa: BLE001
+            bad[n] = str(e)[:300]
+    return bad
+
+
+def sinks_under_cores(t, repo=None):
+    R = _core_rects(t)
+    pts, _ = sink_points(t, repo)
+    return [p[:2] for p in pts if _inside(p, R)]
+
+
+def sink_points(t, repo=None):
+    """(sites, total weight, bins total) of clock.sink_sites_um + clock.sink_bins_file (test / check helper)."""
+    ck = t.get("clock") or {}
+    sites = [list(r) for r in ck.get("sink_sites_um") or []]
+    bins = []
+    if ck.get("sink_bins_file") and repo:
+        bins = json.loads((Path(repo) / ck["sink_bins_file"]).read_text()).get("bins") or []
+    return sites + [list(r) for r in bins], sum(float(r[2]) if len(r) > 2 else 1.0 for r in sites + bins)
 
 
 def _core_rects(t):
@@ -1467,6 +1640,7 @@ def cmd_legalize(a):
     Q = copy.deepcopy(P)
     rows = []
     global _JOB
+    cfg["_bins_dir"] = "physical/die_plan/%s/street_rule_bins" % die
     _JOB = (P, die_dir, repo, conns, cfg, rs_cfg)
     if a.jobs > 1 and len(names) > 1:
         import multiprocessing as mp
@@ -1478,6 +1652,25 @@ def cmd_legalize(a):
         rows.append(row)
         if tn is not None:
             Q["partition_types"][n] = tn
+    # export dry run of the clock taps (schema.tap_grid = what gen phys / kit_rtl derives; density taps re-derive
+    # from the remapped sinks, every sink <= tap_radius_um): a type whose legalized form fails where its base passes
+    # keeps its base form (COORD 11-12, HEAD-94 hd_lep0N "no legal clock tap within 200 um")
+    applied = [r["type"] for r in rows if r.get("applied")]
+    if applied and cfg.get("tap_check", 1):
+        bad1 = tap_check(Q, applied, plan)
+        bad0 = tap_check(P, sorted(bad1), plan) if bad1 else {}
+        for r in rows:
+            n = r["type"]
+            if n in bad1:
+                r["tap_check"] = dict(after=bad1[n], base=bad0.get(n))
+                if n not in bad0:
+                    r["applied"] = False
+                    r["reason"] = "clock taps: %s" % bad1[n][:160]
+                    Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
+            elif n in applied:
+                r["tap_check"] = "ok"
+        print("tap check: %d applied, %d fail after (%d also fail in base) -> %d reverted" % (
+            len(applied), len(bad1), len(bad0), len([n for n in bad1 if n not in bad0])), flush=True)
     def write_plan():
         txt = json.dumps(Q, indent=1) + "\n"
         if a.out_plan.endswith(".gz"):
@@ -1494,7 +1687,10 @@ def cmd_legalize(a):
         if a.rs_halving != "off" and grown:
             outdir = Path(a.rs_out or Path(a.out_plan).parent / "rs")
             rb = CP.rs_rows(plan, die, repo, grown, a.ref_dirs, a.rs_halving, outdir / "before")
-            ra = CP.rs_rows(Path(a.out_plan).resolve(), die, repo, grown, a.ref_dirs, a.rs_halving, outdir / "after")
+            # the output plan usually sits outside the base plan dir: the base dir is a ref dir so route_supply reads the
+            # same core_conns / pin sidecars as the "before" run (without it the "after" demand was near zero, COORD 11-12)
+            ra = CP.rs_rows(Path(a.out_plan).resolve(), die, repo, grown, list(a.ref_dirs) + [str(Path(plan).resolve().parent)],
+                            a.rs_halving, outdir / "after")
             for r in rows:
                 if r["type"] in grown:
                     rs_ = r["route_supply"] = [CP.rs_summary(rb.get(r["type"])), CP.rs_summary(ra.get(r["type"]))]

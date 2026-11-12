@@ -1120,7 +1120,7 @@ def walk_follow(x, fol, key=None):
         return x
     if isinstance(x, list):
         if x and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in x):
-            if key and ("rect" in key) and len(x) == 4:
+            if key and ("rect" in key or key in ("keepouts_um", "die_islands_um")) and len(x) == 4:
                 a, b = fol(x[:2]), fol(x[2:4])
                 if a and b:
                     return [min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])]
