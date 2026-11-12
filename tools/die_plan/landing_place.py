@@ -8,8 +8,15 @@ import re
 def safe(s):return re.sub(r'\W','_',s)
 
 
-def _group_rect_overrides(t, groups):
-    """Explicit physical collector/raw-copy sites; absent plans keep identical output."""
+def _group_rect_overrides(t, groups, stale=None):
+    """Explicit physical collector/raw-copy sites; absent plans keep identical output.
+
+    GEN-CLASS-1 11-12 (QC sle_ctl__cl372cea1c gen: 'unknown ... landing group override u_cland_collect_rst_n_t19'):
+    group_rects_um is keyed on collector tree NODE names, and a reset-tree re-solve (taps moved with the partner
+    windows) keeps the names but changes which nodes are on a source's path.  An override whose node is still in the
+    collector tree but on no active path has no group to move (build_local emits no u_cland_collect_/u_cland_reset_
+    for it): it is a stale no-op, so it is dropped and logged (stale: {prefix: reason}, from tcl()).  A prefix that is
+    not a tree node at all, ambiguous or of an unsupported kind still fails closed."""
     c = t.get('clock', {}).get('landing_contract', {})
     if 'group_rects_um' not in c:
         return groups, ''
@@ -20,10 +27,14 @@ def _group_rect_overrides(t, groups):
     for prefix, rect, tag in groups:
         known[prefix].append(tag)
     width, height = t['outline_um']
+    dropped = {}
     for prefix, rect in overrides.items():
         if not isinstance(prefix, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', prefix):
             raise ValueError(f'invalid landing group prefix {prefix!r}')
         tags = known.get(prefix, [])
+        if not tags and prefix in (stale or {}):
+            dropped[prefix] = stale[prefix]
+            continue
         if len(tags) != 1 or not (tags[0].startswith('collector:') or tags[0] == 'raw-copy-optional'):
             raise ValueError(f'unknown, ambiguous or unsupported landing group override {prefix!r}')
         if not isinstance(rect, (list, tuple)) or len(rect) != 4 or any(
@@ -32,8 +43,11 @@ def _group_rect_overrides(t, groups):
         x0, y0, x1, y1 = rect
         if not (0 <= x0 < x1 <= width and 0 <= y0 < y1 <= height):
             raise ValueError(f'{prefix}: rectangle must be ordered and inside the type outline')
+    notes = ''.join(f'puts "OT_CLAND stale group rectangle override {p}: {why}; dropped"\n'
+                    for p, why in sorted(dropped.items()))
+    overrides = {p: r for p, r in overrides.items() if p not in dropped}
     if not overrides:
-        return groups, ''
+        return groups, notes
     groups = [(p, overrides.get(p, r), tag) for p, r, tag in groups]
     # Optional raw copies can disappear during synthesis (a relay whose load a later
     # event re-pointed): placement already skips an absent optional group, so an
@@ -52,7 +66,7 @@ def _group_rect_overrides(t, groups):
 }
 unset -nocomplain cland_override_prefix cland_override_required cland_override_found cland_override_i
 ''' % entries
-    return groups, check
+    return groups, notes + check
 
 
 def _bus_order(t,bus):
@@ -687,8 +701,12 @@ def tcl(P,tn,macro_moves=None):
         x,y=s['xy_um']
         for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
         groups.append(('u_cland_rst_'+s['name'],near(tree['relays'][next(i for i,r in enumerate(tree['relays']) if r['q']==_source_node(s))]['xy'],_source_node(s)),'raw-copy-optional'))
+    stale={}
     if root:
         active,xy=collector_nodes(ev)
+        for n in sorted(set(xy)-active):
+            for k in ('collect','reset'):
+                stale[f'u_cland_{k}_'+safe(n)]=f'collector node {n} is in the tree but on no active path (tree re-solved)'
         for n in sorted(active):
             groups.append(('u_cland_collect_'+safe(n),near(xy[n],n),'collector:'+n))
             if n!='rst_root_n':groups.append(('u_cland_reset_'+safe(n),near(xy[n],n),'raw-copy-optional'))
@@ -696,7 +714,7 @@ def tcl(P,tn,macro_moves=None):
             if s['seam']:
                 x,y=s['xy_um'];i=s['index']
                 status.extend([(f'cland_dn_trained_{i}',x,y),(f'cland_dn_guard_{i}',x,y)])
-    groups, override_check = _group_rect_overrides(P.types[tn], groups)
+    groups, override_check = _group_rect_overrides(P.types[tn], groups, stale)
     out=[f'puts "OT_CLAND face-window {n}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     for p,r,tag in groups:
         # Optional raw copies only exist when the original START tap is gated.
