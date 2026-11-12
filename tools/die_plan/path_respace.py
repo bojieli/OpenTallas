@@ -551,6 +551,39 @@ def _hit(bank, w, h, avoid):
     return any(x0 < c and x1 > a and y0 < d and y1 > b for a, b, c, d in avoid)
 
 
+def tap_guard(raw_before, raw_after):
+    """kit tap rule on every type whose ft_slots changed (taps.explicit_taps / grid_explicit_taps = the bind's EMIT rule:
+    load <= 1500, radius <= 150, no empty tap).  Returns [(type, error, stations_changed)] for types that FAIL after the
+    change and passed before (or had no tap check)."""
+    import taps
+    P2 = S.Plan(raw_after)
+    P1 = S.Plan(raw_before)
+    out = []
+    for tn, t in raw_after["partition_types"].items():
+        if t.get("hard") or json.dumps(t.get("ft_slots"), sort_keys=True) == json.dumps(
+                raw_before["partition_types"].get(tn, {}).get("ft_slots"), sort_keys=True):
+            continue
+        fn = taps.explicit_taps if (t.get("clock") or {}).get("tap_mode") == "explicit" else taps.grid_explicit_taps
+        try:
+            fn(P2, tn)
+        except Exception as e:                       # noqa: BLE001
+            try:
+                fn(P1, tn)
+                before_ok = True
+            except Exception:                        # noqa: BLE001
+                before_ok = False
+            if before_ok:
+                k0 = [sl.get("stations") for sl in raw_before["partition_types"][tn].get("ft_slots", [])]
+                k1 = [sl.get("stations") for sl in t.get("ft_slots", [])]
+                out.append((tn, str(e)[:160], k0 != k1))
+    return out
+
+
+def revert_types(raw_before, raw_after, types):
+    for tn in types:
+        raw_after["partition_types"][tn]["ft_slots"] = copy.deepcopy(raw_before["partition_types"][tn].get("ft_slots"))
+
+
 def run(raw, limit=405.0, allow_add=True, collectors=True, rebank=False, add_only_lanes=None, only_lanes=None):
     global FREE_BANKS, FREEZE_EXACT, ONLY_LANES
     FREEZE_EXACT = add_only_lanes is not None
