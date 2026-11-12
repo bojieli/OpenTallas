@@ -35,7 +35,14 @@ for ln in pre:
     m = re.search(r"(phy__t\d+)", ln)
     if m:
         mark(m.group(1), "tapwin", rows.get(m.group(1), {}).get("tapwin") or "per_type")
-cols = ["diereview", "lfcs_depth", "lfcs_direct", "tapwin", "band", "reachfix2"]
+nfs = os.path.join(R, "r4b_nfs_lanes.json")
+if os.path.exists(nfs):
+    P = json.load(open(os.path.join(R, "plan_ready12b_A.json")))
+    pm = {p["name"]: p["type"] for p in P["partitions"]}
+    for lane, src, dst, old, new in json.load(open(nfs))["lanes_changed"]:
+        for pn in (src, dst):
+            mark(pm[pn], "native_fixed_sync", "%s:%s->%s" % (lane, old, new))
+cols = ["diereview", "lfcs_depth", "lfcs_direct", "tapwin", "band", "reachfix2", "native_fixed_sync"]
 with open(OUT, "w") as f:
     f.write("type\tn_reasons\t" + "\t".join(cols) + "\n")
     for t in sorted(rows):
