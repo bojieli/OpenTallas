@@ -25,3 +25,6 @@ If asked: LEC of DCHK=1 vs 0 (only the done matching differs); add fault classes
 - Unqualified: g0 reset4/rbin1 setup classes; SW pin clump and clock entry under stack; g1 rbin3 setup class; K-port saturation with GREG not stress-tested beyond SLOW=2; clock ratios limited to 8 tested; real die clock skew/CDC metastability not simulated.
 - kit_g1_cpl (path given by DIE-HBM-100) was not found on epyc7; Codex's kit on epyc4 /srv/opentallas-scratch/claude/codex-hbm-root-s7-1107/kit_g1_vS7_RR_reviewed was used. epyc4 ssh sometimes resets; retry.
 - Rule note: an earlier pkill -x python3 was run once on epyc7 (not repeated).
+
+## 7 Merge routing (COORD 11-12)
+The merge lane takes HBM-CORES-C's 746fe8f88aa9 (recipe + DCHK, without this lane's bench logs and without the g1 recipe hunk) instead of e1f778f65d. This lane's bench and results (results/die_hbm_1112/wbq_qual/, RESULTS.md) land LATER as a results-only branch with the g1 recipe hunk dropped (i.e. no recipes_b2.json change, and no rtl/hbm_accel/counted_1109/ot_wbq_root_g1/ copy unless HBM-CORES-C asks). Not yet created: to do when asked, branch off the then-current main, cherry-pick only the wbq_qual directory from e1f778f65d, note that the bench expects DCHK in reform_1105b/ot_wbq_split.sv (it comes with 746fe8f88aa9). Scope is done; no job is running.
