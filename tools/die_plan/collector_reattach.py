@@ -112,7 +112,11 @@ def reattach_plan(base, cand, reach_um=405):
             info = dict(tree=copy.deepcopy(blc["collector_tree"]),
                         local_sources=copy.deepcopy(blc.get("collector_local_sources") or []),
                         children=copy.deepcopy(blc.get("collector_children") or []),
-                        collector_root_node="rst_root_n" if reroot else lc.get("collector_root_node", "rst_root_n"))
+                        # the root (rst_root_n or a local relay) is validated by _reroot above: kept at its name and
+                        # site, or re-picked at the old site; the sources then follow the tree from the delivered root.
+                        # QC-VIS-RESITE 11-12: an UNCHANGED local root used to fall through to reattach_sources' blanket
+                        # "rerooted collector" refusal (slw_stm_v1__cle34a73c3, rst_n_t8) while a MOVED one passed.
+                        collector_root_node="rst_root_n")
             r = LCO.reattach_sources(info, lc["collector_tree"], reach_um=reach_um)
             lc["collector_local_sources"] = info["local_sources"]
             if "collector_children" in lc or info["children"]:
