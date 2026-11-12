@@ -5,14 +5,14 @@
 #       w_k_wdata (wbk SW) -> S.
 #   pfr (v700685 354.24 x 453.6, u_vmks_Q0/Q2/Q3 nw/ne, ne Q0 MY): w_k_* (wbk: core-frame E for 4 of 6
 #       instances) S -> E; c_k_wdata (ctl partners E/N, mixed) E -> N.
-# Every face is spread evenly over [8.64, len - 8.64] on two layers (E/W M4+M6, N/S M5+M7, alternating along the face;
+# Every face is spread evenly over [8.64, len - 8.64] on its single pin layer (E/W M4, N/S M5, as today;
 # symmetric tracks, offset pitch/2), keeping today's along-face order for staying pins; track use <= 0.70 per layer.
 import json, re, sys, collections
 var, src, out = sys.argv[1:4]
 DIM = {'abcr': (445.824, 506.304), 'pfr': (354.24, 453.6)}[var]
 W, H = DIM
 PITCH = {'M4': 0.048, 'M5': 0.048, 'M6': 0.064, 'M7': 0.064}
-LAYS = {'W': ('M4', 'M6'), 'E': ('M4', 'M6'), 'N': ('M5', 'M7'), 'S': ('M5', 'M7')}
+LAYS = {'W': ('M4',), 'E': ('M4',), 'N': ('M5',), 'S': ('M5',)}   # single layer as today: M6/M7 core pins land off the plan tracks in G0
 J = json.load(open(src))
 def face(p):
     return 'W' if p['x'] < 0.5 else 'E' if p['x'] > W - 0.5 else 'S' if p['y'] < 0.5 else 'N' if p['y'] > H - 0.5 else 'I'
@@ -43,10 +43,10 @@ for f in 'WENS':
     L = H if f in 'EW' else W
     lo, hi = 8.64, L - 8.64
     la = LAYS[f]
-    # pin i goes on layer la[i % 2]; each layer's pins are spread on its own track grid over [lo, hi]
+    # pin i goes on layer la[i % len(la)]
     use = {}
     for li, ln in enumerate(la):
-        sub = ps[li::2]; pit = PITCH[ln]; ntr = int((hi - lo) / pit)
+        sub = ps[li::len(la)]; pit = PITCH[ln]; ntr = int((hi - lo) / pit)
         use[ln] = round(len(sub) / ntr, 3)
         assert len(sub) / ntr <= 0.70, (f, ln, len(sub), ntr)
         for i, p in enumerate(sub):
