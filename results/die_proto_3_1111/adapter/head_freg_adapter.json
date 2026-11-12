@@ -1,0 +1,16 @@
+{
+ "tool": "tools/clk/ot_clk_die_ctree.py",
+ "module": "die_ctree",
+ "prefix": "ck_",
+ "inputs": {
+  "/srv/opentallas-scratch2/claude/die-proto-3/head/freg/tree/kit/clock/ctree.v": "17c9f71890c8a0692b17001837ca32088b644fe1f19742627c7ab7c8e442f16b",
+  "/srv/opentallas-scratch2/claude/die-proto-3/head/freg/grt_spef_TT/combo_TT.spef": "099971deaf071a510ab4c98e25c4798804f3a95b6cd17243ce389a89bc89e533"
+ },
+ "tree_cells": 43810,
+ "tree_ports": 12986,
+ "spef_nets_kept": 43811,
+ "spef_nets_dropped": 48401,
+ "restore_cap": "pins",
+ "restored_cap_ff": 42391.67,
+ "rc_basis": "OpenROAD estimate_parasitics -global_routing (combo die GRT)"
+}
