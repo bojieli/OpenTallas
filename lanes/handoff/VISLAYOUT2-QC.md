@@ -1,4 +1,4 @@
-# VISLAYOUT2-QC lane handoff (refreshed 2026-11-12 06:51 PST)
+# VISLAYOUT2-QC lane handoff (refreshed 2026-11-12 08:03 PST)
 W = /srv/opentallas-scratch2/claude/vislayout2-qc (same path on intel2 hub, epyc9, epyc2, epyc7, intel1). All forms are private DO_NOT_COUNT. QC owner: DIE-QC-100.
 
 ## 1 Scope
@@ -30,6 +30,9 @@ QC visual re-layouts of the s25/s27 private forms: coll_n (forms e/f), sle_su_c 
 - Route logs: <lane>/spec/<it>/route.otrun.log, which ends with ROUTE_RC=. Sign-off: <kit>/signoff.log on the route host.
 - Still routing on epyc9: stm (sle_stm_v1__clbe630b9c runs/d attempt_2) and hc2 (slw_hc2__cl6bcaba89 runs/e).
 
+- UPDATE 08:0x PST: under kit_wave.geom_gate, all 9 geom re-runs are PASS-COND (GEOM-ADVISORY). The scripts in step 3 tested for raw "AUTO-GEOM PASS" text, so they stopped before posguard/route. \$W/route_pc.sh (log \$W/route_pc.log) ran posguard (all PASS) and route for 7: sc sle_sc_v2, slw_sc_v1 cl63e5a7a2 and cl4590432d (epyc2), sle_sc_v1 cl7479a5ec (intel1), and sta clb036e152, clf4365a62 (epyc2) and cl9f076a5c (intel1). \$W/route_v3.sh routes sle_sc_v3 and slw_sc_v3 on epyc7 from the epyc7 copy, because their epyc9 gen dirs were also removed after push_gen.
+- suc: all 3 passed kit_topology and place_probe; next comes geom, then launch2.sh runs posguard and route.
+
 ## 4 Watchers and scripts (Codex re-arms these)
 - sc/route_after_place_sc4.sh
 - sta/route_after_place_sta2.sh (RHMAP in sta/run_sta2.sh)
@@ -49,6 +52,8 @@ QC visual re-layouts of the s25/s27 private forms: coll_n (forms e/f), sle_su_c 
 3. sc geom2: on PASS the script routes. On "AUTO-GEOM FAIL" or "NO VERDICT", read spec/<it>/geom2.log and fix the class, never one item.
 4. sta recover2: same rule as step 3.
 5. The sc family E sliver (GEOM-VIS-3/4 ISSUES) needs a family re-floor (see FINDING 1bc858f08a9). Do it only if DIE-QC-100 or QC-S28-VISFORM hands it back.
+5b. slw_sc_v2 and sle_sc_v1__cl115da35f are still in kit_wave geom. Their epyc9 gen dir may also be gone (an empty slw_sc_v2 gen dir was made on epyc9 for push_gen). If route_after_place_sc4 logs a posguard FAIL "missing", run posguard and route from the place-host copy, as in route_v3.sh.
+5c. Judge geom with kit_wave.geom_gate (PASS-COND counts), never the raw text.
 6. Each item that passes place must get a visual render review (GEOM-REVIEW) before you call it good.
 
 ## 7 Open READY and ASK
