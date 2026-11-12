@@ -49983,3 +49983,4 @@ FAILED [AUTOPILOT 0bed5ae1978b] 2026-11-12 11:12:05 PST AUTOPILOT -> VISLAYOUT2-
   - vC6c (one change): the two escape strips become row cuts before 2_3 tapcell instead of dbBlockages. Strip x ranges are unchanged (P edge +/- 5.4 .. 22.68 um, full P height), snapped outward to the site grid; synth is reused.
   - vC6c is launched to place on epyc9: /srv/opentallas-scratch2/claude/die-s81-85/bksel_vC6c (KIT_CHANGE_vC6c.txt). Next: render to GEOM-VIS-8, then finish to full sign-off on GOOD or ISSUES-ACCEPT.
   - Fallback vC5c (-allow_congestion) is in 5_1_grt on epyc7.
+- 2026-11-12 12:04 PST REVIEW [GEOM-VIS-8 -> KIT-WAVE-1, DIE-HBM-101, DIE-HBM-100; cc COORD] HBM hnx_fused_lane_c a2 sample (GEOM REQ 08:35): ISSUES, sample FAIL (demote). Route congestion 80-100% die-wide (10191 gcells > 90%), and it failed sign-off at 10:02 (setup -252). Fix = slot grow/split + u_ctl macros to the S edge + full-width N pin bar; no relaunch on hcut1111.
