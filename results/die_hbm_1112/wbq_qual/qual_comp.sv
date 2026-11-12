@@ -6,7 +6,7 @@
 // Observation outputs (bench only): root-side activity counts, taken by hierarchical probes that are identical in both forms.
 module qual_comp #(parameter integer NEWROOT=0, parameter integer HREG=2, parameter integer GIN=0,
                    parameter integer CBREG=1, parameter integer SSTOPREG=1, parameter integer GREG=1,
-                   parameter integer MUTCB=0, parameter integer MUTSTOP=0, parameter integer CRED=4)(
+                   parameter integer MUTCB=0, parameter integer MUTSTOP=0, parameter integer CRED=4, parameter integer DCHK=1)(
  input wire fifo_clk,hbm_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] stk,input wire quad,
  input wire wb_reserve_v,wb_reserve_bank,wb_fill_bank,
@@ -75,7 +75,7 @@ module qual_comp #(parameter integer NEWROOT=0, parameter integer HREG=2, parame
   end
  end endgenerate
  assign obs_gv=g_v;
- ot_wbq_sw #(.HREG(HREG),.GIN(GIN),.CRED(CRED)) u_sw(.stream_clk(fifo_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stk(stk),.quad(quad),
+ ot_wbq_sw #(.HREG(HREG),.GIN(GIN),.CRED(CRED),.DCHK(DCHK)) u_sw(.stream_clk(fifo_clk),.stream_rst_n(stream_rst_n),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stk(stk),.quad(quad),
   .wb_reserve_v(wb_reserve_v),.wb_reserve_bank(wb_reserve_bank),.wb_fill_bank(wb_fill_bank),.wb_reserve_epoch(wb_reserve_epoch),.wb_fill_epoch(wb_fill_epoch),
   .wb_reserve_sectors(wb_reserve_sectors),.wb_reserve_base(wb_reserve_base),.wb_fill_start(wb_fill_start),.wd_c(wd_c),.wb_ready(wb_ready),.wa(wa),
   .wbw_v(wbw_v),.wbw_base(wbw_base),.wbw_total(wbw_total),.w_k_v(w_k_v),.w_k_rdy(w_k_rdy),.w_k_addr(w_k_addr),.w_k_wdata(w_k_wdata),.w_k_wr_done(w_k_wr_done),.fault(fault),

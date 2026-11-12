@@ -40,13 +40,13 @@ def gen_rr():
 """)
     p = os.path.join(out, "gen_rr_s7_greg.sv"); open(p, "w").write(t); return p
 def P(**k):
-    d = dict(HREG=2, GIN=0, CBREG=1, SSTOPREG=1, GREG=1, MUTCB=0, MUTSTOP=0, CRED=4)
+    d = dict(HREG=2, GIN=0, CBREG=1, SSTOPREG=1, GREG=1, MUTCB=0, MUTSTOP=0, CRED=4, DCHK=1)
     d.update(k)
     return d
 BUILDS = {
  "tgt": P(), "s7a": P(GREG=0), "base": P(CBREG=0, SSTOPREG=0, GREG=0), "cb": P(SSTOPREG=0, GREG=0), "st": P(CBREG=0, GREG=0),
  "gr": P(CBREG=0, SSTOPREG=0), "tgt_gin": P(GIN=1), "tgt_h0": P(HREG=0),
- "rr": P(GREG=0, RR=1), "tgt_rr": P(RR=1), "mcb1": P(MUTCB=1), "mcb2": P(MUTCB=2), "mst1": P(MUTSTOP=1), "mst2": P(MUTSTOP=2), "mst3": P(MUTSTOP=3)}
+ "rr": P(GREG=0, RR=1), "tgt_rr": P(RR=1), "tgt_d0": P(DCHK=0), "tgt_d2": P(DCHK=2), "mcb1": P(MUTCB=1), "mcb2": P(MUTCB=2), "mst1": P(MUTSTOP=1), "mst2": P(MUTSTOP=2), "mst3": P(MUTSTOP=3)}
 def build(name):
     d = os.path.join(out, "obj_" + name)
     pr = dict(BUILDS[name]); rr = pr.pop("RR", 0)
@@ -90,6 +90,10 @@ for b in ("tgt", "s7a", "rr", "tgt_rr"):             # throughput, K always read
 for b in ("mcb1", "mcb2"):                                           # negative controls, must FAIL
     for rt in ((1000, 1000, 137), (833, 1024, 200)):
         add(b, "neg", rt, 0, 100, 0, 0, expect="FAIL")
+for b in ("tgt_d0", "tgt_d2"):                                      # rule (a): pre-fix sw (DCHK=0) and the no-check mutant (DCHK=2) must FAIL
+    for rt in ((1000, 1000, 137), (833, 1024, 200)):
+        add(b, "ruleA", rt, 1, 2400, 0, 0, expect="FAIL")
+        add(b, "ruleA", rt, 1, 2400, 1, 1, expect="FAIL")
 for b in ("mst1", "mst2", "mst3"):
     for rt in ((1000, 1000, 137), (833, 1024, 200)):
         add(b, "neg", rt, 1, 300, 0, 0, expect="FAIL")

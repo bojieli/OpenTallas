@@ -16,7 +16,7 @@ module tb_qual;
  // runtime plusargs (default in brackets): +TF=ps [1000] +TH=ps [1000] +PH=ps [137] +MODE=0|1 [0] +NCASE=n [20] +SLOW=0|1|2 [0] +QUAD=0|1 [0] +NB=n [4] +MAXTOT=n [1984]
  int TF=1000, TH=1000, PH=137, MODE=0, NCASE=20, NB=4, SLOW=0, QUAD=0;
  initial begin void'($value$plusargs("TF=%d",TF));void'($value$plusargs("TH=%d",TH));void'($value$plusargs("PH=%d",PH));void'($value$plusargs("MODE=%d",MODE));void'($value$plusargs("NCASE=%d",NCASE));void'($value$plusargs("SLOW=%d",SLOW));void'($value$plusargs("QUAD=%d",QUAD));void'($value$plusargs("NB=%d",NB)); end
- parameter integer HREG=2, GIN=0, CBREG=1, SSTOPREG=1, GREG=1, MUTCB=0, MUTSTOP=0, CRED=4;
+ parameter integer HREG=2, GIN=0, CBREG=1, SSTOPREG=1, GREG=1, MUTCB=0, MUTSTOP=0, CRED=4, DCHK=1;
  int MAXTOT=1984;
  initial void'($value$plusargs("MAXTOT=%d",MAXTOT));
  reg fc=0,hc=0;
@@ -31,7 +31,7 @@ module tb_qual;
  wire[31:0]o_fw[0:1],o_fe[0:1],o_mr[0:1];wire[7:0]o_gv[0:1];
  genvar gi;
  generate for(gi=0;gi<2;gi=gi+1)begin:g_d
-  qual_comp #(.NEWROOT(gi),.HREG(HREG),.GIN(GIN),.CBREG(CBREG),.SSTOPREG(SSTOPREG),.GREG(GREG),.MUTCB(MUTCB),.MUTSTOP(MUTSTOP),.CRED(CRED)) u(
+  qual_comp #(.NEWROOT(gi),.HREG(HREG),.GIN(GIN),.CBREG(CBREG),.SSTOPREG(SSTOPREG),.GREG(GREG),.MUTCB(MUTCB),.MUTSTOP(MUTSTOP),.CRED(CRED),.DCHK(DCHK)) u(
    .fifo_clk(fc),.hbm_clk(hc),.stream_rst_n(srst_n),.hbm_rst_n(hrst_n),.stk(2'd0),.quad(QUAD[0]!=0),
    .wb_reserve_v(w_rv),.wb_reserve_bank(w_rb),.wb_fill_bank(fb),.wb_reserve_epoch(re),.wb_fill_epoch(fe),.wb_reserve_sectors(w_rt),.wb_reserve_base(rbase),
    .wb_fill_start(fs),.wd(wd),.wb_ready(rd[gi]),.wa(wa[gi]),.wbw_v(bv[gi]),.wbw_base(bb[gi]),.wbw_total(bt[gi]),
@@ -54,9 +54,12 @@ module tb_qual;
  int  nd[0:1];longint done_t[0:1][$];int wv[0:1][$];
  longint cstart_t[0:1][$];
  int  sbad=0,wbad=0,rdybad=0;
- int  fcyc=0;
+ int  fcyc=0;int ft_f[0:1]='{-1,-1};int fdl_hist[0:3][0:3];int fdl_max[0:3];initial for(int a=0;a<4;a++)begin fdl_max[a]=0;for(int b=0;b<4;b++)fdl_hist[a][b]=0;end
+ int n_unclean_abs=0,n_fdiff=0,max_fdelta=0,n_f3abs_unraised=0;
  bit  fault_seen=0;
- reg  inj_dn_req=0;bit inj_dn_ok=0;
+ reg  inj_dn_req=0;bit inj_dn_ok=0;int spur_pp=-1;bit arr[0:1];bit arr_clean[0:1];longint arr_t[0:1];longint hcyc=0;int n_a_clean[0:1],n_a_unclean[0:1],n_a_viol[0:1];
+ initial begin for(int e=0;e<2;e++)begin n_a_clean[e]=0;n_a_unclean[e]=0;n_a_viol[e]=0;arr[e]=0;arr_clean[e]=0;arr_t[e]=0;end end
+ bit chk_pend[0:1];
  // ---------------- K partner + monitors (hbm_clk), one shared random draw per edge
  bit [15:0] rrdy;bit [15:0] rdn;int u_i,p_i;longint ad_l;
  always @(posedge hc)begin
@@ -88,7 +91,22 @@ module tb_qual;
    for(k=0;k<16;k++)begin
     if(found<0&&outst(0,(pp+k)%16)==0&&outst(1,(pp+k)%16)==0&&q[0][(pp+k)%16]==0&&q[1][(pp+k)%16]==0&&!dn[0][(pp+k)%16]&&!dn[1][(pp+k)%16])found=(pp+k)%16;
    end
-   if(found>=0)begin for(u_i=0;u_i<2;u_i++)dn[u_i][found]<=1'b1;inj_dn_req=0;inj_dn_ok=1;end
+   if(found>=0)begin for(u_i=0;u_i<2;u_i++)dn[u_i][found]<=1'b1;inj_dn_req=0;inj_dn_ok=1;spur_pp=found;arr[0]=0;arr[1]=0;end
+  end
+ end
+ // rule (a): a K write-done with nothing outstanding (and no same-cycle push credit) must raise h_stop within 2 hbm_clk of its arrival
+ initial begin chk_pend[0]=0;chk_pend[1]=0; end
+ always @(posedge hc)begin
+  hcyc<=hcyc+1;
+  if(spur_pp>=0)begin
+   for(int e=0;e<2;e++)begin
+    bit dq;dq=(e==0)?g_d[0].u.u_sw.wr_done_q[spur_pp]:g_d[1].u.u_sw.wr_done_q[spur_pp];
+    if(!arr[e]&&dq===1'b1)begin arr[e]=1;arr_t[e]=hcyc;arr_clean[e]=(outst(e,spur_pp)==0)&&(hst[e]!==1'b1);
+     if(arr_clean[e])begin n_a_clean[e]++;chk_pend[e]=1;end else n_a_unclean[e]++;end
+   end
+  end
+  for(int e=0;e<2;e++)if(chk_pend[e]&&hcyc>=arr_t[e]+2)begin
+   chk_pend[e]=0;if(hst[e]!==1'b1)begin n_a_viol[e]++;if(n_a_viol[e]<=3)$display("RULE-A-VIOL dut %0d: done on PC %0d with nothing outstanding, no h_stop 2 hbm_clk after arrival",e,spur_pp);end
   end
  end
  // ---------------- stream-domain monitors (fifo_clk)
@@ -111,6 +129,7 @@ module tb_qual;
      if(tf_+te_+tm_>0)ev_cyc[e]=ev_cyc[e]+1;
     end
     if(f[e]===1'b1||sst[e]===1'b1||hst[e]===1'b1)fault_seen=1;
+    if(f[e]===1'b1&&ft_f[e]<0)ft_f[e]=fcyc;
    end
   end
  end
@@ -126,7 +145,7 @@ module tb_qual;
   gold.delete();seen[0].delete();seen[1].delete();
   for(int u=0;u<2;u++)begin w[u]=0;corrupt[u]=0;dup[u]=0;afterh[u]=0;gvpost[u]=0;ev_cyc[u]=0;ev_fw[u]=0;ev_fe[u]=0;ev_mr[u]=0;ev_gmax[u]=0;nd[u]=0;
    done_t[u].delete();wv[u].delete();cstart_t[u].delete();for(int g=0;g<8;g++)evg[u][g]=0;end
-  sbad=0;rdybad=0;fault_seen=0;f2_done=0;inj_done=0;fcyc=0;
+  sbad=0;rdybad=0;fault_seen=0;f2_done=0;inj_done=0;spur_pp=-1;chk_pend[0]=0;chk_pend[1]=0;arr[0]=0;arr[1]=0;arr_clean[0]=0;arr_clean[1]=0;ft_f[0]=-1;ft_f[1]=-1;fcyc=0;
  endtask
  task automatic do_reset();
   srst_n=0;hrst_n=0;
@@ -255,12 +274,17 @@ module tb_qual;
     if(inj_done&&!fault_seen)begin bad_inj=bad_inj+1;if(bad_inj<=5)$display("INJECT-NOT-DETECTED case %0d ft %0d",c,ftype);end
     if(fault_seen)begin
      if(inj_done)n_ftdet[ftype]++;
+     if((f[0]===1'b1)&&(f[1]===1'b1))begin
+      int dl;dl=(ft_f[0]>ft_f[1])?ft_f[0]-ft_f[1]:ft_f[1]-ft_f[0];
+      if(dl>max_fdelta)max_fdelta=dl;
+      if(dl>fdl_max[ftype])fdl_max[ftype]=dl;fdl_hist[ftype][(dl==0)?0:(dl<=2)?1:(dl<=20)?2:3]++;
+      if(dl>2&&!(ftype==3&&(!arr_clean[0]||!arr_clean[1])))begin n_fdiff=n_fdiff+1;bad_nofault=bad_nofault+1;if(bad_nofault<=5)$display("FAULT-DELTA-BAD case %0d ft %0d delta %0d",c,ftype,dl);end
+     end else
      if(ftype==3&&(f[0]===1'b1)!=(f[1]===1'b1))begin
       // a spurious write-done is indistinguishable from a real one while a write is in flight on that PC; the two forms have different
       // in-flight timing (GREG +1), so one may absorb it. Accepted if the absorbing form shows no corrupt or duplicate K write (the run is cut at the other form's fault, so blocks may be unfinished).
       int ab;ab=(f[0]===1'b1)?1:0;
-      if(corrupt[ab]==0&&dup[ab]==0)n_absorb++;
-      else begin bad_nofault=bad_nofault+1;if(bad_nofault<=5)$display("ABSORB-BAD case %0d nd %0d corrupt %0d",c,nd[ab],corrupt[ab]);end
+      begin n_absorb++;if(arr_clean[0]&&arr_clean[1]||!arr[0]||!arr[1])begin n_f3abs_unraised++;bad_nofault=bad_nofault+1;end else n_unclean_abs++;end if(corrupt[ab]!=0||dup[ab]!=0)begin bad_nofault=bad_nofault+1;$display("ABSORB-BAD case %0d corrupt %0d dup %0d",c,corrupt[ab],dup[ab]);end
      end else
      if(f[0]!==1'b1||f[1]!==1'b1)begin bad_nofault=bad_nofault+1;if(bad_nofault<=5)$display("FAULT-NOT-HELD case %0d ft %0d f %b %b sst %b %b hst %b %b",c,ftype,f[0],f[1],sst[0],sst[1],hst[0],hst[1]);end
     end
@@ -282,6 +306,9 @@ module tb_qual;
   $display("QUAL cases %0d writes old %0d new %0d done-lag(new-old, ps) min %0d max %0d mean %0d copy-dur mean old %0d new %0d (ps) dwrites(new-old) min %0d max %0d",
    agg_cases,agg_w0,agg_w1,(lag_n>0)?lag_min:0,(lag_n>0)?lag_max:0,(lag_n>0)?int'(lag_sum/lag_n):0,(dur_n[0]>0)?int'(dur_sum[0]/dur_n[0]):0,(dur_n[1]>0)?int'(dur_sum[1]/dur_n[1]):0,(MODE==1)?dw_min:0,(MODE==1)?dw_max:0);
   if(MODE==1)begin
+   for(int a=1;a<4;a++)$display("QUAL first-raise delta F%0d (both forms raised): 0: %0d, 1-2: %0d, 3-20: %0d, >20: %0d, max %0d fifo_clk",a,fdl_hist[a][0],fdl_hist[a][1],fdl_hist[a][2],fdl_hist[a][3],fdl_max[a]);
+   $display("QUAL RULING(2): fault raised by both forms, max first-raise delta %0d fifo_clk (limit 2), delta>2 cases %0d; F3 cases where one form never raised %0d",max_fdelta,n_fdiff,n_f3abs_unraised);
+   $display("QUAL RULE(a) spurious done, nothing outstanding: arrivals clean old %0d new %0d, violations (no h_stop within 2 hbm_clk) old %0d new %0d; arrivals with a write outstanding (inherently indistinguishable, exempt) %0d %0d; unclean absorbs %0d",n_a_clean[0],n_a_clean[1],n_a_viol[0],n_a_viol[1],n_a_unclean[0],n_a_unclean[1],n_unclean_abs);
    $display("QUAL F3 spurious done absorbed by one form only (no corrupt/dup write): %0d",n_absorb);
    $display("QUAL fault types injected F1 %0d F2 %0d F3 %0d, fault raised F1 %0d F2 %0d F3 %0d",n_ft[1],n_ft[2],n_ft[3],n_ftdet[1],n_ftdet[2],n_ftdet[3]);
    $display("QUAL post-stop root activity: max cycles old %0d new %0d, max lane-events per group old %0d new %0d; seam valids after h_stop max old %0d new %0d; K writes after h_stop max old %0d new %0d",
@@ -289,6 +316,7 @@ module tb_qual;
   end
   $display("QUAL bad: integrity %0d fault-not-held %0d post-stop-cycles %0d post-stop-words %0d k-after-hstop %0d recovery %0d inj-undetected %0d clean %0d stream %0d wa-seq %0d outstanding %0d done/timeout %0d fault-in-clean %0d",
    bad_integrity,bad_nofault,bad_postcyc,bad_postwords,bad_hpost,bad_recov,bad_inj,bad_clean,bad_stream,bad_wv,bad_out,bad_done,bad_hold);
+  if(n_a_viol[0]+n_a_viol[1]!=0)bad_nofault=bad_nofault+n_a_viol[0]+n_a_viol[1];
   if(bad_integrity+bad_nofault+bad_postcyc+bad_postwords+bad_hpost+bad_recov+bad_inj+bad_clean+bad_stream+bad_wv+bad_out+bad_done+bad_hold==0)begin $display("QUAL PASS");$finish;end
   else begin $display("QUAL FAIL");$fatal(1,"QUAL FAIL");end
  end

@@ -43,3 +43,12 @@ Measured on the target config:
 - GREG under long K back-pressure: run with K always ready and random ready only.
 - Token-level adoption of the g1 extra in-flight capacity (5 vs 4) and the perf cost: not done here.
 - LEC of S7+GREG: not done here (Codex did g0 S7 LEC without GREG).
+
+## Addendum (11-12, DIE-HBM-101 ruling ADOPT): K write-done check, ot_wbq_sw DCHK
+Change: `ot_wbq_sw` (reform_1105b/ot_wbq_split.sv, shared parent file) gets parameter DCHK. DCHK=0 (default) is byte-identical behaviour. DCHK=1 removes the same-cycle-push term (k_v&&k_rdy) from the done matching in the sticky check, ack_now, an1 and setH: a done that finds nothing outstanding on its PC before this cycle raises hbm_sticky (h_stop) at arrival. DCHK=2 is the mutant without the check (bench only). The check is in ot_wbq_sw, NOT in the S7 root file: the g0 root kit does not change; the **ot_wbq_sw recipe needs params {HREG:2, DCHK:1}**.
+Rule (a): a spurious K write-done with nothing outstanding must raise h_stop within 2 hbm_clk of its arrival (bench-checked at arrival, per form).
+Results, regression out_fix (150 jobs, 0 not OK; logs/results_fix.tsv, logs/fix.log):
+- DCHK=1, target and g1 RR: rule (a) violations 0 / 0 (old root / S7 root) over 11281 / 11336 clean arrivals.
+- Pre-fix DCHK=0 (tgt_d0, 4 jobs of 2400 cases): rule (a) FAILS, 4 to 33 violations per job. DCHK=2 mutant (tgt_d2, 4 jobs): FAILS. Both as required. All earlier negative controls (mcb1/2, mst1/2/3) still FAIL, all-flags-off identity unchanged.
+- First-raise delta between old root and S7 root (fifo_clk, both forms raised, all fault jobs): F1 12023 cases, delta 0 always; F2 7904 cases, delta 0 always; F3 11978 cases: delta 0 in 11614, 1-2 in 19, 3-20 in 118, >20 in 227, max 774. Integrity 0 (no corrupt or duplicate K write) everywhere.
+Residual class (documented phase-2 limit): a spurious done that arrives while a write is outstanding on the same PC (712 / 657 arrivals in this run). The K done port is w_k_wr_done[15:0], one bit per PC, no ID/tag/address, and the parent keeps only a count per PC, so the two dones cannot be told apart. The spurious done is taken as the real one and the fault is raised when the real done arrives with nothing outstanding; the first-raise delta of this class is the 3-20 / >20 tail above (up to 774 fifo_clk). The bench exempts it from the 2-cycle rule and counts it. All 364 F3 cases with delta > 2 belong to this class.

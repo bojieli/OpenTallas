@@ -1,0 +1,17 @@
+FAULT-DELTA-BAD case 4 ft 3 delta 4
+FAULT-DELTA-BAD case 514 ft 3 delta 7
+FAULT-DELTA-BAD case 565 ft 3 delta 4
+FAULT-DELTA-BAD case 1057 ft 3 delta 6
+FAULT-DELTA-BAD case 1526 ft 3 delta 3
+QUAL cfg TF=3000 TH=1000 PH=137 MODE=1 NCASE=2000 SLOW=0 QUAD=0 HREG=2 GIN=0 CBREG=1 SSTOPREG=1 GREG=1 MUTCB=0 MUTSTOP=0
+QUAL back-to-back copy starts (<=3 fifo_clk after the previous copy_on fell): old 2216 new 2227
+QUAL cases 2000 writes old 5105591 new 5104020 done-lag(new-old, ps) min 0 max 21000 mean 1081 copy-dur mean old 76744 new 77826 (ps) dwrites(new-old) min -84 max 62
+QUAL RULING(2): fault raised by both forms, max first-raise delta 7 fifo_clk (limit 2), delta>2 cases 7; F3 cases where one form never raised 0
+QUAL F3 spurious done absorbed by one form only (no corrupt/dup write): 0
+QUAL fault types injected F1 667 F2 242 F3 640, fault raised F1 667 F2 242 F3 640
+QUAL post-stop root activity: max cycles old 0 new 1, max lane-events per group old 0 new 12; seam valids after h_stop max old 0 new 1; K writes after h_stop max old 16 new 13
+QUAL bad: integrity 0 fault-not-held 7 post-stop-cycles 0 post-stop-words 0 k-after-hstop 0 recovery 0 inj-undetected 0 clean 0 stream 0 wa-seq 0 outstanding 0 done/timeout 0 fault-in-clean 0
+QUAL FAIL
+[7995333638000] %Fatal: tb_qual.sv:300: Assertion failed in tb_qual: QUAL FAIL
+%Error: /srv/opentallas-scratch2/claude/hbm-wbq-qual-1/repo/results/die_hbm_1112/wbq_qual/tb_qual.sv:300: Verilog $stop
+Aborting...
