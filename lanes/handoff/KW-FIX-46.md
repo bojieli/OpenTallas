@@ -1,4 +1,12 @@
-# KW-FIX-46 lane handoff (refreshed 2026-11-12 09:30 PST)
+# KW-FIX-46 lane handoff (refreshed 2026-11-12 11:56 PST)
+
+## 0 State at 11:56 (supersedes older lines below)
+- LIVE runtime /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot = main 9c8ff818ef19 tools/autopilot + host-gap patch; kit_wave.py md5 acea0a8097c8. Deployed 11:43 under kit_wave.lock (COORD approved). Full pre-deploy backup: rt/tools/autopilot.bak-kw46-predeploy-1112 (roll back = rsync it back under the lock). Dry decision diff old vs new: 0 different of 9.
+- Branch claude/kw-fix-46-live-kitwave-1112 @ edf6623be211 LANDED in main (9c8ff818ef19).
+- Branch claude/kw-fix-46-hostgap-1112 @ b8e6e2ed9a61 (pushed): collect-time INFRA auto-class (FLOW 'tool input file missing'/KIT_NOT_SELF_CONTAINED on a host in st[src_incomplete_last] -> INFRA, log KIT-WAVE HOST-GAP). Live already; needs ROOT-MERGE-60 merge.
+- ot-run: fleet/kw43-rootreal/ot-run rebased 09:32 = byte copy of main backend (backup ot-run.bak-kw46-rebase-1112). kw44-seal-ap/sealed-{wave,ap}.json sealed_backend -> fleet/isolate-1-kw46m-590d7d62e7/ot-run (backups *.json.bak-kw46-1112). DONE, nothing pending.
+- Fleet fill 11:5x: wave capacity is not the limit (inflight 8/300, queue_fill on). Picks are few because rows are held by rulings (QC/S81/KV WAIT-FORM, S81 STA-2204 FLOW no-retry x11, HBM WAIT-CHILD on ot_pdie_serdes_rx_bm3_rest). Posted to COORD 11:5x.
+- Stopped per COORD 11:41. Next: ROOT-MERGE-60 merge of the hostgap branch; a class fix for s81 resize.tcl STA-2204 if COORD assigns it.
 
 ## 1 Scope
 Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission, autoclean/reaper keep lists. Fix FAIL classes once per class, hold and retry rows in ~/coord/autopilot/kit_wave.json. The sidecar-coverage preflight now belongs to GEN-CLASS-1 (COORD 11-12), not this lane.
