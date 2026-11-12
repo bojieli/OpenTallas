@@ -73,6 +73,16 @@ LAYERS = ["M2", "M3", "M4", "M5", "M6", "M7"]
 GRT_TRANSITION = ("M3", "M4", "M5", "M6", "M7")
 GRT_MAX_LAYER = "M7"
 GRT_GCELL_UM = 0.57    # MEASURED gcell of the ASAP7 tile runs (GRT-PATCH-1 11-10, t15: perimeter ring 2 x 0.57 um)
+# GRT-CALIB-1 11-11 (COORD ruling "GRT calibration"): calibrated feasibility model, opt-in (--calib-1111), checked
+# against 925 completed kit GRTs of 11-07..11-12 (230 types with a model row). The defaults stay byte-identical.
+#  (1) verdict FAIL when the worst region p99 (any track region, dens_A excluded) > CALIB_FAIL_P99, or the soft-cell
+#      density dens_A >= FLAG_AT["dens"]: the measured GRT fail detector (p99 > 1: recall 78%, precision 75%);
+#  (2) over a hard core (kind core) the only signal supply is M6 (H) / M7 (V): M2-M5 are blocked over the whole
+#      macro area whatever share the view's OBS rects cover (--over-macro-m67), with the transition halving of the
+#      active --grt-halving mode (edge_outline for new builds under --calib-1111);
+#  (3) the full-line cut is not a feasibility input (check.py --full-cut band keeps it as a die-band WARN).
+CALIB_FAIL_P99 = 1.0
+CALIB_HALVING = "edge_outline"
 
 
 def grt_halving_weight(g, mrects, pins, k_gcells, gcell_um=GRT_GCELL_UM):
@@ -761,6 +771,10 @@ def analyze_type(name, t, die_dir, repo, conns, cfg):
         for L in LAYERS:
             if o.get(L):
                 obs[L] = np.maximum(obs[L], c * o[L])
+        if cfg.get("over_macro_m67") and kind == "core":
+            # GRT-CALIB-1 (2): over a hard core only M6/M7 carry signals (kit views block M1-M5 over the macro)
+            for L in ("M2", "M3", "M4", "M5"):
+                obs[L] = np.maximum(obs[L], c)
         macro_cov = np.maximum(macro_cov, c)
         if kind == "mem":
             mem_cov = np.maximum(mem_cov, c)
@@ -1423,6 +1437,24 @@ def verdict(r, scale=1.0):
     return ("FLAG" if hits else "ok"), hits
 
 
+def calib_fail(r, fail_p99=CALIB_FAIL_P99):
+    """GRT-CALIB-1 (1): (FAIL?, reason) -- worst track-region p99 > fail_p99, or soft-cell density >= FLAG_AT dens.
+    The region thresholds of FLAG_AT (3.0 for face/open/ring/mem) are NOT used here: measured GRT fails at any
+    region p99 > 1 (calib.tsv, 11-11)."""
+    worst = None
+    for k, v in r["regions"].items():
+        if k == "dens_A":
+            continue
+        if worst is None or v["p99"] > worst[1]:
+            worst = (k, v["p99"])
+    d = (r["regions"].get("dens_A") or {}).get("p99")
+    if worst and worst[1] > fail_p99:
+        return True, f"p99 {worst[1]:.3f} > {fail_p99:g} ({worst[0]})"
+    if d is not None and d >= FLAG_AT["dens"]:
+        return True, f"dens {d:.3f} >= {FLAG_AT['dens']} cells/um2"
+    return False, (f"p99 {worst[1]:.3f} <= {fail_p99:g} ({worst[0]})" if worst else "no region")
+
+
 def _station_lint():
     try:
         import station_lint as sl
@@ -1497,6 +1529,12 @@ def score_rows(T, names, die_dir, repo, conns, cfg, cells_of, flag_ratio, maps=F
         r["verdict"], r["flag_regions"] = verdict(r, flag_ratio)
         if r["verdict"] != "FLAG" and r.get("unchecked_pins"):
             r["verdict"] = "UNCHECKED"          # scored demand is under threshold but some core pins were not scored
+        if cfg.get("verdict_mode") == "calib":
+            # GRT-CALIB-1 (1): p99 > 1 (or dens) is the FAIL class; FLAG regions stay as the fix hint
+            fail, why = calib_fail(r, cfg.get("fail_p99", CALIB_FAIL_P99))
+            r["verdict_flag"] = r["verdict"]
+            r["calib_reason"] = why
+            r["verdict"] = "FAIL" if fail else ("UNCHECKED" if r["verdict"] == "UNCHECKED" else "ok")
         # S1/S2 station-direction lint (COORD S7, DIE-KV-97 kv3_phy o_phy_Q): chains whose kit stage order runs
         # against the bus data flow; reported per type, never changes the verdict
         sl = _station_lint().lint_type(n, t)
@@ -1629,7 +1667,16 @@ def main(argv=None):
     ap.add_argument("--station-spread", action="store_true",
                     help="what-if: station hops spread over the detour window (moves leaf V to H, 8/14 vs 6/15 FAIL "
                          "directions right, but loses leaf t24; off by default)")
-    ap.add_argument("--grt-halving", choices=("full", "edge", "edge_outline", "none"), default="full",
+    ap.add_argument("--calib-1111", action="store_true",
+                    help="GRT-CALIB-1 calibrated feasibility model (COORD 'GRT calibration'): --verdict-mode calib + "
+                         "--over-macro-m67 + --grt-halving %s unless --grt-halving is given" % CALIB_HALVING)
+    ap.add_argument("--verdict-mode", choices=("flag", "calib"), default=None,
+                    help="flag (default) = FLAG/ok by the FLAG_AT region thresholds; calib = FAIL when the worst "
+                         "region p99 > --fail-p99 or dens_A >= %s (GRT-CALIB-1)" % FLAG_AT["dens"])
+    ap.add_argument("--fail-p99", type=float, default=CALIB_FAIL_P99, help="--verdict-mode calib threshold")
+    ap.add_argument("--over-macro-m67", action="store_true",
+                    help="GRT-CALIB-1: over every hard core (kind core) M2-M5 carry nothing, only M6 H / M7 V")
+    ap.add_argument("--grt-halving", choices=("full", "edge", "edge_outline", "none"), default=None,
                     help="OpenROAD transition-layer halving over macro OBS: full = stock image (adjustTransitionLayers "
                          "under the whole OBS); GRT-PATCH-1 patched images: edge = only within --grt-edge-gcells of "
                          "each OBS rect boundary (+ pins), edge_outline = only within K of the macro instance bbox "
@@ -1672,6 +1719,11 @@ def main(argv=None):
     ap.add_argument("--cells", default=str(Path(__file__).with_name("route_supply_cells.json")),
                     help="measured synth cells {die: {type: {cells, src}}}; else tools/die_plan/cells.py estimates")
     a = ap.parse_args(argv)
+    if a.calib_1111:
+        a.verdict_mode = a.verdict_mode or "calib"
+        a.over_macro_m67 = True
+        a.grt_halving = a.grt_halving or CALIB_HALVING
+    a.grt_halving = a.grt_halving or "full"
     a.plan = a.plan or a.plan_opt
     if not a.plan:
         ap.error("PLAN (positional or --plan) is required")
@@ -1698,7 +1750,13 @@ def main(argv=None):
                station_scan=a.station_scan, fanout=not a.no_planmodel,
                grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells,
                grt_halving_types=grt_halving_types(a.grt_halving_type))
-    conns = load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])
+    # GRT-CALIB-1 keys only when opted in, so the default cfg (and the JSON dump of it) stays byte-identical
+    if a.over_macro_m67:
+        cfg["over_macro_m67"] = True
+    if a.verdict_mode == "calib":
+        cfg["verdict_mode"] = "calib"
+        cfg["fail_p99"] = a.fail_p99
+    conns =load_conns(die_dir, a.core_conns, plan.parent, REF_DIRS[1:])
     cfg["signed_modules"] = None
     cfg["core_fill"] = {}
     if a.core_fill:
@@ -1741,7 +1799,7 @@ def main(argv=None):
         print("\n".join(out["lines"]))
         return 0
     rows = score_rows(T, names, die_dir, repo, conns, cfg, cells_of, a.flag_ratio, a.maps and a.out, a.out, die)
-    rows.sort(key=lambda r: (r["verdict"] != "FLAG", -(r["flag_regions"][0][1] if r["flag_regions"] else 0),
+    rows.sort(key=lambda r: (r["verdict"] not in ("FLAG", "FAIL"), -(r["flag_regions"][0][1] if r["flag_regions"] else 0),
                              -r["worst"]["p99"]))
     hdr = ["die", "type", "verdict", "flag_regions", "worst_region", "dir", "layer", "p99_ratio", "max_ratio", "hot_bins",
            "at_um", "core_H", "core_V", "mem_H", "mem_V", "street_H", "street_V", "ring_H", "ring_V", "open_H",
@@ -1769,12 +1827,17 @@ def main(argv=None):
         (od / f"route_supply_{die}.json").write_text(json.dumps(out, indent=1))
     print("\n".join(lines))
     nflag = sum(1 for r in rows if r["verdict"] == "FLAG")
+    nfail = sum(1 for r in rows if r["verdict"] == "FAIL")
     ninv = sum(len(r.get("station_inverted") or []) for r in rows)
     print(f"# {die}: station-direction lint {ninv} INVERTED chain(s) in "
           f"{sum(1 for r in rows if r.get('station_inverted'))} type(s) (station_lint.py; ADVISORY)", file=sys.stderr)
     print(f"# {die}: {len(rows)} types, {nflag} FLAG (region thresholds x{a.flag_ratio}; GRT halving "
           f"{a.grt_halving}{' K=%d' % a.grt_edge_gcells if a.grt_halving.startswith('edge') else ''}); ADVISORY, not a gate",
           file=sys.stderr)
+    if a.verdict_mode == "calib":
+        print(f"# {die}: GRT-CALIB-1 calib verdicts: {nfail} FAIL (worst region p99 > {a.fail_p99:g} or dens >= "
+              f"{FLAG_AT['dens']}; over-macro M6/M7 only: {'yes' if a.over_macro_m67 else 'no'}); ADVISORY, not a gate",
+              file=sys.stderr)
     return 0
 
 
