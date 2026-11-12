@@ -2955,6 +2955,15 @@ def validate(raw):
     return errs
 
 
+# CORE-SHAPE-GATE-1 (OWNER 11-11 CORE-SHAPE FREEZE): a plan event may move or rotate a hard core but not change its outline,
+# unless it declares a measured reason, old -> new shape (check.py --core-shape-index, G0 ERROR core_shape_change).
+# core = module name (all instances), or "<type>/<inst>", or inst; old/new = outline_um [w, h]; measured_by = the evidence.
+SCHEMA["properties"]["core_shape_exceptions"] = {"type": "array", "items": {
+    "type": "object", "additionalProperties": False, "required": ["core", "old", "new", "reason", "measured_by"],
+    "properties": {"core": {"type": "string", "minLength": 1}, "old": _wh, "new": _wh,
+                   "reason": {"type": "string", "minLength": 1}, "measured_by": {"type": "string", "minLength": 1}}}}
+
+
 def main(argv):
     if len(argv) >= 2 and argv[1] == "validate":
         bad = 0
@@ -2976,3 +2985,4 @@ def main(argv):
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv))
+
