@@ -1,9 +1,0 @@
-core split hi=['u_core_peer', 'u_core_prompt']: 81 same-family crossing nets, 5080 b -> ~25400 ring flops (D 4, +3 edges each); 8 cross-region 2-cycles (lp.py cannot keep the flat schedule):
-  loop u_cdc_pc <-> u_core_peer  (530 b / 530 b)
-  loop u_core_guard <-> u_core_peer  (244 b / 476 b)
-  loop u_core_guard <-> u_core_prompt  (175 b / 215 b)
-  loop u_core_peer <-> u_core_queue  (1 b / 99 b)
-  loop u_core_peer <-> u_core_tx  (514 b / 530 b)
-  loop u_core_peer <-> u_rank__u_control__u_packet__u_rx  (1 b / 513 b)
-  loop u_core_prompt <-> u_core_tx  (514 b / 1 b)
-  loop u_core_prompt <-> u_rank__u_control__u_packet__u_rx  (530 b / 514 b)

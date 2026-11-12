@@ -1,7 +1,0 @@
-[Unit]
-Description=M5 re-route batch: compare finished M5 routes with their previous closure (feeds fleet-viz M5-vs-prior metrics)
-[Service]
-Type=oneshot
-WorkingDirectory=/home/ubuntu/wt/el1011-reroute-m5
-ExecStart=/usr/bin/timeout 900 /usr/bin/python3 tools/ref_tile/reroute_batch.py compare
-Nice=10

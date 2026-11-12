@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job s81bf_front_five_roots_n32_soq_roomy-ref-257fcb812 bench bench_mutant_n32_fp8_write_select_lost host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq_roomy-ref-257fcb812 log cl/bench_mutant_n32_fp8_write_select_lost.a1b1.log captured 2026-10-22T19:47:57-07:00
-# fail_regex 'MUTANT BF6 mwself FAIL: DIFF TXN'
-mwself ok ['[2250000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=345b5b5980400010']
-MUTANT BF6 mwself FAIL: DIFF TXN

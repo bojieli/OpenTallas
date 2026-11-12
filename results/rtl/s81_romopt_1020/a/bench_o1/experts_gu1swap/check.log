@@ -1,6 +1,0 @@
-MISMATCH edge 388 row 0 lo 0 k 2 got 3e0835a8/0 want 3d8b9060/0
-MISMATCH edge 389 row 1 lo 0 k 2 got 3f36491b/0 want 3f6fc13c/0
-MISMATCH edge 392 row 2 lo 0 k 1 got 3d9185c0/0 want be5be210/0
-MISMATCH edge 393 row 3 lo 0 k 1 got be190580/0 want 3e4c8cc0/0
-PLAN_MISMATCH predicted 10 words, got 10; first diff ((388, 0, (0, 2, 5), 1032556640, 0), (388, 0, (0, 2, 5), 1040725416, 0))
-XS_PLACE_CHECK FAIL u_f_0L00 ffn.experts_gu phase 1 mutant=swap rows=4 fixture_rows=4 errors=5 END edges=1072 ret_words=10 xo_checked=1070 fault=0

@@ -1,5 +1,0 @@
-PASS NATIVE_FDI1043_LOCAL_BOOT_GUARD_128ACTUAL_CONTROLLERS sectors=864 ck=30047 first=2497 last=29179 fenced=9 image=exact128controllersPHY
-- rtl/test/qwen_host/tb_qkd_host_native_fdi8_boot_guard.sv:242: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 25us; walltime 178.754 s; speed 139.854 ns/s
-- Verilator: cpu 178.743 s on 1 threads; allocated 43 MB

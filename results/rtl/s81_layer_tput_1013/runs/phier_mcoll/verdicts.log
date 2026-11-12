@@ -1,2 +1,0 @@
-mut_coll L0 expect FAIL: TB_S81_DIE_LAYER FAIL | SUMMARY jobs=1 layer_cycles=12886 (header 1246 -> H_STORE done 14132) stage_done_cycle=14737 jobs_done=1/1 dones=58/58 phases_released=8 field_phases=8 capture_writes=5048 mismatching_roots=0 coll_words_die0=720 coll_errors=341 coll_incomplete=0 y_exact=590/640 y_bad=50 y_consumed=640 norm_rows_exact=97/330 hstore_rows_exact=544/640 ref_fault=0 dut_fault=0 ctrl_flt=0 fvec=0000 stuck=0 ep_faults=0 gather_stage_fault=0 hc_fcode=0 max_done_latency=16 errors=0 first_coll_send=1111
-DIE_LAYER_GATE FAIL

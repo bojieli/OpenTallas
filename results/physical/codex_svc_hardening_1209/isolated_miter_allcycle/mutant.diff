@@ -1,4 +1,0 @@
-73c73
-<     wire [31:0] mx_next = a_done ? rmax : mx_local;
----
->     wire [31:0] mx_next = rmax;

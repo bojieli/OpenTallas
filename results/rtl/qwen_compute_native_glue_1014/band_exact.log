@@ -1,6 +1,0 @@
-SEED=3
-PASS qfd_band_lanes ops=1537 groups=11757 words=188112 NL=16 NB=3 LG=12 LNK=1 latency=+-1 faults(finite 0/0, NaN 1/1)
-- rtl/test/qwen_lane_band/tb_qfd_band_lanes.sv:199: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 22us; walltime 2.441 s; speed 9.025 us/s
-- Verilator: cpu 2.441 s on 1 threads; allocated 47 MB

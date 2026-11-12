@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_svc_vm_kshare_splitstrap",
- "enable": false,
- "reason": "RTL registers every K pin in 2-entry pin skids (ot_hbm_svc_pin_skid2: valid/data/ready flops; out_v/out_data/in_r leave from flops), k_wr_done outputs and inputs are re-timed by flops, VM/WB commands land in stream pin flops, fills/fault leave from stream flops, straps land in one flop per domain. A kit pin stage cannot span the two async_gray_fifo domains and would add unpriced K-port latency."
-}

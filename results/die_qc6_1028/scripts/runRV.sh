@@ -1,6 +1,0 @@
-#!/bin/bash
-# DIE-QC-6 real-view die STA on K2 (gate flags + --core-view for the 5 signed SU ETMs). usage: runRV.sh NAME HB [extra args]
-N=$1; HB=$2; shift 2
-V=""; for m in qfd_dv_s8x_vmr qfd_dv_s8_crh_rp1 qfd_dv_s8x_prog qfd_dv_s5_su8_rst3 qfd_dv_s8x_crh; do V="$V --core-view $m=/srv/opentallas-scratch2/claude/die-qc6-1028/views/$m"; done
-cd /srv/opentallas-scratch2/claude/die-qc6-1028 && python3 -I /srv/opentallas-scratch2/claude/die-qc6-1028/dump_hb.py /srv/opentallas-scratch2/claude/wt/die-qc5-1028/tools/die_plan /srv/opentallas-scratch2/claude/die-qc6-1028/$N.pkl -- /srv/opentallas-scratch2/claude/die-qc4-1028/K2/CA_2w2s/proof --plan /srv/opentallas-scratch2/claude/die-qc4-1028/plan_grpP/event/qc_grpP_event.json --out /srv/opentallas-scratch2/claude/die-qc6-1028/$N --corner TT --corner FF --clock-ocv table --clock-droop shared --droop-regions /srv/opentallas-scratch2/claude/die-qc4-1028/K2/CA_2w2s/proof/droop_regions.json --hold-buffers $HB --cppr-lca --clock-cal spice --count-align /srv/opentallas-scratch2/claude/die-qc4-1028/K2/CA_2w2s/grp_spice_bind.json --count-align-key region $V "$@" > /srv/opentallas-scratch2/claude/die-qc6-1028/$N.log 2>&1
-echo "$N rc $? $(date)" >> /srv/opentallas-scratch2/claude/die-qc6-1028/chain.log

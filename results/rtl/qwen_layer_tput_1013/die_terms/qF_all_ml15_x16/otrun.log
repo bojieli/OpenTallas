@@ -1,9 +1,0 @@
-ot-run: ot-epyc1tb     free   757 GB (avail 903, growth 82, headroom 64, waiters 0/0 GB) running 10 disk 1197 GB 
-ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/rom-layer-tput-qwen/src
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/rom-layer-tput-qwen/src
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/rom-layer-tput-qwen/src
-ot-run: -> ot-epyc1tb
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3324933-1791937711 after 1 s
-QJOB qF_all_ml15_x16 run rc=0
-QJOB qF_all_ml15_x16 {'exact': True, 'stage_cycles': {'L0': 7244, 'L1': 6892, 'L2': 6892}, 'layer_x_mismatches': 0, 'kv_mismatches': 0, 'layer_x_checks': 12, 'kv_checks': 12}
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3324933-1791937711): exit 0

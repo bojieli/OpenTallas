@@ -1,9 +1,0 @@
-x loaded: 768 sectors at cycle 5386 (LAT 104 BWX10 31667)
-TPUT 0 disp 5387 ret 9315 service 3928 lines 432 432
-STAGE 0 xi 4 xd 2984 st 2988 rq0 2999 rq1 3430 rs1 3697 rv0 3315 rv1 3827 pd 3924 ret 3928
-summary: 1 SM.MATVEC records back to back, service sum 3928 cycles, 266 result words checked
-HGI_SM_TPUT PASS
-- rtl/hbm_accel/generic/adapters/tb/tb_hgi_sm_tput.sv:201: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 19us; walltime 152.111 s; speed 125.605 ns/s
-- Verilator: cpu 152.064 s on 1 threads; allocated 72 MB

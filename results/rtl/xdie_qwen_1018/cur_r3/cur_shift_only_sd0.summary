@@ -1,5 +1,0 @@
-cur_shift_only_sd0 expect=PASS got=PASS -> OK
-    XQ_FIN layer 1 T 256: pvfin beat0 at root age 1744 = PV 665 + max(P0 260, P1 260, R 1062) + 17 -> 1744 | programme tx_first 1751 end 1785 (RETIRE_STATIC 1 STATUS_DELAY 0)
-    XQ_E C2K_cmd_issue_to_land=32 C2K_q31_issue_to_land=33 C2K_q_first_issue_to_last_land=65 K2C_r31_issue_to_land=31 K2C_r0_issue_to_land=31 K2C_r_first_issue_to_last_land=62 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1842 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=14 K2C_status_issue_to_land=27
-    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=6843 stages C 2,2,2,3,2,2 K 11,11,9,9,9,9,9 MUT=0 layers=35
-    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault

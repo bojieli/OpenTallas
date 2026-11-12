@@ -1,5 +1,0 @@
-PASS MU_KV_WRITE_ROWS users4 x layers36 x positions8192 (stage-interleaved) words4718592 sectors9437184 unique alias0 inverse{user,layer,pos,kind,dim}+raw exact; MU1 == plain writer outside row[9:8]; MU0 wrapper == plain writer
-- rtl/test/mu_qwen_1018/tb_mu_kv_writer_rows.sv:92: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 17ms; walltime 14.034 s; speed 1.177 ms/s
-- Verilator: cpu 13.650 s on 1 threads; allocated 135 MB

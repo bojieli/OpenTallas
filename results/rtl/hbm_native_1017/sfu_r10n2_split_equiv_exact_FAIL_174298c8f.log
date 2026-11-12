@@ -1,6 +1,0 @@
-# FAILED positive (kept, never overwritten): split_equiv_exact at 174298c8f, run verbatim on ot-epyc4 by SUBMIT-FIX 10-18; SFU-R10N3 debug probe: store IO2 leaf (lf[10]) io_dis fault 4 edges after io_start_v (start before the IO2 last config write lands, 3 idle edges < r10n2 contract 4)
-DBG t=4841000 since_start=4 pf=0 iof=1 sp_f=0000 si_f=10 p_dis=0 io_dis=1 lf=10000000000 si_vall=00 si_vany=00 si_aall=01 si_aany=11
-[4841000] %Fatal: tb_hgi_sfu_split_equiv.sv:204: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_FAULT store=1 core=0
-%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:204: Verilog $stop
-Aborting...
-SFU_SPLIT_GATE POSITIVE FAIL rc=1

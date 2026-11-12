@@ -1,9 +1,0 @@
-region_leaf mismatch cyc 30 xo 0 ro 0 so 1 ovf 0
-region_leaf mismatch cyc 38 xo 0 ro 0 so 1 ovf 0
-region_leaf mismatch cyc 39 xo 0 ro 0 so 1 ovf 0
-FAIL qfd_vm_region_leaf LEAF_MUT=8 ROW_MUT=0 SU_MUT=0 errors=4283 of 6166 (xo 0 ro 0 so 4283 ovf 0)
-[61666000] %Fatal: tb_qfd_vm_region_leaf.sv:138: Assertion failed in tb_qfd_vm_region_leaf: FAIL
-%Error: rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_region_leaf.sv:138: Verilog $stop
-Aborting...
-Command exited with non-zero status 1
-maxrss_kb=4232 wall=0.13

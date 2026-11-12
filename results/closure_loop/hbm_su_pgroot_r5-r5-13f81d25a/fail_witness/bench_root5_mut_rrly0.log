@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hbm_su_pgroot_r5-r5-13f81d25a bench bench_root5_mut_rrly0 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hbm_su_pgroot_r5-r5-13f81d25a log cl/bench_root5_mut_rrly0.a1b1.log captured 2026-10-18T06:33:44-07:00
-# fail_regex 'SU_PROGRAMME_ROOT5 FAIL mismatches=[1-9]'
-[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
-[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
-[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
-[rrly0] SU_PROGRAMME_ROOT5 reset release root=1 edges (expected 3) cluster_bad=0
-[rrly0] [1092066000] %Fatal: tb_hbm_su_programme_root5.sv:153: Assertion failed in tb_hbm_su_programme_root5: SU_PROGRAMME_ROOT5 FAIL mismatches=4 active=28444 checked=28693
-[rrly0] rc=1

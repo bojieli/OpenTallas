@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hidx_meta_sram146",
- "enable": false,
- "reason": "Real input and output FFs are part of the exact 146 edge schedule."
-}

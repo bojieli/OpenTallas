@@ -1,5 +1,0 @@
-LANE_SERVICE rgap=24 op= HC_PRE n=6 rd=267 scrd_to_up=14 go_to_cs_last_row0=188 go_to_cs_last_rowN=708 ncs=120 r_last_to_fin=36 go_to_fin=1011 nwq=120 nr=6 flt=0 tnode_up_scalar=4 tnode_up_chunk=9 tnode_up_fin=4 tnode_down=2
-- tb_lane_service.sv:65: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 922ns; walltime 0.126 s; speed 7.298 us/s
-- Verilator: cpu 0.126 s on 1 threads; allocated 12 MB

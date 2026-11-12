@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/home/ubuntu/w17-window-epoch-contract/tools/w17_window_epoch_contract.py", line 240, in <module>
-    main()
-  File "/home/ubuntu/w17-window-epoch-contract/tools/w17_window_epoch_contract.py", line 231, in main
-    payload=json.dumps(build(),indent=2)+'\n'
-  File "/home/ubuntu/w17-window-epoch-contract/tools/w17_window_epoch_contract.py", line 106, in build
-    assert len(ops)==2 and [x['tag'] for x in ops]==[f'L{layer}.scores',f'L{layer}.pv']
-AssertionError

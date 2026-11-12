@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qfd_coll_eslice199",
- "enable": false,
- "reason": "CB16c-COLL: this slice IS one flip-flop per bit between its d and q pins (the face pin register moved out of the body); a flow pin register would add a second stage the face calendar does not price"
-}

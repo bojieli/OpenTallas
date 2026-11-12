@@ -1,4 +1,0 @@
-{"schema":"opentallas.token_pass.head_tok17.v1","base":"claude/tok16-head-1027@104f3b9818",
- "d_double_count":{"verdict":"YES","cycles":6,"basis":"technology.json hop = 200 ns channel + 4 ns CDC + 5 ns digital endpoint; endpoint is real RTL (mesh_ep) outside D in the bench","D_corrected":245,"rank_merge_k166_sim":413,"rank_merge_k172_sim":419,"control_drop_n":"CAUGHT"},
- "ctl_real":{"last_beat_to_xrdy":3,"start_to_go":4,"b_i_to_own_best":6,"driver_own_best":1,"last_peer_to_merge":7,"merge_to_token":[18,15],"merge_to_host_result":[22,19],"control_mut_slice":"CAUGHT"},
- "per_token":{"xb_ingress":167,"spine":8691,"rank_merge":418,"token_out":18,"total":9294,"window":10357,"slack":1063,"label":"pieces CHECKED (sim), composition UNCHECKED"}}

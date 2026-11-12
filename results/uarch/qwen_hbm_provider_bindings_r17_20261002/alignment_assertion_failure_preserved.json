@@ -1,7 +1,0 @@
-{
-  "status": "FAILED_PREPARATION_ASSERTION_PRESERVED",
-  "reason": "Initial compact frontier incorrectly required absolute512B alignment; source activation_scratch base4714740864 is128B-aligned with512B residue384",
-  "repair": "512B local allocation windows retain common source residue;16 real32B sectors verified, no base relocation or rounded-away bytes",
-  "prior_assertion": "assert lo % quantum == 0 and size % quantum == 0",
-  "runtime_or_hardware_evidence": false
-}

@@ -1,8 +1,0 @@
-LOAD_METRICS sent=1480 got=1480 errors=0 fault=0 command_to_output_edges=5 II=1
-RELEASE_ONLY PASS zero_payload=1 zero_fault=1
-OWNERSHIP_RELEASE PASS rejected_reuse=1 extra_packets=0
-DMA_LOAD_STATIC PASS formats=FP32,BF16,FP8E4M3,INT8,U32,UE8M0 tail_mask=all destination_offsets=all
-- tb_hbm_dma_load_static.sv:1528: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 0.015 s; speed 207.331 us/s
-- Verilator: cpu 0.015 s on 1 threads; allocated 8 MB

@@ -1,7 +1,0 @@
-S81 HEAD SPR compact-clock structural successor (m4).
-
-Observed failure: m3 had actual mapped native22 and GRT0/data setup positive, but intraregion TT/FF spread above80ps. Its648/691.2um tall footprint put pin registers along full-height W/E faces while clock entered S. Floorplan and density PNGs of m3 were actually viewed: sparse long strips and corner register mass. New square216um keeps every registered boundary and RTL stage, compacts the register mass around the existing S-centre clock, and reduces physical face span. It fits the existing216x648/259x691reserve. No clock or fill waiver, no added latency.
-
-Safe-design checklist: 1 existing source-registered bus pins, two-stage reset landing; 2 square216um region (placed reach verified by gate); 3 identical mapped native22, reset4equal-depth copies with split24, recheck mandatory; 4 unchanged registered compare/mux pipeline, prior depth243ps; 5 no added storage, only existing datapath/control regs; 6 no macros, full cell rows, four565bit faces each<=2.9pins/um, sparse fill is pin perimeter; 7 compact centred face-root topology, TT/FFspread<=80 pending CTS, io_hold_margin0.03; 8 static schedule and zero added data/reset cycles.
-
-Existing miniarray exactbench and all causal mutants remain the source qualification; this change is physical only. Main/fallback CTS gates run in parallel and first closing view binds. Parent may reproject actual pin geometry inside its existing reserve; no die closure claim.

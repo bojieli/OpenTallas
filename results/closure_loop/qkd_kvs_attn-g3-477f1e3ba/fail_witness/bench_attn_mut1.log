@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_kvs_attn-g3-477f1e3ba bench bench_attn_mut1 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_kvs_attn-g3-477f1e3ba log cl/bench_attn_mut1.a1b1.log captured 2026-10-18T23:14:00-07:00
-# fail_regex '^KVS_TILE FAIL tile=attn .* mut=1 '
-MISMATCH t=2000 out pvfst
-MISMATCH t=2001 out pvfst
-MISMATCH t=2002 out pvfst
-MISMATCH t=2003 out pvfst
-MISMATCH t=2004 out pvfst
-KVS_TILE FAIL tile=attn edges=4000 checks=287784 errors=2000 mut=1 (dropped w_attn_root__cal[175:128] in assign pvfst)

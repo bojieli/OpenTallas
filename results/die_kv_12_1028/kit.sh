@@ -1,9 +1,0 @@
-#!/bin/bash
-# DIE-KV-12: rebuild the DIE-KV-11 kit_rt (re-tree feed) with die_trial from DIE-QC-11 1465eff51c (git archive qc11/, no fork).
-# V = buf (reproduction check vs kit_rt) | inv | inv2
-V=$1; R=/srv/opentallas-scratch2/claude/die-kv-12-1028; K11=/srv/opentallas-scratch2/claude/die-kv-11-1028
-CC=""; [ "$V" != buf ] && CC="--clock-cell $V"
-python3 $R/qc11/tools/die_plan/die_trial.py kit /srv/opentallas-scratch2/claude/die-kv-4-1027/pd9c/hm_r26q9c.json --out $R/kit_$V \
-  --region-trees /srv/opentallas-scratch2/claude/die-kv-2-1027/l128/land128_regions.json --feed $K11/feed_retree.json \
-  --tree-form link_htree --leaf-um 200 --rep-um 250 --tree-site-legal --tree-site-slide \
-  --tap-pad /srv/opentallas-scratch2/claude/die-kv-5-1027/pad/pad_it2.json $CC

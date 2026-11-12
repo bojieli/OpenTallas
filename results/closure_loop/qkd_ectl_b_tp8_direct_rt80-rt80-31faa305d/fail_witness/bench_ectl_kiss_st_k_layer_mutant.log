@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_ectl_b_tp8_direct_rt80-rt80-31faa305d bench bench_ectl_kiss_st_k_layer_mutant host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_b_tp8_direct_rt80-rt80-31faa305d log cl/bench_ectl_kiss_st_k_layer_mutant.a1b1.log captured 2026-10-18T21:36:45-07:00
-# fail_regex 'request identity'
-Verilator 5.050 2026-07-01 rev v5.050
-TRACE c8 localstart0 rq1 rs0 captured0 slot0
-[95000] %Fatal: tb_qkd_static_k_issuer.sv:116: Assertion failed in tb_qkd_static_k_issuer.unnamedblk4: request identity
-%Error: /srv/opentallas-scratch2/claude/closure-loop/qkd_ectl_b_tp8_direct_rt80-rt80-31faa305d/bench_src_a1/rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv:116: Verilog $stop
-Aborting...
-FAIL ectl_kiss_st_k RL 80 QK 91 mut 5: 0 layers

@@ -1,5 +1,0 @@
-# First full real-ASAP7 mapping: FAIL55 dynamic drivers, maximum108
-
-Exact bounded2 source4bd1693dc passed source-construction and250777-cycle paired protocol, but full actual native mapping revealed55 dynamic drivers above32. All roles resolved. Component isolation did not predict cross-scope merge: shared low-address calendar decode cones consumed32+16+8=56loads when all3 calendars saw the real common parentcfg_addr. Generic MUX select also maps into two actual dynamic terminal pins through inversion; budgeting1undercounted parent controls. No layout gate submitted.
-
-Structural successor keeps each real fixed-shape calendar hierarchy and prices generic MUX select2 before recursively cloning actual producer FFs/Boolean cones.7501parent cells vs7451previous, unchanged data/reset/clock edges and macro identities. Full native remap required; this file preserves failure, not a waiver. Raw Lib constants follow current dynamic-only policy; electrical checks remain ordinary flow obligations. Original out2/ODB/netlist remain under /srv/opentallas-scratch2/claude/codex-qw-sysface-review-1020/full_native on ot-epyc5.

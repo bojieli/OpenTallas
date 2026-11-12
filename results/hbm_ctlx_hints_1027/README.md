@@ -1,3 +1,0 @@
-The ctlx source has four identical enabled lane_en bits per quartet. Synthesis retains one and removes the other48 unreset twins. Existing automatic correspondence left their output cones unproved; the recipe now supplies the48 exact pair candidates. These are untrusted hints, each re-proved by the normal simultaneous induction.
-
-Actual same-source/same-netlist proof is EQUIVALENT42,320/42,320; all48 hints applied, none dropped. The negative control maps lane_en[0] to the next quartet's format-dependent bit7: that wrong relation is dropped and the output proof fails1/42,319. Old failed proof records remain unchanged. No RTL, clock, datapath latency or physical view changes. This closes synthesis LEC only; P&R/sign-off remain separate. Pending VMS hints are excluded.

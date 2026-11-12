@@ -1,9 +1,0 @@
-INLINE_CHAIN_BYTES 4495
-ot-run: epyc2          admits   544 GB (avail 732, reserve 0, fresh 96.3, peak 27.5, headroom 0, waiters 0/0 GB) load 35/128 running 20 disk 225 GB 
-ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-ap-crosshost-urgent-1027/kit
-ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/codex-ap-crosshost-urgent-1027/kit
-ot-run: -> epyc2
-ot-heavy: admitted on dear-crayfish as oth-ubuntu-3464746-1793115453 after 0 s
-EXISTING_HOST_STUB_RUNNER dear-crayfish
-CROSSHOST_CHAIN_LEC_STUB_PASS
-ot-run: RAN on epyc2 (unit oth-ubuntu-3464746-1793115453): exit 0

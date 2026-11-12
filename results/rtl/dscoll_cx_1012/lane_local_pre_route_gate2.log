@@ -1,3 +1,0 @@
-GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
-GATE WARN pins: 1-bit vector ports ['ck', 'rs', 'chb', 'tf', 'lo_v', 'lo_r']: scalars after synthesis (named by base name here, which is safe; a hand pin list must not say x[0])  -> FIX: declare them scalar in RTL
-PRE_ROUTE_GATE: WARN (0 fail, 1 warn)

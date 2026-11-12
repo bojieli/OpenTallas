@@ -1,4 +1,0 @@
-GATE_FLOW_RC=1 GATE_FLOW_S=1800
-GATE_FLOWERR FAILED: TimeoutExpired: Command '['docker', 'run', '--rm', '-v', '/srv/opentallas-scratch/claude/ref_gate/val_bad_ctile5db-20261011-202845/src:/src:ro', '-v', '/srv/opentallas-scratch/claude/ref_gate/val_bad_ctile5db-20261011-202845/routes/gate/work/orfs:/work', '-w', '/OpenROAD-flow-scripts/flow', 'openroad/orfs:latest', 'bash', '-lc', "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_s81_hc_ctile_asap7_ref_gate/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_s81_hc_ctile_asap7_ref_gate/base/1_2_yosys.v"]' timed out after 1800 seconds
-
---- stderr

@@ -1,6 +1,0 @@
-PASS qfd_vm_xtree NRB=16 SMAX=8 K=4 XQR=5 MEREG=1 checks=3940 stalls=945 xq_updates=665 bounded_writes=983 min_d=48 min_j=115 min_wsp=302 min_rsp=174 ctl_changes=2995 face_changes=329
-- rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xtree.sv:201: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 0.979 s; speed 8.174 us/s
-- Verilator: cpu 0.978 s on 1 threads; allocated 8 MB
-maxrss_kb=5296 wall=0.98

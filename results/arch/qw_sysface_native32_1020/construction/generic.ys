@@ -1,5 +1,0 @@
-read_verilog -sv -DSYNTHESIS -I. qfd_syscal_n32_bb.sv record_bb.sv ot_rom_4096x72_m8_bb.v qfd_sysface_reset32.sv ot_qwen_d2d_cal_seq.sv ot_qwen_d2d_cal_seq_dies_mu.sv qfd_sys_face_core_n32.sv qfd_sys_face_n32.sv
-hierarchy -check -top qfd_sys_face_n32
-synth -top qfd_sys_face_n32 -flatten -noabc -nofsm -noshare
-write_json top_generic.json
-stat

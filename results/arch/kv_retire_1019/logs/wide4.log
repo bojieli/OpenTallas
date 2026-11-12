@@ -1,7 +1,0 @@
-ERR A release at -1, calendar 1527
-ERR B not released
-ERR B re-assert fall -1 rise -1
-RST_REGION_WIDE_FAIL errors=3
-[1899000] %Fatal: tb_qkd_rst_region_wide.sv:48: Assertion failed in tb_qkd_rst_region_wide
-%Error: rtl/test/qwen_split/tb_qkd_rst_region_wide.sv:48: Verilog $stop
-Aborting...

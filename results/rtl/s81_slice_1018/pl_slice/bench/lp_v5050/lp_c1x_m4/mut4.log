@@ -1,6 +1,0 @@
-LP_MISMATCH child=u_lf0.rst_n cycle=29 flat=1 landed=0
-LP_LOCKSTEP FAIL MUT=4 mismatches=1 of 443970
-- rtl/dsrom_sys/s81_dv/slice/landed/c1x/tb_ot_s81sl_slice_c1x_lp.sv:221: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 3us; walltime 90.521 s; speed 33.141 ns/s
-- Verilator: cpu 75.284 s on 1 threads; allocated 228 MB

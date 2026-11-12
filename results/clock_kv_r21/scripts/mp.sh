@@ -1,5 +1,0 @@
-#!/bin/bash
-cd /srv/opentallas-scratch2/claude/clock-kv-r21-1027/slice; ulimit -v 48000000; export PYTHONPATH=/srv/opentallas-scratch2/claude/clock-kv-r19-1027/in/pylib:/srv/opentallas-scratch2/claude/wt/clock-kv-r21/tools/die_plan
-python3 /srv/opentallas-scratch2/claude/wt/clock-kv-r21/tools/die_plan/master_plan.py pd/hm_r21.json --out mp_r21 --entries /srv/opentallas-scratch2/claude/kv-core-slice-1-1027/entries.json --mesh /srv/opentallas-scratch2/claude/clock-kv-r15-1026/r15 --no-render > mp_r21.log 2>&1; echo mp rc=$? >> mp.done
-python3 /srv/opentallas-scratch2/claude/wt/clock-kv-r21/tools/die_plan/check.py pd/hm_r21.json --out g0_r21 --cells-evidence /srv/opentallas-scratch2/claude/kv-core-slice-1-1027/pd/hm_cells_evidence.json > g0_r21.log 2>&1; echo g0 rc=$? >> mp.done
-python3 /srv/opentallas-scratch2/claude/wt/clock-kv-r21/tools/die_plan/check.py pd/hm_r21.json --out g0c_r21 --completeness --cells-evidence /srv/opentallas-scratch2/claude/kv-core-slice-1-1027/pd/hm_cells_evidence.json > g0c_r21.log 2>&1; echo g0c rc=$? >> mp.done

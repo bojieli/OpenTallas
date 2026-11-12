@@ -1,6 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hidx_land1210_face_main_1021-face-28db7dc14 bench bench_wrong_read_offset host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/hidx_land1210_face_main_1021-face-28db7dc14 log cl/bench_wrong_read_offset.a1b1.log captured 2026-10-21T22:48:37-07:00
-# fail_regex 'COL8_FACE_LAND_FAIL cycle='
-[412000] %Fatal: tb_col8_sram_face.sv:11: Assertion failed in tb_col8_land: COL8_FACE_LAND_FAIL cycle=41
-%Error: rtl/test/hbm_idx_static/tb_col8_sram_face.sv:11: Verilog $stop
-Aborting...

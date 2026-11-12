@@ -1,3 +1,0 @@
-PR=/srv/opentallas-scratch2/claude/die-qc19-1028/fe12/proof
-F="--sta-proof $PR --sta-plan /srv/opentallas-scratch2/claude/die-qc18-1028/gate/ev_a0meas.json --sta-clock-cal spice --sta-cppr-lca --sta-clock-ocv table --sta-clock-droop shared --sta-droop-regions $PR/droop_regions.json --sta-core-latency-ff 202.5"
-for M in width; do python3 /srv/opentallas-scratch2/claude/wt/die-qc19-1028/tools/die_plan/count_align_plan.py /srv/opentallas-scratch2/claude/die-qc18-1028/gate/t12m/grp_spice_xing_lpo.json $F --start-tree clock --start-clean $M --start-retime-up --mc-chips 300 --out /srv/opentallas-scratch2/claude/die-qc19-1028/fe12/plan_${M}_up.json > /srv/opentallas-scratch2/claude/die-qc19-1028/fe12/plan_${M}_up.log 2>&1 & done; wait; echo done

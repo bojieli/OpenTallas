@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c bench bench_hist32_mut_query host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/s81dvbk_hist32_b0r3-hb0r3-bd6f52e8c log cl/bench_hist32_mut_query.a1b1.log captured 2026-10-20T04:17:06-07:00
-# fail_regex '^HIST_BANK FAIL MUT=1 '
-Verilator 5.050 2026-07-01 rev v5.050
-HIST_BANK FAIL MUT=1 cycle=45 sums=0 bin_values=1 busy=0
-[510000] %Fatal: tb_hist_bank.sv:38: Assertion failed in tb_hist_bank.scenario: HIST_BANK_REJECT MUT=1
-%Error: results/arch/s81_topk5_1020/tb_hist_bank.sv:38: Verilog $stop
-Aborting...

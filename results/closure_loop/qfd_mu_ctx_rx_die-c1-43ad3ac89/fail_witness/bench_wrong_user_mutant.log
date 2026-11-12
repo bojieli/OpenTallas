@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_mu_ctx_rx_die-c1-43ad3ac89 bench bench_wrong_user_mutant host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/qfd_mu_ctx_rx_die-c1-43ad3ac89 log cl/bench_wrong_user_mutant.a1b1.log captured 2026-10-20T23:45:19-07:00
-# fail_regex '^TB_CTXRX FAIL errors [1-9]'
-Verilator 5.050 2026-07-01 rev v5.050
-ERR cyc 12 user 2 rec 4d43479e64070079e64070079e640700 exp 4d43279e64070079e64070079e640700 ctx_user 3
-ERR cyc 17 user 3 rec 4d4311fae4098b1fae4098b1fae4098b exp 4d4341fae4098b1fae4098b1fae4098b ctx_user 1
-ERR cyc 18 user 1 rec 4d432323c80035323c80035323c80035 exp 4d431323c80035323c80035323c80035 ctx_user 2
-ERR cyc 22 user 3 rec 4d431235b40d8b235b40d8b235b40d8b exp 4d434235b40d8b235b40d8b235b40d8b ctx_user 1
-TB_CTXRX FAIL errors 741 det -1 loads 741

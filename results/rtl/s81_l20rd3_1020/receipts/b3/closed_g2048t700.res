@@ -1,1 +1,0 @@
-IDXRD_CASE OK b3/closed_g2048t700: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 700 P 3 mut 0 sram 1 ckh 900 hdr_to_last 3990 end_to_last 3797 nerr 921 nopen 0 qerr 0 slice_err 0 | maxrss_kb=211016 wall=1:23.77

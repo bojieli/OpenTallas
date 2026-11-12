@@ -1,9 +1,0 @@
-{
-  "status": "FAIL_ADHOC_PREFIX_CAPTURE",
-  "error": "IndexError: list index out of range on interleaved R continuation with fewer than four tokens; downstream JSONDecodeError on empty output",
-  "failed_output_path": "results/uarch/qwen_rom_L0_payload_preflight_20261003/first-KV-read-witness-r3.json",
-  "failed_output_bytes": 0,
-  "failed_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "live_run_changed": false,
-  "replacement_claim": false
-}

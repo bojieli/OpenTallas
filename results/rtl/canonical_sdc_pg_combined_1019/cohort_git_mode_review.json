@@ -1,9 +1,0 @@
-{
-  "source": "b7c6b7c00b9281ef6c2d61779283b1219cab98bf",
-  "checked_git_execution_modes": 2569,
-  "git_execution_mode_mismatches": [],
-  "production_helper_git_mode": "100644",
-  "production_helper_observed_test_full_mode": "0664",
-  "test_full_modes_preserved_before_after": true,
-  "clarification": "Earlier0644/full-modes-match wording was inaccurate. Full0664 archive/test modes are recorded; Git100644 execution mode matches source. This does not authorize runtime full-mode normalization."
-}

@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_qdq_nw_program_leaf",
- "enable": false,
- "reason": "RTL registers every pin already (cfg/desc/launch enter the target's capture flops, command/status leave registers, rst_n only the reset collar, fault the sticky flop): the identical SW twin sw125_r6 (recipe 2) is native PASS (launch 199.0, capture 123.1, 0 comb, spread 69.0/60.9). Extra tool pin registers would add edges the split r2 lockstep does not price."
-}

@@ -1,9 +1,0 @@
-xplane mismatch cyc 79
-xplane mismatch cyc 80
-xplane mismatch cyc 81
-FAIL qfd_vm_xplane errors=670 of 2923
-[30006000] %Fatal: tb_qfd_vm_xplane.sv:85: Assertion failed in tb_qfd_vm_xplane: FAIL
-%Error: rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xplane.sv:85: Verilog $stop
-Aborting...
-Command exited with non-zero status 1
-maxrss_kb=4292 wall=0.10

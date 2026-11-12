@@ -1,4 +1,0 @@
-{"name": "asap7_bufx24_ndr_m8m9_stafit",
- "note": "stage fit d = d0 + k1 L_load + k2 L^2 + ks L_in, OpenSTA (asap7 INVBUF RVT NLDM 220122, TT 0.7 V 25 C / FF 0.77 V 0 C) on BUFx24 + 4.45 ohm/um 0.11 fF/um ladders; python3 -m mscts.calib (OSS-CLOCK 2026-10-27, max residual 3.9 TT / 3.4 FF ps). STA reads -4.3 % vs ngspice on the same netlist (qcs_small).",
- "seg_fit": {"TT": {"d0": 21.2438, "k1": 0.017202, "k2": 0.00019318, "ks": 0.062359},
-             "FF": {"d0": 16.7019, "k1": 0.013647, "k2": 0.00018845, "ks": 0.045904}}}

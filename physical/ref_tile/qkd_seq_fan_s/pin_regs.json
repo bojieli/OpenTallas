@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_seq_fan_s",
- "enable": false,
- "reason": "The tile IS the quadrant pin-register pair (capture + launch) for aq / kc and the af return, as qkd_seq_fan; every pin is a flop."
-}

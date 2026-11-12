@@ -1,2 +1,0 @@
-OT_VCLK_BIND corner ff clock vclk source_latency 202.5
-OT_HOLD_GATE PASS FF wns_ps -71.75 endpoints 435 reg2reg (limits wns -100 ps, 2000 endpoints); port paths (FF vclk) not gated here: 1152 endpoints wns -164.28; rc /work/setRC_rcx.tcl

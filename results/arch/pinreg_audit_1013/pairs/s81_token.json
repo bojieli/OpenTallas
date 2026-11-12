@@ -1,3 +1,0 @@
-{"basis": "el1013-rom-layer-tput-s81.log 10-13 12:36: 290 field phases per AR token on the critical path (each pays the column X broadcast / config / go / return path once), 35,440 cycles = 4.10 % of an AR token -> 864,390 cycles per AR token; hub / lane / stat classes are not on a per-phase serial chain in that model (not priced: null)",
- "cycles_per_token": 864390,
- "classes": {"^(x_lane|x_ctl|go|cfg|ret_leaf|ret_tree|col_ret)$": 290, "^(lane|hub|local|stat)$": null}}

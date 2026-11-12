@@ -1,7 +1,0 @@
-6 [237, 529, 506, 677, 307, 534] [2, 3, 3, 4, 2, 3] {'T1': 178.74, 'T2': 37.26, 'T3': 17.82} {'mean': 211.47, 'min': 208.19, 'max': 216.31, 'window': 8.12} {'mean': 166.58, 'min': 164.87, 'max': 170.47, 'window': 5.6}
-BEST 6 {'TT': {'mean': 211.47, 'min': 208.19, 'max': 216.31, 'window': 8.12}, 'FF': {'mean': 166.58, 'min': 164.87, 'max': 170.47, 'window': 5.6}}
-rp1 VERDICT FAIL {'G1_macro_orient': 'FAIL', 'G2_island_rows': 'PASS', 'G3_cell_rows': 'PASS', 'G4_detour_sites': 'PASS'}
- pred {'TT': {'mean': 213.37, 'window': 8.12}, 'FF': {'mean': 161.48, 'window': 5.6}} trunk {'TT': {'mean': 255.49, 'window': 8.12}, 'FF': {'mean': 192.58, 'window': 5.6}} BUFx4_ASAP7_75t_R 1 40.0
-  G2_island_rows PASS {'max_disp_um': 9.18} fail 0
-  G3_cell_rows PASS {'n_sites': 81} fail 0
-  G4_detour_sites PASS {'n_edges': 87, 'n_repeaters': 6, 'n_detours': 84, 'max_shift_um': 1.62} fail 0

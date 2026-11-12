@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_s81_hc_ccr",
- "enable": false,
- "reason": "ot_s81_hc_ccr is a lockstep return-chain root: ch_rv / ch_rd are captured at the pin (crv / crd), crd IS crd_o (stage 0 of the centre return, continued by the hard pads f5r1/r6/r5 at the exact production depth tuple), crv_o / cpi_o / ex1_o are the last u_prv / u_ppi / u_pex stages. Any added register moves the centre return against the W/E chains at crx (exact register counts). HC-COMB-3: with OREG=1 crd (W capture) and crd_q (E launch) are the pin registers."
-}

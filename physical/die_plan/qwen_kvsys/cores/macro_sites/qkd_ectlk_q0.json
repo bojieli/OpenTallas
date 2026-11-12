@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.kv.macro_sites.v1",
- "core": "qkd_ectlk_q0__216x172.8",
- "note": "KV-CORES-R9 10-27: static FIRM SRAM sites. Root cause of the PV2 3_3 GPL OT_ISLAND_FT_NO_ROW mp_isl0_ck0 (102.168, 8.64): no MACRO_PLACEMENT_TCL, rtlmp put g_macro[0] MX at (12.96, 7.068) whose halo blockage (8.64..112.104 x 7.044..48.156) removes the std rows under the plan island_ft rect (102.168..103.788 x 8.64..8.91). Sites = rtlmp orientations (MX bottom / R0 top, SRAM pins on its W+E edges 410/409) moved by whole M3/M4/M5/site pitches (dx +2.592 = 6 x 0.432, dy +6.192 = 129 x 0.048): halo now clears the island row (13.26 - 4.32 = 8.94 >= 8.91), W macro channel 11.232 um >= 10.8 (kit_contract macro_channels), std-cell band 8.94 um under the S-face pins, 12.8a entry island (103.68..112.32 x 82.08..90.72) between the two macros.",
- "sites": {"ot_sram_1r1w_128x256_m1_r2c2": [[15.552, 13.26, "MX"], [15.552, 127.404, "R0"]]}
-}

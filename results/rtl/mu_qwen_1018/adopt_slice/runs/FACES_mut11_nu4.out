@@ -1,9 +1,0 @@
-# case FACES_mut11_nu4 host ot-epyc5 2026-10-19T02:06:22-07:00 commit a540f1f9f481ce632e987da1d733d9a941216717
-XC cc count 1 word 2beeecafef00d
-FACES MU_NU=4
-FACES MUT=11: FAIL 1
-- rtl/test/qwen_dv/tb_qfd_dv2_faces.sv:98: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 162ns; walltime 0.819 s; speed 197.903 ns/s
-- Verilator: cpu 0.759 s on 1 threads; allocated 83 MB
-# exit 0

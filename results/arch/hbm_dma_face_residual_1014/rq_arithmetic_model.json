@@ -1,7 +1,0 @@
-{
-  "checks": 19984,
-  "result": "PASS",
-  "nibble_product": "exact unsigned8x27 -> two4x27 + shifted35bit sum",
-  "destination": "modulo32 recurrence covers every row including skipped stacks; initialize descriptorbase, increment once at row construction",
-  "latency": "one extra row sequencer edge; zero mover payload or return ordering changes"
-}

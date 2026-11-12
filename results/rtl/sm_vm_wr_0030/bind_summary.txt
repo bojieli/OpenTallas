@@ -1,5 +1,0 @@
-DIE_PORT_BIND FAIL masters=56 instances=1426 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=17 input_tied=0 unparsed_connections=0 undriven_net_bits=2994 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=3 pad_bits=2288
-exposed_input_ports 50 exposed_input_bits 17241 problems 0
-SM_RESULT_TO_VM unconsumed ports 0
-open smw wq (pending H-SM SW/SE WG 1->2): [['smw_SW', 'wq', 2248], ['smw_SE', 'wq', 2248]]
-baseline (main 0b5257f87): exposed 51/21,737; undriven 7,490; SM_RESULT_TO_VM 160 ports/8,672 b

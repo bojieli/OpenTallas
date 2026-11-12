@@ -1,5 +1,0 @@
-Collected SFU composed strap equivalence, source e31218406aba503d1afdeacf09dec353e5d71a50.
-16 B2n lane cores from q_b110..q_b113 replace all32 selected lane members in the extracted SFU parent (LWB15,LG_PATH31); opstore_a/b and control remain extracted glue. All16 plan strap_map_lane_j values equal old variant constants.
-Canonical, strap and old-variant compositions each match every unsplit-parent output at seeds1/2 densities3/6 for4000cycles each: zero mismatches,3982nonzero-output cycles per run. Strap mutant caught6099/6566mismatches. Overall SFUV_PASS and summary verdict PASS.
-Scope: source composition and strap equivalence under random stimulus. No production SU/SFU programme, throughput, die-token, common833 physical timing or G5 claim. The separate historical SU31 programme failure remains under diagnosis.
-Inherited SU result on branch539f750f5f:22cores/31plan ties,9000checks/4500serialcycles/3resets PASS in canonical/strap/old compositions; swap-lanes mutant390mismatches. Fault outputs match but are asserted on8993/9000observed edges, so this does not establish fault-free programme execution.

@@ -1,6 +1,0 @@
-STATUS_ENDPOINT_RESULT root_done_edge=30 pin_capture=31 earliest_check=32 done_edge=32 jobs=1 done=1 fault=0 MUT_OLD_STATUS1=0 clock_ps=833
-STATUS_ENDPOINT PASS
-- tb_status_endpoint.sv:18: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 112ns; walltime 0.000 s; speed 305.537 us/s
-- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

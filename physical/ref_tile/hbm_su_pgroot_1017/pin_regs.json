@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hbm_su_programme_root_h",
- "enable": false,
- "reason": "ot_hbm_su_programme_root FREG 1 is itself the root register stage of the partitioned SU programme (DEPTH 2 = root + producer pin stage): every output is a register output (r_start/r_len/r_we/r_bank/r_row/r_data/fault_r) and every input lands on one of those registers (cfg_bank through its per-producer range compare / base subtract, p_fault through the fault OR); a kit flop stage would add an edge the start-advance contract does not price"
-}

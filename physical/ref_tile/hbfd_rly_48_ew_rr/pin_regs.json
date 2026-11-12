@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "hbfd_rly_48_EW_rr",
- "enable": false,
- "reason": "relay = ONE register stage at the pins by definition: i is captured by the stage register and o is launched by it; rso is launched by the row-reset flop; a pin register would add a cycle per hop of the relay row and break the compiled static schedule and the 1-edge row-reset contract (as the closed 136 / 624 relays and the F1 _fc relays)"
-}

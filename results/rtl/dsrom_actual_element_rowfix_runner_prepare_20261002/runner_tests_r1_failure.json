@@ -1,6 +1,0 @@
-{
-  "status": "MOCK_TEST_FIXTURE_FAILURE_NO_HDL_RUN",
-  "cause": "Mocking global subprocess.check_output for child version reporting also intercepted the imported preparation module git reads. This prevented mocked cases reaching their child commands; no compiler/simulator ran.",
-  "fix": "Use an explicit preparation stub in control-flow scenarios; real preparation/pins/package remain checked separately in unmocked gate tests.",
-  "source_sha256": "b6f79a3bd6dce4dec93f4a29d9e047a34505f4efb6363ae6f1a89d9286998126"
-}

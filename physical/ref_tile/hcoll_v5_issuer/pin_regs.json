@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_coll_issuer_m",
- "enable": false,
- "reason": "COLLPIN 10-18 (coordinator 0gd): the issuer's input pins cfg/start/start_pc are registered IN RTL (ot_hgi_coll_issuer_m PIN_REGS=1: cfg_q/cfgv_q/start_q/start_pc_q, +1 issue edge, lockstep SH 5); a synthesis pin stage would add a second edge. Outputs: raw done/fault/uop_v/uop_pc and tap_iteration are flop Q; raw busy = busy_c | start_q (two flops, one OR: keeps the programme target's occupancy edge identical); uop_d1/busy_d2/start_d2/busy_d3/done_d3/start_d3 are the leaf's own delay flops; tap_steps is the bank face flop AND uop_v. rst_n loads ONE synchroniser flop (rst_l)."
-}

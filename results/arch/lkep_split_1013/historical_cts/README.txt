@@ -1,1 +1,0 @@
-Historical unverified v1 CTS snapshots retained from19:29-19:30 manual gates. No source-binding-v2 manifest existed. Insertion collection reads completed retained ODBs only. These files are not kit gate_result.json and must not grant source-binding approval or physical qualification. Current daemon jobs must measure immutable source through current source-binding gates.

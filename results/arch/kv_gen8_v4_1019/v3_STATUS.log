@@ -1,2 +1,0 @@
-2026-10-19 13:07:24 PDT kvs14r 5f2ce19bc: lane views 16 committed (lane_views.tsv); prep start 5f2ce19bc57cc98c941aad2362d4c7a855498171
-2026-10-19 13:41:42 PDT PREP FAIL (prep.log): OT_KV_HROOT_VIEW: qkd_kvs_hroot bound to physical/ref_tile/qkd_kvs_hroot_k1/views/qkd_kvs_hroot (stand-in) kv_die: OT_KV_RS_HD -> qkd_pv_rs_hd_f (native_qkd_pv_rs_hd_f_f2-0473e5d89_PASS.json PASS on the view on disk): RS_D 50, every rs_* consumer (pvfin p0/p1 ages, token-pass schedule) must take +1 edge (kv_die.PV_RS_D_DELTA) tools/qwen_kv_die/chain/kvsys_prep.sh: line 176: $2: unbound variable 

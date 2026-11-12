@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "hbfd_rly_136_SN",
- "enable": false,
- "reason": "relay = ONE register stage at the pins by definition: i is captured by the stage register (FIRM at the i face, io_flop_at_pins), o is launched by it (one launch flop per o pin FIRM at the o face, pin_reg_split); a pin register would add a cycle per hop of the lane chain (as the F1 _fc relays, DIE-CLOCK F1)"
-}

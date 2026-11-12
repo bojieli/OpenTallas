@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qfd_dv_s8_crh_rp1-rp1b-007819fb9 bench bench_rp1_bank_mutant host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_s8_crh_rp1-rp1b-007819fb9 log cl/bench_rp1_bank_mutant.a1b1.log captured 2026-10-21T12:16:54-07:00
-# fail_regex 'RP1 beat mismatch'
-FATAL: rtl/test/qwen_dv/s8/tb_rp1_crh.sv:24: RP1 beat mismatch k=0 addr=000c10 fault=0
-       Time: 111000  Scope: tb_rp1_crh

@@ -1,7 +1,0 @@
-PT_LAT INPUT edge=8
-PT_LAT SLICE edge=66 t=0000000013f800000
-PT_LAT JOIN edge=86 x=3f800000 max=0 fault=0/0000
-- pt_latency.sv:23: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 0.014 s; speed 91.166 us/s
-- Verilator: cpu 0.014 s on 1 threads; allocated 14 MB

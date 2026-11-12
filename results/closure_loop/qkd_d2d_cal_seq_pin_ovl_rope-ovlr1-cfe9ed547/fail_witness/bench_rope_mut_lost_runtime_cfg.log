@@ -1,8 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job qkd_d2d_cal_seq_pin_ovl_rope-ovlr1-cfe9ed547 bench bench_rope_mut_lost_runtime_cfg host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/qkd_d2d_cal_seq_pin_ovl_rope-ovlr1-cfe9ed547 log cl/bench_rope_mut_lost_runtime_cfg.a1b1.log captured 2026-10-22T08:03:20-07:00
-# fail_regex '^KDCALOVL_FAIL mode1$'
-KDCALOVL_ERR cyc5821 mode1 runtime TX SEG1 switch missing
-KDCALOVL_FAIL mode1
-[4856000] %Fatal: tb_kv_dcal_ovl_rope.sv:54: Assertion failed in tb_kv_dcal_ovl_rope
-%Error: rtl/test/qwen_split/tb_kv_dcal_ovl_rope.sv:54: Verilog $stop
-Aborting...

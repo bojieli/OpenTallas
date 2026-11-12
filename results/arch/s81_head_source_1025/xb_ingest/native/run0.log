@@ -1,5 +1,0 @@
-XSTORE_WIDE PASS native_pairs=16538 wide_load=80x1024 reference_load=160x512 public_stream=G+5 mutant_differences=16538 indexed=0
-- rtl/tb_s81hd_xstore_wide.sv:44: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 167us; walltime 0.019 s; speed 8.915 ms/s
-- Verilator: cpu 0.019 s on 1 threads; allocated 7 MB

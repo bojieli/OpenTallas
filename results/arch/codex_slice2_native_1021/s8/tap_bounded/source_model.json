@@ -1,8 +1,0 @@
-{
-  "scope": "Source construction only, no physical qualification",
-  "source": "s6 tap exact fixed AW24 NW18 XCW12 source",
-  "repair": "Same-edge kept copies for descriptor valid145, writevalid95, actual combfanout69/51/46. Constructor loadcap16 allows mapped gate multiplicity; mapped native32 still mandatory.",
-  "stages": "No sequential stage added, identical arithmetic and reset priorities; no changed external programme ages",
-  "external": "xt_v landing needs actual same-edge read copies because external input66 cannot be made native-safe with combinational buffers",
-  "gate": "HOLD until measured native32 including reset and exact ports; no parent layout"
-}

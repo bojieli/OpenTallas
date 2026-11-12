@@ -1,8 +1,0 @@
-REC 8345 8124 40f55353 0
-TILE_OUT row 8124 bits 40f55353 flt 0 at 8351
-LOGITS 128/128
-PASS tilecut row0 8064 best 8124 40f55353
-- /srv/opentallas-scratch/claude/rtlgap2-headtb/tools/tb_s81hd_tilecut.sv:90: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 8us; walltime 6.892 s; speed 1.221 us/s
-- Verilator: cpu 6.890 s on 1 threads; allocated 40 MB

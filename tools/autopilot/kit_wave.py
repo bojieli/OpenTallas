@@ -4217,6 +4217,12 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if miss:           # KW-FIX-45 11-11 (COORD, hbm q_su01 PLAN): wait for the child cores, no attempt consumed
             AP.log(f"KIT-WAVE WAIT-CHILD {die}/{r['item']}: no routed PROVISIONAL source yet for child core(s) {' '.join(miss)} (prov_require_cands)")
             return None
+    if (not arm and prev.get("grt_overflow") and opt(cfg, die, "auto_grt_edge") is not False
+            and "OT_GRT_TRANSITION_MODE" not in sp["gen_env"]):
+        # KW-FIX-45 11-11 (COORD/OWNER "edge-only halving default"): a row whose last attempt failed on GRT overflow relaunches
+        # with edge_outline (ORFS main run on the asap7lock-grtoff image); item_env or die option auto_grt_edge false wins.
+        sp["gen_env"] = dict(sp["gen_env"], OT_GRT_TRANSITION_MODE="edge_outline")
+        AP.log(f"KIT-WAVE GRT-EDGE auto {die}/{r[item]}: previous attempt failed on GRT overflow -> OT_GRT_TRANSITION_MODE=edge_outline")
     if attempt > 1:
         # Preserve previous generation/geometry verdicts and run payloads.
         sp["work"] += f"/attempt_{attempt}"
@@ -4282,6 +4288,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
 # route/sign-off verdict) is final and never relaunched; only an INFRA failure before any verdict uses the infra budget.
 # Class stop: top-level grt_halving_arm_stop, die option stop, or AP_DIR/grt_halving_arm.stop launches no new arm and
 # stops every live arm (CANCELLED ARM-STOP).  No option anywhere = no arm and the tick is unchanged.
+GRT_OVERFLOW_RE = re.compile(r"GRT-0116|GRT-0[0-9]{3}.*(overflow|congest)|overflow|congest|global.?rout", re.I)
 GRT_ARM_MODES = ("off", "edge", "edge_outline")
 GRT_ARM_STOP_FILE = "grt_halving_arm.stop"
 GRT_ARM_GEN_MARK = "def write_grt_transition_mode"
@@ -5153,6 +5160,8 @@ def follow_queue(st, ap_dir, notices):
         cls, why = leafslew_plan_route(rec, status, cls, why)
         old = (rec.get("q_status"), rec.get("q_class"))
         rec.update(q_id=j.get("id"), q_stage=stage, q_status=status, q_class=cls, q_reason=why)
+        if status == "FAIL":                       # KW-FIX-45 11-11 (COORD/OWNER): the fail class is kept per row
+            rec["grt_overflow"] = bool(GRT_OVERFLOW_RE.search(f"{why} {stage}"))
         if status == "CANCELLED":
             # KW-FIX-45 11-11 (COORD option (a), orphaned q_b003__physical_v1 pilot): a queue job that was cancelled (ot-run
             # --cancel / cancel-dir, a stopped route) is a stopped attempt, not a failure and not a superseded block: the

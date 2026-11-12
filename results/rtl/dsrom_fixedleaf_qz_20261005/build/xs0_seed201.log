@@ -1,6 +1,0 @@
-QZ=1
-PASS QP=1 XS=0 CAP=0 P1=1 L=1 compared=1625815 exempt=37 seed=201 cycles=1625813 gated_edges=1611550 closed_cycles=14302 hits=132321 issues=184561 rows=4804 nonzero=4157 classes=255 wraps=4920 qadv=449 restarts=273 rejected=12636 go_closed=129 go_drain=162 go_open=143 resets=17
-- /srv/opentallas/repos/rawls-fixedleaf-qz-7957cd35b/rtl/test/tb_dsrom_qz_exact.sv:230: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2ms; walltime 17.050 s; speed 95.360 us/s
-- Verilator: cpu 17.030 s on 1 threads; allocated 8 MB

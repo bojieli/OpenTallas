@@ -1,2 +1,0 @@
-source {/work/grt_post_reviewed.tcl}
-ot_pg_native_birth_end

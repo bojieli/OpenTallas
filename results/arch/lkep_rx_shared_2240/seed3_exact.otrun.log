@@ -1,9 +1,0 @@
-ot-run: ot-epyc4       admits   743 GB (avail 970, growth 53, headroom 48, waiters 0/0 GB) load 33/128 running 10 disk 1111 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-1528210-1791969524 after 0 s
-LKEP_BENCH PASS NS 3 N 1024 ERRP 23 cycles 16288 replays 125/92 drops 191/377 (0.063 flits/cycle A->B)
-- rtl/hbm_accel/tu/lk_ep_20261010/tb_hfd_lk_ep_shared.sv:128: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 16us; walltime 0.948 s; speed 17.179 us/s
-- Verilator: cpu 0.948 s on 1 threads; allocated 11 MB
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1528210-1791969524): exit 0

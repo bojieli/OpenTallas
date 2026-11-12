@@ -1,9 +1,0 @@
-HGI_ATT_TPUT PASS (3 shards)
-rc=0
-ds_L0.qk         T  128 price   147.1  latency [204, 204, 204, 204] (max 1.386x)  service [146, 146, 146] (max 0.992x)
-ds_L0.pv         T  128 price   147.1  latency [223, 223, 223, 223] (max 1.516x)  service [146, 146, 146] (max 0.992x)
-ds_L20.qk        T  640 price   339.1  latency [332, 332, 332, 332] (max 0.979x)  service [274, 274, 274] (max 0.808x)
-ds_L20.pv        T  640 price   339.1  latency [351, 351, 351, 351] (max 1.035x)  service [274, 274, 274] (max 0.808x)
-ring_wrap.qk     T  128 price   147.1  latency [204, 204, 204, 204] (max 1.386x)  service [146, 146, 146] (max 0.992x)
-ring_wrap.pv     T  128 price   147.1  latency [223, 223, 223, 223] (max 1.516x)  service [146, 146, 146] (max 0.992x)
-ATT_TPUT_GATE PASS

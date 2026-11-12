@@ -1,9 +1,0 @@
-read_liberty -lib -ignore_miss_func /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
-verilog_defines -DSYNTHESIS
-read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_dsdv_vstop.sv
-read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/dsdv_bk_v.sv
-read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/dsdv_bk_g.sv
-read_verilog -defer -sv -noautowire -I/work/rtl /work/rtl/ot_sram_1r1w_128x256_m1_r2c2_bb.v
-hierarchy -check -top dsdv_bk_g
-proc
-check -assert

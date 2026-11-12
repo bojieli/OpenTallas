@@ -1,8 +1,0 @@
-{
-  "verdict": "PASS",
-  "origin_instances": 3,
-  "copies_per_origin": 3,
-  "retained_export_flops": 9,
-  "commands": "read_verilog -sv -DSYNTHESIS; hierarchy -top candidate; proc; flatten; opt; stat; write_json",
-  "added_cycles": 0
-}

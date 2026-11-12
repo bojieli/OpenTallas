@@ -1,7 +1,0 @@
-pass 1 (dly 0): region release spread 3..21 cycles after the host (unaligned, D 19)
-BAD capability 0 after the seal, image 1
-BAD capability 0 lost across the functional reset
-pass 2: every region released 21 cycles after the host (D + 2 = 21)
-FAIL kv_die_cfg_boot scn0 mut4 errors2
-FATAL: rtl/test/qwen_static_kv/tb_kv_die_cfg_boot.sv:125: 
-       Time: 53780000  Scope: tb_kv_die_cfg_boot

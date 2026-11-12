@@ -1,3 +1,0 @@
-{"graph": "single", "variant": "plan", "pad": 0, "edge_pad": {"b": 1, "e": 2}, "fall_edges": ["e"], "regions": ["a", "b", "c", "e", "r"], "partitions": ["a", "b", "c", "e", "r"], "root": "a", "relay": null, "roles": {}, "ports": {"ab": ["a", "b", -1, 4, 4, true], "ac": ["a", "c", -1, 4, 2, true], "ae": ["a", "e", -2, 4, 4, true], "bc": ["b", "c", 2, 4, 1, false], "be": ["b", "e", 0, 4, 2, false], "ca": ["c", "a", 3, 4, 2, false], "cr": ["c", "r", -1, 4, 3, true], "ec": ["e", "c", 4, 4, 2, false], "er": ["e", "r", 1, 4, 2, false], "ra": ["r", "a", 6, 4, 2, false], "rb": ["r", "b", 3, 4, 3, false]}, "loops": 7}
-LINT clean
-LOOP bench: 200 chips x 11 crossings, 780783 word checks, 0 bad chips

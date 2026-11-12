@@ -1,8 +1,0 @@
-%Error-PINNOTFOUND: rtl/physical/ot_hdc_vreduce_entries64.sv:24:44: Parameter not found: 'DRST'
-   24 |           ot_hdc_fp32_mul_lat #(.LAT(LM), .DRST(0)) u_sq (.clk(clk), .rst_n(rst_n),
-      |                                            ^~~~
-                                                                  : ... Location of instance's module declaration
-   18 | module ot_hdc_fp32_mul_lat #(
-      |        ^~~~~~~~~~~~~~~~~~~
-                    ... For error description see https://verilator.org/warn/PINNOTFOUND?v=5.050
-%Error: Exiting due to 1 error(s)

@@ -1,9 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hbm_refcfg_q_1018-q2-212589b09 bench bench_rc_mut4_order host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/hbm_refcfg_q_1018-q2-212589b09 log cl/bench_rc_mut4_order.a1b1.log captured 2026-10-18T07:04:21-07:00
-# fail_regex 'PC_REFCFG_Q FAIL errors=\\d+ MUT=4'
-PC_REFCFG_Q_MISMATCH phase 0 hbm: W rel 1/1 E rel 1/1
-PC_REFCFG_Q_MISMATCH phase 0 hbm: W rel 1/1 E rel 1/1
-PC_REFCFG_Q_MISMATCH phase 0 hbm: W rel 1/1 E rel 1/1
-FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_refresh_cfg_q.sv:66: PC_REFCFG_Q FAIL errors=2098 MUT=4
-       Time: 3136000  Scope: tb_hbm_pc_refresh_cfg_q
-STK_IVL MUTANT_REJECTED rc_mut4

@@ -1,4 +1,0 @@
-SEQ-DIE case 0: 3923 dispatches, token 4242 status 0 tokx 0
-CPFETCH case 0 doorbell 186 last_dispatch 234439 completion_seen 234482 cycles_to_last_dispatch=234253 lane_requests=14995 sectors=17008 max_inflight=48 FAST 0 FLAT 104
-HGI_SEQ_DIE PASS cases=1 dispatches=3923 argmax_records=1 other_unit_records=3031 max_fetch_inflight=48 lane_requests=14995 sectors=17008 cycles=234492
-src/rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv:293: $finish called at 468984000 (1ps)

@@ -1,5 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job hbfd_rrl_sync-r1-f8912d0c5 bench bench_reset_tile_mutant host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/hbfd_rrl_sync-r1-f8912d0c5 log cl/bench_reset_tile_mutant.a1b1.log captured 2026-10-18T23:43:05-07:00
-# fail_regex 'RELEASE age'
-FATAL: /tmp/hbfd_rrl_lsh6_0g5/tb.sv:14: RELEASE age cycle=1 sync=0 hop=0
-       Time: 25010  Scope: tb

@@ -1,9 +1,0 @@
-images loaded in 8.4 s
-models constructed in 10.4 s (tiles/die=1536 nodes/die=1488)
-progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=2s passes=3
-STAGE head done cycles=2999 start_cyc=7 end_cyc=3006 me_busy=2434/2434 next_token=50994/50994 next_val=419c72b5/419c72b5 seq_fault=0 core_fault=0 coll_fault=0 me_writes=0 su_writes=4097 wall=1434s
-VERIFY_TOKENS die=0 n=1 t0=50994/419c72b5
-VERIFY_TOKENS die=1 n=1 t0=50994/419c72b5
-VERIFY_TOKENS die=2 n=1 t0=50994/419c72b5
-VERIFY_TOKENS die=3 n=1 t0=50994/419c72b5
-QWEN_ROM_TOKEN_TP2 PASS stages=1 token=50994 val=419c72b5 die1_token=50994 cycles=3006 edges=3006 settle_max=2 wall_s=1433.8 RSS_KiB=1640576 threads=32

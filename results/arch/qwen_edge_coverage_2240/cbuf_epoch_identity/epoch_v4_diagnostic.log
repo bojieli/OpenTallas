@@ -1,3 +1,0 @@
-CACHE busy=0 kind=3 out=  0 r=  1 n=  1 vn=11 vr=01 tn=00 tr0=   100 tr1=     x pending=0
-FAIL cbuf_native_l0 bounded admission timeout t=1 rdy=00 pos=001940065001940065001940065001940065 joined=101 want=101 fault=00 stage=000000000000
-rtl/test/redesign_qwen/tb_qfd_cbuf_reqepoch_native_l0.sv:94: $finish called at 16682919 (1ps)

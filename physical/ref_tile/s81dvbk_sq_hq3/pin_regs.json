@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "dsdv_bksel_q",
- "enable": false,
- "reason": "Source-registered: dsfd_selt_q_hq QIO (cq0/cq command, sq/sq1 status, oq/oq1 beat pin flops) and the u_in lane pin register s0; every input lands in a flop, every output leaves from one."
-}

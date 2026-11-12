@@ -1,5 +1,0 @@
-THREEPRODUCER_SU_START load0 mode0 range0:65535 cycle8
-THREEPRODUCER_PARKED_POSTS observed224 before_grant retained_positive_requires_fullcommit
-[8343401000] %Fatal: tb_hbm_native_threeproducer.sv:172: Assertion failed in tb_hbm_native_threeproducer.su_run: FATAL actual SU timeout mode0 seen0/f donef/0 count0/0/0/0
-%Error: /srv/opentallas-scratch/hbm-native-threeproducer-1014/r4m10/src/rtl/test/hbm_accel/generic/native_contention/tb_hbm_native_threeproducer.sv:172: Verilog $stop
-Aborting...

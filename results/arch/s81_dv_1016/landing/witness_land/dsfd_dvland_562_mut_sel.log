@@ -1,5 +1,0 @@
-# S81-DIE7/LAND 10-18 fleet bench (ot-run --mem 2 --threads 1): python3 tools/s81_dv/land_bench.py --tile/--variant per file name, source branch claude/s81-die7-land-1018
-mut_sel FAIL sweep 0/36 slip-fault 4 {'dL0_wrap/w562': [1, 5], 'dL_halfT/w562': [8], 'dL_T_wrap_age1/w562': [8, 12], 'dL_2T_wrap_16hop/w562': [18, 22]}
-BENCH PASS /tmp/s81die7land/run/dsfd_dvland_562_mut_sel/bench.json
-LAND_BENCH FAIL dsfd_dvland_562 mut_sel D=4 KW=3 sweep 0/36 slip-fault 4/4 latency {'dL0_wrap/w562': [1, 5], 'dL_halfT/w562': [8], 'dL_T_wrap_age1/w562': [8, 12], 'dL_2T_wrap_16hop/w562': [18, 22]}
-ot-run: RAN on ot-agidock128 (unit oth-ubuntu-936817-1792330610): exit 1

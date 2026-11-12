@@ -1,3 +1,0 @@
-case neg_coll done: 1 fails so far
-MU_OPSEG_FAIL mut 22: neg_coll: required fault not raised at ~6469 (opf log [])
-{"mut": 22, "cases": ["neg_coll"], "neg_coll": {"want_edge": 6469, "opf": [], "raised": false}, "verdict": "FAIL"}

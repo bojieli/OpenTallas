@@ -1,9 +1,0 @@
-DBG ref fault t=199000 L=83 pa=86 state=0 iv_r=0f pexp_v=00 cv0=0 out_slot=0
-DBG ref fault t=407000 L=84 pa=87 state=0 iv_r=0f pexp_v=00 cv0=0 out_slot=0
-DBG ref fault t=617000 L=85 pa=88 state=0 iv_r=0f pexp_v=00 cv0=0 out_slot=0
-DBG ref fault t=829000 L=86 pa=89 state=0 iv_r=0f pexp_v=00 cv0=0 out_slot=0
-KVBA_PVCTL PASS A=95 mut=0 L=94 checks=6347 cmds=12
-- /srv/opentallas-scratch/claude/refill-0725/MUKVREG2/src/rtl/test/kv_bootage_1019/tb_kvba_pvctl.sv:115: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 16us; walltime 0.025 s; speed 647.976 us/s
-- Verilator: cpu 0.022 s on 1 threads; allocated 7 MB

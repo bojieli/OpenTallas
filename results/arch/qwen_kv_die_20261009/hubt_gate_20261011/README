@@ -1,3 +1,0 @@
-HUBT layer gate on source 0d1615f2c (ot_qwen_nearhbm_attn_hub_t hardened sub-tiles, KVD_HUBT, DQ=128), ot-epyc1tb.
-pos: bench_gate.sh pos, 7 vectors x VM stall 0/1 = 14/14 bit-exact.
-neg: PBMUT=1 (beat-store mutant), 8192_normal: exact=false, 1024/1024 mismatches -> mutant caught.

@@ -1,4 +1,0 @@
-# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
-# job s81sl_hcpl-s81sl_hcpl-31155b373 bench bench_hcpl_lane_pr_mut1 host ot-epyc4 run /srv/opentallas-scratch2/claude/closure-loop/s81sl_hcpl-s81sl_hcpl-31155b373 log cl/bench_hcpl_lane_pr_mut1.a1b1.log captured 2026-10-18T03:58:32-07:00
-# fail_regex '^FAIL_HCPOST_LANE_PR mismatches=[1-9][0-9]* '
-FAIL_HCPOST_LANE_PR mismatches=6662 outputs=14822

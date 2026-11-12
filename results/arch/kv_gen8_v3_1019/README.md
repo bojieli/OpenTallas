@@ -1,7 +1,0 @@
-# GEN8 v3 unsigned parameter parser successor
-
-Source base 6bc53920d; exact parser and diagnostic autoprofile guard from e4f9eb21a, without unrelated native-audit tooling. Legal unsigned parameter [31:0] literals retain unsigned high-bit evaluation; integer parameters remain signed. Unsupported widths, expressions, unknowns and out-of-range literals refuse. No native parameter qualification exception was added. Signed literal serialization is coerced by the declared unsigned 32-bit parameter without changing its bits.
-
-Fleet 24 unittest cases PASS, including actual SCALE=32'h3DB504F3, unsigned high bit, signed contrast, strict missing-profile/receipt, expansion/binder real Yosys and ledger mutation controls. tests.log records exact fleet run; test_kv_static_params.py imported only and contributes no claimed tests. Initial isolated test setup failures (missing dependency paths) retained in /home/ubuntu/artifacts/kv-gen8-v3-1019/tests{,2}.log; final test root uses read-only dependency symlinks to the exact v2 source root.
-
-Both predecessor v2 jobs terminal PREP failures: gen8mub at 12:51:10 PT, gen8mu at 12:53:47 PT, same legal SCALE parser refusal. Their evidence is preserved. v3 uses the original MU/BOOT_AGES/DCAL_BC recipe; PARAM_DIAG must remain NOT_A_DIE_RESULT. Native-profile strict refusal remains expected until reviewed exact receipts exist. No gate or route helper changed by this source repair.

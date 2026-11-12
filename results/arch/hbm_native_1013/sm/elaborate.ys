@@ -1,6 +1,0 @@
-read_verilog -sv results/arch/hbm_native_1013/sm/boundary_elaboration.sv
-hierarchy -check -top ot_hbm_accel_smh
-proc
-flatten
-check
-write_json results/arch/hbm_native_1013/sm/elaborated.json

@@ -1,2 +1,0 @@
-dv2f11 GEN: ot-run --mem 64 --threads 4 --priority die --dir $S -- bash $S/run.sh   (17:3x PDT, rc=0, 2 min)
-dv2f11 chain: nohup setsid ot-run --mem 240 --threads 16 --priority die --dir $S -- bash $S/chain.sh

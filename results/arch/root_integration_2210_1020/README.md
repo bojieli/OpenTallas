@@ -1,7 +1,0 @@
-# ROOT integration qualification 2026-10-20
-
-Source candidate e807f878d against exact main f752fc0b0. Helper changes: rule classification registry 0a2bbcfce, N59 scoped clock cap a71f9cfe0, FRH10 wrapper-bound child graph 34d230e7c; regression tests bind scoped cap and retain direct cross-region refusal. Additive HBM post-GRT IR guard 80fd80021 refuses missing ODB. Conflict-free READY merges: Qwen forward lanes e35b536ce, ROM capacity 1e0fe7d39, S81 insertion d4bff5d19, Qwen token ledger 23314a50c, KV MU host proof 7d4c189bd.
-
-Full paired fleet suites (identical exact-main RTL/common_flow/SRAM fixtures): closure_loop 19 failed /1151 passed both; ref_tile 112 failed /779->782 passed; fleet 7 failed /55 passed both; landed_parent 2 failed /10 passed both. Exact failure IDs identical in all four cohorts, NEW ZERO. Baseline failures retained; this is regression-neutral integration, not a claim that the entire repository passes. Focused HBM IR, svc4 cap, MC3c7 identity, wrapper graph, guard and helper overlay tests: 100 passed +6 subtests. Guard PASS3 helper-touching commits.
-
-Authoritative unpinned fleet unit oth-ubuntu-2918503-1792559741 ep7 completed exit0. Earlier tools-only sparse harness had collection errors; superseded by this fixture-backed run. No in-flight gate sources changed. Main merge/push and daemon consumed-byte verification belong coordinator; helper_overlay.py and textbook_lint.py import outside ref_tile auto-sync require attention along with pre_route_gate.py.

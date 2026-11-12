@@ -1,7 +1,0 @@
-`verilator_config
-// Lint waivers for the reused, unmodified third-party sources of ot_gpu_memsys: their own -Wall findings are
-// not ours to fix (rtl/hdc/kv/ot_hdc_hbm_model.sv, Codex's W2 component).  SYNCASYNCNET: the W2 component
-// resets asynchronously, the rest of the memory system synchronously, on the same clk_mem reset.
-lint_off -file "*ot_hdc_hbm_model.sv"
-lint_off -file "*ot_hdc_qwen_pc_exact_completion.sv"
-lint_off -rule SYNCASYNCNET

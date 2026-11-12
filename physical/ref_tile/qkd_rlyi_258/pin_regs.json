@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_rlyi_258",
- "enable": false,
- "reason": "KV-RTRUNK: a result-trunk station is ONE register stage pin to pin (inject: a / y -> 2:1 -> flop -> b; header: trunk words -> AND / 2:1 -> flop -> beat word); its flop is the pin register of every pin; pv_trunk_gen counts exactly 1 core cycle per station (RS_D), so a flow-inserted pin register would change the static beat schedule"
-}

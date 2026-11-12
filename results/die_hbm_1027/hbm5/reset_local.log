@@ -1,9 +1,0 @@
-q_hub_nw station regs 28993 inside core boxes (pushdown, reset from the core) 1512
-q_hub_nw grid done
- stuck at (2425.68, 8.64) sink (1961.3, 4.3) 468.7
-q_hub_nw {'pushdown_regs_excluded': 1512, 'grid_taps': 231, 'before_max_hop_um': 656.6, 'before_over_405': 156, 'added_local_taps': 2, 'after_max_hop_um': 468.7, 'after_over_405': 135, 'target_um': 380.0}
-q_hub_ne station regs 29740 inside core boxes (pushdown, reset from the core) 1511
-q_hub_ne grid done
- stuck at (2425.68, 8.64) sink (1961.3, 0.0) 473.0
-q_hub_ne {'pushdown_regs_excluded': 1511, 'grid_taps': 231, 'before_max_hop_um': 661.0, 'before_over_405': 87, 'added_local_taps': 2, 'after_max_hop_um': 473.0, 'after_over_405': 75, 'target_um': 380.0}
-tool check q_hub_nw

@@ -1,7 +1,0 @@
-{"schema": "opentallas.pin_contract_constants.v1",
- "design": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap",
- "constants": [{"core_port": "tile_up_in", "width": 344, "value": 0, "where": "terminal wrapper rtl/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__wrap.sv (.tile_up_in(344d0))",
-   "source": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv:155 assign up[NT]=0 (terminal tile t=NT-1 .up_in(up[t+1])), 4*EW = 344 for EW 86",
-   "plan_pin": "none (planU6b terminal pin table has no tile_up_in bus; 694 pins)", "proof": "kit LEC gold = wrapper RTL incl. the constant",
-   "ruling": "COORD 2026-10-27 07:46 HBM-CORES-R8 1add09346a: ALLOWED as a declared constant"}],
- "open_outputs": ["tile_ovf_v", "tile_ovf_b (unread at the parent: dv[NT], down[NT])"]}

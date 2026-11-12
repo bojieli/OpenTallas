@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/tmp/kepler-ds-r41-prefix-pinned-20261002/tools/ds_hbm_source_prefix_r41.py", line 110, in <module>
-    if __name__=='__main__':main()
-  File "/tmp/kepler-ds-r41-prefix-pinned-20261002/tools/ds_hbm_source_prefix_r41.py", line 101, in main
-    witness=Witness(provider,original_native,ROOT/'results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/independent_prefix_expected_outputs.json')
-  File "/tmp/kepler-ds-r41-prefix-pinned-20261002/tools/ds_hbm_prefix_observed_outputs_r41.py", line 19, in __init__
-    if baseline[name]!=provider.manifest[name]:raise ValueError('reference input source changed '+name)
-ValueError: reference input source changed view_bindings

@@ -1,8 +1,0 @@
-Verilator 5.050 2026-07-01 rev v5.050
-AUDIT PASS
-AUDIT-UNLAND FAIL (expected)
-MUT 0: LP_LOCKSTEP PASS
-MUT 1: LP_LOCKSTEP FAIL
-MUT 2: LP_LOCKSTEP FAIL
-BENCH_EXIT 0
-landing_chunk_bits 8 (a4bc4f950); ot-run unit: RAN on ot-epyc5 (unit oth-ubuntu-4169064-1792561526): exit 0

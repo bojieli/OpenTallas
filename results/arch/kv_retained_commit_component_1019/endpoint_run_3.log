@@ -1,5 +1,0 @@
-PASS real result cleanup edge=23
-PASS protocol fault real matching cleanup edge=47
-[556000] %Fatal: endpoint_tb.sv:91: Assertion failed in endpoint_tb.unnamedblk1_3: POST_POISON_ISSUE edge=56
-%Error: endpoint_tb.sv:91: Verilog $stop
-Aborting...

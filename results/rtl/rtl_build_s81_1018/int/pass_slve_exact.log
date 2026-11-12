@@ -1,8 +1,0 @@
-ot-run: ot-epyc4       admits   244 GB (avail 526, growth 355, headroom 0, waiters 0/0 GB) load 125/128 running 49 disk 606 GB 
-ot-run: ot-pve1        admits   -70 GB (avail 71, growth 120, headroom 0, waiters 3/38 GB) load 70/28 running 28 disk 1284 GB 
-ot-run: ot-agidock128  admits   -10 GB (avail 59, growth 66, headroom 0, waiters 35/657 GB) load 24/64 running 10 disk 287 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-2373944-1792309030 after 0 s
-PASS ot_s81sl_ve beat 4 copies x 64: 12 partials + 256 outputs bit exact; reduce first-in -> last partial 129 cyc (GAP 0), add first-in -> last out 44 cyc
-PASS ve MUT=0 GAP=0
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2373944-1792309030): exit 0

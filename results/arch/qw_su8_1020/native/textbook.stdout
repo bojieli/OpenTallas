@@ -1,3 +1,0 @@
-textbook_lint: PASS qfd_dv_s5_su8_rst3 cells 26,993 flops 4,655 depth 470.1 ps util None reach None um (0.9 s)
-textbook_lint: INFO reset_landing {"max":2,"ports":[{"port":"rst_n","sinks":2,"flops":2,"macros":0}]}
-textbook_lint: INFO clock_roots max_root_sinks=4655 root=port:ck rule=PASS: 4,655 sinks on the largest root; no measured clock tree (no --cts gate evidence)

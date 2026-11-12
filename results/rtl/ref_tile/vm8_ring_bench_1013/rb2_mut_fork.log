@@ -1,8 +1,0 @@
-VM_RING_SRC tile=rb2 sha256=3be9a80a490795a2e73c7b54214daf2eaaaae2b8ba8652d0436ba594f99d253f mut=FORK
-ring_mut: FORK applied to physical/hbm_accel_die_views/vm/cp/rtl/vm_cp_rb2.sv -> ../out/rb2_mut_fork/vm_cp_rb2_mut_FORK.sv
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=95188 beatsA=20000(main 9996 stn 10004) beatsB=20000(main 19880 stn 120) exact_err=92253 order_err=20000 data_err=120 addr_err=53514 credit_err=86555 toggled=3327/3327 stallA=8385/8288 fullA=621/616 zeroA=1051/1076 stallB=16259/35757 fullB=1253/0 zeroB=2097/112 cfg=0
-VM_RING_RUN FAIL tile=rb2: exact order data addr credit cov_beats_B cov_backpressure_B
-VM_RING tile=rb2 WA=2048 WB=1078 WF=201 cycles=97103 beatsA=20000(main 9996 stn 10004) beatsB=20000(main 19860 stn 140) exact_err=94168 order_err=20000 data_err=140 addr_err=54637 credit_err=88739 toggled=3327/3327 stallA=8327/8288 fullA=638/594 zeroA=1143/1039 stallB=16404/35816 fullB=1254/0 zeroB=2136/129 cfg=0
-VM_RING_RUN FAIL tile=rb2: exact order data addr credit cov_beats_B cov_backpressure_B
-VM_RING_BENCH FAIL tile=rb2 mut=FORK beats=0/1
-rc=1

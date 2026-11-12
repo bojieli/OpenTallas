@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "qkd_seq_xd_sel",
- "enable": false,
- "reason": "The tile IS one pin register: x_d <= q_v ? q_d : k_d; the output pin is a flop and every input reaches that flop through one 2:1 select. Extra input registers would add an edge to both the Q and the KVN store push for no timing need (128 flops, one mux level)."
-}

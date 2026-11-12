@@ -1,5 +1,0 @@
-PASS qfd_vm_xpad2 W=512 SEED=1 exact 3991 checks: stalls=1037 q_changes=2956
-- rtl/qwen_sys/vm_plane_20261013/tb_qfd_vm_xpad2.sv:38: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 40us; walltime 0.003 s; speed 15.862 ms/s
-- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB

@@ -1,9 +1,0 @@
-SOGOLD_IMG dir=images_checked/base nq=541 nv=8 so_obase=200 se_obase=0
-SOT_HEAD head=0 beats=8 retires=1 fault=000 parser=0
-SOT_HEAD head=15 beats=8 retires=1 fault=000 parser=0
-SOT_TARGET target_errors=0 faults=0000 retire_errors=0000 verdict=PASS
-SOGOLD se_checked=16 so_checked=64 errors=0 rope_row_errors=0 plain_row_errors=0 rows_bad=0 so_latency=54 lat_bad=0 den_mask=8001 fu=0000 fo=0000 late_q=0 q_sent=541/541 cycles=1196 verdict=PASS
-- tools/s81_dv/layer_prog/svc/tb_so_sot.sv:154: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 1us; walltime 11.897 s; speed 100.575 ns/s
-- Verilator: cpu 11.784 s on 1 threads; allocated 29 MB

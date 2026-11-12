@@ -1,7 +1,0 @@
-TX edge=24 op=14 id=0000
-TX edge=38 op=81 id=73a1
-TX edge=45 op=82 id=73a2
-FAIL OFFER_STABILITY edge=67
-[670000] %Fatal: bridge_tb.sv:23: Assertion failed in bridge_tb.fail: OFFER_STABILITY
-%Error: bridge_tb.sv:23: Verilog $stop
-Aborting...

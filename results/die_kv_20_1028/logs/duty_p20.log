@@ -1,3 +1,0 @@
-{"taps": 1920, "odd_parity_taps": 0, "odd_first": [], "roots": ["root"], "stages_med": 100.0, "stages_max": 176}
-TT {"taps": 1920, "fall_minus_rise_ps": {"min": -17.6, "med": -1.3, "max": 17.9}, "duty_min": 0.4779, "duty_med": 0.4984, "duty_max": 0.5225, "outside_45_55": 0, "mpw_est_fail": 0} worst {'port': 't_phy_EN_3__clk', 'duty': 0.5225, 'high_ps': 435.4, 'low_ps': 397.9, 'mpw_ps': 43.0}
-FF {"taps": 1920, "fall_minus_rise_ps": {"min": -18.2, "med": -3.6, "max": 10.5}, "duty_min": 0.477, "duty_med": 0.4954, "duty_max": 0.5133, "outside_45_55": 0, "mpw_est_fail": 0} worst {'port': 't_pv_N_0__clk_t6', 'duty': 0.477, 'high_ps': 397.5, 'low_ps': 435.8, 'mpw_ps': 42.2}

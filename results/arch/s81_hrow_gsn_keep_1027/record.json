@@ -1,6 +1,0 @@
-{"lane": "S81-CORES-R26/HK", "date": "2026-10-27T18:43:34-07:00",
- "finding": "hrow routed LEC KEEP FAIL (20 of 654 kept bits: g_sn[6..10].q[0..3]) = legal dead logic. snf[f] = {tag, 132 zero bits, 132 data}; g_sn groups j=6..10 (bits 144..263) lie wholly in the zero half, so face selects q[0..3] have no load. Yosys keeps them ((* keep *), 60 g_sn flops in 1_2_yosys.v); ORFS 1_synth eliminate_dead_logic removes them (face_keep protects only the 3849 pin registers; 1_synth.log: Removed 7259 unused instances); 6_final.v has 40.",
- "evidence": {"run": "intel1:/srv/opentallas-scratch2/claude/s81-cores-r24/hrow_iohp/kit/run (unit oth-ubuntu-2813597-1793145421)", "lec": "intel1:/srv/opentallas-scratch2/claude/s81-cores-r25/hrow_lec/lec.log"},
- "fix": "RTL: g_sn declares/keeps q[4:QL], QL=4 for groups inside bits NS*SL..2*NS*SL-1 (only the adder select is live); no logic change",
- "formal": {"tool": "yosys (openroad/orfs:asap7lock) equiv_make/equiv_simple -seq 5/equiv_induct -seq 5, kit RTL old vs new", "result": "EQUIVALENT 72082/72082 equiv cells proven, 0 unproven", "mutant": "QL bound +8 (drops face selects of the live tag group j=11): 30 unproven -> caught"},
- "resign": "intel1:/srv/opentallas-scratch2/claude/s81-cores-r26/hrow_gsn/kit (copy of r24 hrow_iohp kit + this RTL patch), ot-run unit oth-ubuntu-3569807-1793151771, goal finish"}

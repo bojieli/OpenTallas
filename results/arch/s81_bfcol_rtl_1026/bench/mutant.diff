@@ -1,4 +1,0 @@
-676c676
-<         o_row <= so_row_c[t_seg] ^ 16'd1; o_seg <= b_so_idx[t_seg]; o_n <= b_so_n[t_seg];
----
->         o_row <= so_row_c[t_seg]; o_seg <= b_so_idx[t_seg]; o_n <= b_so_n[t_seg];

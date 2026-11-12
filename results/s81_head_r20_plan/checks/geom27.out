@@ -1,9 +1,0 @@
-PG M9 12.96 34.56 17.28 ['VDD', 'VSS']
-r17_e20c M9 95 SHORT 32 SPACE 0 min_gap -2.08
-r17_1d8b M9 95 SHORT 32 SPACE 0 min_gap -2.08
-r18 M9 95 SHORT 32 SPACE 0 min_gap -2.08
-r19 M9 95 SHORT 0 SPACE 0 min_gap 1.16
-r19_on_33029005 M9 95 SHORT 0 SPACE 0 min_gap 1.16
-r17_e20c ->r19 moved 32 deltas [-3.24, 3.24] | moved set == shorted set: True (shorted 32)
-r17_1d8b ->r19 moved 32 deltas [-3.24, 3.24] | moved set == shorted set: True (shorted 32)
-r18 ->r19 moved 32 deltas [-3.24, 3.24] | moved set == shorted set: True (shorted 32)

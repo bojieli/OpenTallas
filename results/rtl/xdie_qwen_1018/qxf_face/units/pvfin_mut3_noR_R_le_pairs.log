@@ -1,5 +1,0 @@
-PASS STRETCH=0 12 commands, 384 beats timed, 24 blocks bit-exact vs the reference slices, beat b = ref + 1 + b
-- rtl/test/qwen_split/tb_qkd_pv_fin_s.sv:109: Verilog $finish
-- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2us; walltime 0.054 s; speed 41.698 us/s
-- Verilator: cpu 0.054 s on 1 threads; allocated 11 MB

@@ -1,8 +1,0 @@
-stn_a1l1: MITER STN=1 QB_ALIGN=1 QB_LOCAL32=1 cycles 200000 q_write_cycles 112025 read_cycles 99693 nonzero_rows 99683 bypass2_cycles 15127 mismatch_cycles 0 (array 0, outputs 0) => EQUIVALENT
-stn_a0l0: MITER STN=1 QB_ALIGN=0 QB_LOCAL32=0 cycles 200000 q_write_cycles 112025 read_cycles 99693 nonzero_rows 99679 bypass2_cycles 15127 mismatch_cycles 0 (array 0, outputs 0) => EQUIVALENT
-mut3_a0l0: MISMATCH cyc 200 arr_neq 00000000 row_eq 0 outs_eq 1
-mut3_a0l0: MISMATCH cyc 201 arr_neq 00000000 row_eq 0 outs_eq 1
-mut3_a0l0: MISMATCH cyc 202 arr_neq 00000000 row_eq 0 outs_eq 1
-mut_a0l0: MISMATCH cyc 5 arr_neq 00001000 row_eq 1 outs_eq 1
-mut_a0l0: MISMATCH cyc 6 arr_neq 00001000 row_eq 1 outs_eq 1
-mut_a0l0: MISMATCH cyc 7 arr_neq 00001000 row_eq 1 outs_eq 1

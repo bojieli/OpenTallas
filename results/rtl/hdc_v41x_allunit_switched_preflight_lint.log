@@ -1,5 +1,0 @@
-%Warning-UNSIGNED: /work/rtl/test/tb_hdc_v41x_array.sv:702:89: Comparison is constant due to unsigned arithmetic
-                                                             : ... In instance tb_hdc_v41x_array
-  702 |                             if (me_omask[q*W + l] && ({me_oaddr[q*AW +: 12], 4'b0} + l) < PROWS)
-      |                                                                                         ^
-                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.

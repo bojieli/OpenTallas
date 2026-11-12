@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.pin_regs.v1",
- "top": "ot_hgi_sfu_store_leaf2_r9",
- "enable": false,
- "reason": "the leaf RTL registers every input at the pin (pure flops: rb/we_q/addr_q/data_q/start_*_q) and every output is a stripe register (calendar/valid/active/done/fault/ordinal/mm); a kit flop stage would add an edge to the priced r9 schedule"
-}
