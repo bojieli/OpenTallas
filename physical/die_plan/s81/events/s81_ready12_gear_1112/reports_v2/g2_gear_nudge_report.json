@@ -1,0 +1,31 @@
+{
+ "lanes": 72,
+ "ports": 220,
+ "type_buses": 46,
+ "ft_slots": 120,
+ "type_buses_not_in_delta": [],
+ "type_buses_missing_vs_delta": [],
+ "ft_slots_not_in_delta": [],
+ "ft_slots_missing_vs_delta": [],
+ "leftover_x_buses_at_1104": [],
+ "bits_saved_on_ports": 120560,
+ "latency_note": "+1 word edge per geared lane NOT written to plan.latency; S81-ARCH-RTL-2 owns landing K/E",
+ "nudged_slots": [
+  [
+   "ot_s81sl_leaf__t65",
+   "ft4"
+  ]
+ ],
+ "nudge_ledger": [
+  {
+   "type": "ot_s81sl_leaf__t65",
+   "slot": "ft4",
+   "width": 556,
+   "stations": 6,
+   "mode": "bit_sites",
+   "bits_moved": 146,
+   "max_move_um": 28.35
+  }
+ ],
+ "nudge_stdout": "slots 19; max slide 0 um; max bit move 72.9 um\n"
+}

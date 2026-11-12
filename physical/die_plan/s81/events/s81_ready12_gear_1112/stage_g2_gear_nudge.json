@@ -1,0 +1,8 @@
+{
+ "name": "g2_gear_nudge",
+ "why": "BUS-GEAR-1 S81 x feed 2:1 (stage g_gear) + minimal-move ft re-site (tools/die_plan/ft_nudge.py, no snap) of the slots the gear left on macros: t65 ft4 (COORD 11-12: 146 station cells on u_vq, no waiver); station counts/windows/pins/outlines unchanged",
+ "script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/gear/apply_xgear_nudge_1112.py",
+ "argv": ["{in}", "{out}", "{report}", "--delta", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/gear/s81_gear_delta.json", "--repo", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/repo", "--only", "ot_s81sl_leaf__t65:ft4"],
+ "type_keys": ["buses", "ft_slots"],
+ "top_keys": ["ports", "lanes"]
+}
