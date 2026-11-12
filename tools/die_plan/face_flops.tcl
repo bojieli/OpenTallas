@@ -649,6 +649,20 @@ if {[info exists ::env(OT_HOP_LATCH_FRAC)] && $::env(OT_HOP_LATCH_FRAC) ne ""} {
     error "OT_HOP_LATCH_FRAC must be a number in (0, 1], got '$ff_hl_frac'"
   }
 }
+# HBM-VSN-XTAP-2 11-11 form A' (plan clock.ft_hop_lockup.latch_frac via gen_phys): OT_HOP_LATCH_FRAC_MAP = space-
+# separated 're=f' items; a latch whose name matches re sits at launch + f * hop (first match wins, before
+# OT_HOP_LATCH_FRAC).  Unset = no change.
+set ff_hl_map {}; set ff_hl_mapped 0
+if {[info exists ::env(OT_HOP_LATCH_FRAC_MAP)]} {
+  foreach ff_it $::env(OT_HOP_LATCH_FRAC_MAP) {
+    set ff_eq [string last "=" $ff_it]
+    set ff_re [string range $ff_it 0 [expr {$ff_eq - 1}]]; set ff_f [string range $ff_it [expr {$ff_eq + 1}] end]
+    if {$ff_eq < 1 || ![string is double -strict $ff_f] || $ff_f <= 0 || $ff_f > 1} {
+      error "OT_HOP_LATCH_FRAC_MAP item must be re=f with 0 < f <= 1, got '$ff_it'"
+    }
+    lappend ff_hl_map $ff_re $ff_f
+  }
+}
 set ff_hl 0; set ff_hl_miss 0
 if {![info exists ::ff_hl_seen]} { set ::ff_hl_seen {} }
 foreach i [dict values $::ff_hl_seen] {
@@ -656,15 +670,18 @@ foreach i [dict values $::ff_hl_seen] {
   if {[ff_is_hop_flop $i]} { set b [ff_hop_next $i] } else { set b [ff_from_in [ff_pin_net $i Q] 0] }
   if {$a eq "" || $b eq ""} { incr ff_hl_miss; continue }
   lassign [$a getLocation] ax ay; lassign [$b getLocation] bx by
-  if {$ff_hl_frac eq ""} {
+  set ff_f $ff_hl_frac
+  foreach {ff_re ff_mf} $ff_hl_map { if {[regexp -- $ff_re [$i getName]]} { set ff_f $ff_mf; incr ff_hl_mapped; break } }
+  if {$ff_f eq ""} {
     set got [ff_put_near $i [expr {($ax + $bx) / 2}] [expr {($ay + $by) / 2}]]
   } else {
-    set got [ff_put_near $i [expr {round($ax + $ff_hl_frac * ($bx - $ax))}] [expr {round($ay + $ff_hl_frac * ($by - $ay))}]]
+    set got [ff_put_near $i [expr {round($ax + $ff_f * ($bx - $ax))}] [expr {round($ay + $ff_f * ($by - $ay))}]]
   }
   if {$got eq ""} { incr ff_hl_miss; continue }
   puts $ff_out "[$i getName]\thl\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t[$a getName]"
   incr ff_hl
 }
+if {[llength $ff_hl_map]} { puts "OT_FACE_FLOPS hop latches: $ff_hl_mapped at their per-hop fraction (OT_HOP_LATCH_FRAC_MAP, [expr {[llength $ff_hl_map] / 2}] items)" }
 if {($ff_hl || $ff_hl_miss) && $ff_hl_frac eq ""} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at their hop midpoints ($ff_hl_miss without both stations)" }
 if {($ff_hl || $ff_hl_miss) && $ff_hl_frac ne ""} { puts "OT_FACE_FLOPS hop latches: $ff_hl ft hop lockup latches FIRM at launch + $ff_hl_frac of their hops (OT_HOP_LATCH_FRAC; $ff_hl_miss without both stations)" }
 close $ff_out

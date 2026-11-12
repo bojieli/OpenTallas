@@ -6309,6 +6309,41 @@
          }
         }
        }
+      },
+      "tap": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "object",
+         "propertyNames": {
+          "pattern": "^[0-9]+$"
+         },
+         "additionalProperties": {
+          "enum": [
+           "launch",
+           "capture"
+          ]
+         }
+        }
+       }
+      },
+      "latch_frac": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "object",
+         "propertyNames": {
+          "pattern": "^[0-9]+$"
+         },
+         "additionalProperties": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+         }
+        }
+       }
       }
      }
     },
