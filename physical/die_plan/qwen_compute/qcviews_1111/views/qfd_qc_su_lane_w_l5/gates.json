@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:245785fc4d8c",
+ "die": "qwen_compute",
+ "type": "qfd_qc_su_lane_w_l5",
+ "src": "/home/ubuntu/scratch-root/claude/die-qc-65-sul/l5/eco/i2",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch2/claude/hbm-form-timing-11-qout/repo/physical/ref_tile/qc_sul1_split_1106/views/qfd_qc_su_lane_w_l5/signoff/signoff.json",
+ "tt_wns_ps": 9.41,
+ "ff_wns_ps": 3.05,
+ "gates": {},
+ "routed_lec": null,
+ "routed_lec_all_shown": null,
+ "routed_lec_record": null,
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}

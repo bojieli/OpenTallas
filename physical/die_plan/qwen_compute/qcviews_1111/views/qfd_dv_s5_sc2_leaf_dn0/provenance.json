@@ -1,0 +1,96 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s5_sc2_leaf_dn0_h257d84",
+  "module": "qfd_dv_s5_sc2_leaf_dn0",
+  "plan_type": "sle_sc_v3",
+  "outline_um": [
+   244.56,
+   514.08
+  ],
+  "ref_tile": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_dn0/_spec/qfd_dv_s5_sc2_leaf_dn0",
+  "spec": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_dn0/_spec/qfd_dv_s5_sc2_leaf_dn0/spec.json",
+  "spec_sha256": "2ab975d0ac722707eaadd8ae36a9f023f94a1a48317eba31ba821ba256a20cf5",
+  "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_dn0_pins.json",
+  "pins_sha256": "257d84fb8f545738aa3a54e1504063f09d9b0d863022f20c37e9c43eb8378392",
+  "pins": 524,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "d285d0a51f713a001858916dbd311608e8c9b4daaaeae38a447874789da02a7b",
+  "period_ps": 833.0,
+  "insertion_ps": 335.3,
+  "insertion_ff_ps": 287.3,
+  "insertion_basis": {
+   "tt": "plan early core tap 335.3 TT / 287.3 FF (parent_budget early tap 85.3 ps TT: ESTIMATE = Codex HARD1 standalone GRT readout epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_timing_readout + sc_buffer_replay: 572 pin-register means TT 335.32 / FF 287.28 ps (global RC, no CTS repair); re-measure from own kit view (12.28b))",
+   "ff": "plan early core tap 335.3 TT / 287.3 FF (parent_budget early tap 85.3 ps TT: ESTIMATE = Codex HARD1 standalone GRT readout epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_timing_readout + sc_buffer_replay: 572 pin-register means TT 335.32 / FF 287.28 ps (global RC, no CTS repair); re-measure from own kit view (12.28b))"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "df3c0b5671",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "a88907bee0469982f950c87a42d71c896ddbbc0aaeac52fcc32b5358351b4663",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "ba09ff6b84f9aaf4",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 335.3,
+   "ff": 287.3,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "b8a117b325f04cce3b4f8b2df097703a66487d8db20db7c3caff9a871cd6087b",
+  "pins_placed_canon_sha256": "dfa442f4beec34a5ed4082d2b758161ada9bfa9c026313de2c5d28e84b12ea67",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_dn0/qfd_dv_s5_sc2_leaf_dn0_h257d84",
+ "src_commit": null,
+ "flow_tag": "flow-20261108-ed-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T18:37:55+00:00",
+  "kit": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_dn0/qfd_dv_s5_sc2_leaf_dn0_h257d84",
+  "base": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_dn0/qfd_dv_s5_sc2_leaf_dn0_h257d84/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_dn0_h257d84/base",
+  "signoff": "/srv/opentallas-scratch3/claude/dq92/resign_ed/qfd_dv_s5_sc2_leaf_dn0/signoff/signoff.json",
+  "signoff_sha256": "3cc7c2b57fdb7dcbc3f9f91ca856228f0305e2eb881dea97813a94ac9427e184",
+  "signoff_generated": "2026-11-08T13:25:37+00:00",
+  "odb": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_dn0/qfd_dv_s5_sc2_leaf_dn0_h257d84/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_dn0_h257d84/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child qfd_dv_s5_sc2_leaf_dn0",
+  "lib_basis": null,
+  "files_sha256": {
+   "pins.json": "cde3189c5f3d4aa52ac631432aac81fd98ec584d527879ca7edfed64b74040e6",
+   "qfd_dv_s5_sc2_leaf_dn0.lef": "89c81257ee562418b23f72c57ef1df90e307de14de028f71f43c78906003aeff",
+   "qfd_dv_s5_sc2_leaf_dn0_ff.lib": "705110549f953673e71c6d5152782478b8fdecae5f19cc150f52dad4e9551051",
+   "qfd_dv_s5_sc2_leaf_dn0_tt.lib": "b895d5e98f469da5fe4b9b438bdee331ed6a5b39c11cecd1e02dbdf98e5183f4"
+  }
+ }
+}

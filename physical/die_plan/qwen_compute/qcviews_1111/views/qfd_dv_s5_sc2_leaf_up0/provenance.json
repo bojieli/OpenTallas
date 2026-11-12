@@ -1,0 +1,99 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s5_sc2_leaf_up0_h0382b3",
+  "module": "qfd_dv_s5_sc2_leaf_up0",
+  "plan_type": "slw_sc_v3",
+  "outline_um": [
+   244.56,
+   514.08
+  ],
+  "ref_tile": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_up0/_spec/qfd_dv_s5_sc2_leaf_up0",
+  "spec": "/srv/opentallas-scratch3/claude/dq71/sc_leaf/gen3_qfd_dv_s5_sc2_leaf_up0/_spec/qfd_dv_s5_sc2_leaf_up0/spec.json",
+  "spec_sha256": "db9f27c3e288176209ccc9dbaba53a0601a5dedd9d5d518328afbc8b9f158a19",
+  "pins_file": "cores/sc/qfd_dv_s5_sc2_leaf_up0_pins.json",
+  "pins_sha256": "0382b3c1881e099949c1c34dfda819125ba55889629f485795c0e38ba04f19aa",
+  "pins": 524,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "2de775d35aaf9a2964244d4b6f1983f17b278e40f2ce610db5b9b1183f7c3213",
+  "period_ps": 833.0,
+  "insertion_ps": 335.3,
+  "insertion_ff_ps": 287.3,
+  "insertion_basis": {
+   "tt": "plan early core tap 335.3 TT / 287.3 FF (parent_budget early tap 85.3 ps TT: ESTIMATE = Codex HARD1 standalone GRT readout epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_timing_readout + sc_buffer_replay: 572 pin-register means TT 335.32 / FF 287.28 ps (global RC, no CTS repair); re-measure from own kit view (12.28b))",
+   "ff": "plan early core tap 335.3 TT / 287.3 FF (parent_budget early tap 85.3 ps TT: ESTIMATE = Codex HARD1 standalone GRT readout epyc2:/srv/opentallas-scratch2/claude/codex-qc-sc-red-1101/sc_timing_readout + sc_buffer_replay: 572 pin-register means TT 335.32 / FF 287.28 ps (global RC, no CTS repair); re-measure from own kit view (12.28b))"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "df3c0b5671",
+  "sdc_lint_sha256": "1009707936b623e070d7637a3336af8ca8ea79bfb1ad981e6d8f095d123634a3",
+  "face_guard_sha256": "89d14d085ae0292e3c1d0765d6c946765386a94aefcb28510d0b3d675552d5bf",
+  "signoff_sha256": "a88907bee0469982f950c87a42d71c896ddbbc0aaeac52fcc32b5358351b4663",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "e801dd769dff7b9d",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 335.3,
+   "ff": 287.3,
+   "default": true
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "ab9f5d3e1436cbbe1603600cc41679af4c0eb07ae7a241e29bae98757c2f260e",
+  "pins_placed_canon_sha256": "a7155056cd261b0fd05212c98db87e2a497edeef7c1ce46fbf7314ca3b4d7fbf",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/dq74/up0_eco/eco/i1",
+ "src_commit": null,
+ "flow_tag": "flow-20261106-e-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T13:55:03+00:00",
+  "kit": "/srv/opentallas-scratch2/claude/dq74/up0_eco/eco/i1",
+  "base": "/srv/opentallas-scratch2/claude/dq74/up0_eco/eco/i1/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_up0_h0382b3/base",
+  "signoff": "/srv/opentallas-scratch2/claude/dq78/rs_up0/out/signoff/signoff.json",
+  "signoff_sha256": "addfb9342185589babee80688da3ef37654262a07189c839ea574da42c3ea735",
+  "signoff_generated": "2026-11-05T20:49:42+00:00",
+  "odb": "/srv/opentallas-scratch2/claude/dq74/up0_eco/eco/i1/run/results/asap7/kq_qfd_dv_s5_sc2_leaf_up0_h0382b3/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child qfd_dv_s5_sc2_leaf_up0",
+  "lib_basis": {
+   "qfd_dv_s5_sc2_leaf_up0_tt.lib": "base qfd_dv_s5_sc2_leaf_up0_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "qfd_dv_s5_sc2_leaf_up0_ff.lib": "base qfd_dv_s5_sc2_leaf_up0_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "4a2ca9cab28427b60b2466365375c28e8741978999f9557fdabbd50ac5cf01a5",
+   "qfd_dv_s5_sc2_leaf_up0.lef": "9c79ed8bd9fc962a0ce3d1410ed295f593ae948b854eea542b423eb86d8ab09b",
+   "qfd_dv_s5_sc2_leaf_up0_ff.lib": "2d5317d06569117e86f797046d4198294b002afd924c6e796e667e13da905973",
+   "qfd_dv_s5_sc2_leaf_up0_tt.lib": "90c1e4ac2689848fa7441a35a1f5bbe2dc5d4fbb29fa75bc30ef3838a167664c"
+  }
+ }
+}

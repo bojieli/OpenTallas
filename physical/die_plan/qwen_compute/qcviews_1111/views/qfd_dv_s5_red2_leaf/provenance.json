@@ -1,0 +1,98 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s5_red2_leaf_pin1lat8",
+  "module": "qfd_dv_s5_red2_leaf",
+  "plan_type": "sle_su_c",
+  "outline_um": [
+   276.48,
+   276.48
+  ],
+  "ref_tile": "results/qc_suc_restore_1101/red_ref",
+  "spec": "results/qc_suc_restore_1101/red_ref/spec.json",
+  "spec_sha256": "0a9b7f68b84e6c17ded420116135aec69bebfcb838f9ef3dbe7ec4f9516ffc0a",
+  "pins_file": "/srv/opentallas-scratch2/claude/codex-qc-red-lattice8-kit-1101/pins.json",
+  "pins_sha256": "0488343152e908bf5e73c68a0cf71398930a358e1e5057eba684952a0085fb25",
+  "pins": 354,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "25ed29b365b7e53827650d20a21a6512b0a48562350ee6399f8ebb5643a6bcc8",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "Existing common250/202.5reference; lowcaplatticePLANMODEL297.53/232.90INFO androotinput0slewhypothesis, noabsframeadoption",
+   "ff": "Existing common250/202.5reference; lowcaplatticePLANMODEL297.53/232.90INFO androotinput0slewhypothesis, noabsframeadoption"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "5d2cc92309d",
+  "sdc_lint_sha256": "9f4cb15408b946d7da4440c0c4430a013a311c295e504fa3deb4709349e9a1cb",
+  "face_guard_sha256": "da1b8ce4bb693991e33dcff378abb65121af213cbc8aa4655e94ed3375e5f67e",
+  "signoff_sha256": "e32413a9ca340f9817edcdf5c6f62b9914037200e87ec060e1c0c46c91061b04",
+  "macros": {},
+  "sram_pincol_halo": [],
+  "rtl_patches": [],
+  "kit_hash": "66a42afd81f4c8f0",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 250.0,
+   "ff": 202.5,
+   "default": true
+  },
+  "master_plan": {
+   "slice_sha256": "c343b825221e6f875ae5b7920c22bef63f9bd515091949d293d020bcfb74ca7e",
+   "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+   "type": "qfd_dv_s5_red2_leaf",
+   "frozen": false
+  },
+  "pins_canon_sha256": "279ffe4d4b69f47c0af8f9584306360b47b9c55f1aed6bb1b416f799923ac0d4",
+  "pins_placed_canon_sha256": "29e99a341d5b1f164dba888f9a4f47892e58d420ac95d1fa10f438296964334f",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/home/ubuntu/scratch-root/claude/dq67-red/eco3/i1",
+ "src_commit": null,
+ "flow_tag": "flow-20261104-d-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T10:37:49-08:00",
+  "kit": "/home/ubuntu/scratch-root/claude/dq67-red/eco3/i1",
+  "base": "/home/ubuntu/scratch-root/claude/dq67-red/eco3/i1/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base",
+  "signoff": "/srv/opentallas-scratch3/claude/dq67-red/eco3/i1/resign_d_qc/signoff/signoff.json",
+  "signoff_sha256": "1122586a813b7e1f425c72d3c20fc285228186005c33a254df47b9b4e1612255",
+  "signoff_generated": "2026-11-04T05:26:30-08:00",
+  "odb": "/home/ubuntu/scratch-root/claude/dq67-red/eco3/i1/run/results/asap7/kq_qfd_dv_s5_red2_leaf_pin1lat8/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child qfd_dv_s5_red2_leaf",
+  "lib_basis": {
+   "qfd_dv_s5_red2_leaf_tt.lib": "base qfd_dv_s5_red2_leaf_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "qfd_dv_s5_red2_leaf_ff.lib": "base qfd_dv_s5_red2_leaf_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "5b4545d9ead7c1f0c5c99f0791098942a117f4558a5dc2028698ba1116d01e64",
+   "qfd_dv_s5_red2_leaf.lef": "22f446d2ea27f728084dadd6bc9ff13e6614c7dfb4dd3bf6ec78e56445f62cf0",
+   "qfd_dv_s5_red2_leaf_ff.lib": "73638f739e36632aef952b1eb696d54278de8e15e8aefd6127fa58932080d81e",
+   "qfd_dv_s5_red2_leaf_tt.lib": "bf50c8c621a092cd15340a1340e9bc55fd1903376d027b214f677d6d4af05618"
+  }
+ }
+}

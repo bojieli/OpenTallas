@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.autopilot.gates.v1",
+ "id": "export-view:1b9a9f5bd185",
+ "die": "qwen_compute",
+ "type": "ot_coll_fold_slice",
+ "src": "/home/ubuntu/scratch-root/claude/qc-fold-1/kits/ot_coll_fold_slice_vA",
+ "geom": "n/a (view export of a signed run; geometry was reviewed at sign-off)",
+ "preflight": "PASS (kit_preflight before runner)",
+ "signoff": "SIGNED",
+ "signoff_record": "/srv/opentallas-scratch3/claude/qc-fold-2/resign_vA/signoff/signoff.json",
+ "tt_wns_ps": 22.15,
+ "ff_wns_ps": 10.22,
+ "gates": {},
+ "routed_lec": null,
+ "routed_lec_all_shown": null,
+ "routed_lec_record": null,
+ "lec_tool": null,
+ "admission_tools_sha256": null,
+ "view_complete": true,
+ "view_problems": []
+}

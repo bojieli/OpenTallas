@@ -1,0 +1,156 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_qc_su_lane_w_l0_we96f11",
+  "module": "qfd_qc_su_lane_w_l0",
+  "plan_type": "slw_su_l0__cl76fb247e",
+  "outline_um": [
+   414.72,
+   267.84
+  ],
+  "ref_tile": "/srv/opentallas-scratch2/claude/die-qc-59/sul/qfd_qc_su_lane_w_l0/_spec/qfd_qc_su_lane_w_l0",
+  "spec": "/srv/opentallas-scratch2/claude/die-qc-59/sul/qfd_qc_su_lane_w_l0/_spec/qfd_qc_su_lane_w_l0/spec.json",
+  "spec_sha256": "e825fd78c37e30b5be16e1b6fe21ed60dd28e0b251cb0fc7e13b27320153a78b",
+  "pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+  "pins_sha256": "e96f11f38b2c80f017b29627793e8efa251a113227fbecce7fca418bee70c76c",
+  "pins": 1064,
+  "plan_lef": "plan pin table (plan_pins_contract)",
+  "clocks": [
+   "clk"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "b8a80b06955a7db961a7e5ebfb0bdc0fd86126b556dc3c7b6d1be4da1c85b5e6",
+  "period_ps": 833.0,
+  "insertion_ps": 392.5,
+  "insertion_ff_ps": 321.0,
+  "insertion_basis": {
+   "tt": "plan early core tap 392.5 TT / 321 FF (parent_budget early tap 142.5 ps TT: ESTIMATE = qfd_qc_su_lane_w_l1 measured view (DIE-QC-58S CTS-only probe, l1 pilot kit qfd_qc_su_lane_w_l1_w0e61bf 3_place, boundary pin-register mean TT 392.45 / FF 320.95 ps (epyc2:/srv/opentallas-scratch2/claude/die-qc-58s/probe_cts.out)); re-measure from own kit view (12.28b))",
+   "ff": "plan early core tap 392.5 TT / 321 FF (parent_budget early tap 142.5 ps TT: ESTIMATE = qfd_qc_su_lane_w_l1 measured view (DIE-QC-58S CTS-only probe, l1 pilot kit qfd_qc_su_lane_w_l1_w0e61bf 3_place, boundary pin-register mean TT 392.45 / FF 320.95 ps (epyc2:/srv/opentallas-scratch2/claude/die-qc-58s/probe_cts.out)); re-measure from own kit view (12.28b))"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 0.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "0ec54753920",
+  "sdc_lint_sha256": "9f4cb15408b946d7da4440c0c4430a013a311c295e504fa3deb4709349e9a1cb",
+  "face_guard_sha256": "2da9ed0acc012192815d38d5ed6a5a18dadd402363c4347d9c93e0998f221c94",
+  "signoff_sha256": "e32413a9ca340f9817edcdf5c6f62b9914037200e87ec060e1c0c46c91061b04",
+  "macros": {
+   "ot_sram_1r1w2c_128x64_m1": [
+    [
+     190.08,
+     99.744,
+     "R0"
+    ],
+    [
+     190.08,
+     138.144,
+     "R0"
+    ]
+   ]
+  },
+  "sram_pincol_halo": [
+   [
+    223.8,
+    93.45,
+    230.874,
+    117.582
+   ],
+   [
+    183.006,
+    93.45,
+    190.08,
+    117.582
+   ],
+   [
+    223.8,
+    131.85,
+    230.874,
+    155.982
+   ],
+   [
+    183.006,
+    131.85,
+    190.08,
+    155.982
+   ]
+  ],
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal). qfd_dv_s5_rst2 (lrly u_rlz).",
+    "sha256": "d02b209b861bc98340f212e14e6510c2acba91164af2c556d95cbbfe148e6d74"
+   },
+   {
+    "file": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal). qfd_dv_s1_rst_land (head face landing).",
+    "sha256": "066d09c651c4846c71c9b275e67ad7792df1a25ba4cd5bea1aba148b29e2383e"
+   }
+  ],
+  "kit_hash": "65792c7241c2f22e",
+  "timing_modes": {
+   "mode": "two-mode tc setup / BC hold (kit_modes.py stage)",
+   "tt": 392.5,
+   "ff": 321.0,
+   "default": false
+  },
+  "reset_contract": {
+   "edges": 64,
+   "module": "qfd_qc_su_lane_w_l0",
+   "die": "qwen_compute",
+   "contract": "/srv/opentallas-scratch2/claude/wt/die-qc-59e/physical/die_plan/qwen_compute/reset_contract.json",
+   "contract_sha256": "38baf688307c98e827324607af146cb9ff1f6079a753233a7f6af05585270bd3",
+   "receipt_sha256": "1e1994ab1acd729ea8651944f6946a8a024b9b4878287e4eb7c47411d1212cad"
+  },
+  "seam_hold": {
+   "sender_ps": 25.0,
+   "seam_ps": 25.0,
+   "in_min_ps": 0.0,
+   "out_min_ps": -25.0,
+   "basis": "shared CLOCK-RESET IO-HOLD contract (gen_phys.seam_hold), --seam-hold"
+  },
+  "pins_canon_sha256": "b7b44f60bb41d84361c8f5d187e751bd869aa1eac7618166f599d12457723d0d",
+  "pins_placed_canon_sha256": "11bcbd79322c52c0808afaf7666419bd7126fd4cdc69c55210152af52120520f",
+  "pins_canon_basis": "kit freeze record"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/dq68-sul-l0/e2",
+ "src_commit": null,
+ "flow_tag": "flow-20261103-s-qc",
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-11-08T10:41:04-08:00",
+  "kit": "/srv/opentallas-scratch2/claude/dq68-sul-l0/e2",
+  "base": "/srv/opentallas-scratch2/claude/dq68-sul-l0/e2/run/results/asap7/kq_qfd_qc_su_lane_w_l0_we96f11/base",
+  "signoff": "/srv/opentallas-scratch2/claude/dq68-sul-l0/e2/resign_s_qc/signoff/signoff.json",
+  "signoff_sha256": "5714b9251e1554bbb04d7109154074055405ccb12c0758a93c28fb4ecbd443bc",
+  "signoff_generated": "2026-11-04T07:54:24-08:00",
+  "odb": "/srv/opentallas-scratch2/claude/dq68-sul-l0/e2/run/results/asap7/kq_qfd_qc_su_lane_w_l0_we96f11/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": "KW-FIX-32 counted child qfd_qc_su_lane_w_l0",
+  "lib_basis": {
+   "qfd_qc_su_lane_w_l0_tt.lib": "base qfd_qc_su_lane_w_l0_tc.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)",
+   "qfd_qc_su_lane_w_l0_ff.lib": "base qfd_qc_su_lane_w_l0_BC.lib (ORFS finish ETM of 6_final; no kit/views or signoff-dir lib)"
+  },
+  "files_sha256": {
+   "pins.json": "265e763311e42a1190669dea9e1fee28f99386d835c39186cd731c9cbcf6d769",
+   "qfd_qc_su_lane_w_l0.lef": "983bf5f4fca32fdd5c82f6cbeaa92eae315ac716edeea42ec710e221315d5419",
+   "qfd_qc_su_lane_w_l0_ff.lib": "5cea2ba514bd47aa87e1ac3ba0450313cc94771c7748339ee62a1779e2c4e823",
+   "qfd_qc_su_lane_w_l0_tt.lib": "a56f64fa5f1b60f745b88cc1573a732becd914750613bd306037b884703d8078"
+  }
+ }
+}
