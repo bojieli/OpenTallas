@@ -1,0 +1,96 @@
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 09:47 PST)
+
+## 1 Scope
+Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
+KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off on a form vN2 replaces.
+- Not mine (owners): ring band (LAND-RING-2), kv3_hgi_v7 ft25 (STREET-RULE-1 pass 2), HEAD closure (HEAD-94), die proto (DIE-PROTO-1).
+- Mine now:
+  - F1 kv3_hgi FT-STREET: evidence plus an orthogonal delta for vN2. Stops after place; never route.
+  - SD-GROW kv3_sys_SD_v1 form A: COORD-approved, die +0.94 %. Full sign-off, unless DIE-KV-99 says vN2 cannot carry the die-width change.
+
+## 2 Worktree
+- epyc8 /srv/opentallas-scratch2/claude/wt/vislayout3-kvhead, branch claude/vislayout3-kvhead.
+- HEAD 3bfb92c1b1105b0053accaccc637057be06e5517 (pushed). Uncommitted: none.
+- Content: tools/die_plan/vislayout/{ft_street,grow_type,ftover,ftposcheck,planview}.py and physical/die_plan/qwen_kvsys/deltas/vislayout3/ (ledgers, SD kit_rtl wrapper).
+- Rule: only `git -C` on this worktree; never git in /home/ubuntu/OpenTallas.
+- Work dir: /srv/opentallas-scratch2/claude/vislayout3-kvhead on epyc9 (master copies, tools/), epyc8 (kits) and epyc2 (binds). Subdirs: hgi_fts, hgi_fts_b, sd_grow, hgiv7_fts, hgiv7_f2b, base_vF, tools.
+
+## 3 Running jobs
+- F1 kv3_hgi: DONE place+geom (AP_RC=0, PASS-COND); WAIT-VISUAL row + post 08:12; NO route. Was intel2 pid 2221253 (`kit_wave.py run-item /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/kv3_hgi_fts/spec.json`).
+  - Kit: epyc8 /srv/opentallas-scratch2/claude/vislayout3-kvhead/pilots/items/kv3_hgi/gen/kv3_hgi.
+  - Log: intel2 .../jobs/kv3_hgi_fts/unit.log (KW_STAGE lines). Check with `grep -E 'KW_STAGE |AP_RC' unit.log | tail`.
+  - Ends after place+GEOM, writing result.json in the job dir. run-item never routes.
+- SD-GROW kv3_sys_SD_v1: intel2 pid 2592671 (run-item .../jobs/kv3_sys_SD_v1_grow/spec.json), in place.
+  - Place service: systemd --user unit kwp-fd865b0e192131866171, log .../jobs/kv3_sys_SD_v1_grow/place.live.log.
+  - Kit: epyc8 /srv/opentallas-scratch2/claude/vislayout3-kvhead/pilots_kv3_sys_SD_v1_grow/items/kv3_sys_SD_v1/gen/kv3_sys_SD_v1.
+  - kit_rtl runs in script mode via sd_grow/kit_rtl_wrap.sh (SerDes PHY specialize).
+- None on epyc9/epyc2. F1b failed at kit_rtl (plan only on epyc2, not epyc8) and is DROPPED: evidence only, vN2 replaces it. Do not relaunch.
+
+## 4 Watchers (F1 watchers ended; only SD-GROW remains) (Claude background tasks; Codex re-arms as plain loops)
+- Wait for AP_RC: `until grep -q AP_RC intel2:.../jobs/<job>/unit.log; do sleep 60; done` for jobs kv3_hgi_fts and kv3_sys_SD_v1_grow.
+- Position proof right after kit gen (already PASS for F1): `python3 -I /srv/opentallas-scratch2/claude/vislayout3-kvhead/tools/ftposcheck.py PLAN TYPE KIT` (epyc8).
+
+## 5 Results (io_cor_v1 + hd_host_w POSTED 06:52)
+- kv3_io_cor_v1 RF1c (inherited, epyc9 /srv/opentallas-scratch2/claude/vislayout2/kv/iocor_rf1b_build): NOT SIGNED. setup TT -139.85 (51 endpoints), hold FF -32.97 (292), DRV slew TT 4675 / FF 3055. LEC EQUIVALENT. Worse setup than wave a11 (-121.8). Strike on RF1c, so it is evidence only.
+- hd_host_w spread3 (inherited, epyc9 .../vislayout2/head/hd_host_w_spread3): LEC NOT EQUIVALENT, 298 compare points differ. First: bb:u_dut.u_core.u_lane0.u_ln.u.u_ep.g_rb_safe.u_m.g_bank[1].g_depth[0].g_256.u_m. FAIL_PREFLOOR; container stopped 12:35 UTC. This is an RTL/LEC class, so it goes to HEAD-94.
+- F1 proof after kit gen: PASS (6,643/6,643 ft sites, 16/16 cores, flow-20261108-dv-kv, edge_outline, asap7lock-grtoff). Posted 06:24.
+
+## 6 NEXT STEPS (in order)
+1. (done 08:12) F1 place posted to VISUAL-QUEUE; only action left: relay GEOM-VIS-7 verdict to DIE-KV-99. Old step: when F1 place lands (unit.log shows KW_STAGE_RC place 0 or geom):
+   - Copy epyc8 kit run/layout_review/place/{layout,density}.png and W/geom/auto_geom.png, then VIEW them.
+   - Append a row to intel2 ~/coord/lanes/VISUAL-QUEUE.tsv (cols: die type family attempt state render_dir auto_geom host): `qwen_kvsys kv3_hgi kv3_hgi vl3_fts WAIT-VISUAL <kit>/run/layout_review/place <W>/geom/auto_geom.json epyc8`. Commit with coord-commit.sh lanes/VISUAL-QUEUE.tsv.
+   - Post the verdict ask to GEOM-VIS-7.
+   - Decision rule: NEVER route F1 (vN2 replaces it). If place shows the ft6 street congestion gone (no GRT hot column at x 650-880), post that as evidence to DIE-KV-99.
+2. SD-GROW place DONE (PASS-COND, GRT ov 0), WAIT-VISUAL posted 2026-11-12 08:13 PST. Then:
+   - View place renders and post to WAIT-VISUAL the same way.
+   - Route only after the GEOM-VIS-7 verdict is GOOD or ISSUES-ACCEPT (COORD 08:2x; NOT merely not-BAD) AND DIE-KV-99 has not said vN2 cannot carry the die-width change. Command: on epyc8, `ot-run-wave --mem 96 --threads 16 --dir <W> --hosts epyc8 -- bash <W>/gen/run_kit.sh <K> route 96 16`, with the kit's flow_tag/grt_transition_mode files present.
+   - Before route, run ftposcheck (cores n/a; check flow_tag + mode).
+   - If NOT SIGNED with reset recovery still worst: fallback = per-chunk reset copy RTL in ot_async_fifo g_sp (COORD-approved fallback, not built).
+   - 2-strike rule applies.
+3. (done) section 5 posted.
+4. Refresh this file at every milestone and at least every 60 min.
+
+## 7 Open READY/ASK
+- SD-GROW ASK: approved by COORD (form A; B dropped). Waiting on DIE-KV-99 to carry it in vN2: plan epyc8/epyc9 .../sd_grow/plan/plan_c.json, ledger sd_grow/ledA.json.
+- F1 delta to DIE-KV-99 for vN2 adoption (post 06:24). DIE-KV-99 must answer adopt / supersede.
+- kv3_hgi_v6 ft18_i/ft19_i band rects (sent to DIE-KV-98, now DIE-KV-99): ft18_i [239.76,95.04,268.92,110.16], ft19_i [17.28,282.96,43.2,300.24].
+- hgi_v7 ft25 handed to STREET-RULE-1 (post 03:13). No answer needed from me.
+
+## 8 Gotchas
+- bind.py bind needs B/asbuilt.json seeded first (cp /srv/opentallas-scratch2/claude/dkv97/bind9/asbuilt.json), else FileNotFoundError.
+- epyc2 lacks some bind inputs; copied dkv95/plan_p4/r8_kv95_phy3.json and kv-types-6/pv/{compose,pads}.
+- Plan dirs need a census symlink (../census -> src physical/die_plan/qwen_kvsys/census) for G0.
+- G0 schema rejects unknown keys (e.g. reset.note).
+- Shifting die geometry: port window_um is a SPAN (x on N/S faces), not a point.
+- run-item needs future_lec/ in the job dir (copy from land-ring-2/jobs_kv/kv3_hgi_v7/future_lec). Plans must exist on the gen host (epyc8).
+- kv3_sys_SD_v1 kit_rtl must use script mode (kit_rtl.sh -> specialize_serdes_phy), not bind mode.
+- epyc9 tail is a Rust tail: use `tail -n N` with one file. epyc8 queue ~130 waiters, so kit_rtl waits 10-30 min.
+- route_supply caps core OBS at M5, so it cannot see ft legs over cores. Use ftover.py.
+
+## 9 HEAD forms (COORD 08:2x order; HEAD-95 owns the plan, I build; claim posted)
+Work dir epyc4 /srv/opentallas-scratch2/claude/vislayout3-kvhead/head. pd/ holds my plans plus symlinks to HEAD-95 pd side files. Tools: hpipe.sh, mesh_trunk.py, code_rf2 (REACH-FIX-2 branch reach_fix copy). Kit tree = /srv/opentallas-scratch2/claude/wt/head-95-rfsr; repo = /srv/opentallas-scratch3/claude/head-94/wtM8.
+(a) hd_mesh M1 = pd/m1_final.json e9c3c4292ef67077: small-macro column of each array E +17.28, seam 17.26 -> 34.54. G0 0 NEW, gen rc 0. Drawing intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/forms/hd_mesh_m1_draw.png, WAIT-FORM posted.
+(b) hd_spn_end SP2 = pd/sp2.json 6ef4172a38c8f21a: reach_fix (code_rf2) --sinks hd_spn_end=sinks/hd_spn_end.json (measured, a3 geom.tsv via tools/tapsinks.py) --min-taps hd_spn_end=40. 64 taps, max 1189, c1/c2/c5 0. G0 0 NEW, gen rc 0 on rfsr. Do NOT run street_rule resetfix after it: it breaks depth. Drawing forms/hd_spn_end_sp2_draw.png, WAIT-FORM posted.
+NEXT for each: GEOM-VIS-7 form verdict GOOD -> kit (gen.py rtl+phys with the HEAD-95 recipe and flow tag; asked HEAD-95) -> place on epyc8/9 via ot-run -> WAIT-VISUAL -> route on GOOD/ISSUES-ACCEPT -> sign-off. 2-strike rule.
+
+## 10 COORD rulings 2026-11-12 08:40 PST
+- SD-GROW place visual = GOOD (COORD OK 08:3x in GEOM-REVIEW.md, concurring with GEOM-VIS-6). The ONLY remaining route condition is DIE-KV-99 confirming that vN2 carries the die width (COORD asked them). Then route on epyc8 (section 6 step 2 command). Tap imbalance is fixed in vN2, not here.
+- hd_spn_end fclk_in_x_i: do NOT split it (forwarded landing clock within 170 um: a single tree is correct).
+- Visual reviewer is now GEOM-VIS-7 (agent a8bbc2a208a5175e9). HEAD-95 kit recipe and flow tag: COORD asked HEAD-95.
+## 11 SD-GROW ROUTE RUNNING (2026-11-12 08:43 PST)
+ot-run-wave on intel2 -> epyc8, kit epyc8 /srv/opentallas-scratch2/claude/vislayout3-kvhead/pilots_kv3_sys_SD_v1_grow/items/kv3_sys_SD_v1/gen/kv3_sys_SD_v1. Log intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/kv3_sys_SD_v1_grow/route.log; it ends with ROUTE_RC=. Sign-off runs at the end of the route: verdict in <kit>/signoff/signoff.json. Next: view the route renders (run/layout_review/route) and post the sign-off verdict with numbers. If NOT SIGNED: one structural fix (fallback = reset-copy RTL), 2-strike rule.
+HEAD recipe (HEAD-95): cwd rfsr tree; gen.py phys PLAN --clock-landing pd/sidecar.json --types T --out KIT --rtl-root <rfsr>; then python3 -I /srv/opentallas-scratch2/claude/head-95/raw_patch.py PLAN KIT T; build: ot-run --hosts H --mem 64 --threads 16 --disk 40 --dir KIT -- bash KIT/run_kit.sh KIT/T place 64 16 (then route); flow tag flow-20261112-lz-head. Kits: epyc4 head/kit_mesh_m1, head/kit_spn_sp2 (ot-run syncs nothing: rsync the kit to the build host first).
+## 12 HEAD PLACES RUNNING (2026-11-12 08:50 PST, epyc9, ot-run from intel2)
+GEOM-VIS-7 08:4x: hd_mesh m1 FORM GOOD; hd_spn_end sp2 FORM GOOD (margin advice -> SP3 cap 1000).
+Jobs (log intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/{hd_mesh_m1,hd_spn_sp2,hd_spn_sp3}/place.log, ends with PLACE_RC=):
+- kit epyc9 .../head/kit_mesh_m1/hd_mesh
+- kit epyc9 .../head/kit_spn_sp2/hd_spn_end
+- kit epyc9 .../head/kit_spn_sp3/hd_spn_end
+Kits are also synced to epyc8. NEXT: on PLACE_RC=0, render <kit>/<type>/run/layout_review/place (layout/density.png), view, append a VISUAL-QUEUE row (die s81_head), post WAIT-VISUAL to GEOM-VIS-7. Route on GOOD/ISSUES-ACCEPT with the same ot-run line and goal route (sign-off at the end). Between SP2 and SP3 route only the better one (clock_tap_sinks / GRT).
+- HEAD-95 08:51: HEAD plan of record = rp15 (epyc4 head-95/pd/rp15.json 7931b5662082; rp14 + lep0N only). HEAD-95 merges m1 + sp2/sp3 onto rp15 once the renders pass GEOM-VIS-7. cc HEAD-95 on every GEOM-VIS-7 verdict. The hd_spn_end raw-port count 14 = 19 exports - 5 existing_port: consistent. Confirm port_bind missing 0 in the place log.
+## 13 2026-11-12 09:32 PST
+- SP2 place: AUTO-GEOM clock_tap_sinks ok 1186 (a3 FAIL 1754), GRT 0. GEOM-VIS-7 09:0x place OK -> ROUTE RUNNING epyc9, log intel2 .../jobs/hd_spn_sp2/route.log (ROUTE_RC=). Sign-off verdict in kit_spn_sp2/hd_spn_end/signoff/signoff.json.
+- SP3 DONE: measured max 1225 (worse than SP2 1186; kit split = nearest, tool c2 capacity moves are paper only). NOT routed; TOOL-GAP posted to REACH-FIX-2 2026-11-12 09:34 PST.
+- hd_mesh M1 placing (log jobs/hd_mesh_m1/place.log). Then: geom (same recipe, outline 604.8x1226.88), WAIT-VISUAL to GEOM-VIS-7 cc HEAD-95, route on GOOD/ISSUES-ACCEPT.
+## 14 SD-GROW DONE 2026-11-12 09:47 PST: NOT SIGNED (posted)
+setup -319 = LAND-RING guard half-cycle (u_cland_i_host_fdi g_guard_reg.w_n -> glo1); reset recovery now MET (+91 TT). Strike 1. Handed to LAND-RING-2 / DIE-KV-99 vN2. No further SD-GROW builds by me unless COORD asks. The reset-copy fallback is moot.
