@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 12:40 PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 12:57 PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -17,8 +17,7 @@ tools/die_plan/test_schema.py tools/die_plan/test_landing_group_rects.py -> 82 p
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, dieclock_arrivals.py) = branch HEAD.
 
 ## 3 Running jobs
-- epyc4 ot-run sp3p.sh (TAP-CAP proof): kit gen (HEAD-95 recipe) of plan_sp3n2/plan_rf.json -> reach-fix-2/kit_sp3n2, place, geom dump
-  -> geom_sp3n2/geom.tsv, capsim.py nearest loads; log epyc4 reach-fix-2/kit_sp3n2.log (SP3P_DONE at end). NOTHING on intel1 (FLEET-2).
+None.
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -30,6 +29,7 @@ Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py, di
 - localhost scratchpad rf/post.sh FILE: queue post + coord-commit + origin confirm.
 
 ## 5 Results
+- 2026-11-12 12:57 TAP-CAP PROVEN (posted): SP3n2 kit placed (epyc4 reach-fix-2/kit_sp3n2), nearest busiest tap 958 <= 1000, 68 taps.
 - 2026-11-12 12:40 TAP-CAP (b) (370eac82bd): class 2 on the nearest split + anchor sinks; SP3 placed sinks 1225 -> 964 (plan 3ac13457f663).
 - 0c2348e9e2 regeq caps (the 324 GB SPEF in s4/best/it6 was my diverged scratch run; I removed it).
 - HEAD regeq with long-hop + L choice (a8006d1570): 14.1 ps TT, 3899 insertion; KV refused (393 ps regional residual, PHY last mile).
@@ -51,7 +51,7 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-1. Read epyc4 reach-fix-2/kit_sp3n2.log: the capsim line nearest_max must be <= 1000; post RESULT to COORD + HEAD-95 + GEOM-VIS-7.
+1. TAP-CAP done (placed only; HEAD-95 decides the form). Branch head 370eac82bd -> READY post for the merge lane still to do.
 2. DIE-S81-88 12:29 FINDING: an added station must bump lanes[].fixed_cycles (reach_fix class 4).
 3. KV last mile (PHY leaves) before KV regeq; HEAD step 2 routed check waits on COORD.
 ## 7 Open
