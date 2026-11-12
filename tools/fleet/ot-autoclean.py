@@ -1540,6 +1540,11 @@ class Job:
         for f in files:
             if EMERGENCY_HOLD_RE.search(os.path.realpath(f) + "/") or EMERGENCY_HOLD_RE.search(f + "/"):
                 raise OSError("emergency hold " + f)
+            try:                                              # per-delete journal: the manifest is written only when a run ends
+                with open(os.path.join(self.a.state, "deleted.log"), "a") as jf:  # noqa
+                    jf.write(f"{time.strftime('%F %T')}\t{cls}\t{f}\n")
+            except (OSError, AttributeError):
+                pass
             if cls == "a":
                 _, size, _ = tree_info_c(f)
                 r = self.rm_tree(f)
