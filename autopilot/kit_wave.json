@@ -43705,7 +43705,7 @@
  "gen_disk_min_gb_prev_kw40": 100,
  "restage_max_per_tick_prev_kw40": 12,
  "restage_min_wait_s_prev_kw40": 1800,
- "restage_min_wait_s": 600,
+ "restage_min_wait_s": 300,
  "note_kw40e6": "KW-FIX-40 2026-11-08 23:08 PST: COORD 23:06: waiters pinned to epyc4 are the launch limit; epyc5/epyc6 OK for new work (drain >=24 h away, +8 h): epyc5+epyc6 back in hosts/place_prefer/gen_hosts (s81 gen_hosts without epyc6: src_c303p_lgm not there), gen_disk_min_gb 100->65 (ot-run scratch floor 60), restage_max_per_tick 12->60, restage_min_wait_s 1800->300 to move unstarted waiters now. Revert keys *_prev_kw40 after the waiters drain.",
  "note_kw40rs": "KW-FIX-40 23:4x COORD 23:06/23:30: place waiters on full epyc4 on scratch3 paths cannot spill (target scratch3 = root disk, root floors); overlay 0fa4f36ff45 lets restage_waiters move them from mkdir to scratch2 elsewhere. Remove when the epyc4 queue is gone.",
  "hosts_prev_kw41e5": [
