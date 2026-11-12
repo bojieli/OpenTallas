@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-12 09:15 PST
+# COORD snapshot 2026-11-12 09:30 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -8,70 +8,55 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-12 08:18 PST MERGED [ROOT-MERGE-60] train 3 REACH-FIX-2 claude/reach-fix-1112@7ed95e4f02 (contains dadcdf9535; tools/die_plan reach_fix.py, dieclock_arrivals.py, die_plan.schema.json, dieclock_routed.py) as main 89adc6c30b98 (from adf10c2724821), no-ff, no conflicts, no deletions, no blob over 95 MB. TESTS epyc8 -n 16, tip da838bbe830 (= main + dadcdf9535) vs main adf10c2724821: 59-style list + 15 test file
 - 2026-11-12 09:09 PST MERGED [ROOT-MERGE-60] train 4a (2 branches) as main b42b54f8c791 (from 89adc6c30b98): vl2qc-fanout-cap 7fa736b945 (CLAND-PUTS-QUOTE Tcl-escape + fanout-hook log line, priority) and head-95-twf 0e5ce1603c (tap_window_floor.py + test, new files). No deletions, no blob over 95 MB. ONE additive conflict hand-resolved: tools/die_plan/landing_place.py (kept the stale-override arg of cef99b3203 in th
 
-## READY/ASK with no later COORD post naming them (5, heuristic: check each)
+## READY/ASK with no later COORD post naming them (6, heuristic: check each)
 - 2026-11-12 04:38 PST READY [QC-S28-FLOORPLAN -> COORD, DIE-QC-99; cc DIEVIEW a02d7fb4c47c284ed, QC-S28-B, QC-S28-C, QC-S28-D, QC-S28-E, GEOM-VIS-2] 'QC HAND FLOORPLAN'. STAGE S1 (die floorplan) before compose. Plan NOT modified. DO_NOT_COUNT. Branch claude/qc-s28-floorplan-1112@01a3eef19f (off qc-event-s28 88018018ef; base plan_qc99_s28 2f0c17d5f1a3), dir physical/die_plan/qwen_compute/qc_s28_floorplan_1112/: qc_da
 - 2026-11-12 04:56 PST READY [QC-S28-DIEVIEW -> DIE-QC-99, COORD; cc QC-S28-A/B/C/D/E/F, QC-S28-FLOORPLAN, GEOM-VIS-2, REACH-FIX-1] tag 'QC DIE VIEW before/after'. STAGE S1/S2 evidence, DO_NOT_COUNT, no plan change of my own. BRANCH claude/qc-s28-dieview-1112@579ce55166fa (tools + evidence: physical/die_plan/qwen_compute/qc_s28_dieview_1112/: qc_die_audit.py, qc_die_render.py, qc_die_compare.py, qc_hf_check.py, after
 - 2026-11-12 06:58 PST ASK [TOK-VERIFY-2 -> BUS-GEAR-2; cc COORD, DIE-S81-88] DO_NOT_COUNT. Gear TOK-VERIFY: I run it for you. I see claude/bus-gear-1-xint-1112@b490b95b86 on origin (combinational beat 0, plan decl beats-only). The S81 token check is a strict-bind compile, so the gear only shows up when the compile reads the GEARED as-built (die_b178_xg.v + s81_asb_xgear_models.sv) and the plan with the 72 lanes decl
 - 2026-11-12 07:09 PST ASK [ROOT-MERGE-60 -> COORD, DIE-KV-98] kv-vn-event-1112@52a724781a52 CANNOT LAND: commit 760ab6343e adds physical/die_plan/qwen_kvsys/plan_of_record/inputs/bind9_asbuilt.json (261,994,306 bytes); GitHub rejects the push (limit 100 MB, GH001 pre-receive), nothing reached origin (hub main was restored to ae71bf887a8f, verified). Merge itself is clean. DIE-KV-98: re-issue the branch with that inp
 - 2026-11-12 08:14 PST READY [GEN-CLASS-1 -> COORD] TCL-PUTS-QUOTE (class of CLAND-PUTS-QUOTE 7fa736b945): claude/tcl-puts-quote-1112@475f0c5d0e on main adf10c2724. I AST-scanned every f-string Tcl puts in tools/die_plan, autopilot and clk: 38 sites, plus the %-format and concatenated ones. Most print only counts, floats, fixed tags or Tcl runtime values (safe, because Tcl does not re-evaluate a substituted result). 
+- 2026-11-12 09:18 PST ASK [ROOT-MERGE-60 -> COORD, FLEET-2] FLEET-2 disk-1111-autoclean-expiry-1112@85f0fd26f5 does NOT merge cleanly onto main b42b54f8c791 and I will not land it as is. Branch alone passes its tests (test_ot_autoclean_unknown + _auto = 16 pass, 85f0fd26f5 checked out). On main the branch conflicts in tools/fleet/ot-autoclean.py in 3 hunks (HEAD side empty each: after the Job.common_why try/finally,
 
 ## Lane handoff files (age) and last queue post
-- BUS-GEAR-2: handoff 59 min old; last post 2026-11-12 08:39 RESULT
-- DIE-HBM-101: handoff 81 min old; last post 2026-11-12 09:05 RESULT
-- DIE-KV-99: handoff 94 min old; last post 2026-11-12 08:40 STATE
-- DIE-PROTO-2: handoff 72 min old; last post 2026-11-12 08:05 RESULT
-- DIE-QC-100: handoff 22 min old; last post 2026-11-12 08:51 STATE
-- DIE-S81-88: handoff 6 min old; last post 2026-11-12 09:08 CORRECTION
-- FLEET-2: handoff 65 min old; last post 2026-11-12 09:0x READY
-- GEN-CLASS-1: handoff 4 min old; last post 2026-11-12 08:51 STATE
-- GEOM-VIS-5: handoff 109 min old; last post 2026-11-12 07:25 HANDOFF
-- GEOM-VIS-6: handoff 57 min old; last post 2026-11-12 08:17 HANDOFF
-- GEOM-VIS-7: handoff 12 min old; last post 2026-11-12 09:1x REVIEW
-- HBM-CORES-B: handoff 124 min old; last post 2026-11-12 07:17 RESULT
-- HEAD-95: handoff 22 min old; last post 2026-11-12 08:51 STATE
-- KW-FIX-46: handoff 1 min old; last post 2026-11-12 08:27 RESULT
-- REACH-FIX-2: handoff 14 min old; last post 2026-11-12 08:59 RESULT
-- ROOT-MERGE-60: handoff 68 min old; last post 2026-11-12 09:09 MERGED
-- TOK-VERIFY-2: handoff 34 min old; last post 2026-11-12 08:40 HANDOFF
-- VISLAYOUT2-QC: handoff 64 min old; last post 2026-11-12 08:09 RESULT
-- VISLAYOUT3-KVHEAD: handoff 23 min old; last post 2026-11-12 06:24 STATE
-- WBQ: handoff 46 min old; last post none in recent queue
+- BUS-GEAR-2: handoff 11 min old; last post 2026-11-12 09:17 RESULT
+- DIE-HBM-101: handoff 1 min old; last post 2026-11-12 09:28 REVIEW-REQUEST
+- DIE-KV-99: handoff 109 min old; last post 2026-11-12 08:40 STATE
+- DIE-PROTO-2: handoff 87 min old; last post 2026-11-12 08:05 RESULT
+- DIE-QC-100: handoff 37 min old; last post 2026-11-12 08:51 STATE
+- DIE-S81-88: handoff 21 min old; last post 2026-11-12 09:08 CORRECTION
+- FLEET-2: handoff 80 min old; last post 2026-11-12 09:0x READY
+- GEN-CLASS-1: handoff 19 min old; last post 2026-11-12 08:51 STATE
+- GEOM-VIS-5: handoff 124 min old; last post 2026-11-12 07:25 HANDOFF
+- GEOM-VIS-6: handoff 72 min old; last post 2026-11-12 08:17 HANDOFF
+- GEOM-VIS-7: handoff 27 min old; last post 2026-11-12 09:2x REVIEW
+- HBM-CORES-B: handoff 139 min old; last post 2026-11-12 07:17 RESULT
+- HEAD-95: handoff 37 min old; last post 2026-11-12 08:51 STATE
+- KW-FIX-46: handoff 16 min old; last post 2026-11-12 08:27 RESULT
+- REACH-FIX-2: handoff 29 min old; last post 2026-11-12 09:20 STATE
+- ROOT-MERGE-60: handoff 84 min old; last post 2026-11-12 09:18 ASK
+- TOK-VERIFY-2: handoff 49 min old; last post 2026-11-12 08:40 HANDOFF
+- VISLAYOUT2-QC: handoff 79 min old; last post 2026-11-12 08:09 RESULT
+- VISLAYOUT3-KVHEAD: handoff 38 min old; last post 2026-11-12 06:24 STATE
+- WBQ: handoff 61 min old; last post none in recent queue
 
 ## ot-run status
-    ot-run status: epyc2 admits 200 GB (avail 266, reserve 0, fresh 0, peak 33.7) load 63/128 run 28 root 89% scratch 168 GB
-    intel1 admits 339 GB (avail 463, reserve 0, fresh 23.8, peak 0) load 63/112 run 53 root 65% scratch 346 GB
-    localhost admits 319 GB (avail 563, reserve 0, fresh 0, peak 180) load 47/112 run 39 root 60% scratch 784 GB
-    epyc4 admits 87 GB (avail 366, reserve 0, fresh 178.6, peak 0) load 68/256 run 39 root 88% scratch 268 GB
-    epyc7 admits 448 GB (avail 570, reserve 0, fresh 36.5, peak 53.1) load 101/96 waiters 15:398 GB run 54 root 34% scratch 1113 GB
-    epyc8 admits 38 GB (avail 409, reserve 0, fresh 235.8, peak 102.4) load 59/96 waiters 1:48 GB run 30 root 6% scratch 1202 GB
-    epyc9 admits 166 GB (avail 724, reserve 0, fresh 377.5, peak 147.8) load 47/96 run 40 root 5% scratch 1761 GB
-    next 16-thread 32 GB job -> epyc4
+    ot-run status: epyc2 admits 234 GB (avail 302, reserve 0, fresh 0, peak 35.5) load 66/128 run 27 root 89% scratch 165 GB
+    intel1 admits 343 GB (avail 467, reserve 0, fresh 23.8, peak 0) load 64/112 run 49 root 65% scratch 327 GB
+    localhost admits 367 GB (avail 572, reserve 0, fresh 0, peak 140.1) load 43/112 run 35 root 60% scratch 791 GB
+    epyc4 unreachable
+    epyc7 admits 534 GB (avail 624, reserve 0, fresh 0, peak 58.2) load 113/96 waiters 18:454 GB run 53 LOADCAP root 34% scratch 1100 GB
+    epyc8 admits 154 GB (avail 354, reserve 0, fresh 65, peak 102.2) load 65/96 run 29 root 6% scratch 1177 GB
+    epyc9 admits 388 GB (avail 676, reserve 0, fresh 72.1, peak 183.2) load 66/96 run 42 root 5% scratch 1741 GB
+    next 16-thread 32 GB job -> epyc2
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-12 09:09:11 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc7 s81: /srv/opentallas-scratch2/claude/s87bind/bsrc4_r12ng/physical/die_plan/s81/plan_h2_2249.json missing; /srv/opentallas-scratch2/clau
-    2026-11-12 09:09:11 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE intel1 hbm: /srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/bind.py missing; /srv/opentallas-scratch2/cla
-    2026-11-12 09:09:24 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/NE_io: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
-    2026-11-12 09:09:24 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/NW_io: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
-    2026-11-12 09:09:24 PST AUTOPILOT: KIT-WAVE WAIT-CHILD hbm/q_spb0: no routed PROVISIONAL source yet for child core(s) ot_pdie_serdes_rx_bm3_rest (prov_require_cands)
-    2026-11-12 09:09:25 PST AUTOPILOT: KIT-WAVE LAUNCH hbm/q_su21__physical_v1 (type, 1 replicas) event-key hcut1111 plan die_plan.json@8b4b6e3071c4 src src_hbm_main_9fc09952cd_q0g_p18 unit kw-hbm-qsu21ph
+    2026-11-12 09:27:27 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc2 s81: /srv/opentallas-scratch2/claude/s87bind/bsrc4_r12ng/physical/die_plan/s81/plan_h2_2249.json missing; /srv/opentallas-scratch2/clau
+    2026-11-12 09:27:27 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc7 qwen_compute: /srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.js
+    2026-11-12 09:27:27 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc7 s81: /srv/opentallas-scratch2/claude/s87bind/bsrc4_r12ng/physical/die_plan/s81/plan_h2_2249.json missing; /srv/opentallas-scratch2/clau
+    2026-11-12 09:27:27 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE intel1 hbm: /srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/bind.py missing; /srv/opentallas-scratch2/cla
+    2026-11-12 09:27:33 PST AUTOPILOT: KIT-WAVE LAUNCH hbm/PHY_NE (type, 1 replicas) event-key hcut1111 plan die_plan.json@8b4b6e3071c4 src src_hbm_main_9fc09952cd_q0g_p18 unit kw-hbm-PHYNE-5-4453
+    2026-11-12 09:27:33 PST AUTOPILOT: KIT-WAVE LAUNCH hbm/q_su00 (type, 1 replicas) event-key hcut1111 plan die_plan.json@8b4b6e3071c4 src src_hbm_main_9fc09952cd_q0g_p18 unit kw-hbm-qsu00-2-4453
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-12 08:27 PST STATE [REACH-FIX-2 -> COORD] ACK decision B. BUFx24 realize work stopped (no jobs were running). Step 1 HEAD started. Diagnosis of the 788 ps root spread: every leaf has the same stage count (54; 2 leaves have 55 from a long-hop repeater), but placed root-to-leaf wire ranges 15.3 to 19.5 mm. So the spread is unequal leg geometry (corridor node shifts and macro-slide detours), not load. Running 
-- 2026-11-12 08:28 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 4 event(s): q_b003__physical_v1 unstarted waiter RESTAGED (epyc7 -> epyc8); q_b003 unstarted waiter RESTAGED (epyc7 -> epyc8); q_b013 unstarted waiter RESTAGED (epyc7 -> epyc8); q_b013__physical_v1 LAUNCHED (kw-hbm-qb013physicalv1-14-891)
-- 2026-11-12 08:28 PST RESULT [DIE-HBM-101 -> COORD, DIE-LAYOUT-HBM, TOK-VERIFY-2] tag hbm-handplan-v2. DO_NOT_COUNT. G0 (check.py, kw45 tool tree) on the analysis plans vs the t40w baseline (B10X-1 g0_t40w): t40w 546 ERROR / 1862 WARN; hp3 544 / 1853; hp4 636 / 1896.
-- 2026-11-12 08:28 PST HOLD [DIE-HBM-101 -> ROOT-MERGE-60, COORD; cc HBM-CORES-C, HBM-WBQ-QUAL-1] tag hbm-wbq-qual. HOLD my READY for claude/hbm-cores-c-wbqsw-dchk-1112 @ 746fe8f88aa9; do not merge it. Reason: the t39w ot_wbq_sw slot's form of record is H13 (pins identical to the wsw_H13 kit: 7,352 pins, 233.28 x 544.32, HREG 4 + SCOPY + MREG + ot_wbq_kg_leaf), not main's HREG 2. Merging 746fe8f88a alone would make t
-- 2026-11-12 08:3x PST REVIEW [GEOM-VIS-7 -> VISLAYOUT2-QC, DIE-QC-100, GEN-CLASS-1; cc COORD] QC coll_n suc ce27 + cf27 a1 place: ISSUES-ACCEPT for route, both (W macro column, E 60% empty; GRT watch: the 15-30 um SRAM seams where the pin rims face each other). HEAD wshim_tx FT-HOP fix route congestion: GOOD (uniform 50-60%, GRT max 61%).
-- 2026-11-12 08:29 PST LOOP-GAP [COORD -> TOK-VERIFY-2, BUS-GEAR-2, DIE-S81-88, ROOT-MERGE-60, KW-FIX-46, all lanes] (1) RULINGS: (a) TOK-VERIFY-2 08:27: cadence-2 at the BOUND rule (-20% AR) is NOT adopted as the default. BUS-GEAR-2 prices (i) gearing only the lanes the street rule needs (down/wo_b/wo_a, about -0.45%) and (ii) an 8192-row calendar ROM for full cadence 2 at the EXPECTED floor, and recommends one. The
-- 2026-11-12 08:30:14 PST AUTO-RESIGN [AUTOPILOT -> COORD, die owners] s81/ot_s81_su_smc needs a lane: FAILED re-sign NOT SIGNED TT 147.93 FF -41.48: hold_ff: FAIL WNS -41.48 ps, 34 endpoints; FAIL_SIGNOFF ff_ref_missing: no per-corner FF insertion reference (ff_vclk sdc: FF hold timed against the single SDC/; same DB and same signoff.py + lec.py on flow-20261112-od-s81, not retried | s81/ot_s81_svc_merge_h4 needs a 
-- 2026-11-12 08:32 PST RESULT [BUS-GEAR-2 -> COORD, TOK-VERIFY-2, DIE-S81-88] DO_NOT_COUNT. Answers to COORD on TOK-VERIFY-2 08:27, with numbers.
-- 2026-11-12 08:4x PST REVIEW [GEOM-VIS-7 -> DIE-KV-99, DIE-S81-88, KW-FIX-46; cc COORD] KV kv3_hg_v1p4 place: ISSUES, hold for vN2d (6 small macros block the centre V street, 40-70% cloud around them; 2 W landing pockets at 70-80%). S81 leaf t42 (e9eda32d41c): ISSUES WAIT-FORM, the same class as t47/t51/t59/t61. KW-FIX-46: the wave is still placing old-plan S81 leaves (t42/t51/t61 on e9eda32d41c). All are WAIT-FORM 
-- 2026-11-12 08:32 PST STATE [QC-S28-HF1C-LAND -> DIE-QC-100] c2 (on base_s 55d318eece08, plan e43b63c3ee12): G0 270 err, NEW vs zz_s28a_bc 40 = 38 latency (all paired with the 38 GONE: same lanes, standing fixed-term lag shifted by +1 station) + 2 faces (sl_W5_fw.W/coll_f4.E 67 pins/10um > 64). START 244 -> 0 (215 stage rows re-sited, max move 104.7 um, root reset hop 6.1->60.1 um, 0 stages/0 cycles), mon 88 -> 0 (1
-- 2026-11-12 08:35 PST RESULT [DIE-HBM-101 -> COORD] tag cores-hbm-1-topk. DO_NOT_COUNT. ot_hbm_idx_topk_link_static arm C2 (settings fallback): STOPPED at GRT, OT_GRT_STOP congested (stage rc 143 -> 21, no re-run), epyc9 unit oth-ubuntu-306076-1794487173, log intel2 ~/cores-hbm-1-logs/topk_C2.otrun.log. Settings alone do not route this core. That is consistent with the class call (emptied SRAM channels need chan_blo
-- 2026-11-12 08:36 PST RESULT [BUS-GEAR-2 -> COORD; cc DIE-S81-88, REACH-FIX-2] DO_NOT_COUNT. Street levers per remaining cut, with numbers. Tool: check.py's own cut geometry and capacity, dumped per lane and per segment (epyc9 /srv/opentallas-scratch2/claude/bus-gear-2/r12ng/cut_dump.py; out cut_base.json = ungeared ready12ng 77cad171, cut_xg.json = all 72 geared). No banked-ROM work started.
-- 2026-11-12 07:39 PST STATE [QC-S28-VISFORM -> DIE-QC-100; cc GEOM-VIS-5] DO_NOT_COUNT. FW-EFACE extended to st_b (W-face mirror of st_a E knot): budgets.face_flop_ew_types += sle_st_b, slw_st_b = {cpitch_sites 80, row_stride 3} (now 6 bases: fw/st_a/st_b x sle/slw). st_b has W-face pins only (1461 regs/type), no E knot. Model W face, all 9 st_b types identical (sle_st_b_v1__pv0e7b1dcc, sle_st_b_v2__cl14c98df5 shown
-- 2026-11-12 08:35 PST STATE [QC-S28-VISFORM -> DIE-QC-100] DO_NOT_COUNT. SC-ECHAN-FT (sc family form part 2): the 6 pin-to-pin hops left by the sc E-channel move are fixed. Rule on all sc types (^(sle|slw)_sc_): a W->E ft slot whose last station sits on the u_core W flank (x in [core.x0-8, core.x0), block rows in the core y band) with max leg > 380 um has that station (regs_um[k-1] + its bit block) moved rigidly on 
-- 2026-11-12 08:37 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 14 event(s): PHY_NE PREFLIGHT-ADVISORY clock_pin_geometry 9 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); macro_channels 1 (macro column 0 x[0,2661.12]: W vertical channel -4.320 um < 10.8); PHY_NE FAIL PLAN (plan macro position outside the core @place: [ERROR MPL-0034] Cannot place u_bound.u_u_phy_Q at (0, 0) 
-- 2026-11-12 08:37 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 3 event(s): serdes__t15__cla3d02796 unstarted waiter RESTAGED (intel1 -> epyc9); serdes__t16 unstarted waiter RESTAGED (intel1 -> epyc9); serdes__t2 unstarted waiter RESTAGED (intel1 -> epyc9)
 - 2026-11-12 08:38 PST RESULT [REACH-FIX-2 -> COORD, DIE-PROTO-2, DIE-HEAD] HEAD step 1 (decision B) numbers. Model RC, own SPEF, die_clock STA TT/FF; pair data from die_clock report on 2,529 seam (landed) and 278,678 intra pairs. Data: intel1 /srv/opentallas-scratch2/claude/reach-fix-2/s2/.
 - 2026-11-12 08:38 PST CORRECTION [BUS-GEAR-2 -> COORD; cc DIE-S81-88, REACH-FIX-2] DO_NOT_COUNT. **Lever (b) as I posted it ("~7 lanes, no area, +1 reg, one class event") is wrong. I have NOT started it and ask COORD to re-rule.** What I missed: a lane's route is its chain of type ft slots (schema lane_crossings), and in the slice columns every slot is already used: s_3S_C 4/4, s_3S_L0 9/9, s_3S_L1 12/12, s_3S_L2 10
 - 2026-11-12 08:38 PST READY [TOK-VERIFY-2 -> COORD, ROOT-MERGE-60; cc BUS-GEAR-2, DIE-S81-88] DO_NOT_COUNT. **claude/tok-verify-2-xcad2-1112@5460102b71** (2 commits on main 8eeefa4716dd; merge-tree CLEAN on main 89adc6c30b98). It adds the S81 xs compiler x stream cadence knob OT_XS_X_CADENCE (default 1) and the floor rule OT_XS_X_CADENCE_FLOOR=bound|expected. Default behaviour unchanged: per your 08:29 ruling, caden
@@ -116,4 +101,20 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-12 09:22 PST STATE [QC-S28-RESID -> DIE-QC-100] DONE (no READY). epyc9 qc-s28-hf1c/resid/resid_fix.py 91a14cd89693 on zz_c7b_lat 3d1f6c30cec4 -> zz_c8_resid 0f0dbf06115f (sidecar side_resid b41986f8d639). Gates: schema PASS, G0 611=611 0 new 0 gone, G0C 762->711 (61 gone, 0 new classes). vs s28a_bc: cl_* pin/track 0, su_l1 cl_rsf_i 0, u_t ck 0, internal_station 0; remaining 12 cl origin = s28a residues (shi
 - 2026-11-12 09:1x PST REVIEW [GEOM-VIS-7 -> DIE-S81-88; cc COORD] Ack 09:08: my t51 rc51e E/W GOOD is withdrawn in GEOM-REVIEW.md, so no finish on rc51e.
 - 2026-11-12 09:1x PST REVIEW [GEOM-VIS-7 -> DIE-QC-100, LAND-RING-2, VISLAYOUT2-QC; cc COORD] QC: slw_st_a pvdf8e5ca4 ISSUES-ACCEPT; sle_st_a_v2 ISSUES-ACCEPT with a firm GRT watch (the E-face column is 90-100%; if GRT is > 0.9 on more than a short run, stop for FW-EFACE); LAND-RING sle_sc_v1 cl7479a5ec ISSUES (sc WAIT-FORM, E sliver; the ring keeps the W columns at 60-80%).
+- 2026-11-12 09:17 PST RULING [COORD -> BUS-GEAR-2, DIE-S81-88, TOK-VERIFY-2, ROOT-MERGE-60, all S81 lanes] S81 X GEAR PARKED (owner default, 09:15, no owner reply). Evidence: gearing all 72 x lanes clears 1 of 5 street cuts, and full cadence 2 costs -20% AR or a banked calendar ROM (+77k um2 + re-sign). The street remainder (6 cuts, all slice-tree feedthrough load) is cleared without the gear by leaf-owned stations 
+- 2026-11-12 09:17 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 6 event(s): ot_hbm_sm_pv_merge PREFLIGHT-ADVISORY macro_channels 1 (macro column 0 x[8.64,179.928]: W vertical channel 4.320 um < 10.8); ot_hbm_sm_pv_merge AUTO-GEOM PASS GEOM-ADVISORY channel_h,col_v,grt: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc7:/srv/opentallas-scratch2/claude/kw43-wave-110
+- 2026-11-12 09:17 PST RESULT [BUS-GEAR-2 -> COORD; cc DIE-S81-88, TOK-VERIFY-2] DO_NOT_COUNT. **Final record, x gear PARKED (owner default 09:15).** Branch claude/bus-gear-1-xint-1112@877cfc14f1 kept unmerged (hub). Tree epyc9 bus-gear-2/r12ng.
+- 2026-11-12 09:17 PST READY [DIE-HBM-101 -> ROOT-MERGE-60] SUPERSEDES 746fe8f88a (my HOLD; COORD confirmed). Branch claude/hbm-cores-c-wbqsw-h13-1112 @ 6a6561ee2da2 (hub:OpenTallas; built by HBM-CORES-C), on top of 746fe8f88a.
+- 2026-11-12 09:17 PST INFRA [DIE-HBM-101 -> KW-FIX-46] hbm-plan-1/stage/p6_relay/core_clock_regions.json is MISSING on epyc2, epyc9 and intel2. epyc4, epyc7, epyc8 and intel1 have it, identical sha 0b99eaec15976b23. Wave kits that read it fail at gen on those three hosts; this hit ot_hgi_sfu_opsa_group0 on epyc9 (HBM-CORES-C copied it there for its own run). This is the same class as the "source missing on epyc9" fl
+- 2026-11-12 09:18 PST ASK [ROOT-MERGE-60 -> COORD, FLEET-2] FLEET-2 disk-1111-autoclean-expiry-1112@85f0fd26f5 does NOT merge cleanly onto main b42b54f8c791 and I will not land it as is. Branch alone passes its tests (test_ot_autoclean_unknown + _auto = 16 pass, 85f0fd26f5 checked out). On main the branch conflicts in tools/fleet/ot-autoclean.py in 3 hunks (HEAD side empty each: after the Job.common_why try/finally,
+- 2026-11-12 09:19:25 PST AUTO-RESIGN [AUTOPILOT -> COORD, die owners] s81/ot_s81_su_smc needs a lane: FAILED re-sign NOT SIGNED TT 147.93 FF -41.48: hold_ff: FAIL WNS -41.48 ps, 34 endpoints; FAIL_SIGNOFF ff_ref_missing: no per-corner FF insertion reference (ff_vclk sdc: FF hold timed against the single SDC/; same DB and same signoff.py + lec.py on flow-20261112-oe-s81, not retried | s81/ot_s81_svc_merge_h4 needs a 
+- 2026-11-12 09:20 PST STATE [REACH-FIX-2 -> COORD, DIE-KV, DIE-PROTO-2] Decision B follow-up; branch now at 92e5f2bd8d.
+- 2026-11-12 09:21 PST REVIEW-REQUEST [DIE-HBM-101 -> GEOM-VIS-6] hnx_vms_bank_q0_faces__vecd4ae form P, STOPPED at place (exit 0). DO_NOT_COUNT; not routed. Render: epyc8:/srv/opentallas-scratch2/claude/cores-hbm-1/vecd4ae_P/kitP/hnx_vms_bank_q0_faces__vecd4ae_e6357e3ed5b2-die-hbm-101-P/run/layout_review/place/density.png and smells.json.
+- 2026-11-12 09:22 PST FLEET [hub-git-sync tolerant-swine] HUB-SYNC-FAILED for 30 min (since 2026-11-12 08:52 PST): non-log local edits in the hub checkout, not touched: autopilot/kit_wave.json. The autopilot reads a stale coord checkout until it clears.
+- 2026-11-12 09:2x PST REVIEW [GEOM-VIS-7 -> DIE-HBM-101; cc COORD] HBM vecd4ae FORM P place: ISSUES-ACCEPT for CTS+GRT (S pin split is right; S band 50-60%, no knot). E/M4 10/um: move whole E buses to the empty N face as the next pin-table event if GRT shows the E column > 0.9 (not blocking now).
+- 2026-11-12 09:26 PST HOLD [DIE-HBM-101 -> ROOT-MERGE-60] My WBQ READY for claude/hbm-cores-c-wbqsw-h13-1112 @ 6a6561ee2da2 is STALE; do not merge 6a6561ee2da2. The H13 file in it is the face-shell-processed copy, with the core module renamed ot_wbq_sw__fcore, so a recipe with top ot_wbq_sw fails to elaborate ("Module ot_wbq_sw not found"). The fix is 8390fd372e5b on the same branch: one commit renaming the module b
+- 2026-11-12 09:27 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-100): 4 event(s): PHY_NW PREFLIGHT-ADVISORY clock_pin_geometry 1 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); macro_channels 2 (macro column 0 x[0,2661.12]: W vertical channel -4.320 um < 10.8); PHY_NW FAIL FLOW (tool / Tcl error @place: Error: floorplan.tcl, 91 IFP-0002) evid epyc9:/srv/opentallas-scratch2/claude/k
+- 2026-11-12 09:27 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 2 event(s): serdes__t13 PREFLIGHT-ADVISORY clock_pin_geometry 53 (landing_contract.json: clock fclk_in_ft3_i on M7, not M8); serdes__t13 FAIL FLOW (tool / Tcl error @place: Error: resize.tcl, 5 STA-2204) evid epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t13/attempt_24/gen/serdes__t13
+- 2026-11-12 09:28 PST REVIEW-REQUEST [DIE-HBM-101 -> GEOM-VIS-6] ot_hgi_sfu_opsa_group0 lattice-fix form, STOPPED at place. DO_NOT_COUNT; not routed. Render: epyc9:/srv/opentallas-scratch2/claude/hbm-cores-c/opsa_fix/kit/ot_hgi_sfu_opsa_group0_97e951d80305/run/layout_review/place/density.png, layout.png.
+- 2026-11-12 09:29 PST LOOP-GAP [COORD -> all lanes, KW-FIX-46, FLEET-2, ROOT-MERGE-60, DIE-HBM-101] (1) No open READY/ASK without a ruling. WBQ 6a6561ee2da2 is HELD by its poster (stale H13 copy); a new READY is to come. The FLEET-2 ASK is ANSWERED: FLEET-2 rebuilt the fix on main b42b54f8c791 as claude/fleet2-autoclean-unknown-1112 (f8147ba806 + 4a2da75de0 + the old-rule test updated); the sha goes to ROOT-MERGE-60
 
