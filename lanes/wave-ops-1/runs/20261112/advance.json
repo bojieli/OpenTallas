@@ -1,0 +1,844 @@
+{
+ "date": "20261112",
+ "main": "83e9f033ecb0db9096bc5d5395d2bcc740c61f1a",
+ "train_line": "    1. Compose on epyc8 (own clone; GitHub-only shas are relayed through a localhost bundle): main + the latest \"ROOT-MERGE-57 UNLANDED\" train in landing order + KW-FIX-44 \"claude/<b> @ <sha>\" posts of the last 48 h + each die's wave branch (src_sha). Merges are plain; a conflict is aborted and repo",
+ "train_main": null,
+ "excluded": [],
+ "overlays": [
+  {
+   "name": "claude/kw-fix-44-script-inputs-1110",
+   "sha": "ad59b36619cb",
+   "src": "KW-FIX-44",
+   "full": "ad59b36619cbb2fce0623070d34d73e375a45f1b",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-grt-early-1110",
+   "sha": "b6d8a28df457",
+   "src": "KW-FIX-44",
+   "full": "b6d8a28df457c9ef4ba4621c1f013cd1c2bfaa95",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-macro-grid-1110",
+   "sha": "a1583449d1cd",
+   "src": "KW-FIX-44",
+   "full": "a1583449d1cd4022babe77837f40f324eea51f29",
+   "status": "on main"
+  },
+  {
+   "name": "claude/kw-fix-44-loadgate-1110",
+   "sha": "2129acf2d0e2",
+   "src": "KW-FIX-44",
+   "full": "2129acf2d0e2b3e2b6de17f199ebf535c7dda2bc",
+   "status": "conflict (not applied)",
+   "detail": "g tools/fleet/ot-heavy-reconcile\nCONFLICT (content): Merge conflict in tools/fleet/ot-heavy-reconcile\nAuto-merging tools/fleet/ot-run\nAuto-merging tools/fleet/test_ot_heavy.py\nCONFLICT (content): Merge conflict in tools/fleet/test_ot_heavy.py\nAuto-merging tools/fleet/test_ot_heavy_crit.py\nCONFLICT (content): Merge conflict in tools/fleet/test_ot_heavy_crit.py\nAuto-merging tools/fleet/test_ot_run_direct.py\nCONFLICT (content): Merge conflict in tools/fleet/test_ot_run_direct.py\nAuto-merging tools/fleet/test_ot_run_loadcap_host.py\nAutomatic merge failed; fix conflicts and then commit the result.\n"
+  },
+  {
+   "name": "claude/kw-fix-44-pingrid-1111",
+   "sha": "0bd2b6f0b13f",
+   "src": "KW-FIX-44",
+   "full": "0bd2b6f0b13fc688215b4ca850cce86c1ec982cc",
+   "status": "merged"
+  },
+  {
+   "name": "wave-ovl/grt-patch-1-genphys-1111",
+   "sha": "aef743c06d75",
+   "src": "KW-FIX-44",
+   "full": "aef743c06d75d6221849cb428db38f6fcda4a058",
+   "status": "conflict (not applied)",
+   "detail": "Auto-merging tools/die_plan/gen_phys.py\nCONFLICT (content): Merge conflict in tools/die_plan/gen_phys.py\nAutomatic merge failed; fix conflicts and then commit the result.\n"
+  }
+ ],
+ "base": "386428f6af2ef585be72c40a3a232797862845a9",
+ "unfetched": [],
+ "dies": {
+  "s81": {
+   "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r11r",
+   "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc8",
+    "epyc9"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/s87bind/plan_ready11r.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r11r",
+    "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87d.json",
+    "note": "KW-FIX-45 11-12 DIE-S81-87 GO db1da17a93ab (ready11r strict --crit bind rc 0, n_errors 0, bind_report e9a09df05ece); kit source bsrc3_r11r = main c6c0f5cf65d2 + dead-input re-proof 341ccaa06f67 + landing table ec8fcf58edc2; launch list launch_list_ready11r.tsv"
+   },
+   "item_inputs": [
+    "col_h10_r1__t1__cld01bb4ae",
+    "col_h10_r2__t1__cl1f5d6c2a",
+    "col_h10_r2__t1__cl8b686b3e",
+    "col_h10_r2__t1__cl99efd374",
+    "col_h10_r2__t1__clac068e56",
+    "col_h9_r1__t1__clf32cde8d",
+    "col_h9_r2__t1__cl774acf45",
+    "col_h9_r2__t1__cl87f3ff59",
+    "col_h9_r2__t1__clb8d86cd5",
+    "col_h9_r2__t1__clc9ad8f7e",
+    "dsdv_slice_c1x_C__t1",
+    "dsdv_slice_c1x_C__t3",
+    "dsdv_slice_c1x_C__t4",
+    "dsdv_slice_c1x_C__t5",
+    "dsdv_slice_c1x_C__t7",
+    "dsdv_slice_c1x_C__t8",
+    "dsdv_slice_c1x_C__t9",
+    "dsdv_slice_lepw_mu_C__t1",
+    "dsdv_slice_lepw_mu_LP__t2",
+    "dsdv_slice_lepw_mus_C__t1",
+    "eng__t1",
+    "gunit__t1",
+    "ot_s81sl_kv_leaf__t1",
+    "ot_s81sl_kv_leaf__t2",
+    "ot_s81sl_kv_leaf__t3",
+    "ot_s81sl_kv_leaf__t4",
+    "ot_s81sl_kv_leaf__t5",
+    "ot_s81sl_leaf__t2",
+    "ot_s81sl_leaf__t5",
+    "seqhost__t1",
+    "serdes__t1__clb45db5be",
+    "slice_station__t14",
+    "slice_station__t17",
+    "slice_station__t18",
+    "slice_station__t21",
+    "slice_station__t22",
+    "slice_station__t24__cl64811a5d",
+    "slice_station__t24__cl66b71008",
+    "slice_station__t24__cleece78ec",
+    "slice_station__t25",
+    "slice_station__t26",
+    "slice_station__t27",
+    "slice_station__t28",
+    "slice_station__t29__cl2e5c855a",
+    "slice_station__t29__clc7772371",
+    "slice_station__t30__cl1653104c",
+    "slice_station__t30__cl6a190133",
+    "slice_station__t30__clcedefe91",
+    "slice_station__t31",
+    "slice_station__t36",
+    "slice_station__t37",
+    "slice_station__t38",
+    "slice_station__t40__cl1ea9de02",
+    "slice_station__t40__clc8fb2c8c",
+    "slice_station__t42__cl4bd1432c",
+    "slice_station__t42__clcf44e680",
+    "slice_station__t43",
+    "slice_station__t44",
+    "slice_station__t46",
+    "slice_station__t47",
+    "slice_station__t48",
+    "slice_station__t49",
+    "slice_station__t50__cl39451317",
+    "slice_station__t50__cld84c9e24",
+    "slice_station__t51",
+    "slice_station__t52",
+    "slice_station__t6__cl0755c26e",
+    "slice_station__t6__cl54a9ceeb",
+    "slice_station__t7__cl362204c4",
+    "slice_station__t7__cl503f4913",
+    "slice_station__t7__cl945bc067",
+    "slice_station__t8",
+    "svc_hi_dsdv_svc_pvso_entry__t1",
+    "svc_hi_dsdv_svc_pvso_entry__t2"
+   ],
+   "bind_mem_gb": 48,
+   "new_sha": "386428f6af2ef585be72c40a3a232797862845a9",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261112/s81",
+   "live_manifests": {
+    "epyc7": "be018651e85b0b6a90a3a0a277a7850c5d7f3900c3c5a82ca75c4dccf3855e0f",
+    "epyc8": "dbaa43eb9941ab3dfeef00c628434c44ce0f0bea92ad251195971c8a5d785a50",
+    "epyc9": "be018651e85b0b6a90a3a0a277a7850c5d7f3900c3c5a82ca75c4dccf3855e0f"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "carry live overlay (not in git)": 39,
+     "carry live-only (not in git)": 100,
+     "restored (in the commit, absent live)": 3410,
+     "same": 140980,
+     "new file (main/overlay)": 742,
+     "take new (main/overlay changed)": 54,
+     "conflict: both changed (kept live)": 3,
+     "sparse (absent live, kept absent)": 179119
+    },
+    "actions": 4206,
+    "carried": 139,
+    "conflicts": 3,
+    "merged": 0,
+    "lag": 0
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     74
+    ],
+    [
+     "physical/die_plan/s81",
+     10
+    ],
+    [
+     "physical/die_plan/qwen_kvsys",
+     4
+    ],
+    [
+     "physical/die_plan/hbm",
+     3
+    ],
+    [
+     "results/token_pass/s81_dead_inputs_2148",
+     2
+    ],
+    [
+     ".gitattributes",
+     1
+    ],
+    [
+     ".github",
+     1
+    ],
+    [
+     ".gitignore",
+     1
+    ],
+    [
+     ".qscratch",
+     1
+    ],
+    [
+     ".s81-scratch",
+     1
+    ],
+    [
+     ".selt_lint",
+     1
+    ],
+    [
+     "AGENTS.md",
+     1
+    ],
+    [
+     "ARCHITECTURE_EXECUTION_CONTRACT.md",
+     1
+    ],
+    [
+     "CITATION.cff",
+     1
+    ],
+    [
+     "CLAUDE.md",
+     1
+    ]
+   ],
+   "conflicts": [
+    "physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py",
+    "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py",
+    "tools/die_plan/gen_phys.py"
+   ],
+   "merged": [],
+   "lag": [],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261112_s81.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind:/srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind -w /srv/opentallas-scratch2/claude/wave-src/20261112/s81 python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/s87bind/plan_ready11r.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind --asbuilt /srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87d.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/s87bind/out_r11r/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/s87bind/plan_ready11r.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind --asbuilt /srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87d.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87d.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/s87bind/out_r11r",
+    "plan": "/srv/opentallas-scratch2/claude/s87bind/plan_ready11r.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261112/s81.bind"
+   },
+   "hosts": {
+    "epyc7": "lace.tcl\", \".qscratch/hub_context_r1/ports/hfd_sfu/ports.json\", \".qscratch/hub_context_r1/ports/hfd_sfu/ports.svh\", \".qscratch/hub_context_r1/ports/summary.json\", \".qscratch/qgrt_all.sh\", \".qscratch/qir_all.sh\", \".qscratch/qstop.sh\", \".s81-scratch/asap7_grid.txt\", \".s81-scratch/geometry_tests.log\"]}",
+    "epyc8": "ERROR bind/bs rc 23: rsync: [sender] change_dir \"/srv/opentallas-scratch2/claude/wave-src/20261112/s81\" failed: No such file or directory (2)\nrsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1874) [Receiver=3.4.1]\nrsync: [Receiver] write error: Broken pipe (32)\n",
+    "epyc9": "lace.tcl\", \".qscratch/hub_context_r1/ports/hfd_sfu/ports.json\", \".qscratch/hub_context_r1/ports/hfd_sfu/ports.svh\", \".qscratch/hub_context_r1/ports/summary.json\", \".qscratch/qgrt_all.sh\", \".qscratch/qir_all.sh\", \".qscratch/qstop.sh\", \".s81-scratch/asap7_grid.txt\", \".s81-scratch/geometry_tests.log\"]}"
+   },
+   "bind_state": "failed",
+   "kept_live_owners": {
+    "physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py": "KW-FIX-44",
+    "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py": "KW-FIX-44",
+    "tools/die_plan/gen_phys.py": "KV-PLAN-2"
+   },
+   "flow_tag": ""
+  },
+  "s81_head": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_main_m8w1_7b84010b1c",
+   "src_sha": "7b84010b1c6ebc8d3641176abe07221a1a12fcf4",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc9",
+    "epyc8"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/head-94/g5p/source_plan.json",
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_h94_9ddabba952/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "note": "KW-FIX-42 2026-11-09 08:47 PST: l48hp1 src_head_hp1 kit_rtl.sh | KW-FIX-16 12:5x I133 tag flow-20261106-c-head: src_q main 3d13a314805 (hardlink of src_p, schema accepts clock.tap_window.per_port_note), kit_rtl.sh byte-same as src_n. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
+   },
+   "item_inputs": [],
+   "bind_mem_gb": null,
+   "new_sha": "386428f6af2ef585be72c40a3a232797862845a9",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261112/s81_head",
+   "live_manifests": {
+    "epyc7": "95db8a40851fad7a3a923eeda88c6d509cf8444da56f97e27fc917aad3522f7f",
+    "epyc9": "95db8a40851fad7a3a923eeda88c6d509cf8444da56f97e27fc917aad3522f7f",
+    "epyc8": "95db8a40851fad7a3a923eeda88c6d509cf8444da56f97e27fc917aad3522f7f"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 225306,
+     "carry live-only (not in git)": 108,
+     "take new (main/overlay changed)": 31,
+     "carry live overlay (not in git)": 11,
+     "restored (in the commit, absent live)": 256,
+     "new file (main/overlay)": 269,
+     "3-way merged (live overlay + main)": 5,
+     "stale old git copy -> take commit": 34,
+     "sparse (absent live, kept absent)": 98434,
+     "conflict: both changed, merge conflict (kept live)": 1
+    },
+    "actions": 595,
+    "carried": 119,
+    "conflicts": 1,
+    "merged": 5,
+    "lag": 34
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     61
+    ],
+    [
+     "physical/die_plan/s81",
+     8
+    ],
+    [
+     "physical/die_plan/qwen_kvsys",
+     4
+    ],
+    [
+     "tools/s81_head/__pycache__",
+     4
+    ],
+    [
+     "physical/die_plan/hbm",
+     3
+    ],
+    [
+     ".m8wave_src.json",
+     1
+    ],
+    [
+     "assets/sink_bins_0.json",
+     1
+    ],
+    [
+     "assets/sink_bins_1.json",
+     1
+    ],
+    [
+     "assets/sink_bins_2.json",
+     1
+    ],
+    [
+     "assets/sink_bins_3.json",
+     1
+    ],
+    [
+     "assets/sink_bins_4.json",
+     1
+    ],
+    [
+     "assets/sink_bins_5.json",
+     1
+    ],
+    [
+     "assets/sink_bins_6.json",
+     1
+    ],
+    [
+     "assets/sink_bins_7.json",
+     1
+    ],
+    [
+     "assets/sink_bins_8.json",
+     1
+    ]
+   ],
+   "conflicts": [
+    "tools/autopilot/kit_wave.py"
+   ],
+   "merged": [
+    "physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py",
+    "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py",
+    "tools/die_plan/die_plan.schema.json",
+    "tools/die_plan/gen_phys.py",
+    "tools/die_plan/schema.py"
+   ],
+   "lag": [
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x.sv",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_k8_lp.sv",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c1x_lp.sv",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c3x.sv",
+    "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_slice_c3x_lp.sv",
+    "rtl/common/ot_dp_clk_landing.sv",
+    "rtl/common/ot_dp_clk_landing_ca.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x/ot_s81sl_slice_c1x_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8/ot_s81sl_slice_c1x_k8_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x/ot_s81sl_slice_c3x_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp.sv",
+    "rtl/dsrom_sys/s81_dv/slice/landed/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp_w3.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c3x.sv",
+    "tools/die_plan/bind.py",
+    "tools/die_plan/bind_verify.py",
+    "tools/die_plan/clock_landings.py",
+    "tools/die_plan/count_align_bind.py",
+    "tools/die_plan/test_core_input_lockup.py",
+    "tools/die_plan/test_core_out_land.py",
+    "tools/die_plan/test_ring_wreg.py",
+    "tools/die_plan/test_ring_wreg_chunks.py",
+    "tools/hbm_idx_topk_static_vectors.py",
+    "tools/hbm_layer_vehicle/cx_layer_1021.py",
+    "tools/hbm_layer_vehicle/idx_images.py",
+    "tools/hbm_vm_static_calendar.py",
+    "tools/s81_dv/layer_prog/test_vp_local_forms.py",
+    "tools/s81_dv/vp_local_1026/forms.py"
+   ],
+   "bind": {
+    "cmd": null,
+    "why": "no strict bind of record in kit_rtl (script mode, script export): bind-diff not applicable; the new tree is built and byte-checked only",
+    "asbuilt": null,
+    "old_bind": null
+   },
+   "hosts": {
+    "epyc7": "{\"ok\": true, \"files\": 226021, \"expected\": 226021, \"differ\": 0, \"sample\": []}",
+    "epyc9": "{\"ok\": true, \"files\": 226021, \"expected\": 226021, \"differ\": 0, \"sample\": []}",
+    "epyc8": "{\"ok\": true, \"files\": 226021, \"expected\": 226021, \"differ\": 0, \"sample\": []}"
+   },
+   "bind_state": "na",
+   "kept_live_owners": {
+    "tools/autopilot/kit_wave.py": ""
+   },
+   "flow_tag": ""
+  },
+  "qwen_compute": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66",
+   "src_sha": "9024de9d66",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc9",
+    "epyc8"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s27.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
+    "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
+    "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
+   },
+   "item_inputs": [],
+   "bind_mem_gb": 48,
+   "new_sha": "69c2982913fb3f517a9e4ecfb26e98fcb4337f02",
+   "die_branch": "merged",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute",
+   "live_manifests": {
+    "epyc7": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "epyc9": "f51b0b12ea6eea2bb811d4438789c918ba7ce4f7ca35709dfeb8a73fe7f06308",
+    "epyc8": "c987b0afc7d882d8decbfea14b6317ec19505734d6ce601c587ca835f03b06ef"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 324289,
+     "take new (main/overlay changed)": 9,
+     "restored (in the commit, absent live)": 32,
+     "carry live-only (not in git)": 34,
+     "carry live overlay (not in git)": 4,
+     "new file (main/overlay)": 52,
+     "stale old git copy -> take commit": 7
+    },
+    "actions": 100,
+    "carried": 38,
+    "conflicts": 0,
+    "merged": 0,
+    "lag": 7
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     28
+    ],
+    [
+     "physical/die_plan/qwen_compute",
+     10
+    ]
+   ],
+   "conflicts": [],
+   "merged": [],
+   "lag": [
+    "tools/die_plan/gen_phys.py",
+    "tools/die_plan/route_supply.py",
+    "tools/die_plan/test_wide_chain_float.py",
+    "tools/die_plan/wide_chain_float_event.py",
+    "tools/fleet/ot-autoclean.py",
+    "tools/fleet/test_ot_autoclean_auto.py",
+    "tools/fleet/test_ot_autoclean_dx.py"
+   ],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261112_qwen_compute.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind:/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind -w /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/qc-vis-resite/planq27/plan_qc99_s27.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind --asbuilt /srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/qc-vis-resite/planq27/plan_qc99_s27.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind --asbuilt /srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
+    "plan": "/srv/opentallas-scratch2/claude/qc-vis-resite/planq27/plan_qc99_s27.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute.bind"
+   },
+   "hosts": {
+    "epyc7": "ERROR c 23: rsync: [sender] change_dir \"/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute\" failed: No such file or directory (2)\nrsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1874) [Receiver=3.4.1]\nrsync: [Receiver] write error: Broken pipe (32)\n",
+    "epyc9": "yc\", \"tools/die_plan/__pycache__/kit_topology.cpython-314.pyc\", \"tools/die_plan/__pycache__/param_wrap.cpython-314.pyc\", \"tools/die_plan/__pycache__/test_param_wrap_status_reg.cpython-314.pyc\", \"tools/die_plan/bind.py\", \"tools/die_plan/param_wrap.py\", \"tools/die_plan/test_param_wrap_status_reg.py\"]}",
+    "epyc8": "yc\", \"tools/die_plan/__pycache__/kit_topology.cpython-314.pyc\", \"tools/die_plan/__pycache__/param_wrap.cpython-314.pyc\", \"tools/die_plan/__pycache__/test_param_wrap_status_reg.cpython-314.pyc\", \"tools/die_plan/bind.py\", \"tools/die_plan/param_wrap.py\", \"tools/die_plan/test_param_wrap_status_reg.py\"]}"
+   },
+   "bind_state": "failed",
+   "kept_live_owners": {},
+   "flow_tag": ""
+  },
+  "qwen_kvsys": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_40e22dd1d2",
+   "src_sha": "9446d18f5d9aa656166cf492128986e43529ee89",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc8",
+    "epyc9"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json",
+    "note": "KW-FIX-42 2026-11-09 07:14 PST KV bind9 = the KV small event (KV-PLAN-1 07:04 READY, COORD 07:1x GO): plan_zbk (plan_c 1035a005 = plan_zb6), asbuilt caba8c83, strict bind9 0 errors (160 partitions, 25 | 11-12 DIE-KV-98: vF (plan_c md5 b85b648476700cea99addc382b4560ac, strict bind RC 0, bind_report eb5154ba73ec, bands widened / resize-bands 0.5); KV src = main 40e22dd1d26c + kv99 reset_tree 0c3eb33db77f + grtm-kv 5796e77ff0 + landing Tcl-quote fix 4fd7cbd4b6d4",
+    "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2"
+   },
+   "item_inputs": [
+    "kv3_hg",
+    "kv3_hg_v1",
+    "kv3_hg_v1p2",
+    "kv3_hg_v1p3",
+    "kv3_hg_v1p4",
+    "kv3_hg_v1p5",
+    "kv3_hg_v1p6",
+    "kv3_hg_v3",
+    "kv3_hgi",
+    "kv3_hgi_v1",
+    "kv3_hgi_v1__cl141fc26e",
+    "kv3_hgi_v1__cl42bc8b12",
+    "kv3_hgi_v2",
+    "kv3_hgi_v2__cl2862d491",
+    "kv3_hgi_v2__cle0015330",
+    "kv3_hgi_v4",
+    "kv3_hgi_v6",
+    "kv3_hgi_v7",
+    "kv3_hgi_v8",
+    "kv3_io_cor",
+    "kv3_io_cor_v1",
+    "kv3_pv_v12",
+    "kv3_pv_v1n",
+    "kv3_pv_v5n",
+    "kv3_pv_v6n",
+    "kv3_pv_v7",
+    "kv3_sys_SD",
+    "kv3_sys_SD_v1",
+    "kv3_sys_c"
+   ],
+   "bind_mem_gb": null,
+   "new_sha": "386428f6af2ef585be72c40a3a232797862845a9",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys",
+   "live_manifests": {
+    "epyc7": "12205103b101a4115f0c11ac0eed7c2d82133988fae46b91d89917ba8aa48030",
+    "epyc8": "e1503cd5adc37704673f32d3ae0d3c2cecabb394b1db7887e0ef93a1a26be0a5",
+    "epyc9": "7cadeca203e5c98c753ac515804157803ab6910692404da8ffdad44194201096"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 323855,
+     "new file (main/overlay)": 438,
+     "take new (main/overlay changed)": 43,
+     "carry live overlay (not in git)": 3,
+     "stale old git copy -> take commit": 7,
+     "carry live-only (not in git)": 98,
+     "conflict: both changed (kept live)": 1
+    },
+    "actions": 488,
+    "carried": 101,
+    "conflicts": 1,
+    "merged": 0,
+    "lag": 7
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     96
+    ],
+    [
+     "physical/die_plan/qwen_kvsys",
+     3
+    ],
+    [
+     "tools/__pycache__/die_port_bind.cpython-314.pyc",
+     1
+    ],
+    [
+     "tools/hbm_die_v16/__pycache__",
+     1
+    ]
+   ],
+   "conflicts": [
+    "tools/die_plan/landing_place.py"
+   ],
+   "merged": [],
+   "lag": [
+    "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py",
+    "tools/die_plan/check.py",
+    "tools/die_plan/clock_landing_plan.py",
+    "tools/die_plan/die_plan.schema.json",
+    "tools/die_plan/gen_phys.py",
+    "tools/die_plan/route_supply.py",
+    "tools/die_plan/schema.py"
+   ],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261112_qwen_kvsys.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind:/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind -w /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind --asbuilt /srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/dkv98/bind_vF2/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind --asbuilt /srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+    "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys.bind"
+   },
+   "hosts": {
+    "epyc7": "ERROR  rc 23: rsync: [sender] change_dir \"/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys\" failed: No such file or directory (2)\nrsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1874) [Receiver=3.4.1]\nrsync: [Receiver] write error: Broken pipe (32)\n",
+    "epyc8": "ERROR  rc 23: rsync: [sender] change_dir \"/srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys\" failed: No such file or directory (2)\nrsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1874) [Receiver=3.4.1]\nrsync: [Receiver] write error: Broken pipe (32)\n",
+    "epyc9": "{\"ok\": true, \"files\": 324445, \"expected\": 324445, \"differ\": 0, \"sample\": []}"
+   },
+   "bind_state": "failed",
+   "kept_live_owners": {
+    "tools/die_plan/landing_place.py": "KW-FIX-45"
+   },
+   "flow_tag": ""
+  },
+  "hbm": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_m8w1_7b84010b1c",
+   "src_sha": "7b84010b1c6ebc8d3641176abe07221a1a12fcf4",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc9",
+    "epyc8"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
+    "note": "KW-FIX-43 2026-11-09 11:0x COORD LOOP-GAP 10:5x (1) + DIE-HBM-97 10:38: HBM plan d44v_restore_1109 27e46e2d84777acf (final4 77bbddd8 + corepins 3742832d + restored part60/part61/expx328/qcore267; SHA256SUMS OK on epyc7) + bind_F5c recipe (asbuilt vK5c, src_hbmf4) STRICT PASS on 27e46e2d (epyc7 kw43/hbm_f5c_pre/bind.log: 90 parts, 81 types, 420 crossings, 378992 bits, errors/unbound/tied/undriven 0, RC 0); bind_out = that strict output (F5c content re-bound on the restore plan: q_su*/q_hub_* RTL and station kit_rtl follow the plan). q_hub_ne/nw held until wsw_H11 signs off. Revert: *_prev_kw43h | KW-FIX-42 11-09 04:17 PST: HBM FINAL switch (COORD 04:1x, benches in parallel): plan d44v_final4_1109 77bbddd87354 (stage/p6_relay) + bind_F5b strict + asbuilt vK5b b63bc28b4f01 (RXLAT 145 RTL kit_hostcp_R6) ; src_hbmf4 = kw41/src_h94_pv (pftr 0591baed) + native_istations a804c119 + kit_topology 65841e40 ; inputs sha256-verified same path on epyc7 (60620 files), intel1 = origin ; revert *_prev_kw42hbm | KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): plan_final2 4da76b51b1a9 + bind vJ"
+   },
+   "item_inputs": [
+    "NE_io",
+    "NW_io",
+    "PHY_NC",
+    "PHY_NE",
+    "PHY_NW",
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16",
+    "ot_hbm_su_pg_lane_exp_x_core__va8815b8d3cb4",
+    "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b",
+    "ot_hgi_sfu_opsb_group",
+    "ot_hidx_s3_q",
+    "q_b000",
+    "q_b000__physical_v1",
+    "q_b001",
+    "q_b001__physical_v1",
+    "q_b002",
+    "q_b002__physical_v1",
+    "q_b003",
+    "q_b003__physical_v1",
+    "q_b010",
+    "q_b010__physical_v1",
+    "q_b011",
+    "q_b011__physical_v1",
+    "q_b012",
+    "q_b012__physical_v1",
+    "q_b013",
+    "q_b013__physical_v1",
+    "q_b100",
+    "q_b100__physical_v1",
+    "q_b101",
+    "q_b101_nw",
+    "q_b102",
+    "q_b102__physical_v1",
+    "q_b103",
+    "q_b103__physical_v1",
+    "q_b110",
+    "q_b110__physical_v1",
+    "q_b111",
+    "q_b111__physical_v1",
+    "q_b112",
+    "q_b112__physical_v1",
+    "q_b113",
+    "q_b113__physical_v1",
+    "q_hub_ne",
+    "q_hub_ne__physical_v1",
+    "q_hub_nw",
+    "q_hub_nw__physical_v1",
+    "q_mca",
+    "q_mcb",
+    "q_sm0",
+    "q_sm1",
+    "q_sm2",
+    "q_sm3",
+    "q_spb0",
+    "q_spb0__physical_v1",
+    "q_spb2",
+    "q_spb2__physical_v1",
+    "q_spt0",
+    "q_spt0__physical_v1",
+    "q_spt1",
+    "q_spt2",
+    "q_spu0",
+    "q_spu0__physical_v1",
+    "q_spu1",
+    "q_spu1__physical_v1",
+    "q_su00",
+    "q_su00__physical_v1",
+    "q_su01",
+    "q_su01__physical_v1",
+    "q_su10",
+    "q_su10__physical_v1",
+    "q_su11",
+    "q_su11__physical_v1",
+    "q_su20",
+    "q_su20__physical_v1",
+    "q_su21",
+    "q_su21__physical_v1",
+    "q_su30",
+    "q_su30__physical_v1",
+    "q_su31",
+    "q_su31__physical_v1",
+    "root",
+    "vsN0",
+    "vsN2",
+    "vsN4",
+    "vsN5",
+    "vsN6"
+   ],
+   "bind_mem_gb": null,
+   "new_sha": "386428f6af2ef585be72c40a3a232797862845a9",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261112/hbm",
+   "live_manifests": {
+    "epyc7": "615c611371caa81e8824aee388766b2a3a8016ca8cb7ae917eb0368d21aafa50",
+    "epyc9": "f9c682440c79f2917351000621cdde34a32a5f8035a4e29c26e3b608b91c2595",
+    "epyc8": "92fb66bf56c9b3709c4542c4e4b5d60218d71cc187a8e6698a374e9e1cb5fcbc"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 324031,
+     "carry live-only (not in git)": 112,
+     "take new (main/overlay changed)": 35,
+     "carry live overlay (not in git)": 10,
+     "new file (main/overlay)": 268,
+     "conflict: both changed (kept live)": 3
+    },
+    "actions": 303,
+    "carried": 122,
+    "conflicts": 3,
+    "merged": 0,
+    "lag": 0
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     97
+    ],
+    [
+     "physical/die_plan/s81",
+     8
+    ],
+    [
+     "physical/die_plan/qwen_kvsys",
+     4
+    ],
+    [
+     "physical/die_plan/hbm",
+     3
+    ],
+    [
+     "physical/die_plan/hbm_arch_cores",
+     3
+    ],
+    [
+     ".m8wave_src.json",
+     1
+    ],
+    [
+     "physical/die_plan/qwen_compute",
+     1
+    ],
+    [
+     "tools/__pycache__/die_port_bind.cpython-314.pyc",
+     1
+    ],
+    [
+     "tools/autopilot/__pycache__",
+     1
+    ],
+    [
+     "tools/die_plan/macro_skip_rtlmp.tcl",
+     1
+    ],
+    [
+     "tools/die_plan/test_gen_phys_phy_core_area.py",
+     1
+    ],
+    [
+     "tools/die_trial/__pycache__",
+     1
+    ]
+   ],
+   "conflicts": [
+    "physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py",
+    "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py",
+    "tools/die_plan/gen_phys.py"
+   ],
+   "merged": [],
+   "lag": [],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261112_hbm.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind:/srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind -w /srv/opentallas-scratch2/claude/wave-src/20261112/hbm python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind --asbuilt /srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json --out /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind --asbuilt /srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
+    "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261112/hbm.bind"
+   },
+   "hosts": {
+    "epyc7": "ERROR 5/src_h rc 23: rsync: [sender] change_dir \"/srv/opentallas-scratch2/claude/wave-src/20261112/hbm\" failed: No such file or directory (2)\nrsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1874) [Receiver=3.4.1]\nrsync: [Receiver] write error: Broken pipe (32)\n",
+    "epyc9": "{\"ok\": true, \"files\": 324459, \"expected\": 324459, \"differ\": 0, \"sample\": []}",
+    "epyc8": "{\"ok\": true, \"files\": 324459, \"expected\": 324459, \"differ\": 0, \"sample\": []}"
+   },
+   "bind_state": "failed",
+   "kept_live_owners": {
+    "physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py": "KW-FIX-44",
+    "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py": "KW-FIX-44",
+    "tools/die_plan/gen_phys.py": "KW-FIX-44"
+   },
+   "flow_tag": ""
+  }
+ }
+}

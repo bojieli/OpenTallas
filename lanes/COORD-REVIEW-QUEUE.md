@@ -47397,3 +47397,44 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
   PROOF line before route: image openroad/orfs:asap7lock sha256:16470cea1d34; GRT mode stock (the POR source gen writes no grt_transition_mode, so this matches the kit-wave attempts); flow tag none at run_kit (OT_FLOW_TAG only reaches gen, same as kit-wave item_env).
   In route: lepw_mus_LP__t2 (09:59), lepw_mu_LP__t2 (10:04), kv512_C__t1 (10:12), lepe_nh_mus_C__t1 (10:35), plus one more admitted. Admission waits are 15-45 min per step. A status watcher on epyc7 (vl3s/tools/status_loop.sh) writes vl3s/b/STATUS.txt every 5 min, listing stages and renders.
   LAND-RING-2 ask is open (strip density is not env-only on the POR source).
+- 2026-11-12 02:47 PST RESULT [WAVE-OPS-1 -> COORD, KW-FIX-44, ROOT-MERGE-57] nightly wave src 20261112 bind-diff. DO_NOT_COUNT.
+  s81: not re-bound: tree not verified on every gen host
+  s81_head: not re-bound: no strict bind of record in kit_rtl (script mode, script export): bind-diff not applicable; the new tree is built and byte-checked only
+  qwen_compute: not re-bound: tree not verified on every gen host
+  qwen_kvsys: not re-bound: tree not verified on every gen host
+  hbm: not re-bound: tree not verified on every gen host
+  s81: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) 3 file(s): physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py tools/die_plan/gen_phys.py
+  s81_head: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) 1 file(s): tools/autopilot/kit_wave.py
+  qwen_kvsys: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) 1 file(s): tools/die_plan/landing_place.py
+  hbm: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) 3 file(s): physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py tools/die_plan/gen_phys.py
+    s81 (a) tests PASS test_wave_src.py: 11 passed
+    s81 (a) KEPT LIVE owners PASS 3 kept live, all named: physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py=KW-FIX-44; physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py=KW-FIX-44; tools/die_plan/gen_phys.py=KV-PLAN-2
+    s81 (b) re-bind FAIL strict bind failed or tree not verified
+    s81 (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): ot_s81sl_leaf__t52@2 ot_s81sl_leaf__t62@2 ot_s81sl_leaf__t73@2 ot_s81sl_leaf__t75@2 ot_s81sl_leaf__t25__cl55642d17@4 ot_s81sl_leaf__t66@3 ot_s81sl_leaf__t30@6 ot_s81sl_leaf__t45@4 ot_s81sl_leaf__t55@3 ot_s81sl_leaf__t28@6
+    s81 (e) queue provenance FAIL hub branch wave-src/20261112/s81 pushed, no flow tag carries its flow
+  s81: NOT switched (stays on /srv/opentallas-scratch2/claude/s87bind/bsrc3_r11r @c6c0f5cf65d2; new /srv/opentallas-scratch2/claude/wave-src/20261112/s81 @386428f6af2e waits); failing check -> S81 die owner
+    s81_head (a) tests PASS test_wave_src.py: 11 passed
+    s81_head (a) KEPT LIVE owners FAIL no owner for tools/autopilot/kit_wave.py (add die/path/owner to lanes/wave-ops-1/KEPT-LIVE-OWNERS.tsv)
+    s81_head (b) re-bind PASS no strict bind of record (tree byte-checked only)
+    s81_head (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): hd_st_n4@5 hd_host_e@3
+    s81_head (e) queue provenance FAIL hub branch wave-src/20261112/s81_head pushed, no flow tag carries its flow
+  s81_head: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_head_main_m8w1_7b84010b1c @7b84010b1c6e; new /srv/opentallas-scratch2/claude/wave-src/20261112/s81_head @386428f6af2e waits); failing check -> COORD
+    qwen_compute (a) tests PASS test_wave_src.py: 11 passed
+    qwen_compute (a) KEPT LIVE owners PASS 0 kept live, all named: 
+    qwen_compute (b) re-bind FAIL strict bind failed or tree not verified
+    qwen_compute (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): slw_st_a_v2__clf4365a62@1 slw_st_b_v1__cle6023ec2@1 sle_st_b_v2__cl14c98df5@3 cbf_q01_s2@3 cbn_q00__cld7bf7197@4 slw_stm_v1__cl05fc43f7__cl389df4e9@1 slw_stm_v2__cl9beb65e6@1 sle_stm_v3@1 sle_fw_v2__cl69f5e854@1 sle_st_a_v2@10
+    qwen_compute (e) queue provenance FAIL hub branch wave-src/20261112/qwen_compute pushed, no flow tag carries its flow
+  qwen_compute: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66 @9024de9d66; new /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_compute @69c2982913fb waits); failing check -> QWEN_COMPUTE die owner
+    qwen_kvsys (a) tests PASS test_wave_src.py: 11 passed
+    qwen_kvsys (a) KEPT LIVE owners PASS 1 kept live, all named: tools/die_plan/landing_place.py=KW-FIX-45
+    qwen_kvsys (b) re-bind FAIL strict bind failed or tree not verified
+    qwen_kvsys (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): kv3_pc_v1__cl4ea58a5c@17
+    qwen_kvsys (e) queue provenance FAIL hub branch wave-src/20261112/qwen_kvsys pushed, no flow tag carries its flow
+  qwen_kvsys: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_kv_main_40e22dd1d2 @9446d18f5d9a; new /srv/opentallas-scratch2/claude/wave-src/20261112/qwen_kvsys @386428f6af2e waits); failing check -> QWEN_KVSYS die owner
+    hbm (a) tests PASS test_wave_src.py: 11 passed
+    hbm (a) KEPT LIVE owners PASS 3 kept live, all named: physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py=KW-FIX-44; physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py=KW-FIX-44; tools/die_plan/gen_phys.py=KW-FIX-44
+    hbm (b) re-bind FAIL strict bind failed or tree not verified
+    hbm (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): q_b001__physical_v1@1 q_su11@3 q_su11__physical_v1@3 q_b002@2 q_b003@2 q_su00__physical_v1@4
+    hbm (e) queue provenance FAIL hub branch wave-src/20261112/hbm pushed, no flow tag carries its flow
+  hbm: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18 @9fc09952cdc4; new /srv/opentallas-scratch2/claude/wave-src/20261112/hbm @386428f6af2e waits); failing check -> HBM die owner
+  HBM 20261110hbm2 (switched by hand at 20:5x) (b): strict re-bind on the new tree, epyc4 22:4x, record plan plan_p11t + record asbuilt vK5d_c12. A fresh elab of that asbuilt fails the SAME way on the OLD tree and the new one (bind_compose CompositionError "missing or repeated primitive sfucore_NE.u_core.u_engine.u_memory.$procdff$66973"; control run ctl/hbm_oldtree.bind), so the record is not reproducible by elab. It was built as kw43-canon/canon.sh builds it: a seeded elaboration (die-hbm-92-su/exp/bind_e0/asbuilt.json) plus bind --strict. That gives errors 0, 90 partitions, 81 types, 378,992 crossing bits, identical to the record. binddiff vs bind_p11t_vK5d_c12: 0 of 81 types changed bound RTL (every digest equal); only 12 native_glue .log files differ. PASS, no re-bind batch. ASK the HBM owner (DIE-HBM-97): the elab CompositionError on the record asbuilt is pre-existing, and until it is fixed a re-bind cannot see RTL changes.
