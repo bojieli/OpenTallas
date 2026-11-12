@@ -1,13 +1,12 @@
-# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~07:0x PST)
+# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~09:2x PST)
 
 ## 1 Scope
 Generator / legalize / preflight CLASS fixes (successor of CLAND-CLASS-1 + STREET-RULE-1). Done + APPROVED: CLAND-SLEW-1,
-LAND-OVERRIDE-STALE, legalize role match + FIXED-FACE flag. Open (COORD ~07:0x): (1) SIDECAR-COVERAGE preflight,
-(2) PLAN-SRC-MACRO preflight, (3) classify HEAD-95 hd_spn_wshim_tx slew violators when sent.
+LAND-OVERRIDE-STALE, legalize role match + FIXED-FACE flag. COORD 07:0x items: (1) SIDECAR-COVERAGE and (2) PLAN-SRC-MACRO READY on claude/preflight-sidecar-macro-1112@ad7c108277; (3) wshim_tx violators CLASSIFIED = FT-HOP-M2-WIRE (posted CLASS, offered to take the fix).
 
 ## 2 Worktree
 intel2:/srv/opentallas-scratch2/claude/wt/gen-class-1 (git object store = hub mirror, remote "hub").
-Current branch claude/preflight-sidecar-macro-1112 = hub/main d767dc851b7, NO changes yet.
+Current branch claude/preflight-sidecar-macro-1112@ad7c108277 (pushed), working tree clean.
 Pushed branches (all on hub): claude/land-override-stale-1112@cef99b3203, claude/cland-slew-1112b@33e70e1695
 (ignore claude/cland-slew-1112@3375e6375c, truncated message), claude/street-fixedface-1112@a07f957bc5 (on top of
 street-rule-1112@3cca0a68ed). Scratch: intel2 /srv/opentallas-scratch2/claude/gen-class-1/ (plans/, msg*.txt, patches).
@@ -25,20 +24,13 @@ None. Affected list for CLAND-SLEW-1: ~/coord/lanes/gen-class-1/cland-slew-1-aff
 KV 54, HBM 0); COORD: no blanket re-sign, unsigned types pick it up at next kit.
 
 ## 6 Next steps
-a. SIDECAR-COVERAGE: KW-FIX-46 already has a LIVE kit_wave launch probe (skip reason SIDECAR_STALE,
-   test_kit_wave_sidecar_preflight.py, runtime kit_wave md5 99312e5a91a3; check whether it is in git).
-   Add the generator-side fail-closed check: where gen loads --clock-landing sidecar (grep "clock_landing" in
-   tools/die_plan/gen*.py / clock_landings.py), compare sidecar collector types vs plan partition types BEFORE gen_rtl,
-   raise "SIDECAR_STALE: sidecar <path> lacks N plan part types: ..." ; add kit_wave FAILURE class pattern; test.
-   Rule: if KW-FIX-46's probe is not in git, also land it (coordinate with KW-FIX-46, do not duplicate).
-b. PLAN-SRC-MACRO: HBM S00 (DIE-HBM-101) plan macros at u_fcore.u_core.u_l/u_s absent in src_hbm_main_9446d18f5d.
-   kit_preflight.py has macro_instances (vs bound netlist); make the check run at kit preflight for every die, name
-   the instance and the src, + test. Find S00 receipt first (ask DIE-HBM-101 for path if not found).
-c. When HEAD-95 posts wshim_tx violator names: classify (ring dsel = CLAND-SLEW-1; else name net family).
-d. Post READY per item to lanes/COORD-REVIEW-QUEUE.md via coord-commit.sh.
-
+a. Wait for COORD on FT-HOP-M2 (wshim_tx: 120/125 slew pins = fanout-1 ~200-um M2-only wires from repair BUFx3 to
+   ft-link station inputs; analysis script epyc8 /srv/opentallas-scratch2/claude/gen-class-1-slewcls.py <kit>).
+   If assigned: in gen_phys / ft_bit_sites.tcl give ft-link station hop nets a layer floor (M4+) or a repeater per
+   <= ~110 um, test, bench on the hb4k wshim_tx kit via ot-run (epyc9), post READY.
+b. Watch the queue for review comments on the 4 READY branches; fix and re-post.
 ## 7 Open READY/ASK
-All 3 earlier READYs approved by COORD (merge lane ROOT-MERGE-60, queue 07:0x). Waiting on HEAD-95 violator names.
+land-override, cland-slew-1112b, street-fixedface APPROVED (ROOT-MERGE-60). preflight-sidecar-macro-1112@ad7c108277 READY, awaiting COORD. FT-HOP-M2 assignment ask to COORD.
 
 ## 8 Gotchas
 - ssh heredocs mangle quotes: scp python patch scripts / message files and run them; commit with git commit -F file.
