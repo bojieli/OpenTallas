@@ -1,0 +1,4 @@
+MISMATCH edge 423 row 1 lo 0 k 0 got 3cae47cc/0 want 3c00bf01/0
+MISMATCH edge 426 row 0 lo 0 k 0 got 3c00bf01/0 want 3cae47cc/0
+PLAN_MISMATCH predicted 6 words, got 6; first diff ((423, 1, (0, 0, 4), 1006681857, 0), (423, 1, (0, 0, 4), 1018054604, 0))
+XS_PLACE_CHECK FAIL u_f_0L03 attn.wo_a phase 106 mutant=swap rows=6 fixture_rows=6 errors=3 END edges=3063 ret_words=6 xo_checked=0 fault=0

@@ -1,0 +1,119 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/root",
+  "schedule": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/sched/col_h9_l4_lp_asb_nx_schedule.json",
+  "master": "col_h9",
+  "variant": "asb_nx",
+  "source_sha256": {
+    "physical/die_plan/s81/bind/models/s81_asb_models.sv": "45670499780afd5c72c5b54aab5cbfc17f5d6bb23d7acf1d20837c9b1b18235c",
+    "ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h9_l4_lp_plan_kit.sv": "598afa63580f900c7ab1461a64a4d544dfe6ddd779ed31cae324d0a4d66e4a75",
+    "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_payload536.sv": "7467c59d1cad40f3cb3e4146506dd32d7ad8dbb5f0fbd21270c05b0c790d0c0a",
+    "rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv": "b40694f6fdb6a36bd461c5c0b9c436933231ea56d060dc5fbcc7474d5534e3cf",
+    "rtl/common/landed_parent/ot_pl_seam.sv": "cd3e085f3269b200b7726dbc9dbc4c2b72a835de03050ec7f81cfbc2833b3dd4",
+    "rtl/common/landed_parent/ot_pl_land.sv": "54d441035b81fce4555ea75a45ff4ef495776c3deb171b96c52760f6a2f4a2e0",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv": "17eb061c1ad0b08315ce629c2df8c8bcf960567a1cb80be79dd80b661413f236",
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "57f568bf0cde9d0dfcf8ce9c2ffb18818471fd7a6e5ee7a30b806fcb03f905ea",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv": "1312d4134029df6d419bdd45757ee17dca41eca738a7bb20199fcb09b9ff4e26",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_536.sv": "e3584dd29cf76543149415f65808a8525e9cf19e1858c2a5d56ad5a2e45185fc",
+    "rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv": "df18dbcd870f952acb0f4fa4a3f77fb51641b283ff3879943e2601d35ab8963c",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv": "357ffbcd9ecf0e9f67ab6c1901d18e75dbc5d6e7c35a5d69529134327d118f4f",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_266ew.sv": "23300ab7868673cca1ace623995db83a3f83961005efda3164f5058d05da5cee",
+    "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_S.sv": "1b70fec0ddb421efcad47164657ce726d6740a21b4608174a41b0444e5cb7d57",
+    "rtl/dsrom_sys/s81_fill2/gen19b/dsfd_qbank_N.sv": "a16f419740eb01a4eb9650fe6ba21cf970a681b792d0b677fe589335e0e87295",
+    "rtl/dsrom_sys/s81_static_net/gen/dsfd_rstg.sv": "ada4232d19db40c1b47248d40e7bc9bac814e8d9a5631933bcf4b671a869ef12",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv": "6e922cfe663df02ff19aa121aa97dfd4d95c93e37ed38e5b21cfe1d7df5e24de",
+    "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb_split.sv": "83c48c7224ae862699c5132750bc398ef660a517f2f48cfdfcc27ac580054999",
+    "rtl/v41die/ot_s81_cfg7_seq_bfp.sv": "6e36b1e26fe71717374dcd09edcefce18d8758ca1b4b19a0a0f79b51b60a4a7c",
+    "rtl/v41die/ot_s81_cfg7_seq.sv": "9acc1f62ca6e800988a420a3fd1335c7b3f65c756831d35d5ae168687a18d714",
+    "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "f9606abe8f228ffbdf8ad3be5380abab6dbb9bac9bdc31af6b76abf99e502e2e",
+    "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfu.sv": "7af10d34479d2cbb56a4baf3479bad7cc30f27e06e520cc16f2418e66d11443f",
+    "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_NNfd.sv": "4e85c913cc19eac3d9a88c766b4c4aaadbd8a1dbd159ec6ead71353bfe5ef85d",
+    "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfu.sv": "699976528bd30ae44b123ae180e392d4eb19bfaf0ae8c5fc8d4137845d88d94e",
+    "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLfd.sv": "1efb43d0d9d2b3e532a9e599b3500c11a0f1fdeca88ee8490bdbce67aa13adc9",
+    "rtl/dsrom_sys/s81_static_net/gen/dsfd_node_LLd.sv": "0c1238dc3f1938dae8fa2ed50f4df5e98c4202f7f78cc513e413761dc396bef9",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "54c30803704601943e827a37263584f505e7546e0c1d8c62a8834031d5e16cf4",
+    "rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col3_kit.sv": "8306e8f6693ed3ddffc2b52ac93f0d18720272a8954a3a65fe2e214691b13727",
+    "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv": "44e30c7a2c33a725b2f15ff85f23d2916cf35e3146b0de5db5ed07fb188a4fbd",
+    "physical/die_plan/s81/bind/frame_asbuilt.json": "e4013e2d4bd5d7525c3a61f515d7c8a1452b34a80fbe81b6868d996b3ea58332",
+    "ext/srv/opentallas-scratch2/claude/type-safe-4/s81p3/romq_rtl/col_h9_l4_lp_kit_vg_romq_split.hard_params.json": "585092dcb09a4ad89dc8de0af4897c152a973e7aa8e579809a17fa282db5923c",
+    "ext/srv/opentallas-scratch2/claude/type-safe-4/s81p3/romq_rtl/col_h10_l4_lp_kit_vg_romq_split.hard_params.json": "b37b013795f02a1470e9f31663bb13062ea995ff6bcf32dc91379a0f258f3be0",
+    "physical/die_plan/s81/bind/inputs/die_b178.v": "c9887ce000636793af504dae035b32a2c0f0bba94adb23103a623199494c068d",
+    "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_schedule.json": "565b0bf8b0839cb418cbdd85536d97d504cdd1b230d36a552ef949577d306e7f",
+    "rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h9_l4_lp_plan_map.json": "ed3ec7d8b9a813227b702c415511b1d9f23bcfcd52a363920f551f2b46b11c48",
+    "tools/s81_dv/frame_schedule_asb.py": "f2ac960c143e63a6985699df87c9710bc0a5503ec2dc1f624488d2ad4e38b3da",
+    "physical/die_plan/s81/die_plan.json": "1e6c8da316b8e914d529e120ddc2faa11748f4bd1b8d133097ea9cf706120d0f"
+  },
+  "overlay_scope": "BF INSTANCE arguments only",
+  "overlay_instances": 12,
+  "cfg_image_instances": 140,
+  "cfg_module_census": {
+    "col_h9_l4_lp_r0": 35,
+    "col_h9_l4_lp_r1": 35,
+    "col_h9_l4_lp_r2": 35,
+    "col_h9_l4_lp_r0_nx": 35
+  },
+  "clock_ps": 833,
+  "production_enabled": false,
+  "hard_cfg_parameters": {
+    "ot_s81_cfg7_seq": {
+      "LAYOUT": "1",
+      "PINREG": "1",
+      "PQ": "1"
+    },
+    "ot_s81_cfg7_seq_bfp": {
+      "LAYOUT": "1",
+      "PINREG": "1"
+    }
+  },
+  "idle_q_assumption": "Q leaf outputs stubbed to zero; BF-only active return composition",
+  "native_family_hold": true,
+  "payload_skew_edges": 4,
+  "xo_forwarding_qualification": "NOT_APPLICABLE_NO_XO_PORT",
+  "selected_defines": [
+    "DSFD_PQ_STATIC_X2",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192",
+    "S81CTRL_NATIVE32",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2",
+    "OT_S81SL_KV_TRANSPORT",
+    "OT_SVC_ALLQ",
+    "SU_SMU_T",
+    "OT_ATTN_HCORE",
+    "OT_S81ENG_RR_N32",
+    "OT_S81C_HCORE_CTLA",
+    "OT_S81C_HCORE_RST_TIMED",
+    "S81_HOSTB_LAND_OBS",
+    "OT_S81_SH_SRAM",
+    "OT_S81_SH_RSZ",
+    "OT_S81_SH_P192",
+    "OT_S81_SH_APIPE9",
+    "OT_S81_SH_APIPE10"
+  ],
+  "defines_manifest": "physical/die_plan/s81/bind/frame_asbuilt.json",
+  "plan_kit": "ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h9_l4_lp_plan_kit.sv",
+  "plan_kit_sha256": "598afa63580f900c7ab1461a64a4d544dfe6ddd779ed31cae324d0a4d66e4a75",
+  "quiescent_q_modules": [
+    "ot_v41_rom_elem_q_qxpq_w10",
+    "ot_v41_rom_elem_q_qxpq_w10_gb_split"
+  ],
+  "bound_plan": {
+    "plan": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/root/physical/die_plan/s81/plan_h2_2249.json",
+    "plan_sha256": "0cedba41a5bd19fcc81707c4bf02e63464d7feb0a88732985f901cef19a2b4ca",
+    "seam_depths": {
+      "u_s01": 11,
+      "u_s10": 2,
+      "u_s12": 6,
+      "u_s21": 2
+    },
+    "seam_extra_stages": {
+      "u_s01": 9,
+      "u_s12": 4
+    },
+    "station_cell": "tools/die_plan/bind.py",
+    "station_cell_sha256": "1439e87bfa989d5651ecdbf5078f96ff22864f09b2bd01fe6d7118ee5736e080"
+  }
+}

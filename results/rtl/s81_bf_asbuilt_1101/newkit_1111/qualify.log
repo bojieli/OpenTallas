@@ -1,0 +1,32 @@
+col_h9_asb_x|E2|bseg1024 pv {'e13e.r': [360], 'e13w.r': [360], 'e4e.r': [324], 'e4w.r': [324], 'e8e.r': [345], 'e8w.r': [345]} corr {} ret [423, 426, 444, 446, 452, 455] ['attn.wo_a', 'ffn.router']
+col_h9_asb_nx|E2|bseg1024 pv {'e13e.r': [360], 'e13w.r': [360], 'e4e.r': [324], 'e4w.r': [324], 'e8e.r': [345], 'e8w.r': [345]} corr {} ret [423, 426, 444, 446, 452, 455] ['attn.wo_a', 'ffn.router']
+col_h10_asb_x|E2|bseg1024 pv {'e10e.r': [348], 'e10w.r': [348], 'e1e.r': [321], 'e1w.r': [321], 'e5e.r': [339], 'e5w.r': [339]} corr {} ret [421, 424, 437, 442, 445, 449] ['attn.wo_a', 'ffn.router']
+== NEW root
+ROOT /srv/opentallas-scratch2/claude/s81-bfasb-1111/root
+QUALIFY col_h10_asb_x|E2|bseg1024 measured_bf_active_idle_q
+  MEAS_FOR attn.wo_a measured_bf_active_idle_q
+  MEAS_FOR ffn.router measured_bf_active_idle_q
+  MEAS_FOR attn.cmp.wk None
+QUALIFY col_h9_asb_nx|E2|bseg1024 measured_bf_active_idle_q
+  MEAS_FOR attn.wo_a measured_bf_active_idle_q
+  MEAS_FOR ffn.router measured_bf_active_idle_q
+  MEAS_FOR attn.cmp.wk None
+QUALIFY col_h9_asb_x|E2|bseg1024 measured_bf_active_idle_q
+  MEAS_FOR attn.wo_a measured_bf_active_idle_q
+  MEAS_FOR ffn.router measured_bf_active_idle_q
+  MEAS_FOR attn.cmp.wk None
+== OLD TS5 root (TOK-VERIFY-1 a2/froot)
+ROOT /srv/opentallas-scratch2/claude/tok-verify-1/a2/froot
+REFUSED col_h10_asb_x|E2|bseg1024 ValueError as-built BF measurement source changed: ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h10_l4_lp_plan_kit.sv
+REFUSED col_h9_asb_nx|E2|bseg1024 ValueError as-built BF measurement source changed: ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h9_l4_lp_plan_kit.sv
+REFUSED col_h9_asb_x|E2|bseg1024 ValueError as-built BF measurement source changed: ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h9_l4_lp_plan_kit.sv
+== OLD root with old kit at the rtl path (own root_old)
+ROOT /srv/opentallas-scratch2/claude/s81-bfasb-1111/root_old
+REFUSED col_h10_asb_x|E2|bseg1024 ValueError as-built BF measurement source changed: ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h10_l4_lp_plan_kit.sv
+REFUSED col_h9_asb_nx|E2|bseg1024 ValueError as-built BF measurement source changed: ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h9_l4_lp_plan_kit.sv
+REFUSED col_h9_asb_x|E2|bseg1024 ValueError as-built BF measurement source changed: ext/srv/opentallas-scratch2/claude/tok-verify-1/b3/kits/col_h9_l4_lp_plan_kit.sv
+== TOK-VERIFY-1 b3/froot as is (rtl plan path = stale base kit)
+ROOT /srv/opentallas-scratch2/claude/tok-verify-1/b3/froot
+REFUSED col_h10_asb_x|E2|bseg1024 ValueError as-built BF measurement source changed: rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h10_l4_lp_plan_kit.sv
+REFUSED col_h9_asb_nx|E2|bseg1024 ValueError as-built BF measurement source changed: rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h9_l4_lp_plan_kit.sv
+REFUSED col_h9_asb_x|E2|bseg1024 ValueError as-built BF measurement source changed: rtl/dsrom_sys/s81_dv/frame_lp/plan/col_h9_l4_lp_plan_kit.sv

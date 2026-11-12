@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "scope": "BF-active as-built frame return composition; Q outputs held quiescent",
+  "clock_ps": 833,
+  "static_replay": true,
+  "controls_caught": true,
+  "trace_lockstep": true,
+  "native_family_hold": true,
+  "payload_skew_edges": 4,
+  "xo_forwarding_qualification": "NOT_APPLICABLE_NO_XO_PORT",
+  "tested_shapes": {
+    "full": {
+      "op": "attn.wo_a",
+      "nrows": 6,
+      "seg": 0,
+      "nseg": 4,
+      "field_phase": 106,
+      "die_frame": "u_f_0L03"
+    },
+    "tail": {
+      "op": "attn.wo_a",
+      "nrows": 5,
+      "seg": 3,
+      "nseg": 4,
+      "field_phase": 125,
+      "die_frame": "u_f_0L03"
+    },
+    "router": {
+      "op": "ffn.router",
+      "nrows": 1,
+      "seg": 4,
+      "nseg": 5,
+      "field_phase": 130,
+      "die_frame": "u_f_0L03"
+    }
+  },
+  "cases": {
+    "full": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=6 xo_checked=0 fault=0"
+    },
+    "tail": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=5 xo_checked=0 fault=0"
+    },
+    "router": {
+      "passed": true,
+      "errors": [],
+      "end": "END edges=3063 ret_words=1 xo_checked=0 fault=0"
+    },
+    "descriptor_fault": {
+      "passed": false,
+      "errors": [
+        "PLAN_MISMATCH predicted 6 words, got 6; first diff ((423, 1, (0, 0, 4), 1006681857, 0), (424, 1, (0, 0, 4), 1006681857, 0))"
+      ],
+      "end": "END edges=3063 ret_words=6 xo_checked=0 fault=0"
+    },
+    "payload_fault": {
+      "passed": false,
+      "errors": [
+        "MISMATCH edge 423 row 1 lo 0 k 0 got 3cae47cc/0 want 3c00bf01/0",
+        "MISMATCH edge 426 row 0 lo 0 k 0 got 3c00bf01/0 want 3cae47cc/0",
+        "PLAN_MISMATCH predicted 6 words, got 6; first diff ((423, 1, (0, 0, 4), 1006681857, 0), (423, 1, (0, 0, 4), 1018054604, 0))"
+      ],
+      "end": "END edges=3063 ret_words=6 xo_checked=0 fault=0"
+    }
+  },
+  "production_enabled": false,
+  "added_cycles": 0
+}

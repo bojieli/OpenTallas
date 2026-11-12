@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "bench": "tools/s81_dv/bf_asbuilt_1101/tb_native_family.sv",
+  "dut": "ot_s81sl_xs4_ctl (rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv)",
+  "clock_ps": 833,
+  "hold_samples": 96,
+  "pulse_family_fault_caught": true,
+  "pulse_control": "NATIVE_FAMILY_FAIL tag0 family1 actual0 valid000000000000000000 fault0",
+  "sources": {
+    "/srv/opentallas-scratch2/claude/s81-bfasb-1111/root/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv": "2710712dd9d163b93f222e09db23ae89fb675e25454d2fc45981d149d97aa75c",
+    "/srv/opentallas-scratch2/claude/s81-bfasb-1111/root/rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "/srv/opentallas-scratch2/claude/s81-bfasb-1111/code/tools/s81_dv/bf_asbuilt_1101/tb_native_family.sv": "486aea348c921b6623e0552b6668f358308ee7a738bdbe9d7fb7c571d040f74f",
+    "tb_hold.sv": "486aea348c921b6623e0552b6668f358308ee7a738bdbe9d7fb7c571d040f74f",
+    "tb_pulse.sv": "ef717f274e8135c175302cca47e30128a20c1621e8e6faa92a1241da2770214b"
+  }
+}

@@ -1,0 +1,487 @@
+{
+ "schema": "opentallas.s81.bf_bench_leaf_latency.v1",
+ "bench": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h9_asb_nx",
+ "schedule": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/sched/col_h9_l4_lp_asb_nx_schedule.json",
+ "master": "col_h9",
+ "variant": "asb_nx",
+ "bench_seam_depths": {
+  "u_s01": 2,
+  "u_s10": 2,
+  "u_s12": 2,
+  "u_s21": 2
+ },
+ "schedule_seam_depths": {
+  "u_s01": 11,
+  "u_s10": 2,
+  "u_s12": 6,
+  "u_s21": 2
+ },
+ "leaves": [
+  {
+   "leaf": "e0.r0",
+   "kind": "q",
+   "schedule": 105,
+   "bench": 96,
+   "path": [
+    "n0",
+    "n1",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e0.r1",
+   "kind": "q",
+   "schedule": 106,
+   "bench": 97,
+   "path": [
+    "n0",
+    "n1",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e1.r0",
+   "kind": "q",
+   "schedule": 102,
+   "bench": 93,
+   "path": [
+    "n2",
+    "n1",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e1.r1",
+   "kind": "q",
+   "schedule": 103,
+   "bench": 94,
+   "path": [
+    "n2",
+    "n1",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e10.r0",
+   "kind": "q",
+   "schedule": 107,
+   "bench": 103,
+   "path": [
+    "n20",
+    "n21",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e10.r1",
+   "kind": "q",
+   "schedule": 108,
+   "bench": 104,
+   "path": [
+    "n20",
+    "n21",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e11.r0",
+   "kind": "q",
+   "schedule": 104,
+   "bench": 100,
+   "path": [
+    "n22",
+    "n21",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e11.r1",
+   "kind": "q",
+   "schedule": 105,
+   "bench": 101,
+   "path": [
+    "n22",
+    "n21",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e12.r0",
+   "kind": "q",
+   "schedule": 97,
+   "bench": 97,
+   "path": [
+    "n24",
+    "n25",
+    "n27",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e12.r1",
+   "kind": "q",
+   "schedule": 98,
+   "bench": 98,
+   "path": [
+    "n24",
+    "n25",
+    "n27",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e13e.r",
+   "kind": "bf",
+   "schedule": 92,
+   "bench": 92,
+   "path": [
+    "n26",
+    "n25",
+    "n27",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e13w.r",
+   "kind": "bf",
+   "schedule": 95,
+   "bench": 95,
+   "path": [
+    "n26",
+    "n25",
+    "n27",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e14.r0",
+   "kind": "q",
+   "schedule": 80,
+   "bench": 80,
+   "path": [
+    "n28",
+    "n27",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e14.r1",
+   "kind": "q",
+   "schedule": 81,
+   "bench": 81,
+   "path": [
+    "n28",
+    "n27",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e2.r0",
+   "kind": "q",
+   "schedule": 105,
+   "bench": 96,
+   "path": [
+    "n4",
+    "n5",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e2.r1",
+   "kind": "q",
+   "schedule": 106,
+   "bench": 97,
+   "path": [
+    "n4",
+    "n5",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e3.r0",
+   "kind": "q",
+   "schedule": 102,
+   "bench": 93,
+   "path": [
+    "n6",
+    "n5",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e3.r1",
+   "kind": "q",
+   "schedule": 103,
+   "bench": 94,
+   "path": [
+    "n6",
+    "n5",
+    "n3",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e4e.r",
+   "kind": "bf",
+   "schedule": 99,
+   "bench": 90,
+   "path": [
+    "n8",
+    "n9",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e4w.r",
+   "kind": "bf",
+   "schedule": 102,
+   "bench": 93,
+   "path": [
+    "n8",
+    "n9",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e5.r0",
+   "kind": "q",
+   "schedule": 109,
+   "bench": 100,
+   "path": [
+    "n10",
+    "n9",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e5.r1",
+   "kind": "q",
+   "schedule": 110,
+   "bench": 101,
+   "path": [
+    "n10",
+    "n9",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e6.r0",
+   "kind": "q",
+   "schedule": 105,
+   "bench": 96,
+   "path": [
+    "n12",
+    "n13",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e6.r1",
+   "kind": "q",
+   "schedule": 106,
+   "bench": 97,
+   "path": [
+    "n12",
+    "n13",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e7.r0",
+   "kind": "q",
+   "schedule": 108,
+   "bench": 99,
+   "path": [
+    "n14",
+    "n13",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e7.r1",
+   "kind": "q",
+   "schedule": 109,
+   "bench": 100,
+   "path": [
+    "n14",
+    "n13",
+    "n11",
+    "n7",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e8e.r",
+   "kind": "bf",
+   "schedule": 99,
+   "bench": 95,
+   "path": [
+    "n16",
+    "n17",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e8w.r",
+   "kind": "bf",
+   "schedule": 101,
+   "bench": 97,
+   "path": [
+    "n16",
+    "n17",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e9.r0",
+   "kind": "q",
+   "schedule": 100,
+   "bench": 96,
+   "path": [
+    "n18",
+    "n17",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  },
+  {
+   "leaf": "e9.r1",
+   "kind": "q",
+   "schedule": 101,
+   "bench": 97,
+   "path": [
+    "n18",
+    "n17",
+    "n19",
+    "n23",
+    "n15"
+   ]
+  }
+ ],
+ "leaves_checked": 30,
+ "run_leaves": [
+  {
+   "record": "col_h9_asb_nx|E2|bseg1024",
+   "file": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h9_asb_nx/measure.json",
+   "leaf": "e13e.r",
+   "run": 92,
+   "schedule": 92
+  },
+  {
+   "record": "col_h9_asb_nx|E2|bseg1024",
+   "file": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h9_asb_nx/measure.json",
+   "leaf": "e13w.r",
+   "run": 95,
+   "schedule": 95
+  },
+  {
+   "record": "col_h9_asb_nx|E2|bseg1024",
+   "file": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h9_asb_nx/measure.json",
+   "leaf": "e4e.r",
+   "run": 90,
+   "schedule": 99
+  },
+  {
+   "record": "col_h9_asb_nx|E2|bseg1024",
+   "file": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h9_asb_nx/measure.json",
+   "leaf": "e4w.r",
+   "run": 93,
+   "schedule": 102
+  },
+  {
+   "record": "col_h9_asb_nx|E2|bseg1024",
+   "file": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h9_asb_nx/measure.json",
+   "leaf": "e8e.r",
+   "run": 95,
+   "schedule": 99
+  },
+  {
+   "record": "col_h9_asb_nx|E2|bseg1024",
+   "file": "/srv/opentallas-scratch2/claude/s81-bfasb-1111/runs/col_h9_asb_nx/measure.json",
+   "leaf": "e8w.r",
+   "run": 97,
+   "schedule": 101
+  }
+ ],
+ "verdict": "FAIL",
+ "fails": [
+  "seam u_s01: bench 2 != schedule bound plan 11",
+  "seam u_s12: bench 2 != schedule bound plan 6",
+  "leaf e0.r0: bench return 96 != schedule leaf_path 105",
+  "leaf e0.r1: bench return 97 != schedule leaf_path 106",
+  "leaf e1.r0: bench return 93 != schedule leaf_path 102",
+  "leaf e1.r1: bench return 94 != schedule leaf_path 103",
+  "leaf e10.r0: bench return 103 != schedule leaf_path 107",
+  "leaf e10.r1: bench return 104 != schedule leaf_path 108",
+  "leaf e11.r0: bench return 100 != schedule leaf_path 104",
+  "leaf e11.r1: bench return 101 != schedule leaf_path 105",
+  "leaf e2.r0: bench return 96 != schedule leaf_path 105",
+  "leaf e2.r1: bench return 97 != schedule leaf_path 106",
+  "leaf e3.r0: bench return 93 != schedule leaf_path 102",
+  "leaf e3.r1: bench return 94 != schedule leaf_path 103",
+  "leaf e4e.r: bench return 90 != schedule leaf_path 99",
+  "leaf e4w.r: bench return 93 != schedule leaf_path 102",
+  "leaf e5.r0: bench return 100 != schedule leaf_path 109",
+  "leaf e5.r1: bench return 101 != schedule leaf_path 110",
+  "leaf e6.r0: bench return 96 != schedule leaf_path 105",
+  "leaf e6.r1: bench return 97 != schedule leaf_path 106",
+  "leaf e7.r0: bench return 99 != schedule leaf_path 108",
+  "leaf e7.r1: bench return 100 != schedule leaf_path 109",
+  "leaf e8e.r: bench return 95 != schedule leaf_path 99",
+  "leaf e8w.r: bench return 97 != schedule leaf_path 101",
+  "leaf e9.r0: bench return 96 != schedule leaf_path 100",
+  "leaf e9.r1: bench return 97 != schedule leaf_path 101",
+  "run col_h9_asb_nx|E2|bseg1024 leaf e4e.r: measured return 90 != schedule leaf_path 99",
+  "run col_h9_asb_nx|E2|bseg1024 leaf e4w.r: measured return 93 != schedule leaf_path 102",
+  "run col_h9_asb_nx|E2|bseg1024 leaf e8e.r: measured return 95 != schedule leaf_path 99",
+  "run col_h9_asb_nx|E2|bseg1024 leaf e8w.r: measured return 97 != schedule leaf_path 101"
+ ]
+}
