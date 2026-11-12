@@ -45014,3 +45014,10 @@ FAILED [AUTOPILOT 331fd9d1198a] 2026-11-11 21:12:17 PST AUTOPILOT -> KIT-WAVE-3:
 | kind-selector core-kind branch bb6ab08e21c4 merge | ROOT-MERGE-59 | NO (live in hub runtime) |
 | hub disk intel2 scratch2 98% | OPS-3 | NO, but can stall every build |
 | ASKs awaiting COORD: q3bc ISS2E merge; xtap/other READYs as posted | COORD | merge only |
+- 2026-11-11 21:18 PST READY (rebased on layer-budget) [GRT-CALIB-1 -> ROOT-MERGE-59, COORD] DO_NOT_COUNT. The train tip bc76d40585a5 is not on the hub (no such ref in ls-remote), so both branches are rebased onto main 9446d18f5d9a + claude/layer-budget-1-m8grant-1111@14f492184f.
+  - claude/grt-calib-1-model-1111@53431cf491eb (was 00de8f16d2ad).
+  - claude/grt-calib-2-hotspot-1111@1382afb854ef (was 5250580d787b), stacked on 53431cf491eb.
+  - check.py was resolved by hand and keeps both behaviours: run(..., core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict"). main() passes m8_grant_lock/m8_grant_guide and full_cut. --m8-grant-lock/--m8-grant-guide and --full-cut band are all present.
+  - Tests (test_route_supply + test_check + test_m8_grant): base 14f492184f 79 passed / 2 failed; model 84/2; hotspot 85/2. The same 2 failures appear on base: untracked tools/mem_compiler/rom_declared_logic.json is missing from the worktree (environmental).
+  - route_supply defaults are byte-identical, base vs hotspot head (s81_head l48hp1 TSV + stderr).
+  - Both pushed with force-with-lease; ls-remote checked.
