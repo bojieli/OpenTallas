@@ -1,0 +1,8 @@
+{
+ "name": "g_gear",
+ "why": "BUS-GEAR-1 S81 x feed 2:1 (COORD 11-12 02:5x, OWNER adopted): 72 x_/xo_ lanes 1104 -> 556 on ports, endpoint type buses and ft slots (FF sites follow the respaced pins); same transformation as gear_delta.py claude/bus-gear-1-1112@f39a5c4f69, fail-closed vs its delta; latency +1 word edge not written (ARCH-RTL-2 landing K/E)",
+ "script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/gear/apply_xgear_1112.py",
+ "argv": ["{in}", "{out}", "{report}", "--delta", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/gear/s81_gear_delta.json"],
+ "type_keys": ["buses", "ft_slots"],
+ "top_keys": ["ports", "lanes"]
+}
