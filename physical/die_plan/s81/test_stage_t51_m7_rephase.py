@@ -82,7 +82,7 @@ def _prof():
     roots = {"ot_s81_station_t51_native_e": {"ports": {"clk": {}, "clk_t40": {}}},
              "ot_s81_station_t51_native_w": {"ports": {"clk_t1": {}}}}
     prof = {"source_constraint_sha256": "x", "children": {
-        "ot_s81_station_t51_native_e": {"tap_window_port_ps": {"clk": 11.0}, "roots": 1},
+        "ot_s81_station_t51_native_e": {"tap_window_port_ps": {"clk": 11.0}, "roots": 1, "lint": "PASS"},
         "ot_s81_station_t51_native_w": {"tap_window_port_ps": {"clk_t1": 33.0}, "roots": 1}}}
     return prof, roots
 
@@ -92,8 +92,10 @@ def test_profile_sync_adds_only_missing_declared_roots_and_contract_passes():
     doc, rec = st.sync_profile(prof, roots, {"e": ("kE", {"clk": 11.0, "clk_t40": 25.0, "zz": 9.0})})
     e = doc["children"]["ot_s81_station_t51_native_e"]
     assert e["tap_window_port_ps"] == {"clk": 11.0, "clk_t40": 25.0} and e["roots"] == 2
+    assert e["lint_pending"] == ["clk_t40"] and "1 roots only; not re-run" in e["lint"]
     assert rec["e"]["added"] == {"clk_t40": {"ps": 25.0, "source": "kE:tap_window_port_ps[clk_t40]"}}
     assert doc["children"]["ot_s81_station_t51_native_w"] == prof["children"]["ot_s81_station_t51_native_w"]
+    assert prof["children"]["ot_s81_station_t51_native_e"]["lint"] == "PASS"
     assert prof["children"]["ot_s81_station_t51_native_e"]["tap_window_port_ps"] == {"clk": 11.0}   # input untouched
     mr = {"roots": [{"base": k, "pins": [k]} for k in roots["ot_s81_station_t51_native_e"]["ports"]]}
     assert G.root_window_contract({"tap_window_port_ps": e["tap_window_port_ps"]}, mr) == {"clk": 11.0, "clk_t40": 25.0}

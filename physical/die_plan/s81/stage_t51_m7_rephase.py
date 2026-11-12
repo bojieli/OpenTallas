@@ -135,6 +135,15 @@ def sync_profile(prof, roots_doc, sources):
         old_n = ch.get("roots")
         if "roots" in ch:
             ch["roots"] = len(declared)
+        if added:
+            # profile_check.py's inputs (--source-sdc / --abi abi_map.json / --source-sync) are not in the repo, so the
+            # lint is not re-run: the old verdict is scoped to the roots it saw and the added ones are lint_pending
+            for f in ("lint", "mutants"):
+                if f in ch:
+                    ch[f] = f"{ch[f]} [11-06 profile_check run (57f24fbed1): {old_n} roots only; not re-run]"
+            ch["lint_pending"] = sorted(added)
+            ch["lint_pending_reason"] = ("window added by S81-T51-PINFIX-2 root_profile sync from " + label +
+                                         "; profile_check.py inputs (source SDC, abi_map.json, source_sync) not in repo")
         rec[side] = dict(added={k: dict(ps=v, source=f"{label}:tap_window_port_ps[{k}]") for k, v in added.items()},
                          unchanged=len(pw) - len(added), roots=[old_n, ch.get("roots")])
     return doc, rec
@@ -205,6 +214,12 @@ def stage(plan_p, repo, out, window_kits=None):
         prof = json.loads((repo / PROFILE).read_text())
         doc, rec["root_profile_sync"] = sync_profile(
             prof, roots_doc, {s: (f"{Path(k).name}/sdc_lint.json", kit_windows(k)) for s, k in window_kits.items()})
+        # reported, not synced: landed_clock_inputs of the profile vs the kit's lint context
+        for s_, k in window_kits.items():
+            kl = next(_find(json.loads((Path(k) / "sdc_lint.json").read_text()), "landed_clock_inputs"))
+            pl = doc["children"][ROOTKEY[s_]].get("landed_clock_inputs", [])
+            rec["root_profile_sync"][s_]["landed_clock_inputs_kit_minus_profile"] = sorted(set(kl) - set(pl))
+            rec["root_profile_sync"][s_]["landed_clock_inputs_profile_minus_kit"] = sorted(set(pl) - set(kl))
         (out / PROFILE).parent.mkdir(parents=True, exist_ok=True)
         (out / PROFILE).write_text(json.dumps(doc, indent=1) + "\n")
     (out / SPLIT).parent.mkdir(parents=True, exist_ok=True)
