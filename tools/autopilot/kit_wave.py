@@ -4293,6 +4293,18 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     return out
 
 
+def plan_sha_mismatch(d, pn):
+    """WAVE-POR guard (CORES-S81-1, COORD 11-12): dies.<die>.plan_sha256 is the declared sha256 of dies.<die>.plan that
+    the release-tree counter counts; a plan file that no longer has it (edited in place, or repointed without
+    updating plan_sha256) stops the die's tick instead of building on an undeclared plan.  -> reason or None"""
+    want = str((d or {}).get("plan_sha256") or "").lower()
+    got = str((pn or {}).get("plan_sha") or "").lower()
+    if not want or not got or want == got:
+        return None
+    return (f"PLAN_SHA_MISMATCH: dies.plan {d.get('plan')} has sha256 {got[:12]} but plan_sha256 declares {want[:12]}; "
+            f"update plan_sha256 with the repoint (the release-tree counter counts the declared plan)")
+
+
 def ensure_plan_view(AP, st, d):
     """The INFRA relaunch loop runs before plan_dies, on a fresh config: a launch there saw no _plan_flags, so a type
     with planned child cores got no provisional views and its kit tried the child bodies (11-04, 16 QC cb rows + the
@@ -4302,7 +4314,7 @@ def ensure_plan_view(AP, st, d):
     if "_plan_flags" in d:
         return True
     pn = plan_names(AP, st, d)
-    if pn.get("error"):
+    if pn.get("error") or plan_sha_mismatch(d, pn):
         return False
     d["_plan_sha"] = pn.get("plan_sha")
     d["_plan_flags"] = pn.get("flags") or {}
@@ -4358,6 +4370,9 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                 pn = plan_names(AP, st, d)
                 if pn.get("error"):
                     ok, why = False, f"plan of record unreadable: {pn['error'][:200]}"
+                elif plan_sha_mismatch(d, pn):
+                    ok, why = False, plan_sha_mismatch(d, pn)
+                    AP.log(f"KIT-WAVE {die}: {why}")
                 else:
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
