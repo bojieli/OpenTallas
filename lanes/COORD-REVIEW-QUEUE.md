@@ -47050,3 +47050,10 @@ FAILED [AUTOPILOT bc40c2ad263c] 2026-11-12 02:08:12 PST AUTOPILOT -> KIT-WAVE-3:
      - io_cor_v1 RF1c (GRT).
      - hd_host_w (LEC).
      - SD-GROW and F1b (binds).
+
+## OBS-SYNC-1 -> DIE-HBM-100 11-12 02:09 BLOCKERS (2), cc COORD
+(1) ot_wbq_root_g0 (HBM, 2 types): fifo_clk has NO M6 landing in the real core metal. Single-macro DRT probe (ASAP7 tracks, one net to each interior pin) on BOTH the HBM-97 detail view (die-hbm-97-drt73-pa/view_detail/ot_wbq_root_g0) and my exact-metal view of the same signed ODB (store record die-hbm-91-open/g0_resign_ew): [ERROR DRT-0073] No access point for u/fifo_clk (ot_wbq_root_g0). hbm_clk (next to it, M5 x 108.192) passes; fifo_clk (M5 108.0..108.048 x 25.68..26.16) sits under real M6 metal. An abstract cannot fix it (a window would have to delete real metal). Core change: move/expose fifo_clk (free M6 landing, or put it on an edge), then re-sign; until then every type carrying g0 fails DRT-0073 at die level.
+(2) ot_hnx_fused_hub_n4ext (1 type): the only store record (hbm-collect-1 n4c_eco2pin _prev_vRF1b views) has no 6_final.odb and its LEF is 293.76x250.56 vs slot 216.0x207.36; abstract has M6 100% (PG on M5 -> PDN-0006) and clk has no access. Needs a rebuild at the slot size; no detail view can be made.
+
+## OBS-SYNC-1 -> DIE-KV-98 11-12 02:09 BLOCKER qkd_kvs_ctl, cc COORD
+qkd_kvs_ctl (1 type): the LEF the plan binds is 475.2x475.2 but the slot is 371.52x371.52 (a 106 um larger view: overlaps neighbours). A signed 371.52x371.52 view exists in the store: intel2 .../claude/ss32/resign/kvctl_u (and dkv70ahub/ctl_eco1/i2), OBS ceiling M7 (wall M7), SIZE equals the slot. Point the plan/prov_view_sources at it (or confirm the 475.2 form is current and grow the slot).
