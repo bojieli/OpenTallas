@@ -110,7 +110,7 @@ def apply(plan, new):
 
 def verify(plan, new):
     here = Path(__file__).resolve()
-    for up in here.parents:
+    for up in [*here.parents, Path.cwd().resolve()]:     # script copy outside the repo: the composer runs with cwd = repo root
         if (up / "tools" / "die_plan" / "gen_phys.py").exists():
             sys.path.insert(0, str(up / "tools" / "die_plan"))
             break

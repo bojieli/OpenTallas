@@ -37,9 +37,13 @@ def one(t):
         return t, "error", f"{type(e).__name__}: {e}"[:160]
     if x == y:
         return t, "same", None
+    om = lambda txt: {m.group(2): float(m.group(1)) for l in txt.splitlines()
+                      for m in [re.match(r"^set_output_delay -max ([-0-9.]+) -clock vclk (.*)$", l)] if m}
+    xa, xb = om(x), om(y)
+    omd = {k: [xa.get(k), xb.get(k)] for k in sorted(set(xa) | set(xb)) if xa.get(k) != xb.get(k)}
     ch = [l[1:] for l in difflib.unified_diff(x.splitlines(), y.splitlines(), lineterm="", n=0)
           if l[:1] in "+-" and l[:3] not in ("+++", "---")]
-    return t, "diff", ch
+    return t, "diff", (ch, omd)
 
 
 if __name__ == "__main__":
@@ -52,6 +56,9 @@ if __name__ == "__main__":
                 res["errors"].append([t, v]); continue
             if k == "same":
                 res["identical"] += 1; continue
+            v, omd = v
+            if omd:
+                res.setdefault("outmax_changes", {})[t] = omd
             ok_re = ALLOWED if t in written else SIDE
             (res["intended"] if t in written else res["side_effect"]).append(t)
             if t not in written:

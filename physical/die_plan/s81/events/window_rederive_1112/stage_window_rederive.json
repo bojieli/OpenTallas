@@ -1,4 +1,8 @@
-{"name": "window_rederive", "why": "WINDOW-REDERIVE-1112: per-port windows = min(measured need + 20, 208) from DIE-PROTO-3 kitwin_auto_r7b_4cf8fb2f1479 (need > effective window only)",
- "script": "physical/die_plan/s81/events/window_rederive_1112/apply_window_rederive_1112.py",
- "argv": ["{in}", "{out}", "{report}", "--table", "<TABLE kitwin_auto_r7b_4cf8fb2f1479.json>", "--signed", "<SIGNED list>", "--name-only", "<NAME_ONLY list>", "--base-plan", "<ready7b plan.json>"],
- "type_keys": [], "top_keys": ["clock.tap_window"]}
+{
+ "name": "w_window",
+ "why": "WINDOW-REDERIVE-1112 (COORD 11-12, DIE-S81-87): per-port windows = min(measured need + 20, 208) from DIE-PROTO-3 kitwin_auto_r7b_4cf8fb2f1479 where need > effective window; signed (name-only minus ready11r launch list) excluded; need > 208 not written (region-tree balance)",
+ "script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win/apply_window_rederive_1112.py",
+ "argv": ["{in}", "{out}", "{report}", "--table", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win/kitwin_auto_r7b_4cf8fb2f1479.json", "--signed", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win/signed_excl.txt", "--name-only", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win/name_only.txt", "--base-plan", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/out/s87_ready7b/plan.json"],
+ "type_keys": [],
+ "top_keys": ["clock.tap_window"]
+}
