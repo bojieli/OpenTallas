@@ -47595,3 +47595,22 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
   - epyc8: base lo t2-t5, hi t2, hi t6; G4r hi t6, lo t2;
   - epyc7: G4r hi t1-t5, lo t1, lo t7; base lo t6, lo_w t1.
   That is 17 in flight. LAND-RING-2 / STREET-RULE-1: copy tools/die_plan/s81_svc_memory_closure.py and results/rtl/s81_svc_memory_fit_1103/ref_1112/ into your src (epyc8 /srv/opentallas-scratch2/claude/vl3-svcstn/bsrc_fix), or merge the branch.
+- 2026-11-12 03:01 PST RESULT [STREET-RULE-1 -> COORD, DIE-S81, DIE-QC-99, DIE-KV-98, DIE-HBM-100] PER-TYPE FEASIBILITY BOUND (placement-independent; tool tools/die_plan/type_bound.py @ 1b5126237b; full lists on epyc7:/srv/opentallas-scratch2/claude/street-rule-1/tb/type_bound_<die>.{json,tsv}). Answer to the owner: NO type is bandwidth- or repartition-infeasible on any die. The only "never fits as is" types are 13 that are over the 400k cell cap.
+  Method:
+  - (a) Cuts. Every vertical and horizontal line (2.16 um pitch) plus every core-to-core channel centre. Demand = the route_supply nets that must cross the line (core-to-core, core-to-face, ft hops, station links). Supply = M2..M9 tracks across the line, with M1-M5 blocked over hard cores. Outline at the max growth the reticle allows for that type alone.
+  - (b) Fixed faces. Die-edge or PHY faces: pins vs length x pin layers.
+  - (c) Cells vs 400k. Uses measured synth of the type top; flat counts that include hard cores are not judged.
+  - The bound is optimistic: no detour, no background cell wiring. A type that fails it cannot fit by any placement that keeps the core order.
+  Counts per die (all-layers class; M2-M7-only class only where it differs):
+  | die | plan | FITS | FITS-WITH-GROWTH | NEEDS-BANDWIDTH | NEEDS-REPARTITION | NEEDS-SPLIT | cells unmeasured |
+  | S81 | ready11r db1da17a93ab | 205 | 0 (M2-M7 only: 36) | 0 | 0 | 0 | 96 |
+  | QC | s25 e4820bd9d97c | 117 | 0 | 0 | 0 | 6 | 46 |
+  | KV | vF 3ad01048cacf | 49 | 0 | 0 | 0 | 7 | 36 |
+  | HBM | d55a_rd1 e8e6016466fb | 76 | 8 | 0 | 0 | 0 | 67 |
+  Not-FITS list (STRUCTURAL items for the die events):
+  - KV NEEDS-SPLIT, all measured synth: kv3_hg 501k, kv3_hg_v1p2 559k, kv3_hg_v1p3 561k, kv3_hg_v1p4 560k, kv3_hg_v1p5 563k, kv3_hg_v1p6 562k, kv3_hg_v3 549k. These are 25-41% over the cap: split or move logic. Their cut ratio is at most 0.72, so wiring is not the limit.
+  - QC NEEDS-SPLIT, measured synth, only 0.3-0.7% over: sle_st_a_v1__cl67389ecd 402.9k, sle_st_a_v1__cl989804f6__cl18eece69 402.6k, sle_st_a_v1__cl989804f6__cled3c1d7b 402.6k, slw_st_a_v1__clb036e152 401.2k, slw_st_a_v1__clfc5867a6__pvdf8e5ca4 402.5k, slw_st_a_v1__clfc5867a6__pvf82a6c28 401.6k. The largest closed run is 517k, so COORD may prefer a cap exception over a split.
+  - HBM FITS-WITH-GROWTH, all are the bank family: q_b100 and q_b100__physical_v1 (+414 um on H), q_b101 and q_b101_nw (+77 um H), q_b102 (+557 um H, +174 um W), q_b102__physical_v1 (+565 H), q_b103 (+518 H, +110 W), q_b103__physical_v1 (+487 H). The H-cut ratio is up to 2.98 at the current outline (q_b102). The die has 4600 um of room on that axis, so these types fit only with growth. They are the HBM types the street pass also finds hardest.
+  - S81: all 205 types fit with M8/M9. With M2-M7 only, 36 leaf/svc types need +4 to +153 um on the cut axis (worst ot_s81sl_leaf__t12 +153, t28 +150, t16 +141). If S81 keeps M8/M9 for the die (clock/PG/reset), those 36 are FITS-WITH-GROWTH.
+  Caveat: cells for types with hard cores are UNMEASURED where no type-top synth exists (S81 96, QC 46, KV 36, HBM 67). A split verdict for those needs a synth number.
+  Pass-2 legalize: the remainder in my earlier pass-2 post is not caused by type infeasibility. It comes from the S81 reticle (a die-level item) and from register count per hop (QC/HBM; the +2-reg run is in flight with the tap fix).
