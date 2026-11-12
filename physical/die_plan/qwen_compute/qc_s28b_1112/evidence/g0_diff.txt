@@ -1,0 +1,18 @@
+== ERR: base 265 cand 265 new 0 gone 0
+== WARN: base 366 cand 366 new 8 gone 8
+  NEW x1 [tap_sink_cap] [tapcap-count] 74 taps over cap in 38 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 107 with a sink inventory, 16 planned face/ft sinks only = lower bound)
+  NEW x1 [tap_sink_cap] [tapcap] ... 54 more taps over the cap
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t106: 1637 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t30: 1346 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t106: 1637 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t30: 1346 clock sinks > cap 1200
+  NEW x1 [xtap_latency] ... 673 more unlocked cross-tap hops (see summary)
+  NEW x1 [xtap_latency] [xtap-count] 693 unlocked hops with tap latency delta > 50 ps (worst 160 ps; 1824 hops, 1032 unknown sites, 0 latch-only); flat tap window 180 ps on every port
+  GONE x1 [tap_sink_cap] [tapcap-count] 77 taps over cap in 39 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 107 with a sink inventory, 16 planned face/ft sinks only = lower bound)
+  GONE x1 [tap_sink_cap] [tapcap] ... 57 more taps over the cap
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t113: 1458 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t19: 1357 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t113: 1458 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t19: 1357 clock sinks > cap 1200
+  GONE x1 [xtap_latency] ... 674 more unlocked cross-tap hops (see summary)
+  GONE x1 [xtap_latency] [xtap-count] 694 unlocked hops with tap latency delta > 50 ps (worst 160 ps; 1824 hops, 1032 unknown sites, 0 latch-only); flat tap window 180 ps on every port
