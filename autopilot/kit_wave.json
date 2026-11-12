@@ -29553,6 +29553,18 @@
       "ot_hgi_sfu_opsb_group__gprot",
       "--orfs-var",
       "OT_FF_CHAIN_PIN=1"
+     ],
+     "ot_q2nf_rest": [
+      "--util",
+      "0.40",
+      "--face-reset-relay",
+      "2",
+      "--face-lockup",
+      ".*",
+      "--clock-regions",
+      "/srv/opentallas-scratch2/claude/hbm-plan-1/stage/p6_relay/core_clock_regions.json",
+      "--orfs-var",
+      "OT_FF_CHAIN_PIN=1"
      ]
     },
     "args": [
@@ -30855,7 +30867,9 @@
     "ot_hbm_su_pg_lane_exp_x_core__va8815b8d3cb4",
     "ot_hbm_su_pg_lane_exp_x_core__vec6b144f732b",
     "ot_hgi_sfu_split3_ctl_rest_1c",
-    "ot_hgi_sfu_opsb_group"
+    "ot_hgi_sfu_opsb_group",
+    "ot_hbm_sm_kv_line",
+    "ot_q2nf_rest"
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave",
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -33568,6 +33582,12 @@
      "OT_GEN_M8_GRANT": "1"
     },
     "vsN2": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_hbm_sm_kv_line": {
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_q2nf_rest": {
      "OT_GEN_M8_GRANT": "1"
     }
    },
