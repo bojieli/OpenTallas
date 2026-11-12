@@ -4145,7 +4145,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
-   }
+   },
+   "kit_self_contained": "copy"
   },
   "s81": {
    "enabled": true,
@@ -5526,7 +5527,60 @@
     "serdes__t13@29",
     "serdes__t15__cla3d02796@6",
     "serdes__t16@14",
-    "serdes__t4@16"
+    "serdes__t4@16",
+    "dsdv_slice_c1x_C__t6@27",
+    "dsdv_slice_c3x_C__t1@19",
+    "dsdv_slice_iq_C__t1@25",
+    "dsdv_slice_kv512_C__t1@31",
+    "dsdv_slice_lepe_mu_C__t1@24",
+    "dsdv_slice_lepe_nh_mus_C__t1@19",
+    "ot_s81sl_leaf__t10@13",
+    "ot_s81sl_leaf__t11@22",
+    "ot_s81sl_leaf__t13@7",
+    "ot_s81sl_leaf__t14@9",
+    "ot_s81sl_leaf__t15@11",
+    "ot_s81sl_leaf__t17@18",
+    "ot_s81sl_leaf__t1@8",
+    "ot_s81sl_leaf__t21@23",
+    "ot_s81sl_leaf__t22@11",
+    "ot_s81sl_leaf__t23@5",
+    "ot_s81sl_leaf__t24__cl81374cd8@7",
+    "ot_s81sl_leaf__t25__cl431c660f@7",
+    "ot_s81sl_leaf__t26@26",
+    "ot_s81sl_leaf__t27@13",
+    "ot_s81sl_leaf__t29@15",
+    "ot_s81sl_leaf__t30@5",
+    "ot_s81sl_leaf__t32@9",
+    "ot_s81sl_leaf__t33@15",
+    "ot_s81sl_leaf__t34@5",
+    "ot_s81sl_leaf__t35@8",
+    "ot_s81sl_leaf__t36@9",
+    "ot_s81sl_leaf__t39@14",
+    "ot_s81sl_leaf__t3@12",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@11",
+    "ot_s81sl_leaf__t40__cl86ea32b3@13",
+    "ot_s81sl_leaf__t40__clf8bbdae1@19",
+    "ot_s81sl_leaf__t41@9",
+    "ot_s81sl_leaf__t43@11",
+    "ot_s81sl_leaf__t44__clf6cf8492@9",
+    "ot_s81sl_leaf__t47@9",
+    "ot_s81sl_leaf__t4@13",
+    "ot_s81sl_leaf__t50@16",
+    "ot_s81sl_leaf__t53__cl958451dd@14",
+    "ot_s81sl_leaf__t54__cl501e5681@8",
+    "ot_s81sl_leaf__t56@19",
+    "ot_s81sl_leaf__t57@10",
+    "ot_s81sl_leaf__t58@8",
+    "ot_s81sl_leaf__t61@13",
+    "ot_s81sl_leaf__t65@10",
+    "ot_s81sl_leaf__t68@8",
+    "ot_s81sl_leaf__t69@7",
+    "ot_s81sl_leaf__t70@8",
+    "ot_s81sl_leaf__t71@6",
+    "ot_s81sl_leaf__t74@14",
+    "ot_s81sl_leaf__t75@4",
+    "ot_s81sl_leaf__t8@10",
+    "serdes__t13@25"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -19898,7 +19952,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
-   }
+   },
+   "kit_self_contained": "copy"
   },
   "s81_head": {
    "enabled": true,
@@ -21036,7 +21091,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
-   }
+   },
+   "kit_self_contained": "copy"
   },
   "qwen_compute": {
    "enabled": true,
@@ -21858,7 +21914,14 @@
     "sle_st_b_v1__pvc5a85fd4@4",
     "sle_st_b_v1__pvc5a85fd4@9",
     "sle_st_b_v2__cl14c98df5@2",
-    "sle_st_b_v2__clfde1249e@3"
+    "sle_st_b_v2__clfde1249e@3",
+    "sle_ctl__cla4f6f12f@7",
+    "sle_fe_v1__cl8210183c@7",
+    "sle_hc1__cl22c1ff36@17",
+    "sle_st_b_v2__cl14c98df5@9",
+    "sle_st_b_v2__clfde1249e@10",
+    "slw_fe_v1__clfe325744__cldb4efe33@7",
+    "slw_fw_v1__clf51c11d8__clc7ddab13@20"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -29435,7 +29498,8 @@
     "slw_st_b_v1__cl6357f1cc__pvffd43fdc": null,
     "slw_st_b_v2__pva66d0f22": null,
     "slw_st_b_v2__pvc2ec5bfb": null
-   }
+   },
+   "kit_self_contained": "copy"
   },
   "hbm": {
    "enabled": true,
@@ -30871,7 +30935,12 @@
     "q_su30@5",
     "hnx_fused_lane_c@1",
     "q_b003__physical_v1@10",
-    "q_b013__physical_v1@13"
+    "q_b013__physical_v1@13",
+    "q_b012__physical_v1@12",
+    "q_b012@13",
+    "q_b013@16",
+    "q_su00__physical_v1@5",
+    "q_su20__physical_v1@5"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -44077,7 +44146,8 @@
     "q_su30__physical_v1"
    ],
    "plan_sha256": "8b4b6e3071c49dee3aa31bf8a0097a4415d617d6c56c0dde22dd70375124f540",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.hbm.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.hbm.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
+   "kit_self_contained": "copy"
   }
  },
  "place_prefer": [
