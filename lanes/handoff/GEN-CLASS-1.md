@@ -1,4 +1,4 @@
-# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~09:1x PST)
+# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~10:0x PST)
 
 ## 1 Scope
 Generator / legalize / preflight CLASS fixes. APPROVED to merge (ROOT-MERGE-60): land-override-stale-1112@cef99b3203,
@@ -15,12 +15,7 @@ schema.py (ft_hop_maxwire_um), test_ft_hop_maxwire.py (5 pass). Ignore the untra
 Commit when the suite run (below) shows only pre-existing failures.
 
 ## 3 Running jobs
-- wshim_tx proof DONE + SIGNED (STATE 08:51 posted): slew 125/124 -> 0, M6 +4.7 pt. Kit epyc2:/srv/opentallas-scratch2/
-  claude/gen-class-1/proof/wtx/hd_spn_wshim_tx (keep until HEAD-95 adopts or drops).
-- S81 slice_station__t45 GRT-only proof: client intel2 pid 950019, host epyc2, kit
-  epyc2:/srv/opentallas-scratch3/claude/gen-class-1/proof/t45/slice_station__t45, log intel2 ~/gc1log/t45_ftmw.log.
-  epyc7/epyc8 attempts were killed (exact PIDs) because of load gates.
-- Code: claude/ft-hop-m2-1112@3bf9f167d4 pushed.
+- none (t45 GRT proof stopped after the selector count; wshim_tx proof finished and signed off).
 ## 4 Watchers
 None.
 
@@ -39,6 +34,7 @@ b. t45 GRT: confirm "OT_FT_MAXWIRE: 0 ft hop nets" or count, usage table vs base
 c. Commit branch claude/ft-hop-m2-1112 (message file style, Co-Authored-By line), push hub, post READY with
    numbers (slew before/after, buffers added, M2-M5 usage base/fix, +5 point rule), tell HEAD-95 the ECO can drop.
 ## 7 Open READY/ASK
+- READY ft-hop-m2-1112@689f54a2fb (posted ~10:0x); READY tcl-puts-quote-1112@475f0c5d0e (08:14). Offered: grt_maxwire GRT183 bypass fix, S81 cland fanout class.
 FT-HOP-M2 READY pending proof. Answered COORD (07:5x): CLAND dch = cland-slew-1112b (wshim_rx needs a fresh kit at a src with it); window-floor scan posted (S81 36 ports < 10 ps in 13 types + phy__t1 per_type 0; QC/KV 0).
 ## 8 Gotchas
 - ot-run is ~/.local/bin/ot-run (not on PATH in ssh); --dir must exist on the target host.
