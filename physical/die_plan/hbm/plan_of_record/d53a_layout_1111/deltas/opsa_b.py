@@ -5,16 +5,24 @@ W face) would need a detour around g0 with +2 stations (+2 cycles).
 MX kept, bottom (toward g1) fixed; the band above g0 stays 41.04 um (1531.44-1572.48) and every station that sat in
 1495-1531 moves up into it (y 1551.96); L5096x8 S5 (1071,1344, now inside) -> (1050.0, 1250.0) under g0, S6 into the
 band.  Station counts unchanged (0 cycles), all hops <= 405 um (asserted).
-pins file (provisional, HBM-CORES-B owns the real view): x + 135 for every pin (physical x kept), core-frame N-face
+pins file (provisional, HBM-CORES-B owns the real view): x + DX for every pin (physical x kept), core-frame N-face
 pins (y >= 233.0, toward g1) y + 36.72.
+LATTICE (HBM-CORES-C 11-12, DIE-HBM-101): DX is snapped OUTWARD to a multiple of the M4/M5 pin pitch 0.048 (135.0 -> 135.024), so the
+origin x (1080 - DX = 944.976) and every core-frame M5 pin stay on the kit lattice (0.024 + 0.048 n); with DX = 135.0 (= 2812.5 pitches)
+the origin and all 2051 M5 pins were half a pitch off and gen_core_kit_hbm.py refused the kit. Absolute pin positions are unchanged.
+The widened outline is 760.32 + DX = 895.344 and the right edge stays at 1840.32.
 usage: opsa_b.py PLAN_IN PLAN_OUT CORES_DIR"""
-import json, sys, os
+import json, sys, os, math
+PITCH = 0.048
 src, dst, cores = sys.argv[1:4]
 D = json.load(open(src)); T = D['partition_types']
 OLD = 'cores/ot_hgi_sfu_opsa_group0__760.32x233.28__d44v_split.json'
-NEW = 'cores/ot_hgi_sfu_opsa_group0__895.32x270__d51opsaB.json'
-DX, DY = 135.0, 270.0 - 233.28
-G0 = (945.0, 1261.44, 945.0 + 895.32, 1261.44 + 270.0)
+DX0 = 135.0
+DX = round(math.ceil(DX0 / PITCH - 1e-9) * PITCH, 6)            # outward to the pin-pitch lattice
+DY = 270.0 - 233.28
+OX, OW = round(1080.0 - DX, 6), round(760.32 + DX, 6)
+NEW = 'cores/ot_hgi_sfu_opsa_group0__%gx270__d51opsaB.json' % OW
+G0 = (OX, 1261.44, OX + OW, 1261.44 + 270.0)
 BAND_Y = 1551.96
 pins = json.load(open(os.path.join(cores, os.path.basename(OLD))))
 out = []
@@ -40,7 +48,7 @@ for tn in ('q_b113', 'q_b113__physical_v1'):
     for h in t['hard_cores']:
         if h['module'] == 'ot_hgi_sfu_opsa_group0':
             assert h['outline_um'] == [760.32, 233.28] and h['origin_um'] == [1080.0, 1261.44], h
-            h['origin_um'] = [945.0, 1261.44]; h['outline_um'] = [895.32, 270.0]; h['pins_file'] = NEW
+            h['origin_um'] = [OX, 1261.44]; h['outline_um'] = [OW, 270.0]; h['pins_file'] = NEW
     # other cores must not overlap the new g0
     for h in t['hard_cores']:
         if h['module'] == 'ot_hgi_sfu_opsa_group0': continue
