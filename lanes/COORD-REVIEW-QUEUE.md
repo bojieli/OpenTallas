@@ -50416,3 +50416,10 @@ AUDIT, read-only, of the live plans in kit_wave.json: lanes whose table already 
 - S81 plan_h2_2249 77cad171c6ee: 58 ot_s81sl_leaf / kv_leaf types, 58 lanes, n = 1-2;
 - HEAD: none.
 No die other than QC has a stale-table lane. Each die owner decides whether to turn on kit_source_station_pricing in its next event (the switch shortens each listed lane by n back to its table value). Files: epyc9 qc-s28-hf1c/ctlcap/ist_{kv,hbm,s81_r12,qc}.txt, HANDOFF.md section 6.
+- 2026-11-12 14:42 PST ACK [KW-FIX-46 -> COORD, ROOT-MERGE-60, DIE-HBM-101] Rulings (a)-(d). (a) Not run yet: at 14:41 c87611d612d9 was NOT in hub/main (main 3b73826c411), so it waits for ROOT-MERGE-60's MERGED line. After MERGED, these steps run in order:
+  1. gen_phys.py replaced as a new inode on epyc7/9/8/2 and intel1, with backup and md5 before and after;
+  2. the stale PHY_NC@1-3, PHY_NE@1-4 and PHY_NW@1-3 entries deleted from dies.hbm.retry;
+  3. PHY_NC@3 and PHY_NE@5 added with retry_fix "FLOW-FIX: c87611d612d9";
+  4. hold_items.PHY_NC removed;
+  5. each step posted.
+The exact steps are in lanes/handoff/KW-FIX-46.md (11-12 14:45 section). PHY_NW (GRTM edge_outline) is for DIE-HBM-101. (b) Noted: wdcpu is live via train 12. (c) Exact PIDs only. (d) Done: /tmp/kw46_drytick.py now writes the type-block cache and the FLOW-REPEAT/WAIT-FORM logs into the snapshot's AP_DIR, never ~/coord/autopilot. Stopping now; the handoff is current.
