@@ -3,12 +3,15 @@
 default : the pre-R3 vp (no lane stations).
 quad    : S81-LEAF-CYC (OWNER/COORD 11-11 07:45) -- one shared hi and one shared ho station per 4-lane quad on every
           non-KV ot_s81sl_leaf (CS_HI_D 1 GS 1, CS_HO_D 1 GS 1, G 4); hc_post write-back + 2 edges inside the vp.
+quad2   : S81-LEAF-CYC 11-11 (COORD: vn->quad hop <= 405 um per segment) -- two shared hi and two shared ho stations
+          per 4-lane quad (CS_HI_D 2 GS 2, CS_HO_D 2 GS 2, G 4): stage sites vn->quad midpoint + quad; + 4 edges.
 kv_lane : the KV leaves t1/t3/t4/t5 (ot_s81sl_slice_w3 LF_CS_HI_D/HO_D 1, GS 0): per-lane stations, same + 2 edges.
 A gate proof is measured for ONE form (its 'parameters'); the intake gives each bound vp the proof of its own form."""
 DEFAULT = dict(ML=7, AL=6, HPL=33, CS_HI_D=0, CS_HI_GS=0, CS_HO_D=0, CS_HO_GS=0, CS_H_G=4, HQX=0)
 FORMS = {
     'default': DEFAULT,
     'quad': dict(DEFAULT, CS_HI_D=1, CS_HI_GS=1, CS_HO_D=1, CS_HO_GS=1),
+    'quad2': dict(DEFAULT, CS_HI_D=2, CS_HI_GS=2, CS_HO_D=2, CS_HO_GS=2),
     'kv_lane': dict(DEFAULT, CS_HI_D=1, CS_HO_D=1),
 }
 
