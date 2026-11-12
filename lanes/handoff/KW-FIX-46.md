@@ -1,4 +1,4 @@
-# KW-FIX-46 lane handoff (refreshed 2026-11-12 07:47 PST)
+# KW-FIX-46 lane handoff (refreshed 2026-11-12 07:36 PST)
 
 ## 1 Scope
 Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission, autoclean/reaper keep lists. Fix FAIL classes once per class, hold and retry rows in ~/coord/autopilot/kit_wave.json. The sidecar-coverage preflight now belongs to GEN-CLASS-1 (COORD 11-12), not this lane.
@@ -45,3 +45,11 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - epyc4 ssh resets intermittently; retry.
 - KV bind_elab class (06:50, 7 rows on intel1, during the FLEET-2 pull): batch retry posted 07:45. Watch `grep "kv3_hub_C\|kv3_phy\|kv3_sys_c" ~/coord/autopilot/log.txt | tail`.
 - Test comparison: background on intel2. When it ends, read /tmp/kw46_all_tests.log and then post READY (step 6.1).
+- APPROVED (COORD): 3ed2a56b106 and f4224a7f4900 go to ROOT-MERGE-60 in the train after reach-fix. No more READY needed.
+- APPROVED, GATED: deploy main's tools/autopilot to the hub runtime ONLY after the current 7-branch train AND both of my branches have landed on main. Procedure:
+  (a) record the main sha;
+  (b) cp -a /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot to autopilot.bak-kw46-predeploy-<date>;
+  (c) deploy main's tools/autopilot at that sha;
+  (d) run ONE dry tick (AP.DRY / no launches) and diff its decisions (launch/retry/hold/restage/FAIL classes) against the last live tick in ~/coord/autopilot/log.txt; post the diff;
+  (e) only then allow real ticks; on any NEW FAIL class, roll back from the .bak.
+- SRC-INCOMPLETE class copies (epyc8:~/kw46_srccopy.log): small trees done and verified. bsrc4_r12ng->intel1, bsrc4_main->epyc9 and bsrc4_main->intel1 are in progress. Then run the manifest (/tmp/kw46_manifest.sh on epyc8/epyc9/intel1, compare), check the next tick for SRC-INCOMPLETE on intel1/epyc9 s81, confirm epyc8 S81 waiters restage to them, and post with `date`.
