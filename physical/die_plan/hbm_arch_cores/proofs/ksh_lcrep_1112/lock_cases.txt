@@ -1,0 +1,12 @@
+lock_cases.txt: system lock-step cases (run_lock_lcrep.sh, GN=1600, epyc8 ksh_lcrep_tb)
+15: LPFRV) D=("${PFR[@]}" +define+OT_KSH_VMSTG +define+OT_KSH_LCREP);;
+CASE LABCR seed 31 expect pass got PASS rc=0 :: LOCK cfg=LABCR hbm_cycles=81848 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=LABCR hbm_cycles=81848 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE LABCR seed 32 expect pass got PASS rc=0 :: LOCK cfg=LABCR hbm_cycles=80990 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=LABCR hbm_cycles=80990 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE LPFR seed 31 expect pass got PASS rc=0 :: LOCK cfg=LPFR hbm_cycles=81120 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=LPFR hbm_cycles=81120 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE LPFR seed 32 expect pass got PASS rc=0 :: LOCK cfg=LPFR hbm_cycles=80356 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=LPFR hbm_cycles=80356 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE LPFRV seed 31 expect pass got PASS rc=0 :: LOCK cfg=LPFRV hbm_cycles=81848 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=LPFRV hbm_cycles=81848 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE LPFRV seed 32 expect pass got PASS rc=0 :: LOCK cfg=LPFRV hbm_cycles=80990 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=LPFRV hbm_cycles=80990 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56
+CASE mutL seed 31 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k1 cyc722
+CASE mutL seed 32 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k2 cyc712
+CASE mutLP seed 31 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k1 cyc722
+CASE mutLP seed 32 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k2 cyc712

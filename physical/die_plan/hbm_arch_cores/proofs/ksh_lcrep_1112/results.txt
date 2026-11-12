@@ -1,0 +1,29 @@
+HBM-CORES-B 11-12 kshare LCREP proofs (DIE-HBM-100 ruling after kshare attempt 3; DO_NOT_COUNT until signed)
+RTL rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv sha256[0:16] e152ddb8ccd7f6e7 (final, with (* keep *) on the copies)
+Pre-keep draft used by the lock-step bench and the first SAT runs: identical except the keep attributes (no function change).
+
+LCREP 1 cycle identity: SAT induction (yosys 0.68, clk2fflogic: hbm_clk and stream_clk interleaved, async resets modelled,
+sat -tempinduct -prove-asserts -set-init-zero) of the FORMAL invariants in g_lc, per lane:
+  hr==hrst_q, smr==sm_h, an==all_norm, cq==cmd_q, wq==wcmd_q, we==wend_q.  With these, every lane input that LCREP
+  replaces (reset release, strap, take_cmd/take_wb, command fields, WB window fields) equals the LCREP 0 value on every
+  edge, so the design is cycle-identical.
+  inv_abcrl_final (abcr defines, KRL1 1, final RTL):              Induction step proven: SUCCESS!
+  inv_pfrvl_final (pfr defines + VMSTG, KRL1 1, final RTL):        Induction step proven: SUCCESS!
+  inv_abcr_m0 / inv_pfr_m0 (same, pre-keep draft):                 Induction step proven: SUCCESS!
+  LCMUT 1 (an from the current lane states, one edge late): the SAT runs (inv_*_m1, inv_pfrvl_mut) do not close within
+  the step budget (the violation needs a full command CDC to reach the lane); the negative control is the lock-step bench.
+
+System lock-step bench (run_lock_lcrep.sh; tb_hbm_svc_wb_kshare_splitstrap_q quadrant: real wb_kport, 32 pc_ctrl_leaf
+controllers, DRAM fixture; 8 dut cores LCREP 1, each shadowed by an LCREP 0 reference core made from the same RTL by
+mkref.py; every hbm K-port output, u_wcmd write, u_fill write + hf and stream fill compared EXACT, no shift):
+  LABCR  (abcr)          seeds 31 32: PASS, 0 mismatches, 8192 fill writes, 56 WB windows
+  LPFR   (pfr)           seeds 31 32: PASS, 0 mismatches
+  LPFRV  (pfr + VMSTG)   seeds 31 32: PASS, 0 mismatches
+  mutL   (abcr, LCMUT 1) seeds 31 32: FAIL (hbm outputs differ k1 cyc722 / k2 cyc712)  expected
+  mutLP  (pfr, LCMUT 1)  seeds 31 32: FAIL (hbm outputs differ k1 cyc722 / k2 cyc712)  expected
+  bench dut source sha256[0:16] c07316a4fb179f07 (pre-keep draft)
+
+LCREP 0 == RCMD branch head (637b5e1f46): yosys equiv_make + equiv_simple -seq 2 + equiv_induct -seq 2 (no equiv_struct),
+  eq0_abcr.ys / eq0_pfr.ys: see eq0_*.result (appended when the runs finish).
+Pin-cycle rows: none (cycle-identical).  Synthesis: (* keep *) on the copies + the kit OT_KEEP_REGS hook keep one flop set
+per lane (opt_merge would otherwise fold them back into the shared register).

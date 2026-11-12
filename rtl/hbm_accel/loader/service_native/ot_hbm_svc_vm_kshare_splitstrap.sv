@@ -297,7 +297,20 @@ endmodule
 `else
 `define KSH_CFIFO ot_hbm_svc_async_fifo
 `endif
-module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
+// HBM-CORES-B 11-12 form LCREP (DIE-HBM-100 kshare re-form after the 3rd attempt; ksh_abcr v8e478a__abcr TT -25.24 72 endpoints:
+// lane[0].st -> all_norm (AND of the four lane FSMs) -> take_cmd -> st/j/got + cmd_q/wcmd_q enables of every lane, a spread
+// cone with launch and capture on different clock taps; slew 115 pins on the broadcast nets).  LCREP 1 (default 0 = unchanged;
+// default 1 under `OT_KSH_LCREP): every lane keeps its OWN registered copy of the shared control, next to its datapath:
+//   an      = "all four lanes are NORM", registered from the four lanes' next-state decode (equal to &norm_l every edge),
+//   take    = lane-local take_cmd / take_wb from an (the FIFO pops use lane 0's copy; all copies are equal),
+//   cmd     = cmd_q / wcmd_q / wend_q copies loaded on the lane-local take from the same FIFO read data,
+//   hrst/sm = the hbm reset release flop and the SM strap flop, one per lane (same pins, same edge).
+// Cycle-identical: every copy equals the shared register it replaces on every edge (SAT induction proofs/ksh_lcrep_1112 on
+// the FORMAL invariants below; exact system lock-step vs LCREP 0).  No pin-cycle change.  LCMUT 1 (negative control only):
+// an registered from the CURRENT lane states, one edge late.
+module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0,
+ LCREP=`ifdef OT_KSH_LCREP 1 `else 0 `endif,
+ LCMUT=`ifdef OT_KSH_MUT_LCREP 1 `else 0 `endif) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
  // die strap (H-SM DEDUPE 2026-10-16, was parameter SM): the SM group k of this leaf, PCs 4k..4k+3.  One hardened master
  // for all 32 instances; the strap lands in one pin flop per clock domain (static value, no CDC timing on it).
@@ -339,7 +352,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  always @(posedge stream_clk)cd_q<={vm_bank,vm_epoch,vm_row,vm_col};
  always @(posedge stream_clk or negedge srst_q)if(!srst_q)cv_q<=0;else cv_q<=vm_v;
  wire cf_wr_ready,cf_ov,cf_rd_valid,cf_un;wire[CMW-1:0]cf_rd_data;wire all_norm;
- wire take_cmd=cf_rd_valid&&all_norm;
+ wire[3:0]an_l,nn_l;   // LCREP: per-lane registered all-NORM copies; per-lane "NORM after this edge"
+ wire take_cmd=cf_rd_valid&&((LCREP!=0)?an_l[0]:all_norm);
  `KSH_CFIFO #(.WIDTH(CMW),.DEPTH(4)) u_cmd(
   .wr_clk(stream_clk),.wr_rst_n(srst_q),.wr_valid(cv_q),.wr_ready(cf_wr_ready),.wr_data(cd_q),.wr_overflow(cf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hrst_q),.rd_valid(cf_rd_valid),.rd_ready(take_cmd),.rd_data(cf_rd_data),.rd_underflow(cf_un));
@@ -402,7 +416,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  assign wq_v=wv3;assign wq_d=wq3;
 `endif
  wire wf_wr_ready,wf_ov,wf_rd_valid,wf_un;wire[WQW-1:0]wf_rd_data;
- wire take_wb=wf_rd_valid&&all_norm&&!cf_rd_valid;
+ wire take_wb=wf_rd_valid&&((LCREP!=0)?an_l[0]:all_norm)&&!cf_rd_valid;
  `KSH_CFIFO #(.WIDTH(WQW),.DEPTH(4)) u_wcmd(
   .wr_clk(stream_clk),.wr_rst_n(srst_q),.wr_valid(wq_v),.wr_ready(wf_wr_ready),.wr_data(wq_d),.wr_overflow(wf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hrst_q),.rd_valid(wf_rd_valid),.rd_ready(take_wb),.rd_data(wf_rd_data),.rd_underflow(wf_un));
@@ -415,28 +429,56 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  wire[3:0]rf_valid;wire[FW*4-1:0]rf_data;
  genvar l;
  generate for(l=0;l<4;l=l+1)begin:lane
-  wire[4:0]P={sm_h,2'(l)};
+  // LCREP: the lane's own copies of the shared control (LCREP 0: the shared registers themselves)
+  wire hrst_l,tk_c,tk_w;wire[2:0]sm_hl;
+  wire lc_bank;wire[15:0]lc_epoch;wire[14:0]lc_row;wire[3:0]lc_col;wire[WQW-1:0]lc_wcmd;wire[29:0]lc_wbase;wire[30:0]lc_wend;
+  if(LCREP!=0)begin:g_lc
+   // keep: the copies must stay one flop set per lane (the kit's OT_KEEP_REGS hook keeps their flops out of opt_merge)
+   (* keep *) reg hr,an;(* keep *) reg[2:0]smr;(* keep *) reg[CMW-1:0]cq;(* keep *) reg[WQW-1:0]wq;(* keep *) reg[30:0]we;
+   always @(posedge hbm_clk or negedge hbm_rst_n)if(!hbm_rst_n)hr<=1'b0;else hr<=1'b1;
+   always @(posedge hbm_clk)smr<=((MUT==5)||(MUT==7))?3'd0:sm_hbm;
+   always @(posedge hbm_clk or negedge hr)if(!hr)an<=1'b1;else an<=(LCMUT==1)?(&norm_l):(&nn_l);
+   always @(posedge hbm_clk)begin
+    if(tk_c)cq<=cf_rd_data;
+    if(tk_w)begin wq<=wf_rd_data;we<={1'b0,wf_rd_data[WQW-1-:30]}+31'(wf_rd_data[43:32]);end
+   end
+   assign hrst_l=hr;assign sm_hl=smr;assign an_l[l]=an;
+   assign tk_c=cf_rd_valid&&an;assign tk_w=wf_rd_valid&&an&&!cf_rd_valid;
+   assign {lc_bank,lc_epoch,lc_row,lc_col}=cq;assign lc_wcmd=wq;assign lc_wbase=wq[WQW-1-:30];assign lc_wend=we;
+`ifdef FORMAL
+   // the invariants of the cycle-identity proof: every copy equals the shared register it replaces
+   always @* begin
+    assert(hr==hrst_q); assert(smr==sm_h); assert(an==all_norm);
+    assert(cq==cmd_q); assert(wq==wcmd_q); assert(we==wend_q);
+   end
+`endif
+  end else begin:g_nlc
+   assign hrst_l=hrst_q;assign sm_hl=sm_h;assign an_l[l]=all_norm;
+   assign tk_c=take_cmd;assign tk_w=take_wb;
+   assign {lc_bank,lc_epoch,lc_row,lc_col}=cmd_q;assign lc_wcmd=wcmd_q;assign lc_wbase=wc_base;assign lc_wend=wend_q;
+  end
+  wire[4:0]P={sm_hl,2'(l)};
   // group-side request pin skid (A) and controller-side request skid (B)
   wire a_v,a_r;wire[KW-1:0]a_d;
-  `KSH_SKID_A #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hrst_q),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
+  `KSH_SKID_A #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hrst_l),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
    .in_data({g_k_we[l],g_k_addr[30*l+:30],g_k_len[4*l+:4],g_k_tag[17*l+:17],g_k_wstrb[32*l+:32],g_k_wdata[256*l+:256]}),
    .out_v(a_v),.out_r(a_r),.out_data(a_d));
   reg[2:0]st;reg[3:0]j;reg[6:0]got;reg[7:0]g_rd_out;reg[5:0]g_wr_out;reg hf;reg[7:0]wsent,wdone;
-  wire[7:0]wn=wcmd_q[8*l+:8];
+  wire[7:0]wn=lc_wcmd[8*l+:8];
   // WB-side request pin skid (E)
   wire e_v,e_r;wire[285:0]e_d;
-  `KSH_SKID_A #(.WIDTH(286)) u_e(.clk(hbm_clk),.rst_n(hrst_q),.in_v(w_k_v[l]),.in_r(w_k_rdy[l]),
+  `KSH_SKID_A #(.WIDTH(286)) u_e(.clk(hbm_clk),.rst_n(hrst_l),.in_v(w_k_v[l]),.in_r(w_k_rdy[l]),
    .in_data({w_k_addr[30*l+:30],w_k_wdata[256*l+:256]}),.out_v(e_v),.out_r(e_r),.out_data(e_d));
   wire wb_st=st==WB;
   wire w_more=wb_st&&wsent!=wn;
   wire[29:0]e_a=e_d[285:256];
   wire[29:0]w_addr=(MUT==4)?(e_a^30'h4):e_a;
-  wire e_bad=(e_a[6:2]^e_a[11:7]^e_a[16:12])!=P||e_a<wc_base||{1'b0,e_a}>=wend_q;
+  wire e_bad=(e_a[6:2]^e_a[11:7]^e_a[16:12])!=P||e_a<lc_wbase||{1'b0,e_a}>=lc_wend;
   wire b_in_v,b_in_r,b_v;wire[KW-1:0]b_in_d,b_d;
-  wire[4:0]bhi5={cm_row[1:0],j[2:0]};wire[4:0]col={cm_col,j[3]};
+  wire[4:0]bhi5={lc_row[1:0],j[2:0]};wire[4:0]col={lc_col,j[3]};
   wire[4:0]pcf=(MUT==2)?(col^bhi5):(P^col^bhi5);
-  wire[29:0]vm_addr={cm_row,j[2:0],col,pcf,2'b00};
-  wire[16:0]vm_tag={cm_bank,cm_epoch[11:0],j};
+  wire[29:0]vm_addr={lc_row,j[2:0],col,pcf,2'b00};
+  wire[16:0]vm_tag={lc_bank,lc_epoch[11:0],j};
   wire vm_req=st==ISSUE;
   assign b_in_v=vm_req?1'b1:wb_st?(e_v&&w_more):(st==NORM&&a_v);
 `ifdef OT_KSH_STSEL
@@ -457,7 +499,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   assign e_r=w_more&&b_in_r;
   wire w_push=wb_st&&b_in_v&&b_in_r;
   assign a_r=st==NORM&&b_in_r;
-  `KSH_SKID #(.WIDTH(KW)) u_b(.clk(hbm_clk),.rst_n(hrst_q),.in_v(b_in_v),.in_r(b_in_r),.in_data(b_in_d),
+  `KSH_SKID #(.WIDTH(KW)) u_b(.clk(hbm_clk),.rst_n(hrst_l),.in_v(b_in_v),.in_r(b_in_r),.in_data(b_in_d),
    .out_v(b_v),.out_r(c_k_rdy[l]),.out_data(b_d));
   assign c_k_v[l]=b_v;
   assign {c_k_we[l],c_k_addr[30*l+:30],c_k_len[4*l+:4],c_k_tag[17*l+:17],c_k_wstrb[32*l+:32],c_k_wdata[256*l+:256]}=b_d;
@@ -470,21 +512,21 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire c_ring_fault;
   if(KRL1!=0)begin:g_c_rl1
    reg c_rdy_q,c_rdy_seen; wire[2:0]c_cnt,c_cnt_next;
-   ot_hbm_svc_ring_h9b_ff #(.WIDTH(RW),.DEPTH((MUT==6)?2:3)) u_c(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_kr_v[l]&&c_rdy_seen),
+   ot_hbm_svc_ring_h9b_ff #(.WIDTH(RW),.DEPTH((MUT==6)?2:3)) u_c(.clk(hbm_clk),.rst_n(hrst_l),.in_v(c_kr_v[l]&&c_rdy_seen),
     .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.pop(c_v&&c_r),.out_data(c_d),
     .cnt(c_cnt),.cnt_next(c_cnt_next),.fault(c_ring_fault));
    always @(posedge hbm_clk)
-    if(!hrst_q)begin c_rdy_q<=1'b0;c_rdy_seen<=1'b0;end
+    if(!hrst_l)begin c_rdy_q<=1'b0;c_rdy_seen<=1'b0;end
     else begin c_rdy_q<=c_cnt_next<=3'd1; c_rdy_seen<=c_rdy_q; end
    assign c_kr_rdy[l]=c_rdy_q;
   end else begin:g_c_rl0
    assign c_ring_fault=1'b0;
-   ot_hbm_svc_pin_skid2 #(.WIDTH(RW)) u_c(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_kr_v[l]),.in_r(c_kr_rdy[l]),
+   ot_hbm_svc_pin_skid2 #(.WIDTH(RW)) u_c(.clk(hbm_clk),.rst_n(hrst_l),.in_v(c_kr_v[l]),.in_r(c_kr_rdy[l]),
     .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.out_r(c_r),.out_data(c_d));
   end
   wire vm_phase=(st==ISSUE||st==WAIT)^(MUT==1&&st==PEND);
   wire d_r,f_r;
-  `KSH_SKID_D #(.WIDTH(RW)) u_d(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_v&&!vm_phase),.in_r(d_r),.in_data(c_d),
+  `KSH_SKID_D #(.WIDTH(RW)) u_d(.clk(hbm_clk),.rst_n(hrst_l),.in_v(c_v&&!vm_phase),.in_r(d_r),.in_data(c_d),
    .out_v(g_kr_v[l]),.out_r(g_kr_rdy[l]),.out_data({g_kr_tag[17*l+:17],g_kr_beat[4*l+:4],g_kr_data[256*l+:256]}));
   wire[16:0]rt=c_d[RW-1-:17];wire[3:0]rb=c_d[259:256];
   wire c_pop_grp=c_v&&!vm_phase&&d_r;
@@ -498,11 +540,11 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   // extra slot under FIFO back-pressure).  st/got still count ring pops: the window may close with the last beat in the
   // stage, which drains on its own (the snapshot keeps the next window's cmd_q out of it).
   reg stg_v;reg[FW-1:0]stg_d;reg[12:0]stg_th;reg[1:0]stg_bh;
-  wire[FW-1:0]stg_in={cm_bank,cm_epoch,rt[3:0],rb[1:0],c_d[255:0]};
+  wire[FW-1:0]stg_in={lc_bank,lc_epoch,rt[3:0],rb[1:0],c_d[255:0]};
   wire stg_rdy=!stg_v||f_r;
   assign c_r=vm_phase?stg_rdy:d_r;
   assign c_pop_vm=c_v&&vm_phase&&stg_rdy;
-  always @(posedge hbm_clk or negedge hrst_q)if(!hrst_q)stg_v<=1'b0;else stg_v<=c_pop_vm||(stg_v&&!f_r);
+  always @(posedge hbm_clk or negedge hrst_l)if(!hrst_l)stg_v<=1'b0;else stg_v<=c_pop_vm||(stg_v&&!f_r);
   for(genvar s=0;s<(FW+63)/64;s=s+1)begin:g_stg
    localparam integer LO=s*64,HI=(FW-1<LO+63)?FW-1:LO+63;
    wire en_s;
@@ -519,13 +561,13 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
 `else
   assign c_r=vm_phase?f_r:d_r;
   assign c_pop_vm=c_v&&vm_phase&&f_r;
-  wire tag_ok=rt=={cm_bank,cm_epoch[11:0],rt[3:0]}&&rb<4;
-  assign f_wv=c_pop_vm;assign f_wd={cm_bank,cm_epoch,rt[3:0],rb[1:0],c_d[255:0]};
+  wire tag_ok=rt=={lc_bank,lc_epoch[11:0],rt[3:0]}&&rb<4;
+  assign f_wv=c_pop_vm;assign f_wd={lc_bank,lc_epoch,rt[3:0],rb[1:0],c_d[255:0]};
   assign tag_bad=c_pop_vm&&!tag_ok;
 `endif
   wire f_ov,f_un;
   ot_hbm_svc_async_fifo #(.WIDTH(FW),.DEPTH(8)) u_fill(
-   .wr_clk(hbm_clk),.wr_rst_n(hrst_q),.wr_valid(f_wv),.wr_ready(f_r),.wr_data(f_wd),.wr_overflow(f_ov),
+   .wr_clk(hbm_clk),.wr_rst_n(hrst_l),.wr_valid(f_wv),.wr_ready(f_r),.wr_data(f_wd),.wr_overflow(f_ov),
    .rd_clk(stream_clk),.rd_rst_n(srst_q),.rd_valid(rf_valid[l]),.rd_ready(rf_valid[l]),.rd_data(rf_data[FW*l+:FW]),.rd_underflow(f_un));
   wire[8:0]rd_beats=b_pop_grp&&!b_d[KW-1]?{5'd0,b_d[KW-1-30-1-:4]}:9'd0;
   wire drained=!b_v&&g_rd_out==0&&g_wr_out==0;
@@ -537,7 +579,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   always @* begin
    st_nx=st;
    case(st)
-    NORM:if(take_cmd)st_nx=PEND;else if(take_wb)st_nx=WPEND;
+    NORM:if(tk_c)st_nx=PEND;else if(tk_w)st_nx=WPEND;
     PEND:if(drained||MUT==1)st_nx=ISSUE;
     ISSUE:if(b_in_r&&j==4'd15)st_nx=WAIT;
     WPEND:if(wdrained)st_nx=WB;
@@ -548,15 +590,30 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   end
   for(genvar s=0;s<NSL;s=s+1)begin:g_sp
 `ifdef OT_KSH_MUT_E
-   ot_hbm_svc_ksh_phase_ff u_v(.clk(hbm_clk),.rst_n(hrst_q),.d((st_nx==ISSUE)&&(s!=1)),.q(vmr_s[s]));   // bench negative control
+   ot_hbm_svc_ksh_phase_ff u_v(.clk(hbm_clk),.rst_n(hrst_l),.d((st_nx==ISSUE)&&(s!=1)),.q(vmr_s[s]));   // bench negative control
 `else
-   ot_hbm_svc_ksh_phase_ff u_v(.clk(hbm_clk),.rst_n(hrst_q),.d(st_nx==ISSUE),.q(vmr_s[s]));
+   ot_hbm_svc_ksh_phase_ff u_v(.clk(hbm_clk),.rst_n(hrst_l),.d(st_nx==ISSUE),.q(vmr_s[s]));
 `endif
-   ot_hbm_svc_ksh_phase_ff u_w(.clk(hbm_clk),.rst_n(hrst_q),.d(st_nx==WB),.q(wbs_s[s]));
+   ot_hbm_svc_ksh_phase_ff u_w(.clk(hbm_clk),.rst_n(hrst_l),.d(st_nx==WB),.q(wbs_s[s]));
   end
 `endif
-  always @(posedge hbm_clk or negedge hrst_q)begin
-   if(!hrst_q)begin st<=NORM;j<=0;got<=0;g_rd_out<=0;g_wr_out<=0;hf<=0;wsent<=0;wdone<=0;end
+  // next-state decode: st after this edge is NORM (feeds the LCREP an copies; unused when LCREP 0)
+  reg[2:0]st_nn;
+  always @* begin
+   st_nn=st;
+   case(st)
+    NORM:if(tk_c)st_nn=PEND;else if(tk_w)st_nn=WPEND;
+    PEND:if(drained||MUT==1)st_nn=ISSUE;
+    ISSUE:if(b_in_r&&j==4'd15)st_nn=WAIT;
+    WPEND:if(wdrained)st_nn=WB;
+    WB:if(wsent==wn&&wdone==wn)st_nn=NORM;
+    default:;
+   endcase
+   if(c_pop_vm&&got==7'd63)st_nn=NORM;
+  end
+  assign nn_l[l]=st_nn==NORM;
+  always @(posedge hbm_clk or negedge hrst_l)begin
+   if(!hrst_l)begin st<=NORM;j<=0;got<=0;g_rd_out<=0;g_wr_out<=0;hf<=0;wsent<=0;wdone<=0;end
    else begin
     g_rd_out<=g_rd_out+rd_beats[7:0]-{7'd0,c_pop_grp};
     g_wr_out<=g_wr_out+{5'd0,b_pop_grp&&b_d[KW-1]}-{5'd0,g_done};
@@ -566,8 +623,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
     if(c_pop_grp&&g_rd_out==0&&!(MUT==1))hf<=1;
     if(tag_bad)hf<=1;
     case(st)
-     NORM:if(take_cmd)begin st<=PEND;j<=0;got<=0;end
-          else if(take_wb)begin st<=WPEND;wsent<=0;wdone<=0;end
+     NORM:if(tk_c)begin st<=PEND;j<=0;got<=0;end
+          else if(tk_w)begin st<=WPEND;wsent<=0;wdone<=0;end
      PEND:if(drained||MUT==1)st<=ISSUE;
      ISSUE:if(b_in_r)begin j<=j+1'b1;if(j==4'd15)st<=WAIT;end
      WPEND:if(wdrained)st<=WB;
@@ -580,8 +637,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
     end
    end
   end
-  always @(posedge hbm_clk or negedge hrst_q)
-   if(!hrst_q)begin g_k_wr_done[l]<=0;w_k_wr_done[l]<=0;end
+  always @(posedge hbm_clk or negedge hrst_l)
+   if(!hrst_l)begin g_k_wr_done[l]<=0;w_k_wr_done[l]<=0;end
    else begin g_k_wr_done[l]<=g_done;w_k_wr_done[l]<=c_k_wr_done[l]&&wb_st;end
   assign norm_l[l]=st==NORM;assign hfault_l[l]=hf||f_ov||c_ring_fault;
  end endgenerate

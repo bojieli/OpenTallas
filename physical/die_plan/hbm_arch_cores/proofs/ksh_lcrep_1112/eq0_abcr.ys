@@ -1,0 +1,18 @@
+read_verilog -sv -DOT_KSH_SELREP -DOT_KSH_VMSTG -DOT_KSH_WCNT2 -DOT_KSH_SRDL -DOT_KSH_RCMD /r/ot_hbm_svc_async_fifo.sv /r/ot_hbm_svc_pc_ctrl_leaf.sv /r/ot_hbm_svc_ring_h9b_ff.sv /r/ot_reset_sync.sv /r/old/ksh.sv
+hierarchy -top ot_hbm_svc_vm_kshare_splitstrap -chparam KRL1 1
+proc; setattr -mod -unset keep_hierarchy; flatten; opt_clean; memory -nomap; memory_map; opt -purge; async2sync
+rename ot_hbm_svc_vm_kshare_splitstrap gold
+design -stash gold
+read_verilog -sv -DOT_KSH_SELREP -DOT_KSH_VMSTG -DOT_KSH_WCNT2 -DOT_KSH_SRDL -DOT_KSH_RCMD /r/ot_hbm_svc_async_fifo.sv /r/ot_hbm_svc_pc_ctrl_leaf.sv /r/ot_hbm_svc_ring_h9b_ff.sv /r/ot_reset_sync.sv /r/new/ksh.sv
+hierarchy -top ot_hbm_svc_vm_kshare_splitstrap -chparam KRL1 1 -chparam LCREP 0
+proc; setattr -mod -unset keep_hierarchy; flatten; opt_clean; memory -nomap; memory_map; opt -purge; async2sync
+rename ot_hbm_svc_vm_kshare_splitstrap gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status
+equiv_status -assert

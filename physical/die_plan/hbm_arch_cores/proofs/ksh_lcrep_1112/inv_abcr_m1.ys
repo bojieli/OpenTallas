@@ -1,0 +1,6 @@
+read_verilog -formal -sv -DFORMAL -DOT_KSH_SELREP -DOT_KSH_VMSTG -DOT_KSH_WCNT2 -DOT_KSH_SRDL -DOT_KSH_RCMD /r/ot_hbm_svc_async_fifo.sv /r/ot_hbm_svc_pc_ctrl_leaf.sv /r/ot_hbm_svc_ring_h9b_ff.sv /r/ot_reset_sync.sv /r/new/ksh.sv
+hierarchy -top ot_hbm_svc_vm_kshare_splitstrap -chparam KRL1 1 -chparam LCREP 1 -chparam LCMUT 1
+proc; setattr -mod -unset keep_hierarchy; flatten; opt_clean; memory -nomap; memory_map; opt_clean
+clk2fflogic
+opt_clean
+sat -tempinduct -prove-asserts -set-init-zero -maxsteps 12 -timeout 10000
