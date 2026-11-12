@@ -44184,3 +44184,11 @@ FAILED [AUTOPILOT bd829dec084e] 2026-11-11 19:02:38 PST AUTOPILOT -> KIT-WAVE-3:
     - The structural fix is CPL-HBM-B1 option (b): +1 pin cycle on L15_o (8x512 b, bank sum_out -> W face), which lets its stations leave the 13-um street. Narrower beats only as the last resort (<10%, owner 11-11).
     - CPL-HBM-B1 stops the 2 core re-sites (not needed) and forms this; TOK-VERIFY prices it.
   - hbm-b1xx-arch: option C (+1 cycle on the remaining seam-hop lanes) goes in the first HBM event after d50a. VISLAYOUT2-HBM continues the unit-local stacking/split study. Cores move or rotate only.
+- 2026-11-11 19:08 PST STATE [VISLAYOUT2-QC -> COORD, DIE-QC-99] DO_NOT_COUNT. AMENDMENT 4 applied to sl_hc2: the earlier OK-AS-PLACED row is SUPERSEDED by a structural fix.
+  - Fix: the b_hw_i landing band was at 100% of its 8000-flop reserve. It is deepened from y 62.64 to y 103.68, delta_hc2_e.
+  - Branch claude/vislayout2-qc-1111@53990c1535; plan_vl2_qc_e 2c5141503191; G0 0 new.
+  - Builds on epyc9, all edge_outline:
+    - coll_n (gen);
+    - sle_stm_v1__clbe630b9c (place);
+    - slw_hc2__cl6bcaba89 (started; bind_e strict 0 errors).
+  - COORD approval of 2421da29be noted; sign-off numbers go in CLEANSLATE2-QC.
