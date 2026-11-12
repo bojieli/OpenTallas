@@ -4139,10 +4139,7 @@
     "epyc2"
    ],
    "plan_sha256": "3ad01048cacf6a1bd560ed3178ee3c06ffa98619dda7ae78eea1e485d8e27a75",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
-   "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
-   }
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "s81": {
    "enabled": true,
@@ -19891,10 +19888,7 @@
     "serdes__t15__cla2127225": "copy"
    },
    "plan_sha256": "685aa34d10d3c164789822a633e5b80ca75f0125f8c07653ad5559889c74abde",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
-   "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
-   }
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "s81_head": {
    "enabled": true,
@@ -21029,10 +21023,7 @@
     "hd_serdes"
    ],
    "plan_sha256": "5e0253c7039325a561b576f3bdd3ebfd97b8266a07ab0460b3340bcb4b3150a1",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
-   "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
-   }
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "qwen_compute": {
    "enabled": true,
@@ -29102,10 +29093,7 @@
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
    "plan_sha256": "2f0c17d5f1a31e5a73baf57acd263c9924fc96c28e3fa4e8729bc7f1c9e7cf44",
-   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
-   "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
-   }
+   "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT."
   },
   "hbm": {
    "enabled": true,
