@@ -342,17 +342,23 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     import types as _t
     trees = {
         "base": dict(relays=[dict(name="r_a", q="qa", depth=2, role="raw", xy=[100.0, 50.0]),
-                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0])]),
+                             dict(name="r_b", q="qb", depth=3, role="raw", xy=[200.0, 50.0]),
+                             dict(name="s1", q="s1", d="qa", depth=3, xy=[100.0, 90.0])]),
         "new": dict(relays=[dict(name="r_a2", q="qa2", depth=2, role="raw", xy=[130.0, 50.0]),
                             dict(name="r_x", q="qx", depth=2, role="raw", xy=[400.0, 50.0]),
-                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0])]),
+                            dict(name="r_b", q="qb", depth=3, role="raw", xy=[205.0, 50.0]),
+                            dict(name="s1n", q="s1n", d="qa2", depth=3, xy=[130.0, 92.0]),
+                            dict(name="s1x", q="s1x", d="qx", depth=3, xy=[100.0, 90.0])]),
     }
     import schema
     import reset_tree
     monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
     monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
     t = {"reset_start_raw_exports": [dict(port="rst_o", instance="r_a", net="qa", xy_um=[100.0, 50.0])],
-         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")]},
+         "clock": {"landing_contract": {"pins": [dict(name="rst_o", xy_um=[101.0, 49.0], source_instance="r_a")],
+                                        "collector_tree": json.loads(json.dumps(trees["base"]))},
+                   "landing_raw_branches": [dict(name="o", base="qa", stages=[dict(original="s1", xy_um=[100.0, 90.0])],
+                                                 consumers=["origin"])],
                    "landing_local_resets": [dict(raw="qa", xy_um=[100.0, 50.0]), dict(raw="qb", xy_um=[200.0, 50.0])]}}
     P = {"tag": "base", "partition_types": {"x": json.loads(json.dumps(t))}}
     Q = {"tag": "new", "partition_types": {"x": t}}
@@ -364,6 +370,53 @@ def test_reset_resel_follows_resolved_tree(monkeypatch, tmp_path):
     assert pn["source_instance"] == "r_a2" and pn["xy_um"] == [131.0, 49.0]           # pin offset kept
     lr = t["clock"]["landing_local_resets"]
     assert lr[0]["raw"] == "qa2" and lr[1]["raw"] == "qb"     # gone -> nearest same depth; surviving Q kept
+    # the published collector_tree is the re-solved one; raw branches follow it as a D-chain (not nearest-by-xy:
+    # s1x sits exactly at the old stage xy but hangs off another base)
+    assert t["clock"]["landing_contract"]["collector_tree"] == trees["new"] and rec["tree_republished"] == [3, 5]
+    br = t["clock"]["landing_raw_branches"][0]
+    assert br["base"] == "qa2" and br["stages"][0]["original"] == "s1n"
+
+
+def test_reset_resel_keeps_role_hd_st_n3_transit_u2_i(monkeypatch, tmp_path):
+    """COORD 11-12 (HEAD-94 hd_st_n3_transit.u2_i): a reader-START stage raw_reset names a REGISTERED raw relay; the
+    nearest same-depth relay of the re-solved tree is the gated consumer tap rst_n_t1 (reset AND run), which fails
+    gen-phys's reader-START check.  The re-select keeps the role: the nearest same-depth RAW relay (a plain rst_rl_*
+    or the raw copy rr_t<i> of a gated tap), never a gated one."""
+    import types as _t
+    import re as _re
+    R = lambda q, d, xy, dd: dict(name="u_" + q, q=q, d=dd, depth=d, kind="tap" if q.startswith("rst_n_t") else "relay",
+                                  xy=xy, tap=None)  # noqa: E731
+    trees = {
+        "base": dict(start=True, relays=[R("rst_rl_25", 3, [300.0, 400.0], "rst_rl_20"),
+                                         R("rst_n_t10", 3, [600.0, 400.0], "rst_rl_20"),
+                                         R("rst_n_t1", 3, [900.0, 900.0], "rst_rl_20")]),
+        # cores moved: rst_rl_25 gone, the gated tap rst_n_t1 now sits closest to the u2_i stage, rst_rl_26 farther
+        "new": dict(start=True, relays=[R("rst_n_t1", 3, [305.0, 402.0], "rst_rl_20"),
+                                        R("rst_rl_26", 3, [360.0, 470.0], "rst_rl_20"),
+                                        R("rst_n_t11", 3, [640.0, 420.0], "rst_rl_20")]),
+    }
+    import schema
+    import reset_tree
+
+    def start_relays(T):     # mission type: consumer taps gated, plain relays raw (reset_tree.start_relays roles)
+        return [dict(r, role="gated" if _re.match(r"rst_n_t\d+$", r["q"]) else "raw") for r in T["relays"]]
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    monkeypatch.setattr(reset_tree, "start_relays", start_relays)
+    st = [dict(xy_um=[300.0, 400.0], raw_reset="rst_rl_25"), dict(xy_um=[600.0, 400.0], raw_reset="rr_t10"),
+          dict(xy_um=[900.0, 900.0], raw_reset="rst_n_t1")]
+    t = {"clock": {"landing_reader_start": {"branches": {"u2_i": {"stages": st}}}}}
+    P = {"tag": "base", "partition_types": {"hd_st_n3_transit": json.loads(json.dumps(t))}}
+    Q = {"tag": "new", "partition_types": {"hd_st_n3_transit": t}}
+    rec = SR.reset_resel(P, Q, ["hd_st_n3_transit"], tmp_path / "plan.json")["hd_st_n3_transit"]
+    assert "error" not in rec, rec
+    got = [x["raw_reset"] for x in st]
+    assert got[0] == "rst_rl_26"          # not the closer gated rst_n_t1
+    assert got[1] == "rr_t11"             # a raw copy stays a raw copy (of the nearest gated tap), never rst_n_t11
+    assert got[2] == "rst_n_t11"          # a gated reference stays gated (nearest gated tap to its stage)
+    roles = SR._q_roles(trees["new"])
+    assert all(roles[q]["role"] == SR._q_roles(trees["base"])[o]["role"]
+               for q, o in zip(got, ["rst_rl_25", "rr_t10", "rst_n_t1"]))
 
 
 def test_add_ft_regs_keeps_site_rows_aligned():
