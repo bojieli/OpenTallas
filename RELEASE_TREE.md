@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-12 00:37 count 272 (flat since 08:05). Main 7b84010b1c6e (7-branch train incl failfast, land-ring-2, dtap-robust, col_h9_r0); next train M8-ready QC s26 + station-bits. OWNER pre-approved plan/die-level changes for closure. Root causes found tonight: wave srcs predate M8 grant (M8-WAVE-1 refreshing all dies), col bus siting in plan generator (fix A+B), localhost coord rebase stuck 23:12-00:4x, 837 GB orphan containers stopped, fleet locality (WAVE-BALANCE-1). M8 what-if: sle_sc_v2 227k->211 ov.
+2026-11-12 01:45 count 272 (flat since 08:05; 58 types + 214 cores). Main 83e9f033ecb0 (3 trains this hour: failfast/free-not-run/wave-balance/HBM d55a+rd1+xtap/kv99; station-bits/edge-float/QC s26/prov-fnf; all-wide float/bandsearch/QC sc+sta forms/autoclean expiry/obs-sync). In flight: S81 col 40, QC re-layout 22, land-ring 52, S81 slice 17, svc_rs 8, HEAD lep0N 5; none at sign-off yet. HBM wave repointing t20io -> t39w (d55a). Explorer on :8760, signed export 22/58 types 112/215 cores.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
