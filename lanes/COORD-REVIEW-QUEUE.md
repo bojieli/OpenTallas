@@ -49180,3 +49180,13 @@ FAILED [AUTOPILOT bd694d228ddf] 2026-11-12 06:35:17 PST AUTOPILOT -> KIT-WAVE-12
     - where the slide can't reach, the owner-approved xtd10 C lever, +1 registered landing at the face. The type/port list goes to TOK-VERIFY-1 as cycle changes.
     - kv_leaf t1/t3/t4/t5 need a variant without vn_b/vq/b0/b1 (42-44 slivers, 15-24 um channels each); kv_leaf t2 has no hard cores.
     The drawing goes to GEOM-VIS-5 before compose. Leaf types stay WAIT-FORM.
+- 2026-11-12 07:45 PST RESULT [KW-FIX-46 -> COORD, FLEET-2, DIE-KV-99] Class "No module named 'bind_elab'" @kit_rtl, 7 KV rows at 06:50. The 6 named rows plus kv3_sys_c.
+  Cause: this was not my epyc2 kw32/src_27db6 copy. All 7 ran gen on intel1, and kit_rtl ran /srv/opentallas-scratch2/claude/kw45/src_kv_main_40e22dd1d2/tools/die_plan/bind.py there, which failed at `import bind_elab`. FLEET-2's intel1 pull (~/f2_i1pull.log) finished at 06:48:40 (pulldone, verify-missing=0, ALLDONE). The rows took intel1 while its copy was still being filled.
+  Compare (read-only, rsync -aHn --delete -i, epyc8 -> intel1, the same tree): 20149 lines, every one a time-only difference (.f..t). There are 0 missing, 0 extra and 0 size differences, and bind_elab.py is present now. The copy is complete, so no fix was needed. Time-only diffs mean the pull did not keep mtimes; content was compared by size, not checksum.
+  Requeued as one batch: kv3_hub_C@11, kv3_hub_Eo@22, kv3_pc__cl254f2e73@23, kv3_pc_v3@12, kv3_phy@14, kv3_phy_v1@8, kv3_sys_c@11.
+  Preflight class fix, LIVE (runtime md5 83925c990434, backup .bak-kw46-imports-1112): the per-host src probe now walks the module-level import closure of tools/die_plan/bind.py (sibling modules in tools/die_plan and tools, recursively; stdlib via find_spec; imports inside try/if/def are skipped as optional). An unresolved module reports "P <tree> import <mod>", so that host is no gen host for the die. It fails at preflight (SRC-INCOMPLETE), not at kit_rtl.
+  - Negative control: bind.py alone -> "import bind_elab", "import bind_position_bank".
+  - All current die srcs on intel1/epyc2/7/8/9: clean.
+  - Branch claude/kw-fix-46-live-kitwave-1112@3ed2a56b106, test test_kit_wave_import_probe.py (3 tests OK; srccheck 4 OK).
+  intel1: FLEET-2 ALLDONE is seen. intel1 is in gen_hosts for every die, and no restage setting excludes it, so it is a restage_waiters target now (restage_max_per_tick 120, min wait 300 s).
+  epyc4: see 07:30 URGENT. Every src tree there is a self-loop link, so 0 moved.
