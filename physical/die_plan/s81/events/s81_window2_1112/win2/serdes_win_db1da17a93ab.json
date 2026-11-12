@@ -1,0 +1,2154 @@
+{
+ "flag_over_116": {
+  "serdes__t12": {
+   "clk_t32": 137.0,
+   "clk_t36": 136.0,
+   "clk_t39": 121.0,
+   "clk_t8": 124.0
+  },
+  "serdes__t14": {
+   "clk": 117.0,
+   "clk_t16": 118.0,
+   "clk_t24": 122.0,
+   "clk_t26": 117.0,
+   "clk_t8": 119.0
+  },
+  "serdes__t15__cla3d02796": {
+   "clk": 133.0,
+   "clk_t17": 135.0,
+   "clk_t26": 119.0,
+   "clk_t34": 132.0,
+   "clk_t39": 121.0,
+   "clk_t41": 156.0,
+   "clk_t43": 138.0,
+   "clk_t48": 131.0,
+   "clk_t49": 130.0,
+   "clk_t57": 134.0,
+   "clk_t8": 161.0,
+   "clk_t9": 137.0
+  },
+  "serdes__t1__clb45db5be": {
+   "clk_t12": 119.0,
+   "clk_t20": 119.0,
+   "clk_t28": 131.0,
+   "clk_t35": 138.0,
+   "clk_t36": 136.0,
+   "clk_t39": 129.0,
+   "clk_t42": 118.0
+  },
+  "serdes__t3": {
+   "clk_t16": 124.0,
+   "clk_t19": 127.0,
+   "clk_t20": 129.0,
+   "clk_t24": 120.0,
+   "clk_t32": 122.0,
+   "clk_t36": 125.0,
+   "clk_t39": 118.0,
+   "clk_t4": 121.0,
+   "clk_t41": 119.0,
+   "clk_t42": 148.0,
+   "clk_t44": 126.0,
+   "clk_t45": 130.0,
+   "clk_t8": 142.0
+  },
+  "serdes__t4": {
+   "clk_t5": 129.0
+  }
+ },
+ "missing": [],
+ "over_208_cap": {},
+ "per_port": {
+  "serdes__t12": {
+   "clk": {
+    "meas_ps": 85.0,
+    "sdc_ps": 105.0
+   },
+   "clk_t1": {
+    "meas_ps": 53.0,
+    "sdc_ps": 73.0
+   },
+   "clk_t10": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t11": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t12": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t13": {
+    "meas_ps": 83.0,
+    "sdc_ps": 103.0
+   },
+   "clk_t14": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t15": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t16": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t17": {
+    "meas_ps": 0.0,
+    "sdc_ps": 20.0
+   },
+   "clk_t18": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t19": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t2": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t20": {
+    "meas_ps": 92.0,
+    "sdc_ps": 112.0
+   },
+   "clk_t21": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t22": {
+    "meas_ps": 28.0,
+    "sdc_ps": 48.0
+   },
+   "clk_t23": {
+    "meas_ps": 28.0,
+    "sdc_ps": 48.0
+   },
+   "clk_t24": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t25": {
+    "meas_ps": 1.0,
+    "sdc_ps": 21.0
+   },
+   "clk_t26": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t27": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t28": {
+    "meas_ps": 92.0,
+    "sdc_ps": 112.0
+   },
+   "clk_t29": {
+    "meas_ps": 87.0,
+    "sdc_ps": 107.0
+   },
+   "clk_t3": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t30": {
+    "meas_ps": 83.0,
+    "sdc_ps": 103.0
+   },
+   "clk_t31": {
+    "meas_ps": 83.0,
+    "sdc_ps": 103.0
+   },
+   "clk_t32": {
+    "meas_ps": 117.0,
+    "sdc_ps": 137.0
+   },
+   "clk_t33": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t34": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t35": {
+    "meas_ps": 88.0,
+    "sdc_ps": 108.0
+   },
+   "clk_t36": {
+    "meas_ps": 116.0,
+    "sdc_ps": 136.0
+   },
+   "clk_t37": {
+    "meas_ps": 82.0,
+    "sdc_ps": 102.0
+   },
+   "clk_t38": {
+    "meas_ps": 62.0,
+    "sdc_ps": 82.0
+   },
+   "clk_t39": {
+    "meas_ps": 101.0,
+    "sdc_ps": 121.0
+   },
+   "clk_t4": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t40": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t41": {
+    "meas_ps": 25.0,
+    "sdc_ps": 45.0
+   },
+   "clk_t42": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t5": {
+    "meas_ps": 78.0,
+    "sdc_ps": 98.0
+   },
+   "clk_t6": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t7": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t8": {
+    "meas_ps": 104.0,
+    "sdc_ps": 124.0
+   },
+   "clk_t9": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   }
+  },
+  "serdes__t13": {
+   "clk": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t1": {
+    "meas_ps": 31.0,
+    "sdc_ps": 51.0
+   },
+   "clk_t10": {
+    "meas_ps": 67.0,
+    "sdc_ps": 87.0
+   },
+   "clk_t11": {
+    "meas_ps": 49.0,
+    "sdc_ps": 69.0
+   },
+   "clk_t12": {
+    "meas_ps": 17.0,
+    "sdc_ps": 37.0
+   },
+   "clk_t13": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t14": {
+    "meas_ps": 62.0,
+    "sdc_ps": 82.0
+   },
+   "clk_t15": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t16": {
+    "meas_ps": 34.0,
+    "sdc_ps": 54.0
+   },
+   "clk_t17": {
+    "meas_ps": 61.0,
+    "sdc_ps": 81.0
+   },
+   "clk_t18": {
+    "meas_ps": 31.0,
+    "sdc_ps": 51.0
+   },
+   "clk_t19": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t2": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t20": {
+    "meas_ps": 8.0,
+    "sdc_ps": 28.0
+   },
+   "clk_t21": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t22": {
+    "meas_ps": 34.0,
+    "sdc_ps": 54.0
+   },
+   "clk_t23": {
+    "meas_ps": 2.0,
+    "sdc_ps": 22.0
+   },
+   "clk_t24": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t25": {
+    "meas_ps": 37.0,
+    "sdc_ps": 57.0
+   },
+   "clk_t26": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t27": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t28": {
+    "meas_ps": 14.0,
+    "sdc_ps": 34.0
+   },
+   "clk_t29": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t3": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t30": {
+    "meas_ps": 35.0,
+    "sdc_ps": 55.0
+   },
+   "clk_t31": {
+    "meas_ps": 0.0,
+    "sdc_ps": 20.0
+   },
+   "clk_t32": {
+    "meas_ps": 66.0,
+    "sdc_ps": 86.0
+   },
+   "clk_t33": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t34": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t35": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t36": {
+    "meas_ps": 64.0,
+    "sdc_ps": 84.0
+   },
+   "clk_t37": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t38": {
+    "meas_ps": 66.0,
+    "sdc_ps": 86.0
+   },
+   "clk_t39": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t4": {
+    "meas_ps": 14.0,
+    "sdc_ps": 34.0
+   },
+   "clk_t40": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t41": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t42": {
+    "meas_ps": 27.0,
+    "sdc_ps": 47.0
+   },
+   "clk_t43": {
+    "meas_ps": 24.0,
+    "sdc_ps": 44.0
+   },
+   "clk_t5": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t6": {
+    "meas_ps": 58.0,
+    "sdc_ps": 78.0
+   },
+   "clk_t7": {
+    "meas_ps": 29.0,
+    "sdc_ps": 49.0
+   },
+   "clk_t8": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t9": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   }
+  },
+  "serdes__t14": {
+   "clk": {
+    "meas_ps": 97.0,
+    "sdc_ps": 117.0
+   },
+   "clk_t1": {
+    "meas_ps": 71.0,
+    "sdc_ps": 91.0
+   },
+   "clk_t10": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t11": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t12": {
+    "meas_ps": 17.0,
+    "sdc_ps": 37.0
+   },
+   "clk_t13": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t14": {
+    "meas_ps": 54.0,
+    "sdc_ps": 74.0
+   },
+   "clk_t15": {
+    "meas_ps": 44.0,
+    "sdc_ps": 64.0
+   },
+   "clk_t16": {
+    "meas_ps": 98.0,
+    "sdc_ps": 118.0
+   },
+   "clk_t17": {
+    "meas_ps": 49.0,
+    "sdc_ps": 69.0
+   },
+   "clk_t18": {
+    "meas_ps": 55.0,
+    "sdc_ps": 75.0
+   },
+   "clk_t19": {
+    "meas_ps": 74.0,
+    "sdc_ps": 94.0
+   },
+   "clk_t2": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t20": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t21": {
+    "meas_ps": 54.0,
+    "sdc_ps": 74.0
+   },
+   "clk_t22": {
+    "meas_ps": 47.0,
+    "sdc_ps": 67.0
+   },
+   "clk_t23": {
+    "meas_ps": 52.0,
+    "sdc_ps": 72.0
+   },
+   "clk_t24": {
+    "meas_ps": 102.0,
+    "sdc_ps": 122.0
+   },
+   "clk_t25": {
+    "meas_ps": 91.0,
+    "sdc_ps": 111.0
+   },
+   "clk_t26": {
+    "meas_ps": 97.0,
+    "sdc_ps": 117.0
+   },
+   "clk_t27": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t28": {
+    "meas_ps": 15.0,
+    "sdc_ps": 35.0
+   },
+   "clk_t29": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t3": {
+    "meas_ps": 55.0,
+    "sdc_ps": 75.0
+   },
+   "clk_t30": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t31": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t4": {
+    "meas_ps": 24.0,
+    "sdc_ps": 44.0
+   },
+   "clk_t5": {
+    "meas_ps": 28.0,
+    "sdc_ps": 48.0
+   },
+   "clk_t6": {
+    "meas_ps": 53.0,
+    "sdc_ps": 73.0
+   },
+   "clk_t7": {
+    "meas_ps": 44.0,
+    "sdc_ps": 64.0
+   },
+   "clk_t8": {
+    "meas_ps": 99.0,
+    "sdc_ps": 119.0
+   },
+   "clk_t9": {
+    "meas_ps": 73.0,
+    "sdc_ps": 93.0
+   }
+  },
+  "serdes__t15__cla2127225": {
+   "clk": {
+    "meas_ps": 27.0,
+    "sdc_ps": 47.0
+   },
+   "clk_t1": {
+    "meas_ps": 73.0,
+    "sdc_ps": 93.0
+   },
+   "clk_t10": {
+    "meas_ps": 55.0,
+    "sdc_ps": 75.0
+   },
+   "clk_t11": {
+    "meas_ps": 83.0,
+    "sdc_ps": 103.0
+   },
+   "clk_t12": {
+    "meas_ps": 7.0,
+    "sdc_ps": 27.0
+   },
+   "clk_t13": {
+    "meas_ps": 2.0,
+    "sdc_ps": 22.0
+   },
+   "clk_t14": {
+    "meas_ps": 4.0,
+    "sdc_ps": 24.0
+   },
+   "clk_t15": {
+    "meas_ps": 17.0,
+    "sdc_ps": 37.0
+   },
+   "clk_t16": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t17": {
+    "meas_ps": 25.0,
+    "sdc_ps": 45.0
+   },
+   "clk_t18": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t19": {
+    "meas_ps": 36.0,
+    "sdc_ps": 56.0
+   },
+   "clk_t2": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t20": {
+    "meas_ps": 9.0,
+    "sdc_ps": 29.0
+   },
+   "clk_t21": {
+    "meas_ps": 12.0,
+    "sdc_ps": 32.0
+   },
+   "clk_t22": {
+    "meas_ps": 15.0,
+    "sdc_ps": 35.0
+   },
+   "clk_t23": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t24": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t25": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t26": {
+    "meas_ps": 44.0,
+    "sdc_ps": 64.0
+   },
+   "clk_t27": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t28": {
+    "meas_ps": 13.0,
+    "sdc_ps": 33.0
+   },
+   "clk_t29": {
+    "meas_ps": 6.0,
+    "sdc_ps": 26.0
+   },
+   "clk_t3": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t30": {
+    "meas_ps": 14.0,
+    "sdc_ps": 34.0
+   },
+   "clk_t31": {
+    "meas_ps": 17.0,
+    "sdc_ps": 37.0
+   },
+   "clk_t32": {
+    "meas_ps": 17.0,
+    "sdc_ps": 37.0
+   },
+   "clk_t33": {
+    "meas_ps": 12.0,
+    "sdc_ps": 32.0
+   },
+   "clk_t34": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t35": {
+    "meas_ps": 33.0,
+    "sdc_ps": 53.0
+   },
+   "clk_t36": {
+    "meas_ps": 12.0,
+    "sdc_ps": 32.0
+   },
+   "clk_t37": {
+    "meas_ps": 7.0,
+    "sdc_ps": 27.0
+   },
+   "clk_t38": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t39": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t4": {
+    "meas_ps": 5.0,
+    "sdc_ps": 25.0
+   },
+   "clk_t40": {
+    "meas_ps": 15.0,
+    "sdc_ps": 35.0
+   },
+   "clk_t41": {
+    "meas_ps": 33.0,
+    "sdc_ps": 53.0
+   },
+   "clk_t42": {
+    "meas_ps": 0.0,
+    "sdc_ps": 20.0
+   },
+   "clk_t43": {
+    "meas_ps": 31.0,
+    "sdc_ps": 51.0
+   },
+   "clk_t44": {
+    "meas_ps": 63.0,
+    "sdc_ps": 83.0
+   },
+   "clk_t45": {
+    "meas_ps": 8.0,
+    "sdc_ps": 28.0
+   },
+   "clk_t46": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t47": {
+    "meas_ps": 9.0,
+    "sdc_ps": 29.0
+   },
+   "clk_t48": {
+    "meas_ps": 29.0,
+    "sdc_ps": 49.0
+   },
+   "clk_t49": {
+    "meas_ps": 33.0,
+    "sdc_ps": 53.0
+   },
+   "clk_t5": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t50": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t51": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t52": {
+    "meas_ps": 31.0,
+    "sdc_ps": 51.0
+   },
+   "clk_t53": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t54": {
+    "meas_ps": 10.0,
+    "sdc_ps": 30.0
+   },
+   "clk_t55": {
+    "meas_ps": 4.0,
+    "sdc_ps": 24.0
+   },
+   "clk_t56": {
+    "meas_ps": 47.0,
+    "sdc_ps": 67.0
+   },
+   "clk_t57": {
+    "meas_ps": 14.0,
+    "sdc_ps": 34.0
+   },
+   "clk_t6": {
+    "meas_ps": 39.0,
+    "sdc_ps": 59.0
+   },
+   "clk_t7": {
+    "meas_ps": 44.0,
+    "sdc_ps": 64.0
+   },
+   "clk_t8": {
+    "meas_ps": 33.0,
+    "sdc_ps": 53.0
+   },
+   "clk_t9": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   }
+  },
+  "serdes__t15__cla3d02796": {
+   "clk": {
+    "meas_ps": 113.0,
+    "sdc_ps": 133.0
+   },
+   "clk_t1": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t10": {
+    "meas_ps": 70.0,
+    "sdc_ps": 90.0
+   },
+   "clk_t11": {
+    "meas_ps": 95.0,
+    "sdc_ps": 115.0
+   },
+   "clk_t12": {
+    "meas_ps": 16.0,
+    "sdc_ps": 36.0
+   },
+   "clk_t13": {
+    "meas_ps": 24.0,
+    "sdc_ps": 44.0
+   },
+   "clk_t14": {
+    "meas_ps": 8.0,
+    "sdc_ps": 28.0
+   },
+   "clk_t15": {
+    "meas_ps": 75.0,
+    "sdc_ps": 95.0
+   },
+   "clk_t16": {
+    "meas_ps": 84.0,
+    "sdc_ps": 104.0
+   },
+   "clk_t17": {
+    "meas_ps": 115.0,
+    "sdc_ps": 135.0
+   },
+   "clk_t18": {
+    "meas_ps": 47.0,
+    "sdc_ps": 67.0
+   },
+   "clk_t19": {
+    "meas_ps": 95.0,
+    "sdc_ps": 115.0
+   },
+   "clk_t2": {
+    "meas_ps": 83.0,
+    "sdc_ps": 103.0
+   },
+   "clk_t20": {
+    "meas_ps": 26.0,
+    "sdc_ps": 46.0
+   },
+   "clk_t21": {
+    "meas_ps": 20.0,
+    "sdc_ps": 40.0
+   },
+   "clk_t22": {
+    "meas_ps": 39.0,
+    "sdc_ps": 59.0
+   },
+   "clk_t23": {
+    "meas_ps": 70.0,
+    "sdc_ps": 90.0
+   },
+   "clk_t24": {
+    "meas_ps": 89.0,
+    "sdc_ps": 109.0
+   },
+   "clk_t25": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t26": {
+    "meas_ps": 99.0,
+    "sdc_ps": 119.0
+   },
+   "clk_t27": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t28": {
+    "meas_ps": 26.0,
+    "sdc_ps": 46.0
+   },
+   "clk_t29": {
+    "meas_ps": 25.0,
+    "sdc_ps": 45.0
+   },
+   "clk_t3": {
+    "meas_ps": 66.0,
+    "sdc_ps": 86.0
+   },
+   "clk_t30": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t31": {
+    "meas_ps": 69.0,
+    "sdc_ps": 89.0
+   },
+   "clk_t32": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t33": {
+    "meas_ps": 84.0,
+    "sdc_ps": 104.0
+   },
+   "clk_t34": {
+    "meas_ps": 112.0,
+    "sdc_ps": 132.0
+   },
+   "clk_t35": {
+    "meas_ps": 75.0,
+    "sdc_ps": 95.0
+   },
+   "clk_t36": {
+    "meas_ps": 92.0,
+    "sdc_ps": 112.0
+   },
+   "clk_t37": {
+    "meas_ps": 81.0,
+    "sdc_ps": 101.0
+   },
+   "clk_t38": {
+    "meas_ps": 93.0,
+    "sdc_ps": 113.0
+   },
+   "clk_t39": {
+    "meas_ps": 101.0,
+    "sdc_ps": 121.0
+   },
+   "clk_t4": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t40": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t41": {
+    "meas_ps": 136.0,
+    "sdc_ps": 156.0
+   },
+   "clk_t42": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t43": {
+    "meas_ps": 118.0,
+    "sdc_ps": 138.0
+   },
+   "clk_t44": {
+    "meas_ps": 16.0,
+    "sdc_ps": 36.0
+   },
+   "clk_t45": {
+    "meas_ps": 0.0,
+    "sdc_ps": 20.0
+   },
+   "clk_t46": {
+    "meas_ps": 89.0,
+    "sdc_ps": 109.0
+   },
+   "clk_t47": {
+    "meas_ps": 17.0,
+    "sdc_ps": 37.0
+   },
+   "clk_t48": {
+    "meas_ps": 111.0,
+    "sdc_ps": 131.0
+   },
+   "clk_t49": {
+    "meas_ps": 110.0,
+    "sdc_ps": 130.0
+   },
+   "clk_t5": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t50": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t51": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t52": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t53": {
+    "meas_ps": 61.0,
+    "sdc_ps": 81.0
+   },
+   "clk_t54": {
+    "meas_ps": 85.0,
+    "sdc_ps": 105.0
+   },
+   "clk_t55": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t56": {
+    "meas_ps": 65.0,
+    "sdc_ps": 85.0
+   },
+   "clk_t57": {
+    "meas_ps": 114.0,
+    "sdc_ps": 134.0
+   },
+   "clk_t58": {
+    "meas_ps": 74.0,
+    "sdc_ps": 94.0
+   },
+   "clk_t6": {
+    "meas_ps": 47.0,
+    "sdc_ps": 67.0
+   },
+   "clk_t7": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t8": {
+    "meas_ps": 141.0,
+    "sdc_ps": 161.0
+   },
+   "clk_t9": {
+    "meas_ps": 117.0,
+    "sdc_ps": 137.0
+   }
+  },
+  "serdes__t16": {
+   "clk": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t1": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t10": {
+    "meas_ps": 49.0,
+    "sdc_ps": 69.0
+   },
+   "clk_t11": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t12": {
+    "meas_ps": 79.0,
+    "sdc_ps": 99.0
+   },
+   "clk_t13": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t14": {
+    "meas_ps": 94.0,
+    "sdc_ps": 114.0
+   },
+   "clk_t15": {
+    "meas_ps": 61.0,
+    "sdc_ps": 81.0
+   },
+   "clk_t16": {
+    "meas_ps": 22.0,
+    "sdc_ps": 42.0
+   },
+   "clk_t17": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t18": {
+    "meas_ps": 29.0,
+    "sdc_ps": 49.0
+   },
+   "clk_t19": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t2": {
+    "meas_ps": 46.0,
+    "sdc_ps": 66.0
+   },
+   "clk_t20": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t21": {
+    "meas_ps": 52.0,
+    "sdc_ps": 72.0
+   },
+   "clk_t22": {
+    "meas_ps": 75.0,
+    "sdc_ps": 95.0
+   },
+   "clk_t23": {
+    "meas_ps": 61.0,
+    "sdc_ps": 81.0
+   },
+   "clk_t24": {
+    "meas_ps": 28.0,
+    "sdc_ps": 48.0
+   },
+   "clk_t25": {
+    "meas_ps": 26.0,
+    "sdc_ps": 46.0
+   },
+   "clk_t26": {
+    "meas_ps": 63.0,
+    "sdc_ps": 83.0
+   },
+   "clk_t27": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t28": {
+    "meas_ps": 26.0,
+    "sdc_ps": 46.0
+   },
+   "clk_t29": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t3": {
+    "meas_ps": 20.0,
+    "sdc_ps": 40.0
+   },
+   "clk_t30": {
+    "meas_ps": 63.0,
+    "sdc_ps": 83.0
+   },
+   "clk_t31": {
+    "meas_ps": 63.0,
+    "sdc_ps": 83.0
+   },
+   "clk_t32": {
+    "meas_ps": 60.0,
+    "sdc_ps": 80.0
+   },
+   "clk_t33": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t34": {
+    "meas_ps": 79.0,
+    "sdc_ps": 99.0
+   },
+   "clk_t35": {
+    "meas_ps": 63.0,
+    "sdc_ps": 83.0
+   },
+   "clk_t36": {
+    "meas_ps": 34.0,
+    "sdc_ps": 54.0
+   },
+   "clk_t37": {
+    "meas_ps": 96.0,
+    "sdc_ps": 116.0
+   },
+   "clk_t38": {
+    "meas_ps": 23.0,
+    "sdc_ps": 43.0
+   },
+   "clk_t39": {
+    "meas_ps": 74.0,
+    "sdc_ps": 94.0
+   },
+   "clk_t4": {
+    "meas_ps": 54.0,
+    "sdc_ps": 74.0
+   },
+   "clk_t40": {
+    "meas_ps": 46.0,
+    "sdc_ps": 66.0
+   },
+   "clk_t41": {
+    "meas_ps": 44.0,
+    "sdc_ps": 64.0
+   },
+   "clk_t42": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t43": {
+    "meas_ps": 74.0,
+    "sdc_ps": 94.0
+   },
+   "clk_t44": {
+    "meas_ps": 84.0,
+    "sdc_ps": 104.0
+   },
+   "clk_t45": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t46": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t47": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t48": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t5": {
+    "meas_ps": 76.0,
+    "sdc_ps": 96.0
+   },
+   "clk_t6": {
+    "meas_ps": 75.0,
+    "sdc_ps": 95.0
+   },
+   "clk_t7": {
+    "meas_ps": 58.0,
+    "sdc_ps": 78.0
+   },
+   "clk_t8": {
+    "meas_ps": 31.0,
+    "sdc_ps": 51.0
+   },
+   "clk_t9": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   }
+  },
+  "serdes__t1__clb45db5be": {
+   "clk": {
+    "meas_ps": 7.0,
+    "sdc_ps": 27.0
+   },
+   "clk_t1": {
+    "meas_ps": 23.0,
+    "sdc_ps": 43.0
+   },
+   "clk_t10": {
+    "meas_ps": 28.0,
+    "sdc_ps": 48.0
+   },
+   "clk_t11": {
+    "meas_ps": 20.0,
+    "sdc_ps": 40.0
+   },
+   "clk_t12": {
+    "meas_ps": 99.0,
+    "sdc_ps": 119.0
+   },
+   "clk_t13": {
+    "meas_ps": 70.0,
+    "sdc_ps": 90.0
+   },
+   "clk_t14": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t15": {
+    "meas_ps": 83.0,
+    "sdc_ps": 103.0
+   },
+   "clk_t16": {
+    "meas_ps": 16.0,
+    "sdc_ps": 36.0
+   },
+   "clk_t17": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t18": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t19": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t2": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t20": {
+    "meas_ps": 99.0,
+    "sdc_ps": 119.0
+   },
+   "clk_t21": {
+    "meas_ps": 75.0,
+    "sdc_ps": 95.0
+   },
+   "clk_t22": {
+    "meas_ps": 58.0,
+    "sdc_ps": 78.0
+   },
+   "clk_t23": {
+    "meas_ps": 55.0,
+    "sdc_ps": 75.0
+   },
+   "clk_t24": {
+    "meas_ps": 18.0,
+    "sdc_ps": 38.0
+   },
+   "clk_t25": {
+    "meas_ps": 25.0,
+    "sdc_ps": 45.0
+   },
+   "clk_t26": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t27": {
+    "meas_ps": 22.0,
+    "sdc_ps": 42.0
+   },
+   "clk_t28": {
+    "meas_ps": 111.0,
+    "sdc_ps": 131.0
+   },
+   "clk_t29": {
+    "meas_ps": 71.0,
+    "sdc_ps": 91.0
+   },
+   "clk_t3": {
+    "meas_ps": 11.0,
+    "sdc_ps": 31.0
+   },
+   "clk_t30": {
+    "meas_ps": 72.0,
+    "sdc_ps": 92.0
+   },
+   "clk_t31": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t32": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t33": {
+    "meas_ps": 46.0,
+    "sdc_ps": 66.0
+   },
+   "clk_t34": {
+    "meas_ps": 53.0,
+    "sdc_ps": 73.0
+   },
+   "clk_t35": {
+    "meas_ps": 118.0,
+    "sdc_ps": 138.0
+   },
+   "clk_t36": {
+    "meas_ps": 116.0,
+    "sdc_ps": 136.0
+   },
+   "clk_t37": {
+    "meas_ps": 23.0,
+    "sdc_ps": 43.0
+   },
+   "clk_t38": {
+    "meas_ps": 43.0,
+    "sdc_ps": 63.0
+   },
+   "clk_t39": {
+    "meas_ps": 109.0,
+    "sdc_ps": 129.0
+   },
+   "clk_t4": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t40": {
+    "meas_ps": 81.0,
+    "sdc_ps": 101.0
+   },
+   "clk_t41": {
+    "meas_ps": 35.0,
+    "sdc_ps": 55.0
+   },
+   "clk_t42": {
+    "meas_ps": 98.0,
+    "sdc_ps": 118.0
+   },
+   "clk_t43": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t44": {
+    "meas_ps": 0.0,
+    "sdc_ps": 20.0
+   },
+   "clk_t45": {
+    "meas_ps": 9.0,
+    "sdc_ps": 29.0
+   },
+   "clk_t46": {
+    "meas_ps": 93.0,
+    "sdc_ps": 113.0
+   },
+   "clk_t47": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t5": {
+    "meas_ps": 94.0,
+    "sdc_ps": 114.0
+   },
+   "clk_t6": {
+    "meas_ps": 95.0,
+    "sdc_ps": 115.0
+   },
+   "clk_t7": {
+    "meas_ps": 81.0,
+    "sdc_ps": 101.0
+   },
+   "clk_t8": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t9": {
+    "meas_ps": 20.0,
+    "sdc_ps": 40.0
+   }
+  },
+  "serdes__t1__clfe1f0815": {
+   "clk": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t1": {
+    "meas_ps": 78.0,
+    "sdc_ps": 98.0
+   },
+   "clk_t10": {
+    "meas_ps": 22.0,
+    "sdc_ps": 42.0
+   },
+   "clk_t11": {
+    "meas_ps": 27.0,
+    "sdc_ps": 47.0
+   },
+   "clk_t12": {
+    "meas_ps": 9.0,
+    "sdc_ps": 29.0
+   },
+   "clk_t13": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t14": {
+    "meas_ps": 21.0,
+    "sdc_ps": 41.0
+   },
+   "clk_t15": {
+    "meas_ps": 28.0,
+    "sdc_ps": 48.0
+   },
+   "clk_t16": {
+    "meas_ps": 40.0,
+    "sdc_ps": 60.0
+   },
+   "clk_t17": {
+    "meas_ps": 5.0,
+    "sdc_ps": 25.0
+   },
+   "clk_t18": {
+    "meas_ps": 13.0,
+    "sdc_ps": 33.0
+   },
+   "clk_t19": {
+    "meas_ps": 67.0,
+    "sdc_ps": 87.0
+   },
+   "clk_t2": {
+    "meas_ps": 22.0,
+    "sdc_ps": 42.0
+   },
+   "clk_t20": {
+    "meas_ps": 15.0,
+    "sdc_ps": 35.0
+   },
+   "clk_t21": {
+    "meas_ps": 66.0,
+    "sdc_ps": 86.0
+   },
+   "clk_t22": {
+    "meas_ps": 53.0,
+    "sdc_ps": 73.0
+   },
+   "clk_t23": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t24": {
+    "meas_ps": 34.0,
+    "sdc_ps": 54.0
+   },
+   "clk_t25": {
+    "meas_ps": 3.0,
+    "sdc_ps": 23.0
+   },
+   "clk_t26": {
+    "meas_ps": 13.0,
+    "sdc_ps": 33.0
+   },
+   "clk_t27": {
+    "meas_ps": 21.0,
+    "sdc_ps": 41.0
+   },
+   "clk_t28": {
+    "meas_ps": 27.0,
+    "sdc_ps": 47.0
+   },
+   "clk_t29": {
+    "meas_ps": 21.0,
+    "sdc_ps": 41.0
+   },
+   "clk_t3": {
+    "meas_ps": 44.0,
+    "sdc_ps": 64.0
+   },
+   "clk_t30": {
+    "meas_ps": 47.0,
+    "sdc_ps": 67.0
+   },
+   "clk_t31": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t32": {
+    "meas_ps": 31.0,
+    "sdc_ps": 51.0
+   },
+   "clk_t33": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t34": {
+    "meas_ps": 65.0,
+    "sdc_ps": 85.0
+   },
+   "clk_t35": {
+    "meas_ps": 49.0,
+    "sdc_ps": 69.0
+   },
+   "clk_t36": {
+    "meas_ps": 4.0,
+    "sdc_ps": 24.0
+   },
+   "clk_t37": {
+    "meas_ps": 35.0,
+    "sdc_ps": 55.0
+   },
+   "clk_t38": {
+    "meas_ps": 87.0,
+    "sdc_ps": 107.0
+   },
+   "clk_t39": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t4": {
+    "meas_ps": 7.0,
+    "sdc_ps": 27.0
+   },
+   "clk_t40": {
+    "meas_ps": 25.0,
+    "sdc_ps": 45.0
+   },
+   "clk_t41": {
+    "meas_ps": 89.0,
+    "sdc_ps": 109.0
+   },
+   "clk_t42": {
+    "meas_ps": 6.0,
+    "sdc_ps": 26.0
+   },
+   "clk_t43": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t44": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t45": {
+    "meas_ps": 35.0,
+    "sdc_ps": 55.0
+   },
+   "clk_t46": {
+    "meas_ps": 15.0,
+    "sdc_ps": 35.0
+   },
+   "clk_t47": {
+    "meas_ps": 7.0,
+    "sdc_ps": 27.0
+   },
+   "clk_t48": {
+    "meas_ps": 37.0,
+    "sdc_ps": 57.0
+   },
+   "clk_t49": {
+    "meas_ps": 27.0,
+    "sdc_ps": 47.0
+   },
+   "clk_t5": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t6": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t7": {
+    "meas_ps": 6.0,
+    "sdc_ps": 26.0
+   },
+   "clk_t8": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t9": {
+    "meas_ps": 80.0,
+    "sdc_ps": 100.0
+   }
+  },
+  "serdes__t2": {
+   "clk": {
+    "meas_ps": 37.0,
+    "sdc_ps": 57.0
+   },
+   "clk_t1": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t10": {
+    "meas_ps": 46.0,
+    "sdc_ps": 66.0
+   },
+   "clk_t11": {
+    "meas_ps": 59.0,
+    "sdc_ps": 79.0
+   },
+   "clk_t12": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t13": {
+    "meas_ps": 42.0,
+    "sdc_ps": 62.0
+   },
+   "clk_t14": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t15": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t16": {
+    "meas_ps": 36.0,
+    "sdc_ps": 56.0
+   },
+   "clk_t17": {
+    "meas_ps": 40.0,
+    "sdc_ps": 60.0
+   },
+   "clk_t18": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t19": {
+    "meas_ps": 55.0,
+    "sdc_ps": 75.0
+   },
+   "clk_t2": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t20": {
+    "meas_ps": 54.0,
+    "sdc_ps": 74.0
+   },
+   "clk_t21": {
+    "meas_ps": 27.0,
+    "sdc_ps": 47.0
+   },
+   "clk_t22": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t23": {
+    "meas_ps": 55.0,
+    "sdc_ps": 75.0
+   },
+   "clk_t24": {
+    "meas_ps": 34.0,
+    "sdc_ps": 54.0
+   },
+   "clk_t25": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t26": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t27": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t28": {
+    "meas_ps": 29.0,
+    "sdc_ps": 49.0
+   },
+   "clk_t29": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t3": {
+    "meas_ps": 46.0,
+    "sdc_ps": 66.0
+   },
+   "clk_t30": {
+    "meas_ps": 69.0,
+    "sdc_ps": 89.0
+   },
+   "clk_t31": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t32": {
+    "meas_ps": 36.0,
+    "sdc_ps": 56.0
+   },
+   "clk_t33": {
+    "meas_ps": 20.0,
+    "sdc_ps": 40.0
+   },
+   "clk_t34": {
+    "meas_ps": 30.0,
+    "sdc_ps": 50.0
+   },
+   "clk_t4": {
+    "meas_ps": 58.0,
+    "sdc_ps": 78.0
+   },
+   "clk_t5": {
+    "meas_ps": 40.0,
+    "sdc_ps": 60.0
+   },
+   "clk_t6": {
+    "meas_ps": 37.0,
+    "sdc_ps": 57.0
+   },
+   "clk_t7": {
+    "meas_ps": 25.0,
+    "sdc_ps": 45.0
+   },
+   "clk_t8": {
+    "meas_ps": 38.0,
+    "sdc_ps": 58.0
+   },
+   "clk_t9": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   }
+  },
+  "serdes__t3": {
+   "clk": {
+    "meas_ps": 66.0,
+    "sdc_ps": 86.0
+   },
+   "clk_t1": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t10": {
+    "meas_ps": 55.0,
+    "sdc_ps": 75.0
+   },
+   "clk_t11": {
+    "meas_ps": 89.0,
+    "sdc_ps": 109.0
+   },
+   "clk_t12": {
+    "meas_ps": 90.0,
+    "sdc_ps": 110.0
+   },
+   "clk_t13": {
+    "meas_ps": 26.0,
+    "sdc_ps": 46.0
+   },
+   "clk_t14": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t15": {
+    "meas_ps": 33.0,
+    "sdc_ps": 53.0
+   },
+   "clk_t16": {
+    "meas_ps": 104.0,
+    "sdc_ps": 124.0
+   },
+   "clk_t17": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t18": {
+    "meas_ps": 51.0,
+    "sdc_ps": 71.0
+   },
+   "clk_t19": {
+    "meas_ps": 107.0,
+    "sdc_ps": 127.0
+   },
+   "clk_t2": {
+    "meas_ps": 52.0,
+    "sdc_ps": 72.0
+   },
+   "clk_t20": {
+    "meas_ps": 109.0,
+    "sdc_ps": 129.0
+   },
+   "clk_t21": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t22": {
+    "meas_ps": 56.0,
+    "sdc_ps": 76.0
+   },
+   "clk_t23": {
+    "meas_ps": 57.0,
+    "sdc_ps": 77.0
+   },
+   "clk_t24": {
+    "meas_ps": 100.0,
+    "sdc_ps": 120.0
+   },
+   "clk_t25": {
+    "meas_ps": 24.0,
+    "sdc_ps": 44.0
+   },
+   "clk_t26": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t27": {
+    "meas_ps": 85.0,
+    "sdc_ps": 105.0
+   },
+   "clk_t28": {
+    "meas_ps": 84.0,
+    "sdc_ps": 104.0
+   },
+   "clk_t29": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t3": {
+    "meas_ps": 81.0,
+    "sdc_ps": 101.0
+   },
+   "clk_t30": {
+    "meas_ps": 81.0,
+    "sdc_ps": 101.0
+   },
+   "clk_t31": {
+    "meas_ps": 76.0,
+    "sdc_ps": 96.0
+   },
+   "clk_t32": {
+    "meas_ps": 102.0,
+    "sdc_ps": 122.0
+   },
+   "clk_t33": {
+    "meas_ps": 62.0,
+    "sdc_ps": 82.0
+   },
+   "clk_t34": {
+    "meas_ps": 52.0,
+    "sdc_ps": 72.0
+   },
+   "clk_t35": {
+    "meas_ps": 53.0,
+    "sdc_ps": 73.0
+   },
+   "clk_t36": {
+    "meas_ps": 105.0,
+    "sdc_ps": 125.0
+   },
+   "clk_t37": {
+    "meas_ps": 80.0,
+    "sdc_ps": 100.0
+   },
+   "clk_t38": {
+    "meas_ps": 71.0,
+    "sdc_ps": 91.0
+   },
+   "clk_t39": {
+    "meas_ps": 98.0,
+    "sdc_ps": 118.0
+   },
+   "clk_t4": {
+    "meas_ps": 101.0,
+    "sdc_ps": 121.0
+   },
+   "clk_t40": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t41": {
+    "meas_ps": 99.0,
+    "sdc_ps": 119.0
+   },
+   "clk_t42": {
+    "meas_ps": 128.0,
+    "sdc_ps": 148.0
+   },
+   "clk_t43": {
+    "meas_ps": 83.0,
+    "sdc_ps": 103.0
+   },
+   "clk_t44": {
+    "meas_ps": 106.0,
+    "sdc_ps": 126.0
+   },
+   "clk_t45": {
+    "meas_ps": 110.0,
+    "sdc_ps": 130.0
+   },
+   "clk_t46": {
+    "meas_ps": 80.0,
+    "sdc_ps": 100.0
+   },
+   "clk_t47": {
+    "meas_ps": 0.0,
+    "sdc_ps": 20.0
+   },
+   "clk_t48": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t49": {
+    "meas_ps": 95.0,
+    "sdc_ps": 115.0
+   },
+   "clk_t5": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t50": {
+    "meas_ps": 94.0,
+    "sdc_ps": 114.0
+   },
+   "clk_t51": {
+    "meas_ps": 61.0,
+    "sdc_ps": 81.0
+   },
+   "clk_t52": {
+    "meas_ps": 2.0,
+    "sdc_ps": 22.0
+   },
+   "clk_t6": {
+    "meas_ps": 54.0,
+    "sdc_ps": 74.0
+   },
+   "clk_t7": {
+    "meas_ps": 81.0,
+    "sdc_ps": 101.0
+   },
+   "clk_t8": {
+    "meas_ps": 122.0,
+    "sdc_ps": 142.0
+   },
+   "clk_t9": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   }
+  },
+  "serdes__t4": {
+   "clk": {
+    "meas_ps": 40.0,
+    "sdc_ps": 60.0
+   },
+   "clk_t1": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t10": {
+    "meas_ps": 32.0,
+    "sdc_ps": 52.0
+   },
+   "clk_t11": {
+    "meas_ps": 54.0,
+    "sdc_ps": 74.0
+   },
+   "clk_t12": {
+    "meas_ps": 45.0,
+    "sdc_ps": 65.0
+   },
+   "clk_t13": {
+    "meas_ps": 86.0,
+    "sdc_ps": 106.0
+   },
+   "clk_t14": {
+    "meas_ps": 33.0,
+    "sdc_ps": 53.0
+   },
+   "clk_t15": {
+    "meas_ps": 27.0,
+    "sdc_ps": 47.0
+   },
+   "clk_t16": {
+    "meas_ps": 62.0,
+    "sdc_ps": 82.0
+   },
+   "clk_t17": {
+    "meas_ps": 62.0,
+    "sdc_ps": 82.0
+   },
+   "clk_t18": {
+    "meas_ps": 13.0,
+    "sdc_ps": 33.0
+   },
+   "clk_t19": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t2": {
+    "meas_ps": 60.0,
+    "sdc_ps": 80.0
+   },
+   "clk_t20": {
+    "meas_ps": 23.0,
+    "sdc_ps": 43.0
+   },
+   "clk_t21": {
+    "meas_ps": 74.0,
+    "sdc_ps": 94.0
+   },
+   "clk_t22": {
+    "meas_ps": 15.0,
+    "sdc_ps": 35.0
+   },
+   "clk_t23": {
+    "meas_ps": 0.0,
+    "sdc_ps": 20.0
+   },
+   "clk_t24": {
+    "meas_ps": 63.0,
+    "sdc_ps": 83.0
+   },
+   "clk_t25": {
+    "meas_ps": 7.0,
+    "sdc_ps": 27.0
+   },
+   "clk_t26": {
+    "meas_ps": 50.0,
+    "sdc_ps": 70.0
+   },
+   "clk_t27": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t28": {
+    "meas_ps": 19.0,
+    "sdc_ps": 39.0
+   },
+   "clk_t29": {
+    "meas_ps": 74.0,
+    "sdc_ps": 94.0
+   },
+   "clk_t3": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t30": {
+    "meas_ps": 9.0,
+    "sdc_ps": 29.0
+   },
+   "clk_t31": {
+    "meas_ps": 2.0,
+    "sdc_ps": 22.0
+   },
+   "clk_t32": {
+    "meas_ps": 24.0,
+    "sdc_ps": 44.0
+   },
+   "clk_t33": {
+    "meas_ps": 73.0,
+    "sdc_ps": 93.0
+   },
+   "clk_t34": {
+    "meas_ps": 48.0,
+    "sdc_ps": 68.0
+   },
+   "clk_t35": {
+    "meas_ps": 39.0,
+    "sdc_ps": 59.0
+   },
+   "clk_t36": {
+    "meas_ps": 41.0,
+    "sdc_ps": 61.0
+   },
+   "clk_t37": {
+    "meas_ps": 61.0,
+    "sdc_ps": 81.0
+   },
+   "clk_t38": {
+    "meas_ps": 47.0,
+    "sdc_ps": 67.0
+   },
+   "clk_t39": {
+    "meas_ps": 68.0,
+    "sdc_ps": 88.0
+   },
+   "clk_t4": {
+    "meas_ps": 66.0,
+    "sdc_ps": 86.0
+   },
+   "clk_t40": {
+    "meas_ps": 20.0,
+    "sdc_ps": 40.0
+   },
+   "clk_t41": {
+    "meas_ps": 20.0,
+    "sdc_ps": 40.0
+   },
+   "clk_t42": {
+    "meas_ps": 70.0,
+    "sdc_ps": 90.0
+   },
+   "clk_t5": {
+    "meas_ps": 109.0,
+    "sdc_ps": 129.0
+   },
+   "clk_t6": {
+    "meas_ps": 52.0,
+    "sdc_ps": 72.0
+   },
+   "clk_t7": {
+    "meas_ps": 53.0,
+    "sdc_ps": 73.0
+   },
+   "clk_t8": {
+    "meas_ps": 44.0,
+    "sdc_ps": 64.0
+   },
+   "clk_t9": {
+    "meas_ps": 75.0,
+    "sdc_ps": 95.0
+   }
+  }
+ },
+ "plan_serdes_types": [
+  "serdes__t12",
+  "serdes__t13",
+  "serdes__t14",
+  "serdes__t15__cla2127225",
+  "serdes__t15__cla3d02796",
+  "serdes__t16",
+  "serdes__t1__clb45db5be",
+  "serdes__t1__clfe1f0815",
+  "serdes__t2",
+  "serdes__t3",
+  "serdes__t4"
+ ],
+ "rule": "sdc = meas + 20 ps, uncapped; flag > 116; cap 208"
+}

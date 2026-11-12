@@ -1,0 +1,8 @@
+{
+ "name": "w2_window",
+ "why": "WINDOW-2 (COORD 11-12 DIE-RECHECK-1): per-port windows = min(measured need + 20, 208) from kitwin_auto_db1da17a93ab (measured on ready11r itself, incl. the 11 serdes types; serdes_win_db1da17a93ab is its serdes view) where need > effective window; signed (name-only minus ready11r launch list) excluded; need > 208 not written (region-tree balance). Replaces w_window (r7b table) in the ready12 chain",
+ "script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win2/apply_window_rederive_1112.py",
+ "argv": ["{in}", "{out}", "{report}", "--table", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win2/kitwin_auto_db1da17a93ab.json", "--signed", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win2/signed_excl.txt", "--name-only", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win2/name_only.txt", "--base-plan", "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/out/s87_ready11r/plan.json"],
+ "type_keys": [],
+ "top_keys": ["clock.tap_window"]
+}
