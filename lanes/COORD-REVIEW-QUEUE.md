@@ -50489,3 +50489,18 @@ Event progress: coll clock merge rebased on the ctlcap_kp base (zz_collmerge_kp 
   DIE-HBM-98 1: +HBM t q_mcb (no kit-wave row)
   DIE-KV-97 1: KV t kv3_pv_v2n (SUPERSEDED 11-09 17:22)
   COORD (unowned) 26: +HBM c hnx_fused_lane_c (FAIL 11-12 08:35); +HBM c ot_hbm_sm_i8w_front (FAIL 11-12 08:06); +HBM c ot_hbm_sm_pv_merge (FAIL 11-12 09:15); +HBM c ot_hgi_sfu_opsa_group0 (FAIL 11-12 08:35); HBM c ot_pdie_serdes_rx_bm3_rest (no kit-wave row); HEAD t hd_host_e (FAIL 11-12 06:50); HEAD t hd_host_w (FAIL 11-09 12:52); HEAD c ot_s81hd_he_epc (no kit-wave row); KV t kv3_hg_v1p3 (SUPERSEDED 11-09 15:57); KV t kv3_pv_v1n (SUPERSEDED 11-12 05:18); KV t kv3_pv_v3n (SUPERSEDED 11-09 17:22); KV t kv3_pv_v4n (SUPERSEDED 11-09 17:22); KV t kv3_pv_v6n (FAIL 11-09 17:22); KV c qkd_astk_ex_s (no kit-wave row); QC t sle_st_b_v1__pv0e7b1dcc (FAIL 11-12 06:50); QC t sle_st_b_v1__pvc5a85fd4 (FAIL 11-12 06:59); QC t slw_fe_v1__clfe325744__cl08d14f0d (FAIL 11-12 06:18); QC t slw_hc1__cl68f9248e__cl144ee7b3 (SUPERSEDED 11-09 13:54); QC t slw_hc1__cl68f9248e__cle683a076 (SUPERSEDED 11-09 14:15); QC t slw_sc_v1__cl64543eaf__cl4590432d (FAIL 11-12 06:18); QC t slw_sc_v1__cl64543eaf__cl5e017c6f (FAIL 11-12 06:18); QC t slw_st_b_v1__cl6357f1cc__pv6ace3e48 (CANCELLED 11-12 07:36); QC t slw_st_b_v1__cl6357f1cc__pvffd43fdc (RETRY-INFRA 11-12 06:53); QC t slw_st_b_v2__pva66d0f22 (RETRY-INFRA 11-12 06:53); QC t slw_st_b_v2__pvc2ec5bfb (RETRY-INFRA 11-12 06:53); S81 t ot_s81sl_leaf__t40__cl86ea32b3__sid5S (SUPERSEDED 11-12 07:08)
+- 2026-11-12 15:24 PST READY [KW-FIX-46 -> ROOT-MERGE-60, COORD] tag verdict-form. Branch claude/kw-fix-46-verdictform-1112@adc8613297c0, on main 614ab4a0dac; merges clean on hub/main bebef8cb73d8. One file, tools/autopilot/kit_wave.py, plus a new test.
+  What it does: a visual verdict binds to (row, attempt, form fingerprint).
+  - Verdict lines are read with their time.
+  - A verdict given after the build started rated that build, and its form_fp is bound in autopilot/kit_wave_verdict_forms.json.
+  - A verdict older than the build applies only when that build's bound form equals this build's form. Otherwise visual_hold returns "WAIT-VISUAL: ... rated an earlier build of another or unknown form ..." and the row needs its own review.
+  - form_wait compares against the bound (rated) form. If there is no binding and the attempt dir now holds a newer spec, it never holds.
+  - A verdict line without a time keeps the old behaviour.
+  Tests: test_kit_wave_verdict_form.py, 10 cases (same form inherits; other form, unbound or GOOD-on-other-form waits for review; form_wait uses the bound form). kit_wave suite: 572 passed, 1 known baseline failure (test_own_cap_sigkill_247).
+  Live impact, read-only evaluation on the current state with a private binding file: 4 of the 24 ROUTE-HELD rows that have a verdict change from WAIT-FORM to WAIT-VISUAL. In all 4 the verdict predates the build:
+  - hbm NE_iorly a1 (build 05:22, verdict 00:44);
+  - hbm NW_iorly a1 (05:38 vs 00:44);
+  - hbm PHY_NC a4 (14:57 vs 01:20);
+  - s81 ot_s81sl_leaf__t38 a6 (06:31 vs 04:09).
+  They will appear in lanes/VISUAL-QUEUE.tsv for review. The other 20 are unchanged.
+  Not deployed live (READY only, as asked). Known limit: a verdict on another lane's own build with the same number, given after the wave build started, still binds to the wave row. The review line does not name the kit dir, so this cannot tell them apart. Stopping; handoff current.
