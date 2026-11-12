@@ -514,6 +514,12 @@ class Verification:
             self.fail(f'{pn}: {key}.{bus} plans {len(stages)} physical stages, as-built rule needs {physical}');return None
         return stages
 
+    def _reach_reader(self,pn):
+        """CLAND-RING-LOCALITY: the type takes the reach-default reader START (strap form only, the generator's rule)"""
+        import clock_landings as CL
+        return bool((self.table.get('count_aligned') or {}).get('strap_form')) and bool(
+            CL.reader_start_reach(self.raw,self.parts[pn]['type']))
+
     def reader_start(self,pn,bus,ring):
         """The count start a count-aligned ring reader resets on.  Default: the partition's start.  With the type's
         clock.landing_reader_start (clock_landings._reader_start_rtl): R kept ot_dp_landing_relay stages
@@ -525,8 +531,7 @@ class Verification:
         cfg=self._tclock(pn).get('landing_reader_start')
         reach=None
         if cfg is None:
-            import clock_landings as CL
-            if (self.table.get('count_aligned') or {}).get('strap_form') and CL.reader_start_reach(self.raw,self.parts[pn]['type']):
+            if self._reach_reader(pn):
                 # CLAND-RING-LOCALITY reach default (clock_landings.reader_start_reach, the rule the generator and
                 # strap K read): ONE stage on the ring's own registered reset (tap node, or its u_cland_rst_<bus> copy)
                 info=self.collector['types'][self.parts[pn]['type']]
