@@ -538,7 +538,30 @@ for r in %r:
             if st.st_mtime_ns > m: m = st.st_mtime_ns
 print("%%d:%%d:%%d" %% (n, m, z))
 """ % (SRC_OVERLAY_SCOPE,)
-SRC_OVERLAY_CACHE = {}                 # (host, src) -> (signature, hash); also persisted next to the kit_wave state
+SRC_OVERLAY_CACHE = {}                 # (host, src) -> (signature, hash); persisted in OVERLAY_CACHE_FILE (a tick is a new process)
+OVERLAY_CACHE_FILE = os.environ.get("KW_OVERLAY_CACHE") or os.path.expanduser("~/coord/autopilot/kit_wave_overlay_cache.json")
+_OVL_LOADED = [False]
+
+
+def _overlay_cache_load():
+    if _OVL_LOADED[0]:
+        return
+    _OVL_LOADED[0] = True
+    try:
+        for k, v in json.loads(open(OVERLAY_CACHE_FILE).read()).items():
+            h, _, src = k.partition("|")
+            SRC_OVERLAY_CACHE.setdefault((h, src), (v[0], v[1]))
+    except (OSError, ValueError, IndexError, TypeError):
+        pass
+
+
+def _overlay_cache_save():
+    try:
+        tmp = OVERLAY_CACHE_FILE + ".tmp"
+        open(tmp, "w").write(json.dumps({f"{h}|{s}": list(v) for (h, s), v in SRC_OVERLAY_CACHE.items()}))
+        os.replace(tmp, OVERLAY_CACHE_FILE)
+    except OSError:
+        pass
 SRC_OVERLAY_TIMEOUT_S = 420            # full content hash of a ~30k-file tree on a loaded gen host (was 90 s: S81 unreadable 27 ticks)
 SRC_OVERLAY_SIG_TIMEOUT_S = 150
 
@@ -561,6 +584,7 @@ def src_overlay_hash(src, host, hub, timeout=None):
     tree (host, path) under a cheap signature (file count, newest mtime_ns, total size over the scope: an in-place edit
     changes it, a top-dir mtime would not) so the full read runs only after a change, with a longer timeout; the caller
     treats '' as CHANGED (never as 'no overlay to compare')."""
+    _overlay_cache_load()
     sig = _overlay_run(src, host, hub, SRC_OVERLAY_SIG_SCRIPT, SRC_OVERLAY_SIG_TIMEOUT_S)
     key = (host, src)
     hit = SRC_OVERLAY_CACHE.get(key)
@@ -570,6 +594,7 @@ def src_overlay_hash(src, host, hub, timeout=None):
     if out and re.fullmatch(r"[0-9a-f]{64}", out):
         if sig:
             SRC_OVERLAY_CACHE[key] = (sig, out)
+            _overlay_cache_save()
         return out
     return ""
 
