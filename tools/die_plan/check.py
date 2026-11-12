@@ -61,6 +61,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               geom_partial_face (plan pin table); granted exceptions kept (plan_geom.EXCEPTIONS)
   G0C (--completeness): hard_cores, core_faces, complete, clock_entry_macro; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
+  xtap_latency (WARN only, XTAP-SWEEP-1 11-11) ft hops between taps whose modeled source latency differs > 50 ps and no
+              clock.ft_hop_lockup (xtap flop / latch); one [xtap-count] line
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
 """
 import argparse
@@ -825,6 +827,109 @@ def ft_s0_window_um(t, slot):
     else:
         e, a = abs((0.0 if face == "S" else h) - y), x
     return e + max(lo - a, 0.0, a - hi), e + max(abs(a - lo), abs(a - hi))
+
+
+XTAP_LAT_DELTA_PS = 50.0     # XTAP-SWEEP-1 11-11: hop tap-latency difference above which an unlocked hop is listed
+
+
+def xtap_latency_hops(P, thresh=XTAP_LAT_DELTA_PS):
+    """XTAP-SWEEP-1 11-11 (COORD, NW_iorly hold): ft station-chain hops k -> k+1 (ft_slots, per type) whose two stations
+    hang on kit clock taps whose MODELED source latency differs by more than `thresh` ps.  Modeled latency of a tap port
+    p = -D_p, the early source latency the kit SDC gives it (plan clock.tap_window.per_port_ps via
+    gen_phys.port_window_ps; late 0 on every port), so delta = |D_a - D_b| (bit with the largest delta decides).
+    Stations map to taps the way ft_xtap.predict_slot does (nearest grid tap by Manhattan distance); the kit's cap /
+    merge passes can still move sinks.  A hop is COVERED when its type is on clock.ft_hop_lockup (latch u_fl_*) and
+    either the hop is on clock.ft_hop_lockup.xtap_flop (full-cycle hop flop) or carries a latch tap / latch_frac entry;
+    a hop of a lockup type with neither is `latch_only` (counted, not listed).  Types / hops with no site data count
+    as unknown (never listed).  Returns (mode, hops, stats): mode "per_port" | "flat" | "none"."""
+    import ft_xtap
+    import gen_phys
+    import gen_rtl
+    tw = (P.raw.get("clock") or {}).get("tap_window")
+    if not tw:
+        mode = "none"
+    elif (tw.get("per_port_ps") or {}):
+        mode = "per_port"
+    else:
+        mode = "flat"
+    stats = dict(hops_total=0, hops_unknown=0, latch_only=0, flat_xtap_hops=0, flat_window_ps=None,
+                 per_port_types=len(((tw or {}).get("per_port_ps") or {})))
+    out = []
+    if mode == "none":
+        return mode, out, stats
+    if mode == "flat":
+        stats["flat_window_ps"] = gen_phys.tap_window_ps(P)
+    for tn in sorted(P.types):
+        t = P.types[tn]
+        slots = [s for s in (t.get("ft_slots") or []) if int(s.get("stations", 1)) >= 2]
+        if not slots:
+            continue
+        taps = S.tap_grid(P, tn)
+        if len(taps) < 2:
+            continue
+        lock = gen_rtl.ft_hop_lockup(P.raw, tn)
+        for s in slots:
+            st, _nb = ft_xtap.station_sites(P, tn, s)
+            xt = set(S.ft_hop_xtap(P.raw, tn, s["name"])) if lock else set()
+            ltap = S.ft_hop_latch_tap(P.raw, tn).get(s["name"], {}) if lock else {}
+            lfrac = S.ft_hop_latch_frac(P.raw, tn).get(s["name"], {}) if lock else {}
+            for k in range(len(st) - 1):
+                a, b = st[k], st[k + 1]
+                stats["hops_total"] += 1
+                if not a or not b:
+                    stats["hops_unknown"] += 1
+                    continue
+                m = max(len(a), len(b))
+                best = None
+                for i in range(m):
+                    na = ft_xtap._nearest(taps, *a[min(i, len(a) - 1)])
+                    nb_ = ft_xtap._nearest(taps, *b[min(i, len(b) - 1)])
+                    if na == nb_:
+                        continue
+                    if mode == "flat":
+                        stats["flat_xtap_hops"] += 1
+                        break
+                    d = abs(gen_phys.port_window_ps(P, tn, na) - gen_phys.port_window_ps(P, tn, nb_))
+                    if best is None or d > best[0]:
+                        best = (d, na, nb_)
+                if best is None or best[0] <= thresh:
+                    continue
+                covered = lock and (k in xt or k in ltap or k in lfrac)
+                if lock and not covered:
+                    stats["latch_only"] += 1
+                if not lock:
+                    out.append(dict(type=tn, slot=s["name"], hop=k, delta_ps=best[0], launch_tap=best[1],
+                                    capture_tap=best[2]))
+    return mode, out, stats
+
+
+def check_xtap_latency(P, R, max_msgs=20):
+    """XTAP-SWEEP-1 11-11: ADVISORY (WARN, never ERROR) list of ft hops between taps with modeled latency difference
+    > XTAP_LAT_DELTA_PS and no lockup (xtap_latency_hops).  Always one count line."""
+    mode, hops, st = xtap_latency_hops(P)
+    hops.sort(key=lambda h: (-h["delta_ps"], h["type"], h["slot"], h["hop"]))
+    for h in hops[:max_msgs]:
+        R.warn("xtap_latency", f"type {h['type']} slot {h['slot']} hop {h['hop']}->{h['hop'] + 1}: {h['launch_tap']} -> "
+               f"{h['capture_tap']} modeled source latency differs {h['delta_ps']:g} ps (> {XTAP_LAT_DELTA_PS:g}), no "
+               "clock.ft_hop_lockup (xtap flop / latch)", type=h["type"])
+    if len(hops) > max_msgs:
+        R.warn("xtap_latency", f"... {len(hops) - max_msgs} more unlocked cross-tap hops (see summary)")
+    worst = max((h["delta_ps"] for h in hops), default=0.0)
+    tops = defaultdict(int)
+    for h in hops:
+        tops[h["type"]] += 1
+    if mode == "none":
+        note = "plan models no tap latency (no clock.tap_window)"
+    elif mode == "flat":
+        note = (f"flat tap window {st['flat_window_ps']:g} ps (equal on every port: per-port delta 0 by model; "
+                f"{st['flat_xtap_hops']} cross-tap hops pay the full window)")
+    else:
+        note = "per-port tap window"
+    R.warn("xtap_latency", f"[xtap-count] {len(hops)} unlocked hops with tap latency delta > {XTAP_LAT_DELTA_PS:g} ps "
+           f"(worst {worst:g} ps; {st['hops_total']} hops, {st['hops_unknown']} unknown sites, {st['latch_only']} "
+           f"latch-only); {note}")
+    return dict(mode=mode, hops=len(hops), worst_delta_ps=worst, top_types=sorted(tops.items(), key=lambda kv: -kv[1])[:5],
+                **st)
 
 
 def check_ft_s0_window(P, R, max_msgs=40):
@@ -2480,6 +2585,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["m89_signals"] = check_m89_signals(P, R)
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["ft_s0_window"] = check_ft_s0_window(P, R)
+    summ["xtap_latency"] = check_xtap_latency(P, R)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
