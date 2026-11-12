@@ -43801,5 +43801,7 @@
   "intel1",
   "intel2",
   "epyc4"
- ]
+ ],
+ "reap_dry_run": true,
+ "note_kw45_reap": "KW-FIX-45 11-11 22:5x COORD: reap_stale_attempts deployed behind reap_dry_run (log the would-stop list for 2 ticks); remove reap_dry_run to enable"
 }
