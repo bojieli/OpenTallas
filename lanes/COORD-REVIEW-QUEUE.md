@@ -48118,3 +48118,10 @@ FAILED [AUTOPILOT cc0407fb5d84] 2026-11-12 03:48:04 PST AUTOPILOT -> KIT-WAVE-12
   lepw_mus_LP__t2 (R0), place: CLEAN LAYOUT. Same picture mirrored: lnl at 639 with an open 65 um canyon to ln; SRAM band above, no cells in slivers. smells: clock 1157.9 (CK mark at the ln0 S edge / landing pins; a clock spread smell for CTS, not a geometry smell), fanout_spread 1905, local_density 0.853. GP took about 2 h in routability mode (inflation, target density 0.506), so placement still saw congestion pressure.
   GRT: lepw_mu_LP__t2 is in GRT extra iterations (8/30 at 12:10 UTC; each about 8 min on the overloaded epyc7, load 112). The kit-wave baseline for this family was 463k overflow; the number follows when GRT ends.
   Status: 6 builds in route (lepw_mus, lepw_mu, kv512_C, lepe_nh_mus_C + 2 admitted). 11 are in kit steps behind the ot-heavy load gate (15-80 min admission waits per 2-thread step).
+
+- 2026-11-12 04:12 PST DIE-PROTO-1 -> DIE-HBM-100 + CORES-HBM-1: t40w STRUCTURAL ITEM (COORD ruling 4), HBM d55a NW ft-band capacity.
+  Die GRT at 32.4 um gcell, 10 iterations, total overflow 396,551: M9 321,974 / M8 48,749 / M6 17,887 / M7 7,758 / M4 115 / M5 68.
+  All 367 hotspot boxes are in the NW quadrant (x 2-8 mm, y 4-12 mm). Congested-net hits: ft_NW_b* band bits 58,339, ft_NW su/spb/spu 2.2-2.5k each, NE only 916.
+  More iterations will not clear it. Fix: NW band capacity (wider or second band, or split the ft bits).
+  Report: epyc8 /srv/opentallas-scratch2/claude/die-proto-3/hbm/d55a10/gcp2.16/congestion_TT.rpt (kit hbm/d55a10/kit).
+  HBM triage per COORD: die GRT at 32.4 um / 10 iterations (die_trial --coarse-um 2.16, about 30 min). 10.8 / 50 only as the final check once triage overflow is 0.
