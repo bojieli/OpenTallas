@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:40 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 08:43 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -77,3 +77,6 @@ NEXT for each: GEOM-VIS-7 form verdict GOOD -> kit (gen.py rtl+phys with the HEA
 - SD-GROW place visual = GOOD (COORD OK 08:3x in GEOM-REVIEW.md, concurring with GEOM-VIS-6). The ONLY remaining route condition is DIE-KV-99 confirming that vN2 carries the die width (COORD asked them). Then route on epyc8 (section 6 step 2 command). Tap imbalance is fixed in vN2, not here.
 - hd_spn_end fclk_in_x_i: do NOT split it (forwarded landing clock within 170 um: a single tree is correct).
 - Visual reviewer is now GEOM-VIS-7 (agent a8bbc2a208a5175e9). HEAD-95 kit recipe and flow tag: COORD asked HEAD-95.
+## 11 SD-GROW ROUTE RUNNING (2026-11-12 08:43 PST)
+ot-run-wave on intel2 -> epyc8, kit epyc8 /srv/opentallas-scratch2/claude/vislayout3-kvhead/pilots_kv3_sys_SD_v1_grow/items/kv3_sys_SD_v1/gen/kv3_sys_SD_v1. Log intel2 /srv/opentallas-scratch2/claude/vislayout3-kvhead/jobs/kv3_sys_SD_v1_grow/route.log; it ends with ROUTE_RC=. Sign-off runs at the end of the route: verdict in <kit>/signoff/signoff.json. Next: view the route renders (run/layout_review/route) and post the sign-off verdict with numbers. If NOT SIGNED: one structural fix (fallback = reset-copy RTL), 2-strike rule.
+HEAD recipe (HEAD-95): cwd rfsr tree; gen.py phys PLAN --clock-landing pd/sidecar.json --types T --out KIT --rtl-root <rfsr>; then python3 -I /srv/opentallas-scratch2/claude/head-95/raw_patch.py PLAN KIT T; build: ot-run --hosts H --mem 64 --threads 16 --disk 40 --dir KIT -- bash KIT/run_kit.sh KIT/T place 64 16 (then route); flow tag flow-20261112-lz-head. Kits: epyc4 head/kit_mesh_m1, head/kit_spn_sp2 (ot-run syncs nothing: rsync the kit to the build host first).
