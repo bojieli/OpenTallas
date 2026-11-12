@@ -19815,7 +19815,11 @@
     "epyc4",
     "intel1"
    ],
-   "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1. Applied to 52 items; 12 with a different type block left as they are (11 already held, eng__t1 held here)."
+   "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:43 PST (COORD: same class on S81): per-item plan override dropped. The old event plan's type block is byte-identical to plan_ready11r's, but plan + die bind out_r11r failed kit_topology.bind_matches (KIT_TOPOLOGY_BIND_STALE). The die plan of record ready11r matches out_r11r. Revert: plan = plan_prev_kvbr1. Applied to 52 items; 12 with a different type block left as they are (11 already held, eng__t1 held here).",
+   "kit_self_contained_by_item": {
+    "serdes__t2": "copy",
+    "serdes__t15__cla2127225": "copy"
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -28916,6 +28920,10 @@
     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237",
     "src_sha": "4e2764d237d8",
     "queue_src": "claude/qc-event-s25-1111@4e2764d237d8"
+   },
+   "kit_self_contained_by_item": {
+    "cbn_q00__cl622f65d2": "copy",
+    "cbn_q00__cldbcda913": "copy"
    }
   },
   "hbm": {
