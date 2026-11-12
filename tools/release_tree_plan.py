@@ -49,14 +49,16 @@ REFRESH_S = 50 * 60
 # the plan dir first, in order (HBM: d35a holds every referenced cores/*.json + side JSON as .gz).  Repo-relative
 # 'results/...' tables the plan names are fetched too.  Re-point a line here when a die's plan of record changes.
 _HBM_POR = 'physical/die_plan/hbm/plan_of_record/'
-PLANS = [('s81', 's81', 'physical/die_plan/s81/events/svc_prov_v5_por_1111/plan_h2_2249_pgr1_v5pi_64eb2c89c94c197f.json.gz', ()),   # S81 POR + PGR1 + svc_prov v5 + physinst fix (COORD 11-11 03:1x ruling (a); main e5cc5a2dc5f, pin tables 274aaaa2b61f; dry run 0 lost, +2 H4/IRG; SMC/SML/SMR/SMD follow with the S81 12:00 plan event)
+PLANS = [('s81', 's81', 'physical/die_plan/s81/events/s81_ready11r_1112/plan_ready11r_db1da17a93ab.json.gz', ()),   # WAVE-POR 11-12: pinned fallback = ready11r (last wave plan on main)
+         # was: ('s81', 's81', 'physical/die_plan/s81/events/svc_prov_v5_por_1111/plan_h2_2249_pgr1_v5pi_64eb2c89c94c197f.json.gz', ()),   # S81 POR + PGR1 + svc_prov v5 + physinst fix (COORD 11-11 03:1x ruling (a); main e5cc5a2dc5f, pin tables 274aaaa2b61f; dry run 0 lost, +2 H4/IRG; SMC/SML/SMR/SMD follow with the S81 12:00 plan event)
          # was: ('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
          ('s81_head', 's81_head/plan_of_record/l48uo', 'physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz',
           ('s81_head/plan_of_record/l48uo',)),   # HEAD l48uo (DIE-HEAD-82, COORD 11-07 13:14; main 2d1ee842c5a with native-reset + head_root_boot re-pin f140216c): plain plan-relative tables, plan latency = sidecar sched_lat; dry run 16 types + 4 cores, 0 lost
          # was l48un: ('s81_head', 's81_head/plan_of_record/l48ui', 'physical/die_plan/s81_head/plan_of_record/l48ui/source_plan_l48un.json.gz', ('s81_head/plan_of_record/l48ui',)),   # HEAD l48un (DIE-HEAD-81, COORD 11-07 09:4x): main l48ui (n4 FREG = the signed hd_st_n4) + hd_serdes same_edge data_inputs, repo-relative sink_bins; dry run same 16 types + 4 cores
          # was l48x: ('s81_head', 's81_head', 'results/die_head_52_1031/pin/source_plan_l48x.json', ('../../results/die_head_47_1031/l47',)),   # HEAD l48x (= l48w + 51 rst_start_raw pin moves; plan of record per COORD 19:0x 10-31, merged f3e4659f5; SIGNOFF-SPRINT-15); same plan-relative core_pins/native_domains refs as l47, laid from the l47 dir
          # was:   # SIGNOFF-SPRINT-11 10-31: plan-relative native_domains/ + core_pins/ (DIE-HEAD-48 fd132f2b694) laid beside the por__ copy   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
-         ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52u.json', ()),  # QC qc52u = qc52t + NK clock-pin event qc52u_nk_ck_event (NK-CK-1 ae9a80d2854d, main 0741e605dae; qfd_tile_nk_a0c ck to the as-built M5 position; COORD 11-09 18:xx)
+         ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s27.json', ()),   # WAVE-POR 11-12: pinned fallback = s27 (last wave plan on main)
+         # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52u.json', ()),  # QC qc52u = qc52t + NK clock-pin event qc52u_nk_ck_event (NK-CK-1 ae9a80d2854d, main 0741e605dae; qfd_tile_nk_a0c ck to the as-built M5 position; COORD 11-09 18:xx)
         # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52t.json', ()),  # QC qc52t = qc52n + tap-pair affinity on 25 types (QC-TYPES-6, main a09cbc70ae5; dry run 26 designs, 0 lost, G0C 616 unchanged; COORD 11-08 01:0x)
         # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52n.json', ()),  # QC qc52n = qc52 + NL clock-pin event (DIE-QC-91, COORD 11-07 17:07 (5) / 18:00 (1); main a6b4cd1c5d3 in 18ed159e6b8): dry run 24 -> 25 designs (NL gained), 0 lost, G0C findings identical
          # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json', ()),  # QC plan of record qc52 (0735589d; binds btab P8eco), COORD 12:43 10-31 SIGNOFF-SPRINT-13 (was plan_qc50)
@@ -152,10 +154,15 @@ def main_plan_index(tops, repo=None, rev='origin/main', index_path=None, min_byt
     return idx
 
 
-def resolve_plans(plans, wave, index):
+def resolve_plans(plans, wave, index, prev=None):
     """-> (resolved [(key, pdir, src, ovl, info)], drift [str]).  info = dict(wave_plan_sha, wave_plan_path,
     wave_source, repointed_from, drift).  The plan file follows the wave when the wave's plan is on main
-    (same die top, preferring a path under the pinned plan dir); else the pinned plan with a drift note."""
+    (same die top, preferring a path under the pinned plan dir).  Else the die keeps the plan it counted last
+    (prev {die: (pdir, src, overlays)} from the previous cache, when that file is still on main) with a drift note:
+    a repoint to a lane-tree plan must not drop the count back to the stale pinned PLANS (11-12 03:37 S81 ready11p /
+    QC s28 repoints would have reverted S81 to svc v5 and QC to qc52u); the pinned entry is the last resort."""
+    prev = prev or {}
+    on_main = {q for v in index.values() for q in v}
     out, drift = [], []
     for key, pdir, src, ovl in plans:
         w = wave.get(key)
@@ -172,8 +179,12 @@ def resolve_plans(plans, wave, index):
                 if cand[0] != src: info['repointed_from'] = src
                 src = cand[0]
             else:
-                info['drift'] = ('PLAN DRIFT %s: the kit wave builds plan sha %s (%s) which is not on origin/main; counting the pinned %s '
-                                 'until that plan event is merged' % (key, w['sha'], w.get('path') or '?', plan_label(src)))
+                pv = prev.get(key)
+                if pv and pv[1] in on_main and pv[1] != src:
+                    info['kept_last'] = pv[1]; pdir, src, ovl = pv[0], pv[1], tuple(pv[2])
+                info['drift'] = ('PLAN DRIFT %s: the kit wave builds plan sha %s (%s) which is not on origin/main; counting the %s %s '
+                                 'until that plan event is merged' % (key, w['sha'], w.get('path') or '?',
+                                                                      'last counted' if info.get('kept_last') else 'pinned', plan_label(src)))
         if info.get('drift'): drift.append(info['drift'])
         out.append((key, pdir, src, ovl, info))
     return out, drift
@@ -1479,7 +1490,8 @@ def refresh(log=lambda *a: None, old=None):
         else:
             try:
                 wave = wave_plan_shas()
-                active, drift = resolve_plans(PLANS, wave, main_plan_index([pd.split('/')[0] for _, pd, _, _ in PLANS]))
+                prev = {r['die']: (r['pdir'], r['src'], r.get('overlays') or ()) for r in ((old or {}).get('plans_resolved') or [])}
+                active, drift = resolve_plans(PLANS, wave, main_plan_index([pd.split('/')[0] for _, pd, _, _ in PLANS]), prev)
                 errs.extend(drift)
             except Exception as e:
                 errs.append('PLAN DRIFT check failed (%s); counting the pinned PLANS' % e)
