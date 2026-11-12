@@ -5115,12 +5115,13 @@ def kit_inline_includes(fl, kd):
     include file ovl_release_rope/ovl_release_img.svh").  A file with includes is copied into KIT/inline/ with each
     include replaced by the included text (recursively, relative to the including file; original sources unchanged);
     the copy takes the original's place in the list.  A missing include is a BindError.  -> files, {copy: record}"""
-    def expand(path, depth, seen):
+    def expand(path, depth, seen, cond0=0):
         if depth > 8:
             raise BindError(f"kit-rtl: `include nesting > 8 at {path}")
         t = path.read_text(errors="replace")
+        cond = [cond0]      # `ifdef/`ifndef nesting depth at the current line (the defines are not evaluated here)
 
-        def sub(m):
+        def sub(m, in_cond):
             q = (path.parent / m.group(2)).resolve()
             if not q.is_file():
                 # DIE-HBM-94 11-08 (HBM q_spb0, NE_io, vsN0): the repo-wide child fallback can bring a file from outside its own
@@ -5132,11 +5133,26 @@ def kit_inline_includes(fl, kd):
                     if c.is_file():
                         hits.setdefault(c.read_bytes(), c.resolve())
                 if len(hits) != 1:
+                    if in_cond:
+                        # DIE-S81-87 11-12 (S81 serdes kit_rtl, ot_s81_kp4_enc.sv `ifdef OT_S81_KP4_ENC_LA_MUTPOW `include
+                        # "..._mat_mut.svh"): a missing include inside a conditional region may be an inactive branch; keep the
+                        # line untouched (the synth read still fails closed if that branch is active).  Unconditional: error.
+                        return m.group(0)
                     raise BindError(f'kit-rtl: {path}: `include "{m.group(2)}" not found next to the including file')
                 q = next(iter(hits.values()))
             seen.append(str(q))
-            return f'{m.group(1)}// kit-rtl inlined `include "{m.group(2)}"\n' + expand(q, depth + 1, seen) + "\n"
-        return KIT_INCLUDE.sub(sub, t)
+            return f'{m.group(1)}// kit-rtl inlined `include "{m.group(2)}"\n' + expand(q, depth + 1, seen, cond[0]) + "\n"
+        lines = []
+        for ln in t.split("\n"):
+            code = ln.split("//", 1)[0]
+            m = KIT_INCLUDE.match(ln)
+            if m:
+                lines.append(sub(m, cond[0] > 0))
+                continue
+            lines.append(ln)
+            for d in re.findall(r"`(ifdef|ifndef|endif)\b", code):
+                cond[0] += -1 if d == "endif" else 1
+        return "\n".join(lines)
     out, rec = [], {}
     for f in fl:
         f = Path(f)

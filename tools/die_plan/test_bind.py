@@ -1155,3 +1155,35 @@ def test_kit_inline_include_found_in_a_kit_file_directory(tmp_path):
     (c / "h.svh").write_text("wire two;\n")
     with pytest.raises(BindError, match="not found next to"):
         kit_inline_includes([a / "x.sv", b / "y.sv", c / "z.sv"], kd)
+
+
+def test_kit_inline_include_missing_in_conditional_region(tmp_path):
+    """DIE-S81-87 11-12: ot_s81_kp4_enc.sv names `include "..._mut.svh" inside an inactive `ifdef; a missing include in a
+    conditional region is left untouched, the same miss outside any conditional (or after the `endif) stays a BindError."""
+    from bind import BindError, kit_inline_includes
+    src = tmp_path / "src"
+    src.mkdir()
+    (src / "la_mat.svh").write_text("wire la;\n")
+    (src / "mat.svh").write_text("wire m;\n")
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    top = src / "enc.sv"
+    top.write_text('module enc;\n`ifdef LA\n`ifdef MUTPOW\n`include "la_mat_mut.svh"\n`else\n`include "la_mat.svh"\n`endif\n'
+                   '`else\n`include "mat.svh"\n`endif\nendmodule\n')
+    out, rec = kit_inline_includes([top], kd)
+    t = out[0].read_text()
+    assert '`include "la_mat_mut.svh"' in t and "wire la;" in t and "wire m;" in t
+    assert t.count("`endif") == 2 and "`ifdef MUTPOW" in t
+    bad = src / "bad.sv"
+    bad.write_text('module bad;\n`ifdef A\n`endif\n`include "nope.svh"\nendmodule\n')
+    with pytest.raises(BindError, match="not found next to"):
+        kit_inline_includes([bad], kd)
+    bad.write_text('module bad;\n`include "nope.svh"\n`ifdef A\n`endif\nendmodule\n')
+    with pytest.raises(BindError, match="not found next to"):
+        kit_inline_includes([bad], kd)
+    # a conditional region inside an included file keeps the depth of the include site
+    (src / "inc.svh").write_text('`include "gone.svh"\n')
+    cond = src / "cond.sv"
+    cond.write_text('module c;\n`ifdef Z\n`include "inc.svh"\n`endif\nendmodule\n')
+    out, _ = kit_inline_includes([cond], kd)
+    assert '`include "gone.svh"' in out[0].read_text()
