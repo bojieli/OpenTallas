@@ -34,6 +34,7 @@ drive).  Grade: RTL-functional (source assembly); execution_qualified False unti
 from __future__ import annotations
 
 import json
+import os
 import math
 from pathlib import Path
 
@@ -584,10 +585,14 @@ class Cx:
         words = II.calendar_words(rel, 0)
         abi = json.loads((Path(CI.ROOT) / "results/arch/hbm_vm_static_1014/quadrant_abi.json").read_text())
         spec = C.layout(abi, "SW", universal=True)
-        cal = C.compile_schedule(spec, dict(base=0, loops=1, cycles=words))
+        sched = dict(base=0, loops=1, cycles=words)
+        rs = int(os.environ.get("CX_RD1_RESP_SHIFT", "0") or 0)   # rd1 hub response calendar +N (default off)
+        if rs:
+            sched["resp_shift"] = rs
+        cal = C.compile_schedule(spec, sched)
         bus = CpBus(16, src="image:CAL")
         bus.install(II.CAL_TGT, [int(w["data"], 16) for w in cal["configuration_writes"]], 0)
-        bus.desc(II.CAL_TGT, 0, len(words), 1)
+        bus.desc(II.CAL_TGT, 0, len(cal["configuration_writes"]), 1)
         bus.src = "image:launch"
         cL = bus.launch()
         E0 = cL + II.CAL_DELTA
