@@ -480,11 +480,14 @@ def strap_bits(value, width):
     return int(value) % (1 << int(width))
 
 
-def reader_start_depth(plan, tn):
-    """Optional uniform ring-reader START transport; logical origin is unchanged."""
+def reader_start_depth(plan, tn, strap=True):
+    """Optional uniform ring-reader START transport; logical origin is unchanged.  CLAND-RING-LOCALITY: without an
+    explicit landing_reader_start a strap-form type takes the shared reach default (clock_landings.reader_start_reach:
+    1 stage on wide soft rings), the same rule the generator builds; non-strap tables keep 0."""
     cfg = plan["partition_types"][tn].get("clock", {}).get("landing_reader_start")
     if cfg is None:
-        return 0
+        import clock_landings as CL
+        return CL.reader_start_reach(plan, tn) if strap else 0
     if not isinstance(cfg, dict):
         raise BindError(f"{tn}: landing_reader_start must be an object")
     depth = cfg.get("depth")
