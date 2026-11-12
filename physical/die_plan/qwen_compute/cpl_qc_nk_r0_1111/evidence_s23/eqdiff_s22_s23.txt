@@ -1,0 +1,24 @@
+only A [] only B [] common 491
+identical 338 differ after path/plan/sha normalisation 17
+DIFF bind_clock_landings.json {}
+DIFF bind_latency.json {}
+DIFF bind_reset.json {}
+DIFF bind_reset_anchor.json {}
+DIFF native_topology.json {}
+DIFF rtl/cbn_q01__clab6e67f2.reset_tree.json {}
+DIFF rtl/cbn_q01__clab6e67f2.reset_tree.tcl {}
+DIFF rtl/cbn_q01__clab6e67f2.sv {"lines": 2222, "reset_lines": 2218, "other": ["+    wire rr_t136;", "+    wire rn_rr_t136;", "-    wire rr_t136;", "-    wire rn_rr_t136;"]}
+DIFF rtl/cbn_q01__cld9ff4c40.reset_tree.json {}
+DIFF rtl/cbn_q01__cld9ff4c40.reset_tree.tcl {}
+DIFF rtl/cbn_q01__cld9ff4c40.sv {"lines": 2104, "reset_lines": 2104, "other": []}
+DIFF rtl/cbn_q01__cldd6ea846.reset_tree.json {}
+DIFF rtl/cbn_q01__cldd6ea846.reset_tree.tcl {}
+DIFF rtl/cbn_q01__cldd6ea846.sv {"lines": 2510, "reset_lines": 2510, "other": []}
+DIFF rtl/qfd_qc_cb_f_q01__cbf_q01.reset_tree.json {}
+DIFF rtl/qfd_qc_cb_f_q01__cbf_q01.reset_tree.tcl {}
+DIFF rtl/qfd_qc_cb_f_q01__cbf_q01.sv {"lines": 480, "reset_lines": 480, "other": []}
+bind_latency.json DIFFERS
+bind_names.json equal
+bind_latency_consumers.json equal
+bind_parent_id_straps.json equal
+bind_core_resets.json equal

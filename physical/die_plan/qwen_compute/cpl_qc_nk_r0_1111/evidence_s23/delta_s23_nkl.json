@@ -1,0 +1,190 @@
+{
+ "base": "plan_qc99_s22_nkr0.json",
+ "base_sha256": "587e484eda913392007b5ba8b67147e2bf0e7572558d70bc6a6e2ee75db86c5f",
+ "plan_sha256": "a5049086ad2c908c3c9e9955cca2a7498c00095368692da4e263b0a77b69ace8",
+ "trial": false,
+ "edits": [
+  {
+   "type": "cbf_q01",
+   "inst": "u_t02",
+   "orient": [
+    "R0",
+    "MY"
+   ],
+   "face_bus": false,
+   "internal_station": false,
+   "ck_tap": {
+    "was": {
+     "xy": [
+      544.224,
+      737.208
+     ],
+     "orient": "R0"
+    },
+    "now": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY"
+    }
+   }
+  },
+  {
+   "type": "cbn_q01__clab6e67f2",
+   "inst": "u_t02",
+   "orient": [
+    "R0",
+    "MY"
+   ],
+   "face_bus": false,
+   "internal_station": false,
+   "ck_tap": {
+    "was": {
+     "xy": [
+      544.224,
+      737.208
+     ],
+     "orient": "R0"
+    },
+    "now": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY"
+    }
+   }
+  },
+  {
+   "type": "cbn_q01__clab6e67f2",
+   "inst": "u_t03",
+   "orient": [
+    "R0",
+    "MY"
+   ],
+   "face_bus": false,
+   "internal_station": false,
+   "ck_tap": {
+    "was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0"
+    },
+    "now": {
+     "xy": [
+      86.496,
+      1972.728
+     ],
+     "orient": "MY"
+    }
+   }
+  },
+  {
+   "type": "cbn_q01__cld9ff4c40",
+   "inst": "u_t02",
+   "orient": [
+    "R0",
+    "MY"
+   ],
+   "face_bus": false,
+   "internal_station": false,
+   "ck_tap": {
+    "was": {
+     "xy": [
+      544.224,
+      737.208
+     ],
+     "orient": "R0"
+    },
+    "now": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY"
+    }
+   }
+  },
+  {
+   "type": "cbn_q01__cld9ff4c40",
+   "inst": "u_t03",
+   "orient": [
+    "R0",
+    "MY"
+   ],
+   "face_bus": false,
+   "internal_station": false,
+   "ck_tap": {
+    "was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0"
+    },
+    "now": {
+     "xy": [
+      86.496,
+      1972.728
+     ],
+     "orient": "MY"
+    }
+   }
+  },
+  {
+   "type": "cbn_q01__cldd6ea846",
+   "inst": "u_t02",
+   "orient": [
+    "R0",
+    "MY"
+   ],
+   "face_bus": false,
+   "internal_station": false,
+   "ck_tap": {
+    "was": {
+     "xy": [
+      544.224,
+      737.208
+     ],
+     "orient": "R0"
+    },
+    "now": {
+     "xy": [
+      86.496,
+      737.208
+     ],
+     "orient": "MY"
+    }
+   }
+  },
+  {
+   "type": "cbn_q01__cldd6ea846",
+   "inst": "u_t03",
+   "orient": [
+    "R0",
+    "MY"
+   ],
+   "face_bus": false,
+   "internal_station": false,
+   "ck_tap": {
+    "was": {
+     "xy": [
+      544.224,
+      1972.728
+     ],
+     "orient": "R0"
+    },
+    "now": {
+     "xy": [
+      86.496,
+      1972.728
+     ],
+     "orient": "MY"
+    }
+   }
+  }
+ ]
+}
