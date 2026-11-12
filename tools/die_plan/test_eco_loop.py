@@ -694,14 +694,25 @@ def test_trim_skips_signed_unfinished_and_switch(tmp_path, monkeypatch):
     assert all((root / d / "run/results/asap7/n/base" / n).exists() for d in ("i1", "i2", "i4") for n in names)
 
 
+def _stub_so(root):
+    """a minimal SO tree that, like stage_so, carries the current tools' orfs_hold_mm pair (the default nonport hold
+    scope of a two-mode kit needs it; ECO-HOLD-SCOPE-1)"""
+    so = root / "so"
+    (so / "tools").mkdir(parents=True)
+    for n in E.HOLD_MM_FILES:
+        src = Path(E.HERE).parent / n
+        if src.is_file():
+            shutil.copy(src, so / "tools" / n)
+    return so
+
+
 def test_relative_output_is_absolute_for_abstract_docker_mount(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     k = kit(tmp_path)
     b = base_rec(k, rec(-4, -2, slew=1))
     f = Fake([rec(1, 2)])
     def stage(_kit, root, tools):
-        (root / "so").mkdir()
-        return root / "so"
+        return _stub_so(root)
     monkeypatch.setattr(E, "stage_so", stage)
     result = E.run_loop("kit", b.relative_to(tmp_path), root="kit/eco_relative", run=f, mem=8, cpus=2)
     assert result["verdict"] == "PASS"
@@ -725,8 +736,7 @@ def test_terminal_abstract_failure_keeps_routed_recovery_pass(tmp_path, monkeypa
                 return 2
             return super().__call__(cmd, **kw)
     def stage(_kit, root, tools):
-        (root / 'so').mkdir()
-        return root / 'so'
+        return _stub_so(root)
     monkeypatch.setattr(E, 'stage_so', stage)
     r = E.run_loop(k, b, run=AbstractFail([rec(1, 2)]), mem=8, cpus=2)
     assert r['verdict'] == 'ERROR' and 'best' not in r
@@ -1080,7 +1090,8 @@ class FakeNP(Fake):
 def test_nonport_scope_scores_nonport_hold(tmp_path, monkeypatch, three_iter):
     """KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91 M5 e1): with OT_HOLD_REPAIR_SCOPE=nonport a repair of the non-port
     hold (81 endpoints at -7.98 -> 1 at -0.05) is an improvement although the whole FF WNS (port starts, the parent's)
-    barely moves; default scope keeps the whole-number rule."""
+    barely moves; the explicit unscoped opt-in (--hold-scope all) keeps the whole-number rule (ECO-HOLD-SCOPE-1: the
+    default is now nonport)."""
     k = kit(tmp_path, mm=False)
     b = base_rec(k, rec(33.7, -7.98))
     _census_out(k / "signoff", 81, -7.98)
@@ -1097,7 +1108,8 @@ def test_nonport_scope_scores_nonport_hold(tmp_path, monkeypatch, three_iter):
     k2 = kit(tmp_path / "d", mm=False)
     b2 = base_rec(k2, rec(33.7, -7.98))
     _census_out(k2 / "signoff", 81, -7.98)
-    r2 = E.run_loop(k2, b2, run=FakeNP(results(), census), mem=8, cpus=2, root=tmp_path / "dflt", **three_iter)
+    r2 = E.run_loop(k2, b2, run=FakeNP(results(), census), mem=8, cpus=2, root=tmp_path / "dflt", hold_scope_flag="all",
+                    **three_iter)
     assert "ff_np" not in r2["base_metrics"] and "ff_np" not in r2["iterations"][0]["metrics"]
     assert r2["verdict"] == "EXHAUSTED" and "no improvement at iteration 1" in r2["reason"]   # -7.98 -> -7.10 < 1 ps
 
@@ -1287,3 +1299,104 @@ def test_postroute_lec_without_any_lec_py_is_a_named_tool_gap(tmp_path):
     assert not E.run_lec(k, res, 8, 2, run=lambda *a, **k: ran.append(a) or 0, tools=empty)
     assert not ran and res["lec"]["verdict"] == "NO_LEC_TOOL" and "not a design verdict" in res["lec"]["reason"]
     assert json.loads((d / "eco_loop.json").read_text())["lec"]["verdict"] == "NO_LEC_TOOL"
+
+
+# ---- ECO-HOLD-SCOPE-1 11-11 (COORD, HBM-COLLECT-1/SPT2): default hold scope nonport, explicit opt-in for port scope ----
+
+class EnvFake(Fake):
+    """Fake that also records the OT_HOLD_REPAIR_SCOPE each prd_mk.sh / prd_run.sh call inherits"""
+
+    def __init__(self, results):
+        super().__init__(results)
+        self.scopes = []
+
+    def __call__(self, cmd, **kw):
+        if cmd[0] == "bash" and Path(cmd[1]).name in ("prd_mk.sh", "prd_run.sh"):
+            env = kw.get("env") or os.environ
+            self.scopes.append((Path(cmd[1]).name, env.get("OT_HOLD_REPAIR_SCOPE")))
+        return super().__call__(cmd, **kw)
+
+
+def _port_only_base(tmp_path, name="k"):
+    """single-mode kit, TT -20.86 and FF hold -174.99 whose every violator starts at an input port (q_spt2 v2)"""
+    k = kit(tmp_path / name, mm=False)
+    b = base_rec(k, rec(-20.86, -174.99))
+    (k / "signoff/ff").mkdir()
+    (k / "signoff/ff/corner.json").write_text(json.dumps(dict(std_min_start=dict(
+        port=6437.0, other=0.0, reg=0.0, trunc=0.0, err=0.0, oport=0.0, ports=["L63wx4_i"], nonport_n=0.0,
+        nonport_wns=0.0))))
+    return k, b
+
+
+def test_hold_scope_defaults_nonport_no_port_hold_pass(tmp_path, monkeypatch, capsys):
+    """no flag, no env, no kit export: nonport; port-only hold schedules no b<N> pass; every pass inherits the scope;
+    the receipt and the summary carry it; the caller's environment is restored"""
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    k, b = _port_only_base(tmp_path)
+    f = EnvFake([rec(1, -174.99)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, owner_override=True)
+    assert r["hold_scope"] == "nonport" and r["hold_scope_source"] == "default"
+    assert r["base_metrics"]["ff_np"] == 0.0 and r["base_metrics"]["ff_np_n"] == 0
+    mk = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")]
+    assert [c[4] for c in mk] == [f"t{E.HOLD_MARGIN_PS}"]                    # no b pass on port-start hold
+    assert f.scopes and all(s == "nonport" for _, s in f.scopes)
+    rec_ = json.loads((Path(r["root"]) / "eco_loop.json").read_text())
+    assert rec_["hold_scope"] == "nonport" and rec_["hold_scope_source"] == "default"
+    assert "[hold scope nonport (default)]" in E.summary(r)
+    assert "ECO_HOLD_SCOPE nonport (default)" in capsys.readouterr().out
+    assert "OT_HOLD_REPAIR_SCOPE" not in os.environ
+
+
+def test_hold_scope_all_is_explicit_opt_in(tmp_path, monkeypatch):
+    """--hold-scope all: unscoped repair (env removed for the children), the b pass runs, recorded as the flag"""
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "nonport")
+    k, b = _port_only_base(tmp_path)
+    f = EnvFake([rec(1, 2)])
+    r = E.run_loop(k, b, run=f, mem=8, cpus=2, owner_override=True, hold_scope_flag="all")
+    assert r["hold_scope"] == "all" and r["hold_scope_source"] == "flag --hold-scope"
+    mk = [c for c, _ in f.calls if c[0] == "bash" and c[1].endswith("prd_mk.sh")]
+    assert [c[4] for c in mk] == [f"t{E.HOLD_MARGIN_PS}", f"b{E.HOLD_MARGIN_PS}"]
+    assert all(s is None for _, s in f.scopes)
+    assert os.environ["OT_HOLD_REPAIR_SCOPE"] == "nonport"                  # restored
+
+
+def test_resolve_hold_scope_order(tmp_path, monkeypatch):
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    k = kit(tmp_path, mm=False)
+    assert E.resolve_hold_scope(k) == ("nonport", "default")
+    assert E.resolve_hold_scope(None) == ("nonport", "default")
+    (k / "config.mk").write_text("export DESIGN_NAME = x\nexport OT_HOLD_REPAIR_SCOPE = reg2reg\n")
+    assert E.resolve_hold_scope(k) == ("reg2reg", "kit config.mk")
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "ALL")
+    assert E.resolve_hold_scope(k) == ("all", "env OT_HOLD_REPAIR_SCOPE")
+    assert E.resolve_hold_scope(k, "nonport") == ("nonport", "flag --hold-scope")
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "ports")
+    with pytest.raises(ValueError, match="hold scope 'ports'"):
+        E.resolve_hold_scope(k)
+
+
+def test_check_prints_hold_scope_and_split(tmp_path, monkeypatch, capsys):
+    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE", raising=False)
+    k, b = _port_only_base(tmp_path)
+    monkeypatch.setattr(sys, "argv", ["eco_loop.py", "check", str(b)])
+    E.main()
+    out = capsys.readouterr().out
+    assert "ECO_HOLD_SCOPE nonport (default): FF hold violators port-start 6437 / non-port 0" in out
+    monkeypatch.setattr(sys, "argv", ["eco_loop.py", "check", str(b), "--hold-scope", "all"])
+    E.main()
+    assert "ECO_HOLD_SCOPE all (flag --hold-scope)" in capsys.readouterr().out
+
+
+def test_run_cli_passes_hold_scope_flag(tmp_path, monkeypatch):
+    seen = []
+
+    def capture(*args, **kwargs):
+        seen.append(kwargs.get("hold_scope_flag"))
+        return dict(verdict="ERROR", reason="fixture", root=str(tmp_path))
+    monkeypatch.setattr(E, "run_loop", capture)
+    monkeypatch.setattr(E, "summary", lambda r: "fixture")
+    for extra, expected in (([], None), (["--hold-scope", "all"], "all")):
+        monkeypatch.setattr(sys, "argv", ["eco_loop.py", "run", "--kit", str(tmp_path),
+                                          "--signoff", str(tmp_path / "signoff.json")] + extra)
+        assert E.main() != 0
+        assert seen[-1] == expected

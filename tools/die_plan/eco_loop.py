@@ -169,6 +169,77 @@ def hold_scope():
     return (os.environ.get("OT_HOLD_REPAIR_SCOPE") or "").strip().lower()
 
 
+# ECO-HOLD-SCOPE-1 11-11 (COORD, HBM-COLLECT-1/SPT2): an ECO launched without OT_HOLD_REPAIR_SCOPE repaired port-start
+# hold (the parent's, io_hold_parent) by delaying input-port -> first-flop paths, and turned q_spt2 TT -20.86 / -48.3 into
+# -353.8 / -366.1 (both one-ECO budgets spent).  The ECO's scope now defaults to nonport; repairing port-start hold too is
+# an explicit opt-in: --hold-scope all (or OT_HOLD_REPAIR_SCOPE=all).  An explicit env / kit config.mk scope is kept.
+HOLD_SCOPE_DEFAULT = "nonport"
+HOLD_SCOPE_ALL = "all"
+HOLD_SCOPE_CHOICES = ("nonport", "reg2reg", HOLD_SCOPE_ALL)
+
+
+def resolve_hold_scope(kit=None, cli=None):
+    """-> (scope, source).  scope: 'nonport' | 'reg2reg' | 'all' (unscoped, port-start hold repaired too).  Order: the
+    --hold-scope flag, the environment, the last OT_HOLD_REPAIR_SCOPE export in the kit config.mk, else nonport."""
+    if cli:
+        s, src = str(cli).strip().lower(), "flag --hold-scope"
+    elif hold_scope():
+        s, src = hold_scope(), "env OT_HOLD_REPAIR_SCOPE"
+    else:
+        s, src = "", ""
+        if kit:
+            try:
+                for line in Path(kit, "config.mk").read_text(errors="replace").splitlines():
+                    m = _HOLD_SCOPE_MK_RX.match(line)
+                    if m:
+                        s = m.group(1).strip().lower()
+            except OSError:
+                pass
+            src = "kit config.mk" if s else ""
+        if not s:
+            s, src = HOLD_SCOPE_DEFAULT, "default"
+    if s not in HOLD_SCOPE_CHOICES:
+        raise ValueError(f"eco_loop: hold scope {s!r} ({src}): want one of {', '.join(HOLD_SCOPE_CHOICES)}")
+    return s, src
+
+
+def hold_split_note(signoff_path):
+    """': FF hold violators port-start P / non-port N' from the record's FF census, '' when it cannot be read"""
+    try:
+        s = json.loads((Path(signoff_path).parent / "ff" / "corner.json").read_text()).get("std_min_start") or {}
+    except (OSError, ValueError, AttributeError, TypeError):
+        return ""
+    if not isinstance(s, dict) or s.get("port") is None:
+        return ""
+    np_ = s.get("nonport_n")
+    if np_ is None:
+        np_ = (s.get("reg") or 0) + (s.get("other") or 0)
+    return f": FF hold violators port-start {int(s.get('port') or 0)} / non-port {int(np_)}"
+
+
+class scoped_hold_env:
+    """OT_HOLD_REPAIR_SCOPE for the ECO's children (prd_mk.sh / prd_run.sh / prd_hook.tcl) and this process's scoring;
+    'all' removes it (the legacy unscoped repair).  The previous value is restored on exit."""
+
+    def __init__(self, scope):
+        self.scope, self.old = scope, None
+
+    def __enter__(self):
+        self.old = os.environ.get("OT_HOLD_REPAIR_SCOPE")
+        if self.scope == HOLD_SCOPE_ALL:
+            os.environ.pop("OT_HOLD_REPAIR_SCOPE", None)
+        else:
+            os.environ["OT_HOLD_REPAIR_SCOPE"] = self.scope
+        return self
+
+    def __exit__(self, *exc):
+        if self.old is None:
+            os.environ.pop("OT_HOLD_REPAIR_SCOPE", None)
+        else:
+            os.environ["OT_HOLD_REPAIR_SCOPE"] = self.old
+        return False
+
+
 def nonport_score(signoff_path):
     """KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91 M5 e1): (wns_ps, endpoints) the loop scores hold on when the repair
     scope is nonport: the FF census non-port split.  A clean census with no non-port violator scores (0.0, 0) (signoff
@@ -219,6 +290,8 @@ def passes(kit, prev, hm):
     if hold_mm(kit):
         return ["m" + str(hm)]
     tt, ff = prev.get("tt"), prev.get("ff")
+    if "ff_np" in prev:     # ECO-HOLD-SCOPE-1: nonport scope scores the non-port hold only (port-start is the parent's)
+        ff = prev["ff_np"]
     need_t = (tt is not None and tt < 0) or prev.get("drv_tt", 0) > 0
     need_b = (ff is not None and ff < 0) or prev.get("drv_ff", 0) > 0 or prev.get("drc", 0) > 0
     out = (["t" + str(hm)] if need_t else []) + (["b" + str(hm)] if need_b or not need_t else [])
@@ -925,7 +998,20 @@ def route_hold_ran(kit):
 
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
-             owner_override=False, strict_one_pass=False, route_hold_form=False):
+             owner_override=False, strict_one_pass=False, route_hold_form=False, hold_scope_flag=None):
+    """ECO-HOLD-SCOPE-1: the loop runs under one resolved hold-repair scope (resolve_hold_scope: default nonport), exported
+    to every pass and recorded in the receipt (hold_scope / hold_scope_source).  See _run_loop."""
+    scope, source = resolve_hold_scope(kit, hold_scope_flag)
+    print(f"ECO_HOLD_SCOPE {scope} ({source})", flush=True)
+    with scoped_hold_env(scope):
+        return _run_loop(kit, base_signoff, root, runner, max_iter, hold_margin, mem, cpus, run, tools, image, keep,
+                         repair_rc, from_mode, owner_override, strict_one_pass, route_hold_form,
+                         hold_scope_rec=(scope, source))
+
+
+def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
+              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
+              owner_override=False, strict_one_pass=False, route_hold_form=False, hold_scope_rec=("", "")):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS
 
     route_hold_form (ROUTE-HOLD-PASS, DIE-HBM-97 11-10, COORD vecd-clkroot-r2 ruling (a)): run the kit's DECLARED in-flow
@@ -952,7 +1038,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
                mem_requested_gb=mem_in, mem_gb=mem, kit_peak_gb=peak, mem_factor=ECO_MEM_FACTOR,
                base_signoff=str(base_signoff), base_routed_db=(base_rec.get("inputs") or {}).get("odb"),
                base_metrics=metrics(base_rec, base_signoff) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
-               started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename)
+               started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename,
+               hold_scope=hold_scope_rec[0], hold_scope_source=hold_scope_rec[1])
     if strict_one_pass:
         budget = dict(limit=1, dispatched=0, blocked=[])
         res["strict_one_pass"] = True
@@ -1097,7 +1184,8 @@ def summary(res):
     tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM", "ABORTED": "late-ECO ABORTED"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
             + (f"(non-port {m0.get('ff_np')}/{m0.get('ff_np_n')}->{b.get('ff_np')}/{b.get('ff_np_n')}) " if "ff_np" in b else "")
-            + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
+            + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}"
+            + (f" [hold scope {res['hold_scope']} ({res.get('hold_scope_source')})]" if res.get("hold_scope") else ""))
 
 
 def lec_tool_of(kit, lec_tool=None, tools=HERE):
@@ -1154,11 +1242,17 @@ def main():
                    help="seed of every iteration (default: route when the DB has no DRC, else grt)")
     r.add_argument("--repair-rc", choices=["placement", "grt"], default="",
                    help="OT_PRD_REPAIR_RC from iteration 1 (default: the hook decides, a wired seed repairs on placement; a fresh one after a FlexPA SIG11)")
+    r.add_argument("--hold-scope", choices=HOLD_SCOPE_CHOICES, default=None, help="hold-repair scope of the ECO passes (ECO-HOLD-SCOPE-1): nonport (default; port-start hold is the parent's), reg2reg, or all (also repair port-start hold: explicit opt-in). Default: env OT_HOLD_REPAIR_SCOPE, else the kit config.mk, else nonport")
     c = sub.add_parser("check")
     c.add_argument("record")
+    c.add_argument("--kit", help="kit whose config.mk may set the scope (default: the record's KIT, i.e. ../..)")
+    c.add_argument("--hold-scope", choices=HOLD_SCOPE_CHOICES, default=None)
     a = ap.parse_args()
     if a.cmd == "check":
         rec = load(a.record)
+        kit = a.kit or Path(a.record).resolve().parent.parent
+        scope, source = resolve_hold_scope(kit, a.hold_scope)
+        print(f"ECO_HOLD_SCOPE {scope} ({source})" + hold_split_note(a.record))
         ok, why = eligible(rec)
         print(("ECO_ELIGIBLE " if ok else "ECO_NOT_ELIGIBLE ") + why)
         if not ok:
@@ -1175,7 +1269,7 @@ def main():
         return 3
     res = run_loop(a.kit, base, a.out, a.runner, a.max_iter, a.hold_margin, a.mem, a.cpus, keep=a.keep,
                    repair_rc=a.repair_rc, from_mode=a.from_mode, owner_override=a.owner_override,
-                   strict_one_pass=a.strict_one_pass)
+                   strict_one_pass=a.strict_one_pass, hold_scope_flag=a.hold_scope)
     if res["verdict"] == "PASS" and a.lec and not run_lec(a.kit, res, a.mem, a.cpus, a.lec_tool):
         # NO_LEC_TOOL: the routed DB is untouched and signed; only the proof is missing -> re-sign uncharged with a tool
         res["verdict"] = "LEC_TOOL_MISSING" if (res.get("lec") or {}).get("verdict") == "NO_LEC_TOOL" else "LEC_FAIL"
