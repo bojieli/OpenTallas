@@ -20973,10 +20973,11 @@
    "src_sha": "9024de9d66",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
-    "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
+    "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
+    "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -28939,6 +28940,13 @@
    "kit_self_contained_by_item": {
     "cbn_q00__cl622f65d2": "copy",
     "cbn_q00__cldbcda913": "copy"
+   },
+   "kit_rtl_prev_kvbr1": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
+    "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
+    "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    }
   },
   "hbm": {
