@@ -12,8 +12,9 @@
 //                  _asb_x -> _asb_nx (the ungeared die)
 // Words leave the slice on the even edges after reset release (x cadence 2); every word sets the crs4 bundle markers
 // x[0] and x[566].  On odd edges G's slice output is random garbage (the TX must drop it) and R gets random payload with
-// both markers 0 (a bubble).  PASS = frames A and B of G and R produce IDENTICAL ret on every edge, and ret is not
-// constant (the frames consumed the words).  ROMs use a deterministic hash model (identical in G and R).
+// an all-zero bubble.  PASS = on every edge (1) the word G lands at frame A and B (the RX x_land) is IDENTICAL to
+// the word R lands there, (2) the frame internal bands r0->r1, r1->r0, r1->r2, r2->r1 and (3) ret are identical in G
+// and R, and the landed words and bands change >50 times (non-vacuous: ret alone retires only a few results per run).  ROMs use a deterministic hash model (identical in G and R).
 // MUT 1: R not delayed (must FAIL: the declared +1 is needed); MUT 2: G slice garbage replaces the words on even edges
 // for one lane (must FAIL); MUT 3: words on the wrong parity (odd edges; must FAIL: the x cadence 2 contract).
 // +define+XEQ_H10 runs the col_h10 frames instead of col_h9.
@@ -73,12 +74,23 @@ module tb;
   // ---------------- stimulus: words on even edges after release
   function [4*LW-1:0] rnd; input integer d; integer q; reg [4*LW+31:0] t;
     begin t = 0; for (q = 0; q < 4*LW; q = q + 32) t[q +: 32] = $random; rnd = t[4*LW-1:0]; end endfunction
-  integer e = 0, errs = 0, chg = 0, words = 0; reg [69:0] pa = 0, pb = 0; reg ph = 1;
+  integer e = 0, errs = 0, chg = 0, words = 0, lchg = 0, bchg = 0; reg [69:0] pa = 0, pb = 0; reg ph = 1;
+  wire [4*LW-1:0] gA_land = u_gA.x_land, gB_land = u_gB.x_land;
+  wire [2*1167+261+321-1:0] gbands = {u_gA.r0_o0, u_gA.r1_o0, u_gA.r1_o1, u_gA.r2_o0},
+                            rbands = {u_rA.r0_o0, u_rA.r1_o0, u_rA.r1_o1, u_rA.r2_o0};
+  wire [2*1167+261+321-1:0] gbandsB = {u_gB.r0_o0, u_gB.r1_o0, u_gB.r1_o1, u_gB.r2_o0},
+                            rbandsB = {u_rB.r0_o0, u_rB.r1_o0, u_rB.r1_o1, u_rB.r2_o0};
+  reg [4*LW-1:0] pl = 0; reg [2*1167+261+321-1:0] pbd = 0;
   always @(posedge clk) begin
     r_q1 <= w_r_now;
     if (rst_n) begin
       e = e + 1;
       if (g_retA !== r_retA || g_retB !== r_retB) begin errs = errs + 1; if (errs < 5) $display("XEQ_MISMATCH edge %0d A %0d B %0d", e, g_retA !== r_retA, g_retB !== r_retB); end
+      if (gA_land !== rA_in || gB_land !== rB_in) begin errs = errs + 1; if (errs < 5) $display("XEQ_LAND_MISMATCH edge %0d A %0d B %0d", e, gA_land !== rA_in, gB_land !== rB_in); end
+      if (gbands !== rbands || gbandsB !== rbandsB) begin errs = errs + 1; if (errs < 5) $display("XEQ_BAND_MISMATCH edge %0d A %0d B %0d", e, gbands !== rbands, gbandsB !== rbandsB); end
+      if (gA_land !== pl) lchg = lchg + 1;
+      if (gbands !== pbd) bchg = bchg + 1;
+      pl = gA_land; pbd = gbands;
       if (g_retA !== pa || g_retB !== pb) chg = chg + 1;
       pa = g_retA; pb = g_retB;
     end
@@ -93,12 +105,12 @@ module tb;
         w_now = rnd(0); w_now[0] = 1'b1; w_now[566] = 1'b1; w_r_now = w_now; words = words + 1;
         if (MUT == 2) w_now[LW*1 +: 32] = ~w_now[LW*1 +: 32];
       end else begin
-        w_now = rnd(1); w_r_now = rnd(2); w_r_now[0] = 1'b0; w_r_now[566] = 1'b0;
+        w_now = rnd(1); w_r_now = 0;
       end
       @(negedge clk); ph = ~ph;
     end
-    if (errs == 0 && chg > 50) $display("XEQ PASS H=%0d edges=%0d words=%0d ret_changes=%0d", H, e, words, chg);
-    else $display("XEQ FAIL H=%0d MUT=%0d errs=%0d ret_changes=%0d", H, MUT, errs, chg);
+    if (errs == 0 && lchg > 50 && bchg > 50) $display("XEQ PASS H=%0d edges=%0d words=%0d land_changes=%0d band_changes=%0d ret_changes=%0d", H, e, words, lchg, bchg, chg);
+    else $display("XEQ FAIL H=%0d MUT=%0d errs=%0d land_changes=%0d band_changes=%0d ret_changes=%0d", H, MUT, errs, lchg, bchg, chg);
     $finish;
   end
 endmodule
