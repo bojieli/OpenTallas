@@ -1,0 +1,36 @@
+{
+ "autoclean_incident": "11-12 ~10:36 UTC epyc9 ot-autoclean (--aggressive --keep-expire, PID 2412100) deleted hbm-bind-6/tip2 and die-hbm-92-su/ab/p37su*_sources, referenced by bind.f/asbuilt (13 + 14 paths). Restored from epyc8 (copy only); .keep set on hbm-bind-6, die-hbm-92-su, die-hbm-95, hbm-cut-1111, hbm-vsn-xtap-t39w/t40w (epyc7/8/9). Alert tag hbm-autoclean-live.",
+ "bind_sha256sums": "see bind/SHA256SUMS on hosts",
+ "bind_summary": {
+  "crossings": 420,
+  "n_errors": 0,
+  "partitions": 92
+ },
+ "dir": "/srv/opentallas-scratch2/claude/hbm-vsn-xtap-t39w",
+ "direct_run": "DIRECT_RUN 2026-11-12 09:56:01 cmd: systemd-run --user --scope -p MemoryMax=48G -p MemorySwapMax=0 env OMP_NUM_THREADS=8 OPENBLAS_NUM_THREADS=8 nice -n 10 bash /srv/opentallas-scratch2/claude/hbm-vsn-xtap-t39w/bind_t39w9.sh",
+ "eq_control": "0 .sv differ vs nophys bind",
+ "g0": "548 -> 548, 0 new",
+ "hosts_verified": [
+  "epyc7",
+  "epyc8",
+  "epyc9"
+ ],
+ "ot_dp_lk_insts": 5253,
+ "p18split": "8 lane_exp types x 8 instances; composed module instantiates lane_exp_core__p18bind",
+ "pad_flops": 951406,
+ "plan": "t38w 7f4896f364be + d12b_formAp_ab_c2_1112 (58907007fea1)",
+ "sha256": {
+  "asbuilt_d12b.json": "14903ddd4febb74451fa3ed48bbb1e982e34926f2535b2004dc3019080848917",
+  "bind/SHA256SUMS": "764af13ad50db94a94b045d30f62876127d8cf4096d52ac952749cb2b16cf666",
+  "bind/bind.f": "daee2663dbda48880e80ca1abf517df1782e2f87154793d28f3de535e1d6f64d",
+  "bind/bind_report.json": "f0eea0dedaeb1f161857b013162e420ca1789928fe5e9d521ab5ec1e141dbef1",
+  "plan_t39w/die_plan.json": "8b4b6e3071c49dee3aa31bf8a0097a4415d617d6c56c0dde22dd70375124f540",
+  "r8/hbm_arch_B2o_r8_landing.json": "baeb6ad3b3d38766715d33c60dad31b2c490d21eea7105901204bdccc5a76a61"
+ },
+ "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18 (read-only)",
+ "stage": "plan event bind (strict two-pass)",
+ "stale": 0,
+ "status": "step 1, density pass pending; DO_NOT_COUNT",
+ "tag": "hbm-xtap-all t39w",
+ "uncovered": 0
+}
