@@ -1463,6 +1463,7 @@ def main(argv=None):
     ap.add_argument("--types", required=True)
     ap.add_argument("--die")
     ap.add_argument("--repo", default=".")
+    ap.add_argument("--allow-need-more", default="", help="VISLAYOUT2: comma list of station indexes that ALREADY need more regs in the base plan (same need_more_idx on a no-move run); apply when the new need_more_idx is a subset (regs kept as in base)")
     ap.add_argument("--accept-timing", action="store_true", help="VISLAYOUT2: apply although modelled direct-link lengths exceed max(base,405) (reported in timing_over; reviewed by hand)")
     ap.add_argument("--ref-dirs", nargs="*", default=[])
     ap.add_argument("--out-plan")
@@ -1695,7 +1696,7 @@ def main(argv=None):
                                     after_orient=M.core_orient(i)) for i in range(M.n)])
             Path(Path(a.svg) / f"{tn}__view.json").write_text(json.dumps(dump))
         nov0 = getattr(M, "_nov_base", 0)
-        ok = not eqbad and nov <= nov0 and srep["need_more_regs"] == 0 and (tviol_end == 0 or a.accept_timing)
+        ok = not eqbad and nov <= nov0 and set(srep["need_more_idx"]) <= {int(x) for x in a.allow_need_more.split(",") if x} and (tviol_end == 0 or a.accept_timing)
         if ok:
             Q["partition_types"][tn] = tnew
         rows.append(dict(type=tn, cores=M.n, clusters=M.m, links=len(M.L), stations=len(M.stations),
