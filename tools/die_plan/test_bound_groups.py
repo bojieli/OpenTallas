@@ -99,3 +99,23 @@ def test_planned_reset_materialization_lockstep_and_wrong_tap_mutant(tmp_path):
     assert good.returncode==0 and 'RESET LOCKSTEP PASS128' in good.stdout
     bad=run(frame.replace('.rst_n(rst_n_t10)', '.rst_n(rst_n_t9)'), 'wrongtap')
     assert bad.returncode!=0 and 'planned reset cut differs' in bad.stdout
+
+
+def test_register_masters_records_successor_head_source_only(tmp_path):
+    import qc_su_lane_cut as C
+    from test_qc_su_lane_cut import fixture
+    src=fixture().replace('leaf u_u_head0 (','qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(0)) u_u_head0 (')
+    assert 'qfd_dv_lane_h_safe2' in src
+    rep,_,_=C.cut(src,0,memory_read_extra=9)
+    b=N(base=str(tmp_path),extra_lib=[])
+    with pytest.raises(G.BoundGroupError):
+        G.register_masters(b,src,rep)             # successor master has no source: refused, not silently unread
+    (tmp_path/'rtl/physical').mkdir(parents=True)
+    f=tmp_path/'rtl/physical/qfd_dv_lane_h_su_mem9.sv'
+    f.write_text('module qfd_dv_lane_h_su_mem9(); endmodule\n')
+    G.register_masters(b,src,rep);G.register_masters(b,src,rep)
+    assert b.extra_lib==[str(f)]                  # the new master, once; the unchanged as-built leaves not added
+    b2=N(base=str(tmp_path),extra_lib=[])
+    rep0,_,_=C.cut(src,0)
+    G.register_masters(b2,src,rep0)
+    assert b2.extra_lib==[]                       # no memory_read_extra: nothing new, default unchanged
