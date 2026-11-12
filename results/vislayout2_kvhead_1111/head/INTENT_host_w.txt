@@ -1,0 +1,41 @@
+INTENT SHEET hd_host_w SPREAD (VISLAYOUT2-KVHEAD 11-11, base = wave plan of record head_tx1111/prep/source_plan.json (TX plan, TX_STAGE=1), DO_NOT_COUNT)
+SVG: intent_host_w.svg.  Before: hd_host_w_before.png (a3, l48hp1, epyc4; gallery ISSUES).  Delta: delta_hostw.py (+ .delta.json on epyc9).
+
+1. PICTURE (a3 placed): 55 x ot_sram_1r1w2c_32x64_m1 (32.0 x 17.3 um) packed in 6 columns x 17 rows at pitch 51.84 x 25.92 in the W
+   half (x 78-369, y 121-553): 19.8-um V channels, 8.6-um H channels. All lane0 glue (ep fifo/rb, gb sf, ski head, host276, frame
+   mux) is forced into those channels or spills into the E 40 % as a blob at (420,320); one clock tap carries 11,139 sinks (target 1000).
+   Routed a3: TT -76.19 (125 ep), FF hold -30.5 (892 ep), DRV slew 798; the 860-ps path is an 11-gate select tree with fanout 86/84
+   (retimed by TX_STAGE, approved 16:40).
+
+2. DATAFLOW CHAIN (plan buses, contents note "lane0 + HBC1 + host276 + frame mux; seam landing/launch registers at the E face")
+   l1_rx_i 558b -> lane0 endpoint (ep: g_fifo_safe 18 SRAM depth0/1, g_rb_safe 18 SRAM) -> gb (u_sf 10 SRAM) -> ski head (9 SRAM)
+   -> host276 TX (h_tx_i 277 / h_rx_o 276) ; coll_i0 514 / coll_o0 512 seam with host_e at the E face; l1_tx_o 554 back.
+   Column order in the plan already follows the chain W->E: ep fifo (cols 0-2) | ep rb (cols 2-4) | gb sf (cols 4-5) | ski (col 5).
+   Timing-critical: ep read data -> u_mux select tree -> u_ctl_tx (the TX_STAGE path); gb/ski read -> seam registers (E face).
+
+3. WHY A HAND RE-FORM: macros are 9.6 % of the outline, so the slot has room; the defect is that the array is packed at SRAM pitch
+   in the W half, so the glue that belongs between consecutive banks has 8.6-20 um channels while 280 um of E width sits empty.
+   Demand/supply is not the issue (no REDESIGN).
+
+4. HAND ARRANGEMENT (no search; order, rows, orientation, row parity and track offsets kept)
+   column pitch 51.84 -> 95.04 (x0 77.76 -> 34.56): V channels 19.8 -> 63.0 um; columns end at x 541.8, E strip 106 um for the
+   seam/face registers (E face to host_e).
+   row pitch 25.92 -> 30.24 (y0 120.96 -> 51.84): H channels 8.6 -> 12.9 um; rows span y 51.8-553.
+   55 SRAMs move; outline, ports, clock/reset taps, RTL unchanged -> EQ by construction (kit LEC is the proof).
+   Pin edges: every bank keeps its orientation, its pin edge now faces a 63-um glue channel instead of a 20-um one.
+
+5. SCORE: G0 / route_supply edge_outline / explorer: see CLEANSLATE2 row (run on the delta plan). Build: full flow on epyc9
+   (vislayout2/head/hd_host_w_spread, OT_GRT_TRANSITION_MODE=edge_outline).
+
+UPDATE 19:1x (v2, delta_hostw2.py X0 25.92): v1 (row pitch 30.24) put 9 cores off the 8.64 lattice and blocked local reset tap
+  (259.2,86.4) -> HEAD kit_rtl bootstrap GEN failed.  v2: columns pitch 95.04 from x 25.92; rows paired on the lattice
+  (25.92 inside a pair, 34.56 between pairs; same-column core gap 19.1 um); all 5 reset taps + clock tap free; 0 overlaps;
+  G0 identical to the original (153 E / 38 W, 24/26 G0C clean).  plan sha 043e2fc4ba1f.
+  route_supply edge_outline (model "fallback": no core_conns, every pin goes to the centroid of all cores): orig p99 2.186,
+  v1 1.819, v2 2.025, all M2 H at y~286 (the core centroid).  Calibration: the same original form routed GRT 0 overflow
+  (l48hp1 a3, M2 12.5 %), so this reading is a fallback-model artefact, not a shortage; build proceeds (Amendment 3 judged
+  by intent; noted in the row).
+MEASURED BLOCKER of the original (l48hp1 a3 sign-off): TT setup -76.19, 125 endpoints: u_core.g_l0s.l0s_v -> u_hbc loader
+  AND5/AND4 -> two BUFx6f fanout trees (86 + 84 loads) -> u_ctl_tx.oq_p: about 860 ps of logic.  A logic-depth path that
+  the SRAM spread does not fix.  Structural fix = +1 cycle (register the l0s_v/loader enable broadcast); RTL change, die
+  owner HEAD-94, EQ/LEC gated.  The spread is kept as the placement form (E 40 % in use, wider channels).

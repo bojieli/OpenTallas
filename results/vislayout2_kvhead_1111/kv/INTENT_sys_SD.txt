@@ -1,0 +1,38 @@
+INTENT SHEET kv3_sys_SD + kv3_sys_SD_v1 (VISLAYOUT2-KVHEAD, 11-11, plan vD plan_c.json md5 1791c1e2, DO_NOT_COUNT)
+SVG: intent_sys_SD.svg (same dir).  Before: kv3_sys_SD_before.png (a12 epyc7), kv3_sys_SD_v1_before.png (a22 epyc9).
+
+1. WHAT THE PICTURE SHOWS vs WHAT IS THERE (measured from a12 geom.tsv + the PHY LEF)
+   - outline 1900.8 x 1036.8; ONE hard macro ot_qfd_serdes_112g_x6_phy_w522 1848.96 x 972.0 at (6.48, 58.32) = 91.2 % of the outline.
+   - std cells 56,273 (17,122 FF), area 8,764 um2.  Free area 173,560 um2 -> fill 0.05 overall; in the E strip
+     (x 1855-1896 = 41 um, y 0-600 where the cells are) local util ~0.22-0.35.  GRT 0 overflow (a12 and a22).
+   - PHY pins: ALL on the macro E edge x=1848.5: tx_flit[522]+tx_v y 122-202, clk y 300, rst_n y 379, rx_flit[522]+rx_v y 549-630, tx_up y 806.
+   - type bus pins: E face x=1898.7 (1052 pins: i_host_fdi 523 in, o_serdes_*_rx_flit 523 out, + clocks/cland), 15 on S, 26 area.
+   So the "logic jammed in a 20-um strip" is the dataflow-correct place: the 523-bit host FDI enters on the E face and goes
+   straight W into the PHY tx pins 50 um away; rx comes out of the PHY E edge and leaves on the E face. Nothing else exists.
+
+2. DATAFLOW CHAIN
+   E face i_host_fdi (523b, y~219 fclk) -> cland landing ring (E strip) -> tx pipe -> PHY tx_flit (E edge y 122-202)
+   PHY rx_flit (E edge y 549-630, clk_phy domain) -> rx pipe -> cland origin (relay_sites x 1876.5 y 497-550) -> E face o_serdes_*_rx_flit
+   i_host_link_rst_n (E y 433) -> reset pipe -> PHY rst_n (y 379)
+   Timing-critical pairs: landing ring write (fclk_in_i_host_fdi) -> tx pipe; PHY rx -> origin -> read select (a22 TT -63.6, CLAND class
+   reader_start, not geometry); clk_phy edge clock (6842 sinks on one tap) -> rx pipe.
+
+3. REAL GEOMETRIC DEFECTS (plan-level, positions only)
+   (a) type clock root tap_um (1760, 27) = SE corner: every E-strip sink is reached from the corner; "sink farthest from its own clock
+       driver 971.8 um", clock_reach 386 um.  The PHY clk pin is at y 300 and the three edge clocks land at y 219 / 354 / 433.
+   (b) reset tap_um (950.4, 518.4) = outline centre = ON the PHY macro (obstacle_model lef_origin moves it to the nearest legal site
+       at place time; the reset tree then starts from a macro edge).
+   Not defects: outline (die tiles abut; E neighbour io_ft is SIGNED, W/N are the die edge, S is pc/phy), macro position (pins face the strip).
+
+4. HAND ARRANGEMENT (no search)
+   clock.tap_um (1760, 27) -> (1876.0, 378.0): E-strip centroid, 78 um above the PHY clk pin, within 160 um of all three edge clocks.
+   reset.tap_um (950.4, 518.4) -> (1876.0, 302.4): E strip, next to PHY rst_n (y 379) and the rst input (y 433), off the macro.
+   Outline, macro, pins, relay sites, ft: unchanged.  RTL unchanged -> EQ by construction.  Applies to sys_SD and sys_SD_v1 (same form).
+   Die impact: the die clock/reset landing point inside sys_SW / sys_SE moves (sys_SW: (1760,26033) -> (1876,26384) die frame,
+   ~370 um N); DIE-KV-98 re-derives the die spine leg on adoption.
+
+5. DEMAND VS SUPPLY: 8.8k um2 of cells in 39k um2 of strip = 0.22 -> NOT a REDESIGN; no squeezing.
+
+6. VERDICT: OK-AS-PLACED for outline + macro (form is inherent to an IO macro tile), plus the tap/reset delta above, built full-flow
+   (sys_SD_v1, epyc9). The open sys_SD/sys_SD_v1 failures are NOT geometric: sys_SD a12 PIN_AUDIT 15 extra pins (KIT-WAVE-1 class),
+   sys_SD_v1 a22 origin -> read select -63.6 (CLAND-CLASS-1 reader_start {depth:1}).

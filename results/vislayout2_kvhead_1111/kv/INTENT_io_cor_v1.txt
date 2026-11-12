@@ -1,0 +1,24 @@
+INTENT SHEET kv3_io_cor_v1 (VISLAYOUT2-KVHEAD, 2026-11-11 19:1x PST, COORD request; AMENDMENT 4 structural). DO_NOT_COUNT.
+Source: wave event28w_c item kv3_io_cor_v1 attempt_11 (block ed3f7d6472f2, 11:45) epyc9 .../kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/event28w_c/items/kv3_io_cor_v1/attempt_11
+ROLE: die corner tile io_E5 (1278.72 x 1036.8, single instance, MY). No macros. 25 ft lanes turn the corner
+  (E->S ft0-10, E->W ft11-12, S->E ft13-22, W->S ft23, W->E ft24; widths 1..548 b; 4-8 stations, hops 107-246 um)
+  + 25 CLAND landing rings (fclk_in_ftN_i, WREG dsrep 1). 119,885 cells, 38,131 regs (26,056 on clk taps, 12,212 fclk ring storage). fill 0.014.
+  The outline is the die corner slot: it carries lanes, not logic. "Outline sized to the logic" would leave the lanes to
+  cross die area outside any tile -> die re-tile (DIE-KV-98), not a type delta.
+DEFECTS (routed sign-off, attempt_11):
+  setup TT -121.81 (52 viol): CLAND ring u_cland_ft13_i half-cycle paths: (1) storage sd_c[177] -> INVx1 43.7 fF / 455 ps slew
+    -> dsel AO221 -> y[49], max_delay 416.5: storage far from its read select (548-b ring spread on the S face);
+    (2) negedge guard w_n[3] -> glo1, INVx1 10.9 fF, -101.06.  Class: ring read-side reach (ring form, not positions).
+  hold FF -40.5 (442 endpoints std, 3524 sdc): station -> station ft hops with ~3 cells of data (ft23_o_3 -> ft23_o_4,
+    ft19_o_2 -> o_3), launch and capture on DIFFERENT clock taps.  Tap trees after OT_TAP_BALANCE: 171..266 ps (spread 95);
+    23 taps over the 270-ps ceiling; t37 mean 171 (149-263).  pair_skew min worst 167.9 ps.
+  Root cause of the hold class: 40 clock taps with sink loads 2..2185 (nearest-site estimate) -> tree depth 3..9 stages;
+    taps were placed as reset-relay / landing anchors, not at sink clusters.
+STRUCTURAL FORM RF1 (positions only; EQ by construction):
+  every clk tap carries an equal share: recursive bisection of the placed clk flops into 40 clusters of 651-652, tap at the
+  cluster median, same 40 tap IDs (least-displacement match).  reach max 393 um (<= 407 tap pitch from OT_TAP_CHECK).
+  Equal loads -> equal CTS depth -> station-hop skew bounded by construction (target spread <= 30 ps vs 95).
+  KV gen refuses tap moves against the captured bound reset identity -> private strict re-bind of vD+RF1 (bind_iocor_rf1),
+  then full flow to sign-off (edge_outline).  Plan delta: plan_iocor_rf1/plan_c.json.delta.json.
+NOT IN RF1 (needs a ring-form change, die owner, EQ/LEC gated): CLAND ft13 read reach -> landing_ring_wreg dsrep 8 (HEAD
+  collector form) or a narrower ring band per 548-b lane; +1 cycle on the ring read (FREG) if reach still fails.
