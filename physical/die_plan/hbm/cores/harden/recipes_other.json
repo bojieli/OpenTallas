@@ -503,7 +503,9 @@
    "rtl/lib/ot_rst_relay.sv"
   ],
   "defines": [],
-  "params": {},
+  "params": {
+   "RR_RT": 80
+  },
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
