@@ -1,4 +1,4 @@
-# KW-FIX-46 lane handoff (refreshed 2026-11-12 09:13 PST)
+# KW-FIX-46 lane handoff (refreshed 2026-11-12 09:30 PST)
 
 ## 1 Scope
 Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission, autoclean/reaper keep lists. Fix FAIL classes once per class, hold and retry rows in ~/coord/autopilot/kit_wave.json. The sidecar-coverage preflight now belongs to GEN-CLASS-1 (COORD 11-12), not this lane.
@@ -68,3 +68,5 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - PHY_NE CLASS (08:45): 7 HBM rows went to intel1/epyc2 (SRC-INCOMPLETE) through my calm filter. Fixed 08:55. Retries PHY_NE@4, q_b013__physical_v1@14, q_spu1__physical_v1@10 and q_su00@1 (re-armed 09:09). q_mcb_ne, q_spu0 and q_spu0__physical_v1 relaunched by themselves as @2 on epyc9. Do NOT re-add their @1 entries. Post the relaunch hosts.
 - NEXT: (1) watch ROOT-MERGE-60's re-run on edf6623be211; (2) post the class relaunch hosts; (3) epyc4 LINKED restage (section 6.3); (4) visual-gate WAIT-FORM counts; (5) hourly FAIL scan / STATE / this file.
 - GOTCHA: an ssh `timeout` kills the local client but NOT the remote loop. Kill your own remote loop by exact PID.
+- 09:3x: p6_relay (505 files) copied epyc7 -> epyc2/epyc9/intel2; manifests match; 0 wave rows needed relaunch. epyc9 load posted (09:29: 74/96, run 42). The calm class is relaunched: q_mcb_ne/q_spu0/q_spu0__physical_v1 @2 and PHY_NE@5, q_su00@2 are all on epyc9. q_b013__physical_v1@14 and q_spu1__physical_v1@10 wait on OWNERS state GEOM-REQ/REVIEW. Their state records were reclassified to INFRA, with class_was_kw46 kept.
+- OPEN (do AFTER ROOT-MERGE-60 lands edf6623be211, so the tip stays the one under test): at collect, a FLOW "tool input file missing" or KIT_NOT_SELF_CONTAINED on a host that the same tick's probe lists as SRC-INCOMPLETE for the die -> INFRA (hold_unchanged otherwise holds the retry). Also: rebase kw43-rootreal ot-run on the main backend (ASK 08:31).
