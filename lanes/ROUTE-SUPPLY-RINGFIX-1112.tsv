@@ -49,3 +49,48 @@ s81	svc_lo_dsdv_svc_rs_w__t1	2.312	2.312	2.582	2.293	2.582	2.312	ring_V	street_H
 s81_head	hd_st_n3_turn	0.455	0.455	0.646	0.435	0.646	0.455	ring_V	ring_H
 s81_head	hd_st_turn	0.773	0.441	0.646	0.435	0.773	0.441	ring_H	ring_H
 # changed > 0.05: 43
+# FULL MODE (default --grt-halving full) follow-up 2026-11-11 23:06 PST: 486 types scored, the same 43 types change > 0.05 as in edge_outline above (identical type set). Values below are full-mode scores.
+# mode	die	type	H_main	H_fix	V_main	V_fix	p99_main	p99_fix	worst_main	worst_fix
+full	qwen_compute	coll_s	1.325	0.895	0.394	0.496	1.325	1.300	ring_H	mstreet_H
+full	qwen_compute	slw_su_c__cl19bb38ef	0.993	0.802	0.830	0.878	0.993	0.878	ring_H	ring_V
+full	qwen_compute	slw_su_c__cl92142dac	0.993	0.802	0.829	0.878	0.993	0.878	ring_H	ring_V
+full	qwen_kvsys	kv3_hroot	0.536	0.533	1.064	0.480	1.064	0.533	ring_V	ring_H
+full	qwen_kvsys	kv3_hub_Wi	1.753	1.753	1.568	1.238	1.753	1.753	street_H	street_H
+full	qwen_kvsys	kv3_hub_Wo	0.961	1.121	1.092	1.005	1.092	1.121	ring_V	ring_H
+full	qwen_kvsys	kv3_io_ft	0.593	0.593	0.515	0.410	0.593	0.593	ring_H	ring_H
+full	qwen_kvsys	kv3_pv_v6n	1.593	1.398	1.005	1.005	1.593	1.398	ring_H	ring_H
+full	s81	col_h10_r0_p1__t1__cl574cc59d	1.229	1.229	1.700	0.801	1.700	1.229	ring_V	street_H
+full	s81	col_h9_r0_p1__t1	1.640	1.646	1.892	0.716	1.892	1.646	ring_V	street_H
+full	s81	col_h9_r0_p3__t1__cl0cd90c0e	1.640	1.646	1.892	0.716	1.892	1.646	ring_V	street_H
+full	s81	col_h9_r0_p3__t1__cl31d0dc4b	1.640	1.646	1.892	0.716	1.892	1.646	ring_V	street_H
+full	s81	col_h9_r0_p3__t1__cl8ce97bcb	1.640	1.646	1.892	0.716	1.892	1.646	ring_V	street_H
+full	s81	col_h9_r0_p5__t1	1.547	1.557	1.836	0.607	1.836	1.557	ring_V	street_H
+full	s81	dsdv_slice_c1x_C__t1	2.675	2.361	0.928	0.928	2.675	2.361	ring_H	ring_H
+full	s81	dsdv_slice_c1x_C__t3	1.035	1.038	1.744	0.592	1.744	1.156	ring_V	mstreet_H
+full	s81	dsdv_slice_c1x_C__t4	0.844	0.843	1.473	0.747	1.473	1.156	ring_V	mstreet_H
+full	s81	dsdv_slice_c1x_C__t7	2.227	2.227	1.744	0.790	2.227	2.227	ring_H	ring_H
+full	s81	dsdv_slice_lepe_nh_mus_C__t1	1.085	1.075	1.439	0.616	1.439	1.156	ring_V	mstreet_H
+full	s81	dsdv_slice_lepw_mu_C__t1	2.227	2.227	1.744	0.790	2.227	2.227	ring_H	ring_H
+full	s81	dsdv_slice_lepw_mus_C__t1	1.070	1.070	1.744	0.893	1.744	1.156	ring_V	mstreet_H
+full	s81	eng__t1	2.967	1.847	0.968	0.968	2.967	1.847	ring_H	ring_H
+full	s81	ot_s81sl_kv_leaf__t2	1.642	0.640	0.773	0.961	1.642	1.469	ring_H	face_V
+full	s81	ot_s81sl_leaf__t1	0.998	1.023	1.592	1.139	1.592	1.139	ring_V	street_V
+full	s81	ot_s81sl_leaf__t17	1.882	1.105	1.905	1.909	1.905	1.909	street_V	street_V
+full	s81	ot_s81sl_leaf__t2	1.562	1.363	2.786	2.790	2.786	2.790	street_V	street_V
+full	s81	ot_s81sl_leaf__t23	1.402	1.402	1.659	1.519	1.659	1.639	ring_V	face_H
+full	s81	ot_s81sl_leaf__t46	2.823	2.915	2.452	2.452	2.823	2.915	ring_H	ring_H
+full	s81	ot_s81sl_leaf__t47	1.683	1.685	1.675	1.411	2.496	2.495	face_H	face_H
+full	s81	ot_s81sl_leaf__t57	1.916	2.464	2.472	2.472	2.472	2.472	street_V	street_V
+full	s81	ot_s81sl_leaf__t66	3.634	2.050	2.472	2.472	3.634	2.472	ring_H	street_V
+full	s81	ot_s81sl_leaf__t67	1.630	1.630	3.246	2.542	3.246	2.542	ring_V	ring_V
+full	s81	ot_s81sl_leaf__t7	1.161	1.161	1.265	1.264	1.554	1.409	face_H	face_H
+full	s81	slice_station__t22	1.860	0.612	1.035	0.988	1.860	0.988	ring_H	ring_V
+full	s81	slice_station__t25	1.091	1.015	1.558	0.711	1.558	1.015	ring_V	ring_H
+full	s81	slice_station__t30__cl6a190133	0.545	0.413	0.480	0.480	0.545	0.480	ring_H	ring_V
+full	s81	slice_station__t36	1.066	1.015	1.543	0.724	1.543	1.015	ring_V	ring_H
+full	s81	slice_station__t8	0.890	0.579	0.966	0.966	0.966	0.966	ring_V	ring_V
+full	s81	svc_hi_dsdv_svc_pvso_entry__t1	11.078	11.089	4.120	3.542	11.078	11.089	ring_H	ring_H
+full	s81	svc_hi_dsdv_svc_pvso_entry__t2	7.893	7.893	4.346	3.567	7.893	7.893	ring_H	ring_H
+full	s81	svc_lo_dsdv_svc_rs_w__t1	3.140	3.140	2.599	2.298	3.140	3.140	street_H	street_H
+full	s81_head	hd_st_n3_turn	0.455	0.455	0.646	0.435	0.646	0.455	ring_V	ring_H
+full	s81_head	hd_st_turn	0.773	0.441	0.646	0.435	0.773	0.441	ring_H	ring_H
