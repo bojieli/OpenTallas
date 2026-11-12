@@ -392,6 +392,16 @@ def macro_band(inst, k_gcells, gcell_um=None):
     return {L: float(f) for L, f in kb.items()} if kb is not None else None
 
 
+def _repo_lef_for(mod, repo, die_dir):
+    """non-template repo LEF of module `mod` (obs_sync.repo_lef_for), or None."""
+    try:
+        import obs_sync as OSY
+    except ImportError:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import obs_sync as OSY
+    return OSY.repo_lef_for(mod, repo, die_dir)
+
+
 def macro_view(h, die_dir, repo, cfg):
     """(obs {layer: frac}, kind core|mem, source, provisional) for one hard core / macro.
 
@@ -427,6 +437,10 @@ def macro_view(h, die_dir, repo, cfg):
             break
     if obs is None and h.get("lef"):
         obs = lef_obs(find_ref(h["lef"], repo))
+        if obs == {} and cfg.get("lef_by_module", True):
+            # OBS-SYNC-1: a pin-only contract LEF (no OBS block, e.g. ot_s81dv_norm_finish FORM-NF 11-04) blocks nothing
+            # for GRT, but the built core routes inside: fall through to the kit view / repo LEF / obs_max / ceiling
+            obs = None
         if obs is not None:
             src = "plan-lef"
             _VIEW_SRC[h["inst"]] = ("lef", find_ref(h["lef"], repo))
@@ -447,6 +461,15 @@ def macro_view(h, die_dir, repo, cfg):
         obs = {L: float(f) for L, f in kv["obs"].items()}
         src = "kit-lef"
         _VIEW_SRC[h["inst"]] = ("kit", kv)
+    if obs is None and cfg.get("lef_by_module", True):
+        # OBS-SYNC-1 11-12: a core whose plan row carries no lef (QC/KV/HBM) used to fall to obs_max / the ceiling even
+        # when the repo holds its real LEF; derive the blockage from that LEF (obs_sync.repo_lef_for), not the ceiling
+        rl = _repo_lef_for(mod, repo, die_dir)
+        if rl:
+            obs = lef_obs(rl)
+            if obs is not None:
+                src = "repo-lef"
+                _VIEW_SRC[h["inst"]] = ("lef", rl)
     if obs is None and h.get("obs_max"):
         top = min(int(str(h["obs_max"])[1:]), 9)
         obs = {f"M{k}": 1.0 for k in range(1, top + 1)}
@@ -1738,6 +1761,9 @@ def main(argv=None):
                     help="old model: an ft slot whose stations_in are hard cores still runs as parent wire over them")
     ap.add_argument("--template-cap-default", action="store_true",
                     help="old model: cap whole-block template LEFs at --core-ceiling even when the plan gives obs_max")
+    ap.add_argument("--no-lef-by-module", action="store_true",
+                    help="old model: a core with no plan lef / signed view / kit view takes the plan obs_max (default M5) "
+                         "instead of the OBS of its repo <module>.lef (OBS-SYNC-1)")
     ap.add_argument("--no-planmodel", action="store_true",
                     help="ignore the fanout_nets / unrealised_stations keys of the core_conns sidecar (its core_conns overrides still apply)")
     ap.add_argument("--station-scan", help="stscan --detail JSON (plan internal_stations vs the bound netlist): "
@@ -1797,6 +1823,7 @@ def main(argv=None):
                ring_um2_per_flop=a.ring_um2_per_flop, detour_um=a.detour_um, margin_bins=a.margin_bins,
                pin_escape=a.pin_escape, station_spread=a.station_spread,
                ft_core_internal=not a.ft_internal_as_parent, template_cap_obs_max=not a.template_cap_default,
+               lef_by_module=not a.no_lef_by_module,
                empty_conns_unchecked=not a.empty_conns_glue, station_face_dedupe=not a.station_face_double,
                station_scan=a.station_scan, fanout=not a.no_planmodel,
                grt_halving=a.grt_halving, grt_edge_gcells=a.grt_edge_gcells,
