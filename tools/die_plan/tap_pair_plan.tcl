@@ -311,4 +311,23 @@ namespace eval ::ot_tap_pair {
   }
   return [list $n $sb $sa $broken]
  }
+ # DIE-QC-97 11-12 RING: on QC slw_fe_v2 pilot 2c (pair + chains) the cross-tap reg-reg hold left inside the count-aligned
+ # landing rings sat just outside the short-pair bounds: PLACEREP copy -> dsel and dsel -> dsel at 3 cells, 3-9 um apart
+ # (-10.78 ps), and the STATUS_REG tag rp -> rp_q at 66 um (-17.16 ps).  ring_key names the landing ring a register
+ # belongs to (the instance path through <..>u_cland_<name>/u_ring, the ot_meso_ring_ca instance), {} outside any ring.
+ proc ring_key {name} {
+  if {[regexp -indices {(?:^|[/.])u_cland_[^/.]+[/.]u_ring(?=[/.])} $name m]} { return [string range $name 0 [lindex $m 1]] }
+  return {}
+ }
+ # BFS depth from a register: the ring depth when it sits in a ring (never below the base depth), else the base depth.
+ proc walk_depth {depth rdepth key} {
+  expr {$key ne {} && $rdepth > $depth ? $rdepth : $depth}
+ }
+ # A pair found after d combinational cells, dd apart: 1 = today's short pair (d <= depth, dd <= pair); 2 = a ring-only
+ # pair (both registers in the SAME ring, d <= ring depth, dd <= ring pair); 0 = not a pair.  Off (keys {}) = today's rule.
+ proc pair_ok {d dd depth pair ka kb rdepth rpair} {
+  if {$d <= $depth && $dd <= $pair} { return 1 }
+  if {$ka ne {} && $ka eq $kb && $d <= $rdepth && $dd <= $rpair} { return 2 }
+  return 0
+ }
 }

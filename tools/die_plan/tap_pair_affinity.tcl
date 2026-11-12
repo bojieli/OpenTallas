@@ -20,6 +20,12 @@ namespace eval ::ot_tap_pair {
   set chains [expr {[info exists ::env(OT_TAP_PAIR_CHAINS)] && $::env(OT_TAP_PAIR_CHAINS) eq "1"}]
   set chainaff [expr {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) eq "1" && [llength [info commands ::ot_tap_chain::identity]]}]
   set idents {}
+  # DIE-QC-97 11-12 RING (OT_TAP_PAIR_RING_DEPTH / OT_TAP_PAIR_RING_UM, plan clock.tap_pair_affinity.ring_depth /
+  # ring_pair_um): inside ONE landing ring (ring_key) a pair also bonds up to the ring depth / distance.  Both unset = off.
+  set ring [expr {[info exists ::env(OT_TAP_PAIR_RING_DEPTH)] || [info exists ::env(OT_TAP_PAIR_RING_UM)]}]
+  set rdepth [expr {[info exists ::env(OT_TAP_PAIR_RING_DEPTH)] ? $::env(OT_TAP_PAIR_RING_DEPTH) : $depth}]
+  set rpair [expr {([info exists ::env(OT_TAP_PAIR_RING_UM)] ? $::env(OT_TAP_PAIR_RING_UM) : $pair_um)*$dbu}]
+  set nring 0
   # tap nets, their xy and load
   set tapxy {}; set load {}
   foreach tp $ct_taps {
@@ -51,13 +57,17 @@ namespace eval ::ot_tap_pair {
   puts "OT_TAP_PAIR registers on taps [dict size $regs], taps [dict size $tapxy], pair_um $pair_um depth $depth group $gmax"
   # short direct pairs: Q net -> up to depth combinational cells -> D of a register on a tap
   set pairs {}
+  set rkeys {}
+  if {$ring} { dict for {iname row} $regs { dict set rkeys $iname [::ot_tap_pair::ring_key $iname] } }
   dict for {iname row} $regs {
    lassign $row it x y t
    set inst [$it getInst]
    set front {}
    foreach o [$inst getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend front [$o getNet] } }
    set seen {}
-   for {set d 0} {$d <= $depth && [llength $front]} {incr d} {
+   set ka [expr {$ring ? [dict get $rkeys $iname] : {}}]
+   set wdepth [::ot_tap_pair::walk_depth $depth $rdepth $ka]
+   for {set d 0} {$d <= $wdepth && [llength $front]} {incr d} {
     set next {}
     foreach net $front {
      if {[dict exists $seen [$net getName]]} continue
@@ -72,15 +82,22 @@ namespace eval ::ot_tap_pair {
        if {$sn ne $iname && [dict exists $regs $sn]} {
         lassign [dict get $regs $sn] sit sx sy st
         set dd [expr {abs($sx-$x)+abs($sy-$y)}]
-        if {$dd <= $pair} { lappend pairs [list $dd $iname $sn] }
+        set kb [expr {$ring ? [dict get $rkeys $sn] : {}}]
+        set ok [::ot_tap_pair::pair_ok $d $dd $depth $pair $ka $kb $rdepth $rpair]
+        if {$ok} { lappend pairs [list $dd $iname $sn] }
+        if {$ok == 2} { incr nring }
        }
        continue
       }
-      if {$d < $depth} { foreach o [$si getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend next [$o getNet] } } }
+      if {$d < $wdepth} { foreach o [$si getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend next [$o getNet] } } }
      }
     }
     set front $next
    }
+  }
+  if {$ring} {
+   set nr 0; dict for {n k} $rkeys { if {$k ne {}} { incr nr } }
+   puts "OT_TAP_PAIR ring: $nr ring registers, ring depth $rdepth ring pair_um [expr {$rpair/$dbu}], $nring ring-only pairs added"
   }
   if {$chains && [dict size $idents]} {
    set seen {}
