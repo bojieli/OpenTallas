@@ -29807,7 +29807,10 @@
     "q_b010@1",
     "q_b010__physical_v1@1",
     "q_b011@2",
-    "q_b011__physical_v1@2"
+    "q_b011__physical_v1@2",
+    "q_spu0__physical_v1@5",
+    "ot_hbm_sm_i8w_front@8",
+    "ot_hbm_sm_pv_merge@6"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
@@ -32520,6 +32523,16 @@
     },
     "hfd_hgi_vms_glue_nw_t": {
      "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "q_spu0__physical_v1": {
+     "OT_GRT_NONPORT_HOLD": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "ot_hbm_sm_i8w_front": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "ot_hbm_sm_pv_merge": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
    "retry_prev_kw37h_added": [
@@ -33245,7 +33258,10 @@
       "bind_out": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/bind_p11t_vK5d_c12",
       "asbuilt": "/srv/opentallas-scratch2/claude/kw43-canon/hbm/asbuilt_p37su5_sm_lat_vK5d_c12.json"
      },
-     "note": "KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43."
+     "note": "KW-FIX-45 11-11 19:5x DIE-HBM-100 approved: fresh attempt on src = HBM wave src + tools/ of main fc5cd3af6f17 (grt_nonport_hold_chain), OT_GRT_NONPORT_HOLD=1 + edge_outline. KW-FIX-43 COORD 11-10 02:1x on KW43-54 (ruling 20:10 (e), DIE-HBM-97 22:19): q_spu0 E13 fresh gen on plan_p12t_spu0 8b9e38c0, no ft_hop_lockup; bind_matches True on bind_p11t_vK5d_c12 for both types; plan staged read-only epyc7, epyc2, intel1. Revert: rel55_prev_kw43.",
+     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_nph_fc5cd3af6f",
+     "src_sha": "fc5cd3af6f173e623db98dd8b35cf94ac7c8327a",
+     "queue_src": "main@fc5cd3af6f17"
     },
     "vsN4": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
