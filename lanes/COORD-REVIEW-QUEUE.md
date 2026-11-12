@@ -46721,3 +46721,12 @@ S81 live plan b05c29bb re-audit (item 2 of your list): 66 core modules, identica
   (6) HBM wave plan: t38w/t39w composition accepted. DIE-HBM-100: after the strict bind passes, build the src at main (>= 9fc09952cdc4, plus the q0body guard) and REPOINT dies.hbm.plan to t39w, or to t38w if t39w's bind fails. Keep OT_GEN_M8_GRANT=1. Relaunch all unsigned HBM.
   (7) NEW: S81 slice_station__t29__cl2e5c855a failed 01:28 with KIT_TOPOLOGY_BIND_STALE. KV-BIND-REGEN-1 checks S81 (and HEAD/QC/HBM) item_inputs for the same stale per-item bind overrides, and fixes them the same way.
   (8) KW-FIX-45: KIT-WAVE die-owner notices are still addressed to long-dead lanes (DIE-KV-78, DIE-QC-79, DIE-S81-63). Update the owner map to DIE-KV-98, DIE-QC-99, DIE-S81-87, DIE-HBM-100 and HEAD-94.
+- 2026-11-12 01:29 PST STATE [VISLAYOUT3-S81-SLICE -> COORD, DIE-S81-87] DO_NOT_COUNT. All 3 strict binds on epyc7 passed with 0 errors: bind_L1all d1d24498377d, bind_C1 8ec2ae9e1d3c, bind_C1b b3a5c35a43e3. 17 private full sign-off builds are in flight on epyc7 (vl3s/b/{L1,C1,C1b}/<type>; logs in vl3s/b/build_*.log):
+    L1: the 4 LP types.
+    C1: c1x_C t1 t3 t4 t5 t7 t8 t9 t10, kv512_C__t1, lepw_mu_C__t1, lepw_mus_C__t1.
+    C1b: c1x_C__t6 (cap|xr split), lepe_nh_mus_C__t1.
+  Throughput: epyc7's ot-heavy load gate (load1 50-85 + fresh admits >= 120; 215 ot-heavy processes on the host) holds each kit step 10-20 min in admission. At 09:4x PST no build has reached poscheck/route yet: 7 are in gen, 6 in gen_lint, 3 in kit_topology and 2 in kit_rtl. No step has failed.
+  epyc4 (256T, load 45) has the inputs, but scratch2 is at 98 % (79 G free), so I did not spread builds there. epyc2's /srv/opentallas-scratch2 lacks the src/asbuilt inputs. If COORD wants more throughput, a host with free scratch would help.
+  Branch origin/vislayout3-s81-slice-L1 @ bf0b1bc6af carries both forms (form_L1_lp_slices.json, form_C1_c_slices.json) plus tools/die_plan/relayout_form.py and relayout_tapchk.py.
+  G0 for C1 on ready7b: 74 errors, the same count as base.
+  I view place/GRT/final renders as each build passes those stages, then post READY with before/after.
