@@ -31071,10 +31071,8 @@
     "q_spb1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt1": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
     "q_spt2": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
-    "q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
     "ot_hgi_coll_tkm_m_tp192__root": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
     "q_spb0__physical_v1": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
-    "q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
     "ot_hbm_su_pg_lane_exp_x_core": "KW-FIX-45 11-11: plan_items_from_allowlist is on for NW_iorly/NE_iorly; this only_items core had no OWNERS row and stays as it was (not launching)",
     "hnx_rp3lp3h_n": "SUPERSEDED KW-FIX-45 11-11 DIE-HBM-100 queue tag hbm-stale-rows (COORD fail_watch): stale d44v-era core row, not in the current plan's core set; counted variants kept",
     "hnx_rp3lp3h_s": "SUPERSEDED KW-FIX-45 11-11 DIE-HBM-100 queue tag hbm-stale-rows (COORD fail_watch): stale d44v-era core row, not in the current plan's core set; counted variants kept",
@@ -41883,7 +41881,9 @@
    "grt_halving_arm": {
     "items": [
      "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a",
-     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16"
+     "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16",
+     "q_su21",
+     "q_su21__physical_v1"
     ],
     "mode": "edge_outline",
     "gen_host": "epyc8",
@@ -41892,7 +41892,11 @@
      "hfd_hgi_vms_glue_nw_t",
      "hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a",
      "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16"
-    ]
+    ],
+    "modes": {
+     "q_su21": "off",
+     "q_su21__physical_v1": "off"
+    }
    },
    "hold_items_kw43qb001_added": [
     "q_b001",
@@ -44226,7 +44230,9 @@
    ],
    "plan_sha256": "8b4b6e3071c49dee3aa31bf8a0097a4415d617d6c56c0dde22dd70375124f540",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.hbm.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
-   "kit_self_contained": "copy"
+   "kit_self_contained": "copy",
+   "hold_items_prev_q_su21_q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
+   "hold_items_prev_q_su21_q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept"
   }
  },
  "place_prefer": [
