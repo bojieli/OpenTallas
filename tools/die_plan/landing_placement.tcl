@@ -852,6 +852,24 @@ proc cland_place_pinslot_col {ordered rect tag pins rev {psp 1.0} {rows 2}} {
   set rows [expr {max($rows,min($::env(OT_CLAND_STRIP_ROWS),$fit))}]
   puts "OT_CLAND strip rows $tag: $rows (asked $::env(OT_CLAND_STRIP_ROWS), band fits $fit, $nc columns, $n flops)"
  }
+ # LAND-RING-2 11-12 (opt-in OT_CLAND_STRIP_DENS=<FIRM ring flops per um2 of strip>, plan budgets.cland_strip_density
+ # (_types); unset = unchanged): the strip row pitch follows the ring's own flop density instead of a per-type row list.
+ # At rows 1 the strip is ceil(1.15 n/C)+1 rows deep at one flop per column pitch = ~2.6 FIRM flops/um2 for every ring
+ # (QC census 11-12: 16 rings at 2.58-2.63), and the ring logic (3.3 cells per flop) is left to GPL beside it; every
+ # rows-1 strip whose kit reached GRT carried the type's overflow within 20 um of its band (sle_ctl__cla4f6f12f
+ # b_tw_data_i 2478 of 2489, sle_hc1/slw_hc1 b_hw_i 16-31k, sle_hc2/slw_hc2 4.5-5.1k, slw_st_a_v2 x_fw_ctl_i 200 of 200),
+ # while the same rings at rows 2-3 routed (sle_ctl__cl67434795 b_tw_data_i rows 3: GRT 0; 2721-flop cws rings rows 2/3:
+ # GRT 0).  rows = max(asked, min(ceil(density at rows 1 / target), what the band depth fits)).
+ if {[info exists ::env(OT_CLAND_STRIP_DENS)] && $::env(OT_CLAND_STRIP_DENS) > 0} {
+  set q [expr {int(ceil(double($h0)/$ff_rh))*$ff_rh}]
+  set d1 [expr {(int(ceil(1.15*$n/$nc))+1)*$q}]
+  set dens [expr {double($n)*$ff_dbu*$ff_dbu/(double($nc)*$rw*$d1)}]
+  set need [expr {int(ceil($dens/double($::env(OT_CLAND_STRIP_DENS))-1e-9))}]
+  set fit [expr {max(1,($byd-$ayd)/$d1)}]
+  set r0 $rows
+  set rows [expr {max($rows,min($need,$fit))}]
+  puts "OT_CLAND strip density $tag: [format %.2f $dens] flops/um2 at rows 1, target $::env(OT_CLAND_STRIP_DENS) -> rows $rows (was $r0, needs $need, band fits $fit, $nc columns, $n flops)"
+ }
  set rh [expr {$rows*int(ceil(double($h0)/$ff_rh))*$ff_rh}]
  # cland_put_column reserves ceil(h/0.4*spread) rows; its column-capacity reduce takes it down to this pitch
  set red [expr {max(0,int(ceil(double($h0)/0.4*$psp/$ff_rh))-$rh/$ff_rh)}]
