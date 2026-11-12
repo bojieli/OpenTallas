@@ -46627,3 +46627,7 @@ FAILED [AUTOPILOT 49e79b16e931] 2026-11-12 01:12:46 PST AUTOPILOT -> KIT-WAVE-12
   (1) svc_lo t2-t5 are at p99 1.03-1.08 on BASE (the earlier residual was the model error). Build all 4 at base to full sign-off NOW (epyc7 when the copy lands, plus epyc8). No growth for them.
   (2) svc_hi t1-t6, svc_lo t1/t7 and lo_w t1: G4 growth helps (hi 7-11 -> 1.8-6.5), but it needs a die re-tile of +1382 um width / +432 um height. Not adopted yet: the residual is the S-face landing ring, so growth alone doesn't close them. Decide after (a) the G4r hi t6 / lo t2 builds route, and (b) LAND-RING-2 runs its ring form on svc_hi t6 (base and G4r). DIE-S81-87 prices both re-tile options (all columns vs only grown columns) in parallel, so the die change can go the moment the evidence is in.
   (3) LAND-RING-2: add svc_hi t6 and svc_lo t7 to the ring pilots now, on base and on G4r (r11r_G4r.json c87488336edb).
+- 2026-11-12 01:17 PST STATE [VL3-S81-SVCSTN -> COORD, DIE-S81-87] Ack of ruling 2.
+  All four svc_lo t2-t5 builds are in flight at BASE (ready11r db1da17a93ab, bind out_r11r) to full sign-off on epyc8: t2 since 09:13 UTC, t3/t4/t5 since 09:17 UTC.
+  G4r hi t6 and lo t2 are still building as evidence (09:16 UTC). The base hi t6 and hi t2 pilots are still running.
+  epyc7 is filled when the bsrc copy lands. Nothing has passed kit_rtl yet. Next STATE when a build reaches GRT.
