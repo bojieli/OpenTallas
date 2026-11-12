@@ -333,7 +333,10 @@
     "kv3_hgi_v7@10",
     "kv3_hgi@10",
     "kv3_pc_v3@11",
-    "kv3_sys_c@13"
+    "kv3_sys_c@13",
+    "kv3_hgi_v8@17",
+    "kv3_io_ft_v1@18",
+    "kv3_pc_v3@6"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -2125,28 +2128,6 @@
     "intel1",
     "epyc4"
    ],
-   "epyc5_prev_kw41": {
-    "gen_host": "epyc5",
-    "gen_hosts": [
-     "intel1",
-     "epyc4",
-     "epyc5",
-     "epyc6"
-    ],
-    "hosts": [
-     "epyc5",
-     "epyc6",
-     "intel1",
-     "intel2",
-     "epyc4"
-    ],
-    "place_prefer": [
-     "intel2",
-     "intel1",
-     "epyc4",
-     "epyc5"
-    ]
-   },
    "e7_prev_kw42": {
     "gen_host": "intel1",
     "gen_hosts": [
@@ -4154,7 +4135,29 @@
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
    },
-   "kit_self_contained": "copy"
+   "kit_self_contained": "copy",
+   "stash_epyc5_prev_kw41": {
+    "gen_host": "epyc5",
+    "gen_hosts": [
+     "intel1",
+     "epyc4",
+     "epyc5",
+     "epyc6"
+    ],
+    "hosts": [
+     "epyc5",
+     "epyc6",
+     "intel1",
+     "intel2",
+     "epyc4"
+    ],
+    "place_prefer": [
+     "intel2",
+     "intel1",
+     "epyc4",
+     "epyc5"
+    ]
+   }
   },
   "s81": {
    "enabled": true,
@@ -5606,7 +5609,12 @@
     "ot_s81sl_leaf__t53__clb66fa5cb@11",
     "ot_s81sl_leaf__t54__cl501e5681@9",
     "ot_s81sl_leaf__t60@10",
-    "serdes__t2@24"
+    "serdes__t2@24",
+    "col_h10_r1__t1__cld01bb4ae@12",
+    "ot_s81sl_kv_leaf__t3@2",
+    "ot_s81sl_leaf__t24__cl2456157b@1",
+    "svc_lo_dsdv_svc_rs__t6@2",
+    "svc_lo_dsdv_svc_rs_w__t1@9"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -9205,27 +9213,6 @@
     }
    },
    "note_kw41_e5": "KW-FIX-41 2026-11-09 00:39 PST: epyc5 back in S81 gen_hosts: bind/rtl recursive list (path+size, 1280 files) equals intel1 and epyc4.",
-   "epyc5_prev_kw41": {
-    "gen_host": "epyc5",
-    "gen_hosts": [
-     "intel1",
-     "epyc4",
-     "epyc5"
-    ],
-    "hosts": [
-     "epyc5",
-     "epyc6",
-     "intel1",
-     "intel2",
-     "epyc4"
-    ],
-    "place_prefer": [
-     "intel2",
-     "intel1",
-     "epyc4",
-     "epyc5"
-    ]
-   },
    "e7_prev_kw42": {
     "gen_host": "intel1",
     "gen_hosts": [
@@ -19979,7 +19966,28 @@
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
    },
-   "kit_self_contained": "copy"
+   "kit_self_contained": "copy",
+   "stash_epyc5_prev_kw41": {
+    "gen_host": "epyc5",
+    "gen_hosts": [
+     "intel1",
+     "epyc4",
+     "epyc5"
+    ],
+    "hosts": [
+     "epyc5",
+     "epyc6",
+     "intel1",
+     "intel2",
+     "epyc4"
+    ],
+    "place_prefer": [
+     "intel2",
+     "intel1",
+     "epyc4",
+     "epyc5"
+    ]
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -20771,28 +20779,6 @@
     "intel1",
     "epyc4"
    ],
-   "epyc5_prev_kw41": {
-    "gen_host": "epyc5",
-    "gen_hosts": [
-     "intel1",
-     "epyc4",
-     "epyc5",
-     "epyc6"
-    ],
-    "hosts": [
-     "epyc5",
-     "epyc6",
-     "intel1",
-     "intel2",
-     "epyc4"
-    ],
-    "place_prefer": [
-     "intel2",
-     "intel1",
-     "epyc4",
-     "epyc5"
-    ]
-   },
    "e7_prev_kw42": {
     "gen_host": "intel1",
     "gen_hosts": [
@@ -21118,7 +21104,29 @@
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
    },
-   "kit_self_contained": "copy"
+   "kit_self_contained": "copy",
+   "stash_epyc5_prev_kw41": {
+    "gen_host": "epyc5",
+    "gen_hosts": [
+     "intel1",
+     "epyc4",
+     "epyc5",
+     "epyc6"
+    ],
+    "hosts": [
+     "epyc5",
+     "epyc6",
+     "intel1",
+     "intel2",
+     "epyc4"
+    ],
+    "place_prefer": [
+     "intel2",
+     "intel1",
+     "epyc4",
+     "epyc5"
+    ]
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -21976,7 +21984,9 @@
     "slw_st_b_v1__cl6357f1cc__pvffd43fdc@2",
     "slw_st_b_v2__pva66d0f22@3",
     "slw_st_b_v2__pvc2ec5bfb@2",
-    "slw_stm_v1__cl05fc43f7__cl2086fa2c@3"
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c@3",
+    "cbx_q10__cl89936551@14",
+    "slw_su_c__cl92142dac@24"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -24808,29 +24818,6 @@
    "note_kw41_cland": "KW-FIX-41: OT_KW41_CLAND is a no-op marker so HOLD_UNCHANGED releases these rows (the fix is in the tool, not src_sha).",
    "note_kw41_oldsrc": "KW-FIX-41 01:0x: 5 rows failed on the pre-fix src (started before the landing_place overlay) or on infra (sle_su_l0 a14 spill run_kit.sh Is a directory; slw_fw_v2 a2 run_place.log cut at 49152 bytes 23:48, exit 1); relaunch on src_lfq_cl",
    "note_kw41_cland2": "KW-FIX-41 01:3x COORD: landing_place.py from qc-types-13-local-reset-clear-1109@0b305f2395 (md5 9d87d07822e3) in kw41/src_lfq_cl; 12 rows restart at gen, marker value 0b305f2395; no charge, changed tool",
-   "epyc5_prev_kw41": {
-    "gen_host": "epyc2",
-    "gen_hosts": [
-     "intel1",
-     "epyc4",
-     "epyc5",
-     "intel2",
-     "epyc6"
-    ],
-    "hosts": [
-     "epyc5",
-     "epyc6",
-     "intel1",
-     "intel2",
-     "epyc4"
-    ],
-    "place_prefer": [
-     "intel2",
-     "intel1",
-     "epyc4",
-     "epyc5"
-    ]
-   },
    "retry_prev_kw42_added": [
     "sle_su_l1__cl5ea486db@12",
     "slw_su_l1__clcc9d0155@10",
@@ -29554,7 +29541,30 @@
     "slw_st_b_v2__pva66d0f22": null,
     "slw_st_b_v2__pvc2ec5bfb": null
    },
-   "kit_self_contained": "copy"
+   "kit_self_contained": "copy",
+   "stash_epyc5_prev_kw41": {
+    "gen_host": "epyc2",
+    "gen_hosts": [
+     "intel1",
+     "epyc4",
+     "epyc5",
+     "intel2",
+     "epyc6"
+    ],
+    "hosts": [
+     "epyc5",
+     "epyc6",
+     "intel1",
+     "intel2",
+     "epyc4"
+    ],
+    "place_prefer": [
+     "intel2",
+     "intel1",
+     "epyc4",
+     "epyc5"
+    ]
+   }
   },
   "hbm": {
    "enabled": true,
@@ -31000,7 +31010,14 @@
     "q_b013__physical_v1@16",
     "q_mcb_ne@1",
     "ot_svgr_top@1",
-    "ot_hgi_dma_back_static_vp4_banks_cp@4"
+    "ot_hgi_dma_back_static_vp4_banks_cp@4",
+    "q_sm0@4",
+    "q_sm1@2",
+    "q_sm2@3",
+    "q_sm3@6",
+    "q_spb1@5",
+    "q_spb2@3",
+    "vsN1@3"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -34628,28 +34645,6 @@
    ],
    "note_kw41_hbm": "KW-FIX-41: OT_KW41_PVMERGE / OT_KW41_CURSRC are no-op markers so HOLD_UNCHANGED releases these rows.",
    "note_kw41_resetc": "KW-FIX-41 01:3x: reset_contract.json from die-hbm-96-1109@3372af2ddba5 in kw41/src_h94_pv (q_b102 + pv1 listed; COORD can veto); OT_KW41_RESETC no-op marker",
-   "epyc5_prev_kw41": {
-    "gen_host": "epyc5",
-    "gen_hosts": [
-     "epyc4",
-     "epyc5",
-     "intel1",
-     "epyc6"
-    ],
-    "hosts": [
-     "epyc5",
-     "epyc6",
-     "intel1",
-     "intel2",
-     "epyc4"
-    ],
-    "place_prefer": [
-     "intel2",
-     "intel1",
-     "epyc4",
-     "epyc5"
-    ]
-   },
    "prov_view_sources_prev_kw42": {
     "ot_pdie_serdes_tx": [
      {
@@ -44232,7 +44227,29 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.hbm.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "kit_self_contained": "copy",
    "hold_items_prev_q_su21_q_su21": "KW-FIX-45 11-11: GEOM-REQ owners rows were not launch states; hbm take_states gained GEOM-REQ only for the q_b003__physical_v1 istations-2 pilot (COORD option a), so this row stays held as before until its owner releases it",
-   "hold_items_prev_q_su21_q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept"
+   "hold_items_prev_q_su21_q_su21__physical_v1": "KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
+   "stash_epyc5_prev_kw41": {
+    "gen_host": "epyc5",
+    "gen_hosts": [
+     "epyc4",
+     "epyc5",
+     "intel1",
+     "epyc6"
+    ],
+    "hosts": [
+     "epyc5",
+     "epyc6",
+     "intel1",
+     "intel2",
+     "epyc4"
+    ],
+    "place_prefer": [
+     "intel2",
+     "intel1",
+     "epyc4",
+     "epyc5"
+    ]
+   }
   }
  },
  "place_prefer": [
