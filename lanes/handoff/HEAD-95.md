@@ -24,7 +24,7 @@ Posting helper: localhost scratchpad h95/post.sh.
 
 ## 6 NEXT STEPS
 1. When the epyc8 place finishes: render the place layout (layout_render_hook / GEOM tools), post WAIT-VISUAL to GEOM-VIS-6. Route only after their verdict (route on epyc8/9).
-2. wshim_rx: post the sign-off verdict (SIGNED / NOT SIGNED + which checks) when the sign-off log ends.
+2. wshim_rx: verdict POSTED 07:5x = NOT SIGNED (1 slew pin u_cland_link_i dch[1] dsel = CLAND class; io_hold_parent needs the parent receipt). Re-sign after the CLAND fix.
 3. wshim_tx: rebuild from the GEN-CLASS-1 branch when READY (with tap_window floor W 10 on clk/clk_t1); then ask DIE-PROTO-2 for the seam re-measure.
 4. Re-sign hd_ctl_n and hd_spn_eshim_rx with the W 10 window (kit SDC change).
 5. The next HEAD form adopts balance (reach_fix.py balance / die_clock, claude/reach-fix-1112@dadcdf9535 once merged).
