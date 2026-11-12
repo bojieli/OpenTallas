@@ -117,12 +117,29 @@ module tb_ksh_lock;
  always @(posedge stream) if(srst) lk_scyc=lk_scyc+1;
  generate for(k=0;k<8;k=k+1)begin:glk
   // hbm-domain K-port outputs (cycle exact for forms A and C; form B moves WB windows by design)
+`ifdef LK_MASK
+  // valid-masked compare (form D skid: out_data differs from the reference only while out_v = 0)
+  wire[2495:0]ho_u,ho_r;
+  for(genvar l=0;l<4;l=l+1)begin:gm
+   wire gkv_u=g_kr_v[4*k+l],ckv_u=c_k_v[4*k+l];
+   wire gkv_r=gks[k].r_g_kr_v[l],ckv_r=gks[k].r_c_k_v[l];
+   assign ho_u[624*l+:624]={g_k_rdy[4*k+l],g_k_wr_done[4*k+l],gkv_u,
+     g_kr_tag[68*k+17*l+:17]&{17{gkv_u}},g_kr_beat[16*k+4*l+:4]&{4{gkv_u}},g_kr_data[1024*k+256*l+:256]&{256{gkv_u}},
+     ckv_u,c_k_addr[120*k+30*l+:30]&{30{ckv_u}},c_k_len[16*k+4*l+:4]&{4{ckv_u}},c_k_tag[68*k+17*l+:17]&{17{ckv_u}},c_k_we[4*k+l]&ckv_u,
+     c_k_wdata[1024*k+256*l+:256]&{256{ckv_u}},c_k_wstrb[128*k+32*l+:32]&{32{ckv_u}},c_kr_rdy[4*k+l],w_k_rdy[4*k+l],w_k_wr_done[4*k+l]};
+   assign ho_r[624*l+:624]={gks[k].r_g_k_rdy[l],gks[k].r_g_k_wr_done[l],gkv_r,
+     gks[k].r_g_kr_tag[17*l+:17]&{17{gkv_r}},gks[k].r_g_kr_beat[4*l+:4]&{4{gkv_r}},gks[k].r_g_kr_data[256*l+:256]&{256{gkv_r}},
+     ckv_r,gks[k].r_c_k_addr[30*l+:30]&{30{ckv_r}},gks[k].r_c_k_len[4*l+:4]&{4{ckv_r}},gks[k].r_c_k_tag[17*l+:17]&{17{ckv_r}},gks[k].r_c_k_we[l]&ckv_r,
+     gks[k].r_c_k_wdata[256*l+:256]&{256{ckv_r}},gks[k].r_c_k_wstrb[32*l+:32]&{32{ckv_r}},gks[k].r_c_kr_rdy[l],gks[k].r_w_k_rdy[l],gks[k].r_w_k_wr_done[l]};
+  end
+`else
   wire[2495:0]ho_u={g_k_rdy[4*k+:4],g_k_wr_done[4*k+:4],g_kr_v[4*k+:4],g_kr_tag[68*k+:68],g_kr_beat[16*k+:16],g_kr_data[1024*k+:1024],
     c_k_v[4*k+:4],c_k_addr[120*k+:120],c_k_len[16*k+:16],c_k_tag[68*k+:68],c_k_we[4*k+:4],c_k_wdata[1024*k+:1024],c_k_wstrb[128*k+:128],
     c_kr_rdy[4*k+:4],w_k_rdy[4*k+:4],w_k_wr_done[4*k+:4]};
   wire[2495:0]ho_r={gks[k].r_g_k_rdy,gks[k].r_g_k_wr_done,gks[k].r_g_kr_v,gks[k].r_g_kr_tag,gks[k].r_g_kr_beat,gks[k].r_g_kr_data,
     gks[k].r_c_k_v,gks[k].r_c_k_addr,gks[k].r_c_k_len,gks[k].r_c_k_tag,gks[k].r_c_k_we,gks[k].r_c_k_wdata,gks[k].r_c_k_wstrb,
     gks[k].r_c_kr_rdy,gks[k].r_w_k_rdy,gks[k].r_w_k_wr_done};
+`endif
 `ifndef LK_NO_HBM_EXACT
   always @(posedge hbm) if(hrst&&ho_u!==ho_r)begin lk_err=lk_err+1;if(lk_err<10)$display("LOCK hbm outputs differ k%0d cyc%0d",k,lk_hcyc);end
 `endif

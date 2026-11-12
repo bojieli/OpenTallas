@@ -1,0 +1,7 @@
+read_verilog -formal -sv eq/eqD_gold.sv eq/eqD_gate.sv eq/eqD_miter.sv
+hierarchy -top miter
+proc; flatten; opt_clean -purge
+setattr -mod -unset keep_hierarchy ot_hbm_svc_skid_enh
+hierarchy -top miter; flatten; opt_clean -purge
+async2sync
+sat -tempinduct -prove-asserts -set-init-zero -maxsteps 8 -verify -show-ports

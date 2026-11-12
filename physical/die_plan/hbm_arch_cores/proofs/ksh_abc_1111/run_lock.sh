@@ -14,6 +14,10 @@ case $cfg in
  B)  D=(+define+OT_KSH_SELREP +define+OT_KSH_WCNT2); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=1 +define+LK_NO_HBM_EXACT +define+LK_NO_FILL_EXACT);;
  B700) D=(+define+OT_KSH_WCNT2); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=1 +define+LK_NO_HBM_EXACT +define+LK_NO_FILL_EXACT);;
  ABC) D=(+define+OT_KSH_SELREP +define+OT_KSH_SRDL +define+OT_KSH_VMSTG +define+OT_KSH_WCNT2); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=1 +define+LK_NO_HBM_EXACT +define+LK_NO_FILL_EXACT);;
+ PF)  D=(+define+OT_KSH_SELREP +define+OT_KSH_SRDL +define+OT_KSH_PFREE +define+OT_KSH_STSEL); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=0 +define+LK_MASK);;
+ P700) D=(+define+OT_KSH_SELREP +define+OT_KSH_SRDL +define+OT_KSH_PFREE +define+OT_KSH_STSEL +define+OT_KSH_WCNT2); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=1 +define+LK_NO_HBM_EXACT +define+LK_NO_FILL_EXACT +define+LK_MASK);;
+ mutD) D=(+define+OT_KSH_SELREP +define+OT_KSH_SRDL +define+OT_KSH_PFREE +define+OT_KSH_STSEL +define+OT_KSH_MUT_D); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=0 +define+LK_MASK); exp=fail;;
+ mutE) D=(+define+OT_KSH_SELREP +define+OT_KSH_SRDL +define+OT_KSH_PFREE +define+OT_KSH_STSEL +define+OT_KSH_MUT_E); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=0 +define+LK_MASK); exp=fail;;
  mutA) D=(+define+OT_KSH_SELREP +define+OT_KSH_SRDL +define+OT_KSH_VMSTG +define+OT_KSH_MUT_A); X=(+define+LK_FSHIFT=1 +define+LK_WSHIFT=0); exp=fail;;
  mutB) D=(+define+OT_KSH_SELREP +define+OT_KSH_WCNT2 +define+OT_KSH_MUT_B); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=1 +define+LK_NO_HBM_EXACT +define+LK_NO_FILL_EXACT); exp=fail;;
  mutC) D=(+define+OT_KSH_SELREP +define+OT_KSH_SRDL +define+OT_KSH_MUT_C); X=(+define+LK_FSHIFT=0 +define+LK_WSHIFT=0); exp=fail;;
@@ -28,7 +32,7 @@ sha256sum "${srcs[@]}" > src-$cfg.sha256
 $vl --binary --timing -j 8 -O1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_ksh_lock --Mdir obj-$cfg -o sim \
   "${D[@]}" "${X[@]}" "+define+LK_CFG=\"$cfg\"" "${srcs[@]}" > build-$cfg.log 2>&1 || { echo "BUILD_FAIL $cfg"; tail -20 build-$cfg.log; exit 2; }
 for sd in "${seeds[@]}"; do
- rc=0; obj-$cfg/sim +verilator+seed+$sd > run-$cfg-s$sd.log 2>&1 || rc=$?
+ rc=0; obj-$cfg/sim +verilator+seed+$sd +GN=${GN:-480} > run-$cfg-s$sd.log 2>&1 || rc=$?
  ok=0; grep -q '^PASS tb_hbm_svc_wb_kshare_splitstrap_q' run-$cfg-s$sd.log && [ $rc = 0 ] && ok=1
  v=FAIL; [ $ok = 1 ] && v=PASS
  echo "CASE $cfg seed $sd expect $exp got $v rc=$rc :: $(grep -m1 '^LOCK cfg' run-$cfg-s$sd.log) :: $(grep -m1 'offset dut-ref' run-$cfg-s$sd.log) :: $(grep -m1 -E 'WB_INTEGRITY|^LOCK [a-z]' run-$cfg-s$sd.log)"

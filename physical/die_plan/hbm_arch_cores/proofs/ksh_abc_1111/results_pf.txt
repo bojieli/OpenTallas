@@ -1,0 +1,33 @@
+# lock-step system bench, GN=1600 (+GN=1600 passed by run_lock.sh; default GN=480), seeds 31 32, per-seed hbm cycles in each line; GN=3200 not usable: the system bench gives up draining (group reads 2276/3200 issued) before the traffic completes, so those runs are not receipts
+CASE A seed 31 expect pass got PASS rc=0 :: LOCK cfg=A hbm_cycles=85933 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:6330 +2:1862 +3:0 :: LOCK cfg=A hbm_cycles=85933 mismatches=0 fill_fifo_writes=819
+CASE A seed 32 expect pass got PASS rc=0 :: LOCK cfg=A hbm_cycles=81524 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:6304 +2:1888 +3:0 :: LOCK cfg=A hbm_cycles=81524 mismatches=0 fill_fifo_writes=819
+CASE ABC seed 31 expect pass got PASS rc=0 :: LOCK cfg=ABC hbm_cycles=81848 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:5475 +2:1629 +3:0 :: LOCK cfg=ABC hbm_cycles=81848 mismatches=0 fill_fifo_writ
+CASE ABC seed 32 expect pass got PASS rc=0 :: LOCK cfg=ABC hbm_cycles=80990 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:0 +1:5828 +2:1750 +3:20 :: LOCK cfg=ABC hbm_cycles=80990 mismatches=0 fill_fifo_wri
+CASE B seed 31 expect pass got PASS rc=0 :: LOCK cfg=B hbm_cycles=81120 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7104 +1:0 +2:0 +3:12 :: LOCK cfg=B hbm_cycles=81120 mismatches=0 fill_fifo_writes=8192 
+CASE B seed 32 expect pass got PASS rc=0 :: LOCK cfg=B hbm_cycles=80356 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7552 +1:37 +2:9 +3:0 :: LOCK cfg=B hbm_cycles=80356 mismatches=0 fill_fifo_writes=8192 
+CASE C seed 31 expect pass got PASS rc=0 :: LOCK cfg=C hbm_cycles=80264 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=C hbm_cycles=80264 mismatches=0 fill_fifo_writes=8192 w
+CASE C seed 32 expect pass got PASS rc=0 :: LOCK cfg=C hbm_cycles=81433 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=C hbm_cycles=81433 mismatches=0 fill_fifo_writes=8192 w
+CASE P700 seed 31 expect pass got PASS rc=0 :: LOCK cfg=P700 hbm_cycles=81120 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7104 +1:0 +2:0 +3:12 :: LOCK cfg=P700 hbm_cycles=81120 mismatches=0 fill_fifo_wri
+CASE P700 seed 32 expect pass got PASS rc=0 :: LOCK cfg=P700 hbm_cycles=80356 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:7552 +1:37 +2:9 +3:0 :: LOCK cfg=P700 hbm_cycles=80356 mismatches=0 fill_fifo_wri
+CASE PF seed 31 expect pass got PASS rc=0 :: LOCK cfg=PF hbm_cycles=80264 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=PF hbm_cycles=80264 mismatches=0 fill_fifo_writes=819
+CASE PF seed 32 expect pass got PASS rc=0 :: LOCK cfg=PF hbm_cycles=81433 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=PF hbm_cycles=81433 mismatches=0 fill_fifo_writes=819
+CASE default seed 31 expect pass got PASS rc=0 :: LOCK cfg=default hbm_cycles=80264 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=default hbm_cycles=80264 mismatches=0 fill_
+CASE default seed 32 expect pass got PASS rc=0 :: LOCK cfg=default hbm_cycles=81433 mismatches=0 fill_fifo_writes=8192 wcmd_writes=56 :: LOCK fill_v offset dut-ref stream edges: -1:0 0:8192 +1:0 +2:0 +3:0 :: LOCK cfg=default hbm_cycles=81433 mismatches=0 fill_
+CASE mutA seed 31 expect fail got FAIL rc=1 ::  ::  :: LOCK u_fill write/hf differs k0 l3 cyc872
+CASE mutA seed 32 expect fail got FAIL rc=1 ::  ::  :: LOCK u_fill write/hf differs k4 l1 cyc836
+CASE mutB seed 31 expect fail got FAIL rc=1 ::  ::  :: LOCK u_wcmd write differs k0 scyc321
+CASE mutB seed 32 expect fail got FAIL rc=1 ::  ::  :: LOCK u_wcmd write differs k0 scyc321
+CASE mutC seed 31 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k0 cyc101
+CASE mutC seed 32 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k3 cyc94
+CASE mutD seed 31 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k1 cyc33
+CASE mutD seed 32 expect fail got FAIL rc=1 ::  ::  :: LOCK hbm outputs differ k0 cyc11
+CASE mutE seed 31 expect fail got FAIL rc=1 :: LOCK cfg=mutE hbm_cycles=80264 mismatches=30427 fill_fifo_writes=8192 wcmd_writes=56 ::  :: LOCK hbm outputs differ k0 cyc815
+CASE mutE seed 32 expect fail got FAIL rc=1 :: LOCK cfg=mutE hbm_cycles=81433 mismatches=30419 fill_fifo_writes=8192 wcmd_writes=56 ::  :: LOCK hbm outputs differ k4 cyc752
+
+# whole-core yosys EQ, form E (STSEL) vs original, and default netlists
+eqE:   Of those cells 25052 are proven and 0 are unproven.
+def_none:   Of those cells 25052 are proven and 0 are unproven.
+def_OT_KSH_SELREP:   Of those cells 26506 are proven and 0 are unproven.
+# form D skid SAT induction (valid-masked), mutant
+eqD: Induction step proven: SUCCESS!
+eqD_mut: SAT temporal induction proof finished - model found for base case: FAIL!

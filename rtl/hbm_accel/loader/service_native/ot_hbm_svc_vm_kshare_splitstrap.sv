@@ -147,10 +147,68 @@ module ot_hbm_svc_pin_skid2_srl #(parameter integer WIDTH=1,SLW=16)(
     end
 endmodule
 
+// HBM-CORES-B 11-11 form D (OT_KSH_PFREE; ksh_w2 = v700685 B only, TT -51.24: wsent -> u_b.out_data 25 at -51.2, st -> u_b.out_data 21 at
+// -34.6, hrst_q -> u_b/u_a.tail_data 30 at -35.0/-27.1, u_e.out_v/g_k_v -> u_b/u_a 8 at -5.5: every data load enable of the pin skid was
+// push (= in_v && in_r, deep request logic) or rst_n gated, fanned to 340 data flops through a 5-7 stage buffer tree).  Push-free skid:
+// head_data loads (!head_valid || out_r) ? (tail_valid ? tail_data : in_data) : hold, tail_data loads whenever !tail_valid; the data
+// registers have no reset gate.  Valid/ready state is the original; out_data differs from ot_hbm_svc_pin_skid2 only while out_v = 0
+// (don't care, no consumer samples it): yosys EQ of {in_r, out_v, out_v ? out_data : 0}.  Per-slice kept enable gate copies.
+(* keep_hierarchy, keep *) module ot_hbm_svc_skid_enh (input wire a, input wire b, output wire y); assign y = !a | b; endmodule
+module ot_hbm_svc_pin_skid2_pf #(parameter integer WIDTH=1,SLW=32)(
+    input wire clk,rst_n,input wire in_v,output wire in_r,
+    input wire [WIDTH-1:0]in_data,output wire out_v,input wire out_r,
+    output wire [WIDTH-1:0]out_data
+);
+    localparam integer NS=(WIDTH+SLW-1)/SLW;
+    reg head_valid,tail_valid;
+    reg [WIDTH-1:0]head_data,tail_data;
+    wire push=in_v&&in_r,pop=out_v&&out_r;
+    assign in_r=!tail_valid;assign out_v=head_valid;assign out_data=head_data;
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n)begin head_valid<=0;tail_valid<=0;end
+        else begin
+            case({push,pop})
+                2'b10:begin
+                    if(!head_valid)head_valid<=1;
+                    else tail_valid<=1;
+                end
+                2'b01:begin
+                    head_valid<=tail_valid;tail_valid<=0;
+                end
+                2'b11:begin head_valid<=1;tail_valid<=0;end
+                default:;
+            endcase
+        end
+    end
+    for(genvar s=0;s<NS;s=s+1)begin:g_sl
+        localparam integer LO=s*SLW,HI=(WIDTH-1<LO+SLW-1)?WIDTH-1:LO+SLW-1;
+        wire en_h;
+        ot_hbm_svc_skid_enh u_eh(.a(head_valid),.b(out_r),.y(en_h));
+        always @(posedge clk)begin
+`ifdef OT_KSH_MUT_D
+            if(en_h)head_data[HI:LO]<=in_data[HI:LO];   // bench negative control: tail beat lost
+`else
+            if(en_h)head_data[HI:LO]<=tail_valid?tail_data[HI:LO]:in_data[HI:LO];
+`endif
+            if(!tail_valid)tail_data[HI:LO]<=in_data[HI:LO];
+        end
+    end
+endmodule
+// per-slice kept copy of a registered phase decode (form E, OT_KSH_STSEL)
+(* keep_hierarchy, keep *) module ot_hbm_svc_ksh_phase_ff (input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if(!rst_n) q<=1'b0; else q<=d;
+endmodule
+
+`ifdef OT_KSH_PFREE
+`define KSH_SKID ot_hbm_svc_pin_skid2_pf
+`define KSH_SKID_A ot_hbm_svc_pin_skid2_pf
+`else
 `ifdef OT_KSH_SELREP
 `define KSH_SKID ot_hbm_svc_pin_skid2_sr
 `else
 `define KSH_SKID ot_hbm_svc_pin_skid2
+`endif
+`define KSH_SKID_A ot_hbm_svc_pin_skid2
 `endif
 `ifdef OT_KSH_SRDL
 `define KSH_SKID_D ot_hbm_svc_pin_skid2_srl
@@ -278,14 +336,14 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire[4:0]P={sm_h,2'(l)};
   // group-side request pin skid (A) and controller-side request skid (B)
   wire a_v,a_r;wire[KW-1:0]a_d;
-  ot_hbm_svc_pin_skid2 #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hrst_q),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
+  `KSH_SKID_A #(.WIDTH(KW)) u_a(.clk(hbm_clk),.rst_n(hrst_q),.in_v(g_k_v[l]),.in_r(g_k_rdy[l]),
    .in_data({g_k_we[l],g_k_addr[30*l+:30],g_k_len[4*l+:4],g_k_tag[17*l+:17],g_k_wstrb[32*l+:32],g_k_wdata[256*l+:256]}),
    .out_v(a_v),.out_r(a_r),.out_data(a_d));
   reg[2:0]st;reg[3:0]j;reg[6:0]got;reg[7:0]g_rd_out;reg[5:0]g_wr_out;reg hf;reg[7:0]wsent,wdone;
   wire[7:0]wn=wcmd_q[8*l+:8];
   // WB-side request pin skid (E)
   wire e_v,e_r;wire[285:0]e_d;
-  ot_hbm_svc_pin_skid2 #(.WIDTH(286)) u_e(.clk(hbm_clk),.rst_n(hrst_q),.in_v(w_k_v[l]),.in_r(w_k_rdy[l]),
+  `KSH_SKID_A #(.WIDTH(286)) u_e(.clk(hbm_clk),.rst_n(hrst_q),.in_v(w_k_v[l]),.in_r(w_k_rdy[l]),
    .in_data({w_k_addr[30*l+:30],w_k_wdata[256*l+:256]}),.out_v(e_v),.out_r(e_r),.out_data(e_d));
   wire wb_st=st==WB;
   wire w_more=wb_st&&wsent!=wn;
@@ -299,8 +357,21 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire[16:0]vm_tag={cm_bank,cm_epoch[11:0],j};
   wire vm_req=st==ISSUE;
   assign b_in_v=vm_req?1'b1:wb_st?(e_v&&w_more):(st==NORM&&a_v);
+`ifdef OT_KSH_STSEL
+  // HBM-CORES-B 11-11 form E (OT_KSH_STSEL; ksh_w2 st -> u_b.out_data 21 at -34.6: the ISSUE/WB phase select fed 340 mux bits through a 6-stage
+  // buffer tree): the request mux selects come from per-64-bit-slice kept flop copies of (st_nx == ISSUE) / (st_nx == WB), same value as st each edge.
+  localparam integer NSL=(KW+63)/64;
+  wire[NSL-1:0]vmr_s,wbs_s;
+  wire[KW-1:0]vm_dd={1'b0,vm_addr,4'd4,vm_tag,32'd0,256'd0};
+  wire[KW-1:0]wb_dd={1'b1,w_addr,4'd1,{1'b1,8'd0,wsent},32'hffffffff,e_d[255:0]};
+  for(genvar s=0;s<NSL;s=s+1)begin:g_ss
+   localparam integer LO=s*64,HI=(KW-1<LO+63)?KW-1:LO+63;
+   assign b_in_d[HI:LO]=vmr_s[s]?vm_dd[HI:LO]:wbs_s[s]?wb_dd[HI:LO]:a_d[HI:LO];
+  end
+`else
   assign b_in_d=vm_req?{1'b0,vm_addr,4'd4,vm_tag,32'd0,256'd0}:
                wb_st?{1'b1,w_addr,4'd1,{1'b1,8'd0,wsent},32'hffffffff,e_d[255:0]}:a_d;
+`endif
   assign e_r=w_more&&b_in_r;
   wire w_push=wb_st&&b_in_v&&b_in_r;
   assign a_r=st==NORM&&b_in_r;
@@ -379,6 +450,29 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   // Controller queue holds 32 writes and KREG holds two more: count needs six bits.
   wire wdrained=!b_v&&(g_wr_out==0||MUT==3);
   wire g_done=c_k_wr_done[l]&&!wb_st;
+`ifdef OT_KSH_STSEL
+  reg[2:0]st_nx;
+  always @* begin
+   st_nx=st;
+   case(st)
+    NORM:if(take_cmd)st_nx=PEND;else if(take_wb)st_nx=WPEND;
+    PEND:if(drained||MUT==1)st_nx=ISSUE;
+    ISSUE:if(b_in_r&&j==4'd15)st_nx=WAIT;
+    WPEND:if(wdrained)st_nx=WB;
+    WB:if(wsent==wn&&wdone==wn)st_nx=NORM;
+    default:;
+   endcase
+   if(c_pop_vm&&got==7'd63)st_nx=NORM;
+  end
+  for(genvar s=0;s<NSL;s=s+1)begin:g_sp
+`ifdef OT_KSH_MUT_E
+   ot_hbm_svc_ksh_phase_ff u_v(.clk(hbm_clk),.rst_n(hrst_q),.d((st_nx==ISSUE)&&(s!=1)),.q(vmr_s[s]));   // bench negative control
+`else
+   ot_hbm_svc_ksh_phase_ff u_v(.clk(hbm_clk),.rst_n(hrst_q),.d(st_nx==ISSUE),.q(vmr_s[s]));
+`endif
+   ot_hbm_svc_ksh_phase_ff u_w(.clk(hbm_clk),.rst_n(hrst_q),.d(st_nx==WB),.q(wbs_s[s]));
+  end
+`endif
   always @(posedge hbm_clk or negedge hrst_q)begin
    if(!hrst_q)begin st<=NORM;j<=0;got<=0;g_rd_out<=0;g_wr_out<=0;hf<=0;wsent<=0;wdone<=0;end
    else begin

@@ -1,0 +1,8 @@
+# HBM-CORES-B 11-11: ksh_w2 (ot_hbm_svc_vm_kshare_splitstrap__v700685 form B only) FF hold 4003 endpoints, kit epyc7:/srv/opentallas-scratch2/claude/hbm-cores-b/kits/ksh_w2/ot_hbm_svc_vm_kshare_splitstrap__v700685_5d7908703d6a (pair skew TT/FF 81.5/76.0). DO_NOT_COUNT.
+class	n	worst_ps	classification	path
+vclk I/O hold (port starts)	3724	-207.03	NEEDS_PARENT (io_hold_parent receipt)	port -> pin flop
+CDC mem read, skew	255	-18.97	skew: hbm-written u_fill.mem read by a stream flop across two clock trees, timed same-clock; data stable >= 2 stream edges by the gray-pointer protocol	u_fill.mem -> fill_data / fill_epoch
+CDC sync/control	11	-15.32	CDC sync flops (wr_online, wr_gray, rd_online, fault_cdc reset): DIE-HBM-100 ruling 11-11 no pads, no SDC declaration	wr_online->wr_online_r1, wr_gray->wr_gray_r1, rd_online->rd_online_w1, sync_rst_n->pending
+same-domain pin flop -> skid tail	11	-13.77	real near miss (route-stage hold repair)	u_bin_w_k_addr -> u_e.tail_data
+same-domain skid tail -> out	1	-6.32	real near miss	u_a.tail_data -> u_a.out_data
+same-domain wt -> wq	1	-0.13	real near miss	wt -> wq
