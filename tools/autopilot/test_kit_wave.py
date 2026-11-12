@@ -714,19 +714,19 @@ class Step(unittest.TestCase):
             st = KW.step(FakeAP(d, c))
             (r,) = st["items"].values()
             (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
-                                                                     "tail": "ot-run: NOT RUN"}))
+                                                                     "tail": "place: exit 137"}))
             ap = FakeAP(d, c)
             st = KW.step(ap)
             (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
             self.assertEqual(r["attempt"], 2)
             self.assertEqual(r["status"], "RUNNING")
             (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
-                                                                     "tail": "ot-run: NOT RUN"}))
+                                                                     "tail": "place: exit 137"}))
             st = KW.step(FakeAP(d, c))
             (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
             self.assertEqual((r["status"], r["attempt"]), ("RUNNING", 3))       # AUTOBUILD-PIPE-1: up to 3 attempts
             (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
-                                                                     "tail": "ot-run: NOT RUN"}))
+                                                                     "tail": "place: exit 137"}))
             st = KW.step(FakeAP(d, c))
             (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
             self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 3))   # then stops
@@ -739,7 +739,7 @@ class Step(unittest.TestCase):
             for _ in range(2):
                 (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
                 (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
-                                                                         "tail": "ot-run: NOT RUN"}))
+                                                                         "tail": "place: exit 137"}))
                 st = KW.step(FakeAP(d, c))
             (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
             self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))
