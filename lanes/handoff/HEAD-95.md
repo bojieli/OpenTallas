@@ -40,6 +40,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 - wshim_rx: GEN-CLASS-1 LOCAL=1 ring form on claude/cland-hop-maxwire-1112@aee2a3f4707; recipe posted for their private rebind + sign-off. rp17 ITEM: wshim_rx reset relay hop u_srl_17/u_rrl_17 334 um (add relay or move site).
 
+- rp17 CANDIDATE epyc4 head-95/pd/rp17wr.json 3d2929bfcc2b = rp16 + windows (kitwin rloop3, 11 ports, max 16) + landing_ring_wreg on wshim_rx/eshim_rx. G0 0 NEW. Freeze adds SP3n2 (3ac13457f663) on its sign-off; reset hop needs REACH-FIX-2 per-type reset reach knob (asked) else rp18. After freeze: send path to REACH-FIX-2; re-sign ctl_n/eshim_rx/wshim_tx (window-only).
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
