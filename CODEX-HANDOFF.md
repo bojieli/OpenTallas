@@ -1,207 +1,95 @@
-# Codex handoff document (generated 2026-11-07 00:34 PST)
+# Codex handoff — Claude COORD -> Codex (rewritten 2026-11-12 07:1x PST; replaces the 11-07 version)
 
-Claude hit its usage limit (resets 3am (America/Los_Angeles)); expected back at 2026-11-07 03:02 PST.
+Read this when Claude is usage-limited. **OWNER ORDER 11-12:** Codex takes over ALL of Claude's lanes **directly**. That means:
+- Continue in each lane's own worktree, branch, run dirs and watchers.
+- Do NOT start new lanes, new codex/* worktrees or fresh rebuilds of work that is already running.
+- Commit on the lane's existing branch, in the lane's worktree, with a `Codex:` line in the commit body.
+- This overrides CODEX-ROLE.md step 4 (own worktree per lane) and the 11-07 watcher-mode limits, for work inside a lane's scope.
 
-Read ~/coord/CODEX-ROLE.md first: your role, the binding rules, and how to cover every task.
+## 0. Start-up order (about 20 min)
+1. Read `~/coord/lanes/handoff/*.md`, one file per lane. Each has: scope, worktree host:path, branch and sha, running jobs with how to check them, watchers, NEXT STEPS with decision rules, open READY/ASK, and gotchas. **These files are the primary handoff.** Section 3 below is the index plus COORD context.
+2. Read the tail of `~/coord/lanes/COORD-REVIEW-QUEUE.md` from 11-12 04:00 PST. Every COORD RULING/REVIEW/LOOP-GAP line there is binding.
+3. Read `~/coord/lanes/GEOM-REVIEW.md` (visual verdicts) and `lanes/VISUAL-QUEUE.tsv`.
+4. Check what is still running before relaunching anything; builds survive a lane stopping. Use `~/.local/bin/ot-run --status` on intel2, plus `docker ps` and `ps` per host.
+5. Then act as COORD and as every lane (section 2). Log one `CODEX:` line per milestone in `~/coord/HANDOFF.md`. Post to the queue as `[CODEX as <LANE>]`.
 
-# OpenTallas — Claude -> Codex standby handoff
+## 1. Binding rules (short; the full rules are in CODEX-ROLE.md, AGENTS.md and METHODOLOGY.md §12)
+- **Keys and owner assets:** never print or commit keys. Cherry Servers writes need the owner. Never delete a host, never touch AGIdock authorized_keys or owner VMs, never touch known_hosts. ssh config and authorized_keys are append-only, with backups.
+- **Git:**
+  - Never run git inside `/home/ubuntu/OpenTallas` on intel2 or localhost; use the lane worktrees.
+  - Never `add -A`, `stash`, force-push or `-X ours/theirs`.
+  - main changes only through the merge lane, on a COORD-APPROVED sha.
+- **~/coord:** change it only via `bash ~/coord/bin/coord-commit.sh "<msg>" <paths>`, then verify on origin/coord/state. Never `git reset` in ~/coord.
+- **Processes:** kill exact PIDs or containers you or the lane own. Never pkill or killall. A lane on epyc7 ran `pkill -x python3` this week; never again.
+- **Disk:**
+  - No deletes outside the guarded tools.
+  - Any move, dedupe or swap goes through `tools/ot_safe_swap.sh` (guard v2, bfcca667a9). It checks dev:inode and readlink, whole-tree deletability, and protected/queue/kitwave refs.
+  - On 11-12 a self-symlink swap destroyed 7 source trees on epyc4.
+  - Never touch `/home/ubuntu/closed_archive`, `/archive`, `~/.codex`, or `~/.claude` (except job tmp).
+- **Owner rules in force:**
+  - **Visual gate:**
+    - After place, a type stops at WAIT-VISUAL until GEOM-REVIEW.md has GOOD or ISSUES-ACCEPT for that attempt.
+    - Never relaunch a BAD form whose fingerprint is unchanged (WAIT-FORM).
+  - **Families:** fix whole families, never per type. Reach problems (taps over the sink cap, hops over 405 um, reset reach) are fixed by REACH-FIX's deterministic tool at compose.
+  - **Floorplans:** a hand top-level floorplan per die. Re-floor over signed types is allowed, with a batch re-sign.
+  - **Clock gate:** routed pair setup >= 0 AND hold >= +10 ps.
+  - **Core shapes:** frozen (move or rotate only), except for a declared exception.
+  - **Slot fill:** below 0.15 gets an exception by default.
+  - **Pre-approved by the owner:** outline or die growth, added cycles, perf loss and compiler changes.
+  - **Wording:** say "signed off", never "signing".
+  - **Owner questions:** plain-text `OWNER?` lines with a recommendation and a default. Never use a blocking dialog.
+- **Heavy jobs:** only via ot-run, never directly on intel2 or localhost.
+  - HBM is phase 2: a separate target, about 96 threads, lower priority.
+  - epyc10 (Cherry 1062383, 2x7443) arrives around 11-14 and is reserved for phase-1 die-level runs.
 
-Updated by Claude COORD at 2026-11-06 23:26 PST. **Claude is running now. This file is only used if Claude hits a usage limit.** If you are reading it because the auto-switch started you, Claude's lanes have all stopped too (same account), so you own every scope below until told Claude is back.
+## 2. Codex as COORD (what Claude did each hour)
+- **LOOP-GAP (every ~20 min):**
+  - Rule on every READY/ASK older than 30 min with no COORD reply.
+  - Check every lane posted within 60 min; give an orphaned scope a successor by doing it yourself in that lane's worktree.
+  - Check KIT-WAVE is launching: `grep KIT-WAVE ~/coord/autopilot/log.txt | tail`.
+  - Check ot-run waiters and disk on every host.
+- **HOURLY:**
+  - Forced count: `cd ~/coord && python3 -I tools/release_tree_plan.py --force`. It takes more than 15 min, so run it detached.
+  - Then `tools/release_tree_render.py --summary` and `tools/failure_breakdown.py`.
+  - Add a row to `lanes/SIGN-RATE.tsv`.
+  - View 2 GEOM renders and write verdicts in GEOM-REVIEW.md.
+  - Update RELEASE_TREE.md line 3 and the BREAKDOWN block.
+  - Add a HANDOFF.md line, then run coord-commit.
+- **Fail monitor:** `bash /home/ubuntu/.claude/jobs/b7f906df/tmp/fail_watch2.sh` prints new FAIL rows. Batch failures by class, one class fix plus a batch relaunch.
+- **Approvals:** approve READY shas to the merge lane as Claude did (tests named, scope sane, class not per-type). Do not change a plan of record on your own outside an approved die event.
 
-Read first: CODEX-ROLE.md, AGENTS.md, ~/coord/METHODOLOGY.md, then the tail of `lanes/COORD-REVIEW-QUEUE.md` from 19:00 PST 11-06 (every RULING line there is binding).
+## 3. Lanes (lane handoff file = `~/coord/lanes/handoff/<LANE>.md`)
+| Lane | Scope | Where / state at 07:1x |
+|---|---|---|
+| ROOT-MERGE-60 | merge lane | Worktree epyc8 `/srv/opentallas-scratch2/claude/wt/rm60` (+ `rm60-main`), venv60. Train 60 tip `3d65e863df` (KV vN 52a724781a52 + qc-verify-gaps 2132a3e0d660/aac9d8eba287) passed the 59-style gate (main and tip both fail the same 43 tests); the wide list (`runwide60.sh`, `wide.list`) is running. Then: HOTFIX `claude/kv99-taps-path-1112@ae71bf887a8f` (taps.py missing Path import; main d767dc851b crashes G0/bind/gen with sink_bins). Then the train `cef99b3203` (land-override-stale) + `bfcca667a9` (guard v2) + `3d254c4a7973` (S81 ready12) + `33e70e1695` (CLAND-SLEW-1) + `a07f957bc5` (street-fixedface on 3cca0a68ed). Gate: the tip's failures must be a subset of main's on the 59-style list AND the wide list, `-n 16`, at most 2 suites at once, epyc8/9. |
+| KW-FIX-46 | kit-wave class fixes, kit_wave.json | Items: PSPLIT sidecar (S81 gen_args `--clock-landing` to the split sidecar psplit2/psplit_all); WAIT-FORM hold_items (`ot_s81sl_leaf__*`, `ot_s81sl_kv_leaf__*`, KV `kv3_hg*`/`kv3_hgi*`, QC hcut1111/s25 old floor); S81 wave to ready12 minus 7 X-TIER; reaper keep list (KW-SRCGONE-1) so autoclean stops pruning referenced bind worktrees; intel1 as restage target once FLEET-2 posts ALLDONE; stale VISUAL-QUEUE rows; epyc4 rows needing qc_s27/hbm p18 go to epyc2/8/9. |
+| GEOM-VIS-5 | visual gate reviewer | Answers every WAIT-VISUAL row; posts in GEOM-REVIEW.md. The die-level renders for KV vN / HEAD fix2 are in `lanes/die-proto-2/`. |
+| HEAD-95 | HEAD die owner | West growth: decision by 08:15 between the fork-free fallback (street_rule legalize hd_lep0N, 0 growth, COORD prefers it) and forking hd_st_turn for nst1 (time box 09:00). HB4: eshim_tx SIGNED OFF; wshim_tx is drv-only (125 slew pins); wshim_rx DRV ECO + CLAND-SLEW-1. |
+| DIE-KV-99 | KV die owner | vN2 (drawing due 11-13 12:00): hroot aspect exception, hgi_EN_0 cut, merge 21 types, W pocket (hg_wstreet.py), stations out of PHY, tap cap 1200. Sub-lanes items 3/5/7/8/9 running. Adopt VISLAYOUT3 F1 ft_street moves. Carry insertion balance. |
+| DIE-S81-88 | S81 die owner | ready12b (insertion balance at compose + REACH-FIX +1 reg; leaf hand floorplan; no gear unless BUS-GEAR-2 is READY by 11-13 18:00). Also absorbs X-TIER-OTC, S81-LEAF-FLOOR, VL3-S81-*, LAND-RING-2. PSPLIT sidecars staged on every gen host. |
+| DIE-QC-100 | QC die owner | s28 + HF-1c (claude/qc-s28-floorplan-1112@ea7be452d3, 3 GEOM-VIS-3 conditions). Sub-lanes: HF1C-LAND, S28-TAPS, taps+F+W fold, R1/R2 routes, visual-class forms. Must name the QC plan of record for DIE-PROTO-2. Must say whether coll_ft/fw forms are unchanged in s28 (if so they get ISSUES-ACCEPT). |
+| REACH-FIX-2 | reach tool (`tools/die_plan/reach_fix.py`) | Worktree epyc7 `/srv/opentallas-scratch2/claude/wt/reach-fix-1`, claude/reach-fix-1112. New classes: RESET-WAVEFRONT-TAPS (re-derive taps/raw refs after a reset re-solve, by role) and INSERTION-BALANCE for all dies (die-agnostic, from the S81 ready12b method). |
+| GEN-CLASS-1 | generator class fixes | Worktree intel2 `/srv/opentallas-scratch2/claude/wt/gen-class-1`. Next: SIDECAR-COVERAGE preflight, PLAN-SRC-MACRO preflight, classify the wshim_tx slew pins. |
+| FLEET-2 | disk / admission / hosts | epyc4 restore of 4 trees into scratch2/claude/kw45-real (logs `~/f2_*.log`, each tree links only after verify). intel1 src pull (`intel1:~/f2_i1pull.log`, 121/125). epyc2: no more deletes; the f2-moved copies of ss29/codex-kv-phy-reset-1551 stay until a dry-run compare passes. |
+| DIE-PROTO-2 | die GRT/STA prototypes | KV vN and HEAD fix2: GRT overflow 0, but the gates FAIL on landed clock damage (1031/1238 ps vs the 416.5 ps window) = insertion skew. Next: insertion-vs-distance fit, S81 ready12b, QC s28, HBM. |
+| DIE-HBM-101 | all HBM, phase 2 | Cores in flight (topk D, fused_lane_c S3C, svgr_top, q2n2_vm_core, su31 G1e); hand floorplan v2 (M9 overflow = ft bands, not the spine); S00/S11 need a source tree that matches the plan macros. |
+| BUS-GEAR-2 | S81 x-feed 2:1 gear | Worktree epyc7 `/srv/opentallas-scratch2/claude/wt/bus-gear-1`, branch claude/bus-gear-1-xint-1112. Steps: commit, EQ bench, +1 lane-cycle declaration, TOK-VERIFY, strict bind on ready12b, READY. |
+| TOK-VERIFY-2 | token checks | Worktree intel1 `/srv/opentallas-scratch2/claude/wt/tok-verify-2`. bc62f30f4e READY; gear token check; post-train S81 token re-run. |
+| VISLAYOUT2-QC | QC manual re-layout | coll_n reset-removal fix; vl2qc-fanout-cap 0080dc2d5c. |
+| VISLAYOUT3-KVHEAD | KV/HEAD re-layout | F1/F1b stop after place (evidence for vN2); kv3_sys_SD_v1 SD-GROW goes to sign-off only if vN2 carries the +103.68 die width. |
 
-## Progress (counter: `cd ~/coord && python3 -I tools/release_tree_plan.py --force && python3 -I tools/release_tree_render.py --summary`)
+## 4. State at 07:1x PST 11-12
+- **Count:** 275 (05:39, flat). Cores 217: S81 61/64, HEAD 4/5, QC 31/31, KV 32/32, HBM 89/119. Types 58: S81 35/204, HEAD 19/26, QC 2/120, KV 1/56, HBM 1/81. No die gate has passed yet.
+- **main:** `d767dc851b70`, which carries the taps.py regression; the hotfix is pending.
+- **Root cause on all dies:** landed clock damage is INSERTION SKEW from the clock root (S81 0.25 ps/um, r=0.99), not hop distance. The fix is insertion balance at compose plus REACH-FIX +1 reg. Hand re-floors meant to shorten hops do not fix it; the HFP-S81-1 re-floor was withdrawn.
+- **Fleet:**
+  - epyc2 scratch2 has about 213 GB free with about 88 waiters.
+  - epyc7 and epyc8 have about 80 waiters each, at or above nproc.
+  - intel1 and epyc9 have free admit. intel1 becomes a wave host once its source pull finishes.
+  - epyc5 is RETIRED.
 
-190 counted items at 21:05 (flat since 19:05):
-
-| Die | Cores | Types |
-|---|---:|---:|
-| S81 | 54/58 | 9/205 |
-| HEAD | 4/4 | 14/25 |
-| QC | 24/26 | 0/119 |
-| KV | 30/32 | 1/56 |
-| HBM | 54/104 | 0/81 |
-
-Die gates (BIND/GRT/STA/CLK) are not yet passed on any die. ETAs: non-HBM cores ~11-07, types ~11-11..13, HBM cores ~11-11/12, HBM types ~11-18/21, die-level ~11-14..16 (HBM ~11-21/24).
-
-## OWNER rules added 11-06 (binding; older ones are in CODEX-ROLE / queue)
-
-1. **"do not wait for them to merge before rebuild."** (21:2x) A READY fix is rebuilt AT ONCE from its branch head in its own flow tree on the least-loaded host (epyc5/epyc6 now). Signed results re-sign on the main flow tag after the merge (resign.py, PROVENANCE kind:resign) to count. Never hold relaunches for the merge train.
-2. **Keep the fleet loaded.** At 21:1x the fleet was at 49% with 0 ot-run waiters. Target is >=0.85 x cores and >=4 waiters on every host.
-2b. **"it is important to make conservative fixes and visually inspect the layout for all your subagents to remove congestion"** (21:5x).
-   - Every failing core/type gets a conservative version in parallel:
-     - registered faces with fanout <=8;
-     - util <=0.40 for cores, <=0.35 for types;
-     - signals <=M6;
-     - feedthrough flops every <=450 um;
-     - +1 PIN CYCLE for setup reach;
-     - pipelined reset.
-   - Every build has its density + GRT congestion + macro/pin PNGs viewed after place, GRT and route. Hotspots are removed structurally.
-   - Lanes: HBM-CONS-1 (all open HBM cores, vK), QC-NLNK-RF (NL/NK vR), TYPE-CONS-1 (congestion + setup families, vC), ARCHIVE-1106B (disks >90%: epyc6 scratch2 37 GB).
-2c. **"the visual layout checks should also find the fix obvious bad smells in physical design, for example pins on opposite sides, congestions in pins, too narrow channels, long diverged clock paths, etc."** (22:0x). Every place/GRT/route view runs a 10-smell checklist and fixes each smell structurally before the next stage:
-   1. pins on opposite sides;
-   2. pin clumps (>50% pin-layer track use);
-   3. narrow channels;
-   4. long or diverged clock paths, clock over macros;
-   5. single-driver fanout spread >100 um;
-   6. crossing or doubling-back data flow;
-   7. logic far from its pins;
-   8. density >0.7 next to empty areas;
-   9. macros blocking the pin edge or clock entry;
-   10. feedthroughs with no flop or repeater within 450 um.
-
-   Posts carry "SMELLS: <list or none> [CHECKED png]". KW-FIX-24 is building an automatic smells.json plus renders per kit run, advisory, which lanes act on. Full text: job tmp core_lane_rules.md sections 21:5x and 22:0x. Codex: apply the same to every build you touch.
-3. **Types safe by construction, all 5 dies** (TYPE-SAFE). Wiring and hold are fixed in the generator, not by rounds of patches:
-   - track-budget corridors;
-   - clock follows data (per-port tap windows, the TAPWIN-PORT SDC);
-   - subtree_balance.tcl and ft_spread.py are default-on;
-   - midpoint lockup latch `clock.ft_hop_lockup` is used only where a per-port rebuild still fails.
-4. **Archive closed, delete non-closed** (ARCHIVE-1106 DONE). Signed results are archived to AGIdock `/archive/opentallas-signed-1106/<host>/<path>`, and a stub is kept on the host (signoff + PROVENANCE + final views + ARCHIVED.json). The key ~/.ssh/agidock_ot is on localhost only.
-   - Never delete a stub.
-   - Never delete kit_wave.json paths or asbuilt paths.
-5. Standing rules:
-   - safe forms, not retries;
-   - two strikes, then RE-FORM (<=150k cells, util <=0.45, registered faces);
-   - PIN CYCLES are cheap;
-   - vA/vB built in parallel, first to sign off wins;
-   - only sign-off blocks (TT setup >= 0, FF hold >= 0, DRV/DRC 0, LEC EQUIVALENT);
-   - io-only hold counts as NEEDS_PARENT;
-   - late-stage ECO is OK;
-   - batch fixes by class;
-   - owner questions in plain text with a default;
-   - say "signed off".
-
-5b. **epyc5 + epyc6 KEPT** (OWNER 22:5x: "keep both hosts. pause the deletion and move the workload from the waitlist to it."). No termination; the Cherry DELETE approval is withdrawn. Root floor 150 GB on epyc2/epyc4 (OWNER "use 150GB for floor decisions"); INV_HEADROOM_GB 32 on epyc4/5/6. Lanes: REBAL-1 (waiters to epyc5/6), AUTOCLEAN-1 (cleanup after each job), MONITOR-FIX.
-5c. **Prune finished runs in Codex trees** (OWNER 23:0x: "all finished runs in the codex trees must be pruned, both on localhost and fleet. it should also be in codex handoff doc").
-   - Codex: when a run finishes or is killed, prune it at once, and again before every handback. This covers codex-*, wt-codex-* and scratch-codex-* trees on localhost and every fleet host.
-   - A finished run has no process, container mount or queued job on it, and no live path references it. Save patches for uncommitted or unpushed git work first. Never touch ~/.codex.
-   - Signed-off run: archive to AGIdock `/archive/opentallas-signed-1106/<host>/<path>`, verify, then keep the stub (signoff, PROVENANCE, 6_final.odb, final views, ARCHIVED.json). Stage ODBs 1_*..5_* leave the host (OWNER 23:0x: "the stage result ODBs can be archived on the agidock"). The AGIdock key is on localhost only.
-   - Not signed off: delete, keeping only the newest resume DB of a block still being worked on.
-   - Lanes: CODEX-PRUNE-1 (backlog), AUTOCLEAN-1 (after each job).
-5d. **Limit expected about 23:45 PST 11-06** (OWNER 23:2x: "please queue all the jobs that can be run and make sure it can fill the hosts while you are rate limited."). All lanes were told at 23:2x to queue everything detached and post a final STATE. Latest state is in the queue tail from 23:25 on. If you take over: keep waiters on every host, watch disks (epyc5/6 scratch, intel2 root), and collect CODEX-PRUNE-1 and ARCHIVE-1106C detached deletes by their manifest paths in their last post. AUTOCLEAN-1 may not be installed: read its last STATE. Retention (OWNER 23:2x, all runs): closed block = small stub on the host, the rest to AGIdock; open block = newest resume database only; everything else deleted.
-5e. **Codex covers Claude limits in WATCHER MODE ONLY** (OWNER 23:34 agreed; weekly limits are covered by other accounts, so this applies to every limit unless the owner says otherwise). This overrides "you own every scope" at the top.
-   - DO: watch disks and prune by the 5c rules; restart a crashed kit wave or autopilot; collect finished results and re-sign them (resign.py) so they count; run lanes' detached chains and read their logs; relaunch FAIL rows whose class fix already exists; one bounded eco_loop on a routed near miss; keep waiters on every host; log what you did in CODEX-LOG.md.
-   - ALSO DO (OWNER 11-07 03:2x): write class fixes and new safe forms on your own branches and rebuild from the branch head at once. Follow lanes/_CORE_LANE_RULES.md, pilot one row through PLACE before any batch release, view renders. Post READY for the merge lane.
-   - DO NOT: merge or cut tags; change plans of record; delete or restart a deletion chain; stop other lanes' jobs (only a job hung by the 2-h rule, by exact name, and log it); make any owner-level decision. Note a problem in the log instead.
-   - Handback: when Claude returns, stop new launches, append a short `## Handoff to Claude` with what ran and what finished, and leave jobs running. Claude does not wait long for it.
-
-## main and merge train
-
-main = `239726a28c` (21:41, re-read the queue for the train). Merge lane ROOT-MERGE-46 takes merges on intel2 central `/home/ubuntu/OpenTallas`, using the merge lock and a plain merge plus tests. Approved order, none landed yet:
-
-1. srcready b5710c267d
-2. qcbatch 9976373442 (27 QC types, relay_resite_crossing default ON)
-3. romqsplit c34808abe5 + framepairs 1152282347 (S81 rom_q halves count after this)
-4. colst aa27610ffa
-5. ftcorr f301811b71
-6. type-safe-2 e23c27ec97
-7. kv-fdicdc 82ac69b35d
-8. PART 51 5e5e75c6dd, PART 52 7f9bb27ea2
-9. centry-m5only 27427d7af5
-10. kv-iocor 26fc32ca, then kv-slgland d725b196f4
-11. KW-FIX-24 fixes:
-    - restagehyst 7adf9c470d
-    - lecunit 2ce49bbe04
-    - leafrep a8fae7f643
-    - pinband 1b7ce20e62 is HELD until its moves are confirmed on the 0.192 um grid
-12. fgctx cc852ad06c
-13. ONE flow-tag cut for all dies, then AUTO-RESIGN.
-
-Also pre-approved: the HBM rest_1c spipe1 plan event, on its READY.
-
-## Fleet
-
-ot-run is on intel2: `~/.local/bin/ot-run --status`. Hosts: epyc2, epyc4 (256T), epyc5, epyc6, intel1, intel2 (= localhost in ot-run).
-
-At 21:1x:
-- epyc5 and epyc6 were ~30% loaded.
-- epyc6 scratch2 is tight (~110 GB free).
-- No heavy jobs on the owner laptop/localhost.
-- Kill exact PIDs only; never pkill -f.
-
-## Live lanes at handoff (Claude subagents; they stop with Claude — pick up their scope)
-
-Each lane posts to lanes/COORD-REVIEW-QUEUE.md; its last STATE line there has paths and the next step.
-
-- **ROOT-MERGE-46:** runs the merge train above (tests were at epyc4 /tmp/rm46_b15).
-- **KW-FIX-24:** kit-wave class fixes (above).
-  - At 21:1x it was told to run a pre-merge wave from the branch heads on epyc5/epyc6.
-  - QC 27 first, then KV slgland 35, then S81 grt-overflow/post-cts-hold rows.
-- **TYPE-SAFE-2:** structural type forms.
-  - Canaries: S81 t14/t26 tsA/tsB, HBM q_spb2 vB.
-  - Widen to ~77 grt-overflow/post-cts-hold rows on epyc5/epyc6.
-- **S81-SSTN-HOLD-1:** 14 slice_station FAILs were stale pre-TAPWIN-PORT kits.
-  - vP SDC-only re-kits count via resign on cl-s81.
-  - t14/t26 vP ECOs on output-port hold.
-- **DIE-S81-72 (S81 die owner):**
-  - 16 stale rows;
-  - leaf batch 2: t54 PIN CYCLES +1, t69 u_vs core move, t57 2-tap move;
-  - rom_q halves (hw re-signed at epyc5 /srv/opentallas-scratch2/claude/s81-romq-b5/hw_x8_resign_at).
-- **S81 core lanes:**
-  - S81-ENGRR-B6 eng_rr_e: vC and vE (vE −97.9 ps on u_xq.u_aq.s0_x); ECO line closed.
-  - S81-IDX-B5 idx_tx: vG/vH.
-  - S81-BKSEL-RF6 bksel: vD-ECO/vE.
-  - S81-RCK-3: serdes PHY pilots.
-  - S81-T51-RECUT: register re-cut, in DRT.
-- **DIE-QC-85 (QC die owner):**
-  - su_l0/SU2/FE/fw rebuild from qcbatch head (START4 fix);
-  - coll_ftm ECO pass 3 on epyc5 (pass 2: TT −13.73 ps, slew fail).
-- **QC-A0C-B6:** QC NL/NK forms and ECOs.
-- **DIE-KV-84 (KV die owner):**
-  - KV slgland/iocor/fdicdc rows from branch heads;
-  - KV die-kv-61 bind/ is lost and must be regenerated if needed.
-- **KV-ING-6:** ingest i2 DRV ECO (intel1 /srv/opentallas-scratch2/claude/kving4/vE_eco/i2 is protected).
-- **DIE-HEAD-76:** 7 stale rows relaunched at 20:47, hd_spn vC route.
-- **DIE-HBM-82 (HBM die owner):**
-  - 21 stale rows;
-  - svgr_bk (B) FIFO/bank split, plus probes vPW45/vPW60;
-  - svgr_own RF3 registered lane selects.
-- **HBM form lanes:**
-  - HBM-FORM-TIMING-13: rest_1c PIN CYCLES +1, vC/vD.
-  - HBM-FORM-SPLIT-14 (+ SUX, OPSB sub-lanes): split forms.
-  - Also live: B128 vA2 with LEAFSLEW, q3_edge_link, flc_eco1, epyc6 HBM core batch, d44v PART 40, rx_bm3_rest + svgr_top RE-FORM.
-
-## Hourly loop (what Claude runs; keep it running)
-
-- LOOP-GAP check at :00/:20/:40:
-  - rule on every READY/ASK older than 30 min that has no [COORD] reply;
-  - restart dead lanes whose scope is still open;
-  - grep the kit-wave log for 'KIT-WAVE failed';
-  - make sure ot-run has waiters on every host.
-- HOURLY:
-  - run the counter and add a lanes/SIGN-RATE.tsv row;
-  - run `python3 -I tools/failure_breakdown.py` and paste it into the RELEASE_TREE.md BREAKDOWN block, plus line 3;
-  - view 2 GEOM renders;
-  - add a HANDOFF.md line;
-  - commit with `timeout 280 ~/coord/bin/coord-commit.sh "msg" files` (never run `git reset` in shared ~/coord; it dropped 9 commits on 11-06).
-- Relaunch FAIL rows older than the last class fix at once, from the branch head if it is not merged yet.
-
-## Never
-
-- Never print keys.
-- Never touch ~/.claude, /home/ubuntu/closed_archive, existing /archive dirs (except new writes under opentallas-signed-1106), or owner VMs.
-- Never run git in localhost /home/ubuntu/OpenTallas.
-- Never use git add -A, force-push or stash.
-- Cherry API is read-only.
-- Deletions need a manifest first and the PROTECTED union. Skip .keep, live mounts, mtime <6 h and locked worktrees.
-
-## Handback
-
-When told Claude is back:
-- park new launches and keep healthy jobs running;
-- append `## Handoff to Claude <date time>` in CODEX-LOG.md with per-lane state (paths, running units, next step);
-- reply HANDOFF DONE.
-
-## Latest handoff milestones
-
-- 2026-11-06 21:40 PST COORD hourly: count 190 flat (main b37de6e708; merge train has not landed). OWNER rules: 21:2x rebuild from branch heads without waiting for merges; 21:5x conservative versions in parallel + visual check; 22:0x 10-smell checklist (all in CODEX-HANDOFF-STATUS + lanes/_CORE_LANE
-
-CODEX: 2026-11-06 22:10 PST temporary takeover STOPPED; no new project changes/jobs/merges. Five new temporary worktrees removed per user; live fleet/source preserved. Full handback in CODEX-LOG.md. Main239726a28ca unchanged.
-2026-11-06 22:32 COORD hourly: count 190 flat; lanes restarted after limit (lanes/_RESTART_1106.md); OWNER 22:3x drain epyc5+epyc6, terminate about 06:37 11-07, RETIRE-EPYC56 copies closed records.
-- 2026-11-06 23:26 PST COORD: owner warned of limit in 20 min. All lanes told to queue everything detached and post final STATE; handoff 5d + _RESTART_1106.md updated. Approved hubgen, type-safe-3, lep. Monitor order + verdict feed live.
-- 2026-11-06 23:52 PST COORD hourly: count recount owed (192 partial vs 194 at 23:05: t46, t7__cl945bc067, hd_spn_wshim_tx records on epyc4). No GEOM renders viewed this hour. Train in, tag cut, KW-FIX-26 + CODEX-PRUNE-1 running detached.
-- 2026-11-07 00:05 PST COORD: count 192 is a scan artifact: release_tree_plan reports epyc4 unreachable ("SIGNED scan epyc4:" empty, cache unreachable_hosts), so its 3 records drop; dirs and SIGNED PROVENANCE checked on epyc4. Real count 195 until a full scan says otherwise. Next: find why the epyc4
-2026-11-07 00:25 PST COORD hourly: count recount owed (194 last full, 192 partial, epyc4 scan timeout); 11 successors started 00:20; intel2 root 61 GB; S81 col_h10_r1 render viewed: pin clumps on top and bottom edges, logic squeezed in the macro channels, clock sink 2104 um from its driver; KV hgi_v
-
-For live jobs and new results, read the active lane files and lanes/COORD-REVIEW-QUEUE.md on intel2. Historical lane contents are intentionally omitted from this handoff.
-
+## 5. Handing back to Claude
+Park safely and let jobs run. Then:
+- refresh every touched `lanes/handoff/<LANE>.md`;
+- append `## Handoff to Claude <date time PST>` to CODEX-LOG.md (what you did per lane with shas, jobs started host:path/unit, results, open failures, OWNER? items);
+- reply `HANDOFF DONE`.
