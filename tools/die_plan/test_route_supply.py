@@ -531,3 +531,53 @@ endmodule
     assert cc["u_w.u_a"]["q"] == ["core:u_w.u_b.i"] and cc["u_w.u_b"]["i"] == ["core:u_w.u_a.q"]
     rc = json.loads((tmp_path / "o1.json.receipt.json").read_text())["types"]["t"]
     assert rc["cores_filled_netlist"] == 2 and rc["header_pairs"] == 2 and rc["cores_wired"] == 2
+
+
+def test_calib_1111_default_unchanged_and_opt_in(tmp_path):
+    """GRT-CALIB-1: default output carries no calib keys; --calib-1111 = FAIL verdict at p99 > 1, edge_outline, M6/M7."""
+    plan(tmp_path, n=2500)
+    _, r0, t0 = run(tmp_path)
+    _, rf, tf = run(tmp_path, "--grt-halving", "full")
+    assert t0 == tf and r0["verdict"] in ("FLAG", "ok") and "calib_reason" not in r0
+    d0 = json.loads((tmp_path / "out" / "route_supply_tst.json").read_text())
+    assert "verdict_mode" not in d0["cfg"] and "over_macro_m67" not in d0["cfg"] and d0["cfg"]["grt_halving"] == "full"
+    _, rc, _ = run(tmp_path, "--calib-1111")
+    d1 = json.loads((tmp_path / "out" / "route_supply_tst.json").read_text())
+    assert d1["cfg"]["verdict_mode"] == "calib" and d1["cfg"]["over_macro_m67"] and d1["cfg"]["grt_halving"] == "edge_outline"
+    assert rc["verdict"] in ("FAIL", "ok", "UNCHECKED") and "calib_reason" in rc
+    assert (rc["verdict"] == "FAIL") == (max(v["p99"] for k, v in rc["regions"].items() if k != "dens_A") > 1.0)
+    _, rcf, _ = run(tmp_path, "--calib-1111", "--grt-halving", "full")      # explicit halving wins over the preset
+    assert rcf["regions"]["core_H"]["p99"] >= rc["regions"]["core_H"]["p99"] - 1e-9
+
+
+def test_over_macro_m67_blocks_partial_view(tmp_path):
+    """a core view that leaves most of M4 free (kit LEF, M5 top) still leaves only M6/M7 over it under
+    --over-macro-m67: core_H rises (M4 H gone); SRAM-class views (top <= M4) are not touched."""
+    plan(tmp_path, layers_a=("M1", "M2", "M3", "M4", "M5", "M6", "M7"), n=2500)
+    kv = tmp_path / "kv.json"
+    kv.write_text(json.dumps({"tst": {"blk": {"obs": {"M1": 1.0, "M2": 1.0, "M3": 1.0, "M4": 0.2, "M5": 0.6,
+                                                      "M6": 0.0, "M7": 0.0}}}}))
+    _, r0, _ = run(tmp_path, "--kit-views", str(kv))
+    _, r1, _ = run(tmp_path, "--kit-views", str(kv), "--over-macro-m67")
+    assert "kit-lef" in r0["obs_src"]
+    assert r1["regions"]["core_H"]["p99"] > r0["regions"]["core_H"]["p99"] + 1e-6
+
+
+def test_calib_fail_rule_regions_and_density():
+    r = {"regions": {"face_H": {"p99": 1.6}, "core_H": {"p99": 0.7}}}
+    assert rs.verdict(r)[0] == "ok"                       # FLAG_AT face = 3.0: the old rule passes it
+    assert rs.calib_fail(r)[0] is True                    # measured: GRT fails at any region p99 > 1
+    r = {"regions": {"core_H": {"p99": 0.9}, "dens_A": {"p99": 0.43}}}
+    assert rs.calib_fail(r)[0] is True and "dens" in rs.calib_fail(r)[1]
+    r = {"regions": {"core_H": {"p99": 1.0}, "dens_A": {"p99": 0.3}}}
+    assert rs.calib_fail(r)[0] is False                   # strictly above 1.0
+
+
+def test_flags_tsv_marks_calib_fail(tmp_path):
+    import route_supply_flags as rf
+    plan(tmp_path, n=8000)
+    run(tmp_path, "--calib-1111")
+    tsv = tmp_path / "flags.tsv"
+    rf.main([str(tmp_path / "out"), "--tsv", str(tsv)])
+    row = tsv.read_text().splitlines()[1].split("\t")
+    assert row[6] == "fail"
