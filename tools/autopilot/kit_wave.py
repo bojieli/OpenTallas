@@ -5407,6 +5407,97 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     return n
 
 
+REAP_LIVE_Q = ("RUNNING", "QUEUED", "STARTING", "WAIT-GEOM", "WAITING")
+
+
+def _row_live(r, jobs):
+    """a wave row that still holds compute: a RUNNING/LAUNCHING unit, or an ENQUEUED kit whose queue job is not terminal"""
+    if r.get("status") in ("RUNNING", "LAUNCHING"):
+        return True
+    return r.get("status") == "ENQUEUED" and bool(r.get("q_id")) and (jobs.get(r["q_id"]) or {}).get("status") in REAP_LIVE_Q
+
+
+def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
+    """KW-FIX-45 11-11 (COORD, epyc4 leaf t9 ran four times; 369 zombie ot-job/container instances found across the fleet):
+    when the wave replaces or cancels an attempt it must also stop that attempt's started work on the gen host and drop its
+    queued respawn.  Two cases, both idempotent:
+      1. SUPERSEDED BY A NEWER ATTEMPT: an older attempt of the same (die, item) that is still live (RUNNING unit, or queue
+         job RUNNING / WAIT-GEOM / QUEUED) while a later attempt of that item that started after it is live too, is
+         stopped (hub unit + detached place client + `ot-run --cancel-dir` so the queue cannot respawn it) and marked
+         CANCELLED class SUPERSEDED.
+      2. CANCELLED ROWS: every CANCELLED row of the last 6 h gets one fleet-wide stop of containers/scopes mounting its
+         attempt root (wave_jobs.stop_on_fleet, exact names) plus `ot-run --cancel-dir` for its kit, once (rec['reaped']).
+    Die option or global reap_stale_attempts false = off; at most reap_max_per_tick (default 40) rows per tick."""
+    if cfg.get("reap_stale_attempts") is False:
+        return 0
+    ap_dir = ap_dir or AP.AP_DIR
+    try:
+        jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+    except (OSError, ValueError):
+        jobs = {}
+    cap = int(cfg.get("reap_max_per_tick") or 40)
+    items = st.get("items") or {}
+    now = time.time()
+    by = {}
+    for k, r in items.items():
+        by.setdefault((r.get("die"), r.get("item")), []).append(r)
+    todo, n = [], 0
+    for (die, item), rows in by.items():
+        if (((cfg.get("dies") or {}).get(die) or {}).get("reap_stale_attempts")) is False:
+            continue
+        live = [r for r in rows if _row_live(r, jobs)]
+        if len(live) > 1:
+            live.sort(key=lambda r: (float(r.get("started") or 0), int(r.get("attempt") or 0)))
+            for r in live[:-1]:
+                if float(r.get("started") or 0) < float(live[-1].get("started") or 0):
+                    todo.append((r, f"superseded by attempt {live[-1].get('attempt')} of the same item", True))
+        for r in rows:
+            if r.get("status") == "CANCELLED" and not r.get("reaped") and now - float(r.get("updated") or 0) < 6 * 3600:
+                todo.append((r, "row CANCELLED", False))
+    roots, seen = [], set()
+    for r, why, supersede in todo:
+        if n >= cap:
+            AP.log(f"KIT-WAVE REAP cap {cap} reached; the rest next tick")
+            break
+        if id(r) in seen:
+            continue
+        seen.add(id(r))
+        units = []
+        if supersede and r.get("status") in ("RUNNING", "LAUNCHING"):
+            units.append(r.get("unit"))
+            try:
+                units.append(json.loads((Path(r["dir"]) / "place_service.json").read_text())["unit"])
+            except (OSError, ValueError, KeyError, TypeError):
+                pass
+        j = jobs.get(r.get("q_id")) or {}
+        if j.get("unit") and j.get("status") in REAP_LIVE_Q:
+            units.append(j["unit"])
+        kit = (r.get("kit") or "").partition(":")[2]
+        if AP.DRY or cfg.get("reap_dry_run"):       # reap_dry_run true: log the would-stop list only (staged enable)
+            AP.log(f"KIT-WAVE REAP would stop {r.get('die')}/{r.get('item')}@{r.get('attempt')} [{r.get('status')}] kit {r.get('kit')}: {why}")
+            continue
+        for u in units:
+            if u:
+                AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+        if kit:                                      # ends the autopilot record so the queue cannot respawn the job
+            AP.sh([OT_RUN, "--cancel-dir", kit, "--reason", "KW-FIX-45 reap: " + why], timeout=60)
+        root = attempt_root(r)
+        if root:
+            roots.append(root)
+        if supersede:
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=now,
+                     reason=f"{why}: its units, containers and queue job stopped (KW-FIX-45 reap)")
+            notices.setdefault(r.get("die"), []).append(f"{r.get('item')}@{r.get('attempt')} SUPERSEDED: {why}")
+        r["reaped"] = now
+        AP.log(f"KIT-WAVE REAP {r.get('die')}/{r.get('item')}@{r.get('attempt')}: {why}; units {units}")
+        n += 1
+    if roots:
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
+        AP.log(f"KIT-WAVE REAP remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+               + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
+    return n
+
+
 def step(AP, ap_dir=None):
     """one wave pass; a non-blocking lock keeps two passes (tick + CLI step) from double-launching"""
     import fcntl
@@ -5459,6 +5550,7 @@ def _step(AP, ap_dir):
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    reap_stale_attempts(AP, cfg, st, notices, ap_dir)      # KW-FIX-45: stop the gen-host work of replaced/cancelled attempts
     try:                                        # KW-FIX-44 GRTARM_1111: arm arbitration / stop rule / class stop
         grt_arm_step(AP, cfg, st, notices, ap_dir)
     except Exception as e:                      # an arm problem never stops the wave
