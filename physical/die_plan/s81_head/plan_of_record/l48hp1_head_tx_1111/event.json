@@ -1,0 +1,17 @@
+{
+ "event": "HEAD hd_host_w a3 retime: TX_STAGE=1 (one register stage on every host276 h_rx_o frame), COORD 'TX_STAGE approved; go now', HEAD-94 11-11",
+ "stage": "S3 plan + RTL event; bench + EQ with the cycle declared",
+ "class": "hd_host_w a3 TT -76.19: worst path u_core.g_l0s.l0s_v -> u_mux select fan-out (86/84) -> u_ctl_tx.u_tx.oq_p[14], 860 ps, 11 gates, soft logic only (not a core-core hop) -> retime",
+ "rtl": "rtl/dsrom_sys/s81_head/ot_s81hd_host_w_core.sv: parameter TX_STAGE (default 1 after the bench passed; 0 = DH58 circuit): registers {ctl_rx_v, ctl_rx_d[552:0]} (u_mux output) before u_ctl_tx; valid reset, data unreset, keep=true",
+ "declared_cycle": "+1 on EVERY host_w.h_rx_o frame; plan lane host_rx fixed_cycles 0 -> 1, latency host_rx cycles/natural 58 -> 59, lat package LAT_HD_HOST_RX 58 -> 59 (lat/s81_head_lat_pkg.sv, lat/s81_head_latency.json regenerated with gen.write_latency; no other lane changes). Lane0 ingress/HBC dates (W0X), peer0/peer1 RX and the lane1 seam are unchanged.",
+ "bench": {
+  "script": "TXS=1 MUTS='0 6' tools/s81_head/head_host_split_bench.sh OUT   (new TXS env, mutant 6 = TX stage dropped while the bench expects +1)",
+  "tx1": "bench_tx1_verdict.json: production MODE0 + MODE1 LOCKSTEP PASS with TXX=1 (h_rx_o type 7 +W0X+1, type 6 +E2W+1, others +1; boot/config identical), mutant 6 caught in both modes; verdict PASS",
+  "tx0": "bench_tx0_verdict.json: TXS=0 regression (DH58 circuit) MODE0 + MODE1 PASS, unchanged behaviour",
+  "tool": "Verilator 5.050 on epyc4 via ot-run"
+ },
+ "eq": "TX_STAGE=0 is the previous circuit (bench regression PASS). With TX_STAGE=1 the only change is one flop stage on the host276 TX frame stream; the lockstep bench compares every frame's content and date against the unsplit reference with the declared +1.",
+ "plan": {"base": "source_plan_mesh_fix.json.gz (mesh re-form + fix, sha de2130703bd3)", "result_file": "source_plan_tx.json.gz", "result_sha256": "479e8c2ed0a5f27a95623c773b1d9d269a95ea92b382a7be31bc15cbbdde8c02", "lat_pkg_sha256": "4950ad44100509a82700fb064a555593d4aa1aeab003f3713ee048d4e14fd704", "apply": "python3 -I tx_event.py REPO BASE.json[.gz] OUT   (checks that the base latency table equals the plan's block first: 329 lanes, 0 differ)"},
+ "g0": {"base_errors": 153, "event_errors": 153, "new": 0},
+ "status": "DO_NOT_COUNT"
+}

@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.head_host_split_lockstep.v1",
+ "rc": {
+  "0_0": 0,
+  "0_1": 0,
+  "6_0": 1,
+  "6_1": 1
+ },
+ "production_pass": true,
+ "mutants_caught": {
+  "6": true
+ },
+ "verdict": "PASS",
+ "offsets": {
+  "E2W": 4,
+  "W2E": 4,
+  "P1X": 1,
+  "W0X": 1,
+  "TXX": 1
+ }
+}
