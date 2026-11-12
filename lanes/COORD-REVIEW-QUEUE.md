@@ -43906,3 +43906,26 @@ Per COORD there is no third try from me. For DIE-HBM-100 / COORD to decide (one 
   - Macro pin access: VIA crowding sits at macro edges and pins. Re-layout lanes put the pin edges of macros toward open channels, never toward a neighbouring macro or a face band. Leave >= 2 gcells (about 1.2 um... use the gcell size of the kit) of soft keep-out on the pin edges.
   - A type that still overflows GRT with halving fully OFF is a real track shortage. It goes to layout/arch (pipeline cycle, re-floor or narrower bus as the last resort under 10%), never to more retries.
   - Revisit if an edge_outline row fails DRT to DRC 0 at a rate the calibration (GRT-CALIB-1) shows is systematic.
+- 2026-11-11 18:24 PST READY [CPL-HBM-B1 -> DIE-HBM-100 (add382707b3aed9d0), DIE-LAYOUT-HBM (a3080da31af94f3a0), COORD] tag cplb1-d6d. DO_NOT_COUNT. Positions event d6d (street-widened) for q_b010, q_b010__physical_v1, q_b011, q_b011__physical_v1 ONLY, against t19 6391dea6. q_b001 (+pv1) is not in it (COORD: no squeeze) and stays on t19. Branch claude/cpl-hbm-b1-1111@67cfe043c5c5, package physical/die_plan/hbm/cpl_hbm_b1_1111/: deltas/d6d_hcol_s2_cplb1_1111.json (sha d27d8e1e, compose format), spec_d6d.json, sheets_d6d/, lad_reports_d6d/, gates/*d6d*, tools/opt.py. A copy is in epyc7 hbm-cut-1111/deltas/ (new name, nothing overwritten). The change is idx frame + bank positions only (orients unchanged), plus ft/plan-station register sites re-sited by lad (every hop <= 405). Register counts are unchanged, so it is EQ by construction. compose apply on t19 gives b675e39a, object-equal to the assembled plan 16eaee4a.
+  GATES vs t19:
+  - route_supply p99: q_b010 1.953 -> 1.938; pv1 3.043 -> 1.910; q_b011 1.933 -> 1.686; pv1 2.446 -> 2.376. All four <= t19.
+  - G0 (main check.py): 554 -> 551 errors, 0 new. NW_b010 cut 6250 0.72 -> 0.65 and 7750 0.78 -> 0.77. Gone: NW_b010@7250, NE_b011@8000, NE_b010 v24750.
+  - G0 WARN 1807 -> 1821: +12 hard_cores 8.64 lattice notes, +2 core_faces q_b011; reach WARN 54 -> 54 net (hops 397-402 < 405).
+  - Cut budget: every partition segment within its t19 blocked length.
+  - stscan: missing>405 = 0 and phantom = 0 on all four, and on q_b002/003/012/013.
+  BUILD: per the owner rule (18:1x), this form builds through FULL sign-off from the event. The probe-only q_b001 arm was cancelled before it started (never admitted on epyc8, exact PIDs killed, CANCELLED marker in epyc8 cpl-hbm-b1-probe/).
+  SCORER ROWS: not applied here. They were sited on the c4 q_b001 frames, and q_b001 now stays on t19. DIE-LAYOUT-HBM, re-run scorer_rows.py on the plan you compose (it reproduces exactly; t19 type RTL copy in epyc4 /srv/opentallas-scratch3/claude/cpl-hbm-b1/rtl19).
+  HANDOFF q_b001 to DIE-LAYOUT-HBM (type-internal inputs for the NW/NE bank-cluster arrangement):
+  - Best layout without squeezing: route_supply p99 q_b001 3.151 (t19 2.284), pv1 3.674 (t19 3.678).
+  - Two H bands compete for about 36 um of vertical slack in the 1840.32-um outline:
+    - (1) bank-row-2 to top-idx-row street: 12.96 um. It carries L15_o 8 x 512 b (bank sum_out to the W face) H, worst 3.48. It needs about 45 um.
+    - (2) top face band: 23.3 um. It carries ft L5065y0 883 b, L5054y0 317, L5055y0 279, L5067y0 213, L5060y0 749 and L5063y1 1457, worst 3.57. It needs about 83 um.
+  - Lowering bank row 2 makes the trace reach on L168m_i -> pair5/6/7 worse (already 1270-1900 um on t19).
+  - OPTIONS:
+    - (a) About +90 um of vertical room for q_b001 from the die-level bank re-arrangement (outline ~1930 um).
+    - (b) Architecture change on L15_o (8 x 512 b crossing): pin cycles or narrower beats, with half-width only as a last resort under 10%.
+  - My recommendation: (a), if the corner arrangement can give it, because it costs no cycles.
+  q_b101 / q_b101_nw: NO ed4bcf72 delta is needed. That form is ALREADY on t19 (25/25 cores, same origin and orient, both types; d12 was this form), so the core_H 3.13 and the 143k residual overflow belong to ed4bcf72 itself.
+  - With core nets left out, route_supply drops to 1.38.
+  - t19 core_conns links every q_b/key/hid pin of each idx core to all 23 other cores (an all-to-all model), so route_supply over-counts. The real GRT overflow shows the form is congested too.
+  - Next, per COORD: trace the real q_b101 core_conns from the t19 bound netlist, re-score, then a new form. That is a separate item, not in this event.
