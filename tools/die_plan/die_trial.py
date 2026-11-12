@@ -2725,8 +2725,12 @@ def dme_region_tree(site, taps, radius_um=800.0, extra_wire_w=0.1, modes=DME_MOD
         for gi, grp in enumerate(seam_groups):
             want = [tuple(g.split("/", 1)) for g in grp]
             mem = [t for pn in sorted(byp) for t in byp[pn]
-                   if any(t[0] == wp and str(t[1]).endswith("__" + wt) for wp, wt in want)]
-            if len(mem) >= 2 and len({t[0] for t in mem}) >= 2:
+                   if any(t[0] == wp and (str(t[1]) == wt or str(t[1]).endswith("__" + wt)) for wp, wt in want)]
+            if len(mem) < 2 or len({t[0] for t in mem}) < 2:
+                # a declared group that does not match is a plan/tap-name error, never a silent no-op
+                raise ValueError(f"--region-dme-seam-groups group {grp}: matched {len(mem)} tap(s) in "
+                                 f"{len({t[0] for t in mem})} partition(s) of this region (need >= 2 taps in >= 2 partitions)")
+            if True:
                 ids = {id(t) for t in mem}
                 for pn in list(byp):
                     byp[pn] = [t for t in byp[pn] if id(t) not in ids]

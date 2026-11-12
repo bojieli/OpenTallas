@@ -65,8 +65,8 @@ def test_taps_and_identity_kept():
 
 
 def test_seam_group_pair_is_its_own_subtree_and_default_unchanged():
-    taps = [("S", "t_S__clk_t36", 100., 100.), ("S", "t_S__clk_t1", 2900., 100.), ("S", "t_S__clk_t2", 1500., 1900.),
-            ("O", "t_O__clk_t2", 3000., 2900.), ("O", "t_O__clk_t5", 3500., 800.)]
+    taps = [("S", "clk_t36", 100., 100.), ("S", "clk_t1", 2900., 100.), ("S", "clk_t2", 1500., 1900.),
+            ("O", "clk_t2", 3000., 2900.), ("O", "clk_t5", 3500., 800.)]   # clock_taps() gives the BARE port name
     taps = [(a, b, c, d) for a, b, c, d in taps]
     base, rb, _ = D.dme_region_tree(Site(), list(taps), delay_rep_um=150.)
     nodes, root, _ = D.dme_region_tree(Site(), list(taps), delay_rep_um=150.,
@@ -75,6 +75,13 @@ def test_seam_group_pair_is_its_own_subtree_and_default_unchanged():
         return [t[1] for t in n[i]["taps"]] + [x for k in n[i]["kids"] for x in under(n, k)]
     assert sorted(under(nodes, root)) == sorted(t[1] for t in taps)
     # the seam pair sits under one node holding exactly those two taps
-    found = [i for i in range(len(nodes)) if sorted(under(nodes, i)) == ["t_O__clk_t2", "t_S__clk_t36"] and nodes[i]["kids"]]
+    found = [i for i in range(len(nodes)) if sorted(under(nodes, i)) == ["clk_t2", "clk_t36"] and nodes[i]["kids"]]
     assert found
     assert D.dme_region_tree(Site(), list(taps), delay_rep_um=150., seam_groups=None)[0] == base
+
+
+def test_seam_group_that_matches_nothing_raises():
+    import pytest
+    taps = [("S", "clk_t36", 100., 100.), ("O", "clk_t2", 3000., 2900.)]
+    with pytest.raises(ValueError):
+        D.dme_region_tree(Site(), taps, delay_rep_um=150., seam_groups=[["S/clk_t99", "O/clk_t2"]])
