@@ -46942,3 +46942,23 @@ ASK COORD (recommendation: YES to all): 1. approve the die growth above under th
   (4) S81 x feed 2:1 (BUS-GEAR-1 B): ADOPTED by the owner, so it is no longer gated on the tok/s price. TOK-VERIFY-1 still posts the price for the record. S81-ARCH-RTL-2 + BUS-GEAR-1 build the TX/RX now. DIE-S81-87 lands it as the S81 event after ready12;
   (5) the remainder goes to over-the-cell M8/M9 (X-TIER-OTC) or a core move to a neighbouring type, listed by cause.
   STREET-RULE-1 runs pass 2 with all 5 and posts counts per die (target 0). Its output becomes each die's next plan event through the die owners.
+
+## RESULT die-proto-head-seamhold-attr (DIE-PROTO-1) 2026-11-12 09:57 UTC
+HEAD routed-tree seam FF hold (-100.5 ps, 18 groups): where each group launches and why the number jumped from -12.8.
+- Launch side of the 18 negative seam groups (run_tree; hd_spn_end was still a stand-in in that run):
+  - sp5 = hd_spn_end (ot_s81hd_spn_end_strip): sp5->sp5_xw_o_shim/link_i -100.5 and sp5->sp5_xe_o_shim/link_i -21.3.
+  - ot_s81hd_spn_strip stand-ins, sp0..sp4 -> *_xw/xe_o_shim/link_i (10 groups): xw -84.0/-66.2/-62.7/-54.3/-40.9; xe -50.9/-32.8/-30.6/-19.7/-8.1.
+  - mesh_ep stand-ins -> *_estrip/m_rx_ft_i: mesh7S -46.5, mesh7N -46.3, mesh0S -40.6.
+  - ctl stand-in -> ctl_estrip/n_tx_ft_i: -38.3.
+  - wshim_rx stand-in sp0_bw_i_shim -> sp0/bw_i: -42.4 (both ends stand-ins).
+  - host_nstrip (real) -> host_w (host_w_ep stand-in) /h_tx_i: -9.7.
+  - Every capture on the shim/estrip groups is a signed view (spn_wshim_tx, spn_eshim_tx, mesh_estrip, ctl_estrip).
+- Cause of the jump: the clock model's early/late split, not the stand-ins and not late-arrival skew.
+  - Stand-in contract delays: same parts and contracts in the branch run and the tree run, so they do not explain the change.
+  - Late skew: tree late tap arrivals match the branch spine offsets within about 2 ps (example: sp5 taps 2288-2317 vs 2287-2316).
+  - Actual cause: the ASAP7 libs carry rise/fall_capacitance_range (CKINVDCx16 A 7.49..10.56 fF). OpenSTA uses the low end for min (early) analysis, so the propagated tree runs about 14 % faster early than late at the same FF corner (t_sp5__clk late 2306.8, early 1992.3 ps). CRPR cancels only the common path, and the leftover on the non-common branch segments of the launch and capture taps is the -40 to -90 ps.
+  - Checked: with the *_capacitance_range lines removed, t_sp5__clk early = late = 2306.8 (head/freg/die_ctree/arr_check_FFnom.txt).
+- What this means:
+  - Under the nominal margin policy (OWNER 12.24b) this split is OCV-like pessimism, not a die-clock defect. The nominal routed-tree run (--libdir libs_nom, hd_spn_end real) is running now as head/ilm/run_tree2n.
+  - The structural signal for HEAD-LEP0N-BAL / HEAD-94 is real: launch and capture taps of the shim seams split far up the tree, which leaves a long non-common path. Re-tapping each strip and its o_shim from one leaf branch would shrink that, so the hold result would not depend on the derate model.
+- Also: die_sta ILM writer fix @2e6955a257 (tests pass). Escaped scalar nets like \fl_..._d[0] were written as bus bits, so the hd_spn_end ILM failed to parse. hd_spn_end real reruns are going: run_tree2 (lib ranges kept) and run_tree2n (nominal).
