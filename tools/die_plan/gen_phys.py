@@ -4590,6 +4590,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         io_text += (f"place_pin -pin_name {{{port}[{i}]}} -layer {ln} -location {{{cx:.4f} {cy:.4f}}} "
                     f"-pin_size {{{pw:.4f} {ph:.4f}}}   ;# interior: hard-IP line side (bump) on the macro pin\n")
     (kd / "io.tcl").write_text(io_text)
+    # HBM-GEOM-2 11-12 PIN_FACE_BLOCKED (COORD hbm-phy-face-blocked): face pins / interior taps against a placed hard
+    # macro leave no std-cell rows for their boundary flops (DPL non-convergence); pin_face_guard.py reports them
+    import pin_face_guard as _PFG
+    _PFG.safe_apply(tn, kd, tuple(t["outline_um"]), pins, tap_pins(P, tn), placed if macros else [])
     top = P.type_top_layer(tn)
     import m8_grant as MG
     m8g = MG.kit_grant(P, tn)        # LAYER-BUDGET-1: leftover-M8 grant (None = off, kit unchanged)
