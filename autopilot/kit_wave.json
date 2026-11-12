@@ -30077,8 +30077,6 @@
     "q_su31__physical_v1@3",
     "q_su30@1",
     "q_su30__physical_v1@1",
-    "q_su11@1",
-    "q_su11__physical_v1@1",
     "q_su01@1",
     "q_su01__physical_v1@1",
     "q_b110@1",
@@ -30299,7 +30297,9 @@
     "PHY_NW@3",
     "ot_hbm_sm_pv_merge@8",
     "ot_hgi_sfu_opsa_group0@3",
-    "ot_hgi_sfu_programme_store_r10@12"
+    "ot_hgi_sfu_programme_store_r10@12",
+    "q_su10__physical_v1@2",
+    "q_su00__physical_v1@2"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-100)",
@@ -33910,20 +33910,20 @@
      "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
     },
     "q_su01__physical_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "q_su11__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "q_su20": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
@@ -33950,12 +33950,12 @@
      "note": "KW-FIX-43 COORD ruling on KW43-37: bindstale-class fallback. Die plan flip would re-key 5 running item-input rows and 3 cores, so these 9 only go on p11t + the p11t bind (bind_matches True on p11t, False on r2_restore; block keys unchanged)."
     },
     "q_su01": {
-     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "PHY_NC": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
@@ -34064,42 +34064,42 @@
     "q_su00": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "q_su00__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "q_su10": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "q_su10__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "q_su11": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-geom-2/rd1p18/asbuilt_rd1_t19_p2.json"
      },
-     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+     "note": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2)."
     },
     "q_su20__physical_v1": {
      "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
@@ -43899,7 +43899,74 @@
     "epyc7",
     "epyc9",
     "epyc8"
-   ]
+   ],
+   "item_inputs_prev_hg2p18": {
+    "q_su00": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+     },
+     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+    },
+    "q_su00__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+     },
+     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+    },
+    "q_su01": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+     },
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+    },
+    "q_su01__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/bind_t20io",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t20io.json"
+     },
+     "note": "KW-FIX-45 11-11 13:2x: HBM t19 switch (hbm-postcut2-1111 99d74f771448, main eb9eafe64107; plan 6391dea6a0b3, strict bind BIND_OK, asbuilt_t19)"
+    },
+    "q_su10": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+     },
+     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+    },
+    "q_su10__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+     },
+     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+    },
+    "q_su11": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+     },
+     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+    },
+    "q_su11__physical_v1": {
+     "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t36/die_plan.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/bind_p2",
+      "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/rd1d54b/asbuilt_rd1_t19_p2.json"
+     },
+     "note": "KW-FIX-45 11-12 COORD ruling d55a-rd1: plan t36 02659299fcf0 (claude/hbm-d55-event-1111@e081ce56e652), G0 548=548 0 new, strict bind rd1d54b/bind_p2 BIND_OK 92/420/0 (bind_report 7e022bf183b8, SHA256SUMS 5f5f70bf7afc); SU re-kit set of 12; DO_NOT_COUNT until the d55a/d53 merge order lands"
+    }
+   },
+   "note_hg2p18": "HBM-GEOM-2 11-12 (COORD: p18emit on main b35eaa100a29): bind_out -> rd1p18 = same rd1 two-pass recipe on t36 02659299 with compose_split emit_module (a371160f43), so lane_exp u_core = ot_hbm_su_pg_lane_exp_core__p18bind (u_l + u_s) as the plan places; BIND_OK 92 parts / 420 crossings / 0 errors, bind_report 5c76d259d6f4, asbuilt_p2 765f93b24cc3; synced epyc7/8/9. Fixes KIT_PREFLIGHT macro_instances 'u_l/u_s neither an instance' (q_su10pv1 9ecbcdd836e8 a2). | retry +q_su10__physical_v1@2 +q_su00__physical_v1@2; removed ['q_su11@1', 'q_su11__physical_v1@1'] for a fresh re-arm next pass (KW-FIX-45 11-11 re-arm rule); q_su01/q_su01pv1 keep their KW-FIX-45 hold (child views)."
   }
  },
  "place_prefer": [
