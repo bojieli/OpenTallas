@@ -282,7 +282,10 @@
     "kv3_hg_v1p5@5",
     "kv3_hg_v1p6@5",
     "kv3_hgi@7",
-    "kv3_hgi_v7@7"
+    "kv3_hgi_v7@7",
+    "kv3_hub_Ei@24",
+    "kv3_hub_Wi@10",
+    "kv3_pv_v8@15"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -820,13 +823,15 @@
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_hub_Ei": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hub_Eo": {
      "OT_HOLD_STOP_PS": "-200"
     },
     "kv3_hub_Wi": {
-     "OT_HOLD_STOP_PS": "-200"
+     "OT_HOLD_STOP_PS": "-200",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_hub_Wo": {
      "OT_HOLD_STOP_PS": "-200"
@@ -924,7 +929,8 @@
     },
     "kv3_pv_v8": {
      "OT_HOLD_STOP_PS": "-200",
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "kv3_sys_SD": {
      "OT_HOLD_STOP_PS": "-200"
@@ -20949,7 +20955,6 @@
    "hold_items": {
     "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
     "coll_core": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): open LEC (QC-TYPES-12 scope), a relaunch would meet the same differs",
-    "sle_sc_v2": "KW-FIX-42 02:13 COORD 02:5x: last two real FAILs grt-overflow (same class, no routing fix between); pending relaunch is a restage of the same form -> held for DIE-QC-97 conservative form",
     "coll_ucie": "KW-FIX-42 11-09 04:17 COORD NEWFAIL 04:2x: GRT gate G2 setup_tt WNS -92.92 ps TT (hold +15.43) on attempt 10 (11-08 10:30), not in QC final switch 45; DIE-QC-97 form, no unchanged relaunch",
     "sle_fw_v3": "RE-FORM KW-FIX-43 11-09 19:5x COORD route (5): routed-not-signed a37, setup WNS -334.6 ps (2687 endpoints), hold FF -64.7/-110 per COORD; not a near miss, attempt count high. Revert: delete this key.",
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
@@ -21529,7 +21534,9 @@
     "slw_fe_v1__clfe325744__cl08d14f0d@1",
     "slw_hc1__cl3449ea95@2",
     "slw_hc1__cl68f9248e__cl144ee7b3@2",
-    "slw_hc1__cl68f9248e__cle683a076@1"
+    "slw_hc1__cl68f9248e__cle683a076@1",
+    "slw_su_c__cl92142dac@1",
+    "cbn_q01__cldd6ea846@1"
    ],
    "queue_src": "main@1ceef0310887",
    "type_args": {
@@ -22243,7 +22250,16 @@
     "cbn_q01__clab6e67f2",
     "cbn_q01__cld9ff4c40",
     "cbn_q01__cldd6ea846",
-    "cbf_q01"
+    "cbf_q01",
+    "slw_sc_v3",
+    "slw_sc_v2",
+    "sle_su_c",
+    "sle_sc_v2",
+    "slw_su_c__cl92142dac",
+    "slw_su_c__cl19bb38ef",
+    "slw_sc_v1__cl63e5a7a2",
+    "slw_sc_v1__cl64543eaf__cl5e017c6f",
+    "slw_sc_v1__cl64543eaf__cl4590432d"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -22270,7 +22286,8 @@
     "slw_su_c__cl92142dac": {
      "OT_CONS_KIT": "1",
      "OT_KW42_CSTART": "9db0ec8d71e",
-     "OT_POROUS_VIEWS": "all"
+     "OT_POROUS_VIEWS": "all",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbf_q00__cl1b5a6458": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -22323,16 +22340,19 @@
      "OT_CONS_KIT": "1"
     },
     "sle_sc_v2": {
-     "OT_CONS_KIT": "1"
+     "OT_CONS_KIT": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "sle_sc_v3": {
      "OT_CONS_KIT": "1"
     },
     "slw_sc_v1__cl64543eaf__cl4590432d": {
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_sc_v2": {
-     "OT_KW42_CSTART": "9db0ec8d71e"
+     "OT_KW42_CSTART": "9db0ec8d71e",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "coll_ftn": {
      "OT_CONS_KIT": "1",
@@ -22467,10 +22487,12 @@
      "OT_POROUS_VIEWS": "all"
     },
     "slw_su_c__cl19bb38ef": {
-     "OT_KW43_FIX": "ccf792c10b63"
+     "OT_KW43_FIX": "ccf792c10b63",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "sle_su_c": {
-     "OT_KW43_FIX": "ccf792c10b63"
+     "OT_KW43_FIX": "ccf792c10b63",
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "slw_st_a_v1__clb036e152": {
      "OT_KW43_FIX": "pvschema-0409748de8de"
@@ -22572,6 +22594,15 @@
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     },
     "cbf_q01": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_sc_v3": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_sc_v1__cl63e5a7a2": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline"
+    },
+    "slw_sc_v1__cl64543eaf__cl5e017c6f": {
      "OT_GRT_TRANSITION_MODE": "edge_outline"
     }
    },
