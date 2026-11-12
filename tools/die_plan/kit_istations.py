@@ -1246,7 +1246,8 @@ def main(argv):
     # KIT-ISTATIONS 11-11: per-bit-group station sites of a multi-core bus (kit_bus_bitgroups); auto = only when the merged
     # chain leaves a core group farther than the planning reach; --bit-groups forces, --no-bit-groups disables
     bit_groups = "off" if "--no-bit-groups" in argv else ("force" if "--bit-groups" in argv else "auto")
-    argv = [a for a in argv if a not in ("--apply", "--bit-groups", "--no-bit-groups")]
+    station_forms = "--no-station-forms" not in argv       # HBM-KITIST-1: opt-in plan keys pad_landing / station_trees
+    argv = [a for a in argv if a not in ("--apply", "--bit-groups", "--no-bit-groups", "--no-station-forms")]
     htree = (4, 0, 0)
     if "--h-tree" in argv:
         i = argv.index("--h-tree")
@@ -1274,7 +1275,12 @@ def main(argv):
         if gerr:
             raise SystemExit("kit_istations: " + "; ".join(gerr[:6]) + (f" (+{len(gerr) - 6} more)" if len(gerr) > 6 else ""))
     txt = core_pin_stations(tn, t, txt, man, tcl, rep, Path(plan).resolve().parent)      # SUL0-PINFACE-1 per-core chains
-    for e in bus_entries(dict(t, internal_stations=[x for x in t.get('internal_stations', []) if not x.get('core')])):           # core<->core: core_stations() below
+    claimed = set()
+    if station_forms:       # HBM-KITIST-1 11-12: per-bit pad landing / station trees (default off: no plan key = no-op)
+        import kit_istation_forms as KF
+        txt, claimed = KF.apply_forms(tn, t, txt, man, tcl, rep, bound_bus_width)
+    for e in bus_entries(dict(t, internal_stations=[x for x in t.get('internal_stations', [])
+                                                    if not x.get('core') and x.get('conn') not in claimed])):           # core<->core: core_stations() below
         conn = e["conn"]
         bus = conn[4:]
         n = gen_rtl.sv_id(bus)
