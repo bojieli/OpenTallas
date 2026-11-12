@@ -1,4 +1,4 @@
-# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~08:1x PST)
+# GEN-CLASS-1 lane handoff (refreshed 2026-11-12 ~09:1x PST)
 
 ## 1 Scope
 Generator / legalize / preflight CLASS fixes. APPROVED to merge (ROOT-MERGE-60): land-override-stale-1112@cef99b3203,
@@ -15,10 +15,8 @@ schema.py (ft_hop_maxwire_um), test_ft_hop_maxwire.py (5 pass). Ignore the untra
 Commit when the suite run (below) shows only pre-existing failures.
 
 ## 3 Running jobs
-- wshim_tx proof (GRT->route->signoff, resumed from 4_cts), ot-run client intel2 pid 4002680, host epyc2, kit
-  epyc2:/srv/opentallas-scratch2/claude/gen-class-1/proof/wtx/hd_spn_wshim_tx (source copy wtx_src/), log intel2
-  ~/gc1log/wtx_ftmw.log. GRT done: pass fired on 2264 hop nets, +2264 repeaters, repair area +15.5 %; guides M2 -93.5 %,
-  M6 +6400 % (from ~0). In DRT. Sign-off lands in <kit>/signoff_<date>/signoff.json (signoff/ is the copied base one).
+- wshim_tx proof DONE + SIGNED (STATE 08:51 posted): slew 125/124 -> 0, M6 +4.7 pt. Kit epyc2:/srv/opentallas-scratch2/
+  claude/gen-class-1/proof/wtx/hd_spn_wshim_tx (keep until HEAD-95 adopts or drops).
 - S81 slice_station__t45 GRT-only proof: client intel2 pid 950019, host epyc2, kit
   epyc2:/srv/opentallas-scratch3/claude/gen-class-1/proof/t45/slice_station__t45, log intel2 ~/gc1log/t45_ftmw.log.
   epyc7/epyc8 attempts were killed (exact PIDs) because of load gates.
@@ -27,6 +25,8 @@ Commit when the suite run (below) shows only pre-existing failures.
 None.
 
 ## 5 Results not yet posted
+- t45 GRT proof (pass expected near no-op after the base 62-um repair); then post FT-HOP-M2 READY.
+- Posted 08:14: READY claude/tcl-puts-quote-1112@475f0c5d0e (TCL-PUTS-QUOTE class).
 - Base GRT usage: wshim_tx M2 3.26 M3 0.02 M4 0.02 M5 0.01 %; t45 M2 4.14 M3 4.70 M4 2.67 M5 0.21 % (GRT-0096,
   first full route). Compare fix with the same table + route.guide per-layer + 5_2_route per-layer wirelength.
 - S81 slice_station slew violators (t45 a14, 1158) are cland ring nets with fanout 128-160 (u_cland_ft*_i place
