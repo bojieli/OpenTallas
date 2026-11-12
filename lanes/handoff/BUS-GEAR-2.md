@@ -1,4 +1,4 @@
-# BUS-GEAR-2 lane handoff (S81 x feed 2:1 bus gear), updated 2026-11-12 07:15 PST
+# BUS-GEAR-2 lane handoff (S81 x feed 2:1 bus gear), updated 2026-11-12 07:12 PST (see STATE 07:10)
 
 ## 1 Scope
 S81 x feed 2:1 gear (owner street lever 4): commit BUS-GEAR-1 work, unit benches + EQ (tb_s81_xgear_eq), plan lane-cycle
@@ -6,7 +6,8 @@ declaration, TOK-VERIFY, strict bind on ready12 base (then ready12b), READY to C
 11-13 18:00 PST, else ready12c.
 
 ## 2 Worktree
-epyc7 /srv/opentallas-scratch2/claude/wt/bus-gear-1, branch claude/bus-gear-1-xint-1112, HEAD b490b95b86 (pushed to hub), clean.
+epyc7 /srv/opentallas-scratch2/claude/wt/bus-gear-1, branch claude/bus-gear-1-xint-1112, HEAD 2d25d93cf8 (pushed to hub), clean.
+1cc1d0ae85 + 2d25d93cf8 = EQ closure (xeq_closure.py prefers asbuilt prefer/files; xeq_files.txt 87 files) + tb ICGx1 model.
 Commits: 360aaab821 (BUS-GEAR-1 work), b9553ae961 (merge origin/main d767dc851b), b490b95b86 (design fix below + generated
 inputs/die_b178_xg.v, models/s81_asb_xgear_models.sv).
 DESIGN FIX (b490b95b86): ot_s81_xc_gear_tx passes beat 0 combinationally into the partition face flop, holds beat 1 one edge
@@ -14,12 +15,15 @@ DESIGN FIX (b490b95b86): ot_s81_xc_gear_tx passes beat 0 combinationally into th
 touched (fixed_cycles becomes a bind pad stage u_lpad_*). EQ reference = ungeared die delayed 1 edge.
 
 ## 3 Running jobs
-- Benches+EQ: ot-run client intel2 pid 2044573, log intel2 ~/bus-gear-2-logs/bench2.otrun.log; runs on epyc2
-  /srv/opentallas-scratch2/claude/bus-gear-2/pkg/run.sh (package from b490b95b86). Results: epyc2 .../pkg/out/summary.txt
+- Unit+xlane: DONE PASS (epyc2 .../bus-gear-2/pkg/out). EQ (XEQ_ONLY=1): ot-run client intel2 pid 3633037, log
+  ~/bus-gear-2-logs/bench4.otrun.log; epyc2 /srv/opentallas-scratch2/claude/bus-gear-2/pkg3/run.sh (pkg from 2d25d93cf8,
+  rebuild: on epyc7 `PKG=pkgN bash /srv/opentallas-scratch2/claude/bus-gear-2/mkpkg.sh`, copy tgz to epyc2). Results .../pkg3/out/summary.txt
   (unit rc, xlane rc, xeq_h9 rc, xeq_h10 rc, "ALL DONE"); logs out/unit.log, xlane.log, xeq_h9.log, xeq_h10.log.
   Expect: unit "BENCH PASS (9 configs exact, 5 mutants caught)", xlane "XLANE BENCH PASS", xeq "XEQ BENCH PASS (h9|h10)"
   (H2/H3 MUT0 PASS; MUT1/2/3 FAIL).
-- Bind prep: epyc9 nohup bash /srv/opentallas-scratch2/claude/bus-gear-2/prep_r12ng.sh (pgrep -f prep_r12ng.sh), log
+- Strict bind: ot-run client intel2 pid 3587816, log ~/bus-gear-2-logs/bind1.otrun.log, script epyc9
+  .../bus-gear-2/r12ng/run_bind_xg.sh (must sit inside --dir), status r12ng/bind.run, logs r12ng/elab.log, bind.log, out r12ng/out_bind.
+- Bind prep (plan/table/asbuilt DONE, G0 running): epyc9 nohup bash /srv/opentallas-scratch2/claude/bus-gear-2/prep_r12ng.sh (pgrep -f prep_r12ng.sh), log
   epyc9 .../bus-gear-2/r12ng/prep.log + prep.out. Copies bsrc4_r12ng (48G) to r12ng/bsrc_xg, applies gear stage g2
   (t65 ft4 nudge) on ready12ng 77cad171c6ee, decl, latency (only geared rows may change), landing width sync, xgear_die on
   asbuilt_f_s87r12g.json -> r12ng/asbuilt_xg.json, G0 plain + completeness. Ends with "PREP DONE".
@@ -28,7 +32,7 @@ touched (fixed_cycles becomes a bind pad stage u_lpad_*). EQ reference = ungeare
 Only local background poll loops (no cron). Nothing for Codex to re-arm.
 
 ## 5 Results not yet posted
-xgear_die.py from commit reproduces BUS-GEAR-1 outputs byte-for-byte (die_b178_xg.v md5 6a563e4a, models c864ce1f). Bench/EQ pending.
+xgear_die.py from commit reproduces BUS-GEAR-1 outputs byte-for-byte (die_b178_xg.v md5 6a563e4a, models c864ce1f). Unit/xlane PASS. plan_xg faaabbe825b4; landing 105 ports 447111->389571. EQ and bind pending.
 
 ## 6 Next steps
 1. When prep says PREP DONE: check r12ng/g0_plain.log / g0c.log vs ungeared ready12ng G0 (s_2N_L1 cut 0.72 should drop; census
