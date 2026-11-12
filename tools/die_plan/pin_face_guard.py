@@ -37,13 +37,19 @@ def lef_size(path, macro=None):
     return float(m.group(1)), float(m.group(2))
 
 
-def macro_boxes(placed):
-    """[(inst, (x0, y0, x1, y1))] of kit macro placements {inst, lef, master, x, y, o}."""
+def macro_boxes(placed, skipped=None):
+    """[(inst, (x0, y0, x1, y1))] of kit macro placements {inst, lef, master, x, y, o}.  A macro whose LEF has no SIZE
+    (or does not parse) is skipped and listed in `skipped` (warn only: the guard never stops a kit on its own input)."""
     out = []
     for q in placed:
         if not q.get("lef"):
             continue
-        w, h = lef_size(q["lef"], q.get("master"))
+        try:
+            w, h = lef_size(q["lef"], q.get("master"))
+        except (OSError, ValueError) as e:
+            if skipped is not None:
+                skipped.append({"inst": q.get("inst"), "lef": str(q.get("lef")), "why": str(e)[:200]})
+            continue
         if q.get("o", "R0") in ROTATED:
             w, h = h, w
         out.append((q["inst"], (float(q["x"]), float(q["y"]), float(q["x"]) + w, float(q["y"]) + h)))
@@ -123,13 +129,30 @@ def lines(rep):
     return out
 
 
+def safe_apply(tn, kd, outline, pins, taps, placed, mode=None, clear=None):
+    """gen_phys entry: apply(); in warn mode any guard failure is printed as a WARN and the kit goes on."""
+    mode = (mode or os.environ.get("OT_PIN_FACE_BLOCKED", "warn")).lower()
+    try:
+        return apply(tn, kd, outline, pins, taps, placed, mode=mode, clear=clear)
+    except Exception as e:                      # noqa: BLE001 (warn-only guard must never abort kit generation)
+        if mode == "error" and "PIN_FACE_BLOCKED" in str(e):
+            raise
+        print(f"PIN_FACE_BLOCKED type {tn}: WARN guard skipped ({type(e).__name__}: {str(e)[:200]})")
+        return None
+
+
 def apply(tn, kd, outline, pins, taps, placed, mode=None, clear=None):
     """run the guard for one kit; returns the report (None when off or no macro)."""
     mode = (mode or os.environ.get("OT_PIN_FACE_BLOCKED", "warn")).lower()
     if mode == "off" or not placed:
         return None
     clear = float(clear if clear is not None else os.environ.get("OT_PIN_FACE_CLEAR_UM", DEFAULT_CLEAR_UM))
-    rep = check(tn, outline, pins, taps, macro_boxes(placed), clear)
+    skipped = []
+    rep = check(tn, outline, pins, taps, macro_boxes(placed, skipped), clear)
+    if skipped:
+        rep["skipped_macros"] = skipped
+        for k in skipped:
+            print(f"PIN_FACE_BLOCKED type {tn}: WARN macro {k['inst']} skipped ({k['why']})")
     if not rep["rows"] and not rep["taps"]:
         return rep
     rep["mode"] = mode

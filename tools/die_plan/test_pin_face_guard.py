@@ -72,3 +72,25 @@ def test_s_face_gaps_q_b010_shape(tmp_path):
     assert rep["free_spans_um"]["S"][0] == [0.0, 56.528]
     assert G.check("q_b010", (1304.64, 2479.68), pins, [], G.macro_boxes(
         [dict(q, y=4.32 + 17.28) for q in placed]))["blocked_pins"] == 0
+
+
+def test_lef_without_size_is_skipped_not_raised(tmp_path, capsys):
+    """test_g2 kits stage LEFs without SIZE: warn mode must skip that macro and never raise."""
+    p = tmp_path / "nosize.lef"
+    p.write_text("MACRO m\n  CLASS BLOCK ;\nEND m\n")
+    placed = [{"inst": "u_m", "master": "m", "lef": str(p), "x": 0.0, "y": 0.0, "o": "R0"}]
+    rep = G.apply("t", tmp_path, OUT, w_pins(1, 100), [], placed)
+    assert rep["rows"] == [] and rep["skipped_macros"][0]["inst"] == "u_m"
+    assert "skipped" in capsys.readouterr().out
+    missing = [dict(placed[0], lef=str(tmp_path / "gone.lef"))]
+    assert G.safe_apply("t", tmp_path, OUT, [], [], missing)["skipped_macros"]
+
+
+def test_safe_apply_never_raises_in_warn_mode(tmp_path, monkeypatch):
+    def boom(*a, **k):
+        raise KeyError("x")
+    monkeypatch.setattr(G, "check", boom)
+    assert G.safe_apply("t", tmp_path, OUT, w_pins(1, 10), [], phy(tmp_path, 0.0, "R0")) is None
+    with pytest.raises(ValueError, match="PIN_FACE_BLOCKED"):
+        monkeypatch.undo()
+        G.safe_apply("PHY_NW", tmp_path, OUT, w_pins(1, 1055), [], phy(tmp_path, 0.0, "R0"), mode="error")
