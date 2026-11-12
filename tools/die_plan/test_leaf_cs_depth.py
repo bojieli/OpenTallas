@@ -82,6 +82,37 @@ def test_gate_reports_cs_rows_and_missing_files(tmp_path):
     assert len(errors) == 1 and errors[0].startswith("LF_CS_DEPTH ot_s81sl_leaf__t8 cs: 1 planned")
 
 
+def test_bind_gate_fails_unstaged_and_passes_staged(tmp_path):
+    """the r12ng form (bound leaf at the old literals: no y stage) fails; the staged form (plan depths) passes"""
+    (tmp_path / "rtl").mkdir()
+    f = tmp_path / "rtl" / "s81p_ot_s81sl_leaf__t8.sv"
+    f.write_text(_bound("u_lf1_", hig=2, y=0))
+    errs = []
+    s = LCD.bind_gate(_plan(ROWS_OK), tmp_path, errs)
+    assert s["verdict"] == "FAIL" and errs and json.loads((tmp_path / "bind_leaf_cs_depth.json").read_text())["errors"]
+    f.write_text(_bound("u_lf1_", hig=2, y=1))
+    errs = []
+    assert LCD.bind_gate(_plan(ROWS_OK), tmp_path, errs)["verdict"] == "PASS" and errs == []
+
+
+R12NG = Path("/srv/opentallas-scratch2/claude/s87bind/out_r12ng")
+R12PLAN = Path("/srv/opentallas-scratch2/claude/s81-leaf-floor-2/data/plan_ready12ng.json")
+
+
+def test_real_r12ng_bind_fails_the_gate(tmp_path):
+    import pytest
+    if not (R12NG / "rtl").is_dir() or not R12PLAN.is_file():
+        pytest.skip("r12ng bind not on this host")
+    errs, rows = LCD.check(json.loads(R12PLAN.read_text()), R12NG / "rtl")
+    assert len(errs) >= 300 and any(" sw: plan 1 stage(s) (deepest row), bound RTL 0" in e for e in errs)
+
+
+def test_bind_py_calls_the_gate_when_the_manifest_asks():
+    src = (HERE / "bind.py").read_text()
+    assert 'B.ab.get("leaf_cs_depth_gate")' in src and "LCD.bind_gate(raw, out, B.errors)" in src
+    assert src.index("LCD.bind_gate") < src.index('rep["errors"], rep["n_errors"] = B.errors[:2000]')
+
+
 def test_cli_exit_status(tmp_path):
     (tmp_path / "s81p_ot_s81sl_leaf__t8.sv").write_text(_bound("u_lf1_", hig=2, y=1))
     pf = tmp_path / "plan.json"

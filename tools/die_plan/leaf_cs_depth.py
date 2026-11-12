@@ -11,7 +11,7 @@ cs (vn_a -> vn_b c_s) rows have no RTL realisation (kit_istations: re-plan vn_a 
 
     leaf_cs_depth.py PLAN.json BOUND_RTL_DIR [--types a,b] [--json OUT]     exit 1 on any mismatch
 
-bind.py calls check() after emit when the as-built manifest sets "leaf_cs_depth_gate": true (errors -> B.errors, so a
+bind.py calls bind_gate() after emit when the as-built manifest sets "leaf_cs_depth_gate": true (errors -> B.errors, so a
 --strict bind fails)."""
 import argparse
 import json
@@ -79,6 +79,15 @@ def check(plan, rtl_dir, types=None):
             elif p != b:
                 errors.append(f"LF_CS_DEPTH {tn} {c}: plan {p} stage(s) (deepest row), bound RTL {b}")
     return errors, rows
+
+
+def bind_gate(plan, out, errors):
+    """bind.py hook (as-built "leaf_cs_depth_gate": true): check <out>/rtl, append mismatches to `errors` (a --strict
+    bind then fails), write <out>/bind_leaf_cs_depth.json; -> report summary."""
+    errs, rows = check(plan, Path(out) / "rtl")
+    (Path(out) / "bind_leaf_cs_depth.json").write_text(json.dumps(dict(errors=errs, rows=rows), indent=1) + "\n")
+    errors.extend(errs)
+    return dict(gate="STRICT", verdict="FAIL" if errs else "PASS", mismatches=len(errs), rows=len(rows))
 
 
 def main(argv=None):
