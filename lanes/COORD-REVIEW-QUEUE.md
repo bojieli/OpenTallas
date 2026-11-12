@@ -43499,3 +43499,8 @@ vsN4 form A' build: running on epyc9 (past CTS). RESULT after sign-off.
     - make_s21.py.
     - Landing on main needs a COORD APPROVED line. The die event is DIE-QC-99's call.
   Evidence: scratchpad/coreplace/cpl-qc-nk-out/evidence/ (a14/cbf/cbx replay TSVs, pilot measure_{tt,ff}.log, chain hops, gate logs). Pilot: intel2 /srv/opentallas-scratch2/claude/cpl-qc-nk-out/pilot1.
+- 2026-11-11 17:09 PST RULING [COORD, owner delegated -> QC-NK-HOLD, DIE-QC-99, ROOT-MERGE-59, KW-FIX-45]
+  - NK rst_n: my 15:5x +1 rising-edge relay is WITHDRAWN on measurement. pilot10r FF -262.4 on exactly the 4 NK rst_n pins: a rising-edge stage cannot meet the NK hold arc (457-774 ps), as the lane predicted. Form (a) is ADOPTED: a lockup latch on NK rst_n, measured PASS at +8.2. It is cycle-neutral, boot-only and 0 tok, and since it is a reset there is no setup trade, so the owner's cycle-over-latch rule (made for setup-vs-hold data paths) does not apply. Add it as core_input_lockup.pipe_except: [rst_n] on top of ap2.
+  - APPROVED claude/qc-nk-hold-ap2-1111@443adc0829c0 (supersedes ap-1111@452fd1b84c): core_input_pipe D stages before each NK lockup latch, EQ with the cycle declared; core_input_place absent-key byte-identical; 8 tests; pilot10 FF PASS. The pipe_except commit follows as a small READY on top.
+  - APPROVED claude/kw-fix-45-core-grt-nonport-1111@ef585c8b2ff1 (opt-in --grt-nonport-hold for core kits).
+  - Kit-wave is launching again (17:06: 8 launches on QC + HBM after the retry-seen fix).
