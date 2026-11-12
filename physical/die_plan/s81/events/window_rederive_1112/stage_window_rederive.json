@@ -1,0 +1,4 @@
+{"name": "window_rederive", "why": "WINDOW-REDERIVE-1112: per-port windows = min(measured need + 20, 208) from DIE-PROTO-3 kitwin_auto_r7b_4cf8fb2f1479 (need > effective window only)",
+ "script": "physical/die_plan/s81/events/window_rederive_1112/apply_window_rederive_1112.py",
+ "argv": ["{in}", "{out}", "{report}", "--table", "<TABLE kitwin_auto_r7b_4cf8fb2f1479.json>", "--signed", "<SIGNED list>", "--name-only", "<NAME_ONLY list>", "--base-plan", "<ready7b plan.json>"],
+ "type_keys": [], "top_keys": ["clock.tap_window"]}
