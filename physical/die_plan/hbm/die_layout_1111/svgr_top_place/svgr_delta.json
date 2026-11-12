@@ -1,0 +1,55 @@
+{
+ "name": "svgr_top_programlo_dlhbm_1112",
+ "source": "/srv/opentallas-scratch3/claude/die-layout-hbm/d51/sc/p_svgr",
+ "base": "/srv/opentallas-scratch3/claude/die-layout-hbm/d51/sc/p_esc",
+ "files": {
+  "core_macros.json": {
+   "kind": "json",
+   "ops": [
+    [
+     [
+      "cores",
+      "ot_svgr_top",
+      "macros",
+      {
+       "k": "name",
+       "v": "u_fcore.feed.programme_leaf.g_m2.u_program_lo"
+      },
+      "rect_um",
+      1
+     ],
+     "set",
+     434.7
+    ],
+    [
+     [
+      "cores",
+      "ot_svgr_top",
+      "macros",
+      {
+       "k": "name",
+       "v": "u_fcore.feed.programme_leaf.g_m2.u_program_lo"
+      },
+      "rect_um",
+      3
+     ],
+     "set",
+     505.17
+    ],
+    [
+     [
+      "cores",
+      "ot_svgr_top",
+      "basis"
+     ],
+     "set",
+     "DIE-HBM-61/SPLIT d44v part 6 | DIE-LAYOUT-HBM 11-12 svgr-place: u_program_lo moved (116.64,8.64)->(116.64,434.7), R0 kept, outline/pins unchanged: the S-face sm_packet/sm_command bus (1182 pins x108.6-301.4, 2 face regs each) and the E-face seam_read_data low half had 0 placeable rows under/beside it (halo 4.32 = core margin), DPL-0036 attempt_7"
+    ]
+   ],
+   "base_sha256": "32b4ba1ca97e3076eeffadcdd39e8c606d6debfe57775da1679844a08b766dd2",
+   "new_sha256": "d04a0924d79f7e63b8cc9242d9851ddf343d65204f7061cc896318f31c1b7ab6"
+  }
+ },
+ "bookkeeping_not_applied": [],
+ "file_base_override": {}
+}
