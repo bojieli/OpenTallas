@@ -40,12 +40,14 @@ for tn, ent in types.items():
                 for k in ("xy_um", "pin_xy_um", "band", "tap", "status_pins_xy_um"):
                     if k in p: src[k] = p[k]
                     elif k in src and k == "status_pins_xy_um": src.pop(k)
-                # the collector source hangs on the reset node of the nearest clock tap (the bay tap, bay_taps.py)
+                # the collector source hangs on the nearest reset-tap node of the type's collector tree (the plan
+                # landing_contract tree the collector walks); a tap node keeps both node and tap
                 xy = src.get("xy_um")
-                if xy and tap_sites.get(tn):
-                    i, _, d = min(((i, n, abs(x - xy[0]) + abs(y - xy[1])) for i, (n, x, y) in enumerate(tap_sites[tn])),
-                                  key=lambda r: r[2])
-                    src["tap"] = i; src.pop("node", None)
+                tree = ((pt.get("clock") or {}).get("landing_contract") or {}).get("collector_tree") or {}
+                nodes = [(r["q"], r["xy"]) for r in tree.get("relays", []) if re.fullmatch(r"rst_n_t\d+", r["q"])]
+                if xy and nodes:
+                    q, _ = min(nodes, key=lambda r: abs(r[1][0] - xy[0]) + abs(r[1][1] - xy[1]))
+                    src["node"] = q; src["tap"] = int(q[7:])
                 moved += 1
         types[tn] = e; rep[tn] = dict(slots=split, tokens=n0, sources_resited=moved)
 json.dump(D, open(tout, "w"))
