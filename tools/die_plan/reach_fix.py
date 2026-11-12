@@ -429,6 +429,7 @@ def reset_metrics(P, tn, G=None, reach=REACH_UM):
         elif pt and _d(r["xy"], pt) > reach + 1e-6:
             out["raw_bad"] += 1
             out["raw_detail"].append("%s: %s %.0f um from its stage" % (tag, net, _d(r["xy"], pt)))
+            out.setdefault("far_xy", []).append([round(float(pt[0]), 3), round(float(pt[1]), 3)])
         elif r.get("q") and net and net != r.get("q") and tag.startswith("export"):
             out["raw_bad"] += 1
             out["raw_detail"].append("%s: net %s != relay q %s" % (tag, net, r.get("q")))
@@ -577,6 +578,13 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
     # then set the target (or restore the type's own value) once the table is final
     own_lim = {k: ck.get(k) for k in ("tap_radius_um", "tap_max_sinks")}
     ck["tap_radius_um"], ck["tap_max_sinks"] = 1e6, 10 ** 9
+    # RESET-WAVEFRONT-TAPS (COORD 11-12, HEAD-95 srx3): a partition move re-solves the die reset wavefront, the type's
+    # relay tree changes and a tap placed for the old relays is EMPTY (export: "explicit tap clk_t4 load=0 ... empty").
+    # Re-derive: every empty stored tap is dropped (canonical names re-packed), then the radius / cap stages below add
+    # taps where the NEW sinks need them, and class 5 re-selects the raw references by role on the new tree.
+    for _k in range(64):
+        if not _drop_one_empty(Q, P.path, tn, ck, mode, rec, None):
+            break
     mine = set()
     try:
         rec["legal_moves"] = _legalize_tap_table(plan_obj(Q, P.path), tn, ck, mode)
@@ -750,6 +758,38 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
         else:
             break
     return rec
+
+
+def _drop_one_empty(Q, path, tn, ck, mode, rec, mine):
+    """drop ONE stored tap the export reports empty (load 0); mine = only taps this tool added (None: any non-core
+    tap).  Re-packs the canonical names.  Returns the dropped name or None."""
+    import schema as S
+    err = _export_ok(Q, path, tn) or ""
+    m = re.search(r"tap (clk_t\d+|clk) load=0(?:\.0)?/.*empty=True", err)
+    if not m:
+        return None
+    drop = m.group(1)
+    rows_ = ck.get("taps") if mode == "explicit" else ck.get("added_taps")
+    if not rows_:
+        return None
+    idx = next((i for i, r in enumerate(rows_) if r.get("name") == drop and r.get("kind") != "core"
+                and (mine is None or (float(r["xy"][0]), float(r["xy"][1])) in mine)), None)
+    if idx is None:
+        return None
+    rows_.pop(idx)
+    if mode == "explicit":
+        n = 0
+        for r in rows_:
+            if r.get("kind") == "core":
+                continue
+            r["name"] = "clk" if n == 0 else "clk_t%d" % n
+            n += 1
+    else:
+        n0 = len(S._grid_taps(plan_obj(Q, path), tn))
+        for i, r in enumerate(rows_):
+            r["name"] = "clk_t%d" % (n0 + i)
+    rec["changes"].append(["dropped_empty_tap", "reset-resolve" if mine is None else "added", drop])
+    return drop
 
 
 def _legalize_tap_table(PQ, tn, ck, mode):
@@ -956,10 +996,96 @@ def fix_raw_tap_refs(P, Q, tn, plan_path, reach=REACH_UM):
     return out
 
 
+def fix_reset_terminals(P, Q, tn, plan_path, reach=REACH_UM):
+    """reset REACH (class 5, after the role-keeping re-select): a raw reset reference whose nearest same-role,
+    same-depth relay is still > reach from its stage gets a reset terminal at the stage (reset.local_taps_um: the
+    wavefront tree grows a relay there), then the re-select runs again.  Kept only when class 5 improves; a type whose
+    reset is not a wavefront (reset_tree refuses local taps) is left as is.  Returns the record or None."""
+    import street_rule as SR
+    t = Q["partition_types"][tn]
+    PQ = plan_obj(Q, plan_path)
+    _reset_caches(PQ)
+    m0 = reset_metrics(PQ, tn, None, reach)
+    far = m0.get("far_xy") or []
+    if not far or m0.get("error"):
+        return None
+    snap = copy.deepcopy(t)
+    rs = t.setdefault("reset", {})
+    lt = rs.setdefault("local_taps_um", [])
+    have = {(round(float(a), 3), round(float(b), 3)) for a, b in lt}
+    add = [p for p in far if (p[0], p[1]) not in have]
+    lt.extend(add)
+    try:
+        SR.reset_resel(P.raw, Q, [tn], plan_path)
+        fix_raw_tap_refs(P, Q, tn, plan_path, reach)
+        PQ = plan_obj(Q, plan_path)
+        _reset_caches(PQ)
+        m1 = reset_metrics(PQ, tn, None, reach)
+    except Exception as e:  # noqa: BLE001
+        m1 = dict(error="%s: %s" % (type(e).__name__, str(e)[:160]))
+    c0 = m0["hops_over"] + m0["raw_bad"]
+    c1 = (m1.get("hops_over", 0) + m1.get("raw_bad", 0)) if not m1.get("error") else 10 ** 9
+    if c1 >= c0:
+        Q["partition_types"][tn] = snap
+        return dict(kept=False, added=add, before=c0, after=None if m1.get("error") else c1, error=m1.get("error"))
+    return dict(kept=True, added=add, before=c0, after=c1)
+
+
+def fix_group_overrides(Q, tn, plan_path, reach=REACH_UM):
+    """RESET-WAVEFRONT-TAPS, collector side (QC sle_ctl__cl372cea1c 'unknown ... landing group override
+    u_cland_collect_rst_n_t19'): clock.landing_contract.group_rects_um names collector / raw-copy groups by the relay
+    they serve; after a reset re-solve that relay can be gone.  A stale prefix moves to the collector node of the SAME
+    ROLE (gated rst_n_t<i> / raw rst_rl_*) nearest the rectangle centre when it lies within reach of it and has no
+    override yet; else the override is dropped (the collector takes its default window).  Returns [[old, new|None]]."""
+    import landing_place as LP
+    t = Q["partition_types"][tn]
+    c = (t.get("clock") or {}).get("landing_contract") or {}
+    ov = c.get("group_rects_um")
+    if not isinstance(ov, dict) or not ov:
+        return []
+    try:
+        ev = LP.collector_event(c)
+        active, xy = LP.collector_nodes(ev) if ev.get("collector_root_node") else (set(), {})
+        start = bool((ev.get("tree") or {}).get("start"))
+    except Exception:  # noqa: BLE001
+        return []
+    role = lambda n: "gated" if (start and re.match(r"rst_n_t\d+$", n)) else "raw"  # noqa: E731
+    live = {}
+    for n in sorted(active):
+        live["u_cland_collect_" + LP.safe(n)] = (n, "collect")
+        if n != "rst_root_n":
+            live["u_cland_reset_" + LP.safe(n)] = (n, "reset")
+    out = []
+    for pfx in sorted(ov):
+        m = re.match(r"u_cland_(collect|reset)_(.+)$", pfx)
+        if pfx in live or not m:
+            continue
+        kind, old = m.group(1), m.group(2)
+        r = ov[pfx]
+        cx, cy = (r[0] + r[2]) / 2.0, (r[1] + r[3]) / 2.0
+        cand = [(abs(xy[n][0] - cx) + abs(xy[n][1] - cy), p, n) for p, (n, k) in live.items()
+                if k == kind and role(n) == role(old) and p not in ov and n in xy]
+        cand = [x for x in cand if x[0] <= reach + 1e-6]
+        rect = ov.pop(pfx)
+        if cand:
+            _dd, p, _n = min(cand)
+            ov[p] = rect
+            out.append([pfx, p])
+        else:
+            out.append([pfx, None])
+    if not ov:
+        c.pop("group_rects_um")
+    return out
+
+
 def fix_type(P, Q, tn, classes, base_row, cap, radius, reach, span, plan_path):
     """apply the stages to type tn of plan dict Q in place (Q holds a deep copy of the base type).  Returns record."""
     rec = dict(type=tn)
     t = Q["partition_types"][tn]
+    if "landing group override" in str(base_row.get("error") or "") or "5" in classes:
+        go = fix_group_overrides(Q, tn, plan_path, reach)
+        if go:
+            rec["group_overrides"] = go
     if "4" in classes and base_row.get("c4"):
         rec["hops"] = fix_hops(t, reach, ends=slot_ends(P, tn))
     if ("1" in classes or "2" in classes) and (base_row.get("c1") or base_row.get("c2_tap", base_row.get("c2"))):
@@ -977,6 +1103,9 @@ def fix_type(P, Q, tn, classes, base_row, cap, radius, reach, span, plan_path):
         rr = fix_raw_tap_refs(P, Q, tn, plan_path)
         if rr:
             rec["raw_tap_resel"] = rr
+        rt = fix_reset_terminals(P, Q, tn, plan_path, reach)
+        if rt:
+            rec["reset_terminals"] = rt
     if "3" in classes and base_row.get("c3"):
         rec["fwd"] = fix_fwd(plan_obj(Q, plan_path), Q, tn, span)
     return rec
@@ -1184,7 +1313,9 @@ def cmd_fix(a):
     for tn, rec, after, tnew in res:
         b = base[tn]
         worse = []
-        if after is not None:
+        if after is not None and b.get("error") and not after.get("error"):
+            pass        # the base did not even export (placeholder c1 = 1): an exporting type is the improvement
+        elif after is not None:
             for c in CLASSES:
                 if (after.get("c" + c) or 0) > (b.get("c" + c) or 0):
                     worse.append("c" + c)

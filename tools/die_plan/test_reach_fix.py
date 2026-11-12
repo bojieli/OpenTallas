@@ -237,3 +237,38 @@ def test_class6_landed_window(tmp_path):
     assert Q["lanes"][0]["fixed_cycles"] == 5 and "fixed_cycles" not in Q["lanes"][1]
     rows2 = RF.landed_rows(Q, str(tsv))
     assert {r["lane"]: r for r in rows2}["ab"]["ok"] and RF.fix_landed(Q, rows2) == {}
+
+
+def test_reset_resolve_empty_tap_dropped(monkeypatch):
+    # RESET-WAVEFRONT-TAPS (HEAD-95 srx3 hd_st_turn clk_t4 load 0): an explicit tap emptied by the reset re-solve is
+    # dropped (any non-core tap), the canonical names re-pack, core taps stay
+    ck = {"tap_mode": "explicit", "taps": [dict(name="clk", xy=[1, 1]), dict(name="clk_t1", xy=[2, 2]),
+                                           dict(name="cA", xy=[3, 3], kind="core"), dict(name="clk_t2", xy=[4, 4])]}
+    errs = iter(["ValueError: T: explicit tap clk_t1 load=0/1500, radius=0/250.0, empty=True", None])
+    monkeypatch.setattr(RF, "_export_ok", lambda Q, path, tn: next(errs))
+    rec = dict(changes=[])
+    assert RF._drop_one_empty({}, None, "T", ck, "explicit", rec, None) == "clk_t1"
+    assert [(r["name"], r["xy"]) for r in ck["taps"]] == [("clk", [1, 1]), ("cA", [3, 3]), ("clk_t1", [4, 4])]
+    assert rec["changes"] == [["dropped_empty_tap", "reset-resolve", "clk_t1"]]
+    assert RF._drop_one_empty({}, None, "T", ck, "explicit", rec, None) is None
+
+
+def test_group_override_rekeyed_by_role(monkeypatch):
+    # QC sle_ctl__cl372cea1c: group_rects_um names u_cland_collect_rst_n_t19, gone after the re-solve -> the nearest
+    # live collector of the same ROLE (gated rst_n_t*) within reach; a raw rst_rl_* override with no raw node in reach
+    # is dropped
+    import landing_place as LP
+    tree = dict(start=True, root=[0.0, 0.0], relays=[dict(q="rst_n_t20", d="rst_root_n", xy=[100.0, 100.0]),
+                                                     dict(q="rst_rl_3", d="rst_root_n", xy=[105.0, 100.0])])
+    monkeypatch.setattr(LP, "collector_event", lambda c: dict(tree=tree, collector_root_node="rst_root_n"))
+    monkeypatch.setattr(LP, "collector_nodes", lambda ev: ({"rst_root_n", "rst_n_t20", "rst_rl_3"},
+                                                           {"rst_root_n": [0.0, 0.0], "rst_n_t20": [100.0, 100.0],
+                                                            "rst_rl_3": [105.0, 100.0]}))
+    ov = {"u_cland_collect_rst_n_t19": [90.0, 90.0, 110.0, 110.0], "u_cland_collect_rst_rl_9": [900, 900, 910, 910]}
+    Q = {"partition_types": {"T": {"outline_um": [1000, 1000],
+                                   "clock": {"landing_contract": {"group_rects_um": dict(ov)}}}}}
+    out = RF.fix_group_overrides(Q, "T", None)
+    assert out == [["u_cland_collect_rst_n_t19", "u_cland_collect_rst_n_t20"], ["u_cland_collect_rst_rl_9", None]]
+    assert Q["partition_types"]["T"]["clock"]["landing_contract"]["group_rects_um"] == {
+        "u_cland_collect_rst_n_t20": [90.0, 90.0, 110.0, 110.0]}
+    assert RF.fix_group_overrides(Q, "T", None) == []                         # idempotent
