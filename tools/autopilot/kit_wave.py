@@ -2253,6 +2253,15 @@ def host_score(v, disk_low=None):
     return s * 0.25 if (busy and s > 0) else s
 
 
+def host_share(cfg, h):
+    """KW-FIX-46 11-12 (COORD: drain epyc7/epyc8 S81+HBM waiters to epyc9 first): cfg host_share {host: multiplier}
+    (default 1.0) weights a host in gen-host choice and in the restage gain test; it never makes an unfit host fit"""
+    try:
+        return max(0.0, float(((cfg or {}).get("host_share") or {}).get(h, 1.0)))
+    except (TypeError, ValueError):
+        return 1.0
+
+
 def host_capacity(v):
     """WAVE-BALANCE-1: free cores x free admits (admits minus the GB already waiting there) of an ot-run status row"""
     if not v:
@@ -2935,8 +2944,8 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         fits = [h for h in room if sc(h) >= max(take, 1)]
         # WAVE-BALANCE-1 11-11 (COORD 23:4x): among hosts that fit, the one with the most (free cores x admits), not the
         # lowest load fraction or a fixed list order (epyc9 97/96 with 30 waiters while epyc2 sat at 26/128)
-        best = (max(fits, key=lambda h: (host_capacity(key(h)), -hs.index(h))) if fits
-                else max(room or hs, key=lambda h: (sc(h), -hs.index(h))))
+        best = (max(fits, key=lambda h: (host_capacity(key(h)) * host_share(cfg, h), -hs.index(h))) if fits
+                else max(room or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
     alt_charge(cfg, best)
@@ -3323,7 +3332,8 @@ def restage_waiters(AP, cfg, st, notices):
                 v = row(best) or {}
                 if best != g and (host_room(v, die_disk_low(cfg, die, best, v) if v else None)
                                   or cfg.get("load_hold") is False) and (
-                        die_score(cfg, die, best, v) - die_score(cfg, die, g, row(g)) >= wsize(row(g), mem)):
+                        die_score(cfg, die, best, v) * host_share(cfg, best)
+                        - die_score(cfg, die, g, row(g)) * host_share(cfg, g) >= wsize(row(g), mem)):
                     why = f"{g} -> {best}"
             # an async PLACE client started pinned (--hosts G, before place_spill) can never move: relaunch it spillable
             if not why and spill and svc0.get("launch") == "launched" and "--hosts" in (svc0.get("argv") or []):
