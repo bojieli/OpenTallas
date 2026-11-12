@@ -65,6 +65,18 @@ def main():
         for k, v in json.load(open(b2)).items():
             if isinstance(v, dict) and "files" in v and k not in rec_by_mod[k]:
                 rec_by_mod[k].insert(0, k)
+    # CORES-HBM-1/svgr 11-12: the generator's last fallback (gen_core_kit_hbm.resolve_recipe_by_top) over ALL its
+    # recipes (recipes_b2 + harden): exactly one build-identical recipe whose RTL top is the module (e.g. split-piece
+    # recipes keyed by cut piece).  Several differing ones stay NO_RECIPE (fail closed, as in the generator).
+    rec_all = dict(rec)
+    if b2.is_file():
+        rec_all.update({k: v for k, v in json.load(open(b2)).items() if isinstance(v, dict) and "files" in v})
+
+    def by_top(m):
+        c = sorted(k for k, r in rec_all.items() if r.get("top") == m)
+        sig = {json.dumps({k: x for k, x in rec_all[c0].items() if k != "source" and "note" not in k}, sort_keys=True)
+               for c0 in c}
+        return c[:1] if c and len(sig) == 1 else []
     views = {}
     no_pins = []
     tables = collections.defaultdict(set)
@@ -86,7 +98,7 @@ def main():
         m = v["module"]
         v["tables_for_module"] = len(tables[m])
         v["canonical_type"] = canon_of.get(m)
-        rk = rec_by_mod.get(m) or []
+        rk = rec_by_mod.get(m) or by_top(m)
         v["recipe_keys"] = rk
         blk = []
         if len(tables[m]) > 1:
