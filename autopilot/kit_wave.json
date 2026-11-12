@@ -19910,7 +19910,8 @@
     "slice_station__t26",
     "slice_station__t38",
     "slice_station__t7__cl362204c4"
-   ]
+   ],
+   "prov_require_cands": true
   },
   "s81_head": {
    "enabled": true,
@@ -20956,7 +20957,8 @@
    "gate_events_extra": [
     "hcut1111"
    ],
-   "plan_prev_kw45_tx": "/srv/opentallas-scratch2/claude/kw45/head_mesh1111/prep/source_plan.json"
+   "plan_prev_kw45_tx": "/srv/opentallas-scratch2/claude/kw45/head_mesh1111/prep/source_plan.json",
+   "prov_require_cands": true
   },
   "qwen_compute": {
    "enabled": true,
@@ -21018,7 +21020,10 @@
     "cbn_q00__cld7bf7197": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
+    "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
+    "sle_su_c": "KW-FIX-45 11-11 20:5x COORD fail_watch: su_c types wait for the qfd_dv_* children (s24/s25 bind-views set) until s25 launches; PROVISIONAL child views missing",
+    "slw_su_c__cl19bb38ef": "KW-FIX-45 11-11 20:5x COORD fail_watch: su_c types wait for the qfd_dv_* children (s24/s25 bind-views set) until s25 launches; PROVISIONAL child views missing",
+    "slw_su_c__cl92142dac": "KW-FIX-45 11-11 20:5x COORD fail_watch: su_c types wait for the qfd_dv_* children (s24/s25 bind-views set) until s25 launches; PROVISIONAL child views missing"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -28480,7 +28485,8 @@
     "slw_su_l0__cl76fb247e",
     "slw_su_l0__cl1a1c1f8f",
     "slw_su_l0__cl1e5219ea"
-   ]
+   ],
+   "prov_require_cands": true
   },
   "hbm": {
    "enabled": true,
