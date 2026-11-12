@@ -43614,3 +43614,39 @@ vsN4 form A' build: running on epyc9 (past CTS). RESULT after sign-off.
   - 96 landing-collector relays sit within 21.6 um of a bay. G0 reports them as WARN, and reset_tree re-sites them.
 - Still to do: formal EQ (reduced x-lane plans prepared) and ring hold. Ring-hold estimate: M8 at 0.34 ps/um, so a hop of 395 um or less takes about 133 ps, against about 300 ps on M4/M5. The data/fclk spread is about 13 ps (base about 30 ps). That gives min margin of about 67 ps against sender 80, so +1 cycle is not expected. It is to be confirmed on the final bays.
 - t8 (fail-watch d59c45e5326f GRT-0116): t8 is in the form-(d) type list, with ft0/ft1 bays and the ring in bay 0. Its rebuild is a fresh kit from the form-(d) plan after READY (KW-FIX-45 bind/kit). It does not re-run the old plan.
+- 2026-11-11 17:40 PST READY [CLAND-CLASS-1 -> DIE-QC-99, COORD; cc ROOT-MERGE-59, CPL-QC-NK-OUT] WSTART re-space table for the combined QC event: 9 (b) + 3 (c) types, 30 branches. Same depth: 0 data cycles, no boot change. Branch claude/cland-wstart-origin-1111@fe4380943c (contains the approved anchor fix 7dd83f04a2).
+  - Ready-to-apply delta: tools/die_plan/bench/wstart_respace_qc_1111/delta_qc99_s20.json (sha256 b636daec2fd4...). Apply with: python3 -I tools/die_plan/wstart_respace.py apply <plan_qc99_s21_nkout.json> <delta> <out.json>. It replaces only these branches' stages, and refuses if a depth differs. Report: same dir, report.txt.
+  - Base plan_qc99_s20 (main). All 12 types have byte-identical geometry in s21_nkout (outline, hard_cores, landing_contract incl. bands/pins, reader/writer start), so the delta applies on s21 as-is. Checked on s21: after apply no branch of these types exceeds 405 um; schema validate shows no new error.
+  - Every site: clear of hard cores (landing_place margin) AND of every landing_contract band rect (+2.16 um); landing_place relocates none; every hop (origin -> stage 0 ... last stage -> fstart face pin) <= 405, worst 362 (was up to 1315). raw_reset kept by stage index from your start planner; re-pick it there if you want the nearest relay for a moved stage.
+  - cbn_q01 x3: computed on their s20 core positions. cbf_q00 x3: re-space only (ARCH-held). cbn_q00__cld7bf7197 computed from its own s20 geometry.
+  - Table (type bus (depth, worst hop old -> new): stage xy):
+    - cbf_q00__cl1b5a6458 bc_o11 (depth 8, hop 480 -> 298): [79.37,741.97] [79.37,1040.38] [79.37,1338.8] [79.37,1637.21] [79.37,1935.62] [79.37,2234.03] [86.8,2525.02] [385.21,2525.02]
+    - cbf_q00__cl1b5a6458 y_o11 (depth 8, hop 1310 -> 356): [79.37,799.29] [79.37,1155.02] [347.56,1242.55] [703.29,1242.55] [1059.02,1242.55] [1167.51,1489.79] [1167.51,1845.51] [1167.51,2201.24]
+    - cbf_q00__cl870de686 bc_o11 (depth 8, hop 480 -> 298): [79.37,741.97] [79.37,1040.38] [79.37,1338.8] [79.37,1637.21] [79.37,1935.62] [79.37,2234.03] [86.8,2525.02] [385.21,2525.02]
+    - cbf_q00__cl870de686 y_o11 (depth 8, hop 1310 -> 356): [79.37,799.29] [79.37,1155.02] [347.56,1242.55] [703.29,1242.55] [1059.02,1242.55] [1167.51,1489.79] [1167.51,1845.51] [1167.51,2201.24]
+    - cbf_q00_s2 bc_o11 (depth 8, hop 495 -> 294): [79.37,778.88] [79.37,1072.68] [79.37,1366.48] [79.37,1660.28] [79.37,1954.07] [79.37,2247.87] [96.02,2525.02] [389.82,2525.02]
+    - cbf_q00_s2 serdes_tx_tx_flit_o (depth 8, hop 496 -> 257): [73.79,747.75] [73.79,1004.84] [73.79,1261.94] [73.79,1519.03] [73.79,1776.12] [73.79,2033.21] [73.79,2290.3] [96.16,2525.02]
+    - cbf_q00_s2 serdes_tx_valid_tx_v_o (depth 8, hop 549 -> 263): [79.37,748.05] [79.37,1011.01] [79.37,1273.98] [79.37,1536.94] [79.37,1799.91] [79.37,2062.87] [79.37,2325.84] [143.15,2525.02]
+    - cbf_q00_s2 y_o11 (depth 8, hop 1315 -> 351): [79.37,836.19] [79.37,1187.31] [375.24,1242.55] [718.79,1250.11] [1022.41,1297.61] [1156.15,1514.99] [1156.15,1866.1] [1156.15,2217.22]
+    - cbn_q00__cl622f65d2 bc_o11 (depth 8, hop 468 -> 297): [79.37,750.58] [79.37,1047.91] [190.71,1233.91] [488.05,1233.91] [551.35,1467.94] [551.35,1765.28] [551.35,2062.62] [551.35,2359.95]
+    - cbn_q00__cl622f65d2 rsf_o (depth 8, hop 494 -> 107): [73.44,352.21] [73.44,245.25] [73.44,138.29] [73.44,31.34] [155.56,6.5] [262.52,6.5] [369.48,6.5] [476.44,6.5]
+    - cbn_q00__cl622f65d2 y_o11 (depth 8, hop 1311 -> 355): [79.37,807.89] [79.37,1162.54] [362.66,1233.91] [717.31,1233.91] [1071.96,1233.91] [1229.02,1431.5] [1229.02,1786.16] [1229.02,2140.81]
+    - cbn_q00__cld7bf7197 bc_o11 (depth 8, hop 467 -> 297): [79.37,753.89] [79.37,1050.81] [79.37,1347.74] [79.37,1644.66] [79.37,1941.58] [79.37,2238.5] [89.78,2525.02] [386.7,2525.02]
+    - cbn_q00__cld7bf7197 rsf_o (depth 8, hop 502 -> 107): [73.44,355.53] [73.44,248.15] [73.44,140.78] [83.13,43.1] [153.9,6.5] [261.28,6.5] [368.65,6.5] [476.02,6.5]
+    - cbn_q00__cld7bf7197 y_o11 (depth 8, hop 1312 -> 354): [79.37,811.21] [79.37,1165.45] [365.14,1233.91] [719.38,1233.91] [1073.62,1233.91] [1167.51,1494.26] [1167.51,1848.49] [1215.91,2154.34]
+    - cbn_q00__cldbcda913 bc_o11 (depth 8, hop 468 -> 297): [79.37,750.58] [79.37,1047.91] [190.71,1233.91] [488.05,1233.91] [551.35,1467.94] [551.35,1765.28] [551.35,2062.62] [551.35,2359.95]
+    - cbn_q00__cldbcda913 rsf_o (depth 8, hop 494 -> 107): [73.44,352.21] [73.44,245.25] [73.44,138.29] [73.44,31.34] [155.56,6.5] [262.52,6.5] [369.48,6.5] [476.44,6.5]
+    - cbn_q00__cldbcda913 y_o11 (depth 8, hop 1311 -> 355): [79.37,807.89] [79.37,1162.54] [362.66,1233.91] [717.31,1233.91] [1071.96,1233.91] [1229.02,1431.5] [1229.02,1786.16] [1229.02,2140.81]
+    - cbn_q01__clab6e67f2 bc_o13 (depth 7, hop 557 -> 339): [79.37,761.71] [79.37,1101.16] [222.38,1297.61] [551.35,1308.1] [551.35,1647.56] [551.35,1987.01] [551.35,2326.47]
+    - cbn_q01__clab6e67f2 y_o12 (depth 7, hop 524 -> 193): [79.37,240.66] [94.26,62.09] [287.71,62.09] [481.17,62.09] [626.6,14.07] [820.06,14.07] [1013.51,14.07]
+    - cbn_q01__cld9ff4c40 bc_o13 (depth 7, hop 556 -> 340): [79.37,760.41] [79.37,1100.06] [79.37,1439.7] [79.37,1779.34] [79.37,2118.98] [79.37,2458.62] [343.98,2533.66]
+    - cbn_q01__cld9ff4c40 y_o12 (depth 7, hop 524 -> 193): [79.37,239.36] [95.37,62.09] [288.64,62.09] [481.91,62.09] [627.16,14.07] [820.43,14.07] [1013.7,14.07]
+    - cbn_q01__cldd6ea846 bc_o13 (depth 7, hop 557 -> 339): [79.37,761.71] [79.37,1101.16] [222.38,1297.61] [551.35,1308.1] [551.35,1647.56] [551.35,1987.01] [551.35,2326.47]
+    - cbn_q01__cldd6ea846 y_o12 (depth 7, hop 524 -> 193): [79.37,240.66] [94.26,62.09] [287.71,62.09] [481.17,62.09] [626.6,14.07] [820.06,14.07] [1013.51,14.07]
+    - cbn_q11__cl49ae4555 bc_o23 (depth 7, hop 1258 -> 335): [79.37,213.19] [79.37,548.55] [79.37,883.92] [79.37,1219.29] [79.37,1554.66] [79.37,1890.02] [79.37,2225.39]
+    - cbn_q11__cl49ae4555 bc_o33 (depth 7, hop 600 -> 362): [551.35,120.69] [551.35,483.06] [551.35,845.43] [551.35,1207.81] [551.35,1570.18] [551.35,1932.55] [551.35,2294.92]
+    - cbn_q11__cl49ae4555 y_o23 (depth 7, hop 475 -> 337): [79.37,215.21] [79.37,552.61] [79.37,890.0] [79.37,1227.39] [79.37,1564.79] [79.37,1902.18] [79.37,2239.58]
+    - cbn_q11__cl5cc92dfe bc_o23 (depth 7, hop 1258 -> 335): [79.37,213.19] [79.37,548.55] [79.37,883.92] [79.37,1219.29] [79.37,1554.66] [79.37,1890.02] [79.37,2225.39]
+    - cbn_q11__cl5cc92dfe bc_o33 (depth 7, hop 600 -> 362): [562.7,109.34] [600.97,433.45] [600.97,795.82] [600.97,1158.19] [600.97,1520.56] [600.97,1882.93] [600.97,2245.3]
+    - cbn_q11__cl5cc92dfe y_o23 (depth 7, hop 475 -> 337): [79.37,215.21] [79.37,552.61] [79.37,890.0] [79.37,1227.39] [79.37,1564.79] [79.37,1902.18] [79.37,2239.58]
+    - cbf_q11 y_o23 (depth 7, hop 484 -> 337): [70.73,206.57] [70.73,543.97] [70.73,881.36] [70.73,1218.75] [70.73,1556.15] [70.73,1893.54] [70.73,2230.94]
