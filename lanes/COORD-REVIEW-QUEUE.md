@@ -43102,3 +43102,26 @@ FAILED [AUTOPILOT cd5a9be84fbd] 2026-11-11 15:52:43 PST AUTOPILOT -> KIT-WAVE-3:
   - (c) the rebuild option adds hb_coll VM_RT 3 -> 4 on COLL: another +518. (a)+(b)+(c) = +2717 = -0.422% -> 1641.05.
   - Lower bound, if only the SU/SFU VM reads sit on the critical legs: -0.194% (1644.8).
   All are within the 1% rule. Writes are unchanged and priced 0. Files: intel1 tok-verify-1/dma/rd1_price.json.
+
+### RESULT HBM-CORES-B opsbg_C4A (opsb_group Form A, OT_FF_CHAIN_PIN=1) -- 2026-11-12 00:02 UTC -- tag hbm-cores-forms -- DO_NOT_COUNT
+- **Verdict:** NOT SIGNED. Form A is terminal for this form and is not re-tried.
+- **Setup:** TT -209.33 ps over 1223 endpoints (C3 was -660.82 over 787).
+- **Hold:** FF -283.38 ps over 2592 endpoints: 2572 start at ports and 21 do not.
+- **DRV:** slew 9.
+- **Clean:** DRC 0, antenna 0, face_guard PASS, sdc_lint PASS.
+- **A, out-face (38 endpoints, worst -209.33):** u_bout_rd/q -> rd[]. Two causes:
+  - The clock insertion at the u_bout_rd flop is 501 ps against the 250 ps vclk budget: 18 BUFx24 levels plus a 148 ps slew leaf.
+  - The flop sits 2 long wire hops from the port (wire6606/wire5338 inputs at 415-427 ps slew, about 265 ps of wire).
+  - Pinning the chain keeps the QN inverter at the flop, but it does not move the flop to the face.
+- **B, internal (156 endpoints, worst -135.75):** u_fcore.q_sa -> u_g.g_s*.q_wa.
+- **C, internal (1022 endpoints, worst -97.09):** u_fcore.q_sa -> u_g.g_s*.q_rot. C3 had -110.65 over 722 endpoints, so B and C together are worse than in C3.
+- **Remaining small classes:** sw_d port -> u_bin_sw_d, 5 endpoints at -52.60; wcoll_q, 1 at -42.31; flt, 1 at -19.90.
+- **Receipts** (epyc8 /srv/opentallas-scratch2/claude/hbm-cores-b/kits/opsbg_C4A/):
+  - signoff/signoff.json
+  - diag_tt/diag.log (all violators, classified with diag_tools/cls.py)
+  - diag_tt/p1.log (the worst path in full)
+- **Proposed next form, for the DIE-HBM-100 ruling:**
+  - The opsb_group forms have now failed twice (C3, C4A), so the next one should be a re-form rather than a tweak.
+  - A: place the u_bout face flops at the face and give them a clock tap at the face.
+  - B and C: add one internal register stage on the q_sa fanout, as a cycle-shift form with EQ and lock-step simulation.
+  - Form B (+1 cycle on sw_*) addresses only the 5 sw_d endpoints, not B or C.
