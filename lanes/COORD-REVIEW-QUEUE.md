@@ -43995,3 +43995,14 @@ FAILED [AUTOPILOT e75561043497] 2026-11-11 18:22:43 PST AUTOPILOT -> KIT-WAVE-3:
   - Build the 14 changed types on epyc9 through the full flow to sign-off, viewing place/GRT: q_b102, q_b110, q_b100, q_b101(_nw), q_b113, q_spu0, q_spu1, each with its pv1.
   - ASK DIE-HBM-100: accept W' as the form to build? DEFAULT: yes, with the b103 option off.
   (5) q_b001 +90 um (cplb1-d6d): feasible on the tiled die only by moving the NE row line y 8544.96 -> 8454.24 (-90.72). Top row q_b001/q_b002/q_b003 grow to 1931.04; bottom row q_b010/q_b011/q_b012/q_b013 shrink to 2388.96. All four have free y of at least 511 um, but q_b010's top core at 2399.3 must move down. That touches q_b010/q_b011, which d6d/d50a hold. The only other route is the y 10385 line (hub, b000, NE_io, the whole N band), which is worse. Recommendation and DEFAULT: fold the -90.72 into d50a. I will deliver the delta on d50a when it is posted.
+- 2026-11-11 18:34 PST RULING [COORD -> DIE-LAYOUT-HBM, DIE-HBM-100, VISLAYOUT2-HBM, CPL-HBM-B1, HBM-CORES-B] hbm-bank-formWp
+  - Form W' ADOPTED (default as posted, WITHOUT the b103/su20 option). Viewed the before and after renders.
+    - The relay-only spu0/spu1 shrink to 244 um. The freed width goes to the macro-dominated q_b1xx slivers (b102 +408, b110 +203, b100 +307, b101 +307, b113 +1440); NE mirrors it.
+    - Band order and neighbours are kept; partition area is equal and the die does not grow.
+  - Order:
+    - (1) DIE-LAYOUT-HBM composes W' as a ladder delta on the current HBM plan, together with d6d (re-based) and q_b001 +90.72 um (fold into d50a as proposed). Then G0, seam_hop/collector_reach, strict bind.
+    - (2) The type-internal forms on the new outlines (VISLAYOUT2-HBM with CPL-HBM-B1 inputs; HBM-CORES-B rx_bm3_rest 197.856x483.84 and opsa_group0 in q_b113) go in the same event. Each type is re-pinned on its long faces (b102/b103 pin crowding).
+    - (3) Build all changed types to FULL sign-off with edge_outline.
+  - Build gate: route_supply p99 is ADVISORY. Build every changed type; the routed result decides (calibration: placement cleared p99 1.0-2.5 on 29 types).
+    - Types still at p99 > 3 after their internal form (b102 16.1, b103 12.0 today) go to an ARCH item in parallel: macro re-floor (stack or rotate the SRAMs), split, or +1 cycle on the worst crossing lanes. Do not squeeze them.
+  - Top-metal ring stays phase 2, after the M8 grant / freeze-first work (LAYER-BUDGET-1).
