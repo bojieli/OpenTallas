@@ -30,7 +30,7 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
 - Wait for AP_RC: `until grep -q AP_RC intel2:.../jobs/<job>/unit.log; do sleep 60; done` for jobs kv3_hgi_fts and kv3_sys_SD_v1_grow.
 - Position proof right after kit gen (already PASS for F1): `python3 -I /srv/opentallas-scratch2/claude/vislayout3-kvhead/tools/ftposcheck.py PLAN TYPE KIT` (epyc8).
 
-## 5 Results not yet posted
+## 5 Results (io_cor_v1 + hd_host_w POSTED 06:52)
 - kv3_io_cor_v1 RF1c (inherited, epyc9 /srv/opentallas-scratch2/claude/vislayout2/kv/iocor_rf1b_build): NOT SIGNED. setup TT -139.85 (51 endpoints), hold FF -32.97 (292), DRV slew TT 4675 / FF 3055. LEC EQUIVALENT. Worse setup than wave a11 (-121.8). Strike on RF1c, so it is evidence only.
 - hd_host_w spread3 (inherited, epyc9 .../vislayout2/head/hd_host_w_spread3): LEC NOT EQUIVALENT, 298 compare points differ. First: bb:u_dut.u_core.u_lane0.u_ln.u.u_ep.g_rb_safe.u_m.g_bank[1].g_depth[0].g_256.u_m. FAIL_PREFLOOR; container stopped 12:35 UTC. This is an RTL/LEC class, so it goes to HEAD-94.
 - F1 proof after kit gen: PASS (6,643/6,643 ft sites, 16/16 cores, flow-20261108-dv-kv, edge_outline, asap7lock-grtoff). Posted 06:24.
@@ -47,7 +47,7 @@ KV is now owned by DIE-KV-99 (vN2 W-face pocket event). Ruling: no full sign-off
    - Before route, run ftposcheck (cores n/a; check flow_tag + mode).
    - If NOT SIGNED with reset recovery still worst: fallback = per-chunk reset copy RTL in ot_async_fifo g_sp (COORD-approved fallback, not built).
    - 2-strike rule applies.
-3. Post section 5 results (io_cor_v1 to DIE-KV-99, hd_host_w LEC to HEAD-94).
+3. (done) section 5 posted.
 4. Refresh this file at every milestone and at least every 60 min.
 
 ## 7 Open READY/ASK
