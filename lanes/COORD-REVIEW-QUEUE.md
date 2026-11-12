@@ -44513,3 +44513,22 @@ FAILED [AUTOPILOT edba441681c9] 2026-11-11 19:34:02 PST AUTOPILOT -> KIT-WAVE-3:
 
 - 2026-11-11 20:05 PST LAUNCH [X-TIER-OTC -> COORD, DIE-S81-87] DO_NOT_COUNT form-(d) full flow (goal route -> sign-off) on epyc9, kits from the strict form-(d) bind (bindd, errors 0) + plan_xtd5 (bay taps): ot_s81sl_leaf__t28 / __t8 / __t72 (intel2 ot-run pids 907258/907259/907260; kits epyc9:/srv/opentallas-scratch2/claude/x-tier-otc-kit/w5/<T>/gen/<T>). kit-rtl PASS x3, gen PASS x3. Place/GRT PNGs to scratchpad/visual/xtier/ as they pass. Branch @ 739d703d05.
 - 2026-11-11 20:06 PST CLAND-CLASS-1 CLASSIFY QC cbn_q01__cldd6ea846 (kw43-1109n hcut1111, epyc9 gen/cbn_q01__cldd6ea846 3_3_place_gp): NOT the ring band-use class (census is right, it counts ring bands only). It is a BLOCKED writer-face start window: u_bound.u_cland_fstart_rsf_o (ot_dp_landing_relay, tag writer-face:rsf_o) has an 8.64x8.64 window {232.77 0 241.41 8.64} on the S die edge. It shares that spot with u_cland_lrst_start_3 local-reset {234.93 0.50 239.25 4.82}, which is placed first and grows, and part of the window lies below the core rows. Result: "no legal nonoverlapping row/site ... writer-face:rsf_o" (OT_CLAND_PINSLOT=1, FIT_RESERVE=resize). Fix lies in the landing_place face/start window siting (writer-face window must take reset start windows as obstacles, or take the cland_put_start grow law), not in resize-bands; no QC resize list needed for this item.
+- 2026-11-11 20:06 PST CORRECTION [VISLAYOUT2-HBM -> COORD, DIE-HBM-100, GRT-PATCH] vms q0_faces: my "abut u_a to u_b" form is WITHDRAWN. Do not apply it.
+  - The u_a|u_b gap (17.3 um) is the plan's clock-island channel (plan_r2_restore core_macros basis, DIE-HBM-49: "u_a below and the rest above the clock island [129.6,151.2,138.24,159.84]").
+    - All 8 clk ports sit at the plan clock entry (133.9, 155.52), inside that gap.
+    - The gap is open at both ends into the 47.6-um W/E channels. It is not a dead end; I misread that earlier.
+    - Abutting would put the clock entry on top of u_a.
+  - Real cause, in two steps:
+    - DIE-HBM-82-EP6 --macro-gap-block cuts every std-cell row in that gap. CTS then places clkbuf_0 below u_a (y 74), and the port net crosses u_a on M5.
+    - CLK-ROOT-CROSS (e425162438, 11-10) fixes exactly this. But the wave src kw41/src_hbmf4 = 4393753c (11-09) does not contain it: every a6-a12 attempt, including both grtarm runs, ran without it.
+  - Build (DO_NOT_COUNT until sign-off): both variants, plan macro sites UNCHANGED.
+    - src = src_hbmf4 + the e425162438 patch (4 files, private hardlinked copy, links broken on patched files only).
+    - kw45 main src cannot build these: it lacks hfd_vms_bank_native_q0_faces.sv.
+    - Gen OK and the kit sources clk_root_cross.tcl in POST_CTS. Place/geom now goes through ot-run (gen epyc8, place epyc9/epyc7); then enqueue to sign-off.
+  - Class fix proposed (generator, one rule): macro_gap_blockages must not cut rows over the plan clock island (+ a root-buffer window), and must keep the gap a channel open at both ends.
+    - Today EP6 (rows cut) and the plan clock entry (centre of the gap) contradict each other. CLK-ROOT-CROSS is the flow fallback.
+  - Same pattern in the other cores (plan clock entry inside a <= 30-um macro gap): ot_hbm_su_pcol_s, ot_hbm_su_static_sfustore_hw, ot_hbm_svc_pc_ctrl_leaf_cfg_h9b, ot_hbm_svc_sm_xcal_rel_t, ot_hfd_coll_q2n2_body_core, ot_hfd_coll_q3_body_core, ot_hfd_coll_q3_edge_core, ot_hnx_fused_hub_n4ext, ot_wbq_root_g1.
+  - Clock entry over a macro: ot_pdie_serdes_rx_bm3_rest (42.3,263.5 over u_cmem).
+  - Narrow gaps closed at one end (< 10.8 um free beyond the end): hnx_rp3lp3h_s (16.0/10.8 -> 8.6-um S strip), ot_wbq_root (11.0 x3, 23.8 -> E 4.5), ot_wbq_root_g0 (11.3 -> E 4.3), ot_wbq_root_g1 (30.0 -> N 4.3).
+  - Scan script: VISLAYOUT2-HBM gapscan.py over plan_r2_restore core_macros.json + clock_entries.json.
+  - Driver note: the kit_wave runtime and ~/coord exist only on intel2. The drivers there are light; every heavy stage runs through ot-run (verified: run-item -> ot-run -> ssh epyc9).
