@@ -152,8 +152,8 @@ async function blobJSON(name){ const u = blobUrl(name); if (!u) throw new Error(
 async function blobBuf(name){ const u = blobUrl(name); if (!u) throw new Error('no ' + name); const r = await fetch(u); if (!r.ok) throw new Error(r.status + ' ' + name); return r.arrayBuffer(); }
 
 function open(o){
-  // o: {root, side, nav (optional: layers + overlay toggles go here, read-outs stay in side), el, d (element JSON), E (elem.js prepped element or null), safe, onFallback}
-  Object.assign(V, {open: true, root: o.root, side: o.side, nav: o.nav || null, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
+  // o: {root, side, nav (optional: layers + overlay toggles go here, read-outs stay in side), el (store key: element or design node id), d (element JSON), E (elem.js prepped element or null), safe, onFallback, onMacro(macro, event) (optional)}
+  Object.assign(V, {open: true, root: o.root, side: o.side, nav: o.nav || null, el: o.el, d: o.d, E: o.E, safe: o.safe, onFallback: o.onFallback, onMacro: o.onMacro || null, base: '/api/layout/' + encodeURIComponent(o.el) + '/'});
   if (V.loadedFor === o.el && deckgl){ V.root.hidden = false; V.side.hidden = false; if (V.nav) V.nav.hidden = false; renderSide(); requestUpdate(); return; }
   close(true);
   V.loadedFor = o.el;
@@ -681,6 +681,7 @@ function onClick(info, ev){
   const id = info.layer && info.layer.id, o = info.object;
   if (o && (id === 'lints' || id === 'lintmk')){ selectFinding(o.f.id, false); return; }
   if (o && id === 'paths'){ V.psel = o.i; renderSide(); requestUpdate(); return; }
+  if (o && id === 'macros' && V.onMacro) V.onMacro(o, ev);   // design explorer: a hard-core macro of a type -> that core's page
   if (V.hover && V.hover.net > 0){ highlight(V.hover.net); return; }
   if (!o) { if (V.hl){ highlight(0); } }
 }

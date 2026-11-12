@@ -86,7 +86,8 @@ export const P = (data) => prepare(data)._prep;
 export function elementsOf(data, n) { return n.elements || (P(data).cls[n.cls] || {}).elements || []; }
 export function instancesOf(data, n) { return n.instances || (P(data).cls[n.cls] || {}).instances || []; }
 
-export function elementHref(name) { return '/explorer#element=' + encodeURIComponent(name); }
+// EXPLORER-2: a step's element -> its type / core node in the design explorer (resolved there; unresolved names say so)
+export function elementHref(name) { return '/explorer/design/#q=' + encodeURIComponent(name); }
 
 export function fmtCyc(c) {
   const a = Math.abs(c);

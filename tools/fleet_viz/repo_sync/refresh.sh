@@ -4,6 +4,7 @@
 #     reset to it (own clone only; never touches /home/ubuntu/OpenTallas), sparse patterns = static list + current plan paths
 #  2. plan_now.py  -> ~/.local/state/fleet-viz/plan_now.json (+ explorer_dies.json plan entries)
 #  3. plan_dataflow.py -> explorer/dataflow/data/plan_<die>.links.json.gz when a plan geometry changed
+#  4. design_index.py -> ~/.local/state/fleet-viz/design_index.json (one die/type/core node index; EXPLORER-2)
 set -u
 R=/srv/opentallas-scratch/claude/fleet-viz-repo
 H=/home/ubuntu/.local/share/fleet-viz
@@ -21,4 +22,5 @@ git reset -q --hard origin/main && git sparse-checkout reapply 2>/dev/null
 echo "trunk $(git log -1 --format='%h %cI' origin/main)"
 FLEET_VIZ_REPO=$R timeout 1500 nice -n 15 python3 "$H/plan_now.py"
 FLEET_VIZ_REPO=$R timeout 1500 nice -n 15 python3 "$H/plan_dataflow.py"
+FLEET_VIZ_REPO=$R timeout 600 nice -n 15 python3 "$H/design_index.py"   # the one node index (die/type/core) every explorer page reads
 tail -n 4000 "$LOG" > "$LOG.tmp" 2>/dev/null && mv "$LOG.tmp" "$LOG"
