@@ -1,0 +1,23 @@
+ot_hbm_sm_pv_merge RDREG (HBM-CORES-B 2026-11-12, DIE-HBM-100 pv_merge event form F2 + macro-output register)
+
+Why: the routed F2 build (pvm_F2s, M7+M7T PDN, GRT0 0 overflow, DRC 0) failed TT setup -56.40 ps / 473 endpoints on
+u_stack rd_out (clk-to-q 310 ps) -> BUFx6f -> 8-level operand mux -> fadd A1 cut (u_ca); 40 TT slew pins in the dense
+band above the macro. RDREG 1 puts one flop on every rd_out bit; the mux + A1 then start from a register.
+Why not a 2-stage reduce split: an extra adder cut makes ALAT 8 and breaks the 8-entry barrel (ALAT+1 = 8 turns); the
+merge would then need a 9-entry barrel or a stall. RDREG keeps the merge cadence untouched.
+
+Contract (EQ_CYCLE_SHIFTED), RDREG 1 vs RDREG 0, same inputs on the same cycles:
+  ev / sum / tag_d -> pv_v / pv_y / pv_tag      +0 edges (read issued two turns ahead, entry bp+2)
+  pub_start -> pub_v / pub_data / pub_word / pub_out_slot / pub_tag   +1 edge (first scalar 3 edges after request,
+                                                 stream seamless; request rules incl. word14 prefetch unchanged)
+  fold_start -> sum written                      F+3+ALAT (was F+2+ALAT); next ev / publication / fold touching the
+                                                 folded entry one edge later (node_pending one edge longer)
+  fault                                          same cycle, except an adder fault raised by a fold add is +1 edge
+RDREG 0 is the main RTL (equivalence below). RDMUT 1/2/3 are negative controls (need RDREG 1).
+
+Results:
+  lockstep_results.txt  tb_hbm_sm_pv_rdreg, 3 seeds x 300k cycles (Verilator 5.050):
+    RDMUT 0 MODE 0: PASS, 0 mismatches (~44.6k ev, ~9.97k merged nodes, ~4.6k publications / ~73.5k words, ~1.66k folds)
+    RDMUT 1 / 2 / 3 MODE 0: FAIL (83k / 69k / 50k mismatches)  <- negative controls detected
+    MODE 1 (full-range finite FP, adders overflow -> fault onset): RDMUT 0 PASS; fault relation holds
+  publication bench tb_hbm_sm_pv_publish: RDREG 0 and 1 PASS (RDREG 1 first scalar 3 edges, no bubbles); MUT 3 fails both.
