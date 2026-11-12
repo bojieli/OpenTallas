@@ -1,0 +1,20 @@
+s27full start Thu Nov 12 09:26:09 UTC 2026
+applied 44 core moves in 11 types
+sle_stm_v1__cl27746664 taps 71->71 renamed 4 max_tap_move 11.068 um
+sle_stm_v1__clbe630b9c taps 74->72 renamed 3 max_tap_move 2.624 um
+sle_stm_v2__cl55be2264 taps 72->73 renamed 3 max_tap_move 10.816 um
+sle_stm_v2__cl7b3062fa taps 126->124 renamed 1 max_tap_move 18.944 um
+sle_stm_v3 taps 89->87 renamed 2 max_tap_move 39.86 um
+slw_stm_v1__cl05fc43f7__cl2086fa2c taps 72->72 renamed 3 max_tap_move 32.448 um
+slw_stm_v1__cl05fc43f7__cl389df4e9 taps 76->74 renamed 4 max_tap_move 71.104 um
+slw_stm_v1__cle34a73c3 taps 72->73 renamed 2 max_tap_move 0.0 um
+slw_stm_v2__cl1ca9c415 taps 71->70 renamed 2 max_tap_move 11.068 um
+slw_stm_v2__cl9beb65e6 taps 74->72 renamed 3 max_tap_move 15.251 um
+slw_stm_v3 taps 76->74 renamed 3 max_tap_move 32.448 um
+COLLECTOR_REATTACH PASS sle_stm_v1__cl27746664:moved0/+0cyc/max360.1um sle_stm_v1__clbe630b9c:moved3/+0cyc/max366.6um sle_stm_v2__cl55be2264:moved3/+0cyc/max347.1um sle_stm_v2__cl7b3062fa:moved10/+0cyc/max314.4um sle_stm_v3:moved7/+0cyc/max218.0um slw_stm_v1__cl05fc43f7__cl2086fa2c:moved0/+0cyc/max333.2um slw_stm_v1__cl05fc43f7__cl389df4e9:moved4/+0cyc/max215.1um slw_stm_v1__cle34a73c3:moved1/+0cyc/max226.4um slw_stm_v2__cl1ca9c415:moved2/+0cyc/max347.1um slw_stm_v2__cl9beb65e6:moved0/+0cyc/max405.0um slw_stm_v3:moved3/+0cyc/max391.5um sha 820f14a689b7
+820f14a689b7ba62a16240a38e9e0bcbbef17bb21493c86f6ed0fd5ebafb2af9  planq27/plan_qc99_s27.json
+27b0eca895ef3221b033ea0c105582e6f3d1a749093e03e591f26e1a572b9af5  sidecar_s27.json
+gates start Thu Nov 12 09:27:37 UTC 2026 check.py=d255186f2d6c route_supply.py=51d6c2430ed5
+plan_qc99_s26 sha 779178a990b5
+plan_qc99_s27 sha 820f14a689b7
+gates end Thu Nov 12 09:33:22 UTC 2026

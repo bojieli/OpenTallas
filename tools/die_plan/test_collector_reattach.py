@@ -154,3 +154,18 @@ if __name__ == "__main__":
             else:
                 f()
             print("PASS", n)
+
+
+def test_rerooted_collector_unchanged_root_reattaches():
+    # QC-VIS-RESITE 11-12 (slw_stm_v1__cle34a73c3): root = local relay rst_n_t0 that keeps its name, site and depth
+    # while another relay moves; the sources still follow their sites and the root stays as it is
+    def rooted(tree):
+        p = _plan(tree, copy.deepcopy(SRC))
+        p["partition_types"]["ctl"]["clock"]["landing_contract"]["collector_root_node"] = "rst_n_t0"
+        return p
+    base, cand = rooted(_tree([450.0, 0.0])), rooted(_tree([0.0, 900.0]))
+    rep = CR.reattach_plan(base, cand)
+    lc = cand["partition_types"]["ctl"]["clock"]["landing_contract"]
+    assert lc["collector_root_node"] == "rst_n_t0" and "rerooted" not in rep["reattached"]["ctl"]
+    assert lc["collector_local_sources"][0]["node"] == "rst_n_t0"
+    assert rep["over"] == {} and rep["reattached"]["ctl"]["added_collector_cycles"] == 0
