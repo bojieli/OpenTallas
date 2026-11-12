@@ -126,3 +126,33 @@ def test_tap_cap_default_is_warn(monkeypatch):
     R, s = _cap_run(monkeypatch, 3001, severity="warn")
     assert s["taps_over"] == 1 and not R.errors()
     assert any(i["level"] == "WARN" and "3001 clock sinks" in i["msg"] for i in R.items)
+
+
+# ---- station_step ----
+def _ss(monkeypatch, sites, outs, ist=None, severity="warn"):
+    slot = {"name": "ft5", "stations": len(sites), "width": 2}
+    t = {"ft_slots": [slot], "outline_um": [2000, 200]}
+    if ist:
+        t["internal_stations"] = ist
+    P = types.SimpleNamespace(types={"T": t}, budgets={})
+    monkeypatch.setattr(ft_xtap, "station_sites", lambda P_, tn, s: (sites, 2))
+    monkeypatch.setattr(gen_phys, "type_pins", lambda P_, tn: [("ft5_o", b, "L", x, y, "E") for b, (x, y) in enumerate(outs)])
+    R = C.Report()
+    return R, C.check_station_step(P, R, severity=severity)
+
+
+def test_station_step_per_bit_gap_listed(monkeypatch):
+    R, s = _ss(monkeypatch, [[(0, 0), (0, 10)], [(300, 0), (840, 10)]], [(400, 0), (900, 10)])
+    assert s["steps"] == 1 and round(s["worst_um"]) == 840 and not R.errors()
+    assert "step 0->1: 840 um" in R.items[0]["msg"]
+
+
+def test_station_step_all_short_none(monkeypatch):
+    R, s = _ss(monkeypatch, [[(0, 0), (0, 10)], [(300, 0), (300, 10)]], [(400, 0), (400, 10)])
+    assert s["steps"] == 0 and R.items == []
+
+
+def test_station_step_landing_and_internal_and_error(monkeypatch):
+    R, s = _ss(monkeypatch, [[(0, 0), (0, 10)], [(300, 0), (300, 10)]], [(800, 0), (800, 10)],
+               ist=[{"conn": "bus:x", "from_um": [0, 0], "regs_um": [[200, 0]], "to_um": [700, 0]}], severity="error")
+    assert s["steps"] == 2 and len(R.errors()) == 3     # 2 steps + count line

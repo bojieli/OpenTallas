@@ -999,6 +999,73 @@ def check_tap_sink_cap(P, R, max_msgs=20, severity="warn"):
                 top_types=sorted(by.items(), key=lambda kv: -kv[1])[:5], **st)
 
 
+def station_step_findings(P, thresh=None):
+    """DIE-LAYOUT-HBM 11-12: [(type, kind, name, step_idx, length_um)] of every consecutive station step longer than
+    `thresh` (default station_max = 405 um).  ft_slots: the per-bit sites of every station (ft_xtap.station_sites: in pin,
+    bit_sites_um / regs_um) and the last station -> the out (landing) pin of the same bit; the MAX over bits of each step.
+    internal_stations: from_um -> regs_um -> to_um.  Manhattan, type frame.  Steps with unknown sites are skipped."""
+    import ft_xtap
+    import gen_rtl
+    lim = station_max(P) if thresh is None else thresh
+    out = []
+    for tn in sorted(P.types):
+        t = P.types[tn]
+        outpins = None
+        for sl in t.get("ft_slots") or []:
+            n = int(sl.get("stations", 1))
+            try:
+                st, _nb = ft_xtap.station_sites(P, tn, sl)
+            except Exception:
+                continue
+            if outpins is None:
+                try:
+                    import gen_phys
+                    outpins = gen_phys.type_pins(P, tn)
+                except Exception:
+                    outpins = []
+            want = gen_rtl.sv_id(sl["name"] + "_o")
+            op = {int(b): (float(x), float(y)) for bn, b, _l, x, y, _f in outpins if gen_rtl.sv_id(bn) == want}
+            chain = list(st)
+            chain.append([op[b] for b in sorted(op)] if op else None)
+            for k in range(len(chain) - 1):
+                a, b = chain[k], chain[k + 1]
+                if not a or not b:
+                    continue
+                m = max(len(a), len(b))
+                d = max(abs(a[min(i, len(a) - 1)][0] - b[min(i, len(b) - 1)][0]) +
+                        abs(a[min(i, len(a) - 1)][1] - b[min(i, len(b) - 1)][1]) for i in range(m))
+                if d > lim + EPS:
+                    out.append((tn, "ft_slot", sl["name"], k, d))
+        for e in t.get("internal_stations") or []:
+            try:
+                pts = [tuple(e["from_um"])] + [tuple(r) for r in e.get("regs_um") or []] + [tuple(e["to_um"])]
+            except (KeyError, TypeError):
+                continue
+            for k in range(len(pts) - 1):
+                d = abs(pts[k][0] - pts[k + 1][0]) + abs(pts[k][1] - pts[k + 1][1])
+                if d > lim + EPS:
+                    out.append((tn, "internal", str(e.get("conn", pts[0])), k, d))
+    return out
+
+
+def check_station_step(P, R, max_msgs=30, severity="warn"):
+    """DIE-LAYOUT-HBM 11-12: station_step (WARN default; severity "error" = ERROR): every consecutive ft / internal
+    station step over the 405-um reach, including per-bit steps and the last station -> landing pin."""
+    f = sorted(station_step_findings(P), key=lambda r: (-r[4], r[0], r[2], r[3]))
+    emit = R.err if severity == "error" else R.warn
+    for tn, kind, name, k, d in f[:max_msgs]:
+        emit("station_step", f"[station_step] type {tn} {kind} {name} step {k}->{k + 1}: {d:.0f} um > "
+             f"{station_max(P):.0f}", type=tn)
+    by = defaultdict(int)
+    for r in f:
+        by[r[0]] += 1
+    if f:
+        emit("station_step", f"[station_step-count] {len(f)} station steps over reach in {len(by)} types (worst "
+             f"{f[0][4]:.0f} um)")
+    return dict(steps=len(f), types=len(by), worst_um=f[0][4] if f else 0.0,
+                top_types=sorted(by.items(), key=lambda kv: -kv[1])[:5])
+
+
 def check_ft_s0_window(P, R, max_msgs=40):
     """ft_s0_window (COORD 11-11 03:0x, explorer hop audit HBM q_b010 L1259x2 2004 um): an ft slot whose plan
     station 0 (regs_um[0]) is more than one reach (ft_station_max_um, <= 405) from its own in window is an ERROR: the
@@ -2605,7 +2672,7 @@ def _plan_geom_default():
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
-        seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn"):
+        seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn", station_step="warn"):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2660,6 +2727,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["ft_s0_window"] = check_ft_s0_window(P, R)
     summ["xtap_latency"] = check_xtap_latency(P, R)
+    if station_step != "off":
+        summ["station_step"] = check_station_step(P, R, severity=station_step)
     if tap_sink_cap != "off":
         summ["tap_sink_cap"] = check_tap_sink_cap(P, R, severity=tap_sink_cap)
     summ["cuts"] = check_cuts(P, R, geo, full_cut)
@@ -2757,6 +2826,9 @@ def main(argv=None):
     ap.add_argument("--seam-hop", choices=("warn", "off"), default="warn",
                     help="SEAM-HOP-1 advisory (seam_hop.py): WARN per seam hop (last station -> first station of the next "
                          "partition) over the 405-um signal reach; never an ERROR, ignored by --strict")
+    ap.add_argument("--station-step", choices=("warn", "error", "off"), default="warn",
+                    help="DIE-LAYOUT-HBM: consecutive ft/internal station step (incl. per-bit, last station -> landing pin) "
+                         "over 405 um: WARN (default), ERROR, off")
     ap.add_argument("--tap-sink-cap", choices=("warn", "error", "off"), default="warn",
                     help="XTAP-SWEEP-1: a tap whose PLAN sink count exceeds gen_phys._tap_cap: WARN (default until validated "
                          "against built tap loads), ERROR (COORD ruling), off")
@@ -2777,7 +2849,7 @@ def main(argv=None):
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, core_shape_index=a.core_shape_index,
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, station_step=a.station_step, core_shape_index=a.core_shape_index,
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
                   full_cut=a.full_cut,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
