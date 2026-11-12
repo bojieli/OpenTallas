@@ -92,6 +92,7 @@ def materialize(binder, tn, frame):
         if out.exists() and _code(out.read_text())!=_code(rtl):
             raise BoundGroupError('group module has inconsistent source across types '+hc['module'])
         out.write_text(rtl);products.append(out);text=new
+        binder.__dict__.setdefault('bound_group_products',[]).append(str(out))
         depths={r['q']:r['depth'] for r in tree['relays']}
         original=f'rst_n_t{RT.leaf_tap(P,t.get("split_of",tn))}'
         records.append(dict(inst=hc['inst'],module=hc['module'],reset_net=net,member_count=5,added_cycles=0,
