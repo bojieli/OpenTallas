@@ -43407,7 +43407,7 @@
  "note_kw24_stale": "KW-FIX-24 11-06 20:06 COORD 20:0x (3): S81 station rows stale on TAPWIN-PORT (I176 11-05 18:23) rebuilt on src_7281a (per-port SDC; ft_hop_lockup is not on main = OFF): 13 stations + t25 (bind) + leaf t22/t28; t14/t38 wait for ftcorr batch 1. Class sweep: type-kit timing FAIL rows started before I176 on HEAD (7) + KV (1); QC types ride the qcbatch re-bind (20:0x (2)). Hosts epyc5, intel2, epyc6 first (20:0x)",
  "note_kw24_genfix": "KW-FIX-24 20:2x: gen_hosts from a measured input check (plan, src bind.py, kit_rtl asbuilt/script, every bind.f source): KV whole only on epyc5/epyc6 (epyc4 lacks 60, intel2 60, intel1 53); S81 whole only on epyc5/epyc2 (kit_rtl script + codex-wave-bind asbuilt + wave_cg_frz plan); HEAD/QC/HBM whole on all 6",
  "restage_max_per_tick_prev_kw24": 60,
- "restage_max_per_tick": 8,
+ "restage_max_per_tick": 120,
  "note_kw24_norestage": "KW-FIX-24 20:4x RESTAGE ping-pong (49 moves 19-20 h, waiters moved every tick, never admitted): restage off (restage_max_per_tick 0) until claude/kw-fix-24-restagehyst-1106 (30-min min wait) merges; then restore restage_max_per_tick_prev_kw24",
  "note_kw24_fill56": "KW-FIX-24 21:2x COORD 21:1x/21:2x (epyc5/epyc6 ~31% load, 0 waiters): HEAD/HBM/QC new attempts gen + place on epyc5/epyc6 (inputs whole there, measured 20:1x); prev in gen_hosts_prev_kw24f",
  "note_rebal1": "REBAL-1 23:2x COORD 23:1x + OWNER 22:5x: S81+QC new attempts under kw26-wave-1106 (epyc5: symlink scratch3->scratch2, so its small root is spared; epyc2/epyc6 real scratch3); restage on at 12 per tick (30-min hysteresis on main); gen_disk_min_gb 100 = kw23 wrapper floor for scratch2 work roots, so a host the wrapper would park is not preferred. max_launch_per_tick left at 60 (epyc5 margin >100). Revert: work_root kw24-wave-1106, restage 0, gen_disk 80.",
@@ -43705,7 +43705,7 @@
  "gen_disk_min_gb_prev_kw40": 100,
  "restage_max_per_tick_prev_kw40": 12,
  "restage_min_wait_s_prev_kw40": 1800,
- "restage_min_wait_s": 300,
+ "restage_min_wait_s": 600,
  "note_kw40e6": "KW-FIX-40 2026-11-08 23:08 PST: COORD 23:06: waiters pinned to epyc4 are the launch limit; epyc5/epyc6 OK for new work (drain >=24 h away, +8 h): epyc5+epyc6 back in hosts/place_prefer/gen_hosts (s81 gen_hosts without epyc6: src_c303p_lgm not there), gen_disk_min_gb 100->65 (ot-run scratch floor 60), restage_max_per_tick 12->60, restage_min_wait_s 1800->300 to move unstarted waiters now. Revert keys *_prev_kw40 after the waiters drain.",
  "note_kw40rs": "KW-FIX-40 23:4x COORD 23:06/23:30: place waiters on full epyc4 on scratch3 paths cannot spill (target scratch3 = root disk, root floors); overlay 0fa4f36ff45 lets restage_waiters move them from mkdir to scratch2 elsewhere. Remove when the epyc4 queue is gone.",
  "hosts_prev_kw41e5": [
