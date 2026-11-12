@@ -1,0 +1,44 @@
+{
+ "method": "flat type-top synth (hard cores black boxes; 1_synth_odb.v epyc4 /srv/opentallas-scratch3/claude/cpl-hbm-b1/k001,k_q_b010,k_q_b011, synthesized 11-11 09:3x from sc_base plan, whose ft bits match the netlist ft DFFs to 0.2-0.5%) categorised by tools/ncat.awk; every station/ft bit is DFFHQNx1 + INVx1 (2 cells); post-ladder = netlist - 2 x (sc_base - t19) ft and internal-station bits. d6c changes positions only, so post-d6c = post-ladder. plan type.cells (~840k) is the FLAT estimate incl. the 8 bank-pair + idx hard cores, which are their own kits.",
+ "types": {
+  "q_b001": {
+   "netlist_total": 400712,
+   "sc_base_ft_st_bits": [
+    73345,
+    66952
+   ],
+   "t19_ft_st_bits": [
+    63008,
+    60847
+   ],
+   "post_ladder_cells": 367828,
+   "cap": 400000
+  },
+  "q_b010": {
+   "netlist_total": 535798,
+   "sc_base_ft_st_bits": [
+    139782,
+    63662
+   ],
+   "t19_ft_st_bits": [
+    56583,
+    65140
+   ],
+   "post_ladder_cells": 372356,
+   "cap": 400000
+  },
+  "q_b011": {
+   "netlist_total": 240149,
+   "sc_base_ft_st_bits": [
+    28675,
+    40783
+   ],
+   "t19_ft_st_bits": [
+    23049,
+    38474
+   ],
+   "post_ladder_cells": 224279,
+   "cap": 400000
+  }
+ }
+}

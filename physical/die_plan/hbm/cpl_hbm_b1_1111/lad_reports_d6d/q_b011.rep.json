@@ -1,0 +1,190 @@
+{
+ "type": "q_b011",
+ "illegal": [],
+ "unplaced": [],
+ "h0h1_max": 299.4,
+ "h0h1_over405": [],
+ "reach_viol": [],
+ "ft_changes": [
+  {
+   "slot": "L5060y1",
+   "moved": 1,
+   "max_hop": 401.8,
+   "first": 402.5,
+   "last": 74.2
+  },
+  {
+   "slot": "L52y2",
+   "moved": 2,
+   "max_hop": 401.8,
+   "first": 401.5,
+   "last": 272.1
+  },
+  {
+   "slot": "L183my1",
+   "moved": 1,
+   "max_hop": 401.8,
+   "first": 398.2,
+   "last": 163.2
+  },
+  {
+   "slot": "L5056y1",
+   "moved": 3,
+   "max_hop": 401.8,
+   "first": 400.7,
+   "last": 251.3
+  },
+  {
+   "slot": "L5078y2",
+   "moved": 4,
+   "max_hop": 401.8,
+   "first": 402.0,
+   "last": 131.9
+  },
+  {
+   "slot": "L8006y2",
+   "moved": 5,
+   "max_hop": 401.8,
+   "first": 399.7,
+   "last": 335.9
+  }
+ ],
+ "st_changes": [
+  {
+   "conn": "bus:L11_o",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.fault",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L11_o",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.sum_out",
+   "moved": 2
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair0.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L11_o",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.sum_out",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair1.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L11_o",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.fault",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair2.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.go",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.lane_valid",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.square",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.weight_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.weight_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.write_data",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.x_addr",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L17_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair3.x_read",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L11_o",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair4.fault",
+   "moved": 1
+  },
+  {
+   "conn": "bus:L43_i",
+   "cap": "u_hcb_Q6.ot_hbm_hc_bank128_pair7.write_data",
+   "moved": 1
+  }
+ ],
+ "moved": 14
+}

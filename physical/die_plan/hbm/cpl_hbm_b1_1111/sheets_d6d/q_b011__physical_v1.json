@@ -1,0 +1,218 @@
+{
+ "type": "q_b011__physical_v1",
+ "base_plan": "t19 6391dea6a0b38710e0da6365e279d9bd3e89ab50f3777cc94c8765546ee06b71",
+ "outline_um": [
+  976.32,
+  2531.52
+ ],
+ "layout": {
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair0": [
+   211.68,
+   699.84,
+   "R0"
+  ],
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair1": [
+   514.08,
+   699.84,
+   "R0"
+  ],
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair2": [
+   56.16,
+   1196.64,
+   "R0"
+  ],
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair3": [
+   362.88,
+   1196.64,
+   "R0"
+  ],
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair4": [
+   669.6,
+   1196.64,
+   "R0"
+  ],
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair5": [
+   56.16,
+   1624.32,
+   "R0"
+  ],
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair6": [
+   362.88,
+   1624.32,
+   "R0"
+  ],
+  "u_hcb_Q6.ot_hbm_hc_bank128_pair7": [
+   642.816,
+   1689.12,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k0h0__ra": [
+   259.2,
+   1991.52,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k0h0__rb": [
+   371.52,
+   1991.52,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k0h1": [
+   259.2,
+   2286.144,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k1h0__ra": [
+   502.848,
+   1991.52,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k1h0__rb": [
+   615.168,
+   1991.52,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k1h1": [
+   502.848,
+   2286.144,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k2h0__ra": [
+   746.496,
+   1991.52,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k2h0__rb": [
+   858.816,
+   1991.52,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k2h1": [
+   746.496,
+   2286.144,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k3h0__ra": [
+   15.552,
+   1991.52,
+   "R0"
+  ],
+  "u_hb_idx__s_Q2_r1c3_k3h0__rb": [
+   127.872,
+   1991.52,
+   "R0"
+  ]
+ },
+ "chain_roles": {
+  "c3": [
+   "r1c3_k0",
+   "r1c3_k1",
+   "r1c3_k2",
+   "r1c3_k3"
+  ]
+ },
+ "window_links": [
+  {
+   "chain": "c3",
+   "half": "h0",
+   "bus": "L166m_i",
+   "dir": "in",
+   "regs": 3,
+   "n": 8
+  },
+  {
+   "chain": "c3",
+   "half": "h0",
+   "bus": "L176m_o",
+   "dir": "out",
+   "regs": 1,
+   "n": 1
+  },
+  {
+   "chain": "c3",
+   "half": "h0",
+   "bus": "L205m_i",
+   "dir": "in",
+   "regs": 4,
+   "n": 8
+  },
+  {
+   "chain": "c3",
+   "half": "h1",
+   "bus": "L166m_i",
+   "dir": "in",
+   "regs": 3,
+   "n": 3
+  },
+  {
+   "chain": "c3",
+   "half": "h1",
+   "bus": "L176m_o",
+   "dir": "out",
+   "regs": 3,
+   "n": 3
+  },
+  {
+   "chain": "c3",
+   "half": "h1",
+   "bus": "L205m_i",
+   "dir": "in",
+   "regs": 4,
+   "n": 3
+  }
+ ],
+ "critical_pairs": {
+  "h0_h1": "bound 33-bit direct (0 regs) h0 ra->rb->h1 per stack: centre <= 405 um (stscan missing>405 gate)",
+  "one_reg_face_links": "window <-> core with 1 relay register: L1 <= 810 um",
+  "h0h1_max_um": 299.4,
+  "reach_violations_after": []
+ },
+ "re_sited": {
+  "ft_slots": [
+   {
+    "slot": "L1254y0",
+    "moved": 2,
+    "max_hop": 401.8,
+    "first": 352.0,
+    "last": 54.8
+   },
+   {
+    "slot": "L1252y1",
+    "moved": 6,
+    "max_hop": 401.8,
+    "first": 399.6,
+    "last": 34.9
+   },
+   {
+    "slot": "L73y2",
+    "moved": 1,
+    "max_hop": 311.0,
+    "first": 374.1,
+    "last": 343.8
+   },
+   {
+    "slot": "L1268y2",
+    "moved": 1,
+    "max_hop": 397.4,
+    "first": 331.3,
+    "last": 28.0
+   },
+   {
+    "slot": "L3006y1",
+    "moved": 1,
+    "max_hop": 302.4,
+    "first": 335.6,
+    "last": 357.2
+   },
+   {
+    "slot": "L1275y1",
+    "moved": 4,
+    "max_hop": 401.8,
+    "first": 50.8,
+    "last": 10.7
+   }
+  ],
+  "plan_stations": 25,
+  "plan_station_regs": 51
+ },
+ "rationale": "Ladder c18 shelf-packed each idx stack's h0 halves and h1 on different shelves (h0->h1 centre up to 2.4 mm, stscan missing>405). Here each stack is one frame (h1 + ra + rb, 4.32/6.05 um apart, h0->h1 centre <= 331 um). Banks keep their ladder sites (q_b011 pair7 and the q_b010__physical_v1 bank rows 1 and 3 move to open frame slots), so plan-station counts stay as bound; frames are placed where their soft relay counts reach their windows (1-reg links <= 810 um, 3-reg <= 1620 um), frame rows sit between the 250-um die cut lines (or put a line through the 4.32-um h1/h0 gap) so no partition cut-segment ratio rises above max(0.6, t19), the clock tap stays in a street, and ft-slot / plan-station register sites covered by a frame are re-sited on free sites with the same count (hops <= 405 um, first/last hop measured to the far end of the window)."
+}
