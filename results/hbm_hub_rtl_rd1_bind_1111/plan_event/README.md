@@ -36,3 +36,8 @@ B. FUSED lanes (q_hub_ne/nw, bound top): the cached top wires the lower FUSED la
    cached, 491 ports).
 Later ASK to COORD: should the manifest versions win (chunk_rt line drift, FUSED splice with the closing
 step moved into the repo)? That would re-sign unrelated cores, so it is outside the rd1 event.
+
+## Re-kit list addition (DIE-HBM-100, 11-12)
+The 8 SU types q_su00/q_su10/q_su20/q_su30 (+ __physical_v1) differ from bind_t19 in the SU slot form (registers + mux,
+EQ proven) and join the rd1 re-kit list, together with the rd1-value types (hb_coll cut cores, FUSED lane cores at RR 11,
+QUANT ctl_r5 + hb_quant_NW parent).
