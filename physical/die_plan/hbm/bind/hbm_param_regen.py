@@ -61,7 +61,10 @@ PIN_READERS = [(r"ot_hgi_dma_back_static_vp4_banks\w*", r"rr", "RR_RT"),
                (r"ot_hbm_idx_vm_share2_static\w*", r"vm_rr", "BANK_RT"),
                (r"ot_hgi_sm_xload\w*ctl\w*", r"rr", "RD_LAT"),
                (r"ot_hbm_idx_vm_query_static_n12", r"vm_rr", "VM_RT_EXTRA"),
-               (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT")]     # hcollgi_q behind hcollrs_q.b_rr
+               (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT"),    # hcollgi_q behind hcollrs_q.b_rr
+               # hb_fvp_*: the FUSED pair's steer tag is BANK_RR + 2 edges from its mux; its a_rr/b_rr leave the die top
+               # (FUSED lanes, lane contract RR = BANK_RR + 4): the lane RR moves with it in the FUSED cores (re-kit).
+               (r"ot_hnx_fused_vm_pair\w*", r"rr0", "BANK_RR")]
 SHARE = (r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr")  # a share's answer ports: their clients see the share's + X
 # Readers inside a netlist cut whose fixed latency is a parameter of the as-built TOP instance above the cut: the bind
 # cannot regenerate it, so an rd1 bind passes only when the elaborated as-built already carries base + X (the plan event
@@ -265,9 +268,12 @@ def pin_plan(ctx, px, clients, params):
                 if s in params and par in params[s]:
                     break                          # an absolute law already carries it (VM_RT behind hb_idx__ctl)
                 try:
-                    asb = int(str(c.params.get(par)).strip('"').replace("64'd", "").replace("'d", ""))
+                    pv = c.params.get(par)
+                    if pv is None:                 # not overridden at the instance: the elaborated master default
+                        pv = (getattr(ctx, "param_defaults", None) or {}).get((getattr(c, "ytype", None), c.module), {}).get(par)
+                    asb = int(str(pv).strip('"').replace("64'd", "").replace("'d", ""))
                 except ValueError:
-                    err.append(f"core pin cycles {s}.{par}: as-built value {c.params.get(par)!r} not an integer")
+                    err.append(f"core pin cycles {s}.{par}: as-built value {pv!r} not an integer")
                     break
                 v = CPC.plus(asb, x, par)
                 params[s][par] = v
