@@ -36,6 +36,7 @@ cut = sys.argv[2] == "cut"
 if cut:
     cr = cell("hcollrs_NE", "ot_hbm_idx_vm_share2_static_r", BANK_RT=7); wire(banks["NE", 4], "rr3", cr, "vm_rr")
     cc = cell("hb_coll_NE.__cut_vm", "hb_coll_NE__cut_vm"); wire(cr, "a_rr", cc, "vmasm_rd_il")
+    gi = cell("hcollgi_NE", "ot_hgi_coll_gq_issue", VM_RT=3); wire(cr, "b_rr", gi, "vm_rr_lo"); wire(cr, "b_rr", gi, "vm_rr_hi")
 ab = {"core_pin_cycles": [dict(tsv=TSV, core="hnx_vms_bank_q0_faces__vecd4ae", module=BANK)]} if sys.argv[2] != "off" else {}
 ctx = NS(F=NS(cells=cells), sinks=sinks, ab=ab, base=W)
 rules = CPC.load(ab, W)
@@ -49,7 +50,7 @@ if px:
     _, rows, prec, perr = H.pin_plan(ctx, px, clients, params); err += perr
     rec["core_pin_regen"] = rows
 pick = ["su_NE0.g_tap_r8b.u_tap", "sfu_NE0", "hc_NE0", "hc_NE.u_q", "hb_idx__ctl", "hb_idx__op_SW", "hb_dbk_NE", "xl_NE_ctl",
-        "hb_idx__op_NE", "hb_idx__nwsh", "hb_idx__op_NW"]
+        "hb_idx__op_NE", "hb_idx__nwsh", "hb_idx__op_NW", "hcollrs_NE", "hcollgi_NE"]
 print("MODE", sys.argv[2], "xr", xr)
 for p in pick:
     print(" ", p, dict(params.get(p, {})))

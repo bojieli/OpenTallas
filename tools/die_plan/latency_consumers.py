@@ -54,6 +54,7 @@ CONTRACTS = {
     "ot_hgi_dma_back_static_vp4_banks_cp": [dict(param="RR_RT", req=["rq"], resp=["rr"])],
     "ot_hbm_idx_vm_share2_static_r": [dict(param="BANK_RT", req=["vm_rq"], resp=["vm_rr"])],
     "ot_hgi_sm_xload_cl2_ctlx": [dict(param="RD_LAT", req=["rq"], resp=["rr"])],
+    "ot_hgi_coll_gq_issue": [dict(param="VM_RT", req=["vm_rq_(lo|hi)"], resp=["vm_rr_(lo|hi)"])],
     "ot_hbm_idx_vm_query_static_n12": [dict(param="VM_RT_EXTRA", req=["vm_rq"], resp=["vm_rr"])],
     "ot_hbm_hc_root_static_s": [dict(param="XRD", req=["q[di]_.*"], resp=[]), dict(param="XRU", req=[], resp=["qps.*"])],
     "ot_hgi_sfu_lg_pair_tap_leaf": [dict(align=["c_rq", "local_read"]), dict(align=["c_wq", "local_write"])],

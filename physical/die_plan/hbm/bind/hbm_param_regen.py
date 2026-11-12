@@ -31,7 +31,8 @@ read from the bound sources of each consumer pin (default: no declaration -> X =
   the hc tap READ_RETURN), the SFU bridge READ_RETURN (through the sfu tap), VM_RT + X(IDX_rr4) (so n12 VM_RT_EXTRA and
   argmax VMX follow), CR_RT + X(the hub's bank pr); WRITE_RETURN / DONE_LAT stay (write done pins are not moved).
   Readers with no absolute law here take as-built + X (record.core_pin_regen; latency_consumers.py checks the loop):
-  dma_back RR_RT (rr), VM share BANK_RT (vm_rr) and the share's clients (n12 VM_RT_EXTRA behind hb_idx__nwsh),
+  dma_back RR_RT (rr), VM share BANK_RT (vm_rr) and the share's clients on a_rr / b_rr (n12 VM_RT_EXTRA behind
+  hb_idx__nwsh, COLL gq issue hcollgi_q VM_RT behind hcollrs_q.b_rr),
   xload RD_LAT (rr; per-bank vector: every element), n12 VM_RT_EXTRA reading banks directly.
   Any other consumer of a moved pin (a cut without parameters, e.g. hb_coll_q.__cut_vm behind a share) is a hook error:
   the bind fails rather than bind a torn read.  Diagnostic status pins (bank_status) are recorded only.
@@ -59,8 +60,9 @@ sys.path.insert(0, str(HERE.parents[3] / "tools" / "die_plan"))
 PIN_READERS = [(r"ot_hgi_dma_back_static_vp4_banks\w*", r"rr", "RR_RT"),
                (r"ot_hbm_idx_vm_share2_static\w*", r"vm_rr", "BANK_RT"),
                (r"ot_hgi_sm_xload\w*ctl\w*", r"rr", "RD_LAT"),
-               (r"ot_hbm_idx_vm_query_static_n12", r"vm_rr", "VM_RT_EXTRA")]
-SHARE = (r"ot_hbm_idx_vm_share2_static\w*", "a_rr")        # a share's answer port: its clients see the share's + X
+               (r"ot_hbm_idx_vm_query_static_n12", r"vm_rr", "VM_RT_EXTRA"),
+               (r"ot_hgi_coll_gq\w*", r"vm_rr_(hi|lo)", "VM_RT")]     # hcollgi_q behind hcollrs_q.b_rr
+SHARE = (r"ot_hbm_idx_vm_share2_static\w*", r"(a|b)_rr")  # a share's answer ports: their clients see the share's + X
 DIAG_PORT = r"(bank_status|b\d_status|status)"            # diagnostic: recorded, never priced
 LAW_PINS = [(r"su_N[EW]\d\.g_tap_r8b\.u_tap", r"near_rr"), (r"hb_idx__ctl", r"vm_rr"),
             (r"hb_vms_\w+", r"(bk|b\d)_pr")]
@@ -189,7 +191,7 @@ def pin_cycles(ctx, rules):
         x = CPC.added(rules, sc.path, sc.module, s[1], s[2])
         if x:
             out[(F.cells[ci].path, pn)].add(x)
-        elif s[1] == SHARE[1] and share_rx.fullmatch(sc.module or ""):
+        elif re.fullmatch(SHARE[1], s[1]) and share_rx.fullmatch(sc.module or ""):
             clients[(F.cells[ci].path, pn)].add(sc.path)
     return out, clients
 

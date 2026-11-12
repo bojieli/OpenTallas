@@ -10,6 +10,8 @@ MODE off xr {}
   hb_idx__op_NE {}
   hb_idx__nwsh {}
   hb_idx__op_NW {}
+  hcollrs_NE {}
+  hcollgi_NE {}
   check 10 18 bridge {'READ_RETURN': 26, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
 MODE on xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
   su_NE0.g_tap_r8b.u_tap {'READ_RETURN': 16, 'WRITE_RETURN': 12}
@@ -23,6 +25,8 @@ MODE on xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1':
   hb_idx__op_NE {'VM_RT_EXTRA': 172}
   hb_idx__nwsh {'BANK_RT': 55}
   hb_idx__op_NW {'VM_RT_EXTRA': 174}
+  hcollrs_NE {}
+  hcollgi_NE {}
   check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
 MODE cut xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1': 1, 'N_NE2': 1, 'N_NE3': 1, 'IDX': 1, 'CR': 1}
   su_NE0.g_tap_r8b.u_tap {'READ_RETURN': 16, 'WRITE_RETURN': 12}
@@ -36,5 +40,7 @@ MODE cut xr {'N_NW0': 1, 'N_NW1': 1, 'N_NW2': 1, 'N_NW3': 1, 'N_NE0': 1, 'N_NE1'
   hb_idx__op_NE {'VM_RT_EXTRA': 172}
   hb_idx__nwsh {'BANK_RT': 55}
   hb_idx__op_NW {'VM_RT_EXTRA': 174}
+  hcollrs_NE {'BANK_RT': 8}
+  hcollgi_NE {'VM_RT': 4}
   check 11 19 bridge {'READ_RETURN': 27, 'WRITE_RETURN': 23, 'law': '3/3 + sfu tap + ctl legs'}
   ERROR core pin cycles: hb_coll_NE.__cut_vm.vmasm_rd_il (hb_coll_NE__cut_vm) reads a moved bank pin (+[1]) and has no regenerable parameter (cut / unlisted reader)
