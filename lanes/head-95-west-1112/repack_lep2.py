@@ -28,7 +28,7 @@ for row, (Y, w, e) in {"N": (YN, 1, 0), "S": (YS, 2, 3)}.items():
 P_RX = 21.6
 for k, h in enumerate(rx[0] + rx[1]): put(h, 846.72, 665.28 + k * P_RX)
 for k, h in enumerate(rx[2] + rx[3]): put(h, 846.72, 77.76 + k * P_RX)
-for i in range(2): put(sr[i], 1745.28, 0.0 + i * 43.2)
+for i in range(2): put(sr[i], 1745.28, 4.32 + i * 43.2)   # kit core area is the outline inset by 4.32 (MPL-0034)
 for i in range(3): put(sr[2 + i], 1745.28, 950.4 + i * 43.2)
 def rect(h):
     x, y = h["origin_um"]; dx, dy = h.get("track_offset_um", [0, 0]); w, hh = h["outline_um"]
@@ -36,6 +36,10 @@ def rect(h):
 R = [rect(h) for h in hc]; RM = [rect(h) for h in hc if "g_pp" not in h["inst"]]
 def blocked(x, y, halo=8.65, rs=None):
     return [r for r in (RM if rs is None else rs) if r[0] - halo < x < r[2] + halo and r[1] - halo < y < r[3] + halo]
+CORE = (4.32, 4.32, t["outline_um"][0] - 4.32, t["outline_um"][1] - 4.32)
+for r in R:
+    if r[0] < CORE[0] - 1e-6 or r[1] < CORE[1] - 1e-6 or r[2] > CORE[2] + 1e-6 or r[3] > CORE[3] + 1e-6:
+        log.append(f"OUTSIDE-CORE {r}")
 for a, b in [(a, b) for i, a in enumerate(R) for b in R[i + 1:]]:
     if a[0] < b[2] - 1e-6 and b[0] < a[2] - 1e-6 and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6:
         log.append(f"OVERLAP {a} {b}")
@@ -62,6 +66,21 @@ for tp in ([] if os.environ.get("NO_C3") else t["clock"].get("taps", [])):
     if blocked(x, ny, 8.64): log.append(f"UNRESOLVED clock core tap {tp['name']} {tp['xy']}"); continue
     tp["xy"] = [x, ny]
     log.append(f"clock core tap {tp['name']} {[x, y]} -> {tp['xy']}")
+# GEOM-VIS-6 07:44: landing bands (cland flop regions) must be macro-free.  A band that a moved tx row overlaps is
+# trimmed on the row side (y edge) to 8.64 um clear of the row; the band keeps its bus-window side and must keep
+# area >= its area_reserve_um2, else it is reported (no silent loss)
+for k, b in t["clock"]["landing_contract"]["bands"].items():
+    x0, y0, x1, y1 = b["rect_um"]
+    for r in RM:
+        if r[0] - 8.64 < x1 and x0 < r[2] + 8.64 and r[1] - 8.64 < y1 and y0 < r[3] + 8.64:
+            up, dn = (r[3] + 8.64) - y0, y1 - (r[1] - 8.64)     # trim from below / from above
+            if up <= dn: y0 = round(r[3] + 8.64, 4)
+            else: y1 = round(r[1] - 8.64, 4)
+    if [x0, y0, x1, y1] != b["rect_um"]:
+        a = (x1 - x0) * (y1 - y0)
+        ok = y1 > y0 and a >= b.get("area_reserve_um2", 0)
+        log.append(f"{'' if ok else 'UNRESOLVED '}landing band {k} {b['rect_um']} -> {[x0, y0, x1, y1]} area {a:.0f} >= reserve {b.get('area_reserve_um2')}")
+        if ok: b["rect_um"] = [x0, y0, x1, y1]
 import os
 if os.environ.get("RESET_CANON"):
     # the type is re-placed, so the frozen-plan 'lef_origin' reset obstacle model (origin only, no track offset) no

@@ -1,4 +1,4 @@
-# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 08:39 PST
+# HEAD-95 lane handoff (HEAD s81_head die owner), refreshed 2026-11-12 08:49 PST
 
 ## 1 Scope
 HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (CLOSED 08:33, fallback taken), HB4 seam shims, wshim_rx DRV ECO, visual gate via GEOM-VIS-5, route on epyc8/9 (not epyc2), hourly STATE.
@@ -18,6 +18,9 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - hd_ctl_n W10 RE-SIGN DONE + RECORDED 08:39 (ctln_w10/resign/PROVENANCE.json, LOCAL_PASS_NEEDS_PARENT, LEC EQ). Was: ot-run epyc4, dir /srv/opentallas-scratch2/claude/head-95/ctln_w10 (kit copy, SDC -early clk_t6/t7/t9 -> -10, run -> signed dh86/ctln_eco1/i1/run), resign.py tag flow-20261112-lz-head, out ctln_w10/resign, log intel2 ~/head95log/ctln_w10_resign.log.
 - hd_spn_eshim_rx W10 BUILD routed, NOT SIGNED (TT -10.59, slew 194/190; same as pre-W10: RE-FORM item, CLAND-SLEW-1 likely for drv). Was: epyc9 /srv/opentallas-scratch2/claude/head-95/eshim_rx_w10 GOAL route, log intel2 ~/head95log/eshim_rx_w10_route.log; then sign-off.
 - Tool branch READY: claude/head-95-twf-1112@0e5ce1603c (worktree epyc4 wt/head-95-twf).
+
+- PLAN OF RECORD now rp15 epyc4 head-95/pd/rp15.json sha 7931b5662082 (= rp14 + lep0N land SRAM g_t[0]/[1] y 4.32/47.52 core-inset fix (MPL-0034) + window floor). lep0N v3 kit epyc4 head-95/kit_lep0N_v3 -> epyc8 head-95/lep0N_v3 place, log ~/head95log/lep0N_v3_place.log; then render -> GEOM-VIS-6 -> route epyc8/9.
+- Kit-gen recipe sent to VISLAYOUT3-KVHEAD (a8e402dfc900a5ca8): gen.py phys + raw_patch.py (needed for port_bind), run_kit.sh place/route.
 
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
