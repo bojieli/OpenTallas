@@ -59,3 +59,20 @@ def test_pinhash_follows_xy():
     a = [dict(name="clk", layer="M7", x=85.664, y=604.768)]
     b = [dict(name="clk", layer="M7", x=85.684, y=604.768)]
     assert st.pinhash(a) != st.pinhash(b) and len(st.pinhash(a)) == 12
+
+
+def _type(taps, fwd):
+    return {"clock": {"taps": taps, "child_root_taps": {"forwarded_roots": fwd}}}
+
+
+def test_forwarded_root_may_lack_a_tap():
+    moved = {"m.clk_t1": 0.02, "m.fclk_in_ft2_i": 0.02}
+    t = _type([{"name": "a", "xy": [1, 2], "lands_on": [{"pin": "m.clk_t1", "xy": [1, 2]}]}], ["fclk_in_ft2_i"])
+    assert st.check_landings(t, moved, 1) == ["m.fclk_in_ft2_i"]
+
+
+def test_unlanded_root_not_forwarded_refuses():
+    moved = {"m.clk_t1": 0.02, "m.clk_t2": 0.02}
+    t = _type([{"name": "a", "xy": [1, 2], "lands_on": [{"pin": "m.clk_t1", "xy": [1, 2]}]}], ["fclk_in_ft2_i"])
+    with pytest.raises(SystemExit, match="neither a tap nor a forwarded entry.*clk_t2"):
+        st.check_landings(t, moved, 1)

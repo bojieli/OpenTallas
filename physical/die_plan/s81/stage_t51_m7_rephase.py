@@ -40,6 +40,7 @@ CHILD = {"e": "s81p_slice_station__t51_ot_s81_station_t51_native_e",
 ROOTKEY = {"e": "ot_s81_station_t51_native_e", "w": "ot_s81_station_t51_native_w"}
 S81 = Path("physical/die_plan/s81")
 SPLIT = S81 / "station_split_1106/native_root_pins.json"
+PROFILE = S81 / "station_split_1106/root_profile.json"   # per-root tap_window_port_ps (not moved by this stage)
 
 
 def gen(repo):
@@ -87,6 +88,19 @@ def derive_shift(G, hc, plan, rects):
     if len(s) != 1:
         raise SystemExit(f"{hc['module']}: roots need different shifts {sorted(s)} nm; refusing")
     return s.pop() / 1000.0, ph / 1000.0
+
+
+def check_landings(t, moved_landings, nl):
+    """forwarded roots (clock.child_root_taps.forwarded_roots: source-forwarded fclk_in_* ring write clocks) and
+    landed roots may lack a tap; any other moved root without a landing refuses.  -> the forwarded roots without a tap"""
+    fwd = set(t["clock"].get("child_root_taps", {}).get("forwarded_roots", []))
+    landed = {lo["pin"] for tp in t["clock"]["taps"] for lo in tp.get("lands_on", []) if lo.get("pin") in moved_landings}
+    unlanded = sorted(p for p in moved_landings if p not in landed)
+    bad = [p for p in unlanded if p.split(".", 1)[1] not in fwd]
+    if bad or nl != len(landed):
+        raise SystemExit(f"{TYPE}: {nl} landings for {len(landed)} landed roots; roots with neither a tap nor a "
+                         f"forwarded entry: {bad[:6]}")
+    return unlanded
 
 
 def stage(plan_p, repo, out):
@@ -149,16 +163,7 @@ def stage(plan_p, repo, out):
             dd = next(moved_landings[lo["pin"]] for lo in tp["lands_on"] if lo.get("pin") in moved_landings)
             tp["xy"] = [r4(tp["xy"][0] + dd), tp["xy"][1]]
             nt += 1
-    # forwarded roots (fclk_*) have no parent tap: the parent drives them from its edge clocks
-    # (clock.child_root_taps.forwarded_roots); every other root must have exactly one moved landing
-    fwd = set(t["clock"].get("child_root_taps", {}).get("forwarded_roots", []))
-    landed = {lo["pin"] for tp in t["clock"]["taps"] for lo in tp.get("lands_on", []) if lo.get("pin") in moved_landings}
-    unlanded = sorted(p for p in moved_landings if p not in landed)
-    bad = [p for p in unlanded if p.split(".", 1)[1] not in fwd]
-    if bad or nl != len(landed):
-        raise SystemExit(f"{TYPE}: {nl} landings for {len(landed)} landed roots; roots with neither a tap nor a "
-                         f"forwarded entry: {bad[:6]}")
-    rec["forwarded_roots_no_tap"] = unlanded
+    rec["forwarded_roots_no_tap"] = check_landings(t, moved_landings, nl)
     (out / SPLIT).parent.mkdir(parents=True, exist_ok=True)
     (out / SPLIT).write_text(json.dumps(roots_doc, indent=1) + "\n")
     (out / "plan.json").write_text(json.dumps(Q, indent=1) + "\n")
@@ -170,6 +175,17 @@ def stage(plan_p, repo, out):
         "(landing contract / edge_clocks are parent-edge pins, unchanged)"])
     (out / "receipt.json").write_text(json.dumps(rec, indent=1) + "\n")
     return rec
+
+
+def _find(o, key):
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if k == key:
+                yield v
+            yield from _find(v, key)
+    elif isinstance(o, list):
+        for v in o:
+            yield from _find(v, key)
 
 
 def io_blocks(text):
@@ -194,18 +210,31 @@ def prove(repo, out, kits):
     Q = json.loads((out / "plan.json").read_text())
     roots_doc = json.loads((out / SPLIT).read_text())
     res, ok = {}, True
-    G.root_window_contract = lambda spec, mr: True      # root windows are not moved by this stage
+    profile = json.loads((repo / PROFILE).read_text())["children"]
     for side, kd in kits.items():
         mod = CHILD[side]
+        kd = Path(kd)
         hc = next(c for c in Q["partition_types"][TYPE]["hard_cores"] if c["module"] == mod)
         pins = json.loads((out / S81 / hc["pins_file"]).read_text())["pins"]
         shapes = G.lef_pin_rects(out / hc["lef"], geometry=True)
-        spec = {"native_clock_pins": roots_doc[ROOTKEY[side]]}
-        mr = {"roots": [{"pins": [k]} for k in roots_doc[ROOTKEY[side]]["ports"]]}
+        # the real per-root window contract (tap_window_port_ps, ps per scalar root; this stage moves no window)
+        # Window source: the kit's own generated table (sdc_lint.json; the recipe spec is lost).  The repo profile is
+        # checked too: it must agree on every root it lists, and the roots it lacks are reported (not filled in).
+        mr = {"roots": [{"base": k, "pins": [k]} for k in roots_doc[ROOTKEY[side]]["ports"]]}
+        kw = next(_find(json.loads((kd / "sdc_lint.json").read_text()), "tap_window_port_ps"))
+        spec = {"native_clock_pins": roots_doc[ROOTKEY[side]], "tap_window_port_ps": kw}
+        windows = G.root_window_contract(spec, mr)                                                       # refuses on error
+        pw = profile[ROOTKEY[side]]["tap_window_port_ps"]
+        try:
+            G.root_window_contract(dict(spec, tap_window_port_ps=pw), mr)
+            prof_refusal = None
+        except SystemExit as e:
+            prof_refusal = str(e)
+        prof_missing = sorted(set(windows) - set(pw))
+        win_diff = sorted(k for k in pw if k not in windows or abs(float(pw[k]) - windows[k]) > 1e-9)
         nat = G.native_root_pin_contract(spec, mr, pins, shapes, hc["outline_um"], hc.get("obs_max"))   # refuses on error
         ph = G.native_m7_phase(nat, hc, Q)                                                               # refuses on error
         tline = next(l for l in G.kit_tracks(None, ph).splitlines() if l.startswith("make_tracks M7"))
-        kd = Path(kd)
         kline = next(l for l in (kd / "make_tracks.tcl").read_text().splitlines() if l.startswith("make_tracks M7"))
         tr_ok = tline.split(";#")[0].split() == kline.split(";#")[0].split()
         kio = io_blocks((kd / "io.tcl").read_text())
@@ -219,10 +248,13 @@ def prove(repo, out, kits):
             want = dict(bus=k, bit=None, layer="M7", x=round(q["x"], 4), y=round(q["y"], 4), face="C", native_rects=[rect])
             if krow.get(k) != want:
                 row_diff.append((k, want, krow.get(k)))
-        res[side] = dict(roots=len(nat), m7_phase=ph, make_tracks_generated=tline, make_tracks_kit=kline,
+        res[side] = dict(roots=len(nat), root_windows=len(windows), root_window_ps_range=[min(windows.values()),
+                         max(windows.values())], repo_profile_value_diff=win_diff,
+                         repo_profile_missing_roots={k: windows[k] for k in prof_missing},
+                         repo_profile_refusal=prof_refusal, m7_phase=ph, make_tracks_generated=tline, make_tracks_kit=kline,
                          make_tracks_equal_ignoring_comment=tr_ok, io_blocks_equal=len(nat) - len(io_diff),
                          io_diff=io_diff, pins_rows_equal=len(nat) - len(row_diff), pins_diff=row_diff[:5])
-        ok &= tr_ok and not io_diff and not row_diff
+        ok &= tr_ok and not io_diff and not row_diff and not win_diff
     return ok, res
 
 
