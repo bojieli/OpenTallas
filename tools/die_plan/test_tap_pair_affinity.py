@@ -346,3 +346,94 @@ def test_chains_key_is_in_the_schema():
                     return r
     spec = find(json.loads(Path(__file__).with_name('die_plan.schema.json').read_text()))
     assert spec['additionalProperties'] is False and spec['properties']['chains'] == {'type': 'boolean'}
+
+
+# ---------------- DIE-QC-97 11-12 RING: ring-local bonding inside one count-aligned landing ring ----------------
+PL = r'u_bound.u_cland_dd_ei/u_ring.dch\[8\].g_pl.u_pl/q\[1\]$_DFF_P_'
+SEL = r'u_bound.u_cland_dd_ei/u_ring.dch\[8\].u_dsel/g_srep.sr\[1\].u_sel/di\[1\]$_DFFE_PP_'
+TAG = r'u_bound.u_cland_arm_ei/u_ring.g_tag.g_status_tag.rp_q\[2\]$_DFF_P_'
+RP = r'u_bound.u_cland_arm_ei/u_ring.rp\[5\]$_DFF_P_'
+
+
+def rkey(name):
+    return tcl(f'puts "<[::ot_tap_pair::ring_key {{{name}}}]>"')[0][1:-1]
+
+
+def test_ring_key_names_one_ring_per_instance():
+    assert rkey(PL) == rkey(SEL) == 'u_bound.u_cland_dd_ei/u_ring'          # PLACEREP copy and its dsel: one ring
+    assert rkey(RP) == rkey(TAG) == 'u_bound.u_cland_arm_ei/u_ring'          # STATUS_REG tag pair: one ring
+    assert rkey(PL) != rkey(RP)                                              # two rings never share a key
+    for outside in ('u_bound.u_rrl_187/q$_DFF_P_', 'u_bound.u_cland_lrst_start_4/q$_DFF_P_',
+                    'u_bound.u_cland_x_su_l0_sc_i/u_fault_port/q$_SDFF_PN0_', r'u_bound.u_pd10_x_fw_p1_i_166.r\[1\]$_DFF_P_',
+                    'u_bound.u_ring.q$_DFF_P_', 'u_bound.u_cland_dd_ei/u_ringx.q$_DFF_P_'):
+        assert rkey(outside) == ''
+
+
+def test_pair_ok_is_todays_rule_when_ring_is_off():
+    f = lambda d, dd: tcl(f'puts [::ot_tap_pair::pair_ok {d} {dd} 2 60 {{}} {{}} 2 60]')[0]
+    assert [f(0, 1), f(2, 60), f(3, 5), f(2, 61), f(1, 200)] == ['1', '1', '0', '0', '0']
+    assert tcl('puts [::ot_tap_pair::walk_depth 2 2 {}]')[0] == '2'
+    assert tcl('puts [::ot_tap_pair::walk_depth 2 3 {}]')[0] == '2'          # outside a ring the walk never deepens
+    assert tcl('puts [::ot_tap_pair::walk_depth 2 3 r]')[0] == '3'
+    assert tcl('puts [::ot_tap_pair::walk_depth 2 1 r]')[0] == '2'           # never below the base depth
+
+
+def test_pair_ok_bonds_the_2c_ring_paths_only_inside_one_ring():
+    def f(d, dd, a, b):
+        return tcl(f'puts [::ot_tap_pair::pair_ok {d} {dd} 2 60 {{{rkey(a)}}} {{{rkey(b)}}} 3 80]')[0]
+    assert f(3, 5.9, PL, SEL) == '2'                                         # PLACEREP -> dsel, 3 cells (-10.78 ps)
+    assert f(2, 65.9, RP, TAG) == '2'                                        # STATUS_REG tag, 66 um (-17.16 ps)
+    assert f(1, 2.0, PL, SEL) == '1'                                         # a short pair stays a short pair
+    assert f(4, 5.0, PL, SEL) == '0' and f(3, 81, PL, SEL) == '0'            # beyond the ring bounds
+    assert f(3, 5.0, PL, RP) == '0'                                          # two rings: never ring-bonded
+    assert f(2, 63.1, 'u_bound.u_cland_x_su_l0_sc_i/u_fault_port/q$_SDFF_PN0_',
+             'u_bound.u_cland_collect_rst_n_t1/fault_o$_SDFF_PN0_') == '0'  # not in a ring: today's 60 um
+
+
+RING_TAPS = {'t0': (0, 0), 't1': (10, 0), 't2': (60, 0)}
+
+
+def ring_case():
+    """ring A: place copy pl (t0) -> dsel s0..s2 (t1), 3 cells apart (ring-only edges); ring B already on t2; outside
+    flop o on t0 with a short pair to pl."""
+    regs = {'pl': (4, 0, 't0'), 'o': (3, 0, 't0'), 's0': (6, 0, 't1'), 's1': (7, 0, 't1'), 's2': (8, 0, 't1'),
+            'b0': (60, 0, 't2'), 'b1': (61, 0, 't2'), 'bq': (62, 0, 't2')}
+    short = [('o', 'pl', 1), ('s0', 's1', 1), ('s1', 's2', 1), ('b0', 'b1', 1), ('b1', 'bq', 1)]
+    ring = [('pl', 's0', 2), ('pl', 's1', 2), ('pl', 's2', 2)]
+    return regs, short, ring
+
+
+def test_ring_edges_put_copy_and_dsel_on_one_tap_other_rings_untouched_idempotent():
+    regs, short, ring = ring_case()
+    lab0, _ = run(regs, short, RING_TAPS, merge=128)                         # today: the copy -> dsel hop stays cross-tap
+    assert cross(lab0, ring) == 3
+    lab, _ = run(regs, short + ring, RING_TAPS, merge=128)
+    assert cross(lab, short + ring) == 0
+    assert len({lab[n] for n in ('o', 'pl', 's0', 's1', 's2')}) == 1
+    assert all(lab[n] == 't2' for n in ('b0', 'b1', 'bq'))                   # the other ring keeps its tap
+    regs2 = {n: (regs[n][0], regs[n][1], lab[n]) for n in regs}
+    lab2, _ = run(regs2, short + ring, RING_TAPS, merge=128)
+    assert lab2 == lab                                                       # idempotent
+
+
+def test_ring_exports_are_opt_in_and_bounded():
+    sys.path.insert(0, str(Path(__file__).parent))
+    from gen_phys import tap_pair_affinity_exports
+    base = {'tap_radius_um': 200, 'tap_max_sinks': 1200}
+    off = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'chains': True})})
+    assert not any('RING' in x for x in off)
+    on = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'chains': True, 'ring_depth': 3,
+                                                                              'ring_pair_um': 80})})
+    assert on == off + ['export OT_TAP_PAIR_RING_DEPTH = 3', 'export OT_TAP_PAIR_RING_UM = 80']
+    for bad in ({'ring_depth': 5}, {'ring_depth': True}, {'ring_depth': 2.5}, {'ring_pair_um': 0}, {'ring_pair_um': 201}):
+        with pytest.raises(ValueError):
+            tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity=bad)})
+
+
+def test_ring_keys_are_in_the_schema():
+    sys.path.insert(0, str(Path(__file__).parent))
+    import schema
+    spec = schema.SCHEMA['properties']['partition_types']['additionalProperties']['properties']['clock']['properties'][
+        'tap_pair_affinity']
+    assert spec['properties']['ring_depth'] == {'type': 'integer', 'minimum': 0, 'maximum': 4}
+    assert spec['properties']['ring_pair_um'] == {'type': 'number', 'exclusiveMinimum': 0}

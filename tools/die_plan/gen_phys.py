@@ -2691,6 +2691,19 @@ def tap_pair_affinity_exports(t):
     chains = spec.get("chains", False)
     if not isinstance(chains, bool):
         raise ValueError("tap_pair_affinity chains must be a boolean")
+    # DIE-QC-97 11-12: ring_depth / ring_pair_um (default absent = off): inside one count-aligned landing ring a pair also
+    # bonds up to this comb depth / distance (tap_pair_plan.tcl RING; clock pins only)
+    ring = []
+    if "ring_depth" in spec:
+        rd = spec["ring_depth"]
+        if isinstance(rd, bool) or not isinstance(rd, int) or not 0 <= rd <= 4:
+            raise ValueError("tap_pair_affinity ring_depth must be an integer in [0, 4]")
+        ring.append(f"export OT_TAP_PAIR_RING_DEPTH = {rd}")
+    if "ring_pair_um" in spec:
+        ru = float(spec["ring_pair_um"])
+        if not 0 < ru <= 200:
+            raise ValueError("tap_pair_affinity ring_pair_um out of range")
+        ring.append(f"export OT_TAP_PAIR_RING_UM = {ru:g}")
     cap = min(1200, _tap_cap(t))
     if not 0 <= grow <= 0.5:
         raise ValueError("tap_pair_affinity overfull_grow must be in [0, 0.5]")
@@ -2707,7 +2720,7 @@ def tap_pair_affinity_exports(t):
             f"export OT_TAP_PAIR_UM = {pair_um:g}",
             f"export OT_TAP_PAIR_DEPTH = {depth}"] + \
         ([f"export OT_TAP_PAIR_OVERFULL_GROW = {grow:g}"] if grow > 0 else []) + \
-        (["export OT_TAP_PAIR_CHAINS = 1"] if chains else [])
+        (["export OT_TAP_PAIR_CHAINS = 1"] if chains else []) + ring
 
 
 # COORD 11-09 (HBM-CORES-B): HBM kits hang TYPE-SAFE-1 hop lockup latches (u_fl_rst_*) on their capture tap by

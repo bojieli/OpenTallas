@@ -2016,6 +2016,15 @@
          },
          "chains": {
           "type": "boolean"
+         },
+         "ring_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+         },
+         "ring_pair_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
          }
         }
        },
