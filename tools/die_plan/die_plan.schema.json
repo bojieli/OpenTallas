@@ -2013,6 +2013,22 @@
          }
         }
        },
+       "tap_group": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "re"
+        ],
+        "properties": {
+         "re": {
+          "type": "string",
+          "minLength": 3
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       },
        "tap_pair_affinity": {
         "type": "object",
         "additionalProperties": false,
