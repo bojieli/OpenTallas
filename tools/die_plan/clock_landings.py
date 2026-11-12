@@ -675,6 +675,19 @@ class Landings:
         self.plan_path = plan_path      # resolves plan-relative pin tables for tap_grid (added_taps -> reset_tree)
         self.ca_variants = ca_variants
         self.collector = table.get("collector")
+        if self.collector is not None:
+            # SIDECAR-COVERAGE (GEN-CLASS-1 11-12, DIE-S81-88 PSPLIT-SIDECAR-STALE): the sidecar is composed per plan
+            # (clock_landing_plan.compose writes one collector.types row per partition type); a sidecar of another
+            # plan (unsplit base vs psplit) lacks the split types and gen_rtl died on KeyError '<type>'.  Fail closed
+            # here, before any RTL is written, with the class name and the missing types.
+            ptypes = sorted({p["type"] for p in plan.get("partitions") or []})
+            have = self.collector.get("types") or {}
+            miss = [tn for tn in ptypes if tn not in have]
+            if miss:
+                raise LandingError(f"SIDECAR_STALE: clock-landing sidecar collector.types lacks {len(miss)} of "
+                                   f"{len(ptypes)} plan partition types ({', '.join(miss[:6])}"
+                                   f"{', ...' if len(miss) > 6 else ''}): the sidecar was composed for another plan; "
+                                   f"pass the sidecar composed with this plan (--clock-landing)")
         # monitor="region" (opt-in, DIE-HEAD-3): the dataflow monitor plus same-region status links (registered ctl
         # pins on the region clock, no ring) from clock_landing_plan.compose(monitor="region").
         self.region_monitor = bool(self.collector) and self.collector.get("monitor", "reset") == "region"
