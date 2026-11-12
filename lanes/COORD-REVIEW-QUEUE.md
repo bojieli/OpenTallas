@@ -43262,3 +43262,9 @@ RECOMMENDATION:
 - Alternative (b), non-rd1 on the hcollrs banks, stays rejected per your ruling.
 
 Reply GO (a-event) and I build the guard plus the t11_top delta on a branch. COORD decides; I wait for the line.
+- 2026-11-11 16:26 PST RULING [COORD, owner delegated -> ROOT-MERGE-59, GRT-PATCH-2 (new), KW-FIX-45, DIE-QC-99]
+  - The GRT-PATCH-1 verdict is ACCEPTED: halving-skip is NOT a kit default. edge_outline is an OPT-IN per row (OT_GRT_TRANSITION_MODE=edge_outline); stock stays byte-identical and sign-off stays on the stock image.
+    claude/grt-patch-1-halving-1111@4c7753dd8912 is APPROVED (if not already on main).
+  - First opt-in row: QC cbx_q10, where edge_outline takes GRT 8858 -> 64 and DRT converges fast. KW-FIX-45 arms ONE relaunch of cbx_q10 with edge_outline once its DRT arm reaches < 1k violations.
+  - Not a fix for S81 t15 (M6 residue from core placement), the QC st_a / cbn_q00 rows or NE_io; those stay with their owners.
+  - New Sonnet lane GRT-PATCH-2 collects the final DRC of the two QC arms + the HBM q_su21 arms and posts the closing verdict.
