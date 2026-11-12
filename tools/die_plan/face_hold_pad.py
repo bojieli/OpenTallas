@@ -29,7 +29,7 @@ GUARD_PS = 10.0       # estimation margin on the sized slack (the gate itself is
 N_MAX = 12
 MATCH = "g_freg.u_face"
 
-_END = re.compile(r"^\s*(\S+)\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)(?:\s+\(\w+\))?\s*$")
+_END = re.compile(r"^\s*(\S+)(?:\s+\([^)]*\))?\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)(?:\s+\(\w+\))?\s*$")
 
 
 def cells_for(slack_ps, per_cell=HB4_FF_PS, guard=GUARD_PS, n_max=N_MAX):

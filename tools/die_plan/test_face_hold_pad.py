@@ -110,3 +110,10 @@ def test_generator_wires_option_after_hold_budget():
     g = (Path(__file__).resolve().parents[2] / "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py").read_text()
     assert "--face-hold-pad" in g and "face_hold_pad.stage(kd" in g
     assert g.index("face_hold_pad.stage(kd") > g.index("(kd / \"hold_budget.tcl\").write_text(")
+
+
+def test_parse_real_openroad_end_rows_with_master_column():
+    rep = ("u_bound.u_cland_ft2_i/g_freg.u_face/q[217]$_DFF_P_/D (DFFHQNx2_ASAP7_75t_R)  274.53  177.60  -96.93 (VIOLATED)\n"
+           "u_bound.u_cland_ft3_i/g_freg.u_face/q[508]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  224.48  194.15  -30.33 (VIOLATED)\n")
+    assert F.parse_end_report(rep) == {"u_bound.u_cland_ft2_i/g_freg.u_face/q[217]$_DFF_P_": -96.93,
+                                       "u_bound.u_cland_ft3_i/g_freg.u_face/q[508]$_DFF_P_": -30.33}
