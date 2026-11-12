@@ -26,11 +26,29 @@ for row, y in ((0, YB), (1, YT)):
 for i in range(2):
     put(sr[i], 1745.28 + AB, AB + i * SH)
 for i in range(3):
-    put(sr[2 + i], 1745.28 + AB, 830.0 + i * SH)
+    put(sr[2 + i], 1745.28 + AB, 950.0 + i * SH)   # between local reset taps (1797.12, 881.28) and (1797.12, 1088.64)
 # rx column in the vertical street, abutting the W pair column
 for i in range(20):
     half = i // 10; k = i % 10
-    y0 = (17.28 + 60.0) if half == 0 else (665.28 + 60.0)
+    y0 = (17.28 + 60.0) if half == 0 else (665.28 + AB)   # top stack ends 875.5, below the local reset tap (898.56, 915.84)
     put(rx[i], 846.72 + AB, y0 + k * RXH)
+# reset local taps covered by a moved macro: move each vertically to the nearest side of that macro (+4.32 um),
+# staying out of every hard core; deterministic, nearest first (the reset tree re-solves from these sites)
+def rect(h):
+    x, y = h["origin_um"]; w, hh = h["outline_um"]
+    return x, y, x + w, y + hh
+R = [rect(h) for h in hc]
+def blocked(x, y, halo=2.16):
+    return [r for r in R if r[0] - halo < x < r[2] + halo and r[1] - halo < y < r[3] + halo]
+lt = t["reset"]["local_taps_um"]
+for i, (x, y) in enumerate(list(lt)):
+    b = blocked(x, y)
+    if not b: continue
+    cands = sorted([(abs(c - y), c) for r in b for c in (r[1] - 4.32, r[3] + 4.32)])
+    for _, ny in cands:
+        if not blocked(x, ny) and 4.32 < ny < t["outline_um"][1] - 4.32:
+            lt[i] = [x, round(ny, 3)]; log.append(f"reset local tap {[x, y]} -> {lt[i]}"); break
+    else:
+        log.append(f"UNRESOLVED reset local tap {[x, y]}")
 json.dump(P, open(sys.argv[2], "w"), indent=1)
 print("\n".join(log)); print("moved", len(log))
