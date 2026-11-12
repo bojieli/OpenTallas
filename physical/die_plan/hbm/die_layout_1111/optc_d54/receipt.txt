@@ -1,0 +1,5 @@
+plan 33a1b3df8d76e474ac3a521ab5bb37a50f8693fe4e6b79c5c882e57d234cb5fc (base d53b ad080c302a2b)
+BIND partitions 92 crossings 420 n_errors 0; stale 0 uncovered 0 pad_flops 945214
+bind_report ce0de0ecd7cb SHA256SUMS 05de7d26efee asbuilt dac2fc3c08db r8 landing b324477b7c74
+G0 (src_hbm_main_fe0002fac6): ERROR 548 -> 536 (0 new, 12 cleared: hops 5, stations 7); WARN 1833 -> 1828 (0 new)
+seam_hop (main 9446d18f5d): over 405: 8 hops on 6 lanes -> 1 (L8101, q_su30 item)
