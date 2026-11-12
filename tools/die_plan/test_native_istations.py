@@ -111,4 +111,52 @@ class NativeStations(unittest.TestCase):
     src=d/(name+'.sv');src.write_text(bind.CELLS+'\n'+source+'\n'+tb.replace('PAD',str(pad)))
     binary=d/name;cp=subprocess.run(['iverilog','-g2012','-s','tb','-o',str(binary),str(src)],capture_output=True,text=True);self.assertEqual(cp.returncode,0,cp.stderr)
     run=subprocess.run(['vvp',str(binary)],capture_output=True,text=True);print(name,run.returncode,run.stdout.strip());self.assertEqual(bool(run.returncode),bool(want))
+class KitSourceStations(unittest.TestCase):
+ """QC-BIND-IST-PAD 11-12: kit-built (non-native) OUT stations are priced at the source, not padded at the receiver."""
+ def fixture(self,cycles=12,regs=4,fixed=4,native=()):
+  src={'module':'s','buses':[{'name':'o','dir':'out','width':8}],'internal_stations':[{'conn':'bus:o','regs_um':[[i,0] for i in range(regs)],'bit_route':'per_bit'}] if regs else []}
+  rx={'module':'r','buses':[{'name':'i','dir':'in','width':8}]}
+  L={'lane':'L0','oname':'o','iname':'i','dst':'q','cycles':cycles,'ft':[],'width':8}
+  b=SimpleNamespace(ab={'internal_stations_types':list(native),'kit_source_station_pricing':True},types={'src':src,'rx':rx},parts={'p':{'type':'src'},'q':{'type':'rx'}},
+                    by_type={'src':['p'],'rx':['q']},out_bus={'p':[L],'q':[]},plan={'lanes':[{'id':'L0','fixed_cycles':fixed}]},errors=[])
+  return b,L
+ def test_table_counts_kit_stations(self):
+  # table 12 = 2 boundary + 4 kit source stations + 6 pad: the receiver pads 6, not 10; bound stages = table
+  b,L=self.fixture();native_istations.annotate(b);native_istations.annotate_kit(b)
+  self.assertEqual(L['internal_kit_source_cycles'],4);self.assertEqual(bind.lane_pad(L),6);self.assertEqual(b.errors,[])
+  self.assertEqual(2+bind.lane_pad(L)+L['internal_kit_source_cycles'],12)
+ def test_lane_without_stations_unchanged(self):
+  b,L=self.fixture(regs=0,fixed=0);native_istations.annotate(b);native_istations.annotate_kit(b)
+  self.assertNotIn('internal_kit_source_cycles',L);self.assertEqual(bind.lane_pad(L),10)
+ def test_native_type_not_double_subtracted(self):
+  b,L=self.fixture(native=('src',));b.types['src']['internal_stations'][0].pop('bit_route')
+  native_istations.annotate(b);native_istations.annotate_kit(b)
+  self.assertEqual(L['internal_source_cycles'],4);self.assertNotIn('internal_kit_source_cycles',L);self.assertEqual(bind.lane_pad(L),6)
+ def test_e5_fixed_cycles_case_keeps_receivers_identical(self):
+  # sl_E5_fw carries 2 kit OUT stations (lane fixed 2, table +2), sl_E0_fw none: both sle_ctl receivers get the same pad,
+  # so the 6 cl503337ff instances keep one ibus signature (no TYPE_SPLIT)
+  b5,L5=self.fixture(cycles=22,regs=2,fixed=2);b0,L0=self.fixture(cycles=20,regs=0,fixed=0)
+  for b in (b5,b0):native_istations.annotate(b);native_istations.annotate_kit(b)
+  self.assertEqual(bind.lane_pad(L5),bind.lane_pad(L0));self.assertEqual(bind.lane_pad(L0),18)
+ def test_stale_table_fails_closed(self):
+  # table not refreshed for the stations (cl67434795 since 11-09): the bind reports it instead of building n long
+  b,L=self.fixture(cycles=4);native_istations.annotate(b);native_istations.annotate_kit(b)
+  self.assertNotIn('internal_kit_source_cycles',L);self.assertEqual(len(b.errors),1);self.assertIn('KIT_ISTATION_LATENCY L0',b.errors[0])
+ def test_unpriced_stations_keep_old_pad(self):
+  # HEAD hd_spn form: OUT stations not priced in fixed_cycles -> pad unchanged, no error (no cross-die change)
+  b,L=self.fixture(cycles=5,regs=2,fixed=0);native_istations.annotate_kit(b)
+  self.assertNotIn('internal_kit_source_cycles',L);self.assertEqual(b.errors,[]);self.assertEqual(bind.lane_pad(L),3)
+ def test_default_off_is_unchanged(self):
+  # COMPAT: without asbuilt kit_source_station_pricing the bind prices exactly as before (no cross-die change)
+  b,L=self.fixture();del b.ab['kit_source_station_pricing'];native_istations.annotate_kit(b)
+  self.assertNotIn('internal_kit_source_cycles',L);self.assertEqual(bind.lane_pad(L),10);self.assertEqual(b.errors,[])
+ def test_type_list_scope(self):
+  b,L=self.fixture();b.ab['kit_source_station_pricing']=['other'];native_istations.annotate_kit(b)
+  self.assertNotIn('internal_kit_source_cycles',L)
+  b,L=self.fixture();b.ab['kit_source_station_pricing']=['base'];b.types['src']['split_of']='base';native_istations.annotate_kit(b)
+  self.assertEqual(L['internal_kit_source_cycles'],4)
+ def test_deepest_row_is_the_chain(self):
+  b,L=self.fixture();b.types['src']['internal_stations'].append({'conn':'bus:o','regs_um':[[0,1],[1,1]],'bit_route':'per_bit'})
+  native_istations.annotate_kit(b);self.assertEqual(L['internal_kit_source_cycles'],4)
+
 if __name__=='__main__':unittest.main()
