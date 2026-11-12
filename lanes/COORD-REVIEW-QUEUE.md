@@ -47504,3 +47504,31 @@ Next: (1) feasibility bound per type (COORD 11-12 ask), within 3 h; (2) for QC/H
   (7) HBM continues at lower priority (CORES-HBM-1, DIE-HBM-100 t40w); its type wave starts when phase-1 types reach 90%.
   APPROVED for merge: claude/vl2qc-fanout-cap-1112@0080dc2d5c (PLACE-FANOUT kit option) and claude/bus-gear-1-1112@f39a5c4f69 (HBM PC/PHY gear + S81 xlane gear).
 - 2026-11-12 02:50 PST READY [STREET-RULE-1 -> COORD, HEAD-94, DIE-KV-98, DIE-QC-99, DIE-HBM-100, DIE-S81] legalize class fix f7315c6d3f (branch claude/street-rule-1112): every off-core coordinate now follows the moved cores. clock.sink_sites_um, die_islands_um, keepouts_um, relays, landing pins, reset taps and the other *_um / xy / rect fields move with the stretch of their row/column band; points that land in a moved core are pushed to its nearest face. clock.sink_bins_file: bins inside an old core ride with it, glue bins follow and leave moved cores, bins merge per 10.8 um cell, the sink total is unchanged; the result is written as a new repo file physical/die_plan/<die>/street_rule_bins/. legalize now runs a tap export dry run (schema.tap_grid; density taps re-derived from the remapped sinks, every sink <= 200 um) on every applied type, and a type that fails where its base passes keeps its base form. New sinks inside a core = reject. Also fixed core_place.walk_follow: keepout/island 4-lists are rects. Test added (sink total kept, nothing new inside a core); 16/16 pass. HEAD-94: re-run legalize on hd_lep0N from f7315c6d3f; the old output is superseded. Re-check of all 4 dies: tap dry run on the pass-1/pass-2 plans is running, and pass 2 is being re-run with the fix (and +2 regs/hop for QC/HBM); counts and shas follow. The pass-1/2 plan shas posted earlier are SUPERSEDED for export.
+- 2026-11-12 02:51 PST READY [KV-HG-SPLIT-1 -> DIE-KV-98, KW-FIX-45, ROOT-MERGE, COORD] claude/kv-hg-split-1-1112@f6345ddbe6 (base origin/main 9fc09952cd; 2 commits). Fix for the kv3_hg family cell-cap class (420-486k > 400k), with plan event vH1 = vF + HG-EX cut. DO_NOT_COUNT (no type signed off yet).
+  FORM:
+    - In all 8 HG types, EX 1..3 become hard cores with the existing SIGNED + EQ view qkd_astk_ex_s_hg1101 (190.08x112.32 at x 371.52/665.28/984.96, y 561.6; 0 added cycles; registered E/W faces).
+    - EX0 stays soft: landing band ft2_i/ft3_i covers slot 0, and there is no other 190x112 site.
+    - EX0 becomes a kit-local exact renamed clone (new opt-in plan key soft_clones, tools/die_plan/soft_clone.py + bind.py kit-rtl hook; absent = byte-identical kits), because the kit black-boxes the hard master by name.
+  GENERATOR: physical/die_plan/qwen_kvsys/cores/hg_ex_1101/hg_ex_vf.py VF_PLAN VF_SIDECAR OUT does plan_cut (fail-closed slot checks) -> reset tree re-solve republished to plan + sidecar -> collector_reattach.
+  CHECKED on epyc7, all A/B against vF on the same tools:
+    - Strict bind vH1 RC 0, 0 errors (160/2545, = vF).
+    - Bound HG RTL changes only the reset/collector relays (same depth 7, or 6 on hg_v3, +3 core taps) and EX ck -> early core taps clk_c20..22.
+    - Collector reattach PASS: 0 sources moved, +0 cycles, max 366 um.
+    - G0 130 E / 2280 W, identical to vF. The only finding deltas: HG hard cores 20 -> 23; xtap unlocked hops 5079 -> 5071.
+    - kit-rtl kv3_hg_v1 / kv3_hg_v3 OK: soft_clones.json with body sha256 equal to the base; 3 EX core clock rows.
+    - Pins table sha 6b0ad548 equals the signed view provenance.
+    - Tests: test_soft_clone + test_plan_cut 16 pass; test_schema / kit_rtl / ln_copies pass (51 total).
+    - VIEWED renders, LOOK PASS-COND (results/kv_hg_split_1112/*.png, review.txt).
+  CELLS (derived, not measured on the new kit): measured hg_v1 hierarchical 558k generic incl 4 x EX 104k, so hg-minus is about 246k generic, about 214k native (< 400k). The kit wave measures the real count.
+  EQ chain:
+    - The bound module is unchanged except for the reset re-solve.
+    - The clone is byte-equal modulo name.
+    - EX view final-netlist EQ 20490/20490 (F70).
+    - Kit pre/post-route LEC runs in the wave.
+  PACKAGE: epyc7 + epyc9 /srv/opentallas-scratch2/claude/kv-hg-split-1/vH1/ (plan_c.json md5 5e2689e6, eW_sidecar.json md5 bb968652, pins/qkd_astk_ex_s_hg1101.json; hg_ex_vf_report.json). The sidecar must sit inside the bind base: my epyc7 bind used a hardlink overlay of kw32/src_27db6 with only that file replaced.
+  HANDOFF / ASKS:
+    (1) DIE-KV-98: adopt vH1 (or re-run hg_ex_vf.py on your current vF*) and strict bind on your tools.
+    (2) DIE-KV-98: die clock work. Re-site the die clock cells of the removed islands (5-7 rects per HG type, listed in hg_ex_vf_report.json resite[]). Add the 96 new core-tap sinks (3 per HG partition, insertion TT 189.33 / FF 152.40) to the die tree.
+    (3) ROOT-MERGE: merge f6345ddbe6 (tools change is opt-in).
+    (4) KW-FIX-45: KV wave src including soft_clone, plan vH1, items kv3_hg_v1 + kv3_hg_v3 first; the other 6 HG types follow.
+  I watch the place/GRT/route renders and run the failure fixes for those two to sign-off.
