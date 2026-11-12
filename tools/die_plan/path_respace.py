@@ -44,6 +44,8 @@ EPS = 1e-6
 MARGIN = 4.32          # landing_place._clear_of_hard_cores margin
 GRID_X, GRID_Y = 0.054, 0.27
 FREE_BANKS = False
+FREEZE_EXACT = False      # ADD-ONLY mode: slots with bit banks keep every station where it is and take no new station
+ONLY_LANES = None
 SLACK = 1.0            # a placement must leave every hop <= limit - SLACK
 
 
@@ -263,7 +265,19 @@ def plan_lane(P, lane, limit, allow_add, decided):
     adds = defaultdict(int)
     clear = {c: _clear_arcs(P, cross, c) for c in range(len(cross))}
     stay = {}
-    for c in exact:                  # exact bit banks: stage j may only move where its whole bank stays on the outline
+    if FREEZE_EXACT:
+        for c in exact:
+            old_c = [tuple(P.to_type(cross[c]["part"], p)) for p in st_now[c]]
+            for j in range(1, len(old_c)):
+                near = min(clear[c] or [cross[c]["lo"]], key=lambda v: _man(_point_at(cross, c, v), st_now[c][j]))
+                stay[(c, j)] = (near, st_now[c][j])
+                clear[(c, j)] = [near]
+            for j in range(len(old_c), len(old_c) + 12):
+                clear[(c, j)] = []
+        exact_loop = []
+    else:
+        exact_loop = list(exact)
+    for c in exact_loop:                  # exact bit banks: stage j may only move where its whole bank stays on the outline
         sl = P.slot(cross[c]["part"], cross[c]["slot"])
         old_c = [tuple(P.to_type(cross[c]["part"], p)) for p in st_now[c]]
         if len(old_c) != len(sl["bit_sites_um"]) + 1:
@@ -311,7 +325,8 @@ def plan_lane(P, lane, limit, allow_add, decided):
         g2, _neg, best = min(trial)
         if g2 >= gstar - EPS and not any(t[0] < gstar - EPS for t in trial):
             # no single add helps (two are needed): add where the route is longest per station
-            best = max(range(len(cross)), key=lambda c: (cross[c]["hi"] - cross[c]["lo"]) / ks[c])
+            ok_c = [t_[2] for t_ in trial if t_[0] != float("inf")] or list(range(len(cross)))
+            best = max(ok_c, key=lambda c: (cross[c]["hi"] - cross[c]["lo"]) / ks[c])
         ks[best] += 1
         adds[best] += 1
     else:
@@ -444,7 +459,48 @@ def respace_collectors(raw2, ops, limit, P2=None):
     return rows
 
 
-def run(raw, limit=405.0, allow_add=True, collectors=True):
+def _regen_bank(raw2, tn, sl, new_regs, search=(0.0, 4.32, 8.64, 17.28, 34.56, 69.12)):
+    """re-bank: bit_sites_um for len(new_regs)-1 stages; stage j = the template stage min(j, old-1) bank translated rigidly
+    (grid-snapped) to new_regs[j]; when that spot is blocked / off the outline the translation is searched on a small
+    ring (+-search um) for the nearest fit, and the station follows its bank.  -> (banks, adjusted regs) or an error string."""
+    old = sl["regs_um"]
+    bank0 = sl["bit_sites_um"]
+    w, h = sl["bit_site_cell_um"]
+    W, H = raw2["partition_types"][tn]["outline_um"]
+    P2 = type("S", (), {"types": raw2["partition_types"]})
+    banks, regs = [], [list(new_regs[0])]
+    for j in range(1, len(new_regs)):
+        t = min(j, len(old) - 1)
+        got = None
+        for r in search:
+            offs = [(0.0, 0.0)] if r == 0 else [(sx * r, sy * r) for sx in (-1, 0, 1) for sy in (-1, 0, 1) if sx or sy]
+            for ox, oy in offs:
+                dx = round((new_regs[j][0] + ox - old[t][0]) / GRID_X) * GRID_X
+                dy = round((new_regs[j][1] + oy - old[t][1]) / GRID_Y) * GRID_Y
+                bank = [[round(x + dx, 5), round(y + dy, 5)] for x, y in bank0[t - 1]]
+                if all(0 <= x and 0 <= y and x + w <= W and y + h <= H and _clear(P2, tn, (x + w / 2, y + h / 2)) for x, y in bank):
+                    got = (bank, [round(old[t][0] + dx, 3), round(old[t][1] + dy, 3)])
+                    break
+            if got:
+                break
+        if not got:
+            return f"bank stage {j} off outline or on a blocker within {search[-1]:g} um"
+        banks.append(got[0])
+        regs.append(got[1])
+    bbs = [(min(x for x, _ in b_), min(y for _, y in b_), max(x for x, _ in b_) + w, max(y for _, y in b_) + h) for b_ in banks]
+    for i in range(len(bbs)):
+        for k in range(i + 1, len(bbs)):
+            a_, b_ = bbs[i], bbs[k]
+            if a_[0] < b_[2] and b_[0] < a_[2] and a_[1] < b_[3] and b_[1] < a_[3]:
+                return f"bank stages {i + 1} and {k + 1} overlap"
+    return banks, regs
+
+
+def run(raw, limit=405.0, allow_add=True, collectors=True, rebank=False, add_only_lanes=None):
+    global FREE_BANKS, FREEZE_EXACT, ONLY_LANES
+    FREEZE_EXACT = add_only_lanes is not None
+    ONLY_LANES = set(add_only_lanes) if add_only_lanes is not None else None
+    FREE_BANKS = bool(rebank)
     P = S.Plan(raw)
     raw2 = copy.deepcopy(raw)
     work = copy.deepcopy(raw)        # accepted slot changes applied lane by lane, for the real-input S0->S1 re-check
@@ -453,6 +509,8 @@ def run(raw, limit=405.0, allow_add=True, collectors=True):
     decided = {}          # (tn, slot) -> [type pts]
     decided_banks = {}    # (tn, slot) -> new bit_sites_um
     ops, changed_slots = [], {}
+    if ONLY_LANES is not None:
+        lanes = {l: v for l, v in lanes.items() if l in ONLY_LANES}
     order = sorted(lanes, key=lambda l: -max(Lane.hops(lanes[l].start, lanes[l].end, lanes[l].cross, lanes[l].stations_now())))
     for lid in order:
         lane = lanes[lid]
@@ -519,6 +577,35 @@ def run(raw, limit=405.0, allow_add=True, collectors=True):
                         else:
                             sl[k_] = v_
                 res["status"], res["why"] = "normal_slot_s0s1", f"real input S0->S1 {worst:.0f} um after the move"
+                report["lanes"][lid] = {k: v for k, v in res.items() if k not in ("new", "old")}
+                continue
+        if FREE_BANKS:           # re-bank: every exact slot of the lane gets a regenerated bank, stations follow their banks
+            why, adj = None, {}
+            for c, pts in res["new"].items():
+                cr = lane.cross[c]
+                sl = next(s_ for s_ in work["partition_types"][cr["tn"]]["ft_slots"] if s_["name"] == cr["slot"])
+                if "bit_sites_um" not in sl:
+                    continue
+                if (cr["tn"], cr["slot"]) in decided_banks:
+                    continue
+                nb = _regen_bank(work, cr["tn"], sl, [[round(x, 3) for x in P.to_type(cr["part"], p)] for p in pts])
+                if isinstance(nb, str):
+                    why = f"{cr['part']}.{cr['slot']}: {nb}"
+                    break
+                adj[c] = nb
+            if not why and adj:
+                st_all = [[P.to_die(lane.cross[c]["part"], tuple(r)) for r in adj[c][1]] if c in adj else res["new"][c]
+                          for c in range(len(lane.cross))]
+                h1 = Lane.hops(lane.start, lane.end, lane.cross, st_all)
+                if max(h1) > limit + EPS:
+                    why = f"stations moved with their banks: hop {max(h1):.0f} um"
+                else:
+                    for c, (bk, rg) in adj.items():
+                        res["new"][c] = [P.to_die(lane.cross[c]["part"], tuple(r)) for r in rg]
+                        banks_of[(lane.cross[c]["tn"], lane.cross[c]["slot"])] = bk
+                    res["after"] = max(h1)
+            if why:
+                res["status"], res["why"] = "bank_regen_failed", why
                 report["lanes"][lid] = {k: v for k, v in res.items() if k not in ("new", "old")}
                 continue
         for c, pts in res["new"].items():
