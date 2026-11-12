@@ -192,6 +192,49 @@ SSH_DROP = re.compile(r"ot-run: NOT RUN|Connection (?:reset|refused|closed)|kex_
                       r"SSH probe exit 255|ssh: connect to host|Could not resolve hostname")
 NO_HOST = re.compile(r"no host qualifies|@unit: OSError: \[Errno 28\]")              # ot-run placed nothing: fleet disk or memory, not the design
 NO_HOST_RETRY_S = 900
+
+OWN_FOLDER_RE = re.compile(r"/items/[^/\s']+/(?:attempt_\d+/)?")      # a path inside a kit-wave item folder is the job's own
+MISSING_ABS_RE = re.compile(r"No such file or directory: '(/(?:srv|home)/[^']+)'")
+
+
+def kit_not_self_contained(text):
+    """the first missing absolute /srv or /home path that is NOT inside an item (job) folder, or '' (KIT_NOT_SELF_CONTAINED)"""
+    for m in MISSING_ABS_RE.finditer(text or ""):
+        if not OWN_FOLDER_RE.search(m.group(1)):
+            return m.group(1)[:200]
+    return ""
+
+
+SELFCONT_PY = r"""
+import os, re, sys
+K, W = sys.argv[1], sys.argv[2]
+pat = re.compile(r"(?<![\w./-])(/(?:srv|home)/[^\s'\"\\);:,<>|]+)")
+skip = {"run", "results", "logs", "objects"}
+out = []
+for root, dirs, files in os.walk(K):
+    dirs[:] = [d for d in dirs if d not in skip]
+    for f in files:
+        if not (f.endswith((".mk", ".sh", ".tcl", ".f", ".sdc", ".py")) or f == "config.mk"):
+            continue
+        p = os.path.join(root, f)
+        try:
+            if os.path.getsize(p) > 2_000_000:
+                continue
+            for n, ln in enumerate(open(p, errors="replace"), 1):
+                for m in pat.finditer(ln):
+                    a = m.group(1).rstrip("/")
+                    if a.startswith(K.rstrip("/")) or a.startswith(W.rstrip("/")):
+                        continue
+                    out.append((os.path.relpath(p, K), n, a))
+        except OSError:
+            pass
+seen = set()
+for f, n, a in out:
+    if (f, a) in seen:
+        continue
+    seen.add((f, a)); print(f"SELFCONT\t{f}\t{n}\t{a}")
+print(f"SELFCONT_COUNT {len(seen)}")
+"""
 # KW-FIX-45 11-11 (COORD 23:5x): the hub-guard --exclude-hosts flag made ot-run print its usage text and NOT RUN; 29 attempts of
 # 12 QC rows were charged to RETRY-INFRA although no command ran.  An ot-run / ot-heavy 'NOT RUN' (admission refusal, usage text,
 # held host) means the command never started: such an attempt is no attempt.  The row waits NO_HOST_RETRY_S and is relaunched;
@@ -1207,6 +1250,11 @@ RULES = [
     ("PLAN", r"^geom$", r"FAIL", "AUTO-GEOM rule FAIL (geometry)"),
     ("PLAN", r"^kit_topology$", r"KIT_TOPOLOGY_(?:BIND_STALE|CONTEXT|REGENERATE|SOURCE)",
      "native source stage/reset realization differs: regenerate the canonical bind/kit"),
+    # KW-FIX-45 11-12 (OWNER ruling via COORD: "if the job relies on any data or files that do not belong to its job folder,
+    # then it is the failure of the kit, not the deletion process"; aggressive cleanup runs on all hosts): a missing absolute
+    # path outside the item's own job folder is KIT_NOT_SELF_CONTAINED.  The fix is in the kit recipe (copy the file into the
+    # kit at staging), never a restore or a cleanup guard.  Class FLOW (no blind retry), the reason carries the name.
+    ("FLOW", None, lambda t: kit_not_self_contained(t), "KIT_NOT_SELF_CONTAINED: kit recipe must copy the file into the kit at staging"),
     ("FLOW", r"^kit_topology$", r"No such file|can.t open file|ImportError|ModuleNotFoundError",
      "captured source cohort lacks canonical topology preparation capability/input"),
     ("FLOW", r"^bind$", r"FileNotFoundError|No such file", "die-prep bind recipe input missing"),
@@ -3647,6 +3695,20 @@ def run_item(spec_path):
         # FLOW-21 11-01 (COORD 08:2x): kits whose runner hands the pre-route LEC to lec_async.sh (phase receipts) PLACE
         # as a detached service on the gen host itself: that kit dir is the one authoritative copy (proof owner, GEOM,
         # enqueue and the route all use G:K), so it is never relayed, pulled or cleaned while its proof runs.
+        # KW-FIX-45 11-12 (OWNER ruling): list every absolute /srv or /home path in the kit's scripts / config.mk / .f files that
+        # lies outside the kit and the item folder.  cfg kit_self_contained: "list" (default, advisory) or "fail" (stage fail);
+        # "off" skips.  Never raises.
+        try:
+            _sc = str(sp.get("kit_self_contained") or "list")
+            if _sc != "off":
+                _rc, _t = run("selfcontained", remote(f"python3 -I -c {q(SELFCONT_PY)} {q(K)} {q(W)}"), idempotent=True)
+                _rows = [ln for ln in (_t or "").splitlines() if ln.startswith("SELFCONT\t")]
+                (out / "selfcontained.tsv").write_text("\n".join(_rows) + "\n")
+                res["selfcontained_outside"] = len(_rows)
+                if _rows and _sc == "fail":
+                    return fail("selfcontained", "KIT_NOT_SELF_CONTAINED: kit names absolute paths outside its folder:\n" + "\n".join(_rows[:40]))
+        except Exception as _e:
+            print(f"KW_SELFCONT_SKIP {_e}", flush=True)
         asy = False
         if sp.get("place_async", True) and G in sp["hosts"] + ["localhost", hub]:
             _, at = run("place_mode", idempotent=True, argv=remote(
