@@ -1,0 +1,9 @@
+S81 ready12 = ready12ng (COORD ruling 11-12): ready12x chain + R3SPREAD stage4b (64 types, kv_leaf t3/t4/t5 excluded) + col_h param split last. NO gear, NO t65 nudge.
+compose: ready12ng.sh (compose_cleanslate_1111_r6.py), pre-split plan sha256 f467f473a08f6a94cb3922068d1e27eba88113f769c5994acec84292396b6d3f
+split: apply_psplit_1112.py v2 (claude/die-s81-87-ready11p-1112@3e9ff9d96f0e) --splits split_all.json: 20 col_h types -> 210 clones
+plan sha256 77cad171c6ee5eb5ec87e805dd4fcc841fecf15bf50a5446119f1e47f39a908c (plan_ready12ng_77cad171c6ee.json.gz)
+EQ (record.json eq_gate): pass_=True, rtl/pin/outline/cycle change False, moved_outside_event_keys []
+R3SPREAD4B: 64 applied, 0 skipped
+bind: epyc8 s87bind/run_r12ng.sh, tree bsrc4_r12ng = origin/main 590cbd5fd0 + dead-input proof 341ccaa06f67 + landed_sidecar_h2_psplit_all + svc closure overlay main 4e1a842257cc; manifest asbuilt_f_s87r12.json (ungeared table). started 2026-11-12 12:54:40 UTC
+gear (x feed 2:1) deferred to ready12b -> events/s81_ready12b_gear_1112 (stage files + landing_width_sync_1112.py: 105 rows, bits 447111->389571; geared manifest). Requires BUS-GEAR-1 RTL integration + EQ.
+gaps -> ready13: X-TIER-OTC, STREET-RULE-1 pass 2, gear (ready12b).
