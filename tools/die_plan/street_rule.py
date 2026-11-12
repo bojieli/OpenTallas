@@ -64,7 +64,7 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
-                add_regs=0, pin_reorder=0, x_pin_factor=1.0)
+                add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="")
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
@@ -550,6 +550,15 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
                 req = need_um(p, cfg)
             tail[k] = max(tail[k], oi + si + req)
             tail_rx[k] = max(tail_rx[k], oi + si + min(req, gap0))
+            # DIE-KV-98 11-12: clock landing storage bands need a macro-free strip off the bus face across the window
+            o0, o1 = (cores[i]["y"], cores[i]["y"] + cores[i]["h"]) if ax == 0 else (cores[i]["x"], cores[i]["x"] + cores[i]["w"])
+            for (bf, blo, bhi, clr) in cfg.get("_bands") or ():
+                if min(o1, bhi) - max(o0, blo) <= EPS:
+                    continue
+                if bf == ("W" if ax == 0 else "S"):
+                    src[k] = max(src[k], clr - oi)
+                elif bf == ("E" if ax == 0 else "N"):
+                    tail[k] = max(tail[k], oi + si + clr)
     for q, it in enumerate(items):
         lo_, hi_ = it.rect[ax], it.rect[2 + ax]
         src[M.m + q] = src_rx[M.m + q] = min(lo_, it.halo)
@@ -748,7 +757,8 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     row = dict(type=name, cores=M.n, clusters=M.m, outline_before=[W0, H0], violations_before=c0,
                worst_before=sorted(V0, key=lambda v: -(v["need"] - v["gap"]))[:6])
     hard = [v for v in V0 if v["kind"] in HARD and not v.get("same_cluster")]
-    if not hard:
+    cfg = dict(cfg, _bands=band_clear(cfg, name))
+    if not hard and not cfg["_bands"]:
         row.update(changed=False, applied=False, reason="clean")
         return row, None
     M.init_limits()
@@ -841,14 +851,13 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             t_eq = copy.deepcopy(t)
             for d in added_st:
                 t_eq["internal_stations"][d["station"]]["regs_um"] = tnew["internal_stations"][d["station"]]["regs_um"]
-        if added_ln:
-            t_eq = copy.deepcopy(t_eq)
-            n0 = len(t.get("internal_stations") or [])
-            t_eq.setdefault("internal_stations", []).extend(copy.deepcopy(tnew["internal_stations"][n0:]))
             for k in {d["slot"] for d in added_ft}:
-                for key in ("regs_um", "bit_sites_um", "stations", "note"):
+                for key in ("regs_um", "bit_sites_um", "stations"):
                     if key in tnew["ft_slots"][k]:
                         t_eq["ft_slots"][k][key] = tnew["ft_slots"][k][key]
+        if added_ln:
+            n0 = len(t.get("internal_stations") or [])
+            t_eq.setdefault("internal_stations", []).extend(copy.deepcopy(tnew["internal_stations"][n0:]))
         eqbad = eq_struct(t_eq, tnew)
         moved = sum(1 for i in range(M.n) if tuple(M.core_origin(i)) != tuple(M.org0[i]))
         gW, gH = 100.0 * (W / W0 - 1), 100.0 * (H / H0 - 1)
@@ -869,6 +878,9 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             reasons.append("eq %s" % eqbad[:3])
         if blocked:
             reasons.append("fixed cores pushed %s" % sorted(set(blocked))[:4])
+        bshort = band_short(M, cfg["_bands"])
+        if bshort:
+            reasons.append("band clearance short %d" % len(bshort))
         if gA > cfg["max_growth_pct"]:
             reasons.append("growth %.1f%% > %.0f%%" % (gA, cfg["max_growth_pct"]))
         ok = not reasons
@@ -909,6 +921,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     ok, reasons, tnew, W, H = R_["ok"], R_["reasons"], R_["tnew"], R_["W"], R_["H"]
     gW, gH, gA, c1, left, moved = R_["gW"], R_["gH"], R_["gA"], R_["c1"], R_["left"], R_["moved"]
     row.update(changed=True, applied=ok, attempts=att + 1, pinned=[M.inst[M.CL[k][0]] for k in sorted(pinned)],
+               band_short=band_short(M, cfg["_bands"]), bands=cfg["_bands"],
                ft_fixed=fix_ft, cycles_added=dict(stations=R_["added_st"], ft=R_["added_ft"], new_link_stations=R_["added_ln"],
                                                   total=sum(d["regs_after"] - d["regs_before"] for d in R_["added_st"])
                                                   + sum(d["added"] for d in R_["added_ft"])
@@ -980,6 +993,38 @@ def ft_hop_check(t0, t1, reach=405.0):
         for j, (a, b) in enumerate(zip(h0, h1)):
             if b > max(a, reach) + 0.01:
                 bad.append(dict(slot=k, hop=j, before=round(a, 1), after=round(b, 1)))
+    return bad
+
+
+_BANDS = {}
+
+
+def band_clear(cfg, name):
+    """[(face, lo, hi, clearance um)] for a type from cfg band_file ({type: [[face, lo, hi, clearance]]})."""
+    f = cfg.get("band_file") or ""
+    if not f:
+        return []
+    if f not in _BANDS:
+        _BANDS[f] = json.loads(Path(f).read_text())
+    return [tuple(x) for x in _BANDS[f].get(name, [])]
+
+
+def band_short(M, bands):
+    """bands whose macro-free strip is not clear: some core overlapping the window is closer than the clearance."""
+    bad = []
+    for (bf, lo, hi, clr) in bands:
+        for i in range(M.n):
+            x0, y0 = M.core_origin(i)
+            w, h = M.dim[i]
+            if M.core_orient(i) in ("R90", "R270", "MXR90", "MYR90"):
+                w, h = h, w
+            o0, o1 = (y0, y0 + h) if bf in "WE" else (x0, x0 + w)
+            if min(o1, hi) - max(o0, lo) <= EPS:
+                continue
+            d = {"W": x0, "E": M.W - x0 - w, "S": y0, "N": M.H - y0 - h}[bf]
+            if d < clr - EPS:
+                bad.append(dict(face=bf, lo=lo, hi=hi, need=clr, have=round(d, 2), core=M.inst[i]))
+                break
     return bad
 
 
@@ -1149,8 +1194,6 @@ def add_ft_regs(M, t0, tnew, reach, add_max):
             f["regs_um"] = regs
             if isinstance(f.get("stations"), int):
                 f["stations"] = len(regs)
-            f["note"] = (f.get("note", "") + " | STREET-RULE-1 +%d ft stage(s) (owner pre-approved cycles)"
-                         % (len(regs) - len(f0.get("regs_um") or [])))
     return out
 
 
