@@ -25,7 +25,13 @@ def build(model, root):
         # Actual r10 source documents B(m)=F(5m)=C(6m). No async or
         # multicycle exception may replace these ordinary timing relations.
         periods['coll_blk'] = 5000.0
-        related = [['stream', 'ucie', 'coll_blk']]
+        # QC-D2D-RELATED 11-12 (DIE-QC-100): the in-die d2d root is the core clock net. gen_relay_rtl.py emits the die
+        # clock receiver qfd_clkrx as `assign <root> = pll_fwd` for EVERY root (pll_d2d included), so clk_d2d has the
+        # core source, period and phase 0 ("mesochronous" is the system-die PLL forwarded in through qfd_ckbump, not a
+        # second in-die clock). QC glue times ~7.3k direct clk <-> clk_d2d bits with no landing (QC-COLL-HOLD census
+        # d2d/README.md): related at phase 0, period x1, never async.
+        periods['d2d'] = 2500.0/3
+        related = [['stream', 'ucie', 'coll_blk', 'd2d']]
         if 'clk_coll_blk' not in nets:
             raise ValueError('r10 collective is missing its real 200 MHz clock trunk')
         serdes = sorted(n for n in nets if n.startswith('clk_serdes'))
@@ -35,7 +41,7 @@ def build(model, root):
             if serdes != ['clk_serdes0', 'clk_serdes1', 'clk_serdes2']:
                 raise ValueError(f'PHY-clocked collective needs clk_serdes0..2 trunks, got {serdes}')
             periods['serdes'] = 2500.0/3
-            related = [['stream', 'ucie', 'coll_blk', 'serdes']]
+            related = [['stream', 'ucie', 'coll_blk', 'd2d', 'serdes']]
         elif serdes:
             raise ValueError(f'SerDes FDI trunks {serdes} without the PHY-clock collective binding')
     rel_pins = {production['master']: production['related_pins']} if production.get('related_pins') else {}

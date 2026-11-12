@@ -64,6 +64,27 @@ endmodule
         self.assertIn('-from [get_clocks stream] -to [get_clocks coll_blk]',text)
         self.assertIn('-from [get_clocks coll_blk] -to [get_clocks stream]',text)
 
+    def test_d2d_root_is_related_to_core_at_phase_0(self):
+        # QC-D2D-RELATED 11-12: the in-die d2d root is the core net (gen_relay_rtl: every qfd_clkrx root = pll_fwd)
+        root = Path(__file__).resolve().parents[2]
+        model = dict(insts=[SimpleNamespace(name='root',master='pll'),
+                            SimpleNamespace(name='io',master='collective')],
+                     buses=[('clk_coll_blk','clock_trunk',1,[('root','block'),('io','blk_ck0')])],
+                     port_join={}, native_static_io_bind={'master':'collective'})
+        for phy in (False, True):
+            if phy:
+                model['native_static_io_bind'] = {'master':'collective','phy_clocks':True}
+                model['buses'] = model['buses'][:1] + [(f'clk_serdes{i}','clock_trunk',1,[('root',f's{i}'),('io',f'q{i}')])
+                                                       for i in range(3)]
+            c = build(model, root)
+            group = [g for g in c['related_domains'] if 'd2d' in g]
+            self.assertEqual(len(group), 1)
+            self.assertTrue({'stream','d2d'} <= set(group[0]))
+            self.assertEqual(c['phase_ps']['d2d'], 0.0)
+            self.assertAlmostEqual(c['periods_ps']['d2d'], c['periods_ps']['stream'])
+        src = (root / 'tools/qwen_split/gen_relay_rtl.py').read_text()
+        self.assertIn("L += [f'    assign {p} = pll_fwd;' for p in outs]", src)
+
     def test_assumed_vector_roots_are_explicit_and_unqualified(self):
         ports = {'blk_ck':'input','face_ck':'input','data':'input'}
         with patch.object(D.E,'IDX',{('IO','blk_ck'),('IO','face_ck')}):
