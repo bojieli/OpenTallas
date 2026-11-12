@@ -28699,6 +28699,7 @@
     "NE_iorly"
    ],
    "place_prefer": [
+    "epyc7",
     "epyc9",
     "epyc8"
    ],
@@ -28706,8 +28707,8 @@
    "coord_enable": "COORD 10-31 00:1x (KIT-WAVE-3 msg): AUTOBUILD-PIPE-2 f2ac000acdd core_kit mode merged -> enable HBM core_kit limited to die-hbm-45/hbm_d44f_fixed_cores.tsv (owner 12.22 item 4)",
    "plan": "/srv/opentallas-scratch2/claude/hbm-cut-1111/compose/t20io/die_plan.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_9446d18f5d",
-   "src_sha": "9446d18f5d9aa656166cf492128986e43529ee89",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_m8w1_7b84010b1c",
+   "src_sha": "7b84010b1c6ebc8d3641176abe07221a1a12fcf4",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -29944,12 +29945,15 @@
     "q_su20@4",
     "PHY_NC@3",
     "PHY_NE@3",
-    "PHY_NW@3"
+    "PHY_NW@3",
+    "ot_hbm_sm_pv_merge@8",
+    "ot_hgi_sfu_opsa_group0@3",
+    "ot_hgi_sfu_programme_store_r10@12"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-74)",
    "pilot_mode": "queue",
-   "queue_src": "main@9446d18f5d",
+   "queue_src": "main@7b84010b1c6e",
    "hold_items": {
     "ot_hbm_idx_score_hcol_h0_ra": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
     "ot_hbm_idx_score_hcol_h0_rb": "KW-FIX-5 01:1x HBM-STAGE dry run: NO_RECIPE at src 386f and main; needs plan-owner source commit; retry only with recipe",
@@ -30354,7 +30358,10 @@
     "NE_io@14": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a14 FLOW kit-RTL bind of record named pruned HDL sources; the taps batch uses the fresh strict bind 11b1d121579",
     "q_su11@10": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a10 INFRA (COORD-authorized stop before detail route); relaunch on the taps plan",
     "q_mca@2": "KW-FIX-43 11-10 23:2x COORD (2) ftres+taps batch on plan_p11t_taps_cyc 29333b2b19c9: a2 CANCELLED (drained epyc5); q_mca is new in the taps batch (type clock insertion 335.7/259.6)",
-    "ot_svgr_top@6": "INFRA (COORD 11-11 05:5x, OPS-3): a6 FLOW tool error @place 'detail_place.tcl, 53 bad optional access' (11-09 DPL class); the core gen path lacked -use_diamond_legalizer. item_args now carries --orfs-var DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer. One fresh gen + one place, no attempt charge. Revert: remove this retry entry."
+    "ot_svgr_top@6": "INFRA (COORD 11-11 05:5x, OPS-3): a6 FLOW tool error @place 'detail_place.tcl, 53 bad optional access' (11-09 DPL class); the core gen path lacked -use_diamond_legalizer. item_args now carries --orfs-var DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer. One fresh gen + one place, no attempt charge. Revert: remove this retry entry.",
+    "ot_hbm_sm_pv_merge@8": "M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
+    "ot_hgi_sfu_opsa_group0@3": "M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
+    "ot_hgi_sfu_programme_store_r10@12": "M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -30400,7 +30407,8 @@
    },
    "hosts": [
     "epyc8",
-    "epyc9"
+    "epyc9",
+    "epyc7"
    ],
    "cancel_superseded": true,
    "plan_core_items": [
@@ -43512,7 +43520,20 @@
    "gen_hosts_prev_wb1": [
     "epyc9"
    ],
-   "m8_grant_gen_env_note": "M8-WAVE-1 11-12: OT_GEN_M8_GRANT=1 in item_env of every item of this die (die-level gen env is not a scheduler option; item_env is its gen env)"
+   "m8_grant_gen_env_note": "M8-WAVE-1 11-12: OT_GEN_M8_GRANT=1 in item_env of every item of this die (die-level gen env is not a scheduler option; item_env is its gen env)",
+   "src_prev_m8w1": {
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_9446d18f5d",
+    "src_sha": "9446d18f5d9aa656166cf492128986e43529ee89",
+    "queue_src": "main@9446d18f5d"
+   },
+   "place_prefer_prev_m8w1": [
+    "epyc9",
+    "epyc8"
+   ],
+   "hosts_prev_m8w1": [
+    "epyc8",
+    "epyc9"
+   ]
   }
  },
  "place_prefer": [
