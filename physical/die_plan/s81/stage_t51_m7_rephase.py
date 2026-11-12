@@ -103,7 +103,44 @@ def check_landings(t, moved_landings, nl):
     return unlanded
 
 
-def stage(plan_p, repo, out):
+def kit_windows(kd):
+    """the kit's generated tap_window_port_ps table (sdc_lint.json)"""
+    return next(_find(json.loads((Path(kd) / "sdc_lint.json").read_text()), "tap_window_port_ps"))
+
+
+def sync_profile(prof, roots_doc, sources):
+    """B3b-class profile desync: add to root_profile.json exactly the roots native_root_pins.json declares and the
+    profile lacks, each value from its source table {side: (label, {root: ps})}.  Fail-closed: existing values are
+    never changed, and a source that disagrees with one or lacks a missing root refuses.  -> (doc, receipt)"""
+    doc = copy.deepcopy(prof)
+    rec = {}
+    for side, (label, table) in sorted(sources.items()):
+        key = ROOTKEY[side]
+        ch = doc["children"][key]
+        pw = ch["tap_window_port_ps"]
+        declared = set(roots_doc[key]["ports"])
+        extra = sorted(set(pw) - declared)
+        if extra:
+            raise SystemExit(f"root_profile {key}: lists undeclared roots {extra}")
+        clash = sorted(k for k in pw if k not in table or abs(float(table[k]) - float(pw[k])) > 1e-9)
+        if clash:
+            raise SystemExit(f"root_profile {key}: {label} disagrees with existing values {clash[:6]}")
+        missing = sorted(declared - set(pw))
+        lack = [k for k in missing if k not in table]
+        if lack:
+            raise SystemExit(f"root_profile {key}: {label} has no window for {lack}")
+        added = {k: float(table[k]) for k in missing}
+        pw.update(added)
+        ch["tap_window_port_ps"] = dict(sorted(pw.items()))
+        old_n = ch.get("roots")
+        if "roots" in ch:
+            ch["roots"] = len(declared)
+        rec[side] = dict(added={k: dict(ps=v, source=f"{label}:tap_window_port_ps[{k}]") for k, v in added.items()},
+                         unchanged=len(pw) - len(added), roots=[old_n, ch.get("roots")])
+    return doc, rec
+
+
+def stage(plan_p, repo, out, window_kits=None):
     repo, out = Path(repo), Path(out)
     G = gen(repo)
     P = json.loads(Path(plan_p).read_text())
@@ -164,6 +201,12 @@ def stage(plan_p, repo, out):
             tp["xy"] = [r4(tp["xy"][0] + dd), tp["xy"][1]]
             nt += 1
     rec["forwarded_roots_no_tap"] = check_landings(t, moved_landings, nl)
+    if window_kits:
+        prof = json.loads((repo / PROFILE).read_text())
+        doc, rec["root_profile_sync"] = sync_profile(
+            prof, roots_doc, {s: (f"{Path(k).name}/sdc_lint.json", kit_windows(k)) for s, k in window_kits.items()})
+        (out / PROFILE).parent.mkdir(parents=True, exist_ok=True)
+        (out / PROFILE).write_text(json.dumps(doc, indent=1) + "\n")
     (out / SPLIT).parent.mkdir(parents=True, exist_ok=True)
     (out / SPLIT).write_text(json.dumps(roots_doc, indent=1) + "\n")
     (out / "plan.json").write_text(json.dumps(Q, indent=1) + "\n")
@@ -210,7 +253,8 @@ def prove(repo, out, kits):
     Q = json.loads((out / "plan.json").read_text())
     roots_doc = json.loads((out / SPLIT).read_text())
     res, ok = {}, True
-    profile = json.loads((repo / PROFILE).read_text())["children"]
+    pp = out / PROFILE if (out / PROFILE).exists() else repo / PROFILE      # the staged repo profile path
+    profile = json.loads(pp.read_text())["children"]
     for side, kd in kits.items():
         mod = CHILD[side]
         kd = Path(kd)
@@ -218,20 +262,15 @@ def prove(repo, out, kits):
         pins = json.loads((out / S81 / hc["pins_file"]).read_text())["pins"]
         shapes = G.lef_pin_rects(out / hc["lef"], geometry=True)
         # the real per-root window contract (tap_window_port_ps, ps per scalar root; this stage moves no window)
-        # Window source: the kit's own generated table (sdc_lint.json; the recipe spec is lost).  The repo profile is
-        # checked too: it must agree on every root it lists, and the roots it lacks are reported (not filled in).
+        # window source: the (staged) repo root_profile.json, no kit-table substitution; refuses on error.  The kit's
+        # generated table (sdc_lint.json) must then equal it root for root.
         mr = {"roots": [{"base": k, "pins": [k]} for k in roots_doc[ROOTKEY[side]]["ports"]]}
-        kw = next(_find(json.loads((kd / "sdc_lint.json").read_text()), "tap_window_port_ps"))
-        spec = {"native_clock_pins": roots_doc[ROOTKEY[side]], "tap_window_port_ps": kw}
-        windows = G.root_window_contract(spec, mr)                                                       # refuses on error
-        pw = profile[ROOTKEY[side]]["tap_window_port_ps"]
-        try:
-            G.root_window_contract(dict(spec, tap_window_port_ps=pw), mr)
-            prof_refusal = None
-        except SystemExit as e:
-            prof_refusal = str(e)
-        prof_missing = sorted(set(windows) - set(pw))
-        win_diff = sorted(k for k in pw if k not in windows or abs(float(pw[k]) - windows[k]) > 1e-9)
+        spec = {"native_clock_pins": roots_doc[ROOTKEY[side]],
+                "tap_window_port_ps": profile[ROOTKEY[side]]["tap_window_port_ps"]}
+        windows = G.root_window_contract(spec, mr)
+        kw = kit_windows(kd)
+        win_diff = sorted(k for k in set(kw) | set(windows) if k not in windows or k not in kw
+                          or abs(float(kw[k]) - windows[k]) > 1e-9)
         nat = G.native_root_pin_contract(spec, mr, pins, shapes, hc["outline_um"], hc.get("obs_max"))   # refuses on error
         ph = G.native_m7_phase(nat, hc, Q)                                                               # refuses on error
         tline = next(l for l in G.kit_tracks(None, ph).splitlines() if l.startswith("make_tracks M7"))
@@ -249,9 +288,8 @@ def prove(repo, out, kits):
             if krow.get(k) != want:
                 row_diff.append((k, want, krow.get(k)))
         res[side] = dict(roots=len(nat), root_windows=len(windows), root_window_ps_range=[min(windows.values()),
-                         max(windows.values())], repo_profile_value_diff=win_diff,
-                         repo_profile_missing_roots={k: windows[k] for k in prof_missing},
-                         repo_profile_refusal=prof_refusal, m7_phase=ph, make_tracks_generated=tline, make_tracks_kit=kline,
+                         max(windows.values())], profile=str(pp.relative_to(out) if pp.is_relative_to(out) else pp),
+                         kit_window_diff=win_diff, m7_phase=ph, make_tracks_generated=tline, make_tracks_kit=kline,
                          make_tracks_equal_ignoring_comment=tr_ok, io_blocks_equal=len(nat) - len(io_diff),
                          io_diff=io_diff, pins_rows_equal=len(nat) - len(row_diff), pins_diff=row_diff[:5])
         ok &= tr_ok and not io_diff and not row_diff and not win_diff
@@ -264,8 +302,10 @@ def main(argv=None):
     ap.add_argument("--repo", default=str(REPO_DEFAULT))
     ap.add_argument("--out", required=True)
     ap.add_argument("--prove-kit", action="append", default=[], help="SIDE=KITDIR (side e or w)")
+    ap.add_argument("--window-kit", action="append", default=[],
+                    help="SIDE=KITDIR: root_profile sync source (KIT/sdc_lint.json tap_window_port_ps)")
     a = ap.parse_args(argv)
-    rec = stage(a.plan, a.repo, a.out)
+    rec = stage(a.plan, a.repo, a.out, dict(s.split("=", 1) for s in a.window_kit) or None)
     print(json.dumps({k: v for k, v in rec.items() if k != "follow_ups"}, indent=1))
     if a.prove_kit:
         ok, res = prove(a.repo, a.out, dict(s.split("=", 1) for s in a.prove_kit))
