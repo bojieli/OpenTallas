@@ -3792,15 +3792,15 @@
     "clock": "PASS",
     "evidence": "DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/s87bind/plan_ready7b.json",
-   "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7b",
+   "plan": "/srv/opentallas-scratch2/claude/s87bind/plan_ready11r.json",
+   "gen_host": "epyc9",
+   "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r11r",
    "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7b",
-    "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87.json",
-    "note": "KW-FIX-45 11-11 20:1x DIE-S81-87 GO 4cf8fb2f1479 (ready7b strict --crit bind rc 0, n_errors 0, bind_report 0875f59221cd; G0 profile accepted by COORD); kit source bsrc3_r7b = main c6c0f5cf65d2 + re-proof b77b058ea7d8 + landing table base28 ec8fcf58edc2"
+    "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r11r",
+    "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87d.json",
+    "note": "KW-FIX-45 11-12 DIE-S81-87 GO db1da17a93ab (ready11r strict --crit bind rc 0, n_errors 0, bind_report e9a09df05ece); kit source bsrc3_r11r = main c6c0f5cf65d2 + dead-input re-proof 341ccaa06f67 + landing table ec8fcf58edc2; launch list launch_list_ready11r.tsv"
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -5240,56 +5240,6 @@
     "col_h9_r2__t1__clb8d86cd5": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
     "col_h9_r2__t1__clc9ad8f7e": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
     "col_h9_r2__t1__clce45cab5": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
-    "ot_s81sl_leaf__t16": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t27": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t27": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t49": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t2": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t21": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t25__cl431c660f": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t29": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t38": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t47": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t5": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t56": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t57": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t59": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t6": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t69": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t70": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t9": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "dsdv_slice_lepw_mu_LP__t2": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "seqhost__t1": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "serdes__t1__clb45db5be": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t14": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t17": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t21": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t22": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t24__cl64811a5d": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t24__cleece78ec": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t28": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t29__clc7772371": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t30__cl6a190133": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t30__clcedefe91": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t40__clc8fb2c8c": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t44": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t46": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t47": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t48": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t50__cl39451317": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t50__cld84c9e24": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t6__cl54a9ceeb": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t7__cl503f4913": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t7__cl945bc067": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "slice_station__t8": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_kv_leaf__t1": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_kv_leaf__t3": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_kv_leaf__t4": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t28": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t55": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t66": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "ot_s81sl_leaf__t73": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
-    "col_h10_r2__t1__cl1f5d6c2a": "KW-FIX-43 11-11 00:0x PAUSE (DIE-S81-85 / COORD fail_watch, KIT_TOPOLOGY_BIND_STALE class): no new gen until DS85's canonical strict S81 bind on 99f40d (src _por36) lands; lift = drop hold_items_kw43pause in one step with the kit_rtl repoint",
     "svc_hi_dsdv_svc_pvso_entry__t1": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
     "svc_hi_dsdv_svc_pvso_entry__t2": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
     "svc_hi_dsdv_svc_rs__t1": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
@@ -5308,7 +5258,14 @@
     "svc_lo_dsdv_svc_rs_w__t1": "S81-A1 ARCH-REQUIRED (FEAS-AUDIT-1), post-cut svc event: KW-FIX-43 11-11 DIE-S81-85: staging SRAM -> transposer one cycle over 2.15 mm (hi) / 2.89 mm (lo), 5-7x the 405 um reach; out of the rebind batch and the 12:00 batch",
     "bk_sel__t2": "REDESIGN reach: q<->c / g->q pin-to-pin links up to 1530 um with no relay (CPL-S81-MISC), FIRM stations + pin cycles after 12:00 (KW-FIX-43 11-11 DIE-S81-85); out of the 12:00 S81 batch",
     "dsdv_slice_c1x_C__t9": "DIE-S81-87 HOLD list (c1x_C t9): stays held (COORD S81 PAUSE LIFT); re-held by KW-FIX-45 after the VIS-SWEEP batch included it",
-    "*": "KW-FIX-45 11-11 22:0x DIE-S81-87 P0: no S81 launch from out_r7b/out_r7c (bind base carries stale 11-06 RTL for 56 files); hold until the corrected bind out_r7d + manifest arrive"
+    "dsdv_slice_c1x_C__t1": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "dsdv_slice_c1x_C__t3": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "dsdv_slice_c1x_C__t4": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "dsdv_slice_lepw_mu_C__t1": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "dsdv_slice_lepw_mus_C__t1": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "dsdv_slice_lepw_mus_LP__t2": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "serdes__t14": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)",
+    "dsdv_bksel_q*": "DIE-S81-87 ready11r HOLD list (KW-FIX-45 11-12)"
    },
    "queue_src": "main@c6c0f5cf65d2",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -6379,9 +6336,8 @@
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
    "hosts": [
-    "epyc7",
     "epyc9",
-    "epyc2"
+    "epyc8"
    ],
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
@@ -6455,9 +6411,7 @@
    },
    "place_prefer": [
     "epyc9",
-    "epyc8",
-    "epyc7",
-    "epyc2"
+    "epyc8"
    ],
    "note_hosts_1104b": "KW-FIX-7 07:1x COORD 06:51 (6): epyc2 scratch 161 GB > 150, S81 PLACE steered to epyc2 first (admit-gated, falls back to epyc4); gen stays epyc4.",
    "item_env": {
@@ -9490,144 +9444,7 @@
      },
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
-    "col_h10_r0_p1__t1__cl574cc59d": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h10_r0_p1__t1__cl911743eb": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h10_r0_p4__t1": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p1__t1": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p2__t1__cl0045af7b": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p2__t1__cl9f71e63d": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p3__t1__cl0cd90c0e": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p3__t1__cl31d0dc4b": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p3__t1__cl8ce97bcb": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p4__t1__cl8ef405e8": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p4__t1__clcb2fbfe8": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p5__t1": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
-    "col_h9_r0_p6__t1": {
-     "src": "/srv/opentallas-scratch2/claude/s87bind/bsrc3_r7c",
-     "src_sha": "c6c0f5cf65d2e444fcfb1b1d87fc7a3177cbc415",
-     "queue_src": "main@c6c0f5cf65d2",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/s87bind/out_r7c",
-      "asbuilt": "/srv/opentallas-scratch2/claude/s87bind/asbuilt_f_s87c.json"
-     },
-     "note": "KW-FIX-45 11-11 21:1x DIE-S81-87 GO: ready7b rebind with the fixed frame kits CLEAN (out_r7c, bind_report ad4b5309d831, plan 4cf8fb2f1479); tree bsrc3_r7c (re-proof + base28c landing table ec8fcf58edc2)"
-    },
     "dsdv_slice_c1x_C__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-     },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
-    "dsdv_slice_c1x_C__t10": {
      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
@@ -9655,13 +9472,6 @@
      },
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
-    "dsdv_slice_c1x_C__t6": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-     },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
     "dsdv_slice_c1x_C__t7": {
      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
      "kit_rtl": {
@@ -9683,41 +9493,6 @@
      },
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
     },
-    "dsdv_slice_c3x_C__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-     },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
-    "dsdv_slice_iq_C__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-     },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
-    "dsdv_slice_kv512_C__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-     },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
-    "dsdv_slice_lepe_mu_C__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-     },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
-    "dsdv_slice_lepe_nh_mus_C__t1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-     },
-     "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
     "dsdv_slice_lepw_mu_C__t1": {
      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
      "kit_rtl": {
@@ -9731,39 +9506,6 @@
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
      },
      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-    },
-    "ot_s81sl_leaf__t16": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "prev_kw43six": {
-      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-      "kit_rtl": {
-       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-      },
-      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-     },
-     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
-    },
-    "ot_s81sl_leaf__t27": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "prev_kw43six": {
-      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-      "kit_rtl": {
-       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-      },
-      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-     },
-     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
-    },
-    "ot_s81sl_leaf__t42": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "prev_kw43six": {
-      "plan": "/srv/opentallas-scratch2/claude/kw43-canon/s81/plan_h2_2249_c839.json",
-      "kit_rtl": {
-       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_ctapw.sh"
-      },
-      "note": "KW-FIX-43 17:2x COORD loopgap-161x (a) CORE-CTAP-WIDE 3b61cbea3b55: plan c839c32358909222 + strict bind10_ctap (rc 0, errors 0), asbuilt_f; staged read-only per host (epyc7/epyc2/intel1/epyc4, md5 manifest equal)"
-     },
-     "note": "KW-FIX-43 00:0x DIE-S81-85 ruling: c839 only retapped grid clock.taps (no core taps) -> plan of record 39eae55ea90a, die kit_rtl (canonical bind at pause lift)"
     },
     "slice_station__t27": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/s81pffe/plan.json",
@@ -9835,75 +9577,6 @@
      },
      "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
     },
-    "iqf__t1": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
-    },
-    "ot_s81sl_leaf__t1": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t10": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t11": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t12": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t13": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t14": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t15": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
     "ot_s81sl_leaf__t2": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
@@ -9913,436 +9586,7 @@
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
      "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
     },
-    "ot_s81sl_leaf__t21": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t22": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
-    },
-    "ot_s81sl_leaf__t23": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t24__cl2456157b": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t24__cl81374cd8": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t25__cl431c660f": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t26": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t29": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t3": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t31": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t32": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t33": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t34": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t35": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t36": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t37": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t38": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t39": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
-    },
-    "ot_s81sl_leaf__t4": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t40__cl86ea32b3": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t40__clf8bbdae1": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t41": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t43": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t44__clf4ea6d4b": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t44__clf6cf8492": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t46": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t47": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
     "ot_s81sl_leaf__t5": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t50": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t51": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t53__cl958451dd": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t53__clb66fa5cb": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
-    },
-    "ot_s81sl_leaf__t54__cl501e5681": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT."
-    },
-    "ot_s81sl_leaf__t54__cl706d9749": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t56": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t57": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t59": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t6": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t60": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t61": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t65": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t67": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t68": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t69": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t70": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t71": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t72": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t74": {
-     "kit_rtl": {
-      "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
-     },
-     "note": "KW-FIX-43 11-10 18:0x COORD: POROUS-ALL-1 batch (15c954afd822, porous_files ad3aee52ccb8 overlay on a new src tree per die, unset env = byte-identical kits) + S81 bind of record bind_ctl for the 100 bind8-drift types (DIE-S81-85 17:46). DO_NOT_COUNT.",
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t9": {
      "kit_rtl": {
       "script": "/srv/opentallas-scratch2/claude/kw43-canon/s81/kit_rtl_bctl.sh"
      },
@@ -10377,42 +9621,7 @@
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
      "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
     },
-    "serdes__t12": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
-     "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
-    },
-    "serdes__t13": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
-     "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
-    },
-    "serdes__t15__cla2127225": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
-     "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
-    },
-    "serdes__t15__cla3d02796": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
-     "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
-    },
-    "serdes__t16": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
-     "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
-    },
     "serdes__t1__clb45db5be": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
-     "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
-    },
-    "serdes__t3": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
-     "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
-    },
-    "serdes__t4": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/s81p99f/plan.json",
      "note": "KW-FIX-43 11-10 23:5x COORD 23:04 RULING + COORD 23:4x (2) approved: DIE-S81-85 FEED-BAL-2 combined plan 99f40d35071d (FEED-BAL-2 d820dd93c6dc on SVCRS-3 v5 ca10ae6afbab; type blocks equal plan_h2_2249), staged sha-checked epyc7/epyc4/epyc8; die kit_rtl unchanged",
      "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/feed1111/out2/plan.json"
@@ -10633,61 +9842,6 @@
      "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
     },
     "ot_s81sl_kv_leaf__t5": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t17": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t25__cl55642d17": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t28": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t45": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t52": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t55": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t58": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t62": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t66": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t7": {
-     "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
-     "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
-     "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
-    },
-    "ot_s81sl_leaf__t73": {
      "plan": "/srv/opentallas-scratch2/claude/kw43/s81p39e/plan.json",
      "note_kw43por36": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release: plan 39eae55ea90a (99f40d + DS85 signed views 372e6b26de17), src _por36 (POROUS-ALL-1 364106cfe616); kit_rtl/env unchanged",
      "plan_prev_kw43pdir": "/srv/opentallas-scratch2/claude/die-s81-85/views1111/out_99f/plan.json"
@@ -19874,86 +19028,76 @@
     "epyc2"
    ],
    "only_items": [
-    "col_h10_r0_p1__t1__cl574cc59d",
-    "col_h10_r0_p1__t1__cl911743eb",
-    "col_h10_r0_p4__t1",
-    "col_h9_r0_p1__t1",
-    "col_h9_r0_p2__t1__cl0045af7b",
-    "col_h9_r0_p2__t1__cl9f71e63d",
-    "col_h9_r0_p3__t1__cl0cd90c0e",
-    "col_h9_r0_p3__t1__cl31d0dc4b",
-    "col_h9_r0_p3__t1__cl8ce97bcb",
-    "col_h9_r0_p4__t1__cl8ef405e8",
-    "col_h9_r0_p4__t1__clcb2fbfe8",
-    "col_h9_r0_p5__t1",
-    "col_h9_r0_p6__t1",
-    "dsdv_slice_c1x_C__t10",
-    "dsdv_slice_c1x_C__t6",
-    "dsdv_slice_c3x_C__t1",
-    "dsdv_slice_iq_C__t1",
-    "dsdv_slice_kv512_C__t1",
-    "dsdv_slice_lepe_mu_C__t1",
-    "dsdv_slice_lepe_nh_mus_C__t1",
-    "iqf__t1",
-    "ot_s81sl_leaf__t1",
+    "ot_s81sl_leaf__t57",
+    "ot_s81sl_leaf__t61",
+    "ot_s81sl_leaf__t17",
+    "ot_s81sl_leaf__t52",
+    "ot_s81sl_leaf__t10",
+    "ot_s81sl_leaf__t11",
+    "ot_s81sl_leaf__t12",
     "ot_s81sl_leaf__t13",
     "ot_s81sl_leaf__t14",
+    "ot_s81sl_leaf__t15",
+    "ot_s81sl_leaf__t16",
+    "ot_s81sl_leaf__t21",
+    "ot_s81sl_leaf__t22",
     "ot_s81sl_leaf__t23",
+    "ot_s81sl_leaf__t24__cl2456157b",
+    "ot_s81sl_leaf__t24__cl81374cd8",
+    "ot_s81sl_leaf__t25__cl431c660f",
     "ot_s81sl_leaf__t25__cl55642d17",
-    "ot_s81sl_leaf__t3",
+    "ot_s81sl_leaf__t26",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t28",
+    "ot_s81sl_leaf__t29",
     "ot_s81sl_leaf__t30",
+    "ot_s81sl_leaf__t31",
+    "ot_s81sl_leaf__t32",
     "ot_s81sl_leaf__t33",
     "ot_s81sl_leaf__t34",
     "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t36",
     "ot_s81sl_leaf__t37",
+    "ot_s81sl_leaf__t38",
     "ot_s81sl_leaf__t39",
-    "ot_s81sl_leaf__t4",
+    "ot_s81sl_leaf__t40__cl86ea32b3",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S",
+    "ot_s81sl_leaf__t40__clf8bbdae1",
+    "ot_s81sl_leaf__t41",
+    "ot_s81sl_leaf__t42",
     "ot_s81sl_leaf__t43",
     "ot_s81sl_leaf__t44__clf4ea6d4b",
     "ot_s81sl_leaf__t44__clf6cf8492",
     "ot_s81sl_leaf__t45",
     "ot_s81sl_leaf__t46",
+    "ot_s81sl_leaf__t47",
+    "ot_s81sl_leaf__t50",
     "ot_s81sl_leaf__t51",
-    "ot_s81sl_leaf__t52",
     "ot_s81sl_leaf__t53__cl958451dd",
     "ot_s81sl_leaf__t53__clb66fa5cb",
     "ot_s81sl_leaf__t54__cl501e5681",
     "ot_s81sl_leaf__t54__cl706d9749",
+    "ot_s81sl_leaf__t55",
+    "ot_s81sl_leaf__t56",
     "ot_s81sl_leaf__t58",
+    "ot_s81sl_leaf__t59",
+    "ot_s81sl_leaf__t6",
+    "ot_s81sl_leaf__t60",
     "ot_s81sl_leaf__t62",
+    "ot_s81sl_leaf__t65",
+    "ot_s81sl_leaf__t66",
     "ot_s81sl_leaf__t67",
+    "ot_s81sl_leaf__t68",
+    "ot_s81sl_leaf__t69",
     "ot_s81sl_leaf__t7",
+    "ot_s81sl_leaf__t70",
     "ot_s81sl_leaf__t71",
+    "ot_s81sl_leaf__t72",
+    "ot_s81sl_leaf__t73",
+    "ot_s81sl_leaf__t74",
     "ot_s81sl_leaf__t75",
-    "serdes__t12",
-    "serdes__t13",
-    "serdes__t15__cla2127225",
-    "serdes__t15__cla3d02796",
-    "serdes__t16",
-    "serdes__t2",
-    "serdes__t3",
-    "serdes__t4",
-    "slice_station__t45",
-    "ot_s81sl_leaf__t11",
-    "ot_s81sl_leaf__t17",
-    "ot_s81sl_leaf__t42",
-    "slice_station__t36",
-    "slice_station__t29__cl2e5c855a",
-    "slice_station__t6__cl0755c26e",
-    "ot_s81sl_kv_leaf__t2",
-    "slice_station__t43",
-    "slice_station__t42__clcf44e680",
-    "slice_station__t42__cl4bd1432c",
-    "slice_station__t37",
-    "slice_station__t31",
-    "slice_station__t18",
-    "slice_station__t25",
-    "ot_s81sl_kv_leaf__t5",
-    "slice_station__t40__cl1ea9de02",
-    "slice_station__t30__cl1653104c",
-    "slice_station__t26",
-    "slice_station__t38",
-    "slice_station__t7__cl362204c4"
+    "ot_s81sl_leaf__t8",
+    "ot_s81sl_leaf__t9"
    ],
    "prov_require_cands": true,
    "hosts_base_prev_kw45_epyc4off": [
@@ -19994,40 +19138,28 @@
     "clock": "PASS",
     "evidence": "KW-FIX-16 13:1x l48uf I135 tag flow-20261106-d-head (COORD 13:00 GO): prep_uf = repo l48uf unpacked from src_r 79e52bd98b2 (SHA256SUMS OK, plan 69ce0830f6e4, sidecar = l48ue bytes); only hd_tile u_core params + published tile_p differ from prep_ue. | KW-FIX-14 11:2x l48ue I121 9ac2d25b51e tag flow-20261106-a-head, COORD 11:05 GO: prep_ue = repo l48ue unpacked (SHA256SUMS OK, plan 9a2186d89486, sidecar = l48ud bytes), 9 types; hd_host/hd_mesh l48ud rows keep running (only_items_l48ud kept for restore). | KW-FIX-12 08:3x l48ud I107 COORD 08:12 GO. | KW-FIX-8 08:4x COORD 06:51 (3) + 07:34 (3): event l48ua = DIE-HEAD-61 07:09 READY prepared_l48ua (plan f64ad52c1726, sidecar bbdd2f7b5ad1), GATE_EVENTS l48ua merged I34 fe4a38b9337, pilot rows only. | KW-FIX-6 04:4x COORD 04:00: event l48se = l48sd + hd_tile RE-FORM only [CHECKED raw diff], src main I23. | KW-FIX-6 03:4x: event l48sd = DIE-HEAD-59 00:56 READY prepared_l48sd (plan 830b9a799df1, sidecar bbdd2f7b5ad1 unchanged), src dh59/serdes/wt@b65c0e2d46, GATE_EVENTS l48sd merged I18, COORD 00:4x + 03:2x GO; 5 items | KW-FIX-5 01:0x: event l48tc = DIE-HEAD-59 FREG-1 prepared_l48tc (plan e094ebb2b6e8, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48tc merged I16, COORD GO; 2 items | KW-FIX-4 20:12: event l48rc = DH58-RF2 CONSERVATIVE prepared_l48rc (plan 8327f303db76, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48rc (kw-fix-4-l48rc@3c9994a17c0), OWNER directive via DIE-HEAD-58; 4 items; l48tb turn_a/b keep running (cancel_superseded false) | KW-FIX-4 19:04: event l48tb = DH58-TURNB prepared_l48tb (plan f9623a82a239, sidecar there), GATE_EVENTS l48tb merged (kw-fix-4-itemenv@7585347926, RM-27 I4); turn_a/turn_b only (only_items_l48rf kept for restore); running l48rf kits untouched | KW-FIX-4 11:3x: event l48rf = DH58-RFPLAN PREPARED (intel2+epyc4 dh58/rfplan_work/prepared_l48rf, plan 59c391855c18, sidecar bbdd2f7b5ad1 = l48h1), DIE-HEAD-58 GO 11:24, COORD APPROVED 11:27, GATE_EVENTS l48rf 38b86b7486 merged; G0C advisory (0 new errors, 17 warn). cancel_superseded false: the 6 live l48h0 jobs finish on l48h0 (die owner). hd_mesh_e/hd_ctl_e/hd_ctl_n/hd_host_n holds released (l48rf geometry). | prev event l48h0 plan /srv/opentallas-scratch2/claude/dh55/prepared_l48h0/source_plan.json | KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98) | COORD 11-01 09:2x/14:0x approved l48z event; gate b3cb024e493 merged main a0f8f0ad6; prepared plan 0c98a23000ad / sidecar dfe1fd228189; DIE-HEAD-53 export PASS n3_turn,mesh_e,hd_spn | ROOT COORDAPPROVED fe9f369d8 paired mesh SOURCE STAGE ONLY: plan ad1e5a17b355 / sidecar bbdd2f7b5ad1; frozen703 GEN PASS; wrapper+10 generated helpers byte-identical to measured mesh_kit4 (7671b3dde p90 29.81/GRT0/nativeEQ). hd_mesh_e held until actual checkpoint resume/adopt joins; no duplicate PLACE or physical-release credit; parent clock/signoff holds remain."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/head_freg1111/prep/source_plan.json",
+   "plan": "/srv/opentallas-scratch2/claude/head-94/g5p/source_plan.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_freg_58a264ab1e",
-   "src_sha": "a0c7f62d020a81e8e37accc8dd954a3ac12ba54b",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_h94_9ddabba952",
+   "src_sha": "9ddabba952d94d6e4686fbbc4c62b1d607b4fe54",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_freg_58a264ab1e/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_h94_9ddabba952/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "KW-FIX-42 2026-11-09 08:47 PST: l48hp1 src_head_hp1 kit_rtl.sh | KW-FIX-16 12:5x I133 tag flow-20261106-c-head: src_q main 3d13a314805 (hardlink of src_p, schema accepts clock.tap_window.per_port_note), kit_rtl.sh byte-same as src_n. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
    },
    "gen_args": [
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/head_freg1111/prep/source_sidecar.json",
+    "/srv/opentallas-scratch2/claude/head-94/g5p/source_sidecar.json",
     "--hold-ff-margin",
     "0"
    ],
    "preflight_args": [],
    "only_items": [
-    "hd_ctl",
     "hd_host_e",
-    "hd_host_w",
-    "hd_lep0N",
-    "hd_mesh",
+    "hd_st_n4",
     "hd_spn",
     "hd_spn_end",
-    "hd_serdes",
-    "hd_st_n4",
-    "hd_st_n3_turn",
-    "hd_st_n3_transit",
-    "hd_st_m",
-    "hd_st_k5",
-    "hd_mesh_e",
-    "hd_ctl_e",
-    "hd_spn_wshim_tx",
-    "hd_spn_eshim_rx"
+    "hd_lep0N"
    ],
    "die_max_inflight": 60,
    "owner_lane": "HEAD die owner (DIE-HEAD-70)",
@@ -20257,7 +19389,7 @@
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": true,
-   "queue_src": "main@58a264ab1ee1",
+   "queue_src": "claude/head-94-heads-1112@9ddabba952d9",
    "item_env": {
     "hd_ctl": {
      "OT_IO_HOLD": "sender_min"
