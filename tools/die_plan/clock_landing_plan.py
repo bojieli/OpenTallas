@@ -392,6 +392,31 @@ def face_distance(t,bus,rect):
     return {"S":rect[1],"N":h-rect[3],"W":rect[0],"E":w-rect[2]}[f]
 
 
+def _compact_bank_boxes(xs,ys,bw,bh,w,h,margin,px,py,obstacles):
+    """LAND-RING-2 11-12 (CLAND-CLASS-1 profile: kv3_pv_v7 600 s, 99 % here, 7.5e8 genexpr calls): the compact-bank
+    candidate scan of _storage_band, same predicates, same order (x0 over xs, y0 over ys, set iteration order), so the
+    returned list is identical.  Speed-ups: the 405-um corner reach max(|x-px|+|y-py|) over the 4 corners equals
+    max|x-px| + max|y-py| (separable, exact in floats: addition is monotone), so each axis is computed once and the
+    y loop skips by its own term; the overlap test only scans obstacles that already overlap the box in x."""
+    R=405-2.16;out=[]
+    yl=[]
+    for y0 in ys:
+        if y0<margin or y0+bh>h-margin:continue
+        yl.append((y0,max(abs(y0-py),abs(y0+bh-py))))
+    for x0 in xs:
+        x1=x0+bw
+        if x0<margin or x1>w-margin:continue
+        dx=max(abs(x0-px),abs(x1-px))
+        if dx>R:continue
+        ox=[o for o in obstacles if min(x1,o[2])>max(x0,o[0])+1e-6]
+        for y0,dy in yl:
+            if dx+dy>R:continue
+            y1=y0+bh
+            if any(min(y1,o[3])>max(y0,o[1])+1e-6 for o in ox):continue
+            out.append([x0,y0,x1,y1])
+    return out
+
+
 def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=(),_use=None):
     if resets:
         try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale,phy=phy)
@@ -491,13 +516,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
         ys={margin,h-bh-margin,max(margin,min(h-bh-margin,py-bh/2))}
         for o in obstacles:
             xs.update((o[0]-bw-2.16,o[2]+2.16));ys.update((o[1]-bh-2.16,o[3]+2.16))
-        for x0 in xs:
-            for y0 in ys:
-                box=[x0,y0,x0+bw,y0+bh]
-                if x0<margin or y0<margin or box[2]>w-margin or box[3]>h-margin:continue
-                if max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))>405-2.16:continue
-                if any(min(box[2],o[2])>max(box[0],o[0])+1e-6 and min(box[3],o[3])>max(box[1],o[1])+1e-6 for o in obstacles):continue
-                candidates.append(box)
+        candidates += _compact_bank_boxes(xs,ys,bw,bh,w,h,margin,px,py,obstacles)
     if FACE_CROSSING and not any(face_crossing(t,bus,c,width)[0]<0.5 for c in candidates):
         wide=_face_wide_boxes(t,b,w,h,obstacles,margin,px,py,area,depth,length,lo,hi)
         if not wide and FACE_HOME:wide=_face_clamped_boxes(t,b,w,h,obstacles,margin,px,py,area)
