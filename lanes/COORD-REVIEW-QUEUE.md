@@ -45476,3 +45476,45 @@ FAILED [AUTOPILOT 9fed45c821e4] 2026-11-11 23:22:24 PST AUTOPILOT -> KIT-WAVE-3:
    (4) MISSING VIEWS: 7 types + lep_pair, owned by KIT-WAVE/HEAD-94 builds in flight. Re-run sta3.sh as each signs off (about 3 min, no new GRT).
    (5) GRT congestion: none. Missing pins: none (0 missing taps; the route.v covers every plan pin).
   VERDICT HEAD: GRT PASS. STA FAIL on (1) and (2). Neither is an ARCH failure and neither needs a die re-plan: (1) is window data plus two region balances, (2) is a bind re-plan.
+- 2026-11-11 23:23 PST RESULT+CLASS [HBM-CORES-B -> COORD, CLK-LEAF-BAL-1, DIE-HBM-100, VISLAYOUT2-HBM] tag hbm-dtap-pad-depth. DO_NOT_COUNT; read-only logs and STA only. Question: why is the vms q0_faces delay-tap padding so deep?
+  The padding target is not a contract. core_tap_align.tcl (physical/die_plan/hbm_arch_cores) sets it to the r0 MAXIMUM tap mean over ALL taps of ALL roots, and never reads OT_VCLK_FF.
+  v32e0 attempt_2 (4_1_cts.log OT_DTAP_ALIGN r0; 69 taps, 8 roots):
+  - macro-only roots clk_macro0..2: 1 pin each, 90-117 ps
+  - side roots clk_w/e/n/s: 291-344 ps
+  - main root clk: 40 taps, 581-727 ps
+  - ONE outlier tap, 700028, at 937 ps: +210 ps over the next tap
+  Every tap is padded to 937 (final 928-955):
+  - each main-root tap gets the ~14-15 BUFx12 chain VISLAYOUT2 saw (~15.3 ps/cell, ~210-265 ps)
+  - the side and macro roots get 600-850 ps
+  v512b is worse: r0 max 860, the chains overshoot, final spread 846..1067 ps.
+  The trunk is already inflated before padding. Worst hold path: rst_n -> u_brst g_b[0].s[1], -597 ps. Its tap input arrives at 430 ps:
+  - root repeater + 5 CTS levels: ~150 ps
+  - three clkleafrep_* repeaters on trunk nets (clknet_0_clk est slew 181 ps): 128 ps
+  - one repair_clock_nets wire BUFx10 + a delaybuf: ~100 ps
+  Then 15 align BUFx12 (265 ps) and 2 tap levels (45 ps) bring the clock pin to 740 ps.
+  Hold endpoints: 2061 port starts + 1255 register starts at -67.7. The port starts use vclk 202.5 and input min -40, so they pass only if core insertion is under ~143 ps.
+  Class census: 20 runs, every HBM kit with core_tap_align and a CTS log under 4 days old on epyc4/7/8/9. The logic-root r0 median is 255-861 ps on every run, before any padding, against OT_VCLK_FF 202.5. Medians:
+  - q3bc_CF2c: 583
+  - smh_static_front: 649-861
+  - smh_pt_w: 570-577
+  - serdes_rx_bm3_rest: 361
+  - hfd_ep: 325-333
+  - rootg1c: 255
+  250 TT / 202.5 FF is the die-wide METHODOLOGY 12.3 default (clk_aocv_qc CORE_LAT, core_family_slice BAND), and no HBM density-tap core meets it. The contract is stale against the built form, but it does not drive the padding.
+  Structural fix, as a class:
+  (1) core_tap_align target = p90 of the logic-root tap means (taps with real sink counts), not the global r0 max.
+      - Taps above the target are reported as OUTLIER and fixed in core_density_taps: re-home or split the outlier's sinks instead of padding every other tap up to it.
+      - Macro-only and side roots align to the same robust target.
+      - On v32e0 this removes the ~210 ps outlier pad from every tap.
+      - Owner: HBM-CORES-B, on a branch, proven by a read-only replay on the v32e0 CTS db.
+  (2) Trunk: clk_leaf_repeat must skip nets above the ot_dtap level (clknet_*_clk trunk, delaynet_*, CTS wire nets).
+      - This belongs to CLK-LEAF-BAL-1's class.
+      - Here it is ~128 ps of the 430 ps trunk, and the likely source of the outlier.
+  (3) Contract: per-core contract, not the die default.
+      - The plan carries parent_budget core taps at the core's measured tap median. core_clock_contract.plan_budget already reads them; compact_coll_form already uses 405/340.
+      - The parent tree delivers the face clock to match; die STA on real views checks the pair. This is the industry form: characterized core latency, parent compensates.
+      - Alternative: keep 202.5 and build root-driven shallow trees. No current HBM core does this.
+      - Choice: DIE-HBM-100 / plan owner.
+  While vclk FF stays at 202.5, (1)+(2) alone will not close port hold on these cores.
+  Evidence: epyc8 /srv/opentallas-scratch2/claude/vislayout2-hbm/kw/runs/items/hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a/attempt_2; census script hbm-cores-b/dtapcensus.sh on epyc4/7/8/9.
+  Correction to my earlier resume STATUS item (5): the flc ECO silence started at 05:41 UTC, not PST.
