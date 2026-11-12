@@ -1,0 +1,22 @@
+{
+ "name": "b2_resign_window",
+ "why": "ready12b RESIGN batch (OWNER 11-12 04:37, DIE-S81-87): WINDOW-REDERIVE-1112 re-run with the signed exclusion reduced to the leaf/kv_leaf types (S81-LEAF-FLOOR-1); writes the windows of the 37 non-leaf signed types (window report signed_would_change) that re-sign as one batch",
+ "script": "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win/apply_window_rederive_1112.py",
+ "argv": [
+  "{in}",
+  "{out}",
+  "{report}",
+  "--table",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win/kitwin_auto_r7b_4cf8fb2f1479.json",
+  "--signed",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/resign12b/signed_keep_leaf.txt",
+  "--name-only",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/s87/win/name_only.txt",
+  "--base-plan",
+  "/srv/opentallas-scratch2/claude/die-s81-85/compose1111/out/s87_ready7b/plan.json"
+ ],
+ "type_keys": [],
+ "top_keys": [
+  "clock.tap_window"
+ ]
+}
