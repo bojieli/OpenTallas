@@ -1,0 +1,954 @@
+{
+ "schema": "opentallas.qc_s28a_delta.v1",
+ "lane": "QC-S28-A",
+ "die": "qwen_compute",
+ "touched": {
+  "cbf_q00__cl1b5a6458": [
+   "hard_cores/[inst=u_t00]/lef",
+   "hard_cores/[inst=u_t01]/lef",
+   "hard_cores/[inst=u_t10]/lef",
+   "hard_cores/[inst=u_t11]/lef"
+  ],
+  "cbf_q00__cl870de686": [
+   "hard_cores/[inst=u_t00]/lef",
+   "hard_cores/[inst=u_t01]/lef",
+   "hard_cores/[inst=u_t10]/lef",
+   "hard_cores/[inst=u_t11]/lef"
+  ],
+  "cbf_q00_s2": [
+   "hard_cores/[inst=u_t00]/lef",
+   "hard_cores/[inst=u_t01]/lef",
+   "hard_cores/[inst=u_t10]/lef",
+   "hard_cores/[inst=u_t11]/lef"
+  ],
+  "cbf_q01": [
+   "hard_cores/[inst=u_t02]/lef",
+   "hard_cores/[inst=u_t03]/lef",
+   "hard_cores/[inst=u_t12]/lef",
+   "hard_cores/[inst=u_t13]/lef"
+  ],
+  "cbf_q01_s2": [
+   "hard_cores/[inst=u_t02]/lef",
+   "hard_cores/[inst=u_t03]/lef",
+   "hard_cores/[inst=u_t12]/lef",
+   "hard_cores/[inst=u_t13]/lef"
+  ],
+  "cbf_q11": [
+   "hard_cores/[inst=u_t22]/lef",
+   "hard_cores/[inst=u_t23]/lef",
+   "hard_cores/[inst=u_t32]/lef",
+   "hard_cores/[inst=u_t33]/lef"
+  ],
+  "cbn_q00__cl622f65d2": [
+   "hard_cores/[inst=u_t00]/lef",
+   "hard_cores/[inst=u_t01]/lef",
+   "hard_cores/[inst=u_t10]/lef",
+   "hard_cores/[inst=u_t11]/lef"
+  ],
+  "cbn_q00__cld7bf7197": [
+   "hard_cores/[inst=u_t00]/lef",
+   "hard_cores/[inst=u_t01]/lef",
+   "hard_cores/[inst=u_t10]/lef",
+   "hard_cores/[inst=u_t11]/lef"
+  ],
+  "cbn_q00__cldbcda913": [
+   "hard_cores/[inst=u_t00]/lef",
+   "hard_cores/[inst=u_t01]/lef",
+   "hard_cores/[inst=u_t10]/lef",
+   "hard_cores/[inst=u_t11]/lef"
+  ],
+  "cbn_q01__clab6e67f2": [
+   "hard_cores/[inst=u_t02]/lef",
+   "hard_cores/[inst=u_t03]/lef",
+   "hard_cores/[inst=u_t12]/lef",
+   "hard_cores/[inst=u_t13]/lef"
+  ],
+  "cbn_q01__cld9ff4c40": [
+   "hard_cores/[inst=u_t02]/lef",
+   "hard_cores/[inst=u_t03]/lef",
+   "hard_cores/[inst=u_t12]/lef",
+   "hard_cores/[inst=u_t13]/lef"
+  ],
+  "cbn_q01__cldd6ea846": [
+   "hard_cores/[inst=u_t02]/lef",
+   "hard_cores/[inst=u_t03]/lef",
+   "hard_cores/[inst=u_t12]/lef",
+   "hard_cores/[inst=u_t13]/lef"
+  ],
+  "cbn_q11__cl49ae4555": [
+   "hard_cores/[inst=u_t22]/lef",
+   "hard_cores/[inst=u_t23]/lef",
+   "hard_cores/[inst=u_t32]/lef",
+   "hard_cores/[inst=u_t33]/lef"
+  ],
+  "cbn_q11__cl5cc92dfe": [
+   "hard_cores/[inst=u_t22]/lef",
+   "hard_cores/[inst=u_t23]/lef",
+   "hard_cores/[inst=u_t32]/lef",
+   "hard_cores/[inst=u_t33]/lef"
+  ],
+  "cbx_q10__cl89936551": [
+   "hard_cores/[inst=u_t20]/lef",
+   "hard_cores/[inst=u_t21]/lef",
+   "hard_cores/[inst=u_t30]/lef",
+   "hard_cores/[inst=u_t31]/lef"
+  ],
+  "cbx_q10__cl94a12200": [
+   "hard_cores/[inst=u_t20]/lef",
+   "hard_cores/[inst=u_t21]/lef",
+   "hard_cores/[inst=u_t30]/lef",
+   "hard_cores/[inst=u_t31]/lef"
+  ],
+  "coll_n": [
+   "clock/tap_group"
+  ]
+ },
+ "edits": [
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl1b5a6458",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t00"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl1b5a6458",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t10"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl1b5a6458",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t01"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl1b5a6458",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t11"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl870de686",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t00"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl870de686",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t10"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl870de686",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t01"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00__cl870de686",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t11"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t00"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t10"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t01"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q00_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t11"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t02"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t12"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t03"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t13"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t02"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t12"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t03"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q01_s2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t13"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q11",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t22"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q11",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t32"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q11",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t23"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbf_q11",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t33"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cl622f65d2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t00"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cl622f65d2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t10"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cl622f65d2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t01"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cl622f65d2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t11"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cld7bf7197",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t00"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cld7bf7197",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t10"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cld7bf7197",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t01"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cld7bf7197",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t11"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cldbcda913",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t00"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cldbcda913",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t10"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cldbcda913",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t01"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q00__cldbcda913",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t11"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__clab6e67f2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t02"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__clab6e67f2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t12"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__clab6e67f2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t03"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__clab6e67f2",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t13"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cld9ff4c40",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t02"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cld9ff4c40",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t12"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cld9ff4c40",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t03"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cld9ff4c40",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t13"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cldd6ea846",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t02"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cldd6ea846",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t12"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cldd6ea846",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t03"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q01__cldd6ea846",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t13"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl49ae4555",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t22"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl49ae4555",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t32"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl49ae4555",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t23"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl49ae4555",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t33"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl5cc92dfe",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t22"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl5cc92dfe",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t32"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl5cc92dfe",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t23"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbn_q11__cl5cc92dfe",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t33"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl89936551",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t20"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl89936551",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t30"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl89936551",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t21"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl89936551",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t31"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl94a12200",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t20"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl94a12200",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t30"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nl_a0c/qfd_tile_nl_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl94a12200",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t21"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A4",
+   "type": "cbx_q10__cl94a12200",
+   "path": [
+    "hard_cores",
+    {
+     "inst": "u_t31"
+    },
+    "lef"
+   ],
+   "from": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef",
+   "to": "physical/die_plan/qwen_compute/qcviews_1112/views/qfd_tile_nk_a0c/qfd_tile_nk_a0c.lef"
+  },
+  {
+   "item": "A5",
+   "type": "coll_n",
+   "path": [
+    "clock",
+    "tap_group"
+   ],
+   "from": null,
+   "to": {
+    "re": "(?:^|[/.])u_(?:cland|bin)_(rec_tx_s0_i)[/.]",
+    "note": "QC-S28-A 11-12 (VISLAYOUT2-QC ring-bin-tap, COORD 02:33): the cland rec_tx_s0_i landing ring and its u_bin_rec_tx_s0_i capture flops are ONE tap group (key rec_tx_s0_i) on the tap nearest their centroid (clock_taps.tcl group form, OT_TAP_GROUP_RE); s25 form-d sign-off had the ring on clk (165 ps) and the bin on clk_t2 (404-456 ps): 466 reg->reg FF hold endpoints to -45.76 ps. Clock tap assignment only, +0 cycles."
+   }
+  }
+ ],
+ "base_plan_sha256": "2f0c17d5f1a31e5a73baf57acd263c9924fc96c28e3fa4e8729bc7f1c9e7cf44"
+}

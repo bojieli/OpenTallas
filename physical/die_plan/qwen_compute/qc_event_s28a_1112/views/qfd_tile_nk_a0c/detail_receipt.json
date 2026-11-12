@@ -1,0 +1,39 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/nk_base.lef",
+ "base_sha256": "103f6e68f7032cd7172d39c298383cf2194ba7a8f85bb842ff072fe88a0cf326",
+ "detail": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/nk/detail.lef",
+ "out": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/nk/detail_view.lef",
+ "out_sha256": "0f95628d4a934e800b3d07f190ee680d0a2d50effd7715bc5f1af7202abc8ef2",
+ "layers_detailed": [
+  "M6",
+  "M7"
+ ],
+ "rects": {
+  "M6": 90279,
+  "M7": 44305
+ },
+ "pin_clear_um": null,
+ "pin_clear": null,
+ "pg_pin_layers": {
+  "VSS": [
+   "M5"
+  ],
+  "VDD": [
+   "M5"
+  ]
+ },
+ "detail_pins_equal_base": true,
+ "check_ok": true,
+ "problems": [],
+ "pin_window": {
+  "margin_um": 1.0,
+  "top_layer": "M7",
+  "clear_um": 0.05,
+  "windows": {},
+  "cut": {},
+  "window_detail": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/nk/detail.lef",
+  "window_detail_sha256": "630ba1f946948992583e0bb5bb9463c181f9ad851623c6b1d1b3b14dbbdb2d06",
+  "window_detail_pins_equal_base": true
+ },
+ "bloat_factor": 0
+}

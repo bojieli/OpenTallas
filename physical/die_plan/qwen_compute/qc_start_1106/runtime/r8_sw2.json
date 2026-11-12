@@ -11,15 +11,15 @@
 "stage_cycles": 0.5,
 "over_margin": "keep"
 },
-"bus_groups_digest": "90f4337c1338dcc9",
+"bus_groups_digest": "af1d7e589d069bdc",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 9050,
 "classes": 1491,
 "replica_links": 609,
-"padded_members": 2248,
-"padded_bits": 151946,
-"pad_flops": 962236,
+"padded_members": 2250,
+"padded_bits": 152577,
+"pad_flops": 962867,
 "max_pad": 24,
 "max_depth_before": 52,
 "max_depth_after": 52,
@@ -158067,9 +158067,9 @@
 ],
 "source": "dvs_W5.u_core.u_sub.u_ctl.ag_own",
 "asbuilt": 0,
-"bound": 10,
+"bound": 11,
 "pad": 0,
-"landed": 10,
+"landed": 11,
 "lane": "sl_W5_ctl__x_ctl_fw"
 },
 {
@@ -158086,28 +158086,9 @@
 ],
 "source": "dvs_W5.u_core.u_sub.u_ctl.cc_o",
 "asbuilt": 0,
-"bound": 10,
+"bound": 11,
 "pad": 0,
-"landed": 10,
-"lane": "sl_W5_ctl__x_ctl_fw"
-},
-{
-"id": "dvs_W5.u_core.u_sub.u_fdn.own_ch[0:570]<-dvs_W5.u_core.u_sub.u_ctl.own_ch@0",
-"sink": "dvs_W5.u_core.u_sub.u_fdn",
-"sink_part": "sl_W5_fw",
-"src_part": "sl_W5_ctl",
-"sink_port": "own_ch",
-"sink_bits": [
-[
-0,
-570
-]
-],
-"source": "dvs_W5.u_core.u_sub.u_ctl.own_ch",
-"asbuilt": 0,
-"bound": 10,
-"pad": 0,
-"landed": 10,
+"landed": 11,
 "lane": "sl_W5_ctl__x_ctl_fw"
 },
 {
@@ -158125,9 +158106,28 @@
 "source": "dvs_W5.u_core.u_sub.u_ctl.own_ch",
 "asbuilt": 0,
 "bound": 10,
-"pad": 0,
-"landed": 10,
+"pad": 1,
+"landed": 11,
 "lane": "sl_W5_ctl__x_ctl_fw_p1"
+},
+{
+"id": "dvs_W5.u_core.u_sub.u_fdn.own_ch[0:570]<-dvs_W5.u_core.u_sub.u_ctl.own_ch@0",
+"sink": "dvs_W5.u_core.u_sub.u_fdn",
+"sink_part": "sl_W5_fw",
+"src_part": "sl_W5_ctl",
+"sink_port": "own_ch",
+"sink_bits": [
+[
+0,
+570
+]
+],
+"source": "dvs_W5.u_core.u_sub.u_ctl.own_ch",
+"asbuilt": 0,
+"bound": 11,
+"pad": 0,
+"landed": 11,
+"lane": "sl_W5_ctl__x_ctl_fw"
 },
 {
 "id": "dvs_W5.u_core.u_sub.u_fdn.st_c[0:106]<-dvs_W5.u_core.u_sub.u_ctl.st@0",
@@ -158144,8 +158144,8 @@
 "source": "dvs_W5.u_core.u_sub.u_ctl.st",
 "asbuilt": 0,
 "bound": 10,
-"pad": 0,
-"landed": 10,
+"pad": 1,
+"landed": 11,
 "lane": "sl_W5_ctl__x_ctl_fw_p1"
 },
 {

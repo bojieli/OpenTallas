@@ -1,0 +1,15 @@
+{
+    "provenance": {
+        "commit": "c92647a21554177b48cb5c147348a9c220b1538f",
+        "dirty": true,
+        "source": "git",
+        "step": "bind",
+        "plan": "physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+        "manifest": "physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+        "external_paths_allowed": false,
+        "inputs": [
+            "physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28a.json",
+            "physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+        ]
+    }
+}
