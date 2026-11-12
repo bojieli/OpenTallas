@@ -1,0 +1,3607 @@
+{
+ "schema": "opentallas.vl2_position_delta.v1",
+ "base_sha256": "580d790a93c3c4972de7dd6b299f917889a17628c97d0e15b5853723967167b4",
+ "plan_sha256": "075ecf5205fae860376f9cc88b8a5148fb20c041f3b6b6cce321f510d0be4067",
+ "types": {
+  "col_h10_r1__t1__cl95b37463": [
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn6",
+    "was": [
+     345.6,
+     648.0
+    ],
+    "now": [
+     276.48,
+     604.8
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn7",
+    "was": [
+     1123.2,
+     648.0
+    ],
+    "now": [
+     838.08,
+     604.8
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn8",
+    "was": [
+     864.0,
+     933.12
+    ],
+    "now": [
+     267.84,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn9",
+    "was": [
+     864.0,
+     967.68
+    ],
+    "now": [
+     838.08,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs6",
+    "was": [
+     414.72,
+     648.0
+    ],
+    "now": [
+     276.48,
+     276.48
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs7",
+    "was": [
+     1252.8,
+     259.2
+    ],
+    "now": [
+     838.08,
+     276.48
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs8",
+    "was": [
+     267.84,
+     656.64
+    ],
+    "now": [
+     276.48,
+     630.72
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs9",
+    "was": [
+     1252.8,
+     578.88
+    ],
+    "now": [
+     838.08,
+     630.72
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e10w.u_view.u_c",
+    "was": [
+     285.12,
+     1010.88
+    ],
+    "now": [
+     276.48,
+     1010.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e10w.u_view.u_ha",
+    "was": [
+     43.2,
+     1010.88
+    ],
+    "now": [
+     34.56,
+     1010.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e10w.u_view.u_hb",
+    "was": [
+     43.2,
+     1114.56
+    ],
+    "now": [
+     34.56,
+     1114.56
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e5",
+    "was": [
+     518.4,
+     17.28
+    ],
+    "now": [
+     527.04,
+     17.28
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_n12",
+    "was": [
+     639.36,
+     8.64
+    ],
+    "now": [
+     699.84,
+     233.28
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_n13",
+    "was": [
+     622.08,
+     233.28
+    ],
+    "now": [
+     648.0,
+     233.28
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_n24",
+    "was": [
+     604.8,
+     596.16
+    ],
+    "now": [
+     1313.28,
+     812.16
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_s10",
+    "was": [
+     328.32,
+     933.12
+    ],
+    "now": [
+     345.6,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_s7",
+    "was": [
+     838.08,
+     241.92
+    ],
+    "now": [
+     907.2,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_s9",
+    "was": [
+     838.08,
+     578.88
+    ],
+    "now": [
+     907.2,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t4",
+    "was": [
+     388.8,
+     259.2
+    ],
+    "now": [
+     371.52,
+     259.2
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t4__payload",
+    "was": [
+     1123.2,
+     259.2
+    ],
+    "now": [
+     552.96,
+     250.56
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t5",
+    "was": [
+     388.8,
+     578.88
+    ],
+    "now": [
+     371.52,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t5__payload",
+    "was": [
+     1123.2,
+     578.88
+    ],
+    "now": [
+     552.96,
+     604.8
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_0",
+    "was": [
+     51.84,
+     933.12
+    ],
+    "now": [
+     34.56,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_1",
+    "was": [
+     103.68,
+     933.12
+    ],
+    "now": [
+     77.76,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_2",
+    "was": [
+     164.16,
+     933.12
+    ],
+    "now": [
+     120.96,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_3",
+    "was": [
+     224.64,
+     933.12
+    ],
+    "now": [
+     164.16,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_4",
+    "was": [
+     276.48,
+     933.12
+    ],
+    "now": [
+     207.36,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_0",
+    "was": [
+     51.84,
+     241.92
+    ],
+    "now": [
+     34.56,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_1",
+    "was": [
+     103.68,
+     241.92
+    ],
+    "now": [
+     77.76,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_2",
+    "was": [
+     164.16,
+     241.92
+    ],
+    "now": [
+     120.96,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_3",
+    "was": [
+     224.64,
+     241.92
+    ],
+    "now": [
+     164.16,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_4",
+    "was": [
+     276.48,
+     241.92
+    ],
+    "now": [
+     207.36,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_5",
+    "was": [
+     492.48,
+     241.92
+    ],
+    "now": [
+     466.56,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_6",
+    "was": [
+     552.96,
+     241.92
+    ],
+    "now": [
+     509.76,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_0",
+    "was": [
+     682.56,
+     241.92
+    ],
+    "now": [
+     751.68,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_1",
+    "was": [
+     734.4,
+     241.92
+    ],
+    "now": [
+     794.88,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_2",
+    "was": [
+     786.24,
+     241.92
+    ],
+    "now": [
+     933.12,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_3",
+    "was": [
+     872.64,
+     241.92
+    ],
+    "now": [
+     984.96,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_4",
+    "was": [
+     924.48,
+     241.92
+    ],
+    "now": [
+     1036.8,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_5",
+    "was": [
+     976.32,
+     241.92
+    ],
+    "now": [
+     1088.64,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_6",
+    "was": [
+     1028.16,
+     241.92
+    ],
+    "now": [
+     1140.48,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_0",
+    "was": [
+     51.84,
+     578.88
+    ],
+    "now": [
+     34.56,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_1",
+    "was": [
+     103.68,
+     578.88
+    ],
+    "now": [
+     77.76,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_2",
+    "was": [
+     164.16,
+     578.88
+    ],
+    "now": [
+     120.96,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_3",
+    "was": [
+     224.64,
+     578.88
+    ],
+    "now": [
+     164.16,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_4",
+    "was": [
+     276.48,
+     578.88
+    ],
+    "now": [
+     207.36,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_5",
+    "was": [
+     492.48,
+     578.88
+    ],
+    "now": [
+     466.56,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_6",
+    "was": [
+     552.96,
+     578.88
+    ],
+    "now": [
+     509.76,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_0",
+    "was": [
+     682.56,
+     578.88
+    ],
+    "now": [
+     673.92,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_1",
+    "was": [
+     734.4,
+     578.88
+    ],
+    "now": [
+     743.04,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_3",
+    "was": [
+     872.64,
+     578.88
+    ],
+    "now": [
+     933.12,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_4",
+    "was": [
+     924.48,
+     578.88
+    ],
+    "now": [
+     984.96,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_5",
+    "was": [
+     976.32,
+     578.88
+    ],
+    "now": [
+     1036.8,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_6",
+    "was": [
+     1028.16,
+     578.88
+    ],
+    "now": [
+     1088.64,
+     578.88
+    ]
+   },
+   {
+    "kind": "clock_derived",
+    "key": "taps",
+    "now": [
+     {
+      "name": "u_r1.u_e6.u_w.ck",
+      "kind": "core",
+      "xy": [
+       170.964,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e6.u_e.ck",
+      "kind": "core",
+      "xy": [
+       439.38,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e7.u_w.ck",
+      "kind": "core",
+      "xy": [
+       732.564,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e7.u_e.ck",
+      "kind": "core",
+      "xy": [
+       1000.98,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e8.u_w.ck",
+      "kind": "core",
+      "xy": [
+       170.964,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e8.u_e.ck",
+      "kind": "core",
+      "xy": [
+       439.38,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e9.u_w.ck",
+      "kind": "core",
+      "xy": [
+       732.564,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e9.u_e.ck",
+      "kind": "core",
+      "xy": [
+       1000.98,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10e.u_view.u_c.clk",
+      "xy": [
+       795.432,
+       1209.372
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10e.u_view.u_ha.clk",
+      "xy": [
+       1020.504,
+       1105.692
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10e.u_view.u_hb.clk",
+      "xy": [
+       1020.504,
+       1209.372
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10w.u_view.u_c.clk",
+      "xy": [
+       380.712,
+       1209.372
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10w.u_view.u_ha.clk",
+      "xy": [
+       155.64,
+       1105.692
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10w.u_view.u_hb.clk",
+      "xy": [
+       155.64,
+       1209.372
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5e.u_view.u_c.clk",
+      "xy": [
+       795.432,
+       215.772
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5e.u_view.u_ha.clk",
+      "xy": [
+       1020.504,
+       112.092
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5e.u_view.u_hb.clk",
+      "xy": [
+       1020.504,
+       215.772
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5w.u_view.u_c.clk",
+      "xy": [
+       389.352,
+       215.772
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5w.u_view.u_ha.clk",
+      "xy": [
+       164.28,
+       112.092
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5w.u_view.u_hb.clk",
+      "xy": [
+       164.28,
+       215.772
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     }
+    ]
+   },
+   {
+    "kind": "internal_stations",
+    "now": [
+     {
+      "conn": "core:u_r1.u_n14.fo|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.fo",
+      "capture": "u_r1.u_n13.b",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "core:u_r1.u_n14.fo|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.fo",
+      "capture": "u_r1.u_n13.fi",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "core:u_r1.u_n14.fo|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.fo",
+      "capture": "u_r1.u_n13",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "core:u_r1.u_n14.o|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.o",
+      "capture": "u_r1.u_n13",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "bus:frame_int_i1",
+      "from_um": [
+       141.394,
+       0.0
+      ],
+      "to_um": [
+       1296.066,
+       851.544
+      ],
+      "regs_um": [
+       [
+        501.12,
+        0.0
+       ],
+       [
+        859.68,
+        0.0
+       ],
+       [
+        1218.24,
+        0.0
+       ],
+       [
+        1304.64,
+        272.16
+       ],
+       [
+        1304.64,
+        630.72
+       ]
+      ],
+      "launch": "face flop",
+      "capture": "u_r1.u_bn6.rs",
+      "note": "TYPE-SAFE-2 11-08 relay: face frame_int_i1 -> u_r1.u_bn6.rs, u_r1.u_bn7.rs, u_r1.u_bn8.rs 2006 um, 5 needed, 5 receiver pad stages sited | CORE-PLACE-1 re-sited (HV, 2023.364 um, 5 regs kept)"
+     }
+    ]
+   }
+  ],
+  "col_h10_r1__t1__cld01bb4ae": [
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn6",
+    "was": [
+     345.6,
+     648.0
+    ],
+    "now": [
+     276.48,
+     604.8
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn7",
+    "was": [
+     1123.2,
+     648.0
+    ],
+    "now": [
+     838.08,
+     604.8
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn8",
+    "was": [
+     864.0,
+     933.12
+    ],
+    "now": [
+     267.84,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bn9",
+    "was": [
+     864.0,
+     967.68
+    ],
+    "now": [
+     838.08,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs6",
+    "was": [
+     414.72,
+     648.0
+    ],
+    "now": [
+     276.48,
+     276.48
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs7",
+    "was": [
+     1252.8,
+     259.2
+    ],
+    "now": [
+     838.08,
+     276.48
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs8",
+    "was": [
+     267.84,
+     656.64
+    ],
+    "now": [
+     276.48,
+     630.72
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_bs9",
+    "was": [
+     1252.8,
+     578.88
+    ],
+    "now": [
+     838.08,
+     630.72
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e10w.u_view.u_c",
+    "was": [
+     285.12,
+     1010.88
+    ],
+    "now": [
+     276.48,
+     1010.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e10w.u_view.u_ha",
+    "was": [
+     43.2,
+     1010.88
+    ],
+    "now": [
+     34.56,
+     1010.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e10w.u_view.u_hb",
+    "was": [
+     43.2,
+     1114.56
+    ],
+    "now": [
+     34.56,
+     1114.56
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_e5",
+    "was": [
+     518.4,
+     17.28
+    ],
+    "now": [
+     527.04,
+     17.28
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_n12",
+    "was": [
+     639.36,
+     8.64
+    ],
+    "now": [
+     699.84,
+     233.28
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_n13",
+    "was": [
+     622.08,
+     233.28
+    ],
+    "now": [
+     648.0,
+     233.28
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_n24",
+    "was": [
+     604.8,
+     596.16
+    ],
+    "now": [
+     1313.28,
+     812.16
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_s10",
+    "was": [
+     328.32,
+     933.12
+    ],
+    "now": [
+     345.6,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_s7",
+    "was": [
+     838.08,
+     241.92
+    ],
+    "now": [
+     907.2,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_s9",
+    "was": [
+     838.08,
+     578.88
+    ],
+    "now": [
+     907.2,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t4",
+    "was": [
+     388.8,
+     259.2
+    ],
+    "now": [
+     371.52,
+     259.2
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t4__payload",
+    "was": [
+     1123.2,
+     259.2
+    ],
+    "now": [
+     552.96,
+     250.56
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t5",
+    "was": [
+     388.8,
+     578.88
+    ],
+    "now": [
+     371.52,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_t5__payload",
+    "was": [
+     1123.2,
+     578.88
+    ],
+    "now": [
+     552.96,
+     604.8
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_0",
+    "was": [
+     51.84,
+     933.12
+    ],
+    "now": [
+     34.56,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_1",
+    "was": [
+     103.68,
+     933.12
+    ],
+    "now": [
+     77.76,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_2",
+    "was": [
+     164.16,
+     933.12
+    ],
+    "now": [
+     120.96,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_3",
+    "was": [
+     224.64,
+     933.12
+    ],
+    "now": [
+     164.16,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c10_4",
+    "was": [
+     276.48,
+     933.12
+    ],
+    "now": [
+     207.36,
+     933.12
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_0",
+    "was": [
+     51.84,
+     241.92
+    ],
+    "now": [
+     34.56,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_1",
+    "was": [
+     103.68,
+     241.92
+    ],
+    "now": [
+     77.76,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_2",
+    "was": [
+     164.16,
+     241.92
+    ],
+    "now": [
+     120.96,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_3",
+    "was": [
+     224.64,
+     241.92
+    ],
+    "now": [
+     164.16,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_4",
+    "was": [
+     276.48,
+     241.92
+    ],
+    "now": [
+     207.36,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_5",
+    "was": [
+     492.48,
+     241.92
+    ],
+    "now": [
+     466.56,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c6_6",
+    "was": [
+     552.96,
+     241.92
+    ],
+    "now": [
+     509.76,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_0",
+    "was": [
+     682.56,
+     241.92
+    ],
+    "now": [
+     751.68,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_1",
+    "was": [
+     734.4,
+     241.92
+    ],
+    "now": [
+     794.88,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_2",
+    "was": [
+     786.24,
+     241.92
+    ],
+    "now": [
+     933.12,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_3",
+    "was": [
+     872.64,
+     241.92
+    ],
+    "now": [
+     984.96,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_4",
+    "was": [
+     924.48,
+     241.92
+    ],
+    "now": [
+     1036.8,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_5",
+    "was": [
+     976.32,
+     241.92
+    ],
+    "now": [
+     1088.64,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c7_6",
+    "was": [
+     1028.16,
+     241.92
+    ],
+    "now": [
+     1140.48,
+     241.92
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_0",
+    "was": [
+     51.84,
+     578.88
+    ],
+    "now": [
+     34.56,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_1",
+    "was": [
+     103.68,
+     578.88
+    ],
+    "now": [
+     77.76,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_2",
+    "was": [
+     164.16,
+     578.88
+    ],
+    "now": [
+     120.96,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_3",
+    "was": [
+     224.64,
+     578.88
+    ],
+    "now": [
+     164.16,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_4",
+    "was": [
+     276.48,
+     578.88
+    ],
+    "now": [
+     207.36,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_5",
+    "was": [
+     492.48,
+     578.88
+    ],
+    "now": [
+     466.56,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c8_6",
+    "was": [
+     552.96,
+     578.88
+    ],
+    "now": [
+     509.76,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_0",
+    "was": [
+     682.56,
+     578.88
+    ],
+    "now": [
+     673.92,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_1",
+    "was": [
+     734.4,
+     578.88
+    ],
+    "now": [
+     743.04,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_3",
+    "was": [
+     872.64,
+     578.88
+    ],
+    "now": [
+     933.12,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_4",
+    "was": [
+     924.48,
+     578.88
+    ],
+    "now": [
+     984.96,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_5",
+    "was": [
+     976.32,
+     578.88
+    ],
+    "now": [
+     1036.8,
+     578.88
+    ]
+   },
+   {
+    "kind": "core",
+    "inst": "u_r1.u_c9_6",
+    "was": [
+     1028.16,
+     578.88
+    ],
+    "now": [
+     1088.64,
+     578.88
+    ]
+   },
+   {
+    "kind": "clock_derived",
+    "key": "taps",
+    "now": [
+     {
+      "name": "u_r1.u_e6.u_w.ck",
+      "kind": "core",
+      "xy": [
+       170.964,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e6.u_e.ck",
+      "kind": "core",
+      "xy": [
+       439.38,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e7.u_w.ck",
+      "kind": "core",
+      "xy": [
+       732.564,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e7.u_e.ck",
+      "kind": "core",
+      "xy": [
+       1000.98,
+       328.32
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e8.u_w.ck",
+      "kind": "core",
+      "xy": [
+       170.964,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e8.u_e.ck",
+      "kind": "core",
+      "xy": [
+       439.38,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e9.u_w.ck",
+      "kind": "core",
+      "xy": [
+       732.564,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_w at the former gb tap's relative x"
+     },
+     {
+      "name": "u_r1.u_e9.u_e.ck",
+      "kind": "core",
+      "xy": [
+       1000.98,
+       682.5600000000001
+      ],
+      "insertion_ps": 465.39,
+      "insertion_ff_ps": 361.26,
+      "budget_owner": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A) PLAN UNCHECKED: DIE-S81-65 11-05 measured half io_reference 465.39 TT / 361.26 FF (rom_q he/hw core.json clock_contract)",
+      "note": "ROMQ-SPLIT-1106 DIE-S81-70 (COORD 13:0x (1) A): early core tap of half u_e at the former gb tap's relative x"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10e.u_view.u_c.clk",
+      "xy": [
+       795.432,
+       1209.372
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10e.u_view.u_ha.clk",
+      "xy": [
+       1020.504,
+       1105.692
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10e.u_view.u_hb.clk",
+      "xy": [
+       1020.504,
+       1209.372
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10w.u_view.u_c.clk",
+      "xy": [
+       380.712,
+       1209.372
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10w.u_view.u_ha.clk",
+      "xy": [
+       155.64,
+       1105.692
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e10w.u_view.u_hb.clk",
+      "xy": [
+       155.64,
+       1209.372
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5e.u_view.u_c.clk",
+      "xy": [
+       795.432,
+       215.772
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5e.u_view.u_ha.clk",
+      "xy": [
+       1020.504,
+       112.092
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5e.u_view.u_hb.clk",
+      "xy": [
+       1020.504,
+       215.772
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5w.u_view.u_c.clk",
+      "xy": [
+       389.352,
+       215.772
+      ],
+      "insertion_ps": 434.57,
+      "insertion_ff_ps": 333.92,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf_col3_c/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5w.u_view.u_ha.clk",
+      "xy": [
+       164.28,
+       112.092
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     },
+     {
+      "kind": "core",
+      "note": "CORELAT-SQ-1: early core tap (12.3 v5.0) at the placed view's boundary-register mean",
+      "name": "u_r1.u_e5w.u_view.u_hb.clk",
+      "xy": [
+       164.28,
+       215.772
+      ],
+      "insertion_ps": 303.17,
+      "insertion_ff_ps": 238.36,
+      "budget_owner": "parent_budget pin_register_mean physical/die_plan/s81/cores/views/bf_col3_1104/ot_v41_bf16_half/insertion.json"
+     }
+    ]
+   },
+   {
+    "kind": "clock_derived",
+    "key": "landing_contract",
+    "now": {
+     "pins": [
+      {
+       "name": "cland_up_ready",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1440.736,
+        12.768
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_up_fault",
+       "dir": "out",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1440.736,
+        14.624
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_dn_ready_0",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1440.736,
+        1078.496
+       ],
+       "epoch": false
+      },
+      {
+       "name": "cland_dn_fault_0",
+       "dir": "in",
+       "kind": "ctl",
+       "layer": "M7",
+       "xy_um": [
+        1440.736,
+        1080.672
+       ],
+       "epoch": false
+      }
+     ],
+     "bands": {},
+     "base_type": "col_h10_r1__t1",
+     "registered_monitor": true,
+     "physical_qualified": false,
+     "collector_tree": {
+      "root": [
+       1434.72,
+       8.608
+      ],
+      "depth": 7,
+      "own_depth": 7,
+      "relays": [
+       {
+        "name": "u_rrl_0",
+        "xy": [
+         1262.52,
+         153.36
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_0",
+        "depth": 1,
+        "tap": 3,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_1",
+        "xy": [
+         1262.52,
+         153.36
+        ],
+        "d": "rst_rl_0",
+        "q": "rst_rl_1",
+        "depth": 2,
+        "tap": 3,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_2",
+        "xy": [
+         1262.52,
+         153.36
+        ],
+        "d": "rst_rl_1",
+        "q": "rst_rl_2",
+        "depth": 3,
+        "tap": 3,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_3",
+        "xy": [
+         1262.52,
+         153.36
+        ],
+        "d": "rst_rl_2",
+        "q": "rst_rl_3",
+        "depth": 4,
+        "tap": 3,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_4",
+        "xy": [
+         1262.52,
+         153.36
+        ],
+        "d": "rst_rl_3",
+        "q": "rst_rl_4",
+        "depth": 5,
+        "tap": 3,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_5",
+        "xy": [
+         1262.52,
+         153.36
+        ],
+        "d": "rst_rl_4",
+        "q": "rst_rl_5",
+        "depth": 6,
+        "tap": 3,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_6",
+        "xy": [
+         1262.52,
+         153.36
+        ],
+        "d": "rst_rl_5",
+        "q": "rst_n_t3",
+        "depth": 7,
+        "tap": 3,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_7",
+        "xy": [
+         972.0,
+         237.6
+        ],
+        "d": "rst_rl_0",
+        "q": "rst_rl_7",
+        "depth": 2,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_8",
+        "xy": [
+         695.4799999999999,
+         332.64
+        ],
+        "d": "rst_rl_7",
+        "q": "rst_rl_8",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_9",
+        "xy": [
+         600.4799999999999,
+         562.6800000000001
+        ],
+        "d": "rst_rl_8",
+        "q": "rst_rl_9",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_10",
+        "xy": [
+         384.48,
+         574.56
+        ],
+        "d": "rst_rl_9",
+        "q": "rst_rl_10",
+        "depth": 5,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_11",
+        "xy": [
+         384.48,
+         574.56
+        ],
+        "d": "rst_rl_10",
+        "q": "rst_rl_11",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_12",
+        "xy": [
+         180.36,
+         682.56
+        ],
+        "d": "rst_rl_11",
+        "q": "rst_n_t8",
+        "depth": 7,
+        "tap": 8,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_13",
+        "xy": [
+         574.32,
+         859.32
+        ],
+        "d": "rst_rl_9",
+        "q": "rst_rl_13",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_14",
+        "xy": [
+         267.0,
+         928.8
+        ],
+        "d": "rst_rl_13",
+        "q": "rst_rl_14",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_15",
+        "xy": [
+         180.384,
+         1218.208
+        ],
+        "d": "rst_rl_14",
+        "q": "rst_n_t17",
+        "depth": 7,
+        "tap": 17,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_16",
+        "xy": [
+         1144.8,
+         12.96
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_16",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_17",
+        "xy": [
+         1144.8,
+         12.96
+        ],
+        "d": "rst_rl_16",
+        "q": "rst_rl_17",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_18",
+        "xy": [
+         1144.8,
+         12.96
+        ],
+        "d": "rst_rl_17",
+        "q": "rst_rl_18",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_19",
+        "xy": [
+         1144.8,
+         116.63999999999999
+        ],
+        "d": "rst_rl_18",
+        "q": "rst_rl_19",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_20",
+        "xy": [
+         876.88,
+         220.32
+        ],
+        "d": "rst_rl_19",
+        "q": "rst_rl_20",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_21",
+        "xy": [
+         514.0799999999999,
+         220.32
+        ],
+        "d": "rst_rl_20",
+        "q": "rst_rl_21",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_22",
+        "xy": [
+         180.36,
+         226.8
+        ],
+        "d": "rst_rl_21",
+        "q": "rst_n_t0",
+        "depth": 7,
+        "tap": 0,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_23",
+        "xy": [
+         275.064,
+         332.64
+        ],
+        "d": "rst_rl_21",
+        "q": "rst_n_t18",
+        "depth": 7,
+        "tap": 18,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_24",
+        "xy": [
+         989.2399999999999,
+         12.96
+        ],
+        "d": "rst_rl_18",
+        "q": "rst_rl_24",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_25",
+        "xy": [
+         989.2399999999999,
+         12.96
+        ],
+        "d": "rst_rl_24",
+        "q": "rst_rl_25",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_26",
+        "xy": [
+         686.88,
+         12.96
+        ],
+        "d": "rst_rl_25",
+        "q": "rst_rl_26",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_27",
+        "xy": [
+         508.68,
+         153.36
+        ],
+        "d": "rst_rl_26",
+        "q": "rst_n_t1",
+        "depth": 7,
+        "tap": 1,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_28",
+        "xy": [
+         876.88,
+         12.96
+        ],
+        "d": "rst_rl_18",
+        "q": "rst_rl_28",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_29",
+        "xy": [
+         876.88,
+         12.96
+        ],
+        "d": "rst_rl_28",
+        "q": "rst_rl_29",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_30",
+        "xy": [
+         686.88,
+         202.96
+        ],
+        "d": "rst_rl_29",
+        "q": "rst_rl_30",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_31",
+        "xy": [
+         564.84,
+         460.08
+        ],
+        "d": "rst_rl_30",
+        "q": "rst_n_t5",
+        "depth": 7,
+        "tap": 5,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_32",
+        "xy": [
+         1429.32,
+         99.32
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_32",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_33",
+        "xy": [
+         1429.32,
+         99.32
+        ],
+        "d": "rst_rl_32",
+        "q": "rst_rl_33",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_34",
+        "xy": [
+         1429.32,
+         99.32
+        ],
+        "d": "rst_rl_33",
+        "q": "rst_rl_34",
+        "depth": 3,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_35",
+        "xy": [
+         1429.32,
+         99.32
+        ],
+        "d": "rst_rl_34",
+        "q": "rst_rl_35",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_36",
+        "xy": [
+         1239.32,
+         194.32
+        ],
+        "d": "rst_rl_35",
+        "q": "rst_rl_36",
+        "depth": 5,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_37",
+        "xy": [
+         1239.32,
+         194.32
+        ],
+        "d": "rst_rl_36",
+        "q": "rst_rl_37",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_38",
+        "xy": [
+         901.8,
+         226.8
+        ],
+        "d": "rst_rl_37",
+        "q": "rst_n_t2",
+        "depth": 7,
+        "tap": 2,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_39",
+        "xy": [
+         1300.32,
+         332.64
+        ],
+        "d": "rst_rl_35",
+        "q": "rst_rl_39",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_40",
+        "xy": [
+         1119.96,
+         522.64
+        ],
+        "d": "rst_rl_39",
+        "q": "rst_rl_40",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_41",
+        "xy": [
+         901.8,
+         682.56
+        ],
+        "d": "rst_rl_40",
+        "q": "rst_n_t10",
+        "depth": 7,
+        "tap": 10,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_42",
+        "xy": [
+         1317.6,
+         254.88
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_42",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_43",
+        "xy": [
+         1317.6,
+         254.88
+        ],
+        "d": "rst_rl_42",
+        "q": "rst_rl_43",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_44",
+        "xy": [
+         1317.6,
+         254.88
+        ],
+        "d": "rst_rl_43",
+        "q": "rst_rl_44",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_45",
+        "xy": [
+         1119.96,
+         427.64
+        ],
+        "d": "rst_rl_44",
+        "q": "rst_rl_45",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_46",
+        "xy": [
+         885.4799999999999,
+         562.6800000000001
+        ],
+        "d": "rst_rl_45",
+        "q": "rst_rl_46",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_47",
+        "xy": [
+         513.88,
+         562.6800000000001
+        ],
+        "d": "rst_rl_46",
+        "q": "rst_rl_47",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_48",
+        "xy": [
+         180.36,
+         568.08
+        ],
+        "d": "rst_rl_47",
+        "q": "rst_n_t4",
+        "depth": 7,
+        "tap": 4,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_49",
+        "xy": [
+         1248.48,
+         540.0000000000001
+        ],
+        "d": "rst_rl_44",
+        "q": "rst_rl_49",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_50",
+        "xy": [
+         1248.48,
+         894.24
+        ],
+        "d": "rst_rl_49",
+        "q": "rst_rl_50",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_51",
+        "xy": [
+         928.8000000000001,
+         928.8
+        ],
+        "d": "rst_rl_50",
+        "q": "rst_rl_51",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_52",
+        "xy": [
+         901.8,
+         1002.24
+        ],
+        "d": "rst_rl_51",
+        "q": "rst_n_t14",
+        "depth": 7,
+        "tap": 14,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_53",
+        "xy": [
+         1213.92,
+         133.92000000000002
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_53",
+        "depth": 1,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_54",
+        "xy": [
+         1162.0800000000002,
+         453.6
+        ],
+        "d": "rst_rl_53",
+        "q": "rst_rl_54",
+        "depth": 2,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_55",
+        "xy": [
+         901.8,
+         568.08
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_55",
+        "depth": 3,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_56",
+        "xy": [
+         901.8,
+         568.08
+        ],
+        "d": "rst_rl_55",
+        "q": "rst_rl_56",
+        "depth": 4,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_57",
+        "xy": [
+         901.8,
+         568.08
+        ],
+        "d": "rst_rl_56",
+        "q": "rst_rl_57",
+        "depth": 5,
+        "tap": 6,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_58",
+        "xy": [
+         901.8,
+         568.08
+        ],
+        "d": "rst_rl_57",
+        "q": "rst_rl_58",
+        "depth": 6,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_59",
+        "xy": [
+         901.8,
+         568.08
+        ],
+        "d": "rst_rl_58",
+        "q": "rst_n_t6",
+        "depth": 7,
+        "tap": 6,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_60",
+        "xy": [
+         534.84,
+         574.56
+        ],
+        "d": "rst_rl_57",
+        "q": "rst_rl_60",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_61",
+        "xy": [
+         275.064,
+         686.88
+        ],
+        "d": "rst_rl_60",
+        "q": "rst_n_t20",
+        "depth": 7,
+        "tap": 20,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_62",
+        "xy": [
+         1018.6800000000001,
+         646.152
+        ],
+        "d": "rst_rl_54",
+        "q": "rst_rl_62",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_63",
+        "xy": [
+         828.6,
+         646.152
+        ],
+        "d": "rst_rl_62",
+        "q": "rst_rl_63",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_64",
+        "xy": [
+         558.36,
+         686.88
+        ],
+        "d": "rst_rl_63",
+        "q": "rst_rl_64",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_65",
+        "xy": [
+         479.32,
+         954.32
+        ],
+        "d": "rst_rl_64",
+        "q": "rst_rl_65",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_66",
+        "xy": [
+         154.44,
+         1002.24
+        ],
+        "d": "rst_rl_65",
+        "q": "rst_n_t12",
+        "depth": 7,
+        "tap": 12,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_67",
+        "xy": [
+         574.32,
+         764.32
+        ],
+        "d": "rst_rl_63",
+        "q": "rst_rl_67",
+        "depth": 5,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_68",
+        "xy": [
+         574.32,
+         764.32
+        ],
+        "d": "rst_rl_67",
+        "q": "rst_rl_68",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_69",
+        "xy": [
+         508.68,
+         1073.52
+        ],
+        "d": "rst_rl_68",
+        "q": "rst_n_t13",
+        "depth": 7,
+        "tap": 13,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_70",
+        "xy": [
+         1334.32,
+         194.32
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_70",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_71",
+        "xy": [
+         1334.32,
+         194.32
+        ],
+        "d": "rst_rl_70",
+        "q": "rst_rl_71",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_72",
+        "xy": [
+         1334.32,
+         194.32
+        ],
+        "d": "rst_rl_71",
+        "q": "rst_rl_72",
+        "depth": 3,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_73",
+        "xy": [
+         1334.32,
+         194.32
+        ],
+        "d": "rst_rl_72",
+        "q": "rst_rl_73",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_74",
+        "xy": [
+         1334.32,
+         194.32
+        ],
+        "d": "rst_rl_73",
+        "q": "rst_rl_74",
+        "depth": 5,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_75",
+        "xy": [
+         1334.32,
+         194.32
+        ],
+        "d": "rst_rl_74",
+        "q": "rst_rl_75",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_76",
+        "xy": [
+         1262.52,
+         449.28
+        ],
+        "d": "rst_rl_75",
+        "q": "rst_n_t7",
+        "depth": 7,
+        "tap": 7,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_77",
+        "xy": [
+         1334.32,
+         99.32
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_77",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_78",
+        "xy": [
+         1334.32,
+         99.32
+        ],
+        "d": "rst_rl_77",
+        "q": "rst_rl_78",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_79",
+        "xy": [
+         1334.32,
+         99.32
+        ],
+        "d": "rst_rl_78",
+        "q": "rst_rl_79",
+        "depth": 3,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_80",
+        "xy": [
+         1213.92,
+         332.64
+        ],
+        "d": "rst_rl_79",
+        "q": "rst_rl_80",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_81",
+        "xy": [
+         836.664,
+         332.64
+        ],
+        "d": "rst_rl_80",
+        "q": "rst_rl_81",
+        "depth": 5,
+        "tap": 19,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_82",
+        "xy": [
+         836.664,
+         332.64
+        ],
+        "d": "rst_rl_81",
+        "q": "rst_rl_82",
+        "depth": 6,
+        "tap": 19,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_83",
+        "xy": [
+         836.664,
+         332.64
+        ],
+        "d": "rst_rl_82",
+        "q": "rst_n_t19",
+        "depth": 7,
+        "tap": 19,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_84",
+        "xy": [
+         885.4799999999999,
+         332.64
+        ],
+        "d": "rst_rl_80",
+        "q": "rst_rl_84",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_85",
+        "xy": [
+         600.4799999999999,
+         427.64
+        ],
+        "d": "rst_rl_84",
+        "q": "rst_rl_85",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_86",
+        "xy": [
+         564.84,
+         766.8
+        ],
+        "d": "rst_rl_85",
+        "q": "rst_n_t9",
+        "depth": 7,
+        "tap": 9,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_87",
+        "xy": [
+         1213.92,
+         686.88
+        ],
+        "d": "rst_rl_80",
+        "q": "rst_rl_87",
+        "depth": 5,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_88",
+        "xy": [
+         1213.92,
+         686.88
+        ],
+        "d": "rst_rl_87",
+        "q": "rst_rl_88",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_89",
+        "xy": [
+         836.664,
+         686.88
+        ],
+        "d": "rst_rl_88",
+        "q": "rst_n_t21",
+        "depth": 7,
+        "tap": 21,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_90",
+        "xy": [
+         1334.32,
+         479.32
+        ],
+        "d": "rst_rl_79",
+        "q": "rst_rl_90",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_91",
+        "xy": [
+         1334.32,
+         479.32
+        ],
+        "d": "rst_rl_90",
+        "q": "rst_rl_91",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_92",
+        "xy": [
+         1300.32,
+         773.2800000000001
+        ],
+        "d": "rst_rl_91",
+        "q": "rst_rl_92",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_93",
+        "xy": [
+         1262.52,
+         1073.52
+        ],
+        "d": "rst_rl_92",
+        "q": "rst_n_t15",
+        "depth": 7,
+        "tap": 15,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_94",
+        "xy": [
+         1429.32,
+         289.32
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_94",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_95",
+        "xy": [
+         1429.32,
+         289.32
+        ],
+        "d": "rst_rl_94",
+        "q": "rst_rl_95",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_96",
+        "xy": [
+         1429.32,
+         289.32
+        ],
+        "d": "rst_rl_95",
+        "q": "rst_rl_96",
+        "depth": 3,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_97",
+        "xy": [
+         1429.32,
+         289.32
+        ],
+        "d": "rst_rl_96",
+        "q": "rst_rl_97",
+        "depth": 4,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_98",
+        "xy": [
+         1429.32,
+         289.32
+        ],
+        "d": "rst_rl_97",
+        "q": "rst_rl_98",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_99",
+        "xy": [
+         1429.32,
+         574.32
+        ],
+        "d": "rst_rl_98",
+        "q": "rst_rl_99",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_100",
+        "xy": [
+         1262.52,
+         779.76
+        ],
+        "d": "rst_rl_99",
+        "q": "rst_n_t11",
+        "depth": 7,
+        "tap": 11,
+        "kind": "tap"
+       },
+       {
+        "name": "u_rrl_101",
+        "xy": [
+         1438.5600000000002,
+         99.32
+        ],
+        "d": "rst_root_n",
+        "q": "rst_rl_101",
+        "depth": 1,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_102",
+        "xy": [
+         1438.5600000000002,
+         99.32
+        ],
+        "d": "rst_rl_101",
+        "q": "rst_rl_102",
+        "depth": 2,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_103",
+        "xy": [
+         1438.5600000000002,
+         99.32
+        ],
+        "d": "rst_rl_102",
+        "q": "rst_rl_103",
+        "depth": 3,
+        "tap": null,
+        "kind": "pad"
+       },
+       {
+        "name": "u_rrl_104",
+        "xy": [
+         1438.5600000000002,
+         99.32
+        ],
+        "d": "rst_rl_103",
+        "q": "rst_rl_104",
+        "depth": 4,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_105",
+        "xy": [
+         1438.5600000000002,
+         479.32
+        ],
+        "d": "rst_rl_104",
+        "q": "rst_rl_105",
+        "depth": 5,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_106",
+        "xy": [
+         1438.5600000000002,
+         764.32
+        ],
+        "d": "rst_rl_105",
+        "q": "rst_rl_106",
+        "depth": 6,
+        "tap": null,
+        "kind": "wire"
+       },
+       {
+        "name": "u_rrl_107",
+        "xy": [
+         1434.72,
+         1074.016
+        ],
+        "d": "rst_rl_106",
+        "q": "rst_n_t16",
+        "depth": 7,
+        "tap": 16,
+        "kind": "tap"
+       }
+      ],
+      "max_hop_um": 380.0,
+      "tap_depth": {
+       "0": 5,
+       "1": 4,
+       "2": 3,
+       "3": 1,
+       "4": 5,
+       "5": 4,
+       "6": 3,
+       "7": 2,
+       "8": 6,
+       "9": 5,
+       "10": 4,
+       "11": 3,
+       "12": 7,
+       "13": 6,
+       "14": 5,
+       "15": 4,
+       "16": 4,
+       "17": 7,
+       "18": 5,
+       "19": 3,
+       "20": 5,
+       "21": 4
+      },
+      "n_tree": 68,
+      "n_pad": 40,
+      "reach_um": 405.0,
+      "plan_reach_um": 380.0,
+      "topology": "grid",
+      "taps": [
+       "clk",
+       "clk_t1",
+       "clk_t2",
+       "clk_t3",
+       "clk_t4",
+       "clk_t5",
+       "clk_t6",
+       "clk_t7",
+       "clk_t8",
+       "clk_t9",
+       "clk_t10",
+       "clk_t11",
+       "clk_t12",
+       "clk_t13",
+       "clk_t14",
+       "clk_t15",
+       "o0",
+       "o1",
+       "core_rst0",
+       "core_rst1",
+       "core_rst2",
+       "core_rst3"
+      ],
+      "tap_offset_um": 0.0,
+      "n_clock_taps": 16,
+      "n_reset_consumers": 16,
+      "local_reset_taps": false,
+      "outs": [
+       [
+        1434.72,
+        1074.016
+       ],
+       [
+        180.384,
+        1218.208
+       ]
+      ],
+      "core_resets": [
+       {
+        "inst": "u_r1.u_e6.u_w",
+        "pin": "rst_n",
+        "pin_um": [
+         191.736,
+         337.014
+        ],
+        "xy": [
+         191.736,
+         332.64
+        ],
+        "internal_depth": 1,
+        "tap": 18
+       },
+       {
+        "inst": "u_r1.u_e6.u_e",
+        "pin": "rst_n",
+        "pin_um": [
+         460.152,
+         337.014
+        ],
+        "xy": [
+         460.152,
+         332.64
+        ],
+        "internal_depth": 1,
+        "tap": 18
+       },
+       {
+        "inst": "u_r1.u_e7.u_w",
+        "pin": "rst_n",
+        "pin_um": [
+         753.336,
+         337.014
+        ],
+        "xy": [
+         753.336,
+         332.64
+        ],
+        "internal_depth": 1,
+        "tap": 19
+       },
+       {
+        "inst": "u_r1.u_e7.u_e",
+        "pin": "rst_n",
+        "pin_um": [
+         1021.752,
+         337.014
+        ],
+        "xy": [
+         1021.752,
+         332.64
+        ],
+        "internal_depth": 1,
+        "tap": 19
+       },
+       {
+        "inst": "u_r1.u_e8.u_w",
+        "pin": "rst_n",
+        "pin_um": [
+         191.736,
+         691.254
+        ],
+        "xy": [
+         191.736,
+         686.88
+        ],
+        "internal_depth": 1,
+        "tap": 20
+       },
+       {
+        "inst": "u_r1.u_e8.u_e",
+        "pin": "rst_n",
+        "pin_um": [
+         460.152,
+         691.254
+        ],
+        "xy": [
+         460.152,
+         686.88
+        ],
+        "internal_depth": 1,
+        "tap": 20
+       },
+       {
+        "inst": "u_r1.u_e9.u_w",
+        "pin": "rst_n",
+        "pin_um": [
+         753.336,
+         691.254
+        ],
+        "xy": [
+         753.336,
+         686.88
+        ],
+        "internal_depth": 1,
+        "tap": 21
+       },
+       {
+        "inst": "u_r1.u_e9.u_e",
+        "pin": "rst_n",
+        "pin_um": [
+         1021.752,
+         691.254
+        ],
+        "xy": [
+         1021.752,
+         686.88
+        ],
+        "internal_depth": 1,
+        "tap": 21
+       }
+      ],
+      "entry": "relayed",
+      "sync_stages": 2,
+      "type": "col_h10_r1__t1__cld01bb4ae",
+      "start": false,
+      "relay_driver": false,
+      "relay_lockup": "negedge"
+     },
+     "collector_root_node": "rst_root_n",
+     "collector_local_sources": [],
+     "collector_children": [
+      {
+       "part": "fW0_p4_b2",
+       "node": "rst_n_t16",
+       "xy_um": [
+        1434.72,
+        1074.016
+       ],
+       "seam": false,
+       "index": 0,
+       "ready": "cland_dn_ready_0",
+       "fault": "cland_dn_fault_0"
+      }
+     ]
+    }
+   },
+   {
+    "kind": "internal_stations",
+    "now": [
+     {
+      "conn": "core:u_r1.u_n14.fo|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.fo",
+      "capture": "u_r1.u_n13.b",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "core:u_r1.u_n14.fo|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.fo",
+      "capture": "u_r1.u_n13.fi",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "core:u_r1.u_n14.fo|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.fo",
+      "capture": "u_r1.u_n13",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "core:u_r1.u_n14.o|core:u_r1.u_n13",
+      "from_um": [
+       1166.508,
+       216.012
+      ],
+      "to_um": [
+       691.308,
+       233.292
+      ],
+      "regs_um": [
+       [
+        816.48,
+        224.64
+       ]
+      ],
+      "launch": "u_r1.u_n14.o",
+      "capture": "u_r1.u_n13",
+      "note": "S81-PLAN3/CCONN2 10-25 R3: derived core bundle 518 um > 405 after the core moves: 1 FIRM station(s), +1 cycle(s) | CORE-PLACE-1 re-sited (HV, 492.696 um, 1 regs kept)"
+     },
+     {
+      "conn": "bus:frame_int_i1",
+      "from_um": [
+       141.394,
+       0.0
+      ],
+      "to_um": [
+       1296.066,
+       851.544
+      ],
+      "regs_um": [
+       [
+        501.12,
+        0.0
+       ],
+       [
+        859.68,
+        0.0
+       ],
+       [
+        1218.24,
+        0.0
+       ],
+       [
+        1304.64,
+        272.16
+       ],
+       [
+        1304.64,
+        630.72
+       ]
+      ],
+      "launch": "face flop",
+      "capture": "u_r1.u_bn6.rs",
+      "note": "TYPE-SAFE-2 11-08 relay: face frame_int_i1 -> u_r1.u_bn6.rs, u_r1.u_bn7.rs, u_r1.u_bn8.rs 2006 um, 5 needed, 5 receiver pad stages sited | CORE-PLACE-1 re-sited (HV, 2023.364 um, 5 regs kept)"
+     }
+    ]
+   }
+  ]
+ }
+}
