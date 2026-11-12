@@ -908,6 +908,14 @@ def fix_hops(t, reach=REACH_UM, add_max=4, ends=None):
             f["regs_um"] = []
         idx = {k: ends[f.get("name")] for k, f in enumerate(t.get("ft_slots") or []) if ends and f.get("name") in ends}
         rec["ft"] = SR.add_ft_regs(None, t0, t, reach, add_max, raster=ras.R, use_base=False, ends=idx)
+        # a slot without an int stations key is priced at 1 by the plan (schema lane_natural): add_ft_regs only bumps
+        # an int key, so the added stages are written here or the lane latency misses them (FIXED-CYCLES 11-12)
+        add = defaultdict(int)
+        for r in rec["ft"]:
+            add[r.get("slot")] += int(r.get("added", 0))
+        for k, f in enumerate(t.get("ft_slots") or []):
+            if add.get(k) and not isinstance(f.get("stations"), int):
+                f["stations"] = 1 + add[k]
     for si, s in enumerate(t.get("internal_stations") or []):
         if not s.get("from_um") or not s.get("to_um"):
             continue
@@ -1288,6 +1296,90 @@ def fix_landed(Q, rows):
     return done
 
 
+def _bus_depths(t):
+    """{bus: register stages} of the type's internal_stations 'bus:<name>' rows (per-core rows of one bus merge to the
+    deepest chain, as kit_istations.bus_entries / native_istations do)."""
+    out = {}
+    for s in t.get("internal_stations") or []:
+        c = str(s.get("conn") or "")
+        if c.startswith("bus:"):
+            out[c[4:]] = max(out.get(c[4:], 0), len(s.get("regs_um") or []))
+    return out
+
+
+def _lane_ends(raw, ln, ports):
+    """[(part, bus)] every partition bus a lane touches (source out, crossed ft _i/_o, destination in); no @die."""
+    out = []
+    for pid in ln.get("ports") or []:
+        p = ports.get(pid) or {}
+        for side in ("src", "dst"):
+            e = p.get(side) or {}
+            if e.get("part") and e.get("part") != "@die" and (e["part"], e.get("bus")) not in out:
+                out.append((e["part"], e.get("bus")))
+    return out
+
+
+def native_rule(raw, lid):
+    """bind's native-station rule (native_istations.annotate): fixed_cycles == source out-bus stations + destination
+    in-bus stations.  None when neither end has a station on its bus (the rule does not apply)."""
+    ports = {p["id"]: p for p in raw.get("ports") or []}
+    parts = {p["name"]: p for p in raw.get("partitions") or []}
+    ln = next(x for x in raw.get("lanes") or [] if x["id"] == lid)
+    a, b = ports[ln["ports"][0]]["src"], ports[ln["ports"][-1]]["dst"]
+    dep = lambda e: _bus_depths(raw["partition_types"].get((parts.get(e.get("part")) or {}).get("type"), {})).get(e.get("bus"))
+    s, d = dep(a), dep(b)
+    if s is None and d is None:
+        return None
+    return dict(source=s or 0, destination=d or 0, fixed=int(ln.get("fixed_cycles") or 0),
+                ok=int(ln.get("fixed_cycles") or 0) == (s or 0) + (d or 0))
+
+
+def sync_fixed_cycles(raw, Q, plan_path=None):
+    """FIXED-CYCLES (COORD 11-12, DIE-S81-88 12:29): every register stage reach_fix adds is counted in the lane.
+    ft slot stations are priced by the plan itself (schema lane_natural sums them); internal_stations 'bus:<name>' stages
+    are not: the bind lands them as the lane's fixed_cycles (kit_istations: pads = fixed_cycles; native_istations:
+    fixed_cycles == source + destination stations).  So every lane through a (part, bus) whose type gained d stages on
+    that bus gets fixed_cycles += d (summed over the lane's ends), the bind rule is re-checked on every touched lane
+    (a lane that met it before must meet it after), and the plan's latency table is refreshed for the lanes whose
+    latency changed (ft stations and fixed_cycles alike; R8 group pads follow).  Returns the record."""
+    ports = {p["id"]: p for p in Q.get("ports") or []}
+    ptype = {p["name"]: p["type"] for p in Q.get("partitions") or []}
+    delta = {}
+    for tn, t1 in (Q.get("partition_types") or {}).items():
+        t0 = (raw.get("partition_types") or {}).get(tn)
+        if t0 is None or t0 is t1:
+            continue
+        d0, d1 = _bus_depths(t0), _bus_depths(t1)
+        for bus in set(d0) | set(d1):
+            if d1.get(bus, 0) != d0.get(bus, 0):
+                delta[(tn, bus)] = d1.get(bus, 0) - d0.get(bus, 0)
+    rec = dict(bus_deltas={"%s.%s" % k: v for k, v in sorted(delta.items())}, lanes={}, rule_broken=[], latency={})
+    for ln in Q.get("lanes") or []:
+        k = sum(delta.get((ptype.get(part), bus), 0) for part, bus in _lane_ends(Q, ln, ports))
+        if not k:
+            continue
+        r0 = native_rule(raw, ln["id"])
+        f0 = ln.get("fixed_cycles")
+        ln["fixed_cycles"] = int(f0 or 0) + k
+        r1 = native_rule(Q, ln["id"])
+        rec["lanes"][ln["id"]] = dict(before=f0, after=ln["fixed_cycles"], added=k, rule_before=r0, rule_after=r1)
+        if r0 and r0["ok"] and not (r1 and r1["ok"]):
+            rec["rule_broken"].append(ln["id"])
+    tab = (Q.get("latency") or {}).get("lanes")
+    if tab is not None:
+        import gen as GEN
+        import schema as S
+        T0 = GEN.latency_table(S.Plan(raw, plan_path))
+        T1 = GEN.latency_table(S.Plan(Q, plan_path))
+        Q["latency"] = dict(Q["latency"], lanes=dict(tab))
+        for lid, d in T1.items():
+            if T0.get(lid, {}).get("cycles") != d["cycles"] or T0.get(lid, {}).get("word_cycles") != d.get("word_cycles"):
+                rec["latency"][lid] = [T0.get(lid, {}).get("cycles"), d["cycles"]]
+                Q["latency"]["lanes"][lid] = d
+    rec["lane_cycles_added"] = sum(b - (a or 0) for a, b in rec["latency"].values())
+    return rec
+
+
 def balance_score(plan_path, run_dir, window=LANDED_WINDOW_PS, corners=("TT", "FF")):
     """INSERTION-BALANCE (COORD 11-12 06:4x, all dies; method of DIE-S81-88 ready12b, S81 780 -> 15 TT): score a
     die_clock.py run (balanced-by-construction H-tree, `die_clock.py run PLAN --out RUN --corner TT --corner FF
@@ -1550,6 +1642,7 @@ def cmd_fix(a):
             after_rows.append(dict(r, **{k: v for k, v in (x["after"] or {}).items()}))
         else:
             after_rows.append(r)
+    fc = sync_fixed_cycles(raw, Q, a.plan) if Q is not raw else None
     out_txt = json.dumps(Q, indent=1, sort_keys=False) + "\n"
     new_sha = hashlib.sha256(out_txt.encode()).hexdigest() if Q is not raw else sha
     if a.out_plan:
@@ -1561,7 +1654,7 @@ def cmd_fix(a):
               landed=dict(rows=lr, applied=landed_done, before=_landed_summary(lr),
                           after=_landed_summary([dict(r, ok=r.get("ok") or r.get("lane") in landed_done) for r in lr]))
               if lr else None,
-              applied=sum(1 for r in rows if r["applied"]), rows=rows,
+              applied=sum(1 for r in rows if r["applied"]), rows=rows, fixed_cycles=fc,
               cycles_added={r["type"]: r["fix"].get("hops", {}).get("cycles_added") for r in rows
                             if r["applied"] and (r["fix"].get("hops") or {}).get("cycles_added")})
     if a.event:
@@ -1571,7 +1664,9 @@ def cmd_fix(a):
                                          + [tsv_line(r, "after") for r in after_rows]) + "\n")
     print(json.dumps(dict(die=P.name, base=sha[:12], out=new_sha[:12], applied=ev["applied"], cap=a.cap,
                           measured=len(MEASURED), before=ev["summary_before"], after=ev["summary_after"],
-                          landed_lanes=len(landed_done))))
+                          landed_lanes=len(landed_done), fixed_cycles_lanes=len((fc or {}).get("lanes") or {}),
+                          lane_cycles_added=(fc or {}).get("lane_cycles_added", 0),
+                          rule_broken=(fc or {}).get("rule_broken", []))))
     return 0
 
 

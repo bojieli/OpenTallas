@@ -364,3 +364,42 @@ def test_tap_cap_priced_on_nearest_split(tmp_path):
     grid = [(n, x, y) for n, x, y in PG.type_sites(PQ, "mid")["entries"] if GR.GRID_TAP_RE.match(n)]
     load, _f, _o = TP.assign(grid, [(x, y, 1.0) for x, y in bank], float("inf"), 0.0)
     assert max(load) <= 1000, max(load)
+
+
+def test_added_station_counted_in_fixed_cycles(tmp_path):
+    # FIXED-CYCLES (COORD 11-12, DIE-S81-88 12:29): a station register reach_fix adds on an internal_stations bus row
+    # is a lane cycle: fixed_cycles += added on every lane through that (part, bus), bind's native rule (fixed ==
+    # source + destination stations) kept where it held, latency table refreshed; ft stations reprice the table too
+    import gen as GEN
+    import schema as S
+    p = copy.deepcopy(EX)
+    p["partition_types"]["mid"]["internal_stations"] = [
+        {"conn": "bus:cfg_o", "from_um": [10.0, 10.0], "to_um": [854.0, 854.0], "regs_um": [[432.0, 432.0]],
+         "launch": "core", "capture": "face flop"}]
+    p["partition_types"]["mid"]["ft_slots"][0]["stations"] = 1          # x lane: 864-um ft hop -> 3 stations
+    ln = {x["id"]: x for x in p["lanes"]}
+    ln["cfg12"]["fixed_cycles"] = 1                                   # meets the rule: 1 source + 0 destination
+    p["latency"] = {"lanes": GEN.latency_table(S.Plan(copy.deepcopy(p)))}
+    base = _write(tmp_path, p)
+    out, ev = _fix(tmp_path, base, "fc", "--classes", "4")
+    q = json.loads(out.read_text())
+    regs = len(q["partition_types"]["mid"]["internal_stations"][0]["regs_um"])
+    added = regs - 1
+    assert added >= 1 and all(h <= RF.REACH_UM + 0.01 for h in [
+        RF._d(a, b) for a, b in zip([(10.0, 10.0)] + [tuple(r[:2]) for r in q["partition_types"]["mid"][
+            "internal_stations"][0]["regs_um"]], [tuple(r[:2]) for r in q["partition_types"]["mid"][
+            "internal_stations"][0]["regs_um"]] + [(854.0, 854.0)])])
+    qln = {x["id"]: x for x in q["lanes"]}
+    # both mid parts launch cfg_o: cfg12 (pm1 -> pm2) and cfg23 (pm2 -> pb); cfg01 (pa -> pm1.cfg_i) is untouched
+    assert qln["cfg12"]["fixed_cycles"] == 1 + added and qln["cfg23"]["fixed_cycles"] == added
+    assert qln["cfg01"].get("fixed_cycles") is None
+    fc = ev["fixed_cycles"]
+    assert fc["bus_deltas"] == {"mid.cfg_o": added} and fc["rule_broken"] == []
+    assert fc["lanes"]["cfg12"]["rule_before"]["ok"] and fc["lanes"]["cfg12"]["rule_after"]["ok"]
+    # the latency table equals the plan's own pricing again (check.py latency), incl. the ft stations of lane x
+    want = GEN.latency_table(S.Plan(q))
+    assert {k: v["cycles"] for k, v in q["latency"]["lanes"].items()} == {k: v["cycles"] for k, v in want.items()}
+    assert fc["latency"]["x"] == [4, 8]                                # 2 mid crossings x 1 -> 3 stations and fc["latency"]["cfg12"] == [3, 3 + added]
+    # idempotent: a second pass adds nothing
+    out2, ev2 = _fix(tmp_path, out, "fc2", "--classes", "4")
+    assert out2.read_bytes() == out.read_bytes()
