@@ -1022,11 +1022,13 @@ def _remap_walk(x0, x1, f, R0, key=None):
             if x1 != x0 or not key:
                 return x1
             if len(x1) == 4 and key not in ("xy", "root", "outs", "start_in"):   # rect (rect_um, keepouts, islands)
-                a, b = x1[:2], x1[2:4]
-                if _inside(a, R0) or _inside(b, R0):
-                    return x1
-                a, b = f(*a), f(*b)
-                return [min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])]
+                # a whole box: both corners by the displacement of its centre (never one corner alone)
+                c = ((x1[0] + x1[2]) / 2.0, (x1[1] + x1[3]) / 2.0)
+                if _inside(c, R0):
+                    return x1                   # rides with its core (core_place.walk_follow)
+                q = f(*c)
+                dx, dy = q[0] - c[0], q[1] - c[1]
+                return [round(x1[0] + dx, 4), round(x1[1] + dy, 4), round(x1[2] + dx, 4), round(x1[3] + dy, 4)]
             if len(x1) >= 2 and (key.endswith("_um") or key in ("xy", "root", "outs", "start_in")):
                 if _inside(x1, R0):
                     return x1
@@ -1097,6 +1099,88 @@ def tap_check(Q, names, plan_path):
         except Exception as e:  # noqa: BLE001
             bad[n] = str(e)[:300]
     return bad
+
+
+def _tap_legalize_table(PQ, tn, table, fixed_pts, extra_boxes=()):
+    """move every illegal tap of `table` (in order) to the nearest legal site (outline - clear, halo-grown placement
+    boxes, keepouts, TAP_CLEAR spacing to fixed_pts and to the taps before it).  Returns [(name, old, new)]."""
+    import schema as SC
+    from placement_obstacles import placement_boxes
+    t = PQ.types[tn]
+    w, h = map(float, t["outline_um"])
+    clear = SC.TAP_CLEAR_UM
+    eps = 1e-8
+    boxes = list(placement_boxes(t, halo=clear).values()) + list(extra_boxes)
+    taken = list(fixed_pts)
+
+    def ok(x, y):
+        return (clear - eps <= x <= w - clear + eps and clear - eps <= y <= h - clear + eps
+                and not any(abs(x - a) < clear - eps and abs(y - b) < clear - eps for a, b in taken)
+                and not any(a + eps < x < c - eps and b + eps < y < d - eps for a, b, c, d in boxes))
+    moves = []
+    for e in table:
+        x, y = map(float, e["xy"])
+        if not ok(x, y):
+            best = None
+            st = 0.54
+            for r in range(1, 400):
+                ring = [(x + i * st, y + (r - abs(i)) * st * sg) for i in range(-r, r + 1) for sg in (1, -1)]
+                ring = [(round(a, 4), round(b, 4)) for a, b in ring if ok(a, b)]
+                if ring:
+                    best = min(ring, key=lambda q: (abs(q[0] - x) + abs(q[1] - y), q))
+                    break
+            if best is None:
+                continue
+            moves.append((e["name"], [x, y], list(best)))
+            e["xy"] = list(best)
+            x, y = best
+        taken.append((x, y))
+    return moves
+
+
+def tap_repair(Q, names, plan_path, log=print):
+    """re-derive the clock taps of legalized types that fail the export tap rule (COORD 11-12):
+    grid+explicit -- renumber clock.added_taps after the (outline-dependent) R4 grid, move illegal added taps to the
+    nearest legal site, then added_tap_recentre.fix_type (minimal move of a failing tap, else ONE added light tap,
+    reset contract guarded); explicit -- legal-site move + fix_type; density / grid -- derived at export from the
+    remapped sinks (nothing stored to fix).  Returns {type: record}."""
+    import schema as SC
+    import added_tap_recentre as ATR
+    try:
+        PQ = SC.Plan(Q, Path(plan_path))
+    except Exception as e:  # noqa: BLE001
+        return {n: dict(error="plan load: %s" % e) for n in names}
+    out = {}
+    for n in names:
+        ck = (Q["partition_types"][n].get("clock") or {})
+        mode = ck.get("tap_mode")
+        rec = dict(mode=mode, renamed=0, legal_moves=[])
+        try:
+            if mode == "grid+explicit" and ck.get("added_taps"):
+                grid = SC._grid_taps(PQ, n)
+                for i, e in enumerate(ck["added_taps"]):
+                    nm = "clk_t%d" % (len(grid) + i)
+                    if e.get("name") != nm:
+                        e["name"] = nm
+                        rec["renamed"] += 1
+                rec["legal_moves"] = _tap_legalize_table(PQ, n, ck["added_taps"], [(x, y) for _, x, y in grid])
+            elif mode == "explicit" and ck.get("taps"):
+                tbl = [p for p in ck["taps"] if p.get("kind") != "core"]
+                clear = SC.TAP_CLEAR_UM
+                ko = [(a - clear, b - clear, c + clear, d + clear) for a, b, c, d in ck.get("keepouts_um", [])]
+                rec["legal_moves"] = _tap_legalize_table(PQ, n, tbl, [(x, y) for _, x, y, _ in SC.core_taps(PQ, n)], ko)
+            ATR.S_reset_cache(PQ)
+            if mode in ("grid+explicit", "explicit"):
+                r = ATR.fix_type(PQ, Q, n, 0.054, 8, add=True)
+                rec.update(moves=r.get("moves"), unfixable=r.get("unfixable"), after=r.get("after"))
+            else:
+                SC.tap_grid(PQ, n)
+                rec["after"] = None
+        except Exception as e:  # noqa: BLE001
+            rec["after"] = "%s: %s" % (type(e).__name__, str(e)[:300])
+        ATR.S_reset_cache(PQ)
+        out[n] = rec
+    return out
 
 
 def sinks_under_cores(t, repo=None):
@@ -1658,17 +1742,41 @@ def cmd_legalize(a):
     applied = [r["type"] for r in rows if r.get("applied")]
     if applied and cfg.get("tap_check", 1):
         bad1 = tap_check(Q, applied, plan)
+        if bad1:
+            # re-derive the taps of the failing types, then re-check every applied type (a child type's taps can
+            # fail a parent's export)
+            rep = tap_repair(Q, sorted(bad1), plan)
+            for r in rows:
+                if r["type"] in rep:
+                    r["tap_repair"] = rep[r["type"]]
+            n1 = len(bad1)
+            bad1 = tap_check(Q, applied, plan)
+            print("tap repair: %d failing -> %d after re-derivation" % (n1, len(bad1)), flush=True)
         bad0 = tap_check(P, sorted(bad1), plan) if bad1 else {}
-        for r in rows:
-            n = r["type"]
-            if n in bad1:
-                r["tap_check"] = dict(after=bad1[n], base=bad0.get(n))
-                if n not in bad0:
-                    r["applied"] = False
-                    r["reason"] = "clock taps: %s" % bad1[n][:160]
-                    Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
-            elif n in applied:
-                r["tap_check"] = "ok"
+        for it in range(3):
+            rev = [n for n in bad1 if n not in bad0]
+            for r in rows:
+                n = r["type"]
+                if n in bad1:
+                    r["tap_check"] = dict(after=bad1[n], base=bad0.get(n))
+                    if n not in bad0:
+                        r["applied"] = False
+                        r["reason"] = "clock taps: %s" % bad1[n][:160]
+                        Q["partition_types"][n] = copy.deepcopy(P["partition_types"][n])
+                elif n in applied:
+                    r["tap_check"] = "ok"
+            if not rev:
+                break
+            # a reverted child can change a parent's export: re-check the types still applied
+            still = [r["type"] for r in rows if r.get("applied")]
+            b2 = tap_check(Q, still, plan) if still else {}
+            b0 = tap_check(P, sorted(set(b2) - set(bad0)), plan) if b2 else {}
+            bad1, bad0 = b2, dict(bad0, **b0)
+            if not [n for n in bad1 if n not in bad0]:
+                for r in rows:
+                    if r.get("applied"):
+                        r["tap_check"] = "ok" if r["type"] not in bad1 else dict(after=bad1[r["type"]], base=bad0.get(r["type"]))
+                break
         print("tap check: %d applied, %d fail after (%d also fail in base) -> %d reverted" % (
             len(applied), len(bad1), len(bad0), len([n for n in bad1 if n not in bad0])), flush=True)
     def write_plan():

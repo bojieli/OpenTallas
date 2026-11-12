@@ -285,6 +285,9 @@ def test_legalize_moves_sinks_with_cores(tmp_path):
     # sites: in the old slot, just E of core b (b moves E onto it), on core a (rides with a)
     t0["clock"]["sink_sites_um"] = [[60.48 + 100 + 7.0, 136.0, 2], [x_b + 104.0, 136.0, 3], [100.0, 120.0, 5]]
     t0["clock"]["keepouts_um"] = [[x_b + 102.0, 90.0, x_b + 110.0, 180.0]]
+    # islands: inside core b, straddling b's W edge (centre on b), free in the slot row above the cores
+    isl = [[x_b + 10.0, 100.0, x_b + 30.0, 120.0], [x_b - 4.0, 140.0, x_b + 12.0, 150.0], [300.0, 250.0, 340.0, 270.0]]
+    t0["clock"]["die_islands_um"] = [list(r) for r in isl]
     bins = [[x_b + 105.3, 135.0, 7], [x_b + 106.0, 140.0, 1], [100.0, 120.0, 11], [20.0, 20.0, 4], [500.0, 280.0, 6]]
     bf = Path("physical/die_plan/toy/bins/toy.json")
     (tmp_path / bf).parent.mkdir(parents=True)
@@ -311,3 +314,23 @@ def test_legalize_moves_sinks_with_cores(tmp_path):
     assert s[2] == [100.0, 120.0, 5]                              # on core a (not moved): unchanged
     k = t["clock"]["keepouts_um"][0]
     assert k[0] >= b1 + 100.0 - 1e-6                              # the keepout E of b followed it
+    # COORD 11-12 (HEAD-94 hd_lep0N): rects move as whole boxes; islands on a moved core move with it
+    dx = b1 - x_b
+    i1 = t["clock"]["die_islands_um"]
+    assert [round(v, 3) for v in i1[0]] == [round(v, 3) for v in (isl[0][0] + dx, 100.0, isl[0][2] + dx, 120.0)]
+    assert [round(v, 3) for v in i1[1]] == [round(v, 3) for v in (isl[1][0] + dx, 140.0, isl[1][2] + dx, 150.0)]
+    assert abs((i1[2][2] - i1[2][0]) - 40.0) < 1e-6 and abs((i1[2][3] - i1[2][1]) - 20.0) < 1e-6
+
+    def rects(o, key=None):
+        if isinstance(o, dict):
+            for k_, v in o.items():
+                yield from rects(v, k_)
+        elif isinstance(o, list):
+            if len(o) == 4 and all(isinstance(v, (int, float)) for v in o) and key and (
+                    "rect" in key or key in ("keepouts_um", "die_islands_um")):
+                yield o
+            else:
+                for v in o:
+                    yield from rects(v, key)
+    for r in rects(t):
+        assert r[0] <= r[2] and r[1] <= r[3], r                   # every rect stays valid
