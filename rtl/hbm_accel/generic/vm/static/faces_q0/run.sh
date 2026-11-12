@@ -18,4 +18,4 @@ for case in ${OT_CASES:-positive latency response clock_n clock_s clock_e clock_
   if [[ $rc = 0 ]] || ! grep -q FATAL "$O/$case.log";then echo "Q0_FACE_CLOCKS BENCH FAIL: negative $case accepted";exit 1;fi
  fi
 done
-echo "Q0_FACE_CLOCKS BENCH PASS: cases=${OT_CASES:-all10} actual 8 banks/24 SRAM; return7/write4; latency, response, four face-clock and three direct SRAM clk_macro drops rejected"
+echo "Q0_FACE_CLOCKS BENCH PASS: cases=${OT_CASES:-all10} actual 8 banks/24 SRAM; return8/write4 (rd1 read stage E); latency, response, four face-clock and three direct SRAM clk_macro drops rejected"

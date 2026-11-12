@@ -8,6 +8,9 @@ module tb_hbm_vm_q0_faces;
     parameter integer FACE_DROP=0;
     parameter integer MUT=0; //1: wrong response-group wiring at actual bank output
     localparam RB=$clog2(RG+1),WB=$clog2(WG+5);
+    // rd1 (a918972c20, vecd4ae read stage E): rr0..rr4 and pr return one edge later (6 -> 7 after the input edge);
+    // writes (*_done) unchanged.
+    parameter integer RD_RET=7;
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0;
     reg [8*RG*17-1:0] rq=0;
@@ -67,12 +70,12 @@ module tb_hbm_vm_q0_faces;
                     group_id=int'(rslot[b*RB+:RB]);
                     if(group_id<RG&&rq[(b*RG+group_id)*17+16])begin
                         row=int'(rq[(b*RG+group_id)*17+3+:10])+(rq[(b*RG+group_id)*17+15]?1024:0); // mirror half (s[15]) = actual u_c rows 1024..2047
-                        exp_rr_v[cycle+6+EXPECT_INPUT_LAT][b*RG+group_id]=1;
-                        exp_data[cycle+6+EXPECT_INPUT_LAT][b*256+:256]=payload(b,row);
+                        exp_rr_v[cycle+RD_RET+EXPECT_INPUT_LAT][b*RG+group_id]=1;
+                        exp_data[cycle+RD_RET+EXPECT_INPUT_LAT][b*256+:256]=payload(b,row);
                     end else if(group_id==RG&&pq[b*285+284])begin
-                        row=int'(pq[b*285+272+:10]);exp_pr_v[cycle+6+EXPECT_INPUT_LAT][b]=1;
-                        exp_data[cycle+6+EXPECT_INPUT_LAT][b*256+:256]=payload(b,row);
-                        exp_pr_tag[cycle+6+EXPECT_INPUT_LAT][b*8+:8]=pq[b*285+:8];
+                        row=int'(pq[b*285+272+:10]);exp_pr_v[cycle+RD_RET+EXPECT_INPUT_LAT][b]=1;
+                        exp_data[cycle+RD_RET+EXPECT_INPUT_LAT][b*256+:256]=payload(b,row);
+                        exp_pr_tag[cycle+RD_RET+EXPECT_INPUT_LAT][b*8+:8]=pq[b*285+:8];
                     end
                 end
             end
@@ -171,7 +174,7 @@ module tb_hbm_vm_q0_faces;
         end
         tick();clear_inputs();repeat(12)tick();
         for(integer b=0;b<8;b=b+1)if(status[b*18+17]!==1)$fatal(1,"unselected secondgroup didnotfault");
-        $display("VM_NATIVE_ABI PASS RG=%0d WG=%0d banks=8 SRAMs=24 wide_writes=2048 mirror_uc_rows=128x8 exactwide_reads=%0d eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=7 conflict_fault_no_arbitration=1",RG,WG,RG*1024);
+        $display("VM_NATIVE_ABI PASS RG=%0d WG=%0d banks=8 SRAMs=24 wide_writes=2048 mirror_uc_rows=128x8 exactwide_reads=%0d eachgroup_reads=1024 packet_reads=8 sectors_per_cycle=8 return_edges=8 conflict_fault_no_arbitration=1",RG,WG,RG*1024);
         $finish;
     end
 endmodule
