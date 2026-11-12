@@ -50,6 +50,13 @@ def main():
         for tid in v.get("type_ids", {}):
             canon_of[re.sub(r"__[\d.]+x[\d.]+$", "", tid)] = ft
     rec = {}
+    # CORES-HBM-1 11-12 (ot_svgr_top, ot_hfd_coll_q2n2_vm_core: false NO_RECIPE blocker): read recipes_b2.json first,
+    # as gen_core_kit_hbm.load_recipes does; the generator resolves these modules, the inventory did not
+    b2 = HERE / "recipes_b2.json"
+    if b2.is_file():
+        for k, v in json.load(open(b2)).items():
+            if isinstance(v, dict) and "files" in v:
+                rec[k] = v
     for f in ("recipes_split.json", "recipes_other.json", "recipes.json"):
         for k, v in json.load(open(HARDEN / f)).items():
             if isinstance(v, dict) and "files" in v:
@@ -79,6 +86,11 @@ def main():
         v["tables_for_module"] = len(tables[m])
         v["canonical_type"] = canon_of.get(m)
         rk = rec_by_mod.get(m) or []
+        if not rk:   # generator fallback (resolve_recipe_by_top): one build-identical recipe whose RTL top is the module
+            c = sorted(k for k, r in rec.items() if r.get("top") == m)
+            sig = {json.dumps({k: x for k, x in rec[c0].items() if k != "source" and "note" not in k}, sort_keys=True)
+                   for c0 in c}
+            rk = c[:1] if c and len(sig) == 1 else []
         v["recipe_keys"] = rk
         blk = []
         if len(tables[m]) > 1:
