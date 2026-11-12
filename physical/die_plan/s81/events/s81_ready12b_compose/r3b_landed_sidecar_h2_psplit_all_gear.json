@@ -1,0 +1,47 @@
+{
+ "stage": "sidecar_collector_sync",
+ "plan": "/srv/opentallas-scratch2/claude/s81-leaf-floor-2/r12b/s3_band.json",
+ "plan_sha256": "c9f88f95e119a210029c1c72660b37f3a8db9ad29b75d1e7d004b2f9de888e46",
+ "in_file": "/srv/opentallas-scratch2/claude/s81-leaf-floor-2/bsrc_main2_lfcs/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all_gear.json",
+ "in_sha256": "5ae74de7d23be6901e9e2568a186d4e042443748ce70c2341608db6badf3dfd6",
+ "out_file": "/srv/opentallas-scratch2/claude/s81-leaf-floor-2/r12b/landed_sidecar_h2_psplit_all_gear.sync.json",
+ "out_sha256": "16ed43ca9c53d42410e7282e34b41e340fb6747f9edf81b9a23fdc0362d3207e",
+ "types_changed": [
+  {
+   "type": "ot_s81sl_leaf__t44__clf6cf8492",
+   "before": [
+    "dn_s_4N_L0x2_i",
+    "ft2_i",
+    "ft3_i",
+    "leafdn_i0",
+    "up_s_4N_L0x3_i"
+   ],
+   "after": [
+    "ft2_i",
+    "ft3_i",
+    "leafdn_i0",
+    "up_s_4N_L0x3_i"
+   ],
+   "mask_inputs_followed": true
+  },
+  {
+   "type": "ot_s81sl_leaf__t52",
+   "before": [
+    "ft0_i",
+    "ft1_i"
+   ],
+   "after": [
+    "dn_s_4N_L0x2_i",
+    "ft0_i",
+    "ft1_i"
+   ],
+   "mask_inputs_followed": true
+  }
+ ],
+ "bus_moves": {
+  "dn_s_4N_L0x2_i": {
+   "from": "ot_s81sl_leaf__t44__clf6cf8492",
+   "to": "ot_s81sl_leaf__t52"
+  }
+ }
+}

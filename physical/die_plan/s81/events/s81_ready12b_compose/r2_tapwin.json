@@ -1,0 +1,13 @@
+{
+ "stage": "tapwin",
+ "in_file": "s1_lfcs.json",
+ "in_sha256": "5b35cffe741bb8d1e25adf72d76823cf6d5b13ae0cacc2dbfd592b6a78234553",
+ "out_file": "s2_tapwin.json",
+ "out_sha256": "af1b160253448128fe2b1bc33a6ef1c1c3f3de0bbf0a36405aa591ad6e8499d6",
+ "types_changed": [],
+ "n_types_changed": 0,
+ "top_level_changed": [
+  "clock"
+ ],
+ "tool": "stage_s81_tapwin_floor.py@f2048007ab19"
+}

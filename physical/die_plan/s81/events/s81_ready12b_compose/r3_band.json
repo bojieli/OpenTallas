@@ -1,0 +1,13 @@
+{
+ "stage": "band",
+ "in_file": "s2_tapwin.json",
+ "in_sha256": "af1b160253448128fe2b1bc33a6ef1c1c3f3de0bbf0a36405aa591ad6e8499d6",
+ "out_file": "s3_band.json",
+ "out_sha256": "c9f88f95e119a210029c1c72660b37f3a8db9ad29b75d1e7d004b2f9de888e46",
+ "types_changed": [
+  "svc_lo_dsdv_svc_rs__t7"
+ ],
+ "n_types_changed": 1,
+ "top_level_changed": [],
+ "tool": "land-ring-2/s81/fixplan.py"
+}
