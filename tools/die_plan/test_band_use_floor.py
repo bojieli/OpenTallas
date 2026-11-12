@@ -92,6 +92,39 @@ class BandUseFloor(unittest.TestCase):
         self.assertTrue(rows[0]["over"] and not rows[0]["reserve_fits"])
         self.assertFalse(CP.band_use_report(new)[0]["over"])
 
+    def _pocket(self, x1, top=40.0):
+        # macro-free pocket x 17.28..x1-4.32, y 17.28..top-4.32 (4.32-um core halo); the bus pin sits inside it
+        t = dict(outline_um=[400.0, 300.0],
+                 hard_cores=[dict(inst="u_top", origin_um=[0.0, top], outline_um=[400.0, 300.0 - top]),
+                             dict(inst="u_right", origin_um=[x1, 0.0], outline_um=[400.0 - x1, top])],
+                 buses=[dict(name="ft1_i", face="S", window_um=[30.0, 30.432], width=15)])
+        t["clock"] = dict(landing_contract=dict(pins=[], bands={}))
+        CP.BAND_RESERVE = "live"
+        old = CP._storage_band(t, "ft1_i", 15, [])
+        CP.BAND_RESERVE = "padded"
+        t["clock"]["landing_contract"]["bands"] = dict(ft1_i=dict(old, instance="u_cland_ft1_i"))
+        side = dict(collector=dict(types=dict(a=dict(bus_geometry={b["name"]: b for b in t["buses"]}))))
+        return dict(partition_types=dict(a=t)), side, old
+
+    def test_resize_steps_use_when_half_does_not_fit(self):
+        # COORD 11-11 (KV ft10/ft19/ft24): resize-bands steps 0.55..1.0 like compose instead of failing at use_max
+        p, side, old = self._pocket(50.0)      # live 280 and use-1.0 364 um2 fit, the 0.5 floor (~692) does not
+        new, rep = CP.resize_undersized_bands(p, side, ["a"], use_max=0.5)
+        b = new["partition_types"]["a"]["clock"]["landing_contract"]["bands"]["ft1_i"]
+        self.assertGreater(b["band_use_target"], 0.5)
+        self.assertLessEqual(b["band_use"], b["band_use_target"] + 1e-6)
+        self.assertLessEqual(b["rect_um"][2], 50.0 - 4.32 + 1e-6)
+        self.assertLessEqual(b["rect_um"][3], 40.0 - 4.32 + 1e-6)
+        self.assertEqual((rep[0]["band_use"], rep[0]["band_use_target"]), (b["band_use"], b["band_use_target"]))
+
+    def test_resize_without_fit_keeps_band_and_reports(self):
+        p, side, old = self._pocket(40.0)      # the live band fits, not even the use-1.0 reserve does
+        new, rep = CP.resize_undersized_bands(p, side, ["a"], use_max=0.5)
+        b = new["partition_types"]["a"]["clock"]["landing_contract"]["bands"]["ft1_i"]
+        self.assertEqual(b["rect_um"], old["rect_um"])
+        self.assertIsNone(rep[0]["new_rect_um"])
+        self.assertIn("error", rep[0])
+
     def test_compose_rejects_bad_use_and_restores(self):
         with self.assertRaises(ValueError):
             CP.compose({}, {}, band_use_max=2.0)
