@@ -1742,7 +1742,10 @@ def topology_env_prefix(sp):
 
 def item_env(d, item):
     """die item_env[item] -> {OT_*: value} (validated: OT_ names, shell-safe values; anything else raises)"""
-    env = dict((d.get("item_env") or {}).get(item) or {})
+    # KW-FIX-45 11-12 (COORD class fix: drive failures from fanout over 64): die option die_gen_env {OT_*: value} is the default
+    # env of EVERY item of the die (no per-type opt-in); the item's own item_env wins
+    env = dict(d.get("die_gen_env") or {})
+    env.update((d.get("item_env") or {}).get(item) or {})
     for k, v in env.items():
         capture_path = (k == "OT_NATIVE_PRODUCER_CONTEXT" and isinstance(v, str)
                         and re.fullmatch(r"/[A-Za-z0-9_./-]+", v))
