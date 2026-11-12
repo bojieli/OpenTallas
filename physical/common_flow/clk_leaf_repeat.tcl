@@ -48,6 +48,28 @@
 #     behind a repeater (grouped as above), inside global_route -start_incremental / detailed_placement /
 #     -end_incremental, at most OT_CLK_LEAF_GRT_PASSES (default 3) passes.  OT_CLK_LEAF_GRT=0 = no GRT pass.
 #   OT_CLK_LEAF_REPEAT=0 (env or 'export OT_CLK_LEAF_REPEAT = 0' in config.mk) = both off (old behaviour).
+# CLK-LEAF-BAL-1 11-11 (DIE-HBM-100 / HBM-CORES-B b128_canon): the half-way rule above equalises DEPTH, not DELAY.  Every
+# repeater takes the driver's master (BUFx24) whatever its load and wire, so a repeater on a long / loaded group costs
+# ~59.8 ps and one on a short group ~37.8 ps (routed, FF).  b128_canon routed (RCX SPEF, FF): leaf arrivals of the
+# repeaters under one leaf-clock level differ by up to 45 ps (median 19 ps over 16 families), and 157 reg-to-reg + 76
+# port FF hold endpoints reopened (WNS -19.66 ps) after GRT hold repair had converged to 0; 65 of the 89 skew >= 15 ps
+# paths have a clkleafrep stage on the diverging branch (pairs clkleafrep_367660 / _377661 are cousins: different
+# parent nets, one common grandparent).
+# OT_CLK_LEAF_REPEAT_BALANCE=1 (default OFF = byte-identical behaviour and output): BALANCED-BY-CONSTRUCTION SIZING.
+#   Balance group = the clkleafrep repeaters whose parent net is driven from one common net (cousins + siblings: same
+#   grandparent net; a repeater nested under another repeater is grouped with its siblings only).  Delay of a member =
+#   mean propagated rising-edge clock arrival at its leaf loads (through nested repeaters), at the max and the min scene.
+#   The slowest member is the reference; every other member takes the clock buffer master (BUF* / HB* of its own
+#   name suffix = site / VT) whose leaf arrival comes closest to the reference at BOTH scenes
+#   (cost max(|dmax-Tmax|, |dmin-Tmin|)), never one whose worst load slew exceeds max(OT_CLK_LEAF_SLEW_PS or 80 ps, the
+#   member's own slew before).  A weaker repeater spends in its own drive the delay its short / light group lacks in
+#   wire RC.  Two rounds (sizes change the parent loads).  Position is not the lever: the Elmore delay of driver ->
+#   repeater -> group is minimal near the midpoint and grows only quadratically off it, too little on short branches.
+#   Runs (a) in the CTS pass after the leaf repeaters are legal (placement RC, the kit's set_wire_rc), resized cells
+#   legalised again, and (b) in the GRT pass right after the first GRT parasitics estimate (GRT RC ~ routed RCX, before
+#   repair_design / hold repair) on every clkleafrep group in the DB, resized cells legalised + incremental GRT
+#   (OT_CLK_LEAF_GRT=0 skips (b)).  OT_CLK_LEAF_BAL_TOL_PS (default 3 ps): a member within it keeps its master.
+#   Log lines: OT_CLK_LEAF_BALANCE ...  Measured with physical/common_flow/clk_leaf_sibling_report.tcl.
 proc clr_is_clkcell {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "CLKBUF*" $m]}]
@@ -118,6 +140,185 @@ proc clr_kit_hooked {} {
     foreach {- s} [regexp -all -inline -line {^\s*source\s+\{?(/work/[A-Za-z0-9_.-]+\.tcl)\}?\s*$} $txt] { lappend todo $s }
   }
   return 0
+}
+# ---- CLK-LEAF-BAL-1: delay-aware repeater sizing (OT_CLK_LEAF_REPEAT_BALANCE=1) ----
+proc clr_bal_on {} {
+  return [expr {[info exists ::env(OT_CLK_LEAF_REPEAT_BALANCE)] && [string trim $::env(OT_CLK_LEAF_REPEAT_BALANCE)] eq "1"}]
+}
+proc clr_is_rep {inst} { return [string match "clkleafrep*" [$inst getName]] }
+# brings the arrival search up to date (a path iterator alone reads whatever is cached)
+proc clr_sta_refresh {} { catch {worst_slack -max} }
+# propagated clock arrival (ps, user units) of the RISING clock edge at an STA pin, the worst over the session scenes
+# (max: latest, min: earliest), waveform edge removed; "" when the pin carries no clock arrival
+proc clr_clk_arr {pin minmax} {
+  set best ""
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    foreach rf {rise fall} {
+      set paths [$vertex path_iterator $rf $minmax]
+      while {[$paths has_next]} {
+        set path [$paths next]; set tag [$path tag]
+        if {[string first "(clock prop)" $tag] < 0 || [lindex $tag 4] ne "^"} continue
+        set a [sta::time_sta_ui [$path arrival]]
+        if {![string is double -strict $a]} continue
+        set cl [get_clocks -quiet [lindex $tag 3]]
+        if {[llength $cl]} { set a [expr {$a - [sta::time_sta_ui [lindex [[lindex $cl 0] waveform] 0]]}] }
+        if {$best eq "" || ($minmax eq "max" ? $a > $best : $a < $best)} { set best $a }
+      }
+      $paths finish
+    }
+  }
+  return $best
+}
+proc clr_out_net {inst} {
+  foreach it [$inst getITerms] { if {[$it isOutputSignal]} { return [$it getNet] } }
+  return NULL
+}
+proc clr_in_net {inst} {
+  foreach it [$inst getITerms] { if {[$it isInputSignal] && [$it getNet] ne "NULL" && [$it getNet] ne ""} { return [$it getNet] } }
+  return NULL
+}
+proc clr_net_drv {net} {
+  foreach it [$net getITerms] { if {[$it isOutputSignal]} { return [$it getInst] } }
+  return NULL
+}
+# leaf loads of a repeater (odb iterms), descending through nested clkleafrep repeaters
+proc clr_rep_leaves {inst {depth 0}} {
+  set on [clr_out_net $inst]
+  if {$on eq "" || $on eq "NULL"} { return {} }
+  set out {}
+  foreach it [$on getITerms] {
+    if {![$it isInputSignal]} continue
+    set li [$it getInst]
+    if {$depth < 8 && [clr_is_rep $li]} { lappend out {*}[clr_rep_leaves $li [expr {$depth + 1}]]; continue }
+    lappend out $it
+  }
+  return $out
+}
+proc clr_sta_pin {it} { return [sta::find_pin "[[$it getInst] getName]/[[$it getMTerm] getName]"] }
+# {mean leaf arrival max, mean leaf arrival min, worst slew on the repeater's own loads, n leaves} or ""
+proc clr_rep_meas {inst} {
+  set amax 0.0; set amin 0.0; set n 0
+  foreach it [clr_rep_leaves $inst] {
+    set pp [clr_sta_pin $it]
+    if {$pp eq "" || $pp eq "NULL"} continue
+    set a [clr_clk_arr $pp max]; set b [clr_clk_arr $pp min]
+    if {$a eq "" || $b eq ""} continue
+    set amax [expr {$amax + $a}]; set amin [expr {$amin + $b}]; incr n
+  }
+  if {!$n} { return "" }
+  set smax 0.0
+  foreach it [[clr_out_net $inst] getITerms] {
+    if {![$it isInputSignal]} continue
+    set pp [clr_sta_pin $it]
+    if {$pp eq "" || $pp eq "NULL"} continue
+    set s [get_property $pp slew_max]
+    if {$s > $smax} { set smax $s }
+  }
+  return [list [expr {$amax / $n}] [expr {$amin / $n}] $smax $n]
+}
+# clock buffer masters of the repeater's own family: BUF* / HB* with the same name suffix (site / VT), in the liberty
+proc clr_bal_masters {master} {
+  if {[info exists ::clr_bal_mcache($master)]} { return $::clr_bal_mcache($master) }
+  set out {}
+  if {[regexp {^(?:BUF|HB)[^_]*(_.*)$} $master -> sfx]} {
+    foreach lib [[ord::get_db] getLibs] {
+      foreach m [$lib getMasters] {
+        set nm [$m getName]
+        if {![regexp {^(?:BUF|HB)[^_]*(_.*)$} $nm -> s2] || $s2 ne $sfx} continue
+        if {![llength [get_lib_cells -quiet */$nm]]} continue
+        lappend out $m
+      }
+    }
+  }
+  set ::clr_bal_mcache($master) $out
+  return $out
+}
+# balance groups from the DB: {key {repeater names}} ...; outer groups first, nested ones (parent driven by a repeater) last
+proc clr_bal_groups {} {
+  set blk [ord::get_db_block]
+  set keys {}; array set grp {}; array set nested {}
+  foreach i [$blk getInsts] {
+    if {![clr_is_rep $i]} continue
+    set pn [clr_in_net $i]
+    if {$pn eq "NULL"} continue
+    set d [clr_net_drv $pn]; set key [$pn getName]
+    if {$d ne "NULL" && [clr_is_rep $d]} {
+      set nested($key) 1
+    } elseif {$d ne "NULL"} {
+      set gn [clr_in_net $d]
+      if {$gn ne "NULL"} { set key "[$gn getName] (grandparent)" }
+    }
+    if {![info exists grp($key)]} { lappend keys $key }
+    lappend grp($key) [$i getName]
+  }
+  set outer {}; set inner {}
+  foreach k $keys { if {[info exists nested($k)]} { lappend inner [list $k $grp($k)] } else { lappend outer [list $k $grp($k)] } }
+  return [concat $outer $inner]
+}
+# groups: clr_bal_groups.  Nested groups first, then outer.  Returns the number of repeaters whose master changed.
+proc clr_balance {groups stage} {
+  set tol [expr {[info exists ::env(OT_CLK_LEAF_BAL_TOL_PS)] ? double($::env(OT_CLK_LEAF_BAL_TOL_PS)) : 3.0}]
+  set slim 80.0
+  if {[info exists ::env(OT_CLK_LEAF_SLEW_PS)] && double($::env(OT_CLK_LEAF_SLEW_PS)) > 0} { set slim [expr {double($::env(OT_CLK_LEAF_SLEW_PS))}] }
+  set blk [ord::get_db_block]
+  # arrivals need the propagated (real) tree; ideal clocks are propagated for the measurement and restored after
+  set ideal {}
+  foreach c [all_clocks] { if {[llength [get_property $c sources]] && ![get_property $c is_propagated]} { lappend ideal $c } }
+  if {[llength $ideal]} { set_propagated_clock $ideal }
+  clr_sta_refresh
+  set nsw 0; set ngrp 0; set wb 0.0; set wa 0.0
+  for {set rnd 1} {$rnd <= 2} {incr rnd} {
+    foreach g [lreverse $groups] {
+      set rows {}
+      foreach nm [lindex $g 1] {
+        set i [$blk findInst $nm]
+        if {$i eq "" || $i eq "NULL"} continue
+        set m [clr_rep_meas $i]
+        if {$m ne ""} { lappend rows [list $i {*}$m] }
+      }
+      if {[llength $rows] < 2} continue
+      set rows [lsort -real -decreasing -index 1 $rows]
+      lassign [lindex $rows 0] - tmax tmin
+      if {$rnd == 1} { incr ngrp; set wb [expr {max($wb, $tmax - [lindex [lindex $rows end] 1])}] }
+      foreach row [lrange $rows 1 end] {
+        lassign $row i d0max d0min s0
+        set cost0 [expr {max(abs($d0max - $tmax), abs($d0min - $tmin))}]
+        if {$cost0 <= $tol} continue
+        set lim [expr {max($slim, $s0)}]
+        set m0 [$i getMaster]; set best $m0; set bestc $cost0
+        foreach cm [clr_bal_masters [$m0 getName]] {
+          if {$cm eq $m0} continue
+          $i swapMaster $cm
+          clr_sta_refresh
+          set mm [clr_rep_meas $i]
+          if {$mm eq ""} continue
+          lassign $mm dmax dmin smax
+          set c [expr {max(abs($dmax - $tmax), abs($dmin - $tmin))}]
+          if {$smax <= $lim && $c < $bestc} { set best $cm; set bestc $c }
+        }
+        if {[$i getMaster] ne $best} { $i swapMaster $best; clr_sta_refresh }
+        if {$best ne $m0} {
+          incr nsw
+          puts [format "OT_CLK_LEAF_BALANCE %s round %d %s %s -> %s: leaf arrival %.1f/%.1f ps vs ref %.1f/%.1f (max/min), cost %.1f -> %.1f ps" \
+                  $stage $rnd [$i getName] [$m0 getName] [$best getName] $d0max $d0min $tmax $tmin $cost0 $bestc]
+        }
+      }
+    }
+  }
+  foreach g $groups {
+    set v {}
+    foreach nm [lindex $g 1] {
+      set i [$blk findInst $nm]
+      if {$i eq "" || $i eq "NULL"} continue
+      set m [clr_rep_meas $i]; if {$m ne ""} { lappend v [lindex $m 0] }
+    }
+    if {[llength $v] >= 2} { set wa [expr {max($wa, [tcl::mathfunc::max {*}$v] - [tcl::mathfunc::min {*}$v])}] }
+  }
+  puts [format "OT_CLK_LEAF_BALANCE %s done: %d groups, %d repeaters resized, worst group leaf-arrival spread (max scene) %.1f -> %.1f ps (tol %.1f, slew limit %.0f ps)" \
+          $stage $ngrp $nsw $wb $wa $tol $slim]
+  if {[llength $ideal]} { unset_propagated_clock $ideal }
+  return $nsw
 }
 set ::ot_clr_mode [expr {[info exists ::ot_clr_stage] && $::ot_clr_stage eq "grt" ? "grt" : "cts"}]
 set ::ot_clr_run 1
@@ -253,6 +454,18 @@ uplevel #0 {
       detailed_placement {*}[clr_dpl_args 1]
     }
     check_placement -verbose
+    # CLK-LEAF-BAL-1 (a): delay-aware sizing on the legal tree, then the resized cells are legalised again
+    if {[clr_bal_on]} {
+      estimate_parasitics -placement
+      if {[clr_balance [clr_bal_groups] cts]} {
+        detailed_placement {*}[clr_dpl_args]
+        if {[catch {check_placement}]} {
+          puts "OT_DPL_RESIDUAL: CTS leaf-balance check failed, legalization once more with [clr_dpl_args 1]"
+          detailed_placement {*}[clr_dpl_args 1]
+        }
+        check_placement -verbose
+      }
+    }
   } elseif {[catch {check_placement}]} {
     # KW-FIX-35-F2: no repeater, but the stock CTS legalization (no check of its own when SKIP_CTS_REPAIR_TIMING=1)
     # left overlaps: repair them here, same diamond pass.  Repair only: the result is reported, the later stage checks
@@ -396,6 +609,18 @@ uplevel #0 {
     estimate_parasitics -global_routing
   }
   if {$clr_g_bufs} { check_placement -verbose }
+  # CLK-LEAF-BAL-1 (b): delay-aware sizing of every clkleafrep group on the GRT parasitics (before repair_design / hold
+  # repair), resized cells legalised + incremental GRT
+  if {[clr_bal_on]} {
+    set clr_g_bgroups [clr_bal_groups]
+    if {[llength $clr_g_bgroups] && [clr_balance $clr_g_bgroups grt]} {
+      global_route -start_incremental
+      detailed_placement
+      global_route -end_incremental
+      estimate_parasitics -global_routing
+      check_placement -verbose
+    }
+  }
   puts [format "OT_CLK_LEAF_REPEAT grt done: %d nets repeated, %d repeaters (%d long / over-macro nets kept: GRT est slew <= gate), longest routed branch %.1f um" \
           $clr_g_nets $clr_g_bufs $clr_g_skip $clr_g_worst]
 }
