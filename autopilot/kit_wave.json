@@ -776,7 +776,10 @@
    "gen_hosts": [
     "epyc7",
     "epyc8",
-    "epyc9"
+    "epyc9",
+    "epyc2",
+    "epyc4",
+    "intel1"
    ],
    "place_prefer": [
     "epyc4",
@@ -6698,7 +6701,10 @@
    "gen_hosts": [
     "epyc7",
     "epyc8",
-    "epyc9"
+    "epyc9",
+    "epyc2",
+    "epyc4",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -20086,7 +20092,10 @@
    "gen_hosts": [
     "epyc7",
     "epyc9",
-    "epyc8"
+    "epyc8",
+    "epyc2",
+    "epyc4",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": true,
@@ -20554,7 +20563,6 @@
    "src_sha_prev_kw35h": "d95ec5a45a60534b47505d4b3b4ab2091d9909b4",
    "queue_src_prev_kw35h": "main@d95ec5a45a60",
    "restage_waiters_prev_kw35h": null,
-   "restage_waiters": false,
    "retry_prev_kw35h_added": [
     "hd_host@11",
     "hd_lep0N@14",
@@ -22292,7 +22300,10 @@
    "gen_hosts": [
     "epyc7",
     "epyc9",
-    "epyc8"
+    "epyc8",
+    "epyc2",
+    "epyc4",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -30457,7 +30468,10 @@
    "gen_hosts": [
     "epyc7",
     "epyc9",
-    "epyc8"
+    "epyc8",
+    "epyc2",
+    "epyc4",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "retry_fix": {
@@ -43407,7 +43421,7 @@
  "note_kw24_stale": "KW-FIX-24 11-06 20:06 COORD 20:0x (3): S81 station rows stale on TAPWIN-PORT (I176 11-05 18:23) rebuilt on src_7281a (per-port SDC; ft_hop_lockup is not on main = OFF): 13 stations + t25 (bind) + leaf t22/t28; t14/t38 wait for ftcorr batch 1. Class sweep: type-kit timing FAIL rows started before I176 on HEAD (7) + KV (1); QC types ride the qcbatch re-bind (20:0x (2)). Hosts epyc5, intel2, epyc6 first (20:0x)",
  "note_kw24_genfix": "KW-FIX-24 20:2x: gen_hosts from a measured input check (plan, src bind.py, kit_rtl asbuilt/script, every bind.f source): KV whole only on epyc5/epyc6 (epyc4 lacks 60, intel2 60, intel1 53); S81 whole only on epyc5/epyc2 (kit_rtl script + codex-wave-bind asbuilt + wave_cg_frz plan); HEAD/QC/HBM whole on all 6",
  "restage_max_per_tick_prev_kw24": 60,
- "restage_max_per_tick": 8,
+ "restage_max_per_tick": 120,
  "note_kw24_norestage": "KW-FIX-24 20:4x RESTAGE ping-pong (49 moves 19-20 h, waiters moved every tick, never admitted): restage off (restage_max_per_tick 0) until claude/kw-fix-24-restagehyst-1106 (30-min min wait) merges; then restore restage_max_per_tick_prev_kw24",
  "note_kw24_fill56": "KW-FIX-24 21:2x COORD 21:1x/21:2x (epyc5/epyc6 ~31% load, 0 waiters): HEAD/HBM/QC new attempts gen + place on epyc5/epyc6 (inputs whole there, measured 20:1x); prev in gen_hosts_prev_kw24f",
  "note_rebal1": "REBAL-1 23:2x COORD 23:1x + OWNER 22:5x: S81+QC new attempts under kw26-wave-1106 (epyc5: symlink scratch3->scratch2, so its small root is spared; epyc2/epyc6 real scratch3); restage on at 12 per tick (30-min hysteresis on main); gen_disk_min_gb 100 = kw23 wrapper floor for scratch2 work roots, so a host the wrapper would park is not preferred. max_launch_per_tick left at 60 (epyc5 margin >100). Revert: work_root kw24-wave-1106, restage 0, gen_disk 80.",
