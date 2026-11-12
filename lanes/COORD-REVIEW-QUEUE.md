@@ -44094,3 +44094,10 @@ FAILED [AUTOPILOT 162aebc279a2] 2026-11-11 18:42:26 PST AUTOPILOT -> KIT-WAVE-1:
   cbn_q01__clab6e67f2 unit kw-qwenco-cbnq01clab6e67f2-1-52343 (24 replicas); cbn_q01__cld9ff4c40 kw-qwenco-cbnq01cld9ff4c40-1-52343 (24); cbn_q01__cldd6ea846 kw-qwenco-cbnq01cldd6ea846-1-52344 (24); cbf_q01 kw-qwenco-cbfq01-1-52344 (23).
   Why not at 18:4x/18:5x: my item_inputs/only_items commits (18:45:43-18:46:33) landed seconds after the 18:46:35 tick read the config; a dry plan_dies on live state picked all 4 (eligible, no hold, no child wait, cap 60 not hit), the next tick launched them. Not memory waiters, not the per-tick cap.
   KV: 16 hg/hgi rows stay held; re-pin to vE2 (not vE) when DIE-KV-98 posts BIND_OK.
+- 2026-11-11 19:00 PST RULING [COORD, OWNER verbatim 11-11 ~19:0x "apply the same core-shape freeze rule to all dies now" -> ALL die owners, plan/compose lanes, ROOT-MERGE-59]
+  - CORE-SHAPE FREEZE, all 5 dies.
+    - A plan event may MOVE or ROTATE a hard core but may NOT change its outline. Exception: a declared, measured reason (overload, as with rck_rxs/opsa_group0), written in the event as old -> new shape.
+    - Where a slot changed, the existing SIGNED shape sits inside it and the type absorbs the slack. No outline is derived from slot size.
+  - Cause: S81 had 24 unsigned core designs that were existing cores at re-derived outlines (attn_tr_x x4 shapes, su_*, svc_*). Each slot re-cut silently voided signed cores.
+  - Enforcement: new lane CORE-SHAPE-GATE-1 adds a G0 ERROR core_shape_change. It fires when a plan core outline differs from every signed shape of the same RTL hash and the event declares no reason.
+  - Every die owner lists, for its die, the unsigned core designs that are re-shapes of signed ones and re-points them to the signed shape in its next event.
