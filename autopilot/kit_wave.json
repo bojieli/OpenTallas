@@ -1384,6 +1384,14 @@
     ],
     "qkd_hr_phy_adp": [
      {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_hr_phy_adp",
+      "job": "COUNTED qkd_hr_phy_adp intel1:/srv/opentallas-scratch2/claude/dkv67/hr/resign/adp_l/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 class: blanket M6/M7 over M5 PG)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
       "host": "intel1",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/3376ef747f1a/qkd_hr_phy_adp",
       "job": "COUNTED qkd_hr_phy_adp intel1:/srv/opentallas-scratch2/claude/dkv67/hr/resign/adp_l/signoff/signoff.json (KW-FIX-32 export_view)"
