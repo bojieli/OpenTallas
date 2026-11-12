@@ -2426,7 +2426,7 @@ def _plan_geom_default():
 
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
-        seam_hop="warn", core_shape_index=None):
+        seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2528,6 +2528,10 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         # CORE-SHAPE-GATE-1 (OWNER 11-11 CORE-SHAPE FREEZE, opt-in): outline of a signed RTL identity never changes silently
         import core_shape
         summ["core_shape"] = core_shape.check_core_shape(raw, R, core_shape_index)
+    if m8_grant_lock:
+        # LAYER-BUDGET-1 lock: a die event may not put die M8 (PG, reserve, die route) on a signed type's granted track
+        import m8_grant
+        summ["m8_grant_lock"] = m8_grant.check_lock(P, R, m8_grant_lock, m8_grant_guide)
     summ["known_errors"] = apply_known_errors(R, plan_dir, completeness)
     if png:
         import render
@@ -2575,6 +2579,9 @@ def main(argv=None):
     ap.add_argument("--core-shape-index", help="CORE-SHAPE-GATE-1: cached signed-shape index (core_shape.py build-index); a hard core whose "
                     "outline matches no signed shape of its module and has no core_shape_exceptions entry is an ERROR "
                     "[core_shape_change] (default: check off)")
+    ap.add_argument("--m8-grant-lock", help="LAYER-BUDGET-1: dir (or file) of SIGNED types' m8_grant.json; ERROR "
+                    "[m8_grant_lock] when this plan's die M8 lands on a granted type track (default: check off)")
+    ap.add_argument("--m8-grant-guide", help="die route write_guides file for --m8-grant-lock (die clock/reset/top)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
@@ -2583,6 +2590,7 @@ def main(argv=None):
                   groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
                   core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, core_shape_index=a.core_shape_index,
+                  m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())

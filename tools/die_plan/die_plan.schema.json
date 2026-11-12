@@ -317,6 +317,37 @@
         "pattern": "^M[1-9]$"
        },
        "minItems": 1
+      },
+      "type_m8_grant": {
+       "type": [
+        "boolean",
+        "object"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "enable": {
+         "type": "boolean"
+        },
+        "types": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "guide": {
+         "type": "string"
+        },
+        "ndr": {
+         "enum": [
+          "2w",
+          "4w",
+          "8w"
+         ]
+        },
+        "note": {
+         "type": "string"
+        }
+       }
       }
      }
     },
@@ -6824,6 +6855,52 @@
      "type": "array",
      "uniqueItems": true,
      "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    }
+   }
+  },
+  "core_shape_exceptions": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+     "core",
+     "old",
+     "new",
+     "reason",
+     "measured_by"
+    ],
+    "properties": {
+     "core": {
+      "type": "string",
+      "minLength": 1
+     },
+     "old": {
+      "type": "array",
+      "items": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "new": {
+      "type": "array",
+      "items": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+     },
+     "reason": {
+      "type": "string",
+      "minLength": 1
+     },
+     "measured_by": {
       "type": "string",
       "minLength": 1
      }
