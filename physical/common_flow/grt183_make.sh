@@ -247,9 +247,29 @@ gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop 
   kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null
   return 0
 }
+# FAILFAST-1 11-11 (COORD, owner fail-fast): stop on PROGRESS, not on silence.  The 2-h hung-job watchdog never fires on a build
+# that keeps writing its log: DISK-1111 found six epyc4 GRTs 23-49 h in "extra iterations to remove congestion" (3-15 rounds of
+# 30, GRT-0273 Disabled NDR), DRT at pass 27, hold repair that hit the buffer cap and then routed anyway.  Every poll
+# /work/failfast_rules.py (kit file, copied by core_flow.stage_grt183; rules and defaults in its docstring) judges THIS run's
+# logs and prints one class line: (a) OT_GRT_NO_PROGRESS (after 60 extra iterations total overflow above OT_FF_GRT_MAX 1000 and
+# fell < 10 % over the last round), (b) OT_DRT_NO_PROGRESS (from iteration 20: > 10000 violations, < 5 % per iteration over the
+# last 3), (c) OT_HOLD_STRUCTURAL (buffer cap hit twice, or OT_HOLD_STALL NEEDS_RTL).  The stage stops, rc 21, no re-run; the
+# autopilot classifies the line (STRUCTURAL grt-no-progress / drt-no-progress -> wave ROUTING, hold-structural -> wave TIMING).
+# Opt out: OT_FAILFAST=0 (env or 'export OT_FAILFAST = 0' in config.mk), or a single rule: OT_FF_GRT / OT_FF_DRT / OT_FF_HOLD = 0.
+FF=$W/failfast_rules.py
+ff_check() {   # sets gstop, prints the class line
+  local line
+  [ -f "$FF" ] || return 1
+  line=$(timeout 120 python3 -I "$FF" judge "$W" "$T0" "$W/run/failfast_state.json" 2>/dev/null | head -n 1)
+  [ -n "$line" ] || return 1
+  echo "$line"
+  case "$line" in OT_GRT_NO_PROGRESS*) gstop=grt_no_progress;; OT_DRT_NO_PROGRESS*) gstop=drt_no_progress;; *) gstop=hold_structural;; esac
+  return 0
+}
 watch_run() {
   stall=0; gstop=""; tpost=""; cong_seen=0; early_done=""
-  if stall_off && cong_off && [ "$POST_MAX" -le 0 ] && [ -z "$EARLY_RULE" ]; then "$@"; return $?; fi
+  rm -f "$W/run/failfast_state.json" 2>/dev/null
+  if stall_off && cong_off && [ "$POST_MAX" -le 0 ] && [ -z "$EARLY_RULE" ] && [ ! -f "$FF" ]; then "$@"; return $?; fi
   if command -v setsid >/dev/null; then setsid "$@" & else "$@" & fi
   local pid=$! Rw Tl age last
   trap 'kill -TERM -- -$pid 2>/dev/null' TERM INT
@@ -257,6 +277,7 @@ watch_run() {
     local i=0; while [ $i -lt "${OT_GRT_STALL_POLL:-60}" ] && kill -0 $pid 2>/dev/null; do sleep 1; i=$((i + 1)); done   # no added latency
     kill -0 $pid 2>/dev/null || break
     Rw=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1); Tl=$(ls "$W"/run/logs/asap7/*/base/5_1_grt.tmp.log 2>/dev/null | head -1)
+    if ff_check; then kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null; break; fi
     if [ -n "$Tl" ] && gstop_check "$Tl" $pid; then break; fi
     stall_off && continue
     [ -n "$Rw" ] && [ -n "$Tl" ] && [ -f "$Rw/5_1_grt.stall_resume.odb" ] && [ ! -f "$Rw/5_1_grt.grt183_recovered.json" ] || continue

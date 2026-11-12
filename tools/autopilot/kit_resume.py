@@ -81,6 +81,7 @@ GATE_ROOTS = {"PROVENANCE.json", "PROVENANCE.generated.json", "LEC_TOOL.json", "
 RUNNER_ROOTS["clk_leaf_repeat_default.tcl"] = "cts"
 # KW-FIX-25/AUTORENDER 11-06: advisory renders, read stage ODBs only and write run/layout_review; no stage output depends on them
 GATE_ROOTS |= {"layout_render_hook.sh", "layout_render.tcl", "layout_smells.py"}
+GATE_ROOTS |= {"failfast_rules.py"}   # FAILFAST-1 11-11: stops a run on progress; inert unless a rule fires
 GATE_ROOTS |= {"grt_stall_resume.tcl"}   # KW-FIX-17 11-05 GRT-STALL: inert unless a 5_1_grt stage stalls in -end_incremental
 # run_kit.sh reads these config variables itself (outside the ORFS make steps)
 RUNNER_VARS = {"OT_HOLD_FF_MARGIN": "grt", "OT_TAP_GRT_PRE": "cts", "OT_PINREG_PAD": "cts"}
