@@ -415,7 +415,14 @@ def g0_errors(raw, tn, full=False, plan_path=None):
             if i["level"] == "ERROR" and (tn in i["msg"] or i.get("type") == tn or i.get("lane") in lanes)}
 
 
-def validate_overlay(base, new, tn, g0_full=False, plan_path=None):
+def _skip(skipped, check, why):
+    """a check that cannot run is never silent: WARN line on stderr and an entry in the result record"""
+    print(f"TYPE_OVERLAY WARN skipped check {check}: {why}", file=sys.stderr)
+    if skipped is not None:
+        skipped.append({"check": check, "why": why})
+
+
+def validate_overlay(base, new, tn, g0_full=False, plan_path=None, skipped=None):
     """All type-scoped checks of the overlaid plan `new` against the bound plan `base`; list of error strings."""
     errs = [f"changed outside the allowlist: {'.'.join(map(str, p))}" for p in _diff(base, new)
             if not _is_note(p, tn) and not pos_key(p, tn) and not (len(p) >= 5 and p[0] == "partition_types" and p[1] == tn and isinstance(p[3], int)
@@ -448,6 +455,7 @@ def validate_overlay(base, new, tn, g0_full=False, plan_path=None):
         import collector_reach as CR
     except ImportError:         # a wave source older than SEAM-HOP-1 has no collector_reach rule (bind enforces it)
         CR = None
+        _skip(skipped, "collector_reach", "module collector_reach.py is not in this source")
     for r in (CR.type_findings(tn, new["partition_types"][tn]) if CR else []):
         errs.append(f"collector_reach: {r['kind']} {r['src']}->{r['dst']} {r['hop_um']:.3f}um exceeds {CR.REACH_UM:g}")
     # 4. seam_hop on this type's lanes: no hop may get worse, none may become over the limit
@@ -460,7 +468,7 @@ def validate_overlay(base, new, tn, g0_full=False, plan_path=None):
                 errs.append(f"seam_hop lane {r['lane']} {r['src']}->{r['dst']}: {r['hop_um']:.1f}um > {r['limit_um']:g} um"
                             + ("" if b0 is None else f" (bound plan {b0['hop_um']:.1f})"))
     except ImportError:
-        pass
+        _skip(skipped, "seam_hop", "module seam_hop.py is not in this source")
     except Exception as exc:
         errs.append(f"seam_hop check failed ({type(exc).__name__}: {exc})")
     # 5. G0 subset: no new ERROR naming the type or its lanes
@@ -474,13 +482,16 @@ def apply_validated(raw, ov, g0_full=False, plan_path=None):
     """(overlaid plan, receipt).  The single entry point of gen_phys --type-overlay and the CLI."""
     new = apply_overlay(raw, ov)
     tn = ov["type"]
-    errs = validate_overlay(raw, new, tn, g0_full, plan_path)
+    skipped = []
+    errs = validate_overlay(raw, new, tn, g0_full, plan_path, skipped)
     if errs:
         raise OverlayError(errs)
     changed = {k: sorted(ov[k]) for k in ("hard_cores", "contents", "internal_stations", "type_positions") if ov.get(k)}
     return new, {"format": FORMAT, "type": tn, "base_plan_sha256": plan_sha(raw), "overlaid_plan_sha256": plan_sha(new),
-                 "changed": changed, "checks": ["allowlist", "schema(type-scoped)", "rtl_projection", "collector_reach",
-                                                "seam_hop", "g0_full" if g0_full else "g0_subset"]}
+                 "changed": changed, "checks": [c for c in ("allowlist", "schema(type-scoped)", "rtl_projection", "collector_reach",
+                                                        "seam_hop", "g0_full" if g0_full else "g0_subset")
+                           if c not in {x["check"] for x in skipped}],
+                 "skipped_checks": skipped}
 
 
 def main(argv=None):

@@ -225,3 +225,22 @@ def test_ft_slots_regs_um_positions_roundtrip_and_shape_guard(plan, tmp_path):
     b = kit(plan, tmp_path / "b",
             type_overlay={"format": TO.FORMAT, "type": "mid", "type_positions": {"ft_slots.0.regs_um": moved}})
     assert set(b) - set(a) == {"mid/type_overlay.json"} and all(k.startswith("mid/") for k in a if a[k] != b[k])
+
+
+def test_missing_check_modules_warn_and_are_recorded(plan, monkeypatch, capsys):
+    import builtins
+    real = builtins.__import__
+
+    def deny(name, *a, **k):
+        if name in ("collector_reach", "seam_hop"):
+            raise ImportError(name)
+        return real(name, *a, **k)
+    monkeypatch.setattr(builtins, "__import__", deny)
+    _new, rec = TO.apply_validated(plan, OV)
+    monkeypatch.undo()
+    assert [x["check"] for x in rec["skipped_checks"]] == ["collector_reach", "seam_hop"]
+    assert "collector_reach" not in rec["checks"] and "seam_hop" not in rec["checks"] and "rtl_projection" in rec["checks"]
+    err = capsys.readouterr().err
+    assert "WARN skipped check collector_reach" in err and "WARN skipped check seam_hop" in err
+    _new, rec = TO.apply_validated(plan, OV)
+    assert rec["skipped_checks"] == [] and "seam_hop" in rec["checks"]
