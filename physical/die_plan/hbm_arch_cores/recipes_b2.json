@@ -2997,6 +2997,71 @@
     "top": "ot_wbq_sw",
     "macros": [],
     "files": [
+      "rtl/hbm_accel/cores_split/reform_1109_wsw_h13/ot_wbq_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+    ],
+    "defines": [],
+    "params": {
+      "HREG": 4,
+      "SEL16": 1,
+      "RSYNC": 1,
+      "SCOPY": 1,
+      "MREG": 1,
+      "DCHK": 1
+    },
+    "source": "HBM-CORES-C 11-12 (DIE-HBM-101 ruling B): the wsw_H13 form of record for the t39w ot_wbq_sw slot (233.28x544.32, plan pins == wsw_H13 kit plan_pins.json, 7352 pins, 0 moved) + DCHK=1. File = HBM-CORES-B H13 ot_wbq_split.sv (sha 69378af6f116, kit wsw_H13, H12 + per-PC keep_hierarchy K-gate cone ot_wbq_kg_leaf) with the 4-place DCHK diff of HBM-WBQ-QUAL-1 e1f778f65d (DCHK=0 default = identical behaviour). Params as the wsw_H13 kit fshell: HREG 4, SEL16 1, RSYNC 1, SCOPY 1, MREG 1. Previous default kept as ot_wbq_sw__hreg2dchk1.",
+    "source_commit": "ce61f34f47d9b9dbdde346f8d8b5c52a2c4df24e",
+    "read_at_commit": true,
+    "util": 0.45
+  },
+  "ot_wbq_sw__h13": {
+    "top": "ot_wbq_sw",
+    "macros": [],
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1109_wsw_h13/ot_wbq_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+    ],
+    "defines": [],
+    "params": {
+      "HREG": 4,
+      "SEL16": 1,
+      "RSYNC": 1,
+      "SCOPY": 1,
+      "MREG": 1,
+      "DCHK": 1
+    },
+    "source": "HBM-CORES-C 11-12 (DIE-HBM-101 ruling B): the wsw_H13 form of record for the t39w ot_wbq_sw slot (233.28x544.32, plan pins == wsw_H13 kit plan_pins.json, 7352 pins, 0 moved) + DCHK=1. File = HBM-CORES-B H13 ot_wbq_split.sv (sha 69378af6f116, kit wsw_H13, H12 + per-PC keep_hierarchy K-gate cone ot_wbq_kg_leaf) with the 4-place DCHK diff of HBM-WBQ-QUAL-1 e1f778f65d (DCHK=0 default = identical behaviour). Params as the wsw_H13 kit fshell: HREG 4, SEL16 1, RSYNC 1, SCOPY 1, MREG 1. Previous default kept as ot_wbq_sw__hreg2dchk1.",
+    "source_commit": "ce61f34f47d9b9dbdde346f8d8b5c52a2c4df24e",
+    "read_at_commit": true,
+    "util": 0.45
+  },
+  "ot_wbq_sw__hreg2dchk1": {
+    "top": "ot_wbq_sw",
+    "macros": [],
+    "files": [
+      "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
+    ],
+    "defines": [],
+    "params": {
+      "HREG": 2,
+      "DCHK": 1
+    },
+    "source": "KEPT SELECTABLE (--recipe-key ot_wbq_sw__hreg2dchk1): the ot_wbq_sw default before the H13 form. HBM-CORES-C 11-12 (DIE-HBM-101/COORD): ot_wbq_sw with HREG=2 + DCHK=1 (K write-done with nothing outstanding raises h_stop at arrival; DCHK default 0 = unchanged; parameter and bench from HBM-WBQ-QUAL-1 e1f778f65d). Same files as ot_wbq_sw; ot_wbq_sw itself is unchanged.",
+    "source_commit": "ce61f34f47d9b9dbdde346f8d8b5c52a2c4df24e",
+    "read_at_commit": true,
+    "util": 0.45
+  },
+  "ot_wbq_sw__dchk0": {
+    "top": "ot_wbq_sw",
+    "macros": [],
+    "files": [
       "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
       "rtl/lib/ot_reset_sync.sv",
       "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
@@ -3006,7 +3071,7 @@
     "params": {
       "HREG": 2
     },
-    "source": "HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh; HREG=1 (HBM-GAPS-3 11-05): registered heads + pick, one-hot K switch, cycle-exact vs HREG=0 (run_lock.sh); HREG=2 (HBM-GAPS-5-WBQ 11-05): + registered replicated fault/meta gates, registered half popcounts, per-slice head pointers, per-PC skid reset sync, cycle-exact (run_lock.sh LOCK_HREG=2)",
+    "source": "KEPT SELECTABLE (--recipe-key ot_wbq_sw__dchk0): the ot_wbq_sw recipe before DCHK=1 became the default. HBM-REFORM-B4 d44v part 25 tile of ot_hbm_svc_wb_kport_q; bench results/die_hbm_1104/reform_b/split_p25/run_eq.sh; HREG=1 (HBM-GAPS-3 11-05): registered heads + pick, one-hot K switch, cycle-exact vs HREG=0 (run_lock.sh); HREG=2 (HBM-GAPS-5-WBQ 11-05): + registered replicated fault/meta gates, registered half popcounts, per-slice head pointers, per-PC skid reset sync, cycle-exact (run_lock.sh LOCK_HREG=2)",
     "source_commit": "ce61f34f47d9b9dbdde346f8d8b5c52a2c4df24e",
     "read_at_commit": true,
     "util": 0.45
