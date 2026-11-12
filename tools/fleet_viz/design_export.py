@@ -264,10 +264,12 @@ def publish(a):
     LS.write_json(edir / (job + '.json'), man)
     try: ix = json.loads((edir / 'index.json').read_text())
     except Exception: ix = {}
-    hist = [j for j in ix.get('history', []) if j != job]; hist.insert(0, job)
+    hist = [j for j in ix.get('history', []) if j != job]
+    keep = getattr(a, 'keep_latest', False) and ix.get('latest') and ix['latest'] != job   # an older attempt: history only
+    hist.insert(1 if keep else 0, job)
     for j in hist[HISTORY:]: (edir / (j + '.json')).unlink(missing_ok=True)
     hist = hist[:HISTORY]
-    LS.write_json(edir / 'index.json', dict(element=node, latest=job, history=hist, updated=man['made'], manifests={j: j + '.json' for j in hist}))
+    LS.write_json(edir / 'index.json', dict(element=node, latest=hist[0], history=hist, updated=man['made'], manifests={j: j + '.json' for j in hist}))
     for p in (pk_local, vj, cj, tj): p.unlink(missing_ok=True)
     ledger_add(store, cutr.get('db'), dict(verdict=ver.get('verdict'), node=node, job=job, made=man['made']))
     log('%s: published %s (%.1f MB objects, %s shapes)' % (node, job, man['bytes'] / 1e6, ver.get('shapes')))
@@ -307,6 +309,7 @@ def main():
     c.add_argument('--no-timing', action='store_true', help='skip the paths / clock-tree export')
     p = sp.add_parser('publish'); p.add_argument('--node', required=True); p.add_argument('--pack', required=True); p.add_argument('--index')
     p.add_argument('--store', default=os.environ.get('LV_STORE', str(HERE / 'layout_store')))
+    p.add_argument('--keep-latest', action='store_true', help='add to history without replacing the latest view (a superseded attempt)')
     q = sp.add_parser('plan'); q.add_argument('--index', required=True); q.add_argument('--die'); q.add_argument('--node'); q.add_argument('--level', default='type,core')
     q.add_argument('--limit', type=int); q.add_argument('--redo', action='store_true')
     a = ap.parse_args()
