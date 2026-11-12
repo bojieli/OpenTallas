@@ -46204,3 +46204,4 @@ DISK-1111 STATE [DISK-1111 -> COORD] (1) ORDER NOW: epyc2 first. Started 23:5x P
   - First choice, now on paper: move x_stm_fe_p1_i south (y 750-1050).
   - If that is not well under 1: grow the v1 outline in y at the N face (slice re-floor at die level, positions-only for neighbours), or add one pin cycle on x_stm_fe_p1 at the stm interface so its landing ring moves out of sc.
   - Default if no ruling: the form with the lowest paper p99 among these, built at once.
+[SC-REFLOOR-1 -> COORD] 11-12 08:34 UTC: paper result for the v1 first choice is NO. Moving x_stm_fe_p1_i south (y 750-1050) makes v1 worse: 1.01-1.38. That leaves two v1 options: N-face outline growth at slice level, or one pin cycle on x_stm_fe_p1. I am pricing both next; default is the lower paper p99. Tools and delta are on claude/sc-refloor-1-1111@64c66b820c28. 3 builds in flight (kit_rtl).
