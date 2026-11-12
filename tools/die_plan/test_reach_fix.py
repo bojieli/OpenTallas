@@ -272,3 +272,18 @@ def test_group_override_rekeyed_by_role(monkeypatch):
     assert Q["partition_types"]["T"]["clock"]["landing_contract"]["group_rects_um"] == {
         "u_cland_collect_rst_n_t20": [90.0, 90.0, 110.0, 110.0]}
     assert RF.fix_group_overrides(Q, "T", None) == []                         # idempotent
+
+
+def test_balance_residue_tsv_feeds_class6(tmp_path):
+    # INSERTION-BALANCE: the part-pair residue of a balanced die clock (balance_score rows) is written in the
+    # reach_hops TSV form and class 6 maps it to the lanes of each pair (+k registers)
+    res = {"TT": dict(over=[dict(launch_part="a", capture_part="b", damage_ps=534.0, bits=12, lane_tag="",
+                                 launch_tap="t_a__clk", capture_tap="t_b__clk", lca="n0_0")]),
+           "FF": dict(over=[])}
+    tsv = tmp_path / "res.tsv"
+    RF.write_hops_tsv(tsv, res, 416.5, "test")
+    raw = {"ports": [{"id": "p0", "src": {"part": "a"}, "dst": {"part": "b"}}],
+           "lanes": [{"id": "ab", "ports": ["p0"]}], "latency": {"lanes": {"ab": {"cycles": 2}}}}
+    rows = RF.landed_rows(raw, str(tsv))
+    assert rows == [dict(lane="ab", k=1, over_ps=117.5, hops=["a->b"], cycles_before=2, fixed_before=None,
+                         target=3, ok=False)]

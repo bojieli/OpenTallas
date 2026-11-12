@@ -1172,6 +1172,95 @@ def fix_landed(Q, rows):
     return done
 
 
+def balance_score(plan_path, run_dir, window=LANDED_WINDOW_PS, corners=("TT", "FF")):
+    """INSERTION-BALANCE (COORD 11-12 06:4x, all dies; method of DIE-S81-88 ready12b, S81 780 -> 15 TT): score a
+    die_clock.py run (balanced-by-construction H-tree, `die_clock.py run PLAN --out RUN --corner TT --corner FF
+    --iters 30 [--core-early pad]`) per launch/capture PART PAIR against the landing window, with die_clock's own seam
+    rows (abutted port bits -> nearest src/dst tap, late/early arrivals, shared-prefix CPPR at the LCA).  Die-agnostic
+    (die_clock reads any plan).  Returns {corner: {part_pairs, over_window, max_ps, p99_ps, over: [rows]}}; the over
+    rows are the class-6 residue (+k registers)."""
+    import die_clock as DC
+    S = DC.S
+    d = Path(run_dir)
+    P = S.Plan(S.load(str(plan_path)), Path(plan_path).resolve())
+    tree = json.loads((d / "tree.json").read_text())
+    taps = tree["taps"]
+    by_port = {t["port"]: t for t in taps}
+    tbp = defaultdict(list)
+    for t in taps:
+        tbp[t["part"]].append(t)
+    paths = {t["port"]: t["path"] for t in taps}
+    sp = DC.seam_pairs(P, tbp)
+    res = {}
+    for corner in corners:
+        f = d / ("arr_%s.txt" % corner)
+        if not f.exists():
+            continue
+        tarr, tmin, _slew, narr = DC.read_arr(f)
+        nr = DC.read_node_ranges(f)
+
+        def lca(pa, pb):
+            A, B = paths[pa], paths[pb]
+            k = 0
+            while k < min(len(A), len(B)) and A[k] == B[k]:
+                k += 1
+            for c in reversed(A[:k]):
+                if c in narr:
+                    return c
+            return None
+        agg = {}
+        for key, bits in sp.items():
+            pa, pb = key[0], key[1]
+            if pa not in tarr or pb not in tarr:
+                continue
+            lc = lca(pa, pb)
+            sh = nr.get(lc)
+            cr = max(0.0, sh[0] - sh[1]) if sh else 0.0
+            r = DC.pair_clock_damage(tarr[pa], tmin[pa], tarr[pb], tmin[pb], cr)
+            k = (by_port[pa]["part"], by_port[pb]["part"])
+            v = r["max_damage_ps"]
+            a = agg.get(k)
+            if a is None or v > a[0]:
+                agg[k] = [v, bits if a is None else a[1] + bits, key[2] if len(key) > 2 else "", pa, pb, lc]
+            else:
+                a[1] += bits
+        over = sorted((dict(launch_part=k[0], capture_part=k[1], damage_ps=round(v[0], 1), bits=v[1], lane_tag=v[2],
+                            launch_tap=v[3], capture_tap=v[4], lca=v[5]) for k, v in agg.items() if v[0] > window),
+                      key=lambda r: (-r["damage_ps"], r["launch_part"], r["capture_part"]))
+        vals = sorted(v[0] for v in agg.values()) or [0.0]
+        res[corner] = dict(part_pairs=len(agg), over_window=len(over), window_ps=window, max_ps=round(vals[-1], 1),
+                           p99_ps=round(vals[int(0.99 * (len(vals) - 1))], 1), over=over)
+    return res
+
+
+def write_hops_tsv(path, res, window, note=""):
+    """class-6 input (same columns as the DIE-RECHECK-1 / DIE-S81-87 reach_hops TSV)."""
+    out = ["# insertion-balance residue %s; over_ps = max damage - %.1f ps window; +1 register per over-reach hop"
+           % (note, window),
+           "over_ps\tcorner\tlane_tag\tlaunch_part\tcapture_part\tlaunch_region\tcapture_region\tpairs_TT\tpairs_FF\t"
+           "max_damage_ps\tworst_launch_tap\tworst_capture_tap"]
+    for corner, r in sorted(res.items()):
+        for o in r["over"]:
+            out.append("\t".join(str(x) for x in (
+                round(o["damage_ps"] - window, 2), corner, o["lane_tag"] or "%s->%s" % (o["launch_part"], o["capture_part"]),
+                o["launch_part"], o["capture_part"], None, None, o["bits"] if corner == "TT" else "",
+                o["bits"] if corner == "FF" else "", o["damage_ps"], o["launch_tap"], o["capture_tap"])))
+    Path(path).write_text("\n".join(out) + "\n")
+
+
+def cmd_balance(a):
+    set_repo(a.repo)
+    res = balance_score(a.plan, a.run, a.landed_window)
+    rec = dict(schema=SCHEMA, mode="balance", plan=str(a.plan), run=str(a.run), window_ps=a.landed_window,
+               corners={c: {k: v for k, v in r.items() if k != "over"} for c, r in res.items()}, result=res)
+    if a.json:
+        Path(a.json).write_text(json.dumps(rec, indent=1) + "\n")
+    if a.hops_tsv:
+        write_hops_tsv(a.hops_tsv, res, a.landed_window, "of die_clock run %s" % a.run)
+    print(json.dumps(dict(mode="balance", **rec["corners"])))
+    return 0
+
+
 # ------------------------------------------------------------------------------------------------------- driver
 _JOB = {}
 
@@ -1389,7 +1478,16 @@ def main(argv=None):
             p.add_argument("--out-plan")
             p.add_argument("--event")
             p.add_argument("--classes", default="1,2,3,4,5,6")
+    b = sub.add_parser("balance", help="score a die_clock.py run per part pair vs the landing window (class-6 input)")
+    b.add_argument("plan")
+    b.add_argument("--run", required=True, help="die_clock.py run --out dir (tree.json, arr_TT.txt, arr_FF.txt)")
+    b.add_argument("--repo", default=None)
+    b.add_argument("--json")
+    b.add_argument("--hops-tsv", help="class-6 TSV for fix --landed-hops")
+    b.add_argument("--landed-window", type=float, default=LANDED_WINDOW_PS)
     a = ap.parse_args(argv)
+    if a.cmd == "balance":
+        return cmd_balance(a)
     a.cap_given = a.cap is not None
     if a.cmd == "fix":
         a.tap_table = None
