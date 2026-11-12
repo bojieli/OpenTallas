@@ -38,6 +38,8 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 
 - hd_spn_end: CARRY SP3n2 (REACH-FIX-2 plan 3ac13457f663, taps 958/1000; GEOM-VIS-8 OK 13:01). Route epyc4 head-95/sp3n2 (copy of reach-fix-2/kit_sp3n2), log ~/head95log/sp3n2_route.log. SP2 route STOPPED at GRT 13:xx (hold_structural, FF ws -110 on bin bars u_bin_bw_i/u_bin_be_i, buffer cap x2): dropped. On SP3n2 sign-off: plan event rp17 with hd_spn_end from 3ac13457f663.
 
+- wshim_rx: GEN-CLASS-1 LOCAL=1 ring form on claude/cland-hop-maxwire-1112@aee2a3f4707; recipe posted for their private rebind + sign-off. rp17 ITEM: wshim_rx reset relay hop u_srl_17/u_rrl_17 334 um (add relay or move site).
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
