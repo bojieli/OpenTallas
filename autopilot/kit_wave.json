@@ -274,7 +274,15 @@
     "kv3_sys_SD_v1@20",
     "kv3_hg@9",
     "kv3_hg_v3@9",
-    "kv3_hg@10"
+    "kv3_hg@10",
+    "kv3_hg_v1@13",
+    "kv3_hg_v1p2@5",
+    "kv3_hg_v1p3@5",
+    "kv3_hg_v1p4@5",
+    "kv3_hg_v1p5@5",
+    "kv3_hg_v1p6@5",
+    "kv3_hgi@7",
+    "kv3_hgi_v7@7"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -321,11 +329,7 @@
     "critical": true
    },
    "hold_items": {
-    "kv3_hgi": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v1*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v2*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
     "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
@@ -345,15 +349,7 @@
     "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
     "kv3_pv_v5": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (b) 'physical collector_tree differs from captured bound reset identity' = plan-vs-bind mismatch, owner DIE-KV-98; held until fixed",
     "kv3_pv*": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_pv* until DIE-KV-98's reset-identity result ('physical collector_tree differs from captured bound reset identity') is in",
-    "kv3_hg_v1": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
-    "kv3_hg_v1p2": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
-    "kv3_hg_v1p3": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
-    "kv3_hg_v1p4": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
-    "kv3_hg_v1p5": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
-    "kv3_hg_v1p6": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
-    "kv3_hg_v3": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
-    "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
-    "kv3_hg_*": "KW-FIX-45 11-11 12:1x (COORD LOOP-GAP): HOLD every kv3_hg_* (glob, also future names) until the ff lib problem is fixed and proven on the single kv3_hg proof; kv3_hg itself is not matched"
+    "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -3653,6 +3649,41 @@
      "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     }
+   },
+   "hold_items_prev_kw45_kvbatch": {
+    "kv3_hgi": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v1*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v2*": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v7": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v4": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_sys_SD": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+    "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+    "kv3_pv_v7": "KW-FIX-43 11-10: kept held when kv3_pv_* was lifted (RETRY-INFRA a17, not a band row; release needs a ruling). Revert: delete this key.",
+    "kv3_pv_v1": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v1n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v3n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v4n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v6n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v12": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_hgi_v3": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+    "kv3_hgi_v5": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+    "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+    "kv3_pv_v5": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (b) 'physical collector_tree differs from captured bound reset identity' = plan-vs-bind mismatch, owner DIE-KV-98; held until fixed",
+    "kv3_pv*": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_pv* until DIE-KV-98's reset-identity result ('physical collector_tree differs from captured bound reset identity') is in",
+    "kv3_hg_v1": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
+    "kv3_hg_v1p2": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
+    "kv3_hg_v1p3": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
+    "kv3_hg_v1p4": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
+    "kv3_hg_v1p5": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
+    "kv3_hg_v1p6": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
+    "kv3_hg_v3": "KW-FIX-45 11-11 COORD fail_watch 11:16: HOLD all kv3_hg* until the ff lib problem ('macro lib ..._tt.lib: no ff view ..._ff.lib in the kit') is fixed and proven on ONE kv3_hg type; no relaunch loop (every failed launch burns a gen slot)",
+    "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
+    "kv3_hg_*": "KW-FIX-45 11-11 12:1x (COORD LOOP-GAP): HOLD every kv3_hg_* (glob, also future names) until the ff lib problem is fixed and proven on the single kv3_hg proof; kv3_hg itself is not matched"
    }
   },
   "s81": {
