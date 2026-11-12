@@ -1247,6 +1247,11 @@ SCHEMA = {
             # 0 opts a type out.  1.0 = the measured routable form (rows-1 strips are ~2.6 and jam GRT).
             cland_strip_density={"type": "number", "minimum": 0},
             cland_strip_density_types={"type": "object", "additionalProperties": {"type": "number", "minimum": 0}},
+            # QC-S28-VISFORM 11-12 (opt-in, absent = unchanged kits): face_flops.tcl E/W face pin-register band per type
+            # or unsplit base: column pitch in sites (default 40 = 2.16 um) and the row stride s (column c takes rows (row + c) mod s = 0)
+            face_flop_ew_types={"type": "object", "additionalProperties": {
+                "type": "object", "additionalProperties": False, "properties": {
+                    "cpitch_sites": {"type": "integer", "minimum": 1}, "row_stride": {"type": "integer", "minimum": 1}}}},
             # DIE-QC-97 11-10 opt-in (absent = unchanged plans): clock_landing_plan face-home re-sites these types' ring
             # bands that sit > 50 um from their own pin face or off their pin window (rehome_far_bands)
             cland_face_home_types={"type": "array", "uniqueItems": True, "items": _name},
