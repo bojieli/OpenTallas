@@ -748,6 +748,8 @@ def load_gated(r):
     """LOADGATE_1110 (KW-FIX-44, COORD 11-10: epyc8 load1 507 / 96 threads): ot-heavy holds EVERY job (crit, direct,
     short too) while load1 + fresh admits >= LOAD_GATE_FACTOR x nproc.  Placement sees the same: the fresh units of the
     --free row count at THREADS each (as ratio()), nproc = the row's cores before HOST_RESERVE."""
+    if LOAD_GATE_FACTOR <= 0:
+        return False
     gf = LOAD_GATE_CRIT_FACTOR if (crit_job() or direct_job()) else LOAD_GATE_FACTOR
     if gf <= 0:
         return False
