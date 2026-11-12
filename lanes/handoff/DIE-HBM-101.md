@@ -1,4 +1,4 @@
-# DIE-HBM-101 lane handoff (HBM die owner, phase 2, ~96 threads). Updated 2026-11-12 07:00 PST.
+# DIE-HBM-101 lane handoff (HBM die owner, phase 2, ~96 threads). Updated 2026-11-12 07:10 PST.
 
 ## 1 Scope
 Single HBM owner for phase 2. Succeeds DIE-HBM-100, HBM-HANDPLAN-1, DIE-LAYOUT-HBM, VISLAYOUT2-HBM, CORES-HBM-1, HBM-CORES-B and the hub/root/stale lanes. HBM is at 1/81 types and 89/119 cores signed off.
@@ -33,6 +33,13 @@ Die-level analysis (epyc8, through ot-run from intel2; logs ~/die-hbm-101-logs/)
 - hm_hp1: DONE (exit 0). CSVs in .../hbm101_hm_hp1/out/hm_*.csv sum all layers (the Layer setting is ignored headless); exact-capacity hot bins are posted in the 06:5x RESULT.
 - tri_hp2.otrun.log: triage of the hp2 plan -> .../hp1lane/tri_hp2/TRIAGE.log (GRT line = total overflow). Queued.
 
+HBM-CORES-B (agent adf5204cb4034d7c1, LIVE, reports to DIE-HBM-101; its handoff is intel2 ~/coord/lanes/handoff/HBM-CORES-B.md, logs ~/hbm-cores-b-logs/):
+- pvm_F2T (F2 + RDREG + TREG) building on epyc9. TREG 243ed13930: all proofs pass. pvm_F2R ended NOT SIGNED (TT -87.42, bp -> TREG).
+- RDREG + TREG combined READY: HELD on RDREG equivalence (unproven cells behind the unpaired stack-SRAM rd_out). Blackbox reruns eq_p0d/eq_p1d plus BMC m0 (must PASS) and m2/m3 (must FAIL) are running on epyc2.
+- kshare LCREP 1973ee13bd: HELD on LCREP=0 equivalence; the fork a99fe9538ce71ed45 is running eq0f (pairs the renamed shared regs). ksh_abcrl3 / ksh_pfrvl3 are building on epyc8. ksh_pfrvl2 ended NOT SIGNED (TT -4.69, FF hold -199.96, sdc -152.46, DRC 0); the core-owned vs port-start hold split is still open.
+- OPSA1 SREG d8c51ee924: READY already posted (by DIE-HBM-100). opsa1_SREG is building on epyc9 (760.32x233.28); on a GRT congestion fail, the outline-growth call is mine (pre-approved; size it from the GRT map).
+- b128_canonT / canonU (tie clone) on epyc7. Renders/verdicts due: opsbg_E, q3bc_ISS2EM, dtap_rb, opsa0_B.
+
 ## 4 Watchers (re-arm)
 - `bash <scratch>/hbm/w101.sh` (background; exits with one line per new build end, VL2 driver end or trial end; seen file w101.seen). Re-run after each event.
 - hp2 triage watcher: loop on epyc8 .../tri_hp2/TRIAGE.log for TRIAGE_DONE|FAIL.
@@ -52,8 +59,10 @@ Die-level analysis (epyc8, through ot-run from intel2; logs ~/die-hbm-101-logs/)
 5. G1e at place: view the place density at (1760,1150) east strip; if it is GOOD, enqueue the route (trial); if BAD, do WAIT-FORM.
 6. topk D: on sign-off, post CLASS (chan_block + evac for HBM cores with emptied SRAM channels; tkm A's PSM-0069 is the same class) and propose the next tkm form = D's chan_block.
 
-## 7 Open asks
-None open yet. The i8w shrink is DECLARED by COORD (05:49), valid only while it is unsigned.
+## 7 Open asks / READYs I must post
+- When HBM-CORES-B sends the RDREG+TREG sha (eq_p0d/p1d 0 unproven + bmc_m0 PASS + m2/m3 FAIL): post ONE combined READY to ROOT-MERGE (branch claude/hbm-cores-b-pvm-treg-1112, proofs/pvm_rdreg_1112 + pvm_treg_1112 RESULTS.txt). If anything is still unproven: no READY.
+- When eq0f gives LCREP=0 with 0 unproven: post READY for claude/hbm-cores-b-ksh-lcrep-1112@1973ee13bd.
+- No other open asks. The i8w shrink is DECLARED by COORD (05:49), valid only while it is unsigned.
 
 ## 8 Gotchas
 - `pgrep -f` matches your own ssh shell: kill only exact PIDs from `ps`.
