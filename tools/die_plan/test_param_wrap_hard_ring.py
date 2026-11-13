@@ -105,3 +105,21 @@ def test_explicit_type_opt_in_conflicts():
     _hard(p, base, params)
     with pytest.raises(LandingError, match="landing_status_reg"):
         Landings(p, t).type_rtl("B", B_BODY)
+
+
+def test_child_signed_from_soft_ring_keeps_dsrep():
+    """QC-PARAMWRAP-DS 11-13: a child generated from the SOFT ring of the same plan under the die fanout bound (QC s29
+    sle_cland_w2104_s_s34: DSREP 8 / RSTREP 34) binds; any other DSREP still fails closed"""
+    p, t = _vehicle(landing_ring_status_reg=True, landing_ring_fanout_max=32)
+    base, soft = _params(Landings(p, t).type_rtl("B", B_BODY))
+    assert soft["DSREP"] > 1
+    p, t = _vehicle(landing_ring_status_reg=True, landing_ring_fanout_max=32)
+    hcs = _hard(p, base, soft)
+    lg = Landings(p, t)
+    rtl = lg.type_rtl("B", B_BODY)
+    assert _params(rtl) == (base, soft)
+    param_wrap.wrap_bound(rtl, hcs)
+    p, t = _vehicle(landing_ring_status_reg=True, landing_ring_fanout_max=32)
+    _hard(p, base, dict(soft, DSREP=soft["DSREP"] * 2 if soft["DSREP"] < 64 else 1))
+    with pytest.raises(LandingError, match="signed hard child"):
+        Landings(p, t).type_rtl("B", B_BODY)

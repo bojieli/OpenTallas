@@ -1687,6 +1687,16 @@ class Landings:
                 wreg = ring_write_reg(wplan, key, b) or ring_write_reg(wplan, tn, b)
                 if wreg and wreg.get("reach") and not cat.get("straps"):
                     wreg = None          # CLAND-RING-LOCALITY reach default: strap form only (no K carrier otherwise)
+                if hard is not None and wreg and "DSREP" in hard and int(hard["DSREP"]) != wreg["dsrep"]:
+                    # QC-PARAMWRAP-DS 11-13: a child signed from the SOFT ring of the same plan (die fanout bound + reach
+                    # read copies, e.g. QC s29 sle_ctl / st_a sle_cland_* DSREP 8) keeps that DSREP: accepted only when
+                    # it equals the soft-form value, so the bind still fails closed on any other count (0 cycles, K
+                    # unchanged: DSREP only replicates read-select flops inside the child)
+                    sw = ring_write_reg(self.plan, key, b) or ring_write_reg(self.plan, tn, b) or {}
+                    soft_ds = max(sw.get("dsrep", 1), ring_reach_select_copies(w + 2 if self.dataflow else w,
+                                                                               sw.get("read_chunk", 0)))
+                    if int(hard["DSREP"]) == soft_ds:
+                        wreg = dict(wreg, dsrep=soft_ds)
                 dsrep = ring_read_select_copies(self.plan, key, b)
                 if dsrep is None:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
