@@ -22,15 +22,18 @@ Targets: s81/serdes__t2 (a27), seqhost__t1, serdes__t1 (2 cohorts), serdes__t14.
 - Placement (to write): kit hook serdes_lanes.tcl at PRE_GLOBAL_PLACE: rows FIRM on per-bit lanes <= 405 um apart, placement blockage outside the KP4 island + lane corridors.
 - Bench: rtl/dsrom_sys/s81_link/col/tb_s81_col_lane.sv, tools/s81_link/run_serdes_lane_bench.sh (verilator/verilator:v5.032 docker on epyc9, lane dir bench_all.sh).
 
-## State 11-13 03:50 PST
-- serdes RTL form LANE: DONE in the worktree (uncommitted): ot_pdie_serdes_col LANE_PIN/TXA/RXI/RXO, bare define OT_S81_SERDES_LANE = 3/4/5/3.
-  Proof (epyc9 lane dir bench3/, bench3r/): lane PASS (TX 9251 edges, RCK 9299 edges, 6000 RX beats, 0 bad); mut8/mut9/mut10/xtx/xrx FAIL as required; loopback latency 88 -> 103 (+15).
-- serdes placement form: tools/die_plan/serdes_lanes.tcl + serdes_lanes_release.tcl, type key serdes_lanes (schema + gen_phys + test_serdes_lanes.py, 4 pass).
-- serdes__t2 proof kit: epyc9 lane dir kitA/gen/serdes__t2 (a27 kit + patched column + value defines 3/4/5/3 + hooks). Place launched via ot-run (log kitA_place.otrun.log). NEXT: read OT_SERDES_LANES log lines, view run/layout_review/place/*.png, then resume.json {"start":"cts"} and run_kit.sh route.
-- seqhost__t1: NOT the serdes class. a9 placement (wave job dir epyc9 /srv/opentallas-scratch2/claude/ot-jobs/seqhost__t1-place-renewed-glider-677733-1794552059/work) is compact; STA (lane dir sta_seqhost_a9/, a9b/): TT -586, 5270 endpoints. Cones: u_win pe 24 cells (-586, 606 ep), u_win rp 21 cells (-457), u_win lw 18 cells (-239, 3488 ep), host engine ap0_local -> ap1_lp 26 cells (-182), cq_rd -> cx_w 18 (-173), ofree -> sp_acc 21 (-117), plus wire/fanout: u_sd.n -> h (-94), u_iss.hh (-90, 743 ep), u_l2.cw_d -> u_bout_unit_o4 787 ps wire (-43).
-  Fix done for u_win only: dsdv_mu_hwin LA=1 (define OT_S81_SH_WIN_LA), exact two-candidate lookahead, 0 cycles. Proof lane dir hwin2/: 5 runs x 1.2 M edges 0 mismatches, mutants LA 2/3 caught (small_s21 run misses its clean-epoch coverage threshold 20 vs > 20, bad = 0).
-  Proof kit kitS/gen/seqhost__t1 (a9 kit + LA) placing (kitS_place.otrun.log). The host-engine cones are NOT fixed.
-- serdes__t14 CRASH = PIN_AUDIT "extra 1" flow error, not timing; t14 and t1 share the column, so form LANE applies with their own lane cfg (not built yet).
+## State 11-13 06:18 PST
+- COORD directives received: (1) RULEBOOK R-RTL (done, committed 04:0x); (2) DIEVIEW-S81 F5: collapse PMA / KP4 core / port bar into one island, ONE template for all 14 serdes, proper recovered-clock tree, then READY.
+- Branch claude/hard-s81-serdes-1-1113 (epyc9 worktree, local commits a143ecdc82, 024764f538, d9f915fb92, 01197b5d5d; NOT pushed yet).
+- serdes RTL form LANE (define OT_S81_SERDES_LANE = PIN 3 / TXA 4 / RXI 5 / RXO 3): proof done. bench3/: lane PASS (TX 9251 edges, RCK 9299 edges, 6000 RX beats, 0 bad); mut8/9/10 and xtx/xrx FAIL as required; loopback 88 -> 103 (bench4/ with the bare define). lane_asbuilt_latency on r12bA PASS 873/873 (lat/).
+- Placement tools: tools/die_plan/serdes_lanes.tcl (+ release), type key serdes_lanes (schema, gen_phys), serdes_template.py (one template: island under the PMA at the port end; 11 types / 14 instances PASS, max hop 337.5 um, one row set; lane dir tmpl/). Tests: test_serdes_lanes.py 4, test_serdes_template.py 5 pass.
+- Kits (epyc9 lane dir): kitA = island at today's plan site (v1 evidence kitA_v1_reports/: lanes fine, place TT -3055 from smeared island logic; v2 = tighter island + density 0.65, placing). kitB = template v3, island under the PMA E end, dchn/SRAMs moved (+902.016, +587.52), placing from floorplan. Logs intel2 ~/hard-s81-serdes-1-logs/kitA_place4 / kitB_place.
+  NEXT: for each, read 3_detailed_place.rpt + view run/layout_review/place/density.png; pick the better; write resume.json {"start":"cts", ...} (new text = new done-list key) and run_kit.sh route; read 4_cts (rck tree skew / latency), GRT, sign-off.
+  To re-run a step in the same kit the resume.json TEXT must change (done list is keyed by its cksum).
+- seqhost__t1: depth class. dsdv_mu_hwin LA=1 (define OT_S81_SH_WIN_LA), exact, 0 cycles: lookahead compares, select at the use edge, kept pointer copies, registered payload. Proof hwin5/: 5 runs x 1.2 M edges 0 mismatches; mutants LA 2 / 3 caught; run small_s21 has bad = 0 but misses its clean-epoch coverage threshold (20, needs > 20).
+  Placements: a9 base TT -586 / 5270 endpoints; kitS (LA v1) -500 / 1232; kitS2 (v2) -337; kitS3 (v3, registered payload) placing.
+  NOT fixed (host engine, other RTL): ap0_local -> ap1_lp 26 cells, cq_rd -> cx_w 18, ofree -> sp_acc 21, st_rem; fanout u_iss.hh (593 ep), u_sd.n; wire u_l2.cw_d -> u_bout_unit_o4.
+- serdes__t14 CRASH 01:32 = PIN_AUDIT "extra 1" (flow), not timing.
 
 ## Log
 - 11-13 03:1x start. 04:0x RULEBOOK R-RTL committed. Bench run 1 launched via ot-run (log bench1.otrun.log).
