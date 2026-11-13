@@ -51312,3 +51312,24 @@ ASK COORD: my scope is fully taken over (KV -> KV-VN2-FIN, HEAD -> HEAD-95/96). 
   hd_spn: hold lifted (recorded in hold_items_released_kitops1_rp18r2).
   hd_mesh: the 20:27 job was cancelled first by exact name: ot-run --cancel-dir on its place dir (.../head_rp18_1112/items/hd_mesh/gen/hd_mesh), then systemctl stop kw-s81hea-hdmesh-1-44046 (inactive). The old row went to FAIL at 01:25; it rebuilds on the r2 block.
   Open from (2): epyc7 is out of hbm.gen_hosts until its pEv10 src copy verifies. Stopping.
+FAILED [AUTOPILOT aba9ee54a35e] 2026-11-13 01:32:10 PST AUTOPILOT -> KIT-WAVE-3: FAILED aba9ee54a35e s81/serdes__t14 (CRASH/flow-error): PIN_AUDIT FAIL 2123/2123 missing 0 wrong_layer 0 wrong_place 0 extra 1 | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t14/attempt_13/gen/serdes__t14 src claude/type-safe-5-s81-final-1109@c0c9a3de749a | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-13 01:33 PST RESULT [DIE-HBM-102 -> COORD, KIT-OPS-1] HBM wave holds after pEv10, plus the n4ext core (answers KIT-OPS-1 01:19 (2)). I own these holds now. Rule I applied: a hold is released only when pEv10 removes its STATED reason. Holds on child views, tool classes or cell caps stay.
+  RELEASE (pEv10 resolves the stated reason):
+   - root: the hold reason was the "split-rebind class (DIE-HBM-98 bind sub-type lane)". pEv10's strict bind binds root cleanly (92 partitions, 0 errors; KIT-OPS-1's own re-bind agrees). The root G0 rows left are the accepted 468 baseline.
+   - q_spt1, q_spt2, vsN4, vsN5, vsN6 (hold_items AND route_hold_items, "xtap form D NOT SIGNED ... until the structural redo"): pEv10 carries the redo, form A' on every cross-port hop (ot_dp_lk latch, launch tap + frac 0.95). On the routed vsN4 STA it passes all 36 cross-tap hops (min S +6.0, H +39.2). Release both lists for these 5.
+  STAY HELD, released by pEv11 (my READY follows):
+   - q_spb1, vsN1, vsN2 (same xtap hold). pEv11 hangs every latched hop of these 3 types on its capture tap (TIMING-CLASS-1 SKEW). Re-kit them on pEv11, not on pEv10.
+  STAY HELD (pEv10 does not touch the reason):
+   - hcol_h0_ra DRT-0073 child class: q_b000/__physical_v1, q_b100/__physical_v1, q_b101, q_b101_nw. They wait for the ra-child proof.
+   - Cell cap: q_b001/__physical_v1 (420.6k/415.2k). The pad_landing cut needs claude/hbm-kitist-1 (train 31) on main.
+   - Bank-chain tool class (kit_istations.bus_entries merges per-core rows; route_hold_items): q_b002/b003/b012/b013 (+__physical_v1).
+   - bank128 canon child: q_b010/q_b011 (+__physical_v1).
+   - Over-reach / route_supply: q_b102/b103 (+__physical_v1). pEv10 G0 still has 37 hops/stations ERROR rows on b102/b103.
+   - q_b113/__physical_v1: missing-station replan + S2 hold. G0 has 47 hops/stations ERROR rows.
+   - Split-rebind / macro_instances check: q_b110/b111/b112 (+__physical_v1). Release only if a gen-only KIT_PREFLIGHT on pEv10 shows the split cores bound hard. KIT-OPS-1 may run that preflight (no P&R).
+   - Hubs: q_hub_ne/nw (+__physical_v1). route_supply > 1; hub stations/hops ERROR rows remain.
+   - smh kids PROVISIONAL views: q_sm0-3.
+   - Child xcal_rel_t PROVISIONAL view: q_spb2*. Same child + route_supply: q_spt0*.
+   - Children lane1p/lane_exp_x/sfu_s not signed: q_su01/__physical_v1.
+   - Cores: ot_hbm_su_pg_lane1_core (tap-only, re-sign path, no P&R) and ot_hnx_fused_host_program (signed ss29 fhp_i; re-sign if its pins equal the signed view).
+  (2) ot_hnx_fused_hub_n4ext: the pEv10 form is NOT new; it is the signed form. root.u_mu_fused_root keeps outline 293.76x250.56 and pins_file cores/ot_hnx_fused_hub_n4ext__293.76x250.56__n4rf.json, the n4ext_1110 slot. pEv10 only moves it +103.68 um in y (the root tier shift; core shape frozen). That form is SIGNED: hbm-collect-1/n4c/n4c_eco2pin/i1 6_final.odb, sha eb531164; OBS-SYNC-1 02:37 staged its detail view, clk probe 0 DRT-0073. All 16 FAIL attempts were d44o/d44v rows on the old 216x207.36 slot, now superseded. Do NOT add a P&R row. Treat it like host_program: a signed core, used by its staged view in the parent kits and re-signed if needed. Before using it, check that the pins of n4rf.json equal the signed view's PIN section (the same check OBS-SYNC-1 ran at 02:37).
