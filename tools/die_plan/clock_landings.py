@@ -721,6 +721,46 @@ def ca_cycles(ca, pid):
     return int(c["sched_lat"])
 
 
+MON_RELAY_RTL = [
+    "(* keep_hierarchy *) module ot_die_mon_relay_fwd (",
+    "    input wire clk, input wire ready_i, input wire fault_i, output wire ready_o, output wire fault_o, output wire clk_o);",
+    "    // R-REACH-1 monitor relay on the bundle's own forwarded clock: falling-edge capture (half a cycle after the",
+    "    // rising-edge launch it travelled with), rising-edge relaunch, clock passed on: the next hop sees the same",
+    "    // launch form as at the source.  Status is level-sensitive: +1 cycle, no data cycle.",
+    '    (* keep = "true" *) reg rf, ff, r, f;',
+    "    always @(negedge clk) begin rf <= ready_i; ff <= fault_i; end",
+    "    always @(posedge clk) begin r <= rf; f <= ff; end",
+    "    assign ready_o = r; assign fault_o = f; assign clk_o = clk;",
+    "endmodule",
+    "(* keep_hierarchy *) module ot_die_mon_relay (",
+    "    input wire clk, input wire ready_i, input wire fault_i, output wire ready_o, output wire fault_o);",
+    "    // R-REACH-1 same-region monitor relay: one region-clock flop per status bit (level-sensitive, +1 cycle).",
+    '    (* keep = "true" *) reg r, f;',
+    "    always @(posedge clk) begin r <= ready_i; f <= fault_i; end",
+    "    assign ready_o = r; assign fault_o = f;",
+    "endmodule"]
+
+
+def monitor_relays(plan):
+    """{child partition: dict(form, relays)} of the collector monitor bundles cland_mon_{ready,fault[,clk]}__<child>
+    that carry R-REACH-1 relays (reach_relay_plan); every edge of a bundle must name the same sites and form."""
+    out = {}
+    for e in plan.get("clock", {}).get("landing_network", {}).get("edges", []):
+        m = re.fullmatch(r"cland_mon_(ready|fault|clk)__(.+)", e.get("id", ""))
+        if not m or not e.get("relays"):
+            continue
+        rel = [(r["kind"], tuple(r["xy_um"])) for r in e["relays"]]
+        got = out.setdefault(m.group(2), dict(form=rel[0][0], relays=e["relays"], sites=rel, kinds=set()))
+        if got["sites"] != rel or len({k for k, _ in rel}) != 1:
+            raise LandingError(f"monitor relays of {m.group(2)}: edges disagree on relay sites / form")
+        got["kinds"].add(m.group(1))
+    for pn, r in out.items():
+        need = {"ready", "fault"} | ({"clk"} if r["form"] == "fwd_clock_relay" else set())
+        if r["kinds"] != need:
+            raise LandingError(f"monitor relays of {pn}: bundle relays {sorted(r['kinds'])}, need {sorted(need)}")
+    return out
+
+
 def ident(s):
     return re.sub(r"[^A-Za-z0-9_]", "_", s)
 
@@ -2468,6 +2508,9 @@ class Landings:
         rst = {r["origin"]: f"clock_landing_rstart_{ident(r['origin'])}" for r in rpr.values() if r["role"] == "relay"}
         decl += [f"    wire {w};" for w in sorted(set(rst.values()))]
         mon = {}
+        mon_out = {}
+        if (self.dataflow or not self.collector) and monitor_relays(self.plan):
+            raise LandingError("monitor relays are emitted for the reset-collector monitor only")
         if self.dataflow:
             # one wire pair per sender status pin (a source bus fanning out to several sinks shares its pin)
             mon = {(r["src"], r["src_bus"]): f"cland_mon_{ident(r['src'])}__{ident(r['src_bus'])}" for r in self.rows}
@@ -2480,6 +2523,33 @@ class Landings:
                     decl += [f"    wire cland_ready_{ident(pn)}, cland_fault_{ident(pn)};"]
             for e in self.collector["edges"]:
                 if e["seam"]:decl.append(f"    wire cland_clock_{ident(e['src'])};")
+            # R-REACH-1 monitor relays: child status (and forwarded clock) -> relay chain -> parent's cland_dn_* pins
+            mrl = monitor_relays(self.plan)
+            self.monitor_relay_sites = []
+            for e in self.collector["edges"]:
+                rl = mrl.pop(e["src"], None)
+                if rl is None:
+                    continue
+                is_fwd = rl["form"] == "fwd_clock_relay"
+                if is_fwd != bool(e["seam"]):
+                    raise LandingError(f"monitor relays of {e['src']}: {rl['form']} on a {'seam' if e['seam'] else 'same-region'} edge")
+                child = ident(e["src"])
+                prev = (f"cland_ready_{child}", f"cland_fault_{child}", f"cland_clock_{child}" if is_fwd else None)
+                for i, r in enumerate(rl["relays"], 1):
+                    n = f"cland_rl{i}_{child}"
+                    decl.append(f"    wire {n}_ready, {n}_fault" + (f", {n}_clock" if is_fwd else "") + ";")
+                    if is_fwd:
+                        decl.append(f"    ot_die_mon_relay_fwd u_{n} (.clk({prev[2]}), .ready_i({prev[0]}), .fault_i({prev[1]}), "
+                                    f".ready_o({n}_ready), .fault_o({n}_fault), .clk_o({n}_clock));")
+                    else:
+                        decl.append(f"    ot_die_mon_relay u_{n} (.clk(clk_region_{ident(self.region[e['dst']])}), "
+                                    f".ready_i({prev[0]}), .fault_i({prev[1]}), .ready_o({n}_ready), .fault_o({n}_fault));")
+                    self.monitor_relay_sites.append(dict(instance=f"u_{n}", child=e["src"], parent=e["dst"], form=rl["form"],
+                                                         xy_um=list(r["xy_um"]), relay=r.get("id")))
+                    prev = (f"{n}_ready", f"{n}_fault", f"{n}_clock" if is_fwd else None)
+                mon_out[e["src"]] = prev
+            if mrl:
+                raise LandingError(f"monitor relays on non-collector edges: {sorted(mrl)[:5]}")
         match = re.search(r"(?m)^module \w+ \([^;]*\);", text)
         text = text[:match.end()] + "\n" + "\n".join(decl) + text[match.end():]
         index = {(r["dst"], r["dst_bus"]): i for i, r in enumerate(self.rows)}
@@ -2570,12 +2640,19 @@ class Landings:
                 for e in self.collector["edges"]:
                     if e["dst"]!=pn:continue
                     i=e["dst_index"];child=ident(e["src"])
+                    ro = mon_out.get(e["src"])
+                    if ro is not None:      # through its R-REACH-1 relays
+                        conn += [f"        .cland_dn_ready_{i}({ro[0]})",f"        .cland_dn_fault_{i}({ro[1]})"]
+                        if e["seam"]:conn.append(f"        .fclk_in_cland_dn_{i}({ro[2]})")
+                        continue
                     conn += [f"        .cland_dn_ready_{i}(cland_ready_{child})",f"        .cland_dn_fault_{i}(cland_fault_{child})"]
                     if e["seam"]:conn.append(f"        .fclk_in_cland_dn_{i}(cland_clock_{child})")
             body = ",\n".join(conn + [body])
             text = text[:m.start()] + m.group(1) + body + m.group(3) + text[m.end():]
         if ansi and re.search(r"\(clk\)", text):
             raise LandingError("clock landing: native top still drives a partition pin from the die clk")
+        if mon_out:
+            text = text.rstrip("\n") + "\n" + "\n".join(MON_RELAY_RTL) + "\n"
         self.emitted_top = True
         return text
 

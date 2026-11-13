@@ -667,3 +667,60 @@ def test_hard_wrapper_landing_reset_is_a_clk_pin_register():
     assert rp["hard_wrapper"] and rp["extra_control_flops"] == 1 and rp["net"] == "cland_reset_y"
     with pytest.raises(LandingError):            # a hard wrapper without its delivered reset fails closed
         Landings(p, t).type_rtl("B", b.replace("    wire rst_n = arst_n;", "    wire rst_n;"))
+
+
+def _relay_monitor_vehicle(form):
+    """test_registered_monitor_replaces_long_die_status_vectors' collector vehicle + one R-REACH-1 relay on b -> a"""
+    p, t = vehicle()
+    def pin(n, d): return dict(name=n, dir=d, width=1, face="E", window_um=[1, 2], layers=["M4"])
+    for ty in p["partition_types"].values():
+        ty["buses"] += [pin("cland_up_ready", "out"), pin("cland_up_fault", "out")]
+    p["partition_types"]["A"]["buses"] += [pin("cland_dn_ready_0", "in"), pin("cland_dn_fault_0", "in"), pin("fclk_in_cland_dn_0", "in")]
+    p["partition_types"]["B"]["buses"].append(pin("fclk_out_cland_up", "out"))
+    tree = dict(root=[1, 1], n_clock_taps=1, relays=[dict(q="rst_n_t0", d="rst_root_n", xy=[2, 1])])
+    seam = form == "fwd_clock_relay"
+    t["collector"] = dict(root="a", parts={"a": dict(parent=None, active=True), "b": dict(parent="a", active=True)},
+        edges=[dict(src="b", dst="a", dst_index=0, seam=seam)], types={
+            "A": dict(mask=dict(active=True, up_seam=False), tree=tree, local_sources=[], children=[
+                dict(index=0, tap=0, seam=seam, ready="cland_dn_ready_0", fault="cland_dn_fault_0", xy_um=[2, 1])]),
+            "B": dict(mask=dict(active=True, up_seam=seam), tree=tree, children=[], local_sources=[
+                dict(name="y", tap=0, ready="landing_ready_y", fault="landing_fault_y", xy_um=[10, 1.5])])})
+    rl = [dict(id="rl_b_1", kind=form, xy_um=[5.0, 1.0])]
+    p["clock"] = dict(landing_network=dict(edges=[
+        dict(id=f"cland_mon_{k}__b", relays=copy.deepcopy(rl), relay_group="cland_mon__b")
+        for k in (("ready", "fault", "clk") if seam else ("ready", "fault"))]))
+    return p, t
+
+
+@pytest.mark.parametrize("form", ["fwd_clock_relay", "die_clock_relay"])
+def test_monitor_relays_emitted_between_child_and_parent(form):
+    p, t = _relay_monitor_vehicle(form)
+    c = Landings(p, t)
+    top = "module die_bound_top (rst_n, clk_core);\n    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\nendmodule\n"
+    out = c.top_rtl(top)
+    if form == "fwd_clock_relay":
+        assert ("ot_die_mon_relay_fwd u_cland_rl1_b (.clk(cland_clock_b), .ready_i(cland_ready_b), .fault_i(cland_fault_b), "
+                ".ready_o(cland_rl1_b_ready), .fault_o(cland_rl1_b_fault), .clk_o(cland_rl1_b_clock));") in out
+        assert ".fclk_in_cland_dn_0(cland_rl1_b_clock)" in out and "module ot_die_mon_relay_fwd" in out
+    else:
+        assert ("ot_die_mon_relay u_cland_rl1_b (.clk(clk_region_r0), .ready_i(cland_ready_b), .fault_i(cland_fault_b), "
+                ".ready_o(cland_rl1_b_ready), .fault_o(cland_rl1_b_fault));") in out
+    assert ".cland_dn_ready_0(cland_rl1_b_ready)" in out and ".cland_dn_fault_0(cland_rl1_b_fault)" in out
+    assert ".cland_dn_ready_0(cland_ready_b)" not in out and ".cland_up_ready(cland_ready_b)" in out
+    assert c.monitor_relay_sites == [dict(instance="u_cland_rl1_b", child="b", parent="a", form=form, xy_um=[5.0, 1.0],
+                                          relay="rl_b_1")]
+
+
+@pytest.mark.parametrize("bad", ["form_vs_seam", "split_sites", "half_bundle"])
+def test_monitor_relay_bundle_guards(bad):
+    p, t = _relay_monitor_vehicle("fwd_clock_relay")
+    ed = p["clock"]["landing_network"]["edges"]
+    if bad == "form_vs_seam":
+        p, t = _relay_monitor_vehicle("die_clock_relay"); t["collector"]["edges"][0]["seam"] = True
+    if bad == "split_sites":
+        ed[1]["relays"][0]["xy_um"] = [6.0, 1.0]
+    if bad == "half_bundle":
+        ed.pop()
+    top = "module die_bound_top (rst_n, clk_core);\n    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\nendmodule\n"
+    with pytest.raises(LandingError):
+        Landings(p, t).top_rtl(top)

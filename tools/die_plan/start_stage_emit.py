@@ -364,6 +364,155 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     return doc, rendered, v, t
 
 
+RELAY_MODULE = "ot_die_start_relay"
+RELAY_RTL = ["(* keep_hierarchy *) module ot_die_start_relay #(parameter bit RESET_RELAY = 1) (",
+             "    input wire clk, input wire rst_raw_n_in, input wire p_start, output wire rst_raw_n_out, output wire start);",
+             "    // R-REACH-1 START relay (reach_relay_plan): one registered START hop at its planned row site.  With the",
+             "    // bounded reset wave its local reset is one more ordinary relay flop, so reset and START each move one",
+             "    // cycle and their order at the next stage is unchanged.",
+             "    if (RESET_RELAY) begin : g_rr",
+             '        (* keep = "true" *) reg r;',
+             "        always @(posedge clk) r <= rst_raw_n_in;",
+             "        assign rst_raw_n_out = r;",
+             "    end else begin : g_nr",
+             "        assign rst_raw_n_out = rst_raw_n_in;",
+             "    end",
+             '    (* keep = "true" *) reg s;',
+             "    always @(posedge clk) if (!rst_raw_n_out) s <= 1'b0; else s <= p_start;",
+             "    assign start = s;",
+             "endmodule"]
+
+
+def _rect_hop(a, b):
+    """conservative corner-to-corner Manhattan hop between two rects (start_provider_plan.hop)"""
+    return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p in ((a[0], a[1]), (a[0], a[3]), (a[2], a[1]), (a[2], a[3]))
+               for q in ((b[0], b[1]), (b[0], b[3]), (b[2], b[1]), (b[2], b[3])))
+
+
+def apply_relays(doc, sv, provider, ctree_v=None, ctree_tcl=None, site=None):
+    """R-REACH-1 (opt-in): emit the plan's START relay stages (reach_relay_plan: landing_network.start_tree.provider nodes
+    of kind 'relay') as their own instances at their planned row sites.  A stage fed through k relays keeps its bind PAD
+    in total: k cycles move out of its ot_dp_landing_origin PAD into k ot_die_start_relay instances on the parent edge
+    (so the bind must already carry PAD >= k: count_align_plan --edge-pad from the relay report).  Each relay is clocked by
+    its own tap port on the PARENT stage's node net (pin at the relay site): the relay is a same-clock pipeline stage of
+    the parent, so the START crossing into the fed stage keeps its sampling edge (EDGE_FALL) and its cycle count; with
+    the bounded reset wave it relays the local reset too.  -> (doc, sv, ctree_v, ctree_tcl); the input objects are not changed."""
+    import copy as _copy
+    doc = _copy.deepcopy(doc)
+    stages = doc["stages"]
+    if any(s.get("module") == RELAY_MODULE for s in stages):
+        raise StageError("stage manifest already carries START relays")
+    by_region = {s["region"]: s for s in stages}
+    nodes = provider.get("nodes", [])
+    pn = {n["region"]: n for n in nodes}
+    fed = sorted((n for n in nodes if n.get("kind") != "relay" and n.get("fed_by")), key=lambda n: n["region"])
+    if not fed:
+        return doc, sv, ctree_v, ctree_tcl
+    wave = bool(doc.get("reset_wave"))
+    rows = Rows()
+    for s_ in stages:
+        rows.add(s_["rect_um"][0], s_["rect_um"][2], s_["rect_um"][1])
+    if ctree_v is not None:
+        _cells, cxy = ctree_cells(ctree_v, ctree_tcl)
+        for x, y in cxy.values():
+            rows.add(x, x + CLK_CELL_W_UM, y)
+    head_end = sv.index(");", sv.index("module ot_die_start_stages ("))
+    body_end = sv.index("endmodule", head_end)
+    ports, body, entries = [], [], []
+    for n in fed:
+        s_ = by_region.get(n["region"])
+        if s_ is None or s_.get("root"):
+            raise StageError(f"relayed START region {n['region']} is not an emitted non-root stage")
+        if s_["parent"] != n["parent"] or s_["parent"] not in by_region:
+            raise StageError(f"stage {s_['id']}: relayed parent {n['parent']} != emitted stage parent {s_['parent']}")
+        chain, r = [], pn.get(n["fed_by"])
+        while r is not None and r.get("kind") == "relay":
+            if r.get("relay_for") != n["region"]:
+                raise StageError(f"relay {r['id']}: relay_for {r.get('relay_for')} != {n['region']}")
+            chain.append(r)
+            r = pn.get(r["parent"])
+        chain.reverse()
+        k = len(chain)
+        if r is None or r["region"] != n["parent"] or k < 1 or k != n.get("relay_cycles"):
+            raise StageError(f"stage {s_['id']}: relay chain does not reach parent {n['parent']} in relay_cycles")
+        if int(s_["pad"]) < k:
+            raise StageError(f"stage {s_['id']}: bind PAD {s_['pad']} < {k} relay cycles (re-derive the bind with "
+                             "count_align_plan --edge-pad from reach_relay_plan's count_align_edge_pad)")
+        par = by_region[s_["parent"]]
+        prev_start, prev_reset, prev_rect = f"st_{par['id']}_start", s_.get("reset_parent", "rst_raw_n"), par["rect_um"]
+        for r in chain:
+            rid = sv_name(r["id"])
+            rect = [round(float(v), 3) for v in r["rect_um"]]
+            nf = 2 if wave else 1
+            if rect[2] - rect[0] < nf * FLOP_W_UM - 1e-6:
+                raise StageError(f"relay {rid}: planned row {rect} narrower than {nf} flops")
+            if not rows.free(rect[0], rect[2], rect[1]):
+                raise StageError(f"relay {rid}: planned row {rect} overlaps a stage / clock cell")
+            if site is not None and not (site.legal((rect[0], rect[1])) and site.legal((rect[2], rect[3]))):
+                raise StageError(f"relay {rid}: planned row {rect} is not on legal sites")
+            rows.add(rect[0], rect[2], rect[1])
+            cp = f"t_st_{rid}__clk"
+            out_s, out_r = f"st_{rid}_start", f"st_{rid}_rraw"
+            ports.append(f",\n    input  wire {cp}")
+            body += [f"    wire {out_s};", f"    wire {out_r};",
+                     f"    {RELAY_MODULE} #(.RESET_RELAY({int(wave)})) u_st_{rid} (.clk({cp}), .rst_raw_n_in({prev_reset}), "
+                     f".p_start({prev_start}), .rst_raw_n_out({out_r}), .start({out_s}));"]
+            entries.append(dict(id=rid, region=r["region"], relay_for=n["region"], parent=r["parent"], module=RELAY_MODULE,
+                                root=False, relay=True, rect_um=rect, flops=nf, node_cell=par["node_cell"],
+                                clock_net=par["clock_net"], clock_from=f"node net of parent stage {par['id']}", clock_port=cp,
+                                clock_pin_xy_um=[rect[0], rect[1]], start_in=prev_start, start_out=out_s,
+                                reset_in=prev_reset, reset_out=out_r,
+                                hop_in_um=round(_rect_hop(prev_rect, rect), 3)))
+            prev_start, prev_reset, prev_rect = out_s, out_r, rect
+        entries[-1]["hop_out_um"] = round(_rect_hop(prev_rect, s_["rect_um"]), 3)
+        sid = s_["id"]
+        old = (f"{STAGE_MODULE} #(.PAD({s_['pad']}), .EDGE_FALL({int(s_['edge_fall'])})) u_st_{sid} "
+               f"(.clk({s_['clock_port']}), .rst_raw_n(")
+        if sv.count(old) != 1:
+            raise StageError(f"stage {sid}: emitted instance not found exactly once")
+        i = sv.index(old)
+        j = sv.index("\n", i)
+        line = sv[i:j]
+        new = line.replace(f".PAD({s_['pad']})", f".PAD({int(s_['pad']) - k})", 1)
+        if f".p_start(st_{par['id']}_start)" not in new:
+            raise StageError(f"stage {sid}: emitted p_start is not its parent's start")
+        new = new.replace(f".p_start(st_{par['id']}_start)", f".p_start({prev_start})", 1)
+        sv = sv[:i] + new + sv[j:]
+        if wave:
+            rl = f"u_rst_{sid} (.clk({s_['clock_port']}), .d({s_['reset_parent']}), .q("
+            if sv.count(rl) != 1:
+                raise StageError(f"stage {sid}: emitted reset relay not found exactly once")
+            sv = sv.replace(rl, f"u_rst_{sid} (.clk({s_['clock_port']}), .d({prev_reset}), .q(", 1)
+            s_["reset_parent"] = prev_reset
+        s_.update(fed_by=n["fed_by"], relay_cycles=k, pad_in_stage=int(s_["pad"]) - k, flops=int(s_["flops"]) - k,
+                  hop_from_last_relay_um=entries[-1]["hop_out_um"])
+    head_end = sv.index(");", sv.index("module ot_die_start_stages ("))
+    sv = sv[:head_end] + "".join(ports) + sv[head_end:]
+    body_end = sv.index("endmodule", head_end)
+    sv = sv[:body_end] + "\n".join(body) + "\n" + sv[body_end:]
+    sv = sv.rstrip("\n") + "\n" + "\n".join(RELAY_RTL) + "\n"
+    stages += entries
+    if ctree_v is not None:
+        mh = re.search(r"module\s+(\w+)\s*\(([^)]*)\);", ctree_v)
+        have = {q.strip() for q in mh.group(2).split(",")}
+        new_ports = [e["clock_port"] for e in entries]
+        if have & set(new_ports):
+            raise StageError("ctree.v already has relay tap ports")
+        v = ctree_v[:mh.start(2)] + mh.group(2) + ", " + ", ".join(new_ports) + ctree_v[mh.end(2):]
+        kk = v.index(";", v.index("module")) + 1
+        v = v[:kk] + "".join(f"\n  output {q};" for q in new_ports) + v[kk:]
+        e_ = v.rindex("endmodule")
+        ctree_v = v[:e_] + "".join(f"  assign {e['clock_port']} = {e['clock_net']};\n" for e in entries) + v[e_:]
+        pins = "".join(f"place_pin -pin_name {e['clock_port']} -layer M9 -location {{{e['clock_pin_xy_um'][0]:.3f} "
+                       f"{e['clock_pin_xy_um'][1]:.3f}}} -pin_size {{0.04 0.32}}\n" for e in entries)
+        m = list(re.finditer(r"^place_pin .*\n", ctree_tcl, re.M))
+        ctree_tcl = ctree_tcl[:m[-1].end()] + pins + ctree_tcl[m[-1].end():]
+    doc["relay_module"] = RELAY_MODULE
+    doc["counts"].update(stages=len(stages), flops=sum(int(x["flops"]) for x in stages), relays=len(entries),
+                         max_relay_hop_um=max(max(e["hop_in_um"], e.get("hop_out_um", 0)) for e in entries))
+    return doc, sv, ctree_v, ctree_tcl
+
+
 def proof_with_stages(proof, stages_doc, arrs, out, clock_netlist=None):
     """copy a die_sta_related proof dir and add every stage's MEASURED clock pin as tap '__st__<tree_path>' (arrival
     files: die_trial / combo 'T <port> <late> <early> [slew]' lines).  DIE-HEAD-12: a both-edge readout (FLOW-ONEMODEL-2
@@ -447,6 +596,10 @@ def main(argv=None):
     e.add_argument("--data-manifest", help="opt-in literal START/RAW BUF8 homes and routes; complete graph required")
     e.add_argument("--out", required=True)
     e.add_argument("--root-settle", type=int, help="root counter SETTLE cycles (default: bind root_settle_cycles, else 64)")
+    rl = sub.add_parser("relays", help="R-REACH-1: emit the plan's START relay stages into an emitted stage dir")
+    rl.add_argument("stages_dir", help="emit output dir (start_stages.json / .sv, optional ctree.v / ctree.tcl)")
+    rl.add_argument("--plan", required=True, help="plan with landing_network.start_tree.provider relay nodes")
+    rl.add_argument("--out", required=True)
     p = sub.add_parser("proof")
     p.add_argument("proof")
     p.add_argument("--stages", required=True)
@@ -478,6 +631,21 @@ def main(argv=None):
             (o / "start_data_manifest.json").write_text(json.dumps(dm, indent=2)+"\n")
         (o / "ctree.v").write_text(v)
         (o / "ctree.tcl").write_text(t)
+        print(json.dumps(doc["counts"]))
+    elif a.cmd == "relays":
+        d = Path(a.stages_dir)
+        plan = json.loads(Path(a.plan).read_text())
+        cv = (d / "ctree.v").read_text() if (d / "ctree.v").exists() else None
+        ct = (d / "ctree.tcl").read_text() if cv is not None else None
+        doc, sv, cv, ct = apply_relays(json.loads((d / "start_stages.json").read_text()), (d / "start_stages.sv").read_text(),
+                                       plan["clock"]["landing_network"]["start_tree"]["provider"], cv, ct)
+        o = Path(a.out)
+        o.mkdir(parents=True, exist_ok=True)
+        (o / "start_stages.json").write_text(json.dumps(doc, indent=1))
+        (o / "start_stages.sv").write_text(sv)
+        if cv is not None:
+            (o / "ctree.v").write_text(cv)
+            (o / "ctree.tcl").write_text(ct)
         print(json.dumps(doc["counts"]))
     else:
         arrs = dict(x.split("=", 1) for x in a.arr)

@@ -43,11 +43,14 @@ def materialize(raw, stages):
         raise ValueError('duplicate START provider stage')
     nodes = [dict(id=s['id'], region=s['region'], rect_um=s['rect_um'], clock_node=s['node_cell'],
                   clock_node_xy_um=s['node_xy_um'], clock_port=s['clock_port'], module=s['module'],
-                  flops=s['flops'], parent=s['parent'], root=s['root']) for s in stages['stages']]
+                  flops=s['flops'], parent=s['parent'], root=s['root'],
+                  # start_stage_emit relays (R-REACH-1): relay stages and the stage they feed keep their chain fields
+                  **{k: s[k] for k in ('relay_for', 'fed_by', 'relay_cycles') if k in s},
+                  **({'kind': 'relay'} if s.get('relay') else {})) for s in stages['stages']]
     edges = []
     for s in stages['stages']:
-        if s['parent'] in by:
-            p=by[s['parent']]
+        if s.get('fed_by',s['parent']) in by:
+            p=by[s.get('fed_by',s['parent'])]
             edges.append(dict(src_stage=p['id'],dst_stage=s['id'],src_rect_um=p['rect_um'],dst_rect_um=s['rect_um']))
     for side in ('die_inputs','die_outputs'):
         for e in stages[side]:

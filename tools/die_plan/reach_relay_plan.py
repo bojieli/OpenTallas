@@ -5,15 +5,15 @@ Plan step (opt-in, guarded): nothing else in the plan changes.
 
   START provider (landing_network.start_tree.provider, emitted_start_stage_rows): every stage -> stage edge whose
     conservative row-envelope hop exceeds the 405-um gate (TRIGGER) gets k = max(1, ceil(hop / TRUNK) - 1) relay stages
-    (TRUNK 340 um), each one flop (kind 'relay', clocked from an existing die clock-tree node of the provider, row
-    segment beside it).  The stage keeps its logical parent and records fed_by (last relay) + relay_cycles k; the
+    (TRUNK 340 um), each one START flop + one bounded-reset relay flop (kind 'relay', module ot_die_start_relay,
+    clocked from the PARENT stage's die clock-tree node net, row segment beside the trunk leg).  The stage keeps its logical parent and records fed_by (last relay) + relay_cycles k; the
     sidecar count_aligned region of that stage takes PAD += k and the report lists it as count_align_edge_pad (the
     count_align_plan --edge-pad input), so the count-aligned bind prices the boot cycles (K re-derived modulo the ring
     count width absorbs them; START is count-aligned).  No data cycle changes.
   Monitor edges (cland_mon_{ready,fault[,clk]}__<pid>): every bundle with an edge over the 405-um gate gets k relay sites
     shared by the bundle.  Seam bundle (with cland_mon_clk): the status is re-registered on its own forwarded clock at
-    each site and the clock is buffered there (fwd_clock_relay).  Same-region bundle (no clock edge): one die-clock flop
-    per status bit at each site, clocked from the trunk node (die_clock_relay).  Status is level-sensitive: + k cycles
+    each site (falling-edge capture, rising-edge relaunch) and the clock passes through (fwd_clock_relay).  Same-region
+    bundle (no clock edge): one region-clock flop per status bit at each site (die_clock_relay).  Status is level-sensitive: + k cycles
     of status latency, no data cycle.
 
   Relay sites: beside a die clock-tree trunk leg between two provider stage clock nodes (straight legs; for a START
@@ -42,6 +42,11 @@ ROW = 0.27
 CLK_HALF = 0.81
 GAP = 0.54
 MAX_LOADS = 48
+# start_stage_emit relay instance (ot_die_start_relay): one START flop + its one-flop bounded-reset relay
+START_RELAY_MODULE = "ot_die_start_relay"
+START_RELAY_FLOPS = 2
+# clock_landings monitor relays: fwd_clock_relay = per status bit a falling-edge capture + rising-edge relaunch on the
+# bundle's forwarded clock (ot_die_mon_relay_fwd); die_clock_relay = one region-clock flop per bit (ot_die_mon_relay)
 
 
 class RelayError(ValueError):
@@ -187,9 +192,9 @@ def start_relays(P, pv, side_regions):
             own = [(min(p_, q_), max(p_, q_), src["clock_node"], dst["clock_node"]) for p_, q_ in own]
             tg = _along(ca, cb, (i + 1) / (k + 1) * Lc)
             for cxy, sg in list(trunk_sites(tg, own, 4, 60)) + list(trunk_sites(tg, segs)):
-                r = free_rect(cxy, taken, ok)
+                r = free_rect(cxy, taken, ok, n=START_RELAY_FLOPS)
                 if r:
-                    best = (sg[3], (round(cxy[0], 4), round(cxy[1], 4)), r, sg)
+                    best = (src["clock_node"], (round(cxy[0], 4), round(cxy[1], 4)), r, sg)
                     break
             if best is None:
                 raise RelayError(f"no relay site within {SITE_MAX} um for {src['id']} -> {dst['id']} (hop {h:.1f})")
@@ -199,7 +204,7 @@ def start_relays(P, pv, side_regions):
             rn = dict(id=rid, region=f"{dst['region']}#rl{i + 1}", kind="relay", relay_for=dst["region"], rect_um=r,
                       clock_node=cn, clock_node_xy_um=list(cxy), clock_port=f"t_st_{rid}__clk",
                       clock_tap=f"trunk {sg[2]} -> {sg[3]}",
-                      module="ot_dp_landing_relay", flops=1, parent=prev["region"], root=False)
+                      module=START_RELAY_MODULE, flops=START_RELAY_FLOPS, parent=prev["region"], root=False)
             nodes.append(rn)
             by[rid] = rn
             new_edges.append(dict(src_stage=prev["id"], dst_stage=rid, src_rect_um=prev["rect_um"], dst_rect_um=r,
@@ -264,7 +269,8 @@ def mon_relays(P, ln, segs, taken, unplaced=None):
                 return True
             best = None
             for cxy, sg in trunk_sites(tg, segs):
-                r = free_rect(cxy, taken, ok, n=len(es) - 1)
+                bits = len([e for e in es if e["kind"] == "ctl"])
+                r = free_rect(cxy, taken, ok, n=bits * (2 if clk else 1))
                 if r:
                     best = (r, cxy, sg)
                     break
