@@ -1457,6 +1457,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
                                "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# R1-NARROW: opt-in per-type narrow soft CA rings; default leaves every generated kit unchanged.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ring_narrow"] = {"type": "boolean"}
 # WREG-1 (DIE-HEAD-58 TURNB 11-03, opt-in, default absent = byte-identical): receiver rings on the listed buses take
 # ot_dp_clk_landing_cas WREG=1 (writer START registered at the face + one write-enable flop per (slot, 64-bit chunk))
 # and DSREP read-select copies per chunk; strap K + 1 (count_align_bind.strap_ties), 0 data cycles.  "freg": true adds
