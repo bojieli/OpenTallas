@@ -1,0 +1,47 @@
+keys ['schema', 'plan', 'verdict', 'pending_view', 'mode', 'errors', 'warnings', 'summary', 'findings'] sample {"level": "WARN", "check": "types", "msg": "near-duplicate types ['col_h10_r0_p4__t1__pv07945c1e', 'col_h10_r0_p4__t1__pv5b623e07', 'col_h10_r0_p4__t1__pvc9270d09', 'col_h10_r0_p4__t1__pvcc166a6d', 'col_h10_r0_p4__t1__pvd11cc58b', 'col_h10_r0_p4__t1__pvd8c0565f'] (6): same outline, buses and slots -
+ERROR base 9468 new plan 12768 added 4590 removed 1290
+  added by check [('hard_cores', 4590)]
+  removed by check [('hard_cores', 1290)]
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_bn10: origin [328.32, 453.6] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_bn11: origin [1170.72, 453.6] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_bn14: origin [1170.72, 864.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_bs10: origin [293.76, 108.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_bs11: origin [1136.16, 108.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_bs14: origin [1136.16, 518.4] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e10.u_w: origin [17.28, 185.76] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e10.u_e: origin [285.12, 185.76] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e11.u_w: origin [859.68, 185.76] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e11.u_e: origin [1127.52, 185.76] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e13: origin [518.4, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e13e.u_view.u_c: origin [691.2, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e13e.u_view.u_ha: origin [898.56, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e13e.u_view.u_hb: origin [898.56, 1075.68] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e13w.u_view.u_c: origin [263.52, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e13w.u_view.u_ha: origin [21.6, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e13w.u_view.u_hb: origin [21.6, 1075.68] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e14.u_w: origin [859.68, 596.16] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_e14.u_e: origin [1127.52, 596.16] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_n23: origin [1270.08, 1092.96] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_n24: origin [1183.68, 1092.96] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_n25: origin [1183.68, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_n26: origin [1356.48, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_n27: origin [1270.08, 972.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s10: origin [514.08, 90.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s10 pin a[0] M4: y 94.8000 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s10 pin a[1] M4: y 94.6560 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s10 pin a[10] M4: y 93.4560 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s10 pin a[11] M4: y 93.3120 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s10 pin a[2] M4: y 94.5120 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s10: 433 pins off the plan tracks
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s11: origin [881.28, 90.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s11 pin a[0] M4: y 94.8000 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s11 pin a[1] M4: y 94.6560 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s11 pin a[10] M4: y 93.4560 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s11 pin a[11] M4: y 93.3120 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s11 pin a[2] M4: y 94.5120 off the plan track (offset 0.024, pitch 0.048) in the type frame
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s11: 373 pins off the plan tracks
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s12: origin [514.08, 501.12] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+   + hard_cores type col_h9_r2__t1__clce45cab5__pv09b9967e core u_r2.u_s12 pin a[0] M4: y 505.2000 off the plan track (offset 0.024, pitch 0.048) in the type frame
+WARN base 2776 new plan 2776 added 54 removed 54
+  added by check [('geom_clock_reach', 54)]
+  removed by check [('geom_partial_face', 18), ('geom_clock_reach', 15), ('geom_tap_sinks', 11), ('geom_pin_reg', 8), ('geom_r2r', 2)]

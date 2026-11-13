@@ -1,0 +1,7 @@
+keys ['schema', 'plan', 'verdict', 'pending_view', 'mode', 'errors', 'warnings', 'summary', 'findings'] sample {"level": "WARN", "check": "types", "msg": "near-duplicate types ['col_h10_r0_p4__t1__pv07945c1e', 'col_h10_r0_p4__t1__pv5b623e07', 'col_h10_r0_p4__t1__pvc9270d09', 'col_h10_r0_p4__t1__pvcc166a6d', 'col_h10_r0_p4__t1__pvd11cc58b', 'col_h10_r0_p4__t1__pvd8c0565f'] (6): same outline, buses and slots -
+ERROR base 74 new plan 74 added 0 removed 0
+  added by check []
+  removed by check []
+WARN base 11770 new plan 15070 added 4590 removed 1290
+  added by check [('hard_cores', 4590)]
+  removed by check [('hard_cores', 1290)]
