@@ -5846,10 +5846,161 @@ def live_on_fleet(AP, roots, hosts=None):
     return out
 
 
-def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
-    """-> [(key, kind, why)] (read-only)"""
+# KIT-OPS-1 11-13 HUNG-WATCH (OWNER 2-h hung-job watchdog; COORD 05:1x): a SILENT row (unit active, no hub log output) whose job
+# is still alive on the fleet was only ever reported, because wave log silence is not a hang (an ORFS step writes place.live.log
+# only when it ends: 7 such rows cancelled 11-13 05:12 were at 100-200 % CPU in global_place / detail_place / LEC).  The real
+# signal is progress: the row is HUNG -- and cancelled -- only when BOTH its stage logs (ORFS run/logs under the attempt root and
+# under its ot-run staging dir ot-jobs/*/work) AND the CPU time of its processes (host processes naming the root or the staging
+# dir, plus every process of a container that mounts either, children included) have not grown for hung_watch_min (default 120)
+# minutes.  CPU growth below HUNG_CPU_S CPU-seconds (an ssh keepalive, an idle ot-run client) is not progress.  Any CPU progress
+# keeps it report-only.  The CPU mark lives in the row (hung_watch), so a row is first observed, never cancelled on one sample.
+# Global option hung_watch_min 0 = off (rows stay report-only, as before).
+HUNG_WATCH_MIN = 120
+HUNG_CPU_S = 60.0
+HUNG_PROBE = r"""
+# HUNG_PROBE
+import glob, json, os, re, subprocess, sys
+roots = [r.rstrip('/') for r in json.loads(sys.argv[1])]
+me = os.getpid()
+hz = float(os.sysconf('SC_CLK_TCK'))
+def under(p, r):
+    return p == r or p.startswith(r + '/')
+def names_root(text, r):
+    # the root itself, or a path below it that is not another attempt of the same item (root = item dir for attempt 1)
+    return re.search(re.escape(r) + r'(?:["\s/]|$)(?!attempt_\d)', text) is not None
+stage = {r: [] for r in roots}
+for jf in glob.glob('/srv/opentallas-scratch*/claude/ot-jobs/*/.ot-job/job.json'):
+    try:
+        t = open(jf, errors='replace').read()
+    except OSError:
+        continue
+    for r in roots:
+        if names_root(t, r):
+            stage[r].append(os.path.dirname(os.path.dirname(jf)))
+def newest_log(top):
+    best = 0.0
+    for dp, dn, fn in os.walk(top):
+        dn[:] = [d for d in dn if d not in ('results', 'objects', 'reports', '_ext', 'in', 'tmp', '.ot-job')]
+        for f in fn:
+            if f.endswith('.log'):
+                try:
+                    best = max(best, os.stat(os.path.join(dp, f)).st_mtime)
+                except OSError:
+                    pass
+    return best
+procs = {}
+for pid in filter(str.isdigit, os.listdir('/proc')):
+    if int(pid) == me:
+        continue
+    try:
+        st = open('/proc/%s/stat' % pid).read()
+        f = st[st.rindex(')') + 2:].split()
+        cl = open('/proc/%s/cmdline' % pid, 'rb').read().decode('utf-8', 'replace').replace('\0', ' ')
+        try:
+            cwd = os.readlink('/proc/%s/cwd' % pid)
+        except OSError:
+            cwd = ''
+        procs[int(pid)] = (int(f[1]), sum(int(x) for x in f[11:15]) / hz, cl, cwd)
+    except (OSError, ValueError, IndexError):
+        continue
+kids = {}
+for pid, (pp, _, _, _) in procs.items():
+    kids.setdefault(pp, []).append(pid)
+seeds = {r: set() for r in roots}
+names = {r: [] for r in roots}
+for pid, (_, _, cl, cwd) in procs.items():
+    if 'HUNG_PROBE' in cl or 'python3 -I -' in cl:
+        continue
+    for r in roots:
+        for p in [r] + stage[r]:
+            if names_root(cl, p) or under(cwd, p):
+                seeds[r].add(pid)
+                break
+try:
+    ids = subprocess.run(['docker', 'ps', '-q', '--no-trunc'], capture_output=True, text=True, timeout=60).stdout.split()
+    info = json.loads(subprocess.run(['docker', 'inspect'] + ids, capture_output=True, text=True, timeout=120).stdout or '[]') if ids else []
+except Exception:
+    info = []
+for c in info:
+    for r in roots:
+        if any(m.get('Type') == 'bind' and any(under(m.get('Source', ''), p) for p in [r] + stage[r]) for m in c.get('Mounts', [])):
+            pid = (c.get('State') or {}).get('Pid') or 0
+            if pid:
+                seeds[r].add(int(pid))
+            names[r].append(c['Name'].lstrip('/'))
+out = {}
+for r in roots:
+    seen, todo = set(), list(seeds[r])
+    while todo:
+        p = todo.pop()
+        if p in seen or p not in procs:
+            continue
+        seen.add(p)
+        todo.extend(kids.get(p, []))
+    logs = [newest_log(os.path.join(r))] if os.path.isdir(r) else []
+    logs += [newest_log(os.path.join(j, 'work')) for j in stage[r]]
+    out[r] = {'log': max(logs or [0.0]), 'cpu': round(sum(procs[p][1] for p in seen), 2), 'pids': len(seen),
+              'containers': sorted(set(names[r])), 'stage': stage[r][:4]}
+print(json.dumps({'HUNG_PROBE': out}))
+"""
+
+
+def progress_on_fleet(AP, roots, hosts):
+    """{root: {'log': newest stage-log mtime, 'cpu': CPU seconds, 'containers': ['host:name'], 'pids': n}} summed over the fleet
+    (log = newest, cpu = sum); None when any host could not be read (then nothing is cancelled as hung)"""
+    roots = sorted({r for r in roots if r})
+    if not roots:
+        return {}
+    args = json.dumps(roots)
+    out = {r: {"log": 0.0, "cpu": 0.0, "containers": [], "pids": 0} for r in roots}
+    for h in hosts:
+        cmd = ["python3", "-I", "-", args] if h in ("localhost", AP.HUB_NAME, os.uname().nodename) else \
+            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h, "python3", "-I", "-", shlex.quote(args)]
+        try:
+            rc, o, e = AP.sh(cmd, timeout=300, input=HUNG_PROBE)
+            if rc == 255 and "Could not resolve hostname" in (e or ""):
+                rc, o, e = AP.sh(["python3", "-I", "-", args], timeout=300, input=HUNG_PROBE)
+            if rc != 0 or not (o or "").strip():
+                return None
+            got = json.loads(o.strip().splitlines()[-1]).get("HUNG_PROBE")
+            if not isinstance(got, dict):
+                return None
+            for r, v in got.items():
+                if r not in out:
+                    continue
+                out[r]["log"] = max(out[r]["log"], float(v.get("log") or 0))
+                out[r]["cpu"] += float(v.get("cpu") or 0)
+                out[r]["pids"] += int(v.get("pids") or 0)
+                out[r]["containers"] += [f"{h}:{n}" for n in v.get("containers") or []]
+        except Exception:                                    # noqa: an unreadable host cancels nothing
+            return None
+    return out
+
+
+def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=HUNG_CPU_S):
+    """-> (hung, new_watch, why).  prev = the row's hung_watch {'cpu', 't'} (CPU mark and when it was set), prog = this row's
+    progress_on_fleet entry.  The CPU mark moves when the CPU grew by >= cpu_s since it (or went down: a restarted process);
+    hung only when the mark is >= minutes old AND the newest stage log (fleet or hub) is >= minutes old."""
+    cpu = float(prog.get("cpu") or 0)
+    w = dict(prev or {})
+    if not w or cpu - float(w.get("cpu", 0)) >= cpu_s or cpu < float(w.get("cpu", 0)):
+        w = {"cpu": cpu, "t": now}
+    logt = max(float(prog.get("log") or 0), float(hub_newest or 0))
+    cpu_m = (now - float(w["t"])) / 60.0
+    log_m = (now - logt) / 60.0 if logt else float("inf")
+    w["log"] = logt
+    hung = cpu_m >= minutes and log_m >= minutes
+    why = (f"no stage-log output for {log_m:.0f} min and CPU {cpu:.0f} s not grown by {cpu_s:.0f} s for {cpu_m:.0f} min "
+           f"({prog.get('pids', 0)} processes, containers {','.join(prog.get('containers') or []) or 'none'})")
+    return hung, w, why
+
+
+def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
+    """-> [(key, kind, why)] (read-only; watch_out, a dict, receives each judged row's new hung_watch mark)"""
     now = now or time.time()
     minutes = REAP_DEAD_MIN if minutes is None else minutes
+    hm = float(cfg.get("hung_watch_min", HUNG_WATCH_MIN) or 0)
+    s_min = min(minutes, hm) if hm > 0 else minutes          # HUNG-WATCH looks at rows silent for hung_watch_min already
     out, silent = [], []
     for key, rec in sorted((st.get("items") or {}).items()):
         s = rec.get("status")
@@ -5861,7 +6012,7 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
                     newest = max((f.stat().st_mtime for f in Path(rec["dir"]).glob("*.log")), default=0)
                 except OSError:
                     newest = 0
-                if newest and (now - newest) / 60.0 > minutes:
+                if newest and (now - newest) / 60.0 > s_min:
                     silent.append((key, rec, (now - newest) / 60.0))
                 continue
             if age_m <= minutes:
@@ -5882,7 +6033,29 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
                 if h not in hosts:
                     hosts.append(h)
         live = live_on_fleet(AP, list(roots.values()), hosts)
+        prog = None
+        if hm > 0 and live:
+            alive = [roots[k] for k, _, _ in silent if roots[k] and live.get(roots[k])]
+            prog = progress_on_fleet(AP, alive, hosts) if alive else {}
         for key, rec, m in silent:
+            if live is not None and live.get(roots[key]) and hm > 0:
+                p = (prog or {}).get(roots[key])
+                if p is None:
+                    if m > minutes:
+                        out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: "
+                                                   f"{','.join(live[roots[key]][:3])}; progress probe unreadable (reported only)"))
+                    continue
+                hung, w, why = hung_judge(rec.get("hung_watch"), p, now - m * 60.0, now, hm)
+                if watch_out is not None:
+                    watch_out[key] = dict(w, containers=list(p.get("containers") or [])) if hung else w
+                if hung:
+                    out.append((key, "HUNG", why))
+                elif m > minutes:
+                    out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: {','.join(live[roots[key]][:3])}; "
+                                               f"progressing ({why}) (reported only)"))
+                continue
+            if m <= minutes:
+                continue
             if live is None:
                 out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; fleet probe unreadable (reported only)"))
             elif live.get(roots[key]):
@@ -5900,14 +6073,18 @@ def reap_dead(AP, cfg, st, notices, now=None):
     minutes = float(cfg.get("reap_dead_min", REAP_DEAD_MIN))
     if minutes <= 0:
         return 0
-    roots, n = [], 0
-    for key, kind, why in reap_dead_scan(AP, cfg, st, now, minutes):
+    roots, n, marks = [], 0, {}
+    for key, kind, why in reap_dead_scan(AP, cfg, st, now, minutes, watch_out=marks):
         if kind == "SILENT":
             AP.log(f"KIT-WAVE REAP-DEAD SILENT {key}: {why}")
             continue
         rec = st["items"][key]
         if AP.DRY:
             AP.log(f"KIT-WAVE REAP-DEAD would reap {key} {kind}: {why}")
+            continue
+        if kind == "HUNG":
+            hung_cancel(AP, rec, why, notices, (marks.pop(key, None) or {}).get("containers") or [])
+            n += 1
             continue
         if kind in ("R1", "R2"):
             units = [rec.get("unit")]
@@ -5929,7 +6106,44 @@ def reap_dead(AP, cfg, st, notices, now=None):
     if roots:
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
         AP.log(f"KIT-WAVE REAP-DEAD remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'none running'}")
+    if not AP.DRY:
+        for key, w in marks.items():                      # HUNG-WATCH: the CPU mark of each judged row
+            if key in st["items"] and st["items"][key].get("status") in ("RUNNING", "LAUNCHING"):
+                st["items"][key]["hung_watch"] = w
     return n
+
+
+def hung_cancel(AP, rec, why, notices, containers=()):
+    """HUNG-WATCH: stop a hung attempt by its exact units (wave unit + PLACE client), the containers under its attempt root
+    (stop_on_fleet) and the containers the progress probe named (they mount its ot-run staging dir, which stop_on_fleet does not
+    see), by exact name on their host.  Run dirs are kept.  The row becomes CANCELLED class HUNG."""
+    units = [rec.get("unit")]
+    try:
+        units.append(json.loads((Path(rec["dir"]) / "place_service.json").read_text())["unit"])
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    for u in units:
+        if u:
+            AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+    stopped = []
+    r = attempt_root(rec)
+    if r:
+        stopped += WJ.stopped_names(WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [r]))
+    for hc in containers:
+        h, _, name = hc.partition(":")
+        if not name or name in " ".join(stopped):
+            continue
+        cmd = ["docker", "stop", "-t", "30", name]
+        if h not in ("localhost", AP.HUB_NAME, os.uname().nodename):
+            cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h] + cmd
+        rc, _, _ = AP.sh(cmd, timeout=120)
+        stopped.append(f"{h}:{name}" + ("" if rc == 0 else f"(rc {rc})"))
+    rec["stopped_containers"] = {"at": time.time(), "names": " ".join(stopped)[:300], "why": "HUNG-WATCH", "root": r or ""}
+    rec.update(status="CANCELLED", **{"class": "HUNG"}, updated=time.time(), reason=f"CANCELLED-HUNG: {why}"[:300])
+    rec.pop("hung_watch", None)
+    notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} CANCELLED-HUNG: {why[:160]}")
+    AP.log(f"KIT-WAVE HUNG-WATCH CANCEL {rec['die']}/{rec['item']}@{rec.get('attempt')} units {units} "
+           f"containers [{' '.join(stopped) or 'none'}]: {why}")
 
 
 def held_stop_reason(cfg, rec, res):
