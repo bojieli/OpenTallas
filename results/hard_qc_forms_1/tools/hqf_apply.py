@@ -49,8 +49,16 @@ def walk_move(o, rect, d, cnt, key=None, skip=None):
 def walk_list(v, rect, d, cnt, k):
     if ispt(v) and len(v) in (2, 3):
         if inside(v, rect): v[0] = round(v[0] + d[0], 6); v[1] = round(v[1] + d[1], 6); cnt[k] = cnt.get(k, 0) + 1
+    elif k in RKEYS and isinstance(v, list) and len(v) == 4 and all(isinstance(x, (int, float)) for x in v):
+        if inside(v[:2], rect) and inside(v[2:], rect):
+            for i in (0, 2): v[i] = round(v[i] + d[0], 6)
+            for i in (1, 3): v[i] = round(v[i] + d[1], 6)
+            cnt[k] = cnt.get(k, 0) + 1
     elif isinstance(v, list):
         for x in v: walk_list(x, rect, d, cnt, k)
+    elif isinstance(v, dict) and k in RKEYS:
+        # Layer-name maps retain the owning rectangle key; arbitrary four-value lists do not become geometry.
+        for x in v.values(): walk_list(x, rect, d, cnt, k)
     elif isinstance(v, dict): walk_move(v, rect, d, cnt, k)
 def main():
     pin, form, pout, rep = sys.argv[1:5]
