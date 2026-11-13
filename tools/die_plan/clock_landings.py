@@ -240,6 +240,28 @@ def reader_start_reach(plan, tn):
     return 1 if _soft_wide_bands(plan, tn) else 0
 
 
+def reader_start_owners(cfg):
+    """R-REACH-1 trunk sharing (RULES-REACH-1 11-13, RULEBOOK R-REACH): {bus: [owner bus of stage i]} of a
+    clock.landing_reader_start config.  With cfg.share_trunk (opt-in, written by reach_rules.fix_start) stage i of a
+    branch whose stages 0..i equal another branch's (same xy_um and raw_reset, stage by stage) is ONE kept relay, named
+    after the first such bus in sorted order: the origin then drives one relay per region trunk instead of one per
+    ring (<= 48 loads per copy), and each trunk relay fans out only where the sites diverge.  The LAST stage is always
+    the bus's own (its RSTREP copies feed that ring).  Same depth on every branch, so K / boot cycles are unchanged
+    by sharing.  Absent / false: every bus owns all its stages (byte-identical output).  Read by the generator,
+    clock_landing_verify and landing_place."""
+    br = (cfg or {}).get("branches") or {}
+    share = bool((cfg or {}).get("share_trunk"))
+    own, first = {}, {}
+    for b in sorted(br):
+        st = br[b].get("stages", []) if isinstance(br[b], dict) else []
+        row, key = [], ()
+        for i, s in enumerate(st):
+            key = key + ((tuple(s.get("xy_um") or ()), s.get("raw_reset")),)
+            row.append(b if (not share or i == len(st) - 1) else first.setdefault(key, b))
+        own[b] = row
+    return own
+
+
 RING_RESET_COPY_LOADS_MAX = 48     # CLAND-RELAY-3 (COORD 11-13 (3)): loads per reader-START copy, under the 64 fanout
 
 
@@ -1275,9 +1297,15 @@ class Landings:
             raise LandingError(f"{tn}.{bus}: reader START needs exactly {depth} physical stages")
         records = []
         prev = "cland_start"
+        # R-REACH-1 share_trunk: a stage whose prefix equals another branch's is that branch's relay (one instance)
+        owners = reader_start_owners(cfg).get(bus) if cfg.get("share_trunk") else None
+        if not hasattr(self, "_reader_shared"):
+            self._reader_shared = {}
+        emitted = self._reader_shared.setdefault(tn, set())
         for i, stage in enumerate(stages):
             xy, raw = stage.get("xy_um"), stage.get("raw_reset")
-            raw = self._branch_raw(tn, f"reader:{bus}:{i}", raw)
+            ob = owners[i] if owners else bus
+            raw = self._branch_raw(tn, f"reader:{ob}:{i}", raw)
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
                 raise LandingError(f"{tn}.{bus}: reader START stage {i} needs finite xy_um")
@@ -1307,13 +1335,17 @@ class Landings:
             if done is not None:
                 private[raw] = done
                 raw = done["net"]
-            name = f"u_cland_reader_start_{ident(bus)}_{i}"
-            net = f"cland_reader_start_{ident(bus)}_{i}"
-            logic += [f"    wire {net};",
-                      f'    (* keep = "true" *) ot_dp_landing_relay {name} (.clk(clk), .rst_raw_n({raw}), '
-                      f".d({prev}), .q({net}));"]
+            name = f"u_cland_reader_start_{ident(ob)}_{i}"
+            net = f"cland_reader_start_{ident(ob)}_{i}"
+            if not (owners and name in emitted):
+                logic += [f"    wire {net};",
+                          f'    (* keep = "true" *) ot_dp_landing_relay {name} (.clk(clk), .rst_raw_n({raw}), '
+                          f".d({prev}), .q({net}));"]
+            if owners:
+                emitted.add(name)
             records.append(dict(instance=name, net=net, d=prev, xy_um=list(xy), raw_reset=raw,
-                                stage=i, control_cycles_added=depth, steady_data_cycles_added=0))
+                                stage=i, control_cycles_added=depth, steady_data_cycles_added=0,
+                                **({"shared_trunk_owner": ob} if ob != bus else {})))
             prev = net
         self.reset_placements.setdefault(tn, {})[bus]["reader_start"] = dict(
             depth=depth, stages=records, ring_reset=prev, K_adjustment=-depth, **({"reach": True} if cfg.get("reach") else {}),
@@ -1347,9 +1379,15 @@ class Landings:
         outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
         records = []
         prev = "cland_start" if reuse else "cland_start_d"
+        # R-REACH-1 share_trunk (writer side): equal stage prefixes are one kept relay (reader_start_owners)
+        owners = reader_start_owners(cfg).get(bus) if cfg.get("share_trunk") else None
+        if not hasattr(self, "_writer_shared"):
+            self._writer_shared = {}
+        emitted = self._writer_shared.setdefault(tn, set())
         for i, stage in enumerate(stages):
             xy, raw = stage.get("xy_um"), stage.get("raw_reset")
-            raw = self._branch_raw(tn, f"writer:{bus}:{i}", raw)
+            ob = owners[i] if owners else bus
+            raw = self._branch_raw(tn, f"writer:{ob}:{i}", raw)
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
@@ -1364,13 +1402,17 @@ class Landings:
                                      re.findall(r"\bassign\s+(\w+)\s*=\s*" + re.escape(raw) + r"\s*;", body)):
                 raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} drives an output port; "
                                    f"plan a non-port registered relay")
-            name = f"u_cland_writer_start_{ident(bus)}_{i}"
-            net = f"cland_writer_start_{ident(bus)}_{i}"
-            logic += [f"    wire {net};",
-                      f'    (* keep = "true" *) ot_dp_landing_relay {name} (.clk(clk), .rst_raw_n({raw}), '
-                      f".d({prev}), .q({net}));"]
+            name = f"u_cland_writer_start_{ident(ob)}_{i}"
+            net = f"cland_writer_start_{ident(ob)}_{i}"
+            if not (owners and name in emitted):
+                logic += [f"    wire {net};",
+                          f'    (* keep = "true" *) ot_dp_landing_relay {name} (.clk(clk), .rst_raw_n({raw}), '
+                          f".d({prev}), .q({net}));"]
+            if owners:
+                emitted.add(name)
             records.append(dict(instance=name, net=net, d=prev, xy_um=list(xy), raw_reset=raw,
-                                stage=i, control_cycles_added=depth, steady_data_cycles_added=0))
+                                stage=i, control_cycles_added=depth, steady_data_cycles_added=0,
+                                **({"shared_trunk_owner": ob} if ob != bus else {})))
             prev = net
         self.reset_placements.setdefault(tn, {}).setdefault(bus, {})["writer_start"] = dict(
             depth=depth, stages=records, fstart_d=prev, K_adjustment_at_receiver=depth,

@@ -483,6 +483,20 @@ def reset_relay_full(rtl_dir):
 
 
 CHAIN_EVEN_HOOK = "source /work/chain_even_cfg.tcl\nsource /work/chain_even.tcl"
+# R-REACH-5 (RULEBOOK 11-13, RULES-REACH-1): the generated zero-logic register chains every kit has -- landing bin ->
+# lane pad stages (u_lpad_<bus> r[k] / q, u_pd<n>_<bus>) -> their consumer -- get equal hops after GPL when a hop is over
+# the reach.  Evidence: S81 leaf t21 u_bin_leafdn_i0 -> u_lpad q 587 um (104 captures), KV hub_Eo u_lpad r -> q 824 um,
+# QC st_a u_bin_x_hc1_i -> u_pd4 748-783 um: GPL keeps the free pad flops at their fanout and pays the distance in ONE
+# hop.  Opt-in (REACH-FIN-2 11-13, existing kits byte-identical): budgets.r_reach_even true; a type with its own
+# chain_even key keeps that.
+REACH_EVEN_CHAINS = [[r"[.]u_bin_[^.]*/", r"[.]u_(lpad|pd[0-9]+)_"]]
+REACH_EVEN_MIN_HOP_UM = 405.0
+
+
+def reach_even_cfg():
+    """the default chain_even.tcl config of R-REACH-5 (only chains with a hop over the reach move; plan-sited flops stay)"""
+    return (chain_even_cfg(dict(chains=REACH_EVEN_CHAINS)) + f"set ::ot_chain_min_hop_um {REACH_EVEN_MIN_HOP_UM:g}\n"
+            "set ::ot_chain_skip_sited 1\n")
 
 
 def chain_even_cfg(spec):
@@ -5152,6 +5166,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "chain_even_cfg.tcl").write_text(chain_even_cfg(t["chain_even"]))
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + CHAIN_EVEN_HOOK + "\n")
+    elif P.budgets.get("r_reach_even", False):
+        # R-REACH-5: default bin -> pad chains (only chains with a hop over the reach move; no netlist change)
+        shutil.copyfile(Path(__file__).with_name("chain_even.tcl"), kd / "chain_even.tcl")
+        (kd / "chain_even_cfg.tcl").write_text(reach_even_cfg())
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text(hook.read_text() + "\n# R-REACH-5: zero-logic bin -> pad chains re-spaced when over the reach\n"
+                        + CHAIN_EVEN_HOOK + "\n")
     if core_input_place(P.raw, tn):
         for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl"):
             shutil.copyfile(Path(__file__).with_name(f_), kd / f_)

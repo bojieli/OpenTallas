@@ -2951,6 +2951,9 @@
            "type": "number"
           }
          },
+         "share_trunk": {
+          "type": "boolean"
+         },
          "branches": {
           "type": "object",
           "additionalProperties": {
@@ -3002,6 +3005,9 @@
          "depth": {
           "type": "integer",
           "minimum": 1
+         },
+         "share_trunk": {
+          "type": "boolean"
          },
          "branches": {
           "type": "object",
@@ -5409,6 +5415,40 @@
       "type": "number",
       "minimum": 0
      },
+     "reach_homes": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "name",
+        "rect_um",
+        "buses"
+       ],
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "rect_um": {
+         "type": "array",
+         "minItems": 4,
+         "maxItems": 4,
+         "items": {
+          "type": "number"
+         }
+        },
+        "buses": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "landing_base_type": {
       "type": "string"
      },
@@ -7271,6 +7311,16 @@
       "type": "string",
       "minLength": 1
      }
+    },
+    "r_reach": {
+     "enum": [
+      "error",
+      "warn",
+      "off"
+     ]
+    },
+    "r_reach_even": {
+     "type": "boolean"
     }
    }
   },

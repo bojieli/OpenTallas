@@ -459,8 +459,14 @@ def _reader_start_groups(t):
         origin = 'u_cland_rstart_rx' if (t or {}).get('landing_relay_start_copy') else 'u_cland_origin'
         groups.append((origin, _clear_of_hard_cores(t, cfg['origin_rect_um']), 'reader-start-origin'))
     origin_xy = _centre(_clear_of_hard_cores(t, cfg['origin_rect_um'])) if 'origin_rect_um' in cfg else None
+    owners = None
+    if cfg.get('share_trunk'):      # R-REACH-1: a shared trunk stage is one instance, placed once (its owner's group)
+        import clock_landings as _CL
+        owners = _CL.reader_start_owners(cfg)
     for bus, branch in sorted(cfg['branches'].items()):
         for i, rect in enumerate(_chain_clear_of_hard_cores(t, origin_xy, branch['stages'])):
+            if owners is not None and owners[bus][i] != bus:
+                continue
             groups.append((f'u_cland_reader_start_{safe(bus)}_{i}', rect, 'reader-start:'+bus))
     return groups
 
@@ -566,8 +572,14 @@ def _writer_start_groups(t):
     groups = []
     origin_xy = _start_origin_xy(t)
     others = [tuple(r) for _, r, _ in _status_reset_groups(t)]
+    owners = None
+    if cfg.get('share_trunk'):      # R-REACH-1: a shared trunk stage is one instance, placed once (its owner's group)
+        import clock_landings as _CL
+        owners = _CL.reader_start_owners(cfg)
     for bus, branch in sorted(cfg['branches'].items()):
         for i, rect in enumerate(_chain_clear_of_hard_cores(t, origin_xy, branch['stages'])):
+            if owners is not None and owners[bus][i] != bus:
+                continue
             groups.append((f'u_cland_writer_start_{safe(bus)}_{i}', rect, 'writer-start:'+bus))
         # The last face relay contains a synchronous-reset AND as well as Q.
         # Keeping only Q at the pin let GPL drag its AND to the distant origin

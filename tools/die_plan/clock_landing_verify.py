@@ -543,8 +543,10 @@ class Verification:
         stages=[dict()] if reach else self._stages(pn,'landing_reader_start',bus,int(cfg.get('depth',-1)))
         if not stages:return ('missing',ident(pn)+'.u_cland_reader_start_'+ident(bus))
         prev=start;path=None
+        import clock_landings as CLO
+        owners=CLO.reader_start_owners(cfg).get(bus) if (not reach and cfg.get('share_trunk')) else None   # R-REACH-1
         for i,st in enumerate(stages):
-            path=ident(pn)+f'.u_cland_reader_start_{ident(bus)}_{i}'
+            path=ident(pn)+f'.u_cland_reader_start_{ident(owners[i] if owners else bus)}_{i}'
             c=self.instance(path,'ot_dp_landing_relay_rep' if rep and i==len(stages)-1 else 'ot_dp_landing_relay')
             if c:
                 self.clock(c,pn);self.equal_input(c,'d',[prev])
@@ -573,8 +575,10 @@ class Verification:
         stages=self._stages(pn,'landing_writer_start',bus,int(cfg.get('depth',-1))-int(bool(reuse)))
         if stages is None:return [('missing',pn,bus)]
         prev=[self.start_net(pn)] if reuse else start_d
+        import clock_landings as CLO
+        owners=CLO.reader_start_owners(cfg).get(bus) if cfg.get('share_trunk') else None   # R-REACH-1
         for i,st in enumerate(stages):
-            path=ident(pn)+f'.u_cland_writer_start_{ident(bus)}_{i}'
+            path=ident(pn)+f'.u_cland_writer_start_{ident(owners[i] if owners else bus)}_{i}'
             c=self.instance(path,'ot_dp_landing_relay')
             if c:
                 self.clock(c,pn);self.equal_input(c,'d',prev);self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
