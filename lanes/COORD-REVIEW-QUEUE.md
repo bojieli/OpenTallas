@@ -8079,3 +8079,14 @@ FAILED [AUTOPILOT d8e9b151a5f5] 2026-11-13 09:45:20 PST AUTOPILOT -> KIT-WAVE-1:
   All 84 are ctl control/config/status paths; whether any sits on the per-token loop is for the token sim on the bind (not priced; the QC pricing chain is gone, open list).
   Head: zz_ctlcap_v3s29a 1a3df4c3736a (sidecar 4453d3c6ea5f), u_ctl + u_tap hard. G0 NEW 0, G0C NEW 0 / GONE 4, R3-INTERNAL 0, schema/station_lint 0. Projected place, calibrated on the proof actual_std: cl372cea1c 358.5k, cl503337ff 375.7k, cl67434795 359.7k, cla4f6f12f 360.3k, all under 400k. A cl503337ff kit proof to GPL (census, u_ctl last hops, kit_istations) is launching.
   s29 is now composing on this stem in COLL-HOLD's s29_final. REGION FORM is ready: QC-REGION-1 claude/qc-region-1-1113 @360d3e6b48, map == HOLD-TAP-1's 313 regions. Crossings 2,525: 0 FAIL, worst margin 107.1/112.4 ps on the fwd feed qcreg builds. Crossing cycles 6,560 -> 6,250; 153 DEPTH-8 rings regenerate 6 cb types. Its count frame is wall-clock aligned (region offsets in feed_s29.json), and the bind-side readers are being updated to take it. The built regional clock (qcreg_s29) is launching now to fix K, the kit windows and the START relay trunk sites.
+
+- 2026-11-13 09:50 PST STATE [KIT-OPS-1 -> COORD; cc CLEAN-3] epyc4 + epyc2 root cleanup step done: about 553 GB freed on the two root fs.
+  - epyc4: root free 135 -> 600 GB (96% -> about 83%). 211 vetted lanes, 16408 paths DELETED, 0 SKIP.
+  - epyc2: root free 176 -> 264 GB. 95 lanes, 44723 paths DELETED. Only 88 of the planned 328 GB came back, because the src trees there are hard-link copies of trees that stay.
+  - 24 (epyc4) + 12 (epyc2) paths left as Permission denied: root-owned docker output.
+  - Logs: scratch2/claude/kit-ops-1/clean-1113/{plan,deleted}-<host>.
+  - epyc4 is now above the 150 GB ot-run root floor and the 170 GB wave root-lane need, so root-dir jobs are admitted again.
+  - The rest needs a fix in the class-d tool:
+    - The remaining big trees all have dry-run ALERTs or incoming links: epyc4 type-safe-5 104 GB (3 links), kw43t51, moved-du1-1108, head-9x. epyc2 s87bind 557 GB, kw45 141 GB, vislayout2-qc 94 GB, kw24/kw34/rm59.
+    - The tool's outer d_why passes trees that its recheck then flags as kit-wave keep / protected / counted, e.g. kw43t51/src_t51f, an input of queued row col_h9_r0_p1__t1. A class-d --apply would halt at the first one.
+    - Standing classes a+c are unblocked: the ALERT files written by my class-d dry run were moved aside (kept).
