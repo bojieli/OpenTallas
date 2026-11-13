@@ -1,0 +1,35 @@
+{
+  "schema": "opentallas.component_variant_gate.v1",
+  "source_rtl_commit": "3e9aa6b25c10251e1d406dfbfda0bc80737e907e",
+  "verdict": "PASS_COMPONENT_ONLY",
+  "cases": {
+    "lpc-rsafe-r2": {
+      "component": "qfd_dv_slice2 -> qfd_tt_ctlm_dv",
+      "old_skew": false,
+      "variant": "lpc-rsafe",
+      "warm_reset": true,
+      "expected": "PASS",
+      "verdict": "PASS",
+      "added_cycles": 0,
+      "global_qualification": false
+    },
+    "lpc-rsafe-old-r2": {
+      "component": "qfd_dv_slice2 -> qfd_tt_ctlm_dv",
+      "old_skew": true,
+      "variant": "lpc-rsafe",
+      "warm_reset": true,
+      "expected": "FAIL",
+      "verdict": "PASS",
+      "added_cycles": 0,
+      "global_qualification": false
+    }
+  },
+  "configuration": "Actual reset-safe LPC core with required HD_W130=1; actual LPS status and CTLM; HEAD-inactive hd_fault=0 bench input because no HEAD instruction is issued. Actual full LP wrapper qualification is recorded separately.",
+  "observed": {
+    "corrected": "10/10 completion events,0 errors",
+    "old_skew": "8/10 completion events,25 errors; intended negative control caught"
+  },
+  "failure_diagnosis": "Initial LPC-only micro attempt selected default HD_W130=0 and actual module rejected that unsupported shape at time0; preserved failed outputs in scratch. R2 uses actual supported HD_W130=1.",
+  "added_cycles": 0,
+  "global_qualification": false
+}
