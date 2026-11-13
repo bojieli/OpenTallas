@@ -1,0 +1,114 @@
+{
+ "crossings": 2525,
+ "changed": 1594,
+ "cycles_old": 6560,
+ "cycles_new": 6250,
+ "delta_hist": {
+  "-3": 34,
+  "-2": 191,
+  "-1": 673,
+  "0": 931,
+  "1": 570,
+  "2": 104,
+  "3": 19,
+  "4": 3
+ },
+ "depth_new": {
+  "4": 2372,
+  "8": 153
+ },
+ "depth_changed": 153,
+ "lanes_changed": 1047,
+ "lane_cycles_old": 11198,
+ "lane_cycles_new": 10888,
+ "lane_table_stale_on_input": 0,
+ "ca": {
+  "crossings": 2525,
+  "depth4": 2372,
+  "depth8": 153,
+  "fail": 0,
+  "worst_margin_lo_ps": 107.1,
+  "worst_margin_hi_ps": 112.4,
+  "lat_hist": {
+   "-6": 15,
+   "-5": 24,
+   "-4": 23,
+   "-3": 7,
+   "-2": 1,
+   "-1": 23,
+   "0": 23,
+   "1": 302,
+   "2": 655,
+   "3": 1126,
+   "4": 232,
+   "5": 48,
+   "8": 2,
+   "9": 14,
+   "10": 30
+  },
+  "phys_hist": {
+   "2": 413,
+   "3": 1909,
+   "4": 158,
+   "5": 45
+  },
+  "max_phys": 5,
+  "min_lat": -6,
+  "sched_w_hist": {
+   "1": 48,
+   "2": 1376,
+   "3": 981,
+   "4": 94,
+   "5": 26
+  },
+  "regions": 313,
+  "feed_root": "sl_E0_fw",
+  "start_tree_edges_clean": 267,
+  "frame_offset_max": 19
+ },
+ "base": {
+  "path": "w2_hand/zz_s29r_hand.json",
+  "sha256": "ce6958cf1db5b7cd1bda7e3e88fa8be35e2ae700b282d42e2b333a24d53c2a0a"
+ },
+ "out": {
+  "path": "w2_hand/zz_s29_region.json",
+  "sha256": "368999ac3248149e578c0d8e7c953162558280496ecf577f6b0e5342204c36b6"
+ },
+ "side_in": "ce64dcf20586a03daf8af31fb36887857ab279daceb81fbeaa40dbf3d66b5e31",
+ "side_out": "e493659bd39ac83c8f747b529e7ca07e31ae1ce55c727ff161d09ec7afabbe1d",
+ "tok_s": {
+  "base_tok_s": 4051,
+  "estimate_delta_pct": 0.6,
+  "status": "UNCHECKED",
+  "basis": "lane-cycle delta only (11198 -> 10888 on 1047 lanes); not a token sim",
+  "open_item": "pricing chain missing: the 10-27 reprice_actual / rederive_edges_ext / compose_edges harness is gone; tools/qwen_layerbench/toksim_compose.py needs its inputs re-derived (DIE-QC-100 open list)"
+ },
+ "depth8_ring_wrappers": {
+  "cbn_q01__clab6e67f2": [
+   "a00_i",
+   "nb_i12"
+  ],
+  "cbn_q01__cld9ff4c40": [
+   "a00_i",
+   "nb_i12"
+  ],
+  "cbx_q10__cl89936551": [
+   "bc_i20",
+   "bc_i30"
+  ],
+  "cbx_q10__cl89936551_h": [
+   "a22_i",
+   "bc_i20",
+   "bc_i30"
+  ],
+  "cbx_q10__cl94a12200": [
+   "bc_i20",
+   "bc_i30"
+  ],
+  "cbx_q10__cl94a12200_h": [
+   "a22_i",
+   "bc_i20",
+   "bc_i30"
+  ]
+ }
+}

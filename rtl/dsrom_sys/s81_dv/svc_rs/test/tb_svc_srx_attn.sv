@@ -21,6 +21,9 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer SRX = 0;
     parameter [1023:0] SRXT = 1024'd0;
     parameter integer SRXMUT = 0;
+    parameter integer BANDX = 0;           // S81 DUT only: ot_s81_svc_band form (svc_srx_lockstep.py --band)
+    parameter integer BANDMUT = 0;
+    parameter integer BANDM = 0;
     parameter integer H = 16;
     parameter integer D = 512;
     parameter integer TD = 64;
@@ -110,7 +113,11 @@ module tb_hdc_v41x_attn (input wire clk);
     ot_hdc_v41x_attn_s
 `endif
                        #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
-                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .FPL(FPL), .FML(FML), .SC_CRED(SC_CRED), .PV_CRED(PV_CRED), .NBANKP(NBANKP), .REPL(REPL), .NSTAGE(NSTAGE), .TILE_S(TILE_S), .NARROW(NARROW), .MFAN(MFAN), .F12(F12), .FPLX(FPLX), .TRX(TRX), .SRX(SRX), .SRXT(SRXT), .SRXMUT(SRXMUT)) dut (
+                        .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .FPL(FPL), .FML(FML), .SC_CRED(SC_CRED), .PV_CRED(PV_CRED), .NBANKP(NBANKP), .REPL(REPL), .NSTAGE(NSTAGE), .TILE_S(TILE_S), .NARROW(NARROW), .MFAN(MFAN), .F12(F12), .FPLX(FPLX), .TRX(TRX), .SRX(SRX), .SRXT(SRXT), .SRXMUT(SRXMUT)
+`ifdef SRX_DUT_S81
+                        , .BANDX(BANDX), .BANDMUT(BANDMUT), .BANDM(BANDM)
+`endif
+                        ) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),
         .q_v(q_v), .q_w(q_w), .q_ready(q_ready), .kv_v(kv_v), .kv_m(kv_m), .kv_w(kv_w), .kv_ready(kv_ready),
         .sc_v(sc_v), .sc_row(sc_row), .sc_m(sc_m), .sc_y(sc_y), .sc_f(sc_f), .sc_cr(sc_cr),

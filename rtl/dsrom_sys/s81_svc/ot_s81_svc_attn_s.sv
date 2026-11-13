@@ -79,6 +79,16 @@ module ot_s81_svc_attn_s #(
     parameter [1023:0] SRXT = 1024'd0,
     parameter integer SRXMUT = 0,      // SRX bench negative controls: 1 = output tags not delayed, 2 = load / issue line one
                                        //   stage short, 3 = tile 0's fill rows one stage short (controls on time)
+    // S81 svc BAND (HARD-S81-SVC-1 11-13, COORD "svc option A", R-CAP-3 point 2; opt-in, 0 = as built): every tile's
+    // transposer + head-group tile + p.v merge become ONE module ot_s81_svc_band (u_eng.g_tr[k].g_xb.u_band) with a
+    // registered boundary both ways, so the die plan can cut the svc tile into band partitions.  The band captures the
+    // SRX-stage bundle once more (+1) and registers its outputs (+1); the output tags wait 2 more: scores +2 and P.V +2
+    // against the same p feed, the SRX signature with n = SRX + 2 (the compiler moves PIO / KPV by SRX + 2).
+    // Needs SRX >= 1, TRX 1, REPL 2, TILE_S 1, MFAN 1, TD 32, H 8.  The as-built instance names do not move at 0.
+    parameter integer BANDX = 0,       // v2: the band's input capture depth (1 = v1); scores +(BANDX + 1)
+    parameter integer BANDM = 0,       // v2: 1 = merge inputs registered in the band; P.V +(BANDX + 1 + BANDM)
+    parameter integer BANDMUT = 0,     // BANDX bench negative controls: 1 = output tags only +1, 2 = band 0's merge tags
+                                       //   not captured (one edge early)
     // derived (do not override): tile bundle widths, same formulas as the NBANK / BW localparams below
     parameter integer TX_NB = (NBANKP > 0) ? NBANKP : (((PWORDS >= 2) ? 4 : 3) + ((ILV != 0) ? 1 : 0)),
     parameter integer TX_BW = (TX_NB > 4) ? $clog2(TX_NB) : 2,
@@ -191,6 +201,10 @@ module ot_s81_svc_attn_s #(
         if (SRX != 0 && (SRX < 0 || SRX > 16 || TRX == 0 || REPL < 2 || NSTAGE < 2 || S != 1 || V != 1 || TEXT != 0 ||
                          PHYS != 0 || NT > 16)) begin : g_bad_srx
             initial $error("ot_hdc_v41x_attn_s: SRX 1..16 needs TRX 1, REPL 2, NSTAGE 2, S 1, V 1, TEXT 0, PHYS 0, NT <= 16");
+        end
+        if (BANDX != 0 && (SRX < 1 || TRX == 0 || REPL < 2 || TILE_S == 0 || MFAN == 0 || TD != 32 || H != 8 ||
+                           SRXMUT == 3)) begin : g_bad_band
+            initial $error("ot_s81_svc_attn_s: BANDX needs SRX >= 1, TRX 1, REPL 2, TILE_S 1, MFAN 1, TD 32, H 8");
         end
         if (!(PWORDS == 1 || (PWORDS == 2 && (PB % 2) == 0))) begin : g_bad_pwords
             initial $error("ot_hdc_v41x_attn: PWORDS must be 1, or 2 with an even word count per block");
@@ -632,6 +646,20 @@ module ot_s81_svc_attn_s #(
     // select, of the fill write index/enable and of the pad flags, from the controller's values on the same
     // edge as the shared _d copies (so no cycle moves), and holds its own E operand register.
     wire [NT*TD*18-1:0] tr_col;
+    // BANDX: the band outputs (registered in ot_s81_svc_band) and the merge tags sent to the bands
+    wire [NT-1:0]      bd_ov, bd_mov;
+    wire [NT*H*32-1:0] bd_y, bd_my;
+    wire [NT*H-1:0]    bd_f, bd_mf;
+    wire               bt_pv, bt_fin;
+    wire [MLEV-1:0]    bt_blk;
+    function automatic integer bfpos(input integer b, input integer xo, input integer n);   // fused fill bits below b
+        integer i;
+        begin
+            bfpos = 0;
+            for (i = 0; i < b; i = i + 1)
+                if (srx_fused(i, xo, n)) bfpos = bfpos + 1;
+        end
+    endfunction
     reg  [NL-1:0] qpad_r;              // REPL: (rd_r0 + r) >= T, registered with rd_r0
     reg  [NL-1:0] qpad_r2;
     always @(posedge clk) qpad_r2 <= qpad_r;
@@ -719,7 +747,37 @@ module ot_s81_svc_attn_s #(
                 assign w_g[gl*GW +: GW] = rd_q_fl[gl*ROWW + ((gk*DPT) / 32) * GW +: GW];
                 assign w_pad[gl] = (XD != 0) ? fpad_d1[gl] : (REPL != 0) ? ((row_fl_c + gl) >= T_p) : ((r0_fl + gl) >= T_p);
             end
-            if (PHYS == 0 && TRX != 0 && REPL != 0) begin : g_x
+            if (BANDX != 0) begin : g_xb
+                // S81 svc BAND: this tile's transposer + tile + merge in one registered module (see BANDX)
+                localparam integer XO = (gk*DPT) % 32;
+                localparam integer NF = bfpos(GW, XO, DPT);
+                wire [SRXW-1:0]    zo = srx_sv[(SRX*NT + gk)*SRXW +: SRXW];
+                wire [NL*ROWW-1:0] zf = zo[20 + 2*NL +: NL*ROWW];
+                wire [NL*ROWW-1:0] zq = zo[20 + 2*NL + NL*ROWW +: NL*ROWW];
+                wire [NL-1:0]      zqp = zo[20 + NL +: NL];
+                wire [NL*NF-1:0]   fw;
+                for (gl = 0; gl < NL; gl = gl + 1) begin : g_g
+                    for (gs = 0; gs < GW; gs = gs + 1) begin : g_b
+                        if (srx_fused(gs, XO, DPT)) begin : g_u
+                            assign fw[gl*NF + bfpos(gs, XO, DPT)] = zf[gl*ROWW + ((gk*DPT) / 32) * GW + gs];
+                        end
+                    end
+                end
+                ot_s81_svc_band #(.H(H), .TD(TD), .DPT(DPT), .NL(NL), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
+                                  .FML(FML), .F12(F12), .MLEV(MLEV), .FX(FX), .XOFF(XO), .NF(NF),
+                                  .CAPD(BANDX), .MREG(BANDM),
+                                  .MUT((BANDMUT == 2 && gk == 0) ? 2 : 0)) u_band (
+                    .clk(clk), .rst_n(rst_n),
+                    .ctl_i(zo[19:0]), .wpad_i(zo[20 +: NL]), .fw_i(fw),
+                    .q_i(zq[(gk / S)*ROWW +: GW]), .qpad_i(zqp[gk / S]),
+                    .ld_v_i(z_ld_v), .ld_mode_i(z_ld_mode), .ld_w2v_i(z_ld_w2v), .ld_bank_i(z_ld_bank),
+                    .ld_grp_i(z_ld_grp), .ld_w_i(z_ldw), .iv_i(z_iv), .ibank_i(z_ibank),
+                    .t_pv_i(bt_pv), .t_fin_i(bt_fin), .t_blk_i(bt_blk),
+                    .ov(bd_ov[gk]), .oy(bd_y[gk*H*32 +: H*32]), .oflt(bd_f[gk*H +: H]),
+                    .m_ov(bd_mov[gk]), .m_y(bd_my[gk*H*32 +: H*32]), .m_f(bd_mf[gk*H +: H]));
+                assign tr_col[gk*TD*18 +: TD*18] = {(TD*18){1'b0}};
+                assign eib_t = {(TD*18){1'b0}};          // the operand register lives in the band
+            end else if (PHYS == 0 && TRX != 0 && REPL != 0) begin : g_x
                 // NSTAGE = 2: this tile's own copies of the front / back staging-buffer selects (the shared
                 // fbuf_rr / bbuf_rr fanned out to every tile's fill and q.k operands)
                 wire [NL*GW-1:0] w_gx;
@@ -847,6 +905,19 @@ module ot_s81_svc_attn_s #(
     // n + 2 + skew(k % 8), the old value on a same-edge write) and compares the id every non-pad read sees with
     // the beat's: a mismatch is a write-after-read or read-before-write violation of the bank guards.
     integer sck_ctr = 0, sck_qset = 0, sck_plset = 0, sck_reads = 0, sck_errors = 0, sck_ld = 0;
+    wire ck_ld_v, ck_ld_w2v, ck_ld_mode, ck_iv;
+    wire [7:0] ck_ld_grp;
+    wire [BW-1:0] ck_ld_bank, ck_ibank;
+    wire [TD*18-1:0] ck_eib;
+    generate if (BANDX != 0) begin : g_ckb
+        assign ck_ld_v = g_tr[0].g_xb.u_band.l_v;       assign ck_ld_w2v = g_tr[0].g_xb.u_band.l_w2v;
+        assign ck_ld_mode = g_tr[0].g_xb.u_band.l_mode; assign ck_ld_grp = g_tr[0].g_xb.u_band.l_grp;
+        assign ck_ld_bank = g_tr[0].g_xb.u_band.l_bank; assign ck_iv = g_tr[0].g_xb.u_band.i_v;
+        assign ck_ibank = g_tr[0].g_xb.u_band.i_bank;   assign ck_eib = g_tr[0].g_xb.u_band.eib;
+    end else begin : g_ck0
+        assign ck_ld_v = z_ld_v; assign ck_ld_w2v = z_ld_w2v; assign ck_ld_mode = z_ld_mode; assign ck_ld_grp = z_ld_grp;
+        assign ck_ld_bank = z_ld_bank; assign ck_iv = z_iv; assign ck_ibank = z_ibank; assign ck_eib = e_ib[TD*18-1:0];
+    end endgenerate
     integer sck_blkset [0:BD-1];
     integer sck_rdset, sck_rdset2, sck_issset, sck_issset_d, sck_issset_dd, e_ld_set, e_iset;
     integer sck_sh [0:NBANK*H*TD-1];
@@ -880,11 +951,12 @@ module ot_s81_svc_attn_s #(
         if (rst_n && p_go && pl_word == 0) begin sck_ctr = sck_ctr + 1; sck_plset = sck_ctr; sck_blkset[pl_blk % BD] = sck_ctr; end
         // the E register of this cycle (sck_n)
         // (SRX: the tile side, SRX edges after the E1 register; the set ids ride the same delay)
-        sck_w[(sck_n + 2) % 64] = {z_ld_v, z_ld_w2v, z_ld_mode, z_ld_grp, z_ld_bank};
-        sck_wset[(sck_n + 2) % 64] = (SRX > 0) ? sck_lq[SRX - 1] : e_ld_set;
-        sck_ib[sck_n % 64] = {z_iv, z_ibank};
-        sck_iset[sck_n % 64] = (SRX > 0) ? sck_iq[SRX - 1] : e_iset;
-        for (sck_k = 0; sck_k < TD; sck_k = sck_k + 1) sck_ipad[sck_n % 64][sck_k] = e_ib[sck_k*18 + 17];
+        // (BANDX: the band's own time base, one edge after the SRX stage -- its captured load / issue line and operand)
+        sck_w[(sck_n + 2) % 64] = {ck_ld_v, ck_ld_w2v, ck_ld_mode, ck_ld_grp, ck_ld_bank};
+        sck_wset[(sck_n + 2) % 64] = (SRX > 0) ? sck_lq[SRX - 1 + BANDX] : e_ld_set;
+        sck_ib[sck_n % 64] = {ck_iv, ck_ibank};
+        sck_iset[sck_n % 64] = (SRX > 0) ? sck_iq[SRX - 1 + BANDX] : e_iset;
+        for (sck_k = 0; sck_k < TD; sck_k = sck_k + 1) sck_ipad[sck_n % 64][sck_k] = ck_eib[sck_k*18 + 17];
         // writes visible from this cycle
         if (sck_w[sck_n % 64][BW+10]) begin
             sck_ld = sck_ld + 1;
@@ -1015,7 +1087,12 @@ module ot_s81_svc_attn_s #(
             wire          b_ov;
             wire [H*32-1:0] b_y;
             wire [H-1:0]  b_f;
-            if (TEXT != 0) begin : g_tx
+            if (BANDX != 0) begin : g_bd
+                assign tx_i[gk*TXI +: TXI] = {TXI{1'b0}};
+                assign b_ov = bd_ov[gk];
+                assign b_y = bd_y[gk*H*32 +: H*32];
+                assign b_f = bd_f[gk*H +: H];
+            end else if (TEXT != 0) begin : g_tx
                 assign tx_i[gk*TXI +: TXI] = {p_ib[gk*TD*18 +: TD*18], p_ibank[gk*BW +: BW], p_iv[gk], e_ld_w2v, ldw,
                                               e_ld_grp, e_ld_bank, e_ld_mode, e_ld_v};
                 wire [TXO-1:0] r;
@@ -1046,7 +1123,19 @@ module ot_s81_svc_attn_s #(
     endgenerate
 
     // tags to the tile outputs (TLX: the landed round trip, compiler re-schedule; VT: ATTN1 sub-beats)
-    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX))) u_tag (.clk(clk),
+    localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? BANDX : BANDX + 1) : 0;   // band capture stages + output register
+    generate if (BANDX == 0) begin : g_bd0
+        assign bd_ov = {NT{1'b0}}; assign bd_mov = {NT{1'b0}};
+        assign bd_y = {(NT*H*32){1'b0}}; assign bd_my = {(NT*H*32){1'b0}};
+        assign bd_f = {(NT*H){1'b0}}; assign bd_mf = {(NT*H){1'b0}};
+    end endgenerate
+    generate if (BANDX != 0) begin : g_btag
+        // merge tags for the bands: one edge before the tile's own output there (captured in the band)
+        ot_hdc_v41x_dly #(.W(2 + MLEV), .D(TLAT + SRX)) u_bt (.clk(clk), .d({e_pv, e_fin, e_blk}), .q({bt_pv, bt_fin, bt_blk}));
+    end else begin : g_btag0
+        assign bt_pv = 1'b0; assign bt_fin = 1'b0; assign bt_blk = {MLEV{1'b0}};
+    end endgenerate
+    ot_hdc_v41x_dly #(.W(16 + NL + 2 + MLEV + 8), .D(TLAT + TLX + VT + ((SRXMUT == 1) ? 0 : SRX) + BXT)) u_tag (.clk(clk),
         .d({e_row0, e_mask, e_pv, e_fin, e_blk, e_c}), .q({t_row0, t_mask, t_pv, t_fin, t_blk, t_c}));
     generate if (V > 1) begin : g_tv
         ot_hdc_v41x_vdly #(.D(TLAT + TLX + VT)) u_tv (.clk(clk), .rst_n(rst_n), .d(e_iv), .q(t_vv));
@@ -1104,7 +1193,11 @@ module ot_s81_svc_attn_s #(
     wire [NT*H-1:0]    m_f;
     generate
         for (gk = 0; gk < NT; gk = gk + 1) begin : g_m
-            if (PHYS == 0) begin : g_real
+            if (BANDX != 0) begin : g_bd
+                assign m_ov[gk] = bd_mov[gk];
+                assign m_y[gk*H*32 +: H*32] = bd_my[gk*H*32 +: H*32];
+                assign m_f[gk*H +: H] = bd_mf[gk*H +: H];
+            end else if (PHYS == 0) begin : g_real
             if (MFAN != 0) begin : g_x
 `ifdef OT_SVC_MERGE_H4
             // DIE-S81-85 form A (11-09): the H8 merge as two hard H4 providers (u_m.g_h4[0..1].u_h4,
@@ -1137,7 +1230,7 @@ module ot_s81_svc_attn_s #(
         end
     endgenerate
     wire [7:0] m_c;
-    ot_hdc_v41x_dly #(.W(8), .D(FX * MLEV + ((MFAN != 0) ? 1 : 0))) u_mc (.clk(clk), .d(t_c), .q(m_c));
+    ot_hdc_v41x_dly #(.W(8), .D(FX * MLEV + ((MFAN != 0) ? 1 : 0) + ((BANDX != 0) ? BANDM : 0))) u_mc (.clk(clk), .d(t_c), .q(m_c));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) pv_v <= 1'b0;
         else pv_v <= m_ov[0];

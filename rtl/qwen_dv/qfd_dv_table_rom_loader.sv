@@ -69,6 +69,9 @@ module qfd_dv_table_rom_loader #(
     endfunction
     wire [1063:0] data, rom_data;
     wire [5:0] local_reset;
+    // HARD-QC-FORMS-1 11-13: the four metadata capture copies as module-level nets (were hierarchical references
+    // g_capture.meta[k].*_q, which yosys rejects: "Identifier bits_q is implicitly declared"); same registers, same values.
+    wire [159:0] cm_bits; wire [7:0] cm_owner; wire [3:0] cm_other, cm_valid, cm_last;
     genvar rg;
     generate if(CAPTURE_STAGE!=0)begin:g_capture
         for(rg=0;rg<6;rg=rg+1)begin:rst
@@ -78,40 +81,38 @@ module qfd_dv_table_rom_loader #(
         reg [1023:0] payload;
         always @(posedge ck) payload<=rom_data[1023:0];
         for(rg=0;rg<4;rg=rg+1)begin:meta
-            wire [39:0] bits_q;
-            wire [1:0] owner_q;
-            wire other_q,valid_q,last_q;
             (* keep=1, keep_hierarchy=1 *) qfd_tload_metadata_capture #(.ID(rg)) ff
                 (.ck(ck),.rst_n(local_reset[rg]),.bits_d(rom_data[1063:1024]),.owner_d(owner),
-                 .other_d(p_other),.valid_d(cap_v),.last_d(cap_last),.bits_q(bits_q),.owner_q(owner_q),
-                 .other_q(other_q),.valid_q(valid_q),.last_q(last_q));
+                 .other_d(p_other),.valid_d(cap_v),.last_d(cap_last),.bits_q(cm_bits[40*rg+:40]),.owner_q(cm_owner[2*rg+:2]),
+                 .other_q(cm_other[rg]),.valid_q(cm_valid[rg]),.last_q(cm_last[rg]));
         end
-        assign data={(CAPTURE_MUT==1)?rom_data[1063:1024]:meta[0].bits_q,payload};
+        assign data={(CAPTURE_MUT==1)?rom_data[1063:1024]:cm_bits[39:0],payload};
     end else begin:g_no_capture
         assign local_reset={6{rst_n}};
         assign data=rom_data;
+        assign cm_bits=160'd0; assign cm_owner=8'd0; assign cm_other=4'd0; assign cm_valid=4'd0; assign cm_last=4'd0;
     end endgenerate
     wire ctrl_reset=local_reset[5];
     wire addr_reset=local_reset[4];
     wire [1:0] data_owner;
     wire data_valid,data_last,data_other;
     generate if(CAPTURE_STAGE!=0)begin:g_cfields
-        assign data_owner=g_capture.meta[0].owner_q;
-        assign data_valid=g_capture.meta[0].valid_q;
-        assign data_last=g_capture.meta[0].last_q;
-        assign data_other=g_capture.meta[0].other_q;
+        assign data_owner=cm_owner[1:0];
+        assign data_valid=cm_valid[0];
+        assign data_last=cm_last[0];
+        assign data_other=cm_other[0];
     end else begin:g_ofields
         assign data_owner=owner;assign data_valid=cap_v;assign data_last=cap_last;assign data_other=p_other;
     end endgenerate
     wire [3:0] we_group;
     generate for(rg=0;rg<4;rg=rg+1)begin:g_validation
         if(CAPTURE_STAGE!=0)begin:g_c
-            wire [39:0] b=g_capture.meta[rg].bits_q;
+            wire [39:0] b=cm_bits[40*rg+:40];
             wire [1:0] k=b[2:1];
             wire [23:0] a=b[26:3];
             wire bad=(b[39:27]!=0)||(k==0)||((k==3)&&(a>=64))||((k!=3)&&(a>=128))||
                      ((BTAB_COMPACT!=0)&&(k==2)&&(a>=72))||((k==2)&&(a[1:0]!=0));
-            assign we_group[rg]=g_capture.meta[rg].valid_q&&b[0]&&!bad;
+            assign we_group[rg]=cm_valid[rg]&&b[0]&&!bad;
         end else begin:g_o
             assign we_group[rg]=cap_v&&data[1024]&&!invalid;
         end

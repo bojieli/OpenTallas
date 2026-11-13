@@ -291,7 +291,7 @@ def bind_check(B, out, lat):
 
 
 # ---- standalone CLI on a bind output dir ----------------------------------------------------------------------------
-def load_bind_dir(bd, plan):
+def load_bind_dir(bd, plan, plan_path=None):
     bd = Path(bd)
     rtl = bd / "rtl"
     mod_file, type_mod = {}, {}
@@ -345,6 +345,12 @@ def load_bind_dir(bd, plan):
     land = defaultdict(int)
     if cl is not None:
         d = json.loads(cl.read_text())
+        # QC-REGION-1 COUNT FRAME: the landing cycles must be in the plan's frame (clock.spine.feed); legacy = no-op
+        import count_frame as CF
+        try:
+            CF.check_same(d.get("count_frame"), CF.load(plan, plan_path), f"{cl}")
+        except CF.FrameError as ex:
+            raise SystemExit(f"lane_asbuilt_latency: {ex}")
         if isinstance(d.get("lane_added_cycles"), dict):
             land.update({k: int(v) for k, v in d["lane_added_cycles"].items()})
         else:
@@ -365,7 +371,7 @@ def main(argv=None):
     ap.add_argument("--json")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
-    rows, module_of, ptype_of, types, landing_of, part_mod = load_bind_dir(a.bind_dir, plan)
+    rows, module_of, ptype_of, types, landing_of, part_mod = load_bind_dir(a.bind_dir, plan, a.plan)
     ab = json.loads(Path(a.asbuilt).read_text()) if a.asbuilt else {}
     bound_sel = ab.get("kit_source_station_pricing")
     mode = None
