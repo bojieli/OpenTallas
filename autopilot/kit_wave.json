@@ -50517,5 +50517,7 @@
  "visual_gate": "signoff",
  "visual_gate_note": "KIT-OPS-1 2026-11-13 03:29: OWNER 11-13 03:5x (COORD queue 03:17) visual gate moves to sign-off: placed type builds route without a verdict; the autopilot archives (counts) a wave type only with GOOD / OK / ISSUES-ACCEPT; BAD / ISSUES withholds the archive and discards a routed build to WAIT-FORM. Revert: visual_gate 'route'.",
  "freeze_kitops1_1113": "KIT-OPS-1 2026-11-13 03:29: OWNER 48 h plan-event freeze until 2026-11-15 04:00: no die's wave switches plan event or src while its builds past place are unfinished; overlays (RA=0, macro_skip_rtlmp) stay until then.",
- "note_kitstage1_die_owner": "KIT-STAGE-1 2026-11-13 03:55: dies.*.die_owner = the owner named on kit_wave_blocked.tsv rows (retry cap, branch claude/kit-stage-1-1113); edit when a die owner lane changes"
+ "note_kitstage1_die_owner": "KIT-STAGE-1 2026-11-13 03:55: dies.*.die_owner = the owner named on kit_wave_blocked.tsv rows (retry cap, branch claude/kit-stage-1-1113); edit when a die owner lane changes",
+ "hung_watch_min": 120,
+ "hung_watch_note": "KIT-OPS-1 2026-11-13 07:03: HUNG-WATCH (train 43, main 9ebef751ca) deployed to kw38/rt; a silent, alive row is cancelled (CANCELLED HUNG) only when stage logs and CPU time both stop growing for hung_watch_min; 0 = off"
 }
