@@ -105,3 +105,31 @@ def test_explicit_type_opt_in_conflicts():
     _hard(p, base, params)
     with pytest.raises(LandingError, match="landing_status_reg"):
         Landings(p, t).type_rtl("B", B_BODY)
+
+
+@pytest.mark.parametrize('fanout', [0, 8, 32])
+def test_signed_hard_wide_ring_keeps_replication_and_start_wires(fanout):
+    """QC sle_ctl b_tw_data_i: signed DSREP8/RSTREP34, not soft defaults1/6."""
+    import count_align_bind as CAB
+    from test_cland_ring_fanout import _reader_start
+    p, t = _vehicle(landing_ring_fanout_max=fanout, ring_hold=dict(write_edge='fall'))
+    _reader_start(p)
+    for row in p['ports'] + t['ports']:
+        row['width'] = 2103
+    body = B_BODY.replace('[4:0]', '[2103:0]')
+    params = dict(W=2104, DEPTH=4, STATUS_REG=1, WFALL=1, WREG=1,
+                  DSREP=8, RSTREP=34, PLACEREP=1)
+    hcs = _hard(p, 'ot_dp_clk_landing_cas', params)
+    before = CAB.strap_ties(t['count_aligned'], p)
+    lg = Landings(p, t)
+    rtl = lg.type_rtl('B', body)
+    assert _params(rtl) == ('ot_dp_clk_landing_cas', params)
+    assert 'ot_dp_landing_relay_rep #(.N(34)) u_cland_reader_start_y_1' in rtl
+    assert 'wire [33:0] cland_reader_start_y_1_x;' in rtl
+    assert '.rst_xn(cland_reader_start_y_1_x)' in rtl
+    receipt = lg.reset_placements['B']['y']
+    assert receipt['ring_dsrep'] == 8
+    assert receipt['reader_start']['ring_reset_copies'] == 34
+    assert receipt['reader_start']['ring_reset_copies_added_cycles'] == 0
+    assert CAB.strap_ties(t['count_aligned'], p) == before
+    param_wrap.wrap_bound(rtl, hcs)
