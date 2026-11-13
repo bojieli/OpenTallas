@@ -69,6 +69,8 @@ def test_apply_adds_the_cone_forms_and_delta_lists_only_serdes_changes():
     assert st.apply(plan, [r], cone=False)["partition_types"]["t2"]["verilog_defines"] == ["OT_KP4_DEC_HARD", "OT_S81_SERDES_LANE"]
     dl = st.delta(plan, new)
     assert set(dl) == {"t2"} and dl["t2"]["verilog_defines"]["from"] == ["OT_KP4_DEC_HARD"]
+    assert dl["t2"]["bound_parameter_form"]["RST_TREE"] == 1
+    assert "serdes_form_params.py" in dl["t2"]["bound_parameter_form"]["apply"]
     assert dl["t2"]["moves"]["u_core.u_dec.u_chn"]["to"][0] == r["moves"]["u_chn"]["to"]
     assert dl["t2"]["moves"]["u_bound.u_core.u_dec.u_dly.u_dmem"]["to"][0] == r["moves"]["u_dmem"]["to"]
 

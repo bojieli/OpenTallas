@@ -161,7 +161,14 @@
    "rx_clk_added": 9,
    "evidence": "bench/bench15_rlat.txt",
    "lockstep": "bench16 lane PASS; MUT9 80 RCK mismatches caught"
+  },
+  "kitH2": {
+   "same_benchmark_as": "kitH",
+   "actual_RST_TREE": 1,
+   "reset_release_clk_edges_added": 1,
+   "status": "PRIVATE_PLACE_PENDING"
   }
  },
- "proof_caveat": "bench15 lane and mut9 are BUILD_FAIL because loopback-only parameters leaked into the lane top; replaced by bench16 after harness correction. bench15 rlat is valid."
+ "proof_caveat": "bench15 lane and mut9 are BUILD_FAIL because loopback-only parameters leaked into the lane top; replaced by bench16 after harness correction. bench15 rlat is valid.",
+ "physical_form_caveat": "Original F/G/H/I captured bound wrappers explicitly set RST_TREE=0 despite the define. Benchmarks use requested RST_TREE=1 form; original physical results do not qualify it. H2 applies actual RST_TREE=1 with a fail-closed parameter receipt and fresh synth/LEC."
 }

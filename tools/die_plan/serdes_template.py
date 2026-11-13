@@ -181,6 +181,10 @@ def delta(plan, new):
         if all(o.get(k) == t.get(k) for k in ("serdes_lanes", "verilog_defines", "hard_cores", "contents")):
             continue
         rec = {}
+        if "OT_S81_SERDES_RST_TREE" in t.get("verilog_defines", []):
+            rec["bound_parameter_form"] = {"module": "ot_pdie_serdes_col", "instance": "u_core",
+                "RST_TREE": 1, "apply": "tools/s81_link/serdes_form_params.py WRAPPER --receipt RECEIPT",
+                "note": "required after bind captures explicit defaults; defines alone do not activate this parameter"}
         if o.get("verilog_defines") != t.get("verilog_defines"):
             rec["verilog_defines"] = {"from": o.get("verilog_defines", []), "to": t["verilog_defines"]}
         if o.get("serdes_lanes") != t.get("serdes_lanes"):

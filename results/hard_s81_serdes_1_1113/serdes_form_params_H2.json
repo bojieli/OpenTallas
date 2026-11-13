@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.serdes_form_params.v1",
+ "module": "ot_pdie_serdes_col",
+ "instance": "u_core",
+ "wrapper": "/srv/opentallas-scratch2/claude/hard-s81-serdes-1/kitH2/gen/serdes__t2/rtl/s81p_serdes__t2_bound.sv",
+ "sha256_before": "43fd4d802570fa4d3df2c138fdd1ba9adf76b1c00900b55c7f6e50237858f304",
+ "sha256_after": "4a5b7d49169757557fdf02e1952082852ab1802ab167fd9d0518c20fa3146023",
+ "parameters": {
+  "RST_TREE": {
+   "captured": 0,
+   "actual": 1
+  }
+ },
+ "reset_release_edges_added": 1,
+ "status": "PRIVATE_DO_NOT_COUNT",
+ "note": "steady cycles must use the matching exact form benchmark"
+}
