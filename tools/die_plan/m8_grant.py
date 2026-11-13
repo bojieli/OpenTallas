@@ -19,11 +19,20 @@ their die tracks (the kit is shared).  A track blocked anywhere along the footpr
 
 Products (all deterministic, sha-stamped):
   grant(P, tn, guides=None) -> dict      the per-type window (layer, pitch, die/type track runs, supply)
-  obstruction_tcl(grant, w)              type-kit pdn.tcl lines: one dbObstruction per run of die tracks (the type routes
-                                         only on its own tracks; a die track's obstruction covers its wire, so an
+  obstruction_tcl(grant, w)              type-kit pdn.tcl lines: one dbObstruction per die track at wire width (the type
+                                         routes only on its own tracks; a die track's obstruction covers its wire, so an
                                          adjacent type track keeps the 0.04 um minimum spacing by construction)
-  abstract_obs_rects(grant, w)           M8 OBS for the type's abstract = its OWN tracks (wire extent), so the die sees
-                                         exactly the granted tracks as used and keeps routing / PG on its own tracks
+  abstract_obs_rects(grant, w)           M8 OBS for the type's abstract = its OWN tracks, one rect per track at wire width,
+                                         so the die sees exactly the granted tracks as used and keeps routing / PG on its
+                                         own tracks
+
+NARROW SHAPES (HEAD-ROUTE-1 11-12): every emitted M8 rect is one track wide (0.04 um).  ASAP7 M8 SPACINGTABLE needs 0.5 um
+beside a shape >= 0.49975 um wide at parallel run >= 1.79975 um, and the tech LEF says USEMINSPACING OBS OFF, so DRT
+applies the table to obstructions / macro OBS at their drawn width.  A run of >= 7 tracks emitted as ONE rect (0.60 um for
+a PG run of 8) made DRT keep 0.5 um from it: 12 of the 19 granted tracks per 2.16-um period were unusable for long runs
+while GRT counted all 19 -> M8 guides DR could not realise (head_rp18_1112: DRT-0255 on hd_turn_a / hd_turn_b /
+hd_spn_wshim_rx / hd_spn_wshim_tx, 4.7k-83k DR violations, all on M8).  Die PG stripes themselves keep the
+width-dependent spacing (die_infra.pg_spacing: 0.04 below 0.49975 um, 0.5 / 1.0 for the wide PHY stripes).
   fix_abstract_lef(text, grant)          rewrite the LEF M8 OBS of a generated abstract to abstract_obs_rects
   lock_check(grant, P, guides=None)      LOCK: re-derive the die tracks from a later plan / die route; every die track
                                          that falls on a granted type track is a violation (the die event must route
@@ -48,6 +57,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 LAYER = "M8"
 WIRE_W = 0.040          # ASAP7 M8 WIDTH
 MIN_SP = 0.040          # ASAP7 M8 SPACING (parallel run, w < 0.5)
+WIDE_W = 0.49975        # ASAP7 M8 SPACINGTABLE width row from which a long parallel run needs 0.5 um (see NARROW SHAPES)
 SCHEMA = "ot.m8_grant.v1"
 CLOCK_NET_RE = re.compile(r"^(ck_|clk|ck\b|.*_clk$|.*clock)")
 RESET_NET_RE = re.compile(r"(rst|reset)")
@@ -94,7 +104,8 @@ def _blocked_by_band(P, tn, lo, hi, pad):
 
 
 def pg_tracks(P, tn, rects=None):
-    """{k} blocked by die PG M8 stripes over any instance of tn (min spacing kept)."""
+    """{k} blocked by die PG M8 stripes over any instance of tn (the stripe's width-dependent spacing kept:
+    die_infra.pg_spacing of its drawn width at a long parallel run, 0.04 um for the 0.48-um core stripes)."""
     import die_infra as DI
     if rects is None:
         rects = [r for r in DI.pg_rects(P, DI.pg_grid(P)) if r[1] == LAYER]
@@ -105,7 +116,7 @@ def pg_tracks(P, tn, rects=None):
             if a1 <= x0 or a0 >= x1 or b1 <= y0 or b0 >= y1:
                 continue
             t0, t1 = sorted((_type_y(P, part, max(b0, y0)), _type_y(P, part, min(b1, y1))))
-            out |= _blocked_by_band(P, tn, t0, t1, MIN_SP)
+            out |= _blocked_by_band(P, tn, t0, t1, max(MIN_SP, DI.pg_spacing(b1 - b0)))
     return out
 
 
@@ -227,28 +238,34 @@ def grant(P, tn, guides=None, ndr="4w", guide_sha=None, pg_rects=None):
     return g
 
 
-def obstruction_tcl(g):
-    """pdn.tcl lines: obstruct every run of die tracks on M8 (wire extent of the run)."""
-    w = g["outline_um"][0]
+def _track_rects(g, runs):
+    """one (x0, y0, x1, y1) per track of `runs` at wire width (NARROW SHAPES: never a merged >= 0.49975-um rect)."""
+    w, h = g["outline_um"]
     p, off = g["pitch_um"], g["offset_um"]
-    L = [f"# M8 GRANT {g['sha']} (tools/die_plan/m8_grant.py): the type routes M8 only on its {g['type_tracks']} of "
+    out = []
+    for k0, k1 in runs:
+        for k in range(k0, k1 + 1):
+            y0, y1 = max(0.0, off + k * p - WIRE_W / 2), min(h, off + k * p + WIRE_W / 2)
+            if y1 > y0:
+                out.append((0.0, y0, w, y1))
+    return out
+
+
+def obstruction_tcl(g):
+    """pdn.tcl lines: obstruct every die track on M8, one wire-width rect per track (NARROW SHAPES)."""
+    L =[f"# M8 GRANT {g['sha']} (tools/die_plan/m8_grant.py): the type routes M8 only on its {g['type_tracks']} of "
          f"{g['n_tracks']} tracks; die tracks (PG {g['pg_tracks']}, die reserve {g['die_reserve_tracks']}, die route "
          f"{g['die_route_tracks']}) are obstructed",
          "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]",
          f"set lay [[ord::get_db_tech] findLayer {g['layer']}]"]
-    h = g["outline_um"][1]
-    for k0, k1 in g["die_runs"]:
-        y0 = max(0.0, off + k0 * p - WIRE_W / 2)
-        y1 = min(h, off + k1 * p + WIRE_W / 2)
-        L.append("odb::dbObstruction_create $blk $lay " + " ".join(
-            f"[expr {{round({v:.4f}*$dbu)}}]" for v in (0.0, y0, w, y1)))
+    for r in _track_rects(g, g["die_runs"]):
+        L.append("odb::dbObstruction_create $blk $lay " + " ".join(f"[expr {{round({v:.4f}*$dbu)}}]" for v in r))
     return "\n".join(L) + "\n"
 
 
 def abstract_obs_rects(g):
-    w, h = g["outline_um"]
-    p, off = g["pitch_um"], g["offset_um"]
-    return [(0.0, max(0.0, off + k0 * p - WIRE_W / 2), w, min(h, off + k1 * p + WIRE_W / 2)) for k0, k1 in g["type_runs"]]
+    """the type's own (granted) tracks as abstract M8 OBS, one wire-width rect per track (NARROW SHAPES)."""
+    return _track_rects(g, g["type_runs"])
 
 
 def fix_abstract_lef(text, g):

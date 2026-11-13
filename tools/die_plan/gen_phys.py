@@ -4780,6 +4780,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
            "export MIN_ROUTING_LAYER = M2",
            f"export MAX_ROUTING_LAYER = {top}",
+           # HEAD-ROUTE-1 11-12: a kit with the leftover-M8 grant routes WITHOUT resistance-aware layer assignment (ORFS
+           # asap7 default ENABLE_RESISTANCE_AWARE=1).  M8 is the lowest-R layer the type sees (0.0084 vs M7 0.0125 ohm/um),
+           # so GRT promoted short nets onto the granted M8 and their M7 legs (head_rp18 hd_turn_a M7 212 mm vs 7 mm before
+           # the grant; hd_turn_b M8 demand 4284 -> 272 without it): via stacks through the dense land-ring / station
+           # columns, M7 PG columns and the fragmented M8 rows that DR cannot realise -> DRT-0255 on hd_turn_a / hd_turn_b /
+           # hd_spn_wshim_rx / hd_spn_wshim_tx.  M8 stays granted (GRT still uses it where M2-M7 congest).
+           *(["export ENABLE_RESISTANCE_AWARE = 0"] if m8g is not None else []),
            # KW-FIX-8 11-04 (COORD 16:5x, S81 GRT-0116 near misses): opt-in per row through wave item_env, off by default.
            # GRT overflow is not a sign-off gate; with this flag the kit continues to detail route and routed DRC decides.
            # The first two arguments are the ORFS GLOBAL_ROUTE_ARGS default, which this variable replaces.
