@@ -96,3 +96,6 @@
   u_d7_6 (7 reg) = 12 registers, then one net to every core reset pin of the tile (same structure in the base plan; each
   core has its own ot_rst_relay). So the bus-link exemption in cp_frame.py covers only that reset bit; its last hop is
   tile-wide in base and new alike (half-span sum about 1160 um base, 1260 um new). The planned rs relay station keeps 4 regs.
+- OPEN LIST (COORD ruling, event scope cut): "frame reset fan-out to R-REACH reset stations, next event". Not in this event.
+  The READY lists the reset net as the ONLY window-link exemption, with the hop table above, and says reach was judged on
+  the 3 single-type items (cl87f3ff59, cl8b686b3e, clac068e56) that share the pv layouts.
