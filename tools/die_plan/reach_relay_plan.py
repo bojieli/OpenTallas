@@ -29,8 +29,9 @@ import math
 import sys
 from pathlib import Path
 
-import schema as S
-import start_provider_plan as SP
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import schema as S  # noqa: E402
+import start_provider_plan as SP  # noqa: E402
 
 SITE_MAX = 395.0     # planned relay site reach (each segment)
 TRIGGER = 405.0      # an edge is relayed only when it fails the 405-um reach gate
