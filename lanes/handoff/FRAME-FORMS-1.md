@@ -31,3 +31,26 @@
 - OPEN: (1) 13 r0 items (cf 281x69, E/W windows, ft lanes) are seeded but cf has no site and node sites are short; (2) 2
   col_h10_r1 items (two bf groups) do not fit vertically (need 1430 of 1227) and need a variant; (3) all-type run, chain
   (G0/G0C, strict bind, latency), 2 proofs: not started.
+
+## 07:5x-08:xx state
+- Template fixes after the first runs (all in branch b74d4c6515): ROM signal pins are on the S face, so ROM columns abut at
+  3.0 um sideways (pitch 41.04, 0.108 grid) and keep a 19 um slot under each ROM; the tool wants abut (< 4.32) or >= 43.2
+  wherever >= 16 pins face a gap, so bn stands 46 um above the element, seq 43.2 below it, station | payload 43.2 apart.
+  core_place quirks handled in cp_frame.py / finalize.py: base outline overlaps 0.54 / 0.89 um; the type clock tap rode with a
+  core (restored to base 725.76, 613.44; it is free in the centre street); core taps set to base + core displacement.
+- RUNNING: Opus sub-agent FRAME-FORMS-1-VOL on epyc4 (scope: 132 pv types of col_h9_r2 x5, col_h10_r2 x4, col_h9_r1 x2):
+  all-type run + merge + finalize, added_tap_recentre, chain, G0/G0C, strict bind, lane latency, 2 private proofs
+  (col_h9_r2 clce45cab5, col_h9_r1 cl49d7a23e). It appends lines under "## VOL sub-agent" below.
+- r0 (13 items, 72 tiles) NOT in this event. Measured with the template as is (epyc4 work dir r0dev/, why0.py prints the
+  blocking rule): col_h9_r0: only two blockers. (a) cf (280.8 x 69.12, 1,170 N + 1,179 S pins) has no site: at its base
+  spot it collides with the E pair. (b) on p1-p3 the bf group may not move: ft0 bit sites stand at (1142.6, 980.6+) and
+  (473-475, 1150+) beside the base bf cores. Variant that keeps bf at its base y 950.4: row street channel 34.56 -> 21.6
+  (S street 129.6), M0 47.52. cf site in the E zone beside bf (x 1144.37, abutted to the E half-group), 43.2 streets N and S,
+  clear of the E-face window span: p1-p3 (window y 740-980) cf y 984.96, node rows y 864 and 1097.3 (6 nodes) + 6 row-street
+  end sites = 12; p4-p6 (window y 981-1221) cf y 885.6, only 3 node sites above it + 6 = 9 of 12: three nodes still need a
+  home. W pair stands 17.28 off the W face inside the W window span (xo_o0 1104 bits): face_street; moving the W unit +25.92
+  leaves a 33 um centre street, so the W window rows need their own answer. col_h10_r0 (bf in the middle, 6 ROM groups, 4
+  stations): the template applies mechanically but leaves 23 street + 2 face_street + 4 outline_street (bn / t3 at the N face
+  under the N window, second bfp group c5/s5 and t3 unassigned).
+- col_h10_r1 (2 items, 12 tiles): two bf groups + two rows need 1430 um of 1227: no fit; needs a variant without the bf ROM
+  band (ROMs beside the bf groups) or a different unit order.
