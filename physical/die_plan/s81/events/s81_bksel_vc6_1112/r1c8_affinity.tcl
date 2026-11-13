@@ -1,3 +1,4 @@
+uplevel #0 {
 # Same-cycle control/source/capture affinity; executes after GPL, before DPL/CTS.
 # Each 8-bit H2 subgroup is compact; its rpd/mbd reach is on the preceding full-cycle stage.
 set rc_blk [ord::get_db_block]
@@ -50,3 +51,5 @@ dict for {key qs} $rc_q {
 close $rc_f
 puts "OT_R1C8_AFFINITY groups=$rc_groups payload_flops=$rc_qn control_flops_latches=$rc_cn cycle_delta=0"
 if {$rc_groups != 88 || $rc_qn != 592 || $rc_cn < 352} {error "R1C8 affinity: incomplete expected groups/payload/control"}
+
+}
