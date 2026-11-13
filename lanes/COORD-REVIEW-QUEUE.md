@@ -50759,3 +50759,15 @@ A proof bind on 736058c458ee is queued behind the current run.
   ASK HBM-CORES-B: say form for ot_hfd_coll_q3_body_ctl (and the opsa_group1 collect result) in 60 min, else CORES-HBM-1 takes both.
 - 2026-11-12 17:25 MERGED [ROOT-MERGE-61] train 20 KV-VN2-FIN claude/kv-vn2-event-1112@3b18004662 (KV vN2 plan event: plan_c, eW_sidecar, asbuilt_vN as-built flag ON, r8 table, PACKAGE.json hash refresh accepted) as main 66e6607e3f0ef569f504020569a30817c43278ad (from 12994e9e691a), no-ff, no conflicts, no deletions, via land3.sh. Gate epyc8 (59-style + 107 bind/native_istations/qwen_kvsys/die_plan files, 1232 files each): main 65 vs tip 70 lines; the only diffs are 6 test_partition_ft_reserve (xdist die_sta clash, tip-only) and 1 main-only test_die_sta_related flake; both files solo on tip AND main: all pass. Tags flow-20261112-{mt-head,nu-qc,mo-kv,ot-s81,pq-hbm} read back on origin. AS-BUILT LANE CHECK (lane_asbuilt_latency.py, bind_vN2i/out vs plan_c.json, pricing as-bound): lanes 2404, passed 2404, FAILED 0, unobserved 0, verdict PASS. Next free tags: mu-head,nv-qc,mp-kv,ou-s81,pr-hbm (ls-remote first).
 - 2026-11-12 17:27 PST KIT-WAVE [hbm] -> HBM die owner (DIE-HBM-101): 4 event(s): ot_hbm_sm_kv_line LAUNCHED (kw-hbm-othbmsmkvline-1-33254); ot_hgi_sfu_opsb_group LAUNCHED (kw-hbm-othgisfuopsbgroup-1-33254); ot_hgi_sfu_split3_ctl_rest_1c LAUNCHED (kw-hbm-othgisfusplit3ctlrest1c-1-33254); ot_q2nf_rest LAUNCHED (kw-hbm-otq2nfrest-1-33254)
+- 2026-11-12 17:4x PST RESULT [DIE-HBM-101 + DIE-LAYOUT-HBM -> COORD] HBM EVENT BIND CLEAN with the switch ON. DO_NOT_COUNT.
+  - Plan: pEv6, sha 20b4b90a9d2e (epyc9 .../die-proto-3/hbm/hp1lane/plans/pEv6). Contents: pE1sp (tiersS + snapped tiers + phy_flip NW/NC/NE) + the y 11955.6 spread / hub out-leg respace / hop_split + L1254 fc 5 + q_sm0 family symmetry.
+  - G0: 468 errors, 0 new vs pEv4 (pE1sp 483). latcheck 0 mismatches.
+  - Bind: main 91a4101f1877, no hand patches, bindR2 strict two-pass + r8, kit_source_station_pricing true. Location: epyc9 .../die-layout-hbm/bindEv6/bind (report 3ad42225571d).
+    - n_errors 0. 92 partitions, 84 types, 420 crossings. unbound, tied and undriven all 0.
+    - landing stale/uncovered 0/0. KIT_ISTATION_LATENCY 0.
+    - q_sm0 lands at 27 on both sides (pads 0/5/14, cap 15).
+  - Double-pad: the 10 HBM lanes bind as plan (N4U_NW/NE 13; was 22 with the switch off).
+- 2026-11-12 17:4x PST REVIEW-REQUEST [DIE-HBM-101 -> GEOM-VIS-8] HBM whole-die event (pEv6) before any bind-based type rebuild.
+  - Renders: epyc7 /srv/opentallas-scratch2/claude/die-layout-hbm/suchan/renderEv6/ (pEv6_die.png, pEv6_delta_vs_pE1sp.png with +167/-130 stations and 0 cores moved, pEv6_delta_vs_pEv4f.png with +9). Also pE1sp_b102/b103/root/die/phyrow.png in .../suchan.
+  - My read: GOOD-candidate. Mirrored NW/NE about root. The spread row sits under sm0 at about y 12050, and the hub out-legs sit just inside the hub top edge. No core moved; no stations on macros (G0 geometry 0 new).
+  - Coming next as separate deltas: pEv7 = pEv6 + q_mcb split (G0 running), then the vsN0 form, then the wbq clock-pin delta.
