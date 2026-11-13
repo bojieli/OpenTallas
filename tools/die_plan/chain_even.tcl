@@ -73,7 +73,7 @@ proc ce_loc {o} { if {[string match "*dbBTerm*" $o]} { return [ce_ctr [$o getBBo
 # one chain from a head flop
 proc ce_chain {head re} {
   global ce_st
-  set seq [list $head]; set segb {}; set cur $head; set tail {}
+  set seq [list $head]; set segb {}; set cur $head; set tail {}; set tail_loads {}
   while {1} {
     set nets [ce_out $cur]; if {![llength $nets]} break
     lassign [ce_fwd [lindex $nets 0]] bufs loads
@@ -88,6 +88,7 @@ proc ce_chain {head re} {
     set sx 0; set sy 0; set n 0
     foreach l $loads { lassign [ce_loc $l] x y; incr sx $x; incr sy $y; incr n }
     if {$n} { set tail [list [expr {$sx/$n}] [expr {$sy/$n}]] }
+    set tail_loads $loads
     lappend segb $bufs
     break
   }
@@ -101,6 +102,16 @@ proc ce_chain {head re} {
     foreach s [lrange $seq 1 end] { lassign [ce_ctr [$s getBBox]] sx2 sy2; set worst [expr {max($worst, abs($sx2-$px)+abs($sy2-$py))}]; set px $sx2; set py $sy2 }
     set worst [expr {max($worst, abs($tx-$px)+abs($ty-$py))}]
     if {$worst <= $ce_min_hop} { return 0 }
+    # ... and never push the farthest load of the last stage farther out (a fan-out bit with loads spread over the
+    # type is a copy problem, R-REACH-1, not a chain: S81 leaf t21 lpad q[0], 10 loads, 700 -> 827 um when moved)
+    lassign [ce_at $hx $hy $tx $ty [expr {double([llength $seq]-1)/$hops}]] nx ny
+    set far_old 0; set far_new 0
+    foreach l $tail_loads {
+      lassign [ce_loc $l] lx ly
+      set far_old [expr {max($far_old, abs($lx-$px)+abs($ly-$py))}]
+      set far_new [expr {max($far_new, abs($lx-$nx)+abs($ly-$ny))}]
+    }
+    if {$far_new > $far_old && $far_new > $ce_min_hop} { return 0 }
   }
   set old 0; set hp {}
   for {set j 1} {$j < [llength $seq]} {incr j} {
