@@ -1,24 +1,23 @@
-# CLEAN-2 lane handoff (updated 2026-11-12 19:3x PST)
+# CLEAN-2 lane handoff (updated 2026-11-12 19:1x PST)
 
 ## 1 Scope
-Fleet disk cleanup rules (COORD task 11-12): why ot-autoclean frees ~0 GB; fix on branch; DRY-RUN every host; RESULT to COORD; STOP for approval before any real delete/deploy. After approval: export signed first, deploy per host as a new inode, verify freed GB.
+Fleet disk cleanup rules (COORD task 11-12). Dry runs done and reviewed. COORD APPROVED (19:0x) real use of classes a and c under --live-refs-only --aggressive (unsigned superseded, failed, cancelled/withdrawn, trims; signed only with verified ARCHIVED.json re-checked at delete). Stop + post on any ALERT, any path under closed_archive or /archive, or a symlinked target.
 
-## 2 Worktree / branch
-localhost:/home/ubuntu/wt/clean2 (sparse clone, tools/fleet only), branch claude/clean-2-1112 off origin/main 12994e9e69, HEAD 47966e1cca pushed (f5c127da65 rules, ad216a064f bind-ref fix, 47966e1cca COORD signed-export + open READY/ASK rules). NOT merged, NOT deployed.
-Change: ot-autoclean `--live-refs-only` (host flag) + hub reduce_live() (additive kitwave.json fields live_attempts/live_keep/live_keep_why) + snapshot protected_stale.txt + wt-reaper `--tracked-ok`; `--wt-reaper-state`, `--wt-reaper-args=` for dry runs. Tests: test_ot_autoclean_live.py 21 OK; existing suites OK (auto 58, unknown 11, dx 6, stub 17, ot_autoclean 40, wt_reaper, wt_reaper_generic 4).
+## 2 Branch
+localhost:/home/ubuntu/wt/clean2 (sparse clone), claude/clean-2-1112@cf818e05ae, pushed. READY posted 19:1x (merge lane train 24). Merges clean on main (main has no tools/fleet change since base).
 
-## 3 Running jobs (dry only, nothing deletes)
-v3 19:3x: dry A finished on all 8 hosts (logs ~/.local/state/ot-autoclean-clean2/dryA.log, manifests .../manifests); dry B3 (aggressive + COORD 11-12 rules, snapshot3 with queue_open.json 516 paths) running: in/clean2_dryB3.sh, log dryB3.log, manifests .../aggr3/manifests. Old dryB results (aggr/) are superseded, ignore. Summary script: scratchpad clean2/summ3.py <host> (copy to host /tmp, run python3 -I).
-COORD 11-12 asks: RESULT must split class a into signed (needs export first: export GB + target agidock:/archive/opentallas-signed-1106/<host>/<path>), unsigned-superseded, failed; open READY/ASK paths kept; confirmed to COORD that localhost 103 GB was dry (queue post 18:1x).
-Old text:
-Every host (intel2 intel1 epyc2 epyc4 epyc7 epyc8 epyc9 localhost): ~/.local/share/ot-autoclean-clean2/in/clean2_dry.sh (dry B: env args minus --apply + --aggressive --live-refs-only, no wt-reaper, state ~/.local/state/ot-autoclean-clean2/aggr, log dryB.log) then clean2_dryA.sh (dry A: env args minus --apply + --live-refs-only, wt-reaper dry --no-rescue with its own state dir; log ~/.local/state/ot-autoclean-clean2/dryA.log). Both end with DONE. Snapshot = copy of the host's deployed snapshot + kitwave.json from the new reducer (run read-only on intel2 17:32) + protected_stale.txt (1755 paths).
-Deployed timers untouched (md5 96d3ada9, env non-aggressive --classes abc).
+## 3 Approved steps (do in order)
+1. DONE: READY posted.
+2. After MERGED (check: git -C ~/wt/clean2 fetch origin main; git branch -r --contains cf818e05ae): deploy main's tools/fleet/ot-autoclean.py + wt-reaper.py on all 8 hosts KW-FIX-46 way: systemctl --user stop ot-autoclean.timer (localhost also ot-autoclean-push.timer), cp -p live file to .bak-clean2-1112, copy main file to .new in same dir, mv over (new inode), md5 == main, start timer. Localhost FIRST (its hourly push at :10 copies tools + builds the snapshot; snapshot needs live_attempts/live_keep, queue_open.json, protected_stale.txt for --live-refs-only, else the host refuses = safe).
+3. Env: add " --live-refs-only --aggressive" to ~/.config/ot-autoclean-auto/env OT_AUTOCLEAN_ARGS (backup env.bak-clean2-1112); keep --classes abc (no d). Then run the push once (systemctl --user start ot-autoclean-push.service on localhost) so snapshots carry the new fields.
+4. Real pass epyc4 first (scratch2 96%): df before; systemctl --user start ot-autoclean.service; df after; check manifest: 0 ALERT, no /archive or closed_archive paths, no symlinked targets. Then other hosts. Leave hourly timers on.
+5. Signed export backlog: the export already runs: DISK-1111's epyc4 drive pid 467773 (log scratchpad kw46/drive_apply_epyc4_s2.log, ARCHIVED ... sha256 all match lines; FAIL lines are mostly epyc4 sshd resets, retried) and the hourly localhost drive (drive --no-run --apply --commit). epyc4 dry count: 1805 signed units in held attempts, 1669 already ARCHIVED.json. Do not kill those drives.
+6. RESULT to COORD: GB freed per host (df before/after + manifest DELETED sums), then STOP.
 
-## 4 NEXT
-1. When DONE everywhere: per host GB WOULD by class + 5 sample paths per class (manifests in ~/.local/state/ot-autoclean-clean2/manifests and .../aggr/manifests; wt-reaper last-run in .../wt-reaper/last-run.tsv) -> RESULT to COORD via intel2 coord-commit.sh.
-2. WAIT for COORD approval. Then: READY branch for merge; after merge: archive signed (drive --apply archive step) first; deploy tools per host as new inode (cp to tmp + mv); add --live-refs-only to env; verify freed GB with df before/after.
+## 4 Dry-run evidence
+Per host results: scratchpad clean2/res-<host>.txt (summ3.py). Dry state on hosts: ~/.local/state/ot-autoclean-clean2 (A), .../aggr3 (B3 aggressive). Reaper-only dry rerun with marker fix: in/clean2_wt.sh, log wt2.log (running 19:0x).
 
 ## 5 Gotchas
-- argparse: pass --wt-reaper-args=--no-rescue (with =).
-- the drive's push copies tools with cp onto the existing file (same inode): deploy must be via the drive's script = merged main.
-- localhost ~/coord is a stale clone; hub is intel2.
+- pgrep -f inside an ssh command string matches the ssh bash itself (I killed my own ssh shell once): put pgrep in a script file.
+- argparse: --wt-reaper-args=--no-rescue (with =); empty --protected-dbs-repo needs '=' when replayed.
+- localhost ~/coord is current (19:01) despite FLEET-2's note.
