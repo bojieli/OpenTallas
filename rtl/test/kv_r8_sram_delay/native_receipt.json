@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.r8_sram_native.v1",
+ "type": "PCv3_private_backend_vehicle",
+ "banks": [
+  {
+   "W": 291,
+   "DMAX": 24,
+   "CW": 5,
+   "BASE": 0,
+   "module": "ot_dp_dly_cnt_sram",
+   "site": "strap_r8pad_hsl3_fi",
+   "inst": "u_bank",
+   "d": "d",
+   "q": "q"
+  }
+ ],
+ "hashes": {
+  "module": "8432571b47468098f683d898da036067e1bd49b608c5e8e17ad867a1921de10f",
+  "macro": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2"
+ },
+ "backend_sha256": "8bf94710f6a73d4011cc0822448c3537e54b5f4f881d1966382dafc908001bc7",
+ "startup": "all arbitrary binary states; ordinary uninitialized 4-state X is outside contract",
+ "reset": "none; warm reset elsewhere preserves all-bit history",
+ "rows": [
+  {
+   "kind": "nominal",
+   "seed": 1,
+   "rc": 0,
+   "pass_": true
+  },
+  {
+   "kind": "nominal",
+   "seed": 17,
+   "rc": 0,
+   "pass_": true
+  },
+  {
+   "kind": "nominal",
+   "seed": 93,
+   "rc": 0,
+   "pass_": true
+  },
+  {
+   "kind": "tie_mutant",
+   "seed": 1,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "tie_mutant",
+   "seed": 17,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "tie_mutant",
+   "seed": 93,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "age_mutant",
+   "seed": 1,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "age_mutant",
+   "seed": 17,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "age_mutant",
+   "seed": 93,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "count_mutant",
+   "seed": 1,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "count_mutant",
+   "seed": 17,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "count_mutant",
+   "seed": 93,
+   "rc": 1,
+   "pass_": true
+  },
+  {
+   "kind": "all_binary_convergence",
+   "DMAX": 24,
+   "CW": 5,
+   "BASE": 0,
+   "steps": 36,
+   "rc": 0,
+   "pass_": true,
+   "cached_from": "/srv/opentallas-scratch2/claude/dkv100/pc_sram/src/native_backend/receipt.json",
+   "cache_sha256": "9cd80c9cc68094bb3b14fe7deeb7e79694b48a6eb3f28c399dc999c416f1b52f"
+  }
+ ],
+ "verdict": "PASS_BINARY_NATIVE",
+ "selected_variants": [
+  {
+   "gold": {
+    "strap_r8pad_hsl3_fi": 0
+   },
+   "ties": {
+    "strap_r8pad_hsl3_fi": 0
+   }
+  },
+  {
+   "gold": {
+    "strap_r8pad_hsl3_fi": 4
+   },
+   "ties": {
+    "strap_r8pad_hsl3_fi": 4
+   }
+  },
+  {
+   "gold": {
+    "strap_r8pad_hsl3_fi": 19
+   },
+   "ties": {
+    "strap_r8pad_hsl3_fi": 19
+   }
+  },
+  {
+   "gold": {
+    "strap_r8pad_hsl3_fi": 24
+   },
+   "ties": {
+    "strap_r8pad_hsl3_fi": 24
+   }
+  }
+ ],
+ "theorem": "For any later time choose the state 36 cycles earlier as the arbitrary initial binary state. The universal convergence proof applies again because count is static and the DUT has no reset or absolute-time state. Thus the proved delay holds at every later cycle; no DUT initialization or invalid-payload masking is assumed. All stored and read bits are independent in the pinned source."
+}

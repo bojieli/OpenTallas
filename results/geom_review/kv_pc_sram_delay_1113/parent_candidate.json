@@ -1,0 +1,81 @@
+{
+ "parent": "ns_kv100_out7/plan2/plan_c.json:kv3_pc_v3",
+ "envelope": [
+  250.56,
+  864,
+  366.336,
+  984.96
+ ],
+ "macros": [
+  {
+   "bank": 0,
+   "origin_um": [
+    267.84,
+    881.28
+   ],
+   "outline_um": [
+    31.968,
+    17.28
+   ],
+   "orient": "MY"
+  },
+  {
+   "bank": 1,
+   "origin_um": [
+    317.088,
+    881.28
+   ],
+   "outline_um": [
+    31.968,
+    17.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "bank": 2,
+   "origin_um": [
+    267.84,
+    915.84
+   ],
+   "outline_um": [
+    31.968,
+    17.28
+   ],
+   "orient": "MY"
+  },
+  {
+   "bank": 3,
+   "origin_um": [
+    317.088,
+    915.84
+   ],
+   "outline_um": [
+    31.968,
+    17.28
+   ],
+   "orient": "R0"
+  },
+  {
+   "bank": 4,
+   "origin_um": [
+    267.84,
+    950.4
+   ],
+   "outline_um": [
+    31.968,
+    17.28
+   ],
+   "orient": "MY"
+  }
+ ],
+ "hard_obstacle_collisions": [],
+ "macro_area_um2": 2762.0352,
+ "signal_pin_faces": "all signals are west in LEF R0; MY left column faces the 17.28um center corridor",
+ "limits": [
+  "not inserted in plan",
+  "bank netlist instance paths pending actualbind",
+  "standardcell mapped area/finalplacement unknown",
+  "wideprefix/edgeFF regions and all <=405um reach need actualnet endpoints",
+  "clock/PG/pindensity/STA not checked"
+ ]
+}
