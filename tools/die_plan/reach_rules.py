@@ -34,8 +34,8 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         nearer tap exists, never a tap that no longer exists.  FIX: re-point source_clock_port to
                         the nearest tap (0 cycles, same clock family).
 
-G0: check.py calls check_plan(); a finding is an ERROR (check "r_reach") unless budgets.r_reach is "warn"; rule 3 is
-always a warning.  The fix is idempotent: a fixed plan run again changes nothing.
+G0: check.py calls check_plan(); a finding is a WARNING (check "r_reach") by default; budgets.r_reach "error" makes it
+an ERROR (opt-in, REACH-FIN-2 11-13: defaults of existing plans preserved), "off" skips; rule 3 is always a warning.  The fix is idempotent: a fixed plan run again changes nothing.
 """
 import argparse
 import copy
@@ -762,9 +762,9 @@ def plan_findings(P, rx=None, rules=RULES):
 
 
 def check_plan(P, R, max_msgs=40):
-    """G0 entry (check.py run): ERROR per finding under check "r_reach" (budgets.r_reach "warn" -> warnings; "off"
-    skips); rule 3 is always a warning.  -> summary dict"""
-    mode = P.budgets.get("r_reach", "error")
+    """G0 entry (check.py run): WARNING per finding under check "r_reach" by default (budgets.r_reach "error" -> ERROR,
+    opt-in; "off" skips); rule 3 is always a warning.  -> summary dict"""
+    mode = P.budgets.get("r_reach", "warn")
     if mode == "off":
         return dict(mode="off")
     rows, fs = plan_findings(P)

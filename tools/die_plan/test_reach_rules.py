@@ -207,6 +207,9 @@ def test_rule2_barrier_needs_homes_then_stations():
 def test_g0_hook_errors_and_budget_modes():
     import check as CK
     p = _start_plan()
+    Rd, sd = CK.run(copy.deepcopy(p))       # default: warnings only (existing plans keep their G0 verdict)
+    assert sd["r_reach"]["mode"] == "warn" and not [e for e in Rd.errors() if e["check"] == "r_reach"]
+    p["budgets"]["r_reach"] = "error"
     R, summ = CK.run(copy.deepcopy(p))
     msgs = [m for c, m, *_ in [(e["check"], e["msg"]) for e in R.errors()] if c == "r_reach"]
     assert any("R-REACH-1 start_reach" in m for m in msgs) and summ["r_reach"]["mode"] == "error"
@@ -252,5 +255,6 @@ def test_rule5_default_even_chain_config():
     tcl = (HERE / "chain_even.tcl").read_text()
     for frag in ("::ot_chain_min_hop_um", "::ot_chain_skip_sited", "ot_face_flops.txt", "if {$worst <= $ce_min_hop} { return 0 }"):
         assert frag in tcl
-    # a type with its own chain_even key keeps it; the plan opt-out is a budget
+    # opt-in by budget (existing kits unchanged); a type with its own chain_even key keeps it
+    assert 'P.budgets.get("r_reach_even", False)' in (HERE / "gen_phys.py").read_text()
     assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] == {"type": "boolean"}
