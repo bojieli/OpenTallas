@@ -23004,7 +23004,8 @@
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
    "hold_items": {
     "hd_lep0N": "KIT-OPS-1 2026-11-12 19:57 (COORD 17:19 rp18 ruling): lep0N = window-only re-sign of the signed build, not a wave rebuild; the rp18 lep0N block also re-places its SRAMs vs the wave's g5p plan, so a wave row would be a full rebuild. Was: KW-FIX-45 11-11 (COORD ruling HEAD cut): hd_lep0N lepB+S03 route_supply 1.68, KIT launch CONDITIONAL on the post-cut lep0N GRT0 check (HEAD-94)",
-    "hd_ctl": "KW-FIX-45 11-11 (HEAD-94): hd_ctl FAIL rebuild is a die-owner hand launch (claude/head-94-ctl-1111@7c501990c29f needs COORD approval + merge; ZLP hold hook not wired in the wave); not in the TX batch"
+    "hd_ctl": "KW-FIX-45 11-11 (HEAD-94): hd_ctl FAIL rebuild is a die-owner hand launch (claude/head-94-ctl-1111@7c501990c29f needs COORD approval + merge; ZLP hold hook not wired in the wave); not in the TX batch",
+    "hd_tile": "DIEVIEW-F1 HEAD-97 2026-11-13 05:59 (COORD 06:0x, lanes/DIEVIEW-HEAD-1113.md): do NOT relaunch hd_tile unchanged; DRT-0255 a4b2265f9999 is a symptom of the form (W->E i/o 565-bit window over elemB, relay column/taps in the elemA N-S street). New form (R-CLOCK tap affinity/split/windows + R-STREET relay column to the E-W street + R-REACH station across elemB) in one HEAD event on rp19p; adopt after the freeze. Release: HEAD die owner."
    },
    "retry_fix": {
     "hd_spn_eshim_tx@1": "src wt/kw-fix-3-headsrc: 11 results/ bin JSONs absent in dh55/src_l48h (gen FileNotFound); kit inputs change",
