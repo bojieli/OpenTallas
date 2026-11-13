@@ -94,6 +94,38 @@ class HubSync(unittest.TestCase):
         self.assertTrue((self.hub / "autopilot/HUB-SYNC-OK").is_file())
         self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
 
+    def test_dirty_lane_handoff_is_an_append_log(self):
+        # COORD-COMMIT-SPEED-1 11-13: lanes/handoff/<LANE>.md appended in the hub tree made every sync FAIL 07:05-08:22
+        self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
+        (self.other / "lanes/handoff").mkdir(parents=True, exist_ok=True)
+        (self.other / "lanes/handoff/L-1.md").write_text("l1\n")
+        self.git(self.other, "add", "lanes/handoff/L-1.md")
+        self.git(self.other, "commit", "-qm", "handoff")
+        self.git(self.other, "push", "-q", "origin", B)
+        self.assertEqual(self.sync().returncode, 0)
+        self.append(self.hub, "lanes/handoff/L-1.md", "hub lane note")
+        self.remote_commit("lanes/handoff/L-1.md", "remote lane note")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        got = self.remote_file("lanes/handoff/L-1.md").splitlines()
+        for line in ("l1", "hub lane note", "remote lane note"):
+            self.assertEqual(got.count(line), 1, got)
+        self.assertFalse([l for l in got if l.startswith(("<<<<<<<", "=======", ">>>>>>>"))], got)
+
+    def test_deeper_handoff_path_is_not_an_append_log(self):
+        self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
+        (self.other / "lanes/handoff/sub").mkdir(parents=True, exist_ok=True)
+        (self.other / "lanes/handoff/sub/Y.md").write_text("y1\n")
+        self.git(self.other, "add", "lanes/handoff/sub/Y.md")
+        self.git(self.other, "commit", "-qm", "deep")
+        self.git(self.other, "push", "-q", "origin", B)
+        self.assertEqual(self.sync().returncode, 0)
+        self.append(self.hub, "lanes/handoff/sub/Y.md", "edit")
+        r = self.sync()
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("lanes/handoff/sub/Y.md", (self.hub / "autopilot/HUB-SYNC-FAILED").read_text())
+
     def test_clean_hub_fast_forwards(self):
         self.remote_commit("lanes/X.md", "x2")
         r = self.sync()
