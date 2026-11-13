@@ -149,14 +149,21 @@ def leaf_defaults(slice_txt):
 
 
 def kv_leaf_depths(w3_txt):
-    """{kv_leaf type suffix: {CS_<C>_D: depth}} from the slice_w3 bind: .LF_CS_<C>_D(20'h...) nibble k is the depth of leaf
-    lf[k]; the comment on that instance names which kv_leaf type sits at lf[k] (lf[1] = ot_s81sl_kv_leaf__t3 ...)."""
-    nib = {c: v for c, v in re.findall(r"\.LF_CS_(\w+?)_D\(20'h([0-9a-fA-F]+)\)", w3_txt)}
-    at = {int(k): t for k, t in re.findall(r"lf\[(\d)\] = (?:ot_s81sl_kv_leaf)?__(t\d+)", w3_txt)}
-    out = {}
-    for k, t in at.items():
-        out[t] = {f"CS_{c}_D": int(v.zfill(5)[::-1][k], 16) for c, v in nib.items()}
-    return out
+    """{kv_leaf type suffix: {CS_<C>_D: depth}} from the slice_w3 bind: LF_CS_<C>_D nibble k is the depth of leaf lf[k]; the
+    comment on the slice instance names which kv_leaf type sits at lf[k] (lf[1] = ot_s81sl_kv_leaf__t3 ...).
+    Depths come from the module that holds that commented instance: its parameter defaults (LF-CS-FWD form,
+    parameter [19:0] LF_CS_<C>_D = 20'h...), overridden by literal instance overrides (.LF_CS_<C>_D(20'h...), the older form)."""
+    lf_rx = r"lf\[(\d)\] = (?:ot_s81sl_kv_leaf)?__(t\d+)"
+    mods = re.findall(r"^\s*module\s+\w+.*?^\s*endmodule\b", w3_txt, re.S | re.M)
+    body = next((m for m in mods if re.search(lf_rx, m)), w3_txt)
+
+    def val(base, digits):
+        return int(digits.replace("_", ""), 16 if base.lower() == "h" else 10)
+    nib = {c: val(b, v) for c, b, v in
+           re.findall(r"\bparameter\s*\[19:0\]\s*LF_CS_(\w+?)_D\s*=\s*20'([hdHD])([0-9a-fA-F_]+)", body)}
+    nib.update({c: val(b, v) for c, b, v in re.findall(r"\.LF_CS_(\w+?)_D\(\s*20'([hdHD])([0-9a-fA-F_]+)\s*\)", body)})
+    at = {int(k): t for k, t in re.findall(lf_rx, body)}
+    return {t: {f"CS_{c}_D": (v >> (4 * k)) & 0xF for c, v in nib.items()} for k, t in at.items()}
 
 
 def bound_depths(kit, defaults, bound_txt=None):
