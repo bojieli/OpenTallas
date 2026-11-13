@@ -50867,3 +50867,23 @@ FAILED [AUTOPILOT e0457be87375] 2026-11-12 17:32:14 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-12 19:27 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-98): 2 event(s): kv3_hroot PREFLIGHT-ADVISORY clock_pin_geometry 86 (landing_contract.json: clock fclk_in_ft0_i on M7, not M8); kv3_hroot AUTO-GEOM PASS, ROUTE held: WAIT-VISUAL: place done; the ISSUES verdict on attempt 1 rated an earlier build of another or unknown form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md
 - 2026-11-12 19:27 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-94): 2 event(s): hd_spn_end AUTO-GEOM PASS, ROUTE held: WAIT-FORM: visual verdict ISSUES for this attempt; the type relaunches when its form fingerprint changes; hd_spn AUTO-GEOM PASS, ROUTE held: WAIT-FORM: visual verdict ISSUES for this attempt; the type relaunches when its form fingerprint changes
 - 2026-11-12 19:29:36 PST AUTO-RESIGN [AUTOPILOT -> COORD, die owners] hbm/hnx_rp3h_tl RECORDED flow-20261112-ps-hbm TT 64.54 FF 1.92 LEC EQUIVALENT, epyc2:/srv/opentallas-scratch3/claude/auto-resign/hbm/hnx_rp3h_tl__flow-20261112-ps-hbm__2be808e4_a11
+- 2026-11-12 20:0x PST READY [DIE-HBM-101 -> COORD] HBM EVENT (scope-cut rule 17:0x). DO_NOT_COUNT.
+  - PLAN pEv10, sha b334c92f7a84 (epyc9 /srv/opentallas-scratch2/claude/die-proto-3/hbm/hp1lane/plans/pEv10; builders hbm101/mk_ev{,6,8,9,10}.sh).
+    Contents: pE1sp (tiersS, snapped tiers, phy_flip NW/NC/NE) + y 11955.6 spread / hub out-leg respace / hop_split + L1254 fc 5 + q_sm0 family symmetry + LATCHECK-1 pricing of 118 UNPRICED_KIT_STATIONS lanes (fixed_cycles = src + dst kit stations, table regen) + as-built NW/NE symmetry (NW L8300 42->49 = L8300m, hub kit chains 15 vs 22; NW L8301 28->29).
+  - GATES, all PASS:
+    - G0: 468, 0 new vs pEv6/pEv4 (pE1sp 483).
+    - latcheck (native_istations model): 0 mismatches. reset: 0 reset-equation rows.
+    - BIND bindEv10 (main 12994e9e691a, no hand patches, bindR2 strict two-pass + r8 + land_r8, kit_source_station_pricing TRUE): n_errors 0, 92 partitions, 84 types, 420 crossings, unbound/tied/undriven/multiply 0; landing stale/uncovered 0/0. Location epyc9 .../hp1lane/hbm101/bindEv10/bind (report 9558fe37457a, r8 landing 91bded397f4d).
+    - LATCHECK-1 CLI tools/die_plan/lane_asbuilt_latency.py: 420/420 PASS, 0 FAIL, 0 UNOBSERVED. bindEv6 had 118 FAIL; the intermediate bindEv8 (pricing only) had 420 PASS but 5 q_sm0/q_sm1 strap/type-split errors, fixed by the symmetry above.
+    - Static schedule reads the table: the bind param_regen hook regenerates the consumer READ_RETURN/WRITE_RETURN parameters from the bound latency (23 instances REGEN, 0 consumer errors), and bound = table on every lane (LANE_ASBUILT).
+  - OPEN LIST (non-blocking per scope cut):
+    1. TIMING-CLASS-1 (1) SKEW q_spb1/vsN1/vsN2: clock the lockup latch from the receiving tap. FIRST item of the next event (not a small plan field in this one).
+    2. TIMING-CLASS-1 (2) ot_hidx_s3_q ripple adder (prefix adder or +1 stage); (3) hnx_fused_lane_c SRAM wdata drive + SRAM clock 99 ps early (register bank at the SRAM pins / rotate + balance); (4) splitstrap -36/-68.
+    3. GEOM-VIS-10 BAD forms q_su30/q_su20/q_su00/q_spu1 (cell cap / pin access): new forms.
+    4. q_mcb split (pEv7 line, G0 0 new): RTL + bind for q_mcb_{ne,nw}_s0..s3 (empty s0 like q_mca); rebase on pEv10.
+    5. vsN0 form (vsn0_form.py; K1/K2/K3 to KW-FIX, K4 dchn re-pin to HBM-CORES).
+    6. OPSA1 group1 SREG=1: BAD STRUCTURAL (GRT overflow 44454 die-wide); needs a re-shape or split form (HBM-CORES-B).
+    7. wbq g0/g1 v8 (HBM-CORES-C): both LOCAL_PASS_NEEDS_PARENT after a scoped near-miss ECO (setup +68.5/+87.5, drv 0, drc 0; hold 1085 port-launched endpoints per kit = NEEDS_PARENT, die clock). Routed LEC pending. Parent cycle change: g0 ingress +1 fifo_clk (RPIPE), ring depth 4 -> 5. Also wbq clk52 clock-entry delta (branch claude/hbm-cores-c-wbq-clkpins-1112 @3d6a8faf0f) to fold.
+    8. Advisory, unchanged since bindEv4: 15 generic R8 group messages at su taps (local vs near returns differ, e.g. [34,55]). The tool marks them advisory for dies with pads + hook; consumer params are regenerated per instance. Confirm with the HBM token sim in the next event.
+    9. Old NW/NE landing asymmetries q_sm3 (L8303/L8304/L8316, 1-2 cycles; strap sites within cap, bound clean).
+    10. Fabric run on pEv10 + rowm8/M6 seam checks; GEOM-VIS-8 whole-die verdict for the event (request filed with the pEv6 renders; the pEv10 delta adds only the 9+8 symmetry stations).
