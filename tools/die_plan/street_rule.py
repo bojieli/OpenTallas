@@ -615,13 +615,26 @@ def column_boxes(t, pin_regs=None):
         if kind != "station":
             point([x, y])
 
+    # Canonical actual CS bank sites are lower-left allocations, not point
+    # columns. Their full footprint can cross a strip boundary even when the
+    # anchor is outside; do not expand them to the generic point-grid halo.
+    if (t.get("clock") or {}).get("soft_reg_banks"):
+        try:
+            import soft_reg_banks
+            for bank in soft_reg_banks.validated_banks(t):
+                cw, ch = bank["bit_site_cell_um"]
+                for x, y in bank["bit_sites_um"]:
+                    boxes.add((x, y, x + cw, y + ch))
+        except (ValueError, TypeError, KeyError, ImportError):
+            complete = False
+
     def walk(v, key=""):
         nonlocal complete
         if isinstance(v, dict):
             if v.get("kind") == "core":
                 return
             for k, q in v.items():
-                if k == "pins" or k.startswith("sink_") or k in ("bit_site_cell_um", "outline_um"):
+                if k == "pins" or k.startswith("sink_") or k in ("bit_site_cell_um", "outline_um", "soft_reg_banks"):
                     continue
                 if k.endswith(("sites_file", "taps_file", "islands_file")) and q:
                     complete = False
