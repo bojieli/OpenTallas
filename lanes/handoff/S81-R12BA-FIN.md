@@ -1,6 +1,6 @@
 # S81-R12BA-FIN handoff (narrow successor of DIE-S81-88; only job: post S81 ready12b-A tonight, then stop)
 
-Updated: 17:5x PST 11-12.
+Updated: 18:0x PST 11-12.
 
 ## State
 - LATCHECK-1 (COORD 17:1x): switch-ON bind out_r12bA_ist (plan af9967df9f89 = c9f88 + B5) still had 19 UNPRICED_KIT_STATIONS
@@ -14,6 +14,14 @@ Updated: 17:5x PST 11-12.
   verify_dst.log, verify_main_dst.log.
 - Token: reform_rebaseline --die s81 base plan_r12bA3 (c9f88) vs s6_kdst -> s81-r12ba-fin/tok_dst.log / tok_dst_vs_A3.json.
 - Verify OOM fix: lint parallelism = asbuilt lint_jobs (6 in asbuilt_ist); memory bounded by ot-heavy --mem >= 6x23+26 GB.
+
+## Results so far (18:0x)
+- G0 74 = base (identical msgs), 0 latency/reset rows. Strict bind rc 0. LATCHECK-1 CLI as-bound 873/873 PASS.
+- Token: 41 lanes +52 cycles max +2; AR 842.8 / MTP 2713.5 unchanged (epyc9 s81-r12ba-fin/tok_dst.log).
+- Re-kit: 71 bound modules differ vs m2 (s81-r12ba-fin/rtl_changed_vs_m2.json); signed slice_station t45/t47 unchanged.
+- Both verifies running in parallel (merged in run_dst scope --mem 230; main 14685c in its own --mem 200 scope).
+- Package staged (not yet committed): epyc8 wt/s81-r12ba-pkg (branch claude/s81-ready12bA-1112 off origin/main 66e6607e3f,
+  sparse), events/s81_ready12bA_1112/ (13 MB, max file 10.6 MB plan gz) + record.json. Add verify reports, commit, push, post.
 
 ## Next
 1. When verifies + LATCHECK 0 pass: package plan branch off origin/main (no file > 95 MB), post READY + plan event with open list.
