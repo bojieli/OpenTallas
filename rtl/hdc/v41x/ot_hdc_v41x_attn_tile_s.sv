@@ -388,7 +388,11 @@ module ot_hdc_v41x_attn_tile_s #(
         initial $error("ot_hdc_v41x_attn_tile_s: OT_ATTN_HCORE needs the H8 S81 engine parameters");
     end endgenerate
 `ifdef OT_SVC_H8_REUSE_RT2
-    ot_s81c_attn_tile_hc_h8_rt2 u_hc (
+    ot_s81c_attn_tile_hc_h8_rt2
+`ifdef OT_S81C_TILE_PAIR
+        #(.PAIR(1))            // HARD-S81-SVC-1 11-13: reset + load word registered once per core pair (no cycle moves)
+`endif
+        u_hc (
 `else
     ot_s81c_attn_tile_hc_h8 u_hc (
 `endif
