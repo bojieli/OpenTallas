@@ -26,3 +26,9 @@
 - Running: strict bind m055 (ot-run epyc7, dkv100/bind_m055, log intel2 ~/dkv100log/bind_m055.log) -> then run-item jobs m055_kv3_hub_Eo / m055_kv3_hub_Wo (python3 /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/kit_wave.py run-item SPEC on intel2).
 - SD-GROW-W plan: dkv100/sdgrow/p3.json = sys_SD +103.68 at cut 1855.44 (as _v1) + kv3_io_ft (io_W2 only, pure E/W ft, no N/S ports) shrunk -64.746 at 280.8 and -38.934 at 961.254 (empty bands, site-aligned), io_W2 origin +103.68 -> no die growth, no port window change. sidecar RC 0; G0 running (sd_g0.sh).
 - R-REACH not yet in RULEBOOK at this time; no cland_origin / sys_c fix built.
+## UPDATE 2026-11-13 04:31
+- COORD 04:2x: R-CAP folds into the KV event: hub_Eo/Wo 2-way, kv3_pv family (16 plan types incl. v1n-v6n) 3-way (pv, v8 2-way). ACK posted 04:16.
+- Sub-agent KV-SPLIT-1 (Claude background agent of this session) is writing the N-way type split tool (tools/die_plan/type_split.py, physical/die_plan/qwen_kvsys/split_1113/; work dir epyc7 dkv100/split) and applying it to the hubs -> G0 + strict bind RC 0. It does not commit; DIE-KV-100 commits.
+- Strict bind m055 RC 0 (epyc7 dkv100/bind_m055/out). Run-items m055_kv3_hub_Eo/Wo running (intel2 dkv100/jobs/m055_*/unit.log; kits epyc7 dkv100/pilots_m055/items/*).
+- SD-GROW-W v2: grow 77.76 (not 103.68: io_ft tap grid nx=ceil(W/400) must stay 4 -> W >= 1200.06). Plan dkv100/sdgrow/plan (p3.json md5 b2909a63). Base G0 PASS 0 errors; new G0 running; diff with dkv100/g0_slot.py.
+- census_map_v35.json added to the tree (missing on main; copy of epyc4 /dev/shm, md5 d2157225).
