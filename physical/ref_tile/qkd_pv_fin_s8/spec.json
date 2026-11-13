@@ -23,7 +23,7 @@
  ],
  "outline": {
   "w": 207.36,
-  "h": 207.36
+  "h": 198.72
  },
  "layer_cap": "M5",
  "macros": [],
@@ -125,91 +125,91 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "KV-PVFIN-1 11-13: new core (lane slice of qkd_pv_fin_s). The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed post-place setup -448 ps / CTS -381 ps on out_epoch[3] and ~20k endpoints: the calendar slots were 16-bit window compares of age + 1 against adder-derived ages, ANDed into the fault check, the state enables and the 16,384 sbuf enables, and the multiplier operands came through a 32:1 read mux. R-RTL-5 (1)+(2)+(3): calendar decoded flop to flop behind a +1 input stage (s8c: the raw-pin decode sat behind the 487 ps link-budget input delay, post-CTS -304 ps at cq_bad / cq_em), out_beat / out_epoch enabled without the fault cone, sbuf a flat vector (s8a: an inferred memory moved the 32:1 read mux behind the address flop, -480 ps), slots are flag registers (set/clear by equality), beat indices are 5-bit counters, the sbuf read and head select are prefetched one edge early into operand registers with a write-through bypass. Outline 207.36 x 207.36 (R-CAP-2: ~18k um2 std at synth / 41.2k um2 core = ~0.44; the planned 190.08 frame would sit at ~0.53).",
+ "structural_change": "KV-PVFIN-1 11-13: new core (lane slice of qkd_pv_fin_s). The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed post-place setup -448 ps / CTS -381 ps on out_epoch[3] and ~20k endpoints: the calendar slots were 16-bit window compares of age + 1 against adder-derived ages, ANDed into the fault check, the state enables and the 16,384 sbuf enables, and the multiplier operands came through a 32:1 read mux. R-RTL-5 (1)+(2)+(3): calendar decoded flop to flop behind a +1 input stage (s8c: the raw-pin decode sat behind the 487 ps link-budget input delay, post-CTS -304 ps at cq_bad / cq_em), out_beat / out_epoch enabled without the fault cone, sbuf a flat vector (s8a: an inferred memory moved the 32:1 read mux behind the address flop, -480 ps), slots are flag registers (set/clear by equality), beat indices are 5-bit counters, the sbuf read and head select are prefetched one edge early into operand registers with a write-through bypass. Outline 207.36 W x 198.72 H (R-CAP-2: 17.7k um2 std after place / ~39.5k um2 core = ~0.45; the planned 190.08 frame would sit at ~0.51). Height 198.72 so the abutted lo/hi pair (397.44) fits the hub_C pocket between ft21 (y 839.3) and the die island (y 1270.8) with the 10.8 um clearance of hubc_split_form.py; the 207.36-square s8d build (signed off) did not fit (414.72).",
  "pin_ranges": {
   "p0_valid": [
-   4.0,
-   5.0
+   3.83,
+   4.79
   ],
   "p0_beat": [
-   5.0,
-   7.0
+   4.79,
+   6.71
   ],
   "p0_epoch": [
-   7.0,
-   12.0
+   6.71,
+   11.5
   ],
   "p0_data": [
-   12.0,
-   83.0
+   11.5,
+   79.54
   ],
   "rz_valid": [
-   83.5,
-   84.5
+   80.02,
+   80.98
   ],
   "rz_epoch": [
-   84.5,
-   89.0
+   80.98,
+   85.29
   ],
   "rz": [
-   89.0,
-   124.0
+   85.29,
+   118.83
   ],
   "p1_data": [
-   124.0,
-   195.0
+   118.83,
+   186.87
   ],
   "p1_epoch": [
-   195.0,
-   200.0
+   186.87,
+   191.67
   ],
   "p1_beat": [
-   200.0,
-   202.0
+   191.67,
+   193.58
   ],
   "p1_valid": [
-   202.0,
-   203.0
+   193.58,
+   194.54
   ],
   "out_valid": [
-   4.0,
-   5.0
+   3.83,
+   4.79
   ],
   "out_beat": [
-   5.0,
-   7.0
+   4.79,
+   6.71
   ],
   "out_epoch": [
-   7.0,
-   12.0
+   6.71,
+   11.5
   ],
   "out_data": [
-   12.0,
-   150.0
+   11.5,
+   143.75
   ],
   "fault": [
-   150.0,
-   152.0
+   143.75,
+   145.67
   ],
   "ck": [
-   158.0,
-   160.0
+   151.42,
+   153.33
   ],
   "rst_n": [
-   161.0,
-   163.0
+   154.29,
+   156.21
   ],
   "start": [
-   166.0,
-   168.0
+   159.08,
+   161.0
   ],
   "epoch": [
-   168.0,
-   176.0
+   161.0,
+   168.67
   ],
   "cal": [
-   176.0,
-   200.0
+   168.67,
+   191.67
   ]
  },
  "reset_landing": {
