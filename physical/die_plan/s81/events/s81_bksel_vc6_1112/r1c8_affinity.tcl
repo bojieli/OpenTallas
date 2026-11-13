@@ -39,6 +39,67 @@ foreach i [$rc_blk getInsts] {
   if {[[$i getMaster] isSequential]} {dict lappend rc_c "$g,$rs" $i}
  }
 }
+
+# The local group includes its mux and buffer topology, not just endpoints.
+# Backward from each q D: include buffers and the first data mux, stop there.
+proc rc_qcone {q} {
+ set todo {};set seen {};set out {}
+ foreach t [$q getITerms] {if {[[$t getMTerm] getName] eq "D" && [$t getNet] ne "NULL"} {lappend todo [$t getNet]}}
+ while {[llength $todo]} {
+  set n [lindex $todo 0];set todo [lrange $todo 1 end]
+  if {[dict exists $seen $n]} continue
+  dict set seen $n 1
+  foreach t [$n getITerms] {
+   if {[[$t getMTerm] getIoType] ne "OUTPUT"} continue
+   set i [$t getInst];set m [$i getMaster]
+   if {[$m isBlock] || [$m isSequential]} continue
+   lappend out $i
+   if {[regexp {^(BUF|INV|HB)} [$m getName]]} {
+    foreach it [$i getITerms] {if {[[$it getMTerm] getIoType] eq "INPUT" && [$it getNet] ne "NULL"} {lappend todo [$it getNet]}}
+   }
+  }
+  if {[dict size $seen]>256} {error "R1C8 q cone exceeded bounded depth"}
+ }
+ return [lsort -unique $out]
+}
+# Forward from each control flop/latch Q: include buffer tree and terminal muxes;
+# sequential consumers stop traversal, so control launch timing remains unchanged.
+proc rc_control_cone {i} {
+ set todo {};set seen {};set out {}
+ foreach t [$i getITerms] {if {[[$t getMTerm] getName] in {Q QN} && [$t getNet] ne "NULL"} {lappend todo [$t getNet]}}
+ while {[llength $todo]} {
+  set n [lindex $todo 0];set todo [lrange $todo 1 end]
+  if {[dict exists $seen $n]} continue
+  dict set seen $n 1
+  foreach t [$n getITerms] {
+   if {[[$t getMTerm] getIoType] ne "INPUT"} continue
+   set j [$t getInst];set m [$j getMaster]
+   if {[$m isBlock] || [$m isSequential]} continue
+   lappend out $j
+   if {[regexp {^(BUF|INV|HB)} [$m getName]]} {
+    foreach ot [$j getITerms] {if {[[$ot getMTerm] getIoType] eq "OUTPUT" && [$ot getNet] ne "NULL"} {lappend todo [$ot getNet]}}
+   }
+  }
+  if {[dict size $seen]>256} {error "R1C8 control cone exceeded bounded depth"}
+ }
+ return [lsort -unique $out]
+}
+set rc_combs {};set rc_owners {};set rc_comb_n 0
+# Check all ownership before moving any group: a shared cone must never drift
+# to a different group's anchor silently.
+dict for {key qs} $rc_q {
+ set local {}
+ foreach q $qs {lappend local {*}[rc_qcone $q]}
+ foreach c [dict get $rc_c $key] {lappend local {*}[rc_control_cone $c]}
+ set local [lsort -unique $local]
+ foreach i $local {
+  if {[dict exists $rc_owners $i] && [dict get $rc_owners $i] ne $key} {error "R1C8 shared local cone [$i getName] between $key and [dict get $rc_owners $i]"}
+  dict set rc_owners $i $key
+ }
+ dict set rc_combs $key $local
+ incr rc_comb_n [llength $local]
+}
+
 set rc_groups 0;set rc_qn 0;set rc_cn 0
 set rc_f [open /work/r1c8_affinity.csv w];puts $rc_f {group,subgroup,q_count,control_count,x_um,y_um}
 dict for {key qs} $rc_q {
@@ -47,7 +108,7 @@ dict for {key qs} $rc_q {
  foreach q $qs {lassign [$q getLocation] x y;set sx [expr {$sx+$x}];set sy [expr {$sy+$y}]}
  lassign [rc_out [expr {round($sx/double([llength $qs]))}] [expr {round($sy/double([llength $qs]))}]] x y
  set idx 0
- foreach i [concat $qs $cs] {
+ foreach i [concat $qs $cs [dict get $rc_combs $key]] {
   $i setLocation [expr {round($x+($idx%4)*1.62*$rc_dbu)}] [expr {round($y+($idx/4)*0.54*$rc_dbu)}]
   $i setPlacementStatus PLACED
   incr idx
@@ -56,7 +117,7 @@ dict for {key qs} $rc_q {
  incr rc_groups; incr rc_qn [llength $qs]; incr rc_cn [llength $cs]
 }
 close $rc_f
-puts "OT_R1C8_AFFINITY groups=$rc_groups payload_flops=$rc_qn control_flops_latches=$rc_cn cycle_delta=0"
+puts "OT_R1C8_AFFINITY groups=$rc_groups payload_flops=$rc_qn control_flops_latches=$rc_cn local_mux_buffers=$rc_comb_n cycle_delta=0"
 if {$rc_groups != 88 || $rc_qn != 592 || $rc_cn < 352} {error "R1C8 affinity: incomplete expected groups/payload/control"}
 
 }
