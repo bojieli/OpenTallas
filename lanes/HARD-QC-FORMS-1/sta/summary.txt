@@ -1,0 +1,5 @@
+frame corner=TT libs=TC_LIB_FILES sdc=/work/constraint.sdc vclk_src_lat=250.0000 propagated=18_real_clocks parasitics=placement(setRC_rcx)
+setup_wns_ps -464.7344749837695
+setup_tns_ps -73255.07341132939
+failing_paths_found 602
+paths_written 602

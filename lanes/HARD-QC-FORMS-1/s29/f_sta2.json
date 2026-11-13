@@ -1,0 +1,95 @@
+{
+ "name": "F-STA-RTL scale_wait output register + kept pin register (QC-FORMS-2 11-13)",
+ "ops": [
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v1__cl67389ecd",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v1__cl989804f6__cled3c1d7b",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v2",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v1__clb036e152",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v1__clfc5867a6__pvf82a6c28",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v2__cl9f076a5c",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v2__clf4365a62",
+   "define": "OT_QC_SWREG"
+  },
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v1__cl67389ecd",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v1__cl989804f6__cled3c1d7b",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "sle_st_a_v2",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v1__clb036e152",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v1__clfc5867a6__pvf82a6c28",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v2__cl9f076a5c",
+   "define": "OT_QC_PINKEEP"
+  },
+  {
+   "op": "add_define",
+   "type": "slw_st_a_v2__clf4365a62",
+   "define": "OT_QC_PINKEEP"
+  }
+ ]
+}
