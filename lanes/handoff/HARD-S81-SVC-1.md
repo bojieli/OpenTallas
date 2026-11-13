@@ -80,3 +80,16 @@
 - RUNNING: lockstep proof epyc2 hard-s81-svc-1/ls/w_band1 (--dut s81 --srx 1 --band --mut 1,2), log intel2 ~/tmp/hard_s81_svc_ls_band1.log.
 - NOT done: u_att service cut (handshakes q/kv/p ready cross it: needs skid stages, see tools/landed_parent/lp.py and dsdv_svc_rs_lp for the
   existing landed form), SM boxes and lo IRG placement per part, LEC, plan event (pvso_entry, reset contract), floorplan, place + GRT.
+
+## 2026-11-13 08:29 band RTL proven and pushed
+- READY claude/hard-s81-svc-1-band-1113@2a0fecefcd (parent origin main 5eefdbe2fa; on origin). Files: rtl/dsrom_sys/s81_svc/ot_s81_svc_band.sv (new),
+  ot_s81_svc_attn_s.sv (BANDX / BANDMUT), dsdv_svc_att.sv (-DOT_SVC_BAND), test/tb_svc_srx_attn.sv, test/svc_srx_lockstep.py (--band).
+- Proofs (epyc2 hard-s81-svc-1/ls/{w_band1,w_srx3,w_base}; verilator v5.032; seed 11, 10 jobs, 419 score beats, 80 P.V beats):
+  (1) band form (SRX 1 + BANDX) vs as-built engine: all beats bit-identical in value and order, first job +3 / +6, bank-set checker 0 errors,
+      BANDMUT 1 and 2 both break the data (lockstep.json status PASS);
+  (2) band form vs the SRX 3 engine (the form S81-ARCH-RTL-2 proved 11-11): all 1,218 traced events (job/q/kv/p accepts, score and P.V beats with
+      data) identical INCLUDING the cycle -> the band is cycle-exact SRX + 2;
+  (3) defaults off: unpatched main vs patched source at BANDX 0, SRX 0 and SRX 3 traces sha-identical.
+- Latency bookkeeping: per svc pass scores +(SRX+2), P.V +2(SRX+2) against the as-built schedule, the SRX rule with n = SRX + 2. The die schedule
+  (compose_tok_ds PIO / KPV) must move by n; R-RTL-6 latency rows are owed with the plan event (n is fixed there, SRX = plan station hops).
+- NOT done: formal LEC of the band form (sequential; sim proof only), service cut S_att | S_rs, plan event, floorplan, place + GRT.
