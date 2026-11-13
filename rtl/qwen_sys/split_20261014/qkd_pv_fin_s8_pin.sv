@@ -19,19 +19,19 @@ module qkd_pv_fin_s8_pin #(
  output wire fault
 );
  wire  c_out_valid;
- (* keep = 1 *) reg  pin_out_valid;
+ reg  pin_out_valid;
  assign out_valid=pin_out_valid;
  wire [4:0] c_out_beat;
- (* keep = 1 *) reg [4:0] pin_out_beat;
+ reg [4:0] pin_out_beat;
  assign out_beat=pin_out_beat;
  wire [15:0] c_out_epoch;
- (* keep = 1 *) reg [15:0] pin_out_epoch;
+ reg [15:0] pin_out_epoch;
  assign out_epoch=pin_out_epoch;
  wire [32*NL-1:0] c_out_data;
- (* keep = 1 *) reg [32*NL-1:0] pin_out_data;
+ reg [32*NL-1:0] pin_out_data;
  assign out_data=pin_out_data;
  wire  c_fault;
- (* keep = 1 *) reg  pin_fault;
+ reg  pin_fault;
  assign fault=pin_fault;
  qkd_pv_fin_s8 #(.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT),.SKEW(SKEW),.MUT(MUT),.NL(NL),.IN_STAGE(IN_STAGE)) u_core (
   .ck(ck),

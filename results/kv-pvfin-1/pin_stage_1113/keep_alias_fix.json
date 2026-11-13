@@ -1,0 +1,16 @@
+{
+ "verdict": "SOURCE_FUNCTION_UNCHANGED_SYNTH_FACE_PENDING",
+ "old_stage_fail": {
+  "checked": 1045,
+  "ok": 1043,
+  "shared": [
+   "out_valid",
+   "fault"
+  ]
+ },
+ "cause": "Two kept PIN aliases retained dead BUF loads on exported scalar output nets; no functional consumer",
+ "change": "Remove exactly five keep attributes on NEW PIN-stage registers only; original modules/ports/cycles/reset identical",
+ "semantic_normalization": "Old source after removing keep attributes byte-identical to new source",
+ "semantic_sha256": "e425d0c87057d39c95125e86112a7138385398c05c9e659c080045d9ecfb358b",
+ "placement": "First newPINplace retained unsigned; fresh actualsource place required"
+}
