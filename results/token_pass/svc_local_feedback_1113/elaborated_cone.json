@@ -1,0 +1,185 @@
+{
+  "schema": "opentallas.svc.feedback-elaborated-cone.v1",
+  "top": "tb_svc_feedback",
+  "verilator": "5.050",
+  "method": "Actual --json-only elaboration with same source/parameter/TB selections as measured v4; module origName/location from emitted AST, then complete original module blobs hashed.",
+  "modules": [
+    {
+      "name": "tb_svc_feedback",
+      "path": "tools/s81_dv/layer_prog/svc/tb_svc_feedback.sv",
+      "sha256": "42762a211711c07ad73492925e0461e8e8efca26db9b4129086e4cfcc93c02d3"
+    },
+    {
+      "name": "ot_s81_su_sms_fold2",
+      "path": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_sms_fold2.sv",
+      "sha256": "a187e93c8468a3dfbe5c85b487f122f1e7f523c16c46cbc908114ddab9b0ccdf"
+    },
+    {
+      "name": "dsdv_svc_p_source",
+      "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv",
+      "sha256": "a3b0a95051f3658cb6537a17396ed65481051b2e02eefcd3b181023d34ecbc59"
+    },
+    {
+      "name": "dsdv_svc_mem_ar",
+      "path": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv",
+      "sha256": "f32c25304e8df3f5af8003a0673e1d288ee7977d407859c8fdf3a39599d85742"
+    },
+    {
+      "name": "ot_sram_1r1w_160x256_m1_r0c0",
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_160x256_m1_r0c0/ot_sram_1r1w_160x256_m1_r0c0.v",
+      "sha256": "e8b417b2c1a868038c48360955ffc47109de812bf419ad04b341fa4502d06ed0"
+    },
+    {
+      "name": "ot_s81_su_smh_fold2",
+      "path": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv",
+      "sha256": "886818ef91c1331a4fd6299324959c394ea9106995b3559f17f14bf5712cbcd7"
+    },
+    {
+      "name": "ot_s81_su_sml_fold2",
+      "path": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_sml_fold2.sv",
+      "sha256": "7e52e534dad5d0ae7e34fc9a15a13c13167f2f1cf098d5dbb21761b2fb1bad6f"
+    },
+    {
+      "name": "ot_s81_su_smd_fold2",
+      "path": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smd_fold2.sv",
+      "sha256": "a366e958896d4605f9e39231341a0835ffa9c6504bfbd51c89823dc94eb69dab"
+    },
+    {
+      "name": "ot_s81_su_smq",
+      "path": "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv",
+      "sha256": "2d9923d9e0f0a25ff4f55445f4b9c709223caa18fca2504aa4de66590dde6e5b"
+    },
+    {
+      "name": "ot_s81_su_smc",
+      "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+      "sha256": "1aaea25805fa6f0e2b66c006f5c0a803184517c60a666f7a389f717045b60141"
+    },
+    {
+      "name": "ot_s81_su_smr",
+      "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
+      "sha256": "2024b4523c9a9f615300661aaa3009ee67712194b9f02070fb0e403e1440f136"
+    },
+    {
+      "name": "ot_dsrom_su_fdiv_f12",
+      "path": "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
+      "sha256": "f1a0c99f715e67053a868c4611ac2c1a88a21b7578d6d552f640b2f69f3a41cd"
+    },
+    {
+      "name": "ot_dsrom_su_softmax_add",
+      "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv",
+      "sha256": "732185c1f39457a8804b5d46daa22603884d7d15de869e0ae3272ff34ae7f382"
+    },
+    {
+      "name": "ot_dsrom_su_softmax_mul",
+      "path": "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv",
+      "sha256": "247aa2dd2a82ff4e5f7007f10a7548562da1497f3268327179e08540700f24cd"
+    },
+    {
+      "name": "ot_hdc_v41x_exp",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "sha256": "42bf292e13d9f4ea407e89a7f76265d00dbe1572d25ecc1ff687297907c873f9"
+    },
+    {
+      "name": "ot_hdc_kge",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "sha256": "5dcbe9a02f8465af4bf7045529604b9ac23ede5ffe45ff38d381c3e626d1b2b7"
+    },
+    {
+      "name": "ot_hdc_delay",
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "006d2b2babc6adc264795fd999f2bb8adec919f133a77f61f4d5f6007e7e244f"
+    },
+    {
+      "name": "ot_hdc_vline",
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "96afb156dc18d4dafbaf6dec11f77445051b963b00e60b8af86f597a0bb5ceb9"
+    },
+    {
+      "name": "ot_hdc_kinc",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "sha256": "d6e477d9199c1e1a112f9508ac581ff8151f4a594f5eb08284c18911c6e4d3a0"
+    },
+    {
+      "name": "ot_hdc_qmul_lat",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "sha256": "9bd267a3438cd0a5ec8ffcf984c66b9f10cf198ad5b5fd02f60df38e8f5c1552"
+    },
+    {
+      "name": "ot_hdc_qadd_lat",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "sha256": "6f28da4ef7d19497a22731c265e2f31c9b22990d2c021a9b8245fdf4ca87a176"
+    },
+    {
+      "name": "ot_hdc_kadd",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "sha256": "7df40abab782cf50458b5888977a30fdc66ac92ff21ad8bc0b967f07f9a37228"
+    },
+    {
+      "name": "ot_hdc_fp32_mul_f12_l5",
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "d24d4bf90f98acce31f2a400d9f756096a49d0f9f9d00d200fa80d2baac79eaa"
+    },
+    {
+      "name": "ot_hdc_fp32_mul_f12",
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "7a054101eb5ef041208f28847bb24d99bdcc64a91ea8cd6c03355da2a1a03d1c"
+    },
+    {
+      "name": "ot_hdc_mul24_rows",
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "4bc1240c9bbc5207d3137982309d3c635b2693d38ed2c942b90f86d3c098fcb5"
+    },
+    {
+      "name": "ot_hdc_fp32_add_f12_l4",
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "64eab87ee56e47d13487bfeddfddc5231c2ac208741a27fa1319c4bdd61322d9"
+    },
+    {
+      "name": "ot_hdc_fp32_add_f12",
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "2210302b7cb6ddbf1ecc4cf2b3b79df881d0d899bb92bcaf1ced0d6995ef96f8"
+    },
+    {
+      "name": "ot_hdc_inc_k",
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "78d8efe6ec4cddeaeff9eab35776d7f580cee8ca1ae3b4e3ec8a3b43721927b3"
+    },
+    {
+      "name": "ot_hdc_f12_cut",
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "1597a7bf5011a331f9f5ca7646f2cb2da342bd4b2c0769d8bd0f61d9217c6569"
+    },
+    {
+      "name": "ot_hdc_lzc32",
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ef4f79f4640953e144374f1dfde28787a672182e98a00819d09ab371f26760f0"
+    },
+    {
+      "name": "ot_hdc_ksadd_k",
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "6288fb312129aedce779ef1625790db8af448f8b361fa6b24a5974d7f88dd08b"
+    }
+  ],
+  "portable_bench": {
+    "path": "tools/s81_dv/layer_prog/svc/tb_svc_feedback.sv",
+    "sha256": "09d23c6ea6dcd9c42cb1033e0690501e70edd7d23044229a6298f25a6622caae"
+  },
+  "original_bench": "/srv/opentallas-scratch2/claude/tok-verify-2/svc_feedback/v4/tb_svc_feedback.sv",
+  "original_broad_manifest": "sources.sha256",
+  "broad_manifest_scope": "All rs_files.sh parser inputs, including unused native engines; whole-file equality FAIL is preserved and does not imply those modules were exercised.",
+  "excluded_changed_modules": [
+    "dsdv_svc_att",
+    "ot_hdc_v41x_attn_tile_s"
+  ],
+  "tree_sha256": "d68c607f9decf47253831c405ae612da7e620e2a1bc9929db12051fb922962ed",
+  "meta_sha256": "0f7f25d925669c3ee229507eda33d98bb66fa52e0c5d9e5e9b08918340c3a35e",
+  "raw_elaboration": "/srv/opentallas-scratch2/claude/tok-verify-2/svc_feedback/closure/build",
+  "global_qualification": false,
+  "current_main_compatibility": {
+    "commit": "35d6c74a865d6d3e98afc25a4caaa6f784bd28cf",
+    "provider_modules": 30,
+    "mismatches": [],
+    "bench": "New committed evidence bench equals original measured v4 scratch bench; does not exist on prior main until evidence intake.",
+    "simulation_rerun": false
+  }
+}
