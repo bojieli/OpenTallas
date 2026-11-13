@@ -12,3 +12,10 @@
 - epyc8 /tmp/kitops2_copy_units.sh (KIT-OPS-1 copy_units: real parents, no --delete, --ignore-existing) lists /tmp/kitops2_{small,big_src_*}.txt -> logs /tmp/kitops2_*.out (pids 806356-806360).
 - epyc7 /tmp/kitops2_lfcs.txt (s81-leaf-floor-2/bsrc_main2_lfcs = the 97 bind-named files, as on epyc7/9/intel1/epyc2) pid 2991539.
 - Next: manifest2 (per-file sha256) on epyc4 vs epyc8 (lfcs vs epyc7), then config edit, tick check, RESULT.
+
+## 2026-11-12 22:51 progress
+- DONE + manifest-verified (per-file sha256 = epyc8): kit-ops-1/{kvbind_vN2i, s81_r12bA/out_main_7073a6b4a5_b, s81_r12bA/asbuilt_kitops1_7073a6b4a5.json, head_rp18r1/prep, head_rp18c/prep}, qc-transport-fix-4/src_sw2, hbm-vsn-xtap-t39w/{plan_t39w,bind,asbuilt_d12b.json}, die-hbm-92-{phy,su}/ab/p37*_sources, hbm-plan-1/sm1109/files, kw45/qcs28in.
+- bsrc_main2_lfcs: the 97 bind-named files from epyc7, tree sha 98bfa596 = epyc7.
+- QC kw45/src_qc_s28_88018018ef (FLEET-2 restore, kw45-real): all 324315 epyc8 files identical; 114 extra files on epyc4, all ARCHIVED.json stubs.
+- hbm-bind-6/tip2: 1 ARCHIVED.json differs + 2 extra composed_rtl .sv; die-hbm-95/bind/composed_rtl/receipt.json on epyc4 = epyc7/9/2/intel1 (2fbecb3e), epyc8 is the odd one (7cc58676). Not overwritten.
+- 4 big src trees still copying (epyc8 /tmp/kitops2_big_*.out); epyc8 source manifest running (/tmp/kitops2_man3.out, pid 1060901). Next: manifest on epyc4, compare (scratchpad kitops2/cmp.py), then e4_add.py on intel2 (/tmp/kitops2_e4_add.py STAMP kv,s81,head,qc,hbm).
