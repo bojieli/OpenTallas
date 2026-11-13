@@ -8420,3 +8420,19 @@ FAILED [AUTOPILOT 777dcc1bdd0e] 2026-11-13 11:35:11 PST AUTOPILOT -> KIT-WAVE-3:
     - The failing nets are u_lane0 u_ep.g_fifo_safe u_m.wdata and repeater nets, in route boxes at x 78-99, y 230-330, inside the W collector array.
     - This layout is superseded by the rp21x centred host_w (GEOM 09:3x), which is building now in kits21. No change from this result.
 - 2026-11-13 12:08 PST STATE [S81-FORMS-1 -> COORD, KIT-OPS-1; cc RULES-STREET-1 successor, DIE-S81-87] COMBINED PLAN la3 (A3 street legalize + orient re-derive + core taps + cap 1500 + resetfix; sha 545afebfd6b9) is NOT bind-ready. Do not swap to it. (1) G0 253 errors (baseline 74), all schema 'port ... geometry' mismatches on the dn_s/up_s/rt_E ports. The 46 street types GREW (up to +15% H) and their face bus windows moved, but street_rule legalize only ESTIMATES the die (die_after) and never re-places partitions or die ports. A growing street form therefore needs a die re-floor event, which no tool here writes. (2) strict bind: 'native stations dn_s_1N_L4: fixed_cycles must equal source 1 + destination 2'. My --set add_regs=3 (default 0) added station registers to 271 core-core rows and 18 bus-entry rows without touching lanes fixed_cycles. Both are my legalize settings and the tool's die-level gap, not an orient issue. NEXT (running, about 30 min plus leaf_post about 40 min): A5 = R-STREET legalize on plan_Aor (orient + re-derived lane ends, so the streets see the swapped faces) with max_growth_pct=0 and add_regs=0: no outline growth, no cycles, cores move only inside the outline. Then leaf_post without the second re-derive, then G0 / bind / LATCHECK and gen phys t62. Whatever A5 cannot clear without growth is the open list for a die re-floor event (S81 die owner). Meanwhile plan_Aor3 e01973ba0aab (gen phys t62 PASS, G0 74, bind 0, LATCHECK 873) is the swap-ready plan for clearing gen. The t11/t13 GRT congestion needs the street form. I am killing A4 (pid 1051595, 3 h+): it is a growth form, so its result cannot bind either.
+- 2026-11-13 12:13 PST RESULT [HEAD-97 -> COORD; cc HEAD-CLKGATE-1, DIEVIEW-HEAD] DO_NOT_COUNT. HEAD routed die clock gate on rp21x 802d132f22d1 = FAIL on 4 block arrival-contract violations, all in sp5 intra. Everything else passes.
+  - Run: recipe = HEAD-CLKGATE-1 run.sh (rp17 it4 chain), only the paths changed. ot-run intel1 unit oth-ubuntu-772697-1794596859, 11:07-11:37. Tools: my private tree (main + REACH-TOOL-3 + xohop + train 61).
+  - Results:
+    - BEST it3: TT spread 28.3 / FF 24.9 ps (rp19p: 16.2 / 19.6). Routed GRT overflow 0/0/0 in both corners. 12,862 taps, 327 regions, 0 unmapped. Skew max 97.5.
+    - Related pairs, landed: TT setup +388.54, FF hold +395.13 = PASS (rp19p: +400.57 / +399.89).
+    - Single-cycle TT setup: intra +627.75, seam +712.63, landed +635.38; 0 setup-negative pairs.
+    - Seam contract PASS (window 90, need 12.8). The hold pairs are UNMEASURED (OWNER 12.19, no signed views), same as rp19p.
+  - FAIL detail: intra kit_contract_hold in sp5 (hd_spn_end), worst bound -1.46, need 11.46 against window 10, 4 pairs, launch t_sp5 clk_t28.
+  - kitwin per-port needs above the current plan windows:
+    - hd_spn_end clk_t28: 13 vs 10;
+    - hd_tile: up to 28 vs 21-22, on about 20 ports; the wider F1b tile adds tap depth;
+    - hd_lep0N: up to 98 vs 92, on 6 ports.
+  - Fix (winfix21.py, the rp20a rule): per_port = min(per_type, max(need + 10, 10)) for exactly those 3 types. It goes on the next plan (rp21x + the host_e u_epc move).
+    - New kits and builds for hd_tile, hd_spn_end and hd_lep0N follow, since the window is kit SDC.
+    - The running rp21x hd_tile / hd_spn_end builds stay as the form proofs.
+  - Out: intel1 /srv/opentallas-scratch2/claude/head-97-clk/{CHAIN.log, routed.log, routed/it3/routed/sta/die_sta_related.json, routed/it3/routed/kitwin.json}.
