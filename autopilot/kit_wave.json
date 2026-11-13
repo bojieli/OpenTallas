@@ -34065,7 +34065,8 @@
     "q_b001__physical_v1": "KW-FIX-45 11-12 DIE-HBM-100: cell-cap decision pending (COORD); keep the running t20io row, do not relaunch, until COORD decides",
     "ot_wbq_root_g0": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept",
     "ot_wbq_root_g1": "DIE-HBM-100 11-12: g0/g1 WBQ root recipe changes (HBM-CORES-C recipes_b2.json edit); do not rebuild the old reform_1105b root rows; running rows kept",
-    "q_mcb_ne": "KW-FIX-46 11-12 COORD: 1.07M instances over the 400k cap; OOM at 48/72/108 GB; split/re-form in DIE-HBM-101 hp5. No more OOM resubmits"
+    "q_mcb_ne": "KW-FIX-46 11-12 COORD: 1.07M instances over the 400k cap; OOM at 48/72/108 GB; split/re-form in DIE-HBM-101 hp5. No more OOM resubmits",
+    "q_su30": "KIT-OPS-1 2026-11-13 00:10 COORD: WAIT-FORM, q_su30 form BAD/ISSUES (GEOM-VIS-10 17:12 BAD on q_su30__physical_v1 a12; COORD 04:31 ISSUES), VISLAYOUT2-HBM route 88b8264ee90f STRUCTURAL GRT overflow 128,868 (23:42). Held until a new form; attempt 11 (23:57, new block key b3687039ce5b after the AUTO-VIEWS child-view change, same plan 8b4b6e3071c4) stopped."
    },
    "gen_hosts": [
     "epyc7",
