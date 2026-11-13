@@ -363,6 +363,9 @@ def sdc(P, tn, text):
                          for line in text.splitlines()) + '\n'
         for clock, row in data:
             same = row.get('capture') == 'same_edge'
+            native_min = row['min_ps'] - (row['eye_hold_extra_ps'] if same else 0)
+            text += (f'# OT_NATIVE_PAD_INPUT {clock} {row["port"]}[*] '
+                     f'{gen_phys.t_lib(native_min):.4f} {gen_phys.t_lib(row["max_ps"]):.4f}\n')
             for kind in ('max', 'min'):
                 budget = row[kind + '_ps'] - (row['eye_hold_extra_ps'] if same and kind == 'min' else 0)
                 value = gen_phys.t_lib(budget)

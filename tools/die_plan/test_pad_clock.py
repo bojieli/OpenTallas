@@ -232,6 +232,7 @@ def test_native_pad_data_keeps_budget_and_uses_recovered_clock():
     ctx = SL.kit_context(p, 'mid')
     assert not SL.lint(text, **ctx)
     assert 'lsearch -exact $pad_native_inputs $pad_input' in text
+    assert '# OT_NATIVE_PAD_INPUT pma_rck ' in text
     assert 'remove_from_collection' not in text
     broken_filter = text.replace('lsearch -exact $pad_native_inputs $pad_input', 'lsearch -exact $non_clk_in $pad_input')
     assert SL.lint(broken_filter, **ctx)

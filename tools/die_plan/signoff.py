@@ -1099,7 +1099,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
                 ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None, margin_policy=None,
                 fwd_ring_min=None, retain_child_clock_witness=False, parent_boundary_instances=(), parent_boundary_std_limit=0,
-                static_straps=(), tt_vclk="sdc"):
+                static_straps=(), tt_vclk="sdc", native_pad_inputs=()):
     """tt_vclk: 'rebind' = the TT session alone rebinds the IO vclk to its routed pin-register mean (hard_core_latency
     contract kits, KW-FIX-34-SIG) whatever ff_vclk says for FF; 'sdc' = no TT-only rebind (session byte-identical).
     pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
@@ -1156,6 +1156,8 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
         t = _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports, fwd_ring_min)
         hold_in_min_ports = {k: v for k, v in (hold_in_min_ports or {}).items()
                              if k not in {sel.split("[")[0] for _ck, sels in fwd_ring for sel in sels}}
+    if native_pad_inputs:
+        t = _native_pad_tcl(t, native_pad_inputs)
     t = t.replace("@DROOP665@", "" if not droop else (
         "# ---- 12.4a b2 0.665 V data droop re-time (INFORMATION only, never a reason) ----\n" + droop +
         "so DROOP665_WNS_MAX [so_ps [sta::worst_slack_cmd max]]\n"
@@ -1295,6 +1297,52 @@ def margin_policy_record(policy, sdc_text):
         rec["sdc_uncertainty_overridden"] = {k: dict(sdc=sdc[k], signoff=v, changed=sdc[k] is None or abs(sdc[k] - v) > 1e-9)
                                              for k, v in (("setup", su), ("hold", hu)) if k in kinds}
     return rec
+
+
+NATIVE_PAD_TAG = "# OT_NATIVE_PAD_INPUT"
+
+
+def native_pad_inputs(sdc_text):
+    """Exact existing recovered-pad eye contracts; never substitute the seam vclk budget."""
+    import math
+    out, seen = [], set()
+    for ln in sdc_text.splitlines():
+        if not ln.startswith(NATIVE_PAD_TAG):
+            continue
+        w = ln.split()
+        if (len(w) != 6 or w[:2] != ['#', 'OT_NATIVE_PAD_INPUT']
+                or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', w[2])
+                or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*\[\*\]', w[3]) or w[3] in seen):
+            raise ValueError(f'signoff: malformed or duplicate native pad contract: {ln}')
+        try:
+            mn, mx = float(w[4]), float(w[5])
+        except ValueError as exc:
+            raise ValueError(f'signoff: invalid native pad delay: {ln}') from exc
+        if not all(map(math.isfinite, (mn, mx))) or mn > mx:
+            raise ValueError(f'signoff: invalid native pad delay: {ln}')
+        seen.add(w[3]); out.append((w[2], w[3], mn, mx))
+    return out
+
+
+def _native_pad_tcl(t, contracts):
+    anchor = "so INPUTS {*}[lsort -unique [lmap p $so_din {regsub {\\[[0-9]+\\]$} [get_full_name $p] {}}]]\n"
+    overlay = "@IN_MIN_PORTS@\n"
+    if t.count(anchor) != 1 or t.count(overlay) != 1:
+        raise ValueError('signoff: native pad overlay anchors changed')
+    lines = ['set so_native_in {}\n']
+    restore = []
+    for ck, sel, mn, mx in contracts:
+        lines += [f'if {{[llength [get_clocks -quiet {{{ck}}}]] != 1}} {{error "missing native pad clock {ck}"}}\n',
+                  f'set so_native_ports [get_ports -quiet {{{sel}}}]\n',
+                  f'if {{![llength $so_native_ports]}} {{error "empty native pad selector {sel}"}}\n',
+                  'foreach p $so_native_ports {\n'
+                  '  if {$p ni [all_inputs] || [get_full_name $p] in $so_ck_ports || [get_full_name $p] in $so_native_in} {error "ambiguous native pad input"}\n'
+                  '  lappend so_native_in [get_full_name $p]\n' ' }\n']
+        restore += [f'  set_input_delay -min {mn:.12g} -clock [get_clocks {{{ck}}}] [get_ports {{{sel}}}]\n',
+                    f'  set_input_delay -max {mx:.12g} -clock [get_clocks {{{ck}}}] [get_ports {{{sel}}}]\n']
+    lines += ['set so_din [lmap p $so_din {if {[get_full_name $p] in $so_native_in} continue; set p}]\n',
+              'so NATIVE_PAD_INPUTS [llength $so_native_in] golden_delays_preserved\n']
+    return t.replace(anchor, anchor + ''.join(lines)).replace(overlay, overlay + ''.join(restore))
 
 
 FWD_RING_TAG = "# OT_FWD_RING_INPUTS"
@@ -1715,6 +1763,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 pair_targets=ptf is not None,
                                                 fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text()),
                                                 fwd_ring_min=fwd_ring_min(Path(disc["sdc"]).read_text()),
+                                                native_pad_inputs=native_pad_inputs(Path(disc["sdc"]).read_text()),
                                                 margin_policy=margin_policy,
                                                 retain_child_clock_witness=retain_child_clock_witness,
                                                 parent_boundary_instances=parent_boundary_instances,
