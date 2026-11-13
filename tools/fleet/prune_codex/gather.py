@@ -32,6 +32,23 @@ def line_blockers(l,src,emit):
     for rx in (BARE,ELL):
         for mo in rx.finditer(l):
             if KW.search(l[max(0,mo.start()-200):mo.end()+200]): emit('QREL','any',mo.group(1),src)
+QARCH='lanes/archive/COORD-REVIEW-QUEUE-*.md'
+def queue_window(coord,qdays,now=None):
+    """(source, line number, line) of the review queue back to qdays: the rotated archives (oldest name first) then the live
+    lanes/COORD-REVIEW-QUEUE.md, scanned as one text from the first post dated inside the window.  The live file keeps the
+    source name 'queue' (older global.tsv rows use it); an archive line is '<archive basename>:<n>'."""
+    lim=time.strftime('%Y-%m-%d %H:%M',time.localtime((time.time() if now is None else now)-qdays*86400))
+    rows=[]
+    for p in sorted(glob.glob(os.path.join(coord,QARCH)))+[os.path.join(coord,'lanes/COORD-REVIEW-QUEUE.md')]:
+        if not os.path.isfile(p): continue
+        src='queue' if p.endswith('/lanes/COORD-REVIEW-QUEUE.md') else os.path.basename(p)[:-3]
+        with open(p,errors='replace') as f: rows+=[(src,i,l) for i,l in enumerate(f.read().split('\n'))]
+    start=len(rows)
+    for k,(src,i,l) in enumerate(rows):
+        m=re.match(r'- (2026-\d\d-\d\d \d\d:\d\d)',l)
+        if m and m.group(1)>=lim: start=k; break
+    print('queue from',(rows[start][0],rows[start][1]) if start<len(rows) else None,'of',len(rows),'lines')
+    return rows[start:]
 def main():
     OUT=open(ROOT+'/global.tsv','w'); seen=set()
     def emit(k,h,t,s):
@@ -63,18 +80,11 @@ def main():
     for m in set(R.findall(r.stdout)):
         emit('A','any',m,'live wave spec.json'); n+=1
     print('live wave specs',len(dirs),'paths',n)
-    # queue
-    lim=time.strftime('%Y-%m-%d %H:%M',time.localtime(time.time()-QDAYS*86400))
-    lines=open(COORD+'/lanes/COORD-REVIEW-QUEUE.md',errors='replace').read().split('\n')
-    start=0
-    for i,l in enumerate(lines):
-        m=re.match(r'- (2026-\d\d-\d\d \d\d:\d\d)',l)
-        if m and m.group(1)>=lim: start=i; break
-    print('queue from line',start,'of',len(lines))
-    for i,l in enumerate(lines[start:]): line_blockers(l,'queue:%d'%(start+i),emit)
+    # queue: the rotated archives (lanes/archive/COORD-REVIEW-QUEUE-*.md, COORD-COMMIT-SPEED-1 11-13) and the live file
+    for src,i,l in queue_window(COORD,QDAYS): line_blockers(l,'%s:%d'%(src,i),emit)
     # other notes
     TXT=('.md','.txt')
-    docs=[p for p in glob.glob(COORD+'/lanes/**',recursive=True) if p.endswith(TXT) and not p.endswith('COORD-REVIEW-QUEUE.md') and '/lanes/prune/' not in p and os.path.basename(p)!='PROTECTED-DBS.txt']
+    docs=[p for p in glob.glob(COORD+'/lanes/**',recursive=True) if p.endswith(TXT) and not p.endswith('COORD-REVIEW-QUEUE.md') and not os.path.basename(p).startswith('COORD-REVIEW-QUEUE-') and '/lanes/prune/' not in p and os.path.basename(p)!='PROTECTED-DBS.txt']
     docs+=glob.glob(COORD+'/CODEX-LOG.md')+glob.glob(COORD+'/CODEX-HANDOFF*')+glob.glob(COORD+'/HANDOFF*')+glob.glob(COORD+'/handoff/**',recursive=True)+glob.glob(COORD+'/tmp/**/*.md',recursive=True)+glob.glob(COORD+'/tmp/**/*.txt',recursive=True)
     for p in sorted(set(docs)):
         if not os.path.isfile(p) or os.path.getsize(p)>64<<20: continue
