@@ -2790,6 +2790,13 @@ class Binder:
             self.warns.append(f"TYPE_CANON {tn}: " + ", ".join(f"{m['inst']}->{m['ref']} ({m['renamed']} renamed)"
                                                                for m in merged if m["type"] == tn))
 
+    def r8_pad_width(self, tn, site=None):
+        import r8 as R8
+        capacity = R8.strap_pad_capacity(getattr(self, "types", {}).get(tn, {}))
+        record = getattr(self, "r8_sites", {}).get(tn, {}).get(site)
+        # Only the used span needs a selector. A larger type capacity does not widen its unchanged short banks.
+        return max(4, int(record["span"]).bit_length()) if record is not None else capacity.bit_length()
+
     def r8_strap_sites(self, by_type):
         """asbuilt.land_r8_strap_pads = true (OWNER 2026-10-28 KV R8 decision, opt-in): instances of one partition type
         whose R8 landing pads differ at a sink bit are NOT a type split.  Every such (leaf, port) bit set with one
@@ -2828,8 +2835,9 @@ class Binder:
                 per_port[(r, pn)] += 1
                 site = short_id(f"strap_r8pad_{r}__{pn}" + (f"_{n}" if n else ""), 80)
                 base, mx = min(pv), max(pv)
-                if mx > R8.STRAP_PAD_MAX:
-                    self.errors.append(f"R8_STRAP_PAD {tn} {r}.{pn}: pad {mx} > strap capacity {R8.STRAP_PAD_MAX}")
+                capacity = R8.strap_pad_capacity(getattr(self, "types", {}).get(tn, {}))
+                if mx > capacity:
+                    self.errors.append(f"R8_STRAP_PAD {tn} {r}.{pn}: pad {mx} > strap capacity {capacity}")
                     continue
                 counts = {p: pv[k] - base for k, p in enumerate(ps)}
                 sites[site] = dict(leaf=r, port=pn, bits=sorted(bits), width=len(bits), base=base, span=mx - base,
@@ -2886,9 +2894,10 @@ class Binder:
                 per_port[(r, pn)] += 1
                 site = short_id(f"strap_r8pad_{r}__{pn}__in" + (f"{n}" if n else ""), 80)
                 base, mx = min(pv), max(pv)
-                if mx - base > R8.STRAP_PAD_MAX:
+                capacity = R8.strap_pad_capacity(getattr(self, "types", {}).get(tn, {}))
+                if mx - base > capacity:
                     self.errors.append(f"INNER_STRAP_PAD {tn} {r}.{pn} <- {sr}.{spn}: depth span {mx - base} > strap "
-                                       f"capacity {R8.STRAP_PAD_MAX}")
+                                       f"capacity {capacity}")
                     continue
                 if site in sites:
                     raise BindError(f"INNER_STRAP_PAD {tn}: site name {site} collides")
@@ -3446,9 +3455,10 @@ class Binder:
         r8_ports = {}
         for k in sorted(params, key=repr):
             if k[0] == "r8pad":
-                r8_ports[k[1]] = dict(width=4, kind="r8pad_strap")
-                pnames[k] = (k[1], 4)
-                ports.append(f"    input wire [3:0] {k[1]}   // parent-tied R8 pad-count strap (OWNER 10-28): static")
+                r8cw = self.r8_pad_width(tn, k[1])
+                r8_ports[k[1]] = dict(width=r8cw, kind="r8pad_strap")
+                pnames[k] = (k[1], r8cw)
+                ports.append(f"    input wire [{r8cw - 1}:0] {k[1]}   // parent-tied R8 pad-count strap (OWNER 10-28): static")
         self.__dict__.setdefault("r8pad_ports", {})[tn] = r8_ports
         r8banks = {}                         # site -> output wire of the bank (one bank per site, W = site bits)
         # die IO inputs (pads) read by this partition's leaves: one partition port per die port, named io_<port>
@@ -3813,7 +3823,9 @@ class Binder:
                                         f".q({nb}_f));  // INNER strap site {site}: fixed common depth {base}")
                             prev = f"{nb}_f"
                         decl.append(f"    wire [{W - 1}:0] {nb};")
-                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span})) u_{nb} (.clk(clk), "
+                        bank_cw = r8_ports[site]["width"]
+                        r8cw_param = f", .CW({bank_cw})" if bank_cw != 4 else ""
+                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span}){r8cw_param}) u_{nb} (.clk(clk), "
                                     f".strap_cnt({site}), .d({prev}), .q({nb}));  // INNER strap-count bank "
                                     f"(depth = {base} + {site})")
                         r8banks[site] = (nb, sb)
@@ -3845,7 +3857,9 @@ class Binder:
                                         f".q({nb}_f));  // R8 strap site {site}: fixed common pad {base}")
                             prev = f"{nb}_f"
                         decl.append(f"    wire [{W - 1}:0] {nb};")
-                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span})) u_{nb} (.clk(clk), "
+                        bank_cw = r8_ports[site]["width"]
+                        r8cw_param = f", .CW({bank_cw})" if bank_cw != 4 else ""
+                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span}){r8cw_param}) u_{nb} (.clk(clk), "
                                     f".strap_cnt({site}), .d({prev}), .q({nb}));  // R8 strap-count bank "
                                     f"(pad = {base} + {site})")
                         r8banks[site] = (nb, sb)
@@ -4122,10 +4136,10 @@ class Binder:
             for k, (nm, w) in sorted(pn.items(), key=lambda kv: kv[1][0]):
                 if k[0] == "r8pad":
                     cnt = self.tvals[tn][p].get(k)
-                    if type(cnt) is not int or not 0 <= cnt < 16:
-                        raise BindError(f"R8 strap pad {p}.{nm}: count {cnt} is not a 4-bit constant")
-                    parent_ids.append((nm, f"4'b{cnt:04b}"))
-                    self.__dict__.setdefault("r8pad_values", {}).setdefault(sv_id(p), {})[nm] = (4, cnt)
+                    if type(cnt) is not int or not 0 <= cnt < (1 << w):
+                        raise BindError(f"R8 strap pad {p}.{nm}: count {cnt} is not a {w}-bit constant")
+                    parent_ids.append((nm, f"{w}'b{cnt:0{w}b}"))
+                    self.__dict__.setdefault("r8pad_values", {}).setdefault(sv_id(p), {})[nm] = (w, cnt)
                     continue
                 if k[0] == "strap":
                     r, port = k[1], k[2]

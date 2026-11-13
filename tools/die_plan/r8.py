@@ -250,7 +250,19 @@ def type_norm(raw):
     return out
 
 
-STRAP_PAD_MAX = 15     # 4-bit pad-count strap (ot_dp_dly_cnt CW); a site needing more is an ERROR
+STRAP_PAD_MAX = 15     # default 4-bit pad-count strap; larger banks require a declared type-local hardware capacity
+
+
+def strap_pad_capacity(type_spec=None):
+    """Type-local R8 bank capacity; absent retains every existing 4-bit form and rejection."""
+    value = (type_spec or {}).get("r8_strap_pad_max", STRAP_PAD_MAX)
+    if type(value) is not int or value < STRAP_PAD_MAX:
+        raise ValueError("r8_strap_pad_max must be an integer >= 15")
+    return value
+
+
+def strap_pad_width(type_spec=None):
+    return strap_pad_capacity(type_spec).bit_length()
 
 
 def check(bg, raw, landing=None, replica="all", bus="part", limit=40, strap_pads=False):
@@ -344,10 +356,11 @@ def check(bg, raw, landing=None, replica="all", bus="part", limit=40, strap_pads
                                             source=k[3], asbuilt=k[4], dmax=mx, base=base, span=mx - base, pads=pads,
                                             used=sorted(set(pads.values())),
                                             strap_counts=sorted({v - base for v in pads.values()})))
-                    if mx > STRAP_PAD_MAX:
+                    capacity = strap_pad_capacity(raw.get("partition_types", {}).get(t, {}))
+                    if mx > capacity:
                         bad_t += 1
                         msgs.append(("ERROR", f"R8 strap pad {t} {k[0]}.{k[1]} <- {k[3]}: pad {mx} > strap capacity "
-                                     f"{STRAP_PAD_MAX}"))
+                                     f"{capacity}"))
                 msgs.append(("WARN", f"R8 type {t}: {len(conf)} strap-pad sites (instances tie their pad count; "
                              "OWNER 10-28 strap pads)"))
                 continue
