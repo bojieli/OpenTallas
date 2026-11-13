@@ -1,0 +1,23 @@
+{
+ "source": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv",
+ "sha256": "6974331afcbecab8932b3eb0b78b4ccbaa37ed8f7aae4b4dfc5012e1cc5df12a",
+ "defines": [
+  "OT_GUNIT_BF_M1REG",
+  "OT_GUNIT_BF_C1REG"
+ ],
+ "modules_prefixed": [
+  "dsdv_l1f_term8",
+  "dsdv_l1f_mux8",
+  "dsdv_l1f_or8",
+  "dsdv_l1f_wdec8",
+  "dsdv_l1f_dec64",
+  "dsdv_l1f_dec7",
+  "dsdv_gunit_l1f_flat",
+  "dsdv_gunit_l1f_acore",
+  "dsdv_gunit_l1f_ba0",
+  "dsdv_gunit_l1f_ba1",
+  "dsdv_gunit_l1f_bf",
+  "dsdv_gunit_l1f"
+ ],
+ "note": "Frozen before GF5 edits; complete three-band parent and F/A modules, common external FP/SRAM models unchanged."
+}

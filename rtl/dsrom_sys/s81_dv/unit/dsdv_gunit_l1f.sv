@@ -408,6 +408,11 @@ module dsdv_gunit_l1f_acore #(
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     reg [NL*32-1:0] s_bias;
     always @(posedge clk) for (k = 0; k < NL; k = k + 1) s_bias[32 * k +: 32] <= (MUT == 1) ? 32'd0 : rd[32 * k +: 32];
+`ifdef OT_GUNIT_BF_SVREG
+    // GF5: preserve the original SRAM read snapshot while F SV/CTL gains one stage.
+    (* keep *) reg [NL*32-1:0] s_bias_svreg;
+    always @(posedge clk) s_bias_svreg <= s_bias;
+`endif
     wire       s_v = ctl[0], s_f = ctl[1], s_l = ctl[2];
     wire [2:0] s_bn = ctl[5:3];
     wire [NL-1:0] s_lv = ctl[13:6];
@@ -426,7 +431,16 @@ module dsdv_gunit_l1f_acore #(
             wire [31:0] pa2 = pa;
             always @(posedge clk) begin
                 pa <= sv[32 * l +: 32];
+`ifdef OT_GUNIT_BF_SVREG
+`ifdef OT_GUNIT_BF_SVREG_MUT_BIAS
+                // Negative: matching bias snapshot is one edge ahead of the data.
                 pb <= s_bias[32 * l +: 32]; pb2 <= s_bias[32 * l +: 32];
+`else
+                pb <= s_bias_svreg[32 * l +: 32]; pb2 <= s_bias_svreg[32 * l +: 32];
+`endif
+`else
+                pb <= s_bias[32 * l +: 32]; pb2 <= s_bias[32 * l +: 32];
+`endif
             end
             wire vo; wire [1:0] er;
             ot_s81sl_ve_fadd u (.clk(clk), .rst_n(rq[6 + GL / 4]), .valid_in(pv), .a(pa), .a2(pa2), .b(pb), .b2(pb2),
@@ -626,6 +640,35 @@ module dsdv_gunit_l1f_bf (
     // FACE 11-07: ctl_hi has its own kept copies of {s_bn, s_l, s_f, s_v} (one output flop per pin bit; the 10-22 band
     // drove ctl_lo and ctl_hi from the same flops = face_guard feedthrough / shared); same D, same edge
     (* keep *) reg s_vh, s_fh, s_lh; (* keep *) reg [2:0] s_bnh;
+`ifdef OT_GUNIT_BF_SVREG
+    // GF5: local read/forward mux -> interior register -> existing named face flops.
+    // All 512 data + 22 unique metadata bits move by one edge, together.
+    (* keep *) reg [NL*32-1:0] svreg_data;
+    (* keep *) reg svreg_v, svreg_f, svreg_l;
+    (* keep *) reg [2:0] svreg_bn;
+    (* keep *) reg [NL-1:0] svreg_lv;
+    integer svreg_k;
+    always @(posedge clk or negedge rq[5])
+        if (!rq[5]) svreg_v <= 1'b0; else svreg_v <= cgo;
+    always @(posedge clk) begin
+        svreg_data <= svn;
+        svreg_f <= cfwc[0]; svreg_l <= cl; svreg_bn <= cbc[2:0];
+        for (svreg_k = 0; svreg_k < NL; svreg_k = svreg_k + 1) svreg_lv[svreg_k] <= svreg_k < clv;
+    end
+    always @(posedge clk or negedge rq[5])
+        if (!rq[5]) begin s_v <= 1'b0; s_vh <= 1'b0; end else begin s_v <= svreg_v; s_vh <= svreg_v; end
+    always @(posedge clk) begin
+        s_f <= svreg_f; s_l <= svreg_l;
+        s_fh <= svreg_f; s_lh <= svreg_l;
+`ifdef OT_GUNIT_BF_SVREG_MUT_CTL
+        // Negative: beat identity one edge ahead of its captured data.
+        s_bn <= cbc[2:0]; s_bnh <= cbc[2:0];
+`else
+        s_bn <= svreg_bn; s_bnh <= svreg_bn;
+`endif
+        s_lv <= svreg_lv; s_val <= svreg_data;
+    end
+`else
     always @(posedge clk or negedge rq[5])
         if (!rq[5]) begin s_v <= 1'b0; s_vh <= 1'b0; end else begin s_v <= cgo; s_vh <= cgo; end
     always @(posedge clk) begin
@@ -636,6 +679,7 @@ module dsdv_gunit_l1f_bf (
             for (j = 0; j < 4; j = j + 1) s_val[32 * k + 8 * j +: 8] <= svn[32 * k + 8 * j +: 8];
         end
     end
+`endif
     assign sv_lo = s_val[255:0];  assign sv_hi = s_val[511:256];
     assign ctl_lo = {s_lv[7:0], s_bn, s_l, s_f, s_v};
     assign ctl_hi = {s_lv[15:8], s_bnh, s_lh, s_fh, s_vh};

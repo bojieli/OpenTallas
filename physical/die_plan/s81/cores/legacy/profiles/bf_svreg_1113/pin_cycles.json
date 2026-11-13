@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.gunit.gf5_paired_pin_cycles.v1",
+ "status": "SOURCE_READY_DEFAULT_OFF_NOT_PHYSICALLY_QUALIFIED",
+ "defines": [
+  "OT_GUNIT_BF_M1REG",
+  "OT_GUNIT_BF_C1REG",
+  "OT_GUNIT_BF_SVREG"
+ ],
+ "requires_paired_masters": [
+  "dsdv_gunit_l1f_bf",
+  "dsdv_gunit_l1f_ba0",
+  "dsdv_gunit_l1f_ba1"
+ ],
+ "additional_cycles_vs_gf4": {
+  "bf_SV_CTL_outputs": 1,
+  "bf_direct_sort_input_to_output": 0,
+  "bf_gather": 0,
+  "A_SV_CTL_to_sort_outputs": 0,
+  "A_bias_prefetch_lead_relative_to_SV": 1,
+  "whole_front_select": 1,
+  "whole_GU_router_ids": 1,
+  "whole_GU_gather_feedback": 0
+ },
+ "measured": {
+  "RT_LAT_N": 65,
+  "RT_LAT_S": 63,
+  "RW_GAP": 103,
+  "weights_II": 1
+ },
+ "registers_added": {
+  "bf": 534,
+  "ba0": 256,
+  "ba1": 256
+ },
+ "existing_gf4_output_cycles_vs_gf2": 2,
+ "adoption": "All three new variants require reviewed placement, LEC and re-sign before a coordinated plan selects them. Old views and recipes untouched."
+}

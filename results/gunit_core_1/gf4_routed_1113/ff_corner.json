@@ -1,0 +1,211 @@
+{
+ "done": true,
+ "design": "dsdv_gunit_l1f_bf",
+ "cells": 429055.0,
+ "parasitics": "spef",
+ "clocks": [
+  "clk",
+  "vclk"
+ ],
+ "vclks": [
+  "vclk"
+ ],
+ "periods": {
+  "clk": 833.0,
+  "vclk": 833.0
+ },
+ "clock_ports": [
+  "clk"
+ ],
+ "inputs": [
+  "c_bn",
+  "c_fw",
+  "c_go",
+  "c_l",
+  "c_lvn",
+  "g_a",
+  "g_go",
+  "g_hit",
+  "rst_n",
+  "s0a",
+  "s0b",
+  "s1a",
+  "s1b",
+  "sa_d",
+  "sa_r",
+  "sb_d",
+  "sb_r",
+  "sf0",
+  "vf_hi",
+  "vf_lo",
+  "we"
+ ],
+ "outputs": [
+  "ctl_hi",
+  "ctl_lo",
+  "o_d",
+  "o_f",
+  "o_flt",
+  "o_g",
+  "o_l",
+  "o_v",
+  "sv_hi",
+  "sv_lo"
+ ],
+ "overlay": "applied vclk in_min -40 out_min 0",
+ "ff_vclk_reference": "applied mode bound_ff clock vclk latency_ps 202.500000",
+ "sdc_wns_max": 109.76,
+ "sdc_wns_min": -1.07,
+ "sdc_tns_max": 0.0,
+ "sdc_tns_min": -1.07,
+ "sdc_nviol_max": 0.0,
+ "sdc_nviol_min": 1.0,
+ "std_wns_max": 109.76,
+ "std_wns_min": -38.28,
+ "std_tns_max": 0.0,
+ "std_tns_min": -10011.21,
+ "std_nviol_max": 0.0,
+ "std_nviol_min": 883.0,
+ "std_min_start": {
+  "port": 882.0,
+  "other": 1.0,
+  "reg": 1.0,
+  "trunc": 0.0,
+  "err": 0.0,
+  "ports": [
+   "c_bn",
+   "c_fw",
+   "c_go",
+   "c_l",
+   "c_lvn",
+   "g_a",
+   "g_go",
+   "g_hit",
+   "s0a",
+   "s0b",
+   "s1a",
+   "s1b",
+   "sa_d",
+   "sa_r",
+   "sb_d",
+   "sb_r",
+   "sf0",
+   "vf_hi",
+   "vf_lo",
+   "we"
+  ],
+  "oport": 0.0,
+  "oports": [],
+  "nonport_n": 1.0,
+  "nonport_wns": -1.07,
+  "core_n": 1.0,
+  "core_wns": -1.07
+ },
+ "slew_viol": 0.0,
+ "cap_viol": 3.0,
+ "fanout_max": 32.0,
+ "fanout_worst_net": "clknet_leaf_360_clk",
+ "fanout_viol": 0.0,
+ "check_setup": {
+  "unconstrained": 0,
+  "unclocked": 0,
+  "loops": 0,
+  "multiple_clock": 0,
+  "generated": 0
+ },
+ "ck_errors": 0.0,
+ "pg_terms": 858110.0,
+ "pg_open": 0.0,
+ "pg_first_open": null,
+ "insertion_all": {
+  "n": 10730,
+  "min": 308.55,
+  "mean": 334.27,
+  "max": 414.43,
+  "spread": 105.88
+ },
+ "insertion_pinflops": {
+  "n": 4911,
+  "min": 310.88,
+  "mean": 333.33,
+  "max": 410.08,
+  "spread": 99.2
+ },
+ "pair_skew": {
+  "done": true,
+  "checks": {
+   "max": {
+    "n": 201745.0,
+    "worst_abs_ps": 105.57,
+    "bounded": false,
+    "worst_signed_ps": -105.57,
+    "worst_launch": "sc[735]$_DFFE_PP_",
+    "worst_capture": "sv_lo[223]$_DFF_P_",
+    "worst_crpr_ps": 5.36,
+    "p99_raw_ps": 85.05,
+    "searched": 20.0,
+    "nopath": 0.0,
+    "verify_ps": 0.0
+   },
+   "min": {
+    "n": 201745.0,
+    "worst_abs_ps": 100.57,
+    "bounded": false,
+    "worst_signed_ps": 100.57,
+    "worst_launch": "gac[152]$_DFF_P_",
+    "worst_capture": "hs[424]$_DFF_P_",
+    "worst_crpr_ps": 4.46,
+    "p99_raw_ps": 62.57,
+    "searched": 31.0,
+    "nopath": 0.0,
+    "verify_ps": 0.0
+   }
+  },
+  "counts": {
+   "regs": 10730.0,
+   "no_clock_arrival": 0.0,
+   "data_pins": 10730.0,
+   "pairs": 201745.0,
+   "inter_clock": 0.0
+  },
+  "method": "tag",
+  "seconds": 20.0,
+  "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+  "tsv": "pair_skew.tsv"
+ },
+ "clock_endpoint_masters": [
+  "DFFASRHQNx1_ASAP7_75t_R",
+  "DFFHQNx1_ASAP7_75t_R",
+  "DFFHQNx2_ASAP7_75t_R",
+  "DFFHQNx3_ASAP7_75t_R"
+ ],
+ "clock_endpoint_mapping_errors": 0.0,
+ "ocv5_wns_max": 52.72,
+ "ocv5_wns_min": -63.23,
+ "unc_policy": {
+  "policy": "nominal",
+  "setup_ps": 0.0,
+  "hold_ps": 25.0,
+  "errors": 0.0
+ },
+ "corner": "ff",
+ "rc": 0,
+ "macro_libs": [],
+ "macro_missing": [],
+ "errors": [],
+ "clock_endpoint_coverage": {
+  "schema": "opentallas.clock_endpoint_coverage.v1",
+  "raw_pair_basis": "visible_clock_pins",
+  "models": [],
+  "instantiated_masters": [
+   "DFFASRHQNx1_ASAP7_75t_R",
+   "DFFHQNx1_ASAP7_75t_R",
+   "DFFHQNx2_ASAP7_75t_R",
+   "DFFHQNx3_ASAP7_75t_R"
+  ],
+  "status": "NO_UNEXPANDED_CHILD_ETM",
+  "verdict": "PASS",
+  "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+  "library_receipt": "/srv/opentallas-scratch2/claude/gunit-core-1/kits/kit_gf4/signoff_codex_gf4_1113/ff/libraries.json"
+ }
+}

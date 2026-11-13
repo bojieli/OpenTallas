@@ -100,13 +100,18 @@ RT_LAT_BASE_N, RT_LAT_BASE_S = 62, 60  # -> ids row on vo_n / vo_s with the bf c
 # DIE-S81-89 11-13: like HC_LAT, the router latency follows the FORM of record of the hard core dsdv_gunit_l1f_bf (its
 # recipe defines, physical/die_plan/s81/cores/legacy/recipes.json): whichever bf view binds carries its schedule (no second
 # edit).  Every bf output o_* (-> u_l1c -> u_l1 -> ids row on vo_n / vo_s) moves by the define's delta; the gather reply
-# moves with it. The weight path traverses bf again after IDs, so RW_GAP also adds the form delta.
+# moves with it for the M1REG/C1REG forms. GF5 SVREG shifts only select: its paired A bias snapshot
+# preserves the old read edge; gather feedback is separate and keeps the gf4 RW_GAP.
 # No die lane (plan latency.lanes) changes (GUNIT-CORE-1 11-13 trace).
 #   OT_GUNIT_BF_M1REG  gf3: u_m1 first exchange registered (c1r)                    +1  (DIE-S81-80 11-08)
 #   OT_GUNIT_BF_C1REG  gf4: fold / candidate compares registered at the compare site +1  (GUNIT-CORE-1 11-13)
+#   OT_GUNIT_BF_SVREG gf5: local SV/CTL cut + paired A bias snapshot; select +1, gather +0
 # run_gu_bench.sh compiles the bench with the same define set (bf_defines()) and asserts the total.  An OT_GUNIT_BF_*
 # define without a row here fails closed: a new bf form adds its row with the delta its bench measures.
-RT_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1))
+RT_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1), ('OT_GUNIT_BF_SVREG', 1))
+# GF5 SV/paired-bias stage is on the select path, not the independent gather reply.
+# Keep the feedback budget separate: gf2/3/4 remain byte-for-byte the same prices.
+RW_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1), ('OT_GUNIT_BF_SVREG', 0))
 BF_RECIPE = 'physical/die_plan/s81/cores/legacy/recipes.json'
 BF_CORE = 'dsdv_gunit_l1f_bf'
 BF_DEFINES_ENV = 'OT_GUNIT_BF_DEFINES'   # bench / what-if override: comma or space separated, "" = gf2 (no define)
@@ -132,9 +137,20 @@ def rt_form_delta(defines=None):
     return sum(known.get(d, 0) for d in defs)
 
 
+def rw_form_delta(defines=None):
+    """Response-class-specific gather feedback delta; unknown BF forms fail closed."""
+    defs = bf_defines() if defines is None else tuple(defines)
+    rt_form_delta(defs)
+    known = dict(RW_FORM_DELTAS)
+    bad = [d for d in defs if d.startswith('OT_GUNIT_BF_') and d not in known]
+    if bad:
+        raise ValueError(f'{BF_CORE} define(s) {bad} have no RW_FORM_DELTAS row')
+    return sum(known.get(d, 0) for d in defs)
+
+
 RT_LAT_N, RT_LAT_S = RT_LAT_BASE_N + rt_form_delta(), RT_LAT_BASE_S + rt_form_delta()
 RW_GAP_BASE = 101               # gf2 IDs -> first weights row (L3 ot_s81_su_rw, measured)
-RW_GAP = RW_GAP_BASE + rt_form_delta()  # feedback weight path crosses bf once more; gf3 102, gf4 103
+RW_GAP = RW_GAP_BASE + rw_form_delta()  # gf3 102, gf4 103; GF5 SV does not traverse this reply
 import sys as _sys                                  # noqa: E402
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
 from leaf_rows import GU_ROWS                       # noqa: E402  (TOK-S81-GAPS/GU: the allocated leaf-store rows)

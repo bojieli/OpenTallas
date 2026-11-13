@@ -38,3 +38,17 @@ def test_module_constants_follow_the_bf_form():
     defs = L.bf_defines() if ENV_AT_IMPORT is None else tuple(sorted(d for d in ENV_AT_IMPORT.replace(',', ' ').split()))
     d = L.rt_form_delta(defs)
     assert (L.RT_LAT_N, L.RT_LAT_S) == (L.RT_LAT_BASE_N + d, L.RT_LAT_BASE_S + d)
+
+
+def test_svreg_select_stage_does_not_double_charge_gather_feedback():
+    gf4 = ('OT_GUNIT_BF_M1REG', 'OT_GUNIT_BF_C1REG')
+    gf5 = gf4 + ('OT_GUNIT_BF_SVREG',)
+    assert L.rt_form_delta(gf5) == L.rt_form_delta(gf4) + 1
+    assert L.rw_form_delta(gf5) == L.rw_form_delta(gf4) == 2
+    for defs in ((), ('OT_GUNIT_BF_M1REG',), gf4):
+        assert L.rw_form_delta(defs) == L.rt_form_delta(defs)
+
+
+def test_unknown_feedback_form_fails_closed():
+    with pytest.raises(ValueError):
+        L.rw_form_delta(('OT_GUNIT_BF_UNMEASURED',))
