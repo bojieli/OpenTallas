@@ -92,6 +92,45 @@ class Store(unittest.TestCase):
         self.assertEqual(out["delete"], 1)
 
 
+class InPlaceSrc(unittest.TestCase):
+    """KIT-STAGE-1 11-13: KV kv3_pv x15 failed kit_rtl 'preferred HDL source missing: <kit_inputs>/<src>/rtl/...': the plan and
+    as-built live in the wave src, were moved into the kit, and the bind resolved tree-relative files against the moved copy"""
+
+    def setUp(self):
+        self.t = os.path.realpath(tempfile.mkdtemp(prefix="kst"))
+        self.old = KS.SCAN_PREFIX
+        KS.SCAN_PREFIX = self.t
+        self.root = os.path.join(self.t, "scratch/kit-store")
+        self.src = os.path.join(self.t, "scratch/claude/kw45/src_kv_main_abc")
+        self.lane = os.path.join(self.t, "scratch/claude/kit-ops-1/kvbind")
+
+    def tearDown(self):
+        KS.SCAN_PREFIX = self.old
+
+    def test_src_inputs_stay_in_place_outside_inputs_move_in(self):
+        plan = put(os.path.join(self.src, "physical/die_plan/kv/plan_c.json"), '{"p": 1}')
+        ab = put(os.path.join(self.src, "physical/die_plan/kv/asbuilt.json"), '{"base": "x", "files": ["rtl/a.sv"]}')
+        sv = put(os.path.join(self.src, "rtl/a.sv"), "module a; endmodule\n")
+        ext = put(os.path.join(self.t, "scratch/claude/other-lane/views/b.sv"), "module b; endmodule\n")
+        put(os.path.join(self.lane, "out/bind_report.json"), '{"errors": []}')
+        put(os.path.join(self.lane, "out/bind.f"), sv + "\n" + ext + "\n")
+        spec = {"in_place": [self.src], "inputs": [
+            {"role": "plan", "path": plan, "kind": "file", "required": True, "siblings": ["r8"]},
+            {"role": "asbuilt", "path": ab, "kind": "file", "required": True, "siblings": []},
+            {"role": "bind_out", "path": os.path.join(self.lane, "out"), "kind": "dir", "required": True}]}
+        ki = os.path.join(self.t, "kit/kit_inputs")
+        man = KS.snapshot(spec, ki, store_root=self.root, log=lambda *a: None)
+        self.assertNotIn(plan, man["map"])                    # read where it is: tree-relative files resolve in the src
+        self.assertNotIn(ab, man["map"])
+        self.assertIn(plan, man["in_place"])
+        self.assertIn(sv, man["in_place"])
+        self.assertEqual(len(man["in_place"][sv]), 64)        # recorded by content sha
+        self.assertIn(ext, man["map"])                        # outside the src: copied into the kit
+        bf = open(ki + os.path.join(self.lane, "out/bind.f")).read().split()
+        self.assertEqual(bf, [sv, ki + ext])                  # the src line kept, the lane line kit-local
+        self.assertTrue(os.path.exists(ki + ext))
+
+
 class KitWaveOption(unittest.TestCase):
     def setUp(self):
         self.K = SourceFileLoader("kw_ks", str(HERE / "kit_wave.py")).load_module()

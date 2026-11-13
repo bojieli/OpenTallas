@@ -143,6 +143,10 @@ ARCHIVE_PREFIX = "/archive/opentallas-signed-1106/"
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 GENERIC_NAMES = {"kit", "run", "base", "results", "asap7", "src", "items", "work", "kits", "children", "child",
                  "s81_head", "kit-wave", "relocated-1106", "relocated-1106b", "signoff", "objects", "logs", "reports"}
+# OWNER 11-13 03:5x (via COORD): every attempt keeps its diagnostics (STA / timing reports, logs; a few MB each)
+KEEP_DIAG_DIRS = {"reports", "logs"}
+KEEP_DIAG_MAX_BYTES = 256 << 20
+REPORTS_KEPT_MARK = "REPORTS-KEPT.txt"
 HEAVY_DIRS = {"run", "objects", "results", "logs", "reports", "gen", "items", ".git"}
 ABS_RE = re.compile(r"(?<![\w.~/])/(?:srv|home|tmp)/[^\s'\"<>|;,()\[\]{}`*?$\\]+")
 REL_RE = re.compile(r"(?<![\w./-])(scratch\d*/claude/[^\s'\"<>|;,()\[\]{}`*?$\\]+)")
@@ -763,6 +767,52 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
 # of queued / running jobs, signed results until archived, protected paths still referenced).  reduce_live() is the
 # rule set the host applies with --live-refs-only; reduce_kitwave() above stays as it was for hosts without the flag.
 SPEC_RUN_KEYS = ("root", "work", "dir", "log", "logs")
+# KIT-STAGE-1 11-13 (COORD: DISK-E2 02:51 deleted die-hbm-92 + qc-transport-fix-4/src_sw2 that live binds named; the wave config
+# lists only the top-level src): every input field a kit spec / a die config names is a live input, not only src / plan.
+KIT_INPUT_KEYS = ("src", "plan", "queue_src", "kit_rtl", "gen_args", "gen_env", "type_overlay", "core_kit", "item_inputs",
+                  "item_env", "type_args", "prov_views", "region_guide_geom", "leafslew_form", "asbuilt", "bind_out", "script")
+
+
+def _drop_notes(v):
+    if isinstance(v, dict):
+        return {k: _drop_notes(x) for k, x in v.items() if not str(k).startswith("note")}
+    if isinstance(v, list):
+        return [_drop_notes(x) for x in v]
+    return v
+
+
+def spec_input_paths(spec, keys=KIT_INPUT_KEYS):
+    """absolute paths named by the input fields of a kit-wave spec / die config (whole values and paths inside commands
+    such as prep_cmd or '--clock-landing /x.json'); note* keys are commentary and never inputs"""
+    out = []
+    for k in keys:
+        if k in spec:
+            for s in _json_strings(_drop_notes(spec[k])):
+                if s.startswith("/"):
+                    out.append(os.path.normpath(s))
+                out += sorted(text_paths(s))
+    return list(dict.fromkeys(out))
+
+
+def config_keep(cfg):
+    """{path: why} of every input the kit-wave config names for an enabled die (rows not launched yet have no spec)"""
+    out = {}
+    if not isinstance(cfg, dict):
+        return out
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        # COORD 11-13 03:4x: every wave src tree the config names is protected, whatever the die's enabled / held state
+        # (a held or parked die resumes on the same trees); the other inputs of an enabled die too
+        srcs = [d.get("src")] + [v.get("src") for v in (d.get("item_inputs") or {}).values() if isinstance(v, dict)]
+        for p in srcs:
+            if isinstance(p, str) and p.startswith("/"):
+                out.setdefault(os.path.normpath(p), f"wave src of kit-wave config die {die}")
+        if d.get("enabled") is False or cfg.get("enabled") is False:
+            continue
+        for p in spec_input_paths(d):
+            out.setdefault(p, f"input of kit-wave config die {die}")
+    return out
 KW_CONTAINER_RE = re.compile(r"/kit-wave/[^/]+(?:/[^/]+(?:/items(?:/[^/]+)?)?)?$")   # die / event / items / item dirs
 LIVE_GRACE_S = 2 * 3600       # a terminal row whose queue still says RUNNING/QUEUED stays live this long after its last update
 QUEUED_STATUS = {"QUEUED", "PENDING-DEP", "WAIT-PARENT", "RETRY-INFRA", "ENQUEUED"}
@@ -858,6 +908,7 @@ def reduce_live(state, stage_rows, read_spec=None, history=None, orphans=(), now
         names = list(_json_strings(rec))
         if isinstance(spec, dict):
             names += [spec.get(f) for f in ("src", "plan", "queue_src")]
+            names += spec_input_paths(spec)          # KIT-STAGE-1 11-13: bind_out / asbuilt / script / sidecars too
         for s in names:
             hp = _host_path(s, (spec.get("gen_host") if isinstance(spec, dict) else "") or host)
             if not hp or not hp[0]:
@@ -953,6 +1004,19 @@ def kitwave_reduce_main(a):
     recs = [r for r in (state.get("items") or {}).values() if isinstance(r, dict)]
     history, orphans = kitwave_history([r.get("dir") for r in recs])
     out.update(reduce_live(state, rows, read_spec, history, orphans))
+    cfg_path = getattr(a, "config", "") or ""
+    if cfg_path:
+        try:
+            ck = config_keep(jl(cfg_path))
+        except (OSError, ValueError) as e:
+            raise SystemExit(f"kitwave-reduce: kit-wave config {cfg_path} unreadable ({e}); refusing a reduction without it")
+        keep, why = set(out["live_keep"]), out["live_keep_why"]
+        for p, w in ck.items():
+            k = f"cfg:{p}"
+            keep.add(k)
+            why.setdefault(k, w)
+        out["live_keep"] = sorted(keep)
+        out["config_inputs"] = len(ck)
     out["created"] = now_s()
     out["source"] = f"{socket.gethostname()}:{a.state_json} mtime {int(os.path.getmtime(a.state_json))}"
     json.dump(out, sys.stdout)
@@ -1413,48 +1477,63 @@ class Job:
             self.dx = dict(ledger=set(d.get("ledger") or []), paths=set(d.get("ledger_paths") or []), names=names,
                            stages=list(DX_STAGES))
 
-    BIND_NAME_RE = re.compile(r"(^bind.*\.f$|\.f$|^manifest.*\.json$|^plan.*\.json$|^filelist.*|^spec\.json$|^config\.mk$|\.mk$|^cmd\.sh$|^run_kit\.sh$)")
+    BIND_NAME_RE = re.compile(r"(^bind.*\.f$|\.f$|^manifest.*\.json$|^plan.*\.json$|^asbuilt.*\.json$|^bind_report\.json$|^provenance_bind\.json$|sidecar.*\.json$|^filelist.*|^spec\.json$|^config\.mk$|\.mk$|^cmd\.sh$|^run_kit\.sh$)")
+
+    BIND_DEPTH = 4                 # KIT-STAGE-1: spec -> bind_out -> bind.f / asbuilt -> sources (and a sidecar they name)
+    BIND_SCAN_SUFFIX = (".f", ".json", ".sh", ".tcl", ".mk", ".txt")
+    BIND_MAX_FILES = 20000
+    BIND_MAX_BYTES = 64 << 20
+
+    def _bind_files_in(self, p, cap=400):
+        """bind / filelist / manifest / plan / spec files below a keep dir (3 levels, heavy result dirs skipped)"""
+        files, stack = [], [(p, 0)]
+        while stack and len(files) < cap:
+            d, dep = stack.pop()
+            try:
+                ents = list(os.scandir(d))
+            except OSError:
+                continue
+            for e in ents:
+                try:
+                    if e.is_symlink():
+                        continue
+                    if e.is_dir(follow_symlinks=False):
+                        if dep < 3 and e.name not in HEAVY_DIRS and e.name not in ("results", "run", "logs", "objects", "reports"):
+                            stack.append((e.path, dep + 1))
+                    elif self.BIND_NAME_RE.search(e.name):
+                        files.append(e.path)
+                except OSError:
+                    pass
+        return files
 
     def add_bind_refs(self):
         """COORD 11-12 (autoclean emptied die-hbm-92-su/ab, named only by bind.f): parse every bind.f / filelist / manifest / plan /
-        spec of each kit-wave keep path (live or queued rows) and keep every path they name plus its parent dir"""
+        spec of each kit-wave keep path (live or queued rows) and keep every path they name plus its parent dir.
+        KIT-STAGE-1 11-13 (COORD: DISK-E2 02:51 deleted die-hbm-92 and qc-transport-fix-4/src_sw2 again; the kept spec named
+        the bind dir, the bind dir's bind.f / the asbuilt named the sources): TRANSITIVE.  A named file that is itself a recipe
+        or data file (.f .json .sh .tcl .mk .txt) is parsed in turn, and a named directory's bind files too, up to BIND_DEPTH
+        levels (bounded by BIND_MAX_FILES).  Paths found below the first level are kept only below lane level (a lane root or a
+        scratch root named in a json never pins a whole lane)."""
         if not len(self.kwkeep):
             return
-        files, seen = [], set()
+        queue, seen, parsed, added = [], set(), 0, 0
         for p in list(self.kwkeep.m):
             if os.path.isfile(p):
-                files.append(p)
+                queue.append((p, 0))
             elif os.path.isdir(p):
-                stack, n = [(p, 0)], 0
-                while stack and n < 400:
-                    d, dep = stack.pop()
-                    try:
-                        ents = list(os.scandir(d))
-                    except OSError:
-                        continue
-                    for e in ents:
-                        try:
-                            if e.is_symlink():
-                                continue
-                            if e.is_dir(follow_symlinks=False):
-                                if dep < 3 and e.name not in HEAVY_DIRS and e.name not in ("results", "run", "logs", "objects", "reports"):
-                                    stack.append((e.path, dep + 1))
-                            elif self.BIND_NAME_RE.search(e.name):
-                                files.append(e.path)
-                                n += 1
-                        except OSError:
-                            pass
-        added = 0
-        for f in files:
+                queue += [(f, 0) for f in self._bind_files_in(p)]
+        while queue and parsed < self.BIND_MAX_FILES:
+            f, lvl = queue.pop(0)
             if f in seen:
                 continue
             seen.add(f)
             try:
-                if os.path.getsize(f) > (8 << 20):
+                if os.path.getsize(f) > (self.BIND_MAX_BYTES if f.endswith(".json") else (8 << 20)):
                     continue
                 txt = rd(f)
             except OSError:
                 continue
+            parsed += 1
             if self.live_refs and os.path.basename(f) == "spec.json":
                 # CLEAN-2: a kit-wave spec's root / work / dir are where the row RUNS (the whole wave event dir, its own
                 # attempt), not inputs it reads; on intel2 they held 441 finished attempts of whole waves
@@ -1465,15 +1544,26 @@ class Job:
                 except ValueError:
                     pass
             for q in text_paths(txt):
-                if os.path.exists(q):
-                    for r_ in {q, os.path.dirname(q)}:
-                        if self.live_refs and r_ != q and (KW_CONTAINER_RE.search(self.paths.canon(r_)) or not self.deep(r_)):
-                            continue          # CLEAN-2: the parent of a named attempt is its item / event dir, the parent of a
-                                              # lane-level tree is the lane or scratch root: neither is a ref
-                        if r_.count("/") >= 4:
-                            self.kwkeep.add(r_, "bind/filelist ref from " + f)
+                if not os.path.exists(q):
+                    continue
+                if lvl > 0 and not self.deep(q):
+                    continue                  # transitive refs: below lane level only
+                for r_ in {q, os.path.dirname(q)}:
+                    if self.live_refs and r_ != q and (KW_CONTAINER_RE.search(self.paths.canon(r_)) or not self.deep(r_)):
+                        continue          # CLEAN-2: the parent of a named attempt is its item / event dir, the parent of a
+                                          # lane-level tree is the lane or scratch root: neither is a ref
+                    if r_.count("/") >= 4:
+                        if self.paths.canon(os.path.normpath(r_)) not in self.kwkeep.m:
                             added += 1
-        say(f"kit-wave keep: {len(files)} bind/filelist/manifest files parsed, {added} referenced paths added")
+                        self.kwkeep.add(r_, ("bind/filelist ref from " if lvl == 0 else f"transitive ref (level {lvl + 1}) from ") + f)
+                if lvl + 1 >= self.BIND_DEPTH or ATTEMPT_RE.match(q):
+                    continue                  # an attempt dir is a kit (its own keep rules), never walked as an input tree
+                if os.path.isfile(q) and q.endswith(self.BIND_SCAN_SUFFIX):
+                    queue.append((q, lvl + 1))
+                elif os.path.isdir(q) and self.deep(q):
+                    queue += [(x, lvl + 1) for x in self._bind_files_in(q, cap=200)]
+        say(f"kit-wave keep: {parsed} bind/filelist/manifest/json files parsed (transitive, depth {self.BIND_DEPTH}), "
+            f"{added} referenced paths added")
 
     def signed_near(self, unit):
         """DISK-1111 (OWNER 11-12 "routing results should be exported only if it is signed"): the unit, something below it or
@@ -1874,6 +1964,8 @@ class Job:
         return f"resume-pending: attempt_{n} {term or 'unknown'} not superseded, < 24 h"
 
     def eval_attempt(self, d):
+        if os.path.exists(os.path.join(d, REPORTS_KEPT_MARK)):
+            return "diagnostics remainder (reports/logs kept, OWNER 11-13)", []
         if self.kitwave is None:
             return "no kit-wave snapshot", []
         c = self.paths.canon(d)
@@ -2059,6 +2151,61 @@ class Job:
                 pass
         return subprocess.run(["rm", "-rf", "--one-file-system", "--", f], capture_output=True, text=True, timeout=7200)
 
+    def keep_reports(self, f):
+        """OWNER 11-13 03:5x (via COORD): keep every attempt's reports/ (STA / timing reports) and logs/ under the aggressive
+        cleanup, so a failure can be diagnosed instead of rebuilt blind.  Deletes everything in tree f EXCEPT directories named
+        in KEEP_DIAG_DIRS (with their whole contents) and writes REPORTS_KEPT_MARK at f; later runs skip f (class a and d).
+        Over KEEP_DIAG_MAX_BYTES of kept data in one tree keeps reports/ only.  -> bytes kept, or None when f holds no such
+        dir (the caller removes f whole).  Raises OSError on a failed rm."""
+        if not os.path.isdir(f) or os.path.islink(f):
+            return None
+        keepd = []
+        for dp, dns, _fns in os.walk(f):
+            for n in list(dns):
+                if n in KEEP_DIAG_DIRS and not os.path.islink(os.path.join(dp, n)):
+                    keepd.append(os.path.join(dp, n))
+                    dns.remove(n)                         # never walk into a kept dir
+        if not keepd:
+            return None
+        sizes = {k: tree_info_c(k)[1] for k in keepd}
+        if sum(sizes.values()) > KEEP_DIAG_MAX_BYTES:
+            keepd = [k for k in keepd if os.path.basename(k) == "reports"]
+            if not keepd or sum(sizes[k] for k in keepd) > KEEP_DIAG_MAX_BYTES:
+                say(f"keep-reports: {f}: kept diagnostics over {KEEP_DIAG_MAX_BYTES >> 20} MB, tree removed whole")
+                return None
+        keep_set = set(keepd)
+        anc = set()
+        for k in keepd:
+            a = os.path.dirname(k)
+            while a.startswith(f + "/") or a == f:
+                anc.add(a)
+                if a == f:
+                    break
+                a = os.path.dirname(a)
+
+        def prune(d):
+            for n in os.listdir(d):
+                q = os.path.join(d, n)
+                if q in keep_set:
+                    continue
+                if q in anc and os.path.isdir(q) and not os.path.islink(q):
+                    prune(q)
+                    continue
+                r = self.rm_tree(q) if (os.path.isdir(q) and not os.path.islink(q)) else None
+                if r is None:
+                    os.unlink(q)
+                elif r.returncode:
+                    if "ermission denied" in r.stderr and getattr(self.a, "aggressive", False):
+                        r = subprocess.run(["sudo", "-n", "rm", "-rf", "--one-file-system", "--", q], capture_output=True,
+                                           text=True, timeout=7200)
+                    if r.returncode:
+                        raise OSError(r.stderr.strip()[:200])
+        prune(f)
+        with open(os.path.join(f, REPORTS_KEPT_MARK), "w") as fh:
+            fh.write(f"{time.strftime('%F %T')} ot-autoclean: tree removed except {len(keepd)} diagnostics dir(s) "
+                     f"(OWNER 11-13 keep reports/logs)\n" + "".join(os.path.relpath(k, f) + "\n" for k in sorted(keepd)))
+        return sum(sizes[k] for k in keepd)
+
     def delete(self, cls, files):
         freed = 0
         for f in files:
@@ -2071,6 +2218,10 @@ class Job:
                 pass
             if cls == "a":
                 _, size, _ = tree_info_c(f)
+                kept = self.keep_reports(f)
+                if kept is not None:
+                    freed += max(0, size - kept)
+                    continue
                 r = self.rm_tree(f)
                 if r.returncode and "ermission denied" in r.stderr and getattr(self.a, "aggressive", False) \
                         and os.path.realpath(f) == f and not os.path.islink(f):
@@ -2210,7 +2361,7 @@ class Job:
             if stat.S_ISLNK(st.st_mode) or never_touch(p):
                 return
             if stat.S_ISDIR(st.st_mode):
-                if os.path.exists(os.path.join(p, ".ot-hold")):
+                if os.path.exists(os.path.join(p, ".ot-hold")) or os.path.exists(os.path.join(p, REPORTS_KEPT_MARK)):
                     return
                 why = self.d_why(p, keep, anc)
             else:
@@ -3205,6 +3356,8 @@ def main(argv=None):
     kr = sub.add_parser("kitwave-reduce")
     kr.add_argument("--state-json", default=os.path.join(HOME, "coord/autopilot/kit_wave_state.json"))
     kr.add_argument("--stages-tsv", default=os.path.join(HOME, "coord/autopilot/kit_wave_stages.tsv"))
+    kr.add_argument("--config", default=os.path.join(HOME, "coord/autopilot/kit_wave.json"),
+                    help="KIT-STAGE-1: kit-wave config whose enabled dies' inputs are live ('' = off)")
     dr = sub.add_parser("drive", help="localhost driver: snapshot -> push -> archive -> host runs -> collect")
     dr.add_argument("--archive-jobs", type=int, default=8, help="DISK-1111: signed units archived in parallel per host (1 = old serial pace)")
     dr.add_argument("--hosts", default=",".join(HOSTS))
