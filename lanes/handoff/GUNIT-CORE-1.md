@@ -68,3 +68,8 @@ epyc8 kit_gf4 + kit_gf4ds60 (ot-heavy tags gunit-core-1-kit_gf4*). Nothing kille
   -> replace kit_wave.json dies.s81.prov_view_sources[dsdv_gunit_l1f_bf] (backup first) so gunit__t1 re-signs with gf4 views.
   Pick ONE of the two kits (prefer stock kit_gf4 if both sign off). The +2 o_* cycles must be rescheduled by the S81 die owner
   before the gf4 view binds (corelat TSV is on the branch).
+
+## 9 Update 12:5x PST (COORD: keep going through items 1-5 myself)
+- Full bench PASS (bench_full.out). Lane mapping traced: bf -> u_l1c -> u_l1 -> vo_n/vo_s; no plan lane change; owed to
+  DIE-S81-89: lower_gu RT_LAT_N/RT_LAT_S 62/60 -> 64/62. Branch @98d58ab38d, READY posted to ROOT-MERGE.
+- Remaining: GRT + route renders posted for GEOM verdict, signoff.py, export_view.py, swap prov_view_sources (backup first).
