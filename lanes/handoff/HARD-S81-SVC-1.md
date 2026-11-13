@@ -49,3 +49,16 @@
   (kr_all.sh, 4 at a time, about 12 min per type); hi rs t1-t4 APPLIED. kit_rtl_post.sh run on the real closed kit of hi t2: PASS.
 - Running: epyc2 genproof.sh svc_hi_dsdv_svc_rs__t1 (gen + GEN_LINT from the closed kit RTL; intel2 ~/tmp/hard_s81_svc_genproof_hi_t1.log).
 - NOT done: steps 2-4 of the brief (split, floorplan, place/GRT kit). See the PLAN post for the form decision COORD has to make first.
+
+## RESUMED 2026-11-13 07:27 (COORD: Fable limit reset; I own svc again; read lanes/handoff/SVC-MACRO-2.md HANDBACK 07:26)
+- Checked myself after the handback: closure APPLIED 16/16 on the ready12b-A wave bind, 0 kit-rtl failures (intel2 ~/tmp/hard_s81_svc_kr_all.log);
+  GEN + GEN_LINT svc_hi_dsdv_svc_rs__t1 PASS, memory_bits PASS (~/tmp/hard_s81_svc_genproof_hi_t1.log); MEM v2 sim gate PASS, 5/5 mutants fail.
+- Memory part (brief step 1) = DONE by READY claude/svc-macro-2-1113@3856aafc01 (my fe4468028e on main 24b08535da; on origin). No new macro, no cycle change.
+- Codex recover output reviewed by SVC-MACRO-2 and kept as step 1 of the form: epyc7 hard-s81-svc-1/v5/plan_provider_recover.json, status
+  PRIVATE_UNGATED, 14 rs types, die geometry unchanged; pvso_entry t1/t2 OPEN (+57.24 um row offset, new landing placement); reset contract not re-solved.
+  Branch claude/svc-macro-2-form-1113@ff8154806c (script only). Untracked Codex files still in wt/hard-s81-svc-1 (not mine, left).
+- NOT started: RTL band cut (dsdv_svc_rs_c / ot_s81_svc_attn_s), sim + LEC of the cut, plan event, floorplan, private place + GRT kit.
+  All gated on the A/B ruling asked 2026-11-13 07:27. No job of mine is running. Hold SVC-MACRO-1113 stays.
+- Next for whoever continues: (1) ruling A/B; (2) band wrapper RTL + benches (tb_svc_h8_protocol, tb_svc_srx_attn, svc mem benches) + LEC with
+  boundary flops mapped + R-RTL-6 latency rows; (3) plan event = provider-recover + band partitions + pvso_entry + reset contract, R-STREET
+  (final on main 5eefdbe2fa) on the band streets; (4) one band part to place + GRT privately, renders viewed; (5) READY after 11-15 04:00.
