@@ -555,9 +555,9 @@ class Verification:
         if (self.table.get('count_aligned') or {}).get('strap_form'):
             import clock_landings as CL
             pr=getattr(ring,'params',None) or {}
-            need=CL.reader_reset_copies(self.raw,self.parts[pn]['type'],bus,int(pr.get('W',0) or len(ring.ports.get('q',[]))),int(pr.get('READ_CHUNK',0) or 0))
+            need=CL.reader_reset_copies(self.raw,self.parts[pn]['type'],bus,int(pr.get('W',0) or len(ring.ports.get('q',[]))),int(pr.get('READ_CHUNK',0) or 0),int(pr.get('DSREP',1) or 1),int(pr.get('DEPTH',4) or 4))
             if need and rep<need:
-                self.fail(ring.path+f': reader START copies {rep} < {need} (CLAND-RING-LOCALITY one copy per read chunk)')
+                self.fail(ring.path+f': reader START copies {rep} < {need} (CLAND-RING-LOCALITY / RSTH-1 per-chunk copies)')
         return prev
 
     def writer_start(self,pn,bus,start_d):

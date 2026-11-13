@@ -126,12 +126,12 @@ def test_wide_soft_strap_ring_gets_reach_wreg_and_k_plus_one():
     lg = Landings(p, t)
     rtl = lg.type_rtl("B", body)
     line = _ring_line(rtl)
-    # WREG (writer) + reach reader START: RSTREP 1 + 9 chunks, PLACEREP copies per chunk
-    assert line.endswith(", .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(10), .PLACEREP(1)) u_cland_y ("), line
+    # WREG (writer) + reach reader START: RSTREP 1 + 2 x 9 chunks (RSTH-1, D4 DSREP 8), PLACEREP copies per chunk
+    assert line.endswith(", .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(19), .PLACEREP(1)) u_cland_y ("), line
     assert lg.reset_placements["B"]["y"]["ring_wreg"] == 1 and lg.reset_placements["B"]["y"]["strap_k_delta"] == 1
     rs = lg.reset_placements["B"]["y"]["reader_start"]
-    assert rs["reach"] and rs["depth"] == 1 and rs["K_adjustment"] == -1 and rs["ring_reset_copies"] == 10
-    assert "ot_dp_landing_relay_rep #(.N(10)) u_cland_reader_start_y_0 (.clk(clk), .rst_raw_n(" in rtl
+    assert rs["reach"] and rs["depth"] == 1 and rs["K_adjustment"] == -1 and rs["ring_reset_copies"] == 19
+    assert "ot_dp_landing_relay_rep #(.N(19)) u_cland_reader_start_y_0 (.clk(clk), .rst_raw_n(" in rtl
     assert ".d(cland_start), .q(cland_reader_start_y_0), .qx(cland_reader_start_y_0_x));" in rtl
     assert ".rst_n(cland_reader_start_y_0)" in line or ".rst_n(cland_reader_start_y_0)" in rtl
     k1 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
@@ -174,11 +174,27 @@ def test_explicit_reader_start_chain_gets_per_chunk_copies_no_k_change():
     k0 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
     lg = Landings(p, t)
     rtl = lg.type_rtl("B", body)
-    assert "ot_dp_landing_relay_rep #(.N(10)) u_cland_reader_start_y_1 (" in rtl, rtl
-    assert "ot_dp_landing_relay u_cland_reader_start_y_0 (" in rtl and ", .RSTREP(10)" in _ring_line(rtl)
-    assert lg.reset_placements["B"]["y"]["reader_start"]["ring_reset_copies"] == 10
+    assert "ot_dp_landing_relay_rep #(.N(19)) u_cland_reader_start_y_1 (" in rtl, rtl
+    assert "ot_dp_landing_relay u_cland_reader_start_y_0 (" in rtl and ", .RSTREP(19)" in _ring_line(rtl)
+    assert lg.reset_placements["B"]["y"]["reader_start"]["ring_reset_copies"] == 19
     assert CAB.reader_start_depth(p, "B") == 2 and not CL.reader_start_reach(p, "B")
     assert CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"] == k0
     assert CL.reader_reset_copies(p, "B", "y", 568) == 10 and CL.reader_reset_copies(p, "B", "y", 64) == 0
+    assert CL.reader_reset_copies(p, "B", "y", 568, 0, 8, 4) == 19
     p["partition_types"]["B"]["clock"]["landing_reader_start_reach"] = False       # opt-out
     assert "RSTREP" not in _ring_line(Landings(p, t).type_rtl("B", body))
+
+
+def test_reset_copies_per_chunk_bound_loads():
+    # RSTH-1 (CLAND-RELAY-3, COORD 11-13 (3)): every reader-START copy drives <= 48 loads (DSREP/h x 2 DEPTH + 1 INV)
+    import clock_landings as CL
+    assert CL.ring_reset_copies_per_chunk(8, 4) == 2 and CL.ring_reset_copies_per_chunk(8, 8) == 4
+    assert CL.ring_reset_copies_per_chunk(4, 4) == 1 and CL.ring_reset_copies_per_chunk(1, 4) == 1
+    assert CL.ring_reset_copies_per_chunk(2, 8) == 1 and CL.ring_reset_copies_per_chunk(4, 8) == 2
+    for ds in (1, 2, 4, 8):
+        for d in (4, 8):
+            h = CL.ring_reset_copies_per_chunk(ds, d)
+            assert ds % h == 0 and (ds // h) * 2 * d + 1 <= CL.RING_RESET_COPY_LOADS_MAX
+    assert CL.ring_reset_copies_reach(568, 0, 8, 4) == 19 and CL.ring_reset_copies_reach(568) == 10
+    assert CL.ring_reset_copies_reach(64, 0, 8, 4) == 0                         # one chunk: no copies
+    assert CL.ring_reset_copies_reach(568, 48, 1, 4) == 1 + 12                  # bounded READ_CHUNK, DSREP 1

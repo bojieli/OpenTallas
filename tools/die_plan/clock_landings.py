@@ -225,8 +225,9 @@ def reader_start_reach(plan, tn):
     copies' INPUTS, one cland_start net from the same-partition origin -> BUFx10 fo 94 into ~70 select copies along the
     column).  A type whose count-aligned rings take cland_start straight (no clock.landing_reader_start) and that has a
     wide soft band gets ONE reader-START relay stage per input ring (the existing landing_reader_start form: K - 1 via
-    count_align_bind.reader_start_depth, boot +1, data unchanged) whose last stage is RSTREP with one copy per 64-bit
-    chunk (ring_reset_copies_reach).  -> 1 or 0.  0 for: an explicit landing_reader_start (its own depth), a type with
+    count_align_bind.reader_start_depth, boot +1, data unchanged) whose last stage is RSTREP with per-chunk copies
+    (ring_reset_copies_reach; RSTH-1: 2 per 64-bit chunk at D4 DSREP 8).  -> 1 or 0.  0 for: an explicit
+    landing_reader_start (its own depth), a type with
     any signed hard-child ring (its K is fixed in the child), no wide soft band, or clock.landing_reader_start_reach
     false (opt-out).  Plan-only: the generator, strap K (strap_ties / verify strap_k) and the table K read this."""
     pt = (plan or {}).get("partition_types", {})
@@ -239,20 +240,37 @@ def reader_start_reach(plan, tn):
     return 1 if _soft_wide_bands(plan, tn) else 0
 
 
-def ring_reset_copies_reach(w, read_chunk=0):
-    """RSTREP count of a reach-default reader START (reader_start_reach): 1 (oh) + one copy per read chunk, 0 for a
-    single-chunk ring"""
+RING_RESET_COPY_LOADS_MAX = 48     # CLAND-RELAY-3 (COORD 11-13 (3)): loads per reader-START copy, under the 64 fanout
+
+
+def ring_reset_copies_per_chunk(dsrep=1, depth=4):
+    """RSTH-1 (CLAND-RELAY-3, COORD 11-13 (3)): reset copies per read chunk = the smallest divisor h of DSREP whose copy
+    load (DSREP/h select copies x 2 DEPTH control pins (align/on per one-hot flop) + 1 align inverter) is <=
+    RING_RESET_COPY_LOADS_MAX.  Measured (CLAND-RELAY-2 hd_turn_b wc16 / hd_spn_wshim_rx, D4 DSREP 8): one copy per chunk
+    = 65 loads (64 u_sel pins + 1 INV), one over the place-stage fanout 64 -> BUFx2 fo64 trees at 331-336 ps routed.
+    D4 DSREP 8 -> 2 (33 loads); D8 DSREP 8 -> 4 (33); DSREP 1-2 -> 1.  ot_meso_ring_ca derives the same count from RSTN."""
+    dsrep, depth = max(1, int(dsrep)), int(depth)
+    for h in range(1, dsrep + 1):
+        if dsrep % h == 0 and (dsrep // h) * 2 * depth + 1 <= RING_RESET_COPY_LOADS_MAX:
+            return h
+    return dsrep
+
+
+def ring_reset_copies_reach(w, read_chunk=0, dsrep=1, depth=4):
+    """RSTREP count of a reach-default reader START (reader_start_reach): 1 (oh) + ring_reset_copies_per_chunk copies
+    per read chunk (RSTH-1; 1 per chunk at DSREP 1-2), 0 for a single-chunk ring"""
     rw = -(-int(w) // 64) * 64
     nch = -(-rw // int(read_chunk)) if read_chunk else rw // 64
-    return 1 + nch if nch > 1 else 0
+    return 1 + ring_reset_copies_per_chunk(dsrep, depth) * nch if nch > 1 else 0
 
 
-def reader_reset_copies(plan, tn, bus, w, read_chunk=0):
+def reader_reset_copies(plan, tn, bus, w, read_chunk=0, dsrep=1, depth=4):
     """CLAND-RING-LOCALITY (COORD-approved whole-family rule): the RSTREP count the LAST reader-START stage of a soft
     count-aligned strap ring takes by default, for the reach stage (reader_start_reach) AND for an explicit
-    landing_reader_start chain: 1 (oh) + one copy per read chunk (ring_reset_copies_reach), 0 for a single-chunk ring,
-    a signed hard child (hard_ring_params / band hard_core) or clock.landing_reader_start_reach false.  Same-D kept
-    copies at the stage: 0 cycles, no K change.  Read by the generator and clock_landing_verify."""
+    landing_reader_start chain: 1 (oh) + per-chunk copies (ring_reset_copies_reach; RSTH-1: 2 per chunk at D4 DSREP 8),
+    0 for a single-chunk ring, a signed hard child (hard_ring_params / band hard_core) or
+    clock.landing_reader_start_reach false.  dsrep / depth = the ring's DSREP / DEPTH.  Same-D kept copies at the stage:
+    0 cycles, no K change.  Read by the generator and clock_landing_verify."""
     pt = (plan or {}).get("partition_types", {})
     t = pt.get(tn) or pt.get(tn.split("__")[0]) or {}
     c = t.get("clock") or {}
@@ -260,7 +278,7 @@ def reader_reset_copies(plan, tn, bus, w, read_chunk=0):
         return 0
     if ((c.get("landing_contract") or {}).get("bands") or {}).get(bus, {}).get("hard_core"):
         return 0
-    return ring_reset_copies_reach(w, read_chunk)
+    return ring_reset_copies_reach(w, read_chunk, dsrep, depth)
 
 
 def ring_write_reg(plan, tn, bus):
@@ -1665,7 +1683,9 @@ class Landings:
                                              wreg["dsrep"] if wreg else (dsrep or 1), (wreg or {}).get("read_chunk", 0))
                     if hard is None:   # CLAND-RING-LOCALITY: reach AND explicit chains, one shared rule
                         nrep = max(nrep, reader_reset_copies(self.plan, key, b, w + 2 if self.dataflow else w,
-                                                             (wreg or {}).get("read_chunk", 0)))
+                                                             (wreg or {}).get("read_chunk", 0),
+                                                             wreg["dsrep"] if wreg else (dsrep or 1),
+                                                             int(cat["rings"][b]["depth"])))
                     if nrep:
                         rx = re.compile(r'^(    \(\* keep = "true" \*\) )ot_dp_landing_relay (u_cland_reader_start_\w+) '
                                         r'(\(.*\.q\(' + re.escape(reader_start) + r'\))\);$')
