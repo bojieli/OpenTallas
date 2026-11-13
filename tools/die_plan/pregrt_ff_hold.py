@@ -20,10 +20,11 @@ What changed against the 11-03 opt-in form:
   2. TWO scenes when run_kit.sh passes TLIBS (TC_LIB_FILES): TC/mode tt checks setup, BC/mode ff checks hold, so
      repair_timing never spends TT setup slack on a hold cell (the FF-only form could only see FF setup);
   3. ROUTE GUARD on CROSS-TAP pairs only: built to +OT_PREGRT_HOLD_GUARD ps (plan clock.pregrt_hold_guard_ps,
-     default 35) = the measured placement -> routed loss + 10 (hd_turn_b: built to +25.0, GRT +12.0, routed +2.71,
-     loss 22.3 ps; before the rule +0.45 at GRT -> -14.07 routed, all 25 misses cross-tap; hd_mesh ~25).  Ports and
-     same-tap pairs are built to OT_PREGRT_HOLD_PORT_MARGIN (5): a uniform guard pads the ordinary zero-logic
-     pairs of the whole kit and spends setup (see the TAIL comment);
+     default 45) = the worst measured placement -> routed loss of a cross-tap pair (hd_turn_b proof: u_srl_10 ->
+     u_rrl_11 built to +35.1, routed +3.66 = 31.4 ps; every other cross-tap pair lost <= 25) + the +10 ps of the die
+     hold gate.  Before the rule: +0.45 at GRT -> -14.07 routed, all 25 misses cross-tap.  Ports and same-tap pairs
+     are built to OT_PREGRT_HOLD_PORT_MARGIN (5; routed same-tap worst +6.88): a uniform guard pads the ordinary
+     zero-logic pairs of the whole kit and spends setup (see the TAIL comment);
   4. the clock network and every clock sink are FIRM while hold cells are legalized (tap balance stays as measured);
   5. a class line before / after (port_in / same_tap / cross_tap / port_out) and pregrt_ff_hold_open.tsv = the
      endpoints the build could not close (ESCALATE: lockup latch / same tap / +1 cycle are plan forms);
@@ -34,7 +35,7 @@ from pathlib import Path
 
 MARK = "# A separate FF-only process: do not impersonate the shared multi-mode context.\n"
 CONFIG = "export OT_PREGRT_FF_HOLD = 1"
-GUARD_PS = 35.0
+GUARD_PS = 45.0
 # the single-scene read of hold_gate.tcl; replaced (exactly once, fail closed) by the two-scene read below
 READ = ("foreach l $::env(PLIBS) { read_liberty $l }\n"
         "read_db $::env(ODB)\n"
@@ -66,7 +67,7 @@ if {$pg_two} {
 }
 """
 TAIL = r"""# R-CLOCK HOLD BUILD: repair + legalize on the context above, then replace 4_cts.odb (fail-safe: FALLBACK writes nothing)
-set pg_guard [expr {[info exists ::env(OT_PREGRT_HOLD_GUARD)] && [string is double -strict $::env(OT_PREGRT_HOLD_GUARD)] ? $::env(OT_PREGRT_HOLD_GUARD) : 35.0}]
+set pg_guard [expr {[info exists ::env(OT_PREGRT_HOLD_GUARD)] && [string is double -strict $::env(OT_PREGRT_HOLD_GUARD)] ? $::env(OT_PREGRT_HOLD_GUARD) : 45.0}]
 set pg_blk [ord::get_db_block]
 proc pg_hold {} { return [sta::time_sta_ui [sta::worst_slack_cmd min]] }
 proc pg_setup {} { return [sta::time_sta_ui [sta::worst_slack_cmd max]] }

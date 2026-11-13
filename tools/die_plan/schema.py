@@ -1380,8 +1380,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
-# R-CLOCK (HOLD-TAP-1 11-13): the build is on unless pregrt_ff_hold is false; pregrt_hold_guard_ps = the register-to-register
-# route guard (default 35 ps).
+# R-CLOCK (HOLD-TAP-1 11-13): the build is on unless pregrt_ff_hold is false; pregrt_hold_guard_ps = the
+# cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {
     "type": "number", "minimum": 0, "maximum": 100}
 # HEAD START-export fanout: retained copies of existing data states, zero added cycles.

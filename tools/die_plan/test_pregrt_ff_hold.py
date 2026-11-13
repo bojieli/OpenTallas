@@ -29,7 +29,7 @@ def test_default_is_on_for_every_type(tmp_path):
     assert PG.enabled({}) and PG.enabled({"clock": {}}) and PG.enabled({"clock": {"pregrt_ff_hold": True}})
     assert not PG.enabled({"clock": {"pregrt_ff_hold": False}})
     assert _kit(tmp_path, {}) is True
-    assert PG.config_lines({"clock": {}}) == [PG.CONFIG, "export OT_PREGRT_HOLD_GUARD = 35"]
+    assert PG.config_lines({"clock": {}}) == [PG.CONFIG, "export OT_PREGRT_HOLD_GUARD = 45"]
     assert PG.config_lines({"clock": {"pregrt_hold_guard_ps": 40}})[1] == "export OT_PREGRT_HOLD_GUARD = 40"
     with pytest.raises(ValueError):
         PG.config_lines({"clock": {"pregrt_hold_guard_ps": 150}})
