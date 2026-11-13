@@ -49,3 +49,9 @@ Classification tables (t41, sle_st_a running), design, implement + tests, proofs
 - QC prototype (final form, guard 45) running: epyc4 hold-tap-1/proof/sle_x45/pg.log (sle_p1 = older uniform-25 form, ignore).
 - pytest subset on the final branch: epyc9 hold-tap-1/pytest_final.log (compare failing set with f_base.txt).
 - LEFT: t41 sign-off result, QC result -> update RULEBOOK proof rows, post READY in COORD-REVIEW-QUEUE.md, stop.
+
+## 2026-11-13 06:53 READY posted
+- READY + FINDING (S81 leaf core taps, R-CLOCK-5) are in COORD-REVIEW-QUEUE.md; branch claude/hold-tap-1-1113@003069fbf3 on hub (adds kit_preflight core_tap_reach).
+- OPEN: t41 sign-off RESULT (run in GRT max-wire repair; localhost ~/ht1log/t41_route.log, ot-run client on localhost) and QC sle_x45 prototype (epyc4 hold-tap-1/proof/sle_x45/pg.log).
+  When they end: append a RESULT line to the queue and update the two RUNNING rows in RULEBOOK-1113.md R-CLOCK Proof. Then the lane stops.
+- Cleanup after the RESULT: epyc9 hold-tap-1/proof/{turn_b,tb45,t41,tbk,t0,t1,t41_p1} and epyc4 hold-tap-1/proof are private copies (delete); keep proof/evidence and diag.
