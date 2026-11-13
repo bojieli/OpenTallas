@@ -176,7 +176,7 @@ module ot_s81sl_slice_iq_w3 #(
     parameter integer DR = 6,
     parameter integer DX = 6,
     parameter integer VQ_XMEM = 2,
-    parameter integer VS_MUT = 0, parameter [4:0] LF_VP_CFR = 5'd0  // LF_VP_CFR[k]: leaf k u_vp.CFR (TYPE-SAFE-5 11-10, 0 cycles)
+    parameter integer VS_MUT = 0, parameter [4:0] LF_VP_CFR = 5'd0, parameter [19:0] LF_CS_HI_D = 20'h00000, parameter [19:0] LF_CS_HI_GS = 20'h00000, parameter [19:0] LF_CS_HO_D = 20'h00000, parameter [19:0] LF_CS_HO_GS = 20'h00000, parameter [19:0] LF_CS_H_G = {5{4'd4}}, parameter [19:0] LF_CS_VNI_D = 20'h00000, parameter [19:0] LF_CS_VNO_D = 20'h00000, parameter [19:0] LF_CS_Y_D = 20'h00000, parameter [19:0] LF_CS_U_D = 20'h00000, parameter [19:0] LF_CS_SW_D = 20'h00000, parameter [19:0] LF_CS_SWR_D = 20'h00000, parameter [19:0] LF_CS_RA_D = 20'h00000, parameter [19:0] LF_CS_RAR_D = 20'h00000, parameter [19:0] LF_CS_VE_D = 20'h00000, parameter [19:0] LF_CS_VER_D = 20'h00000, parameter [19:0] LF_CS_PVS_D = 20'h00000, parameter [19:0] LF_CS_VSP_D = 20'h00000  // LF_VP_CFR[k]: leaf k u_vp.CFR (TYPE-SAFE-5 11-10, 0 cycles)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -194,14 +194,14 @@ module ot_s81sl_slice_iq_w3 #(
     output wire            fault
 );
     wire [512:0] bo_c;
-    ot_s81sl_slice_w3 #(.HB(HB), .DL(DL), .DR(DR), .DX(DX), .VQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .LF_VP_CFR(LF_VP_CFR)) u_sl (
+    ot_s81sl_slice_w3 #(.HB(HB), .DL(DL), .DR(DR), .DX(DX), .VQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .LF_VP_CFR(LF_VP_CFR), .LF_CS_HI_D(LF_CS_HI_D), .LF_CS_HI_GS(LF_CS_HI_GS), .LF_CS_HO_D(LF_CS_HO_D), .LF_CS_HO_GS(LF_CS_HO_GS), .LF_CS_H_G(LF_CS_H_G), .LF_CS_VNI_D(LF_CS_VNI_D), .LF_CS_VNO_D(LF_CS_VNO_D), .LF_CS_Y_D(LF_CS_Y_D), .LF_CS_U_D(LF_CS_U_D), .LF_CS_SW_D(LF_CS_SW_D), .LF_CS_SWR_D(LF_CS_SWR_D), .LF_CS_RA_D(LF_CS_RA_D), .LF_CS_RAR_D(LF_CS_RAR_D), .LF_CS_VE_D(LF_CS_VE_D), .LF_CS_VER_D(LF_CS_VER_D), .LF_CS_PVS_D(LF_CS_PVS_D), .LF_CS_VSP_D(LF_CS_VSP_D)) u_sl (
         .clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e), .ro_w(ro_w), .vi(vi), .vo(vo),
         .bi(bi), .bo(bo_c), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(fault));
     dsdv_idx_bsplit #(.BW(513)) u_bs (.ck(clk), .rst_n(rst_n), .i(bo_c), .o_s(bo), .o_i(iq));
 endmodule
 
 // base: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_sukv_raw512.sv @07abeb43f (binder rtl_extra)
-module ot_s81sl_slice_sukv_raw512_w3 (
+module ot_s81sl_slice_sukv_raw512_w3 #(parameter [19:0] LF_CS_HI_D = 20'h11110, parameter [19:0] LF_CS_HI_GS = 20'h00000, parameter [19:0] LF_CS_HO_D = 20'h11110, parameter [19:0] LF_CS_HO_GS = 20'h00000, parameter [19:0] LF_CS_H_G = {5{4'd4}}, parameter [19:0] LF_CS_VNI_D = 20'h00000, parameter [19:0] LF_CS_VNO_D = 20'h00000, parameter [19:0] LF_CS_Y_D = 20'h00000, parameter [19:0] LF_CS_U_D = 20'h00000, parameter [19:0] LF_CS_SW_D = 20'h11110, parameter [19:0] LF_CS_SWR_D = 20'h11010, parameter [19:0] LF_CS_RA_D = 20'h00000, parameter [19:0] LF_CS_RAR_D = 20'h10000, parameter [19:0] LF_CS_VE_D = 20'h00000, parameter [19:0] LF_CS_VER_D = 20'h00000, parameter [19:0] LF_CS_PVS_D = 20'h00000, parameter [19:0] LF_CS_VSP_D = 20'h00000) (
     input  wire            clk,
     input  wire            rst_n,
     input  wire [3:0]      sid,
@@ -221,7 +221,7 @@ module ot_s81sl_slice_sukv_raw512_w3 (
     output wire [7:0]      ck_rt,
     output wire            fault
 );
-    ot_s81sl_slice_w3 #(.HB(0), .DL(4), .DR(6), .DX(6), .VQ_XMEM(2), .KV_ENABLE(1), .KV_CNIK(1), .KV_CP(1), .VS_MUT(0), .LF_CS_HI_D(20'h11110), .LF_CS_HO_D(20'h11110), .LF_CS_SW_D(20'h11110), .LF_CS_SWR_D(20'h11010), .LF_CS_RAR_D(20'h10000)) u_slice (  // DIE-S81-70 11-06 (COORD 10:49 (2), S81-PLAN R3): plan core<->core station depths of the kv leaf types (plan_h2_2249 internal_stations, kit_istations core_class): lf[1] = ot_s81sl_kv_leaf__t3 hi/ho/sw/swr 1, lf[2] = __t1 hi/ho/sw 1, lf[3] = __t4 hi/ho/sw/swr 1, lf[4] = __t5 hi/ho/sw/swr/rar 1, lf[0] = __t2 none; G 4, GS 0. PIN CYCLES (declared): +1 cycle per realised class on the leaf seams vp<->hc_post lanes, vs<->vsw, vs<->rxsb; the vp/vs timelines derive from the depths
+    ot_s81sl_slice_w3 #(.HB(0), .DL(4), .DR(6), .DX(6), .VQ_XMEM(2), .KV_ENABLE(1), .KV_CNIK(1), .KV_CP(1), .VS_MUT(0), .LF_CS_HI_D(LF_CS_HI_D), .LF_CS_HI_GS(LF_CS_HI_GS), .LF_CS_HO_D(LF_CS_HO_D), .LF_CS_HO_GS(LF_CS_HO_GS), .LF_CS_H_G(LF_CS_H_G), .LF_CS_VNI_D(LF_CS_VNI_D), .LF_CS_VNO_D(LF_CS_VNO_D), .LF_CS_Y_D(LF_CS_Y_D), .LF_CS_U_D(LF_CS_U_D), .LF_CS_SW_D(LF_CS_SW_D), .LF_CS_SWR_D(LF_CS_SWR_D), .LF_CS_RA_D(LF_CS_RA_D), .LF_CS_RAR_D(LF_CS_RAR_D), .LF_CS_VE_D(LF_CS_VE_D), .LF_CS_VER_D(LF_CS_VER_D), .LF_CS_PVS_D(LF_CS_PVS_D), .LF_CS_VSP_D(LF_CS_VSP_D)) u_slice (  // DIE-S81-70 11-06 (COORD 10:49 (2), S81-PLAN R3): plan core<->core station depths of the kv leaf types (plan_h2_2249 internal_stations, kit_istations core_class): lf[1] = ot_s81sl_kv_leaf__t3 hi/ho/sw/swr 1, lf[2] = __t1 hi/ho/sw 1, lf[3] = __t4 hi/ho/sw/swr 1, lf[4] = __t5 hi/ho/sw/swr/rar 1, lf[0] = __t2 none; G 4, GS 0. PIN CYCLES (declared): +1 cycle per realised class on the leaf seams vp<->hc_post lanes, vs<->vsw, vs<->rxsb; the vp/vs timelines derive from the depths
         .clk(clk),
         .rst_n(rst_n),
         .sid(sid),

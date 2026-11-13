@@ -4676,6 +4676,10 @@ def cmd_bind(a):
         if la_errs:
             B.errors.append(f"LANE_ASBUILT_TOTAL {len(la_errs)} of {la_sum['lanes']} lanes deliver off the latency table "
                             f"(classes {la_sum['classes']}; full list bind_lane_asbuilt.json)")
+    # LF-CS-GATE (S81-LEAF-FLOOR-2 11-12, COORD): plan leaf station depth == bound depth per (type, class); strict
+    if B.ab.get("leaf_cs_depth_gate"):
+        import leaf_cs_depth as LCD
+        rep["leaf_cs_depth"] = LCD.bind_gate(raw, out, B.errors)
     # TOK-VERIFY-1 / COORD 11-10: signed landing phase class (WNEG=1 rings flip +3 -> +2 at zero phase).  ADVISORY
     # (targets, not gates): reported here and in landing_phase_sign.json, never a bind error.  Arrivals at the rings
     # (routed clock, TT + FF, OCV-derated) come from OT_LANDING_PHASE_ARRIVALS; without them every ring is UNMEASURED.

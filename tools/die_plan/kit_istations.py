@@ -478,20 +478,25 @@ def _flat(path):
     return re.sub(r"\[(\d+)\]", r"_\1", path).replace(".", "_")
 
 
+LF_PFX = r"(?:u_lf\d*_)?"   # S81-LEAF-FLOOR-2 11-12: image-flat leaf binds name their stage registers g_u_lf<k>_u_... (KW-FIX-27)
+
+
 def native_params(txt):
-    """bound CS_* of a flat native kv_leaf bind, counted from the stage registers (d stages = s_0..s_{d-1})."""
+    """bound CS_* of a flat native leaf bind, counted from the stage registers (d stages = s_0..s_{d-1}).
+    S81-LEAF-FLOOR-2 11-12: the image-flat u_lf<k>_ prefix is allowed in the register names too (it was only allowed in
+    NATIVE_MARK, so every lf-prefixed ordinary leaf bind counted 0 on every class: 61 of the 75 r12ng leaf types)."""
     def stages(rx):
         return len({int(j) for j in re.findall(rx + r"_gd_s_(\d+)_u_", txt)})
     have = {}
     for c in {c for c, _, _ in CORE_CLASSES if c != "cs"}:
         if c in H_CLASSES:
-            shared = stages(rf"\bg_u_vp_g_{c[0]}{c[1]}g_\d+_u_cst")
-            lane = max((stages(rf"\bg_u_vp_g_ln_{l}_u_cst_{c}") for l in range(16)), default=0)
+            shared = stages(rf"\bg_{LF_PFX}u_vp_g_{c[0]}{c[1]}g_\d+_u_cst")
+            lane = max((stages(rf"\bg_{LF_PFX}u_vp_g_ln_{l}_u_cst_{c}") for l in range(16)), default=0)
             have[CLASS_PARAM[c]] = shared + lane
             have[f"CS_{c.upper()}_GS"] = shared
         else:
-            have[CLASS_PARAM[c]] = stages(rf"\bg_u_cst_{c}")
-    groups = {int(g) for g in re.findall(r"\bg_u_vp_g_h[io]g_(\d+)_u_cst_gd_s_", txt)}
+            have[CLASS_PARAM[c]] = stages(rf"\bg_{LF_PFX}u_cst_{c}")
+    groups = {int(g) for g in re.findall(rf"\bg_{LF_PFX}u_vp_g_h[io]g_(\d+)_u_cst_gd_s_", txt)}
     have["CS_H_G"] = 16 // len(groups) if groups else 4
     return have
 
