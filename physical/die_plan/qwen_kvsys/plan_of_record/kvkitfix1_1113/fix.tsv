@@ -1,0 +1,5 @@
+tag	type	tap_mode	taps	c1 n/max_um	c2 n/max_sinks	c3 n/max_um	c4 n/max_um	c5 n/hop_max/raw_bad	error
+before	kv3_phy	grid+explicit		1/	0/	0/	0/320.5	0/0.0/0	tap export: ValueError: kv3_phy: grid+explicit tap clk_t1 load=0/1500, radius=0/200.0, empty=True
+before	kv3_phy_v1	grid+explicit		1/	0/	0/	0/381.4	0/0.0/0	tap export: ValueError: kv3_phy_v1: grid+explicit tap clk_t1 load=0/1500, radius=0/200.0, empty=True
+after	kv3_phy	grid+explicit		0/150.0	0/953.0	0/45.3	0/320.5	0/0.0/0	
+after	kv3_phy_v1	grid+explicit		0/188.3	0/953.0	0/45.3	0/381.4	0/0.0/0	
