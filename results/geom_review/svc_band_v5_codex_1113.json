@@ -1,0 +1,16 @@
+{
+  "verdict": "BLOCKED",
+  "kind": "private proof, DO_NOT_COUNT",
+  "images": [
+    "epyc2:/srv/opentallas-scratch2/claude/band-kit-1/v5/layout_review/place/layout.png",
+    "epyc2:/srv/opentallas-scratch2/claude/band-kit-1/v5/layout_review/place/density.png"
+  ],
+  "viewed": true,
+  "findings": [
+    "Eight head macros form a wall: W input gaps 15.12 um, below R-STREET 43.2 um minimum.",
+    "Upper floor is sparse. Added per-core stage localizes the final wires but leaves the wide broadcast long.",
+    "Post-CTS setup -448.83 ps on d_q[0][1766] to g_in[7].g_r.qw[97], source flow readout only, not signoff.",
+    "Advisory pin_track_use 0.502, fanout_spread 1498.3 um."
+  ],
+  "next": "Geometry reform and distributed relay chain; full service partition packing remains unresolved. No new physical launch authorized by this review."
+}
