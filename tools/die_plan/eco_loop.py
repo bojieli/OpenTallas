@@ -567,8 +567,10 @@ def hold_mm_scope_needed(kit):
 
 
 def hold_mm_supports(tcl, scope):
-    """does orfs_hold_mm.tcl implement `scope`?  nonport: listed in ::ot_hold_scope_supported_modes (what prd_hook.tcl and
-    grt_nonport_hold.tcl check); reg2reg: the list, or (older copies) the ot_hold_repair_scope proc itself"""
+    """Does the helper explicitly declare `scope` in ::ot_hold_scope_supported_modes?
+
+    A legacy proc name alone cannot prove safe scoped MM dispatch for a late ECO.
+    """
     try:
         t = Path(tcl).read_text(errors="replace")
     except OSError:
