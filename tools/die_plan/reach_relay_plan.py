@@ -121,6 +121,42 @@ def trunks(pv):
     return sorted(out)
 
 
+def load_trunks(doc):
+    """built clock (QC-REGION-1 opentallas.qc_trunk_nodes.v1): stages {provider id: built node}, and the straight legs of
+    the BUILT tree as trunk segments (lo, hi, a, b); legs the kit detoured (detour_um) carry no relay.  meta[seg] = leg."""
+    if doc.get("schema") != "opentallas.qc_trunk_nodes.v1":
+        raise RelayError(f"trunks: schema {doc.get('schema')!r}")
+    segs, meta = [], {}
+    for lg in doc["legs"]:
+        if lg.get("detour_um"):
+            continue
+        p, q = tuple(lg["a_xy_um"]), tuple(lg["b_xy_um"])
+        if p == q or not (abs(p[0] - q[0]) < 1e-6 or abs(p[1] - q[1]) < 1e-6):
+            continue
+        sg = (min(p, q), max(p, q), lg["a"], lg["b"])
+        segs.append(sg)
+        meta[sg] = lg
+    return doc["stages"], sorted(segs), meta
+
+
+def rewrite_provider(pv, stages):
+    """every emitted START stage takes its BUILT clock node (no fallback to the old die H-tree node)"""
+    miss = [n["id"] for n in pv["nodes"] if n.get("kind") != "relay" and n["id"] not in stages]
+    if miss:
+        raise RelayError(f"trunks: {len(miss)} provider nodes have no built clock node: {miss[:5]}")
+    moved = []
+    for n in pv["nodes"]:
+        if n.get("kind") == "relay":
+            raise RelayError("trunks: rewrite on a relayed provider (apply on a clean provider)")
+        b = stages[n["id"]]
+        old = (n["clock_node"], list(n["clock_node_xy_um"]))
+        n.update(clock_node=b["clock_node"], clock_node_xy_um=list(b["clock_node_xy_um"]), clock_net=b.get("clock_net"),
+                 clock_region=b.get("region"), clock_region_kind=b.get("region_kind"))
+        moved.append(abs(old[1][0] - n["clock_node_xy_um"][0]) + abs(old[1][1] - n["clock_node_xy_um"][1]))
+    moved.sort()
+    return dict(nodes=len(moved), node_move_um=dict(median=round(moved[len(moved) // 2], 1), max=round(moved[-1], 1)))
+
+
 def project(tg, seg):
     (a, b) = seg[0], seg[1]
     if abs(a[0] - b[0]) < 1e-6:
@@ -157,12 +193,13 @@ def free_rect(cxy, taken, ok, n=1):
     return None
 
 
-def start_relays(P, pv, side_regions):
-    """insert relay nodes on long stage -> stage edges; returns rows"""
+def start_relays(P, pv, side_regions, built=None, rejected=None):
+    """insert relay nodes on long stage -> stage edges; returns rows.  built = (segs, meta) of the built clock: relays
+    sit on BUILT legs of the source stage's own clock region only (a leg of another region is rejected and counted)."""
     nodes, edges = pv["nodes"], pv["edges"]
     by = {n["id"]: n for n in nodes}
     taken = Grid([tuple(n["rect_um"]) for n in nodes])
-    segs = trunks(pv)
+    segs = trunks(pv) if built is None else built[0]
     rows, new_edges = [], []
     for e in edges:
         if not ("src_stage" in e and "dst_stage" in e) or e.get("signal") == "reset":
@@ -191,7 +228,18 @@ def start_relays(P, pv, side_regions):
                 [(ca, (cb[0], ca[1])), ((cb[0], ca[1]), cb), (ca, (ca[0], cb[1])), ((ca[0], cb[1]), cb)]
             own = [(min(p_, q_), max(p_, q_), src["clock_node"], dst["clock_node"]) for p_, q_ in own]
             tg = _along(ca, cb, (i + 1) / (k + 1) * Lc)
-            for cxy, sg in list(trunk_sites(tg, own, 4, 60)) + list(trunk_sites(tg, segs)):
+            if built is not None:       # the built tree: no implied src -> dst leg; legs of src's clock region only
+                own = []
+                cand = []
+                for cxy, sg in trunk_sites(tg, segs):
+                    if built[1][sg].get("region") != src.get("clock_region"):
+                        if rejected is not None:
+                            rejected.add((src["id"], dst["id"], built[1][sg].get("region")))
+                        continue
+                    cand.append((cxy, sg))
+            else:
+                cand = list(trunk_sites(tg, segs))
+            for cxy, sg in list(trunk_sites(tg, own, 4, 60)) + cand:
                 r = free_rect(cxy, taken, ok, n=START_RELAY_FLOPS)
                 if r:
                     best = (src["clock_node"], (round(cxy[0], 4), round(cxy[1], 4)), r, sg)
@@ -204,6 +252,8 @@ def start_relays(P, pv, side_regions):
             rn = dict(id=rid, region=f"{dst['region']}#rl{i + 1}", kind="relay", relay_for=dst["region"], rect_um=r,
                       clock_node=cn, clock_node_xy_um=list(cxy), clock_port=f"t_st_{rid}__clk",
                       clock_tap=f"trunk {sg[2]} -> {sg[3]}",
+                      **({} if built is None else dict(clock_net=src.get("clock_net"), clock_region=src.get("clock_region"),
+                                                       site_net=built[1][sg].get("net"))),
                       module=START_RELAY_MODULE, flops=START_RELAY_FLOPS, parent=prev["region"], root=False)
             nodes.append(rn)
             by[rid] = rn
@@ -324,15 +374,27 @@ def depth_stats(pv):
                 max_loads=max(kids.values()) if kids else 0)
 
 
-def plan(raw, side, skip_unplaced=False):
+def plan(raw, side, skip_unplaced=False, trunks_doc=None):
     raw, side = copy.deepcopy(raw), copy.deepcopy(side)
     P = S.Plan(raw)
     ln = raw["clock"]["landing_network"]
     pv = ln["start_tree"]["provider"]
     before = depth_stats(pv)
     regions = side["count_aligned"]["regions"]
-    segs = trunks(pv)
-    srows = start_relays(P, pv, regions)
+    built, rewrite, rejected = None, None, set()
+    if trunks_doc is not None and not any(n.get("kind") == "relay" for n in pv["nodes"]):
+        stages, bsegs, meta = load_trunks(trunks_doc)
+        rewrite = rewrite_provider(pv, stages)
+        rewrite.update(clock_build=trunks_doc.get("clock_build"), plan_sha256=trunks_doc.get("plan_sha256"),
+                       legs=len(bsegs), legs_detoured=sum(1 for lg in trunks_doc["legs"] if lg.get("detour_um")))
+        built = (bsegs, meta)
+        ln["start_tree"]["built_clock"] = dict(schema=trunks_doc["schema"], clock_build=trunks_doc.get("clock_build"),
+                                               plan_sha256=trunks_doc.get("plan_sha256"))
+    elif trunks_doc is not None:
+        _s, bsegs, meta = load_trunks(trunks_doc)
+        built = (bsegs, meta)
+    segs = trunks(pv) if built is None else built[0]
+    srows = start_relays(P, pv, regions, built, rejected)
     taken = Grid([tuple(n["rect_um"]) for n in pv["nodes"]])
     unplaced = [] if skip_unplaced else None
     mrows = mon_relays(P, ln, segs, taken, unplaced)
@@ -353,6 +415,11 @@ def plan(raw, side, skip_unplaced=False):
                             edges=sum(r["edges"] for r in mrows), status_cycles_added_max=max([r["relays"] for r in mrows] or [0]),
                             unplaced=unplaced or [], rows=mrows),
                data_cycles_added=0)
+    if trunks_doc is not None:
+        rep["built_clock"] = dict(rewrite=rewrite, rejected_region_sites=len(rejected),
+                                  rejected_edges=len({(a, b) for a, b, _r in rejected}),
+                                  rejected_examples=sorted(rejected)[:10],
+                                  max_relay_segment_um=max([max(r["hops_um"]) for r in srows] or [0]))
     return raw, side, rep
 
 
@@ -368,10 +435,13 @@ def main(argv=None):
     p.add_argument("--skip-unplaced-monitor", action="store_true",
                    help="leave a monitor bundle with no relay site unchanged (listed in report.monitor.unplaced; its "
                         "reach rows stay in the gates) instead of failing the step")
+    p.add_argument("--trunks", help="built clock trunk_nodes.json (opentallas.qc_trunk_nodes.v1): rewrite the provider "
+                   "clock nodes from it and seat relays on its legs (same clock region as the source stage)")
     a = ap.parse_args(argv)
     try:
         raw, side, rep = plan(json.loads(Path(a.plan).read_text()), json.loads(Path(a.sidecar).read_text()),
-                              a.skip_unplaced_monitor)
+                              a.skip_unplaced_monitor,
+                              json.loads(Path(a.trunks).read_text()) if a.trunks else None)
     except RelayError as ex:
         print(f"reach_relay_plan: NOT PLACED: {ex}", file=sys.stderr)
         return 2
