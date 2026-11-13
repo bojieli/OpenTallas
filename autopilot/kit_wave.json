@@ -19924,7 +19924,8 @@
         "svc_lo_dsdv_svc_rs__t7": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key).",
         "svc_lo_dsdv_svc_rs__t7__*": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key).",
         "svc_lo_dsdv_svc_rs_w__t1": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key).",
-        "svc_lo_dsdv_svc_rs_w__t1__*": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key)."
+        "svc_lo_dsdv_svc_rs_w__t1__*": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key).",
+        "ot_s81sl_leaf__t62": "CODEX 2026-11-13 13:59: exact attempt3 visually reviewed ISSUES (253 collapsed chains, r2r1009.5um, clk_t42 5120 sinks); GEN canary objective complete, combined street/reach/tap form pending. User review-before-route: no new route of known bad form."
       },
       "route_hold_items_prev_kw43fb_added": [
         "col_h10_r0_p1__t1__cl574cc59d",
@@ -23476,7 +23477,9 @@
         "hd_turn_a@2",
         "hd_turn_a@3",
         "hd_spn_wshim_rx@2",
-        "hd_host_e@5"
+        "hd_host_e@5",
+        "hd_turn_a@4",
+        "hd_spn_wshim_rx@3"
       ],
       "pilot_max": 12,
       "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -23596,7 +23599,9 @@
         "hd_spn_end@2": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)",
         "hd_spn_end@10": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)",
         "hd_turn_a@3": "REDESIGN: kit recipe change, not a blind retry (COORD 13:3x fill ruling (1) / 10:5x R-FLOW): per-item R-FLOW flow set --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32 (type_args/item_env); KIT-OPS-1 2026-11-13 13:35. Gate token per COORD 11-07 05:24 (unchanged_fail); the change is a flow setting, not RTL/macros/outline/clock.",
-        "hd_host_e@5": "INFRA: exact frozen source restored on all HEAD gen hosts; hd_host_e attempt5 failed only because src_head_main_m8w1_7b84010b1c/tools/s81_head/head_wave_kit_rtl.py was absent. Script is now present on E7/E8/E9/E2/I1. Also restored exact head_rp18r2/prep asset references from E8 using ignore-existing. No plan/src/form/clock/RTL change (CODEX KIT-OPS takeover 2026-11-13 13:47). One staging-class relaunch; do not retry a physical failure."
+        "hd_host_e@5": "INFRA: exact frozen source restored on all HEAD gen hosts; hd_host_e attempt5 failed only because src_head_main_m8w1_7b84010b1c/tools/s81_head/head_wave_kit_rtl.py was absent. Script is now present on E7/E8/E9/E2/I1. Also restored exact head_rp18r2/prep asset references from E8 using ignore-existing. No plan/src/form/clock/RTL change (CODEX KIT-OPS takeover 2026-11-13 13:47). One staging-class relaunch; do not retry a physical failure.",
+        "hd_turn_a@4": "INFRA: exact original rp18r2/prep receipt assets restored from E8 onto all HEAD gen hosts; all11 receipt assets SHA-match on I1. receipt_inputs now declares original manifest/assets for host preflight and cleanup protection. Previous attempt failed at kit_rtl before restoration; one source-staging relaunch only, no physical/form/RTL/clock/plan/src change (CODEX 11-13).",
+        "hd_spn_wshim_rx@3": "INFRA: exact original rp18r2/prep receipt assets restored from E8 onto all HEAD gen hosts; all11 receipt assets SHA-match on I1. receipt_inputs now declares original manifest/assets for host preflight and cleanup protection. Previous attempt failed at kit_rtl before restoration; one source-staging relaunch only, no physical/form/RTL/clock/plan/src change (CODEX 11-13)."
       },
       "gen_hosts": [
         "epyc7",
@@ -24646,7 +24651,7 @@
       },
       "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7.",
       "retry_note_kitops1_rearm3_1113": "2026-11-13 12:50 add (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): hd_turn_a@3 hd_spn_wshim_rx@2",
-      "retry_note_codex_restore_1113": "2026-11-13 13:49: stale hd_turn_a@4 and hd_spn_wshim_rx@3 entries removed for one scheduler pass; both failed kit_rtl before exact receipt assets were restored. Re-add ONLY after retry_seen forgets them. No physical retry."
+      "retry_note_codex_restore_1113": "2026-11-13: original receipt inputs restored; stale epochs cleared by scheduler before one infrastructure rearm: hd_turn_a@4 hd_spn_wshim_rx@3"
     },
     "qwen_compute": {
       "enabled": true,
