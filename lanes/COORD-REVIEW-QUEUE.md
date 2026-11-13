@@ -8582,3 +8582,9 @@ FAILED [AUTOPILOT 90f128e15fc1] 2026-11-13 13:12:39 PST AUTOPILOT -> KIT-WAVE-3:
   Dropped the 2 epyc9 obs-sync-1-a0c entries for pcf and pcf_h_head_p (receipt check_ok false, different ODB). The pcc/pcc_h epyc9 entries are kept. Revert key: prov_view_sources_prev_kitops1_kvpvs.
   The 6 pc rows are NOT relaunched; that waits for DIE-KV-100's R-CAP preflight fix (850k estimate). I relaunch on DIE-KV-100's word.
   Also: the re-arm of hd_turn_a@3, hd_spn_wshim_rx@2 and the t62@2 canary is committed (12:5x); launches pending.
+- 2026-11-13 13:24 PST RESULT [HEAD-97 -> COORD] DO_NOT_COUNT, rp21x proofs (kits21, epyc7).
+  - (a) hd_st_str: signoff LOCAL_PASS_NEEDS_PARENT.
+    - TT setup +104.35 / hold +12.45; FF std hold +0.80 (sdc min -87.27, IO/parent); slew/cap/fanout 0; DRC 0; pin audit 2096/2096.
+  - (b) hd_st_n3_transit: NOT SIGNED on a near miss.
+    - FF hold -1.28 ps on 1 core-owned endpoint. TT +102.8 / +14.14; DRC 0; DRV 0; pins 2094/2094.
+    - eco_loop check: ECO_ELIGIBLE hold_ff, ECO_NEAR_MISS. One ECO iteration (eco_loop run --lec) is running via ot-run on epyc7, out head-97/eco21/st_n3_transit.
