@@ -22,6 +22,9 @@ from pathlib import Path
 CH = "0123456789abcdefghijklmnopqrstuvwxyz"
 
 
+EDGES_HDR = "# OT_EDGES v1"
+
+
 def read_arr(p):
     T, N = {}, {}
     for ln in Path(p).read_text().splitlines():
@@ -33,10 +36,25 @@ def read_arr(p):
     return T, N
 
 
+def read_fall(p):
+    """(F {port: (late, early)}, M {cell: (late, early)}) of a both-edge readout (die_clock.sta_tcl, header EDGES_HDR);
+    ({}, {}) for a rise-only file.  Without the header an F row is the legacy 'F port fall rise' form and is not read."""
+    lines = Path(p).read_text().splitlines()
+    if not any(ln.startswith(EDGES_HDR) for ln in lines[:5]):
+        return {}, {}
+    F, M = {}, {}
+    for ln in lines:
+        f = ln.split()
+        if len(f) >= 4 and f[0] in ("F", "M"):
+            (F if f[0] == "F" else M)[f[1]] = tuple(map(float, f[2:4]))
+    return F, M
+
+
 def export(run, corner, regions_from=None):
     run = Path(run)
     tree = json.loads((run / "tree.json").read_text())
     T, N = read_arr(run / ("arr_%s.txt" % corner))
+    F, M = read_fall(run / ("arr_%s.txt" % corner))
     reg = {}
     if regions_from:
         ref = json.loads(Path(regions_from).read_text())
@@ -56,6 +74,8 @@ def export(run, corner, regions_from=None):
         la, ea = N[cell] if cell in N else inherit
         meta["node_late_ps"][key] = la
         meta["node_early_ps"][key] = ea
+        if cell in M:     # measured fall arrival of this node (R-CLOCK-6 g); an untimed path cell gets none (fails closed)
+            meta.setdefault("node_fall_late_ps", {})[key], meta.setdefault("node_fall_early_ps", {})[key] = M[cell]
         meta["node_stages"][key] = depth
         meta["cppr_node_range_ps"][key] = round(la - ea, 4)
         return la, ea
@@ -91,7 +111,12 @@ def export(run, corner, regions_from=None):
         p = tuple(t["path"])
         taps.append(dict(port=port, part=t["part"], late_ps=la, early_ps=ea, slew_ps=sl,
                          cppr_node=reg.get(port, "h"), tree_path=code[p], stages_from_root=len(p) + 1,
-                         xy_um=t["xy"], node=t.get("leaf")))
+                         xy_um=t["xy"], node=t.get("leaf"),
+                         **(dict(fall_late_ps=F[port][0], fall_early_ps=F[port][1]) if port in F else {})))
+    if F or M:
+        meta["fall_arrivals"] = dict(source="die_clock.sta_tcl F/M rows (both-edge readout)",
+                                     taps_with_fall=sum(1 for x in taps if "fall_late_ps" in x), taps=len(taps),
+                                     nodes_with_fall=len(meta.get("node_fall_late_ps", {})))
     return dict(meta, taps=taps, regions=len(set(reg.values()))), miss
 
 
@@ -107,7 +132,8 @@ def main():
         lost = sum(1 for t in res["taps"] if t["cppr_node"] == "h")
         print("regions from", a.regions_from, "taps without a reference region", lost)
     Path(a.out).write_text(json.dumps(res))
-    print(a.corner, "taps", len(res["taps"]), "missing", miss, "nodes", len(res["node_late_ps"]))
+    print(a.corner, "taps", len(res["taps"]), "missing", miss, "nodes", len(res["node_late_ps"]),
+          "fall taps", sum(1 for x in res["taps"] if "fall_late_ps" in x), "fall nodes", len(res.get("node_fall_late_ps", {})))
     return 1 if miss else 0
 
 

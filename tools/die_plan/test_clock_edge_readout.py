@@ -89,7 +89,8 @@ def test_clock_kit_ctree_tcl_emits_both_edges(tmp_path, monkeypatch):
     out = _kit(tmp_path, monkeypatch)
     t = (out / "ctree.tcl").read_text()
     assert "set fh [open /work/clock/arr_$::env(CORNER).txt w]" in t and D.EDGES_HDR in t
-    assert "puts $fh \"T $n [expr {833.333 - $smx}] [expr {$smn}]\" }" in t      # T row unchanged
+    assert D.die_sta.PERIOD_PS == 833.0
+    assert "puts $fh \"T $n [expr {833.0 - $smx}] [expr {$smn}]\" }" in t      # T row unchanged
     assert "slack_max_fall" in t and "\"M [get_full_name $i]" in t and "foreach i [get_cells b*]" in t
 
 
