@@ -1692,6 +1692,16 @@ class Landings:
                     dsrep = ring_read_select_copies(self.plan, tn, b)
                 if dsrep is not None and not cat.get("straps"):
                     raise LandingError(f"{tn}.{b}: landing_ring_dsrep needs the count-aligned strap form")
+                # Signed hard children own their replication hardware. Die-wide
+                # fanout knobs are stripped above, but the child's signed DSREP
+                # must not fall back to the soft WREG default of one copy.
+                if hard is not None and "DSREP" in hard:
+                    if wreg:
+                        wreg = dict(wreg, dsrep=int(hard["DSREP"]))
+                    else:
+                        dsrep = int(hard["DSREP"])
+                    if dsrep is not None:
+                        dsrep = int(hard["DSREP"])
                 # (CLAND-SLEW-1 copies below need no strap: ot_dp_clk_landing_ca carries DSREP too)
                 if wreg and dsrep is not None and dsrep != wreg["dsrep"]:
                     raise LandingError(f"{tn}.{b}: conflicting read-select copy counts in dsrep and wreg")
@@ -1720,9 +1730,10 @@ class Landings:
                 # RSTREP-1 (DIE-QC-97 (d)): the last reader-START stage becomes 1 + N kept same-D relay copies at its
                 # site (ot_dp_landing_relay_rep, same instance name, 0 cycles) and the ring splits its reset loads
                 if reader_start != "cland_start" and cat.get("straps") and (hard is None or "RSTREP" in hard):
-                    nrep = ring_reset_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
-                                             int(cat["rings"][b]["depth"]),
-                                             wreg["dsrep"] if wreg else (dsrep or 1), (wreg or {}).get("read_chunk", 0))
+                    nrep = (int(hard["RSTREP"]) if hard is not None else
+                            ring_reset_copies(self.plan.get("clock"), w + 2 if self.dataflow else w,
+                                              int(cat["rings"][b]["depth"]),
+                                              wreg["dsrep"] if wreg else (dsrep or 1), (wreg or {}).get("read_chunk", 0)))
                     if hard is None:   # CLAND-RING-LOCALITY: reach AND explicit chains, one shared rule
                         nrep = max(nrep, reader_reset_copies(self.plan, key, b, w + 2 if self.dataflow else w,
                                                              (wreg or {}).get("read_chunk", 0),
@@ -1746,10 +1757,10 @@ class Landings:
                 # PLACEREP-1 (DIE-QC-97): under clock.landing_ring_fanout_max every strap-form ring gets one kept copy of the
                 # reader placement value per read chunk (ot_dp_clk_landing_cas PLACEREP; rings with one chunk keep none).
                 # The value is 0 - strap_k, read only by the align load inside the held reset: 0 cycles, same q/ready/fault.
-                if cat.get("straps") and (hard is None or "PLACEREP" in hard) and (ring_place_copies(
+                if cat.get("straps") and (bool(hard.get("PLACEREP")) if hard is not None else (ring_place_copies(
                         self.plan.get("clock"), w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)) or (
-                        hard is None and reader_start_reach(self.plan, key)       # CLAND-RING-LOCALITY: same rule
-                        and ring_reach_select_copies(w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)) > 1)):
+                        reader_start_reach(self.plan, key)       # CLAND-RING-LOCALITY: same rule
+                        and ring_reach_select_copies(w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)) > 1))):
                     ring_mod = ring_mod[:-1] + ", .PLACEREP(1))"
                     self.reset_placements[tn][b].update(ring_place_copies=True, ring_place_copies_added_cycles=0)
                 if hard is not None:
