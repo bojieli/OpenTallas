@@ -69,4 +69,12 @@ OT_PRD_MAX_WIRE_LENGTH=120 (one proof, no A/B). Proposal: R-FLOW-8 ECO defaults 
 1. Collect t21_nokeep + coll_ftc trio; decide R-FLOW-7. 2. Update RULEBOOK R-FLOW (status, proof 2/3/4 rows above, max-wire and ECO
 open items, per-kit-class default list) once HOLDTAP-FIN-2's R-CLOCK edit is committed. 3. Push branch, READY to ROOT-MERGE + COORD.
 
+### 07:40 addendum: t21_nokeep finished (S81 R-FLOW-7 arm)
+| arm | TT slew | TT setup | FF hold | cells | GRT / route |
+|---|---|---|---|---|---|
+| S81 t21 R-FLOW + keep (ab/t21) | 0 | +122.10 | -8.62 / 76 | 214,945 | 1:14:55 / 26:26 |
+| S81 t21 R-FLOW no keep (ab/t21_nokeep) | 0 | +76.16 | -6.02 / 51 | 215,607 | 1:36:13 / 48:36 |
+Reading: on S81, dropping GPL keep costs 46 ps setup and +21 min GRT / +22 min route for a 2.6 ps hold gain; HEAD was neutral.
+So far R-FLOW-7 points to KEEP 0.25 in the default; the QC coll_ftc vs coll_ftc_nokeep pair (still routing) decides it.
+
 HANDBACK 2026-11-13 07:27 to RULES-FLOW-1
