@@ -996,6 +996,10 @@ def select(rows, cfg, die, state, plan_types=None):
             skip.setdefault("counted by the sign-off counter", []).append(r["item"])
             continue
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
+        bw = blocked_why(cfg, state, die, r["item"])
+        if bw:
+            skip.setdefault(bw.split(":", 1)[0] + ": same failure signature at the retry cap (kit_wave_blocked.tsv)", []).append(r["item"])
+            continue
         only_retry = False
         if r["state"] not in states:
             # KW-RELAUNCH-1 11-05: the parent row of a class-split item carries the state of the wave's OWN running class
@@ -1079,6 +1083,11 @@ def select(rows, cfg, die, state, plan_types=None):
                 if same:
                     skip.setdefault(HOLD_UNCHANGED, []).extend(same)
                     todo = [c for c in todo if c not in same]
+            capped = [c for c in todo if blocked_why(cfg, state, die, c)]
+            for c in capped:
+                skip.setdefault(blocked_why(cfg, state, die, c).split(":", 1)[0]
+                                + ": same failure signature at the retry cap (kit_wave_blocked.tsv)", []).append(c)
+            todo = [c for c in todo if c not in capped]
             if cfg.get("flow_repeat_gate", True):
                 rep = [c for c in todo if flow_repeat(cfg, state, die, c, its.get(item_key(die, ev, c, blk(c))), r["item"], r.get("kind"))]
                 if rep:
@@ -3491,6 +3500,142 @@ def flow_repeat(cfg, st, die, item, rec, parent=None, kind="type"):
         return False
 
 
+# KIT-STAGE-1 11-13 (independent review: 4,769 launches on 534 items 11-10..13, the worst 47; 58 % of FAILs died in kit staging
+# with the same five signatures): the same failure signature RETRY_CAP times in a row on one item stops relaunching it,
+# whatever releases it (retry entries, RETRY-INFRA, a new event).  The row is BLOCKED-<class> with a named owner (the die
+# owner, never the wave lane) and is listed in BLOCKED_FILE, which COORD reads.  Released only by the die's 'unblock' list:
+# entries 'pattern' or 'pattern#tag' (fnmatch on the item); each entry releases ONE attempt (the entry is spent); a new
+# release needs a new entry (another #tag).  The same failure after the release blocks the row again at once.
+RETRY_CAP = 3
+BLOCKED_FILE = "kit_wave_blocked.tsv"
+BLOCKED_COLS = ["die", "item", "block", "n", "owner", "owner_source", "item_default_owner", "stage", "signature", "attempts",
+                "first", "last", "last_reason", "release"]
+_TRANSIENT_INFRA = re.compile(r"ot-run: NOT RUN|ot-run: NOT COMPLETED|no host qualifies|transport drop|ssh transport|"
+                              r"Connection (?:reset|refused|closed)|kex_exchange_identification|Errno 28")
+
+
+def fail_signature(cls, why, stage=""):
+    """(block class, comparable signature) of a FAIL, or None for a transient host failure (never counted).  Paths, hosts,
+    hashes and numbers are dropped, so the same error on another host / tree / attempt is the same signature.  A host-gap
+    INFRA (KW-FIX-46: FLOW input missing relabelled INFRA) counts as its original FLOW reason."""
+    why = str(why or "")
+    cls = str(cls or "")
+    if why.startswith("INFRA host input gap"):
+        i = min([why.find(w) for w in HOST_GAP_WHY if w in why] or [-1])
+        if i >= 0:
+            why, cls = why[i:], "FLOW"
+    elif cls == "INFRA" and _TRANSIENT_INFRA.search(why):
+        return None
+    head, _, rest = why.partition(" @")
+    stg = (rest.split(":", 1)[0].strip() if rest else "") or str(stage or "")
+    norm = re.sub(r"(?:[\w.-]+:)?/[^\s,;'\")]+", "<path>", head)
+    norm = re.sub(r"\b(?:epyc|intel)\d+\b|\b[0-9a-f]{7,}\b|\d+", "#", norm)
+    norm = re.sub(r"\s+", " ", norm).strip()[:200]
+    return (cls or "FLOW"), f"{cls}|{stg}|{norm}"
+
+
+def note_fail_sig(st, rec, cls, why, now=None):
+    """count consecutive identical FAIL signatures per die|item (across attempts and events); -> the counter dict"""
+    fs = st.setdefault("fail_sigs", {})
+    key = f"{rec.get('die')}|{rec.get('item')}"
+    got = fail_signature(cls, why, rec.get("stage"))
+    if got is None:
+        return fs.get(key)
+    bcls, sig = got
+    now = time.time() if now is None else now
+    c = fs.get(key)
+    if not c or c.get("sig") != sig:
+        c = fs[key] = {"sig": sig, "cls": bcls, "n": 0, "attempts": [], "first": now}
+    c["n"] = int(c.get("n") or 0) + 1
+    c["attempts"] = (list(c.get("attempts") or []) + [f"{rec.get('event')}@{rec.get('attempt')}"])[-8:]
+    c.update(last=now, stage=str(rec.get("stage") or ""), reason=re.sub(r"\s+", " ", str(why or ""))[:300])
+    return c
+
+
+def clear_fail_sig(st, rec):
+    (st.get("fail_sigs") or {}).pop(f"{rec.get('die')}|{rec.get('item')}", None)
+
+
+def blocked_why(cfg, st, die, item):
+    """'' or the BLOCKED-<class> skip reason of an item at the retry cap that the die's unblock list does not release"""
+    c = (st.get("fail_sigs") or {}).get(f"{die}|{item}")
+    if not c or int(c.get("n") or 0) < RETRY_CAP:
+        return ""
+    if unblock_entry(cfg, die, item, c):
+        return ""
+    return (f"BLOCKED-{c.get('cls') or 'FLOW'}: the same failure {c['n']}x in a row ({c.get('sig', '')[:160]}); "
+            f"owner {die_owner(cfg, die)[0]}; release = dies.{die}.unblock (KIT-STAGE-1 retry cap)")
+
+
+def unblock_entry(cfg, die, item, c):
+    """the first unspent unblock entry of the die that names this item, or ''"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    used = set(c.get("unblocks_used") or [])
+    for x in d.get("unblock") or []:
+        x = str(x)
+        if x not in used and fnmatch.fnmatchcase(item, x.split("#", 1)[0]):
+            return x
+    return ""
+
+
+def note_unblock_launch(cfg, st, die, item):
+    """a launch released by an unblock entry spends that entry (the next identical failure blocks again)"""
+    c = (st.get("fail_sigs") or {}).get(f"{die}|{item}")
+    if c and int(c.get("n") or 0) >= RETRY_CAP:
+        x = unblock_entry(cfg, die, item, c)
+        if x:
+            c["unblocks_used"] = list(c.get("unblocks_used") or []) + [x]
+
+
+def die_owner(cfg, die, owners=None, item=None):
+    """(owner, source) of a BLOCKED row: the die config's die_owner, else the lane named in owner_lane '(...)', else the
+    item's OWNERS.tsv default_owner; never a KIT-WAVE lane"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if d.get("die_owner"):
+        return str(d["die_owner"]), "kit_wave.json dies.%s.die_owner" % die
+    m = re.search(r"\(([A-Z][A-Z0-9-]+)\)", str(d.get("owner_lane") or ""))
+    if m:
+        return m.group(1), "kit_wave.json dies.%s.owner_lane" % die
+    for r in owners or []:
+        if r.get("die") == die and r.get("item") == item and r.get("default_owner") \
+                and not str(r["default_owner"]).startswith("KIT-WAVE"):
+            return r["default_owner"], "OWNERS.tsv default_owner"
+    return f"{die} die owner (unnamed)", "none"
+
+
+def blocked_rows(cfg, st, owners=None):
+    out = []
+    for key, c in sorted((st.get("fail_sigs") or {}).items()):
+        die, _, item = key.partition("|")
+        why = blocked_why(cfg, st, die, item)
+        if not why:
+            continue
+        own, src = die_owner(cfg, die, owners, item)
+        dflt = next((r.get("default_owner") for r in owners or [] if r.get("die") == die and r.get("item") == item), "")
+        out.append(dict(die=die, item=item, block=f"BLOCKED-{c.get('cls') or 'FLOW'}", n=c.get("n"), owner=own,
+                        owner_source=src, item_default_owner=dflt or "", stage=c.get("stage", ""), signature=c.get("sig", ""),
+                        attempts=",".join(c.get("attempts") or []),
+                        first=time.strftime("%F %T", time.localtime(float(c.get("first") or 0))),
+                        last=time.strftime("%F %T", time.localtime(float(c.get("last") or 0))),
+                        last_reason=c.get("reason", ""), release=f"add '{item}' to dies.{die}.unblock after the fix"))
+    return out
+
+
+def write_blocked(cfg, st, ap_dir, owners=None):
+    rows = blocked_rows(cfg, st, owners)
+    clean = lambda v: re.sub(r"[\t\n]+", " ", str(v))
+    body = "\n".join(["\t".join(BLOCKED_COLS)] + ["\t".join(clean(r[c]) for c in BLOCKED_COLS) for r in rows]) + "\n"
+    p = Path(ap_dir) / BLOCKED_FILE
+    try:
+        if not p.exists() or p.read_text() != body:
+            tmp = p.with_suffix(".tmp")
+            tmp.write_text(body)
+            tmp.replace(p)
+    except OSError:
+        pass
+    return rows
+
+
 REDESIGN_FILE = "kit_wave_redesign.tsv"
 
 
@@ -4649,7 +4794,7 @@ def kit_store_stage(sp, run, remote, res, W, plan):
     import base64
     q = shlex.quote
     kr = {k: v for k, v in (sp.get("kit_rtl") or {}).items() if not str(k).startswith("note")}
-    spec = {"inputs": ks_inputs(sp, plan),
+    spec = {"inputs": ks_inputs(sp, plan), "in_place": [sp["src"]] if str(sp.get("src") or "").startswith("/") else [],
             "rebuild": {"src": sp.get("src"), "src_sha": sp.get("src_sha"), "queue_src": sp.get("queue_src"),
                         "plan": plan, "kit_rtl": kr, "gen_args": sp.get("gen_args"), "event": sp.get("event")},
             "meta": {"die": sp.get("die"), "item": sp.get("item"), "attempt": os.path.basename(W), "work": W}}
@@ -5306,6 +5451,7 @@ def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
     launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
     relaunch the same attempt dirs).  The row stays as it was and is taken again on a later pass."""
     try:
+        note_unblock_launch(cfg, st, die, r.get("item"))
         return launch(AP, cfg, st, die, r, hub, delay_s=delay_s)
     except Exception as e:
         AP.log(f"KIT-WAVE LAUNCH-SKIP {die}/{r.get('item')}: {type(e).__name__}: {e} (pass continues; retried next pass)")
@@ -6003,6 +6149,7 @@ def collect(AP, cfg, st, notices):
                     rec[k] = res[k]
             rec.update(status="PASS", geom=res.get("geom_line", ""), cells=res.get("cells"), geom_dir=res.get("geom_dir"),
                        geom_tag=res.get("geom_tag", ""), geom_verdict=res.get("geom") or "PASS")
+            clear_fail_sig(st, rec)
             enqueue_pass(AP, cfg, st, rec, notices)
             continue
         for k in ("resume", "stage_fp"):
@@ -6039,6 +6186,13 @@ def collect(AP, cfg, st, notices):
             free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
         if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
+        c = note_fail_sig(st, rec, cls, why)
+        if c and int(c.get("n") or 0) >= RETRY_CAP and blocked_why(cfg, st, rec["die"], rec["item"]):
+            rec["blocked"] = f"BLOCKED-{c.get('cls') or cls}"
+            if rec["status"] == "RETRY-INFRA":
+                rec["status"] = "FAIL"                   # a capped row never auto-relaunches as infra either
+            AP.log(f"KIT-WAVE BLOCKED {rec['die']}/{rec['item']}@{rec.get('attempt')} {rec['blocked']}: the same failure "
+                   f"{c['n']}x ({c.get('sig', '')[:200]}); owner {die_owner(cfg, rec['die'])[0]}; listed in {BLOCKED_FILE}")
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
         AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
 
@@ -6197,6 +6351,8 @@ def rotate_dies(rows, die_of, pass_n):
 def infra_relaunch_due(cfg, rec):
     """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
     if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
+        return False
+    if rec.get("blocked"):                               # KIT-STAGE-1 retry cap
         return False
     # KW-FIX-10 11-05: a held item stays held here too.  serdes__t4 a1, stopped and held 11-04 23:37, came back as a2 at
     # 23:44 through this path, which is not plan_dies and never read hold_items.
@@ -7184,6 +7340,10 @@ def _step(AP, ap_dir):
             write_redesign(cfg, st, ap_dir)
         except Exception as e:                  # a report never stops the tick
             AP.log(f"KIT-WAVE redesign list skipped: {e}")
+    try:                                        # KIT-STAGE-1: the retry-cap list COORD reads
+        write_blocked(cfg, st, ap_dir, owners)
+    except Exception as e:
+        AP.log(f"KIT-WAVE blocked list skipped: {type(e).__name__}: {e}")
     for die, ok, why, picks, skip in res:
         n = sum(len(its) for w, its in skip.items() if w.startswith("LOAD-HOLD"))
         if n:
