@@ -1,10 +1,26 @@
 #!/bin/bash
 # usage: coord-commit.sh "message" file1 [file2 ...]   (paths relative to ~/coord) -- serialised commit+push of coord/state
+# COORD-COMMIT-SPEED-1 11-13: two locks, group commit. Measured 11-13: a push of coord/state waits 15-75 s (up to 290 s) on
+# GitHub receive-pack (client side ~2.5 s), so one push per post made 14 posts queue ~10 min. Now:
+#   .coord.lock      (fd 9) guards the shared worktree/index: add+commit, preserve, fetch+merge, restore. Held seconds.
+#   .coord.push.lock (fd 8) one pusher at a time. Pushes a fixed sha with fd 9 released, so later posters commit meanwhile.
+# A waiter that gets fd 8 fetches first: if its own commit (or, with nothing of its own, HEAD) is already on origin --
+# an earlier holder pushed it, or committed its lines through preserve_append_logs -- it exits 0 without merge or push.
+# Safety kept: KW-FIX-25 re-apply (restore_own), KW-FIX-17 merge abort, append preservation, generated-file discard,
+# never rebase/stash/reset. Env (tests only): COORD_DIR, COORD_BRANCH. Timing log: ~/.local/state/coord-commit-times.log
 set -e
-cd /home/ubuntu/coord
+C=${COORD_DIR:-/home/ubuntu/coord}; B=${COORD_BRANCH:-coord/state}
+cd "$C"
 msg="$1"; shift
-exec 9>/home/ubuntu/coord/.coord.lock
-flock 9
+now() { date +%s.%N; }
+T0=$(now)
+TLOG=${COORD_COMMIT_TLOG:-$HOME/.local/state/coord-commit-times.log}
+tlog() { printf '%s pid=%s mode=%s wait9=%.1f wait8=%.1f push=%.1f total=%.1f tries=%s msg=%s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$$" "$1" \
+  "$W9" "$W8" "$TP" "$(echo "$(now)-$T0" | bc)" "$i" "${msg:0:60}" >> "$TLOG" 2>/dev/null || true; }
+W9=0; W8=0; TP=0; i=0
+exec 9>"$C/.coord.lock"
+exec 8>"$C/.coord.push.lock"
+t=$(now); flock 9; W9=$(echo "$(now)-$t" | bc)
 git add -- "$@"
 own_before=$(git rev-parse HEAD)
 git commit -q -m "$msg" -- "$@" || true
@@ -12,6 +28,7 @@ git commit -q -m "$msg" -- "$@" || true
 # commit and our push it silently dropped the commit (9 commits, 20 queue lines today). Remember what we committed, re-apply it
 # if it left HEAD, and exit 0 only when origin holds it.
 OWN=""; [ "$(git rev-parse HEAD)" = "$own_before" ] || OWN=$(git rev-parse HEAD)
+flock -u 9
 restore_own() {
 [ -n "$OWN" ] || return 0
 git merge-base --is-ancestor "$OWN" HEAD && return 0
@@ -70,5 +87,32 @@ if [ -f "$HOME/.config/systemd/user/autopilot.service" ]; then
   done
 fi
 }
-for i in 1 2 3 4 5; do discard_generated; preserve_append_logs && git fetch -q origin coord/state && { git merge -q --no-edit origin/coord/state || { git merge --abort 2>/dev/null; false; }; } && restore_own "$@" && git push -q origin coord/state && git fetch -q origin coord/state && { [ -z "$OWN" ] || git merge-base --is-ancestor "$OWN" origin/coord/state; } && exit 0; sleep 3; done
+on_origin() { git merge-base --is-ancestor "$1" "origin/$B" 2>/dev/null; }
+# done when origin holds our own commit; with no commit of our own, when origin holds HEAD (our lines, if committed by
+# preserve_append_logs here or by an earlier holder, are in HEAD)
+done_now() { if [ -n "$OWN" ]; then on_origin "$OWN"; else on_origin "$(git rev-parse HEAD)"; fi; }
+for i in 1 2 3 4 5 6; do
+  t=$(now); flock 8; W8=$(echo "$W8+$(now)-$t" | bc)
+  # coalesce: an earlier pusher already carried our commit
+  if [ -n "$OWN" ] && git fetch -q origin "$B" && on_origin "$OWN"; then tlog coalesced; exit 0; fi
+  t=$(now); flock 9; W9=$(echo "$W9+$(now)-$t" | bc)
+  ok=0
+  discard_generated; preserve_append_logs && git fetch -q origin "$B" && { git merge -q --no-edit "origin/$B" || { git merge --abort 2>/dev/null; false; }; } && restore_own "$@" && ok=1 || true
+  P=$(git rev-parse HEAD)
+  flock -u 9
+  if [ $ok = 1 ]; then
+    if done_now; then tlog coalesced; exit 0; fi
+    t=$(now)
+    if git push -q origin "$P:refs/heads/$B"; then
+      TP=$(echo "$TP+$(now)-$t" | bc)
+      git fetch -q origin "$B" || true
+      if done_now || { [ -z "$OWN" ] && on_origin "$P"; }; then tlog pushed; exit 0; fi
+    else
+      TP=$(echo "$TP+$(now)-$t" | bc)
+    fi
+  fi
+  flock -u 8
+  sleep 3
+done
+tlog FAILED
 echo "coord push failed" >&2; exit 1
