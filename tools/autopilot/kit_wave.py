@@ -920,6 +920,22 @@ def no_row_source(rows, d, die, plan_types):
     return sorted(set(out))
 
 
+PLAN_CORE_NOT_IN_ONLY = ("PLAN-CORE-NOT-IN-ONLY: plan_core_items core in the plan of record but not in only_items "
+                         "(its row is dropped as outside configured only_items; never launches)")
+
+
+def plan_core_not_in_only(d, plan_types):
+    """KIT-OPS-1 11-12 (CORE-ROWS-1 17:23 class): select() makes a kind=core row for every plan_core_items name that is a
+    plan type, then the only_items filter drops it as "outside configured only_items" with no log line (4 HBM cores with
+    item_args/item_env never launched).  -> sorted plan_core_items names that are plan types (all of them when the plan is
+    unknown) and are missing from a configured only_items; [] when there is no only_items list."""
+    if d.get("only_items") is None:
+        return []
+    allowed = set(d.get("only_items") or [])
+    return sorted({c for c in d.get("plan_core_items") or []
+                   if c not in allowed and (plan_types is None or c in plan_types)})
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -934,6 +950,9 @@ def select(rows, cfg, die, state, plan_types=None):
     orphans = no_row_source(rows, d, die, plan_types)
     if orphans:
         skip[NO_ROW_SOURCE] = orphans                   # plan_dies() logs it loudly every tick
+    not_only = plan_core_not_in_only(d, plan_types)
+    if not_only:
+        skip[PLAN_CORE_NOT_IN_ONLY] = not_only          # plan_dies() logs it once per run (KIT-OPS-1)
     if (d.get("plan_items_from_allowlist") or d.get("plan_core_items")) and plan_types is not None:
         # Adopted plans may split types before the ownership census catches up.
         # Explicit die-owned allowlists select those real plan types; retain every
@@ -3144,9 +3163,12 @@ def cfg_require_render(sp):
 
 
 HOLD_UNCHANGED = "no input change since this FAIL: redesign list, no P&R retry (OWNER 11-07)"
-WAIT_FORM = "WAIT-FORM: latest visual verdict BAD and the form fingerprint (type block, plan sha, kit recipe) is unchanged; releases when it changes (COORD 11-12)"
+# KIT-OPS-1 11-12 (COORD): a plain ISSUES verdict (not ISSUES-ACCEPT) rejects a build like BAD: the row goes to WAIT-FORM and the type
+# relaunches only when its form fingerprint changes (before, ISSUES left the row in WAIT-VISUAL forever)
+VISUAL_REJECT = ("BAD", "ISSUES")
+WAIT_FORM = "WAIT-FORM: latest visual verdict BAD or ISSUES and the form fingerprint (type block, plan sha, kit recipe) is unchanged; releases when it changes (COORD 11-12)"
 WAIT_FORM_LOG = "kit_wave_wait_form.tsv"
-_GEOM_VERDICT_RE = re.compile(r"GEOM VERDICT \[[^\]]*viewed\] (\w+)[/ ](\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(BAD|ISSUES|OK|GOOD)\b")
+_GEOM_VERDICT_RE = re.compile(r"GEOM VERDICT \[[^\]]*viewed\] (\w+)[/ ](\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(BAD|ISSUES-ACCEPT|ISSUES|OK|GOOD)\b")
 _GEOM_CACHE = {"t": 0.0, "mtime": None, "v": {}, "ts": {}}
 _VERDICT_TS_RE = re.compile(r"^-\s+(\d{4}-\d\d-\d\d \d\d:\d\d)")
 VERDICT_FORMS = "kit_wave_verdict_forms.json"
@@ -3374,7 +3396,7 @@ def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
     by itself when any of those change."""
     try:
         v = geom_verdicts().get(({"qwen_kvsys": "qwen_kvsys", "qwen_compute": "qwen_compute"}.get(die, die), item))
-        if not v or v[1] != "BAD" or not rec:
+        if not v or v[1] not in VISUAL_REJECT or not rec:
             return False
         if str(rec.get("class") or "") == "INFRA":
             return False
@@ -5149,6 +5171,11 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     (AP.log if AP else log)(f"KIT-WAVE NO-ROW-SOURCE {die}: {len(its)} only_items item(s) have no row "
                                             f"source (no OWNERS row, not in plan_core_items / allowlisted plan types) "
                                             f"and can never launch: " + " ".join(its[:40]) + (" ..." if len(its) > 40 else ""))
+                if skip.get(PLAN_CORE_NOT_IN_ONLY):          # KIT-OPS-1 11-12: was a silent "outside configured only_items" drop
+                    its = skip[PLAN_CORE_NOT_IN_ONLY]
+                    (AP.log if AP else log)(f"KIT-WAVE PLAN-CORE-NOT-IN-ONLY {die}: {len(its)} plan_core_items core(s) are "
+                                            f"in the plan but not in only_items, so the wave drops their rows: "
+                                            + " ".join(its[:40]) + (" ..." if len(its) > 40 else ""))
                 if picks:                                    # WAVE-OPS-1 11-10 (a): advisory, never blocks
                     fl = wave_src_flag(cfg, die)
                     if fl:
@@ -6214,8 +6241,8 @@ def visual_verdicts():
 def visual_hold(cfg, rec):
     """COORD/OWNER 11-12 'stop repeating bad builds, manual visual placement and visual review before sign-off': a TYPE row
     stops after place (place DB + renders kept, route resumes from it) until lanes/GEOM-REVIEW.md carries a verdict for that
-    attempt: GOOD / OK / ISSUES-ACCEPT release it; BAD sends it to WAIT-FORM (form_wait keeps the type from relaunching until its
-    form fingerprint changes); no verdict or ISSUES = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
+    attempt: GOOD / OK / ISSUES-ACCEPT release it; BAD or ISSUES (KIT-OPS-1 11-12) sends it to WAIT-FORM (form_wait keeps the type
+    from relaunching until its form fingerprint changes); no verdict = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
     if cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
         return None
     vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
@@ -6226,8 +6253,8 @@ def visual_hold(cfg, rec):
                 "lanes/GEOM-REVIEW.md")
     if v in VISUAL_ACCEPT:
         return None
-    if v == "BAD":
-        return "WAIT-FORM: visual verdict BAD for this attempt; the type relaunches when its form fingerprint changes"
+    if v in VISUAL_REJECT:
+        return f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
     return "WAIT-VISUAL: place done, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in lanes/GEOM-REVIEW.md for this attempt" + (f" (now {v})" if v else "")
 
 
@@ -6268,6 +6295,16 @@ def visual_queue_publish(cfg, st):
                 # longer the die's, is not reviewed and never routes: it goes to WAIT-FORM (its route stays held, the type
                 # rebuilds on the current form) and leaves the queue
                 rec["route_hold"] = f"WAIT-FORM: stale for review ({why}); rebuild on the current form"
+                rec["updated"] = time.time()
+                continue
+        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
+            # KIT-OPS-1 11-12 (COORD, GEOM-VIS-10 found 9 such rows): a row whose own build already carries a non-accepting
+            # verdict (BAD / ISSUES) needs no review: WAIT-FORM, off the queue.  Done here because enqueue_pass skips rows under
+            # a hold_items pattern, so their route_hold text is never re-evaluated there.
+            vk = (rec.get("die"), rec.get("item"), int(rec.get("attempt") or 0))
+            v = visual_verdicts().get(vk)
+            if v in VISUAL_REJECT and verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
+                rec["route_hold"] = f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
                 rec["updated"] = time.time()
                 continue
         if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):

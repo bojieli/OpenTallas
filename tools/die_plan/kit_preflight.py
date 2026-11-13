@@ -210,6 +210,56 @@ def unresolved_modules(kit):
     return errors
 
 
+
+def _plan_doc(plan_dir):
+    for name in ('die_plan.json', 'plan_c.json'):
+        f = Path(plan_dir) / name
+        if f.is_file():
+            return json.loads(f.read_text())
+    return None
+
+
+def plan_pins_source(kit, plan_dir=None):
+    """KIT-OPS-1 11-12 (DIE-HBM-101 18:1x, wbq g1): a core kit frozen with plan_pins_source = another type's pin table (the g0
+    table, pitch 0.096, instead of the g1 vC5 table, 0.192) builds every later result on the wrong pins.  When freeze.json
+    records plan_pins_source and the plan is reachable: the kit's module (narrowed to its partition type when freeze names one
+    the plan has) must list that file as a hard_cores[].pins_file, and the file's bytes must still hash to
+    plan_pins_source_sha256.  -> errors ([] when freeze.json has no plan_pins_source or there is no plan to compare with)."""
+    import hashlib
+    kit = Path(kit)
+    fz = kit / 'freeze.json'
+    if not fz.is_file() or not plan_dir:
+        return []
+    F = json.loads(fz.read_text())
+    src = F.get('plan_pins_source')
+    if not src:
+        return []
+    plan = _plan_doc(plan_dir)
+    if plan is None:
+        return []
+    module = F.get('module') or F.get('design')
+    types = plan.get('partition_types') or {}
+    narrow = next((t for t in (F.get('canonical_type'), F.get('type')) if t and t in types), None)
+    want = set()
+    for tname, t in types.items():
+        if narrow and tname != narrow:
+            continue
+        for h in (t or {}).get('hard_cores') or []:
+            if h.get('pins_file') and (not module or h.get('module') == module):
+                want.add(h['pins_file'])
+    if not want:
+        return []                                  # the plan names no pin table for this module: not this check's class
+    norm = lambda f: str((Path(plan_dir) / f).resolve()) if not Path(f).is_absolute() else str(Path(f).resolve())
+    if norm(src) not in {norm(f) for f in want}:
+        return [f'freeze plan_pins_source {src} is not the plan pins_file of {module}'
+                + (f' in type {narrow}' if narrow else '') + f' ({", ".join(sorted(want))}): the kit was built on another pin table']
+    sha = F.get('plan_pins_source_sha256')
+    f = Path(norm(src))
+    if sha and f.is_file() and hashlib.sha256(f.read_bytes()).hexdigest() != sha:
+        return [f'plan pins_file {src} changed since the kit froze (sha256 {sha[:12]} recorded): the kit pins are stale']
+    return []
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -250,6 +300,7 @@ def check(kit, plan_dir=None, contract=False):
                 for line, rule, snippet in entries]
     run('yosys_cast_forms', cast_forms)
     run('module_closure', lambda: unresolved_modules(kit))
+    run('plan_pins_source', lambda: plan_pins_source(kit, plan_dir))
     if (kit/'master_slice.json').is_file():
         def slice_check():
             import master_slice
