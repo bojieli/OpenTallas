@@ -6322,7 +6322,6 @@
     "ot_s81sl_leaf__t56": "DRT73-AOR-1113 (KIT-OPS-1 2026-11-13 11:55, COORD 11:2x): held until S81-FORMS-1 delivers the combined per-type plan (orient + streets A4 + core-tap fix); orient-only plans fail gen (or1: collector_tree vs bound reset identity) and then GRT on street congestion (LEAF-DRT73-1: t13 overflow 62k). Only ot_s81sl_leaf__t62 runs as the plan_Aor gen/reset canary. Lift = switch item_inputs to the combined plan + its bind, then delete these keys.",
     "ot_s81sl_leaf__t58": "DRT73-AOR-1113 (KIT-OPS-1 2026-11-13 11:55, COORD 11:2x): held until S81-FORMS-1 delivers the combined per-type plan (orient + streets A4 + core-tap fix); orient-only plans fail gen (or1: collector_tree vs bound reset identity) and then GRT on street congestion (LEAF-DRT73-1: t13 overflow 62k). Only ot_s81sl_leaf__t62 runs as the plan_Aor gen/reset canary. Lift = switch item_inputs to the combined plan + its bind, then delete these keys.",
     "ot_s81sl_leaf__t60": "DRT73-AOR-1113 (KIT-OPS-1 2026-11-13 11:55, COORD 11:2x): held until S81-FORMS-1 delivers the combined per-type plan (orient + streets A4 + core-tap fix); orient-only plans fail gen (or1: collector_tree vs bound reset identity) and then GRT on street congestion (LEAF-DRT73-1: t13 overflow 62k). Only ot_s81sl_leaf__t62 runs as the plan_Aor gen/reset canary. Lift = switch item_inputs to the combined plan + its bind, then delete these keys.",
-    "ot_s81sl_leaf__t62": "DRT73-AOR-1113 (KIT-OPS-1 2026-11-13 11:10, COORD 11:1x): no relaunch on the or1 per-item plan: 20 or1 attempts failed at gen 11:07 'physical collector_tree differs from captured bound reset identity' (the orient change moves the reset solve away from the die bind's captured tree). Release = plan_Aor (S81-FORMS-1) passes G0 + strict bind + gen phys on a canary leaf type, then item_inputs plan+kit_rtl switch to plan_Aor + its bind. Running rows are not cancelled by this hold. Lift = delete these keys.",
     "ot_s81sl_leaf__t65": "DRT73-AOR-1113 (KIT-OPS-1 2026-11-13 11:55, COORD 11:2x): held until S81-FORMS-1 delivers the combined per-type plan (orient + streets A4 + core-tap fix); orient-only plans fail gen (or1: collector_tree vs bound reset identity) and then GRT on street congestion (LEAF-DRT73-1: t13 overflow 62k). Only ot_s81sl_leaf__t62 runs as the plan_Aor gen/reset canary. Lift = switch item_inputs to the combined plan + its bind, then delete these keys.",
     "ot_s81sl_leaf__t67": "DRT73-AOR-1113 (KIT-OPS-1 2026-11-13 11:55, COORD 11:2x): held until S81-FORMS-1 delivers the combined per-type plan (orient + streets A4 + core-tap fix); orient-only plans fail gen (or1: collector_tree vs bound reset identity) and then GRT on street congestion (LEAF-DRT73-1: t13 overflow 62k). Only ot_s81sl_leaf__t62 runs as the plan_Aor gen/reset canary. Lift = switch item_inputs to the combined plan + its bind, then delete these keys.",
     "ot_s81sl_leaf__t71": "DRT73-AOR-1113 (KIT-OPS-1 2026-11-13 11:55, COORD 11:2x): held until S81-FORMS-1 delivers the combined per-type plan (orient + streets A4 + core-tap fix); orient-only plans fail gen (or1: collector_tree vs bound reset identity) and then GRT on street congestion (LEAF-DRT73-1: t13 overflow 62k). Only ot_s81sl_leaf__t62 runs as the plan_Aor gen/reset canary. Lift = switch item_inputs to the combined plan + its bind, then delete these keys."
@@ -7517,6 +7516,10 @@
      "20",
      "--max-wire-um",
      "120"
+    ],
+    "ot_s81sl_leaf__t62": [
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-aor3/landed_sidecar_aor3.json"
     ]
    },
    "place_prefer": [
@@ -11231,8 +11234,12 @@
      "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item]."
     },
     "ot_s81sl_leaf__t62": {
-     "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-or1/plan_h2_2249_or1.json",
-     "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item]."
+     "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-aor3/plan_Aor3_e01973ba0aab.json",
+     "kit_rtl": {
+      "bind_out": "/srv/opentallas-scratch2/claude/s81-forms-1/b/aor3/out",
+      "asbuilt": "/srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/asbuilt_kitops1_7073a6b4a5.json"
+     },
+     "note_kitops1_aor3": "KIT-OPS-1 2026-11-13 11:59 (COORD 11:2x canary): plan_Aor3 e01973ba0aab (S81-FORMS-1 11:57: orient + re-derive + collector_tree re-published; G0 74 = baseline, strict bind rc 0, LATCHECK 873/873, their gen phys t62 PASS) + its own bind b/aor3/out (bind.f is absolute into that dir). Copies of plan + sidecar on epyc7 only, so this canary runs on epyc7. Revert = item_inputs_prev_kitops1_aor3."
     },
     "ot_s81sl_leaf__t65": {
      "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-or1/plan_h2_2249_or1.json",
@@ -23153,7 +23160,16 @@
     }
    },
    "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7.",
-   "note_gunit1_1113": "GUNIT-CORE-1 2026-11-13 11:5x (COORD task): gunit__t1 sat WAIT-CHILD all day because dsdv_gunit_l1f_bf is a lane-kit core (DIE-S81-88 11-12 08:18: no wave row) and no prov_view_sources entry pointed at its routed DRC-0 kit_gf3ds60. Added prov_view_sources[dsdv_gunit_l1f_bf] (one routed candidate, PROVISIONAL). No src/plan/event change. Revert: delete prov_view_sources[dsdv_gunit_l1f_bf] (backup kit_wave.json.bak-gunit-1113)."
+   "note_gunit1_1113": "GUNIT-CORE-1 2026-11-13 11:5x (COORD task): gunit__t1 sat WAIT-CHILD all day because dsdv_gunit_l1f_bf is a lane-kit core (DIE-S81-88 11-12 08:18: no wave row) and no prov_view_sources entry pointed at its routed DRC-0 kit_gf3ds60. Added prov_view_sources[dsdv_gunit_l1f_bf] (one routed candidate, PROVISIONAL). No src/plan/event change. Revert: delete prov_view_sources[dsdv_gunit_l1f_bf] (backup kit_wave.json.bak-gunit-1113).",
+   "item_inputs_prev_kitops1_aor3": {
+    "ot_s81sl_leaf__t62": {
+     "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-or1/plan_h2_2249_or1.json",
+     "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item]."
+    }
+   },
+   "type_args_prev_kitops1_aor3": {
+    "ot_s81sl_leaf__t62": null
+   }
   },
   "s81_head": {
    "enabled": true,
