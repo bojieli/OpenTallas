@@ -60,14 +60,38 @@ def test_two_scene_read_replaces_the_single_read_once(tmp_path):
     assert t.count("read_db $::env(ODB)") == 2 and t.count(PG.READ) == 0
 
 
-def test_route_guard_is_register_to_register_only(tmp_path):
+def test_route_guard_is_cross_tap_only(tmp_path):
     _kit(tmp_path, {})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
-    assert "foreach {pg_tag pg_m} [list all $pg_pm rr $pg_guard]" in t
-    a, b = t.index("set_false_path -hold -from $pg_in"), t.index("unset_path_exceptions -hold -from $pg_in")
-    assert a < t.index("repair_timing -hold -hold_margin $pg_m -max_buffer_percent 100") < b
+    assert "foreach pg_tag {all xt}" in t and "set pg_dg [expr {$pg_guard - $pg_pm}]" in t
+    # the guard pass: port hold excepted, every tap port early latency widened, repair, then both restored
+    a = t.index("set_false_path -hold -from $pg_in")
+    w = t.index("set_clock_latency -source -early -clock $pg_ck [expr {$pg_e - $pg_dg}] [get_ports $pg_p]")
+    r = t.index("repair_timing -hold -hold_margin $pg_pm -max_buffer_percent 100")
+    z = t.index("set_clock_latency -source -early -clock $pg_ck $pg_e [get_ports $pg_p]")
+    b = t.index("unset_path_exceptions -hold -from $pg_in")
+    assert a < w < r < z < b
     assert "set_false_path -hold -to $pg_out" in t and "unset_path_exceptions -hold -to $pg_out" in t
     assert "OT_PREGRT_HOLD_PORT_MARGIN" in t and "OT_PREGRT_HOLD_GUARD" in t
+    assert "cross-tap guard not applied" in t          # a kit without tap window lines keeps the base margin only
+
+
+def test_tap_window_lines_are_the_generator_form(tmp_path):
+    """the tcl reads the window ports from the lines gen_phys.tap_window_tcl writes (same regular expression)"""
+    _kit(tmp_path, {})
+    t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
+    pat = r"^set_clock_latency -source -early -clock (\S+) (-?[0-9.]+) \[get_ports \{?([^\}\]]+)\}?\]\s*$"
+    assert "regexp {" + pat + "} $pg_l" in t
+    py = re.compile(pat)
+    m = py.match("set_clock_latency -source -early -clock clk -40.0000 [get_ports {clk clk_t1 clk_t2}]")
+    assert m and m.group(1) == "clk" and float(m.group(2)) == -40.0 and m.group(3).split() == ["clk", "clk_t1", "clk_t2"]
+    assert py.match("set_clock_latency -source -early -clock fclk_in_cland_dn_0 -50.0000 [get_ports {fclk_in_cland_dn_0}]")
+    assert not py.match("set_clock_latency -source -late -clock clk 0.0000 [get_ports {clk clk_t1}]")
+    assert not py.match("set_clock_latency -source 450.0000 [get_clocks vclk]")
+    # the generator still writes that form
+    src = (HERE / "gen_phys.py").read_text()
+    assert 'f"set_clock_latency -source -early -clock {ck} {t_lib(-v) + 0.0:.4f} "' in src
+    assert 'f"set_clock_latency -source -early -clock {ck} {t_lib(e):.4f} [get_ports' in src
 
 
 def test_clock_network_is_firm_during_the_build_and_released(tmp_path):

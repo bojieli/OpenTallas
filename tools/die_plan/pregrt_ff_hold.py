@@ -19,11 +19,11 @@ What changed against the 11-03 opt-in form:
   1. default on (enabled()); the run_kit.sh step is advisory: any failure keeps 4_cts.odb and the GRT repair as before;
   2. TWO scenes when run_kit.sh passes TLIBS (TC_LIB_FILES): TC/mode tt checks setup, BC/mode ff checks hold, so
      repair_timing never spends TT setup slack on a hold cell (the FF-only form could only see FF setup);
-  3. ROUTE GUARD: register-to-register hold is built to +OT_PREGRT_HOLD_GUARD ps (plan clock.pregrt_hold_guard_ps,
-     default 35) = the measured placement -> routed loss + 10 (hd_turn_b proof: built to +25.0, GRT +12.0, routed
-     +2.71, so the loss is 22.3 ps; before the rule +0.45 at GRT -> -14.07 routed; hd_mesh ~25).
-     Port hold (the seam contract, judged at die STA) is built to OT_PREGRT_HOLD_PORT_MARGIN (5) only: a guard there
-     spends the input setup window (hd_turn_b t_i: TT setup 173.7 -> 39.7 with the guard on ports);
+  3. ROUTE GUARD on CROSS-TAP pairs only: built to +OT_PREGRT_HOLD_GUARD ps (plan clock.pregrt_hold_guard_ps,
+     default 35) = the measured placement -> routed loss + 10 (hd_turn_b: built to +25.0, GRT +12.0, routed +2.71,
+     loss 22.3 ps; before the rule +0.45 at GRT -> -14.07 routed, all 25 misses cross-tap; hd_mesh ~25).  Ports and
+     same-tap pairs are built to OT_PREGRT_HOLD_PORT_MARGIN (5): a uniform guard pads the ordinary zero-logic
+     pairs of the whole kit and spends setup (see the TAIL comment);
   4. the clock network and every clock sink are FIRM while hold cells are legalized (tap balance stays as measured);
   5. a class line before / after (port_in / same_tap / cross_tap / port_out) and pregrt_ff_hold_open.tsv = the
      endpoints the build could not close (ESCALATE: lockup latch / same tap / +1 cycle are plan forms);
@@ -138,28 +138,58 @@ foreach pg_net [$pg_blk getNets] {
     if {[$pg_i getPlacementStatus] eq "PLACED"} { lappend pg_lock $pg_i; $pg_i setPlacementStatus FIRM }
   }
 }
-set pg_fail ""; set pg_rr "nan"
+set pg_fail ""; set pg_xt "nan"
+# tap window ports of the kit SDC (gen_phys.tap_window_tcl: set_clock_latency -source -early -clock <ck> <-W_p>
+# [get_ports {...}]): port -> {clock early}.  Early core-tap ports with an FF overlay (core_taps_ff.sdc) keep their
+# FF value untouched (no cross-tap guard on them).
+set pg_taps [dict create]
+if {[info exists hg_txt]} {
+  set pg_skip {}
+  set pg_cf [file join [file dirname $hg_gold] core_taps_ff.sdc]
+  if {[file exists $pg_cf]} {
+    set pg_f [open $pg_cf]
+    foreach pg_l [split [read $pg_f] "\n"] { if {[regexp {\[get_ports \{?([^\}\]]+)\}?\]} $pg_l -> pg_pl]} { foreach pg_p $pg_pl { lappend pg_skip $pg_p } } }
+    close $pg_f
+  }
+  foreach pg_l [split $hg_txt "\n"] {
+    if {![regexp {^set_clock_latency -source -early -clock (\S+) (-?[0-9.]+) \[get_ports \{?([^\}\]]+)\}?\]\s*$} $pg_l -> pg_ck pg_e pg_pl]} continue
+    foreach pg_p $pg_pl { if {$pg_p ni $pg_skip && [llength [get_ports -quiet $pg_p]]} { dict set pg_taps $pg_p [list $pg_ck $pg_e] } }
+  }
+}
 set pg_pm [expr {[info exists ::env(OT_PREGRT_HOLD_PORT_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_PORT_MARGIN)] ? $::env(OT_PREGRT_HOLD_PORT_MARGIN) : 5.0}]
 set pg_in [all_inputs -no_clocks]; set pg_out [all_outputs]
+set pg_dg [expr {$pg_guard - $pg_pm}]
 if {[catch {
-  # (A) every hold path, ports included, to the port margin: the seam contract (in_min / out_min) is padded as the GRT
-  #     repair would, with no route guard (port hold is judged at die STA against the parent's real arrivals);
-  # (B) register-to-register only (port hold excepted for the pass, then restored) to the route guard.
-  foreach {pg_tag pg_m} [list all $pg_pm rr $pg_guard] {
-    if {$pg_tag eq "rr"} {
+  # (A) every hold path, ports included, to the base margin (OT_PREGRT_HOLD_PORT_MARGIN, 5): the seam contract
+  #     (in_min / out_min) and same-tap pairs are padded as the GRT repair would pad them, with no route guard: port
+  #     hold is judged at die STA against the real arrivals of the parent, and a same-tap pair keeps its CRPR credit
+  #     at route (before the rule the routed misses were cross-tap only).  A uniform guard above ~25 ps pads the
+  #     ordinary zero-logic pairs of the whole kit (hd_turn_b: 1,014 cells at 25, 2,678 at 28, 3,319 at 35, TT setup
+  #     104 -> 43).
+  # (B) CROSS-TAP pairs only, to the route guard: port hold is excepted and the early source latency of every tap
+  #     port (the kit tap window W_p) is widened by guard - base margin for the pass, then restored.  OpenSTA credits
+  #     the widening back to same-port pairs (CRPR at the common tap port), so only a pair on two tap ports sees it.
+  foreach pg_tag {all xt} {
+    if {$pg_tag eq "xt"} {
+      if {![dict size $pg_taps] || $pg_dg <= 0} {
+        puts "OT_PREGRT_FF_HOLD cross-tap guard not applied ([expr {$pg_dg <= 0 ? {guard <= base margin} : {no tap window lines in the kit SDC}}])"
+        break
+      }
       if {[llength $pg_in]} { set_false_path -hold -from $pg_in }
       if {[llength $pg_out]} { set_false_path -hold -to $pg_out }
+      dict for {pg_p pg_v} $pg_taps { lassign $pg_v pg_ck pg_e; set_clock_latency -source -early -clock $pg_ck [expr {$pg_e - $pg_dg}] [get_ports $pg_p] }
     }
     for {set pg_ps 1} {$pg_ps <= 6} {incr pg_ps} {
       set pg_wp [pg_hold]
-      if {$pg_wp >= $pg_m} break
-      repair_timing -hold -hold_margin $pg_m -max_buffer_percent 100
+      if {$pg_wp >= $pg_pm} break
+      repair_timing -hold -hold_margin $pg_pm -max_buffer_percent 100
       set pg_wq [pg_hold]
-      puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_m wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
-      if {$pg_wq >= $pg_m || $pg_wq - $pg_wp < 1.0} break
+      puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_pm[expr {$pg_tag eq {xt} ? " + cross-tap $pg_dg" : {}}] wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
+      if {$pg_wq >= $pg_pm || $pg_wq - $pg_wp < 1.0} break
     }
-    if {$pg_tag eq "rr"} {
-      set pg_rr [pg_hold]
+    if {$pg_tag eq "xt"} {
+      set pg_xt [expr {[pg_hold] + $pg_dg}]
+      dict for {pg_p pg_v} $pg_taps { lassign $pg_v pg_ck pg_e; set_clock_latency -source -early -clock $pg_ck $pg_e [get_ports $pg_p] }
       if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }
       if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }
     }
@@ -184,7 +214,7 @@ if {$pg_fail ne ""} {
 } else {
   set pg_open [file join [file dirname [file normalize [info script]]] pregrt_ff_hold_open.tsv]
   if {[catch {pg_classes after $pg_open} pg_err]} { catch {pg_classes after}; puts "OT_PREGRT_FF_HOLD open list not written ($pg_err)" }
-  puts "OT_PREGRT_FF_HOLD after wns $pg_w1 endpoints [sta::endpoint_violation_count min] rr_wns $pg_rr hold_cells $pg_nh insts [llength [$pg_blk getInsts]] setup_wns $pg_s1 (before $pg_s0) guard $pg_guard locked [llength $pg_lock] secs [expr {[clock seconds] - $pg_t0}]"
+  puts "OT_PREGRT_FF_HOLD after wns $pg_w1 endpoints [sta::endpoint_violation_count min] cross_tap_wns $pg_xt tap_ports [dict size $pg_taps] hold_cells $pg_nh insts [llength [$pg_blk getInsts]] setup_wns $pg_s1 (before $pg_s0) guard $pg_guard locked [llength $pg_lock] secs [expr {[clock seconds] - $pg_t0}]"
   write_db $::env(ODB).pg_tmp
   file rename -force $::env(ODB).pg_tmp $::env(ODB)
 }
