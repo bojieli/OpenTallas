@@ -1453,7 +1453,7 @@
       "detail_bloat_factor": 0
      },
      {
-      "host": "intel2",
+      "host": "epyc4",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc",
       "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
       "detailed_lef": "detail_view.lef",
@@ -1476,7 +1476,7 @@
       "detail_bloat_factor": 0
      },
      {
-      "host": "intel2",
+      "host": "epyc4",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc_h_head_p",
       "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
       "detailed_lef": "detail_view.lef",
@@ -1491,15 +1491,7 @@
     ],
     "qkd_kvs_pcf": [
      {
-      "host": "epyc9",
-      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcf",
-      "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
-      "detailed_lef": "detail_view.lef",
-      "detailed_receipt": "detail_receipt.json",
-      "detail_bloat_factor": 0
-     },
-     {
-      "host": "intel2",
+      "host": "epyc4",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf",
       "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
       "detailed_lef": "detail_view.lef",
@@ -1514,15 +1506,7 @@
     ],
     "qkd_kvs_pcf_h_head_p": [
      {
-      "host": "epyc9",
-      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcf_h_head_p",
-      "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
-      "detailed_lef": "detail_view.lef",
-      "detailed_receipt": "detail_receipt.json",
-      "detail_bloat_factor": 0
-     },
-     {
-      "host": "intel2",
+      "host": "epyc4",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf_h_head_p",
       "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
       "detailed_lef": "detail_view.lef",
@@ -4659,7 +4643,102 @@
    ],
    "note_kitstage1_1113": "KIT-STAGE-1 2026-11-13 03:55: kit_store pilot (kv3_pv*) OFF: the pilot itself failed kit_rtl 'preferred HDL source missing' on all 15 kv3_pv rows 11-12 18:25 (inputs inside the wave src were moved into kit_inputs and the bind resolved tree-relative files there). Fix on branch claude/kit-stage-1-1113 (kit_store in_place src); restore kit_store_prev_kitstage1_1113 after it is deployed. The 15 kv3_pv_*@1 retry entries were stale (KW-FIX-23 epoch): removed in step1 and re-added in step2 one tick later = the batch relaunch.",
    "die_owner": "DIE-KV-99",
-   "retry_note_kitops1_kvsdra0_1113": "2026-11-13 10:04 KIT-OPS-1 (add; KW-FIX-45 documented re-arm: remove for one pass, re-add) COORD 10:0x R-FLOW-6: regenerate kv3_sys_SD / kv3_sys_SD_v1 (kvN2_66e6607 @1 died DRT-0255, rows db84da4eefbb / 19d456d1a995) so the kit carries ENABLE_RESISTANCE_AWARE=0; src_kv_main_66e6607e3f gen_phys has the RA=0 overlay; the @1 retry entries were stale (retry_seen of event28w_c)"
+   "retry_note_kitops1_kvsdra0_1113": "2026-11-13 10:04 KIT-OPS-1 (add; KW-FIX-45 documented re-arm: remove for one pass, re-add) COORD 10:0x R-FLOW-6: regenerate kv3_sys_SD / kv3_sys_SD_v1 (kvN2_66e6607 @1 died DRT-0255, rows db84da4eefbb / 19d456d1a995) so the kit carries ENABLE_RESISTANCE_AWARE=0; src_kv_main_66e6607e3f gen_phys has the RA=0 overlay; the @1 retry entries were stale (retry_seen of event28w_c)",
+   "prov_view_sources_prev_kitops1_kvpvs": {
+    "qkd_kvs_pcc": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcc",
+      "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc",
+      "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/a0e9f5c3fe3e/qkd_kvs_pcc",
+      "job": "COUNTED qkd_kvs_pcc epyc2:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc__flow-20261106-c-kv__c303603e/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "qkd_kvs_pcc_h_head_p": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcc_h_head_p",
+      "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcc_h_head_p",
+      "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/df3060246f1f/qkd_kvs_pcc_h_head_p",
+      "job": "COUNTED qkd_kvs_pcc_h_head_p epyc4:/srv/opentallas-scratch3/claude/auto-resign/qwen_kvsys/qkd_kvs_pcc_h_head_p__flow-20261106-c-kv__2a7cab7f/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "qkd_kvs_pcf": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/388dc9658f5c/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "qkd_kvs_pcf_h_head_p": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/obs-sync-1-a0c/kvview_stage/qkd_kvs_pcf_h_head_p",
+      "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 + DRT-0073 class; DRT-probed)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf_h_head_p",
+      "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
+      "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ]
+   },
+   "note_kitops1_kvpvs": "KIT-OPS-1 2026-11-13 13:23 (COORD 13:2x, KV-KITFIX-1 READY 13:22): kv-types-6/pc_detail sources host intel2 -> epyc4 (files live on epyc4; 4 entries); dropped 2 epyc9 obs-sync-1-a0c pcf/pcf_h entries (receipt check_ok false, different ODB). Revert: prov_view_sources_prev_kitops1_kvpvs. pc rows NOT relaunched (R-CAP preflight, DIE-KV-100)."
   },
   "s81": {
    "enabled": true,
