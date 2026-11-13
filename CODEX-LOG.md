@@ -12908,3 +12908,6 @@ PAIR5 isolated productiontile proof now PASS all3seeds (16kcycles,3warmresets,2o
 
 ## CODEX authority correction — 2026-11-13
 The opening CODEX-ROLE OWNER ORDER 11-12 explicitly says it supersedes watcher mode. My earlier retention of the older watcher no-merge restriction was too restrictive. Existing gated-source merges under AGENTS/BRIEFING are authorized; ROOT-MERGE-61 is now directly covered by the merge worker. This resolves the earlier OWNER? no-merge scope question by the written existing order, without assuming a new owner answer. Later HBM PARK and plan/source freeze remain in force. No owner-level policy change or plan adoption is authorized by this correction.
+
+## CODEX notes 2026-11-13 14:43 PST — direct merge takeover
+Existing E8 rm60 reused at be5ba677c6. Six SOURCE-only candidates merged privately with plain --no-ff/no conflicts/no deletions: KV measuredcap4b95, capd34, CS7e036, reachab145, PINKEEP95dd, tokenTOOLS904455 (producerRTL3e9 held). Chain bec97a9fcb59; focused merged-tree tests + actual PINKEEP option/default/mutant+synth proof admitted E8 via ot-run, log intel2 ~/tmp/codex_merge67_gate.log; results E8 wt/rm60-scripts/codex67. No main push until gate. No plan/wave/source freeze switch or HBM event.
