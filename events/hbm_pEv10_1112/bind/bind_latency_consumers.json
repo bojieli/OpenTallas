@@ -1,0 +1,551 @@
+{
+ "schema": "opentallas.die_plan.latency_consumers.v1",
+ "stats": {
+  "leaves": 1505,
+  "contract_modules": 19,
+  "instances_checked": 23,
+  "verdicts": {
+   "REGEN": 23
+  },
+  "advisory_families": 3,
+  "errors": 0
+ },
+ "errors": [],
+ "r8": {
+  "checked": true,
+  "adds_to_zero_stage_members": 9702,
+  "landing_pads": true,
+  "param_regen_hook": true,
+  "stats": {
+   "groups": 4124,
+   "groups_unequal": 15,
+   "inversions": 0,
+   "landed_bundles": 0,
+   "landed_over_margin": 0,
+   "replica_sets": 207,
+   "replica_unequal": 0,
+   "types_conflicting": 0,
+   "replica_mode": "type",
+   "bus_mode": "part",
+   "async_skipped": 234,
+   "depth_source": "bus_groups landed_stages",
+   "strap_pads": true,
+   "strap_sites": [],
+   "strap_site_count": 0,
+   "strap_used_constants": []
+  },
+  "errors": 15,
+  "messages": [
+   "ERROR R8 bus group su_NE0.g_tap_r8b.u_tap <- NE_hub (NE_su00): unequal added delay [34, 55]; (port, as-built, landed) [('local_read', 0, 34), ('local_write', 0, 34), ('near_rr', 0, 55), ('near_w_done', 0, 55)]",
+   "ERROR R8 bus group su_NE1.g_tap_r8b.u_tap <- NE_hub (NE_su11): unequal added delay [2, 34]; (port, as-built, landed) [('local_read', 0, 34), ('local_write', 0, 34), ('near_rr', 0, 2), ('near_w_done', 0, 2)]",
+   "ERROR R8 bus group su_NE2.g_tap_r8b.u_tap <- NE_hub (NE_su20): unequal added delay [34, 37]; (port, as-built, landed) [('local_read', 0, 34), ('local_write', 0, 34), ('near_rr', 0, 37), ('near_w_done', 0, 37)]",
+   "ERROR R8 bus group su_NE3.g_tap_r8b.u_tap <- NE_hub (NE_su31): unequal added delay [2, 34]; (port, as-built, landed) [('local_read', 0, 34), ('local_write', 0, 34), ('near_rr', 0, 2), ('near_w_done', 0, 2)]",
+   "ERROR R8 bus group su_NW0.g_tap_r8b.u_tap <- NW_hub (NW_su00): unequal added delay [35, 53]; (port, as-built, landed) [('local_read', 0, 35), ('local_write', 0, 35), ('near_rr', 0, 53), ('near_w_done', 0, 53)]",
+   "ERROR R8 bus group su_NW1.g_tap_r8b.u_tap <- NW_hub (NW_su11): unequal added delay [2, 35]; (port, as-built, landed) [('local_read', 0, 35), ('local_write', 0, 35), ('near_rr', 0, 2), ('near_w_done', 0, 2)]",
+   "ERROR R8 bus group su_NW2.g_tap_r8b.u_tap <- NW_hub (NW_su20): unequal added delay [25, 35]; (port, as-built, landed) [('local_read', 0, 35), ('local_write', 0, 35), ('near_rr', 0, 25), ('near_w_done', 0, 25)]",
+   "ERROR R8 bus group su_NW3.g_tap_r8b.u_tap <- NW_hub (NW_su31): unequal added delay [2, 35]; (port, as-built, landed) [('local_read', 0, 35), ('local_write', 0, 35), ('near_rr', 0, 2), ('near_w_done', 0, 2)]",
+   "ERROR R8 bus group sucore_NE <- NE_su00 (NE_hub): unequal added delay [27, 76]; (port, as-built, landed) [('slice_t', 0, 76), ('slice_x', 0, 27)]",
+   "ERROR R8 bus group sucore_NE <- NE_su10 (NE_hub): unequal added delay [2, 117]; (port, as-built, landed) [('slice_t', 0, 117), ('slice_x', 0, 2)]",
+   "ERROR R8 bus group sucore_NE <- NE_su20 (NE_hub): unequal added delay [31, 88]; (port, as-built, landed) [('slice_t', 0, 88), ('slice_x', 0, 31)]",
+   "ERROR R8 bus group sucore_NE <- NE_su30 (NE_hub): unequal added delay [2, 121]; (port, as-built, landed) [('slice_t', 0, 121), ('slice_x', 0, 2)]",
+   "ERROR R8 bus group sucore_NW <- NW_su00 (NW_hub): unequal added delay [18, 70]; (port, as-built, landed) [('slice_t', 0, 70), ('slice_x', 0, 18)]",
+   "ERROR R8 bus group sucore_NW <- NW_su10 (NW_hub): unequal added delay [2, 117]; (port, as-built, landed) [('slice_t', 0, 117), ('slice_x', 0, 2)]",
+   "ERROR R8 bus group sucore_NW <- NW_su30 (NW_hub): unequal added delay [2, 121]; (port, as-built, landed) [('slice_t', 0, 121), ('slice_x', 0, 2)]"
+  ],
+  "options": {
+   "exempt": [],
+   "strap_pads": true,
+   "replica": "type",
+   "bus": "part"
+  },
+  "verdict": "ADVISORY (die has R8 pads or a param_regen hook)"
+ },
+ "contracts": [
+  {
+   "inst": "hb_idx__ctl",
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "param": "CR_RT",
+   "asbuilt": 36,
+   "added": 57,
+   "req": [
+    12
+   ],
+   "resp": [
+    45
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 58,
+   "verdict": "REGEN",
+   "bound": 58,
+   "asbuilt_plus_added": 93
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "param": "VM_RT",
+   "asbuilt": 75,
+   "added": 79,
+   "req": [
+    34
+   ],
+   "resp": [
+    45
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 80,
+   "verdict": "REGEN",
+   "bound": 80,
+   "asbuilt_plus_added": 154
+  },
+  {
+   "inst": "hb_idx__op_SW",
+   "module": "ot_hbm_idx_vm_query_static_n12",
+   "param": "VM_RT_EXTRA",
+   "asbuilt": 171,
+   "added": 79,
+   "req": [
+    45
+   ],
+   "resp": [
+    34
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 161,
+   "verdict": "REGEN",
+   "bound": 161,
+   "asbuilt_plus_added": 250
+  },
+  {
+   "inst": "hc_NE.u_q",
+   "module": "ot_hbm_hc_q_static",
+   "param": "DONE_LAT",
+   "asbuilt": 47,
+   "added": 146,
+   "req": [
+    34
+   ],
+   "resp": [
+    34,
+    48,
+    112
+   ],
+   "torn": true,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 170,
+   "verdict": "REGEN",
+   "bound": 170,
+   "asbuilt_plus_added": 193
+  },
+  {
+   "inst": "hc_NW.u_q",
+   "module": "ot_hbm_hc_q_static",
+   "param": "DONE_LAT",
+   "asbuilt": 47,
+   "added": 133,
+   "req": [
+    35
+   ],
+   "resp": [
+    31,
+    48,
+    98
+   ],
+   "torn": true,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 157,
+   "verdict": "REGEN",
+   "bound": 157,
+   "asbuilt_plus_added": 180
+  },
+  {
+   "inst": "hc_eng",
+   "module": "ot_hbm_hc_root_static_s",
+   "param": "XRD",
+   "asbuilt": 0,
+   "added": 36,
+   "req": [
+    36
+   ],
+   "resp": [
+    0
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 36,
+   "verdict": "REGEN",
+   "bound": 36,
+   "asbuilt_plus_added": 36
+  },
+  {
+   "inst": "hc_eng",
+   "module": "ot_hbm_hc_root_static_s",
+   "param": "XRU",
+   "asbuilt": 0,
+   "added": 45,
+   "req": [
+    0
+   ],
+   "resp": [
+    45
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 45,
+   "verdict": "REGEN",
+   "bound": 45,
+   "asbuilt_plus_added": 45
+  },
+  {
+   "inst": "su_NE0.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 25,
+   "added": 82,
+   "req": [
+    27
+   ],
+   "resp": [
+    55
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 93,
+   "verdict": "REGEN",
+   "bound": 93,
+   "asbuilt_plus_added": 107
+  },
+  {
+   "inst": "su_NE0.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 22,
+   "added": 82,
+   "req": [
+    27
+   ],
+   "resp": [
+    55
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 90,
+   "verdict": "REGEN",
+   "bound": 90,
+   "asbuilt_plus_added": 104
+  },
+  {
+   "inst": "su_NE1.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 15,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 15,
+   "verdict": "REGEN",
+   "bound": 15,
+   "asbuilt_plus_added": 19
+  },
+  {
+   "inst": "su_NE1.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 12,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 12,
+   "verdict": "REGEN",
+   "bound": 12,
+   "asbuilt_plus_added": 16
+  },
+  {
+   "inst": "su_NE2.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 19,
+   "added": 68,
+   "req": [
+    31
+   ],
+   "resp": [
+    37
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 79,
+   "verdict": "REGEN",
+   "bound": 79,
+   "asbuilt_plus_added": 87
+  },
+  {
+   "inst": "su_NE2.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 16,
+   "added": 68,
+   "req": [
+    31
+   ],
+   "resp": [
+    37
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 76,
+   "verdict": "REGEN",
+   "bound": 76,
+   "asbuilt_plus_added": 84
+  },
+  {
+   "inst": "su_NE3.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 15,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 15,
+   "verdict": "REGEN",
+   "bound": 15,
+   "asbuilt_plus_added": 19
+  },
+  {
+   "inst": "su_NE3.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 12,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 12,
+   "verdict": "REGEN",
+   "bound": 12,
+   "asbuilt_plus_added": 16
+  },
+  {
+   "inst": "su_NW0.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 25,
+   "added": 71,
+   "req": [
+    18
+   ],
+   "resp": [
+    53
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 82,
+   "verdict": "REGEN",
+   "bound": 82,
+   "asbuilt_plus_added": 96
+  },
+  {
+   "inst": "su_NW0.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 22,
+   "added": 71,
+   "req": [
+    18
+   ],
+   "resp": [
+    53
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 79,
+   "verdict": "REGEN",
+   "bound": 79,
+   "asbuilt_plus_added": 93
+  },
+  {
+   "inst": "su_NW1.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 15,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 15,
+   "verdict": "REGEN",
+   "bound": 15,
+   "asbuilt_plus_added": 19
+  },
+  {
+   "inst": "su_NW1.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 12,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 12,
+   "verdict": "REGEN",
+   "bound": 12,
+   "asbuilt_plus_added": 16
+  },
+  {
+   "inst": "su_NW2.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 19,
+   "added": 54,
+   "req": [
+    29
+   ],
+   "resp": [
+    25
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 65,
+   "verdict": "REGEN",
+   "bound": 65,
+   "asbuilt_plus_added": 73
+  },
+  {
+   "inst": "su_NW2.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 16,
+   "added": 54,
+   "req": [
+    29
+   ],
+   "resp": [
+    25
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 62,
+   "verdict": "REGEN",
+   "bound": 62,
+   "asbuilt_plus_added": 70
+  },
+  {
+   "inst": "su_NW3.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "READ_RETURN",
+   "asbuilt": 15,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 15,
+   "verdict": "REGEN",
+   "bound": 15,
+   "asbuilt_plus_added": 19
+  },
+  {
+   "inst": "su_NW3.g_tap_r8b.u_tap",
+   "module": "ot_hbm_vm_lg_pair_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": 12,
+   "added": 4,
+   "req": [
+    2
+   ],
+   "resp": [
+    2
+   ],
+   "torn": false,
+   "src": "latency_consumers.CONTRACTS",
+   "needed": 12,
+   "verdict": "REGEN",
+   "bound": 12,
+   "asbuilt_plus_added": 16
+  }
+ ],
+ "advisory": [
+  {
+   "module": "ot_hbm_su_static_vm_bank_leaf",
+   "n": 16,
+   "eg": "su_NE0.u_slice.g_leaf[0].u_leaf",
+   "max_added": 25,
+   "params": {
+    "READ_RETURN": [
+     "15",
+     "19",
+     "25"
+    ],
+    "WRITE_RETURN": [
+     "12",
+     "16",
+     "22"
+    ]
+   }
+  },
+  {
+   "module": "ot_hbm_idx_rootctl_static_am",
+   "n": 1,
+   "eg": "hb_idx__ctl",
+   "max_added": 45,
+   "params": {
+    "SEL_LAT": [
+     "40"
+    ]
+   }
+  },
+  {
+   "module": "ot_hbm_router_ids_static_2src",
+   "n": 1,
+   "eg": "hb_router_ids",
+   "max_added": 38,
+   "params": {
+    "CQ_DELAY": [
+     "1"
+    ],
+    "GO_DELAY": [
+     "1"
+    ]
+   }
+  }
+ ]
+}
