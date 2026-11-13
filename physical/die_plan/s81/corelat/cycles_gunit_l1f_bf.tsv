@@ -1,0 +1,3 @@
+core	sub_block	port_or_bus	dir	added_cycles	note
+dsdv_gunit_l1f_bf	u_m0 fold + u_m1 (OT_GUNIT_BF_M1REG + OT_GUNIT_BF_C1REG, form gf4)	o_v,o_f,o_l,o_g,o_d[244:0],o_flt	out	2	against gf2 / plan latency: M1REG c1r +1 (DIE-S81-80 11-08) + C1REG compare registers +1 (GUNIT-CORE-1 11-13); sv_lo,sv_hi,ctl_lo,ctl_hi +0; consumer dsdv_gunit_l1c (gunit__t1 dsdv_gunit_lp u_l1c)
+dsdv_gunit_l1f_bf	sv path (unchanged)	sv_lo,sv_hi,ctl_lo,ctl_hi	out	0	no edge moves on the SC read path

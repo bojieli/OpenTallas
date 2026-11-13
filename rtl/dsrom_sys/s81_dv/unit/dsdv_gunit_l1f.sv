@@ -657,19 +657,56 @@ module dsdv_gunit_l1f_bf (
         end
     endgenerate
     always @(posedge clk) begin l0b <= s0b; l1b <= s1b; end
+`ifndef OT_GUNIT_BF_C1REG
     dsdv_seln_fold_cx #(.EW(EW)) u_m0 (.aa(l0a), .ab(l0b), .ba(l1a), .bb(l1b), .q(c1));
+`endif
     always @(posedge clk or negedge rq[12]) if (!rq[12]) mf <= 3'd0; else mf <= sf0;
 `ifdef OT_GUNIT_BF_M1REG
     // DIE-S81-80 11-08 (bf gf3, COORD approved): gf2 GRT TT -392 on a ~37-stage l0r -> u_m0 -> u_m1 -> o_d path in ONE
     // cycle.  The fold result c1 is registered (c1r) between u_m0 and u_m1; every output (o_v o_f o_l o_g o_d o_flt) is
     // then exactly the gf2 output one edge later (+1 PIN CYCLE on all bf outputs, nothing else moves): mf, the gather
     // select gq2, the gather data gd and the o_flt term get the same one-stage delay (mfr, gq2r, gdr, fltn).
+`ifdef OT_GUNIT_BF_C1REG
+    // GUNIT-CORE-1 11-13 (bf gf4, COORD 12:1x ruling, owner pre-approved cycles): gf3 routed TT -95.94 / 355 endpoints on
+    // l1r / l0b / l0r -> u_m0 -> c1r.  The fold pairs A lane i (S face) with B lane 7-i (N face), both faces left to right,
+    // so every fold compare reads records ~270-520 um apart and the stage held ~14 logic cells + 210 ps of repeaters
+    // (RULEBOOK R-RTL-1: 3 cells at that distance).  gf4 registers the fold's compares at their own site: f_c1q (the S-copy
+    // select compares), f_gq (the four candidate compares per pair) and the records they select (f_uq = A copy B, f_wq =
+    // mirrored B copy B, wires only from the face flops).  The fold's exchange then runs from those registers, and the
+    // gf3 merge register c1r is retimed forward through the first u_m1 exchange: c1r still holds the fold result, but
+    // the u_m1 compares (m_c1q, m_gq) are registered beside it, so the last stage is the u_m1 exchange + o_d select only.
+    // +1 PIN CYCLE on every bf data/valid output against gf3 (+2 against gf2): mf, gq2, gd and the o_flt term get one more
+    // delay (mfr2, gq2r2, gdr2, fltn2).  sv_* / ctl_* untouched.  Bench: profiles/bf_c1reg_1113/bench (gf4(t+1) == gf3(t)).
+    wire [8*8-1:0] f_c1; wire [31:0] f_g; wire [LW-1:0] f_w, m_w, m_wq; wire [8*8-1:0] m_c1; wire [31:0] m_g;
+    generate
+        for (l = 0; l < 8; l = l + 1) begin : g_cw
+            assign f_w[EW * l +: EW]  = l1b[EW * (7 - l) +: EW];      // dsdv_seln_fold_cx: w = bb mirrored
+            assign m_w[EW * l +: EW]  = c1[EW * (l ^ 2) +: EW];      // dsdv_seln_cx8_2 (J1 2): w = db[i ^ J1]
+            assign m_wq[EW * l +: EW] = c1r[EW * (l ^ 2) +: EW];
+        end
+    endgenerate
+    dsdv_seln_fold_c #(.EW(EW)) u_f0c (.aa(l0a), .ba(l1a), .c1(f_c1));
+    dsdv_seln_x2g #(.EW(EW), .J2(4)) u_f0g (.u(l0b), .w(f_w), .g(f_g));
+    reg [8*8-1:0] f_c1q; reg [31:0] f_gq; (* keep *) reg [LW-1:0] f_uq, f_wq;
+    always @(posedge clk) begin f_c1q <= f_c1; f_gq <= f_g; f_uq <= l0b; f_wq <= f_w; end
+`ifdef OT_GUNIT_BF_C1REG_MUT   // bench mutant: the fold exchange reads the candidate compares one edge early
+    dsdv_seln_x2s #(.EW(EW), .J2(4), .KB2(8)) u_f0s (.u(f_uq), .w(f_wq), .c1(f_c1q), .g(f_g), .q(c1));
+`else
+    dsdv_seln_x2s #(.EW(EW), .J2(4), .KB2(8)) u_f0s (.u(f_uq), .w(f_wq), .c1(f_c1q), .g(f_gq), .q(c1));
+`endif
+    dsdv_seln_cx_c #(.EW(EW), .J1(2), .KB1(8)) u_m1c (.da(c1), .c1(m_c1));
+    dsdv_seln_x2g #(.EW(EW), .J2(1)) u_m1g (.u(c1), .w(m_w), .g(m_g));
+    (* keep *) reg [LW-1:0] c1r; reg [8*8-1:0] m_c1q; reg [31:0] m_gq;
+    always @(posedge clk) begin c1r <= c1; m_c1q <= m_c1; m_gq <= m_g; end
+    dsdv_seln_x2s #(.EW(EW), .J2(1), .KB2(8)) u_m1s (.u(c1r), .w(m_wq), .c1(m_c1q), .g(m_gq), .q(c3));
+`else
     (* keep *) reg [LW-1:0] c1r;
     always @(posedge clk) c1r <= c1;
 `ifdef OT_GUNIT_BF_M1REG_MUT   // bench mutant: u_m1 reads the unregistered fold (data one edge early vs valid)
     dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(c1), .db(c1), .q(c3));
 `else
     dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(c1r), .db(c1r), .q(c3));
+`endif
 `endif
 `else
     dsdv_seln_cx8_2 #(.EW(EW), .J1(2), .KB1(8), .J2(1), .KB2(8)) u_m1 (.da(c1), .db(c1), .q(c3));
@@ -709,6 +746,9 @@ module dsdv_gunit_l1f_bf (
     (* keep *) reg flt_s;
 `ifdef OT_GUNIT_BF_M1REG
     reg [2:0] mfr; reg fltn; (* keep *) reg [NQ-1:0] gq2r; reg [191:0] gdr;
+`ifdef OT_GUNIT_BF_C1REG
+    reg [2:0] mfr2; reg fltn2; (* keep *) reg [NQ-1:0] gq2r2; reg [191:0] gdr2;
+`endif
     always @(posedge clk or negedge rq[12])
         if (!rq[12]) begin mfr <= 3'd0; gq2r <= {NQ{1'b0}}; fltn <= 1'b0; o_v <= 1'b0; o_f <= 1'b0; o_l <= 1'b0; o_g <= 1'b0;
                            o_flt <= 1'b0; flt_s <= 1'b0; end
@@ -716,12 +756,27 @@ module dsdv_gunit_l1f_bf (
             mfr <= mf; gq2r <= gq2;
             flt_s <= flt_s || (|yf) || (gq2[NQ - 1] && mf[0]);
             fltn  <= flt_s || (|yf) || (gq2[NQ - 1] && mf[0]);
+`ifdef OT_GUNIT_BF_C1REG
+            o_v <= mfr2[0]; o_f <= mfr2[1]; o_l <= mfr2[2]; o_g <= gq2r2[NQ - 1]; o_flt <= fltn2;
+`else
             o_v <= mfr[0]; o_f <= mfr[1]; o_l <= mfr[2]; o_g <= gq2r[NQ - 1]; o_flt <= fltn;
+`endif
         end
+`ifdef OT_GUNIT_BF_C1REG
+    // gf4: one more delay on valid / flags / gather select / gather data / fault (same reset as their sources)
+    always @(posedge clk or negedge rq[12])
+        if (!rq[12]) begin mfr2 <= 3'd0; gq2r2 <= {NQ{1'b0}}; fltn2 <= 1'b0; end
+        else begin mfr2 <= mfr; gq2r2 <= gq2r; fltn2 <= fltn; end
+    always @(posedge clk) begin gdr <= gd; gdr2 <= gdr; end
+    wire [245:0] onext = {54'd0, gdr2};
+    always @(posedge clk)
+        for (i = 0; i < 246; i = i + 1) if (i != 205) o_df[i] <= gq2r2[i / 14] ? onext[i] : c3[i];
+`else
     always @(posedge clk) gdr <= gd;
     wire [245:0] onext = {54'd0, gdr};
     always @(posedge clk)
         for (i = 0; i < 246; i = i + 1) if (i != 205) o_df[i] <= gq2r[i / 14] ? onext[i] : c3[i];
+`endif
 `else
     always @(posedge clk or negedge rq[12])
         if (!rq[12]) begin o_v <= 1'b0; o_f <= 1'b0; o_l <= 1'b0; o_g <= 1'b0; o_flt <= 1'b0; flt_s <= 1'b0; end

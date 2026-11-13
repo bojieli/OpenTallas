@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.latency_rows.v1",
+ "lane": "GUNIT-CORE-1",
+ "date": "2026-11-13",
+ "rows": [
+  {"id": "S81-GUNIT-BF-M1REG", "lane": "s81 gunit__t1: dsdv_gunit_l1f_bf (4 bands u_l1f0..3 / u_f) o_v o_f o_l o_g o_d o_flt -> dsdv_gunit_l1c u_l1c f_*", "parameter": "recipe defines OT_GUNIT_BF_M1REG (gf3, DIE-S81-80 11-08)", "added_cycles": 1, "clock": "core 833 ps (ck_rt region)", "relative_to": "gf2 = plan latency / token-sim reference", "bench": "physical/die_plan/s81/cores/legacy/profiles/bf_m1reg_1108/bench (N=1 PASS, M1REG_MUT FAIL)", "status": "listed again here: still owed to the die owner (pin_cycles.json owed)"},
+  {"id": "S81-GUNIT-BF-C1REG", "lane": "s81 gunit__t1: dsdv_gunit_l1f_bf o_v o_f o_l o_g o_d o_flt -> dsdv_gunit_l1c u_l1c f_*", "parameter": "recipe defines OT_GUNIT_BF_C1REG on top of OT_GUNIT_BF_M1REG (gf4)", "added_cycles": 1, "clock": "core 833 ps (ck_rt region)", "relative_to": "gf3 (cumulative +2 against gf2 / plan latency); sv_* / ctl_* +0; no die lane (latency.lanes) station count changes: the edges are inside the hard core", "bench": "physical/die_plan/s81/cores/legacy/profiles/bf_c1reg_1113/bench/run_bench.sh (N=1 PASS; N=0, N=2, C1REG_MUT FAIL)"}
+ ],
+ "gunit__t1_lane_table": {
+  "note": "gunit__t1 die lanes (plan latency.lanes) whose token schedule follows the l1c output, i.e. the bf o_* edges: station counts are unchanged (bf edges are core-internal), the token schedule moves by the bf added cycles once the compiler reschedules; values below are the plan table as of plan_h2_2249 (cycles) and the pending schedule shift",
+  "rows": [
+   {"lane": "xtier__gunit__s_3N_C", "plan_cycles": 25, "core_edges_upstream": "+2 (bf o_* via l1c)", "station_change": 0},
+   {"lane": "xtier__gunit__s_3S_C", "plan_cycles": 61, "core_edges_upstream": "+2 (bf o_* via l1c)", "station_change": 0},
+   {"lane": "flt__gunit__s_3N_C", "plan_cycles": 25, "core_edges_upstream": "+2 (bf o_flt via l1c fault)", "station_change": 0}
+  ],
+  "unverified": "which of the three lanes carry l1c outputs derived from bf o_* was read from the lane names, not traced through dsdv_gunit_lp; the die owner confirms when rescheduling"
+ }
+}
