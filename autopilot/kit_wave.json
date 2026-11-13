@@ -5029,7 +5029,6 @@
     "ot_s81sl_leaf__t46@2",
     "ot_s81sl_leaf__t47@2",
     "ot_s81sl_leaf__t4@2",
-    "ot_s81sl_leaf__t50@2",
     "ot_s81sl_leaf__t51@2",
     "ot_s81sl_leaf__t52@2",
     "ot_s81sl_leaf__t53__cl958451dd@3",
@@ -5237,7 +5236,6 @@
     "col_h9_r1__t1__cl49d7a23e@13",
     "col_h9_r2__t1__clce45cab5@10",
     "ot_s81sl_kv_leaf__t1@9",
-    "ot_s81sl_kv_leaf__t4@7",
     "ot_s81sl_leaf__t12@10",
     "ot_s81sl_leaf__t17@7",
     "ot_s81sl_leaf__t21@6",
@@ -6221,7 +6219,9 @@
     "ot_s81sl_leaf__t65@3",
     "ot_s81sl_leaf__t67@1",
     "ot_s81sl_leaf__t71@1",
-    "ot_s81sl_leaf__t62@2"
+    "ot_s81sl_leaf__t62@2",
+    "ot_s81sl_leaf__t7@9",
+    "ot_s81sl_kv_leaf__t5@7"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -7599,6 +7599,38 @@
     "ot_s81sl_leaf__t62": [
      "--clock-landing",
      "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-aor3/landed_sidecar_aor3.json"
+    ],
+    "ot_s81sl_leaf__t50": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "ot_s81sl_leaf__t7": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "ot_s81sl_kv_leaf__t4": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "ot_s81sl_kv_leaf__t5": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
     ]
    },
    "place_prefer": [
@@ -7786,7 +7818,8 @@
     "ot_s81sl_leaf__t50": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "ot_s81sl_leaf__t51": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -7851,7 +7884,8 @@
     "ot_s81sl_leaf__t7": {
      "OT_MACRO_MOVES": "u_lf.u_ve.u_s:1028.16:803.52:MY,u_lf.u_vn.u_a:475.2:665.28:R0,u_lf.u_vp.u_b0:216:717.12:R0,u_lf.u_vq:1105.92:656.64:R0,u_lf.u_vs:846.72:648:MY,u_lf.u_vsw:1149.12:406.08:R0",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "ot_s81sl_leaf__t15": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -8163,12 +8197,14 @@
     },
     "ot_s81sl_kv_leaf__t4": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "ot_s81sl_kv_leaf__t5": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "ot_s81sl_leaf__t28": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -23249,7 +23285,35 @@
    "type_args_prev_kitops1_aor3": {
     "ot_s81sl_leaf__t62": null
    },
-   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:50 add (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): ot_s81sl_leaf__t62@2"
+   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:50 add (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): ot_s81sl_leaf__t62@2",
+   "type_args_prev_kitops1_tc4": {
+    "ot_s81sl_leaf__t50": null,
+    "ot_s81sl_leaf__t7": null,
+    "ot_s81sl_kv_leaf__t4": null,
+    "ot_s81sl_kv_leaf__t5": null
+   },
+   "item_env_prev_kitops1_tc4": {
+    "ot_s81sl_leaf__t50": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t7": {
+     "OT_MACRO_MOVES": "u_lf.u_ve.u_s:1028.16:803.52:MY,u_lf.u_vn.u_a:475.2:665.28:R0,u_lf.u_vp.u_b0:216:717.12:R0,u_lf.u_vq:1105.92:656.64:R0,u_lf.u_vs:846.72:648:MY,u_lf.u_vsw:1149.12:406.08:R0",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_kv_leaf__t4": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_kv_leaf__t5": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1"
+    }
+   },
+   "note_kitops1_tc4": "KIT-OPS-1 2026-11-13 13:25 (COORD 13:3x fill (1)): the 4 GRT-timecap rows released with the R-FLOW per-item set (--slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32, no GPL keep): real retries, not blind. Re-arm: ['ot_s81sl_leaf__t7@9', 'ot_s81sl_kv_leaf__t5@7'] added; ['ot_s81sl_leaf__t50@2', 'ot_s81sl_kv_leaf__t4@7'] removed one pass (stale first-seen) then re-added. Revert: *_prev_kitops1_tc4."
   },
   "s81_head": {
    "enabled": true,
