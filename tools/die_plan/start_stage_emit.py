@@ -365,20 +365,30 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
 
 
 RELAY_MODULE = "ot_die_start_relay"
-RELAY_RTL = ["(* keep_hierarchy *) module ot_die_start_relay #(parameter bit RESET_RELAY = 1) (",
+RELAY_RTL = ["(* keep_hierarchy *) module ot_die_start_relay #(parameter bit RESET_RELAY = 1, parameter bit EDGE_FALL = 0) (",
              "    input wire clk, input wire rst_raw_n_in, input wire p_start, output wire rst_raw_n_out, output wire start);",
              "    // R-REACH-1 START relay (reach_relay_plan): one registered START hop at its planned row site.  With the",
              "    // bounded reset wave its local reset is one more ordinary relay flop, so reset and START each move one",
-             "    // cycle and their order at the next stage is unchanged.",
+             "    // cycle and their order at the next stage is unchanged.  EDGE_FALL (destination-side relay, clocked by the",
+             "    // fed stage's clock): the relay takes over that stage's crossing capture (falling-edge pre-capture of START",
+             "    // and of the reset relay input), and the fed stage then captures it same-clock with EDGE_FALL 0.",
+             "    wire p_in, r_in;",
+             "    if (EDGE_FALL) begin : g_fall",
+             '        (* async_reg = "true" *) reg sf, rf;',
+             "        always @(negedge clk) begin sf <= p_start; rf <= rst_raw_n_in; end",
+             "        assign p_in = sf; assign r_in = rf;",
+             "    end else begin : g_rise",
+             "        assign p_in = p_start; assign r_in = rst_raw_n_in;",
+             "    end",
              "    if (RESET_RELAY) begin : g_rr",
              '        (* keep = "true" *) reg r;',
-             "        always @(posedge clk) r <= rst_raw_n_in;",
+             "        always @(posedge clk) r <= r_in;",
              "        assign rst_raw_n_out = r;",
              "    end else begin : g_nr",
              "        assign rst_raw_n_out = rst_raw_n_in;",
              "    end",
              '    (* keep = "true" *) reg s;',
-             "    always @(posedge clk) if (!rst_raw_n_out) s <= 1'b0; else s <= p_start;",
+             "    always @(posedge clk) if (!rst_raw_n_out) s <= 1'b0; else s <= p_in;",
              "    assign start = s;",
              "endmodule"]
 
@@ -440,10 +450,14 @@ def apply_relays(doc, sv, provider, ctree_v=None, ctree_tcl=None, site=None):
                              "count_align_plan --edge-pad from reach_relay_plan's count_align_edge_pad)")
         par = by_region[s_["parent"]]
         prev_start, prev_reset, prev_rect = f"st_{par['id']}_start", s_.get("reset_parent", "rst_raw_n"), par["rect_um"]
-        for r in chain:
+        dst_side = [r.get("clock_side") == "dst" for r in chain]
+        if any(dst_side[:-1]):
+            raise StageError(f"stage {s_['id']}: only the last relay of a chain may sit on the fed stage's clock")
+        for r, on_dst in zip(chain, dst_side):
             rid = sv_name(r["id"])
             rect = [round(float(v), 3) for v in r["rect_um"]]
-            nf = 2 if wave else 1
+            ef = int(s_["edge_fall"]) if on_dst else 0
+            nf = (2 if wave else 1) * (1 + ef)
             if rect[2] - rect[0] < nf * FLOP_W_UM - 1e-6:
                 raise StageError(f"relay {rid}: planned row {rect} narrower than {nf} flops")
             if not rows.free(rect[0], rect[2], rect[1]):
@@ -455,11 +469,14 @@ def apply_relays(doc, sv, provider, ctree_v=None, ctree_tcl=None, site=None):
             out_s, out_r = f"st_{rid}_start", f"st_{rid}_rraw"
             ports.append(f",\n    input  wire {cp}")
             body += [f"    wire {out_s};", f"    wire {out_r};",
-                     f"    {RELAY_MODULE} #(.RESET_RELAY({int(wave)})) u_st_{rid} (.clk({cp}), .rst_raw_n_in({prev_reset}), "
+                     f"    {RELAY_MODULE} #(.RESET_RELAY({int(wave)})" + (f", .EDGE_FALL({ef})" if on_dst else "") +
+                     f") u_st_{rid} (.clk({cp}), .rst_raw_n_in({prev_reset}), "
                      f".p_start({prev_start}), .rst_raw_n_out({out_r}), .start({out_s}));"]
             entries.append(dict(id=rid, region=r["region"], relay_for=n["region"], parent=r["parent"], module=RELAY_MODULE,
-                                root=False, relay=True, rect_um=rect, flops=nf, node_cell=par["node_cell"],
-                                clock_net=par["clock_net"], clock_from=f"node net of parent stage {par['id']}", clock_port=cp,
+                                root=False, relay=True, rect_um=rect, flops=nf,
+                                node_cell=(s_ if on_dst else par)["node_cell"], clock_net=(s_ if on_dst else par)["clock_net"],
+                                clock_from=(f"node net of fed stage {s_['id']} (destination side, EDGE_FALL {ef})" if on_dst
+                                            else f"node net of parent stage {par['id']}"), clock_port=cp,
                                 clock_pin_xy_um=[rect[0], rect[1]], start_in=prev_start, start_out=out_s,
                                 reset_in=prev_reset, reset_out=out_r,
                                 hop_in_um=round(_rect_hop(prev_rect, rect), 3)))
@@ -477,13 +494,24 @@ def apply_relays(doc, sv, provider, ctree_v=None, ctree_tcl=None, site=None):
         if f".p_start(st_{par['id']}_start)" not in new:
             raise StageError(f"stage {sid}: emitted p_start is not its parent's start")
         new = new.replace(f".p_start(st_{par['id']}_start)", f".p_start({prev_start})", 1)
+        if dst_side[-1]:        # the last relay took the crossing: the fed stage now captures same-clock
+            new = new.replace(f".EDGE_FALL({int(s_['edge_fall'])}))", ".EDGE_FALL(0))", 1)
         sv = sv[:i] + new + sv[j:]
         if wave:
             rl = f"u_rst_{sid} (.clk({s_['clock_port']}), .d({s_['reset_parent']}), .q("
             if sv.count(rl) != 1:
                 raise StageError(f"stage {sid}: emitted reset relay not found exactly once")
             sv = sv.replace(rl, f"u_rst_{sid} (.clk({s_['clock_port']}), .d({prev_reset}), .q(", 1)
+            if dst_side[-1]:
+                ri = sv.index(f"u_rst_{sid} (")
+                li = sv.rindex("\n", 0, ri) + 1
+                head = sv[li:ri]
+                if f".EDGE_FALL({int(s_['edge_fall'])})" in head:
+                    sv = sv[:li] + head.replace(f".EDGE_FALL({int(s_['edge_fall'])})", ".EDGE_FALL(0)", 1) + sv[ri:]
             s_["reset_parent"] = prev_reset
+        if dst_side[-1]:
+            s_["edge_fall_moved_to_relay"] = int(s_["edge_fall"])
+            s_["edge_fall"] = 0
         s_.update(fed_by=n["fed_by"], relay_cycles=k, pad_in_stage=int(s_["pad"]) - k, flops=int(s_["flops"]) - k,
                   hop_from_last_relay_um=entries[-1]["hop_out_um"])
     head_end = sv.index(");", sv.index("module ot_die_start_stages ("))

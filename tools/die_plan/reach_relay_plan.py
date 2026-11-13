@@ -139,6 +139,13 @@ def load_trunks(doc):
     return doc["stages"], sorted(segs), meta
 
 
+def by_region(segs, meta):
+    out = {}
+    for sg in segs:
+        out.setdefault(meta[sg].get("region"), []).append(sg)
+    return out
+
+
 def rewrite_provider(pv, stages):
     """every emitted START stage takes its BUILT clock node (no fallback to the old die H-tree node)"""
     miss = [n["id"] for n in pv["nodes"] if n.get("kind") != "relay" and n["id"] not in stages]
@@ -228,22 +235,25 @@ def start_relays(P, pv, side_regions, built=None, rejected=None):
                 [(ca, (cb[0], ca[1])), ((cb[0], ca[1]), cb), (ca, (ca[0], cb[1])), ((ca[0], cb[1]), cb)]
             own = [(min(p_, q_), max(p_, q_), src["clock_node"], dst["clock_node"]) for p_, q_ in own]
             tg = _along(ca, cb, (i + 1) / (k + 1) * Lc)
-            if built is not None:       # the built tree: no implied src -> dst leg; legs of src's clock region only
+            side = "src"
+            if built is not None:       # the built tree: no implied src -> dst leg; legs of the source's clock region
                 own = []
-                cand = []
-                for cxy, sg in trunk_sites(tg, segs):
-                    if built[1][sg].get("region") != src.get("clock_region"):
-                        if rejected is not None:
-                            rejected.add((src["id"], dst["id"], built[1][sg].get("region")))
-                        continue
-                    cand.append((cxy, sg))
+                cand = [(c, sg, "src") for c, sg in trunk_sites(tg, built[2].get(src.get("clock_region"), []))]
+                # the last relay may sit on the FED stage's clock region instead (it then takes that stage's crossing:
+                # start_stage_emit destination-side form, EDGE_FALL moved into the relay); never a third region
+                if last and dst.get("clock_region") != src.get("clock_region"):
+                    cand += [(c, sg, "dst") for c, sg in trunk_sites(tg, built[2].get(dst.get("clock_region"), []))]
             else:
-                cand = list(trunk_sites(tg, segs))
-            for cxy, sg in list(trunk_sites(tg, own, 4, 60)) + cand:
-                r = free_rect(cxy, taken, ok, n=START_RELAY_FLOPS)
+                cand = [(c, sg, "src") for c, sg in trunk_sites(tg, segs)]
+            for cxy, sg, sd in [(c, sg, "src") for c, sg in trunk_sites(tg, own, 4, 60)] + cand:
+                r = free_rect(cxy, taken, ok, n=START_RELAY_FLOPS * (2 if sd == "dst" else 1))
                 if r:
-                    best = (src["clock_node"], (round(cxy[0], 4), round(cxy[1], 4)), r, sg)
+                    best = ((dst if sd == "dst" else src)["clock_node"], (round(cxy[0], 4), round(cxy[1], 4)), r, sg)
+                    side = sd
                     break
+            if best is None and built is not None and rejected is not None:
+                near = [built[1][sg].get("region") for _c, sg in trunk_sites(tg, segs, 50, 1)]
+                rejected.update((src["id"], dst["id"], g) for g in near if g not in (src.get("clock_region"), dst.get("clock_region")))
             if best is None:
                 raise RelayError(f"no relay site within {SITE_MAX} um for {src['id']} -> {dst['id']} (hop {h:.1f})")
             cn, cxy, r, sg = best
@@ -252,9 +262,11 @@ def start_relays(P, pv, side_regions, built=None, rejected=None):
             rn = dict(id=rid, region=f"{dst['region']}#rl{i + 1}", kind="relay", relay_for=dst["region"], rect_um=r,
                       clock_node=cn, clock_node_xy_um=list(cxy), clock_port=f"t_st_{rid}__clk",
                       clock_tap=f"trunk {sg[2]} -> {sg[3]}",
-                      **({} if built is None else dict(clock_net=src.get("clock_net"), clock_region=src.get("clock_region"),
+                      **({} if built is None else dict(clock_net=(dst if side == "dst" else src).get("clock_net"),
+                                                       clock_region=(dst if side == "dst" else src).get("clock_region"),
                                                        site_net=built[1][sg].get("net"))),
-                      module=START_RELAY_MODULE, flops=START_RELAY_FLOPS, parent=prev["region"], root=False)
+                      **({"clock_side": "dst"} if side == "dst" else {}),
+                      module=START_RELAY_MODULE, flops=START_RELAY_FLOPS * (2 if side == "dst" else 1), parent=prev["region"], root=False)
             nodes.append(rn)
             by[rid] = rn
             new_edges.append(dict(src_stage=prev["id"], dst_stage=rid, src_rect_um=prev["rect_um"], dst_rect_um=r,
@@ -387,12 +399,12 @@ def plan(raw, side, skip_unplaced=False, trunks_doc=None):
         rewrite = rewrite_provider(pv, stages)
         rewrite.update(clock_build=trunks_doc.get("clock_build"), plan_sha256=trunks_doc.get("plan_sha256"),
                        legs=len(bsegs), legs_detoured=sum(1 for lg in trunks_doc["legs"] if lg.get("detour_um")))
-        built = (bsegs, meta)
+        built = (bsegs, meta, by_region(bsegs, meta))
         ln["start_tree"]["built_clock"] = dict(schema=trunks_doc["schema"], clock_build=trunks_doc.get("clock_build"),
                                                plan_sha256=trunks_doc.get("plan_sha256"))
     elif trunks_doc is not None:
         _s, bsegs, meta = load_trunks(trunks_doc)
-        built = (bsegs, meta)
+        built = (bsegs, meta, by_region(bsegs, meta))
     segs = trunks(pv) if built is None else built[0]
     srows = start_relays(P, pv, regions, built, rejected)
     taken = Grid([tuple(n["rect_um"]) for n in pv["nodes"]])
@@ -417,6 +429,8 @@ def plan(raw, side, skip_unplaced=False, trunks_doc=None):
                data_cycles_added=0)
     if trunks_doc is not None:
         rep["built_clock"] = dict(rewrite=rewrite, rejected_region_sites=len(rejected),
+                                  relays_src_side=sum(1 for n in pv["nodes"] if n.get("kind") == "relay" and n.get("clock_side") != "dst"),
+                                  relays_dst_side=sum(1 for n in pv["nodes"] if n.get("kind") == "relay" and n.get("clock_side") == "dst"),
                                   rejected_edges=len({(a, b) for a, b, _r in rejected}),
                                   rejected_examples=sorted(rejected)[:10],
                                   max_relay_segment_um=max([max(r["hops_um"]) for r in srows] or [0]))
