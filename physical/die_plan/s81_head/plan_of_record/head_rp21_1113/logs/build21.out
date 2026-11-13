@@ -1,0 +1,36 @@
+{"reset_tap_moved": [[[699.84, 289.44], [691.2, 354.24]], [[4.32, 211.68], [30.24, 354.24]]], "tile_width": 717.12, "die_dx": 190.08, "tile": {"relay_core": 915, "relay_e": 1376, "inside_new_cores": [], "inside_n": 0}, "ports_ns_shifted": 38, "ports_mixed_dx": [], "ports_mixed_n": 0, "port_faces": [
+bins 756 pushed 8 x range 5.4 716.04
+{"u_core.u_b.g_cv.u_eA0": {"face": "W", "n": 81, "x": 6.68, "y": [146.39, 258.8]}, "u_core.u_b.g_cv.u_eA1": {"face": "E", "n": 81, "x": 693.16, "y": [146.39, 258.8]}, "u_core.u_b.g_cv.u_eA2": {"face": "W", "n": 81, "x": 6.68, "y": [449.68, 562.09]}, "u_core.u_b.g_cv.u_eA3": {"face": "E", "n": 81, "x": 693.16, "y": [449.68, 562.09]}}
+reach_rules fix s81_head: 1 types changed, 0 NOT FIXED -> /srv/opentallas-scratch2/claude/head-97/pd/rp21d.json
+hd_host_e	True	648.0	570.24	656.64	570.24	1.33	20	42	33	0.76	0.76	clean
+head [[570.24, 103.68], [570.24, 120.96], [570.24, 138.24], [570.24, 207.36], [570.24, 224.64], [570.24, 241.92], [570.24, 311.04], [570.24, 328.32], [570.24, 345.6]]
+sf [[224.64, 216.0], [224.64, 233.28], [224.64, 250.56], [224.64, 267.84], [224.64, 336.96], [224.64, 354.24], [224.64, 371.52], [224.64, 440.64], [224.64, 457.92], [224.64, 475.2]]
+y0 112.32 array 69.12 112.32 380.316 456.07199999999995
+[["tap_um", [324.0, 285.12], [302.4, 285.12]], ["reset", [[276.48, 324.0], [259.2, 86.4], [17.28, 17.28], [639.36, 293.76], [207.36, 17.28]]]]
+lane b y 241.92 - 585.672  lane a y 630.72 - 974.472
+[["reset", [[276.48, 324.0], [272.16, 915.84], [552.96, 604.8], [17.28, 604.8], [272.16, 1140.48], [259.2, 86.4], [17.28, 17.28], [375.84, 1002.24], [207.36, 17.28]]]]
+ctl {'u_xa0': [95.04, 77.76], 'u_xa1': [95.04, 207.36], 'u_xb0': [95.04, 336.96], 'u_xb1': [311.04, 138.24]}
+[["reset", [[276.48, 311.04], [259.2, 69.12], [17.28, 17.28], [207.36, 17.28]]]]
+{"types_changed": ["hd_host_e"], "same": 1, "renumbered": 6, "moved": 3}
+{"types_changed": ["hd_ctl", "hd_host_w", "hd_mesh", "hd_spn_end", "hd_spn_eshim_tx", "hd_st_n3_transit", "hd_st_str", "hd_tile", "hd_turn_a"], "same": 473, "renumbered": 111, "moved": 52}
+OFFSET-FALLBACK hd_spn_eshim_tx rst_start_raw_0 offset 2 -> 1 (HEAD-97 rp21: type tree shallower after re-layout)
+OFFSET-FALLBACK hd_tile rst_start_raw_0 offset 4 -> 3 (HEAD-97 rp21: type tree shallower after re-layout)
+reach_rules fix s81_head: 3 types changed, 0 NOT FIXED -> /srv/opentallas-scratch2/claude/head-97/pd/rp21i.json
+pins moved 0
+{"bad": 0}
+regions 327 bad [('lep0N', 'shift', 95.04, ['lk_WN0', 'lep0N'])] 1
+{"trees_replaced": [], "sources_synced": {}, "refused_stale_sidecar": []}
+3bdcbe5cba1cbad8
+5709a30770c1f3ad
+types 7, with street-rule violations 0
+G0C per type: 23/26 types clean (G3-eligible: 23); die-level {}; reported as WARN (run --completeness)
+G0 FAIL: 1 errors, 0 pending-view, 94 warnings; 26 types / 358 partitions (6 in near-duplicate groups); worst cut {'ratio': 0.0578, 'at': 'horizontal@16000'}, worst partition segment {'ratio': 0.3587,
+R-REACH s81_head: 26 soft types, 3 errors, 4 warnings
+{"xo_hop": 2, "relay_sites_added": 1028, "stage_sites": [[203.052, 755.553], [496.812, 732.529]], "out_sha256": "802d132f22d15f6e5c7e3ca9d2e9e5a2617a4a2bc74ba4bf6c861a05c0725f13", "tile_i_to_o_cycles"
+802d132f22d15f6e
+prepare rc 0
+sidecar rc 0
+republish rc 0
+KITRTL hd_ctl rc 0 HEAD_WAVE_KIT_RTL_PASS_DISABLED hd_ctl 31
+GEN hd_ctl rc 0 /srv/opentallas-scratch2/claude/head-97/kits21c/g_hd_ctl/hd_ctl
+BUILD21_DONE

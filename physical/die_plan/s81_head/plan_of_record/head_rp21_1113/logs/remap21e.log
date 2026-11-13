@@ -1,0 +1,10 @@
+hd_host_e.landing_reader_start.coll_i1[0]: rst_rl_21 -> rst_rl_23 (same relay, renumbered)
+hd_host_e.landing_reader_start.coll_i1[1]: rst_rl_0 -> rst_rl_0 (moved 4.3 um, depth offset 2)
+hd_host_e.landing_reader_start.coll_i1[2]: rst_rl_19 -> rst_rl_20 (same relay, renumbered)
+hd_host_e.landing_writer_start.coll_o1[0]: rst_rl_21 -> rst_rl_23 (same relay, renumbered)
+hd_host_e.landing_writer_start.coll_o1[1]: rst_rl_12 -> rst_rl_15 (moved 95.3 um, depth offset 2)
+hd_host_e.landing_local_resets.k0[0]: rst_rl_22 -> rst_rl_24 (same relay, renumbered)
+hd_host_e.landing_local_resets.k2[2]: rst_rl_13 -> rst_rl_16 (moved 106.6 um, depth offset 1)
+hd_host_e.landing_local_resets.k3[3]: rst_rl_16 -> rst_rl_18 (same relay, renumbered)
+hd_host_e.landing_local_resets.k4[4]: rst_rl_19 -> rst_rl_20 (same relay, renumbered)
+{"types_changed": ["hd_host_e"], "same": 1, "renumbered": 6, "moved": 3}

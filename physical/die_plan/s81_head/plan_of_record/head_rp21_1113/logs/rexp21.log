@@ -1,0 +1,54 @@
+OFFSET-FALLBACK hd_spn_eshim_tx rst_start_raw_0 offset 2 -> 1 (HEAD-97 rp21: type tree shallower after re-layout)
+OFFSET-FALLBACK hd_tile rst_start_raw_0 offset 4 -> 3 (HEAD-97 rp21: type tree shallower after re-layout)
+hd_ctl.rst_start_raw_1: u_rrl_83/rst_rl_83 -> u_rrl_79/rst_rl_79 d1 (same relay; 0.0 um to the pin)
+hd_ctl.rst_start_raw_2: u_rrl_44/rst_n_t24 -> u_rrl_60/rst_n_t24 d3 (same relay; 1.8 um to the pin)
+hd_ctl.rst_start_raw_3: u_rrl_6/rst_rl_6 -> u_rrl_7/rst_rl_7 d2 (same relay; 1.7 um to the pin)
+hd_ctl.rst_start_raw_4: u_rrl_8/rst_n_t32 -> u_rrl_9/rst_n_t32 d3 (same relay; 0.5 um to the pin)
+hd_ctl.rst_start_raw_0: u_rrl_59/rst_rl_59 -> u_rrl_61/rst_rl_61 d1 (moved, offset 2; 12.5 um to the pin)
+hd_host_e.rst_start_raw_1: u_rrl_23/rst_n_t4 -> u_rrl_25/rst_n_t4 d3 (moved, offset 0; 0.0 um to the pin)
+hd_host_e.rst_start_raw_4: u_rrl_32/rst_n_t6 -> u_rrl_36/rst_n_t6 d3 (moved, offset 0; 0.0 um to the pin)
+hd_mesh.rst_start_raw_0: u_rrl_137/rst_rl_137 -> u_rrl_173/rst_rl_173 d1 (same relay; 0.5 um to the pin)
+hd_mesh.rst_start_raw_1: u_rrl_206/rst_rl_206 -> u_rrl_14/rst_rl_14 d3 (moved, offset 2; 31.5 um to the pin)
+hd_mesh.rst_start_raw_2: u_rrl_87/rst_rl_87 -> u_rrl_120/rst_rl_120 d1 (moved, offset 4; 7.0 um to the pin)
+hd_mesh.rst_start_raw_3: u_rrl_142/rst_rl_142 -> u_rrl_229/rst_rl_229 d2 (moved, offset 3; 181.8 um to the pin)
+hd_mesh.rst_start_raw_4: u_rrl_159/rst_rl_159 -> u_rrl_174/rst_rl_174 d2 (moved, offset 3; 234.8 um to the pin)
+hd_mesh.rst_start_raw_5: u_rrl_107/rst_rl_107 -> u_rrl_170/rst_rl_170 d3 (moved, offset 2; 3.8 um to the pin)
+hd_spn_end.rst_start_raw_11: reuse rst_o_5 via u_rrl_197/rr_t89
+hd_spn_end.rst_start_raw_15: reuse rst_o_3 via u_rrl_159/rr_t87
+hd_spn_end.rst_start_raw_0: u_rrl_194/rr_t86 -> u_rrl_192/rr_t86 d5 (same relay; 345.6 um to the pin)
+hd_spn_end.rst_start_raw_4: u_rrl_215/rst_rl_215 -> u_rrl_213/rst_rl_213 d4 (same relay; 0.5 um to the pin)
+hd_spn_end.rst_start_raw_5: u_rrl_172/rst_rl_172 -> u_rrl_170/rst_rl_170 d4 (same relay; 1.7 um to the pin)
+hd_spn_end.rst_start_raw_6: u_rrl_174/rst_rl_174 -> u_rrl_172/rst_rl_172 d4 (same relay; 1.2 um to the pin)
+hd_spn_end.rst_start_raw_9: u_rrl_195/rst_rl_195 -> u_rrl_193/rst_rl_193 d1 (same relay; 2.4 um to the pin)
+hd_spn_end.rst_start_raw_14: u_rrl_164/rst_rl_164 -> u_rrl_162/rst_rl_162 d4 (same relay; 0.5 um to the pin)
+hd_spn_end.rst_start_raw_17: u_rrl_196/rst_rl_196 -> u_rrl_194/rst_rl_194 d2 (same relay; 2.5 um to the pin)
+hd_spn_end.rst_start_raw_18: u_rrl_187/rst_rl_187 -> u_rrl_185/rst_rl_185 d4 (same relay; 1.8 um to the pin)
+hd_spn_end.rst_start_raw_1: u_rrl_139/rr_t88 -> u_rrl_159/rr_t87 d5 (moved, offset 0; 596.1 um to the pin)
+hd_spn_eshim_rx.rst_start_raw_0: reuse rst_o_0 via u_rrl_8/rr_t5
+hd_spn_eshim_rx.rst_start_raw_1: u_rrl_24/rr_t5 -> u_rrl_11/rst_rl_11 d3 (moved, offset 0; 700.4 um to the pin)
+hd_spn_eshim_tx.rst_start_raw_1: u_rrl_1/rst_rl_1 -> u_rrl_0/rst_rl_0 d1 (same relay; 0.5 um to the pin)
+hd_spn_eshim_tx.rst_start_raw_0: u_rrl_0/rst_rl_0 -> u_rrl_4/rst_rl_4 d1 (moved, offset 2; 131.9 um to the pin)
+hd_st_n3_transit.rst_start_raw_5: no out on its pin [180.384, 8.608] any more -> private export
+hd_st_n3_transit.rst_start_raw_4: u_rrl_44/rst_rl_44 -> u_rrl_40/rst_rl_40 d4 (same relay; 0.0 um to the pin)
+hd_st_n3_transit.rst_start_raw_5: u_rrl_41/rr_t15 -> u_rrl_37_r/rr_t1 d5 (moved, offset 0; 282.5 um to the pin)
+hd_st_n3_transit.rst_start_raw_5: landing pin created at [180.384, 8.608]
+hd_tile.rst_start_raw_5: no out on its pin [699.36, 864.032] any more -> private export
+hd_tile.rst_start_raw_0: u_rrl_79/rst_rl_79 -> u_rrl_22/rst_rl_22 d1 (moved, offset 4; 12.4 um to the pin)
+hd_tile.rst_start_raw_1: u_rrl_49/rst_rl_49 -> u_rrl_39/rst_rl_39 d2 (moved, offset 2; 12.5 um to the pin)
+hd_tile.rst_start_raw_2: u_rrl_52/rst_rl_52 -> u_rrl_42/rst_rl_42 d3 (moved, offset 1; 1.7 um to the pin)
+hd_tile.rst_start_raw_3: u_rrl_92/rst_rl_92 -> u_rrl_113/rst_rl_113 d2 (moved, offset 2; 22.0 um to the pin)
+hd_tile.rst_start_raw_4: u_rrl_140/rst_rl_140 -> u_rrl_129/rst_rl_129 d2 (moved, offset 2; 43.7 um to the pin)
+hd_tile.rst_start_raw_5: u_rrl_78/rr_t54 -> u_rrl_102/rr_t54 d4 (moved, offset 0; 9.6 um to the pin)
+hd_tile.rst_start_raw_5: landing pin created at [699.36, 864.032]
+hd_tile.rst_start_raw_6: u_rrl_128/rst_rl_128 -> u_rrl_117/rst_rl_117 d2 (moved, offset 2; 0.5 um to the pin)
+hd_tile.rst_start_raw_7: u_rrl_45/rr_t53 -> u_rrl_143/rr_t56 d4 (moved, offset 0; 3.9 um to the pin)
+hd_tile.rst_start_raw_8: u_rrl_80/rst_rl_80 -> u_rrl_64/rst_rl_64 d1 (moved, offset 3; 16.8 um to the pin)
+hd_turn_a.rst_start_raw_0: u_rrl_19/rst_rl_19 -> u_rrl_12/rst_rl_12 d1 (moved, offset 2; 52.4 um to the pin)
+hd_turn_a.rst_start_raw_2: u_rrl_20/rst_rl_20 -> u_rrl_19/rst_rl_19 d2 (moved, offset 1; 96.9 um to the pin)
+hd_turn_b.rst_start_raw_0: no out on its pin [86.88, 691.232] any more -> private export
+hd_turn_b.rst_start_raw_0: u_rrl_15/rr_t6 -> u_rrl_9/rst_rl_9 d2 (moved, offset 0; 535.3 um to the pin)
+hd_turn_b.rst_start_raw_0: landing pin created at [86.88, 691.232]
+hd_st_n3_transit.rst_start_raw_5: declared open on every instance (no die-level reader)
+hd_tile.rst_start_raw_5: declared open on every instance (no die-level reader)
+hd_turn_b.rst_start_raw_0: declared open on every instance (no die-level reader)
+{"changed": 322}

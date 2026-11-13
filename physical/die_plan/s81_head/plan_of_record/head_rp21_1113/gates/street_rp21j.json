@@ -1,0 +1,772 @@
+{
+ "schema": "opentallas.street_rule.v1",
+ "mode": "check",
+ "plan": "/srv/opentallas-scratch2/claude/head-97/pd/rp21j.json",
+ "plan_sha256": "3bdcbe5cba1cbad8053fd4b7a1ea2f6f58e2fa8ae72b79362fcf7a470c050e08",
+ "die": "s81_head",
+ "cfg": {
+  "street_min_um": 43.2,
+  "pin_pitch_um": 0.048,
+  "street_layers": 3.0,
+  "street_fill": 0.6,
+  "abut_um": 4.32,
+  "wall_pins": 1500,
+  "wall_min_um": 43.2,
+  "pinface_min": 16,
+  "tap_street_um": 17.28,
+  "anchor_um": 21.6,
+  "rounds": 4,
+  "reach": 360.0,
+  "outline_grid_um": 8.64,
+  "max_growth_pct": 25.0,
+  "outline_margin_um": 8.64,
+  "attempts": 4,
+  "reach_limit_um": 405.0,
+  "grow_axes": "xy",
+  "reticle_fit": 1,
+  "rs_worse": 0.1,
+  "add_regs": 0,
+  "pin_reorder": 0,
+  "x_pin_factor": 1.0,
+  "band_file": "",
+  "sliver_rule": 0,
+  "face_rule": 1,
+  "face_depth_um": 129.6,
+  "face_passes": 5,
+  "dense_per_um": 3.0,
+  "transit_rule": 0,
+  "sparse_tier": 1,
+  "pin_relay": 1,
+  "pin_relay_um": 4.32
+ },
+ "rows": [
+  {
+   "type": "hd_tile",
+   "cores": 5,
+   "counts": {
+    "sliver": 1,
+    "outline_sliver": 1
+   },
+   "worst": [
+    {
+     "face": "N",
+     "gap": 17.28,
+     "pins": 5,
+     "need": 43.2,
+     "sparse": false,
+     "kind": "outline_sliver",
+     "a": "u_core.u_b.g_cvb.u_eB",
+     "b": "outline"
+    },
+    {
+     "axis": "y",
+     "gap": 34.56,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 120.96,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_b.g_cv.u_eA2",
+     "b": "u_core.u_b.g_cvb.u_eB",
+     "same_cluster": false
+    }
+   ],
+   "face": [],
+   "pin_registers": 1220
+  },
+  {
+   "type": "hd_serdes",
+   "cores": 3,
+   "counts": {
+    "outline_sliver": 2,
+    "sliver": 1
+   },
+   "worst": [
+    {
+     "axis": "x",
+     "gap": 8.64,
+     "pins": [
+      2,
+      0
+     ],
+     "faces": [
+      "W",
+      "E"
+     ],
+     "span": 81.0,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_phy.u_link.u_dec.u_out.u_cmem",
+     "b": "u_phy.u_link.u_dec.u_chn",
+     "same_cluster": false
+    },
+    {
+     "face": "S",
+     "gap": 17.28,
+     "pins": 0,
+     "need": 43.2,
+     "sparse": false,
+     "kind": "outline_sliver",
+     "a": "u_phy.u_link.u_dec.u_out.u_cmem",
+     "b": "outline"
+    },
+    {
+     "face": "S",
+     "gap": 34.56,
+     "pins": 0,
+     "need": 43.2,
+     "sparse": false,
+     "kind": "outline_sliver",
+     "a": "u_phy.u_link.u_dec.u_dly.u_dmem",
+     "b": "outline"
+    }
+   ],
+   "face": [],
+   "pin_registers": 0
+  },
+  {
+   "type": "hd_mesh",
+   "cores": 110,
+   "counts": {
+    "sliver": 16
+   },
+   "worst": [
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[0].u_m",
+     "b": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[2].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[1].u_m",
+     "b": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[3].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[4].u_m",
+     "b": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[6].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[7].u_m",
+     "b": "u_core.u_la.u_ln.u.u_gb.u_sf.g_bank[9].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_la.u_ln.u.u_ski.u_head.g_bank[0].u_m",
+     "b": "u_core.u_la.u_ln.u.u_ski.u_head.g_bank[2].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_la.u_ln.u.u_ski.u_head.g_bank[3].u_m",
+     "b": "u_core.u_la.u_ln.u.u_ski.u_head.g_bank[5].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_la.u_ln.u.u_ski.u_head.g_bank[6].u_m",
+     "b": "u_core.u_la.u_ln.u.u_ski.u_head.g_bank[8].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lb.u_ln.u.u_gb.u_sf.g_bank[0].u_m",
+     "b": "u_core.u_lb.u_ln.u.u_gb.u_sf.g_bank[2].u_m",
+     "same_cluster": true
+    }
+   ],
+   "face": [],
+   "pin_registers": 0
+  },
+  {
+   "type": "hd_lep0N",
+   "cores": 49,
+   "counts": {
+    "outline_sliver": 2,
+    "sliver": 17
+   },
+   "worst": [
+    {
+     "face": "S",
+     "gap": 17.28,
+     "pins": 1,
+     "need": 43.2,
+     "sparse": false,
+     "kind": "outline_sliver",
+     "a": "u_core.u.g_pp[2].u_pair",
+     "b": "outline"
+    },
+    {
+     "face": "S",
+     "gap": 17.28,
+     "pins": 1,
+     "need": 43.2,
+     "sparse": false,
+     "kind": "outline_sliver",
+     "a": "u_core.u.g_pp[3].u_pair",
+     "b": "outline"
+    },
+    {
+     "axis": "y",
+     "gap": 22.392,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 51.43,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "b": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 22.392,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 51.43,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "b": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 22.392,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 51.43,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "b": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 22.392,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 51.43,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m",
+     "b": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 22.392,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 51.43,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m",
+     "b": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 22.392,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 51.43,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m",
+     "b": "u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m",
+     "same_cluster": true
+    }
+   ],
+   "face": [],
+   "pin_registers": 0
+  },
+  {
+   "type": "hd_ctl",
+   "cores": 4,
+   "counts": {},
+   "worst": [],
+   "face": [],
+   "pin_registers": 0
+  },
+  {
+   "type": "hd_host_e",
+   "cores": 20,
+   "counts": {
+    "sliver": 8,
+    "outline_sliver": 1
+   },
+   "worst": [
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[0].u_m",
+     "b": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[2].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "S",
+      "N"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[1].u_m",
+     "b": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[9].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[3].u_m",
+     "b": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[5].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[6].u_m",
+     "b": "u_core.u_lane1.u_ln.u.u_gb.u_sf.g_bank[8].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_ski.u_head.g_bank[0].u_m",
+     "b": "u_core.u_lane1.u_ln.u.u_ski.u_head.g_bank[2].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_ski.u_head.g_bank[3].u_m",
+     "b": "u_core.u_lane1.u_ln.u.u_ski.u_head.g_bank[5].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_ski.u_head.g_bank[6].u_m",
+     "b": "u_core.u_lane1.u_ln.u.u_ski.u_head.g_bank[8].u_m",
+     "same_cluster": true
+    },
+    {
+     "face": "N",
+     "gap": 17.28,
+     "pins": 0,
+     "need": 43.2,
+     "sparse": false,
+     "kind": "outline_sliver",
+     "a": "u_core.u_lane1.u_ln.u.u_epc",
+     "b": "outline"
+    }
+   ],
+   "face": [],
+   "pin_registers": 0
+  },
+  {
+   "type": "hd_host_w",
+   "cores": 55,
+   "counts": {
+    "sliver": 8
+   },
+   "worst": [
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[0].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[2].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[1].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[3].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[4].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[6].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[7].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[9].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_ski.u_head.g_bank[0].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_ski.u_head.g_bank[2].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_ski.u_head.g_bank[3].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_ski.u_head.g_bank[5].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 17.256,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_ski.u_head.g_bank[6].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_ski.u_head.g_bank[8].u_m",
+     "same_cluster": true
+    },
+    {
+     "axis": "y",
+     "gap": 34.536,
+     "pins": [
+      0,
+      0
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 31.99,
+     "pin_reorder": 0,
+     "need": 43.2,
+     "kind": "sliver",
+     "a": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[0].u_m",
+     "b": "u_core.u_lane0.u_ln.u.u_gb.u_sf.g_bank[3].u_m",
+     "same_cluster": true
+    }
+   ],
+   "face": [],
+   "pin_registers": 0
+  }
+ ],
+ "types_with_violations": 0
+}

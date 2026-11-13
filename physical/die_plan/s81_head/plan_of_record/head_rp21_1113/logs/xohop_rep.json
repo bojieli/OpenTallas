@@ -1,0 +1,29 @@
+{
+ "xo_hop": 2,
+ "relay_sites_added": 1028,
+ "stage_sites": [
+  [
+   203.052,
+   755.553
+  ],
+  [
+   496.812,
+   732.529
+  ]
+ ],
+ "out_sha256": "802d132f22d15f6e5c7e3ca9d2e9e5a2617a4a2bc74ba4bf6c861a05c0725f13",
+ "tile_i_to_o_cycles": [
+  2,
+  4
+ ],
+ "per_row_pair_tiles": 22,
+ "per_position_added_cycles": 0,
+ "x_at_return_lane_added": 44,
+ "bench_plan_params_cycles": {
+  "XO_HOP0": 8442,
+  "XO_HOP2": 8442,
+  "XO_HOP4": 8442,
+  "XO_HOP6": 8443
+ },
+ "lanes_changed": 0
+}
