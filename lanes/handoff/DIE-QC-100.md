@@ -126,3 +126,14 @@ Open list (s30): u_ctl re-floor (win back the R-CAP cycles); monitor graph regen
 - QC-REGION-1: s29reg gate FAIL (intra-region TT -151.32 ps; c_* early taps a median 546 ps late). T3a/T3b trunk_nodes written (epyc9 qc-region-1/s29t3a, epyc8 s29t3b; about 9.3k detoured legs, stage access max 387 um); GRT/STA running. K re-derive and the START-retime variants are running. Pick the s29 clock by gate + relay dry run.
 - QC-FTGRID-1: grid-check branch claude/ft-site-grid-check-1113; asked to add a core-origin-on-track + entry-footprint-moves-with-core G0 check.
 - Gotcha: a waiter that runs pgrep -f with the target pattern inside its own ssh command matches itself and never ends. Check the chain log's RC line instead.
+
+## 8 CURRENT STATE 2026-11-13 13:34 PST (supersedes section 7 where they differ)
+- s29 ETA: READY 2026-11-14 18:00 PST (posted to COORD several times). Critical path: HOLD-TAP-1 DME proof (needed by ~11-14 08:00).
+- Ring choice is START retime (not depth-16). It runs only in region_form STA on a built proof. region_form @c38eedcb4c (claude/qc-region-1-1113) adds sync_count_straps and the retime default; --depth16-allow is opt-in.
+- Knee: re-authored by me, delta 06fd6430b2a8 (epyc9 qc-s28-hf1c/bind/knee29). Applies on the stem hand 0427c6a3462d -> 3fffd9e7b186 and on the FORMS hand. +1 cycle on 4 lanes (x_fw_ctl 13->14, ag_eo/ard_eo 7->8, x_fw_stm_p1 4->5).
+- Chains (COLL-HOLD, epyc9 qc-s29-reach):
+  - ctl3/ctl4 strict bind FAIL BIND_RC=2 (strap 6 vs 7 bits; old region tool).
+  - ctl6 = tree wt/qc-s29-tree2 @f9a49f6f86 (s29 tree + c38eedcb4c), script s29_final_v4.sh dd1f818ca4f5: hand reuse -> knee -> REGION -> STA (retime, PROOF switchable, default s29reg) -> Landings (exit 31) -> reach -> relays -> entries -> reset -> bind -> gates. Running.
+  - ctl5f = FORMS with 5 kept types (3 cbn_q00 + 2 slw_su_l1, F-SUL1W schema errors). Running.
+- Open: the new strap-site pin-record check (QC-REGION-1), and QC-FORMS-2 re-emit (cbn_q00 half track + F-SUL1W).
+- Proof builds: once ctl6 passes G0 + bind, COLL-HOLD launches 10+ via ot-run on epyc4/intel1 (COORD order).
