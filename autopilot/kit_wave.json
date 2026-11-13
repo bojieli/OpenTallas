@@ -34100,6 +34100,7 @@
     "q_su21__physical_v1": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept"
    },
    "gen_hosts": [
+    "epyc7",
     "epyc9",
     "epyc8",
     "epyc2",
@@ -48415,7 +48416,7 @@
     "epyc2",
     "intel1"
    ],
-   "gen_hosts_note_kitops1_pEv10": "KIT-OPS-1 2026-11-13 00:54: epyc7 out of HBM gen_hosts until its copy of the pEv10 src (kw45/src_hbm_main_7073a6b4a5) verifies by manifest; then restore gen_hosts_prev_kitops1_pEv10",
+   "gen_hosts_note_kitops1_pEv10": "KIT-OPS-1 2026-11-13 01:35: restored (epyc7 pEv10 src manifest a5e5a0bcd0adab20 and kit-ops-1/hbm_pEv10 b1ebcf1468e51ebb incl. bind_w/asbuilt_kitops1w = epyc8). | KIT-OPS-1 2026-11-13 00:54: epyc7 out of HBM gen_hosts until its copy of the pEv10 src (kw45/src_hbm_main_7073a6b4a5) verifies by manifest; then restore gen_hosts_prev_kitops1_pEv10",
    "note_kitops1_pEv10": "KIT-OPS-1 2026-11-13 00:54: HBM wave -> pEv10. Re-kit = 11 changed modules (bound RTL changed, or core block changed); BAD held 8; moved-only held 4; standing holds kept on 42; retries 0."
   }
  },
