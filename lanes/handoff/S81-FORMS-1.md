@@ -46,3 +46,9 @@
   (pattern events/s81_ready12bA_1112/run_r12bA_dst.sh; seed OUT from kit-ops-1/s81_r12bA/out_main_7073a6b4a5_b) and
   street_rule.py sidecar for the landed sidecar.
 - CLEAR is provisional (43.2) until R-STREET posts; R-CAP pending too.
+
+## 2026-11-13 04:25 update
+- PLAN for R-CAP-3 on the dsdv family is posted on origin (lanes/COORD-REVIEW-QUEUE.md). Kit projections: c1x t1 436k, t3 457k, t6 468k, t10 453k, lepe_mu 458k, lepe_nh_mus 455k, lepw_mus 460k, iq t1 514k.
+- Cut design: epyc7 /srv/opentallas-scratch2/claude/s81-forms-1/leafgraph.py; c1x t3 group graph in cut/c1x_t3_graph.json. Candidate 2-way cut: xf cluster (eng_finish x4, norm_finish, xstop, soft xf) | rest (xg, xr, cap, eg, flt, landings, stations). Cut links: xstop<->xg 346 bits (+ check cfg/fault).
+- Per-leaf cells: hierarchical yosys stat on epyc8 hstat_c1x_t3/ (ot-run; intel2 ~/tmp/s81f_hstat.log).
+- Street family: fam43B (epyc7 pid 1653335) still in the die-wide post phase. R-STREET not posted yet.
