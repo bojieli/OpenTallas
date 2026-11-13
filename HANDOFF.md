@@ -3623,3 +3623,5 @@ CODEX: 2026-11-13 14:56 PST GUNIT private gf4 Nrev PLACE exit0/LEC EQUIVALENT; a
 CODEX: 2026-11-13 15:00 PST SVC native replay bug fixed by static II2 calendar; engine payloads exact with priced +9/+20 component receipt. Production reschedule and geometry held; source7239ea0c89 GitHub, timingd4eb5ad2b8 hub.
 
 CODEX: 2026-11-13 15:01 PST ROOT-MERGE-61 landedclock/street/ECOsource batch68 as349ae7e4cb3,202focusedPASS; no runtime/POR/freezechange.
+
+CODEX: 2026-11-13 15:02 PST producer status fix49efe4cdc3 READY with all reset-safe cold/warm component gates and old-skew control; global programme remains open.
