@@ -33,7 +33,7 @@
 // the same (-457), and lw -> nw -> hcfg_bad -> rec -> 47 x 63 table write enables 3488 endpoints (-239).
 //   A pointer only stays or steps to nxt(p).  One edge early, for BOTH candidates j, the registered key
 //   keyE[e] = tm + 1 - eD[e] turns "ts[j] + eD == tm" of the next edge into ts[j] == keyE[e] (no adder after the mux); the
-//   late step / stay decision picks one result into eq_q / lt_q / due_q.  An entry written by rec this edge (ts <= tm)
+//   step / stay bit of that edge (registered) picks one of the two registered results at the edge of use.  An entry written by rec this edge (ts <= tm)
 //   is not in the table yet: its result is the constant eD == 1 (lt: eD == 0; due: crl == 2).  eD / crl only change
 //   while no entry is valid, and the first entry after such a write is that rec entry, so the keys use the next-state eD / crl.
 //   hcfg_bad / bad_d are registered from the NEXT-STATE configuration (same value on every edge).
@@ -91,6 +91,7 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use (= calendar slots per period)
     wire hcfg_bad = gn == 0 || cs < nw || crl <= nw;                     // hslot's own arming rule
     wire hcfg_bad_u, bad_d_u, due_u; wire [NEV-1:0] fire_u, lt_u;        // the values used below (LA: lookahead forms)
+    wire [20:0] pl_ep [0:NEV-1]; wire [9:0] pl_eu [0:NEV-1]; wire [1:0] pl_at [0:NEV-1];   // payload under pe (LA: registered)
     wire rec = st && on_cal && !col && !udup && !(!armed && hcfg_bad_u);
     wire due = vld[rp] && ts[rp] + {8'd0, crl} - 32'd1 == tm;             // hslot's return edge: the entry retires
     function automatic [SI-1:0] nxt(input [SI-1:0] p);
@@ -129,10 +130,10 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
         for (e = 0; e < NEV; e = e + 1) if (fire_u[e]) begin
             if (!ek[e]) begin
                 if (c_n[34*eep[e]]) col_w = 1'b1;
-                c_n[34*eep[e] +: 34] = {ep[pe[e]], eu[pe[e]], eat[e][pe[e]][1], (MUT == 3) ? 1'b0 : eat[e][pe[e]][0], 1'b1};
-            end else if (eat[e][pe[e]][1] || MUT == 4) begin
+                c_n[34*eep[e] +: 34] = {pl_ep[e], pl_eu[e], pl_at[e][1], (MUT == 3) ? 1'b0 : pl_at[e][0], 1'b1};
+            end else if (pl_at[e][1] || MUT == 4) begin
                 if (rc_n[11*eep[e]]) col_w = 1'b1;
-                rc_n[11*eep[e] +: 11] = {eu[pe[e]], 1'b1};
+                rc_n[11*eep[e] +: 11] = {pl_eu[e], 1'b1};
             end
         end
     end
@@ -157,45 +158,89 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
                 if ({3'd0, eDn[k]} < nw_n + 24'd2 || (crl_w ? {3'd0, eDn[k]} + 24'd2 > mcd : {3'd0, eDn[k]} + 24'd2 > crl)) bad_n = 1'b1;
             end
         end
-        // ---- keys and the two-candidate compares
-        reg hcfg_q, badd_q, due_q; reg [NEV-1:0] eq_q, ltq_q; reg [31:0] keyE [0:NEV-1]; reg [31:0] keyE_d [0:NEV-1]; reg [31:0] keyR;
-        reg [NEV-1:0] eq_n, lt_n, adv; reg due_n, advr;
-        reg [SI-1:0] ja, jb; reg [31:0] ta, tb, da, db, ky; reg bpa, bpb, ea, eb, la, lb;
+        // ---- keys and the two-candidate compares.  Both candidate results are registered; the step / stay bit (adv_q)
+        //      and the rec bypass (rec_q, ss_q, constants c1_q / c0_q / cr2_q) select at the edge of use, so the start
+        //      cone (udup -> rec) reaches these flops only through the 1-bit adv / rec registers.
+        reg hcfg_q, badd_q; reg [31:0] keyE [0:NEV-1]; reg [31:0] keyE_d [0:NEV-1]; reg [31:0] keyR;
+        reg [NEV-1:0] eA_q, eB_q, lA_q, lB_q, adv_q, c1_q, c0_q; reg dA_q, dB_q, advr_q, cr2_q, rec_q; reg [SI-1:0] ss_q;
+        reg [NEV-1:0] ea_n, eb_n, la_n, lb_n, adv; reg dra_n, drb_n, advr;
+        // pointer copies (kept registers, same next state as pe / rp; R-RTL-2): pe / rp drove every 47:1 mux of the table
+        // (668 ps of fanout buffers on the first LA placement).  *_ta = the pointer, *_tb = nxt(pointer) under the
+        // next-state lw, for the two candidate ts muxes; pe_d for the payload muxes (ep / eu / eat).
+        // The payload {ep, eu, eat} of both candidates is registered the same way (pyA_q / pyB_q; rec bypass = the start
+        // word of that edge ksu_q / ksp_q and the slot's attribute atS_q; eat uses its next-state value), from the copies
+        // pe_pa / pe_pb, so no table mux sits behind pe in the firing edge.
+        (* keep *) reg [NEV*SI-1:0] pe_ta, pe_tb, pe_pa, pe_pb; (* keep *) reg [SI-1:0] rp_ta, rp_tb;
+        reg [NEV*33-1:0] pyA_q, pyB_q; reg [NEV*2-1:0] atS_q; reg [9:0] ksu_q; reg [20:0] ksp_q;
+        wire at_w = wv && idle && mw_q[22:21] == 2'd2;
+        reg [NEV*33-1:0] pya_n, pyb_n; reg [NEV*2-1:0] ats_n; reg [SI-1:0] ka, kb; integer y;
+        always @* begin
+            for (y = 0; y < NEV; y = y + 1) begin
+                ka = pe_pa[y*SI +: SI]; kb = pe_pb[y*SI +: SI];
+                pya_n[y*33 +: 33] = {ep[ka], eu[ka], (at_w && esel == EI'(y) && mw_q[SI-1:0] == ka) ? mw_q[11:10] : eat[y][ka]};
+                pyb_n[y*33 +: 33] = {ep[kb], eu[kb], (at_w && esel == EI'(y) && mw_q[SI-1:0] == kb) ? mw_q[11:10] : eat[y][kb]};
+                ats_n[y*2 +: 2]   = (at_w && esel == EI'(y) && mw_q[SI-1:0] == ss) ? mw_q[11:10] : eat[y][ss];
+            end
+        end
+        always @(posedge ck) begin pyA_q <= pya_n; pyB_q <= pyb_n; atS_q <= ats_n; ksu_q <= su; ksp_q <= sp; end
+        wire [SI-1:0] lw_n = gap_w ? ((gn == 0) ? SI'(NSLOT - 1) : gn[SI-1:0]) : lw;
+        function automatic [SI-1:0] nxtn(input [SI-1:0] p);
+            nxtn = (p == lw_n) ? {SI{1'b0}} : p + 1'b1;
+        endfunction
+        reg [SI-1:0] ja, jb; reg [31:0] ta, tb, da, db, ky;
         integer q;
         always @* begin
             for (q = 0; q < NEV; q = q + 1) begin
-                ja = pe[q]; jb = nxt(pe[q]); ta = ts[ja]; tb = ts[jb]; ky = (LA == 3) ? keyE_d[q] : keyE[q];
-                bpa = (LA != 2) && rec && ss == ja; bpb = (LA != 2) && rec && ss == jb;
+                ja = pe_ta[q*SI +: SI]; jb = pe_tb[q*SI +: SI]; ta = ts[ja]; tb = ts[jb]; ky = (LA == 3) ? keyE_d[q] : keyE[q];
                 da = ta - ky; db = tb - ky;
-                ea = bpa ? eDn[q] == 21'd1 : ta == ky;  la = bpa ? eDn[q] == 21'd0 : da[31];
-                eb = bpb ? eDn[q] == 21'd1 : tb == ky;  lb = bpb ? eDn[q] == 21'd0 : db[31];
-                adv[q] = fire_u[q] || ((!vld[ja] || fd[q][ja]) && !(rec && ss == ja));
-                eq_n[q] = adv[q] ? eb : ea; lt_n[q] = adv[q] ? lb : la;
+                ea_n[q] = ta == ky; la_n[q] = da[31]; eb_n[q] = tb == ky; lb_n[q] = db[31];
+                adv[q] = fire_u[q] || ((!vld[pe[q]] || fd[q][pe[q]]) && !(rec && ss == pe[q]));
             end
-            ja = rp; jb = nxt(rp); ta = ts[ja]; tb = ts[jb];
-            bpa = (LA != 2) && rec && ss == ja; bpb = (LA != 2) && rec && ss == jb;
-            ea = bpa ? crl_n == 24'd2 : ta == keyR; eb = bpb ? crl_n == 24'd2 : tb == keyR;
+            dra_n = ts[rp_ta] == keyR; drb_n = ts[rp_tb] == keyR;
             advr = due_u || (!vld[rp] && !(rec && ss == rp));
-            due_n = advr ? eb : ea;
         end
         integer w;
         always @(posedge ck or negedge rn)
             if (!rn) begin
-                hcfg_q <= 1'b1; badd_q <= 1'b1; due_q <= 1'b0; eq_q <= {NEV{1'b0}}; ltq_q <= {NEV{1'b0}}; keyR <= 32'd0;
-                for (w = 0; w < NEV; w = w + 1) begin keyE[w] <= 32'd0; keyE_d[w] <= 32'd0; end
+                hcfg_q <= 1'b1; badd_q <= 1'b1; keyR <= 32'd0; rec_q <= 1'b0; ss_q <= {SI{1'b0}};
+                eA_q <= {NEV{1'b0}}; eB_q <= {NEV{1'b0}}; lA_q <= {NEV{1'b0}}; lB_q <= {NEV{1'b0}}; adv_q <= {NEV{1'b0}};
+                c1_q <= {NEV{1'b0}}; c0_q <= {NEV{1'b0}}; dA_q <= 1'b0; dB_q <= 1'b0; advr_q <= 1'b0; cr2_q <= 1'b0;
+                for (w = 0; w < NEV; w = w + 1) begin
+                    keyE[w] <= 32'd0; keyE_d[w] <= 32'd0;
+                    pe_ta[w*SI +: SI] <= {SI{1'b0}}; pe_pa[w*SI +: SI] <= {SI{1'b0}};
+                    pe_tb[w*SI +: SI] <= SI'(1); pe_pb[w*SI +: SI] <= SI'(1);                // nxt(0) at reset (lw = NSLOT - 1 >= 1)
+                end
+                rp_ta <= {SI{1'b0}}; rp_tb <= SI'(1);
             end else begin
-                hcfg_q <= hcfg_n; badd_q <= bad_n; due_q <= due_n; eq_q <= eq_n; ltq_q <= lt_n;
+                rp_ta <= advr ? nxt(rp) : rp; rp_tb <= advr ? nxtn(nxt(rp)) : nxtn(rp);
+                hcfg_q <= hcfg_n; badd_q <= bad_n;
+                eA_q <= ea_n; eB_q <= eb_n; lA_q <= la_n; lB_q <= lb_n; adv_q <= adv; dA_q <= dra_n; dB_q <= drb_n; advr_q <= advr;
+                rec_q <= (LA != 2) && rec; ss_q <= ss; cr2_q <= crl_n == 24'd2;
                 keyR <= tm + 32'd3 - {8'd0, crl_n};
-                for (w = 0; w < NEV; w = w + 1) begin keyE[w] <= tm + 32'd2 - {11'd0, eDn[w]}; keyE_d[w] <= keyE[w]; end
+                for (w = 0; w < NEV; w = w + 1) begin
+                    keyE[w] <= tm + 32'd2 - {11'd0, eDn[w]}; keyE_d[w] <= keyE[w];
+                    c1_q[w] <= eDn[w] == 21'd1; c0_q[w] <= eDn[w] == 21'd0;
+                    pe_ta[w*SI +: SI] <= adv[w] ? nxt(pe[w]) : pe[w]; pe_pa[w*SI +: SI] <= adv[w] ? nxt(pe[w]) : pe[w];
+                    pe_tb[w*SI +: SI] <= adv[w] ? nxtn(nxt(pe[w])) : nxtn(pe[w]); pe_pb[w*SI +: SI] <= adv[w] ? nxtn(nxt(pe[w])) : nxtn(pe[w]);
+                end
             end
         genvar ge;
         for (ge = 0; ge < NEV; ge = ge + 1) begin : g_f
-            assign fire_u[ge] = vld[pe[ge]] && !fd[ge][pe[ge]] && eq_q[ge];
-            assign lt_u[ge]   = vld[pe[ge]] && !fd[ge][pe[ge]] && ltq_q[ge];
+            wire bp = rec_q && ss_q == pe[ge];                       // the entry under the pointer was written last edge
+            wire on = vld[pe[ge]] && !fd[ge][pe[ge]];
+            assign fire_u[ge] = on && (bp ? c1_q[ge] : adv_q[ge] ? eB_q[ge] : eA_q[ge]);
+            assign lt_u[ge]   = on && (bp ? c0_q[ge] : adv_q[ge] ? lB_q[ge] : lA_q[ge]);
+            assign {pl_ep[ge], pl_eu[ge], pl_at[ge]} = bp ? {ksp_q, ksu_q, atS_q[ge*2 +: 2]}
+                                                          : adv_q[ge] ? pyB_q[ge*33 +: 33] : pyA_q[ge*33 +: 33];
         end
-        assign due_u = vld[rp] && due_q; assign hcfg_bad_u = hcfg_q; assign bad_d_u = badd_q;
+        assign due_u = vld[rp] && ((rec_q && ss_q == rp) ? cr2_q : advr_q ? dB_q : dA_q);
+        assign hcfg_bad_u = hcfg_q; assign bad_d_u = badd_q;
     end else begin : g_nola
         assign fire_u = fire; assign lt_u = lt; assign due_u = due; assign hcfg_bad_u = hcfg_bad; assign bad_d_u = bad_d;
+        genvar gn0;
+        for (gn0 = 0; gn0 < NEV; gn0 = gn0 + 1) begin : g_pd
+            assign pl_ep[gn0] = ep[pe[gn0]]; assign pl_eu[gn0] = eu[pe[gn0]]; assign pl_at[gn0] = eat[gn0][pe[gn0]];
+        end
     end endgenerate
     // event-row config + entry payload (no reset: written before arming / at the start that sets vld)
     always @(posedge ck) begin

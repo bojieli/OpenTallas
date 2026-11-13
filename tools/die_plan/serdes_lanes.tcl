@@ -72,13 +72,15 @@ proc sl_put {f x y} {
   }
   return ""
 }
-# ---- chains
+# ---- chains + blockages (in a proc: no globals of other hooks are touched)
+proc sl_run {} {
+global sl_blk sl_dbu sl_cfg
 set sl_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 set sl_log {}
 foreach ch [dict get $sl_cfg chains] {
   lassign $ch cn n kind ax ay bx by
   set ax [sl_u $ax]; set ay [sl_u $ay]; set bx [sl_u $bx]; set by [sl_u $by]
-  array unset row; array set row {}
+  catch {unset row}; array set row {}
   set bits {}
   set re [format {[./]%s[./]g_reg[./]r\\?\[(\d+)\\?\]\\?\[(\d+)\\?\]} $cn]
   foreach i [$sl_blk getInsts] {
@@ -142,4 +144,6 @@ foreach r [dict get $sl_cfg blocks] {
 }
 close $sl_bf
 puts "OT_SERDES_LANES blockages: $sl_nb created ([llength [dict get $sl_cfg blocks]] planned)"
+}
+sl_run
 }
