@@ -673,6 +673,17 @@ SCHEMA = {
                         "control_sinks": {"type": "boolean"},
                         "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
                                                                      "items": {"type": "number"}}},
+                        # Exact actual CS class/stage banks, shared by placement and sink planning.
+                        "soft_reg_banks": {"type": "array", "items": {
+                            "type": "object", "additionalProperties": False,
+                            "required": ["id", "cell_glob", "bit_sites_um", "bit_site_cell_um", "source"],
+                            "properties": {
+                                "id": {"type": "string", "minLength": 1},
+                                "cell_glob": {"type": "string", "minLength": 1},
+                                "source": {"type": "string", "minLength": 1},
+                                "bit_sites_um": {"type": "array", "minItems": 1, "items": _xy},
+                                "bit_site_cell_um": {"type": "array", "minItems": 2, "maxItems": 2,
+                                                     "items": {"type": "number", "exclusiveMinimum": 0}}}}},
                         "sink_bins_file": {"type": "string"},
                         # Geometry/model PREP from complete native net/FF census. No periods or clock waivers.
                         "native_domains": {"type": "object", "additionalProperties": False,

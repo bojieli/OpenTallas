@@ -190,6 +190,8 @@ def planned_sinks(P, tn, bit_sites=False):
         for bx,by in e["face_bit_sites_um"][n:]:
             out.append((bx+cw/2,by+ch/2,"face_epoch"))
     out += per_bit_station_sites(t, pins, __import__("pathlib").Path(P.path).resolve().parent if getattr(P, "path", None) else None)
+    import soft_reg_banks
+    out += [(x, y, "soft_reg_bank") for x, y, _ in soft_reg_banks.sink_sites(t)]
     return out
 
 
