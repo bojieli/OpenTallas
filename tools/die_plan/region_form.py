@@ -77,49 +77,48 @@ class Conflict(Exception):
 
 
 # ----------------------------------------------------------------------------------------------------- count straps
-STRAP_PITCH_UM = 4.32      # count / ID strap pin lattice (head_count_strap_sites: M5, 4.32 um pitch, 4.32 um macro halo)
+STRAP_PITCH_UM = 4.32      # count / ID strap pin lattice (head_count_strap_sites: M5, 4.32 um pitch, 4.32 um halo)
 
 
-def _strap_lattice_free(raw, plan_path, tn, need, taken):
-    """`need` free interior strap pin sites of type tn on the strap lattice, nearest (Manhattan) to the type's strap
-    anchor (landing_ring_bank reserved site / clock tap / outline centre, as head_count_strap_sites placed them), off
-    every macro (+ 5.4 um: the 4.32 um halo plus half a pin), off clock reserved sites (+ 1.08 um) and >= 2.16 um from
-    every placed pin (plan pin records + every declared strap site)."""
-    import re as _re
-    import gen_phys as G
-    import schema as S
-    P = S.Plan(raw, path=plan_path)
-    t = P.types[tn]
+def _strap_lattice_free(raw, plan_path, tn, need, taken, cache=None):
+    """`need` free interior strap pin sites of type tn on the strap lattice (4.32 um, M5), nearest (Manhattan) to the
+    type's strap anchor (landing_ring_bank reserved site / clock tap / outline centre, as head_count_strap_sites placed
+    them).  PLAN-ONLY geometry, so the step gives the same answer on every host and needs no staged view: off every
+    placed hard_cores[] / contents[] footprint (origin_um + outline_um, rotated for R90-class orients) + 5.4 um (the
+    4.32 um macro halo plus half a pin), off clock reserved sites + 1.08 um, and >= 2.16 um from every declared strap
+    site and the clock / reset tap points.  The existing strap bits must pass the same rule (else CONFLICT: the rule
+    would disagree with the placement it extends).  plan_path / cache: unused (signature kept for callers)."""
+    t = raw["partition_types"][tn]
     w, h = t["outline_um"]
     blocked = []
-    # a repo-relative LEF resolves in the plan's own tree first (the chain worktree), then in this tool's tree
-    roots = ([d for d in Path(plan_path).resolve().parents] if plan_path else []) + [HERE.parents[1]]
-    for _inst, _mod, lef, _lib, x, y, orient in G.type_macros(P, tn):
-        lp = Path(lef) if Path(lef).is_absolute() else next((d / lef for d in roots if (d / lef).is_file()),
-                                                             HERE.parents[1] / lef)
-        try:
-            m = _re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)\s*;", lp.read_text())
-        except OSError as ex:
-            raise Conflict(f"count strap sites {tn}: macro LEF {lef} unreadable ({ex})")
-        if not m:
-            raise Conflict(f"count strap sites {tn}: no SIZE in macro LEF {lef}")
-        mw, mh = map(float, m.groups())
-        if orient in ("R90", "R270", "E", "W", "FE", "FW", "MXR90", "MYR90"):
+    for c in (t.get("hard_cores") or []) + (t.get("contents") or []):
+        if not (c.get("origin_um") and c.get("outline_um")):
+            continue
+        (x, y), (mw, mh) = c["origin_um"], c["outline_um"]
+        if c.get("orient") in ("R90", "R270", "E", "W", "FE", "FW", "MXR90", "MYR90"):
             mw, mh = mh, mw
         blocked.append((x - 5.4, y - 5.4, x + mw + 5.4, y + mh + 5.4))
-    for r in t.get("clock", {}).get("reserved_sites_um", []):
+    clk = t.get("clock") or {}
+    for r in clk.get("reserved_sites_um", []):
         x0, y0, x1, y1 = r["rect_um"]
         blocked.append((x0 - 1.08, y0 - 1.08, x1 + 1.08, y1 + 1.08))
-    occ = [(r["x"], r["y"]) for r in G.plan_pin_records(P, tn, G.type_pins(P, tn))] + list(taken)
+
+    def inside(x, y):
+        return any(a <= x <= c and b <= y <= d for a, b, c, d in blocked)
+    bad = [xy for xy in taken if inside(*xy)]
+    if bad:
+        raise Conflict(f"count strap sites {tn}: {len(bad)} declared strap sites sit on a macro / reserved box "
+                       f"under the plan-only rule ({bad[:3]})")
+    occ = list(taken) + [tuple(p) for p in (clk.get("tap_um"), (t.get("reset") or {}).get("tap_um")) if p]
     anchors = [((r["rect_um"][0] + r["rect_um"][2]) / 2, (r["rect_um"][1] + r["rect_um"][3]) / 2)
-               for r in t.get("clock", {}).get("reserved_sites_um", []) if r.get("kind") == "landing_ring_bank"]
-    ax, ay = anchors[0] if anchors else t.get("clock", {}).get("tap_um", [w / 2, h / 2])
+               for r in clk.get("reserved_sites_um", []) if r.get("kind") == "landing_ring_bank"]
+    ax, ay = anchors[0] if anchors else clk.get("tap_um", [w / 2, h / 2])
     cand = []
     for ix in range(2, int(w / STRAP_PITCH_UM) - 1):
         x = round(ix * STRAP_PITCH_UM, 4)
         for iy in range(2, int(h / STRAP_PITCH_UM) - 1):
             y = round(iy * STRAP_PITCH_UM, 4)
-            if not any(a <= x <= c and b <= y <= d for a, b, c, d in blocked):
+            if not inside(x, y):
                 cand.append((abs(x - ax) + abs(y - ay), x, y))
     out = []
     for _d, x, y in sorted(cand):
@@ -139,8 +138,8 @@ def sync_count_straps(raw, ca, plan_path=None):
     choice (4 -> 8, an allowed 16, a retime) changes the declared width clock_landings requires.  In place on raw
     (the plan written by the same step that wrote K / DEPTH into ca = sidecar count_aligned): every
     types[].count_straps entry is set to count_align_bind.strap_ties(ca, raw) widths; existing bits keep their
-    sites_um, a widened strap gets new lattice sites (_strap_lattice_free), a narrowed one drops its top bits.  The
-    kit RTL ports, die_trial free ports, SDC false paths, pin records and parent ties all size from this declaration.
+    sites_um, a widened strap gets new lattice sites (_strap_lattice_free, plan-only geometry), a narrowed one drops
+    its top bits.  The kit RTL ports, die_trial free ports, SDC false paths, pin records and parent ties all size from this declaration.
     No-op without count_aligned.strap_form.  -> [dict(type, strap, old, new, sites_added, sites_dropped)]"""
     if not ca.get("strap_form"):
         return []
@@ -455,7 +454,15 @@ def apply(base_path, out_path, side_in, side_out, reg_path, feed_path, ca_path, 
     return rep
 
 
-def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_out=None, cap_args=()):
+# s29 ring choice (DIE-QC-100 11-13): on a clock START sidecar the sta step retimes unclean START edges (retime flops on
+# ancestor tap nodes, lift into mesh regions) so every crossing fits at DEPTH <= 8 (s29reg: 2525/2525, +343 crossing
+# cycles) instead of DEPTH-16 rings (2521/2525, +907).  --no-start-retime = the plain clock START tree; the COORD
+# DEPTH-16 allow-list stays an opt-in count_align_plan option (--cap-arg=--depth16-allow --cap-arg=FILE).
+START_RETIME = ("--start-retime-up", "--start-lift")
+
+
+def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_out=None, cap_args=(),
+        start_retime=True):
     import count_frame as CF
     import locality as LO
     import count_align_plan as CAP
@@ -480,6 +487,7 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
     pr = plain_regions(raw)
     if pr != fr.part_region:
         raise Conflict("plan regions differ from the frame's region map")
+    retime = [x for x in START_RETIME if x not in cap_args] if start_retime and start_form == "clock" else []
     D = LO.load_plan(base_path)
     with contextlib.redirect_stderr(io.StringIO()):
         S = LO.score(D, dict(pr), v, "fwd")
@@ -497,7 +505,7 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
             rc = CAP.main([str(fi), "--corner", ",".join(rows), "--period", str(D["period"]), "--aperture",
                            str(D["period"] / 8), "--wander-frac", "0.05", "--sta-proof", str(proof), "--sta-plan",
                            str(base_path), "--sta-cppr-lca", "--sta-clock-cell", "inv2", "--start-tree", start_form,
-                           "--out", str(fo)] + list(cap_args))
+                           "--out", str(fo)] + retime + list(cap_args))
         cap = json.loads(fo.read_text())
     if ca_out:
         Path(ca_out).write_text(json.dumps(cap, indent=0) + "\n")
@@ -565,7 +573,7 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
                 worst_margin_lo_ps=cap["summary"].get("worst_margin_lo_ps"),
                 worst_margin_hi_ps=cap["summary"].get("worst_margin_hi_ps"),
                 below_100ps=cap["summary"].get("below_100ps"), sta_interval=cap["summary"].get("sta_interval"),
-                count_straps=strap_summary(straps))
+                start_retime=retime, count_straps=strap_summary(straps))
     rep = dict(schema=SCHEMA + ".sta_report", base=dict(path=str(base_path), sha256=sha(btext)),
                out=dict(path=str(out_path), sha256=sha(otext.encode())), side_in=sha(Path(side_in).read_bytes()),
                side_out=sha(stext.encode()), proof=str(proof), summary=summ, post_check=post, ports=ledger,
@@ -606,10 +614,13 @@ def main(argv=None):
     t.add_argument("--cap-arg", action="append", default=[], metavar="ARG",
                    help="extra count_align_plan argument (e.g. --start-retime-up), repeatable")
     t.add_argument("--v-ps-mm", type=float, default=290.0)
+    t.add_argument("--no-start-retime", action="store_true",
+                   help="clock START sidecar: plain START tree (default: " + " ".join(START_RETIME) + ")")
     a = ap.parse_args(argv)
     if a.cmd == "sta":
         try:
-            rep = sta(a.base, a.out, a.sidecar[0], a.sidecar[1], a.proof, a.v_ps_mm, a.report, a.ca_out, a.cap_arg)
+            rep = sta(a.base, a.out, a.sidecar[0], a.sidecar[1], a.proof, a.v_ps_mm, a.report, a.ca_out, a.cap_arg,
+                      start_retime=not a.no_start_retime)
         except Conflict as ex:
             print(f"CONFLICT {ex}")
             return 3

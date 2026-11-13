@@ -47,7 +47,7 @@ def test_sites_kept_widened_bits_get_new_sites_and_narrowing_drops_top_bits(monk
         x["sites_um"] = old if x["name"] == "strap_ca_k_y" else [[0.0, 4.32 * len(x["name"])]]
     seen = {}
 
-    def free(raw, plan_path, tn, need, taken):
+    def free(raw, plan_path, tn, need, taken, cache=None):
         seen.update(tn=tn, need=need, taken=set(taken))
         return [[99.0 + i, 1.0] for i in range(need)]
     monkeypatch.setattr(RF, "_strap_lattice_free", free)
@@ -73,3 +73,21 @@ def test_no_strap_form_is_a_noop_and_undeclared_strap_is_a_conflict():
                                                  if x["name"] != "strap_ca_pad"]
     with pytest.raises(RF.Conflict, match="strap_ca_pad"):
         RF.sync_count_straps(p, t["count_aligned"])
+
+
+def test_plan_only_site_rule_avoids_macros_reserved_sites_and_placed_straps():
+    raw = dict(partition_types=dict(T=dict(
+        outline_um=[100.0, 100.0],
+        hard_cores=[dict(inst="m", origin_um=[0.0, 0.0], outline_um=[30.0, 100.0], orient="R0")],
+        clock=dict(tap_um=[51.84, 51.84], reserved_sites_um=[dict(kind="x", rect_um=[60.0, 40.0, 70.0, 60.0])]))))
+    taken = [(51.84, 51.84), (47.52, 51.84)]
+    got = RF._strap_lattice_free(raw, None, "T", 40, taken)
+    assert len(got) == 40 and len({tuple(s) for s in got}) == 40
+    for x, y in got:
+        assert x > 35.4                                   # macro 0..30 + 5.4 um
+        assert not (58.92 <= x <= 71.08 and 38.92 <= y <= 61.08)   # reserved + 1.08 um
+        assert all(abs(x - a) >= 2.16 or abs(y - b) >= 2.16 for a, b in taken)
+        assert abs(x / RF.STRAP_PITCH_UM - round(x / RF.STRAP_PITCH_UM)) < 1e-6
+    assert got[0] in ([56.16, 51.84], [51.84, 47.52], [51.84, 56.16])      # nearest the tap anchor first
+    with pytest.raises(RF.Conflict, match="sit on a macro"):
+        RF._strap_lattice_free(raw, None, "T", 1, [(8.64, 8.64)])

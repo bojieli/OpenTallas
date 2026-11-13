@@ -102,3 +102,15 @@ def test_fail_on_built_clock_is_a_post_check_failure(tmp_path, stubs, monkeypatc
     monkeypatch.setattr(CAP, "main", cap_fail)
     rep = run(tmp_path, "clock", stubs, monkeypatch)
     assert rep["summary"]["fail"] == 1 and rep["post_check"] and "FAIL the CA ring" in rep["post_check"][0]
+
+
+def test_clock_start_retimes_by_default_and_can_be_turned_off(tmp_path, stubs, monkeypatch):
+    rep = run(tmp_path, "clock", stubs, monkeypatch)
+    a = stubs["argv"]
+    assert "--start-retime-up" in a and "--start-lift" in a and "--depth16-allow" not in a
+    assert rep["summary"]["start_retime"] == ["--start-retime-up", "--start-lift"]
+    pp, sp, fr = fixture(tmp_path, "clock")
+    RF.sta(pp, tmp_path / "o2.json", sp, tmp_path / "s2.json", tmp_path / "proof", start_retime=False)
+    assert "--start-retime-up" not in stubs["argv"] and "--start-lift" not in stubs["argv"]
+    run(tmp_path, None, stubs, monkeypatch)                          # data START: retime needs a clock START tree
+    assert "--start-retime-up" not in stubs["argv"]
