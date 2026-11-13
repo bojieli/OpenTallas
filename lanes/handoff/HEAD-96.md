@@ -19,3 +19,8 @@ NOT mine: HEAD-95 routes (lep0N v3, hd_mesh M1, SP3n2).
 - GEOM verdict posted (GEOM-REVIEW.md, renders lanes/head-96-rp18/). READY + PLAN EVENT posted (COORD-REVIEW-QUEUE.md), branch claude/head-96-rp18-1112@7bf527a804 (plan_of_record/head_rp18_1112).
 - LATCHECK: HEAD has no bind.py elaboration/as-built manifest -> CLI not runnable, UNMEASURED (structural argument in the post). Open list in the post (a-f).
 - DONE. HEAD-96 stopped. Worktree epyc4 wt/head-96 kept for the merge; work dir head-96/ (has tmp gen dirs removed).
+
+## 20:3x fix job (COORD): rp18 reset-export defects found by KIT-OPS-1
+- (1) 5 private export rows without landing pin (my rawfix2 conversions), (2) 2 duplicate relay pairs (HEAD-95 rawfix nearest rule collapsed twin relays).
+- One-class tool tools/s81_head/head_reset_exports.py (fix OLD IN OUT / check PLAN) on branch claude/head-96-rp18fix-1112 (wt/head-96, off main b9c049d416).
+- rp18k = fix(rp17, rp18j): check 8 bad -> 0; kit_rtl head_start_raw_private.prepare_plan failures 2 -> 0. Gates head-96/g_rp18k.
