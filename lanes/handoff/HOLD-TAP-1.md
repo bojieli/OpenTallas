@@ -59,3 +59,8 @@ Classification tables (t41, sle_st_a running), design, implement + tests, proofs
 ## 2026-11-13 09:01 QC die clock task (COORD 08:4x)
 - PLAN posted to the queue (diagnosis, 313-region form, s29 delta). Routed estimate RUNNING: epyc7 /srv/opentallas-scratch2/claude/hold-tap-1/qcreg/s28reg (ot-run client on localhost, log ~/ht1log/qcreg_s28.log; chain qcreg.sh; CHAIN.log there). When it ends: read reg/sta.log + reg/sta/die_sta_related.json (intra / seam / landed, kit window need), post RESULT, add R-CLOCK-6 to RULEBOOK-1113.md.
 - t41 sign-off still open (ot-run client localhost pid 506716, log ~/ht1log/t41_route.log).
+
+## 2026-11-13 10:03 QC die clock: RESULT + R-CLOCK-6 posted
+- Routed regional estimate done (epyc7 hold-tap-1/qcreg/s28reg): GRT 0, 59,689 repeaters; equal-stage regions 66 ps p50, the 192 c_* regions 260-299 ps (stock builder stage imbalance); landed class not timed by this chain (needs CA bind). Evidence lanes/HOLD-TAP-1/qcreg/.
+- NOT run: second chain with c_* region DME + count_align bind (handed to QC-CLKGATE-1 / DIE-QC-100 in the RESULT).
+- Still open: t41 sign-off RESULT (localhost ot-run pid 506716, ~/ht1log/t41_route.log) -> queue RESULT + replace the t41 RUNNING row in R-CLOCK Proof. Cleanup after: epyc7 hold-tap-1/qcreg/src (2.8 GB copy of tools + QC plan dir), epyc4 /srv/opentallas-scratch3/claude/hold-tap-1 (small).
