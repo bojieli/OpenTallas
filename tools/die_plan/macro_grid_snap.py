@@ -13,6 +13,13 @@ else platform tracks).  A macro with off-track pins moves to the nearest origin 
   at most SNAP_MAX_UM away, inside the type outline, not overlapping another placed macro.
 On-grid macros are untouched (the kit is byte-identical).  A macro with no such origin keeps its plan origin and is listed
 'unresolved' in the receipt (kit_contract.macro_pin_grid still reports it).  OT_MACRO_GRID_SNAP=0 turns it off.
+
+LEAF-DRT73-1 11-13 (S81 leaf t13/t21/t29/t30/t39/t44/t51/t65 DRT-0073 on ot_dsrom_su_hcpost_lane_pr c0[0] / c2[2]): an
+orient can be unrealizable -- NO origin at any distance puts the pins of one axis on track (the hcpost N face mixes M3
+pitch 0.036 phase 0.009 and M5 pitch 0.048 pins; under an x-mirror (MY, R180) M3 needs an 18-nm shift, M5 a multiple of
+12 nm).  Such a macro is listed with 'unrealizable' (axes, the orient the plan should use, all realizable orients) and
+refuse_unrealizable() stops the kit generation: it is a plan error, and the kit would otherwise run place + CTS (~4 h)
+and die at GRT pin access.  tools/die_plan/orient_realize.py fixes the plan.
 """
 import json
 import math
@@ -155,6 +162,46 @@ def snap_axis(spec, o, tracks, axis, v, step, limit, fits):
     return best[0]
 
 
+ORIENTS = ("R0", "MX", "MY", "R180")
+# the orient that drops one mirror: x (MY part) or y (MX part) of an orient
+_DROP = {"x": {"R0": "R0", "MX": "MX", "MY": "R0", "R180": "MX"},
+         "y": {"R0": "R0", "MX": "R0", "MY": "MY", "R180": "MY"}}
+
+
+def axis_phases(spec, o, tracks, axis):
+    """origins (nm, in [0, period)) of one axis that put every signal pin of that axis on track at orient o, and the
+    period (nm): the lcm of the pitches of the axis' pin layers.  The pin set is periodic in it, so an empty list
+    means NO origin anywhere puts those pins on track (not just none near the plan origin)."""
+    shapes = _unique_axis(spec, o, tracks, axis)
+    period = 1
+    for layer in {s[0] for s in shapes}:
+        period = math.lcm(period, int(round(tracks[layer][1] * 1000)))
+    return [v for v in range(period) if _axis_ok(shapes, v / 1000.0, tracks)], period
+
+
+def orient_realizable(spec, o, tracks):
+    """{'x': bool, 'y': bool}: some origin puts every x (vertical-layer) / y (horizontal-layer) pin on track at o"""
+    return {a: bool(axis_phases(spec, o, tracks, a)[0]) for a in ("x", "y")}
+
+
+def realizable_orients(spec, tracks):
+    return [o for o in ORIENTS if all(orient_realizable(spec, o, tracks).values())]
+
+
+def nearest_realizable_orient(spec, o, tracks):
+    """LEAF-DRT73-1: the orient a plan should use instead of an unrealizable o -- drop the mirror of each failing axis
+    (R180 -> MX and MY -> R0 when the x phases fail: the N/S face flip is kept, only the E/W swap goes); None when o is
+    realizable or nothing is"""
+    ok = orient_realizable(spec, o, tracks)
+    if all(ok.values()):
+        return None
+    n = o
+    for a in ("x", "y"):
+        if not ok[a]:
+            n = _DROP[a][n]
+    return n if all(orient_realizable(spec, n, tracks).values()) else None
+
+
 def snap_all(placements, outline, tracks, env=None):
     """placements: [dict(inst, master, lef, x, y, o)] -> (new placements, receipt rows).  Only off-track macros move."""
     env = os.environ if env is None else env
@@ -176,6 +223,22 @@ def snap_all(placements, outline, tracks, env=None):
         if not off["x"] and not off["y"]:
             continue
         x, y = p["x"], p["y"]
+        real = orient_realizable(spec, p["o"], tracks)
+        if not all(real.values()):
+            row = {"inst": p["inst"], "master": p["master"], "orient": p["o"], "plan_um": [x, y],
+                   "off_track_pins": off["x"] + off["y"]}
+            # LEAF-DRT73-1: no origin at all (any distance) puts the pins on track in this orient: a plan error, not a
+            # snap distance.  S81 hcpost lane N face mixes M3 (0.036, phase 0.009) and M5 (0.048) pins; an x-mirror
+            # needs an 18-nm M3 shift that no M5 phase allows -> DRT-0073 at GRT pin access, 4 h after kit start.
+            row["unrealizable"] = {"axes": [a for a in ("x", "y") if not real[a]],
+                                   "use_orient": nearest_realizable_orient(spec, p["o"], tracks),
+                                   "realizable_orients": realizable_orients(spec, tracks)}
+            row["unresolved"] = (f"orient {p['o']} has no on-track origin on axis "
+                                 f"{'/'.join(row['unrealizable']['axes'])} at any distance (pin phases of the master's "
+                                 f"layers cannot all mirror onto the kit tracks); the plan must place it "
+                                 f"{row['unrealizable']['use_orient'] or row['unrealizable']['realizable_orients']}")
+            rows.append(row)
+            continue
 
         def fits(nx, ny):
             b = _box(spec, nx, ny, p["o"])
@@ -204,6 +267,17 @@ def snap_all(placements, outline, tracks, env=None):
             boxes[i] = _box(spec, nx, ny, p["o"])
         rows.append(row)
     return out, rows
+
+
+def refuse_unrealizable(tn, rows):
+    """LEAF-DRT73-1: raise ValueError (kit generation stops; the receipt is already written) when a placed macro's plan
+    orient has no on-track origin at all.  Not an opt-out target: OT_MACRO_GRID_SNAP=0 skips the check with the snap."""
+    bad = [r for r in rows if r.get("unrealizable")]
+    if bad:
+        raise ValueError(f"type {tn}: ORIENT-OFF-TRACK {len(bad)} macro(s) placed in an orient whose pins cannot sit on "
+                         "the kit tracks at any origin (fix the plan: tools/die_plan/orient_realize.py): " +
+                         "; ".join(f"{r['inst']} ({r['master']} {r['orient']} -> {r['unrealizable']['use_orient']})"
+                                   for r in bad[:8]) + (" ..." if len(bad) > 8 else ""))
 
 
 def write_receipt(kd, rows):

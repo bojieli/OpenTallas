@@ -4588,6 +4588,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             print(f"OT_MACRO_GRID_SNAP type {tn}: {r['inst']} ({r['master']} {r['orient']}) {r['off_track_pins']} pin(s) "
                   f"off track at {r['plan_um']} -> " + (str(r['snapped_um']) if 'snapped_um' in r else
                                                         "UNRESOLVED: " + r['unresolved']))
+        # LEAF-DRT73-1 11-13: a plan orient with no on-track origin at all (S81 hcpost lane MY/R180) stops here, with the
+        # receipt written, instead of after place + CTS at GRT pin access (DRT-0073)
+        _MGS.refuse_unrealizable(tn, snap_rows)
         for q in placed:
             mplace.append(f"place_macro -macro_name {{{q['inst_db']}}} -location {{{q['x']:.4f} {q['y']:.4f}}} "
                           f"-orientation {q['o']} -exact")
