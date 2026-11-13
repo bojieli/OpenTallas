@@ -71,7 +71,10 @@ module qfd_dv_s8s_sram_lookahead #(parameter integer W = 512, parameter integer 
     initial if (W > 546 || W < 1) $fatal(1, "SRAM_LOOKAHEAD_WIDTH");
 `endif
 endmodule
-module qfd_dv_s8s_sram_delay #(parameter integer W = 514, parameter integer D = 14, parameter integer MUT = 0, parameter integer G = 12) (
+// OREG (HARD-QC-FORMS-1 11-13, R-RTL-3, default 0 = the netlist as before): 1 = the memory is read one address earlier and
+// its output is registered, so q comes from a flop instead of the SRAM read port (clk->Q 250 ps).  Same q on every edge
+// (0 cycles).  Bench rtl/test/qwen_dv/swreg.
+module qfd_dv_s8s_sram_delay #(parameter integer W = 514, parameter integer D = 14, parameter integer MUT = 0, parameter integer G = 12, parameter integer OREG = 0) (
     input wire ck, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
 );
     reg [4:0] wp;
@@ -81,16 +84,24 @@ module qfd_dv_s8s_sram_delay #(parameter integer W = 514, parameter integer D = 
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin wp <= 0; valid <= 0; end
         else begin wp <= wp + 1'b1; valid <= {valid[D-3:0], 1'b1}; end
-    wire [4:0] ra = wp - (D-1) + ((MUT != 0) ? 5'd1 : 5'd0);
+    wire [4:0] ra = wp - (D-1) + ((MUT != 0) ? 5'd1 : 5'd0) + ((OREG != 0) ? 5'd1 : 5'd0);
     wire [W-1:0] mq;
     qfd_dv_sram_bank64 #(.W(W)) u_m (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mq),
         .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(d), .w_mask_in({W{1'b1}}));
+    wire [W-1:0] mo;
+    generate if (OREG != 0) begin : g_oreg
+        reg [W-1:0] mr;
+        always @(posedge ck) mr <= mq;
+        assign mo = mr;
+    end else begin : g_noreg
+        assign mo = mq;
+    end endgenerate
     genvar g;
     generate for (g = 0; g < (W+G-1)/G; g = g + 1) begin : g_out
         localparam integer B = ((W-G*g) < G) ? W-G*g : G;
         wire warm_q;
         (* keep_hierarchy = "yes" *) qfd_dv_kept_valid #(.ID(g)) u_v (.ck(ck), .rst_n(mask_reset), .d(valid[D-2]), .q(warm_q));
-        assign q[G*g +: B] = warm_q ? mq[G*g +: B] : {B{1'b0}};
+        assign q[G*g +: B] = warm_q ? mo[G*g +: B] : {B{1'b0}};
     end endgenerate
 `ifndef SYNTHESIS
     initial if (D < 3 || D > 27 || W > 546) $fatal(1, "SRAM_DELAY_CONFIG");

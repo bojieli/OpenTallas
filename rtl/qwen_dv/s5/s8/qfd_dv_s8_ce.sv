@@ -432,6 +432,14 @@ module qfd_dv_s6_stm_se0 #(parameter integer CE_MUT = 0, parameter integer HARD 
     qfd_dv_slice_tload
 `ifdef OT_S6_SIM
         #(.SLICE(TSLICE),.CAPTURE_STAGE(1),.LOCAL_JOIN(1))   // the CLOSED ns4 view's baked parameters (sim only: a hard view has none)
+`elsif OT_QC_TLOADCAP
+        // HARD-QC-FORMS-1 11-13 (R-RTL-3, opt-in per plan type: verilog_defines OT_QC_TLOADCAP; default OFF = the netlist as
+        // before): the QC stm types flatten the tload (no hard ns4 view), so the kit built the parameter defaults, CAPTURE_STAGE 0 /
+        // LOCAL_JOIN 0: ROM clk->Q (598 ps) -> validation / address cone -> 1,051 tw registers in one stage (routed TT setup
+        // -565..-1,046 ps on all 11 types).  This selects the ns4 profile: a capture register at the ROM outputs and 67 kept
+        // write-enable copies.  Cost: every loader-origin table write is ONE edge later (first VM write 4, last 91 edges
+        // after the sample; busy one edge longer); stream-origin writes are unchanged.  Bench rtl/test/qwen_dv/tloadcap.
+        #(.SLICE(TSLICE),.CAPTURE_STAGE(1),.LOCAL_JOIN(1))
 `endif
         u_tload(
         .ck(ck),.rst_n(rst),.treq(treq_i),.s_we(s_we),.s_kind(s_kind),.s_addr(s_addr),.s_data(s_data),

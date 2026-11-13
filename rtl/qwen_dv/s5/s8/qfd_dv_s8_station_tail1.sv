@@ -272,7 +272,13 @@ end
         else bt_word <= sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0);
 
     wire [DW-1:0] fd3;
+    // OT_QC_SWREG (HARD-QC-FORMS-1 11-13, opt-in per plan type): registered u_scale_wait output, 0 cycles.  QC st_a post-CTS:
+    // SRAM clk->Q 250 ps + 18 cells of u_mul in one stage, TT setup -465 ps on 260 endpoints (R-RTL-3).
+`ifdef OT_QC_SWREG
+    qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT), .OREG(1)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+`else
     qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+`endif
     wire fv3,ls3;wire[7:0] j3;
     qfd_dv_s8s_ring_delay #(.W(10),.D(3+BT_LAT)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
     wire [DW-1:0] y;
