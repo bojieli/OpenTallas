@@ -69,3 +69,9 @@ Classification tables (t41, sle_st_a running), design, implement + tests, proofs
 - epyc7 hold-tap-1/qcreg/s28dme2 (chain refit/qcreg3.sh; ot-run client on localhost, log ~/ht1log/qcreg3_s28.log; CHAIN.log in the run dir). Inputs: refit/inv2_stage_cal_s28dme.json, refit/early_other_regions.txt, refit/edge_readout_patch.py. STATE with the pre-build estimate is in the queue.
 - When it ends: read CHAIN.log (CA_C/D/E, BIND, STA lines), compute c_* glue spread + core-tap residual vs declared early, post RESULT, update R-CLOCK-6.
 - t41 sign-off still open (localhost ot-run pid 506716).
+
+## 2026-11-13 13:35 QC third chain DONE, RESULT + R-CLOCK-6 (g)-(j) posted
+- epyc7 hold-tap-1/qcreg/s28dme2: crossings 0 FAIL (2,873 D4 / 120 D8, no D16), START 763/763 clean, intra TT setup +368; block arrival contract still fails in c_* (need 317 FF vs W 130; glue spread 131 p50 / 339 max). Evidence lanes/HOLD-TAP-1/qcreg3/.
+- Nothing of mine is running for QC. Left for DIE-QC-100 / QC-CLKGATE-1: per-port kit windows from gate/kitwin.json, more clock entries for c_* regions over the T/4 cap, both-edge readout in mk_combo_kv.py.
+- Still open: t41 sign-off RESULT (localhost ot-run pid 506716, ~/ht1log/t41_route.log) -> queue RESULT + replace the t41 RUNNING row in R-CLOCK Proof.
+- Cleanup when the lane ends: epyc7 hold-tap-1/qcreg/src (2.8 GB) and s28reg / s28dme2 kits; epyc4 /srv/opentallas-scratch3/claude/hold-tap-1; epyc9 hold-tap-1/proof private copies.
