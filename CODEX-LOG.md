@@ -12772,3 +12772,34 @@ CODEX KV TYPES 1113: Private exact-native PC PG class codex/kv-types-safe-1113@f
 
 ## CODEX takeover 2026-11-13 03:06 PST
 Read role/full handoff/0304 handoff and binding instructions. Direct takeover across all five dies and shared tools, wave/fleet, visual, token scopes in existing trees. Canonical files are intel2; local mirrors stale. All 696 lane files inventoried in lanes/CODEX.md. Healthy jobs preserved; no merges/tags or plan-of-record changes.
+
+## CODEX takeover 2026-11-13 06:59 PST
+Canonical intel2. Eight scope leads cover all die, shared flow, wave/fleet and token tasks directly in existing Claude trees. Healthy jobs retained. Coverage indexed in lanes/CODEX-COVERAGE-0659.md. No merges/tags or plan switches performed.
+
+OWNER? HBM-FORMS-1 remains explicitly parked until owner word; collect existing jobs and prepare source drafts while preserving the hold. Default: no HBM new physical build/adoption until explicit resume.
+
+## OWNER?
+OWNER? 2026-11-13 HBM resume: 03:17 owner ruling explicitly parked HBM (no new HBM kit-wave launches/events/merges, running jobs finish). May HBM resume? Default: retain park and freeze; collect live results, diagnose failures and prepare safe source drafts only. No answer awaited.
+
+## CODEX ownership reconciliation 2026-11-13 07:1x PST
+Claude coordinator remains LIVE in tmux0:0 on Opus; the limited model was Fable, and live successors FLOW-FIN-2 / SERDES-FIN-2 plus QC-FORMS-2 were observed. Codex stopped new overlapping edits/launches immediately and cascaded stop to all children. Healthy inherited jobs preserved. This is NOT a claim Claude's limit reset. No merges/tags/POR switches/deletion chains by Codex. Continued work is bounded independent read-only failure collection until scopes are reconciled.
+
+Exact useful changes to collect (do not duplicate or overwrite):
+- HEAD E4 head-97: delta_f2.py creates RAW candidate pd/rp20_f2_raw.json + .f2_report.json/f2.log. Not READY; reset-export remap and routed clock still needed. head-97/street_tools donor copy and refused tile_street_trial (output identical rp20a) retained. HEAD-ROUTE-1 handoff has diagnostics only.
+- DSDV E7 wt/hard-s81-dsdv-1/physical/die_plan/s81/cores/legacy/recipes_xs4h_1113.json: macro_rows_halo=0 and orfs_vars.MACRO_PLACE_HALO='0 0'. Regenerated UNLAUNCHED xs4 kit, gen5_nohalo.log hash80d4f1d34e7eaa85. No physical run/commit. Original live chain3 and b3 untouched.
+- SVC E7 wt/hard-s81-svc-1: untracked physical/die_plan/s81/delta_svc_provider_recover_1113.py restores14providers without doubling prior die growth; untracked tools/die_plan/type_split.py copied donor unchanged. Lightweight output hard-s81-svc-1/v5/plan_provider_recover.json + report; not adopted, pvso incomplete.
+- QC HARD forms: commit28be9ae16c on existing claude/hard-qc-forms-1-rtl-1113 pushed HUB, results package only (README/tools/forms/bench logs/3PNGs+review). Existing RTL aab1fcfe0c unchanged. No own jobs. CTLCAP v3 adds render_cap.py/ctl_v3.png/sta_v3.png/cap_v3s29.txt diagnostics only.
+- Wave: kit_wave.json s81_head.kit_rtl.prepared_inputs adds existing head_rp18c/prep dependency to protect against cleanup. Backup kit_wave.json.bak-codex-prep-protect-1113. No source/plan switch. intel1 restored dependency confirmed, src_incomplete_last.dies={}.
+- Token intel1 wt/tok-verify-2 detached HEAD d3f85cdf ->9ebef751ca28; fixture capsule1.3GB restored from E9 into tok-verify-2/v1; current_compile_1113.sh prepared NOT RUN. Gear remains PARKED.
+- One completed S81 readonly STA (no route): E9 oth-ubuntu-3165769-1794582058, hard-s81-serdes-1/sta_kitA_v2, WNS-932.23. All other new physical/heavy launches: NONE.
+
+Failure findings worth acting on:
+- QC SU physical double insertion: bound u_lpad_x_su_c_i D3 already feeds x_su_c_i_q; kit_istations.py per-core chain adds k3 after q while lane_pad still charges3. LATCHECK60SU lanes FAIL+2/3/4; generic packed_input_delay absorbs receiver chains but per-core path does not. Fix smallest exact mechanism, no waiver.
+- QC clock MODEL FAIL TT spread857.9ps/global slow PHY leaf n10_17 8877.14 arrival. Future qcgate chain ignores exit2; not labelled PASS. Healthy kit job preserved.
+- HEAD hd_ctl_n992b8a45f39a generated M8 kit lacks ENABLE_RESISTANCE_AWARE=0 though present in newer src; oldkit propagation issue. hd_tile already RA0, separate macro crossing/root geometry.
+- HEAD wshim_rx cab48 single ECO gets FF+3.61/DRV0 but TT-10.17 on6 endpoints. Input link_i12 path has3HB4/~229ps; preserve TT/input contract in new two-scene pre-GRT form, no second ECO.
+- KV split unknown metadata keys core_pg_connect/landing_control_status_copy/reset_spine_pins; live DIE-KV-100 owns. Old4way limitation moot after live3way proposal.
+- S81 R-FLOW t21 fresh final slew0 TT+122.10 FF-8.62/76 DRC0 (old slew135 TT+165.85 FF-17.34/409); NOT SIGNED. HOLD-TAP t41 still healthy GRT maxwire repair~60k buffers/+28.9%area.
+- HBM cores10terminal no-signoffs; b128U close TT+31.17/FF+4.03 but4slew/2cap, two offenders hold17723/Y and hold20914/Y. RDREG24step controls fail to distinguish mutants, deeper proofs timedout. No new HBM jobs under explicit park.
+
+OWNER? Active Opus Claude coordination conflicts with automated all-lane takeover caused by Fable limit. Default: preserve active ownership, stop conflicting new writes/launches, retain useful Codex candidates and continue independent read-only diagnoses. No answer is awaited.
