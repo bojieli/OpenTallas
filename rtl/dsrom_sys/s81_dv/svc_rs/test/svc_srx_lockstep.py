@@ -44,13 +44,13 @@ def vectors(d: Path, seed: int):
 def build(a, srx, mut, nkv, np_):
     ns = a.nstage if srx else 2
     band = a.band if srx else 0
-    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + (f"_band{band}m{a.bandm}" if band else "")
+    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + (f"_band{band}m{a.bandm}t{a.bandt}" if band else "") + ("_hc" if a.hcore else "")
     if (a.work / f"build_{tag}.rc").is_file() and (a.work / f"build_{tag}.rc").read_text().strip() == "0":
         return tag
     prm = dict(P, NSTAGE=ns, SRX=srx, SRXMUT=mut, NJOBMAX=len(TS), NKV=nkv, NP=np_, NSC=1, NPV=1, MAXCYC=400000)
     if band:
         # --band: the S81 band form (ot_s81_svc_band); the mutants are the BAND negative controls (BANDMUT 1, 2)
-        prm.update(SRXMUT=0, BANDX=band, BANDM=a.bandm, BANDMUT=mut)
+        prm.update(SRXMUT=0, BANDX=band, BANDM=a.bandm, BANDT=a.bandt, BANDMUT=mut)
     if srx and a.srxt:
         prm["SRXT"] = f"1024'h{a.srxt}"
     r = "/work/root"
@@ -59,12 +59,17 @@ def build(a, srx, mut, nkv, np_):
              "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
              "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv"]
     if a.dut == "s81":
+        if a.hcore:
+            files += ["rtl/hdc/v41x/ot_s81c_attn_hcore.sv", "rtl/hdc/v41x/ot_s81c_attn_hcore_h8.sv", "rtl/hdc/v41x/ot_s81c_attn_h8_rt2.sv",
+                      "rtl/hdc/v41x/ot_dsrom_su_add6.sv", "rtl/hdc/ot_hdc_delay.sv", "rtl/hdc/v41x/ot_dsrom_su_f12.sv", "rtl/hdc/ot_hdc_fastfp_lat_f12.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv"]
         files += ["rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv", "rtl/dsrom_sys/s81_dv/ot_s81_svc_merge_h4.sv",
                   "rtl/dsrom_sys/s81_svc/ot_s81_svc_band.sv"]
     cmd = ["verilator", "--cc", "--exe", "--build", "-j", "24", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
            "-Wno-BLKSEQ", "-Wno-MULTIDRIVEN", "--top-module", "tb_hdc_v41x_attn", "--prefix", "Vtb", "-Mdir",
            f"/work/out/obj_{tag}", "+define+OT_ATTN_SETCHECK",
            *(["+define+SRX_DUT_S81", "+define+OT_SVC_MERGE_H4"] if a.dut == "s81" else []),
+           *(["+define+OT_ATTN_HCORE", "+define+OT_S81C_HCORE_CTLA", "+define+OT_S81C_HCORE_RST_TIMED", "+define+OT_SVC_H8", "+define+OT_SVC_H8_REUSE_RT2"] if a.hcore else []),
+           *(["+define+OT_S81C_TILE_PAIR", "+define+OT_S81C_TILE_REACH" if a.bandt == 5 else "+define+OT_S81C_TILE_STAGE"] if (a.hcore and band and a.bandt) else []),
            *[x for y in ys for x in ("-y", f"{r}/{y}")],
            *[f"-G{k}={v}" for k, v in prm.items()], *[f"{r}/{f}" for f in files],
            f"{r}/rtl/dsrom_sys/s81_dv/svc_rs/test/tb_svc_srx_attn.sv", f"{r}/rtl/test/hdc_v41_harness.cpp",
@@ -122,13 +127,15 @@ def main():
     ap.add_argument("--seed", type=int, default=11)
     ap.add_argument("--band", type=int, default=0, help="S81 band form: BANDX = capture depth (1 or 2) on top of --srx; "
                     "--mut then names the BANDMUT controls (1 = tags one stage short, 2 = band 0 merge tags early)")
+    ap.add_argument("--bandt", type=int, default=0, help="BANDT: 1 = the S81 tile with its per-core input stage (needs --hcore: adds +define+OT_S81C_TILE_STAGE to the DUT only)")
+    ap.add_argument("--hcore", action="store_true", help="build reference and DUT with the S81 H8 RT2 head-core tile (OT_ATTN_HCORE ...)")
     ap.add_argument("--bandm", type=int, default=0, help="BANDM: 1 = merge inputs registered in the band (P.V +1 more)")
     ap.add_argument("--image", default="verilator/verilator:v5.032")
     a = ap.parse_args()
     a.work = a.work.resolve(); a.work.mkdir(parents=True, exist_ok=True)
     if a.band and a.dut != "s81":
         sys.exit("--band needs --dut s81")
-    n = a.srx + ((a.band + 1) if a.band else 0)     # scores +n (band: capture stages + output register)
+    n = a.srx + ((a.band + 1 + a.bandt) if a.band else 0)     # scores +n (band: capture stages + output register)
     npv = 2 * n + (a.bandm if a.band else 0)       # P.V: p feed +n, then +n (+1 with registered merge inputs)
     nkv, np_ = vectors(a.work / "vec", a.seed)
     from concurrent.futures import ThreadPoolExecutor
@@ -160,6 +167,7 @@ def main():
     print("status", rec["status"], "data_equal", m0r["data_equal"], "strict_lockstep", m0r["lockstep"], "end_cycle",
           m0r["end_cycle"], "mutants_caught", caught,
           "sc/pv beats", rec["ref"]["beats_sc"], rec["ref"]["beats_pv"])
+    sys.exit(0 if rec["status"] == "PASS" else 1)
 
 
 if __name__ == "__main__":

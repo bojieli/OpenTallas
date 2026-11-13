@@ -1,0 +1,6 @@
+TILE_PAIR seed=1 cycles=16000 warm_resets=3 ov=1560 nonzero=1560 mismatches=0 stage_mismatches=0 reach_mismatches=0 mutant_mismatches=8181
+TILE_PAIR PASS
+- rtl/hdc/v41x/test/tb_s81c_tile_pair.sv:61: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 310.840 s; speed 51.475 ns/s
+- Verilator: cpu 310.808 s on 1 threads; allocated 460 MB

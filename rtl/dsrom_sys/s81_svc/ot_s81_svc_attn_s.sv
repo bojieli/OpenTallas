@@ -86,6 +86,7 @@ module ot_s81_svc_attn_s #(
     // against the same p feed, the SRX signature with n = SRX + 2 (the compiler moves PIO / KPV by SRX + 2).
     // Needs SRX >= 1, TRX 1, REPL 2, TILE_S 1, MFAN 1, TD 32, H 8.  The as-built instance names do not move at 0.
     parameter integer BANDX = 0,       // v2: the band's input capture depth (1 = v1); scores +(BANDX + 1)
+    parameter integer BANDT = 0,       // edges the band's tile leaves later than as built (OT_S81C_TILE_STAGE: 1): scores and P.V +BANDT
     parameter integer BANDM = 0,       // v2: 1 = merge inputs registered in the band; P.V +(BANDX + 1 + BANDM)
     parameter integer BANDMUT = 0,     // BANDX bench negative controls: 1 = output tags only +1, 2 = band 0's merge tags
                                        //   not captured (one edge early)
@@ -765,7 +766,7 @@ module ot_s81_svc_attn_s #(
                 end
                 ot_s81_svc_band #(.H(H), .TD(TD), .DPT(DPT), .NL(NL), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
                                   .FML(FML), .F12(F12), .MLEV(MLEV), .FX(FX), .XOFF(XO), .NF(NF),
-                                  .CAPD(BANDX), .MREG(BANDM),
+                                  .CAPD(BANDX), .MREG(BANDM), .TILEX(BANDT),
                                   .MUT((BANDMUT == 2 && gk == 0) ? 2 : 0)) u_band (
                     .clk(clk), .rst_n(rst_n),
                     .ctl_i(zo[19:0]), .wpad_i(zo[20 +: NL]), .fw_i(fw),
@@ -1123,7 +1124,7 @@ module ot_s81_svc_attn_s #(
     endgenerate
 
     // tags to the tile outputs (TLX: the landed round trip, compiler re-schedule; VT: ATTN1 sub-beats)
-    localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? BANDX : BANDX + 1) : 0;   // band capture stages + output register
+    localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? BANDX : BANDX + 1) + BANDT : 0;   // band capture stages + output register
     generate if (BANDX == 0) begin : g_bd0
         assign bd_ov = {NT{1'b0}}; assign bd_mov = {NT{1'b0}};
         assign bd_y = {(NT*H*32){1'b0}}; assign bd_my = {(NT*H*32){1'b0}};

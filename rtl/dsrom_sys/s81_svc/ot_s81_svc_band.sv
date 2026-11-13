@@ -37,6 +37,7 @@ module ot_s81_svc_band #(
     parameter integer NF = 1,          // fused fill bits per lane (the engine computes it; checked below)
     parameter integer CAPD = 1,
     parameter integer MREG = 0,
+    parameter integer TILEX = 0,       // edges the tile's outputs leave later than as built (OT_S81C_TILE_STAGE: 1)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
@@ -131,7 +132,18 @@ module ot_s81_svc_band #(
     wire [PWORDS*TD*16-1:0] l_w;
     wire            g_pv, g_fin;
     wire [MLEV-1:0] g_blk;
-    assign {c_d, c_pad, c_fw, c_q, c_qp, l_mode, l_w2v, l_bank, l_grp, l_w, i_bank, g_pv, g_fin, g_blk} = d_q[CAPD-1];
+    wire            g0_pv, g0_fin;
+    wire [MLEV-1:0] g0_blk;
+    assign {c_d, c_pad, c_fw, c_q, c_qp, l_mode, l_w2v, l_bank, l_grp, l_w, i_bank, g0_pv, g0_fin, g0_blk} = d_q[CAPD-1];
+    // TILEX: the merge tags wait as many edges as the tile's own extra stages
+    generate if (TILEX > 0) begin : g_tx
+        reg [MLEV+1:0] tq [0:TILEX-1];
+        integer ti;
+        always @(posedge clk) for (ti = 0; ti < TILEX; ti = ti + 1) tq[ti] <= (ti == 0) ? {g0_pv, g0_fin, g0_blk} : tq[ti - 1];
+        assign {g_pv, g_fin, g_blk} = tq[TILEX-1];
+    end else begin : g_tx0
+        assign {g_pv, g_fin, g_blk} = {g0_pv, g0_fin, g0_blk};
+    end endgenerate
     assign {c_v, l_v, i_v} = v_q[CAPD-1];
     // the merge tags one capture stage early (MUT 2 only)
     wire [DW-1:0] d_e = (CAPD == 1) ? d_in : d_q[(CAPD > 1) ? CAPD - 2 : 0];
