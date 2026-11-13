@@ -165,3 +165,37 @@ def test_old_plan_regression(tmp_path):
         plan_doc(CF.load(plan_f, pp_f)), parts=parts()))
     with pytest.raises(CF.FrameError):
         CF.check_same(tw["count_aligned"].get("frame"), None, "sidecar")
+
+
+def test_implicit_frame_source_missing_is_a_no_op(tmp_path):
+    """--sta-plan / --plan-die that is not on disk (planner_cli tests): no frame, legacy output; an explicit
+    --frame-plan that is missing is an error"""
+    assert CF.load_optional(None) is None and CF.load_optional(tmp_path / "nope.json") is None
+    (tmp_path / "bad.json").write_text("{not json")
+    assert CF.load_optional(tmp_path / "bad.json") is None
+    with pytest.raises(OSError):
+        CF.load_path(tmp_path / "nope.json")
+    plan, pp = die(tmp_path)
+    assert CF.load_optional(pp).feed_sha == CF.load_path(pp).feed_sha       # a real feed plan still loads
+    s, out, regs = CAP.plan(rows(), T, T / 8, 0.05, 26.5, 0)
+    before = json.dumps([s, out], sort_keys=True, default=str)
+    CAP.apply_frame(s, out, CF.load_optional(tmp_path / "nope.json"))
+    assert json.dumps([s, out], sort_keys=True, default=str) == before
+
+
+def test_cli_without_frame_plan_on_missing_sta_plan_is_byte_identical(tmp_path):
+    """count_align_plan.main: no --frame-plan + a --sta-plan path that does not exist never touches the frame"""
+    fi = tmp_path / "in.json"
+    rs = rows()
+    fi.write_text(json.dumps(dict(corners=dict(TT=dict(all=rs), FF=dict(all=rs)))))
+    a = ["--corner", "TT,FF", "--period", str(T), "--wander-frac", "0.05"]
+    CAP.main([str(fi)] + a + ["--out", str(tmp_path / "o1.json")])
+    import unittest.mock as um
+    with um.patch.object(CAP, "sta_rows_hull", lambda rows, args: dict(missing=0)):
+        CAP.main([str(fi)] + a + ["--sta-proof", str(tmp_path / "noproof"), "--sta-plan", str(tmp_path / "none.json"),
+                                  "--out", str(tmp_path / "o2.json")])
+    d1, d2 = json.loads((tmp_path / "o1.json").read_text()), json.loads((tmp_path / "o2.json").read_text())
+    d2["summary"].pop("sta_interval", None)
+    assert "frame" not in d2["summary"] and d1["crossings"] == d2["crossings"]
+    with pytest.raises((OSError, SystemExit)):
+        CAP.main([str(fi)] + a + ["--frame-plan", str(tmp_path / "none.json"), "--out", str(tmp_path / "o3.json")])

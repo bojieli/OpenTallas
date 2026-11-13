@@ -207,6 +207,11 @@ def directed_tree(rows, regions):
     return best[1], best[2]
 
 
+# COORD 11-13 11:54 (QC-CLKGATE-1): DEPTH 16 on an explicit per-crossing allow-list (--depth16-allow), not a global
+# cap raise; every other crossing keeps max_depth.  Set by main() for one run; empty = unchanged.
+DEPTH16_ALLOW = frozenset()
+
+
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
          skew_clean=False, _pad_pass=False, tree_parent=None, max_depth=8, start_edges=None, start_root=None,
          start_prefer=None):
@@ -416,7 +421,8 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         k_eff = math.ceil((lo_win - rel_lo) / T - 1e-12) + (pe(child) - pad if child is not None else 0)
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
         nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
-        dep = next((dd for dd in (4, 8, 16) if dd <= max_depth and L_hi <= (dd - 0.5) * T - nh + 1e-9), None)
+        dep = next((dd for dd in (4, 8, 16) if (dd <= max_depth or (dd == 16 and r["port"] in DEPTH16_ALLOW))
+                    and L_hi <= (dd - 0.5) * T - nh + 1e-9), None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
         if r.get("src_part") is not None and r.get("dst_part") is not None and r.get("_named"):
             out_parts = dict(src_part=r["src_part"], dst_part=r["dst_part"])
@@ -1535,6 +1541,9 @@ def main(argv=None):
                          "OWNER 12.24b)")
     ap.add_argument("--sta-cppr-lca", action="store_true", help="as die_sta_related --cppr-lca")
     add_sta_ocv_args(ap)
+    ap.add_argument("--depth16-allow", metavar="JSON",
+                    help="COORD 11-13 11:54 opt-in: JSON list of crossing ids that may take DEPTH 16 (RTL proof "
+                         "results/die_s81_11_1028/D16.md); every other crossing keeps --max-depth")
     ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
                     help="DIE-S81-11 / 12.16 b(iii) opt-in: largest standard ring DEPTH (16 needs its RTL proof; default 8)")
     add_start_tree_args(ap)
@@ -1542,9 +1551,23 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
+    global DEPTH16_ALLOW
+    allow = frozenset(json.load(open(a.depth16_allow))) if a.depth16_allow else frozenset()
+    DEPTH16_ALLOW = allow
+    try:
+        return _main(a, ap, allow)
+    finally:
+        DEPTH16_ALLOW = frozenset()
+
+
+def _main(a, ap, allow):
     mpol = apply_sta_margin_policy(a)      # OWNER 12.24b, before any check that reads a margin flag
     check_start_tree_args(a, ap.error)
     rows = load_rows(a.ocv_json, a.corner, a.scale)
+    if allow:
+        unknown = sorted(allow - {r["port"] for r in rows})
+        if unknown:
+            ap.error(f"--depth16-allow: {len(unknown)} ids are not crossings of the input: {unknown[:5]}")
     sta_info = None
     if a.sta_proof:
         if not a.sta_plan:
@@ -1578,7 +1601,7 @@ def main(argv=None):
         summ["start_tree"].update(sinfo)
     import count_frame as CF
     try:
-        apply_frame(summ, out, CF.load_path(a.frame_plan or a.sta_plan))
+        apply_frame(summ, out, CF.load_path(a.frame_plan) if a.frame_plan else CF.load_optional(a.sta_plan))
     except CF.FrameError as ex:
         ap.error(str(ex))
     if a.tree_parent:
@@ -1587,6 +1610,11 @@ def main(argv=None):
         summ["start_skew_ps"] = list(a.start_skew)
     if sta_info:
         summ["sta_interval"] = sta_info
+    if allow:
+        d16 = sorted(o["port"] for o in out if o.get("depth") == 16)
+        summ["depth16_allow"] = dict(source=a.depth16_allow, allowed=len(allow), depth16=len(d16),
+                                     allowed_still_fail=sorted(p for p in allow if not next(
+                                         (o for o in out if o["port"] == p), {}).get("depth")))
     summ.update(corner=a.corner, period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture,
                 wander_frac=a.wander_frac, pad=a.pad, scale=a.scale, source=a.ocv_json, margin_policy=mpol)
     if a.mc_chips:
