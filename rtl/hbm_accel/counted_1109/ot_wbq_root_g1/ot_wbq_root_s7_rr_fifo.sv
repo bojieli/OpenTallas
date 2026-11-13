@@ -59,6 +59,10 @@ module ot_wbq_root_s7_rr_fifo #(parameter integer W = 32, parameter integer AW =
       always @(posedge rclk or negedge rrst_n)
         if (!rrst_n) rsel_oh[rs] <= D'(1);
         else rsel_oh[rs] <= D'(1) << rbin_n[AW-1:0];
+`ifndef SYNTHESIS
+      // invariant (simulation only): the registered one-hot copy equals the decoded read pointer at every rclk edge
+      always @(posedge rclk) if (rrst_n && rsel_oh[rs] !== (D'(1) << rbin[AW-1:0])) $display("RSEL_INV_FAIL t=%0t slice=%0d", $time, rs);
+`endif
       reg [WS-1:0] sl_data;
       always @* begin
         sl_data = {WS{1'b0}};

@@ -1,0 +1,19 @@
+read_verilog -sv -DSYNTHESIS /eq/orig.sv
+hierarchy -top ot_wbq_root_s7_rr_fifo
+proc; flatten; opt_clean
+rename ot_wbq_root_s7_rr_fifo gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS /eq/new.sv
+hierarchy -top ot_wbq_root_s7_rr_fifo -chparam RSEL 1
+proc; flatten; opt_clean
+rename ot_wbq_root_s7_rr_fifo gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+memory_map
+async2sync
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status -assert
