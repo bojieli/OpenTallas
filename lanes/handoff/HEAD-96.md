@@ -36,3 +36,4 @@ NOT mine: HEAD-95 routes (lep0N v3, hd_mesh M1, SP3n2).
 - hd_host_w spread3 NOT EQ (298) is a DIFFERENT signature (r_ce_in/w_ce_in, cones matched) -> not in r2, open item.
 - Gates: head-96/gates.sh rp18p; RTL export replay head-96/rtlx.py (prepare_plan all 26 + gen --trial + alias/private patch per export type).
 - 2026-11-13 00:39 READY r2 posted (branch 46bb7dfc34, plan rp18p cda1ecf604eb), verified on origin. Remaining: one-line RESULT when epyc9 h96-mesh-m1-lec reports (lec/lec.json); NOT EQ -> hints as r3. Then stop.
+- 2026-11-13 02:00 COORD queued NEXT EVENT (r3/rp19, after M1 LEC RESULT): (a) write_chunk 16 on hd_turn_b, hd_turn_a, hd_st_n4 (approved, 0 cycles); (b) hd_spn_wshim_rx reset reach: u_srl_41 / u_rrl_75 single-load hops on 30-37 fF wire, slew 409-411 ps -> shorten hop (move or add relay; +1 reset cycle pre-approved); (c) build on main once train 34 (CLAND 2-copies-per-chunk) is MERGED. Gates as r2, then READY.
