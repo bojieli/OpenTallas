@@ -13,10 +13,11 @@ Per type, per row:
   * private: source = the same physical relay as in OLD (same xy, same START role, same depth offset from the
     type release) when it exists and is still unused; else the same-role same-offset relay nearest the pin; if the
     OLD row named no relay of the OLD tree (a stale row), the raw-role relay nearest the pin.  Never a relay already
-    used by another private row (kit_rtl head_start_raw_private: one export_q per ot_dp_rrelay).
+    used by another private row (kit_rtl head_start_raw_private: one export_q per ot_dp_rrelay), nor a relay the
+    generated RTL already makes a reader raw export pair (reader START stage on a port-driving relay, r2).
   * every private row has exactly one landing_contract pin named after its port (created at the pin site, M7 out
     ctl, when the row was an existing_port reuse), whose source_* fields name the row's relay.
-check: every private row has its pin, private sources are unique, every (instance, net) is a START relay of the
+check: every private row has its pin, private sources are unique and no reader raw export pair, every (instance, net) is a START relay of the
 solved tree, pin source fields match, every existing_port names an out that sits on the row's xy.
 """
 import copy
@@ -56,6 +57,30 @@ def set_pin_source(pin, r):
                source_copy_from_net=r["q"], source_registered=True)
 
 
+def reader_pairs(t, pn, outs, rows):
+    """Relays the generated RTL already turns into a reader raw export pair (clock_landings._reader_start_rtl, FLOW-6):
+    a landing_reader_start stage whose raw_reset is the plain Q of a relay that also drives an rst_o port gets
+    `ot_dp_head_raw_export_pair <relay> (... .export_q(<raw>_reader_raw))`.  That relay's one export_q is taken, so a
+    private START export can not also use it.  A stage remapped by landing_raw_branches reads a generated copy, not the
+    relay.  A relay drives a port when it is the deepest raw relay on an out site or an existing_port row names it."""
+    clock = t.get("clock") or {}
+    remapped = {c for b in (clock.get("landing_raw_branches") or []) for c in b.get("consumers", [])}
+    port_q = {row["net"] for row in rows if row.get("existing_port")}
+    for xy in outs.values():
+        at = [r for r in pn if r.get("role") == "raw" and man(r["xy"], xy) < SAME_UM]
+        if at:
+            port_q.add(max(at, key=lambda r: (r["depth"], r["name"]))["q"])
+    by_q = {r["q"]: r for r in pn}
+    occ = {}
+    for bus, b in sorted(((clock.get("landing_reader_start") or {}).get("branches") or {}).items()):
+        for i, st in enumerate((b.get("stages") or []) if isinstance(b, dict) else []):
+            q = st.get("raw_reset")
+            if f"reader:{bus}:{i}" in remapped or q not in port_q or q not in by_q:
+                continue
+            occ.setdefault(by_q[q]["name"], f"{q}_reader_raw ({bus} stage {i})")
+    return occ
+
+
 def fix_type(Po, Pn, T_out, tn, log):
     rows = T_out.get("reset_start_raw_exports") or []
     if not rows:
@@ -63,6 +88,7 @@ def fix_type(Po, Pn, T_out, tn, log):
     To, Tn = RT.for_type(Po, tn), RT.for_type(Pn, tn)
     po, pn = pool(To), pool(Tn)
     outs = {o[0]: (o[1], o[2]) for o in RT.out_pins(Pn, tn)}
+    occupied = reader_pairs(T_out, pn, outs, rows)
     old_rows = {r["port"]: r for r in (Po.types[tn].get("reset_start_raw_exports") or [])}
     pins = T_out.setdefault("clock", {}).setdefault("landing_contract", {}).setdefault("pins", [])
     by_pin = {p["name"]: p for p in pins}
@@ -87,7 +113,10 @@ def fix_type(Po, Pn, T_out, tn, log):
             row.pop("existing_port", None); n += 1
         private.append((row, o, site))
     # pass 2: private rows, physical identity first, unique sources
-    used = set()
+    used = set(occupied)       # reader raw export pairs already own their relay's export_q
+    for nm, why in sorted(occupied.items()):
+        if any(row["instance"] == nm for row, _, _ in private):
+            log.append(f"{tn}: {nm} is a reader raw export pair {why}: no private export may use it")
     def pick(row, o, site, strict):
         old = next((r for r in po if r["name"] == o.get("instance") and r["q"] == o.get("net")), None)
         if old is None:
@@ -141,6 +170,7 @@ def check(Pn, raw):
         outs = {o[0]: (o[1], o[2]) for o in RT.out_pins(Pn, tn)}
         pins = {p["name"]: p for p in (t.get("clock") or {}).get("landing_contract", {}).get("pins", [])}
         seen = {}
+        occupied = reader_pairs(t, pn, outs, rows)
         parts = [n_ for n_, p_ in Pn.parts.items() if p_["type"] == tn]
         for row in rows:
             src = [r for r in pn if r["name"] == row["instance"] and r["q"] == row["net"]]
@@ -154,6 +184,9 @@ def check(Pn, raw):
             if row["instance"] in seen:
                 bad.append(f"{tn}.{row['port']}: shares relay {row['instance']} with {seen[row['instance']]}")
             seen[row["instance"]] = row["port"]
+            if row["instance"] in occupied:
+                bad.append(f"{tn}.{row['port']}: relay {row['instance']} is already the reader raw export pair "
+                           f"{occupied[row['instance']]}")
             pin = pins.get(row["port"])
             if pin is None:
                 bad.append(f"{tn}.{row['port']}: no landing_contract pin")
