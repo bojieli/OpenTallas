@@ -9,6 +9,7 @@ die-agnostic and only reads the plan.
 
     die_refloor.py refloor BASE.json CAND.json --out-plan OUT.json [--report REP.json] [--no-pad] [--no-sync-cycles]
     die_refloor.py check   PLAN.json [--report REP.json]
+    die_refloor.py sidecar BASE.json PLAN.json SIDECAR_IN.json SIDECAR_OUT.json   (clock-landing regions[].box_um)
 
 BASE is the last plan with a legal placement; CAND has the same partitions with changed partition_types (grown outlines,
 added station registers).  Partition origins in CAND are ignored: they are re-solved from BASE.
@@ -25,14 +26,19 @@ MODEL (per axis, x then y; orients R0/MX/MY/R180 never swap width and height):
     type-frame coordinate (cores, windows, stations, taps) moves: die-high side for an unflipped partition, die-low side
     for a flipped one (MY/R180 in x, MX/R180 in y).  A gap that neither side can close that way is a CONFLICT.  A type
     padded differently on two instances is a CONFLICT.  Pads change sizes, so the solve repeats until stable.
-  * die: outline = solved extent + the base right/top margins; every die-frame rect (die.channels, die.io, pg domains)
-    and the clock spine root move with the monotone edge map of the partitions.
+  * die: outline = solved extent + the base right/top margins; die.io / pg-domain rects follow their partition
+    (type-frame exact), die.channels and the clock spine root the monotone edge map, clock.cohort.feed taps their
+    source partition.  The clock-landing sidecar regions move with `sidecar` (bind needs one region per partition).
   * ports: face / window_um of every port are re-derived from its src type geometry; src != dst in the die frame is a
     CONFLICT.
   * lanes: register stages added on internal_stations bus rows are counted in lanes[].fixed_cycles
     (reach_fix.sync_fixed_cycles; the strict bind's native-station rule fixed_cycles = source + destination).
 
-Exit 0 = clean (no conflicts, no overlaps, every port consistent and abutted), 1 = conflicts (plan still written).
+  * fit: with --fallback FB.json, while the die is over the reticle the grown type whose revert to its FB form cuts
+    the overflow most is reverted (greedy, report reticle_reverted).
+
+Exit 0 = clean (no conflicts, no overlaps, every port consistent and abutted, die inside the reticle), 1 = otherwise
+(the plan is still written).
 """
 import argparse
 import bisect
@@ -70,6 +76,19 @@ class Geo:
         x, y = map(float, self.parts[n]["origin_um"])
         w, h = self.size(n)
         return x, y, x + w, y + h
+
+    def to_type(self, n, pt):
+        x, y = float(pt[0]) - self.parts[n]["origin_um"][0], float(pt[1]) - self.parts[n]["origin_um"][1]
+        w, h = self.size(n)
+        o = self.parts[n].get("orient", "R0")
+        return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
+
+    def to_die(self, n, pt):
+        x, y = pt
+        w, h = self.size(n)
+        o = self.parts[n].get("orient", "R0")
+        X, Y = {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
+        return r6(self.parts[n]["origin_um"][0] + X), r6(self.parts[n]["origin_um"][1] + Y)
 
     def flipped(self, n, ax):
         return self.parts[n].get("orient", "R0") in FLIP[ax]
@@ -242,6 +261,32 @@ def solve_axis(base, geo, ax, ports, log):
             break
     else:
         conflicts.append(dict(kind="cycle", axis="xy"[ax], msg="ties contradict the base order (positive cycle)"))
+    # ALAP pull (DIE-S81-89): a group that is the LOW side of an abutted port follows its high neighbour (the gap then
+    # opens where no port crosses, e.g. between frame groups) instead of being padded.  Reverse topological order over
+    # the order edges; a group without such a port stays at its ASAP position.
+    abut_lo = {root[lo][0] for _, lo, hi in abut if root[lo][0] != root[hi][0]}
+    succ = {}
+    indeg = {g: 0 for g in groups}
+    for gl, gh, w, lo, hi in edges:
+        if gl != gh:
+            succ.setdefault(gl, []).append((gh, w))
+            indeg[gh] += 1
+    order, stack = [], [g for g in groups if indeg[g] == 0]
+    while stack:
+        g = stack.pop()
+        order.append(g)
+        for h, _ in succ.get(g, ()):
+            indeg[h] -= 1
+            if indeg[h] == 0:
+                stack.append(h)
+    if len(order) == len(groups):
+        final = {}
+        for g in reversed(order):
+            if g in abut_lo and succ.get(g):
+                final[g] = max(gpos[g], min(final[h] - w for h, w in succ[g]))
+            else:
+                final[g] = gpos[g]
+        gpos = final
     pos = {n: r6(gpos[root[n][0]] + root[n][1]) for n in names}
     # intra-group order violations (a rigid group that now overlaps itself)
     for gl, gh, w, lo, hi in edges:
@@ -313,6 +358,83 @@ def map_coord(m, v):
 
 def map_rect(mx, my, r):
     return [map_coord(mx, r[0]), map_coord(my, r[1]), map_coord(mx, r[2]), map_coord(my, r[3])]
+
+
+def move_point(base, geo, part, pt):
+    """a die point that belongs to partition `part` (inside or on its outline): same type-frame point, new placement."""
+    return list(geo.to_die(part, base.to_type(part, pt)))
+
+
+def move_rect(base, geo, part, r):
+    a = move_point(base, geo, part, (r[0], r[1]))
+    b = move_point(base, geo, part, (r[2], r[3]))
+    return [min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])]
+
+
+def is_rect(v):
+    return isinstance(v, list) and len(v) == 4 and all(isinstance(u, (int, float)) for u in v)
+
+
+def remap_die_frame(Q, base, geo, mx, my):
+    """die-frame geometry outside the partitions: io / pg-domain rects follow their partition (type-frame exact);
+    channels and anything without an owner follow the monotone edge maps; clock.cohort.feed taps 'a->b' follow a."""
+    n = 0
+    part_of_io = {}
+    for io in Q["die"].get("io", []) or []:
+        p = io.get("part") if io.get("part") in geo.parts else None
+        part_of_io[io.get("name")] = p
+        for k, v in list(io.items()):
+            if k.endswith("_um") and is_rect(v):
+                io[k] = move_rect(base, geo, p, v) if p else map_rect(mx, my, v)
+                n += 1
+            elif k.endswith("_um") and isinstance(v, list) and v and all(is_rect(u) for u in v):
+                io[k] = [move_rect(base, geo, p, u) if p else map_rect(mx, my, u) for u in v]
+                n += len(v)
+    for d in ((Q["die"].get("pg") or {}).get("domains") or []):
+        ps = [part_of_io.get(i) for i in d.get("io", []) or [] if part_of_io.get(i)]
+        p = ps[0] if ps else None
+        def mv(v):
+            return move_rect(base, geo, p, v) if p else map_rect(mx, my, v)
+        for obj in (d, d.get("bumps") or {}):
+            for k, v in list(obj.items()):
+                if k.endswith("_um") and is_rect(v):
+                    obj[k] = mv(v)
+                    n += 1
+                elif k.endswith("_um") and isinstance(v, list) and v and all(is_rect(u) for u in v):
+                    obj[k] = [mv(u) for u in v]
+                    n += len(v)
+    for c in Q["die"].get("channels", []) or []:
+        if "rect_um" in c:
+            c["rect_um"] = map_rect(mx, my, c["rect_um"])
+            n += 1
+    sp = (Q.get("clock") or {}).get("spine") or {}
+    if "root_um" in sp:
+        sp["root_um"] = [map_coord(mx, sp["root_um"][0]), map_coord(my, sp["root_um"][1])]
+        n += 1
+    feed = ((Q.get("clock") or {}).get("cohort") or {}).get("feed") or {}
+    for k, v in list((feed.get("tap") or {}).items()):
+        a = k.split("->")[0]
+        feed["tap"][k] = move_point(base, geo, a, v) if a in geo.parts else [map_coord(mx, v[0]), map_coord(my, v[1])]
+        n += 1
+    return n
+
+
+def remap_sidecar(base_raw, new_raw, side):
+    """clock-landing sidecar: regions[].box_um (die frame, one region per partition) follow their partition: the low
+    corner moves with the partition origin, the high corner with origin + size (centre containment kept)."""
+    base, geo = Geo(base_raw), Geo(new_raw)
+    n = 0
+    for r in side.get("regions") or []:
+        ps = [p for p in r.get("parts") or [] if p in geo.parts]
+        if len(ps) != 1:
+            continue
+        p = ps[0]
+        (bx, by), (nx, ny) = base.parts[p]["origin_um"], geo.parts[p]["origin_um"]
+        (bw, bh), (nw, nh) = base.size(p), geo.size(p)
+        b = r["box_um"]
+        r["box_um"] = [r6(b[0] + nx - bx), r6(b[1] + ny - by), r6(b[2] + nx - bx + nw - bw), r6(b[3] + ny - by + nh - bh)]
+        n += 1
+    return n
 
 
 # ------------------------------------------------------------------------------------------------------------ checks
@@ -406,22 +528,7 @@ def refloor(base_raw, cand_raw, pad=True, max_rounds=12, log=print):
     W1, H1 = r6(nx1 + (W0 - bx1)), r6(ny1 + (H0 - by1))
     Q["die"]["outline_um"] = [W1, H1]
     mx, my = edge_map(base, geo, 0), edge_map(base, geo, 1)
-    moved_rects = 0
-    for c in Q["die"].get("channels", []) or []:
-        if "rect_um" in c:
-            c["rect_um"] = map_rect(mx, my, c["rect_um"])
-            moved_rects += 1
-    for io in Q["die"].get("io", []) or []:
-        if "rect_um" in io:
-            io["rect_um"] = map_rect(mx, my, io["rect_um"])
-            moved_rects += 1
-    for d in ((Q["die"].get("pg") or {}).get("domains") or []):
-        if "rect_um" in d:
-            d["rect_um"] = map_rect(mx, my, d["rect_um"])
-            moved_rects += 1
-    sp = (Q.get("clock") or {}).get("spine") or {}
-    if "root_um" in sp:
-        sp["root_um"] = [map_coord(mx, sp["root_um"][0]), map_coord(my, sp["root_um"][1])]
+    moved_rects = remap_die_frame(Q, base, geo, mx, my)
     # ports: re-derive from the src type geometry
     rederived = 0
     for q in Q["ports"]:
@@ -447,6 +554,43 @@ def refloor(base_raw, cand_raw, pad=True, max_rounds=12, log=print):
     return Q, rep
 
 
+def reticle_over(rep):
+    lo, hi = sorted(rep["die_after"]), sorted(RETICLE_UM)
+    return max(0.0, lo[0] - hi[0]) + max(0.0, lo[1] - hi[1])
+
+
+def fit_reticle(base_raw, cand_raw, fallback_raw, types=None, pad=True, log=print):
+    """greedy: while the re-floored die is over the reticle, give back the grown type (CAND type replaced by its
+    FALLBACK form) whose revert cuts the overflow most (ties: the smaller growth).  Returns (CAND', reverted, rep)."""
+    C = copy.deepcopy(cand_raw)
+    quiet = lambda *a: None  # noqa: E731
+    Q, rep = refloor(base_raw, C, pad=pad, log=quiet)
+    reverted = []
+    while reticle_over(rep) > EPS:
+        ov = reticle_over(rep)
+        grown = [tn for tn, t in C["partition_types"].items() if (types is None or tn in types)
+                 and tn in fallback_raw["partition_types"]
+                 and t["outline_um"] != fallback_raw["partition_types"][tn]["outline_um"]]
+        if not grown:
+            break
+        best = None
+        for tn in grown:
+            C2 = dict(C, partition_types=dict(C["partition_types"]))
+            C2["partition_types"][tn] = fallback_raw["partition_types"][tn]
+            _, r2 = refloor(base_raw, C2, pad=pad, log=quiet)
+            g = sum(float(a) - float(b) for a, b in zip(C["partition_types"][tn]["outline_um"],
+                                                        fallback_raw["partition_types"][tn]["outline_um"]))
+            key = (ov - reticle_over(r2), -g)
+            if best is None or key > best[0]:
+                best = (key, tn, r2)
+        (gain, _), tn, r2 = best
+        C["partition_types"][tn] = copy.deepcopy(fallback_raw["partition_types"][tn])
+        reverted.append(dict(type=tn, overflow_before=round(ov, 2), overflow_after=round(reticle_over(r2), 2)))
+        log("  reticle fit: reverted %s -> overflow %.2f um" % (tn, reticle_over(r2)))
+        rep = r2
+    return C, reverted, rep
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -457,10 +601,24 @@ def main(argv=None):
     a.add_argument("--report")
     a.add_argument("--no-pad", action="store_true")
     a.add_argument("--no-sync-cycles", action="store_true")
+    a.add_argument("--fallback", help="plan whose partition_types are the no-growth form of each grown type; when the "
+                   "re-floored die is over the reticle, grown types are reverted to it greedily until it fits")
+    a.add_argument("--fit-types", help="file with the type names --fallback may revert (one per line; default all)")
+    sc = sub.add_parser("sidecar")
+    sc.add_argument("base")
+    sc.add_argument("plan")
+    sc.add_argument("sidecar_in")
+    sc.add_argument("sidecar_out")
     c = sub.add_parser("check")
     c.add_argument("plan")
     c.add_argument("--report")
     args = ap.parse_args(argv)
+    if args.cmd == "sidecar":
+        side = json.loads(Path(args.sidecar_in).read_text())
+        n = remap_sidecar(json.loads(Path(args.base).read_text()), json.loads(Path(args.plan).read_text()), side)
+        Path(args.sidecar_out).write_text(json.dumps(side, separators=(",", ":")))
+        print("DIE_REFLOOR_SIDECAR regions moved %d" % n)
+        return 0
     if args.cmd == "check":
         raw = json.loads(Path(args.plan).read_text())
         errs = plan_check(raw)
@@ -473,7 +631,14 @@ def main(argv=None):
         return 1 if errs else 0
     base = json.loads(Path(args.base).read_text())
     cand = json.loads(Path(args.cand).read_text())
+    reverted = None
+    if args.fallback:
+        fb = json.loads(Path(args.fallback).read_text())
+        only = set(Path(args.fit_types).read_text().split()) if args.fit_types else None
+        cand, reverted, _ = fit_reticle(base, cand, fb, types=only, pad=not args.no_pad)
     Q, rep = refloor(base, cand, pad=not args.no_pad)
+    if reverted is not None:
+        rep["reticle_reverted"] = reverted
     if not args.no_sync_cycles:
         sys.path.insert(0, str(HERE))
         import reach_fix as RF
@@ -494,7 +659,7 @@ def main(argv=None):
         fc = rep["fixed_cycles"]
         print("DIE_REFLOOR fixed_cycles: %d lanes changed, %d bind-rule broken, +%d lane cycles" % (
             len(fc["lanes"]), len(fc["rule_broken"]), fc.get("lane_cycles_added", 0)))
-    return 0 if not rep["conflicts"] and not errs else 1
+    return 0 if not rep["conflicts"] and not errs and rep["reticle_fits"] else 1
 
 
 if __name__ == "__main__":

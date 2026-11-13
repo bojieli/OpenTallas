@@ -133,3 +133,33 @@ def test_reticle_flag():
     cand["partition_types"]["lo"]["outline_um"] = [100, 40000]
     Q, rep = D.refloor(raw, cand, log=lambda *a: None)
     assert rep["reticle_fits"] is False
+
+
+def test_fit_reticle_reverts_the_biggest_overflow():
+    raw = column()
+    cand = copy.deepcopy(raw)
+    cand["partition_types"]["lo"]["outline_um"] = [100, 33000]
+    cand["partition_types"]["hi"]["outline_um"] = [100, 120]
+    C, reverted, rep = D.fit_reticle(raw, cand, raw, log=lambda *a: None)
+    assert [r["type"] for r in reverted] == ["lo"] and rep["reticle_fits"]
+    assert C["partition_types"]["hi"]["outline_um"] == [100, 120]
+
+
+def test_sidecar_regions_follow_partitions():
+    raw = column()
+    cand = copy.deepcopy(raw)
+    cand["partition_types"]["lo"]["outline_um"] = [100, 130]
+    Q, rep = D.refloor(raw, cand, log=lambda *a: None)
+    side = {"regions": [{"tag": "r0", "box_um": [0, 0, 120, 110], "parts": ["a"]},
+                        {"tag": "r1", "box_um": [0, 110, 120, 220], "parts": ["b"]}]}
+    assert D.remap_sidecar(raw, Q, side) == 2
+    assert side["regions"][0]["box_um"] == [0, 0, 120, 140] and side["regions"][1]["box_um"] == [0, 140, 120, 250]
+
+
+def test_io_rect_follows_its_partition():
+    raw = column()
+    raw["die"]["io"] = [{"name": "io0", "part": "b", "rect_um": [20, 150, 40, 160]}]
+    cand = copy.deepcopy(raw)
+    cand["partition_types"]["lo"]["outline_um"] = [100, 130]
+    Q, rep = D.refloor(raw, cand, log=lambda *a: None)
+    assert Q["die"]["io"][0]["rect_um"] == [20, 180, 40, 190]
