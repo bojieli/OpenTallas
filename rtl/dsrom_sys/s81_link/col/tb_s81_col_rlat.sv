@@ -5,7 +5,10 @@
 // Build once per define set; the min / max latency difference between two builds is that form's added cycles (the TX
 // side of every form in the vB set is unchanged, so a loopback delta is an RX delta).  OT_S81_SERDES_TXL4 adds 2 TX clk.
 // EXPECT_LAT != 0: PASS needs lat_min == lat_max == EXPECT_LAT (TXL mutant MUT=8 removes one u_txl row: must FAIL).
-module tb_s81_col_rlat #(parameter integer MUT = 0, parameter integer EXPECT_LAT = 0);
+// RST_EDGES (default 8 = the bench as it was): clk edges the die reset is held at power-up.  Forms whose unreset row
+// registers need more than 8 edges to flush (LANE_RXO 6 behind the staged rate matcher: 12) are run with 64, the owner
+// boot rule (rst_n >= 64 clk).
+module tb_s81_col_rlat #(parameter integer MUT = 0, parameter integer EXPECT_LAT = 0, parameter integer RST_EDGES = 8);
     reg clk = 0, rst = 0;
     always #416.5 clk = ~clk;
     reg [511:0] tx = 512'd2; wire [511:0] rx; wire [1:0] st; wire [543:0] pt; wire tc;
@@ -24,7 +27,7 @@ module tb_s81_col_rlat #(parameter integer MUT = 0, parameter integer EXPECT_LAT
         end
     end
     initial begin
-        repeat (8) @(posedge clk); #100 rst = 1;
+        repeat (RST_EDGES) @(posedge clk); #100 rst = 1;
         repeat (6000) @(posedge clk);
         $display("TB_S81_COL_RLAT beats=%0d bad=%0d lat_min=%0d lat_max=%0d st=%b", n, bad, lmin, lmax, st);
         if (n > 4000 && bad == 0 && st == 2'b10 && (EXPECT_LAT == 0 || (lmin == EXPECT_LAT && lmax == EXPECT_LAT))) $display("TB_S81_COL_RLAT PASS"); else $display("TB_S81_COL_RLAT FAIL");

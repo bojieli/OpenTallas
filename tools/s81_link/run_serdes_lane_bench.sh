@@ -22,6 +22,7 @@ case $mode in
   *) echo "LANE BAD_MODE $mode"; exit 2;; esac
 for x in ${EXTRA_DEFS:-}; do d="$d +define+$x"; done
 [ -n "${RT_EXPECT:-}" ] && g="$g -GEXPECT_LAT=$RT_EXPECT"
+[ -n "${RLAT_RST:-}" ] && g="$g -GRST_EDGES=$RLAT_RST"   # rlat modes only: power-up reset length
 $VL --version > "$out/verilator.version" 2>&1
 $VL --binary --timing -j ${COL_J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTITOP +incdir+$L \
   $d --top-module $top $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" \

@@ -161,6 +161,41 @@ if {[dict exists $sl_cfg anchors]} {
     puts "OT_SERDES_LANES anchor $are: $n flops FIRM on a $cols x $rws raster in ([expr {$x0 / double($sl_dbu)}] [expr {$y0 / double($sl_dbu)}] [expr {$x1 / double($sl_dbu)}] [expr {$y1 / double($sl_dbu)}]), unplaced $miss"
   }
 }
+# ---- module regions (cfg key regions {{name cx cy aspect} ...} + /work/serdes_groups.txt "group<TAB>instance", optional;
+#      tools/die_plan/serdes_groups.py writes the membership from the flat netlist): each group becomes a dbGroup in a
+#      dbRegion box centred at (cx, cy), sized from the group's own cell area at OT_SERDES_REGION_UTIL (default 0.6).
+#      Registers stay free inside their region.  Why: one shared island lets GPL interleave the KP4 modules, so every
+#      net of a dense GF(2) matrix is as long as the island; even-raster register anchors (kitD) were worse.
+if {[dict exists $sl_cfg regions] && [file exists /work/serdes_groups.txt]} {
+  set util [expr {[info exists ::env(OT_SERDES_REGION_UTIL)] ? $::env(OT_SERDES_REGION_UTIL) : 0.6}]
+  set byname {}
+  foreach i [$sl_blk getInsts] { dict set byname [string map [list \\ {}] [$i getName]] $i }
+  set mem {}
+  set gf [open /work/serdes_groups.txt r]
+  foreach ln [split [read $gf] "
+"] {
+    set t [split $ln "	"]; if {[llength $t] != 2} continue
+    if {[dict exists $byname [lindex $t 1]]} { dict lappend mem [lindex $t 0] [dict get $byname [lindex $t 1]] }
+  }
+  close $gf
+  foreach rgn [dict get $sl_cfg regions] {
+    lassign $rgn rn cx cy asp
+    if {![dict exists $mem $rn]} { puts "OT_SERDES_LANES region $rn: no members (skipped)"; continue }
+    set area 0.0; set nm 0
+    set members {}
+    foreach i [dict get $mem $rn] {
+      if {[$i getPlacementStatus] in {FIRM LOCKED}} continue
+      set m [$i getMaster]; set area [expr {$area + double([$m getWidth]) * [$m getHeight]}]; lappend members $i; incr nm
+    }
+    set h [expr {sqrt($area / $util / $asp)}]; set w [expr {$h * $asp}]
+    set x0 [expr {int([sl_u $cx] - $w / 2)}]; set y0 [expr {int([sl_u $cy] - $h / 2)}]
+    set rg [odb::dbRegion_create $sl_blk "sl_$rn"]
+    odb::dbBox_create $rg $x0 $y0 [expr {int($x0 + $w)}] [expr {int($y0 + $h)}]
+    set g [odb::dbGroup_create $rg "sl_g_$rn"]
+    foreach i $members { $g addInst $i }
+    puts [format "OT_SERDES_LANES region %s: %d cells, %.0f um2, box %.1f x %.1f um at (%.1f %.1f), util %.2f" $rn $nm [expr {$area / double($sl_dbu) / $sl_dbu}] [expr {$w / $sl_dbu}] [expr {$h / $sl_dbu}] [expr {$x0 / double($sl_dbu)}] [expr {$y0 / double($sl_dbu)}] $util]
+  }
+}
 close $sl_fh
 # ---- blockages (removed again by serdes_lanes_release.tcl)
 set sl_have {}
