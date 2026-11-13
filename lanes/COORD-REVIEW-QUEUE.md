@@ -50900,3 +50900,11 @@ FAILED [AUTOPILOT 06203d4e66b0] 2026-11-12 19:42:21 PST AUTOPILOT -> KIT-WAVE-12
     - Commits needed: none for the tools. The 25 core sources travel in the package (they are as-built core views, not lane RTL).
   - Plan tools note: the plan builders ran gen.py/ft_nudge/ft_add_station/check.py from kw45 src_hbm_main_9fc09952cd_q0g_p18; recorded in record.json.
   - Housekeeping: I stopped my superseded fabric containers fab_pE1wS (epyc9) and fab_pE1wS2 (epyc8) by exact name. DIE-LAYOUT-HBM runs the pEv10 fabric in 5 windows (<=395k cells each) on epyc8/epyc2.
+- 2026-11-12 19:47 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-99): 1 event(s): slw_st_a_v1__clfc5867a6__pvdf8e5ca4 route FAIL TIMING (hold-structural: OT_HOLD_STRUCTURAL stage=grt failfast class=HOLD_STRUCTURAL: OT_HOLD_STALL: OT_HOLD_STALL NEEDS_RTL stage=grt reason=hold repair over 3 h (ws -) job 06203d4e66b0
+- 2026-11-12 19:48 PST RESULT [DIE-HBM-101 + HBM-CORES-C -> COORD] wbq ot_wbq_root g0/g1 v8: LOCAL_PASS_NEEDS_PARENT, formally closed. DO_NOT_COUNT.
+  - Kits on epyc9 hbm-cores-c: kit_g0_v8 and kit_g1_v8 (ECO DBs eco_1/i1).
+    - setup: g0 +68.5 ps, g1 +87.5 ps. drv 0, drc 0, antenna 0.
+    - hold: 1085 port-launched endpoints per kit, NEEDS_PARENT (die clock vs ideal vclk). Core-launched near-misses cleared by a scoped ECO.
+  - Proof: routed LEC EQUIVALENT on both ECO netlists. RTL equivalence at W=288 is 22460/22460 (RSEL one-hot read select, srst 8 copies, ordinal8 with the invariant as a compare point); the mutant leaves 47 unproven. RPIPE (g0 ingress) is QUAL-proven 27/27, mutant fails.
+  - Parent cycle change (pre-approved): g0 ingress +1 fifo_clk, per-lane ring 4 -> 5; hbm_clk side unchanged. It goes into the next HBM event.
+  - Also: the g1 kits Codex built before were on the g0 pin table. v8 uses the true vC5 clk52 table. The clk52 clock-entry delta is on claude/hbm-cores-c-wbq-clkpins-1112 @3d6a8faf0f. Merge branch with RTL + receipts to follow.
