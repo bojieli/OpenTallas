@@ -1,0 +1,34 @@
+{
+  "verdict": "FAIL",
+  "scope": "Inherited private diagnostic only; NOT SIGNED",
+  "images_viewed": [
+    "epyc2:/srv/opentallas-scratch2/claude/band-kit-1/v5q/layout_review/grt/congestion.png",
+    "epyc2:/srv/opentallas-scratch2/claude/band-kit-1/v5q/layout_review/grt/density.png"
+  ],
+  "overflow": {
+    "total": 2358,
+    "M2": 2,
+    "M4": 76,
+    "M6": 2280
+  },
+  "terminal": "GRT-0232 on five-iteration copy; full copy hit existing60minute cap at extra iteration23",
+  "sta_info_only": {
+    "corner": "TT only, no FF signoff",
+    "setup_ps": -458.2276798550465,
+    "hold_ps": -4.252154201305119
+  },
+  "findings": [
+    "Horizontal congestion strip spans the complete head-row upper channel and the provider pin faces.",
+    "Eight head macros remain a wall with15.12um input gaps; top floor remains sparse.",
+    "The long input broadcast is still unsegmented upstream of the one-stage per-core capture.",
+    "Stage0CAPD input registers lack direct face-placement guidance; current guide only places stage1.",
+    "Plain CTS insertion/virtual-clock latency is a separate contract concern; actualperiod remains833ps."
+  ],
+  "required_next": [
+    "Use the programme-exact static-calendar source only after actual production integration passes.",
+    "Produce a legal macro/channel form inside the die reticle budget; no R-STREET relaxation.",
+    "Place real first input captures near top pins and distribute conservative per-core relay chains.",
+    "Use explicit macro/clock latency balancing and review the new drawing before P&R."
+  ],
+  "new_route_launched": false
+}
