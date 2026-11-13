@@ -1,0 +1,88 @@
+{
+  "status": "PRIVATE CONCEPT ONLY, NOT PLACED OR SIGNED",
+  "target": {
+    "W": 291,
+    "BASE": 0,
+    "DMAX": 24,
+    "CW": 5,
+    "existing_fixed_prefix": 2,
+    "used_static_counts": [
+      0,
+      4,
+      19,
+      24
+    ],
+    "total_ages": [
+      2,
+      6,
+      21,
+      26
+    ]
+  },
+  "hardware": {
+    "macro_master": "ot_sram_1r1w_32x64_m1",
+    "macro_count_per_instance": 5,
+    "macro_outline_um": [
+      31.968,
+      17.28
+    ],
+    "macro_area_um2_per_instance": 2762.0352000000003,
+    "allocated_bits": 10240,
+    "variable_history_bits_required": 6984,
+    "generic_std_ff_bits": 878,
+    "existing_fixed_prefix_ff_bits": 582,
+    "total_std_ff_bits_including_prefix_and_pointer": 1460,
+    "generic_mux_cells": 878,
+    "generic_other_logic_cells": 75,
+    "replicas": 4
+  },
+  "concept": {
+    "outline_um": [
+      115.77600000000001,
+      120.96000000000001
+    ],
+    "macro_origins_um": [
+      [
+        17.28,
+        17.28
+      ],
+      [
+        66.528,
+        17.28
+      ],
+      [
+        17.28,
+        51.84
+      ],
+      [
+        66.528,
+        51.84
+      ],
+      [
+        17.28,
+        86.4
+      ]
+    ],
+    "street_um": 17.28,
+    "border_um": 17.28,
+    "parent_slot_clearance_checked": false
+  },
+  "latency": {
+    "additional_cycles": 0,
+    "throughput_words_per_cycle": 1,
+    "bypass_depths": [
+      0,
+      1,
+      2
+    ],
+    "memory_depth_range": [
+      3,
+      32
+    ]
+  },
+  "limitations": [
+    "Uninitialized pointer stays X in conventional four-state RTL simulation; binary-state convergence must be reviewed.",
+    "Actual macro placement, PG, clocks, current-source parent integration and signoff not run.",
+    "Count is a static parent strap; runtime changes are outside this contract."
+  ]
+}
