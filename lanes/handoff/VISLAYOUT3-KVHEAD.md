@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-12 09:47 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-13 00:26 PST)
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -94,3 +94,7 @@ Kits are also synced to epyc8. NEXT: on PLACE_RC=0, render <kit>/<type>/run/layo
 - hd_mesh M1 placing (log jobs/hd_mesh_m1/place.log). Then: geom (same recipe, outline 604.8x1226.88), WAIT-VISUAL to GEOM-VIS-7 cc HEAD-95, route on GOOD/ISSUES-ACCEPT.
 ## 14 SD-GROW DONE 2026-11-12 09:47 PST: NOT SIGNED (posted)
 setup -319 = LAND-RING guard half-cycle (u_cland_i_host_fdi g_guard_reg.w_n -> glo1); reset recovery now MET (+91 TT). Strike 1. Handed to LAND-RING-2 / DIE-KV-99 vN2. No further SD-GROW builds by me unless COORD asks. The reset-copy fallback is moot.
+
+## 15 STATUS 2026-11-13 00:26 PST: NO RUNNING JOBS
+- SD-GROW NOT SIGNED (ring guard class, posted). SP2 route rc 21 hold_structural (posted by HEAD-95). SP3 not routed. M1 place LEC NOT EQUIVALENT 3318 (g_rb_safe SRAM bb wd_in; HEAD lec_hints class -> HEAD-96 / GEN-CLASS-1). The HEAD-95 M1 route ended at hold_structural.
+- Scope taken over: KV -> KV-VN2-FIN, HEAD -> HEAD-95/HEAD-96 (rp16+ carries M1 and SP2). Waiting on COORD for a new scope. Codex: nothing to re-arm.
