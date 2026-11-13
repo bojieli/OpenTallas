@@ -30,9 +30,9 @@
    "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/adp_macrofit_1101/report.json"
   },
   "asbuilt_vN.json": {
-   "sha256": "6cbb45f1ee5faf1104c080e08cb8d623b8d50e3b60fd642fa1f2deef171febf4",
-   "bytes": 204545,
-   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json"
+   "sha256": "dde3c68eb4ecc68c3571908d906c6f8e597324d1f075c0f496e989d25e302415",
+   "bytes": 204583,
+   "origin": "KV vN2i (epyc4 dkv99/vN2i, R8 = dkv99/r8_rebased_vN2f.json):asbuilt_vN.json"
   },
   "cells_evidence.json": {
    "sha256": "5134b1455916a0bf7d1737e50e625c560553bebd6c8793fd759f1ca300b73dc0",
@@ -125,9 +125,9 @@
    "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/densitytaps_1105/report_taps.json"
   },
   "eW_sidecar.json": {
-   "sha256": "39cabef34eb2a0740a523c2524d9a7331dbf2675ed3207c039465d45d4d9e716",
-   "bytes": 12352505,
-   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   "sha256": "4f6742e2b3a439a27a492e552632edc7d26760f5061d5797bcab49574efe17b0",
+   "bytes": 9326276,
+   "origin": "KV vN2i (epyc4 dkv99/vN2i, R8 = dkv99/r8_rebased_vN2f.json):eW_sidecar.json"
   },
   "ftwreg_1104/event.py": {
    "sha256": "8673d826833a448cc925f409389f4f3d8dc49a3e300b5943ed67524c9191a2a7",
@@ -903,9 +903,9 @@
    "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pins/rf_kv1/qkd_hr_core_queue_pins_rfkv1.json"
   },
   "plan_c.json": {
-   "sha256": "77533c398d4dfd61170f0e8029d6a2c5dbb11ba71a7910cadaf7c1e880ae9b5d",
-   "bytes": 43542886,
-   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json"
+   "sha256": "cdea77f148ce56c5e830cc6e01d9f712c21db9ee1697eaeec290ffbded34b4d0",
+   "bytes": 23950722,
+   "origin": "KV vN2i (epyc4 dkv99/vN2i, R8 = dkv99/r8_rebased_vN2f.json):plan_c.json"
   },
   "plan_c.original.json.gz": {
    "sha256": "f352bf5136d882dc95812c84d42b6bb5d704cd9aeb626fb1e39b1e21b81b3d80",
@@ -973,9 +973,9 @@
    "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/pvpilot_1104/report_taps.json"
   },
   "r8_kv95_phy3.json": {
-   "sha256": "1659d386de1c2dc4cf4cb3806cecfe897dad28850dc73a7a3e63c7f98849898f",
-   "bytes": 2159291,
-   "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/r8_kv95_phy3.json"
+   "sha256": "a689fc3ca43b16f422e7dcdbfc2ed11d9fc59d1f25a3a060c1e91a4f92c169cd",
+   "bytes": 2159449,
+   "origin": "KV vN2i (epyc4 dkv99/vN2i, R8 = dkv99/r8_rebased_vN2f.json):r8_kv95_phy3.json"
   },
   "r8_no_dead_forwarded_clocks.json": {
    "sha256": "cf30fc95f8047c8b9ba7c8067a497d6095304cb17c20784eb44ff66720420d78",
@@ -1182,5 +1182,6 @@
    "bytes": 1823,
    "origin": "/srv/opentallas-scratch2/claude/wt/die-kv-98/physical/die_plan/qwen_kvsys/plan_of_record/source_boot_admission.json"
   }
- }
+ },
+ "refreshed": "2026-11-13T01:11:56+0000 KV-VN2-FIN vN2 event: plan_c.json, eW_sidecar.json, r8_kv95_phy3.json, asbuilt_vN.json"
 }

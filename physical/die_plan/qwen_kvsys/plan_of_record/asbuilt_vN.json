@@ -6813,5 +6813,6 @@
  ],
  "reset_gate_note": "DIE-KV-95 11-08 (KV-TYPES-2 pilot 11-07, KV-TYPES-6 20:06): the 9 soft-leaf reset pins of every kv3_pc* row through ot_dp_rgate (lane AND wavefront tap, anchored on the kvpc core of that leaf); RESET RELEASE +1 cycle, data 0, same as PCC/PCF",
  "param_regen_note_zb": "DIE-KV-97 11-09: kv_pv_col_regen.py of the ZB_ADD src (= base kw32/src_27db6 hook + kv_ep_offset_regen: EO_E/EO_RL per EP, ZB_ADD on qkd_kvs_attn_fl); declare = parameters the cached as-built netlist cannot show (substitute EP masters, ZB_ADD added after the as-built elaboration, default = as-built behaviour)",
- "note_kv_compose": "DIE-KV-97 11-09: ONE KV small event = plan_zb6 (ZB_ADD hook + plan_p6 geometry) + KV-PLAN-1 plan_k1 (vport RT bound 95 in regen_agebounds_2144.py md5 f58875e7, W pads vport_w_pads_b5.json md5 95a57e44)"
+ "note_kv_compose": "DIE-KV-97 11-09: ONE KV small event = plan_zb6 (ZB_ADD hook + plan_p6 geometry) + KV-PLAN-1 plan_k1 (vport RT bound 95 in regen_agebounds_2144.py md5 f58875e7, W pads vport_w_pads_b5.json md5 95a57e44)",
+ "kit_source_station_pricing": true
 }

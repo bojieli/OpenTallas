@@ -15,7 +15,7 @@
   "over_margin": "keep"
  },
  "bus_groups_digest": "d0766ec7039fbc52",
- "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules | DIE-KV-95 11-08: PHY RE-FORM +3 on the 192 PI lanes: 256 pc__pi members bound/landed 2 -> 5, pad 0 (PIN CYCLES +3)",
+ "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules | DIE-KV-95 11-08: PHY RE-FORM +3 on the 192 PI lanes: 256 pc__pi members bound/landed 2 -> 5, pad 0 (PIN CYCLES +3) | DIE-KV-99 vN2 11-12: targeted rebase of 12 members after +1-register lanes (bound += k; pad absorbs it where it can, else landed += the rest; r8_rebase.py)",
  "members": [
   {
    "id": "ahub.ap2[0:42]<-native_composite_hub_Eo_astk_ES.u_strip_u_strip_u_ctl__ap@22",
@@ -103340,9 +103340,9 @@
    ],
    "source": "vport_EN_2.vq0_t",
    "asbuilt": 9,
-   "bound": 27,
+   "bound": 28,
    "pad": 0,
-   "landed": 27,
+   "landed": 28,
    "lane": "L2245"
   },
   {
@@ -103359,9 +103359,9 @@
    ],
    "source": "vport_EN_2.vq0_valid",
    "asbuilt": 9,
-   "bound": 27,
+   "bound": 28,
    "pad": 0,
-   "landed": 27,
+   "landed": 28,
    "lane": "L2245"
   },
   {
@@ -103910,8 +103910,8 @@
    ],
    "source": "vport_EN_3.vq1_t",
    "asbuilt": 4,
-   "bound": 19,
-   "pad": 5,
+   "bound": 20,
+   "pad": 4,
    "landed": 24,
    "lane": "L2259"
   },
@@ -103929,8 +103929,8 @@
    ],
    "source": "vport_EN_3.vq1_valid",
    "asbuilt": 4,
-   "bound": 19,
-   "pad": 5,
+   "bound": 20,
+   "pad": 4,
    "landed": 24,
    "lane": "L2259"
   },
@@ -105392,8 +105392,8 @@
    ],
    "source": "vport_ES_3.vq1_t",
    "asbuilt": 4,
-   "bound": 17,
-   "pad": 3,
+   "bound": 18,
+   "pad": 2,
    "landed": 20,
    "lane": "L2311"
   },
@@ -105411,8 +105411,8 @@
    ],
    "source": "vport_ES_3.vq1_valid",
    "asbuilt": 4,
-   "bound": 17,
-   "pad": 3,
+   "bound": 18,
+   "pad": 2,
    "landed": 20,
    "lane": "L2311"
   },
@@ -106304,9 +106304,9 @@
    ],
    "source": "vport_WN_2.vq0_t",
    "asbuilt": 8,
-   "bound": 23,
+   "bound": 24,
    "pad": 0,
-   "landed": 23,
+   "landed": 24,
    "lane": "L2349"
   },
   {
@@ -106323,9 +106323,9 @@
    ],
    "source": "vport_WN_2.vq0_valid",
    "asbuilt": 8,
-   "bound": 23,
+   "bound": 24,
    "pad": 0,
-   "landed": 23,
+   "landed": 24,
    "lane": "L2349"
   },
   {
@@ -106874,8 +106874,8 @@
    ],
    "source": "vport_WN_3.vq1_t",
    "asbuilt": 4,
-   "bound": 19,
-   "pad": 5,
+   "bound": 20,
+   "pad": 4,
    "landed": 24,
    "lane": "L2363"
   },
@@ -106893,8 +106893,8 @@
    ],
    "source": "vport_WN_3.vq1_valid",
    "asbuilt": 4,
-   "bound": 19,
-   "pad": 5,
+   "bound": 20,
+   "pad": 4,
    "landed": 24,
    "lane": "L2363"
   },
@@ -108356,8 +108356,8 @@
    ],
    "source": "vport_WS_3.vq1_t",
    "asbuilt": 4,
-   "bound": 17,
-   "pad": 3,
+   "bound": 18,
+   "pad": 2,
    "landed": 20,
    "lane": "L2415"
   },
@@ -108375,8 +108375,8 @@
    ],
    "source": "vport_WS_3.vq1_valid",
    "asbuilt": 4,
-   "bound": 17,
-   "pad": 3,
+   "bound": 18,
+   "pad": 2,
    "landed": 20,
    "lane": "L2415"
   },
