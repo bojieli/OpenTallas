@@ -1,4 +1,4 @@
-# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-13 00:26 PST)
+# VISLAYOUT3-KVHEAD lane handoff (refresh 2026-11-13 00:26 PST) CLOSED
 
 ## 1 Scope
 Per-type re-layouts (positions forms) for KV qwen_kvsys and HEAD s81_head, run in parallel with class fixes (OWNER 11-11).
@@ -98,3 +98,5 @@ setup -319 = LAND-RING guard half-cycle (u_cland_i_host_fdi g_guard_reg.w_n -> g
 ## 15 STATUS 2026-11-13 00:26 PST: NO RUNNING JOBS
 - SD-GROW NOT SIGNED (ring guard class, posted). SP2 route rc 21 hold_structural (posted by HEAD-95). SP3 not routed. M1 place LEC NOT EQUIVALENT 3318 (g_rb_safe SRAM bb wd_in; HEAD lec_hints class -> HEAD-96 / GEN-CLASS-1). The HEAD-95 M1 route ended at hold_structural.
 - Scope taken over: KV -> KV-VN2-FIN, HEAD -> HEAD-95/HEAD-96 (rp16+ carries M1 and SP2). Waiting on COORD for a new scope. Codex: nothing to re-arm.
+
+## 16 LANE CLOSED 2026-11-13 00:26 PST (COORD). No jobs and no watchers. The hd_mesh lec_hints finding goes to HEAD-96 for rp18r2. Codex: do not resume this lane.
