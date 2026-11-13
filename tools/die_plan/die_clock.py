@@ -1027,6 +1027,9 @@ def write_spef(T, path, design="die_ctree", pads=None):
     f.close()
 
 
+EDGES_HDR = "# OT_EDGES v1"   # = die_trial.EDGES_HDR / trial_tap_arrivals.EDGES_HDR (both-edge arrival readout)
+
+
 def sta_tcl(d, corner, libdir):
     lib = f"{libdir}/asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz"
     return "\n".join([
@@ -1036,11 +1039,20 @@ def sta_tcl(d, corner, libdir):
         f"set_load {TAP_LOAD_FF} [all_outputs]", "set_output_delay 0 -clock vclk [all_outputs]",
         "set ot_w [sta::worst_slack_cmd max]",
         f"set fh [open {d}/arr_{corner}.txt w]",
+        # HOLD-TAP-1 11-13 (R-CLOCK-6 g): BOTH source edges.  The tree is BUFx24 only (non-inverting), so a cell output
+        # rise / fall IS the source rise / fall and the T / N rows are unchanged; F (tap) and M (cell) rows add the
+        # falling edge (FLOW-ONEMODEL-2 format, header EDGES_HDR), so a fall-edge sample and the duty are measured
+        # instead of assumed rise + T/2 (HEAD rp21w routed: fall - rise = 110 ps TT / 129 ps FF at every tap).
+        f"puts $fh \"{EDGES_HDR} T/N=source rise F/M=source fall (late early)\"",
         "foreach p [get_ports t_*] { puts $fh \"T [get_full_name $p] [expr {"
         f"{PERIOD_PS} - [get_property $p slack_max_rise]" "}] [get_property $p slack_min_rise] "
         "[get_property $p slew_max_rise]\" }",
+        "foreach p [get_ports t_*] { puts $fh \"F [get_full_name $p] [expr {"
+        f"{PERIOD_PS} - [get_property $p slack_max_fall]" "}] [get_property $p slack_min_fall] "
+        "[get_property $p slew_max_fall]\" }",
         "foreach i [get_cells n*] { set q [get_pins [get_full_name $i]/Y]; puts $fh \"N [get_full_name $i] "
-        "[get_property $q arrival_max_rise] [get_property $q arrival_min_rise]\" }",
+        "[get_property $q arrival_max_rise] [get_property $q arrival_min_rise]\"; puts $fh \"M [get_full_name $i] "
+        "[get_property $q arrival_max_fall] [get_property $q arrival_min_fall]\" }",
         "close $fh",
         "report_check_types -max_slew -max_capacitance -violators",
         "puts OT_DONE"]) + "\n"
