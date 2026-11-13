@@ -23411,7 +23411,6 @@
         "hd_spn_eshim_tx@9",
         "hd_turn_b@3",
         "hd_ctl_e@9",
-        "hd_ctl_n@1",
         "hd_host_n@8",
         "hd_lep0N@4",
         "hd_spn_eshim_rx@2",
@@ -24651,7 +24650,12 @@
       },
       "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7.",
       "retry_note_kitops1_rearm3_1113": "2026-11-13 12:50 add (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): hd_turn_a@3 hd_spn_wshim_rx@2",
-      "retry_note_codex_restore_1113": "2026-11-13: original receipt inputs restored; stale epochs cleared by scheduler before one infrastructure rearm: hd_turn_a@4 hd_spn_wshim_rx@3"
+      "retry_note_codex_restore_1113": "2026-11-13: original receipt inputs restored; stale epochs cleared by scheduler before one infrastructure rearm: hd_turn_a@4 hd_spn_wshim_rx@3",
+      "route_hold_items": {
+        "hd_host_e": "CODEX 11-13: actual attempt6 place image ISSUES (same giant EPC/remote W pins as earlier attempt2); staging missing-source objective complete. HEAD structural event required; no new route on unchanged bad form.",
+        "hd_ctl_n": "CODEX approved HEAD-ROUTE-1/R-FLOW6 class regeneration (old generated M8 kit lacked RA0); hold fresh attempt after place for its own actual image review before route. Lift only on fresh same-attempt GOOD/ISSUES-ACCEPT, not historical names."
+      },
+      "retry_note_codex_ctlra0_1113": "11-13: remove stale hd_ctl_n@1 epoch for one scheduler pass, then ONE approved RA0 class-fix regeneration; old accepted ISSUES-ACCEPT form checked, failed APjob992b8a45f39a DONE-CRASH preserved. No source/POR switch."
     },
     "qwen_compute": {
       "enabled": true,
