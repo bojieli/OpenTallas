@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 16:1x PST)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 16:4x PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -8,7 +8,7 @@ re-select, 6 landed window (+k cycles from a hops TSV). COORD classes: RESET-WAV
 INSERTION-BALANCE all dies (priority; proven on HEAD fix2 + KV vN in DIE-PROTO-2's die STA with die_clock ladder RC).
 
 ## 2 Worktree
-epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD e60e4fab8d (pushed, clean; + e60e4fab8d reset column mode + relay_rule slew_safe 130 um; + 8f61cd7a19 per-type reset.relay_um; + c81d837870 FAIL-LOUD, 082b2c63ca/b251146029 leafcell, bd0bf92f81 regeq --routed) =
+epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD 39e04ecad5 (pushed, clean; + 39e04ecad5 column to COORD spec (geometric parent, exit at child line, data-sink band); + e60e4fab8d reset column mode + relay_rule slew_safe 130 um; + 8f61cd7a19 per-type reset.relay_um; + c81d837870 FAIL-LOUD, 082b2c63ca/b251146029 leafcell, bd0bf92f81 regeq --routed) =
 main d3f85cdf01 + 7 cherry-picked REACH-FIX-2 commits (5e19ca2647..72e2c1295a) + FIXED-CYCLES 54d2a1ec4b. READY posted 13:00
 (ROOT-MERGE-60) and 13:2x (adds 54d2a1ec4b). Old branch claude/reach-fix-1112 (370eac82bd) is superseded by it.
 Tests (epyc7 repo root, --basetemp under reach-fix-2/pyt): test_reach_fix (20) test_dieclock_routed test_die_clock*.py
@@ -16,9 +16,7 @@ test_taps* test_die_sta_related test_street_rule* test_schema -> 188 passed 8 sk
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py) = branch HEAD.
 
 ## 3 Running jobs
-RESET-SLEW sweep (python, nice): epyc4 rsw/sweep.py on KV dkv99/vN2h/plan_c.json (root_kv) and HEAD rp17 (root_head);
-epyc8 rsw on S81 plan_s81_r12ng/plan_rf_fc.json (root_s81). DONE: epyc9 rsw/qc.json (zz_c6b_fix), rsw/hbm.json (pEv4f).
-Measurement DONE: epyc9 reach-fix-2/rp17/rsl (meas2.tcl per-net slew, n/<kit>/net_<C>.txt, fit.py -> fit.json).
+None. RESET-SLEW sweeps done: rsw/{s81 epyc8, head+kv epyc4, qc+hbm epyc9}.json (sweep.py, summ.py). Measure epyc9 reach-fix-2/rp17/rsl.
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -72,15 +70,11 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
-0. RESET-SLEW RESULT post (COORD 11-12): L_safe 130 um (fit.json); per-die sweep a/b counts + depth/release at 130/190/250/300;
-   types erroring in my overlay roots (pin tables) are excluded and listed. Column READY posted (e60e4fab8d).
-DONE: rp17 die clock gate (RESULT posted): epyc9 reach-fix-2/rp17 (pd/ = rp17 + sidecars, code/ = bd0bf92f81 tools + HEAD-95 physical,
-kit/ = rp17 die_trial kit, model/ best it3, routed/ best it4: 16.2/19.6 ps, landed 400.57/399.89 PASS, contract 0, gate BLOCKED(kits)
-= no signed type views; regions reg/proof_m = fix2 327 regions by part). Scripts rp17run.sh / rp17run3.sh, CHAIN.log.
-DONE: per-type reset reach 8f61cd7a19 (READY posted; wshim_rx 300 -> 72 relays depth 5 max hop 273.9; 250 -> 89 / 7 / 224.3).
-1. HEAD-95 takes routed/it4 as rp17 clock form; sets reset.relay_um in rp18 -> re-run gate on rp18 with same recipe.
-2. SP3n2 GRT hold on W/E bin register bars, if it fails like SP2: mine.
-3. Merge lane questions on @8f61cd7a19. KV regeq after DIE-KV-99 vN2e.
+DONE (posted): column READY 39e04ecad5; RESET-SLEW RESULT (L_safe 130 um, per-die a/b sweep, ASK: 0-cycle repeater pitch vs relay pitch).
+1. COORD ruling on RESET-SLEW form (relay pitch opt-in already on branch vs 0-cycle reset-hop repeaters at 130 um).
+2. (3) rp18 die clock + reset gate re-run when HEAD-95 freezes rp18: same recipe as rp17 (epyc9 reach-fix-2/rp17/rp17run.sh + rp17run3.sh,
+   regions reg/proof_m by part from fix2), plus RT.check / wf_plan on rp18.
+3. SP3n2 GRT hold if it fails like SP2: mine. Merge-lane questions on @39e04ecad5.
 ## 7 Open
 - Open: realize --sites channel moves cells a median 1.37 mm on HEAD; proposed wire residual instead (posted). OCV 386 ps on top-cut landed pairs; mesh/spine at level 2-4 is the next lever.
 dadcdf9535 APPROVED. READY 08:20 for 7ed95e4f02 (dieclock_routed). ASK 07:21 combo-GRT adapter owner (COORD). Q: HEAD/HBM cap 1200 source.
