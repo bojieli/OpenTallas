@@ -14,8 +14,15 @@ stations u_ft_<slot>_o_<j> (rtl/<T>_bound.sv) with their plan bays in ft_station
   * every station FIRM at a plan bay: ft_stations.txt gets explicit sites at equal spacing along the in->out Manhattan
     path (kept as planned when the plan already has sites for k' stations with every hop <= max_hop);
   * repeaters: the largest BUFx4 pitch whose computed hop (OpenSTA ASAP7 TT/FF, kit RCX ladder, M5 and M7, skew bound
-    30 ps) shows TT setup and FF hold >= 10% of the period and slew <= 320 ps -> OT_MAXWIRE_UM (the hop delay is fixed by
-    the form, not tuned).
+    30 ps) shows TT setup >= 10% of the period and slew <= 320 ps -> OT_MAXWIRE_UM, and only ever LOWERS the kit value.
+    R-FLOW-3 (RULES-FLOW-1 11-13, coord lanes/RULEBOOK-1113.md): FF hold no longer picks the pitch.  It used to (hold >=
+    +10% too), which chose 50 um where 100 um met setup and slew, i.e. repeater delay as hold padding, and the kit-wide
+    variable then cut EVERY net at 50 um: S81 slice_station__t41 353k -> 560k cells (+78k buffers); slice_station__t21
+    built at 100 um instead of 50: 215,607 -> 197,013 cells, area -15 %, 0 slew pins both, routed FF hold -9.72 ps on 69
+    endpoints against -6.02 on 51, GRT hold repair 2,207 against 2,243 cells.  Putting the 50-um pitch on the hop nets
+    only did not help (t21: 24,746 of its nets are hop nets, 33,863 repeaters against 27,285 kit-wide).  The hop hold
+    margin is the hold build's job (R-CLOCK); the table still reports it (verdict HOLD-MARGIN, advisory).
+    OT_RELAY_BAY_HOLD_PITCH=1 restores the old choice.
 Pre-build table relay_bay_table.tsv (per hop: length, pitch, delay, slew, setup, hold, skew); any hop below +10% ->
 'ADVISORY relay_bay', form not applied, exit 0 (OWNER 11-03 06:40: pre-build checks report, never block).
 FAIL_PREBUILD (exit 2) only for tool failures (bound RTL / station / config.mk not found).  Idempotent: a kit that already carries
@@ -37,7 +44,10 @@ def load_rows(path):
 
 def hop_row(probe, h, period, skew, margin):
     """computed hop of length h: TT setup from the nearest probed length >= h, FF hold from the nearest probed length
-    <= h (hold grows with length), worst of M5/M7; the largest pitch that meets the margin, else the best row + fail."""
+    <= h (hold grows with length), worst of M5/M7; the largest pitch that meets the setup margin and the slew limit
+    (hold_short marks a hop whose FF hold is under the margin: reported, it does not pick the pitch; R-FLOW-3), else the
+    best row + fail.  OT_RELAY_BAY_HOLD_PITCH=1: hold picks the pitch too (the old form)."""
+    hold_pitch = os.environ.get("OT_RELAY_BAY_HOLD_PITCH", "") == "1"
     Ls = sorted({k[0] for k in probe})
     lo = max([x for x in Ls if x <= h + 1e-6], default=None)
     hi = min([x for x in Ls if x >= h - 1e-6], default=None)
@@ -55,7 +65,8 @@ def hop_row(probe, h, period, skew, margin):
             continue
         w = dict(pitch=p, delay=round(max(r[0] for r in rs), 1), slew=round(max(r[1] for r in rs), 1),
                  setup=round(min(r[2] for r in rs), 1), hold=round(min(r[3] for r in rs), 1))
-        if w["setup"] >= margin and w["hold"] >= margin and w["slew"] <= 320:
+        if w["setup"] >= margin and w["slew"] <= 320 and (w["hold"] >= margin or not hold_pitch):
+            w["hold_short"] = w["hold"] < margin
             return w
         if best is None or w["hold"] > best["hold"]:
             best = w
@@ -166,7 +177,8 @@ def main(argv=None):
                     pitch = w["pitch"] if pitch is None else min(pitch, w["pitch"])
             table.append([s, names[j], names[j + 1], f"{h:.1f}", str(w.get("pitch", "")), str(w.get("delay", "")),
                           str(w.get("slew", "")), str(w.get("setup", "")), str(w.get("hold", "")), str(a.skew),
-                          "PASS" if ok else "FAIL " + w.get("why", ""),
+                          ("HOLD-MARGIN (advisory: hold build, R-CLOCK)" if w.get("hold_short") else "PASS") if ok
+                          else "FAIL " + w.get("why", ""),
                           *((str(round(w["hold"] - win, 1)), str(round(w["setup"] - max(0.0, win - w["hold"]), 1)))
                             if "hold" in w else ("", ""))])
         table.append([s, f"{s} s{k2-1}", f"port {s}_o", f"{dist(ch[-1], B):.1f}", "", "", "", "", "", "",
@@ -198,7 +210,7 @@ def main(argv=None):
         fh.write(f"# relay-bay pre-build table {T}: period {a.period} ps, required >= +{margin:.1f} ps (10%) TT setup and "
                  f"FF hold after a {a.skew}-ps skew bound, hops <= {a.max_hop} um\n")
         fh.write("\t".join(hdr) + "\n" + "".join("\t".join(r) + "\n" for r in table))
-    nh = sum(1 for r in table if r[10] == "PASS" or r[10].startswith("FAIL"))
+    nh = sum(1 for r in table if r[10] == "PASS" or r[10].startswith(("FAIL", "HOLD-MARGIN")))
     st = {s: (d["stations_plan"], d["stations_new"]) for s, d in decl.items()}
     if bad:
         # OWNER 11-03 06:40: pre-build checks are ADVISORY (report, never block).  COORD 07:0x: the relay-bay form is the
@@ -227,8 +239,9 @@ def main(argv=None):
         cm = f"{K}/config.mk"; t = open(cm).read()
         # KW-FIX-4 11-03 (DIE-QC-66 class B): accept 'override export' and spacing variants; a kit whose config.mk has
         # no OT_MAXWIRE_UM line gets one appended (the flow default applies otherwise); only >1 lines stay a FAIL
-        t2, nn = re.subn(r"^((?:override[ \t]+)?export[ \t]+OT_MAXWIRE_UM[ \t]*[:?]?=)[ \t]*\d+[ \t]*$",
-                         lambda m: f"{m.group(1)} {pitch}", t, flags=re.M)
+        # R-FLOW-3: the form only ever lowers the kit-wide limit (a kit at 100 um with a 100-um hop pitch is unchanged)
+        t2, nn = re.subn(r"^((?:override[ \t]+)?export[ \t]+OT_MAXWIRE_UM[ \t]*[:?]?=)[ \t]*(\d+)[ \t]*$",
+                         lambda m: f"{m.group(1)} {min(int(m.group(2)), int(pitch))}", t, flags=re.M)
         if nn == 0:
             t2 = t + ("" if not t or t.endswith("\n") else "\n") + f"export OT_MAXWIRE_UM = {pitch}\n"
         elif nn > 1:

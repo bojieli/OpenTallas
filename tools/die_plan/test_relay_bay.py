@@ -54,9 +54,11 @@ class RelayBay(unittest.TestCase):
             self.assertEqual(len(ft["fa"]), 4 + 2 * 4)
             self.assertEqual(ft["fb"][-1], "1200.0000")                    # plain: last station = out-face register
             tab = open(K + "/relay_bay_table.tsv").read()
-            hops = [l.split("\t") for l in tab.splitlines()[2:] if l.split("\t")[10] == "PASS"]
+            # R-FLOW-3: setup and slew pick the pitch; a hop whose FF hold is under +10% is reported, not re-pitched
+            hops = [l.split("\t") for l in tab.splitlines()[2:] if l.split("\t")[10].split(" ")[0] in ("PASS", "HOLD-MARGIN")]
             self.assertEqual(len(hops), 4 + 4)
-            self.assertTrue(all(float(h[3]) <= 300.0 and float(h[7]) >= 83.3 and float(h[8]) >= 83.3 for h in hops))
+            self.assertTrue(all(float(h[3]) <= 300.0 and float(h[7]) >= 83.3 and float(h[6]) <= 320.0 for h in hops))
+            self.assertTrue(all((float(h[8]) >= 83.3) == (h[10] == "PASS") for h in hops))
             self.assertRegex(open(K + "/config.mk").read(), r"OT_MAXWIRE_UM = (50|62|75|100)\n")
             self.assertTrue(os.path.isfile(K + "/grt_maxwire.tcl"))  # grt_pre.tcl sources it when the env is set
             # idempotent: a second run re-checks only
@@ -80,6 +82,29 @@ class RelayBay(unittest.TestCase):
             K = mkkit(d)
             open(K + "/config.mk", "w").write("export OT_MAXWIRE_UM = 100\nexport OT_MAXWIRE_UM = 90\n")
             self.assertEqual(RB.main([K]), 2)
+
+    def test_hold_does_not_pick_the_pitch(self):
+        # R-FLOW-3: the pitch is the largest one that meets setup and slew; the old hold-driven choice is never larger,
+        # and the kit-wide limit is only ever lowered
+        rows = RB.load_rows(os.path.join(os.path.dirname(os.path.abspath(RB.__file__)), "relay_bay_hop_rows.json"))
+        for h in (150.0, 240.0, 300.0):
+            new = RB.hop_row(rows, h, 833.0, 30.0, 83.3)
+            os.environ["OT_RELAY_BAY_HOLD_PITCH"] = "1"
+            try:
+                old = RB.hop_row(rows, h, 833.0, 30.0, 83.3)
+            finally:
+                del os.environ["OT_RELAY_BAY_HOLD_PITCH"]
+            self.assertFalse(new.get("fail"))
+            self.assertGreaterEqual(new["setup"], 83.3)
+            self.assertLessEqual(new["slew"], 320)
+            if not old.get("fail"):
+                self.assertGreaterEqual(new["pitch"], old["pitch"])
+        with tempfile.TemporaryDirectory() as d:
+            K = mkkit(d)
+            open(K + "/config.mk", "w").write("export OT_MAXWIRE_UM = 62\n")
+            self.assertEqual(RB.main([K]), 0)
+            v = int(re.search(r"OT_MAXWIRE_UM = (\d+)", open(K + "/config.mk").read()).group(1))
+            self.assertLessEqual(v, 62)
 
     def test_bit_sites_dropped_for_regenerated_lanes(self):
         with tempfile.TemporaryDirectory() as d:
