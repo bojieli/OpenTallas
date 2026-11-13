@@ -281,3 +281,36 @@ def test_reach_homes_is_a_plan_schema_key_and_g0_reads_it():
     assert schema.validate(bad)
     bad["partition_types"]["mid"]["reach_homes"] = [dict(name="w", rect_um=[0, 0, 1, 1], buses=["*"], home=1)]
     assert schema.validate(bad)
+
+
+def test_rule1_relay_piece_of_a_split_is_scored_and_fixed():
+    """DIE-KV-100 11-13 (R-CAP split, KV pv _x1/_x2, hub _s/_n): a non-keep piece takes START on cland_rstart_in
+    (rx flop u_cland_rstart_rx); rule 1 scores and fixes it exactly like a cland_tstart_in origin."""
+    p = _start_plan()
+    t = p["partition_types"]["mid"]
+    for q in t["clock"]["landing_contract"]["pins"]:
+        if q["name"] == "cland_tstart_in":
+            q["name"] = "cland_rstart_in"
+    row, fs = RR.start_findings(t, "mid")
+    assert row["origin_kind"] == "relay_rx" and {"start_reach", "start_writer_reach"} <= {f["kind"] for f in fs}
+    # without the start copy the writer side cannot be planned: the type is reported, nothing is half-written
+    import pytest
+    before = json.dumps(t, sort_keys=True)
+    with pytest.raises(ValueError, match="landing_relay_start_copy"):
+        RR.fix_start(_P(p), t, "mid")
+    assert json.dumps(t, sort_keys=True) == before
+    t["landing_relay_start_copy"] = True
+    rep = RR.fix_start(_P(p), t, "mid")
+    assert rep["changed"] == ["landing_reader_start", "landing_writer_start"]
+    assert RR.start_findings(t, "mid")[1] == [] and "origin_rect_um" in t["clock"]["landing_reader_start"]
+    # a relay piece with only far rings (no far FSTART pin) is fixed without the copy key, origin left unpinned
+    p2 = _start_plan()
+    t2 = p2["partition_types"]["mid"]
+    pins = t2["clock"]["landing_contract"]["pins"]
+    pins[:] = [q for q in pins if not q["name"].startswith("cland_fstart_out_")]
+    for q in pins:
+        if q["name"] == "cland_tstart_in":
+            q["name"] = "cland_rstart_in"
+    rep2 = RR.fix_start(_P(p2), t2, "mid")
+    assert rep2["changed"] == ["landing_reader_start"] and "origin_rect_um" not in t2["clock"]["landing_reader_start"]
+    assert not [f for f in RR.start_findings(t2, "mid")[1] if f["kind"] == "start_reach"]
