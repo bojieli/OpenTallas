@@ -134,3 +134,13 @@ Floorplan starting numbers (hi tile 1442.88 x 2747.52, from v5/plan_provider_rec
 - Band kit v3 (new RTL, transposer centred, 43.2 channel, M7): RUNNING in BAND-KIT-1 (GRT cap about 11:13). Renders will be in localhost
   scratchpad band_kit/v3/. Known item: 15.12 um streets between the 8 cores (lattice width 1442.88 leaves no more).
 - NOT started: pvso_entry t1/t2, reset contract, bind defines, plan event, grown S_rs floorplan.
+
+## 2026-11-13 11:03 tile pair READY; sub-lanes running
+- COORD 10:5x: band v2 = train 63; service cut needs a programme-driven bench (P.V + SM controls caught) before READY; do the tile change in rtl/hdc.
+- READY claude/hard-s81-svc-1-tilepair-1113@ba62fe88e1 (on band v2 aef8068c0b): ot_s81c_attn_tile_hc_h8_rt2 PAIR 1 (-DOT_S81C_TILE_PAIR):
+  4 load-sender copies (one per core pair, same edge, no cycle moves) + reset registered once per pair and in front of u_expand (reset +1 edge).
+  Bench tile_pair_bench.sh: seeds 1-3, 16,000 cycles, 3 warm resets, 1,560 output beats each: 0 mismatches; control 10.8k mismatching cycles.
+  No signed tile view exists (the tile wrapper is soft logic of the band; the signed object is the head core, untouched): the band kit is its physical proof.
+- Sub-lanes (Opus): CUT-BENCH-1 = trace-replay bench for dsdv_svc_att_cut with CUTMUT 2 (P.V) and a new CUTMUT 3 (SM row lane), epyc2
+  /srv/opentallas-scratch2/claude/cut-bench-1; BAND-KIT-1 = band kit v3 (band v2 RTL, no tile pair yet), epyc2 band-kit-1.
+- Next: band kit v4 with the tile pair define once v3 reports; then pvso_entry, reset contract, bind defines, plan event, grown S_rs region.
