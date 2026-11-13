@@ -885,7 +885,12 @@ wire [PW-1:0] pin_d = {cfg_v_p, cfg_mode_p, cfg_wsrc_p, cfg_nwords_p, cfg_sbase_
                        rs_n_hi_p, rs_s_c_p, rs_n_c_p, bt_q_p};
 wire [PW-1:0] pin_q;
 generate if (PIN_IN) begin : g_pin
+`ifdef OT_QC_PINKEEP
+    // Keep each region's existing pin register independent; 0 added cycles.
+    qfd_dv_station_copy #(.W(PW),.ID(900)) r (.ck(ck),.d(pin_d),.q(pin_q));
+`else
     reg [PW-1:0] r; always @(posedge ck) r <= pin_d; assign pin_q = r;
+`endif
 end else begin : g_nopin
     assign pin_q = pin_d;
 end endgenerate
