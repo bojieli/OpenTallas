@@ -37,3 +37,23 @@ Required next: clean strict bind seed from parent QC; generate coherent new EXTR
 rerun strict bind/asbuilt/model event pricing, manifest kit generation, source-faithful
 RTL lockstep and review refreshed plan render, then a private PLACE-only pilot.
 Do not enable the placer on old fixed3 or route an unpriced/new latency event.
+
+Bank-area refinement after independent geometry review:
+The original route skeleton used collinear bit targets. The placer now allocates
+three whole fixed-FF bank rectangles and one combined count/data-mux rectangle.
+Actual master demand: DFF1.08–1.188um x0.27um. The measured candidate's three
+514-FF banks each reserve36.18x11.8125um /20rows /35.07% occupancy. The combined
+514count+1542data-mux/buffer bank reserves36.18x46.44um /77rows /16.06% occupancy.
+All rectangles are macro/9um-halo-clear, inside core, and mutually disjoint.
+Actual per-bit minimum/count1 paths max387.2675um; all rectangle-corner paths
+max393.0286um (<405). This bound includes uncorrelated endpoint movement within
+each bank. The source fails atomically if any rectangle or exact/corner hop fails.
+It still needs real synthesized common-floor4 masters and PLACE legalization proof.
+Static count decode remains in its existing tree; it is not moved into this bank.
+Evidence: cbf_bank_area_review.png (viewed), bank_sites.tsv, bank_rects.tsv.
+Intel2 ~/hqf-codexlog/cbf_bank_layout_corners.log, E4unit2281269-1794612927 exit0.
+This probe uses exact real ODB masters/data cones plus a virtual proposed fourth FF;
+no database placement or ODB write occurred. Eight focused tests PASS including
+full-bank row demand, macro-clear fit and unfittable-bank refusal (E7unit1948094).
+The earlier327.43um skeleton estimate excludes bank area and is superseded by the
+387.27um exact/393.03um rectangle-envelope bounds above.

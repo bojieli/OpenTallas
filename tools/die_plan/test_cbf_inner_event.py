@@ -119,3 +119,28 @@ def test_failing_strict_seed_cannot_emit_an_event(tmp_path):
     (tmp_path/'bind_report.json').write_text(json.dumps({'n_errors':1,'errors':['R8_STALE actualseed']}))
     with pytest.raises(ValueError,match='clean strict seed'):
         E.generate(tmp_path/'plan.json',tmp_path,'not-read-r8.json','not-read-extra.json')
+
+
+def test_full_bank_rectangle_has_row_area_and_stays_in_channel(tmp_path):
+    funcs=tcl_procs(['nc_cnt_bank_grid'])
+    script=funcs+r'''
+proc master {method} {if {$method eq "getWidth"} {return 1188};if {$method eq "getHeight"} {return 270};error unexpected}
+proc ff {method} {if {$method eq "getMaster"} {return master};error unexpected}
+proc core {method} {switch $method {xMin - yMin {return 0} xMax {return 1300000} yMax {return 1304652}}}
+set nc_core core;set nc_halo 9000;set nc_mac {{86400 77760 544860 1226892} {650000 77760 1149120 1226892}}
+set members {};set targets {}
+for {set k 0} {$k<514} {incr k} {interp alias {} ff$k {} ff;lappend members ff$k;dict set targets ff$k {550860 1200000}}
+set z [nc_cnt_bank_grid $members $targets 1000]
+if {[dict get $z rows]!=20 || [dict get $z occupancy]>0.36} {error "bank area allowance failed"}
+lassign [dict get $z bbox] a b c d
+if {$a<553860 || $c>641000} {error "bank rectangle crosses centre channel halo"}
+set seen {};foreach i $members {set xy [dict get $z targets $i];if {[dict exists $seen $xy]} {error "collinear point collision"};dict set seen $xy 1}
+# A too-large rectangle must fail before any caller applies placement.
+proc master {method} {if {$method eq "getWidth"} {return 100000};if {$method eq "getHeight"} {return 100000};error unexpected}
+if {![catch {nc_cnt_bank_grid $members $targets 1000}]} {error "unfittable bank accepted"}
+puts TCL_BANK_AREA_PASS
+'''
+    f=tmp_path/'bank.tcl';f.write_text(script)
+    p=subprocess.run(['tclsh',str(f)],capture_output=True,text=True)
+    assert p.returncode==0,p.stdout+p.stderr
+    assert 'TCL_BANK_AREA_PASS' in p.stdout

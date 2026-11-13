@@ -237,6 +237,37 @@ proc nc_cnt_layout {route fixed span dbu} {
 # Validate every bit before applying ANY of this pass's locations. An under-staged site cannot partially route.
 proc nc_cnt_place {inst x y} { global nc_cnt_targets;dict set nc_cnt_targets $inst [list $x $y] }
 set nc_cnt_targets {}
+# Full banks need row area, not 514 near-coincident points on a route skeleton.
+# Per-stage rectangles reserve conservative row demand; the final count/mux bank is shared
+# so its data muxes cannot overlap the optional FF bank. Legalization remains mandatory.
+proc nc_cnt_bank_add {group inst} { global nc_cnt_bank_groups;dict set nc_cnt_bank_groups $group $inst 1 }
+proc nc_cnt_bank_grid {members targets dbu} {
+  global nc_mac nc_core nc_halo
+  set n [llength $members];set sx 0;set sy 0;set mw 0;set mh 0;set area 0
+  foreach i $members {
+    lassign [dict get $targets $i] x y;set sx [expr {$sx+$x}];set sy [expr {$sy+$y}]
+    set m [$i getMaster];set w [$m getWidth];set h [$m getHeight]
+    set mw [expr {max($mw,$w)}];set mh [expr {max($mh,$h)}];set area [expr {$area+$w*$h}]
+  }
+  set cols [expr {min(27,$n)}];set rows [expr {int(ceil(double($n)/$cols))}]
+  set px [expr {$mw*1.25}];set py [expr {$mh*2.25}]
+  set w [expr {($cols-1)*$px+$mw}];set h [expr {($rows-1)*$py+$mh}]
+  set x [expr {$sx/double($n)-$w/2}];set y [expr {$sy/double($n)-$h/2}]
+  set xs [list $x];set ys [list $y]
+  foreach m $nc_mac {lassign $m a b c d;lappend xs [expr {$a-$nc_halo-$w}] [expr {$c+$nc_halo}];lappend ys [expr {$b-$nc_halo-$h}] [expr {$d+$nc_halo}]}
+  set best {};set dist 1e100
+  foreach xx $xs {foreach yy $ys {
+    if {$xx<[$nc_core xMin] || $yy<[$nc_core yMin] || $xx+$w>[$nc_core xMax] || $yy+$h>[$nc_core yMax]} continue
+    set ok 1;foreach m $nc_mac {lassign $m a b c d;if {$xx<$c+$nc_halo && $xx+$w>$a-$nc_halo && $yy<$d+$nc_halo && $yy+$h>$b-$nc_halo} {set ok 0;break}}
+    set dd [expr {abs($xx-$x)+abs($yy-$y)}]
+    if {$ok && $dd<$dist} {set best [list $xx $yy];set dist $dd}
+  }}
+  if {$best eq {} || $dist/double($dbu)>60.0} {error "bank rectangle cannot fit near corridor"}
+  lassign $best x y;set out {};set k 0
+  foreach i $members {dict set out $i [list [expr {$x+($k%$cols)*$px}] [expr {$y+int($k/$cols)*$py}]];incr k}
+  return [dict create targets $out bbox [list $x $y [expr {$x+$w}] [expr {$y+$h}]] rows $rows occupancy [expr {$area/double($w*$h)}]]
+}
+set nc_cnt_bank_groups {};set nc_cnt_bit_paths {}
 proc nc_cnt_hop_buffers {sink fa fb route} {
   set dp [nc_dpin $sink]; if {$dp eq ""} return
   lassign [nc_back $dp] _ bs; set n [llength $bs]
@@ -326,13 +357,13 @@ foreach bank [dict keys $nc_cnt_fixed] {
     foreach j [dict keys $counts] { if {![nc_mov [dict get $counts $j]]} { set good 0 } }
     if {!$good} { incr nc_cnt_refused; continue }
     for {set j 1} {$j < $n} {incr j} {
-      set i [lindex $seq $j]; lassign [lindex [dict get $layout fixed] [expr {$j-1}]] x y; nc_cnt_place $i $x $y
+      set i [lindex $seq $j]; lassign [lindex [dict get $layout fixed] [expr {$j-1}]] x y; nc_cnt_place $i $x $y;nc_cnt_bank_add ${bank}:fixed$j $i
       nc_cnt_hop_buffers $i [expr {double($j-1)/$n}] [expr {double($j)/$n}] $route
       incr nc_cnt_stages
     }
     for {set j 0} {$j < $span} {incr j} {
       set f [expr {(double($n-1)+double($j+1)/($span+1))/$n}]
-      set i [dict get $counts $j]; lassign [lindex [dict get $layout count] $j] x y; nc_cnt_place $i $x $y
+      set i [dict get $counts $j]; lassign [lindex [dict get $layout count] $j] x y; nc_cnt_place $i $x $y;nc_cnt_bank_add ${bank}:count_mux $i
       set prevf [expr {(double($n-1)+double($j)/($span+1))/$n}]
       nc_cnt_hop_buffers $i $prevf $f $route; incr nc_cnt_stages
     }
@@ -341,8 +372,10 @@ foreach bank [dict keys $nc_cnt_fixed] {
     set ng [dict size $gates]; set gi 0
     foreach nm [lsort [dict keys $gates]] {
       set i [dict get $gates $nm]; incr gi
-      if {[nc_mov $i]} { set gf [expr {(double($n-1)+0.2+0.6*double($gi)/($ng+1))/$n}]; lassign [nc_at $route $gf] x y; nc_cnt_place $i $x $y; incr nc_cnt_mux }
+      if {[nc_mov $i]} { set gf [expr {(double($n-1)+0.2+0.6*double($gi)/($ng+1))/$n}]; lassign [nc_at $route $gf] x y; nc_cnt_place $i $x $y;nc_cnt_bank_add ${bank}:count_mux $i; incr nc_cnt_mux }
     }
+    set countseq {};foreach j [lsort -integer [dict keys $counts]] {lappend countseq [dict get $counts $j]}
+    lappend nc_cnt_bit_paths [list $seq $countseq $pc]
     set nc_cnt_worst [expr {max($nc_cnt_worst,$hop)}]; incr nc_cnt_chains
   }
 }
@@ -350,6 +383,53 @@ if {$nc_cnt_refused} {
   puts "OT_NK_R8_COUNT_BLOCKED eligible_bits $nc_cnt_seen planned_bits $nc_cnt_chains placed_bits 0 refused_bits $nc_cnt_refused"
   error "CBF count-bank corridor requires a coherent PIN-cycle/site event; no locations from this pass applied"
 }
+set nc_cnt_rects {};set nc_cnt_bank_report {};set nc_cnt_inst_bank {}
+foreach group [dict keys $nc_cnt_bank_groups] {
+  set members [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} [dict keys [dict get $nc_cnt_bank_groups $group]]]
+  set z [nc_cnt_bank_grid $members $nc_cnt_targets $nc_dbu]
+  lassign [dict get $z bbox] a b c d
+  foreach prev [dict keys $nc_cnt_rects] {
+    lassign [dict get $nc_cnt_rects $prev] aa bb cc dd
+    if {$a<$cc && $c>$aa && $b<$dd && $d>$bb} {error "overlapping corridor bank rectangles: $group $prev"}
+  }
+  dict set nc_cnt_rects $group [dict get $z bbox]
+  foreach i [dict keys [dict get $z targets]] {dict set nc_cnt_targets $i [dict get $z targets $i];dict set nc_cnt_inst_bank $i $group}
+  lappend nc_cnt_bank_report [list $group [llength $members] [dict get $z rows] [dict get $z occupancy] [dict get $z bbox]]
+}
+proc nc_cnt_target_ctr {inst} {global nc_cnt_targets;if {[dict exists $nc_cnt_targets $inst]} {return [dict get $nc_cnt_targets $inst]};return [nc_ctr $inst]}
+proc nc_cnt_envelope {inst} {
+  global nc_cnt_inst_bank nc_cnt_rects
+  if {![dict exists $nc_cnt_inst_bank $inst]} {return [list [nc_cnt_target_ctr $inst]]}
+  lassign [dict get $nc_cnt_rects [dict get $nc_cnt_inst_bank $inst]] a b c d
+  return [list [list $a $b] [list $a $d] [list $c $b] [list $c $d]]
+}
+set nc_cnt_spread_worst 0;set nc_cnt_envelope_worst 0;set nc_cnt_pair_seen {}
+foreach bitpath $nc_cnt_bit_paths {
+  lassign $bitpath fs cs pc
+  # Both the minimum-count bypass and every selected-count serial hop must fit.
+  set pairs {};set prev [lindex $fs 0]
+  foreach i [concat [lrange $fs 1 end] [list $pc]] {lappend pairs [list $prev $i];set prev $i}
+  set prev [lindex $fs end];foreach i [concat $cs [list $pc]] {lappend pairs [list $prev $i];set prev $i}
+  foreach pair $pairs {
+    lassign $pair src dst;lassign [nc_cnt_target_ctr $src] hx hy;lassign [nc_cnt_target_ctr $dst] tx ty
+    set route [nc_route $hx $hy $tx $ty];set hop [expr {[nc_len $route]/double($nc_dbu)}]
+    if {![nc_cnt_route_ok $route] || $hop>405.0} {error "bank spread exceeds macro-clear hop bound: $hop um"}
+    set nc_cnt_spread_worst [expr {max($nc_cnt_spread_worst,$hop)}]
+    set sk $src;set dk $dst
+    if {[dict exists $nc_cnt_inst_bank $src]} {set sk [dict get $nc_cnt_inst_bank $src]}
+    if {[dict exists $nc_cnt_inst_bank $dst]} {set dk [dict get $nc_cnt_inst_bank $dst]}
+    if {![dict exists $nc_cnt_pair_seen [list $sk $dk]]} {
+      dict set nc_cnt_pair_seen [list $sk $dk] 1
+      foreach sp [nc_cnt_envelope $src] {foreach dp [nc_cnt_envelope $dst] {
+        lassign $sp x y;lassign $dp xx yy;set er [nc_route $x $y $xx $yy];set eh [expr {[nc_len $er]/double($nc_dbu)}]
+        if {![nc_cnt_route_ok $er] || $eh>405.0} {error "bank corner envelope exceeds macro-clear hop bound: $eh um"}
+        set nc_cnt_envelope_worst [expr {max($nc_cnt_envelope_worst,$eh)}]
+      }}
+    }
+  }
+}
+foreach row $nc_cnt_bank_report {puts "OT_NK_R8_BANK group_cells_rows_occupancy_bbox_dbu $row"}
+puts "OT_NK_R8_BANK_HOPS max_um $nc_cnt_spread_worst rectangle_corner_envelope_um $nc_cnt_envelope_worst"
 foreach inst [dict keys $nc_cnt_targets] { lassign [dict get $nc_cnt_targets $inst] x y;nc_put $inst $x $y }
 puts "OT_NK_R8_COUNT_CHAIN eligible_bits $nc_cnt_seen placed_bits $nc_cnt_chains stages_moved $nc_cnt_stages mux_cells_moved $nc_cnt_mux refused_bits $nc_cnt_refused min_count_max_hop_um $nc_cnt_worst"
 }
