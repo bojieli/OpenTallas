@@ -115,3 +115,6 @@
   and col_h10_r1.
 - READY scope (COORD): the 11 items now; the 15 others open with owners (me: r0 hub form; DIE-S81-89: ft0 and height).
 - Lesson: a wait loop `while pgrep -f X` inside `bash -c "...X..."` matches itself; it cost 3.7 h. Wait on a DONE file.
+
+## VOL2 sub-agent
+- 13:36 T0 rep gate PASS (epyc4 frame-forms-1/vol2/rep11, tools @9b19ffb56a): 11/11 applied True, 0 SEED-MOVED, 0 need_more_regs, tviol 0 (single-type cl87f3ff59/cl8b686b3e/clac068e56 links 901/1019/280), street 255 hard all in accepted sparse classes (rom_x/bn_elemN/bn_rom/node_x 17.28), 0 findings; node-over-bank 25.92 gone. Starting all-type seeds/shards (vol2/all2).
