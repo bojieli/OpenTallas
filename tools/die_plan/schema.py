@@ -405,6 +405,22 @@ SCHEMA = {
                     "rck_band": {"type": "object", "additionalProperties": False, "required": ["inst"],
                                  "properties": {"inst": {"type": "string", "minLength": 1},
                                                 "rows": {"type": "integer", "minimum": 1, "maximum": 8}}},
+                    # HARD-S81-SERDES-1 11-13 (serdes_lanes.tcl, RTL form OT_S81_SERDES_LANE): hand floorplan of a shore
+                    # serdes lot.  chains = ot_pl_pad row chains placed FIRM on per-bit lanes (kind txl: b end = the PMA
+                    # TX pin x; rxi: a end = the RCK band flop; pt: both ends are points); blocks = GPL-only placement
+                    # blockages (um) that keep the logic in the KP4 island and the pin strip
+                    "serdes_lanes": {"type": "object", "additionalProperties": False, "required": ["chains", "blocks"],
+                                     "properties": {
+                                         "blocks": {"type": "array", "items": {"type": "array", "minItems": 4, "maxItems": 4,
+                                                                                "items": {"type": "number"}}},
+                                         "chains": {"type": "array", "minItems": 1, "items": {
+                                             "type": "object", "additionalProperties": False,
+                                             "required": ["name", "rows", "kind", "a_um", "b_um"],
+                                             "properties": {"name": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+                                                            "rows": {"type": "integer", "minimum": 2, "maximum": 16},
+                                                            "kind": {"enum": ["txl", "rxi", "pt"]},
+                                                            "a_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
+                                                            "b_um": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}}}}}},
                     # S81-RCK-4 11-07 (gen_phys.reset_relay_full): kit copy of ot_dp_rrelay_nl = one posedge flop
                     "reset_relay_full": {"type": "boolean"},
                     # S81-RCK-4 11-07 (chain_even.tcl): equal hops on register chains after GPL, no netlist change

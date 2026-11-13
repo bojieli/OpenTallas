@@ -45,6 +45,23 @@
 //   lock_sync -> rs_t[0] recovery -83) but ONE kept pma_rck flop rq_t (async assert by that AND, release on the next
 //   pma_rck edge) beside rs_t: the clk domain releases one pma_rck edge later; rs_r and the rck domain are unchanged.
 //   0 data cycles (reset release only).
+// LANE (HARD-S81-SERDES-1 2026-11-13; all four default 0 = the column unchanged, flop for flop): registered LANE ROWS for
+//   the serdes lots whose PMA pair lies along the shore (2885.76 x 1226.88: the PMA digital face is 2.2 mm wide and
+//   ~0.7 mm from the KP4 island, the coll pins ~1.3 mm from it).  serdes__t2 attempt_27: every worst path was a bare wire
+//   (u_txl r[0] -> q 1674 ps of buffers, PMA face -> u_syn 4018 ps, u_rm r_d -> u_bout, u_bin -> u_enc).  Each lane gets
+//   one ot_pl_pad row per 405 um hop (the kit hook serdes_lanes.tcl places every row FIRM on its per-bit lane):
+//   LANE_PIN  clk rows coll pin register -> encoder (u_lpin; data, tx_v AND the encoder reset move together, as the
+//             TX PIN form: needs LOCKSAFE=1, HOLD_EDGES >= 64).  pma_tx +LANE_PIN clk.
+//   LANE_TXA  extra u_txl rows encoder -> PMA TX (on top of TXL / TXL4).  pma_tx +LANE_TXA clk.
+//   LANE_RXI  pma_rck rows PMA RX q -> decoder (u_lrxi).  The rck reset synchroniser rs_r grows by LANE_RXI stages
+//             (same async assert), so decoder, unc_r and the u_rm write side all release LANE_RXI edges later and see
+//             the SAME words: the whole rck domain is the old one shifted by LANE_RXI pma_rck edges.
+//   LANE_RXO  clk rows u_rm r_d / st -> rx / st ports (u_lrxo, no reset: rx reaches IDLE LANE_RXO edges after a reset).
+//             rx, st +LANE_RXO clk.
+//   `define OT_S81_SERDES_LANE (plan type verilog_defines) = the shore-lot set PIN 3 / TXA 4 / RXI 5 / RXO 3;
+//   OT_S81_SERDES_LANE_<row>=<n> overrides one value (benches).
+//   MUT 9 / 10 (bench only): 9 = rck reset not moved with the LANE_RXI rows, 10 = encoder reset not moved with LANE_PIN.
+//   Lock-step proof tb_s81_col_lane (tools/s81_link/run_serdes_lane_bench.sh).
 module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0,
                             parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64,
 `ifdef OT_S81_SERDES_RST_TREE2
@@ -58,6 +75,35 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
                             parameter integer RST_RT = 1
 `else
                             parameter integer RST_RT = 0
+`endif
+                            ,
+`ifdef OT_S81_SERDES_LANE_PIN
+                            parameter integer LANE_PIN = `OT_S81_SERDES_LANE_PIN,
+`elsif OT_S81_SERDES_LANE
+                            parameter integer LANE_PIN = 3,
+`else
+                            parameter integer LANE_PIN = 0,
+`endif
+`ifdef OT_S81_SERDES_LANE_TXA
+                            parameter integer LANE_TXA = `OT_S81_SERDES_LANE_TXA,
+`elsif OT_S81_SERDES_LANE
+                            parameter integer LANE_TXA = 4,
+`else
+                            parameter integer LANE_TXA = 0,
+`endif
+`ifdef OT_S81_SERDES_LANE_RXI
+                            parameter integer LANE_RXI = `OT_S81_SERDES_LANE_RXI,
+`elsif OT_S81_SERDES_LANE
+                            parameter integer LANE_RXI = 5,
+`else
+                            parameter integer LANE_RXI = 0,
+`endif
+`ifdef OT_S81_SERDES_LANE_RXO
+                            parameter integer LANE_RXO = `OT_S81_SERDES_LANE_RXO
+`elsif OT_S81_SERDES_LANE
+                            parameter integer LANE_RXO = 3
+`else
+                            parameter integer LANE_RXO = 0
 `endif
                             ) (
     input  wire          clk,
@@ -106,10 +152,12 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         assign rst_g = rst; assign rst_g_t = rst;
     end endgenerate
     // ---- resets: one synchroniser per clock domain (rs_t in region tx, rs_r in region syn beside the PMA)
-    reg [1:0] rs_t, rs_r;
+    initial if (LANE_PIN != 0 && (LOCKSAFE != 1 || HOLD_EDGES < 64))
+        $error("LANE_PIN requires LOCKSAFE=1 and HOLD_EDGES>=64");
+    reg [1:0] rs_t; reg [1+LANE_RXI:0] rs_r;
     always @(posedge clk or negedge rst_g_t) if (!rst_g_t) rs_t <= 2'b00; else rs_t <= {rs_t[0], 1'b1};
-    always @(posedge pma_rck or negedge rst_g) if (!rst_g) rs_r <= 2'b00; else rs_r <= {rs_r[0], 1'b1};
-    wire rn_t = rs_t[1], rn_r = rs_r[1];
+    always @(posedge pma_rck or negedge rst_g) if (!rst_g) rs_r <= {(2+LANE_RXI){1'b0}}; else rs_r <= {rs_r[LANE_RXI:0], 1'b1};
+    wire rn_t = rs_t[1], rn_r = rs_r[(MUT == 9) ? 1 : 1 + LANE_RXI];
     // ---- clk reset fan-out (RST_TREE): rn_te (TX encoder rst_n + tx_v), rn_ts (status), rn_tc / rn_td (u_rm read side)
     localparam integer RT_ND = 8;
     wire rn_te, rn_te_rst, rn_ts, rn_tc, rn_trm; wire [RT_ND-1:0] rn_td;
@@ -143,6 +191,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     // ---- transmit: FEC encoder (closed tile) -> TX lane relay rows (clk) -> PMA TX
     wire e_v; wire [543:0] e_d; wire e_flt;
 `ifdef OT_S81_SERDES_COL_PIN
+    initial if (LANE_PIN != 0) $error("LANE_PIN and the TX PIN form (OT_S81_SERDES_COL_PIN) are alternatives");
     // Private RCK successor: three coherent TX input PIN cycles.  Reset is
     // registered by the same three edges, so the FEC frame calendar moves with
     // data and valid.  TXL is independently priced in the private kit profile.
@@ -157,7 +206,11 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
          .p_v(e_v), .p_d(e_d), .fault(e_flt));
 `endif
 `else
-    ot_s81_kp4_enc u_enc (.clk(clk), .rst_n(rn_te_rst), .tx_v(rn_te), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+    // LANE_PIN rows (0 = wires): data, valid and the encoder reset on the same edges
+    wire [511:0] lp_d; wire lp_v, lp_rst;
+    ot_pl_pad #(.W(514), .N(LANE_PIN)) u_lpin (.ck(clk), .d({rn_te_rst, rn_te, tx}), .q({lp_rst, lp_v, lp_d}));
+    ot_s81_kp4_enc u_enc (.clk(clk), .rst_n((MUT == 10) ? rn_te_rst : lp_rst), .tx_v(lp_v), .tx_d(lp_d), .p_v(e_v), .p_d(e_d),
+        .fault(e_flt));
 `endif
     wire [544:0] l_q;
 `ifdef OT_S81_SERDES_TXL4
@@ -168,7 +221,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
 `else
     localparam integer TXL_N = TXL;
 `endif
-    ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL_N - 1 : TXL_N)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
+    ot_pl_pad #(.W(545), .N(((MUT == 8) ? TXL_N - 1 : TXL_N) + LANE_TXA)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
     // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
     //      TX lane drop), each with ONE clock (tx: the forwarded lane clock; rx: the recovered clock)
     wire [543:0] r_d;
@@ -184,7 +237,11 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     ot_s81_pma_txm #(.LAT(PMA_LAT)) u_ptx (.ck(clk), .d_v(l_q[544]), .d(l_q[543:0]), .pma_tx(pma_tx), .pma_tck(pma_tck));
     ot_s81_pma_rxm #(.LAT(PMA_LAT)) u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
 `endif
+    // ---- LANE_RXI rows (0 = wires): PMA RX face -> decoder, one 544-b word an edge; rs_r carries the same edges
+    wire [543:0] r_dl;
+    ot_pl_pad #(.W(544), .N(LANE_RXI)) u_lrxi (.ck(pma_rck), .d(r_d), .q(r_dl));
     // ---- receive: landed KP4 decoder (4 rck regions) -> rate matcher -> clk
+    wire [511:0] rx_m;
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
 `ifdef OT_S81_RCK_REFORM
     // S81-RCK-11 RE-FORM: same ports / cycles, regrouped into the RX-SYN + RX-BACK hard cores (ot_s81_rck_reform.sv)
@@ -192,7 +249,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
 `else
     ot_s81_kp4_dec_native_flat_lp #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0)) u_dec (
 `endif
-        .rst_n(rn_r), .p_v(rn_r), .p_d(r_d),
+        .rst_n(rn_r), .p_v(rn_r), .p_d(r_dl),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .lock(lock),
         .n_corr(n_corr), .n_unc(n_unc), .n_relock(n_rl),
         .ck_syn(pma_rck), .ck_dly(pma_rck), .ck_chn(pma_rck), .ck_out(pma_rck));
@@ -200,13 +257,13 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     wire rm_flt;
 `ifdef OT_S81_RM_STAGED
     ot_s81_rate_match #(.RLEAF((RST_TREE != 0) ? 1 : 0)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk),
-        .rrst_n(rn_trm), .r_d(rx), .fault(rm_flt));
+        .rrst_n(rn_trm), .r_d(rx_m), .fault(rm_flt));
 `elsif OT_S81_SERDES_RST_TREE
     // same instance name; with RST_TREE=0 every leaf input is rn_t (== ot_s81_rate_match, tb_s81_col_rst_tree RM compare)
     ot_s81_rate_match_rt #(.NRD(RT_ND)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk),
-        .rrst_nc(rn_tc), .rrst_nd(rn_td), .r_d(rx), .fault(rm_flt));
+        .rrst_nc(rn_tc), .rrst_nd(rn_td), .r_d(rx_m), .fault(rm_flt));
 `else
-    ot_s81_rate_match u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t), .r_d(rx),
+    ot_s81_rate_match u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t), .r_d(rx_m),
         .fault(rm_flt));
 `endif
     // ---- status (clk)
@@ -216,7 +273,8 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         else begin lk_s <= {lk_s[0], lock}; uf_s <= {uf_s[0], unc_r}; end
     reg [1:0] st_q;
     always @(posedge clk or negedge rn_ts) if (!rn_ts) st_q <= 2'b00; else st_q <= {lk_s[1], st_q[0] | uf_s[1] | rm_flt | e_flt};
-    assign st = st_q;
+    // ---- LANE_RXO rows (0 = wires): u_rm read side / status -> the coll_o pin register
+    ot_pl_pad #(.W(514), .N(LANE_RXO)) u_lrxo (.ck(clk), .d({st_q, rx_m}), .q({st, rx}));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
