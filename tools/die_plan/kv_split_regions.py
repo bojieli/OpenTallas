@@ -191,6 +191,8 @@ def model(plan_path, side, out, velocity):
                  crossings=len(table_rows), ports=table_rows)
     table = CAB.annotate_table(table, b, root_settle_cycles=ca0.get("root_settle_cycles", 64),
                                strap_form=True)
+    if ca0.get("start_reset_wave"):
+        table["count_aligned"]["start_reset_wave"] = True
     dump(out / "pipeline_stage_cycles.json", price_existing_pipeline_stages(table, raw))
     dump(out / "sidecar_model.json", table)
     dump(out / "status.json", dict(verdict="MODEL_PASS", physical_qualified=False,
@@ -264,11 +266,13 @@ def prepare_native_form(raw, side, scored, out):
     dump(out / "clock_geometry_plan.json", geometry)
 
 
-def bind_native_measurement(raw, clock_table, cap_path, out):
+def bind_native_measurement(raw, clock_table, cap_path, out, provisional=False):
     """Bind released measured clock-START output with independent real origins."""
     import count_align_bind as CAB
     cap = json.loads(Path(cap_path).read_text())
     summary = cap["summary"]
+    if (cap.get("prediction_only") or summary.get("prediction_only")) and not provisional:
+        raise ValueError("prediction-only CA document cannot be accepted as measured")
     if summary.get("fail") or summary.get("below_100ps"):
         raise ValueError("measured CA fails crossing/margin gate")
     start = summary.get("start_tree", {})
@@ -289,16 +293,26 @@ def bind_native_measurement(raw, clock_table, cap_path, out):
     table.pop("count_aligned", None)
     for row in table["ports"]:
         row["added_cycles"] = b["ports"][row["port"]]["sched_lat"]
-    table = CAB.annotate_table(table, b, root_settle_cycles=64, strap_form=True)
     groups = json.loads((out / "regions.json").read_text())["part_region"]
+    # CAB annotates in count-frame coordinates; Landings consumes physical
+    # clock-region rows. Preserve both through the tested frame_clock_regions API.
+    for row in table["ports"]:
+        row["src_region"], row["dst_region"] = row["src"], row["dst"]
+    table = CAB.annotate_table(table, b, root_settle_cycles=64, strap_form=True)
+    for row in table["ports"]:
+        row["src_region"], row["dst_region"] = groups[row["src"]], groups[row["dst"]]
     ca = table["count_aligned"]
     for part, role in ca["parts"].items():
         if role["role"] != "origin" or role["region"] != part:
             raise ValueError(f"measured independent origin lost for {part}: {role}")
     ca["frame_clock_regions"] = groups
+    if clock_table["count_aligned"].get("start_reset_wave"):
+        ca["start_reset_wave"] = True
     dump(out / "native_pipeline_stage_cycles.json", price_existing_pipeline_stages(table, raw))
-    dump(out / "sidecar_native_measured.json", table)
-    dump(out / "native_measured_bind_check.json", check)
+    label = "prototype" if provisional else "measured"
+    dump(out / ("native_" + label + "_bind.json"), b)
+    dump(out / ("sidecar_native_" + label + ".json"), table)
+    dump(out / ("native_" + label + "_bind_check.json"), check)
     return table
 
 
@@ -368,7 +382,10 @@ def main():
     ap.add_argument("--v-ps-mm", type=float, default=290.0)
     ap.add_argument("--compose", action="store_true")
     ap.add_argument("--measured-ca", help="released both-edge measured clock-START CA doc; independent partition origins")
+    ap.add_argument("--prototype-ca", help="explicit unmeasured standard-origin body prototype; never measured qualification")
     a = ap.parse_args()
+    if a.measured_ca and a.prototype_ca:
+        ap.error("choose measured-ca or prototype-ca")
     sys.path.insert(0, str(Path(a.repo) / "tools/die_plan"))
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -377,8 +394,10 @@ def main():
     if table is None:
         return 3
     prepare_native_form(raw, side, scored, out)
-    if a.measured_ca:
-        table = bind_native_measurement(raw, table, a.measured_ca, out)
+    if a.measured_ca or a.prototype_ca:
+        table = bind_native_measurement(raw, table, a.measured_ca or a.prototype_ca, out, provisional=bool(a.prototype_ca))
+    if a.prototype_ca:
+        dump(out / "prototype_scope.json", dict(prediction_only=True, physical_qualified=False, source="standard origin/START body prototype; timing/K must be replaced by measured clock START", source_ca=a.prototype_ca))
     if a.compose:
         compose(raw, table, a.plan, out, side)
     status = json.loads((out / "status.json").read_text())
