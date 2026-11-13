@@ -32,3 +32,10 @@
 - Strict bind m055 RC 0 (epyc7 dkv100/bind_m055/out). Run-items m055_kv3_hub_Eo/Wo running (intel2 dkv100/jobs/m055_*/unit.log; kits epyc7 dkv100/pilots_m055/items/*).
 - SD-GROW-W v2: grow 77.76 (not 103.68: io_ft tap grid nx=ceil(W/400) must stay 4 -> W >= 1200.06). Plan dkv100/sdgrow/plan (p3.json md5 b2909a63). Base G0 PASS 0 errors; new G0 running; diff with dkv100/g0_slot.py.
 - census_map_v35.json added to the tree (missing on main; copy of epyc4 /dev/shm, md5 d2157225).
+## UPDATE 2026-11-13 05:10
+- COORD 04:5x APPROVED pv cut (A): 4-way per lane group for 14 members, 2-way middle cut for kv3_pv/v8. R-REACH posted 04:48 (claude/rules-reach-1-1113@1376d26613); 2nd worktree epyc7 wt/die-kv-100-rr on that branch (tools only).
+- Hub split: KV-SPLIT-1 found the 2-way cut (forced y 846.72) leaves Wo S at ~338k (279-397k): DECIDED 3-way family cut [c1, 846.72] for Eo+Wo (cycles pre-approved). Agent continues (type_split.py draft in tree, untracked).
+- SD: bind_sdg FAILED RC1 'kv3_io_ft raw Q rst_rl_63' (shrink renumbered reset relays) -> street_rule.py resetfix -> sdgrow/p3r.json md5 5de1af02 (2 types, 5 refs reselected); rerun sidecar+G0+bind_sdg2 via ot-run (intel2 ~/dkv100log/sd_g0r.log).
+- sys_c R-REACH-2: dkv100/sysc/sysc_form.py: reach_homes d2d_phyN [959.04,859.68,2142.72,1019.52] (PHY pins all on its N face die x 968-1417) + dcal home; 4 d2d link SRAMs moved SW corner -> x 1615.68 y 518.4-777.6 (E of PHY). First try at x 1494.72 hit added tap clk_t13 halo. rr.sh = reach fix 1,2,4 + check (p5).
+- hub_C R-REACH-2 (ahub 605 um, 260 loose buses): sub-agent KV-HUBC-REACH writing dkv100/hubc/hubc_form.py (homes + leafs).
+- Event compose order: p3r (SD) -> sysc_form -> hubc_form -> type_split (hubs 3-way, pv 4/2-way) -> reach_rules fix 1,2,4 -> resetfix/raw step -> sidecar -> G0 -> strict bind -> lane latency.
