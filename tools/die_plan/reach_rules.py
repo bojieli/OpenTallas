@@ -367,6 +367,34 @@ def _legal_hubs(o, tg, free, limit):
     return out
 
 
+def _reuse_writer_sites(o, target, count, obs, bands, W, H, free, reach):
+    """Re-site a fixed number of physical stages after an existing rx flop.
+
+    No phase/latency budget is invented here: an infeasible fixed count fails.
+    Short paths keep spare stages as local dwell registers near that same rx.
+    """
+    import kv_start_corridor_event as KS
+    from start_obstacle_path import relay_sites
+    if man(o, target) <= PAD_SPAN_UM:
+        sites = _dwell_sites(o, count, free, -1)
+        pts = [o] + sites + [target]
+        if max(man(a, b) for a, b in zip(pts, pts[1:])) <= reach + EPS:
+            return sites
+    errors = []
+    for extra in (False, True):
+        try:
+            c = KS.CLEAR_UM
+            bx = [list(x) for x in bands if not any(
+                x[0] - c < q[0] < x[2] + c and x[1] - c < q[1] < x[3] + c
+                for q in (o, target))] if extra else []
+            path = KS._route(tuple(o), tuple(target), obs + bx, W, H)
+            return relay_sites(path, count, max_hop_um=min(reach, SITE_HOP_UM),
+                               site_boxes=bands, clearance_um=KS.CLEAR_UM)
+        except ValueError as ex:
+            errors.append(str(ex))
+    raise ValueError(f"fixed writer physical depth {count} cannot reach {tuple(target)}; rerun REGION/STA/K before changing writer phase: {' | '.join(errors)}")
+
+
 def _fix_start(P, t, tn, obs, reach=REACH_UM):
     import reset_tree as RT
     import kv_start_corridor_event as KS
@@ -379,7 +407,15 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
     W, H = t["outline_um"]
     ck = t["clock"]
     bands = [b["rect_um"] for b in si["bands"].values() if b.get("rect_um")]
-    o = _home(t, si, obs)
+    reuse_writer = bool(si["writer"].get("reuse_relay_origin"))
+    if reuse_writer:
+        if not si["relay"] or not si["relay_copy"] or not si["pinned"]:
+            raise ValueError(f"{tn}: writer origin reuse needs a pinned actual relay rx and landing_relay_start_copy")
+        o = tuple(si["origin"])
+        if _free_in(o, obs, W, H) != o:
+            raise ValueError(f"{tn}: existing reused relay origin {o} is blocked; cannot move it implicitly")
+    else:
+        o = _home(t, si, obs)
     taps = RT.consumer_taps(P, tn)
     raw_prefix = "rst_n_t" if (t.get("reset") or {}).get("start_role") == "bootstrap" else "rr_t"
 
@@ -427,27 +463,48 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
                 and (not si["relay"] or si["relay_copy"])):
             cfg["origin_rect_um"] = [round(max(0.0, o[0] - 8.64), 3), round(max(0.0, o[1] - 6.48), 3),
                                      round(min(W, o[0] + 8.64), 3), round(min(H, o[1] + 6.48), 3)]
+        if reuse_writer and si["reader"].get("origin_rect_um"):
+            cfg["origin_rect_um"] = copy.deepcopy(si["reader"]["origin_rect_um"])
         new["landing_reader_start"] = cfg
         rep["reader"] = dict(depth=depth, hubs=hub_rep, rings=len(branches),
                              old_depth=int(si["reader"].get("depth", 0) or 0))
         rep["changed"].append("landing_reader_start")
     if "start_writer_reach" in kinds and si["outs"]:
         old = si["writer"]
-        if old.get("reuse_relay_origin"):
-            raise ValueError(f"{tn}: writer START reuse_relay_origin form: re-site by hand (HEAD relay origin)")
         if si["relay"] and not si["relay_copy"]:
             raise ValueError(f"{tn}: relay piece (cland_rstart_in) with far FSTART pins needs landing_relay_start_copy "
                              f"true (start_d = the rx flop's D) before a writer START chain can be planned")
+        if reuse_writer:
+            depth = int(old.get("depth", 0) or 0)
+            if depth < 2:
+                raise ValueError(f"{tn}: relay-origin writer reuse needs phase >= 2")
+            count = depth - 1
+            branches = {}
+            for b in si["outs"]:
+                target = free(_inside(si["pins"]["cland_fstart_out_" + b], W, H, 4.32))
+                sites = _reuse_writer_sites(o, target, count, obs, bands, W, H, free, reach)
+                if len(sites) != count:
+                    raise ValueError(f"{tn}.{b}: reused writer needs exactly {count} physical stages")
+                pts = [o] + sites + [si["pins"]["cland_fstart_out_" + b]]
+                if max(man(a, c) for a, c in zip(pts, pts[1:])) > reach + EPS:
+                    raise ValueError(f"{tn}.{b}: reused writer physical depth {count} cannot reach its FSTART pin")
+                branches[b] = dict(stages=[dict(xy_um=[round(xy[0], 3), round(xy[1], 3)], raw_reset=raw_of(xy))
+                                           for xy in sites])
+            keep = {k: copy.deepcopy(v) for k, v in old.items() if k not in ("depth", "branches")}
+            new["landing_writer_start"] = dict(keep, depth=depth, branches=branches)
+            rep["writer"] = dict(depth=depth, physical_depth=count, branches=len(branches),
+                                 old_depth=depth, reused_origin_stage=1, phase_changed=False)
+            rep["changed"].append("landing_writer_start")
         tg = {}
-        for b in si["outs"]:
+        for b in ([] if reuse_writer else si["outs"]):
             q = free(_inside(si["pins"]["cland_fstart_out_" + b], W, H, 4.32))
             if man(o, q) > KS.NEED_UM or b in (old.get("branches") or {}):
                 tg[b] = q
         hubs = _legal_hubs(o, tg, free, SITE_HOP_UM - PAD_SPAN_UM)
         tr = [_trunk(o, h, obs, bands, W, H, reach) for h, _m in hubs]
         need = [len(x[1]) + 1 for x in tr]
-        depth = max(max(need) + 1, int(old.get("depth", 0) or 0))
-        pads = _dwell_sites(o, depth - 1 - min(need), free, -1)
+        depth = max(max(need, default=0) + 1, int(old.get("depth", 0) or 0))
+        pads = _dwell_sites(o, depth - 1 - min(need, default=depth - 1), free, -1)
         branches = {}
         for (h, members), (r, way), n in zip(hubs, tr, need):
             k = depth - 1 - n
