@@ -4368,6 +4368,21 @@
         "exclusiveMinimum": 25,
         "maximum": 405
        },
+       "column": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+         "axis": {
+          "enum": [
+           "x",
+           "y"
+          ]
+         },
+         "at_um": {
+          "type": "number"
+         }
+        }
+       },
        "obstacle_model": {
         "enum": [
          "canonical",
@@ -6652,6 +6667,11 @@
     "hop_um": {
      "type": "number",
      "exclusiveMinimum": 0
+    },
+    "relay_rule": {
+     "enum": [
+      "slew_safe"
+     ]
     },
     "in_sites": {
      "type": "object",

@@ -485,3 +485,68 @@ def test_reset_from_master_port_keeps_target_internal_drops_it_and_needs_content
     assert RT.for_type(plan("internal"), "src")["core_resets"] == []
     with pytest.raises(RT.ResetError):
         RT.core_reset_targets(plan("port", content="u_nope"), "src")
+
+
+def _child_type_with_parent(P):
+    W = RT.wf_plan(P)
+    for p, r in sorted(W["parts"].items()):
+        if r["parent"] is not None and not P.types[r["type"]].get("hard"):
+            return r["type"]
+    return None
+
+
+def test_reset_column_mode_straight_chain_on_the_parent_line():
+    """REACH-FIX-2 11-12 (HEAD-95 rp18 chain types): reset.column puts entry and exit on ONE line - taken from the
+    parent's exit pin, clamped into the logic span - and the relay tree is a straight chain along it."""
+    for raw0 in (PAIR, TINY):
+        P0 = schema.Plan(wave(raw0))
+        tn = _child_type_with_parent(P0)
+        if tn is None:
+            continue
+        raw = wave(raw0)
+        raw["partition_types"][tn].setdefault("reset", {})["column"] = {}
+        assert schema.validate(raw) == []
+        P = schema.Plan(raw)
+        cs = RT.column_spec(P, tn)
+        W = RT.wf_plan(P)
+        assert W["unreachable"] == []
+        cs = RT.column_spec(P, tn)
+        assert cs["at"] is not None and cs["span"][0] - 1e-6 <= cs["at"] <= cs["span"][1] + 1e-6
+        k = 0 if cs["axis"] == "y" else 1
+        sites = RT.face_sites(P, tn)[:2]                  # the two line ends come first (other face sites: side exits)
+        assert abs(sites[0]["xy"][k] - sites[1]["xy"][k]) < 1.0 and abs(sites[0]["xy"][k] - cs["at"]) < 1.0
+        ent = RT.in_pin(P, tn)
+        assert any(abs(ent[0] - s["xy"][0]) < 1e-6 and abs(ent[1] - s["xy"][1]) < 1e-6 for s in sites)
+        # the line is the parent's exit pin (median over instances), unless clamped into the span
+        r = next(r for p, r in sorted(W["parts"].items()) if r["type"] == tn and r["parent"] is not None)
+        par = r["parent"]
+        T = RT.for_type(P, tn)
+        assert RT.verify(T) == [] and T["topology"] == "column" and T["max_hop_um"] <= RT.relay_um(P, tn)
+        # chain relays (wire relays fed from the root or another chain relay) sit on the line
+        e, _w, _i = RT.check(P)
+        assert e == []
+        # explicit at_um is taken (clamped into the span)
+        raw["partition_types"][tn]["reset"]["column"] = {"at_um": -1000.0}
+        P2 = schema.Plan(raw)
+        assert RT.column_spec(P2, tn)["at"] == RT.column_spec(P2, tn)["span"][0]
+        assert par in P.parts
+        return
+    pytest.skip("no soft child type in the examples")
+
+
+def test_slew_safe_relay_rule_is_the_die_default_and_types_only_tighten():
+    raw = wave(PAIR, relay_rule="slew_safe")
+    P = schema.Plan(raw)
+    assert RT.relay_um(P) == RT.SLEW_SAFE_RELAY_UM == 130.0
+    raw["reset"]["relay_um"] = 380.0
+    assert RT.relay_um(schema.Plan(raw)) == 130.0                  # the rule caps a looser plan value
+    tn = sorted(t for t in raw["partition_types"] if not raw["partition_types"][t].get("hard"))[0]
+    raw["partition_types"][tn].setdefault("reset", {})["relay_um"] = 100.0
+    assert RT.relay_um(schema.Plan(raw), tn) == 100.0
+    raw["partition_types"][tn]["reset"]["relay_um"] = 200.0
+    with pytest.raises(RT.ResetError):
+        RT.relay_um(schema.Plan(raw), tn)
+    for t in schema.Plan(wave(PAIR, relay_rule="slew_safe")).types:
+        if not raw["partition_types"][t].get("hard"):
+            T = RT.for_type(schema.Plan(wave(PAIR, relay_rule="slew_safe")), t)
+            assert T["max_hop_um"] <= 130.0 + 1e-6
