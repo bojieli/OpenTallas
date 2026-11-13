@@ -38,3 +38,14 @@ Classification tables (t41, sle_st_a running), design, implement + tests, proofs
 - RUNNING: turn_b guard 35 (log localhost ~/ht1log/turn_b_route.log) and t41 full CTS -> sign-off (~/ht1log/t41_route.log), both ot-run epyc9,
   kits epyc9 hold-tap-1/proof/{turn_b,t41}/gen.  QC sle_st_a prototype epyc4 hold-tap-1/proof/sle_p1/pg.log.
 - TODO: push branch, class list, READY, RULEBOOK-1113.md R-CLOCK.
+
+## 2026-11-13 05:06 state
+- Branch claude/hold-tap-1-1113@5851f447f3 PUSHED to hub (4 commits on origin/main 23aaa6e1de; GitHub not reachable from epyc9). Final form: pass A every path to +5,
+  pass B cross-tap pairs only to +45 (tap-port early latency widened for the pass; uniform guard rejected: pads ordinary pairs, TT setup 104 -> 43).
+- RULEBOOK-1113.md R-CLOCK posted (coord c07f5fc3d3c, verified on origin); evidence lanes/HOLD-TAP-1/.  t41 and QC rows there say RUNNING: update them.
+- turn_b final (guard 45, epyc9 hold-tap-1/proof/tb45): SIGNOFF LOCAL_PASS_NEEDS_PARENT, TT +101.32, FF hold +3.00, DRC 0 (baseline -14.07 on 25).
+- t41 in-flow build DONE: 7049 -> 0, 9,540 hold cells, 816 s, TT setup 124.64 unchanged; now in GRT (log localhost ~/ht1log/t41_route.log, ot-run epyc9;
+  kit config guard 35, only 4 cross-tap pairs so the value does not matter there).
+- QC prototype (final form, guard 45) running: epyc4 hold-tap-1/proof/sle_x45/pg.log (sle_p1 = older uniform-25 form, ignore).
+- pytest subset on the final branch: epyc9 hold-tap-1/pytest_final.log (compare failing set with f_base.txt).
+- LEFT: t41 sign-off result, QC result -> update RULEBOOK proof rows, post READY in COORD-REVIEW-QUEUE.md, stop.
