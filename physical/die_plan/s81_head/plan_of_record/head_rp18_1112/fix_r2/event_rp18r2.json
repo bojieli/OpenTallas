@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.head_plan_event.v1",
+ "event": "head_rp18_1112",
+ "revision": "fix_r2",
+ "author": "HEAD-96",
+ "base": {"plan": "rp18r1 (rp18m)", "sha256_16": "220334aa9b30ef3d"},
+ "plan_sha256": "cda1ecf604ebe085b39fd21b83e8ead7a0a3eff013fc1ea7393418ec0875621e",
+ "reason": [
+  "KIT-OPS-1: hd_spn r1 RTL export fails: private export rst_start_raw_42 was assigned relay u_rrl_147, which the generated RTL already turns into the reader raw export pair rr_t58_reader_raw (landing_reader_start bd_i stage 5 on a port-driving relay, clock_landings FLOW-6) -> head_start_raw_private finds no plain ot_dp_rrelay u_rrl_147",
+  "COORD/VISLAYOUT3: hd_mesh M1 LEC NOT EQUIVALENT, 3318 of 144992 points at g_rb_safe SRAM lec_bbi_wd_in: the plan's hd_mesh lec_hints (sha 6b2f2c09, carried since l48ub) relate g_rb_safe.u_m.wdata[i] to a_in[i], the RBL=0 relation; hd_mesh is RBL=1 (wdata is the same-D twin of a0_in)"
+ ],
+ "fix": [
+  "tools/s81_head/head_reset_exports.py r2: the one-relay-per-export rule counts reader raw export pairs as occupied (reader START stage raw_reset = plain Q of a relay that drives an rst_o port, not remapped by landing_raw_branches); check flags any private row on such a relay. fix rp17 rp18j -> rp18n. Only change vs r1: hd_spn rst_start_raw_42 u_rrl_147/rr_t58 -> u_rrl_118/rr_t60 (same depth 7 = same release cycle; the only free depth-7 raw relay, 1261 um from its pin; the pin is declared OPEN, no die-level reader).",
+  "scripts/mesh_hints.py: hd_mesh.lec_hints := main physical/die_plan/s81_head/plan_of_record/l48hp1_mesh_hints/lec_hints_rbl1.json.gz (HEAD-92, proven EQUIVALENT on ds8), asserting the only change is the 1106 rows wdata[i] eq a_in[i] -> a0_in[i]; hints sha 6b2f2c09e6fe3372 -> a9525b391323a649, 9882 rows. Hints stay candidates; lec.py proves every one. rp18n -> rp18p = rp18r2."
+ ],
+ "not_in_r2": "hd_host_w spread3 LEC NOT EQUIVALENT (298) is a different signature: r_ce_in/w_ce_in of g_rb_safe, cones fully matched, no wd_in; no other HEAD type carries g_rb_safe wdata hints",
+ "files": {"plan": "source_plan_rp18r2.json.gz", "sidecar": "../source_sidecar_rp18.json.gz (unchanged)"}
+}
