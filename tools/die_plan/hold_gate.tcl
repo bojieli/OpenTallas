@@ -28,6 +28,7 @@ if {[llength $vclks] != 1} { error "hold gate: expected one IO virtual clock" }
 # below would replace their forwarded-clock input delays (OpenSTA drops the other-clock delays of a port), which hid
 # every ring-write hold path from this gate (HEAD l47 hd_turn_a: gate -57/2 vs kit SDC -185/2274, GRT RSZ-0060).
 set hg_fwd {}; set hg_fwd_ports {}; set hg_ring_in ""
+set hg_native {}; set hg_native_ports {}
 set hg_gold [file join [file dirname [file normalize [info script]]] constraint.sdc]
 if {[info exists ::env(OT_GOLDEN_SDC)] && $::env(OT_GOLDEN_SDC) ne ""} { set hg_gold $::env(OT_GOLDEN_SDC) }
 if {[file exists $hg_gold]} {
@@ -35,6 +36,24 @@ if {[file exists $hg_gold]} {
   foreach line [split $hg_txt "\n"] {
     # S81-RINGHOLD-3 opt-in plan clock.ring_hold: the measured sender data-vs-fclk min replaces the seam fallback
     if {[regexp {^# OT_FWD_RING_MIN (\S+)$} $line -> hg_ring_in]} continue
+    if {[string match {# OT_NATIVE_PAD_INPUT*} $line]} {
+      set w [regexp -all -inline {\S+} $line]
+      if {[llength $w] != 6 || [lindex $w 1] ne "OT_NATIVE_PAD_INPUT"} {error "hold gate: malformed OT_NATIVE_PAD_INPUT: $line"}
+      lassign [lrange $w 2 end] ck sel mn mx
+      if {![regexp {^[A-Za-z_][A-Za-z0-9_]*$} $ck] || ![regexp {^[A-Za-z_][A-Za-z0-9_]*\[\*\]$} $sel]
+          || ![string is double -strict $mn] || ![string is double -strict $mx]
+          || [regexp -nocase {inf|nan} "$mn $mx"] || $mn > $mx} {error "hold gate: invalid native pad contract: $line"}
+      if {[llength [get_clocks -quiet $ck]] != 1} {error "hold gate: missing native pad clock $ck"}
+      set ps [get_ports -quiet $sel]
+      if {![llength $ps]} {error "hold gate: empty native pad selector $sel"}
+      foreach q $ps {
+        set pn [get_full_name $q]
+        if {$pn in $hg_native_ports || $pn in $clock_ports || $q ni [all_inputs]} {error "hold gate: ambiguous native pad input $pn"}
+        lappend hg_native_ports $pn
+      }
+      lappend hg_native [list $ck $sel $mn $mx]
+      continue
+    }
     if {![string match {# OT_FWD_RING_INPUTS *} $line]} continue
     set w [regexp -all -inline {\S+} $line]
     if {[llength $w] < 4} { error "hold gate: malformed OT_FWD_RING_INPUTS line: $line" }
@@ -43,7 +62,7 @@ if {[file exists $hg_gold]} {
   }
 }
 set din {}
-foreach p [all_inputs] { if {[get_full_name $p] ni $clock_ports && [get_full_name $p] ni $hg_fwd_ports} { lappend din $p } }
+foreach p [all_inputs] { if {[get_full_name $p] ni $clock_ports && [get_full_name $p] ni $hg_fwd_ports && [get_full_name $p] ni $hg_native_ports} { lappend din $p } }
 # CLOCK-RESET IO-HOLD 10-25: the kit's seam hold contract (gen_phys.seam_hold via config.mk); legacy -40 / 0
 set hg_in -40; set hg_out 0
 if {[info exists ::env(OT_HOLD_IN_MIN)] && $::env(OT_HOLD_IN_MIN) ne ""} { set hg_in $::env(OT_HOLD_IN_MIN) }
@@ -63,6 +82,13 @@ if {[llength [all_outputs]]} { set_output_delay -min $hg_out -clock [lindex $vcl
 if {$hg_ring_in eq ""} { set hg_ring_in $hg_in }
 foreach r $hg_fwd { lassign $r ck sels; foreach s $sels { set_input_delay -min $hg_ring_in -clock [get_clocks $ck] [get_ports $s] } }
 if {[llength $hg_fwd]} { puts "OT_HOLD_GATE forwarded ring inputs [llength $hg_fwd_ports] on [llength $hg_fwd] clock(s), min $hg_ring_in" }
+# Restore the golden native eye exactly after all generic/per-port overlays. No seam budget applies here.
+foreach r $hg_native {
+  lassign $r ck sel mn mx
+  set_input_delay -min $mn -clock [get_clocks $ck] [get_ports $sel]
+  set_input_delay -max $mx -clock [get_clocks $ck] [get_ports $sel]
+}
+if {[llength $hg_native]} {puts "OT_HOLD_GATE native pad inputs [llength $hg_native_ports], golden delays preserved"}
 # A separate FF-only process: do not impersonate the shared multi-mode context.
 # Owner thresholds match orfs_hold_mm.tcl, applied to actual negative endpoints.
 set w [sta::time_sta_ui [sta::worst_slack_cmd min]]
