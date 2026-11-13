@@ -38,3 +38,17 @@ def test_hold_gate_keeps_native_delays(tmp_path):
     assert 'SID -min -40 -clock vclk {a b cland_dn_ready_t_i}' in r.stdout
     assert 'SID -min -265.0000 -clock fclk_in_t_i {{t_i[0]} {t_i[1]}}' in r.stdout
     assert 'SID -max 166.6000 -clock fclk_in_t_i {{t_i[0]} {t_i[1]}}' in r.stdout
+
+
+def test_old_native_kit_cannot_silently_qualify():
+    declaration = 'set pad_native_inputs [get_ports {t_i[*]}]\n'
+    with pytest.raises(ValueError, match='native pad metadata missing'):
+        SO.native_pad_inputs(declaration)
+    assert SO.native_pad_inputs(declaration+TAG) == [('fclk_in_t_i', 't_i[*]', -265., 166.6)]
+    # A forwarded ring with no native declaration is unaffected.
+    assert SO.native_pad_inputs('# OT_FWD_RING_INPUTS fclk_in_t_i t_i[*]\n') == []
+
+
+def test_hold_gate_rejects_old_native_kit(tmp_path):
+    r = HG._run(tmp_path, 'set pad_native_inputs [get_ports {t_i[*]}]\n')
+    assert r.returncode != 0 and 'native pad metadata missing' in r.stderr

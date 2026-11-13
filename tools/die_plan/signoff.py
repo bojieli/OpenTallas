@@ -1321,6 +1321,9 @@ def native_pad_inputs(sdc_text):
         if not all(map(math.isfinite, (mn, mx))) or mn > mx:
             raise ValueError(f'signoff: invalid native pad delay: {ln}')
         seen.add(w[3]); out.append((w[2], w[3], mn, mx))
+    declared = re.findall(r'^set pad_native_inputs \[get_ports \{([^}]*)\}\]$', sdc_text, re.M)
+    if len(declared) > 1 or (declared and set(declared[0].split()) != seen):
+        raise ValueError('signoff: native pad metadata missing or inconsistent; regenerate kit before qualification')
     return out
 
 
