@@ -7,7 +7,7 @@
   hd_spn HELD: r1 export picks u_rrl_147, which is already the FLOW-6 reader raw export pair; waiting on HEAD-96 r2. To release on r2: re-run run_head_rp18r1.sh as a new dir, make source_plan_wave.json the same way, probe (head_cmp/probe.py) to confirm only intended blocks change, stage + manifest, switch plan, drop the hd_spn hold.
   4 rp18 HEAD route jobs CRASHed with DRT-0255 maze route (turn_a, turn_b, wshim_rx, wshim_tx): reported to COORD as a HEAD routing class.
 
-## In progress: (e) S81 ready12b-A
+## Done: (e) S81 ready12b-A armed 21:58 (55 launched; see RESULT)
 - src epyc8 kw45/src_s81_main_7073a6b4a5 = archive of main 7073a6b4a599 + KITOPS1_OVERLAY.txt (plan_r12bA6/plan_h2_2249 = event plan 18c864518844; dead-input proof from origin/claude/s81-dead-reprove2-1112@8fa82e457d, not in main).
 - strict bind rc 0 -> kit-ops-1/s81_r12bA/out_main_7073a6b4a5_b (bound .sv identical to out_r12bA_dst after normalization). asbuilt kit-ops-1/s81_r12bA/asbuilt_kitops1_7073a6b4a5.json (base -> archive).
 - out + asbuilt staged to epyc7/9/intel1/epyc2. src copies running: epyc7 (orphan rsync pid 3799005 on epyc8) and stage_s81src_{e9,i1,e2}.out.
