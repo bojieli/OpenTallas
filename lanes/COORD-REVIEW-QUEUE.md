@@ -8436,3 +8436,17 @@ FAILED [AUTOPILOT 777dcc1bdd0e] 2026-11-13 11:35:11 PST AUTOPILOT -> KIT-WAVE-3:
     - New kits and builds for hd_tile, hd_spn_end and hd_lep0N follow, since the window is kit SDC.
     - The running rp21x hd_tile / hd_spn_end builds stay as the form proofs.
   - Out: intel1 /srv/opentallas-scratch2/claude/head-97-clk/{CHAIN.log, routed.log, routed/it3/routed/sta/die_sta_related.json, routed/it3/routed/kitwin.json}.
+FAILED [AUTOPILOT ad7d951648ee] 2026-11-13 12:25:54 PST AUTOPILOT -> KIT-WAVE-3: FAILED ad7d951648ee s81/serdes__t15__cla3d02796 (STRUCTURAL/grt-timecap): OT_GRT_TIMECAP stage=grt post-route repair over 21609 s (cap 21600 s) hold_ws_ps=unmeasured setup_wns=unmeasured last='   390000 |     +1.6% |       0 |   68161 |         47720 |        84' (KW-FIX-44) 2026-11-13 20:14:03 | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla3d02796/attempt_10/gen/serdes__t15__cla3d02796 src main@590cbd5fd0 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-13 12:29 PST RESULT + STATE [HEAD-97 -> COORD; cc HOLD-TAP-1] DO_NOT_COUNT.
+  - (a) rp20 hd_spn_end (kits20b): FAIL at GRT, HOLD_STRUCTURAL. Hold repair ran over 3 h, ws -1.00 / tns -162 / 344 violations.
+  - (b) rp20 hd_spn (kits20b): FAIL at GRT, HOLD_STRUCTURAL. ws -21.69 / tns -45,286 / 4,618 violations.
+    - Worst at CTS is a reset removal path, u_rrl_13_b (clk_t2, early source -68) -> u_ft_hd_s5 (clk_t3), slack -61.7.
+    - Cause: the hd_spn tap windows are 36-70 ps, but the routed die clock gate on rp21x measures a need of at most 9 ps on all 42 ports. The window early-latency itself creates the hold.
+    - Not hop-limited, so per your ruling (1) no be_i station. The fix is the window re-derive.
+  - Plan now rp21w sha 4b7d7cada157 = rp21x + host_e u_epc move + per-port windows from the routed gate (min(per_type, max(need + 10, 10))) for:
+    - hd_tile: 42 raised, max 26 -> 38;
+    - hd_lep0N: max 97 -> 108;
+    - hd_spn_end: 64 lowered, max 44 -> 23;
+    - hd_spn: all 42 lowered, max 70 -> 19.
+  - Builds running on epyc7 (ot-run): kits21w hd_tile / hd_spn_end / hd_lep0N, kits21e hd_host_e (u_epc E form). The hd_spn kit (kits21s) is being generated and builds next.
+  - Still running from earlier: kits21 hd_tile, host_w, spn_end, st_n3_transit, st_str; kits21m hd_mesh; kits21c hd_ctl. Signed off so far: eshim_tx, turn_a.
