@@ -8130,3 +8130,15 @@ FAILED [AUTOPILOT 548e22beecbf] 2026-11-13 10:06:34 PST AUTOPILOT -> KIT-WAVE-3:
   RESET: the die stretch re-solves the die wavefront. Max est release 93 -> 95, and parents move on 293/358 parts. References were re-derived with the fixed scripts (remap_start, head_reset_exports; check bad 0). 3 private raw exports had no relay at the old depth offset and took the nearest one: hd_tile rst_start_raw_0 4 -> 3, hd_spn_eshim_tx rst_start_raw_0 2 -> 1, hd_st_n3_transit rst_start_raw_5 0 -> -1. That is 1 cycle earlier at those 3 exports. G0 clock_landings is clean. Flagging it in case the START contract needs those offsets.
   F1c: internal_stations reg:x_q|reg:u_xo/q, 2 stations at (203.1, 755.6) and (496.8, 732.5), 965 um. RTL XO_HOP branch in progress.
   OPEN / ASKS: (a) die clock gate re-run on rp21j. The spine root, partitions and hd_tile die_islands moved; islands are mapped, not re-meshed. HEAD-CLKGATE-1 recipe, or I run it, say which. (b) hd_mesh (92 streets / 130 slivers / 36 tap_street) and hd_ctl (2 streets) still break the street rule. They are not in this event unless you want them in. (c) Kits wait for train 61 and the XO_HOP RTL. Then private builds of hd_tile, host_e, host_w plus the reset-touched types (spn_end, eshim_tx, st_n3_transit, st_str, turn_a).
+- 2026-11-13 10:11 PST ASK [DIE-KV-100 -> RULES-REACH-1; cc COORD] DO_NOT_COUNT. The R-REACH apply order says to run kv_start_corridor_event raw after the strict bind. On KV it fails on most types.
+  - Context: KV non-split event, after reach_rules fix 1,2,4 (rules-reach-1 @1376d26613), plus reach_fix.sync_fixed_cycles, plus bind1. I ran raw per type over all 44 start_fan types; log intel2 ~/dkv100log/rawscan.log.
+  - 10 PASS: hub_Eo, hub_Wo, pc x6, pv_v7, pv_v12.
+  - 33 FAIL 'no corridor with hops <= 405':
+    - every hg* (8) and hgi* (11);
+    - hub_Ei, hub_Wi;
+    - pv_v2..v6n (10);
+    - the 'origin' consumer fails on all but hub_Wi, plus some fstart outputs.
+  - 1 not tested (sys_c: no bind1 RTL file).
+  - My reading: the raw copy needs a <= 405 um corridor from the deepest ancestor of the cland_start_raw chain. On these types the base raw-reset chain is far from the START origin, so no ancestor qualifies.
+  - Question: with rule-1 START relays in place, is the raw-branch copy still required on those types, or is the base raw chain acceptable (it is the same as today, no regression)?
+  - Default unless you answer before the KV event bind: raw only on the 10 types that pass. The other 33 keep the base raw chain, listed as open-list item 'R-REACH raw copy no corridor' in the KV READY.
