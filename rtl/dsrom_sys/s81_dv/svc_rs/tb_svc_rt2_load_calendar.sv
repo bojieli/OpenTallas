@@ -54,6 +54,7 @@ module tb_svc_rt2_load_calendar;
     integer metadata_errors [0:1];
     integer reserved_inputs [0:1];
     integer cycle=0, last_accept=-2, ii_errors=0, phase_errors=0;
+    integer timing_errors=0, first_output=-1, last_output=-1, first_p_output=-1, last_p_output=-1;
     integer i,j,k,r,h,n,base;
 
     // Scoreboard samples the transport values on the receiving clock edge.
@@ -61,6 +62,19 @@ module tb_svc_rt2_load_calendar;
     task automatic observe(input integer which);
         integer rr,hh,ww,row0;
         begin
+            if(which==0) begin
+                if(out_v[which] !== (((cycle<=14)&&(cycle%2==0)) || (cycle>=16&&cycle<=23)))
+                    timing_errors=timing_errors+1;
+                if(out_v[which]) begin
+                    if(first_output<0) first_output=cycle;
+                    last_output=cycle;
+                    if(out_mode[which]) begin
+                        if(first_p_output<0) first_p_output=cycle;
+                        last_p_output=cycle;
+                        if(cycle<16 || cycle>23 || out_grp[which] != 8'(2*(cycle-16))) timing_errors=timing_errors+1;
+                    end else if(cycle>14 || cycle%2!=0 || out_grp[which] != 8'(cycle/2)) timing_errors=timing_errors+1;
+                end
+            end
             if(out_v[which]) begin
                 if(!out_mode[which]) begin
                     q_outputs[which]=q_outputs[which]+1;
@@ -145,9 +159,10 @@ module tb_svc_rt2_load_calendar;
             offered[0],q_outputs[0],p_outputs[0],checked[0],q_errors[0],p_errors[0],metadata_errors[0],fault[0],ii_errors,reserved_inputs[0],phase_errors,cycle);
         $display("RT2_CALENDAR malformed offered=%0d Q_outputs=%0d P_outputs=%0d checked_words=%0d Q_errors=%0d P_errors=%0d metadata_errors=%0d af=%0d reserved_inputs=%0d",
             offered[1],q_outputs[1],p_outputs[1],checked[1],q_errors[1],p_errors[1],metadata_errors[1],fault[1],reserved_inputs[1]);
+        $display("RT2_CALENDAR timing first_output=%0d last_output=%0d first_P=%0d last_P=%0d errors=%0d",first_output,last_output,first_p_output,last_p_output,timing_errors);
         if(offered[0]!=12 || q_outputs[0]!=8 || p_outputs[0]!=8 || checked[0]!=768 ||
            q_errors[0]!=0 || p_errors[0]!=0 || metadata_errors[0]!=0 || fault[0]!==1'b0 ||
-           ii_errors!=0 || reserved_inputs[0]!=0 || phase_errors!=0)
+           ii_errors!=0 || reserved_inputs[0]!=0 || phase_errors!=0 || timing_errors!=0)
             $fatal(1,"RT2_CALENDAR nominal FAIL");
         if(offered[1]!=12 || q_outputs[1]!=8 || p_outputs[1]>=8 || q_errors[1]!=0 ||
            p_errors[1]==0 || fault[1]!==1'b1)
