@@ -60,3 +60,10 @@ Scope: (1) NEAR-MISS ECO on routed DB (hd_turn_a 89228387ea15; hd_turn_b 9098341
 - Launched from intel2 via /tmp/h97_launch.sh (ot-run --hosts epyc4, goal route = route+finish+signoff); logs intel2 ~/tmp/h97_rp20a_<type>.log; containers dpkit-<type>-*.
 - Result per kit: <kit>/signoff/signoff.json, run_route.log. Post RESULT per type. ot-run "ROOT filesystem" warning is a false hit (scratch3 is md0 bind of /home/ubuntu/scratch-root).
 - STATE posted (rp20 PROOF BUILDS RUNNING).
+
+## 2026-11-13 08:48 rp20 proof builds, second launch (current)
+- The first launch (kits_rp20a, plain gen on the raw plan) FAILED port_bind: missing rst_start_raw_* ports. A raw-plan gen does not add the private raw exports; you need the wave kit_rtl export.
+- Prep: epyc4 /srv/opentallas-scratch3/claude/head-97/prep20a.sh -> prep20a/{prep,x}. Uses base/hp1, copied from epyc8 kw45/head_c90382b467/hp1. pd side files are added without overwriting. Prepared sha 0a679eb7bb58.
+- Gen: gen20b.sh <types>, which sets item_env, --kit-rtl, --hold-ff-margin 0 and the R-FLOW args.
+- Kits: copied to epyc7 /srv/opentallas-scratch2/claude/head-97/kits20b. Launched by intel2 /tmp/h97_launch2.sh (ot-run --hosts epyc7); logs intel2 ~/tmp/h97_k20b_<type>.log.
+- All 6 port_bind PASS. Next: RESULT per type (<kit>/signoff/signoff.json); then F2 proper, F1b, F1c, die clock gate re-run, package + READY.
