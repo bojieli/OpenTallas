@@ -851,6 +851,8 @@ def cmd_verify(a):
                     if len(mism) < 200:
                         mism.append((key, want, got) + ((dict(kit_source_credit=kc, raw=raw_got),) if kc else ()))
     cnt["pipe_declared"] = cnt_pipe   # sinks compared with a declared +D core-input pipe (bind_core_input_pipe.json)
+    kit._memo.clear()                 # per-net credit cache: free it before the multi-job lint (S81 memcg 230 GB)
+    del sinks
     missing = sorted(set(names.values()) - seen)
     # lint: the bound RTL plus the full RTL closure of every leaf master (unchanged as-built sources)
     from bind import plan_base
