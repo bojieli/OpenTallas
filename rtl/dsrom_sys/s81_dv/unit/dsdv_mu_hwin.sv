@@ -38,9 +38,17 @@
 //   while no entry is valid, and the first entry after such a write is that rec entry, so the keys use the next-state eD / crl.
 //   hcfg_bad / bad_d are registered from the NEXT-STATE configuration (same value on every edge).
 // LA 2 / 3 (bench mutants, must FAIL the lock-step): 2 = no rec bypass, 3 = event key one edge late.
+// LA 4 (SERDES-FIN-2 2026-11-13; under `define OT_S81_SH_WIN_SS) = LA 1 plus a REGISTERED slot select, 0 cycles (R-RTL-2 /
+//   R-RTL-5(1)).  kitS3 placement (LA 1): armed -> ss = armed ? sl : 0 -> on_cal / col = vld[ss] -> rec -> NSLOT x 63 table
+//   write enables, 13 cells + 12 buffers, TT -115, 2983 endpoints.  ss, its one-hot and on_cal are registered from the
+//   NEXT-STATE armed / sl / ph (the same update rules as the registers below), so they hold the same value on every edge;
+//   every table write (eu / ep / ts / vld / fd) is enabled per slot by rec AND its own one-hot bit.
+//   LA 5 (bench mutant, must FAIL): the one-hot is registered from the CURRENT sl (one edge late after each slot step).
 module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, parameter integer NEP = 4,
                       parameter integer NRT = 2, parameter integer MUT = 0,
-`ifdef OT_S81_SH_WIN_LA
+`ifdef OT_S81_SH_WIN_SS
+                      parameter integer LA = 4
+`elsif OT_S81_SH_WIN_LA
                       parameter integer LA = 1
 `else
                       parameter integer LA = 0
@@ -83,11 +91,13 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     // cs = the smallest gap.
     reg [23:0] gt [0:NSLOT-1]; reg [SI:0] gn; reg [SI-1:0] gx, lw; reg [23:0] cg, ng;
     reg [NSLOT-1:0] vld; reg [9:0] eu [0:NSLOT-1]; reg [20:0] ep [0:NSLOT-1]; reg [31:0] ts [0:NSLOT-1];
-    wire [SI-1:0] ss = armed ? sl : {SI{1'b0}};
-    wire on_cal = !armed || ph == 24'd0;
-    reg udup; integer i;
+    localparam integer SSR = (LA >= 4) ? 1 : 0;
+    wire [SI-1:0] ss_c = armed ? sl : {SI{1'b0}};
+    wire on_cal_c = !armed || ph == 24'd0;
+    wire [SI-1:0] ss; wire on_cal; wire [NSLOT-1:0] ssoh;          // SSR 1: registered (g_ssr below)
+    reg udup; integer i; integer wa, wb;
     always @* begin udup = 1'b0; for (i = 0; i < NSLOT; i = i + 1) if (vld[i] && eu[i] == su) udup = 1'b1; end
-    wire col = vld[ss];
+    wire col = (SSR != 0) ? |(vld & ssoh) : vld[ss];
     wire [23:0] nw = {{(23-SI){1'b0}}, lw} + 24'd1;     // slot entries in use (= calendar slots per period)
     wire hcfg_bad = gn == 0 || cs < nw || crl <= nw;                     // hslot's own arming rule
     wire hcfg_bad_u, bad_d_u, due_u; wire [NEV-1:0] fire_u, lt_u;        // the values used below (LA: lookahead forms)
@@ -98,6 +108,26 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
         nxt = (p == lw) ? {SI{1'b0}} : p + 1'b1;
     endfunction
     wire [SI-1:0] gxn = (MUT == 5 || {1'b0, gx} == gn - 1'b1) ? {SI{1'b0}} : gx + 1'b1;   // MUT 5: gap table index stuck at 0
+    generate if (SSR != 0) begin : g_ssr
+        // next-state armed / sl / ph: exactly the updates of the state block below
+        wire          arm_n = armed || (st && !hcfg_bad_u);
+        wire          stp   = armed && ph == cg;
+        wire [SI-1:0] sl_n  = stp ? nxt(sl) : sl;
+        wire [23:0]   ph_n  = armed ? (stp ? 24'd0 : ph + 24'd1) : (st && !hcfg_bad_u) ? 24'd1 : ph;
+        wire [SI-1:0] ss_n  = arm_n ? ((LA == 5) ? sl : sl_n) : {SI{1'b0}};
+        (* keep *) reg [SI-1:0] ss_r; (* keep *) reg onc_r; (* keep *) reg [NSLOT-1:0] oh_r; integer h;
+        always @(posedge ck or negedge rn)
+            if (!rn) begin ss_r <= {SI{1'b0}}; onc_r <= 1'b1; oh_r <= {{(NSLOT-1){1'b0}}, 1'b1}; end
+            else begin
+                ss_r <= ss_n; onc_r <= !arm_n || ph_n == 24'd0;
+                for (h = 0; h < NSLOT; h = h + 1) oh_r[h] <= ss_n == SI'(h);
+            end
+        assign ss = ss_r; assign on_cal = onc_r; assign ssoh = oh_r;
+    end else begin : g_ssc
+        integer h;
+        reg [NSLOT-1:0] ohc; always @* for (h = 0; h < NSLOT; h = h + 1) ohc[h] = ss_c == SI'(h);
+        assign ss = ss_c; assign on_cal = on_cal_c; assign ssoh = ohc;
+    end endgenerate
     always @(posedge ck) ng <= gt[gx] - 24'd1;          // next slot's gap, prefetched (gx = the slot after the current one)
     always @(posedge ck) if (mc_q[25] && !mc_q[24] && !armed && !(|vld) && gn != SJ'(NSLOT)) gt[gn[SI-1:0]] <= mc_q[23:0];
     // ---- event rows
@@ -244,7 +274,8 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
     end endgenerate
     // event-row config + entry payload (no reset: written before arming / at the start that sets vld)
     always @(posedge ck) begin
-        if (rec) begin eu[ss] <= su; ep[ss] <= sp; ts[ss] <= tm; end
+        if (SSR == 0) begin if (rec) begin eu[ss] <= su; ep[ss] <= sp; ts[ss] <= tm; end end
+        else for (wa = 0; wa < NSLOT; wa = wa + 1) if (rec && ssoh[wa]) begin eu[wa] <= su; ep[wa] <= sp; ts[wa] <= tm; end
         if (wv && idle)
             case (mw_q[22:21])
                 2'd0: begin esel <= mw_q[EI-1:0]; ek[mw_q[EI-1:0]] <= mw_q[8]; eep[mw_q[EI-1:0]] <= mw_q[9 +: PI]; end
@@ -276,10 +307,12 @@ module dsdv_mu_hwin #(parameter integer NSLOT = 47, parameter integer NEV = 8, p
             end
             if (due_u) begin vld[rp] <= 1'b0; rp <= nxt(rp); end
             else if (!vld[rp] && !(rec && ss == rp)) rp <= nxt(rp);
-            if (rec) vld[ss] <= 1'b1;
+            if (SSR == 0) begin if (rec) vld[ss] <= 1'b1; end
+            else for (wb = 0; wb < NSLOT; wb = wb + 1) if (rec && ssoh[wb]) vld[wb] <= 1'b1;
             c_q <= c_n; rc_q <= rc_n;
             for (e = 0; e < NEV; e = e + 1) begin
-                if (rec) fd[e][ss] <= 1'b0;
+                if (SSR == 0) begin if (rec) fd[e][ss] <= 1'b0; end
+                else for (wb = 0; wb < NSLOT; wb = wb + 1) if (rec && ssoh[wb]) fd[e][wb] <= 1'b0;
                 if (fire_u[e]) begin fd[e][pe[e]] <= 1'b1; pe[e] <= nxt(pe[e]); end
                 else if ((!vld[pe[e]] || fd[e][pe[e]]) && !(rec && ss == pe[e])) pe[e] <= nxt(pe[e]);
             end

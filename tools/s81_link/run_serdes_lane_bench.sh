@@ -4,6 +4,7 @@
 # usage: [LANE="PIN TXA RXI RXO"] run_serdes_lane_bench.sh MODE OUTDIR      (LANE default "3 4 4 3")
 #   MODE: lane (PASS) | mut8 / mut9 / mut10 (FAIL) | xtx / xrx (FAIL: expected shift one edge off) |
 #         rlat0 (reference loopback latency, no LANE define) | rlatd (+define+OT_S81_SERDES_LANE) | rlat (LANE defines; with RT_EXPECT=<cycles> PASS needs that latency)
+# EXTRA_DEFS="A B ..." adds +define+ for every mode (both columns and the peer), e.g. the vB cone set under LANE.
 # Verilator (fleet image); never on localhost.
 set -u
 mode=${1:?mode}; out=${2:?fresh output directory}; mkdir -p "$out"
@@ -19,6 +20,7 @@ case $mode in
         d="+define+OT_S81_SERDES_LANE_PIN=$P+OT_S81_SERDES_LANE_TXA=$A+OT_S81_SERDES_LANE_RXI=$I+OT_S81_SERDES_LANE_RXO=$O";;
   rlatd) top=tb_s81_col_rlat; g=""; d="+define+OT_S81_SERDES_LANE";;      # the plan define: PIN 3 / TXA 4 / RXI 5 / RXO 3
   *) echo "LANE BAD_MODE $mode"; exit 2;; esac
+for x in ${EXTRA_DEFS:-}; do d="$d +define+$x"; done
 [ -n "${RT_EXPECT:-}" ] && g="$g -GEXPECT_LAT=$RT_EXPECT"
 $VL --version > "$out/verilator.version" 2>&1
 $VL --binary --timing -j ${COL_J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTITOP +incdir+$L \
