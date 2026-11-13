@@ -9,3 +9,7 @@
 ## Standing
 - RA=0 overlay: drop when the wave src moves to a main containing train 30 (backups kit-ops-1/ra0/bak).
 - Awaiting COORD: the 6 QC sle/slw_st kits (DIE-QC-100 WAIT-FORM).
+## 11-13 02:1x
+- Recipe-loss class: overlay #2 = KW-FIX-45 macro_skip_rtlmp (kit-ops-1/ms0, ms_overlay.sh) in src_hbm_main_7073a6b4a5 and src_kv_main_66e6607e3f on 5 hosts (gen_phys 3d5beb3720f5bfeb). PHY_NC/PHY_NW relaunched 02:07. READY claude/kit-ops-1-phy-skip-rtlmp-1113@427c251f4c; when MERGED (plus train 30), move the wave src to that main and drop both overlays.
+- (i) Released root/q_spt1/q_spt2/vsN4/5/6 (+ xtap route holds). q_spb1/vsN1/vsN2 stay held for pEv11. q_spt2 has no row (OWNERS SIGNED-UNVERSIONED).
+- (ii) ARMED: when ROOT-MERGE-61 posts train 33 MERGED (HBM pEv11c, plan c9ac33aeb09c, events/hbm_pEv11_1113), repeat the pEv10 switch: archive the new main, bind with the package recipe, run ra0 + ms0 overlays, probe old vs new, re-kit only the changed types (q_spb1, vsN1, vsN2, NW_io, q_b113 + probe), release the xtap holds on q_spb1/vsN1/vsN2, keep unchanged pEv10 keys, post a RESULT.
