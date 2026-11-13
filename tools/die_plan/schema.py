@@ -1390,6 +1390,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
         "depth": {"type": "integer", "minimum": 1},
         "origin_rect_um": {"type": "array", "minItems": 4, "maxItems": 4,
                            "items": {"type": "number"}},
+        # R-REACH-1 (RULEBOOK-1113): equal stage prefixes are one kept relay (clock_landings.reader_start_owners)
+        "share_trunk": {"type": "boolean"},
         "branches": {"type": "object", "additionalProperties": {
             "type": "object", "additionalProperties": False, "required": ["stages"],
             "properties": {"stages": {"type": "array", "minItems": 1, "items": {
@@ -1397,12 +1399,24 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
                                "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# R-REACH (RULEBOOK-1113, tools/die_plan/reach_rules.py): reach_homes = where the soft logic of the named face buses is
+# placed (rule 2, macro barriers; rule 3, bus windows); budgets.r_reach = G0 severity of check "r_reach".
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reach_homes"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["name", "rect_um", "buses"],
+                               "properties": {"name": {"type": "string"},
+                                              "rect_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                                                          "items": {"type": "number"}},
+                                              "buses": {"type": "array", "items": {"type": "string"}},
+                                              "note": {"type": "string"}}}}
+SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
+SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] = {"type": "boolean"}   # R-REACH-5 default chains (gen_phys)
 # W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;
 # every receiving crossing binds K+W-R. Default absent = byte-identical.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_writer_start"] = {
     "type": "object", "additionalProperties": False, "required": ["depth", "branches"],
     "properties": {
         "depth": {"type": "integer", "minimum": 1},
+        "share_trunk": {"type": "boolean"},      # R-REACH-1, as landing_reader_start.share_trunk
         "branches": {"type": "object", "minProperties": 1, "additionalProperties": {
             "type": "object", "additionalProperties": False, "required": ["stages"],
             "properties": {"stages": {"type": "array", "minItems": 1, "items": {

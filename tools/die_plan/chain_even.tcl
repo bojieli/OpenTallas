@@ -7,6 +7,11 @@
 #   ::ot_chain_groups = optional list of {name from_re {stage_re..} cone_re to_re}: one clustered chain (metadata cohort):
 #                       centroid of from_re -> stage_re stages by index -> cone flop(s) -> centroid of to_re
 # Both come from /work/chain_even_cfg.tcl (gen_phys, plan type key chain_even).
+# R-REACH-5 (RULEBOOK 11-13, RULES-REACH-1; gen_phys.REACH_EVEN_CHAINS, every kit without its own chain_even key):
+#   ::ot_chain_min_hop_um  = only a chain with a hop (head -> stage .. -> tail) longer than this is re-spaced (405: a
+#                            chain inside the reach is left where GPL put it, so kits without the class are unchanged)
+#   ::ot_chain_skip_sited  = 1: flops the plan sited (ot_face_flops.txt: face / station / pad registers that were FIRM
+#                            through GPL and were just released) are never moved as stages
 uplevel #0 {
 set ce_blk [ord::get_db_block]
 set ce_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
@@ -18,7 +23,14 @@ foreach i [$ce_blk getInsts] { if {[[$i getMaster] isBlock]} { set b [$i getBBox
 proc ce_clean {n} { return [string map {\\ {}} $n] }
 proc ce_isff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
 proc ce_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "HB*" $m]}] }
-proc ce_movable {inst} { return [expr {[$inst getPlacementStatus] ni {FIRM LOCKED COVER}}] }
+set ce_sited {}
+if {[info exists ::ot_chain_skip_sited] && $::ot_chain_skip_sited && [info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/ot_face_flops.txt]} {
+  set ce_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]
+  foreach ce_ln [split [read $ce_fh] "\n"] { if {$ce_ln ne ""} { dict set ce_sited [string map {\\ {}} [lindex [split $ce_ln "\t"] 0]] 1 } }
+  close $ce_fh
+}
+set ce_min_hop [expr {[info exists ::ot_chain_min_hop_um] ? round($::ot_chain_min_hop_um * $ce_dbu) : 0}]
+proc ce_movable {inst} { global ce_sited; return [expr {[$inst getPlacementStatus] ni {FIRM LOCKED COVER} && ![dict exists $ce_sited [string map {\\ {}} [$inst getName]]]}] }
 proc ce_ctr {b} { return [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] }
 proc ce_out {inst} { set r {}; foreach it [$inst getITerms] { if {[$it isOutputSignal] && [$it getNet] ne "NULL"} { lappend r [$it getNet] } }; return $r }
 # forward trace from a net through buffers: returns {buffers(by depth) loads(iterm)}
@@ -82,6 +94,14 @@ proc ce_chain {head re} {
   if {$tail eq "" || [llength $seq] < 2} { return 0 }
   set hops [expr {[llength $seq]}]   ;# stages after head + 1 tail hop
   lassign [ce_ctr [$head getBBox]] hx hy; lassign $tail tx ty
+  global ce_min_hop
+  if {$ce_min_hop > 0} {
+    # R-REACH-5: leave a chain whose hops are all inside the reach
+    set px $hx; set py $hy; set worst 0
+    foreach s [lrange $seq 1 end] { lassign [ce_ctr [$s getBBox]] sx2 sy2; set worst [expr {max($worst, abs($sx2-$px)+abs($sy2-$py))}]; set px $sx2; set py $sy2 }
+    set worst [expr {max($worst, abs($tx-$px)+abs($ty-$py))}]
+    if {$worst <= $ce_min_hop} { return 0 }
+  }
   set old 0; set hp {}
   for {set j 1} {$j < [llength $seq]} {incr j} {
     lassign [ce_at $hx $hy $tx $ty [expr {double($j)/$hops}]] x y

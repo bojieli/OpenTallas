@@ -28,6 +28,11 @@ CLASSES (limits from the canonical rules; METHODOLOGY 12.1e / 12.8b, geom_rules 
                        reader/writer START stages, landing_local_resets) names a relay of the re-solved reset tree at its
                        depth within 405 um; fixed by street_rule.reset_resel (STREET-RULE-1 d94ec4b983).
 
+  7 start_fan          (opt-in, --classes ...,7) R-REACH-1 (RULEBOOK 11-13, reach_rules.py): the count-aligned START fan,
+                       origin -> every input ring / FSTART output pin <= 405 um per registered hop and <= 48 loads per
+                       copy; fixed by clock.landing_reader_start / landing_writer_start with share_trunk region hubs.
+  8 fwd_source         (opt-in, --classes ...,8) R-REACH-4: every forwarded clock output takes the nearest grid tap.
+
   6 landed_window      (die level, only with --landed-hops TSV) a landed crossing launch_part -> capture_part over the
                        landing window by over_ps gets k = ceil(over_ps / window) cycles on every lane of that part pair
                        (lanes[].fixed_cycles = latency cycles + k; owner-approved +1 register per over-reach hop).
@@ -1233,6 +1238,25 @@ def fix_type(P, Q, tn, classes, base_row, cap, radius, reach, span, plan_path):
             rec["reset_terminals"] = rt
     if "3" in classes and base_row.get("c3"):
         rec["fwd"] = fix_fwd(plan_obj(Q, plan_path), Q, tn, span)
+    # R-REACH (RULEBOOK 11-13, reach_rules.py), opt-in classes, run LAST so they see the final taps / reset tree:
+    # 8 = rule 4 forwarded clock source -> nearest tap; 7 = rule 1 START fan (shared relay trunks, K - depth at the bind)
+    if "7" in classes or "8" in classes:
+        import reach_rules as RRL
+        Pq = plan_obj(Q, plan_path)
+        if "8" in classes:
+            x = RRL.fix_fwd(Pq, t, tn, reach)
+            if x["repoints"]:
+                rec["fwd_source"] = x
+        if "7" in classes:
+            keep = copy.deepcopy(t)
+            try:
+                x = RRL.fix_start(Pq, t, tn, reach=reach)
+                if x.get("changed"):
+                    rec["start_fan"] = x
+            except Exception as e:  # noqa: BLE001  (no legal corridor / site: the type keeps its base START form)
+                t.clear()
+                t.update(keep)
+                rec["start_fan_error"] = "%s: %s" % (type(e).__name__, str(e)[:200])
     # DEPTH contract (clock_landings: depth(raw)+1 == consumer reset depth, HEAD srx3 hd_host_e k2 rst_rl_23 d2 ->
     # rst_rl_17 d1): a fix that leaves any raw reference at another release cycle than the base is not applied
     dd = depth_drift(P, Q, tn, plan_path)
