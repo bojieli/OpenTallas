@@ -1,0 +1,13 @@
+{
+  "verdict": "ROOT_CAUSE_CONFIRMED",
+  "model_source": "frozen ls_pair archives, no RTL recompile",
+  "observation": "Baseline native H8 RT2 expander receives consecutive P loads while pending replay; sticky expander fault goes high at cycle80.",
+  "evidence": [
+    "EXP 78 lv1 mode1 pending0 badgrp0 fault0",
+    "EXP 79 lv1 mode1 pending1 badgrp0 fault0",
+    "EXP 80 lv1 mode1 pending0 badgrp0 fault1"
+  ],
+  "explanation": "LA=3 P-load prefetch permits bursts faster than the native RT2 expander can consume. It needs one replay cycle with no other load after a live second word. Baseline and delayed band change burst spacing and lose different P words; first three prefetched blocks differ before the merge.",
+  "repair": "Under OT_SVC_H8_REUSE_RT2 gate both p_ready_i and q_ready during a parent replay-pending cycle. Set pending from p_go && p_w2v; no P or Q load in that replay slot. Preserve all other forms/default behavior.",
+  "qualification": "Old baseline is invalid on these bursts. Re-run fresh guarded native reference plus DUT and mutant; preserve old FAIL. Price the P-load throughput/cycle change. faults=0 in the existing bench summary counts expected golden fault flags, not observed af."
+}

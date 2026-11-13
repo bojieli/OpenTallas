@@ -389,7 +389,13 @@ module ot_hdc_v41x_attn_tile_s #(
     end endgenerate
 `ifdef OT_SVC_H8_REUSE_RT2
     ot_s81c_attn_tile_hc_h8_rt2
-`ifdef OT_S81C_TILE_PAIR
+`ifdef OT_S81C_TILE_REACH
+        #(.PAIR(5))            // five distributed per-core input stages, parent tags +5
+`elsif OT_S81C_TILE_STAGE
+        #(.PAIR(4))            // per-core senders + per-core input stage: tile outputs ONE EDGE LATER (parent tags +1)
+`elsif OT_S81C_TILE_CORE
+        #(.PAIR(3))            // one sender + reset register per core (west-face street), no cycle moves
+`elsif OT_S81C_TILE_PAIR
         #(.PAIR(1))            // HARD-S81-SVC-1 11-13: reset + load word registered once per core pair (no cycle moves)
 `endif
         u_hc (

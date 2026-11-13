@@ -1,0 +1,400 @@
+{
+ "tool": "svc_srx_lockstep.py",
+ "dut": "s81",
+ "srx": 1,
+ "band": 2,
+ "bandm": 1,
+ "shift": 5,
+ "shift_pv": 11,
+ "nstage": 2,
+ "srxt": "",
+ "seed": 11,
+ "params": {
+  "H": 8,
+  "D": 32,
+  "TD": 32,
+  "NL": 4,
+  "TROWS": 640,
+  "PWORDS": 2,
+  "ILV": 1,
+  "REPL": 2,
+  "NSTAGE": 2,
+  "FPL": 4,
+  "FML": 6,
+  "TILE_S": 1,
+  "NARROW": 1,
+  "MFAN": 1,
+  "F12": 1,
+  "FPLX": 5,
+  "TRX": 1,
+  "SC_CRED": 0,
+  "PV_CRED": 0,
+  "NBANKP": 0
+ },
+ "T": [
+  37,
+  128,
+  1,
+  200,
+  64,
+  333,
+  96,
+  640,
+  5,
+  160
+ ],
+ "ref": {
+  "tag": "s81_srx0_m0_hc",
+  "summary": {
+   "V41XATTN": {
+    "jobs": "10",
+    "sc_checked": "13312",
+    "sc_errors": "13312",
+    "pv_checked": "2560",
+    "pv_errors": "2560",
+    "faults": "0",
+    "lat_score_max": "29",
+    "lat_score_min": "29",
+    "lat_pv_max": "102",
+    "cycles": "1224",
+    "timeout": "0"
+   },
+   "V41XSETCHK": {
+    "loads": "290",
+    "reads": "160576",
+    "errors": "0"
+   }
+  },
+  "beats_sc": 419,
+  "beats_pv": 80
+ },
+ "runs": {
+  "s81_srx1_m0_band2m1t1_hc": {
+   "srxmut": 0,
+   "lockstep": false,
+   "data_equal": false,
+   "first_job_shift_ok": true,
+   "end_cycle": [
+    1224,
+    1255
+   ],
+   "setcheck_errors": "0",
+   "summary": {
+    "V41XATTN": {
+     "jobs": "10",
+     "sc_checked": "13312",
+     "sc_errors": "13312",
+     "pv_checked": "2560",
+     "pv_errors": "2560",
+     "faults": "0",
+     "lat_score_max": "34",
+     "lat_score_min": "34",
+     "lat_pv_max": "108",
+     "cycles": "1255",
+     "timeout": "0"
+    },
+    "V41XSETCHK": {
+     "loads": "290",
+     "reads": "160576",
+     "errors": "0"
+    }
+   },
+   "compare": {
+    "IJ": {
+     "n_ref": 10,
+     "n_dut": 10,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      5,
+      10,
+      15,
+      20
+     ]
+    },
+    "IQ": {
+     "n_ref": 80,
+     "n_dut": 80,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 16,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      4,
+      5,
+      10,
+      15,
+      20
+     ]
+    },
+    "IKV": {
+     "n_ref": 419,
+     "n_dut": 419,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      5,
+      10,
+      15,
+      20
+     ]
+    },
+    "IP": {
+     "n_ref": 210,
+     "n_dut": 210,
+     "shift": 5,
+     "ok": false,
+     "first_bad": 21,
+     "data_equal": true,
+     "first_shift": 5,
+     "deltas": [
+      5,
+      10,
+      15,
+      20,
+      25
+     ]
+    },
+    "BSC": {
+     "n_ref": 419,
+     "n_dut": 419,
+     "shift": 5,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": true,
+     "first_shift": 5,
+     "deltas": [
+      5,
+      10,
+      15,
+      20,
+      25
+     ]
+    },
+    "BPV": {
+     "n_ref": 80,
+     "n_dut": 80,
+     "shift": 11,
+     "ok": false,
+     "first_bad": 24,
+     "data_equal": false,
+     "first_shift": 11,
+     "deltas": [
+      11,
+      16,
+      21,
+      26,
+      31
+     ]
+    }
+   }
+  },
+  "s81_srx1_m1_band2m1t1_hc": {
+   "srxmut": 1,
+   "lockstep": false,
+   "data_equal": false,
+   "first_job_shift_ok": false,
+   "end_cycle": null,
+   "setcheck_errors": null,
+   "summary": {},
+   "compare": {
+    "IJ": {
+     "n_ref": 10,
+     "n_dut": 3,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": false,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      18
+     ]
+    },
+    "IQ": {
+     "n_ref": 80,
+     "n_dut": 22,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 16,
+     "data_equal": false,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      18
+     ]
+    },
+    "IKV": {
+     "n_ref": 419,
+     "n_dut": 42,
+     "shift": 0,
+     "ok": false,
+     "first_bad": null,
+     "data_equal": false,
+     "first_shift": 0,
+     "deltas": [
+      0
+     ]
+    },
+    "IP": {
+     "n_ref": 210,
+     "n_dut": 5,
+     "shift": 5,
+     "ok": false,
+     "first_bad": 0,
+     "data_equal": false,
+     "first_shift": 18,
+     "deltas": [
+      18
+     ]
+    },
+    "BSC": {
+     "n_ref": 419,
+     "n_dut": 41,
+     "shift": 5,
+     "ok": false,
+     "first_bad": 0,
+     "data_equal": false,
+     "first_shift": 5,
+     "deltas": [
+      5
+     ]
+    },
+    "BPV": {
+     "n_ref": 80,
+     "n_dut": 0,
+     "shift": 11,
+     "ok": false,
+     "first_bad": null,
+     "data_equal": false,
+     "first_shift": null,
+     "deltas": []
+    }
+   }
+  },
+  "s81_srx1_m2_band2m1t1_hc": {
+   "srxmut": 2,
+   "lockstep": false,
+   "data_equal": false,
+   "first_job_shift_ok": false,
+   "end_cycle": [
+    1224,
+    1113
+   ],
+   "setcheck_errors": null,
+   "summary": {},
+   "compare": {
+    "IJ": {
+     "n_ref": 10,
+     "n_dut": 10,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      5,
+      10,
+      15,
+      20
+     ]
+    },
+    "IQ": {
+     "n_ref": 80,
+     "n_dut": 80,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 16,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      4,
+      5,
+      10,
+      15,
+      20
+     ]
+    },
+    "IKV": {
+     "n_ref": 419,
+     "n_dut": 419,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      5,
+      10,
+      15,
+      20
+     ]
+    },
+    "IP": {
+     "n_ref": 210,
+     "n_dut": 190,
+     "shift": 5,
+     "ok": false,
+     "first_bad": 21,
+     "data_equal": false,
+     "first_shift": 5,
+     "deltas": [
+      5,
+      10,
+      15,
+      20
+     ]
+    },
+    "BSC": {
+     "n_ref": 419,
+     "n_dut": 415,
+     "shift": 5,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": false,
+     "first_shift": 5,
+     "deltas": [
+      5,
+      10,
+      15,
+      20,
+      25
+     ]
+    },
+    "BPV": {
+     "n_ref": 80,
+     "n_dut": 68,
+     "shift": 11,
+     "ok": false,
+     "first_bad": 0,
+     "data_equal": false,
+     "first_shift": 9,
+     "deltas": [
+      9,
+      11,
+      16,
+      21,
+      26,
+      28,
+      34,
+      38
+     ]
+    }
+   }
+  }
+ },
+ "status": "FAIL"
+}

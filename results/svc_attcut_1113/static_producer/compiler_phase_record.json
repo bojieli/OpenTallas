@@ -1,0 +1,96 @@
+[
+  {
+    "status": "PROSPECTIVE_UNCALIBRATED",
+    "h8_calibrated": false,
+    "build_defines": [
+      "OT_SVC_MERGE_H4",
+      "OT_ATTN_HCORE",
+      "OT_SVC_H8_REUSE_RT2"
+    ],
+    "relative_to": "outer static-program GO edge",
+    "go_phase": 0,
+    "load_interval": 2,
+    "engine_load_phase": 0,
+    "q_launch_phase": 1,
+    "p_push_phase": 1,
+    "q_launch_cycles": [
+      1,
+      3,
+      5,
+      7,
+      9,
+      11,
+      13,
+      15
+    ],
+    "q_accept_cycles": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+    ],
+    "kv_accept_first": 2,
+    "kv_interval": 1,
+    "kv_beats": 8,
+    "requested_po": 64,
+    "first_p_push": 65,
+    "first_p_engine_slot": 66,
+    "p_round_up": 1,
+    "existing_p_skid_slots": 2,
+    "runtime_ready_driven_issue": false,
+    "new_elastic_storage": false,
+    "emitted_pio_pvo_unchanged": true,
+    "requires_full_programme_calibration": true
+  },
+  {
+    "status": "PROSPECTIVE_UNCALIBRATED",
+    "h8_calibrated": false,
+    "build_defines": [
+      "OT_SVC_MERGE_H4",
+      "OT_ATTN_HCORE",
+      "OT_SVC_H8_REUSE_RT2"
+    ],
+    "relative_to": "outer static-program GO edge",
+    "go_phase": 1,
+    "load_interval": 2,
+    "engine_load_phase": 0,
+    "q_launch_phase": 1,
+    "p_push_phase": 1,
+    "q_launch_cycles": [
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16
+    ],
+    "q_accept_cycles": [
+      3,
+      5,
+      7,
+      9,
+      11,
+      13,
+      15,
+      17
+    ],
+    "kv_accept_first": 2,
+    "kv_interval": 1,
+    "kv_beats": 8,
+    "requested_po": 64,
+    "first_p_push": 64,
+    "first_p_engine_slot": 65,
+    "p_round_up": 0,
+    "existing_p_skid_slots": 2,
+    "runtime_ready_driven_issue": false,
+    "new_elastic_storage": false,
+    "emitted_pio_pvo_unchanged": true,
+    "requires_full_programme_calibration": true
+  }
+]

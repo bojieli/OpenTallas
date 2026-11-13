@@ -86,6 +86,7 @@ module ot_s81_svc_attn_s #(
     // against the same p feed, the SRX signature with n = SRX + 2 (the compiler moves PIO / KPV by SRX + 2).
     // Needs SRX >= 1, TRX 1, REPL 2, TILE_S 1, MFAN 1, TD 32, H 8.  The as-built instance names do not move at 0.
     parameter integer BANDX = 0,       // v2: the band's input capture depth (1 = v1); scores +(BANDX + 1)
+    parameter integer BANDT = 0,       // edges the band's tile leaves later than as built (OT_S81C_TILE_STAGE: 1): scores and P.V +BANDT
     parameter integer BANDM = 0,       // v2: 1 = merge inputs registered in the band; P.V +(BANDX + 1 + BANDM)
     parameter integer BANDMUT = 0,     // BANDX bench negative controls: 1 = output tags only +1, 2 = band 0's merge tags
                                        //   not captured (one edge early)
@@ -295,7 +296,31 @@ module ot_s81_svc_attn_s #(
     assign job_ready = !act;
     wire job_go = job_v && job_ready;
     // p words: a new block needs a free bank and at most 3 blocks between the issuing and the loading one
+    // Private static-calendar candidate; producer and compiler must select the same define.
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
+    // Native H8 reuse serializes a P packet into two H16-RT2 load cycles.
+    // Every odd load phase is statically reserved for replay, whether or not
+    // the preceding slot carried a P packet. Q loads use the same fixed slots.
+    // This is a known II=2 resource calendar; the native programme must issue
+    // on these slots. No new credit/queue or request-dependent issue rule.
+    wire rt2_load_slot;
+`ifdef OT_ATTN_HCORE
+`ifdef OT_SVC_H8_REUSE_RT2
+    generate if (H == 8) begin : g_rt2_load_calendar
+        ot_s81_svc_rt2_load_calendar u_calendar (.clk(clk), .rst_n(rst_n), .load_slot(rt2_load_slot));
+    end else begin : g_rt2_load_calendar_other_h
+        assign rt2_load_slot = 1'b1;
+    end endgenerate
+`else
+    assign rt2_load_slot = 1'b1;
+`endif
+`else
+    assign rt2_load_slot = 1'b1;
+`endif
+    wire p_ready_i = rt2_load_slot && p_side && (pl_blk < nblk_p) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
+`else
     wire p_ready_i = p_side && (pl_blk < nblk_p) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
+`endif
     // REPL: a 2-entry skid between the p port and the loader, so p_ready and q_ready come from registers
     // only (no p_v -> q_ready path); a p word reaches the loader one cycle after its handshake
     wire p_v_i;
@@ -330,7 +355,11 @@ module ot_s81_svc_attn_s #(
     wire p_go = p_v_i && p_ready_i;
     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
     wire p_w2v = (PWORDS > 1) && ({8'd0, pl_word} + 1 < words_blk);   // second word of the pair is live
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
+    assign q_ready = rt2_load_slot && act && (q_cnt < H) && ((q_cnt != 0) || q_bank_ok) && !((ILV != 0) && p_go);
+`else
     assign q_ready = act && (q_cnt < H) && ((q_cnt != 0) || q_bank_ok) && !((ILV != 0) && p_go);
+`endif
     wire q_go = q_v && q_ready;
     // ILV: a job without the reuse flag rewrites the staging only once the back job's fills are done
     assign kv_ready = act && (wptr < T) && ((ILV == 0) || (NSTAGE >= 2) || reuse_f || !act_b || (fl_blk >= nblk_b));
@@ -765,7 +794,7 @@ module ot_s81_svc_attn_s #(
                 end
                 ot_s81_svc_band #(.H(H), .TD(TD), .DPT(DPT), .NL(NL), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
                                   .FML(FML), .F12(F12), .MLEV(MLEV), .FX(FX), .XOFF(XO), .NF(NF),
-                                  .CAPD(BANDX), .MREG(BANDM),
+                                  .CAPD(BANDX), .MREG(BANDM), .TILEX(BANDT),
                                   .MUT((BANDMUT == 2 && gk == 0) ? 2 : 0)) u_band (
                     .clk(clk), .rst_n(rst_n),
                     .ctl_i(zo[19:0]), .wpad_i(zo[20 +: NL]), .fw_i(fw),
@@ -1123,7 +1152,7 @@ module ot_s81_svc_attn_s #(
     endgenerate
 
     // tags to the tile outputs (TLX: the landed round trip, compiler re-schedule; VT: ATTN1 sub-beats)
-    localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? BANDX : BANDX + 1) : 0;   // band capture stages + output register
+    localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? BANDX : BANDX + 1) + BANDT : 0;   // band capture stages + output register
     generate if (BANDX == 0) begin : g_bd0
         assign bd_ov = {NT{1'b0}}; assign bd_mov = {NT{1'b0}};
         assign bd_y = {(NT*H*32){1'b0}}; assign bd_my = {(NT*H*32){1'b0}};
@@ -1238,4 +1267,20 @@ module ot_s81_svc_attn_s #(
     always @(posedge clk) begin
         pv_c <= m_c; pv_y <= m_y; pv_f <= m_f;
     end
+endmodule
+
+// Fixed native H8 load calendar. Phase zero is the first active clock edge
+// after local reset release; phase one is always reserved for RT2 replay.
+// The phase never depends on a request, acceptance, ready signal or credit.
+module ot_s81_svc_rt2_load_calendar (
+    input wire clk,
+    input wire rst_n,
+    output wire load_slot
+);
+    reg phase;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) phase <= 1'b0;
+        else phase <= !phase;
+    end
+    assign load_slot = !phase;
 endmodule

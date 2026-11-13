@@ -1,0 +1,31 @@
+Q case0 idx0 cycle249 relative3 slot1
+Q case0 idx1 cycle251 relative5 slot1
+Q case0 idx2 cycle253 relative7 slot1
+Q case0 idx3 cycle255 relative9 slot1
+Q case0 idx4 cycle257 relative11 slot1
+Q case0 idx5 cycle259 relative13 slot1
+Q case0 idx6 cycle261 relative15 slot1
+Q case0 idx7 cycle263 relative17 slot1
+P case0 idx0 cycle310 relative64 slot0
+P case0 idx1 cycle312 relative66 slot0
+P case0 idx2 cycle314 relative68 slot0
+P case0 idx3 cycle316 relative70 slot0
+PRODUCER case0 go_phase1 Q8 KV8 P4 qerr0 phaseerr0 fc00000000 af0 expandedP8
+Q case1 idx0 cycle757 relative2 slot1
+Q case1 idx1 cycle759 relative4 slot1
+Q case1 idx2 cycle761 relative6 slot1
+Q case1 idx3 cycle763 relative8 slot1
+Q case1 idx4 cycle765 relative10 slot1
+Q case1 idx5 cycle767 relative12 slot1
+Q case1 idx6 cycle769 relative14 slot1
+Q case1 idx7 cycle771 relative16 slot1
+P case1 idx0 cycle820 relative65 slot0
+P case1 idx1 cycle822 relative67 slot0
+P case1 idx2 cycle824 relative69 slot0
+P case1 idx3 cycle826 relative71 slot0
+PRODUCER case1 go_phase0 Q8 KV8 P4 qerr0 phaseerr0 fc00000000 af0 expandedP8
+STATIC_PRODUCER PASS mut=0
+- rtl/dsrom_sys/s81_dv/svc_rs/test/tb_svc_static_producer.sv:61: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.001 s; speed 1.230 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

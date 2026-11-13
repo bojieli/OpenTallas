@@ -1,0 +1,103 @@
+{
+  "scope": "fixed T32 actual outer/macro/native source/control/timing; preloaded P; no SM-feedback PIO calibration or whole-die qualification",
+  "status": "PASS",
+  "defines": [
+    "OT_SVC_MERGE_H4",
+    "OT_ATTN_HCORE",
+    "OT_S81C_HCORE_CTLA",
+    "OT_S81C_HCORE_RST_TIMED",
+    "OT_SVC_H8",
+    "OT_SVC_H8_REUSE_RT2",
+    "OT_S81C_TILE_PAIR",
+    "OT_S81C_TILE_REACH",
+    "OT_SVC_BAND",
+    "OT_SVC_SRX=1",
+    "OT_SVC_ATT_MEM_MACRO"
+  ],
+  "test_po": 64,
+  "test_pvo": 200,
+  "T": 32,
+  "h8_calibrated": false,
+  "general_pio_pvo_adoption": false,
+  "cases": [
+    {
+      "case": 0,
+      "q_accept": [
+        3,
+        5,
+        7,
+        9,
+        11,
+        13,
+        15,
+        17
+      ],
+      "p_push": [
+        64,
+        66,
+        68,
+        70
+      ],
+      "p_engine_accept": [
+        65,
+        67,
+        69,
+        71
+      ],
+      "kv_accept": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "summary": "go_phase1 Q8 KV8 Ppush4 Paccept4 scores8 rawPV8 drainedWords40 payloadErrors0 phaseErrors0 fc00000000 afSeen0 scoreDates77:84 rawPVDates156:163 drainDates202:241 done1"
+    },
+    {
+      "case": 1,
+      "q_accept": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16
+      ],
+      "p_push": [
+        65,
+        67,
+        69,
+        71
+      ],
+      "p_engine_accept": [
+        66,
+        68,
+        70,
+        72
+      ],
+      "kv_accept": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "summary": "go_phase0 Q8 KV8 Ppush4 Paccept4 scores8 rawPV8 drainedWords40 payloadErrors0 phaseErrors0 fc00000000 afSeen0 scoreDates76:83 rawPVDates157:164 drainDates202:241 done1"
+    }
+  ],
+  "sha256": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "6fa3845ffcd2fd76bdfc1487b4a649fac3092ab0bbb21d4eb79e97fc936e5bd9",
+    "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv": "beac32eeb50b64e26acdd62fb085b735dadbe964f06faa011c5fa3cc1c1b709d",
+    "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_svc_native_programme.sv": "703ef8cbc69933056116db38f2ce9ff1885544b7285a6b709e5caafe1ee0ccbf",
+    "tools/s81_dv/svc_rs/run_native_programme.sh": "1ab9e953e8f291933880a0c2d1539da776b08ff5659e28039177f8b1d63e40fc"
+  },
+  "run_log_sha256": "58ff34b8818709100fc3d9f70bb1a330febf12fa59ea0c97d188847cc13472df"
+}

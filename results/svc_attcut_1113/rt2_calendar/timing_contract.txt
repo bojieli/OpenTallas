@@ -1,0 +1,9 @@
+Independent real-module transport proof, final timing assertions PASS.
+Actual calendar: ot_s81_svc_rt2_load_calendar, phase toggles on every active clock, independent of requests/acceptance/ready/credits. Phase0 is first active edge after reset; phase1 always reserved.
+Static source programme: 8 Q packets followed by 4 P packets, at cycles0,2,...22. No runtime waiting, input delay, elastic FIFO, or testbench backpressure.
+Each packet contains64 unique16-bit fields. Q=8x64=512 fields; P=32rowsx8heads=256 fields. All768 fields checked independently against packet/row/head values.
+P input packet contains8rowsx8heads. Real RT2 expansion emits4rowsx16heads per cycle; upper8heads are checked zero; observed row base=2*out_grp. Packet groups0,2,4,6 map through output groups0,2,4,...14.
+Measured nominal:12 inputs, II2;8 Q outputs and8 P outputs; first output cycle0, last23, first P16, last P23;0 payload/metadata/timing/phase errors, actual af0. Phase checked through40 active cycles, including idle24..39.
+Malformed cadence control: same12 input payloads/groups at consecutive cycles0..11, ignoring reserved phase. Measured8 Q outputs but only4 P outputs;128 P-field mismatches and actual af1, with6 reserved-phase inputs. This catches data loss, not just a phase assertion.
+Final ot-run unit epyc2 oth-ubuntu-1589941-1794609616 exit0. Intel2 frontend492782; log ~/tmp/hard_s81_svc_calendar_timing_codex.log. Source/output capsule epyc2 hard-s81-svc-1/calendar_probe/{root,out_timing}.
+Bench timing additions remain uncommitted after parent7239ea0c89. Exact diff bench.patch and run.log preserved here; parent collects follow-up. No live own job remains. No design source edits beyond the assigned new bench and runner; no adoption.

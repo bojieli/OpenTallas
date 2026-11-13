@@ -1,0 +1,4 @@
+PRIVATE FORM, NOT READY FOR COMBINED PHYSICAL RELEASE.
+PAIR5 adds five per-core input stages, with the reset and expander sticky-fault pipelines delayed consistently. Defaults and signed head macro interfaces unchanged. Intended physical path: four <=405um horizontal hops through the inter-row corridor, then the last stage at each W-face pin; no physical proof launched. Current15.12um macro streets remain a separate blocking geometry item.
+Production eight-head tile differential proof seed1:16000 cycles,3 warm resets,2 malformed odd P-groups,1560 nonzero output beats;0 mismatches on legacy pair,per-core,one-stage and five-stage variants; negative control8181 mismatching cycles. Seeds2/3 continue in epyc2 hard-s81-svc-1/tile_reach5/out.
+Whole engine programme remains FAIL for the inherited one-stage form (PV corruption on jobs3/5/6), being debugged separately. This source package does not authorize a new physical build or plan adoption.

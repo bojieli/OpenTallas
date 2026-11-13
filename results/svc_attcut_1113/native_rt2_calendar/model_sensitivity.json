@@ -1,0 +1,88 @@
+{
+  "grade": "PRICED_ONLY_NOT_NATIVE_RTL",
+  "head": "3e9aa6b25c10251e1d406dfbfda0bc80737e907e",
+  "terms": {
+    "attn.scores": 769.0,
+    "attn.pv": 1076.0
+  },
+  "cases": {
+    "srx0_cut0": {
+      "srx": 0,
+      "cut": false,
+      "scores_added_per_pass": 0,
+      "pv_added_per_pass": 0,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1423824.58,
+          "tau": 1.0,
+          "tok_s": 842.8004522860533,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 0.0,
+          "rate_delta_pct": 0.0
+        },
+        "mtp": {
+          "T_cycles": 1839233.83,
+          "tau": 4.159,
+          "tok_s": 2713.521205729453,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 0.0,
+          "rate_delta_pct": 0.0
+        }
+      }
+    },
+    "srx1_cut0": {
+      "srx": 1,
+      "cut": false,
+      "scores_added_per_pass": 9,
+      "pv_added_per_pass": 20,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424984.58,
+          "tau": 1.0,
+          "tok_s": 842.1143757218762,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 1160.0,
+          "rate_delta_pct": -0.08140438965311692
+        },
+        "mtp": {
+          "T_cycles": 1839638.83,
+          "tau": 4.159,
+          "tok_s": 2712.923818856335,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 405.0,
+          "rate_delta_pct": -0.022015190883961644
+        }
+      }
+    },
+    "srx1_cut1": {
+      "srx": 1,
+      "cut": true,
+      "scores_added_per_pass": 11,
+      "pv_added_per_pass": 22,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1425144.58,
+          "tau": 1.0,
+          "tok_s": 842.0198321211732,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 1320.0,
+          "rate_delta_pct": -0.09262218153333057
+        },
+        "mtp": {
+          "T_cycles": 1839728.83,
+          "tau": 4.159,
+          "tok_s": 2712.7911019364738,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 495.0,
+          "rate_delta_pct": -0.026906139205307156
+        }
+      }
+    }
+  }
+}

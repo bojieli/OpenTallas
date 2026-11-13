@@ -1,0 +1,13 @@
+{
+  "status": "ISOLATED_TILE_MEASURED_COMPOSITION_PENDING",
+  "tile_input_stages": 5,
+  "tile_output_added_cycles": 5,
+  "band_capture_cycles": 2,
+  "band_output_cycles": 1,
+  "band_merge_register_cycles": 1,
+  "engine_score_added_formula": "SRX+8",
+  "engine_pv_added_formula": "2*SRX+17",
+  "srx1_score_added": 9,
+  "srx1_pv_added": 19,
+  "scope": "Prospective model rows only; whole-engine native programme currently fails and must be fixed before adoption."
+}

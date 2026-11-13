@@ -24,6 +24,7 @@ module tb_hdc_v41x_attn (input wire clk);
     parameter integer BANDX = 0;           // S81 DUT only: ot_s81_svc_band form (svc_srx_lockstep.py --band)
     parameter integer BANDMUT = 0;
     parameter integer BANDM = 0;
+    parameter integer BANDT = 0;
     parameter integer H = 16;
     parameter integer D = 512;
     parameter integer TD = 64;
@@ -115,7 +116,7 @@ module tb_hdc_v41x_attn (input wire clk);
                        #(.H(H), .D(D), .TD(TD), .NL(NL), .TROWS(TROWS),
                         .SRAM_MACRO(SRAM_MACRO != 0), .PWORDS(PWORDS), .ILV(ILV), .FPL(FPL), .FML(FML), .SC_CRED(SC_CRED), .PV_CRED(PV_CRED), .NBANKP(NBANKP), .REPL(REPL), .NSTAGE(NSTAGE), .TILE_S(TILE_S), .NARROW(NARROW), .MFAN(MFAN), .F12(F12), .FPLX(FPLX), .TRX(TRX), .SRX(SRX), .SRXT(SRXT), .SRXMUT(SRXMUT)
 `ifdef SRX_DUT_S81
-                        , .BANDX(BANDX), .BANDMUT(BANDMUT), .BANDM(BANDM)
+                        , .BANDX(BANDX), .BANDMUT(BANDMUT), .BANDM(BANDM), .BANDT(BANDT)
 `endif
                         ) dut (
         .clk(clk), .rst_n(rst_n), .job_v(job_v), .job_t(job_t), .job_ready(job_ready),

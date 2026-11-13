@@ -1,0 +1,2 @@
+The earlier native_hcore_stage1_fail/README no-fault statement was based on the bench summary faults=0. That summary counts expected golden flags, not observed DUT protocol faults. Archive traces show actual expander af1 after baselinecycle80/DUTcycle88. The old FAIL verdict and log are preserved. Actual af0 is explicitly checked in the independent static calendar test.
+PAIR5 isolated tile proof now PASS all3seeds; seed2/3 logs accompany this commit. Full native engine programme remains pending.
