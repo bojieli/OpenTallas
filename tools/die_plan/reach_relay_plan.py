@@ -7,8 +7,9 @@ Plan step (opt-in, guarded): nothing else in the plan changes.
     conservative row-envelope hop exceeds the 405-um gate (TRIGGER) gets k = max(1, ceil(hop / TRUNK) - 1) relay stages
     (TRUNK 340 um), each one flop (kind 'relay', clocked from an existing die clock-tree node of the provider, row
     segment beside it).  The stage keeps its logical parent and records fed_by (last relay) + relay_cycles k; the
-    sidecar count_aligned region of that stage takes PAD += k, so the count-aligned bind prices the boot cycles (K
-    absorbs them; START is count-aligned).  No data cycle changes.
+    sidecar count_aligned region of that stage takes PAD += k and the report lists it as count_align_edge_pad (the
+    count_align_plan --edge-pad input), so the count-aligned bind prices the boot cycles (K re-derived modulo the ring
+    count width absorbs them; START is count-aligned).  No data cycle changes.
   Monitor edges (cland_mon_{ready,fault[,clk]}__<pid>): every bundle with an edge over the 405-um gate gets k relay sites
     shared by the bundle.  Seam bundle (with cland_mon_clk): the status is re-registered on its own forwarded clock at
     each site and the clock is buffered there (fwd_clock_relay).  Same-region bundle (no clock edge): one die-clock flop
@@ -332,6 +333,9 @@ def plan(raw, side, skip_unplaced=False):
     rep = dict(schema="opentallas.reach_relay_plan.v1", site_max_um=SITE_MAX, trigger_um=TRIGGER, trunk_um=TRUNK,
                start=dict(edges=len(srows), relays=sum(r["relays"] for r in srows), before=before, after=after,
                           boot_cycles_added_max_path=after["max_relays_on_path"],
+                          # count_align_plan --edge-pad input (MESO-RECONCILE-1: per start-tree edge PAD, keyed by child
+                          # region): the bind re-derives n_nominal and K from it (K mod ring count width: data latency kept)
+                          count_align_edge_pad={r["region"]: int(regions[r["region"]]["pad"]) for r in srows},
                           provider_check=dict(errors=chk["errors"][:20], n_errors=len(chk["errors"]),
                                               max_hop_um=chk["max_hop_um"], max_clock_access_um=chk["max_clock_access_um"]),
                           rows=srows),
