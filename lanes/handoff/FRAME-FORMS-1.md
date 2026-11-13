@@ -123,3 +123,8 @@
 - Collected VOL2 all11 shards:132 types all applied True, no timing/equivalence/schema errors. Private next chain started via ot-run E4 unitoth-ubuntu-3122597-1794606241; intel2 clientPID3884133, log~/codex-s81-log/frame_next.log.
 - Existing vol2/collect_codex.py,next_codex.sh merge/finalize then chain.132 types restored120 die-owned taps (0 illegal) and1848 core taps. Tap recenter still CPU-active; no P&R launched before review.
 - r0 hub form and ft0/growth open tasks retained; no POR/wave switch.
+
+## CODEX notes 2026-11-13 14:14 PST
+- Full132 tap recentre remains CPU-active on R1; no P&R launched. To advance reviewed dense R2 pilot while R1 is repaired, started72-type R2-only private chain (R1 stays baseline) in existing E4 vol2/r2pilot, unitoth-ubuntu-3905555-1794607939, intel2client135854/log~/codex-s81-log/frame_r2pilot.log. Own chain→G0C baseline comparison→strictbind→LATCHECK; no wave registration/adoption.
+- Wave stages coherent R-FLOW06a9tools after BIND_SH_DONE, retaining7073RTL. Private standalone place-only harness/specs at intel2 existing frame-forms-1-vol/vol2codex (no route enqueue, GRT probe disabled), unlaunched until bind + tools + gate review.
+- R0 hub helper coded actual new seed and corrected reach analysis; generic new frame core→core internal_stations are not RTL-realized. Prioritize real existing cst2 station repositioning, never receipt-only hops. Remaining bank/ROM street packing being revised, not routed.

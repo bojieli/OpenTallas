@@ -80,3 +80,7 @@
 - Cause: source sidecar67 leaf collector trees differ from source plan geometry (coordinates and one self-type label), not topology/depth; old run_bind also retains asbuilt.base at original source so the candidate sidecar was ignored.
 - Private repair helpers E7 s81-forms-1/sync_baseline_sidecar_codex.py and run_bind_codex.sh align only geometry after topology/depth equality, fail on sync error, and rebase asbuilt.base to private tree. A5 candidate sidecar now syncs with refused_stale_sidecar0. No production src/sidecar edited, no adoption.
 - Existing DIE-S81-89 legy CPU job retained (PID4040400 E7); fold combined leaf/frame event before next bind; no duplicate whole bind launched.
+
+## CODEX notes 2026-11-13 14:14 PST
+- Concrete hand t28 form in E7 w/leaf_template_codex/plan_grid4_cycles.json is0growth/0hardstreet, but NOT a realizable form yet: proposed74 new station rows are receipt-only in nativeflat RTL (50core_unmapped,24recognizedonlycounted). Sum157 proposed edge-cycles must NOT be claimed actual latency. Exactcensus realization_grid4.json + report_grid4_cycles.json.
+- Root shared lane owns actual station lowering kit_istations/bind fix + minimal exact/mutant proof. Leaf helper owns plan/t75 variant. No P&R or falseREADY; original failed grid/cut analyses retained.
