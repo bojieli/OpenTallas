@@ -18,3 +18,7 @@
 - take_states += SIGNED-UNVERSIONED (hbm) and a q_spt2 hold (KIT-OPS-1 xtap): revert both once q_spb1/vsN1 are past launch.
 - Overlays: trains 34 and 35 MERGED 03:08. Drop RA=0 + ms0 at each die's next src switch (HBM, KV).
 - epyc2: DISK-E2 cleanup removed die-hbm-92-*/ab sources and qc-transport-fix-4/src_sw2; restaged 03:1x.
+## 11-13 03:4x OWNER DECISIONS
+- visual_gate "signoff" live (branch claude/kit-ops-1-visual-signoff-1113@b73feceda8, deployed to kw38/rt; backup kit-ops-1/rt-bak-visual-1113). READY posted. Revert: visual_gate "route".
+- HBM parked: hold_items "*" PARKED-OWNER-1113. Freeze to 2026-11-15 04:00: no src/plan switches; overlays stay.
+- epyc2 qc-transport-fix-4 deleted twice (02:51 DISK-E2; ~03:32 unknown). Restaged from epyc9. Watch it.
