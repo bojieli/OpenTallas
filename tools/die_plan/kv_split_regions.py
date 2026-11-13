@@ -271,9 +271,16 @@ def bind_native_measurement(raw, clock_table, cap_path, out):
     summary = cap["summary"]
     if summary.get("fail") or summary.get("below_100ps"):
         raise ValueError("measured CA fails crossing/margin gate")
-    if not cap.get("start_edges") or not summary.get("start_tree", "clock") == "clock":
+    start = summary.get("start_tree", {})
+    if not cap.get("start_edges") or not isinstance(start, dict) or start.get("form") != "clock":
         raise ValueError("measured independent origins require standard clock START edges")
+    if start.get("start_fail") or summary.get("tree_edges_ambiguous"):
+        raise ValueError("measured independent origins fail START cleanliness")
     ends = {q["id"]: (q["src"]["part"], q["dst"]["part"]) for q in raw["ports"]}
+    expected = {r["port"] for r in clock_table["ports"]}
+    received = {r["port"] for r in cap["crossings"]}
+    if expected != received:
+        raise ValueError(f"measured crossing set changed: missing={len(expected-received)} extra={len(received-expected)}")
     b = CAB.bind(cap, parts=ends)
     check = CAB.verify(b, samples=100)
     if check["identity_and_loop_errors"] or check["sim_window_violations"]:
