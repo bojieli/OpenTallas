@@ -3620,3 +3620,4 @@ CODEX: 2026-11-13 14:47 PST HEADrestoredrows pastGEN; exactbadhost_e routeheld, 
 CODEX: 2026-11-13 14:48 PST ROOT-MERGE-61 landed6 gatedsource fixes as main bec97a9fcb59; focused84PASS+PINKEEP actualcontrols/synthPASS; no tag/deploy/POR/sourcefreeze change.
 
 CODEX: 2026-11-13 14:56 PST GUNIT private gf4 Nrev PLACE exit0/LEC EQUIVALENT; actual images viewed. Additive source-only stage/test/pins/LEF a0de150aa5 pushed hub and SOURCE READY; physical core remains private, no CTS/route or plan adoption.
+CODEX: 2026-11-13 15:00 PST SVC native replay bug fixed by static II2 calendar; engine payloads exact with priced +9/+20 component receipt. Production reschedule and geometry held; source7239ea0c89 GitHub, timingd4eb5ad2b8 hub.
