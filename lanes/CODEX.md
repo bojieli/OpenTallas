@@ -10210,3 +10210,20 @@ Coverage: S81 -> s81; HEAD -> head; QC -> qc; KV -> kv; HBM -> hbm; shared landi
 
 ## CODEX takeover 2026-11-13 06:59 PST
 Coverage: CODEX-COVERAGE-0659.md (592 lane records). Active owners: S81 all families; HEAD rp20/routes; QC s29/forms/clock; KV event/splits/pvfin; HBM existing results/held drafts; shared flow/reach/street/cap/hold; wave/fleet; token. Existing branches/run dirs retained. No source/plan switch before standing 11-15 04:00 freeze.
+
+## CODEX takeover 2026-11-13 13:44 PST
+Existing Claude worktrees retained; canonical coordination on intel2. Coverage: QC plan/REGION/forms/cores -> qc; S81 die/frame/leaf -> s81; S81 DSDV/SVC/Serdes/GUNIT -> s81cores; KV all -> kv; HEAD all -> head; HBM collection/diagnosis under owner PARK -> hbm; shared clock/flow/reach/cap/street -> shared; token/model -> token; KIT-OPS/fleet/source recovery -> wave; root -> integration, result registration and uncovered tasks. Healthy jobs preserved. No owner-answer wait.
+
+## CODEX progress 2026-11-13 13:46 PST
+S81: 11 completed VOL2 shards collected (132 rows), next composition admitted epyc4 unit oth-ubuntu-3122597-1794606241. QC: self-matching waiter fixed; SWREG/PINKEEP pilot now admitted intel1; KITWIN delta preserves 320 ports/11 types requiring >208 ps as BLOCKED_CLOCK_ENTRIES. HEAD: spn_end pre-GRT hold-build pilot preparing from existing reviewed placement; tile spread-grid place healthy. KV: PHY reach3->0 errors, 128 fixed-cycle lanes synced; ns_chain7 and LEC-ES healthy. HBM: all10 core jobs terminal, no signed results; exact causes and remedies recorded, owner PARK retained. Wave: exact QC missing-source donor restore in progress; autopilot healthy, six approved R-FLOW launches13:41. AUTO-RESIGN turn_a already registered and credited, no duplicate work.
+
+OWNER? The older watcher rule forbids merges/tags/POR changes; the latest takeover order explicitly permits direct existing worktrees but does not explicitly revoke that restriction. Default: continue fixes, branch-head builds and READY posts; preserve the merge/tag/POR restriction until clarified. No work waits on this question.
+
+## CODEX notes 2026-11-13 13:49 PST — active QC takeover
+- Direct takeover DIE-QC-100, QC-REGION-1, HARD-QC-FORMS-1/QC-FORMS-2 in existing trees. Healthy ctl6, ctl5f, DME STA and trunk dry-run retained.
+- DME region STA completed at epyc9 qc-region-1/htdme2/sta_rep.json: crossings2525 FAIL0; depth4=2396/depth8=129; worst margins104.4/122.2; 684K changes; lane cycles5981->6495 across573 changed lanes;20 straps widened6->7 across8types. Numbers artifact-read, not independent signoff.
+- New guarded kitwin_delta.py + htdme2/kitwin_delta.json/report in existing QC-REGION workdir:11852ports/125types;320 ports/11types need>208(max357). Candidate sets budget<=208 and PHY190, explicitly BLOCKED_CLOCK_ENTRIES;0cycles. Guard/idempotence passed. No closure claim.
+- ctl7c private compose launched via ot-run epyc9 (intel2 client3969258, ~/qc100-codex-logs/ctl7c.log): reuses exact DME STA input hashes, applies KITWIN guarded delta, current trunk sites, reach/reset/strictbind. Source s29_final_v5.sh/run_ctl7_codex.sh in existing qc-s29-reach; existing v4/live jobs untouched.
+- c_W1_bn_10 new clock form pilot2x2 uses existing region-dme-split, four local groups23/23/23/24taps with one core tap each; proposal viewed epyc9 qc-region-1/htdme2/split2x2_proposal.png. Verdict PASS-COND for kit generation only; new tree still needs visual review before GRT. ot-run epyc7 unit oth-ubuntu-549991-1794606482, intel2 client3953041 log ~/qc100-codex-logs/s29_split2x2_kit.log; stops WAIT_VISUAL after KIT. No new RTL/cycles/domain.
+- Hard forms helper restored fsta3 actual compiled SWREG/PINKEEP proof launch (previous watcher selfmatched indefinitely); inherited launcher guarded against duplicate, no processes killed. SUL1 schema repair in progress.
+- Token integration obligation: TOK-VERIFY-3/capture1113/latency_contract.json measures TLOADCAP resident install spacing90->91, first3->4/last90->91;stream+0/SWREG0. Carry into s29 event, no blanket per-token cycle claim.

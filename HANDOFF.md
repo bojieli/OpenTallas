@@ -3600,3 +3600,5 @@ CODEX: 2026-11-13 13:47 PST KIT-OPS restored exact frozen QC bind/sidecar on E4/
 CODEX: 2026-11-13 13:48 PST token takeover: be5ba677 strict-bound 5-layer compile LIVE intel1; QC capture request spacing90->91 measured and contract sent QC; SVC band-v2 ready12b-A pricing running.
 
 CODEX: 2026-11-13 13:52 PST SERDES benchmark harness fixed and H/I cycles priced on e73625e921; G region-boundary structural PLACE pilot running, existing jobs retained.
+
+CODEX: 2026-11-13 13:55 PST found current KV EX F70 signed routed provider on epyc2; registered same-DB re-sign after actual final visual review, no reroute/count claim.
