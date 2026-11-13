@@ -27,6 +27,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  pin_sites   (ERROR, pin_sites.py) two different interior pins of a type (taps incl. arst_n / start_i, reset outs, straps,
+              reset spine, landing_contract pins) on one layer site: GRT-0080 'Invalid pin placement' at route
   collector_reach (ERROR, SEAM-HOP-1, collector_reach.py) every ACTIVE reverse-collector edge (reset relay -> parent on the path
               from a collector source tap to the root) and source -> tap hop <= 405 um: the rule landing_collector.build_local
               enforces at bind ("EMIT <type>: reverse collector a->b: N um exceeds 405")
@@ -2723,6 +2725,13 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     check_clock_reset(P, R)
     summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
     summ["reset"] = check_reset(P, R)
+    import pin_sites as PS          # HEAD-96 11-13: two different interior pins on one site = GRT-0080 at route
+    _pe, _pw = PS.check(P)
+    for e in _pe:
+        R.err("pin_sites", e)
+    for w in _pw:
+        R.warn("pin_sites", w)
+    summ["pin_sites"] = dict(duplicates=len(_pe), not_computable=len(_pw))
     import collector_reach as CRH      # SEAM-HOP-1: the bind's reverse-collector reach rule, plan-only (ERROR)
     summ["collector_reach"] = CRH.check_collector_reach(P, R)
     summ["seams"] = check_seams(P, R)
