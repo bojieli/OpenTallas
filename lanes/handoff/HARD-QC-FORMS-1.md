@@ -24,3 +24,9 @@ Design forms per family (guarded delta scripts), proof builds, RULEBOOK rows, RE
 - Worktree clone epyc7 hard-qc-forms-1/wt (blob:none, 9 GB of trees, slow) for branch claude/hard-qc-forms-1-stm-tloadcap-1113; RTL patch not yet written: qfd_dv_s6_stm + qfd_dv_s6_stm_se0 get `elsif OT_QC_TLOADCAP -> #(.SLICE(TSLICE),.CAPTURE_STAGE(1),.LOCAL_JOIN(1)).
 - HQF-PIPE (Opus sub-agent) still building the private kit chain on epyc9 hard-qc-forms-1/pipe.
 - CB (c): cbn_q00 = 2x2 NK mesh; t00 takes na/nb from the N face and drives y_o00 on the S face, so a N->S transit of the quad is inherent; no plan delta yet.
+
+## 07:35 resumed after the Fable limit (QC-FORMS-2 carried 06:55-07:26; read lanes/handoff/QC-FORMS-2.md, its HANDBACK section is the state)
+- Added by QC-FORMS-2 and kept: F-SUC2 (u_va / u_vb +17.28), fwd_repoint.py (R-REACH-4 after every core move: NEEDED), form_stm_reach.py (stm S / E window stations), OT_QC_PINKEEP branch claude/qc-forms-2-pinkeep-1113@17e7e452ca (not READY), pipe run_q2.sh / AUTO_HOST, s29/compose_qf2.sh.
+- Every core-moving form needs reset_pad -> reset_repick (-> tap_ident) before the re-bind, else EMIT kills kit-rtl for the whole bind.
+- Runs in flight (epyc9 pipe/runs): base stm (cts), fsta (place), fsta2, fstm3, fsuc2r. Failed and to redo with pad + repick: fsucr, fsul1r, fcbr. base cbn_q00 failed at gen.
+- RTL branch is train 46 (merge lane landing 28be9ae16c). SU double insertion (60 LATCHECK) is DIE-QC-100's; su forms wait for its order.
