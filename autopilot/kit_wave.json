@@ -8955,6 +8955,13 @@
       "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/dsfd_node_NNfd",
       "job": "COUNTED dsfd_node_NNfd intel1:/srv/opentallas-scratch2/claude/counted/s81/dsfd_node_NNfd/view_legacy_record/signoff.json (COUNT-ARCHIVE-2 11-10 VIEWS-S81-STALE (b), DIE-S81-85: counted SIGNED-LEGACY store record d374aee91e66 view; record LEF sha 246b093de77af1f3 + abstract_pin_stub.py only (-> abae33314d3d6284, pins/PG unchanged), record tt/ff libs unchanged, no ss; replaces the closure-loop old-PG kit view; archive copy /archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views_legacy/s81/dsfd_node_NNfd)"
      }
+    ],
+    "dsdv_gunit_l1f_bf": [
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/gunit-core-1/view_gf3ds60/dsdv_gunit_l1f_bf",
+      "job": "GUNIT-CORE-1 11-13 routed DRC-0 NOT SIGNED kit_gf3ds60 (epyc8 die-s81-85/bfpad, DS88 BF-SIGN-2 form, GEOM-VIS-9 ISSUES-ACCEPT 11-12 16:06): base lef + tc/BC libs copied as _tt/_ff, PROVISIONAL only; prov_view.py make on plan_h2_2249 accepted it (routed)"
+     }
     ]
    },
    "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
@@ -23145,7 +23152,8 @@
      "OT_GEN_M8_GRANT": "1"
     }
    },
-   "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7."
+   "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7.",
+   "note_gunit1_1113": "GUNIT-CORE-1 2026-11-13 11:5x (COORD task): gunit__t1 sat WAIT-CHILD all day because dsdv_gunit_l1f_bf is a lane-kit core (DIE-S81-88 11-12 08:18: no wave row) and no prov_view_sources entry pointed at its routed DRC-0 kit_gf3ds60. Added prov_view_sources[dsdv_gunit_l1f_bf] (one routed candidate, PROVISIONAL). No src/plan/event change. Revert: delete prov_view_sources[dsdv_gunit_l1f_bf] (backup kit_wave.json.bak-gunit-1113)."
   },
   "s81_head": {
    "enabled": true,
