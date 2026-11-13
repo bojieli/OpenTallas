@@ -62,6 +62,7 @@ WINDOW_UM = 200.0       # target face window -> consumer distance (tap radius / 
 BUF_UM = 150.0          # repeater spacing used to price face-net buffers (HBM q_su: ~10 buffers per ~1.5 mm net)
 EDGE_IN_UM = 12.0       # origin home: this far inside the face of the START pin (KV corridor form EDGE_Y)
 PAD_PITCH_UM = 5.4      # dwell stages of a short trunk sit side by side at the origin home
+PAD_SPAN_UM = 30.0      # ... never farther than this from the home (the trunk's first hop is planned this much shorter)
 RULES = ("1", "2", "3", "4")
 RULE_NAME = {"1": "start_fan", "2": "macro_barrier", "3": "bus_window", "4": "fwd_source"}
 EPS = 1e-6
@@ -290,9 +291,12 @@ def _trunk(o, h, obs, bands, W, H, reach=REACH_UM):
     err = None
     for extra in (False, True):
         try:
-            r = KS._route(tuple(o), tuple(h), obs + ([list(x) for x in bands] if extra else []), W, H)
+            c = KS.CLEAR_UM      # a band that holds an endpoint (the origin home / a hub next to its ring) stays open
+            bx = [list(x) for x in bands if not any(x[0] - c < q[0] < x[2] + c and x[1] - c < q[1] < x[3] + c
+                                                    for q in (o, h))] if extra else []
+            r = KS._route(tuple(o), tuple(h), obs + bx, W, H)
             n = max(0, math.ceil(length(r) / STEP_UM) - 1)
-            way = relay_sites(r, n, max_hop_um=min(reach, SITE_HOP_UM), site_boxes=bands,
+            way = relay_sites(r, n, max_hop_um=min(reach, SITE_HOP_UM) - PAD_SPAN_UM, site_boxes=bands,
                               clearance_um=KS.CLEAR_UM) if n else []
             return r, [list(q) for q in way]
         except ValueError as ex:
@@ -306,7 +310,7 @@ def fix_start(P, t, tn, margin=4.32, min_um=10.8, reach=REACH_UM):
     macros with every narrow edge channel closed (kv_start_corridor_event.corridor_obstacles); a type whose pins sit
     in such a channel (QC cbn / cbf) falls back to the plain macro boxes."""
     import kv_start_corridor_event as KS
-    err = None
+    err = []
     for name, obs in (("edge-closed", KS.corridor_obstacles(t, margin, min_um)),
                       ("macro-boxes", [list(b) for b in macro_boxes(t).values()])):
         try:
@@ -320,8 +324,40 @@ def fix_start(P, t, tn, margin=4.32, min_um=10.8, reach=REACH_UM):
                 rep["corridor_obstacles"] = name
             return rep
         except ValueError as ex:
-            err = ex
-    raise ValueError(str(err))
+            err.append(f"{name}: {ex}")
+    raise ValueError(" | ".join(err))
+
+
+def _dwell_sites(o, k, free, sign=1):
+    """k dwell sites side by side at the origin home (PAD_PITCH_UM apart, the first free direction); a site with no
+    free neighbour spot is the home itself.  Never farther than PAD_SPAN_UM from the home, so the next hop holds."""
+    out = []
+    for i in range(k):
+        d = (i + 1) * PAD_PITCH_UM
+        spot = None
+        if d <= PAD_SPAN_UM:
+            for dx, dy in ((sign * d, 0.0), (-sign * d, 0.0), (0.0, sign * d), (0.0, -sign * d)):
+                q = (round(o[0] + dx, 3), round(o[1] + dy, 3))
+                try:
+                    if free(q) == q:
+                        spot = q
+                        break
+                except ValueError:
+                    pass
+        out.append(spot or (round(o[0], 3), round(o[1], 3)))
+    return out
+
+
+def _legal_hubs(o, tg, free, limit):
+    """region hubs on free sites; a member left farther than limit from its (moved) hub becomes its own hub"""
+    out = []
+    for h, m in _hubs(o, tg):
+        h = free(h)
+        near = [b for b in m if man(h, tg[b]) <= limit]
+        if near:
+            out.append((h, near))
+        out += [(tg[b], [b]) for b in m if b not in near]
+    return out
 
 
 def _fix_start(P, t, tn, obs, reach=REACH_UM):
@@ -354,13 +390,13 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
         kinds.add("start_writer_reach") if (row0["writer_over"] or row0["origin_d_loads"] > FANOUT_MAX) else None
     if (row0["reader_over"] or row0["origin_loads"] > FANOUT_MAX) and si["ins"]:
         tg = {b: free(_centre(si["bands"][b]["rect_um"])) for b in si["ins"]}
-        hubs = [(free(h), m) for h, m in _hubs(o, tg)]
+        hubs = _legal_hubs(o, tg, free, SITE_HOP_UM - PAD_SPAN_UM)
         tr = [_trunk(o, h, obs, bands, W, H, reach) for h, _m in hubs]
         routes = [x[0] for x in tr]
         # trunk relays of a hub: the hub relay itself + ceil(L / STEP) - 1 on the way; one more stage per ring
         need = [len(x[1]) + 1 for x in tr]
         depth = max(need) + 1
-        pads = [free((o[0] + (i + 1) * PAD_PITCH_UM, o[1])) for i in range(depth - 1 - min(need))]
+        pads = _dwell_sites(o, depth - 1 - min(need), free, 1)
         branches, hub_rep = {}, []
         for (h, members), (r, way), n in zip(hubs, tr, need):
             k = depth - 1 - n                      # dwell stages at the origin home (shared by every such trunk)
@@ -394,21 +430,22 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
             q = free(_inside(si["pins"]["cland_fstart_out_" + b], W, H, 4.32))
             if man(o, q) > KS.NEED_UM or b in (old.get("branches") or {}):
                 tg[b] = q
-        hubs = [(free(h), m) for h, m in _hubs(o, tg)]
+        hubs = _legal_hubs(o, tg, free, SITE_HOP_UM - PAD_SPAN_UM)
         tr = [_trunk(o, h, obs, bands, W, H, reach) for h, _m in hubs]
         need = [len(x[1]) + 1 for x in tr]
         depth = max(max(need) + 1, int(old.get("depth", 0) or 0))
-        pads = [free((o[0] - (i + 1) * PAD_PITCH_UM, o[1])) for i in range(depth - 1 - min(need))]
+        pads = _dwell_sites(o, depth - 1 - min(need), free, -1)
         branches = {}
         for (h, members), (r, way), n in zip(hubs, tr, need):
             k = depth - 1 - n
             trunk = [list(p) for p in pads[:k]] + [list(p) for p in way] + [list(h)]
             for b in members:
-                # the last relay sits between its hub and the FSTART pin (the face flop itself is at the pin)
-                last = free(((h[0] + tg[b][0]) / 2.0, (h[1] + tg[b][1]) / 2.0))
+                # the last relay sits at the free site next to its FSTART pin (the face flop itself is at the pin)
+                last = tg[b]
                 pts = [list(o)] + trunk + [list(last), list(tg[b])]
                 if max(man(a, c) for a, c in zip(pts, pts[1:])) > reach + EPS:
-                    raise ValueError(f"{tn}.{b}: no writer relay sites within {reach:g} um")
+                    raise ValueError(f"{tn}.{b}: no writer relay sites within {reach:g} um: "
+                                     f"{[[round(v) for v in q] for q in pts]}")
                 branches[b] = dict(stages=[dict(xy_um=[round(xy[0], 3), round(xy[1], 3)], raw_reset=raw_of(xy))
                                            for xy in trunk + [list(last)]])
         if branches:
