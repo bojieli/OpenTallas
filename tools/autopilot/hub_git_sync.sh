@@ -4,7 +4,7 @@
 #
 #   hub_git_sync.sh coord   sync the coordination checkout ~/coord (branch coord/state) MERGE-BASED, like
 #                           bin/coord-commit.sh:
-#                           (1) dirty APPEND-ONLY logs (HANDOFF.md, CODEX-LOG.md, CODEX-HANDOFF.md, lanes/*.md,
+#                           (1) dirty APPEND-ONLY logs (HANDOFF.md, CODEX-LOG.md, CODEX-HANDOFF.md, lanes/*.md, lanes/handoff/*.md,
 #                               autopilot/queue.tsv, autopilot/resolved.tsv) are committed as they are (agents and
 #                               die_ci_cron.sh append lines in this checkout); any OTHER tracked edit -> FAIL, untouched;
 #                           (1b) GENERATED files (RELEASE_TREE.md, rewritten on the hub by release_tree_plan.py; the
@@ -31,7 +31,9 @@
 set -uo pipefail
 C=${HUB_SYNC_COORD:-$HOME/coord}; R=${HUB_SYNC_REPO:-$HOME/OpenTallas}; B=${HUB_SYNC_BRANCH:-coord/state}
 URL=git@github.com:bojieli/OpenTallas.git
-APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/SIGN-RATE\.tsv|autopilot/(queue|resolved)\.tsv)$'
+# COORD-COMMIT-SPEED-1 11-13: lanes/handoff/<LANE>.md is lane-appended text like lanes/*.md; three dirty handoffs made the sync
+# FAIL 07:05-08:22 ("non-log local edits") while the autopilot read a stale checkout.
+APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/handoff/[^/]+\.md|lanes/SIGN-RATE\.tsv|autopilot/(queue|resolved)\.tsv)$'
 GENERATED_RE='^RELEASE_TREE\.md$'
 LIVE_RE='^autopilot/kit_wave_state\.json$'
 FLEET_AFTER_MIN=${HUB_SYNC_FLEET_AFTER_MIN:-30}
