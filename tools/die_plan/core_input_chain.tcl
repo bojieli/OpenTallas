@@ -226,7 +226,7 @@ proc nc_cnt_route_ok {pts} {
   return [nc_ok $pts]
 }
 proc nc_cnt_layout {route fixed span dbu} {
-  if {$fixed < 2 || $span < 1 || $span > 16 || ![nc_cnt_route_ok $route]} { error "invalid count-bank corridor" }
+  if {$fixed < 2 || $span < 0 || $span > 16 || ![nc_cnt_route_ok $route]} { error "invalid count-bank corridor" }
   set hop [expr {[nc_len $route]/double($fixed)/$dbu}]
   if {$hop > 405.0} { error "NEED_PIN_CYCLE fixed=$fixed min_count_hop_um=$hop" }
   set fs {};set cs {}
@@ -278,6 +278,9 @@ proc nc_cnt_hop_buffers {sink fa fb route} {
   }
 }
 proc nc_cnt_parse_name {nm} {
+  # Singleton CBF types have ordinary fixed delays; Binder never invents an INNER count site.
+  if {[regexp {^(.*u_d[0-9]+_u_t_1_2_t_out)[./]r\[([0-9]+)\]\[([0-9]+)\]} $nm _ bank st bit]} {return [list fixed $bank $st $bit]}
+  if {[regexp {^(.*u_d[0-9]+_u_t_1_2_t_out)[./]q\[([0-9]+)\]} $nm _ bank bit]} {return [list fixedq $bank -1 $bit]}
   if {[regexp {^(.*u_r8b_(strap_r8pad_.+)_f)[./]r\[([0-9]+)\]\[([0-9]+)\]} $nm _ bank site st bit]} { return [list fixed $bank $st $bit] }
   if {[regexp {^(.*u_r8b_(strap_r8pad_.+)_f)[./]q\[([0-9]+)\]} $nm _ bank site bit]} { return [list fixedq $bank -1 $bit] }
   if {[regexp {^(.*u_r8b_(strap_r8pad_.+))[./]r\[([0-9]+)\]\[([0-9]+)\]} $nm _ bank site st bit] && ![string match "*_f" $bank]} { return [list count $bank $st $bit] }
@@ -307,17 +310,24 @@ foreach bank [dict keys $nc_cnt_fixed_q] {
 }
 set nc_cnt_chains 0; set nc_cnt_stages 0; set nc_cnt_mux 0; set nc_cnt_refused 0; set nc_cnt_worst 0; set nc_cnt_seen 0
 foreach bank [dict keys $nc_cnt_fixed] {
-  if {[info exists ::env(OT_NK_R8_COUNT_SITE_REGEX)] && ![regexp $::env(OT_NK_R8_COUNT_SITE_REGEX) $bank]} continue
-  if {![regexp {^(.*)u_r8b_strap_r8pad_(u_t_[0-9]+_[0-9]+)_(n_[ab])_in[0-9]*_f$} $bank _ scope rel port]} continue
-  set countbank [string range $bank 0 end-2]; set pcbank ${scope}u_pc_nk_${rel}_${port}
+  set plain_fixed 0;set filter_bank $bank
+  if {[regexp {^(.*)u_r8b_strap_r8pad_(u_t_[0-9]+_[0-9]+)_(n_[ab])_in[0-9]*_f$} $bank _ scope rel port]} {
+    set countbank [string range $bank 0 end-2];set pcbank ${scope}u_pc_nk_${rel}_${port}
+  } elseif {[info exists ::env(OT_NK_CBF_FIXED_CHAIN)] && $::env(OT_NK_CBF_FIXED_CHAIN) eq "1" &&
+      [regexp {^(.*)u_d[0-9]+_u_t_1_2_t_out$} $bank _ scope]} {
+    set plain_fixed 1;set countbank "";set pcbank ${scope}u_pc_nk_u_t_0_2_n_b
+    set filter_bank ${scope}u_r8b_strap_r8pad_u_t_0_2_n_b_in_f
+  } else {continue}
+  if {[info exists ::env(OT_NK_R8_COUNT_SITE_REGEX)] && ![regexp $::env(OT_NK_R8_COUNT_SITE_REGEX) $filter_bank]} continue
   foreach bit [dict keys [dict get $nc_cnt_fixed $bank]] {
     incr nc_cnt_seen
     set fixed [dict get $nc_cnt_fixed $bank $bit]; set n [dict size $fixed]
-    if {$n < 2 || ![dict exists $nc_cnt_pc $pcbank $bit] || ![dict exists $nc_cnt_count $countbank $bit]} { incr nc_cnt_refused; continue }
-    set counts [dict get $nc_cnt_count $countbank $bit]; set span [dict size $counts]; set seq {}; set good 1
+    if {$n < 2 || ![dict exists $nc_cnt_pc $pcbank $bit] || (!$plain_fixed && ![dict exists $nc_cnt_count $countbank $bit])} { incr nc_cnt_refused; continue }
+    set counts {};if {!$plain_fixed} {set counts [dict get $nc_cnt_count $countbank $bit]}
+    set span [dict size $counts];set seq {};set good 1
     for {set j 0} {$j < $n} {incr j} { if {![dict exists $fixed $j]} { set good 0; break }; lappend seq [dict get $fixed $j] }
     for {set j 0} {$j < $span} {incr j} { if {![dict exists $counts $j]} { set good 0; break } }
-    if {!$good || $span < 1 || $span > 16} { incr nc_cnt_refused; continue }
+    if {!$good || (!$plain_fixed && $span < 1) || $span > 16} { incr nc_cnt_refused; continue }
     set first [lindex $seq 0]; set pc [dict get $nc_cnt_pc $pcbank $bit]
     # The improved core_input_anchor must have identified this real PC (including its generic QN inverter).
     # Its face-file identity survives release to PLACED before this hook; a floating old PC is not an endpoint.

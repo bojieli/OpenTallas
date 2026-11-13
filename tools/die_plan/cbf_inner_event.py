@@ -60,6 +60,16 @@ def coherent_pads(edges, floors):
     return pads,{k:n-o for k,(o,n) in memo.items()}
 
 
+def type_fixed_floor(rows, typename):
+    """Singletons have a fixed chain: Binder never creates an INNER strap for one instance."""
+    if not rows:raise ValueError('missing target type '+typename)
+    mn=min(e['depth'] for _,_,e in rows);mx=max(e['depth'] for _,_,e in rows)
+    span=mx-mn
+    if span!=1 and not (len(rows)==1 and span==0):
+        raise ValueError(f'{typename}: expected replicated span1 or singleton fixed chain, got {len(rows)} instances/{span}')
+    return mn,mx,max(0,FIXED_FLOOR-mn)
+
+
 def generate(plan, bdir, r8_path, extra_path):
     raw=json.loads(Path(plan).read_text());bd=Path(bdir)
     seed_report=json.loads((bd/'bind_report.json').read_text())
@@ -102,10 +112,8 @@ def generate(plan, bdir, r8_path, extra_path):
             bytype[ptypes[pt]].append((leaf,pn,e))
     for tn in TYPES:
         rows=bytype[tn]
-        if not rows:raise ValueError('missing target type '+tn)
-        mn=min(e['depth'] for _,_,e in rows);mx=max(e['depth'] for _,_,e in rows)
-        if mx-mn!=1:raise ValueError(f'{tn}: expected optional span1, got {mn}..{mx}')
-        for leaf,pn,e in rows:targets[(leaf,pn)]=max(0,FIXED_FLOOR-mn)
+        mn,mx,add=type_fixed_floor(rows,tn)
+        for leaf,pn,e in rows:targets[(leaf,pn)]=add
     pads,timing=coherent_pads(edges,targets)
     updated={m['id']:copy.deepcopy(m) for m in extra['members']};ledger=[]
     for (leaf,pn),add in sorted(pads.items()):
@@ -126,7 +134,7 @@ def generate(plan, bdir, r8_path, extra_path):
         pad_flops=sum(int(m.get('tree_align',0))*(sum(b-a+1 for a,b in m.get('sink_bits',[])) or len(per.get((m['sink'],m['sink_port']),[]))) for m in out['members']))
     out['cbf_corridor_event']=dict(fixed_floor=FIXED_FLOOR,types=list(TYPES),source_bind=str(bd),adopted=False)
     report=dict(status='CANDIDATE_REQUIRES_STRICT_BIND_MODEL_AND_PLACE',fixed_floor=FIXED_FLOOR,
-        types={t:dict(instances=len(v),old_min=min(e['depth'] for _,_,e in v),old_max=max(e['depth'] for _,_,e in v))for t,v in bytype.items()},
+        types={t:dict(instances=len(v),old_min=min(e['depth'] for _,_,e in v),old_max=max(e['depth'] for _,_,e in v),optional_span=max(e['depth'] for _,_,e in v)-min(e['depth'] for _,_,e in v))for t,v in bytype.items()},
         members_changed=len(ledger),added_stage_bits=sum(x['added_cycles']*x['bits'] for x in ledger),
         max_added_output_cycles=max(timing.values(),default=0),ledger=ledger,
         obligations=['strict bind and unchanged count spans on target site','lane_asbuilt/INNER ledger','compiler/model price','RTL lockstep+mutants','plan render and PLACE pilot'])

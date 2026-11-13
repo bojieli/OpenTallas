@@ -97,6 +97,10 @@ foreach n [list $f0 $fq $cr $pq] want {fixed fixedq count pc} {if {[lindex [nc_c
 set nc_mac {{691200 77760 1149120 1235520} {86400 77760 544320 1235520}}
 set route {{1162080 986000} {1162080 1244160} {550080 1244160} {550080 885000}}
 if {![catch {nc_cnt_layout $route 3 1 1000} err] || ![string match *NEED_PIN_CYCLE* $err]} {error "N3 must reject insufficient reach"}
+set z0 [nc_cnt_layout $route 4 0 1000]
+if {[llength [dict get $z0 count]] || [llength [dict get $z0 fixed]]!=3} {error "singleton invented a count stage"}
+set plain {u_bound.u_d4_u_t_1_2_t_out.q[78]$_DFF_P_}
+if {[lindex [nc_cnt_parse_name $plain] 0] ne "fixedq"} {error "singleton fixed alias lost"}
 set z [nc_cnt_layout $route 4 1 1000]
 if {[llength [dict get $z fixed]]!=3 || [llength [dict get $z count]]!=1 || [dict get $z max_hop_um]>405} {error "N4 layout invalid"}
 # Every legal optional count: bypass0 or through1 stays in the same last fixed->PC hop.
@@ -144,3 +148,18 @@ puts TCL_BANK_AREA_PASS
     p=subprocess.run(['tclsh',str(f)],capture_output=True,text=True)
     assert p.returncode==0,p.stdout+p.stderr
     assert 'TCL_BANK_AREA_PASS' in p.stdout
+
+
+def test_singleton_keeps_ordinary_fixed_chain_without_inventing_count_span():
+    rows=[('s.u_t_0_2','n_b',{'depth':3})]
+    assert E.type_fixed_floor(rows,'cbf_q01_s2')==(3,3,1)
+    assert E.type_fixed_floor([('s.u_t_0_2','n_b',{'depth':4})],'cbf_q01_s2')==(4,4,0)
+    b=_binder({'s':[3]*514},port_w=514)
+    inner=[dict(id='INNER:s:s_u.x<-s_s@3',sink='s_u',source='s_s',sink_port='x',asbuilt=3,landed=4)]
+    st={'stale':0};b._apply_inner(inner,{c.path:i for i,c in enumerate(b.F.cells)},st)
+    b.inner_strap_sites({'cbf_q01_s2':['s']})
+    assert st['stale']==0 and st['inner']['changed_bits']==514
+    assert not b.isp and not b.r8_sites
+    assert {d[4] for d in b.sinks.values() if d[0]=='int'}=={4}
+    with pytest.raises(ValueError,match='singleton fixed chain'):
+        E.type_fixed_floor(rows+[('t.u_t_0_2','n_b',{'depth':3})],'unexpected')
