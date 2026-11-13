@@ -20,11 +20,14 @@ What changed against the 11-03 opt-in form:
   2. TWO scenes when run_kit.sh passes TLIBS (TC_LIB_FILES): TC/mode tt checks setup, BC/mode ff checks hold, so
      repair_timing never spends TT setup slack on a hold cell (the FF-only form could only see FF setup);
   3. ROUTE GUARD on CROSS-TAP pairs only: built to +OT_PREGRT_HOLD_GUARD ps (plan clock.pregrt_hold_guard_ps,
-     default 45) = the worst measured placement -> routed loss of a cross-tap pair (hd_turn_b proof: u_srl_10 ->
-     u_rrl_11 built to +35.1, routed +3.66 = 31.4 ps; every other cross-tap pair lost <= 25) + the +10 ps of the die
-     hold gate.  Before the rule: +0.45 at GRT -> -14.07 routed, all 25 misses cross-tap.  Ports and same-tap pairs
-     are built to OT_PREGRT_HOLD_PORT_MARGIN (5; routed same-tap worst +6.88): a uniform guard pads the ordinary
-     zero-logic pairs of the whole kit and spends setup (see the TAIL comment);
+     default 45).  Measured on the hd_turn_b proof, placement -> routed hold loss per pair: cross-tap median -0.9,
+     p90 11.5, p99 26.5 ps (571 pairs); same-tap p99 11.0 (3,300 pairs).  Before the rule the GRT repair closed the
+     cross-tap u_ft_t_s0 -> u_ft_t_s1 hops to +0.45 and route took them to -14.07 (25 endpoints); with the guard at
+     45 the same hops route at >= +17.0.  Ports and same-tap pairs are built to OT_PREGRT_HOLD_PORT_MARGIN (5;
+     routed same-tap worst +6.75): a uniform guard pads the ordinary zero-logic pairs of the whole kit and spends
+     setup (see the TAIL comment).  NOT covered by any placement-basis guard: an unpadded long hop whose data wire
+     the placement estimate over-states (hd_turn_b u_srl_10 -> u_rrl_11: +50.2 placed, +8.7 at GRT, +3.0 routed);
+     the in-flow GRT repair sees those on GRT parasitics;
   4. the clock network and every clock sink are FIRM while hold cells are legalized (tap balance stays as measured);
   5. a class line before / after (port_in / same_tap / cross_tap / port_out) and pregrt_ff_hold_open.tsv = the
      endpoints the build could not close (ESCALATE: lockup latch / same tap / +1 cycle are plan forms);
