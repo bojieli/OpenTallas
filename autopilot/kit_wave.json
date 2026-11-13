@@ -6101,7 +6101,11 @@
     "dsdv_slice_iq_C__t1@24",
     "dsdv_slice_lepe_mu_C__t1@23",
     "dsdv_slice_lepe_nh_mus_C__t1@20",
-    "ot_s81sl_leaf__t7@7"
+    "ot_s81sl_leaf__t7@7",
+    "dsdv_slice_c3x_C__t1@21",
+    "ot_s81sl_leaf__t34@4",
+    "ot_s81sl_leaf__t61@12",
+    "dsdv_slice_kv512_C__t1@34"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -22729,7 +22733,8 @@
      "ot_s81sl_kv_leaf__t2"
     ]
    },
-   "note_kitops1_r12bA": "KIT-OPS-1 2026-11-12 21:46: S81 wave -> ready12b-A. Re-kit = the 71 bound modules of rekit_rtl_changed_vs_m2.json (leaf__t3 WAIT-FORM); 16 moved-only types held; retries 6."
+   "note_kitops1_r12bA": "KIT-OPS-1 2026-11-12 21:46: S81 wave -> ready12b-A. Re-kit = the 71 bound modules of rekit_rtl_changed_vs_m2.json (leaf__t3 WAIT-FORM); 16 moved-only types held; retries 6.",
+   "note_kitops1_oldrtl": "KIT-OPS-1 2026-11-12 22:02: COORD ruling (1) cancelled 4 old-RTL rows of the 71 (retry added): dsdv_slice_c3x_C__t1, ot_s81sl_leaf__t34, ot_s81sl_leaf__t61, dsdv_slice_kv512_C__t1"
   },
   "s81_head": {
    "enabled": true,
