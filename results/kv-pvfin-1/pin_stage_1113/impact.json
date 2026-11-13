@@ -1,0 +1,32 @@
+{
+ "verdict": "SOURCE_READY_PHYSICAL_UNSIGNED",
+ "master": "qkd_pv_fin_s8_pin",
+ "wrapper": "qkd_pv_fin_s2x8_pin",
+ "core_hierarchy": [
+  "g_sl[0].u_sl",
+  "g_sl[1].u_sl"
+ ],
+ "compute_suffix": "u_core",
+ "params": {
+  "ADD_LAT": 7,
+  "MUL_LAT": 6,
+  "SKEW": 1,
+  "MUT": 0,
+  "IN_STAGE": 1
+ },
+ "additional_output_cycles": 1,
+ "total_additional_cycles_vs_original": 2,
+ "ff_per_core": 279,
+ "ff_per_pair": 558,
+ "outline_um": [
+  207.36,
+  194.4
+ ],
+ "reset": "control PIN flops asynchronous active-low reset; data PIN resetless",
+ "proof": "2 seeds x60 commands, all535pairobservable bits each edge, wrongSHIFT0 caught666mismatches",
+ "token_cycles": 272713,
+ "token_rate_rounded": 4402.0,
+ "native_calendar": "FAIL_missing_receipt",
+ "old_s8f": "canonicalFAILshared278andFFhold-2.75/21;noECOattempt",
+ "first_prototype": "resetlesscontrolPIN simulationFAIL32warmresetmismatches retained outside source; fixed controls preserve asyncreset"
+}

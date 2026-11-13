@@ -1,0 +1,220 @@
+{
+ "name": "qkd_pv_fin_s8_pin",
+ "top": "qkd_pv_fin_s8_pin",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_pv_fin_s8.sv",
+  "rtl/qwen_sys/split_20261014/qkd_pv_fin_s8_pin.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv"
+ ],
+ "params": {
+  "ADD_LAT": 7,
+  "MUL_LAT": 6,
+  "SKEW": 1,
+  "MUT": 0,
+  "NL": 8,
+  "IN_STAGE": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 207.36,
+  "h": 194.4
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "p0_valid",
+   "p0_beat",
+   "p0_epoch",
+   "p0_data",
+   "rz_valid",
+   "rz_epoch",
+   "rz",
+   "p1_data",
+   "p1_epoch",
+   "p1_beat",
+   "p1_valid"
+  ],
+  "E": [
+   "out_valid",
+   "out_beat",
+   "out_epoch",
+   "out_data",
+   "fault",
+   "ck",
+   "rst_n",
+   "start",
+   "epoch",
+   "cal"
+  ],
+  "N": [],
+  "S": []
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "purpose": "KV-PVFIN-1 2026-11-13 (R-CAP-3.3, DIE-KV-100 06:13 ASK, kv3_hub_C split): ONE lane slice of the PV final join qkd_pv_fin_s: 8 of its 16 fp32 lanes (256-b beats), the whole static-calendar control replicated per slice; two instances (pvfin_lo lanes 0-7, pvfin_hi lanes 8-15) replace the 273k-cell soft qkd_pv_fin_s in kv3_hub_C (drop-in pair qkd_pv_fin_s2x8). Faces per the hub_C split plan (KV-HUBC-REACH gen_pvfin_pins.py): W = operand inputs p0 / rz / p1, E = out / fault / control / ck / rst_n, N / S free (the two slices abut N-S). +1 added cycle (declared, results/kv-pvfin-1/latency_rows.json): every input lands in a pin flop (stage i) ahead of the pin registers of qkd_pv_fin_s, every output a flop, beat b = PRODUCT_AGE + 2 + b (qkd_pv_fin_s: + 1 + b).",
+ "job": {
+  "owner": "Claude:KV-PVFIN-1",
+  "branch": "claude/kv-pvfin-1-core-1113",
+  "tag": "s8a",
+  "purpose": "KV-PVFIN-1 11-13: lane-sliced pv_fin hard core qkd_pv_fin_s8_pin (2 per kv3_hub_C) for the R-CAP-3 hub_C split.",
+  "benches": [
+   {
+    "name": "pv_fin_s2x8_lockstep",
+    "cmd": "bash rtl/test/qwen_split/run_qkd_pv_fin_s2x8.sh {RUN}/bench/s2x8",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PVFIN_S2X8_KIT PASS ",
+    "sources": [
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv",
+     "rtl/qwen_sys/split_20261014/qkd_pv_fin_s8_pin.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/test/qwen_split/tb_qkd_pv_fin_s2x8.sv",
+     "rtl/test/qwen_split/run_qkd_pv_fin_s2x8.sh"
+    ],
+    "pass_witness": "results/kv-pvfin-1/s2x8_bench.txt"
+   }
+  ],
+  "extra_paths": [
+   "results/kv-pvfin-1",
+   "rtl"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv_fin_s8_pin/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv_fin_s8_pin",
+  "cycles_added": 1
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input at the pin (control *_q, data = tap 0 of the operand lines) and every output is a flop; the static calendar {R, P1, P0} and the face's F_DLY count that one pin stage (bench tb_qkd_pv_fin_s2x8 lock-step vs qkd_pv_fin_s: beat b = reference + 1 + b); a flow-inserted second stage would add an edge the calendar does not have. io_flop_at_pins anchors the RTL pin flops (recipe 2/3)."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KV-PVFIN-1 11-13: new core (lane slice of qkd_pv_fin_s). The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed post-place setup -448 ps / CTS -381 ps on out_epoch[3] and ~20k endpoints: the calendar slots were 16-bit window compares of age + 1 against adder-derived ages, ANDed into the fault check, the state enables and the 16,384 sbuf enables, and the multiplier operands came through a 32:1 read mux. R-RTL-5 (1)+(2)+(3): calendar decoded flop to flop behind a +1 input stage (s8c: the raw-pin decode sat behind the 487 ps link-budget input delay, post-CTS -304 ps at cq_bad / cq_em), out_beat / out_epoch enabled without the fault cone, sbuf a flat vector (s8a: an inferred memory moved the 32:1 read mux behind the address flop, -480 ps), slots are flag registers (set/clear by equality), beat indices are 5-bit counters, the sbuf read and head select are prefetched one edge early into operand registers with a write-through bypass. Outline 207.36 W x 194.4 H (R-CAP-2: 17.7k um2 std after place / ~38.7k um2 core = ~0.46; the planned 190.08 frame would sit at ~0.51). Height 194.4 so the abutted lo/hi pair (388.8, origins (1041.12, 851.04) / (1041.12, 1045.44)) passes hubc_split_form.py --cores: the hub_C pocket is bounded by ft21 (y 839.3) and the reset local tap (1218.24, 1252.8) with 10.8 um clearance, ft0 (x 1029.8) and clk_t44 (x 1260); the 207.36-square s8d build (signed off) did not fit.",
+ "pin_ranges": {
+  "p0_valid": [
+   3.75,
+   4.69
+  ],
+  "p0_beat": [
+   4.69,
+   6.56
+  ],
+  "p0_epoch": [
+   6.56,
+   11.25
+  ],
+  "p0_data": [
+   11.25,
+   77.81
+  ],
+  "rz_valid": [
+   78.28,
+   79.22
+  ],
+  "rz_epoch": [
+   79.22,
+   83.44
+  ],
+  "rz": [
+   83.44,
+   116.25
+  ],
+  "p1_data": [
+   116.25,
+   182.81
+  ],
+  "p1_epoch": [
+   182.81,
+   187.5
+  ],
+  "p1_beat": [
+   187.5,
+   189.37
+  ],
+  "p1_valid": [
+   189.37,
+   190.31
+  ],
+  "out_valid": [
+   3.75,
+   4.69
+  ],
+  "out_beat": [
+   4.69,
+   6.56
+  ],
+  "out_epoch": [
+   6.56,
+   11.25
+  ],
+  "out_data": [
+   11.25,
+   140.62
+  ],
+  "fault": [
+   140.62,
+   142.5
+  ],
+  "ck": [
+   148.13,
+   150.0
+  ],
+  "rst_n": [
+   150.94,
+   152.81
+  ],
+  "start": [
+   155.62,
+   157.5
+  ],
+  "epoch": [
+   157.5,
+   165.0
+  ],
+  "cal": [
+   165.0,
+   187.5
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
