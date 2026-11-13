@@ -1305,6 +1305,11 @@ RULES = [
     # KW-FIX-7 11-04: before INFRA. S81 serdes__t3/t4/t12-16 stopped on the cap with ot-run client text beside it, read as
     # INFRA and relaunched at the same cap.  The cap line is a verdict on the kit whatever surrounds it.
     ("PLAN", r"^place$", r"OT_NATIVE_CELL_CAP.*above \d+ run cap", "actual native standard-cell count above the kit run cap"),
+    # R-CAP stops are design-size verdicts even when a watchdog/ot-run line follows.
+    # A projection summary or a declared capacity probe is not a stopped build.
+    ("PLAN", None, r"OT_CELL_BUDGET(?![^\n]*capacity probe)[^\n]*above the R-CAP place budget \d+|"
+                   r"R-CAP OVER projected movable cells after resize",
+     "movable-cell budget exceeded: split or harden the design before relaunch"),
     # KW-FIX-8 11-04: same class.  serdes__t13 a6: MPL-0034 at 08:46, make stopped, a parallel LEC then idled until the
     # watchdog stop 12:53, so the unit ended 143, read as INFRA and relaunched at the same macro position.
     ("PLAN", r"^place$", r"\[ERROR MPL-0034\]", "plan macro position outside the core"),
