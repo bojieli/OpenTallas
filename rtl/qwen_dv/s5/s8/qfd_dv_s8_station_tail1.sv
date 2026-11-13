@@ -63,7 +63,14 @@ wire [PW-1:0] pin_d = {cfg_v_p, cfg_mode_p, cfg_wsrc_p, cfg_nwords_p, cfg_sbase_
                        rs_n_hi_p, nb_d_p, rs_s_c_p, rs_n_c_p, nb_c_p, bt_q_p};
 wire [PW-1:0] pin_q;
 generate if (PIN_IN) begin : g_pin
+`ifdef OT_QC_PINKEEP
+    // OT_QC_PINKEEP (QC-FORMS-2 11-13, opt-in per plan type, 0 cycles): the pin register in a kept hierarchy, so synthesis
+    // cannot merge the identical pin registers of the 4 st_a regions into one flop (post-CTS: u_u_r0.g_pin.r drove the
+    // u_h9 SRAM inputs of r0, r1 and r3, TT setup to -442 ps).  Same flops, same edges; default = the netlist as before.
+    qfd_dv_station_copy #(.W(PW),.ID(900)) r (.ck(ck),.d(pin_d),.q(pin_q));
+`else
     reg [PW-1:0] r; always @(posedge ck) r <= pin_d; assign pin_q = r;
+`endif
 end else begin : g_nopin
     assign pin_q = pin_d;
 end endgenerate
