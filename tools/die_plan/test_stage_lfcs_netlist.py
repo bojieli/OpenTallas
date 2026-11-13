@@ -57,3 +57,19 @@ def test_stage_fails_on_an_unforwarded_slice_or_a_preset_lf_cs(tmp_path):
     rtl = _rtl(tmp_path / "b", "ot_s81sl_slice_x", {})
     with pytest.raises(SystemExit, match="already sets LF_CS"):
         SN.stage(PLAN, NET.replace("#(.HBC_ENABLE(0))", "#(.LF_CS_Y_D(20'h1))"), rtl)
+
+
+def test_stage_reads_each_module_defaults_once(tmp_path, monkeypatch):
+    import copy
+    plan = copy.deepcopy(PLAN)
+    plan["partitions"].append(dict(name="s_1N_L1", type="ot_s81sl_leaf__t8"))
+    rtl = _rtl(tmp_path/"rtl", "ot_s81sl_slice_x", {})
+    original = SN.module_defaults
+    calls = []
+    def read(root, mod):
+        calls.append(mod)
+        return original(root, mod)
+    monkeypatch.setattr(SN, "module_defaults", read)
+    out, _ = SN.stage(plan, NET.replace("ot_s81sl_slice_y", "ot_s81sl_slice_x"), rtl)
+    assert calls == ["ot_s81sl_slice_x"]
+    assert "u_s_0N" in out and "u_s_1N" in out

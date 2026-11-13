@@ -93,7 +93,11 @@ def stage(plan, net_text, rtl_root):
         if s not in slices:
             return m.group(0)
         mod = m.group("mod")
-        dft = defaults.setdefault(mod, module_defaults(rtl_root, mod))
+        # setdefault evaluates its fallback eagerly: re-reading every RTL file
+        # per slice made a 16-slice production staging take several minutes.
+        if mod not in defaults:
+            defaults[mod] = module_defaults(rtl_root, mod)
+        dft = defaults[mod]
         vals = []
         for x in CL:
             v = 0
