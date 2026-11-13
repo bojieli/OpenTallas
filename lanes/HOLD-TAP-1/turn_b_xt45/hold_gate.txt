@@ -1,0 +1,4 @@
+OT_HOLD_GATE contract in_min -90.0000 out_min 40.0000
+OT_HOLD_GATE forwarded ring inputs 569 on 1 clock(s), min 80.0000
+OT_HOLD_GATE structural limit -150.0 (contract in_min -90.0000, tap window 40.0000, endpoint cap none)
+OT_HOLD_GATE PASS FF wns_ps -117.94 endpoints 2312 (true negative slack)

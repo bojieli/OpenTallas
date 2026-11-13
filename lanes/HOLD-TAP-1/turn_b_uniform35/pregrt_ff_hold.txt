@@ -1,0 +1,6 @@
+OT_PREGRT_FF_HOLD before wns -117.94473778136673 endpoints 2312 insts 30757 setup_wns 173.72436891843893 scenes TC+BC guard 35
+OT_PREGRT_FF_HOLD class before port_in 2278 ws -117.94 same_tap 0 ws 0.00 cross_tap 34 ws -9.09 port_out 0 ws 0.00
+OT_PREGRT_FF_HOLD pass all 1 margin 5.0 wns 5.5296878408460595 endpoints 0 insts 31392
+OT_PREGRT_FF_HOLD pass rr 1 margin 35 wns 35.01536574693073 endpoints 0 insts 34076
+OT_PREGRT_FF_HOLD class after port_in 0 ws 0.00 same_tap 0 ws 0.00 cross_tap 0 ws 0.00 port_out 0 ws 0.00
+OT_PREGRT_FF_HOLD after wns 15.472123644150967 endpoints 0 rr_wns 35.01536574693073 hold_cells 3319 insts 34076 setup_wns 42.600478870417454 (before 173.72436891843893) guard 35 locked 1641 secs 28

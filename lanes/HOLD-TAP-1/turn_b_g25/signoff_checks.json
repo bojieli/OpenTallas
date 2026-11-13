@@ -1,0 +1,292 @@
+{
+ "name": "dp_hd_turn_b",
+ "generated": "2026-11-13T11:52:25+00:00",
+ "host": "renewed-glider",
+ "verdict": "LOCAL_PASS_NEEDS_PARENT",
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 101.46,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 101.46,
+   "vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 449.677848 samples 627 missing 0 clocks 1 forwarded_excluded 0",
+   "reason": null
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 2.71,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": -80.51,
+   "overlay": "applied vclk in_min -90 out_min 40",
+   "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 344.099023 samples 627 missing 0 clocks 1 forwarded_excluded 0",
+   "reason": null
+  },
+  "drv": {
+   "verdict": "PASS",
+   "by_corner": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {}
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 39.0,
+   "worst_net": "clknet_leaf_42_fclk_in_t_i"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0,
+    "ft_die_timed": 0,
+    "static_strap_endpoints": 18
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "endpoint_model_coverage": {
+    "tt": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFASRHQNx1_ASAP7_75t_R",
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFLQNx1_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/hold-tap-1/proof/turn_b/gen/hd_turn_b/signoff/tt/libraries.json"
+    },
+    "ff": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFASRHQNx1_ASAP7_75t_R",
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFLQNx1_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/hold-tap-1/proof/turn_b/gen/hd_turn_b/signoff/ff/libraries.json"
+    }
+   },
+   "raw_clock_verdict": "PASS",
+   "raw_pair_basis": "visible_clock_pins",
+   "pair_skew_max_ps": 80.0,
+   "spread_info_only": true,
+   "pair_skew_info_only": true,
+   "pair_skew_info": [
+    "TT hold related pair skew 92.5 ps > 80 (u_cland_t_i/u_ring.dch[5].u_dsel/y[4]$_DFF_P_ -> u_ft_t_s0/q[324]$_DFF_P_)",
+    "FF hold related pair skew 82.3 ps > 80 (u_cland_t_i/u_ring.dch[5].u_dsel/y[4]$_DFF_P_ -> u_ft_t_s0/q[324]$_DFF_P_)"
+   ],
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 627,
+      "min": 427.59,
+      "mean": 449.68,
+      "max": 479.07,
+      "spread": 51.48
+     },
+     "all": {
+      "n": 2100,
+      "min": 426.31,
+      "mean": 443.54,
+      "max": 490.44,
+      "spread": 64.13
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 10288.0,
+        "worst_abs_ps": 70.77,
+        "bounded": false,
+        "worst_signed_ps": -70.77,
+        "worst_launch": "u_ft_t_s0/q[324]$_DFF_P_",
+        "worst_capture": "u_ft_t_s1/q[324]$_DFF_P_",
+        "worst_crpr_ps": -0.0,
+        "p99_raw_ps": 68.61,
+        "searched": 65.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 10288.0,
+        "worst_abs_ps": 92.5,
+        "bounded": false,
+        "worst_signed_ps": 92.5,
+        "worst_launch": "u_cland_t_i/u_ring.dch[5].u_dsel/y[4]$_DFF_P_",
+        "worst_capture": "u_ft_t_s0/q[324]$_DFF_P_",
+        "worst_crpr_ps": -0.0,
+        "p99_raw_ps": 75.17,
+        "searched": 16.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 4543.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 4543.0,
+       "pairs": 10288.0,
+       "inter_clock": 2316.0
+      },
+      "method": "tag",
+      "seconds": 3.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 627,
+      "min": 325.03,
+      "mean": 344.1,
+      "max": 356.39,
+      "spread": 31.36
+     },
+     "all": {
+      "n": 2100,
+      "min": 323.96,
+      "mean": 339.21,
+      "max": 363.7,
+      "spread": 39.74
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 10288.0,
+        "worst_abs_ps": 63.96,
+        "bounded": false,
+        "worst_signed_ps": -63.96,
+        "worst_launch": "u_ft_t_s0/q[324]$_DFF_P_",
+        "worst_capture": "u_ft_t_s1/q[324]$_DFF_P_",
+        "worst_crpr_ps": 0.0,
+        "p99_raw_ps": 65.43,
+        "searched": 127.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 10288.0,
+        "worst_abs_ps": 82.29,
+        "bounded": false,
+        "worst_signed_ps": 82.29,
+        "worst_launch": "u_cland_t_i/u_ring.dch[5].u_dsel/y[4]$_DFF_P_",
+        "worst_capture": "u_ft_t_s0/q[324]$_DFF_P_",
+        "worst_crpr_ps": 0.0,
+        "p99_raw_ps": 67.63,
+        "searched": 8.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 4543.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 4543.0,
+       "pairs": 10288.0,
+       "inter_clock": 2316.0
+      },
+      "method": "tag",
+      "seconds": 2.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    }
+   },
+   "problems": [],
+   "insertion_band_info": [],
+   "insertion_target_ps": 450.0,
+   "insertion_bound": {
+    "tt": 450.0,
+    "ff": 342.0,
+    "tol": 40.0,
+    "source": "/srv/opentallas-scratch2/claude/hold-tap-1/proof/turn_b/gen/hd_turn_b/sdc_lint.json"
+   }
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch2/claude/hold-tap-1/proof/turn_b/gen/hd_turn_b/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "PASS",
+   "top": "ot_s81hd_turn_b",
+   "checked": 1141,
+   "ok": 1141,
+   "fail_counts": {},
+   "fails": {},
+   "dead_declared": [],
+   "netlist": "/srv/opentallas-scratch2/claude/hold-tap-1/proof/turn_b/gen/hd_turn_b/run/results/asap7/dp_hd_turn_b/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch2/claude/hold-tap-1/proof/turn_b/gen/hd_turn_b/pins.json",
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "pg": {
+   "verdict": "PASS",
+   "open_terms": 0,
+   "pg_terms": 803728,
+   "first": null
+  },
+  "timing_modes": {
+   "verdict": "PASS",
+   "applicable": true,
+   "step": "signoff",
+   "tt": 450.0,
+   "ff": 342.0,
+   "mm": false
+  },
+  "io_hold_parent": {
+   "verdict": "NOT RUN",
+   "required": true,
+   "problems": [
+    "matching real-parent PASS receipt missing"
+   ]
+  }
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ }
+}

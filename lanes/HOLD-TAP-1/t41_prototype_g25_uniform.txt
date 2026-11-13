@@ -1,0 +1,10 @@
+OT_PREGRT_FF_HOLD before wns -68.21830627670661 endpoints 7049 insts 353455 setup_wns 124.64079818096896 scenes TC+BC guard 25
+OT_PREGRT_FF_HOLD class before port_in 4817 ws -68.22 same_tap 9 ws -10.65 cross_tap 4 ws -12.93 port_out 2220 ws -34.43
+[INFO RSZ-0046] Found 8155 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 9524 hold buffers.
+OT_PREGRT_FF_HOLD pass all 1 margin 5.0 wns 5.00088861210412 endpoints 0 insts 362979
+[INFO RSZ-0046] Found 3295 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 3281 hold buffers.
+OT_PREGRT_FF_HOLD pass rr 1 margin 25 wns 25.000335235313074 endpoints 0 insts 366260
+OT_PREGRT_FF_HOLD class after port_in 0 ws 0.00 same_tap 0 ws 0.00 cross_tap 0 ws 0.00 port_out 0 ws 0.00
+OT_PREGRT_FF_HOLD after wns 3.440525655909791 endpoints 0 rr_wns 25.000335235313074 hold_cells 12805 insts 366260 setup_wns 124.64079818096896 (before 124.64079818096896) guard 25 locked 52494 secs 1267
