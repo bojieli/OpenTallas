@@ -58,3 +58,11 @@
 - R-STREET is still a header only in RULEBOOK-1113 (checked 04:46). Not applied, no READY.
 - hstat rerun (yosys synth has no -noflatten flag; it failed after 28 min): ot-run on epyc8, log intel2 ~/tmp/s81f_hstat.log.
 - Split mechanism: physical/die_plan/s81/bind/asbuilt_map_s81.json parts (longest prefix). Add e.g. u_s_<id>.u_lp.u_xf -> s_<id>_X plus a new plan partition and type.
+
+## 2026-11-13 05:23 update (R-CAP-3 dsdv, design state)
+- hstat c1x t3 (epyc8 /srv/opentallas-scratch2/claude/s81-forms-1/hstat_c1x_t3/hstat.txt, generic cells): total 326,144. u_xg = ot_s81sl_xgt_xo: u_s ot_s81sl_xs4 172,755 + 37 macros (24 SRAM 128x256, 7 ROM 4096x72, 6 SRAM 128x64); u_r ot_s81sl_rstopt_xo 51,390. Rest about 100k.
+- PLAN-REV posted (origin): harden u_xg.u_s xs4 as ONE core (projection about 207k), parent C about 253k; iq/kv512 swap u_xg master xg->xgt_xo (+1 edge x path).
+- Template: commit 81afc6c5dd "S81 xfin event" (delta_xfin_split_1104.py, ref_tile spec.json, cores/legacy recipes_*.json, asbuilt dissolve, provisional libs from the LEF contract). Core kit: physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py --module M --recipes R (pin contract = plan hard_core outline + pins_file).
+- History: ref_tile/s81sl_xgtxo (whole xgt_xo 734.4x777.6, 11,914 pins, 10-21) never signed. xs4 alone has 4,365 port bits.
+- SITE SCAN (epyc7 /srv/opentallas-scratch2/claude/s81-forms-1/xssite.py, margin 34.56, gap 8.64): with the current core positions NO C type except c1x t1 has a free site for any xs4 outline from 432x950 to 734x562. The xf row (941.76x190.08), cap (336.96x414.72), xr and eg block it. Next step: a per-type hand re-layout of the C rows (move/rotate cores, shapes frozen) with the xs4 core, which also applies the street bands. Area is fine (about 0.73 of 1.59 mm2 inner).
+- Leaf street: R-STREET still header-only at 2026-11-13 05:23. fam43B result above.
