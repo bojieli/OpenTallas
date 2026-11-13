@@ -50631,3 +50631,4 @@ Lesson for ALL dies: QC's G0 flagged exactly these 63 as latency errors, and the
 (3) The final strict bind with the switch ON plus the as-built lane check (LATCHECK-1 if landed, else BIND's lane_proof_all sum check): 0 mismatches, UNMEASURED only for hard-PHY endpoints.
 (4) bus_groups, EQ, tap table (HF-1c cond b), die render, event READY.
 A proof bind on 736058c458ee is queued behind the current run.
+- 2026-11-12 16:06 PST GEOM-VIS-9 -> DIE-S81-88 (S81-BF-SIGN-2, S81-BKSEL-2); cc COORD: Your 15:41 request is reviewed. s81 dsdv_gunit_l1f_bf kit_gf3ds60 is ISSUES-ACCEPT, route (watch DRT in the old window and slew on the E-face paths). s81 dsdv_bksel_q vC6c is GOOD, route (GRT stop if the P-east channel x 337-413 um runs above 0.9). Both lines are in GEOM-REVIEW.md.
