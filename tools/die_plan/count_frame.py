@@ -109,7 +109,21 @@ def load(plan, plan_path=None, base=None):
 
 
 def load_path(plan_path):
+    """explicit frame plan (--frame-plan): a missing / unreadable file is an error"""
     return None if plan_path is None else load(json.loads(Path(plan_path).read_bytes()), plan_path)
+
+
+def load_optional(plan_path):
+    """implicit frame source (--sta-plan / --plan-die): None when not given or not a readable file, so a run without a
+    die plan on disk keeps the legacy (no-frame) behaviour byte-identical; a plan WITH clock.spine.feed still loads
+    (and fails closed on a bad feed / map)"""
+    if not plan_path or not Path(plan_path).is_file():
+        return None
+    try:
+        raw = json.loads(Path(plan_path).read_bytes())
+    except (OSError, ValueError):
+        return None
+    return load(raw, plan_path) if isinstance(raw, dict) else None
 
 
 def from_meta(m):

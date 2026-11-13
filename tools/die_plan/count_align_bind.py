@@ -863,7 +863,7 @@ def main(argv=None):
         s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
                  wander_frac=a.wander_frac, source=a.plan_json)
         import count_frame as CF
-        CAP.apply_frame(s, out, CF.load_path(a.plan_die or a.sta_plan))     # QC-REGION-1 count frame (no feed: no-op)
+        CAP.apply_frame(s, out, CF.load_optional(a.plan_die or a.sta_plan))   # QC-REGION-1 count frame (no feed: no-op)
         plan = plan_doc(s, out, regs)
         if sedges is not None:
             plan["start_edges"] = [{k: v for k, v in e.items() if not k.startswith("_")} for e in sedges]
@@ -880,7 +880,7 @@ def main(argv=None):
     if a.plan_die:
         import count_frame as CF
         try:
-            CF.check_same(plan["summary"].get("frame"), CF.load_path(a.plan_die), f"plan {a.plan_json}")
+            CF.check_same(plan["summary"].get("frame"), CF.load_optional(a.plan_die), f"plan {a.plan_json}")
         except CF.FrameError as ex:
             raise SystemExit(f"count_align_bind: {ex}")
     b = bind(plan, parts=parts)

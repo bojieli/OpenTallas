@@ -1578,7 +1578,7 @@ def main(argv=None):
         summ["start_tree"].update(sinfo)
     import count_frame as CF
     try:
-        apply_frame(summ, out, CF.load_path(a.frame_plan or a.sta_plan))
+        apply_frame(summ, out, CF.load_path(a.frame_plan) if a.frame_plan else CF.load_optional(a.sta_plan))
     except CF.FrameError as ex:
         ap.error(str(ex))
     if a.tree_parent:
