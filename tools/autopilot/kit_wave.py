@@ -5604,9 +5604,9 @@ def grt_arm_reclaim(AP, rec, hosts):
     return "; ".join(out) or "no host"
 
 
-def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices):
+def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices, reclaim=True):
     """stop one attempt by its exact units (wave unit + PLACE client, or its running route job; an unstarted queue row is
-    withdrawn), stop its containers on the fleet, mark it CANCELLED <cls> and reclaim its run data"""
+    withdrawn), stop its containers on the fleet, mark it CANCELLED <cls> and reclaim its run data (reclaim=False keeps it)"""
     units, withdraw, s = [], False, rec.get("status")
     j = (jobs or {}).get(rec.get("q_id")) or {}
     if s in ("RUNNING", "LAUNCHING"):
@@ -5638,7 +5638,8 @@ def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices):
     except (OSError, ValueError, KeyError, TypeError):
         gh = None
     rec.update(status="CANCELLED", **{"class": cls}, updated=time.time(), reason=why[:300])
-    rec["reclaim"] = grt_arm_reclaim(AP, rec, [gh, str(rec.get("kit") or "").partition(":")[0], j.get("ran_on")])
+    rec["reclaim"] = (grt_arm_reclaim(AP, rec, [gh, str(rec.get("kit") or "").partition(":")[0], j.get("ran_on")]) if reclaim
+                      else "kept (no reclaim)")
     notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} {cls}: {why[:200]}")
     AP.log(f"KIT-WAVE GRT-ARM CANCEL {rec['die']}/{rec['item']}@{rec.get('attempt')} units {units} {wd} "
            f"containers [{stopped or 'none'}] reclaim [{rec['reclaim']}]: {why}")
@@ -6238,6 +6239,83 @@ def visual_verdicts():
     return _VISUAL_CACHE["v"]
 
 
+VISUAL_SIGNOFF = "WAIT-VISUAL-SIGNOFF"
+
+
+def visual_gate_mode(cfg):
+    """'route' (COORD 11-12: a placed type row holds its ROUTE until a visual verdict) or 'signoff' (OWNER 11-13 03:5x: it routes
+    at once and the verdict gates the count: no SIGNED archive without GOOD / OK / ISSUES-ACCEPT, BAD / ISSUES discard the routed
+    build).  Global kit_wave.json option visual_gate, default 'route'."""
+    return "signoff" if str(cfg.get("visual_gate") or "route").strip().lower() == "signoff" else "route"
+
+
+def visual_signoff_state(cfg, rec):
+    """-> ('accept' | 'reject' | 'none', verdict or None) for this build's own visual verdict (bound by verdict_applies)"""
+    vk = (rec.get("die"), rec.get("item"), int(rec.get("attempt") or 0))
+    v = visual_verdicts().get(vk)
+    if v is None or not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
+        return "none", v
+    return ("accept" if v in VISUAL_ACCEPT else "reject" if v in VISUAL_REJECT else "none"), v
+
+
+def visual_signoff_gated(cfg, rec):
+    """True: a TYPE row whose sign-off needs a visual verdict (signoff mode, placed after the visual gate start)"""
+    if visual_gate_mode(cfg) != "signoff" or cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
+        return False
+    try:
+        return float(rec.get("started") or 0) >= visual_gate_t0(cfg)
+    except (TypeError, ValueError):
+        return True
+
+
+def signoff_visual_gate(ap_dir, job):
+    """autopilot.after_class (SIGNED, before archive): ('', '') = archive; ('hold', why) = keep the job SIGNED, archive pending,
+    until the build's visual verdict is GOOD / OK / ISSUES-ACCEPT; ('reject', why) = BAD / ISSUES: never archived or counted
+    (the wave row is discarded to WAIT-FORM by visual_reject_discard).  Jobs without a kit-wave row are never gated."""
+    try:
+        cfg = json.loads((Path(ap_dir) / "kit_wave.json").read_text())
+        if visual_gate_mode(cfg) != "signoff":
+            return "", ""
+        items = json.loads((Path(ap_dir) / STATE_FILE).read_text()).get("items") or {}
+    except (OSError, ValueError):
+        return "", ""
+    kit = job.get("kit")
+    recs = [r for r in items.values() if kit and r.get("kit") == kit]
+    if not recs:
+        return "", ""
+    rec = max(recs, key=lambda r: float(r.get("updated") or 0))
+    if not visual_signoff_gated(cfg, rec):
+        return "", ""
+    s, v = visual_signoff_state(cfg, rec)
+    if s == "accept":
+        return "", ""
+    if s == "reject":
+        return "reject", (f"archive withheld: visual verdict {v} for {rec['die']}/{rec['item']} attempt {rec.get('attempt')} "
+                          f"(visual gate at sign-off, OWNER 11-13): not counted; the type rebuilds on a new form (WAIT-FORM)")
+    return "hold", (f"archive pending: {VISUAL_SIGNOFF}: signed off, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in "
+                    f"lanes/GEOM-REVIEW.md for {rec['die']}/{rec['item']} attempt {rec.get('attempt')} before it counts")
+
+
+def visual_reject_discard(AP, cfg, st, notices, jobs=None):
+    """signoff mode: a routed (ENQUEUED) type row whose own build gets a BAD / ISSUES verdict is discarded: its route job is
+    stopped (or its unstarted queue row withdrawn), the row goes CANCELLED class WAIT-FORM (run data kept, never reclaimed);
+    form_wait keeps the type from relaunching until its form fingerprint changes, as for a held row today.  -> rows discarded"""
+    if visual_gate_mode(cfg) != "signoff":
+        return 0
+    n = 0
+    for rec in (st.get("items") or {}).values():
+        if rec.get("status") != "ENQUEUED" or not visual_signoff_gated(cfg, rec):
+            continue
+        s, v = visual_signoff_state(cfg, rec)
+        if s != "reject":
+            continue
+        why = (f"WAIT-FORM: visual verdict {v} for this attempt (visual gate at sign-off, OWNER 11-13): routed build discarded, "
+               "not counted; the type relaunches when its form fingerprint changes")
+        grt_arm_cancel(AP, cfg, rec, why, "WAIT-FORM", jobs, notices, reclaim=False)
+        n += 1
+    return n
+
+
 def visual_hold(cfg, rec):
     """COORD/OWNER 11-12 'stop repeating bad builds, manual visual placement and visual review before sign-off': a TYPE row
     stops after place (place DB + renders kept, route resumes from it) until lanes/GEOM-REVIEW.md carries a verdict for that
@@ -6245,6 +6323,12 @@ def visual_hold(cfg, rec):
     from relaunching until its form fingerprint changes); no verdict = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
     if cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
         return None
+    if visual_gate_mode(cfg) == "signoff":
+        # OWNER 11-13 03:5x (KIT-OPS-1): the visual verdict gates sign-off, not route.  A placed build routes at once; only a
+        # verdict that already rejects THIS build (BAD / ISSUES, bound to its form) keeps it at WAIT-FORM.
+        s, v = visual_signoff_state(cfg, rec)
+        return (f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
+                if s == "reject" else None)
     vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
     v = visual_verdicts().get(vk)
     if v is not None and not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
@@ -6283,7 +6367,8 @@ def stale_visual_why(cfg, rec, t0):
 
 
 def visual_queue_publish(cfg, st):
-    """lanes/VISUAL-QUEUE.tsv = every WAIT-VISUAL / WAIT-FORM row (die type family attempt state render paths host), rewritten when it changes"""
+    """lanes/VISUAL-QUEUE.tsv = every WAIT-VISUAL row (signoff mode: also every routed type row still without its verdict, state
+    WAIT-VISUAL-SIGNOFF) (die type family attempt state render paths host), rewritten when it changes"""
     rows = []
     t0 = visual_gate_t0(cfg)
     for rec in (st.get("items") or {}).values():
@@ -6307,11 +6392,19 @@ def visual_queue_publish(cfg, st):
                 rec["route_hold"] = f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
                 rec["updated"] = time.time()
                 continue
-        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
-            k = rec.get("kit") or ""
-            rows.append("\t".join([rec["die"], rec["item"], kit_class(rec["die"], rec["item"]).split("|", 2)[2], str(rec.get("attempt")),
-                                   h.split(":")[0], f"{rec.get('kit_host') or rec.get('gen_host') or ''}:{k}/run/layout_review",
-                                   f"{rec.get('geom_dir') or ''}/auto_geom.png", str(rec.get("kit_host") or rec.get("gen_host") or "")]))
+        if (rec.get("status") == "ENQUEUED" and rec.get("q_status") not in ("FAIL", "CANCELLED")
+                and visual_signoff_gated(cfg, rec) and visual_signoff_state(cfg, rec)[0] == "none"):
+            # OWNER 11-13 (signoff mode): a routed build still needs its verdict before it counts -- same queue, state
+            # WAIT-VISUAL-SIGNOFF (the place renders are kept in the kit)
+            h = VISUAL_SIGNOFF + ": routed, verdict needed before SIGNED counts"
+        elif rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
+            pass
+        else:
+            continue
+        k = rec.get("kit") or ""
+        rows.append("\t".join([rec["die"], rec["item"], kit_class(rec["die"], rec["item"]).split("|", 2)[2], str(rec.get("attempt")),
+                               h.split(":")[0], f"{rec.get('kit_host') or rec.get('gen_host') or ''}:{k}/run/layout_review",
+                               f"{rec.get('geom_dir') or ''}/auto_geom.png", str(rec.get("kit_host") or rec.get("gen_host") or "")]))
     rows.sort()
     body = "die\ttype\tfamily\tattempt\tstate\trender_dir\tauto_geom\thost\n" + "\n".join(rows) + ("\n" if rows else "")
     p = Path.home() / "coord" / "lanes" / "VISUAL-QUEUE.tsv"
@@ -6459,7 +6552,11 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         AP.coord_append("lanes/GEOM-REVIEW.md",
                         f"- {now_s()} GEOM REQ [KIT-WAVE-1 sample {rec['die']}/{rec['item']}] 3_place {rec['kit']} "
                         f"(event {rec['event']}); AUTO-GEOM PASS {rec['geom_dir']}/auto_geom.{{json,png}}; 1-in-5 "
-                        f"independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it")
+                        + (f"independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it"
+                         if visual_gate_mode(cfg) != "signoff" else
+                         "visual sample; route already enqueued (visual gate at sign-off, OWNER 11-13) -- every routed type "
+                         "still needs GOOD / OK / ISSUES-ACCEPT before it counts (lanes/VISUAL-QUEUE.tsv); BAD / ISSUES "
+                         "discards the routed build (WAIT-FORM)"))
         msg += " + GEOM REQ sample"
     notices.setdefault(rec["die"], []).append(msg)
     AP.log(f"KIT-WAVE ENQUEUE {rec['die']}/{rec['item']} {rec['kit']} geom {rec.get('geom', '')[:120]}")
@@ -6522,6 +6619,8 @@ def queue_class(j):
     if stt == "ARCHIVED":
         return "count", "SIGNED", "", f"signed off, archived {j.get('archive', '')} flow {j.get('flow_tag', '')}"
     if stt == "SIGNED":
+        if j.get("visual_gate"):                     # OWNER 11-13: archive (count) waits for / was refused by the visual verdict
+            return "visual", "RUNNING", "", str(j["visual_gate"])[:300]
         return "archive", "RUNNING", "", "signed off; archive + PROVENANCE pending"
     if stt == "SIGNED-UNVERSIONED":
         return "provenance", "FAIL", "FLOW", "signed off but no flow release tag carries its flow: " + str(j.get("prov_error") or "")[:200]
@@ -6968,6 +7067,11 @@ def _step(AP, ap_dir):
     retry_enqueue(AP, cfg, st, notices)
     stops = []
     follow_queue(st, ap_dir, notices, stops)
+    try:
+        visual_reject_discard(AP, cfg, st, notices,
+                              json.loads((Path(ap_dir or AP.AP_DIR) / "state.json").read_text()).get("jobs") or {})
+    except Exception as e:           # a discard problem never stops the wave
+        AP.log(f"KIT-WAVE VISUAL-REJECT discard failed: {e}")
     stop_cancelled_rows(AP, stops)
     auto_rejudge(AP, cfg, st, notices)
     try:
