@@ -25,10 +25,11 @@
 // Equivalence (lock-step, every edge, every reset): rtl/test/qwen_split/tb_qkd_pv_fin_s2x8.sv runs qkd_pv_fin_s2x8 against
 // the unsliced qkd_pv_fin_s on the same pins (healthy commands in the three STRETCH regimes, random calendars incl.
 // unmeetable ones, off-slot / wrong-beat / wrong-epoch / missing inputs, starts while active, NaN / overflow operands,
-// warm resets): out_valid and fault equal at every edge; out_beat, out_epoch, out_data equal at every edge until the
-// first fault and on every out_valid beat.  After a fault raised by ONE slice's own lanes (fp err / unit valid) the other
-// slice's payload registers may still move once with out_valid low (qkd_pv_fin_s holds them): the payload is qualified
-// by out_valid, which is identical.  MUT (bench negative controls, as qkd_pv_fin_s): 1 head index (b + 1) / 8, 2 pair-0
+// warm resets): out_valid and fault equal at every edge; out_beat / out_epoch equal at every edge outside a fault (until
+// the next reset), out_data at every edge outside a fault (until the next product beat; it has no reset in either design),
+// and all of them on every out_valid beat.  After a fault raised by ONE slice's own lanes (fp err / unit valid) the other
+// slice's payload registers may still move with out_valid low (qkd_pv_fin_s holds them): the payload is qualified by
+// out_valid, which is identical.  MUT (bench negative controls, as qkd_pv_fin_s): 1 head index (b + 1) / 8, 2 pair-0
 // operand one tap late, 3 R left out of the join age.
 module qkd_pv_fin_s8 #(
  parameter integer ADD_LAT=7,

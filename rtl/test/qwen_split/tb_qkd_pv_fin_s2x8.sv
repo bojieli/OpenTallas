@@ -9,8 +9,9 @@
 //   5 start while active 6 unmeetable calendar  7 non-finite operand in ONE slice's lanes (lo or hi only)
 //   8 multiplier overflow in one slice's lanes  9 warm reset mid-command  10 reciprocal epoch wrong
 // After a fault both designs are dead until reset: the bench resets (warm) and goes on.
-// Checks (every posedge, after it settles): out_valid and fault equal; out_beat, out_epoch and out_data equal while no
-// fault was seen since the last reset, and on every out_valid beat.  +SHIFT=1 compares against gold one edge late (a
+// Checks (every posedge, after it settles): out_valid and fault equal; out_beat and out_epoch equal while no fault was
+// seen since the last reset, out_data equal while no fault was seen since the last product beat (out_data has no reset in
+// either design), and all three on every out_valid beat.  +SHIFT=1 compares against gold one edge late (a
 // wrongly declared +1 cycle) and must FAIL; MUT 1..3 (in the slices) and -DOT_PVFIN_S2X8_MUTANT_LANESWAP must FAIL.
 module tb_qkd_pv_fin_s2x8;
  parameter integer MUT=0;
@@ -26,7 +27,7 @@ module tb_qkd_pv_fin_s2x8;
   .p0_valid(p0v),.p0_beat(p0b),.p0_epoch(p0e),.p0_data(p0d),.p1_valid(p1v),.p1_beat(p1b),.p1_epoch(p1e),.p1_data(p1d),
   .rz_valid(rv),.rz_epoch(rep),.rz(rz),.out_valid(dv),.out_beat(db),.out_epoch(de),.out_data(dd),.fault(df));
  // ---------------- checker ----------------
- integer SHIFT=0,errs=0,edges=0,vbeats=0,pay_edges=0,seenf=0;
+ integer SHIFT=0,errs=0,edges=0,vbeats=0,pay_edges=0,seenf=0,dstale=0;
  reg hv=0,h_v=0,h_f=0;reg [4:0] h_b=0;reg [15:0] h_e=0;reg [511:0] h_d=0;
  always @(posedge ck)begin
   #0.5;
@@ -35,14 +36,15 @@ module tb_qkd_pv_fin_s2x8;
    reg xv,xf;reg [4:0] xb;reg [15:0] xe;reg [511:0] xd;
    xv=SHIFT?h_v:gv;xf=SHIFT?h_f:gf;xb=SHIFT?h_b:gb;xe=SHIFT?h_e:ge;xd=SHIFT?h_d:gd;
    if(dv!==xv||df!==xf)begin errs=errs+1;if(errs<8)$display("MISMATCH edge %0d valid %b/%b fault %b/%b",edges,xv,dv,xf,df);end
-   if((seenf==0||xv)&&(db!==xb||de!==xe||dd!==xd))begin
+   if((seenf==0&&!xf||xv)&&(db!==xb||de!==xe||(dstale==0||xv)&&dd!==xd))begin   // the fault edge itself: payload not qualified
     errs=errs+1;if(errs<8)$display("MISMATCH edge %0d payload beat %0d/%0d epoch %h/%h data %0s",edges,xb,db,xe,de,dd===xd?"eq":"DIFF");
    end
    if(seenf==0)pay_edges=pay_edges+1;
    if(xv)vbeats=vbeats+1;
   end
-  if(gf||df)seenf=1;
-  if(!rst_n)seenf=0;
+  if(gf||df)begin seenf=1;dstale=1;end
+  if(!rst_n)seenf=0;        // out_valid / out_beat / out_epoch / fault are reset; out_data (no reset, as qkd_pv_fin_s)
+  if(gv&&!gf)dstale=0;      // keeps a post-fault value until the next product beat rewrites it
   h_v=gv;h_f=gf;h_b=gb;h_e=ge;h_d=gd;hv=1;
  end
  // ---------------- stimulus ----------------
