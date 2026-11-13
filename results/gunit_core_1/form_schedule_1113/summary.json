@@ -1,0 +1,33 @@
+{
+ "status": "PASS",
+ "form": "gf4",
+ "defines": [
+  "OT_GUNIT_BF_M1REG",
+  "OT_GUNIT_BF_C1REG"
+ ],
+ "period_ps": 833,
+ "jobs": 3,
+ "input_beats": 1655,
+ "ctl_rows_each_side": 15,
+ "roots": 50,
+ "rsqrt": 2,
+ "nominal_faults": 0,
+ "mutants": {
+  "late": 35,
+  "which": 34
+ },
+ "ids_latency_N_S": [
+  64,
+  62
+ ],
+ "ids_to_weights_gap": 103,
+ "base_gf2_ids_N_S": [
+  62,
+  60
+ ],
+ "base_gf2_gap": 101,
+ "delta_ids_cycles": 2,
+ "delta_weights_cycles": 4,
+ "physical_signoff": "NOT CLAIMED",
+ "source": "existing die-s81-89/gunit bench gf4r2, ot-heavy oth-ubuntu-609421-1794606637"
+}

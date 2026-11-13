@@ -34,11 +34,22 @@ sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog/gu'))
 from gu_values import Fx, u32, hc_roots, hc_coef, router_vals   # noqa: E402,F401  (shared with lower_gu.encode)
 
 
-def build(layer, fixtures, tree, out, mutant=None):
+def bench_die(tree, bound_data=None, bound_manifest=None):
+    """the compiler's die model: the legacy tree, or (as prepare_frame_schedules / dv_layer_compile --bound-data) the
+    strict bind's own die top + its emitted XRT landing form.  Main's source contract refuses the legacy tree's XRT
+    form 0, so a current-main kit needs a bind; the gunit lowering itself reads only the gunit strap and cw link."""
+    if bound_data is None:
+        return C.Die(tree)
+    from layer_prog import bound_data as BD
+    B = BD.load_bind(bound_data, bound_manifest, C.ROOT)
+    return C.Die(tree, netlist=B['netlist_path'], netlist_sha=B['netlist_sha256'], bound_rtl=Path(B['bound']) / 'rtl')
+
+
+def build(layer, fixtures, tree, out, mutant=None, bound_data=None, bound_manifest=None):
     out = Path(out)
     (out / 'prog').mkdir(parents=True, exist_ok=True)
     fx = Fx(fixtures)
-    die = C.Die(tree)
+    die = bench_die(tree, bound_data, bound_manifest)
     sched = C.layer_schedule(tree, layer)
     ctx = dict(layer=layer, slice='u_s_0S', sched=sched, fixtures=Path(fixtures))
     prog = C.Prog(die)
@@ -119,8 +130,12 @@ def main():
     ap.add_argument('--die-src', required=True)
     ap.add_argument('--out', required=True)
     ap.add_argument('--mutant', default=None, choices=('which', 'late'))
+    ap.add_argument('--bound-data', default=None, help='strict bind out dir (die top + XRT form), as dv_layer_compile')
+    ap.add_argument('--bound-data-manifest', default=None, help='the as-built manifest of that bind')
     a = ap.parse_args()
-    print(json.dumps(build(a.layer, a.fixtures, Path(a.die_src), a.out, a.mutant)))
+    if (a.bound_data is None) != (a.bound_data_manifest is None):
+        ap.error('--bound-data needs --bound-data-manifest')
+    print(json.dumps(build(a.layer, a.fixtures, Path(a.die_src), a.out, a.mutant, a.bound_data, a.bound_data_manifest)))
 
 
 if __name__ == '__main__':
