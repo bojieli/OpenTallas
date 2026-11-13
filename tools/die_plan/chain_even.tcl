@@ -102,7 +102,7 @@ proc ce_chain {head re} {
     foreach s [lrange $seq 1 end] { lassign [ce_ctr [$s getBBox]] sx2 sy2; set worst [expr {max($worst, abs($sx2-$px)+abs($sy2-$py))}]; set px $sx2; set py $sy2 }
     set worst [expr {max($worst, abs($tx-$px)+abs($ty-$py))}]
     if {$worst <= $ce_min_hop} { return 0 }
-    # ... and never push the farthest load of the last stage farther out (a fan-out bit with loads spread over the
+    # ... and never make the worst hop worse by pushing the farthest load of the last stage out (a fan-out bit with loads spread over the
     # type is a copy problem, R-REACH-1, not a chain: S81 leaf t21 lpad q[0], 10 loads, 700 -> 827 um when moved)
     lassign [ce_at $hx $hy $tx $ty [expr {double([llength $seq]-1)/$hops}]] nx ny
     set far_old 0; set far_new 0
@@ -111,7 +111,7 @@ proc ce_chain {head re} {
       set far_old [expr {max($far_old, abs($lx-$px)+abs($ly-$py))}]
       set far_new [expr {max($far_new, abs($lx-$nx)+abs($ly-$ny))}]
     }
-    if {$far_new > $far_old && $far_new > $ce_min_hop} { return 0 }
+    if {$far_new > $far_old && $far_new > $worst} { return 0 }
   }
   set old 0; set hp {}
   for {set j 1} {$j < [llength $seq]} {incr j} {
