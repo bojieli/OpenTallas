@@ -31,15 +31,15 @@ does not know (cf, rstg) keep their base spot and are legalised by core_place.
 """
 import json, re, sys, gzip, itertools, random
 
-G = 4.32
-XW, XE, DHE = 17.28, 859.68, 267.84
-COL = {"W": (557.28, 598.32, 639.36), "E": (818.64, 777.6, 736.56)}   # cols A, B, C: abutted to the pair and to each other
-SEQX = {"W": 514.08, "E": 881.28}
-SEQO = {"W": "R180", "E": "MX"}
-TX, PX = 717.12, 587.52
-S_STREET, ROW_PITCH = 142.56, 410.4
-ROMP = 82.08
-BF_BAND = 108.0
+G = 8.64          # G0C hard_cores: every core origin on the 8.64 um lattice
+XW, XE, DHE = 17.28, 864.0, 267.84
+COL = {"W": (578.88, 639.36), "E": (803.52, 743.04)}   # col B' 17.28 off the type clock tap x 725.76   # cols A, B, C: abutted to the pair and to each other
+SEQX = {"W": 518.4, "E": 993.6}   # <= 405 um to the far half's cfg pins and to the farthest ROM
+SEQO = {"W": "R0", "E": "R0"}      # no flips: a flipped seq puts its M4 pins off the plan tracks
+TX, PX = 699.84, 570.24
+S_STREET, ROW_PITCH = 138.24, 406.08
+ROMP = 69.12
+BF_BAND = 103.68
 REACH = 395.0
 
 
@@ -91,6 +91,29 @@ def partner_insts(A, C, a):
             if dn.startswith(a + "."):
                 out.add(b)
     return out
+
+
+PINS = {}          # module -> {pin group: (x, y) centroid in the core frame}
+REPO = [None]
+
+
+def pin_xy(c, pin):
+    m = c["module"]
+    if m not in PINS:
+        g = {}
+        try:
+            import os
+            f = os.path.join(REPO[0], c["pins_file"])
+            if not os.path.exists(f):
+                f = os.path.join(REPO[0], "physical/die_plan/s81", c["pins_file"])
+            acc = {}
+            for q in json.load(open(f))["pins"]:
+                acc.setdefault(q["name"].split("[")[0], []).append((q["x"], q["y"]))
+            g = {k: (sum(x for x, _ in v) / len(v), sum(y for _, y in v) / len(v)) for k, v in acc.items()}
+        except Exception:
+            g = {}
+        PINS[m] = g
+    return PINS[m].get(pin, (c["outline_um"][0] / 2, c["outline_um"][1] / 2))
 
 
 def seed_type(tn, t, conns, log):
@@ -162,9 +185,7 @@ def seed_type(tn, t, conns, log):
     # the top unit: a row keeps its N street inside ROW_PITCH (46.44); a bf group needs >= 43.2 to the N face
     top_m = 43.2 if units[-1][0] == "bf" else 0.0
     slack = H - need - top_m
-    m0 = snap(min(max(slack, 0), 43.2))
-    if m0 > slack:
-        m0 -= G
+    m0 = 43.2 if slack >= 43.2 else 8.64 * int(max(slack, 0) / 8.64)
     info = {"units": [(u[0], u[1]) for u in units], "need": round(need, 2), "slack": round(slack, 2), "m0": m0,
             "top_margin": round(H - need - m0, 2), "t_of": {str(k): v for k, v in t_of.items()}, "bf_seq": bf_seq}
     if slack < 0:
@@ -173,6 +194,7 @@ def seed_type(tn, t, conns, log):
         return {}, info
     y = m0
     node_sites = []
+    row_sites = set()
     rg_sites = []
     for i, u in enumerate(units):
         if u[0] == "row":
@@ -184,21 +206,36 @@ def seed_type(tn, t, conns, log):
                 if "u_bs" + k in C:
                     put("u_bs" + k, px + 276.48, ye - 77.76, "R0")
                 if "u_bn" + k in C:
-                    put("u_bn" + k, px + (43.2 if side == "W" and i + 1 < len(units) and units[i + 1][0] == "bf" else 311.04),
-                        ye + 267.84, "R0")
+                    put("u_bn" + k, px + ((138.24 if side == "W" else 95.04) if i + 1 < len(units) and units[i + 1][0] == "bf" else 311.04),
+                        ye + 241.92, "R0")      # 20.5 um over the N pins: sparse face (2.1 pins / um), tap-legal slot
                 if k in seq_of:
                     put(seq_of[k], SEQX[side], ye - 95.04, SEQO[side])
                 cols = COL[side]
                 roms = sorted((n for n in C if re.match(r"u_c%s_\d+$" % k, n)), key=lambda n: int(n.rsplit("_", 1)[1]))
                 for j, n in enumerate(roms):
-                    cx, r = (cols[2], 0) if j == 0 else (cols[(j - 1) // 3], (j - 1) % 3)   # rd_out pins on the ROM S face:
-                    put(n, cx, ye - 4.32 + r * ROMP)                                          # a 19 um slot under each
+                    # ROM pins: 43 + 43 M4 pins at the bottom 5 um of the W and E edges.  Col A (4 ROMs, next to the pair)
+                    # and col B (3 ROMs, at the street) keep 17.28+ um slots on both sides (COORD ruling 11-13: sparse
+                    # faces may face a tap-legal slot); N-S the ROMs stand 6.2 um apart (pinless faces)
+                    cx, r = (cols[0], j) if j < 4 else (cols[1], j - 4)
+                    if side == "E":
+                        # E unit reach (<= 405 um to the seq): col A' rows -1..2, col B' rows 0..1, 7th in the corner
+                        cx, r = (cols[0], j - 1) if j < 4 else (cols[1], j - 4)
+                    if side == "E" and j == 6:
+                        # E unit: the pin groups sit at 143 / 411 of 536, so its seq stands 130 um into the pair and the
+                        # 7th ROM would be 429 um from it at the top of col B: it stands in the street corner beside
+                        # the seq instead (43.2 off the seq q face, outside the bank fan)
+                        put(n, px + 43.2, ye - 112.32)
+                    else:
+                        put(n, cx, ye - 51.84 + r * ROMP)
             tk = t_of.get(tuple(u[1]))
             if tk:
                 put(tk, TX, ys, "R0")
                 if tk + "__payload" in C:
                     put(tk + "__payload", PX, ys, "R0")
-            node_sites += [(60.48, max(ys + G, 43.2)), (146.88, max(ys + G, 43.2)), (1296.0, max(ys + G, 43.2))]
+            # row-street end sites, below the apron: 2 W of the hw pin group, 4 E (1 W of the bank, 3 E of it at 17.28 um
+            # slots: node side faces are sparse or pinless)
+            node_sites += [(x_, max(ys + G, 43.2)) for x_ in (60.48, 146.88, 1080.0, 1218.24, 1278.72, 1339.2)]
+            row_sites.update(node_sites[-6:])
             y += hs[i]
         else:
             b = u[1]
@@ -217,35 +254,37 @@ def seed_type(tn, t, conns, log):
                 c3w = C[c3]["outline_um"][0]
                 if side == "w":
                     gap = ex - (c3x + c3w)
-                    dx = -snap(max(0.0, 43.2 - gap) + 2.15) if gap < 43.2 else 0.0
+                    dx = -snap(max(0.0, 43.2 - gap) + 4.31) if gap < 43.2 else 0.0
                 else:
                     gap = c3x - (ex + C[b]["outline_um"][0])
-                    dx = snap(max(0.0, 43.2 - gap) + 2.15) if gap < 43.2 else 0.0
+                    dx = snap(max(0.0, 43.2 - gap) + 4.31) if gap < 43.2 else 0.0
                 for n in grp:
                     put(n, C[n]["origin_um"][0] + dx, yb + (C[n]["origin_um"][1] - C[b]["origin_um"][1]))
             if has_band:
                 yr = y
                 k = bf_seq.get(b)
                 sx = snap(ex)
-                tx = snap(sx + 30.24 + 43.2 + 2.15)
+                tx = snap(sx + 30.24 + 43.2 + 4.31)        # seq | station | 7th ROM | payload
                 if k:
-                    put(seq_of[k], sx, yr + G, "R0")
+                    put(seq_of[k], sx, yr, "R0")
                     roms = sorted((n for n in C if re.match(r"u_c%s_\d+$" % k, n)),
                                   key=lambda n: int(n.rsplit("_", 1)[1]))
-                    wx = snap(sx - 43.2 - 38.04 - 2.15)
-                    exr = snap(tx + 84.24 + 43.2 + 2.15)
+                    wx = snap(sx - 43.2 - 38.04 - 4.31)
+                    exr = snap(tx + 84.24 + 17.28 + 4.31)
                     for j, n in enumerate(roms):
-                        put(n, wx - j * 41.04 if j < 4 else exr + (j - 4) * 41.04, yr)
+                        put(n, wx - j * 60.48 if j < 6 else exr, yr)
                 tk = t_of.get(b)
                 if tk:
-                    put(tk, tx, yr + 34.56, "R0")
+                    put(tk, tx, yr + 25.92, "R0")
                     if tk + "__payload" in C:
-                        put(tk + "__payload", snap(snap(tx + 84.24 + 43.2 + 2.15) + 2 * 41.04 + 38.04 + 43.2 + 2.15),
-                            yr + 38.88, "R0")
+                        put(tk + "__payload", snap(snap(tx + 84.24 + 17.28 + 4.31) + 38.04 + 17.28 + 4.31), yr + 34.56, "R0")
             # node sites in the E zone beside the bf group
             for cx in (1183.68, 1270.08, 1356.48):
-                for ry in (yb, yb + 120.96):
+                rows_ = (yb + 25.92, yb + 146.88) if has_band and yb + 146.88 + 77.76 + 43.2 <= H + 0.01 else (yb, yb + 120.96)
+                for ry in rows_:
                     node_sites.append((cx, ry))
+                if has_band and rows_[0] > yb and i > 0 and units[i - 1][0] == "row":
+                    node_sites.append((cx, y + 8.64))      # band row: links the E zone to the row street below
             if i > 0 and units[i - 1][0] == "row":
                 rg_sites.append((1036.8, yb - 77.76))
             y += hs[i]
@@ -270,22 +309,49 @@ def seed_type(tn, t, conns, log):
     if nodes:
         if len(node_sites) < len(nodes):
             log("  %s: %d nodes, %d sites: the rest stay at base (core_place legalises)" % (tn, len(nodes), len(node_sites)))
-        links = []
+        links = []          # (node a, pin offset a, node b, pin offset b): node-to-node links, pin to pin
+        seen_l = set()
         for a in nodes:
-            for b in partner_insts(A, C, a):
-                if b in nodes and a < b:
-                    links.append((a, b))
+            for pin, dsts in ((conns or {}).get(C[a]["inst"]) or {}).items():
+                for d in dsts:
+                    if not d.startswith("core:"):
+                        continue
+                    dn = d[5:].split(".", 1)[1]
+                    b = next((n for n in nodes if dn.startswith(n + ".")), None)
+                    if b and b != a and (a, pin, b) not in seen_l and (b, dn[len(b) + 1:], a) not in seen_l:
+                        seen_l.add((a, pin, b))
+                        links.append((a, pin_xy(C[a], pin), b, pin_xy(C[b], dn[len(b) + 1:])))
         base = {n: C[n]["origin_um"] for n in nodes}
+        win = {}
+        for b_ in t["buses"]:
+            lo, hi = b_["window_um"]; m_ = (lo + hi) / 2
+            win[b_["name"]] = {"S": (m_, 0.0), "N": (m_, H), "W": (0.0, m_), "E": (W, m_)}[b_["face"]]
+        blinks = []
+        for a in nodes:
+            for pin, dsts in ((conns or {}).get(C[a]["inst"]) or {}).items():
+                if pin in ("rs", "rst_n", "clk", "ck"):
+                    continue
+                for d in dsts:
+                    if d.startswith("bus:") and d[4:] in win:
+                        blinks.append((a, win[d[4:]]))
         use = nodes[:len(node_sites)]
 
         def cost(asg):
             s = 0.0
-            for a, b in links:
+            for a, oa, b, ob in links:
                 if a in asg and b in asg:
                     pa, pb = node_sites[asg[a]], node_sites[asg[b]]
-                    d = abs(pa[0] - pb[0]) + abs(pa[1] - pb[1])
-                    d0 = abs(base[a][0] - base[b][0]) + abs(base[a][1] - base[b][1])
-                    s += d + (50.0 * (d - max(d0, 405.0)) if d > max(d0, 405.0) else 0.0)
+                    d = abs(pa[0] + oa[0] - pb[0] - ob[0]) + abs(pa[1] + oa[1] - pb[1] - ob[1])
+                    d0 = abs(base[a][0] + oa[0] - base[b][0] - ob[0]) + abs(base[a][1] + oa[1] - base[b][1] - ob[1])
+                    # core_place measures these links with its own pin model (seen up to 50 um longer than the pin-group centroids):
+                    # keep 60 um of margin under the limit
+                    s += d + (500.0 * (d - max(d0, 405.0) + 60.0) if d > max(d0, 405.0) - 60.0 else 0.0)
+            for a, wp in blinks:               # a node -> window link stays no longer than in the base plan
+                if a in asg:
+                    p = node_sites[asg[a]]
+                    d = abs(p[0] - wp[0]) + abs(p[1] - wp[1])
+                    d0 = abs(base[a][0] - wp[0]) + abs(base[a][1] - wp[1])
+                    s += 0.2 * d + (50.0 * (d - max(d0, 405.0)) if d > max(d0, 405.0) else 0.0)
             for a_, b_, fa, fb, lim, _ in stn:      # a station keeps its register count: its ends stay in reach
                 if a_ in asg or b_ in asg:
                     def pos(n, f):
@@ -306,7 +372,7 @@ def seed_type(tn, t, conns, log):
             return s
         rnd = random.Random(1113)
         best = None
-        for trial in range(40):
+        for trial in range(400):
             idx = list(range(len(node_sites)))
             rnd.shuffle(idx)
             asg = {n: idx[i] for i, n in enumerate(use)}
@@ -333,7 +399,53 @@ def seed_type(tn, t, conns, log):
                             free[fi], asg[a] = asg[a], old
             if best is None or c < best[0]:
                 best = (c, dict(asg))
-        for n, si in best[1].items():
+        # polish (hand rule): shorten the longest node-to-node link by pairwise swaps while no station / window limit
+        # gets worse (a cross-row link wants its two nodes in one column)
+        asg = dict(best[1])
+
+        def worst(as_):
+            m = 0.0
+            for a_, oa, b_, ob in links:
+                if a_ in as_ and b_ in as_:
+                    pa, pb = node_sites[as_[a_]], node_sites[as_[b_]]
+                    m = max(m, abs(pa[0] + oa[0] - pb[0] - ob[0]) + abs(pa[1] + oa[1] - pb[1] - ob[1]))
+            return m
+
+        def hard(as_):          # the penalty part of the cost only (limits), without the plain length terms
+            return cost(as_) - sum(1 for _ in ())
+        imp = True
+        while imp:
+            imp = False
+            w0, c0 = worst(asg), cost(asg)
+            for a_, b_ in itertools.combinations(use, 2):
+                asg[a_], asg[b_] = asg[b_], asg[a_]
+                if worst(asg) < w0 - 1.0 and cost(asg) < c0 + 2000.0:
+                    imp = True
+                    break
+                asg[a_], asg[b_] = asg[b_], asg[a_]
+        if len(use) <= 6 and len(use) == len(nodes):
+            # small trees: exact minimax over all sites (station limits kept), ties by the cost above
+            def stn_ok(as_):
+                for a_, b_, fa, fb, lim, _ in stn:
+                    for n_, f_, o_ in ((a_, fa, fb), (b_, fb, fa)):
+                        if n_ in as_ and (b_ if n_ == a_ else a_) is None:
+                            q = node_sites[as_[n_]]
+                            if abs(q[0] + f_[0] - base[n_][0] - o_[0]) + abs(q[1] + f_[1] - base[n_][1] - o_[1]) > lim - 8.64:
+                                return False
+                return True
+            bb = (worst(asg), asg) if stn_ok(asg) else None
+            cand = [i_ for i_, q_ in enumerate(node_sites) if 1000.0 <= q_[0] <= 1340.0 and q_ in row_sites]   # E row-street ends
+            for perm in itertools.permutations(cand, len(use)):
+                as_ = dict(zip(use, perm))
+                if not stn_ok(as_):
+                    continue
+                w_ = worst(as_)
+                if bb is None or w_ < bb[0] - 1e-6:
+                    bb = (w_, as_)
+            if bb:
+                asg = bb[1]
+        info["node_worst_link"] = round(worst(asg), 1)
+        for n, si in asg.items():
             put(n, node_sites[si][0], node_sites[si][1])
         info["node_cost"] = round(best[0], 1)
         info["node_links"] = len(links)
@@ -362,14 +474,23 @@ def main():
     if "partition_types" in D:
         types = D["partition_types"]
         cc = json.load(open(a[a.index("--conns") + 1]))
+        import os
+        REPO[0] = os.path.abspath(os.path.join(os.path.dirname(a[a.index("--conns") + 1]), "..", "..", ".."))
     else:
         types = D["types"]; cc = D["conns"]
-    seeds, rep = {}, {}
+        for m_, v_ in D["pins"].items():
+            PINS[m_] = {k: ((g["x"][0] + g["x"][1]) / 2, (g["y"][0] + g["y"][1]) / 2) for k, g in v_["groups"].items()}
+    seeds, rep, cache = {}, {}, {}
     for tn, t in sorted(types.items()):
         if not tn.startswith("col_h") or not rx.search(tn):
             continue
         base = tn.split("__pv")[0]
-        s, info = seed_type(tn, t, cc.get(base) or cc.get(tn), lambda m: print(m))
+        if base in cache:            # all pv types of one base share one layout: same seed, renamed
+            s0, info = cache[base]
+            s = {k: v for k, v in s0.items()}
+        else:
+            s, info = seed_type(tn, t, cc.get(base) or cc.get(tn), lambda m: print(m))
+            cache[base] = (s, info)
         if s:
             seeds[tn] = s
         rep[tn] = info
