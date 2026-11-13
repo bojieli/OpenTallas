@@ -2028,6 +2028,7 @@ class Event:
         f = dict(name=nm, in_face=lo_f if frm < piece else hi_f, out_face=hi_f if to > piece else lo_f,
                  width=int(width), stations=1, regs_um=[], note=f"{self.tag}: pass-through slot piece {frm} -> {to}")
         t.setdefault("ft_slots", []).append(f)
+        self.mid_slot_refs = getattr(self, "mid_slot_refs", []) + [(ts, piece, f)]
         ts.bus_piece[nm + "_i"] = ts.bus_piece[nm + "_o"] = piece
         return f
 
@@ -2140,6 +2141,9 @@ class Event:
             # "type": the type's own (G2-proven) face budget, capped at schema.FACE_PINS_HARD_CAP; else the die budget
             per_um = float(cpu) if cpu != "type" else min(
                 float(ts.t.get("face_pins_per_um") or self.raw["budgets"]["face_pins_per_um"]), S.FACE_PINS_HARD_CAP)
+            # A cut spends only 90% of the inherited face budget: discrete two-layer pin snapping and
+            # epoch/infrastructure boundaries otherwise exceeded the 10-um window limit (pv6: 231 errors).
+            per_um *= 0.90
             p = next(x for x in self.raw["partitions"] if x["name"] == base)
             items = []
             # infrastructure pins (collector / relay) sit on the cut face around infra_x: keep that span clear
@@ -2240,6 +2244,99 @@ class Event:
                     f["regs_um"] = [[rnd(a), rnd(b)] for a, b in st]
                     f["stations"] = len(st)
                     del f["_x"]
+        self._place_mid_slot_banks()
+        self._inventory_cut_sinks()
+
+    def _inventory_cut_sinks(self):
+        """Keep added FIRM flops visible even when old placed-netlist bins suppress planned_sinks."""
+        import schema as S
+        import gen_phys
+        from die_hop_scan import input_site
+        P = S.Plan(self.out, ROOT)
+        types = {p["name"]: p["type"] for p in self.out["partitions"]}
+        added_ids = set(self.rep["ports_added"])
+        buses = defaultdict(set)
+        for port in self.out["ports"]:
+            if port["id"] in added_ids:
+                for side in ("src", "dst"):
+                    endpoint = port[side]
+                    buses[types[endpoint["part"]]].add(endpoint["bus"])
+        sites = defaultdict(Counter)
+        for tn, names in buses.items():
+            typ = self.out["partition_types"][tn]
+            slots = {f["name"] for f in typ.get("ft_slots", [])}
+            for bus, _bit, _layer, x, y, face in gen_phys.type_pins(P, tn):
+                if bus not in names or (bus.endswith("_o") and bus[:-2] in slots):
+                    continue
+                point = input_site((x, y, face))
+                sites[tn][tuple(round(v, 6) for v in point)] += 1
+        for ts, piece, slot in getattr(self, "mid_slot_refs", []):
+            tn = ts.tnames[piece]
+            cw, ch = slot["bit_site_cell_um"]
+            for row in slot["bit_sites_um"]:
+                for x, y in row:
+                    sites[tn][(round(x + cw / 2, 6), round(y + ch / 2, 6))] += 1
+        self.added_clock_cells = {}
+        for tn, counts in sites.items():
+            rows = [[x, y, n] for (x, y), n in sorted(counts.items())]
+            clock = self.out["partition_types"][tn]["clock"]
+            clock.setdefault("sink_sites_um", []).extend(rows)
+            self.added_clock_cells[tn] = sum(counts.values())
+        self.rep["added_cut_sink_inventory"] = dict(counts=self.added_clock_cells,
+            basis="new cut faces (FT output faces have no FF) plus all explicit new mid-slot banks; old complete bins retained; boundary sharing may conservatively overcount, never omitted")
+
+    def _place_mid_slot_banks(self):
+        """New pass-through hops follow streets, with one distinct legal cell per bit and stage."""
+        if not getattr(self, "mid_slot_refs", None):
+            return
+        import schema as S
+        import gen_phys
+        from die_hop_scan import input_site
+        from split_station_paths import plan_slot, StationPathError, CELL_UM
+        P = S.Plan(self.out, ROOT)
+        grouped = defaultdict(list)
+        for ts, piece, slot in self.mid_slot_refs:
+            grouped[ts.tnames[piece]].append(slot)
+        for tn, slots in grouped.items():
+            typ = self.out["partition_types"][tn]
+            obstacles = list(typ.get("hard_cores", []))
+            obstacles += [part for content in typ.get("contents", []) for part in content.get("physical_parts", [])]
+            pins = defaultdict(dict)
+            for bus, bit, _layer, x, y, face in gen_phys.type_pins(P, tn):
+                pins[bus][bit] = (x, y, face)
+            used = set()
+            new_names = {slot["name"] for slot in slots}
+            # Existing explicitly anchored stations and real face flops keep their full cell envelopes.
+            occupied_rects = []
+            for old in typ.get("ft_slots", []):
+                if old["name"] in new_names:
+                    continue
+                cw, ch = old.get("bit_site_cell_um", CELL_UM)
+                for row in old.get("bit_sites_um", []):
+                    occupied_rects.extend((x, y, cw, ch) for x, y in row)
+            for bus_sites in pins.values():
+                for site in bus_sites.values():
+                    x, y = input_site(site)
+                    occupied_rects.append((x, y, *CELL_UM))
+            for slot in slots:
+                name = slot["name"]
+                bits = sorted(pins[name + "_i"])
+                if bits != sorted(pins[name + "_o"]):
+                    raise SplitError(f"{tn}.{name}: pass-through bit endpoints differ")
+                start = [input_site(pins[name + "_i"][bit]) for bit in bits]
+                end = [input_site(pins[name + "_o"][bit]) for bit in bits]
+                previous = slot["stations"]
+                try:
+                    placed = plan_slot(typ["outline_um"], obstacles, start, end,
+                                       reach=float(self.raw.get("budgets", {}).get("ft_station_max_um", 405.0)),
+                                       occupied=used, occupied_rects=occupied_rects)
+                except StationPathError as exc:
+                    raise SplitError(f"{tn}.{name}: safe pass-through banks: {exc}") from exc
+                report = placed.pop("station_path_report")
+                slot.update(placed)
+                slot["note"] += " | macro-clear explicit bit banks, +{} PIN cycles".format(slot["stations"] - previous)
+                self.rep.setdefault("pass_through_paths", []).append(dict(type=tn, slot=name,
+                    old_stations=previous, stations=slot["stations"], **report))
 
     # ---------------------------------------------------------------- plan cells
     def _plan_cells(self, T):
@@ -3066,10 +3163,44 @@ class Event:
         return v
 
     # ---------------------------------------------------------------- write
+    def _stage_pin_tables(self, out):
+        """Keep plan-relative hard-core pin tables usable when this output feeds another split."""
+        refs = set()
+        def visit(value):
+            if isinstance(value, dict):
+                for key, item in value.items():
+                    if key == "pins_file" and isinstance(item, str):
+                        refs.add(item)
+                    else:
+                        visit(item)
+            elif isinstance(value, list):
+                for item in value:
+                    visit(item)
+        visit(self.out)
+        hashes = {}
+        for name in sorted(refs):
+            path = Path(name)
+            if path.is_absolute():
+                continue
+            dest = out / path
+            if not dest.resolve().is_relative_to(out.resolve()):
+                raise SplitError(f"pins_file {name}: relative pin table escapes output folder")
+            source = self.plan_dir / path
+            if not source.is_file():
+                raise SplitError(f"pins_file {name}: source table missing under {self.plan_dir}")
+            payload = source.read_bytes()
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            if dest.exists() or dest.is_symlink():
+                dest.unlink()
+            dest.write_bytes(payload)
+            hashes[name] = hashlib.md5(payload).hexdigest()
+        return hashes
+
     def write(self, out_dir, rel_dir):
         out = Path(out_dir)
         out.mkdir(parents=True, exist_ok=True)
         md5 = self._census(out)
+        md5.update(self._stage_pin_tables(out))
         cp = self.spec.get("cap_projection")
         if cp:
             # R-CAP per piece: placed movable cells ~= registers in the piece (sink bins by centre) x the anchor kit's
@@ -3080,9 +3211,11 @@ class Event:
                     sb = getattr(ts, "sink_bins", None)
                     if not sb:
                         continue
-                    regs = sum(int(b[2]) for b in sb[i]["bins"])
+                    old_regs = sum(int(b[2]) for b in sb[i]["bins"])
+                    added_regs = getattr(self, "added_clock_cells", {}).get(nm, 0)
+                    regs = old_regs + added_regs
                     proj = int(round(regs * float(cp["movable_per_register"]) * float(cp.get("overhead", 1.03))))
-                    rows.append(dict(type=nm, base=tn, piece=i, registers=regs, projected_movable=proj,
+                    rows.append(dict(type=nm, base=tn, piece=i, registers=regs, source_registers=old_regs, added_cut_registers=added_regs, projected_movable=proj,
                                      verdict="OVER" if proj > 400_000 else "TARGET" if proj > 250_000 else "OK"))
             self.rep["cap_projection"] = dict(method=cp, rows=rows)
         for tn, ts in self.ts.items():
