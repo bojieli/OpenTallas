@@ -1,0 +1,29 @@
+{
+ "schema": "s81_gunit_bf_m1reg.pin_cycles.v1",
+ "module": "dsdv_gunit_l1f_bf",
+ "form": "gf4",
+ "define": "OT_GUNIT_BF_C1REG",
+ "requires": [
+  "OT_GUNIT_BF_M1REG"
+ ],
+ "model": {
+  "added_tx_clk_PIN_cycles": {
+   "o_v": 1,
+   "o_f": 1,
+   "o_l": 1,
+   "o_g": 1,
+   "o_d[244:0]": 1,
+   "o_flt": 1,
+   "sv_lo": 0,
+   "sv_hi": 0,
+   "ctl_lo": 0,
+   "ctl_hi": 0
+  },
+  "inputs": 0,
+  "relative_to": "gf3 (OT_GUNIT_BF_M1REG); against gf2 / the plan latency every bf data/valid output is +2 (M1REG +1, C1REG +1)"
+ },
+ "basis": "GUNIT-CORE-1 11-13, COORD 12:1x ruling: the fold compares (f_c1q, f_gq) and their records (f_uq, f_wq) are registered at the compare site; c1r is retimed forward through the first u_m1 exchange (m_c1q, m_gq beside it); mf, gq2, gd and the o_flt term get one more delay (mfr2, gq2r2, gdr2, fltn2); sv_* / ctl_* untouched",
+ "proof": "lock-step bench bench/run_bench.sh (gold = main 0a4b432de8 dsdv_gunit_l1f_bf compiled as gf3, outputs delayed NDLY edges): N1 must PASS; N0, N2 and mutant OT_GUNIT_BF_C1REG_MUT (fold exchange reads the candidate compares one edge early) must FAIL; results in bench/bench_*.log. Define off: the preprocessed dsdv_gunit_l1f.sv equals main for the gf3 and gf2 define sets (blank lines only), dsdv_gunit_sel_n32.sv only appends modules",
+ "ledger": "physical/die_plan/s81/corelat/cycles_gunit_l1f_bf.tsv (core_pin_cycles.py format) + results/gunit_core_1/latency_rows.json",
+ "owed": "DIE-S81-89: tools/s81_dv/layer_prog/lower_gu.py RT_LAT_N/RT_LAT_S 62/60 -> 64/62 (gf3 +1 and gf4 +1; path bf -> u_l1c -> u_l1 -> vo_n/vo_s traced in dsdv_gunit_lp); no plan latency.lanes change"
+}

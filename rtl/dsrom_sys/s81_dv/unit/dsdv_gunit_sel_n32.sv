@@ -193,3 +193,118 @@ module dsdv_seln_sort8 #(
     assign qb = rb[LW*(NS-1) +: LW];
     assign fo = f[FW*(NS-1) +: FW];
 endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// GUNIT-CORE-1 11-13 (OT_GUNIT_BF_C1REG, COORD 12:1x ruling): the compare-exchange split in two halves so that the
+// compares of a merge stage can be REGISTERED at their own site (dsdv_gunit_l1f_bf gf4).  Purely combinational and
+// used only under OT_GUNIT_BF_C1REG; the modules above are untouched (define off = gf3 flop for flop).
+//   dsdv_seln_x2g = the four candidate compares of dsdv_seln_x2 per pair, dsdv_seln_x2s = the rest of dsdv_seln_x2:
+//     x2s(u, w, c1, x2g(u, w)) == x2(u, w, c1) bit for bit;
+//   dsdv_seln_fold_c = the S-copy select compares of dsdv_seln_fold_cx (c1);
+//   dsdv_seln_cx_c   = the S-copy select compares of dsdv_seln_cx8_2 (its c1).
+// ---------------------------------------------------------------------------------------------------------------------
+module dsdv_seln_x2g #(
+    parameter integer EW  = 41,
+    parameter integer J2  = 1
+) (
+    input  wire [8*EW-1:0] u,
+    input  wire [8*EW-1:0] w,
+    output wire [31:0]     g            // pair (i, L = i ^ J2 > i): g[4 i +: 4] = {uu, uw, wu, ww}; other slots 0
+);
+    genvar i;
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : g_p
+            localparam integer L = i ^ J2;
+            if (L > i) begin : g_ce
+                (* keep = 1 *) dsdv_seln_gt40 u_uu (.a(u[EW*i+1 +: EW-1]), .b(u[EW*L+1 +: EW-1]), .y(g[4*i+3]));
+                (* keep = 1 *) dsdv_seln_gt40 u_uw (.a(u[EW*i+1 +: EW-1]), .b(w[EW*L+1 +: EW-1]), .y(g[4*i+2]));
+                (* keep = 1 *) dsdv_seln_gt40 u_wu (.a(w[EW*i+1 +: EW-1]), .b(u[EW*L+1 +: EW-1]), .y(g[4*i+1]));
+                (* keep = 1 *) dsdv_seln_gt40 u_ww (.a(w[EW*i+1 +: EW-1]), .b(w[EW*L+1 +: EW-1]), .y(g[4*i]));
+            end else begin : g_z
+                assign g[4*i +: 4] = 4'd0;
+            end
+        end
+    endgenerate
+endmodule
+
+module dsdv_seln_x2s #(
+    parameter integer EW  = 41,
+    parameter integer J2  = 1,
+    parameter integer KB2 = 8,
+    parameter integer S   = 8
+) (
+    input  wire [8*EW-1:0] u,
+    input  wire [8*EW-1:0] w,
+    input  wire [8*S-1:0]  c1,
+    input  wire [31:0]     g,
+    output wire [8*EW-1:0] q
+);
+    wire [8*EW-1:0] t;
+    genvar i, b, k;
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : g_t
+            for (b = 0; b < EW; b = b + 1) begin : g_b
+                (* keep = 1 *) dsdv_seln_mux1 u_m (.s(c1[8 * (b * S / EW) + i]), .a(u[EW*i + b]), .b(w[EW*i + b]), .y(t[EW*i + b]));
+            end
+        end
+        for (i = 0; i < 8; i = i + 1) begin : g_p
+            localparam integer L = i ^ J2;
+            if (L > i) begin : g_ce
+                wire g_uu = g[4*i+3], g_uw = g[4*i+2], g_wu = g[4*i+1], g_ww = g[4*i];
+                wire [S-1:0] s;
+                for (k = 0; k < S; k = k + 1) begin : g_k
+                    wire ci = c1[8 * k + i], cl = c1[8 * k + L];
+                    wire gt = ci ? (cl ? g_uu : g_uw) : (cl ? g_wu : g_ww);
+                    assign s[k] = (gt == ((i & KB2) == 0));
+                end
+                for (b = 0; b < EW; b = b + 1) begin : g_b
+                    (* keep = 1 *) dsdv_seln_mux1 u_qi (.s(s[b * S / EW]), .a(t[EW*i + b]), .b(t[EW*L + b]), .y(q[EW*i + b]));
+                    (* keep = 1 *) dsdv_seln_mux1 u_ql (.s(s[b * S / EW]), .a(t[EW*L + b]), .b(t[EW*i + b]), .y(q[EW*L + b]));
+                end
+            end
+        end
+    endgenerate
+endmodule
+
+module dsdv_seln_fold_c #(
+    parameter integer EW = 41,
+    parameter integer S  = 8
+) (
+    input  wire [8*EW-1:0] aa,
+    input  wire [8*EW-1:0] ba,
+    output wire [8*S-1:0]  c1
+);
+    genvar i, k;
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : g_f
+            for (k = 0; k < S; k = k + 1) begin : g_k
+                (* keep = 1 *) dsdv_seln_gt40 u_c (.a(aa[EW*i+1 +: EW-1]), .b(ba[EW*(7-i)+1 +: EW-1]), .y(c1[8 * k + i]));
+            end
+        end
+    endgenerate
+endmodule
+
+module dsdv_seln_cx_c #(
+    parameter integer EW  = 41,
+    parameter integer J1  = 1,
+    parameter integer KB1 = 2,
+    parameter integer S   = 8
+) (
+    input  wire [8*EW-1:0] da,
+    output wire [8*S-1:0]  c1
+);
+    genvar i, k;
+    generate
+        for (i = 0; i < 8; i = i + 1) begin : g_p
+            localparam integer P = i ^ J1;
+            if (P > i) begin : g_pair
+                for (k = 0; k < S; k = k + 1) begin : g_k
+                    wire g;
+                    (* keep = 1 *) dsdv_seln_gt40 u_c (.a(da[EW*i+1 +: EW-1]), .b(da[EW*P+1 +: EW-1]), .y(g));
+                    assign c1[8 * k + i] = (g == ((i & KB1) == 0));
+                    assign c1[8 * k + P] = (g == ((i & KB1) == 0));
+                end
+            end
+        end
+    endgenerate
+endmodule

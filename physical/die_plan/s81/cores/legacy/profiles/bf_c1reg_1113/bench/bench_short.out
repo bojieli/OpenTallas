@@ -1,0 +1,5 @@
+# GUNIT-CORE-1 2026-11-13 20:41 UTC NCYC=120 run_bench.sh (iverilog -g2012), rtl @608f9ed400; full NCYC=1500 run follows in bench_full.out
+RUN N2 rc 0: BENCH cycles 120 compares 113 data_compares 99 valid 48 gather 19 flt 107 mismatches 190 -> FAIL CTL MISMATCH cyc 8 new 10100 gold 00000
+RUN N0 rc 0: BENCH cycles 120 compares 113 data_compares 98 valid 48 gather 20 flt 109 mismatches 189 -> FAIL CTL MISMATCH cyc 8 new 10100 gold 01000
+RUN N1 rc 0: BENCH cycles 120 compares 113 data_compares 99 valid 49 gather 19 flt 108 mismatches 0 -> PASS 
+RUN MUT rc 0: BENCH cycles 120 compares 113 data_compares 99 valid 49 gather 19 flt 108 mismatches 88 -> FAIL DATA MISMATCH cyc 8
