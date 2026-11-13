@@ -19,7 +19,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-PERIOD_PS = "833.333"
+import die_sta
+
+PERIOD_PS = str(die_sta.PERIOD_PS)
 ARR_PATH = "/out/arr_$::env(CORNER).txt"
 RISE_ONLY = ("set fh [open /out/arr_$::env(CORNER).txt w]\n"
              "foreach p [get_ports t_*] { puts $fh \"T [get_full_name $p] [expr {833.333 - [get_property $p slack_max_rise]}] "
@@ -35,7 +37,7 @@ def readout_tcl(ctree_v, rise_only=None):
     if rise_only is None:
         rise_only = os.environ.get("OT_COMBO_RISE_ONLY") == "1"
     if rise_only:
-        return RISE_ONLY
+        return RISE_ONLY.replace("833.333", PERIOD_PS)
     import die_trial
     return "\n".join(die_trial.clock_edge_readout(ctree_v, ARR_PATH, period=PERIOD_PS, cells="ck_*", tap_slew=True, prefix="ck_"))
 
@@ -81,7 +83,7 @@ def main(argv=None):
 {chr(10).join(insts)}
 puts "OT_T clockplaced [expr {{[clock seconds]-$t0}}]"
 foreach f [glob $::env(LIBDIR)/*RVT_$::env(CORNER)_nldm*.lib*] {{ read_liberty $f }}
-create_clock -name dck -period 833.333 [get_ports root]
+create_clock -name dck -period {PERIOD_PS} [get_ports root]
 set_routing_layers -signal {os.environ.get('SIGL','M4-M7')} -clock M8-M9
 set_global_routing_layer_adjustment M4 {ADJ}
 set_global_routing_layer_adjustment M5 {ADJ}
@@ -95,7 +97,7 @@ write_guides /out/route_$::env(CORNER).guide
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 delete_clock [get_clocks dck]
 estimate_parasitics -global_routing
-create_clock -name vclk -period 833.333
+create_clock -name vclk -period {PERIOD_PS}
 set_driving_cell -lib_cell BUFx24_ASAP7_75t_R -pin Y [get_ports root]
 set_input_delay 0 -clock vclk [get_ports root]
 set_load 3.0 [get_ports t_*]

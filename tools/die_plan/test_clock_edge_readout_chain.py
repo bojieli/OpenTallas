@@ -65,6 +65,8 @@ def test_combo_script_end_to_end(tmp_path, monkeypatch):
     tcl = (o / "combo.tcl").read_text()
     assert die_trial.EDGES_HDR in tcl and tcl.count("close $fh") == 1 and tcl.rstrip().endswith("puts OT_DONE")
     assert "place_inst -name ck_b0" in tcl and "link_design die_combo" in tcl
+    assert "create_clock -name dck -period 833.0" in tcl and "create_clock -name vclk -period 833.0" in tcl
+    assert "833.333" not in tcl
     assert tcl.index("read_liberty") < tcl.index("link_design die_combo")
     v = (o / "combo.v").read_text()
     assert "CKINVDCx16_ASAP7_75t_R ck_b3 (.A(ck_w2), .Y(t_a__clk));" in v
