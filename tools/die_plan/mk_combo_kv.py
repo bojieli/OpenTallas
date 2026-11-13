@@ -9,7 +9,7 @@ header "# OT_EDGES v1").  The lane script wrote rise rows only and read arrival_
 an inv / inv2 tree is the source FALLING edge on every odd-parity cell.  With no fall arrivals the count-aligned planner
 cannot pick the fall edge: QC s28 had 276 of 637 START edges and 72 crossings failing; with both edges 0 and 0 and no
 DEPTH-16 ring.
-Env: CORNER (TT), ADJ (M4-M6 adjustment, required), ADJ7 (0), SIGL (M4-M7); OT_COMBO_RISE_ONLY=1 writes the old
+Env: OT_DIE_PLAN_TOOLS (shared tool directory, default sibling), CORNER (TT), ADJ (M4-M6 adjustment, required), ADJ7 (0), SIGL (M4-M7); OT_COMBO_RISE_ONLY=1 writes the old
 rise-only rows (A/B runs only).
 """
 import os
@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, os.environ.get("OT_DIE_PLAN_TOOLS", str(Path(__file__).resolve().parent)))
 
 import die_sta
 
