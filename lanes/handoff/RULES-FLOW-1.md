@@ -58,3 +58,16 @@
   hold does not get worse than ab/t21 and cells drop: commit relay_bay change, update the R-FLOW-3 paragraph + status line in
   the RULEBOOK (post_rb.py pattern: replace only the R-FLOW section), add the coll_ftc_nokeep line under R-FLOW-7,
   push the branch, post READY in lanes/COORD-REVIEW-QUEUE.md. If it does not hold: git checkout the two relay_bay files, say so.
+
+## 2026-11-13 09:55 READY posted; lane STOPPED
+- Branch claude/rules-flow-1-1113 @ 06a9b2cf28 (3 commits on origin/main 7d5f821bd2), pushed and verified on origin.
+  Commits: R-FLOW defaults; per-kit-class switch (RFLOW_DIES); relay_bay (hold no longer picks the pitch).
+- RULEBOOK R-FLOW v3 final on origin coord/state; READY line in lanes/COORD-REVIEW-QUEUE.md (d0f9d83af83).
+- The staged OT_FT_MAXWIRE_UM variant of the relay_bay change was DROPPED (built: 33,863 repeaters against 27,285); the committed
+  change is the pitch criterion (setup + slew only).
+- Tests: 58 focused pass; perfile.sh fin5 / fin5off: 299 files, same 14 failing with and without the change.
+- Still running, harmless, nobody waits on it: ot-run epyc7 ab/t21_ft50 (sign-off). No other job of this lane is alive.
+- Disk: epyc7 /srv/opentallas-scratch2/claude/rules-flow-1/ab holds 20 kit copies (proof evidence). Keep until the branch is
+  merged and the RULEBOOK numbers are no longer questioned; then the whole rules-flow-1 dir can go. epyc9 rules-flow-1/d255 = one log.
+- Open items listed in the RULEBOOK (not defaults): ECO slew margin 50 / 120 (HEAD-97), GRT repair on TT libs, HBM proof kit,
+  75 um fallback if a station kit shows slew pins at 100 um.
