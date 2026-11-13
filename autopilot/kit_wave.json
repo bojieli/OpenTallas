@@ -20540,8 +20540,10 @@
    ],
    "preflight_args": [],
    "only_items": [
+    "hd_ctl_n",
     "hd_host_e",
     "hd_lep0N",
+    "hd_mesh",
     "hd_serdes",
     "hd_spn",
     "hd_spn_end",
@@ -20550,6 +20552,7 @@
     "hd_spn_wshim_rx",
     "hd_spn_wshim_tx",
     "hd_st_n4",
+    "hd_st_str",
     "hd_tile",
     "hd_turn_a",
     "hd_turn_b"
@@ -20721,10 +20724,6 @@
    "hold_items": {
     "hd_lep0N": "KIT-OPS-1 2026-11-12 19:57 (COORD 17:19 rp18 ruling): lep0N = window-only re-sign of the signed build, not a wave rebuild; the rp18 lep0N block also re-places its SRAMs vs the wave's g5p plan, so a wave row would be a full rebuild. Was: KW-FIX-45 11-11 (COORD ruling HEAD cut): hd_lep0N lepB+S03 route_supply 1.68, KIT launch CONDITIONAL on the post-cut lep0N GRT0 check (HEAD-94)",
     "hd_ctl": "KW-FIX-45 11-11 (HEAD-94): hd_ctl FAIL rebuild is a die-owner hand launch (claude/head-94-ctl-1111@7c501990c29f needs COORD approval + merge; ZLP hold hook not wired in the wave); not in the TX batch",
-    "hd_serdes": "KIT-OPS-1 2026-11-12 19:57: rp18 changes hd_serdes (clock.landing_contract, count_straps, raw exports) vs the wave's g5p plan, but hd_serdes is not in the COORD rp18 re-kit list; held until COORD rules",
-    "hd_ctl_n": "KIT-OPS-1 2026-11-12 19:57: the rp18 prepared plan changes this type's block vs the wave's g5p plan, but it is not in the COORD rp18 re-kit list; held so the new key does not relaunch it, until COORD rules",
-    "hd_mesh": "KIT-OPS-1 2026-11-12 19:57: the rp18 prepared plan changes this type's block vs the wave's g5p plan, but it is not in the COORD rp18 re-kit list; held so the new key does not relaunch it, until COORD rules",
-    "hd_st_str": "KIT-OPS-1 2026-11-12 19:57: the rp18 prepared plan changes this type's block vs the wave's g5p plan, but it is not in the COORD rp18 re-kit list; held so the new key does not relaunch it, until COORD rules",
     "hd_spn": "KIT-OPS-1 2026-11-12 19:57: rp18 kit_rtl export FAILS for this re-kit type (head_start_raw_private.patch_rtl: two reset_start_raw_exports rows name one ot_dp_rrelay instance; prepare_plan's rule wants an explicit multi-output source design). Held until HEAD-96 fixes the rp18 plan/tool; then remove this hold. Was: ",
     "hd_spn_end": "KIT-OPS-1 2026-11-12 19:57: rp18 kit_rtl export FAILS for this re-kit type (head_start_raw_private.patch_rtl: two reset_start_raw_exports rows name one ot_dp_rrelay instance; prepare_plan's rule wants an explicit multi-output source design). Held until HEAD-96 fixes the rp18 plan/tool; then remove this hold. Was: "
    },
@@ -21065,13 +21064,11 @@
     "hd_st_n3_transit",
     "hd_st_n3_turn",
     "hd_st_n4",
-    "hd_st_str",
     "hd_st_turn",
     "ot_s81_kp4_dchn",
     "ot_s81hd_elemA_cv",
     "ot_s81hd_elemB_cv",
-    "ot_s81hd_lep_pair",
-    "hd_ctl_n"
+    "ot_s81hd_lep_pair"
    ],
    "note_gen_epyc56_kw19": "KW-FIX-19 21:2x: gen_hosts_base [epyc5, epyc6, epyc4] (disk watcher rebuilt gen_hosts from the old base [epyc4] and undid the 21:0x move for hbm/qwen_kvsys/s81_head)",
    "note_codex_source": "CODEX-WAVE current tags t-head/r-qc/o-kv/t-s81 at c6252e2 plus z-hbm at 2c7054fd3cd; merged plan fixes, HEAD ctlrq, literal LEC, witnessed clock-source INFRA, reset leaf preservation, HBM lane1p/WBQ/p35. Old running sources retained.",
@@ -21720,7 +21717,13 @@
      "evidence": "KW-FIX-16 13:1x l48uf I135 tag flow-20261106-d-head (COORD 13:00 GO): prep_uf = repo l48uf unpacked from src_r 79e52bd98b2 (SHA256SUMS OK, plan 69ce0830f6e4, sidecar = l48ue bytes); only hd_tile u_core params + published tile_p differ from prep_ue. | KW-FIX-14 11:2x l48ue I121 9ac2d25b51e tag flow-20261106-a-head, COORD 11:05 GO: prep_ue = repo l48ue unpacked (SHA256SUMS OK, plan 9a2186d89486, sidecar = l48ud bytes), 9 types; hd_host/hd_mesh l48ud rows keep running (only_items_l48ud kept for restore). | KW-FIX-12 08:3x l48ud I107 COORD 08:12 GO. | KW-FIX-8 08:4x COORD 06:51 (3) + 07:34 (3): event l48ua = DIE-HEAD-61 07:09 READY prepared_l48ua (plan f64ad52c1726, sidecar bbdd2f7b5ad1), GATE_EVENTS l48ua merged I34 fe4a38b9337, pilot rows only. | KW-FIX-6 04:4x COORD 04:00: event l48se = l48sd + hd_tile RE-FORM only [CHECKED raw diff], src main I23. | KW-FIX-6 03:4x: event l48sd = DIE-HEAD-59 00:56 READY prepared_l48sd (plan 830b9a799df1, sidecar bbdd2f7b5ad1 unchanged), src dh59/serdes/wt@b65c0e2d46, GATE_EVENTS l48sd merged I18, COORD 00:4x + 03:2x GO; 5 items | KW-FIX-5 01:0x: event l48tc = DIE-HEAD-59 FREG-1 prepared_l48tc (plan e094ebb2b6e8, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48tc merged I16, COORD GO; 2 items | KW-FIX-4 20:12: event l48rc = DH58-RF2 CONSERVATIVE prepared_l48rc (plan 8327f303db76, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48rc (kw-fix-4-l48rc@3c9994a17c0), OWNER directive via DIE-HEAD-58; 4 items; l48tb turn_a/b keep running (cancel_superseded false) | KW-FIX-4 19:04: event l48tb = DH58-TURNB prepared_l48tb (plan f9623a82a239, sidecar there), GATE_EVENTS l48tb merged (kw-fix-4-itemenv@7585347926, RM-27 I4); turn_a/turn_b only (only_items_l48rf kept for restore); running l48rf kits untouched | KW-FIX-4 11:3x: event l48rf = DH58-RFPLAN PREPARED (intel2+epyc4 dh58/rfplan_work/prepared_l48rf, plan 59c391855c18, sidecar bbdd2f7b5ad1 = l48h1), DIE-HEAD-58 GO 11:24, COORD APPROVED 11:27, GATE_EVENTS l48rf 38b86b7486 merged; G0C advisory (0 new errors, 17 warn). cancel_superseded false: the 6 live l48h0 jobs finish on l48h0 (die owner). hd_mesh_e/hd_ctl_e/hd_ctl_n/hd_host_n holds released (l48rf geometry). | prev event l48h0 plan /srv/opentallas-scratch2/claude/dh55/prepared_l48h0/source_plan.json | KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertion_ff_ps 380 -> 342 on 21 types; G0C 0 new/0 gone, ot_clk kit byte-identical = l46 die clock, strict bind l46a PASS stands) APPROVED; merged main 1a34525e751 (ROOT-MERGE-AH); gate l47 = kit-wave-3 87dda5f5fce (main 8ce125d6a98) | COORD 11-01 09:2x/14:0x approved l48z event; gate b3cb024e493 merged main a0f8f0ad6; prepared plan 0c98a23000ad / sidecar dfe1fd228189; DIE-HEAD-53 export PASS n3_turn,mesh_e,hd_spn | ROOT COORDAPPROVED fe9f369d8 paired mesh SOURCE STAGE ONLY: plan ad1e5a17b355 / sidecar bbdd2f7b5ad1; frozen703 GEN PASS; wrapper+10 generated helpers byte-identical to measured mesh_kit4 (7671b3dde p90 29.81/GRT0/nativeEQ). hd_mesh_e held until actual checkpoint resume/adopt joins; no duplicate PLACE or physical-release credit; parent clock/signoff holds remain."
     }
    },
-   "note_kitops1_rp18": "KIT-OPS-1 2026-11-12 19:57: HEAD wave -> rp18. Prepared tree = kw45/run_headfreg.sh recipe (prepare_cut on kw45/head_c90382b467/hp1, freg apply_sidecar with the rp18 sidecar, republish all 26 types, kit_rtl.sh export per type) at /srv/opentallas-scratch2/claude/kit-ops-1/head_rp18c/prep. only_items += COORD re-kit list hd_spn,hd_spn_end,hd_spn_eshim_rx,hd_spn_eshim_tx,hd_spn_wshim_rx,hd_spn_wshim_tx,hd_tile,hd_turn_a,hd_turn_b; those leave counted_items. hd_lep0N/hd_serdes held (see hold_items)."
+   "note_kitops1_rp18": "KIT-OPS-1 2026-11-12 19:57: HEAD wave -> rp18. Prepared tree = kw45/run_headfreg.sh recipe (prepare_cut on kw45/head_c90382b467/hp1, freg apply_sidecar with the rp18 sidecar, republish all 26 types, kit_rtl.sh export per type) at /srv/opentallas-scratch2/claude/kit-ops-1/head_rp18c/prep. only_items += COORD re-kit list hd_spn,hd_spn_end,hd_spn_eshim_rx,hd_spn_eshim_tx,hd_spn_wshim_rx,hd_spn_wshim_tx,hd_tile,hd_turn_a,hd_turn_b; those leave counted_items. hd_lep0N/hd_serdes held (see hold_items). | 2026-11-12 20:22 COORD ruling: + hd_serdes,hd_ctl_n,hd_mesh,hd_st_str (no die-owner hold); hd_ctl stays on its HEAD-94 die-owner hold.",
+   "hold_items_released_kitops1_rp18": {
+    "hd_serdes": "KIT-OPS-1 2026-11-12 20:22 COORD ruling: joins the rp18 re-kit. Was: KIT-OPS-1 2026-11-12 19:57: rp18 changes hd_serdes (clock.landing_contract, count_straps, raw exports) vs the wave's g5p plan, but hd_serdes is not in the COORD rp18 re-kit list; held until COORD rules",
+    "hd_ctl_n": "KIT-OPS-1 2026-11-12 20:22 COORD ruling: joins the rp18 re-kit. Was: KIT-OPS-1 2026-11-12 19:57: the rp18 prepared plan changes this type's block vs the wave's g5p plan, but it is not in the COORD rp18 re-kit list; held so the new key does not relaunch it, until COORD rules",
+    "hd_mesh": "KIT-OPS-1 2026-11-12 20:22 COORD ruling: joins the rp18 re-kit. Was: KIT-OPS-1 2026-11-12 19:57: the rp18 prepared plan changes this type's block vs the wave's g5p plan, but it is not in the COORD rp18 re-kit list; held so the new key does not relaunch it, until COORD rules",
+    "hd_st_str": "KIT-OPS-1 2026-11-12 20:22 COORD ruling: joins the rp18 re-kit. Was: KIT-OPS-1 2026-11-12 19:57: the rp18 prepared plan changes this type's block vs the wave's g5p plan, but it is not in the COORD rp18 re-kit list; held so the new key does not relaunch it, until COORD rules"
+   }
   },
   "qwen_compute": {
    "enabled": true,
