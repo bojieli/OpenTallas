@@ -112,3 +112,17 @@ Scope: (1) NEAR-MISS ECO on routed DB (hd_turn_a 89228387ea15; hd_turn_b 9098341
   - re-derive the per-port windows (winfix.py) from routed/it*/routed/kitwin.json.
 - READY = when all proofs and the gate are posted: the rp21 branch + the xohop branch, which needs reach-tool-3 (train 58).
 - hd_spn: keep the form (ruling 1); the be_i station only if hop-limited.
+
+## 2026-11-13 12:36 rp21w state
+- Plan rp21w sha 4b7d7cada157 (epyc7 head-97/pd/rp21w.json; pushed claude/head-97-rp21-1113 @74d9700454).
+  - rp21w = rp21x + he_epc_east (host_e) + winfix21 (WF_EXTRA=hd_spn).
+- Die clock gate on 802d132f: FAIL, 4 sp5 contract violations; posted. It is fixed by the windows in rp21w.
+- Next: re-run the gate on rp21w (intel1 head-97-clk/run21.sh; copy pd/rp21w.json to pd/rp21x.json there) once the builds settle.
+- Builds via ot-run on epyc7:
+  - kits21: tile, host_w, spn_end, st_n3_transit, st_str (form proofs);
+  - kits21m: mesh; kits21c: ctl; kits21e: host_e;
+  - kits21w: tile, spn_end, lep0N (lep0N relaunched with a patched kit_preflight); kits21s: spn.
+- Signed off: eshim_tx, turn_a.
+- FAIL: kits21 host_e (u_epc crossing; fixed by kits21e); rp20 host_w / spn_end / spn (superseded).
+- Tool fix posted READY: claude/head-97-ctr-fix-1113 @8f8ee95129 (core_tap_reach masters).
+- Monitor script: scratchpad mon21.sh, with a SKIP list of finished kits.
