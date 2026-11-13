@@ -53,7 +53,7 @@ and the same legalize.  K = street_layers x street_fill / pin_pitch = 37.5 track
   < street_min_um stands in a SLOT; with B >= pinface_min station bits in a slot of length L (the facing overlap) it
   is an ERROR when the slot is < tap_street_um (17.28) wide, or < street_min_um (43.2) wide and dense (B / L >=
   dense_per_um).  Legalize widens that slot to a street (the pair / the outline gap becomes a street requirement).
-  TRANSIT STREET (transit_street): a station chain that RUNS ALONG a slot uses it as a corridor.  Every planned hop
+  TRANSIT STREET (transit_street, WARN; legalize widens it only with --set transit_rule=1): a station chain that RUNS ALONG a slot uses it as a corridor.  Every planned hop
   (window -> first station, station -> station, last station -> window; internal stations from -> regs -> to) is a
   segment with the bits of its slot; a hop that runs along x (|dx| >= |dy|) loads the free width in y at its
   midpoint (macro to macro or macro to outline), a hop along y the free width in x.  T = the largest sum of hop bits
@@ -93,11 +93,13 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
                 add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="", sliver_rule=0,
-                face_rule=1, face_depth_um=129.6, face_passes=5, dense_per_um=3.0)
+                face_rule=1, face_depth_um=129.6, face_passes=5, dense_per_um=3.0, transit_rule=0)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 # ERROR kinds; sliver / outline_sliver / tap_street are WARN.  face_street / station_alley: R-STREET (11-13)
-HARD = ("street", "wall", "outline_street", "face_street", "station_alley", "transit_street")
+# transit_street is a WARN (measured on t28: widening the corridors to bits / K on top of the face / station rules cut
+# the M4-M8 overflow only 13% more for +7.7% area); --set transit_rule=1 makes legalize widen them too
+HARD = ("street", "wall", "outline_street", "face_street", "station_alley")
 # SLIVER RULE (COORD 11-12, VISLAYOUT3-S81-LEAF): --set sliver_rule=1 makes "no two facing core edges closer than one
 # street" a hard rule: a core-core gap in [abut_um, street) is a STREET violation even when (almost) no pins face it,
 # so check counts it as an error and legalize widens it to need_um (>= street_min_um).  Default 0 keeps the WARN class.
@@ -627,11 +629,12 @@ def content_only(t, cfg, name=None):
     return face_shadow_rule(W, H, xb, c.get("_fwins") or {}, cfg) + station_alleys(t, cfg, xb)
 
 
-def alley_force(V):
-    """({core-core pair: need}, {(inst, face): need}) that legalize widens for the station alleys / transit streets V."""
+def alley_force(V, transit=False):
+    """({core-core pair: need}, {(inst, face): need}) that legalize widens for the station alleys V (and, with
+    transit, the transit streets)."""
     pairs, faces = {}, {}
     for v in V:
-        if v["kind"] not in ("station_alley", "transit_street"):
+        if v["kind"] not in (("station_alley", "transit_street") if transit else ("station_alley",)):
             continue
         a, b = v["a"], v["b"]
         nd = max(float(v["need"]), 43.2)
@@ -1299,8 +1302,8 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     cfg face_passes (5) more passes run on the applied result until no station_alley / face_street is left."""
     row, tn = _legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log)
     for _ in range(int(cfg.get("face_passes", 2)) if cfg.get("face_rule") else 0):
-        if tn is None or not any(k in ("station_alley", "face_street", "transit_street")
-                                 for k in row.get("violations_after") or {}):
+        kinds = ("station_alley", "face_street") + (("transit_street",) if cfg.get("transit_rule") else ())
+        if tn is None or not any(k in kinds for k in row.get("violations_after") or {}):
             break
         row2, tn2 = _legalize_type(name, tn, die_dir, repo, conns, cfg, rs_cfg, log)
         if tn2 is None:
@@ -1337,7 +1340,7 @@ def _legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     if SA0:
         V0 = V0 + SA0
         c0 = dict(collections.Counter(v["kind"] for v in V0))
-        ap_, af_ = alley_force(SA0)
+        ap_, af_ = alley_force(SA0, bool(cfg.get("transit_rule")))
         cfg = dict(cfg, _alley=ap_, _alley_faces=af_)
     row = dict(type=name, cores=M.n, clusters=M.m, outline_before=[W0, H0], violations_before=c0,
                worst_before=sorted(V0, key=lambda v: -(v["need"] - v["gap"]))[:6])

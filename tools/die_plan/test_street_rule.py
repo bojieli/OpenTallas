@@ -769,7 +769,8 @@ def test_transit_street():
     got = {(v["a"], v["b"]): (v["pins"][0], v["gap"], v["need"]) for v in V}
     assert got == {("outline:S", "a"): (2208, 43.2, 60.48), ("outline:S", "b"): (2208, 43.2, 60.48)}
     assert all(v["kind"] == "transit_street" and v["axis"] == "y" for v in V)
-    pairs, faces = SR.alley_force(V)
+    assert SR.alley_force(V) == ({}, {})                   # WARN by default: legalize leaves it
+    pairs, faces = SR.alley_force(V, True)                 # --set transit_rule=1
     assert faces == {("a", "S"): 60.48, ("b", "S"): 60.48} and pairs == {}
     # the same chain in a 60.48-um strip is legal; one 1,104-bit slot alone fits 43.2 (29.4 -> 30.24)
     for h in t["hard_cores"]:
@@ -786,9 +787,9 @@ def test_transit_street():
           "internal_stations": [{"from_um": [320.0, 520.0], "regs_um": [[320.0, 300.0]], "to_um": [320.0, 80.0], "bits": 3000}]}
     V = SR.transit_streets(t2, CFG)
     assert [(v["a"], v["b"], v["axis"], v["pins"][0], v["need"]) for v in V] == [("a", "b", "x", 3000, 82.08)]
-    pairs, _ = SR.alley_force(V)
+    pairs, _ = SR.alley_force(V, True)
     a = core("a", 100, 100, 200, 400)
     b = core("b", 343.2, 100, 200, 400)
     r = SR.pair_rule(a, b, dict(CFG, _alley=pairs))
     assert r["kind"] == "street" and r["need"] == 82.08
-    assert "transit_street" in SR.HARD
+    assert "transit_street" not in SR.HARD                 # a WARN kind
