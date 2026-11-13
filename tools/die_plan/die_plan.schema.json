@@ -7347,6 +7347,23 @@
       "minimum": 0
      }
     },
+    "face_flop_ew_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "cpitch_sites": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "row_stride": {
+        "type": "integer",
+        "minimum": 1
+       }
+      }
+     }
+    },
     "cland_face_home_types": {
      "type": "array",
      "uniqueItems": true,
