@@ -49,6 +49,75 @@ Written 2026-11-13 03:29 PST by HARD-S81-SERDES-1. Status: rule text final; the 
 - HBM q_spb1, vsN1, vsN2 and the 10 S81 slice_station rows are clock-tap or hold items (R-CLOCK), not R-RTL.
 ## R-STREET (RULES-STREET-1): macro and pin-face streets, congestion escape
 ## R-REACH (RULES-REACH-1): fanout and reach locality, face-net buffering
+
+Posted 2026-11-13 04:48 by RULES-REACH-1. Branch `claude/rules-reach-1-1113` @ 1376d26613 (hub; off origin/main 055e36edab, train 36). Tool: `tools/die_plan/reach_rules.py` (check / fix / census). Handoff: `lanes/handoff/RULES-REACH-1.md`.
+
+**The rule in one line:** no register talks to anything more than 405 um away or to more than 48 loads; whatever must travel farther goes through registered relays planned at 340 um, and one script inserts them.
+
+### The five rules and their numbers
+
+| ID | Rule | Limit | Auto-fix | Otherwise |
+|---|---|---|---|---|
+| R-REACH-1 start_fan | One register (or one kept copy) drives <= 48 loads, all within 405 um. A wider control net is carried by registered relays and copied once per region (hub + its loads within 300 um). Checked on the count-aligned START fan: origin -> every input ring, origin -> every FSTART output pin. | 405 um per hop (sites chosen at <= 395, trunks planned at 340); 48 loads per copy | yes: `clock.landing_reader_start` / `landing_writer_start` with `share_trunk` | G0 ERROR |
+| R-REACH-2 macro_barrier | A macro with a side >= 405 um is a barrier. Logic on both sides needs a registered stage on the way round. The type declares `reach_homes` (where the soft logic of each face bus sits) and every window -> home corridor over 405 um gets stations. | barrier 405 um; hop 405 um; k = ceil(L/340) - 1 stations, +k cycles | stations yes (`--rules 2`), once `reach_homes` is declared | G0 ERROR |
+| R-REACH-3 bus_window | A bus window sits on the face nearest its consumer. | target <= 200 um; never > 405 um without stations (R3-INTERNAL) | no (window moves are plan events) | G0 WARNING + MOVE-WINDOW list, priced in bit-mm |
+| R-REACH-4 fwd_source | A forwarded clock output takes the nearest tap of the type's current tap grid. Never the root when a nearer tap exists, never a tap that no longer exists. | tap -> pin <= 405 um | yes: re-point `source_clock_port` | G0 ERROR |
+| R-REACH-5 even chains | The generated zero-logic chains (landing bin -> lane pad stages `u_lpad_*` / `u_pd<n>_*` -> consumer) are re-spaced to equal hops after global placement when a hop is over 405 um. | 405 um | yes: every kit (chain_even.tcl default); plan-sited flops never move | AUTO-GEOM r2r |
+
+Cycles: rule 1 adds boot cycles only (reader K - depth, writer K + depth at the bind; data cycles 0). Rule 2 adds +k data cycles on the bus (pre-approved). Rules 4 and 5 add none.
+
+### Why these numbers
+
+- **405 um** is METHODOLOGY 12.1e (registered hop, every layer). **340 um** is the planning step the KV START corridors already use (`kv_start_corridor_event.STEP_UM`): it leaves room for legal sites.
+- **48 loads**: CLAND-RELAY-2/3 measured 65 loads per copy at 331-336 ps routed slew (limit 320) and 33-48 loads clean. The kit gate stays at 64 (`reg_fanout_gate`); 48 is the design number.
+- **Evidence for rule 1.** KV kv3_hub_Eo (wave kit, BAD 11-13 03:08): 3,236 of its 3,869 captures over 405 um are the START fan, from two flops of `u_cland_origin` (2,425 + 800 captures, up to 2,260 um). The plan had no START transport for this type. That is the family: KV has 27 types with rings past 405 um and no reader chain; QC 6; HEAD 1. The carrier already exists and is in use: `landing_reader_start` on 75 QC types, 24 KV and 19 HEAD. Train 34 (one relay per wide ring, at the ring) cuts the load count but leaves the origin -> relay hop at up to 2 mm.
+- **Stale chains are the second cause.** QC s28: 23 of the 75 types with a reader chain have a hop over 405 um (e.g. `sle_st_b_v1`: hops 255 / 846 / 1,229 um, the band moved and the chain did not); KV 5 of 24. The check prices a chain at the sites the kit really uses (`landing_place._chain_clear_of_hard_cores`), so a stage planned inside a hard core is measured where it lands.
+- **Evidence for rule 2.** KV kv3_sys_c: ucie_rom is 778 um wide, 41 face buses on 6 sides name no consumer, 5,491 captures over 900 um. The check finds exactly kv3_sys_c and kv3_hub_C (ahub 605 um) on KV.
+- **Evidence for rule 3.** HBM q_su30 pv1: 83,144 buffers on 8,393 nets, about 10 per net, for 7.8k face bits that sit far from their cores (HBM-FORMS-1). Buffers ~ bits x distance / 150 um. On the current plans (buses with a named consumer only): QC 26.6k bit-mm (~177k buffers), S81 22.1k (~147k), KV 4.4k, HEAD 2.5k.
+- **Evidence for rule 4.** QC-S28-RESID: 573 forwarded-clock hops over 404 um; 572 of them can take a nearer tap. The same check finds 534 pins on QC s28, 1,338 on KV (root-sourced, FWDCLK-1 form), 49 on S81, 10 on HEAD.
+- **Evidence for rule 5.** S81 leaf t21: `u_bin_leafdn_i0 -> u_lpad q` 587 um on 104 captures; KV hub_Eo `u_lpad r -> q` 824 um; QC st_a `u_bin -> u_pd4` 748-783 um. GPL keeps the free pad flop at its fanout and pays the distance in one hop.
+
+### How to apply (every die owner; no questions needed)
+
+Run from the tree root of a checkout that has the branch (or main after the merge).
+
+1. **Check.** `python3 tools/die_plan/reach_rules.py check PLAN.json --repo . --tsv r_reach.tsv`. Exit 1 = errors. G0 (`check.py`) runs the same check; findings are check `r_reach`.
+2. **Fix rules 1 and 4.** `python3 tools/die_plan/reach_rules.py fix PLAN.json --repo . --out-plan NEW.json --report REP.json` (default `--rules 1,4`; `--types RE` narrows it). Idempotent. A type it cannot fix is listed NOT FIXED and keeps its base form; exit 2. In a compose chain use `reach_fix.py fix ... --classes 1,2,3,4,5,7,8` (7 = rule 1, 8 = rule 4, run last).
+3. **Bind strictly** (K - reader depth / K + writer depth are recomputed there; `clock_landing_verify` knows the shared trunk). Then the raw-reset branches of the START consumers, as before: `kv_start_corridor_event.py raw` (KV) or the die's own raw step. Run the lane latency check; boot cycles move, data cycles do not.
+4. **Rule 2.** For each type the check names: add `reach_homes: [{"name": "...", "rect_um": [x0, y0, x1, y1], "buses": ["bus", ...]}]` to the type (the box where that soft logic is to be placed; `"*"` = all buses), or move the windows to the consumer's side. Then `fix --rules 2` adds the `internal_stations` chains; re-price the lane cycles (`reach_fix.sync_fixed_cycles`).
+5. **Rule 3.** Read the `window_far` warnings; put the listed windows on the consumer's face at the next plan event. Nothing blocks.
+6. **Rule 5** needs nothing: every kit generated from this tree has it. A type with its own `chain_even` key keeps that. `budgets.r_reach_even: false` turns it off for a plan.
+7. **G0 severity.** `budgets.r_reach` = `"error"` (default) / `"warn"` / `"off"`. Use `"warn"` only for a plan that was frozen before 2026-11-15 04:00; the first event after the freeze reaches 0 `r_reach` errors.
+
+What `share_trunk` builds (rule 1): rings are grouped on a 300-um lattice anchored at the origin home; each group gets one hub relay; one relay trunk runs origin -> hub on a macro-free corridor; each ring keeps its own last stage (its RSTREP copies). Equal stage prefixes are ONE kept relay (`clock_landings.reader_start_owners`), so the origin drives one relay per trunk. Depth is uniform per type; short trunks dwell at the origin home. Absent `share_trunk` = byte-identical RTL.
+
+### Affected types per die
+
+Final checker, KV on main plan vN2i, the others on their wave plans (QC s28, HEAD rp18r2w, S81 h2_2249). Types with at least one finding:
+
+| Die | Soft types | Rule 1 | (no reader chain) | Rule 2 | Rule 4 (pins) | Any error | Rule 3 warn | After `fix --rules 1,4` |
+|---|---|---|---|---|---|---|---|---|
+| KV | 54 | 42 | 27 | 2 (kv3_sys_c, kv3_hub_C) | 42 (1,338) | 52 | 6 | 52 changed, 0 not fixed, 0 errors left in rules 1 and 4 |
+| QC | 120 | 45 | 6 | 0 | 99 (534), 2 of them with no tap in reach | 106 | 28 | 105 changed; 2 types keep errors: coll_core (START sites and taps), coll_ft__cla4a25d77 (no tap in reach) |
+| HEAD | 26 | 2 | 1 | 0 | 2 (10) | 3 | 5 | 3 changed, 0 errors left |
+| S81 | 394 | 0 (no START pin form) | 0 | 24 (dsdv_slice 20, serdes 3, bk_sel 1) | 14 (49) | 38 | 34 (25 leaf types) | 14 changed, 0 errors left in rule 4 |
+
+Hand items the script reports and does not fix: QC `coll_core` (START sites; a core-filled type) and QC `coll_ft__cla4a25d77` plus `coll_core` (forwarded outputs with no tap within 405 um: add a tap or move the pin); the rule-2 types above (declare `reach_homes`).
+
+### Proof kits
+
+Both kits are private builds through ot-run, renders viewed by RULES-REACH-1.
+
+1. **S81 `ot_s81sl_leaf__t21`** (epyc9 `/srv/opentallas-scratch2/claude/rules-reach-1/s81/t21`): the wave kit a3 (event 7073a6b4a59), re-placed with main's FT-LANE `face_flops.tcl` (train 36) and the rule-5 hook. PLACED. `OT_FT_LANE` 0 station hops over 405 um (max 359); `OT_CHAIN_EVEN` moved 105 chains. Captures over 405 um: 1,134 -> 1,034. The bin -> pad class went 104 (max 587 um) -> 12 (max 434 um; that chain needs one more pad cycle). What is left is not a rule-5 class: 840 captures are leaf glue registers 410-563 um apart (`g_u_vp_driver_q*` at the vp cores (730, 646) -> `g_u_vp_cf` / `yrow_d` at the ln cores (955-1008, 869); `g_u_vp_driver_lo_d` (918, 811) -> the first leafup_o0 station (535, 964), 536 um). For S81-FORMS-1: this is rule 3 on the leaf form. Put the leafup_o0 first station on the driver's side (or add one station), and keep the vp driver / cf pair on one side of vn_a. The place density render shows no new hotspot.
+2. **KV `kv3_hub_Eo`** (epyc7 `/srv/opentallas-scratch2/claude/rules-reach-1/kv`): main plan vN2i + `fix --rules 1` on kv3_hub_Eo / kv3_hub_Wo. Plan: reader depth 9 / 8, writer depth 9 / 10, worst planned hop 405 / 395 um (reader), 375 / 385 um (writer); the origin start drives 3 relays (was 58 rings), start_d 11 (was 65 face flops). Strict bind: RC 0, 160 partitions, 2,545 crossings, 0 errors. Bound RTL of hub_Eo: 149 reader relays (522 unshared), 118 writer relays, 0 rings on `cland_start`. Place: in progress (run-item `rr1_kv3_hub_Eo`, intel2 `/srv/opentallas-scratch2/claude/rules-reach-1/jobs/`); the result is added here and posted in the READY.
+
+### Limits (what this rule does not do)
+
+- Rule 1 covers the START fan (strap / START-tree origins with a `cland_tstart_in` pin). A root origin (KV kv3_hub_C) and the S81 landing form are out of its scope. Ring -> bin distance and the raw-reset branches stay with their owners (CLAND-RING-LOCALITY, the raw step).
+- Rule 2 needs `reach_homes` from the die owner; the script cannot guess where soft logic belongs. Its station fix is tested at plan and G0 level, not yet through a bind.
+- Rule 3 prices only buses that name a consumer (buses[].leaf or the core_conns sidecar). HBM was not run (parked).
+- Rule 5 moves only the bin -> pad chains. Other unsited glue registers (S81 leaf `g_u_vp_driver_* -> cf / yrow`, 450-563 um) are not covered; see the S81 proof.
+
 ## R-CAP (RULES-CAP-1): partition size, cell cap, outline sizing
 Written 2026-11-13 03:57 PST by RULES-CAP-1. Status: rule final; code on branch `claude/rules-cap-1`@daf4c190d3 (parent main fbfb4fc6a6), READY posted to COORD-REVIEW-QUEUE, not yet merged. Evidence: 376 kit runs harvested from the fleet logs (S81 132, QC 76, HBM 57, HEAD 34, KV 33, 44 core kits; 10-28..11-13; epyc2/4/7/8/9, intel1/2), 295 distinct type forms kept as `tools/die_plan/testdata/cap_runs_1113.json`. Outcome labels come from `autopilot/kit_wave_stages.tsv` and `structural.tsv`. I ran no new build. Runs on epyc5/6 and pruned run dirs are not in the sample.
 

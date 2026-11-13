@@ -1,0 +1,43 @@
+# RULES-REACH-1 handoff (Fable expert lane, rule R-REACH; COORD coordinates)
+
+## Scope
+Set rule R-REACH once (fanout + reach locality, face-net buffering): numbers, ONE family change in the die_plan
+generator + G0, proof on KV kv3_hub_Eo + one S81 leaf, affected-type count per die, section in lanes/RULEBOOK-1113.md,
+READY with branch + tests, stop.
+
+## Where
+- worktree epyc7 /srv/opentallas-scratch2/claude/rules-reach-1/wt, branch claude/rules-reach-1-1113 off origin/main.
+- logs intel2 ~/rr1log/.
+
+## Log
+- 2026-11-13 03:30 lane started; evidence read (EXPERT-REVIEW-1, 11-13 verdicts, RELAY-PLACE-1, CLAND-RELAY-3,
+  HBM-FORMS-1, REACH-FIX-2); worktree being cloned.
+- 2026-11-13 03:57 worktree ready (branch claude/rules-reach-1-1113 off origin/main 055e36edab). Census (scan/census0.py on
+  the wave plans): START origin -> ring > 405 um with NO reader START chain: KV 27 types, HEAD 2, QC 6, S81 0 (no START
+  pin form). hub_Eo before-kit r2r classes (scratch rr/r2r_class.py): 3236/3869 = origin fan. Design: R-REACH-1 trunk
+  sharing (clock.landing_reader_start.share_trunk; patched clock_landings/_verify/landing_place/schema, uncommitted),
+  tool tools/die_plan/reach_rules.py (being written): start fan fix, fclk source, macro barrier, window census + G0 hook.
+- 2026-11-13 04:13 code in wt (uncommitted): reach_rules.py (rules 1-4 check/fix/census CLI), share_trunk in
+  clock_landings (reader+writer) / clock_landing_verify / landing_place / schema (+ reach_homes, budgets.r_reach), G0 hook
+  in check.py (check "r_reach"), reach_fix classes 7/8, test_reach_rules.py (10 pass). KV proof: private plan
+  epyc7 rules-reach-1/kv/por/plan_c.json = main plan_c + fix on kv3_hub_Eo/Wo (reader depth 9/8, writer 9/10, origin
+  loads 3/11); strict bind running: ot-run epyc7 kv/bind_rr.sh a1 (log intel2 ~/rr1log/kv_bind_a1.log, out kv/bind_a1).
+  Die checks: epyc7 rules-reach-1/scan/{kv,head,qc,s81}_check.{log,json,tsv} (scan/run_check.sh). Related pytest via
+  ot-run: scan/pyt.sh -> scan/pyt.log.
+- 2026-11-13 04:23 R-REACH-5 added (chain_even.tcl default: bin -> lane pad chains re-spaced when a hop > 405; gen_phys
+  REACH_EVEN_CHAINS, budgets.r_reach_even). S81 proof: epyc9 rules-reach-1/s81/t21 = copy of wave kit ot_s81sl_leaf__t21
+  a3 (7073a6b4a59), 3_*/4_* removed, face_flops.tcl + main FT-LANE delta (ov/ftlane_main.patch), chain_even hook
+  appended; place via ot-run epyc9 (log intel2 ~/rr1log/s81_t21_place.log). Before geom: s81/t21/before/.
+  KV bind a2 running (kv/bind_a2; a1 failed: private plan must sit in the tree plan_of_record -> untracked
+  wt/physical/die_plan/qwen_kvsys/plan_of_record/plan_rr1.json, NEVER stage it).
+  Census (wave plans; types): KV start_reach 32 / writer 27 / fanout 28 / barrier 2 / fwd_source 42 (1338 pins);
+  QC 18 / 26 / 1 / 0 / 99 (534 pins, +2 no tap); HEAD 1 / 3 / 0 / 0 / 2; S81 0 / 0 / 0 / 24 / 14; window_far (warn)
+  KV 6, QC 28, HEAD 5, S81 34.
+- 2026-11-13 04:44 branch commits 86d4155aff, e6bfa65802, 2ad9de19a9 (local on epyc7 wt, not pushed yet). KV strict bind a2
+  RC 0 / 0 errors (kv/bind_a2/out): hub_Eo bound RTL = 149 reader + 118 writer START relays, cland_start drives 3,
+  start_d 12, 0 rings direct. run-item hub_Eo launched: intel2 /srv/opentallas-scratch2/claude/rules-reach-1/jobs/
+  rr1_kv3_hub_Eo (unit.log there; work epyc7 rules-reach-1/kv/pilots_rr1/items/kv3_hub_Eo).
+  S81 t21 placed (epyc9 rules-reach-1/s81/t21): OT_FT_LANE 0 hops > 405; OT_CHAIN_EVEN 105 chains moved; r2r > 405
+  1134 -> 1034 (bin->lpad 104 -> 12, max 587 -> 434); rest = vp glue hops 410-563 um (driver -> cf/yrow, driver_lo_d ->
+  leafup ist0 536). AUTO-GEOM after: s81/t21/after (geom_after.sh via ot-run). Renders viewed (place density).
+  Full-die fix runs: fix/{kv,qc,head,s81}_fix.log on epyc7 (scan/run_fix.sh).
