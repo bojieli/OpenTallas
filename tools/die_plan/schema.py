@@ -819,6 +819,9 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # per-type reset relay reach (reset_tree.relay_um): only tightens the die reset.relay_um
                         "relay_um": {"type": "number", "exclusiveMinimum": 25, "maximum": 405},
+                        # reset column mode (reset_tree.column_spec): entry/exit on one line, straight relay chain
+                        "column": {"type": "object", "additionalProperties": False, "properties": {
+                            "axis": {"enum": ["x", "y"]}, "at_um": {"type": "number"}, "entry": {"enum": ["lo", "hi"]}}},
                         # reset relay obstacle model (reset_tree.blockages): default canonical placed union;
                         # "lef_origin" = the frozen pre-11-02 model a published relay graph was solved with
                         "obstacle_model": {"enum": ["canonical", "lef_origin"]},
@@ -1156,6 +1159,8 @@ SCHEMA = {
             # (parent rst_o relay -> child u_rst_in, default relay_um); in_sites {type: [x, y]} overrides the solver's
             # IN pin; root_part names the root partition (default: the one at the die rst_n pin).
             "release": {"enum": ["counted", "pipelined", "wavefront"]}, "relay_um": _pos, "hop_um": _pos,
+            # RESET-SLEW: "slew_safe" = die relay reach default reset_tree.SLEW_SAFE_RELAY_UM (measured slew-safe hop)
+            "relay_rule": {"enum": ["slew_safe"]},
             "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
             "parent_pins": {"type": "object", "additionalProperties": {"oneOf": [_name, {"type": "array", "minItems": 2, "maxItems": 2}]}},
             "keep_outs": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "integer"}}},

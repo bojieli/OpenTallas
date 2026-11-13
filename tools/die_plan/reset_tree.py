@@ -77,6 +77,13 @@ sys.path.insert(0, str(HERE))
 import schema as S  # noqa: E402
 
 REACH_UM = 405.0        # owner rule: relay flops every <= 405 um
+# RESET-SLEW (REACH-FIX-2 11-12, COORD): the longest reset relay hop ONE relay stage (its INVx3 output driver) drives
+# within the 320 ps max-slew rule at TT and FF with 20 % margin, from 141 measured routed reset relay nets in 6 HEAD
+# kits (rp17 k17 wshim_tx / eshim_rx, w10 eshim_rx, hb4k eshim_tx, ctlk hd_ctl): worst wire term over nets >= 150 um
+# k = 0.0093 TT / 0.0103 FF ps/um^2 on top of the driver slew (p90 102 TT / 65 FF ps): sqrt((320/1.2 - drv) / k) =
+# 133 TT / 140 FF -> 130 um.  All 4 measured violators (350-418 ps) were single-driver segments of 186-219 um.
+# A plan opts in with reset.relay_rule "slew_safe" (die default for relay_um, a type's reset.relay_um only tightens).
+SLEW_SAFE_RELAY_UM = 130.0
 MARGIN_UM = 25.0        # planning slack under the reach (row / site snapping, ff_put_near spiral, macro push-off)
 CLEAR_UM = 4.32         # relay sites stay this far off hard cores / macro leaves (one std-cell row + halo)
 
@@ -94,7 +101,9 @@ def relay_um(P, tn=None):
     """die reset relay reach (reset.relay_um, default 405); with tn, partition_types[tn].reset.relay_um may only
     TIGHTEN it for that type (REACH-FIX-2 11-12, HEAD-95 rp18: hd_spn_wshim_rx u_rrl_14 -> u_rrl_17 334.8 um on a
     380-um plan reach -> 250 puts one more relay on that hop; reach is set by this fixed script, not by hand)"""
-    die = float(P.reset.get("relay_um", REACH_UM))
+    die = float(P.reset.get("relay_um", SLEW_SAFE_RELAY_UM if P.reset.get("relay_rule") == "slew_safe" else REACH_UM))
+    if P.reset.get("relay_rule") == "slew_safe":
+        die = min(die, SLEW_SAFE_RELAY_UM)
     if tn is None:
         return die
     t = (P.types.get(tn) or {}).get("reset") or {}
@@ -645,7 +654,8 @@ def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(),
     return assign(topo, depth, prefix)
 
 
-def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=(), avoid_cores=False):
+def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=(), avoid_cores=False,
+             column=None):
     """the depth-independent part of build(): relay sites and parents.  A tap (or the entry) over a blockage gets its
     relay site at the nearest free point (tap_offset_um records how far).  `walls` (see walls()): every hop must have
     a wall-free L route, else the grid topology routes around them; a remaining walled hop fails closed."""
@@ -661,13 +671,16 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
         pts = sites
     plan_reach = reach - margin
     walls = list(walls or ())
-    nodes, method = _topo_taps(pts, root, plan_reach, boxes, box_out), "taps"
+    if column is not None:
+        nodes, method = _topo_column(pts, root, column, plan_reach, boxes, box_out), "column"
+    else:
+        nodes, method = _topo_taps(pts, root, plan_reach, boxes, box_out), "taps"
     # WALL rule (CLOCK-RESET 10-25): never a hop without a wall-free L route.  avoid_cores (plan reset.relay_avoid_cores,
     # KV-PLAN2 10-25): no hop whose both L routes cross ANY blockage (G2 kv3_pc: rrl_13 -> rrl_14 straight through
     # kvpc0, 1272 M3 overflow)
     hb = boxes if avoid_cores else ()
-    if ((_maxhop(nodes, root) > reach + 1e-6 and boxes) or walled_hops(nodes, root, walls)
-            or (hb and _crosses(nodes, root, hb))):
+    if column is None and ((_maxhop(nodes, root) > reach + 1e-6 and boxes) or walled_hops(nodes, root, walls)
+                           or (hb and _crosses(nodes, root, hb))):
         nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out, walls=walls, hop_boxes=hb), "grid"
     bad = walled_hops(nodes, root, walls)
     if bad:
@@ -726,6 +739,51 @@ def _topo_taps(pts, root, reach, boxes, box_out):
             nodes.append(dict(xy=p, par=prev, tap=None))
             prev = len(nodes) - 1
         nodes[v]["par"] = prev
+    return nodes
+
+
+def _topo_column(pts, root, column, reach, boxes, box_out):
+    """reset column (column_spec): a straight relay chain from the entry along column['axis'] on the entry line, with a
+    relay at each end of the data sinks' along band (column['band']) so the empty outline past the band is trunk only,
+    out to column['end'] (the exit line end, reached by an L from the last chain relay) or the band end; relays every
+    <= reach.  Every tap hangs off the chain node that gives it the fewest hops (then the least wire), with
+    reach-limited L relays on the branch.  Nodes as _topo_taps."""
+    n = len(pts)
+    k = 1 if column["axis"] == "y" else 0                      # along-axis coordinate index
+    a0 = root[k]
+    end = column.get("end")
+    b0, b1 = column.get("band") or (min(p[k] for p in pts), max(p[k] for p in pts))
+    if end is not None:
+        a1 = end[k]
+    else:
+        a1 = b1 if abs(b1 - a0) >= abs(b0 - a0) else b0
+    lo, hi = sorted((a0, a1))
+    stops = [a0] + sorted({min(max(b, lo), hi) for b in (b0, b1)} - {a0, a1}, key=lambda v: abs(v - a0)) + [a1]
+    nodes = [dict(xy=pts[v], par=None, tap=v) for v in range(n)]
+    chain = [(-1, root, 0)]
+    prev, depth = -1, 0
+    line = lambda a: (root[0], a) if k == 1 else (a, root[1])
+    for i in range(1, len(stops)):
+        s0, s1 = stops[i - 1], stops[i]
+        m = max(1, math.ceil(abs(s1 - s0) / reach - 1e-9))
+        last = i == len(stops) - 1 and end is not None       # the exit end itself is a tap (o<k>), not a chain relay
+        for j in range(1, m + (0 if last else 1)):
+            p = line(s0 + (s1 - s0) * j / m)
+            if box_out is not None and boxes:
+                p = push_off(p, boxes, box_out)
+            nodes.append(dict(xy=p, par=prev, tap=None))
+            prev = len(nodes) - 1
+            depth += 1
+            chain.append((prev, p, depth))
+    for v in range(n):
+        u, pu, du = min(chain, key=lambda c: (c[2] + _hops(c[1], pts[v], reach), _man(c[1], pts[v]), c[2]))
+        par = u
+        for p in _lpath(pu, pts[v], _hops(pu, pts[v], reach) - 1):
+            if box_out is not None and boxes:
+                p = push_off(p, boxes, box_out)
+            nodes.append(dict(xy=p, par=par, tap=None))
+            par = len(nodes) - 1
+        nodes[v]["par"] = par
     return nodes
 
 
@@ -1272,6 +1330,55 @@ def _snap(P, x, y):
     return tuple(gen_phys._snap_tap(P, x, y))
 
 
+def column_spec(P, tn):
+    """reset 'column' mode of a wavefront soft type (partition_types[t].reset.column, REACH-FIX-2 11-12, HEAD-95 rp18
+    chain types).  The reset enters on the face toward its parent at the cross coordinate of the parent's exit pin and
+    leaves on the opposite face at the cross coordinate of its column child's entry (else the same line), both clamped
+    into the cross band of the type's DATA sinks (consumer_taps: clock taps + local reset taps; relay flops, rst_o and
+    core reset pins are never sinks); the relay tree is a straight chain on the entry line with a relay at each end of
+    the sinks' along-axis band, the taps branching off it.  The parent of every column instance is chosen by geometry
+    (wf_solve): the nearest exit site of a partition that releases earlier.
+    -> None or {axis ('y': line along y, S/N faces; 'x': along x, W/E faces), at, exit_at, entry ('lo' S/W | 'hi'
+    N/E | None), span (cross band), band (along band)}"""
+    if not wavefront(P):
+        return None
+    t = P.types.get(tn) or {}
+    col = (t.get("reset") or {}).get("column")
+    if col is None or t.get("hard"):
+        return None
+    w, h = t["outline_um"]
+    cache = P.__dict__.setdefault("_reset_tree_cache", {})
+    axis = col.get("axis") or cache.get("column_axis", {}).get(tn) or ("y" if h >= w else "x")
+    k = 0 if axis == "y" else 1
+    key = ("column_sinks", tn)
+    if key not in cache:
+        cache[key] = [(float(x), float(y)) for _, x, y in consumer_taps(P, tn)]
+    pts = cache[key]
+    W = w if axis == "y" else h
+    L = h if axis == "y" else w
+    span = (min(p[k] for p in pts), max(p[k] for p in pts)) if pts else (INSET_UM, W - INSET_UM)
+    band = (min(p[1 - k] for p in pts), max(p[1 - k] for p in pts)) if pts else (INSET_UM, L - INSET_UM)
+    clamp = lambda v: None if v is None else min(max(float(v), span[0]), span[1])
+    at = col.get("at_um")
+    if at is None:
+        at = cache.get("column_at", {}).get(tn)
+    ex = cache.get("column_exit_at", {}).get(tn)
+    return dict(axis=axis, at=clamp(at), exit_at=clamp(ex if ex is not None else at), span=span, band=band,
+                entry=col.get("entry") or cache.get("column_entry", {}).get(tn))
+
+
+def _column_sites(P, tn, cs):
+    """the two line ends (index 0 = S/W face, 1 = N/E face); the entry end at cs['at'], the other at cs['exit_at']."""
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    lo, hi = (cs["at"], cs["exit_at"]) if cs["entry"] != "hi" else (cs["exit_at"], cs["at"])
+    if cs["axis"] == "y":
+        raw = (("S", lo, INSET_UM), ("N", hi, h - INSET_UM))
+    else:
+        raw = (("W", INSET_UM, lo), ("E", w - INSET_UM, hi))
+    return [dict(face=f, j=j, mid=True, xy=_snap(P, x, y)) for j, (f, x, y) in enumerate(raw)]
+
+
 def face_sites(P, tn):
     """candidate reset pin sites of a soft type (type frame): along every face, INSET_UM inside, spaced so that every
     point of the face is within (hop - margin) / 2 of one; pushed off hard cores / macro leaves and off the clock tap
@@ -1280,13 +1387,15 @@ def face_sites(P, tn):
     key = ("sites", tn)
     if key in cache:
         return cache[key]
+    cs = column_spec(P, tn)
+    line = _column_sites(P, tn, cs) if cs and cs["at"] is not None else []
     t = P.types[tn]
     w, h = t["outline_um"]
     sp = max(50.0, hop_um(P) - MARGIN_UM)
     boxes = blockages(t)
     box_out = (CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM)
-    taken = [(x, y) for _, x, y in _plan_taps(P, tn)]
-    out = []
+    taken = [(x, y) for _, x, y in _plan_taps(P, tn)] + [tuple(c["xy"]) for c in line]
+    out = list(line)
     for face, L in (("S", w), ("E", h), ("N", w), ("W", h)):
         m = max(1, math.ceil(L / sp))
         for j in range(m):
@@ -1300,7 +1409,7 @@ def face_sites(P, tn):
                     break
                 x, y = _snap(P, x + (8.64 if face in "SN" else 0.0), y + (8.64 if face in "EW" else 0.0))
             taken.append((x, y))
-            out.append(dict(face=face, j=j, mid=(j == m // 2), xy=(x, y)))
+            out.append(dict(face=face, j=j, mid=(j == m // 2) and not line, xy=(x, y)))
     cache[key] = out
     return out
 
@@ -1309,6 +1418,9 @@ def corner_sites(P, tn):
     """the four corner IN-pin candidates of a soft type (INSET_UM inside both faces; reachable from two sides)."""
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     key = ("corners", tn)
+    cs = column_spec(P, tn)
+    if cs and cs["at"] is not None:
+        return []
     if key not in cache:
         t = P.types[tn]
         w, h = t["outline_um"]
@@ -1346,6 +1458,89 @@ def _root_part(P, soft):
 
 
 def wf_solve(P):
+    """die wavefront routing (see _wf_solve_once) with reset column types (column_spec): solve, then per column instance
+    pin its parent by GEOMETRY - the nearest exit site (any face site of a soft partition released earlier in that
+    solve, within hop) - take the entry line from that site (median over instances; axis and entry face from the side
+    the parent sits on) and the exit line from the column child's entry, re-solve with the pinned parents and the line
+    sites, until nothing moves (<= 5 passes)."""
+    cache = P.__dict__.setdefault("_reset_tree_cache", {})
+    if "wf_solve" in cache:
+        return cache["wf_solve"]
+    cols = [tn for tn in sorted(P.types) if column_spec(P, tn)]
+    if not cols:
+        return _wf_solve_once(P)
+    hp = hop_um(P) - MARGIN_UM
+    soft = [n for n in P.parts if not P.types[P.parts[n]["type"]].get("hard")]
+    for _pass in range(5):
+        res = _wf_solve_once(P)
+        rel = res["est_rel"]
+        st = dict(axis=dict(cache.get("column_axis", {})), at=dict(cache.get("column_at", {})),
+                  entry=dict(cache.get("column_entry", {})), exit_at=dict(cache.get("column_exit_at", {})),
+                  parent=dict(cache.get("column_parent", {})))
+        new = dict(axis={}, at={}, entry={}, exit_at={}, parent={})
+        sites = {q: [P.to_die(q, s_["xy"]) for s_ in face_sites(P, P.parts[q]["type"])] for q in soft}
+        ent = {}                                            # column instance -> parent site in its own type frame
+        for tn in cols:
+            w, h = P.types[tn]["outline_um"]
+            col = P.types[tn]["reset"]["column"]
+            votes = []
+            for n in sorted(x for x in P.parts if P.parts[x]["type"] == tn):
+                if n not in rel:
+                    continue
+                x0, y0, x1, y1 = P.rect(n)
+                best = None
+                for q in soft:
+                    if q == n or q not in rel or rel[q] >= rel[n]:
+                        continue
+                    for j, (X, Y) in enumerate(sites[q]):
+                        d = max(x0 - X, 0, X - x1) + max(y0 - Y, 0, Y - y1)
+                        if d <= hp and (best is None or (d, q, j) < best):
+                            best = (d, q, j)
+                if best is None:
+                    continue
+                _d, q, j = best
+                new["parent"][n] = [q, j]
+                px, py = P.to_type(n, sites[q][j])
+                ent[n] = (px, py)
+                votes.append((px, py))
+            if not votes:
+                continue
+            px = sorted(v[0] for v in votes)[len(votes) // 2]
+            py = sorted(v[1] for v in votes)[len(votes) // 2]
+            a = col.get("axis") or ("y" if 0.0 <= px <= w else "x" if 0.0 <= py <= h else ("y" if h >= w else "x"))
+            new["axis"][tn] = a
+            new["at"][tn] = px if a == "y" else py
+            along = py if a == "y" else px
+            new["entry"][tn] = "lo" if along < (h if a == "y" else w) / 2.0 else "hi"
+        # exit line = the column child's entry line, seen from this type
+        for tn in cols:
+            vals = []
+            for c, (q, _j) in new["parent"].items():
+                if P.parts[q]["type"] != tn or c not in ent:
+                    continue
+                ct = P.parts[c]["type"]
+                if ct not in new["at"]:
+                    continue
+                a = new["axis"][ct]
+                cw, ch = P.types[ct]["outline_um"]
+                cx = (new["at"][ct], 0.0 if new["entry"][ct] == "lo" else ch) if a == "y" else \
+                     (0.0 if new["entry"][ct] == "lo" else cw, new["at"][ct])
+                X, Y = P.to_type(q, P.to_die(c, cx))
+                vals.append(X if new["axis"].get(tn, "y") == "y" else Y)
+            if vals:
+                new["exit_at"][tn] = sorted(vals)[len(vals) // 2]
+        same = all(all(abs(new[k_].get(t_, 0) - st[k_].get(t_, 0)) < 0.5 if k_ in ("at", "exit_at") else
+                       new[k_].get(t_) == st[k_].get(t_) for t_ in set(new[k_]) | set(st[k_])) for k_ in new)
+        if same and _pass:
+            return res
+        for key in [k_ for k_ in cache if k_ == "wf_solve" or (isinstance(k_, tuple) and k_[0] in ("sites", "corners"))]:
+            del cache[key]
+        cache.update(column_axis=new["axis"], column_at=new["at"], column_entry=new["entry"],
+                     column_exit_at=new["exit_at"], column_parent=new["parent"])
+    return _wf_solve_once(P)
+
+
+def _wf_solve_once(P):
     """die wavefront routing: per soft type the reset IN site (one of its four face-midpoint sites, or
     reset.in_sites[type]) and per partition its parent (the partition whose rst_o site is within hop of its IN pin and
     releases first).  Dijkstra on release cycles with estimated type depths; local search over the IN faces
@@ -1364,7 +1559,12 @@ def wf_solve(P):
     over = P.reset.get("in_sites") or {}
     cands = {}
     for tn in stypes:
-        if tn in over:
+        if column_spec(P, tn) and column_spec(P, tn)["at"] is not None:
+            cs_ = column_spec(P, tn)
+            fs_ = face_sites(P, tn)[:2]
+            cands[tn] = [fs_[1]["xy"]] if cs_["entry"] == "hi" else [fs_[0]["xy"]] if cs_["entry"] == "lo" else \
+                [s["xy"] for s in fs_]                       # the entry end of the column (wins over in_sites)
+        elif tn in over:
             cands[tn] = [_snap(P, *over[tn])]
         else:          # face midpoints first (the initial choice prefers them), then corners, then every face site
             fs = face_sites(P, tn)
@@ -1397,7 +1597,8 @@ def wf_solve(P):
     # the part unreachable (flagged like any other, G0 error).
     # A pin [parent, site] also names the parent's rst_o face site; reset.keep_outs {type: [site]} keeps a published out of
     # an untouched type that no instance uses any more, so the type's tree stays as signed.
-    pins = P.reset.get("parent_pins") or {}
+    pins = dict(P.reset.get("parent_pins") or {})
+    pins.update(cache.get("column_parent", {}))            # column instances: parent chosen by geometry (wf_solve)
     pinned = lambda p, rows: (rows if p not in pins else [r for r in rows if r[0] == pins[p]] if isinstance(pins[p], str)
                               else [r for r in rows if r[0] == pins[p][0] and r[1] == pins[p][1]])
     for p in soft:
@@ -1767,9 +1968,17 @@ def _wf_type_tree(P, tn):
         for k, c in enumerate(core_rst):
             c["tap"] = len(pts)
             pts.append((f"core_rst{k}", *c["xy"]))
+        cs = column_spec(P, tn)
+        column = None
+        if cs and cs["at"] is not None:
+            ent = tuple(in_pin(P, tn))
+            far = [s["xy"] for s in face_sites(P, tn)[:2] if _man(s["xy"], ent) > 1.0]
+            used = {(round(x, 3), round(y, 3)) for _, x, y in outs}
+            column = dict(axis=cs["axis"], band=cs["band"],
+                          end=far[0] if far and (round(far[0][0], 3), round(far[0][1], 3)) in used else None)
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P, tn), boxes=blockages(t),
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
-                        avoid_cores=bool(P.reset.get("relay_avoid_cores")))
+                        avoid_cores=bool(P.reset.get("relay_avoid_cores")), column=column)
         T = assign(topo, wavefront_min_depth(t), pad_spread=bool(P.reset.get("relay_pad_spread")), boxes=blockages(t),
                    box_out=(CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM), walls=walls(P, tn),
                    site_names=t.get("reset_relay_names") == "site")
