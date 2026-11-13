@@ -610,6 +610,8 @@ def core_stations(t, txt, apply, htree, tcl, rep, source_sha=None):
     if unmapped:
         rep.append(dict(core_unmapped=sorted(set(unmapped))))
     if not groups:
+        if t.get("clock", {}).get("soft_reg_banks"):
+            raise ValueError("soft CS banks require mapped native core station rows; refusing an unconsumed bank manifest")
         return txt
     native = not re.search(rf"\bot_s81sl_leaf\b[^;]*?\b{LEAF_INST}\s*\(", txt) and bool(NATIVE_MARK.search(txt))
     depth = {}

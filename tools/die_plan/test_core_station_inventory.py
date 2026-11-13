@@ -88,3 +88,17 @@ def test_real_kit_entry_preserves_and_suppresses_centroid(tmp_path,monkeypatch):
     assert result.count('(* keep = 1 *)')==2
     assert 'is_soft_cs_banks {{' in tcl
     assert not any(line.startswith('is_place ') and 'cst:ve' in line for line in tcl.splitlines())
+
+
+def test_h_tree_pipeline_ordinal_from_actual_native_stages():
+    from core_station_inventory import inventory
+    parts=[]
+    for cls,indices in [('u_vp_g_hig_0_u_cst',[0]),('u_vp_g_ln_0_u_cst_hi',[0,1,2]),('u_vp_g_hog_0_u_cst',[0,1]),('u_vp_g_ln_0_u_cst_ho',[0,1])]:
+        for j in indices:
+            name=f'g_{cls}_gd_s_{j}_u_q'
+            parts.append(f'reg {name}; always @(posedge clk) {name} <= 0;')
+    rows=inventory('test',{},'\n'.join(parts))['banks']
+    hi=next(b for b in rows if b['cls']=='hi' and b['lane']==0 and b['stage']==0)
+    ho=next(b for b in rows if b['cls']=='ho' and b['group']==0 and b['stage']==0)
+    assert (hi['pipeline_stage'],hi['total_depth'],hi['shared_stages'])==(1,4,1)
+    assert (ho['pipeline_stage'],ho['total_depth'],ho['shared_stages'])==(2,4,2)

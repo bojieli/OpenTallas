@@ -68,6 +68,19 @@ def inventory(tn,t,txt):
         m=re.fullmatch(r"is_place \{([^}]+)\} ([\d.eE+-]+) ([\d.eE+-]+) cst:(\w+)",line)
         if m:sites.append((m.group(1),[float(m.group(2)),float(m.group(3))],m.group(4)))
     for bank in banks:
+        cls = bank["cls"]
+        total = native_depths.get("CS_"+cls.upper()+"_D")
+        if total is None:
+            total = max(b["stage"] for b in banks if b["cls"] == cls)+1
+        shared = native_depths.get("CS_"+cls.upper()+"_GS", 0)
+        # HI: shared source stages then lane stages; HO: lane stages then shared.
+        # These are physical pipeline ordinals, while stage remains local generate index.
+        offset = shared if cls == "hi" and bank["lane"] is not None else 0
+        if cls == "ho" and bank["group"] is not None:
+            offset = total-shared
+        bank["pipeline_stage"] = offset+bank["stage"]
+        bank["total_depth"] = total
+        bank["shared_stages"] = shared if cls in {"hi", "ho"} else None
         matches=[(pat,xy) for pat,xy,_ in sites if all(fnmatch.fnmatchcase(r["name"],pat) for r in bank["registers"])]
         if len(matches)>1:raise ValueError("ambiguous planned CS bank site: "+bank["id"])
         bank["centroid_um"]=matches[0][1] if matches else None
