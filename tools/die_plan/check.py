@@ -2686,6 +2686,10 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["island_ft_rows"] = check_island_ft_rows(P, R, plan_dir, _views)
     summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()), plan_dir=plan_dir,
                                           side=load_core_conns(plan_dir, core_conns))
+    # R-REACH (RULEBOOK 11-13, reach_rules.py): START fan fanout / reach, macro barriers, bus windows, forwarded
+    # clock sources.  ERROR under check "r_reach" (budgets.r_reach "warn" / "off" changes that); fix = reach_rules.py fix
+    import reach_rules as RRL
+    summ["r_reach"] = RRL.check_plan(P, R)
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
