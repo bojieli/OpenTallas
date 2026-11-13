@@ -1107,7 +1107,13 @@ end
         else bt_word <= sbase + {1'b0, j} + ((MUT == 3) ? 9'd1 : 9'd0);
 
     wire [DW-1:0] fd3;
+    // OT_QC_SWREG (HARD-QC-FORMS-1 11-13): as qfd_dv_s8_station_tail1, registered u_scale_wait output, 0 cycles.  The _orq /
+    // _orq_mrep / _orq3 copies already use qfd_dv_s8s_sram_delay_orq (the same registered-read form) and need no define.
+`ifdef OT_QC_SWREG
+    qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT), .OREG(1)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+`else
     qfd_dv_s8s_sram_delay #(.W(DW), .D(3+BT_LAT)) u_scale_wait (.ck(ck), .rst_n(sr_reset[39]), .d(fd), .q(fd3));
+`endif
     wire fv3,ls3;wire[7:0] j3;
     qfd_dv_s8s_ring_delay #(.W(10),.D(3+BT_LAT)) u_meta(.clk(ck),.rst_n(sr_reset[40]),.d({fv,j,j+8'd1==nwords}),.q({fv3,j3,ls3}));
     wire [DW-1:0] y;
