@@ -1996,6 +1996,15 @@ class TestCrashTriage1025(unittest.TestCase):
         c = self.classify_probe("PIN_AUDIT FAIL early\n[ERROR DRT-0255] stop\n")
         self.assertIn("DRT-0255", c["orfs_error"])
 
+    def test_pregrt_hold_fallback_is_recorded_not_a_verdict(self):
+        # R-CLOCK (COORD 11-13 07:2x): the opt-in pre-GRT hold build fell back -> recorded on the job, class unchanged
+        c = self.classify_probe("OT_PREGRT_FF_HOLD FALLBACK step rc 139 (pregrt_ff_hold.log)\n"
+                                "PREGRT_HOLD_FALLBACK tool rc 139: 4_cts.odb unchanged (pregrt_ff_hold.log)\n")
+        self.assertEqual(c["pregrt_hold_fallback"], "PREGRT_HOLD_FALLBACK tool rc 139: 4_cts.odb unchanged (pregrt_ff_hold.log)")
+        base = self.classify_probe("OT_PREGRT_FF_HOLD after wns 3.4 endpoints 0\n")
+        self.assertNotIn("pregrt_hold_fallback", base)
+        self.assertEqual(self.ap.classify(c, {"exit": 1})[:2], self.ap.classify(base, {"exit": 1})[:2])
+
     def test_clock_source_exception_after_pass_is_infra_without_blind_retry(self):
         files = {
             "FAIL_POSTCTS": "legacy grt gate: TT global-routing insertion gate failed: PASS exit 1\n"

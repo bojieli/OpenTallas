@@ -1,5 +1,5 @@
 """R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13; was HEAD-TILE-PREGRT-HOLD DH59-TILE 11-03) + clock.tap_core_etap plan form:
-the placement-basis FF hold build is ON for every type, plan clock.pregrt_ff_hold false writes nothing."""
+the placement-basis FF hold build is OPT-IN (plan clock.pregrt_ff_hold true; COORD 11-13 07:2x default-preserving)."""
 import json
 import re
 import shutil
@@ -25,14 +25,17 @@ def test_opt_out_writes_nothing(tmp_path):
     assert PG.config_lines({"clock": {"pregrt_ff_hold": False}}) == []
 
 
-def test_default_is_on_for_every_type(tmp_path):
-    assert PG.enabled({}) and PG.enabled({"clock": {}}) and PG.enabled({"clock": {"pregrt_ff_hold": True}})
-    assert not PG.enabled({"clock": {"pregrt_ff_hold": False}})
-    assert _kit(tmp_path, {}) is True
-    assert PG.config_lines({"clock": {}}) == [PG.CONFIG, "export OT_PREGRT_HOLD_GUARD = 45"]
-    assert PG.config_lines({"clock": {"pregrt_hold_guard_ps": 40}})[1] == "export OT_PREGRT_HOLD_GUARD = 40"
+def test_default_is_off_and_opt_in(tmp_path):
+    # COORD 11-13 07:2x: default-preserving; a kit generated from a plan without the key is byte-identical to before
+    assert not PG.enabled({}) and not PG.enabled({"clock": {}}) and not PG.enabled({"clock": {"pregrt_ff_hold": False}})
+    assert PG.enabled({"clock": {"pregrt_ff_hold": True}})
+    assert _kit(tmp_path, {}) is False and not (tmp_path / "pregrt_ff_hold.tcl").exists()
+    assert PG.config_lines({}) == [] and PG.config_lines({"clock": {"pregrt_hold_guard_ps": 40}}) == []
+    on = {"pregrt_ff_hold": True}
+    assert PG.config_lines({"clock": on}) == [PG.CONFIG, "export OT_PREGRT_HOLD_GUARD = 45"]
+    assert PG.config_lines({"clock": dict(on, pregrt_hold_guard_ps=40)})[1] == "export OT_PREGRT_HOLD_GUARD = 40"
     with pytest.raises(ValueError):
-        PG.config_lines({"clock": {"pregrt_hold_guard_ps": 150}})
+        PG.config_lines({"clock": dict(on, pregrt_hold_guard_ps=150)})
 
 
 def test_on_keeps_the_gate_context_and_drops_the_verdict(tmp_path):
@@ -48,7 +51,7 @@ def test_on_keeps_the_gate_context_and_drops_the_verdict(tmp_path):
 
 
 def test_two_scene_read_replaces_the_single_read_once(tmp_path):
-    _kit(tmp_path, {})
+    _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     # TT setup scene + FF hold scene when the runner passes TLIBS; the FF-only read is kept for an older runner
     assert "define_scene TC -mode tt -liberty $::env(TLIBS)" in t and "define_scene BC -mode ff -liberty $::env(PLIBS)" in t
@@ -61,7 +64,7 @@ def test_two_scene_read_replaces_the_single_read_once(tmp_path):
 
 
 def test_route_guard_is_cross_tap_only(tmp_path):
-    _kit(tmp_path, {})
+    _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     assert "foreach pg_tag {all xt}" in t and "set pg_dg [expr {$pg_guard - $pg_pm}]" in t
     # the guard pass: port hold excepted, every tap port early latency widened, repair, then both restored
@@ -78,7 +81,7 @@ def test_route_guard_is_cross_tap_only(tmp_path):
 
 def test_tap_window_lines_are_the_generator_form(tmp_path):
     """the tcl reads the window ports from the lines gen_phys.tap_window_tcl writes (same regular expression)"""
-    _kit(tmp_path, {})
+    _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     pat = r"^set_clock_latency -source -early -clock (\S+) (-?[0-9.]+) \[get_ports \{?([^\}\]]+)\}?\]\s*$"
     assert "regexp {" + pat + "} $pg_l" in t
@@ -95,21 +98,21 @@ def test_tap_window_lines_are_the_generator_form(tmp_path):
 
 
 def test_clock_network_is_firm_during_the_build_and_released(tmp_path):
-    _kit(tmp_path, {})
+    _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     lock, rep, rel = t.index("setPlacementStatus FIRM"), t.index("repair_timing -hold"), t.index("foreach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }")
     assert lock < rep < t.index("detailed_placement") < rel < t.index("write_db")
 
 
 def test_fail_safe_conditions(tmp_path):
-    _kit(tmp_path, {})
+    _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     assert "TT setup loss" in t and "no hold gain" in t and "tool error" in t
     assert "min($pg_s0, 0.0) - 1.0" in t          # a positive TT setup may be spent down to 0, never below
 
 
 def test_class_report_and_open_list(tmp_path):
-    _kit(tmp_path, {})
+    _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     for c in ("port_in", "same_tap", "cross_tap", "port_out"):
         assert c in t
@@ -120,7 +123,7 @@ def test_tcl_parses(tmp_path):
     tclsh = shutil.which("tclsh")
     if not tclsh:
         pytest.skip("no tclsh")
-    _kit(tmp_path, {})
+    _kit(tmp_path, {"pregrt_ff_hold": True})
     chk = tmp_path / "chk.tcl"
     chk.write_text('set f [open [lindex $argv 0]]; set t [read $f]; close $f\n'
                    'if {![info complete $t]} { puts INCOMPLETE; exit 1 }\nputs OK\n')
@@ -137,7 +140,7 @@ def test_marker_missing_fails_closed(tmp_path):
 def test_changed_gate_read_fails_closed(tmp_path):
     (tmp_path / "hold_gate.tcl").write_text("read_db $::env(ODB)\n" + PG.MARK + "y\n")
     with pytest.raises(ValueError):
-        PG.install({"clock": {}}, tmp_path)
+        PG.install({"clock": {"pregrt_ff_hold": True}}, tmp_path)
 
 
 def test_run_kit_step_is_guarded_advisory_and_before_grt():
@@ -149,6 +152,8 @@ def test_run_kit_step_is_guarded_advisory_and_before_grt():
     # a failed build never stops the kit: no FAIL_POSTCTS, rc stays 0, the temporary database is removed
     assert "FAIL_POSTCTS" not in step and "rc=6" not in step and "pgrc=" in step
     assert "OT_PREGRT_FF_HOLD FALLBACK step rc" in step and '.pg_tmp' in step
+    # COORD 11-13 07:2x: both fallbacks (tool rc, the build's own guard) print one classified line autopilot records
+    assert step.count("PREGRT_HOLD_FALLBACK tool rc") == 1 and step.count("PREGRT_HOLD_FALLBACK guard") == 1
 
 
 def test_schema_keys():

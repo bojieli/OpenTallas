@@ -667,6 +667,10 @@ for k, p in pat.items():
     else:
         m = re.search(p, alltxt)
         if m: out[k] = m.group(0)[:300]
+# R-CLOCK (HOLD-TAP-1 / COORD 11-13 07:2x): the opt-in pre-GRT hold build fell back (tool error or its own guard):
+# never a verdict (the GRT repair takes the debt), but recorded on the job, not silent
+fb = re.findall(r"(?m)^PREGRT_HOLD_FALLBACK\b[^\n]*", runlog)
+if fb: out["pregrt_hold_fallback"] = fb[-1][:300]
 cells = 0
 for js in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.json")):
     d = jl(js) or {}
@@ -2553,6 +2557,9 @@ def finish(st, j, c, client):
     if c.get("chain"):
         j["chain"] = {k: c["chain"].get(k) for k in ("verdict", "reason", "gates", "lec", "lec_verdict",
                                                    "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
+    if c.get("pregrt_hold_fallback"):                # R-CLOCK (COORD 11-13 07:2x): advisory, recorded, never a class
+        j["pregrt_hold_fallback"] = c["pregrt_hold_fallback"]
+        log(f"PREGRT_HOLD_FALLBACK {j['id']} {j['die']}/{j['type']}: {c['pregrt_hold_fallback'][:200]}")
     log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> {cls} ({kind}): {reasons[:240]}")
     if cls == "CRASH" and kind in INFRA_KINDS and not j.get("adopted"):
         why = wave_superseded(j)

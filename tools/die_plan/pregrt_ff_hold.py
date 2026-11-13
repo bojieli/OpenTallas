@@ -2,8 +2,9 @@
 """R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13, RULEBOOK-1113 R-CLOCK; extends HEAD-TILE-PREGRT-HOLD DH59-TILE 11-03).
 
 Every gen_phys kit repairs its FF hold debt ONCE, on the tap-balanced post-CTS database (4_cts.odb), on placement
-parasitics, before the first global route.  DEFAULT ON for every type of every die; plan clock.pregrt_ff_hold false
-opts a type out (the kit then gets no tcl and no config line, as before this rule).
+parasitics, before the first global route.  OPT-IN per type (COORD 11-13 07:2x ruling on merge train 44, default-
+preserving): plan clock.pregrt_ff_hold true turns it on; absent or false = no tcl and no config line, as before this
+rule.  Turning it on per die follows a signed proof and the die owner's plan event.
 
 Why (measured 11-13, same kits that ended HOLD_STRUCTURAL / time cap at GRT):
   - The hold debt of a kit is a CONTRACT quantity known as soon as the tap trees are balanced: a cross-tap register
@@ -16,7 +17,8 @@ Why (measured 11-13, same kits that ended HOLD_STRUCTURAL / time cap at GRT):
   - The in-flow GRT repair re-routes per buffer (QC sle_st_a: 1,384 buffers in 9,432 s; hd_spn_end 3,809 in 5.2 h)
     and ends on the 3 h stall guard; on placement parasitics the same work is minutes (hd_tile 24,282 buffers, 166 s).
 What changed against the 11-03 opt-in form:
-  1. default on (enabled()); the run_kit.sh step is advisory: any failure keeps 4_cts.odb and the GRT repair as before;
+  1. opt-in (enabled(), COORD 11-13 07:2x); the run_kit.sh step is advisory: any failure keeps 4_cts.odb and the GRT
+     repair as before, and prints one classified PREGRT_HOLD_FALLBACK line (run_<goal>.log) that autopilot records;
   2. TWO scenes when run_kit.sh passes TLIBS (TC_LIB_FILES): TC/mode tt checks setup, BC/mode ff checks hold, so
      repair_timing never spends TT setup slack on a hold cell (the FF-only form could only see FF setup);
   3. ROUTE GUARD on CROSS-TAP pairs only: built to +OT_PREGRT_HOLD_GUARD ps (plan clock.pregrt_hold_guard_ps,
@@ -226,9 +228,8 @@ if {$pg_fail ne ""} {
 
 
 def enabled(t):
-    """R-CLOCK: on for every type unless the plan says clock.pregrt_ff_hold false."""
-    v = (t.get("clock") or {}).get("pregrt_ff_hold")
-    return True if v is None else bool(v)
+    """R-CLOCK: opt-in (COORD 11-13 07:2x, default-preserving): on only when the plan says clock.pregrt_ff_hold true."""
+    return (t.get("clock") or {}).get("pregrt_ff_hold") is True
 
 
 def guard_ps(t):
@@ -267,7 +268,7 @@ if __name__ == "__main__":      # pregrt_ff_hold.py KIT [GUARD]: stage the build
     import sys
     kit = Path(sys.argv[1])
     g = float(sys.argv[2]) if len(sys.argv) > 2 else GUARD_PS
-    install({"clock": {}}, kit)
+    install({"clock": {"pregrt_ff_hold": True}}, kit)
     c = (kit / "config.mk").read_text()
     if CONFIG not in c:
         (kit / "config.mk").write_text(c.rstrip("\n") + f"\n{CONFIG}\nexport OT_PREGRT_HOLD_GUARD = {g:g}\n")

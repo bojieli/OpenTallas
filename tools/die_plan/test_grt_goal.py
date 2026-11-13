@@ -44,7 +44,7 @@ printf 'openroad %s\\n' "${*: -1}" >> "$TRACE"
 case "$*" in
  *hold_gate.tcl*) if [ "$FAIL_HOLD" = 1 ]; then echo 'OT_HOLD_GATE FAIL';exit 1;else echo 'OT_HOLD_GATE PASS';fi;;
  *postcts_gate.tcl*) echo 'OT_POSTCTS_GATE PASS';;
- *pregrt_ff_hold.tcl*) [ "${FAIL_PG:-0}" != 1 ] || exit 139;;
+ *pregrt_ff_hold.tcl*) [ "${FAIL_PG:-0}" != 1 ] || exit 139; [ "${FAIL_PG:-0}" != 2 ] || echo 'OT_PREGRT_FF_HOLD FALLBACK setup loss -3.1: 4_cts.odb unchanged';;
 esac
 exit 0
 ''')
@@ -67,6 +67,7 @@ exit 0
             p = subprocess.run(['bash', '-c', 'set -uo pipefail; rc=0; M=make; ' + body], env=env,
                                text=True, capture_output=True)
             lines = trace.read_text().replace(str(k), 'KIT').splitlines() if trace.exists() else []
+            self.last_stdout = p.stdout
             return p.returncode, lines, p.stderr
 
     def test_existing_goal_execution_is_unchanged(self):
@@ -97,6 +98,15 @@ exit 0
         self.assertEqual(rc, 0, (lines, err))
         self.assertTrue(any('pregrt_ff_hold.tcl' in x for x in lines), lines)
         self.assertEqual(sum('grt' in x.split() for x in lines if x.startswith('make ')), 1, lines)
+        # COORD 11-13 07:2x: the fallback is a classified line in run_<goal>.log, not silent
+        self.assertIn('PREGRT_HOLD_FALLBACK tool rc 139', self.last_stdout)
+
+    def test_hold_build_guard_fallback_is_classified(self):
+        rc, lines, err = self.execute(self.new, 'grt', fail_pg=2)
+        self.assertEqual(rc, 0, (lines, err))
+        self.assertIn('PREGRT_HOLD_FALLBACK guard setup loss -3.1', self.last_stdout)
+        rc, lines, err = self.execute(self.new, 'grt')
+        self.assertNotIn('PREGRT_HOLD_FALLBACK', self.last_stdout)
 
     def test_structural_failure_stops_before_grt(self):
         rc, lines, _ = self.execute(self.new, 'grt', fail_hold=True)
