@@ -35041,9 +35041,9 @@
    "kit_rtl_prev_kw32": null,
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/asbuilt_kitops1.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/asbuilt_kitops1w.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/bind",
-    "note": "KIT-OPS-1 2026-11-13 00:54: HBM pEv10 (train 26, events/hbm_pEv10_1112) strict two-pass bind (package bind.sh recipe) on plain main archive 7073a6b4a599; 98/98 generated RTL = record, r8 table = package, 92 partitions / 420 crossings / 0 errors | KW-FIX-45 11-12 HBM t39w repoint: plan /srv/opentallas-scratch2/claude/hbm-vsn-xtap-t39w/plan_t39w/die_plan.json; src = main 9fc09952cdc4 + q0body guard 0dcd23f1b9c2 + p18emit a371160f43; DIE-HBM-100 / HBM-VSN-XTAP-2 strict bind"
+    "note": "KIT-OPS-1 2026-11-13 01:02: asbuilt -> asbuilt_kitops1w.json (6 dead phy_slices bb.v entries dropped; bind skips absent files; SRC-INCOMPLETE probe needs every listed path) | KIT-OPS-1 2026-11-13 00:54: HBM pEv10 (train 26, events/hbm_pEv10_1112) strict two-pass bind (package bind.sh recipe) on plain main archive 7073a6b4a599; 98/98 generated RTL = record, r8 table = package, 92 partitions / 420 crossings / 0 errors | KW-FIX-45 11-12 HBM t39w repoint: plan /srv/opentallas-scratch2/claude/hbm-vsn-xtap-t39w/plan_t39w/die_plan.json; src = main 9fc09952cdc4 + q0body guard 0dcd23f1b9c2 + p18emit a371160f43; DIE-HBM-100 / HBM-VSN-XTAP-2 strict bind"
    },
    "gen_hosts_prev_kw32g": [
     "intel1",
