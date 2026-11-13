@@ -52,3 +52,9 @@
 - Cut design: epyc7 /srv/opentallas-scratch2/claude/s81-forms-1/leafgraph.py; c1x t3 group graph in cut/c1x_t3_graph.json. Candidate 2-way cut: xf cluster (eng_finish x4, norm_finish, xstop, soft xf) | rest (xg, xr, cap, eg, flt, landings, stations). Cut links: xstop<->xg 346 bits (+ check cfg/fault).
 - Per-leaf cells: hierarchical yosys stat on epyc8 hstat_c1x_t3/ (ot-run; intel2 ~/tmp/s81f_hstat.log).
 - Street family: fam43B (epyc7 pid 1653335) still in the die-wide post phase. R-STREET not posted yet.
+
+## 2026-11-13 04:46 update
+- fam43B done (band-only, provisional 43.2 um, no growth, die area +0.0%): 70/89 types clean. All named BAD/mild types are clean: leaf t28 (7 moved, rs p99 5.39->5.00), t75, t73, t29, t34, t44, t53, and dsdv c1x t1/t3/t4/t6-t10 and c3x t1. 19 reverted: route_supply worse (13: leaf t5/t12/t15/t30/t41/t72, kv_leaf t3, c1x t5, t54/t25/t40 clones), clock-tap radius (leaf t1/t8/t14), reset collector root moved (t37, t25 clone), band short (kv_leaf t5). Those need growth + regs (srbands2 form). Plan: epyc7 .../w/fam43B/plan.json, rows.tsv.
+- R-STREET is still a header only in RULEBOOK-1113 (checked 04:46). Not applied, no READY.
+- hstat rerun (yosys synth has no -noflatten flag; it failed after 28 min): ot-run on epyc8, log intel2 ~/tmp/s81f_hstat.log.
+- Split mechanism: physical/die_plan/s81/bind/asbuilt_map_s81.json parts (longest prefix). Add e.g. u_s_<id>.u_lp.u_xf -> s_<id>_X plus a new plan partition and type.
