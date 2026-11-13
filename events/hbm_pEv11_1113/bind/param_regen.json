@@ -1,0 +1,932 @@
+{
+ "file": "/srv/opentallas-scratch2/claude/die-hbm-93/src_mclk/physical/die_plan/hbm/bind/hbm_param_regen.py",
+ "changed": [
+  {
+   "inst": "su_NW0.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 82
+  },
+  {
+   "inst": "su_NW0.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 79
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 82
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 79
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 82
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 79
+  },
+  {
+   "inst": "sfu_NW0",
+   "param": "READ_RETURN",
+   "asbuilt": "29",
+   "bound": 86
+  },
+  {
+   "inst": "sfu_NW0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "26",
+   "bound": 83
+  },
+  {
+   "inst": "hc_NW0",
+   "param": "READ_RETURN",
+   "asbuilt": "33",
+   "bound": 90
+  },
+  {
+   "inst": "hc_NW0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "30",
+   "bound": 87
+  },
+  {
+   "inst": "su_NW2.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 65
+  },
+  {
+   "inst": "su_NW2.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 62
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 65
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 62
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 65
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 62
+  },
+  {
+   "inst": "sfu_NW2",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 69
+  },
+  {
+   "inst": "sfu_NW2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 66
+  },
+  {
+   "inst": "hc_NW2",
+   "param": "READ_RETURN",
+   "asbuilt": "27",
+   "bound": 73
+  },
+  {
+   "inst": "hc_NW2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "24",
+   "bound": 70
+  },
+  {
+   "inst": "hc_NW.u_q",
+   "param": "RD_CAPTURE",
+   "asbuilt": "51",
+   "bound": 161
+  },
+  {
+   "inst": "hc_NW.u_q",
+   "param": "GATHER_PHASE",
+   "asbuilt": "51",
+   "bound": 161
+  },
+  {
+   "inst": "hc_NW.u_q",
+   "param": "DONE_LAT",
+   "asbuilt": "47",
+   "bound": 157
+  },
+  {
+   "inst": "su_NE0.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 93
+  },
+  {
+   "inst": "su_NE0.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 90
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 93
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 90
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 93
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 90
+  },
+  {
+   "inst": "sfu_NE0",
+   "param": "READ_RETURN",
+   "asbuilt": "29",
+   "bound": 97
+  },
+  {
+   "inst": "sfu_NE0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "26",
+   "bound": 94
+  },
+  {
+   "inst": "hc_NE0",
+   "param": "READ_RETURN",
+   "asbuilt": "33",
+   "bound": 101
+  },
+  {
+   "inst": "hc_NE0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "30",
+   "bound": 98
+  },
+  {
+   "inst": "su_NE2.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 79
+  },
+  {
+   "inst": "su_NE2.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 76
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 79
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 76
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 79
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 76
+  },
+  {
+   "inst": "sfu_NE2",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 83
+  },
+  {
+   "inst": "sfu_NE2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 80
+  },
+  {
+   "inst": "hc_NE2",
+   "param": "READ_RETURN",
+   "asbuilt": "27",
+   "bound": 87
+  },
+  {
+   "inst": "hc_NE2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "24",
+   "bound": 84
+  },
+  {
+   "inst": "hc_NE.u_q",
+   "param": "RD_CAPTURE",
+   "asbuilt": "51",
+   "bound": 174
+  },
+  {
+   "inst": "hc_NE.u_q",
+   "param": "GATHER_PHASE",
+   "asbuilt": "51",
+   "bound": 174
+  },
+  {
+   "inst": "hc_NE.u_q",
+   "param": "DONE_LAT",
+   "asbuilt": "47",
+   "bound": 170
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "param": "VM_RT",
+   "asbuilt": "75",
+   "bound": 80
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "param": "CR_RT",
+   "asbuilt": "36",
+   "bound": 58
+  },
+  {
+   "inst": "hb_idx__op_SW",
+   "param": "VM_RT_EXTRA",
+   "asbuilt": "171",
+   "bound": 161
+  },
+  {
+   "inst": "hc_eng",
+   "param": "XRD",
+   "asbuilt": "0",
+   "bound": 36
+  },
+  {
+   "inst": "hc_eng",
+   "param": "XRU",
+   "asbuilt": "0",
+   "bound": 45
+  }
+ ],
+ "derived": [
+  {
+   "inst": "su_NW0.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 82
+  },
+  {
+   "inst": "su_NW0.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 79
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 82
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 79
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 82
+  },
+  {
+   "inst": "su_NW0.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 79
+  },
+  {
+   "inst": "sfu_NW0",
+   "param": "READ_RETURN",
+   "asbuilt": "29",
+   "bound": 86
+  },
+  {
+   "inst": "sfu_NW0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "26",
+   "bound": 83
+  },
+  {
+   "inst": "hc_NW0",
+   "param": "READ_RETURN",
+   "asbuilt": "33",
+   "bound": 90
+  },
+  {
+   "inst": "hc_NW0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "30",
+   "bound": 87
+  },
+  {
+   "inst": "su_NW1.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NW1.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NW1.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NW1.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NW1.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NW1.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "sfu_NW1",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 19
+  },
+  {
+   "inst": "sfu_NW1",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 16
+  },
+  {
+   "inst": "hc_NW1",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 23
+  },
+  {
+   "inst": "hc_NW1",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 20
+  },
+  {
+   "inst": "su_NW2.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 65
+  },
+  {
+   "inst": "su_NW2.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 62
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 65
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 62
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 65
+  },
+  {
+   "inst": "su_NW2.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 62
+  },
+  {
+   "inst": "sfu_NW2",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 69
+  },
+  {
+   "inst": "sfu_NW2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 66
+  },
+  {
+   "inst": "hc_NW2",
+   "param": "READ_RETURN",
+   "asbuilt": "27",
+   "bound": 73
+  },
+  {
+   "inst": "hc_NW2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "24",
+   "bound": 70
+  },
+  {
+   "inst": "su_NW3.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NW3.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NW3.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NW3.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NW3.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NW3.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "sfu_NW3",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 19
+  },
+  {
+   "inst": "sfu_NW3",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 16
+  },
+  {
+   "inst": "hc_NW3",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 23
+  },
+  {
+   "inst": "hc_NW3",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 20
+  },
+  {
+   "inst": "hc_NW.u_q",
+   "param": "RD_CAPTURE",
+   "asbuilt": "51",
+   "bound": 161
+  },
+  {
+   "inst": "hc_NW.u_q",
+   "param": "GATHER_PHASE",
+   "asbuilt": "51",
+   "bound": 161
+  },
+  {
+   "inst": "hc_NW.u_q",
+   "param": "DONE_LAT",
+   "asbuilt": "47",
+   "bound": 157
+  },
+  {
+   "inst": "su_NE0.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 93
+  },
+  {
+   "inst": "su_NE0.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 90
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 93
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 90
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "25",
+   "bound": 93
+  },
+  {
+   "inst": "su_NE0.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "22",
+   "bound": 90
+  },
+  {
+   "inst": "sfu_NE0",
+   "param": "READ_RETURN",
+   "asbuilt": "29",
+   "bound": 97
+  },
+  {
+   "inst": "sfu_NE0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "26",
+   "bound": 94
+  },
+  {
+   "inst": "hc_NE0",
+   "param": "READ_RETURN",
+   "asbuilt": "33",
+   "bound": 101
+  },
+  {
+   "inst": "hc_NE0",
+   "param": "WRITE_RETURN",
+   "asbuilt": "30",
+   "bound": 98
+  },
+  {
+   "inst": "su_NE1.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NE1.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NE1.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NE1.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NE1.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NE1.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "sfu_NE1",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 19
+  },
+  {
+   "inst": "sfu_NE1",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 16
+  },
+  {
+   "inst": "hc_NE1",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 23
+  },
+  {
+   "inst": "hc_NE1",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 20
+  },
+  {
+   "inst": "su_NE2.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 79
+  },
+  {
+   "inst": "su_NE2.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 76
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 79
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 76
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 79
+  },
+  {
+   "inst": "su_NE2.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 76
+  },
+  {
+   "inst": "sfu_NE2",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 83
+  },
+  {
+   "inst": "sfu_NE2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 80
+  },
+  {
+   "inst": "hc_NE2",
+   "param": "READ_RETURN",
+   "asbuilt": "27",
+   "bound": 87
+  },
+  {
+   "inst": "hc_NE2",
+   "param": "WRITE_RETURN",
+   "asbuilt": "24",
+   "bound": 84
+  },
+  {
+   "inst": "su_NE3.g_tap_r8b.u_tap",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NE3.g_tap_r8b.u_tap",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NE3.u_slice.g_leaf[0].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NE3.u_slice.g_leaf[0].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "su_NE3.u_slice.g_leaf[1].u_leaf",
+   "param": "READ_RETURN",
+   "asbuilt": "15",
+   "bound": 15
+  },
+  {
+   "inst": "su_NE3.u_slice.g_leaf[1].u_leaf",
+   "param": "WRITE_RETURN",
+   "asbuilt": "12",
+   "bound": 12
+  },
+  {
+   "inst": "sfu_NE3",
+   "param": "READ_RETURN",
+   "asbuilt": "19",
+   "bound": 19
+  },
+  {
+   "inst": "sfu_NE3",
+   "param": "WRITE_RETURN",
+   "asbuilt": "16",
+   "bound": 16
+  },
+  {
+   "inst": "hc_NE3",
+   "param": "READ_RETURN",
+   "asbuilt": "23",
+   "bound": 23
+  },
+  {
+   "inst": "hc_NE3",
+   "param": "WRITE_RETURN",
+   "asbuilt": "20",
+   "bound": 20
+  },
+  {
+   "inst": "hc_NE.u_q",
+   "param": "RD_CAPTURE",
+   "asbuilt": "51",
+   "bound": 174
+  },
+  {
+   "inst": "hc_NE.u_q",
+   "param": "GATHER_PHASE",
+   "asbuilt": "51",
+   "bound": 174
+  },
+  {
+   "inst": "hc_NE.u_q",
+   "param": "DONE_LAT",
+   "asbuilt": "47",
+   "bound": 170
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "param": "VM_RT",
+   "asbuilt": "75",
+   "bound": 80
+  },
+  {
+   "inst": "hb_idx__ctl",
+   "param": "CR_RT",
+   "asbuilt": "36",
+   "bound": 58
+  },
+  {
+   "inst": "hb_idx__op_SW",
+   "param": "VM_RT_EXTRA",
+   "asbuilt": "171",
+   "bound": 161
+  },
+  {
+   "inst": "hc_eng",
+   "param": "XRD",
+   "asbuilt": "0",
+   "bound": 36
+  },
+  {
+   "inst": "hc_eng",
+   "param": "XRU",
+   "asbuilt": "0",
+   "bound": 45
+  }
+ ],
+ "record": {
+  "rule": "A leg = the crossing members (sink leaf, sink port, source leaf) named in physical/die_plan/hbm/r8/hbm_lat_contract.json;\nL(leg) = landed register stages of the leg (bind boundary flops + plan lane stages + landing pads), one value per leg\n(the pads guarantee it; a leg with two values is a hook error, the bind fails).",
+  "contract": "hbm_lat_1108",
+  "N": {
+   "NW0": 71,
+   "NW1": 4,
+   "NW2": 54,
+   "NW3": 4,
+   "NE0": 82,
+   "NE1": 4,
+   "NE2": 68,
+   "NE3": 4
+  },
+  "check": {
+   "hb_argmax": {
+    "VMX": 85,
+    "ACK": 71,
+    "note": "r2 behind the rootctl share (header: VMX 5+VM_RT); ACK law assumed 13 + CR_RT; as-built 89 / 52 do not follow 5+75 / 13+36: owner look before emitting"
+   }
+  },
+  "variant_values": {
+   "sfucore_NW.__cut_ctl:LG0": {
+    "sfu_tap_read_return": 86,
+    "sfu_tap_write_return": 83,
+    "ctl_legs": 49
+   },
+   "sfucore_NW.__cut_ctl:LG1": {
+    "sfu_tap_read_return": 19,
+    "sfu_tap_write_return": 16,
+    "ctl_legs": 116
+   },
+   "sfucore_NW.__cut_ctl:LG2": {
+    "sfu_tap_read_return": 69,
+    "sfu_tap_write_return": 66,
+    "ctl_legs": 66
+   },
+   "sfucore_NW.__cut_ctl:LG3": {
+    "sfu_tap_read_return": 19,
+    "sfu_tap_write_return": 16,
+    "ctl_legs": 116
+   },
+   "sfucore_NW.__cut_ctl": {
+    "READ_RETURN": 137,
+    "WRITE_RETURN": 134,
+    "law": "2/2 + sfu tap + ctl legs"
+   },
+   "sfucore_NE.__cut_ctl:LG0": {
+    "sfu_tap_read_return": 97,
+    "sfu_tap_write_return": 94,
+    "ctl_legs": 49
+   },
+   "sfucore_NE.__cut_ctl:LG1": {
+    "sfu_tap_read_return": 19,
+    "sfu_tap_write_return": 16,
+    "ctl_legs": 127
+   },
+   "sfucore_NE.__cut_ctl:LG2": {
+    "sfu_tap_read_return": 83,
+    "sfu_tap_write_return": 80,
+    "ctl_legs": 63
+   },
+   "sfucore_NE.__cut_ctl:LG3": {
+    "sfu_tap_read_return": 19,
+    "sfu_tap_write_return": 16,
+    "ctl_legs": 127
+   },
+   "sfucore_NE.__cut_ctl": {
+    "READ_RETURN": 148,
+    "WRITE_RETURN": 145,
+    "law": "2/2 + sfu tap + ctl legs"
+   }
+  }
+ }
+}
