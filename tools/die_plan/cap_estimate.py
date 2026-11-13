@@ -122,6 +122,42 @@ def message(name, e):
 
 
 # ---- kit (preflight) -------------------------------------------------------------------------------------------
+# Measured std-cell counts of the kit's synthesized top (macro / hard-core instances are physical blocks, never
+# cells), best first: the pre-floorplan receipt native_cell_cap.tcl writes, its projection receipt, and the ORFS synth
+# metrics of a run inside the kit.  A measured count always beats a plan estimate (KV-RCAP-MEAS 11-13: kv3_pc_v1
+# measured 227,619 std cells + 12 macros at synth; the plan's flat cells.py row, 850,612, counts the qkd_kvs_pcc/pcf
+# hard cores' contents).
+MEASURED = (("native_cell_count.json", "stdcells", "macros"),
+            ("cap_projection.json", "synth", "macros"),
+            ("run/logs/*/*/*/1_synth.json", "synth__design__instance__count__stdcell",
+             "synth__design__instance__count__macros"))
+
+
+def measured_synth(kit):
+    """(stdcells, macros, basis) measured on the kit's synthesized top, or None when the kit has no measurement."""
+    kit = Path(kit)
+    for pattern, key, mkey in MEASURED:
+        for f in sorted(kit.glob(pattern)):
+            try:
+                doc = json.loads(f.read_text())
+                n = int(doc[key])
+            except (OSError, ValueError, KeyError, TypeError):
+                continue
+            try:
+                m = int(doc.get(mkey) or 0)
+            except (ValueError, TypeError):
+                m = 0
+            return n, m, f"measured synth ({f.relative_to(kit)} {key})"
+    return None
+
+
+def cored_estimate(type_doc, basis):
+    """True when a plan estimate of a type built from hard cores is not the type's own movable logic: only plan
+    type.cells is (cells.py "plan"); a flat module / partition / by_type table counts the cores' contents too, and a
+    hard core's contents are never movable cells of the parent run."""
+    return bool((type_doc or {}).get("hard_cores")) and not str(basis).startswith("plan")
+
+
 def kit_inputs(kit, synth=None):
     """(synth, basis, pins, outline, macros) of a generated kit, or None when the kit has no budget.json."""
     kit = Path(kit)
@@ -131,22 +167,22 @@ def kit_inputs(kit, synth=None):
     except (OSError, ValueError, KeyError, TypeError):
         return None
     basis = "given"
+    measured = measured_synth(kit)
     if synth is None:
-        for name, key, b in (("native_cell_count.json", "stdcells", "measured synth (native_cell_count.json)"),
-                             ("cap_budget.json", "cells", "plan estimate (cap_budget.json)")):
+        if measured is not None:
+            synth, basis = measured[0], measured[2]
+        else:
             try:
-                synth, basis = int(json.loads((kit / name).read_text())[key]), b
-                break
+                synth, basis = int(json.loads((kit / "cap_budget.json").read_text())["cells"]), \
+                    "plan estimate (cap_budget.json)"
             except (OSError, ValueError, KeyError, TypeError):
-                continue
+                pass
     macros = 0
     mk = kit / "macros"
     if mk.is_dir():
         macros = len({p.stem for p in mk.glob("*.lef")})
-    try:
-        macros = max(macros, int(json.loads((kit / "native_cell_count.json").read_text()).get("macros", 0)))
-    except (OSError, ValueError, TypeError):
-        pass
+    if measured is not None:
+        macros = max(macros, measured[1])
     try:
         macros = max(macros, int(json.loads((kit / "cap_budget.json").read_text()).get("macros", 0)))
     except (OSError, ValueError, TypeError):
@@ -195,7 +231,7 @@ def plan_rows(P, est):
         blocked = sum(c["outline_um"][0] * c["outline_um"][1] for c in cores if c.get("outline_um"))
         e = project(nc, plan_pins(P, tn), t["outline_um"], macros, blocked)
         e["synth_basis"] = basis
-        if cores and not str(basis).startswith("plan"):
+        if cored_estimate(t, basis):
             e["verdict"] = "CORED"
         rows.append((tn, e, basis))
     return rows

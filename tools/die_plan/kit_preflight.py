@@ -220,13 +220,14 @@ def _plan_doc(plan_dir):
 
 
 def _plan_cells(kit, plan_dir):
-    """cells.py estimate of the kit's type from the plan directory, or None."""
+    """cells.py estimate of the kit's type from the plan directory: (cells, basis, type entry), or None."""
     try:
         import cells
         raw = _plan_doc(plan_dir)
         tn = json.loads((Path(kit)/'budget.json').read_text())['type']
         est, _ = cells.estimate(raw, plan_dir)
-        return est[tn][0]
+        n, basis = est[tn]
+        return n, basis, raw['partition_types'].get(tn) or {}
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
         return None
 
@@ -409,22 +410,42 @@ def check(kit, plan_dir=None, contract=False):
     run('module_closure', lambda: unresolved_modules(kit))
     run('plan_pins_source', lambda: plan_pins_source(kit, plan_dir))
     # R-CAP (RULES-CAP-1, RULEBOOK 11-13): projected movable cells after place resize against the 400k place budget,
-    # before any allocation.  Synth count: an earlier attempt's native_cell_count.json, a staged cap_budget.json, or
-    # the plan's cells.py estimate (--plan-dir).  No estimate = not judged here (native_cell_cap.tcl projects the
-    # synthesized top before floorplan).  Only OVER fails; the record keeps the projection either way.
+    # before any allocation.  Synth count, best first: a MEASURED count of the kit's synthesized top
+    # (cap_estimate.measured_synth: native_cell_count.json, cap_projection.json, run/logs/.../1_synth.json), a staged
+    # cap_budget.json, or the plan's cells.py estimate (--plan-dir).  KV-RCAP-MEAS 11-13: the cap counts the soft std
+    # cells of the run, never a hard core's contents, so a plan estimate of a type built from hard cores that is not
+    # its own type.cells (a flat by_type / module row counts the cores: kv3_pc_v1 850,612 flat vs 227,619 measured)
+    # is recorded as CORED and not judged here, as cap_estimate.plan_rows does at G0; native_cell_cap.tcl projects the
+    # measured synthesized top before floorplan.  No estimate = not judged.  Only OVER fails; the record keeps the
+    # projection and its basis either way.
     cap_record = {}
     def cell_budget():
         try:
             import cap_estimate
         except ImportError:        # a kit staged before R-CAP carries no cap_estimate.py
             return []
-        synth = None
-        if not (kit/'native_cell_count.json').is_file() and not (kit/'cap_budget.json').is_file() and plan_dir:
-            synth = _plan_cells(kit, plan_dir)
+        measured = getattr(cap_estimate, 'measured_synth', None)
+        if measured is not None:
+            has_measured = measured(kit) is not None
+        else:                      # a kit staged before KV-RCAP-MEAS
+            has_measured = (kit/'native_cell_count.json').is_file()
+        synth = plan = None
+        if not has_measured and not (kit/'cap_budget.json').is_file() and plan_dir:
+            plan = _plan_cells(kit, plan_dir)
+            if plan is not None:
+                synth, basis, tdoc = plan
+                cored = getattr(cap_estimate, 'cored_estimate', None)
+                if cored is not None and cored(tdoc, basis):
+                    cap_record.update(rule='R-CAP', verdict='CORED', plan_estimate=int(synth),
+                                      hard_cores=len(tdoc.get('hard_cores') or []),
+                                      synth_basis=f'plan estimate (cells.py {basis})',
+                                      note='flat plan estimate counts the hard cores\' contents; not judged before '
+                                           'synthesis: native_cell_cap.tcl projects the measured synthesized top')
+                    return []
         errors, estimate = cap_estimate.check_kit(kit, synth)
         if estimate:
-            if synth is not None:
-                estimate['synth_basis'] = 'plan estimate (cells.py)'
+            if plan is not None:
+                estimate['synth_basis'] = f'plan estimate (cells.py {plan[1]})'
             cap_record.update(estimate)
         return errors
     run('cell_budget', cell_budget)

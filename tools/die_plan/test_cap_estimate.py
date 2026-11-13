@@ -113,6 +113,74 @@ def test_kit_preflight_fails_an_over_budget_kit(tmp_path):
     assert rec['checks']['cell_budget']['verdict'] == 'PASS' and rec['checks']['cell_budget']['estimate']['verdict'] == 'OK'
 
 
+def _synth_metrics(kit, stdcells, macros):
+    d = kit / 'run' / 'logs' / 'asap7' / 'dp_t' / 'base'
+    d.mkdir(parents=True)
+    (d / '1_synth.json').write_text(json.dumps({'synth__design__instance__count': stdcells + macros,
+                                                'synth__design__instance__count__stdcell': stdcells,
+                                                'synth__design__instance__count__macros': macros}))
+
+
+def _pc_plan(tmp_path, hard_cores=True, flat_k=802):
+    """KV kv3_pc_v1 shape: a 1036.8 x 1520.64 type whose cells_evidence row is the FLAT count (hard cores included)."""
+    pd = tmp_path / 'plan'
+    pd.mkdir()
+    t = dict(outline_um=[1036.8, 1520.64], contents=[dict(module='qkd_kvs_pc')])
+    if hard_cores:
+        t['hard_cores'] = [dict(module='qkd_kvs_pcc'), dict(module='qkd_kvs_pcf')] * 4
+    (pd / 'die_plan.json').write_text(json.dumps(dict(partition_types=dict(t=t), partitions=[dict(name='pc_0', type='t')])))
+    (pd / 'cells_evidence.json').write_text(json.dumps(dict(cells_per_type=dict(t=dict(flat_k=flat_k)))))
+    return pd
+
+
+def test_measured_synth_sources(tmp_path):
+    """KV-RCAP-MEAS 11-13: any measured count of the synthesized top beats a plan estimate; macros are not cells."""
+    kit = mk_kit(tmp_path, pins=8903, outline=(1036.8, 1520.64), cap_budget=dict(cells=850_612, macros=3))
+    _synth_metrics(kit, 227_619, 12)
+    n, m, basis = C.measured_synth(kit)
+    assert (n, m) == (227_619, 12) and '1_synth.json' in basis
+    errs, e = C.check_kit(kit)
+    assert errs == [] and e['synth'] == 227_619 and e['macros'] == 12 and e['synth_basis'].startswith('measured synth')
+    (kit / 'cap_projection.json').write_text(json.dumps(dict(synth=227_000, macros=12)))
+    assert C.measured_synth(kit)[0] == 227_000                  # the receipt beats the ORFS metrics
+    (kit / 'native_cell_count.json').write_text(json.dumps(dict(stdcells=227_619, macros=12)))
+    assert 'native_cell_count.json' in C.measured_synth(kit)[2]
+    bare = tmp_path / 'bare'
+    bare.mkdir()
+    assert C.measured_synth(mk_kit(bare)) is None
+
+
+def test_kit_preflight_prefers_measured_over_flat_plan_estimate(tmp_path):
+    """kv3_pc_v1 (KV-KITFIX-1 13:22): main failed the kit at 906,739 projected from the plan's 850,612 flat row."""
+    import kit_preflight as KP
+    pd = _pc_plan(tmp_path)
+    fresh = tmp_path / 'fresh'
+    fresh.mkdir()
+    kit = mk_kit(fresh, pins=8903, outline=(1036.8, 1520.64), macros=12)
+    (kit / 'budget.json').write_text(json.dumps(dict(type='t', outline_um=[1036.8, 1520.64], pins=8903)))
+    rec = KP.check(kit, pd)                                    # no synthesis yet: the flat row is CORED, not judged
+    row = rec['checks']['cell_budget']
+    assert row['verdict'] == 'PASS' and row['estimate']['verdict'] == 'CORED'
+    assert row['estimate']['plan_estimate'] > 800_000 and row['estimate']['hard_cores'] == 8
+    _synth_metrics(kit, 227_619, 12)                           # measured: judged on the measured count
+    row = KP.check(kit, pd)['checks']['cell_budget']
+    assert row['verdict'] == 'PASS' and row['estimate']['synth'] == 227_619
+    assert row['estimate']['synth_basis'].startswith('measured synth') and row['estimate']['verdict'] in ('OK', 'TARGET')
+    over = tmp_path / 'over'
+    over.mkdir()
+    kit = mk_kit(over, 450_000, pins=8903, outline=(1036.8, 1520.64), macros=12)
+    rec = KP.check(kit, pd)                                    # a genuinely over-cap measured netlist still fails
+    assert rec['checks']['cell_budget']['verdict'] == 'FAIL' and rec['checks']['cell_budget']['estimate']['verdict'] == 'OVER'
+    soft = tmp_path / 'soft'
+    soft.mkdir()
+    pd2 = _pc_plan(soft, hard_cores=False)
+    kit = mk_kit(soft, pins=8903, outline=(1036.8, 1520.64))
+    (kit / 'budget.json').write_text(json.dumps(dict(type='t', outline_um=[1036.8, 1520.64], pins=8903)))
+    row = KP.check(kit, pd2)['checks']['cell_budget']          # no hard cores: the plan row is its movable logic
+    assert row['verdict'] == 'FAIL' and row['estimate']['verdict'] == 'OVER'
+    assert row['estimate']['synth_basis'].startswith('plan estimate (cells.py by_type')
+
+
 def test_g0_check_plan():
     types = dict(big=dict(outline_um=[1442.88, 1226.88]), small=dict(outline_um=[622.08, 1339.2]),
                  cored=dict(outline_um=[2160.0, 1520.64], hard_cores=[dict(outline_um=[300.0, 300.0])] * 4),
