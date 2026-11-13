@@ -1,0 +1,94 @@
+type	p99_s28_edge_outline	worst	p99_if_width_only	cells	form
+glue	0.622	mstreet_H	-	200408	DELIVERED: clock density form (delta_s28e); clk_d2d -> REACH-FIX-1
+sle_ctl__cl372cea1c	0.69	ring_H	-	322620	DIE P3 width donor 1226.88->915.84 (fill 3%)
+sle_ctl__cl503337ff	0.69	ring_H	-	369320	DIE P3 width donor 1226.88->915.84 (fill 3%)
+sle_ctl__cl67434795	1.094	ring_H	-	323298	DIE P3 width donor 1226.88->915.84 (fill 3%)
+sle_ctl__cla4f6f12f	0.69	ring_H	-	325200	DIE P3 width donor 1226.88->915.84 (fill 3%)
+sle_fe_v1__cl1cbb7497	0.621	ring_H	-	186661	DIE P1 mid row h ~1780; width donor for P4
+sle_fe_v1__cl8210183c	0.621	ring_H	-	176551	DIE P1 mid row h ~1780; width donor for P4
+sle_fe_v2	0.606	ring_H	-	166307	DIE P1 mid row h ~1780; width donor for P4
+sle_fe_v3	0.588	ring_V	-	57546	DIE P1 mid row h ~1780; width donor for P4
+sle_fw_v1__cl9d029624	0.639	ring_V	-	174569	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+sle_fw_v1__clf58b4dfb	0.639	ring_V	-	177878	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+sle_fw_v2__cl6740750e	0.682	ring_V	-	174547	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+sle_fw_v2__cl69f5e854	0.682	ring_V	-	174523	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+sle_fw_v3	0.875	open_V	-	170420	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+sle_hc0__cl05696ed1	0.6	ring_V	-	343957	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_hc0__cl929603c0__cl38badc56	0.6	ring_V	-	338896	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_hc0__cl929603c0__cl4baa7c9c	0.6	ring_V	-	343963	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_hc1__cl22c1ff36	0.925	ring_V	0.925	381548	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_hc1__cl7d360508	0.915	ring_H	0.915	381744	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_hc2__cl9c4c4509__cl3edce1b8	0.662	ring_V	-	349422	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_hc2__cl9c4c4509__clf60c5152	0.715	ring_H	-	349505	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_hc2__clcc5e3e61	0.754	ring_H	-	348690	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+sle_sc_v1__cl115da35f	1.509	ring_V	1.509	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+sle_sc_v1__cl7479a5ec	1.509	ring_V	1.509	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+sle_sc_v2	1.325	open_V	1.308	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+sle_sc_v3	1.337	ring_V	1.337	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+sle_st_a_v1__cl67389ecd	0.852	ring_V	0.834	402850	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+sle_st_a_v1__cl989804f6__cl18eece69	0.853	ring_H	0.835	402587	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+sle_st_a_v1__cl989804f6__cled3c1d7b	0.853	ring_H	0.835	402638	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+sle_st_a_v2	0.914	ring_H	0.891	386305	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+sle_st_b_v1__pv0e7b1dcc	0.942	ring_V	0.928	374232	DIE P3 st row cols 777.6|915.84|777.6
+sle_st_b_v1__pvc5a85fd4	0.942	ring_V	0.928	375088	DIE P3 st row cols 777.6|915.84|777.6
+sle_st_b_v2__cl14c98df5	0.888	ring_V	0.873	360167	DIE P3 st row cols 777.6|915.84|777.6
+sle_st_b_v2__clfde1249e	0.888	ring_V	0.873	359577	DIE P3 st row cols 777.6|915.84|777.6
+sle_stm_v1__cl27746664	0.827	ring_H	-	-	DIE P1 mid row h ~1780
+sle_stm_v1__clbe630b9c	0.827	ring_H	-	233596	DIE P1 mid row h ~1780
+sle_stm_v2__cl55be2264	0.822	ring_H	-	231938	DIE P1 mid row h ~1780
+sle_stm_v2__cl7b3062fa	0.822	ring_H	-	232538	DIE P1 mid row h ~1780
+sle_stm_v3	0.617	open_H	-	166071	DIE P1 mid row h ~1780
+sle_su_c	0.943	ring_V	-	-	DIE P2 width donor 1226.88->915.84
+sle_su_l0__cl086d85ba	1.204	ring_V	1.201	-	DIE P2 su row cols 777.6|915.84|777.6
+sle_su_l0__cl7a55c676	1.203	ring_V	1.2	-	DIE P2 su row cols 777.6|915.84|777.6
+sle_su_l1__cl5ea486db	1.404	ring_H	1.404	-	DIE P2 su row cols 777.6|915.84|777.6 + row h ~1400 (width-starved: 4 lane cores 420 wide in 622, all traffic to E face)
+sle_su_l1__clc6d66f5b	1.359	ring_H	1.359	-	DIE P2 su row cols 777.6|915.84|777.6 + row h ~1400 (width-starved: 4 lane cores 420 wide in 622, all traffic to E face)
+slw_fe_v1__cl95cd1d0c	0.607	ring_H	-	156167	DIE P1 mid row h ~1780; width donor for P4
+slw_fe_v1__clfe325744__cl08d14f0d	0.607	ring_H	-	166303	DIE P1 mid row h ~1780; width donor for P4
+slw_fe_v1__clfe325744__cldb4efe33	0.607	ring_H	-	154973	DIE P1 mid row h ~1780; width donor for P4
+slw_fe_v2__cle312294d	0.607	ring_H	-	164382	DIE P1 mid row h ~1780; width donor for P4
+slw_fe_v2__clf110fab2	0.607	ring_H	-	155293	DIE P1 mid row h ~1780; width donor for P4
+slw_fw_v1__cl51d45468	0.606	ring_V	-	186178	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+slw_fw_v1__clf51c11d8__cl592e3d37	0.606	ring_V	-	186212	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+slw_fw_v1__clf51c11d8__clc7ddab13	0.606	ring_V	-	186179	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+slw_fw_v2__cl8537f156	0.671	ring_V	-	170992	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+slw_fw_v2__cl8f84514c	0.671	ring_V	-	171008	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+slw_fw_v3	0.677	ring_V	-	184496	DIE P1 mid row h ~1780 (E face 5.6-7.5 kb on 1339 = the wall)
+slw_hc0__cl1bc59e1c	0.6	ring_V	-	346104	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc0__cl4f54b7a3	0.6	ring_V	-	344727	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc1__cl3449ea95	0.915	ring_H	0.915	381606	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc1__cl68f9248e__cl144ee7b3	0.915	ring_H	0.915	381214	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc1__cl68f9248e__cle683a076	0.915	ring_H	0.915	381741	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc2__cl6bcaba89	0.754	ring_H	-	348996	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc2__cla3497502__cl16607c7a	0.754	ring_H	-	349131	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc2__cla3497502__cldc737267	0.754	ring_H	-	348982	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc3__clccfc3e6b	0.196	ring_H	-	298259	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_hc3__cld86a7ad4	0.194	face_V	-	297135	DIE P1 hc row h 1339->~520 (content S 40%; N-face ft stations re-site)
+slw_sc_v1__cl63e5a7a2	1.144	face_V	1.036	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+slw_sc_v1__cl64543eaf__cl4590432d	1.143	face_V	1.037	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+slw_sc_v1__cl64543eaf__cl5e017c6f	1.143	face_V	1.037	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+slw_sc_v2	1.135	face_V	1.007	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+slw_sc_v3	1.135	face_V	1.025	-	DIE P1 mid row h 1339->~1780 (E/W face-bound) + P4 sc 734.4 from fe
+slw_st_a_v1__clb036e152	0.853	ring_H	0.835	401225	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+slw_st_a_v1__clfc5867a6__pvdf8e5ca4	1.215	ring_V	0.835	402474	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+slw_st_a_v1__clfc5867a6__pvf82a6c28	1.215	ring_V	0.835	401562	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+slw_st_a_v2__cl9f076a5c	0.914	ring_H	0.891	387159	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+slw_st_a_v2__clf4365a62	1.023	ring_V	0.999	385749	DIE P3 st row cols 777.6|915.84|777.6 (+ 417-436k cells > 400k cap: R8 split / soft-area, VL2QC-STA flag)
+slw_st_b_v1__cl6357f1cc__pv6ace3e48	1.151	open_V	0.912	362169	DIE P3 st row cols 777.6|915.84|777.6
+slw_st_b_v1__cl6357f1cc__pvffd43fdc	1.151	open_V	0.912	363026	DIE P3 st row cols 777.6|915.84|777.6
+slw_st_b_v1__cle6023ec2	0.942	ring_V	0.928	361354	DIE P3 st row cols 777.6|915.84|777.6
+slw_st_b_v2__pva66d0f22	0.856	ring_V	0.841	347616	DIE P3 st row cols 777.6|915.84|777.6
+slw_st_b_v2__pvc2ec5bfb	0.856	ring_V	0.841	348066	DIE P3 st row cols 777.6|915.84|777.6
+slw_stm_v1__cl05fc43f7__cl2086fa2c	0.842	ring_H	-	221050	DIE P1 mid row h ~1780
+slw_stm_v1__cl05fc43f7__cl389df4e9	0.842	ring_H	-	220931	DIE P1 mid row h ~1780
+slw_stm_v1__cle34a73c3	0.842	ring_H	-	-	DIE P1 mid row h ~1780
+slw_stm_v2__cl1ca9c415	0.842	ring_H	-	-	DIE P1 mid row h ~1780
+slw_stm_v2__cl9beb65e6	0.842	ring_H	-	-	DIE P1 mid row h ~1780
+slw_stm_v3	0.842	ring_H	-	218467	DIE P1 mid row h ~1780
+slw_su_c__cl19bb38ef	0.878	ring_V	-	-	DIE P2 width donor 1226.88->915.84
+slw_su_c__cl92142dac	0.878	ring_V	-	-	DIE P2 width donor 1226.88->915.84
+slw_su_l0__cl1a1c1f8f	1.147	ring_V	1.141	-	DIE P2 su row cols 777.6|915.84|777.6
+slw_su_l0__cl1e5219ea	1.14	ring_V	1.135	-	DIE P2 su row cols 777.6|915.84|777.6
+slw_su_l0__cl76fb247e	1.143	ring_V	1.138	-	DIE P2 su row cols 777.6|915.84|777.6
+slw_su_l1__cla2a78701	1.697	ring_V	1.237	-	DIE P2 su row cols 777.6|915.84|777.6 + row h ~1400 (width-starved: 4 lane cores 420 wide in 622, all traffic to E face)
+slw_su_l1__clcc9d0155	1.697	ring_V	1.237	-	DIE P2 su row cols 777.6|915.84|777.6 + row h ~1400 (width-starved: 4 lane cores 420 wide in 622, all traffic to E face)

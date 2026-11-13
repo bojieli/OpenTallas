@@ -1,0 +1,78 @@
+== ERR: base 365 cand 387 new 24 gone 2
+  NEW x6 [clock_landings] start tree: boundary pin geometry mismatch
+  NEW x1 [clock_landings] start tree: physical START provider boundary differs from declared START uses
+  NEW x1 [collector_reach] reverse collector rst_rl_20->rst_rl_9: 427.279um exceeds 405 (type slw_st_b_v1__cle6023ec2; the bind stops on this as EMIT <type>: reverse collector ...)
+  NEW x1 [collector_reach] reverse collector rst_rl_57->rst_rl_42: 414.720um exceeds 405 (type slw_st_b_v1__cle6023ec2; the bind stops on this as EMIT <type>: reverse collector ...)
+  NEW x1 [collector_reach] reverse collector rst_rl_74->rst_rl_42: 433.536um exceeds 405 (type slw_st_b_v1__cle6023ec2; the bind stops on this as EMIT <type>: reverse collector ...)
+  NEW x1 [collector_reach] reverse collector rst_rl_75->rst_rl_64: 426.407um exceeds 405 (type slw_st_b_v2__pvc2ec5bfb; the bind stops on this as EMIT <type>: reverse collector ...)
+  NEW x1 [core_faces] type coll_s core u_bound.u_g_face_3_u_face.u_tx.u_mem port w_addr_in: 6 pins on face W face away from its partner(s) u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in: mean cos -0.57, 6 pins on the far side (re-pin to face N)
+  NEW x1 [core_faces] type coll_s core u_bound.u_g_face_3_u_face.u_tx.u_mem port w_ce_in: 1 pins on face W face away from its partner(s) u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in: mean cos -0.57, 1 pins on the far side (re-pin to face N)
+  NEW x1 [hard_cores] type coll_s core u_bound.u_g_face_4_u_face.u_tx.u_mem: origin [557.28, 449.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type sle_sc_v1__cl115da35f core u_core: origin [324.0, 648.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type sle_sc_v1__cl7479a5ec core u_core: origin [324.0, 648.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type sle_sc_v3 core u_core: origin [324.0, 648.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type sle_stm_v2__cl55be2264 core u_bound.u_core.u_tload.u_ld.m0: origin [298.08, 1054.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type sle_stm_v2__cl7b3062fa core u_bound.u_core.u_tload.u_ld.m0: origin [298.08, 1054.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type slw_sc_v1__cl63e5a7a2 core u_core: origin [324.0, 648.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type slw_sc_v1__cl64543eaf__cl4590432d core u_core: origin [324.0, 648.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type slw_sc_v1__cl64543eaf__cl5e017c6f core u_core: origin [324.0, 648.0] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type slw_stm_v2__cl1ca9c415 core u_bound.u_core.u_tload.u_ld.m2: origin [263.52, 1054.08] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  NEW x1 [hard_cores] type tt_ctlm core u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom2: origin [505.44, 181.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [core_faces] type coll_s core u_bound.u_g_face_3_u_face.u_tx.u_mem port w_addr_in: 6 pins on face W face away from its partner(s) u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in: mean cos -0.55, 6 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] type coll_s core u_bound.u_g_face_3_u_face.u_tx.u_mem port w_ce_in: 1 pins on face W face away from its partner(s) u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in: mean cos -0.55, 1 pins on the far side (re-pin to face N)
+== WARN: base 541 cand 550 new 32 gone 23
+  NEW x1 [core_faces] type sle_stm_v2__cl55be2264 core u_bound.u_core.u_tload.u_ld.m0 port rd_out: 266 pins on face E/W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m1.rd_out: mean cos -0.01, 140 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+  NEW x1 [geom_clock_reach] [G0C-GEOM] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4: plan-time AUTO-GEOM clock_reach 275.97 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_308 (613.0, 1196.1)
+  NEW x1 [geom_clock_reach] [G0C-GEOM] type slw_st_a_v1__clfc5867a6__pvf82a6c28: plan-time AUTO-GEOM clock_reach 275.97 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_308 (613.0, 1196.1)
+  NEW x1 [geom_clock_reach] [G0C-GEOM] type slw_st_b_v1__cl6357f1cc__pvffd43fdc: plan-time AUTO-GEOM clock_reach 284.9 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_260 (613.0, 1216.4)
+  NEW x1 [geom_clock_reach] [G0C-GEOM] type slw_st_b_v2__pva66d0f22: plan-time AUTO-GEOM clock_reach 295.78 (limit <=220.0; METHODOLOGY 12.8b entry-to-sink ~<=200 um (geom_rules CLK_REACH_MAX x TOL)) far relay:u_rrl_235 (613.0, 1216.4)
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type sle_sc_v1__cl115da35f: plan-time AUTO-GEOM pin_reg_max 164.44 (limit <=150.0; layout_review.py 150 backstop) 164.4 x_su_l1_i[4]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type sle_sc_v1__cl7479a5ec: plan-time AUTO-GEOM pin_reg_max 164.44 (limit <=150.0; layout_review.py 150 backstop) 164.4 x_su_l1_i[4]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type sle_sc_v3: plan-time AUTO-GEOM pin_reg_max 164.44 (limit <=150.0; layout_review.py 150 backstop) 164.4 x_su_l1_i[4]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl63e5a7a2: plan-time AUTO-GEOM pin_reg_max 164.44 (limit <=150.0; layout_review.py 150 backstop) 164.4 x_su_l1_i[4]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl63e5a7a2: plan-time AUTO-GEOM pin_reg_p90 45.16 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 164.4 x_su_l1_i[4], 164.4 x_su_l1_i[3]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl64543eaf__cl4590432d: plan-time AUTO-GEOM pin_reg_max 164.44 (limit <=150.0; layout_review.py 150 backstop) 164.4 x_su_l1_i[4]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl64543eaf__cl4590432d: plan-time AUTO-GEOM pin_reg_p90 45.16 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 164.4 x_su_l1_i[4], 164.4 x_su_l1_i[3]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl64543eaf__cl5e017c6f: plan-time AUTO-GEOM pin_reg_max 164.44 (limit <=150.0; layout_review.py 150 backstop) 164.4 x_su_l1_i[4]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl64543eaf__cl5e017c6f: plan-time AUTO-GEOM pin_reg_p90 45.16 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 164.4 x_su_l1_i[4], 164.4 x_su_l1_i[3]
+  NEW x1 [geom_pin_reg] [G0C-GEOM] type tt_ctlm: plan-time AUTO-GEOM pin_reg_p90 34.91 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 185.8 dh[9], 185.8 dh[99]
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v1__cl115da35f: plan-time AUTO-GEOM clock_tap_sinks 1608.3 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t104
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v1__cl7479a5ec: plan-time AUTO-GEOM clock_tap_sinks 1608.3 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t102
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v3: plan-time AUTO-GEOM clock_tap_sinks 1635.4 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t30
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v1__cl63e5a7a2: plan-time AUTO-GEOM clock_tap_sinks 1877.6 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t32
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v1__cl64543eaf__cl5e017c6f: plan-time AUTO-GEOM clock_tap_sinks 1605.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t122
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4: plan-time AUTO-GEOM clock_tap_sinks 1641.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t106
+  NEW x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_a_v1__clfc5867a6__pvf82a6c28: plan-time AUTO-GEOM clock_tap_sinks 1641.0 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t106
+  NEW x1 [tap_sink_cap] [tapcap-count] 78 taps over cap in 40 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 107 with a sink inventory, 16 planned face/ft sinks only = lower bound)
+  NEW x1 [tap_sink_cap] [tapcap] ... 58 more taps over the cap
+  NEW x1 [tap_sink_cap] [tapcap] type slw_sc_v1__cl63e5a7a2 tap clk_t5: 1408 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_sc_v1__cl64543eaf__cl5e017c6f tap clk_t122: 1385 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t106: 1637 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t30: 1346 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t106: 1637 clock sinks > cap 1200
+  NEW x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t30: 1346 clock sinks > cap 1200
+  NEW x1 [xtap_latency] ... 671 more unlocked cross-tap hops (see summary)
+  NEW x1 [xtap_latency] [xtap-count] 691 unlocked hops with tap latency delta > 50 ps (worst 160 ps; 1824 hops, 1032 unknown sites, 0 latch-only); flat tap window 180 ps on every port
+  GONE x1 [core_faces] type sle_stm_v2__cl55be2264 core u_bound.u_core.u_tload.u_ld.m1 port addr_in: 12 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in, u_bound.u_core.u_tload.u_ld.m3.addr_in: mean cos -0.09, 12 pins on the far side (re-pin to fac
+  GONE x1 [core_faces] type sle_stm_v2__cl55be2264 core u_bound.u_core.u_tload.u_ld.m1 port ce_in: 1 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in, u_bound.u_core.u_tload.u_ld.m3.ce_in: mean cos -0.09, 1 pins on the far side (re-pin to face W) [abou
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type sle_sc_v1__cl115da35f: plan-time AUTO-GEOM pin_reg_p90 95.04 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 146.9 x_su_l1_i[4], 146.9 x_su_l1_i[3]
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type sle_sc_v1__cl7479a5ec: plan-time AUTO-GEOM pin_reg_p90 95.04 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 146.9 x_su_l1_i[4], 146.9 x_su_l1_i[3]
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl63e5a7a2: plan-time AUTO-GEOM pin_reg_p90 95.04 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 146.9 x_su_l1_i[4], 146.9 x_su_l1_i[3]
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl64543eaf__cl4590432d: plan-time AUTO-GEOM pin_reg_p90 95.04 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 146.9 x_su_l1_i[4], 146.9 x_su_l1_i[3]
+  GONE x1 [geom_pin_reg] [G0C-GEOM] type slw_sc_v1__cl64543eaf__cl5e017c6f: plan-time AUTO-GEOM pin_reg_p90 95.04 (limit <=30.0; METHODOLOGY 1.9 (R2 p90 <= 30)) 146.9 x_su_l1_i[4], 146.9 x_su_l1_i[3]
+  GONE x1 [geom_r2r] [G0C-GEOM] type sle_sc_v1__cl115da35f: plan-time AUTO-GEOM r2r 417.92 (limit <=405.0; METHODOLOGY 1.3/4.2 reach 405) 2 plan stages > 405; worst ft x_fw_st_b ring->s1
+  GONE x1 [geom_r2r] [G0C-GEOM] type sle_sc_v1__cl7479a5ec: plan-time AUTO-GEOM r2r 417.92 (limit <=405.0; METHODOLOGY 1.3/4.2 reach 405) 2 plan stages > 405; worst ft x_fw_st_b ring->s1
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type sle_sc_v3: plan-time AUTO-GEOM clock_tap_sinks 1625.3 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t28
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_sc_v1__cl63e5a7a2: plan-time AUTO-GEOM clock_tap_sinks 1889.7 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t32
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4: plan-time AUTO-GEOM clock_tap_sinks 1555.9 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t19
+  GONE x1 [geom_tap_sinks] [G0C-GEOM] type slw_st_a_v1__clfc5867a6__pvf82a6c28: plan-time AUTO-GEOM clock_tap_sinks 1555.9 (limit <=1500; METHODOLOGY 3.3 (~1000-1500 sinks/tap), plan sinks = lower bound) tap clk_t19
+  GONE x1 [tap_sink_cap] [tapcap-count] 77 taps over cap in 39 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 107 with a sink inventory, 16 planned face/ft sinks only = lower bound)
+  GONE x1 [tap_sink_cap] [tapcap] ... 57 more taps over the cap
+  GONE x1 [tap_sink_cap] [tapcap] type sle_st_a_v1__cl67389ecd tap clk_t77: 1342 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_sc_v1__cl63e5a7a2 tap clk_t5: 1540 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t113: 1458 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t19: 1357 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t113: 1458 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t19: 1357 clock sinks > cap 1200
+  GONE x1 [xtap_latency] ... 674 more unlocked cross-tap hops (see summary)
+  GONE x1 [xtap_latency] [xtap-count] 694 unlocked hops with tap latency delta > 50 ps (worst 160 ps; 1824 hops, 1032 unknown sites, 0 latch-only); flat tap window 180 ps on every port

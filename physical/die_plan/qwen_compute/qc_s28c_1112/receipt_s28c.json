@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.qc_s28c.receipt.v1",
+ "base": "/srv/opentallas-scratch2/claude/qc-event-s28/planq/plan_qc99_s28.json",
+ "base_sha256": "2f0c17d5f1a31e5a73baf57acd263c9924fc96c28e3fa4e8729bc7f1c9e7cf44",
+ "out": "/srv/opentallas-scratch2/claude/qc-s28c/plan_qc99_s28c.json",
+ "out_sha256": "4b60917c5e0276cbd4a51b33af02bb28f4d1b97be91993d08471937cf795ed15",
+ "types": [
+  {
+   "type": "cbx_q10__cl89936551",
+   "conn": "bus:y_o21",
+   "launch_pins": 514,
+   "before": {
+    "to_um": [
+     77.856,
+     2356.871
+    ],
+    "regs_um": [
+     [
+      34.56,
+      2522.88
+     ]
+    ]
+   },
+   "after": {
+    "to_um": [
+     544.224,
+     2356.871
+    ],
+    "regs_um": [
+     [
+      557.28,
+      2496.96
+     ]
+    ]
+   },
+   "hops_um": [
+    153.1,
+    363.3
+   ],
+   "hops_before_um": [
+    209.3,
+    202.6
+   ],
+   "bits": 515,
+   "regs": 1
+  },
+  {
+   "type": "cbx_q10__cl94a12200",
+   "conn": "bus:y_o21",
+   "launch_pins": 514,
+   "before": {
+    "to_um": [
+     77.856,
+     2356.871
+    ],
+    "regs_um": [
+     [
+      34.56,
+      2522.88
+     ]
+    ]
+   },
+   "after": {
+    "to_um": [
+     544.224,
+     2356.871
+    ],
+    "regs_um": [
+     [
+      557.28,
+      2496.96
+     ]
+    ]
+   },
+   "hops_um": [
+    153.1,
+    363.3
+   ],
+   "hops_before_um": [
+    209.3,
+    202.6
+   ],
+   "bits": 515,
+   "regs": 1
+  }
+ ],
+ "touched_keys": [
+  "partition_types.<cbx_q*>.internal_stations[conn=bus:y_o21].{to_um,regs_um,note}"
+ ],
+ "eq": "positions only: same station count, bits, launch, capture; +0 cycles; no RTL/core/bus/ft/clock key",
+ "delta_sha256": "ab3b1c426981e15976fa5b3ffe691c94778b86dcf8fa1a34464adea934d7cda5"
+}
