@@ -451,7 +451,24 @@ LEAF_INST = "u_lf"
 
 
 def core_class(e):
-    key = f"{e.get('launch', e['conn'].split('|')[0])}|{e.get('capture', e['conn'].split('|')[-1].replace('core:', ''))}"
+    launch = e.get("launch", e["conn"].split("|")[0])
+    capture = e.get("capture", e["conn"].split("|")[-1]).removeprefix("core:")
+    if launch.startswith("u_lf."):
+        launch = "core:" + launch
+    # Direct-link rows can name the receiving hard module, without a port
+    # suffix.  Resolve the stream's role from the real slice RTL, not merely
+    # from the direction in which the floorplan link was enumerated.
+    if capture == "u_lf.u_vsw" and launch.startswith("core:u_lf.u_vs."):
+        pin = launch.rsplit(".", 1)[-1]
+        if pin in ("sw_v", "sw_d", "sw_w", "sw_lim"):
+            return "sw", True, None
+        if pin in ("sw_vi", "sw_ri", "sw_fi"):
+            return "swr", False, None
+    if capture == "u_lf.u_vs" and re.fullmatch(r"core:u_lf\.u_rxsf\.i_(v|x)", launch):
+        return "ra", False, None
+    if re.fullmatch(r"u_lf\.u_(vs|vq|vn|ve|vsw|rxsf|rxsb)", capture):
+        capture += "."
+    key = f"{launch}|{capture}"
     for c, rx, fwd in CORE_CLASSES:
         if re.match(rx, key):
             lane = re.search(r"g_ln\[(\d+)\]", key)

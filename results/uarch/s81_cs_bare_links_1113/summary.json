@@ -1,0 +1,33 @@
+{
+ "verdict": "COMPONENT_PASS",
+ "scope": "actual ot_s81sl_cst payload+valid pipelines, not bound type or die sign-off",
+ "source": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv",
+ "source_sha256": "f9dbba7a794651b99f44f0374f17ed88a165c14bd9fdef898d07aed3e0c30c35",
+ "channels": [
+  {
+   "cls": "VE",
+   "payload_bits": 740,
+   "valid_bits": 2,
+   "added_stages": 2
+  },
+  {
+   "cls": "VER",
+   "payload_bits": 228,
+   "valid_bits": 3,
+   "added_stages": 2
+  },
+  {
+   "cls": "VNI",
+   "payload_bits": 651,
+   "valid_bits": 4,
+   "added_stages": 3
+  }
+ ],
+ "checks": "cycle-offset lockstep against D0 actual RTL; randomized payload/valid, bubbles, warm reset",
+ "nominal": "CST_LOCKSTEP_PASS actual_source VE740x2 VER228x2 VNI651x3 warm_reset bubbles\n- tb.sv:35: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 3ns; walltime 0.001 s; speed 5.905 us/s\n- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB\n",
+ "mutant": "[56] %Fatal: tb.sv:21: Assertion failed in tb.ve: CST_LOCKSTEP_FAIL W=740 V=2 D=2 mutant=1\n%Error: tb.sv:21: Verilog $stop\nAborting...\n",
+ "mutant_control": "actual missing-stage output selected instead of planned D2; detected at first post-reset valid",
+ "run_host": "epyc7",
+ "unit": "oth-ubuntu-1015766-1794608419",
+ "limits": "No full leaf bind, latency model, P&R or token gate claimed"
+}
