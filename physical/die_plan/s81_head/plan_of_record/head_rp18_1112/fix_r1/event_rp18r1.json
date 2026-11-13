@@ -1,0 +1,10 @@
+{
+ "schema": "opentallas.head_plan_event.v1",
+ "event": "head_rp18_1112",
+ "revision": "fix_r1",
+ "author": "HEAD-96",
+ "base": {"plan": "rp18 (rp18j)", "sha256_16": "1f167af2038687ac"},
+ "reason": "KIT-OPS-1 20:20: (1) private reset_start_raw_exports rows with no landing_contract pin (hd_tile raw_7, hd_spn_eshim_rx raw_1, hd_spn raw_42, hd_spn_end raw_0/1) -> PORT_BIND FAIL; (2) two private exports on one relay (hd_spn u_rrl_93 raw_34/36, u_rrl_114 raw_30/43; hd_spn_end u_rrl_194 raw_9/17) -> kit_rtl head_start_raw_private refuses",
+ "fix": "tools/s81_head/head_reset_exports.py fix rp17 rp18j -> rp18r1 (one rule for every export row of every type): existing_port reuse kept only where an out still sits on the pin; otherwise a private export with its own landing pin at the old pin site, declared start_tree OPEN on every instance (it had no die-level reader in rp17 either); private sources by physical identity from rp17 (same xy, same START role, same depth offset from release), unique per relay. Side effect: 4 private rows whose rawfix source had a different depth offset than rp17 get back their rp17 depth (hd_spn raw_14, hd_spn_wshim_tx raw_0, hd_turn_a raw_0/raw_2): same release cycle as the bound rp17 rows.",
+ "files": {"plan": "source_plan_rp18r1.json.gz", "sidecar": "../source_sidecar_rp18.json.gz (unchanged)"}
+}
