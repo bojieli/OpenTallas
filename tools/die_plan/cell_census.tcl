@@ -68,5 +68,19 @@ proc ot_cell_census {stage {estimate auto}} {
               $stage $std $tap $mac $mw $est $nm $nu $proj $cap $v]
     close $fh
   }
+  # R-CAP (RULES-CAP-1, RULEBOOK 11-13): the place budget is HARD.  Of 58 harvested runs above 400k movable cells after
+  # place resize none finished global route (CTS 3-5 h, then the FF hold gate or a GRT repair that never ends), so a
+  # run measured above it stops here, before CTS, with the split.  Only this stage stops; every other call stays
+  # advisory.  OT_CELL_BUDGET_GATE=0 is for declared capacity probes only (never a sign-off kit).
+  if {$stage eq "place" && $std > 400000} {
+    set parts 2
+    while {$std * 1.03 / $parts > 250000} { incr parts }
+    set msg "OT_CELL_BUDGET stage=place movable=$std above the R-CAP place budget 400000 (tap/endcap $tap not counted): split into $parts parts of <= 250000 movable cells at lane-group boundaries with registered boundary buses, or harden logic into cores"
+    if {[info exists ::env(OT_CELL_BUDGET_GATE)] && $::env(OT_CELL_BUDGET_GATE) eq "0"} {
+      puts "$msg (OT_CELL_BUDGET_GATE=0: capacity probe, not stopped)"
+    } else {
+      error $msg
+    }
+  }
   return [list $std $proj $v]
 }
