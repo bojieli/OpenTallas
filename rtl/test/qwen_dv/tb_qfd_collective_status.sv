@@ -6,7 +6,7 @@ reg rst_n=0;reg[115:0] cmd=0;reg[1037:0] ret=0;wire[106:0] st;wire[9:0] ag;
 wire[106:0] st_next;wire[9:0] ag_next;
 // This component contains no HEAD instruction; the independent HEAD fault
 // input is inactive.  The actual reset-safe core and actual status flops run.
-qfd_dv_slice2_lpc #(.MU_NU(1),.SU_LT(0)) p(.ck(ck),.rst_n(rst_n),.cmd_i(cmd),.hr_i(453'b0),.rs_s0(514'b0),.rs_s1(514'b0),.rs_n0(514'b0),.rs_n1(514'b0),.l9_i(514'b0),.st_up_i(1088'b0),.st_dn_i(1088'b0),.sc_up_i(48'b0),.sc_dn_i(48'b0),.ch_up_i(1095'b0),.ch_dn_i(ret),.ag_up_i(10'b0),.st_n(st_next),.ag_n(ag_next));
+qfd_dv_slice2_lpc #(.MU_NU(1),.SU_LT(0),.HD_W130(1)) p(.ck(ck),.rst_n(rst_n),.cmd_i(cmd),.hr_i(453'b0),.rs_s0(514'b0),.rs_s1(514'b0),.rs_n0(514'b0),.rs_n1(514'b0),.l9_i(514'b0),.st_up_i(1088'b0),.st_dn_i(1088'b0),.sc_up_i(48'b0),.sc_dn_i(48'b0),.ch_up_i(1095'b0),.ch_dn_i(ret),.ag_up_i(10'b0),.st_n(st_next),.ag_n(ag_next));
 qfd_dv_slice2_lps ps(.ck(ck),.rst_n(rst_n),.st_n(st_next),.ag_n(ag_next),.hd_fault(1'b0),.st(st),.ag_dn_o(ag));
 `else
 `ifdef STATUS_LPF
