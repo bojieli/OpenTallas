@@ -43,6 +43,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -804,7 +805,9 @@ def compile_image(a):
     exp_nat = [dict(edge=e['edge'] + C['ISSUE_TO_NAT'], pc=e['pc']) for e in exp_me if e['pc'] in nat_pcs]
     exp_xpf = [dict(edge=C['XPF0'] + r['arm_cycle'] + C['XPF_ARM_EDGE'], xpf72=r['xpf72'], consumer_pc=r['consumer_pc'])
                for r in xrows]
-    status = status_timeline(plan, R, C)
+    receipt_path = getattr(a, 'collective_status_receipt', None)
+    receipt = json.loads((ROOT / receipt_path).read_text()) if receipt_path else None
+    status = status_timeline(plan, R, C, collective_receipt=receipt)
     rec = dict(
         schema='opentallas.qwen.ctlm-image.v1', tool='tools/qwen_layerbench/ctlm_image.py',
         scope='decode-layer stage image (stages 1..36) of qfd_tt_ctlm_dv; ONE image per epoch serves every stage '
@@ -854,6 +857,10 @@ def compile_image(a):
             if head is not None else
             'LM-head (stage 37) ME programme: not compiled (run with --lm-head; RTL needs qfd_tt_ctlm_dv SEG_CAL 1)',
             'per-layer ROM relocation needs qfd_tt_ctlm_dv STAGE_ME 1 (command_stage = running stage)'])
+    if receipt_path:
+        rec['inputs'][receipt_path] = sha(ROOT / receipt_path)
+        rec['collective_status_receipt'] = dict(schema=receipt['schema'], source_commit=receipt['source_commit'],
+                                                producer=receipt['producer'], plan_sha256=receipt['plan_sha256'])
     if getattr(a, 'dv_lower', False):
         rec.update(dv_lower_section(rec))
     return image, rec
@@ -892,7 +899,60 @@ def _acc(entries):
     return out
 
 
-def status_timeline(plan, R, C):
+def collective_status_events(plan, receipt):
+    """Consume actual bound-producer ss5 pin events; never infer dates from plan prices."""
+    fields = {'schema', 'source_commit', 'controller_sha256', 'producer', 'plan_sha256', 'events'}
+    if set(receipt) != fields or receipt['schema'] != 'opentallas.qwen.collective-status.v1':
+        raise CompileError('collective status: invalid receipt schema/fields')
+    head = subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip()
+    if receipt['source_commit'] != head:
+        raise CompileError('collective status: selected source commit mismatch')
+    controller = ROOT / 'rtl/qwen_dv/qfd_tt_ctlm_dv.sv'
+    if receipt['controller_sha256'] != sha(controller):
+        raise CompileError('collective status: controller source mismatch')
+    producer = receipt['producer']
+    if not isinstance(producer, dict) or set(producer) != {'path', 'sha256'}:
+        raise CompileError('collective status: missing producer source identity')
+    path = (ROOT / producer['path']).resolve()
+    if not path.is_relative_to(ROOT.resolve()) or not path.is_file() or producer['sha256'] != sha(path):
+        raise CompileError('collective status: producer source mismatch')
+    plan_sha = hashlib.sha256(json.dumps(plan, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    if receipt['plan_sha256'] != plan_sha:
+        raise CompileError('collective status: selected plan mismatch')
+    expected = {p['tag']: p for p in plan if p['kind'] == 'XC'}
+    if len(expected) != sum(p['kind'] == 'XC' for p in plan):
+        raise CompileError('collective status: duplicate planned collective tags')
+    events, seen, last_edge = [], set(), -1
+    for e in receipt['events']:
+        if not isinstance(e, dict) or set(e) != {'tag', 'edge', 'ar_land', 'ar_last'}:
+            raise CompileError('collective status: malformed event')
+        if any(type(e[k]) is not int for k in e) or e['tag'] not in expected or e['edge'] <= last_edge:
+            raise CompileError('collective status: unordered/unknown tag or noninteger event')
+        if e['ar_land'] not in (0, 1) or e['ar_last'] not in (0, 1):
+            raise CompileError('collective status: nonbinary status sample')
+        last_edge = e['edge']
+        p = expected[e['tag']]
+        if e['edge'] < p['at']:
+            raise CompileError('collective status: status sample precedes collective launch')
+        if e['ar_land'] and e['ar_last']:
+            if e['tag'] in seen:
+                raise CompileError('collective status: duplicate completion')
+            if e['edge'] < p['done']:
+                raise CompileError('collective status: early completion before planned collective end')
+            segments = [q for q in plan if q['kind'] == 'SEG' and q['window'] == p['window']]
+            if len(segments) != 1 or segments[0]['at'] < e['edge']:
+                raise CompileError('collective status: SEG precedes actual completion; reschedule programme')
+            seen.add(e['tag'])
+        # Both levels come from the trace.  In particular ar_last is sticky in
+        # slice2: inventing a clear one edge after completion would be wrong.
+        for field in ('ar_land', 'ar_last'):
+            events.append(dict(edge=e['edge'], field=field, value=e[field]))
+    if seen != set(expected):
+        raise CompileError('collective status: missing collective completion event')
+    return events
+
+
+def status_timeline(plan, R, C, collective_receipt=None):
     """status the tt_ctlm pins must see (the slices' / native59's compiled responses), as level changes:
     [(edge at the tt_ctlm pin, field, value)]; fields su_busy, stn_busy (ag5), su_prog (ss5 [60:45]), native_idle."""
     ch = []                      # (edge, phase, field, value): on one edge an op's end (phase 0) precedes the next start
@@ -909,7 +969,11 @@ def status_timeline(plan, R, C):
             ch.append((p['at'] + 1, 1, 'native_idle', 0))
             ch.append((p['done'], 0, 'native_idle', 1))
     ch.sort(key=lambda c: (c[0], c[1]))
-    return [dict(edge=e, field=f, value=v) for e, _, f, v in ch]
+    timeline = [dict(edge=e, field=f, value=v) for e, _, f, v in ch]
+    if collective_receipt is not None:
+        timeline.extend(collective_status_events(plan, collective_receipt))
+        timeline.sort(key=lambda x: x['edge'])
+    return timeline
 
 
 def check_image(image, meta_rows, me_count, xpf_count, stage, xpf_edges):
@@ -971,6 +1035,7 @@ def main():
                     help='tt_ctlm XPF_TRANSPORT_EDGES (default 1 + R_HR: the hr register + the hr relays)')
     ap.add_argument('--me-observe-edges', type=int, default=1, help='head fixed issue -> actual_me_observe edges')
     ap.add_argument('--su-first-write', type=int, default=12, help='SU command at the W5 pin -> its first VM write')
+    ap.add_argument('--collective-status-receipt', help='bound producer ss5 ar_land/ar_last receipt; source/plan identity and every collective required; no inferred dates')
     ap.add_argument('--dv-lower', action='store_true', help='attach the DV slice lowering (dv_lower.py, G-C4)')
     ap.add_argument('--lm-head', action='store_true',
                     help='compile the LM-head (stage 37) ME programme at base = decode words: segment-G calendar '
