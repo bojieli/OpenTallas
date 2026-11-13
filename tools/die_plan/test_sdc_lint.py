@@ -268,3 +268,64 @@ def test_landing_contract_sdc_negatives(mut, msg):
     assert bad != txt
     errs = _errs(bad, ctx)
     assert any(msg in e for e in errs), errs
+
+
+# ---- fifo cdc form (HBM-CORES-C 11-12, DIE-HBM-101): Gray-pointer first synchroniser stages, generated from RTL async_reg only ----
+FIFO_RTL = HERE.parents[1] / "rtl" / "hbm_accel" / "service" / "ot_hbm_accel_cdc_fifo.sv"
+
+
+def test_fifo_cdc_pairs_come_only_from_async_reg_first_stages():
+    pairs = sdc_lint.async_reg_first_stages(FIFO_RTL.read_text())
+    assert sorted(pairs) == [("rgray", "rg_w1"), ("wgray", "wg_r1")]
+    plain = "reg [2:0] a, b;\n always @(posedge c) begin a <= x; b <= a; end\n"
+    assert sdc_lint.async_reg_first_stages(plain) == []        # not async_reg: no pair, so nothing to allow
+
+
+def _fifo_text(raw=TINY, cmds=None, drop=None, tweak=None):
+    txt, ctx = _kit(raw)
+    pairs = sdc_lint.async_reg_first_stages(FIFO_RTL.read_text())
+    lines = sdc_lint.fifo_cdc_commands(pairs, ctx["period_ps"])
+    if drop is not None:
+        lines = [x for i, x in enumerate(lines) if i != drop]
+    if tweak:
+        lines = [tweak(x) for x in lines]
+    return txt + "\n" + "\n".join(lines + list(cmds or [])) + "\n", ctx, pairs
+
+
+def test_fifo_cdc_declared_commands_pass():
+    txt, ctx, pairs = _fifo_text()
+    assert _errs(txt, ctx, fifo_cdc=pairs) == []
+
+
+def test_fifo_cdc_commands_are_refused_when_not_declared():
+    txt, ctx, pairs = _fifo_text()
+    assert _errs(txt, ctx) != []
+
+
+def test_fifo_cdc_missing_half_is_an_error():
+    for i in range(4):
+        txt, ctx, pairs = _fifo_text(drop=i)
+        assert any("fifo cdc" in e for e in _errs(txt, ctx, fifo_cdc=pairs)), i
+
+
+def test_fifo_cdc_wrong_delay_is_an_error():
+    txt, ctx, pairs = _fifo_text(tweak=lambda x: x.replace("-ignore_clock_latency %g" % ctx_period(), "-ignore_clock_latency 1"))
+    assert _errs(txt, ctx, fifo_cdc=pairs) != []
+
+
+def ctx_period():
+    return _kit(TINY)[1]["period_ps"]
+
+
+def test_fifo_cdc_non_async_reg_target_is_still_refused():
+    # a user-written false path on the read pointer (rbin is not an async_reg first stage) stays an error with the form declared
+    txt, ctx, pairs = _fifo_text()
+    bad = sdc_lint.fifo_cdc_commands([("rbin", "rgray")], ctx["period_ps"])
+    for b in bad:
+        assert _errs(txt + "\n" + b + "\n", ctx, fifo_cdc=pairs) != [], b
+
+
+def test_fifo_cdc_duplicate_is_an_error():
+    txt, ctx, pairs = _fifo_text()
+    dup = sdc_lint.fifo_cdc_commands(pairs[:1], ctx["period_ps"])[0]
+    assert any("twice" in e for e in _errs(txt + "\n" + dup + "\n", ctx, fifo_cdc=pairs))

@@ -40,6 +40,12 @@ liberty files before synthesis):
                (lint(landed_clock_inputs=...)) and a real tap clock, both directions, W = period/2 - setup
                uncertainty (the meso-ring phase window, held HERE at the legacy 60 ps:
                LANDING_WINDOW_SETUP_PS); every landed clock needs all four.
+  fifo cdc   (HBM-CORES-C 11-12, DIE-HBM-101 ruling (a); a tool change for all dies, opt-in) the Gray-pointer first synchroniser
+             stage of an async FIFO: fifo_cdc = [[src, dst], ...] is generated ONLY from the RTL (async_reg_first_stages():
+             `(* async_reg = "true" *) reg .. dst, dst2;` with `dst <= src;`).  For each pair exactly two commands are allowed,
+             `set_false_path -hold -from [get_pins -hierarchical -regexp {<src flop>/CLK}] -to [get_pins -hierarchical -regexp
+             {<dst flop>/D}]` and `set_max_delay -ignore_clock_latency <period> ...` with the same -from/-to, written by
+             fifo_cdc_commands(); anything else (another target, another delay, a missing half) stays an error.
   pad cdc    (COORD 10-31 ruling (3), pad_clock.py opt-in) an input pad clock the plan declares "cdc": "synchronized"
              (lint(pad_clock_cdc={port: period_ps}), a subset of pad_clock_inputs) carries exactly, against EVERY other
              defined clock B (create_clock / create_generated_clock, virtual included), both directions:
@@ -364,6 +370,35 @@ def _num(x, what):
         raise SdcLintError(f"{what}: not a number: {x}")
 
 
+_ASYNC_REG_RE = re.compile(r'\(\*\s*async_reg\s*=\s*"true"\s*\*\)\s*reg\s*(?:\[[^\]]*\]\s*)?([A-Za-z_]\w*)\s*,\s*([A-Za-z_]\w*)\s*;')
+
+
+def async_reg_first_stages(rtl_text):
+    """[(src, dst)]: for every `(* async_reg = "true" *) reg [..] dst, dst2;` pair the first stage dst and the register src it
+    samples (`dst <= src;`).  Only a register that is declared async_reg AND assigned straight from one register qualifies."""
+    out = []
+    for m in _ASYNC_REG_RE.finditer(rtl_text):
+        dst = m.group(1)
+        a = re.findall(r"\b" + re.escape(dst) + r"\s*<=\s*([A-Za-z_]\w*)\s*;", rtl_text)
+        if len(set(a)) == 1:
+            out.append((a[0], dst))
+    return out
+
+
+def _cdc_pin(reg, pin):
+    return r"[get_pins -hierarchical -regexp {^(?:.*[./])?" + re.escape(reg).replace("\\", "\\") + r"\[[0-9]+\]\$_DFF_[A-Z0-9_]*/" + pin + "}]"
+
+
+def fifo_cdc_commands(pairs, period_ps):
+    """the exact SDC lines of the fifo cdc form for [(src, dst)] (see 'fifo cdc' above)."""
+    out = []
+    for src, dst in pairs:
+        ft = f"-from {_cdc_pin(src, 'CLK')} -to {_cdc_pin(dst, 'D')}"
+        out.append(f"set_false_path -hold {ft}")
+        out.append(f"set_max_delay -ignore_clock_latency {period_ps:g} {ft}")
+    return out
+
+
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=None, unc_hold_ps=None, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
@@ -371,7 +406,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, source_sync_inputs=None):
+         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, source_sync_inputs=None, fifo_cdc=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -508,6 +543,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     same_edge_fp = set()
     pad_l, pad_fp = list(reset_pad_pins or []), []
     root_fp = 0
+    fifo_seen = set()                 # fifo cdc exception commands seen (each declared pair needs both)
     cdc_ex = {}                       # (max|hold, from clock, to clock) -> ps (hold: 0) : declared pad cdc exceptions
     edge_cdc = dict(edge_clock_cdc or {})   # DIE-KV-84 11-06 (COORD 16:2x(b)): edge clock port -> max delay ps (peer clk)
     edge_ex = {}
@@ -553,6 +589,14 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     if (kind, a_, b_) in cdc_ex:
                         err.append(f"pad_clock: cdc {kind} exception {a_}->{b_} given twice")
                     cdc_ex[(kind, a_, b_)] = v
+                    continue
+            if fifo_cdc and c in ("set_max_delay", "set_false_path"):
+                exp_ = {" ".join(_words(x)): x for x in fifo_cdc_commands([tuple(x) for x in fifo_cdc], period_ps / u)}
+                key_ = " ".join(w)
+                if key_ in exp_:
+                    if key_ in fifo_seen:
+                        err.append(f"fifo cdc: exception given twice: {cmd}")
+                    fifo_seen.add(key_)
                     continue
             if c == "set_false_path" and root_async_reset:
                 if w == _words(root_exception):
@@ -895,6 +939,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     if (k, a_, b_) not in cdc_ex:
                         err.append(f"pad_clock: cdc-declared {n} has no {'set_max_delay' if k == 'max' else 'set_false_path -hold'} "
                                    f"{a_}->{b_}")
+    if fifo_cdc:
+        for x_ in fifo_cdc_commands([tuple(y) for y in fifo_cdc], period_ps / u):
+            if " ".join(_words(x_)) not in fifo_seen:
+                err.append(f"fifo cdc: declared pair has no {x_.split(' -from')[0]}: {x_}")
     for x in strap_l:
         if x not in strap_fp:
             err.append(f"straps: declared strap {x} has no set_false_path -from (quasi-static ID input)")
