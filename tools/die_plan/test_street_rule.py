@@ -830,26 +830,27 @@ def test_sparse_rom_faces_17_28_slot_frame_forms_1():
     # 7 ROMs per pair as 2 columns x 4 rows at 17.28 slots: analyze reports no street / wall error
     cs = [rom("c%d%d" % (i, j), i * (38.04 + 17.28), j * (63.0 + 17.28), e=43, w_=43) for i in range(2) for j in range(4)]
     cs = [dict(c, x=c["x"] + 17.28, y=c["y"] + 17.28) for c in cs[:7]]
-    V, cnt = SR.analyze(400.0, 400.0, cs, [[k] for k in range(7)], dict(CFG, face_rule=0))
+    V, cnt = SR.analyze(400.0, 400.0, cs, [[k] for k in range(7)], SR.type_cfg(dict(CFG, face_rule=0), {}, "empty"))
     assert not any(k in SR.HARD for k in cnt), V
 
 
 def test_sparse_outline_face_head97():
     """HEAD-97 ruling: a sparse core face toward the outline (< 3 pins / um, nothing planned in the strip) keeps
     max(8.64, pins / 37.5); hd_tile's 81-pin elemA faces at 12.96 are legal (tool used to print need 43.2)."""
+    cfg = SR.type_cfg(CFG, {}, "empty")
     c = core("u_eA0", 300.0, 12.96, 270.0, 200.0, {"S": face(81, 0, 270)})
-    assert SR.outline_rule(c, 1000, 1000, CFG) == []
+    assert SR.outline_rule(c, 1000, 1000, cfg) == []
     c["y"] = 4.32
-    v = SR.outline_rule(c, 1000, 1000, CFG)
+    v = SR.outline_rule(c, 1000, 1000, cfg)
     assert len(v) == 1 and v[0]["kind"] == "street" and v[0]["need"] == 8.64 and v[0]["sparse"]
     c["y"] = 12.96
     big = dict(c, pins={"S": face(1000, 0, 270)})                # 3.7 / um of the face: dense, 43.2
-    v = SR.outline_rule(big, 1000, 1000, CFG)
+    v = SR.outline_rule(big, 1000, 1000, cfg)
     assert v[0]["need"] == 43.2 and not v[0]["sparse"]
-    v = SR.outline_rule(c, 1000, 1000, dict(CFG, _cols=[(400.0, 6.0)]))          # a tap in the strip
+    v = SR.outline_rule(c, 1000, 1000, dict(cfg, _col_boxes=[(396.0, 2.0, 404.0, 10.0)]))          # a tap in the strip
     assert v[0]["need"] == 43.2 and v[0]["kind"] == "street" and v[0]["columns_in_slot"] == 1
     many = dict(c, w=900.0, x=50.0, pins={"S": face(2000, 0, 900)})          # sparse but many: pins / K
-    v = SR.outline_rule(many, 1000, 1000, CFG)
+    v = SR.outline_rule(many, 1000, 1000, cfg)
     assert v[0]["need"] == SR.up(2000 / 37.5) == 56.16 and v[0]["sparse"]
 
 
@@ -1009,3 +1010,30 @@ def test_pin_registers_core_to_core_street():
     assert r["kind"] == "ok" and r["need"] == 17.28 and r.get("sparse")
     r = SR.pair_rule(a, b, SR.type_cfg(dict(CFG, face_rule=0, pin_relay=0), t, "x", [a, b]))
     assert r["kind"] == "street" and r["need"] == 43.2 and r["columns_in_slot"] == 400
+
+
+def test_raw_branch_keeps_consumer_terminal_at_new_fork(monkeypatch, tmp_path):
+    """KV sys_c: nearby same-depth base can lead to the wrong sibling reset tap."""
+    import types
+    import schema
+    import reset_tree
+    def row(q, d, depth, xy):
+        return dict(name=q, q=q, d=d, depth=depth, xy=xy)
+    trees = {
+        "base": dict(relays=[row("old_base", "root", 2, [0, 0]),
+                             row("target", "old_base", 3, [10, 0])]),
+        "new": dict(relays=[row("near_base", "root", 2, [1, 0]),
+                            row("wrong", "near_base", 3, [10, 0]),
+                            row("correct_base", "root", 2, [100, 0]),
+                            row("target", "correct_base", 3, [110, 0])])}
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: types.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda p, tn: trees[p.tag])
+    branch = dict(name="fstart:ft1_o", base="old_base", stages=[dict(original="target", xy_um=[10, 0])])
+    import copy
+    p = dict(tag="base", partition_types={"x": dict(clock=dict(landing_raw_branches=[copy.deepcopy(branch)]))})
+    q = dict(tag="new", partition_types={"x": dict(clock=dict(landing_raw_branches=[branch]))})
+    rec = SR.reset_resel(p, q, ["x"], tmp_path/"plan.json")["x"]
+    assert "error" not in rec, rec
+    assert branch["base"] == "correct_base"
+    assert branch["stages"] == [dict(original="target", xy_um=[10, 0])]
+    assert any("terminal" in r[0] for r in rec["raw"])

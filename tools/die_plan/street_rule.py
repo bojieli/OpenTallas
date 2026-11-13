@@ -268,7 +268,16 @@ def outline_need(c, face, p, W, H, cfg):
     if p >= cfg["pinface_min"]:
         x0, y0, x1, y1 = c["x"], c["y"], c["x"] + c["w"], c["y"] + c["h"]
         strip = {"W": (0.0, y0, x0, y1), "E": (x1, y0, W, y1), "S": (x0, 0.0, x1, y0), "N": (x0, y1, x1, H)}[face]
-        sn, nc = sparse_need(p, (p,), (y1 - y0) if face in "WE" else (x1 - x0), cfg["outline_margin_um"], cfg, strip)
+        boxes = cfg.get("_col_boxes")
+        if boxes is None:
+            return nd, False, 0       # no authoritative occupancy context: keep the dense floor
+        nc = sum(r[0] < strip[2] - EPS and r[2] > strip[0] + EPS and
+                 r[1] < strip[3] - EPS and r[3] > strip[1] + EPS for r in boxes)
+        if nc:
+            return nd, False, nc
+        # Exact footprints above replace the quantized station census for this tier.
+        sn, nc = sparse_need(p, (p,), (y1 - y0) if face in "WE" else (x1 - x0), cfg["outline_margin_um"],
+                             dict(cfg, _cols=[]), strip)
         if sn is not None:
             return sn, True, 0
         return nd, False, nc
@@ -549,6 +558,96 @@ def pin_registers(t, cores, cfg):
     return out
 
 
+def column_boxes(t, pin_regs=None):
+    """Exact planned footprint context for the sparse OUTLINE tier.
+
+    Keep raw FT bit sites (not station_points' 8.64-um census bins), and
+    include internal station windows plus reset/clock point and rectangle
+    sites. Port pins and clock sink census sites are not planned columns.
+    None means unreadable/unsupported site metadata: no sparse waiver.
+    """
+    boxes = set()
+    complete = True
+
+    def point(p, dx=G, dy=None):
+        nonlocal complete
+        if not _xy(p) or any(isinstance(x, bool) or not math.isfinite(x) for x in p[:2]):
+            complete = False
+            return
+        dy = dx if dy is None else dy
+        x, y = map(float, p[:2])
+        boxes.add((x - dx, y - dy, x + dx, y + dy))
+
+    def points(v, dx=G, dy=None):
+        nonlocal complete
+        if _xy(v):
+            point(v, dx, dy)
+        elif isinstance(v, (list, tuple)):
+            for p in v:
+                points(p, dx, dy)
+        else:
+            complete = False
+
+    for f in t.get("ft_slots") or []:
+        if f.get("bit_sites_um"):
+            cw, ch = f.get("bit_site_cell_um", [1.404, .27])
+            if any(isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) or x <= 0
+                   for x in (cw, ch)):
+                complete = False
+                continue
+            # Same conservative cell footprint as landing_place._ft_site_rects.
+            def ft(v):
+                nonlocal complete
+                if _xy(v) and not any(isinstance(x, bool) or not math.isfinite(x) for x in v[:2]):
+                    x, y = map(float, v[:2])
+                    boxes.add((x - cw / 2, y - ch / 2, x + cw, y + ch))
+                elif isinstance(v, (list, tuple)) and not _xy(v):
+                    for q in v: ft(q)
+                else:
+                    complete = False
+            ft(f["bit_sites_um"])
+        else:
+            points(f.get("regs_um") or [], 2.16)
+    for st in t.get("internal_stations") or []:
+        points(st.get("regs_um") or [])
+    # Preserve the approved one-to-one pin-register exception, but no other relay.
+    for x, y, _bits, kind in column_points(t, pin_regs):
+        if kind != "station":
+            point([x, y])
+
+    def walk(v, key=""):
+        nonlocal complete
+        if isinstance(v, dict):
+            if v.get("kind") == "core":
+                return
+            for k, q in v.items():
+                if k == "pins" or k.startswith("sink_") or k in ("bit_site_cell_um", "outline_um"):
+                    continue
+                if k.endswith(("sites_file", "taps_file", "islands_file")) and q:
+                    complete = False
+                else:
+                    walk(q, k)
+        elif isinstance(v, (list, tuple)):
+            if key.endswith("_um") or key in ("xy", "rect", "box"):
+                if len(v) == 4 and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in v):
+                    if all(math.isfinite(x) for x in v) and v[0] <= v[2] and v[1] <= v[3]:
+                        boxes.add(tuple(map(float, v)))
+                    else:
+                        complete = False
+                    return
+                if _xy(v):
+                    point(v)
+                    return
+            for q in v:
+                walk(q, key)
+        elif key in ("xy", "xy_um", "tap_um", "origin_rect_um", "rect_um", "box_um", "local_taps_um",
+                     "die_islands_um", "regs_um", "bit_sites_um") and v is not None:
+            complete = False
+    walk(t.get("clock") or {})
+    walk(t.get("reset") or {})
+    return sorted(boxes) if complete else None
+
+
 def column_points(t, pin_regs=None):
     """[(x, y, bits, kind)] every planned column point of a type ("Where columns may go", RULEBOOK-1113): kind
     'station' (station_points: ft bit sites / regs, internal stations), 'relay' (relay_sites, one bit per site; reset
@@ -770,10 +869,11 @@ def type_cfg(cfg, t, name=None, cores=None):
     (_pinregs, pin_registers) and the column points without them (_cols)."""
     pr = pin_registers(t, cores, cfg)
     cols = [p[:2] for p in column_points(t, pr)]       # sparse tier: a strip holding a column is never sparse
+    occupancy = column_boxes(t, pr)
     if not cfg.get("face_rule"):
-        return dict(cfg, _cols=cols, _pinregs=pr)
+        return dict(cfg, _cols=cols, _pinregs=pr, _col_boxes=occupancy)
     wins = type_face_windows(t) or (cfg.get("_planwins") or {}).get(name) or {}
-    return dict(cfg, _fwins=wins, _xboxes=extra_boxes(t), _cols=cols, _pinregs=pr)
+    return dict(cfg, _fwins=wins, _xboxes=extra_boxes(t), _cols=cols, _pinregs=pr, _col_boxes=occupancy)
 
 
 def content_only(t, cfg, name=None):
@@ -2068,7 +2168,38 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
                     kids[r["d"]].append(r)
             base_br = ((P["partition_types"].get(tn) or {}).get("clock") or {}).get("landing_raw_branches") or []
             base_by_name = {b.get("name"): b for b in base_br if isinstance(b, dict)}
+            # Consumer reset terminals retain their semantic tap identity across a
+            # collector re-solve.  Depth/nearest-child alone can select a sibling
+            # consumer at a fork (KV sys_c ft1_o: rst_n_t31 became rst_n_t11).
+            plain_q = {r["q"]: r for r in rb_plain}
+            old_branches = {b.get("name"): b for b in
+                            (P["partition_types"][tn].get("clock") or {}).get("landing_raw_branches", [])}
             for bi, br in enumerate(ck.get("landing_raw_branches") or []):
+                stages = br.get("stages") or []
+                prior = old_branches.get(br.get("name"), br).get("stages") or []
+                terminal = prior[-1].get("original") if prior else None
+                if stages and terminal in plain_q:
+                    # Walk UP from the retained consumer, never down through a
+                    # geometry-selected sibling; stage count and physical sites stay.
+                    tail, seen = [], set()
+                    q = terminal
+                    for _ in stages:
+                        if q in seen or q not in plain_q:
+                            raise ValueError("raw reset terminal %s: chain ends before %d stages" %
+                                             (terminal, len(stages)))
+                        seen.add(q)
+                        row = plain_q[q]
+                        tail.append(row)
+                        q = row.get("d")
+                    if q is None:
+                        raise ValueError("raw reset terminal %s: chain ends at its base" % terminal)
+                    chain = list(reversed(tail))
+                    if br.get("base") != q or [st.get("original") for st in stages] != [r["q"] for r in chain]:
+                        rec["raw"].append(["landing_raw_branches.%d.terminal" % bi, br.get("base"), q])
+                    br["base"] = q
+                    for st, row in zip(stages, chain):
+                        st["original"] = row["q"]
+                    continue
                 ob = ra_q.get(br.get("base"))
                 if ob is None or rb_q.get(br.get("base"), {}).get("xy") == ob.get("xy"):
                     nb = rb_q.get(br.get("base"))
