@@ -3612,3 +3612,5 @@ CODEX: 2026-11-13 14:06 PST token: be5ba677 five-arm compiler EXIT0 programme va
 CODEX: 2026-11-13 14:27 PST GUNIT parent DRT-0073 pin-access class cleared by exact M6 metal refinement, bbb2b73c09; original nets/pins/clock unchanged; private macro/std AP failures0, full route pending.
 
 CODEX: 2026-11-13 14:30 PST token: actual ARstatus producer fix3e9aa6b25c READY (real beforeFAIL/afterPASS5events,0cycles); guardedreceipt hook9044558f71; KVPHY/QCSTM/SVCPAIR5 incremental models delivered, no adoption/globalqualification.
+
+CODEX: 2026-11-13 authority correction: OWNER11-12 supersedeswatchermode; existing ROOT-MERGE-61 now integrating gatedsource fixes. HBMpark/POR-srcfreeze retained.
