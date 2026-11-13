@@ -24654,10 +24654,10 @@
       "retry_note_kitops1_rearm3_1113": "2026-11-13 12:50 add (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): hd_turn_a@3 hd_spn_wshim_rx@2",
       "retry_note_codex_restore_1113": "2026-11-13: original receipt inputs restored; stale epochs cleared by scheduler before one infrastructure rearm: hd_turn_a@4 hd_spn_wshim_rx@3",
       "route_hold_items": {
-        "hd_host_e": "CODEX 11-13: actual attempt6 place image ISSUES (same giant EPC/remote W pins as earlier attempt2); staging missing-source objective complete. HEAD structural event required; no new route on unchanged bad form.",
-        "hd_ctl_n": "CODEX approved HEAD-ROUTE-1/R-FLOW6 class regeneration (old generated M8 kit lacked RA0); hold fresh attempt after place for its own actual image review before route. Lift only on fresh same-attempt GOOD/ISSUES-ACCEPT, not historical names."
+        "hd_host_e": "CODEX 11-13: actual attempt6 place image ISSUES (same giant EPC/remote W pins as earlier attempt2); staging missing-source objective complete. HEAD structural event required; no new route on unchanged bad form."
       },
-      "retry_note_codex_ctlra0_1113": "11-13: remove stale hd_ctl_n@1 epoch for one scheduler pass, then ONE approved RA0 class-fix regeneration; old accepted ISSUES-ACCEPT form checked, failed APjob992b8a45f39a DONE-CRASH preserved. No source/POR switch."
+      "retry_note_codex_ctlra0_1113": "11-13: remove stale hd_ctl_n@1 epoch for one scheduler pass, then ONE approved RA0 class-fix regeneration; old accepted ISSUES-ACCEPT form checked, failed APjob992b8a45f39a DONE-CRASH preserved. No source/POR switch.",
+      "note_codex_ctl_review_1113": "Own attempt2 actual layout+density reviewed15:16 by GEOM, ISSUES-ACCEPT, GRT0, r2r378.97um/0over405, relay0. Removed only CODEX fresh-image hold. One RA0 class regeneration; no further unchanged retries authorized."
     },
     "qwen_compute": {
       "enabled": true,
