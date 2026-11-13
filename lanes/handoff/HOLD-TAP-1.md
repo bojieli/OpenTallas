@@ -64,3 +64,8 @@ Classification tables (t41, sle_st_a running), design, implement + tests, proofs
 - Routed regional estimate done (epyc7 hold-tap-1/qcreg/s28reg): GRT 0, 59,689 repeaters; equal-stage regions 66 ps p50, the 192 c_* regions 260-299 ps (stock builder stage imbalance); landed class not timed by this chain (needs CA bind). Evidence lanes/HOLD-TAP-1/qcreg/.
 - NOT run: second chain with c_* region DME + count_align bind (handed to QC-CLKGATE-1 / DIE-QC-100 in the RESULT).
 - Still open: t41 sign-off RESULT (localhost ot-run pid 506716, ~/ht1log/t41_route.log) -> queue RESULT + replace the t41 RUNNING row in R-CLOCK Proof. Cleanup after: epyc7 hold-tap-1/qcreg/src (2.8 GB copy of tools + QC plan dir), epyc4 /srv/opentallas-scratch3/claude/hold-tap-1 (small).
+
+## 2026-11-13 12:03 QC third chain running
+- epyc7 hold-tap-1/qcreg/s28dme2 (chain refit/qcreg3.sh; ot-run client on localhost, log ~/ht1log/qcreg3_s28.log; CHAIN.log in the run dir). Inputs: refit/inv2_stage_cal_s28dme.json, refit/early_other_regions.txt, refit/edge_readout_patch.py. STATE with the pre-build estimate is in the queue.
+- When it ends: read CHAIN.log (CA_C/D/E, BIND, STA lines), compute c_* glue spread + core-tap residual vs declared early, post RESULT, update R-CLOCK-6.
+- t41 sign-off still open (localhost ot-run pid 506716).
