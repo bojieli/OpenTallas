@@ -6141,7 +6141,8 @@
     "ot_s81sl_leaf__t62@1",
     "ot_s81sl_leaf__t65@3",
     "ot_s81sl_leaf__t67@1",
-    "ot_s81sl_leaf__t71@1"
+    "ot_s81sl_leaf__t71@1",
+    "ot_s81sl_leaf__t62@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -23169,7 +23170,7 @@
    "type_args_prev_kitops1_aor3": {
     "ot_s81sl_leaf__t62": null
    },
-   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:44 remove (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): ot_s81sl_leaf__t62@2"
+   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:50 add (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): ot_s81sl_leaf__t62@2"
   },
   "s81_head": {
    "enabled": true,
@@ -23323,7 +23324,9 @@
     "hd_host_e@2",
     "hd_host_e@3",
     "hd_spn_end@10",
-    "hd_turn_a@2"
+    "hd_turn_a@2",
+    "hd_turn_a@3",
+    "hd_spn_wshim_rx@2"
    ],
    "pilot_max": 12,
    "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -24490,7 +24493,7 @@
     }
    },
    "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7.",
-   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:44 remove (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): hd_turn_a@3 hd_spn_wshim_rx@2"
+   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:50 add (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): hd_turn_a@3 hd_spn_wshim_rx@2"
   },
   "qwen_compute": {
    "enabled": true,
