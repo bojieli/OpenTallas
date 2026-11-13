@@ -83,6 +83,63 @@ def annotate(b):
             L['internal_source_cycles']=count
 
 
+def kit_source_depth(typ,bus):
+    """Depth of the KIT-built (kit_istations.py) OUT station chain of one bus: the deepest bus:<bus> entry
+    (kit_istations.bus_entries merges per-core rows to the deepest chain; bit_route rows share one stage count)."""
+    rows=[e for e in typ.get('internal_stations',[]) if e.get('conn')=='bus:'+bus]
+    return max((len(e['regs_um']) for e in rows),default=0)
+
+
+def annotate_kit(b):
+    """QC-BIND-IST-PAD 11-12: price KIT-built SOURCE stations like native ones.
+
+    kit_istations.py builds a type's OUT-bus internal_stations as u_ist_<bus>_<j> flops inside the SOURCE kit
+    (before u_bout_<bus>); the bind lands the lane pad only at the RECEIVER (u_lpad_<iname>), and kit_istations
+    absorbs receiver pads only for that receiver's own IN-bus stations.  So when the latency table counts the
+    source stations (schema lane_latency: fixed_cycles = source + destination), lane_pad() must not also pad them
+    at the receiver, or the built lane is long by the source count.  Sets L['internal_kit_source_cycles'] on every
+    lane whose source type carries OUT stations on its oname and is not realised natively (annotate()); lane_pad()
+    subtracts it and the bound-stage count adds it back.  IN-bus (destination) stations stay in the pad: the
+    receiver kit converts its u_lpad / pad stages into those stations (kit_istations packed_input_delay)."""
+    # COMPAT (opt-in, default OFF = byte-identical bind to before): asbuilt key kit_source_station_pricing
+    #   true            -> every non-native type of the die
+    #   [type, ...]     -> only these types (split variants follow split_of)
+    # A die enables it in the same event that refreshes its latency table (KIT_ISTATION_LATENCY lists stale lanes).
+    sel=b.ab.get('kit_source_station_pricing')
+    if not sel:return
+    only=None if sel is True else set(sel)
+    native=set(b.ab.get('internal_stations_types',[]))
+    lanes={x['id']:x for x in b.plan.get('lanes',[])}
+    for part,p in b.parts.items():
+        t=b.types.get(p.get('type'),{})
+        if not t.get('internal_stations'):continue
+        if only is not None and p['type'] not in only and t.get('split_of') not in only:continue
+        tn=p['type'];scope=selected_buses(b.ab,tn,t.get('split_of',tn)) if (tn in native or t.get('split_of') in native) else set()
+        outs={x['name'] for x in t.get('buses',[]) if x.get('dir')=='out'}
+        for L in b.out_bus.get(part,[]):
+            name=L.get('oname')
+            if name not in outs or not L.get('lane') or L.get('spine'):continue
+            if L.get('internal_source_cycles'):continue          # realised natively: already priced by annotate()
+            if scope is None or (scope and name in scope):continue  # natively selected bus (stations in the bound RTL)
+            n=kit_source_depth(t,name)
+            if not n:continue
+            # Scope: only lanes whose plan PRICES the source stations as lane cycles (fixed_cycles = source + destination,
+            # the STRUCT-CTL-1 / native_istations convention).  Station rows not priced in fixed_cycles (e.g. HEAD hd_spn
+            # spine relays, realize_internal_stations source forms) keep the pre-fix pad unchanged.
+            raw=lanes.get(L.get('lane'),{})
+            if int(raw.get('fixed_cycles',0))<n:continue
+            base=2+sum(h['stations'] for h in L.get('ft',[]))+int(L.get('clock_landing_cycles',0))
+            if int(L.get('cycles',0))<base+n:
+                # the table does not count the kit stations (stale since the stations were planned): the built lane
+                # would be n cycles longer than the table.  Fail the bind; refresh the table (gen.py latency).
+                msg=(f'KIT_ISTATION_LATENCY {L.get("lane")}: {part}.{name} has {n} kit source stations but the latency '
+                     f'table prices {L.get("cycles")} < {base}+{n} cycles (refresh the latency table)')
+                errs=getattr(b,'errors',None)
+                if errs is None:raise ValueError(msg)
+                errs.append(msg);continue
+            L['internal_kit_source_cycles']=n
+
+
 def materialize(b,tn,file):
     typ=b.types[tn];original=typ.get('split_of',tn)
     selected=set(b.ab.get('internal_stations_types',[]))

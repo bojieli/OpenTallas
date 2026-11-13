@@ -238,6 +238,66 @@ def cmd_pads(a):
 CELL_RE = re.compile(r"^\s*(\w+)\s+(\w+)\s*\((.*)\);\s*$")
 
 
+def type_rects(plan):
+    """partition outlines (x0, y0, x1, y1, part, type) of a die plan json; R90/R270 swap w/h"""
+    raw = json.loads(Path(plan).read_text())
+    ty = raw["partition_types"]
+    out = []
+    for p in raw["partitions"]:
+        w, h = ty[p["type"]]["outline_um"][:2]
+        if p.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+            w, h = h, w
+        x, y = p["origin_um"]
+        out.append((x, y, x + w, y + h, p["name"], p["type"]))
+    return out
+
+
+class ChannelSites:
+    """legal delay-cell sites = outside every partition outline (die channels).  snap(x, y) -> nearest channel point
+    (Manhattan), searched as the 4 points just past each containing outline's edges (abutted outlines chain on), to depth 24,
+    pruned by the best distance found."""
+    EPS = 0.54
+
+    def __init__(self, rects, grid=50.0):
+        self.rects, self.grid, self.bins = rects, grid, defaultdict(list)
+        for i, r in enumerate(rects):
+            for gx in range(int(r[0] // grid), int(r[2] // grid) + 1):
+                for gy in range(int(r[1] // grid), int(r[3] // grid) + 1):
+                    self.bins[(gx, gy)].append(i)
+
+    def inside(self, x, y):
+        for i in self.bins.get((int(x // self.grid), int(y // self.grid)), ()):
+            r = self.rects[i]
+            if r[0] < x < r[2] and r[1] < y < r[3]:
+                return r
+        return None
+
+    def snap(self, x, y):
+        if self.inside(x, y) is None:
+            return x, y, 0.0
+        best, front, seen = None, [(x, y)], set()
+        for _ in range(24):
+            nxt = []
+            for px, py in front:
+                r = self.inside(px, py)
+                if r is None:
+                    d = abs(px - x) + abs(py - y)
+                    if best is None or d < best[2]:
+                        best = (px, py, d)
+                    continue
+                for q in ((r[0] - self.EPS, py), (r[2] + self.EPS, py), (px, r[1] - self.EPS), (px, r[3] + self.EPS)):
+                    k = (round(q[0], 2), round(q[1], 2))
+                    if k not in seen and (best is None or abs(q[0] - x) + abs(q[1] - y) < best[2]):
+                        seen.add(k)
+                        nxt.append(q)
+            front = nxt
+            if not front:
+                break
+        if best is None:
+            raise ValueError("no channel site near (%.1f, %.1f)" % (x, y))
+        return best
+
+
 def cmd_realize(a):
     """balance realized as PLACED DELAY CELLS (CTS-style), from measured (routed) arrivals: on every branch point the
     faster kids get k = round(deficit / step) delay buffers in series (placed at the branch point), where deficit =
@@ -245,6 +305,8 @@ def cmd_realize(a):
     cells in front of a load; every existing cell and site is kept, so the step can iterate route -> STA -> realize.
     -> OUT/ctree.v (module ctree), OUT/ctree_ck89.tcl, OUT/tree.json, OUT/realize.json"""
     src, out = Path(a.clkdir), Path(a.out)
+    if a.sites == "channel" and not a.plan:
+        raise SystemExit("realize --sites channel needs --plan (partition outlines)")
     out.mkdir(parents=True, exist_ok=True)
     lines = (src / "ctree.v").read_text().splitlines()
     cells, ports = {}, set()
@@ -319,11 +381,16 @@ def cmd_realize(a):
                     ins.append((u, k, n))
         stack += [k for k in ks if not k.startswith("port:")]
     new_cells, edits, z = [], {}, 0
+    sites = ChannelSites(type_rects(a.plan)) if a.sites == "channel" else None
+    moved = []
     for u, k, n in ins:
         net = cells[u][2]
         names = ["dlyg%d_%d_%d" % (gen, z, j) for j in range(n)]
         z += 1
         x, y = place.get(u, (0.0, 0.0))
+        if sites is not None:                           # never inside a type: nearest die-channel point
+            x, y, d = sites.snap(x, y)
+            moved.append(d)
         src_net = net
         if k.startswith("port:"):                       # u drives the port net itself: u -> chain -> port
             src_net = "w_dlyg%din%d" % (gen, z)
@@ -367,10 +434,89 @@ def cmd_realize(a):
     t = [v_ for k_, v_ in arr.items() if k_ in ports]
     rep = dict(mode="realize", arr=str(a.arr), generation=gen, step_ps=round(step, 2), step_measured=len(dd), cell=a.cell, taps=len(t),
                spread_in_ps=round(max(t) - min(t), 1) if t else None, branches=len(ins),
-               delay_cells=len(new_cells), cells_before=len(cells))
+               delay_cells=len(new_cells), cells_before=len(cells), sites=a.sites)
+    if sites is not None:
+        mv = sorted(moved)
+        rep.update(chains_moved=sum(1 for d in mv if d > 0), move_um_p50=round(mv[len(mv) // 2], 1) if mv else 0.0,
+                   move_um_max=round(mv[-1], 1) if mv else 0.0,
+                   cells_inside_types=sum(1 for c in new_cells if sites.inside(c[3], c[4]) is not None))
     (out / "realize.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps(rep))
     return 0
+
+
+def cmd_leafcell(a):
+    """COORD 11-12 (HEAD routed re-balance): a leaf whose region equalisation needs more wire than the per-leaf cap gets
+    ONE placed delay cell (HB4xp67) in series on its OWN leg (parent node -> repeaters -> leaf node; the leg is not
+    shared, so the cell delays that leaf only).  Site = the point of the leg closest to a die channel (outside every
+    partition outline, never inside a type); the cell is spliced into the leg's segment there, with the detour from the
+    leg to the site on both sides.  A leaf whose leg passes no channel within --max-detour-um gets no cell (listed as
+    no_channel: its residual stays on wire).  RUN is a die_clock build dir (nets.json, place.json, tree.json); OUT gets
+    the same files with the cells + ctree.v + leafcell.json.  The wire trim follows on the next build's --leaf-pad."""
+    run, out = Path(a.run), Path(a.out)
+    leaves = json.loads(Path(a.leaves).read_text())
+    leaves = sorted(leaves) if isinstance(leaves, list) else sorted(k for k, v in leaves.items() if v >= a.cap_um - 0.1)
+    out.mkdir(parents=True, exist_ok=True)
+    nj = json.loads((run / "nets.json").read_text())
+    cells = json.loads((run / "place.json").read_text())
+    rects = type_rects(a.plan)
+    sites = ChannelSites(rects)
+    into = {}
+    for n in nj["nets"]:
+        for bi, b in enumerate(n["branches"]):
+            into[b[2]] = (n, bi)
+    rows, missing, no_ch = [], [], []
+    for lf in leaves:
+        if lf not in into or lf not in cells:
+            missing.append(lf)
+            continue
+        best, w, hops = None, lf, 0
+        while True:                                   # walk the leaf's own leg up to its parent node
+            n, bi = into[w]
+            u = n["drv"]
+            if u not in cells:
+                break
+            p, q = cells[u], cells[w]
+            L = abs(p["x"] - q["x"]) + abs(p["y"] - q["y"])
+            k = max(1, int(L / a.sample_um))
+            for j in range(k, -1, -1):                # leaf end first: ties keep the cell near the leaf
+                f = j / k
+                x, y, d = sites.snap(p["x"] + (q["x"] - p["x"]) * f, p["y"] + (q["y"] - p["y"]) * f)
+                if best is None or d < best[0] - 1e-9:
+                    best = (d, n, bi, f, x, y)
+            hops += 1
+            if cells[u].get("kind") == "node" or hops > 64:
+                break
+            w = u
+        if best is None or best[0] > a.max_detour_um:
+            no_ch.append([lf, None if best is None else round(best[0], 1)])
+            continue
+        d, n, bi, f, x, y = best
+        nm = "lh_" + lf
+        if nm in cells:
+            raise SystemExit("leafcell: %s already has a delay cell" % lf)
+        cells[nm] = dict(x=round(x, 3), y=round(y, 3), kind="delay", level=cells[lf].get("level"), lib=a.cell)
+        L, layer, load, geo = n["branches"][bi]
+        # the weak cell drives only the physical rest of the segment (+ its detour); the segment's balance pad stays on
+        # the cell's INPUT side, driven by the leg's own BUFx24 (an HB4xp67 into ~1 mm of 4W pad measured +500 ps)
+        g2 = max(geo * (1 - f) + d, 1.0)
+        n["branches"][bi] = [max(L + 2 * d - g2, 1.0), layer, nm, max(geo * f + d, 1.0)]
+        nj["nets"].append(dict(name="w_" + nm, drv=nm, branches=[[g2, layer, load, g2]]))
+        rows.append(dict(leaf=lf, site=[round(x, 3), round(y, 3)], detour_um=round(d, 1), on=n["name"], frac=round(f, 3)))
+    (out / "nets.json").write_text(json.dumps(nj) + "\n")
+    (out / "place.json").write_text(json.dumps(cells) + "\n")
+    for fn in ("tree.json", "own.json", "pads.json"):
+        if (run / fn).exists():
+            shutil.copy(run / fn, out / fn)
+    if not (out / "pads.json").exists():
+        (out / "pads.json").write_text("[]\n")
+    DC.write_verilog(DC.load_tree(out), out / "ctree.v")
+    inside = sum(1 for r in rows if any(q[0] < r["site"][0] < q[2] and q[1] < r["site"][1] < q[3] for q in rects))
+    rep = dict(mode="leafcell", cell=a.cell, cells=len(rows), missing=missing, no_channel=no_ch, cells_inside_types=inside,
+               detour_um_max=max([r["detour_um"] for r in rows], default=0.0), rows=rows)
+    (out / "leafcell.json").write_text(json.dumps(rep, indent=1) + "\n")
+    print(json.dumps({k: v for k, v in rep.items() if k != "rows"}))
+    return 1 if (missing or inside) else 0
 
 
 def main(argv=None):
@@ -386,7 +532,11 @@ def main(argv=None):
     p.add_argument("out")
     p.add_argument("--step-ps", type=float, default=0.0,
                    help="delay per inserted cell; 0 (default) = measured on earlier generations' chains, else 15")
-    p.add_argument("--cell", default="BUFx24_ASAP7_75t_R")
+    p.add_argument("--cell", default="HB4xp67_ASAP7_75t_R",
+                   help="delay cell (COORD 11-12: HB4xp67; BUFx24 rejected)")
+    p.add_argument("--sites", choices=("branch", "channel"), default="channel",
+                   help="channel (default) = never inside a partition outline (needs --plan); branch = at the branch point")
+    p.add_argument("--plan", help="die plan json (partition outlines) for --sites channel")
     p = sp.add_parser("pads")
     p.add_argument("run")
     p.add_argument("spef")
@@ -397,8 +547,18 @@ def main(argv=None):
     p.add_argument("--no-pads", action="store_true", help="no wire pads (physical tree netlist; with --route-ndr)")
     p.add_argument("--route-ndr", action="store_true",
                    help="scale the routed clock RC to die_clock's NDR width (2W2S R/2 C x1.1; 4W on long hops)")
+    p = sp.add_parser("leafcell")
+    p.add_argument("run", help="die_clock build dir (nets.json, place.json, tree.json)")
+    p.add_argument("out")
+    p.add_argument("--plan", required=True, help="die plan json (partition outlines: channel sites)")
+    p.add_argument("--leaves", required=True, help="JSON list of leaf node cells, or a leaf-pad JSON {leaf: um}: the "
+                   "leaves at --cap-um get a cell")
+    p.add_argument("--cap-um", type=float, default=1500.0)
+    p.add_argument("--cell", default="HB4xp67_ASAP7_75t_R")
+    p.add_argument("--max-detour-um", type=float, default=200.0, help="no cell when the leg passes no channel this close")
+    p.add_argument("--sample-um", type=float, default=5.0)
     a = ap.parse_args(argv)
-    return dict(prep=cmd_prep, pads=cmd_pads, realize=cmd_realize)[a.cmd](a)
+    return dict(prep=cmd_prep, pads=cmd_pads, realize=cmd_realize, leafcell=cmd_leafcell)[a.cmd](a)
 
 
 if __name__ == "__main__":

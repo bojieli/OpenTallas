@@ -99,6 +99,10 @@ ORPHAN_IDLE_S = 3 * 3600
 CHAIN_VERSION = 2
 MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "12"))
 MAX_NOTRUN = 3                                          # 'NOT RUN' (never admitted) resubmits
+# KW-FIX-46 11-12 (COORD, hbm q_mcb_ne 58ab1566e512): a container memory-cgroup OOM is the kit's --mem request, not the
+# host: q_mcb_ne route peaked > 75 GB, killed at --mem 48 and again at 72 (one x1.5 step), then filed as a final CRASH.
+# Two x1.5 steps (48 -> 72 -> 108) cover a 2x under-estimate; a third OOM is a real memory problem.
+MAX_OOM_RESUBMITS = 2
 # DIE-S81-70 11-06: any numbered scratch root (owner 11-05: every disk is scratch; kw21 wave lives on epyc5 scratch3).
 KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch[0-9]*/claude/[A-Za-z0-9_./+=-]+)$")
 SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
@@ -1140,7 +1144,8 @@ def watchdog_stop(unit, since=0.0):
     except OSError:
         return None
     for line in reversed(lines):
-        if " STOP " not in line or (f" {unit}.scope" not in line and f" {unit} " not in line):
+        if " STOP " not in line or (f" {unit}.scope" not in line and f" {unit} " not in line
+                                     and not (unit.endswith("/") and f"/ot-jobs/{unit}" in line)):
             continue
         try:
             t = datetime.datetime.strptime(" ".join(line.split(" ")[:2]), "%Y-%m-%d %H:%M").timestamp()
@@ -2508,9 +2513,24 @@ def poll_running(st):
         finish(st, j, c, client)
 
 
+def sealed_job_dir(j):
+    """the sealed ot-job dir name ('ot-job: SEALED <dir>:' in the client log) of this attempt, or ''"""
+    try:
+        t = Path(j.get("client_log") or "").read_text(errors="replace")
+    except OSError:
+        return ""
+    m = re.findall(r"ot-job: SEALED (/\S+/ot-jobs/[^/\s:]+)", t)
+    return m[-1] if m else ""
+
+
 def finish(st, j, c, client):
     if client.get("exit") in (137, 143) and client.get("unit") and not c.get("oom"):
         w = watchdog_stop(client["unit"], j.get("started", 0))
+        sj = "" if w else sealed_job_dir(j)
+        if sj:
+            # KW-FIX-46 11-12 (hbm PHY_NC 2731c12447d5): the WATCHDOG stops the container inside a sealed ot-job and its
+            # STOP line names that container and the job dir, not the ot-heavy unit, so the stop read 'from outside'
+            w = watchdog_stop(sj.rsplit("/", 1)[-1] + "/", j.get("started", 0))
         if w:
             client = dict(client, watchdog=w)
     cls, kind, reasons = classify(c, client)
@@ -2547,10 +2567,15 @@ def finish(st, j, c, client):
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1
             submit(st, j, f"(resubmit: never admitted, {j['notrun_retries']}/{MAX_NOTRUN})")
             return
-        if not notrun and not j.get("infra_retry"):
+        if kind == "infra-oom" and j.get("oom_retries", 1 if j.get("infra_retry") else 0) < MAX_OOM_RESUBMITS:
+            j["oom_retries"] = j.get("oom_retries", 1 if j.get("infra_retry") else 0) + 1
             j["infra_retry"] = True
-            if kind == "infra-oom":
-                j["mem_gb"] = min(512, int(j["mem_gb"] * 1.5 + 0.999))
+            j["mem_gb"] = min(512, int(j["mem_gb"] * 1.5 + 0.999))
+            submit(st, j, f"(resubmit {j['oom_retries']}/{MAX_OOM_RESUBMITS} after infra-oom; resumes the run dir; "
+                          f"--mem {j['mem_gb']})")
+            return
+        if not notrun and kind != "infra-oom" and not j.get("infra_retry"):
+            j["infra_retry"] = True
             submit(st, j, f"(resubmit once after {kind}; resumes the run dir; --mem {j['mem_gb']})")
             return
     set_status(st, j, cls, f"{kind}: {reasons[:200]}")

@@ -1435,9 +1435,12 @@ class Binder:
             cnt["crossing"] += 1
             return ("x", sp, sci, spn, sb, st, p)
         if k == "clock":
-            self.clk_dom[p].add(s[1])
+            # asbuilt.clock_merge {part: {domain: domain}} (DIE-QC-97 11-09, EDGE-CLOCK-LATE): die clock roots of one
+            # source and frequency (contract: related, phase 0) that this partition takes from one clock family.
+            d = (self.ab.get("clock_merge") or {}).get(p, {}).get(s[1], s[1])
+            self.clk_dom[p].add(d)
             cnt["clock"] += 1
-            return ("clk", s[1])
+            return ("clk", d)
         if k == "reset":
             cnt["reset"] += 1
             self.reset_age[p].append(s[2])
@@ -1851,6 +1854,7 @@ class Binder:
 
         import native_istations
         native_istations.annotate(self)
+        native_istations.annotate_kit(self)     # QC-BIND-IST-PAD 11-12: kit-built source stations are not padded twice
 
     def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
@@ -4208,7 +4212,7 @@ class Binder:
         rh = getattr(self, "_reg_hard", None) or {}
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("internal_kit_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
@@ -5933,10 +5937,12 @@ def cmd_kit_rtl(a):
 
 
 def lane_pad(L):
-    """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations), when positive"""
+    """the latency table's pad on a plan lane: table cycles - (2 boundary flops + ft stations + source stations
+    realised natively or by the source kit + clock landing), when positive"""
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
-    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
+    return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0))
+               - int(L.get("internal_kit_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
 
 
 def _reset_latency_meta(out, wavefront):

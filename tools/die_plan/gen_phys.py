@@ -4097,7 +4097,21 @@ def kit_core_area(t):
     placement rows only, without shifting the outline, macro origins or plan pins.
     """
     w,h=t["outline_um"]
-    margins=t.get("kit_core_margins_um",[CORE_MARGIN_UM]*4)
+    margins=t.get("kit_core_margins_um")
+    if margins is None:
+        margins=[CORE_MARGIN_UM]*4
+        # KW-FIX-45 11-11 (DIE-HBM-100, hbm-phy-place: IFP-0002 / MPL-0034 on PHY_NC/NE/NW): a hard wrapper whose single hard
+        # macro reaches a die edge (within CORE_MARGIN_UM of it) gets no core margin on that side: the macro sits at the die
+        # origin / spans the frozen outline, so a 4.32 um inset core can neither contain nor place it.  Every other type is
+        # unchanged; an explicit kit_core_margins_um still wins.
+        hc=[c for c in t.get("hard_cores",[]) if c.get("lef") and c.get("outline_um") and c.get("origin_um")]
+        if t.get("hard") and len(hc)==1:
+            (ox,oy),(mw,mh)=hc[0]["origin_um"],hc[0]["outline_um"]
+            eps=1e-6
+            margins=[0.0 if ox<=CORE_MARGIN_UM+eps else CORE_MARGIN_UM,      # W
+                     0.0 if oy<=CORE_MARGIN_UM+eps else CORE_MARGIN_UM,      # S
+                     0.0 if ox+mw>=w-CORE_MARGIN_UM-eps else CORE_MARGIN_UM, # E
+                     0.0 if oy+mh>=h-CORE_MARGIN_UM-eps else CORE_MARGIN_UM] # N
     if not isinstance(margins,(list,tuple)) or len(margins)!=4:
         raise ValueError("kit_core_margins_um must be [W,S,E,N]")
     for v,step in zip(margins,(0.054,0.27,0.054,0.27)):

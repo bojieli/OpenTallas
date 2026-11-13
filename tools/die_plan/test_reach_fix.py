@@ -332,3 +332,98 @@ def test_depth_drift_from_reselect_is_caught(monkeypatch):
     assert RF.depth_drift(P, Q, "x", None) == [["landing_local_resets.0", "rst_rl_17", 1, 2]]
     rec = RF.fix_raw_tap_refs(P, Q, "x", None)
     assert rec == [["landing_local_resets.0", "rst_rl_17", "rst_rl_24"]] and RF.depth_drift(P, Q, "x", None) == []
+
+
+def test_tap_cap_priced_on_nearest_split(tmp_path):
+    # TAP-CAP (b) (COORD 11-12, VL3 hd_spn_end SP3: cap 1000 on paper, 1225 at place): a placed register bank the
+    # planner inventory does not list sits on one tap.  Class 2 is priced on the NEAREST split (what AUTO-GEOM measures
+    # at place), not on the pre-CTS capacity moves; the fix re-sites taps until the nearest split meets the cap, and the
+    # new taps survive the planner's empty-tap check (anchor sinks).
+    import taps as TP
+    bank = [[300.0 + 1.0 * (i % 80), 300.0 + 0.4 * (i // 80)] for i in range(2400)]
+    (tmp_path / "sinks").mkdir()
+    (tmp_path / "sinks" / "mid.json").write_text(json.dumps(bank))
+    base = _write(tmp_path, copy.deepcopy(EX))
+    sd = ["--sinks-dir", str(tmp_path / "sinks"), "--cap", "1000"]
+    chk = tmp_path / "chk.json"
+    for mode in ("kit", "nearest"):
+        assert RF.main(["check", str(base), "--json", str(chk), "--assign", mode] + sd) == 0
+        r = {x["type"]: x for x in json.loads(chk.read_text())["rows"]}["mid"]
+        if mode == "kit":
+            kit_max = r["c2_max"]
+        else:
+            assert r["c2"] >= 1 and r["c2_max"] > kit_max and r["c2_max"] > 1000, (kit_max, r)
+    out, _ev = _fix(tmp_path, base, "fcap", *sd)
+    assert RF.main(["check", str(out), "--json", str(chk)] + sd) == 0
+    a = {x["type"]: x for x in json.loads(chk.read_text())["rows"]}["mid"]
+    assert a["c2"] == 0 and a["c2_max"] <= 1000, a
+    # independent of the tool's pricing: the plain nearest split on the fixed plan's taps
+    import plan_geom as PG
+    import geom_rules as GR
+    PQ = RF.plan_obj(json.loads(out.read_text()), out)
+    grid = [(n, x, y) for n, x, y in PG.type_sites(PQ, "mid")["entries"] if GR.GRID_TAP_RE.match(n)]
+    load, _f, _o = TP.assign(grid, [(x, y, 1.0) for x, y in bank], float("inf"), 0.0)
+    assert max(load) <= 1000, max(load)
+
+
+def test_added_station_counted_in_fixed_cycles(tmp_path):
+    # FIXED-CYCLES (COORD 11-12, DIE-S81-88 12:29): a station register reach_fix adds on an internal_stations bus row
+    # is a lane cycle: fixed_cycles += added on every lane through that (part, bus), bind's native rule (fixed ==
+    # source + destination stations) kept where it held, latency table refreshed; ft stations reprice the table too
+    import gen as GEN
+    import schema as S
+    p = copy.deepcopy(EX)
+    p["partition_types"]["mid"]["internal_stations"] = [
+        {"conn": "bus:cfg_o", "from_um": [10.0, 10.0], "to_um": [854.0, 854.0], "regs_um": [[432.0, 432.0]],
+         "launch": "core", "capture": "face flop"}]
+    p["partition_types"]["mid"]["ft_slots"][0]["stations"] = 1          # x lane: 864-um ft hop -> 3 stations
+    ln = {x["id"]: x for x in p["lanes"]}
+    ln["cfg12"]["fixed_cycles"] = 1                                   # meets the rule: 1 source + 0 destination
+    p["latency"] = {"lanes": GEN.latency_table(S.Plan(copy.deepcopy(p)))}
+    base = _write(tmp_path, p)
+    out, ev = _fix(tmp_path, base, "fc", "--classes", "4")
+    q = json.loads(out.read_text())
+    regs = len(q["partition_types"]["mid"]["internal_stations"][0]["regs_um"])
+    added = regs - 1
+    assert added >= 1 and all(h <= RF.REACH_UM + 0.01 for h in [
+        RF._d(a, b) for a, b in zip([(10.0, 10.0)] + [tuple(r[:2]) for r in q["partition_types"]["mid"][
+            "internal_stations"][0]["regs_um"]], [tuple(r[:2]) for r in q["partition_types"]["mid"][
+            "internal_stations"][0]["regs_um"]] + [(854.0, 854.0)])])
+    qln = {x["id"]: x for x in q["lanes"]}
+    # both mid parts launch cfg_o: cfg12 (pm1 -> pm2) and cfg23 (pm2 -> pb); cfg01 (pa -> pm1.cfg_i) is untouched
+    assert qln["cfg12"]["fixed_cycles"] == 1 + added and qln["cfg23"]["fixed_cycles"] == added
+    assert qln["cfg01"].get("fixed_cycles") is None
+    fc = ev["fixed_cycles"]
+    assert fc["bus_deltas"] == {"mid.cfg_o": added} and fc["rule_broken"] == []
+    assert fc["lanes"]["cfg12"]["rule_before"]["ok"] and fc["lanes"]["cfg12"]["rule_after"]["ok"]
+    # the latency table equals the plan's own pricing again (check.py latency), incl. the ft stations of lane x
+    want = GEN.latency_table(S.Plan(q))
+    assert {k: v["cycles"] for k, v in q["latency"]["lanes"].items()} == {k: v["cycles"] for k, v in want.items()}
+    assert fc["latency"]["x"] == [4, 8]                                # 2 mid crossings x 1 -> 3 stations and fc["latency"]["cfg12"] == [3, 3 + added]
+    # idempotent: a second pass adds nothing
+    out2, ev2 = _fix(tmp_path, out, "fc2", "--classes", "4")
+    assert out2.read_bytes() == out.read_bytes()
+
+
+def test_per_type_error_is_a_nonzero_exit_with_the_type_list(tmp_path, monkeypatch, capsys):
+    # FAIL-LOUD (COORD 11-12, DIE-KV-99): an unresolved pin table (pins/<x>.json missing) left 8 KV hg types unfixed
+    # with exit 0.  Any per-type error now exits 3 and lists the types on stderr, in check and in fix; outputs are
+    # still written so the event can be read
+    real = RF.type_row
+
+    def row(P, tn, *a, **k):
+        if tn == "mid":
+            raise FileNotFoundError("pins/qkd_astk_ex_s_hg1101.json")
+        return real(P, tn, *a, **k)
+    monkeypatch.setattr(RF, "type_row", row)
+    base = _write(tmp_path, EX)
+    chk = tmp_path / "c.json"
+    assert RF.main(["check", str(base), "--json", str(chk)]) == 3
+    err = capsys.readouterr().err
+    assert "REACH-FIX-FAIL check: 1 type(s)" in err and "mid: FileNotFoundError" in err and "hg1101" in err
+    out, ev = tmp_path / "o.json", tmp_path / "e.json"
+    assert RF.main(["fix", str(base), "--out-plan", str(out), "--event", str(ev)]) == 3
+    err = capsys.readouterr().err
+    assert "REACH-FIX-FAIL fix" in err and "mid:" in err and out.exists() and ev.exists()
+    monkeypatch.setattr(RF, "type_row", real)
+    assert RF.main(["check", str(base), "--json", str(chk)]) == 0

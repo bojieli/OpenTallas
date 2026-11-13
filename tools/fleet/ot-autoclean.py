@@ -149,6 +149,9 @@ REL_RE = re.compile(r"(?<![\w./-])(scratch\d*/claude/[^\s'\"<>|;,()\[\]{}`*?$\\]
 WORD_RE = re.compile(r"[A-Za-z0-9_.+-]{8,}")
 ATTEMPT_RE = re.compile(r"^(.*/items/[^/]+)/attempt_(\d+)(?=/|$)")
 ITEM_RE = re.compile(r"^(.*/items/[^/]+)(?=/|$)")
+VISUAL_DIRS = ("layout_review", "geom")      # FLEET-2 11-12: judged by GEOM-REVIEW before an attempt may go
+VISUAL_HOLD_S = 24 * 3600
+VISUAL_EXT = (".png", ".svg", ".html", ".jpg", ".jpeg", ".gif", ".webp")
 RESUME_S = 24 * 3600   # COORD 11-08: FAIL rows resume from their last valid stage
 XPATH_RE = re.compile(r"/kit-wave/([^/]+)/[^/]+/items/([^/]+)/attempt_(\d+)$")   # die, item, N (plan dir ignored)
 STAMP_RE = re.compile(r"(20\d\d-\d\d-\d\d) (\d\d:\d\d)(?::(\d\d))?")
@@ -379,6 +382,100 @@ def protected_sources(coord):
     named by signed records, kit_wave live inputs; AUTOCLEAN-13: 8 rows under it were deleted on 11-10 because the union
     did not read it).  RETIRED-PROTECTION-EXTRAS.tsv stays optional."""
     return [os.path.join(coord, f) for f in REQUIRED_PROTECTED + OPTIONAL_PROTECTED]
+
+
+def _vh_path(s):
+    """attempt dir (through attempt_N) or item dir of a host:path / :host:path evidence string; '' if none"""
+    s = (s or "").strip()
+    m = re.match(r"^:?[A-Za-z0-9_.-]+:(/.*)$", s)
+    p = m.group(1) if m else s
+    if not p.startswith("/"):
+        return ""
+    m = re.search(r"^(.*?/items/[^/]+/attempt_\d+)(/|$)", p)
+    if m:
+        return m.group(1)
+    m = re.search(r"^(.*?/items/[^/]+)/(gen|geom|rtl|logs)(/|$)", p)
+    return m.group(1) if m else ""
+
+
+VISUAL_FRESH_S = 15 * 60
+VISUAL_HUB = "intel2"
+
+
+def _git_hold_sources(coord, now):
+    """(vq_text, state_text, age_s) from origin/coord/state: git fetch + git show; age = the tip commit's age"""
+    def g(*a, t=180):
+        r = subprocess.run(["git", "-C", coord, *a], capture_output=True, text=True, timeout=t)
+        if r.returncode:
+            raise OSError(r.stderr.strip()[-200:])
+        return r.stdout
+    g("fetch", "-q", "origin", "coord/state")
+    ct = float(g("log", "-1", "--format=%ct", "origin/coord/state").strip())
+    return (g("show", "origin/coord/state:lanes/VISUAL-QUEUE.tsv"), g("show", "origin/coord/state:autopilot/kit_wave_state.json"),
+            now - ct)
+
+
+def _ssh_hold_sources(coord, now):
+    """(vq_text, state_text, age_s) from the hub over ssh; age = the kit-wave state file's mtime age (the autopilot rewrites it constantly)"""
+    cmd = ("cd ~/coord && echo $(( $(date +%s) - $(stat -c %Y autopilot/kit_wave_state.json) )) && "
+           "cat lanes/VISUAL-QUEUE.tsv && echo '=====STATE=====' && cat autopilot/kit_wave_state.json")
+    r = subprocess.run(["ssh", "-n", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", VISUAL_HUB, cmd],
+                       capture_output=True, text=True, timeout=300)
+    if r.returncode:
+        raise OSError(r.stderr.strip()[-200:])
+    head, _, rest = r.stdout.partition("\n")
+    vq, sep, state = rest.partition("=====STATE=====\n")
+    if not sep:
+        raise OSError("hub read: no state marker")
+    return vq, state, float(head)
+
+
+def fetch_hold_sources(coord, now=None, readers=None):
+    """FLEET-2 11-12: the CURRENT hold sources, no flag to remember: origin/coord/state first, the hub over ssh second; a read
+    older than VISUAL_FRESH_S (15 min) does not count.  None when neither is fresh."""
+    now = time.time() if now is None else now
+    for rd_ in (readers or (_git_hold_sources, _ssh_hold_sources)):
+        try:
+            vq, state, age = rd_(coord, now)
+        except (OSError, ValueError, subprocess.SubprocessError):
+            continue
+        if age <= VISUAL_FRESH_S and vq and state:
+            return vq, state
+    return None
+
+
+def visual_hold_paths(coord, state_json=None, sources=None):
+    """FLEET-2 11-12: attempts that wait for a visual verdict (autoclean never deletes them): lanes/VISUAL-QUEUE.tsv rows in
+    state WAIT-VISUAL (render_dir / auto_geom) and kit-wave state rows whose route_hold or reason says WAIT-VISUAL (kit, geom_dir,
+    evidence).  sources = (vq_text, state_text) or None -> fetch_hold_sources(coord) (fresh < 15 min).  Returns a sorted list, or
+    None when no fresh source is readable (then NO file is written and the tool uses its 24 h render hold)."""
+    out = set()
+    if sources is None:
+        sources = fetch_hold_sources(coord)
+    if sources is None:
+        return None
+    try:
+        rows = [ln.split("\t") for ln in sources[0].split("\n") if ln.strip()]
+        hdr = rows[0]
+        for r in rows[1:]:
+            d = dict(zip(hdr, r))
+            if "WAIT-VISUAL" in d.get("state", ""):
+                for k in ("render_dir", "auto_geom"):
+                    p = _vh_path(d.get(k, ""))
+                    if p:
+                        out.add(p)
+        state = json.loads(sources[1])
+    except (ValueError, IndexError):
+        return None
+    for r in (state.get("items", state) or {}).values():
+        if not isinstance(r, dict):
+            continue
+        if "WAIT-VISUAL" in str(r.get("route_hold", "")) + str(r.get("reason", "")):
+            for k in ("kit", "geom_dir", "evidence"):
+                p = _vh_path(str(r.get(k, "")))
+                if p:
+                    out.add(p)
+    return sorted(out)
 
 
 def build_protected_union(coord):
@@ -998,6 +1095,12 @@ class Job:
         q = jl(os.path.join(snap, "queue.json"))
         self.queue = PathSet([(p, "queue post") for p in q["paths"]], deep=self.deep, canon=self.paths.canon)
         self.qwords = set(q["words"])
+        vh = os.path.join(snap, "visual_hold.txt")
+        self.visual_names = None
+        if os.path.exists(vh):
+            with open(vh) as fh:
+                self.visual_names = {self.paths.canon(x.strip()) if x.strip().startswith("/") else x.strip()
+                                     for x in fh if x.strip() and not x.startswith("#")}
         kw = os.path.join(snap, "kitwave.json")
         self.kitwave = None
         if os.path.exists(kw):
@@ -1454,10 +1557,14 @@ class Job:
             verdict = f"superseded by attempt_{self.kw_latest[m.group(1)]}"
         elif cur > int(m.group(2)):               # older attempt of a die|item now run from another plan dir
             verdict = f"superseded-xpath by attempt_{cur}"
-        elif aggr and not st:
-            verdict = "no kit-wave state row (aggressive)"
         else:
+            # FLEET-2 11-12 RUN-DIR LOSS: a row the kit-wave state does not know (lane run roots such as vislayout2-*,
+            # a state snapshot taken before the row was launched) is NEVER deleted, aggressive or not: only a terminal
+            # record or a later attempt of the same item may release an attempt
             return "kit-wave unknown", []
+        vh = self.visual_hold(d, c)
+        if vh:
+            return vh, []
         h = self.signed_set.hit(c)
         if h and not (aggr and self.stub_verified(c) is None):       # aggressive: a verified AGIdock copy lets the signed attempt go
             return "signed: " + h, []
@@ -1482,6 +1589,42 @@ class Job:
         finally:
             self._qn_skip = False
             self._attempt_mode = False
+
+    def visual_hold(self, d, c):
+        """FLEET-2 11-12: an attempt whose layout_review/ or geom/ is not yet judged keeps EVERYTHING (gen/, geom/,
+        layout_review/, renders): held while it is named in <snapshot>/visual_hold.txt (one path or item name per line,
+        written by the driver from lanes/GEOM-REVIEW.md WAIT-VISUAL attempts), and, with no such list, while its
+        layout_review/ or geom/ is younger than VISUAL_HOLD_S."""
+        try:
+            has = any(os.path.isdir(os.path.join(d, n)) for n in VISUAL_DIRS)
+        except OSError:
+            return "visual-hold: unreadable"
+        names = getattr(self, "visual_names", None)
+        if names is not None:
+            m = ATTEMPT_RE.match(c)
+            if (c in names or d in names or (m and (m.group(1) in names or os.path.basename(m.group(1)) in names))
+                    or any(n.startswith("/") and c.startswith(n + "/") for n in names)):
+                return "visual-hold: WAIT-VISUAL attempt (visual_hold.txt)"
+        if not has:
+            return None
+        if names is None:
+            # no driver list: the renders a reviewer looks at (layout_review/ anything; geom/ images, svg, html) younger than 24 h;
+            # geom/auto_geom.json alone is a machine check, not a render, and does not hold
+            for n in VISUAL_DIRS:
+                p = os.path.join(d, n)
+                if not os.path.isdir(p):
+                    continue
+                newest = 0.0
+                for dp, _dn, fns in os.walk(p):
+                    for fn in fns:
+                        if n == "layout_review" or fn.lower().endswith(VISUAL_EXT):
+                            try:
+                                newest = max(newest, os.lstat(os.path.join(dp, fn)).st_mtime)
+                            except OSError:
+                                pass
+                if newest and self.now - newest < VISUAL_HOLD_S:
+                    return f"visual-hold: {n}/ render < 24 h and no visual_hold.txt"
+        return None
 
     # ---- recheck + delete
     def recheck(self, cls, path, files):
@@ -1624,6 +1767,10 @@ class Job:
                 return "kept: emergency hold (bind/src tree)"
         if c in keep or p in keep:
             return "kept: referenced / signed / git / keep"
+        if os.path.basename(c) in VISUAL_DIRS + ("gen",) and re.search(r"/items/[^/]+/attempt_\d+/", c + "/"):
+            return "kept: layout_review/geom/gen of an attempt (FLEET-2 11-12)"
+        if re.search(r"/(vislayout2?[^/]*|[^/]*-wave-[^/]*)/", c + "/") and os.path.isfile(os.path.join(p, ".keep")):
+            return "kept: lane run root .keep"
         for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave-keep", self.kwkeep),
                          ("local keep", self.localkeep_trim)):
             for f in self.paths.forms(p):
@@ -2409,6 +2556,13 @@ class Driver:
                 fh.write(kw)
         else:
             say("snapshot: kit-wave state unavailable; hosts skip class a")
+        vh = visual_hold_paths(a.coord)
+        if vh is None:
+            say("snapshot: no fresh (<15 min) VISUAL-QUEUE.tsv / kit-wave state from origin/coord/state or the hub; no visual_hold.txt (24 h render hold applies)")
+        else:
+            with open(os.path.join(out, "visual_hold.txt"), "w") as fh:
+                fh.write("".join(p + "\n" for p in vh))
+            say(f"snapshot: visual_hold.txt {len(vh)} WAIT-VISUAL attempt paths")
         self.dx_snapshot(out)
         n_store = write_store_index(a.coord, os.path.join(out, STORE_INDEX))
         say(f"snapshot: signed-store index {n_store} entries")

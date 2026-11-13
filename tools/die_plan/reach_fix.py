@@ -80,6 +80,13 @@ LANDED_WINDOW_PS = 416.5   # S81 landing window (DIE-RECHECK-1 / DIE-S81-87 reac
 MEASURED = {}              # type -> [(x, y, 1.0)] placed clock sinks (tap_sinks_dump.tcl), replaces the plan sinks
 MIN_TAPS = {}              # type -> minimum tap count (die-owner input, e.g. KV hgi_v8 39)
 TAP_TABLE = False          # check --tap-table: keep per-tap rows
+# TAP-CAP (COORD 11-12, VISLAYOUT3-KVHEAD hd_spn_end SP3: cap 1000 on paper, 1225 measured at place): class 2 is
+# priced on the NEAREST-tap split (Voronoi), the split AUTO-GEOM measures at place.  The kit's cap pass (clock_taps.tcl
+# OT_TAP_MAX_SINKS) runs only at pre-CTS and its move bound is half OT_TAP_PITCH_UM (50 mm in density kits), so pricing
+# the capacity moves let a tap sit over cap at place and pushed sinks past the reach radius at CTS.  Fix (b): taps are
+# placed so the nearest split itself meets the cap; the kit cap pass then has nothing to move.  --assign kit restores
+# the old pricing (nearest + capacity moves <= radius) for A/B.
+ASSIGN = ["nearest"]
 REF = {}                   # --ref-plan: {"P": Plan before the die move}; raw-reference depths are checked against it
 
 
@@ -218,7 +225,10 @@ def tap_metrics(P, tn, G=None, cap=CAP_SINKS, radius=RADIUS_UM):
     if not grid or not sinks:
         out.update(c1=len(out["tap_on_macro"]), c1_max_um=0.0, c2=pile, c2_max=0.0)
         return out, None
-    load, far, own = TP.assign(grid, sinks, cap, radius)
+    if ASSIGN[0] == "nearest":
+        load, far, own = TP.assign(grid, sinks, float("inf"), 0.0)       # no capacity moves: pure Voronoi split
+    else:
+        load, far, own = TP.assign(grid, sinks, cap, radius)
     dist = [_d(s, (grid[j][1], grid[j][2])) for s, j in zip(sinks, own)]
     over_r = [i for i, d in enumerate(dist) if d > radius + 1e-6]
     kinds = defaultdict(int)
@@ -396,6 +406,12 @@ def reset_metrics(P, tn, G=None, reach=REACH_UM):
         xy[r["q"]] = tuple(r["xy"])
     hops = [_d(xy[r["d"]], r["xy"]) for r in T.get("relays", []) if r["d"] in xy]
     out["hop_max_um"] = round(max(hops), 1) if hops else 0.0
+    try:                                     # per-type reset reach (reset_tree.relay_um: only tightens)
+        reach = min(reach, RT.relay_um(P, tn))
+    except Exception as e:  # noqa: BLE001
+        out["error"] = "%s: %s" % (type(e).__name__, str(e)[:160])
+        return out
+    out["reach_um"] = reach
     out["hops_over"] = sum(1 for h in hops if h > reach + 1e-6)
     allr = []
     if T.get("start"):
@@ -714,6 +730,19 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                 mine.add((float(nw[0]), float(nw[1])))
         if mv:
             rec["changes"].append(["legal_moves", rnd, mv])
+        if tn in MEASURED:
+            # TAP-CAP (b): a re-site tap for MEASURED sinks (a placed register bank the planner inventory does not list)
+            # is empty to the planner's export check and was dropped every round (VL3 hd_spn_end SP3 W bar: 1225 at
+            # place).  One inventory sink at the tap's final site keeps it; tap_metrics prices the measured sinks.
+            fin = {(float(o[0]), float(o[1])): (float(w[0]), float(w[1])) for _n, o, w in mv}
+            keep_s = []
+            for q in new:
+                x_, y_ = fin.get((float(q[0]), float(q[1])), (float(q[0]), float(q[1])))
+                keep_s.append([round(x_, 4), round(y_, 4), 1.0])
+            if keep_s:
+                ck.setdefault("sink_sites_um", []).extend(keep_s)
+                ck.setdefault("reach_fix_sinks", []).extend(keep_s)
+                rec["changes"].append(["tap_anchor_sinks+", rnd, len(keep_s)])
         for _k in range(len(new) + len(mv)):
             err = _export_ok(Q, P.path, tn)
             m = (re.search(r"tap (clk_t\d+) load=0/.*empty=True", err or "")
@@ -885,6 +914,14 @@ def fix_hops(t, reach=REACH_UM, add_max=4, ends=None):
             f["regs_um"] = []
         idx = {k: ends[f.get("name")] for k, f in enumerate(t.get("ft_slots") or []) if ends and f.get("name") in ends}
         rec["ft"] = SR.add_ft_regs(None, t0, t, reach, add_max, raster=ras.R, use_base=False, ends=idx)
+        # a slot without an int stations key is priced at 1 by the plan (schema lane_natural): add_ft_regs only bumps
+        # an int key, so the added stages are written here or the lane latency misses them (FIXED-CYCLES 11-12)
+        add = defaultdict(int)
+        for r in rec["ft"]:
+            add[r.get("slot")] += int(r.get("added", 0))
+        for k, f in enumerate(t.get("ft_slots") or []):
+            if add.get(k) and not isinstance(f.get("stations"), int):
+                f["stations"] = 1 + add[k]
     for si, s in enumerate(t.get("internal_stations") or []):
         if not s.get("from_um") or not s.get("to_um"):
             continue
@@ -1265,6 +1302,90 @@ def fix_landed(Q, rows):
     return done
 
 
+def _bus_depths(t):
+    """{bus: register stages} of the type's internal_stations 'bus:<name>' rows (per-core rows of one bus merge to the
+    deepest chain, as kit_istations.bus_entries / native_istations do)."""
+    out = {}
+    for s in t.get("internal_stations") or []:
+        c = str(s.get("conn") or "")
+        if c.startswith("bus:"):
+            out[c[4:]] = max(out.get(c[4:], 0), len(s.get("regs_um") or []))
+    return out
+
+
+def _lane_ends(raw, ln, ports):
+    """[(part, bus)] every partition bus a lane touches (source out, crossed ft _i/_o, destination in); no @die."""
+    out = []
+    for pid in ln.get("ports") or []:
+        p = ports.get(pid) or {}
+        for side in ("src", "dst"):
+            e = p.get(side) or {}
+            if e.get("part") and e.get("part") != "@die" and (e["part"], e.get("bus")) not in out:
+                out.append((e["part"], e.get("bus")))
+    return out
+
+
+def native_rule(raw, lid):
+    """bind's native-station rule (native_istations.annotate): fixed_cycles == source out-bus stations + destination
+    in-bus stations.  None when neither end has a station on its bus (the rule does not apply)."""
+    ports = {p["id"]: p for p in raw.get("ports") or []}
+    parts = {p["name"]: p for p in raw.get("partitions") or []}
+    ln = next(x for x in raw.get("lanes") or [] if x["id"] == lid)
+    a, b = ports[ln["ports"][0]]["src"], ports[ln["ports"][-1]]["dst"]
+    dep = lambda e: _bus_depths(raw["partition_types"].get((parts.get(e.get("part")) or {}).get("type"), {})).get(e.get("bus"))
+    s, d = dep(a), dep(b)
+    if s is None and d is None:
+        return None
+    return dict(source=s or 0, destination=d or 0, fixed=int(ln.get("fixed_cycles") or 0),
+                ok=int(ln.get("fixed_cycles") or 0) == (s or 0) + (d or 0))
+
+
+def sync_fixed_cycles(raw, Q, plan_path=None):
+    """FIXED-CYCLES (COORD 11-12, DIE-S81-88 12:29): every register stage reach_fix adds is counted in the lane.
+    ft slot stations are priced by the plan itself (schema lane_natural sums them); internal_stations 'bus:<name>' stages
+    are not: the bind lands them as the lane's fixed_cycles (kit_istations: pads = fixed_cycles; native_istations:
+    fixed_cycles == source + destination stations).  So every lane through a (part, bus) whose type gained d stages on
+    that bus gets fixed_cycles += d (summed over the lane's ends), the bind rule is re-checked on every touched lane
+    (a lane that met it before must meet it after), and the plan's latency table is refreshed for the lanes whose
+    latency changed (ft stations and fixed_cycles alike; R8 group pads follow).  Returns the record."""
+    ports = {p["id"]: p for p in Q.get("ports") or []}
+    ptype = {p["name"]: p["type"] for p in Q.get("partitions") or []}
+    delta = {}
+    for tn, t1 in (Q.get("partition_types") or {}).items():
+        t0 = (raw.get("partition_types") or {}).get(tn)
+        if t0 is None or t0 is t1:
+            continue
+        d0, d1 = _bus_depths(t0), _bus_depths(t1)
+        for bus in set(d0) | set(d1):
+            if d1.get(bus, 0) != d0.get(bus, 0):
+                delta[(tn, bus)] = d1.get(bus, 0) - d0.get(bus, 0)
+    rec = dict(bus_deltas={"%s.%s" % k: v for k, v in sorted(delta.items())}, lanes={}, rule_broken=[], latency={})
+    for ln in Q.get("lanes") or []:
+        k = sum(delta.get((ptype.get(part), bus), 0) for part, bus in _lane_ends(Q, ln, ports))
+        if not k:
+            continue
+        r0 = native_rule(raw, ln["id"])
+        f0 = ln.get("fixed_cycles")
+        ln["fixed_cycles"] = int(f0 or 0) + k
+        r1 = native_rule(Q, ln["id"])
+        rec["lanes"][ln["id"]] = dict(before=f0, after=ln["fixed_cycles"], added=k, rule_before=r0, rule_after=r1)
+        if r0 and r0["ok"] and not (r1 and r1["ok"]):
+            rec["rule_broken"].append(ln["id"])
+    tab = (Q.get("latency") or {}).get("lanes")
+    if tab is not None:
+        import gen as GEN
+        import schema as S
+        T0 = GEN.latency_table(S.Plan(raw, plan_path))
+        T1 = GEN.latency_table(S.Plan(Q, plan_path))
+        Q["latency"] = dict(Q["latency"], lanes=dict(tab))
+        for lid, d in T1.items():
+            if T0.get(lid, {}).get("cycles") != d["cycles"] or T0.get(lid, {}).get("word_cycles") != d.get("word_cycles"):
+                rec["latency"][lid] = [T0.get(lid, {}).get("cycles"), d["cycles"]]
+                Q["latency"]["lanes"][lid] = d
+    rec["lane_cycles_added"] = sum(b - (a or 0) for a, b in rec["latency"].values())
+    return rec
+
+
 def balance_score(plan_path, run_dir, window=LANDED_WINDOW_PS, corners=("TT", "FF")):
     """INSERTION-BALANCE (COORD 11-12 06:4x, all dies; method of DIE-S81-88 ready12b, S81 780 -> 15 TT): score a
     die_clock.py run (balanced-by-construction H-tree, `die_clock.py run PLAN --out RUN --corner TT --corner FF
@@ -1428,6 +1549,7 @@ def _setup(a, P):
     m, bad = load_measured(a.sinks_dir, a.sinks, outl)
     MEASURED.update(m)
     TAP_TABLE = bool(getattr(a, "tap_table", None))
+    ASSIGN[0] = getattr(a, "assign", None) or "nearest"
     REF.clear()
     if getattr(a, "ref_plan", None):
         rr, _rsha = load_raw(a.ref_plan)
@@ -1451,6 +1573,20 @@ def write_tap_table(path, rows, cap, radius):
             out.append("\t".join(str(v) for v in (r["type"], n, x, y, ld, far, int(ld > cap + 1e-6),
                                                    int(far > radius + 1e-6), r.get("sink_source", ""))))
     Path(path).write_text("\n".join(out) + "\n")
+
+
+def fail_loud(mode, errs, extra=None):
+    """FAIL-LOUD (COORD 11-12, DIE-KV-99: 8 KV hg types left unfixed on an unresolved pins/ table, exit 0): any per-type
+    error (export, pin table, fix job) or a broken bind rule is a non-zero exit with the type list on stderr."""
+    errs = sorted(errs.items())
+    if not errs and not extra:
+        return 0
+    msg = ["REACH-FIX-FAIL %s: %d type(s) with errors" % (mode, len(errs))]
+    msg += ["  %s: %s" % (t, str(e)[:300]) for t, e in errs]
+    if extra:
+        msg.append("  %s" % extra)
+    print("\n".join(msg), file=sys.stderr)
+    return 3
 
 
 def cmd_check(a):
@@ -1477,7 +1613,7 @@ def cmd_check(a):
     if a.tsv:
         Path(a.tsv).write_text("\n".join(lines) + "\n")
     print(json.dumps(dict(die=P.name, plan_sha256=sha[:12], **rec["summary"])))
-    return 0
+    return fail_loud("check", {r["type"]: r["error"] for r in rows if r.get("error")})
 
 
 def cmd_fix(a):
@@ -1526,6 +1662,7 @@ def cmd_fix(a):
             after_rows.append(dict(r, **{k: v for k, v in (x["after"] or {}).items()}))
         else:
             after_rows.append(r)
+    fc = sync_fixed_cycles(raw, Q, a.plan) if Q is not raw else None
     out_txt = json.dumps(Q, indent=1, sort_keys=False) + "\n"
     new_sha = hashlib.sha256(out_txt.encode()).hexdigest() if Q is not raw else sha
     if a.out_plan:
@@ -1537,7 +1674,7 @@ def cmd_fix(a):
               landed=dict(rows=lr, applied=landed_done, before=_landed_summary(lr),
                           after=_landed_summary([dict(r, ok=r.get("ok") or r.get("lane") in landed_done) for r in lr]))
               if lr else None,
-              applied=sum(1 for r in rows if r["applied"]), rows=rows,
+              applied=sum(1 for r in rows if r["applied"]), rows=rows, fixed_cycles=fc,
               cycles_added={r["type"]: r["fix"].get("hops", {}).get("cycles_added") for r in rows
                             if r["applied"] and (r["fix"].get("hops") or {}).get("cycles_added")})
     if a.event:
@@ -1547,8 +1684,15 @@ def cmd_fix(a):
                                          + [tsv_line(r, "after") for r in after_rows]) + "\n")
     print(json.dumps(dict(die=P.name, base=sha[:12], out=new_sha[:12], applied=ev["applied"], cap=a.cap,
                           measured=len(MEASURED), before=ev["summary_before"], after=ev["summary_after"],
-                          landed_lanes=len(landed_done))))
-    return 0
+                          landed_lanes=len(landed_done), fixed_cycles_lanes=len((fc or {}).get("lanes") or {}),
+                          lane_cycles_added=(fc or {}).get("lane_cycles_added", 0),
+                          rule_broken=(fc or {}).get("rule_broken", []))))
+    errs = {r["type"]: r["error"] for r in after_rows if r.get("error")}
+    for tn, rec, after, _tnew in res:
+        if after is None and (rec or {}).get("error"):
+            errs[tn] = "fix: " + rec["error"]
+    rb = (fc or {}).get("rule_broken")
+    return fail_loud("fix", errs, "bind native-station rule broken on lanes %s" % rb if rb else None)
 
 
 def main(argv=None):
@@ -1564,6 +1708,9 @@ def main(argv=None):
         p.add_argument("-j", "--jobs", type=int, default=1)
         p.add_argument("--cap", type=int, default=None, help="sinks per tap (default per die: %s)" % DIE_CAP)
         p.add_argument("--radius", type=float, default=RADIUS_UM)
+        p.add_argument("--assign", choices=("nearest", "kit"), default="nearest",
+                       help="class-2 split: nearest (default, = AUTO-GEOM at place; taps placed so it meets the cap) or "
+                            "kit (nearest + capacity moves <= radius, the pre-CTS cap pass; A/B only)")
         p.add_argument("--reach", type=float, default=REACH_UM)
         p.add_argument("--span", type=float, default=REPEATER_UM)
         p.add_argument("--sinks-dir", action="append", default=[], help="dir of <type>.json placed sinks")

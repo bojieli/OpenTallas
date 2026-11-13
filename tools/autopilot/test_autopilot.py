@@ -662,7 +662,8 @@ class TestTick(TickBase):
         order = [a[a.index("--dir") + 1].rsplit("_", 1)[1] for _, a in self.f.launched]
         self.assertEqual(order, ["4", "3", "2", "1", "0"])
 
-    def test_infra_oom_resubmits_once_with_more_mem_then_marks(self):
+    def test_infra_oom_resubmits_twice_with_more_mem_then_marks(self):
+        # KW-FIX-46 11-12: MAX_OOM_RESUBMITS = 2 (hbm q_mcb_ne peaked > 75 GB: 48 and 72 both OOM)
         self.queue(ROW)
         self.tick()
         path = "/srv/opentallas-scratch2/claude/s81/kits/slice_station__t5"
@@ -674,7 +675,12 @@ class TestTick(TickBase):
         self.assertEqual(argv[argv.index("--mem") + 1], "36")
         self.finish_client(self.f.launched[1][0], "ot-run: RAN on epyc2: exit 2\nAP_RC=2\n")
         jobs = self.tick()
-        self.assertEqual(len(self.f.launched), 2)        # once only
+        self.assertEqual(len(self.f.launched), 3)
+        argv = self.f.launched[2][1]
+        self.assertEqual(argv[argv.index("--mem") + 1], "54")
+        self.finish_client(self.f.launched[2][0], "ot-run: RAN on epyc2: exit 2\nAP_RC=2\n")
+        jobs = self.tick()
+        self.assertEqual(len(self.f.launched), 3)        # two OOM resubmits only
         self.assertEqual(list(jobs.values())[0]["status"], "DONE-CRASH")
         self.assertIn("CRASH/infra-oom", (Path(self.tmp.name) / "structural.tsv").read_text())
 
@@ -2130,3 +2136,26 @@ class TestPhysicalGoalReceipt(Base):
         self.assertTrue(self.ap.poll_physical_completion({},j))
         self.assertEqual(seen[0][0]["cts_odb"],"/kit/run/results/asap7/t/base/4_cts.odb")
         self.assertEqual(seen[0][1]["exit"],0)
+
+
+class SealedWatchdogStopTest(unittest.TestCase):
+    """KW-FIX-46 11-12 (hbm PHY_NC 2731c12447d5): a WATCHDOG STOP of a container inside a sealed ot-job names the job dir"""
+
+    def test_stop_line_found_by_sealed_job_dir(self):
+        import autopilot as ap
+        with tempfile.TemporaryDirectory() as td:
+            wl = Path(td) / "WATCHDOG.log"
+            wl.write_text("2026-11-12 13:13 PST STOP epyc4 GRT dpkit-PHY_NC-3468881 idle 6h18 lane ? kit epyc4:/srv/x/"
+                          "ot-jobs/PHY_NC-route-aware-parakeet-3317157-1794474529/work rc 0 why hung 6h18\n")
+            cl = Path(td) / "a1.log"
+            cl.write_text("ot-job: SEALED /srv/x/ot-jobs/PHY_NC-route-aware-parakeet-3317157-1794474529: 3 inputs\n")
+            old = ap.WATCHDOG_LOG
+            ap.WATCHDOG_LOG = wl
+            try:
+                sj = ap.sealed_job_dir({"client_log": str(cl)})
+                self.assertTrue(sj.endswith("/ot-jobs/PHY_NC-route-aware-parakeet-3317157-1794474529"))
+                self.assertIsNotNone(ap.watchdog_stop(sj.rsplit("/", 1)[-1] + "/", 0))
+                self.assertIsNone(ap.watchdog_stop("PHY_NC-route-aware-parakeet-3317157-17944745/", 0))
+                self.assertIsNone(ap.watchdog_stop("oth-ubuntu-1-2", 0))
+            finally:
+                ap.WATCHDOG_LOG = old

@@ -393,12 +393,47 @@ def lec_kit(kit, up=3):
     return os.path.abspath(kit)
 
 
-def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False):
+def kit_ff_reference(kit):
+    """the kit's own per-corner FF insertion (sdc_lint.json insertion_ff_ps, in the kit or the nearest kit above an ECO
+    pass dir), or None"""
+    for k in dict.fromkeys((os.path.abspath(kit), lec_kit(kit))):
+        p = os.path.join(k, 'sdc_lint.json')
+        if os.path.isfile(p):
+            try:
+                v = load(p).get('insertion_ff_ps')
+            except Exception:
+                v = None
+            if v is not None:
+                return v
+    return None
+
+
+def ff_vclk_args(kit, source_record=None):
+    """KW-FIX-46 11-12 (STA2204-1 13:32, S81-SVCRS-3 su_smc / svc_merge_h4): the FF reference of a re-sign.  A kit with its
+    own sdc_lint insertion_ff_ps keeps '--ff-vclk auto' (signoff.py binds it).  A kit without one, re-signing a record
+    that signed under bound-ff, replays that record's contract-pinned reference (policy ff_vclk / ff_vclk_bound_ps /
+    ff_vclk_contract): 'auto' resolved to the single TT SDC vclk there and failed ff_ref_missing although nothing in the
+    DB or the tools changed.  The reference is the one the record was signed under, not a waiver."""
+    if kit_ff_reference(kit) is None and source_record:
+        try:
+            pol = load(source_record).get('policy') or {}
+        except Exception:
+            pol = {}
+        if pol.get('ff_vclk') == 'bound-ff' and pol.get('ff_vclk_bound_ps') is not None:
+            why = 'replayed from signed record %s: %s' % (source_record, pol.get('ff_vclk_contract') or 'bound-ff')
+            return ['--ff-vclk', 'bound-ff', '--ff-bound-ps', '%g' % float(pol['ff_vclk_bound_ps']),
+                    '--ff-vclk-contract', why[:500]]
+    return ['--ff-vclk', 'auto']
+
+
+def run_cmds(kit, run_dir, tools, out, image, name, lec_netlist=None, mem='32g', cpus=8, superset=False,
+             source_record=None):
     """the two commands of one re-sign (same as the lane scripts resign3.sh / tag_signoff_lec.sh)."""
     kit, run_dir, tools, out = map(os.path.abspath, (kit, run_dir, tools, out))
     lkit = lec_kit(kit)
     so = [sys.executable, '-I', os.path.join(tools, 'signoff.py'), 'run', '--run-dir', run_dir, '--kit', kit,
-          '--corners', 'tt,ff', '--ff-vclk', 'auto', '--out', os.path.join(out, 'signoff'), '--image', image]
+          '--corners', 'tt,ff'] + ff_vclk_args(kit, source_record) + [
+          '--out', os.path.join(out, 'signoff'), '--image', image]
     if lec_netlist:
         net = os.path.abspath(lec_netlist)
         mounts = ['-v', '%s:/net.v:ro' % net]
@@ -449,6 +484,8 @@ def main(argv=None):
             s.add_argument('--dry-run', action='store_true', help='print the commands only')
             s.add_argument('--auto', action='store_true', help='the unattended form (module doc)')
             s.add_argument('--lec-mem', default='32g', help='LEC container memory')
+            s.add_argument('--source-record', help='signoff.json being re-signed: its FF reference is replayed when the kit '
+                           'has no insertion_ff_ps of its own (ff_vclk_args)')
         else:
             s.add_argument('--dir', required=True, help='re-sign dir holding signoff/signoff.json + lec/lec.json')
             s.add_argument('--tools', help='tag tools dir to verify against TAG (recommended)')
@@ -473,7 +510,7 @@ def main(argv=None):
             print('clock_family.tcl from %s: %s' % (a.tag, export_clock_family(a.repo, a.tag, a.tools)), file=sys.stderr)
             name = a.name or default_container_suffix(a.out)
             so, lec = run_cmds(a.kit, a.run_dir or os.path.join(a.kit, 'run'), a.tools, a.out, a.image, name,
-                               a.lec_netlist, mem=a.lec_mem, superset=a.auto)
+                               a.lec_netlist, mem=a.lec_mem, superset=a.auto, source_record=a.source_record)
             if a.dry_run:
                 print(' '.join(so)); print(' '.join(lec)); return 0
             env = dict(os.environ, SIGNOFF_DOCKER=os.environ.get('SIGNOFF_DOCKER', 'docker'),

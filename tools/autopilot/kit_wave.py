@@ -1014,6 +1014,8 @@ def select(rows, cfg, die, state, plan_types=None):
             why = HOLD_UNCHANGED
         elif rec and cfg.get("form_gate", True) and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = WAIT_FORM
+        elif rec and cfg.get("flow_repeat_gate", True) and flow_repeat(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+            why = FLOW_REPEAT
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
@@ -1058,6 +1060,11 @@ def select(rows, cfg, die, state, plan_types=None):
                 if same:
                     skip.setdefault(HOLD_UNCHANGED, []).extend(same)
                     todo = [c for c in todo if c not in same]
+            if cfg.get("flow_repeat_gate", True):
+                rep = [c for c in todo if flow_repeat(cfg, state, die, c, its.get(item_key(die, ev, c, blk(c))), r["item"], r.get("kind"))]
+                if rep:
+                    skip.setdefault(FLOW_REPEAT, []).extend(rep)
+                    todo = [c for c in todo if c not in rep]
             if not cls and blocked:
                 continue
             if not cls:
@@ -3140,7 +3147,80 @@ HOLD_UNCHANGED = "no input change since this FAIL: redesign list, no P&R retry (
 WAIT_FORM = "WAIT-FORM: latest visual verdict BAD and the form fingerprint (type block, plan sha, kit recipe) is unchanged; releases when it changes (COORD 11-12)"
 WAIT_FORM_LOG = "kit_wave_wait_form.tsv"
 _GEOM_VERDICT_RE = re.compile(r"GEOM VERDICT \[[^\]]*viewed\] (\w+)[/ ](\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(BAD|ISSUES|OK|GOOD)\b")
-_GEOM_CACHE = {"t": 0.0, "mtime": None, "v": {}}
+_GEOM_CACHE = {"t": 0.0, "mtime": None, "v": {}, "ts": {}}
+_VERDICT_TS_RE = re.compile(r"^-\s+(\d{4}-\d\d-\d\d \d\d:\d\d)")
+VERDICT_FORMS = "kit_wave_verdict_forms.json"
+VERDICT_SLACK_S = 60                                   # verdict lines carry minutes only
+
+
+def verdict_line_ts(ln):
+    """epoch (hub local time) of a '- YYYY-MM-DD HH:MM ...' review line, None when the line has no time"""
+    m = _VERDICT_TS_RE.match(ln)
+    if not m:
+        return None
+    try:
+        return time.mktime(time.strptime(m.group(1), "%Y-%m-%d %H:%M"))
+    except ValueError:
+        return None
+
+
+def _verdict_forms_path():
+    return Path.home() / "coord" / "autopilot" / VERDICT_FORMS
+
+
+def _verdict_key(die, item, attempt, ts):
+    return f"{die}|{item}|{int(attempt)}|{int(ts)}"
+
+
+def verdict_form(die, item, attempt, ts):
+    """the form fingerprint bound to the verdict at ts on die/item attempt N, or None (never bound)"""
+    try:
+        return json.loads(_verdict_forms_path().read_text()).get(_verdict_key(die, item, attempt, ts))
+    except (OSError, ValueError, TypeError):
+        return None
+
+
+def bind_verdict_form(die, item, attempt, ts, form):
+    try:
+        p = _verdict_forms_path()
+        tab = json.loads(p.read_text()) if p.exists() else {}
+        k = _verdict_key(die, item, attempt, ts)
+        if tab.get(k) == form:
+            return
+        tab[k] = form
+        tmp = p.with_name(p.name + ".tmp")
+        tmp.write_text(json.dumps(tab, sort_keys=True))
+        os.replace(tmp, p)
+    except (OSError, ValueError, TypeError):
+        pass
+
+
+def verdict_applies(cfg, rec, ts):
+    """KW-FIX-46 11-12 (COORD, hbm PHY_NC: GEOM-VIS-1's 01:20 BAD on the 11-11 attempt_4 held the NEW a4 of 14:57): a visual
+    verdict binds to (row, attempt, form fingerprint).  Attempt numbers repeat (a new event or block restarts them), so a verdict
+    given BEFORE this build started rated an earlier build: it applies only when that build's bound form equals this build's
+    form.  A verdict given after this build started rated it, and its form is bound then.  No bound form (a verdict older than
+    the binding, another lane's build), an unreadable spec or an unknown form = the verdict does not apply (WAIT-VISUAL).
+    A line without a time keeps the old behaviour (applies)."""
+    if ts is None:
+        return True
+    try:
+        started = float(rec.get("started") or 0)
+    except (TypeError, ValueError):
+        started = 0.0
+    spec_file = Path(rec["dir"]) / "spec.json" if rec.get("dir") else None
+    try:
+        spec = json.loads(spec_file.read_text()) if spec_file else None
+    except (OSError, ValueError):
+        spec = None
+    gh = list((((cfg.get("dies") or {}).get(rec.get("die")) or {}).get("gen_hosts") or []))
+    cur = form_fp(spec, spec_file, gh) if spec is not None else None
+    if started and ts + VERDICT_SLACK_S < started:
+        bound = verdict_form(rec["die"], rec["item"], rec.get("attempt") or 0, ts)
+        return bound is not None and cur is not None and bound == cur
+    if cur is not None:
+        bind_verdict_form(rec["die"], rec["item"], rec.get("attempt") or 0, ts, cur)
+    return True
 
 
 def geom_verdicts():
@@ -3154,12 +3234,13 @@ def geom_verdicts():
         mt = p.stat().st_mtime
         if _GEOM_CACHE["mtime"] == (str(p), mt):
             return _GEOM_CACHE["v"]
-        v = {}
+        v, ts = {}, {}
         for ln in p.read_text(errors="replace").splitlines():
             m = _GEOM_VERDICT_RE.search(ln)
             if m:
                 v[(m.group(1), m.group(2))] = (int(m.group(3)), m.group(4))
-        _GEOM_CACHE.update(mtime=(str(p), mt), v=v)
+                ts[(m.group(1), m.group(2))] = verdict_line_ts(ln)
+        _GEOM_CACHE.update(mtime=(str(p), mt), v=v, ts=ts)
         return v
     except OSError:
         return _GEOM_CACHE["v"]
@@ -3304,7 +3385,15 @@ def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
         cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
                         kind=kind or rec.get("kind") or "type")
         gh = list((cfg["dies"][die].get("gen_hosts") or []))
-        fo, fc = form_fp(old, old_dir / "spec.json", gh), form_fp(cand, None, gh)
+        vts = (_GEOM_CACHE.get("ts") or {}).get(({"qwen_kvsys": "qwen_kvsys", "qwen_compute": "qwen_compute"}.get(die, die), item))
+        bound = verdict_form(die, item, v[0], vts) if vts is not None else None
+        if bound is not None:
+            fo = bound                     # KW-FIX-46 verdict binding: the form the verdict rated
+        elif vts is not None and (old_dir / "spec.json").stat().st_mtime > vts + VERDICT_SLACK_S:
+            return False                   # that attempt dir now holds a newer build: the rated form is unknown, never a hold
+        else:
+            fo = form_fp(old, old_dir / "spec.json", gh)
+        fc = form_fp(cand, None, gh)
         hold = fo is not None and fo == fc
         if hold:
             try:
@@ -3315,6 +3404,71 @@ def form_wait(cfg, st, die, item, rec, parent=None, kind="type"):
         return hold
     except (OSError, ValueError, KeyError, TypeError):
         return False
+FLOW_REPEAT = ("FLOW-REPEAT: the last two attempts failed with the same tool error and the form fingerprint (type block, plan "
+               "sha, kit recipe) is unchanged; releases when the form changes or retry_fix names a FLOW-FIX (COORD 11-12)")
+FLOW_REPEAT_LOG = "kit_wave_flow_repeat.tsv"
+
+
+def _fail_sig(cls, why):
+    """the comparable part of a FAIL: class + the quoted error, whitespace-normalised"""
+    return (str(cls or ""), re.sub(r"\s+", " ", str(why or "")).strip())
+
+
+def attempt_fail_sig(adir):
+    """(class, reason) of a finished FAIL attempt from its result.json (the same classify the wave used), else None"""
+    try:
+        res = json.loads((Path(adir) / "result.json").read_text())
+    except (OSError, ValueError):
+        return None
+    if str(res.get("verdict") or res.get("status") or "").upper() != "FAIL":
+        return None
+    cls, why = classify(res.get("stage", ""), (res.get("errors") or "") + "\n" + (res.get("tail") or ""))
+    if res.get("class"):
+        cls, why = res["class"], (res.get("reason") or why)
+    return _fail_sig(cls, why)
+
+
+def flow_repeat(cfg, st, die, item, rec, parent=None, kind="type"):
+    """KW-FIX-46 11-12 (COORD, hbm PHY_NC: a1 13:37 and a2 13:57 both 'floorplan.tcl, 91 IFP-0002' at place, a third queued by a
+    released retry): True when attempt N of this row is a wave FLOW FAIL, attempt N-1 of the same row (same event) failed with the
+    same tool error, and the next launch would build the same form (form_fp of attempt N's spec == candidate).  A third run of an
+    unchanged form gives the same tool error.  INFRA / TIMING / ROUTING and unreadable records are never held here.  Releases:
+    the form changes (type block, plan, kit recipe), or the die's retry_fix for item@N starts with 'FLOW-FIX:' (COORD names the
+    landed generator / flow fix, which form_fp does not see)."""
+    try:
+        if not rec or rec.get("status") != "FAIL" or str(rec.get("class") or "") != "FLOW":
+            return False
+        n = int(rec.get("attempt") or 0)
+        if n < 2 or not rec.get("dir"):
+            return False
+        rf = ((cfg.get("dies") or {}).get(die) or {}).get("retry_fix")
+        if str((rf.get(f"{item}@{n}") if isinstance(rf, dict) else "") or "").startswith("FLOW-FIX:"):
+            return False
+        cur_dir = Path(rec["dir"])
+        prev_dir = cur_dir.parent / f"a{n - 1}"
+        sig = _fail_sig(rec.get("class"), rec.get("reason"))
+        if not sig[1] or attempt_fail_sig(prev_dir) != sig:
+            return False
+        cur = json.loads((cur_dir / "spec.json").read_text())
+        prev = json.loads((prev_dir / "spec.json").read_text())
+        if prev.get("event", rec.get("event")) != cur.get("event", rec.get("event")):
+            return False                               # attempt numbers restart per event: a1 of a new event is no repeat
+        cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
+                        kind=kind or rec.get("kind") or "type")
+        gh = list(((cfg.get("dies") or {}).get(die) or {}).get("gen_hosts") or [])
+        fo, fc = form_fp(cur, cur_dir / "spec.json", gh), form_fp(cand, None, gh)
+        hold = fo is not None and fo == fc
+        if hold:
+            try:
+                with open(Path.home() / "coord" / "autopilot" / FLOW_REPEAT_LOG, "a") as f:
+                    f.write(f"{time.strftime('%F %T')}\t{die}\t{item}\ta{n - 1},a{n}\t{sig[1][:200]}\n")
+            except OSError:
+                pass
+        return hold
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
 REDESIGN_FILE = "kit_wave_redesign.tsv"
 
 
@@ -6045,12 +6199,13 @@ def visual_verdicts():
     try:
         mt = (str(p), p.stat().st_mtime)
         if _VISUAL_CACHE["mtime"] != mt:
-            v = {}
+            v, ts = {}, {}
             for ln in p.read_text(errors="replace").splitlines():
                 m = _VISUAL_RE.search(ln)
                 if m:
                     v[(m.group(1), m.group(2), int(m.group(3)))] = m.group(4)
-            _VISUAL_CACHE.update(mtime=mt, v=v)
+                    ts[(m.group(1), m.group(2), int(m.group(3)))] = verdict_line_ts(ln)
+            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts)
     except OSError:
         pass
     return _VISUAL_CACHE["v"]
@@ -6063,7 +6218,12 @@ def visual_hold(cfg, rec):
     form fingerprint changes); no verdict or ISSUES = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
     if cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
         return None
-    v = visual_verdicts().get((rec["die"], rec["item"], int(rec.get("attempt") or 0)))
+    vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
+    v = visual_verdicts().get(vk)
+    if v is not None and not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
+        return (f"WAIT-VISUAL: place done; the {v} verdict on attempt {vk[2]} rated an earlier build of another or unknown "
+                "form (KW-FIX-46 verdict binding), so this build needs its own verdict GOOD / OK / ISSUES-ACCEPT in "
+                "lanes/GEOM-REVIEW.md")
     if v in VISUAL_ACCEPT:
         return None
     if v == "BAD":
@@ -7491,11 +7651,19 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
     # KW-FIX-45 11-11 (su_l0 @2 and the HBM pilot stayed stale after remove + re-add): a retry entry that is ABSENT from the
     # config at this pass loses its first-seen record, so re-adding it later is a fresh release (the documented re-arm).
     # Limited to dies that still carry a retry list, so an empty/unsynced list of a die never wipes anything.
+    # KW-FIX-46 11-12 (COORD, hbm PHY_NC a2 13:57 / a3 14:16 on a stale @1 / @2): the pass calls this twice; the first call
+    # drops a stale entry from the in-memory list, so the second saw it 'absent from the config', forgot its first-seen time,
+    # and the next tick re-armed it as a fresh release (every stale entry relaunched one tick later).  'Present' is the
+    # union of every list this pass has seen for the die (_retry_all: the config's own entries plus in-tick additions).
     for die, d in (cfg.get("dies") or {}).items():
-        if not isinstance(d, dict) or not d.get("retry"):
+        if not isinstance(d, dict):
+            continue
+        d["_retry_all"] = list(dict.fromkeys(list(d.get("_retry_all") or []) + list(d.get("retry") or [])))
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("_retry_all"):
             continue
         ev = d.get("event") or ""
-        present = {retry_seen_key(die, ev, ia) for ia in d["retry"]}
+        present = {retry_seen_key(die, ev, ia) for ia in d["_retry_all"]}
         pre = f"{die}|{ev}|" if ev else f"{die}|"
         for tab in (seen, st.setdefault("retry_stale_logged", {})):
             for k in [k for k in tab if k.startswith(pre) and k not in present]:
