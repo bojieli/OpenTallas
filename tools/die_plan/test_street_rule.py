@@ -793,3 +793,30 @@ def test_transit_street():
     r = SR.pair_rule(a, b, dict(CFG, _alley=pairs))
     assert r["kind"] == "street" and r["need"] == 82.08
     assert "transit_street" not in SR.HARD                 # a WARN kind
+
+
+def test_raw_branch_keeps_consumer_terminal_at_new_fork(monkeypatch, tmp_path):
+    """KV sys_c: nearby same-depth base can lead to the wrong sibling reset tap."""
+    import types
+    import schema
+    import reset_tree
+    def row(q, d, depth, xy):
+        return dict(name=q, q=q, d=d, depth=depth, xy=xy)
+    trees = {
+        "base": dict(relays=[row("old_base", "root", 2, [0, 0]),
+                             row("target", "old_base", 3, [10, 0])]),
+        "new": dict(relays=[row("near_base", "root", 2, [1, 0]),
+                            row("wrong", "near_base", 3, [10, 0]),
+                            row("correct_base", "root", 2, [100, 0]),
+                            row("target", "correct_base", 3, [110, 0])])}
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: types.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda p, tn: trees[p.tag])
+    branch = dict(name="fstart:ft1_o", base="old_base", stages=[dict(original="target", xy_um=[10, 0])])
+    import copy
+    p = dict(tag="base", partition_types={"x": dict(clock=dict(landing_raw_branches=[copy.deepcopy(branch)]))})
+    q = dict(tag="new", partition_types={"x": dict(clock=dict(landing_raw_branches=[branch]))})
+    rec = SR.reset_resel(p, q, ["x"], tmp_path/"plan.json")["x"]
+    assert "error" not in rec, rec
+    assert branch["base"] == "correct_base"
+    assert branch["stages"] == [dict(original="target", xy_um=[10, 0])]
+    assert any("terminal" in r[0] for r in rec["raw"])

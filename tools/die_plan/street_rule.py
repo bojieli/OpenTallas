@@ -1901,7 +1901,38 @@ def reset_resel(P, Q, names, plan_path, near_um=25.0):
             for r in rb_plain:
                 if r.get("d"):
                     kids[r["d"]].append(r)
+            # Consumer reset terminals retain their semantic tap identity across a
+            # collector re-solve.  Depth/nearest-child alone can select a sibling
+            # consumer at a fork (KV sys_c ft1_o: rst_n_t31 became rst_n_t11).
+            plain_q = {r["q"]: r for r in rb_plain}
+            old_branches = {b.get("name"): b for b in
+                            (P["partition_types"][tn].get("clock") or {}).get("landing_raw_branches", [])}
             for bi, br in enumerate(ck.get("landing_raw_branches") or []):
+                stages = br.get("stages") or []
+                prior = old_branches.get(br.get("name"), br).get("stages") or []
+                terminal = prior[-1].get("original") if prior else None
+                if stages and terminal in plain_q:
+                    # Walk UP from the retained consumer, never down through a
+                    # geometry-selected sibling; stage count and physical sites stay.
+                    tail, seen = [], set()
+                    q = terminal
+                    for _ in stages:
+                        if q in seen or q not in plain_q:
+                            raise ValueError("raw reset terminal %s: chain ends before %d stages" %
+                                             (terminal, len(stages)))
+                        seen.add(q)
+                        row = plain_q[q]
+                        tail.append(row)
+                        q = row.get("d")
+                    if q is None:
+                        raise ValueError("raw reset terminal %s: chain ends at its base" % terminal)
+                    chain = list(reversed(tail))
+                    if br.get("base") != q or [st.get("original") for st in stages] != [r["q"] for r in chain]:
+                        rec["raw"].append(["landing_raw_branches.%d.terminal" % bi, br.get("base"), q])
+                    br["base"] = q
+                    for st, row in zip(stages, chain):
+                        st["original"] = row["q"]
+                    continue
                 ob = ra_q.get(br.get("base"))
                 if ob is None or rb_q.get(br.get("base"), {}).get("xy") == ob.get("xy"):
                     nb = rb_q.get(br.get("base"))
