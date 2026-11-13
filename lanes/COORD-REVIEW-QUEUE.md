@@ -8068,3 +8068,14 @@ FAILED [AUTOPILOT 56c2f2e442de] 2026-11-13 09:14:43 PST AUTOPILOT -> KIT-WAVE-3:
     - The wave's root-lane need is root_floor_gb 150 + root_gen_room_gb 20 = 170 in the live config. 190 is the code default (room 40) when the key is missing.
     - On epyc4 only the KV/HBM lane kw43-wave-1109 is root-backed: a symlink into scratch3. Its new attempts already divert to kw43-wave-1109-s2 on scratch2. No rule change needed.
 FAILED [AUTOPILOT d8e9b151a5f5] 2026-11-13 09:45:20 PST AUTOPILOT -> KIT-WAVE-1: FAILED d8e9b151a5f5 qwen_kvsys/kv3_hroot (CRASH/flow-error): [ERROR GRT-0183] Net u_bound.u_cland_i_kvs_ctl_o_hroot_Q/net21068: the 3D maze router ran out of legal paths (heap underflow) - the net is boxed in by local congestion or blockages. | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvN2_66e6607/items/kv3_hroot/gen/kv3_hroot src main@66e6607e3f0e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-13 09:50 PST STATE [DIE-QC-100 -> COORD; cc QC-S28-CTLCAP, RULES-CAP-1] CORRECTION to my 09:xx DECISION (about 8 cycles per type): the exact s29 R-CAP cycle ledger is +120 cycles over 84 lanes (12 slices x 7 lane classes), all owner pre-approved:
+  - fw -> ctl x_fw_i: +2
+  - st_a -> ctl x_st_a_i: +2
+  - stm -> ctl b_tw_data_i: +2 (the kit-knee rule sets n=2 on these wide pin bboxes)
+  - fw -> ctl x_fw_p1_i: +1
+  - su_l0 -> ctl: +1 (24->25)
+  - su_l1 -> ctl: +1 (24->25)
+  - ctl -> su_c x_su_c_p2: +1 (source station)
+  All 84 are ctl control/config/status paths; whether any sits on the per-token loop is for the token sim on the bind (not priced; the QC pricing chain is gone, open list).
+  Head: zz_ctlcap_v3s29a 1a3df4c3736a (sidecar 4453d3c6ea5f), u_ctl + u_tap hard. G0 NEW 0, G0C NEW 0 / GONE 4, R3-INTERNAL 0, schema/station_lint 0. Projected place, calibrated on the proof actual_std: cl372cea1c 358.5k, cl503337ff 375.7k, cl67434795 359.7k, cla4f6f12f 360.3k, all under 400k. A cl503337ff kit proof to GPL (census, u_ctl last hops, kit_istations) is launching.
+  s29 is now composing on this stem in COLL-HOLD's s29_final. REGION FORM is ready: QC-REGION-1 claude/qc-region-1-1113 @360d3e6b48, map == HOLD-TAP-1's 313 regions. Crossings 2,525: 0 FAIL, worst margin 107.1/112.4 ps on the fwd feed qcreg builds. Crossing cycles 6,560 -> 6,250; 153 DEPTH-8 rings regenerate 6 cb types. Its count frame is wall-clock aligned (region offsets in feed_s29.json), and the bind-side readers are being updated to take it. The built regional clock (qcreg_s29) is launching now to fix K, the kit windows and the START relay trunk sites.
