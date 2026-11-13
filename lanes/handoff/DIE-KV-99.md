@@ -1,4 +1,4 @@
-# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 15:50 PST
+# DIE-KV-99 handoff (KV qwen_kvsys die owner) -- updated 2026-11-12 16:10 PST
 ## 1 Scope
 KV vN2 hand-floorplan event + vN re-issue. Items: 1 census DONE, 2 pg rects DONE, 3 hgi_EN_0 cut DONE, 4 hroot aspect exception (no edit), 5 21-type merge DROPPED (not exact; tool item), 6 REACH-FIX taps (cap 1200, hgi_v8 39) DONE in pipeline / insertion balance = die_clock stage by REACH-FIX-2 (KV PHY last-mile fix in progress there), 7 hg+hgi W street DONE, 8 sys_c stations DONE (PHY exemption ASK open), 9 drawing draft 2 posted (GEOM-VIS-6 FORM GOOD + 5 conditions), GEOM-VIS-6 cond 5 phy re-face DONE (option B).
 ## 2 Worktrees (epyc8 repo /srv/opentallas-scratch2/claude/wt/die-kv-98 = SPARSE, never bind from it)
@@ -57,3 +57,6 @@ none persistent.
 - R8: bind tree plan_of_record/r8_kv95_phy3.json = main copy rebased on 12 members of the 6 +1 lanes (epyc8 dkv99/r8_lanelog.py OLD_lat NEW_lat -> r8_rebase.py; report dkv99/r8_rebase_vN2f.rep.json). L2245/L2349 landed +1 (COORD: pre-approved). For vN2g: rerun r8_lanelog vs cleanbind/bind_vN2/bind_latency.json on the vN2g bind latency and rebase from the MAIN copy (dkv99/r8_main.json).
 - Trial binds: flag-on try3 dkv99/bind_vN2f (running); flag-off to run after it (asbuilt_vN_flagoff.json in plan_of_record = TEMP, delete before package; inputs/composed_rtl/ = bind output, do not commit).
 - AFTER vN2 (COORD 15:4x class items): (1) reach_fix fixed_cycles also rebases the R8 landing table (r8_rebase logic as a main tool); (2) bind R8_STALE reports all stale groups in one pass. Branch + tests after posting, or hand to REACH-FIX-2 in the event open list.
+## UPDATE 16:10
+- EVENT CANDIDATE vN2h: epyc4 dkv99/vN2h/plan_c.json md5 22227437 (= vN2g with kv3_pv_v1n reverted to p1b; sidecar re-run). G0 dkv99/g0_vN2h (running, m4 = main 614ab tools). Bind: epyc8 dkv99/bind_vN2h (bind_e.sh now has --all-gaps), copy of plan at dkv99/bindh/.
+- On clean G0 + bind RC 0: package in wt/die-kv-99-e (rm asbuilt_vN_flagoff.json, exclude inputs/composed_rtl), commit on claude/kv-vn2-event-1112, push, READY + plan event (tool basis main 614ab4a0dac0; latency refresh = reach_fix fixed_cycles; R8 rebase 12 members; flag decision; open list: tap-cap residue 12 types, pv_v1n reset renumber class, hub_Eo/Wo 420/409 hops, R8 class items).
