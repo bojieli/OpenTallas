@@ -1,0 +1,2544 @@
+{
+ "schema": "opentallas.hbm_plan_event_delta.v1",
+ "event": "wbq_root_clkpins_1112",
+ "lane": "HBM-CORES-C (DIE-HBM-101)",
+ "date": "2026-11-12",
+ "NOT_APPLIED": "delta only; DIE-HBM-101 folds it into the HBM event line (head pEv6) and runs G0",
+ "base_plan": "plan_t39w die_plan.json sha256 8b4b6e3071c49dee3aa31bf8a0097a4415d617d6c56c0dde22dd70375124f540, clock_entries.json sha256 603711cc2dbd22e073e1f89d381cde284e759829a8928d838fe690295da1d9a5",
+ "why": "fifo_clk/hbm_clk (interior M5 clock entry pins) sit inside the bottom SRAM macro (kit macro stack x 100.032..191.832, y 14.892..125.268): DRT-0073 / pin-top DRC; the plan entry was authored as 'in the S logic band below the macros' but the Codex vS6 macro geometry leaves 14.9 um.",
+ "tables": {
+  "g0": {
+   "old": "ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "ot_wbq_root_g__216x129.6__d44v_p51__clk52.json",
+   "old_sha256": "73293b7602133f1909e6bcdf7e1f9f9100919f80f4cc2607297af742625b9773",
+   "new_sha256": "73843b0228dc4c01b93d3b43e539118f286eb2e03f1480c99570d5c54437cb5e",
+   "rows_changed": 2,
+   "rows": 1373
+  },
+  "g1": {
+   "old": "ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "ot_wbq_root_g1__216x129.6__vC5__clk52.json",
+   "old_sha256": "d30c289f282de8fbed4bed9d8cd577d4d0f5f28863a60bfce5438609362dda69",
+   "new_sha256": "a7cdad8bffc0ff8ee6e05e3f9b9ab7ef8eeb281f38511c7dd0d588550b36b524",
+   "rows_changed": 2,
+   "rows": 1373
+  }
+ },
+ "pins_file_edits": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": "cores/ot_wbq_root_g__216x129.6__d44v_p51.json",
+   "new": "cores/ot_wbq_root_g__216x129.6__d44v_p51__clk52.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": "cores/ot_wbq_root_g1__216x129.6__vC5.json",
+   "new": "cores/ot_wbq_root_g1__216x129.6__vC5__clk52.json"
+  }
+ ],
+ "clock_entries_edits": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q0__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_wbk_Q__q1__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q0__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r0__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r0__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r1__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r1__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r2__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r2__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r3__g0",
+   "module": "ot_wbq_root_g0",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_wbk_Q__q1__r3__g1",
+   "module": "ot_wbq_root_g1",
+   "old": {
+    "xy_um": [
+     108.0,
+     25.92
+    ],
+    "island_um": [
+     103.68,
+     21.6,
+     112.32,
+     30.24
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      108.024,
+      25.92
+     ],
+     "hbm_clk": [
+      108.216,
+      25.92
+     ]
+    }
+   },
+   "new": {
+    "xy_um": [
+     51.84,
+     64.8
+    ],
+    "island_um": [
+     47.52,
+     60.48,
+     56.16,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      51.864,
+      64.8
+     ],
+     "hbm_clk": [
+      52.056,
+      64.8
+     ]
+    }
+   },
+   "alt_clk50": {
+    "xy_um": [
+     50.016,
+     64.8
+    ],
+    "island_um": [
+     45.696,
+     60.48,
+     54.336,
+     69.12
+    ],
+    "clock_pin_sites_um": {
+     "fifo_clk": [
+      50.04,
+      64.8
+     ],
+     "hbm_clk": [
+      50.232,
+      64.8
+     ]
+    }
+   }
+  }
+ ],
+ "alt_clk50_tables": {
+  "g0": {
+   "new": "ot_wbq_root_g__216x129.6__d44v_p51__clk50.json",
+   "new_sha256": "828b0e4302116bf68f3906dd5c924c340bccbd8483fc16a0ea8e4010a7a2bf3d"
+  },
+  "g1": {
+   "new": "ot_wbq_root_g1__216x129.6__vC5__clk50.json",
+   "new_sha256": "6b6f29ffc254de31277d33f003264865e161e0cacd49efa00b73f1c97457a4d0"
+  }
+ },
+ "decision": "DIE-HBM-101: the lattice-aligned clk52 variant (entry xy 51.84, pins 51.864/52.056) is the primary; clk50 kept as alt",
+ "alt_note": "entry xy 50.016 is not on the 4.32 PG lattice that the 'sub frame' source note names for the old entries (108.0 = 25 x 4.32); the alt variant keeps xy on the lattice (51.84 = 12 x 4.32) with pins +0.024/+0.216 from it",
+ "not_verified": "other plan consumers of the clock entry (bind_clock_landings, clock_regions, core_conns clock taps, region tap lists) were not traced; G0 should be run on the folded plan",
+ "counts": {
+  "pins_file_edits": 32,
+  "clock_entries_edits": 32
+ }
+}

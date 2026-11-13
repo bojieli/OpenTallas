@@ -1,0 +1,4 @@
+read_verilog -sv -formal /eq/inv.sv
+hierarchy -top inv
+proc; async2sync; opt_clean
+sat -tempinduct -prove-asserts -seq 1 -verify -show-ports inv

@@ -1,0 +1,21 @@
+read_verilog -sv -DSYNTHESIS -DOT_WBQ_ROOT_S7_RPIPE /eq/stub.sv /eq/rs.sv /eq/cdc.sv /eq/fifo.sv /eq/gold_s7.sv
+chparam -set G 0 -set CBREG 1 -set SSTOPREG 1 -set RSTCP 1 -set O8 0 ot_wbq_root_s7_grp
+hierarchy -top ot_wbq_root_s7_grp
+proc; flatten; opt_clean
+rename -top gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS -DOT_WBQ_ROOT_S7_RPIPE /eq/stub.sv /eq/rs.sv /eq/cdc.sv /eq/fifo.sv /eq/gate_s7.sv
+chparam -set G 0 -set CBREG 1 -set SSTOPREG 1 -set RSTCP 8 -set O8 1 ot_wbq_root_s7_grp
+hierarchy -top ot_wbq_root_s7_grp
+proc; flatten; opt_clean
+rename -top gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+memory_map
+async2sync
+equiv_make -inames gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 4
+equiv_induct -seq 4
+equiv_status
