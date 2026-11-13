@@ -116,3 +116,21 @@ Floorplan starting numbers (hi tile 1442.88 x 2747.52, from v5/plan_provider_rec
   if back-to-back slip matters). pvso_entry t1/t2 and the reset contract are still open in the recover plan.
 - Codex untracked files in wt/hard-s81-svc-1 (delta_svc_provider_recover_1113.py, type_split.py): not mine, left untouched; the script is on
   origin as claude/svc-macro-2-form-1113@ff8154806c.
+
+## 2026-11-13 10:46 band v2 READY, service cut pushed (bench gap), band kit v1 result, kit v3 running
+- COORD rulings 08:3x-09:5x: form approved (4 bands + S_att + S_rs, + S_idx lo); SM boxes into a grown S_rs region; band RTL train 55; then
+  band fixes (centre transposer, 43.2 inter-row channel, registered reset tree, registered merge valid, load pipeline, M7 ceiling).
+- READY claude/hard-s81-svc-1-band2-1113@aef8068c0b (on 2a0fecefcd): reset tree (root + 3 leaf flops), MREG merge input register, CAPD 2.
+  Lockstep SRX 1: 419 score / 80 P.V beats bit-identical, first job +4 / +9, set checker 0, both controls caught; define-off trace = main.
+  Latency with -DOT_SVC_BAND: scores +(SRX+3), P.V +(SRX+4) against the p feed; per pass scores +(SRX+3), P.V +(2 SRX+7).
+  NOT fixed in RTL: the tile fans reset and the load word out to its 8 cores inside rtl/hdc (one port each); that needs a tile change.
+- Service cut: claude/hard-s81-svc-1-attcut-1113@52dc675ba9 (on 2a0fecefcd), dsdv_svc_att_cut, -DOT_SVC_ATTCUT. Bench 3 seeds x 200k cycles:
+  0 mismatches (qrq +1, other lanes +2), CUTMUT 1 caught, CUTMUT 2 MISSED: the random stream makes 0 P.V beats (fault 99 percent of cycles),
+  so the P.V and SM lanes are NOT exercised. Owed: programme-driven bench (tb_svc_h8_protocol stimulus) before any kit uses it. NOT READY.
+  The landed parent dsdv_svc_rs_lp was not used: it was generated from the 10-18 flat form dsdv_svc_rs_f, stale against today s dsdv_svc_rs_c.
+- Band kit v1 (sub-lane BAND-KIT-1, Opus; epyc2 /srv/opentallas-scratch2/claude/band-kit-1): 9,658 synth cells, 11 cores, 28-31k movable after
+  place; my brief s floorplan overshot its outline (grown to 1442.88 x 639.36); GRT M7: 552 overflow cells on M6 in one row over the cores,
+  M5 ceiling fails (core clk pin is M5); setup about -0.51 ns est. Renders viewed by me: one thin trunk along the core row top, rest green.
+- Band kit v3 (new RTL, transposer centred, 43.2 channel, M7): RUNNING in BAND-KIT-1 (GRT cap about 11:13). Renders will be in localhost
+  scratchpad band_kit/v3/. Known item: 15.12 um streets between the 8 cores (lattice width 1442.88 leaves no more).
+- NOT started: pvso_entry t1/t2, reset contract, bind defines, plan event, grown S_rs floorplan.
