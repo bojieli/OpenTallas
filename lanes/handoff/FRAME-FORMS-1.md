@@ -58,3 +58,25 @@
 ## VOL sub-agent
 - 08:04 T1 all-type run (epyc4 frame-forms-1/all1): 5/11 items ACCEPTED (cl49d7a23e 54, clf32cde8d 6, cl774acf45 5, clb8d86cd5 6, clce45cab5 43 = 114 types, hard street 5112->0); 6 REFUSED at base: 4 col_h10_r2 (applied False, link-length tviol 1/143/20) + col_h9_r2 cl87f3ff59 (tviol 185, SEED-MOVED) + clc9ad8f7e (SEED-MOVED u_e13w.u_view.u_c -> 1 street/type). Chain running.
 - 08:12 T2 taps: core_place had CARRIED 152 added taps with their cores (e.g. clk_t20 1070 um west); restored to park_taps xy (all kit-legal, 0 legality moves; added_tap_legalize.py). added_tap_recentre: col_h9_r2 items 0 failing; col_h9_r1 BOTH items (60 types) fail clk_t21 radius 288.7/200 (x1.10 slack) from reset relay rst_rl_77 (1429.32,669.32), no legal single-tap move -> needs an added tap = design call: col_h9_r1 STOPPED (left at base). Chain re-run r2-only (3 items, 54 types).
+- 08:23 T3 chain r2-only -> plan_frame_spine_571ca8f7c313 (epyc4 wt physical/die_plan/s81/): recentre 0 failing, collector republished on 11 types (cl774acf45, clb8d86cd5; depth 6=6, relays 121->148, reset taps 32->36), stage tables 0 lanes. Street final 216: in-scope accepted 2052 -> 0 hard. Strict bind + G0/G0C running on epyc4 (vol/).
+- 08:39 T3 DONE plan_frame_spine_571ca8f7c313: G0 0 new err (74=base); G0C +4590/-1290 ERR all hard_cores lattice (origins off 8.64) + M4 pins off track (template lattice, design call); strict bind rc0 0 err; latency 873/873 PASS delta {}. Pushed claude/frame-forms-1-1113 8ffe40ee66. T4 proofs running (intel2 /srv/opentallas-scratch2/claude/frame-forms-1-vol/jobs/*/unit.log; clce45cab5 + substitute cl774acf45; cl49d7a23e not built: r1 stopped).
+- 08:43 T4 BLOCKED (infra): private kit_wave proofs (clce45cab5, substitute cl774acf45) stopped at kit_rtl: ot-run-wave refuses epyc4 for scratch3 dirs (scratch3 = root md0, 137 GB free < 150 keep-free + 40 floor, ROOTSCR_1101). Killed my launcher PIDs; nothing started on epyc4. Needs: epyc4 root >= 190 GB free, or OK to use epyc4 scratch2 / another host. VOL sub-agent done.
+
+## RESULT of the volume run and STOP state (FRAME-FORMS-1)
+- NO READY posted. Branch claude/frame-forms-1-1113 @8ffe40ee66 holds the tools, reports and plan_frame_spine_571ca8f7c313
+  (3 items only); it is evidence, not an adoptable event.
+- CORRECTION: the cfg ROM (ot_rom_4096x72_m8) pins are on the W and E edges (x 0.01 and 38.03, 43 each, M4, y 0.78-4.81),
+  not on the S face as I wrote above. The side-abutted ROM columns (3.0 um) of the committed template block those pins.
+- G0C: 4590 new hard_cores errors on the 54 applied types (3294 origins off the 8.64 lattice, 1296 pins off track): the
+  template must place on the 8.64 lattice (sub-lattice shift only via track_offset_um).
+- Passed on the 3 applied items: R-STREET hard 2052 -> 0, G0 0 new, strict bind rc 0 (epyc4 work dir vol/out_fs), lane
+  latency 873/873 PASS. 11 types got a republished reset collector tree (relays 121 -> 148, reset taps 32 -> 36).
+- Failed at base: col_h10_r2 x4 + col_h9_r2 cl87f3ff59 (links over limit), col_h9_r2 clc9ad8f7e (1 street; bf W group pushed
+  by a fixed rect), col_h9_r1 x2 (tap clk_t21 radius 289 > 200; far sink reset relay rst_rl_77 at 1429, 669).
+- Proofs: none ran (epyc4 root has 137 GB free, launcher wants 190). Specs are staged on intel2
+  /srv/opentallas-scratch2/claude/frame-forms-1-vol/.
+- NEXT (successor or me): (1) get the ruling on sparse-pin 17.28 slots (queue line of this stamp); (2) re-grid
+  frame_spine_seed.py to 8.64: W pair 17.28, ROM cols as 2 x 4 per pair with 17.28 slots, E pair re-derived, centre street
+  >= 43.2 holding the tap at x 725.76; (3) fix per-item deltas above; (4) re-run all1 / vol chain scripts (in the branch);
+  (5) proofs on a host with >= 190 GB free. epyc4 vol/ holds 56 GB of mine (bind tree) and can be deleted once re-run.
+- Leftover: epyc7 /srv/opentallas-scratch2/claude/wt/frame-forms-1 (my first clone, no unique state) can be removed.
