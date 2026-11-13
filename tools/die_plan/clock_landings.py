@@ -1774,6 +1774,16 @@ class Landings:
                         and ring_reach_select_copies(w + 2 if self.dataflow else w, (wreg or {}).get("read_chunk", 0)) > 1))):
                     ring_mod = ring_mod[:-1] + ", .PLACEREP(1))"
                     self.reset_placements[tn][b].update(ring_place_copies=True, ring_place_copies_added_cycles=0)
+                # R1-NARROW (KV-PVFIN-1): reduce only soft CA rings selected by
+                # their type.  No flag means byte-identical legacy RTL.  Hard
+                # children retain their already-signed parameter set.
+                narrow_flag = t.get("clock", {}).get("landing_ring_narrow", False)
+                if not isinstance(narrow_flag, bool):
+                    raise LandingError(f"{tn}.{b}: landing_ring_narrow must be boolean")
+                narrow = int((hard or {}).get("NARROW", 0)) if hard is not None else int(narrow_flag)
+                if narrow:
+                    ring_mod = ring_mod[:-1] + ", .NARROW(1))"
+                    self.reset_placements[tn][b].update(ring_narrow=True, ring_narrow_added_cycles=0)
                 if hard is not None:
                     # fail at bind, not at kit-rtl: the bound ring must be the signed child's exact paramod
                     got = ring_mod.format(w=w + 2 if self.dataflow else w)
