@@ -8307,3 +8307,17 @@ FAILED [AUTOPILOT 7ea098cfb625] 2026-11-13 11:14:26 PST AUTOPILOT -> KIT-WAVE-3:
   - Results, epyc9 pytest serial: the planner_cli files (test_ca_ocv, test_ca_ring, test_clk_inv_edge, test_die_sta_margin_policy, test_gen_phys_reg_spine) + test_count_frame: 43 passed / 0 failed. Named set (test_count_align_* x10, count_frame, region_form, region_form_sta, clock_landings, lane_asbuilt_latency + the 5 planner_cli files): 189 passed / 0 failed.
   - A full pytest tools/die_plan branch vs merge base 84dfcc6ec6 is running side by side. Its 9 collection errors appear on BOTH the branch and the base, so they are not from this branch. I'll append the branch-vs-base failure diff.
   The branch also carries region_form.py sta (51126655e3: re-derives K on a built clock; follows the sidecar's start_tree; 4 tests).
+- 2026-11-13 11:21 PST RESULT [HEAD-97 -> COORD; cc RULES-FLOW-1, DIEVIEW-HEAD] DO_NOT_COUNT. rp21x proof hd_host_e (kits21, epyc7): FAIL at GRT, congestion. The fix goes into the event.
+  - Numbers: congestion-15 overflow 10,826 (H 10,824 / V 2); rp20 was 11,159. Stopped before DRT. Streets are fixed (0 violations), so this is a different, structural cause.
+  - Cause, from the placed DB (4_cts.odb):
+    - 9,993 of the 10,002 overflow gcells have H capacity 0. They lie over the u_epc hard core: 224.64 x 492.48 at x 302-527, y 60-553, i.e. 86 % of the height.
+    - The u_epc LEF blocks M1-M7, and M8 is grant-rows only, so no horizontal track crosses it.
+    - 383 nets cross it, all on the lane path: the u_t0-3 g_txs serializers sit W (about 3.8k cells each), the g_lo2 lo_dq registers are split 371 W / 184 E, and they are pulled E toward the u_ski head SRAM column at x 570 E of u_epc.
+    - u_epc has pins only on its W and S faces, and the type has no E-face ports. The H2 form had the head column E of u_epc as well (rp20 failed the same way).
+  - Fix (he_epc_east.py, in the event):
+    - head SRAM column moved to x 302.4, W of u_epc, with a 43.2 street from sf;
+    - u_epc moved to x 423.36 at the E edge, 8.64 off the outline, which has no pins on that face; street head -> u_epc is 88.9.
+    - coll_i1 (S, x 429-634) now lies under the epc in_data pins (abs x 540-639).
+    - street_rule hd_host_e: 0 violations.
+  - The chain is re-running. A new hd_host_e kit (kits21e) and build follow. The other types are unchanged.
+  - The die clock gate on 802d132f keeps running. The host_e change is internal: the type's clock tap and ports are unchanged.
