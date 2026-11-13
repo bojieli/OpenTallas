@@ -27,6 +27,7 @@ def test_generated_runner_forwards_preseed_without_changing_default(tmp_path,val
     env.pop("OT_LEC_HINTS_PRESEED",None)
     env.pop("OT_LEC_EARLY_COMPARE",None)
     env.pop("OT_LEC_SUPERSET_VEC",None)
+    env["OT_LEC_ASYNC"]="0"   # KIT-OPS-1 11-13: this kit has no lec_async.sh; the inline LEC is asked for explicitly (else exit 13)
     if value is not None:env["OT_LEC_HINTS_PRESEED"]=value
     if early is not None:env["OT_LEC_EARLY_COMPARE"]=early
     if superset is not None:env["OT_LEC_SUPERSET_VEC"]=superset

@@ -76,6 +76,12 @@ LECA=
 if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec_async.sh" ] && [ -f "$K/lec.py" ]; then
   LECA=1; bash "$K/lec_async.sh" start "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK" "$GOAL" || exit $?
 fi
+# KIT-OPS-1 11-13 (COORD: two serdes kits sat >1 h in a blocking inline LEC): async LEC requested but the kit has no
+# lec_async.sh = fail fast; the inline LEC runs only when asked for (OT_LEC_ASYNC=0, no lec_async.on/.identity).
+if [ -z "$LECA" ] && { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec.py" ] && [ ! -f "$K/lec_async.sh" ]; then
+  echo "LEC_ASYNC KIT ERROR: async LEC is on (OT_LEC_ASYNC default 1) but $K/lec_async.sh is missing; refusing the blocking inline LEC after synthesis (can run for hours). Regenerate the kit or copy tools/die_plan/lec_async.sh into it; OT_LEC_ASYNC=0 runs the inline LEC on purpose." >&2
+  exit 13
+fi
 # Read the repair margin through Make: export/override and assignment precedence must match the flow.
 # An unset margin keeps the legacy no-explicit-repair path; malformed explicit values stop before GRT.
 $DK run "${LECSOLVER[@]}" --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
