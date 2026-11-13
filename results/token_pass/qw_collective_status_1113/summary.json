@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.component_gate.v1",
+  "component": "real qfd_dv_slice2 -> real qfd_tt_ctlm_dv",
+  "verdict": "PASS_CORRECTION_COMPONENT_ONLY",
+  "clock_ps": 833,
+  "before": {
+    "producer_sha256": "60cef671ab43f27ec2b3c3a4cac552cc79372e0c9fd057122818a5583450e85b",
+    "unit": "intel1 oth-ubuntu-1565801-1794608136",
+    "functional_verdict": "FAIL",
+    "expected_completions": 5,
+    "observed_completions": 4,
+    "timing_errors": 5,
+    "note": "Executable uses display+finish; process exit0 was not a functional pass."
+  },
+  "after": {
+    "producer_sha256": "134d1d03e5087757e2906ba806030252d352f6a86f69649ae495f7c8a16a8892",
+    "controller_sha256": "a0f19f7c7ecdea8ca5a3ed45ba34a078ba4cbad9fb8df6ff59d294e2cd3397de",
+    "unit": "intel1 oth-ubuntu-1634163-1794608582",
+    "functional_verdict": "PASS",
+    "expected_completions": 5,
+    "observed_completions": 5,
+    "timing_errors": 0,
+    "rank_errors": 0
+  },
+  "cases": [
+    "terminal word -> idle",
+    "consecutive multiword return",
+    "bubble in return",
+    "back-to-back one-word message boundaries"
+  ],
+  "change": "current ar_v pairs with current ar_q rank/last at status output, preserving sticky rank/last in idle",
+  "added_data_cycles": 0,
+  "added_status_cycles": 0,
+  "scope": "Component source correction only. No selected-source bound receipt, native programme/calendar, physical signoff, or whole-token qualification. Previous source-compile and consumer-only ABI passes did not exercise this producer alignment.",
+  "variants": "LP core regenerated from exact matching baseline generator. Reset-safe copies carry only same exact status expression changes; their pre-existing generation drift preserved. Separate reset-safe dynamic qualification NOT RUN."
+}

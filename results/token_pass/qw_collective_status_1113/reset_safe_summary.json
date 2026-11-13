@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.component_variant_gate.v1",
+  "source_rtl_commit": "3e9aa6b25c10251e1d406dfbfda0bc80737e907e",
+  "verdict": "PASS_COMPONENT_ONLY",
+  "cases": "cold and warm resets; terminal->idle,continuous,bubbled,and back-to-back message boundaries; landing/last and rank metadata checked",
+  "variants": {
+    "rsafe": {
+      "component": "qfd_dv_slice2 -> qfd_tt_ctlm_dv",
+      "old_skew": false,
+      "variant": "rsafe",
+      "warm_reset": true,
+      "expected": "PASS",
+      "verdict": "PASS",
+      "added_cycles": 0,
+      "global_qualification": false
+    },
+    "landed-rsafe-r4": {
+      "component": "qfd_dv_slice2 -> qfd_tt_ctlm_dv",
+      "old_skew": false,
+      "variant": "landed-rsafe",
+      "warm_reset": true,
+      "expected": "PASS",
+      "verdict": "PASS",
+      "added_cycles": 0,
+      "global_qualification": false
+    },
+    "lpf-rsafe-r2": {
+      "component": "qfd_dv_slice2 -> qfd_tt_ctlm_dv",
+      "old_skew": false,
+      "variant": "lpf-rsafe",
+      "warm_reset": true,
+      "expected": "PASS",
+      "verdict": "PASS",
+      "added_cycles": 0,
+      "global_qualification": false
+    },
+    "rsafe-old": {
+      "component": "qfd_dv_slice2 -> qfd_tt_ctlm_dv",
+      "old_skew": true,
+      "variant": "rsafe",
+      "warm_reset": true,
+      "expected": "FAIL",
+      "verdict": "PASS",
+      "added_cycles": 0,
+      "global_qualification": false
+    }
+  },
+  "configuration": {
+    "rsafe": "actual preserved reset-safe qfd_dv_slice2 source; SU_LT0",
+    "landed-rsafe-r4": "actual preserved reset-safe landed source; required SU_LT1; actual landed lane and stream-land helpers",
+    "lpf-rsafe-r2": "actual preserved reset-safe LPcore/status/HEAD wrapper; actual source-era wrapper4ec4aa5f2e (current wrapper ARF/RP parameters are not present in this preserved core)"
+  },
+  "failure_diagnoses": {
+    "landed-rsafe": "initial runner missed qfd_dv_su8_landed dependency",
+    "landed-rsafe-r2": "documented landed shape requires SU_LT1; default0 was invalid",
+    "landed-rsafe-r3": "actual stream-land chunk helper dependency missing",
+    "lpf-rsafe": "current wrapper cannot elaborate preserved core with absent ARF/RP parameters; correct historical wrapper used without guessing parameter substitution"
+  },
+  "added_data_cycles": 0,
+  "added_status_cycles": 0,
+  "global_qualification": false,
+  "limitations": "No actual selected-source bound receipt or native programme/calendar PASS. Original before failure and limited initial gate summary remain immutable in separate files."
+}
