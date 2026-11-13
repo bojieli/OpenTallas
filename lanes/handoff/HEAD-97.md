@@ -99,3 +99,16 @@ Scope: (1) NEAR-MISS ECO on routed DB (hd_turn_a 89228387ea15; hd_turn_b 9098341
 - prep21.sh now takes PW/PO/PT env (prep dir, kit dir, types). Do NOT rm kits21 while builds run.
 - rp20 builds still running in kits20b: host_w, mesh, spn, spn_end. Post one RESULT per type.
 - hd_spn: proposed to COORD to keep the form (stations exist already); waiting on the reply.
+
+## 2026-11-13 11:12 COORD rulings 1-5 in progress
+- Final plan rp21x is sha 802d132f22d1: epyc7 head-97/pd/rp21x_final.json, pushed as origin claude/head-97-rp21-1113 @54eb03e825 (head_rp21_1113/). It adds ctl_relayout.py (hd_ctl at 43.2 streets).
+- Builds via ot-run on epyc7; the monitor script is scratchpad mon21.sh, logs in intel2 ~/tmp/h97_k21_*.log:
+  - kits21: 8 types;
+  - kits21m: hd_mesh;
+  - kits21c: hd_ctl.
+- hd_spn_eshim_tx is signed off (LOCAL_PASS_NEEDS_PARENT).
+- Die clock gate runs on intel1 /srv/opentallas-scratch2/claude/head-97-clk (run21.sh = HEAD-CLKGATE-1 recipe, CHAIN.log). When done:
+  - compare it with the rp19p numbers (TT 16.2 / FF 19.6, landed +400.57 / +399.89);
+  - re-derive the per-port windows (winfix.py) from routed/it*/routed/kitwin.json.
+- READY = when all proofs and the gate are posted: the rp21 branch + the xohop branch, which needs reach-tool-3 (train 58).
+- hd_spn: keep the form (ruling 1); the be_i station only if hop-limited.
