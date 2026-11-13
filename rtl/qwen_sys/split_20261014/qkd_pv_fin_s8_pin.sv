@@ -94,3 +94,42 @@ module qkd_pv_fin_s2x8_pin #(
  end endgenerate
  assign out_valid=&ov,fault=|fl,out_beat=ob[0],out_epoch=oe[0],out_data={od[1],od[0]};
 endmodule
+
+// Fixed IN_STAGE1 bridge for an as-built substitution preserving original explicit parameter list.
+module qkd_pv_fin_s2x8_pin_i1 #(
+ parameter integer ADD_LAT=7,
+ parameter integer MUL_LAT=6,
+ parameter integer SKEW=2,
+ parameter integer MUT=0
+)(
+ input wire ck,rst_n,
+ input wire start,input wire [15:0] epoch,input wire [47:0] cal,
+ input wire p0_valid,input wire [4:0] p0_beat,input wire [15:0] p0_epoch,input wire [511:0] p0_data,
+ input wire p1_valid,input wire [4:0] p1_beat,input wire [15:0] p1_epoch,input wire [511:0] p1_data,
+ input wire rz_valid,input wire [15:0] rz_epoch,input wire [127:0] rz,
+ output wire out_valid,output wire [4:0] out_beat,output wire [15:0] out_epoch,output wire [511:0] out_data,
+ output wire fault
+);
+ qkd_pv_fin_s2x8_pin #(.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT),.SKEW(SKEW),.MUT(MUT),.IN_STAGE(1)) u_pair (
+  .ck(ck),
+  .rst_n(rst_n),
+  .start(start),
+  .epoch(epoch),
+  .cal(cal),
+  .p0_valid(p0_valid),
+  .p0_beat(p0_beat),
+  .p0_epoch(p0_epoch),
+  .p0_data(p0_data),
+  .p1_valid(p1_valid),
+  .p1_beat(p1_beat),
+  .p1_epoch(p1_epoch),
+  .p1_data(p1_data),
+  .rz_valid(rz_valid),
+  .rz_epoch(rz_epoch),
+  .rz(rz),
+  .out_valid(out_valid),
+  .out_beat(out_beat),
+  .out_epoch(out_epoch),
+  .out_data(out_data),
+  .fault(fault));
+endmodule

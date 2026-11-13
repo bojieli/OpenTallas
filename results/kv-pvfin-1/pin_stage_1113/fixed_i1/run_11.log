@@ -1,0 +1,6 @@
+COVER healthy 35 inj1..10 2 4 2 4 0 2 3 3 3 2 edges 13509 valid_beats 1160 payload_edges 0
+PVFIN_S2X8 PASS mut=0 skew=1 in_stage=1 seed=1071668534 shift=1
+- rtl/test/qwen_split/tb_qkd_pv_fin_s2x8_pin.sv:107: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 27us; walltime 0.556 s; speed 48.600 us/s
+- Verilator: cpu 0.556 s on 1 threads; allocated 9 MB

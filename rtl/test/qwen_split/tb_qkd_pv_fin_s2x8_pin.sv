@@ -13,7 +13,7 @@ module tb_qkd_pv_fin_s2x8_pin;
  qkd_pv_fin_s2x8 #(.SKEW(SKEW),.MUT(0),.IN_STAGE(IN_STAGE)) u_gold(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
   .p0_valid(p0v),.p0_beat(p0b),.p0_epoch(p0e),.p0_data(p0d),.p1_valid(p1v),.p1_beat(p1b),.p1_epoch(p1e),.p1_data(p1d),
   .rz_valid(rv),.rz_epoch(rep),.rz(rz),.out_valid(gv),.out_beat(gb),.out_epoch(ge),.out_data(gd),.fault(gf));
- qkd_pv_fin_s2x8_pin #(.SKEW(SKEW),.MUT(MUT),.IN_STAGE(IN_STAGE)) u_dut(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
+ qkd_pv_fin_s2x8_pin_i1 #(.SKEW(SKEW),.MUT(MUT)) u_dut(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
   .p0_valid(p0v),.p0_beat(p0b),.p0_epoch(p0e),.p0_data(p0d),.p1_valid(p1v),.p1_beat(p1b),.p1_epoch(p1e),.p1_data(p1d),
   .rz_valid(rv),.rz_epoch(rep),.rz(rz),.out_valid(dv),.out_beat(db),.out_epoch(de),.out_data(dd),.fault(df));
  // ---------------- checker ----------------

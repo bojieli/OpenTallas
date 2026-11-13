@@ -28,5 +28,16 @@
  "token_rate_rounded": 4402.0,
  "native_calendar": "FAIL_missing_receipt",
  "old_s8f": "canonicalFAILshared278andFFhold-2.75/21;noECOattempt",
- "first_prototype": "resetlesscontrolPIN simulationFAIL32warmresetmismatches retained outside source; fixed controls preserve asyncreset"
+ "first_prototype": "resetlesscontrolPIN simulationFAIL32warmresetmismatches retained outside source; fixed controls preserve asyncreset",
+ "asbuilt_fixed_i1_wrapper": "qkd_pv_fin_s2x8_pin_i1",
+ "asbuilt_core_hierarchy": [
+  "u_pair.g_sl[0].u_sl",
+  "u_pair.g_sl[1].u_sl"
+ ],
+ "explicit_asbuilt_params": [
+  "ADD_LAT",
+  "MUL_LAT",
+  "SKEW",
+  "MUT"
+ ]
 }
