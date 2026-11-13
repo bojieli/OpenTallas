@@ -6259,13 +6259,11 @@ def visual_signoff_state(cfg, rec):
 
 
 def visual_signoff_gated(cfg, rec):
-    """True: a TYPE row whose sign-off needs a visual verdict (signoff mode, placed after the visual gate start)"""
-    if visual_gate_mode(cfg) != "signoff" or cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
-        return False
-    try:
-        return float(rec.get("started") or 0) >= visual_gate_t0(cfg)
-    except (TypeError, ValueError):
-        return True
+    """True: a TYPE row whose sign-off needs a visual verdict (signoff mode).  Builds placed before the visual gate start are
+    gated too: under the route gate they were held as stale WAIT-FORM and never routed; in signoff mode they route, so their
+    count needs a verdict like any other."""
+    return not (visual_gate_mode(cfg) != "signoff" or cfg.get("wait_visual", True) is False
+                or (rec.get("kind") or "type") != "type")
 
 
 def signoff_visual_gate(ap_dir, job):

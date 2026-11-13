@@ -115,7 +115,7 @@ class VisualSignoff(unittest.TestCase):
         self.write_ap([self.rec("ENQUEUED", kind="core")])
         self.assertEqual(K.signoff_visual_gate(str(self.ap), {"kit": "epyc8:/k"}), ("", ""))       # hard core exempt
         self.write_ap([self.rec("ENQUEUED", started=K.visual_gate_t0(self.cfg) - 10)])
-        self.assertEqual(K.signoff_visual_gate(str(self.ap), {"kit": "epyc8:/k"}), ("", ""))       # placed before the gate
+        self.assertEqual(K.signoff_visual_gate(str(self.ap), {"kit": "epyc8:/k"})[0], "hold")     # pre-gate build: gated too
 
     # ---- a routed build rated BAD is discarded to WAIT-FORM, its data kept
     def test_discard_routed_bad(self):
