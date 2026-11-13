@@ -163,3 +163,39 @@ def test_schema_keys():
     on_disk = json.loads((HERE / "die_plan.schema.json").read_text())
     assert (on_disk["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]
             ["pregrt_hold_guard_ps"]) == ck["pregrt_hold_guard_ps"]
+
+
+def test_classification_uses_launch_clock_net_not_data_net(tmp_path):
+    """A shared data net must not make different clock trees appear to be one tap."""
+    tclsh = shutil.which("tclsh")
+    if not tclsh:
+        pytest.skip("no tclsh")
+    proc = "proc pg_classes" + PG.TAIL.split("proc pg_classes", 1)[1].split("\n}\n", 1)[0] + "\n}\n"
+    script = r"""
+namespace eval sta {}
+proc find_timing_paths {args} { return {path_same path_cross} }
+proc get_property {p key} {
+  if {$key eq "startpoint"} {return launch}
+  if {$p eq "path_same"} {return cap_same}
+  return cap_cross
+}
+proc sta::time_sta_ui {v} {return $v}
+proc sta::sta_to_db_pin {v} {return $v}
+proc path_same {op} {return -5}
+proc path_cross {op} {return -9}
+proc launch {op} {return launch_inst}
+proc cap_same {op} {return cap_same_inst}
+proc cap_cross {op} {return cap_cross_inst}
+proc pg_clk_iterm {inst} {return ${inst}_clock}
+proc pg_tap_of {pin} {
+  # A DATA pin would trace to the common data source, and misclassify the crossing.
+  if {$pin eq "launch"} {error "launch DATA pin queried as a clock"}
+  if {$pin eq "cap_cross_inst_clock"} {return tap_B}
+  return tap_A
+}
+"""
+    f = tmp_path / "classify.tcl"
+    f.write_text(script + proc + "pg_classes test\n")
+    result = subprocess.run([tclsh, str(f)], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    assert "same_tap 1 ws -5.00 cross_tap 1 ws -9.00" in result.stdout

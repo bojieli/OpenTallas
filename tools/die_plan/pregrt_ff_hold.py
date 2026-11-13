@@ -115,7 +115,9 @@ proc pg_classes {when {open ""}} {
     if {$a eq "NULL" || $a eq ""} { set c port_in
     } elseif {$b eq "NULL" || $b eq ""} { set c port_out
     } else {
-      set lt [pg_tap_of $a]; set ci [pg_clk_iterm [$b getInst]]
+      set li [pg_clk_iterm [$a getInst]]
+      set lt [expr {$li eq "" ? "?" : [pg_tap_of $li]}]
+      set ci [pg_clk_iterm [$b getInst]]
       set ct [expr {$ci eq "" ? "?" : [pg_tap_of $ci]}]
       set c [expr {$lt eq $ct ? "same_tap" : "cross_tap"}]
     }
