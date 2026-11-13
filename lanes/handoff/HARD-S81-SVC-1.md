@@ -93,3 +93,26 @@
 - Latency bookkeeping: per svc pass scores +(SRX+2), P.V +2(SRX+2) against the as-built schedule, the SRX rule with n = SRX + 2. The die schedule
   (compose_tok_ds PIO / KPV) must move by n; R-RTL-6 latency rows are owed with the plan event (n is fixed there, SRX = plan station hops).
 - NOT done: formal LEC of the band form (sequential; sim proof only), service cut S_att | S_rs, plan event, floorplan, place + GRT.
+
+## 2026-11-13 08:30 STOP POINT (context budget; no job of mine running)
+State of the brief: (1) memory macro DONE (train 49). (2) size: measured, form = 4 bands + S_att + S_rs (+ S_idx lo), amendment asked 07:53,
+no COORD answer yet, I proceeded on it. Band RTL READY 2a0fecefcd. (3) floorplan, (4) place + GRT, (5) plan READY: NOT done.
+Floorplan starting numbers (hi tile 1442.88 x 2747.52, from v5/plan_provider_recover.json rows; NOT validated against R-STREET):
+- band k = one attn core row (8 cores, 259.2 tall) + the box row above it. Row pairs at y 34.56/311.04, 587.52/864.0, 1321.92/1598.4, 1874.88/2151.36.
+  Band outlines in Y: B0 [0, 587.52), B1 [587.52, 1140.48), B2 [1321.92, 1874.88), B3 [1874.88, 2419.2). sx_hrow strip [1140.48, 1321.92).
+  Top strip [2419.2, 2747.52] = 0.474 mm2 for S_att (76 SRAM about 0.15 mm2 + 168k soft).
+- PROBLEM to solve first: in the recover plan each box row also holds 2 SML + 1 SMD (S_rs logic). Partitions are rectangles, so either
+  (a) SML/SMD go logically into the band (needs a registered SM cut smh <-> g_l/g_p: +1 each way on the softmax lanes, new RTL + bench), or
+  (b) SM boxes move into a grown S_rs region next to the sx strip (8 SML 103.68 wide + 4 SMD 69.12 + SMC + SMR = 1,252 um of boxes: two rows
+      with R-STREET streets; svc rows grow about +300 um, pre-approved) and each band keeps TRX + 2 H4 only (band soft about 9k).
+  I recommend (b): no new RTL cut, SM timing untouched, bands become identical for all 14 rs types (one band type, one sign-off).
+- Service cut S_att | S_rs = the u_att instance of dsdv_svc_rs_c. Its q / kv / p handshakes use ready signals, so a registered boundary needs skid
+  stages; the generated landed parent dsdv_svc_rs_lp (tools/landed_parent/lp.py, 8 landed crossings, record
+  results/arch/s81_dv_1016/svc_rs/lp/) is the existing proven form of exactly this cut: start there, do not hand-write it.
+- Band private kit: follow HARD-S81-DSDV-1 xs4h (physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py --module --recipes, LEF contract,
+  macro_sites) with module ot_s81_svc_band, children = 8 ot_s81c_attn_hcore (signed rt22m_hx2 views), ot_hdc_v41x_attn_tr_x (S81-SVCRS-4 trx rows:
+  trx0/trx24 SIGNED, trx8/trx16 LOCAL_PASS_NEEDS_PARENT), 2 ot_s81_svc_merge_h4 (SIGNED). Band pins about 1.75k in / 530 out.
+- Bind defines for the form: OT_SVC_H8 OT_SVC_H8_REUSE_RT2 OT_SVC_MERGE_H4 OT_SVC_ATT_MEM_MACRO OT_SVC_SRX=<hops> OT_SVC_BAND (+ OT_SVC_NSTAGE=3
+  if back-to-back slip matters). pvso_entry t1/t2 and the reset contract are still open in the recover plan.
+- Codex untracked files in wt/hard-s81-svc-1 (delta_svc_provider_recover_1113.py, type_split.py): not mine, left untouched; the script is on
+  origin as claude/svc-macro-2-form-1113@ff8154806c.
