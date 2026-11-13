@@ -122,7 +122,7 @@ def events_and_expect(img: dict, words: list, n_decode: int, bmut: int):
 
 def status_events(ev, e0, status, late):
     ag = dict(su_busy=0, stn_busy=0)
-    ss = dict(su_prog=0)
+    ss = dict(su_prog=0, ar_land=0, ar_last=0)
     nat = dict(native_idle=1)
     sts = []
     for s in status:
@@ -137,10 +137,12 @@ def status_events(ev, e0, status, late):
             ev.append((e0 + e, 7, (ag['stn_busy'] << 9) | (ag['su_busy'] << 1)))
         elif f in ss:
             ss[f] = v
-            ev.append((e0 + e, 8, (v << 45) | (v << 29)))
-        else:
+            ev.append((e0 + e, 8, (ss['su_prog'] << 45) | (ss['su_prog'] << 29) | (ss['ar_land'] << 106) | (ss['ar_last'] << 25)))
+        elif f in nat:
             nat[f] = v
             ev.append((e0 + e, 9, (v << 1) | 1))
+        else:
+            raise ValueError(f'unsupported controller status field {f!r}')
 
 
 def run(a):

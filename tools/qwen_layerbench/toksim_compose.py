@@ -127,6 +127,14 @@ def die_edge_map(de, variant=None):
     for e in de['edges']:
         cyc = e.get(f'cycles_{variant}', e['cycles']) if variant else e['cycles']
         for b in e['at']:
+            if b not in L.EDGE_POINTS:
+                # Ledger annotations may describe overlapped/off-path work at a
+                # boundary this serial layer model does not represent.  Zero
+                # selected cost needs no invented placement; retain the source
+                # annotation in de, but never silently discard a charged edge.
+                if cyc == 0:
+                    continue
+                raise ValueError(f'die_edges: charged edge at unknown boundary {b!r}: {cyc}')
             m.setdefault(b, []).append(dict(label=e['label'], cycles=cyc, grade=e.get('grade', 'PRICED'),
                                             source=e.get('source', '')))
     return m
