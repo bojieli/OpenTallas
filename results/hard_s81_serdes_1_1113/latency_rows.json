@@ -1,17 +1,82 @@
 {
  "title": "S81 serdes column form LANE (HARD-S81-SERDES-1 2026-11-13): added cycles",
- "status": "private proof, DO_NOT_COUNT; default off; plan define OT_S81_SERDES_LANE (ot_pdie_serdes_col LANE_PIN 3 / LANE_TXA 4 / LANE_RXI 5 / LANE_RXO 3)",
+ "status": "private proof, DO_NOT_COUNT; default off; plan defines OT_S81_SERDES_LANE + the cone set (OT_S81_SERDES_RST_TREE, OT_S81_RM_STAGED, OT_S81_RM_LOCAL4, OT_S81_RM_WFULL8, OT_S81_KP4_SYN_LOCAL, OT_S81_KP4_AM_FACE3, OT_S81_CLAND_WCHK)",
  "relative_to": "the column as bound today (TXL 2, no opt-in define except OT_KP4_DEC_HARD)",
  "rows": [
-  {"id": "LANE_PIN", "lane": "TX coll_i pin register -> u_enc (u_lpin; data, tx_v and the encoder reset together)", "added_cycles": 3, "clk": "clk"},
-  {"id": "LANE_TXA", "lane": "TX u_enc -> u_txl rows -> PMA TX (u_txl 2 -> 6 rows)", "added_cycles": 4, "clk": "clk"},
-  {"id": "LANE_RXI", "lane": "RX PMA RX q -> decoder (u_lrxi; rs_r +5 stages: the whole pma_rck domain shifts)", "added_cycles": 5, "clk": "pma_rck"},
-  {"id": "LANE_RXO", "lane": "RX u_rm r_d / st -> coll_o pin register (u_lrxo)", "added_cycles": 3, "clk": "clk"}
+  {
+   "id": "LANE_PIN",
+   "lane": "TX coll_i pin register -> u_enc (u_lpin; data, tx_v and the encoder reset together)",
+   "added_cycles": 3,
+   "clk": "clk"
+  },
+  {
+   "id": "LANE_TXA",
+   "lane": "TX u_enc -> u_txl rows -> PMA TX (u_txl 2 -> 6 rows)",
+   "added_cycles": 4,
+   "clk": "clk"
+  },
+  {
+   "id": "LANE_RXI",
+   "lane": "RX PMA RX q -> decoder (u_lrxi; rs_r +5 stages: the whole pma_rck domain shifts)",
+   "added_cycles": 5,
+   "clk": "pma_rck"
+  },
+  {
+   "id": "LANE_RXO",
+   "lane": "RX u_rm r_d / st -> coll_o pin register (u_lrxo)",
+   "added_cycles": 3,
+   "clk": "clk"
+  },
+  {
+   "id": "RM_STAGED",
+   "lane": "RX rate matcher (OT_S81_RM_STAGED + RM_LOCAL4 + RM_WFULL8): write side +2 pma_rck, read side +3 clk",
+   "added_cycles": 5,
+   "clk": "pma_rck 2 + clk 3",
+   "source": "existing form, S81-RCK-10 vJ / DIE-S81-85 vB proofs; loopback measured by SERDES-FIN-2 bench6vb"
+  },
+  {
+   "id": "KP4_SYN_LOCAL",
+   "lane": "RX decoder syndrome faces registered (OT_S81_KP4_SYN_LOCAL, with KP4_AM_FACE3 0 cycles)",
+   "added_cycles": 2,
+   "clk": "pma_rck"
+  },
+  {
+   "id": "RST_TREE",
+   "lane": "clk-domain reset fan-out tree (OT_S81_SERDES_RST_TREE)",
+   "added_cycles": 0,
+   "clk": "clk",
+   "note": "+1 clk edge on reset release only"
+  },
+  {
+   "id": "CLAND_WCHK",
+   "lane": "landing ring write-enable copies (OT_S81_CLAND_WCHK)",
+   "added_cycles": 0,
+   "note": "ready +1 clk at boot only"
+  }
  ],
- "totals": {"pma_tx": 7, "rx_and_st": 8, "loopback": 15},
- "bench_loopback_cycles": {"released": 88, "LANE 3/4/4/3": 102, "LANE 3/4/5/3": 103},
+ "totals": {
+  "pma_tx": 7,
+  "rx_and_st": 15,
+  "loopback": 22,
+  "of_which_LANE": 15,
+  "of_which_cone_set": 7
+ },
+ "bench_loopback_cycles": {
+  "released": 88,
+  "LANE 3/4/4/3": 102,
+  "LANE 3/4/5/3": 103,
+  "cone set only (vB)": 95,
+  "cone set + LANE 3/4/5/3": 110
+ },
  "reset": "rx reaches IDLE and st 0 within LANE_RXO + 2 clk edges of the die reset (bench leaf check); LOCKSAFE HOLD_EDGES 64 unchanged",
  "plan_lanes": "no die_plan lane changes: the coll lanes end at the column pins, so lane_asbuilt_latency.py rows are unchanged; the link-internal cycles above go to the die owner / TOK-VERIFY as rows",
- "seqhost": {"form": "dsdv_mu_hwin LA=1 (define OT_S81_SH_WIN_LA)", "added_cycles": 0},
- "route_to": ["S81 die owner", "TOK-VERIFY", "COORD"]
+ "seqhost": {
+  "form": "dsdv_mu_hwin LA=1 (define OT_S81_SH_WIN_LA)",
+  "added_cycles": 0
+ },
+ "route_to": [
+  "S81 die owner",
+  "TOK-VERIFY",
+  "COORD"
+ ]
 }
