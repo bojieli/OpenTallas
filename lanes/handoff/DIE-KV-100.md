@@ -45,3 +45,9 @@
 - hub_C R-CAP: ASK posted (pv_fin 2 slice cores + y3 split + R1 ring RW=W; needs owners) default = follow-up event. KV-HUBC-REACH writing hubc_split_form + yosys stat.
 - SD pilot (old p3 form) placed + viewed ISSUES (fdi_cdc 2 clumps, tap t5 3035). io_ft pilot failed kit_rtl (stale in_site, now fixed in p3r2).
 - hub m055 kits still in place (place_mode done).
+## UPDATE 2026-11-13 07:09
+- hub_C: COORD approved y3 split + pv_fin 2 slice cores (KV-PVFIN-1) + R1; DIE-KV-100 moved the cut to 518.4/1503.36 (no pll move; posted). Forms epyc7 dkv100/hubc/ (hubc_split_form.py 3606e238, spec, post_split homes). yosys stat queued (kit-rtl fails: qkd_ahub no source).
+- pv: 3-way 622.08/1537.92 all 16 (vport windows block the 1080 gap); v2n _x1 282k ASK exception posted (default yes).
+- KV-SPLIT-1: hub split gates spilled to epyc4/intel2 via ot-run; event split event_in2 RC 0 (on pre_split2 91ef39a7); adding pv handlers (core_pg_connect, landing_control_status_copy, reset_spine_pins).
+- Event tail script: epyc7 dkv100/event/event_chain.sh IN_DIR OUT_DIR (reach fix 1,2,4 -> guard_reg -> sidecar -> bind1 -> raw -> G0 -> bind2 -> lane latency).
+- m055 hub kits placed; geom (AUTO-GEOM) queued behind epyc7 load 150-170.
