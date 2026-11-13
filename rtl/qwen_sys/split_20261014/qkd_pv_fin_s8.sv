@@ -97,7 +97,10 @@ module qkd_pv_fin_s8 #(
   for(k=1;k<=SKEW+1;k=k+1)begin t0[k]<=t0[k-1];t1[k]<=t1[k-1];end
  end
  wire [DW-1:0] opa=t0[s0],opb=t1[s1];
- reg [DW-1:0] sbuf[0:31];reg [127:0] rzr;
+ // sbuf is a FLAT vector, never an array: yosys memory_dff folded rd_q into a sync read port of an inferred sbuf memory and
+ // memory_map then registered the ADDRESS (b_q) and put the 32:1 x 256-bit mux AFTER the flop, in front of the multiplier
+ // S1 logic (s8a post-place WC -480 ps, b_q copy -> sbuf mux -> u_mul a_n -> u_c1).  A flat vector keeps rd_q a data register.
+ reg [32*DW-1:0] sbuf;reg [127:0] rzr;
  reg [DW-1:0] rd_q;reg [31:0] rzh_q;                               // = sbuf[rptr] / rzh of qkd_pv_fin_s, one edge early
  wire [DW-1:0] sum,product;wire [NL-1:0] av,mv;wire [2*NL-1:0] ae,me;
  genvar l;
@@ -153,8 +156,8 @@ module qkd_pv_fin_s8 #(
  wire [127:0] rzn=f_r?rz_q:rzr;                                    // rzr after this edge
  always @(posedge ck)begin
   if(f_r)rzr<=rz_q;
-  if(f_sum)sbuf[b_sum]<=sum;
-  rd_q<=(f_sum&&b_sum==b_q)?sum:sbuf[b_q];
+  if(f_sum)sbuf[DW*b_sum+:DW]<=sum;
+  rd_q<=(f_sum&&b_sum==b_q)?sum:sbuf[DW*b_q+:DW];
   rzh_q<=(hb==3'd0)?rzn[31:0]:(hb==3'd1)?rzn[63:32]:(hb==3'd2)?rzn[95:64]:rzn[127:96];
   if(f_prod)out_data<=product;
  end

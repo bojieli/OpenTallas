@@ -1,4 +1,3 @@
-# KV-PVFIN-1 2026-11-13T15:13:08Z epyc4 ot-run, source 8da61f762e + working tree (tb fault-edge qualifier)
 SIM Verilator 5.050 2026-07-01 rev v5.050
 COVER healthy 165 inj1..10 19 11 12 15 10 16 9 21 8 13 edges 77227 valid_beats 5885 payload_edges 59253
 PVFIN_S2X8 PASS mut=0 skew=1 seed=-229780165 shift=0
@@ -28,12 +27,3 @@ COVER healthy 13 inj1..10 2 0 2 1 2 1 2 3 1 2 edges 8103 valid_beats 481 payload
 PVFIN_S2X8 FAIL mut=0 skew=1 seed=-1214696331 shift=0 errs=1533
 MUTANT_CAUGHT laneswap
 PVFIN_S2X8_KIT PASS lockstep vs qkd_pv_fin_s SKEW 1+2 x 3 seeds x 300 cmds, 0 cycles; negatives shift1 mut1-3 laneswap caught
-## source sha256
-11469d4501702bb4d7af5ee86889fdf3ec31901302615da0cf4fca7fe3a349e4  rtl/qwen_sys/split_20261014/qkd_pv_fin_s.sv
-3f00a2cf128c960ba76fb967c42ed5c7feb141ea94edda9abd74f67d3f266300  rtl/qwen_sys/split_20261014/qkd_pv_fin_s8.sv
-4ce896e46dfbb559c2b15b3aa0abd04b2f62dd0e1973a9e60dd0154d42ab3c51  rtl/hdc/ot_hdc_fp32_add_lat.sv
-8165ec2905ae85c84c193853549dd91bb44b16fdd55ec1bf6ae39aaaf47acde1  rtl/hdc/ot_hdc_fp32_mul_lat.sv
-98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587  rtl/hdc/ot_hdc_prefix.sv
-d275d61a0f0cf5f45cdc6a89793bf8b858dad2d538f9368e2c75a189efee1db1  rtl/hdc/ot_hdc_fastfp.sv
-1c2fb7ba44ad9341532bfbca7b1ff1e5dd28b5c087adf99512c598f573a74ce7  rtl/test/qwen_split/tb_qkd_pv_fin_s2x8.sv
-cc1d7359a7f004bfeb9a197e116c96a9b2034578056db45b245079e0b4852339  rtl/test/qwen_split/run_qkd_pv_fin_s2x8.sh
