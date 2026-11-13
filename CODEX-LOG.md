@@ -12825,3 +12825,13 @@ OWNER? Previous HBM explicit-resume question and ownership-overlap question are 
 
 ## CODEX takeover 2026-11-13 13:44 PST
 Existing Claude worktrees retained; canonical coordination on intel2. Coverage: QC plan/REGION/forms/cores -> qc; S81 die/frame/leaf -> s81; S81 DSDV/SVC/Serdes/GUNIT -> s81cores; KV all -> kv; HEAD all -> head; HBM collection/diagnosis under owner PARK -> hbm; shared clock/flow/reach/cap/street -> shared; token/model -> token; KIT-OPS/fleet/source recovery -> wave; root -> integration, result registration and uncovered tasks. Healthy jobs preserved. No owner-answer wait.
+
+## CODEX notes 2026-11-13 13:45 PST
+Direct takeover in existing worktrees. CUT-BENCH-1 programme proof collected: seeds1/2/3 nominal0 mismatches,0 faults; each160 P.V words,20 SM row beats; CUTMUT2 caught164 cycles, CUTMUT3 caught37. This closes the earlier unexercised P.V/SM gap. Source+bench+logs pushed hub as claude/hard-s81-svc-1-tilepair-1113@7140618b36 (7 new files only; inherited tile-stage dirty edits excluded). Original OT_SVC_ATTCUT integration remains52dc675ba9; no plan/wave change. Band v5 E2 unitoth-ubuntu-3630374-1794605544 healthy in placement; tile3 lockstep E2 unitoth-ubuntu-2900932-1794605007 healthy. Next: collect these, inspect placed band, service split floorplan.
+
+## CODEX progress 2026-11-13 13:46 PST
+S81: 11 completed VOL2 shards collected (132 rows), next composition admitted epyc4 unit oth-ubuntu-3122597-1794606241. QC: self-matching waiter fixed; SWREG/PINKEEP pilot now admitted intel1; KITWIN delta preserves 320 ports/11 types requiring >208 ps as BLOCKED_CLOCK_ENTRIES. HEAD: spn_end pre-GRT hold-build pilot preparing from existing reviewed placement; tile spread-grid place healthy. KV: PHY reach3->0 errors, 128 fixed-cycle lanes synced; ns_chain7 and LEC-ES healthy. HBM: all10 core jobs terminal, no signed results; exact causes and remedies recorded, owner PARK retained. Wave: exact QC missing-source donor restore in progress; autopilot healthy, six approved R-FLOW launches13:41. AUTO-RESIGN turn_a already registered and credited, no duplicate work.
+
+OWNER? The older watcher rule forbids merges/tags/POR changes; the latest takeover order explicitly permits direct existing worktrees but does not explicitly revoke that restriction. Default: continue fixes, branch-head builds and READY posts; preserve the merge/tag/POR restriction until clarified. No work waits on this question.
+
+2026-11-13 13:47 PST shared: QC both-edge combo helper fixed in existing lane; t41 healthy abstract after route DRC0, pending signoff; dropped FT50 result collected NOTSIGNED; STREET c1x visual diagnosis retained; cap_budget follow-up delegated in existing RULES-CAP wt. No merges/tags/POR switches or new physical jobs.
