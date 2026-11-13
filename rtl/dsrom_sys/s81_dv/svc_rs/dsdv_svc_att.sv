@@ -633,7 +633,8 @@ module dsdv_svc_att #(
 `ifdef OT_SVC_BAND
                          // HARD-S81-SVC-1 11-13 (COORD svc option A): each engine lane band = one registered module
                          // ot_s81_svc_band (needs -DOT_SVC_MERGE_H4 and -DOT_SVC_SRX >= 1): scores +2, P.V +2 more.
-                         , .BANDX(1)
+                         // v2: capture depth 2 + registered merge inputs: scores +3, P.V +4 on top of SRX
+                         , .BANDX(2), .BANDM(1)
 `endif
                          ) u_eng (
         .clk(clk), .rst_n(rst_n), .job_v(ej_v), .job_t({6'd0, tjob}), .job_ready(ej_ready),
