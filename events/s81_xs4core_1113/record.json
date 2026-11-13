@@ -1,0 +1,31 @@
+{
+ "event": "S81 XS4-CORE (plan event): ot_s81sl_xs4 hard core + hand re-layout of the 16 dsdv_slice_*_C rows",
+ "lane": "HARD-S81-DSDV-1 (Fable; DSDV-FORMS-2 carried it 07:02-07:27 11-13)",
+ "ruling": "COORD: R-CAP-3 point 3 (harden the one engine); DIEVIEW-S81 F4 (break the xf wall, register ft0_i at the pin)",
+ "plan_sha256_12": "fb7f60293915",
+ "plan_file": "plan_xs4core_fb7f60293915.json.gz",
+ "base": "ready12b-A 18c864518844 (events/s81_ready12bA_1112/plan_ready12bA_18c864518844.json.gz)",
+ "composition": [
+  "1 delta_xs4_core_1113.py: 37 (iq / kv512: 31) u_xg.u_s macro contents leave the parent; hard core u_c.u_xg.u_s = ot_s81sl_xs4 (648.0 x 518.4, MX, pin face on the ring band); every existing core moved to the family template (shapes frozen, R0 / MX only for cores with M3 + M5 pins); xf row broken 3 + 2 with a 43.2-um N-S street; track offsets recomputed; ft and internal stations re-routed; station cycles priced (reach_fix.sync_fixed_cycles: 55 lanes, +85 lane cycles); r1_delta.json",
+  "2 reach_fix.py fix --classes 1,2,3,4,5 on the 16 types: 16 applied, 0 violating types left (taps re-seeded, reset re-selected); r2_reach.json",
+  "3 delta_xs4_collector_1113.py: reset tree per type solved again and published to the landing contract and the sidecar (landed_sidecar_h2_psplit_all.xs4.json.gz)",
+  "4 stage_kit_source_table_refresh.py (source, then --dest): 0 lanes each (step 1 priced them); r4_kdst.json"
+ ],
+ "row_deltas": "c1x t1: template sites mirrored in x (ft0 S>N at x 993.6 crosses the xs4 site), xr on the W part of the ring band; c1x t3: left xf group -25.92 um (type clock tap at 682.56 / 1123.2); lepw_mus: cap in the lower-left quadrant (lepk bars on W up to y 1077), xr +51.84; cap / xr orient = lower bit-um of R0 / MX",
+ "rtl": "rtl/dsrom_sys/s81_dv/slice/cap_end/ot_s81sl_slice_w3.sv (iq / kv512 parent): u_xg master ot_s81sl_xg -> ot_s81sl_xgt_xo; x relay line D = DX - 1 and marker mkq one edge later, so frame word and marker reach the x-chain heads on the old edge (no calendar change); fault +1 edge (status)",
+ "asbuilt": "asbuilt_xs4.json = ready12b-A asbuilt_ist + dissolve ot_s81sl_xgt_xo + instance_path_params ot_s81sl_xs4 + declared tie ot_s81sl_rstopt_xo ci_b[1103:1076] = 0; its base field names the private bind tree (re-point at adoption)",
+ "tools": "plan chain, G0, G0C, street check: origin/main 0a4b432de8 + this branch. Bind + latency: tree = S81-R12BA-FIN bsrc_r12bA_dst bulk with rtl/ and tools/ of origin/main 87b85b86bd + this lane's files (epyc8 /srv/opentallas-scratch2/claude/hard-s81-dsdv-1/bsrc_xs4, run_bind_xs4.sh)",
+ "gates": {
+  "G0": "74 errors = the base plan's 74 on the same tools (0 added, 0 removed; g0cmp.py); g0_report.json.gz",
+  "G0C": "0 errors on the 16 C types (cell_budget and core pin tracks included); die total 9456 is the standing completeness backlog of other types",
+  "R-STREET": "street_rule.py check (main): 16 types, 0 with violations; r5_street_check.json",
+  "strict_bind": "rc 0: 398 partitions, 395 types, 873 crossings, errors 0, unbound 0, tied 0, undriven 0, multiply_bound 0 (bind.log.gz; fresh elab)",
+  "latcheck_asbuilt": "lane_asbuilt_latency.py as-bound: 873/873 PASS, 0 failed, 0 unobserved (latcheck.summary.txt, latcheck.tsv)",
+  "token": "not run: 55 lanes change, +85 lane cycles (leafdn / leafup / ret lanes of the C rows); TOK-VERIFY re-baseline at adoption"
+ },
+ "open": [
+  "ot_s81sl_xs4 core kit 6e80a8657ec1d541 is building (epyc2); the plan carries the LEF contract and PROVISIONAL libs (cores/views/xs4_prov_1113) until it signs off",
+  "place proofs c1x t3 and c1x t8 running; ft0_i registered at the pin (DIEVIEW-S81 F4) not yet resolved",
+  "bind_verify (bind.py verify) not run"
+ ]
+}
