@@ -149,8 +149,13 @@ class Fake:
             (d / "run/objects").mkdir(parents=True)
             (d / "config.mk").write_text("eco overrides\n")
             (d / "signoff.py").write_text("# kit sign-off\n")
+            (d / "prd_hook.tcl").write_text((E.PRD / "prd_hook.tcl").read_text())
             return 0
         if cmd[0] == "bash" and cmd[1].endswith("prd_run.sh"):
+            scope = (kw.get("env") or {}).get("OT_HOLD_REPAIR_SCOPE")
+            if scope in E.HOLD_SCOPES:
+                with (Path(cmd[2]) / "run_prd.log").open("a") as f:
+                    f.write(f"OT_PRD_HOLD_SCOPE_VERIFIED scope={scope} entered=1 restored=1 completed=1\n")
             return 9 if self.results[self.n] is None else 0
         if "run" in cmd and "--out" in cmd:
             out = Path(cmd[cmd.index("--out") + 1])
@@ -289,7 +294,7 @@ def test_pass_on_second_iteration(tmp_path, three_iter):
     # sign-off on the kit's own config.mk (ECO overrides kept aside as config_eco.mk)
     d = Path(r["best"]["dir"])
     assert (d / "config.mk").read_text() == (k / "config.mk").read_text()
-    assert (d / "config_eco.mk").read_text() == "eco overrides\n"
+    assert (d / "config_eco.mk").read_text() == "eco overrides\n\noverride export OT_HOLD_REPAIR_SCOPE = reg2reg\n"
     assert json.loads((Path(r["root"]) / "eco_loop.json").read_text())["verdict"] == "PASS"
     # every ECO pass: route-keeping incremental DRT, finish only (the loop signs off itself)
     env = [e for c, e in f.calls if c[0] == "bash" and c[1].endswith("prd_run.sh")][0]
@@ -345,7 +350,12 @@ def test_post_runner_used_when_kit_has_one(tmp_path):
             d = Path(cmd[3])
             (d / "run/results/asap7/n/base").mkdir(parents=True)
             (d / "config.mk").write_text("eco\n")
+            (d / "prd_hook.tcl").write_text((E.PRD / "prd_hook.tcl").read_text())
             (d / "run_kit_hbm.sh").write_text('if [ "$GOAL" = post ]; then :; fi\n')
+        elif cmd[1].endswith("prd_run.sh"):
+            scope = (kw.get("env") or {}).get("OT_HOLD_REPAIR_SCOPE")
+            if scope in E.HOLD_SCOPES:
+                (Path(cmd[2]) / "run_prd.log").write_text(f"OT_PRD_HOLD_SCOPE_VERIFIED scope={scope} entered=1 restored=1 completed=1\n")
         elif cmd[1].endswith("run_kit_hbm.sh"):
             d = Path(cmd[2])
             (d / "signoff").mkdir()
@@ -375,11 +385,16 @@ def _resumed_post_run(k, calls):
             d = Path(cmd[3])
             (d / "run/results/asap7/n/base").mkdir(parents=True)
             (d / "config.mk").write_text("eco\n")
+            (d / "prd_hook.tcl").write_text((E.PRD / "prd_hook.tcl").read_text())
             (d / "resume.json").write_text('{"start": "cts"}\n')
             _refusing_runner(d)
             r = rec(2, 5)
             r["inputs"] = {"base": str(d / "run/results/asap7/n/base")}
             (d / "rec.json").write_text(json.dumps(r))
+        elif cmd[1].endswith("prd_run.sh"):
+            scope = (kw.get("env") or {}).get("OT_HOLD_REPAIR_SCOPE")
+            if scope in E.HOLD_SCOPES:
+                (Path(cmd[2]) / "run_prd.log").write_text(f"OT_PRD_HOLD_SCOPE_VERIFIED scope={scope} entered=1 restored=1 completed=1\n")
         elif cmd[1].endswith("run_kit_hbm.sh"):
             return subprocess.call(["bash"] + cmd[1:], env=kw.get("env"), stdout=subprocess.DEVNULL)
         return 0
@@ -423,7 +438,12 @@ def test_post_without_resume_sets_no_override(tmp_path):
             d = Path(cmd[3])
             (d / "run/results/asap7/n/base").mkdir(parents=True)
             (d / "config.mk").write_text("eco\n")
+            (d / "prd_hook.tcl").write_text((E.PRD / "prd_hook.tcl").read_text())
             (d / "run_kit_hbm.sh").write_text('if [ "$GOAL" = post ]; then :; fi\n')
+        elif cmd[1].endswith("prd_run.sh"):
+            scope = (kw.get("env") or {}).get("OT_HOLD_REPAIR_SCOPE")
+            if scope in E.HOLD_SCOPES:
+                (Path(cmd[2]) / "run_prd.log").write_text(f"OT_PRD_HOLD_SCOPE_VERIFIED scope={scope} entered=1 restored=1 completed=1\n")
         elif cmd[1].endswith("run_kit_hbm.sh"):
             d = Path(cmd[2])
             (d / "signoff").mkdir()
@@ -700,7 +720,10 @@ def test_relative_output_is_absolute_for_abstract_docker_mount(tmp_path, monkeyp
     b = base_rec(k, rec(-4, -2, slew=1))
     f = Fake([rec(1, 2)])
     def stage(_kit, root, tools):
-        (root / "so").mkdir()
+        (root / "so" / "tools").mkdir(parents=True)
+        # The isolated staging stub still provides the repair scope the late ECO now requires.
+        for name in ("orfs_hold_mm.tcl", "orfs_hold_mm.py"):
+            shutil.copyfile(E.HERE.parent / name, root / "so" / "tools" / name)
         return root / "so"
     monkeypatch.setattr(E, "stage_so", stage)
     result = E.run_loop("kit", b.relative_to(tmp_path), root="kit/eco_relative", run=f, mem=8, cpus=2)
@@ -1093,7 +1116,8 @@ def test_nonport_scope_scores_nonport_hold(tmp_path, monkeypatch, three_iter):
     assert "no improvement at iteration 1" not in r["reason"] and len(r["iterations"]) >= 2
     assert r["iterations"][1]["metrics"]["ff_np"] == 0.0 and r["iterations"][1]["metrics"]["ff_np_n"] == 0
     assert "non-port -7.98/81->" in E.summary(r)
-    monkeypatch.delenv("OT_HOLD_REPAIR_SCOPE")
+    # Explicit all retains the historical whole-number score; late default now owns core endpoints only.
+    monkeypatch.setenv("OT_HOLD_REPAIR_SCOPE", "all")
     k2 = kit(tmp_path / "d", mm=False)
     b2 = base_rec(k2, rec(33.7, -7.98))
     _census_out(k2 / "signoff", 81, -7.98)
@@ -1170,7 +1194,7 @@ def test_hold_mm_supports_reads_the_declared_modes(tmp_path):
     t.write_text(STALE_MM_TCL)
     assert not E.hold_mm_supports(t, "nonport") and not E.hold_mm_supports(t, "reg2reg")
     t.write_text(R2R_MM_TCL)
-    assert E.hold_mm_supports(t, "reg2reg") and not E.hold_mm_supports(t, "nonport")
+    assert not E.hold_mm_supports(t, "reg2reg") and not E.hold_mm_supports(t, "nonport")
     assert E.hold_mm_supports(E.HERE.parent / "orfs_hold_mm.tcl", "nonport")    # the current tools copy
     assert E.hold_mm_supports(E.HERE.parent / "orfs_hold_mm.tcl", "reg2reg")
 
