@@ -6582,13 +6582,39 @@ def infra_relaunch_due(cfg, rec):
             and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("event") == rec.get("event"))
 
 
-_VISUAL_RE = re.compile(r"GEOM VERDICT \[[^\]]*\] (\S+)/(\S+) (?:attempt_|a)(\d+)\b[^:]*?(?:\([^)]*\))?:\s*(GOOD|OK|ISSUES-ACCEPT|BAD|ISSUES)\b")
+# row-attempt verdict head; the verdict itself is found by parse_visual_line (KIT-OPS-1 11-13, GEOM-VIS-15: the old single
+# regex allowed one flat parenthesis before the verdict, so "(... has no place render (eco 6_final 11-05 08:50 UTC); ...): ISSUES-
+# ACCEPT" did not parse and 14 GEOM-VIS-14 verdicts were silently lost for 3+ h)
+_VISUAL_HEAD_RE = re.compile(r"GEOM VERDICT \[[^\]]*\] (\S+)/(\S+) (?:attempt_|a)(\d+)\b")
+_VISUAL_WORD_RE = re.compile(r"\s*(ISSUES-ACCEPT|GOOD|OK|BAD|ISSUES)\b")
 _VISUAL_CACHE = {"mtime": None, "v": {}}
 VISUAL_ACCEPT = ("GOOD", "OK", "ISSUES-ACCEPT")
 
 
+def parse_visual_line(ln):
+    """-> (die, item, attempt, verdict) of a row-attempt GEOM VERDICT line, None when the line is not one, or 'UNPARSED' when
+    it names a row attempt but no verdict can be read.  The verdict is the first ':' at parenthesis depth 0 (any nesting,
+    colons inside parentheses ignored) that is followed by GOOD / OK / ISSUES-ACCEPT / BAD / ISSUES."""
+    m = _VISUAL_HEAD_RE.search(ln)
+    if not m:
+        return None
+    depth = 0
+    rest = ln[m.end():]
+    for i, ch in enumerate(rest):
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth = max(0, depth - 1)
+        elif ch == ":" and depth == 0:
+            w = _VISUAL_WORD_RE.match(rest, i + 1)
+            if w:
+                return m.group(1), m.group(2), int(m.group(3)), w.group(1)
+    return "UNPARSED"
+
+
 def visual_verdicts():
-    """{(die, item, attempt): verdict} of lanes/GEOM-REVIEW.md (the last line per row attempt wins), cached by mtime"""
+    """{(die, item, attempt): verdict} of lanes/GEOM-REVIEW.md (the last line per row attempt wins), cached by mtime.
+    Row-attempt verdict lines that do not parse are kept in _VISUAL_CACHE['unparsed'] (visual_parse_warn logs them)."""
     for p in (Path.home() / "coord" / "lanes" / "GEOM-REVIEW.md", Path.home() / "coord" / "GEOM-REVIEW.md"):
         if p.exists():
             break
@@ -6597,16 +6623,34 @@ def visual_verdicts():
     try:
         mt = (str(p), p.stat().st_mtime)
         if _VISUAL_CACHE["mtime"] != mt:
-            v, ts = {}, {}
+            v, ts, bad = {}, {}, []
             for ln in p.read_text(errors="replace").splitlines():
-                m = _VISUAL_RE.search(ln)
-                if m:
-                    v[(m.group(1), m.group(2), int(m.group(3)))] = m.group(4)
-                    ts[(m.group(1), m.group(2), int(m.group(3)))] = verdict_line_ts(ln)
-            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts)
+                r = parse_visual_line(ln)
+                if r == "UNPARSED":
+                    bad.append(ln.strip())
+                elif r:
+                    v[r[:3]] = r[3]
+                    ts[r[:3]] = verdict_line_ts(ln)
+            _VISUAL_CACHE.update(mtime=mt, v=v, ts=ts, unparsed=bad)
     except OSError:
         pass
     return _VISUAL_CACHE["v"]
+
+
+def visual_parse_warn(AP, st):
+    """KIT-OPS-1 11-13 (COORD via GEOM-VIS-15): warn in the autopilot log about each row-attempt GEOM VERDICT line of
+    GEOM-REVIEW.md that does not parse (once per line; the warned set is kept in the state).  -> lines newly warned"""
+    visual_verdicts()
+    bad = _VISUAL_CACHE.get("unparsed") or []
+    seen = set(st.get("visual_unparsed_warned") or [])
+    new = [ln for ln in bad if hashlib.sha1(ln.encode()).hexdigest()[:16] not in seen]
+    for ln in new:
+        AP.log(f"KIT-WAVE VISUAL-PARSE WARN: GEOM VERDICT line names a row attempt but no verdict parses (need ': GOOD|OK|"
+               f"ISSUES-ACCEPT|BAD|ISSUES' outside parentheses), the wave ignores it: {ln[:300]}")
+    cur = sorted({hashlib.sha1(ln.encode()).hexdigest()[:16] for ln in bad})
+    if cur != sorted(seen):
+        st["visual_unparsed_warned"] = cur
+    return len(new)
 
 
 VISUAL_SIGNOFF = "WAIT-VISUAL-SIGNOFF"
@@ -6760,6 +6804,11 @@ def visual_queue_publish(cfg, st):
                 rec["route_hold"] = f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
                 rec["updated"] = time.time()
                 continue
+            if v in VISUAL_ACCEPT and launch_held(cfg, rec) and verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
+                # KIT-OPS-1 11-13 (COORD via GEOM-VIS-15, QC coll_ft x2): the build already has its accepting verdict; it stays
+                # WAIT-VISUAL only because a hold_items pattern (die-wide '*' or the item) keeps enqueue_pass from re-judging it.
+                # Nothing is left to review: off the queue (the row and its hold are unchanged; it routes when the hold lifts)
+                continue
         if (rec.get("status") == "ENQUEUED" and rec.get("q_status") not in ("FAIL", "CANCELLED")
                 and visual_signoff_gated(cfg, rec) and visual_signoff_state(cfg, rec)[0] == "none"):
             # OWNER 11-13 (signoff mode): a routed build still needs its verdict before it counts -- same queue, state
@@ -6784,6 +6833,12 @@ def visual_queue_publish(cfg, st):
     except (OSError, subprocess.TimeoutExpired):
         pass
     return len(rows)
+
+
+def launch_held(cfg, rec):
+    """True when a hold_items pattern of the row's die (a die-wide '*' or the item) matches the row's item"""
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    return any(fnmatch.fnmatchcase(str(rec.get("item") or ""), pat) for pat in (d.get("hold_items") or {}))
 
 
 def route_hold_reason(cfg, rec):
@@ -6958,6 +7013,10 @@ def retry_enqueue(AP, cfg, st, notices):
             continue
         enqueue_pass(AP, cfg, st, rec, notices)
         n += 1
+    try:
+        visual_parse_warn(AP, st)
+    except Exception as e:           # a parse-check problem never stops the wave
+        AP.log(f"KIT-WAVE VISUAL-PARSE check failed: {e}")
     try:
         visual_queue_publish(cfg, st)
     except Exception as e:           # a publish problem never stops the wave
