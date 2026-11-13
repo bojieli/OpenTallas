@@ -338,7 +338,19 @@ Tap, endcap and filler cells never count. The kit-level raise to 517k (`--native
 - KV, split needed: kv3_pv family, 10 plan types (pv, v1-v8, v12; 20 cores each). Measured 423-724k movable from 281-445k synthesized soft logic; 16 of 17 runs failed FF hold after 3-5 h of CTS. pv and v8 2 ways, the rest 3 ways, or harden the soft logic between the 20 cores into cores. kv3_hub_Wo / kv3_hub_Eo (464k / 407k) 2 ways.
 - HBM (parked): q_su00 757k, q_su00 pv1 627k, q_su20 pv1 633k, q_su11/pv1 446-468k, q_su31/pv1 393-428k, q_su20 413k, q_su30 396-440k, q_b002/pv1 445-778k, q_b012 762k, q_spu0 407k. The approved pEv12 split (su00 3 ways, others 2) matches R-CAP-3.
 ## R-FLOW (RULES-FLOW-1): ORFS flow settings for slew, DRV and early buffering
-Written 2026-11-13 04:40 PST by RULES-FLOW-1. Status: rule set final for slew/DRV, fanout, max wire, hold and routing; code on branch `claude/rules-flow-1-1113` (epyc7 `/srv/opentallas-scratch2/claude/rules-flow-1/wt`, parent main 055e36edab), not pushed yet. Proof 1 of 3 (HEAD) is done; the S81 and QC proof builds are running, and one knob (GPL_KEEP_OVERFLOW) is decided by them. Their rows are added here when they finish. No KV kit was built: no routed KV kit survives on the fleet to compare against.
+Written 2026-11-13 by RULES-FLOW-1 (v2 08:27 PST; FLOW-FIN-2 collected part of the builds). Status: rules final except R-FLOW-3's relay-bay part, whose deciding build is still running. Code on branch `claude/rules-flow-1-1113` 5209be699f (2 commits on main 99b30dde2a), not pushed yet: the relay-bay change is staged in the worktree and waits for its build. Every number below is from a private ot-run build through route, finish and sign-off, old and new settings on the same synthesized netlist (epyc7 `/srv/opentallas-scratch2/claude/rules-flow-1/ab/`), or from the fleet logs where a source is named.
+
+**Defaults per kit class.** The generator applies the set only to a die plan that has its own proof build. Explicit generator arguments still win.
+
+| kit class (die plan) | SLEW / CAP margin | place fanout | max wire, kit-wide | GPL keep overflow | resistance-aware GRT | proof kit |
+|---|---|---|---|---|---|---|
+| S81 (`s81`) | 50 / 20 | 32 | 100 um (the die's argument; 120 without it) | 0.25 | on; off on an M8-grant kit | slice_station__t21 |
+| HEAD (`s81_head`) | 50 / 20 | 32 | 120 um | 0.25 | on; off on an M8-grant kit | hd_turn_b |
+| KV (`qwen_kvsys`) | 50 / 20 | 32 | 120 um | 0.25 | on; off on an M8-grant kit | kv3_sys_SD_v1 |
+| QC (`qwen_compute`) | 50 / 20 | 32 | 120 um (the die's argument) | 0.25 | on; off on an M8-grant kit | coll_ftc |
+| HBM (`hbm`, parked) | unchanged: its own 35 / 35 | unchanged | unchanged | unchanged | off on an M8-grant kit | none; gets the set after its own proof |
+
+All classes: CTS unchanged; hold repair unchanged (once, FF GRT step, target 0), plus a report line with a 10 % budget.
 
 **What a flow setting fixes, and what it does not.** Counts are autopilot `structural.tsv` rows since 11-06, HBM excluded.
 
@@ -348,11 +360,12 @@ Written 2026-11-13 04:40 PST by RULES-FLOW-1. Status: rule set final for slew/DR
 | "post-CTS hold" | 121 | no: 84 are the GRT setup gate (depth or reach), 36 the FF structural hold gate | R-RTL, R-REACH, R-CLOCK |
 | routed, not signed off | 90 | partly: 89 of 90 carry a max-slew failure, and that part is a setting. 67 also fail setup and 89 fail hold, which are not | R-FLOW for slew; R-RTL, R-CLOCK for the rest |
 | flow error | 105 | no: kit staging, DPL-0033 (14), DRT-0073 no access point (about 20), tap capacity (10) | tooling, R-STREET |
-| DRT-0255 on M8-grant kits | 4 (HEAD rp18) | yes, already merged: no resistance-aware layer assignment on a kit with an M8 grant | HEAD-ROUTE-1, kept here |
+| DRT-0255 on M8-grant kits | 4 HEAD rp18, 2 KV kvN2 | yes: no resistance-aware layer assignment on a kit with an M8 grant (R-FLOW-6) | HEAD-ROUTE-1, kept here |
+| DRT-0255 on HEAD hd_tile | 1 | no: see R-FLOW-6 | HEAD route owner, R-STREET |
 
 What the slew fix is worth alone, from the 29 routed S81, HEAD and QC kits whose sign-off logs survive on the fleet (all not signed off):
 - 7 fail max slew only (HEAD hd_spn_wshim_rx, hd_spn_wshim_tx, hd_turn_a; S81 slice_station t24, t30 `cl1653104c`, t45, t7 `cl503f4913`). The setting alone takes them to LOCAL_PASS_NEEDS_PARENT.
-- 4 fail max slew plus FF hold on at most 35 endpoints by at most 13 ps (QC coll_ftm, HEAD hd_st_str, S81 t30 x2). With slew clean they enter the existing late-ECO window (30 ps, 100 endpoints, 20 slew nets).
+- 4 fail max slew plus FF hold on at most 35 endpoints by at most 13 ps (QC coll_ftm, HEAD hd_st_str, S81 t30 x2). With slew clean they enter the existing late-ECO window (30 ps, 100 endpoints, 20 slew nets; `eco_loop.py`).
 - 7 fail max slew plus FF hold on 409 to 4,236 endpoints, and 3 fail hold alone on 160 to 312 endpoints: R-CLOCK.
 - 8 fail setup by 11 to 258 ps as well: R-RTL or R-REACH. The setting removes their slew failure and nothing else.
 
@@ -360,44 +373,58 @@ What the slew fix is worth alone, from the 29 routed S81, HEAD and QC kits whose
 - 85 to 99 % of the routed TT max-slew pins sit on a few dozen nets with 17 to 154 loads: clock-landing ring select and write-enable nets, each driven by one BUFx2 to BUFx6f or INVx1 to INVx4. hd_turn_b: 1,399 of 1,408 pins on 39 nets. The rest are long fanout-1 wires (hd_ctl: 441 pins, worst 678 ps).
 - No violating pin is a clock pin, in any kit. CTS already uses BUFx24 for root and sinks, with clusters of 23 to 42 sinks.
 - `repair_design` repairs to exactly the 320 ps limit on the estimate: worst slew slack after the GRT repair is within -0.33 to +0.29 of the limit, mostly 0.00 to 0.19. Sign-off on routed RCX then reads -0.10 to -1.44. Two things widen the gap: the GRT repair step runs on FF libraries only (`run_kit.sh`: `grt CORNER=BC CORNERS=bc`), while slew signs off at TT; and the estimate is optimistic on wide nets and on long M2/M3 segments (FLOW-RC-1, 10-27).
-- The three S81 kits that already carried SLEW_MARGIN 50 (t14, t22, t44) routed with 0 slew pins, at +0.04 to +0.25 slack. The margin was a per-type argument on 4 S81 types; HEAD and KV had neither a margin nor a wire limit.
 
-**R-FLOW-1 design-rule margins.** Every gen_phys type kit repairs to half the slew limit and 80 % of the cap limit: `SLEW_MARGIN = 50`, `CAP_MARGIN = 20`, at the place repair and at the post-GRT repair. This is the rule that clears the class: alone it took hd_turn_b from 1,408 pins to 0.
+**R-FLOW-1 design-rule margins.** `SLEW_MARGIN = 50`, `CAP_MARGIN = 20` at the place repair and at the post-GRT repair. This is the rule that clears the class: alone it took hd_turn_b from 1,408 pins to 0.
 
-**R-FLOW-2 fanout.** The place repair limits every driver to 32 loads: `OT_PLACE_MAX_FANOUT = 32` (was off, or 64 from the gen environment). Alone it took hd_turn_b from 1,408 pins to 31. It does not replace R-RTL-2: a net with more than 64 loads at synthesis is still an RTL item. The limit only stops the tool from hanging 64 to 154 loads on one buffer.
+**R-FLOW-2 fanout.** The place repair limits every driver to 32 loads: `OT_PLACE_MAX_FANOUT = 32` (was off, or 64 from the gen environment). Alone it took hd_turn_b from 1,408 pins to 31. It does not replace R-RTL-2: a net with more than 64 loads at synthesis is still an RTL item. A kit with its own `PRE_RESIZE_TCL` does not get the limit.
 
-**R-FLOW-3 wire length.** The post-GRT repair limits a driven segment to 120 um: `OT_MAXWIRE_UM = 120`. A smaller value given by the die (S81 `--max-wire-um 100`) wins. Do not go below 100: at 50 um the S81 t21 repair inserted 27,000 to 30,000 repeaters on 15,000 to 17,000 nets (14 % of its cells), and the tool warns that a limit under 143 um adds wire delay.
+**R-FLOW-3 wire length.** Kit-wide, the post-GRT repair limits a driven segment to 120 um (`OT_MAXWIRE_UM = 120`); a smaller value from the die's arguments wins (S81 100). A tighter pitch belongs on the nets that need it, not on the kit. **Measured item, relay-bay station kits (S81 slice_station, QC stm / fw / fe).** `relay_bay.py` writes its hop repeater pitch (50 or 62 um on most kits) into the kit-wide `OT_MAXWIRE_UM`, so every net of the kit is cut at that pitch. Cost measured: S81 t41 353,455 to 560,173 cells (+78,268 buffers, +28.9 % area, HOLDTAP-FIN-2); S81 t21 27,000 to 30,000 repeaters on 15,000 to 17,000 nets (14 % of its cells). The pitch is not a slew need: the tool's own hop table gives 81 to 90 ps slew at 100 um. It is repeater delay used as hold margin on the station hops. Fix under test: the hop pitch goes on the station hop nets only (`OT_FT_MAXWIRE_UM`, `ft_hop_maxwire.tcl`), the kit-wide limit stays 100 / 120 um, and any further hop hold margin comes from R-CLOCK's hold build. Deciding builds running on t21: kit-wide 100 um with hop pitch 50 um (`ab/t21_ft50`), and kit-wide 100 um alone (`ab/t21_mw100`), against the 50-um arms above. The code change is staged, not committed, until they finish.
 
 **R-FLOW-4 CTS: no change.** Smaller sink clusters and a stronger leaf buffer were proposed (EXPERT-REVIEW-1). The measurement does not support them: 0 clock pins among the violators, and the leaf buffer is already the largest in the library.
 
-**R-FLOW-5 hold repair: once, at the FF GRT step, target 0, with a budget line.** No hold repair after CTS: it would run on placement RC and be redone at GRT. No repair margin either. A +30 ps repair target was built on hd_turn_b: hold cells went from 631 to 3,323 (18.5 % of the logic cells) and TT setup from +100 to -45 ps on 463 endpoints, because the FF-only repair cannot see TT setup. The routed hold loss (22 to 26 ps on hd_turn_b) is closed by R-CLOCK's two-scene pre-GRT repair, not by a margin here. Each kit now prints `OT_HOLD_BUDGET added N logic_cells M pct P budget 10 ... OK|OVER`. OVER (more than 10 % of the placed logic cells) is a structural hold class for R-CLOCK; nobody raises a cap or a margin for it. The tool cap stays at 100 % as a guard.
+**R-FLOW-5 hold repair: once, at the FF GRT step, target 0, with a budget line.** No hold repair after CTS from this rule, and no repair margin. A +30 ps repair target was built on hd_turn_b: hold cells went from 631 to 3,323 (18.5 % of the logic cells) and TT setup from +100 to -45 ps on 463 endpoints, because the FF-only repair cannot see TT setup. The routed hold loss is R-CLOCK's to close with its two-scene hold build. Each kit prints `OT_HOLD_BUDGET added N logic_cells M pct P budget 10 ... OK|OVER`. OVER (more than 10 % of the placed logic cells) is a structural hold class for R-CLOCK; nobody raises a cap or a margin for it. The four proof kits read 0.14 to 3.69 %.
 
-**R-FLOW-6 routing.** `ENABLE_RESISTANCE_AWARE = 0` on a kit with an M8 grant, and only there (HEAD-ROUTE-1, merged). hd_turn_b routes clean with it under this rule set (DRC 0), and its slew failure is gone, so the open question in HEAD-ROUTE-1's handoff (did RA=0 cause the 1,408 pins?) is answered: no.
+**R-FLOW-6 routing.** `ENABLE_RESISTANCE_AWARE = 0` on a kit with an M8 grant, and only there (HEAD-ROUTE-1, merged).
+- KV proof: kv3_sys_SD_v1 died with DRT-0255 at detail-route iteration 1 (row 19d456d1a995). It carries an M8 grant, was generated before the merge, and its GRT ran resistance-aware. With the one config line it routes to DRC 0 (iteration 0: 11,281 violations, then 1,384, then clean). kv3_sys_SD (row db84da4eefbb) is the same kit form. Any M8-grant kit generated before HEAD-ROUTE-1 merged (train 30) needs the line or a regeneration.
+- hd_turn_b routes clean with RA off and this rule set, and its slew failure is gone, so RA off did not cause the 1,408 pins.
+- HEAD hd_tile (row a4b2265f9999) is not this class: its kit already has RA off. The failing net is a 2-pin BUFx16f repeater wire of about 206 um with guides on M1 to M7, in a route box over hard core `u_core.u_b.g_cvb.u_eB` and under two 0.60-um M8 obstruction rows. That is routing resource over a hard core under the grant rows: HEAD route owner and R-STREET. No setting from this rule changes it. Evidence: epyc9 `/srv/opentallas-scratch2/claude/rules-flow-1/d255/hd_tile.log`.
 
-**R-FLOW-7 place-stage buffering (open until proofs 2 and 3).** Timing-driven global placement keeps the repair buffers of its first pass, made at overflow 0.41 to 0.63: +18 to +51 % area on S81 station kits (+371 % on HBM q_su30 pv1, HBM-FORMS-1). The second pass at overflow 0.19 deletes and re-inserts them, so the final count is the same; the first pass only disturbs the placement. `GPL_KEEP_OVERFLOW = 0.25` makes the first pass virtual. On hd_turn_b it changed nothing that matters (same slew result with and without the other rules). It goes into the default only if the S81 and QC builds show no loss; otherwise it stays an opt-in for the HBM resume.
+**R-FLOW-7 place-stage buffering: `GPL_KEEP_OVERFLOW = 0.25`, decided.** Timing-driven global placement keeps the repair buffers of its first pass, made at overflow 0.41 to 0.63: +18 to +51 % area on S81 station kits (+371 % on HBM q_su30 pv1, HBM-FORMS-1). The second pass at overflow 0.19 deletes and re-inserts them, so the first pass only disturbs the placement. The setting makes the first pass virtual. Built with and without it under R-FLOW-1/2/3:
+- HEAD hd_turn_b: neutral (setup +100.52 with, +99.02 without; 0 slew pins both).
+- S81 t21: better with it. Setup +122.10 against +76.16, 662 fewer cells, GRT 1 h 15 against 1 h 36, route 26 min against 49 min; hold 8.62 ps on 76 endpoints against 6.02 on 51.
+- QC coll_ftc: the arm with it routes to DRC 0 in the same time as the old kit; the arm without it had not signed off when this was written, and its result is added below.
+It is in the default for the four classes. It is not proven on HBM.
 
-**What is not a setting.** Setup misses of 80 ps and more, hold on hundreds of endpoints, GRT overflow, and nets over 64 loads at synthesis stay with their owners above. `OT_RFLOW=0` in the gen environment writes the old kit; it is for A/B runs only.
+**What is not a setting.** Setup misses, hold on hundreds of endpoints, GRT overflow and nets over 64 loads at synthesis stay with their owners. The proof kits show it: hold endpoints did not shrink with the set on KV (269 to 540) and QC (347 to 465), and coll_ftc still misses setup by 60 ps. `OT_RFLOW=0` in the gen environment writes the old kit, `OT_RFLOW=1` the new set for a die plan not yet listed; both are for proof builds only.
 
 **Implementation** (branch `claude/rules-flow-1-1113`, under `tools/die_plan/`):
-- `gen_phys.py`: `RFLOW` table and `rflow_margins`, `rflow_max_wire_um`, `rflow_cfg`; `place_max_fanout` defaults to 32. Explicit `--slew-margin`, `--cap-margin`, `--max-wire-um` and a gen-environment `OT_PLACE_MAX_FANOUT` still win, so HBM keeps its 35/35 until its owner drops the argument.
+- `gen_phys.py`: `RFLOW` values, `RFLOW_DIES` (die plan and proof kit), `rflow_on`, `rflow_margins`, `rflow_max_wire_um`, `rflow_cfg`; `place_max_fanout` gives 32 for a listed die plan.
 - `hold_repair_pre.tcl`: the `OT_HOLD_BUDGET` line (report only).
-- Tests: `test_rflow_defaults.py` (new), `test_place_fanout_cap.py`, `tools/autopilot/test_gp_noconverge_gate.py`.
-- No `kit_wave.json` change is needed and no running job is touched. Kits generated from main after the merge get the set; a kit already generated keeps its config.
+- `relay_bay.py` (staged, uncommitted): hop pitch to `OT_FT_MAXWIRE_UM` instead of the kit-wide variable; `OT_RELAY_BAY_KITWIDE=1` or an old kit without the hop hook keeps the old form.
+- Tests: `test_rflow_defaults.py` (new), `test_place_fanout_cap.py`, `test_relay_bay.py`, `tools/autopilot/test_gp_noconverge_gate.py`. 297 related test files run one process each: the same 13 files fail with the set and with `OT_RFLOW=0` (already failing on main), so the change adds no failure.
+- No `kit_wave.json` change is needed and no running job is touched. A kit generated from main after the merge gets the set; a kit already generated keeps its config. The per-type `--slew-margin 50 --cap-margin 20` arguments in the S81 wave are now redundant and harmless.
 
-**Proof 1, HEAD hd_turn_b** (M8-grant kit with a landing ring; copy of HEAD-ROUTE-1's proof kit; epyc7 `/srv/opentallas-scratch2/claude/rules-flow-1/ab/`; every arm has synthesized netlist sha1 `ed0f30376e1c`; private ot-run builds through route, finish and sign-off):
+**Proof builds** (old arm = the same kit copy with untouched settings; every old rerun reproduced the wave's sign-off to the digit; all routes DRC 0):
 
-| arm | TT slew pins (worst) | TT setup | FF hold, internal pairs | cells | wire |
+| kit, arm | TT slew pins (worst) | TT setup | FF hold, internal pairs | cells | verdict |
 |---|---|---|---|---|---|
-| old settings, rerun (`turn_b_old`) | 1,408 (424 ps) | +100.36 | -26.35 on 47 | 31,190 | 203.4 mm |
-| margins only (`tb_A_margins`) | 0 | +101.38 | -10.53 on 19 | 31,272 | 203.7 mm |
-| fanout 32 only (`tb_B_fanout`) | 31 (393 ps) | +103.02 | -12.78 on 15 | 31,390 | 205.0 mm |
-| max wire 120 only (`tb_D_maxwire`) | 1,342 (355 ps) | +101.96 | -25.92 on 47 | 31,223 | 203.4 mm |
-| GPL keep 0.25 only (`tb_C_gplkeep`) | 1,486 (373 ps) | +33.99 | -19.43 on 45 | 31,211 | 203.7 mm |
-| R-FLOW-1/2/3 + GPL keep (`turn_b_v2`) | 0 (283 ps worst routed) | +100.52 | -24.27 on 32 | 31,453 (+0.8 %) | 204.8 mm (+0.7 %) |
-| the same + 30 ps hold target (`turn_b`), rejected | 0 | -45.09 on 463 | +1.90 | 34,112 | 208.7 mm |
+| HEAD hd_turn_b, old | 1,408 (424 ps) | +100.36 | -26.35 on 47 | 31,190 | NOT SIGNED: slew, hold |
+| HEAD hd_turn_b, R-FLOW | 0 | +100.52 | -24.27 on 32 | 31,453 (+0.8 %) | NOT SIGNED: hold only, inside the late-ECO window |
+| S81 slice_station__t21, old | 135 (425 ps) | +165.85 | -17.34 on 409 | 212,282 | NOT SIGNED: slew, hold |
+| S81 slice_station__t21, R-FLOW | 0 | +122.10 | -8.62 on 76 | 214,945 (+1.3 %; area +5.7 %) | NOT SIGNED: hold only, inside the late-ECO window |
+| KV kv3_sys_SD_v1, old | no route: DRT-0255 | | | | crash |
+| KV kv3_sys_SD_v1, RA off only | 1,037 (440 ps) | -15.04 on 4 | -13.43 on 269 | 84,462 | NOT SIGNED: slew, setup, hold |
+| KV kv3_sys_SD_v1, RA off + R-FLOW | 0 | +42.65 | -20.54 on 540 | 87,419 (+3.5 %; wire +5.9 %) | NOT SIGNED: hold only (R-CLOCK) |
+| QC coll_ftc, old | 2,280 (473 ps) | -90.92 on 49 | -16.48 on 347 | 262,361 | NOT SIGNED: slew, setup, hold |
+| QC coll_ftc, R-FLOW | 7 on 2 nets (333 ps) | -59.94 on 96 | -27.21 on 465 | 277,292 (+5.7 %; area +10.3 %) | NOT SIGNED: setup, hold; slew inside the late-ECO window |
 
-The rerun of the old settings reproduces the 11-12 proof kit to the digit, so the arms differ by settings only. All arms: DRC 0, antenna 0. Verdict of the new arm: the drv check passes; NOT SIGNED on the 32 hold endpoints, which is HOLD-TAP-1's class (their proof on this kit reaches FF hold +2.71). The +34 ps setup in the GPL-keep-only arm is one landing-origin broadcast path with 40 repeaters and hold pads; it does not appear when the margins are on.
+Reading the table:
+- Slew is cleared on three classes and cut from 2,280 pins to 7 on QC. The two QC nets left are a landing-ring write-enable inverter with 29 loads and one feedthrough station output.
+- No kit signs off from the set alone here, because each also carries a hold or setup failure owned elsewhere. The 7 slew-only kits listed above are where the set alone gives a sign-off.
+- Costs: 0.8 to 5.7 % more cells. t21 loses 44 ps of setup slack and stays at +122 ps. GRT plus route time: QC 2 h 25 old, 2 h 23 new; S81 t21 1 h 28 old, 1 h 41 new.
+- Single-rule arms on hd_turn_b: margins only 0 pins; fanout 32 only 31 pins; max wire 120 only 1,342 pins; GPL keep only 1,486 pins.
 
-**Proof 2, S81 slice_station__t21, and proof 3, QC coll_ftc**: running on epyc7, old and new arms from the same kit copy. Old sign-offs: t21 135 slew pins and FF hold -17.34 on 409; coll_ftc 2,280 slew pins, setup -90.92 on 49, FF hold -16.48 on 347.
-
-**Dies and types it touches.** Every gen_phys type kit on S81, HEAD, QC and KV, and HBM when it resumes. Hard-core kits from other generators are not changed.
+**Open, measured items** (not defaults until built on a second kit):
+- Post-route ECO margins (HEAD-97): `prd_mk.sh` writes `OT_SLEW_MARGIN=20` for the ECO passes; HEAD-97 signed hd_turn_a with 50 and a 120-um wire limit. One kit, no old/new pair.
+- The GRT repair sees FF libraries only. Running its `repair_design` on TT as well would let the slew margin drop from 50 toward 35 and save buffers. Not built.
+- HBM: with its 35 / 35 margins, six of seven routed HBM kits in the fleet logs still fail slew (up to 12,799 pins on q_spu1). Build one HBM kit with `OT_RFLOW=1` when HBM resumes.
