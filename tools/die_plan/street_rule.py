@@ -42,15 +42,17 @@ and the same legalize.  K = street_layers x street_fill / pin_pitch = 37.5 track
   sits.  Macros (hard cores and LEF contents) closer than face_depth_um (129.6) to a pin face form WALLS along that
   face: neighbours whose lateral opening is < street_min_um merge.  n = type pins of the face inside the wall span;
   ends = wall ends with a >= street_min_um opening (to the next wall, to an abutted macro, to the corner).  Every
-  wall member keeps        gap >= need = clamp(up4.32(n / (K x max(ends, 1))), 43.2, 129.6)        (ends = 0: 129.6)
-  off the face; a wall with < pinface_min (16) pins has no demand (the plan edge margin stays legal).  A macro ABUTTED
-  to the face (< 4.32) is legal only when the pins in its span go straight into it (pins <= its own face pins + 16);
-  otherwise its pins move out of the span or it lifts to a street.  1,620 shadowed pins fill 43.2 one-ended, 3,240
-  two-ended; a 1,030-um wall under a 5.4 pins/um face (t28 S) needs 77.76 two-ended.
+  wall member keeps        gap >= need = min(129.6, max(floor, up4.32(n / (K x ends))))            (ends = 0: 129.6)
+  off the face, floor = street_min_um (43.2) when the wall is DENSE (n / wall length >= dense_per_um = 3 pins/um; the
+  failing S81 faces carry 4.0-5.4), else tap_street_um (17.28).  A wall with < pinface_min (16) pins has no demand (the
+  plan edge margin stays legal).  A macro ABUTTED to the face (< 4.32) is legal only when the pins in its span go
+  straight into it (pins <= its own face pins + 16); otherwise its pins move out of the span or it lifts to a street.
+  1,620 shadowed pins fill 43.2 one-ended, 3,240 two-ended; the 616-um t28 S wall (2,929 pins, one end) needs 82.08.
   STATION ALLEY (station_alley): planned station registers (ft bit sites / regs, internal stations) may sit only in
-  open area or in a street: a station point whose free width (macro to macro, or macro to outline, along x or y) is
-  < street_min_um is in an alley; >= pinface_min station bits in one alley is an ERROR.  Legalize widens that alley
-  to a street (the pair / the outline gap becomes a street requirement).
+  open area or in a street.  A station point whose free width (macro to macro, or macro to outline, along x or y) is
+  < street_min_um stands in a SLOT; with B >= pinface_min station bits in a slot of length L (the facing overlap) it
+  is an ERROR when the slot is < tap_street_um (17.28) wide, or < street_min_um (43.2) wide and dense (B / L >=
+  dense_per_um).  Legalize widens that slot to a street (the pair / the outline gap becomes a street requirement).
   Legalize moves hard cores only (never a shape, never a LEF content macro: those stay residual with their reason).
 
 OUTPUT: new plan (types changed only), event JSON + TSV rows: per type outline before/after and growth %, cores
@@ -82,7 +84,7 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
                 add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="", sliver_rule=0,
-                face_rule=1, face_depth_um=129.6, face_passes=2)
+                face_rule=1, face_depth_um=129.6, face_passes=2, dense_per_um=3.0)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 # ERROR kinds; sliver / outline_sliver / tap_street are WARN.  face_street / station_alley: R-STREET (11-13)
@@ -356,12 +358,14 @@ def face_shadow_rule(W, H, boxes, wins, cfg):
             left = max([s for s in stops if s <= wl["lo"] + EPS] or [0.0])
             right = min([s for s in stops if s >= wl["hi"] - EPS] or [L])
             ends = int(wl["lo"] - left >= smin - EPS) + int(right - wl["hi"] >= smin - EPS)
-            nd = D if ends == 0 else min(D, max(smin, up(n / (k * ends))))
+            dense = n / max(wl["hi"] - wl["lo"], 1e-9) >= cfg["dense_per_um"]
+            floor = smin if dense else cfg["tap_street_um"]
+            nd = D if ends == 0 else min(D, max(floor, up(n / (k * ends))))
             for lo, hi, gap, b in wl["m"]:
                 if gap < nd - EPS:
                     V.append(dict(kind="face_street", a=b["inst"], b="face:" + face, face=face, gap=round(gap, 4),
                                   need=round(nd, 4), pins=[n, 0], wall=[round(wl["lo"], 2), round(wl["hi"], 2)],
-                                  ends=ends, movable=bool(b.get("movable")), free_spans=fs))
+                                  ends=ends, dense=dense, movable=bool(b.get("movable")), free_spans=fs))
     return V
 
 
@@ -416,8 +420,17 @@ def station_alleys(t, cfg, boxes=None):
         boxes += extra_boxes(t)
     if not boxes:
         return []
-    smin = cfg["street_min_um"]
+    smin, tmin = cfg["street_min_um"], cfg["tap_street_um"]
     R = [(b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"], b["inst"]) for b in boxes]
+    RN = {r[4]: r for r in R}
+
+    def slot_len(axis, a, b):
+        ra, rb = RN.get(a), RN.get(b)
+        i0, i1 = (1, 3) if axis == "x" else (0, 2)
+        if ra and rb:
+            return max(min(ra[i1], rb[i1]) - max(ra[i0], rb[i0]), 1e-9)
+        r = ra or rb
+        return max(r[i1] - r[i0], 1e-9)
     acc = {}
     for x, y, bits in station_points(t):
         if any(r[0] - 0.01 < x < r[2] + 0.01 and r[1] - 0.01 < y < r[3] + 0.01 for r in R):
@@ -443,9 +456,14 @@ def station_alleys(t, cfg, boxes=None):
                 d["gap"] = min(d["gap"], hi - lo)
     V = []
     for (axis, a, b), d in sorted(acc.items()):
-        if d["bits"] >= cfg["pinface_min"]:
-            V.append(dict(kind="station_alley", a=a, b=b, axis=axis, gap=round(d["gap"], 4), need=smin,
-                          pins=[d["bits"], 0], stations=d["stations"]))
+        if d["bits"] < cfg["pinface_min"]:
+            continue
+        L = slot_len(axis, a, b)
+        dense = d["bits"] / L >= cfg["dense_per_um"]
+        nd = smin if dense else tmin
+        if d["gap"] < nd - EPS:
+            V.append(dict(kind="station_alley", a=a, b=b, axis=axis, gap=round(d["gap"], 4), need=nd,
+                          pins=[d["bits"], 0], stations=d["stations"], slot_um=round(L, 2), dense=dense))
     return V
 
 

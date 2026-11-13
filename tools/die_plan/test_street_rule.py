@@ -548,6 +548,11 @@ def test_face_street_need_by_pins_and_ends():
             box("d", 853.68, 34.56, 250, 100)]
     v = SR.face_shadow_rule(W, H, row2, wins, CFG)
     assert {x["ends"] for x in v} == {2} and {x["need"] for x in v} == {43.2} and {x["pins"][0] for x in v} == {2747}
+    # a sparse wall (< 3 pins / um): only the 17.28 tap-legal floor, so the 34.56 edge margin is legal
+    sp = {"S": [(0.0, 1250.0, 2500, "s")]}                    # 2 pins / um
+    assert SR.face_shadow_rule(W, H, [box("m", 400, 34.56, 300, 300)], sp, CFG) == []
+    v = SR.face_shadow_rule(W, H, [box("m", 400, 8.64, 300, 300)], sp, CFG)
+    assert len(v) == 1 and v[0]["need"] == 17.28 and not v[0]["dense"]
     # deeper than face_depth_um: not a wall of this face; a face without pins: no rule
     assert SR.face_shadow_rule(W, H, [box("m", 400, 129.6, 300, 300)], wins, CFG) == []
     assert SR.face_shadow_rule(W, H, [box("m", 400, 8.64, 300, 300)], {"S": [(0.0, 100.0, 10, "s")]}, CFG) == []
@@ -585,16 +590,21 @@ def test_station_alley():
          "hard_cores": [{"inst": "a", "origin_um": [100.0, 100.0], "outline_um": [200.0, 200.0]},
                         {"inst": "b", "origin_um": [320.0, 100.0], "outline_um": [200.0, 200.0]},
                         {"inst": "c", "origin_um": [600.0, 25.0], "outline_um": [200.0, 200.0]}],
-         "internal_stations": [{"regs_um": [[310.0, 150.0]], "bits": 64},      # in the 20-um a|b slot
-                               {"regs_um": [[310.0, 250.0]], "bits": 4},       # same slot: 68 bits in all
-                               {"regs_um": [[700.0, 12.0]], "bits": 32},       # under c, 25 um off the S outline
+         "internal_stations": [{"regs_um": [[310.0, 150.0]], "bits": 640},     # in the 20-um a|b slot (200 long)
+                               {"regs_um": [[310.0, 250.0]], "bits": 4},       # same slot: 652 bits = 3.3 / um, dense
+                               {"regs_um": [[700.0, 12.0]], "bits": 32},       # under c, 25 um off S: sparse, legal
                                {"regs_um": [[560.0, 150.0]], "bits": 100},     # 80-um b|c street: legal
                                {"regs_um": [[150.0, 150.0]], "bits": 500},     # on core a: rides with it
                                {"regs_um": [[900.0, 900.0]], "bits": 500}],    # open area
          "ft_slots": [{"name": "f", "width": 8, "regs_um": [[310.0, 120.0]]}]}
     V = SR.station_alleys(t, CFG)
     got = {(v["a"], v["b"]): (v["pins"][0], v["gap"]) for v in V}
-    assert got == {("a", "b"): (76, 20.0), ("outline:S", "c"): (32, 25.0)}
+    assert got == {("a", "b"): (652, 20.0)} and V[0]["need"] == 43.2 and V[0]["dense"]
+    # a sparse slot (>= 16 bits, < 3 bits / um) only needs the 17.28 tap-legal width: c moved to 12 um off S fails
+    t["hard_cores"][2]["origin_um"] = [600.0, 16.0]
+    V = SR.station_alleys(t, CFG)
+    got = {(v["a"], v["b"]): (v["pins"][0], v["gap"], v["need"]) for v in V}
+    assert got == {("a", "b"): (652, 20.0, 43.2), ("outline:S", "c"): (32, 16.0, 17.28)}
     pairs, faces = SR.alley_force(V)
     assert pairs == {frozenset(("a", "b"))} and faces == {("c", "S")}
     # legalize: the forced pair is a street although no core pin faces the slot
