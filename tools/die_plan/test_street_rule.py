@@ -1,4 +1,5 @@
 """STREET-RULE-1: street-or-abut rule (pure geometry), the compactor / expander on a synthetic type, die estimate."""
+import collections
 import json
 import sys
 from pathlib import Path
@@ -266,7 +267,8 @@ def test_pass2_levers_reorder_and_xfeed():
     cfg = dict(SR.DEFAULTS, pin_reorder=1)
     a = core("a", 0, 0, 100, 100, {"E": face(20, 0, 100)}, has_conns=False)
     b = core("b", 117.28, 0, 100, 100, {"W": face(20, 2.5, 102.5)}, has_conns=False)
-    assert SR.pair_rule(a, b, CFG)["kind"] == "street"          # misaligned pins: a street
+    assert SR.pair_rule(a, b, dict(CFG, sparse_tier=0))["kind"] == "street"   # misaligned pins: a street
+    assert SR.pair_rule(a, b, CFG)["kind"] == "ok"             # (0.2 pins / um: sparse tier, 17.28 is tap-legal)
     r = SR.pair_rule(a, b, cfg)
     assert r["pins"] == [0, 0] and r["pin_reorder"] == 20 and r["kind"] == "sliver"   # (b) reordered straight across
     cfg2 = dict(SR.DEFAULTS, x_pin_factor=0.5)
@@ -793,3 +795,140 @@ def test_transit_street():
     r = SR.pair_rule(a, b, dict(CFG, _alley=pairs))
     assert r["kind"] == "street" and r["need"] == 82.08
     assert "transit_street" not in SR.HARD                 # a WARN kind
+
+
+# ------------------------------------------------------------------------------------------------ STREET-TOOL-2 (11-13)
+def rom(inst, x, y, e=0, w_=0):
+    """a cfg ROM (ot_rom_4096x72_m8, 38.04 x 63): 43 M4 signal pins on the W and E edges at y 0.78-4.81."""
+    pins = {}
+    if e:
+        pins["E"] = face(e, 0.78, 4.81)
+    if w_:
+        pins["W"] = face(w_, 0.78, 4.81)
+    return core(inst, x, y, 38.04, 63.0, pins)
+
+
+def test_sparse_rom_faces_17_28_slot_frame_forms_1():
+    """FRAME-FORMS-1 (R-STREET-6 / COORD ruling): a cfg ROM face with 43 M4 pins in 63 um (0.7 / um) facing a
+    17.28-um slot is legal; the tool used to want 43.2 for any 4.32-43.2 gap with >= 16 facing pins."""
+    a, b = rom("r0", 0, 0, e=43), rom("r1", 38.04 + 17.28, 0, w_=43)
+    r = SR.pair_rule(a, b, CFG)
+    assert r["kind"] == "ok" and r["need"] == 17.28 and r["pins"] == [43, 43] and r.get("sparse")
+    assert SR.pair_rule(rom("r0", 0, 0, e=43), rom("r1", 38.04 + 17.28, 0), CFG)["kind"] == "ok"   # one pin face
+    b["x"] = 38.04 + 12.96                                    # under the tap-legal width: still an error, need 17.28
+    r = SR.pair_rule(a, b, CFG)
+    assert r["kind"] == "street" and r["need"] == 17.28
+    b["x"] = 38.04 + 17.28
+    assert SR.pair_rule(a, b, dict(CFG, sparse_tier=0))["need"] == 43.2         # tier off: the old reading
+    # a dense face (>= 3 counted pins / um of the facing span) keeps the 43.2 street
+    d = core("d", 38.04 + 17.28, 0, 38.04, 63.0, {"W": face(200, 0, 63)})
+    assert SR.pair_rule(a, d, CFG)["kind"] == "street" and SR.pair_rule(a, d, CFG)["need"] == 43.2
+    # a column (station / relay / tap) standing in the slot: never sparse (hd_tile elemA street, 43.2 floor)
+    r = SR.pair_rule(a, b, dict(CFG, _cols=[(38.04 + 8.64, 30.0)]))
+    assert r["kind"] == "street" and r["need"] == 43.2 and r["columns_in_slot"] == 1
+    assert SR.pair_rule(a, b, dict(CFG, _cols=[(38.04 + 8.64, 90.0)]))["kind"] == "ok"   # beside, not in, the slot
+    # 7 ROMs per pair as 2 columns x 4 rows at 17.28 slots: analyze reports no street / wall error
+    cs = [rom("c%d%d" % (i, j), i * (38.04 + 17.28), j * (63.0 + 17.28), e=43, w_=43) for i in range(2) for j in range(4)]
+    cs = [dict(c, x=c["x"] + 17.28, y=c["y"] + 17.28) for c in cs[:7]]
+    V, cnt = SR.analyze(400.0, 400.0, cs, [[k] for k in range(7)], dict(CFG, face_rule=0))
+    assert not any(k in SR.HARD for k in cnt), V
+
+
+def test_sparse_outline_face_head97():
+    """HEAD-97 ruling: a sparse core face toward the outline (< 3 pins / um, nothing planned in the strip) keeps
+    max(8.64, pins / 37.5); hd_tile's 81-pin elemA faces at 12.96 are legal (tool used to print need 43.2)."""
+    c = core("u_eA0", 300.0, 12.96, 270.0, 200.0, {"S": face(81, 0, 270)})
+    assert SR.outline_rule(c, 1000, 1000, CFG) == []
+    c["y"] = 4.32
+    v = SR.outline_rule(c, 1000, 1000, CFG)
+    assert len(v) == 1 and v[0]["kind"] == "street" and v[0]["need"] == 8.64 and v[0]["sparse"]
+    c["y"] = 12.96
+    big = dict(c, pins={"S": face(1000, 0, 270)})                # 3.7 / um of the face: dense, 43.2
+    v = SR.outline_rule(big, 1000, 1000, CFG)
+    assert v[0]["need"] == 43.2 and not v[0]["sparse"]
+    v = SR.outline_rule(c, 1000, 1000, dict(CFG, _cols=[(400.0, 6.0)]))          # a tap in the strip
+    assert v[0]["need"] == 43.2 and v[0]["kind"] == "street" and v[0]["columns_in_slot"] == 1
+    many = dict(c, w=900.0, x=50.0, pins={"S": face(2000, 0, 900)})          # sparse but many: pins / K
+    v = SR.outline_rule(many, 1000, 1000, CFG)
+    assert v[0]["need"] == SR.up(2000 / 37.5) == 56.16 and v[0]["sparse"]
+
+
+def test_column_points_relays_and_taps():
+    t = {"relay_sites": {"u_ist_a_0.q[0]": [10.0, 20.0], "u_ist_a_0.q[1]": [10.0, 21.0]},
+         "reset": {"local_taps_um": [[30.0, 40.0]], "tap_um": [50.0, 60.0]},
+         "clock": {"tap_um": [70.0, 80.0], "edge_clocks": [{"tap_um": [1.0, 2.0]}],
+                   "taps": [{"name": "c", "kind": "core", "xy": [5.0, 5.0]}, {"name": "t1", "xy": [6.0, 6.0]}],
+                   "added_taps": [{"name": "t2", "xy": [7.0, 7.0]}]},
+         "internal_stations": [{"regs_um": [[90.0, 90.0]], "bits": 12}]}
+    got = collections.Counter(k for *_, k in SR.column_points(t))
+    assert got == {"station": 1, "relay": 3, "tap": 5}
+    assert sum(b for _, _, b, _ in SR.column_points(t)) == 12 + 3
+    assert [p[:2] for p in SR.column_points(t) if p[3] == "tap"][0] == (50.0, 60.0)
+    assert SR.type_cfg(dict(CFG, face_rule=0), dict(t, outline_um=[100, 100]))["_cols"]
+
+
+def test_station_alley_counts_relay_columns_and_taps():
+    """"Where columns may go": relay columns count as station bits; a tap needs a tap-legal (>= 17.28) slot."""
+    base = {"outline_um": [1000.0, 1000.0],
+            "hard_cores": [{"inst": "a", "origin_um": [100.0, 100.0], "outline_um": [200.0, 200.0]},
+                           {"inst": "b", "origin_um": [312.0, 100.0], "outline_um": [200.0, 200.0]}]}
+    t = json.loads(json.dumps(base))                          # 12-um a|b slot, 200 long
+    t["relay_sites"] = {"r%d" % k: [306.0, 110.0 + 8 * k] for k in range(20)}
+    V = SR.station_alleys(t, CFG)
+    assert len(V) == 1 and V[0]["kind"] == "station_alley" and V[0]["pins"][0] == 20 and V[0]["relays"] == 20
+    assert V[0]["need"] == 17.28 and not V[0].get("tap_only")
+    t = json.loads(json.dumps(base))
+    t["clock"] = {"tap_um": [306.0, 200.0]}                   # one clock tap in the 12-um slot: tap-illegal
+    V = SR.station_alleys(t, CFG)
+    assert len(V) == 1 and V[0]["tap_only"] and V[0]["taps"] == 1 and V[0]["need"] == 17.28
+    pairs, faces = SR.alley_force(V)
+    assert pairs == {frozenset(("a", "b")): 17.28}           # legalize opens it to the tap-legal width only
+    t["hard_cores"][1]["origin_um"] = [317.28, 100.0]          # a 17.28 slot is tap-legal
+    t["clock"] = {"tap_um": [308.64, 200.0]}
+    assert SR.station_alleys(t, CFG) == []
+    t["clock"] = {"taps": [{"name": "c", "kind": "core", "xy": [308.64, 200.0]}]}   # core taps ride with the core
+    t["hard_cores"][1]["origin_um"] = [312.0, 100.0]
+    assert SR.station_alleys(t, CFG) == []
+    t = json.loads(json.dumps(base))                          # reset local taps count as relay bits
+    t["reset"] = {"local_taps_um": [[306.0, 110.0 + 8 * k] for k in range(16)]}
+    assert SR.station_alleys(t, CFG)[0]["relays"] == 16
+
+
+def test_reset_resel_raw_branch_keeps_original_terminal_die_kv_100(monkeypatch, tmp_path):
+    """DIE-KV-100 (kv3_io_ft fs_ft1_o): the re-selected base rst_rl_16 branches; the nearest child leads to the tap-34
+    chain (rst_rl_60/61 -> rst_n_t34) while the consumer keeps the rst_n_t15 equation (strict bind: 'reset
+    phase/equation differs').  The stage chain must follow the path to the ORIGINAL terminal rst_n_t15."""
+    import types as _t
+    R = lambda q, d, depth, xy: dict(name="u_" + q, q=q, d=d, depth=depth, xy=xy)  # noqa: E731
+    trees = {
+        "base": dict(relays=[R("rst_rl_63", "rst_rl_1", 2, [100.0, 50.0]), R("rst_rl_64", "rst_rl_63", 3, [100.0, 90.0]),
+                             R("rst_rl_65", "rst_rl_64", 4, [100.0, 130.0]),
+                             R("rst_n_t15", "rst_rl_65", 5, [100.0, 170.0])]),
+        "new": dict(relays=[R("rst_rl_16", "rst_rl_1", 2, [110.0, 50.0]),
+                            R("rst_rl_60", "rst_rl_16", 3, [100.0, 92.0]), R("rst_rl_61", "rst_rl_60", 4, [100.0, 131.0]),
+                            R("rst_n_t34", "rst_rl_61", 5, [100.0, 171.0]),
+                            R("rst_rl_70", "rst_rl_16", 3, [180.0, 90.0]), R("rst_rl_71", "rst_rl_70", 4, [180.0, 130.0]),
+                            R("rst_n_t15", "rst_rl_71", 5, [180.0, 170.0])]),
+    }
+    import schema
+    import reset_tree
+    monkeypatch.setattr(schema, "Plan", lambda raw, path=None: _t.SimpleNamespace(tag=raw["tag"]))
+    monkeypatch.setattr(reset_tree, "for_type", lambda PP, tn: trees[PP.tag])
+    st = [dict(original=q, xy_um=xy) for q, xy in (("rst_rl_64", [100.0, 90.0]), ("rst_rl_65", [100.0, 130.0]),
+                                                   ("rst_n_t15", [100.0, 170.0]))]
+    t = {"clock": {"landing_raw_branches": [dict(name="fs_ft1_o", base="rst_rl_63", stages=st,
+                                                 consumers=["fstart:ft1_o"])]}}
+    P = {"tag": "base", "partition_types": {"kv3_io_ft": json.loads(json.dumps(t))}}
+    Q = {"tag": "new", "partition_types": {"kv3_io_ft": t}}
+    rec = SR.reset_resel(P, Q, ["kv3_io_ft"], tmp_path / "plan.json")["kv3_io_ft"]
+    assert "error" not in rec and not rec["skipped"], rec
+    br = t["clock"]["landing_raw_branches"][0]
+    assert br["base"] == "rst_rl_16"
+    assert [s["original"] for s in br["stages"]] == ["rst_rl_70", "rst_rl_71", "rst_n_t15"]   # not ... rst_n_t34
+    # the original terminal gone from the re-solved tree: the nearest-child walk stays (old behaviour)
+    trees["new"]["relays"] = [r for r in trees["new"]["relays"] if r["q"] != "rst_n_t15"]
+    t2 = json.loads(json.dumps(P["partition_types"]["kv3_io_ft"]))
+    Q2 = {"tag": "new", "partition_types": {"kv3_io_ft": t2}}
+    SR.reset_resel(P, Q2, ["kv3_io_ft"], tmp_path / "plan.json")
+    assert [s["original"] for s in t2["clock"]["landing_raw_branches"][0]["stages"]] == \
+        ["rst_rl_60", "rst_rl_61", "rst_n_t34"]
