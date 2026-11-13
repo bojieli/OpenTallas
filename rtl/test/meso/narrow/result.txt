@@ -1,0 +1,73 @@
+# R1-NARROW (KV-PVFIN-1) evidence 2026-11-13T15:32:35Z, epyc4 via ot-run, base origin/main 24b08535da
+## run.sh (verilator 5.050 lock-step NARROW 1 vs 0: q/ready/fault identical every clk edge; W 1,2,7,32,33,44,64,65 x DEPTH 4/8 x SREG/CSC x WFALL x WREG x FREG x DSREP 1/2 + _ca W 2/33 K 2/3; 11 receiver phases)
+LINT ot_dp_clk_landing_ca W=2 NARROW=0 warnings=10 errors=1
+LINT ot_dp_clk_landing_ca W=2 NARROW=1 warnings=9 errors=1
+LINT ot_dp_clk_landing_cas W=2 NARROW=0 warnings=11 errors=1
+LINT ot_dp_clk_landing_cas W=2 NARROW=1 warnings=10 errors=1
+PASS_RUNS 11 of 11; MISMATCH_LINES 0
+NEGCTRL_CAUGHT shift=1 (1498593 mismatch lines)
+MUTANT_CAUGHT NARROW (698728 mismatch lines)
+RC 0
+NARROW_PASS phase=0 shift=0 ready_word_checks=534816 nonzero=481520
+NARROW_PASS phase=41 shift=0 ready_word_checks=518034 nonzero=466177
+NARROW_PASS phase=83 shift=0 ready_word_checks=518034 nonzero=466177
+NARROW_PASS phase=125 shift=0 ready_word_checks=518034 nonzero=466177
+NARROW_PASS phase=208 shift=0 ready_word_checks=518034 nonzero=466177
+NARROW_PASS phase=400 shift=0 ready_word_checks=518034 nonzero=466177
+NARROW_PASS phase=416 shift=0 ready_word_checks=518034 nonzero=466177
+NARROW_PASS phase=433 shift=0 ready_word_checks=533526 nonzero=479985
+NARROW_PASS phase=624 shift=0 ready_word_checks=533526 nonzero=479985
+NARROW_PASS phase=791 shift=0 ready_word_checks=533526 nonzero=479985
+NARROW_PASS phase=830 shift=0 ready_word_checks=533526 nonzero=479985
+## eq.sh (yosys equiv_simple + equiv_induct -seq 4)
+A_* = NARROW default vs origin/main (identical logic); B_* = NARROW 1 vs NARROW 0 (all ports, 0 cycles); NEG_* = B with OT_MESO_CA_MUTANT_NARROW (must not prove)
+A_cas_w2_d4 rc=0 Of those cells 1475 are proven and 0 are unproven
+A_cas_w2_d8 rc=0 Of those cells 2404 are proven and 0 are unproven
+A_cas_w2_d4_sreg_wfall_wreg rc=0 Of those cells 1550 are proven and 0 are unproven
+A_cas_w2_d4_freg_greg rc=0 Of those cells 1527 are proven and 0 are unproven
+A_cas_w33_d4_dsrep rc=0 Of those cells 1556 are proven and 0 are unproven
+A_cas_w44_d4_ds2 rc=0 Of those cells 1581 are proven and 0 are unproven
+A_cas_w64_d4 rc=0 Of those cells 1599 are proven and 0 are unproven
+A_cas_w129_d4 rc=0 Of those cells 4195 are proven and 0 are unproven
+A_ca_w2_d4 rc=0 Of those cells 1469 are proven and 0 are unproven
+A_ca_w33_d4 rc=0 Of those cells 1501 are proven and 0 are unproven
+STAT cas W=2 DEPTH=4 NARROW=0 cells=1085
+STAT cas W=2 DEPTH=4 NARROW=1 cells=341
+STAT cas W=32 DEPTH=4 NARROW=0 cells=1085
+STAT cas W=32 DEPTH=4 NARROW=1 cells=701
+STAT cas W=33 DEPTH=4 NARROW=0 cells=1085
+STAT cas W=33 DEPTH=4 NARROW=1 cells=713
+STAT cas W=44 DEPTH=4 NARROW=0 cells=1085
+STAT cas W=44 DEPTH=4 NARROW=1 cells=845
+STAT cas W=64 DEPTH=4 NARROW=0 cells=1085
+STAT cas W=64 DEPTH=4 NARROW=1 cells=1085
+B_cas_w2_d4 rc=0 Of those cells 281 are proven and 0 are unproven
+NEG_cas_w2_d4 rc=1 Of those cells 279 are proven and 2 are unproven
+NEGCTRL_CAUGHT cas_w2_d4
+B_cas_w2_d8 rc=0 Of those cells 450 are proven and 0 are unproven
+NEG_cas_w2_d8 rc=1 Of those cells 448 are proven and 2 are unproven
+NEGCTRL_CAUGHT cas_w2_d8
+B_cas_w2_d4_sreg_wfall_wreg rc=0 Of those cells 356 are proven and 0 are unproven
+NEG_cas_w2_d4_sreg_wfall_wreg rc=1 Of those cells 354 are proven and 2 are unproven
+NEGCTRL_CAUGHT cas_w2_d4_sreg_wfall_wreg
+B_cas_w2_d4_freg_greg rc=0 Of those cells 333 are proven and 0 are unproven
+NEG_cas_w2_d4_freg_greg rc=1 Of those cells 331 are proven and 2 are unproven
+NEGCTRL_CAUGHT cas_w2_d4_freg_greg
+B_cas_w33_d4_dsrep rc=0 Of those cells 703 are proven and 0 are unproven
+NEG_cas_w33_d4_dsrep rc=1 Of those cells 701 are proven and 2 are unproven
+NEGCTRL_CAUGHT cas_w33_d4_dsrep
+B_cas_w44_d4 rc=0 Of those cells 827 are proven and 0 are unproven
+NEG_cas_w44_d4 rc=1 Of those cells 825 are proven and 2 are unproven
+NEGCTRL_CAUGHT cas_w44_d4
+B_cas_w44_d4_ds2 SKIP formal (select-copy grouping differs; lock-step tb_narrow covers DSREP 2)
+B_cas_w64_d4 rc=0 Of those cells 1663 are proven and 0 are unproven
+NEG_cas_w64_d4 rc=1 Of those cells 1661 are proven and 2 are unproven
+NEGCTRL_CAUGHT cas_w64_d4
+B_cas_w129_d4 rc=0 Of those cells 4324 are proven and 0 are unproven
+B_ca_w2_d4 rc=0 Of those cells 275 are proven and 0 are unproven
+NEG_ca_w2_d4 rc=1 Of those cells 273 are proven and 2 are unproven
+NEGCTRL_CAUGHT ca_w2_d4
+B_ca_w33_d4 rc=0 Of those cells 648 are proven and 0 are unproven
+NEG_ca_w33_d4 rc=1 Of those cells 646 are proven and 2 are unproven
+NEGCTRL_CAUGHT ca_w33_d4
+RC 0

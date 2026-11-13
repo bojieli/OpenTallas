@@ -1,0 +1,7 @@
+{
+ "schema": "opentallas.latency_rows.v1",
+ "lane": "KV-PVFIN-1",
+ "rule": "RULEBOOK-1113 R-RTL-6",
+ "forms": [{"id": "r1_narrow", "module": "ot_dp_clk_landing_ca / ot_dp_clk_landing_cas", "parameter": "NARROW (default 0)", "added_cycles": 0, "clock": "receiver clk", "relative_to": "the same ring with NARROW 0 (q/ready/fault identical every edge)", "evidence": "rtl/test/meso/narrow/result.txt"}],
+ "rows": []
+}

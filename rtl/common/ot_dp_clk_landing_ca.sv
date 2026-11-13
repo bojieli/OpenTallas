@@ -61,7 +61,13 @@ module ot_dp_clk_landing_ca #(
     parameter bit QREG = 0,
     // CLAND-SLEW-1 (GEN-CLASS-1 11-12): read-select register copies per 64-bit chunk (ot_meso_ring_ca DSREP, as
     // ot_dp_clk_landing_cas); appended for positional compatibility.  Default 1 = identical logic.
-    parameter int DSREP = 1
+    parameter int DSREP = 1,
+    // R1-NARROW (KV-PVFIN-1 11-13, kv3_hub_C R-CAP, DIE-KV-100 06:13 ASK): 1 = a bundle of W <= 64 bits keeps a W-bit ring
+    // (rounded up to a multiple of DSREP) instead of the zero-padded 64-bit ring.  The padded bits carry the constant 0
+    // and never reach q (q = ring_q[W-1:0]), so q / ready / fault are identical at every edge, 0 added cycles, same
+    // K / strap / guards / window; only the dead slot, read-select and readout flops of the pad are not built
+    // (W = 2: about 1,079 -> ~320 cells).  W > 64 is unchanged.  Default 0 = identical logic (bench rtl/test/meso/narrow).
+    parameter bit NARROW = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -76,7 +82,7 @@ module ot_dp_clk_landing_ca #(
     input  wire [W+3:0]     fv_any
 `endif
 );
-    localparam integer RW = ((W + 63) / 64) * 64;
+    localparam integer RW = (NARROW && W <= 64) ? ((W + DSREP - 1) / DSREP) * DSREP : ((W + 63) / 64) * 64;
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(ARM + 1);
     localparam integer TCW = $clog2(TIMEOUT + 2);
@@ -122,10 +128,16 @@ module ot_dp_clk_landing_ca #(
     localparam integer KTW = AW + 1 + 3;      // ring count width (LAPX = 3)
     localparam integer KNT = 1 << KTW;
     localparam integer KM  = ((K % KNT) + KNT) % KNT;
+`ifdef OT_MESO_CA_MUTANT_NARROW
+    // MUTANT: the narrow ring is one live bit short (its top data bit is not stored)
+    wire [W-1:0] d_r = (NARROW && W <= 64) ? (d & ~(W'(1) << (W - 1))) : d;
+`else
+    wire [W-1:0] d_r = d;
+`endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG), .GUARD_REG(GUARD_REG),
                       .DSREP(DSREP)) u_ring (
-        .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d({{(RW-W){1'b0}}, d}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(1'b1), .k_s(KTW'(KM)),
+        .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(1'b1), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
@@ -206,7 +218,13 @@ module ot_dp_clk_landing_cas #(
     // flop, so the long ring -> face wire gets its own cycle.  The ring, its window, K and ready/fault are unchanged;
     // q is the same word stream ONE clk later (+1 data cycle, declared by the plan key landing_output_qreg and counted
     // in the crossing's added_cycles).  Default 0 = identical logic.
-    parameter bit QREG = 0
+    parameter bit QREG = 0,
+    // R1-NARROW (KV-PVFIN-1 11-13, kv3_hub_C R-CAP, DIE-KV-100 06:13 ASK): 1 = a bundle of W <= 64 bits keeps a W-bit ring
+    // (rounded up to a multiple of DSREP) instead of the zero-padded 64-bit ring.  The padded bits carry the constant 0
+    // and never reach q (q = ring_q[W-1:0]), so q / ready / fault are identical at every edge, 0 added cycles, same
+    // K / strap / guards / window; only the dead slot, read-select and readout flops of the pad are not built
+    // (W = 2: about 1,079 -> ~320 cells).  W > 64 is unchanged.  Default 0 = identical logic (bench rtl/test/meso/narrow).
+    parameter bit NARROW = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -223,7 +241,7 @@ module ot_dp_clk_landing_cas #(
     input  wire [W+3:0]     fv_any
 `endif
 );
-    localparam integer RW = ((W + 63) / 64) * 64;
+    localparam integer RW = (NARROW && W <= 64) ? ((W + DSREP - 1) / DSREP) * DSREP : ((W + 63) / 64) * 64;
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(ARM + 1);
     localparam integer TCW = $clog2(TIMEOUT + 2);
@@ -286,9 +304,15 @@ module ot_dp_clk_landing_cas #(
 `else
     wire [RXW-1:0] rst_x = RSTREP > 0 ? rst_xn : {RXW{1'b1}};
 `endif
+`ifdef OT_MESO_CA_MUTANT_NARROW
+    // MUTANT: the narrow ring is one live bit short (its top data bit is not stored)
+    wire [W-1:0] d_r = (NARROW && W <= 64) ? (d_w & ~(W'(1) << (W - 1))) : d_w;
+`else
+    wire [W-1:0] d_r = d_w;
+`endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP)) u_ring (
-        .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d({{(RW-W){1'b0}}, d_w}), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
+        .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
        ,.fv_recent(fv_recent), .fv_now(fv_now), .fv_any(fv_any)
