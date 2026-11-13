@@ -6675,7 +6675,7 @@
     "col_h9_r1__t1__cl49d7a23e@13": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "col_h9_r2__t1__clce45cab5@10": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "ot_s81sl_kv_leaf__t1@9": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
-    "ot_s81sl_kv_leaf__t4@7": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
+    "ot_s81sl_kv_leaf__t4@7": "REDESIGN: kit recipe change, not a blind retry (COORD 13:3x fill ruling (1) / 10:5x R-FLOW): per-item R-FLOW flow set --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32 (type_args/item_env); KIT-OPS-1 2026-11-13 13:35. Gate token per COORD 11-07 05:24 (unchanged_fail); the change is a flow setting, not RTL/macros/outline/clock.",
     "ot_s81sl_leaf__t12@10": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
     "ot_s81sl_leaf__t15@8": "REDESIGN: macros (real-shape porous child abstracts, OT_POROUS_VIEWS=all, POROUS-ALL-1 15c954afd822); REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
     "ot_s81sl_leaf__t17@7": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
@@ -7007,7 +7007,7 @@
     "dsdv_slice_c3x_C__t1@4": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "ot_s81sl_leaf__t25__cl55642d17@24": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "ot_s81sl_leaf__t42@2": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
-    "ot_s81sl_leaf__t50@2": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
+    "ot_s81sl_leaf__t50@2": "REDESIGN: kit recipe change, not a blind retry (COORD 13:3x fill ruling (1) / 10:5x R-FLOW): per-item R-FLOW flow set --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32 (type_args/item_env); KIT-OPS-1 2026-11-13 13:35. Gate token per COORD 11-07 05:24 (unchanged_fail); the change is a flow setting, not RTL/macros/outline/clock.",
     "ot_s81sl_leaf__t51@2": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "ot_s81sl_leaf__t72@2": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
     "ot_s81sl_leaf__t75@2": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
@@ -7466,7 +7466,9 @@
     "slice_station__t27@7": "KW-FIX-43 11-10 23:5x DIE-S81-85: FTLOCK on 99f40d = plan ffe10641e938 + bind_ftlk t27/t49 RTL",
     "slice_station__t49@5": "KW-FIX-43 11-10 23:5x DIE-S81-85: FTLOCK on 99f40d = plan ffe10641e938 + bind_ftlk t27/t49 RTL",
     "col_h9_r0_p3__t1__cl31d0dc4b@17": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
-    "ot_s81sl_leaf__t59@6": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL"
+    "ot_s81sl_leaf__t59@6": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
+    "ot_s81sl_leaf__t7@9": "REDESIGN: kit recipe change, not a blind retry (COORD 13:3x fill ruling (1) / 10:5x R-FLOW): per-item R-FLOW flow set --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32 (type_args/item_env); KIT-OPS-1 2026-11-13 13:35. Gate token per COORD 11-07 05:24 (unchanged_fail); the change is a flow setting, not RTL/macros/outline/clock.",
+    "ot_s81sl_kv_leaf__t5@7": "REDESIGN: kit recipe change, not a blind retry (COORD 13:3x fill ruling (1) / 10:5x R-FLOW): per-item R-FLOW flow set --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32 (type_args/item_env); KIT-OPS-1 2026-11-13 13:35. Gate token per COORD 11-07 05:24 (unchanged_fail); the change is a flow setting, not RTL/macros/outline/clock."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -23558,7 +23560,7 @@
     "hd_host_n@8": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_lep0N@4": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_spn_eshim_rx@2": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
-    "hd_spn_wshim_rx@2": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
+    "hd_spn_wshim_rx@2": "REDESIGN: kit recipe change, not a blind retry (COORD 13:3x fill ruling (1) / 10:5x R-FLOW): per-item R-FLOW flow set --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32 (type_args/item_env); KIT-OPS-1 2026-11-13 13:35. Gate token per COORD 11-07 05:24 (unchanged_fail); the change is a flow setting, not RTL/macros/outline/clock.",
     "hd_spn_wshim_tx@5": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_st_n4@1": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
     "hd_serdes@1": "KW-FIX-8 11-04 I44 rstleaf 84f5a49e989: OT_RESET_LEAF over target is advisory, main f8170b8b778; resume at cts per DIE-HEAD-62",
@@ -23589,7 +23591,8 @@
     "hd_host_w@3": "REDESIGN: HEAD FREG plan l48hp1_head_freg_1111 (main 58a264ab1ee1; COORD via HEAD-94 release 19:0x, hd_host_e/hd_st_n4/hd_mesh launched on it at 19:09)",
     "hd_spn@2": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)",
     "hd_spn_end@2": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)",
-    "hd_spn_end@10": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)"
+    "hd_spn_end@10": "REDESIGN: HEAD fix2 on head-94-heads-1112@9ddabba952d9 (reset IN pin clamp in tap_pins, CA K re-plan 8 crossings, open-type clock windows, he_epc pin-cleared LEF), prepared tree head-94/g5p plan 5e0253c70393 (KW-FIX-45 12-Nov, HEAD-94 ruling)",
+    "hd_turn_a@3": "REDESIGN: kit recipe change, not a blind retry (COORD 13:3x fill ruling (1) / 10:5x R-FLOW): per-item R-FLOW flow set --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32 (type_args/item_env); KIT-OPS-1 2026-11-13 13:35. Gate token per COORD 11-07 05:24 (unchanged_fail); the change is a flow setting, not RTL/macros/outline/clock."
    },
    "gen_hosts": [
     "epyc7",
