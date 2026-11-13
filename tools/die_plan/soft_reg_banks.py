@@ -67,6 +67,9 @@ def sink_sites(t):
 
 
 def area(t):
-    """Allocated FF footprint area, counted once per canonical actual bank."""
+    """Raw declared FF footprint sum, counted once per canonical bank.
+
+    Excludes bank envelopes/clock space; this is not measured mapped area.
+    """
     return sum(len(b["bit_sites_um"]) * b["bit_site_cell_um"][0] * b["bit_site_cell_um"][1]
                for b in validated_banks(t))
