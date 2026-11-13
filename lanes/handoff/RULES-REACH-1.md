@@ -51,3 +51,11 @@ READY with branch + tests, stop.
   epyc9 rules-reach-1/s81/ov/), view run/layout_review/place/{density,layout}.png; route if place is clean;
   (3) update the Proof kits paragraph of the R-REACH section (intel2 ~/rr1log/put_section.py + rulebook_reach_post.md),
   coord-commit; (4) READY in lanes/COORD-REVIEW-QUEUE.md (branch, tests, census, proofs); stop.
+- 2026-11-13 07:25 REACH-FIN-2 (Opus successor) finished the lane. Hub tip was 9c98f405bd = epyc7 wt HEAD (nothing unpushed;
+  untracked plan_rr1.json + composed_rtl/ are proof inputs, NOT staged). Commit 3144527add (pushed): G0 r_reach default
+  "warn" (budgets.r_reach "error" opts in) and R-REACH-5 chain_even only with budgets.r_reach_even true (defaults preserved).
+  merge-tree vs origin/main 9ebef751ca clean. Tests on merged tree: 802 pass / 2 fail (both fail on origin/main alone:
+  band_reserve steps_down_to_fit_reach, bump_ports refuse_mismatch). Proofs read: S81 t21 after AUTO-GEOM r2r>405 1134 -> 1039,
+  max 701, GRT 0 ov; KV hub_Eo placed, AUTO-GEOM FAIL, GRT 0 ov, r2r>405 721 (worst u_rrl_150 -> cland_fstart_ft12_o 2376 um),
+  run-item stopped at geom. RULEBOOK text (rows 1/2/4/5, item 7) still says ERROR / every kit: COORD to change to opt-in.
+  READY posted in lanes/COORD-REVIEW-QUEUE.md. Lane STOPPED; nothing running from this lane.
