@@ -1,0 +1,569 @@
+{
+ "date": "20261113",
+ "main": "3f11a4569d729f408032e9504669dd162171c4cb",
+ "train_line": "    1. Compose on epyc8 (own clone; GitHub-only shas are relayed through a localhost bundle): main + the latest \"ROOT-MERGE-57 UNLANDED\" train in landing order + KW-FIX-44 \"claude/<b> @ <sha>\" posts of the last 48 h + each die's wave branch (src_sha). Merges are plain; a conflict is aborted and repo",
+ "train_main": null,
+ "excluded": [],
+ "overlays": [
+  {
+   "name": "claude/kw-fix-44-pingrid-1111",
+   "sha": "0bd2b6f0b13f",
+   "src": "KW-FIX-44",
+   "full": "0bd2b6f0b13fc688215b4ca850cce86c1ec982cc",
+   "status": "merged"
+  },
+  {
+   "name": "wave-ovl/grt-patch-1-genphys-1111",
+   "sha": "aef743c06d75",
+   "src": "KW-FIX-44",
+   "full": "aef743c06d75d6221849cb428db38f6fcda4a058",
+   "status": "conflict (not applied)",
+   "detail": "Auto-merging tools/die_plan/gen_phys.py\nCONFLICT (content): Merge conflict in tools/die_plan/gen_phys.py\nAutomatic merge failed; fix conflicts and then commit the result.\n"
+  }
+ ],
+ "base": "ef623404397a582dd76dcd5d2c9ba5a6ba26cfa6",
+ "unfetched": [],
+ "dies": {
+  "s81": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5",
+   "src_sha": "7073a6b4a599c1de9e041896421b3b779045df1d",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc8",
+    "epyc9",
+    "epyc2",
+    "intel1"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5/physical/die_plan/s81/plan_h2_2249.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/out_main_7073a6b4a5_b",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/asbuilt_kitops1_7073a6b4a5.json",
+    "note": "KIT-OPS-1 2026-11-12 21:46: S81 ready12b-A (train 23 event + train 25 rtl) strict bind on plain main archive 7073a6b4a599 | KW-FIX-46 11-12 COORD 06:3x (c): S81 wave on ready12 = ready12ng (DIE-S81-87 3d254c4a7973, strict bind rc 0, bind_report 42dc708ab529, plan 77cad171c6ee, asbuilt 28a2355ef1cb); tree bsrc4_r12ng = main 590cbd5fd0 + dead-input proof 341ccaa06f67 + landing ec8fcf58edc2 + psplit sidecar + svc closure 4e1a842257cc; revert = dies.s81.prev_kw46_r11p"
+   },
+   "item_inputs": [
+    "col_h10_r1__t1__cld01bb4ae",
+    "col_h10_r2__t1__cl1f5d6c2a",
+    "col_h10_r2__t1__cl8b686b3e",
+    "col_h10_r2__t1__cl99efd374",
+    "col_h10_r2__t1__clac068e56",
+    "col_h9_r1__t1__clf32cde8d",
+    "col_h9_r2__t1__cl774acf45",
+    "col_h9_r2__t1__cl87f3ff59",
+    "col_h9_r2__t1__clb8d86cd5",
+    "col_h9_r2__t1__clc9ad8f7e",
+    "dsdv_slice_lepw_mu_LP__t2",
+    "gunit__t1",
+    "ot_s81sl_kv_leaf__t1",
+    "ot_s81sl_kv_leaf__t2",
+    "ot_s81sl_kv_leaf__t3",
+    "ot_s81sl_kv_leaf__t4",
+    "ot_s81sl_kv_leaf__t5",
+    "ot_s81sl_leaf__t5",
+    "seqhost__t1",
+    "serdes__t1__clb45db5be",
+    "slice_station__t14",
+    "slice_station__t17",
+    "slice_station__t18",
+    "slice_station__t21",
+    "slice_station__t22",
+    "slice_station__t24__cl64811a5d",
+    "slice_station__t24__cl66b71008",
+    "slice_station__t24__cleece78ec",
+    "slice_station__t25",
+    "slice_station__t26",
+    "slice_station__t27",
+    "slice_station__t28",
+    "slice_station__t29__cl2e5c855a",
+    "slice_station__t29__clc7772371",
+    "slice_station__t30__cl1653104c",
+    "slice_station__t30__cl6a190133",
+    "slice_station__t30__clcedefe91",
+    "slice_station__t31",
+    "slice_station__t36",
+    "slice_station__t37",
+    "slice_station__t38",
+    "slice_station__t40__cl1ea9de02",
+    "slice_station__t40__clc8fb2c8c",
+    "slice_station__t42__cl4bd1432c",
+    "slice_station__t42__clcf44e680",
+    "slice_station__t43",
+    "slice_station__t44",
+    "slice_station__t46",
+    "slice_station__t47",
+    "slice_station__t48",
+    "slice_station__t49",
+    "slice_station__t50__cl39451317",
+    "slice_station__t50__cld84c9e24",
+    "slice_station__t51",
+    "slice_station__t52",
+    "slice_station__t6__cl0755c26e",
+    "slice_station__t6__cl54a9ceeb",
+    "slice_station__t7__cl362204c4",
+    "slice_station__t7__cl503f4913",
+    "slice_station__t7__cl945bc067",
+    "slice_station__t8"
+   ],
+   "bind_mem_gb": 48,
+   "new_sha": "ef623404397a582dd76dcd5d2c9ba5a6ba26cfa6",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261113/s81",
+   "live_manifests": {
+    "epyc7": "e6efd59aaaccb940643b83a7793552d80e9c23a370f7efc5b8d4e82c74dae89d",
+    "epyc8": "8c1392cbd7a0085261292659ee99c6dfed616a666db11a616cf8891369f72594",
+    "epyc9": "26256e9a14a0455662eba061c5d1dd85eaac8d9c035fadb29d0bd9aa8ce15040",
+    "epyc2": "0cead6813f3c6ddc82df96872f6162fc11aa3a66226a4081dba36b195ca2cd0b",
+    "intel1": "0e0c3b2c443595994cb1f86d22a6267dc679809d5e3985f1350a15d553e4ce55"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 325058,
+     "carry live-only (not in git)": 89,
+     "take new (main/overlay changed)": 18,
+     "new file (main/overlay)": 80,
+     "carry live overlay (not in git)": 1,
+     "stale old git copy -> take commit": 1
+    },
+    "actions": 99,
+    "carried": 90,
+    "conflicts": 0,
+    "merged": 0,
+    "lag": 1
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     85
+    ],
+    [
+     "physical/die_plan/s81",
+     2
+    ],
+    [
+     "KITOPS1_OVERLAY.txt",
+     1
+    ],
+    [
+     "tools/autopilot/__pycache__",
+     1
+    ],
+    [
+     "tools/die_trial/__pycache__",
+     1
+    ]
+   ],
+   "conflicts": [],
+   "merged": [],
+   "lag": [
+    "tools/die_plan/gen_phys.py"
+   ],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261113_s81.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind:/srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind -w /srv/opentallas-scratch2/claude/wave-src/20261113/s81 python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5/physical/die_plan/s81/plan_h2_2249.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind --asbuilt /srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/asbuilt_kitops1_7073a6b4a5.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/out_main_7073a6b4a5_b/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5/physical/die_plan/s81/plan_h2_2249.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind --asbuilt /srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/asbuilt_kitops1_7073a6b4a5.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/asbuilt_kitops1_7073a6b4a5.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/out_main_7073a6b4a5_b",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5/physical/die_plan/s81/plan_h2_2249.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261113/s81.bind"
+   }
+  },
+  "s81_head": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_main_2dd0d8c9fd",
+   "src_sha": "2dd0d8c9fd6c525f46b567c778d6e899249630bd",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc9",
+    "epyc8",
+    "epyc2",
+    "intel1"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/head_rp18r2w/prep/source_plan.json",
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_main_2dd0d8c9fd/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "note": "KIT-OPS-1 2026-11-12 19:57: rp18 (train 21) src_head_main_2dd0d8c9fd kit_rtl.sh; prepared tree head_rp18c/prep | KW-FIX-42 2026-11-09 08:47 PST: l48hp1 src_head_hp1 kit_rtl.sh | KW-FIX-16 12:5x I133 tag flow-20261106-c-head: src_q main 3d13a314805 (hardlink of src_p, schema accepts clock.tap_window.per_port_note), kit_rtl.sh byte-same as src_n. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
+   },
+   "item_inputs": [],
+   "bind_mem_gb": null,
+   "new_sha": "ef623404397a582dd76dcd5d2c9ba5a6ba26cfa6",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261113/s81_head",
+   "live_manifests": {
+    "epyc7": "b0907987e2d7865d17cf249632eedd4680849e1171db1b2219f953c326d0ce9d",
+    "epyc9": "864c82ca63e259547c503b2dbcb13a8037b3b6ad8e60229542e15eaf17ff3f5a",
+    "epyc8": "16ace1680c751b71c793bb4e28aa667818d861f5aa8d26357b4a3e958c7fb236",
+    "epyc2": "1608950ebdd07aa2d26c6f0aabc6bdb0794c6026d53e604e9f83696debca8e9d",
+    "intel1": "01e5a478a4a0768a79a018b49c182ab4e72b73c14a7a478f97cefd02055da451"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 324897,
+     "carry live-only (not in git)": 105,
+     "new file (main/overlay)": 210,
+     "take new (main/overlay changed)": 50,
+     "stale old git copy -> take commit": 1
+    },
+    "actions": 261,
+    "carried": 105,
+    "conflicts": 0,
+    "merged": 0,
+    "lag": 1
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     73
+    ],
+    [
+     "tools/s81_head/__pycache__",
+     5
+    ],
+    [
+     "KITOPS1_OVERLAY.txt",
+     1
+    ],
+    [
+     "core_pins/elemA_pins.json",
+     1
+    ],
+    [
+     "core_pins/elemB_pins.json",
+     1
+    ],
+    [
+     "core_pins/kp4_276x138_pins.json",
+     1
+    ],
+    [
+     "core_pins/lep_pair_pins.json",
+     1
+    ],
+    [
+     "core_pins/lep_pair_pins_777.json",
+     1
+    ],
+    [
+     "core_pins/lep_pair_pins_777r.json",
+     1
+    ],
+    [
+     "core_pins/ot_s81hd_he_epc_pins.json",
+     1
+    ],
+    [
+     "core_pins/ot_sram_1r1w2c_256x64_m1.json",
+     1
+    ],
+    [
+     "core_pins/ot_sram_1r1w2c_32x64_m1.json",
+     1
+    ],
+    [
+     "core_pins/ot_sram_1r1w2c_64x546_m1.json",
+     1
+    ],
+    [
+     "core_pins/ot_sram_1r1w_128x256_m1_r0c0.json",
+     1
+    ],
+    [
+     "core_pins/ot_sram_1r1w_32x128_m1_r0c0.json",
+     1
+    ]
+   ],
+   "conflicts": [],
+   "merged": [],
+   "lag": [
+    "tools/die_plan/gen_phys.py"
+   ],
+   "bind": {
+    "cmd": null,
+    "why": "no strict bind of record in kit_rtl (script mode, script export): bind-diff not applicable; the new tree is built and byte-checked only",
+    "asbuilt": null,
+    "old_bind": null
+   }
+  },
+  "qwen_compute": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef",
+   "src_sha": "88018018ef",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc4",
+    "epyc7",
+    "epyc9",
+    "epyc8",
+    "epyc2",
+    "intel1"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs28in/bind_plan_qc99_s28",
+    "note": "KW-FIX-45 11-12 QC s28 item 1 (sink bins): plan_qc99_s28 2f0c17d5f1a3 (qc-event-s28-1111@88018018ef on s27), sidecar 38a30992accc, DIE-QC-99 strict bind rc 0 (bind_report 14318a0162a1); bind.f src28b/bind-dir paths rewritten to my tree (identical bytes)",
+    "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
+    "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
+   },
+   "item_inputs": [],
+   "bind_mem_gb": 48,
+   "new_sha": "ef623404397a582dd76dcd5d2c9ba5a6ba26cfa6",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute",
+   "live_manifests": {
+    "epyc4": "34db5ebada4b0ea91d8d2651e8fd5897f90563c0825137b17304835a7e48ad72",
+    "epyc7": "2fbb64a070c220cfbf59f13940dc9064553bccdeb1d24ae23a3844943af10fc5",
+    "epyc9": "2fbb64a070c220cfbf59f13940dc9064553bccdeb1d24ae23a3844943af10fc5",
+    "epyc8": "b4d36b1288d1642b8adc547fc92bb6499cef3428f5657229babac68245c6c4b9",
+    "epyc2": "df0967b2a70ae5058f187ea1de8289b95407f8477129ba6a998dd8001a198fc3",
+    "intel1": "9e4ac5d8a6c7b90d88d8f5f644d1b1e444df477c187d7be134878cbdc4037f46"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 324173,
+     "carry live-only (not in git)": 23,
+     "new file (main/overlay)": 772,
+     "take new (main/overlay changed)": 139,
+     "stale old git copy -> take commit": 17,
+     "restored (in the commit, absent live)": 54,
+     "conflict: both changed (kept live)": 2,
+     "carry live overlay (not in git)": 1
+    },
+    "actions": 982,
+    "carried": 24,
+    "conflicts": 2,
+    "merged": 0,
+    "lag": 17
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     17
+    ],
+    [
+     "physical/die_plan/qwen_compute",
+     3
+    ],
+    [
+     "KITOPS1_OVERLAY.txt",
+     1
+    ],
+    [
+     "tools/die_plan/gp_noconverge_gate.tcl.pre_fanout",
+     1
+    ],
+    [
+     "tools/die_plan/param_wrap.py",
+     1
+    ],
+    [
+     "tools/die_plan/test_param_wrap_status_reg.py",
+     1
+    ]
+   ],
+   "conflicts": [
+    "tools/die_plan/bind.py",
+    "tools/die_plan/gen_phys.py"
+   ],
+   "merged": [],
+   "lag": [
+    "physical/die_plan/hbm_arch_cores/recipes_b2.json",
+    "tools/autopilot/autopilot.py",
+    "tools/autopilot/kit_wave.py",
+    "tools/autopilot/test_kit_wave.py",
+    "tools/die_plan/check.py",
+    "tools/die_plan/die_plan.schema.json",
+    "tools/die_plan/kit_istations.py",
+    "tools/die_plan/reset_tree.py",
+    "tools/die_plan/route_supply.py",
+    "tools/die_plan/schema.py",
+    "tools/die_plan/test_wide_chain_float.py",
+    "tools/die_plan/wide_chain_float_event.py",
+    "tools/fleet/ot-autoclean.py",
+    "tools/fleet/test_ot_autoclean_auto.py",
+    "tools/fleet/test_ot_autoclean_dx.py",
+    "tools/fleet_viz/design_dev_server.py",
+    "tools/fleet_viz/explorer/dataflow/dataflow.js"
+   ],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261113_qwen_compute.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind:/srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind -w /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind --asbuilt /srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/kw45/qcs28in/bind_plan_qc99_s28/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind --asbuilt /srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/kw45/qcs28in/bind_plan_qc99_s28",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute.bind"
+   }
+  },
+  "qwen_kvsys": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f",
+   "src_sha": "66e6607e3f0ef569f504020569a30817c43278ad",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc8",
+    "epyc9",
+    "epyc2",
+    "intel1"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out",
+    "note": "KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f (pure git archive of main 66e6607e3f0e), same command as epyc8 dkv99/bind_e.sh; replaces dkv99/bind_vN2i only because that bind names HDL sources inside the epyc8 lane worktree wt/die-kv-99-e. Mirrored to every KV gen host."
+   },
+   "item_inputs": [],
+   "bind_mem_gb": null,
+   "new_sha": "ef623404397a582dd76dcd5d2c9ba5a6ba26cfa6",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys",
+   "live_manifests": {
+    "epyc7": "ae888ad701e395e1a5008335d828ec80e721bba9273102cb63c526df6038d496",
+    "epyc8": "7e147ed472de558bcd39abe28d94974748149b6990013e66343b95d5ff029d24",
+    "epyc9": "4905de557beb2f39c398f7e6c4407e8e3b0e9af5ab32d7dc55b4a9f93042ea4f",
+    "epyc2": "32d0f151d94e26fc405d26de5c6874f28887429496cb18fd1e22c34e160202f2",
+    "intel1": "7a41aefb71442bd5c09b355824a0044c7ad7d8fb0f786a11bbfe76435cc10666"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 324838,
+     "carry live-only (not in git)": 127,
+     "new file (main/overlay)": 269,
+     "take new (main/overlay changed)": 50,
+     "conflict: both changed (kept live)": 1
+    },
+    "actions": 319,
+    "carried": 127,
+    "conflicts": 1,
+    "merged": 0,
+    "lag": 0
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     106
+    ],
+    [
+     "physical/die_plan/qwen_kvsys",
+     15
+    ],
+    [
+     "KITOPS1_OVERLAY.txt",
+     1
+    ],
+    [
+     "tools/__pycache__/die_port_bind.cpython-314.pyc",
+     1
+    ],
+    [
+     "tools/autopilot/__pycache__",
+     1
+    ],
+    [
+     "tools/die_plan/macro_skip_rtlmp.tcl",
+     1
+    ],
+    [
+     "tools/die_trial/__pycache__",
+     1
+    ],
+    [
+     "tools/hbm_die_v16/__pycache__",
+     1
+    ]
+   ],
+   "conflicts": [
+    "tools/die_plan/gen_phys.py"
+   ],
+   "merged": [],
+   "lag": [],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261113_qwen_kvsys.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind:/srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind -w /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind --asbuilt /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind --asbuilt /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys.bind"
+   }
+  },
+  "hbm": {
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_7073a6b4a5",
+   "src_sha": "7073a6b4a599c1de9e041896421b3b779045df1d",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc7",
+    "epyc9",
+    "epyc8",
+    "epyc2",
+    "intel1"
+   ],
+   "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/plan/die_plan.json",
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/asbuilt_kitops1w.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/bind_w",
+    "note": "KIT-OPS-1 2026-11-13 01:12: bind_out -> hbm_pEv10/bind_w = pass 2 rebind on asbuilt_kitops1w.json (native_topology asbuilt sha matches; 98/98 bound .sv/.v identical to hbm_pEv10/bind = record; 92/420/0) | KIT-OPS-1 2026-11-13 01:02: asbuilt -> asbuilt_kitops1w.json (6 dead phy_slices bb.v entries dropped; bind skips absent files; SRC-INCOMPLETE probe needs every listed path) | KIT-OPS-1 2026-11-13 00:54: HBM pEv10 (train 26, events/hbm_pEv10_1112) strict two-pass bind (package bind.sh recipe) on plain main archive 7073a6b4a599; 98/98 generated RTL = record, r8 table = package, 92 partitions / 420 crossings / 0 errors | KW-FIX-45 11-12 HBM t39w repoint: plan /srv/opentallas-scratch2/claude/hbm-vsn-xtap-t39w/plan_t39w/die_plan.json; src = main 9fc09952cdc4 + q0body guard 0dcd23f1b9c2 + p18emit a371160f43; DIE-HBM-100 / HBM-VSN-XTAP-2 strict bind"
+   },
+   "item_inputs": [
+    "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16",
+    "ot_hgi_dma_back_static_vp4_banks_cp",
+    "ot_hgi_sfu_opsb_group",
+    "ot_svgr_top",
+    "q_hub_nw"
+   ],
+   "bind_mem_gb": null,
+   "new_sha": "ef623404397a582dd76dcd5d2c9ba5a6ba26cfa6",
+   "die_branch": "on main/overlays",
+   "new_tree": "/srv/opentallas-scratch2/claude/wave-src/20261113/hbm",
+   "live_manifests": {
+    "epyc7": "bb181c067cf4865fb0e97678d3656356d3029588505c86f2ca8efe1663137d38",
+    "epyc9": "3b0e323caae1585003c8a62578511a8f7963ffc5a8d0bd4ec1bb4d5b92e7ddd1",
+    "epyc8": "ce413bb4f210c7fdedb6203402989ecad0d7863ec727f797e0e68917d3547768",
+    "epyc2": "6a6967ee78835353a9b6ecf24ddc7b08ed1ee1bf08706b22f1a000b3b3fc6e02",
+    "intel1": "9707e942978aa10f4a5c7a63835dee5f2e2abb634cd3c5529138c1c12a758d9a"
+   },
+   "canonical_host": "epyc9",
+   "classify": {
+    "counts": {
+     "same": 325058,
+     "carry live-only (not in git)": 78,
+     "take new (main/overlay changed)": 19,
+     "new file (main/overlay)": 80,
+     "conflict: both changed (kept live)": 1
+    },
+    "actions": 99,
+    "carried": 78,
+    "conflicts": 1,
+    "merged": 0,
+    "lag": 0
+   },
+   "carried_dirs": [
+    [
+     "tools/die_plan/__pycache__",
+     76
+    ],
+    [
+     "KITOPS1_OVERLAY.txt",
+     1
+    ],
+    [
+     "tools/die_plan/macro_skip_rtlmp.tcl",
+     1
+    ]
+   ],
+   "conflicts": [
+    "tools/die_plan/gen_phys.py"
+   ],
+   "merged": [],
+   "lag": [],
+   "bind": {
+    "cmd": "docker run --rm --name waveops_bind_20261113_hbm.bind -u $(id -u):$(id -g) --group-add $(stat -c %g /var/run/docker.sock) -v /usr/bin/docker:/usr/bin/docker:ro -v /var/run/docker.sock:/var/run/docker.sock -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 --memory 64g --memory-swap 64g --cpus 2 -v /srv/opentallas-scratch2:/srv/opentallas-scratch2:ro -v /srv/opentallas-scratch3:/srv/opentallas-scratch3:ro -v /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind:/srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind -w /srv/opentallas-scratch2/claude/wave-src/20261113/hbm python:3.14-slim sh -c 'python -I -B tools/die_plan/bind.py all /srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/plan/die_plan.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind --asbuilt /srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/asbuilt_kitops1w.json --strict --mem 32 && echo elab+bind > /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind/FORM || { echo \"ELAB FAILED: seeded bind on the record elaboration\"; mkdir -p /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind/elab_failed && find /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind -mindepth 1 -maxdepth 1 ! -name elab_failed -exec mv {} /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind/elab_failed/ \\; ; cp -L /srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/bind_w/asbuilt.json /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind/asbuilt.json && python -I -B tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/plan/die_plan.json --out /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind --asbuilt /srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/asbuilt_kitops1w.json --strict --mem 32 && echo seeded-bind > /srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind/FORM; }'",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/asbuilt_kitops1w.json",
+    "old_bind": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/bind_w",
+    "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/plan/die_plan.json",
+    "out": "/srv/opentallas-scratch2/claude/wave-src/20261113/hbm.bind"
+   }
+  }
+ }
+}

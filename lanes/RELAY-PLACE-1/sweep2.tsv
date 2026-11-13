@@ -1,0 +1,399 @@
+hbm	NE_iorly	1	geom	ROUTE-HELD	0	375.52	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/NE_iorly/geom
+hbm	NW_iorly	1	geom	ROUTE-HELD	45	431.22	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/NW_iorly/geom
+hbm	PHY_NC	4	geom	ROUTE-HELD	0	1216.0	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/PHY_NC/attempt_4/geom
+hbm	PHY_NE	6	route	FAIL	NA	NA	
+hbm	PHY_NW	4	place	FAIL	NA	NA	
+hbm	hfd_hgi_vms_glue_nw_t	11	route	FAIL	NA	NA	
+hbm	hnx_fused_lane_c	2	signoff	FAIL	0	409.86	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/hnx_fused_lane_c/attempt_2/geom
+hbm	hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a	6	route	FAIL	NA	NA	
+hbm	hnx_vms_bank_q0_faces__vecd4ae__v32e0dfcad68a	6	route	FAIL	NA	NA	
+hbm	hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16	9	route	FAIL	0	467.91	epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16/attempt_9/geom
+hbm	hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16	9	route	FAIL	0	467.91	epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16/attempt_9/geom
+hbm	ot_hbm_hc_bank128_pair_first_core	5	route	SIGNED	0	444.96	epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_bank128_pair_first_core/attempt_5/geom
+hbm	ot_hbm_hc_root_static__hcp_sys1	2	queue	SIGNED	0	143.75	epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_hc_root_static__hcp_sys1/attempt_2/geom
+hbm	ot_hbm_hc_subtree32_core	6	gen	SIGNED	NA	NA	
+hbm	ot_hbm_host_cp_rxs	10	gen	CANCELLED	NA	NA	
+hbm	ot_hbm_idx_rootctl_static_am	17	queue	FAIL	19	586.33	intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_idx_rootctl_static_am/attempt_17/geom
+hbm	ot_hbm_idx_topk_link_static	11	place	FAIL	NA	NA	
+hbm	ot_hbm_idx_vm_query_static_n12	10	route	FAIL	0	239.49	intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_idx_vm_query_static_n12/attempt_10/geom
+hbm	ot_hbm_sm_i8w_front	3	route	FAIL	4	981.4	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/ot_hbm_sm_i8w_front/attempt_3/geom
+hbm	ot_hbm_sm_kv_line	1	place	RUNNING	NA	NA	
+hbm	ot_hbm_sm_pv_merge	2	route	FAIL	0	373.73	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/ot_hbm_sm_pv_merge/attempt_2/geom
+hbm	ot_hbm_sm_vm_wr_q_t_lanes4	5	route	SIGNED	0	299.11	epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_sm_vm_wr_q_t_lanes4/attempt_5/geom
+hbm	ot_hbm_su_static_cxport_ij_q	7	gen	SIGNED	NA	NA	
+hbm	ot_hbm_su_static_pgslice_lg__pretree	1	count	SIGNED	0	210.44	intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hbm_su_static_pgslice_lg__pretree/geom
+hbm	ot_hbm_su_static_sfustore_hw	5	route	SIGNED	0	387.42	epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hbm_su_static_sfustore_hw/attempt_5/geom
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	8	gen	CANCELLED	NA	NA	
+hbm	ot_hbm_svc_vm_kshare_splitstrap__v700685	6	signoff	FAIL	0	532.12	epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_svc_vm_kshare_splitstrap__v700685/attempt_6/geom
+hbm	ot_hbm_svc_vm_kshare_splitstrap__v8e478a	6	signoff	FAIL	0	850.01	epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hbm_svc_vm_kshare_splitstrap__v8e478a/attempt_6/geom
+hbm	ot_hbm_svc_vmdel_lane_n	14	gen	SIGNED	NA	NA	
+hbm	ot_hfd_coll_q2_hard_v8g__reduce	4	views	CANCELLED	NA	NA	
+hbm	ot_hfd_coll_q2n2_vm_core	5	route	FAIL	630	862.46	epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hfd_coll_q2n2_vm_core/attempt_5/geom
+hbm	ot_hgi_coll_gq_land__v25778639ea1b	1	signoff	SIGNED	0	237.6	intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_coll_gq_land__v25778639ea1b/geom
+hbm	ot_hgi_coll_gq_land__vac72b8c34f86	1	signoff	SIGNED	0	274.48	intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_coll_gq_land__vac72b8c34f86/geom
+hbm	ot_hgi_qw_dec	10	views	CANCELLED	NA	NA	
+hbm	ot_hgi_sfu_opsa_group0	4	gen	FAIL	NA	NA	
+hbm	ot_hgi_sfu_opsb_group	1	gen	FAIL	NA	NA	
+hbm	ot_hgi_sfu_programme_store_r10	12	route	FAIL	278	810.11	epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/d44v/items/ot_hgi_sfu_programme_store_r10/attempt_12/geom
+hbm	ot_hgi_sfu_split3_ctl_rest_1c	1	route	RUNNING	27	522.29	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/ot_hgi_sfu_split3_ctl_rest_1c/geom
+hbm	ot_hgi_sm_xload_cl2_bfqg	6	route	SIGNED	0	446.8	intel1:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/ot_hgi_sm_xload_cl2_bfqg/attempt_6/geom
+hbm	ot_hgi_sm_xload_cl2_ctlx	2	route	SIGNED	0	649.4	epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hgi_sm_xload_cl2_ctlx/attempt_2/geom
+hbm	ot_hidx_s3_q	5	signoff	FAIL	NA	NA	
+hbm	ot_hnx_fused_tnode	2	geom	CANCELLED	0	218.92	intel2:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44o/items/ot_hnx_fused_tnode/attempt_2/geom
+hbm	ot_hnx_idxn_keybuf_slice	4	signoff	SIGNED	0	390.12	epyc4:/srv/opentallas-scratch2/claude/kit-wave/hbm/d44v/items/ot_hnx_idxn_keybuf_slice/attempt_4/geom
+hbm	ot_q2nf_rest	1	place	RUNNING	NA	NA	
+hbm	ot_svgr_top	2	place	FAIL	NA	NA	
+hbm	q_b002	2	geom	ROUTE-HELD	930	1339.98	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b002/attempt_2/geom
+hbm	q_b003	2	geom	ROUTE-HELD	2749	1559.47	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003/attempt_2/geom
+hbm	q_b003__physical_v1	11	geom	ROUTE-HELD	2266	1561.46	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003__physical_v1/attempt_11/geom
+hbm	q_b012	12	geom	ROUTE-HELD	1422	1332.83	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b012/attempt_12/geom
+hbm	q_b012__physical_v1	11	geom	ROUTE-HELD	1532	1244.86	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b012__physical_v1/attempt_11/geom
+hbm	q_b013	17	geom	ROUTE-HELD	834	1219.4	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b013/attempt_17/geom
+hbm	q_b013__physical_v1	15	geom	ROUTE-HELD	807	1210.6	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b013__physical_v1/attempt_15/geom
+hbm	q_mcb_ne	2	route	FAIL	0	2696.87	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_mcb_ne/attempt_2/geom
+hbm	q_spb1	5	geom	FAIL	0	347.98	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/q_spb1/attempt_5/geom
+hbm	q_spu0	2	place	FAIL	NA	NA	
+hbm	q_spu0__physical_v1	2	geom	ROUTE-HELD	0	380.81	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_spu0__physical_v1/attempt_2/geom
+hbm	q_spu1	8	geom	ROUTE-HELD	0	399.3	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_spu1/attempt_8/geom
+hbm	q_spu1__physical_v1	11	geom	ROUTE-HELD	0	388.53	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_spu1__physical_v1/attempt_11/geom
+hbm	q_su00	2	geom	ROUTE-HELD	2009	2430.22	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su00/attempt_2/geom
+hbm	q_su00__physical_v1	2	place	RUNNING	NA	NA	
+hbm	q_su10	3	route	FAIL	54	1878.61	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su10/attempt_3/geom
+hbm	q_su10__physical_v1	3	route	FAIL	0	1886.68	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su10__physical_v1/attempt_3/geom
+hbm	q_su11	1	geom	ROUTE-HELD	341	2918.05	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su11/geom
+hbm	q_su11__physical_v1	7	geom	ROUTE-HELD	809	2835.86	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su11__physical_v1/attempt_7/geom
+hbm	q_su20	1	geom	ROUTE-HELD	1351	2237.06	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su20/geom
+hbm	q_su20__physical_v1	1	geom	ROUTE-HELD	914	2328.21	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su20__physical_v1/geom
+hbm	q_su21	3	geom	CANCELLED	44	1897.72	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su21/attempt_3/geom
+hbm	q_su21	3	geom	ROUTE-HELD	44	1897.72	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su21/attempt_3/geom
+hbm	q_su21__physical_v1	3	geom	ROUTE-HELD	24	1583.33	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su21__physical_v1/attempt_3/geom
+hbm	q_su21__physical_v1	3	place	CANCELLED	24	1583.33	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su21__physical_v1/attempt_3/geom
+hbm	q_su30__physical_v1	12	geom	ROUTE-HELD	0	1870.34	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su30__physical_v1/attempt_12/geom
+hbm	q_su31	2	geom	ROUTE-HELD	318	2042.33	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su31/attempt_2/geom
+hbm	q_su31__physical_v1	2	geom	ROUTE-HELD	336	2400.19	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su31__physical_v1/attempt_2/geom
+hbm	vsN1	3	geom	FAIL	0	365.15	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/vsN1/attempt_3/geom
+hbm	vsN2	8	signoff	FAIL	0	375.57	epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/hbm/kit-wave/hbm/d44v/items/vsN2/attempt_8/geom
+qwen_compute	cbf_q00_s2	1	gen	FAIL	NA	NA	
+qwen_compute	cbf_q01	1	gen	FAIL	NA	NA	
+qwen_compute	cbf_q01_s2	1	gen	RETRY-INFRA	NA	NA	
+qwen_compute	cbf_q11	3	kit_rtl	RETRY-INFRA	NA	NA	
+qwen_compute	cbn_q00__cl622f65d2	1	unit	FAIL	NA	NA	
+qwen_compute	cbn_q00__cld7bf7197	20	gen	FAIL	NA	NA	
+qwen_compute	cbn_q00__cldbcda913	1	unit	FAIL	NA	NA	
+qwen_compute	cbn_q01__clab6e67f2	1	gen	FAIL	NA	NA	
+qwen_compute	cbn_q01__cld9ff4c40	2	kit_rtl	RETRY-INFRA	NA	NA	
+qwen_compute	cbn_q01__cldd6ea846	1	gen	RETRY-INFRA	NA	NA	
+qwen_compute	cbn_q11__cl49ae4555	2	kit_rtl	RETRY-INFRA	NA	NA	
+qwen_compute	cbn_q11__cl5cc92dfe	2	kit_rtl	RETRY-INFRA	NA	NA	
+qwen_compute	coll_ft__cl78c7b300	2	geom	ROUTE-HELD	0	545.67	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/coll_ft__cl78c7b300/attempt_2/geom
+qwen_compute	coll_ft__cla4a25d77	1	geom	ROUTE-HELD	0	370.22	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/coll_ft__cla4a25d77/geom
+qwen_compute	coll_ftc	1	unit	FAIL	NA	NA	
+qwen_compute	coll_n	1	kit_topology	RETRY-INFRA	NA	NA	
+qwen_compute	coll_s	2	route	FAIL	734	840.51	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/coll_s/attempt_2/geom
+qwen_compute	glue	2	kit_rtl	RETRY-INFRA	NA	NA	
+qwen_compute	native59	2	place	RUNNING	NA	NA	
+qwen_compute	sle_ctl__cl372cea1c	3	gen	FAIL	NA	NA	
+qwen_compute	sle_ctl__cl503337ff	3	gen	FAIL	NA	NA	
+qwen_compute	sle_ctl__cl67434795	20	geom	ROUTE-HELD	2319	796.28	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/sle_ctl__cl67434795/attempt_20/geom
+qwen_compute	sle_ctl__cla4f6f12f	2	geom	ROUTE-HELD	1247	2542.37	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/sle_ctl__cla4f6f12f/attempt_2/geom
+qwen_compute	sle_fe_v1__cl1cbb7497	1	unit	FAIL	NA	NA	
+qwen_compute	sle_fe_v1__cl8210183c	2	kit_topology	FAIL	NA	NA	
+qwen_compute	sle_fe_v2	1	unit	FAIL	NA	NA	
+qwen_compute	sle_fe_v3	1	unit	FAIL	NA	NA	
+qwen_compute	sle_fw_v1__cl9d029624	2	unit	FAIL	NA	NA	
+qwen_compute	sle_fw_v1__clf58b4dfb	1	unit	FAIL	NA	NA	
+qwen_compute	sle_fw_v2__cl6740750e	1	unit	FAIL	NA	NA	
+qwen_compute	sle_fw_v2__cl69f5e854	13	geom	ROUTE-HELD	2808	1196.26	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/sle_fw_v2__cl69f5e854/attempt_13/geom
+qwen_compute	sle_hc0__cl05696ed1	1	unit	FAIL	NA	NA	
+qwen_compute	sle_hc0__cl929603c0__cl38badc56	23	unit	FAIL	NA	NA	
+qwen_compute	sle_hc0__cl929603c0__cl4baa7c9c	1	unit	FAIL	NA	NA	
+qwen_compute	sle_hc1__cl22c1ff36	1	unit	FAIL	NA	NA	
+qwen_compute	sle_hc1__cl7d360508	2	unit	FAIL	NA	NA	
+qwen_compute	sle_hc2__cl9c4c4509__cl3edce1b8	2	unit	FAIL	NA	NA	
+qwen_compute	sle_hc2__cl9c4c4509__clf60c5152	1	unit	FAIL	NA	NA	
+qwen_compute	sle_hc2__clcc5e3e61	1	unit	FAIL	NA	NA	
+qwen_compute	sle_sc_v1__cl115da35f	1	gen	RETRY-INFRA	NA	NA	
+qwen_compute	sle_sc_v1__cl7479a5ec	1	unit	FAIL	NA	NA	
+qwen_compute	sle_sc_v2	27	unit	FAIL	NA	NA	
+qwen_compute	sle_st_a_v1__cl67389ecd	3	route	RUNNING	1241	1236.11	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/sle_st_a_v1__cl67389ecd/attempt_3/geom
+qwen_compute	sle_st_a_v1__cl989804f6__cl18eece69	2	geom_run	FAIL	NA	NA	
+qwen_compute	sle_st_a_v1__cl989804f6__cled3c1d7b	1	route	RUNNING	1200	1245.94	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/sle_st_a_v1__cl989804f6__cled3c1d7b/geom
+qwen_compute	sle_st_a_v2	2	route	RUNNING	1089	1369.06	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/sle_st_a_v2/attempt_2/geom
+qwen_compute	sle_st_b_v1__pv0e7b1dcc	1	gen	FAIL	NA	NA	
+qwen_compute	sle_st_b_v1__pvc5a85fd4	1	gen	FAIL	NA	NA	
+qwen_compute	sle_st_b_v2__cl14c98df5	1	gen	FAIL	NA	NA	
+qwen_compute	sle_st_b_v2__clfde1249e	2	kit_rtl	RETRY-INFRA	NA	NA	
+qwen_compute	sle_stm_v1__cl27746664	17	unit	FAIL	NA	NA	
+qwen_compute	sle_stm_v1__clbe630b9c	2	unit	FAIL	NA	NA	
+qwen_compute	sle_stm_v2__cl55be2264	16	unit	FAIL	NA	NA	
+qwen_compute	sle_stm_v2__cl7b3062fa	1	unit	FAIL	NA	NA	
+qwen_compute	sle_stm_v3	1	kit_topology	RETRY-INFRA	NA	NA	
+qwen_compute	sle_su_c	1	unit	FAIL	NA	NA	
+qwen_compute	sle_su_l0__cl086d85ba	1	unit	FAIL	NA	NA	
+qwen_compute	sle_su_l0__cl7a55c676	1	unit	FAIL	NA	NA	
+qwen_compute	sle_su_l1__cl5ea486db	2	unit	FAIL	NA	NA	
+qwen_compute	sle_su_l1__clc6d66f5b	1	unit	FAIL	NA	NA	
+qwen_compute	slw_fe_v1__cl95cd1d0c	2	unit	FAIL	NA	NA	
+qwen_compute	slw_fe_v1__clfe325744__cl08d14f0d	1	unit	FAIL	NA	NA	
+qwen_compute	slw_fe_v1__clfe325744__cldb4efe33	1	unit	FAIL	NA	NA	
+qwen_compute	slw_fe_v2__cle312294d	1	kit_topology	FAIL	NA	NA	
+qwen_compute	slw_fe_v2__clf110fab2	1	lec_tools	RETRY-INFRA	NA	NA	
+qwen_compute	slw_fw_v1__cl51d45468	1	unit	FAIL	NA	NA	
+qwen_compute	slw_fw_v1__clf51c11d8__cl592e3d37	1	unit	FAIL	NA	NA	
+qwen_compute	slw_fw_v1__clf51c11d8__clc7ddab13	16	unit	FAIL	NA	NA	
+qwen_compute	slw_fw_v2__cl8537f156	8	unit	FAIL	NA	NA	
+qwen_compute	slw_fw_v2__cl8f84514c	8	unit	FAIL	NA	NA	
+qwen_compute	slw_fw_v3	1	unit	FAIL	NA	NA	
+qwen_compute	slw_sc_v1__cl63e5a7a2	10	bind	FAIL	NA	NA	
+qwen_compute	slw_sc_v1__cl64543eaf__cl4590432d	1	unit	FAIL	NA	NA	
+qwen_compute	slw_sc_v1__cl64543eaf__cl5e017c6f	17	unit	FAIL	NA	NA	
+qwen_compute	slw_sc_v2	20	unit	FAIL	NA	NA	
+qwen_compute	slw_sc_v3	20	bind	FAIL	NA	NA	
+qwen_compute	slw_st_a_v1__clb036e152	1	geom_run	FAIL	NA	NA	
+qwen_compute	slw_st_a_v1__clfc5867a6__pvdf8e5ca4	2	route	RUNNING	1176	1161.32	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/slw_st_a_v1__clfc5867a6__pvdf8e5ca4/attempt_2/geom
+qwen_compute	slw_st_a_v1__clfc5867a6__pvf82a6c28	1	route	RUNNING	1171	1269.59	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/slw_st_a_v1__clfc5867a6__pvf82a6c28/geom
+qwen_compute	slw_st_a_v2__cl9f076a5c	1	route	RUNNING	1074	1378.03	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/slw_st_a_v2__cl9f076a5c/geom
+qwen_compute	slw_st_a_v2__clf4365a62	2	place	FAIL	NA	NA	
+qwen_compute	slw_st_b_v1__cl6357f1cc__pv6ace3e48	1	unit	CANCELLED	NA	NA	
+qwen_compute	slw_st_b_v1__cl6357f1cc__pvffd43fdc	1	kit_topology	RETRY-INFRA	NA	NA	
+qwen_compute	slw_st_b_v1__cle6023ec2	1	unit	CANCELLED	NA	NA	
+qwen_compute	slw_st_b_v2__pva66d0f22	1	kit_topology	RETRY-INFRA	NA	NA	
+qwen_compute	slw_st_b_v2__pvc2ec5bfb	1	gen	RETRY-INFRA	NA	NA	
+qwen_compute	slw_stm_v1__cl05fc43f7__cl2086fa2c	1	unit	FAIL	NA	NA	
+qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9	1	unit	FAIL	NA	NA	
+qwen_compute	slw_stm_v1__cle34a73c3	1	unit	FAIL	NA	NA	
+qwen_compute	slw_stm_v2__cl1ca9c415	17	unit	FAIL	NA	NA	
+qwen_compute	slw_stm_v2__cl9beb65e6	1	kit_topology	FAIL	NA	NA	
+qwen_compute	slw_stm_v3	1	kit_topology	FAIL	NA	NA	
+qwen_compute	slw_su_c__cl19bb38ef	2	unit	FAIL	NA	NA	
+qwen_compute	slw_su_c__cl92142dac	2	unit	FAIL	NA	NA	
+qwen_compute	slw_su_l0__cl1a1c1f8f	1	unit	FAIL	NA	NA	
+qwen_compute	slw_su_l0__cl1e5219ea	1	unit	FAIL	NA	NA	
+qwen_compute	slw_su_l0__cl76fb247e	2	unit	FAIL	NA	NA	
+qwen_compute	slw_su_l1__cla2a78701	2	unit	FAIL	NA	NA	
+qwen_compute	slw_su_l1__clcc9d0155	2	gen	FAIL	NA	NA	
+qwen_compute	tt_ctlm	2	place	FAIL	NA	NA	
+qwen_kvsys	kv3_hroot	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_hub_C	12	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_hub_Eo	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_hub_Wo	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_io_cor	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_io_cor_v1	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_io_ft_v1	20	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_pc__cl254f2e73	2	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_pc__cl5a95b461	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_pc_v1__cl23f6a148	1	place	FAIL	NA	NA	
+qwen_kvsys	kv3_pc_v1__cl4ea58a5c	1	place	FAIL	NA	NA	
+qwen_kvsys	kv3_pc_v1__cl7f648944	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_pc_v3	1	place	FAIL	NA	NA	
+qwen_kvsys	kv3_phy	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_phy_v1	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v1	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v12	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v1n	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v2	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v2n	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v3	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v3n	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v4	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v4n	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v5	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v5n	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v6	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v6n	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v7	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_pv_v8	1	kit_rtl	FAIL	NA	NA	
+qwen_kvsys	kv3_sys_SD	1	place	RUNNING	NA	NA	
+qwen_kvsys	kv3_sys_SD_v1	1	geom	RUNNING	NA	NA	
+qwen_kvsys	kv3_sys_c	2	kit_rtl	RUNNING	NA	NA	
+s81	dsdv_slice_c1x_C__t10	14	gen	FAIL	NA	NA	
+s81	dsdv_slice_c1x_C__t6	25	gen	FAIL	NA	NA	
+s81	dsdv_slice_c3x_C__t1	21	geom	ROUTE-HELD	3453	2071.79	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_c3x_C__t1/attempt_21/geom
+s81	dsdv_slice_iq_C__t1	24	place	FAIL	NA	NA	
+s81	dsdv_slice_kv512_C__t1	34	route	RUNNING	2510	1443.37	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/dsdv_slice_kv512_C__t1/attempt_34/geom
+s81	dsdv_slice_lepe_mu_C__t1	23	gen	FAIL	NA	NA	
+s81	dsdv_slice_lepe_nh_mus_C__t1	20	place	FAIL	NA	NA	
+s81	gunit__t1	13	gen	FAIL	NA	NA	
+s81	iqf__t1	13	gen	FAIL	NA	NA	
+s81	ot_s81sl_kv_leaf__t1	4	geom	CANCELLED	714	646.76	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_kv_leaf__t1/attempt_4/geom
+s81	ot_s81sl_kv_leaf__t2	11	gen	FAIL	NA	NA	
+s81	ot_s81sl_kv_leaf__t3	4	geom	CANCELLED	186	702.7	epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_kv_leaf__t3/attempt_4/geom
+s81	ot_s81sl_kv_leaf__t4	4	geom	CANCELLED	329	743.63	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_kv_leaf__t4/attempt_4/geom
+s81	ot_s81sl_kv_leaf__t5	4	geom	CANCELLED	54	606.01	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_kv_leaf__t5/attempt_4/geom
+s81	ot_s81sl_leaf__t1	6	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t2	6	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t22	9	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t23	4	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t3	11	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t34	4	geom	ROUTE-HELD	183	817.18	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t34/attempt_4/geom
+s81	ot_s81sl_leaf__t4	11	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t5	5	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t50	15	gen	FAIL	NA	NA	
+s81	ot_s81sl_leaf__t61	12	geom	ROUTE-HELD	441	1002.56	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/ot_s81sl_leaf__t61/attempt_12/geom
+s81	ot_s81sl_leaf__t7	7	gen	FAIL	NA	NA	
+s81	seqhost__t1	7	queue	FAIL	238	1514.05	epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/seqhost__t1/attempt_7/geom
+s81	serdes__t12	18	gen	FAIL	NA	NA	
+s81	serdes__t13	26	place	RUNNING	NA	NA	
+s81	serdes__t15__cla2127225	24	gen	FAIL	NA	NA	
+s81	serdes__t15__cla3d02796	10	geom	ROUTE-HELD	695	1784.16	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t15__cla3d02796/attempt_10/geom
+s81	serdes__t16	18	geom	ROUTE-HELD	353	1675.24	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t16/attempt_18/geom
+s81	serdes__t1__clb45db5be	13	geom	CANCELLED	688	2110.32	epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clb45db5be/attempt_13/geom
+s81	serdes__t1__clfe1f0815	14	route	FAIL	676	2079.32	intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t1__clfe1f0815/attempt_14/geom
+s81	serdes__t2	27	route	RUNNING	686	2507.54	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t2/attempt_27/geom
+s81	serdes__t3	19	gen	FAIL	NA	NA	
+s81	serdes__t4	17	geom	ROUTE-HELD	741	1579.2	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/e9eda32d41c/items/serdes__t4/attempt_17/geom
+s81	slice_station__t12	8	queue	WAIT-PARENT	0	380.94	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t12/attempt_8/geom
+s81	slice_station__t14	13	queue	WAIT-PARENT	0	391.69	epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t14/attempt_13/geom
+s81	slice_station__t17	14	geom	CANCELLED	0	382.59	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t17/attempt_14/geom
+s81	slice_station__t18	14	queue	WAIT-PARENT	0	381.02	intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t18/attempt_14/geom
+s81	slice_station__t20	5	queue	WAIT-PARENT	0	381.29	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t20/attempt_5/geom
+s81	slice_station__t21	15	geom	CANCELLED	0	381.02	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t21/attempt_15/geom
+s81	slice_station__t22	12	geom	CANCELLED	0	389.66	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t22/attempt_12/geom
+s81	slice_station__t23	5	count	SIGNED	0	381.13	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t23/attempt_5/geom
+s81	slice_station__t24__cl64811a5d	14	geom	CANCELLED	0	382.48	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t24__cl64811a5d/attempt_14/geom
+s81	slice_station__t24__cl66b71008	8	geom	CANCELLED	0	381.46	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t24__cl66b71008/attempt_8/geom
+s81	slice_station__t24__cleece78ec	14	signoff	FAIL	0	385.02	epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t24__cleece78ec/attempt_14/geom
+s81	slice_station__t25	4	geom	CANCELLED	126	431.92	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t25/attempt_4/geom
+s81	slice_station__t26	8	geom	CANCELLED	0	381.62	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t26/attempt_8/geom
+s81	slice_station__t27	2	signoff	FAIL	104	447.2	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t27/attempt_2/geom
+s81	slice_station__t28	11	geom	CANCELLED	0	381.35	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t28/attempt_11/geom
+s81	slice_station__t29__cl2e5c855a	11	geom	CANCELLED	111	447.25	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t29__cl2e5c855a/attempt_11/geom
+s81	slice_station__t29__clc7772371	14	signoff	FAIL	54	446.72	epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t29__clc7772371/attempt_14/geom
+s81	slice_station__t30__cl1653104c	16	geom	CANCELLED	0	379.3	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t30__cl1653104c/attempt_16/geom
+s81	slice_station__t30__cl6a190133	18	queue	WAIT-PARENT	1	405.3	epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t30__cl6a190133/attempt_18/geom
+s81	slice_station__t30__clcedefe91	17	queue	WAIT-PARENT	0	379.08	epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t30__clcedefe91/attempt_17/geom
+s81	slice_station__t31	3	signoff	SIGNED	0	385.07	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t31/attempt_3/geom
+s81	slice_station__t36	4	signoff	FAIL	126	431.35	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t36/attempt_4/geom
+s81	slice_station__t37	7	signoff	FAIL	108	445.63	epyc4:/srv/opentallas-scratch2/claude/s81-wave-1105e4/kit-wave/s81/bf1e2233ce05/items/slice_station__t37/attempt_7/geom
+s81	slice_station__t38	6	geom	CANCELLED	0	423.09	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t38/attempt_6/geom
+s81	slice_station__t40__cl1ea9de02	7	geom	CANCELLED	0	379.73	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t40__cl1ea9de02/attempt_7/geom
+s81	slice_station__t40__clc8fb2c8c	15	geom	CANCELLED	0	379.08	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t40__clc8fb2c8c/attempt_15/geom
+s81	slice_station__t41	4	signoff	FAIL	129	446.23	epyc7:/srv/opentallas-scratch2/claude/kw27-wave-1109/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t41/attempt_4/geom
+s81	slice_station__t42__cl4bd1432c	10	geom	CANCELLED	0	380.97	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t42__cl4bd1432c/attempt_10/geom
+s81	slice_station__t42__clcf44e680	9	geom	CANCELLED	0	382.05	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t42__clcf44e680/attempt_9/geom
+s81	slice_station__t43	4	signoff	FAIL	106	447.8	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t43/attempt_4/geom
+s81	slice_station__t44	8	queue	WAIT-PARENT	0	387.72	epyc4:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t44/attempt_8/geom
+s81	slice_station__t46	5	signoff	SIGNED	0	378.76	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t46/attempt_5/geom
+s81	slice_station__t47	20	signoff	FAIL	0	389.1	epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t47/attempt_20/geom
+s81	slice_station__t48	5	queue	WAIT-PARENT	0	375.35	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t48/attempt_5/geom
+s81	slice_station__t49	1	signoff	FAIL	0	382.1	epyc4:/srv/opentallas-scratch2/claude/s81-wave-1105f2/kit-wave/s81/bf1e2233ce05/items/slice_station__t49/geom
+s81	slice_station__t50__cl39451317	2	queue	WAIT-PARENT	0	380.48	epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t50__cl39451317/attempt_2/geom
+s81	slice_station__t50__cld84c9e24	12	queue	WAIT-PARENT	0	382.67	epyc2:/srv/opentallas-scratch3/claude/kw24-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t50__cld84c9e24/attempt_12/geom
+s81	slice_station__t52	18	signoff	FAIL	109	446.77	intel1:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t52/attempt_18/geom
+s81	slice_station__t6__cl0755c26e	17	geom	CANCELLED	105	445.04	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t6__cl0755c26e/attempt_17/geom
+s81	slice_station__t6__cl54a9ceeb	14	queue	WAIT-PARENT	104	446.88	epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t6__cl54a9ceeb/attempt_14/geom
+s81	slice_station__t7__cl362204c4	15	geom	CANCELLED	0	377.73	epyc6:/srv/opentallas-scratch2/claude/codex-wave-1105/runs/s81/kit-wave/s81/bf1e2233ce05/items/slice_station__t7__cl362204c4/attempt_15/geom
+s81	slice_station__t7__cl503f4913	19	queue	WAIT-PARENT	0	381.24	epyc2:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t7__cl503f4913/attempt_19/geom
+s81	slice_station__t7__cl945bc067	12	queue	WAIT-PARENT	0	381.56	epyc4:/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/s81/b1a2125433d0/items/slice_station__t7__cl945bc067/attempt_12/geom
+s81	slice_station__t8	12	geom	CANCELLED	1	407.11	epyc5:/srv/opentallas-scratch3/claude/kw26-wave-1106/runs/s81/kit-wave/s81/e9eda32d41c/items/slice_station__t8/attempt_12/geom
+s81_head	hd_ctl_e	10	kit_rtl	CANCELLED	NA	NA	
+s81_head	hd_host_e	5	kit_rtl	FAIL	NA	NA	
+s81_head	hd_host_n	9	kit_rtl	CANCELLED	NA	NA	
+s81_head	hd_host_w	3	signoff	FAIL	NA	NA	
+s81_head	hd_mesh_e	5	geom	CANCELLED	0	404.3	epyc5:/srv/opentallas-scratch2/claude/kw25-wave-1106/runs/s81_head/kit-wave/s81_head/l48ui/items/hd_mesh_e/attempt_5/geom
+s81_head	hd_serdes	6	gen	FAIL	NA	NA	
+s81_head	hd_spn	3	geom	ROUTE-HELD	0	550.45	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/l48uj/items/hd_spn/attempt_3/geom
+s81_head	hd_spn_end	3	geom	ROUTE-HELD	0	711.15	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/l48uj/items/hd_spn_end/attempt_3/geom
+s81_head	hd_st_k5	1	geom	CANCELLED	NA	NA	
+s81_head	hd_st_m	1	geom	CANCELLED	0	391.77	intel2:/srv/opentallas-scratch2/claude/kit-wave/s81_head/l48x/items/hd_st_m/geom
+s81_head	hd_st_n3_transit	13	unit	SIGNED	NA	NA	
+s81_head	hd_st_n3_turn	16	kit_rtl	CANCELLED	NA	NA	
+s81_head	hd_st_n4	1	place	SIGNED	NA	NA	
+s81_head	hd_st_turn	11	kit_rtl	CANCELLED	NA	NA	
+hbm	NE_io	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	NW_io	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b000	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b000__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b001	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b001__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b002	2	prelint	LINT-ADVISORY	930	1339.98	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b002/attempt_2/geom
+hbm	q_b002__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b003	2	prelint	LINT-ADVISORY	2749	1559.47	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003/attempt_2/geom
+hbm	q_b003__physical_v1	11	prelint	LINT-ADVISORY	2266	1561.46	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b003__physical_v1/attempt_11/geom
+hbm	q_b010	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b010__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b011	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b011__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b012	12	prelint	LINT-ADVISORY	1422	1332.83	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b012/attempt_12/geom
+hbm	q_b012__physical_v1	11	prelint	LINT-ADVISORY	1532	1244.86	epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b012__physical_v1/attempt_11/geom
+hbm	q_b013	17	prelint	LINT-ADVISORY	834	1219.4	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b013/attempt_17/geom
+hbm	q_b013__physical_v1	15	prelint	LINT-ADVISORY	807	1210.6	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_b013__physical_v1/attempt_15/geom
+hbm	q_b100	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b100__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b101	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b101_nw	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b102	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b102__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b103	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b103__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b110	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b110__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b111	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b111__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b112	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b112__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b113	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_b113__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_hub_ne	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_hub_nw	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_sm0	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_sm1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_sm2	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_sm3	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_spb0	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_spb0__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_spb2	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_spb2__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_spt0	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_spt0__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_spt1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_su00	2	prelint	LINT-ADVISORY	2009	2430.22	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su00/attempt_2/geom
+hbm	q_su00__physical_v1	2	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_su01	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_su01__physical_v1	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_su10	3	prelint	LINT-ADVISORY	54	1878.61	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su10/attempt_3/geom
+hbm	q_su10__physical_v1	3	prelint	LINT-ADVISORY	0	1886.68	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su10__physical_v1/attempt_3/geom
+hbm	q_su11	1	prelint	LINT-ADVISORY	341	2918.05	epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su11/geom
+hbm	q_su11__physical_v1	7	prelint	LINT-ADVISORY	809	2835.86	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su11__physical_v1/attempt_7/geom
+hbm	q_su20	1	prelint	LINT-ADVISORY	1351	2237.06	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su20/geom
+hbm	q_su20__physical_v1	1	prelint	LINT-ADVISORY	914	2328.21	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su20__physical_v1/geom
+hbm	q_su21	3	prelint	LINT-ADVISORY	44	1897.72	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su21/attempt_3/geom
+hbm	q_su21__physical_v1	3	prelint	LINT-ADVISORY	24	1583.33	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su21__physical_v1/attempt_3/geom
+hbm	q_su30	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	q_su30__physical_v1	12	prelint	LINT-ADVISORY	0	1870.34	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su30__physical_v1/attempt_12/geom
+hbm	q_su31	2	prelint	LINT-ADVISORY	318	2042.33	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su31/attempt_2/geom
+hbm	q_su31__physical_v1	2	prelint	LINT-ADVISORY	336	2400.19	epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/q_su31__physical_v1/attempt_2/geom
+hbm	root	None	prelint	LINT-ADVISORY	NA	NA	
+hbm	vsN0	None	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	sle_fe_v1__cl8210183c	2	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	sle_fw_v1__cl9d029624	2	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	sle_fw_v1__clf58b4dfb	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	sle_fw_v2__cl6740750e	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	sle_fw_v2__cl69f5e854	13	prelint	LINT-ADVISORY	2808	1196.26	epyc4:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/hcut1111/items/sle_fw_v2__cl69f5e854/attempt_13/geom
+qwen_compute	sle_fw_v3	None	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	sle_hc0__cl929603c0__cl38badc56	23	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	sle_su_c	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fe_v1__cl95cd1d0c	2	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fe_v1__clfe325744__cldb4efe33	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fe_v2__clf110fab2	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fw_v1__cl51d45468	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fw_v1__clf51c11d8__cl592e3d37	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fw_v1__clf51c11d8__clc7ddab13	16	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fw_v2__cl8537f156	8	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_fw_v2__cl8f84514c	8	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_su_c__cl19bb38ef	2	prelint	LINT-ADVISORY	NA	NA	
+qwen_compute	slw_su_c__cl92142dac	2	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_hub_C	12	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_hub_Ei	None	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_hub_Eo	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_hub_Wi	None	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_hub_Wo	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_pc__cl254f2e73	2	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_pc__cl5a95b461	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_pc_v1__cl23f6a148	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_pc_v1__cl4ea58a5c	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_pc_v1__cl7f648944	1	prelint	LINT-ADVISORY	NA	NA	
+qwen_kvsys	kv3_pc_v3	1	prelint	LINT-ADVISORY	NA	NA	
+s81	eng__t1	None	prelint	LINT-ADVISORY	NA	NA	
+s81	gunit__t1	13	prelint	LINT-ADVISORY	NA	NA	
+s81	slice_station__t51	None	prelint	LINT-ADVISORY	NA	NA	

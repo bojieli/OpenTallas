@@ -14,4 +14,7 @@ kit_source_station_pricing ON; fix verify to use the LATCHECK-1 station source; 
   aside in OUT as verify_merged/, verify_report.json_merged, lint_merged/. Log verify_vp1.log, run_vp1.out (VERIFY_VP1_RC).
 - Pass criteria: kit_source_credit.raw_mismatched_credited_match == 3966, raw_matched_credited_mismatch == 0, mismatched 0;
   only the 2 leaf__t3 CLOCK_LANDING reset rows remain (ruled functional, separate).
+- Run 1 OOM-killed 04:15 UTC in lint (memcg 230 GiB, peak 230). Fix 376cb98e4b frees bind_sinks + credit cache before lint.
+  Run 2: bin/run_verify_vp1b.sh under ot-heavy --mem 260 (started 11:1x UTC 11-13), log verify_vp1b.log, run_vp1b.out.
+  Session restarted 11-13; no READY posted yet.
 - Next: on result -> push branch, READY to COORD, stop.
