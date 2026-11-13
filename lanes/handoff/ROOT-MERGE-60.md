@@ -95,3 +95,6 @@ In progress: train 16 = DIE-QC-100 qc-d2d-related-1112@6a2b2c7e2d3 (approved), g
 ## NEWEST 4 (main 91a4101f1877) -- trains 16 and 17 landed
 Train 16 -> e97dc7dd5f04f6cee80bf92cb0f83385e0735520 (DIE-QC-100 qc-d2d-related 6a2b2c7e2d3). Train 17 -> 91a4101f18770ec87a06d23e3b81ed63c48b3e60 (KW-FIX-46 verdictform adc8613297c0). Tags read back OK: flow-20261112-{mp-head,nq-qc,mk-kv,op-s81,pm-hbm} and {mq-head,nr-qc,ml-kv,oq-s81,pn-hbm}. NEXT FREE TAGS: mr-head,ns-qc,mm-kv,or-s81,po-hbm (ls-remote first).
 No open approved branches. KW-FIX-46 owns the live kit_wave.py deploy (intel2 /tmp/kw46_deploy_fr.sh): do NOT deploy it myself (COORD). Poller: keep a Monitor loop on the line count of lanes/COORD-REVIEW-QUEUE.md grepping ROOT-MERGE|APPROVED. Note for changed tests that fail to import only in the big xdist run (e.g. tools/qwen_tp8/test_source_clock_contract.py, die_clock name clash): run the changed file alone on tip and main and report both.
+
+## NEWEST 5 (main 14685c8552d3, ROOT-MERGE-61) -- train 18 landed
+Train 18 -> 14685c8552d3b38eebac201ef24de6192e4f367e (REACH-FIX-2 reach-fix-2-main 39e04ecad5; gate t23 in epyc8 wt/, 42 failed identical both sides). Tags read back OK: flow-20261112-{mr-head,ns-qc,mm-kv,or-s81,po-hbm}. NEXT FREE TAGS: ms-head,nt-qc,mn-kv,os-s81,pp-hbm (ls-remote first). No open approved branches; no pollers started by ROOT-MERGE-61.
