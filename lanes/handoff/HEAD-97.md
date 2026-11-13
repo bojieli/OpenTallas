@@ -92,3 +92,10 @@ Scope: (1) NEAR-MISS ECO on routed DB (hd_turn_a 89228387ea15; hd_turn_b 9098341
 - Reset: remap_start.py (local copy; ONLY/SKIP filter; rr_t raw copies follow their leaf). Pass 1: OLD=rp21e for hd_host_e. Pass 2: OLD=rp20a for the rest. Then head_reset_exports_rp21.py (offset fallback, 2 exports 1 cycle earlier: tile raw_0, eshim_tx raw_0).
 - Last fail fixed: one hd_tile die_island collapsed to zero width under the endpoint map. Islands now move as a whole. Kits pending: launch with ot-run --hosts epyc7 like h97_launch2.sh, but on kits21.
 - Posted: STATE, RESULT (plan gates rp21j), CORRECTION (DRT-0255 location uses 1000 DBU). ASKed COORD about the die clock gate re-run and hd_mesh / hd_ctl streets.
+
+## 2026-11-13 10:57 rp21x builds in flight (epyc7 ot-run, launched from intel2 /tmp/h97_launch3.sh; logs intel2 ~/tmp/h97_k21_<type>.log)
+- 8 types run from kits21: plan pd/rp21x_k21.json, sha 4efb51aa4843.
+- hd_mesh runs from kits21m: plan pd/rp21x.json, sha b1d07e3e127e. It adds mesh_relayout.py (lanes stacked mid-height); the other types are unchanged.
+- prep21.sh now takes PW/PO/PT env (prep dir, kit dir, types). Do NOT rm kits21 while builds run.
+- rp20 builds still running in kits20b: host_w, mesh, spn, spn_end. Post one RESULT per type.
+- hd_spn: proposed to COORD to keep the form (stations exist already); waiting on the reply.
