@@ -343,6 +343,19 @@ class ReaperTracked(T.Base):
         self.assertIsNone(self.pr(os.path.dirname(p), "protected-dbs.txt [protected]"))
         self.assertIsNotNone(self.pr(p, "protected-dbs.txt [counted]", ok=False))   # flag off: unchanged
 
+    def test_export_marker_is_not_dirt(self):
+        p = os.path.join(self.wt, "physical/views")
+        with open(os.path.join(p, "ARCHIVED.json"), "w") as f:
+            f.write("{}")
+        self.assertIsNone(self.pr(p, "protected-dbs.txt [counted]"))
+        real, junk = wr.dirt(self.wt, True)
+        self.assertEqual(real, [])
+        self.assertEqual(len(wr.dirt(self.wt, False)[0]), 1)       # flag off: unchanged
+        with open(os.path.join(p, "other.json"), "w") as f:
+            f.write("{}")
+        wr.tracked_clean.cache_clear()
+        self.assertIsNotNone(self.pr(p, "protected-dbs.txt [counted]"))
+
     def test_kitwave_and_localkeep_rows_still_pin(self):
         p = os.path.join(self.wt, "physical/views/v.json")
         for o in ("protected-dbs.txt [kitwave]", "protected-dbs.txt [localkeep]", "kit_wave.txt", "protected-dbs.txt"):

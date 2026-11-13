@@ -455,7 +455,11 @@ def tracked_clean(wt, rel):
     if r.returncode != 0 or not r.stdout.strip("\0"):
         return False
     r = git(wt, "status", "--porcelain", "--ignored", "--untracked-files=all", "--", rel, timeout=300)
-    return r.returncode == 0 and not r.stdout.strip()
+    if r.returncode != 0:
+        return False
+    # the archive drive's verified-export marker (untracked ARCHIVED.json / STUBBED.json) is not lane data
+    return not [l for l in r.stdout.splitlines() if l.strip()
+                and not (l.startswith(("?? ", "!! ")) and EXPORT_MARKER_RE.search(l[3:].strip('"')))]
 
 
 UNION_KINDS = ("protected", "counted", "kitwave", "localkeep")
@@ -550,13 +554,19 @@ def recently_modified(wt, admin, hours, timeout=900):
     return None
 
 
-def dirt(wt):
-    """(real_lines, junk_lines) of `git status --porcelain`, or (None, err)"""
+EXPORT_MARKER_RE = re.compile(r"(^|/)(ARCHIVED|STUBBED)\.json$")   # ot-autoclean's verified-export markers (CLEAN-2)
+
+
+def dirt(wt, markers_ok=False):
+    """(real_lines, junk_lines) of `git status --porcelain`, or (None, err).  markers_ok (CLEAN-2 --tracked-ok): an
+    untracked ARCHIVED.json / STUBBED.json (the archive drive's marker that the signed unit has a verified AGIdock copy)
+    counts as junk, not as lane work"""
     r = git(wt, "status", "--porcelain", "--untracked-files=all")
     if r.returncode != 0:
         return None, (r.stderr.strip() or "git status failed")[:160]
     lines = [l for l in r.stdout.splitlines() if l.strip()]
-    junk = [l for l in lines if JUNK_RE.search(l[3:].strip('"'))]
+    junk = [l for l in lines if JUNK_RE.search(l[3:].strip('"'))
+            or (markers_ok and l.startswith("?? ") and EXPORT_MARKER_RE.search(l[3:].strip('"')))]
     return [l for l in lines if l not in junk], junk
 
 
@@ -673,7 +683,7 @@ def evaluate(wt, admin, common, refs, a):
     busy = recently_modified(wt, admin, a.idle_h, timeout=a.find_timeout)
     if busy:
         return "KEEP", busy, info
-    real, junk = dirt(wt)
+    real, junk = dirt(wt, getattr(a, "tracked_ok", False))
     if real is None:
         return "KEEP", "git status: " + junk, info
     if real:
