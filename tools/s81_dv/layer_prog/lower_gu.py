@@ -94,9 +94,47 @@ HC_LAT_N, HC_LAT_S = HC_LAT_BASE_N + hc_form_delta(), HC_LAT_BASE_S + hc_form_de
 # TOK-ALL-16 10-27: re-measured on current main (gunit parent with the bound native-32 L5 127356adf2 + 10-24 pin-register
 # stations; identical with and without the GUNIT_* defines): HC 759/757 -> 1018/1016 (+259), router ids 68/66 -> 50/48
 # (-18), RW_GAP 121 -> 101; every value bit-exact (results/token_pass/tok16_dsl0_1027/gu)
-RT_LAT_N, RT_LAT_S = 62, 60     # -> ids row on vo_n / vo_s (S81-CORE-LAT-R17: +1, l1c order sort CPS 3 -> 2;
-#                                  S81-RF1 11-03: +12, l1c RE-FORM RF 1 = one exchange per stage, 4 accumulators)
-RW_GAP = 101                    # ids row -> first weights row on the same port (L3 ot_s81_su_rw, measured)
+RT_LAT_BASE_N, RT_LAT_BASE_S = 62, 60  # -> ids row on vo_n / vo_s with the bf core in form gf2 (no bf define)
+#                                  (S81-CORE-LAT-R17: +1, l1c order sort CPS 3 -> 2; S81-RF1 11-03: +12, l1c RE-FORM RF 1 =
+#                                  one exchange per stage, 4 accumulators)
+# DIE-S81-89 11-13: like HC_LAT, the router latency follows the FORM of record of the hard core dsdv_gunit_l1f_bf (its
+# recipe defines, physical/die_plan/s81/cores/legacy/recipes.json): whichever bf view binds carries its schedule (no second
+# edit).  Every bf output o_* (-> u_l1c -> u_l1 -> ids row on vo_n / vo_s) moves by the define's delta; the gather reply
+# moves with it. The weight path traverses bf again after IDs, so RW_GAP also adds the form delta.
+# No die lane (plan latency.lanes) changes (GUNIT-CORE-1 11-13 trace).
+#   OT_GUNIT_BF_M1REG  gf3: u_m1 first exchange registered (c1r)                    +1  (DIE-S81-80 11-08)
+#   OT_GUNIT_BF_C1REG  gf4: fold / candidate compares registered at the compare site +1  (GUNIT-CORE-1 11-13)
+# run_gu_bench.sh compiles the bench with the same define set (bf_defines()) and asserts the total.  An OT_GUNIT_BF_*
+# define without a row here fails closed: a new bf form adds its row with the delta its bench measures.
+RT_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1))
+BF_RECIPE = 'physical/die_plan/s81/cores/legacy/recipes.json'
+BF_CORE = 'dsdv_gunit_l1f_bf'
+BF_DEFINES_ENV = 'OT_GUNIT_BF_DEFINES'   # bench / what-if override: comma or space separated, "" = gf2 (no define)
+
+
+def bf_defines(recipes=None):
+    """the define set of the bf form of record: $OT_GUNIT_BF_DEFINES if set, else recipes.json[dsdv_gunit_l1f_bf].defines"""
+    import os
+    ov = os.environ.get(BF_DEFINES_ENV)
+    if ov is not None:
+        return tuple(sorted(d for d in re.split(r'[\s,]+', ov) if d))
+    f = Path(recipes) if recipes else Path(__file__).resolve().parents[3] / BF_RECIPE
+    return tuple(sorted(json.loads(f.read_text())[BF_CORE].get('defines', [])))
+
+
+def rt_form_delta(defines=None):
+    """sum of the router latency deltas of the bf define set (default: the form of record); unknown bf define -> raise"""
+    defs = bf_defines() if defines is None else tuple(defines)
+    known = dict(RT_FORM_DELTAS)
+    bad = [d for d in defs if d.startswith('OT_GUNIT_BF_') and d not in known]
+    if bad:
+        raise ValueError(f'{BF_CORE} define(s) {bad} have no RT_FORM_DELTAS row (measure the form with run_gu_bench.sh)')
+    return sum(known.get(d, 0) for d in defs)
+
+
+RT_LAT_N, RT_LAT_S = RT_LAT_BASE_N + rt_form_delta(), RT_LAT_BASE_S + rt_form_delta()
+RW_GAP_BASE = 101               # gf2 IDs -> first weights row (L3 ot_s81_su_rw, measured)
+RW_GAP = RW_GAP_BASE + rt_form_delta()  # feedback weight path crosses bf once more; gf3 102, gf4 103
 import sys as _sys                                  # noqa: E402
 _sys.path.insert(0, str(Path(__file__).resolve().parent))
 from leaf_rows import GU_ROWS                       # noqa: E402  (TOK-S81-GAPS/GU: the allocated leaf-store rows)
@@ -369,7 +407,7 @@ def lower(die, op, ctx):
                                           tag=f'ffn.router.{tag}', payload=f'row {row + dr}'))
         res['files']['prog/gu/ffn.router.plan.json'] = json.dumps(dict(
             t_issue=issue, t_sc0=t0, t_last_sc=tl, set=set_, row=row, ne=NE, sid_gunit=sid_gu, cw_age=cw_age,
-            rw_gap=RW_GAP, beats=plan), indent=0) + '\n'
+            rw_gap=RW_GAP, rt_lat=[RT_LAT_N, RT_LAT_S], bf_defines=list(bf_defines()), beats=plan), indent=0) + '\n'
         err = encode(res, ctx.get('fixtures'), sid_gu, row)
         if err:
             res['encode_gap'] = err
@@ -377,3 +415,8 @@ def lower(die, op, ctx):
         res['note'] = 'the gunit emits the 6 ids in id order (top6_order); the rank order is not materialised (consumers use id order)'
     res['deps'].append('allgathered sqrt(softplus) scores as SC beats (vs RA + xr SC relay) at the sc_plan edges')
     return res
+
+
+if __name__ == '__main__':      # run_gu_bench.sh: the bf define set + router latency this lowering schedules
+    print(json.dumps(dict(bf_defines=list(bf_defines()), rt_lat=[RT_LAT_N, RT_LAT_S], rt_lat_base=[RT_LAT_BASE_N, RT_LAT_BASE_S],
+                          hc_lat=[HC_LAT_N, HC_LAT_S], rw_gap=RW_GAP)))
