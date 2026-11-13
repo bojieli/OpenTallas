@@ -303,6 +303,17 @@ def core_tap_reach_rows(kit):
         for row in json.loads(cfg.read_text()).get('rows', []):
             if row.get('physical_inst') and row.get('physical_master'):
                 masters[row['physical_inst']] = row['physical_master']
+    cl = kit/'core_latency.json'
+    if cl.is_file():
+        # HEAD-97 11-13: a kit without bound_macro_paths.json still names each hard core's module in core_latency.json;
+        # without it the core box had size 0 (its origin point), so the distance was measured to the core's corner
+        # (hd_lep0N: 437-989 um reported, 40-120 um real)
+        try:
+            for row in json.loads(cl.read_text()).get('rows', []):
+                if row.get('inst') and row.get('module'):
+                    masters.setdefault(row['inst'], row['module'])
+        except (ValueError, AttributeError):
+            pass
     boxes = {}
     for m in _PLACE_MACRO.finditer(mp.read_text()):
         inst, x, y, orient = m.group(1).replace('\\', ''), float(m.group(2)), float(m.group(3)), m.group(4) or 'R0'
