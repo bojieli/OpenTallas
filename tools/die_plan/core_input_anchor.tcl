@@ -3,11 +3,48 @@
 # registers), released to PLACED for DPL by face_flops_release.tcl (names appended to ot_face_flops.txt).  The long
 # fabric wire then lands on the pipeline register (full cycle) and reg -> latch -> NK pin is a few-um hop.
 set nka_blk [ord::get_db_block]
-set nka_lat 0; set nka_reg 0; set nka_miss 0
+set nka_lat 0; set nka_reg 0; set nka_miss 0; set nka_pipe_miss 0
 set nka_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 proc nka_place {inst x y} {
   $inst setLocation $x $y
   $inst setPlacementStatus FIRM
+}
+# Discover the complete bounded fanin before moving anything. Yosys' QN
+# inverter can have a generic name: only unary BUF/INV masters are transparent,
+# and the terminal DFF must still be the named NK pipeline register. Reset
+# latch fanin and unrelated logic therefore produce no placement side effects.
+proc nka_pipe_chain {net {limit 6}} {
+  set chain {}; set seen_nets {}; set seen_insts {}
+  for {set hop 0} {$hop < $limit} {incr hop} {
+    if {$net eq "" || $net eq "NULL" || [dict exists $seen_nets $net]} { return {} }
+    dict set seen_nets $net 1
+    set drivers {}
+    foreach it [$net getITerms] {
+      if {[[$it getMTerm] getIoType] eq "OUTPUT"} { lappend drivers [$it getInst] }
+    }
+    if {[llength $drivers] != 1} { return {} }
+    set drv [lindex $drivers 0]
+    if {[dict exists $seen_insts $drv]} { return {} }
+    dict set seen_insts $drv 1
+    set mn [[$drv getMaster] getName]
+    if {[regexp {^(DFF|SDF)} $mn]} {
+      if {![regexp {u_pc_nk_} [$drv getName]]} { return {} }
+      lappend chain $drv
+      return $chain
+    }
+    if {![regexp {^(BUF|INV)} $mn]} { return {} }
+    set inputs {}
+    foreach it [$drv getITerms] {
+      if {[[$it getMTerm] getIoType] eq "INPUT"} {
+        set n [$it getNet]
+        if {$n ne "" && $n ne "NULL"} { lappend inputs $n }
+      }
+    }
+    if {[llength $inputs] != 1} { return {} }
+    lappend chain $drv
+    set net [lindex $inputs 0]
+  }
+  return {}
 }
 foreach inst [$nka_blk getInsts] {
   set nm [$inst getName]
@@ -39,19 +76,14 @@ foreach inst [$nka_blk getInsts] {
   } elseif {$m == $dy0} { set lx $px; set ly [expr {[$mb yMin] - $g}]; set rx $px; set ry [expr {[$mb yMin] - $g2}]
   } else { set lx $px; set ly [expr {[$mb yMax] + $g}]; set rx $px; set ry [expr {[$mb yMax] + $g2}] }
   nka_place $inst $lx $ly; puts $nka_out $nm; incr nka_lat
-  # walk back from the latch D through the QN inverter / buffers of the pipe register to the flop itself and anchor
-  # every cell on the way (pilot6 anchored only the QN inverter: the DFF stayed at its source, 1.3 ns reg->latch wire)
-  set net $dn; set hops 0
-  while {$net ne "" && $net ne "NULL" && $hops < 6} {
-    set drv ""
-    foreach it [$net getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT"} { set drv [$it getInst] } }
-    if {$drv eq "" || ![regexp {u_pc_nk_} [$drv getName]]} break
-    nka_place $drv $rx $ry; puts $nka_out [$drv getName]; incr hops
-    set mn [[$drv getMaster] getName]
-    if {[regexp {^(DFF|SDF)} $mn]} { incr nka_reg; break }
-    set net ""
-    foreach it [$drv getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT" && [$it getNet] ne "NULL"} { set net [$it getNet] } }
+  set chain [nka_pipe_chain $dn]
+  if {![llength $chain]} { incr nka_pipe_miss; continue }
+  foreach drv $chain {
+    nka_place $drv $rx $ry
+    puts $nka_out [$drv getName]
   }
+  incr nka_reg
+
 }
 close $nka_out
-puts "OT_NK_ANCHOR latches $nka_lat pipe_regs $nka_reg unresolved $nka_miss (FIRM outside their NK pin; released for DPL)"
+puts "OT_NK_ANCHOR latches $nka_lat pipe_regs $nka_reg unresolved $nka_miss pipe_unresolved $nka_pipe_miss (FIRM outside their NK pin; released for DPL)"
