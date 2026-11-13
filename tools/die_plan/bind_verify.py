@@ -6,6 +6,8 @@ the inserted cells as transport (ot_dp_st boundary flops / stations, ot_dp_dly k
 ot_reset_sync as the partition reset (the bind's own synchroniser; an as-built leaf ot_reset_sync the bind kept -- a
 bind_names.json path -- stays a leaf, its outputs are compared as pins: DIE-S81-30 10-29).  Each as-built leaf input bit (DIR/bind_sinks.json) must see:
   * the same driver pin (as-built path.port[bit]) -- intra-partition with the same stage count, crossing with 2;
+    with asbuilt kit_source_station_pricing on, a crossing's bound count is credited with the source-kit stations
+    the bind priced but left to the source kit (KitSourceCredit; LATCHECK-1's station source);
   * a fault-OR with the same set of source pins;
   * the partition clock of the same domain / the partition's synchronised reset.
 Sinks or sources inside a dissolved parent's glue are counted (not matched by name: Yosys renames glue cells).
@@ -20,7 +22,7 @@ import subprocess
 from pathlib import Path
 
 import bind_elab as E
-from bind import Binder, Graph, Rules, load_plan, sv_id  # noqa: F401
+from bind import Binder, Graph, Rules, _tmap, load_plan, sv_id  # noqa: F401
 
 VERIFY_RULES = {
     "transport": [
@@ -530,6 +532,89 @@ def set_count_aligned_transport(graph,stages):
         graph.spec[ci]=spec
 
 
+class KitSourceCredit:
+    """VERIFY-PRICING-1 11-12: kit source stations a kit_source_station_pricing bind priced but did not emit.
+
+    With asbuilt kit_source_station_pricing on, the bind takes a lane's source-kit stations out of the receiver pad
+    (native_istations.annotate_kit: internal_kit_source_cycles) because the SOURCE kit inserts them (kit_istations
+    u_ist_<o>_<j> before u_bout_<o>); bind_sinks.json still carries the full lane depth.  The bound RTL is therefore
+    short by exactly that count on every sink whose path passes the lane's source face u_bout_<o>.  cuts:
+    {(source partition, bus_out): (n, lane)} from lane_asbuilt_latency.source_cuts (LATCHECK-1's station source), so
+    verify credits the same stations the as-built lane check counts.  credit(net) = the summed cuts of every cut
+    u_bout_<o> on the transport chain that drives net (forwarded buses cross more than one); 0 when cuts is empty
+    (switch off: the receiver pad holds them, nothing is credited)."""
+
+    def __init__(self, G, cuts):
+        self.G = G
+        want = {f"{sv_id(p)}.u_bout_{sv_id(b)}": (n, lane) for (p, b), (n, lane) in cuts.items()}
+        self.cells = {}                     # ci -> cut
+        self.lane_of = {}                   # ci -> lane
+        found = set()
+        for ci, c in enumerate(G.F.cells):
+            if G.kind[ci] != "transport":
+                continue
+            k = ".".join(c.path.split(".")[-2:])
+            if k in want:
+                self.cells[ci], self.lane_of[ci] = want[k]
+                found.add(k)
+        self.unmatched = sorted(set(want) - found)   # a priced source face the bound netlist does not have
+        self._memo = {}
+
+    def credit(self, net):
+        """-> (stations, [lanes]) credited on the transport chain driving net"""
+        if not self.cells:
+            return 0, ()
+        walk = []
+        G = self.G
+        base = (0, ())
+        for _ in range(100000):
+            if isinstance(net, str):
+                break
+            if net in self._memo:
+                base = self._memo[net]
+                break
+            ds = G.drv.get(net, [])
+            if len(ds) != 1 or net in G.F.const_drivers:
+                break
+            ci, pn, bit = ds[0]
+            if G.kind[ci] != "transport":
+                break
+            sp = G.spec[ci]
+            ip = _tmap(sp, pn)
+            if ip is None:
+                break
+            ib = G.F.cells[ci].ports[ip]
+            if sp.get("replicate") and ib:
+                bit = bit % len(ib)
+            walk.append((net, ci))
+            net = ib[bit] if bit < len(ib) else "z"
+        n, lanes = base
+        for nt, ci in reversed(walk):
+            if ci in self.cells:
+                n, lanes = n + self.cells[ci], tuple(lanes) + (self.lane_of[ci],)
+            self._memo[nt] = (n, lanes)
+        return n, lanes
+
+    def adjust(self, s, got, net):
+        """a non-glue pin source's described stage count + the credited stations -> (got, credit, raw got, lanes)"""
+        if not self.cells or s[0] != "pin" or got[3]:
+            return got, 0, None, ()
+        kc, lanes = self.credit(net)
+        if not kc:
+            return got, 0, None, ()
+        return got[:2] + [got[2] + kc] + got[3:], kc, got, lanes
+
+
+def kit_source_cuts(out, raw):
+    """{(source partition, bus_out): (n, lane)} of a bind dir made with raw['asbuilt'] kit_source_station_pricing"""
+    sel = raw["asbuilt"].get("kit_source_station_pricing")
+    if not sel:
+        return {}
+    import lane_asbuilt_latency as LAL
+    rows, module_of, ptype_of, types, _land, _pm = LAL.load_bind_dir(out, raw)
+    return LAL.source_cuts(raw, rows, module_of, ptype_of, types, sel)
+
+
 def native_lib_stubs(lib, vdir):
     """Interface-only leaf stubs for the NATIVE Yosys verify read.
 
@@ -679,6 +764,14 @@ def cmd_verify(a):
     cnt = dict(compared=0, matched=0, mismatched=0, glue_unmatched=0, unbound=0, tied=0, undriven=0, multiply_driven=0, plan_driven=0)
     mism, tied_ex = [], []
     seen = set()
+    # VERIFY-PRICING-1: kit source stations priced in the lane but inserted later by the source kit (switch on only)
+    kcuts = kit_source_cuts(out, raw)
+    kit = KitSourceCredit(G, kcuts)
+    kstat = dict(pricing=raw["asbuilt"].get("kit_source_station_pricing", False), lanes_priced=len(kcuts),
+                 stations_priced=sum(n for n, _ in kcuts.values()), faces_unmatched=kit.unmatched[:50],
+                 n_faces_unmatched=len(kit.unmatched), sinks=0, raw_mismatched_credited_match=0,
+                 raw_matched_credited_mismatch=0, mismatched_both=0, matched_both=0, by_lane={},
+                 cut_by_lane={lane: n for n, lane in kcuts.values()})
     for ci, c in enumerate(F.cells):
         if G.kind[ci] in ("transport", "reducer", "source", "glue"):
             continue
@@ -698,6 +791,11 @@ def cmd_verify(a):
                 original=landing_verify.observer_input(c,pn,i) if landing_verify else None
                 s = G.source(original if original is not None else b)
                 got = gdesc(s)
+                got, kc, raw_got, klanes = kit.adjust(s, got, original if original is not None else b)
+                if kc:
+                    kstat["sinks"] += 1
+                    for ln in klanes:
+                        kstat["by_lane"][ln] = kstat["by_lane"].get(ln, 0) + 1
                 if got[0] in ("undriven", "dropped"):
                     cnt["undriven"] += 1
                     cnt["unbound"] += 1
@@ -741,12 +839,17 @@ def cmd_verify(a):
                     if part in regions and got==['clk','region_'+sv_id(regions[part])]:
                         got=want  # exact region clock proved against this actual leaf partition
                 ok = want[:3] == got[:3] if want[0] == "pin" else want == got
+                if kc:
+                    raw_ok = want[:3] == raw_got[:3] if want[0] == "pin" else want == raw_got
+                    kstat["raw_mismatched_credited_match" if ok and not raw_ok else
+                          "raw_matched_credited_mismatch" if raw_ok and not ok else
+                          "matched_both" if ok else "mismatched_both"] += 1
                 if ok:
                     cnt["matched"] += 1
                 else:
                     cnt["mismatched"] += 1
                     if len(mism) < 200:
-                        mism.append((key, want, got))
+                        mism.append((key, want, got) + ((dict(kit_source_credit=kc, raw=raw_got),) if kc else ()))
     cnt["pipe_declared"] = cnt_pipe   # sinks compared with a declared +D core-input pipe (bind_core_input_pipe.json)
     missing = sorted(set(names.values()) - seen)
     # lint: the bound RTL plus the full RTL closure of every leaf master (unchanged as-built sources)
@@ -770,14 +873,15 @@ def cmd_verify(a):
     landing_result=landing_verify.report() if landing_verify else None
     if landing_result:errs.extend('CLOCK_LANDING '+e for e in landing_result['errors'])
     v = dict(clock_landing=landing_result,top=top, cells=len(F.cells), leaves_missing=len(missing), leaves_missing_examples=missing[:20],
-             counts=cnt, mismatches=mism[:200], tied_examples=tied_ex, graph_errors=errs[:50], lint=lt,
+             counts=cnt, kit_source_credit=kstat, mismatches=mism[:200], tied_examples=tied_ex, graph_errors=errs[:50], lint=lt,
              asbuilt_proof=rep["proof"], asbuilt_errors=rep["n_errors"])
     ok = (cnt["mismatched"] == 0 and cnt["unbound"] == 0 and cnt["tied"] == 0 and cnt["multiply_driven"] == 0 and
           not missing and not errs and rep["n_errors"] == 0 and (not lt.get("ran") or lt.get("errors") == 0))
     v["verdict"] = "PASS" if ok else "FAIL"
     (out / "verify_report.json").write_text(json.dumps(v, indent=1))
     print(json.dumps(dict(verdict=v["verdict"], **cnt, leaves_missing=len(missing), lint=lt.get("errors"),
-                          asbuilt_errors=rep["n_errors"])))
+                          asbuilt_errors=rep["n_errors"], kit_source_credited=kstat["sinks"],
+                          kit_source_lanes=kstat["lanes_priced"])))
     for m in mism[:10]:
         print("  ", m)
     return 0 if ok else 1
