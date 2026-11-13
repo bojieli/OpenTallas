@@ -1,28 +1,22 @@
-# S81-R12BA-FIN handoff (narrow successor of DIE-S81-88; only job: post S81 ready12b-A tonight, then stop)
+# S81-R12BA-FIN handoff (narrow successor of DIE-S81-88; job: post S81 ready12b-A, then stop) -- STOPPED
 
-Updated: 18:0x PST 11-12.
+Updated: 19:3x PST 11-12.
 
-## State
-- LATCHECK-1 (COORD 17:1x): switch-ON bind out_r12bA_ist (plan af9967df9f89 = c9f88 + B5) still had 19 UNPRICED_KIT_STATIONS
-  lanes (receiver kit IN stations, receiver pad 0). The ist verify was moot and was stopped (exact PIDs 3910744/56483 + children).
-- B6 = tools/die_plan/stage_kit_source_table_refresh.py --dest (branch claude/s81-r12ba-fin-1112 @9489114321, worktree
-  epyc8 /srv/opentallas-scratch2/claude/wt/s81-r12ba-fin, +9 tests, 16 pass). af9967df9f89 -> 18c864518844, 19 lanes, +21
-  cycles, selection == LATCHECK-1 FAIL set (19/19). Receipt epyc8 s81-r12ba-fin/r6_kdst.json.
-- Final rebind: epyc8 /srv/opentallas-scratch2/claude/s81-r12ba-fin/bin/run_r12bA_dst.sh (ot-heavy --mem 230): G0, strict bind,
-  LATCHECK CLI (must be 0), copy OUT -> out_r12bA_dst_main + launch run_verify_main_dst.sh (ot-heavy --mem 200, main 14685c8552d3
-  tools via git archive in main_tools/), then merged-tools verify. Log run_dst.out; logs g0dst.log, bind_dst.log, lc/dst.log,
-  verify_dst.log, verify_main_dst.log.
-- Token: reform_rebaseline --die s81 base plan_r12bA3 (c9f88) vs s6_kdst -> s81-r12ba-fin/tok_dst.log / tok_dst_vs_A3.json.
-- Verify OOM fix: lint parallelism = asbuilt lint_jobs (6 in asbuilt_ist); memory bounded by ot-heavy --mem >= 6x23+26 GB.
+## Done
+- PLAN EVENT (READY except verify) + ASK posted to COORD (queue). Default (a): post as is; verify classes to tool lanes.
+- Plan 18c864518844 = ready12ng + B1 lfcs + B2 tapwin + B3 band + B3b sidecar sync (c9f88) + B5 kit source refresh (22 lanes)
+  + B6 kit dest refresh (19 lanes, LATCHECK-1 set). Asbuilt asbuilt_ist.json f969c08b916e (kit_source_station_pricing ON).
+- Package: origin claude/s81-ready12bA-1112@cdeca6e28c79 (off main 66e6607e3f), events/s81_ready12bA_1112/ (record.json).
+- Tool branch: origin claude/s81-r12ba-fin-1112@9489114321 (stage_kit_source_table_refresh --dest + 9 tests) - needs approval/merge.
+- Gates: G0 74 = base (0 lat/reset rows); strict bind 0; LATCHECK-1 873/873; token AR 842.8 / MTP 2713.5 unchanged.
+- Merged verify FAIL: (1) 3966 depth mismatches = kit source stations not counted by bind_verify under the switch (tool gap,
+  all dies); (2) 2 CLOCK_LANDING reset-contract rows s_0S_L1 (leaf__t3) rst_rl_283/284, pre-existing in c9f88 (same in GEN-CLASS-1 out_t45).
+- Main-tools verify (14685c8552d3) NOT run (chained on merged PASS). Must run IN PLACE on out_r12bA_dst (bind.f has absolute
+  OUT paths): epyc8 s81-r12ba-fin/bin/run_verify_main_dst2.sh (it refuses unless run_dst.out has VERIFY_RC=0; edit that guard
+  if COORD accepts (a)). Tree bsrc_verify_main_dst ready.
 
-## Results so far (18:0x)
-- G0 74 = base (identical msgs), 0 latency/reset rows. Strict bind rc 0. LATCHECK-1 CLI as-bound 873/873 PASS.
-- Token: 41 lanes +52 cycles max +2; AR 842.8 / MTP 2713.5 unchanged (epyc9 s81-r12ba-fin/tok_dst.log).
-- Re-kit: 71 bound modules differ vs m2 (s81-r12ba-fin/rtl_changed_vs_m2.json); signed slice_station t45/t47 unchanged.
-- Both verifies running in parallel (merged in run_dst scope --mem 230; main 14685c in its own --mem 200 scope).
-- Package staged (not yet committed): epyc8 wt/s81-r12ba-pkg (branch claude/s81-ready12bA-1112 off origin/main 66e6607e3f,
-  sparse), events/s81_ready12bA_1112/ (13 MB, max file 10.6 MB plan gz) + record.json. Add verify reports, commit, push, post.
-
-## Next
-1. When verifies + LATCHECK 0 pass: package plan branch off origin/main (no file > 95 MB), post READY + plan event with open list.
-2. Report to COORD and stop.
+## Files (epyc8 /srv/opentallas-scratch2/claude/s81-r12ba-fin)
+- out_r12bA_dst (bind + verify_report.json), bsrc_r12bA_dst, g0dst, lc/dst.tsv, run_dst.out, bind_dst.log, verify_dst.log,
+  rtl_changed_vs_m2.json (71 modules), r6_kdst.json, s6_kdst.json. Token: epyc9 same dir tok_dst.log.
+- out_r12bA_dst_main = useless copy (6.5 GB), safe to delete (not a link). Worktrees: wt/s81-r12ba-fin, wt/s81-r12ba-pkg (sparse).
+- Stopped by exact PID: the moot out_r12bA_ist verify (run_r12bA_ist.sh) and my duplicate m2 baseline verify.
