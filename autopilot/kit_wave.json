@@ -33503,7 +33503,8 @@
     "FIX",
     "REVIEW",
     "KIT-PLACED",
-    "GEOM-REQ"
+    "GEOM-REQ",
+    "SIGNED-UNVERSIONED"
    ],
    "lane": "KIT-WAVE-3",
    "die_max_inflight": 60,
@@ -34091,7 +34092,8 @@
     "q_b002": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_b013": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_b013__physical_v1": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
-    "q_su21__physical_v1": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept"
+    "q_su21__physical_v1": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
+    "q_spt2": "KIT-OPS-1 2026-11-13 02:58: COORD 11-13: q_spt2 signed, pEv10/pEv11c do not change it, no rebuild (held because take_states now includes SIGNED-UNVERSIONED for the pEv11c xtap types q_spb1/vsN1)"
    },
    "gen_hosts": [
     "epyc9",
@@ -34401,7 +34403,10 @@
     "ot_hgi_sfu_opsa_group0@3": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
     "ot_hgi_sfu_programme_store_r10@12": "REDESIGN: M8-WAVE-1 11-12 COORD 00:5x: leftover-M8 grant (OT_GEN_M8_GRANT=1, 14f492184f in main 7b84010b1c6e) relaunch of the GRT-overflow FAIL",
     "PHY_NC@3": "FLOW-FIX: c87611d612d9 (phy-core-area, main 850367dbc41c train 13; gen_phys.py swapped in src_hbm_main_9fc09952cd_q0g_p18 on epyc7/9/8/2, KW-FIX-46 11-12)",
-    "PHY_NE@5": "FLOW-FIX: c87611d612d9 (phy-core-area, main 850367dbc41c train 13; gen_phys.py swapped in src_hbm_main_9fc09952cd_q0g_p18 on epyc7/9/8/2, KW-FIX-46 11-12)"
+    "PHY_NE@5": "FLOW-FIX: c87611d612d9 (phy-core-area, main 850367dbc41c train 13; gen_phys.py swapped in src_hbm_main_9fc09952cd_q0g_p18 on epyc7/9/8/2, KW-FIX-46 11-12)",
+    "q_spb1@5": "REDESIGN: KIT-OPS-1 2026-11-13 02:58: pEv11c (train 33, plan c9ac33aeb09c) changes clock.ft_hop_lockup.tap of this type (capture-tap latches, HBM-VSN-XTAP form A'); DIE-HBM-102 READY 01:53, COORD (ii)",
+    "vsN1@3": "REDESIGN: KIT-OPS-1 2026-11-13 02:58: pEv11c (train 33, plan c9ac33aeb09c) changes clock.ft_hop_lockup.tap of this type (capture-tap latches, HBM-VSN-XTAP form A'); DIE-HBM-102 READY 01:53, COORD (ii)",
+    "vsN2@8": "REDESIGN: KIT-OPS-1 2026-11-13 02:58: pEv11c (train 33, plan c9ac33aeb09c) changes clock.ft_hop_lockup.tap of this type (capture-tap latches, HBM-VSN-XTAP form A'); DIE-HBM-102 READY 01:53, COORD (ii)"
    },
    "plan_note": "17:58 KW-FIX-4 (COORD 17:5x intel2 scratch2 95%): gen_host intel2 -> epyc4, gen_hosts [epyc4] (src hbmi3 + d44v8h staged on epyc4) until intel2 > 300 GB free | 17:07 KW-FIX-4 (DIE-HBM-61/B128): plan dir d44v8g -> d44v8h = d44v8g + d44v part 5 core_macros e39d7947 / core_clock_regions be5ce4ae from claude/die-hbm-61-por-1103@101616937ca (bank128_pair S-edge macro stack; probe GRT ovf 7646 -> 0); the 3 ENQUEUED bank128_pair items launch on it | KW-FIX-4 14:1x: d44v part 4 merged (5675ace8eb0, core_macros KNOWN RW macro sites for hfd_ep_static/ot_hbm_host_cp_rxs) -> plan dir d44v8g = d44v8f + part-4 core_macros.json (die_plan.json identical 915b936540f3, intel2+epyc4); holds released; src kw-fix-4-hbmv 78e511e3a45 already carries MEM 55c4a61894a (OT_HBM_RW_MACROS). | ",
    "item_args_rf1prev": {
@@ -49349,7 +49354,15 @@
      "why": "KIT-OPS-1 2026-11-13 02:35: pEv11c capture-tap latches resolve the xtap form (DIE-HBM-102 READY 01:53; COORD (ii))"
     }
    },
-   "note_kitops1_pEv11c": "KIT-OPS-1 2026-11-13 02:35: HBM wave -> pEv11c. Re-kit = 4 changed types ['NW_io', 'q_spb1', 'vsN1', 'vsN2']; xtap holds released ['q_spb1', 'vsN1', 'vsN2']; standing holds kept on ['q_b113']; retries ['vsN2@8']."
+   "note_kitops1_pEv11c": "KIT-OPS-1 2026-11-13 02:35: HBM wave -> pEv11c. Re-kit = 4 changed types ['NW_io', 'q_spb1', 'vsN1', 'vsN2']; xtap holds released ['q_spb1', 'vsN1', 'vsN2']; standing holds kept on ['q_b113']; retries ['vsN2@8'].",
+   "take_states_prev_kitops1_xtap": [
+    "NEEDS-KIT",
+    "FIX",
+    "REVIEW",
+    "KIT-PLACED",
+    "GEOM-REQ"
+   ],
+   "note_kitops1_xtap": "KIT-OPS-1 2026-11-13 02:58: take_states += SIGNED-UNVERSIONED (3 HBM rows: q_spb1, vsN1 relaunch; q_spt2 held); retry_fix REDESIGN q_spb1@5 vsN1@3 vsN2@8. Revert: take_states_prev_kitops1_xtap, drop the q_spt2 hold once q_spb1/vsN1 launched."
   }
  },
  "place_prefer": [
