@@ -75,5 +75,40 @@
   "sha256": "368999ac3248149e578c0d8e7c953162558280496ecf577f6b0e5342204c36b6"
  },
  "side_in": "ce64dcf20586a03daf8af31fb36887857ab279daceb81fbeaa40dbf3d66b5e31",
- "side_out": "e493659bd39ac83c8f747b529e7ca07e31ae1ce55c727ff161d09ec7afabbe1d"
+ "side_out": "e493659bd39ac83c8f747b529e7ca07e31ae1ce55c727ff161d09ec7afabbe1d",
+ "tok_s": {
+  "base_tok_s": 4051,
+  "estimate_delta_pct": 0.6,
+  "status": "UNCHECKED",
+  "basis": "lane-cycle delta only (11198 -> 10888 on 1047 lanes); not a token sim",
+  "open_item": "pricing chain missing: the 10-27 reprice_actual / rederive_edges_ext / compose_edges harness is gone; tools/qwen_layerbench/toksim_compose.py needs its inputs re-derived (DIE-QC-100 open list)"
+ },
+ "depth8_ring_wrappers": {
+  "cbn_q01__clab6e67f2": [
+   "a00_i",
+   "nb_i12"
+  ],
+  "cbn_q01__cld9ff4c40": [
+   "a00_i",
+   "nb_i12"
+  ],
+  "cbx_q10__cl89936551": [
+   "bc_i20",
+   "bc_i30"
+  ],
+  "cbx_q10__cl89936551_h": [
+   "a22_i",
+   "bc_i20",
+   "bc_i30"
+  ],
+  "cbx_q10__cl94a12200": [
+   "bc_i20",
+   "bc_i30"
+  ],
+  "cbx_q10__cl94a12200_h": [
+   "a22_i",
+   "bc_i20",
+   "bc_i30"
+  ]
+ }
 }
