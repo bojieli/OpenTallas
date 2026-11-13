@@ -117,3 +117,27 @@ The rebind path is proven: `chain_qc.sh rbtest ... zz_bind_base.json $P/bind_bas
 Post-CTS TT setup (W/sta/summary.txt): WNS -679.0 ps, TNS -288163.8 ps, 886 violating endpoints. Worst path:
 `u_core.u_stream.wd_q[12]` -> `lane_c[399]`, 1630 um Manhattan (launch 120,58 -> capture 260,1548).
 See W/sta/worst5_setup_tt.rpt and worst5_geom.tsv.
+
+CODEX 2026-11-13 CBF corridor source READY: existing HARD-QC-FORMS branch pushed 4ad3e1b02c (parent d2506256e2), count-bank-aware opt-in core_input_chain plus coherent INNER metadata adapter and focused tests. Requires RULES-REACH anchor fe86e6ab12+6d5f095842. Actual E4 frozen CBF ODB: all514 fixed/count/mux bits discovered; corrected anchors6148latches/5888PC/unresolved0 (256constant tap+4reset non-PC classified). Old fixed3 refuses208bits, max minimum-count hop436.574um; proposed coherent fixed4/span1/input1 gives327.4305um. Atomic old-depth rejection verified ZERO location/status changes across ODB. Seven focused tests PASS including actual Binder/514bit RTL lockstep+mutants. E7 WT results/geom_review/cbf_r8_corridor_codex has viewed current candidate render/sites; no ODB written and no physical result claimed. Production event/PLACE waits parent QC clean strict seed; adapter refuses dirty/stale seed and propagates companion/downstream pads without RTL hand-edit. Intel2 logs ~/hqf-codexlog/cbf_anchor_layout_final.log and cbf_atomic_final.log; units1495261/1496597 exit0.
+
+CODEX bank-area follow-up PUSHED b869e17362 (parent4ad3e1b02c); independent GEOM full-rectangle/corner PASS-COND, proposal-only.
+
+Bank-area refinement after independent geometry review:
+The original route skeleton used collinear bit targets. The placer now allocates
+three whole fixed-FF bank rectangles and one combined count/data-mux rectangle.
+Actual master demand: DFF1.08–1.188um x0.27um. The measured candidate's three
+514-FF banks each reserve36.18x11.8125um /20rows /35.07% occupancy. The combined
+514count+1542data-mux/buffer bank reserves36.18x46.44um /77rows /16.06% occupancy.
+All rectangles are macro/9um-halo-clear, inside core, and mutually disjoint.
+Actual per-bit minimum/count1 paths max387.2675um; all rectangle-corner paths
+max393.0286um (<405). This bound includes uncorrelated endpoint movement within
+each bank. The source fails atomically if any rectangle or exact/corner hop fails.
+It still needs real synthesized common-floor4 masters and PLACE legalization proof.
+Static count decode remains in its existing tree; it is not moved into this bank.
+Evidence: cbf_bank_area_review.png (viewed), bank_sites.tsv, bank_rects.tsv.
+Intel2 ~/hqf-codexlog/cbf_bank_layout_corners.log, E4unit2281269-1794612927 exit0.
+This probe uses exact real ODB masters/data cones plus a virtual proposed fourth FF;
+no database placement or ODB write occurred. Eight focused tests PASS including
+full-bank row demand, macro-clear fit and unfittable-bank refusal (E7unit1948094).
+The earlier327.43um skeleton estimate excludes bank area and is superseded by the
+387.27um exact/393.03um rectangle-envelope bounds above.
