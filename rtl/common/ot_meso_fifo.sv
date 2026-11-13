@@ -459,9 +459,29 @@ module ot_meso_ring #(
         localparam int NCW = (W % WCCB == 0) ? W / WCCB : 1;
         localparam int WCW = W / NCW;
         wire [AW-1:0] nxt = tc[AW-1:0] + AW'(1);
+        // Opt-in hierarchical slot-index distribution. A group register holds tc
+        // after one clock and its child captures group+1 on the next. Every child
+        // holds current tc after two startup edges; no data or ready cycle moves.
+        // Ring training discards unsynchronised startup slots. The root tc drives
+        // one group per WCC_GROUP chunks instead of every chunk.
+`ifdef OT_MESO_WCC_GROUP
+        localparam int WCC_GROUP = `OT_MESO_WCC_GROUP;
+`else
+        localparam int WCC_GROUP = 0;
+`endif
+        localparam int WCC_NGROUP = WCC_GROUP > 0 ? (NCW + WCC_GROUP - 1) / WCC_GROUP : 1;
+        wire [AW-1:0] grouped_nxt [WCC_NGROUP];
+        if (WCC_GROUP > 0 && NCW > WCC_GROUP) begin : g_grouped
+            for (genvar g = 0; g < WCC_NGROUP; g++) begin : group
+                ot_meso_wcc_group #(.AW(AW)) u_group
+                    (.clk(tclk_w), .nxt(nxt), .out(grouped_nxt[g]));
+            end
+        end
         for (genvar c = 0; c < NCW; c++) begin : wcc
+            localparam int G = WCC_GROUP > 0 ? c / WCC_GROUP : 0;
+            wire [AW-1:0] chunk_nxt = WCC_GROUP > 0 && NCW > WCC_GROUP ? grouped_nxt[G] : nxt;
             logic [DEPTH*WCW-1:0] sd_c;
-            ot_meso_wcc #(.W(WCW), .DEPTH(DEPTH)) u_wcc (.clk(tclk_w), .v(t_v), .nxt(nxt), .d(t_d[c*WCW +: WCW]), .sd(sd_c));
+            ot_meso_wcc #(.W(WCW), .DEPTH(DEPTH)) u_wcc (.clk(tclk_w), .v(t_v), .nxt(chunk_nxt), .d(t_d[c*WCW +: WCW]), .sd(sd_c));
             for (genvar i = 0; i < DEPTH; i++) begin : sl
                 assign s_d[i][c*WCW +: WCW] = sd_c[i*WCW +: WCW];
             end
@@ -713,6 +733,23 @@ module ot_meso_wch #(parameter int W = 64, parameter int DEPTH = 4) (
         always_ff @(posedge clk) if (we[i]) m[i] <= d;
         assign sd[i*W +: W] = m[i];
     end
+endmodule
+
+// Preserve each distribution group as a real physical register stage. Wire-level
+// keep alone permits Yosys to merge identical group registers back into tc.
+(* keep_hierarchy *)
+module ot_meso_wcc_group #(parameter int AW = 2) (
+    input logic clk,
+    input logic [AW-1:0] nxt,
+    output wire [AW-1:0] out
+);
+    (* keep *) logic [AW-1:0] tc_group;
+    always_ff @(posedge clk) tc_group <= nxt;
+`ifdef OT_MESO_WCC_GROUP_MUTANT
+    assign out = tc_group; // negative control: no lookahead
+`else
+    assign out = tc_group + AW'(1);
+`endif
 endmodule
 
 // S81-RCK-10 WCHKC chunk: its own registered copy of the write slot index, decoded locally (kept hierarchy and kept
