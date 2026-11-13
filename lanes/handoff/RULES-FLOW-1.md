@@ -31,3 +31,14 @@
   tb_A_margins / tb_B_fanout / tb_C_gplkeep / tb_D_maxwire (single-knob arms on turn_b), pt_new2 (test shards).
 - Results: `python3 -I ab/abres.py <kitdir>` on epyc7. Kit patcher: ab/apply_rflow.py KIT wt/tools/die_plan [KEY=-].
 - NEXT: collect t21 / coll_ftc, write R-FLOW section in lanes/RULEBOOK-1113.md (coord-commit.sh), commit + push branch, READY.
+
+## 2026-11-13 04:45 RULEBOOK R-FLOW v1 posted (coord/state, verified on origin); code committed locally aa1d118875 (NOT pushed)
+- Single-knob arms on turn_b (ab/tb_*): margins only 0 slew pins; fanout 32 only 31; max wire only 1,342; GPL keep only 1,486
+  and setup +34 (one landing-origin path with 40 repeaters/hold pads). So GPL_KEEP_OVERFLOW is OPEN: default only if S81 + QC show no loss.
+- Extra arms launched for that decision: ab/tb_E_nokeep, ab/t21_nokeep, ab/coll_ftc_nokeep (= set without GPL_KEEP_OVERFLOW).
+- t21 arms take ~2.3 h each (GRT 1 h 15, route 51 min in the original run); coll_ftc longer. Started 04:01 (keep) / 04:28 (nokeep).
+- Tests: focused 60 pass. The 12-shard multi-file run has 27 failures, the same set with OT_RFLOW=0 (cross-file import
+  pollution: die_sta_related, tkinter); per-file run in progress: epyc7 rules-flow-1/pf_new/summary.txt (perfile.sh TAG [ENV=V]).
+- TO FINISH: (1) collect t21 / coll_ftc old, new, nokeep with `python3 -I ab/abrow.py <kitdirs>`; (2) decide GPL keep: if dropped,
+  remove gpl_keep_overflow from gen_phys.RFLOW + rflow_cfg + tests, amend with a NEW commit; (3) update RULEBOOK R-FLOW (status line,
+  R-FLOW-7, proof 2/3 rows); (4) run perfile.sh off OT_RFLOW=0 and compare; (5) push branch, READY in COORD-REVIEW-QUEUE.md.
