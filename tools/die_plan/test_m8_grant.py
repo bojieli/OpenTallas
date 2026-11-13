@@ -105,8 +105,49 @@ def test_die_route_guides_reserve_ndr_tracks(tmp_path):
 def test_obstruction_tcl_covers_die_runs_only():
     g = MG.grant(plan(), "mid")
     t = MG.obstruction_tcl(g)
-    assert t.count("odb::dbObstruction_create") == len(g["die_runs"])
+    assert t.count("odb::dbObstruction_create") == len(tracks(g["die_runs"]))
     assert "findLayer M8" in t and g["sha"] in t
+
+
+def _tcl_rects(t):
+    import re
+    return [tuple(float(v) for v in re.findall(r"round\(([0-9.]+)\*", ln))
+            for ln in t.splitlines() if ln.startswith("odb::dbObstruction_create")]
+
+
+def test_obstructions_and_abstract_obs_stay_narrow():
+    """HEAD-ROUTE-1 11-12: a merged run >= 0.49975 um wide falls in the ASAP7 M8 0.5-um wide-metal spacing row (USEMINSPACING
+    OBS OFF) and blocks the granted tracks beside it in DRT (head_rp18_1112 DRT-0255).  Every rect is one wire wide, the
+    rects cover exactly the die (resp. type) tracks, and neighbouring rects never touch (no merged polygon)."""
+    g = MG.grant(plan(), "mid")
+    assert max(b - a + 1 for a, b in g["die_runs"]) >= 7                # the case that broke: a PG run of 7-8 tracks
+    for rects, runs in ((_tcl_rects(MG.obstruction_tcl(g)), g["die_runs"]), (MG.abstract_obs_rects(g), g["type_runs"])):
+        assert len(rects) == len(tracks(runs))
+        assert all(y1 - y0 <= MG.WIRE_W + 1e-9 < MG.WIDE_W for _x0, y0, _x1, y1 in rects)
+        ys = sorted((y0, y1) for _x0, y0, _x1, y1 in rects)
+        assert all(b[0] - a[1] >= MG.MIN_SP - 1e-9 for a, b in zip(ys, ys[1:]))
+        cen = {round((y0 + y1) / 2, 4) for _x0, y0, _x1, y1 in rects if y1 - y0 > MG.WIRE_W - 1e-9}
+        assert cen <= {round(MG.track_y(plan(), k), 4) for k in tracks(runs)}
+
+
+def test_wide_pg_stripe_keeps_wide_metal_spacing():
+    """a die PG stripe >= 0.49975 um wide (PHY supply) blocks every type track within its 0.5-um table spacing."""
+    def wide(p):
+        p["die"]["pg"]["grid"][0]["width_um"] = 0.96
+    P = plan(wide)
+    g = MG.grant(P, "mid")
+    sp = DI.pg_spacing(0.96)
+    assert sp == 0.5
+    for part in MG.instances(P, "mid"):
+        x0, y0, x1, y1 = P.rect(part)
+        for _n, _L, a0, b0, a1, b1 in pg_m8(P):
+            if b1 <= y0 or b0 >= y1:
+                continue
+            for k in tracks(g["type_runs"]):
+                yd = P.to_die(part, (0.0, MG.track_y(P, k)))[1]
+                gap = max(b0 - (yd + MG.WIRE_W / 2), (yd - MG.WIRE_W / 2) - b1)
+                assert gap >= sp - 1e-6, (part, k, yd, b0, b1)
+    assert g["pg_tracks"] > MG.grant(plan(), "mid")["pg_tracks"]
 
 
 LEF = """MACRO dp_mid
@@ -136,7 +177,7 @@ def test_fix_abstract_lef_replaces_m8_obs_with_granted_tracks():
     out = MG.fix_abstract_lef(LEF, g)
     assert out.count("LAYER M8 ;") == 1 and "LAYER M6 ;" in out and "LAYER M7 ;" in out
     m8 = out.split("LAYER M8 ;")[1].split("LAYER")[0].split("END")[0]
-    assert m8.count("RECT") == len(g["type_runs"])
+    assert m8.count("RECT") == len(tracks(g["type_runs"]))
     assert out.count("RECT 0 0 864 864 ;") == 2          # M6 + M7 kept, the full-area M8 OBS replaced
     bare = MG.fix_abstract_lef(LEF.replace("  OBS\n", "").replace(
         "    LAYER M6 ;\n      RECT 0 0 864 864 ;\n    LAYER M8 ;\n      RECT 0 0 864 864 ;\n"
@@ -184,6 +225,7 @@ def test_kit_off_by_default_byte_identical():
         fa, fb = _files(_kit(a)), _files(_kit(b, OT_GEN_M8_GRANT="0"))
         assert fa == fb and "m8_grant.json" not in fa
         assert b"export MAX_ROUTING_LAYER = M7" in fa["config.mk"]
+        assert b"ENABLE_RESISTANCE_AWARE" not in fa["config.mk"]       # no grant: platform default kept
 
 
 def test_kit_grant_from_plan_key():
@@ -194,10 +236,12 @@ def test_kit_grant_from_plan_key():
         kd = _kit(a, on)
         f = _files(kd)
         assert b"export MAX_ROUTING_LAYER = M8" in f["config.mk"]
+        # HEAD-ROUTE-1: the grant kit routes without resistance-aware layer assignment (head_rp18 DRT-0255)
+        assert b"export ENABLE_RESISTANCE_AWARE = 0" in f["config.mk"]
         g = json.loads(f["m8_grant.json"])
         assert g == MG.grant(plan(on), "mid")
         pdn = f["pdn.tcl"].decode()
-        assert pdn.count("odb::dbObstruction_create") == len(g["die_runs"]) and g["sha"] in pdn
+        assert pdn.count("odb::dbObstruction_create") == len(tracks(g["die_runs"])) and g["sha"] in pdn
         assert "m8_grant.py" in f
         assert b"m8_grant.py fixlef" in f["run_kit.sh"] if "run_kit.sh" in f else True
         f2 = _files(_kit(b, OT_GEN_M8_GRANT="1"))      # env opt-in = the same kit
