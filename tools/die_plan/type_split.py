@@ -3252,12 +3252,12 @@ class Event:
                 self.ab_out["plan_cells"] = f"{rel_dir}/plan_cells.json"
             self.ab_out["clock_landing_table"] = f"{rel_dir}/eW_sidecar.json"
             b = self.ab_out.get("base")
-            if b and not Path(b).is_absolute():
+            if b:
                 # the manifest base (repo root, relative to the plan folder): re-based on the output folder when it
                 # sits at another depth (bind resolves it next to the --asbuilt file; manifest paths stay relative)
                 import os
-                want = (self.plan_dir / b).resolve()
-                if (out / b).resolve() != want:
+                want = Path(b).resolve() if Path(b).is_absolute() else (self.plan_dir / b).resolve()
+                if Path(b).is_absolute() or (out / b).resolve() != want:
                     self.ab_out["base"] = os.path.relpath(want, out.resolve())
             md5["asbuilt_vN.json"] = jdump(self.ab_out, out / "asbuilt_vN.json")
         md5["latency_rows.json"] = jdump(dict(schema="opentallas.latency_rows.v1", rule="R-RTL-6", event=self.tag,

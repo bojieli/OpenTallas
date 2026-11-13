@@ -248,3 +248,16 @@ def test_added_cut_flops_count_with_existing_complete_bins(monkeypatch):
     assert b["clock"]["sink_bins_file"] == "old_b.json"
     assert sum(row[2] for row in b["clock"]["sink_sites_um"]) == 4
     assert "sink_sites_um" not in a["clock"]  # FT output pins are not an extra clocked stage
+
+
+def test_split_output_rebases_absolute_repository_base(tmp_path):
+    ev = TS.Event.__new__(TS.Event)
+    ev.plan_dir, ev.spec, ev.ts, ev.rep, ev.tag = tmp_path, {}, {}, {}, "test-base"
+    ev.out, ev.ab_out = {}, dict(base=str(TS.ROOT))
+    ev._census = lambda _out: {}
+    ev.side, ev.pc_out, ev.latency_rows = None, None, []
+    out = tmp_path / "new"
+    ev.write(out, "new")
+    published = json.loads((out / "asbuilt_vN.json").read_text())
+    assert not Path(published["base"]).is_absolute()
+    assert (out / published["base"]).resolve() == TS.ROOT
