@@ -33976,7 +33976,9 @@
     "q_spu1__physical_v1@10",
     "q_su00@1",
     "PHY_NC@3",
-    "PHY_NE@5"
+    "PHY_NE@5",
+    "PHY_NC@1",
+    "PHY_NW@1"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-101)",
@@ -48438,7 +48440,8 @@
      "route_hold": "KW-FIX-45 11-11 (DIE-HBM-100, queue tag hbm-vsn-xtap): xtap form D (in t19 via d10) NOT SIGNED on vsN4 (FF hold -194.56 / 34,675 ep); no new launch and no route submission until the structural redo (lockup latch on the later tap, per-pair paper check) lands as a plan delta replacing xtap_flop; running vsN* proof kits are left alone",
      "why": "KIT-OPS-1 2026-11-13 01:56: DIE-HBM-102 released on pEv10 (COORD (i)); q_spb1/vsN1/vsN2 stay held for pEv11"
     }
-   }
+   },
+   "note_kitops1_ms0": "KIT-OPS-1 2026-11-13 01:59: KW-FIX-45 macro_skip_rtlmp overlay in src_hbm_main_7073a6b4a5 (+ KV src); retries ['PHY_NC@1', 'PHY_NW@1'] for the MPL-0006 recipe loss (DIE-HBM-102 01:36)."
   }
  },
  "place_prefer": [
