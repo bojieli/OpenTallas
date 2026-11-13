@@ -1,0 +1,9 @@
+{
+ "schema": "opentallas.latency_rows.v1",
+ "lane": "HARD-QC-FORMS-1",
+ "date": "2026-11-13",
+ "rows": [
+  {"id": "QC-STM-TLOADCAP", "lane": "qwen_compute stm types (11): qfd_dv_s6_stm / qfd_dv_s6_stm_se0 u_tload loader-origin table writes (tw_we / tw_kind / tw_addr / tw_data -> b_tw_data_ctl_o)", "parameter": "verilog_defines OT_QC_TLOADCAP (qfd_dv_slice_tload CAPTURE_STAGE 1, LOCAL_JOIN 1)", "added_cycles": 1, "clock": "core 833 ps", "relative_to": "current QC bound RTL / token-sim reference (CAPTURE_STAGE 0, LOCAL_JOIN 0): first VM write 3 -> 4 edges, last 90 -> 91 edges after the request sample; busy +1; stream-origin writes +0; no die lane cycle changes", "bench": "rtl/test/qwen_dv/tloadcap/run_tloadcap.sh (N=1 PASS; N=0, N=2, CAPTURE_MUT 1, warm reset not moved FAIL)"},
+  {"id": "QC-STA-SWREG", "lane": "qwen_compute st_a / st_b station tail (qfd_dv_s8_station_tail1 u_scale_wait -> g_sc u_mul)", "parameter": "verilog_defines OT_QC_SWREG (qfd_dv_s8s_sram_delay OREG 1)", "added_cycles": 0, "clock": "core 833 ps", "relative_to": "current RTL: same q on every edge (memory read one address earlier, output registered)", "bench": "rtl/test/qwen_dv/swreg/run_swreg.sh (N=0 PASS; N=1, read-address MUT FAIL)"}
+ ]
+}

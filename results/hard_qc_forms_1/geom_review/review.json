@@ -1,0 +1,41 @@
+{
+  "scope": "private candidate forms; DO_NOT_COUNT; no plan adoption",
+  "rtl_commit": "aab1fcfe0c",
+  "base_head_sha256_prefix": "736058c458ee",
+  "lockstep": {
+    "TLOADCAP": {
+      "pass": "N=1; 447 loader writes;43 stream writes;676 edges",
+      "negative_controls": [
+        "N=0",
+        "N=2",
+        "CAPTURE_MUT=1",
+        "warm-reset not moved"
+      ],
+      "cycles": 1
+    },
+    "SWREG": {
+      "pass": "N=0;407 edges;1161 nonzero",
+      "negative_controls": [
+        "N=1",
+        "read-address MUT"
+      ],
+      "cycles": 0
+    }
+  },
+  "review": {
+    "F_STM": "PASS-COND for private PLACE only: 2x2 ROM block below north output face, open west/east street, capture register required; actual density, PDN and routing unmeasured",
+    "F_SUC": "HOLD: west pg access street opened; core clock tap/through-lane reach still needs composed die-event rebind; slw variants retain face street violation",
+    "F_SUL1": "HOLD: inter-lane gaps opened but east station chains diverge across pin pocket; needs actual reach/site-clear check before build"
+  },
+  "build_blockers": [
+    "private fstm rebind has32 R8_STALE on unrelated baseline rows; cannot count as strict bind",
+    "full-parent lane latency and token adoption must account STM loader +1"
+  ],
+  "form_status": {
+    "F_STM": "private PLACE candidate",
+    "F_STA": "RTL proof PASS only; original CTS mul21-cell cone and btab reach remain open",
+    "F_SUC": "candidate HOLD",
+    "F_SUL1": "candidate HOLD",
+    "F_CB": "plan-check candidate HOLD"
+  }
+}

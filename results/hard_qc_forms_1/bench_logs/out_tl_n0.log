@@ -1,0 +1,7 @@
+TLOADCAP_MISMATCH we t=20000 new=0 old(t-0)=1
+TLOADCAP_MISMATCH payload t=21000
+TLOADCAP_MISMATCH payload t=22000
+TLOADCAP_MISMATCH payload t=23000
+TLOADCAP_MISMATCH payload t=23000
+TLOADCAP_LOCKSTEP FAIL N=0 MUT=0 errs 481 loader_writes old 448 new 447 stream_writes old 43 new 43
+rtl/test/qwen_dv/tloadcap/tb_tloadcap.sv:100: $finish called at 594642 (1ps)

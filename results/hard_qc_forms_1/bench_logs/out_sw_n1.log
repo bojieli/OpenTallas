@@ -1,0 +1,6 @@
+SWREG_MISMATCH t=6000 D-index 0
+SWREG_MISMATCH t=7000 D-index 0
+SWREG_MISMATCH t=7000 D-index 1
+SWREG_MISMATCH t=8000 D-index 0
+SWREG_LOCKSTEP FAIL N=1 errs 1164 nonzero 1161
+rtl/test/qwen_dv/swreg/tb_swreg.sv:44: $finish called at 339855 (1ps)
