@@ -1,0 +1,57 @@
+{
+ "top": "sle_cland_w2_e_200",
+ "checked": 6,
+ "ok": 6,
+ "fails": {},
+ "flops": {
+  "fault": "u_w/u_fault_port/q$_SDFF_PN0_",
+  "ready": "u_w/ready$_SDFF_PN0_",
+  "d[1]": "u_w/u_ring.s_d[2][1]$_DFFE_NP_",
+  "d[0]": "u_w/u_ring.s_d[2][0]$_DFFE_NP_",
+  "q[1]": "u_w/u_ring.dch[0].u_dsel/y[1]$_DFF_P_",
+  "q[0]": "u_w/u_ring.dch[0].u_dsel/y[0]$_DFF_P_"
+ },
+ "straps_exempt": [
+  "strap_k"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {},
+ "registered_atmost_one": {
+  "u_w/u_ring.g_wreg.sl[0].ch[0].u_wen/q$_DFF_N_": {
+   "flops": [
+    "u_w/u_ring.g_wreg.sl[0].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[1].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[2].ch[0].u_wen/q$_DFF_N_",
+    "u_w/u_ring.g_wreg.sl[3].ch[0].u_wen/q$_DFF_N_"
+   ],
+   "leaves": [
+    "t_rst_n",
+    "u_w/_059_",
+    "u_w/_071_",
+    "u_w/_074_"
+   ],
+   "start": "t_rst_n",
+   "start_chain_edges": 0,
+   "start_asserted_edges_required": 1
+  }
+ },
+ "land_mux_depth": {
+  "1": 7,
+  "3": 1
+ },
+ "land_slot_bits": 2,
+ "land_mux_bits": 2,
+ "pairs_declared": [],
+ "fail_counts": {},
+ "verdict": "PASS",
+ "planned_bits": 12,
+ "missing_ports": [],
+ "extra_ports": [],
+ "missing_n": 0,
+ "extra_n": 0,
+ "self_loop_only": false,
+ "self_loops": [],
+ "non_self_loop_fails": [],
+ "netlist": "/work/run/results/asap7/kq_sle_cland_w2_e_200_h953ee3/base/1_synth.v"
+}
