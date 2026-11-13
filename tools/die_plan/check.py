@@ -27,6 +27,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  pin_sites   (ERROR, pin_sites.py) two different interior pins of a type (taps incl. arst_n / start_i, reset outs, straps,
+              reset spine, landing_contract pins) on one layer site: GRT-0080 'Invalid pin placement' at route
   collector_reach (ERROR, SEAM-HOP-1, collector_reach.py) every ACTIVE reverse-collector edge (reset relay -> parent on the path
               from a collector source tap to the root) and source -> tap hop <= 405 um: the rule landing_collector.build_local
               enforces at bind ("EMIT <type>: reverse collector a->b: N um exceeds 405")
@@ -93,7 +95,7 @@ def lnum(name):
 
 # G0C (COORD 10-23 ~20:10): the plan-completeness / hard-core rules are ERRORs only under `check.py --completeness`;
 # plain G0 reports them as WARN "[G0C] ..." so a plan that passed G0 keeps passing while it is completed.
-G0C_CHECKS = ("hard_cores", "core_faces", "complete",
+G0C_CHECKS = ("hard_cores", "cell_budget", "core_faces", "complete",
               # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
               "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget",
               # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
@@ -1658,6 +1660,11 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
     out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0, types_no_cells=0, over_cap_no_cores=0)
     import cells as CE
     est, out["cell_sources"] = CE.estimate(P.raw, plan_dir, evidence or ())
+    # R-CAP (RULES-CAP-1, RULEBOOK 11-13): projected movable cells after place resize per type against the 400k place
+    # budget (cap_estimate.py): ERROR cell_budget with the split for an OVER type, WARN inside the +-25 % band.
+    # A G0C check like hard_cores: an ERROR with --completeness, a [G0C] WARN in plain G0.
+    import cap_estimate as CAP
+    out["cell_budget"] = CAP.check_plan(P, R, est)
     no_cells = []
     for tn, t in P.types.items():
         w, h = t["outline_um"]
@@ -2723,6 +2730,13 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     check_clock_reset(P, R)
     summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
     summ["reset"] = check_reset(P, R)
+    import pin_sites as PS          # HEAD-96 11-13: two different interior pins on one site = GRT-0080 at route
+    _pe, _pw = PS.check(P)
+    for e in _pe:
+        R.err("pin_sites", e)
+    for w in _pw:
+        R.warn("pin_sites", w)
+    summ["pin_sites"] = dict(duplicates=len(_pe), not_computable=len(_pw))
     import collector_reach as CRH      # SEAM-HOP-1: the bind's reverse-collector reach rule, plan-only (ERROR)
     summ["collector_reach"] = CRH.check_collector_reach(P, R)
     summ["seams"] = check_seams(P, R)

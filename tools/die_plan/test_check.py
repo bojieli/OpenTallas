@@ -714,9 +714,9 @@ def test_g0c_gated():
     R, summ = check.run(p)
     assert R.errors() == [] and any(i["msg"].startswith("[G0C]") for i in R.items)
     R, summ = check.run(copy.deepcopy(p), completeness=True)
-    assert {i["check"] for i in R.errors()} == {"hard_cores", "complete"}
+    assert {i["check"] for i in R.errors()} == {"hard_cores", "cell_budget", "complete"}      # R-CAP: 450k is over both
     g = summ["g0c"]
-    assert g["by_type"] == {"mid": {"hard_cores": 1}} and g["die_level"] == {"complete:common_latency": 1}
+    assert g["by_type"] == {"mid": {"hard_cores": 1, "cell_budget": 1}} and g["die_level"] == {"complete:common_latency": 1}
     assert g["g3_eligible"] == [] and g["clean"] == 2
 
 

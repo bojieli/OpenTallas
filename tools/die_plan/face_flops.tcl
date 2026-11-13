@@ -579,7 +579,66 @@ proc ff_put_stage {f slot j nm xy} {
   }
   return [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
 }
+# RELAY-PLACE-1 11-12 (FT-LANE, default on; OT_FT_LANE=0 restores the slot-point form): plan regs_um are ONE site per
+# slot stage (the slot centre line), so every bit of a W-bit slot took ff_put_near around the same point and the spiral
+# piled them into a blob, while station 0 (the face flop) and the landing ring sit AT each bit's own pin, spread over the
+# slot's pin span.  S81 slice_station t41 a7: plan stage pitch 288.5 um, yet u_ft_ft1_o_0/q[7] (pin y 485.2) ->
+# u_ft_ft1_o_1/q[7] (blob at y 367.2, x pushed 46 um) = 447 um; 111 ft>ft + 20 ring>s0 chains over the 405-um reach
+# (geom relay_collapse 131).  Industry bit-sliced form: each bit keeps its own lane.  Station j of bit b targets the
+# plan site of stage j plus the bit's offset from the slot pin centroid, blended in -> out:
+#   site_j + (1 - t) * (pin_in(b) - c_in) + t * (pin_out(b) - c_out),   t = j / k   (landed station i: t = (i+1)/k)
+# so the lane runs pin -> pin parallel to the plan centre line and the hop is the plan stage pitch.  Explicit per-bit
+# plan sites (ft_bit_sites.tcl) and siteless slots (already per-bit routes) are unchanged.
+proc ff_lane_on {} { return [expr {![info exists ::env(OT_FT_LANE)] || $::env(OT_FT_LANE) ne "0"}] }
+proc ff_bt_ctr {bt} { set b [$bt getBBox]; return [list [expr {([$b xMin] + [$b xMax]) / 2.0}] [expr {([$b yMin] + [$b yMax]) / 2.0}]] }
+# slot -> {cix ciy ni cox coy no}: centroids of the slot's in / out pins (dbu)
+proc ff_lane_centroids {blk} {
+  global ff_ft
+  set acc {}
+  foreach bt [$blk getBTerms] {
+    if {[$bt getSigType] ne "SIGNAL"} continue
+    set nm [$bt getName]
+    set io [expr {[$bt getIoType] eq "INPUT" ? 0 : 1}]
+    set slot [ff_slot_of $nm [expr {$io ? "_o" : "_i"}]]
+    if {$slot eq ""} continue
+    if {![dict exists $acc $slot]} { dict set acc $slot {0.0 0.0 0 0.0 0.0 0} }
+    set a [dict get $acc $slot]
+    lassign [ff_bt_ctr $bt] x y
+    set o [expr {3 * $io}]
+    lset a $o [expr {[lindex $a $o] + $x}]; lset a [expr {$o + 1}] [expr {[lindex $a [expr {$o + 1}]] + $y}]
+    lset a [expr {$o + 2}] [expr {[lindex $a [expr {$o + 2}]] + 1}]
+    dict set acc $slot $a
+  }
+  set r {}
+  dict for {slot a} $acc {
+    lassign $a sx sy ni ox oy no
+    dict set r $slot [list [expr {$ni ? $sx / $ni : 0.0}] [expr {$ni ? $sy / $ni : 0.0}] $ni [expr {$no ? $ox / $no : 0.0}] [expr {$no ? $oy / $no : 0.0}] $no]
+  }
+  return $r
+}
+# plan site xy (dbu) of a slot stage -> the bit's lane point at fraction t of the slot (in pin bt, out pin ob or NULL)
+proc ff_lane_xy {slot bt ob xy t} {
+  global ff_lane_c
+  if {![ff_lane_on] || ![info exists ff_lane_c] || ![dict exists $ff_lane_c $slot]} { return $xy }
+  lassign [dict get $ff_lane_c $slot] cix ciy ni cox coy no
+  lassign [ff_bt_ctr $bt] ix iy
+  set dx [expr {$ix - $cix}]; set dy [expr {$iy - $ciy}]
+  if {$ob ne "NULL" && $ob ne "" && $no > 0} {
+    lassign [ff_bt_ctr $ob] ox oy
+    set dx [expr {(1.0 - $t) * $dx + $t * ($ox - $cox)}]; set dy [expr {(1.0 - $t) * $dy + $t * ($oy - $coy)}]
+  }
+  return [list [expr {round([lindex $xy 0] + $dx)}] [expr {round([lindex $xy 1] + $dy)}]]
+}
+# per-bit station chain hop record (um): the longest placed station -> station hop of the pass (report only)
+proc ff_lane_hop {prev got} {
+  global ff_lane_max ff_lane_n405 ff_dbu
+  if {$prev eq "" || $got eq ""} return
+  set h [expr {(abs([lindex $prev 0] - [lindex $got 0]) + abs([lindex $prev 1] - [lindex $got 1])) / double($ff_dbu)}]
+  if {$h > $ff_lane_max} { set ff_lane_max $h }
+  if {$h > 405.0} { incr ff_lane_n405 }
+}
 set ff_st 0; set ff_st_miss 0; set ff_lst 0; set ff_landed_line {}
+set ff_lane_c [ff_lane_centroids $ff_blk]; set ff_lane_max 0.0; set ff_lane_n405 0; set ff_lane_bits 0
 foreach bt [$ff_blk getBTerms] {
   if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne "INPUT"} continue
   set nm [$bt getName]
@@ -604,16 +663,19 @@ foreach bt [$ff_blk getBTerms] {
     set pts [ff_zroute [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}] [expr {([$ab xMin] + [$ab xMax]) / 2}] [expr {([$ab yMin] + [$ab yMax]) / 2}] $fin $fout]
     set L 0
     for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
+    set lprev ""; incr ff_lane_bits
     for {set j 0} {$j < $k} {incr j} {
       set f [lindex $fs $j]
       dict set ff_done [$f getName] 1
       if {$j + 1 < $k && [llength $regs] >= 2 * $k} {
         set xy [list [expr {round([lindex $regs [expr {2*($j+1)}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*($j+1)+1}]] * $ff_dbu)}]]
+        set xy [ff_lane_xy $slot $bt $ob $xy [expr {double($j + 1) / $k}]]
       } else {
         set xy [ff_point_at $pts [expr {$L * double($j + 1) / $k}]]
       }
       if {$j + 1 < $k} { set got [ff_put_stage $f $slot [expr {$j + 1}] $nm $xy] } else { set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]] }
-      if {$got eq ""} { incr ff_st_miss; continue }
+      if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
+      ff_lane_hop $lprev $got; set lprev $got
       puts $ff_out "[$f getName]\tlst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
       incr ff_lst
     }
@@ -627,6 +689,9 @@ foreach bt [$ff_blk getBTerms] {
   set pts [ff_zroute $ax $ay $bx $by $fin $fout]
   set L 0
   for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
+  # station 0 = the in-face register placed by the face pass (its location when the db has it)
+  if {[catch {$f getLocation} lprev] || [llength $lprev] != 2} { set lprev "" }
+  incr ff_lane_bits
   for {set j 1} {$j < $k} {incr j} {
     set q [ff_next_station $f]
     if {$q eq "" || [dict exists $ff_done [$q getName]]} { incr ff_st_miss; break }
@@ -634,11 +699,13 @@ foreach bt [$ff_blk getBTerms] {
     dict set ff_done [$f getName] 1
     if {[llength $regs] >= 2 * $k} {
       set xy [list [expr {round([lindex $regs [expr {2*$j}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*$j+1}]] * $ff_dbu)}]]
+      set xy [ff_lane_xy $slot $bt $ob $xy [expr {double($j) / $k}]]
     } else {
       set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
     }
     set got [ff_put_stage $f $slot $j $nm $xy]
-    if {$got eq ""} { incr ff_st_miss; continue }
+    if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
+    ff_lane_hop $lprev $got; set lprev $got
     puts $ff_out "[$f getName]\tst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
     incr ff_st
   }
@@ -698,6 +765,7 @@ close $ff_out
 close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-chain cells" }
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k" }
+if {$ff_lane_bits} { puts "OT_FT_LANE [expr {[ff_lane_on] ? "on" : "off (OT_FT_LANE=0)"}]: $ff_lane_bits slot bits, max placed station hop [format %.1f $ff_lane_max] um, $ff_lane_n405 hops > 405 um (plan reach)" }
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
 if {[file exists /work/istations.tcl]} { source /work/istations.tcl }
 # OWNER RESET RULE 10-24: FIRM reset entry stage + synchronous relay tree (tools/die_plan/reset_tree.py, kit_rsync)

@@ -343,7 +343,7 @@ KIT_TOOL_DEPENDENCIES = {
     "orfs_hold_mm.tcl": ("macro_cts_cluster.tcl",),
     "die_sta_related.py": ("clock_components.py", "data_droop.py", "pair_slack_gate.py", "die_sta.py"),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
-                         "kit_contract.py", "die_sta_related.py", "data_droop.py"),
+                         "kit_contract.py", "die_sta_related.py", "data_droop.py", "cap_estimate.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "pinreg_pad.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
     "tap_balance.tcl": ("clock_family.tcl",),
