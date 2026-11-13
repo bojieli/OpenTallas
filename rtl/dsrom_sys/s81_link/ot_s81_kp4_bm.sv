@@ -149,17 +149,20 @@ endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // ot_s81_kp4_bm_it2 (HARD-S81-SERDES-1 2026-11-13; used only under `define OT_S81_KP4_BM_IT2, so every other form is
-// unchanged): the same RiBM unit with a TWO-CYCLE iteration, the standard folded form of a recurrence whose loop is one
-// GF(2^10) multiply + XOR.  serdes__t2 kitC2 (template island, placement): u_syn.Sl -> operand mux -> multiply -> XOR ->
-// u_bm.d was 12 cells + 21 wire buffers, 3.2 ns, 2247 endpoints; the loop cannot take a register without taking time.
-//   ld (cycle t)      : state <= the S image (delta = theta = {1 at 45, S_29..S_0}, gamma = 1, k = 0); no multiply.
-//   M phase (t+1+2r)  : pa_q <= gamma * delta_(i+1), pb_q <= delta_0 * theta_i, upd_q <= (delta_0 != 0 && k >= 0).
-//   U phase (t+2+2r)  : delta_i <= pa_q ^ pb_q; theta / gamma / k / L update from upd_q exactly as ot_s81_kp4_bm.
-//   r = 0..29; done is high in cycle t + 61 with the result in delta (ot_s81_kp4_bm: t + 30).  PIN CYCLES: k_* +31 rck.
-// The unit is busy 61 cycles, so the syndrome tile runs NBM = 7 units (one frame every 10 cycles: reload after 70) and
-// ot_s81_kp4_ddly delays the words 31 more (a 31-word register line before the 64-word delay memory).
-// Same arithmetic, same L / any / lam / om values as ot_s81_kp4_bm for every S (bench: KP4 gate vs rs544.py + column
-// lock-step).  `define OT_BM_IT2_MUT (bench only): 29 iterations instead of 30 -> must FAIL the KP4 gate.
+// unchanged): the RiBM unit FOLDED 2-way -- a two-cycle iteration (multiply, then update), with two frames interleaved
+// on the one set of 92 GF(2^10) multipliers, so the syndrome tile keeps NBM = 3 units.  (A first form with one frame a
+// unit needed 7 units: 522k standard cells, over the 400k run cap.)
+// Why: the loop is one multiply + XOR and cannot take a register without taking time.  serdes__t2 kitC2 (placement):
+// u_syn.Sl -> operand mux -> multiply -> XOR -> u_bm.d was 12 cells + 21 wire buffers, 3.2 ns, 2247 endpoints.
+//   Two slots (frame states); loads alternate slots.  par toggles every cycle; slot X multiplies only when par == X.
+//   ld (cycle t)  : slot state <= the S image (no multiply).
+//   M (par == X)  : pa_q <= gamma * delta_(i+1), pb_q <= delta_0 * theta_i, upd_q, and the slot's n / L (shared, 1 cycle).
+//   U (next cycle): delta / theta / gamma / k / L of that slot update exactly as ot_s81_kp4_bm; the 30th U writes the
+//                   RESULT registers only (the slot may already hold the next frame: it is reloaded every 60 cycles).
+//   The first M is at t + 1 or t + 2 (parity), the 30th U at t + 60 or t + 61; done is high in cycle t + 62 for both
+//   (ot_s81_kp4_bm: t + 30).  PIN CYCLES: k_* +32 rck; ot_s81_kp4_ddly holds the words 32 more under the same define.
+// Same arithmetic, same L / any / lam / om as ot_s81_kp4_bm for every S (KP4 gate vs rs544.py + column lock-step).
+// `define OT_BM_IT2_MUT (bench only): 15 iterations instead of 30 -> must FAIL the KP4 gate.
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_kp4_bm_it2 #(parameter integer NG = 4, parameter integer NCD = 4) (
     input  wire            clk,
@@ -174,68 +177,97 @@ module ot_s81_kp4_bm_it2 #(parameter integer NG = 4, parameter integer NCD = 4) 
 );
     localparam integer NPE = 46, GS = (NPE + NG - 1) / NG;
 `ifdef OT_BM_IT2_MUT
-    localparam [4:0] LAST = 5'd28;
+    localparam [4:0] LAST = 5'd14;     // 15 iterations (one short only multiplies lambda and omega by x: same roots, same values)
 `else
     localparam [4:0] LAST = 5'd29;
 `endif
-    reg  [9:0] d  [0:NPE-1];
-    reg  [9:0] th [0:NPE-1];
+    reg  [9:0] d0 [0:NPE-1];
+    reg  [9:0] d1 [0:NPE-1];
+    reg  [9:0] t0 [0:NPE-1];
+    reg  [9:0] t1 [0:NPE-1];
     reg  [9:0] pa_q [0:NPE-1];
     reg  [9:0] pb_q [0:NPE-1];
-    (* keep *) reg [9:0] gm [0:NG-1];
-    (* keep *) reg [9:0] dz [0:NG-1];
-    (* keep *) reg [5:0] kc [0:NG-1];
-    (* keep *) reg [NG-1:0] upd_q, ph_m, ph_u;      // phase copies, one per PE group
-    reg  [4:0] n;
+    reg  [9:0] rq [0:30];                              // result: lambda = rq[15..30], omega = rq[0..14]
+    (* keep *) reg [9:0] gm0 [0:NG-1];
+    (* keep *) reg [9:0] gm1 [0:NG-1];
+    (* keep *) reg [9:0] dz0 [0:NG-1];
+    (* keep *) reg [9:0] dz1 [0:NG-1];
+    (* keep *) reg [5:0] kc0 [0:NG-1];
+    (* keep *) reg [5:0] kc1 [0:NG-1];
+    (* keep *) reg [NG-1:0] par, uv, us, fin, upd_q, sel;   // per-group copies: parity, U valid, U slot, final U, update, load slot
+    reg        act0, act1, any0, any1, anym_q;
+    reg  [4:0] n0, n1, L0, L1, nm_q, Lm_q;
+    reg  [5:0] c0, c1; reg dn1;
     function automatic [9:0] dinit(input integer j);
         dinit = (j < 30) ? S[10 * j +: 10] : ((j == 45) ? 10'd1 : 10'd0);
     endfunction
     wire [9:0] nd0 = pa_q[0] ^ pb_q[0];
     genvar gi, gg;
     generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_grp
+        wire       X  = par[gg];
+        wire [9:0] G  = X ? gm1[gg] : gm0[gg];
+        wire [9:0] D0 = X ? dz1[gg] : dz0[gg];
+        wire [5:0] K  = X ? kc1[gg] : kc0[gg];
+        wire       l0 = ld[gg] && !sel[gg], l1 = ld[gg] && sel[gg];
+        wire       u0 = uv[gg] && !us[gg] && !fin[gg], u1 = uv[gg] && us[gg] && !fin[gg];
         always @(posedge clk) begin
-            if (ld[gg]) begin gm[gg] <= 10'd1; kc[gg] <= 6'd0; dz[gg] <= S[9:0]; end
-            else if (ph_u[gg]) begin
-                gm[gg] <= upd_q[gg] ? dz[gg] : gm[gg];
-                kc[gg] <= upd_q[gg] ? (~kc[gg]) : (kc[gg] + 6'd1);
-                dz[gg] <= nd0;
+            upd_q[gg] <= (D0 != 10'd0) && !K[5];
+            if (l0) begin gm0[gg] <= 10'd1; kc0[gg] <= 6'd0; dz0[gg] <= S[9:0]; end
+            else if (u0) begin gm0[gg] <= upd_q[gg] ? dz0[gg] : gm0[gg]; kc0[gg] <= upd_q[gg] ? (~kc0[gg]) : (kc0[gg] + 6'd1); dz0[gg] <= nd0; end
+            if (l1) begin gm1[gg] <= 10'd1; kc1[gg] <= 6'd0; dz1[gg] <= S[9:0]; end
+            else if (u1) begin gm1[gg] <= upd_q[gg] ? dz1[gg] : gm1[gg]; kc1[gg] <= upd_q[gg] ? (~kc1[gg]) : (kc1[gg] + 6'd1); dz1[gg] <= nd0; end
+            if (!rs_n) begin par[gg] <= 1'b0; uv[gg] <= 1'b0; us[gg] <= 1'b0; fin[gg] <= 1'b0; sel[gg] <= 1'b0; end
+            else begin
+                par[gg] <= !par[gg];
+                uv[gg]  <= par[0] ? act1 : act0;
+                us[gg]  <= par[0];
+                fin[gg] <= (par[0] ? n1 : n0) == LAST;
+                if (ld[gg]) sel[gg] <= !sel[gg];
             end
-            if (ph_m[gg]) upd_q[gg] <= (dz[gg] != 10'd0) && !kc[gg][5];
-            if (!rs_n) begin ph_m[gg] <= 1'b0; ph_u[gg] <= 1'b0; end
-            else if (ld[gg]) begin ph_m[gg] <= 1'b1; ph_u[gg] <= 1'b0; end
-            else begin ph_m[gg] <= ph_u[gg] && (n != LAST); ph_u[gg] <= ph_m[gg]; end
         end
         for (gi = gg * GS; gi < ((gg == NG - 1) ? NPE : (gg + 1) * GS); gi = gi + 1) begin : g_pe
-            wire [9:0] Dn = (gi + 1 < NPE) ? d[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0;
+            wire [9:0] Dn0 = (gi + 1 < NPE) ? d0[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0;
+            wire [9:0] Dn1 = (gi + 1 < NPE) ? d1[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0;
             wire [9:0] pa, pb;
-            ot_s81_kp4_vmul u_a (.a(gm[gg]), .b(Dn),     .y(pa));
-            ot_s81_kp4_vmul u_b (.a(dz[gg]), .b(th[gi]), .y(pb));
+            ot_s81_kp4_vmul u_a (.a(G),  .b(X ? Dn1 : Dn0),       .y(pa));
+            ot_s81_kp4_vmul u_b (.a(D0), .b(X ? t1[gi] : t0[gi]), .y(pb));
             always @(posedge clk) begin
-                if (ph_m[gg]) begin pa_q[gi] <= pa; pb_q[gi] <= pb; end
-                if (ld[gg]) begin d[gi] <= dinit(gi); th[gi] <= dinit(gi); end
-                else if (ph_u[gg]) begin
-                    d[gi]  <= pa_q[gi] ^ pb_q[gi];
-                    th[gi] <= upd_q[gg] ? Dn : th[gi];
-                end
+                pa_q[gi] <= pa; pb_q[gi] <= pb;
+                if (l0) begin d0[gi] <= dinit(gi); t0[gi] <= dinit(gi); end
+                else if (u0) begin d0[gi] <= pa_q[gi] ^ pb_q[gi]; t0[gi] <= upd_q[gg] ? Dn0 : t0[gi]; end
+                if (l1) begin d1[gi] <= dinit(gi); t1[gi] <= dinit(gi); end
+                else if (u1) begin d1[gi] <= pa_q[gi] ^ pb_q[gi]; t1[gi] <= upd_q[gg] ? Dn1 : t1[gi]; end
+            end
+            if (gi < 31) begin : g_res
+                always @(posedge clk) if (uv[gg] && fin[gg]) rq[gi] <= pa_q[gi] ^ pb_q[gi];
             end
         end
     end endgenerate
+    wire ld0 = ld[0] && !sel[0], ld1 = ld[0] && sel[0];
+    wire m0  = !par[0] && act0, m1 = par[0] && act1;          // the slot that multiplies this cycle
+    wire [4:0] Lu = upd_q[0] ? (nm_q + 5'd1 - Lm_q) : Lm_q;   // L after the update in flight
     integer q;
     always @(posedge clk) begin
-        if (ld[0]) begin L <= 5'd0; any <= |S; end
-        else if (ph_u[0]) L <= upd_q[0] ? (n + 5'd1 - L) : L;
-        if (!rs_n) begin n <= 5'd31; done <= {NCD{1'b0}}; end
+        nm_q <= par[0] ? n1 : n0; Lm_q <= par[0] ? L1 : L0; anym_q <= par[0] ? any1 : any0;
+        if (ld0) begin L0 <= 5'd0; any0 <= |S; end else if (uv[0] && !us[0] && !fin[0]) L0 <= Lu;
+        if (ld1) begin L1 <= 5'd0; any1 <= |S; end else if (uv[0] &&  us[0] && !fin[0]) L1 <= Lu;
+        if (uv[0] && fin[0]) begin L <= Lu; any <= anym_q; end
+        if (!rs_n) begin act0 <= 1'b0; act1 <= 1'b0; n0 <= 5'd0; n1 <= 5'd0; c0 <= 6'd0; c1 <= 6'd0; dn1 <= 1'b0; done <= {NCD{1'b0}}; end
         else begin
-            if (ld[0]) n <= 5'd0;
-            else if (ph_u[0] && n != 5'd31) n <= (n == LAST) ? 5'd31 : n + 5'd1;
-            for (q = 0; q < NCD; q = q + 1) done[q] <= !ld[0] && ph_u[0] && (n == LAST);
+            if (ld0) begin act0 <= 1'b1; n0 <= 5'd0; end else if (m0) begin act0 <= n0 != LAST; n0 <= n0 + 5'd1; end
+            if (ld1) begin act1 <= 1'b1; n1 <= 5'd0; end else if (m1) begin act1 <= n1 != LAST; n1 <= n1 + 5'd1; end
+            // c == 60 in cycle t + 60 (the cycle the same slot may be reloaded); done two edges later, in t + 62
+            c0 <= ld0 ? 6'd1 : (c0 == 6'd0 || c0 == 6'd60) ? 6'd0 : c0 + 6'd1;
+            c1 <= ld1 ? 6'd1 : (c1 == 6'd0 || c1 == 6'd60) ? 6'd0 : c1 + 6'd1;
+            dn1 <= (c0 == 6'd60) || (c1 == 6'd60);
+            for (q = 0; q < NCD; q = q + 1) done[q] <= dn1;
         end
     end
     genvar go;
     generate for (go = 0; go < 16; go = go + 1) begin : g_lam
-        assign lam[10 * go +: 10] = d[15 + go];
+        assign lam[10 * go +: 10] = rq[15 + go];
         if (go < 15) begin : g_om
-            assign om[10 * go +: 10] = d[go];
+            assign om[10 * go +: 10] = rq[go];
         end
     end endgenerate
 endmodule

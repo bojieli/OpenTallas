@@ -16,15 +16,9 @@
 //   unchanged.  The word delay tile must wait one more word: ot_s81_kp4_ddly DD +1 under OT_S81_RCK_RX_SPCYC.
 // ---------------------------------------------------------------------------------------------------------------
 // OT_S81_KP4_BM_IT2 (HARD-S81-SERDES-1 11-13, opt-in; needs OT_S81_KP4_SYN_LOCAL without BM_PREL): the RiBM units are
-//   ot_s81_kp4_bm_it2 (two-cycle iteration, done 31 cycles later) and there are NBM = 7 of them; k_* +31 rck; the delay
-//   tile ot_s81_kp4_ddly holds the words 31 more under the same define.
-module ot_s81_kp4_dsyn #(parameter integer MUT = 0,
-`ifdef OT_S81_KP4_BM_IT2
-    parameter integer NBM = 7,
-`else
-    parameter integer NBM = 3,
-`endif
-    parameter integer BMTHC = 0, parameter integer PIN_X = 0,
+//   ot_s81_kp4_bm_it2 (two-cycle iteration, two frames interleaved a unit, done 32 cycles later), still NBM = 3;
+//   k_* +32 rck; the delay tile ot_s81_kp4_ddly holds the words 32 more under the same define.
+module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0, parameter integer PIN_X = 0,
 `ifdef OT_S81_RCK_RX_SPCYC
     parameter integer SPCYC = 1) (     // the define is the form switch in every parent (flat column and RE-FORM cores)
 `else

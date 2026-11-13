@@ -44,10 +44,10 @@ module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT, paramete
     wire [5:0] rd_d = ptr - DD[5:0] + RQ[5:0];
 `endif
     wire [545:0] d_rd;
-    // OT_S81_KP4_BM_IT2: the key equation takes 31 cycles longer; the words wait in a 31-word register line before the
-    // 64-word memory (DD + 31 would not fit its 6-bit pointer).  XD 0 = wires.
+    // OT_S81_KP4_BM_IT2: the key equation takes 32 cycles longer; the words wait in a 32-word register line before the
+    // 64-word memory (DD + 32 would not fit its 6-bit pointer).  XD 0 = wires.
 `ifdef OT_S81_KP4_BM_IT2
-    localparam integer XD = 31;
+    localparam integer XD = 32;
 `else
     localparam integer XD = 0;
 `endif

@@ -81,10 +81,11 @@
   },
   {
    "id": "BM_IT2",
-   "lane": "RX RiBM two-cycle iteration, 7 units, +31-word delay line (OT_S81_KP4_BM_IT2)",
-   "added_cycles": 31,
+   "lane": "RX RiBM folded 2-way: two-cycle iteration, two frames interleaved a unit (3 units), +32-word delay line (OT_S81_KP4_BM_IT2)",
+   "added_cycles": 32,
    "clk": "pma_rck",
-   "set": "kitF only (fallback)"
+   "set": "kitF only (fallback)",
+   "note": "the first form (one frame a unit, 7 units, +31) was 522k standard cells, over the 400k run cap; bench records bench9 / kp4g1 are that form, bench11 / kp4g3 / kp4g4 this one"
   }
  ],
  "totals": {
@@ -102,7 +103,7 @@
   "cone set + LANE 3/4/5/3": 110,
   "kitD set (cone set + ENC_LA + BM_PE_LOCAL + LANE)": 110,
   "kitE set (kitD + SPCYC + PPCYC)": 112,
-  "kitF set (kitD + BM_IT2)": 141
+  "kitF set (kitD + BM_IT2)": 142
  },
  "reset": "rx reaches IDLE and st 0 within LANE_RXO + 2 clk edges of the die reset (bench leaf check); LOCKSAFE HOLD_EDGES 64 unchanged",
  "plan_lanes": "no die_plan lane changes: the coll lanes end at the column pins, so lane_asbuilt_latency.py rows are unchanged; the link-internal cycles above go to the die owner / TOK-VERIFY as rows",
@@ -125,8 +126,8 @@
    "vs_released": 24
   },
   "kitF": {
-   "loopback": 141,
-   "vs_released": 53
+   "loopback": 142,
+   "vs_released": 54
   }
  }
 }
