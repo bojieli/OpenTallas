@@ -1618,6 +1618,26 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["p
 # DIE-KV-59 10-31 (opt-in): FIRM sites of existing RTL stage flops, {flop name below the bound inst: [x_um, y_um]}
 # DIE-HEAD-79 11-07: registered hops that cross a hard core: one strong driver, no repair on the net (kit_istations.py)
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_cross"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["sink_glob", "sink_pin", "cell"], "properties": {"sink_glob": {"type": "string"}, "sink_pin": {"type": "string"}, "cell": {"type": "string"}}}}
+# HBM-KITIST-1 11-12 (opt-in, kit_istation_forms.py): per-bit station depth of a bus chain / shared-trunk station tree
+_PT = SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]
+_RUNS = {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 3, "maxItems": 3,
+                                                   "items": {"type": "integer", "minimum": 0}}}
+_BITS = {"type": "array", "minItems": 1, "items": {"oneOf": [{"type": "integer", "minimum": 0}, {
+    "type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}}]}}
+_XY = {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}
+_PT["pad_landing"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["bus", "bit_depth"], "properties": {
+    "bus": {"type": "string", "minLength": 1}, "bit_depth": _RUNS, "stage_sites_um": {"type": "array", "items": _XY},
+    "peer": {"type": "object", "additionalProperties": False, "properties": {
+        "type": {"type": "string"}, "bus": {"type": "string"}}}, "k": {"type": "integer", "minimum": 0},
+    "reach_waiver": {"type": "boolean"}, "note": {"type": "string"}}}}
+_ATT = {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["node"], "properties": {
+    "node": {"type": "string", "minLength": 1}, "core": {"type": "string", "minLength": 1}, "name": {"type": "string"},
+    "prefix": {"type": "array", "items": {"type": "string", "minLength": 1}}, "bits": _BITS}}}
+_PT["station_trees"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["bus", "nodes"], "properties": {
+    "bus": {"type": "string", "minLength": 1}, "note": {"type": "string"},
+    "nodes": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["id", "parent"], "properties": {
+        "id": {"type": "string", "minLength": 1}, "parent": {"type": ["string", "null"]}, "site_um": _XY}}},
+    "readers": _ATT, "sources": _ATT}}}
 # RELAY-SITES 11-09: opt-in per type, reset relays numbered from their site (reset_tree.site_relay_id); absent = visit order
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_relay_names"] = {"enum": ["site"]}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_sites"] = {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}
@@ -1783,6 +1803,12 @@ def validate_structure(obj):
     _check(obj, _schema_station_model() if opt else SCHEMA, "$", errs)
     if opt and not errs:
         errs += station_model_errors(obj)
+    if not errs and isinstance(obj, dict) and any(t.get("pad_landing") for t in obj.get("partition_types", {}).values()):
+        try:                                    # HBM-KITIST-1: pad_landing seams must preserve per-bit lane cycles
+            from . import kit_istation_forms as _KF
+        except ImportError:
+            import kit_istation_forms as _KF
+        errs += [f"pad_landing: {m}" for m in _KF.pair_problems(obj)]
     id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
                 if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
     if id_types:

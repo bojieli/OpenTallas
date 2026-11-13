@@ -179,6 +179,9 @@ def main(argv):
                 if m and m.group(2) in buses:
                     delta[m.group(2)] += sign * int(m.group(1))
                     continue
+                if re.match(r"^ot_dp_st #\(\.W\(\d+\)\) u_ist_\w+_t\w+ \(", ln) and any(
+                        re.match(rf"^ot_dp_st #\(\.W\(\d+\)\) u_ist_{re.escape(x)}_t", ln) for x in buses):
+                    continue    # HBM-KITIST-1 station_trees node: tree depth is gated by kit_topology, not a cycle delta here
                 m = re.match(r"^ot_dp_st #\(\.W\(\d+\)\) u_ist_(\w+)_(\d+) \(", ln)
                 if m and m.group(1) in buses:
                     delta[m.group(1)] += sign

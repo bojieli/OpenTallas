@@ -188,19 +188,43 @@ def source_census(raw,tn,rtl_dir, *, require_receipt=True):
                                  parameters=dict(W=packed['width'],D=packed['depth']),
                                  register_bits=packed['width']*packed['depth'],kind=conn))
             continue
+        # HBM-KITIST-1 11-12: opt-in station forms (kit_istation_forms.py).  station_trees: the receipt lists the tree nodes
+        # u_ist_<bus>_t<id>, every reader sits `planned` stations from the face.  pad_landing: the chain has `stages`
+        # (>= planned) stations, per-bit depths differ (receipt carries bit_depth).
+        frows=[r for r in report if r.get('conn')==conn]
+        tree=next((r for r in frows if r.get('station_tree')),None)
+        padl=next((r for r in frows if r.get('pad_landing')),None)
+        if tree:
+            names=tree.get('stations',[])
+            pads=sorted(set(re.findall(r'\bu_b(?:in|out)_'+re.escape(bus)+r'_pad\d+\b',text)))
+            if tree.get('planned')!=count:problems.append(f'{conn}: tree receipt planned {tree.get("planned")}, expected {count}')
+            bad=[d for d in tree['station_tree'].get('reader_stations',[]) if d!=count]
+            if bad or not tree['station_tree'].get('reader_stations'):
+                problems.append(f'{conn}: tree readers at {sorted(set(bad))} stations, bus latency is {count}')
+            if re.search(r'\bu_ist_'+re.escape(bus)+r'_\d+\s*\(',text):
+                problems.append(f'{conn}: plain chain stations beside a station tree')
+            if len(names)!=len(set(names)) or len(names)!=tree['station_tree'].get('nodes'):
+                problems.append(f'{conn}: tree receipt lists {len(names)} stations for {tree["station_tree"].get("nodes")} nodes')
+            ks={n:[k for k in ['ot_dp_st','ot_dp_ste'] if len(_instance_type_spans(text,k,n))==1] for n in names}
+            for n in names:
+                if len(ks[n])!=1:problems.append(f'{n}: expected one canonical station instance, found {len(ks[n])}')
+                required.append(dict(inst=n,master=ks[n][0] if len(ks[n])==1 else 'ot_dp_st',kind=conn))
+            emitted_bus_stages[conn]=pads+[n for n in names if len(ks[n])==1]
+            continue
+        expect=padl['pad_landing']['stages'] if padl else count
         candidates=set(re.findall(r'\b(u_ist_'+re.escape(bus)+r'_\d+|u_b(?:in|out)_'+re.escape(bus)+r'_pad\d+)\b',text))
         kinds={name:[kind for kind in ['ot_dp_st','ot_dp_ste'] if len(_instance_type_spans(text,kind,name))==1] for name in sorted(candidates)}
         emitted=[name for name,ks in kinds.items() if len(ks)==1]
         emitted_bus_stages[conn]=emitted
-        if len(emitted)!=count:
-            problems.append(f'{conn}: actual source emitted {len(emitted)} stages, expected {count}')
+        if len(emitted)!=expect:
+            problems.append(f'{conn}: actual source emitted {len(emitted)} stages, expected {expect}')
         if require_receipt and not rows:
             problems.append(f'{conn}: missing kit_istations factory receipt for {count} stages')
             continue
         for row in rows:
             names=row.get('stations',[])
-            if row.get('planned')!=count or len(names)!=count:
-                problems.append(f'{conn}: factory emitted {len(names)} stages, expected {count}')
+            if row.get('planned')!=count or len(names)!=expect:
+                problems.append(f'{conn}: factory emitted {len(names)} stages, expected {expect}')
             for name in names:
                 choices=kinds.get(name,[])
                 if len(choices)!=1:problems.append(f'{name}: expected one canonical station instance, found {len(choices)}')

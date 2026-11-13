@@ -61,7 +61,7 @@ def bound_rtl_file(rtl_dir, raw, tn):
 
 def rtl_mentions(txt, bus):
     b = re.escape(bus)
-    pat = rf"\b(?:u_bin_|u_bout_|u_ist_)?{b}(?:_q|_eq|_pad\d+|_is\d+_q|_is\d+_eq|_\d+)?\b"
+    pat = rf"\b(?:u_bin_|u_bout_|u_ist_)?{b}(?:_q|_eq|_pad\d+|_is\d+_q|_is\d+_eq|_t\w+|_\d+)?\b"
     return len(re.findall(pat, txt))
 
 
