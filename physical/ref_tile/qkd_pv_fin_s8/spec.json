@@ -23,7 +23,7 @@
  ],
  "outline": {
   "w": 207.36,
-  "h": 198.72
+  "h": 194.4
  },
  "layer_cap": "M5",
  "macros": [],
@@ -125,91 +125,91 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "KV-PVFIN-1 11-13: new core (lane slice of qkd_pv_fin_s). The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed post-place setup -448 ps / CTS -381 ps on out_epoch[3] and ~20k endpoints: the calendar slots were 16-bit window compares of age + 1 against adder-derived ages, ANDed into the fault check, the state enables and the 16,384 sbuf enables, and the multiplier operands came through a 32:1 read mux. R-RTL-5 (1)+(2)+(3): calendar decoded flop to flop behind a +1 input stage (s8c: the raw-pin decode sat behind the 487 ps link-budget input delay, post-CTS -304 ps at cq_bad / cq_em), out_beat / out_epoch enabled without the fault cone, sbuf a flat vector (s8a: an inferred memory moved the 32:1 read mux behind the address flop, -480 ps), slots are flag registers (set/clear by equality), beat indices are 5-bit counters, the sbuf read and head select are prefetched one edge early into operand registers with a write-through bypass. Outline 207.36 W x 198.72 H (R-CAP-2: 17.7k um2 std after place / ~39.5k um2 core = ~0.45; the planned 190.08 frame would sit at ~0.51). Height 198.72 so the abutted lo/hi pair (397.44) fits the hub_C pocket between ft21 (y 839.3) and the die island (y 1270.8) with the 10.8 um clearance of hubc_split_form.py; the 207.36-square s8d build (signed off) did not fit (414.72).",
+ "structural_change": "KV-PVFIN-1 11-13: new core (lane slice of qkd_pv_fin_s). The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed post-place setup -448 ps / CTS -381 ps on out_epoch[3] and ~20k endpoints: the calendar slots were 16-bit window compares of age + 1 against adder-derived ages, ANDed into the fault check, the state enables and the 16,384 sbuf enables, and the multiplier operands came through a 32:1 read mux. R-RTL-5 (1)+(2)+(3): calendar decoded flop to flop behind a +1 input stage (s8c: the raw-pin decode sat behind the 487 ps link-budget input delay, post-CTS -304 ps at cq_bad / cq_em), out_beat / out_epoch enabled without the fault cone, sbuf a flat vector (s8a: an inferred memory moved the 32:1 read mux behind the address flop, -480 ps), slots are flag registers (set/clear by equality), beat indices are 5-bit counters, the sbuf read and head select are prefetched one edge early into operand registers with a write-through bypass. Outline 207.36 W x 194.4 H (R-CAP-2: 17.7k um2 std after place / ~38.7k um2 core = ~0.46; the planned 190.08 frame would sit at ~0.51). Height 194.4 so the abutted lo/hi pair (388.8, origins (1041.12, 851.04) / (1041.12, 1045.44)) passes hubc_split_form.py --cores: the hub_C pocket is bounded by ft21 (y 839.3) and the reset local tap (1218.24, 1252.8) with 10.8 um clearance, ft0 (x 1029.8) and clk_t44 (x 1260); the 207.36-square s8d build (signed off) did not fit.",
  "pin_ranges": {
   "p0_valid": [
-   3.83,
-   4.79
+   3.75,
+   4.69
   ],
   "p0_beat": [
-   4.79,
-   6.71
+   4.69,
+   6.56
   ],
   "p0_epoch": [
-   6.71,
-   11.5
+   6.56,
+   11.25
   ],
   "p0_data": [
-   11.5,
-   79.54
+   11.25,
+   77.81
   ],
   "rz_valid": [
-   80.02,
-   80.98
+   78.28,
+   79.22
   ],
   "rz_epoch": [
-   80.98,
-   85.29
+   79.22,
+   83.44
   ],
   "rz": [
-   85.29,
-   118.83
+   83.44,
+   116.25
   ],
   "p1_data": [
-   118.83,
-   186.87
+   116.25,
+   182.81
   ],
   "p1_epoch": [
-   186.87,
-   191.67
+   182.81,
+   187.5
   ],
   "p1_beat": [
-   191.67,
-   193.58
+   187.5,
+   189.37
   ],
   "p1_valid": [
-   193.58,
-   194.54
+   189.37,
+   190.31
   ],
   "out_valid": [
-   3.83,
-   4.79
+   3.75,
+   4.69
   ],
   "out_beat": [
-   4.79,
-   6.71
+   4.69,
+   6.56
   ],
   "out_epoch": [
-   6.71,
-   11.5
+   6.56,
+   11.25
   ],
   "out_data": [
-   11.5,
-   143.75
+   11.25,
+   140.62
   ],
   "fault": [
-   143.75,
-   145.67
+   140.62,
+   142.5
   ],
   "ck": [
-   151.42,
-   153.33
+   148.13,
+   150.0
   ],
   "rst_n": [
-   154.29,
-   156.21
+   150.94,
+   152.81
   ],
   "start": [
-   159.08,
-   161.0
+   155.62,
+   157.5
   ],
   "epoch": [
-   161.0,
-   168.67
+   157.5,
+   165.0
   ],
   "cal": [
-   168.67,
-   191.67
+   165.0,
+   187.5
   ]
  },
  "reset_landing": {
