@@ -83,3 +83,12 @@ Scope: (1) NEAR-MISS ECO on routed DB (hd_turn_a 89228387ea15; hd_turn_b 9098341
 - OPEN: reset re-solve. The die wavefront re-solves with the die stretch: tile depth 5 -> 4, and st_n3_transit u_rrl_44 moves. street_rule resetfix REVERTS hd_tile (u_rrl_78 / u_rrl_45: no same-role relay at depth 5). Do not use rp21h/rp21i (their hd_tile is reverted to the old form). Trying reach_fix fix --classes 5 --ref-plan rp20a (-> pd/rp21h5.json, log g_b/rf5.log).
 - F1c RTL: a fork sub-agent is building XO_HOP=2 on branch claude/head-97-xohop-1113 (worktree wt/head-97-xohop). Delta script goes in head-97/xohop/.
 - rp20 RESULTs posted: hd_host_e (GRT), hd_tile (DRT-0255 eA0 W strip). Monitor re-armed for the other 4.
+
+## 2026-11-13 10:26 rp21 status
+- Form is final: hd_tile W 8.64 / 43.2 / E 25.92. G0C needs the 8.64 lattice. Tile 717.12, die 17712 x 17556.48.
+- SRAM blocks abut via track_offset +0.048 per macro. host_w head banks are MY at 449.28, sf at 544.32.
+- Private tools tree epyc7 wt/head-97-rp20 @ fb5f5a8db8, local merges, NOT pushed: main + REACH-TOOL-3 1a13fcec4a + head-97-xohop 1bb0c4ec0f (fork; XO_HOP RTL, proofs in head-97/xohop/proof) + train 61 rules-flow-1 06a9b2cf28.
+- Chain: head-97/build21.sh (full; it ends by running prep21.sh = KIT-OPS prep + kit_rtl + gen for 8 types -> kits21/). Plan out pd/rp21x.json, sidecar pd/sidecar_rp21.json.
+- Reset: remap_start.py (local copy; ONLY/SKIP filter; rr_t raw copies follow their leaf). Pass 1: OLD=rp21e for hd_host_e. Pass 2: OLD=rp20a for the rest. Then head_reset_exports_rp21.py (offset fallback, 2 exports 1 cycle earlier: tile raw_0, eshim_tx raw_0).
+- Last fail fixed: one hd_tile die_island collapsed to zero width under the endpoint map. Islands now move as a whole. Kits pending: launch with ot-run --hosts epyc7 like h97_launch2.sh, but on kits21.
+- Posted: STATE, RESULT (plan gates rp21j), CORRECTION (DRT-0255 location uses 1000 DBU). ASKed COORD about the die clock gate re-run and hd_mesh / hd_ctl streets.
