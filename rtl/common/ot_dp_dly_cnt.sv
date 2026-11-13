@@ -6,9 +6,9 @@
 // (W, DMAX, count) constant is LEC'd against ot_dp_dly #(W, D=count) (results/die_kv_7_1028/r8_strap/run_lec.py).
 // Not a runtime selector: the strap is a parent-level constant, like the ID / K straps (OWNER 10-25 B, 12.15a).
 (* keep_hierarchy = 1 *)
-module ot_dp_dly_cnt #(parameter integer W = 1, parameter integer DMAX = 1) (
+module ot_dp_dly_cnt #(parameter integer W = 1, parameter integer DMAX = 1, parameter integer CW = 4) (
     input  wire         clk,
-    input  wire [3:0]   strap_cnt,
+    input  wire [CW-1:0] strap_cnt,
     input  wire [W-1:0] d,
     output wire [W-1:0] q
 );

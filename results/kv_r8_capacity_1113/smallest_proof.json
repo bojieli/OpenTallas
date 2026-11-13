@@ -1,0 +1,198 @@
+{
+ "verdict": "PASS",
+ "default_eq": true,
+ "extended_counts": [
+  0,
+  2,
+  4,
+  6,
+  21,
+  24,
+  26,
+  30,
+  31,
+  32,
+  45,
+  53,
+  62
+ ],
+ "rows": [
+  {
+   "tag": "default_eq",
+   "seq": 2,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_0_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_2_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_4_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_6_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_21_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_24_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_26_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_30_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_31_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_32_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_45_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_53_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "extended_62_eq",
+   "seq": 63,
+   "kind": "eq",
+   "rc": 0,
+   "proven": true,
+   "unproven": null,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  },
+  {
+   "tag": "truncated_count_mutant",
+   "seq": 63,
+   "kind": "mutant",
+   "rc": 1,
+   "proven": false,
+   "unproven": 2,
+   "timeout": false,
+   "pass_": true,
+   "undecided": false
+  }
+ ],
+ "lockstep": [
+  {
+   "kind": "nominal",
+   "rc": 0,
+   "log": "LOCKSTEP PASS\n/srv/opentallas-scratch2/claude/dkv100/ahub_r8_probe/capacity_proof/tb_nominal.sv:35: $finish called at 5006 (1s)"
+  },
+  {
+   "kind": "mutant",
+   "rc": 1,
+   "log": "LOCKSTEP FAIL 201\nFATAL: /srv/opentallas-scratch2/claude/dkv100/ahub_r8_probe/capacity_proof/tb_mutant.sv:35: \n       Time: 5006  Scope: tb"
+  }
+ ]
+}

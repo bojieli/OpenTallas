@@ -25,9 +25,9 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-BANK_RE = re.compile(r"^\s*ot_dp_dly_cnt #\(\.W\((\d+)\), \.DMAX\((\d+)\)\) (\w+) \(\.clk\(clk\), "
+BANK_RE = re.compile(r"^\s*ot_dp_dly_cnt #\(\.W\((\d+)\), \.DMAX\((\d+)\)(?:, \.CW\((\d+)\))?\) (\w+) \(\.clk\(clk\), "
                      r"\.strap_cnt\((strap_r8pad_\w+)\), \.d\(([^;]*?)\), \.q\((\w+)\)\);.*$", re.M)
-PORT_RE = re.compile(r"^\s*input wire \[3:0\] (strap_r8pad_\w+)\b.*$", re.M)
+PORT_RE = re.compile(r"^\s*input wire \[(\d+):0\] (strap_r8pad_\w+)\b.*$", re.M)
 INST_RE = re.compile(r"(?m)^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*([A-Za-z_]\w*)\s*\(")
 DLY = """module ot_dp_dly #(parameter integer W = 1, parameter integer D = 1) (
     input  wire         clk,
@@ -46,14 +46,16 @@ endmodule
 
 
 def banks_of(text):
-    return [dict(W=int(m[1]), DMAX=int(m[2]), inst=m[3], site=m[4], d=m[5], q=m[6]) for m in BANK_RE.finditer(text)]
+    return [dict(W=int(m[1]), DMAX=int(m[2]), inst=m[4], site=m[5], d=m[6], q=m[7], **({"CW": int(m[3])} if m[3] else {})) for m in BANK_RE.finditer(text)]
 
 
 def structure_ok(text):
     """(1): removing the strap port lines and the bank lines leaves the module the parameter form also has"""
     stripped = re.sub(r"//[^\n]*", "", PORT_RE.sub("", BANK_RE.sub("", text)))
     # no other use of a strap pin (the bank output wires r8b_strap_r8pad_* are ordinary names)
-    return "ot_dp_dly_cnt" not in stripped and not re.search(r"(?<!\w)strap_r8pad_\w+", stripped)
+    widths = {m[2]: int(m[1]) + 1 for m in PORT_RE.finditer(text)}
+    return ("ot_dp_dly_cnt" not in stripped and not re.search(r"(?<!\w)strap_r8pad_\w+", stripped)
+            and all(widths.get(b["site"]) == b.get("CW", 4) for b in banks_of(text)))
 
 
 def harness(tn, banks, gold, ties, tag):
@@ -69,8 +71,10 @@ def harness(tn, banks, gold, ties, tag):
                 f"    ot_dp_dly #(.W({b['W']}), .D({c})) u{k} (.clk(clk), .d(d{k}), .q(q{k}));\n")
     txt += f"endmodule\nmodule gate {hdr}"
     for k, b in enumerate(banks):
-        txt += (f"    wire [3:0] t{k} = 4'd{ties[b['site']]};\n"
-                f"    ot_dp_dly_cnt #(.W({b['W']}), .DMAX({b['DMAX']})) u{k} (.clk(clk), .strap_cnt(t{k}), "
+        cw = b.get("CW", 4)
+        cp = f", .CW({cw})" if cw != 4 else ""
+        txt += (f"    wire [{cw - 1}:0] t{k} = {cw}'d{ties[b['site']]};\n"
+                f"    ot_dp_dly_cnt #(.W({b['W']}), .DMAX({b['DMAX']}){cp}) u{k} (.clk(clk), .strap_cnt(t{k}), "
                 f".d(d{k}), .q(q{k}));\n")
     return txt + "endmodule\n"
 

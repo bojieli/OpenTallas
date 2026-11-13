@@ -5415,6 +5415,11 @@
       "type": "number",
       "minimum": 0
      },
+     "r8_strap_pad_max": {
+      "type": "integer",
+      "minimum": 15,
+      "description": "Declared capacity of this type's R8 static pad banks; binder emits enough count bits and DMAX stages. Absent = 15."
+     },
      "reach_homes": {
       "type": "array",
       "items": {

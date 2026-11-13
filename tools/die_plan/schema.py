@@ -1419,6 +1419,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
                                "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# KV R8 maximum-capacity static pad bank: opt-in type-local hardware depth/count width, default 15 / four bits.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r8_strap_pad_max"] = {
+    "type": "integer", "minimum": 15,
+    "description": "Declared capacity of this type's R8 static pad banks; binder emits enough count bits and DMAX stages. Absent = 15."}
 # R-REACH (RULEBOOK-1113, tools/die_plan/reach_rules.py): reach_homes = where the soft logic of the named face buses is
 # placed (rule 2, macro barriers; rule 3, bus windows); budgets.r_reach = G0 severity of check "r_reach".
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reach_homes"] = {
