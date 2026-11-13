@@ -469,6 +469,18 @@ def prov_item(d, item):
     return prov_on(d) and (f == "noview" or (f == "planned" and not d.get("planned_core_flat")))
 
 
+def kit_rtl_post_cmd(T, W, plan):
+    """HARD-S81-SVC-1 11-13: shell suffix of the kit_rtl stage in kit_rtl mode "bind" (cwd = wave source checkout): run
+    every die-owned physical/die_plan/*/kit_wave/kit_rtl_post.sh of the wave source on the kit RTL dir just written.
+    Each script selects itself from the kit content and leaves any other kit untouched (exit 0).  Class: the S81 svc
+    memory closure was a line of the script-mode kit_rtl.sh only; the move of the S81 wave to mode "bind" (11-12 21:46)
+    dropped it and all 16 svc items failed GEN_LINT memory_bits.  A step the kit needs must not depend on which
+    kit_rtl mode the wave configuration names."""
+    q = shlex.quote
+    return (' && for P in physical/die_plan/*/kit_wave/kit_rtl_post.sh; do [ -f "$P" ] || continue; '
+            f'TYPE={q(T)} OUT={q(W + "/rtl")} PLAN={q(plan)} bash "$P" || exit $?; done')
+
+
 def kit_rtl_mode(d):
     """the die's kit-RTL mode (bind / script): the type kit takes the bound partition RTL; None = plan wrapper"""
     kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
@@ -4446,7 +4458,7 @@ def run_item(spec_path):
             if rc:
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
         rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && python3 tools/die_plan/bind.py kit-rtl {q(plan)} --out {q(bind)} "
-                                               f"--asbuilt {q(a)} --type {q(T)} --kit {q(W)}/rtl", gh))
+                                               f"--asbuilt {q(a)} --type {q(T)} --kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan), gh))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:
