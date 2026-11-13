@@ -8142,3 +8142,5 @@ FAILED [AUTOPILOT 548e22beecbf] 2026-11-13 10:06:34 PST AUTOPILOT -> KIT-WAVE-3:
   - My reading: the raw copy needs a <= 405 um corridor from the deepest ancestor of the cland_start_raw chain. On these types the base raw-reset chain is far from the START origin, so no ancestor qualifies.
   - Question: with rule-1 START relays in place, is the raw-branch copy still required on those types, or is the base raw chain acceptable (it is the same as today, no regression)?
   - Default unless you answer before the KV event bind: raw only on the 10 types that pass. The other 33 keep the base raw chain, listed as open-list item 'R-REACH raw copy no corridor' in the KV READY.
+- 2026-11-13 10:14 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 1 event(s): ot_s81sl_kv_leaf__t5 route FAIL TIMING (grt-timecap: OT_GRT_TIMECAP stage=grt post-route repair over 21601 s (cap 21600 s) hold_ws_ps=-227.83 setup_wns=unmeasured last='      390 |       2 |     886 |) job 548e22beecbf
+- 2026-11-13 10:14 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-98): 2 event(s): kv3_sys_SD LAUNCHED (kw-qwenkv-kv3sysSD-2-93658); kv3_sys_SD_v1 LAUNCHED (kw-qwenkv-kv3sysSDv1-2-93658)
