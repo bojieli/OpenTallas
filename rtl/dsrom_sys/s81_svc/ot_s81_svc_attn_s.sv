@@ -85,7 +85,8 @@ module ot_s81_svc_attn_s #(
     // SRX-stage bundle once more (+1) and registers its outputs (+1); the output tags wait 2 more: scores +2 and P.V +2
     // against the same p feed, the SRX signature with n = SRX + 2 (the compiler moves PIO / KPV by SRX + 2).
     // Needs SRX >= 1, TRX 1, REPL 2, TILE_S 1, MFAN 1, TD 32, H 8.  The as-built instance names do not move at 0.
-    parameter integer BANDX = 0,
+    parameter integer BANDX = 0,       // v2: the band's input capture depth (1 = v1); scores +(BANDX + 1)
+    parameter integer BANDM = 0,       // v2: 1 = merge inputs registered in the band; P.V +(BANDX + 1 + BANDM)
     parameter integer BANDMUT = 0,     // BANDX bench negative controls: 1 = output tags only +1, 2 = band 0's merge tags
                                        //   not captured (one edge early)
     // derived (do not override): tile bundle widths, same formulas as the NBANK / BW localparams below
@@ -764,6 +765,7 @@ module ot_s81_svc_attn_s #(
                 end
                 ot_s81_svc_band #(.H(H), .TD(TD), .DPT(DPT), .NL(NL), .NBANK(NBANK), .BW(BW), .PWORDS(PWORDS), .FPL(FPL),
                                   .FML(FML), .F12(F12), .MLEV(MLEV), .FX(FX), .XOFF(XO), .NF(NF),
+                                  .CAPD(BANDX), .MREG(BANDM),
                                   .MUT((BANDMUT == 2 && gk == 0) ? 2 : 0)) u_band (
                     .clk(clk), .rst_n(rst_n),
                     .ctl_i(zo[19:0]), .wpad_i(zo[20 +: NL]), .fw_i(fw),
@@ -951,9 +953,9 @@ module ot_s81_svc_attn_s #(
         // (SRX: the tile side, SRX edges after the E1 register; the set ids ride the same delay)
         // (BANDX: the band's own time base, one edge after the SRX stage -- its captured load / issue line and operand)
         sck_w[(sck_n + 2) % 64] = {ck_ld_v, ck_ld_w2v, ck_ld_mode, ck_ld_grp, ck_ld_bank};
-        sck_wset[(sck_n + 2) % 64] = (SRX > 0) ? sck_lq[SRX - 1 + ((BANDX != 0) ? 1 : 0)] : e_ld_set;
+        sck_wset[(sck_n + 2) % 64] = (SRX > 0) ? sck_lq[SRX - 1 + BANDX] : e_ld_set;
         sck_ib[sck_n % 64] = {ck_iv, ck_ibank};
-        sck_iset[sck_n % 64] = (SRX > 0) ? sck_iq[SRX - 1 + ((BANDX != 0) ? 1 : 0)] : e_iset;
+        sck_iset[sck_n % 64] = (SRX > 0) ? sck_iq[SRX - 1 + BANDX] : e_iset;
         for (sck_k = 0; sck_k < TD; sck_k = sck_k + 1) sck_ipad[sck_n % 64][sck_k] = ck_eib[sck_k*18 + 17];
         // writes visible from this cycle
         if (sck_w[sck_n % 64][BW+10]) begin
@@ -1121,7 +1123,7 @@ module ot_s81_svc_attn_s #(
     endgenerate
 
     // tags to the tile outputs (TLX: the landed round trip, compiler re-schedule; VT: ATTN1 sub-beats)
-    localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? 1 : 2) : 0;   // BANDX: band capture + output register
+    localparam integer BXT = (BANDX != 0) ? ((BANDMUT == 1) ? BANDX : BANDX + 1) : 0;   // band capture stages + output register
     generate if (BANDX == 0) begin : g_bd0
         assign bd_ov = {NT{1'b0}}; assign bd_mov = {NT{1'b0}};
         assign bd_y = {(NT*H*32){1'b0}}; assign bd_my = {(NT*H*32){1'b0}};
@@ -1228,7 +1230,7 @@ module ot_s81_svc_attn_s #(
         end
     endgenerate
     wire [7:0] m_c;
-    ot_hdc_v41x_dly #(.W(8), .D(FX * MLEV + ((MFAN != 0) ? 1 : 0))) u_mc (.clk(clk), .d(t_c), .q(m_c));
+    ot_hdc_v41x_dly #(.W(8), .D(FX * MLEV + ((MFAN != 0) ? 1 : 0) + ((BANDX != 0) ? BANDM : 0))) u_mc (.clk(clk), .d(t_c), .q(m_c));
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) pv_v <= 1'b0;
         else pv_v <= m_ov[0];

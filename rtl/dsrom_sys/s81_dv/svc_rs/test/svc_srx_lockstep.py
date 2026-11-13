@@ -43,14 +43,14 @@ def vectors(d: Path, seed: int):
 
 def build(a, srx, mut, nkv, np_):
     ns = a.nstage if srx else 2
-    band = 1 if (srx and a.band) else 0
-    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + ("_band" if band else "")
+    band = a.band if srx else 0
+    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + (f"_band{band}m{a.bandm}" if band else "")
     if (a.work / f"build_{tag}.rc").is_file() and (a.work / f"build_{tag}.rc").read_text().strip() == "0":
         return tag
     prm = dict(P, NSTAGE=ns, SRX=srx, SRXMUT=mut, NJOBMAX=len(TS), NKV=nkv, NP=np_, NSC=1, NPV=1, MAXCYC=400000)
     if band:
         # --band: the S81 band form (ot_s81_svc_band); the mutants are the BAND negative controls (BANDMUT 1, 2)
-        prm.update(SRXMUT=0, BANDX=1, BANDMUT=mut)
+        prm.update(SRXMUT=0, BANDX=band, BANDM=a.bandm, BANDMUT=mut)
     if srx and a.srxt:
         prm["SRXT"] = f"1024'h{a.srxt}"
     r = "/work/root"
@@ -96,9 +96,10 @@ def run(a, tag):
     return ev, summ
 
 
-def compare(ref, dut, n):
+def compare(ref, dut, n, npv=None):
+    npv = 2 * n if npv is None else npv
     out = {}
-    for k, sh in (("IJ", 0), ("IQ", 0), ("IKV", 0), ("IP", n), ("BSC", n), ("BPV", 2 * n)):
+    for k, sh in (("IJ", 0), ("IQ", 0), ("IKV", 0), ("IP", n), ("BSC", n), ("BPV", npv)):
         a, b = ref[k], dut[k]
         ok = len(a) == len(b) and all(x[1] == y[1] and y[0] - x[0] == sh for x, y in zip(a, b))
         bad = next((i for i, (x, y) in enumerate(zip(a, b)) if x[1] != y[1] or y[0] - x[0] != sh), None)
@@ -119,14 +120,16 @@ def main():
     ap.add_argument("--mut", default="1,2,3")
     ap.add_argument("--nstage", type=int, default=2, help="DUT NSTAGE (3 = third staging buffer); the SRX 0 reference stays 2")
     ap.add_argument("--seed", type=int, default=11)
-    ap.add_argument("--band", action="store_true", help="S81 band form (BANDX 1) on top of --srx: expected shift n = srx + 2; "
-                    "--mut then names the BANDMUT controls (1 = tags only +1, 2 = band 0 merge tags early)")
+    ap.add_argument("--band", type=int, default=0, help="S81 band form: BANDX = capture depth (1 or 2) on top of --srx; "
+                    "--mut then names the BANDMUT controls (1 = tags one stage short, 2 = band 0 merge tags early)")
+    ap.add_argument("--bandm", type=int, default=0, help="BANDM: 1 = merge inputs registered in the band (P.V +1 more)")
     ap.add_argument("--image", default="verilator/verilator:v5.032")
     a = ap.parse_args()
     a.work = a.work.resolve(); a.work.mkdir(parents=True, exist_ok=True)
     if a.band and a.dut != "s81":
         sys.exit("--band needs --dut s81")
-    n = a.srx + (2 if a.band else 0)          # scores +n, P.V +2n (the band adds 2 edges to the tile round trip)
+    n = a.srx + ((a.band + 1) if a.band else 0)     # scores +n (band: capture stages + output register)
+    npv = 2 * n + (a.bandm if a.band else 0)       # P.V: p feed +n, then +n (+1 with registered merge inputs)
     nkv, np_ = vectors(a.work / "vec", a.seed)
     from concurrent.futures import ThreadPoolExecutor
     muts = [0] + [int(m) for m in a.mut.split(",") if m]
@@ -134,16 +137,16 @@ def main():
         tags = list(ex.map(lambda sm: build(a, sm[0], sm[1], nkv, np_), [(0, 0)] + [(a.srx, m) for m in muts]))
     ref_tag = tags[0]
     ref, rs = run(a, ref_tag)
-    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, band=bool(a.band), shift=n, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
+    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, band=a.band, bandm=a.bandm, shift=n, shift_pv=npv, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
                ref=dict(tag=ref_tag, summary=rs, beats_sc=len(ref["BSC"]), beats_pv=len(ref["BPV"])), runs={})
     with ThreadPoolExecutor(len(muts)) as ex:
         res = list(ex.map(lambda t: run(a, t), tags[1:]))
     for mut, tag, (ev, s) in zip(muts, tags[1:], res):
-        c = compare(ref, ev, n)
+        c = compare(ref, ev, n, npv)
         setchk = s.get("V41XSETCHK", {}).get("errors")
         lock = all(v["ok"] for v in c.values()) and setchk in ("0", None)
         data = all(v["data_equal"] for v in c.values()) and setchk in ("0", None)
-        first = c["BSC"]["first_shift"] == n and c["BPV"]["first_shift"] == 2 * n
+        first = c["BSC"]["first_shift"] == n and c["BPV"]["first_shift"] == npv
         end = (ref["BPV"][-1][0], ev["BPV"][-1][0]) if ev["BPV"] and ref["BPV"] else None
         rec["runs"][tag] = dict(srxmut=mut, lockstep=lock, data_equal=data, first_job_shift_ok=first, end_cycle=end,
                                 setcheck_errors=setchk, summary=s, compare=c)
