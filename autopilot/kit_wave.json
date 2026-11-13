@@ -7444,11 +7444,53 @@
      "--slew-margin",
      "50",
      "--cap-margin",
-     "20"
+     "20",
+     "--max-wire-um",
+     "120"
     ],
     "dsdv_slice_lepe_nh_mus_C__t1": [
      "--dpl-diamond",
      "dsdv_slice_lepe_nh_mus_C__t1"
+    ],
+    "slice_station__t24__cl64811a5d": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "slice_station__t24__cl66b71008": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "slice_station__t30__cl1653104c": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "slice_station__t45": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "slice_station__t7__cl503f4913": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
     ]
    },
    "place_prefer": [
@@ -7834,7 +7876,8 @@
     },
     "slice_station__t24__cleece78ec": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "col_h10_r0_p1__t1__cl911743eb": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -8144,11 +8187,13 @@
     },
     "slice_station__t24__cl64811a5d": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "slice_station__t24__cl66b71008": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "slice_station__t25": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -8176,7 +8221,8 @@
     "slice_station__t30__cl1653104c": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "slice_station__t30__cl6a190133": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -8236,7 +8282,8 @@
     },
     "slice_station__t45": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "slice_station__t46": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -8286,7 +8333,8 @@
     },
     "slice_station__t7__cl503f4913": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "slice_station__t7__cl945bc067": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -23030,7 +23078,48 @@
     "reheld": "2026-11-13 10:10",
     "lifted_or1": "2026-11-13 10:35 KIT-OPS-1 (COORD ruling (a)): per-item plan overlay; 56 keys deleted"
    },
-   "retry_note_kitops1_or1_1113": "2026-11-13 10:24 phase1: removed for one pass (KW-FIX-45 re-arm): ot_s81sl_leaf__t13@3 ot_s81sl_leaf__t17@1 ot_s81sl_leaf__t1@7 ot_s81sl_leaf__t21@3 ot_s81sl_leaf__t23@5 ot_s81sl_leaf__t29@4 ot_s81sl_leaf__t30@3 ot_s81sl_leaf__t33@1 ot_s81sl_leaf__t37@1 ot_s81sl_leaf__t38@1 ot_s81sl_leaf__t39@4 ot_s81sl_leaf__t3@12 ot_s81sl_leaf__t42@1 ot_s81sl_leaf__t43@1 ot_s81sl_leaf__t44__clf4ea6d4b@1 ot_s81sl_leaf__t45@1 ot_s81sl_leaf__t46@1 ot_s81sl_leaf__t51@3 ot_s81sl_leaf__t54__cl706d9749@4 ot_s81sl_leaf__t56@3 ot_s81sl_leaf__t58@1 ot_s81sl_leaf__t60@1 ot_s81sl_leaf__t62@1 ot_s81sl_leaf__t65@3 ot_s81sl_leaf__t67@1 ot_s81sl_leaf__t71@1 | 2026-11-13 10:35 phase2: re-added; DRT73 hold lifted (56 keys)"
+   "retry_note_kitops1_or1_1113": "2026-11-13 10:24 phase1: removed for one pass (KW-FIX-45 re-arm): ot_s81sl_leaf__t13@3 ot_s81sl_leaf__t17@1 ot_s81sl_leaf__t1@7 ot_s81sl_leaf__t21@3 ot_s81sl_leaf__t23@5 ot_s81sl_leaf__t29@4 ot_s81sl_leaf__t30@3 ot_s81sl_leaf__t33@1 ot_s81sl_leaf__t37@1 ot_s81sl_leaf__t38@1 ot_s81sl_leaf__t39@4 ot_s81sl_leaf__t3@12 ot_s81sl_leaf__t42@1 ot_s81sl_leaf__t43@1 ot_s81sl_leaf__t44__clf4ea6d4b@1 ot_s81sl_leaf__t45@1 ot_s81sl_leaf__t46@1 ot_s81sl_leaf__t51@3 ot_s81sl_leaf__t54__cl706d9749@4 ot_s81sl_leaf__t56@3 ot_s81sl_leaf__t58@1 ot_s81sl_leaf__t60@1 ot_s81sl_leaf__t62@1 ot_s81sl_leaf__t65@3 ot_s81sl_leaf__t67@1 ot_s81sl_leaf__t71@1 | 2026-11-13 10:35 phase2: re-added; DRT73 hold lifted (56 keys)",
+   "type_args_prev_kitops1_rflow7": {
+    "slice_station__t24__cl64811a5d": null,
+    "slice_station__t24__cl66b71008": null,
+    "slice_station__t24__cleece78ec": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20"
+    ],
+    "slice_station__t30__cl1653104c": null,
+    "slice_station__t45": null,
+    "slice_station__t7__cl503f4913": null
+   },
+   "item_env_prev_kitops1_rflow7": {
+    "slice_station__t24__cl64811a5d": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slice_station__t24__cl66b71008": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slice_station__t24__cleece78ec": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slice_station__t30__cl1653104c": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slice_station__t45": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slice_station__t7__cl503f4913": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    }
+   },
+   "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7."
   },
   "s81_head": {
    "enabled": true,
@@ -23378,12 +23467,14 @@
     },
     "hd_spn_wshim_rx": {
      "OT_IO_HOLD": "sender_min",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "hd_spn_wshim_tx": {
      "OT_IO_HOLD": "sender_min",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "hd_st_k5": {
      "OT_IO_HOLD": "sender_min",
@@ -23424,7 +23515,8 @@
     },
     "hd_turn_a": {
      "OT_IO_HOLD": "sender_min",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
     },
     "hd_turn_b": {
      "OT_IO_HOLD": "sender_min",
@@ -24302,7 +24394,54 @@
     "hd_spn": "KIT-OPS-1 2026-11-13 01:24 (h): rp18r2 fixes the hd_spn export (test export rc 0). Was: KIT-OPS-1 2026-11-12 21:28 (f): rp18r1 kit_rtl export still FAILS for hd_spn: the new private export rst_start_raw_42 takes u_rrl_147 (rr_t58), which the published RTL already uses as an ot_dp_head_raw_export_pair for the FLOW-6 reader START raw copy (rr_t58_reader_raw), so head_start_raw_private finds no ot_dp_rrelay u_rrl_147. Held until HEAD-96 r2. Was: KIT-OPS-1 2026-11-12 19:57: rp18 kit_rtl export FAILS for this re-kit type (head_start_raw_private.patch_rtl: two reset_start_raw_exports rows name one o"
    },
    "note_kitops1_rp18r2": "KIT-OPS-1 2026-11-13 01:24 (h): plan -> rp18r2 (raw cda1ecf604eb). hd_spn hold lifted; hd_mesh re-kits on its new block (old 20:27 unit kw-s81hea-hdmesh-1-44046 cancelled by exact name); every other type keeps its key.",
-   "die_owner": "HEAD-96"
+   "die_owner": "HEAD-96",
+   "type_args": {
+    "hd_spn_wshim_rx": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "hd_spn_wshim_tx": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ],
+    "hd_turn_a": [
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20",
+     "--max-wire-um",
+     "120"
+    ]
+   },
+   "type_args_prev_kitops1_rflow7": {
+    "hd_spn_wshim_rx": null,
+    "hd_spn_wshim_tx": null,
+    "hd_turn_a": null
+   },
+   "item_env_prev_kitops1_rflow7": {
+    "hd_spn_wshim_rx": {
+     "OT_IO_HOLD": "sender_min",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "hd_spn_wshim_tx": {
+     "OT_IO_HOLD": "sender_min",
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "hd_turn_a": {
+     "OT_IO_HOLD": "sender_min",
+     "OT_GEN_M8_GRANT": "1"
+    }
+   },
+   "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7."
   },
   "qwen_compute": {
    "enabled": true,
