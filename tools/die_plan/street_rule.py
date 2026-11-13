@@ -56,6 +56,7 @@ and the same legalize.  K = street_layers x street_fill / pin_pitch = 37.5 track
   NOTCH: a wall or slot shorter than street_min_um along its length is exempt from both rules (open area is at most
   21.6 um away), unless the macro is abutted to the pin face.
   Legalize moves hard cores only (never a shape, never a LEF content macro: those stay residual with their reason).
+  Types WITHOUT hard cores whose LEF content macros (SRAM / ROM) break the rule are checked too (check and G0).
 
 OUTPUT: new plan (types changed only), event JSON + TSV rows: per type outline before/after and growth %, cores
 moved, violations before/after, route_supply p99 before/after (route_supply on both plans), die-level growth estimate
@@ -476,8 +477,8 @@ def plan_face_windows(raw, plan_path=None, names=None):
     windows live on the die ports): the pins of the type's first instance from schema.Plan (the gen_phys.type_pins
     walk), one window per run of a bus on a face (runs split at gaps > 8.64 um).  {} when the plan does not load."""
     T = raw.get("partition_types") or {}
-    want = [n for n in (names if names is not None else T) if n in T and T[n].get("hard_cores")
-            and not type_face_windows(T[n])]
+    want = [n for n in (names if names is not None else T) if n in T
+            and (T[n].get("hard_cores") or extra_boxes(T[n])) and not type_face_windows(T[n])]
     if not want:
         return {}
     try:
@@ -526,6 +527,17 @@ def type_cfg(cfg, t, name=None):
         return cfg
     wins = type_face_windows(t) or (cfg.get("_planwins") or {}).get(name) or {}
     return dict(cfg, _fwins=wins, _xboxes=extra_boxes(t))
+
+
+def content_only(t, cfg, name=None):
+    """R-STREET on a type WITHOUT hard cores whose LEF content macros (SRAM / ROM / PHY parts) stand behind its pin
+    faces or squeeze its stations: the same face_street / station_alley kinds (never movable by legalize)."""
+    xb = extra_boxes(t)
+    if not cfg.get("face_rule") or not xb:
+        return []
+    W, H = map(float, t["outline_um"][:2])
+    c = type_cfg(cfg, t, name)
+    return face_shadow_rule(W, H, xb, c.get("_fwins") or {}, cfg) + station_alleys(t, cfg, xb)
 
 
 def alley_force(V):
@@ -2300,12 +2312,16 @@ def g0_check(raw, R, plan_dir, mode="warn", repo=None, ref_dirs=(), max_msgs=40,
     n = 0
     for tn, t in raw["partition_types"].items():
         if not t.get("hard_cores"):
-            continue
+            V = content_only(t, cfg, tn)        # R-STREET: LEF content macros only
+            if not V:
+                continue
+        else:
+            M = CP.TypeModel(tn, t, die_dir, repo, conns, ccfg)
+            attach_pins(M, die_dir, repo)
+            V, cnt = analyze(M.W, M.H, core_models(M, conns_partners(conns, tn, t)), M.CL, type_cfg(cfg, t, tn),
+                             type_windows(t))
+            V += station_alleys(t, cfg)
         summ["types"] += 1
-        M = CP.TypeModel(tn, t, die_dir, repo, conns, ccfg)
-        attach_pins(M, die_dir, repo)
-        V, cnt = analyze(M.W, M.H, core_models(M, conns_partners(conns, tn, t)), M.CL, type_cfg(cfg, t, tn), type_windows(t))
-        V += station_alleys(t, cfg)
         cnt = dict(collections.Counter(v["kind"] for v in V))
         tot.update(cnt)
         if any(k in HARD for k in cnt):
@@ -2372,7 +2388,13 @@ def setup(a):
         else:
             cfg[k] = type(DEFAULTS[k])(float(v)) if k in DEFAULTS else float(v)
     if cfg.get("face_rule"):
-        cfg["_planwins"] = plan_face_windows(P, plan, names)
+        xn = [n for n, t in P["partition_types"].items() if not t.get("hard_cores") and extra_boxes(t)]
+        if a.types:
+            xn = [n for n in xn if n in set(a.types.split(","))]
+        if a.match:
+            xn = [n for n in xn if re.search(a.match, n)]
+        cfg["_xnames"] = xn
+        cfg["_planwins"] = plan_face_windows(P, plan, names + xn)
     return repo, plan, P, sha, die, die_dir, rs_cfg, conns, names, cfg
 
 
@@ -2391,8 +2413,13 @@ def cmd_check(a):
         rows.append(dict(type=n, cores=M.n, counts=c, worst=sorted(V, key=lambda v: -(v["need"] - v["gap"]))[:8],
                          face=[v for v in V if v["kind"] in ("face_street", "station_alley")]))
         print("%s\t%d\t%s" % (n, M.n, json.dumps(c, sort_keys=True)), flush=True)
+    for n in cfg.get("_xnames") or ():      # R-STREET: types with LEF content macros only (no hard core)
+        V = content_only(P["partition_types"][n], cfg, n)
+        c = dict(collections.Counter(v["kind"] for v in V))
+        rows.append(dict(type=n, cores=0, counts=c, worst=sorted(V, key=lambda v: -(v["need"] - v["gap"]))[:8], face=V))
+        print("%s\t%d\t%s" % (n, 0, json.dumps(c, sort_keys=True)), flush=True)
     rec = dict(schema=SCHEMA, mode="check", plan=str(plan), plan_sha256=sha, die=die,
-               cfg={k: v for k, v in cfg.items() if k != "_planwins"}, rows=rows,
+               cfg={k: v for k, v in cfg.items() if k not in ("_planwins", "_xnames")}, rows=rows,
                types_with_violations=sum(1 for r in rows if any(k in HARD for k in r["counts"])))
     if a.out:
         Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
@@ -2556,7 +2583,7 @@ def cmd_legalize(a):
     rec = dict(schema=SCHEMA, mode="legalize", tool="tools/die_plan/street_rule.py", lane="STREET-RULE-1",
                advisory=True, base_plan=str(plan), base_plan_sha256=sha, plan_output=a.out_plan,
                plan_output_sha256=out_sha, die=die,
-               cfg={k: v for k, v in cfg.items() if k != "_planwins"}, die_estimate=die_est,
+               cfg={k: v for k, v in cfg.items() if k not in ("_planwins", "_xnames")}, die_estimate=die_est,
                summary=dict(types=len(rows), violating=sum(1 for r in rows if r.get("changed")),
                             applied=len(grown),
                             cycles_added=sum((r.get("cycles_added") or {}).get("total", 0) for r in rows if r.get("applied")),

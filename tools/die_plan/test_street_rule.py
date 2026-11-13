@@ -729,3 +729,29 @@ def test_plan_face_windows_fallback(tmp_path, monkeypatch):
     # a type that carries its own windows never takes the fallback
     raw["partition_types"]["toy"]["buses"] = [{"name": "o", "face": "N", "window_um": [0, 10], "width": 5}]
     assert SR.plan_face_windows(raw) == {}
+
+
+def test_content_only_type_checked(tmp_path):
+    # a type with no hard core: its SRAM 20 um above a dense S pin window is a face_street (check and G0)
+    import check as CK
+    t = {"outline_um": [600.0, 300.0], "module": "soft",
+         "buses": [{"name": "s_i", "dir": "in", "width": 2000, "kind": "data", "face": "S", "window_um": [50.0, 550.0]}],
+         "contents": [{"inst": "u_mem", "module": "M", "lef": "m.lef", "origin_um": [100.0, 20.0],
+                       "outline_um": [200.0, 80.0], "orient": "R0"}]}
+    P = {"die": {"name": "toy", "outline_um": [600.0, 300.0]}, "partition_types": {"soft": t},
+         "partitions": [{"name": "p0", "type": "soft", "origin_um": [0, 0]}]}
+    plan = tmp_path / "plan.json"
+    plan.write_text(json.dumps(P))
+    ck = tmp_path / "ck.json"
+    SR.main(["check", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out", str(ck)])
+    rec = json.loads(ck.read_text())
+    assert rec["types_with_violations"] == 1 and rec["rows"][0]["cores"] == 0
+    v = rec["rows"][0]["face"][0]
+    assert v["kind"] == "face_street" and v["a"] == "u_mem" and not v["movable"] and v["need"] == 43.2
+    R = CK.Report()
+    summ = SR.g0_check(P, R, tmp_path, "error", repo=tmp_path)
+    assert summ["counts"] == {"face_street": 1} and summ["types_with_errors"] == 1 and len(R.errors()) == 1
+    t["contents"][0]["origin_um"] = [100.0, 43.2]
+    plan.write_text(json.dumps(P))
+    SR.main(["check", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out", str(ck)])
+    assert json.loads(ck.read_text())["types_with_violations"] == 0
