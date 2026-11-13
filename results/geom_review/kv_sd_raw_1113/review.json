@@ -1,0 +1,22 @@
+{
+ "verdict": "PASS_COND_PRIVATE_PLAN_ONLY",
+ "picture": "results/geom_review/kv_sd_raw_1113/raw_reset_sites.png",
+ "viewed": true,
+ "findings": [
+  "Same-depth original raw terminal maintained: SD rst_n_t5, SD_v1 rst_n_t6",
+  "Three separate single-flop copies/type in free column west of landing bands, clear of PHY and band reserve",
+  "Max plan hop379.708/342.398um incl endpoint, under405; no macro-crossing relay or pin move",
+  "Source-bound RawBranches.validate PASS and schema PASS;0data/0reset added cycles"
+ ],
+ "conditions": [
+  "Full new-plan bind/gen must reproduce original terminal/D chain; fail closed on re-numbering",
+  "Fresh placed view required before route; ring/FIFO control fanout and tap hold remain open",
+  "Constructor rejects any SD semantic type change against supplied reference-plan; external source is explicit, not a hidden cache"
+ ],
+ "source_constructor": "tools/die_plan/kv_sd_raw_reset_form.py",
+ "plan": "/srv/opentallas-scratch2/claude/dkv100/sdgrow/sd_origin/p_raw_sd.json",
+ "reference_inputs": {
+  "plan": "explicit --reference-plan required, semantic type equality guards stale source",
+  "bind_rtl": "explicit --bind-rtl required; each wrapper source hash recorded in report"
+ }
+}
