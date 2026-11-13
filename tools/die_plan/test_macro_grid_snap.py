@@ -145,6 +145,8 @@ def test_unrealizable_orient_is_receipted_and_refused(tmp_path):
     except ValueError as e:
         assert "ORIENT-OFF-TRACK" in str(e) and "R180 -> MX" in str(e)
     M.refuse_unrealizable("t", [{"inst": "u", "unresolved": "no on-track origin within 4.32 um"}])   # distance: no stop
+    M.refuse_unrealizable("t", [{"inst": "u", "unrealizable": {"axes": ["x"], "use_orient": None,
+                                                                "realizable_orients": []}}])   # core-view defect: no stop
 
 
 def test_gen_phys_refuses_unrealizable_after_receipt():

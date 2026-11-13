@@ -1,0 +1,332 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     223
+Number of vias:       77
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   s81p_ot_s81sl_leaf__t13
+Die area:                 ( 0 0 ) ( 1442880 1226880 )
+Number of track patterns: 30
+Number of DEF vias:       0
+Number of components:     334801
+Number of terminals:      6696
+Number of snets:          2
+Number of nets:           224554
+
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[0] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[10] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[11] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[12] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[13] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[14] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[15] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[1] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[2] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[3] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[4] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[5] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[6] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[7] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[8] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[9] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[0] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[10] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[11] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[12] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[13] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[14] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[15] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[1] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[2] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[3] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[4] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[5] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[6] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[7] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[8] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c1[9] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[0] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[10] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[11] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[12] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[13] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[14] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[15] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[1] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[2] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[3] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[4] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[5] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[6] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[7] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[8] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c2[9] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[0] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[10] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[11] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[12] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[13] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[14] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[15] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[1] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[2] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[3] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[4] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[5] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[6] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[7] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[8] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c3[9] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/clk has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/fault has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/o[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[0] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[10] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[11] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[12] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[13] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[14] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[15] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[1] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[2] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[3] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[4] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[5] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[6] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[7] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[8] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/p[9] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r0[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r1[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r2[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/r3[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/rst_n has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/v has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/vo has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[0] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[10] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[11] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[12] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[13] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[14] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[15] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[16] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[17] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[18] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[19] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[1] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[20] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[21] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[22] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[23] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[24] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[25] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[26] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[27] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[28] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[29] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[2] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[30] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[31] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[3] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[4] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[5] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[6] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[7] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[8] has no pins on routing grid
+[WARNING DRT-0418] Term u_bound.u_u_lf0_u_vp_g_ln_5_u_l/y[9] has no pins on routing grid
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+  Complete 200000 instances.
+  Complete 300000 instances.
+[INFO DRT-0164] Number of unique instances = 328.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0018]   Complete 200000 insts.
+[INFO DRT-0018]   Complete 300000 insts.
+[INFO DRT-0165] Start pin access.
+[ERROR DRT-0073] No access point for u_bound.u_u_lf0_u_vp_g_ln_5_u_l/c0[0] (ot_dsrom_su_hcpost_lane_pr).
+Error: pa.tcl, 24 DRT-0073
+rc=1

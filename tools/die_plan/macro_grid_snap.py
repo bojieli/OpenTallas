@@ -276,8 +276,12 @@ def snap_all(placements, outline, tracks, env=None):
 
 def refuse_unrealizable(tn, rows):
     """LEAF-DRT73-1: raise ValueError (kit generation stops; the receipt is already written) when a placed macro's plan
-    orient has no on-track origin at all.  Not an opt-out target: OT_MACRO_GRID_SNAP=0 skips the check with the snap."""
-    bad = [r for r in rows if r.get("unrealizable")]
+    orient has no on-track origin at all while another orient has one: the plan chose the wrong orient.  A master with
+    NO realizable orient (its own pin phases conflict on the kit tracks, e.g. S81 slice_station__t51 native_w/_e: M5 at
+    the platform 0.012 phase and M7 at 0.016 need shifts 12 mod 48 and 0 mod 64) is a core-view defect, not a plan
+    choice: it stays receipted 'unrealizable' with realizable_orients [] and the kit runs as before.
+    OT_MACRO_GRID_SNAP=0 skips the check together with the snap."""
+    bad = [r for r in rows if (r.get("unrealizable") or {}).get("use_orient")]
     if bad:
         raise ValueError(f"type {tn}: ORIENT-OFF-TRACK {len(bad)} macro(s) placed in an orient whose pins cannot sit on "
                          "the kit tracks at any origin (fix the plan: tools/die_plan/orient_realize.py): " +
