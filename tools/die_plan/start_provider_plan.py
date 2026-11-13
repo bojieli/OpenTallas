@@ -72,6 +72,34 @@ def materialize(raw, stages):
     return out
 
 
+def feed_region(n):
+    """physical parent region of a provider node: a REACH relay (kind 'relay', R-REACH-1) is fed by its parent; a stage
+    with relays on its parent edge is fed by its last relay ('fed_by'); else by its logical parent."""
+    return n['parent'] if n.get('kind')=='relay' else n.get('fed_by',n['parent'])
+
+
+def relay_chains(nodes):
+    """errors of the REACH relay chains: every relay belongs to exactly one chain that runs from a stage's logical parent
+    to that stage (relay_for), and the stage declares relay_cycles == chain length (count-aligned PAD of its region)."""
+    errors=[];regions={n['region']:n for n in nodes};used=set()
+    for n in nodes:
+        if n.get('kind')=='relay':
+            if n.get('root') or n.get('relay_for') not in regions or regions[n['relay_for']].get('kind')=='relay':
+                errors.append(f"relay {n.get('id')}: needs relay_for = a materialized stage region and no root")
+            continue
+        if 'fed_by' not in n and not n.get('relay_cycles'):continue
+        r=regions.get(n.get('fed_by'));k=0
+        while r is not None and r.get('kind')=='relay' and r['region'] not in used:
+            if r.get('relay_for')!=n['region']:errors.append(f"relay {r['id']}: relay_for {r.get('relay_for')} != {n['region']}");break
+            used.add(r['region']);k+=1;r=regions.get(r['parent'])
+        if r is None or r['region']!=n['parent'] or k<1 or k!=n.get('relay_cycles'):
+            errors.append(f"stage {n.get('id')}: relay chain from {n.get('fed_by')} does not reach parent {n['parent']} "
+                          f"in relay_cycles {n.get('relay_cycles')} relays (found {k})")
+    for n in nodes:
+        if n.get('kind')=='relay' and n['region'] not in used:errors.append(f"relay {n.get('id')}: not on its stage's chain")
+    return errors
+
+
 def check(P, contract):
     errors=[]
     nodes=contract.get('nodes',[]);edges=contract.get('edges',[])
@@ -81,6 +109,7 @@ def check(P, contract):
     clock_access=0
     roots=[n for n in nodes if n.get('root')]
     if len(roots)>1 or not nodes:errors.append('START provider requires a nonempty tree with at most one virtual root')
+    errors+=relay_chains(nodes)
     for n in nodes:
         try:
             corners(n['rect_um'])
@@ -99,7 +128,7 @@ def check(P, contract):
             for end,r in [('src_stage',a),('dst_stage',b)]:
                 if end in e and (e[end] not in by or r!=by[e[end]]['rect_um']):raise ValueError('stage endpoint rectangle mismatch')
             if 'src_stage' in e and 'dst_stage' in e:
-                if by[e['dst_stage']]['parent']!=by[e['src_stage']]['region']:raise ValueError('START provider parent edge mismatch')
+                if feed_region(by[e['dst_stage']])!=by[e['src_stage']]['region']:raise ValueError('START provider parent edge mismatch')
                 adj[e['src_stage']].append(e['dst_stage'])
             if 'part' in e:
                 if e['pin'] not in ('cland_tstart_in','cland_tstart_out','cland_raw_reset_out'):raise ValueError('invalid START boundary pin')
@@ -122,7 +151,8 @@ def check(P, contract):
     if seen!=set(by):errors.append('START provider has unreachable physical stages')
     declared={(u['part'],u['pin'],u['net']) for u in P.clock['landing_network']['start_tree'].get('uses',[])}
     if boundary!=declared:errors.append('physical START provider boundary differs from declared START uses')
-    return dict(errors=errors,stages=len(nodes),edges=len(edges),max_hop_um=maximum,max_clock_access_um=clock_access,physical_qualified=False)
+    return dict(errors=errors,stages=len(nodes),edges=len(edges),max_hop_um=maximum,max_clock_access_um=clock_access,physical_qualified=False,
+                **({'relays':sum(n.get('kind')=='relay' for n in nodes)} if any(n.get('kind')=='relay' for n in nodes) else {}))
 
 
 def main():
