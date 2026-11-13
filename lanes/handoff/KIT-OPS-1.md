@@ -13,3 +13,9 @@
 - out + asbuilt staged to epyc7/9/intel1/epyc2. src copies running: epyc7 (orphan rsync pid 3799005 on epyc8) and stage_s81src_{e9,i1,e2}.out.
 - Next: manifest the src on 5 hosts (manifest2.sh), then on intel2: python3 -I /tmp/kitops1_s81_switch.py STAMP 7073a6b4a599c1de9e041896421b3b779045df1d <src> <out_b> <asbuilt>. The script is scratchpad s81_r12bA_switch.py; it needs /tmp/kitops1_s81_{tb_new,sets}.json and plan_sha. Then coord-commit, verify on origin, count S81 LAUNCH lines, post the RESULT.
 - Open asks to COORD: train 8fa82e457d; the 4 in-flight old-RTL rows of the 71 (c3x_C__t1, leaf__t34, leaf__t61, kv512_C__t1).
+
+## COORD rulings 22:0x
+- (1) DONE: 4 old-RTL S81 rows CANCELLED OLD-RTL (script scratchpad s81_oldrtl_cancel.py; backups kit_wave*.bak-kitops1-s81oldrtl-1112). kv512 rebuilt. c3x_C__t1 / leaf__t34 / leaf__t61 are held by WAIT-FORM: their verdicts were rated on a form fingerprint the RTL change leaves unchanged. Waiting on COORD. leaf__t2 old route ap-e5438a810146-a1 NOT cancelled: asked COORD.
+- 97 bind.f sources staged on 4 gen hosts at s81-leaf-floor-2/bsrc_main2_lfcs (list epyc8 kit-ops-1/lfcs_97.txt).
+- (2) TODO: when train 29 (8fa82e457d dead-input proof) is MERGED, drop the proof line from src_s81_main_7073a6b4a5/KITOPS1_OVERLAY.txt (note only, never delete files).
+- (3) hd_spn r2 -> HEAD-96; DRT-0255 -> new HEAD routing lane (no KIT-OPS-1 action).
