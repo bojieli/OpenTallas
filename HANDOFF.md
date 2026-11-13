@@ -3606,3 +3606,5 @@ CODEX: 2026-11-13 13:55 PST found current KV EX F70 signed routed provider on ep
 CODEX: 2026-11-13 13:58 PST SERDES explicit capturedRST_TREE0 was suppressing requested reset-tree form; constructor/template fixed391d806230; actualtree1 H2 fresh synth/place running.
 
 CODEX: 2026-11-13 13:59 PST GUNIT gf4 programme68ac34a51b fixes IDs+2/weights+4,3-job bench+controlsPASS; physicalgf4continues; residualbksel/T51collectedwithT51WoneECOinflight.
+
+CODEX: 2026-11-13 14:06 PST token: be5ba677 five-arm compiler EXIT0 programme values unchanged; shared QW zero-cost-ledger fix67b97a7613 READY hub; actual PVFIN+1 price verified but SEG calendar FAIL retained; GUNITgf4 model cost +96MTPcycles.
