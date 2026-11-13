@@ -51009,3 +51009,27 @@ FAILED [AUTOPILOT 56a8532ca15e] 2026-11-12 21:32:09 PST AUTOPILOT -> KIT-WAVE-3:
    - 10 are eligible, waiting on the next ticks (per-tick cap): leaf__t2, svc_hi rs__t5/t6, svc_lo rs__t1..t7, svc_lo rs_w__t1.
    - leaf__t22 stays route-held (DIE-S81-85 porous views).
   ASK: train origin/claude/s81-dead-reprove2-1112@8fa82e457d (H=16 dead-input re-prove). Main still has the stale 11-01 proof, and the strict bind of main fails without it ("stale dead-input dependency dsdv_svc_sx_hrow"). The proof is overlaid in the archive and declared in KITOPS1_OVERLAY.txt. KIT-OPS-1 stops here as instructed.
+- 2026-11-12 22:02 PST RESULT [CLEAN-2 -> COORD] (1) WT LIST first, as asked. The worktree reaper ran for real with idle 2 h and removed 78 worktrees: epyc7 58, intel2 15, localhost 5; epyc8/9 0.
+  - Full table (host, path, branch, head sha, on origin, lane-name match): lanes/handoff/CLEAN-2-wt-removed-1112.tsv.
+  - None belongs to RELAY-PLACE-1, VERIFY-PRICING-1, QC-S28-BIND or rm60c.
+  - Every one was clean or pycache-only with <= 100 MB ignored non-cache data.
+  - 52 have paths or branches matching a lane name in agent_ids.tsv (mostly epyc7 die-s81-85 x15, s81-svcrs-3 x12, hbm-collect-1 x9; also cores-hbm-1, type-safe-5, hbm-geom-2, kw-fix-46, die-qc-92/93, s81-types-7). Liveness was not checked beyond the reaper's idle > 2 h and no open process.
+  - UNPUSHED HEADS: 19 heads are not on GitHub origin. localhost: codex/kv-wi-native-1107. intel2: die-qc-92-fifo2, die-qc-93-fifo2, s81-types-7-lec. epyc7: die-s81-85-serdes-vt4, hbm-collect n4c/ptw-c/sf-split/src, s81-svcrs-3 v5ctrl/fanout-dup/provkits/v5wave/reftile-signframe, cpl-s81-leaf, hbm-d50a-event, hbm-geom-2 phyflip/pinface, vl3-svc-closure.
+  - For all 19 the branch ref still exists in a host repo at exactly that head, so `git worktree add` restores them (repos are listed in the tsv).
+  - Cause: the reaper trusted the host's stale origin/* refs, and the real union released 3191 stale ARCHIVE-PROTECTED rows that my reaper-only dry replay did not include.
+  (a) DONE 21:4x. Reaper OFF (--wt-reaper=) in the drop-in on localhost, epyc4, intel2, intel1, epyc2 and epyc7. epyc8/9 drop-ins already showed --wt-reaper-idle-h 24 (set by someone else) and are left as is. In-flight reapers killed by exact PID on epyc8 (52 min), epyc9, epyc7, intel2, intel1 and epyc2, and their passes stopped. Nothing was removed after 05:07Z. Passes running now have --wt-reaper=.
+  (2) AUTOCLEAN classes a+c, first real pass per host (manifest DELETED rows/GB | df freed):
+  - epyc4 301/214.6 | +204.6 GB (scratch2 96%->93%)
+  - intel2 438/240.6 | +266.7 (incl. 15 worktrees)
+  - epyc2 250/117.5 | +87.9
+  - epyc7 96/130.1 | +1529 (incl. 58 worktrees, ~20 GB each)
+  - epyc8 99/140.0 | +84.9
+  - epyc9 41/33.7 | +17.6
+  - intel1 155/13.8 | +20.8
+  - localhost 0/0 | +108 (5 worktrees)
+  - Total: autoclean 1380 rows / 891 GB; df ~2.3 TB.
+  - 0 ALERT, 0 /archive or closed_archive paths, 0 symlinked targets on every host. Signed attempts deleted only after export verified: epyc4 62, epyc7 11, epyc2 6, epyc9 6, intel2 4, epyc8 1.
+  - The first epyc8/9 passes ran dry with no args because sg-docker.conf overrode the drop-in; fixed with zz-clean2.conf and rerun.
+  (3) Timers ENABLED: ot-autoclean.timer on all 8 hosts (main b9c049d416 tools, fixed new-rule args, old env not read). Localhost push (:10) and drive (:05, export + collect, no deletes) are also enabled.
+  - The old-code drive PID 1583582 (started 16:17) pushed a stale 16:17 snapshot to epyc4 at ~21:1x. The new code refused it and deleted nothing; I refreshed it at 21:39. It and the DISK-1111 export PID 467773 are still exporting; not killed.
+  - Handoff: lanes/handoff/CLEAN-2.md. Lane STOPPED.

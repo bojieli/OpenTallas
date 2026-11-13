@@ -1,26 +1,34 @@
-# CLEAN-2 lane handoff (updated 2026-11-12 19:3x PST)
+# CLEAN-2 lane handoff (updated 2026-11-12 22:02 PST): RESULT posted, lane STOPPED
 
-## 1 Scope
-Fleet disk cleanup rules (COORD task 11-12). Dry runs done and reviewed. COORD APPROVED (19:0x) real use of classes a and c under --live-refs-only --aggressive (unsigned superseded, failed, cancelled/withdrawn, trims; signed only with verified ARCHIVED.json re-checked at delete). Stop + post on any ALERT, any path under closed_archive or /archive, or a symlinked target.
+## State now
+- All 8 hosts run main b9c049d416 tools as new inodes: ot-autoclean.py 7033b99c, wt-reaper.py b41e676d. The old 96d3ada9/3a9cba07 files are kept as ~/.local/share/ot-autoclean-auto/*.bak-clean2-1112.
+- Unit drop-in ~/.config/systemd/user/ot-autoclean.service.d/clean2.conf (epyc8/9: zz-clean2.conf, sorted after sg-docker.conf and wrapped in sg docker -c). It clears EnvironmentFile and OT_AUTOCLEAN_ARGS (the old env is not read) and sets fixed args: run --host H [--srccopy on localhost] --queuename-skip-superseded --queuename-skip-trim-c --c-old-keep-h 24 --union-real-sources-only --keep-expire-h 24 --classes ac --live-refs-only --aggressive --apply, plus the reaper setting.
+- wt-reaper: OFF (--wt-reaper=) on localhost, epyc4, intel2, intel1, epyc2 and epyc7 since 21:4x (COORD: not approved for real use; idle 2 h too short). epyc8/9 drop-ins show --wt-reaper-idle-h 24, set by someone else before my change; COORD allows >= 24 h.
+- Timers ENABLED: ot-autoclean.timer on all 8 hosts. Localhost: ot-autoclean-push.timer (:10, snapshot + tool push, main code) and ot-autoclean-drive.timer (:05, drive --no-run --apply --commit = signed export with sha256 + manifest collect, no deletes).
+- Still running: old-code drive PID 1583582 (started 16:17 with old code in memory). It pushed a 16:17 snapshot to epyc4 at ~21:1x. The new code refused it ("4.9 h old"; nothing deleted). I refreshed it with a push at 21:39. The next push at :10 refreshes all hosts. DISK-1111 export drive PID 467773 (epyc4 scratch2) is still running. Do not kill either: they carry the signed export.
 
-## 2 Branch
-localhost:/home/ubuntu/wt/clean2 (sparse clone), claude/clean-2-1112@cf818e05ae, pushed. READY posted 19:1x (merge lane train 24). Merges clean on main (main has no tools/fleet change since base).
+## Real pass results (first new-rules pass per host)
+Columns: host | manifest DELETED rows / GB | df freed | worktrees removed by the reaper
+- epyc4 | 301 / 214.6 | +204.6 (scratch2 96%->93%) | 0
+- intel2 | 438 / 240.6 | +266.7 | 15
+- epyc2 | 250 / 117.5 | +87.9 | 0
+- epyc7 | 96 / 130.1 | +1529 | 58
+- intel1 | 155 / 13.8 | +20.8 | 0
+- epyc9 | 41 / 33.7 | +17.6 | 0
+- epyc8 | 99 / 140.0 | +84.9 | 0 (reaper stopped)
+- localhost | 0 / 0 | +108 | 5
 
-## 2b OWNER ORDER 19:2x (via COORD): old hourly cleanup STOPPED + DISABLED by COORD on all 8 hosts (ot-autoclean.timer; localhost also ot-autoclean-push + ot-autoclean-drive timers). Do NOT re-enable old timers/config. After MERGED: unit runs only main's code with --live-refs-only --aggressive --classes abc as FIXED unit args (not the old env), then enable. If train 24 not MERGED by ~20:25: real pass by hand from cf818e05ae, epyc4 first: fresh snapshot via scratchpad clean2/build_snap.py <branch ot-autoclean.py> <dir> (tested 19:3x: 9600 live attempts, 619 live keep, 515 open READY/ASK paths, 1755 stale rows), scp to host state dir ~/.local/state/ot-autoclean-clean2/snapshot-real, run ~/.local/share/ot-autoclean-clean2/ot-autoclean.py (= branch tip) run <args> --apply --live-refs-only --aggressive --classes abc --state ~/.local/state/ot-autoclean-clean2/real.
-Reapers left running by COORD (job reapers, not disk cleanup): intel2 */15 released-reaper, localhost */30 ~/bin/ot-reaper.py, localhost ot-orphan-reaper timer. Assessed + told COORD 19:3x: no direct conflict; ot-reaper HAND/UMBRELLA (idle>48 h lane dirs) honours lanes/PROTECTED-DBS + signed only, looser than the new rules; follow-up idea: make it read the autoclean union.
+0 ALERT, 0 /archive or closed_archive paths, 0 symlinked targets on every host. Signed attempts deleted only with export verified: epyc4 62, epyc7 11, epyc2 6, epyc9 6, intel2 4, epyc8 1.
+Note: the first epyc8/9 passes ran DRY with no args because sg-docker.conf overrode clean2.conf; fixed (zz-clean2.conf) and rerun.
 
-## 3 Approved steps (do in order)
-1. DONE: READY posted.
-2. (timers: see 2b) After MERGED (check: git -C ~/wt/clean2 fetch origin main; git branch -r --contains cf818e05ae): deploy main's tools/fleet/ot-autoclean.py + wt-reaper.py on all 8 hosts KW-FIX-46 way: systemctl --user stop ot-autoclean.timer (localhost also ot-autoclean-push.timer), cp -p live file to .bak-clean2-1112, copy main file to .new in same dir, mv over (new inode), md5 == main, start timer. Localhost FIRST (its hourly push at :10 copies tools + builds the snapshot; snapshot needs live_attempts/live_keep, queue_open.json, protected_stale.txt for --live-refs-only, else the host refuses = safe).
-3. Env: add " --live-refs-only --aggressive" to ~/.config/ot-autoclean-auto/env OT_AUTOCLEAN_ARGS (backup env.bak-clean2-1112); keep --classes abc (no d). Then run the push once (systemctl --user start ot-autoclean-push.service on localhost) so snapshots carry the new fields.
-4. Real pass epyc4 first (scratch2 96%): df before; systemctl --user start ot-autoclean.service; df after; check manifest: 0 ALERT, no /archive or closed_archive paths, no symlinked targets. Then other hosts. Leave hourly timers on.
-5. Signed export backlog: the export already runs: DISK-1111's epyc4 drive pid 467773 (log scratchpad kw46/drive_apply_epyc4_s2.log, ARCHIVED ... sha256 all match lines; FAIL lines are mostly epyc4 sshd resets, retried) and the hourly localhost drive (drive --no-run --apply --commit). epyc4 dry count: 1805 signed units in held attempts, 1669 already ARCHIVED.json. Do not kill those drives.
-6. RESULT to COORD: GB freed per host (df before/after + manifest DELETED sums), then STOP.
+## Worktree removals (NOT reviewed by COORD; see lanes/handoff/CLEAN-2-wt-removed-1112.tsv)
+- 78 removed for real (epyc7 58, intel2 15, localhost 5).
+- All were clean or pycache-only, with at most 100 MB of ignored non-cache data (reaper rule). Each was an ~20 GB tracked checkout.
+- 59 heads are on GitHub origin. 19 are not (15 not found, 4 on branches that have since moved). For all 19, the branch ref still exists in a host repo at the same head (listed in the tsv), so they are recoverable with git worktree add.
+- The dry run showed epyc7 at 0 because my reaper-only dry replay used the old union. The real union released 3191 stale ARCHIVE-PROTECTED 11-06 rows.
+- The second-pass reapers (timer catch-up at 21:14) were killed by exact PID before they removed anything new (removals.tsv shows nothing after 05:07Z).
 
-## 4 Dry-run evidence
-Per host results: scratchpad clean2/res-<host>.txt (summ3.py). Dry state on hosts: ~/.local/state/ot-autoclean-clean2 (A), .../aggr3 (B3 aggressive). Reaper-only dry rerun with marker fix: in/clean2_wt.sh, log wt2.log (running 19:0x).
-
-## 5 Gotchas
-- pgrep -f inside an ssh command string matches the ssh bash itself (I killed my own ssh shell once): put pgrep in a script file.
-- argparse: --wt-reaper-args=--no-rescue (with =); empty --protected-dbs-repo needs '=' when replayed.
-- localhost ~/coord is current (19:01) despite FLEET-2's note.
+## Gotchas
+- A new drop-in must sort after any existing one (epyc8/9 have sg-docker.conf).
+- Enabling a Persistent timer fires it at once.
+- pgrep -f inside an ssh command string matches the ssh shell itself.
