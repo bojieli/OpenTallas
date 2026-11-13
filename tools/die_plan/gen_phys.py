@@ -37,6 +37,37 @@ from schema import DIE_PART
 
 
 
+def write_cap_budget(P, tn, kd):
+    """First-attempt R-CAP input; hard-core internals never become movable cells.
+
+    A cored type needs an explicit type.cells glue estimate or a measured synth
+    receipt. Flat contents/module estimates include its hardened children and
+    are recorded as unjudged, so native_cell_count can supply the actual count.
+    """
+    import cells
+    t = P.types[tn]
+    cores = t.get("hard_cores") or []
+    hard_names = {c.get("inst") for c in cores}
+    macros = len(cores) + sum(1 for c in t.get("contents") or []
+                              if c.get("lef") and c.get("inst") not in hard_names)
+    if "cells" in t:
+        count, basis = int(t["cells"]), "type.cells"
+    elif cores:
+        count, basis = None, "CORED: await measured movable synth count"
+    else:
+        if not hasattr(P, "_cap_cell_estimates"):
+            path = getattr(P, "path", None)
+            P._cap_cell_estimates = cells.estimate(P.raw, Path(path).parent if path else None)[0]
+        count, basis = P._cap_cell_estimates.get(tn, (None, "no plan estimate"))
+    rec = dict(schema="opentallas.cap_budget.v1", type=tn, macros=macros, basis=basis)
+    if count is not None and count > 0:
+        rec["cells"] = int(count)
+    # Always replace an old receipt, including when a formerly flat type became
+    # cored. An unjudged receipt has no cells key and cannot trigger preflight.
+    (Path(kd) / "cap_budget.json").write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
 def _rtl_lint_dead_output_vars():
     modules = os.environ.get("OT_RTL_LINT_DEAD_OUTPUT_MODULES", "").split()
     if any(not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", m) for m in modules):
@@ -5369,6 +5400,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if bump_ports:
         bud["bump_ports"] = [dict(b) for b in bump_ports]
     (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
+    write_cap_budget(P, tn, kd)
     shutil.copyfile(Path(__file__).with_name("pin_audit.py"), kd / "pin_audit.py")
     shutil.copyfile(Path(__file__).with_name("native_pin_contract.py"), kd / "native_pin_contract.py")
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
