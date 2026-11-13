@@ -46,6 +46,20 @@
 `define OT_S81SL_XS4_ROM(n) ot_rom_4096x72_m8 #(.INSTANCE(INSTANCE == "" ? n : {INSTANCE, ".", n}))
 `endif
 
+// Dedicated face captures keep output and internal feedback states in separate
+// physical modules. No kept top-level alias can create a dead buffer load on
+// the public output; no data/status cycle is added.
+(* keep_hierarchy *)
+module ot_s81sl_xs4_face_bit(input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
+endmodule
+(* keep_hierarchy *)
+module ot_s81sl_xs4_face_bit_rst(input wire clk, input wire rst_n, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= 1'b0;
+        else q <= d;
+endmodule
+
 // ===================================================================================================================== reset
 // rst_n port drives 2 flops.  e: 4 early regions (release R+3 = main's ot_rst_relay edge: the capture valids, which
 // stand one edge before main's pin flops); l2: 54 regions (R+4 = main + 1); k4: 39 controller regions (R+7 = main's
@@ -1182,22 +1196,21 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
             if (collision) collision_fault <= 1'b1;
             lx_fault <= o_ff | collision | collision_fault;
         end
-    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles: xw_v leaves its OWN kept flop (same D as xw_q[0]); xw_d[0] keeps xw_q[0]
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles: xw_v leaves its own kept-hierarchy face capture (same D as xw_q[0]); xw_d[0] keeps xw_q[0]
     (* keep = "true" *) reg [1100:0] xw_q;
-    (* keep = "true" *) reg xw_vq;
-    always @(posedge clk) begin xw_q <= xw_l; xw_vq <= xw_l[0]; end
+    always @(posedge clk) xw_q <= xw_l;
     assign xw_d = xw_q;
-    assign xw_v = xw_vq;
+    ot_s81sl_xs4_face_bit u_xw_v_face(.clk(clk), .d(xw_l[0]), .q(xw_v));
 
     // ================================================================== sticky fault (registered output)
-    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles: the sticky register fault_s stays internal; the port is driven by its own kept copy fault_q with the
-    // same next-state value (fault_s | any fault term) and the same reset, so fault_q == fault_s on every edge.
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles: the sticky register fault_s stays internal; the port is driven by its own kept-hierarchy face capture with the
+    // same next-state value (fault_s | any fault term) and reset, so the port equals fault_s on every edge.
     wire fault_any = is_fault || cal_fault || ctl_fault || wr_fault || rd_fault || lx_fault;
     (* keep = "true" *) reg fault_s;
-    (* keep = "true" *) reg fault_q;
     always @(posedge clk or negedge rst_l[30])
-        if (!rst_l[30]) begin fault_s <= 1'b0; fault_q <= 1'b0; end
-        else begin fault_s <= fault_s | fault_any; fault_q <= fault_s | fault_any; end
-    assign fault = fault_q;
+        if (!rst_l[30]) fault_s <= 1'b0;
+        else fault_s <= fault_s | fault_any;
+    ot_s81sl_xs4_face_bit_rst u_fault_face
+        (.clk(clk), .rst_n(rst_l[30]), .d(fault_s | fault_any), .q(fault));
 endmodule
 `undef OT_S81SL_XS4_ROM

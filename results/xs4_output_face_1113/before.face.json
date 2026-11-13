@@ -1,0 +1,24 @@
+{
+  "top": "face_probe",
+  "checked": 2,
+  "ok": 0,
+  "fails": {
+    "feedthrough": [
+      "valid: buffered from port data0"
+    ],
+    "shared": [
+      "fault: net fault has 3 loads besides the port chain"
+    ]
+  },
+  "flops": {},
+  "straps_exempt": [],
+  "dead_declared": [],
+  "bumps_exempt": [],
+  "clock_exports": {},
+  "pairs_declared": [],
+  "fail_counts": {
+    "feedthrough": 1,
+    "shared": 1
+  },
+  "verdict": "FAIL"
+}
