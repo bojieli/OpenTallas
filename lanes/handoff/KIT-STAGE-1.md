@@ -19,3 +19,9 @@ Brief: COORD 11-13 KIT-STAGE-1 (kit staging failures = 58% of kit-wave FAILs; se
 
 ## Next (if resumed)
 - After step2 (bpjanouoq): check KIT-WAVE LAUNCH qwen_kvsys/kv3_pv_* lines, post RESULT with counts.
+
+## 2026-11-13 07:11 final
+- train 39 merged (main 4a5e3dcf7e) + deployed (autoclean all 8 hosts, kw38/rt kit_wave/kit_store; backups *.bak-kitstage1-1113, kw38/rt-bak-kitstage1-1113).
+- KV kit_store pilot still OFF (kit_store_prev_kitstage1_1113 in kit_wave.json): re-enable when RCAP-SPLIT-1113 lifts; the in_place fix is deployed.
+- intel1: deleted s81ck5, signed-keep, most of kv-fn-7 (stopped; vec + veh60 remain); 20 PROTECTED-DBS rows dropped. source-follow kept (s81 src_follow root).
+- Open: the second release_tree_plan --force run (started 06:5x) is unchecked; epyc8 and epyc4 CLEAN-2 passes were still running at stop.
