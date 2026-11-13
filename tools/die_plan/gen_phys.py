@@ -267,6 +267,16 @@ def _cland_strip_density(budgets, tn):
     return float(v) if v and float(v) > 0 else None
 
 
+def _face_flop_ns_config(budgets, tn):
+    """Opt-in NS pin-register row geometry. No environment override; absent keeps legacy kits."""
+    per = budgets.get("face_flop_ns_types") or {}
+    v = per.get(tn, per.get(tn.split("__")[0]))
+    if v is None:
+        return []
+    return [f"export OT_FF_NS_ROW_STRIDE = {int(v.get('row_stride', 1))}",
+            f"export OT_FF_NS_INSET_ROWS = {int(v.get('inset_rows', 0))}"]
+
+
 def _cland_pinslot_dense(budgets, tn):
     """DIE-KV-62/stations 11-02 opt-in: budgets.cland_pinslot_dense_types names the types (or unsplit base names) whose
     y-column pinslot rows pack the ring slot flops body to body (OT_CLAND_PINSLOT_DENSE=1, landing_placement.tcl);
@@ -4945,6 +4955,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
            # DIE-KV-62/stations 11-02 opt-in budgets.cland_pinslot_dense_types: y-column pinslot rows body to body
            *(["export OT_CLAND_PINSLOT_DENSE = 1"] if _cland_pinslot_dense(P.budgets, tn) else []),
+           *_face_flop_ns_config(P.budgets, tn),
            # DIE-QC-97 11-09 opt-in budgets.cland_strip_rows(_types): thin the N/S ring_ff face strip (conservative kit wins)
            *([f"export OT_CLAND_STRIP_ROWS = {_cland_strip_rows(P.budgets, tn)}"] if _cland_strip_rows(P.budgets, tn) else []),
            # LAND-RING-2 11-12 opt-in budgets.cland_strip_density(_types): strip rows from each ring's own flop density

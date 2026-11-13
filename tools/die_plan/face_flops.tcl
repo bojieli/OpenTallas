@@ -37,6 +37,13 @@ proc ff_slot_of {nm sfx} {
 }
 # column pitch along the depth of an E/W band and along an N/S face (a DFFHQNx1 is 20 sites wide; the rest is room for its INV / port buffer)
 set ff_cpitch [expr {$ff_sw * 40}]
+# QC NS face bank: explicit per-type geometry, unchanged without the opt-in.
+set ff_ns_stride 1; set ff_ns_inset 0
+if {[info exists ::env(OT_FF_NS_ROW_STRIDE)]} { set ff_ns_stride $::env(OT_FF_NS_ROW_STRIDE) }
+if {[info exists ::env(OT_FF_NS_INSET_ROWS)]} { set ff_ns_inset $::env(OT_FF_NS_INSET_ROWS) }
+if {![string is integer -strict $ff_ns_stride] || $ff_ns_stride < 1 || $ff_ns_stride > 16} { error "invalid NS face row stride" }
+if {![string is integer -strict $ff_ns_inset] || $ff_ns_inset < 0 || $ff_ns_inset > 64} { error "invalid NS face inset" }
+
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
 # LATCH-FACE 11-03 (CLK table row 1; FLOW-LATCH-1): an out-face lockup latch (ASAP7 DLL / DHL) between the face flop
 # and its port is part of the face chain: the output walker passes ONE latch through its D pin (never CLK) to the
@@ -238,6 +245,7 @@ foreach pass {INPUT OUTPUT} {
         foreach dc {0 1 -1} {
           set c [expr {$col + $dc}]
           if {$c < 0 || $c > $cmax || [dict exists $ff_occ "$face,$r,$c"]} continue
+          if {$r < $ff_ns_inset || ($r - $ff_ns_inset + $c) % $ff_ns_stride} continue
           dict set ff_occ "$face,$r,$c" 1
           set cx [expr {min($ff_x0 + $c * $ff_cpitch, $ff_x1 - $w)}]
           set cy [expr {$face eq "S" ? $ff_y0 + $r * $ff_rh : $ff_y1 - ($r + 1) * $ff_rh}]
