@@ -530,6 +530,11 @@ endmodule
     assert p.returncode == 0 and "implicit" not in p.stderr.lower(), p.stderr
     q = subprocess.run(["vvp", str(tmp_path / "sim")], capture_output=True, text=True)
     assert q.returncode == 0 and "ERRORS 0" in q.stdout, q.stdout + q.stderr
+    # every relay net is declared before the stage that reads it (no implicit nets in the relayed module)
+    m = dut[dut.index("module ot_die_start_stages ("):]
+    m = m[:m.index("endmodule")]
+    first_use = m.index("st_b2_rl1_start")
+    assert m.index("wire st_b2_rl1_start;") <= first_use
 
 
 def test_relay_manifest_materializes_into_a_checked_provider():
