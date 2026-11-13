@@ -1,4 +1,4 @@
-# GUNIT-CORE-1 lane handoff (S81 dsdv_gunit_l1f_bf / gunit__t1) -- STOPPED 2026-11-13 12:06 PST, ASK posted
+# GUNIT-CORE-1 lane handoff (S81 dsdv_gunit_l1f_bf / gunit__t1) -- gf4 builds RUNNING 2026-11-13 12:2x PST
 
 ## 1 Scope
 Give S81 hard core dsdv_gunit_l1f_bf a routed source (unblock gunit__t1 KIT-WAVE WAIT-CHILD), then get it to sign-off.
@@ -34,4 +34,26 @@ Give S81 hard core dsdv_gunit_l1f_bf a routed source (unblock gunit__t1 KIT-WAVE
   [dsdv_gunit_l1f_bf], profile cores/legacy/profiles/bf_m1reg_1108 (bench, pin_cycles.json).
 
 ## 5 Running jobs
-None of mine. Nothing killed.
+epyc8 kit_gf4 + kit_gf4ds60 (ot-heavy tags gunit-core-1-kit_gf4*). Nothing killed.
+
+## 6 COORD ruling 12:1x: form A APPROVED -> gf4 (OT_GUNIT_BF_C1REG) built 11-13 20:2x UTC
+- Branch claude/gunit-core-1-c1reg-1113 (worktree epyc9 /srv/opentallas-scratch2/claude/wt/gunit-core-1, base origin/main 0a4b432de8):
+  dsdv_gunit_l1f.sv bf `ifdef OT_GUNIT_BF_C1REG (inside M1REG): u_f0c fold compares + u_f0g candidate compares registered
+  (f_c1q, f_gq) with records f_uq/f_wq; u_f0s exchange; u_m1c/u_m1g compares registered beside c1r (m_c1q, m_gq); u_m1s exchange;
+  mfr2/gq2r2/gdr2/fltn2 extra delay. Mutant OT_GUNIT_BF_C1REG_MUT. sel_n32.sv appends dsdv_seln_x2g/x2s/fold_c/cx_c only.
+- Define-off check: preprocessed dsdv_gunit_l1f.sv identical to main (blank lines only) for gf3 and gf2 define sets; sel_n32
+  old text is an exact prefix (epyc9 /srv/opentallas-scratch2/claude/gunit-core-1/eqoff).
+- Bench: profiles/bf_c1reg_1113/bench/run_bench.sh (gold = main bf as gf3; N1 PASS, N0/N2/MUT must FAIL).
+- Ledger: profiles/bf_c1reg_1113/pin_cycles.json, physical/die_plan/s81/corelat/cycles_gunit_l1f_bf.tsv (o_* +2 vs plan),
+  results/gunit_core_1/latency_rows.json (rows + gunit__t1 lane table, lane mapping read from names = UNVERIFIED).
+  OWED by the S81 die owner: compiler/token reschedule of dsdv_gunit_l1c (u_l1c) for +2 on bf o_*.
+- recipes.json dsdv_gunit_l1f_bf: suffix gf4, defines M1REG + C1REG, why_reform4.
+- Builds (epyc8, ot-heavy 96G, GOAL finish): /srv/opentallas-scratch2/claude/gunit-core-1/kits/kit_gf4 (stock) and kit_gf4ds60
+  (same + kit_gf3ds60 GPL-only density screen). Next: render at place (render_kit.py) -> GEOM-VIS verdict -> signoff.py; then
+  export_view.py and replace the provisional prov_view_sources entry (keep it LIVE until then).
+
+## 7 PLAN ITEM for the next S81 event (AFTER 11-15 04:00 freeze; COORD 12:1x)
+- Real root cause = mirrored face order: fold pairs A lane i (S face s0a/s0b) with B lane 7-i (N face s1a/s1b) while BOTH faces
+  run lanes left to right. Reverse the N-face lane order in the plan pins (s1a/s1b x order) so every compare pair is vertically
+  aligned: 0 cycles; then gf4's +1 (and possibly gf3's +1) can be retired by a define-off form. Needs a plan event (pins of
+  the bf core + gunit__t1 parent wiring) -> GEOM review -> rebuild.
