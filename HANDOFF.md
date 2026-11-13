@@ -3627,3 +3627,5 @@ CODEX: 2026-11-13 15:01 PST ROOT-MERGE-61 landedclock/street/ECOsource batch68 a
 CODEX: 2026-11-13 15:02 PST producer status fix49efe4cdc3 READY with all reset-safe cold/warm component gates and old-skew control; global programme remains open.
 
 CODEX: 2026-11-13 15:12 PST ROOT-MERGE-61 landedGUNIT/additiveSVC/qualifiedproducer/isolatedR8source batch69 as4a8851da4b;56focusedchecksPASS,proposeractualcomponentcontrolsretained; noPOfreezechangeorG5claim.
+
+CODEX: 2026-11-13 15:30 PST ROOT-MERGE-61 landedisolatedR1NARROWbridge+LPsafeprooffollowup ascb980b9ada0,27focusedPASS; plans/runtimeunchanged.
