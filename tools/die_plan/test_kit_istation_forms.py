@@ -452,3 +452,133 @@ def test_kit_topology_accepts_pad_landing_and_tree(tmp_path):
     man["kit_istations"][0]["station_tree"]["reader_stations"] = [3, 2]
     (kd3 / "kit_rtl.json").write_text(json.dumps(man))
     assert any("bus latency is 3" in p for p in _census(plan3, kd3)["problems"])
+
+
+# ---------------------------------------------------------------- two-sided pad_landing (seam) gate / producer / latency
+def seam_plan(d_src, d_dst, k_src=4, k_dst=2):
+    ts = dict(buses=[dict(name="o", dir="out", width=6, kind="data", face="W")],
+              internal_stations=[dict(row("A.out", "face bus o", range(100, 100 * (k_src + 1), 100), 3, [0, 0], [500, 0]), conn="bus:o"),
+                                 dict(row("B.out", "face bus o", range(100, 100 * (k_src + 1), 100), 3, [0, 900], [500, 900]), conn="bus:o")],
+              pad_landing=[dict(bus="o", bit_depth=d_src, peer=dict(type="d", bus="i"))])
+    td = dict(buses=[dict(name="i", dir="in", width=6, kind="data", face="E")],
+              internal_stations=[dict(conn="bus:i", from_um=[0, 0], to_um=[900, 0], regs_um=[[100 * (j + 1), 0] for j in range(k_dst)],
+                                      bits=6, launch="face bus i", capture="A.din")],
+              pad_landing=[dict(bus="i", bit_depth=d_dst, peer=dict(type="t", bus="o"))])
+    return dict(partition_types=dict(t=ts, d=td))
+
+
+def test_pair_gate_accepts_balanced_and_rejects_the_rest():
+    ok = seam_plan([[0, 2, 2], [3, 5, 4]], [[0, 2, 4], [3, 5, 2]])            # 2+4 == 4+2, 4+2 == 4+2
+    assert KF.pair_problems(ok) == []
+    bad = seam_plan([[0, 2, 2], [3, 5, 4]], [[0, 5, 2]])                         # bits 0-2: 2+2 != 6
+    e = KF.pair_problems(bad)
+    assert len(e) == 1 and "per-bit cycles change on 3 bit(s)" in e[0] and "bit 0: 2+2 != 2+4" in e[0]
+    one = seam_plan([[0, 5, 4]], [[0, 5, 2]])
+    del one["partition_types"]["d"]["pad_landing"]
+    assert "peer" in KF.pair_problems(one)[0] and "missing" in KF.pair_problems(one)[0]
+    nopeer = seam_plan([[0, 5, 4]], [[0, 5, 2]])
+    del nopeer["partition_types"]["t"]["pad_landing"][0]["peer"]
+    assert any("one-sided" in x for x in KF.pair_problems(nopeer))
+    same = seam_plan([[0, 5, 4]], [[0, 5, 2]])
+    same["partition_types"]["d"]["buses"][0]["dir"] = "out"
+    assert any("same direction" in x for x in KF.pair_problems(same))
+    wid = seam_plan([[0, 5, 4]], [[0, 5, 2]])
+    wid["partition_types"]["d"]["buses"][0]["width"] = 7
+    assert any("width" in x for x in KF.pair_problems(wid))
+    back = seam_plan([[0, 5, 4]], [[0, 5, 2]])
+    back["partition_types"]["d"]["pad_landing"][0]["peer"] = dict(type="d", bus="i")
+    assert any("name this entry back" in x for x in KF.pair_problems(back))
+
+
+def test_schema_validate_structure_runs_the_pair_gate():
+    import schema
+    from test_schema import EX
+    plan = json.loads(json.dumps(EX))
+    tn = next(iter(plan["partition_types"]))
+    plan["partition_types"][tn]["pad_landing"] = [dict(bus="x", bit_depth=[[0, 0, 1]])]
+    errs = schema.validate_structure(plan)
+    assert any("pad_landing" in e for e in errs)
+
+
+def test_limit_move_keeps_largest_savings():
+    d = [1, 1, 3, 3, 4, 4]                                                       # k = 5: savings 4 4 2 2 1 1
+    assert KF.limit_move(d, 5, None) == d
+    assert KF.limit_move(d, 5, 8) == [1, 1, 5, 5, 5, 5]
+    assert KF.limit_move(d, 5, 12) == [1, 1, 3, 3, 5, 5]
+    assert KF.limit_move(d, 5, 0) == [5] * 6
+
+
+def test_derive_pair_cli_end_to_end(tmp_path):
+    kd = kit(tmp_path, OUT_BOUND)
+    plan = seam_plan([[0, 5, 4]], [[0, 5, 2]])
+    for t in plan["partition_types"].values():
+        t.pop("pad_landing")
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    out = tmp_path / "out.json"
+    r = subprocess.run([sys.executable, str(HERE / "kit_istation_forms.py"), "pair", str(pf), str(out), "t", "o", str(kd), "d", "i"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    st = json.loads(r.stdout)
+    assert st["k_src"] == 4 and st["k_peer"] == 2 and st["net_flops"] == 0 and st["src_flops"][0] < st["src_flops"][1]
+    new = json.loads(out.read_text())
+    assert KF.pair_problems(new) == []
+    d_src = KF.expand_runs(new["partition_types"]["t"]["pad_landing"][0]["bit_depth"], 6)
+    d_dst = KF.expand_runs(new["partition_types"]["d"]["pad_landing"][0]["bit_depth"], 6)
+    assert d_src == [1] * 6 and d_dst == [5] * 6                                 # 500 um rows: reach need 1; peer 2 + (4-1)
+    lint = subprocess.run([sys.executable, str(HERE / "kit_istation_forms.py"), "lint", str(out)], capture_output=True, text=True)
+    assert lint.returncode == 0
+
+
+def test_kit_reach_gate_refuses_a_landing_below_the_row_need(tmp_path):
+    kd = kit(tmp_path, OUT_BOUND)
+    plan = out_plan([[0, 5, 0]])                                                 # 500 um rows need 1 station
+    r = run_ist(tmp_path, plan, kd)
+    assert r.returncode != 0 and "below their row reach need" in r.stderr
+    plan["partition_types"]["t"]["pad_landing"][0]["reach_waiver"] = True
+    assert run_ist(tmp_path, plan, kit(tmp_path, OUT_BOUND, "w")).returncode == 0
+
+
+def test_in_owners_attributes_flattened_core_reads():
+    txt = ("module m(input clk);\n    wire [5:0] i_q;\n    wire i_eq;\n"
+           "    always @(posedge clk) g_core_x_leaf_r1_q <= {i_q[5:3], i_q[0]};\n"
+           "    always @(posedge clk) w_other_r2_q <= i_q[2:1];\nendmodule\n")
+    own = KF.in_owners(txt, "i", ["core_x_leaf", "other"])
+    assert own == {5: {"core_x_leaf"}, 4: {"core_x_leaf"}, 3: {"core_x_leaf"}, 0: {"core_x_leaf"}, 2: {"other"}, 1: {"other"}}
+
+
+def test_seam_end_to_end_latency_per_bit_is_unchanged(tmp_path):
+    """src out chain (K=4) feeding dst in chain (K'=2) through the face pair: with per-bit depths d / K'+K-d every bit
+    keeps the uniform latency (4 + 2 stations + 2 face flops); the epoch chains stay K / K' deep."""
+    plan = seam_plan([[0, 2, 1], [3, 5, 3]], [[0, 2, 5], [3, 5, 3]])
+    assert KF.pair_problems(plan) == []
+    src = kit(tmp_path, OUT_BOUND, "src")
+    r = run_ist(tmp_path, plan, src)
+    assert r.returncode == 0, r.stderr
+    plan_d = json.loads(json.dumps(plan))
+    dst = kit(tmp_path, PLAIN_IN.replace("t_part_bound", "d_part_bound"), "dst")
+    (dst / "kit_rtl.json").write_text(json.dumps(dict(bound_module="d_part_bound", files=[str(dst / "t_part_bound.sv")])))
+    (dst / "d_part_bound.sv").write_text((dst / "t_part_bound.sv").read_text().replace("t_part_bound", "d_part_bound"))
+    (dst / "t_part_bound.sv").unlink()
+    (dst / "kit_rtl.json").write_text(json.dumps(dict(bound_module="d_part_bound", files=[str(dst / "d_part_bound.sv")])))
+    pf = tmp_path / "plan_d.json"
+    pf.write_text(json.dumps(dict(partition_types=dict(t=plan_d["partition_types"]["d"]))))
+    r = subprocess.run([sys.executable, str(HERE / "kit_istations.py"), str(pf), "t", str(dst)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    top = """module top(input wire clk, input wire rst_n, input wire [5:0] i_a, output wire [5:0] y, output wire ye);
+      wire [6:0] mid;
+      t_part_bound a(.clk(clk), .rst_n(rst_n), .i_a(i_a), .o(mid));
+      d_part_bound b(.clk(clk), .rst_n(rst_n), .i(mid), .y(y), .ye(ye));
+    endmodule
+    """
+    tb = """module tb; reg clk=0, rst_n=0; reg [5:0] i_a=0; wire [5:0] y; wire ye; integer t=0; reg [31:0] r;
+      top u(.clk(clk), .rst_n(rst_n), .i_a(i_a), .y(y), .ye(ye));
+      always #5 clk = ~clk;  initial begin #22 rst_n = 1; end
+      always @(negedge clk) begin r = $random; i_a <= r[5:0]; end
+      always @(posedge clk) begin t = t + 1; #1 $display("S %0d %b %b", t, i_a, y); end
+      initial begin #3000 $finish; end
+    endmodule
+    """
+    (tmp_path / "top.v").write_text(top)
+    lines = sim(tmp_path, [src / "t_part_bound.sv", dst / "d_part_bound.sv", tmp_path / "top.v"], tb)
+    assert latencies(lines, 6) == [4 + 2 + 2 - 1] * 6                             # K + K' stations + bout + bin flops, minus the sample

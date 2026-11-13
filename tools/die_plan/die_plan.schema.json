@@ -5512,6 +5512,13 @@
           }
          }
         },
+        "k": {
+         "type": "integer",
+         "minimum": 0
+        },
+        "reach_waiver": {
+         "type": "boolean"
+        },
         "note": {
          "type": "string"
         }

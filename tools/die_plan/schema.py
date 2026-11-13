@@ -1612,7 +1612,8 @@ _XY = {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"
 _PT["pad_landing"] = {"type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["bus", "bit_depth"], "properties": {
     "bus": {"type": "string", "minLength": 1}, "bit_depth": _RUNS, "stage_sites_um": {"type": "array", "items": _XY},
     "peer": {"type": "object", "additionalProperties": False, "properties": {
-        "type": {"type": "string"}, "bus": {"type": "string"}}}, "note": {"type": "string"}}}}
+        "type": {"type": "string"}, "bus": {"type": "string"}}}, "k": {"type": "integer", "minimum": 0},
+    "reach_waiver": {"type": "boolean"}, "note": {"type": "string"}}}}
 _ATT = {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["node"], "properties": {
     "node": {"type": "string", "minLength": 1}, "core": {"type": "string", "minLength": 1}, "name": {"type": "string"},
     "prefix": {"type": "array", "items": {"type": "string", "minLength": 1}}, "bits": _BITS}}}
@@ -1786,6 +1787,12 @@ def validate_structure(obj):
     _check(obj, _schema_station_model() if opt else SCHEMA, "$", errs)
     if opt and not errs:
         errs += station_model_errors(obj)
+    if not errs and isinstance(obj, dict) and any(t.get("pad_landing") for t in obj.get("partition_types", {}).values()):
+        try:                                    # HBM-KITIST-1: pad_landing seams must preserve per-bit lane cycles
+            from . import kit_istation_forms as _KF
+        except ImportError:
+            import kit_istation_forms as _KF
+        errs += [f"pad_landing: {m}" for m in _KF.pair_problems(obj)]
     id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
                 if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
     if id_types:

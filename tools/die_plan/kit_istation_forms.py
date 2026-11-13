@@ -118,6 +118,20 @@ def bit_depth_from_rows(rows, owners, W, k, hard=(), reach=REACH_UM):
     return out
 
 
+def limit_move(d, k, budget):
+    """keep the largest per-bit savings (k - d_b) until `budget` data flops are moved; every other bit keeps K.
+    Deterministic (ties by bit index).  budget None = no limit.  -> new depth list"""
+    if budget is None:
+        return list(d)
+    order = sorted((b for b in range(len(d)) if d[b] < k), key=lambda b: (-(k - d[b]), b))
+    out, used = [k] * len(d), 0
+    for b in order:
+        if used + (k - d[b]) > budget:
+            continue
+        out[b], used = d[b], used + (k - d[b])
+    return out
+
+
 def cat(refs):
     """MSB-first [(name, idx|None)] -> RTL expression; consecutive descending bits of one name fold to name[hi:lo]"""
     parts, i = [], 0
@@ -178,14 +192,39 @@ def _decl(qn, eqn, w):
     return f"    wire [{w - 1}:0] {qn};\n    wire {eqn};  // kit_istations"
 
 
+def in_owners(txt, n, cores):
+    """in-bus bit -> {core}: BG.in_bit_owners (instance blocks u_<core flat>, pass-through regs) plus flattened cores whose
+    shell registers read the bus directly (`g_/w_<core flat>_... <= {n}_q[..]`, the scorer leaf group in q_b001 L14_i)"""
+    own = {b: set(c) for b, c in (BG.in_bit_owners(txt, n, cores) or {}).items()}
+    qre = re.compile(rf"^{re.escape(n)}(?:_p\d+|_is\d+)?_q$")
+    lhs = re.compile(r"^\s*(?:assign\s+)?([A-Za-z_][\w$]*)\s*(?:<=|=)\s*([^;]+);")
+    for ln in txt.split("\n"):
+        if "u_bin_" in ln or "ot_dp_" in ln:
+            continue
+        m = lhs.match(re.sub(r"^\s*always\s*@\([^)]*\)\s*(begin\s*)?", "", ln))
+        if not m:
+            m = re.search(r"([A-Za-z_][\w$]*)\s*<=\s*([^;]+);", ln.split("//")[0])
+        if not m:
+            continue
+        c = BG.match_core(m.group(1), cores)
+        its = BG._items(m.group(2).strip()) if c else None
+        for (nm, hi, lo) in (its or []):
+            if qre.match(nm) and hi is not None:
+                for bit in range(min(hi, lo), max(hi, lo) + 1):
+                    own.setdefault(bit, set()).add(c)
+    return own
+
+
 def _bus_rows(t, bus):
     return [e for e in t.get("internal_stations", []) if e.get("conn") == "bus:" + bus]
 
 
-def _planned_k(t, bus, tn):
+def _planned_k(t, bus, tn, entry=None):
     rows = _bus_rows(t, bus)
     if not rows:
-        _fail(tn, bus, "no internal_stations rows (planned station count unknown)")
+        if entry is not None and isinstance(entry.get("k"), int) and entry["k"] >= 0:
+            return entry["k"]            # peer side of a seam with no station rows on this bus (e.g. q_b002 L71_o)
+        _fail(tn, bus, "no internal_stations rows (planned station count unknown); give pad_landing.k")
     return max(len(e["regs_um"]) for e in rows)
 
 
@@ -228,7 +267,7 @@ def pad_landing(tn, t, bus_name, entry, txt, man, tcl, rep, bound_bus_width):
         _fail(tn, bus_name, str(ex))
     if any(not isinstance(x, int) or x < 0 for x in dl):
         _fail(tn, bus_name, "bit_depth must be non-negative integers")
-    k = _planned_k(t, bus_name, tn)
+    k = _planned_k(t, bus_name, tn, entry)
     if re.search(rf"\bu_ist_{re.escape(n)}_(\d+)\b", txt) or re.search(rf"\bu_ist_{re.escape(n)}_t", txt):
         _fail(tn, bus_name, "stations already inserted (run on a fresh kit-rtl copy)")
     pads = sorted(int(m) for m in re.findall(rf"\bu_b(?:in|out)_{re.escape(n)}_pad(\d+)\b", txt))
@@ -242,12 +281,24 @@ def pad_landing(tn, t, bus_name, entry, txt, man, tcl, rep, bound_bus_width):
     hard = [h["inst"] for h in t.get("hard_cores", [])]
     rows = _bus_rows(t, bus_name)
     cores = sorted({BG.core_of_entry(e, hard) for e in rows} - {None})
-    owners = (BG.in_bit_owners(txt, n, cores) if in_bus else BG.out_bit_owners(txt, n, W, cores)) if cores else None
+    owners = (in_owners(txt, n, cores) if in_bus else BG.out_bit_owners(txt, n, W, cores)) if cores else None
     owner_row = {}
     for e in rows:
         c = BG.core_of_entry(e, hard)
         if c and c not in owner_row and e.get("from_um") and e.get("to_um"):
             owner_row[c] = _row_regs(e, in_bus)
+    if owners and rows and not entry.get("reach_waiver"):
+        # reach gate: a bit may not carry fewer stations than its own owner row needs for hops <= REACH_UM (peer sides
+        # that ADD stations never trip it); unresolved bits are not checked here (they keep the planned depth by derive)
+        need = {}
+        for e in rows:
+            c = BG.core_of_entry(e, hard)
+            if c and e.get("from_um") and e.get("to_um"):
+                need[c] = max(need.get(c, 0), reach_need(e["from_um"], e["to_um"]))
+        short = [bit for bit in range(W) for c in owners.get(bit, ()) if c in need and dl[bit] < need[c]]
+        if short:
+            _fail(tn, bus_name, f"pad_landing leaves {len(set(short))} bit(s) below their row reach need "
+                                f"(e.g. bit {short[0]} d={dl[short[0]]})")
     deep = next((e for e in rows if len(e["regs_um"]) == k and e.get("from_um") and e.get("to_um")), None)
     merged = _row_regs(deep, in_bus) if deep else None
     explicit = entry.get("stage_sites_um")
@@ -462,7 +513,7 @@ def station_tree(tn, t, entry, txt, man, tcl, rep, bound_bus_width):
             except ValueError as ex:
                 _fail(tn, bus_name, str(ex))
     if any("_bits" not in a for a in atts):
-        owners = (BG.in_bit_owners(txt, n, cores) if in_bus else BG.out_bit_owners(txt, n, W, cores)) if cores else None
+        owners = (in_owners(txt, n, cores) if in_bus else BG.out_bit_owners(txt, n, W, cores)) if cores else None
         for a in atts:
             if "_bits" in a:
                 continue
@@ -602,6 +653,92 @@ def apply_forms(tn, t, txt, man, tcl, rep, bound_bus_width):
     return txt, claimed
 
 
+def pair_problems(raw):
+    """plan-lint gate of every pad_landing seam.  An entry with peer {type, bus} must be mirrored by the peer type's entry,
+    buses must be opposite directions with equal width, and for EVERY bit d_src + d_dst == K_src + K_dst (per-bit cycles
+    and seam bit order unchanged).  An entry without a peer is a one-sided landing and is reported."""
+    T = raw.get("partition_types", {})
+    errs = []
+    ent = {}
+    for tn, t in T.items():
+        for e in t.get("pad_landing", []):
+            ent[(tn, e["bus"])] = e
+    for (tn, bus), e in sorted(ent.items()):
+        t = T[tn]
+        b = next((x for x in t["buses"] if x["name"] == bus), None)
+        if b is None:
+            errs.append(f"{tn} {bus}: pad_landing on unknown bus")
+            continue
+        pe = e.get("peer")
+        if not pe:
+            errs.append(f"{tn} {bus}: pad_landing has no peer (one-sided landing changes the lane cycles)")
+            continue
+        pt = T.get(pe.get("type"))
+        pb = next((x for x in pt["buses"] if x["name"] == pe.get("bus")), None) if pt else None
+        other = ent.get((pe.get("type"), pe.get("bus")))
+        if pb is None or other is None:
+            errs.append(f"{tn} {bus}: peer {pe} missing (bus or pad_landing entry)")
+            continue
+        back = other.get("peer") or {}
+        if (back.get("type"), back.get("bus")) != (tn, bus):
+            errs.append(f"{tn} {bus}: peer {pe} does not name this entry back")
+            continue
+        if b["dir"] == pb["dir"]:
+            errs.append(f"{tn} {bus}: peer {pe} has the same direction ({b['dir']})")
+            continue
+        if b["width"] != pb["width"]:
+            errs.append(f"{tn} {bus}: width {b['width']} != peer width {pb['width']}")
+            continue
+        if (tn, bus) > (pe["type"], pe["bus"]):
+            continue                                        # check each seam once
+        W = b["width"]
+        try:
+            da, db = expand_runs(e["bit_depth"], W), expand_runs(other["bit_depth"], W)
+        except ValueError as ex:
+            errs.append(f"{tn} {bus}: {ex}")
+            continue
+        ka, kb = _planned_k(t, bus, tn, e), _planned_k(pt, pe["bus"], pe["type"], other)
+        bad = check_pair(ka, da, kb, db)
+        if bad:
+            errs.append(f"{tn} {bus} <-> {pe['type']} {pe['bus']}: per-bit cycles change on {len(bad)} bit(s) "
+                        f"(e.g. bit {bad[0]}: {da[bad[0]]}+{db[bad[0]]} != {ka}+{kb})")
+    return errs
+
+
+def derive_pair(raw, src_t, src_bus, src_txt, peer_t, peer_bus, peer_k=None, budget=None):
+    """write pad_landing on both sides of a seam into raw: the src side at its reach floor (bit_depth_from_rows from the
+    src kit RTL owners), the peer at K_peer + (K_src - d_src).  -> stats dict"""
+    T = raw["partition_types"]
+    ts, tp = T[src_t], T[peer_t]
+    bs = next(x for x in ts["buses"] if x["name"] == src_bus)
+    bp = next(x for x in tp["buses"] if x["name"] == peer_bus)
+    if bs["width"] != bp["width"] or bs["dir"] == bp["dir"]:
+        raise SystemExit(f"derive_pair: {src_t}.{src_bus} / {peer_t}.{peer_bus} width or direction mismatch")
+    n = gen_rtl.sv_id(src_bus)
+    m = re.search(rf"\bot_dp_ste?\s+#\(\.W\((\d+)\)\)\s+u_b(in|out)_{re.escape(n)}\s*\(", src_txt)
+    if not m:
+        raise SystemExit(f"derive_pair: no face register of {src_bus} in the src RTL")
+    W, in_bus = int(m.group(1)), m.group(2) == "in"
+    hard = [h["inst"] for h in ts.get("hard_cores", [])]
+    rows = _bus_rows(ts, src_bus)
+    ks = _planned_k(ts, src_bus, src_t)
+    kp = peer_k if peer_k is not None else (_planned_k(tp, peer_bus, peer_t) if _bus_rows(tp, peer_bus) else 0)
+    cores = sorted({BG.core_of_entry(e, hard) for e in rows} - {None})
+    owners = (in_owners(src_txt, n, cores) if in_bus else BG.out_bit_owners(src_txt, n, W, cores)) or {}
+    d = limit_move(bit_depth_from_rows(rows, owners, W, ks, hard), ks, budget)
+    dp = peer_depth(ks, d, kp)
+    ent_s = dict(bus=src_bus, bit_depth=compress_runs(d), peer=dict(type=peer_t, bus=peer_bus))
+    ent_p = dict(bus=peer_bus, bit_depth=compress_runs(dp), peer=dict(type=src_t, bus=src_bus))
+    if not _bus_rows(tp, peer_bus):
+        ent_p["k"] = kp
+    for t, e in ((ts, ent_s), (tp, ent_p)):
+        t["pad_landing"] = [x for x in t.get("pad_landing", []) if x["bus"] != e["bus"]] + [e]
+    return dict(src=f"{src_t}.{src_bus}", peer=f"{peer_t}.{peer_bus}", width=W, k_src=ks, k_peer=kp,
+                owners_resolved=sum(1 for b in range(W) if owners.get(b)),
+                src_flops=(sum(d), W * ks), peer_flops=(sum(dp), W * kp),
+                net_flops=(sum(d) - W * ks) + (sum(dp) - W * kp))
+
+
 def derive_cli(plan_path, tn, bus_name, kit_dir):
     """print the legal-maximum pad_landing entry for one bus (reach floor of every owner row); the plan side bakes the
     two sides of a seam from this table (check_pair verifies they agree)."""
@@ -620,15 +757,36 @@ def derive_cli(plan_path, tn, bus_name, kit_dir):
     rows = _bus_rows(t, bus_name)
     k = _planned_k(t, bus_name, tn)
     cores = sorted({BG.core_of_entry(e, hard) for e in rows} - {None})
-    owners = (BG.in_bit_owners(txt, n, cores) if in_bus else BG.out_bit_owners(txt, n, W, cores)) or {}
+    owners = (in_owners(txt, n, cores) if in_bus else BG.out_bit_owners(txt, n, W, cores)) or {}
     d = bit_depth_from_rows(rows, owners, W, k, hard)
     print(json.dumps(dict(bus=bus_name, bit_depth=compress_runs(d), planned_k=k, width=W,
                           owners_resolved=sum(1 for b in range(W) if owners.get(b)),
                           data_flops_single_chain=W * k, data_flops=sum(d))))
 
 
+def _src_txt(kit_dir):
+    import json
+    man = json.loads((Path(kit_dir) / "kit_rtl.json").read_text())
+    return next(Path(f) for f in man["files"] if Path(f).stem == man["bound_module"]).read_text()
+
+
 if __name__ == "__main__":
+    import json
     if len(sys.argv) == 6 and sys.argv[1] == "derive":
         derive_cli(*sys.argv[2:])
+    elif len(sys.argv) == 3 and sys.argv[1] == "lint":
+        errs = pair_problems(json.load(open(sys.argv[2])))
+        print("\n".join(errs) or "pad_landing seams ok")
+        sys.exit(1 if errs else 0)
+    elif len(sys.argv) >= 9 and sys.argv[1] == "pair":
+        # pair PLAN.json OUT.json SRC_TYPE SRC_BUS SRC_KIT_DIR PEER_TYPE PEER_BUS [PEER_K]  (repeatable via OUT=PLAN for the next seam)
+        raw = json.load(open(sys.argv[2]))
+        av = [x for x in sys.argv[9:] if not x.startswith("--budget=")]
+        bud = next((int(x.split("=")[1]) for x in sys.argv[9:] if x.startswith("--budget=")), None)
+        st = derive_pair(raw, sys.argv[4], sys.argv[5], _src_txt(sys.argv[6]), sys.argv[7], sys.argv[8],
+                         int(av[0]) if av else None, bud)
+        json.dump(raw, open(sys.argv[3], "w"), indent=1)
+        print(json.dumps(st))
     else:
-        raise SystemExit("usage: kit_istation_forms.py derive PLAN.json TYPE BUS KIT_RTL_DIR")
+        raise SystemExit("usage: kit_istation_forms.py derive PLAN TYPE BUS KITDIR | lint PLAN | "
+                         "pair PLAN OUT SRC_TYPE SRC_BUS SRC_KITDIR PEER_TYPE PEER_BUS [PEER_K] [--budget=N]")
