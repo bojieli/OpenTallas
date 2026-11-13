@@ -146,3 +146,96 @@ module ot_s81_kp4_bm #(parameter integer NG = 4, parameter integer NCD = 4, para
         end
     end endgenerate
 endmodule
+
+// ---------------------------------------------------------------------------------------------------------------
+// ot_s81_kp4_bm_it2 (HARD-S81-SERDES-1 2026-11-13; used only under `define OT_S81_KP4_BM_IT2, so every other form is
+// unchanged): the same RiBM unit with a TWO-CYCLE iteration, the standard folded form of a recurrence whose loop is one
+// GF(2^10) multiply + XOR.  serdes__t2 kitC2 (template island, placement): u_syn.Sl -> operand mux -> multiply -> XOR ->
+// u_bm.d was 12 cells + 21 wire buffers, 3.2 ns, 2247 endpoints; the loop cannot take a register without taking time.
+//   ld (cycle t)      : state <= the S image (delta = theta = {1 at 45, S_29..S_0}, gamma = 1, k = 0); no multiply.
+//   M phase (t+1+2r)  : pa_q <= gamma * delta_(i+1), pb_q <= delta_0 * theta_i, upd_q <= (delta_0 != 0 && k >= 0).
+//   U phase (t+2+2r)  : delta_i <= pa_q ^ pb_q; theta / gamma / k / L update from upd_q exactly as ot_s81_kp4_bm.
+//   r = 0..29; done is high in cycle t + 61 with the result in delta (ot_s81_kp4_bm: t + 30).  PIN CYCLES: k_* +31 rck.
+// The unit is busy 61 cycles, so the syndrome tile runs NBM = 7 units (one frame every 10 cycles: reload after 70) and
+// ot_s81_kp4_ddly delays the words 31 more (a 31-word register line before the 64-word delay memory).
+// Same arithmetic, same L / any / lam / om values as ot_s81_kp4_bm for every S (bench: KP4 gate vs rs544.py + column
+// lock-step).  `define OT_BM_IT2_MUT (bench only): 29 iterations instead of 30 -> must FAIL the KP4 gate.
+// ---------------------------------------------------------------------------------------------------------------
+module ot_s81_kp4_bm_it2 #(parameter integer NG = 4, parameter integer NCD = 4) (
+    input  wire            clk,
+    input  wire            rs_n,
+    input  wire [NG-1:0]   ld,
+    input  wire [299:0]    S,
+    output wire [159:0]    lam,
+    output wire [149:0]    om,
+    output reg  [4:0]      L,
+    output reg             any,
+    output reg  [NCD-1:0]  done
+);
+    localparam integer NPE = 46, GS = (NPE + NG - 1) / NG;
+`ifdef OT_BM_IT2_MUT
+    localparam [4:0] LAST = 5'd28;
+`else
+    localparam [4:0] LAST = 5'd29;
+`endif
+    reg  [9:0] d  [0:NPE-1];
+    reg  [9:0] th [0:NPE-1];
+    reg  [9:0] pa_q [0:NPE-1];
+    reg  [9:0] pb_q [0:NPE-1];
+    (* keep *) reg [9:0] gm [0:NG-1];
+    (* keep *) reg [9:0] dz [0:NG-1];
+    (* keep *) reg [5:0] kc [0:NG-1];
+    (* keep *) reg [NG-1:0] upd_q, ph_m, ph_u;      // phase copies, one per PE group
+    reg  [4:0] n;
+    function automatic [9:0] dinit(input integer j);
+        dinit = (j < 30) ? S[10 * j +: 10] : ((j == 45) ? 10'd1 : 10'd0);
+    endfunction
+    wire [9:0] nd0 = pa_q[0] ^ pb_q[0];
+    genvar gi, gg;
+    generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_grp
+        always @(posedge clk) begin
+            if (ld[gg]) begin gm[gg] <= 10'd1; kc[gg] <= 6'd0; dz[gg] <= S[9:0]; end
+            else if (ph_u[gg]) begin
+                gm[gg] <= upd_q[gg] ? dz[gg] : gm[gg];
+                kc[gg] <= upd_q[gg] ? (~kc[gg]) : (kc[gg] + 6'd1);
+                dz[gg] <= nd0;
+            end
+            if (ph_m[gg]) upd_q[gg] <= (dz[gg] != 10'd0) && !kc[gg][5];
+            if (!rs_n) begin ph_m[gg] <= 1'b0; ph_u[gg] <= 1'b0; end
+            else if (ld[gg]) begin ph_m[gg] <= 1'b1; ph_u[gg] <= 1'b0; end
+            else begin ph_m[gg] <= ph_u[gg] && (n != LAST); ph_u[gg] <= ph_m[gg]; end
+        end
+        for (gi = gg * GS; gi < ((gg == NG - 1) ? NPE : (gg + 1) * GS); gi = gi + 1) begin : g_pe
+            wire [9:0] Dn = (gi + 1 < NPE) ? d[(gi + 1 < NPE) ? gi + 1 : 0] : 10'd0;
+            wire [9:0] pa, pb;
+            ot_s81_kp4_vmul u_a (.a(gm[gg]), .b(Dn),     .y(pa));
+            ot_s81_kp4_vmul u_b (.a(dz[gg]), .b(th[gi]), .y(pb));
+            always @(posedge clk) begin
+                if (ph_m[gg]) begin pa_q[gi] <= pa; pb_q[gi] <= pb; end
+                if (ld[gg]) begin d[gi] <= dinit(gi); th[gi] <= dinit(gi); end
+                else if (ph_u[gg]) begin
+                    d[gi]  <= pa_q[gi] ^ pb_q[gi];
+                    th[gi] <= upd_q[gg] ? Dn : th[gi];
+                end
+            end
+        end
+    end endgenerate
+    integer q;
+    always @(posedge clk) begin
+        if (ld[0]) begin L <= 5'd0; any <= |S; end
+        else if (ph_u[0]) L <= upd_q[0] ? (n + 5'd1 - L) : L;
+        if (!rs_n) begin n <= 5'd31; done <= {NCD{1'b0}}; end
+        else begin
+            if (ld[0]) n <= 5'd0;
+            else if (ph_u[0] && n != 5'd31) n <= (n == LAST) ? 5'd31 : n + 5'd1;
+            for (q = 0; q < NCD; q = q + 1) done[q] <= !ld[0] && ph_u[0] && (n == LAST);
+        end
+    end
+    genvar go;
+    generate for (go = 0; go < 16; go = go + 1) begin : g_lam
+        assign lam[10 * go +: 10] = d[15 + go];
+        if (go < 15) begin : g_om
+            assign om[10 * go +: 10] = d[go];
+        end
+    end endgenerate
+endmodule

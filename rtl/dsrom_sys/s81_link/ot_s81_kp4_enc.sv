@@ -40,7 +40,11 @@
 //   RCKRF_MUT_LA_LANE (S_0 lane fed from S_1's D row).
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_kp4_enc #(parameter integer MUT = 0, parameter integer PIN_FAULT = 0, parameter integer H0_SEQ_ONLY = 0,
+`ifdef OT_S81_RCK_TX_PPCYC
+    parameter integer PPCYC = 1) (     // the define is the form switch in every parent (flat column and RE-FORM cores)
+`else
     parameter integer PPCYC = 0) (
+`endif
     input  wire          clk,
     input  wire          rst_n,
     input  wire          tx_v,

@@ -132,6 +132,35 @@ foreach ch [dict get $sl_cfg chains] {
   puts "OT_SERDES_LANES chain $cn kind $kind rows $n bits $nb: placed $nplaced FIRM, missing $nmiss, max planned hop [format %.1f [expr {$hmax / double($sl_dbu)}]] um"
   if {$nb == 0 || $nmiss > 0} { error "OT_SERDES_LANES chain $cn: $nb bits, $nmiss rows not found or not placed (RTL form / names changed?)" }
 }
+# ---- module anchors (cfg key anchors {{regexp x0 y0 x1 y1} ...}, optional): every not yet FIRM flop whose name matches
+#      is placed FIRM on an even raster inside its box (dictionary order of the names), so each module's logic packs
+#      around its own registers.  Why: the KP4 encoder / syndrome / RiBM cones are dense GF(2) matrices; left to one
+#      shared island GPL interleaves the modules and every net is as long as the island (kitC2: 12 cells, 21 wire
+#      buffers, 3.2 ns on u_syn.Sl -> u_bm.d).  The comb cells stay free and follow their registers.
+if {[dict exists $sl_cfg anchors]} {
+  foreach an [dict get $sl_cfg anchors] {
+    lassign $an are x0 y0 x1 y1
+    set x0 [sl_u $x0]; set y0 [sl_u $y0]; set x1 [sl_u $x1]; set y1 [sl_u $y1]
+    set ffs {}
+    foreach i [$sl_blk getInsts] {
+      if {![sl_is_ff $i] || [$i getPlacementStatus] eq "FIRM"} continue
+      if {[regexp $are [$i getName]]} { lappend ffs [list [$i getName] $i] }
+    }
+    set n [llength $ffs]
+    if {$n == 0} { puts "OT_SERDES_LANES anchor $are: 0 flops (skipped)"; continue }
+    set ffs [lsort -dictionary -index 0 $ffs]
+    set cols [expr {int(ceil(sqrt(double($n) * ($x1 - $x0) / ($y1 - $y0))))}]; set rws [expr {int(ceil(double($n) / $cols))}]
+    set k 0; set miss 0
+    foreach e $ffs {
+      set f [lindex $e 1]
+      set x [expr {int($x0 + ($x1 - $x0) * (($k % $cols) + 0.5) / $cols)}]; set y [expr {int($y0 + ($y1 - $y0) * (($k / $cols) + 0.5) / $rws)}]
+      set xy [sl_put $f $x $y]
+      if {$xy eq ""} { incr miss } else { puts $sl_fh "[$f getName]	SLA	[expr {[lindex $xy 0] / double($sl_dbu)}]	[expr {[lindex $xy 1] / double($sl_dbu)}]	anchor" }
+      incr k
+    }
+    puts "OT_SERDES_LANES anchor $are: $n flops FIRM on a $cols x $rws raster in ([expr {$x0 / double($sl_dbu)}] [expr {$y0 / double($sl_dbu)}] [expr {$x1 / double($sl_dbu)}] [expr {$y1 / double($sl_dbu)}]), unplaced $miss"
+  }
+}
 close $sl_fh
 # ---- blockages (removed again by serdes_lanes_release.tcl)
 set sl_have {}

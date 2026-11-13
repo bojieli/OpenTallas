@@ -52,6 +52,39 @@
    "lane": "landing ring write-enable copies (OT_S81_CLAND_WCHK)",
    "added_cycles": 0,
    "note": "ready +1 clk at boot only"
+  },
+  {
+   "id": "ENC_LA",
+   "lane": "TX encoder look-ahead (OT_S81_KP4_ENC_LA)",
+   "added_cycles": 0,
+   "set": "kitD"
+  },
+  {
+   "id": "BM_PE_LOCAL",
+   "lane": "RX RiBM per-PE load copies (OT_S81_KP4_BM_PE_LOCAL)",
+   "added_cycles": 0,
+   "set": "kitD"
+  },
+  {
+   "id": "RX_SPCYC",
+   "lane": "RX syndrome partial products (OT_S81_RCK_RX_SPCYC)",
+   "added_cycles": 1,
+   "clk": "pma_rck",
+   "set": "kitE only"
+  },
+  {
+   "id": "TX_PPCYC",
+   "lane": "TX encoder partial products (OT_S81_RCK_TX_PPCYC)",
+   "added_cycles": 1,
+   "clk": "clk",
+   "set": "kitE only"
+  },
+  {
+   "id": "BM_IT2",
+   "lane": "RX RiBM two-cycle iteration, 7 units, +31-word delay line (OT_S81_KP4_BM_IT2)",
+   "added_cycles": 31,
+   "clk": "pma_rck",
+   "set": "kitF only (fallback)"
   }
  ],
  "totals": {
@@ -66,7 +99,10 @@
   "LANE 3/4/4/3": 102,
   "LANE 3/4/5/3": 103,
   "cone set only (vB)": 95,
-  "cone set + LANE 3/4/5/3": 110
+  "cone set + LANE 3/4/5/3": 110,
+  "kitD set (cone set + ENC_LA + BM_PE_LOCAL + LANE)": 110,
+  "kitE set (kitD + SPCYC + PPCYC)": 112,
+  "kitF set (kitD + BM_IT2)": 141
  },
  "reset": "rx reaches IDLE and st 0 within LANE_RXO + 2 clk edges of the die reset (bench leaf check); LOCKSAFE HOLD_EDGES 64 unchanged",
  "plan_lanes": "no die_plan lane changes: the coll lanes end at the column pins, so lane_asbuilt_latency.py rows are unchanged; the link-internal cycles above go to the die owner / TOK-VERIFY as rows",
@@ -78,5 +114,19 @@
   "S81 die owner",
   "TOK-VERIFY",
   "COORD"
- ]
+ ],
+ "sets": {
+  "kitD": {
+   "loopback": 110,
+   "vs_released": 22
+  },
+  "kitE": {
+   "loopback": 112,
+   "vs_released": 24
+  },
+  "kitF": {
+   "loopback": 141,
+   "vs_released": 53
+  }
+ }
 }

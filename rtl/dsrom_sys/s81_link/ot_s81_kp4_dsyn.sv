@@ -15,8 +15,21 @@
 //   The S final stage, the RiBM load and the k_* results move one cycle (k_* +1 rck); x_q, lock and n_relock are
 //   unchanged.  The word delay tile must wait one more word: ot_s81_kp4_ddly DD +1 under OT_S81_RCK_RX_SPCYC.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0, parameter integer PIN_X = 0,
+// OT_S81_KP4_BM_IT2 (HARD-S81-SERDES-1 11-13, opt-in; needs OT_S81_KP4_SYN_LOCAL without BM_PREL): the RiBM units are
+//   ot_s81_kp4_bm_it2 (two-cycle iteration, done 31 cycles later) and there are NBM = 7 of them; k_* +31 rck; the delay
+//   tile ot_s81_kp4_ddly holds the words 31 more under the same define.
+module ot_s81_kp4_dsyn #(parameter integer MUT = 0,
+`ifdef OT_S81_KP4_BM_IT2
+    parameter integer NBM = 7,
+`else
+    parameter integer NBM = 3,
+`endif
+    parameter integer BMTHC = 0, parameter integer PIN_X = 0,
+`ifdef OT_S81_RCK_RX_SPCYC
+    parameter integer SPCYC = 1) (     // the define is the form switch in every parent (flat column and RE-FORM cores)
+`else
     parameter integer SPCYC = 0) (
+`endif
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
@@ -183,8 +196,13 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
         else for (i = 0; i < NBM; i = i + 1) ld2[i] <= ldr[i];
 `endif
     generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
+`ifdef OT_S81_KP4_BM_IT2
+        ot_s81_kp4_bm_it2 #(.NG(NGB), .NCD(4)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ld2[gu]), .S(Sl[gu]),
+            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]));
+`else
         ot_s81_kp4_bm #(.NG(NGB), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ld2[gu]), .S(Sl[gu]),
             .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp({NGB{1'b0}}), .Sp(300'd0));
+`endif
     end endgenerate
 `endif
 `else

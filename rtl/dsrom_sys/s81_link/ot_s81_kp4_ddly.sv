@@ -44,8 +44,23 @@ module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT, paramete
     wire [5:0] rd_d = ptr - DD[5:0] + RQ[5:0];
 `endif
     wire [545:0] d_rd;
+    // OT_S81_KP4_BM_IT2: the key equation takes 31 cycles longer; the words wait in a 31-word register line before the
+    // 64-word memory (DD + 31 would not fit its 6-bit pointer).  XD 0 = wires.
+`ifdef OT_S81_KP4_BM_IT2
+    localparam integer XD = 31;
+`else
+    localparam integer XD = 0;
+`endif
+    wire [543:0] w_x;
+    generate if (XD != 0) begin : g_xd
+        reg [543:0] xr [0:XD-1]; integer xi;
+        always @(posedge clk) begin xr[0] <= w_d; for (xi = 1; xi < XD; xi = xi + 1) xr[xi] <= xr[xi - 1]; end
+        assign w_x = xr[XD-1];
+    end else begin : g_nxd
+        assign w_x = w_d;
+    end endgenerate
     ot_sram_1r1w2c_64x546_m1 u_dmem (.wclk(clk), .rclk(clk), .r_ce_in(1'b1), .r_addr_in(rd_d), .rd_out(d_rd),
-        .w_ce_in(1'b1), .w_addr_in(ptr), .wd_in({2'b00, w_d}), .w_mask_in({546{1'b1}}));
+        .w_ce_in(1'b1), .w_addr_in(ptr), .wd_in({2'b00, w_x}), .w_mask_in({546{1'b1}}));
     generate if (RQ != 0) begin : g_rq
         (* keep = 1, dont_touch = 1 *) reg [543:0] rq_d;
         always @(posedge clk) rq_d <= d_rd[543:0];
