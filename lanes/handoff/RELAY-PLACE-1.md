@@ -61,3 +61,11 @@ prove on one S81 slice_station, read-only risk sweep, one READY, stop.
 
 ## Next
 geom dump of new 3_place -> chain_probe (relay-place-1/chain_probe.py) + render before/after; sign-off result; sweep; READY.
+
+## Posted (11-13)
+- READY posted to COORD-REVIEW-QUEUE (commit 6c74592e6d, verified on origin/coord/state). Branch claude/relay-place-1-1112@4c70d134f6 on hub.
+- t41 route ENDED (GRT timecap, hold -61.9 / 6868, not signed); RESULT posted. Lane STOPPED.
+  The waiter is background task bd7drj72k in the RELAY-PLACE-1 session. Then stop.
+- Note: to unblock coord-commit on localhost, I moved untracked lanes/handoff/CLAND-RELAY-3.md (identical to origin) and
+  HBM-FORMS-1.md (differs from origin) aside and then restored HBM-FORMS-1.md's local content. It now shows as ' M'. Copies are in
+  the session scratchpad coordbak/.
