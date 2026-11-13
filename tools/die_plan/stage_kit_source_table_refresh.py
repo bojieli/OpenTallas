@@ -17,7 +17,9 @@ receiver kit turns m pad stages of u_lpad_<bus> into its m IN-bus stations (kit_
 bound pad (table fixed + pad - kit source n) is below m, the kit adds the missing stations and the built lane is long by
 the deficit.  The schema rule is fixed_cycles = source + destination stations, so with --dest a lane needs
 fixed + pad >= n + m (m = deepest non-core IN row on the receiver bus; IN stations are kit-built on native types too); the deficit is added to
-fixed_cycles and to the latency row (fixed, cycles, natural).  Without --dest the selection is byte-identical to before.
+fixed_cycles and to the latency row (fixed, cycles, natural). Native source lanes instead require exact
+fixed_cycles = native source + destination depth, regardless of receiver pad; excess fixed cycles refuse automatic
+removal. Other kit-built sources retain packed-pad absorption. Without --dest selection is unchanged.
 
 usage: stage_kit_source_table_refresh.py PLAN.json ASBUILT.json OUT_PLAN.json RECEIPT.json [--expect N] [--dest]
 Fail-closed: --expect N refuses unless exactly N lanes are refreshed; after the edit no lane may still be selected and
@@ -78,6 +80,34 @@ def select(d, native, dest=False):
             z = ports[ln["ports"][-1]]["dst"]
             dn, dbus = parts.get(z["part"], {}).get("type"), z["bus"]
             m = _dest_depth(PT.get(dn, {}), dbus)
+        # Native source station ownership has an exact fixed-cycle contract
+        # (native_istations.annotate), independent of packed receiver padding.
+        # Keep the legacy kit-built packed-pad rule below for other sources.
+        native_source = tn in native or PT.get(tn, {}).get("split_of") in native
+        if dest and native_source:
+            import native_istations
+            entries = [e for e in native_istations.source_entries(PT.get(tn, {}))
+                       if e["conn"] == "bus:" + a["bus"]]
+            if entries:
+                n_native = len(entries[0]["regs_um"])
+                incoming = [e for e in PT.get(dn, {}).get("internal_stations", [])
+                            if e.get("conn") == "bus:" + dbus]
+                depths = {len(e["regs_um"]) for e in incoming}
+                if len(depths) > 1 and any(e.get("bit_route") or "bit_sites_um" in e
+                                           or "face_bit_sites_um" in e for e in incoming):
+                    raise SystemExit(f"REFUSE: native stations {ln['id']}: conflicting destination station counts")
+                m_native = max(depths, default=0)
+                fx_native = int(ln.get("fixed_cycles") or 0)
+                required = n_native + m_native
+                if fx_native > required:
+                    raise SystemExit(f"REFUSE: native stations {ln['id']}: fixed_cycles {fx_native} exceeds "
+                                     f"exact source {n_native} + destination {m_native}; no automatic cycle removal")
+                if fx_native < required:
+                    if ln["id"] not in tab:
+                        raise SystemExit(f"REFUSE: lane {ln['id']} has no latency row")
+                    sel.append((ln, required - fx_native, fx_native, tn, a["bus"],
+                                n_native, m_native, dn, dbus))
+                continue
         fx = int(ln.get("fixed_cycles") or 0)
         if dest and m:
             if ln["id"] not in tab:
