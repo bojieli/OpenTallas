@@ -5,6 +5,8 @@
     region_form.py model   PLAN REGIONS.json OUTDIR [--v-ps-mm 290]          -> feed.json, ca.json, crossings.tsv
     region_form.py apply   BASE OUT --sidecar SIDE_IN SIDE_OUT --regions R.json --feed F.json --ca CA.json
                            [--report REPORT.json] [--v-ps-mm 290] [--path-prefix plan_of_record/]
+    region_form.py sta     PLAN OUT --sidecar SIDE_IN SIDE_OUT --proof DIR [--report R.json] [--ca-out CA.json]
+                           [--v-ps-mm 290]     (follow-on delta: K / DEPTH / sched_lat on the BUILT regional clock)
     exit: 0 applied, 2 usage / input error, 3 CONFLICT (nothing written), 4 post-check failed (outputs written, invalid)
 
 REGIONS = the components of the plan's plain-seam graph: a plan port between two real partitions whose id is NOT a
@@ -36,6 +38,12 @@ APPLY (one guarded step, row/type-level guards so it composes after any delta th
   sidecar ports[].added_cycles; every latency.lanes entry == lane_latency; clock_landings.network_lane_cycles OK.
 K and the START tree are PLAN values (landing_network.physical_qualified stays false): the built regional clock
 (qcreg.sh) re-derives them with count_align_plan --sta-proof before any physical adoption.
+STA (follow-on delta on a REGION FORM plan, built clock proof DIR = qcreg reg/proof tap_arrivals_{TT,FF}.json):
+  the same locality v3 rows (partition endpoints from the plan ports) hulled with die_sta_related.sta_port_intervals
+  (count_align_plan --sta-proof --sta-cppr-lca --sta-clock-cell inv2 --start-tree = the sidecar's START form,
+  frame from the plan's clock.spine.feed) ->
+  per crossing DEPTH / sched_lat in the count frame; K absorbs (K + sched_new - sched_in, origins kept, same frame).
+  CONFLICT unless the plan is link_htree with the sidecar in the plan's frame, and plan / sidecar agree on input.
 """
 import argparse
 import collections
@@ -328,6 +336,124 @@ def apply(base_path, out_path, side_in, side_out, reg_path, feed_path, ca_path, 
     return rep
 
 
+def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_out=None, cap_args=()):
+    import count_frame as CF
+    import locality as LO
+    import count_align_plan as CAP
+    import tempfile
+    btext = Path(base_path).read_bytes()
+    raw = json.loads(btext)
+    side = json.loads(Path(side_in).read_bytes())
+    sp = raw["clock"].get("spine", {})
+    if sp.get("topology") != "link_htree":
+        raise Conflict(f"clock.spine.topology {sp.get('topology')!r}: apply the REGION FORM first")
+    fr = CF.load(raw, base_path)
+    sca = side.get("count_aligned") or {}
+    try:
+        CF.check_same(sca.get("frame"), fr, "sidecar")
+    except CF.FrameError as ex:
+        raise Conflict(str(ex))
+    # the START form of the re-derivation is the sidecar's: a clock START tree is never re-planned on data crossings
+    # (a data START tree on the STA hull turns sync-ambiguous tree edges into multi-cycle path ambiguity, s28: 117 fails)
+    start_form = sca.get("start_tree") or "data"
+    if start_form not in ("data", "clock"):
+        raise Conflict(f"sidecar count_aligned.start_tree {start_form!r} not data / clock")
+    pr = plain_regions(raw)
+    if pr != fr.part_region:
+        raise Conflict("plan regions differ from the frame's region map")
+    D = LO.load_plan(base_path)
+    with contextlib.redirect_stderr(io.StringIO()):
+        S = LO.score(D, dict(pr), v, "fwd")
+    rows = LO.cap_corner_rows(S["crossings"])
+    pp = {p["id"]: p for p in raw["ports"]}
+    for c in rows:
+        for r in rows[c]:
+            q = pp[r["port"]]
+            r["src_part"], r["dst_part"] = q["src"]["part"], q["dst"]["part"]
+    with tempfile.TemporaryDirectory() as td:
+        fi, fo = Path(td) / "in.json", Path(td) / "out.json"
+        fi.write_text(json.dumps(dict(corners={c: dict(all=rows[c]) for c in rows})))
+        so = io.StringIO()
+        with contextlib.redirect_stdout(so):
+            rc = CAP.main([str(fi), "--corner", ",".join(rows), "--period", str(D["period"]), "--aperture",
+                           str(D["period"] / 8), "--wander-frac", "0.05", "--sta-proof", str(proof), "--sta-plan",
+                           str(base_path), "--sta-cppr-lca", "--sta-clock-cell", "inv2", "--start-tree", start_form,
+                           "--out", str(fo)] + list(cap_args))
+        cap = json.loads(fo.read_text())
+    if ca_out:
+        Path(ca_out).write_text(json.dumps(cap, indent=0) + "\n")
+    xs = {o["port"]: o for o in cap["crossings"]}
+    cac = raw["clock"]["landing_network"]["count_aligned_cycles"]
+    sports = sca["ports"]
+    if set(cac) != set(sports) or set(sports) - set(xs):
+        raise Conflict(f"landed sets differ: plan {len(cac)} sidecar {len(sports)} sta {len(xs)}")
+    fail = sorted(p for p in sports if not xs[p].get("depth"))
+    bad = [f"{p}: plan {cac[p]} != sidecar {c['sched_lat']}" for p, c in sports.items() if int(cac[p]) != int(c["sched_lat"])]
+    if bad:
+        raise Conflict(f"{len(bad)} rows: " + " | ".join(bad[:6]))
+    out, s2, ledger = copy.deepcopy(raw), copy.deepcopy(side), []
+    for p in sorted(sports):
+        c, x = s2["count_aligned"]["ports"][p], xs[p]
+        if not x.get("depth"):
+            continue
+        new = int(x["lat_cycles"]) + (1 if c.get("output_qreg") else 0) + (1 if c.get("freg") else 0)
+        old = int(c["sched_lat"])
+        ledger.append(dict(port=p, old=old, new=new, depth_old=int(c["depth"]), depth_new=int(x["depth"]),
+                           K_old=int(c["K"]), K_new=int(c["K"]) + new - old, frame_shift=x.get("frame_shift"),
+                           m_lo=x.get("margin_lo_ps"), m_hi=x.get("margin_hi_ps")))
+        c["K"], c["sched_lat"], c["depth"] = int(c["K"]) + new - old, new, int(x["depth"])
+        out["clock"]["landing_network"]["count_aligned_cycles"][p] = new
+    for r in s2.get("ports", []):
+        if r["port"] in sports:
+            r["added_cycles"] = s2["count_aligned"]["ports"][r["port"]]["sched_lat"]
+    note = f"QC-REGION-1 STA: K / DEPTH / sched_lat on the built regional clock proof {proof} ({len(ledger)} crossings)"
+    s2["note"] = (s2.get("note", "") + " | " + note).lstrip(" |")
+    old_tab = raw.get("latency", {}).get("lanes", {})
+    after = lane_table(out, list(old_tab))
+    lanes = []
+    for lid in sorted(old_tab):
+        n = merge_lane(old_tab[lid], after[lid])
+        if n != old_tab[lid]:
+            lanes.append(dict(lane=lid, old=old_tab[lid].get("cycles"), new=n["cycles"]))
+        out["latency"]["lanes"][lid] = n
+    otext, stext = jdump(out), jdump(s2)
+    post = [f"{len(fail)} crossings FAIL the CA ring on the built clock: {fail[:6]}"] if fail else []
+    if rc != 0 and not fail:
+        post.append(f"count_align_plan rc {rc} (start tree not spanning / start fail)")
+    Path(out_path).write_text(otext)
+    Path(side_out).write_text(stext)
+    chk = json.loads(otext)
+    e0, e1 = validate_errs(raw), validate_errs(chk)
+    if e1 - e0:
+        post.append(f"schema: {len(e1 - e0)} new errors: {sorted(e1 - e0)[:4]}")
+    import clock_landings as CL
+    try:
+        CL.network_lane_cycles(chk)
+    except Exception as ex:  # noqa: BLE001
+        post.append(f"network_lane_cycles: {ex}")
+    if any(chk["latency"]["lanes"][l]["cycles"] < 1 for l in old_tab):
+        post.append("lane with cycles < 1")
+    dh = collections.Counter(x["new"] - x["old"] for x in ledger)
+    summ = dict(crossings=len(ledger), fail=len(fail), changed=sum(x["new"] != x["old"] for x in ledger),
+                K_changed=sum(x["K_new"] != x["K_old"] for x in ledger),
+                cycles_old=sum(x["old"] for x in ledger), cycles_new=sum(x["new"] for x in ledger),
+                delta_hist={str(k): dh[k] for k in sorted(dh)},
+                depth_new={str(k): v for k, v in sorted(collections.Counter(x["depth_new"] for x in ledger).items())},
+                depth_changed=sum(x["depth_new"] != x["depth_old"] for x in ledger),
+                lanes_changed=len(lanes), lane_cycles_old=sum(x["old"] for x in lanes),
+                lane_cycles_new=sum(x["new"] for x in lanes),
+                worst_margin_lo_ps=cap["summary"].get("worst_margin_lo_ps"),
+                worst_margin_hi_ps=cap["summary"].get("worst_margin_hi_ps"),
+                below_100ps=cap["summary"].get("below_100ps"), sta_interval=cap["summary"].get("sta_interval"))
+    rep = dict(schema=SCHEMA + ".sta_report", base=dict(path=str(base_path), sha256=sha(btext)),
+               out=dict(path=str(out_path), sha256=sha(otext.encode())), side_in=sha(Path(side_in).read_bytes()),
+               side_out=sha(stext.encode()), proof=str(proof), summary=summ, post_check=post, ports=ledger,
+               lanes=lanes)
+    if report:
+        Path(report).write_text(jdump(rep))
+    return rep
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -349,7 +475,29 @@ def main(argv=None):
     p.add_argument("--report")
     p.add_argument("--v-ps-mm", type=float, default=290.0)
     p.add_argument("--path-prefix", default="plan_of_record/")
+    t = sub.add_parser("sta")
+    t.add_argument("base")
+    t.add_argument("out")
+    t.add_argument("--sidecar", nargs=2, required=True, metavar=("SIDE_IN", "SIDE_OUT"))
+    t.add_argument("--proof", required=True)
+    t.add_argument("--report")
+    t.add_argument("--ca-out")
+    t.add_argument("--cap-arg", action="append", default=[], metavar="ARG",
+                   help="extra count_align_plan argument (e.g. --start-retime-up), repeatable")
+    t.add_argument("--v-ps-mm", type=float, default=290.0)
     a = ap.parse_args(argv)
+    if a.cmd == "sta":
+        try:
+            rep = sta(a.base, a.out, a.sidecar[0], a.sidecar[1], a.proof, a.v_ps_mm, a.report, a.ca_out, a.cap_arg)
+        except Conflict as ex:
+            print(f"CONFLICT {ex}")
+            return 3
+        print(json.dumps(dict(out=rep["out"]["sha256"][:12], side=rep["side_out"][:12], **rep["summary"]), default=str))
+        if rep["post_check"]:
+            print("POST-CHECK FAIL: " + " | ".join(rep["post_check"]))
+            return 4
+        print("POST-CHECK PASS")
+        return 0
     if a.cmd == "regions":
         b = Path(a.plan).read_bytes()
         d = regions_doc(json.loads(b), b)
