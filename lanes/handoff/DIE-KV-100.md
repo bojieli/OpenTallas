@@ -51,3 +51,8 @@
 - KV-SPLIT-1: hub split gates spilled to epyc4/intel2 via ot-run; event split event_in2 RC 0 (on pre_split2 91ef39a7); adding pv handlers (core_pg_connect, landing_control_status_copy, reset_spine_pins).
 - Event tail script: epyc7 dkv100/event/event_chain.sh IN_DIR OUT_DIR (reach fix 1,2,4 -> guard_reg -> sidecar -> bind1 -> raw -> G0 -> bind2 -> lane latency).
 - m055 hub kits placed; geom (AUTO-GEOM) queued behind epyc7 load 150-170.
+## UPDATE 2026-11-13 07:33
+- Task 1 DONE: RESULT posted 07:28 (on origin). m055 hub_Eo/Wo AUTO-GEOM FAIL (r2r 2382/2530 um, relay_collapse 227/184, tap sinks 17-18k, Wo GRT congested); renders viewed. Train 34/36 do not fix; fix = event R-REACH rule 1 + hub 3-way split.
+- hub_C stat (KV-HUBC-REACH, epyc7 dkv100/hubc/stat/breakdown.txt): 987,915 cells hierarchical (census 706,641). Collectors 546k (R1 -> ~248k). Per part synth/proj k: no R1 S 360/423, C 307/401, N 302/333; R1 S 224/286, C 250/344, N 150/181 (census-scaled R1 205/246/129). R1 REQUIRED; C marginal vs 250k (next levers R2/R3 collector reduction, ot_dp_dly). 5,472 cut bits +1 cycle. hubc_post_split.py md5 dc622117 (C only; untested on a split).
+- Blocker: bind.py kit-rtl kv3_hub_C 'leaf modules without a source [qkd_ahub]' (no ahub RTL/macro view in tree) -> hub_C kit owner.
+- Pending: KV-SPLIT-1 (hub gates, pv 3-way handlers), KV-PVFIN-1 cores + R1, COORD on pv_v2n 282k, then event_chain.sh -> package -> READY.
