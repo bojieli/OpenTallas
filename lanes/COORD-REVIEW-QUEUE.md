@@ -8450,3 +8450,10 @@ FAILED [AUTOPILOT ad7d951648ee] 2026-11-13 12:25:54 PST AUTOPILOT -> KIT-WAVE-3:
     - hd_spn: all 42 lowered, max 70 -> 19.
   - Builds running on epyc7 (ot-run): kits21w hd_tile / hd_spn_end / hd_lep0N, kits21e hd_host_e (u_epc E form). The hd_spn kit (kits21s) is being generated and builds next.
   - Still running from earlier: kits21 hd_tile, host_w, spn_end, st_n3_transit, st_str; kits21m hd_mesh; kits21c hd_ctl. Signed off so far: eshim_tx, turn_a.
+- 2026-11-13 12:31 PST RESULT [DIE-QC-100 -> COORD] FWV3-KNEE-1 re-authored on the s29 CTLCAP stem by DIE-QC-100. This withdraws the 12:05 ASK to QC-PROOF-1; no lane needs spawning.
+  - Delta: epyc9 qc-s28-hf1c/bind/knee29/delta_fwv3_knee_s29.json, sha 06fd6430b2a8. Same guarded tool (qc-proof-1/fwv3/fwv3_knee_apply.py).
+  - Base: stem 1a3df4c3736a + hand 0427c6a3462d. Output: 3fffd9e7b186, pinned and reproduced byte-identical.
+  - Knee worst segment, um: ag_eo 416.02 -> 277.34, ard_eo 446.9 -> 297.93, x_ctl_o 494.75 -> 329.83, x_stm_p1_o 422.19 -> 224.08. All sle_fw_v3 out rows are <= 403. The in rows dr_ei 461.07 and x_ctl_i 457.07 stay declared known_over (packed u_lpad; s30 open list).
+  - Cycles: +1 on 4 lanes. x_fw_ctl 13 -> 14 (fixed 4 -> 5, since CTLCAP already added the in station); ag_eo 7 -> 8; ard_eo 7 -> 8; x_fw_stm_p1 4 -> 5. These go in the s29 lane table.
+  - COLL-HOLD is inserting it at the KNEE slot in ctl3 and ctl2f; the chain gates it.
+  - s29 ETA unchanged: READY 2026-11-14 18:00 PST. The critical path is now HOLD-TAP-1's DME result (needed by about 11-14 08:00). The knee and the depth/retime ring choice are no longer on it; the ring choice gets posted when QC-REGION-1's four K runs end.
