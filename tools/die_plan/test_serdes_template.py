@@ -56,3 +56,29 @@ def test_apply_sets_the_key_the_define_and_the_origins():
     assert "OT_S81_SERDES_LANE" in out["verilog_defines"] and out["serdes_lanes"] == r["serdes_lanes"]
     assert out["hard_cores"][0]["origin_um"] == r["moves"]["u_chn"]["to"]
     assert plan["partition_types"]["t2"]["hard_cores"][0]["origin_um"] == [864.0, 95.04]   # input untouched
+
+
+def test_apply_adds_the_cone_forms_and_delta_lists_only_serdes_changes():
+    plan = {"partition_types": {"t2": _type(244.536, "E", [119.04, 228.444], [6.144, 117.852]),
+                                "other": {"outline_um": [10, 10], "verilog_defines": ["X"]}}}
+    r = st.template("t2", plan["partition_types"]["t2"])
+    new = st.apply(plan, [r])
+    d = new["partition_types"]["t2"]["verilog_defines"]
+    assert d[:2] == ["OT_KP4_DEC_HARD", "OT_S81_SERDES_LANE"] and all(x in d for x in st.CONE_DEFINES)
+    assert "OT_S81_RCK_RELAY4" not in d
+    assert st.apply(plan, [r], cone=False)["partition_types"]["t2"]["verilog_defines"] == ["OT_KP4_DEC_HARD", "OT_S81_SERDES_LANE"]
+    dl = st.delta(plan, new)
+    assert set(dl) == {"t2"} and dl["t2"]["verilog_defines"]["from"] == ["OT_KP4_DEC_HARD"]
+    assert dl["t2"]["moves"]["u_core.u_dec.u_chn"]["to"][0] == r["moves"]["u_chn"]["to"]
+    assert dl["t2"]["moves"]["u_bound.u_core.u_dec.u_dly.u_dmem"]["to"][0] == r["moves"]["u_dmem"]["to"]
+
+
+def test_apply_moves_srams_that_are_physical_parts():
+    ty = _type(244.536, "E", [119.04, 228.444], [6.144, 117.852])
+    sr = [c for c in ty["contents"] if c["inst"].endswith(("u_dmem", "u_cmem"))]
+    ty["contents"] = [c for c in ty["contents"] if c not in sr]
+    ty["contents"][0]["physical_parts"] += [{"physical_inst": c["inst"], "origin_um": c["origin_um"], "orient": "R0"} for c in sr]
+    plan = {"partition_types": {"t2": ty}}
+    r = st.template("t2", ty)
+    pp = {q["physical_inst"].split(".")[-1]: q for q in st.apply(plan, [r])["partition_types"]["t2"]["contents"][0]["physical_parts"]}
+    assert pp["u_dmem"]["origin_um"] == r["moves"]["u_dmem"]["to"] and pp["u_cmem"]["origin_um"] == r["moves"]["u_cmem"]["to"]

@@ -24,6 +24,10 @@ STRIP = 101.0             # pin strip depth at the port face
 REACH = 405.0
 ROWS = {"u_lpin": 3, "u_txl": 6, "u_lrxi": 5, "u_lrxo": 3}
 DEFINE = "OT_S81_SERDES_LANE"
+# SERDES-FIN-2 11-13: the column cone forms that close inside the island (S81-RCK-10 vJ / DIE-S81-85 vB, proven lock-step
+# 11-07 / 11-09; LANE over them: bench6vb).  RCK_RELAY4 is not part of it: LANE_RXI carries the PMA -> decoder reach.
+CONE_DEFINES = ["OT_S81_SERDES_RST_TREE", "OT_S81_RM_STAGED", "OT_S81_RM_LOCAL4", "OT_S81_RM_WFULL8",
+                "OT_S81_KP4_SYN_LOCAL", "OT_S81_KP4_AM_FACE3", "OT_S81_CLAND_WCHK"]
 # macro origins relative to the island's lower-left corner (the serdes__t2 proof kit arrangement)
 REL = {"u_chn": (36.016, 40.448), "u_dmem": (355.696, 10.172), "u_cmem": (545.776, 10.172)}
 GX, GY = 0.432, 2.16      # move grid: keeps every macro pin on its routing track and the origin on the site grid
@@ -145,7 +149,7 @@ def template(name, t):
             "signature": f"{end}/{face}/px{px:g}"}
 
 
-def apply(plan, res):
+def apply(plan, res, cone=True):
     out = copy.deepcopy(plan)
     for r in res:
         t = out["partition_types"][r["type"]]
@@ -153,20 +157,54 @@ def apply(plan, res):
             leaf = c.get("inst", "").split(".")[-1]
             if leaf in r["moves"] and "origin_um" in c:
                 c["origin_um"] = r["moves"][leaf]["to"]
+            for pp in c.get("physical_parts") or []:          # the SRAMs are physical parts of u_phy on the S81 plan
+                pl = pp["physical_inst"].split(".")[-1]
+                if pl in r["moves"]:
+                    pp["origin_um"] = r["moves"][pl]["to"]
         for h in t.get("hard_cores") or []:
             leaf = h["inst"].split(".")[-1]
             if leaf in r["moves"]:
                 h["origin_um"] = r["moves"][leaf]["to"]; h["orient"] = "R180"
         t["serdes_lanes"] = r["serdes_lanes"]
         d = t.setdefault("verilog_defines", [])
-        if DEFINE not in d:
-            d.append(DEFINE)
+        for x in [DEFINE] + (CONE_DEFINES if cone else []):
+            if x not in d:
+                d.append(x)
+    return out
+
+
+def delta(plan, new):
+    """Per-type changes plan -> new for the serdes types (a small JSON for the die plan event)."""
+    out = {}
+    for n, t in new["partition_types"].items():
+        o = plan["partition_types"][n]
+        if all(o.get(k) == t.get(k) for k in ("serdes_lanes", "verilog_defines", "hard_cores", "contents")):
+            continue
+        rec = {}
+        if o.get("verilog_defines") != t.get("verilog_defines"):
+            rec["verilog_defines"] = {"from": o.get("verilog_defines", []), "to": t["verilog_defines"]}
+        if o.get("serdes_lanes") != t.get("serdes_lanes"):
+            rec["serdes_lanes"] = t["serdes_lanes"]
+        mv = {}
+        for key in ("hard_cores", "contents"):
+            for a, b in zip(o.get(key) or [], t.get(key) or []):
+                if a.get("origin_um") != b.get("origin_um") or a.get("orient") != b.get("orient"):
+                    mv[b["inst"]] = {"from": [a.get("origin_um"), a.get("orient")], "to": [b.get("origin_um"), b.get("orient")]}
+        for a, b in zip(o.get("contents") or [], t.get("contents") or []):
+            for pa, pb in zip(a.get("physical_parts") or [], b.get("physical_parts") or []):
+                if pa.get("origin_um") != pb.get("origin_um"):
+                    mv[pb["physical_inst"]] = {"from": [pa.get("origin_um"), pa.get("orient")], "to": [pb.get("origin_um"), pb.get("orient")]}
+        if mv:
+            rec["moves"] = mv
+        out[n] = rec
     return out
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan"); ap.add_argument("--types"); ap.add_argument("--tsv"); ap.add_argument("--json"); ap.add_argument("--apply")
+    ap.add_argument("--delta", help="write the per-type changes (moves, serdes_lanes, defines) as JSON")
+    ap.add_argument("--no-cone", action="store_true", help="LANE define only (without the island cone forms)")
     a = ap.parse_args(argv)
     plan = json.load(open(a.plan))
     want = set(a.types.split(",")) if a.types else None
@@ -179,10 +217,13 @@ def main(argv=None):
     txt = "\n".join(rows) + "\n"
     if a.tsv: open(a.tsv, "w").write(txt)
     if a.json: json.dump(res, open(a.json, "w"), indent=1)
-    if a.apply: json.dump(apply(plan, res), open(a.apply, "w"), indent=1)
+    if a.apply or a.delta:
+        new = apply(plan, res, cone=not a.no_cone)
+        if a.apply: json.dump(new, open(a.apply, "w"), indent=1)
+        if a.delta: json.dump(delta(plan, new), open(a.delta, "w"), indent=1, sort_keys=True)
     sys.stdout.write(txt)
     nf = sum(r["verdict"] != "PASS" for r in res)
-    print(f"SERDES_TEMPLATE types {len(res)} FAIL {nf} rows {ROWS} define {DEFINE}")
+    print(f"SERDES_TEMPLATE types {len(res)} FAIL {nf} rows {ROWS} define {DEFINE} cone {0 if a.no_cone else len(CONE_DEFINES)}")
     return 1 if nf else 0
 
 
