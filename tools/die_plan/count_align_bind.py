@@ -72,6 +72,21 @@ def plan_doc(summ, out, regs):
     return dict(summary=summ, regions=regs, crossings=out)
 
 
+def _frame(b):
+    """QC-REGION-1 count frame of a bind (count_frame.Frame) or None (legacy: edge-index frame == wall frame)"""
+    if not b.get("frame"):
+        return None
+    if "_frame_obj" not in b:
+        import count_frame as CF
+        b["_frame_obj"] = CF.from_meta(b["frame"])
+    return b["_frame_obj"]
+
+
+def _fsh(b, s, d):
+    fr = _frame(b)
+    return 0 if fr is None else fr.shift(s, d)
+
+
 def bind(plan, T=None, parts=None):
     """plan = count_align_plan.py --out document {summary, regions, crossings}.
     parts (opt-in, DIE-KV-3/CAORIGIN): {port: (src_partition, dst_partition)}; None = one origin per region (output
@@ -134,6 +149,16 @@ def bind(plan, T=None, parts=None):
         if o.get("src_part") is not None:
             # FLOW-ONEMODEL-1: the partition pair the plan timed this port on (die_sta_related times it on the same)
             ports[o["port"]].update(src_part=o["src_part"], dst_part=o["dst_part"])
+    fm = summ.get("frame")
+    if fm:
+        # QC-REGION-1 COUNT FRAME: sched_lat (= plan lat_cycles, wall-aligned) = K + 1 + N'_dst - N'_src, N' = N + f
+        import count_frame as CF
+        fr = CF.from_meta(fm)
+        for o in xs:
+            e = o.get("lat_cycles_edge")
+            if e is None or int(o["lat_cycles"]) - int(e) != fr.shift(o["src"], o["dst"]):
+                raise BindError(f"crossing {o['port']}: lat_cycles {o['lat_cycles']} is not lat_cycles_edge {e} + "
+                                f"frame shift {fr.shift(o['src'], o['dst'])} (plan / frame mismatch)")
     b = dict(schema="opentallas.count_align_bind.v2", form="count_aligned", period_ps=T,
                 pad=int(summ.get("pad", 0)), root=root[0], ports=ports, regions=regions,
                 sync_aperture_ps=summ.get("sync_aperture_ps", 26.5), aperture_ps=summ.get("aperture_ps", T / 8),
@@ -141,6 +166,9 @@ def bind(plan, T=None, parts=None):
                 convention="a_child - a_parent = PAD + 2 + J(d) = MESO-INTEG-1 m + 1 + PAD (identity, checked per edge); "
                            "RTL K = plan K_eff - n0",
                 latency_frame="receiver counts; sched_lat = K + 1 + n_dst - n_src (nominal) = plan lat_cycles")
+    if fm:
+        b["frame"] = fm
+        b["latency_frame"] += f"; count frame {fm['frame']}: n' = n + f (feed {fm.get('feed_sha256')})"
     if starts:
         for g in regs:
             regions[g["region"]]["virtual"] = bool(g.get("virtual"))
@@ -224,7 +252,7 @@ def bind_parts(b, parts):
     for pid, c in ports.items():
         sp, dp = parts[pid]
         if not c["tree"]:
-            c["K"] = c["sched_lat"] - 1 - (N[dp] - N[sp])
+            c["K"] = c["sched_lat"] - 1 - (N[dp] - N[sp]) - _fsh(b, sp, dp)   # count frame: N' = N + f
         c.update(src_part=sp, dst_part=dp)
     for pid, c in sp_.items():
         c["src_part"], c["dst_part"] = eparts(pid)
@@ -263,9 +291,12 @@ def _ends(b, c):
 def _edge(b, eid):
     """(sched_lat, K + 1) of a start-tree edge or crossing; a relay edge is r stages with K + 1 = 0"""
     if eid.startswith("relay:"):
-        return b["parts"][eid[6:]]["stages"], 0
+        q = eid[6:]
+        return b["parts"][q]["stages"] + _fsh(b, b["parts"][q]["src"], q), 0
     if eid in b.get("start_ports", {}):
-        return b["start_ports"][eid]["step"], 0     # START-TREE-1 start port: origin step, no ring
+        sp = b["start_ports"][eid]
+        e = (sp["src_part"], sp["dst_part"]) if "parts" in b and "src_part" in sp else (sp["src"], sp["dst"])
+        return sp["step"] + _fsh(b, *e), 0     # START-TREE-1 start port: origin step, no ring (count frame: N' = N + f)
     c = b["ports"][eid]
     return c["sched_lat"], c["K"] + 1
 
@@ -320,7 +351,7 @@ def verify(b, samples=2000, seed=1, need_ps=100.0, fall_ports=None):
     nom = b["parts"] if "parts" in b else reg
     for pid, c in ports.items():
         s_, d_ = _ends(b, c)
-        lhs = c["K"] + 1 + nom[d_]["n_nominal"] - nom[s_]["n_nominal"]
+        lhs = c["K"] + 1 + nom[d_]["n_nominal"] - nom[s_]["n_nominal"] + _fsh(b, s_, d_)
         if lhs != c["sched_lat"]:
             errs.append(f"identity {pid}: K+1+dn {lhs} != sched_lat {c['sched_lat']}")
     for q, pi in b.get("parts", {}).items():
@@ -451,6 +482,10 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
         t["count_aligned"]["start_ports"] = {pid: {k: c.get(k) for k in ("src", "dst", "launch_part", "capture_part",
                                                                           "src_part", "dst_part")}
                                              for pid, c in sorted(b["start_ports"].items())}
+    if b.get("frame"):
+        # QC-REGION-1: the frame of sched_lat; clock_landings / lane_asbuilt_latency refuse a sidecar whose frame is
+        # not the die plan's clock.spine.feed
+        t["count_aligned"]["frame"] = {k: v for k, v in b["frame"].items() if k not in ("offsets", "part_region")}
     if "parts" in b:
         t["count_aligned"]["parts"] = {q: {x: v[x] for x in ("region", "role", "src", "stages")}
                                        for q, v in b["parts"].items()}
@@ -827,6 +862,8 @@ def main(argv=None):
             s["start_skew_ps"] = list(a.start_skew)
         s.update(period_ps=a.period, aperture_ps=a.aperture, sync_aperture_ps=a.sync_aperture, pad=a.pad, scale=a.scale,
                  wander_frac=a.wander_frac, source=a.plan_json)
+        import count_frame as CF
+        CAP.apply_frame(s, out, CF.load_optional(a.plan_die or a.sta_plan))   # QC-REGION-1 count frame (no feed: no-op)
         plan = plan_doc(s, out, regs)
         if sedges is not None:
             plan["start_edges"] = [{k: v for k, v in e.items() if not k.startswith("_")} for e in sedges]
@@ -840,6 +877,12 @@ def main(argv=None):
         raise SystemExit("--parts ocv needs --from-ocv")
     parts = (table_parts(table) if mode == "table" else
              ocv_parts(rows) if mode == "ocv" else None)
+    if a.plan_die:
+        import count_frame as CF
+        try:
+            CF.check_same(plan["summary"].get("frame"), CF.load_optional(a.plan_die), f"plan {a.plan_json}")
+        except CF.FrameError as ex:
+            raise SystemExit(f"count_align_bind: {ex}")
     b = bind(plan, parts=parts)
     fall = write_fall_ports(b, json.load(open(a.plan_die))) if a.plan_die else set()
     v = verify(b, a.samples, fall_ports=fall)
@@ -853,6 +896,7 @@ def main(argv=None):
                             start_tree_ports_forced_ca=forced)
     rep["margin_policy"] = mpol
     b["report"] = rep
+    b.pop("_frame_obj", None)
     Path(a.out).write_text(json.dumps(b, indent=0) + "\n")
     if a.table:
         t = annotate_table(table, b, a.root_settle, strap_form=a.strap_form,

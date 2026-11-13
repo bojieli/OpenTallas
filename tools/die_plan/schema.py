@@ -1133,7 +1133,23 @@ SCHEMA = {
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,
-                "topology": {"enum": ["htree", "fishbone", "mesh"]},
+                "topology": {"enum": ["htree", "fishbone", "mesh", "link_htree"]},
+                # QC-REGION-1 (R-CLOCK-6 draft, COORD 11-13 HOLD-TAP-1 PLAN): topology link_htree = the clock follows
+                # the links: one balanced local H-tree per clock region (the plain-seam components of the plan: ports
+                # not in clock.landing_network.count_aligned_cycles), fed along the max-bit spanning tree of the region
+                # crossing graph (locality.py feed fwd; die_trial --tree-form link_htree --region-trees --feed).
+                # region_map / feed name the committed files ({part_region} / {root, parent, tap, joined,
+                # frame_offset}); region_form.py derives both from the plan and refuses a plan they do not match.
+                "region_map": {"type": "object", "additionalProperties": False, "required": ["path", "sha256"],
+                               "properties": {"path": {"type": "string", "minLength": 1},
+                                              "sha256": {"type": "string", "pattern": "^[0-9a-f]{16,64}$"},
+                                              "regions": {"type": "integer", "minimum": 1}}},
+                "feed": {"type": "object", "additionalProperties": False, "required": ["path", "sha256", "root"],
+                         "properties": {"path": {"type": "string", "minLength": 1},
+                                        "sha256": {"type": "string", "pattern": "^[0-9a-f]{16,64}$"},
+                                        "root": _name, "form": {"enum": ["fwd"]},
+                                        "frame": {"enum": ["wall_aligned"]}}},
+                "note": {"type": "string"},
                 # CP2 branch model (spine.py, pair plans): the FULL die's root / outline and each partition's origin
                 # in that die; branch latency = H-tree path length x branch_ps_per_mm (default 60), recursion down to
                 # regions <= branch_leaf_um (default budgets.tap_pitch_um)
@@ -3058,6 +3074,12 @@ def validate(raw):
         n = len(inlane.get(pid, []))
         if n != 1:
             errs.append(f"port {pid}: in {n} lanes (each port belongs to exactly one lane)")
+    # QC-REGION-1: a link_htree die clock names its region map and feed (region_form.py checks their content)
+    sp = (raw.get("clock", {}) or {}).get("spine", {}) or {}
+    if sp.get("topology") == "link_htree":
+        for k in ("region_map", "feed"):
+            if not sp.get(k):
+                errs.append(f"clock.spine.topology link_htree needs clock.spine.{k}")
     # reset / clock references
     for k in ("clock", "reset"):
         src = raw.get(k, {}).get("source")
