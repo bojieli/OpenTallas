@@ -200,6 +200,43 @@ def model(plan_path, side, out, velocity):
     return raw, table, scored
 
 
+def prepare_native_form(raw, side, scored, out):
+    """Export independent count-frame intent without fabricating a START proof.
+
+    Physical clock groups remain plain-seam components. Standard measured
+    clock START planning supplies all K, stage and origin steps later.
+    """
+    import locality as LO
+    mapping = json.loads((out / "regions.json").read_text())["part_region"]
+    endpoints = {p["id"]: (p["src"]["part"], p["dst"]["part"])
+                 for p in raw["ports"]}
+    corners = LO.cap_corner_rows(scored["crossings"])
+    for rows in corners.values():
+        for row in rows:
+            src, dst = endpoints[row["port"]]
+            row.update(src=src, dst=dst, src_part=src, dst_part=dst)
+    dump(out / "independent_ocv_prediction.json",
+         dict(corners={c: dict(all=r) for c, r in corners.items()},
+              source="locality prediction only; replace with measured both-edge OCV before planning"))
+    dump(out / "independent_count_intent.json", dict(
+         physical_qualified=False, verdict="NEEDS_MEASURED_CLOCK_START",
+         count_regions=len(mapping), physical_clock_groups=len(set(mapping.values())),
+         root="hub_C", frame_clock_regions=mapping,
+         parts={p: dict(region=p, role="origin", src=None, stages=0) for p in mapping},
+         new_origin_parts=[p for p, a in side["count_aligned"]["parts"].items()
+                           if a["role"] == "relay"],
+         start_form="released count_align_plan --start-tree clock --start-partition-origins --start-native-clocks",
+         required_readout="TT and FF rise AND fall, native t_PART__clk for all196parts, actual tree geometry",
+         note="All196countorigins independent;32PC+PHYpairs share actual clock roots; no extra plain-edge landing or fixed2stagePHYrelay"))
+    # This file is solely a clock geometry input, never a bound production plan.
+    geometry = copy.deepcopy(raw)
+    geometry.setdefault("clock", {}).setdefault("spine", {}).update(
+        topology="link_htree",
+        region_map=dict(path="regions.json", sha256=hashlib.sha256((out / "regions.json").read_bytes()).hexdigest()),
+        feed=dict(path="feed.json", sha256=hashlib.sha256((out / "feed.json").read_bytes()).hexdigest(), frame="wall_aligned"))
+    dump(out / "clock_geometry_plan.json", geometry)
+
+
 def compose(raw, table, source, out, oldside):
     import clock_landing_plan as CLP
     # Generated reset/START references belong to the previous origin/mask.
@@ -244,6 +281,7 @@ def compose(raw, table, source, out, oldside):
     dump(out / "lane_cycle_delta.json", delta)
     dump(out / "plan_c.json", plan)
     dump(out / "eW_sidecar.json", side)
+    dump(out / "scope_disposition.json", dict(verdict="SUPERSEDED_164_COUNT_FRAME_VARIANT", physical_qualified=False, reason="32newPHYfixedrelays undesired; use196independent count origins on164physical clock groups after measured native-clock START"))
     dump(out / "compose_extra.json", extra)
     changed = {tn: [k for k in set(raw["partition_types"][tn]) | set(t)
                     if raw["partition_types"][tn].get(k) != t.get(k)]
@@ -271,6 +309,7 @@ def main():
     raw, table, scored = model(a.plan, side, out, a.v_ps_mm)
     if table is None:
         return 3
+    prepare_native_form(raw, side, scored, out)
     if a.compose:
         compose(raw, table, a.plan, out, side)
     print((out / "status.json").read_text())
