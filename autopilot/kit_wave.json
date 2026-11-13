@@ -4961,7 +4961,6 @@
     "ot_s81sl_leaf__t58@2",
     "ot_s81sl_leaf__t5@2",
     "ot_s81sl_leaf__t60@2",
-    "ot_s81sl_leaf__t62@2",
     "ot_s81sl_leaf__t65@2",
     "ot_s81sl_leaf__t66@2",
     "ot_s81sl_leaf__t67@2",
@@ -23169,7 +23168,8 @@
    },
    "type_args_prev_kitops1_aor3": {
     "ot_s81sl_leaf__t62": null
-   }
+   },
+   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:44 remove (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): ot_s81sl_leaf__t62@2"
   },
   "s81_head": {
    "enabled": true,
@@ -23256,14 +23256,12 @@
     "hd_ctl_e@8",
     "hd_host_n@7",
     "hd_spn_eshim_tx@9",
-    "hd_turn_a@3",
     "hd_turn_b@3",
     "hd_ctl_e@9",
     "hd_ctl_n@1",
     "hd_host_n@8",
     "hd_lep0N@4",
     "hd_spn_eshim_rx@2",
-    "hd_spn_wshim_rx@2",
     "hd_spn_wshim_tx@5",
     "hd_st_n4@1",
     "hd_turn_a@4",
@@ -24491,7 +24489,8 @@
      "OT_GEN_M8_GRANT": "1"
     }
    },
-   "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7."
+   "note_kitops1_rflow7": "KIT-OPS-1 2026-11-13 10:56 (COORD 10:5x R-FLOW per-item, wave src lacks train 61): type_args --slew-margin 50 --cap-margin 20 --max-wire-um 120 + item_env OT_PLACE_MAX_FANOUT=32 (R-FLOW set without GPL_KEEP_OVERFLOW, unsupported by the old src); only these rows rehash. Revert: type_args_prev_kitops1_rflow7 / item_env_prev_kitops1_rflow7.",
+   "retry_note_kitops1_rearm3_1113": "2026-11-13 12:44 remove (KW-FIX-45 re-arm: retry_seen first-seen 11-12 predates the current attempt, entries were stale): hd_turn_a@3 hd_spn_wshim_rx@2"
   },
   "qwen_compute": {
    "enabled": true,
