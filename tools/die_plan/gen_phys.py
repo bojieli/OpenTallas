@@ -1883,13 +1883,13 @@ def t_lib(ps):
 
 
 SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the limit (R-FLOW default, see RFLOW)
-# R-FLOW (RULES-FLOW-1 2026-11-13, coord lanes/RULEBOOK-1113.md): ONE default flow set for every gen_phys type kit.
-# Measured on 40 routed kits (S81 / HEAD / QC, sign-off sta.log + 6_final.v): 85-99 % of the routed TT max-slew pins sit
-# on a few dozen nets of fanout 17..154 (clock-landing ring select / enable nets, one BUFx2..BUFx6f driver), the rest on
-# fanout-1 long wires; no clock pin.  repair_design repaired to exactly the 320 ps limit on the estimate (GRT worst slew
-# slack 0.00..0.29) and the GRT repair sees FF libs only, so the routed TT slack was -0.10..-1.44.  The three S81 kits
-# that already carried SLEW_MARGIN 50 routed with 0 slew pins.  The former per-die / per-type opt-ins (--slew-margin,
-# --max-wire-um, OT_PLACE_MAX_FANOUT in the gen env) are now the default; explicit arguments still win.
+# R-FLOW (RULES-FLOW-1 2026-11-13, coord lanes/RULEBOOK-1113.md): the default flow set of a gen_phys type kit, per
+# kit class.  Measured on 40 routed kits (S81 / HEAD / QC, sign-off sta.log + 6_final.v): 85-99 % of the routed TT
+# max-slew pins sit on a few dozen nets of fanout 17..154 (clock-landing ring select / enable nets, one BUFx2..BUFx6f
+# driver), the rest on fanout-1 long wires; no clock pin.  repair_design repaired to exactly the 320 ps limit on the
+# estimate (GRT worst slew slack 0.00..0.29) and the GRT repair sees FF libs only, so the routed TT slack was
+# -0.10..-1.44.  The former per-type opt-ins (--slew-margin, --max-wire-um, OT_PLACE_MAX_FANOUT in the gen env) are the
+# default for the kit classes with a same-netlist old/new proof build (RFLOW_DIES); explicit arguments still win.
 #   slew_margin / cap_margin   repair_design margins (place 3_4 and post-GRT), % of the liberty limit
 #   gpl_keep_overflow          timing-driven GPL keeps repair buffers only below this overflow: the first pass (overflow
 #                              0.41-0.63) added +18..+51 % area on an unsettled placement and was re-done at 0.19
@@ -1897,37 +1897,45 @@ SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the lim
 #   max_wire_um                post-GRT repair_design -max_wire_length (grt_maxwire.tcl); a smaller explicit value wins
 #   hold_budget_pct            OT_HOLD_BUDGET report line: repair_timing cells / placed logic cells (OVER = R-CLOCK).
 #                              Hold repair itself is unchanged: once, at the FF GRT step, target slack 0, HB4 pads.
-# CTS is unchanged (BUFx24 root and sink buffers, clusters of <= ~30 sinks / <= 44 um; 0 clock pins among the violators).
-# OT_RFLOW=0 in the gen environment writes the kit without these defaults (A/B and old-flow reproduction only).
-RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_PCT), "gpl_keep_overflow": 0.25,
-         "place_max_fanout": 32, "max_wire_um": 120.0, "hold_budget_pct": 10.0}
+# CTS is unchanged (BUFx24 root and sink buffers, clusters of <= ~42 sinks; 0 clock pins among the violators).
+RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_PCT), "gpl_keep_overflow": 0.25, "place_max_fanout": 32,
+         "max_wire_um": 120.0, "hold_budget_pct": 10.0}
+# Kit classes (die plans) that take the defaults, each with its proof kit (old vs new settings on one synthesized
+# netlist, through route and sign-off; epyc7 rules-flow-1/ab).  A die plan not listed keeps its old kit until its own
+# proof exists: HBM is parked and passes explicit margins.
+RFLOW_DIES = {"s81": "slice_station__t21", "s81_head": "hd_turn_b", "qwen_kvsys": "kv3_sys_SD_v1",
+              "qwen_compute": "coll_ftc"}
 
 
-def rflow_on():
-    """R-FLOW defaults apply unless the gen environment sets OT_RFLOW=0."""
-    return os.environ.get("OT_RFLOW", "1").strip() != "0"
+def rflow_on(die=None):
+    """R-FLOW defaults apply to the die plans in RFLOW_DIES.  Gen environment OT_RFLOW=0 writes the old kit for every
+    die (A/B, old-flow reproduction); OT_RFLOW=1 applies the set to any die plan (proof builds of a new class)."""
+    v = os.environ.get("OT_RFLOW", "").strip()
+    if v in ("0", "1"):
+        return v == "1"
+    return die in RFLOW_DIES
 
 
-def rflow_margins(margins):
+def rflow_margins(margins, die=None):
     """(slew_pct, cap_pct) of a kit: the explicit --slew-margin / --cap-margin value, else the R-FLOW default (None
-    with OT_RFLOW=0)."""
+    for a die plan outside RFLOW_DIES or with OT_RFLOW=0)."""
     s, c = (tuple(margins) + (None, None))[:2] if margins else (None, None)
-    if rflow_on():
+    if rflow_on(die):
         s = RFLOW["slew_margin"] if s is None else s
         c = RFLOW["cap_margin"] if c is None else c
     return s, c
 
 
-def rflow_max_wire_um(max_wire_um):
+def rflow_max_wire_um(max_wire_um, die=None):
     """post-GRT repeater pitch of a kit: the explicit --max-wire-um, else the R-FLOW default (None with OT_RFLOW=0)."""
-    if max_wire_um is None and rflow_on():
+    if max_wire_um is None and rflow_on(die):
         return RFLOW["max_wire_um"]
     return max_wire_um
 
 
-def rflow_cfg(gpl_plain=False):
+def rflow_cfg(gpl_plain=False, die=None):
     """config.mk lines of the R-FLOW defaults that have no generator argument."""
-    if not rflow_on():
+    if not rflow_on(die):
         return []
     return ["# R-FLOW (RULEBOOK-1113): timing-driven GPL keeps repair buffers only on a settled placement; hold budget report",
             *([] if gpl_plain else [f"export GPL_KEEP_OVERFLOW = {RFLOW['gpl_keep_overflow']:g}"]),
@@ -4574,8 +4582,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
-    margins = rflow_margins(margins)            # R-FLOW defaults (explicit arguments win; OT_RFLOW=0 = none)
-    max_wire_um = rflow_max_wire_um(max_wire_um)
+    margins = rflow_margins(margins, P.name)    # R-FLOW defaults per kit class (explicit arguments win)
+    max_wire_um = rflow_max_wire_um(max_wire_um, P.name)
     macro_moves = macro_move_table(t, tn)
     if gpl_plain and not t.get("ft_slots"):
         raise ValueError(f"type {tn}: --gpl-plain is for pure-FT corridor kits; the type has no ft_slots")
@@ -5043,7 +5051,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # preserving the native placement deck and all following ORFS stages.
     import fully_fixed_macros as FFM
     cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
-    cfg += install_gp_noconverge_gate(kd, cfg)
+    cfg += install_gp_noconverge_gate(kd, cfg, P.name)
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -5074,7 +5082,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # repair_timing -hold; constraints, margins, corners and the routed FF hold acceptance unchanged.
     cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
-    cfg += rflow_cfg(gpl_plain)
+    cfg += rflow_cfg(gpl_plain, P.name)
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
@@ -5574,7 +5582,7 @@ def type_verilog_defines(t, kit_defines=None):
     return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
 
 
-def install_gp_noconverge_gate(kd, cfg):
+def install_gp_noconverge_gate(kd, cfg, die=None):
     """KW-FIX-44 PLACE-NOCONVERGE (COORD 11-10): PRE_RESIZE_TCL gate that ends the run at place when global placement
     stopped at the Nesterov iteration cap (GPL-1010) above overflow 0.1, before resize and DPL spend hours on it.
     The kit keeps a PRE_RESIZE_TCL of its own (no gate then); OT_GPL_NOCONV = 0 in the kit config turns the gate off."""
@@ -5582,7 +5590,7 @@ def install_gp_noconverge_gate(kd, cfg):
         return []
     here = Path(__file__).resolve().parent
     shutil.copyfile(here / "gp_noconverge_gate.tcl", kd / "gp_noconverge_gate.tcl")
-    fo = place_max_fanout()
+    fo = place_max_fanout(die)
     shutil.copyfile(here.parent / "autopilot" / "gp_noconverge.py", kd / "gp_noconverge.py")
     return ["# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
             "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"] + (
@@ -5590,17 +5598,17 @@ def install_gp_noconverge_gate(kd, cfg):
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
 
 
-def place_max_fanout():
+def place_max_fanout(die=None):
     """KW-FIX-45 PLACE-FANOUT (COORD 11-12, VISLAYOUT2-QC coll_n): the gen environment's OT_PLACE_MAX_FANOUT (a positive
-    integer from the die's gen_env / item_env) -> the kit's place-stage fanout limit, else the R-FLOW default 32
-    (0 = off only with OT_RFLOW=0).
+    integer from the die's gen_env / item_env) -> the kit's place-stage fanout limit, else the R-FLOW default 32 for a
+    die plan in RFLOW_DIES (0 = off elsewhere).
     coll_n s25: codec bank-select flops (g_bank[*].u_store.hit_age*) fanned through placement buffers to 60+ loads, 209 TT
     slew pins up to 397 ps (limit 320) at sign-off, whose FANOUT_MAX 64 is a WARN only.  The limit goes into the STA
     session before the place repair_design (PRE_RESIZE gate), so repair_design splits the wide nets there; write_sdc
     carries it to the later repair_design passes.  Sign-off reads the kit's own constraint.sdc: no gate changes."""
     v = os.environ.get("OT_PLACE_MAX_FANOUT", "").strip()
     if not v:
-        return RFLOW["place_max_fanout"] if rflow_on() else 0   # R-FLOW 11-13: default 32 (was off)
+        return RFLOW["place_max_fanout"] if rflow_on(die) else 0   # R-FLOW 11-13: 32 for the RFLOW_DIES classes
     if not v.isdigit() or not 2 <= int(v) <= 1000:
         raise ValueError(f"OT_PLACE_MAX_FANOUT must be an integer 2..1000, got {v!r}")
     return int(v)

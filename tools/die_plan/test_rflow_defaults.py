@@ -22,8 +22,11 @@ def _clean_env(monkeypatch):
         monkeypatch.delenv(k, raising=False)
 
 
-def kit(d, **kw):
-    kd = gen_phys.write_type_kit(schema.Plan(copy.deepcopy(TINY)), "mid", d, [], util=0.5, **kw)
+def kit(d, die="s81_head", **kw):
+    raw = copy.deepcopy(TINY)
+    if die is not None:
+        raw["die"]["name"] = die
+    kd = gen_phys.write_type_kit(schema.Plan(raw), "mid", d, [], util=0.5, **kw)
     return kd, dict(re.findall(r"^export (\w+) = (.*)$", (Path(kd) / "config.mk").read_text(), re.M))
 
 
@@ -48,8 +51,22 @@ def test_explicit_arguments_win(tmp_path, monkeypatch):
 
 
 def test_gpl_plain_kit_has_no_keep_overflow():
-    assert not any("GPL_KEEP_OVERFLOW" in line for line in gen_phys.rflow_cfg(gpl_plain=True))
-    assert any(line == "export GPL_KEEP_OVERFLOW = 0.25" for line in gen_phys.rflow_cfg())
+    assert not any("GPL_KEEP_OVERFLOW" in line for line in gen_phys.rflow_cfg(gpl_plain=True, die="s81"))
+    assert any(line == "export GPL_KEEP_OVERFLOW = 0.25" for line in gen_phys.rflow_cfg(die="s81"))
+
+
+def test_only_proven_kit_classes_take_the_defaults(tmp_path, monkeypatch):
+    # per kit class: a die plan without its own same-netlist proof build keeps the old kit (QC until coll_ftc, HBM)
+    assert set(gen_phys.RFLOW_DIES) == {"s81", "s81_head", "qwen_kvsys", "qwen_compute"}
+    for die in ("hbm", "some_new_die"):
+        assert not gen_phys.rflow_on(die)
+        _, c = kit(tmp_path / die, die=die)
+        assert "SLEW_MARGIN" not in c and "OT_MAXWIRE_UM" not in c and "OT_PLACE_MAX_FANOUT" not in c
+    for die in gen_phys.RFLOW_DIES:
+        assert gen_phys.rflow_on(die) and gen_phys.place_max_fanout(die) == 32
+    monkeypatch.setenv("OT_RFLOW", "1")                      # proof build of a new class
+    _, c = kit(tmp_path / "forced", die="some_new_die")
+    assert c["SLEW_MARGIN"] == "50" and c["OT_PLACE_MAX_FANOUT"] == "32"
 
 
 def test_rflow_off_is_the_old_kit(tmp_path, monkeypatch):
@@ -59,8 +76,8 @@ def test_rflow_off_is_the_old_kit(tmp_path, monkeypatch):
               "OT_HOLD_BUDGET_PCT"):
         assert k not in c, k
     assert not (Path(kd) / "grt_maxwire.tcl").exists()
-    assert gen_phys.rflow_margins(None) == (None, None) and gen_phys.rflow_max_wire_um(None) is None
-    assert gen_phys.place_max_fanout() == 0
+    assert gen_phys.rflow_margins(None, "s81") == (None, None) and gen_phys.rflow_max_wire_um(None, "s81") is None
+    assert gen_phys.place_max_fanout("s81") == 0
 
 
 def test_hold_budget_line_reports_and_never_stops():

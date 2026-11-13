@@ -21,7 +21,8 @@ def test_rflow_default_32(tmp_path, monkeypatch):
     # R-FLOW 11-13 (RULEBOOK-1113): the place fanout limit is on for every kit; the gen env value still wins
     monkeypatch.delenv("OT_PLACE_MAX_FANOUT", raising=False)
     monkeypatch.delenv("OT_RFLOW", raising=False)
-    assert "export OT_PLACE_MAX_FANOUT = 32" in gen_phys.install_gp_noconverge_gate(tmp_path, [])
+    assert "export OT_PLACE_MAX_FANOUT = 32" in gen_phys.install_gp_noconverge_gate(tmp_path, [], "s81")
+    assert not any("OT_PLACE_MAX_FANOUT" in c for c in gen_phys.install_gp_noconverge_gate(tmp_path, [], "hbm"))
 
 
 def test_export_when_set(tmp_path, monkeypatch):
