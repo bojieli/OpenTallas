@@ -1,0 +1,20 @@
+{
+  "type": "hd_spn_end",
+  "changed": true,
+  "conflicts_before": [
+    [
+      "arst_n",
+      "rst_o_2"
+    ]
+  ],
+  "conflicts_after": [],
+  "old_entry": [
+    578.4,
+    1209.632
+  ],
+  "new_entry": [
+    578.4,
+    1207.968
+  ],
+  "note": "Explicit plan override; recheck actual relay/die hops and publish release offsets."
+}

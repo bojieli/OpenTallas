@@ -1,0 +1,15 @@
+hd_spn_end.rst_start_raw_11: reuse rst_o_6 via u_rrl_199/rr_t90
+hd_spn_end.rst_start_raw_15: reuse rst_o_3 via u_rrl_161/rr_t87
+hd_spn_end.rst_start_raw_0: u_rrl_193/rr_t86 -> u_rrl_194/rr_t86 d5 (same relay; 345.6 um to the pin)
+hd_spn_end.rst_start_raw_4: u_rrl_214/rst_rl_214 -> u_rrl_215/rst_rl_215 d4 (same relay; 0.5 um to the pin)
+hd_spn_end.rst_start_raw_5: u_rrl_171/rst_rl_171 -> u_rrl_172/rst_rl_172 d4 (same relay; 1.7 um to the pin)
+hd_spn_end.rst_start_raw_6: u_rrl_173/rst_rl_173 -> u_rrl_174/rst_rl_174 d4 (same relay; 1.2 um to the pin)
+hd_spn_end.rst_start_raw_13: u_rrl_82/rst_rl_82 -> u_rrl_83/rst_rl_83 d3 (same relay; 1.7 um to the pin)
+hd_spn_end.rst_start_raw_14: u_rrl_162/rst_rl_162 -> u_rrl_164/rst_rl_164 d4 (same relay; 0.5 um to the pin)
+hd_spn_end.rst_start_raw_16: u_rrl_85/rst_rl_85 -> u_rrl_86/rst_rl_86 d4 (same relay; 1.7 um to the pin)
+hd_spn_end.rst_start_raw_18: u_rrl_186/rst_rl_186 -> u_rrl_187/rst_rl_187 d4 (same relay; 1.8 um to the pin)
+hd_spn_end.rst_start_raw_9: u_rrl_194/rst_rl_194 -> u_rrl_195/rst_rl_195 d1 (moved, offset 4; 2.4 um to the pin)
+hd_spn_end.rst_start_raw_17: u_rrl_195/rst_rl_195 -> u_rrl_196/rst_rl_196 d2 (moved, offset 3; 2.5 um to the pin)
+hd_spn_eshim_rx.rst_start_raw_0: reuse rst_o_1 via u_rrl_8/rr_t6
+hd_spn_eshim_rx.rst_start_raw_1: u_rrl_24/rr_t6 -> u_rrl_24/rr_t5 d3 (same relay; 202.9 um to the pin)
+{"changed": 14}

@@ -1457,6 +1457,19 @@ def _root_part(P, soft):
     return min(soft, key=lambda n: (dist(n), n))
 
 
+def _is_in_site(P, q, j, choice):
+    """True when face site j of soft partition q is its own type's reset IN site (choice[type]): an rst_o there would sit on
+    arst_n (one M7 site, GRT-0080 'Invalid pin placement'; HEAD rp18 hd_spn_end / hd_spn_eshim_rx), so a child never takes
+    it as its parent site (HEAD-96 11-13).  A non-column type whose children can reach it only through that site
+    takes an explicit reset.in_sites entry beside it instead (reset_pin_sites.py; hd_spn_end in HEAD rp19); a column
+    type's entry is its column end, so there the child moves to another site.  G0 pin_sites checks the result."""
+    c = choice.get(P.parts[q]["type"]) if choice else None
+    if c is None:
+        return False
+    xy = face_sites(P, P.parts[q]["type"])[j]["xy"]
+    return abs(xy[0] - c[0]) <= 1e-3 and abs(xy[1] - c[1]) <= 1e-3
+
+
 def wf_solve(P):
     """die wavefront routing (see _wf_solve_once) with reset column types (column_spec): solve, then per column instance
     pin its parent by GEOMETRY - the nearest exit site (any face site of a soft partition released earlier in that
@@ -1493,6 +1506,8 @@ def wf_solve(P):
                     if q == n or q not in rel or rel[q] >= rel[n]:
                         continue
                     for j, (X, Y) in enumerate(sites[q]):
+                        if _is_in_site(P, q, j, res["choice"]):
+                            continue
                         d = max(x0 - X, 0, X - x1) + max(y0 - Y, 0, Y - y1)
                         if d <= hp and (best is None or (d, q, j) < best):
                             best = (d, q, j)
@@ -1615,9 +1630,13 @@ def _wf_solve_once(P):
         adj = {}
         for p in soft:
             for q, j, d in ein[(p, choice[P.parts[p]["type"]])]:
+                if _is_in_site(P, q, j, choice):
+                    continue
                 adj.setdefault(q, []).append((p, j, d))
         for p in hard:
             for q, j, d in ein[(p, None)]:
+                if _is_in_site(P, q, j, choice):
+                    continue
                 adj.setdefault(q, []).append((p, j, d))
         rel = {root: N + est[(rtype, choice[rtype])]}
         par = {root: None}
@@ -1688,6 +1707,8 @@ def _wf_solve_once(P):
             if q in hard:
                 continue
             for j, s_ in enumerate(face_sites(P, P.parts[q]["type"])):
+                if _is_in_site(P, q, j, choice):
+                    continue
                 d = _man(P.to_die(q, s_["xy"]), xy)
                 if b is None or d < b[0]:
                     b = (d, q, j)

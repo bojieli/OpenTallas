@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.head_plan_event.v1",
+ "event": "head_rp18_1112",
+ "revision": "fix_r4 (rp19p, pin sites)",
+ "author": "HEAD-96",
+ "base": {"plan": "rp19 (rp19c)", "sha256_16": "9249e31961979aa5"},
+ "plan_sha256": "4d8a246c67013bbfe46f48f40af39f08f3d0876a87ca2b6cedf7e995750a4ae1",
+ "reason": "GEOM-VIS-14 / KIT-WAVE 03:58: hd_spn_end a3 and hd_spn_eshim_rx a3 GRT-0031 then GRT-0080 'Invalid pin placement': the reset IN pin arst_n and a reset OUT rst_o on one M7 site (hd_spn_end arst_n + rst_o_2 at (578.4, 1209.632); hd_spn_eshim_rx arst_n + rst_o_0 at (47.008, 8.608)). Cause: reset_tree.wf_solve let a child take its parent's own IN face site as the parent's rst_o site.",
+ "fix": [
+  "tools/die_plan/reset_tree.py _is_in_site: no child takes a partition's own reset IN site as its parent rst_o site (wf_solve column-parent geometry, Dijkstra adjacency, unreachable fallback).",
+  "Plan: reset.in_sites.hd_spn_end = [578.4, 1207.968] by the existing tools/die_plan/reset_pin_sites.py repair (non-column type: the shim sp5_xe_o_shim reaches hd_spn_end only through that site, so the entry moves 1.66 um instead). hd_spn_eshim_rx is a column type (entry = column end): its child moves to the S-face site (48.032, 8.608), and rst_o_0/1 swap names.",
+  "References re-derived by fixed scripts with the OLD plan solved by the pre-fix rule (scripts/legacy_run.py): remap_start.py (hd_spn_end 121 renumbered, 19 moved <= 2.5 um, same depth offsets) and head_reset_exports.py (hd_spn_end 12 rows, eshim_rx 2 rows; same relays or same depth offset).",
+  "New G0 class pin_sites (tools/die_plan/pin_sites.py, ERROR): two different interior pins of a type (taps incl. arst_n / start_i, reset outs, straps, reset spine, landing_contract pins) on one layer site. rp18r2 and rp19: 2 (exactly the two GEOM-VIS-14 types); rp19p: 0."
+ ],
+ "files": {"plan": "source_plan_rp19p.json.gz", "sidecar": "../source_sidecar_rp18.json.gz (unchanged)"}
+}
