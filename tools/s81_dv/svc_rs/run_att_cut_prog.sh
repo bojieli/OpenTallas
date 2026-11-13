@@ -27,5 +27,16 @@ if [ ! -x "$O/obj/Vtb_svc_att_cut_prog" ]; then
   /usr/bin/time -v "$VL" --binary --top-module tb_svc_att_cut_prog -Mdir "$O/obj" -j 16 -CFLAGS -O1 "${FL[@]}" > "$O/build.log" 2>&1 \
     || { tail -30 "$O/build.log"; exit 1; }
 fi
-for s in $SEEDS; do "$O/obj/Vtb_svc_att_cut_prog" +seed=$s $ARGS > "$O/run_s$s.log" 2>&1 & done; wait
-for s in $SEEDS; do echo "== seed $s"; grep -E "^PROG|^CUT_PROG|^FIRST_MISMATCH|^  |^PASS|^FAIL|^CAUGHT|^MISSED|^TIMEOUT" "$O/run_s$s.log"; done
+pids=()
+for s in $SEEDS; do
+  "$O/obj/Vtb_svc_att_cut_prog" +seed=$s $ARGS > "$O/run_s$s.log" 2>&1 &
+  pids+=("$!")
+done
+rc=0
+for pid in "${pids[@]}"; do wait "$pid" || rc=1; done
+for s in $SEEDS; do
+  echo "== seed $s"
+  grep -E "^PROG|^CUT_PROG|^FIRST_MISMATCH|^  |^PASS|^FAIL|^CAUGHT|^MISSED|^TIMEOUT" "$O/run_s$s.log" || true
+  grep -q "^CUT_PROG_VERDICT PASS " "$O/run_s$s.log" || rc=1
+done
+exit "$rc"
