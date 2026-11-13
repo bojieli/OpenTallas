@@ -116,6 +116,11 @@ HARD = ("street", "wall", "outline_street", "face_street", "station_alley")
 # so check counts it as an error and legalize widens it to need_um (>= street_min_um).  Default 0 keeps the WARN class.
 
 
+def _json_default(o):
+    """numpy scalars in residual rows (e.g. a numpy bool dense) -> plain JSON (S81-FORMS-1 08:33 crash after the reverts)."""
+    return o.item() if hasattr(o, "item") else str(o)
+
+
 def need_um(pins, cfg):
     w = pins * cfg["pin_pitch_um"] / (cfg["street_layers"] * cfg["street_fill"])
     return round(max(cfg["street_min_um"], math.ceil(w / G - 1e-9) * G), 4)
@@ -2642,7 +2647,7 @@ def cmd_check(a):
                cfg={k: v for k, v in cfg.items() if k not in ("_planwins", "_xnames")}, rows=rows,
                types_with_violations=sum(1 for r in rows if any(k in HARD for k in r["counts"])))
     if a.out:
-        Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
+        Path(a.out).write_text(json.dumps(rec, indent=1, default=_json_default) + "\n")
     print("types %d, with street-rule violations %d" % (len(rows), rec["types_with_violations"]))
     return 0
 
@@ -2810,7 +2815,7 @@ def cmd_legalize(a):
                             types_with_cycles_added=sorted(r["type"] for r in rows if r.get("applied")
                                                            and (r.get("cycles_added") or {}).get("total"))), rows=rows)
     if a.event:
-        Path(a.event).write_text(json.dumps(rec, indent=1) + "\n")
+        Path(a.event).write_text(json.dumps(rec, indent=1, default=_json_default) + "\n")
     hdr = ["type", "applied", "W0", "H0", "W1", "H1", "growth_area_pct", "moved", "viol_before", "viol_after",
            "rs_p99_before", "rs_p99_after", "reason"]
     lines = ["\t".join(hdr)]
