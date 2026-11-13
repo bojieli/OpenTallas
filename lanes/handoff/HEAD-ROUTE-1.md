@@ -54,3 +54,10 @@
   DRT-0255). 6 QC hcut1111 sle/slw_st kits are through GRT (M7 demand 0.83-1.07M) and not yet in DR = same exposure.
   Earlier DRT-0255 (9 between 10-25 and 11-10) predate the grant, different class.
 - Re-kit: any M8-grant kit regenerated from this branch picks up RA=0; existing kits can take it as a config.mk line.
+
+## 2026-11-12 23:35 AMEND READY: proof kit's own sign-off ran after route (ot-run exit 0) -> NOT SIGNED
+- SIGNOFF dp_hd_turn_b: TT setup +100.36 | DRC 0 ant 0 | pins 1152/1152 | sdc_lint/face_guard PASS.
+- FAIL hold_ff WNS -26.35 ps, 47 endpoints; FAIL drv TT slew 1408 viol / FF 108 (worst 424 vs 320 limit, all inside
+  u_cland_t_i land-ring select logic, place15xx buffers); io_hold_parent NEEDS_PARENT.
+- Routing class (DRT-0255) is fixed; these are timing/DRV closure items. Not separated whether RA=0 contributes
+  (higher-R wire assignment) vs pre-existing land-ring load. Proof dir epyc9 proof2_turn_b/gen/hd_turn_b/signoff.
