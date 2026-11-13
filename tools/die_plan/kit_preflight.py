@@ -219,6 +219,18 @@ def _plan_doc(plan_dir):
     return None
 
 
+def _plan_cells(kit, plan_dir):
+    """cells.py estimate of the kit's type from the plan directory, or None."""
+    try:
+        import cells
+        raw = _plan_doc(plan_dir)
+        tn = json.loads((Path(kit)/'budget.json').read_text())['type']
+        est, _ = cells.estimate(raw, plan_dir)
+        return est[tn][0]
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return None
+
+
 def plan_pins_source(kit, plan_dir=None):
     """KIT-OPS-1 11-12 (DIE-HBM-101 18:1x, wbq g1): a core kit frozen with plan_pins_source = another type's pin table (the g0
     table, pitch 0.096, instead of the g1 vC5 table, 0.192) builds every later result on the wrong pins.  When freeze.json
@@ -301,6 +313,28 @@ def check(kit, plan_dir=None, contract=False):
     run('yosys_cast_forms', cast_forms)
     run('module_closure', lambda: unresolved_modules(kit))
     run('plan_pins_source', lambda: plan_pins_source(kit, plan_dir))
+    # R-CAP (RULES-CAP-1, RULEBOOK 11-13): projected movable cells after place resize against the 400k place budget,
+    # before any allocation.  Synth count: an earlier attempt's native_cell_count.json, a staged cap_budget.json, or
+    # the plan's cells.py estimate (--plan-dir).  No estimate = not judged here (native_cell_cap.tcl projects the
+    # synthesized top before floorplan).  Only OVER fails; the record keeps the projection either way.
+    cap_record = {}
+    def cell_budget():
+        try:
+            import cap_estimate
+        except ImportError:        # a kit staged before R-CAP carries no cap_estimate.py
+            return []
+        synth = None
+        if not (kit/'native_cell_count.json').is_file() and not (kit/'cap_budget.json').is_file() and plan_dir:
+            synth = _plan_cells(kit, plan_dir)
+        errors, estimate = cap_estimate.check_kit(kit, synth)
+        if estimate:
+            if synth is not None:
+                estimate['synth_basis'] = 'plan estimate (cells.py)'
+            cap_record.update(estimate)
+        return errors
+    run('cell_budget', cell_budget)
+    if cap_record:
+        checks['cell_budget']['estimate'] = cap_record
     if (kit/'master_slice.json').is_file():
         def slice_check():
             import master_slice

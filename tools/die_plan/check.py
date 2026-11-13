@@ -93,7 +93,7 @@ def lnum(name):
 
 # G0C (COORD 10-23 ~20:10): the plan-completeness / hard-core rules are ERRORs only under `check.py --completeness`;
 # plain G0 reports them as WARN "[G0C] ..." so a plan that passed G0 keeps passing while it is completed.
-G0C_CHECKS = ("hard_cores", "core_faces", "complete",
+G0C_CHECKS = ("hard_cores", "cell_budget", "core_faces", "complete",
               # PLAN-TOOL5 (COORD die-plan visual review 10-23, cross-die items (a)-(e)): die_io.py / xdie.py
               "die_io_plan", "cut_lines", "reach", "face_tracks", "ft_budget",
               # HBM-MU-QUAD-6/CLK (COORD 10-27): a core clock entry (12.8a) / its island never sits over a hard-core macro
@@ -1658,6 +1658,11 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
     out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0, types_no_cells=0, over_cap_no_cores=0)
     import cells as CE
     est, out["cell_sources"] = CE.estimate(P.raw, plan_dir, evidence or ())
+    # R-CAP (RULES-CAP-1, RULEBOOK 11-13): projected movable cells after place resize per type against the 400k place
+    # budget (cap_estimate.py): ERROR cell_budget with the split for an OVER type, WARN inside the +-25 % band.
+    # A G0C check like hard_cores: an ERROR with --completeness, a [G0C] WARN in plain G0.
+    import cap_estimate as CAP
+    out["cell_budget"] = CAP.check_plan(P, R, est)
     no_cells = []
     for tn, t in P.types.items():
         w, h = t["outline_um"]
