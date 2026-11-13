@@ -67,3 +67,10 @@ Scope: (1) NEAR-MISS ECO on routed DB (hd_turn_a 89228387ea15; hd_turn_b 9098341
 - Gen: gen20b.sh <types>, which sets item_env, --kit-rtl, --hold-ff-margin 0 and the R-FLOW args.
 - Kits: copied to epyc7 /srv/opentallas-scratch2/claude/head-97/kits20b. Launched by intel2 /tmp/h97_launch2.sh (ot-run --hosts epyc7); logs intel2 ~/tmp/h97_k20b_<type>.log.
 - All 6 port_bind PASS. Next: RESULT per type (<kit>/signoff/signoff.json); then F2 proper, F1b, F1c, die clock gate re-run, package + READY.
+
+## 2026-11-13 09:05 F1b/F1c (COORD: build F1b+F1c, street-tool-2 correction)
+- Tools tree: epyc7 /srv/opentallas-scratch2/claude/wt/head-97-rp20. Branch claude/head-97-rp20-1113 = origin/main 11e125f2c3 + local merge of origin/claude/rules-reach-1-1113 (NOT pushed). Sparse checkout widened to match head-96r3. Untracked links to head-97/pd side files. tools/die_plan/street_rule_st2.py = c2dac9c23d copy.
+- epyc7 /srv/opentallas-scratch2/claude/head-97 holds: pd/ (rp20a + all side files, sidecar), base/hp1, f1b.py -> pd/rp20b.json (sha 7b677b4b8d48), g_b/ (street, st2, g0, rr), prep20b.sh.
+- st2 verdict: all 4 A outline faces are non-sparse (81 pin relays per strip). G0 and gen error: corner sink (696.6, 16.2) has no tap within 200 um, because a 12.96 strip is under the 17.28 tap street.
+- Posted ASK: (b') 17.28 / 43.2 / 17.28 (+8.64 per tile, die +190 um) + (c) pin-relay ruling, or (a) +60.48. F1c: rule 2 does not fire (no macro >= 405); ASK (i) RTL stage or (ii) u_xo W + bus:o internal_stations.
+- Monitor on the kits20b builds: local script scratchpad/mon20b.sh (it emits KIT_END <type>). Post one RESULT per type.
