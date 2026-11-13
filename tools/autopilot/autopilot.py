@@ -2616,6 +2616,21 @@ def after_class(st, j):
             log(f"TRIAL {j['id']} {j['die']}/{j['type']}: local SIGNED kept as a trial result (trial.tsv), not archived "
                 f"as a sign-off -- {trial[:200]}")
             return
+        # OWNER 11-13 03:5x (KIT-OPS-1): visual gate at sign-off -- a kit-wave type build is archived (counted) only with its
+        # visual verdict GOOD / OK / ISSUES-ACCEPT; until then it stays SIGNED, archive pending (retried each tick); a BAD /
+        # ISSUES verdict withholds the archive for good (the wave row goes to WAIT-FORM).  Kit data is kept either way.
+        try:
+            vg, vwhy = KW.signoff_visual_gate(str(AP_DIR), j)
+        except Exception as e:                       # noqa: a gate read problem holds, never counts by accident
+            vg, vwhy = "hold", f"archive pending: visual gate unreadable ({type(e).__name__}: {e})"
+        if vg:
+            j["delete_pending"] = False
+            if j.get("visual_gate") != vwhy:
+                log(f"VISUAL-GATE {j['id']} {j['die']}/{j['type']}: {vwhy[:200]}")
+            j["visual_gate"] = vwhy[:300]
+            set_status(st, j, "SIGNED", vwhy)
+            return
+        j.pop("visual_gate", None)
         archive(st, j)
     elif cls == "WAIT-PARENT":
         j["delete_pending"] = False
