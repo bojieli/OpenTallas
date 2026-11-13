@@ -28,12 +28,16 @@ if {[llength $vclks] != 1} { error "hold gate: expected one IO virtual clock" }
 # below would replace their forwarded-clock input delays (OpenSTA drops the other-clock delays of a port), which hid
 # every ring-write hold path from this gate (HEAD l47 hd_turn_a: gate -57/2 vs kit SDC -185/2274, GRT RSZ-0060).
 set hg_fwd {}; set hg_fwd_ports {}; set hg_ring_in ""
-set hg_native {}; set hg_native_ports {}
+set hg_native {}; set hg_native_ports {}; set hg_native_selectors {}; set hg_native_declared {}
 set hg_gold [file join [file dirname [file normalize [info script]]] constraint.sdc]
 if {[info exists ::env(OT_GOLDEN_SDC)] && $::env(OT_GOLDEN_SDC) ne ""} { set hg_gold $::env(OT_GOLDEN_SDC) }
 if {[file exists $hg_gold]} {
   set f [open $hg_gold]; set hg_txt [read $f]; close $f
   foreach line [split $hg_txt "\n"] {
+    if {[regexp {^set pad_native_inputs \[get_ports \{([^\}]*)\}\]$} $line -> selectors]} {
+      if {[llength $hg_native_declared]} {error "hold gate: duplicate native pad declaration"}
+      set hg_native_declared $selectors
+    }
     # S81-RINGHOLD-3 opt-in plan clock.ring_hold: the measured sender data-vs-fclk min replaces the seam fallback
     if {[regexp {^# OT_FWD_RING_MIN (\S+)$} $line -> hg_ring_in]} continue
     if {[string match {# OT_NATIVE_PAD_INPUT*} $line]} {
@@ -52,6 +56,7 @@ if {[file exists $hg_gold]} {
         lappend hg_native_ports $pn
       }
       lappend hg_native [list $ck $sel $mn $mx]
+      lappend hg_native_selectors $sel
       continue
     }
     if {![string match {# OT_FWD_RING_INPUTS *} $line]} continue
@@ -60,6 +65,9 @@ if {[file exists $hg_gold]} {
     lappend hg_fwd [list [lindex $w 2] [lrange $w 3 end]]
     foreach s [lrange $w 3 end] { foreach q [get_ports $s] { lappend hg_fwd_ports [get_full_name $q] } }
   }
+}
+if {[llength $hg_native_declared] && [lsort -unique $hg_native_declared] ne [lsort -unique $hg_native_selectors]} {
+  error "hold gate: native pad metadata missing or inconsistent; regenerate kit before qualification"
 }
 set din {}
 foreach p [all_inputs] { if {[get_full_name $p] ni $clock_ports && [get_full_name $p] ni $hg_fwd_ports && [get_full_name $p] ni $hg_native_ports} { lappend din $p } }
