@@ -82,8 +82,6 @@
     "kv3_hub_Eo@1",
     "kv3_hub_Wo@1",
     "kv3_phy_v1@3",
-    "kv3_sys_SD@1",
-    "kv3_sys_SD_v1@1",
     "kv3_hgi_v7@1",
     "kv3_astk@2",
     "qkd_hr_cdc_ci@1",
@@ -4659,7 +4657,7 @@
    ],
    "note_kitstage1_1113": "KIT-STAGE-1 2026-11-13 03:55: kit_store pilot (kv3_pv*) OFF: the pilot itself failed kit_rtl 'preferred HDL source missing' on all 15 kv3_pv rows 11-12 18:25 (inputs inside the wave src were moved into kit_inputs and the bind resolved tree-relative files there). Fix on branch claude/kit-stage-1-1113 (kit_store in_place src); restore kit_store_prev_kitstage1_1113 after it is deployed. The 15 kv3_pv_*@1 retry entries were stale (KW-FIX-23 epoch): removed in step1 and re-added in step2 one tick later = the batch relaunch.",
    "die_owner": "DIE-KV-99",
-   "retry_note_kitops1_kvsdra0_1113": "2026-11-13 09:56 KIT-OPS-1 (COORD 10:0x, R-FLOW-6): regenerate kv3_sys_SD / kv3_sys_SD_v1 on event kvN2_66e6607 so the kit carries ENABLE_RESISTANCE_AWARE=0 (M8-grant DRT-0255 class); src_kv_main_66e6607e3f gen_phys has the RA=0 overlay; the @1 kits (11-12 18:18) lack it"
+   "retry_note_kitops1_kvsdra0_1113": "2026-11-13 09:57 KIT-OPS-1 (remove; KW-FIX-45 documented re-arm: remove for one pass, re-add) COORD 10:0x R-FLOW-6: regenerate kv3_sys_SD / kv3_sys_SD_v1 (kvN2_66e6607 @1 died DRT-0255, rows db84da4eefbb / 19d456d1a995) so the kit carries ENABLE_RESISTANCE_AWARE=0; src_kv_main_66e6607e3f gen_phys has the RA=0 overlay; the @1 retry entries were stale (retry_seen of event28w_c)"
   },
   "s81": {
    "enabled": true,
