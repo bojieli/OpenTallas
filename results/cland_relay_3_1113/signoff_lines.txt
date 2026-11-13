@@ -1,0 +1,8 @@
+/home/ubuntu/cr3log/wrx_route.log:SIGNOFF dp_hd_spn_wshim_rx: NOT SIGNED | TT setup 2.64 | FF hold -6.6 (sdc -120.99) | SS setup (info) None | pair skew TT/FF 109.6/99.6 (spread info 84.65/54.05) | DRC 0 ant 0 | sdc_lint PASS face_guard PASS
+/home/ubuntu/cr3log/wrx_route.log-  - drv: FAIL TT slew 2.0 cap 0.0, FF slew 2.0 cap 0.0
+/home/ubuntu/cr3log/wrx_route.log-  - io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing
+/home/ubuntu/cr3log/wrx_route.log-ot-run: RAN on epyc9 (unit oth-ubuntu-3132312-1794561032): exit 0
+/home/ubuntu/cr3log/turn_b_route.log:SIGNOFF dp_hd_turn_b: NOT SIGNED | TT setup 104.02 | FF hold -14.07 (sdc -80.99) | SS setup (info) None | pair skew TT/FF 94.6/84.0 (spread info 51.73/32.01) | DRC 0 ant 0 | sdc_lint PASS face_guard PASS
+/home/ubuntu/cr3log/turn_b_route.log-  - hold_ff: FAIL WNS -14.07 ps, 25 endpoints
+/home/ubuntu/cr3log/turn_b_route.log-  - io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing
+/home/ubuntu/cr3log/turn_b_route.log-ot-run: RAN on epyc9 (unit oth-ubuntu-3132313-1794561032): exit 0

@@ -189,6 +189,8 @@ module ot_dp_clk_landing_cas #(
     // rst_n keeps the control flops (seen/arm/ready/fault/timeout, ring rp/status/rv/lap), rst_xn[0] the ring one-hot
     // oh, rst_xn[1..RSTREP-1] the read-select chunks in contiguous groups (ot_meso_ring_ca RSTN).  Every copy equals
     // rst_n, so q/ready/fault are identical; only the reset fanout per driver is bounded.  0 = rst_xn unused, identical logic.
+    // RSTH-1 (CLAND-RELAY-3, COORD 11-13): RSTREP = 1 + RH x NCH (RH > 1, NCH read chunks, RH | DSREP) gives every chunk
+    // RH copies, each on DSREP/RH read-select copies (reader-START copy <= 48 loads); same D, 0 cycles, no K change.
     parameter int RSTREP = 0,
     // GUARD-REG-1 (see ot_meso_ring_ca; needs STATUS_REG): no logic on a half-cycle rclk path; 0 added cycles.
     // Default 0 = identical logic.
@@ -333,7 +335,9 @@ module ot_meso_ring_ca #(
     // writes only constant padding, so its write-enable flop takes D = 0 (the start has no unproven sink).  Default W: every chunk.
     parameter int WLIVE = W,
     // RSTREP-1: copies of r_rst_n on r_rst_x (0 = unused): r_rst_x[0] resets oh, r_rst_x[1..RSTN-1] the read-select
-    // chunks in contiguous groups (chunk c -> 1 + c*(RSTN-1)/NCH); r_rst_n keeps rp and the status/rv/lap flops
+    // chunks in contiguous groups (chunk c -> 1 + c*(RSTN-1)/NCH); r_rst_n keeps rp and the status/rv/lap flops.
+    // RSTH-1 (CLAND-RELAY-3): RSTN - 1 = RH x NCH (RH > 1, RH | DSREP) gives each chunk RH copies
+    // r_rst_x[1 + c*RH + h], copy h driving read-select copies [h*DSREP/RH, (h+1)*DSREP/RH) (ot_meso_dsel NR)
     parameter int RSTN = 0,
     // GUARD-REG-1 (CLAND-RING-NEGEDGE, COORD 11-11 09:47; needs STATUS_REG): no logic on any half-cycle rclk path.
     // STATUS_REG still selects/compares the falling-edge guard sample (w_n/lap_n, negedge) into glo1/ghi1 (posedge):
@@ -500,6 +504,12 @@ module ot_meso_ring_ca #(
     // data: per-64-bit chunk registered one-hot select (ot_meso_dsel, REG=1), placed at reset, rotating every cycle
     localparam int NCH = READ_CHUNK > 0 ? (W + READ_CHUNK - 1) / READ_CHUNK : ((W % 64 == 0) ? W / 64 : 1);
     localparam int RSTEP = READ_CHUNK > 0 ? READ_CHUNK : W / NCH;
+    // RSTH-1 (CLAND-RELAY-3): reset copies per read chunk.  RSTN - 1 <= NCH (every legacy / fanout-max form) -> 1, the
+    // contiguous chunk-group mapping below, identical logic; RSTN - 1 = RH x NCH with RH > 1 -> RH copies per chunk.
+    localparam int RH = (RSTN > 1 && RSTN - 1 > NCH) ? (RSTN - 1) / NCH : 1;
+    if (RH > 1 && (RH * NCH != RSTN - 1 || DSREP % RH != 0)) begin : g_bad_rh
+        $error("ot_meso_ring_ca: RSTN - 1 > NCH needs RSTN - 1 = RH x NCH with RH dividing DSREP");
+    end
     logic [W-1:0] rd_q;
     for (genvar c = 0; c < NCH; c++) begin : dch
         localparam int WCH = W - c * RSTEP < RSTEP ? W - c * RSTEP : RSTEP;
@@ -509,6 +519,16 @@ module ot_meso_ring_ca #(
         end
         // RSTREP-1: this chunk's equal copy of r_rst_n (contiguous chunk groups over r_rst_x[1..RSTN-1])
         wire r_rst_c = RSTN > 1 ? r_rst_x[(RSTN > 1 ? 1 + (c * (RSTN - 1)) / NCH : 0)] : r_rst_n;
+        // RSTH-1: with RSTN - 1 = RH x NCH (RH > 1) the chunk takes RH copies r_rst_x[1 + c*RH + h], each driving
+        // DSREP/RH of the chunk's read-select copies (ot_meso_dsel NR); RH = 1 keeps r_rst_c (identical logic)
+        wire [RH-1:0] r_rst_cv;
+        if (RH > 1) begin : g_rh
+            for (genvar h = 0; h < RH; h++) begin : hx
+                assign r_rst_cv[h] = r_rst_x[1 + c * RH + h];
+            end
+        end else begin : g_rh1
+            assign r_rst_cv = r_rst_c;
+        end
         // PLACEREP-1: this chunk's own copy of the placement value (see parameter PLACEREP)
         logic [AW-1:0] pl_c;
         if (PLACEREP && NCH > 1) begin : g_pl
@@ -516,8 +536,8 @@ module ot_meso_ring_ca #(
         end else begin : g_pl0
             assign pl_c = RP0[AW-1:0];
         end
-        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP)) u_dsel (.clk(rclk), .align(!r_rst_c), .on(r_rst_c),
-            .place(pl_c), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
+        ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP), .NR(RH)) u_dsel (.clk(rclk),
+            .align(~r_rst_cv), .on(r_rst_cv), .place(pl_c), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
     end
     logic r_v_c, r_lap_c, r_lap1_c;
     ot_meso_ohor #(.N(NS)) u_v   (.sel(st_oh), .x(pos_v),   .y(r_v_c));

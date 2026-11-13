@@ -1,0 +1,31 @@
+min_delay/hold group clk
+
+                                     Required  Actual
+Endpoint                               Delay   Delay   Slack
+------------------------------------------------------------
+u_ft_t_s1/q[174]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  377.06  362.99  -14.07 (VIOLATED)
+u_ft_t_s1/q[158]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  375.90  364.18  -11.72 (VIOLATED)
+u_ft_t_s1/q[184]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  373.52  363.33  -10.19 (VIOLATED)
+u_ft_t_s1/q[159]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  375.68  366.02   -9.66 (VIOLATED)
+u_ft_t_s1/q[177]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  377.03  368.37   -8.66 (VIOLATED)
+u_ft_t_s1/q[160]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  374.70  367.41   -7.30 (VIOLATED)
+u_ft_t_s1/q[163]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  374.81  368.18   -6.63 (VIOLATED)
+u_ft_t_s1/q[263]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  383.72  377.30   -6.42 (VIOLATED)
+u_ft_t_s1/q[251]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  377.31  371.75   -5.55 (VIOLATED)
+u_ft_t_s1/q[204]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  373.38  368.08   -5.30 (VIOLATED)
+u_ft_t_s1/q[248]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  376.79  373.10   -3.69 (VIOLATED)
+u_ft_t_s1/q[179]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  372.90  369.94   -2.96 (VIOLATED)
+u_ft_t_s1/q[155]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  375.74  373.29   -2.45 (VIOLATED)
+u_ft_t_s1/q[173]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  376.37  374.12   -2.25 (VIOLATED)
+u_ft_t_s1/q[218]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  372.73  370.71   -2.01 (VIOLATED)
+u_ft_t_s1/q[231]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  372.03  370.20   -1.83 (VIOLATED)
+u_ft_t_s1/q[210]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  373.38  371.68   -1.70 (VIOLATED)
+u_ft_t_s1/q[223]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  372.60  371.13   -1.47 (VIOLATED)
+u_ft_t_s1/q[168]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  375.74  374.30   -1.44 (VIOLATED)
+u_ft_t_s1/q[147]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  374.67  373.23   -1.43 (VIOLATED)
+u_ft_t_s1/q[265]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  383.04  381.76   -1.28 (VIOLATED)
+u_ft_t_s1/q[193]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  373.59  372.66   -0.93 (VIOLATED)
+u_ft_t_s1/q[149]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  374.63  374.01   -0.62 (VIOLATED)
+u_ft_t_s1/q[247]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  376.41  375.89   -0.52 (VIOLATED)
+u_ft_t_s1/q[214]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  372.84  372.79   -0.05 (VIOLATED)
+

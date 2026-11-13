@@ -624,18 +624,24 @@ endmodule
 module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter bit REG = 0, parameter bit SPLIT = 0,
                       // DSREP-1 (DIE-HEAD-58 TURNB): SREP kept copies of the one-hot select di, copy s drives bits
                       // [s*W/SREP, (s+1)*W/SREP); same align/on/place, so every copy equals di.  1 = identical logic.
-                      parameter int SREP = 1) (
+                      parameter int SREP = 1,
+                      // RSTH-1 (CLAND-RELAY-3, COORD 11-13 (3)): NR equal copies of the align/on control (align[h] ==
+                      // !on[h] == the ring's reader-START copy h); select copy r takes control copy r*NR/SREP, so each
+                      // control copy drives SREP/NR select copies (contiguous bit groups).  NR must divide SREP.
+                      // 1 = identical logic (one align/on pair, as before).
+                      parameter int NR = 1) (
     input  logic                    clk,
-    input  logic                    align,
-    input  logic                    on,
+    input  logic [NR-1:0]           align,
+    input  logic [NR-1:0]           on,
     input  logic [$clog2(DEPTH)-1:0] place,
     input  logic [DEPTH*W-1:0]      sd,
     output logic [W-1:0]            y
 );
+    if (NR < 1 || (NR > 1 && (SREP % NR != 0 || SREP < NR))) begin : g_bad_nr $error("ot_meso_dsel: NR must divide SREP"); end
     logic [DEPTH-1:0] di;
     always_ff @(posedge clk) begin
-        if (align) di <= DEPTH'(1) << place;
-        else if (on) di <= {di[DEPTH-2:0], di[DEPTH-1]};
+        if (align[0]) di <= DEPTH'(1) << place;
+        else if (on[0]) di <= {di[DEPTH-2:0], di[DEPTH-1]};
     end
     logic [W-1:0] y_c;
     if (SREP > 1) begin : g_srep
@@ -643,8 +649,15 @@ module ot_meso_dsel #(parameter int W = 64, parameter int DEPTH = 4, parameter b
         if (SW * SREP != W) begin : g_bad $error("ot_meso_dsel: W %% SREP != 0"); end
         wire [DEPTH-1:0] dr [SREP];
         for (genvar r = 0; r < SREP; r++) begin : sr
-            (* keep = "true" *) ot_meso_dsel_sel #(.DEPTH(DEPTH)) u_sel (.clk(clk), .align(align), .on(on), .place(place),
+            localparam int H = (r * NR) / SREP;
+`ifdef OT_MESO_CA_MUTANT_RSTH
+            // MUTANT: the last control copy's select copies never re-align (place not loaded at reset)
+            (* keep = "true" *) ot_meso_dsel_sel #(.DEPTH(DEPTH)) u_sel (.clk(clk),
+                .align((NR > 1 && H == NR - 1) ? 1'b0 : align[H]), .on(on[H]), .place(place), .di(dr[r]));
+`else
+            (* keep = "true" *) ot_meso_dsel_sel #(.DEPTH(DEPTH)) u_sel (.clk(clk), .align(align[H]), .on(on[H]), .place(place),
                                                                    .di(dr[r]));
+`endif
         end
         always_comb begin
             y_c = '0;

@@ -18,7 +18,7 @@ def _proc(name):
 
 
 def run(tag='ring:i+x+ff',obstacle=False,resize=False,rect='0 0 1.08 1.08', legacy=False):
-    script=COMMON+'\n'+''.join(_proc(n) for n in ['cland_group_insts','cland_occupy','cland_family_w','cland_put_column','cland_put','cland_ffkey','cland_dsel_wch','cland_column_select','cland_start_bterm_name','cland_place_ff','cland_fill_spread'])
+    script=COMMON+'\n'+''.join(_proc(n) for n in ['cland_group_insts','cland_occupy','cland_family_w','cland_put_column','cland_put','cland_ffkey','cland_dsel_wch','cland_wcc_w','cland_column_select','cland_start_bterm_name','cland_place_ff','cland_fill_spread'])
     script+='\nset cland_occ {};set cland_famw {};set cland_ff_fill 0.90;set instances {};set places {};set moves 0\n'
     for bit in range(4):
         for slot in range(2):

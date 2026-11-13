@@ -13,7 +13,7 @@ from test_landing_status_slide_resize import COMMON
 
 TCL = Path(__file__).with_name("landing_placement.tcl").read_text()
 pytestmark = pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh unavailable")
-NAMES = ["cland_group_insts", "cland_occupy", "cland_family_w", "cland_put_column", "cland_put", "cland_ffkey", "cland_freg_rekey", "cland_dsel_wch",
+NAMES = ["cland_group_insts", "cland_occupy", "cland_family_w", "cland_put_column", "cland_put", "cland_ffkey", "cland_freg_rekey", "cland_dsel_wch", "cland_wcc_w",
          "cland_column_select", "cland_kbit", "cland_nearest_bit", "cland_ctl_rekey", "cland_bus_pins", "cland_start_bterm_name",
          "cland_place_pinslot", "cland_place_pinslot_col", "cland_place_ff"]
 OPT = ["cland_fill_spread"]

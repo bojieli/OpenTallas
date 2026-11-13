@@ -48,6 +48,7 @@ def vehicle(mutant=None,reset_tree=None):
     tree=dict(root=[0,0],sync_stages=2,relays=[dict(name='u_rrl_0',q='rst_n_t0',d='rst_root_n',xy=[1,0])])
     A=dict(mask=dict(active=True),tree=tree,collector_root_node='rst_root_n',local_sources=[],children=[dict(part='b',node='rst_root_n',index=0,seam=True)])
     B=dict(mask=dict(active=True),tree=tree,collector_root_node='rst_root_n',local_sources=[dict(name='y',tap=0)],children=[])
+    if mutant=='no_local_source':B['local_sources']=[]   # stale sidecar (DIE-S81-88 13:18 t52 x2 bus)
     if mutant=='representative_child':A['children'][0]['part']='representative_only'
     if mutant=='different_status_tap':
         bt1=cell('b.u_rrl_1','ot_dp_rrelay',{'clk':[bclk],'d':[br]},{'q':1}).ports['q'][0]
@@ -237,7 +238,7 @@ def test_out_relay_tap_copy_mutants_fail():
 # (landing_writer_start, reuse_relay_origin), same-cycle local reset copies (landing_local_resets), relay-partition
 # FSTART face flops (landing_relay_start_copy) and the strap K re-reference (count_align_bind.strap_ties).
 
-def _reader_vehicle(mutant=None):
+def _reader_vehicle(mutant=None,reach=False):
     """the 'ca' vehicle with B's ring reset through a 1-stage reader START chain and B's origin on a local copy"""
     g=globals();orig=g['Verification']
     class Hook(orig):
@@ -258,10 +259,12 @@ def _reader_vehicle(mutant=None):
             lr=cell('b.u_cland_lrst_s0','ot_dp_rrelay',{'clk':bclk,'d':br.ports['q'] if mutant!='lrst_d' else bt.ports['q']},['q'])
             bo.ports['rst_raw_n']=lr.ports['q']
             raw['partition_types']['B']['clock']=dict(
-                landing_reader_start=dict(depth=1,branches=dict(y=dict(stages=[dict(xy_um=[0,0],raw_reset='rst_n_t0')]))),
+                **({} if reach else dict(landing_reader_start=dict(depth=1,branches=dict(y=dict(stages=[dict(xy_um=[0,0],raw_reset='rst_n_t0')]))))),
                 landing_local_resets=[dict(name='s0',raw='rst_root_n' if mutant!='lrst_depth' else 'rst_n_t0',
                                            xy_um=[0,0],consumers=['u_cland_origin'])])
             super().__init__(F,G,raw,table,names,**kw)
+        def _reach_reader(self,pn):   # CLAND-RING-LOCALITY reach default for B (rule itself: test_cland_slew_reach)
+            return reach and self.parts[pn]['type']=='B'
     g['Verification']=Hook
     try:return vehicle('ca',reset_tree=_plan_tree)
     finally:g['Verification']=orig
@@ -269,6 +272,15 @@ def _reader_vehicle(mutant=None):
 
 def test_reader_start_chain_and_local_reset_copy_verified():
     assert _reader_vehicle()['errors']==[]
+
+
+def test_reach_default_reader_start_verified_on_ring_reset_and_mutants_fail():
+    # CLAND-RING-LOCALITY: no landing_reader_start; one stage on the ring's own reset node, d = the start
+    assert _reader_vehicle(reach=True)['errors']==[]
+    for m,frag in (('reader_d','u_cland_reader_start_y_0.d'),('reader_raw','u_cland_reader_start_y_0: raw reset'),
+                   ('reader_skip','u_cland_y.rst_n')):
+        errs=_reader_vehicle(m,reach=True)['errors']
+        assert any(frag in e for e in errs),(m,errs)
 
 
 def test_reader_start_chain_and_local_reset_mutants_fail():
@@ -396,3 +408,9 @@ def test_reset_anchor_names_are_repicked_onto_the_bound_tree(monkeypatch):
     assert r0['partition_types']['T']['clock']['landing_reader_start']['branches']['i']['stages'][0]['raw_reset']=='rst_rl_5'
     v.errors=[];v._anchored(raw([400.0,0.0]))
     assert any('RESET_ANCHOR' in e for e in v.errors),v.errors
+
+
+def test_landing_without_local_source_row_refused_by_name():
+    # CLAND-SIDECAR-LOCAL-1: was StopIteration (bind.py verify crashed); now a named refusal in the report
+    errs=vehicle('no_local_source')['errors']
+    assert any('CLAND_SIDECAR_LOCAL_SOURCE_MISSING' in e and 'bus y' in e for e in errs), errs

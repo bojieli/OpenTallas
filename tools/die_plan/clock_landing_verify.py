@@ -391,7 +391,14 @@ class Verification:
             if c:
                 self.clock(c,r['dst']);self.clock(c,r['src'],'fclk')
                 info=self.collector['types'][self.parts[r['dst']]['type']]
-                local=next(x for x in info['local_sources'] if x['name']==bus)
+                # CLAND-SIDECAR-LOCAL-1 (GEN-CLASS-1 11-12, DIE-S81-88 13:18: StopIteration on S81 r12ng t52 dn_s_4N_L0x2_i):
+                # a landing whose bus has no collector.types[].local_sources row is a stale sidecar, refused by name
+                local=next((x for x in info.get('local_sources',[]) if x['name']==bus),None)
+                if local is None:
+                    self.fail(f"{path}: CLAND_SIDECAR_LOCAL_SOURCE_MISSING: port {r['port']} lands on bus {bus} of type "
+                              f"{self.parts[r['dst']]['type']}, whose sidecar collector.types[].local_sources has no {bus} row "
+                              f"(has {[x['name'] for x in info.get('local_sources',[])]}): regenerate the clock-landing sidecar "
+                              f"for this plan")
                 if ca:
                     cfg=ca['ports'][r['port']]
                     params=getattr(c,'params',{})
@@ -507,6 +514,12 @@ class Verification:
             self.fail(f'{pn}: {key}.{bus} plans {len(stages)} physical stages, as-built rule needs {physical}');return None
         return stages
 
+    def _reach_reader(self,pn):
+        """CLAND-RING-LOCALITY: the type takes the reach-default reader START (strap form only, the generator's rule)"""
+        import clock_landings as CL
+        return bool((self.table.get('count_aligned') or {}).get('strap_form')) and bool(
+            CL.reader_start_reach(self.raw,self.parts[pn]['type']))
+
     def reader_start(self,pn,bus,ring):
         """The count start a count-aligned ring reader resets on.  Default: the partition's start.  With the type's
         clock.landing_reader_start (clock_landings._reader_start_rtl): R kept ot_dp_landing_relay stages
@@ -516,19 +529,35 @@ class Verification:
         start=self.start_net(pn,'u_cland_'+bus)
         rep=len(ring.ports.get('rst_xn',[]))
         cfg=self._tclock(pn).get('landing_reader_start')
+        reach=None
         if cfg is None:
-            if rep:self.fail(ring.path+': unpriced ring reset copies rst_xn without a reader START chain')
-            return start
-        stages=self._stages(pn,'landing_reader_start',bus,int(cfg.get('depth',-1)))
+            if self._reach_reader(pn):
+                # CLAND-RING-LOCALITY reach default (clock_landings.reader_start_reach, the rule the generator and
+                # strap K read): ONE stage on the ring's own registered reset (tap node, or its u_cland_rst_<bus> copy)
+                info=self.collector['types'][self.parts[pn]['type']]
+                reach=(self.ring_reset_node(pn,bus,info),'u_cland_rst_'+bus)
+                cfg=dict(depth=1)
+            else:
+                if rep:self.fail(ring.path+': unpriced ring reset copies rst_xn without a reader START chain')
+                return start
+        stages=[dict()] if reach else self._stages(pn,'landing_reader_start',bus,int(cfg.get('depth',-1)))
         if not stages:return ('missing',ident(pn)+'.u_cland_reader_start_'+ident(bus))
         prev=start;path=None
         for i,st in enumerate(stages):
             path=ident(pn)+f'.u_cland_reader_start_{ident(bus)}_{i}'
             c=self.instance(path,'ot_dp_landing_relay_rep' if rep and i==len(stages)-1 else 'ot_dp_landing_relay')
             if c:
-                self.clock(c,pn);self.equal_input(c,'d',[prev]);self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
+                self.clock(c,pn);self.equal_input(c,'d',[prev])
+                if reach:self.check_reset(c,pn,reach[0],reach[1],port='rst_raw_n',wave=True)
+                else:self.check_reset(c,pn,st.get('raw_reset'),port='rst_raw_n',wave=True)
             prev=self.output(path,'q')
         if rep:self.equal_input(ring,'rst_xn',[self.output(path,'qx',k) for k in range(rep)])
+        if (self.table.get('count_aligned') or {}).get('strap_form'):
+            import clock_landings as CL
+            pr=getattr(ring,'params',None) or {}
+            need=CL.reader_reset_copies(self.raw,self.parts[pn]['type'],bus,int(pr.get('W',0) or len(ring.ports.get('q',[]))),int(pr.get('READ_CHUNK',0) or 0),int(pr.get('DSREP',1) or 1),int(pr.get('DEPTH',4) or 4))
+            if need and rep<need:
+                self.fail(ring.path+f': reader START copies {rep} < {need} (CLAND-RING-LOCALITY / RSTH-1 per-chunk copies)')
         return prev
 
     def writer_start(self,pn,bus,start_d):

@@ -79,7 +79,9 @@ def test_wreg_ring_raised_never_lowered():
 def test_placement_keys_copies_at_their_group():
     band = lambda w, **kw: dict(instance="u_cland_link_i", ring_width=w, **kw)          # noqa: E731
     typ = dict(clock=dict(landing_contract=dict(bands=dict(link_i=band(576)))))
-    assert "dict set ::cland_local_chunks {u_cland_link_i} {write 0 read 8}" in _local_chunk_config(typ)
+    assert "dict set ::cland_local_chunks {u_cland_link_i} {write 16 read 8}" in _local_chunk_config(typ)  # reach WREG
+    typ = dict(clock=dict(landing_ring_wreg=dict(buses=[], reach=False), landing_contract=dict(bands=dict(link_i=band(576)))))
+    assert "{u_cland_link_i} {write 0 read 8}" in _local_chunk_config(typ)            # explicit opt-out
     typ = dict(clock=dict(landing_contract=dict(bands=dict(link_i=band(64)))))
     assert _local_chunk_config(typ) == ""                                             # one chunk: no row, as before
     typ = dict(clock=dict(landing_contract=dict(bands=dict(link_i=band(576, hard_core=True)))))
@@ -89,4 +91,110 @@ def test_placement_keys_copies_at_their_group():
     assert "{u_cland_link_i} {write 8 read 8}" in _local_chunk_config(typ)            # same copies as the ring RTL
     typ = dict(buses=[dict(name="link_i", width=566)],
                clock=dict(landing_contract=dict(bands=dict(link_i=dict(instance="u_cland_link_i")))))
-    assert "{u_cland_link_i} {write 0 read 8}" in _local_chunk_config(typ)            # width from the bus declaration
+    assert "{u_cland_link_i} {write 16 read 8}" in _local_chunk_config(typ)           # width from the bus declaration
+
+
+def test_plain_wide_ring_gets_local_write_side():
+    # CLAND-RING-LOCALITY (GEN-CLASS-1 11-12): a plain ring wider than one chunk gets LOCAL = 1 (WCHKC slot-index copy per
+    # chunk + local reset/on/align copies) next to its DSREP read copies; one-chunk rings and count-aligned rings unchanged
+    from test_clock_landings import vehicle
+    p, t = vehicle()
+    body = _wide(p, t, 63)
+    narrow = _ring_line(Landings(p, t).type_rtl("B", body))
+    assert narrow.startswith("    ot_dp_clk_landing #(.W(64)") and "LOCAL" not in narrow and "DSREP" not in narrow
+    p, t = vehicle()
+    body = _wide(p, t, 567)
+    lg = Landings(p, t)
+    line = _ring_line(lg.type_rtl("B", body))
+    assert line == "    ot_dp_clk_landing #(.W(568), .DSREP(8), .LOCAL(1)) u_cland_y (", line
+    assert lg.reset_placements["B"]["y"]["ring_local"] == 1
+    p, t = ca_vehicle()
+    body = _wide(p, t, 567)
+    assert "LOCAL" not in _ring_line(Landings(p, t).type_rtl("B", body))
+
+
+def _wide_band(p, n):
+    p["partition_types"]["B"].setdefault("clock", {})["landing_contract"] = dict(bands=dict(y=dict(ring_width=n + 1)))
+
+
+def test_wide_soft_strap_ring_gets_reach_wreg_and_k_plus_one():
+    # CLAND-RING-LOCALITY (COORD-approved family rule): ONE shared rule (ring_wreg_reach) gives RTL and strap K
+    p, t = strap_vehicle()
+    k0 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    lg = Landings(p, t)
+    rtl = lg.type_rtl("B", body)
+    line = _ring_line(rtl)
+    # WREG (writer) + reach reader START: RSTREP 1 + 2 x 9 chunks (RSTH-1, D4 DSREP 8), PLACEREP copies per chunk
+    assert line.endswith(", .WREG(1), .DSREP(8), .WRITE_CHUNK(16), .RSTREP(19), .PLACEREP(1)) u_cland_y ("), line
+    assert lg.reset_placements["B"]["y"]["ring_wreg"] == 1 and lg.reset_placements["B"]["y"]["strap_k_delta"] == 1
+    rs = lg.reset_placements["B"]["y"]["reader_start"]
+    assert rs["reach"] and rs["depth"] == 1 and rs["K_adjustment"] == -1 and rs["ring_reset_copies"] == 19
+    assert "ot_dp_landing_relay_rep #(.N(19)) u_cland_reader_start_y_0 (.clk(clk), .rst_raw_n(" in rtl
+    assert ".d(cland_start), .q(cland_reader_start_y_0), .qx(cland_reader_start_y_0_x));" in rtl
+    assert ".rst_n(cland_reader_start_y_0)" in line or ".rst_n(cland_reader_start_y_0)" in rtl
+    k1 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
+    assert k1 == k0 % 64                                            # WREG +1 and reader START -1: net strap K unchanged
+    assert CAB.reader_start_depth(p, "B") == 1 and CAB.reader_start_depth(p, "B", strap=False) == 0
+    assert ring_write_reg(p, "B", "y") == dict(depth=1, dsrep=8, freg=False, write_chunk=16, reach=True)
+
+
+def test_reach_wreg_opt_out_narrow_and_non_strap_unchanged():
+    p, t = strap_vehicle()
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    p["partition_types"]["B"]["clock"]["landing_ring_wreg"] = dict(buses=[], reach=False)
+    p["partition_types"]["B"]["clock"]["landing_reader_start_reach"] = False
+    line = _ring_line(Landings(p, t).type_rtl("B", body))
+    assert "WREG" not in line and "RSTREP" not in line                              # explicit opt-outs
+    assert CAB.reader_start_depth(p, "B") == 0
+    p, t = strap_vehicle()
+    body = _wide(p, t, 63)
+    _wide_band(p, 63)
+    assert "WREG" not in _ring_line(Landings(p, t).type_rtl("B", body))            # one chunk
+    assert ring_write_reg(p, "B", "y") is None
+    p, t = ca_vehicle()
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    line = _ring_line(Landings(p, t).type_rtl("B", body))
+    assert "WREG" not in line and line.endswith(", .DSREP(8)) u_cland_y (")      # non-strap: no K carrier, no WREG
+
+
+def test_explicit_reader_start_chain_gets_per_chunk_copies_no_k_change():
+    # CLAND-RING-LOCALITY (COORD whole-family scope): an explicit landing_reader_start chain's LAST stage takes the same
+    # per-chunk RSTREP copies (clock_landings.reader_reset_copies) without the die fanout knob; strap K unchanged
+    import clock_landings as CL
+    p, t = strap_vehicle()
+    body = _wide(p, t, 567)
+    _wide_band(p, 567)
+    p["partition_types"]["B"]["clock"]["landing_reader_start"] = dict(
+        depth=2, branches={"y": {"stages": [dict(xy_um=[3., 3.], raw_reset="cland_reset_y"),
+                                            dict(xy_um=[6., 3.], raw_reset="cland_reset_y")]}})
+    k0 = CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"]
+    lg = Landings(p, t)
+    rtl = lg.type_rtl("B", body)
+    assert "ot_dp_landing_relay_rep #(.N(19)) u_cland_reader_start_y_1 (" in rtl, rtl
+    assert "ot_dp_landing_relay u_cland_reader_start_y_0 (" in rtl and ", .RSTREP(19)" in _ring_line(rtl)
+    assert lg.reset_placements["B"]["y"]["reader_start"]["ring_reset_copies"] == 19
+    assert CAB.reader_start_depth(p, "B") == 2 and not CL.reader_start_reach(p, "B")
+    assert CAB.strap_ties(t["count_aligned"], p)["instances"]["b"]["values"]["strap_ca_k_y"] == k0
+    assert CL.reader_reset_copies(p, "B", "y", 568) == 10 and CL.reader_reset_copies(p, "B", "y", 64) == 0
+    assert CL.reader_reset_copies(p, "B", "y", 568, 0, 8, 4) == 19
+    p["partition_types"]["B"]["clock"]["landing_reader_start_reach"] = False       # opt-out
+    assert "RSTREP" not in _ring_line(Landings(p, t).type_rtl("B", body))
+
+
+def test_reset_copies_per_chunk_bound_loads():
+    # RSTH-1 (CLAND-RELAY-3, COORD 11-13 (3)): every reader-START copy drives <= 48 loads (DSREP/h x 2 DEPTH + 1 INV)
+    import clock_landings as CL
+    assert CL.ring_reset_copies_per_chunk(8, 4) == 2 and CL.ring_reset_copies_per_chunk(8, 8) == 4
+    assert CL.ring_reset_copies_per_chunk(4, 4) == 1 and CL.ring_reset_copies_per_chunk(1, 4) == 1
+    assert CL.ring_reset_copies_per_chunk(2, 8) == 1 and CL.ring_reset_copies_per_chunk(4, 8) == 2
+    for ds in (1, 2, 4, 8):
+        for d in (4, 8):
+            h = CL.ring_reset_copies_per_chunk(ds, d)
+            assert ds % h == 0 and (ds // h) * 2 * d + 1 <= CL.RING_RESET_COPY_LOADS_MAX
+    assert CL.ring_reset_copies_reach(568, 0, 8, 4) == 19 and CL.ring_reset_copies_reach(568) == 10
+    assert CL.ring_reset_copies_reach(64, 0, 8, 4) == 0                         # one chunk: no copies
+    assert CL.ring_reset_copies_reach(568, 48, 1, 4) == 1 + 12                  # bounded READ_CHUNK, DSREP 1
