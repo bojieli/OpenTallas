@@ -340,6 +340,32 @@ Tap, endcap and filler cells never count. The kit-level raise to 517k (`--native
 - QC, NEAR: sle/slw_st_b_v1/_v2 (354-380k), sle/slw_hc0-hc2 (353-387k). Inside the budget; the four that routed took 9-10 h and missed setup by 146-281 ps, which is R-RTL / R-CLOCK work. If st_a is cut, cut st_b the same way in the same event.
 - KV, split needed: kv3_pv family, 10 plan types (pv, v1-v8, v12; 20 cores each). Measured 423-724k movable from 281-445k synthesized soft logic; 16 of 17 runs failed FF hold after 3-5 h of CTS. pv and v8 2 ways, the rest 3 ways, or harden the soft logic between the 20 cores into cores. kv3_hub_Wo / kv3_hub_Eo (464k / 407k) 2 ways.
 - HBM (parked): q_su00 757k, q_su00 pv1 627k, q_su20 pv1 633k, q_su11/pv1 446-468k, q_su31/pv1 393-428k, q_su20 413k, q_su30 396-440k, q_b002/pv1 445-778k, q_b012 762k, q_spu0 407k. The approved pEv12 split (su00 3 ways, others 2) matches R-CAP-3.
+
+### R-CAP dsdv application (HARD-S81-DSDV-1, 2026-11-13 13:08 PST): one big engine per type means harden the engine
+
+Added by HARD-S81-DSDV-1 at COORD's request; the R-CAP rule text above is unchanged. Event branch `claude/hard-s81-dsdv-1-1113` @ acac09abb5 (off origin/main 0a4b432de8), package `events/s81_xs4core_1113/`.
+
+**The case.** The 16 S81 `dsdv_slice_*_C` types measure 436k to 1.43M movable cells. A hierarchical count of the bound c1x t3 (326k synthesized) shows one engine, the x streamer `ot_s81sl_xs4`, with 173k cells and all 37 ROM/SRAM macros; the ring stop has 51k; everything else is about 100k. A lane-group cut (R-CAP-3 point 2) cannot reach 250k, because whichever part holds the engine keeps 173k plus the macros. So point 3 applies.
+
+**How to tell which point applies (any die).** Count cells per leaf of the bound type before choosing the cut. If one leaf holds more than half of the 250k budget, or holds most of the macros, harden that leaf (point 3). Cut at lane groups (point 2) only when no single leaf is that big.
+
+**What was done.**
+1. `ot_s81sl_xs4` is ONE hard core shared by all 16 types (projection about 207k movable; measured count follows when its kit places). Outline 648.0 x 518.4, one pin face (M5, 4,365 pins), obstruction up to M5 so the parent keeps M6/M7 over it. RTL unchanged, 0 cycles: inputs land in capture flops, outputs leave flops.
+2. The two members that used an older engine (iq, kv512) switch to the shared one. Its extra input edge is taken out of the relay line that follows it, so their neighbours see no cycle change.
+3. The parent keeps outline and pins and projects about 253k (from 436-468k).
+4. The whole family moves in one plan event (R-CAP-3 point 4), with a hand re-layout on one template, because no free site for the core existed in 15 of 16 rows.
+
+**R-CAP-2 note: a macro-bound core is sized by its pin channels, not by utilization.** xs4 has 115.8k um2 of macros and about 31k um2 of cells, 0.14 of its free area, below the 0.30-0.50 band. The band assumes a cell-bound core. Here every SRAM face carries about 410 M4 pins under an M5 cap, so each 4-stack face needs a channel of 48 um or more, and each column is split around a macro-free centre band. Sizing rule used: channels first, then check that utilization is not above 0.55. State the reason in the kit spec (`fill_reason.pin_bound`).
+
+**Lessons for the next family.**
+- Find the fixed pin bars before placing anything. In all 16 types the ring bars sit at y 6-487 on the W and E faces, also in the 7 types whose cores had been mirrored to the top. The ring stop therefore always lives in the bottom band, and the engine goes next to it with its pin face on that band.
+- A core with pins on both M3 and M5 cannot be mirrored in x: the M3 plan tracks (offset 0.009, pitch 0.036) are not mirror-symmetric, the M5 tracks are. Such cores take R0 or MX only. Cores with M5 pins only may take all four orientations.
+- Moving cores changes station counts. The delta must price them in the lane table itself (`reach_fix.sync_fixed_cycles`), or the strict bind refuses the plan. Here: 55 lanes, +85 lane cycles.
+- Dissolving the engine's wrapper exposes literal ties on the sibling leaf (448 bits here). Declare them in the as-built map.
+- The landing sidecar carries the reset collector nodes. Publish the new reset tree to the plan and the sidecar, and install the sidecar in the bind tree.
+
+**Gates on plan fb7f60293915.** G0 74 errors, the same 74 as the base plan (0 added). G0C 0 errors on the 16 types. R-STREET check 0 violations on the 16 types. Strict bind rc 0 (0 errors, 0 tied, 0 unbound). Lane latency as-bound 873/873 PASS. Not yet: xs4 kit sign-off (in synthesis), place proofs of c1x t3 and c1x t8 (running), token re-baseline.
+
 ## R-FLOW (RULES-FLOW-1): ORFS flow settings for slew, DRV and early buffering
 Written 2026-11-13 by RULES-FLOW-1 (v3 09:53 PST; FLOW-FIN-2 collected part of the builds). Status: rules final. Code on branch `claude/rules-flow-1-1113` `claude/rules-flow-1-1113` @ 06a9b2cf28 (3 commits on main 7d5f821bd2), pushed, READY posted. Every number below is from a private ot-run build through route, finish and sign-off, old and new settings on the same synthesized netlist (epyc7 `/srv/opentallas-scratch2/claude/rules-flow-1/ab/`), or from the fleet logs where a source is named.
 
