@@ -6573,8 +6573,67 @@
        "enum": [
         "htree",
         "fishbone",
-        "mesh"
+        "mesh",
+        "link_htree"
        ]
+      },
+      "region_map": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "path",
+        "sha256"
+       ],
+       "properties": {
+        "path": {
+         "type": "string",
+         "minLength": 1
+        },
+        "sha256": {
+         "type": "string",
+         "pattern": "^[0-9a-f]{16,64}$"
+        },
+        "regions": {
+         "type": "integer",
+         "minimum": 1
+        }
+       }
+      },
+      "feed": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "path",
+        "sha256",
+        "root"
+       ],
+       "properties": {
+        "path": {
+         "type": "string",
+         "minLength": 1
+        },
+        "sha256": {
+         "type": "string",
+         "pattern": "^[0-9a-f]{16,64}$"
+        },
+        "root": {
+         "type": "string",
+         "minLength": 1
+        },
+        "form": {
+         "enum": [
+          "fwd"
+         ]
+        },
+        "frame": {
+         "enum": [
+          "wall_aligned"
+         ]
+        }
+       }
+      },
+      "note": {
+       "type": "string"
       },
       "die_root_um": {
        "type": "array",
