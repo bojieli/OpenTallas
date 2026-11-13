@@ -140,6 +140,42 @@ def annotate_kit(b):
             L['internal_kit_source_cycles']=n
 
 
+def annotate_kit_dest(b):
+    """QC-SU-LPAD-1 11-13: price KIT-built DESTINATION core pin-face chains once (the IN-side twin of annotate_kit).
+
+    kit_istations.core_pin_stations (SUL0-PINFACE-1) builds an IN bus's internal_stations entries that name a hard
+    'core' as their OWN chains u_ist_<bus>__<cores>_<g>_<j> between the face register and the cores.  Unlike plain IN
+    stations (packed_input_delay converts the receiver u_lpad into them), those chains are NOT absorbed from the
+    receiver pad: a bind that also lands them as u_lpad_<bus> D gets them twice (QC su_l0/su_l1 x_su_c_i / _p1_i /
+    flt_su_c_i: delivered = table + D, LANE_ASBUILT +2/+3/+4, and kit_istations refuses "still read outside the core
+    chains").  Sets L['internal_kit_dest_core_cycles'] = the core chain depth on every receiving lane whose plan prices
+    the chain (lane fixed_cycles >= depth); lane_pad() subtracts it and the bound-stage count adds it back, so the
+    bound receiver carries no pad for them and the kit chain lands the lane at its table cycles.  Not a switch: the
+    pre-fix bind cannot be kitted on such a bus at all."""
+    lanes={x['id']:x for x in b.plan.get('lanes',[])}
+    for part,p in b.parts.items():
+        t=b.types.get(p.get('type'),{})
+        rows=[e for e in t.get('internal_stations',[]) if e.get('core') and str(e.get('conn','')).startswith('bus:')]
+        if not rows:continue
+        ins={x['name'] for x in t.get('buses',[]) if x.get('dir')=='in'}
+        for L in getattr(b,'in_bus',{}).get(part,[]):
+            name=L.get('iname')
+            if name not in ins or not L.get('lane') or L.get('spine'):continue
+            n=max((len(e['regs_um']) for e in rows if e['conn']=='bus:'+name),default=0)
+            if not n:continue
+            raw=lanes.get(L.get('lane'),{})
+            if int(raw.get('fixed_cycles',0))<n:continue          # chain not priced as lane cycles: pad unchanged
+            base=(2+sum(h['stations'] for h in L.get('ft',[]))+int(L.get('clock_landing_cycles',0))
+                  +int(L.get('internal_source_cycles',0))+int(L.get('internal_kit_source_cycles',0)))
+            if int(L.get('cycles',0))<base+n:
+                msg=(f'KIT_ISTATION_LATENCY {L.get("lane")}: {part}.{name} has a {n}-stage kit core pin-face chain but '
+                     f'the latency table prices {L.get("cycles")} < {base}+{n} cycles (refresh the latency table)')
+                errs=getattr(b,'errors',None)
+                if errs is None:raise ValueError(msg)
+                errs.append(msg);continue
+            L['internal_kit_dest_core_cycles']=n
+
+
 def materialize(b,tn,file):
     typ=b.types[tn];original=typ.get('split_of',tn)
     selected=set(b.ab.get('internal_stations_types',[]))

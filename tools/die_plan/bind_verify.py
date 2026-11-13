@@ -544,9 +544,12 @@ class KitSourceCredit:
     u_bout_<o> on the transport chain that drives net (forwarded buses cross more than one); 0 when cuts is empty
     (switch off: the receiver pad holds them, nothing is credited)."""
 
-    def __init__(self, G, cuts):
+    def __init__(self, G, cuts, dest_cuts=None):
         self.G = G
         want = {f"{sv_id(p)}.u_bout_{sv_id(b)}": (n, lane) for (p, b), (n, lane) in cuts.items()}
+        # QC-SU-LPAD-1: receiver core pin-face chains the bind left to the receiver kit (bind_latency dest_core_cut),
+        # credited on the receiver face u_bin_<i> of the sink's transport chain
+        want.update({f"{sv_id(p)}.u_bin_{sv_id(b)}": (n, lane) for (p, b), (n, lane) in (dest_cuts or {}).items()})
         self.cells = {}                     # ci -> cut
         self.lane_of = {}                   # ci -> lane
         found = set()
@@ -613,6 +616,15 @@ def kit_source_cuts(out, raw):
     import lane_asbuilt_latency as LAL
     rows, module_of, ptype_of, types, _land, _pm = LAL.load_bind_dir(out, raw)
     return LAL.source_cuts(raw, rows, module_of, ptype_of, types, sel)
+
+
+def kit_dest_cuts(out):
+    """QC-SU-LPAD-1: {(receiver partition, bus_in): (n, lane)} of the bind_latency rows with dest_core_cut"""
+    f = Path(out) / "bind_latency.json"
+    if not f.is_file():
+        return {}
+    return {(r["dst"], r["bus_in"]): (int(r["dest_core_cut"]), r.get("lane"))
+            for r in json.loads(f.read_text()).get("buses", []) if r.get("dest_core_cut")}
 
 
 def native_lib_stubs(lib, vdir):
@@ -766,12 +778,14 @@ def cmd_verify(a):
     seen = set()
     # VERIFY-PRICING-1: kit source stations priced in the lane but inserted later by the source kit (switch on only)
     kcuts = kit_source_cuts(out, raw)
-    kit = KitSourceCredit(G, kcuts)
+    dcuts = kit_dest_cuts(out)
+    kit = KitSourceCredit(G, kcuts, dcuts)
     kstat = dict(pricing=raw["asbuilt"].get("kit_source_station_pricing", False), lanes_priced=len(kcuts),
                  stations_priced=sum(n for n, _ in kcuts.values()), faces_unmatched=kit.unmatched[:50],
                  n_faces_unmatched=len(kit.unmatched), sinks=0, raw_mismatched_credited_match=0,
                  raw_matched_credited_mismatch=0, mismatched_both=0, matched_both=0, by_lane={},
-                 cut_by_lane={lane: n for n, lane in kcuts.values()})
+                 cut_by_lane={lane: n for n, lane in kcuts.values()},
+                 dest_core_lanes=len(dcuts), dest_core_stations=sum(n for n, _ in dcuts.values()))
     for ci, c in enumerate(F.cells):
         if G.kind[ci] in ("transport", "reducer", "source", "glue"):
             continue
