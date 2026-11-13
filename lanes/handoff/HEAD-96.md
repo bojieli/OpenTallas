@@ -28,3 +28,11 @@ NOT mine: HEAD-95 routes (lep0N v3, hd_mesh M1, SP3n2).
 - rp18m = rp18r1 sha 220334aa9b30ef3d: check 0, prepare_plan 0 failures, gen 26/26, G0 0 NEW, G0C 0 NEW err, reset 0 NEW, street = rp17.
 - Branch claude/head-96-rp18fix-1112@eb8a6d68eb pushed; READY posted (asks KIT-OPS-1 to also re-kit wshim_tx + turn_a: 4 rows had wrong depth from rawfix, restored).
 - DONE, stopped.
+
+## r2 fix job (COORD, 11-13): reader raw export pair + hd_mesh M1 LEC hints
+- (A) KIT-OPS-1: hd_spn rst_start_raw_42 on u_rrl_147 = reader raw export pair rr_t58_reader_raw (bd_i stage 5). Tool r2 (branch claude/head-96-rp18r2-1112 off eb8a6d68eb, wt/head-96): reader_pairs() counts them occupied, check flags. rp18n = fix(rp17, rp18j): only raw_42 -> u_rrl_118/rr_t60 d7. check rp18m 1 bad, rp18n 0.
+- (B) COORD: hd_mesh M1 LEC NOT EQ 3318 = stale wdata==a_in hints (RBL0) on an RBL1 kit; proven fix = main l48hp1_mesh_hints/lec_hints_rbl1.json.gz (HEAD-92, a9525b39). head-96/mesh_hints.py -> rp18p (= rp18n + hd_mesh.lec_hints a9525b39, 1106 rows). rp18p = rp18r2 candidate, sha cda1ecf604eb.
+- LEC proof: epyc9 docker h96-mesh-m1-lec on a copy of VISLAYOUT3 kit_mesh_m1 (netlist 4490e862 unchanged), dir epyc9 /srv/opentallas-scratch2/claude/head-96/mesh_m1_lec. Started 2026-11-13 00:30.
+- hd_host_w spread3 NOT EQ (298) is a DIFFERENT signature (r_ce_in/w_ce_in, cones matched) -> not in r2, open item.
+- Gates: head-96/gates.sh rp18p; RTL export replay head-96/rtlx.py (prepare_plan all 26 + gen --trial + alias/private patch per export type).
+- 2026-11-13 00:39 READY r2 posted (branch 46bb7dfc34, plan rp18p cda1ecf604eb), verified on origin. Remaining: one-line RESULT when epyc9 h96-mesh-m1-lec reports (lec/lec.json); NOT EQ -> hints as r3. Then stop.
