@@ -191,6 +191,7 @@ def model(plan_path, side, out, velocity):
                  crossings=len(table_rows), ports=table_rows)
     table = CAB.annotate_table(table, b, root_settle_cycles=ca0.get("root_settle_cycles", 64),
                                strap_form=True)
+    dump(out / "pipeline_stage_cycles.json", price_existing_pipeline_stages(table, raw))
     dump(out / "sidecar_model.json", table)
     dump(out / "status.json", dict(verdict="MODEL_PASS", physical_qualified=False,
                                     summary=summ, bind_check=verified,
@@ -198,6 +199,32 @@ def model(plan_path, side, out, velocity):
                                     regions_after=len(boxes),
                                     removed_fixed_relay_roles=sum(r["role"] == "relay" for r in ca0["parts"].values())))
     return raw, table, scored
+
+
+def price_existing_pipeline_stages(table, raw):
+    """Preserve declared FREG/QREG hardware cycles while replanning raw rings."""
+    import clock_landings as CL
+    types = {p["name"]: p["type"] for p in raw["partitions"]}
+    ports = {p["id"]: p for p in raw["ports"]}
+    changes = []
+    for row in table["ports"]:
+        pid = row["port"]
+        p = ports[pid]
+        tn, bus = types[p["dst"]["part"]], p["dst"]["bus"]
+        c = table["count_aligned"]["ports"][pid]
+        wr = CL.ring_write_reg(raw, tn, bus)
+        freg = bool(wr and wr.get("freg"))
+        qreg = CL.output_qreg(raw, tn, bus)
+        extra = int(freg) + int(qreg)
+        if freg: c["freg"] = 1
+        if qreg:
+            c["output_qreg"] = 1
+            c["K"] += 1
+        if extra:
+            c["sched_lat"] += extra
+            row["added_cycles"] += extra
+            changes.append(dict(port=pid, freg=int(freg), output_qreg=int(qreg), added_cycles=extra))
+    return changes
 
 
 def prepare_native_form(raw, side, scored, out):
@@ -262,6 +289,7 @@ def bind_native_measurement(raw, clock_table, cap_path, out):
         if role["role"] != "origin" or role["region"] != part:
             raise ValueError(f"measured independent origin lost for {part}: {role}")
     ca["frame_clock_regions"] = groups
+    dump(out / "native_pipeline_stage_cycles.json", price_existing_pipeline_stages(table, raw))
     dump(out / "sidecar_native_measured.json", table)
     dump(out / "native_measured_bind_check.json", check)
     return table
