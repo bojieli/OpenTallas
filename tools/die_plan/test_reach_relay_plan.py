@@ -122,11 +122,11 @@ def test_built_trunk_rewrites_provider_and_seats_relays_on_built_legs_of_the_sou
     assert rw["nodes"] == 2 and pv["nodes"][0]["clock_node"] == "c0" and pv["nodes"][0]["clock_region"] == "R0"
     regions = {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}
     rej = set()
-    rows = RP.start_relays(P, pv, regions, (segs, meta), rej)
+    rows = RP.start_relays(P, pv, regions, (segs, meta, RP.by_region(segs, meta)), rej)
     rl = [n for n in pv["nodes"] if n.get("kind") == "relay"][0]
     assert rows[0]["relays"] == 1 and rl["clock_node_xy_um"][1] == 3.0 and rl["site_net"] == "n0"
     assert rl["clock_node"] == "c0" and rl["clock_region"] == "R0" and not SP.check(P, pv)["errors"]
-    assert rej and all(r[2] == "R9" for r in rej)
+    assert not rej                              # placed on R0 (the nearer R9 leg is never offered)
 
 
 def test_built_trunk_guards():
@@ -142,11 +142,19 @@ def test_built_trunk_guards():
     assert segs == []                           # detoured legs carry no relay
     RP.rewrite_provider(pv, st)
     with pytest.raises(RP.RelayError):
-        RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta), set())
-    pv = _pv()                                  # source region mismatch everywhere: no site
+        RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta, RP.by_region(segs, meta)), set())
+    pv = _pv()                                  # only the FED stage's region has a leg: destination-side relay
     st, segs, meta = RP.load_trunks(_trunks(region_b0="R5"))
+    RP.rewrite_provider(pv, st)
+    RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta, RP.by_region(segs, meta)), set())
+    rl = [n for n in pv["nodes"] if n.get("kind") == "relay"][0]
+    assert rl["clock_side"] == "dst" and rl["clock_node"] == "c1" and rl["clock_region"] == "R0" and rl["flops"] == 4
+    pv = _pv()                                  # a third region only: rejected, no site
+    tk = _trunks(region_b0="R5")
+    tk["stages"]["b1"]["region"] = "R6"
+    st, segs, meta = RP.load_trunks(tk)
     RP.rewrite_provider(pv, st)
     rej = set()
     with pytest.raises(RP.RelayError):
-        RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta), rej)
-    assert rej
+        RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta, RP.by_region(segs, meta)), rej)
+    assert rej and all(r[2] == "R0" for r in rej)
