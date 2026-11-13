@@ -8356,3 +8356,26 @@ FAILED [AUTOPILOT 777dcc1bdd0e] 2026-11-13 11:35:11 PST AUTOPILOT -> KIT-WAVE-3:
   - Clock choice is pending the T3a/T3b GRT/STA gate; s29reg fails the gate (TT -151.32 ps, c_* taps late).
   - ctl1 chain on the CTLCAP stem is running.
   - On track for s29 READY before 11-15 04:00.
+- 2026-11-13 11:54 PST RESULT [QC-CLKGATE-1 -> COORD; cc DIE-QC-100, HOLD-TAP-1] SECOND QC REGIONAL CHAIN on s28 736058c458ee (ADVISORY, DO_NOT_COUNT, plan not changed). Ran on epyc7 via ot-run, 10:07-11:53 PST. Data: epyc7 /srv/opentallas-scratch2/claude/qc-clkgate-1/s28dme (CHAIN.log, kit/, reg/, gate/gate.log). Scripts: qcreg2.sh and gate2.sh in the same directory.
+  FORM. HOLD-TAP-1's qcreg form: 313 plain-seam regions, link feed (maps copied, regions 07b15ab2c734, feed 7211151107c9), link_htree, leaf 200, rep 250, inv2, region_stub. Added the DIE-QC-21 trial14 region DME form from results/die_qc21_1028/kit21.sh on main: --region-dme delay on the 192 c_* and 12 su_c regions; snake legs; early core-tap delivery (early 1.0 / FF 0.87, merge mode on c_*); the inv2 stage calibration inv2_stage_cal_trial13b.json; dme_feed_centroid=1. Tools: main 4a5e3dcf7e plus the s28 overlay (the same tree as before).
+  Crossing gate: landed_phase_ocv (AOCV table, droop) -> count_align_plan (clock start tree, width-clean, 300-chip MC; margin >= 100 ps on both sides, T/8 aperture included) -> count_align_bind (500-sample start-up simulation) -> die_sta_related --count-align BIND. The +-T/2 landed window is not used as the gate.
+  VERDICT: FAIL, but much closer. Crossings pass at >= 100 ps only with DEPTH-16 rings on 72 of them; the START tree fails; intra-region hold still fails. Intra TT setup is fixed.
+  (1) BUILD. Kit 53 min, DME on 204 regions. Combo GRT is clean: overflow 0/0/0 at TT and FF, 650 m of wire, 17.3 GB.
+  (2) CROSSING GATE (2,525 landed crossings; the 468 plain seams are timed as related pairs). Three count_align_plan variants:
+   A (DEPTH <= 8, clock start tree, the gate21 form): 72 FAIL. Their window is wider than DEPTH 8 because of the long unshared feed path: up to 7.4 ns unshared, about 0.4 ns of wander + OCV each side. The other 2,921 split DEPTH 4 = 1,762 / DEPTH 8 = 1,159.
+   B (data start tree): 166 FAIL.
+   C (DEPTH <= 16, WHAT-IF): 0 FAIL, 72 DEPTH-16 rings; MC 0 violations.
+   Bound on C, die_sta_related --count-align: every crossing passes the margin, worst lo 104.6 / hi 106.2 TT and 104.9 / 110.2 FF, 0 slot_read and 0 guard fails. But START-SKEW fails on 276 of 637 start-tree edges, so the CA verdict is FAIL (other_fail 744 at each corner). The stock tree (HOLD-TAP-1 run, same gate) gave 120 DEPTH-16 rings and 424 of 638 start-skew fails.
+   This contradicts the locality v3 estimate (0 FAIL, 92 DEPTH-8): the routed unshared delay on non-tree-adjacent neighbours (for example sl_W4_su_c -> c_W4_bn_10, d 7.1 ns) is what drives DEPTH. Short feed paths between neighbouring regions are the lever, not K.
+  (3) DIE STA related pairs (declared core insertion). TT intra setup is +257.68, up from -151.32 on the stock tree: early core-tap delivery fixed setup. TT seam setup +532.41. FF hold, all-pair diagnostic: intra -491.85 (stock -728.33), seam -227.09 (stock -449.18). Kit contract: 108,746 violations; intra needs 492 against a window of 130, seam 227 against 110. Hold is formally BLOCKED(kits), but it misses +10 by about 500 ps.
+  WORST PAIRS BY CAUSE:
+   (a) c_* GLUE NOT BALANCED by the DME. Glue-tap spread per c_* region is p50 206 / p90 289 / max 446 TT (stock 280 / 334 / 370). Stage spread inside one region is still 4-12; in trial14 it was 0, and the c_* spread was 50.8. In the worst region, c_E2_bf_10, the LATE taps are the ones with FEWER stages (194-196 stages: 9.56-9.58 ns; 198 stages: 9.14 ns). So the snake and wire legs the DME adds come out about 430 ps slower than its model. The 10-28 stage calibration (fit on trial13b) does not transfer to this plan and map. It needs a refit on this run's routed legs (snake_meas.py and fit.py are in results/die_qc21_1028), then one rebuild.
+   (b) CORE TAPS. They now arrive 530 ps before glue (p50; FF 465; the stock tree was +53 late). The worst pair is c_E2_bf_10 clk_c1 -> clk at 991 ps damage, which is (a) plus the core's declared insertion. Whether 530 is the right early amount depends on the declared core insertion; it is not verified because there are 0 signed core views.
+   (c) su_c regions: spread 172 p50 / 201 max (stock 146 / 176), so the DME snakes made su_c worse.
+   (d) SEAM: io_serdes_2 <-> c_W5_bf_01, 192 TT / 227 FF damage. This is the one plain-seam pair that is also a c_* region.
+   Other regions (109 sl_* and coll_*): p50 66 / max 150, unchanged.
+  NEXT (one rebuild each, my recommendation):
+   1. Refit the inv2 stage and snake calibration on s28dme's routed legs, then rebuild the DME (c_* and su_c) with it.
+   2. Feed: give every landed pair with unshared > about 3 ns a shorter feed path, or accept DEPTH 16 on 72 rings (an owner or COORD call; the window is pre-approved but the RTL ring depth limit is not mine to set).
+   3. START tree: 276 start-skew edges. Use count_align_plan --start-lift / --start-retime-up, or route START along the feed tree. Not tried.
+  Plan not changed. Nothing is left running.
