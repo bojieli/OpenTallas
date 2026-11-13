@@ -464,7 +464,9 @@ module ot_meso_ring #(
         // holds current tc after two startup edges; no data or ready cycle moves.
         // Ring training discards unsynchronised startup slots. The root tc drives
         // one group per WCC_GROUP chunks instead of every chunk.
-`ifdef OT_MESO_WCC_GROUP
+`ifdef OT_MESO_WCC_GROUP16
+        localparam int WCC_GROUP = 16; // bare define accepted by die-plan generators
+`elsif OT_MESO_WCC_GROUP
         localparam int WCC_GROUP = `OT_MESO_WCC_GROUP;
 `else
         localparam int WCC_GROUP = 0;
