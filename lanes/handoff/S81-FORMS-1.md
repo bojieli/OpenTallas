@@ -30,3 +30,19 @@
 2. Plan stage: core_place face-clear on the listed types (+ station re-route); private ot-run builds to place for t28/t75/c1x t3;
    view renders; route where possible.
 3. READY: event branch (plan files only) + tool branch separately; adopted after the freeze (11-15 04:00).
+
+## Update ~04:2x PST
+- FINDING posted 03:42 (on origin): street_rule.outline_rule counts only CORE face pins (and drops type-window pins), so the type
+  I/O pin bar is never street demand -> the GEOM-VIS-12 class is invisible to the street tool.
+- Method that works (no tool change): street_rule.py legalize with --set band_file=BANDS.json, BANDS = pinface_bands.py output
+  ({type: [[face, lo, hi, CLEAR]]} from gen_phys.type_pins spans, merge 43.2, min 16 pins), --set add_regs=1 --set attempts=6.
+  Band-only variant (core-core streets neutralised: street_min_um=4.32 pin_pitch_um=0.0001 wall_min_um=4.32), CLEAR 43.2:
+  t28 APPLIED 0 growth, 7 moved, +4 station regs, rs p99 5.39->5.00; t75 APPLIED 0 growth, 3 moved, +0 regs, rs 3.43->3.18.
+  Full street rule + bands (srbands2): t28 +7.7% H, 27 regs; t75 +4.2% W, 11 regs; c1x t3 0 growth, 3 regs, clean.
+  No die re-pack tool exists for grown types -> prefer the band-only form. c3x t1 clean with bands at 0 growth.
+- Family run fam43B (all 89 types, band-only, 43.2) on epyc7 w/fam43B.
+- Private build route: copy wave spec (intel2 ~/coord/autopilot/kit_wave/s81_<item>_*/aN/spec.json), point plan/work/kit_rtl.bind_out
+  at the candidate, run kit_wave.py run-item with a private AP_DIR. Station regs added => needs its own strict bind
+  (pattern events/s81_ready12bA_1112/run_r12bA_dst.sh; seed OUT from kit-ops-1/s81_r12bA/out_main_7073a6b4a5_b) and
+  street_rule.py sidecar for the landed sidecar.
+- CLEAR is provisional (43.2) until R-STREET posts; R-CAP pending too.
