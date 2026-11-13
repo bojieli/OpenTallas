@@ -33,3 +33,5 @@
 - Source safety: E7 wt/qc-clkgate-1 orphaned gitdir sourceintact; .keep set and tools345MB+clock scripts180KB preserved under qc-clkgate-1/source_preserve_1113 (no gitrepair).
 
 - 2026-11-13 14:47 PST CODEX: hd_host_e@6 source-staging achievedPLACE but actualimage remains historicalsameform ISSUES; exactroutehold set, noadmittednewroute. turn_a@5GOOD andwshim_rx@4ISSUES-ACCEPT actualimages byGEOM. hd_ctl_n currentacceptedISSUES-ACCEPT, oldjob992b8a45f39a DONE-CRASH DRT0255 M8RA0missing; currentfrozengenerator verifiedwritesRA0, normalone-shot staleepoch rearmfired14:45:32. Exactctl_n fresh-attempt imageholdbeforeanyroute; watcherkit-ops-1/codex_rearm_ctlra0_1113.py/log ended, originalfailedrecordkept.
+
+- CODEX15:10: hd_ctl_n@2 launched14:55:16 under approved RA0 class with exact fresh-image route hold. t7@11 actual image later found clk_t7 inside u_vsw macro; exact hold set, but route ea177cfcbe66 was already RUNNING on E9 (ap-ea177cfcbe66-a1). No manual kill/state edit; exact negative verdict posted by GEOM for normal visual-reject handling.
