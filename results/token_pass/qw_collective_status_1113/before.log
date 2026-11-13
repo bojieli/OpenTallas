@@ -1,0 +1,10 @@
+STATUS_MISMATCH cyc=32 expected=1 got=0 stland=0 stlast=1
+STATUS_MISMATCH cyc=39 expected=0 got=1 stland=1 stlast=0
+STATUS_MISMATCH cyc=41 expected=1 got=0 stland=0 stlast=1
+STATUS_MISMATCH cyc=48 expected=0 got=1 stland=0 stlast=0
+STATUS_MISMATCH cyc=50 expected=1 got=0 stland=0 stlast=1
+PRODUCER_STATUS FAIL expected=5 got=4 errors=5
+- /srv/opentallas-scratch2/claude/tok-verify-2/qw_producer_status/tb_status.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48ns; walltime 0.044 s; speed 1.086 us/s
+- Verilator: cpu 0.044 s on 1 threads; allocated 27 MB

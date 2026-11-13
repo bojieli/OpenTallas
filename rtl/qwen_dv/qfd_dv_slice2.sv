@@ -417,11 +417,15 @@ module qfd_dv_slice2 #(
     always @(posedge ck or negedge rst) if (!rst) tok_g <= 1'b0; else if (g_tok_v) tok_g <= 1'b1; else if (tok_v) tok_g <= 1'b0;
     wire any_fault = su_fault | vm_fault | stn_fault | sc_fault | stm_fault | port_fault | hd_fault;
     // MU-QW-AMIX: st[27:26] = user of the token on a tok_v edge (MU_NU > 1), else ar_rank[1:0] (MU_NU 1: always)
-    wire [1:0] st_ru = (MU_NU > 1 && (tok_v || g_tok_v)) ? (tsel ? g_user : tok_user) : ar_rank[1:0];
+    // ar_v describes the current registered return word.  Publish that word's
+    // metadata on its landing edge; the saved metadata remains sticky in idle.
+    wire [2:0] st_ar_rank = ar_v ? ar_q[515:513] : ar_rank;
+    wire st_ar_last = ar_v ? ar_q[512] : ar_last;
+    wire [1:0] st_ru = (MU_NU > 1 && (tok_v || g_tok_v)) ? (tsel ? g_user : tok_user) : st_ar_rank[1:0];
     always @(posedge ck or negedge rst)
         if (!rst) st <= 107'd0;
         else st <= {ar_v, tsel ? g_tok_val : tok_v ? (tok_own ? tok_val : 32'd0) : tok_own_val, 4'd0 /* sid */, any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
-                    su_idle, sc_busy, su_prog, su_rows, ar_rank[2], st_ru, ar_last, tok_v || g_tok_v,
+                    su_idle, sc_busy, su_prog, su_rows, st_ar_rank[2], st_ru, st_ar_last, tok_v || g_tok_v,
                     tsel ? g_tok_idx : tok_idx} | (107'(sid_q) << 70);
     // status OR chain toward W5 (registered; the chain end's ag_up_i is the zero identity)
     always @(posedge ck or negedge rst)

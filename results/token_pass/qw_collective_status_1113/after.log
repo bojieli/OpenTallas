@@ -1,0 +1,5 @@
+PRODUCER_STATUS PASS expected=5 got=5 errors=0 added_cycles=0
+- /srv/opentallas-scratch2/claude/tok-verify-2/qw_producer_status/tb_status.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48ns; walltime 0.044 s; speed 1.087 us/s
+- Verilator: cpu 0.044 s on 1 threads; allocated 27 MB

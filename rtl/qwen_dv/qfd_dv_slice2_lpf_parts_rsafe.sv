@@ -2672,9 +2672,11 @@ always @(posedge ck or negedge sr_reset[311])
     always @(posedge ck or negedge sr_reset[312]) if (!sr_reset[312]) tok_g <= 1'b0; else if (g_tok_v) tok_g <= 1'b1; else if (tok_v) tok_g <= 1'b0;
     wire any_fault = su_fault | vm_fault | stn_fault | sc_fault | stm_fault | port_fault | hd_fault;
                                                                                                                  
-    wire [1:0] st_ru = (MU_NU > 1 && (tok_v || g_tok_v)) ? (tsel ? g_user : tok_user) : ar_rank[1:0];
+    wire [2:0] st_ar_rank = ar_v ? ar_q[515:513] : ar_rank;
+    wire st_ar_last = ar_v ? ar_q[512] : ar_last;
+    wire [1:0] st_ru = (MU_NU > 1 && (tok_v || g_tok_v)) ? (tsel ? g_user : tok_user) : st_ar_rank[1:0];
     assign st_n = {ar_v, tsel ? g_tok_val : tok_v ? (tok_own ? tok_val : 32'd0) : tok_own_val, 4'd0          , any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
-                    su_idle, sc_busy, su_prog, su_rows, ar_rank[2], st_ru, ar_last, tok_v || g_tok_v,
+                    su_idle, sc_busy, su_prog, su_rows, st_ar_rank[2], st_ru, st_ar_last, tok_v || g_tok_v,
                     tsel ? g_tok_idx : tok_idx} | (107'(sid_q) << 70);
                                                                                            
     assign ag_n = agu_q | {stn_busy, any_fault, su_fault, vm_fault, stn_fault, sc_fault, stm_fault, port_fault,
