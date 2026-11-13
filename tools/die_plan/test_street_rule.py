@@ -514,3 +514,158 @@ def test_face_anchor_cfg_rejects_bad():
     for bad in ({"grow": {"x": "N"}}, {"fixed_faces": ["Q"]}, {"origin_shift_um": [1]}, {"other": 1}):
         with pytest.raises(ValueError):
             SR.face_anchor_cfg(bad, "x")
+
+
+# ---------------------------------------------------------------------------------------------- R-STREET (11-13)
+def box(inst, x, y, w, h, movable=True, face_pins=None):
+    return dict(inst=inst, x=x, y=y, w=w, h=h, movable=movable, face_pins=face_pins or {})
+
+
+def test_face_windows_and_span_pins():
+    t = {"buses": [{"name": "a", "face": "S", "window_um": [0, 100], "width": 500, "kind": "data"}],
+         "ft_slots": [{"name": "ft0", "in_face": "N", "out_face": "S", "width": 200,
+                       "in_window_um": [10, 50], "out_window_um": [200, 300]}]}
+    w = SR.type_face_windows(t)
+    assert w["S"] == [(0.0, 100.0, 500, "a"), (200.0, 300.0, 200, "ft0_o")] and w["N"] == [(10.0, 50.0, 200, "ft0_i")]
+    assert SR.span_pins(w["S"], 0, 50) == 250 and SR.span_pins(w["S"], 50, 250) == 350 and SR.span_pins(w["S"], 100, 200) == 0
+
+
+def test_face_street_need_by_pins_and_ends():
+    W, H = 1440.0, 1200.0
+    wins = {"S": [(0.0, 1250.0, 6750, "s")]}                  # 5.4 pins / um (leaf t28 S face)
+    # one macro 300 um wide, both ends open: 1,620 pins / (37.5 x 2) = 21.6 -> the 43.2 minimum
+    v = SR.face_shadow_rule(W, H, [box("m", 400, 34.56, 300, 300)], wins, CFG)
+    assert len(v) == 1 and v[0]["kind"] == "face_street" and v[0]["need"] == 43.2 and v[0]["ends"] == 2
+    assert v[0]["pins"][0] == 1620 and v[0]["face"] == "S" and v[0]["free_spans"][0] == (0.0, 400.0)
+    assert SR.face_shadow_rule(W, H, [box("m", 400, 43.2, 300, 300)], wins, CFG) == []
+    # a 1,030-um wall of four macros (8.64 seams), W end closed by the corner: 5,562 pins one-ended -> the 129.6 cap
+    row = [box("a", 30, 34.56, 250, 100), box("b", 288.64, 34.56, 250, 100), box("c", 547.28, 34.56, 250, 100),
+           box("d", 805.92, 34.56, 254.08, 100)]
+    v = SR.face_shadow_rule(W, H, row, wins, CFG)
+    assert len(v) == 4 and {x["ends"] for x in v} == {1} and {x["need"] for x in v} == {129.6}
+    # the same wall with a 43.2 street in the middle and off the corner: two walls, two-ended each
+    row2 = [box("a", 43.2, 34.56, 250, 100), box("b", 301.84, 34.56, 250, 100), box("c", 595.04, 34.56, 250, 100),
+            box("d", 853.68, 34.56, 250, 100)]
+    v = SR.face_shadow_rule(W, H, row2, wins, CFG)
+    assert {x["ends"] for x in v} == {2} and {x["need"] for x in v} == {43.2} and {x["pins"][0] for x in v} == {2747}
+    # deeper than face_depth_um: not a wall of this face; a face without pins: no rule
+    assert SR.face_shadow_rule(W, H, [box("m", 400, 129.6, 300, 300)], wins, CFG) == []
+    assert SR.face_shadow_rule(W, H, [box("m", 400, 8.64, 300, 300)], {"S": [(0.0, 100.0, 10, "s")]}, CFG) == []
+    # E face: gap measured from the E outline
+    v = SR.face_shadow_rule(W, H, [box("m", W - 30 - 200, 100, 200, 400)], {"E": [(0.0, 600.0, 2600, "e")]}, CFG)
+    assert len(v) == 1 and v[0]["face"] == "E" and v[0]["gap"] == 30.0 and v[0]["pins"][0] == 1733
+
+
+def test_face_street_abutted():
+    W, H = 1000.0, 1000.0
+    wins = {"S": [(0.0, 1000.0, 4000, "s")]}
+    # abutted, the 800 pins of its span go straight into its own 800 S pins: legal
+    assert SR.face_shadow_rule(W, H, [box("m", 400, 0, 200, 300, face_pins={"S": 800})], wins, CFG) == []
+    # abutted over foreign pins: the pins move out of the span (free spans given) or the macro lifts to a street
+    v = SR.face_shadow_rule(W, H, [box("m", 400, 0, 200, 300)], wins, CFG)
+    assert len(v) == 1 and v[0]["abutted"] and v[0]["need"] == 43.2 and v[0]["free_spans"] == [(0.0, 400.0), (600.0, 1000.0)]
+    # an abutted macro closes the end of the wall next to it (20 um opening): one-ended, 800 pins -> 43.2 > 34.56
+    v = SR.face_shadow_rule(W, H, [box("m", 400, 0, 200, 300, face_pins={"S": 800}), box("n", 620, 34.56, 200, 100)],
+                            wins, CFG)
+    assert [x["a"] for x in v] == ["n"] and v[0]["ends"] == 1
+
+
+def test_face_needs_and_fixed_content():
+    cfg = dict(CFG, _fwins={"S": [(0.0, 1000.0, 4000, "s")]}, _xboxes=[box("sram", 700, 20, 100, 50, movable=False)])
+    cs = [core("m", 100, 34.56, 300, 300)]
+    V, cnt = SR.analyze(1000, 1000, cs, [[0]], cfg)
+    assert cnt.get("face_street") == 2                       # the hard core and the fixed LEF content macro
+    assert SR.face_needs(1000, 1000, cs, cfg) == {("m", "S"): 43.2}          # only the movable core is lifted
+    assert "face_street" not in SR.analyze(1000, 1000, cs, [[0]], dict(cfg, face_rule=0))[1]
+    assert set(SR.HARD) >= {"face_street", "station_alley"}
+
+
+def test_station_alley():
+    t = {"outline_um": [1000.0, 1000.0],
+         "hard_cores": [{"inst": "a", "origin_um": [100.0, 100.0], "outline_um": [200.0, 200.0]},
+                        {"inst": "b", "origin_um": [320.0, 100.0], "outline_um": [200.0, 200.0]},
+                        {"inst": "c", "origin_um": [600.0, 25.0], "outline_um": [200.0, 200.0]}],
+         "internal_stations": [{"regs_um": [[310.0, 150.0]], "bits": 64},      # in the 20-um a|b slot
+                               {"regs_um": [[310.0, 250.0]], "bits": 4},       # same slot: 68 bits in all
+                               {"regs_um": [[700.0, 12.0]], "bits": 32},       # under c, 25 um off the S outline
+                               {"regs_um": [[560.0, 150.0]], "bits": 100},     # 80-um b|c street: legal
+                               {"regs_um": [[150.0, 150.0]], "bits": 500},     # on core a: rides with it
+                               {"regs_um": [[900.0, 900.0]], "bits": 500}],    # open area
+         "ft_slots": [{"name": "f", "width": 8, "regs_um": [[310.0, 120.0]]}]}
+    V = SR.station_alleys(t, CFG)
+    got = {(v["a"], v["b"]): (v["pins"][0], v["gap"]) for v in V}
+    assert got == {("a", "b"): (76, 20.0), ("outline:S", "c"): (32, 25.0)}
+    pairs, faces = SR.alley_force(V)
+    assert pairs == {frozenset(("a", "b"))} and faces == {("c", "S")}
+    # legalize: the forced pair is a street although no core pin faces the slot
+    a = core("a", 100, 100, 200, 200)
+    b = core("b", 320, 100, 200, 200)
+    assert SR.pair_rule(a, b, CFG)["kind"] == "sliver"
+    assert SR.pair_rule(a, b, dict(CFG, _alley=pairs))["kind"] == "street"
+    # fewer than pinface_min bits: a single relay in a slot is legal
+    t["internal_stations"] = [{"regs_um": [[310.0, 150.0]], "bits": 8}]
+    t["ft_slots"] = []
+    assert SR.station_alleys(t, CFG) == []
+    assert SR.station_alleys(t, dict(CFG, face_rule=0)) == []
+
+
+def _face_plan(tmp_path):
+    """toy plan with the two cores 21.6 um above a 2,000-pin S bus window of the type (4 pins / um)."""
+    plan, P = _toy_plan(tmp_path, gap=86.4)
+    t = P["partition_types"]["toy"]
+    for h in t["hard_cores"]:
+        h["origin_um"][1] = 21.6
+    t["buses"] = [{"name": "s_i", "dir": "in", "width": 2000, "kind": "data", "face": "S", "window_um": [50.0, 550.0]}]
+    t["ft_slots"] = []
+    plan.write_text(json.dumps(P))
+    return plan, P
+
+
+def test_face_street_check_and_legalize(tmp_path):
+    plan, P = _face_plan(tmp_path)
+    ck = tmp_path / "ck.json"
+    SR.main(["check", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out", str(ck)])
+    row = json.loads(ck.read_text())["rows"][0]
+    assert row["counts"].get("face_street") == 2 and {v["a"] for v in row["face"]} == {"u_a", "u_b"}
+    assert json.loads(ck.read_text())["types_with_violations"] == 1
+    # face_rule=0 restores the STREET-RULE-1 result
+    SR.main(["check", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out", str(ck), "--set", "face_rule=0"])
+    assert "face_street" not in json.loads(ck.read_text())["rows"][0]["counts"]
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    rc = SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+                  "--event", str(ev), "--rs-halving", "off"])
+    assert rc == 0
+    row = json.loads(ev.read_text())["rows"][0]
+    assert row["applied"], row["reason"]
+    t = json.loads(out.read_text())["partition_types"]["toy"]
+    for h0, h1 in zip(P["partition_types"]["toy"]["hard_cores"], t["hard_cores"]):
+        assert h1["origin_um"][1] >= 43.2 - 1e-6                        # lifted to a street off the S pin face
+        assert h1["outline_um"] == h0["outline_um"]                     # never a core shape change
+        assert abs((h1["origin_um"][1] - h0["origin_um"][1]) / SR.G - round((h1["origin_um"][1] - h0["origin_um"][1]) / SR.G)) < 1e-6
+    assert t["outline_um"] == P["partition_types"]["toy"]["outline_um"]
+    SR.main(["check", str(out), "--die", "toy", "--repo", str(tmp_path), "--out", str(ck)])
+    assert json.loads(ck.read_text())["types_with_violations"] == 0
+
+
+def test_face_street_g0_error(tmp_path):
+    import check as CK
+    plan, P = _face_plan(tmp_path)
+    R = CK.Report()
+    summ = SR.g0_check(P, R, tmp_path, "error", repo=tmp_path)
+    assert summ["counts"]["face_street"] == 2 and summ["types_with_errors"] == 1
+    errs = [i for i in R.items if i["level"] == "ERROR" and i["check"] == "street_gap"]
+    assert len(errs) == 1 and "face_street" in errs[0]["msg"] and "face:S" in errs[0]["msg"]
+
+
+def test_legalize_refuses_core_on_content_macro(tmp_path):
+    plan, P = _face_plan(tmp_path)
+    t = P["partition_types"]["toy"]
+    # a fixed LEF content macro right above u_a: lifting u_a would land on it -> not applied, the base stays
+    t["contents"] = [{"inst": "u_mem", "module": "M", "lef": "m.lef", "origin_um": [60.48, 125.0],
+                      "outline_um": [100.0, 40.0], "orient": "R0"}]
+    plan.write_text(json.dumps(P))
+    out, ev = tmp_path / "new.json", tmp_path / "ev.json"
+    SR.main(["legalize", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out-plan", str(out),
+             "--event", str(ev), "--rs-halving", "off"])
+    row = json.loads(ev.read_text())["rows"][0]
+    assert not row["applied"] and "LEF content" in row["reason"]

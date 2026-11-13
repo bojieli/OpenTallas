@@ -2754,6 +2754,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         summ["clock_mesh"] = check_clock_mesh(R, clock_builds)
     if street_rule != "off" and plan_dir:
         # STREET-RULE-1 (COORD 11-12, opt-in): hard cores inside a type abut or face a street sized by the pins facing it
+        # R-STREET (RULES-STREET-1 11-13): + type pin-face streets (face_street) and station alleys (station_alley)
         import street_rule as SRULE
         summ["street_gap"] = SRULE.g0_check(raw, R, Path(plan_dir), street_rule)
     if core_shape_index:
@@ -2823,7 +2824,10 @@ def main(argv=None):
     ap.add_argument("--street-rule", choices=("warn", "error", "off"), default="off",
                     help="STREET-RULE-1 street-or-abut rule per type (street_rule.py): two hard cores (or a core and the "
                          "outline) abut or leave a street >= max(43.2, facing pins x 0.048 / (3 x 0.6)) um; warn = WARN, "
-                         "error = street/wall/outline_street are ERRORs; default off (reads every core pin table)")
+                         "error = street/wall/outline_street are ERRORs; default off (reads every core pin table).  "
+                         "R-STREET (RULEBOOK-1113): the same check also raises face_street (a macro behind the type's own "
+                         "pin face keeps max(43.2, shadowed pins / (37.5 x open ends)) um, cap 129.6) and station_alley "
+                         "(>= 16 station bits in a macro slot < 43.2 um); street_rule.py legalize is the auto-fix")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent

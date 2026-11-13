@@ -36,6 +36,23 @@ LEGALIZE (compactor / expander, keeps the relative order of everything):
   keeps its register count, no direct link / ft hop exceeds max(base, 405 um), every fixed core stays, and the
   structural EQ check (only coordinates / outline_um differ) passes.  Otherwise the row says why and the base stays.
 
+R-STREET (RULES-STREET-1 11-13, RULEBOOK-1113; cfg face_rule=1, default on): two more ERROR kinds on the same check
+and the same legalize.  K = street_layers x street_fill / pin_pitch = 37.5 tracks per um of street width.
+  FACE STREET (face_street): the TYPE's own face pins (bus / ft windows, uniform in the window) behind which a macro
+  sits.  Macros (hard cores and LEF contents) closer than face_depth_um (129.6) to a pin face form WALLS along that
+  face: neighbours whose lateral opening is < street_min_um merge.  n = type pins of the face inside the wall span;
+  ends = wall ends with a >= street_min_um opening (to the next wall, to an abutted macro, to the corner).  Every
+  wall member keeps        gap >= need = clamp(up4.32(n / (K x max(ends, 1))), 43.2, 129.6)        (ends = 0: 129.6)
+  off the face; a wall with < pinface_min (16) pins has no demand (the plan edge margin stays legal).  A macro ABUTTED
+  to the face (< 4.32) is legal only when the pins in its span go straight into it (pins <= its own face pins + 16);
+  otherwise its pins move out of the span or it lifts to a street.  1,620 shadowed pins fill 43.2 one-ended, 3,240
+  two-ended; a 1,030-um wall under a 5.4 pins/um face (t28 S) needs 77.76 two-ended.
+  STATION ALLEY (station_alley): planned station registers (ft bit sites / regs, internal stations) may sit only in
+  open area or in a street: a station point whose free width (macro to macro, or macro to outline, along x or y) is
+  < street_min_um is in an alley; >= pinface_min station bits in one alley is an ERROR.  Legalize widens that alley
+  to a street (the pair / the outline gap becomes a street requirement).
+  Legalize moves hard cores only (never a shape, never a LEF content macro: those stay residual with their reason).
+
 OUTPUT: new plan (types changed only), event JSON + TSV rows: per type outline before/after and growth %, cores
 moved, violations before/after, route_supply p99 before/after (route_supply on both plans), die-level growth estimate
 (partition push model: every instance of a grown type widens, partitions to its right / above are pushed keeping
@@ -64,10 +81,12 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 wall_pins=1500, wall_min_um=43.2, pinface_min=16, tap_street_um=17.28, anchor_um=21.6,
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
-                add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="", sliver_rule=0)
+                add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="", sliver_rule=0,
+                face_rule=1, face_depth_um=129.6, face_passes=2)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
-HARD = ("street", "wall", "outline_street")      # ERROR kinds; sliver / outline_sliver / tap_street are WARN
+# ERROR kinds; sliver / outline_sliver / tap_street are WARN.  face_street / station_alley: R-STREET (11-13)
+HARD = ("street", "wall", "outline_street", "face_street", "station_alley")
 # SLIVER RULE (COORD 11-12, VISLAYOUT3-S81-LEAF): --set sliver_rule=1 makes "no two facing core edges closer than one
 # street" a hard rule: a core-core gap in [abut_um, street) is a STREET violation even when (almost) no pins face it,
 # so check counts it as an error and legalize widens it to need_um (>= street_min_um).  Default 0 keeps the WARN class.
@@ -158,7 +177,9 @@ def pair_rule(a, b, cfg):
     nd = need_um(pa + pb, cfg)
     r.update(need=nd, kind="ok" if gap >= nd - EPS else "street")
     if r["kind"] == "street" and pa + pb < cfg["pinface_min"]:
-        if cfg.get("sliver_rule"):
+        if cfg.get("_alley") and frozenset((a["inst"], b["inst"])) in cfg["_alley"]:
+            r["alley"] = True         # R-STREET: stations sit in this slot (legalize): it becomes a street
+        elif cfg.get("sliver_rule"):
             r["sliver"] = True        # sliver rule on: a sub-street slot between facing cores is a street violation
         else:
             r["kind"] = "sliver"      # (almost) no pins into it: WARN only (tap-illegal / wasted area), never widened
@@ -226,8 +247,228 @@ def analyze(W, H, cores, clusters, cfg, windows=None):
         if best < cfg["tap_street_um"] - EPS:
             V.append(dict(kind="tap_street", a=cores[g[0]]["inst"], b="", gap=round(best, 2),
                           need=cfg["tap_street_um"], pins=[0, 0]))
+    if cfg.get("face_rule") and cfg.get("_fwins"):
+        V += face_shadow_rule(W, H, [_core_box(c) for c in cores] + list(cfg.get("_xboxes") or ()), cfg["_fwins"], cfg)
     cnt = collections.Counter(v["kind"] for v in V)
     return V, dict(cnt)
+
+
+# ------------------------------------------------------------------------------------------------ R-STREET (11-13)
+def type_face_windows(t):
+    """{face: [(lo, hi, pins, name)]}: the type's bus / ft pin windows with their pin counts (uniform in a window)."""
+    out = collections.defaultdict(list)
+    for b in t.get("buses") or []:
+        if isinstance(b, dict) and b.get("face") in OPP and isinstance(b.get("window_um"), list) and b.get("width"):
+            lo, hi = b["window_um"][:2]
+            out[b["face"]].append((float(lo), float(hi), int(b["width"]), str(b.get("name"))))
+    for f in t.get("ft_slots") or []:
+        for fk, wk, sfx in (("in_face", "in_window_um", "_i"), ("out_face", "out_window_um", "_o")):
+            if f.get(fk) in OPP and isinstance(f.get(wk), list) and f.get("width"):
+                lo, hi = f[wk][:2]
+                out[f[fk]].append((float(lo), float(hi), int(f["width"]), str(f.get("name")) + sfx))
+    return dict(out)
+
+
+def span_pins(wins, lo, hi):
+    """pins of the windows [(lo, hi, pins, name)] inside [lo, hi] (uniform density per window)."""
+    n = 0.0
+    for a, b, w, _ in wins:
+        o = min(b, hi) - max(a, lo)
+        if o > EPS:
+            n += w * min(1.0, o / max(b - a, 1e-9))
+    return int(round(n))
+
+
+def free_spans(wins_len, shadows, smin):
+    """[(lo, hi)] spans of a face (length wins_len) outside every macro shadow, >= smin long: where pins may move."""
+    out, x = [], 0.0
+    for lo, hi in sorted(shadows) + [(wins_len, wins_len)]:
+        if lo - x >= smin - EPS:
+            out.append((round(x, 2), round(lo, 2)))
+        x = max(x, hi)
+    return out
+
+
+def _core_box(c):
+    return dict(inst=c["inst"], x=c["x"], y=c["y"], w=c["w"], h=c["h"], movable=True,
+                face_pins={f: len(v) for f, v in (c.get("pins") or {}).items()})
+
+
+def extra_boxes(t):
+    """LEF content macros of the type that are not hard cores (SRAM / ROM / PHY parts): fixed obstacles."""
+    cores = {h["inst"] for h in t.get("hard_cores") or []}
+    out = []
+    for c in t.get("contents") or []:
+        ents = [c] if c.get("lef") else []
+        ents += [dict(p, inst=p.get("physical_inst")) for p in c.get("physical_parts") or []]
+        for e in ents:
+            if e.get("inst") in cores or "origin_um" not in e or "outline_um" not in e:
+                continue
+            w, h = map(float, e["outline_um"][:2])
+            if e.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
+                w, h = h, w
+            out.append(dict(inst=e["inst"], x=float(e["origin_um"][0]), y=float(e["origin_um"][1]), w=w, h=h,
+                            movable=False, face_pins={}))
+    return out
+
+
+def face_shadow_rule(W, H, boxes, wins, cfg):
+    """R-STREET face street: violations [dict(kind='face_street', a, b='face:F', face, gap, need, pins=[n, 0], wall,
+    ends, movable, free_spans)] for macros `boxes` behind the type pin windows `wins` (type_face_windows)."""
+    V = []
+    smin, D, ab, pmin = cfg["street_min_um"], cfg["face_depth_um"], cfg["abut_um"], cfg["pinface_min"]
+    k = cfg["street_layers"] * cfg["street_fill"] / cfg["pin_pitch_um"]
+    for face in "WESN":
+        fw = wins.get(face) or []
+        if sum(w[2] for w in fw) < pmin:
+            continue
+        L = H if face in "WE" else W
+        ent, blk = [], []
+        for b in boxes:
+            if face in "WE":
+                gap, lo, hi = (b["x"] if face == "W" else W - b["x"] - b["w"]), b["y"], b["y"] + b["h"]
+            else:
+                gap, lo, hi = (b["y"] if face == "S" else H - b["y"] - b["h"]), b["x"], b["x"] + b["w"]
+            if gap >= D - EPS:
+                continue
+            (blk if gap < ab - EPS else ent).append((lo, hi, gap, b))
+        shadows = [(e[0], e[1]) for e in ent + blk]
+        fs = free_spans(L, shadows, smin)
+        for lo, hi, gap, b in blk:        # abutted to the pin face: only straight-in pins may sit in its span
+            n = span_pins(fw, lo, hi) - int(b.get("face_pins", {}).get(face, 0))
+            if n >= pmin:
+                V.append(dict(kind="face_street", a=b["inst"], b="face:" + face, face=face, gap=round(gap, 4),
+                              need=smin, pins=[n, 0], wall=[round(lo, 2), round(hi, 2)], ends=0,
+                              movable=bool(b.get("movable")), abutted=True, free_spans=fs))
+        ent.sort(key=lambda e: (e[0], e[1]))
+        walls = []
+        for e in ent:
+            if walls and e[0] - walls[-1]["hi"] < smin - EPS:
+                walls[-1]["hi"] = max(walls[-1]["hi"], e[1])
+                walls[-1]["m"].append(e)
+            else:
+                walls.append(dict(lo=e[0], hi=e[1], m=[e]))
+        stops = [0.0, L] + [v for b_ in blk for v in b_[:2]]
+        for wl in walls:
+            n = span_pins(fw, wl["lo"], wl["hi"])
+            if n < pmin:
+                continue
+            left = max([s for s in stops if s <= wl["lo"] + EPS] or [0.0])
+            right = min([s for s in stops if s >= wl["hi"] - EPS] or [L])
+            ends = int(wl["lo"] - left >= smin - EPS) + int(right - wl["hi"] >= smin - EPS)
+            nd = D if ends == 0 else min(D, max(smin, up(n / (k * ends))))
+            for lo, hi, gap, b in wl["m"]:
+                if gap < nd - EPS:
+                    V.append(dict(kind="face_street", a=b["inst"], b="face:" + face, face=face, gap=round(gap, 4),
+                                  need=round(nd, 4), pins=[n, 0], wall=[round(wl["lo"], 2), round(wl["hi"], 2)],
+                                  ends=ends, movable=bool(b.get("movable")), free_spans=fs))
+    return V
+
+
+def face_needs(W, H, cores, cfg):
+    """{(inst, face): need um} of the movable cores under the face rule at the current positions (legalize)."""
+    out = {}
+    if cfg.get("face_rule") and cfg.get("_fwins"):
+        for v in face_shadow_rule(W, H, [_core_box(c) for c in cores] + list(cfg.get("_xboxes") or ()),
+                                  cfg["_fwins"], cfg):
+            if v["movable"]:
+                out[(v["a"], v["face"])] = max(out.get((v["a"], v["face"]), 0.0), v["need"])
+    for key in cfg.get("_alley_faces") or ():
+        out[key] = max(out.get(key, 0.0), cfg["street_min_um"])
+    return out
+
+
+def station_points(t):
+    """[(x, y, bits)] planned station registers of a type: ft slot stations (bit sites per 8.64 cell, else the
+    station register point with the slot width) and internal stations (regs_um, bits)."""
+    pts = []
+    for f in t.get("ft_slots") or []:
+        sites = f.get("bit_sites_um") or []
+        lists = sites if (sites and isinstance(sites[0], list) and sites[0] and isinstance(sites[0][0], list)) else \
+            ([sites] if sites and isinstance(sites[0], list) else [])
+        if lists:
+            for s_ in lists:
+                cells = collections.Counter()
+                for p in s_:
+                    if isinstance(p, list) and len(p) >= 2:
+                        cells[(int(p[0] // 8.64), int(p[1] // 8.64))] += 1
+                pts += [((cx + 0.5) * 8.64, (cy + 0.5) * 8.64, n) for (cx, cy), n in cells.items()]
+        else:
+            pts += [(float(r[0]), float(r[1]), int(f.get("width") or 1)) for r in f.get("regs_um") or []
+                    if isinstance(r, list) and len(r) >= 2]
+    for st in t.get("internal_stations") or []:
+        for r in st.get("regs_um") or []:
+            if isinstance(r, list) and len(r) >= 2:
+                pts.append((float(r[0]), float(r[1]), int(st.get("bits") or 1)))
+    return pts
+
+
+def station_alleys(t, cfg, boxes=None):
+    """R-STREET station alley: [dict(kind='station_alley', a, b, axis, gap, need, pins=[bits, 0], stations)] for
+    station bits standing in a macro-macro or macro-outline slot narrower than street_min_um."""
+    if not cfg.get("face_rule"):
+        return []
+    W, H = map(float, t["outline_um"][:2])
+    if boxes is None:
+        boxes = []
+        for (x0, y0, x1, y1), h in zip(_core_rects(t), t.get("hard_cores") or []):
+            boxes.append(dict(inst=h["inst"], x=x0, y=y0, w=x1 - x0, h=y1 - y0, movable=True))
+        boxes += extra_boxes(t)
+    if not boxes:
+        return []
+    smin = cfg["street_min_um"]
+    R = [(b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"], b["inst"]) for b in boxes]
+    acc = {}
+    for x, y, bits in station_points(t):
+        if any(r[0] - 0.01 < x < r[2] + 0.01 and r[1] - 0.01 < y < r[3] + 0.01 for r in R):
+            continue                  # on a core (its own station bay): rides with the core
+        lx, ln_, rx, rn = 0.0, "outline:W", W, "outline:E"
+        by, bn, ty, tn_ = 0.0, "outline:S", H, "outline:N"
+        for x0, y0, x1, y1, nm in R:
+            if y0 <= y <= y1:
+                if x1 <= x and x1 > lx:
+                    lx, ln_ = x1, nm
+                if x0 >= x and x0 < rx:
+                    rx, rn = x0, nm
+            if x0 <= x <= x1:
+                if y1 <= y and y1 > by:
+                    by, bn = y1, nm
+                if y0 >= y and y0 < ty:
+                    ty, tn_ = y0, nm
+        for axis, lo, hi, a, b in (("x", lx, rx, ln_, rn), ("y", by, ty, bn, tn_)):
+            if hi - lo < smin - EPS and not (a.startswith("outline") and b.startswith("outline")):
+                d = acc.setdefault((axis, a, b), dict(gap=hi - lo, bits=0, stations=0))
+                d["bits"] += bits
+                d["stations"] += 1
+                d["gap"] = min(d["gap"], hi - lo)
+    V = []
+    for (axis, a, b), d in sorted(acc.items()):
+        if d["bits"] >= cfg["pinface_min"]:
+            V.append(dict(kind="station_alley", a=a, b=b, axis=axis, gap=round(d["gap"], 4), need=smin,
+                          pins=[d["bits"], 0], stations=d["stations"]))
+    return V
+
+
+def type_cfg(cfg, t):
+    """per-type cfg for analyze(): the type pin windows and the fixed LEF content boxes of the face rule."""
+    if not cfg.get("face_rule"):
+        return cfg
+    return dict(cfg, _fwins=type_face_windows(t), _xboxes=extra_boxes(t))
+
+
+def alley_force(V):
+    """(core-core pairs, (inst, face) outline gaps) that legalize widens to a street for the station alleys V."""
+    pairs, faces = set(), set()
+    for v in V:
+        if v["kind"] != "station_alley":
+            continue
+        a, b = v["a"], v["b"]
+        if a.startswith("outline") or b.startswith("outline"):
+            inst, f = (b, a[-1]) if a.startswith("outline") else (a, b[-1])
+            faces.add((inst, f))
+        else:
+            pairs.add(frozenset((a, b)))
+    return pairs, faces
 
 
 # ------------------------------------------------------------------------------------------------ plan -> model
@@ -558,6 +799,7 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
     L = W if ax == 0 else H
     pos = [tuple(M.cpos[k]) for k in range(M.m)]
     cores = core_models(M, partners)
+    fneed = face_needs(W, H, cores, cfg)      # R-STREET: type pin-face streets + station alleys on the outline
     # nodes: clusters 0..m-1, items m..
     start = []
     for k in range(M.m):
@@ -655,6 +897,7 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
                 src[k] = max(src[k], r[0]["need"] - oi)
             else:
                 src[k] = max(src[k], min(near, cfg["outline_margin_um"]) - oi)
+            src[k] = max(src[k], fneed.get((cores[i]["inst"], "W" if ax == 0 else "S"), 0.0) - oi)
             src_rx[k] = max(src_rx[k], min(near, cfg["outline_margin_um"]) - oi)
             gap0 = L - near - si
             face = "E" if ax == 0 else "N"
@@ -667,6 +910,10 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
                 req = min(gap0, cfg["outline_margin_um"])
             else:
                 req = need_um(p, cfg)
+            fn_ = fneed.get((cores[i]["inst"], face), 0.0)
+            if fn_ > req:
+                req = fn_
+                anchored[k] = False       # R-STREET: lifted off the pin face, no longer abutted to it
             tail[k] = max(tail[k], oi + si + req)
             tail_rx[k] = max(tail_rx[k], oi + si + min(req, gap0))
             # DIE-KV-98 11-12: clock landing storage bands need a macro-free strip off the bus face across the window
@@ -863,8 +1110,46 @@ def one_pass(M, items, axis, W, H, cfg, partners, fixed_k, windows=None, fix_ft=
     return newpos, newL, shifts, blocked
 
 
+def _over_contents(cores, xboxes):
+    """(core, LEF content macro) pairs that overlap: legalize never moves a content macro, so it never lands on one."""
+    out = []
+    for c in cores:
+        for b in xboxes or ():
+            if min(c["x"] + c["w"], b["x"] + b["w"]) - max(c["x"], b["x"]) > 0.01 and \
+                    min(c["y"] + c["h"], b["y"] + b["h"]) - max(c["y"], b["y"]) > 0.01:
+                out.append((c["inst"], b["inst"]))
+    return out
+
+
 def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
-    """returns (row, new type or None)."""
+    """returns (row, new type or None).  R-STREET: a station re-sited by the first pass may stand in a new alley; up to
+    cfg face_passes (2) more passes run on the applied result until no station_alley / face_street is left."""
+    row, tn = _legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log)
+    for _ in range(int(cfg.get("face_passes", 2)) if cfg.get("face_rule") else 0):
+        if tn is None or not any(k in ("station_alley", "face_street") for k in row.get("violations_after") or {}):
+            break
+        row2, tn2 = _legalize_type(name, tn, die_dir, repo, conns, cfg, rs_cfg, log)
+        if tn2 is None:
+            break
+        W0, H0 = row["outline_before"]
+        W1, H1 = row2["outline_after"]
+        keep = {k: row[k] for k in ("outline_before", "violations_before", "worst_before", "overlaps_base",
+                                     "points_under_base") if k in row}
+        cyc = row.get("cycles_added") or {}
+        cyc2 = row2.get("cycles_added") or {}
+        row2["cycles_added"] = {k: (cyc.get(k) or 0) + (cyc2.get(k) or 0) if k == "total" else
+                                list(cyc.get(k) or []) + list(cyc2.get(k) or []) for k in set(cyc) | set(cyc2)}
+        row2["moved_cores"] = max(row.get("moved_cores", 0), row2.get("moved_cores", 0))
+        row2["growth_pct"] = dict(W=round(100.0 * (W1 / W0 - 1), 2), H=round(100.0 * (H1 / H0 - 1), 2),
+                                  area=round(100.0 * (W1 * H1 / (W0 * H0) - 1), 2))
+        row2["passes"] = row.get("passes", 1) + 1
+        row2.update(keep)
+        row, tn = row2, tn2
+    return row, tn
+
+
+def _legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
+    """one legalize pass: returns (row, new type or None)."""
     ccfg = dict(gap=G, sweeps=0, topk=1, lam=1.0, reach=cfg["reach"], grid_um=21.6, grt_halving="full",
                 fixed_re="", rs=rs_cfg, flips_only=False, face_clear=[])
     M = CP.TypeModel(name, t, die_dir, repo, conns, ccfg)
@@ -872,7 +1157,14 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     partners = conns_partners(conns, name, t)
     W0, H0 = M.W, M.H
     windows = type_windows(t)
+    cfg = type_cfg(cfg, t)
     V0, c0 = analyze(W0, H0, core_models(M, partners), M.CL, cfg, windows)
+    SA0 = station_alleys(t, cfg)
+    if SA0:
+        V0 = V0 + SA0
+        c0 = dict(collections.Counter(v["kind"] for v in V0))
+        ap_, af_ = alley_force(SA0)
+        cfg = dict(cfg, _alley=ap_, _alley_faces=af_)
     row = dict(type=name, cores=M.n, clusters=M.m, outline_before=[W0, H0], violations_before=c0,
                worst_before=sorted(V0, key=lambda v: -(v["need"] - v["gap"]))[:6])
     hard = [v for v in V0 if v["kind"] in HARD and not v.get("same_cluster")]
@@ -884,6 +1176,7 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     len0 = [M.llen(q) for q in range(len(M.L))]
     nov0 = CP.overlaps(M)
     under0 = len(points_under_cores(t)) + len(sinks_under_cores(t, repo))
+    cov0 = len(_over_contents(core_models(M, partners), cfg.get("_xboxes")))
     L_base = list(M.L)
     on_core0 = lambda p: M.owner(p, tol=-0.01) is not None   # noqa: E731
 
@@ -957,7 +1250,11 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             srep = dict(srep, need_more_idx=[i for i in srep.get("need_more_idx") or [] if i not in fixed_si])
             srep["need_more_regs"] = len(srep["need_more_idx"])
             added_ft = add_ft_regs(M, t, tnew, cfg["reach_limit_um"], int(cfg["add_regs"]))
-        V1, c1 = analyze(W, H, core_models(M, partners), M.CL, cfg, windows)
+        V1, c1 = analyze(W, H, core_models(M, partners), M.CL, dict(cfg, _alley=None), windows)
+        SA1 = station_alleys(tnew, cfg)
+        if SA1:
+            V1 = V1 + SA1
+            c1 = dict(collections.Counter(v["kind"] for v in V1))
         nov = CP.overlaps(M)
         reach_ = cfg["reach_limit_um"]
         new_over = [q for q in range(len(M.L)) if M.L[q][3] != "station" and M.llen(q) > reach_ + 0.01 and len0[q] <= reach_ + 0.01]
@@ -1009,6 +1306,9 @@ def legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             reasons.append("eq %s" % eqbad[:3])
         if blocked:
             reasons.append("fixed cores pushed %s" % sorted(set(blocked))[:4])
+        cov = _over_contents(core_models(M, partners), cfg.get("_xboxes"))
+        if len(cov) > cov0:
+            reasons.append("cores over LEF content macros %s" % cov[:3])
         bshort = band_short(M, cfg["_bands"])
         if bshort:
             reasons.append("band clearance short %d" % len(bshort))
@@ -1930,7 +2230,9 @@ def g0_check(raw, R, plan_dir, mode="warn", repo=None, ref_dirs=(), max_msgs=40,
         summ["types"] += 1
         M = CP.TypeModel(tn, t, die_dir, repo, conns, ccfg)
         attach_pins(M, die_dir, repo)
-        V, cnt = analyze(M.W, M.H, core_models(M, conns_partners(conns, tn, t)), M.CL, cfg, type_windows(t))
+        V, cnt = analyze(M.W, M.H, core_models(M, conns_partners(conns, tn, t)), M.CL, type_cfg(cfg, t), type_windows(t))
+        V += station_alleys(t, cfg)
+        cnt = dict(collections.Counter(v["kind"] for v in V))
         tot.update(cnt)
         if any(k in HARD for k in cnt):
             summ["types_with_errors"] += 1
@@ -2007,8 +2309,11 @@ def cmd_check(a):
         t = P["partition_types"][n]
         M = CP.TypeModel(n, t, die_dir, repo, conns, ccfg)
         attach_pins(M, die_dir, repo)
-        V, c = analyze(M.W, M.H, core_models(M, conns_partners(conns, n, t)), M.CL, cfg, type_windows(t))
-        rows.append(dict(type=n, cores=M.n, counts=c, worst=sorted(V, key=lambda v: -(v["need"] - v["gap"]))[:8]))
+        V, c = analyze(M.W, M.H, core_models(M, conns_partners(conns, n, t)), M.CL, type_cfg(cfg, t), type_windows(t))
+        V += station_alleys(t, cfg)
+        c = dict(collections.Counter(v["kind"] for v in V))
+        rows.append(dict(type=n, cores=M.n, counts=c, worst=sorted(V, key=lambda v: -(v["need"] - v["gap"]))[:8],
+                         face=[v for v in V if v["kind"] in ("face_street", "station_alley")]))
         print("%s\t%d\t%s" % (n, M.n, json.dumps(c, sort_keys=True)), flush=True)
     rec = dict(schema=SCHEMA, mode="check", plan=str(plan), plan_sha256=sha, die=die, cfg=cfg, rows=rows,
                types_with_violations=sum(1 for r in rows if any(k in HARD for k in r["counts"])))
