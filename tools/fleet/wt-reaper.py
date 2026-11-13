@@ -33,6 +33,7 @@ A DIRTY worktree idle > --dirty-report-h (24 h) is never removed: its changes (t
 --rescue-dir/wt-reaper-<host>-<name>-<head7>-<hash8>.patch, verified non-empty, and listed in dirty.tsv for the lane.
 Kills nothing.  Default is a dry run; --apply removes."""
 import argparse
+import functools
 import hashlib
 import json
 import os
@@ -222,8 +223,14 @@ def protect_list(state, jsons=()):
     for f in sorted(d.glob("*.txt")) if d.is_dir() else []:
         try:
             # one absolute path per line, or PROTECTED-DBS rows host<TAB>path<TAB>kinds (the path field)
-            out += [(x.strip(), f.name) for l in f.read_text(errors="replace").splitlines()
-                    if not l.lstrip().startswith("#") for x in l.split("\t")[:2] if x.strip().startswith("/")]
+            # an ot-autoclean union row host<TAB>path<TAB>kind: why carries its kind ("protected-dbs.txt [counted]")
+            for l in f.read_text(errors="replace").splitlines():
+                if l.lstrip().startswith("#"):
+                    continue
+                cols = l.split("\t")
+                kind = cols[2].split(":")[0].strip() if len(cols) >= 3 else ""
+                origin = f"{f.name} [{kind}]" if kind in UNION_KINDS else f.name
+                out += [(x.strip(), origin) for x in cols[:2] if x.strip().startswith("/")]
         except OSError:
             pass
     for j in jsons:
@@ -438,7 +445,30 @@ def live_seeds(paths, texts, roots):
     return [(p, "live process/docker") for p in sorted(out)]
 
 
-def protected(wt, admin, common, extra=(), listed=()):
+@functools.lru_cache(maxsize=65536)
+def tracked_clean(wt, rel):
+    """CLEAN-2: rel (a path inside the worktree) is git content: tracked at HEAD and unchanged, nothing untracked or ignored
+    under it.  The tree is removed only when clean and pushed, so such a path is recoverable from origin."""
+    if not rel or rel == "." or rel.startswith(".."):
+        return False
+    r = git(wt, "ls-files", "-z", "--", rel, timeout=120)
+    if r.returncode != 0 or not r.stdout.strip("\0"):
+        return False
+    r = git(wt, "status", "--porcelain", "--ignored", "--untracked-files=all", "--", rel, timeout=300)
+    return r.returncode == 0 and not r.stdout.strip()
+
+
+UNION_KINDS = ("protected", "counted", "kitwave", "localkeep")
+TRACKED_OK_KINDS = ("protected", "counted")   # signed citations / protected lists; never kit-wave live inputs or local keeps
+
+
+def tracked_ok_origin(origin):
+    """CLEAN-2: the listed row (or the closure seed it came from) may be released by --tracked-ok"""
+    o = origin.split(" -> ")[0]
+    return any(o.endswith(f" [{k}]") for k in TRACKED_OK_KINDS)
+
+
+def protected(wt, admin, common, extra=(), listed=(), tracked_ok=False):
     rp = os.path.realpath(wt)
     for s in list(PROTECT_SUBSTR) + list(extra):
         if s in wt or s in rp:
@@ -446,6 +476,8 @@ def protected(wt, admin, common, extra=(), listed=()):
     for p, origin in listed:
         p = p.rstrip("/")
         for c in {wt.rstrip("/"), rp}:
+            if p.startswith(c + "/") and tracked_ok and tracked_ok_origin(origin) and tracked_clean(wt, os.path.relpath(p, c)):
+                continue          # CLEAN-2 --tracked-ok: a cited source file/dir that is clean git content does not pin the tree
             if p == c or p.startswith(c + "/"):
                 return f"protected (listed source {p} in {origin})"
             # worktree inside a listed path (PROTECTED-DBS: parent/child).  A broad ancestor (/srv, a scratch root) named
@@ -466,11 +498,15 @@ def protected(wt, admin, common, extra=(), listed=()):
     return None
 
 
-def closure_ref(wt, closure):
-    """FLOW-19: first reference-closure path inside wt, as a KEEP reason (or None)"""
+def closure_ref(wt, closure, tracked_ok=False):
+    """FLOW-19: first reference-closure path inside wt, as a KEEP reason (or None).  CLEAN-2 --tracked-ok: a path reached
+    only from a signed-citation / protected-list seed that is clean git content in wt does not keep it"""
     cands = {wt.rstrip("/"), os.path.realpath(wt)}
     for p, origin in closure:
         for c in cands:
+            if (tracked_ok and p.startswith(c + "/") and tracked_ok_origin(origin)
+                    and tracked_clean(wt, os.path.relpath(p, c))):
+                continue
             if p == c or p.startswith(c + "/"):
                 return f"referenced source {p} via {origin}"
     return None
@@ -628,7 +664,7 @@ def append_tsv(path, row, header):
 def evaluate(wt, admin, common, refs, a):
     """(verdict, reason, info) where verdict in REMOVE, REMOVE_FORCE, KEEP, DIRTY_IDLE"""
     info = {}
-    why = protected(wt, admin, common, a.protect, getattr(a, "listed", ()))
+    why = protected(wt, admin, common, a.protect, getattr(a, "listed", ()), getattr(a, "tracked_ok", False))
     if why:
         return "KEEP", why, info
     why = referenced(wt, *refs, roots=a.roots)
@@ -654,7 +690,7 @@ def evaluate(wt, admin, common, refs, a):
     ok, br = pushed(wt)
     if not ok:
         return "KEEP", "HEAD not in any origin branch", info
-    why = closure_ref(wt, getattr(a, "closure", ()))
+    why = closure_ref(wt, getattr(a, "closure", ()), getattr(a, "tracked_ok", False))
     if why:
         return "KEEP", why, info
     f = getattr(a, "recent", {}).get(wt.rstrip("/"))
@@ -690,6 +726,8 @@ def main(argv=None):
     ap.add_argument("--rescue-dir", default=RESCUE_DIR)
     ap.add_argument("--no-rescue", action="store_true")
     ap.add_argument("--no-sudo", action="store_true")
+    ap.add_argument("--tracked-ok", action="store_true",
+                    help="CLEAN-2: a listed path inside a worktree that is tracked, unchanged git content does not protect the tree")
     a = ap.parse_args(argv)
     host = socket.gethostname()
     state = Path(a.state)
@@ -708,7 +746,14 @@ def main(argv=None):
     a.listed = protect_list(state, a.protect_json)
     seeds = a.listed + live_seeds(*refs, roots) + \
         [(d, "bind manifest dir") for d in bind_manifest_dirs(roots, a.bind_ref_days)]
-    a.closure = reference_closure(seeds, roots, a.ref_depth) if a.ref_depth > 0 else []
+    if a.ref_depth <= 0:
+        a.closure = []
+    elif a.tracked_ok:
+        # CLEAN-2: two closures, so a path reached from a live / bind / kit-wave seed never inherits a releasable origin
+        a.closure = reference_closure([x for x in seeds if not tracked_ok_origin(x[1])], roots, a.ref_depth) + \
+            reference_closure([x for x in seeds if tracked_ok_origin(x[1])], roots, a.ref_depth)
+    else:
+        a.closure = reference_closure(seeds, roots, a.ref_depth)
     a.recent = recent_text_refs(roots, [w for w, _, _ in wts], a.recent_ref_h)
     hdr_run = ["time", "host", "mode", "verdict", "path", "branch", "head", "reason"]
     last = state / "last-run.tsv.tmp"

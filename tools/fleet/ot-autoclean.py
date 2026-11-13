@@ -500,6 +500,33 @@ def build_protected_union(coord):
     return rows
 
 
+# CLEAN-2 11-12: lanes/prune/ARCHIVE-PROTECTED.tsv is mostly the 11-06 ARCHIVE-1106 snapshot (asbuilt / bind.f inputs of
+# binds of that day, kit_wave.json inputs of that day, copied PROTECTED-DBS rows).  Those rows protect a path only while
+# it is still referenced (--live-refs-only); rows added later (WAVE-OPS-1, KW-FIX-43 ...) and every other list stay
+# authoritative.
+ARCHIVE_LIST = "lanes/prune/ARCHIVE-PROTECTED.tsv"
+STALE_FILE = "protected_stale.txt"
+ARCHIVE_STALE_NOTE_RE = re.compile(r"^(ARCHIVE-1106\w*\b.*|COORD 20:[0-9]x\b.*|PROTECTED-DBS|RETIRED-EXTRAS|)$")
+
+
+def archive_stale_paths(coord, rows):
+    """paths whose ONLY protection is an 11-06 snapshot row of ARCHIVE-PROTECTED.tsv (rows = the built union)"""
+    stale, fresh = set(), set()
+    try:
+        text = rd(os.path.join(coord, ARCHIVE_LIST))
+    except OSError:
+        return set()
+    for ln in text.splitlines():
+        if not ln.strip() or ln.startswith("#"):
+            continue
+        cols = ln.split("\t")
+        note = cols[2].strip() if len(cols) >= 3 else ""
+        for p, _ in parse_protected(ln, ARCHIVE_LIST):          # = the union's parse (note paths included)
+            (stale if ARCHIVE_STALE_NOTE_RE.match(note) else fresh).add(p)
+    other = {p for p, w in rows if w != ARCHIVE_LIST}
+    return stale - fresh - other
+
+
 def check_required_sources(rows, what):
     """every required list must have contributed rows (the snapshot names each row's source list)"""
     srcs = {w for _, w in rows}
@@ -682,6 +709,179 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
     return {"attempts": attempts, "latest": latest, "keep": sorted(keep), "current_di": current_di}
 
 
+# CLEAN-2 11-12 (OWNER aggressive cleanup: keep ONLY live jobs, the current attempt of a live or queued row and the inputs
+# of queued / running jobs, signed results until archived, protected paths still referenced).  reduce_live() is the
+# rule set the host applies with --live-refs-only; reduce_kitwave() above stays as it was for hosts without the flag.
+LIVE_GRACE_S = 2 * 3600       # a terminal row whose queue still says RUNNING/QUEUED stays live this long after its last update
+QUEUED_STATUS = {"QUEUED", "PENDING-DEP", "WAIT-PARENT", "RETRY-INFRA", "ENQUEUED"}
+
+
+def rec_live(r, now):
+    """CLEAN-2: a record's current attempt is live.  A terminal STATUS (FAIL / CANCELLED / SUPERSEDED / WITHDRAWN) ends it
+    whatever the queue column still says (203 CANCELLED/RUNNING rows held old waves), after LIVE_GRACE_S for teardown.
+    ENQUEUED follows its queue status; a known active status is live; an unknown status is live (fail safe)."""
+    st, q = r.get("status"), r.get("q_status")
+    if st in TERMINAL_STATUS:
+        try:
+            upd = float(r.get("updated") or 0)
+        except (TypeError, ValueError):
+            upd = 0.0
+        return q in ACTIVE_Q and now - upd < LIVE_GRACE_S
+    if st == "ENQUEUED":
+        return q not in TERMINAL_Q and q != "SIGNED"
+    return True
+
+
+def rec_own_attempt(rec, spec):
+    """(host, attempt dir) of the record's CURRENT attempt: kit / evidence / geom_dir, else its spec.json work dir (rows that
+    failed before the kit existed have no kit path: 231 epyc4 attempts were 'unknown' for that reason).  None if unmappable."""
+    for k in ("kit", "evidence", "geom_dir"):
+        hp = _host_path(rec.get(k))
+        if hp and hp[0]:
+            m = ATTEMPT_RE.match(hp[1])
+            if m:
+                return hp[0], m.group(0)
+    if isinstance(spec, dict):
+        host = spec.get("gen_host") or spec.get("host") or ""
+        hp = _host_path(spec.get("work"), host)
+        if hp and hp[0]:
+            m = ATTEMPT_RE.match(hp[1])
+            if m and m.group(0) == hp[1]:
+                return hp[0], hp[1]
+    return None
+
+
+def reduce_live(state, stage_rows, read_spec=None, history=None, orphans=(), now=None):
+    """CLEAN-2 reduction -> {"live_attempts": {"host:attempt": {active, signed, terminal, current, history}},
+    "live_keep": ["host:path"], "live_keep_why": {"host:path": why}}.
+      * every record maps to its current attempt (rec_own_attempt); active = rec_live, signed = rec_signed;
+      * history(rec_dir) -> [(host, attempt dir)] of the record's earlier launches (sibling aN/spec.json work dirs): each
+        one that is not the current attempt is 'superseded' (attempt numbers are not monotonic in time: a state rollback
+        renumbers, so the record says which attempt is current, not the largest N);
+      * orphans: [(die, item, host, attempt dir)] of record dirs with no state row: 'dropped' when the same die|item
+        has a state row (the item moved on), else not listed (stays unknown = live);
+      * live_keep: live rows only.  RUNNING / held: the current attempt + every non-attempt path the row or its spec
+        (src / plan / queue_src) names (inputs of the running job).  QUEUED: every path it names (resume sources too).
+        Signed rows that are not live: the current attempt only (signed result, held until archived; not its sources).
+      * stage rows: signed (SIGNED / class COUNTED) mark their attempt signed; a row is live only when its status is not
+        terminal and its plan block is current (plan_current != no: old-plan rows are not live)."""
+    now = time.time() if now is None else now
+    att, keep, why = {}, set(), {}
+    items_seen = set()
+
+    def slot(h, p):
+        return att.setdefault(f"{h}:{p}", {"active": False, "signed": False, "terminal": [], "current": False, "history": ""})
+
+    def add_keep(h, p, w):
+        k = f"{h}:{p}"
+        keep.add(k)
+        why.setdefault(k, w)
+
+    hist_todo = []
+    for key, rec in (state.get("items") or {}).items():
+        if not isinstance(rec, dict):
+            continue
+        items_seen.add(f"{rec.get('die')}|{rec.get('item')}")
+        spec = read_spec(rec.get("dir")) if read_spec and rec.get("dir") else {}
+        own = rec_own_attempt(rec, spec)
+        live, signed = rec_live(rec, now), rec_signed(rec)
+        tag = f"{key} {rec.get('status')}/{rec.get('q_status')}"
+        if own:
+            sl = slot(*own)
+            sl["current"] = True
+            sl["active"] |= live
+            sl["signed"] |= signed
+            if not live and not signed:
+                sl["terminal"].append(f"{rec.get('status')}/{rec.get('q_status')}")
+            if history and rec.get("dir"):
+                hist_todo.append((own, key, rec))
+        host = own[0] if own else ""
+        if signed and not live and own:
+            add_keep(own[0], own[1], f"signed current attempt {tag}")
+        if not live:
+            continue
+        queued = rec.get("status") in QUEUED_STATUS or rec.get("q_status") in ("QUEUED", "WAIT-PARENT")
+        if own:
+            add_keep(own[0], own[1], f"current attempt of live row {tag}")
+        names = list(_json_strings(rec))
+        if isinstance(spec, dict):
+            names += [spec.get(f) for f in ("src", "plan", "queue_src")]
+        for s in names:
+            hp = _host_path(s, (spec.get("gen_host") if isinstance(spec, dict) else "") or host)
+            if not hp or not hp[0]:
+                continue
+            ma = ATTEMPT_RE.match(hp[1])
+            if ma and own and ma.group(0) != own[1] and not queued:   # a running job is self contained (OWNER 11-12)
+                continue
+            add_keep(hp[0], hp[1], f"{'input of queued' if queued else 'input of live'} row {tag}")
+    for own, key, rec in hist_todo:
+        for h, p in history(rec.get("dir")) or []:
+            if p == own[1]:
+                continue
+            sl = slot(h, p)
+            if not sl["current"] and not sl["history"]:
+                sl["history"] = f"superseded: row {key} is now at attempt {os.path.basename(own[1])}"
+    for die, item, h, p in orphans or ():
+        if f"{die}|{item}" not in items_seen:
+            continue
+        sl = slot(h, p)
+        if not sl["current"] and not sl["history"]:
+            sl["history"] = f"dropped: its record dir has no state row, {die}|{item} has current rows"
+    for row in stage_rows:
+        hp = _host_path(row.get("kit"))
+        if not hp or not hp[0]:
+            continue
+        m = ATTEMPT_RE.match(hp[1])
+        st, cl = row.get("status", ""), row.get("class", "")
+        signed = st == "SIGNED" or cl == "COUNTED"
+        live = not signed and st not in TERMINAL_STATUS and (row.get("plan_current") or "").strip().lower() != "no"
+        if m:
+            sl = slot(hp[0], m.group(0))
+            sl["signed"] |= signed
+            sl["active"] |= live
+            if not signed and not live:
+                sl["terminal"].append(f"stage:{st}")
+        if signed or live:
+            add_keep(hp[0], hp[1], f"stage row {row.get('die')}|{row.get('item')} {st}/{cl}")
+    return {"live_attempts": att, "live_keep": sorted(keep), "live_keep_why": why}
+
+
+def kitwave_history(rec_dirs, root=None):
+    """(history(rec_dir) -> [(host, attempt)], orphans [(die, item, host, attempt)]) from the kit-wave record tree
+    <root>/<die_item_bsha>/a<N>/spec.json (root = the common parent of the records' key dirs)"""
+    keydirs = {os.path.dirname(os.path.normpath(d)) for d in rec_dirs if d}
+    roots = {root} if root else {os.path.dirname(k) for k in keydirs}
+    by_key = {}
+    for r in roots:
+        try:
+            names = os.listdir(r)
+        except OSError:
+            continue
+        for n in names:
+            kd = os.path.join(r, n)
+            try:
+                subs = [s for s in os.listdir(kd) if re.fullmatch(r"a\d+", s)]
+            except OSError:
+                continue
+            out = []
+            for s in subs:
+                try:
+                    sp = jl(os.path.join(kd, s, "spec.json"))
+                except (OSError, ValueError):
+                    continue
+                if not isinstance(sp, dict):
+                    continue
+                hp = _host_path(sp.get("work"), sp.get("gen_host") or sp.get("host") or "")
+                if hp and hp[0] and ATTEMPT_RE.match(hp[1]) and ATTEMPT_RE.match(hp[1]).group(0) == hp[1]:
+                    out.append((hp[0], hp[1], sp.get("die"), sp.get("item")))
+            by_key[kd] = out
+    orphans = [(d, i, h, p) for kd, v in by_key.items() if kd not in keydirs for h, p, d, i in v]
+
+    def history(rec_dir):
+        return [(h, p) for h, p, _d, _i in by_key.get(os.path.dirname(os.path.normpath(rec_dir)), [])]
+    return history, orphans
+
+
 def kitwave_reduce_main(a):
     import csv
     state = jl(a.state_json)
@@ -698,6 +898,9 @@ def kitwave_reduce_main(a):
         except (OSError, ValueError):
             return {}
     out = reduce_kitwave(state, rows, read_spec)
+    recs = [r for r in (state.get("items") or {}).values() if isinstance(r, dict)]
+    history, orphans = kitwave_history([r.get("dir") for r in recs])
+    out.update(reduce_live(state, rows, read_spec, history, orphans))
     out["created"] = now_s()
     out["source"] = f"{socket.gethostname()}:{a.state_json} mtime {int(os.path.getmtime(a.state_json))}"
     json.dump(out, sys.stdout)
@@ -1081,6 +1284,7 @@ class Job:
         self.rows = []
         self.alerts = []
         self.recheck_hits = 0
+        self.live_refs = bool(getattr(a, "live_refs_only", False))
 
     # ---- inputs
     def load_snapshot(self):
@@ -1122,6 +1326,23 @@ class Job:
             self.kw_current_di = dict(k.get("current_di") or {})
             self.kwkeep = PathSet([(key.partition(":")[2], "kit-wave active/resume/spec") for key in k["keep"]],
                                   canon=self.paths.canon)
+            if self.live_refs and "live_attempts" in k and "live_keep" in k:
+                # CLEAN-2: current attempt of live / queued rows, inputs of queued / running jobs, signed current attempts
+                self.kw_attempts = {}
+                for key, v in k["live_attempts"].items():
+                    c = self.paths.canon(key.partition(":")[2])
+                    o = self.kw_attempts.setdefault(c, {"active": False, "signed": False, "terminal": [], "current": False,
+                                                        "history": ""})
+                    for f in ("active", "signed", "current"):
+                        o[f] |= bool(v.get(f))
+                    o["terminal"] = o["terminal"] + list(v.get("terminal") or [])
+                    o["history"] = o["history"] or str(v.get("history") or "")
+                lw = k.get("live_keep_why") or {}
+                self.kwkeep = PathSet([(key.partition(":")[2], "kit-wave " + str(lw.get(key, "live ref"))[:160])
+                                       for key in k["live_keep"]], canon=self.paths.canon)
+            elif self.live_refs:
+                raise RuntimeError("--live-refs-only: the snapshot's kitwave.json has no live_attempts/live_keep "
+                                   "(drive older than CLEAN-2); nothing done")
         else:
             self.kwkeep = PathSet()
         self.add_bind_refs()
@@ -1239,7 +1460,31 @@ class Job:
         if len(rows) < self.a.min_protected:
             refuse_lists(f"protection union {self.prot_file} has {len(rows)} rows (< {self.a.min_protected})")
         check_required_sources(rows, f"protection union {self.prot_file}")
+        self.stale_released = []
+        if self.live_refs and getattr(self, "refs_loaded", False):
+            # CLEAN-2: an 11-06 ARCHIVE-PROTECTED snapshot row protects only while something current names it: a signed
+            # record (counted), a live / queued kit-wave row or its bind refs, a local keep, a queue post.  Containing a
+            # referenced path is not enough (that path is protected by its own row).
+            try:
+                stale = {x.strip() for x in rd(os.path.join(self.a.snapshot, STALE_FILE)).splitlines() if x.strip().startswith("/")}
+            except OSError:
+                stale = set()
+            keep_rows = []
+            for p, src in rows:
+                if src == ARCHIVE_LIST and p in stale and not self.still_referenced(p):
+                    self.stale_released.append(p)
+                    continue
+                keep_rows.append((p, src))
+            rows = keep_rows
         self.protected = PathSet(rows, canon=self.paths.canon)
+
+    def still_referenced(self, p):
+        for ps in (self.counted, self.kwkeep, self.localkeep, self.queue):
+            for f in self.paths.forms(p):
+                h = ps.hit(f)
+                if h and not h.startswith("holds "):
+                    return True
+        return False
 
     def load_local_keeps(self):
         rows = []
@@ -1337,9 +1582,13 @@ class Job:
         import bisect
         if getattr(self, "_indep", None) is None:
             raw = [ln.split("\t", 1)[0] for ln in rd(self.prot_file).splitlines() if ln.startswith("/")]
+            rel = set(getattr(self, "stale_released", []) or [])
+            if rel:                                   # CLEAN-2: rows released by the stale-row rule (only when unreferenced)
+                raw = [r for r in raw if r not in rel]
             if self.kitwave is not None:
-                raw += [x.partition(":")[2] for x in self.kitwave.get("keep", [])]
-                raw += [x.partition(":")[2] for x, v in self.kitwave.get("attempts", {}).items()
+                lr = self.live_refs and "live_keep" in self.kitwave
+                raw += [x.partition(":")[2] for x in self.kitwave.get("live_keep" if lr else "keep", [])]
+                raw += [x.partition(":")[2] for x, v in self.kitwave.get("live_attempts" if lr else "attempts", {}).items()
                         if v.get("active") or v.get("signed")]
             self._indep = sorted({self._indep_real(r) for r in raw if r.startswith("/")})
             self._indep_set = set(self._indep)
@@ -1526,7 +1775,11 @@ class Job:
         st = self.kw_attempts.get(f"{item}/attempt_{n}") if n >= 0 else None
         xm = XPATH_RE.search(f"{item}/attempt_{max(n, 0)}")
         cur = self.kw_current_di.get(f"{xm.group(1)}|{xm.group(2)}", -1) if xm else -1
-        if n >= 0 and (self.kw_latest.get(item, -1) > n or cur > n):
+        if self.live_refs and st and st.get("current"):
+            pass                                         # CLEAN-2: the row's current attempt (numbers can be renumbered lower)
+        elif self.live_refs and st and st.get("history"):
+            return None                                  # CLEAN-2: an earlier launch of a row now at another attempt
+        elif n >= 0 and (self.kw_latest.get(item, -1) > n or cur > n):
             return None                                  # superseded: a later attempt exists
         term = ",".join(sorted(set(st["terminal"]))) if st else ""
         if st and term and "FAIL" not in term:
@@ -1553,6 +1806,10 @@ class Job:
         cur = self.kw_current_di.get(f"{xm.group(1)}|{xm.group(2)}", -1) if xm else -1
         if st and st["terminal"]:
             verdict = "finished " + ",".join(sorted(set(st["terminal"])))[:80]
+        elif self.live_refs and st and st.get("history") and not st.get("current"):
+            verdict = st["history"][:120]           # CLEAN-2: an earlier launch of a row that is now at another attempt
+        elif self.live_refs and st and st.get("current"):
+            return "kit-wave current attempt (no terminal status)", []
         elif self.kw_latest.get(m.group(1), -1) > int(m.group(2)):
             verdict = f"superseded by attempt_{self.kw_latest[m.group(1)]}"
         elif cur > int(m.group(2)):               # older attempt of a die|item now run from another plan dir
@@ -2177,6 +2434,10 @@ class Job:
             raise RuntimeError("find scan failed or timed out")
         self.load_counted()
         self.load_local_keeps()
+        if self.live_refs:
+            self.refs_loaded = True
+            self.load_protected()
+            say(f"CLEAN-2 live-refs-only: {len(self.stale_released)} unreferenced ARCHIVE-PROTECTED 11-06 snapshot rows released")
         pos, neg = self.controls()
         say(f"controls: positive {'PASS' if pos else 'FAIL'} negative {'PASS' if neg else 'FAIL'}")
         if not (pos and neg):
@@ -2299,7 +2560,9 @@ class Job:
             cmd = [sys.executable, "-I", a.wt_reaper, "--protected-dbs", union, "--protected-dbs-repo", "",
                    "--idle-h", str(max(a.wt_reaper_idle_h, LOCAL_WT_IDLE_H) if self.host == "localhost" else a.wt_reaper_idle_h)] + (
                    ["--rescue-dir", LOCAL_RESCUE_DIR] if self.host == "localhost" else []) + [
-                   "--roots"] + dedupe_roots(self.roots + [os.path.join(HOME, "wt")]) + (["--apply"] if a.apply else [])
+                   "--roots"] + dedupe_roots(self.roots + [os.path.join(HOME, "wt")]) + (["--apply"] if a.apply else []) + (
+                   ["--tracked-ok"] if self.live_refs else []) + (
+                   ["--state", a.wt_reaper_state] if getattr(a, "wt_reaper_state", "") else []) + shlex.split(getattr(a, "wt_reaper_args", "") or "")
             try:
                 r = subprocess.run(cmd, capture_output=True, text=True, timeout=a.wt_reaper_timeout)
                 with open(os.path.join(a.state, "wt-reaper.log"), "a") as fh:
@@ -2537,6 +2800,10 @@ class Driver:
         check_required_sources(rows, "snapshot union")
         with open(os.path.join(out, "protected.tsv"), "w") as fh:
             fh.write("".join(f"{p}\t{w}\n" for p, w in rows))
+        stale = archive_stale_paths(a.coord, rows)
+        with open(os.path.join(out, STALE_FILE), "w") as fh:     # CLEAN-2: read only by hosts run with --live-refs-only
+            fh.write("".join(p + "\n" for p in sorted(stale)))
+        say(f"snapshot: {len(stale)} ARCHIVE-PROTECTED 11-06 snapshot rows protect only while referenced (--live-refs-only)")
         qf = os.path.join(a.coord, "lanes/COORD-REVIEW-QUEUE.md")
         paths, words = parse_queue(rd(qf), now_s(), a.queue_hours)
         with open(os.path.join(out, "queue.json"), "w") as fh:
@@ -2794,6 +3061,12 @@ def main(argv=None):
     r.add_argument("--c-old-keep-h", type=float, default=0.0,
                    help="class c only: an ancestor .keep older than this many hours does not block the trim of a finished "
                         "or superseded kit (6_final.odb, signoff.json or a later attempt); 0 = off (COORD 11-08)")
+    r.add_argument("--live-refs-only", action="store_true",
+                   help="CLEAN-2 (OWNER aggressive cleanup): keep only the current attempt of live/queued kit-wave rows, inputs of "
+                        "queued/running rows, signed current attempts; earlier launches of a row and dropped record dirs go; "
+                        "11-06 ARCHIVE-PROTECTED snapshot rows hold only while referenced; wt-reaper --tracked-ok")
+    r.add_argument("--wt-reaper-state", default="", help="wt-reaper --state (dry-run comparisons; default: its own)")
+    r.add_argument("--wt-reaper-args", default="", help="extra wt-reaper args, one string (e.g. '--no-rescue')")
     r.add_argument("--wt-reaper-idle-h", type=float, default=6.0, help="worktree idle hours before the reaper may remove it (fleet 6 h rule)")
     ls = sub.add_parser("list-signed")
     ls.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
