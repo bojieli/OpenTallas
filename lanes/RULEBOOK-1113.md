@@ -92,6 +92,67 @@ Written 2026-11-13 03:29 PST by HARD-S81-SERDES-1. Status: rule text final; the 
 - QC: the census has no QC setup rows; unmeasured against R-RTL-4a.
 - HBM q_spb1, vsN1, vsN2 and the 10 S81 slice_station rows are clock-tap or hold items (R-CLOCK), not R-RTL.
 ## R-STREET (RULES-STREET-1): macro and pin-face streets, congestion escape
+Written 2026-11-13 05:28 PST by RULES-STREET-1. Status: rule text and tool final (branch pushed); counts final; proof builds still running (INTERIM, numbers below are labelled).
+
+**What it fixes.** GRT overflow is the largest structural class (103 CLASSIFY events). The renders show one cause: a macro stands close behind a face that carries thousands of the type's own pins, or station columns stand in 15-35 um slots between macros. STREET-RULE-1 (11-12) only counted the pins of the *cores* facing a gap, so a macro row 34.56 um above a 6.7k-pin face passed it. R-STREET adds the type's own pins and the stations to the same tool.
+
+**Constant.** K = 37.5 routable tracks per um of street width (3 layers along the street, 0.048 um pitch, 0.6 fill; AUTO-GEOM's demand rule uses the same ~35/um for M2+M4 or M3+M5 at 0.75). All widths snap up to the 4.32 um lattice. A street is 43.2 um; a tap-legal slot is 17.28 um; abutted means < 4.32 um.
+
+**R-STREET-1 macro to macro** (STREET-RULE-1, kept). Two facing macros either abut (pins go straight across, no cells between) or leave a street >= max(43.2, facing pins / 37.5) um. A face with more than 1,500 pins never abuts another pin face.
+
+**R-STREET-2 macro to pin face** (new, check kind `face_street`). Macros (hard cores and LEF SRAM/ROM contents) nearer than 129.6 um to a face that carries the type's pins form *walls* along that face; two macros belong to one wall when the opening between them is under 43.2 um. For each wall: n = type pins of that face inside the wall span, ends = wall ends that open onto >= 43.2 um (0, 1 or 2). Every macro of the wall keeps
+
+`gap to the face >= min(129.6, max(floor, n / (37.5 x ends)))`, and 129.6 when ends = 0,
+
+with floor = 43.2 um when the wall is dense (n / wall length >= 3 pins per um; the failing S81 faces carry 4.0 to 5.4) and 17.28 um otherwise. Under 16 pins, or a wall shorter than 43.2 um, there is no demand and the plan edge margin stays legal. In numbers: at 5 pins/um a two-ended wall may be 648 um long at 43.2 um; a one-ended wall 324 um; beyond that the gap grows 4.32 um per 162 pins (one end) or 324 pins (two ends).
+
+**R-STREET-3 abut instead, and move the pins.** A macro may abut a pin face (< 4.32 um) only when the pins in its span go straight into it (pins in span <= its own pins on that face + 16). Order of fixes for a `face_street`, cheapest first:
+1. Move the pin window to a free span of the same face (the check prints `free_spans`) if the window still fits at <= 6 pins per um. Costs nothing, but both partitions of that face move together, so it is a die plan event.
+2. Lift the macro to the need. `street_rule.py legalize` does this; it uses free area first and grows the outline only when there is none (growth is pre-approved).
+3. If the need is over 86.4 um: break the wall. Open a >= 43.2 um cross street so each wall is two-ended and shadows <= 3,240 pins, then the need falls back to 43.2.
+4. What is left goes over the cell on M8/M9 (X-TIER-OTC) where the macro obstruction stops at M7 or lower.
+
+**R-STREET-4 where stations may sit** (new, check kind `station_alley`). Planned station registers (ft bit sites, ft registers, internal stations) sit in open area, in a street, or on their own core. A slot between two macros, or between a macro and the outline, that is narrower than 43.2 um and at least 43.2 um long may hold: nothing above 15 bits if it is under 17.28 um wide; under 3 bits per um of slot length if it is 17.28 to 43.2 um wide. A station column (>= 3 bits per um) needs a street. The fix is to widen the slot to a street (legalize does it) or to abut the pair and re-site the stations.
+
+**R-STREET-5 a station chain that runs along a slot needs a street as wide as its bits** (new, check kind `transit_street`). Every planned hop (window to first station, station to station, last station to window, and internal stations) is a segment that carries the bits of its slot. A hop that runs along a slot between two macros, or between a macro and the outline, loads that slot. T = the largest sum of hop bits through one 43.2 um stretch of the slot. The slot keeps
+
+`width >= T / 37.5`.
+
+In numbers: one 1,104-bit ft slot needs 30.24 um, two side by side 60.48, 3,400 bits 90.72, 4,250 bits 116.64. A pin-face strip that is used as an ft corridor is the common case: on S81 leaf t28 the strip between the S face and the macro row carries ft2 to ft12 sideways, 4,250 bits at x 237, in 34.56 um. The fix is to widen the corridor (legalize does it), or better to route the chain through open area or split it over two streets. Putting the first and last station of a window inside the window span, within 30 um of the face (METHODOLOGY 1.9), removes the sideways run from the face strip altogether.
+
+**R-STREET-6 halo.** No kit halo is added: kits keep `MACRO_PLACE_HALO 0 0`, and the plan gap is the halo. Between a macro and anything else the plan uses only three widths: abutted (< 4.32), tap-legal (>= 17.28, sparse pins and stations only) or street (>= 43.2). Gaps of 4.32 to 17.28 um stay a WARN (`sliver`) unless pins or stations use them; do not create new ones.
+
+**Why these numbers.** A pin in the shadow of a macro must jog along the alley to the wall end before it can turn into the type, so the alley mouth carries n / ends wires; 43.2 um x 37.5 = 1,620 wires. The 43.2 floor on dense walls is the room for the pin registers, the station column and the clock tap that land there. Measured (S81 leaf t28 attempt_3, event 7073a6b4a59): the macro row stands 34.56 um above a 6,714-pin S face; AUTO-GEOM reports channel_h 4.13 in the window y 10-20, x 227. The plan model of R-STREET-5 puts 4,251 transit bits through the same strip at x 237 against 1,296 tracks (3.3x), and 3,752 bits through the 34.56 um W strip. Lifting the row to 43.2 um and opening cross streets (R-STREET-2 alone) left channel_h at 4.77 on my first proof placement, which is why R-STREET-5 exists. dsdv c1x t3: u_cap is 34.56 um behind 1,903 W pins and 2,570 S pins (4.4 per um); AUTO-GEOM channel_v 5.44 and channel_h 3.02 in those strips; no transit there.
+
+**Implementation.** One tool, `tools/die_plan/street_rule.py` (branch `claude/rules-street-1113`, sha 59858adeb6, off origin main fbfb4fc6a6; tests in `test_street_rule.py`):
+- `street_rule.py check PLAN --repo SRC --out J.json`: per type the counts, the worst cases, and for each `face_street` the wall, pins, ends, need and free spans. Types whose only macros are LEF contents are checked too. Types whose buses carry no window (qwen_kvsys) take the pins from the plan ports.
+- `check.py --street-rule warn|error` (G0): the same check; `face_street`, `station_alley` and `transit_street` are ERRORs under `error`, next to `street`, `wall`, `outline_street`.
+- `street_rule.py legalize PLAN --out-plan NEW.json --event EV.json [--set add_regs=3]`: the auto-fix. It moves hard cores only (never a shape, never a LEF content macro), lifts them off the pin face, widens station slots and transit corridors, keeps every station register count, re-sites stations, and refuses a move that lands on a content macro, breaks reach, or needs more than +25% area. `--no-bins` makes a read-only dry run. `--set face_rule=0` gives the old STREET-RULE-1 result.
+- A moved core changes the type's reset collector tree, so a legalized type needs the normal re-bind before its kit (same as any plan event).
+
+**Proof.** INTERIM. Private builds on epyc7 `/srv/opentallas-scratch2/claude/rules-street-1/` (no wave state touched). Base = wave plan `src_s81_main_7073a6b4a5/.../plan_h2_2249.json`; legalized plans `plan_rs1_d.json` (R-STREET-2/4) and `plan_rs2_a.json` (plus R-STREET-5); each needed a private strict re-bind (rc 0, 0 errors) because the reset tree follows the cores.
+- Plan level, checked: t28 goes from 12 face_street + 25 station_alley + 24 transit_street to 0 / 0 / 0 in 5 legalize passes, 27 cores moved, no shape change, outline 1442.88 x 1226.88 -> 1442.88 x 1416.96 (+15.5% in H; the NE 40% of the type is empty, so a hand form inside the slot is the better answer). c1x t3 goes from 4 face_street to 0 with 5 cores moved and 0% growth. Drawings: `lanes/rules-street-1113/t28_plan_before_after.png`, `c1x_t3_plan_before_after.png` (the t28 drawing is the R-STREET-2/4 form).
+- Builds: t28 R-STREET-2/4 form placed (render viewed: the 15 um ln slots are now 43.2 um streets at about 20% density, the S landing strip is still 60-80%); its GRT and the baseline GRT on the same host are running. The t28 R-STREET-5 form and the c1x t3 form are in kit generation / placement. Results will replace this paragraph.
+
+**Affected types today** (wave plans of 11-13; `face_street`, `station_alley` or `transit_street`; tables with the worst case and the fix per type in `lanes/rules-street-1113/`):
+
+| die | types with macros | R-STREET violators | face_street | station_alley | transit_street | what they need |
+|---|---|---|---|---|---|---|
+| S81 | 349 | 170 | 129 | 128 | 84 | all 74 `ot_s81sl_leaf` types, 54 `col_h9/h10` types, 9 `dsdv_slice_c1x_C`, 16 `svc_*` types, 4 `kv_leaf`, 13 single slice / phy types. Lift or move the window 116, break a wall 21, re-site an SRAM/ROM 17, pins under an abutted macro 2, station slots 128, transit corridors 84 (median need 86.4 um, p90 155.5). |
+| HEAD | 7 | 0 | 0 | 0 | 0 | nothing. (5 types still carry STREET-RULE-1 core-to-core items.) |
+| QC | 73 | 31 | 30 | 0 | 12 | `sle/slw_sc` 9 (u_core 23.28 um behind 1.6-2.0k E pins, wants 43.2), `sle/slw_stm` 11 (tload macro 14.8-23.5 um under 1.4-1.6k N pins), `su_c` 3, `su_l1` 4 (two with a closed wall), `cbn_q00` 2, `coll_core` 1, `cbf_q00_s2` 1 (3,340 transit bits in 86.4 um). |
+| KV | 50 | 21 | 7 | 17 | 0 | all 16 `kv3_pv` types (stations in a 14.74 um edge slot, wants 17.28: a 2.6 um move), `kv3_hub_Eo/Wi/Wo`, `kv3_hg_v3`, `kv3_hgi_v8` (macro 17-26 um behind 0.7-0.8k pins, wants 43.2). |
+
+Read-only legalize dry run (`--no-bins --set add_regs=3`, per type, before die-level re-checks): S81 310 of 334 violating types applied and clean under the 11-13 03:5x rule set, median growth 6.3%, p90 14.7%; 17 stopped on a LEF content macro in the way. QC 0 of 30 applied (reset-contract and ft-reach checks stop them), so QC needs hand forms. KV pending.
+
+**For S81-FORMS-1 and the die owners.**
+1. Run `street_rule.py check` on your plan and read your rows in the table.
+2. Draw the form so that no macro is inside the R-STREET-2 gap of a pin face, walls are two-ended, station columns stand in streets, and no ft chain runs sideways through a slot narrower than its bits / 37.5. Prefer moving a window, breaking a wall or re-routing a chain through open area over growth.
+3. Run legalize for the remainder, re-bind, build. Fold it into your next plan event; the 48 h wave freeze stands, so no wave switch before 11-15 04:00.
+4. COORD: G0 `--street-rule warn` now on every die; `error` from each die's next plan event.
+
+**Not done / limits.** (1) K = 37.5 per um and the 3 pins per um density line are set from the S81 leaf and c1x measurements; no QC or KV type was built under the rule. (2) The auto-fix grows S81 leaf outlines (t28 +15.5%), and all leaf types share one slot, so growth is a die event; I did not estimate the die. (3) The check reads the plan: pins are taken uniform inside each window and hops as straight segments. (4) The rule does not cover density padding at pin bars or pin-register distance (t28 pin_reg p90 is 261 um against the 30 um rule); those belong to R-FLOW and R-REACH. (5) HBM was not counted (parked).
+
 ## R-REACH (RULES-REACH-1): fanout and reach locality, face-net buffering
 
 Posted 2026-11-13 04:48 by RULES-REACH-1. Branch `claude/rules-reach-1-1113` @ 1376d26613 (hub; off origin/main 055e36edab, train 36). Tool: `tools/die_plan/reach_rules.py` (check / fix / census). Handoff: `lanes/handoff/RULES-REACH-1.md`.

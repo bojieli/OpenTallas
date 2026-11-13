@@ -1,0 +1,22 @@
+type	face_street	station_alley	transit_street	worst_face(macro|face gap->need pins ends)	worst_alley(a|b gap->need bits)	worst_transit(a|b gap->need bits)	needs	legalize_dry_run
+kv3_hg_v3	1	0	0	ectl_q0|N 25.92->43.20 777 e2	-	-	LIFT: macro to need off the face (legalize) or move the pin window to a free span	-
+kv3_hgi_v8	1	0	0	head2_e0|S 17.28->43.20 733 e2	-	-	LIFT: macro to need off the face (legalize) or move the pin window to a free span	-
+kv3_hub_Eo	2	0	0	astk_ES|S 25.92->43.20 815 e2	-	-	LIFT: macro to need off the face (legalize) or move the pin window to a free span	-
+kv3_hub_Wi	1	2	0	host__qkd_hr_core_guard|W 25.92->43.20 680 e2	host__qkd_hr_core_prompt|host__qkd_hr_core_rx 12.96->17.28 145	-	LIFT: macro to need off the face (legalize) or move the pin window to a free span + STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_hub_Wo	2	0	0	astk_WS|S 25.92->43.20 815 e2	-	-	LIFT: macro to need off the face (legalize) or move the pin window to a free span	-
+kv3_pv	0	2	0	-	outline:W|pvg0_p0 14.74->17.28 20	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v1	0	2	0	-	outline:W|pvg0_p0 14.74->17.28 20	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v12	2	3	0	pvg0_p1|W 14.74->17.28 257 e2	pvg3_p0|outline:E 14.74->17.28 24	-	LIFT: macro to need off the face (legalize) or move the pin window to a free span + STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v1n	0	2	0	-	outline:W|pvg0_p3 14.74->17.28 20	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v2	0	6	0	-	pvg3_p1|outline:E 14.74->17.28 52	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v2n	0	6	0	-	pvg3_p3|outline:E 14.74->17.28 52	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v3	0	1	0	-	pvg3_p0|outline:E 14.74->17.28 32	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v3n	0	1	0	-	pvg3_p1|outline:E 14.74->17.28 32	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v4	0	2	0	-	outline:W|pvg0_p0 14.74->17.28 70	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v4n	0	2	0	-	outline:W|pvg0_p2 14.74->17.28 70	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v5	0	3	0	-	outline:W|pvg0_p0 14.74->17.28 36	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v5n	0	3	0	-	outline:W|pvg0_p3 14.74->17.28 36	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v6	0	4	0	-	outline:W|pvg0_p3 14.74->17.28 115	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v6n	0	4	0	-	outline:W|pvg0_p1 14.74->17.28 115	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v7	0	1	0	-	pvg3_p0|outline:E 14.74->17.28 46	-	STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
+kv3_pv_v8	1	2	0	pvg3_p0|E 14.74->43.20 1057 e2	outline:W|pvg0_p0 14.74->17.28 20	-	LIFT: macro to need off the face (legalize) or move the pin window to a free span + STATIONS: widen the slot to a street (legalize) or abut the pair and re-site the stations	-
