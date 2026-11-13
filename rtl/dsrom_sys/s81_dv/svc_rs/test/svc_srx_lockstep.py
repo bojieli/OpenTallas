@@ -144,8 +144,12 @@ def main():
         tags = list(ex.map(lambda sm: build(a, sm[0], sm[1], nkv, np_), [(0, 0)] + [(a.srx, m) for m in muts]))
     ref_tag = tags[0]
     ref, rs = run(a, ref_tag)
-    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, band=a.band, bandm=a.bandm, shift=n, shift_pv=npv, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
+    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, band=a.band, bandm=a.bandm, bandt=a.bandt, hcore=a.hcore, shift=n, shift_pv=npv, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
                ref=dict(tag=ref_tag, summary=rs, beats_sc=len(ref["BSC"]), beats_pv=len(ref["BPV"])), runs={})
+    engine_source = a.root / "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv"
+    fixed_rt2_calendar = a.hcore and a.dut == "s81" and "ot_s81_svc_rt2_load_calendar u_calendar" in engine_source.read_text()
+    rec["native_load_calendar"] = dict(ii_cycles=2, first_load_phase=0, replay_phase=1, static=True) if fixed_rt2_calendar else None
+    rec["summary_fault_counter_kind"] = "expected golden flags, not observed DUT protocol faults"
     with ThreadPoolExecutor(len(muts)) as ex:
         res = list(ex.map(lambda t: run(a, t), tags[1:]))
     for mut, tag, (ev, s) in zip(muts, tags[1:], res):

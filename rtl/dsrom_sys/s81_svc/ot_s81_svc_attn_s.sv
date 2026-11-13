@@ -296,7 +296,26 @@ module ot_s81_svc_attn_s #(
     assign job_ready = !act;
     wire job_go = job_v && job_ready;
     // p words: a new block needs a free bank and at most 3 blocks between the issuing and the loading one
-    wire p_ready_i = p_side && (pl_blk < nblk_p) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
+    // Native H8 reuse serializes a P packet into two H16-RT2 load cycles.
+    // Every odd load phase is statically reserved for replay, whether or not
+    // the preceding slot carried a P packet. Q loads use the same fixed slots.
+    // This is a known II=2 resource calendar; the native programme must issue
+    // on these slots. No new credit/queue or request-dependent issue rule.
+    wire rt2_load_slot;
+`ifdef OT_ATTN_HCORE
+`ifdef OT_SVC_H8_REUSE_RT2
+    generate if (H == 8) begin : g_rt2_load_calendar
+        ot_s81_svc_rt2_load_calendar u_calendar (.clk(clk), .rst_n(rst_n), .load_slot(rt2_load_slot));
+    end else begin : g_rt2_load_calendar_other_h
+        assign rt2_load_slot = 1'b1;
+    end endgenerate
+`else
+    assign rt2_load_slot = 1'b1;
+`endif
+`else
+    assign rt2_load_slot = 1'b1;
+`endif
+    wire p_ready_i = rt2_load_slot && p_side && (pl_blk < nblk_p) && ((pl_word != 0) || (p_bank_ok && (pl_blk < iss_blk + LA)));
     // REPL: a 2-entry skid between the p port and the loader, so p_ready and q_ready come from registers
     // only (no p_v -> q_ready path); a p word reaches the loader one cycle after its handshake
     wire p_v_i;
@@ -331,7 +350,7 @@ module ot_s81_svc_attn_s #(
     wire p_go = p_v_i && p_ready_i;
     wire p_last_word = p_go && ((PWORDS == 1) ? (pl_word + 1 == words_blk) : ({8'd0, pl_word} + PWORDS >= words_blk));
     wire p_w2v = (PWORDS > 1) && ({8'd0, pl_word} + 1 < words_blk);   // second word of the pair is live
-    assign q_ready = act && (q_cnt < H) && ((q_cnt != 0) || q_bank_ok) && !((ILV != 0) && p_go);
+    assign q_ready = rt2_load_slot && act && (q_cnt < H) && ((q_cnt != 0) || q_bank_ok) && !((ILV != 0) && p_go);
     wire q_go = q_v && q_ready;
     // ILV: a job without the reuse flag rewrites the staging only once the back job's fills are done
     assign kv_ready = act && (wptr < T) && ((ILV == 0) || (NSTAGE >= 2) || reuse_f || !act_b || (fl_blk >= nblk_b));
@@ -1239,4 +1258,20 @@ module ot_s81_svc_attn_s #(
     always @(posedge clk) begin
         pv_c <= m_c; pv_y <= m_y; pv_f <= m_f;
     end
+endmodule
+
+// Fixed native H8 load calendar. Phase zero is the first active clock edge
+// after local reset release; phase one is always reserved for RT2 replay.
+// The phase never depends on a request, acceptance, ready signal or credit.
+module ot_s81_svc_rt2_load_calendar (
+    input wire clk,
+    input wire rst_n,
+    output wire load_slot
+);
+    reg phase;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) phase <= 1'b0;
+        else phase <= !phase;
+    end
+    assign load_slot = !phase;
 endmodule
