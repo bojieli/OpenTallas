@@ -66,3 +66,11 @@
 - History: ref_tile/s81sl_xgtxo (whole xgt_xo 734.4x777.6, 11,914 pins, 10-21) never signed. xs4 alone has 4,365 port bits.
 - SITE SCAN (epyc7 /srv/opentallas-scratch2/claude/s81-forms-1/xssite.py, margin 34.56, gap 8.64): with the current core positions NO C type except c1x t1 has a free site for any xs4 outline from 432x950 to 734x562. The xf row (941.76x190.08), cap (336.96x414.72), xr and eg block it. Next step: a per-type hand re-layout of the C rows (move/rotate cores, shapes frozen) with the xs4 core, which also applies the street bands. Area is fine (about 0.73 of 1.59 mm2 inner).
 - Leaf street: R-STREET still header-only at 2026-11-13 05:23. fam43B result above.
+
+## 2026-11-13 10:32 update (leaf template event)
+- Work dir epyc7 /srv/opentallas-scratch2/claude/s81-forms-1. Tools: rs8d/ = R-STREET final 8dd3028a50 (street_rule.py patched: json default for numpy bool; .orig kept), rsd73/ = orient_realize 4a438c2be2.
+- Base: plan_A 18c864518844 -> orient_realize -> w/plan_Ao.json f1add586784c.
+- Legalize runs: A2 (plan outside --repo) reverted 71/79 on 'collector root moved' = ARTIFACT (reset_resel could not resolve pin tables, 0 trees republished). A3 (reset_resel=0): 46 applied, 22 reticle-reverted (die +181x+553 um, W headroom 10.9), 6 route_supply reverted; reset_contract post-hoc passes 44/46 (t25__cl431c660f, t66 fail). A4 = rsleafA4.sh (plan INSIDE repo, full contract) running, out w/rsleafoA4.
+- Post pipeline: leaf_post.sh TAG LEGALIZED_PLAN BINS [CAP] (orient -> core_tap_fix -> tapcap 1500 -> tapknobs (pregrt_ff_hold all leaf, tap_pitch 200 on kv_leaf t1-5 + leaf t29) -> resetfix in w/vt -> checks -> run_bind.sh G0/strict bind/LATCHECK). NEVER cp onto a hard-linked repo file; rm first (rsleafA4 does).
+- Leaf hold family (COORD 10:xx/11:xx): t6 = core-tap reach (clk_c24 181 um) + port-out boundary; kv_leaf t5 = pocket tap overload (clk_t5 11,297). Posted STATE.
+- Next: A4 result -> leaf_post -> private place proofs -> READY (event branch off origin main, plan + street_rule_bins only; tools core_tap_fix/tapcap/tapknobs on separate branch).
