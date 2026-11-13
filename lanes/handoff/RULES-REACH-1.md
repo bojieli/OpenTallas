@@ -59,3 +59,6 @@ READY with branch + tests, stop.
   max 701, GRT 0 ov; KV hub_Eo placed, AUTO-GEOM FAIL, GRT 0 ov, r2r>405 721 (worst u_rrl_150 -> cland_fstart_ft12_o 2376 um),
   run-item stopped at geom. RULEBOOK text (rows 1/2/4/5, item 7) still says ERROR / every kit: COORD to change to opt-in.
   READY posted in lanes/COORD-REVIEW-QUEUE.md. Lane STOPPED; nothing running from this lane.
+- 2026-11-13 07:35 RESUMED after REACH-FIN-2 handback. Branch tip ce0e50e4e7 (adds the reach_homes schema/G0 test; pushed; merge-tree
+  vs origin/main 5eefdbe2fa clean). hub_Eo placed: r2r>405 3869 -> 721, START fan 3236 -> 0; leftovers classified in the
+  RULEBOOK proof table. RULEBOOK R-REACH updated (opt-in wording, final proof numbers). Renders viewed (scratch rr/img).
