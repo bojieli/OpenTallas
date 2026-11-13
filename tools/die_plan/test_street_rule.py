@@ -608,7 +608,7 @@ def test_station_alley():
     got = {(v["a"], v["b"]): (v["pins"][0], v["gap"], v["need"]) for v in V}
     assert got == {("a", "b"): (652, 20.0, 43.2), ("outline:S", "c"): (32, 16.0, 17.28)}
     pairs, faces = SR.alley_force(V)
-    assert pairs == {frozenset(("a", "b"))} and faces == {("c", "S")}
+    assert pairs == {frozenset(("a", "b")): 43.2} and faces == {("c", "S"): 43.2}
     # legalize: the forced pair is a street although no core pin faces the slot
     a = core("a", 100, 100, 200, 200)
     b = core("b", 320, 100, 200, 200)
@@ -755,3 +755,40 @@ def test_content_only_type_checked(tmp_path):
     plan.write_text(json.dumps(P))
     SR.main(["check", str(plan), "--die", "toy", "--repo", str(tmp_path), "--out", str(ck)])
     assert json.loads(ck.read_text())["types_with_violations"] == 0
+
+
+def test_transit_street():
+    # two macros 43.2 um above the S outline; an ft chain of 2,208 bits runs along that strip (hops along x at y = 12)
+    t = {"outline_um": [1000.0, 600.0],
+         "hard_cores": [{"inst": "a", "origin_um": [100.0, 43.2], "outline_um": [300.0, 200.0]},
+                        {"inst": "b", "origin_um": [500.0, 43.2], "outline_um": [300.0, 200.0]}],
+         "ft_slots": [{"name": "f4", "width": 1104, "regs_um": [[900.0, 0.0], [700.0, 12.0], [400.0, 12.0], [60.0, 12.0]]},
+                      {"name": "f5", "width": 1104, "regs_um": [[950.0, 0.0], [720.0, 14.0], [420.0, 14.0], [80.0, 14.0]]}]}
+    assert len(SR.station_hops(t)) == 6
+    V = SR.transit_streets(t, CFG)
+    got = {(v["a"], v["b"]): (v["pins"][0], v["gap"], v["need"]) for v in V}
+    assert got == {("outline:S", "a"): (2208, 43.2, 60.48), ("outline:S", "b"): (2208, 43.2, 60.48)}
+    assert all(v["kind"] == "transit_street" and v["axis"] == "y" for v in V)
+    pairs, faces = SR.alley_force(V)
+    assert faces == {("a", "S"): 60.48, ("b", "S"): 60.48} and pairs == {}
+    # the same chain in a 60.48-um strip is legal; one 1,104-bit slot alone fits 43.2 (29.4 -> 30.24)
+    for h in t["hard_cores"]:
+        h["origin_um"][1] = 60.48
+    assert SR.transit_streets(t, CFG) == []
+    for h in t["hard_cores"]:
+        h["origin_um"][1] = 43.2
+    t["ft_slots"] = t["ft_slots"][:1]
+    assert SR.transit_streets(t, CFG) == []
+    # a chain between two cores: the pair becomes a street of the transit width in legalize
+    t2 = {"outline_um": [1000.0, 600.0],
+          "hard_cores": [{"inst": "a", "origin_um": [100.0, 100.0], "outline_um": [200.0, 400.0]},
+                         {"inst": "b", "origin_um": [343.2, 100.0], "outline_um": [200.0, 400.0]}],
+          "internal_stations": [{"from_um": [320.0, 520.0], "regs_um": [[320.0, 300.0]], "to_um": [320.0, 80.0], "bits": 3000}]}
+    V = SR.transit_streets(t2, CFG)
+    assert [(v["a"], v["b"], v["axis"], v["pins"][0], v["need"]) for v in V] == [("a", "b", "x", 3000, 82.08)]
+    pairs, _ = SR.alley_force(V)
+    a = core("a", 100, 100, 200, 400)
+    b = core("b", 343.2, 100, 200, 400)
+    r = SR.pair_rule(a, b, dict(CFG, _alley=pairs))
+    assert r["kind"] == "street" and r["need"] == 82.08
+    assert "transit_street" in SR.HARD
