@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.head_plan_event.v1",
+ "event": "head_rp18_1112",
+ "die": "s81_head",
+ "author": "HEAD-96",
+ "supersedes": {"plan": "rp17", "sha256_16": "501a3ad70cc107d1"},
+ "tools": "main 14685c8552d3 (train 18, reset column mode 39e04ecad5)",
+ "content": [
+  "rp18a: clock.tap_window.per_port_ps hd_lep0N from REACH-FIX-2 it4 kitwin 55daf79b71d8 by need+10 (15 ports; clk_t4/t6/t7 93/90/90); partition_types.hd_spn_wshim_tx.reset.relay_um 300",
+  "partition_types[T].reset.column = {} on hd_spn_wshim_tx, hd_spn_wshim_rx, hd_spn_eshim_tx, hd_spn_eshim_rx, hd_turn_a, hd_turn_b; reset.in_sites dropped for them",
+  "re-derived reset references from the re-solved trees (fixed scripts, no hand edits): scripts/rawfix.py (reset_start_raw_exports private rows + landing pin source_instance; landing_local_resets), scripts/remap_start.py (landing_reader/writer_start stage raw_reset, physical identity), scripts/rawfix2.py (existing_port raw exports follow the out site; START-copy stage names)",
+  "no outline change"
+ ],
+ "not_in_event": ["hd_lep0N lep_pair rst_n centre pin (250.6 um, signed vE_1106 view): needs a core re-pin build; proposal scripts/lep_rst_edge.py (S face M5 x 397.464, push-off 34.6 um)"],
+ "files": {"plan": "source_plan_rp18.json.gz", "sidecar": "source_sidecar_rp18.json.gz (unchanged from rp17)"}
+}

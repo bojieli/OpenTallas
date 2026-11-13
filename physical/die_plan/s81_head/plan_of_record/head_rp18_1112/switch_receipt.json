@@ -1,0 +1,574 @@
+{
+ "schema": "opentallas.head_final_switch.v1",
+ "base": "physical/die_plan/s81_head/plan_of_record/l48ve/source_plan.json.gz",
+ "base_sha256": "26cb484d02505dcd5dc37c5ca5e0fcd3493dbc484f5842acb7c366362f5ecaa8",
+ "events": [
+  {
+   "id": "H2_HSPLIT",
+   "why": "hd_host -> hd_host_w + hd_host_e (CAP/TIM); host_l1rx/l1tx 4, COLL_HOST0_U 11->12, COLL_HOST1_D 4->5",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H2",
+    "DIE-HEAD-84 l48uo_hsplit (claude/die-head-84-host-hsplit-1107@e0599ebe03b)"
+   ],
+   "kind": "diff",
+   "event_base": "physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz",
+   "event_base_sha256": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
+   "event_plan": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48uo_hsplit_source_plan.json.gz",
+   "event_plan_sha256": "f818bf93f011454e0261e76529bdd1977d5a580a8e2e8e15b20c19fdc642ed66",
+   "units_applied": [
+    "lanes/coll_HOST0_u",
+    "lanes/coll_HOST1_d",
+    "lanes/host_l1rx",
+    "lanes/host_l1tx",
+    "partitions/host",
+    "partitions/host_e",
+    "partitions/host_w",
+    "ports/coll_HOST0_d__0",
+    "ports/coll_HOST0_u__1",
+    "ports/coll_HOST1_d__0",
+    "ports/coll_HOST1_u__0",
+    "ports/host_l1rx__0",
+    "ports/host_l1tx__0",
+    "ports/host_rx__0__h5n",
+    "ports/host_tx__6__h5n",
+    "tkey/hd_host/buses",
+    "tkey/hd_host/cells",
+    "tkey/hd_host/clock",
+    "tkey/hd_host/contents",
+    "tkey/hd_host/core_pg_connect",
+    "tkey/hd_host/count_straps",
+    "tkey/hd_host/hard",
+    "tkey/hd_host/hard_cores",
+    "tkey/hd_host/lec_hints",
+    "tkey/hd_host/module",
+    "tkey/hd_host/note",
+    "tkey/hd_host/outline_um",
+    "tkey/hd_host/private_reset_start_exports",
+    "tkey/hd_host/reset",
+    "tkey/hd_host/reset_start_raw_exports",
+    "tkey/hd_host/sources",
+    "tkey/hd_host/verilog_defines",
+    "tkey/hd_host_e/buses",
+    "tkey/hd_host_e/cells",
+    "tkey/hd_host_e/clock",
+    "tkey/hd_host_e/contents",
+    "tkey/hd_host_e/core_pg_connect",
+    "tkey/hd_host_e/count_straps",
+    "tkey/hd_host_e/hard",
+    "tkey/hd_host_e/hard_cores",
+    "tkey/hd_host_e/module",
+    "tkey/hd_host_e/note",
+    "tkey/hd_host_e/outline_um",
+    "tkey/hd_host_e/private_reset_start_exports",
+    "tkey/hd_host_e/reset",
+    "tkey/hd_host_e/reset_start_raw_exports",
+    "tkey/hd_host_e/sources",
+    "tkey/hd_host_e/verilog_defines",
+    "tkey/hd_host_w/buses",
+    "tkey/hd_host_w/cells",
+    "tkey/hd_host_w/clock",
+    "tkey/hd_host_w/contents",
+    "tkey/hd_host_w/core_pg_connect",
+    "tkey/hd_host_w/count_straps",
+    "tkey/hd_host_w/hard",
+    "tkey/hd_host_w/hard_cores",
+    "tkey/hd_host_w/module",
+    "tkey/hd_host_w/note",
+    "tkey/hd_host_w/outline_um",
+    "tkey/hd_host_w/private_reset_start_exports",
+    "tkey/hd_host_w/reset",
+    "tkey/hd_host_w/sources",
+    "tkey/hd_host_w/verilog_defines",
+    "top/clock/landing_network/edges",
+    "top/clock/landing_network/start_tree/uses",
+    "top/clock/tap_window/per_type_ps/hd_host",
+    "top/clock/tap_window/per_type_ps/hd_host_e",
+    "top/clock/tap_window/per_type_ps/hd_host_w",
+    "top/reset/in_sites/hd_host",
+    "top/reset/in_sites/hd_host_e",
+    "top/reset/in_sites/hd_host_w",
+    "type/hd_host"
+   ],
+   "units_already": [
+    "type/hd_host_e",
+    "type/hd_host_w"
+   ],
+   "sidecar": {
+    "path": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48uo_hsplit_source_sidecar.json.gz",
+    "sha256": "eb6e0857bad44135cfddd9d76df95980bfe29fc037b542144455497456682f14"
+   }
+  },
+  {
+   "id": "H5_SPN",
+   "why": "hd_spn / hd_spn_end realized internal stations + fstart leaves (Codex station closeout); 0 lane cycles",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H5",
+    "KW-FIX-36 hold_items hd_spn 'paid station event'",
+    "DIE-HEAD-77 l48uj (epyc2 dh77/ev/prep_l48uj)",
+    "codex_stations_boot_1106 realized stations"
+   ],
+   "kind": "diff",
+   "event_base": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48ui_prep_kw23.json.gz",
+   "event_base_sha256": "a2c18c19e08ce6c39d3a0bf8e575119c6ab792c28f3fa188df2aaea835d0d1ac",
+   "event_plan": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48uj_plan.json.gz",
+   "event_plan_sha256": "3b0e9771f47bc1a53c999b566904f86255fdd37606a80f8a8d16ffff90d219d7",
+   "units_applied": [
+    "tkey/hd_spn/clock",
+    "tkey/hd_spn/internal_stations",
+    "tkey/hd_spn/realize_internal_stations",
+    "tkey/hd_spn/reset",
+    "tkey/hd_spn_end/clock",
+    "tkey/hd_spn_end/realize_internal_stations",
+    "tkey/hd_spn_end/reset"
+   ],
+   "units_already": []
+  },
+  {
+   "id": "H4_LEP",
+   "why": "hd_lep0N density-entry clock (clk_t entries), reset/start raw exports, Codex vF provider; 0 lane cycles",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H4",
+    "DIE-HEAD-88 LEP density entries r200/t1200 (intel1 dh88/lep/prepared_dt 371ab6f315a0)"
+   ],
+   "kind": "diff",
+   "event_base": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48ui_prep_kw23.json.gz",
+   "event_base_sha256": "a2c18c19e08ce6c39d3a0bf8e575119c6ab792c28f3fa188df2aaea835d0d1ac",
+   "event_plan": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/lep_dt_plan.json.gz",
+   "event_plan_sha256": "371ab6f315a0e01d9d22fc2809faae4e45a00d721084be409cfd245bbaa93932",
+   "units_applied": [
+    "tkey/hd_lep0N/clock",
+    "tkey/hd_lep0N/contents",
+    "tkey/hd_lep0N/hard_cores",
+    "tkey/hd_lep0N/reset",
+    "tkey/hd_lep0N/reset_start_raw_exports"
+   ],
+   "units_already": []
+  },
+  {
+   "id": "H1_CTL",
+   "why": "hd_ctl read-select DSREP 8 on 5 rings (0 cycles); u_core SRAM_RAW_CAPTURE/CTL_PRE/CTL_WINDOW_PRE = x_o +1 -> lane sp_x0 fixed_cycles 1 (LAT_HD_SPX0 5->6)",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H1",
+    "DIE-HEAD-91 hd_ctl vH ds8 (epyc2 dh88/ctl_ds8/hd_ctl_vH_ds8)"
+   ],
+   "kind": "ops",
+   "ops": [
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_ctl",
+      "clock",
+      "landing_ring_dsrep"
+     ],
+     "value": {
+      "buses": [
+       "a_rx_i",
+       "b7_rx_i",
+       "b_i",
+       "h_rx_i",
+       "lepk_i0"
+      ],
+      "dsrep": 8
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_ctl",
+      "contents",
+      {
+       "inst": "u_core"
+      },
+      "params"
+     ],
+     "value": {
+      "SRAM_RAW_CAPTURE": "1",
+      "CTL_PRE": "1",
+      "CTL_WINDOW_PRE": "1"
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "sp_x0"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    }
+   ],
+   "units_applied": [
+    "lanes/sp_x0",
+    "tkey/hd_ctl/clock",
+    "tkey/hd_ctl/contents"
+   ]
+  },
+  {
+   "id": "H2b_HOST_E_DS8",
+   "why": "hd_host_e read-select DSREP 8 on coll_i1 (0 cycles)",
+   "owner_rows": [
+    "DIE-HEAD-91 HSPLIT e ds8 (DSREP 8 on coll_i1)"
+   ],
+   "kind": "ops",
+   "ops": [
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_host_e",
+      "clock",
+      "landing_ring_dsrep"
+     ],
+     "value": {
+      "buses": [
+       "coll_i1"
+      ],
+      "dsrep": 8
+     }
+    }
+   ],
+   "units_applied": [
+    "tkey/hd_host_e/clock"
+   ]
+  },
+  {
+   "id": "H3_MESH",
+   "why": "hd_mesh u_core RBL 1 + BQ 10 (replay landing: coll_oa/coll_ob +1 TX edge, RX 0) and DSREP 8 on coll_ia/coll_ib -> 6 mesh->serdes lanes fixed_cycles 1",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H3",
+    "codex/head-mesh-collector-1113@b6d8c0d798e collector form",
+    "codex/head-mesh-split-1108@80c3c10de24 (RTL/kit only, 0 plan delta)"
+   ],
+   "kind": "ops",
+   "ops": [
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_mesh",
+      "contents",
+      {
+       "inst": "u_core"
+      },
+      "params"
+     ],
+     "value": {
+      "BQ": "10",
+      "RBL": "1"
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_mesh",
+      "clock",
+      "landing_ring_dsrep"
+     ],
+     "value": {
+      "buses": [
+       "coll_ia",
+       "coll_ib"
+      ],
+      "dsrep": 8
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_EN0_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_EN1_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_WS0_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_WS1_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_ES0_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_ES1_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    }
+   ],
+   "units_applied": [
+    "lanes/coll_EN0_d",
+    "lanes/coll_EN1_d",
+    "lanes/coll_ES0_d",
+    "lanes/coll_ES1_d",
+    "lanes/coll_WS0_d",
+    "lanes/coll_WS1_d",
+    "tkey/hd_mesh/clock",
+    "tkey/hd_mesh/contents"
+   ]
+  },
+  {
+   "id": "H6_TX",
+   "why": "ot_s81hd_sc_tx CH_STAGE: pma_tx +1 (off-die PMA path, SC form total +3 ck edges vs RXQ) and e_flt +1 (fault-only status); no die lane changes; link/compiler nominal term in the switch table",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H6",
+    "DIE-HEAD-91 TX hm10ff (epyc2 dh88/ot_s81hd_sc_tx_vH_fold_mw_hm10ff) CH_STAGE+1"
+   ],
+   "kind": "ops",
+   "ops": [],
+   "units_applied": []
+  }
+ ],
+ "conflicts": [],
+ "lane_cycles_changed": [
+  {
+   "lane": "coll_EN0_d",
+   "old": 4,
+   "new": 5,
+   "by": [
+    "H3_MESH"
+   ]
+  },
+  {
+   "lane": "coll_EN1_d",
+   "old": 18,
+   "new": 19,
+   "by": [
+    "H3_MESH"
+   ]
+  },
+  {
+   "lane": "coll_ES0_d",
+   "old": 4,
+   "new": 5,
+   "by": [
+    "H3_MESH"
+   ]
+  },
+  {
+   "lane": "coll_ES1_d",
+   "old": 18,
+   "new": 19,
+   "by": [
+    "H3_MESH"
+   ]
+  },
+  {
+   "lane": "coll_HOST0_u",
+   "old": 11,
+   "new": 12,
+   "by": [
+    "H2_HSPLIT"
+   ]
+  },
+  {
+   "lane": "coll_HOST1_d",
+   "old": 4,
+   "new": 5,
+   "by": [
+    "H2_HSPLIT"
+   ]
+  },
+  {
+   "lane": "coll_WS0_d",
+   "old": 4,
+   "new": 5,
+   "by": [
+    "H3_MESH"
+   ]
+  },
+  {
+   "lane": "coll_WS1_d",
+   "old": 18,
+   "new": 19,
+   "by": [
+    "H3_MESH"
+   ]
+  },
+  {
+   "lane": "host_l1rx",
+   "old": null,
+   "new": 4,
+   "by": [
+    "H2_HSPLIT"
+   ]
+  },
+  {
+   "lane": "host_l1tx",
+   "old": null,
+   "new": 4,
+   "by": [
+    "H2_HSPLIT"
+   ]
+  },
+  {
+   "lane": "sp_x0",
+   "old": 5,
+   "new": 6,
+   "by": [
+    "H1_CTL"
+   ]
+  }
+ ],
+ "plan_sha256": "7322511ff22a4741426044711ca11b2b52fe8afcb18f0abfed4d1080aa54a5e6",
+ "sidecar": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48uo_hsplit_source_sidecar.json.gz",
+ "sidecar_sha256": "eb6e0857bad44135cfddd9d76df95980bfe29fc037b542144455497456682f14",
+ "units_by_event": {
+  "H3_MESH": [
+   "lanes/coll_EN0_d",
+   "lanes/coll_EN1_d",
+   "lanes/coll_ES0_d",
+   "lanes/coll_ES1_d",
+   "lanes/coll_WS0_d",
+   "lanes/coll_WS1_d",
+   "tkey/hd_mesh/clock",
+   "tkey/hd_mesh/contents"
+  ],
+  "H2_HSPLIT": [
+   "lanes/coll_HOST0_u",
+   "lanes/coll_HOST1_d",
+   "lanes/host_l1rx",
+   "lanes/host_l1tx",
+   "partitions/host",
+   "partitions/host_e",
+   "partitions/host_w",
+   "ports/coll_HOST0_d__0",
+   "ports/coll_HOST0_u__1",
+   "ports/coll_HOST1_d__0",
+   "ports/coll_HOST1_u__0",
+   "ports/host_l1rx__0",
+   "ports/host_l1tx__0",
+   "ports/host_rx__0__h5n",
+   "ports/host_tx__6__h5n",
+   "tkey/hd_host/buses",
+   "tkey/hd_host/cells",
+   "tkey/hd_host/clock",
+   "tkey/hd_host/contents",
+   "tkey/hd_host/core_pg_connect",
+   "tkey/hd_host/count_straps",
+   "tkey/hd_host/hard",
+   "tkey/hd_host/hard_cores",
+   "tkey/hd_host/lec_hints",
+   "tkey/hd_host/module",
+   "tkey/hd_host/note",
+   "tkey/hd_host/outline_um",
+   "tkey/hd_host/private_reset_start_exports",
+   "tkey/hd_host/reset",
+   "tkey/hd_host/reset_start_raw_exports",
+   "tkey/hd_host/sources",
+   "tkey/hd_host/verilog_defines",
+   "tkey/hd_host_e/buses",
+   "tkey/hd_host_e/cells",
+   "tkey/hd_host_e/clock",
+   "tkey/hd_host_e/contents",
+   "tkey/hd_host_e/core_pg_connect",
+   "tkey/hd_host_e/count_straps",
+   "tkey/hd_host_e/hard",
+   "tkey/hd_host_e/hard_cores",
+   "tkey/hd_host_e/module",
+   "tkey/hd_host_e/note",
+   "tkey/hd_host_e/outline_um",
+   "tkey/hd_host_e/private_reset_start_exports",
+   "tkey/hd_host_e/reset",
+   "tkey/hd_host_e/reset_start_raw_exports",
+   "tkey/hd_host_e/sources",
+   "tkey/hd_host_e/verilog_defines",
+   "tkey/hd_host_w/buses",
+   "tkey/hd_host_w/cells",
+   "tkey/hd_host_w/clock",
+   "tkey/hd_host_w/contents",
+   "tkey/hd_host_w/core_pg_connect",
+   "tkey/hd_host_w/count_straps",
+   "tkey/hd_host_w/hard",
+   "tkey/hd_host_w/hard_cores",
+   "tkey/hd_host_w/module",
+   "tkey/hd_host_w/note",
+   "tkey/hd_host_w/outline_um",
+   "tkey/hd_host_w/private_reset_start_exports",
+   "tkey/hd_host_w/reset",
+   "tkey/hd_host_w/sources",
+   "tkey/hd_host_w/verilog_defines",
+   "top/clock/landing_network/edges",
+   "top/clock/landing_network/start_tree/uses",
+   "top/clock/tap_window/per_type_ps/hd_host",
+   "top/clock/tap_window/per_type_ps/hd_host_e",
+   "top/clock/tap_window/per_type_ps/hd_host_w",
+   "top/reset/in_sites/hd_host",
+   "top/reset/in_sites/hd_host_e",
+   "top/reset/in_sites/hd_host_w",
+   "type/hd_host",
+   "type/hd_host_e",
+   "type/hd_host_w"
+  ],
+  "H1_CTL": [
+   "lanes/sp_x0",
+   "tkey/hd_ctl/clock",
+   "tkey/hd_ctl/contents"
+  ],
+  "H4_LEP": [
+   "tkey/hd_lep0N/clock",
+   "tkey/hd_lep0N/contents",
+   "tkey/hd_lep0N/hard_cores",
+   "tkey/hd_lep0N/reset",
+   "tkey/hd_lep0N/reset_start_raw_exports"
+  ],
+  "H5_SPN": [
+   "tkey/hd_spn/clock",
+   "tkey/hd_spn/internal_stations",
+   "tkey/hd_spn/realize_internal_stations",
+   "tkey/hd_spn/reset",
+   "tkey/hd_spn_end/clock",
+   "tkey/hd_spn_end/realize_internal_stations",
+   "tkey/hd_spn_end/reset"
+  ]
+ },
+ "preservation": "every unit not named in units_by_event byte-identical to the base (sort_keys JSON)"
+}
