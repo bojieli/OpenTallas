@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.svc.local-feedback.v1",
+  "verdict": "PASS_LOCAL_MECHANISM_ONLY",
+  "candidate_source": "48800dce6a197cd7534ed8c58d723237db46ef44",
+  "base_main": "4a8851da4bafc353709823ee2627d46671e80284",
+  "unit": "epyc7/1891310-1794612591",
+  "selected_modules_sha256": {
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_sms_fold2.sv": "ae398683830d00890b74c66d03bd822a87c463350e5a47d2524dbc638722a8b4",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smh_fold2.sv": "dd8e8d3c93f8206f2db13fdff884a1027761da173b1e4e9b24df72e119d456c5",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_sml_fold2.sv": "2453990ee4769247878bda39b3ae464e6709029118772a2d57dc1aa38b431933",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smd_fold2.sv": "7db47528365467141d6e555b22d12bd8fff21ae2902fcd9e44747cebceae60de",
+    "rtl/dsrom_sys/s81_dv/su_sm/ot_s81_su_smq.sv": "98ffbee4b8c7be7f1d11ffe839df6aeb9ecf4e7918630cfa16cab9643a7f7b56",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_mem_ar.sv": "61aa7c4cc40ea3eca59032b4db0ef88258f7d228724bcd7b3b58f9c0269c693a",
+    "dsdv_svc_p_source_module": "a3b0a95051f3658cb6537a17396ed65481051b2e02eefcd3b181023d34ecbc59"
+  },
+  "selected_main_modules_equal": true,
+  "stimulus": "Unit SE parameters and finite deterministic operand rows at one actual fold2 SM head; operand rows8edges apart. No real upstream score/SX producer in this vehicle.",
+  "production_modules": [
+    "ot_s81_su_sms_fold2 and actual SMQ/SMH children",
+    "dsdv_svc_mem_ar with actual160x256SRAM",
+    "dsdv_svc_p_source H8"
+  ],
+  "bench_glue": "BF16 rounding and pb_n/pk sampling follow rs_c equations; one job, no GO/head/reset partition or complete rs wrapper qualification.",
+  "measured_cases": [
+    {
+      "T": 32,
+      "nv": 2,
+      "nonzero_result_rows": 2,
+      "P_beats_exact": 8,
+      "first_e_after_last_operand": 106,
+      "first_P_after_last_operand": 107,
+      "first_P_after_first_e": 1,
+      "errors": 0
+    },
+    {
+      "T": 128,
+      "nv": 8,
+      "nonzero_result_rows": 8,
+      "P_beats_exact": 32,
+      "first_e_after_last_operand": 106,
+      "first_P_after_last_operand": 107,
+      "first_P_after_first_e": 1,
+      "errors": 0
+    },
+    {
+      "T": 640,
+      "nv": 40,
+      "nonzero_result_rows": 40,
+      "P_beats_exact": 160,
+      "first_e_after_last_operand": 106,
+      "first_P_after_last_operand": 107,
+      "first_P_after_first_e": 1,
+      "errors": 0
+    }
+  ],
+  "negative_control": {
+    "T": 32,
+    "P_after_last_operand": 9,
+    "missing_beats_caught": 8
+  },
+  "added_data_cycles": 0,
+  "H8_CALIBRATED": false,
+  "limitations": [
+    "No global SM-feedback PIO scalar",
+    "No SX or P_ARR/PVO calibration",
+    "No global programme/physical adoption",
+    "No full arithmetic golden comparison: actual SM arithmetic has independent existing gates; this checks nonzero payload transport/readiness"
+  ]
+}
