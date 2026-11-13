@@ -1,0 +1,7 @@
+FEEDBACK_DATA nonzero_rows=2 expected_rows=2
+FEEDBACK_TIMES last_row=95 first_write=201 last_write=203 first_fire=202 write_delta=106 fire_delta=107
+FEEDBACK PASS writes=2 fires=8 errors=0
+- /srv/opentallas-scratch2/claude/tok-verify-2/svc_feedback/v4/tb_svc_feedback.sv:56: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 669ns; walltime 2.794 s; speed 239.404 ns/s
+- Verilator: cpu 2.793 s on 1 threads; allocated 28 MB
