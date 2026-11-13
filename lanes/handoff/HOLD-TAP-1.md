@@ -55,3 +55,7 @@ Classification tables (t41, sle_st_a running), design, implement + tests, proofs
 - OPEN: t41 sign-off RESULT (run in GRT max-wire repair; localhost ~/ht1log/t41_route.log, ot-run client on localhost) and QC sle_x45 prototype (epyc4 hold-tap-1/proof/sle_x45/pg.log).
   When they end: append a RESULT line to the queue and update the two RUNNING rows in RULEBOOK-1113.md R-CLOCK Proof. Then the lane stops.
 - Cleanup after the RESULT: epyc9 hold-tap-1/proof/{turn_b,tb45,t41,tbk,t0,t1,t41_p1} and epyc4 hold-tap-1/proof are private copies (delete); keep proof/evidence and diag.
+
+## 2026-11-13 09:01 QC die clock task (COORD 08:4x)
+- PLAN posted to the queue (diagnosis, 313-region form, s29 delta). Routed estimate RUNNING: epyc7 /srv/opentallas-scratch2/claude/hold-tap-1/qcreg/s28reg (ot-run client on localhost, log ~/ht1log/qcreg_s28.log; chain qcreg.sh; CHAIN.log there). When it ends: read reg/sta.log + reg/sta/die_sta_related.json (intra / seam / landed, kit window need), post RESULT, add R-CLOCK-6 to RULEBOOK-1113.md.
+- t41 sign-off still open (ot-run client localhost pid 506716, log ~/ht1log/t41_route.log).
