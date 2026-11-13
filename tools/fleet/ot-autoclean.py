@@ -564,6 +564,56 @@ def parse_queue(text, now, hours=25.0, tz="America/Los_Angeles"):
     return paths, words
 
 
+OPEN_FILE = "queue_open.json"
+READYASK_RE = re.compile(r"\b(READY|ASK)\b")
+CLOSE_RE = re.compile(r"\b(MERGED|APPROVED|REJECTED|WITHDRAWN|SUPERSEDED|CLOSED|DONE|ANSWER|ANSWERED|DECISION|DROPPED)\b")
+KEY_RE = re.compile(r"\b[0-9a-f]{10,40}\b|\bclaude/[\w.-]+(?:/[\w.-]+)*")
+
+
+def parse_open_readyask(text, now, hours=168.0, tz="America/Los_Angeles"):
+    """CLEAN-2 (COORD 11-12): paths named by READY / ASK posts of the last `hours` that no later post closes.  A post is
+    closed when a later post carrying MERGED / APPROVED / REJECTED / WITHDRAWN / SUPERSEDED / CLOSED / DONE / ANSWER /
+    DECISION names one of its keys (a commit sha >= 10 hex or a claude/<branch>).  A READY/ASK without any key stays
+    open for the whole window (fail safe)."""
+    try:
+        from zoneinfo import ZoneInfo
+        zone = ZoneInfo(tz)
+    except Exception:
+        zone = None
+    import datetime
+    lo = now - hours * 3600
+    posts, cur = [], None
+    for ln in text.splitlines():
+        if ln[:1] and not ln[:1].isspace():
+            m = STAMP_RE.search(ln[:80])
+            if m:
+                try:
+                    dt = datetime.datetime.strptime(f"{m.group(1)} {m.group(2)}:{m.group(3) or '00'}", "%Y-%m-%d %H:%M:%S")
+                    t = dt.replace(tzinfo=zone).timestamp() if zone else time.mktime(dt.timetuple())
+                except ValueError:
+                    t = now
+                cur = {"t": t, "lines": [ln]}
+                posts.append(cur)
+                continue
+        if cur is not None:
+            cur["lines"].append(ln)
+    out = set()
+    for i, p in enumerate(posts):
+        if p["t"] < lo:
+            continue
+        head = p["lines"][0][:200]
+        for j, ln in enumerate(p["lines"]):
+            if not (READYASK_RE.search(head) if j == 0 else READYASK_RE.search(ln.lstrip()[:12])):
+                continue
+            body = "\n".join(p["lines"]) if j == 0 else ln
+            keys = set(KEY_RE.findall(body))
+            closed = bool(keys) and any(CLOSE_RE.search(q["lines"][0][:200]) and any(k in "\n".join(q["lines"]) for k in keys)
+                                        for q in posts[i + 1:])
+            if not closed:
+                out |= text_paths(body)
+    return out
+
+
 def generic_name(n):
     return (len(n) < 8 or n in GENERIC_NAMES or n.startswith("attempt") or re.fullmatch(r"[0-9a-f]{10,}", n) is not None
             or n.startswith("qwen_") or "wave-" in n or n == "flow-canary" or n.startswith("_ot_autoclean")
@@ -1301,6 +1351,13 @@ class Job:
         q = jl(os.path.join(snap, "queue.json"))
         self.queue = PathSet([(p, "queue post") for p in q["paths"]], deep=self.deep, canon=self.paths.canon)
         self.qwords = set(q["words"])
+        self.queue_open = PathSet()
+        if self.live_refs:
+            try:
+                qo = jl(os.path.join(snap, OPEN_FILE))["paths"]
+            except (OSError, ValueError, KeyError):
+                raise RuntimeError(f"--live-refs-only: snapshot has no readable {OPEN_FILE}; nothing done")
+            self.queue_open = PathSet([(p, "open READY/ASK") for p in qo], deep=self.deep, canon=self.paths.canon)
         vh = os.path.join(snap, "visual_hold.txt")
         self.visual_names = None
         if os.path.exists(vh):
@@ -1620,12 +1677,20 @@ class Job:
 
     def guard_hits(self, k):
         """protected / counted / kit-wave keep: hits here at recheck time are ALERTs"""
+        own = getattr(self, "_signed_ok_attempt", "")
         for name, ps in (("protected", self.protected), ("counted", self.counted), ("kitwave-keep", self.kwkeep)):
             for f in self.paths.forms(k):
                 h = ps.hit(f)
+                if h and name == "counted" and own and self._counted_by_own(h, own):
+                    continue                              # CLEAN-2: cited by a signed record inside this exported attempt
                 if h:
                     return f"{name}: {h}"
         return None
+
+    def _counted_by_own(self, h, own):
+        """the counted row came from a signed record inside attempt `own` (its why ends with that record's path)"""
+        m = re.search(r"(?:signed record dir|named by signed) (\S+)\)$", h)
+        return bool(m) and self.paths.canon(m.group(1)).startswith(own + "/")
 
     def common_why(self, k, files, qn_ok=False):
         nt = never_touch(k)
@@ -1648,6 +1713,14 @@ class Job:
         h = self.queue.hit(k)
         if h and not getattr(self, "_attempt_mode", False):          # OWNER 11-12: a queue post does not hold a terminal / superseded attempt
             return "queuepath: " + h
+        if self.live_refs and getattr(self, "_attempt_mode", False):
+            # CLEAN-2 (COORD 11-12): a path named by a still-open READY/ASK holds anything; a plain queue path frees an
+            # attempt only when it is superseded (an earlier launch), not the current attempt of a finished row
+            ho = self.queue_open.hit(k)
+            if ho:
+                return "queue-open: " + ho
+            if h and not getattr(self, "_attempt_superseded", False):
+                return "queuepath (current attempt): " + h
         rest = k.split("/claude/", 1)[1].split("/")[1:] if "/claude/" in k else []
         for i, n in enumerate(rest):
             if i >= 2 and rest[i - 2] == "kit-wave":   # kit-wave/<die>/<plan event>: the plan dir names a whole wave
@@ -1837,7 +1910,16 @@ class Job:
         if vh:
             return vh, []
         h = self.signed_set.hit(c)
-        if h and not (aggr and self.stub_verified(c) is None):       # aggressive: a verified AGIdock copy lets the signed attempt go
+        self._signed_tag = ""
+        if h and self.live_refs:
+            # CLEAN-2 (COORD 11-12, OWNER export-before-cleanup): a signed attempt goes only with --aggressive and only when
+            # every signed unit in it has a verified AGIdock export (ARCHIVED.json, sha256 of every file, re-checked now)
+            ok = aggr and self.signed_exported(c)
+            if not ok:
+                return "signed: needs export first: " + h, []
+            self._signed_tag = " [signed, export verified]"
+            self._signed_ok_attempt = c
+        elif h and not (aggr and self.stub_verified(c) is None):       # aggressive: a verified AGIdock copy lets the signed attempt go
             return "signed: " + h, []
         for g in self.found["git"]:
             if g.startswith(d + "/"):
@@ -1850,16 +1932,33 @@ class Job:
         h = self.dx_hold(d, "newest" if verdict.startswith("finished") else "superseded")
         if h:
             return h, []
-        self._attempt_note = verdict
+        self._attempt_note = verdict + getattr(self, "_signed_tag", "")
         # --queuename-skip-superseded: a bare item NAME in a queue post protects the item's current attempt, not
         # older attempts the state has superseded (an exact queue PATH still protects them)
         self._qn_skip = (bool(getattr(self.a, "queuename_skip_superseded", False)) and verdict.startswith("superseded")) or aggr
         self._attempt_mode = aggr
+        self._attempt_superseded = not verdict.startswith("finished")
         try:
             return self.common_why(d, []), [d]
         finally:
             self._qn_skip = False
             self._attempt_mode = False
+            self._attempt_superseded = False
+            self._signed_ok_attempt = ""
+
+    def signed_units_in(self, c):
+        """signed units (unit_of each signed record) at or below attempt c"""
+        return sorted({unit_of(r) for r in self.signed_records if r.startswith(c + "/")})
+
+    def signed_exported(self, c):
+        """CLEAN-2: True when attempt c holds signed units (records BELOW it, not c inside a signed unit) and every one has
+        a verified ARCHIVED.json export of exactly its current archive set"""
+        if self.signed_set.hit(c) is None:
+            return True
+        if any(c == r or c.startswith(unit_of(r) + "/") or c == unit_of(r) for r in self.signed_records):
+            return False                                  # the attempt is (inside) a signed unit itself
+        units = self.signed_units_in(c)
+        return bool(units) and all(self.stub_verified(u) is None for u in units)
 
     def visual_hold(self, d, c):
         """FLEET-2 11-12: an attempt whose layout_review/ or geom/ is not yet judged keeps EVERYTHING (gen/, geom/,
@@ -1901,9 +2000,19 @@ class Job:
     def recheck(self, cls, path, files):
         self.load_protected()                      # re-read the union file: a row added meanwhile must stop us
         k = path
+        ck = self.paths.canon(k)
+        exported = (cls == "a" and self.live_refs and getattr(self.a, "aggressive", False)
+                    and self.signed_set.hit(ck) is not None and self.signed_exported(ck))   # CLEAN-2, re-checked now
+        self._signed_ok_attempt = ck if exported else ""
+        try:
+            return self._recheck(cls, path, files, k, exported)
+        finally:
+            self._signed_ok_attempt = ""
+
+    def _recheck(self, cls, path, files, k, exported):
         g = self.guard_hits(k)
         if not g and cls == "a":
-            g = self.signed_set.hit(self.paths.canon(k))
+            g = None if exported else self.signed_set.hit(self.paths.canon(k))
             g = "signed: " + g if g else None
         if not g:
             for f in files:
@@ -2822,6 +2931,9 @@ class Driver:
         paths, words = parse_queue(rd(qf), now_s(), a.queue_hours)
         with open(os.path.join(out, "queue.json"), "w") as fh:
             json.dump({"paths": sorted(paths), "words": sorted(words)}, fh)
+        qo = parse_open_readyask(rd(qf), now_s())
+        with open(os.path.join(out, OPEN_FILE), "w") as fh:          # CLEAN-2: read by --live-refs-only hosts
+            json.dump({"paths": sorted(qo)}, fh)
         kw = None
         if a.kitwave_state:                          # local files (tests / a host with the state)
             r = subprocess.run([sys.executable, "-I", self.script, "kitwave-reduce", "--state-json", a.kitwave_state,

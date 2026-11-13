@@ -133,6 +133,13 @@ class History(T.Base):
 
 
 class HostLive(T.Base):
+    qopen = ()
+
+    def write_snap(self, age=0):
+        super().write_snap(age)
+        with open(os.path.join(self.snap, ac.OPEN_FILE), "w") as f:
+            json.dump({"paths": list(self.qopen)}, f)
+
     def attempt(self, item, n, rel="kw-x/kit-wave/qkv/ev1"):
         d = os.path.join(self.root, rel, f"items/{item}/attempt_{n}")
         T.touch(os.path.join(d, f"gen/{item}/run/results/asap7/dp_{item}/base/3_place.odb"))
@@ -201,6 +208,61 @@ class HostLive(T.Base):
         self.assertFalse(os.path.exists(other), "spec root (whole event dir) must not hold other items")
         self.run_job("--classes", "a")                         # old rules: root held it -> (already gone) no error
 
+    def test_queue_path_frees_superseded_not_current_and_open_readyask_holds(self):
+        cur, old, old2 = self.attempt("t1", 7), self.attempt("t1", 6), self.attempt("t1", 5)
+        self.snap_kw({cur: {"current": True, "terminal": ["FAIL/None"]}, old: {"history": "superseded: x"},
+                      old2: {"history": "superseded: x"}})
+        self.qpaths = [cur, old, old2]
+        self.qopen = [old2]
+        self.run_job("--classes", "a", "--live-refs-only", "--aggressive")
+        self.assertTrue(os.path.isdir(cur), "current attempt named by a queue path stays")
+        self.assertFalse(os.path.exists(old), "superseded attempt named only by a queue path goes")
+        self.assertTrue(os.path.isdir(old2), "path in an open READY/ASK stays")
+        self.assertIn("queue-open", self.row(old2)[4])
+
+    def test_flag_refuses_snapshot_without_open_list(self):
+        d = self.attempt("t1", 2)
+        self.snap_kw({d: {"history": "superseded: x"}})
+        T.Base.write_snap(self)
+        os.unlink(os.path.join(self.snap, ac.OPEN_FILE)) if os.path.exists(os.path.join(self.snap, ac.OPEN_FILE)) else None
+        self.write_snap = lambda age=0: T.Base.write_snap(self, age)
+        self.assertEqual(self.run_job("--classes", "a", "--live-refs-only"), 2)
+        self.assertTrue(os.path.isdir(d))
+
+    def signed_attempt(self, item, n, archived=False):
+        d = self.attempt(item, n)
+        unit = os.path.join(d, "gen", item, "signed_unit")
+        T.touch(os.path.join(unit, "6_final.odb"))
+        with open(os.path.join(unit, "signoff.json"), "w") as f:
+            json.dump({"status": "SIGNED", "verdict": "SIGNED"}, f)
+        T.age_tree(d)
+        return d, unit
+
+    def test_signed_attempt_needs_export_first(self):
+        d, unit = self.signed_attempt("t3", 2)
+        self.snap_kw({d: {"history": "superseded: x"}})
+        self.run_job("--classes", "a", "--live-refs-only", "--aggressive")
+        self.assertTrue(os.path.isdir(d))
+        if self.row(d):
+            self.assertIn("signed", self.row(d)[4])
+
+    def test_signed_attempt_with_verified_export_goes_only_aggressive(self):
+        d, unit = self.signed_attempt("t4", 2)
+        self.snap_kw({d: {"history": "superseded: x"}})
+        orig = ac.Job.stub_verified
+        ac.Job.stub_verified = lambda self_, u: None if u == unit else "no ARCHIVED.json"
+        try:
+            self.run_job("--classes", "a", "--live-refs-only")
+            self.assertTrue(os.path.isdir(d), "not without --aggressive")
+            self.run_job("--classes", "a", "--live-refs-only", "--aggressive")
+            self.assertFalse(os.path.exists(d), self.out[-600:])
+            self.assertEqual(self.recheck_alerts(), 0)
+        finally:
+            ac.Job.stub_verified = orig
+
+    def recheck_alerts(self):
+        return sum(1 for r in self.manifest if r[3] == "ALERT")
+
     def stale_setup(self, stale_rel):
         kit = os.path.join(self.root, stale_rel)
         d = os.path.join(kit, "run/results/asap7/x/base")
@@ -238,6 +300,25 @@ class HostLive(T.Base):
                 ("/srv/a/claude/x/both", ac.ARCHIVE_LIST), ("/srv/a/claude/x/both", "lanes/PROTECTED-DBS.txt"),
                 ("/srv/a/claude/x/blank", ac.ARCHIVE_LIST)]
         self.assertEqual(ac.archive_stale_paths(coord, rows), {"/srv/a/claude/x/old", "/srv/a/claude/x/blank"})
+
+
+class OpenReadyAsk(unittest.TestCase):
+    Q = ("- 2026-11-12 10:00 PST READY [A -> COORD] claude/a-1112@aaaaaaaaaa11 keep /srv/s2/claude/a/x\n"
+         "- 2026-11-12 10:05 PST READY [B -> COORD] claude/b-1112@bbbbbbbbbb22 path /srv/s2/claude/b/y\n"
+         "- 2026-11-12 10:10 PST STATE [C -> COORD] status\n"
+         "  ASK COORD: may I drop /srv/s2/claude/c/z\n"
+         "- 2026-11-12 11:00 PST MERGED [ROOT-MERGE -> A] claude/a-1112@aaaaaaaaaa11\n"
+         "- 2026-11-01 10:00 PST READY [OLD] /srv/s2/claude/old/w\n")
+
+    def test_open_and_closed(self):
+        import datetime
+        from zoneinfo import ZoneInfo
+        now = datetime.datetime(2026, 11, 12, 12, 0, tzinfo=ZoneInfo("America/Los_Angeles")).timestamp()
+        got = ac.parse_open_readyask(self.Q, now)
+        self.assertNotIn("/srv/s2/claude/a/x", got)        # merged
+        self.assertIn("/srv/s2/claude/b/y", got)           # still open
+        self.assertIn("/srv/s2/claude/c/z", got)           # ASK continuation line, no key: open
+        self.assertNotIn("/srv/s2/claude/old/w", got)      # outside the 7-day window
 
 
 class ReaperTracked(T.Base):
