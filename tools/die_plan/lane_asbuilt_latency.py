@@ -149,6 +149,41 @@ def kit_source_pricing(typ, bus, lane_fixed, native_src):
     return n if n and lane_fixed >= n else 0
 
 
+def source_cut(ms, typ, bus_out, lane_fixed):
+    """the kit source stations a kit_source_station_pricing bind cut from this lane's receiver pad: the lane's source
+    bus chain depth unless the source stations are native (u_ist_<o>_* already in the bound source module)"""
+    return kit_source_pricing(typ, bus_out, lane_fixed, bool(ms is not None and ms.ist(sv_id(bus_out))))
+
+
+def source_cuts(plan, rows, module_of, ptype_of, types, sel=True):
+    """VERIFY-PRICING-1 11-12: {(source partition, bus_out): (cut, lane)} for a bind made with asbuilt
+    kit_source_station_pricing = sel (true, or a type list; split variants follow split_of).  The same station source
+    and rule as check(), so bind verify credits exactly the stations this check counts as kit-inserted at the source."""
+    if not sel:
+        return {}
+    only = None if sel is True else set(sel)
+    fixed = {x["id"]: int(x.get("fixed_cycles", 0) or 0) for x in plan.get("lanes", [])}
+    out = {}
+    for r in rows:
+        lane = r.get("lane")
+        if not lane:
+            continue
+        st = ptype_of(r["src"])
+        typ = types.get(st)
+        if only is not None and st not in only and (typ or {}).get("split_of") not in only:
+            continue
+        ms = module_of(r["src"])
+        if ms is None:
+            continue
+        md = module_of(r["dst"])
+        if md is not None and md.has(f"u_rs_{sv_id(r['bus_in'])}"):
+            continue                                 # reset spine (ot_dp_rsync): no lane latency
+        n = source_cut(ms, typ, r["bus_out"], fixed.get(lane, 0))
+        if n:
+            out[(r["src"], r["bus_out"])] = (n, lane)
+    return out
+
+
 def check(plan, rows, module_of, ptype_of, types, landing_of, *, spine=(), pricing=None):
     """rows: bind_latency buses (lane, src, dst, bus_out, bus_in, macro_pin_reg_ends?); module_of(part) -> ModuleIndex
     or None; ptype_of(part) -> plan type name; types: type name -> plan type; landing_of(lane) -> bound landing cycles.
@@ -187,7 +222,7 @@ def check(plan, rows, module_of, ptype_of, types, landing_of, *, spine=(), prici
                 continue
             ft += mf.ft(sv_id(ob))
         land = int(landing_of(lane) or 0)
-        cut = kit_source_pricing(types.get(st), r["bus_out"], fixed.get(lane, 0), sdet["bound_ist"] > 0)
+        cut = source_cut(ms, types.get(st), r["bus_out"], fixed.get(lane, 0))
         override = None
         lp = md.lpad(sv_id(r["bus_in"]))
         if pricing == "on" and cut and lp is not None:

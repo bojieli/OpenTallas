@@ -12,7 +12,8 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         at <= REACH_UM hops (planned at STEP_UM 340) and copied once per region (a hub with its loads
                         within HUB_UM 300 um).  Checked on the count-aligned START fan, the largest such net of every
                         die: origin (clock.landing_reader_start.origin_rect_um / landing_origin_rect_um, else the
-                        cland_tstart_in pin) -> every input ring band, and origin -> every FSTART output pin.
+                        cland_tstart_in pin; a relay piece of an R-CAP split: its rx flop on cland_rstart_in) -> every
+                        input ring band, and origin -> every FSTART output pin.
                         FIX: clock.landing_reader_start with share_trunk (one relay trunk per region hub, one last
                         stage per ring; depth uniform per type, K - depth at the bind, data cycles 0) and
                         clock.landing_writer_start for far FSTART pins, sites on macro-free corridors
@@ -34,8 +35,8 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         nearer tap exists, never a tap that no longer exists.  FIX: re-point source_clock_port to
                         the nearest tap (0 cycles, same clock family).
 
-G0: check.py calls check_plan(); a finding is an ERROR (check "r_reach") unless budgets.r_reach is "warn"; rule 3 is
-always a warning.  The fix is idempotent: a fixed plan run again changes nothing.
+G0: check.py calls check_plan(); a finding is a WARNING (check "r_reach") by default; budgets.r_reach "error" makes it
+an ERROR (opt-in, REACH-FIN-2 11-13: defaults of existing plans preserved), "off" skips; rule 3 is always a warning.  The fix is idempotent: a fixed plan run again changes nothing.
 """
 import argparse
 import copy
@@ -100,7 +101,11 @@ def start_info(t):
     ck = t.get("clock") or {}
     lc = ck.get("landing_contract") or {}
     pins = {p["name"]: p["xy_um"] for p in lc.get("pins", [])}
-    if "cland_tstart_in" not in pins:
+    # the START origin of the type: a START-tree child samples cland_tstart_in (u_cland_origin); a relay piece (an
+    # R-CAP split part that is not the keep piece, intra-region relay role) takes the keep piece's start on
+    # cland_rstart_in through its rx flop u_cland_rstart_rx, whose q is that piece's cland_start.  Same rule for both.
+    spin = "cland_tstart_in" if "cland_tstart_in" in pins else "cland_rstart_in" if "cland_rstart_in" in pins else None
+    if spin is None:
         return None
     bands = lc.get("bands") or {}
     ins = sorted(b for b in bands if "cland_fstart_in_" + b in pins and bands[b].get("rect_um"))
@@ -108,7 +113,7 @@ def start_info(t):
     rs, ws = ck.get("landing_reader_start") or {}, ck.get("landing_writer_start") or {}
     rect = rs.get("origin_rect_um") or ws.get("origin_rect_um") or ck.get("landing_origin_rect_um")
     W, H = t["outline_um"]
-    sp = pins["cland_tstart_in"]
+    sp = pins[spin]
     if rect:
         o = None
         try:                      # where the kit really puts the origin: the rect cleared of hard cores
@@ -126,7 +131,8 @@ def start_info(t):
             o = {"W": (EDGE_IN_UM, sp[1]), "E": (W - EDGE_IN_UM, sp[1]), "S": (sp[0], EDGE_IN_UM),
                  "N": (sp[0], H - EDGE_IN_UM)}[f]
     return dict(pins=pins, bands=bands, ins=ins, outs=outs, origin=(round(o[0], 3), round(o[1], 3)),
-                pinned=bool(rect), reader=rs, writer=ws)
+                pinned=bool(rect), reader=rs, writer=ws, start_pin=spin, relay=spin == "cland_rstart_in",
+                relay_copy=bool(t.get("landing_relay_start_copy")))
 
 
 def _kit_sites(t, o, stages):
@@ -190,7 +196,8 @@ def start_findings(t, tn, reach=REACH_UM, fanout=FANOUT_MAX):
                reader_depth=int(rs.get("depth", 0) or 0), writer_depth=int(ws.get("depth", 0) or 0),
                share_trunk=bool(rs.get("share_trunk")), reader_worst_hop_um=round(worst_r, 1),
                writer_worst_hop_um=round(worst_w, 1), reader_over=len(far_r), writer_over=len(far_w),
-               origin_loads=loads, origin_d_loads=len(wfirsts) + wdirect)
+               origin_loads=loads, origin_d_loads=len(wfirsts) + wdirect,
+               origin_kind="relay_rx" if si["relay"] else "start_tree")
     if far_r:
         b, h, has = max(far_r, key=lambda v: v[1])
         out.append(dict(rule="1", kind="start_reach", type=tn, value=round(h, 1), limit=reach, n=len(far_r),
@@ -255,7 +262,7 @@ def _home(t, si, obs):
     """the START origin home: its pinned rect centre, else the free point nearest the START pin, inside the outline"""
     W, H = t["outline_um"]
     o = _free_in(si["origin"], obs, W, H)
-    sp = si["pins"]["cland_tstart_in"]
+    sp = si["pins"][si["start_pin"]]
     if not si["pinned"] and man(o, sp) > REACH_UM:
         raise ValueError(f"START pin {tuple(sp)} has no free origin home within {REACH_UM:g} um (nearest {o})")
     return o
@@ -414,7 +421,10 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
                 branches[b] = dict(stages=[dict(xy_um=[round(xy[0], 3), round(xy[1], 3)], raw_reset=raw_of(xy))
                                            for xy in st])
         cfg = dict(depth=depth, share_trunk=True, branches=branches)
-        if not ck.get("landing_origin_rect_um") and not (ck.get("landing_writer_start") or {}).get("origin_rect_um"):
+        # landing_place pins the origin group on u_cland_rstart_rx only with landing_relay_start_copy; a relay piece
+        # without that key keeps its rx flop unpinned (it sits at its pin by its D net) and gets no origin rect
+        if (not ck.get("landing_origin_rect_um") and not (ck.get("landing_writer_start") or {}).get("origin_rect_um")
+                and (not si["relay"] or si["relay_copy"])):
             cfg["origin_rect_um"] = [round(max(0.0, o[0] - 8.64), 3), round(max(0.0, o[1] - 6.48), 3),
                                      round(min(W, o[0] + 8.64), 3), round(min(H, o[1] + 6.48), 3)]
         new["landing_reader_start"] = cfg
@@ -425,6 +435,9 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
         old = si["writer"]
         if old.get("reuse_relay_origin"):
             raise ValueError(f"{tn}: writer START reuse_relay_origin form: re-site by hand (HEAD relay origin)")
+        if si["relay"] and not si["relay_copy"]:
+            raise ValueError(f"{tn}: relay piece (cland_rstart_in) with far FSTART pins needs landing_relay_start_copy "
+                             f"true (start_d = the rx flop's D) before a writer START chain can be planned")
         tg = {}
         for b in si["outs"]:
             q = free(_inside(si["pins"]["cland_fstart_out_" + b], W, H, 4.32))
@@ -762,9 +775,9 @@ def plan_findings(P, rx=None, rules=RULES):
 
 
 def check_plan(P, R, max_msgs=40):
-    """G0 entry (check.py run): ERROR per finding under check "r_reach" (budgets.r_reach "warn" -> warnings; "off"
-    skips); rule 3 is always a warning.  -> summary dict"""
-    mode = P.budgets.get("r_reach", "error")
+    """G0 entry (check.py run): WARNING per finding under check "r_reach" by default (budgets.r_reach "error" -> ERROR,
+    opt-in; "off" skips); rule 3 is always a warning.  -> summary dict"""
+    mode = P.budgets.get("r_reach", "warn")
     if mode == "off":
         return dict(mode="off")
     rows, fs = plan_findings(P)

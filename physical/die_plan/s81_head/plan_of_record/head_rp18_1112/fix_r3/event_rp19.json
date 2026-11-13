@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.head_plan_event.v1",
+ "event": "head_rp18_1112",
+ "revision": "fix_r3 (rp19)",
+ "author": "HEAD-96",
+ "base": {"plan": "rp18r2 (rp18p)", "sha256_16": "cda1ecf604ebe085"},
+ "plan_sha256": "9249e31961979aa52462de9e8718e5968eeb30870e07798ebb9466ba43b8fe70",
+ "built_on": "origin/main fbfb4fc6a6 (train 34 CLAND-RELAY-3 + 35 merged)",
+ "content": [
+  "(a) clock.landing_ring_wreg.write_chunk 16 on hd_turn_b, hd_turn_a, hd_st_n4 (COORD ruling 11-13 01:09 (1); CLAND-RELAY-3 proof turn_b slew 0/0). 0 cycles, no K change.",
+  "(b) hd_spn_wshim_rx reset.relay_um 260: wshim_rx reset own depth 4 -> 6 (+2 reset cycles, COORD 11-13 approved), relays 76 -> 113, max hop 360.2 -> 233.5 um. Fixes the u_srl_41 / u_rrl_75 single-load hops (313 / 340 um, 409-411 ps slew in the CLAND-RELAY-3 route). Die max release 109 unchanged.",
+  "Fixed scripts re-derive references after the re-solve: remap_start.py (now also clock.landing_local_resets: wshim_rx c rst_rl_70 -> rst_rl_15, same depth offset, 60.7 um) and tools/s81_head/head_reset_exports.py fix (wshim_rx rst_start_raw_0 u_rrl_62 -> u_rrl_99, same depth offset, 59.4 um to its pin)."
+ ],
+ "open": ["G0C WARN geom_clock_reach hd_spn_wshim_rx 248.1 um (limit 220), far relay u_rrl_97: new relay sites of the denser tree, non-functional"],
+ "files": {"plan": "source_plan_rp19.json.gz", "sidecar": "../source_sidecar_rp18.json.gz (unchanged)"}
+}

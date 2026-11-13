@@ -667,6 +667,10 @@ for k, p in pat.items():
     else:
         m = re.search(p, alltxt)
         if m: out[k] = m.group(0)[:300]
+# R-CLOCK (HOLD-TAP-1 / COORD 11-13 07:2x): the opt-in pre-GRT hold build fell back (tool error or its own guard):
+# never a verdict (the GRT repair takes the debt), but recorded on the job, not silent
+fb = re.findall(r"(?m)^PREGRT_HOLD_FALLBACK\b[^\n]*", runlog)
+if fb: out["pregrt_hold_fallback"] = fb[-1][:300]
 cells = 0
 for js in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.json")):
     d = jl(js) or {}
@@ -2553,6 +2557,9 @@ def finish(st, j, c, client):
     if c.get("chain"):
         j["chain"] = {k: c["chain"].get(k) for k in ("verdict", "reason", "gates", "lec", "lec_verdict",
                                                    "lec_all_shown", "lec_tool", "signoff", "netlist", "eco")}
+    if c.get("pregrt_hold_fallback"):                # R-CLOCK (COORD 11-13 07:2x): advisory, recorded, never a class
+        j["pregrt_hold_fallback"] = c["pregrt_hold_fallback"]
+        log(f"PREGRT_HOLD_FALLBACK {j['id']} {j['die']}/{j['type']}: {c['pregrt_hold_fallback'][:200]}")
     log(f"CLASSIFY {j['id']} {j['die']}/{j['type']} -> {cls} ({kind}): {reasons[:240]}")
     if cls == "CRASH" and kind in INFRA_KINDS and not j.get("adopted"):
         why = wave_superseded(j)
@@ -2616,6 +2623,21 @@ def after_class(st, j):
             log(f"TRIAL {j['id']} {j['die']}/{j['type']}: local SIGNED kept as a trial result (trial.tsv), not archived "
                 f"as a sign-off -- {trial[:200]}")
             return
+        # OWNER 11-13 03:5x (KIT-OPS-1): visual gate at sign-off -- a kit-wave type build is archived (counted) only with its
+        # visual verdict GOOD / OK / ISSUES-ACCEPT; until then it stays SIGNED, archive pending (retried each tick); a BAD /
+        # ISSUES verdict withholds the archive for good (the wave row goes to WAIT-FORM).  Kit data is kept either way.
+        try:
+            vg, vwhy = KW.signoff_visual_gate(str(AP_DIR), j)
+        except Exception as e:                       # noqa: a gate read problem holds, never counts by accident
+            vg, vwhy = "hold", f"archive pending: visual gate unreadable ({type(e).__name__}: {e})"
+        if vg:
+            j["delete_pending"] = False
+            if j.get("visual_gate") != vwhy:
+                log(f"VISUAL-GATE {j['id']} {j['die']}/{j['type']}: {vwhy[:200]}")
+            j["visual_gate"] = vwhy[:300]
+            set_status(st, j, "SIGNED", vwhy)
+            return
+        j.pop("visual_gate", None)
         archive(st, j)
     elif cls == "WAIT-PARENT":
         j["delete_pending"] = False

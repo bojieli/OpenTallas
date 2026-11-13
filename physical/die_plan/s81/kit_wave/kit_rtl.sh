@@ -30,9 +30,9 @@ python3 -I tools/die_plan/bind.py kit-rtl "$PLAN" --out "$OV" --asbuilt "$ASBUIL
     ${INST:+--instance "$INST"}
 # COORD 07:34 (5), S81 svc plan event (delta_svc_band_1104): every svc type closes its native memories to the MEM v2
 # macros the plan places (T7 class port + idx fit, tools/die_plan/s81_svc_memory_closure.py); other types do not apply.
-case "$TYPE" in
-    svc_*) python3 -I tools/die_plan/s81_svc_memory_closure.py --form v2 --kit-rtl "$OUT" ;;
-esac
+# HARD-S81-SVC-1 11-13: the step lives in kit_rtl_post.sh, which kit_rtl mode "bind" runs too (kit_wave.py
+# kit_rtl_post_cmd), so a change of kit_rtl mode can no longer drop it.
+TYPE="$TYPE" OUT="$OUT" PLAN="$PLAN" bash "$HERE/kit_rtl_post.sh"
 # DIE-S81-85 11-10 (KW43-111, class J3): the J3 leaves xs4/rstopt_xo follow the wave source when the frozen as-built
 # base still has the pre-fix bytes (KEEP FAIL g_hq[*].h folded constants); kits without them stay byte-identical.
 python3 -I "$HERE/j3_leaf_follow.py" "$OUT"

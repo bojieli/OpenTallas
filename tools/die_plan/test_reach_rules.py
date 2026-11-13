@@ -207,6 +207,9 @@ def test_rule2_barrier_needs_homes_then_stations():
 def test_g0_hook_errors_and_budget_modes():
     import check as CK
     p = _start_plan()
+    Rd, sd = CK.run(copy.deepcopy(p))       # default: warnings only (existing plans keep their G0 verdict)
+    assert sd["r_reach"]["mode"] == "warn" and not [e for e in Rd.errors() if e["check"] == "r_reach"]
+    p["budgets"]["r_reach"] = "error"
     R, summ = CK.run(copy.deepcopy(p))
     msgs = [m for c, m, *_ in [(e["check"], e["msg"]) for e in R.errors()] if c == "r_reach"]
     assert any("R-REACH-1 start_reach" in m for m in msgs) and summ["r_reach"]["mode"] == "error"
@@ -252,5 +255,62 @@ def test_rule5_default_even_chain_config():
     tcl = (HERE / "chain_even.tcl").read_text()
     for frag in ("::ot_chain_min_hop_um", "::ot_chain_skip_sited", "ot_face_flops.txt", "if {$worst <= $ce_min_hop} { return 0 }"):
         assert frag in tcl
-    # a type with its own chain_even key keeps it; the plan opt-out is a budget
+    # opt-in by budget (existing kits unchanged); a type with its own chain_even key keeps it
+    assert 'P.budgets.get("r_reach_even", False)' in (HERE / "gen_phys.py").read_text()
     assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] == {"type": "boolean"}
+
+
+def test_reach_homes_is_a_plan_schema_key_and_g0_reads_it():
+    """QC-FORMS-2 11-13 (s29 composed plan: schema 'unknown key reach_homes' on a tree without this branch): the plan
+    schema and its JSON dump accept type.reach_homes and budgets.r_reach / r_reach_even, refuse a malformed home, and
+    G0 runs clean on a plan that carries homes."""
+    import check as CK
+    p = copy.deepcopy(EX)
+    p["partition_types"]["mid"]["reach_homes"] = [dict(name="w", rect_um=[20.0, 100.0, 180.0, 760.0], buses=["*"],
+                                                      note="soft logic of every face bus")]
+    p["budgets"]["r_reach"] = "warn"
+    p["budgets"]["r_reach_even"] = True
+    assert schema.validate(p) == []
+    on_disk = json.loads((HERE / "die_plan.schema.json").read_text())
+    tp = on_disk["properties"]["partition_types"]["additionalProperties"]["properties"]
+    assert "reach_homes" in tp and "r_reach" in on_disk["properties"]["budgets"]["properties"]
+    R, summ = CK.run(copy.deepcopy(p))
+    assert not [e for e in R.errors() if e["check"] in ("schema", "r_reach")] and summ["r_reach"]["mode"] == "warn"
+    bad = copy.deepcopy(p)
+    bad["partition_types"]["mid"]["reach_homes"] = [dict(name="w", rect_um=[20.0, 100.0, 180.0], buses=["*"])]
+    assert schema.validate(bad)
+    bad["partition_types"]["mid"]["reach_homes"] = [dict(name="w", rect_um=[0, 0, 1, 1], buses=["*"], home=1)]
+    assert schema.validate(bad)
+
+
+def test_rule1_relay_piece_of_a_split_is_scored_and_fixed():
+    """DIE-KV-100 11-13 (R-CAP split, KV pv _x1/_x2, hub _s/_n): a non-keep piece takes START on cland_rstart_in
+    (rx flop u_cland_rstart_rx); rule 1 scores and fixes it exactly like a cland_tstart_in origin."""
+    p = _start_plan()
+    t = p["partition_types"]["mid"]
+    for q in t["clock"]["landing_contract"]["pins"]:
+        if q["name"] == "cland_tstart_in":
+            q["name"] = "cland_rstart_in"
+    row, fs = RR.start_findings(t, "mid")
+    assert row["origin_kind"] == "relay_rx" and {"start_reach", "start_writer_reach"} <= {f["kind"] for f in fs}
+    # without the start copy the writer side cannot be planned: the type is reported, nothing is half-written
+    import pytest
+    before = json.dumps(t, sort_keys=True)
+    with pytest.raises(ValueError, match="landing_relay_start_copy"):
+        RR.fix_start(_P(p), t, "mid")
+    assert json.dumps(t, sort_keys=True) == before
+    t["landing_relay_start_copy"] = True
+    rep = RR.fix_start(_P(p), t, "mid")
+    assert rep["changed"] == ["landing_reader_start", "landing_writer_start"]
+    assert RR.start_findings(t, "mid")[1] == [] and "origin_rect_um" in t["clock"]["landing_reader_start"]
+    # a relay piece with only far rings (no far FSTART pin) is fixed without the copy key, origin left unpinned
+    p2 = _start_plan()
+    t2 = p2["partition_types"]["mid"]
+    pins = t2["clock"]["landing_contract"]["pins"]
+    pins[:] = [q for q in pins if not q["name"].startswith("cland_fstart_out_")]
+    for q in pins:
+        if q["name"] == "cland_tstart_in":
+            q["name"] = "cland_rstart_in"
+    rep2 = RR.fix_start(_P(p2), t2, "mid")
+    assert rep2["changed"] == ["landing_reader_start"] and "origin_rect_um" not in t2["clock"]["landing_reader_start"]
+    assert not [f for f in RR.start_findings(t2, "mid")[1] if f["kind"] == "start_reach"]

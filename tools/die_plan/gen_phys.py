@@ -506,7 +506,8 @@ CHAIN_EVEN_HOOK = "source /work/chain_even_cfg.tcl\nsource /work/chain_even.tcl"
 # lane pad stages (u_lpad_<bus> r[k] / q, u_pd<n>_<bus>) -> their consumer -- get equal hops after GPL when a hop is over
 # the reach.  Evidence: S81 leaf t21 u_bin_leafdn_i0 -> u_lpad q 587 um (104 captures), KV hub_Eo u_lpad r -> q 824 um,
 # QC st_a u_bin_x_hc1_i -> u_pd4 748-783 um: GPL keeps the free pad flops at their fanout and pays the distance in ONE
-# hop.  A type with its own chain_even key keeps that; budgets.r_reach_even false opts a plan out.
+# hop.  Opt-in (REACH-FIN-2 11-13, existing kits byte-identical): budgets.r_reach_even true; a type with its own
+# chain_even key keeps that.
 REACH_EVEN_CHAINS = [[r"[.]u_bin_[^.]*/", r"[.]u_(lpad|pd[0-9]+)_"]]
 REACH_EVEN_MIN_HOP_UM = 405.0
 
@@ -4620,6 +4621,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             print(f"OT_MACRO_GRID_SNAP type {tn}: {r['inst']} ({r['master']} {r['orient']}) {r['off_track_pins']} pin(s) "
                   f"off track at {r['plan_um']} -> " + (str(r['snapped_um']) if 'snapped_um' in r else
                                                         "UNRESOLVED: " + r['unresolved']))
+        # LEAF-DRT73-1 11-13: a plan orient with no on-track origin at all (S81 hcpost lane MY/R180) stops here, with the
+        # receipt written, instead of after place + CTS at GRT pin access (DRT-0073)
+        _MGS.refuse_unrealizable(tn, snap_rows)
         for q in placed:
             mplace.append(f"place_macro -macro_name {{{q['inst_db']}}} -location {{{q['x']:.4f} {q['y']:.4f}}} "
                           f"-orientation {q['o']} -exact")
@@ -5055,9 +5059,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if t.get("clock", {}).get("tap_core_etap"):
         # HEAD-TILE-ETAP as a plan form (DH59-TILE 11-03, opt-in clock.tap_core_etap): tap_balance.tcl early-source core re-hang
         cfg.append("export OT_TAP_CORE_ETAP = 1")
-    if t.get("clock", {}).get("pregrt_ff_hold"):
-        # HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in clock.pregrt_ff_hold): pregrt_ff_hold.py, run_kit.sh step below
-        cfg.append("export OT_PREGRT_FF_HOLD = 1")
+    # R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13; was HEAD-TILE-PREGRT-HOLD): opt-in, plan clock.pregrt_ff_hold true
+    # (COORD 11-13 07:2x, default-preserving); pregrt_ff_hold.py, run_kit.sh step below
+    import pregrt_ff_hold as _pregrt_ff_hold
+    cfg += _pregrt_ff_hold.config_lines(t)
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
     cfg += tap_post_merge_exports(t)
@@ -5182,7 +5187,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "chain_even_cfg.tcl").write_text(chain_even_cfg(t["chain_even"]))
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + CHAIN_EVEN_HOOK + "\n")
-    elif P.budgets.get("r_reach_even", True):
+    elif P.budgets.get("r_reach_even", False):
         # R-REACH-5: default bin -> pad chains (only chains with a hop over the reach move; no netlist change)
         shutil.copyfile(Path(__file__).with_name("chain_even.tcl"), kd / "chain_even.tcl")
         (kd / "chain_even_cfg.tcl").write_text(reach_even_cfg())
@@ -6006,13 +6011,15 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then { grep -h 'OT_HOLD_GATE FAIL' /work/hold_gate.log || echo 'NOT RUN (no OT_HOLD_GATE verdict, see hold_gate.log)'; } | sed 's/^/FAIL_POSTCTS FF structural hold gate: /' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && grep -q '^export OT_PREGRT_FF_HOLD = 1' /work/config.mk; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
-    PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
+    PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" TLIBS=\"\$(\$M print-TC_LIB_FILES 2>/dev/null | sed -n 's/^TC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
       OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
       OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
       OT_TAP_WINDOW=\$(sed -n 's/^export OT_TAP_WINDOW = //p' /work/config.mk) \
+      OT_PREGRT_HOLD_GUARD=\$(sed -n 's/^export OT_PREGRT_HOLD_GUARD = //p' /work/config.mk) OT_PREGRT_HOLD_PORT_MARGIN=\$(sed -n 's/^export OT_PREGRT_HOLD_PORT_MARGIN = //p' /work/config.mk) \
       LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
-      openroad -exit /work/pregrt_ff_hold.tcl > /work/pregrt_ff_hold.log 2>&1; rc=\$?; grep -h OT_PREGRT_FF_HOLD /work/pregrt_ff_hold.log | tail -3; \
-    if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS pre-GRT FF hold step (pregrt_ff_hold.log)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
+      openroad -exit /work/pregrt_ff_hold.tcl > /work/pregrt_ff_hold.log 2>&1; pgrc=\$?; grep -h OT_PREGRT_FF_HOLD /work/pregrt_ff_hold.log | tail -4; \
+    rm -f \"\$C.pg_tmp\"; if [ \$pgrc != 0 ]; then echo \"OT_PREGRT_FF_HOLD FALLBACK step rc \$pgrc (pregrt_ff_hold.log): 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt\" | tee -a /work/pregrt_ff_hold_fallback.log; echo \"PREGRT_HOLD_FALLBACK tool rc \$pgrc: 4_cts.odb unchanged (pregrt_ff_hold.log)\" | tee -a /work/pregrt_ff_hold_fallback.log; \
+    elif grep -q 'OT_PREGRT_FF_HOLD FALLBACK' /work/pregrt_ff_hold.log; then grep -h 'OT_PREGRT_FF_HOLD FALLBACK' /work/pregrt_ff_hold.log | tail -1 | sed 's/^.*OT_PREGRT_FF_HOLD FALLBACK */PREGRT_HOLD_FALLBACK guard /' | tee -a /work/pregrt_ff_hold_fallback.log; fi; fi; \
   HM=; if [ \$rc = 0 ]; then HMR=\$(\$M print-OT_HOLD_FF_MARGIN 2> /work/hold_margin_read.log); hmr=\$?; \
     if [ \$hmr != 0 ]; then cat /work/hold_margin_read.log; echo 'FAIL_POSTCTS hold margin Make read' | tee -a /work/FAIL_POSTCTS; rc=9; \
     else HM=\$(printf '%s\\n' \"\$HMR\" | sed -nE 's/^OT_HOLD_FF_MARGIN[[:space:]]*[:=][[:space:]]*//p'); \

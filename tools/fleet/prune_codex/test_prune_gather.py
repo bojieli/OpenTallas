@@ -104,5 +104,45 @@ class Classify(unittest.TestCase):
             self.assertEqual(classify(r, preview=True).returncode, 0)
 
 
+class QueueArchive(unittest.TestCase):
+    """COORD-COMMIT-SPEED-1 11-13: the queue was rotated; posts before 2026-11-12 live in lanes/archive/COORD-REVIEW-QUEUE-*.md.
+    A retention post there must still protect its tree inside QDAYS, and an archive line older than the window must not."""
+
+    def test_archive_read_inside_window_only(self):
+        p_new = C + 'codex-archived-keep-1110/ckpt'
+        p_old = C + 'codex-ancient-keep-1020/ckpt'
+        p_live = C + 'codex-live-keep-1113/ckpt'
+        now = time.mktime(time.strptime('2026-11-13 08:00', '%Y-%m-%d %H:%M'))
+        with tempfile.TemporaryDirectory() as coord:
+            os.makedirs(coord + '/lanes/archive')
+            with open(coord + '/lanes/archive/COORD-REVIEW-QUEUE-20261024-20261111.md', 'w') as f:
+                f.write('# COORD-REVIEW-QUEUE (ROOT-MERGE, 2026-10-24)\n'
+                        f'- 2026-10-20 09:00 PST STATE [X-1 -> COORD] {p_old} retained\n'
+                        f'- 2026-11-10 09:00 PST STATE [X-2 -> COORD] {p_new} retained, do not delete\n')
+            with open(coord + '/lanes/COORD-REVIEW-QUEUE.md', 'w') as f:
+                f.write('# COORD-REVIEW-QUEUE (live)\n'
+                        f'- 2026-11-13 07:00 PST STATE [X-3 -> COORD] {p_live} kept\n')
+            rows = gather.queue_window(coord, 14, now=now)
+            got = []
+            for src, i, l in rows:
+                gather.line_blockers(l, '%s:%d' % (src, i), lambda k, h, t, s: got.append((k, t, s)))
+            paths = {t for k, t, s in got}
+            self.assertIn(p_new, paths)
+            self.assertIn(p_live, paths)
+            self.assertNotIn(p_old, paths)
+            srcs = {t: s for k, t, s in got}
+            self.assertEqual(srcs[p_new], 'COORD-REVIEW-QUEUE-20261024-20261111:2')
+            self.assertEqual(srcs[p_live], 'queue:1')
+
+    def test_live_only_still_works(self):
+        now = time.mktime(time.strptime('2026-11-13 08:00', '%Y-%m-%d %H:%M'))
+        with tempfile.TemporaryDirectory() as coord:
+            os.makedirs(coord + '/lanes')
+            with open(coord + '/lanes/COORD-REVIEW-QUEUE.md', 'w') as f:
+                f.write(f'- 2026-11-12 07:00 PST STATE [X-3 -> COORD] {C}codex-only-1112 retained\n')
+            rows = gather.queue_window(coord, 14, now=now)
+            self.assertEqual([(s, i) for s, i, _ in rows][:1], [('queue', 0)])
+
+
 if __name__ == '__main__':
     unittest.main()

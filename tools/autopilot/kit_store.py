@@ -258,6 +258,15 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
     os.makedirs(kit_inputs, exist_ok=True)
     files, mp, restored, absent, roles = {}, {}, [], [], {}
     seen = set()
+    # KIT-STAGE-1 11-13 (KV kv3_pv x15 'preferred HDL source missing' 18:25): an input inside the wave's own source tree
+    # (spec 'in_place' = the src root) is NOT moved into the kit.  Moved, the bind resolved the as-built's tree-relative
+    # files (rtl/...) against kit_inputs/<src>, where only the plan dir was.  The src tree is the wave's pinned,
+    # sha-named checkout (src_<die>_main_<sha>, kept by the kit-wave keep set); its files are recorded by content sha.
+    in_place = [os.path.normpath(x).rstrip("/") for x in (spec.get("in_place") or []) if x]
+    kept_in_place = {}
+
+    def under_src(p):
+        return any(p == r or p.startswith(r + "/") for r in in_place)
     queue = [(dict(x), 0) for x in spec.get("inputs") or []]
     # floor guard: copies (writable or foreign-fs sources) count against the host root floor when the store is on '/'
     root_dev = os.stat("/").st_dev
@@ -268,6 +277,18 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
         if p in seen:
             continue
         seen.add(p)
+        if under_src(p):
+            try:
+                kept_in_place[p] = store.file_sha(p, os.stat(p)) if os.path.isfile(p) else "dir"
+            except OSError:
+                kept_in_place[p] = "absent"
+            if inp.get("deep", True) and lvl < depth and os.path.isfile(p) and p.endswith(SCAN_SUFFIX):
+                fo = p.endswith((".json", ".tcl", ".mk"))
+                for r in scan_refs(p):              # a file in the tree may still name inputs outside it
+                    r = os.path.normpath(r)
+                    if r not in seen and not under_src(r):
+                        queue.append(({"role": "deep", "path": r, "required": False, "deep": True, "files_only": fo}, lvl + 1))
+            continue
         local = kit_inputs.rstrip("/") + p
         kind = inp.get("kind") or ("dir" if os.path.isdir(p) else "file")
         got = {}
@@ -359,6 +380,7 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
     store.commit()
     man = {"schema": SCHEMA, "t": now_s(), "host": socket.gethostname(), "store": store.root, "kit_inputs": kit_inputs,
            "map": mp, "roles": roles, "files": files, "rewritten": rewritten, "restored": restored, "absent": absent,
+           "in_place": kept_in_place,
            "bytes_copied": store.bytes_copied, "blobs_new": store.files_new,
            "rebuild": spec.get("rebuild") or {}, "meta": spec.get("meta") or {}}
     write_manifest(store, kit_inputs, man)

@@ -469,6 +469,18 @@ def prov_item(d, item):
     return prov_on(d) and (f == "noview" or (f == "planned" and not d.get("planned_core_flat")))
 
 
+def kit_rtl_post_cmd(T, W, plan):
+    """HARD-S81-SVC-1 11-13: shell suffix of the kit_rtl stage in kit_rtl mode "bind" (cwd = wave source checkout): run
+    every die-owned physical/die_plan/*/kit_wave/kit_rtl_post.sh of the wave source on the kit RTL dir just written.
+    Each script selects itself from the kit content and leaves any other kit untouched (exit 0).  Class: the S81 svc
+    memory closure was a line of the script-mode kit_rtl.sh only; the move of the S81 wave to mode "bind" (11-12 21:46)
+    dropped it and all 16 svc items failed GEN_LINT memory_bits.  A step the kit needs must not depend on which
+    kit_rtl mode the wave configuration names."""
+    q = shlex.quote
+    return (' && for P in physical/die_plan/*/kit_wave/kit_rtl_post.sh; do [ -f "$P" ] || continue; '
+            f'TYPE={q(T)} OUT={q(W + "/rtl")} PLAN={q(plan)} bash "$P" || exit $?; done')
+
+
 def kit_rtl_mode(d):
     """the die's kit-RTL mode (bind / script): the type kit takes the bound partition RTL; None = plan wrapper"""
     kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
@@ -996,6 +1008,10 @@ def select(rows, cfg, die, state, plan_types=None):
             skip.setdefault("counted by the sign-off counter", []).append(r["item"])
             continue
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
+        bw = blocked_why(cfg, state, die, r["item"])
+        if bw:
+            skip.setdefault(bw.split(":", 1)[0] + ": same failure signature at the retry cap (kit_wave_blocked.tsv)", []).append(r["item"])
+            continue
         only_retry = False
         if r["state"] not in states:
             # KW-RELAUNCH-1 11-05: the parent row of a class-split item carries the state of the wave's OWN running class
@@ -1079,6 +1095,11 @@ def select(rows, cfg, die, state, plan_types=None):
                 if same:
                     skip.setdefault(HOLD_UNCHANGED, []).extend(same)
                     todo = [c for c in todo if c not in same]
+            capped = [c for c in todo if blocked_why(cfg, state, die, c)]
+            for c in capped:
+                skip.setdefault(blocked_why(cfg, state, die, c).split(":", 1)[0]
+                                + ": same failure signature at the retry cap (kit_wave_blocked.tsv)", []).append(c)
+            todo = [c for c in todo if c not in capped]
             if cfg.get("flow_repeat_gate", True):
                 rep = [c for c in todo if flow_repeat(cfg, state, die, c, its.get(item_key(die, ev, c, blk(c))), r["item"], r.get("kind"))]
                 if rep:
@@ -3491,6 +3512,142 @@ def flow_repeat(cfg, st, die, item, rec, parent=None, kind="type"):
         return False
 
 
+# KIT-STAGE-1 11-13 (independent review: 4,769 launches on 534 items 11-10..13, the worst 47; 58 % of FAILs died in kit staging
+# with the same five signatures): the same failure signature RETRY_CAP times in a row on one item stops relaunching it,
+# whatever releases it (retry entries, RETRY-INFRA, a new event).  The row is BLOCKED-<class> with a named owner (the die
+# owner, never the wave lane) and is listed in BLOCKED_FILE, which COORD reads.  Released only by the die's 'unblock' list:
+# entries 'pattern' or 'pattern#tag' (fnmatch on the item); each entry releases ONE attempt (the entry is spent); a new
+# release needs a new entry (another #tag).  The same failure after the release blocks the row again at once.
+RETRY_CAP = 3
+BLOCKED_FILE = "kit_wave_blocked.tsv"
+BLOCKED_COLS = ["die", "item", "block", "n", "owner", "owner_source", "item_default_owner", "stage", "signature", "attempts",
+                "first", "last", "last_reason", "release"]
+_TRANSIENT_INFRA = re.compile(r"ot-run: NOT RUN|ot-run: NOT COMPLETED|no host qualifies|transport drop|ssh transport|"
+                              r"Connection (?:reset|refused|closed)|kex_exchange_identification|Errno 28")
+
+
+def fail_signature(cls, why, stage=""):
+    """(block class, comparable signature) of a FAIL, or None for a transient host failure (never counted).  Paths, hosts,
+    hashes and numbers are dropped, so the same error on another host / tree / attempt is the same signature.  A host-gap
+    INFRA (KW-FIX-46: FLOW input missing relabelled INFRA) counts as its original FLOW reason."""
+    why = str(why or "")
+    cls = str(cls or "")
+    if why.startswith("INFRA host input gap"):
+        i = min([why.find(w) for w in HOST_GAP_WHY if w in why] or [-1])
+        if i >= 0:
+            why, cls = why[i:], "FLOW"
+    elif cls == "INFRA" and _TRANSIENT_INFRA.search(why):
+        return None
+    head, _, rest = why.partition(" @")
+    stg = (rest.split(":", 1)[0].strip() if rest else "") or str(stage or "")
+    norm = re.sub(r"(?:[\w.-]+:)?/[^\s,;'\")]+", "<path>", head)
+    norm = re.sub(r"\b(?:epyc|intel)\d+\b|\b[0-9a-f]{7,}\b|\d+", "#", norm)
+    norm = re.sub(r"\s+", " ", norm).strip()[:200]
+    return (cls or "FLOW"), f"{cls}|{stg}|{norm}"
+
+
+def note_fail_sig(st, rec, cls, why, now=None):
+    """count consecutive identical FAIL signatures per die|item (across attempts and events); -> the counter dict"""
+    fs = st.setdefault("fail_sigs", {})
+    key = f"{rec.get('die')}|{rec.get('item')}"
+    got = fail_signature(cls, why, rec.get("stage"))
+    if got is None:
+        return fs.get(key)
+    bcls, sig = got
+    now = time.time() if now is None else now
+    c = fs.get(key)
+    if not c or c.get("sig") != sig:
+        c = fs[key] = {"sig": sig, "cls": bcls, "n": 0, "attempts": [], "first": now}
+    c["n"] = int(c.get("n") or 0) + 1
+    c["attempts"] = (list(c.get("attempts") or []) + [f"{rec.get('event')}@{rec.get('attempt')}"])[-8:]
+    c.update(last=now, stage=str(rec.get("stage") or ""), reason=re.sub(r"\s+", " ", str(why or ""))[:300])
+    return c
+
+
+def clear_fail_sig(st, rec):
+    (st.get("fail_sigs") or {}).pop(f"{rec.get('die')}|{rec.get('item')}", None)
+
+
+def blocked_why(cfg, st, die, item):
+    """'' or the BLOCKED-<class> skip reason of an item at the retry cap that the die's unblock list does not release"""
+    c = (st.get("fail_sigs") or {}).get(f"{die}|{item}")
+    if not c or int(c.get("n") or 0) < RETRY_CAP:
+        return ""
+    if unblock_entry(cfg, die, item, c):
+        return ""
+    return (f"BLOCKED-{c.get('cls') or 'FLOW'}: the same failure {c['n']}x in a row ({c.get('sig', '')[:160]}); "
+            f"owner {die_owner(cfg, die)[0]}; release = dies.{die}.unblock (KIT-STAGE-1 retry cap)")
+
+
+def unblock_entry(cfg, die, item, c):
+    """the first unspent unblock entry of the die that names this item, or ''"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    used = set(c.get("unblocks_used") or [])
+    for x in d.get("unblock") or []:
+        x = str(x)
+        if x not in used and fnmatch.fnmatchcase(item, x.split("#", 1)[0]):
+            return x
+    return ""
+
+
+def note_unblock_launch(cfg, st, die, item):
+    """a launch released by an unblock entry spends that entry (the next identical failure blocks again)"""
+    c = (st.get("fail_sigs") or {}).get(f"{die}|{item}")
+    if c and int(c.get("n") or 0) >= RETRY_CAP:
+        x = unblock_entry(cfg, die, item, c)
+        if x:
+            c["unblocks_used"] = list(c.get("unblocks_used") or []) + [x]
+
+
+def die_owner(cfg, die, owners=None, item=None):
+    """(owner, source) of a BLOCKED row: the die config's die_owner, else the lane named in owner_lane '(...)', else the
+    item's OWNERS.tsv default_owner; never a KIT-WAVE lane"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if d.get("die_owner"):
+        return str(d["die_owner"]), "kit_wave.json dies.%s.die_owner" % die
+    m = re.search(r"\(([A-Z][A-Z0-9-]+)\)", str(d.get("owner_lane") or ""))
+    if m:
+        return m.group(1), "kit_wave.json dies.%s.owner_lane" % die
+    for r in owners or []:
+        if r.get("die") == die and r.get("item") == item and r.get("default_owner") \
+                and not str(r["default_owner"]).startswith("KIT-WAVE"):
+            return r["default_owner"], "OWNERS.tsv default_owner"
+    return f"{die} die owner (unnamed)", "none"
+
+
+def blocked_rows(cfg, st, owners=None):
+    out = []
+    for key, c in sorted((st.get("fail_sigs") or {}).items()):
+        die, _, item = key.partition("|")
+        why = blocked_why(cfg, st, die, item)
+        if not why:
+            continue
+        own, src = die_owner(cfg, die, owners, item)
+        dflt = next((r.get("default_owner") for r in owners or [] if r.get("die") == die and r.get("item") == item), "")
+        out.append(dict(die=die, item=item, block=f"BLOCKED-{c.get('cls') or 'FLOW'}", n=c.get("n"), owner=own,
+                        owner_source=src, item_default_owner=dflt or "", stage=c.get("stage", ""), signature=c.get("sig", ""),
+                        attempts=",".join(c.get("attempts") or []),
+                        first=time.strftime("%F %T", time.localtime(float(c.get("first") or 0))),
+                        last=time.strftime("%F %T", time.localtime(float(c.get("last") or 0))),
+                        last_reason=c.get("reason", ""), release=f"add '{item}' to dies.{die}.unblock after the fix"))
+    return out
+
+
+def write_blocked(cfg, st, ap_dir, owners=None):
+    rows = blocked_rows(cfg, st, owners)
+    clean = lambda v: re.sub(r"[\t\n]+", " ", str(v))
+    body = "\n".join(["\t".join(BLOCKED_COLS)] + ["\t".join(clean(r[c]) for c in BLOCKED_COLS) for r in rows]) + "\n"
+    p = Path(ap_dir) / BLOCKED_FILE
+    try:
+        if not p.exists() or p.read_text() != body:
+            tmp = p.with_suffix(".tmp")
+            tmp.write_text(body)
+            tmp.replace(p)
+    except OSError:
+        pass
+    return rows
+
+
 REDESIGN_FILE = "kit_wave_redesign.tsv"
 
 
@@ -4301,7 +4458,7 @@ def run_item(spec_path):
             if rc:
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
         rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && python3 tools/die_plan/bind.py kit-rtl {q(plan)} --out {q(bind)} "
-                                               f"--asbuilt {q(a)} --type {q(T)} --kit {q(W)}/rtl", gh))
+                                               f"--asbuilt {q(a)} --type {q(T)} --kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan), gh))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:
@@ -4649,7 +4806,7 @@ def kit_store_stage(sp, run, remote, res, W, plan):
     import base64
     q = shlex.quote
     kr = {k: v for k, v in (sp.get("kit_rtl") or {}).items() if not str(k).startswith("note")}
-    spec = {"inputs": ks_inputs(sp, plan),
+    spec = {"inputs": ks_inputs(sp, plan), "in_place": [sp["src"]] if str(sp.get("src") or "").startswith("/") else [],
             "rebuild": {"src": sp.get("src"), "src_sha": sp.get("src_sha"), "queue_src": sp.get("queue_src"),
                         "plan": plan, "kit_rtl": kr, "gen_args": sp.get("gen_args"), "event": sp.get("event")},
             "meta": {"die": sp.get("die"), "item": sp.get("item"), "attempt": os.path.basename(W), "work": W}}
@@ -5306,6 +5463,7 @@ def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
     launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
     relaunch the same attempt dirs).  The row stays as it was and is taken again on a later pass."""
     try:
+        note_unblock_launch(cfg, st, die, r.get("item"))
         return launch(AP, cfg, st, die, r, hub, delay_s=delay_s)
     except Exception as e:
         AP.log(f"KIT-WAVE LAUNCH-SKIP {die}/{r.get('item')}: {type(e).__name__}: {e} (pass continues; retried next pass)")
@@ -5604,9 +5762,9 @@ def grt_arm_reclaim(AP, rec, hosts):
     return "; ".join(out) or "no host"
 
 
-def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices):
+def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices, reclaim=True):
     """stop one attempt by its exact units (wave unit + PLACE client, or its running route job; an unstarted queue row is
-    withdrawn), stop its containers on the fleet, mark it CANCELLED <cls> and reclaim its run data"""
+    withdrawn), stop its containers on the fleet, mark it CANCELLED <cls> and reclaim its run data (reclaim=False keeps it)"""
     units, withdraw, s = [], False, rec.get("status")
     j = (jobs or {}).get(rec.get("q_id")) or {}
     if s in ("RUNNING", "LAUNCHING"):
@@ -5638,7 +5796,8 @@ def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices):
     except (OSError, ValueError, KeyError, TypeError):
         gh = None
     rec.update(status="CANCELLED", **{"class": cls}, updated=time.time(), reason=why[:300])
-    rec["reclaim"] = grt_arm_reclaim(AP, rec, [gh, str(rec.get("kit") or "").partition(":")[0], j.get("ran_on")])
+    rec["reclaim"] = (grt_arm_reclaim(AP, rec, [gh, str(rec.get("kit") or "").partition(":")[0], j.get("ran_on")]) if reclaim
+                      else "kept (no reclaim)")
     notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} {cls}: {why[:200]}")
     AP.log(f"KIT-WAVE GRT-ARM CANCEL {rec['die']}/{rec['item']}@{rec.get('attempt')} units {units} {wd} "
            f"containers [{stopped or 'none'}] reclaim [{rec['reclaim']}]: {why}")
@@ -5845,10 +6004,161 @@ def live_on_fleet(AP, roots, hosts=None):
     return out
 
 
-def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
-    """-> [(key, kind, why)] (read-only)"""
+# KIT-OPS-1 11-13 HUNG-WATCH (OWNER 2-h hung-job watchdog; COORD 05:1x): a SILENT row (unit active, no hub log output) whose job
+# is still alive on the fleet was only ever reported, because wave log silence is not a hang (an ORFS step writes place.live.log
+# only when it ends: 7 such rows cancelled 11-13 05:12 were at 100-200 % CPU in global_place / detail_place / LEC).  The real
+# signal is progress: the row is HUNG -- and cancelled -- only when BOTH its stage logs (ORFS run/logs under the attempt root and
+# under its ot-run staging dir ot-jobs/*/work) AND the CPU time of its processes (host processes naming the root or the staging
+# dir, plus every process of a container that mounts either, children included) have not grown for hung_watch_min (default 120)
+# minutes.  CPU growth below HUNG_CPU_S CPU-seconds (an ssh keepalive, an idle ot-run client) is not progress.  Any CPU progress
+# keeps it report-only.  The CPU mark lives in the row (hung_watch), so a row is first observed, never cancelled on one sample.
+# Global option hung_watch_min 0 = off (rows stay report-only, as before).
+HUNG_WATCH_MIN = 120
+HUNG_CPU_S = 60.0
+HUNG_PROBE = r"""
+# HUNG_PROBE
+import glob, json, os, re, subprocess, sys
+roots = [r.rstrip('/') for r in json.loads(sys.argv[1])]
+me = os.getpid()
+hz = float(os.sysconf('SC_CLK_TCK'))
+def under(p, r):
+    return p == r or p.startswith(r + '/')
+def names_root(text, r):
+    # the root itself, or a path below it that is not another attempt of the same item (root = item dir for attempt 1)
+    return re.search(re.escape(r) + r'(?:["\s/]|$)(?!attempt_\d)', text) is not None
+stage = {r: [] for r in roots}
+for jf in glob.glob('/srv/opentallas-scratch*/claude/ot-jobs/*/.ot-job/job.json'):
+    try:
+        t = open(jf, errors='replace').read()
+    except OSError:
+        continue
+    for r in roots:
+        if names_root(t, r):
+            stage[r].append(os.path.dirname(os.path.dirname(jf)))
+def newest_log(top):
+    best = 0.0
+    for dp, dn, fn in os.walk(top):
+        dn[:] = [d for d in dn if d not in ('results', 'objects', 'reports', '_ext', 'in', 'tmp', '.ot-job')]
+        for f in fn:
+            if f.endswith('.log'):
+                try:
+                    best = max(best, os.stat(os.path.join(dp, f)).st_mtime)
+                except OSError:
+                    pass
+    return best
+procs = {}
+for pid in filter(str.isdigit, os.listdir('/proc')):
+    if int(pid) == me:
+        continue
+    try:
+        st = open('/proc/%s/stat' % pid).read()
+        f = st[st.rindex(')') + 2:].split()
+        cl = open('/proc/%s/cmdline' % pid, 'rb').read().decode('utf-8', 'replace').replace('\0', ' ')
+        try:
+            cwd = os.readlink('/proc/%s/cwd' % pid)
+        except OSError:
+            cwd = ''
+        procs[int(pid)] = (int(f[1]), sum(int(x) for x in f[11:15]) / hz, cl, cwd)
+    except (OSError, ValueError, IndexError):
+        continue
+kids = {}
+for pid, (pp, _, _, _) in procs.items():
+    kids.setdefault(pp, []).append(pid)
+seeds = {r: set() for r in roots}
+names = {r: [] for r in roots}
+for pid, (_, _, cl, cwd) in procs.items():
+    if 'HUNG_PROBE' in cl or 'python3 -I -' in cl:
+        continue
+    for r in roots:
+        for p in [r] + stage[r]:
+            if names_root(cl, p) or under(cwd, p):
+                seeds[r].add(pid)
+                break
+try:
+    ids = subprocess.run(['docker', 'ps', '-q', '--no-trunc'], capture_output=True, text=True, timeout=60).stdout.split()
+    info = json.loads(subprocess.run(['docker', 'inspect'] + ids, capture_output=True, text=True, timeout=120).stdout or '[]') if ids else []
+except Exception:
+    info = []
+for c in info:
+    for r in roots:
+        if any(m.get('Type') == 'bind' and any(under(m.get('Source', ''), p) for p in [r] + stage[r]) for m in c.get('Mounts', [])):
+            pid = (c.get('State') or {}).get('Pid') or 0
+            if pid:
+                seeds[r].add(int(pid))
+            names[r].append(c['Name'].lstrip('/'))
+out = {}
+for r in roots:
+    seen, todo = set(), list(seeds[r])
+    while todo:
+        p = todo.pop()
+        if p in seen or p not in procs:
+            continue
+        seen.add(p)
+        todo.extend(kids.get(p, []))
+    logs = [newest_log(os.path.join(r))] if os.path.isdir(r) else []
+    logs += [newest_log(os.path.join(j, 'work')) for j in stage[r]]
+    out[r] = {'log': max(logs or [0.0]), 'cpu': round(sum(procs[p][1] for p in seen), 2), 'pids': len(seen),
+              'containers': sorted(set(names[r])), 'stage': stage[r][:4]}
+print(json.dumps({'HUNG_PROBE': out}))
+"""
+
+
+def progress_on_fleet(AP, roots, hosts):
+    """{root: {'log': newest stage-log mtime, 'cpu': CPU seconds, 'containers': ['host:name'], 'pids': n}} summed over the fleet
+    (log = newest, cpu = sum); None when any host could not be read (then nothing is cancelled as hung)"""
+    roots = sorted({r for r in roots if r})
+    if not roots:
+        return {}
+    args = json.dumps(roots)
+    out = {r: {"log": 0.0, "cpu": 0.0, "containers": [], "pids": 0} for r in roots}
+    for h in hosts:
+        cmd = ["python3", "-I", "-", args] if h in ("localhost", AP.HUB_NAME, os.uname().nodename) else \
+            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h, "python3", "-I", "-", shlex.quote(args)]
+        try:
+            rc, o, e = AP.sh(cmd, timeout=300, input=HUNG_PROBE)
+            if rc == 255 and "Could not resolve hostname" in (e or ""):
+                rc, o, e = AP.sh(["python3", "-I", "-", args], timeout=300, input=HUNG_PROBE)
+            if rc != 0 or not (o or "").strip():
+                return None
+            got = json.loads(o.strip().splitlines()[-1]).get("HUNG_PROBE")
+            if not isinstance(got, dict):
+                return None
+            for r, v in got.items():
+                if r not in out:
+                    continue
+                out[r]["log"] = max(out[r]["log"], float(v.get("log") or 0))
+                out[r]["cpu"] += float(v.get("cpu") or 0)
+                out[r]["pids"] += int(v.get("pids") or 0)
+                out[r]["containers"] += [f"{h}:{n}" for n in v.get("containers") or []]
+        except Exception:                                    # noqa: an unreadable host cancels nothing
+            return None
+    return out
+
+
+def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=HUNG_CPU_S):
+    """-> (hung, new_watch, why).  prev = the row's hung_watch {'cpu', 't'} (CPU mark and when it was set), prog = this row's
+    progress_on_fleet entry.  The CPU mark moves when the CPU grew by >= cpu_s since it (or went down: a restarted process);
+    hung only when the mark is >= minutes old AND the newest stage log (fleet or hub) is >= minutes old."""
+    cpu = float(prog.get("cpu") or 0)
+    w = dict(prev or {})
+    if not w or cpu - float(w.get("cpu", 0)) >= cpu_s or cpu < float(w.get("cpu", 0)):
+        w = {"cpu": cpu, "t": now}
+    logt = max(float(prog.get("log") or 0), float(hub_newest or 0))
+    cpu_m = (now - float(w["t"])) / 60.0
+    log_m = (now - logt) / 60.0 if logt else float("inf")
+    w["log"] = logt
+    hung = cpu_m >= minutes and log_m >= minutes
+    why = (f"no stage-log output for {log_m:.0f} min and CPU {cpu:.0f} s not grown by {cpu_s:.0f} s for {cpu_m:.0f} min "
+           f"({prog.get('pids', 0)} processes, containers {','.join(prog.get('containers') or []) or 'none'})")
+    return hung, w, why
+
+
+def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
+    """-> [(key, kind, why)] (read-only; watch_out, a dict, receives each judged row's new hung_watch mark)"""
     now = now or time.time()
     minutes = REAP_DEAD_MIN if minutes is None else minutes
+    hm = float(cfg.get("hung_watch_min", HUNG_WATCH_MIN) or 0)
+    s_min = min(minutes, hm) if hm > 0 else minutes          # HUNG-WATCH looks at rows silent for hung_watch_min already
     out, silent = [], []
     for key, rec in sorted((st.get("items") or {}).items()):
         s = rec.get("status")
@@ -5860,7 +6170,7 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
                     newest = max((f.stat().st_mtime for f in Path(rec["dir"]).glob("*.log")), default=0)
                 except OSError:
                     newest = 0
-                if newest and (now - newest) / 60.0 > minutes:
+                if newest and (now - newest) / 60.0 > s_min:
                     silent.append((key, rec, (now - newest) / 60.0))
                 continue
             if age_m <= minutes:
@@ -5881,7 +6191,29 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None):
                 if h not in hosts:
                     hosts.append(h)
         live = live_on_fleet(AP, list(roots.values()), hosts)
+        prog = None
+        if hm > 0 and live:
+            alive = [roots[k] for k, _, _ in silent if roots[k] and live.get(roots[k])]
+            prog = progress_on_fleet(AP, alive, hosts) if alive else {}
         for key, rec, m in silent:
+            if live is not None and live.get(roots[key]) and hm > 0:
+                p = (prog or {}).get(roots[key])
+                if p is None:
+                    if m > minutes:
+                        out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: "
+                                                   f"{','.join(live[roots[key]][:3])}; progress probe unreadable (reported only)"))
+                    continue
+                hung, w, why = hung_judge(rec.get("hung_watch"), p, now - m * 60.0, now, hm)
+                if watch_out is not None:
+                    watch_out[key] = dict(w, containers=list(p.get("containers") or [])) if hung else w
+                if hung:
+                    out.append((key, "HUNG", why))
+                elif m > minutes:
+                    out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: {','.join(live[roots[key]][:3])}; "
+                                               f"progressing ({why}) (reported only)"))
+                continue
+            if m <= minutes:
+                continue
             if live is None:
                 out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; fleet probe unreadable (reported only)"))
             elif live.get(roots[key]):
@@ -5899,14 +6231,18 @@ def reap_dead(AP, cfg, st, notices, now=None):
     minutes = float(cfg.get("reap_dead_min", REAP_DEAD_MIN))
     if minutes <= 0:
         return 0
-    roots, n = [], 0
-    for key, kind, why in reap_dead_scan(AP, cfg, st, now, minutes):
+    roots, n, marks = [], 0, {}
+    for key, kind, why in reap_dead_scan(AP, cfg, st, now, minutes, watch_out=marks):
         if kind == "SILENT":
             AP.log(f"KIT-WAVE REAP-DEAD SILENT {key}: {why}")
             continue
         rec = st["items"][key]
         if AP.DRY:
             AP.log(f"KIT-WAVE REAP-DEAD would reap {key} {kind}: {why}")
+            continue
+        if kind == "HUNG":
+            hung_cancel(AP, rec, why, notices, (marks.pop(key, None) or {}).get("containers") or [])
+            n += 1
             continue
         if kind in ("R1", "R2"):
             units = [rec.get("unit")]
@@ -5928,7 +6264,44 @@ def reap_dead(AP, cfg, st, notices, now=None):
     if roots:
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
         AP.log(f"KIT-WAVE REAP-DEAD remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'none running'}")
+    if not AP.DRY:
+        for key, w in marks.items():                      # HUNG-WATCH: the CPU mark of each judged row
+            if key in st["items"] and st["items"][key].get("status") in ("RUNNING", "LAUNCHING"):
+                st["items"][key]["hung_watch"] = w
     return n
+
+
+def hung_cancel(AP, rec, why, notices, containers=()):
+    """HUNG-WATCH: stop a hung attempt by its exact units (wave unit + PLACE client), the containers under its attempt root
+    (stop_on_fleet) and the containers the progress probe named (they mount its ot-run staging dir, which stop_on_fleet does not
+    see), by exact name on their host.  Run dirs are kept.  The row becomes CANCELLED class HUNG."""
+    units = [rec.get("unit")]
+    try:
+        units.append(json.loads((Path(rec["dir"]) / "place_service.json").read_text())["unit"])
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    for u in units:
+        if u:
+            AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+    stopped = []
+    r = attempt_root(rec)
+    if r:
+        stopped += WJ.stopped_names(WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [r]))
+    for hc in containers:
+        h, _, name = hc.partition(":")
+        if not name or name in " ".join(stopped):
+            continue
+        cmd = ["docker", "stop", "-t", "30", name]
+        if h not in ("localhost", AP.HUB_NAME, os.uname().nodename):
+            cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h] + cmd
+        rc, _, _ = AP.sh(cmd, timeout=120)
+        stopped.append(f"{h}:{name}" + ("" if rc == 0 else f"(rc {rc})"))
+    rec["stopped_containers"] = {"at": time.time(), "names": " ".join(stopped)[:300], "why": "HUNG-WATCH", "root": r or ""}
+    rec.update(status="CANCELLED", **{"class": "HUNG"}, updated=time.time(), reason=f"CANCELLED-HUNG: {why}"[:300])
+    rec.pop("hung_watch", None)
+    notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} CANCELLED-HUNG: {why[:160]}")
+    AP.log(f"KIT-WAVE HUNG-WATCH CANCEL {rec['die']}/{rec['item']}@{rec.get('attempt')} units {units} "
+           f"containers [{' '.join(stopped) or 'none'}]: {why}")
 
 
 def held_stop_reason(cfg, rec, res):
@@ -6002,6 +6375,7 @@ def collect(AP, cfg, st, notices):
                     rec[k] = res[k]
             rec.update(status="PASS", geom=res.get("geom_line", ""), cells=res.get("cells"), geom_dir=res.get("geom_dir"),
                        geom_tag=res.get("geom_tag", ""), geom_verdict=res.get("geom") or "PASS")
+            clear_fail_sig(st, rec)
             enqueue_pass(AP, cfg, st, rec, notices)
             continue
         for k in ("resume", "stage_fp"):
@@ -6038,6 +6412,13 @@ def collect(AP, cfg, st, notices):
             free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
         if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
+        c = note_fail_sig(st, rec, cls, why)
+        if c and int(c.get("n") or 0) >= RETRY_CAP and blocked_why(cfg, st, rec["die"], rec["item"]):
+            rec["blocked"] = f"BLOCKED-{c.get('cls') or cls}"
+            if rec["status"] == "RETRY-INFRA":
+                rec["status"] = "FAIL"                   # a capped row never auto-relaunches as infra either
+            AP.log(f"KIT-WAVE BLOCKED {rec['die']}/{rec['item']}@{rec.get('attempt')} {rec['blocked']}: the same failure "
+                   f"{c['n']}x ({c.get('sig', '')[:200]}); owner {die_owner(cfg, rec['die'])[0]}; listed in {BLOCKED_FILE}")
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
         AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
 
@@ -6197,6 +6578,8 @@ def infra_relaunch_due(cfg, rec):
     """an INFRA failure the wave relaunches: RETRY-INFRA, or a FAIL INFRA record left by the old 2-attempt limit"""
     if infra_used(rec) >= infra_attempts(cfg, rec["die"]):
         return False
+    if rec.get("blocked"):                               # KIT-STAGE-1 retry cap
+        return False
     # KW-FIX-10 11-05: a held item stays held here too.  serdes__t4 a1, stopped and held 11-04 23:37, came back as a2 at
     # 23:44 through this path, which is not plan_dies and never read hold_items.
     import fnmatch
@@ -6238,6 +6621,81 @@ def visual_verdicts():
     return _VISUAL_CACHE["v"]
 
 
+VISUAL_SIGNOFF = "WAIT-VISUAL-SIGNOFF"
+
+
+def visual_gate_mode(cfg):
+    """'route' (COORD 11-12: a placed type row holds its ROUTE until a visual verdict) or 'signoff' (OWNER 11-13 03:5x: it routes
+    at once and the verdict gates the count: no SIGNED archive without GOOD / OK / ISSUES-ACCEPT, BAD / ISSUES discard the routed
+    build).  Global kit_wave.json option visual_gate, default 'route'."""
+    return "signoff" if str(cfg.get("visual_gate") or "route").strip().lower() == "signoff" else "route"
+
+
+def visual_signoff_state(cfg, rec):
+    """-> ('accept' | 'reject' | 'none', verdict or None) for this build's own visual verdict (bound by verdict_applies)"""
+    vk = (rec.get("die"), rec.get("item"), int(rec.get("attempt") or 0))
+    v = visual_verdicts().get(vk)
+    if v is None or not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
+        return "none", v
+    return ("accept" if v in VISUAL_ACCEPT else "reject" if v in VISUAL_REJECT else "none"), v
+
+
+def visual_signoff_gated(cfg, rec):
+    """True: a TYPE row whose sign-off needs a visual verdict (signoff mode).  Builds placed before the visual gate start are
+    gated too: under the route gate they were held as stale WAIT-FORM and never routed; in signoff mode they route, so their
+    count needs a verdict like any other."""
+    return not (visual_gate_mode(cfg) != "signoff" or cfg.get("wait_visual", True) is False
+                or (rec.get("kind") or "type") != "type")
+
+
+def signoff_visual_gate(ap_dir, job):
+    """autopilot.after_class (SIGNED, before archive): ('', '') = archive; ('hold', why) = keep the job SIGNED, archive pending,
+    until the build's visual verdict is GOOD / OK / ISSUES-ACCEPT; ('reject', why) = BAD / ISSUES: never archived or counted
+    (the wave row is discarded to WAIT-FORM by visual_reject_discard).  Jobs without a kit-wave row are never gated."""
+    try:
+        cfg = json.loads((Path(ap_dir) / "kit_wave.json").read_text())
+        if visual_gate_mode(cfg) != "signoff":
+            return "", ""
+        items = json.loads((Path(ap_dir) / STATE_FILE).read_text()).get("items") or {}
+    except (OSError, ValueError):
+        return "", ""
+    kit = job.get("kit")
+    recs = [r for r in items.values() if kit and r.get("kit") == kit]
+    if not recs:
+        return "", ""
+    rec = max(recs, key=lambda r: float(r.get("updated") or 0))
+    if not visual_signoff_gated(cfg, rec):
+        return "", ""
+    s, v = visual_signoff_state(cfg, rec)
+    if s == "accept":
+        return "", ""
+    if s == "reject":
+        return "reject", (f"archive withheld: visual verdict {v} for {rec['die']}/{rec['item']} attempt {rec.get('attempt')} "
+                          f"(visual gate at sign-off, OWNER 11-13): not counted; the type rebuilds on a new form (WAIT-FORM)")
+    return "hold", (f"archive pending: {VISUAL_SIGNOFF}: signed off, needs a visual verdict GOOD / OK / ISSUES-ACCEPT in "
+                    f"lanes/GEOM-REVIEW.md for {rec['die']}/{rec['item']} attempt {rec.get('attempt')} before it counts")
+
+
+def visual_reject_discard(AP, cfg, st, notices, jobs=None):
+    """signoff mode: a routed (ENQUEUED) type row whose own build gets a BAD / ISSUES verdict is discarded: its route job is
+    stopped (or its unstarted queue row withdrawn), the row goes CANCELLED class WAIT-FORM (run data kept, never reclaimed);
+    form_wait keeps the type from relaunching until its form fingerprint changes, as for a held row today.  -> rows discarded"""
+    if visual_gate_mode(cfg) != "signoff":
+        return 0
+    n = 0
+    for rec in (st.get("items") or {}).values():
+        if rec.get("status") != "ENQUEUED" or not visual_signoff_gated(cfg, rec):
+            continue
+        s, v = visual_signoff_state(cfg, rec)
+        if s != "reject":
+            continue
+        why = (f"WAIT-FORM: visual verdict {v} for this attempt (visual gate at sign-off, OWNER 11-13): routed build discarded, "
+               "not counted; the type relaunches when its form fingerprint changes")
+        grt_arm_cancel(AP, cfg, rec, why, "WAIT-FORM", jobs, notices, reclaim=False)
+        n += 1
+    return n
+
+
 def visual_hold(cfg, rec):
     """COORD/OWNER 11-12 'stop repeating bad builds, manual visual placement and visual review before sign-off': a TYPE row
     stops after place (place DB + renders kept, route resumes from it) until lanes/GEOM-REVIEW.md carries a verdict for that
@@ -6245,6 +6703,12 @@ def visual_hold(cfg, rec):
     from relaunching until its form fingerprint changes); no verdict = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
     if cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
         return None
+    if visual_gate_mode(cfg) == "signoff":
+        # OWNER 11-13 03:5x (KIT-OPS-1): the visual verdict gates sign-off, not route.  A placed build routes at once; only a
+        # verdict that already rejects THIS build (BAD / ISSUES, bound to its form) keeps it at WAIT-FORM.
+        s, v = visual_signoff_state(cfg, rec)
+        return (f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
+                if s == "reject" else None)
     vk = (rec["die"], rec["item"], int(rec.get("attempt") or 0))
     v = visual_verdicts().get(vk)
     if v is not None and not verdict_applies(cfg, rec, (_VISUAL_CACHE.get("ts") or {}).get(vk)):
@@ -6283,7 +6747,8 @@ def stale_visual_why(cfg, rec, t0):
 
 
 def visual_queue_publish(cfg, st):
-    """lanes/VISUAL-QUEUE.tsv = every WAIT-VISUAL / WAIT-FORM row (die type family attempt state render paths host), rewritten when it changes"""
+    """lanes/VISUAL-QUEUE.tsv = every WAIT-VISUAL row (signoff mode: also every routed type row still without its verdict, state
+    WAIT-VISUAL-SIGNOFF) (die type family attempt state render paths host), rewritten when it changes"""
     rows = []
     t0 = visual_gate_t0(cfg)
     for rec in (st.get("items") or {}).values():
@@ -6307,11 +6772,19 @@ def visual_queue_publish(cfg, st):
                 rec["route_hold"] = f"WAIT-FORM: visual verdict {v} for this attempt; the type relaunches when its form fingerprint changes"
                 rec["updated"] = time.time()
                 continue
-        if rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
-            k = rec.get("kit") or ""
-            rows.append("\t".join([rec["die"], rec["item"], kit_class(rec["die"], rec["item"]).split("|", 2)[2], str(rec.get("attempt")),
-                                   h.split(":")[0], f"{rec.get('kit_host') or rec.get('gen_host') or ''}:{k}/run/layout_review",
-                                   f"{rec.get('geom_dir') or ''}/auto_geom.png", str(rec.get("kit_host") or rec.get("gen_host") or "")]))
+        if (rec.get("status") == "ENQUEUED" and rec.get("q_status") not in ("FAIL", "CANCELLED")
+                and visual_signoff_gated(cfg, rec) and visual_signoff_state(cfg, rec)[0] == "none"):
+            # OWNER 11-13 (signoff mode): a routed build still needs its verdict before it counts -- same queue, state
+            # WAIT-VISUAL-SIGNOFF (the place renders are kept in the kit)
+            h = VISUAL_SIGNOFF + ": routed, verdict needed before SIGNED counts"
+        elif rec.get("status") == "ROUTE-HELD" and h.startswith("WAIT-VISUAL"):
+            pass
+        else:
+            continue
+        k = rec.get("kit") or ""
+        rows.append("\t".join([rec["die"], rec["item"], kit_class(rec["die"], rec["item"]).split("|", 2)[2], str(rec.get("attempt")),
+                               h.split(":")[0], f"{rec.get('kit_host') or rec.get('gen_host') or ''}:{k}/run/layout_review",
+                               f"{rec.get('geom_dir') or ''}/auto_geom.png", str(rec.get("kit_host") or rec.get("gen_host") or "")]))
     rows.sort()
     body = "die\ttype\tfamily\tattempt\tstate\trender_dir\tauto_geom\thost\n" + "\n".join(rows) + ("\n" if rows else "")
     p = Path.home() / "coord" / "lanes" / "VISUAL-QUEUE.tsv"
@@ -6459,7 +6932,11 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         AP.coord_append("lanes/GEOM-REVIEW.md",
                         f"- {now_s()} GEOM REQ [KIT-WAVE-1 sample {rec['die']}/{rec['item']}] 3_place {rec['kit']} "
                         f"(event {rec['event']}); AUTO-GEOM PASS {rec['geom_dir']}/auto_geom.{{json,png}}; 1-in-5 "
-                        f"independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it")
+                        + (f"independent visual sample (owner rule); route already enqueued -- a FAIL verdict demotes it"
+                         if visual_gate_mode(cfg) != "signoff" else
+                         "visual sample; route already enqueued (visual gate at sign-off, OWNER 11-13) -- every routed type "
+                         "still needs GOOD / OK / ISSUES-ACCEPT before it counts (lanes/VISUAL-QUEUE.tsv); BAD / ISSUES "
+                         "discards the routed build (WAIT-FORM)"))
         msg += " + GEOM REQ sample"
     notices.setdefault(rec["die"], []).append(msg)
     AP.log(f"KIT-WAVE ENQUEUE {rec['die']}/{rec['item']} {rec['kit']} geom {rec.get('geom', '')[:120]}")
@@ -6522,6 +6999,8 @@ def queue_class(j):
     if stt == "ARCHIVED":
         return "count", "SIGNED", "", f"signed off, archived {j.get('archive', '')} flow {j.get('flow_tag', '')}"
     if stt == "SIGNED":
+        if j.get("visual_gate"):                     # OWNER 11-13: archive (count) waits for / was refused by the visual verdict
+            return "visual", "RUNNING", "", str(j["visual_gate"])[:300]
         return "archive", "RUNNING", "", "signed off; archive + PROVENANCE pending"
     if stt == "SIGNED-UNVERSIONED":
         return "provenance", "FAIL", "FLOW", "signed off but no flow release tag carries its flow: " + str(j.get("prov_error") or "")[:200]
@@ -6968,6 +7447,11 @@ def _step(AP, ap_dir):
     retry_enqueue(AP, cfg, st, notices)
     stops = []
     follow_queue(st, ap_dir, notices, stops)
+    try:
+        visual_reject_discard(AP, cfg, st, notices,
+                              json.loads((Path(ap_dir or AP.AP_DIR) / "state.json").read_text()).get("jobs") or {})
+    except Exception as e:           # a discard problem never stops the wave
+        AP.log(f"KIT-WAVE VISUAL-REJECT discard failed: {e}")
     stop_cancelled_rows(AP, stops)
     auto_rejudge(AP, cfg, st, notices)
     try:
@@ -7082,6 +7566,10 @@ def _step(AP, ap_dir):
             write_redesign(cfg, st, ap_dir)
         except Exception as e:                  # a report never stops the tick
             AP.log(f"KIT-WAVE redesign list skipped: {e}")
+    try:                                        # KIT-STAGE-1: the retry-cap list COORD reads
+        write_blocked(cfg, st, ap_dir, owners)
+    except Exception as e:
+        AP.log(f"KIT-WAVE blocked list skipped: {type(e).__name__}: {e}")
     for die, ok, why, picks, skip in res:
         n = sum(len(its) for w, its in skip.items() if w.startswith("LOAD-HOLD"))
         if n:
