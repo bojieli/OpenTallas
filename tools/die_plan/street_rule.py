@@ -74,6 +74,14 @@ and the same legalize.  K = street_layers x street_fill / pin_pitch = 37.5 track
   local_taps_um, one bit each) count as station bits in station_alley; a clock / reset tap (clock tap_um, taps /
   added_taps not on a core, edge_clocks, reset tap_um) in a slot under tap_street_um (17.28) is a station_alley
   ERROR (need 17.28, tap_only), and every column point makes the strip it stands in non-sparse (above).
+  PIN REGISTERS (REACH-TOOL-3 11-13, COORD ruling on HEAD-97 (c); cfg pin_relay=1, pin_relay_um=4.32): a relay_sites
+  register that hugs its own pin face is a pin register, not a column: it stands outside a hard core, at most
+  pin_relay_um off that core's face, inside the face span, and its along-face coordinate is within pin_relay_um of a
+  signal pin of that face, matched one relay per pin (two pointers on the sorted coordinates; a second relay at the
+  same pin, or a relay with no pin within pin_relay_um, stays a column).  Pin registers do not make a strip
+  non-sparse and carry no station_alley bits.  Every other item in the strip (reset local taps, unmatched relays,
+  stations, taps) is still a column, and a clock / reset tap still needs 17.28 (tap_only).  --set pin_relay=0 gives
+  the STREET-TOOL-2 reading (every relay site is a column).
 
 OUTPUT: new plan (types changed only), event JSON + TSV rows: per type outline before/after and growth %, cores
 moved, violations before/after, route_supply p99 before/after (route_supply on both plans), die-level growth estimate
@@ -104,7 +112,8 @@ DEFAULTS = dict(street_min_um=43.2, pin_pitch_um=0.048, street_layers=3.0, stree
                 rounds=4, reach=360.0, outline_grid_um=8.64, max_growth_pct=25.0, outline_margin_um=8.64, attempts=4,
                 reach_limit_um=405.0, grow_axes="xy", reticle_fit=1, rs_worse=0.1,
                 add_regs=0, pin_reorder=0, x_pin_factor=1.0, band_file="", sliver_rule=0,
-                face_rule=1, face_depth_um=129.6, face_passes=5, dense_per_um=3.0, transit_rule=0, sparse_tier=1)
+                face_rule=1, face_depth_um=129.6, face_passes=5, dense_per_um=3.0, transit_rule=0, sparse_tier=1,
+                pin_relay=1, pin_relay_um=4.32)
 RETICLE_UM = (26000.0, 33000.0)
 OPP = dict(N="S", S="N", E="W", W="E")
 # ERROR kinds; sliver / outline_sliver / tap_street are WARN.  face_street / station_alley: R-STREET (11-13)
@@ -491,16 +500,64 @@ def _xy(p):
     return isinstance(p, (list, tuple)) and len(p) >= 2 and all(isinstance(v, (int, float)) for v in p[:2])
 
 
-def column_points(t):
+def _relay_sites(t):
+    """[(id, x, y)] the type's relay_sites (dict: id = key; list: id = index)."""
+    rs_ = t.get("relay_sites")
+    it = rs_.items() if isinstance(rs_, dict) else enumerate(rs_) if isinstance(rs_, list) else ()
+    return [(k, float(p[0]), float(p[1])) for k, p in it if _xy(p)]
+
+
+def pin_registers(t, cores, cfg):
+    """set of relay_sites ids that are PIN REGISTERS (COORD ruling on HEAD-97 (c), 11-13): outside every core, at most
+    pin_relay_um off one core face, inside that face's span, and matched one-to-one (two pointers, tolerance
+    pin_relay_um) to a signal pin of that face by the along-face coordinate.  cores: analyze() core dicts (x, y, w, h,
+    pins{face: [(offset, bus)]}).  Empty when cfg pin_relay is off or no core is given."""
+    if not cfg.get("pin_relay") or not cores:
+        return set()
+    tol = float(cfg.get("pin_relay_um", G))
+    rel = _relay_sites(t)
+    if not rel:
+        return set()
+    boxes = [(c["x"], c["y"], c["x"] + c["w"], c["y"] + c["h"]) for c in cores]
+    free = [r for r in rel if not any(b[0] - 0.01 < r[1] < b[2] + 0.01 and b[1] - 0.01 < r[2] < b[3] + 0.01
+                                      for b in boxes)]
+    out = set()
+    for c, (x0, y0, x1, y1) in zip(cores, boxes):
+        for face in "WESN":
+            cand = []
+            for k, x, y in free:
+                if k in out:
+                    continue
+                d, a, lo, hi = {"W": (x0 - x, y, y0, y1), "E": (x - x1, y, y0, y1),
+                                "S": (y0 - y, x, x0, x1), "N": (y - y1, x, x0, x1)}[face]
+                if -EPS <= d <= tol + EPS and lo - EPS <= a <= hi + EPS:
+                    cand.append((a, k))
+            if not cand:
+                continue
+            pins = face_pos(c, face, -1e18, 1e18)
+            cand.sort()
+            i = j = 0
+            while i < len(cand) and j < len(pins):
+                if abs(cand[i][0] - pins[j]) <= tol + EPS:
+                    out.add(cand[i][1])
+                    i += 1
+                    j += 1
+                elif cand[i][0] < pins[j]:
+                    i += 1
+                else:
+                    j += 1
+    return out
+
+
+def column_points(t, pin_regs=None):
     """[(x, y, bits, kind)] every planned column point of a type ("Where columns may go", RULEBOOK-1113): kind
     'station' (station_points: ft bit sites / regs, internal stations), 'relay' (relay_sites, one bit per site; reset
     local_taps_um, one bit each) and 'tap' (clock tap_um, clock taps / added_taps not on a core, edge_clocks tap_um,
-    reset tap_um; 0 bits)."""
+    reset tap_um; 0 bits).  pin_regs: relay_sites ids that are pin registers (pin_registers), left out."""
     out = [(x, y, b, "station") for x, y, b in station_points(t)]
-    rs_ = t.get("relay_sites")
-    for p in (rs_.values() if isinstance(rs_, dict) else rs_ if isinstance(rs_, list) else ()):
-        if _xy(p):
-            out.append((float(p[0]), float(p[1]), 1, "relay"))
+    for k, x, y in _relay_sites(t):
+        if not pin_regs or k not in pin_regs:
+            out.append((x, y, 1, "relay"))
     rst = t.get("reset") or {}
     for p in rst.get("local_taps_um") or ():
         if _xy(p):
@@ -540,7 +597,7 @@ def station_alleys(t, cfg, boxes=None):
         r = ra or rb
         return max(r[i1] - r[i0], 1e-9)
     acc = {}
-    for x, y, bits, kind in column_points(t):
+    for x, y, bits, kind in column_points(t, cfg.get("_pinregs")):
         if any(r[0] - 0.01 < x < r[2] + 0.01 and r[1] - 0.01 < y < r[3] + 0.01 for r in R):
             continue                  # on a core (its own station bay): rides with the core
         lx, ln_, rx, rn = 0.0, "outline:W", W, "outline:E"
@@ -707,14 +764,16 @@ def transit_streets(t, cfg, boxes=None):
     return V
 
 
-def type_cfg(cfg, t, name=None):
-    """per-type cfg for analyze(): the type pin windows (type buses / ft slots, else the plan port pins in
-    cfg _planwins) and the fixed LEF content boxes of the face rule."""
-    cols = [p[:2] for p in column_points(t)]       # sparse tier: a strip holding a column is never sparse
+def type_cfg(cfg, t, name=None, cores=None):
+    """per-type cfg for analyze() and station_alleys(): the type pin windows (type buses / ft slots, else the plan
+    port pins in cfg _planwins), the fixed LEF content boxes of the face rule, the pin registers of the cores
+    (_pinregs, pin_registers) and the column points without them (_cols)."""
+    pr = pin_registers(t, cores, cfg)
+    cols = [p[:2] for p in column_points(t, pr)]       # sparse tier: a strip holding a column is never sparse
     if not cfg.get("face_rule"):
-        return dict(cfg, _cols=cols)
+        return dict(cfg, _cols=cols, _pinregs=pr)
     wins = type_face_windows(t) or (cfg.get("_planwins") or {}).get(name) or {}
-    return dict(cfg, _fwins=wins, _xboxes=extra_boxes(t), _cols=cols)
+    return dict(cfg, _fwins=wins, _xboxes=extra_boxes(t), _cols=cols, _pinregs=pr)
 
 
 def content_only(t, cfg, name=None):
@@ -1433,7 +1492,7 @@ def _legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     partners = conns_partners(conns, name, t)
     W0, H0 = M.W, M.H
     windows = type_windows(t)
-    cfg = type_cfg(cfg, t, name)
+    cfg = type_cfg(cfg, t, name, core_models(M, partners))
     V0, c0 = analyze(W0, H0, core_models(M, partners), M.CL, cfg, windows)
     SA0 = station_alleys(t, cfg)
     if SA0:
@@ -1526,9 +1585,11 @@ def _legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
             srep = dict(srep, need_more_idx=[i for i in srep.get("need_more_idx") or [] if i not in fixed_si])
             srep["need_more_regs"] = len(srep["need_more_idx"])
             added_ft = add_ft_regs(M, t, tnew, cfg["reach_limit_um"], int(cfg["add_regs"]))
-        V1, c1 = analyze(W, H, core_models(M, partners), M.CL,
-                         dict(cfg, _alley=None, _cols=[p[:2] for p in column_points(tnew)]), windows)
-        SA1 = station_alleys(tnew, cfg)
+        cm1 = core_models(M, partners)
+        pr1 = pin_registers(tnew, cm1, cfg)
+        cfg1 = dict(cfg, _alley=None, _pinregs=pr1, _cols=[p[:2] for p in column_points(tnew, pr1)])
+        V1, c1 = analyze(W, H, cm1, M.CL, cfg1, windows)
+        SA1 = station_alleys(tnew, cfg1)
         if SA1:
             V1 = V1 + SA1
             c1 = dict(collections.Counter(v["kind"] for v in V1))
@@ -2538,9 +2599,10 @@ def g0_check(raw, R, plan_dir, mode="warn", repo=None, ref_dirs=(), max_msgs=40,
         else:
             M = CP.TypeModel(tn, t, die_dir, repo, conns, ccfg)
             attach_pins(M, die_dir, repo)
-            V, cnt = analyze(M.W, M.H, core_models(M, conns_partners(conns, tn, t)), M.CL, type_cfg(cfg, t, tn),
-                             type_windows(t))
-            V += station_alleys(t, cfg)
+            cm = core_models(M, conns_partners(conns, tn, t))
+            tc = type_cfg(cfg, t, tn, cm)
+            V, cnt = analyze(M.W, M.H, cm, M.CL, tc, type_windows(t))
+            V += station_alleys(t, tc)
         summ["types"] += 1
         cnt = dict(collections.Counter(v["kind"] for v in V))
         tot.update(cnt)
@@ -2627,11 +2689,14 @@ def cmd_check(a):
         t = P["partition_types"][n]
         M = CP.TypeModel(n, t, die_dir, repo, conns, ccfg)
         attach_pins(M, die_dir, repo)
-        V, c = analyze(M.W, M.H, core_models(M, conns_partners(conns, n, t)), M.CL, type_cfg(cfg, t, n), type_windows(t))
-        V += station_alleys(t, cfg)
+        cm = core_models(M, conns_partners(conns, n, t))
+        tc = type_cfg(cfg, t, n, cm)
+        V, c = analyze(M.W, M.H, cm, M.CL, tc, type_windows(t))
+        V += station_alleys(t, tc)
         c = dict(collections.Counter(v["kind"] for v in V))
         rows.append(dict(type=n, cores=M.n, counts=c, worst=sorted(V, key=lambda v: -(v["need"] - v["gap"]))[:8],
-                         face=[v for v in V if v["kind"] in ("face_street", "station_alley", "transit_street")]))
+                         face=[v for v in V if v["kind"] in ("face_street", "station_alley", "transit_street")],
+                         pin_registers=len(tc["_pinregs"])))
         print("%s\t%d\t%s" % (n, M.n, json.dumps(c, sort_keys=True)), flush=True)
     for n in cfg.get("_xnames") or ():      # R-STREET: types with LEF content macros only (no hard core)
         V = content_only(P["partition_types"][n], cfg, n)

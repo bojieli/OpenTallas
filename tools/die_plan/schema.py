@@ -1428,6 +1428,15 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                                                           "items": {"type": "number"}},
                                               "buses": {"type": "array", "items": {"type": "string"}},
                                               "note": {"type": "string"}}}}
+# reach_pairs (REACH-TOOL-3 11-13, R-REACH-2 route round a macro): register-to-register routes between two relay_sites
+# register groups (from / to: relay_sites name prefix); reach_rules.py rule 2 checks the route round the macros.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reach_pairs"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["name", "from", "to"],
+                               "properties": {"name": {"type": "string", "minLength": 1},
+                                              "from": {"type": "string", "minLength": 1},
+                                              "to": {"type": "string", "minLength": 1},
+                                              "bits": {"type": "integer", "minimum": 1},
+                                              "note": {"type": "string"}}}}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] = {"type": "boolean"}   # R-REACH-5 default chains (gen_phys)
 # W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;

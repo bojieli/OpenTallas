@@ -932,3 +932,80 @@ def test_reset_resel_raw_branch_keeps_original_terminal_die_kv_100(monkeypatch, 
     SR.reset_resel(P, Q2, ["kv3_io_ft"], tmp_path / "plan.json")
     assert [s["original"] for s in t2["clock"]["landing_raw_branches"][0]["stages"]] == \
         ["rst_rl_60", "rst_rl_61", "rst_n_t34"]
+
+
+def _pinreg_tile():
+    """an hd_tile-like elemA row (COORD ruling on HEAD-97 (c)): core eA0 12.96 off the W outline with 81 W pins, core
+    eA1 43.2 E of it; the type and the analyze() core dicts of the same geometry."""
+    a = core("eA0", 12.96, 8.64, 319.68, 319.68, {"W": face(81, 40.0, 200.0)})
+    b = core("eA1", 12.96 + 319.68 + 43.2, 8.64, 319.68, 319.68, {})
+    t = {"outline_um": [708.48, 400.0],
+         "hard_cores": [{"inst": c["inst"], "origin_um": [c["x"], c["y"]], "outline_um": [c["w"], c["h"]]}
+                        for c in (a, b)]}
+    # one relay per pin, 1.96 um off its own face, at the pin's along-face coordinate (the E-face relays of rp20b)
+    t["relay_sites"] = {"u_b.g_a[0].g_ais.u_w/q[%d]" % k: [12.96 - 1.96, 8.64 + p] for k, (p, _) in
+                        enumerate(a["pins"]["W"])}
+    return t, [a, b]
+
+
+def test_pin_registers_do_not_block_sparse_tier_head97():
+    """COORD ruling on HEAD-97 (c): a per-pin relay hugging its own pin face is a pin register, not a column: the
+    81-pin elemA outline face at 12.96 stays sparse-legal and the strip carries no station_alley bits."""
+    t, cs = _pinreg_tile()
+    tc = SR.type_cfg(CFG, t, "hd_tile", cs)
+    assert len(tc["_pinregs"]) == 81 and tc["_cols"] == []
+    assert SR.outline_rule(cs[0], 708.48, 400.0, tc) == []                    # sparse: need 8.64 <= 12.96
+    assert SR.station_alleys(t, tc) == []
+    # the STREET-TOOL-2 reading (pin_relay=0, or no core models): 81 columns in the strip, 43.2 + station_alley
+    for c0 in (SR.type_cfg(dict(CFG, pin_relay=0), t, "hd_tile", cs), SR.type_cfg(CFG, t, "hd_tile")):
+        v = SR.outline_rule(cs[0], 708.48, 400.0, c0)
+        assert v[0]["need"] == 43.2 and v[0]["columns_in_slot"] == 81 and not v[0]["sparse"]
+        sa = SR.station_alleys(t, c0)
+        assert len(sa) == 1 and sa[0]["relays"] == 81 and sa[0]["need"] == 17.28
+    # any other item in the strip is still a column: a reset local tap (hd_tile (4.32, 211.68)) ...
+    t2 = dict(t, reset={"local_taps_um": [[4.32, 211.68]]})
+    tc = SR.type_cfg(CFG, t2, "hd_tile", cs)
+    v = SR.outline_rule(cs[0], 708.48, 400.0, tc)
+    assert v[0]["need"] == 43.2 and v[0]["columns_in_slot"] == 1
+    # ... and a clock tap still needs the 17.28 tap-legal slot (tap legality unchanged)
+    t3 = dict(t, clock={"tap_um": [6.48, 300.0]})
+    sa = SR.station_alleys(t3, SR.type_cfg(CFG, t3, "hd_tile", cs))
+    assert len(sa) == 1 and sa[0]["tap_only"] and sa[0]["need"] == 17.28 and sa[0]["relays"] == 0
+
+
+def test_pin_registers_one_per_pin_at_the_pin():
+    """only a relay AT its pin (<= 4.32 um off the face and along it), one per pin, is a pin register."""
+    t, cs = _pinreg_tile()
+    cs[0]["pins"]["W"] = face(8, 40.0, 200.0)                  # pins 20 um apart (> the 4.32 tolerance)
+    pins = [p + 8.64 for p, _ in cs[0]["pins"]["W"]]
+    # rp20b outline stacks: 81 relays at ONE point 54 um past the pin span are a column, not pin registers
+    t["relay_sites"] = {"s%d" % k: [11.0, 312.678] for k in range(81)}
+    assert SR.pin_registers(t, cs, CFG) == set()
+    t["relay_sites"] = {"a": [11.0, pins[0]], "a2": [11.0, pins[0]],                 # 2 relays on one pin
+                        "far": [12.96 - 6.0, pins[1]],                               # 6 um off the face
+                        "off": [11.0, pins[2] + 1.0],                                # 1 um along: hugs its pin
+                        "in": [20.0, pins[3]],                                       # inside the core
+                        "e": [12.96 + 319.68 + 1.96, 100.0]}                         # E face, no pin there
+    assert SR.pin_registers(t, cs, CFG) == {"a", "off"}
+    tc = SR.type_cfg(CFG, t, "hd_tile", cs)
+    assert sorted(tc["_cols"]) == sorted([(11.0, pins[0]), (12.96 - 6.0, pins[1]), (20.0, pins[3]),
+                                          (12.96 + 319.68 + 1.96, 100.0)])
+    assert SR.pin_registers(t, cs, dict(CFG, pin_relay=0)) == set()
+    # list-form relay_sites: ids are indices
+    t["relay_sites"] = [[11.0, pins[0]], [11.0, 312.678]]
+    assert SR.pin_registers(t, cs, CFG) == {0}
+
+
+def test_pin_registers_core_to_core_street():
+    """a sparse core-core slot whose only items are the pin registers of its two faces keeps the sparse tier."""
+    a = core("a", 0.0, 0.0, 300.0, 300.0, {"E": face(200, 0, 300)})
+    b = core("b", 317.28, 0.0, 300.0, 300.0, {"W": face(200, 0, 300)})
+    t = {"outline_um": [700.0, 300.0],
+         "relay_sites": dict([("ra%d" % k, [302.0, p]) for k, (p, _) in enumerate(a["pins"]["E"])] +
+                             [("rb%d" % k, [315.28, p]) for k, (p, _) in enumerate(b["pins"]["W"])])}
+    tc = SR.type_cfg(dict(CFG, face_rule=0), t, "x", [a, b])
+    assert len(tc["_pinregs"]) == 400
+    r = SR.pair_rule(a, b, tc)
+    assert r["kind"] == "ok" and r["need"] == 17.28 and r.get("sparse")
+    r = SR.pair_rule(a, b, SR.type_cfg(dict(CFG, face_rule=0, pin_relay=0), t, "x", [a, b]))
+    assert r["kind"] == "street" and r["need"] == 43.2 and r["columns_in_slot"] == 400
