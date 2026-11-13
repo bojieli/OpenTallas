@@ -24,3 +24,7 @@ NOT mine: HEAD-95 routes (lep0N v3, hd_mesh M1, SP3n2).
 - (1) 5 private export rows without landing pin (my rawfix2 conversions), (2) 2 duplicate relay pairs (HEAD-95 rawfix nearest rule collapsed twin relays).
 - One-class tool tools/s81_head/head_reset_exports.py (fix OLD IN OUT / check PLAN) on branch claude/head-96-rp18fix-1112 (wt/head-96, off main b9c049d416).
 - rp18k = fix(rp17, rp18j): check 8 bad -> 0; kit_rtl head_start_raw_private.prepare_plan failures 2 -> 0. Gates head-96/g_rp18k.
+- rp18k had 277 NEW G0 "infrastructure pin used 0 times" (new pins without a reader) -> tool declares them start_tree OPEN -> rp18m.
+- rp18m = rp18r1 sha 220334aa9b30ef3d: check 0, prepare_plan 0 failures, gen 26/26, G0 0 NEW, G0C 0 NEW err, reset 0 NEW, street = rp17.
+- Branch claude/head-96-rp18fix-1112@eb8a6d68eb pushed; READY posted (asks KIT-OPS-1 to also re-kit wshim_tx + turn_a: 4 rows had wrong depth from rawfix, restored).
+- DONE, stopped.
