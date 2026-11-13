@@ -188,3 +188,63 @@ def test_deferred_bus_driver_routes_stay_in_their_own_split_family(tmp_path):
     for t in ("A", "B"):
         assert result["types"][t+"0"]["bus_drivers"] == [dict(bus="o_cut_"+t, drivers=[dict(inst="driver", port="q", bits=[0, 0])])]
         assert result["types"][t+"1"]["bus_drivers"] == [dict(bus="o_out", drivers=[dict(bus="i_cut_"+t, bits=[0, 0])])]
+
+
+def test_fresh_output_retains_inherited_core_pin_tables(tmp_path):
+    incoming = tmp_path / "incoming"
+    pins = incoming / "pins/core.json"
+    pins.parent.mkdir(parents=True)
+    payload = b"[{\"name\":\"ck\",\"layer\":\"M5\",\"x\":1.0,\"y\":2.0}]\n"
+    pins.write_bytes(payload)
+    ev = TS.Event.__new__(TS.Event)
+    ev.plan_dir, ev.spec, ev.ts, ev.rep, ev.tag = incoming, {}, {}, {}, "test-pins"
+    ev.out = dict(partition_types=dict(t=dict(hard_cores=[dict(pins_file="pins/core.json")])))
+    ev._census = lambda _out: {}
+    ev.side, ev.pc_out, ev.ab_out, ev.latency_rows = None, None, None, []
+    output = tmp_path / "fresh"
+    ev.write(output, "fresh")
+    pins.unlink()
+    assert (output / "pins/core.json").read_bytes() == payload
+
+
+def test_new_passthrough_slots_get_macro_clear_actual_bit_banks(monkeypatch):
+    from types import SimpleNamespace
+    import schema
+    import gen_phys
+    slot = dict(name="ft0", width=4, stations=3, note="new pass-through")
+    typ = dict(outline_um=[1000, 600], hard_cores=[dict(inst="core", origin_um=[400, 0], outline_um=[200, 400])], ft_slots=[slot])
+    ev = TS.Event.__new__(TS.Event)
+    ev.out, ev.raw, ev.rep = dict(partition_types=dict(t=typ)), dict(budgets=dict(ft_station_max_um=405)), {}
+    ev.mid_slot_refs = [(SimpleNamespace(tnames=["t"]), 0, slot)]
+    monkeypatch.setattr(schema, "Plan", lambda *_args: object())
+    monkeypatch.setattr(gen_phys, "type_pins", lambda *_args: [
+        (bus, bit, "M4", x, 50 + bit, face) for bus, x, face in [("ft0_i", 0, "W"), ("ft0_o", 1000, "E")] for bit in range(5)])
+    ev._place_mid_slot_banks()
+    assert slot["stations"] > 3
+    assert len(slot["bit_sites_um"]) == slot["stations"] - 1
+    assert all(len(row) == 5 for row in slot["bit_sites_um"])
+    assert ev.rep["pass_through_paths"][0]["max_actual_bit_hop_um"] <= 405
+    for row in slot["bit_sites_um"]:
+        for x, y in row:
+            assert not (400 < x < 600 and 0 < y < 400)
+
+
+def test_added_cut_flops_count_with_existing_complete_bins(monkeypatch):
+    from types import SimpleNamespace
+    import schema
+    import gen_phys
+    slot = dict(name="ft1", bit_site_cell_um=[1.404, .27], bit_sites_um=[[[20, 30], [22.16, 30]]])
+    a = dict(clock=dict(sink_bins_file="old_a.json"), ft_slots=[dict(name="ft1")])
+    b = dict(clock=dict(sink_bins_file="old_b.json"), ft_slots=[slot])
+    ev = TS.Event.__new__(TS.Event)
+    ev.out = dict(partition_types=dict(a=a, b=b), partitions=[dict(name="a",type="a"),dict(name="b",type="b")],
+                  ports=[dict(id="cut",src=dict(part="a",bus="ft1_o"),dst=dict(part="b",bus="ft1_i"))])
+    ev.rep = dict(ports_added=["cut"])
+    ev.mid_slot_refs = [(SimpleNamespace(tnames=["b"]),0,slot)]
+    monkeypatch.setattr(schema,"Plan",lambda *_args: object())
+    monkeypatch.setattr(gen_phys,"type_pins",lambda _p,tn: [("ft1_o" if tn=="a" else "ft1_i",bit,"M4",0,50+bit,"W")for bit in range(2)])
+    ev._inventory_cut_sinks()
+    assert ev.added_clock_cells == {"b":4}
+    assert b["clock"]["sink_bins_file"] == "old_b.json"
+    assert sum(row[2] for row in b["clock"]["sink_sites_um"]) == 4
+    assert "sink_sites_um" not in a["clock"]  # FT output pins are not an extra clocked stage
