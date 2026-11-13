@@ -20,3 +20,8 @@ Updated: 19:3x PST 11-12.
   rtl_changed_vs_m2.json (71 modules), r6_kdst.json, s6_kdst.json. Token: epyc9 same dir tok_dst.log.
 - out_r12bA_dst_main = useless copy (6.5 GB), safe to delete (not a link). Worktrees: wt/s81-r12ba-fin, wt/s81-r12ba-pkg (sparse).
 - Stopped by exact PID: the moot out_r12bA_ist verify (run_r12bA_ist.sh) and my duplicate m2 baseline verify.
+
+## Train 25 fix (20:2x)
+- READY posted: claude/s81-r12ba-fin-1112@d25fcb51f748 = s81_leaf_conns.kv_leaf_depths reads LF-CS-FWD parameter defaults
+  (old override form kept). 24 tests passed (leaf_conns, leaf_cs_depth, slice_lfcs_forward, stage_leaf_cs_direct, stage_lfcs_netlist).
+  ROOT-MERGE-61 re-gates train 25. Lane STOPPED.
