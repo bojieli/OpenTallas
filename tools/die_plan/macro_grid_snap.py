@@ -173,10 +173,15 @@ def axis_phases(spec, o, tracks, axis):
     period (nm): the lcm of the pitches of the axis' pin layers.  The pin set is periodic in it, so an empty list
     means NO origin anywhere puts those pins on track (not just none near the plan origin)."""
     shapes = _unique_axis(spec, o, tracks, axis)
+    allowed = {}                                   # per layer: on-track shifts mod its pitch (nm)
+    for layer, lo, hi in shapes:
+        d, pitch, width, offsets = tracks[layer]
+        a = allowed.setdefault(layer, (int(round(pitch * 1000)), set(range(int(round(pitch * 1000))))))[1]
+        a.intersection_update([r for r in a if _on_track(lo + r / 1000.0, hi + r / 1000.0, pitch, width, offsets)])
     period = 1
-    for layer in {s[0] for s in shapes}:
-        period = math.lcm(period, int(round(tracks[layer][1] * 1000)))
-    return [v for v in range(period) if _axis_ok(shapes, v / 1000.0, tracks)], period
+    for p_nm, _a in allowed.values():
+        period = math.lcm(period, p_nm)
+    return [v for v in range(period) if all(v % p_nm in a for p_nm, a in allowed.values())], period
 
 
 def orient_realizable(spec, o, tracks):

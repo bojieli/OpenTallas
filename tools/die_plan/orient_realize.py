@@ -67,8 +67,11 @@ def offset_for(spec, o, tracks, origin, cur):
     return res
 
 
-def realize(plan, root, types_re=None, tracks=None):
-    """-> (changes, refused).  Mutates plan in place."""
+def realize(plan, root, types_re=None, tracks=None, stats=None):
+    """-> (changes, refused).  Mutates plan in place.  stats (dict) gets checked / no_view counts."""
+    stats = {} if stats is None else stats
+    stats.setdefault("checked", 0)
+    stats.setdefault("no_view", 0)
     tracks = tracks or plan_tracks(plan)
     specs, real, changes, refused = {}, {}, [], []
     rx = re.compile(types_re) if types_re else None
@@ -85,7 +88,9 @@ def realize(plan, root, types_re=None, tracks=None):
                 specs[key] = MGS.lef_master(p, key[1]) if p.is_file() else None
             spec = specs[key]
             if not spec or not spec[2]:
+                stats["no_view"] += 1
                 continue
+            stats["checked"] += 1
             o = hc.get("orient", "R0")
             if (key, o) not in real:
                 real[(key, o)] = all(MGS.orient_realizable(spec, o, tracks).values())
@@ -119,8 +124,9 @@ def main(argv=None):
     ap.add_argument("--types")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
-    changes, refused = realize(plan, a.root, a.types)
-    rep = dict(schema="opentallas.orient_realize.v1", by="LEAF-DRT73-1", plan=a.plan, changed=len(changes),
+    stats = {}
+    changes, refused = realize(plan, a.root, a.types, stats=stats)
+    rep = dict(schema="opentallas.orient_realize.v1", by="LEAF-DRT73-1", plan=a.plan, **stats, changed=len(changes),
                types=len({c["type"] for c in changes}), refused=refused,
                by_move={f"{o}->{n}": sum(1 for c in changes if c["orient"] == [o, n])
                         for o, n in sorted({tuple(c["orient"]) for c in changes})},
@@ -129,7 +135,7 @@ def main(argv=None):
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     if a.out and changes:
         Path(a.out).write_text(json.dumps(plan, indent=1) + "\n")
-    print(f"ORIENT_REALIZE {len(changes)} core(s) in {rep['types']} type(s) {rep['by_move']}; refused {len(refused)}"
+    print(f"ORIENT_REALIZE checked {stats['checked']} placed core(s) (no LEF view {stats['no_view']}): {len(changes)} core(s) in {rep['types']} type(s) {rep['by_move']}; refused {len(refused)}"
           + (f"; wrote {a.out}" if a.out and changes else ""))
     return 2 if refused else 0
 
