@@ -1,0 +1,548 @@
+{
+ "plan": "physical/die_plan/s81/plan_ffv_c0b.json",
+ "out": "physical/die_plan/s81/plan_ffv_c1.json",
+ "failing": 60,
+ "fixed": 0,
+ "types": [
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv047ea3b3",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv047ea3b3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv047ea3b3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv047ea3b3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv0a45e191",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv0a45e191: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv0a45e191: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv0a45e191: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv0bab1162",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv0bab1162: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv0bab1162: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv0bab1162: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv11c696bc",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv11c696bc: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv11c696bc: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv11c696bc: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv11dcdcd2",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv11dcdcd2: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv11dcdcd2: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv11dcdcd2: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv152ea348",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv152ea348: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv152ea348: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv152ea348: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv15cef3f7",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv15cef3f7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv15cef3f7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv15cef3f7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv1c15776f",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv1c15776f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv1c15776f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv1c15776f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv2cabd9a9",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv2cabd9a9: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv2cabd9a9: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv2cabd9a9: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv2ec9c8a9: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv2f96c04f",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv2f96c04f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv2f96c04f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv2f96c04f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv36da905c",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv36da905c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv36da905c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv36da905c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv3a0a8b60",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv3a0a8b60: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv3a0a8b60: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv3a0a8b60: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv4108910d",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv4108910d: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv4108910d: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv4108910d: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv4593e8e5",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv4593e8e5: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv4593e8e5: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv4593e8e5: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv461b5256",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv461b5256: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv461b5256: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv461b5256: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv47efee8f",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv47efee8f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv47efee8f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv47efee8f: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv49636389",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv49636389: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv49636389: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv49636389: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv49f0ba38",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv49f0ba38: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv49f0ba38: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv49f0ba38: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv4bd36c74",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv4bd36c74: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv4bd36c74: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv4bd36c74: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv4ef1b59c",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv4ef1b59c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv4ef1b59c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv4ef1b59c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv534ef85e",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv534ef85e: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv534ef85e: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv534ef85e: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv58f6356d",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv58f6356d: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv58f6356d: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv58f6356d: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv5bdf9f51",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv5bdf9f51: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv5bdf9f51: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv5bdf9f51: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv5ffbfb8b: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv62bca836",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv62bca836: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv62bca836: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv62bca836: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv637e5d47",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv637e5d47: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv637e5d47: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv637e5d47: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv6c1e320a",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv6c1e320a: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv6c1e320a: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv6c1e320a: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv70f04488",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv70f04488: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv70f04488: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv70f04488: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv7466df46",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv7466df46: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv7466df46: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv7466df46: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv87d52780",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv87d52780: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv87d52780: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv87d52780: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv88891f20",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv88891f20: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv88891f20: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv88891f20: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv8aaf8508",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv8aaf8508: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv8aaf8508: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv8aaf8508: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv8ea75ee5",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv8ea75ee5: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv8ea75ee5: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv8ea75ee5: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv9a5bd576",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv9a5bd576: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv9a5bd576: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv9a5bd576: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pv9c5966b7",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pv9c5966b7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pv9c5966b7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pv9c5966b7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pva2370bfd",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pva2370bfd: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pva2370bfd: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pva2370bfd: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pva7e46565",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pva7e46565: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pva7e46565: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pva7e46565: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvac06e607",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvac06e607: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvac06e607: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvac06e607: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvadb6c679",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvadb6c679: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvadb6c679: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvadb6c679: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvadbd1880",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvadbd1880: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvadbd1880: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvadbd1880: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvafa6f454",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvafa6f454: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvafa6f454: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvafa6f454: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvb2dac3cf",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvb2dac3cf: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvb2dac3cf: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvb2dac3cf: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvbb600efe",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvbb600efe: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvbb600efe: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvbb600efe: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvc22584f3",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvc22584f3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvc22584f3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvc22584f3: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvc25aad1b",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvc25aad1b: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvc25aad1b: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvc25aad1b: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvc382fb14",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvc382fb14: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvc382fb14: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvc382fb14: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvcb813ee7",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvcb813ee7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvcb813ee7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvcb813ee7: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pve273b259",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pve273b259: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pve273b259: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pve273b259: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pve3f8a86c",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pve3f8a86c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pve3f8a86c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pve3f8a86c: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvebe696ff",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvebe696ff: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvebe696ff: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvebe696ff: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__cl49d7a23e__pvfed9fee6",
+   "moves": [],
+   "before": "col_h9_r1__t1__cl49d7a23e__pvfed9fee6: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False",
+   "published_tree": false,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__cl49d7a23e__pvfed9fee6: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__cl49d7a23e__pvfed9fee6: grid+explicit tap clk_t21 load=20/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__clf32cde8d__pv387d6579",
+   "moves": [],
+   "before": "col_h9_r1__t1__clf32cde8d__pv387d6579: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__clf32cde8d__pv387d6579: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__clf32cde8d__pv387d6579: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__clf32cde8d__pv3b9ba75c",
+   "moves": [],
+   "before": "col_h9_r1__t1__clf32cde8d__pv3b9ba75c: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__clf32cde8d__pv3b9ba75c: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__clf32cde8d__pv3b9ba75c: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__clf32cde8d__pv48cfde67",
+   "moves": [],
+   "before": "col_h9_r1__t1__clf32cde8d__pv48cfde67: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__clf32cde8d__pv48cfde67: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__clf32cde8d__pv48cfde67: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__clf32cde8d__pv63f488e9",
+   "moves": [],
+   "before": "col_h9_r1__t1__clf32cde8d__pv63f488e9: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__clf32cde8d__pv63f488e9: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__clf32cde8d__pv63f488e9: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__clf32cde8d__pvd9381c1d",
+   "moves": [],
+   "before": "col_h9_r1__t1__clf32cde8d__pvd9381c1d: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__clf32cde8d__pvd9381c1d: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__clf32cde8d__pvd9381c1d: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False"
+  },
+  {
+   "type": "col_h9_r1__t1__clf32cde8d__pvee46d7b8",
+   "moves": [],
+   "before": "col_h9_r1__t1__clf32cde8d__pvee46d7b8: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False",
+   "published_tree": true,
+   "tree_matched_before": false,
+   "unfixable": "no legal single-tap move closes clk_t21 (col_h9_r1__t1__clf32cde8d__pvee46d7b8: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False)",
+   "after": "col_h9_r1__t1__clf32cde8d__pvee46d7b8: grid+explicit tap clk_t21 load=21/1500, radius=288.72/200.0, empty=False"
+  }
+ ]
+}
