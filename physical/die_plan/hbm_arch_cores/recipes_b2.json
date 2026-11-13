@@ -4207,16 +4207,19 @@
       "ot_sram_1r1w_128x256_m1_r0c0_g256"
     ],
     "files": [
-      "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+      "rtl/hbm_accel/counted_1109/ot_wbq_root_g0/ot_wbq_root_s7.sv",
+      "rtl/hbm_accel/counted_1109/ot_wbq_root_g0/ot_wbq_root_s7_rr_fifo.sv",
       "rtl/lib/ot_reset_sync.sv",
       "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
       "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
     ],
-    "defines": [],
+    "defines": [
+      "OT_WBQ_ROOT_S7_RPIPE"
+    ],
     "params": {},
-    "source": "DIE-HBM-82-EP6 d44v part 51 (plan-owner approved DIE-HBM-82 11-06 19:1x): lane group 0 of ot_wbq_root (lanes 0-3, 4 x ot_sram_1r1w_128x256_m1_r0c0_g256); slot glue ot_wbq_root_g2 = ot_wbq_root (OT_WBQ_N1M) cycle-exact: results/die_hbm_1106/wbq_g2/eq_g2.sh (yosys induction) + bench_g2.sh (lock-step)",
-    "source_commit": "75ed2b0eaa5ccd30d227f3e88ca86cb595db50fe",
-    "read_at_commit": true,
+    "source": "HBM-CORES-C 11-12 v8 (DIE-HBM-101 accepted): S7 RR + RSEL read select + srst copies (RSTCP=8) + ordinal8, RPIPE ingress record (g0 +1 fifo_clk, ring 4->5); g0 and g1 are one design (G=0/1). Proofs and receipts: results/die_hbm_1112/wbq_v8/README.md",
+    "source_commit": "21bad708b1",
+    "read_at_commit": false,
     "util": 0.45
   },
   "ot_wbq_root_g1": {
@@ -4225,16 +4228,19 @@
       "ot_sram_1r1w_128x256_m1_r0c0_g256"
     ],
     "files": [
-      "rtl/hbm_accel/cores_split/reform_1105b/ot_wbq_split.sv",
+      "rtl/hbm_accel/counted_1109/ot_wbq_root_g1/ot_wbq_root_s7.sv",
+      "rtl/hbm_accel/counted_1109/ot_wbq_root_g1/ot_wbq_root_s7_rr_fifo.sv",
       "rtl/lib/ot_reset_sync.sv",
       "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
       "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv"
     ],
-    "defines": [],
+    "defines": [
+      "OT_WBQ_ROOT_S7_RPIPE"
+    ],
     "params": {},
-    "source": "DIE-HBM-82-EP6 d44v part 51 (plan-owner approved DIE-HBM-82 11-06 19:1x): lane group 1 of ot_wbq_root (lanes 4-7, 4 x ot_sram_1r1w_128x256_m1_r0c0_g256); slot glue ot_wbq_root_g2 = ot_wbq_root (OT_WBQ_N1M) cycle-exact: results/die_hbm_1106/wbq_g2/eq_g2.sh (yosys induction) + bench_g2.sh (lock-step)",
-    "source_commit": "75ed2b0eaa5ccd30d227f3e88ca86cb595db50fe",
-    "read_at_commit": true,
+    "source": "HBM-CORES-C 11-12 v8 (DIE-HBM-101 accepted): S7 RR + RSEL read select + srst copies (RSTCP=8) + ordinal8, RPIPE ingress record (g0 +1 fifo_clk, ring 4->5); g0 and g1 are one design (G=0/1). Proofs and receipts: results/die_hbm_1112/wbq_v8/README.md",
+    "source_commit": "21bad708b1",
+    "read_at_commit": false,
     "util": 0.45
   },
   "ot_hgi_sfu_opsb_output__wp3": {

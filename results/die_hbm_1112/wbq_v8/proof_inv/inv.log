@@ -1,0 +1,149 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/eq/inv.ys' --
+
+1. Executing Verilog-2005 frontend: /eq/inv.sv
+Parsing formal SystemVerilog input from `/eq/inv.sv' to AST representation.
+Generating RTLIL representation for module `\inv'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \inv
+
+2.2. Analyzing design hierarchy..
+Top module:  \inv
+Removed 0 unused modules.
+Module inv directly or indirectly contains formal properties -> setting "keep" attribute.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/eq/inv.sv:3$1 in module inv.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 1 redundant assignment.
+Promoted 4 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\inv.$proc$/eq/inv.sv:12$11'.
+  Set init value: \ordinal = 12'000000000000
+  Set init value: \ordinal8 = 13'0000000001000
+  Set init value: \filling = 1'0
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\inv.$proc$/eq/inv.sv:3$1'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~3 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\inv.$proc$/eq/inv.sv:12$11'.
+Creating decoders for process `\inv.$proc$/eq/inv.sv:13$7'.
+Creating decoders for process `\inv.$proc$/eq/inv.sv:3$1'.
+     1/3: $0\filling[0:0]
+     2/3: $0\ordinal8[12:0]
+     3/3: $0\ordinal[11:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\inv.\ordinal' using process `\inv.$proc$/eq/inv.sv:3$1'.
+  created $adff cell `$procdff$37' with positive edge clock and positive level reset.
+Creating register for signal `\inv.\ordinal8' using process `\inv.$proc$/eq/inv.sv:3$1'.
+  created $adff cell `$procdff$42' with positive edge clock and positive level reset.
+Creating register for signal `\inv.\filling' using process `\inv.$proc$/eq/inv.sv:3$1'.
+  created $adff cell `$procdff$47' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `inv.$proc$/eq/inv.sv:12$11'.
+Removing empty process `inv.$proc$/eq/inv.sv:13$7'.
+Found and cleaned up 3 empty switches in `\inv.$proc$/eq/inv.sv:3$1'.
+Removing empty process `inv.$proc$/eq/inv.sv:3$1'.
+Cleaned up 3 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module inv.
+<suppressed ~6 debug messages>
+
+4. Executing ASYNC2SYNC pass.
+Replacing inv.$procdff$42 ($adff): ARST=\rst_n, D=$procmux$24_Y, Q=\ordinal8
+Replacing inv.$procdff$47 ($adff): ARST=\rst_n, D=$procmux$17_Y, Q=\filling
+Replacing inv.$procdff$37 ($adff): ARST=\rst_n, D=$procmux$31_Y, Q=\ordinal
+
+5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \inv..
+Removed 6 unused cells and 25 unused wires.
+<suppressed ~7 debug messages>
+
+6. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 22 cells to SAT database.
+Import set-constraint from init attribute: $auto$async2sync.cc:253:execute$48 = 13'0000000001000
+Import set-constraint from init attribute: $auto$async2sync.cc:253:execute$50 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:253:execute$52 = 12'000000000000
+Final init constraint equation: { $auto$async2sync.cc:253:execute$52 $auto$async2sync.cc:253:execute$50 $auto$async2sync.cc:253:execute$48 } = 26'00000000000000000000001000
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 22 cells to SAT database.
+Import proof for assert: $eq$/eq/inv.sv:13$10_Y when 1'1.
+
+** Trying induction with length 1 **
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 22 cells to SAT database.
+Import proof for assert: $eq$/eq/inv.sv:13$10_Y when 1'1.
+Import show expression: \total
+Import show expression: \stop
+Import show expression: \fill_start
+Import show expression: \rst_n
+Import show expression: \clk
+
+[base case 1] Solving problem with 2362 variables and 6370 clauses..
+Base case for induction length 1 proven.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 22 cells to SAT database.
+Import proof for assert: $eq$/eq/inv.sv:13$10_Y when 1'1.
+Import show expression: \total
+Import show expression: \stop
+Import show expression: \fill_start
+Import show expression: \rst_n
+Import show expression: \clk
+
+[induction step 1] Solving problem with 2310 variables and 6189 clauses..
+Induction step proven: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 839664f870, time: 0.02s, user: 0.02s, system: 0.01s, MEM: 28.01 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 87% 1x sat (0 sec), 5% 2x read_verilog (0 sec), ...

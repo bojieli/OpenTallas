@@ -4,7 +4,7 @@
 // Defaults CBREG=0/SSTOPREG=0 match vS6. Kit opt-in adds exactly +1 fifo_clk
 // input cycle on copy_bank and s_stop; parent fault/inflight qualification is
 // required before adoption. No payload/valid/output cycle added. No fences.
-module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG)(
+module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG, parameter integer RSTCP=1, parameter integer O8=0)(
  input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] root_id,
  input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
@@ -28,13 +28,17 @@ module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, par
  end
  wire reset_both=stream_rst_n&&hbm_rst_n;
  wire srst,hrst;
- ot_reset_sync u_root_reset(.clk(fifo_clk),.async_rst_n(reset_both),.sync_rst_n(srst));
+ // V8 (HBM-CORES-C 11-12): srst loads (copy_row/pending_row/read_pending/fifo wclk side) spread over kept first-stage + output copies (<= OT_RST_COPIES_MAX each);
+ // same release edge as the single flop (ot_reset_sync TREE form), drv RESETN slew class of g0 clk52.
+ ot_reset_sync #(.OUTPUT_COPIES(RSTCP),.TREE(RSTCP>1?1:0)) u_root_reset(.clk(fifo_clk),.async_rst_n(reset_both),.sync_rst_n(srst));
  ot_reset_sync u_hbm_reset(.clk(hbm_clk),.async_rst_n(reset_both),.sync_rst_n(hrst));
  assign root_ready=srst;
  wire [255:0] wd[0:3];
  assign wd[0]=wd0;assign wd[1]=wd1;assign wd[2]=wd2;assign wd[3]=wd3;
  reg [31:0] base[0:1];reg [11:0] total[0:1];reg [11:0] committed[0:1];
  reg filling,fill_bank;reg [11:0] ordinal;
+ // O8=1: ordinal8 == ordinal+8 (13 bit, unwrapped) kept as a register; the fill compare and the committed value read it instead of re-adding.
+ reg [12:0] ordinal8;
  reg copy_q;reg [6:0] copy_row[0:3];reg [5:0] pending_row[0:3];reg [3:0] read_pending;
  wire [3:0] fifo_full,fifo_empty,fifo_we,fifo_re,mem_read;
  wire [287:0] fifo_head[0:3];wire [255:0] mem_data[0:3];
@@ -63,7 +67,11 @@ module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, par
   wire [31:0] sector=base[local_copy_bank]+{pending_row[g],5'b0}+lane;
   assign fifo_we[g]=copy_q&&read_pending[g]&&!fifo_full[g]&&!local_s_stop;
   assign mem_read[g]=copy_q&&(!read_pending[g]||fifo_we[g])&&row*32+int'(lane)<committed[local_copy_bank]&&!local_s_stop;
+`ifdef OT_WBQ_ROOT_S7_RPIPE
+  ot_wbq_root_s7_rr_fifo #(.W(288),.AW(2),.RSEL(1)) u_fifo(
+`else
   ot_hbm_accel_cdc_fifo #(.W(288),.AW(2)) u_fifo(
+`endif
    .wclk(fifo_clk),.wrst_n(srst),.we(fifo_we[g]),.wdata({sector,mem_data[g]}),.full(fifo_full[g]),.rd_freed(),
    .rclk(hbm_clk),.rrst_n(hrst),.re(fifo_re[g]),.rdata(fifo_head[g]),.empty(fifo_empty[g]));
   ot_sram_1r1w_128x256_m1_r0c0_g256 u_payload(
@@ -74,15 +82,20 @@ module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, par
  integer s;
  always @(posedge fifo_clk or negedge srst)begin
   if(!srst)begin
-   filling<=0;fill_bank<=0;ordinal<=0;copy_q<=0;read_pending<=0;
+   filling<=0;fill_bank<=0;ordinal<=0;ordinal8<=13'd8;copy_q<=0;read_pending<=0;
    for(s=0;s<2;s=s+1)begin base[s]<=0;total[s]<=0;committed[s]<=0;end
    for(s=0;s<4;s=s+1)begin copy_row[s]<=0;pending_row[s]<=0;end
   end else begin
    if(reserve_v)begin base[reserve_bank]<={2'b00,reserve_base};total[reserve_bank]<=reserve_total;committed[reserve_bank]<=0;end
-   if(fill_start)begin filling<=1;fill_bank<=fill_start_bank;ordinal<=0;end
+   if(fill_start)begin filling<=1;fill_bank<=fill_start_bank;ordinal<=0;ordinal8<=13'd8;end
    if(filling&&!core_s_stop)begin
+    if(O8!=0)begin
+     if(ordinal8>=total[fill_bank])begin filling<=0;committed[fill_bank]<=total[fill_bank];end
+     else begin ordinal<=ordinal8[11:0];ordinal8<=ordinal8+13'd8;committed[fill_bank]<={ordinal8[11:5],5'b0};end
+    end else begin
     if(ordinal+8>=total[fill_bank])begin filling<=0;committed[fill_bank]<=total[fill_bank];end
     else begin ordinal<=ordinal+8;committed[fill_bank]<=((ordinal+12'd8)>>5)<<5;end
+    end
    end
    copy_q<=copy_on;
    if(copy_on&&!copy_q)begin
@@ -111,7 +124,7 @@ module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, par
 endmodule
 
 // the two hard-core masters of the split (d44v part 51): same pins, G fixed
-module ot_wbq_root_g0__fcore #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG)(
+module ot_wbq_root_s7_g0 #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG, parameter integer RSTCP=8, parameter integer O8=1)(
  input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] root_id,
  input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
@@ -122,9 +135,12 @@ module ot_wbq_root_g0__fcore #(parameter integer CRED=4, parameter integer MUT=0
  output wire root_ready,
  output wire g_v,output wire [285:0] g_d
 );
- ot_wbq_root_s7_grp #(.G(0),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG)) u_grp(.*);
+ ot_wbq_root_s7_grp #(.G(0),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG),.RSTCP(RSTCP),.O8(O8)) u_grp(.*);
 endmodule
-module ot_wbq_root_s7_g1 #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=0, parameter integer SSTOPREG=CBREG)(
+// v8 (HBM-CORES-C 11-12): the module below is the recipe top ot_wbq_root_g0; gen_core_kit_hbm.py renames it to ot_wbq_root_g0__fcore
+// (face shell). CBREG/SSTOPREG default 1 here because the shell instantiates it without parameters (kit form = +1 fifo_clk pin cycle on
+// copy_bank and s_stop). RSTCP=8 srst copies, O8=1 ordinal8, RSEL=1 read select; RPIPE ingress record via define OT_WBQ_ROOT_S7_RPIPE.
+module ot_wbq_root_g0 #(parameter integer CRED=4, parameter integer MUT=0, parameter integer CBREG=1, parameter integer SSTOPREG=CBREG, parameter integer RSTCP=8, parameter integer O8=1)(
  input wire hbm_clk,fifo_clk,stream_rst_n,hbm_rst_n,
  input wire [1:0] root_id,
  input wire reserve_v,reserve_bank,input wire [11:0] reserve_total,input wire [29:0] reserve_base,
@@ -135,7 +151,7 @@ module ot_wbq_root_s7_g1 #(parameter integer CRED=4, parameter integer MUT=0, pa
  output wire root_ready,
  output wire g_v,output wire [285:0] g_d
 );
- ot_wbq_root_s7_grp #(.G(1),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG)) u_grp(.*);
+ ot_wbq_root_s7_grp #(.G(0),.CRED(CRED),.MUT(MUT),.CBREG(CBREG),.SSTOPREG(SSTOPREG),.RSTCP(RSTCP),.O8(O8)) u_grp(.*);
 endmodule
 
 

@@ -1,0 +1,126 @@
+{
+ "schema": "opentallas.eco_loop.v1",
+ "kind": "eco",
+ "tool": "tools/die_plan/eco_loop.py",
+ "kit": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8",
+ "root": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1",
+ "mem_requested_gb": 64,
+ "mem_gb": 64,
+ "kit_peak_gb": 8.53,
+ "mem_factor": 1.5,
+ "base_signoff": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/signoff/signoff.json",
+ "base_routed_db": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/run/results/asap7/hbc_ot_wbq_root_g0/base/6_final.odb",
+ "base_metrics": {
+  "verdict": "NOT SIGNED",
+  "signed": false,
+  "tt": 72.13,
+  "ff": -126.84,
+  "drv": 54,
+  "drc": 0,
+  "drv_tt": 29,
+  "drv_ff": 25,
+  "fails": [
+   "drv",
+   "hold_ff"
+  ],
+  "vclk_tt": 340.32246,
+  "vclk_ff": null
+ },
+ "max_iter": 1,
+ "hold_margin_ps": 5,
+ "started": 1794539158.1484723,
+ "iterations": [
+  {
+   "n": 1,
+   "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8",
+   "mode": "route",
+   "variant": "m5",
+   "started": 1794539158.5043952,
+   "commands": [
+    "bash /srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/post_route_drv/prd_mk.sh /srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8 /srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1 m5 /srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/so",
+    "bash /srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18/tools/die_plan/post_route_drv/prd_run.sh /srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1 16 64 1",
+    "bash /srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/run_kit_hbm.sh /srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1 post 64 16"
+   ],
+   "rc": {
+    "prd_mk": 0,
+    "prd_run": 0,
+    "signoff": 1
+   },
+   "pass_dirs": [
+    "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1"
+   ],
+   "repair_rc": "auto",
+   "eco_vclk_ps": {
+    "m5": null
+   },
+   "signoff": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/signoff/signoff.json",
+   "base": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/run/results/asap7/hbc_ot_wbq_root_g0/base",
+   "metrics": {
+    "verdict": "LOCAL_PASS_NEEDS_PARENT",
+    "signed": true,
+    "tt": 68.52,
+    "ff": -126.74,
+    "drv": 0,
+    "drc": 0,
+    "drv_tt": 0,
+    "drv_ff": 0,
+    "fails": [],
+    "vclk_tt": 340.214891,
+    "vclk_ff": null
+   },
+   "status": "SIGNED",
+   "reason": "",
+   "finished": 1794539790.7446976,
+   "wall_s": 632.2,
+   "trimmed": [
+    "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/run/results/asap7/hbc_ot_wbq_root_g0/base/5_route.odb",
+    "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/run/results/asap7/hbc_ot_wbq_root_g0/base/5_3_fillcell.odb",
+    "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/run/results/asap7/hbc_ot_wbq_root_g0/base/6_1_fill.odb"
+   ]
+  }
+ ],
+ "flow": {
+  "tools_sha256": "b1a0c8af069491680503bec401936f4f16bfc148060dc5fe008e60134e758218"
+ },
+ "host": "renewed-glider",
+ "eligibility": "ECO class: drv,hold_ff",
+ "route_hold_form": {
+  "requested": false,
+  "declared": false
+ },
+ "near_miss": {
+  "near": true,
+  "beyond": [],
+  "advisory": [
+   "hold scored on core-owned only: 3 endpoint(s) at -8.64 ps; the rest start at input ports or end at output ports, the parent's",
+   "29 slew pins, nets not in the record: count the nets (near miss = at most 20, one family, local cause)"
+  ],
+  "owner_override": false,
+  "route_hold_form": false
+ },
+ "best": {
+  "n": 1,
+  "dir": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1",
+  "signoff": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/signoff/signoff.json",
+  "base": "/srv/opentallas-scratch2/claude/hbm-cores-c/kit_g0_v8/eco_1/i1/run/results/asap7/hbc_ot_wbq_root_g0/base",
+  "metrics": {
+   "verdict": "LOCAL_PASS_NEEDS_PARENT",
+   "signed": true,
+   "tt": 68.52,
+   "ff": -126.74,
+   "drv": 0,
+   "drc": 0,
+   "drv_tt": 0,
+   "drv_ff": 0,
+   "fails": [],
+   "vclk_tt": 340.214891,
+   "vclk_ff": null
+  }
+ },
+ "best_trimmed": 3,
+ "verdict": "PASS",
+ "reason": "signed off after 1 ECO iteration(s)",
+ "finished": 1794539790.769184,
+ "wall_s": 632.6
+}
