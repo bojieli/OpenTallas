@@ -712,6 +712,8 @@ def reduce_kitwave(state, stage_rows, read_spec=None):
 # CLEAN-2 11-12 (OWNER aggressive cleanup: keep ONLY live jobs, the current attempt of a live or queued row and the inputs
 # of queued / running jobs, signed results until archived, protected paths still referenced).  reduce_live() is the
 # rule set the host applies with --live-refs-only; reduce_kitwave() above stays as it was for hosts without the flag.
+SPEC_RUN_KEYS = ("root", "work", "dir", "log", "logs")
+KW_CONTAINER_RE = re.compile(r"/kit-wave/[^/]+(?:/[^/]+(?:/items(?:/[^/]+)?)?)?$")   # die / event / items / item dirs
 LIVE_GRACE_S = 2 * 3600       # a terminal row whose queue still says RUNNING/QUEUED stays live this long after its last update
 QUEUED_STATUS = {"QUEUED", "PENDING-DEP", "WAIT-PARENT", "RETRY-INFRA", "ENQUEUED"}
 
@@ -1396,9 +1398,21 @@ class Job:
                 txt = rd(f)
             except OSError:
                 continue
+            if self.live_refs and os.path.basename(f) == "spec.json":
+                # CLEAN-2: a kit-wave spec's root / work / dir are where the row RUNS (the whole wave event dir, its own
+                # attempt), not inputs it reads; on intel2 they held 441 finished attempts of whole waves
+                try:
+                    sj = json.loads(txt)
+                    if isinstance(sj, dict):
+                        txt = json.dumps({k_: v_ for k_, v_ in sj.items() if k_ not in SPEC_RUN_KEYS})
+                except ValueError:
+                    pass
             for q in text_paths(txt):
                 if os.path.exists(q):
                     for r_ in {q, os.path.dirname(q)}:
+                        if self.live_refs and r_ != q and (KW_CONTAINER_RE.search(self.paths.canon(r_)) or not self.deep(r_)):
+                            continue          # CLEAN-2: the parent of a named attempt is its item / event dir, the parent of a
+                                              # lane-level tree is the lane or scratch root: neither is a ref
                         if r_.count("/") >= 4:
                             self.kwkeep.add(r_, "bind/filelist ref from " + f)
                             added += 1

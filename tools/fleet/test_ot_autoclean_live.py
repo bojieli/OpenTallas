@@ -181,6 +181,26 @@ class HostLive(T.Base):
         self.run_job("--classes", "c", "--live-refs-only")
         self.assertTrue(os.path.exists(os.path.join(cur, "gen/t1/run/results/asap7/dp_t1/base/2_1_floorplan.odb")))
 
+    def test_spec_root_and_item_parent_are_not_bind_refs(self):
+        cur, old = self.attempt("t1", 5), self.attempt("t1", 4)
+        other = self.attempt("t2", 1)
+        ev = os.path.dirname(os.path.dirname(os.path.dirname(cur)))
+        src = os.path.join(self.root, "src_tree")
+        os.makedirs(src)
+        rdir = os.path.join(self.root, "hubrec/a5")
+        os.makedirs(rdir)
+        with open(os.path.join(rdir, "spec.json"), "w") as f:
+            json.dump({"root": ev, "work": cur, "src": src, "resume_from": old + "/gen"}, f)
+        os.makedirs(old + "/gen", exist_ok=True)
+        self.snap_kw({cur: {"active": True, "current": True}, old: {"terminal": ["FAIL/None"]},
+                      other: {"terminal": ["CANCELLED/None"]}}, keep=[cur, rdir])
+        self.run_job("--classes", "a", "--live-refs-only")
+        self.assertTrue(os.path.isdir(cur))
+        self.assertTrue(os.path.isdir(src))
+        self.assertTrue(os.path.isdir(old), "a path the spec names (resume source) stays")
+        self.assertFalse(os.path.exists(other), "spec root (whole event dir) must not hold other items")
+        self.run_job("--classes", "a")                         # old rules: root held it -> (already gone) no error
+
     def stale_setup(self, stale_rel):
         kit = os.path.join(self.root, stale_rel)
         d = os.path.join(kit, "run/results/asap7/x/base")
