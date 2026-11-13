@@ -265,6 +265,18 @@ def strap_pad_width(type_spec=None):
     return strap_pad_capacity(type_spec).bit_length()
 
 
+
+def strap_pad_storage(type_spec, leaf, port, span):
+    """Explicit relative leaf.port storage opt-in; default remains the original flop bank."""
+    spec = (type_spec or {}).get("r8_strap_pad_storage", {})
+    if not isinstance(spec, dict) or any(v != "sram32" for v in spec.values()):
+        raise ValueError("r8_strap_pad_storage must map exact leaf.port sites to sram32")
+    storage = spec.get(f"{leaf}.{port}", "flop")
+    if storage == "sram32" and not 0 <= span <= 32:
+        raise ValueError(f"R8 SRAM32 {leaf}.{port}: declared variable depth {span} exceeds 32 words")
+    return storage
+
+
 def check(bg, raw, landing=None, replica="all", bus="part", limit=40, strap_pads=False):
     """G0 R8: [(severity, message)] + stats.  landing = {member id: landed depth} or None (use landed_stages).
     strap_pads (OWNER 2026-10-28 KV R8 decision, opt-in, default off = unchanged): instances of one type that need
@@ -356,7 +368,15 @@ def check(bg, raw, landing=None, replica="all", bus="part", limit=40, strap_pads
                                             source=k[3], asbuilt=k[4], dmax=mx, base=base, span=mx - base, pads=pads,
                                             used=sorted(set(pads.values())),
                                             strap_counts=sorted({v - base for v in pads.values()})))
-                    capacity = strap_pad_capacity(raw.get("partition_types", {}).get(t, {}))
+                    ts = raw.get("partition_types", {}).get(t, {})
+                    capacity = strap_pad_capacity(ts)
+                    try:
+                        storage = strap_pad_storage(ts, k[0], k[1], mx - base)
+                        if storage != "flop":
+                            strap_sites[-1]["storage"] = storage
+                    except ValueError as exc:
+                        bad_t += 1
+                        msgs.append(("ERROR", str(exc)))
                     if mx > capacity:
                         bad_t += 1
                         msgs.append(("ERROR", f"R8 strap pad {t} {k[0]}.{k[1]} <- {k[3]}: pad {mx} > strap capacity "

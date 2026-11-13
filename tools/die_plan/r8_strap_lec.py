@@ -25,8 +25,9 @@ import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-BANK_RE = re.compile(r"^\s*ot_dp_dly_cnt #\(\.W\((\d+)\), \.DMAX\((\d+)\)(?:, \.CW\((\d+)\))?\) (\w+) \(\.clk\(clk\), "
-                     r"\.strap_cnt\((strap_r8pad_\w+)\), \.d\(([^;]*?)\), \.q\((\w+)\)\);.*$", re.M)
+BANK_RE = re.compile(r"^\s*(?P<module>ot_dp_dly_cnt(?:_sram)?) #\(\.W\((?P<W>\d+)\), \.DMAX\((?P<DMAX>\d+)\)"
+                     r"(?:, \.CW\((?P<CW>\d+)\))?(?:, \.BASE\((?P<BASE>\d+)\))?\) (?P<inst>\w+) \(\.clk\(clk\), "
+                     r"\.strap_cnt\((?P<site>strap_r8pad_\w+)\), \.d\((?P<d>[^;]*?)\), \.q\((?P<q>\w+)\)\);.*$", re.M)
 PORT_RE = re.compile(r"^\s*input wire \[(\d+):0\] (strap_r8pad_\w+)\b.*$", re.M)
 INST_RE = re.compile(r"(?m)^\s*([A-Za-z_]\w*)\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*([A-Za-z_]\w*)\s*\(")
 DLY = """module ot_dp_dly #(parameter integer W = 1, parameter integer D = 1) (
@@ -46,7 +47,18 @@ endmodule
 
 
 def banks_of(text):
-    return [dict(W=int(m[1]), DMAX=int(m[2]), inst=m[4], site=m[5], d=m[6], q=m[7], **({"CW": int(m[3])} if m[3] else {})) for m in BANK_RE.finditer(text)]
+    banks = []
+    for m in BANK_RE.finditer(text):
+        b = {k: m[k] for k in ("inst", "site", "d", "q")}
+        b.update(W=int(m["W"]), DMAX=int(m["DMAX"]))
+        if m["CW"] is not None:
+            b["CW"] = int(m["CW"])
+        if m["module"] == "ot_dp_dly_cnt_sram":
+            b.update(module=m["module"], BASE=int(m["BASE"]) if m["BASE"] is not None else 2)
+        elif m["BASE"] is not None:
+            raise ValueError("ordinary count bank has no BASE parameter")
+        banks.append(b)
+    return banks
 
 
 def structure_ok(text):
@@ -55,7 +67,8 @@ def structure_ok(text):
     # no other use of a strap pin (the bank output wires r8b_strap_r8pad_* are ordinary names)
     widths = {m[2]: int(m[1]) + 1 for m in PORT_RE.finditer(text)}
     return ("ot_dp_dly_cnt" not in stripped and not re.search(r"(?<!\w)strap_r8pad_\w+", stripped)
-            and all(widths.get(b["site"]) == b.get("CW", 4) for b in banks_of(text)))
+            and all(widths.get(b["site"]) == b.get("CW", 5 if b.get("module") else 4) for b in banks_of(text))
+            and all(b.get("BASE") == 0 and b["DMAX"] <= 32 for b in banks_of(text) if b.get("module")))
 
 
 def harness(tn, banks, gold, ties, tag):
@@ -71,10 +84,13 @@ def harness(tn, banks, gold, ties, tag):
                 f"    ot_dp_dly #(.W({b['W']}), .D({c})) u{k} (.clk(clk), .d(d{k}), .q(q{k}));\n")
     txt += f"endmodule\nmodule gate {hdr}"
     for k, b in enumerate(banks):
-        cw = b.get("CW", 4)
-        cp = f", .CW({cw})" if cw != 4 else ""
+        cw = b.get("CW", 5 if b.get("module") else 4)
+        cp = f", .CW({cw})" if cw != 4 or b.get("module") else ""
+        module = b.get("module", "ot_dp_dly_cnt")
+        if b.get("module"):
+            cp += f", .BASE({b['BASE']})"
         txt += (f"    wire [{cw - 1}:0] t{k} = {cw}'d{ties[b['site']]};\n"
-                f"    ot_dp_dly_cnt #(.W({b['W']}), .DMAX({b['DMAX']}){cp}) u{k} (.clk(clk), .strap_cnt(t{k}), "
+                f"    {module} #(.W({b['W']}), .DMAX({b['DMAX']}){cp}) u{k} (.clk(clk), .strap_cnt(t{k}), "
                 f".d(d{k}), .q(q{k}));\n")
     return txt + "endmodule\n"
 
@@ -108,6 +124,7 @@ def main(argv=None):
     ap.add_argument("--jobs", type=int, default=6)
     ap.add_argument("--timeout", type=int, default=1800)
     ap.add_argument("--image", default="openroad/orfs:asap7lock")
+    ap.add_argument("--sram-theorem", help="native SRAM receipt with matching source/macro hashes; reuses only successful universal binary-state proof rows")
     a = ap.parse_args(argv)
     bo = Path(a.bind_out).resolve()
     rep = json.loads((bo / "bind_report.json").read_text())
@@ -119,7 +136,7 @@ def main(argv=None):
     out.mkdir(exist_ok=True)
     (out / "dly.sv").write_text(DLY)
     (out / "bank.sv").write_text((ROOT / "rtl/common/ot_dp_dly_cnt.sv").read_text())
-    jobs, structure = [], {}
+    jobs, structure, native = [], {}, {}
     for tn, ports in sorted(man["types"].items()):
         r8 = sorted(p for p, d in ports.items() if d.get("kind") == "r8pad_strap")
         if not r8:
@@ -140,6 +157,13 @@ def main(argv=None):
             gold = {sp: sites[base_tn][sp]["pads"][i] - sites[base_tn][sp]["base"] for sp in r8}
             key = json.dumps([ties, gold], sort_keys=True)
             variants.setdefault(key, dict(ties=ties, gold=gold, instances=[]))["instances"].append(i)
+        sram = [b for b in banks if b.get("module") == "ot_dp_dly_cnt_sram"]
+        if sram:
+            import r8_sram_lec
+            native[tn] = r8_sram_lec.qualify(tn, sram, list(variants.values()), out / f"{mod}_sram_native", a.sram_theorem)
+        banks = [b for b in banks if not b.get("module")]
+        if not banks:
+            continue
         seq = max(b["DMAX"] for b in banks) + 1
         for k, (key, v) in enumerate(sorted(variants.items())):
             txt = harness(tn, banks, v["gold"], v["ties"], f"variant {k} instances {v['instances']}")
@@ -156,11 +180,13 @@ def main(argv=None):
         rows = list(ex.map(lambda j: run(j, out, a.image, a.timeout), jobs))
     eq = [r for r in rows if r["kind"] == "eq"]
     mu = [r for r in rows if r["kind"] == "mutant"]
-    ok = all(r["pass_"] for r in rows) and all(s["ok"] for s in structure.values()) and bool(rows)
+    ok = (all(r["pass_"] for r in rows) and all(s["ok"] for s in structure.values())
+          and all(r["verdict"] == "PASS_BINARY_NATIVE" for r in native.values()) and bool(rows or native))
     res = dict(schema="opentallas.r8_strap_type_lec.v1", bind=str(bo), types=len(structure), structure=structure,
                variants=len(eq), equivalent=sum(r["pass_"] for r in eq), mutants=len(mu),
                mutants_caught=sum(r["pass_"] for r in mu), undecided=sum(r["undecided"] for r in rows),
-               verdict="PASS" if ok else "FAIL", rows=rows)
+               verdict="PASS" if ok else "FAIL", rows=rows, native_sram=native,
+               native_semantics="binary power-up, resetless all-bit history; not four-state X startup" if native else None)
     (out / "receipt.json").write_text(json.dumps(res, indent=1) + "\n")
     print(json.dumps({k: v for k, v in res.items() if k not in ("rows", "structure")}))
     return 0 if ok else 1

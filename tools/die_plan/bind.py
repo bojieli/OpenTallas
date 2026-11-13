@@ -2865,10 +2865,17 @@ class Binder:
                 if mx > capacity:
                     self.errors.append(f"R8_STRAP_PAD {tn} {r}.{pn}: pad {mx} > strap capacity {capacity}")
                     continue
+                try:
+                    storage = R8.strap_pad_storage(getattr(self, "types", {}).get(tn, {}), r, pn, mx - base)
+                except ValueError as exc:
+                    self.errors.append(str(exc))
+                    continue
                 counts = {p: pv[k] - base for k, p in enumerate(ps)}
                 sites[site] = dict(leaf=r, port=pn, bits=sorted(bits), width=len(bits), base=base, span=mx - base,
                                    pads={p: pv[k] for k, p in enumerate(ps)}, counts=counts,
                                    used=sorted(set(counts.values())))
+                if storage != "flop":
+                    sites[site]["storage"] = storage
                 for i in bits:
                     for p in ps:
                         self.r8sp[(where[(r, pn, i)][p], pn, i)] = (site, base, mx - base, counts[p])
@@ -2927,11 +2934,18 @@ class Binder:
                     continue
                 if site in sites:
                     raise BindError(f"INNER_STRAP_PAD {tn}: site name {site} collides")
+                try:
+                    storage = R8.strap_pad_storage(getattr(self, "types", {}).get(tn, {}), r, pn, mx - base)
+                except ValueError as exc:
+                    self.errors.append(str(exc))
+                    continue
                 counts = {p: pv[k] - base for k, p in enumerate(ps)}
                 sites[site] = dict(kind="inner", leaf=r, port=pn, src=f"{sr}.{spn}", bits=sorted(bits),
                                    width=len(bits), base=base, span=mx - base,
                                    pads={p: pv[k] for k, p in enumerate(ps)}, counts=counts,
                                    used=sorted(set(counts.values())))
+                if storage != "flop":
+                    sites[site]["storage"] = storage
                 for i in bits:
                     for p in ps:
                         self.isp[(where[(r, pn, i)][p], pn, i)] = (site, base, mx - base, counts[p])
@@ -2969,6 +2983,11 @@ class Binder:
             if not hasattr(self, "r8_sites"):
                 self.r8sp, self.r8_sites = {}, {}
             self.inner_strap_sites(by_type)
+        for tn, spec in self.types.items():
+            selected = spec.get("r8_strap_pad_storage", {})
+            actual = {f"{v['leaf']}.{v['port']}" for v in getattr(self, "r8_sites", {}).get(tn, {}).values()}
+            for site in sorted(set(selected) - actual):
+                self.errors.append(f"R8 SRAM storage site {tn} {site} is not a realized strap-count bank")
         for tn, ps in sorted(by_type.items()):
             sigs = {}
             for p in ps:
@@ -3851,7 +3870,12 @@ class Binder:
                         decl.append(f"    wire [{W - 1}:0] {nb};")
                         bank_cw = r8_ports[site]["width"]
                         r8cw_param = f", .CW({bank_cw})" if bank_cw != 4 else ""
-                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span}){r8cw_param}) u_{nb} (.clk(clk), "
+                        storage = self.r8_sites[tn][site].get("storage", "flop")
+                        bank_module = "ot_dp_dly_cnt_sram" if storage == "sram32" else "ot_dp_dly_cnt"
+                        bank_base = ", .BASE(0)" if storage == "sram32" else ""
+                        if storage == "sram32":
+                            r8cw_param = f", .CW({bank_cw})"
+                        body.append(f"    {bank_module} #(.W({W}), .DMAX({span}){r8cw_param}{bank_base}) u_{nb} (.clk(clk), "
                                     f".strap_cnt({site}), .d({prev}), .q({nb}));  // INNER strap-count bank "
                                     f"(depth = {base} + {site})")
                         r8banks[site] = (nb, sb)
@@ -3885,7 +3909,12 @@ class Binder:
                         decl.append(f"    wire [{W - 1}:0] {nb};")
                         bank_cw = r8_ports[site]["width"]
                         r8cw_param = f", .CW({bank_cw})" if bank_cw != 4 else ""
-                        body.append(f"    ot_dp_dly_cnt #(.W({W}), .DMAX({span}){r8cw_param}) u_{nb} (.clk(clk), "
+                        storage = self.r8_sites[tn][site].get("storage", "flop")
+                        bank_module = "ot_dp_dly_cnt_sram" if storage == "sram32" else "ot_dp_dly_cnt"
+                        bank_base = ", .BASE(0)" if storage == "sram32" else ""
+                        if storage == "sram32":
+                            r8cw_param = f", .CW({bank_cw})"
+                        body.append(f"    {bank_module} #(.W({W}), .DMAX({span}){r8cw_param}{bank_base}) u_{nb} (.clk(clk), "
                                     f".strap_cnt({site}), .d({prev}), .q({nb}));  // R8 strap-count bank "
                                     f"(pad = {base} + {site})")
                         r8banks[site] = (nb, sb)
@@ -4606,6 +4635,8 @@ def cmd_bind(a):
     if getattr(B, "r8sp", None) or getattr(B, "isp", None):
         # OWNER 10-28 R8 strap pads: the strap-count bank master (rtl/common, LEC'd per used constant)
         B.extra_lib.append(str(Path(B.base).resolve() / "rtl/common/ot_dp_dly_cnt.sv"))
+        if any(v.get("storage") == "sram32" for sites in getattr(B, "r8_sites", {}).values() for v in sites.values()):
+            B.extra_lib.append(str(Path(B.base).resolve() / "rtl/common/ot_dp_dly_cnt_sram.sv"))
     if B.ab.get("land_pad_tree"):
         B.pad_trees()
     files = []

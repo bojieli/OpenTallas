@@ -12,7 +12,8 @@ module formal_domain #(parameter integer BASE=2, DMAX=24, CW=5)(
  wire gold=depth==0?d:history[depth-1];
  always @(posedge clk) begin
   if (!$initstate) assume($stable(strap_cnt));
-  history<={history[TOTAL-2:0],d};
+  history[0]<=d;
+  for(integer j=1;j<TOTAL;j=j+1) history[j]<=history[j-1];
   if(age<6'd40)age<=age+6'd1;
   if(age>=depth)assert(q==gold);
  end

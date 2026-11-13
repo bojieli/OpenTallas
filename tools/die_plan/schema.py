@@ -1423,6 +1423,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r8_strap_pad_max"] = {
     "type": "integer", "minimum": 15,
     "description": "Declared capacity of this type's R8 static pad banks; binder emits enough count bits and DMAX stages. Absent = 15."}
+# Private opt-in SRAM storage at exact relative leaf.port R8 sites. Absent = existing flop banks.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r8_strap_pad_storage"] = {
+    "type": "object", "additionalProperties": {"enum": ["sram32"]},
+    "propertyNames": {"pattern": r"^[A-Za-z_][A-Za-z0-9_.$/]*\.[A-Za-z_][A-Za-z0-9_$]*$"},
+    "description": "Exact relative leaf.port to sram32 static-count bank; variable span must fit 32 words. Default flop unchanged."}
 # R-REACH (RULEBOOK-1113, tools/die_plan/reach_rules.py): reach_homes = where the soft logic of the named face buses is
 # placed (rule 2, macro barriers; rule 3, bus windows); budgets.r_reach = G0 severity of check "r_reach".
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reach_homes"] = {
