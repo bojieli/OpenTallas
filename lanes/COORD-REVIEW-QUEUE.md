@@ -8347,3 +8347,4 @@ FAILED [AUTOPILOT 777dcc1bdd0e] 2026-11-13 11:35:11 PST AUTOPILOT -> KIT-WAVE-3:
   - Base: 7948 passed / 180 failed / 63 errors / 78 skipped / 2 xfailed.
   - The FAILED/ERROR id sets are identical: 240 ids on each side, 0 branch-only, 0 base-only. The +12 passes are the branch's new tests (test_count_frame 5, test_region_form_sta 4, test_region_form 3).
   - The branch adds no failures. The 240 shared failures are pre-existing in the sparse clone. Logs: epyc9 qc-region-1/full_repo.log, full_basewt.log, fail_repo.txt, fail_basewt.txt.
+- 2026-11-13 11:42 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 1 event(s): ot_s81sl_leaf__t7 route FAIL TIMING (grt-timecap: OT_GRT_TIMECAP stage=grt post-route repair over 21603 s (cap 21600 s) hold_ws_ps=-151.98 setup_wns=unmeasured last='        0 |       0 |       0 |) job 777dcc1bdd0e
