@@ -1,0 +1,34 @@
+{
+  "status": "PASS",
+  "scope": "independent exact fixedT32 all-one KV arithmetic oracle; no global PIO/PVO calibration",
+  "integer_unit": "2^-10",
+  "checked_fp32_fields": 1024,
+  "counts": {
+    "SCORE0": 8,
+    "SCORE1": 8,
+    "PV_RAW0": 8,
+    "PV_RAW1": 8
+  },
+  "expected_score_by_head": [
+    "410f8000",
+    "412f8000",
+    "414f8000",
+    "416f8000",
+    "418f8000",
+    "41af8000",
+    "41cf8000",
+    "41ef8000"
+  ],
+  "expected_pv_by_head": [
+    "410d0000",
+    "410dc000",
+    "410e8000",
+    "410f4000",
+    "41100000",
+    "4110c000",
+    "41118000",
+    "41124000"
+  ],
+  "errors": [],
+  "error_count": 0
+}
