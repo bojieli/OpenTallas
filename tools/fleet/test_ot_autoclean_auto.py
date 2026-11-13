@@ -1211,7 +1211,7 @@ class TestBindRefs(Base):
         self.assertTrue(os.path.exists(ab), "die-hbm-*/ab emergency hold")
         self.assertFalse(os.path.exists(srct), "an unreferenced old src_* tree goes (COORD 11-12)")
         self.assertFalse(os.path.exists(other), "rest of the lane goes")
-        self.assertIn("bind/filelist/manifest files parsed", self.out)
+        self.assertIn("bind/filelist/manifest/json files parsed", self.out)
 
 
 if __name__ == "__main__":
