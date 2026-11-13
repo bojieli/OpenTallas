@@ -9,11 +9,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gen_phys  # noqa: E402
 
 
-def test_off_by_default(tmp_path, monkeypatch):
+def test_off_without_rflow(tmp_path, monkeypatch):
     monkeypatch.delenv("OT_PLACE_MAX_FANOUT", raising=False)
+    monkeypatch.setenv("OT_RFLOW", "0")
     cfg = gen_phys.install_gp_noconverge_gate(tmp_path, [])
     assert not any("OT_PLACE_MAX_FANOUT" in c for c in cfg)
     assert any(c.startswith("export PRE_RESIZE_TCL") for c in cfg)
+
+
+def test_rflow_default_32(tmp_path, monkeypatch):
+    # R-FLOW 11-13 (RULEBOOK-1113): the place fanout limit is on for every kit; the gen env value still wins
+    monkeypatch.delenv("OT_PLACE_MAX_FANOUT", raising=False)
+    monkeypatch.delenv("OT_RFLOW", raising=False)
+    assert "export OT_PLACE_MAX_FANOUT = 32" in gen_phys.install_gp_noconverge_gate(tmp_path, [])
 
 
 def test_export_when_set(tmp_path, monkeypatch):
