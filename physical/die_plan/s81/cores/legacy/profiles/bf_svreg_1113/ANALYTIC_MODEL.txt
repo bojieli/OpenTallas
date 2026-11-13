@@ -1,0 +1,21 @@
+PRIVATE GF5 proposal: SV/CTL interior cut (2026-11-13). No adoption or physical launch.
+Source: dsdv_gunit_l1f.sv, bf + acore; existing gf4 M1REG+C1REG remains default.
+Evidence retained: E8 gunit-core-1/kits/kit_gf4/signoff_codex_gf4_1113/tt/sta.log lines100-167, NOTSIGNED. TT-126.67/25,112slew+3cap,DRC0; FF882parentinput+1core. This is not an ECO candidate.
+
+Measured root cause and stage estimate (833ps unchanged)
+arc[52] CLK403.52 -> Q467.83 -> decoder/cache forward logic -> final mux AO21 Y1107.69 -> sv_hi[227] D1338.18; captureCLK386.19 (excluding period). Q-to-D870.35ps: through mux639.86ps, after mux230.49ps buffered wire. Source/capture clocks differ17.33ps; wire/logic depth dominates.
+Proposed existing boundary s_val/CTL flops remain at their named pins. Add a local interior register at each read/forward mux output, close to that mux, then one short registered hop to the N/S boundary flops. Stage1 estimate640comb +70CQ+15setup+80pairskew=805ps (<833 by28ps); stage2 measured230.5wire +70CQ+15setup+80skew=395.5ps. These are feasibility estimates, not timing closure. The new interior register must stay near the local mux; otherwise the cut would fail to remove the measured wire segment. Pin-to-pin reaches stay within unchanged432x172.8um core.
+
+Width and area budget
+F:512SV bits +22 unique metadata bits (valid1,forward1,last1,beat3,lanevalid16)=534new flops; existing512SV+28CTL face flops retained. Reset only new valid; datapath/other metadata unreset as their existing sources. Match both CTL faces on the same edge. Source4xgf4 interfaces unchanged. No new arithmetic, storage macro, fanout class, pin or wire protocol.
+CRITICAL paired operand: A_lo/A_hi capture bias SRAM output into s_bias independently of F SV/CTL, then pb consumes s_bias with pa=SV. Add one256-bit bias-snapshot register per A core, preserving the original read-edge snapshot; do not simply issue SRAM reads later (concurrent writes would change the sampled value). A bias matching adds512flops total. Total1046new flops across F+twoA cores, estimated <2000cells including local buffering; F +~0.5% cells and A +~0.3% each on ~100k/~80k existing sizes. All outlines unchanged; no numerical/reduction-order change.
+
+Latency and contract impact (private, measured proof still owed)
+SV_lo/hi and every paired CTL field +1clk vs gf4. A bias snapshot and resulting qa/qb/fo/vf +1clk to keep operands paired. Full-band select o_v/f/l/data +1clk vs gf4; gather request/data path does NOT traverse SV, so gather latency is initially expected unchanged. Arithmetic fault arrival shifts with A; valid/collision semantics need legal full-band/calendar proof, not an isolated F miter.
+Affected views: F dsdv_gunit_l1f_bf plus signed A_lo/A_hi dsdv_gunit_l1f_ba0/ba1 if matching bias stage is in acore. These require coordinated re-sign before any plan adopts GF5; source default remains off. New opt-in OT_GUNIT_BF_SVREG must price router-select latency separately from gather feedback (current lower_gu uses one sum for RT and RW_GAP). Do not automatically add1 to RW_GAP without measuring it. Token owner asked to price: A expected IDs+1/RW_GAP+0, B conservative upper bound IDs+1/RW_GAP+1 per router job.
+
+Proof before physical work
+1. Freeze gf4 baseline source. Default-off preprocessed RTL/outputs identical.
+2. Smallest FULL BAND = F+A_lo+A_hi with real SRAM models/adders. Compare SV/CTL delayed1 every edge, A records/flags/errors delayed1, full select transactions delayed1, gather unchanged. Exercise consecutive beats, all lane counts, forward writes, changing bias rows, warm reset and legal separated gather/select phases. Mutant1 mismatches metadata timing; mutant2 skips bias snapshot delay, must fail actual selected payload/rank.
+3. Current known whole-GU calendar vehicle (existing gu_kit/run_gu_bench flow) with GF5 schedule rows; numerical output and exact cycles, plus wrong-calendar/mutant controls. Capture real RT_LAT and RW_GAP rather than infer from F alone.
+4. Only after exact proof, model pricing and parent impact approval: render actual interior/face register placement plan and one PRIVATE PLACE pilot. No source recipe/POR change or P&R now.

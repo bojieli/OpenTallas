@@ -1,0 +1,14 @@
+GF5 MISMATCH kind=SV_CTL cycle=132
+GF5 MISMATCH kind=SV_CTL cycle=133
+GF5 MISMATCH kind=SV_CTL cycle=134
+GF5 MISMATCH kind=SV_CTL cycle=135
+GF5 MISMATCH kind=SV_CTL cycle=136
+GF5 MISMATCH kind=SV_CTL cycle=137
+GF5 MISMATCH kind=SV_CTL cycle=141
+GF5 MISMATCH kind=A_RECORDS cycle=141
+GF5_FULLBAND checks=813 select=168 gather=18 Achecks=168 forwards=24 biaschanges=168 biasrw=12 mismatches=455
+GF5_FULLBAND FAIL
+- /srv/opentallas-scratch2/claude/die-s81-89/gunit/wt/physical/die_plan/s81/cores/legacy/profiles/bf_svreg_1113/bench/tb_gf5_fullband.sv:129: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 757ns; walltime 0.070 s; speed 10.783 us/s
+- Verilator: cpu 0.070 s on 1 threads; allocated 10 MB

@@ -1,0 +1,118 @@
+{
+ "status": "PRIVATE_FUNCTIONAL_PROOF_ONLY_NO_POR_OR_PHYSICAL",
+ "fullband": [
+  {
+   "checks": 813,
+   "selects": 168,
+   "gathers": 18,
+   "Achecks": 168,
+   "forwards": 24,
+   "biaschanges": 168,
+   "biasrw": 12,
+   "mismatches": 0,
+   "mode": "nominal",
+   "seed": 11
+  },
+  {
+   "checks": 813,
+   "selects": 168,
+   "gathers": 18,
+   "Achecks": 168,
+   "forwards": 24,
+   "biaschanges": 168,
+   "biasrw": 12,
+   "mismatches": 0,
+   "mode": "nominal",
+   "seed": 37
+  },
+  {
+   "checks": 813,
+   "selects": 168,
+   "gathers": 18,
+   "Achecks": 168,
+   "forwards": 24,
+   "biaschanges": 168,
+   "biasrw": 12,
+   "mismatches": 455,
+   "mode": "mut_ctl",
+   "seed": 11
+  },
+  {
+   "checks": 813,
+   "selects": 168,
+   "gathers": 18,
+   "Achecks": 168,
+   "forwards": 24,
+   "biaschanges": 168,
+   "biasrw": 12,
+   "mismatches": 455,
+   "mode": "mut_ctl",
+   "seed": 37
+  },
+  {
+   "checks": 813,
+   "selects": 168,
+   "gathers": 18,
+   "Achecks": 168,
+   "forwards": 24,
+   "biaschanges": 168,
+   "biasrw": 12,
+   "mismatches": 336,
+   "mode": "mut_bias",
+   "seed": 11
+  },
+  {
+   "checks": 813,
+   "selects": 168,
+   "gathers": 18,
+   "Achecks": 168,
+   "forwards": 24,
+   "biaschanges": 168,
+   "biasrw": 12,
+   "mismatches": 336,
+   "mode": "mut_bias",
+   "seed": 37
+  }
+ ],
+ "whole_gu": {
+  "N": {
+   "ids": 11352,
+   "first_weights": 11455,
+   "second_weights": 11456,
+   "RT_LAT": 65,
+   "RW_GAP": 103,
+   "weights_II": 1
+  },
+  "S": {
+   "ids": 11350,
+   "first_weights": 11453,
+   "second_weights": 11454,
+   "RT_LAT": 63,
+   "RW_GAP": 103,
+   "weights_II": 1
+  }
+ },
+ "whole_gu_result": "PASS:3jobs,1655HP/SCbeats,15CTLrows per side,50roots,2rsqrt,no fault; late/which calendar negatives fail35/34",
+ "select_path_II": "raw per-cycle select-valid equals one-cycle delayed GF4 on every checked edge, including 7 consecutive issue beats; II1 preserved",
+ "pin_cycle_deltas": {
+  "F_SV_CTL_outputs": 1,
+  "F_direct_sort_input_to_output": 0,
+  "F_gather": 0,
+  "A_SV_CTL_to_sort_records": 0,
+  "A_bias_snapshot_relative_to_SV_prefetch_lead": 1,
+  "fullband_A_sort_records": 1,
+  "fullband_select_response": 1,
+  "whole_GU_router_ids_vs_GF4": 1,
+  "whole_GU_RW_GAP_vs_GF4": 0
+ },
+ "source_RTL_sha256": "428b0155b87859266b3366b8b673dc94b8b38b47b5825942a8a7ae18a3ebb25a",
+ "baseline_RTL_sha256": "6974331afcbecab8932b3eb0b78b4ccbaa37ed8f7aae4b4dfc5012e1cc5df12a",
+ "signed_views_preserved": [
+  "dsdv_gunit_l1f_ba0_gf3",
+  "dsdv_gunit_l1f_ba1_gf3"
+ ],
+ "physical": "NOT RUN; require new register-locality layout review, LEC and paired A/F rebuild/re-sign before adoption",
+ "limitation": "Finite legal stimulus; raw A error/valid sidebands checked, no intentional IEEE exception injection",
+ "frozen_DUT_matches_current_source": true,
+ "portable_runner": "bench/run_bench.sh OUT mode tests live repository RTL, not the captured DUT snapshot"
+}
