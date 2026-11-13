@@ -272,6 +272,90 @@ def plan_pins_source(kit, plan_dir=None):
     return []
 
 
+# R-CLOCK-5 (HOLD-TAP-1 11-13, RULEBOOK-1113): an early core tap port clk_c<k> drives ONE hard-core clock pin, CTS skips
+# a single-sink net, so the port -> pin leg is one unbuffered wire.  S81 ot_s81sl_leaf__t41 (wave 7073a6b4a59): 9 of the
+# 16 u_vp.g_ln[k].u_l core taps sat on ANOTHER ln core's site, 283-1,054 um from their own core; the leg delay follows the
+# distance (35 um -> 0 ps, 1,054 um -> 470 ps), the core captured 729 ps after the tap target 250 and the post-CTS FF
+# hold gate stopped the kit at -432 ps after place + CTS (8 leaf types on 11-13).  The check reads the kit's own files
+# (core_taps.txt, io.tcl, macro_place.tcl, macros/*.lef) and fails the kit in seconds instead.
+CORE_TAP_REACH_UM = 300.0     # blocks: >= ~150 ps of unbuffered clock leg (t41: 383 um 155 ps, 486 um 196 ps, 939 um 470 ps)
+CORE_TAP_NOTE_UM = 100.0      # named in the message (t41: 135-178 um = 35-82 ps); correct taps measure 0-50 um
+_PLACE_PIN = re.compile(r'place_pin -pin_name (\S+) .*?-location \{([-\d.]+) ([-\d.]+)\}')
+_PLACE_MACRO = re.compile(r'place_macro -macro_name \{([^}]+)\} -location \{([-\d.]+) ([-\d.]+)\}(?: -orientation (\S+))?')
+_LEF_SIZE = re.compile(r'MACRO\s+(\S+).*?\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)', re.S)
+
+
+def core_tap_reach_rows(kit):
+    """[(port, core inst, distance um from the port to the core outline, nearest other macro or '')] of the kit's early
+    core taps; [] when the kit has none or a file is missing (nothing to judge)."""
+    kit = Path(kit)
+    taps, io, mp = kit/'core_taps.txt', kit/'io.tcl', kit/'macro_place.tcl'
+    if not (taps.is_file() and io.is_file() and mp.is_file()):
+        return []
+    pins = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in _PLACE_PIN.finditer(io.read_text())}
+    sizes = {}
+    for lef in sorted((kit/'macros').glob('*.lef')) if (kit/'macros').is_dir() else []:
+        for m in _LEF_SIZE.finditer(lef.read_text(errors='replace')):
+            sizes.setdefault(m.group(1), (float(m.group(2)), float(m.group(3))))
+    masters = {}
+    cfg = kit/'bound_macro_paths.json'
+    if cfg.is_file():
+        for row in json.loads(cfg.read_text()).get('rows', []):
+            if row.get('physical_inst') and row.get('physical_master'):
+                masters[row['physical_inst']] = row['physical_master']
+    boxes = {}
+    for m in _PLACE_MACRO.finditer(mp.read_text()):
+        inst, x, y, orient = m.group(1).replace('\\', ''), float(m.group(2)), float(m.group(3)), m.group(4) or 'R0'
+        w, h = sizes.get(masters.get(inst), (0.0, 0.0))
+        if orient in ('R90', 'R270', 'MXR90', 'MYR90'):
+            w, h = h, w
+        boxes[inst] = (x, y, x+w, y+h)
+    def dist(p, b):
+        return max(b[0]-p[0], 0.0, p[0]-b[2]) + max(b[1]-p[1], 0.0, p[1]-b[3])
+    by_port = {}
+    for line in taps.read_text().splitlines():
+        f = line.split()
+        if len(f) >= 2 and not line.startswith('#'):
+            by_port.setdefault(f[0], []).append(f[1].replace('\\', ''))
+    rows = []
+    for port, insts in sorted(by_port.items()):
+        own = [(dist(pins[port], boxes[i]), i) for i in insts if port in pins and i in boxes]
+        if not own:
+            continue
+        if len(insts) != 1:
+            continue        # a tap of several clock pins (core group / all pins of a core) gets a CTS tree: not this check
+        d, inst = min(own)
+        others = [(dist(pins[port], b), i) for i, b in boxes.items() if i not in insts]
+        near = min(others)[1] if others and min(others)[0] < d else ''
+        rows.append((port, inst, round(d, 1), near))
+    return rows
+
+
+def core_tap_reach(kit, limit=None):
+    """errors: early core tap ports farther than the reach limit from their own hard core (config.mk
+    `export OT_CORE_TAP_REACH_UM = N` overrides the default; 0 turns the check off)."""
+    if limit is None:
+        limit = CORE_TAP_REACH_UM
+        cfg = Path(kit)/'config.mk'
+        m = re.search(r'(?m)^export OT_CORE_TAP_REACH_UM\s*:?=\s*([\d.]+)\s*$', cfg.read_text()) if cfg.is_file() else None
+        if m:
+            limit = float(m.group(1))
+    if limit <= 0:
+        return []
+    rows = core_tap_reach_rows(kit)
+    far = [r for r in rows if r[2] > limit]
+    if not far:
+        return []
+    noted = [r for r in rows if CORE_TAP_NOTE_UM < r[2] <= limit]
+    out = [f'core tap {port} is {d:g} um from its core {inst} (limit {limit:g}): one unbuffered clock wire'
+           + (f'; it sits at {near}' if near else '') + ' -- fix the plan tap xy / core site binding (R-CLOCK-5)'
+           for port, inst, d, near in far]
+    if noted:
+        out.append(f'{len(noted)} more core taps are {CORE_TAP_NOTE_UM:g}-{limit:g} um from their core: '
+                   + ' '.join(f'{r[0]}={r[2]:g}' for r in noted))
+    return out
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -335,6 +419,7 @@ def check(kit, plan_dir=None, contract=False):
     run('cell_budget', cell_budget)
     if cap_record:
         checks['cell_budget']['estimate'] = cap_record
+    run('core_tap_reach', lambda: core_tap_reach(kit))
     if (kit/'master_slice.json').is_file():
         def slice_check():
             import master_slice

@@ -2923,6 +2923,11 @@
        "pregrt_ff_hold": {
         "type": "boolean"
        },
+       "pregrt_hold_guard_ps": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+       },
        "landing_origin_export_copy": {
         "type": "boolean"
        },
