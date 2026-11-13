@@ -51033,3 +51033,27 @@ FAILED [AUTOPILOT 56a8532ca15e] 2026-11-12 21:32:09 PST AUTOPILOT -> KIT-WAVE-3:
   (3) Timers ENABLED: ot-autoclean.timer on all 8 hosts (main b9c049d416 tools, fixed new-rule args, old env not read). Localhost push (:10) and drive (:05, export + collect, no deletes) are also enabled.
   - The old-code drive PID 1583582 (started 16:17) pushed a stale 16:17 snapshot to epyc4 at ~21:1x. The new code refused it and deleted nothing; I refreshed it at 21:39. It and the DISK-1111 export PID 467773 are still exporting; not killed.
   - Handoff: lanes/handoff/CLEAN-2.md. Lane STOPPED.
+
+## RESULT WT-RESCUE-1 (2026-11-12 22:05): 15 of 19 unpushed worktree heads preserved, 4 SKIPPED
+- Table gives no repo path. I used the only repo on each host that holds the refs: epyc7 /home/ubuntu/OpenTallas (allowed). 'origin' there is the ssh alias hub:OpenTallas (hub repo), NOT github.com. COORD: confirm hub mirrors to GitHub, else these 15 are on hub only. Verified with git ls-remote origin on epyc7 (15/15 present, all new branches, no force, no delete).
+- cat-file -e passed for all 15. Note: for 12 of 15 the branch name is NOT a ref in the epyc7 repo (commit object present, ref missing), so the table's "branch ref still on host" is wrong for them; the pushed rescue branch is now the only ref on hub.
+- OK rescue/wt-1112/epyc7/claude/die-s81-85-serdes-vt4-1111 = 82d7d0242e73
+- OK rescue/wt-1112/epyc7/claude/hbm-collect-n4c-1109 = b4976e0f9b9e
+- OK rescue/wt-1112/epyc7/claude/hbm-collect-ptw-c-1109 = 34289497d722
+- OK rescue/wt-1112/epyc7/claude/hbm-collect-sf-split-1110 = a3c60cdd0708
+- OK rescue/wt-1112/epyc7/claude/hbm-collect-src-1109 = 7e5547b2aab4
+- OK rescue/wt-1112/epyc7/claude/s81-svcrs-3-v5ctrl-1110 = abaec9392e9c
+- OK rescue/wt-1112/epyc7/claude/s81-svcrs-3-fanout-dup-1110 = 62b3a5e3a33b
+- OK rescue/wt-1112/epyc7/claude/s81-svcrs-3-provkits-1110 = b8f789562f4c
+- OK rescue/wt-1112/epyc7/claude/s81-svcrs-3-v5wave-1110 = 491452c9f3e9
+- OK rescue/wt-1112/epyc7/claude/s81-svcrs-3-reftile-signframe-1110 = a4a9dcdd08a9
+- OK rescue/wt-1112/epyc7/claude/cpl-s81-leaf-1111 = 1a034e314cae
+- OK rescue/wt-1112/epyc7/claude/hbm-d50a-event-1111 = 0ba1121e429e
+- OK rescue/wt-1112/epyc7/claude/hbm-geom-2-phyflip-1112 = b5dbc0e45255
+- OK rescue/wt-1112/epyc7/claude/hbm-geom-2-pinface-1112 = 75ff554e4945
+- OK rescue/wt-1112/epyc7/claude/vl3-svc-closure-1112 = 6e3511d345da
+- SKIPPED intel2 claude/die-qc-92-fifo2-1108 ab0ee605e (repo is /home/ubuntu/OpenTallas on intel2, forbidden by rule; branch ref present in its packed-refs)
+- SKIPPED intel2 claude/die-qc-93-fifo2-1108 73481bfff (same)
+- SKIPPED intel2 claude/s81-types-7-lec-1108 4a80ce2d3c70 (same)
+- SKIPPED localhost codex/kv-wi-native-1107 73b7a5f68 (repo is /home/ubuntu/OpenTallas on localhost, forbidden by rule)
+- COORD action for the 4 SKIPPED: tell me to push them, or have a lane with that permission run: git push origin <sha>:refs/heads/rescue/wt-1112/<host>/<branch>. Lane STOPPED.
