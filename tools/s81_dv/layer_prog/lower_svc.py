@@ -201,7 +201,7 @@ def h8_native_rt2_calendar_record(po, go_phase, rows):
     q_first = 2 + go_phase
     push = int(po) + ((int(po) & 1) ^ (1 ^ go_phase))
     return dict(status='PROSPECTIVE_UNCALIBRATED', h8_calibrated=False,
-                build_defines=['OT_SVC_MERGE_H4', 'OT_ATTN_HCORE', 'OT_SVC_H8_REUSE_RT2'],
+                build_defines=['OT_SVC_MERGE_H4', 'OT_ATTN_HCORE', 'OT_SVC_H8_REUSE_RT2', 'OT_SVC_NATIVE_RT2_CALENDAR'],
                 relative_to='outer static-program GO edge', go_phase=go_phase,
                 load_interval=2, engine_load_phase=0, q_launch_phase=1, p_push_phase=1,
                 q_launch_cycles=[q_first - 1 + 2*h for h in range(8)],

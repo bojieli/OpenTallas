@@ -206,6 +206,8 @@ module dsdv_svc_att #(
 );
     localparam integer D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam bit P2 = H < 16;                    // R5 two-pass build
+    // Private static-calendar candidate; producer and compiler must select the same define.
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
     // Native S81 H8 RT2: one fixed load slot and one reserved replay slot.
     // No other engine/profile, including H16, changes its source programme.
 `ifdef OT_SVC_MERGE_H4
@@ -220,6 +222,7 @@ module dsdv_svc_att #(
 `endif
 `else
     localparam bit NATIVE_RT2_LOAD_CAL = 1'b0;
+`endif
 `endif
     localparam integer PFW = $clog2(PFIFO);
     localparam integer TR = 640;
@@ -508,6 +511,7 @@ module dsdv_svc_att #(
     reg [15:0] po, pvo, pio, jc;                    // compiled p-feed start / P.V drain base / P injection start; cycles since the share's start
     reg dr_arm, dr_on; reg [2:0] dbeat;
     reg [9:0] rc; reg run;                           // program cycle
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
     reg [4:0] q_launch_count;                       // native Q head index, independent of the KV row clock
     wire native_load_slot;
     generate if(NATIVE_RT2_LOAD_CAL) begin:g_native_load_calendar
@@ -519,6 +523,7 @@ module dsdv_svc_att #(
     // the engine on the following phase0. No index or launch depends on ready.
     wire native_q_launch = run && q_launch_count < 5'(H) && !native_load_slot;
     wire [3:0] qmem_read_index = NATIVE_RT2_LOAD_CAL ? 4'(q_launch_count) : 4'(rc - 10'd1);
+`endif
     wire [9:0] nbeat = (tjob + 10'd3) >> 2;
     // ------------------------------------------------------------------ R5 pass state (H < 16 only; constant at H = 16)
     // more_h / hb_h: GO spec[48] / ATTN_Q spec[448] as they arrive; more_p / hb_p: the values of the running pass,
@@ -609,11 +614,15 @@ module dsdv_svc_att #(
     // H8 packs 4 rows/word: two PWORDS load one 32-row block in 4 steps,
     // while its fixed issue schedule takes DPT=8 cycles. Alternate-cycle feed
     // preserves the bounded-ahead bank/skid budget without runtime backpressure.
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
     // The native engine already owns a two-slot P skid. A fixed phase1
     // producer push reaches its phase0 pop one edge later. First PO eligibility
     // rounds up by zero or one clock from the known reset/GO phase, never ready.
     wire ep_v = job_active && p_left != 0 && jc >= po &&
                 (NATIVE_RT2_LOAD_CAL ? !native_load_slot : (!P2 || jc[0] == po[0]));
+`else
+    wire ep_v = job_active && p_left != 0 && jc >= po && (!P2 || jc[0] == po[0]);
+`endif
     wire ep_ready;
 `ifdef RTLGAP_MUT_ALLQ_NOP
     // RTL MUTANT (bench only): ALLQ drains every slice, but P stays gated to quarter ST -> 12 tiles of zero P.V
@@ -754,7 +763,11 @@ module dsdv_svc_att #(
     end
     // pvq is NOT converted here: the as-built bound flow already maps it to 32x128 macros (ot_t7_pvq_capture_v2).
     dsdv_svc_mem_ar #(.W(D*16), .DEPTH(H), .AW(4), .SYNC(1)) u_qmem_mem (
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
         .clk(clk), .ra_n(qmem_read_index), .we(q_word), .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d), .rd(eq_w));
+`else
+        .clk(clk), .ra_n(4'(rc - 10'd1)), .we(q_word), .wa(P2 ? 4'(f_idx[6:4]) : {f_hdr[448], f_idx[6:4]}), .wd(q_d), .rd(eq_w));
+`endif
 `ifndef SYNTHESIS
     // bench visibility (warm-reset lock-step): the read pointers of the last edge before reset assertion
     reg [5:0] tb_sw_r, tb_sw_w; reg [23:0] tb_wq_r; reg [9:0] tb_rc;
@@ -823,7 +836,11 @@ module dsdv_svc_att #(
         // SEL words
         // engine program inputs
 `ifndef OT_SVC_ATT_MEM_MACRO
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
         eq_w <= qmem[qmem_read_index];
+`else
+        eq_w <= qmem[4'(rc - 10'd1)];
+`endif
 `endif
         ekv_w <= kc_w; ekv_m <= kc_m;
         // PC request flops
@@ -840,7 +857,11 @@ module dsdv_svc_att #(
             sw_w <= 0; sw_r <= 0; sw_i <= 0; sel_held <= 0; pres <= 0; spres <= 0; q_have <= 0;
             x_n <= 0; x_arm <= 0; x_on <= 0; x_em <= 0; x_gc <= 0; xo <= 0; xc <= 0; nxw <= 0; xi <= 0; xb <= 0;
             x_last <= 0; x5 <= 0; x_ro <= 0; x_ovf <= 0; x_np <= 0; x_xp <= 0; x_t <= 0; x_wb <= 0; x_own <= 0;
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
             job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0; q_launch_count <= 0;
+`else
+            job_open <= 0; job_active <= 0; go_arm <= 0; go_cnt <= 0; go <= 0; run <= 0; rc <= 0;
+`endif
             po <= 0; pvo <= 0; pio <= 0; jc <= 0; dr_arm <= 0; dr_on <= 0; dbeat <= 0;
             ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pr <= 0; p_left <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
@@ -968,13 +989,18 @@ module dsdv_svc_att #(
             // ---- the static program
             ej_v <= 1'b0; eq_v <= 1'b0; ekv_v <= 1'b0;
             if (go) begin
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
                 run <= 1'b1; rc <= 10'd1; ej_v <= 1'b1; job_active <= 1'b1; pv_n <= 0; q_launch_count <= 0;
+`else
+                run <= 1'b1; rc <= 10'd1; ej_v <= 1'b1; job_active <= 1'b1; pv_n <= 0;
+`endif
                 if (dr_arm || dr_on) fc[22] <= 1'b1;                          // a start while P.V of the last job drains
                 dr_arm <= pvown;
                 if(pv_identity_bad) fc[23]<=1'b1;
                 p_left <= (16'(tjob) + 16'(R) - 1) / 16'(R);
                 if (q_have != 5'(H)) fc[9] <= 1'b1;                           // q not loaded at the compiled start
             end else if (run) begin
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
                 if(NATIVE_RT2_LOAD_CAL) begin
                     eq_v <= native_q_launch;
                     if(native_q_launch) q_launch_count <= q_launch_count + 5'd1;
@@ -985,8 +1011,15 @@ module dsdv_svc_att #(
                     eq_v <= rc <= 10'(H);
                     if (rc >= 10'(H) && rc >= nbeat) run <= 1'b0;
                 end
+`else
+                eq_v <= rc <= 10'(H);
+`endif
                 ekv_v <= rc <= nbeat;
                 if (rc <= nbeat && |rel_bad) fc[10] <= 1'b1;                  // a row not landed at its release cycle
+`ifdef OT_SVC_NATIVE_RT2_CALENDAR
+`else
+                if (rc >= 10'(H) && rc >= nbeat) run <= 1'b0;
+`endif
                 rc <= rc + 1'b1;
             end
             if (ej_v && !ej_ready) fc[11] <= 1'b1;

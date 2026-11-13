@@ -1,0 +1,7 @@
+The static native H8 RT2 replay calendar and its production Q/P source reschedule are now selected only by OT_SVC_NATIVE_RT2_CALENDAR. Compiler prospective records name the same build define; the engine lockstep helper requires --rt2-calendar. H8, HCORE, or RT2 alone no longer selects the candidate.
+
+Preprocessed token equality checks actual source, not mirrored test logic. With the define absent, decoder equals 84b3a53d7e^ and engine equals 7239ea0c89^ (the new uninstantiated calendar helper module is excluded from this engine comparison). With the define present, both match 4b3430fb52, whose full native fixed-T32 nonzero programme checked 1,024 FP32 fields, 0 errors. No numerical simulation was repeated for a preprocessing-only isolation.
+
+Original invalid native baseline and every FAIL remain documented. Opt-in preserves that baseline by default; it does not claim that old cadence is correct. Actual SM feedback/global PIO/P_ARR/PVO calibration and band geometry remain held. No production-profile, plan, or physical adoption.
+
+Focused explicit-flag cached static-producer proof PASS: nominal register Q memory and nominal macro Q memory each Q 8, KV 8, P 4, expanded P 8, exact words, fc 0 and af 0, both GO phases. Legacy-cadence malformed control caught; no new native arithmetic rebuild. ot-run E7 unit oth-ubuntu-2259244-1794614082 exit 0. Earlier admission refusal lacked declared stage; first admitted command failed exit 126 because runner lacked executable mode; both launch errors corrected with declared stage and explicit bash, no design change.
