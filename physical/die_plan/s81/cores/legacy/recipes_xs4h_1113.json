@@ -1,0 +1,17 @@
+{
+ "ot_s81sl_xs4": {
+  "ref_tile": "physical/ref_tile/s81sl_xs4h",
+  "lef_contract": "physical/ref_tile/s81sl_xs4h/views/ot_s81sl_xs4/ot_s81sl_xs4.lef",
+  "rtl_dirs": true,
+  "suffix": "xs4h",
+  "why": "HARD-S81-DSDV-1 11-13 R-CAP-3 point 3: the x streamer ot_s81sl_xs4 as ONE hard core of the dsdv C rows (see spec structural_change).",
+  "two_mode": true,
+  "regional_taps": {
+   "nx": 4,
+   "ny": 4,
+   "firm_spine": true,
+   "_why": "DSDV-FORMS-2 11-13: 648.0 x 518.4 core, 12.8b structured clock: 4x4 regional taps (162 x 129.6 um regions; the generator takes powers of 2), spine FIRM after CTS legalization (S81-CORES-KITS-5/6 form)"
+  },
+  "plan_type_pending": "dsdv_slice_*_C (16 C-row types; plan event of HARD-S81-DSDV-1)"
+ }
+}

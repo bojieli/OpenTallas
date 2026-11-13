@@ -1037,10 +1037,56 @@ def apply_patch(text, edits, what):
     return text
 
 
+_ANSI_PORT = re.compile(r"^\s*(input|output|inout)\s+(?:wire|reg|logic)?\s*(?:signed\s+)?(?:\[\s*(\d+)\s*:\s*(\d+)\s*\])?"
+                        r"\s*([A-Za-z_]\w*)\s*$")
+
+
+def ansi_port_dirs(kd, srcs, top):
+    """DSDV-FORMS-2 11-13: port directions straight from the top's ANSI header when every port has a constant width (no
+    parameter in a range, one port per declaration).  yosys `hierarchy` elaborates the whole design to read 11 ports
+    (ot_s81sl_xs4: > 1 h); this reads the header only.  -> dict, or None when the header is not that simple (yosys then)."""
+    head = None
+    for f in srcs:
+        t = (kd / "rtl" / Path(f).name).read_text(errors="replace")
+        m = re.search(r"^\s*module\s+%s\b\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*\((.*?)\)\s*;" % re.escape(top),
+                      t, re.S | re.M)
+        if m:
+            head = m.group(1)
+            break
+    if head is None:
+        return None
+    head = re.sub(r"//[^\n]*", "", re.sub(r"/\*.*?\*/", "", head, flags=re.S))
+    if "`" in head:
+        return None
+    out = {}
+    for decl in head.split(","):
+        if not decl.strip():
+            continue
+        m = _ANSI_PORT.match(decl.replace("\n", " "))
+        if not m:
+            return None
+        d = {"input": "INPUT", "output": "OUTPUT"}.get(m.group(1), "INOUT")
+        n = m.group(4)
+        if m.group(2) is None:
+            out[n] = d
+            out[f"{n}[0]"] = d
+            continue
+        hi, lo = int(m.group(2)), int(m.group(3))
+        for i in range(min(hi, lo), max(hi, lo) + 1):
+            out[f"{n}[{i}]"] = d
+        if hi == lo:
+            out[n] = d
+    return out or None
+
+
 def rtl_port_dirs(kd, srcs, top, params, defines):
     """bit-level port directions of the kit RTL top (yosys read + hierarchy, no synthesis): name / name[i] -> INPUT|OUTPUT;
     a 1-bit port is listed both bare and as [lsb] (plan tables name [0:0] buses x[0])."""
     import os, tempfile
+    fast = ansi_port_dirs(kd, srcs, top)
+    if fast is not None:
+        print(f"PORT DIRS: {top} from its ANSI header ({len(fast)} names; yosys elaboration skipped)", file=sys.stderr)
+        return fast
     ys = shutil.which("yosys") or os.path.expanduser("~/.local/opentallas-tools/bin/yosys")
     files = " ".join(str(kd / "rtl" / Path(f).name) for f in srcs)
     cp = "".join(f"chparam -set {k} {v} {top}; " for k, v in params.items())
@@ -1696,8 +1742,15 @@ def main():
                   pins_file=rec["lef_contract"], child_of=par,
                   child_count=sum(c["view"] == want for c in pspec["children"]))
     elif rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
-        ptype = rec["plan_type"]
-        assert any(c.get("module") == a.module for c in plan["partition_types"][ptype].get("contents", [])), ptype
+        if rec.get("plan_type_pending") and not rec.get("plan_type"):
+            # HARD-S81-DSDV-1 11-13: a NEW hard core kitted before its plan event (no plan row holds it yet); the label
+            # names the family that will instance it.  Sign-off of the core does not depend on the parent row.
+            ptype = "PENDING:" + rec["plan_type_pending"]
+            print(f"WARNING KIT PLAN ROW PENDING: {a.module} is in no plan type of the plan; plan_type = {ptype}",
+                  file=sys.stderr)
+        else:
+            ptype = rec["plan_type"]
+            assert any(c.get("module") == a.module for c in plan["partition_types"][ptype].get("contents", [])), ptype
         outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
         hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
                   pins_file=rec["lef_contract"])
