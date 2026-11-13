@@ -1,0 +1,1759 @@
+{
+ "schema": "opentallas.orient_realize.v1",
+ "by": "LEAF-DRT73-1",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5/physical/die_plan/s81/plan_h2_2249.json",
+ "checked": 21010,
+ "no_view": 0,
+ "changed": 54,
+ "types": 30,
+ "refused": [
+  {
+   "type": "slice_station__t51",
+   "inst": "s81p_slice_station__t51_ot_s81_station_t51_native_w",
+   "module": "s81p_slice_station__t51_ot_s81_station_t51_native_w",
+   "orient": "R0",
+   "realizable": []
+  },
+  {
+   "type": "slice_station__t51",
+   "inst": "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+   "module": "s81p_slice_station__t51_ot_s81_station_t51_native_e",
+   "orient": "R0",
+   "realizable": []
+  }
+ ],
+ "by_move": {
+  "MY->R0": 18,
+  "R180->MX": 36
+ },
+ "changes": [
+  {
+   "type": "ot_s81sl_leaf__t1",
+   "inst": "u_lf.u_vp.g_ln[10].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    984.96,
+    367.2
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t13",
+   "inst": "u_lf.u_vp.g_ln[5].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1257.12,
+    466.56
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t17",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1278.72,
+    224.64
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t21",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1058.4,
+    514.08
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t23",
+   "inst": "u_lf.u_vp.g_ln[12].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1218.24,
+    717.12
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t23",
+   "inst": "u_lf.u_vp.g_ln[3].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1244.16,
+    587.52
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t23",
+   "inst": "u_lf.u_vp.g_ln[7].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1218.24,
+    190.08
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t24__cl2456157b",
+   "inst": "u_lf.u_vp.g_ln[6].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1036.8,
+    708.48
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t24__cl81374cd8",
+   "inst": "u_lf.u_vp.g_ln[6].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1036.8,
+    708.48
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t25__cl55642d17",
+   "inst": "u_lf.u_vp.g_ln[1].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    51.84,
+    432.0
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t29",
+   "inst": "u_lf.u_vp.g_ln[11].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    263.52,
+    721.44
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t3",
+   "inst": "u_lf.u_vp.g_ln[10].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1041.12,
+    725.76
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t30",
+   "inst": "u_lf.u_vp.g_ln[10].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    43.2,
+    293.76
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t30",
+   "inst": "u_lf.u_vp.g_ln[2].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    367.2,
+    864.0
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t30",
+   "inst": "u_lf.u_vp.g_ln[6].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    410.4,
+    410.4
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t30",
+   "inst": "u_lf.u_vp.g_ln[8].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    51.84,
+    432.0
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t33",
+   "inst": "u_lf.u_vp.g_ln[11].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1270.08,
+    872.64
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t33",
+   "inst": "u_lf.u_vp.g_ln[12].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    937.44,
+    427.68
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t33",
+   "inst": "u_lf.u_vp.g_ln[15].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1270.08,
+    449.28
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t33",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1270.08,
+    319.68
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t33",
+   "inst": "u_lf.u_vp.g_ln[8].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1149.12,
+    604.8
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t37",
+   "inst": "u_lf.u_vp.g_ln[2].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    540.0,
+    285.12
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t38",
+   "inst": "u_lf.u_vp.g_ln[12].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1321.92,
+    1097.28
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t38",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1261.44,
+    241.92
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t38",
+   "inst": "u_lf.u_vp.g_ln[5].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1153.44,
+    1101.6
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t39",
+   "inst": "u_lf.u_vp.g_ln[2].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    928.8,
+    734.4
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t42",
+   "inst": "u_lf.u_vp.g_ln[13].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    885.6,
+    393.12
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t43",
+   "inst": "u_lf.u_vp.g_ln[12].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1149.12,
+    604.8
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t44__clf4ea6d4b",
+   "inst": "u_lf.u_vp.g_ln[12].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    514.08,
+    652.32
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t44__clf4ea6d4b",
+   "inst": "u_lf.u_vp.g_ln[13].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    423.36,
+    21.6
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t44__clf6cf8492",
+   "inst": "u_lf.u_vp.g_ln[13].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    488.16,
+    812.16
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t45",
+   "inst": "u_lf.u_vp.g_ln[11].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    963.36,
+    1097.28
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t45",
+   "inst": "u_lf.u_vp.g_ln[5].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1179.36,
+    436.32
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t46",
+   "inst": "u_lf.u_vp.g_ln[11].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1270.08,
+    656.64
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t46",
+   "inst": "u_lf.u_vp.g_ln[15].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1270.08,
+    246.24
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t46",
+   "inst": "u_lf.u_vp.g_ln[5].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1300.32,
+    1080.0
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t51",
+   "inst": "u_lf.u_vp.g_ln[10].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    190.08,
+    440.64
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t54__cl706d9749",
+   "inst": "u_lf.u_vp.g_ln[0].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    12.96,
+    4.32
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t56",
+   "inst": "u_lf.u_vp.g_ln[11].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1283.04,
+    1101.6
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t58",
+   "inst": "u_lf.u_vp.g_ln[10].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1261.44,
+    699.84
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t58",
+   "inst": "u_lf.u_vp.g_ln[1].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1252.8,
+    181.44
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t58",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1127.52,
+    686.88
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t58",
+   "inst": "u_lf.u_vp.g_ln[9].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1278.72,
+    570.24
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t60",
+   "inst": "u_lf.u_vp.g_ln[13].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    876.96,
+    1101.6
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t60",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1058.4,
+    514.08
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t60",
+   "inst": "u_lf.u_vp.g_ln[9].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    1209.6,
+    656.64
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t62",
+   "inst": "u_lf.u_vp.g_ln[3].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1218.24,
+    717.12
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t62",
+   "inst": "u_lf.u_vp.g_ln[6].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1218.24,
+    190.08
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t62",
+   "inst": "u_lf.u_vp.g_ln[8].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1244.16,
+    587.52
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t65",
+   "inst": "u_lf.u_vp.g_ln[11].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1287.36,
+    1101.6
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t67",
+   "inst": "u_lf.u_vp.g_ln[10].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1218.24,
+    717.12
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t67",
+   "inst": "u_lf.u_vp.g_ln[14].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1218.24,
+    190.08
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t67",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "R180",
+    "MX"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.036
+    ],
+    [
+     0.108,
+     0.036
+    ]
+   ],
+   "origin_um": [
+    1244.16,
+    587.52
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  },
+  {
+   "type": "ot_s81sl_leaf__t71",
+   "inst": "u_lf.u_vp.g_ln[4].u_l",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "orient": [
+    "MY",
+    "R0"
+   ],
+   "track_offset_um": [
+    [
+     0.108,
+     0.012
+    ],
+    [
+     0.108,
+     0.012
+    ]
+   ],
+   "origin_um": [
+    730.08,
+    419.04
+   ],
+   "faces_change_side": {
+    "MY": {
+     "E": 18,
+     "W": 161
+    }
+   },
+   "unrealizable_axes": [
+    "x"
+   ]
+  }
+ ]
+}
