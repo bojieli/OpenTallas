@@ -62,3 +62,4 @@ READY with branch + tests, stop.
 - 2026-11-13 07:35 RESUMED after REACH-FIN-2 handback. Branch tip ce0e50e4e7 (adds the reach_homes schema/G0 test; pushed; merge-tree
   vs origin/main 5eefdbe2fa clean). hub_Eo placed: r2r>405 3869 -> 721, START fan 3236 -> 0; leftovers classified in the
   RULEBOOK proof table. RULEBOOK R-REACH updated (opt-in wording, final proof numbers). Renders viewed (scratch rr/img).
+- 2026-11-13 08:11 branch tip ec64b8339b: rule 1 takes cland_rstart_in (relay piece of an R-CAP split) as START origin; RULING + new train-47 sha posted to DIE-KV-100 / ROOT-MERGE. Lane stopped again.
