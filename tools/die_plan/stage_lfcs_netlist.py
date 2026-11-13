@@ -56,9 +56,13 @@ def module_defaults(rtl_root, mod):
     raise SystemExit(f"{mod}: no #(...) module header under {rtl_root}")
 
 
-def leaf_depths(plan):
+def leaf_depths(plan, tree_overrides=None):
     """{(slice, k): {param: depth}}, report rows."""
+    tree_overrides = tree_overrides or {}
     PT = plan["partition_types"]
+    unknown = set(tree_overrides) - {p["type"] for p in plan["partitions"] if LCD.LEAF_TYPE.match(p["type"])}
+    if unknown:
+        raise SystemExit(f"unknown leaf tree override types: {sorted(unknown)}")
     out, rep = {}, []
     for p in plan["partitions"]:
         if not LCD.LEAF_TYPE.match(p["type"]):
@@ -79,6 +83,12 @@ def leaf_depths(plan):
         d = {x: want.get(c, 0) for x, c in CLS.items()}
         kv = "kv_leaf" in p["type"]          # DIE-S81-70 kv leaves: per-lane hi / ho stages (GS 0), as bound today
         d["HI_GS"], d["HO_GS"], d["H_G"] = (0, 0, 4) if kv else (d["HI_D"], d["HO_D"], 4)
+        for param, value in tree_overrides.get(p["type"], {}).items():
+            if param not in {"HI_GS", "HO_GS"} or isinstance(value, bool) or not isinstance(value, int):
+                raise SystemExit(f"{p['name']}: invalid shared-stage override {param}={value}")
+            if not 0 <= value <= d[param.replace("GS", "D")]:
+                raise SystemExit(f"{p['name']}: shared stages must lie between zero and class depth: {param}={value}")
+            d[param] = value
         if any(v > 15 for v in d.values()):
             raise SystemExit(f"{p['name']}: depth > 15 does not fit a nibble: {d}")
         out[(m.group(1), k)] = d
@@ -87,8 +97,8 @@ def leaf_depths(plan):
     return out, rep
 
 
-def stage(plan, net_text, rtl_root):
-    depths, rep = leaf_depths(plan)
+def stage(plan, net_text, rtl_root, tree_overrides=None):
+    depths, rep = leaf_depths(plan, tree_overrides)
     slices = sorted({s for s, _ in depths})
     done, defaults = set(), {}
 
@@ -130,9 +140,22 @@ def main(argv=None):
     ap.add_argument("out")
     ap.add_argument("--rtl", default="rtl")
     ap.add_argument("--report")
+    ap.add_argument("--hi-gs", action="append", default=[], metavar="TYPE:N")
+    ap.add_argument("--ho-gs", action="append", default=[], metavar="TYPE:N")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
-    out, rep = stage(plan, Path(a.netlist).read_text(), a.rtl)
+    overrides = {}
+    for param, values in (("HI_GS", a.hi_gs), ("HO_GS", a.ho_gs)):
+        for item in values:
+            try:
+                typ, value = item.rsplit(":", 1)
+                value = int(value)
+            except ValueError:
+                ap.error(f"invalid {param} override {item!r}; expected TYPE:N")
+            if param in overrides.setdefault(typ, {}):
+                ap.error(f"duplicate {param} override for {typ}")
+            overrides[typ][param] = value
+    out, rep = stage(plan, Path(a.netlist).read_text(), a.rtl, overrides)
     Path(a.out).write_text(out)
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")

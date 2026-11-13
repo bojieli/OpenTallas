@@ -73,3 +73,22 @@ def test_stage_reads_each_module_defaults_once(tmp_path, monkeypatch):
     out, _ = SN.stage(plan, NET.replace("ot_s81sl_slice_y", "ot_s81sl_slice_x"), rtl)
     assert calls == ["ot_s81sl_slice_x"]
     assert "u_s_0N" in out and "u_s_1N" in out
+
+
+def test_explicit_shared_stage_override_keeps_latency(tmp_path):
+    rtl = _rtl(tmp_path/'rtl', 'ot_s81sl_slice_x', {})
+    out, report = SN.stage(PLAN, NET, rtl, {'ot_s81sl_leaf__t8': {'HI_GS':1}})
+    row=next(r for r in report if r.get('type')=='ot_s81sl_leaf__t8')
+    assert row['depths']['HI_D']==2 and row['depths']['HI_GS']==1
+    assert '.LF_CS_HI_GS(20\'h00010)' in out
+
+
+@pytest.mark.parametrize('overrides',[
+    {'unknown':{'HI_GS':1}},
+    {'ot_s81sl_leaf__t8':{'HI_GS':3}},
+    {'ot_s81sl_leaf__t8':{'HI_GS':-1}},
+    {'ot_s81sl_leaf__t8':{'HI_GS':True}},
+    {'ot_s81sl_leaf__t8':{'H_G':1}},
+])
+def test_bad_tree_override_fails(overrides):
+    with pytest.raises(SystemExit):SN.leaf_depths(PLAN,overrides)
