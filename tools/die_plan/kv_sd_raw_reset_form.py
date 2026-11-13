@@ -15,6 +15,7 @@ ap.add_argument('--reference-plan',required=True,help='Exact plan from which --b
 ap.add_argument('--bind-rtl',required=True,help='Explicit completed bind RTL directory, not a cache guessed by this tool')
 args=ap.parse_args()
 p=json.load(open(args.plan));reference=json.load(open(args.reference_plan));reports={}
+assert p.get('clock')==reference.get('clock'),'global clock/landing semantics changed; regenerate bind RTL from the new reference plan'
 def semantic(t):
  t=copy.deepcopy(t);ck=t.get('clock',{});ck.pop('landing_origin_rect_um',None);ck.pop('landing_raw_branches',None)
  # This form may coexist with an independently reviewed forwarded-clock source re-site. Pins and all reset semantics stay exact.
