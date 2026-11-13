@@ -57,3 +57,14 @@ epyc8 kit_gf4 + kit_gf4ds60 (ot-heavy tags gunit-core-1-kit_gf4*). Nothing kille
   run lanes left to right. Reverse the N-face lane order in the plan pins (s1a/s1b x order) so every compare pair is vertically
   aligned: 0 cycles; then gf4's +1 (and possibly gf3's +1) can be retired by a define-off form. Needs a plan event (pins of
   the bf core + gunit__t1 parent wiring) -> GEOM review -> rebuild.
+
+## 8 Waiter notes (gf4, 2026-11-13 12:4x PST)
+- Branch claude/gunit-core-1-c1reg-1113 @abef324ccc (NOT merged; merge after the gf4 route verdict). Bench NCYC 120: N1 PASS,
+  N0/N2/MUT FAIL (bench/bench_short.out). Full NCYC 1500 still running on epyc9 in the worktree bench dir (bench_N*.log, slow
+  iverilog ~30+ min); commit its result as bench_full.out.
+- kit_gf4 CTS: "No setup violations found"; kit_gf4ds60 CTS: 6 setup endpoints repaired. CAUTION: gf3 also looked clean
+  before route (GRT +7, routed -96) -- judge only on routed signoff.py TT/FF.
+- Next per kit: route -> signoff.py verdict -> GEOM-VIS verdict on run/layout_review/{place,grt,route} -> SIGNED -> export_view.py
+  -> replace kit_wave.json dies.s81.prov_view_sources[dsdv_gunit_l1f_bf] (backup first) so gunit__t1 re-signs with gf4 views.
+  Pick ONE of the two kits (prefer stock kit_gf4 if both sign off). The +2 o_* cycles must be rescheduled by the S81 die owner
+  before the gf4 view binds (corelat TSV is on the branch).
