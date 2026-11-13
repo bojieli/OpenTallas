@@ -22,3 +22,8 @@
 - visual_gate "signoff" live (branch claude/kit-ops-1-visual-signoff-1113@b73feceda8, deployed to kw38/rt; backup kit-ops-1/rt-bak-visual-1113). READY posted. Revert: visual_gate "route".
 - HBM parked: hold_items "*" PARKED-OWNER-1113. Freeze to 2026-11-15 04:00: no src/plan switches; overlays stay.
 - epyc2 qc-transport-fix-4 deleted twice (02:51 DISK-E2; ~03:32 unknown). Restaged from epyc9. Watch it.
+
+## CODEX notes — 2026-11-13 13:47 PST KIT-OPS takeover
+- Frozen QC s28 missing-input class repaired: restored qcs28in/bind_plan_qc99_s28 (445 MB) and sidecar_pv_s28.json from exact epyc8 donor to epyc4 + epyc2, rsync --ignore-existing. Checksum dry-run returned no differences. epyc2 kw45 resolves to scratch3 already (504 GB free); scratch2 141 GB below floor untouched. No plan/src/config switch.
+- HEAD original head_rp18r2/prep asset tree (29 MB) was missing on E7/E9/E2/I1 although prepared plan receipt names its sink_bins_4.json. Restored exact epyc8 donor with --ignore-existing on all four. hd_host_e old-script input now present on every gen host. Armed ONE infrastructure re-launch hd_host_e@5; backup autopilot/kit_wave.json.bak-codex-head-input-1113. hd_mesh WAIT-FORM and hd_spn superseded left untouched.
+- Healthy six R-FLOW launches13:41 retained. HBM PARK and freeze retained; no HBM source work or launches. AUTO-RESIGN untouched.

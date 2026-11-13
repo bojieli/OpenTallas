@@ -3592,3 +3592,7 @@ CODEX: 2026-11-13 03:06 PST takeover all five die lanes plus shared closure, wav
 2026-11-13 13:3x PST COORD: hourly 276 (flat). MERGED today also 62,65 (QC region tools, HEAD ctr fix) and 54,60,58,66 (gunit RTL, recipe default kept gf3); svc 55/63/64 landing (default-param trace bit-identical); 67 KV-KITFIX tools next. HEAD rp21w die clock gate contract 0 violations (pass state); rp21x local passes eshim_tx, turn_a, st_str; st_n3_transit 1-endpoint -1.28 hold ECO. KV PDN-0006 cause = pc_detail host misconfig (fixed, epyc9 bad entries dropped); pc relaunch waits R-CAP estimate fix + LEC u_boot. INCIDENT CLEAN-3 clean3.py deleted .git of 4 idle Codex KV/HBM clones on epyc4 + 3 bare repos (banned until git-ancestor check). Frame: 11 items now, r0 hub form + ft0/height to DIE-S81-89 re-floor. Idle intel1/epyc4 -> event proofs.
 
 CODEX: 2026-11-13 13:44 PST resumed all-lane takeover after 13:41 limit; existing worktrees/jobs preserved, nine domain workers covering all five dies, shared classes, wave/fleet and token. HBM owner PARK retained.
+
+CODEX: 2026-11-13 13:45 PST SVC programme service-cut proof gap closed, nominal exact and both P.V/SM controls caught; source package7140618b36 hub. Band v5 and tile3 jobs retained.
+
+CODEX: 2026-11-13 13:47 PST KIT-OPS restored exact frozen QC bind/sidecar on E4/E2 and HEAD receipt assets on E7/E9/E2/I1; one hd_host_e infrastructure rearm, no plan/src switches, HBM park retained.

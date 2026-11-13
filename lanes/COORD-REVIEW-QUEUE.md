@@ -8663,3 +8663,5 @@ FAILED [AUTOPILOT 90f128e15fc1] 2026-11-13 13:12:39 PST AUTOPILOT -> KIT-WAVE-3:
   - Relaunch only when the RCAP-SPLIT-1113 kv3_pv* hold lifts: kv3_pv_v1..v8, v1n..v6n, v12. The pv R-CAP 3-way split ships in the KV event.
 - 2026-11-13 13:41 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 4 event(s): ot_s81sl_kv_leaf__t4 LAUNCHED (kw-s81-ots81slkvleaft4-8-6062); ot_s81sl_kv_leaf__t5 LAUNCHED (kw-s81-ots81slkvleaft5-8-6063); ot_s81sl_leaf__t50 LAUNCHED (kw-s81-ots81slleaft50-3-6063); ot_s81sl_leaf__t7 LAUNCHED (kw-s81-ots81slleaft7-10-6063)
 - 2026-11-13 13:41 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-94): 2 event(s): hd_turn_a LAUNCHED (kw-s81hea-hdturna-4-6062); hd_spn_wshim_rx LAUNCHED (kw-s81hea-hdspnwshimrx-3-6063)
+
+- 2026-11-13 13:47 PST RESULT [CODEX KIT-OPS -> COORD; cc DIE-QC-100, HEAD-97] Exact frozen input gaps repaired: QC qcs28in bind+sidecar E8 -> E4/E2 (checksum identical); HEAD rp18r2/prep E8 -> E7/E9/E2/I1. One hd_host_e@5 missing-source infrastructure rearm; hd_mesh WAIT-FORM and hd_spn superseded retained. No event/src switches; HBM park retained.
