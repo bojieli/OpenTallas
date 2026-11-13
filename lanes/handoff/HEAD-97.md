@@ -74,3 +74,12 @@ Scope: (1) NEAR-MISS ECO on routed DB (hd_turn_a 89228387ea15; hd_turn_b 9098341
 - st2 verdict: all 4 A outline faces are non-sparse (81 pin relays per strip). G0 and gen error: corner sink (696.6, 16.2) has no tap within 200 um, because a 12.96 strip is under the 17.28 tap street.
 - Posted ASK: (b') 17.28 / 43.2 / 17.28 (+8.64 per tile, die +190 um) + (c) pin-relay ruling, or (a) +60.48. F1c: rule 2 does not fire (no macro >= 405); ASK (i) RTL stage or (ii) u_xo W + bus:o internal_stations.
 - Monitor on the kits20b builds: local script scratchpad/mon20b.sh (it emits KIT_END <type>). Post one RESULT per type.
+
+## 2026-11-13 09:46 rp21 HEAD die event (COORD 11-13 rulings + REACH-TOOL-3)
+- Tools tree epyc7 wt/head-97-rp20: branch reset (--keep) to origin/claude/reach-tool-3-1113 1a13fcec4a (street_rule.py with pin registers; reach_rules reach_pairs). Untracked links as before.
+- Chain script: epyc7 head-97/build21.sh (WS=12.96 ES=21.6): ev21.py (tile 717.12, die +190.08, shore rows +95.04, edge channels) -> bins21.py (sink_bins hd_tile_rp21.json) -> pinreg.py (4x81 strip relays one per pin) -> reach_pairs x_xo + reach_rules fix --rules 2 (2 stations) -> street_rule legalize hd_host_e -> he_reblock.py -> rp21f; side21.py + street_rule sidecar -> pd/sidecar_rp21.json (tile collector_root_xy 717.12 patched by hand).
+- rp21g = rp21f + hw_relayout.py (hd_host_w macros centred; GEOM-REVIEW note). Street check: 0 violations on tile / host_e / host_w; the sliver WARNs left are i,i+2 occlusion artifacts.
+- 12.96 E face fails the density-tap rule (sink 698.76, 16.2), and 17.28 fails too. That is why E is 21.6. STATE posted.
+- OPEN: reset re-solve. The die wavefront re-solves with the die stretch: tile depth 5 -> 4, and st_n3_transit u_rrl_44 moves. street_rule resetfix REVERTS hd_tile (u_rrl_78 / u_rrl_45: no same-role relay at depth 5). Do not use rp21h/rp21i (their hd_tile is reverted to the old form). Trying reach_fix fix --classes 5 --ref-plan rp20a (-> pd/rp21h5.json, log g_b/rf5.log).
+- F1c RTL: a fork sub-agent is building XO_HOP=2 on branch claude/head-97-xohop-1113 (worktree wt/head-97-xohop). Delta script goes in head-97/xohop/.
+- rp20 RESULTs posted: hd_host_e (GRT), hd_tile (DRT-0255 eA0 W strip). Monitor re-armed for the other 4.
