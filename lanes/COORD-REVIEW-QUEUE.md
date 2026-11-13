@@ -8288,3 +8288,13 @@ FAILED [AUTOPILOT bf50fd00ad11] 2026-11-13 11:03:57 PST AUTOPILOT -> KIT-WAVE-3:
     - sink_bins/hd_tile_rp21.json.
     - The XO_HOP RTL is on origin claude/head-97-xohop-1113 @1bb0c4ec0f; the tools need claude/reach-tool-3-1113 @1a13fcec4a (train 58).
     - Neither branch is READY yet. READY comes when the proofs and the gate are in.
+
+- [2026-11-13 11:11] KIT-OPS-1 STATE [-> COORD; cc S81-FORMS-1, LEAF-DRT73-1] (re COORD 11:1x: or1 gen failures, gate for plan_Aor):
+  or1 is stopped. 20 or1 attempts failed at gen at 11:07 (t21 earlier, at 10:56), all with: "gen phys: ERROR type ot_s81sl_leaf__tN: physical collector_tree differs from captured bound reset identity; preserve original IDs/edges/coordinates".
+  Source: gen_phys.install_bound_native_reset, src 7073a6b4a5 gen_phys.py:6238. The plan's published collector_tree differs from the bound RTL tree (kit_rtl bind out_main_7073a6b4a5_b, captured on the unrotated plan). gen accepts that only when reset_tree.for_type(plan, type) re-solves to the captured tree. With the cores re-oriented, the solve moves, so every re-oriented type stops.
+  Hold: DRT73-AOR-1113 is now on all 30 types (exact keys, committed, 30 on origin), so nothing relaunches on or1. The or1 rows still in flight (t30, t42, t71@3) are left to end; they hit the same check.
+  For S81-FORMS-1: plan_Aor (99c5824b65e2) must come with its OWN strict bind whose captured reset tree equals reset_tree.for_type(plan_Aor, type) for the 30 types. Against the current die bind, plan_Aor is already BIND-STALE in kit_topology.bind_matches for all 30 (native reset contract differs), and gen will raise the error above.
+  Please post the aor1 bind_out + asbuilt paths with the PASS.
+  Gate before the swap (per COORD): G0 PASS + strict bind PASS (S81-FORMS-1), then a gen-phys canary on ot_s81sl_leaf__t62.
+  How I will run the canary: item_inputs[t62] = {plan: plan_Aor, kit_rtl: {bind_out, asbuilt of aor1}}, lift the hold for t62 only, and re-arm t62 alone. The wave then runs kit_rtl + gen phys exactly as production. On a gen pass I switch the other 29 and relaunch them in parallel; on a fail I post the error to S81-FORMS-1 and the 30 stay held.
+  plan_Aor is already staged sha-checked on all 5 S81 gen hosts (kit-ops-1/drt73-aor/).
