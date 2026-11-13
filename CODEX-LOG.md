@@ -12822,3 +12822,6 @@ Per lane:
 Only newly launched admitted diagnostic: completed read-only E9 STA unitoth-ubuntu-3165769-1794582058, hard-s81-serdes-1/sta_kitA_v2, I2 log~/hard-s81-serdes-1-logs/sta_kitA_v2.otrun.log. No live own jobs remain; no new P&R runs, merges, tags, deletion chains or plan switches. Root appended coverage index592historical lane records lanes/CODEX-COVERAGE-0659.md and current summary in lanes/CODEX.md. Existing Claude coordinator was found active on Opus; all overlapping work stopped before reset notice. No half-written merge/files remain.
 
 OWNER? Previous HBM explicit-resume question and ownership-overlap question are now handed to Claude; no answer assumed, no new owner policy adopted. All standing freeze/adoption/geometry/exactness requirements retained.
+
+## CODEX takeover 2026-11-13 13:44 PST
+Existing Claude worktrees retained; canonical coordination on intel2. Coverage: QC plan/REGION/forms/cores -> qc; S81 die/frame/leaf -> s81; S81 DSDV/SVC/Serdes/GUNIT -> s81cores; KV all -> kv; HEAD all -> head; HBM collection/diagnosis under owner PARK -> hbm; shared clock/flow/reach/cap/street -> shared; token/model -> token; KIT-OPS/fleet/source recovery -> wave; root -> integration, result registration and uncovered tasks. Healthy jobs preserved. No owner-answer wait.
