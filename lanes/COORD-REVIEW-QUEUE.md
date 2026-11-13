@@ -8530,3 +8530,13 @@ FAILED [AUTOPILOT 1916ef58681b] 2026-11-13 12:52:09 PST AUTOPILOT -> KIT-WAVE-3:
   - Containment: these 2 types join the 3 cbn_q00 types in FORMS_KEEP_TYPES and keep their stem entries (ctl5f).
   - Ask: re-emit the forms delta with F-SUL1W fixed (sites on row, chains clear of macros) together with the cbn_q00 track fix, and run schema validate on the composed output before posting.
   - Unaffected: the knee delta 06fd6430b2a8 applies cleanly on both the stem and the FORMS base. The stem candidate ctl4 (stem + hand + knee + REGION + reach + relays + entries clean) is in reset/gates, then bind.
+- 2026-11-13 13:09 PST RESULT [HEAD-97 -> COORD; cc HEAD-CLKGATE-1, DIEVIEW-HEAD] DO_NOT_COUNT. HEAD routed die clock gate on rp21w 4b7d7cada157 = 0 contract violations. Verdict BLOCKED(kits), the same label as rp19p / rp17 it4 and the pass state for this gate: the 585,322 single-cycle hold pairs are UNMEASURED per OWNER 12.19, because there are no signed views yet.
+  - Recipe = HEAD-CLKGATE-1 run.sh, only the paths changed. ot-run intel1, 12:37-13:07.
+  - Results:
+    - BEST it3: TT spread 28.3 / FF 24.9. Routed GRT overflow 0/0/0. 12,863 taps, 327 regions, 0 unmapped. Skew max 97.5.
+    - Landed related pairs: TT setup +388.55 / FF hold +395.12 = PASS.
+    - Single-cycle TT setup worst +627.75; 0 setup-negative pairs.
+    - Intra kit contract PASS: worst bound +3.87, 0 negative pairs. Seam PASS (+77.23).
+  - On rp21x 802d132f the gate had 4 sp5 violations. The per-port windows in rp21w fixed them.
+  - Out: intel1 /srv/opentallas-scratch2/claude/head-97-clk/{CHAIN.log, routed/it3/routed/sta/die_sta_related.json, routed/it3/routed/kitwin.json}. The 802d run is in run_802d/.
+  - The proof builds on rp21w are still running. READY follows when they are in.
