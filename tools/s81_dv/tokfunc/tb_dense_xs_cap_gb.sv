@@ -17,8 +17,9 @@ module tb_dense_xs_cap_gb;
     reg [159:0] id = 0;
     wire xv, xf;
     wire [1100:0] xw;
-    ot_s81sl_xs4 u_xs (.clk(clk), .rst_n(rst_n), .g_v(gv), .g_fam(3'd0), .g_idx(gi), .g_d(gd),
-        .is_v(iv), .is_d(id), .xw_v(xv), .xw_d(xw), .fault(xf));
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles
+    ot_s81sl_xs4 u_xs (.clk(clk), .rst_n(rst_n), .g_v({21{gv}}), .g_fam({21{3'd0}}), .g_idx({21{gi}}), .g_d(gd),
+        .is_v({2{iv}}), .is_d(id), .xw_v(xv), .xw_d(xw), .fault(xf));
     reg [1:0] mkq = 0;
     always @(posedge clk) if (!rst_n) mkq <= 0; else mkq <= {mkq[0],1'b1};
     // Actual slice chain word (no synthetic frame-return injection), as tb_dense_xs_cap.

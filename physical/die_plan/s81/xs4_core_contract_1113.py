@@ -8,9 +8,10 @@ the 16 dsdv_slice_*_C types).  Writes, from the constants below (cwd = repo root
     physical/die_plan/s81/inputs/core_pins/ot_s81sl_xs4.json                 plan pin table (core_pins_gen.table)
 
 Outline 648.0 x 518.4 (4.32 lattice).  ONE pin face (N in the core frame; the plan places the core MX so the face looks
-at the ring band), M5, one pin every third track (0.144 um), 4,365 pins.  Order along the face follows the macro map of
+at the ring band), M5, one pin every second track (0.096 um), 4,906 pins: the 27 gather control bits and is_v come as one
+pin per kept capture copy (21 / 2), so every pin lands in exactly one flop (face rule).  Order along the face follows the macro map of
 physical/ref_tile/s81sl_xs4h/spec.json (bank columns b1 | b0 | ROMs | b2), so every g_d slice lands over its own bank:
-    g_d[2047:1024] | g_v g_fam g_idx is_v is_d | g_d[1023:0] | clk rst_n | xw_v xw_d fault | g_d[3071:2048]
+    g_d[2047:1024] | g_v g_fam is_v copies | g_d[1023:0] | is_d | clk rst_n | xw_v xw_d fault | g_idx copies | g_d[3071:2048]
 The libs are PROVISIONAL (boundary flops at the stated insertion; inputs land in the K=1 capture flops, outputs leave
 flops) and are replaced by the signed kit views.
 """
@@ -19,27 +20,33 @@ from pathlib import Path
 sys.path[:0] = ["physical/die_plan/s81", "tools/die_plan"]
 MOD = "ot_s81sl_xs4"
 W, H = 648.0, 518.4
-PITCH, OFF, STEP = 0.048, 0.012, 3          # M5 track pitch / offset, tracks per pin
+PITCH, OFF, STEP = 0.048, 0.012, 2          # M5 track pitch / offset, tracks per pin (0.096 um)
 PW, PH = 0.024, 0.084                       # pin shape (norm_finish contract form)
-GAP = 12                                    # empty pin slots between groups
 INS = dict(tt=330.0, ff=259.0)              # PROVISIONAL insertion (xrt1 RF-J signed view: 329.78 / 258.88)
+NC = 21                                     # kept capture copies per gather control bit: ONE PIN PER COPY (face rule: a pin
+                                            # lands in exactly one flop).  g_v[3*c +: 3], g_fam[3*c +: 3], g_idx[21*c +: 21] = copy c
+# (group centre x in the core frame, pins): every g_d slice sits over its own bank column (b1 x 41-136, b0 192-287, b2 512-607),
+# the control copies between b1 and b0, xw over the ROM columns
 GROUPS = [
-    [("g_d", i, "in") for i in range(1024, 2048)],
-    [("g_v", i, "in") for i in range(3)] + [("g_fam", i, "in") for i in range(3)] + [("g_idx", i, "in") for i in range(21)]
-    + [("is_v", None, "in")] + [("is_d", i, "in") for i in range(160)],
-    [("g_d", i, "in") for i in range(0, 1024)],
-    [("clk", None, "in"), ("rst_n", None, "in")],
-    [("xw_v", None, "out")] + [("xw_d", i, "out") for i in range(1101)] + [("fault", None, "out")],
-    [("g_d", i, "in") for i in range(2048, 3072)],
+    (88.0, [("g_d", i, "in") for i in range(1024, 2048)]),
+    (165.0, [("g_v", i, "in") for i in range(3 * NC)] + [("g_fam", i, "in") for i in range(3 * NC)] + [("is_v", i, "in") for i in range(2)]),
+    (240.0, [("g_d", i, "in") for i in range(0, 1024)]),
+    (305.0, [("is_d", i, "in") for i in range(160)]),
+    (324.0, [("clk", None, "in"), ("rst_n", None, "in")]),
+    (385.0, [("xw_v", None, "out")] + [("xw_d", i, "out") for i in range(1101)] + [("fault", None, "out")]),
+    (468.0, [("g_idx", i, "in") for i in range(21 * NC)]),
+    (560.0, [("g_d", i, "in") for i in range(2048, 3072)]),
 ]
-BUS = dict(g_d=3072, g_v=3, g_fam=3, g_idx=21, is_d=160, xw_d=1101)
+BUS = dict(g_d=3072, g_v=3 * NC, g_fam=3 * NC, g_idx=21 * NC, is_d=160, is_v=2, xw_d=1101)
 
 
 def pins():
-    n = sum(len(g) for g in GROUPS) + GAP * (len(GROUPS) - 1) + 4      # 2 extra slots each side of clk
-    k0 = round((W / 2 - OFF) / PITCH) - (n * STEP) // 2
-    out, k = [], k0
-    for gi, g in enumerate(GROUPS):
+    out, last = [], None
+    for cx, g in GROUPS:
+        n = len(g) + (4 if g[0][0] == "clk" else 0)
+        k = round((cx - OFF) / PITCH) - (n * STEP) // 2
+        if last is not None and k < last + 2 * STEP:
+            k = last + 2 * STEP                       # groups never overlap: at least one empty slot between them
         for name, bit, d in g:
             if name == "clk":
                 k += 2 * STEP
@@ -48,8 +55,9 @@ def pins():
             k += STEP
             if name == "rst_n":
                 k += 2 * STEP
-        k += GAP * STEP
+        last = k
     assert out[0][2] >= 4.32 and out[-1][2] <= W - 4.32, (out[0], out[-1])
+    assert len({p[2] for p in out}) == len(out)
     return out
 
 
@@ -136,7 +144,7 @@ def main():
         | {"source": "PROVISIONAL HARD-S81-DSDV-1 11-13: xrt1 RF-J signed insertion (329.78 / 258.88) as the stand-in; replaced by the signed xs4 kit"}))
     import core_pins_gen as CP
     j, size = CP.table(MOD, str(vw / (MOD + ".lef")))
-    assert size == (W, H) and len(j["pins"]) == len(P) == 4365, (size, len(j["pins"]))
+    assert size == (W, H) and len(j["pins"]) == len(P) == 4906, (size, len(j["pins"]))
     j["source"] = "HARD-S81-DSDV-1 11-13: xs4 hard-core LEF contract (kit io.tcl exact pins), xs4_core_contract_1113.py"
     json.dump(j, open("physical/die_plan/s81/inputs/core_pins/%s.json" % MOD, "w"), indent=0)
     print("pins", len(P), "span", P[0][2], P[-1][2], "pinhash", j["pinhash"])

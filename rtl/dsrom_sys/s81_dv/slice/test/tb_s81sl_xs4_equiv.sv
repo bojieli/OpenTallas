@@ -31,8 +31,9 @@ module tb_s81sl_xs4_equiv (input wire clk);
     wire a_xwv, a_f, b_xwv, b_f; wire [1100:0] a_xw, b_xw;
     ot_s81sl_xs_refm u_a (.clk(clk), .rst_n(r_rst_n), .g_v(r_gv), .g_fam(r_gf), .g_idx(r_gi), .g_d(r_gd),
         .is_v(r_isv), .is_d(r_isd), .xw_v(a_xwv), .xw_d(a_xw), .fault(a_f));
-    ot_s81sl_xs4 u_b (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d),
-        .is_v(is_v), .is_d(is_d), .xw_v(b_xwv), .xw_d(b_xw), .fault(b_f));
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles
+    ot_s81sl_xs4 u_b (.clk(clk), .rst_n(rst_n), .g_v({21{g_v}}), .g_fam({21{g_fam}}), .g_idx({21{g_idx}}), .g_d(g_d),
+        .is_v({2{is_v}}), .is_d(is_d), .xw_v(b_xwv), .xw_d(b_xw), .fault(b_f));
 
     function automatic [31:0] hmix(input integer a, input integer b, input integer c, input integer d);
         reg [31:0] x;

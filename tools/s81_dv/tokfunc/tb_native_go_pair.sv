@@ -19,8 +19,9 @@ module tb_native_go_pair;
  .ci_dir(3'd0),.ci_b(1104'd0),.g_v(rgv),.g_fam(rgfam),.g_idx(rgi),.g_d(rgd),.fault(ringfault));
  wire[2:0]gv=ring?rgv:dgv,gfam=ring?rgfam:3'd0;wire[20:0]gi=ring?rgi:dgi;wire[3071:0]gd=ring?rgd:dgd;
  wire xv,sf;wire[1100:0]xw;
- ot_s81sl_xs4 xs(.clk(clk),.rst_n(rst_n),.g_v(gv),.g_fam(gfam),.g_idx(gi),.g_d(gd),
-   .is_v(iv),.is_d(id),.xw_v(xv),.xw_d(xw),.fault(sf));
+ // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles
+ ot_s81sl_xs4 xs(.clk(clk),.rst_n(rst_n),.g_v({21{gv}}),.g_fam({21{gfam}}),.g_idx({21{gi}}),.g_d(gd),
+   .is_v({2{iv}}),.is_d(id),.xw_v(xv),.xw_d(xw),.fault(sf));
  reg[1:0]mk=0;always@(posedge clk)if(!rst_n)mk<=0;else mk<={mk[0],1'b1};
  wire[1103:0]word0={xw[1100:565],xw[0],mk[1],xw[564:0],mk[1]};
  // Actual current bind_ev2 x_W0_in: all four 276-bit lanes have41 bound stages.

@@ -612,15 +612,18 @@ endmodule
 module ot_s81sl_xs4 #(parameter INSTANCE = "") (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire [2:0]    g_v,
-    input  wire [2:0]    g_fam,
-    input  wire [20:0]   g_idx,
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles:
+    // NA = 21 capture copies per gather source; copy gc of source gs reads g_v / g_fam[3*gc + gs] and
+    // g_idx[21*gc + 7*gs +: 7], parents pass {21{...}} replicas; is_v = one bit per kept isv_a copy, parent {2{is_v}}.
+    input  wire [62:0]   g_v,      // 3*NA,  NA = 21
+    input  wire [62:0]   g_fam,    // 3*NA
+    input  wire [440:0]  g_idx,    // 21*NA
     input  wire [3071:0] g_d,
-    input  wire          is_v,
+    input  wire [1:0]    is_v,     // one bit per isv_a copy
     input  wire [159:0]  is_d,
     output wire          xw_v,
     output wire [1100:0] xw_d,
-    output reg           fault
+    output wire          fault
 );
     // ------------------------------------------------------------------ reset
     wire [3:0] rst_e; wire [53:0] rst_l; wire [38:0] rst_k; wire [23:0] rst_x;
@@ -640,15 +643,16 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
             (* keep = "true" *) reg v;
             (* keep = "true" *) reg f;
             (* keep = "true" *) reg [6:0] g;
-            always @(posedge clk or negedge rst_e[gs]) if (!rst_e[gs]) v <= 1'b0; else v <= g_v[gs];
-            always @(posedge clk) begin f <= g_fam[gs]; g <= g_idx[7*gs +: 7]; end
+            // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles
+            always @(posedge clk or negedge rst_e[gs]) if (!rst_e[gs]) v <= 1'b0; else v <= g_v[3*gc + gs];
+            always @(posedge clk) begin f <= g_fam[3*gc + gs]; g <= g_idx[21*gc + 7*gs +: 7]; end
             assign ga_v[gs][gc] = v; assign ga_f[gs][gc] = f; assign ga_g[gs][gc] = g;
         end
     end endgenerate
     reg [3071:0] gd_a, gd_b;
     always @(posedge clk) begin gd_a <= g_d; gd_b <= gd_a; end
     (* keep = "true" *) reg [1:0] isv_a;
-    always @(posedge clk or negedge rst_e[3]) if (!rst_e[3]) isv_a <= 2'd0; else isv_a <= {2{is_v}};
+    always @(posedge clk or negedge rst_e[3]) if (!rst_e[3]) isv_a <= 2'd0; else isv_a <= is_v;   // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles
     reg [44:0] ip_a; reg ow_a; reg [7:0] of_a; reg [27:0] rv_a;
     always @(posedge clk) begin
         ip_a <= {is_d[122:93], is_d[92], is_d[13:0]}; ow_a <= is_d[123]; of_a <= is_d[131:124]; rv_a <= is_d[159:132];
@@ -1178,14 +1182,22 @@ module ot_s81sl_xs4 #(parameter INSTANCE = "") (
             if (collision) collision_fault <= 1'b1;
             lx_fault <= o_ff | collision | collision_fault;
         end
-    reg [1100:0] xw_q;
-    always @(posedge clk) xw_q <= xw_l;
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles: xw_v leaves its OWN kept flop (same D as xw_q[0]); xw_d[0] keeps xw_q[0]
+    (* keep = "true" *) reg [1100:0] xw_q;
+    (* keep = "true" *) reg xw_vq;
+    always @(posedge clk) begin xw_q <= xw_l; xw_vq <= xw_l[0]; end
     assign xw_d = xw_q;
-    assign xw_v = xw_q[0];
+    assign xw_v = xw_vq;
 
     // ================================================================== sticky fault (registered output)
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles: the sticky register fault_s stays internal; the port is driven by its own kept copy fault_q with the
+    // same next-state value (fault_s | any fault term) and the same reset, so fault_q == fault_s on every edge.
+    wire fault_any = is_fault || cal_fault || ctl_fault || wr_fault || rd_fault || lx_fault;
+    (* keep = "true" *) reg fault_s;
+    (* keep = "true" *) reg fault_q;
     always @(posedge clk or negedge rst_l[30])
-        if (!rst_l[30]) fault <= 1'b0;
-        else if (is_fault || cal_fault || ctl_fault || wr_fault || rd_fault || lx_fault) fault <= 1'b1;
+        if (!rst_l[30]) begin fault_s <= 1'b0; fault_q <= 1'b0; end
+        else begin fault_s <= fault_s | fault_any; fault_q <= fault_s | fault_any; end
+    assign fault = fault_q;
 endmodule
 `undef OT_S81SL_XS4_ROM

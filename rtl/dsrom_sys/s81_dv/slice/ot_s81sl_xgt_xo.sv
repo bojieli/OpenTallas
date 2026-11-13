@@ -40,8 +40,9 @@ module ot_s81sl_xgt_xo #(parameter INSTANCE = "") (
         .vi(vi), .vo(vo), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .nx_wi(nx_wi), .nx_ei(nx_ei), .nx_eo(nx_eo), .nx_wo(nx_wo),
         .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .fault(f_r));
-    ot_s81sl_xs4 #(.INSTANCE(INSTANCE)) u_s (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d),
-        .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_s));
+    // XS4-CORE 11-13 (HARD-S81-DSDV-1): face rule, one pin per kept capture copy / own port flop; value-preserving, 0 cycles
+    ot_s81sl_xs4 #(.INSTANCE(INSTANCE)) u_s (.clk(clk), .rst_n(rst_n), .g_v({21{g_v}}), .g_fam({21{g_fam}}), .g_idx({21{g_idx}}), .g_d(g_d),
+        .is_v({2{is_v}}), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_s));
     // fault: rstopt_xo fault (registered) gets one edge so both halves reach the output together (= xg_xo fault + 1)
     reg f_rq, flt;
     always @(posedge clk) begin f_rq <= f_r; flt <= f_rq | f_s; end
