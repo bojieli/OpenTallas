@@ -80,3 +80,19 @@
   >= 43.2 holding the tap at x 725.76; (3) fix per-item deltas above; (4) re-run all1 / vol chain scripts (in the branch);
   (5) proofs on a host with >= 190 GB free. epyc4 vol/ holds 56 GB of mine (bind tree) and can be deleted once re-run.
 - Leftover: epyc7 /srv/opentallas-scratch2/claude/wt/frame-forms-1 (my first clone, no unique state) can be removed.
+
+## After COORD ruling (sparse 17.28 slots OK; window-link exemption must be checked) -- re-grid in progress
+- Work dir epyc4 /srv/opentallas-scratch3/claude/frame-forms-1/g8/ (ev/ = re-gridded tools, NOT yet in the branch; w/t11.txt =
+  one type per in-scope item; cp11/ = current run; run11.log).
+- Re-grid: all seeds on the 8.64 lattice, no seq flips (R0), ROM block = col A 4 + col B 3 ROMs with 22-25 um slots on the W/E
+  pin faces, W pair x 17.28, E pair x 864.0, centre street 65 um (cols B at 639.36 / 743.04), row pitch 414.72 (S street
+  146.88), bf band 112.32, M0 43.2, top 43.2. bn 20.5 um over the N pins (sparse slot). seq x 527.04 / 933.12.
+- KEY FINDING: core_place only has the link model for single-type items (type name == core_conns key); for pv types it sees
+  1 link, so "applied" on pv types does not prove reach. Judge reach on cl87f3ff59 / cl8b686b3e / clac068e56 (same layouts).
+- WINDOW LINK CHECK (bound RTL, epyc4 vol/out_fs/rtl/col_h9_r2__t1__cl87f3ff59.sv): no data bit goes from a window to a core
+  directly. frame_int_i0 -> u_bin (1 reg) -> u_lpad (4 reg) -> fields: [348:66]+[614:349] station xai/xbi, [1165:630] payload,
+  [629:615] cci. Every element S pin is driven by its bank bs (register) + seq go_tag; line 3508. The 'bus' entries of
+  core_conns on element / bs / bn / seq / node / station pins are ONE bit: rst_n = window bit [1166] -> bin 1 + pad 4 +
+  u_d7_6 (7 reg) = 12 registers, then one net to every core reset pin of the tile (same structure in the base plan; each
+  core has its own ot_rst_relay). So the bus-link exemption in cp_frame.py covers only that reset bit; its last hop is
+  tile-wide in base and new alike (half-span sum about 1160 um base, 1260 um new). The planned rs relay station keeps 4 regs.
