@@ -56,3 +56,9 @@
 - hub_C stat (KV-HUBC-REACH, epyc7 dkv100/hubc/stat/breakdown.txt): 987,915 cells hierarchical (census 706,641). Collectors 546k (R1 -> ~248k). Per part synth/proj k: no R1 S 360/423, C 307/401, N 302/333; R1 S 224/286, C 250/344, N 150/181 (census-scaled R1 205/246/129). R1 REQUIRED; C marginal vs 250k (next levers R2/R3 collector reduction, ot_dp_dly). 5,472 cut bits +1 cycle. hubc_post_split.py md5 dc622117 (C only; untested on a split).
 - Blocker: bind.py kit-rtl kv3_hub_C 'leaf modules without a source [qkd_ahub]' (no ahub RTL/macro view in tree) -> hub_C kit owner.
 - Pending: KV-SPLIT-1 (hub gates, pv 3-way handlers), KV-PVFIN-1 cores + R1, COORD on pv_v2n 282k, then event_chain.sh -> package -> READY.
+## UPDATE 2026-11-13 13:22
+- Non-split event chain v6 (epyc7 wt/die-kv-100 qwen_kvsys/ns_kv100 -> ns_kv100_out; log intel2 ~/dkv100log/ns_chain6.log; script epyc7 dkv100/event/event_chain2.sh, RAW_TYPES = the 10 corridor-pass types): G0 PASS 0 errors, bind2a RC 0, R8 re-derived (plan2/r8_ev.json 6b4f9961), strict bind2 running. Next: launch_ev.py (intel2 dkv100/jobs) proof builds from plan2/bind_2.
+- io_ft sdg7 (plan7 = p3r4 + ioft_sidecar.py): placed RC 0 on epyc7 (OT_CLAND fixed). AUTO-GEOM FAIL fill 0.005 (feed-through; standing fill exception), pin_reg_p90 75.8, partial_face 2; clock pins on M7 (advisory). Render viewed: OK for a feed-through (2 face register banks, 2167 sinks each).
+- kit_rtl class: STATE posted (phy overlay epyc8/intel1 dkv100/rtlcls/phyfix md5 92412555 + --rebalance diff 2829643d for the event branch; pv closed by KIT-STAGE-1, held by RCAP-SPLIT).
+- PDN-0006 class (KV-PDN-CLS sub-agent, epyc8 dkv100/pdncls): abstract_detail.export_plan asks for the exact M6/M7 detail view when a PG pin is buried under OBS (qkd_kvs_pcf). Proof kv3_pc_v3: 2_4 PDN RC 0 with all 8 core grids; placement running. Then STATE + KIT-OPS-1 relaunch of the 6 pc items.
+- Still running: KV-SPLIT-1 (pv6).
