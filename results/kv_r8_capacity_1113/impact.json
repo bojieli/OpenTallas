@@ -1,0 +1,62 @@
+{
+ "status": "SOURCE_CAPABILITY_READY_NO_PLAN_ADOPTION",
+ "rule": "Existing OWNER R8 static-count straps; no global capacity or timing change",
+ "defaults": {
+  "capacity": 15,
+  "count_width": 4,
+  "rtl_CW_default": 4
+ },
+ "type_local_option": "partition_types[T].r8_strap_pad_max",
+ "hardware": "Per-site DMAX=actual max-minus-min required pad; common minimum is a fixed delay. CW=max(4, bit_length(DMAX)); unchanged short banks stay four bits. A larger declared type limit does not add stages to any bank.",
+ "added_data_cycles": 0,
+ "added_reset_cycles": 0,
+ "interface": "Only sites whose actual span exceeds15 gain count pins (to5or6 bits); parent manifest/count_straps physical sites and every used constant must be regenerated/gated from final bind.",
+ "suggested_private_limits": {
+  "kv3_pc_v1__cl4ea58a5c": 62,
+  "kv3_pc_v1__cl7f648944": 45
+ },
+ "not_enabled": {
+  "kv3_pc_v3": "hsl3.fi is291bits x24variable stages+2fixed=7566bits perinstance; memory-backed form required. No flop storage budget waiver."
+ },
+ "full_bank_inventory": {
+  "kv3_pc_v1__cl4ea58a5c": {
+   "banks": 5,
+   "replicas": 8,
+   "per_instance_ff": 1795,
+   "all_replicas_ff": 14360,
+   "storage_over_2048": [],
+   "prior_all_replicas_constant_bank_ff": 3997,
+   "shared_master_replication_overhead_ff": 10363
+  },
+  "kv3_pc_v1__cl7f648944": {
+   "banks": 6,
+   "replicas": 12,
+   "per_instance_ff": 3119,
+   "all_replicas_ff": 37428,
+   "storage_over_2048": [],
+   "prior_all_replicas_constant_bank_ff": 6382,
+   "shared_master_replication_overhead_ff": 31046
+  },
+  "kv3_pc_v3": {
+   "banks": 4,
+   "replicas": 4,
+   "per_instance_ff": 8654,
+   "all_replicas_ff": 34616,
+   "storage_over_2048": [
+    {
+     "site": "hsl3.fi",
+     "bits": 6984
+    }
+   ],
+   "prior_all_replicas_constant_bank_ff": 17267,
+   "shared_master_replication_overhead_ff": 17349
+  }
+ },
+ "all_replica_bank_ff": 86404,
+ "limitations": [
+  "Counts are exact emitted register-bit inventory, including every leaf payload/control bit. Independent wrapper epoch/flops are unchanged; mux/buffer mapped cells still require measured synth preflight.",
+  "No type limit is enabled by this source commit. No physical sign-off or strict-bind success is inferred.",
+  "v3FI memory-backed delay remains a separate source/form with cold/warm observable semantics proof and macro planning."
+ ],
+ "cycle_reference": "Zero new cycles relative to the requested coherent R8 landed depths in all_bank_inventory.json; actual per-instance pads (up to62) remain compiler/token latency obligations of the final bind, never hidden."
+}
