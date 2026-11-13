@@ -258,3 +258,26 @@ def test_rule5_default_even_chain_config():
     # opt-in by budget (existing kits unchanged); a type with its own chain_even key keeps it
     assert 'P.budgets.get("r_reach_even", False)' in (HERE / "gen_phys.py").read_text()
     assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] == {"type": "boolean"}
+
+
+def test_reach_homes_is_a_plan_schema_key_and_g0_reads_it():
+    """QC-FORMS-2 11-13 (s29 composed plan: schema 'unknown key reach_homes' on a tree without this branch): the plan
+    schema and its JSON dump accept type.reach_homes and budgets.r_reach / r_reach_even, refuse a malformed home, and
+    G0 runs clean on a plan that carries homes."""
+    import check as CK
+    p = copy.deepcopy(EX)
+    p["partition_types"]["mid"]["reach_homes"] = [dict(name="w", rect_um=[20.0, 100.0, 180.0, 760.0], buses=["*"],
+                                                      note="soft logic of every face bus")]
+    p["budgets"]["r_reach"] = "warn"
+    p["budgets"]["r_reach_even"] = True
+    assert schema.validate(p) == []
+    on_disk = json.loads((HERE / "die_plan.schema.json").read_text())
+    tp = on_disk["properties"]["partition_types"]["additionalProperties"]["properties"]
+    assert "reach_homes" in tp and "r_reach" in on_disk["properties"]["budgets"]["properties"]
+    R, summ = CK.run(copy.deepcopy(p))
+    assert not [e for e in R.errors() if e["check"] in ("schema", "r_reach")] and summ["r_reach"]["mode"] == "warn"
+    bad = copy.deepcopy(p)
+    bad["partition_types"]["mid"]["reach_homes"] = [dict(name="w", rect_um=[20.0, 100.0, 180.0], buses=["*"])]
+    assert schema.validate(bad)
+    bad["partition_types"]["mid"]["reach_homes"] = [dict(name="w", rect_um=[0, 0, 1, 1], buses=["*"], home=1)]
+    assert schema.validate(bad)
