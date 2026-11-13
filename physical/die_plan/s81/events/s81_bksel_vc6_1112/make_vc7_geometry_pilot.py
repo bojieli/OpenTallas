@@ -7,6 +7,10 @@ from pathlib import Path
 import shutil,re,json
 base=Path(os.environ.get('SOURCE','/srv/opentallas-scratch2/claude/die-s81-85/bksel_vC6c')); out=Path(os.environ.get('DEST',str(base.with_name('bksel_vC7geo'))))
 assert not out.exists(),out
+# The legacy runner defaults to async but older kits omitted its helper. Never silently serialize hours of LEC.
+helper=Path(os.environ.get('LEC_HELPER',str(Path(__file__).resolve().parents[5]/'tools/die_plan/lec_async.sh')))
+if not (base/'lec_async.sh').is_file() and not helper.is_file():
+    raise SystemExit('Missing core async helper; set LEC_HELPER to the active core cohort lec_async.sh before staging')
 skip={'run','render_place','lec','__pycache__','signoff','views'}
 shutil.copytree(base,out,ignore=lambda p,ns: [n for n in ns if Path(p)==base and (n in skip or n.startswith('sta_') or n.startswith('run_') and n.endswith('.log') or n.startswith('build_') and n.endswith('.log'))])
 p=out/'macro_place.tcl';s=p.read_text();s=s.replace('{414.72 345.6 R0}','{414.72 483.84 R0}').replace('{535.68 345.6 R0}','{535.68 483.84 R0}')
@@ -14,6 +18,7 @@ old='{{414.72 475.2 R0} {474.48 475.2 R0} {534.24 475.2 R0} {414.72 529.2 R0} {4
 new='{{414.72 267.84 R0} {518.4 267.84 R0} {414.72 332.64 R0} {518.4 332.64 R0} {414.72 397.44 R0}'
 assert old in s;s=s.replace(old,new).replace('ot_s81ph_hq_pk2 {{142.56 200.88 R0}}','ot_s81ph_hq_pk2 {{142.56 200.904 MX}}')
 s='# CODEX vC7 geometry: P MX puts low-valid outputs beside FQ; five FQ banks in former upper payload-RAM bay; two displaced payload RAMs in the old FQ bay. Zero added cycles.\n'+s;p.write_text(s)
+if not (out/'lec_async.sh').is_file():shutil.copy2(helper,out/'lec_async.sh')
 # No shared inputs or failed result files are modified. New physical form starts at synth.
 (out/'geometry_change.json').write_text(json.dumps(dict(base=str(base),form=str(out),changes=['P R0 to MX','FQ 5-bank control-local bay','two payload RAMs moved from upper bay to old FQ bay'],added_cycles=0,status='PRIVATE_PLACE_PILOT_NOT_READY'),indent=1)+'\n')
 # Inherited stale verdict/artifacts would confuse the new form: retain them in base, omit from new kit.
