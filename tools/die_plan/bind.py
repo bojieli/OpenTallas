@@ -1855,6 +1855,7 @@ class Binder:
         import native_istations
         native_istations.annotate(self)
         native_istations.annotate_kit(self)     # QC-BIND-IST-PAD 11-12: kit-built source stations are not padded twice
+        native_istations.annotate_kit_dest(self)  # QC-SU-LPAD-1 11-13: kit core pin-face chains are not padded twice
 
     def _route(self, srcs, dst, keys, out_of, heapq, only=None):
         """fewest-hop lane path from any partition holding `keys` to dst over lanes with room for the bits they do not
@@ -4212,12 +4213,15 @@ class Binder:
         rh = getattr(self, "_reg_hard", None) or {}
         for L in self.links:
             st = L["stages"]
-            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("internal_kit_source_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
+            bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L) + int(L.get("internal_source_cycles", 0)) + int(L.get("internal_kit_source_cycles", 0)) + int(L.get("internal_kit_dest_core_cycles", 0)) + int(L.get("clock_landing_cycles", 0))
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
                             leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
+            if L.get("internal_kit_dest_core_cycles"):
+                # QC-SU-LPAD-1: the receiver kit's core pin-face chain carries these stages (bind_verify credits them)
+                lat[-1]["dest_core_cut"] = int(L["internal_kit_dest_core_cycles"])
             if L["src"] in rh or L["dst"] in rh:
                 # the macro's registered pin is that end's boundary stage (bound_stages unchanged, 1:1)
                 lat[-1]["macro_pin_reg_ends"] = [e for e in ("src", "dst") if L[e] in rh]
@@ -5955,7 +5959,8 @@ def lane_pad(L):
     if L.get("spine") or not L.get("lane") or "cycles" not in L:
         return 0
     return max(0, int(L["cycles"]) - 2 - sum(h["stations"] for h in L.get("ft", [])) - int(L.get("internal_source_cycles", 0))
-               - int(L.get("internal_kit_source_cycles", 0)) - int(L.get("clock_landing_cycles", 0)))
+               - int(L.get("internal_kit_source_cycles", 0)) - int(L.get("internal_kit_dest_core_cycles", 0))
+               - int(L.get("clock_landing_cycles", 0)))
 
 
 def _reset_latency_meta(out, wavefront):
