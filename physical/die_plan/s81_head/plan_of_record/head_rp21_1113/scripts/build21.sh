@@ -17,7 +17,8 @@ json.dump(p,open('pd/rp21c.json','w'),indent=1); open('pd/rp21c.json','a').write
 (cd $N && python3 -I tools/die_plan/reach_rules.py fix $H/pd/rp21c.json --repo $N --rules 2 --types hd_tile --out-plan $H/pd/rp21d.json --report $H/g_b/rr_fix21.json | tail -1)
 (cd $N && python3 -I tools/die_plan/street_rule.py legalize $H/pd/rp21d.json --die s81_head --types hd_host_e --repo $N --out $H/g_b/leg_he21.json --out-plan $H/pd/rp21e.json --event $H/g_b/leg_he21_event.json > $H/g_b/leg_he21.log 2>&1); grep -v "^#" g_b/leg_he21.log | tail -2 | head -1 | cut -c1-250
 python3 -I he_reblock.py pd/rp21e.json pd/rp21f.json | tail -2
-python3 -I hw_relayout.py pd/rp21f.json pd/rp21gw.json
+python3 -I he_epc_east.py pd/rp21f.json pd/rp21fe.json
+python3 -I hw_relayout.py pd/rp21fe.json pd/rp21gw.json
 python3 -I mesh_relayout.py pd/rp21gw.json pd/rp21gm.json
 python3 -I ctl_relayout.py pd/rp21gm.json pd/rp21g.json
 ONLY=hd_host_e python3 -I remap_start.py $N pd/rp21e.json pd/rp21g.json pd/rp21g1.json > g_b/remap21e.log 2>&1; tail -1 g_b/remap21e.log | cut -c1-300
@@ -41,5 +42,5 @@ sha256sum pd/rp21j.json pd/sidecar_rp21.json | cut -c1-16
 (cd $N && python3 -I tools/die_plan/reach_rules.py check $H/pd/rp21j.json --repo $N > $H/g_b/rr_rp21j.log 2>&1 || true; head -1 $H/g_b/rr_rp21j.log)
 python3 -I xohop/xohop_delta.py pd/rp21j.json pd/rp21x.json --report g_b/xohop_rep.json | cut -c1-200
 sha256sum pd/rp21x.json | cut -c1-16
-PW=$H/prep21c PO=$H/kits21c PT=hd_ctl bash $H/prep21.sh > $H/prep21c.out 2>&1; grep -v "cp: warning" $H/prep21c.out | grep "rc \\|GEN\\|KITRTL" | cut -c1-200
+PW=$H/prep21e PO=$H/kits21e PT=hd_host_e bash $H/prep21.sh > $H/prep21e.out 2>&1; grep -v "cp: warning" $H/prep21e.out | grep "rc \\|GEN\\|KITRTL" | cut -c1-200
 echo BUILD21_DONE

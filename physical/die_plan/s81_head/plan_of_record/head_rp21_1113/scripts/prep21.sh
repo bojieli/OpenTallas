@@ -7,7 +7,7 @@ P=physical/die_plan/s81_head/plan_of_record; MESH=$D/$P/l48hp1_head_mesh_1111
 TYPES="${PT:-hd_tile hd_mesh hd_host_e hd_host_w hd_spn_end hd_spn_eshim_tx hd_st_n3_transit hd_st_str hd_turn_a}"
 [ -e $W ] && { echo EXISTS; exit 3; }
 mkdir -p $W/compose $W/tmp $O; export TMPDIR=$W/tmp
-cp $H/pd/rp21x.json $W/compose/source_plan.json
+cp ${PS:-$H/pd/rp21x.json} $W/compose/source_plan.json
 echo "rp21x plan sha $(sha256sum $W/compose/source_plan.json | cut -c1-16)"
 python3 -I $MESH/prepare_cut.py $D $W/compose $H/base/hp1 $W/prep > $W/prepare.log 2>&1; echo "prepare rc $?"; tail -2 $W/prepare.log
 for f in core_pins assets native_domains lat; do cp -rL --update=none $H/pd/$f/. $W/prep/$f/; done

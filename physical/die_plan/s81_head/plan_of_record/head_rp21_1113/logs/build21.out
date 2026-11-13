@@ -5,13 +5,15 @@ reach_rules fix s81_head: 1 types changed, 0 NOT FIXED -> /srv/opentallas-scratc
 hd_host_e	True	648.0	570.24	656.64	570.24	1.33	20	42	33	0.76	0.76	clean
 head [[570.24, 103.68], [570.24, 120.96], [570.24, 138.24], [570.24, 207.36], [570.24, 224.64], [570.24, 241.92], [570.24, 311.04], [570.24, 328.32], [570.24, 345.6]]
 sf [[224.64, 216.0], [224.64, 233.28], [224.64, 250.56], [224.64, 267.84], [224.64, 336.96], [224.64, 354.24], [224.64, 371.52], [224.64, 440.64], [224.64, 457.92], [224.64, 475.2]]
+host_e head x 302.4 epc x 423.36 street head-epc 88.86
+[["reset", [[414.72, 280.8], [70.7815, 190.08], [550.152, 47.52], [414.72, 185.76], [496.8, 17.28]]]]
 y0 112.32 array 69.12 112.32 380.316 456.07199999999995
 [["tap_um", [324.0, 285.12], [302.4, 285.12]], ["reset", [[276.48, 324.0], [259.2, 86.4], [17.28, 17.28], [639.36, 293.76], [207.36, 17.28]]]]
 lane b y 241.92 - 585.672  lane a y 630.72 - 974.472
 [["reset", [[276.48, 324.0], [272.16, 915.84], [552.96, 604.8], [17.28, 604.8], [272.16, 1140.48], [259.2, 86.4], [17.28, 17.28], [375.84, 1002.24], [207.36, 17.28]]]]
 ctl {'u_xa0': [95.04, 77.76], 'u_xa1': [95.04, 207.36], 'u_xb0': [95.04, 336.96], 'u_xb1': [311.04, 138.24]}
 [["reset", [[276.48, 311.04], [259.2, 69.12], [17.28, 17.28], [207.36, 17.28]]]]
-{"types_changed": ["hd_host_e"], "same": 1, "renumbered": 6, "moved": 3}
+{"types_changed": ["hd_host_e"], "same": 0, "renumbered": 1, "moved": 9}
 {"types_changed": ["hd_ctl", "hd_host_w", "hd_mesh", "hd_spn_end", "hd_spn_eshim_tx", "hd_st_n3_transit", "hd_st_str", "hd_tile", "hd_turn_a"], "same": 473, "renumbered": 111, "moved": 52}
 OFFSET-FALLBACK hd_spn_eshim_tx rst_start_raw_0 offset 2 -> 1 (HEAD-97 rp21: type tree shallower after re-layout)
 OFFSET-FALLBACK hd_tile rst_start_raw_0 offset 4 -> 3 (HEAD-97 rp21: type tree shallower after re-layout)
@@ -20,17 +22,17 @@ pins moved 0
 {"bad": 0}
 regions 327 bad [('lep0N', 'shift', 95.04, ['lk_WN0', 'lep0N'])] 1
 {"trees_replaced": [], "sources_synced": {}, "refused_stale_sidecar": []}
-3bdcbe5cba1cbad8
+58c09968002b695a
 5709a30770c1f3ad
 types 7, with street-rule violations 0
 G0C per type: 23/26 types clean (G3-eligible: 23); die-level {}; reported as WARN (run --completeness)
 G0 FAIL: 1 errors, 0 pending-view, 94 warnings; 26 types / 358 partitions (6 in near-duplicate groups); worst cut {'ratio': 0.0578, 'at': 'horizontal@16000'}, worst partition segment {'ratio': 0.3587,
 R-REACH s81_head: 26 soft types, 3 errors, 4 warnings
-{"xo_hop": 2, "relay_sites_added": 1028, "stage_sites": [[203.052, 755.553], [496.812, 732.529]], "out_sha256": "802d132f22d15f6e5c7e3ca9d2e9e5a2617a4a2bc74ba4bf6c861a05c0725f13", "tile_i_to_o_cycles"
-802d132f22d15f6e
+{"xo_hop": 2, "relay_sites_added": 1028, "stage_sites": [[203.052, 755.553], [496.812, 732.529]], "out_sha256": "1a014fd2fcdc65f46bf8daf8f63fde713b517dce4d452cc86a2269b35ea54bef", "tile_i_to_o_cycles"
+1a014fd2fcdc65f4
 prepare rc 0
 sidecar rc 0
 republish rc 0
-KITRTL hd_ctl rc 0 HEAD_WAVE_KIT_RTL_PASS_DISABLED hd_ctl 31
-GEN hd_ctl rc 0 /srv/opentallas-scratch2/claude/head-97/kits21c/g_hd_ctl/hd_ctl
+KITRTL hd_host_e rc 0 HEAD_WAVE_KIT_RTL_PASS_DISABLED hd_host_e 26
+GEN hd_host_e rc 0 /srv/opentallas-scratch2/claude/head-97/kits21e/g_hd_host_e/hd_host_e
 BUILD21_DONE

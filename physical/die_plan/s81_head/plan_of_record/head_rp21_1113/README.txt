@@ -1,5 +1,5 @@
 HEAD-97 rp21x: HEAD die event (COORD rulings 11-13).
-Plan: source_plan_rp21x.json.gz, sha256 802d132f22d15f6e (gzip -dc). Sidecar: sidecar_rp21.json. Sink bins: ../sink_bins/hd_tile_rp21.json.
+Plan: source_plan_rp21w.json.gz, sha256 4b7d7cada1576768 (gzip -dc) = rp21x 802d132f + hd_host_e u_epc east (he_epc_east.py) + per-port windows from the routed die clock gate on 802d132f (winfix21.py, WF_EXTRA=hd_spn; gates/kitwin_rp21x_it3.json). Sidecar: sidecar_rp21.json. Sink bins: ../sink_bins/hd_tile_rp21.json.
 Contents of the event:
 - F1b hd_tile form: W 8.64, E 25.92; tile 717.12; die 17712 x 17556.48.
 - Every partition east of the array is shifted.
