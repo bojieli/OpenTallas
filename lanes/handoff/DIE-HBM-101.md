@@ -55,3 +55,15 @@ post101_25..42 as before (failure owners, REVIEW-REQUESTs, STATE, seam table, hp
 - On intel2 under nohup use ~/.local/bin/ot-run. Kill only exact PIDs.
 - Sealed ot-job dirs are deleted with their GRT logs: plain ot-run --dir kits keep artifacts.
 - A plan lane with beats > 1 and no beat_endpoint binds as a narrow 1-beat lane and spills silently. Never add beats without a P1/P2 PASS.
+
+## 2026-11-12 17:5x PST refresh (supersedes the 13:45 state where they differ)
+- Event plan line (epyc9 /srv/opentallas-scratch2/claude/die-proto-3/hbm/hp1lane/plans; builders in hbm101/mk_ev*.sh):
+  - pE1sp 784faf909b83 (DIE-LAYOUT-HBM) -> pEv4 1bc7f69df5b2 (mk_ev.sh: spread + respace + hop_split) -> pEv4f 45b8d9b940fa (L1254 fc 5).
+  - -> pEv6 20b4b90a9d2e (mk_ev6.sh: q_sm0 symmetry). EVENT BIND CLEAN, bindEv6 on epyc9 die-layout-hbm/bindEv6, flag ON.
+  - -> pEv7 ca14c1c034b9 (mk_ev7.sh: + mcb split). G0 0 new; needs RTL/bind for the q_mcb_*_s0..s3 pieces.
+- Still to fold in: vsN0 form (hbm101/vsn0_form.py), wbq clk52 clock-pin delta (claude/hbm-cores-c-wbq-clkpins-1112 @ 1df88d4756).
+- Gate tools: hbm101/latcheck.py PLAN ASBUILT (native_istations model; must be 0); hbm101/pairsym.py PLAN (shared-type NW/NE landing; q_sm1/q_sm3 asymmetries are old and bound fine).
+- Copying a plan needs its sidecars (cores/ etc.). Use cp -a of the plan dir, not die_plan.json alone.
+- OPSA1 SREG: BAD STRUCTURAL (GRT overflow 44454 across the die; 16-macro 4x4 at 64% fixed in 760x233). It needs a re-shape or split form from HBM-CORES-B.
+- GEOM-VIS-8 request filed for pEv6 (renders epyc7 die-layout-hbm/suchan/renderEv6).
+- Agents: DIE-LAYOUT-HBM a3080da31af94f3a0, HBM-CORES-C aa7c81666cfdde1de (RSEL g1 at the place gate, H13 in GRT, CDC lint, clk pins). MCB-SPLIT-1 done.
