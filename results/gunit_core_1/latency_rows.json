@@ -3,16 +3,51 @@
  "lane": "GUNIT-CORE-1",
  "date": "2026-11-13",
  "rows": [
-  {"id": "S81-GUNIT-BF-M1REG", "lane": "s81 gunit__t1: dsdv_gunit_l1f_bf (4 bands u_l1f0..3 / u_f) o_v o_f o_l o_g o_d o_flt -> dsdv_gunit_l1c u_l1c f_*", "parameter": "recipe defines OT_GUNIT_BF_M1REG (gf3, DIE-S81-80 11-08)", "added_cycles": 1, "clock": "core 833 ps (ck_rt region)", "relative_to": "gf2 = plan latency / token-sim reference", "bench": "physical/die_plan/s81/cores/legacy/profiles/bf_m1reg_1108/bench (N=1 PASS, M1REG_MUT FAIL)", "status": "listed again here: still owed to the die owner (pin_cycles.json owed)"},
-  {"id": "S81-GUNIT-BF-C1REG", "lane": "s81 gunit__t1: dsdv_gunit_l1f_bf o_v o_f o_l o_g o_d o_flt -> dsdv_gunit_l1c u_l1c f_*", "parameter": "recipe defines OT_GUNIT_BF_C1REG on top of OT_GUNIT_BF_M1REG (gf4)", "added_cycles": 1, "clock": "core 833 ps (ck_rt region)", "relative_to": "gf3 (cumulative +2 against gf2 / plan latency); sv_* / ctl_* +0; no die lane (latency.lanes) station count changes: the edges are inside the hard core", "bench": "physical/die_plan/s81/cores/legacy/profiles/bf_c1reg_1113/bench/run_bench.sh (N=1 PASS; N=0, N=2, C1REG_MUT FAIL)"}
+  {
+   "id": "S81-GUNIT-BF-M1REG",
+   "lane": "s81 gunit__t1 internal router path: 4 x dsdv_gunit_l1f (bf u_f) o_v/o_f/o_l/o_g/o_d/o_flt -> dsdv_gunit_l1c u_l1c f_* -> i_v/i_ids/s_v/s_d/fault -> dsdv_gunit_l1 u_l1 -> ids row on vo_n / vo_s",
+   "parameter": "recipe defines OT_GUNIT_BF_M1REG (gf3, DIE-S81-80 11-08)",
+   "added_cycles": 1,
+   "clock": "core 833 ps (ck_rt region)",
+   "relative_to": "gf2 = plan latency / token-sim reference",
+   "bench": "physical/die_plan/s81/cores/legacy/profiles/bf_m1reg_1108/bench (N=1 PASS, M1REG_MUT FAIL)",
+   "status": "listed again here: still owed to the die owner (pin_cycles.json owed)"
+  },
+  {
+   "id": "S81-GUNIT-BF-C1REG",
+   "lane": "s81 gunit__t1 internal router path: 4 x dsdv_gunit_l1f (bf u_f) o_v/o_f/o_l/o_g/o_d/o_flt -> dsdv_gunit_l1c u_l1c f_* -> i_v/i_ids/s_v/s_d/fault -> dsdv_gunit_l1 u_l1 -> ids row on vo_n / vo_s",
+   "parameter": "recipe defines OT_GUNIT_BF_C1REG on top of OT_GUNIT_BF_M1REG (gf4)",
+   "added_cycles": 1,
+   "clock": "core 833 ps (ck_rt region)",
+   "relative_to": "gf3 (cumulative +2 against gf2 / plan latency); sv_* / ctl_* +0; no die lane (latency.lanes) station count changes: the edges are inside the hard core",
+   "bench": "physical/die_plan/s81/cores/legacy/profiles/bf_c1reg_1113/bench/run_bench.sh (N=1 PASS; N=0, N=2, C1REG_MUT FAIL); NCYC 1500: bench/bench_full.out (N1 0 mismatches / 1469 compares PASS; N0 2794, N2 2791, MUT 1106 mismatches FAIL)"
+  }
  ],
  "gunit__t1_lane_table": {
-  "note": "gunit__t1 die lanes (plan latency.lanes) whose token schedule follows the l1c output, i.e. the bf o_* edges: station counts are unchanged (bf edges are core-internal), the token schedule moves by the bf added cycles once the compiler reschedules; values below are the plan table as of plan_h2_2249 (cycles) and the pending schedule shift",
-  "rows": [
-   {"lane": "xtier__gunit__s_3N_C", "plan_cycles": 25, "core_edges_upstream": "+2 (bf o_* via l1c)", "station_change": 0},
-   {"lane": "xtier__gunit__s_3S_C", "plan_cycles": 61, "core_edges_upstream": "+2 (bf o_* via l1c)", "station_change": 0},
-   {"lane": "flt__gunit__s_3N_C", "plan_cycles": 25, "core_edges_upstream": "+2 (bf o_flt via l1c fault)", "station_change": 0}
+  "traced": "GUNIT-CORE-1 11-13 through rtl/dsrom_sys/s81_dv/unit/landed/dsdv_gunit_lp.sv: the bf outputs feed ONLY u_l1c (f_v/f_f/f_l/f_g = fo_*[0], f_d = fo_d, f_flt = fo_flt); u_l1c i_v/i_ids/s_v (gs_v)/s_d (gs_d)/fault (f1c) feed ONLY u_l1 (i_v, i_ids, gs_v, gs_d, fc); u_l1 reaches vo_s via u_l3 and vo_n via the u_l2 -> u_l0 -> u_l4 -> u_l5 ring. Gather: l1c g_go/g_hit/g_a -> l1f -> bf gq2/gd -> o_g/o_d -> l1c s_v/s_d; gf4 delays the gather reply by the same +1 as the select data, so ids row and gather reply move together (RW_GAP unchanged).",
+  "die_lanes": "NO plan latency.lanes row changes: xtier__gunit__s_3N_C 25, xtier__gunit__s_3S_C 61, flt__gunit__s_3N_C 25 (and the inbound lanes) price transport between partitions; the bf edges are inside the gunit__t1 partition (station_change 0, cycles unchanged). The earlier name-based mapping is withdrawn.",
+  "compiler_rows": [
+   {
+    "constant": "tools/s81_dv/layer_prog/lower_gu.py RT_LAT_N, RT_LAT_S",
+    "on_main": [
+     62,
+     60
+    ],
+    "with_gf3_view": [
+     63,
+     61
+    ],
+    "with_gf4_view": [
+     64,
+     62
+    ],
+    "note": "static router latency (ids row on vo_n / vo_s); lower_vs.py uses max(RT_LAT_N, RT_LAT_S) + RW_GAP + 1, RW_GAP 101 unchanged; HC_LAT unchanged (bf is not on the HC path)"
+   },
+   {
+    "constant": "flt (gunit fault): u_l1c fault -> u_l1 fc",
+    "delta": "+2 against gf2 (sticky flag, no schedule constant)"
+   }
   ],
-  "unverified": "which of the three lanes carry l1c outputs derived from bf o_* was read from the lane names, not traced through dsdv_gunit_lp; the die owner confirms when rescheduling"
+  "owner": "DIE-S81-89 (S81 die owner, COORD 11-13): reschedule RT_LAT_N/RT_LAT_S when the gf4 bf view binds (gf3 +1 still owed as well); run_gu_bench.sh asserts the measured total"
  }
 }
