@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.latency_rows.v1",
+ "lane": "KV-PVFIN-1",
+ "rule": "RULEBOOK-1113 R-RTL-6 (one row per ADDED cycle); R-CAP-3.3 hardening of qkd_pv_fin_s",
+ "forms": [
+  {"id": "pvfin_s2x8_in_stage", "module": "qkd_pv_fin_s2x8 (2 x qkd_pv_fin_s8 hard cores) replacing qkd_pv_fin_s in kv3_hub_C",
+   "parameter": "IN_STAGE (default 0 = 0 cycles; the kit physical/ref_tile/qkd_pv_fin_s8 and the hub_C plan type set IN_STAGE=1)",
+   "added_cycles": 1, "clock": "ck (hub_C core clock)",
+   "relative_to": "qkd_pv_fin_s on the same pins: every output (out_valid, out_beat, out_epoch, out_data, fault) one edge later; beat b leaves PRODUCT_AGE + 2 + b edges after the start pin edge",
+   "evidence": "rtl/test/qwen_split/run_qkd_pv_fin_s2x8.sh (results/kv-pvfin-1/s2x8_bench.txt): lock-step new(t + 1) == old(t) every edge incl. cold + warm resets; IN_STAGE 0 lock-step at 0; negatives +SHIFT=0, +SHIFT=2, row-short mutant (pair-0 data not moved), MUT 1-3, lane swap all FAIL"}
+ ],
+ "rows": [
+  {"id": "pvfin_s8_in_stage", "lane": "KV-PVFIN-1", "parameter": "qkd_pv_fin_s8 / qkd_pv_fin_s2x8 IN_STAGE=1", "added_cycles": 1,
+   "clock": "ck (kv3_hub_C core clock)",
+   "relative_to": "qkd_pv_fin_s (unsliced pv_fin in kv3_hub_C): PV-final out_valid / out_beat / out_epoch / out_data / fault +1 edge; inputs (start, cal, epoch, p0 / p1 beats, rz) and their resets move together (all inputs land in one stage of pin flops, the valid / start flops on the same async rst_n)",
+   "why": "calendar decode behind the 487 ps link-budget input delay: s8c post-CTS setup -304 ps at cq_bad / cq_em (R-RTL-5 (3), cycles pre-approved in the KV-PVFIN-1 brief)"}
+ ]
+}
