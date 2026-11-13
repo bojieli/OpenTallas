@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.latency_rows.v1",
+ "lane": "KV-PVFIN-1",
+ "rule": "RULEBOOK-1113 R-RTL-6 (one row per ADDED cycle); R-CAP-3.3 hardening of qkd_pv_fin_s",
+ "forms": [
+  {"id": "pvfin_s2x8", "module": "qkd_pv_fin_s2x8 (2 x qkd_pv_fin_s8 hard cores) replacing qkd_pv_fin_s in kv3_hub_C",
+   "parameter": "none (structural replacement; drop-in port list)", "added_cycles": 0, "clock": "ck (hub_C core clock)",
+   "relative_to": "qkd_pv_fin_s: inputs registered at the pin (1 edge), beat b leaves PRODUCT_AGE + 1 + b edges after the start pin edge",
+   "evidence": "rtl/test/qwen_split/run_qkd_pv_fin_s2x8.sh lock-step vs qkd_pv_fin_s every edge; +SHIFT=1 (a +1 cycle) caught"},
+  {"id": "pvfin_s8_ctl_retime", "module": "qkd_pv_fin_s8 internal (calendar decode at the pin, slot flags, sbuf read prefetch)",
+   "parameter": "none", "added_cycles": 0, "clock": "ck", "relative_to": "qkd_pv_fin_s",
+   "evidence": "same bench"}
+ ],
+ "rows": []
+}
