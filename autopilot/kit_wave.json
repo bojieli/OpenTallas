@@ -2046,7 +2046,13 @@
    },
    "note_prov_view_sources_kw32": "KW-FIX-32 2026-11-07 18:06 PST: signed views of counted child cores (counted_child_views.py, export_view.py of the counter's sign-off records) first in prov_view_sources for 18 modules; revert: prov_view_sources <- prov_view_sources_prev_kw32",
    "note_prov_view_sources_kw35cv": "KW-FIX-35-CV 2026-11-08 10:52 PST: counted child views (counted_child_views.py export of the counter's sign-off records, manifest 2026-11-08 10:37 PST) first in prov_view_sources; changed 1: qkd_hr_core_prompt. Revert: prov_view_sources <- prov_view_sources_prev_kw35cv",
-   "route_hold_items": {},
+   "route_hold_items": {
+    "kv3_pv*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "kv3_hub_Eo": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "kv3_hub_Eo__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "kv3_hub_Wo": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "kv3_hub_Wo__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key."
+   },
    "src_prev_kw36us": "/srv/opentallas-scratch2/claude/kw35/src_e2rd",
    "note_src_kw36us": "KW-FIX-36 (COORD 10:2x/17:4x UNINDEXED-SRC-STALE): src + bind.py LeafFollow only (fea7df0c0a6 merged 3-way onto this die's live bind.py; hard-link tree on every gen host); src_sha/queue_src unchanged because no other file differs. Revert src_prev_kw36us.",
    "prov_view_sources_prev_kw36pc": {
@@ -19535,7 +19541,9 @@
     "ot_s81sl_leaf__t8": "COORD 11-10 23:4x (1): DIE-S81-85 porous-view DRT-0073 class (feed1111/out2 relaunch.json porous_held, 98); no new route submission until DIE-S81-85 posts the fixed porous views (admitted jobs untouched)",
     "col_h10_r1__t1__cl95b37463": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
     "col_h10_r2__t1__cl99efd374": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
-    "col_h9_r2__t1__cl774acf45": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)"
+    "col_h9_r2__t1__cl774acf45": "DIE-S81-85 11-10 23:5x porous release: col type over 208 ps (DS85 late-tap lane form pending)",
+    "dsdv_slice_*_C": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "dsdv_slice_*_C__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key."
    },
    "route_hold_items_prev_kw43fb_added": [
     "col_h10_r0_p1__t1__cl574cc59d",
@@ -31835,7 +31843,18 @@
     "epyc2"
    ],
    "pilot_max_prev_kw45_1111": 2,
-   "route_hold_items": {},
+   "route_hold_items": {
+    "sle_ctl": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "sle_ctl__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "sle_st_a_v1": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "sle_st_a_v1__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "sle_st_a_v2": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "sle_st_a_v2__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "slw_st_a_v1": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "slw_st_a_v1__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "slw_st_a_v2": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key.",
+    "slw_st_a_v2__*": "RCAP-SPLIT-1113 (KIT-OPS-1 2026-11-13 04:32; COORD 04:3x, RULES-CAP-1 R-CAP): no design over 200k movable cells has ever signed off; this family measures far above it. No new launch or route submission; running jobs finish. S81-FORMS-1 owns the split event after the 11-15 04:00 freeze. Lift = delete this key."
+   },
    "gen_hosts_prev_kw45_1111": [
     "epyc8",
     "epyc9"
