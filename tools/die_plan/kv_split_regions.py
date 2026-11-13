@@ -237,6 +237,36 @@ def prepare_native_form(raw, side, scored, out):
     dump(out / "clock_geometry_plan.json", geometry)
 
 
+def bind_native_measurement(raw, clock_table, cap_path, out):
+    """Bind released measured clock-START output with independent real origins."""
+    import count_align_bind as CAB
+    cap = json.loads(Path(cap_path).read_text())
+    summary = cap["summary"]
+    if summary.get("fail") or summary.get("below_100ps"):
+        raise ValueError("measured CA fails crossing/margin gate")
+    if not cap.get("start_edges") or not summary.get("start_tree", "clock") == "clock":
+        raise ValueError("measured independent origins require standard clock START edges")
+    ends = {q["id"]: (q["src"]["part"], q["dst"]["part"]) for q in raw["ports"]}
+    b = CAB.bind(cap, parts=ends)
+    check = CAB.verify(b, samples=100)
+    if check["identity_and_loop_errors"] or check["sim_window_violations"]:
+        raise ValueError(f"measured native CA bind fails: {check}")
+    table = copy.deepcopy(clock_table)
+    table.pop("count_aligned", None)
+    for row in table["ports"]:
+        row["added_cycles"] = b["ports"][row["port"]]["sched_lat"]
+    table = CAB.annotate_table(table, b, root_settle_cycles=64, strap_form=True)
+    groups = json.loads((out / "regions.json").read_text())["part_region"]
+    ca = table["count_aligned"]
+    for part, role in ca["parts"].items():
+        if role["role"] != "origin" or role["region"] != part:
+            raise ValueError(f"measured independent origin lost for {part}: {role}")
+    ca["frame_clock_regions"] = groups
+    dump(out / "sidecar_native_measured.json", table)
+    dump(out / "native_measured_bind_check.json", check)
+    return table
+
+
 def compose(raw, table, source, out, oldside):
     import clock_landing_plan as CLP
     # Generated reset/START references belong to the previous origin/mask.
@@ -281,7 +311,8 @@ def compose(raw, table, source, out, oldside):
     dump(out / "lane_cycle_delta.json", delta)
     dump(out / "plan_c.json", plan)
     dump(out / "eW_sidecar.json", side)
-    dump(out / "scope_disposition.json", dict(verdict="SUPERSEDED_164_COUNT_FRAME_VARIANT", physical_qualified=False, reason="32newPHYfixedrelays undesired; use196independent count origins on164physical clock groups after measured native-clock START"))
+    if not table["count_aligned"].get("frame_clock_regions"):
+        dump(out / "scope_disposition.json", dict(verdict="SUPERSEDED_164_COUNT_FRAME_VARIANT", physical_qualified=False, reason="32newPHYfixedrelays undesired; use196independent count origins on164physical clock groups after measured native-clock START"))
     dump(out / "compose_extra.json", extra)
     changed = {tn: [k for k in set(raw["partition_types"][tn]) | set(t)
                     if raw["partition_types"][tn].get(k) != t.get(k)]
@@ -301,6 +332,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--v-ps-mm", type=float, default=290.0)
     ap.add_argument("--compose", action="store_true")
+    ap.add_argument("--measured-ca", help="released both-edge measured clock-START CA doc; independent partition origins")
     a = ap.parse_args()
     sys.path.insert(0, str(Path(a.repo) / "tools/die_plan"))
     out = Path(a.out)
@@ -310,9 +342,12 @@ def main():
     if table is None:
         return 3
     prepare_native_form(raw, side, scored, out)
+    if a.measured_ca:
+        table = bind_native_measurement(raw, table, a.measured_ca, out)
     if a.compose:
         compose(raw, table, a.plan, out, side)
-    print((out / "status.json").read_text())
+    status = json.loads((out / "status.json").read_text())
+    print(json.dumps({k: status[k] for k in ("verdict", "physical_qualified", "root", "regions_after")}, sort_keys=True))
     return 0
 
 
