@@ -39,3 +39,9 @@
 - sys_c R-REACH-2: dkv100/sysc/sysc_form.py: reach_homes d2d_phyN [959.04,859.68,2142.72,1019.52] (PHY pins all on its N face die x 968-1417) + dcal home; 4 d2d link SRAMs moved SW corner -> x 1615.68 y 518.4-777.6 (E of PHY). First try at x 1494.72 hit added tap clk_t13 halo. rr.sh = reach fix 1,2,4 + check (p5).
 - hub_C R-REACH-2 (ahub 605 um, 260 loose buses): sub-agent KV-HUBC-REACH writing dkv100/hubc/hubc_form.py (homes + leafs).
 - Event compose order: p3r (SD) -> sysc_form -> hubc_form -> type_split (hubs 3-way, pv 4/2-way) -> reach_rules fix 1,2,4 -> resetfix/raw step -> sidecar -> G0 -> strict bind -> lane latency.
+## UPDATE 2026-11-13 06:14
+- Event input (final): epyc7 dkv100/event/pre_split2.json md5 91ef39a7 = sdgrow/p3r2 (82d7821d; resetfix_seam.py fixes io_ft reset.in_sites + parent-seam refusal) + sysc_form (f57b0a3d) + hubc_form (1069bf27). Next: KV-SPLIT-1 split -> dkv100/split/event_in2/, then reach_rules fix 1,2,4 (wt/die-kv-100-rr), clock.landing_ring_guard_reg=true, resetfix, sidecar, G0, strict bind, lane latency.
+- KV-SPLIT-1 decisions given: option A netlist-derived row ends (13 base-defect rows, BASE-DEFECT latency rows), soft-driver rule, landing_contract.py one-line cland_rstart_out exemption + test_landing_relay_fanout.py, ft2 vertical-first.
+- hub_C R-CAP: ASK posted (pv_fin 2 slice cores + y3 split + R1 ring RW=W; needs owners) default = follow-up event. KV-HUBC-REACH writing hubc_split_form + yosys stat.
+- SD pilot (old p3 form) placed + viewed ISSUES (fdi_cdc 2 clumps, tap t5 3035). io_ft pilot failed kit_rtl (stale in_site, now fixed in p3r2).
+- hub m055 kits still in place (place_mode done).
