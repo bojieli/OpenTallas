@@ -51767,3 +51767,4 @@ FAILED [AUTOPILOT 992b8a45f39a] 2026-11-13 06:07:40 PST AUTOPILOT -> KIT-WAVE-5:
   - DEFAULT: the KV event goes as one READY without hub_C R-CAP: SD grow + sys_c/hub_C R-REACH-2 + hubs 3-way + pv 4/2-way + reach fix 1,2,4 + GUARD-REG.
     - hub_C split + pv_fin cores + R1 follow as a second KV event when the cores close.
     - KV-HUBC-REACH is writing the hub_C split form now and running a per-module yosys stat (<= 60 min).
+- 2026-11-13 06:14 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-94): 1 event(s): hd_ctl_n route FAIL FLOW (flow-error: [ERROR DRT-0255] Maze Route cannot find path of net u_ft_ctrl_ft_s0/net26991 in worker of routeBox ( 38760 214320 ) ( 42750 218310 ).) job 992b8a45f39a
