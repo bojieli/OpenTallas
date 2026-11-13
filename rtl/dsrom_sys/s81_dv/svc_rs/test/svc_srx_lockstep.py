@@ -45,6 +45,10 @@ def build(a, srx, mut, nkv, np_):
     ns = a.nstage if srx else 2
     band = a.band if srx else 0
     tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + (f"_band{band}m{a.bandm}t{a.bandt}" if band else "") + ("_hc" if a.hcore else "")
+    if a.analyze_only:
+        if not (a.work / f"run_{tag}.log").is_file():
+            sys.exit(f"analysis log missing: run_{tag}.log")
+        return tag
     if (a.work / f"build_{tag}.rc").is_file() and (a.work / f"build_{tag}.rc").read_text().strip() == "0":
         return tag
     prm = dict(P, NSTAGE=ns, SRX=srx, SRXMUT=mut, NJOBMAX=len(TS), NKV=nkv, NP=np_, NSC=1, NPV=1, MAXCYC=400000)
@@ -89,7 +93,8 @@ def run(a, tag):
     dk = ["docker", "run", "--rm", "--memory", "8g", "--cpus", "1", "-u", f"{os.getuid()}:{os.getgid()}",
           "-v", f"{a.work}:/work/out", "-e", "HOME=/work/out", "-e", "CCACHE_DISABLE=1", "--entrypoint", "bash", a.image, "-c",
           f"timeout 900 /work/out/obj_{tag}/Vtb +dir=/work/out/vec > /work/out/run_{tag}.log 2>&1"]
-    subprocess.run(dk, check=False)
+    if not a.analyze_only:
+        subprocess.run(dk, check=False)
     ev = {"BSC": [], "BPV": [], "IJ": [], "IQ": [], "IKV": [], "IP": []}
     summ = {}
     for ln in log.read_text().splitlines():
@@ -131,13 +136,28 @@ def main():
     ap.add_argument("--hcore", action="store_true", help="build reference and DUT with the S81 H8 RT2 head-core tile (OT_ATTN_HCORE ...)")
     ap.add_argument("--bandm", type=int, default=0, help="BANDM: 1 = merge inputs registered in the band (P.V +1 more)")
     ap.add_argument("--image", default="verilator/verilator:v5.032")
+    ap.add_argument("--analyze-only", action="store_true", help="read existing build/run logs without executing tools; requires a fresh --report")
+    ap.add_argument("--report", type=Path, help="new report filename under --work (default lockstep.json)")
     a = ap.parse_args()
     a.work = a.work.resolve(); a.work.mkdir(parents=True, exist_ok=True)
     if a.band and a.dut != "s81":
         sys.exit("--band needs --dut s81")
     n = a.srx + ((a.band + 1 + a.bandt) if a.band else 0)     # scores +n (band: capture stages + output register)
-    npv = 2 * n + (a.bandm if a.band else 0)       # P.V: p feed +n, then +n (+1 with registered merge inputs)
-    nkv, np_ = vectors(a.work / "vec", a.seed)
+    engine_source = a.root / "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv"
+    fixed_rt2_calendar = a.hcore and a.dut == "s81" and "ot_s81_svc_rt2_load_calendar u_calendar" in engine_source.read_text()
+    # The known phase-zero native load calendar rounds an odd feedback shift
+    # to its next II=2 slot. The tile then adds n and the optional merge stage.
+    p_feed_shift = 2 * ((n + 1) // 2) if fixed_rt2_calendar else n
+    npv = n + p_feed_shift + (a.bandm if a.band else 0)
+    report = a.work / (a.report or Path("lockstep.json"))
+    if a.analyze_only and (a.report is None or report.exists()):
+        sys.exit("--analyze-only requires a fresh --report; existing verdicts are preserved")
+    if a.analyze_only:
+        nkv = sum(TS)
+        rows_per_word = P["TD"] // P["H"]
+        np_ = sum((t + rows_per_word - 1) // rows_per_word for t in TS)
+    else:
+        nkv, np_ = vectors(a.work / "vec", a.seed)
     from concurrent.futures import ThreadPoolExecutor
     muts = [0] + [int(m) for m in a.mut.split(",") if m]
     with ThreadPoolExecutor(len(muts) + 1) as ex:
@@ -146,8 +166,9 @@ def main():
     ref, rs = run(a, ref_tag)
     rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, band=a.band, bandm=a.bandm, bandt=a.bandt, hcore=a.hcore, shift=n, shift_pv=npv, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
                ref=dict(tag=ref_tag, summary=rs, beats_sc=len(ref["BSC"]), beats_pv=len(ref["BPV"])), runs={})
-    engine_source = a.root / "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv"
-    fixed_rt2_calendar = a.hcore and a.dut == "s81" and "ot_s81_svc_rt2_load_calendar u_calendar" in engine_source.read_text()
+    rec["analyze_only"] = a.analyze_only
+    rec["p_feed_shift"] = p_feed_shift
+    rec["qualification_scope"] = "engine component only; production programme and physical adoption are separate"
     rec["native_load_calendar"] = dict(ii_cycles=2, first_load_phase=0, replay_phase=1, static=True) if fixed_rt2_calendar else None
     rec["summary_fault_counter_kind"] = "expected golden flags, not observed DUT protocol faults"
     with ThreadPoolExecutor(len(muts)) as ex:
@@ -167,7 +188,7 @@ def main():
     # checker clean, every negative control breaks the data; strict per-beat lock-step (lockstep) is reported, not
     # required: with NSTAGE 2 back-to-back jobs the staging double buffer couples the front end to the later P.V drain
     rec["status"] = "PASS" if (m0r["data_equal"] and m0r["first_job_shift_ok"] and caught and rec["ref"]["beats_pv"] > 0) else "FAIL"
-    (a.work / "lockstep.json").write_text(json.dumps(rec, indent=1) + "\n")
+    report.write_text(json.dumps(rec, indent=1) + "\n")
     print("status", rec["status"], "data_equal", m0r["data_equal"], "strict_lockstep", m0r["lockstep"], "end_cycle",
           m0r["end_cycle"], "mutants_caught", caught,
           "sc/pv beats", rec["ref"]["beats_sc"], rec["ref"]["beats_pv"])

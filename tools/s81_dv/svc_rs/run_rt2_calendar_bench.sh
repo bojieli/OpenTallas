@@ -8,6 +8,9 @@ mkdir -p "$O"
     rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv \
     rtl/hdc/v41x/ot_s81c_attn_h8_rt2.sv \
     rtl/dsrom_sys/s81_dv/svc_rs/tb_svc_rt2_load_calendar.sv >"$O/build.log" 2>&1
-"$O/obj/Vtb_svc_rt2_load_calendar" >"$O/run.log" 2>&1
-cat "$O/run.log"
-grep -q '^RT2_CALENDAR PASS:' "$O/run.log"
+for requested_origin in 0 1; do
+    "$O/obj/Vtb_svc_rt2_load_calendar" +requested_origin=$requested_origin >"$O/run_r${requested_origin}.log" 2>&1
+    cat "$O/run_r${requested_origin}.log"
+    grep -q '^RT2_CALENDAR PASS:' "$O/run_r${requested_origin}.log"
+done
+cp "$O/run_r0.log" "$O/run.log"

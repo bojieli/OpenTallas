@@ -1,0 +1,21 @@
+RT2_ROUND request=1 accepted_origin=2 phase=0 II=2
+RT2_ACCEPT cycle=2 packet=0 slot=1
+RT2_ACCEPT cycle=4 packet=1 slot=1
+RT2_ACCEPT cycle=6 packet=2 slot=1
+RT2_ACCEPT cycle=8 packet=3 slot=1
+RT2_ACCEPT cycle=10 packet=4 slot=1
+RT2_ACCEPT cycle=12 packet=5 slot=1
+RT2_ACCEPT cycle=14 packet=6 slot=1
+RT2_ACCEPT cycle=16 packet=7 slot=1
+RT2_ACCEPT cycle=18 packet=8 slot=1
+RT2_ACCEPT cycle=20 packet=9 slot=1
+RT2_ACCEPT cycle=22 packet=10 slot=1
+RT2_ACCEPT cycle=24 packet=11 slot=1
+RT2_CALENDAR nominal offered=12 Q_outputs=8 P_outputs=8 checked_words=768 Q_errors=0 P_errors=0 metadata_errors=0 af=0 II=2 ii_errors=0 reserved_inputs=0 phase_errors=0 active_cycles=40
+RT2_CALENDAR malformed offered=12 Q_outputs=8 P_outputs=4 checked_words=768 Q_errors=0 P_errors=128 metadata_errors=0 af=1 reserved_inputs=6
+RT2_CALENDAR timing first_output=2 last_output=25 first_P=18 last_P=25 errors=0
+RT2_CALENDAR PASS: static phase0 programme lossless; malformed cadence loses P words and raises af
+- rtl/dsrom_sys/s81_dv/svc_rs/tb_svc_rt2_load_calendar.sv:180: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 44ns; walltime 0.000 s; speed 341.636 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB

@@ -1,0 +1,4 @@
+ENGINE COMPONENT ONLY; no production/physical adoption.
+Guarded native reference and PAIR5 DUT: all419score and80PVpayloads exact; both controls caught. Nominal finishes1336cycles, reference1276. First-job +9score/+20PVcycles. Old lockstep.json remains FAIL because it expected+19PV; new lockstep_priced_ii2.json reanalyzes identical logs with explicit source-slot rounding. NoRTL/simulation rerun for repricing.
+Actual expander af checked independently from compiled archives throughcycle1250:1252samples pervariant, all4tileexpanders observed,0nonzero samples. Scope ends at1250, not full1336. Original archiveprobe livesE2native_rt2_calendar/afcheck.
+Newactualstaticproducer is separately protocol-tested and source programme integration is still pending. Model sensitivity is UNADOPTED; currentPOR unchanged.

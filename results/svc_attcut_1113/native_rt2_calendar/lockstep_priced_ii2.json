@@ -1,0 +1,420 @@
+{
+ "tool": "svc_srx_lockstep.py",
+ "dut": "s81",
+ "srx": 1,
+ "band": 2,
+ "bandm": 1,
+ "bandt": 5,
+ "hcore": true,
+ "shift": 9,
+ "shift_pv": 20,
+ "nstage": 2,
+ "srxt": "",
+ "seed": 11,
+ "params": {
+  "H": 8,
+  "D": 32,
+  "TD": 32,
+  "NL": 4,
+  "TROWS": 640,
+  "PWORDS": 2,
+  "ILV": 1,
+  "REPL": 2,
+  "NSTAGE": 2,
+  "FPL": 4,
+  "FML": 6,
+  "TILE_S": 1,
+  "NARROW": 1,
+  "MFAN": 1,
+  "F12": 1,
+  "FPLX": 5,
+  "TRX": 1,
+  "SC_CRED": 0,
+  "PV_CRED": 0,
+  "NBANKP": 0
+ },
+ "T": [
+  37,
+  128,
+  1,
+  200,
+  64,
+  333,
+  96,
+  640,
+  5,
+  160
+ ],
+ "ref": {
+  "tag": "s81_srx0_m0_hc",
+  "summary": {
+   "V41XATTN": {
+    "jobs": "10",
+    "sc_checked": "13312",
+    "sc_errors": "13312",
+    "pv_checked": "2560",
+    "pv_errors": "2560",
+    "faults": "0",
+    "lat_score_max": "21",
+    "lat_score_min": "21",
+    "lat_pv_max": "101",
+    "cycles": "1276",
+    "timeout": "0"
+   },
+   "V41XSETCHK": {
+    "loads": "290",
+    "reads": "160576",
+    "errors": "0"
+   }
+  },
+  "beats_sc": 419,
+  "beats_pv": 80
+ },
+ "runs": {
+  "s81_srx1_m0_band2m1t5_hc": {
+   "srxmut": 0,
+   "lockstep": false,
+   "data_equal": true,
+   "first_job_shift_ok": true,
+   "end_cycle": [
+    1276,
+    1336
+   ],
+   "setcheck_errors": "0",
+   "summary": {
+    "V41XATTN": {
+     "jobs": "10",
+     "sc_checked": "13312",
+     "sc_errors": "13312",
+     "pv_checked": "2560",
+     "pv_errors": "2560",
+     "faults": "0",
+     "lat_score_max": "30",
+     "lat_score_min": "30",
+     "lat_pv_max": "111",
+     "cycles": "1336",
+     "timeout": "0"
+    },
+    "V41XSETCHK": {
+     "loads": "290",
+     "reads": "160576",
+     "errors": "0"
+    }
+   },
+   "compare": {
+    "IJ": {
+     "n_ref": 10,
+     "n_dut": 10,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      10,
+      20,
+      30,
+      40
+     ]
+    },
+    "IQ": {
+     "n_ref": 80,
+     "n_dut": 80,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 16,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      8,
+      10,
+      20,
+      30,
+      40
+     ]
+    },
+    "IKV": {
+     "n_ref": 419,
+     "n_dut": 419,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      10,
+      20,
+      30,
+      40
+     ]
+    },
+    "IP": {
+     "n_ref": 210,
+     "n_dut": 210,
+     "shift": 9,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": true,
+     "first_shift": 9,
+     "deltas": [
+      9,
+      10,
+      19,
+      20,
+      29,
+      30,
+      39,
+      40
+     ]
+    },
+    "BSC": {
+     "n_ref": 419,
+     "n_dut": 419,
+     "shift": 9,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": true,
+     "first_shift": 9,
+     "deltas": [
+      9,
+      19,
+      29,
+      39,
+      49
+     ]
+    },
+    "BPV": {
+     "n_ref": 80,
+     "n_dut": 80,
+     "shift": 20,
+     "ok": false,
+     "first_bad": 16,
+     "data_equal": true,
+     "first_shift": 20,
+     "deltas": [
+      20,
+      24,
+      30,
+      40,
+      50,
+      60
+     ]
+    }
+   }
+  },
+  "s81_srx1_m1_band2m1t5_hc": {
+   "srxmut": 1,
+   "lockstep": false,
+   "data_equal": false,
+   "first_job_shift_ok": false,
+   "end_cycle": null,
+   "setcheck_errors": null,
+   "summary": {},
+   "compare": {
+    "IJ": {
+     "n_ref": 10,
+     "n_dut": 3,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": false,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      30
+     ]
+    },
+    "IQ": {
+     "n_ref": 80,
+     "n_dut": 17,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 16,
+     "data_equal": false,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      30
+     ]
+    },
+    "IKV": {
+     "n_ref": 419,
+     "n_dut": 42,
+     "shift": 0,
+     "ok": false,
+     "first_bad": null,
+     "data_equal": false,
+     "first_shift": 0,
+     "deltas": [
+      0
+     ]
+    },
+    "IP": {
+     "n_ref": 210,
+     "n_dut": 5,
+     "shift": 9,
+     "ok": false,
+     "first_bad": 0,
+     "data_equal": false,
+     "first_shift": 30,
+     "deltas": [
+      30
+     ]
+    },
+    "BSC": {
+     "n_ref": 419,
+     "n_dut": 41,
+     "shift": 9,
+     "ok": false,
+     "first_bad": 0,
+     "data_equal": false,
+     "first_shift": 9,
+     "deltas": [
+      9
+     ]
+    },
+    "BPV": {
+     "n_ref": 80,
+     "n_dut": 0,
+     "shift": 20,
+     "ok": false,
+     "first_bad": null,
+     "data_equal": false,
+     "first_shift": null,
+     "deltas": []
+    }
+   }
+  },
+  "s81_srx1_m2_band2m1t5_hc": {
+   "srxmut": 2,
+   "lockstep": false,
+   "data_equal": false,
+   "first_job_shift_ok": false,
+   "end_cycle": [
+    1276,
+    1325
+   ],
+   "setcheck_errors": null,
+   "summary": {},
+   "compare": {
+    "IJ": {
+     "n_ref": 10,
+     "n_dut": 10,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      10,
+      20,
+      30,
+      40
+     ]
+    },
+    "IQ": {
+     "n_ref": 80,
+     "n_dut": 80,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 16,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      8,
+      10,
+      20,
+      30,
+      40
+     ]
+    },
+    "IKV": {
+     "n_ref": 419,
+     "n_dut": 419,
+     "shift": 0,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": true,
+     "first_shift": 0,
+     "deltas": [
+      0,
+      10,
+      20,
+      30,
+      40
+     ]
+    },
+    "IP": {
+     "n_ref": 210,
+     "n_dut": 210,
+     "shift": 9,
+     "ok": false,
+     "first_bad": 2,
+     "data_equal": true,
+     "first_shift": 9,
+     "deltas": [
+      9,
+      10,
+      19,
+      20,
+      29,
+      30,
+      39,
+      40
+     ]
+    },
+    "BSC": {
+     "n_ref": 419,
+     "n_dut": 419,
+     "shift": 9,
+     "ok": false,
+     "first_bad": 42,
+     "data_equal": true,
+     "first_shift": 9,
+     "deltas": [
+      9,
+      19,
+      29,
+      39,
+      49
+     ]
+    },
+    "BPV": {
+     "n_ref": 80,
+     "n_dut": 63,
+     "shift": 20,
+     "ok": false,
+     "first_bad": 0,
+     "data_equal": false,
+     "first_shift": 14,
+     "deltas": [
+      14,
+      24,
+      30,
+      40,
+      48,
+      50,
+      66,
+      190
+     ]
+    }
+   }
+  }
+ },
+ "analyze_only": true,
+ "p_feed_shift": 10,
+ "qualification_scope": "engine component only; production programme and physical adoption are separate",
+ "native_load_calendar": {
+  "ii_cycles": 2,
+  "first_load_phase": 0,
+  "replay_phase": 1,
+  "static": true
+ },
+ "summary_fault_counter_kind": "expected golden flags, not observed DUT protocol faults",
+ "status": "PASS"
+}

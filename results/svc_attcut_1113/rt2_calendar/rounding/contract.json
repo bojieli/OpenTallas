@@ -1,0 +1,30 @@
+{
+  "rule": "A(t,phi)=t+((phi-t) mod 2)",
+  "load_shift": "A(t+n,phi)-A(t,phi)",
+  "pv_shift": "n+load_shift+MREG",
+  "accepted_reference_special_case": "n+2*ceil(n/2)+1 for phase0 accepted reference and MREG1",
+  "measured_engine": {
+    "n": 9,
+    "score_shift": 9,
+    "pv_shift": 20
+  },
+  "small_mechanism": [
+    {
+      "requested_origin": 0,
+      "accepted_origin": 0,
+      "first_P": 16,
+      "last_P": 23,
+      "checked_words": 768,
+      "errors": 0
+    },
+    {
+      "requested_origin": 1,
+      "accepted_origin": 2,
+      "first_P": 18,
+      "last_P": 25,
+      "checked_words": 768,
+      "errors": 0
+    }
+  ],
+  "scope": "Other SRX values analytic only; no fabricated measured results; productioncompiler calibration remains pending."
+}

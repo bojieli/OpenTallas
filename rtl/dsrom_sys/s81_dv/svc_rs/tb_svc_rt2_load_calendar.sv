@@ -54,16 +54,18 @@ module tb_svc_rt2_load_calendar;
     integer metadata_errors [0:1];
     integer reserved_inputs [0:1];
     integer cycle=0, last_accept=-2, ii_errors=0, phase_errors=0;
+    integer requested_origin=0, accepted_origin=0;
     integer timing_errors=0, first_output=-1, last_output=-1, first_p_output=-1, last_p_output=-1;
     integer i,j,k,r,h,n,base;
 
     // Scoreboard samples the transport values on the receiving clock edge.
     // P output grp is an OLD RT2 index: 2*grp gives the first of four rows.
     task automatic observe(input integer which);
-        integer rr,hh,ww,row0;
+        integer rr,hh,ww,row0,relative_cycle;
         begin
+            relative_cycle=cycle-accepted_origin;
             if(which==0) begin
-                if(out_v[which] !== (((cycle<=14)&&(cycle%2==0)) || (cycle>=16&&cycle<=23)))
+                if(out_v[which] !== (((relative_cycle>=0)&&(relative_cycle<=14)&&(relative_cycle%2==0)) || (relative_cycle>=16&&relative_cycle<=23)))
                     timing_errors=timing_errors+1;
                 if(out_v[which]) begin
                     if(first_output<0) first_output=cycle;
@@ -71,8 +73,8 @@ module tb_svc_rt2_load_calendar;
                     if(out_mode[which]) begin
                         if(first_p_output<0) first_p_output=cycle;
                         last_p_output=cycle;
-                        if(cycle<16 || cycle>23 || out_grp[which] != 8'(2*(cycle-16))) timing_errors=timing_errors+1;
-                    end else if(cycle>14 || cycle%2!=0 || out_grp[which] != 8'(cycle/2)) timing_errors=timing_errors+1;
+                        if(relative_cycle<16 || relative_cycle>23 || out_grp[which] != 8'(2*(relative_cycle-16))) timing_errors=timing_errors+1;
+                    end else if(relative_cycle<0 || relative_cycle>14 || relative_cycle%2!=0 || out_grp[which] != 8'(relative_cycle/2)) timing_errors=timing_errors+1;
                 end
             end
             if(out_v[which]) begin
@@ -120,6 +122,13 @@ module tb_svc_rt2_load_calendar;
     integer p_errors [0:1];
     integer checked [0:1];
     initial begin
+        void'($value$plusargs("requested_origin=%d",requested_origin));
+        if(requested_origin<0) $fatal(1,"negative programme origin");
+        // Compile the programme once, before any active edge. Never wait for
+        // ready or inspect calendar state to decide a later issue cycle.
+        accepted_origin=requested_origin+(requested_origin%2);
+        last_accept=accepted_origin-2;
+        $display("RT2_ROUND request=%0d accepted_origin=%0d phase=0 II=2",requested_origin,accepted_origin);
         for(i=0;i<2;i=i+1) begin
             offered[i]=0;q_outputs[i]=0;p_outputs[i]=0;
             metadata_errors[i]=0;reserved_inputs[i]=0;
@@ -134,13 +143,13 @@ module tb_svc_rt2_load_calendar;
         // at cycles0..11, deliberately ignoring the reserved replay phase.
         for(i=0;i<40;i=i+1) begin
             for(j=0;j<2;j=j+1) begin
-                n=(j==0)?(i/2):i;
-                ld_v[j]=(n<12)&&((j==1)||(i%2==0));
+                n=(j==0)?((i-accepted_origin)/2):i;
+                ld_v[j]=(n>=0)&&(n<12)&&((j==1)||((i>=accepted_origin)&&((i-accepted_origin)%2==0)));
                 ld_mode[j]=(n>=8);
                 ld_w2v[j]=1;
                 ld_grp[j]=(n<8)?8'(n):8'((n-8)*2);
                 ld_bank[j]=(n<8)?3'(n%5):3'd3;
-                ld_w[j]=(n<12)?packet_word(n):1024'd0;
+                ld_w[j]=(n>=0&&n<12)?packet_word(n):1024'd0;
             end
             @(negedge clk);
         end
