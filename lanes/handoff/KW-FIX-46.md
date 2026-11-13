@@ -125,3 +125,9 @@ Owner of the kit-wave autopilot code: hub runtime kit_wave.py, ot-run admission,
 - Deploy only after ROOT-MERGE-60 lands it: stop the timer, back up kit_wave.py, swap, start the timer, as in /tmp/kw46_deploy_fr.sh.
 - Paired dry runs: /tmp/kw46_drytick.py uses private caches (COORD (d)).
 - Live kit_wave.py is still md5 b34e97d7404c (flowrepeat); flowrepeat is now in main.
+
+## 11-12 16:0x verdict-form LIVE
+- Live kit_wave.py md5 9036dc997ae4 = main 91a4101f1877 (backup kit_wave.py.bak-kw46-verdictform-1112).
+- NE_iorly a1, NW_iorly a1 and PHY_NC a4 are WAIT-VISUAL and in VISUAL-QUEUE.tsv.
+- s81 leaf t38 a6 stays under the class hold ot_s81sl_leaf__* and gets its WAIT-VISUAL when that hold lifts.
+- Nothing open in this lane beyond GEOM-VIS reviews and the DIE-HBM-101 phy_flip decision.
