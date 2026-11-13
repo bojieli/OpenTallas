@@ -1,4 +1,4 @@
-# REACH-FIX-2 lane handoff (updated 2026-11-12 15:2x PST, epyc9 clock 23:2x UTC)
+# REACH-FIX-2 lane handoff (updated 2026-11-12 16:1x PST)
 
 ## 1 Scope
 Owner of the deterministic reach tool tools/die_plan/reach_fix.py (owner 11-12 "reach resolved via fixed scripts"), run at
@@ -8,7 +8,7 @@ re-select, 6 landed window (+k cycles from a hops TSV). COORD classes: RESET-WAV
 INSERTION-BALANCE all dies (priority; proven on HEAD fix2 + KV vN in DIE-PROTO-2's die STA with die_clock ladder RC).
 
 ## 2 Worktree
-epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD 8f61cd7a19 (pushed, clean; + 8f61cd7a19 per-type reset.relay_um; + c81d837870 FAIL-LOUD, 082b2c63ca/b251146029 leafcell, bd0bf92f81 regeq --routed) =
+epyc7 /srv/opentallas-scratch2/claude/wt/reach-fix-1, branch claude/reach-fix-2-main-1112 HEAD e60e4fab8d (pushed, clean; + e60e4fab8d reset column mode + relay_rule slew_safe 130 um; + 8f61cd7a19 per-type reset.relay_um; + c81d837870 FAIL-LOUD, 082b2c63ca/b251146029 leafcell, bd0bf92f81 regeq --routed) =
 main d3f85cdf01 + 7 cherry-picked REACH-FIX-2 commits (5e19ca2647..72e2c1295a) + FIXED-CYCLES 54d2a1ec4b. READY posted 13:00
 (ROOT-MERGE-60) and 13:2x (adds 54d2a1ec4b). Old branch claude/reach-fix-1112 (370eac82bd) is superseded by it.
 Tests (epyc7 repo root, --basetemp under reach-fix-2/pyt): test_reach_fix (20) test_dieclock_routed test_die_clock*.py
@@ -16,7 +16,9 @@ test_taps* test_die_sta_related test_street_rule* test_schema -> 188 passed 8 sk
 Local edit copies: localhost scratchpad rf/ (reach_fix.py, test_reach_fix.py) = branch HEAD.
 
 ## 3 Running jobs
-None (rt_leg done 21:13 UTC; STA re-run in docker because epyc9 has no host sta/libs).
+RESET-SLEW sweep (python, nice): epyc4 rsw/sweep.py on KV dkv99/vN2h/plan_c.json (root_kv) and HEAD rp17 (root_head);
+epyc8 rsw on S81 plan_s81_r12ng/plan_rf_fc.json (root_s81). DONE: epyc9 rsw/qc.json (zz_c6b_fix), rsw/hbm.json (pEv4f).
+Measurement DONE: epyc9 reach-fix-2/rp17/rsl (meas2.tcl per-net slew, n/<kit>/net_<C>.txt, fit.py -> fit.json).
 ## 4 Scripts
 - scratch .../reach-fix-2/ on epyc4/8/9/intel1: rf2_run.sh TAG PLAN SRC [args] (check+tap table -> fix -> after);
   rf2_g0.sh TAG BASEPLAN DIEDIR SRC (G0 diff); rf_dc.sh TAG PLAN SRC (die_clock run + balance score; needs sta+libs:
@@ -70,6 +72,8 @@ HEAD fix2 landed 1237.93 -> 30.27 TT; KV vN 1031.15 -> 78.07 TT, KV contract 732
 19/19. Negative control: die_trial top.form htree breaks intra (HEAD 24,566 / KV 25,900 contract violations).
 
 ## 6 Next steps
+0. RESET-SLEW RESULT post (COORD 11-12): L_safe 130 um (fit.json); per-die sweep a/b counts + depth/release at 130/190/250/300;
+   types erroring in my overlay roots (pin tables) are excluded and listed. Column READY posted (e60e4fab8d).
 DONE: rp17 die clock gate (RESULT posted): epyc9 reach-fix-2/rp17 (pd/ = rp17 + sidecars, code/ = bd0bf92f81 tools + HEAD-95 physical,
 kit/ = rp17 die_trial kit, model/ best it3, routed/ best it4: 16.2/19.6 ps, landed 400.57/399.89 PASS, contract 0, gate BLOCKED(kits)
 = no signed type views; regions reg/proof_m = fix2 327 regions by part). Scripts rp17run.sh / rp17run3.sh, CHAIN.log.

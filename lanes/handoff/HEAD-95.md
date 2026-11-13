@@ -50,6 +50,12 @@ HEAD die owner (successor to HEAD-94). COORD 06:09 brief: west growth one pass (
 - rp18 items: wshim_rx reset.relay_um 300 after 8f61cd7a19 (train 15) + wshim_tx relay_um (rp17 build NOT SIGNED: 4 reset-relay slew pins, hops ~340 um; value asked of REACH-FIX-2); hd_lep0N clk_t4/t6/t7 windows 93/90/90 from it4 kitwin (needs 83/80/80 > 71/69/61).
 - Die STA view feed: post every signed HEAD view to REACH-FIX-2 (hd_ctl_n rp17 sent); post when measured pair count rises. FF hold all-pair diag -62.2 intra / -15.0 seam (watch).
 
+- rp18 pin/outline (GEOM-REVIEW 16:0x): wshim_tx 4 slew nets = in-band W-E reset hops (340 um) -> relay_um 300 still the fix; start_i/arst_n W-face y518 pin -> move into band (y 711-1009). wshim_rx: pins spread over empty lower 65%, 45 relays, 334 hop in empty space -> move pins into band, then re-check relay_um. Outline shrink to ~700x320 proposed to COORD (die floorplan call).
+
+- rp18 EVENT SHAPE ASK posted (sweep epyc4 head-95/sweep17, tool lanes/head-95-west-1112/outline_sweep.py): no shrink (pitch-locked); reset pass-through columns via reset.in_sites/parent_pins for wshim_tx/rx, eshim_tx/rx, turn_a/b; relay_um 300 wshim_tx; lep0N windows 93/90/90. Default build if no answer 30 min. Asked REACH-FIX-2 for a reset.column solver mode.
+
+- rp18a epyc4 head-95/pd/rp18a.json = rp17 + lep0N windows (it4 kitwin, 15 ports) + wshim_tx relay_um 300. HELD for REACH-FIX-2 reset column mode (asked; timebox ~2 h). Fallback lanes/head-95-west-1112/column_sites.py dry-run NOT adoptable (solver re-picks parents by depth). Main tree at 91a4101f1877.
+
 ## 4 Watchers
 - localhost background loop on ~/head95log/wshim_rx_p2_signoff.log. If this session ends, check by hand: verdict = signoff.py verdict pass_t10r_p2/signoff/signoff.json.
 Posting helper: localhost scratchpad h95/post.sh.
