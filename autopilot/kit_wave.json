@@ -23478,7 +23478,8 @@
         "hd_spn_wshim_rx@2",
         "hd_host_e@5",
         "hd_turn_a@4",
-        "hd_spn_wshim_rx@3"
+        "hd_spn_wshim_rx@3",
+        "hd_ctl_n@1"
       ],
       "pilot_max": 12,
       "plan_note": "CODEX 11-01 approved CTL-transport822v2 + LEP7d991 view-only event. HEAD owner actual LEP exportPASS31files, +7same-cycle privateQ/+0cycles, 4exactSIGNED2141pin/777.6x492.48LEPviews. Cohort23staged inclheldhd_tile;22eligible. NativeCTLproper/SerDes/tile remain their owned scopes. Existing057jobs/source untouched. | CODEX1131 tooling-only703 snapshot: exact unchanged external prepared_v3b plan/sidecar; actual LEP export32files+GEN+GEN_LINT0 PASS, parameterized signed-child BB363. Old source/jobs immutable.",
@@ -23561,7 +23562,7 @@
         "hd_host_n@7": "l48rc DH58-RF2 CONSERVATIVE (KW-FIX-4 20:5x): plan block unchanged vs l48rf, so the l48rf ENQUEUED-FAIL record is the key; relaunch on l48rc src fl-head4 59e3c6a6246 + plan prepared_l48rc",
         "hd_spn_eshim_tx@9": "l48rc DH58-RF2 CONSERVATIVE (KW-FIX-4 20:5x): plan block unchanged vs l48rf, so the l48rf ENQUEUED-FAIL record is the key; relaunch on l48rc src fl-head4 59e3c6a6246 + plan prepared_l48rc",
         "hd_ctl_e@9": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
-        "hd_ctl_n@1": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
+        "hd_ctl_n@1": "APPROVED FLOW CLASS FIX HEAD-ROUTE-1/R-FLOW6: old generated M8-grant config lacked ENABLE_RESISTANCE_AWARE=0 and DRT-0255; frozen generator now emits RA0 for M8 (actual newturn_a proof confirms). Regenerate ONE fresh kit; no RTL/outline/macros/clock/plan/src switch. Historical sameform ISSUES-ACCEPT checked; exact route_hold requires fresh actual place-image review before route. Preserve originalfailure992b8a45f39a. CODEX11-13.",
         "hd_host_n@8": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
         "hd_lep0N@4": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",
         "hd_spn_eshim_rx@2": "DIE-HEAD-60 03:39 batch (b), l48sd on main-based src, COORD 03:41",

@@ -3614,3 +3614,5 @@ CODEX: 2026-11-13 14:27 PST GUNIT parent DRT-0073 pin-access class cleared by ex
 CODEX: 2026-11-13 14:30 PST token: actual ARstatus producer fix3e9aa6b25c READY (real beforeFAIL/afterPASS5events,0cycles); guardedreceipt hook9044558f71; KVPHY/QCSTM/SVCPAIR5 incremental models delivered, no adoption/globalqualification.
 
 CODEX: 2026-11-13 authority correction: OWNER11-12 supersedeswatchermode; existing ROOT-MERGE-61 now integrating gatedsource fixes. HBMpark/POR-srcfreeze retained.
+
+CODEX: 2026-11-13 14:47 PST HEADrestoredrows pastGEN; exactbadhost_e routeheld, acceptedctl_n getsoneapprovedRA0regeneration plusfreshimagehold. DSDVactualparentSYNTH220826std/11macro fanout0over64; asyncLECpreserved, measuredpreflight/PLACEcontinuing privately.
