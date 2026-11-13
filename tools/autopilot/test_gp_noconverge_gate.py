@@ -108,9 +108,15 @@ def test_stopped_run_still_carries_the_classifier_evidence(tmp_path):
 def test_gen_installs_the_gate_once(tmp_path):
     sys.path.insert(0, str(HERE.parent / "die_plan"))
     import gen_phys
-    assert gen_phys.install_gp_noconverge_gate(tmp_path, ["export PLACE_DENSITY = 0.5"]) == [
+    got = gen_phys.install_gp_noconverge_gate(tmp_path, ["export PLACE_DENSITY = 0.5"])
+    assert got[:2] == [
         "# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
         "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"]
+    # R-FLOW 11-13 (RULEBOOK-1113): the same hook carries the place fanout limit of an R-FLOW kit class
+    if not os.environ.get("OT_PLACE_MAX_FANOUT") and os.environ.get("OT_RFLOW") != "1":
+        assert got[2:] == []
+        if os.environ.get("OT_RFLOW") != "0":
+            assert "export OT_PLACE_MAX_FANOUT = 32" in gen_phys.install_gp_noconverge_gate(tmp_path, [], "s81")
     assert (tmp_path / "gp_noconverge_gate.tcl").is_file() and (tmp_path / "gp_noconverge.py").is_file()
     other = tmp_path / "o"; other.mkdir()
     assert gen_phys.install_gp_noconverge_gate(other, ["export PRE_RESIZE_TCL = /work/mine.tcl"]) == []

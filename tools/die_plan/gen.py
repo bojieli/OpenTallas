@@ -183,13 +183,14 @@ def main(argv=None):
                          "repair with CORNERS=bc and this hold margin); TT setup is judged by signoff.py")
     a3.add_argument("--slew-margin", type=float, default=None, metavar="PCT",
                     help="export SLEW_MARGIN (repair_design margin, %% of the liberty max_transition; ELEM-S81 "
-                         "station405: 50 fits the routed ASAP7 RCX, the setRC estimate is ~1.8x optimistic in slew)")
-    a3.add_argument("--cap-margin", type=float, default=None, metavar="PCT", help="export CAP_MARGIN (e.g. 20)")
+                         "station405: 50 fits the routed ASAP7 RCX, the setRC estimate is ~1.8x optimistic in slew; "
+                         "default: R-FLOW 50, gen_phys.RFLOW)")
+    a3.add_argument("--cap-margin", type=float, default=None, metavar="PCT", help="export CAP_MARGIN (default: R-FLOW 20)")
     a3.add_argument("--skip-kit-ir", action="store_true",
                     help="clear PWR/GND_NETS_VOLTAGES: skip ORFS 6_report per-kit PDNSim IR (IR NOT RUN; TRIAL IR required)")
     a3.add_argument("--max-wire-um", type=float, default=None, metavar="UM",
                     help="post-GRT repair_design -max_wire_length UM (kit grt_maxwire.tcl as PRE_GLOBAL_ROUTE_TCL; "
-                         "repeater pitch so routed M2/M3 segments keep max slew; default off)")
+                         "repeater pitch so routed M2/M3 segments keep max slew; default: R-FLOW 120)")
     a3.add_argument("--master-slice", metavar="DIR",
                     help="METHODOLOGY 12.7c: master-plan slices DIR/<type>.json (opt-in; required once the plan sets "
                          "master_plan.required or OT_MASTER_PLAN_REQUIRED=1)")
