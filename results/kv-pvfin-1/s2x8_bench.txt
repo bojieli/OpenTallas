@@ -1,29 +1,37 @@
 SIM Verilator 5.050 2026-07-01 rev v5.050
-COVER healthy 165 inj1..10 19 11 12 15 10 16 9 21 8 13 edges 77227 valid_beats 5885 payload_edges 59253
-PVFIN_S2X8 PASS mut=0 skew=1 seed=-229780165 shift=0
-COVER healthy 175 inj1..10 16 16 9 11 17 13 12 8 6 17 edges 71162 valid_beats 5871 payload_edges 48877
-PVFIN_S2X8 PASS mut=0 skew=1 seed=-1906021229 shift=0
-COVER healthy 184 inj1..10 17 15 13 12 13 12 7 8 7 12 edges 74611 valid_beats 6183 payload_edges 51985
-PVFIN_S2X8 PASS mut=0 skew=1 seed=1271892754 shift=0
-COVER healthy 172 inj1..10 21 9 7 15 9 13 16 13 14 11 edges 80781 valid_beats 5873 payload_edges 59605
-PVFIN_S2X8 PASS mut=0 skew=2 seed=701902452 shift=0
-COVER healthy 168 inj1..10 11 12 18 16 12 12 10 11 18 12 edges 73439 valid_beats 5883 payload_edges 50549
-PVFIN_S2X8 PASS mut=0 skew=2 seed=1883363872 shift=0
-COVER healthy 169 inj1..10 12 11 18 15 12 11 10 11 18 13 edges 73990 valid_beats 5920 payload_edges 49007
-PVFIN_S2X8 PASS mut=0 skew=2 seed=654665112 shift=0
-COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 945 payload_edges 10424
-PVFIN_S2X8 FAIL mut=0 skew=1 seed=-1952898006 shift=1 errs=1079
-NEGCTRL_CAUGHT shift=1
+COVER healthy 165 inj1..10 19 11 12 15 10 16 9 21 8 13 edges 77227 valid_beats 5882 payload_edges 59376
+PVFIN_S2X8 PASS mut=0 skew=1 in_stage=1 seed=-229780165 shift=1
+COVER healthy 175 inj1..10 16 16 9 11 17 13 12 8 6 17 edges 71162 valid_beats 5868 payload_edges 48996
+PVFIN_S2X8 PASS mut=0 skew=1 in_stage=1 seed=-1906021229 shift=1
+COVER healthy 184 inj1..10 17 15 13 12 13 12 7 8 7 12 edges 74611 valid_beats 6179 payload_edges 52094
+PVFIN_S2X8 PASS mut=0 skew=1 in_stage=1 seed=1271892754 shift=1
+COVER healthy 172 inj1..10 21 9 7 15 9 13 16 13 14 11 edges 80781 valid_beats 5868 payload_edges 59719
+PVFIN_S2X8 PASS mut=0 skew=2 in_stage=1 seed=701902452 shift=1
+COVER healthy 168 inj1..10 11 12 18 16 12 12 10 11 18 12 edges 73439 valid_beats 5880 payload_edges 50662
+PVFIN_S2X8 PASS mut=0 skew=2 in_stage=1 seed=1883363872 shift=1
+COVER healthy 169 inj1..10 12 11 18 15 12 11 10 11 18 13 edges 73990 valid_beats 5916 payload_edges 49119
+PVFIN_S2X8 PASS mut=0 skew=2 in_stage=1 seed=654665112 shift=1
 COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 945 payload_edges 10425
-PVFIN_S2X8 FAIL mut=1 skew=1 seed=-1952898006 shift=0 errs=89
+PVFIN_S2X8 FAIL mut=0 skew=1 in_stage=1 seed=-1952898006 shift=0 errs=1037
+NEGCTRL_CAUGHT shift=0
+COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 944 payload_edges 7258
+PVFIN_S2X8 FAIL mut=0 skew=1 in_stage=1 seed=-1952898006 shift=2 errs=1047
+NEGCTRL_CAUGHT shift=2
+COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 944 payload_edges 10456
+PVFIN_S2X8 FAIL mut=1 skew=1 in_stage=1 seed=-1952898006 shift=1 errs=89
 MUTANT_CAUGHT mut=1
-COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 945 payload_edges 10425
-PVFIN_S2X8 FAIL mut=2 skew=1 seed=-1952898006 shift=0 errs=3005
+COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 944 payload_edges 10456
+PVFIN_S2X8 FAIL mut=2 skew=1 in_stage=1 seed=-1952898006 shift=1 errs=3004
 MUTANT_CAUGHT mut=2
-COVER healthy 26 inj1..10 0 2 1 2 2 6 3 2 5 1 edges 15981 valid_beats 1245 payload_edges 10278
-PVFIN_S2X8 FAIL mut=3 skew=1 seed=-546310093 shift=0 errs=9325
+COVER healthy 26 inj1..10 0 2 1 2 2 6 3 2 5 1 edges 15981 valid_beats 1243 payload_edges 10307
+PVFIN_S2X8 FAIL mut=3 skew=1 in_stage=1 seed=-546310093 shift=1 errs=9199
 MUTANT_CAUGHT mut=3
-COVER healthy 13 inj1..10 2 0 2 1 2 1 2 3 1 2 edges 8103 valid_beats 481 payload_edges 4007
-PVFIN_S2X8 FAIL mut=0 skew=1 seed=-1214696331 shift=0 errs=1533
+COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 944 payload_edges 10454
+PVFIN_S2X8 FAIL mut=0 skew=1 in_stage=1 seed=-1952898006 shift=1 errs=2997
+MUTANT_CAUGHT rowshort
+COVER healthy 175 inj1..10 16 16 9 11 17 13 12 8 6 17 edges 71162 valid_beats 5871 payload_edges 48877
+PVFIN_S2X8 PASS mut=0 skew=1 in_stage=0 seed=-1906021229 shift=0
+COVER healthy 13 inj1..10 2 0 2 1 2 1 2 3 1 2 edges 8103 valid_beats 480 payload_edges 4022
+PVFIN_S2X8 FAIL mut=0 skew=1 in_stage=1 seed=-1214696331 shift=1 errs=1470
 MUTANT_CAUGHT laneswap
-PVFIN_S2X8_KIT PASS lockstep vs qkd_pv_fin_s SKEW 1+2 x 3 seeds x 300 cmds, 0 cycles; negatives shift1 mut1-3 laneswap caught
+PVFIN_S2X8_KIT PASS lockstep vs qkd_pv_fin_s SKEW 1+2 x 3 seeds x 300 cmds, IN_STAGE 1 (declared +1 cycle) + IN_STAGE 0 (0 cycles); negatives shift0 shift2 mut1-3 rowshort laneswap caught

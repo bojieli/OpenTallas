@@ -14,7 +14,8 @@
   "MUL_LAT": 6,
   "SKEW": 1,
   "MUT": 0,
-  "NL": 8
+  "NL": 8,
+  "IN_STAGE": 1
  },
  "clock_port": "ck",
  "reset_ports": [
@@ -69,7 +70,7 @@
   "io_hold_margin_ns": 0.03
  },
  "recipe": 3,
- "purpose": "KV-PVFIN-1 2026-11-13 (R-CAP-3.3, DIE-KV-100 06:13 ASK, kv3_hub_C split): ONE lane slice of the PV final join qkd_pv_fin_s: 8 of its 16 fp32 lanes (256-b beats), the whole static-calendar control replicated per slice; two instances (pvfin_lo lanes 0-7, pvfin_hi lanes 8-15) replace the 273k-cell soft qkd_pv_fin_s in kv3_hub_C (drop-in pair qkd_pv_fin_s2x8). Faces per the hub_C split plan (KV-HUBC-REACH gen_pvfin_pins.py): W = operand inputs p0 / rz / p1, E = out / fault / control / ck / rst_n, N / S free (the two slices abut N-S). 0 added cycles: every input registered at the pin, every output a flop, beat b = PRODUCT_AGE + 1 + b as qkd_pv_fin_s.",
+ "purpose": "KV-PVFIN-1 2026-11-13 (R-CAP-3.3, DIE-KV-100 06:13 ASK, kv3_hub_C split): ONE lane slice of the PV final join qkd_pv_fin_s: 8 of its 16 fp32 lanes (256-b beats), the whole static-calendar control replicated per slice; two instances (pvfin_lo lanes 0-7, pvfin_hi lanes 8-15) replace the 273k-cell soft qkd_pv_fin_s in kv3_hub_C (drop-in pair qkd_pv_fin_s2x8). Faces per the hub_C split plan (KV-HUBC-REACH gen_pvfin_pins.py): W = operand inputs p0 / rz / p1, E = out / fault / control / ck / rst_n, N / S free (the two slices abut N-S). +1 added cycle (declared, results/kv-pvfin-1/latency_rows.json): every input lands in a pin flop (stage i) ahead of the pin registers of qkd_pv_fin_s, every output a flop, beat b = PRODUCT_AGE + 2 + b (qkd_pv_fin_s: + 1 + b).",
  "job": {
   "owner": "Claude:KV-PVFIN-1",
   "branch": "claude/kv-pvfin-1-core-1113",
@@ -104,7 +105,8 @@
    "rtl"
   ],
   "views_to": "physical/ref_tile/qkd_pv_fin_s8/views",
-  "record_to": "results/rtl/ref_tile/qkd_pv_fin_s8"
+  "record_to": "results/rtl/ref_tile/qkd_pv_fin_s8",
+  "cycles_added": 1
  },
  "pin_regs": {
   "enable": false,
@@ -123,7 +125,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "KV-PVFIN-1 11-13: new core (lane slice of qkd_pv_fin_s). The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed post-place setup -448 ps / CTS -381 ps on out_epoch[3] and ~20k endpoints: the calendar slots were 16-bit window compares of age + 1 against adder-derived ages, ANDed into the fault check, the state enables and the 16,384 sbuf enables, and the multiplier operands came through a 32:1 read mux. R-RTL-5 (1)+(2), 0 cycles: calendar decoded at the pin, slots are flag registers (set/clear by equality), beat indices are 5-bit counters, the sbuf read and head select are prefetched one edge early into operand registers with a write-through bypass. Outline 207.36 x 207.36 (R-CAP-2: ~18k um2 std at synth / 41.2k um2 core = ~0.44; the planned 190.08 frame would sit at ~0.53).",
+ "structural_change": "KV-PVFIN-1 11-13: new core (lane slice of qkd_pv_fin_s). The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed post-place setup -448 ps / CTS -381 ps on out_epoch[3] and ~20k endpoints: the calendar slots were 16-bit window compares of age + 1 against adder-derived ages, ANDed into the fault check, the state enables and the 16,384 sbuf enables, and the multiplier operands came through a 32:1 read mux. R-RTL-5 (1)+(2)+(3): calendar decoded flop to flop behind a +1 input stage (s8c: the raw-pin decode sat behind the 487 ps link-budget input delay, post-CTS -304 ps at cq_bad / cq_em), out_beat / out_epoch enabled without the fault cone, sbuf a flat vector (s8a: an inferred memory moved the 32:1 read mux behind the address flop, -480 ps), slots are flag registers (set/clear by equality), beat indices are 5-bit counters, the sbuf read and head select are prefetched one edge early into operand registers with a write-through bypass. Outline 207.36 x 207.36 (R-CAP-2: ~18k um2 std at synth / 41.2k um2 core = ~0.44; the planned 190.08 frame would sit at ~0.53).",
  "pin_ranges": {
   "p0_valid": [
    4.0,

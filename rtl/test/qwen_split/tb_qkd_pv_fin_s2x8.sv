@@ -9,13 +9,15 @@
 //   5 start while active 6 unmeetable calendar  7 non-finite operand in ONE slice's lanes (lo or hi only)
 //   8 multiplier overflow in one slice's lanes  9 warm reset mid-command  10 reciprocal epoch wrong
 // After a fault both designs are dead until reset: the bench resets (warm) and goes on.
-// Checks (every posedge, after it settles): out_valid and fault equal; out_beat and out_epoch equal while no fault was
-// seen since the last reset, out_data equal while no fault was seen since the last product beat (out_data has no reset in
-// either design), and all three on every out_valid beat.  +SHIFT=1 compares against gold one edge late (a
-// wrongly declared +1 cycle) and must FAIL; MUT 1..3 (in the slices) and -DOT_PVFIN_S2X8_MUTANT_LANESWAP must FAIL.
+// Checks (every posedge, after it settles, DUT at edge t vs gold at edge t - 1: the declared +1 cycle): out_valid and
+// fault equal; out_beat and out_epoch equal while no fault was seen since the last reset, out_data equal while no fault
+// was seen since the last product beat (out_data has no reset in either design), and all three on every out_valid beat.
+// +SHIFT=0 / +SHIFT=2 (a wrongly declared 0 / +2 cycles) must FAIL; MUT 1..3 (in the slices) and
+// -DOT_PVFIN_S2X8_MUTANT_LANESWAP must FAIL.
 module tb_qkd_pv_fin_s2x8;
  parameter integer MUT=0;
  parameter integer SKEW=1;
+ parameter integer IN_STAGE=1;
  reg ck=0,rst_n=0;always #1 ck=~ck;
  reg start=0;reg [15:0] epoch=0;reg [47:0] cal=0;
  reg p0v=0,p1v=0,rv=0;reg [4:0] p0b=0,p1b=0;reg [15:0] p0e=0,p1e=0,rep=0;reg [511:0] p0d=0,p1d=0;reg [127:0] rz=0;
@@ -23,29 +25,37 @@ module tb_qkd_pv_fin_s2x8;
  qkd_pv_fin_s #(.SKEW(SKEW),.MUT(0)) u_gold(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
   .p0_valid(p0v),.p0_beat(p0b),.p0_epoch(p0e),.p0_data(p0d),.p1_valid(p1v),.p1_beat(p1b),.p1_epoch(p1e),.p1_data(p1d),
   .rz_valid(rv),.rz_epoch(rep),.rz(rz),.out_valid(gv),.out_beat(gb),.out_epoch(ge),.out_data(gd),.fault(gf));
- qkd_pv_fin_s2x8 #(.SKEW(SKEW),.MUT(MUT)) u_dut(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
+ qkd_pv_fin_s2x8 #(.SKEW(SKEW),.MUT(MUT),.IN_STAGE(IN_STAGE)) u_dut(.ck(ck),.rst_n(rst_n),.start(start),.epoch(epoch),.cal(cal),
   .p0_valid(p0v),.p0_beat(p0b),.p0_epoch(p0e),.p0_data(p0d),.p1_valid(p1v),.p1_beat(p1b),.p1_epoch(p1e),.p1_data(p1d),
   .rz_valid(rv),.rz_epoch(rep),.rz(rz),.out_valid(dv),.out_beat(db),.out_epoch(de),.out_data(dd),.fault(df));
  // ---------------- checker ----------------
- integer SHIFT=0,errs=0,edges=0,vbeats=0,pay_edges=0,seenf=0,dstale=0;
- reg hv=0,h_v=0,h_f=0;reg [4:0] h_b=0;reg [15:0] h_e=0;reg [511:0] h_d=0;
+ // The DUT is declared +IN_STAGE cycles (stage-i input flops): at edge t it must equal gold at edge t - SHIFT, SHIFT =
+ // IN_STAGE by default.
+ // rst_n is asynchronous in both designs: while rst_n is low the expectation is the reset value (valid / fault / beat /
+ // epoch 0), whatever gold showed SHIFT edges earlier.  +SHIFT=0 and +SHIFT=2 (a wrongly declared latency) must FAIL.
+ integer SHIFT=IN_STAGE,errs=0,edges=0,vbeats=0,pay_edges=0,seenf=0,dstale=0,hn=0,k_;
+ reg h_v[0:2],h_f[0:2];reg [4:0] h_b[0:2];reg [15:0] h_e[0:2];reg [511:0] h_d[0:2];
  always @(posedge ck)begin
   #0.5;
   edges=edges+1;
-  if(SHIFT==0||hv)begin : chk
+  for(k_=2;k_>0;k_=k_-1)begin h_v[k_]=h_v[k_-1];h_f[k_]=h_f[k_-1];h_b[k_]=h_b[k_-1];h_e[k_]=h_e[k_-1];h_d[k_]=h_d[k_-1];end
+  h_v[0]=gv;h_f[0]=gf;h_b[0]=gb;h_e[0]=ge;h_d[0]=gd;
+  if(hn<2)hn=hn+1;
+  if(hn>=SHIFT)begin : chk
    reg xv,xf;reg [4:0] xb;reg [15:0] xe;reg [511:0] xd;
-   xv=SHIFT?h_v:gv;xf=SHIFT?h_f:gf;xb=SHIFT?h_b:gb;xe=SHIFT?h_e:ge;xd=SHIFT?h_d:gd;
+   xv=h_v[SHIFT];xf=h_f[SHIFT];xb=h_b[SHIFT];xe=h_e[SHIFT];xd=h_d[SHIFT];
+   if(!rst_n)begin xv=0;xf=0;xb=0;xe=0;dstale=1;end   // reset: out_data stale from this edge on (see below)
    if(dv!==xv||df!==xf)begin errs=errs+1;if(errs<8)$display("MISMATCH edge %0d valid %b/%b fault %b/%b",edges,xv,dv,xf,df);end
    if((seenf==0&&!xf||xv)&&(db!==xb||de!==xe||(dstale==0||xv)&&dd!==xd))begin   // the fault edge itself: payload not qualified
     errs=errs+1;if(errs<8)$display("MISMATCH edge %0d payload beat %0d/%0d epoch %h/%h data %0s",edges,xb,db,xe,de,dd===xd?"eq":"DIFF");
    end
    if(seenf==0)pay_edges=pay_edges+1;
    if(xv)vbeats=vbeats+1;
+   if(xf||df)begin seenf=1;dstale=1;end
+   if(!rst_n)begin seenf=0;dstale=1;end  // out_valid / out_beat / out_epoch / fault are reset; out_data (no reset, as
+   // qkd_pv_fin_s) is stale across a reset: a reset may cancel the last product write that gold made SHIFT edges earlier
+   if(xv&&!xf)dstale=0;      // keeps a post-fault value until the next product beat rewrites it
   end
-  if(gf||df)begin seenf=1;dstale=1;end
-  if(!rst_n)seenf=0;        // out_valid / out_beat / out_epoch / fault are reset; out_data (no reset, as qkd_pv_fin_s)
-  if(gv&&!gf)dstale=0;      // keeps a post-fault value until the next product beat rewrites it
-  h_v=gv;h_f=gf;h_b=gb;h_e=ge;h_d=gd;hv=1;
  end
  // ---------------- stimulus ----------------
  integer seed=1,NCMD=400,cmd,okc=0,STRETCH=1;
@@ -117,8 +127,8 @@ module tb_qkd_pv_fin_s2x8;
   repeat(20)@(negedge ck);
   $display("COVER healthy %0d inj1..10 %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d edges %0d valid_beats %0d payload_edges %0d",
    okc,kinds[1],kinds[2],kinds[3],kinds[4],kinds[5],kinds[6],kinds[7],kinds[8],kinds[9],kinds[10],edges,vbeats,pay_edges);
-  if(errs==0&&okc>=NCMD/3&&vbeats>=32*okc)$display("PVFIN_S2X8 PASS mut=%0d skew=%0d seed=%0d shift=%0d",MUT,SKEW,seed,SHIFT);
-  else $display("PVFIN_S2X8 FAIL mut=%0d skew=%0d seed=%0d shift=%0d errs=%0d",MUT,SKEW,seed,SHIFT,errs);
+  if(errs==0&&okc>=NCMD/3&&vbeats>=32*okc)$display("PVFIN_S2X8 PASS mut=%0d skew=%0d in_stage=%0d seed=%0d shift=%0d",MUT,SKEW,IN_STAGE,seed,SHIFT);
+  else $display("PVFIN_S2X8 FAIL mut=%0d skew=%0d in_stage=%0d seed=%0d shift=%0d errs=%0d",MUT,SKEW,IN_STAGE,seed,SHIFT,errs);
   $finish;
  end
 endmodule

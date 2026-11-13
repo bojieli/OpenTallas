@@ -5,15 +5,18 @@
 // sticky fault) of qkd_pv_fin_s replicated in each slice, so the two slices step in lock-step on the same pins.
 // qkd_pv_fin_s2x8 = the drop-in pair with the exact port list of qkd_pv_fin_s: slice lo = lanes 0..7 (data bits
 // [255:0]), slice hi = lanes 8..15 ([511:256]); out_valid = lo & hi, fault = lo | hi, out_beat / out_epoch = lo's.
-// 0 ADDED CYCLES: every input is still registered at the pin (one edge), every output is a flop, beat b leaves
-// PRODUCT_AGE + 1 + b edges after the start pin edge, exactly as qkd_pv_fin_s.  Only the inside is re-timed (R-RTL-5 (1)
-// restructure + (2) retime, no cycle): the unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed setup at -381 ps on
+// IN_STAGE 1 (the kit form; R-RTL-6 parameter, default 0) = +1 ADDED CYCLE (declared, results/kv-pvfin-1/latency_rows.json):
+// every input lands in a flop at the pin (stage i), then
+// the pin registers of qkd_pv_fin_s (stage q); every output is a flop; beat b leaves PRODUCT_AGE + 2 + b edges after the
+// start pin edge (qkd_pv_fin_s: + 1 + b), and fault / out_valid / out_beat / out_epoch / out_data are those of
+// qkd_pv_fin_s one edge later.  The inside is re-timed (R-RTL-5 (1) restructure + (2) retime) and (3) one input stage
+// was added because the calendar decode cannot sit behind the 487 ps link-budget input delay.  The unsliced pvfin_h3 build (epyc7 kvhubc-core1, 11-12) failed setup at -381 ps on
 // out_epoch[3] (placement -448 ps: ep -> 16-b compare -> OR trees -> bad -> 1,145 ps of enable fan-out) and on ~20k
 // endpoints (the sbuf write enables behind the window compares), because every slot of the static calendar was a
 // combinational 16-bit window compare of age + 1 against adder-derived ages, re-evaluated each cycle and ANDed into
 // `bad`, the state enables and the 16,384 sbuf enables.  Here:
-//   * the calendar is decoded at the PIN from the raw cal port into registers (cq_*: the same values qkd_pv_fin_s
-//     derives from cal_q every cycle), and latched at the accepted start edge (window / end / beat-offset registers);
+//   * the calendar is decoded from the stage-i cal flops into registers (cq_*: the same values qkd_pv_fin_s derives
+//     from cal_q every cycle), and latched at the accepted start edge (window / end / beat-offset registers);
 //   * every slot (p0, p1, r, add, sum, mul, product) is a FLAG register kept equal to active && win(n, X) by its
 //     set (n + 1 == X) / clear (n + 1 == X + 32) edges, so `bad`, the state enables and the sbuf write enable start at
 //     flops (no adder, no magnitude compare in the cycle);
@@ -22,8 +25,8 @@
 //   * the 32:1 sbuf read and the reciprocal-head select move one edge earlier into the multiplier operand registers
 //     (rd_q / rzh_q) with a write-through bypass for the beat written at the same edge (MUL_AGE = SUM_AGE + 1 when
 //     R <= LASTP), so the multiplier inputs are flops instead of a 32:1 mux behind a 512-load pointer.
-// Equivalence (lock-step, every edge, every reset): rtl/test/qwen_split/tb_qkd_pv_fin_s2x8.sv runs qkd_pv_fin_s2x8 against
-// the unsliced qkd_pv_fin_s on the same pins (healthy commands in the three STRETCH regimes, random calendars incl.
+// Equivalence (lock-step at the declared +1 edge, every reset): rtl/test/qwen_split/tb_qkd_pv_fin_s2x8.sv runs
+// qkd_pv_fin_s2x8 against the unsliced qkd_pv_fin_s on the same pins (healthy commands in the three STRETCH regimes, random calendars incl.
 // unmeetable ones, off-slot / wrong-beat / wrong-epoch / missing inputs, starts while active, NaN / overflow operands,
 // warm resets): out_valid and fault equal at every edge; out_beat / out_epoch equal at every edge outside a fault (until
 // the next reset), out_data at every edge outside a fault (until the next product beat; it has no reset in either design),
@@ -36,7 +39,8 @@ module qkd_pv_fin_s8 #(
  parameter integer MUL_LAT=6,
  parameter integer SKEW=2,
  parameter integer MUT=0,
- parameter integer NL=8
+ parameter integer NL=8,
+ parameter integer IN_STAGE=0
 )(
  input wire ck,rst_n,
  input wire start,input wire [15:0] epoch,input wire [47:0] cal,
@@ -48,14 +52,41 @@ module qkd_pv_fin_s8 #(
 );
  localparam integer DW=32*NL;
  // ---------------- pin registers (as qkd_pv_fin_s) ----------------
+ // stage i (IN_STAGE 1: +1 cycle): EVERY input lands in a flop at the pin.  The s8c build (52cf3da09d) decoded the
+ // calendar from the raw cal pins (c0 > c1 -> max -> + ADD/MUL ages -> 17-bit compare) behind the 487 ps link-budget input
+ // delay: post-CTS setup -304 ps at cq_bad / cq_em.  Now cq_* = f(cal_i), flop to flop, and the whole command (beats,
+ // epochs, reciprocals, start) is uniformly one edge later than qkd_pv_fin_s.
+ // IN_STAGE (R-RTL-6 parameter, default 0 = the 0-cycle form, flop for flop): the hub_C kit / plan type set IN_STAGE 1.
+ wire start_i,p0_valid_i,p1_valid_i,rz_valid_i;wire [15:0] epoch_i,p0_epoch_i,p1_epoch_i,rz_epoch_i;wire [47:0] cal_i;
+ wire [4:0] p0_beat_i,p1_beat_i;wire [DW-1:0] p0_data_i,p1_data_i;wire [127:0] rz_i;
+ generate if(IN_STAGE!=0)begin:g_in
+  reg sv,v0,v1,vr;reg [15:0] e,e0,e1,er;reg [47:0] c;reg [4:0] b0,b1;reg [DW-1:0] d0,d1;reg [127:0] r;
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)begin sv<=0;v0<=0;v1<=0;vr<=0;end
+   else begin sv<=start;v0<=p0_valid;v1<=p1_valid;vr<=rz_valid;end
+  always @(posedge ck)begin e<=epoch;c<=cal;b0<=p0_beat;b1<=p1_beat;e0<=p0_epoch;e1<=p1_epoch;er<=rz_epoch;
+   d0<=p0_data;d1<=p1_data;r<=rz;end
+  assign start_i=sv,p0_valid_i=v0,p1_valid_i=v1,rz_valid_i=vr,epoch_i=e,cal_i=c,p0_beat_i=b0,p1_beat_i=b1;
+  assign p0_epoch_i=e0,p1_epoch_i=e1,rz_epoch_i=er,p1_data_i=d1,rz_i=r;
+`ifdef OT_PVFIN_S8_MUTANT_ROWSHORT
+  assign p0_data_i=p0_data;                 // R-RTL-6 mutant: pair-0 data not moved with its valid / beat (a row short)
+`else
+  assign p0_data_i=d0;
+`endif
+ end else begin:g_in0
+  assign start_i=start,p0_valid_i=p0_valid,p1_valid_i=p1_valid,rz_valid_i=rz_valid,epoch_i=epoch,cal_i=cal;
+  assign p0_beat_i=p0_beat,p1_beat_i=p1_beat,p0_epoch_i=p0_epoch,p1_epoch_i=p1_epoch,rz_epoch_i=rz_epoch;
+  assign p0_data_i=p0_data,p1_data_i=p1_data,rz_i=rz;
+ end endgenerate
+ // stage q (the pin registers of qkd_pv_fin_s)
  reg start_q,p0v_q,p1v_q,rzv_q;reg [15:0] epoch_q,p0e_q,p1e_q,rze_q;reg [4:0] p0b_q,p1b_q;reg [127:0] rz_q;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)begin start_q<=0;p0v_q<=0;p1v_q<=0;rzv_q<=0;end
-  else begin start_q<=start;p0v_q<=p0_valid;p1v_q<=p1_valid;rzv_q<=rz_valid;end
- always @(posedge ck)begin epoch_q<=epoch;p0b_q<=p0_beat;p1b_q<=p1_beat;p0e_q<=p0_epoch;p1e_q<=p1_epoch;
-  rze_q<=rz_epoch;rz_q<=rz;end
- // ---------------- calendar decode at the pin: cq_* = f(cal_q) of qkd_pv_fin_s, registered from the raw pin ----------------
- wire [15:0] c0=cal[15:0],c1=cal[31:16],cr=cal[47:32];
+  else begin start_q<=start_i;p0v_q<=p0_valid_i;p1v_q<=p1_valid_i;rzv_q<=rz_valid_i;end
+ always @(posedge ck)begin epoch_q<=epoch_i;p0b_q<=p0_beat_i;p1b_q<=p1_beat_i;p0e_q<=p0_epoch_i;p1e_q<=p1_epoch_i;
+  rze_q<=rz_epoch_i;rz_q<=rz_i;end
+ // ---------------- calendar decode: cq_* = f(cal_q) of qkd_pv_fin_s, registered from the stage-i cal flops ----------------
+ wire [15:0] c0=cal_i[15:0],c1=cal_i[31:16],cr=cal_i[47:32];
  wire g01=c0>c1;
  wire [15:0] lp=g01?c0:c1;                                       // LASTP of the new command
  wire lp_gt_r=g01?(c0>cr):(c1>cr);
@@ -93,7 +124,7 @@ module qkd_pv_fin_s8 #(
  reg [DW-1:0] t0[0:SKEW+1],t1[0:SKEW+1];
  integer k;
  always @(posedge ck)begin
-  t0[0]<=p0_data;t1[0]<=p1_data;
+  t0[0]<=p0_data_i;t1[0]<=p1_data_i;
   for(k=1;k<=SKEW+1;k=k+1)begin t0[k]<=t0[k-1];t1[k]<=t1[k-1];end
  end
  wire [DW-1:0] opa=t0[s0],opb=t1[s1];
@@ -141,7 +172,7 @@ module qkd_pv_fin_s8 #(
      active<=0;{f_p0,f_p1,f_r,f_add,f_sum,f_mul,f_prod}<=7'd0;
     end
     if(!bad)begin
-     if(f_prod)begin out_valid<=1;out_beat<=b_prod;out_epoch<=ep;end
+     if(f_prod)out_valid<=1;
      if(!last)begin
       f_p0<=(f_p0&&n!=e0)||n==g0;f_p1<=(f_p1&&n!=e1)||n==g1;f_r<=(n==gr);
       f_add<=(f_add&&n!=ea)||n==ga;f_sum<=(f_sum&&n!=es)||n==gs;
@@ -149,6 +180,9 @@ module qkd_pv_fin_s8 #(
      end
     end
    end else if(!active&&(p0v_q||p1v_q||rzv_q))fault<=1;
+   // payload regs: enable = f_prod && active && !fault && !start_q (no `bad`): on a bad product edge they move with
+   // out_valid low and fault rising; out_beat / out_epoch are qualified by out_valid (qkd_pv_fin_s holds them there)
+   if(!start_q&&active&&!fault&&f_prod)begin out_beat<=b_prod;out_epoch<=ep;end
   end
  end
  // sum buffer write (beat order), operand prefetch for the next edge, reciprocal, product
@@ -168,7 +202,8 @@ module qkd_pv_fin_s2x8 #(
  parameter integer ADD_LAT=7,
  parameter integer MUL_LAT=6,
  parameter integer SKEW=2,
- parameter integer MUT=0
+ parameter integer MUT=0,
+ parameter integer IN_STAGE=0
 )(
  input wire ck,rst_n,
  input wire start,input wire [15:0] epoch,input wire [47:0] cal,
@@ -186,7 +221,7 @@ module qkd_pv_fin_s2x8 #(
 `else
   localparam integer LO=256*s;
 `endif
-  qkd_pv_fin_s8 #(.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT),.SKEW(SKEW),.MUT(MUT),.NL(8)) u_sl(.ck(ck),.rst_n(rst_n),
+  qkd_pv_fin_s8 #(.ADD_LAT(ADD_LAT),.MUL_LAT(MUL_LAT),.SKEW(SKEW),.MUT(MUT),.NL(8),.IN_STAGE(IN_STAGE)) u_sl(.ck(ck),.rst_n(rst_n),
    .start(start),.epoch(epoch),.cal(cal),
    .p0_valid(p0_valid),.p0_beat(p0_beat),.p0_epoch(p0_epoch),.p0_data(p0_data[LO+:256]),
    .p1_valid(p1_valid),.p1_beat(p1_beat),.p1_epoch(p1_epoch),.p1_data(p1_data[LO+:256]),
