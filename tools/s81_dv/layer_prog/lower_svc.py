@@ -182,6 +182,36 @@ PASS_GAP = 16                # previous pass's last P.V word -> next pass's ATTN
 # H8 engine / P-path latencies: PLACEHOLDERS = the H16 values until the S81-SVCRS-3 H8 lock-step bench measures
 # PIO0 / P_ARR / P_PO_M / KPV / PV_LAT / GW_ARR / SOT_W_LAT at H8 (interface v1: "until then use the H16 values").
 H8_CALIBRATED = False
+# Explicit opt-in RECORD ONLY for the new native S81 RT2 load calendar. This
+# does not select new measured PIO/PVO constants or silently alter emitted GO.
+H8_NATIVE_RT2_PROSPECTIVE = os.environ.get('OT_SVC_NATIVE_RT2_CALENDAR', '0') == '1'
+
+
+def h8_native_rt2_calendar_record(po, go_phase, rows):
+    """Prospective clock-derived dates relative to the outer static-program GO edge.
+
+    go_phase is the phase *before* that edge (0=engine load slot, 1=replay).
+    Both outer and engine calendars use the same clock/reset. Q launch is
+    registered for the next edge; P pushes the existing two-slot skid. Bank/skid
+    readiness is checked as a fault by RTL, never used to move these dates.
+    No scalar numerical/engine/P-path latency is asserted by this record.
+    """
+    if go_phase not in (0, 1) or not 1 <= int(rows) <= TR or int(po) < 1:
+        raise ValueError('native RT2 calendar needs phase0/1, rows1..640 and PO>=1')
+    q_first = 2 + go_phase
+    push = int(po) + ((int(po) & 1) ^ (1 ^ go_phase))
+    return dict(status='PROSPECTIVE_UNCALIBRATED', h8_calibrated=False,
+                build_defines=['OT_SVC_MERGE_H4', 'OT_ATTN_HCORE', 'OT_SVC_H8_REUSE_RT2'],
+                relative_to='outer static-program GO edge', go_phase=go_phase,
+                load_interval=2, engine_load_phase=0, q_launch_phase=1, p_push_phase=1,
+                q_launch_cycles=[q_first - 1 + 2*h for h in range(8)],
+                q_accept_cycles=[q_first + 2*h for h in range(8)],
+                kv_accept_first=2, kv_interval=1, kv_beats=-(-int(rows)//4),
+                requested_po=int(po), first_p_push=push, first_p_engine_slot=push+1,
+                p_round_up=push-int(po), existing_p_skid_slots=2,
+                runtime_ready_driven_issue=False, new_elastic_storage=False,
+                emitted_pio_pvo_unchanged=True, requires_full_programme_calibration=True)
+
 
 
 def h8_p_feed_lag(npw):
@@ -313,6 +343,9 @@ class Job:
         if self.hs not in (16, 8):
             raise ValueError(f'svc slice head width {self.hs}: only 16 (H16) and 8 (R5 H8) exist')
         self.npass = H // self.hs
+        self.native_rt2_prospective = H8_NATIVE_RT2_PROSPECTIVE
+        if self.native_rt2_prospective and self.hs != 8:
+            raise ValueError('native S81 RT2 calendar record applies only to H8')
         if self.npass > 1 and not PPATH:
             raise ValueError('the H8 two-pass job needs the on-die P path (PPATH); the legacy host PV frame is H16 only')
         if timing_profile not in SERVICE_TIMING:
@@ -693,8 +726,11 @@ class Job:
         w = hdr(13, 0, self.tag, spec=(po & 0xFFFF) | ((pvo & 0xFFFF) << 16) | ((pio & 0xFFFF) << 32) | (more << GO_MORE))
         npv = 2 * NPVQ if self.allq else NPVQ
         pv_first = go + pvo + PV_LAT
-        return w, dict(k=k, go=go, pio=pio, pvs=pvs, po=po, pvo=pvo, npw=npw, more=more, pv_first=pv_first,
-                       pv_last=pv_first + npv - 1, npv=npv, feed_interval=H8_FEED_INTERVAL)
+        rec = dict(k=k, go=go, pio=pio, pvs=pvs, po=po, pvo=pvo, npw=npw, more=more, pv_first=pv_first,
+                   pv_last=pv_first + npv - 1, npv=npv, feed_interval=H8_FEED_INTERVAL)
+        if self.native_rt2_prospective:
+            rec['native_rt2_calendar'] = [h8_native_rt2_calendar_record(po, phase, T) for phase in (0, 1)]
+        return w, rec
 
     def _schedule_passes(self, t_q0, t_q, t_exp, j_age_w, j_age_e):
         """S81-SVCC-1: the static schedule of the H8 job.  Pass 0 = today's rules (GO >= WIN_LOAD + W_SLACK, SEL / ROWS
