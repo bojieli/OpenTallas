@@ -42,3 +42,19 @@
 - TO FINISH: (1) collect t21 / coll_ftc old, new, nokeep with `python3 -I ab/abrow.py <kitdirs>`; (2) decide GPL keep: if dropped,
   remove gpl_keep_overflow from gen_phys.RFLOW + rflow_cfg + tests, amend with a NEW commit; (3) update RULEBOOK R-FLOW (status line,
   R-FLOW-7, proof 2/3 rows); (4) run perfile.sh off OT_RFLOW=0 and compare; (5) push branch, READY in COORD-REVIEW-QUEUE.md.
+
+## 2026-11-13 resumed after FLOW-FIN-2 handback; RULEBOOK R-FLOW v2 posted (coord/state, on origin)
+- Branch claude/rules-flow-1-1113 = 5209be699f (2 commits on main 99b30dde2a), NOT pushed. Commit 2 = per-kit-class defaults
+  (gen_phys.RFLOW_DIES: s81, s81_head, qwen_kvsys, qwen_compute; HBM unchanged; OT_RFLOW=1 forces, =0 old kit).
+- STAGED, UNCOMMITTED in the worktree: tools/die_plan/relay_bay.py + test_relay_bay.py = hop pitch to OT_FT_MAXWIRE_UM (station
+  hop nets only) instead of kit-wide OT_MAXWIRE_UM. Commit it only if ab/t21_ft50 holds (see below). Tests pass (7).
+- Results in: QC coll_ftc old 2,280 slew / setup -90.92 / hold -16.48 on 347; R-FLOW 7 slew pins on 2 nets / -59.94 on 96 /
+  -27.21 on 465; cells +5.7 %; DRC 0. KV + S81 + HEAD rows in the RULEBOOK table. R-FLOW-7 decided: GPL keep 0.25 stays.
+- RUNNING (ot-run epyc7): ab/t21_ft50 (R-FLOW + kit-wide 100 um + OT_FT_MAXWIRE_UM 50; compare with ab/t21),
+  ab/t21_mw100 (R-FLOW no GPL keep + kit-wide 100 um, no hop pitch; compare with ab/t21_nokeep), ab/coll_ftc_nokeep (sign-off).
+  Each t21 arm takes about 2.3 h (launched 15:27 and 15:44 UTC).
+- Regression: perfile.sh fin3 = 297 files, same 13 failing as OT_RFLOW=0 baseline (pf_fin2off).
+- TO FINISH: read t21_ft50 / t21_mw100 with `python3 -I ab/abrow.py <kitdir>` (buffers = rep, cells, hold_ff, setup); if hop
+  hold does not get worse than ab/t21 and cells drop: commit relay_bay change, update the R-FLOW-3 paragraph + status line in
+  the RULEBOOK (post_rb.py pattern: replace only the R-FLOW section), add the coll_ftc_nokeep line under R-FLOW-7,
+  push the branch, post READY in lanes/COORD-REVIEW-QUEUE.md. If it does not hold: git checkout the two relay_bay files, say so.
