@@ -3596,3 +3596,7 @@ CODEX: 2026-11-13 13:44 PST resumed all-lane takeover after 13:41 limit; existin
 CODEX: 2026-11-13 13:45 PST SVC programme service-cut proof gap closed, nominal exact and both P.V/SM controls caught; source package7140618b36 hub. Band v5 and tile3 jobs retained.
 
 CODEX: 2026-11-13 13:47 PST KIT-OPS restored exact frozen QC bind/sidecar on E4/E2 and HEAD receipt assets on E7/E9/E2/I1; one hd_host_e infrastructure rearm, no plan/src switches, HBM park retained.
+
+CODEX: 2026-11-13 13:48 PST token takeover: be5ba677 strict-bound 5-layer compile LIVE intel1; QC capture request spacing90->91 measured and contract sent QC; SVC band-v2 ready12b-A pricing running.
+
+CODEX: 2026-11-13 13:52 PST SERDES benchmark harness fixed and H/I cycles priced on e73625e921; G region-boundary structural PLACE pilot running, existing jobs retained.
