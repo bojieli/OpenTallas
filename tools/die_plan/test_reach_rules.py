@@ -314,3 +314,101 @@ def test_rule1_relay_piece_of_a_split_is_scored_and_fixed():
     rep2 = RR.fix_start(_P(p2), t2, "mid")
     assert rep2["changed"] == ["landing_reader_start"] and "origin_rect_um" not in t2["clock"]["landing_reader_start"]
     assert not [f for f in RR.start_findings(t2, "mid")[1] if f["kind"] == "start_reach"]
+
+
+class _NoPlan:
+    """barrier_findings on a bare type dict: no face buses, no core_conns sidecar."""
+    path = None
+
+
+def _xo_tile():
+    """HEAD hd_tile (rp20, COORD ruling 11-13 on HEAD-97 F1c): elemB 285.12 um square (side < BARRIER_UM 405) in the N
+    of a 708.48 x 1036.8 tile, 13.3 um under the top edge; x_q registers in the W lobe, u_xo/q in the E lobe."""
+    t = dict(outline_um=[708.48, 1036.8],
+             contents=[dict(inst="u_eB", module="elemB", status="new", origin_um=[216.0, 734.4],
+                            outline_um=[285.12, 285.12])])
+    rs = {}
+    for k in range(64):
+        y = 737.632 + 270.0 * k / 63
+        rs[f"x_q[{k}]"] = [130.0 + 60.0 * (k % 2), round(y, 3)]
+        rs[f"u_xo/q[{k}]"] = [510.0 + 60.0 * (k % 2), round(y, 3)]
+    t["relay_sites"] = rs
+    t["reach_pairs"] = [{"name": "x_xo", "from": "x_q", "to": "u_xo/q"}]
+    return t
+
+
+def test_rule2_reg_pair_round_a_small_macro_head97():
+    """REACH-TOOL-3 (COORD 11-13): rule 2 fires on the ROUTE length round a macro, not on the macro side: hd_tile's
+    x_q -> u_xo registers go round the 285-um elemB (its 13.3-um N band is no corridor), > 405 um, so the check asks
+    one station per 405 um (+1 cycle each) and the fix plans them."""
+    t = _xo_tile()
+    assert max(b[2] - b[0] for b in RR.macro_boxes(t).values()) < RR.BARRIER_UM
+    row, fs = RR.barrier_findings(_NoPlan(), t, "hd_tile")
+    hop = [f for f in fs if f["kind"] == "reg_hop"]
+    assert len(hop) == 1 and row["over"] == 1 and row["barriers"] == 0
+    f = hop[0]
+    w = RR.pair_route(t, t["reach_pairs"][0])
+    assert f["value"] == round(w["L"], 1) > RR.REACH_UM and w["L"] > w["man"] + RR.DETOUR_UM
+    assert f["stations"] == __import__("math").ceil(w["L"] / RR.REACH_UM) - 1 >= 1
+    # without the declared pair, or with the old macro-side trigger only, rule 2 is silent on this type
+    assert RR.barrier_findings(_NoPlan(), dict(t, reach_pairs=[]), "hd_tile") == (None, [])
+    # the fix: one chain reg:x_q|reg:u_xo/q, every hop (registers -> first station, station -> station, last station
+    # -> registers) <= 405 um round the macros, +k cycles; idempotent
+    rep = RR.fix_barrier(_NoPlan(), t, "hd_tile")
+    assert [a["conn"] for a in rep["added"]] == ["reg:x_q|reg:u_xo/q"]
+    e = t["internal_stations"][0]
+    assert e["conn"] == "reg:x_q|reg:u_xo/q" and e["bits"] == 64 and len(e["regs_um"]) == rep["added"][0]["stations"]
+    import kv_start_corridor_event as KS
+    from start_obstacle_path import length
+    obs = KS.corridor_obstacles(t, 4.32, 10.8)
+    chain = [tuple(e["from_um"])] + [tuple(r) for r in e["regs_um"]] + [tuple(e["to_um"])]
+    assert max(length(KS._route(a, b, obs, 708.48, 1036.8)) for a, b in zip(chain, chain[1:])) <= RR.REACH_UM + 1e-6
+    assert rep["added"][0]["worst_end_hop_um"] <= RR.REACH_UM
+    for p in RR._group_points(t, "x_q"):
+        assert length(KS._route(KS._free_point(p, obs), tuple(e["regs_um"][0]), obs, 708.48, 1036.8)) <= RR.REACH_UM + 1e-6
+    assert [f for f in RR.barrier_findings(_NoPlan(), t, "hd_tile")[1] if f["kind"] == "reg_hop"] == []
+    before = json.dumps(t, sort_keys=True)
+    assert RR.fix_barrier(_NoPlan(), t, "hd_tile")["added"] == []
+    assert json.dumps(t, sort_keys=True) == before
+
+
+def test_rule2_reg_pair_scope():
+    """only a route that must go round a macro counts; a missing register group is a warning, never a pass."""
+    t = _xo_tile()
+    t["contents"][0]["origin_um"] = [216.0, 300.0]           # elemB out of the way: a straight 380-440 um route
+    row, fs = RR.barrier_findings(_NoPlan(), t, "hd_tile")
+    assert [f for f in fs if f["kind"] == "reg_hop"] == []   # no detour: not this rule (R3 / 12.1e own it)
+    t = _xo_tile()
+    t["reach_pairs"].append({"name": "gone", "from": "x_q_old", "to": "u_xo/q"})
+    fs = RR.barrier_findings(_NoPlan(), t, "hd_tile")[1]
+    unk = [f for f in fs if f["kind"] == "reg_pair_unknown"]
+    assert len(unk) == 1 and unk[0]["warn"] and unk[0]["pair"] == "gone"
+    assert RR._group_points(t, "x_q") and not RR._group_points(t, "x")          # prefix ends at '[', '/' or '.'
+    assert len(RR._group_points(t, "u_xo")) == 64                              # 'u_xo/q[k]': '/' after the prefix
+
+
+def test_rule2_home_corridor_round_a_small_macro(monkeypatch):
+    """a declared window -> home corridor now fires without a >= 405 um macro when its route goes round one."""
+    t = _xo_tile()
+    t.pop("reach_pairs")
+    t["buses"] = [dict(name="i", dir="in", width=8, face="W")]
+    t["reach_homes"] = [dict(name="e", rect_um=[520.0, 900.0, 600.0, 1000.0], buses=["i"])]
+    monkeypatch.setattr(RR, "_bus_points", lambda P, tn: {"i": ("W", (0.0, 990.0))})
+    fs = RR.barrier_findings(_NoPlan(), t, "hd_tile")[1]
+    assert [f["kind"] for f in fs] == ["barrier_hop"] and fs[0]["value"] > RR.REACH_UM
+    t["contents"][0]["origin_um"] = [216.0, 300.0]               # no macro in the way: 520 um straight, not rule 2
+    assert RR.barrier_findings(_NoPlan(), t, "hd_tile")[1] == []
+
+
+def test_reach_pairs_is_a_plan_schema_key():
+    p = copy.deepcopy(EX)
+    p["partition_types"]["mid"]["reach_pairs"] = [{"name": "x_xo", "from": "x_q", "to": "u_xo/q", "bits": 512,
+                                                   "note": "HEAD hd_tile x -> xo round elemB"}]
+    assert schema.validate(p) == []
+    on_disk = json.loads((HERE / "die_plan.schema.json").read_text())
+    assert "reach_pairs" in on_disk["properties"]["partition_types"]["additionalProperties"]["properties"]
+    bad = copy.deepcopy(p)
+    bad["partition_types"]["mid"]["reach_pairs"] = [{"name": "x_xo", "from": "x_q"}]
+    assert schema.validate(bad)
+    bad["partition_types"]["mid"]["reach_pairs"] = [{"name": "x_xo", "from": "x_q", "to": "y", "via": 1}]
+    assert schema.validate(bad)

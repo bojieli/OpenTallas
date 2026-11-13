@@ -5449,6 +5449,39 @@
        }
       }
      },
+     "reach_pairs": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "name",
+        "from",
+        "to"
+       ],
+       "properties": {
+        "name": {
+         "type": "string",
+         "minLength": 1
+        },
+        "from": {
+         "type": "string",
+         "minLength": 1
+        },
+        "to": {
+         "type": "string",
+         "minLength": 1
+        },
+        "bits": {
+         "type": "integer",
+         "minimum": 1
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
+     },
      "landing_base_type": {
       "type": "string"
      },

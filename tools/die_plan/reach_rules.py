@@ -25,6 +25,19 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         home corridor (around the macros) longer than REACH_UM needs an internal_stations chain with
                         hops <= REACH_UM.  FIX (opt-in --rules 2, with reach_homes declared): the chain, k =
                         ceil(L / 340) - 1 stations, +k cycles on that bus (pre-approved).
+                        ROUTE ROUND A MACRO (REACH-TOOL-3 11-13, COORD ruling on HEAD-97 F1c): the trigger is the
+                        ROUTE length round the macros, not the macro side.  (a) a declared window -> home corridor
+                        fires on any type (no macro side >= BARRIER_UM needed) when its route round the macros is
+                        longer than REACH_UM; (b) reach_pairs [{name, from, to}] declares register-to-register
+                        routes between two relay_sites register groups (from / to: a relay_sites name prefix, e.g.
+                        HEAD hd_tile x_q -> u_xo/q round elemB).  The route of the farthest register pair (groups
+                        sampled per PAIR_CELL_UM cell, routed round the macros) fires when it is longer than
+                        REACH_UM and must go round a macro (route > Manhattan distance).  FIX (--rules 2): an
+                        internal_stations chain conn 'reg:<from>|reg:<to>' sited on that route, one planned station
+                        per REACH_UM (k = ceil(L / REACH_UM) - 1, more until every register -> first station and
+                        last station -> register route is <= REACH_UM), +k cycles (pre-approved).  The chain is the
+                        plan's demand: the stage itself is an RTL / kit item (kit_istations reports a 'reg:' chain
+                        as core_unmapped; it does not realise it).
   R-REACH-3 bus_window  A bus window sits on the face nearest its consumer: window -> consumer (hard core box / pins,
                         or its reach_home) <= WINDOW_UM (200 um, target; warning + MOVE-WINDOW list) and never more
                         than REACH_UM without internal stations (R3-INTERNAL already errors on that).  Face-net
@@ -61,6 +74,8 @@ FANOUT_MAX = 48         # loads per register copy (CLAND-RELAY-3: 65 loads = 331
 BARRIER_UM = 405.0      # a macro side this long is a barrier (no single registered hop crosses it)
 WINDOW_UM = 200.0       # target face window -> consumer distance (tap radius / half a hop)
 BUF_UM = 150.0          # repeater spacing used to price face-net buffers (HBM q_su: ~10 buffers per ~1.5 mm net)
+PAIR_CELL_UM = 21.6     # reach_pairs: register groups are sampled per cell of this size (worst pair, bounded cost)
+DETOUR_UM = 1.0         # a route longer than the Manhattan distance by more than this goes round a macro
 EDGE_IN_UM = 12.0       # origin home: this far inside the face of the START pin (KV corridor form EDGE_Y)
 PAD_PITCH_UM = 5.4      # dwell stages of a short trunk sit side by side at the origin home
 PAD_SPAN_UM = 30.0      # ... never farther than this from the home (the trunk's first hop is planned this much shorter)
@@ -528,69 +543,174 @@ def _inside(pt, W, H, d=EDGE_IN_UM):
     return (min(max(pt[0], d), W - d), min(max(pt[1], d), H - d))
 
 
+def _group_points(t, pre):
+    """(x, y) of the relay_sites registers of group `pre`: key == pre, or key starts with pre + one of '[', '/', '.'
+    (relay_sites dict; a list has no names and gives no group)."""
+    rs_ = t.get("relay_sites")
+    if not isinstance(rs_, dict) or not pre:
+        return []
+    return [(float(v[0]), float(v[1])) for k, v in sorted(rs_.items())
+            if (k == pre or (k.startswith(pre) and k[len(pre)] in "[/.")) and isinstance(v, (list, tuple))
+            and len(v) >= 2]
+
+
+def _cells(pts, cell=PAIR_CELL_UM):
+    """one sample per cell: the member nearest the cell's mean (deterministic, a real register site)."""
+    acc = defaultdict(list)
+    for p in pts:
+        acc[(int(p[0] // cell), int(p[1] // cell))].append(p)
+    out = []
+    for k in sorted(acc):
+        g = acc[k]
+        m = (sum(p[0] for p in g) / len(g), sum(p[1] for p in g) / len(g))
+        out.append(min(g, key=lambda p: (man(p, m), p)))
+    return out
+
+
+def _pair_conn(pr):
+    return f"reg:{pr['from']}|reg:{pr['to']}"
+
+
+def pair_route(t, pr, obs=None):
+    """worst register pair of a reach_pairs entry -> dict(L, man, a, q, route, n_from, n_to, over_pairs, pairs) or
+    None when a group has no relay_sites registers.  Routes go round the corridor obstacles (macros, edge-extended)."""
+    import kv_start_corridor_event as KS
+    from start_obstacle_path import length
+    W, H = t["outline_um"]
+    if obs is None:
+        obs = KS.corridor_obstacles(t, 4.32, 10.8)
+    A, B = _group_points(t, pr.get("from")), _group_points(t, pr.get("to"))
+    if not A or not B:
+        return None
+    best, over, n = None, 0, 0
+    fa = [KS._free_point(_inside(p, W, H, 0.0), obs) for p in _cells(A)]
+    fb = [KS._free_point(_inside(p, W, H, 0.0), obs) for p in _cells(B)]
+    for a in fa:
+        for q in fb:
+            try:
+                rt = KS._route(a, q, obs, W, H)
+                L = length(rt)
+            except ValueError:
+                rt, L = None, float("inf")
+            n += 1
+            over += L > REACH_UM + EPS
+            if best is None or L > best["L"] + EPS:
+                best = dict(L=L, man=man(a, q), a=a, q=q, route=rt)
+    best.update(n_from=len(A), n_to=len(B), over_pairs=over, pairs=n, from_pts=fa, to_pts=fb)
+    return best
+
+
 def barrier_findings(P, t, tn, reach=REACH_UM, barrier=BARRIER_UM):
-    """rule 2 -> (row, findings)"""
+    """rule 2 -> (row, findings).  barrier_unanchored needs a macro side >= barrier; window -> home corridors and
+    reach_pairs fire on the ROUTE length round the macros (REACH-TOOL-3, COORD ruling 11-13)."""
     boxes = macro_boxes(t)
     big = {k: b for k, b in boxes.items() if max(b[2] - b[0], b[3] - b[1]) >= barrier - EPS}
-    if not big:
+    homes = t.get("reach_homes") or []
+    pairs = t.get("reach_pairs") or []
+    if not big and not ((homes or pairs) and boxes):
         return None, []
     W, H = t["outline_um"]
-    homes = t.get("reach_homes") or []
     stn = _station_buses(t)
     pts = _bus_points(P, tn)
     buses = [b for b in t.get("buses", []) if b.get("kind", "data") != "clock" and b["name"] in pts]
-    cons = _consumers(P, t, tn)
-    loose = [b["name"] for b in buses if not b.get("leaf") and b["name"] not in stn and b["name"] not in cons
-             and not any(b["name"] in (h.get("buses") or []) or "*" in (h.get("buses") or []) for h in homes)]
     out = []
-    worst = max(big, key=lambda k: max(big[k][2] - big[k][0], big[k][3] - big[k][1]))
-    wdim = max(big[worst][2] - big[worst][0], big[worst][3] - big[worst][1])
-    # a barrier only matters when buses sit on both sides of it: face points more than the reach apart round it
-    sides = set()
-    for n in loose:
-        p = pts[n][1]
-        b = big[worst]
-        sides.add(("W" if p[0] < b[0] else "E" if p[0] > b[2] else "M", "S" if p[1] < b[1] else "N" if p[1] > b[3]
-                   else "M"))
+    if big:
+        cons = _consumers(P, t, tn)
+        loose = [b["name"] for b in buses if not b.get("leaf") and b["name"] not in stn and b["name"] not in cons
+                 and not any(b["name"] in (h.get("buses") or []) or "*" in (h.get("buses") or []) for h in homes)]
+        worst = max(big, key=lambda k: max(big[k][2] - big[k][0], big[k][3] - big[k][1]))
+        wdim = max(big[worst][2] - big[worst][0], big[worst][3] - big[worst][1])
+        # a barrier only matters when buses sit on both sides of it: face points more than the reach apart round it
+        sides = set()
+        for n in loose:
+            p = pts[n][1]
+            b = big[worst]
+            sides.add(("W" if p[0] < b[0] else "E" if p[0] > b[2] else "M", "S" if p[1] < b[1] else "N" if p[1] > b[3]
+                       else "M"))
+    else:
+        loose, sides, worst, wdim = [], set(), None, 0.0
     row = dict(type=tn, barrier=worst, barrier_um=round(wdim, 1), barriers=len(big), buses=len(buses),
-               unanchored=len(loose), homes=len(homes), sides=len(sides), over=0)
+               unanchored=len(loose), homes=len(homes), sides=len(sides), over=0, reach_pairs=len(pairs))
     if loose and len(sides) > 1:
         out.append(dict(rule="2", kind="barrier_unanchored", type=tn, value=len(loose), limit=0, n=len(loose),
                         msg=f"macro barrier: {worst} is {wdim:.0f} um long (>= {barrier:g}) and {len(loose)} face "
                             f"buses on {len(sides)} sides of it name no consumer (no leaf, no internal_stations, no "
                             f"reach_homes), e.g. {loose[0]}: declare reach_homes [{{name, rect_um, buses}}] or move "
                             f"the windows to the consumer's side"))
-    if homes:
+    if homes or pairs:
         import kv_start_corridor_event as KS
         from start_obstacle_path import length
         obs = KS.corridor_obstacles(t, 4.32, 10.8)
-        for h in homes:
-            r = h["rect_um"]
-            for b in buses:
-                n = b["name"]
-                if n in stn or not (n in (h.get("buses") or []) or "*" in (h.get("buses") or [])):
-                    continue
-                a = KS._free_point(_inside(pts[n][1], W, H), obs)
-                q = KS._free_point((min(max(a[0], r[0]), r[2]), min(max(a[1], r[1]), r[3])), obs)
-                try:
-                    L = length(KS._route(a, q, obs, W, H))
-                except ValueError:
-                    L = float("inf")
-                if L > reach + EPS:
-                    row["over"] += 1
-                    out.append(dict(rule="2", kind="barrier_hop", type=tn, value=round(L, 1) if L < 1e9 else -1,
-                                    limit=reach, n=1, bus=n, home=h.get("name"),
-                                    msg=f"macro barrier: bus {n} window -> home {h.get('name')} is "
-                                        f"{L:.0f} um round the macros (> {reach:g}) with no internal_stations "
-                                        f"bus:{n} chain (fix: reach_rules.py fix --rules 2, +"
-                                        f"{max(1, math.ceil(L / STEP_UM) - 1) if L < 1e9 else '?'} cycles)"))
+    for h in homes:
+        r = h["rect_um"]
+        for b in buses:
+            n = b["name"]
+            if n in stn or not (n in (h.get("buses") or []) or "*" in (h.get("buses") or [])):
+                continue
+            a = KS._free_point(_inside(pts[n][1], W, H), obs)
+            q = KS._free_point((min(max(a[0], r[0]), r[2]), min(max(a[1], r[1]), r[3])), obs)
+            try:
+                L = length(KS._route(a, q, obs, W, H))
+            except ValueError:
+                L = float("inf")
+            # with a barrier macro (side >= barrier) every corridor over the reach counts (train 47); without one,
+            # a corridor counts when its route goes round a macro (REACH-TOOL-3)
+            if L > reach + EPS and (big or L > man(a, q) + DETOUR_UM):
+                row["over"] += 1
+                out.append(dict(rule="2", kind="barrier_hop", type=tn, value=round(L, 1) if L < 1e9 else -1,
+                                limit=reach, n=1, bus=n, home=h.get("name"),
+                                msg=f"macro barrier: bus {n} window -> home {h.get('name')} is "
+                                    f"{L:.0f} um round the macros (> {reach:g}) with no internal_stations "
+                                    f"bus:{n} chain (fix: reach_rules.py fix --rules 2, +"
+                                    f"{max(1, math.ceil(L / STEP_UM) - 1) if L < 1e9 else '?'} cycles)"))
+    have = {str(e.get("conn") or "") for e in t.get("internal_stations", []) or []}
+    for pr in pairs:
+        if _pair_conn(pr) in have:
+            continue                     # the planned chain exists (R3-INTERNAL checks its hops)
+        w = pair_route(t, pr, obs)
+        if w is None:
+            out.append(dict(rule="2", kind="reg_pair_unknown", type=tn, value=0, limit=0, n=1, warn=True,
+                            pair=pr.get("name"), msg=f"reach_pairs {pr.get('name')}: no relay_sites registers for "
+                                                     f"from '{pr.get('from')}' or to '{pr.get('to')}'"))
+            continue
+        L = w["L"]
+        if L > reach + EPS and L > w["man"] + DETOUR_UM:
+            row["over"] += 1
+            k = math.ceil(L / reach) - 1 if L < 1e9 else -1
+            out.append(dict(rule="2", kind="reg_hop", type=tn, value=round(L, 1) if L < 1e9 else -1, limit=reach,
+                            n=w["over_pairs"], pair=pr.get("name"), stations=k,
+                            msg=f"route round a macro: registers {pr['from']} -> {pr['to']} ({w['n_from']} -> "
+                                f"{w['n_to']}) worst pair {tuple(w['a'])} -> {tuple(w['q'])} is {L:.0f} um round "
+                                f"the macros (Manhattan {w['man']:.0f}; > {reach:g}; {w['over_pairs']} of "
+                                f"{w['pairs']} sampled pairs over) with no internal_stations {_pair_conn(pr)} chain "
+                                f"(fix: reach_rules.py fix --rules 2, +{k if k >= 0 else '?'} cycles)"))
     return row, out
+
+
+def _pair_chain(t, pr, w, reach, obs, extra_max=3):
+    """stations for a reg_hop finding: k = ceil(L / reach) - 1 sites on the worst pair's route, more (up to
+    extra_max) until every sampled register -> first station and last station -> register route is <= reach.
+    -> (regs, k, worst end hop) or raises ValueError."""
+    import kv_start_corridor_event as KS
+    from start_obstacle_path import length, relay_sites
+    W, H = t["outline_um"]
+    rt = w["route"]
+    k0 = max(1, math.ceil(w["L"] / reach) - 1)
+    for k in range(k0, k0 + extra_max + 1):
+        regs = relay_sites(rt, k, max_hop_um=reach, clearance_um=KS.CLEAR_UM)
+        ends = [length(KS._route(a, tuple(regs[0]), obs, W, H)) for a in w["from_pts"]] + \
+               [length(KS._route(tuple(regs[-1]), q, obs, W, H)) for q in w["to_pts"]]
+        if max(ends) <= reach + EPS:
+            return regs, k, max(ends)
+    raise ValueError(f"reach_pairs {pr.get('name')}: no chain of {k0}..{k0 + extra_max} stations keeps every "
+                     f"register -> station hop <= {reach:g} um (worst end hop {max(ends):.0f})")
 
 
 def fix_barrier(P, t, tn, reach=REACH_UM):
     """rule 2 fix (opt-in): an internal_stations chain bus:<name> for every barrier_hop finding, sites on the
-    macro-free corridor, k = ceil(L / STEP) - 1 stations.  The lane cycles (+k) follow by reach_fix.sync_fixed_cycles /
-    the die latency step, as for every station add (STREET-RULE-1 lever 1)."""
+    macro-free corridor, k = ceil(L / STEP) - 1 stations; a chain reg:<from>|reg:<to> for every reg_hop finding (one
+    station per reach, _pair_chain).  The lane cycles (+k) follow by reach_fix.sync_fixed_cycles / the die latency
+    step, as for every station add (STREET-RULE-1 lever 1); a reg chain's cycles are the type's internal latency."""
     import kv_start_corridor_event as KS
     from start_obstacle_path import length, relay_sites
     _row, fs = barrier_findings(P, t, tn, reach)
@@ -598,9 +718,24 @@ def fix_barrier(P, t, tn, reach=REACH_UM):
     obs = KS.corridor_obstacles(t, 4.32, 10.8)
     pts = _bus_points(P, tn)
     homes = {h.get("name"): h for h in t.get("reach_homes") or []}
+    pairs = {pr.get("name"): pr for pr in t.get("reach_pairs") or []}
     width = {b["name"]: b for b in t.get("buses", [])}
     rep = dict(type=tn, added=[])
     for f in fs:
+        if f["kind"] == "reg_hop" and f["value"] >= 0:
+            pr = pairs[f["pair"]]
+            w = pair_route(t, pr, obs)
+            regs, k, endh = _pair_chain(t, pr, w, reach, obs)
+            bits = int(pr.get("bits") or w["n_from"])
+            t.setdefault("internal_stations", []).append(dict(
+                conn=_pair_conn(pr), from_um=[round(v, 3) for v in w["a"]], to_um=[round(v, 3) for v in w["q"]],
+                regs_um=regs, bits=bits,
+                note=f"R-REACH-2 reg pair {pr.get('name')} (REACH-TOOL-3 11-13): {w['L']:.0f} um round the macros "
+                     f"{pr['from']} -> {pr['to']}: {k} FIRM station(s), +{k} cycle(s), worst register -> station "
+                     f"hop {endh:.0f} um"))
+            rep["added"].append(dict(pair=pr.get("name"), conn=_pair_conn(pr), stations=k, bits=bits,
+                                     corridor_um=round(w["L"], 1), worst_end_hop_um=round(endh, 1)))
+            continue
         if f["kind"] != "barrier_hop" or f["value"] < 0:
             continue
         n, r = f["bus"], homes[f["home"]]["rect_um"]
