@@ -452,17 +452,34 @@ if {$::env(OT_SETUP_MARGIN) ne ""} {
 # OWNER 11-07: nonport excludes only input-port starts; register-to-output and macro/internal hold remains core work.
 # Env unset (or any other value): the body runs exactly as before. Legacy reg2reg semantics are unchanged.
 proc ot_prd_hold_scope {body} {
+  if {[info exists ::ot_prd_expected_hold_scope] &&
+      (![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ne $::ot_prd_expected_hold_scope)} {
+    error "OT_HOLD_SCOPE expected $::ot_prd_expected_hold_scope in actual OpenROAD environment; refusing unscoped repair"
+  }
   if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ni {reg2reg nonport}} {
     return [uplevel 1 $body]
   }
   set scope $::env(OT_HOLD_REPAIR_SCOPE)
-  if {[llength [info commands ot_hold_repair_scope]] && [info exists ::ot_mm_active] && $::ot_mm_active} {
-    if {$scope eq "nonport" && (![info exists ::ot_hold_scope_supported_modes] ||
-        "nonport" ni $::ot_hold_scope_supported_modes)} {
-      error "OT_HOLD_SCOPE nonport requires matching orfs_hold_mm.tcl; refusing unscoped repair"
+  set mm_active [expr {[info exists ::ot_mm_active] && $::ot_mm_active}]
+  set mm_synced [expr {[info exists ::ot_mm_synced] && $::ot_mm_synced}]
+  set mm_stage [expr {[info exists ::ot_mm_stage] ? $::ot_mm_stage : "UNSET"}]
+  puts "OT_PRD_HOLD_SCOPE requested=$scope mm_active=$mm_active mm_synced=$mm_synced stage=$mm_stage"
+  if {$mm_active} {
+    # The shared helper returns BODY unscoped outside this exact FF context.
+    # A late ECO must refuse that path, never silently pad the parent's ports.
+    if {!$mm_synced || $mm_stage ne "4_cts.sdc" || ![llength [info commands ot_hold_repair_scope]]} {
+      error "OT_HOLD_SCOPE refusing unscoped late repair: scope=$scope active=$mm_active synced=$mm_synced stage=$mm_stage; establish the validated FF scene first"
+    }
+    if {![info exists ::ot_hold_scope_supported_modes] || $scope ni $::ot_hold_scope_supported_modes} {
+      error "OT_HOLD_SCOPE $scope requires matching orfs_hold_mm.tcl; refusing unscoped repair"
     }
     puts "OT_PRD hold scope $scope: shared ot_hold_repair_scope (orfs_hold_mm.tcl)"
-    return [uplevel 1 [list ot_hold_repair_scope $body]]
+    set ::ot_prd_scope_entered 1
+    set result [uplevel 1 [list ot_hold_repair_scope $body]]
+    set ::ot_prd_scope_restored 1
+    set ::ot_prd_scope_completed 1
+    puts "OT_PRD_HOLD_SCOPE_COMPLETE scope=$scope mode=ff"
+    return $result
   }
   set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
   set stem [file join $dir ot_prd_hold_scope_[pid]_[clock clicks]]
@@ -480,11 +497,15 @@ proc ot_prd_hold_scope {body} {
   set outputs {}
   if {$scope eq "reg2reg"} { set outputs [all_outputs] }
   puts "OT_HOLD_SCOPE begin (post-route single-mode) scope=$scope input_ports=[llength $inputs] excluded_output_ports=[llength $outputs]"
+  set completed 0
   try {
     if {[llength $inputs]} { set_false_path -hold -from $inputs }
     if {[llength $outputs]} { set_false_path -hold -to $outputs }
     puts "OT_HOLD_SCOPE repair scope=$scope (nonport retains register-to-output and macro/internal paths)"
-    return [uplevel 1 $body]
+    set ::ot_prd_scope_entered 1
+    set result [uplevel 1 $body]
+    set completed 1
+    return $result
   } finally {
     if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
     if {[llength $outputs]} { unset_path_exceptions -hold -to $outputs }
@@ -493,12 +514,32 @@ proc ot_prd_hold_scope {body} {
     set fb [open $before r]; set tb [read $fb]; close $fb
     set fa [open $after r]; set ta [read $fa]; close $fa
     if {$tb ne $ta} { error "OT_HOLD_SCOPE restore differs: retained $before $after" }
+    set ::ot_prd_scope_restored 1
+    if {$completed} {
+      set ::ot_prd_scope_completed 1
+      puts "OT_PRD_HOLD_SCOPE_COMPLETE scope=$scope mode=single"
+    }
     puts "OT_HOLD_SCOPE restored exact SDC (port hold remains visible)"
     if {![info exists ::env(OT_HOLD_SCOPE_KEEP_SDC)] || $::env(OT_HOLD_SCOPE_KEEP_SDC) ne "1"} {
       file delete $before $after
     }
   }
 }
+proc ot_prd_hold_scope_assert {} {
+  if {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} { return }
+  set requested [expr {[info exists ::ot_prd_expected_hold_scope] ? $::ot_prd_expected_hold_scope :
+                       ([info exists ::env(OT_HOLD_REPAIR_SCOPE)] ? $::env(OT_HOLD_REPAIR_SCOPE) : "")}]
+  if {$requested ni {reg2reg nonport}} { return }
+  foreach flag {ot_prd_scope_entered ot_prd_scope_restored ot_prd_scope_completed} {
+    if {![info exists ::$flag] || ![set ::$flag]} {
+      error "OT_HOLD_SCOPE missing runtime $flag for requested $requested; refusing route after unobserved scoped repair"
+    }
+  }
+  puts "OT_PRD_HOLD_SCOPE_VERIFIED scope=$requested entered=1 restored=1 completed=1"
+}
+set ::ot_prd_scope_entered 0
+set ::ot_prd_scope_restored 0
+set ::ot_prd_scope_completed 0
 set args [list -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 # two-mode kits: the SHARED guarded hold repair of orfs_hold_mm.tcl (R5 chunk buffer cap inside the same total budget,
@@ -514,6 +555,8 @@ if {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
   puts "OT_PRD pass $_pass repair_timing -hold $args"
   ot_prd_hold_scope { repair_timing -hold {*}$args }
 }
+# Verify the entire RC-calibration dispatch too: its callback must really have run.
+ot_prd_hold_scope_assert
 
 # fail-safe: any clock-net instance whose master changed is put back (LOCKED cells are never legalized, so a grown
 # master overlaps its neighbours); the count is reported, a revert that cannot be applied stops the ECO

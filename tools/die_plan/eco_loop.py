@@ -53,6 +53,7 @@ import shutil
 import subprocess
 import sys
 import threading
+from contextvars import ContextVar
 import time
 from pathlib import Path
 
@@ -164,9 +165,34 @@ def eco_vclk_frame(pass_dir, variant, prev):
     return ps
 
 
+_LATE_HOLD_SCOPE = ContextVar("late_eco_hold_scope", default=None)
+
+
 def hold_scope():
-    """the ECO's hold repair scope (prd_hook.tcl / orfs_hold_mm.tcl read the same OT_HOLD_REPAIR_SCOPE)"""
-    return (os.environ.get("OT_HOLD_REPAIR_SCOPE") or "").strip().lower()
+    """Explicit environment override, else this late-ECO call's scoped default."""
+    if "OT_HOLD_REPAIR_SCOPE" in os.environ:
+        return (os.environ.get("OT_HOLD_REPAIR_SCOPE") or "").strip().lower()
+    return _LATE_HOLD_SCOPE.get() or ""
+
+
+def late_hold_scope(kit):
+    """Late ECO defaults to core-owned paths: exclude input starts AND output ends.
+
+    Existing reg2reg implements that exact endpoint ownership, including internal
+    macro paths. Explicit env/config scopes (even blank/all) retain their meaning.
+    This default never changes pre-GRT repair or the declared ROUTE-HOLD form.
+    """
+    if "OT_HOLD_REPAIR_SCOPE" in os.environ:
+        return hold_scope()
+    scope = None
+    try:
+        for line in Path(kit, "config.mk").read_text(errors="replace").splitlines():
+            m = _HOLD_SCOPE_MK_RX.match(line)
+            if m:
+                scope = m.group(1).strip().lower()
+    except OSError:
+        pass
+    return "reg2reg" if scope is None else scope
 
 
 def nonport_score(signoff_path):
@@ -190,7 +216,8 @@ def nonport_score(signoff_path):
 def metrics(rec, signoff_path=None):
     """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}; with OT_HOLD_REPAIR_SCOPE=nonport and a readable
     FF census next to signoff_path also ff_np / ff_np_n (the non-port hold the ECO repairs), which the stop rule and the
-    best pick score instead of ff.  Default scope: byte-identical metrics."""
+    best pick score instead of ff. The late-ECO reg2reg scope scores the same fields on core_hold and also records
+    ff_core / ff_core_n; standalone metrics without a scoped run retain the whole-number behavior."""
     c = rec.get("checks") or {}
     by = {}
     for k, v in ((c.get("drv") or {}).get("by_corner") or {}).items():
@@ -205,10 +232,19 @@ def metrics(rec, signoff_path=None):
                 drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails,
                 vclk_tt=measured_vclk((c.get("setup_tt") or {}).get("vclk_reference")),
                 vclk_ff=measured_vclk((c.get("hold_ff") or {}).get("ff_vclk_reference")))
-    if signoff_path and hold_scope() == "nonport":
-        np_ = nonport_score(signoff_path)
-        if np_ and np_[0] is not None:
-            out["ff_np"], out["ff_np_n"] = np_
+    if signoff_path and hold_scope() in ("reg2reg", "nonport"):
+        scope = hold_scope()
+        split = core_hold(signoff_path) if scope == "reg2reg" else nonport_score(signoff_path)
+        if split and split[0] is not None:
+            out["ff_np"], out["ff_np_n"] = split[:2]   # scoring compatibility with explicit nonport callers
+            out["hold_score_scope"] = "core" if scope == "reg2reg" else "non-port"
+            if scope == "reg2reg":
+                out["hold_score_exact"] = bool(split[2])
+                if split[2]:
+                    out["ff_core"], out["ff_core_n"] = split[:2]
+                else:
+                    out["hold_score_scope"] = "core-bound"
+                    out["ff_core_bound"], out["ff_core_n_bound"] = split[:2]
     return out
 
 
@@ -225,7 +261,7 @@ def passes(kit, prev, hm):
     return out
 
 
-def eligible(rec):
+def eligible(rec, signoff_path=None):
     """(ok, reason): a NOT SIGNED routed sign-off whose only FAILs are TIMING / DRV / small DRC"""
     if not rec:
         return False, "no sign-off record"
@@ -239,6 +275,10 @@ def eligible(rec):
         return False, "structural gate FAIL " + ",".join(other) + " (not an ECO class)"
     if m["drc"] > DRC_SMALL:
         return False, f"DRC {m['drc']} > {DRC_SMALL} (ROUTING class)"
+    if signoff_path and m["fails"] == ["hold_ff"]:
+        split = core_hold(signoff_path)
+        if port_only_hold(signoff_path) or (split is not None and split[1] == 0):
+            return False, "hold is parent-port only (input starts/output ends): no core-owned ECO work"
     return True, "ECO class: " + ",".join(m["fails"])
 
 
@@ -536,7 +576,32 @@ def hold_mm_supports(tcl, scope):
     m = _HOLD_MODES_RX.search(t)
     if m:
         return scope in m.group(1).split()
-    return scope == "reg2reg" and re.search(r"^\s*proc\s+(::)?ot_hold_repair_scope\b", t, re.M) is not None
+    return False  # a named legacy proc alone cannot prove the scoped MM dispatch contract
+
+
+def pin_late_hold_scope(pd):
+    """Pin the selected late scope in Make and assert it at actual OpenROAD entry."""
+    scope = hold_scope()
+    if scope not in HOLD_SCOPES:
+        return None
+    pd = Path(pd)
+    hook = pd / "prd_hook.tcl"
+    if not hook.is_file():
+        raise ValueError("scoped late ECO has no staged prd_hook.tcl; refused before physical repair")
+    hook_text = hook.read_text()
+    if "proc ot_prd_hold_scope_assert {}" not in hook_text or "ot_prd_expected_hold_scope" not in hook_text:
+        raise ValueError("staged late-ECO hook lacks the runtime scope postcondition; refused before physical repair")
+    def replace(path, text):
+        # A resumed kit may be hard-linked to its donor. Replace only our path.
+        with tempfile.NamedTemporaryFile("w", dir=pd, prefix=path.name + ".scope.", delete=False) as f:
+            f.write(text)
+            tmp = Path(f.name)
+        tmp.chmod(path.stat().st_mode & 0o777)
+        os.replace(tmp, path)
+    config = pd / "config.mk"
+    replace(config, config.read_text() + f"\noverride export OT_HOLD_REPAIR_SCOPE = {scope}\n")
+    replace(hook, f"set ::ot_prd_expected_hold_scope {scope}\n" + hook_text)
+    return scope
 
 
 def refresh_hold_mm(pd, so, kit):
@@ -740,6 +805,8 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         # keep_route=False (GRT-hang class retry): every pass is a full ECO route (OT_PRD_FROM=grt), never route-keep
         env = dict(os.environ, OT_PRD_FROM=mode if i == 0 else ("route" if keep_route else "grt"), OT_PRD_POST="0",
                    OT_PRD_FINISH="1")
+        if "OT_HOLD_REPAIR_SCOPE" not in env and hold_scope():
+            env["OT_HOLD_REPAIR_SCOPE"] = hold_scope()
         if (Path(kit) / "kwrs_busfit.py").is_file():  # KW-FIX-5: the kit's LEF-only pins (prd_run.sh busfit_prep)
             env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
@@ -749,6 +816,9 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
         try:
             fresh = refresh_hold_mm(pd, so, kit)
+            pinned_scope = pin_late_hold_scope(pd)
+            if pinned_scope:
+                it["hold_repair_scope"] = pinned_scope
         except ValueError as e:
             return end("ERROR", str(e))
         if fresh:
@@ -760,6 +830,13 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
         it.setdefault("eco_vclk_ps", {})[v] = eco_vclk_frame(pd, v, prev)
         with GrtWatch(pd, stop=watch_stop) as w:
             rc = step("prd_run" + stag, ["bash", PRD / "prd_run.sh", pd, cpus, mem, 1], env=env)
+        if not rc and pinned_scope and v[0] in "mb":
+            try:
+                trace = (pd / "run_prd.log").read_text(errors="replace")
+            except OSError:
+                trace = ""
+            if f"OT_PRD_HOLD_SCOPE_VERIFIED scope={pinned_scope} " not in trace:
+                return end("ERROR", "late ECO scoped repair has no runtime completion receipt; no result accepted")
         if w.hung:
             it["grt_hang"] = w.hung
             return end("ERROR", f"ECO {v} route-keep incremental GRT hung (run_prd.log flat {w.hung['flat_s']} s after "
@@ -926,6 +1003,20 @@ def route_hold_ran(kit):
 def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
              cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
              owner_override=False, strict_one_pass=False, route_hold_form=False):
+    """Apply the core-owned repair/scoring default only for this late-ECO call."""
+    options = dict(locals())
+    if route_hold_form:
+        return _run_loop(**options)
+    token = _LATE_HOLD_SCOPE.set(late_hold_scope(kit))
+    try:
+        return _run_loop(**options)
+    finally:
+        _LATE_HOLD_SCOPE.reset(token)
+
+
+def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_margin=HOLD_MARGIN_PS, mem=48,
+             cpus=8, run=subprocess.call, tools=HERE, image=IMAGE, keep=False, repair_rc="", from_mode="",
+             owner_override=False, strict_one_pass=False, route_hold_form=False):
     """-> result dict (also written to ROOT/eco_loop.json).  verdict PASS | EXHAUSTED | ERROR | NOT_ELIGIBLE | NOT_NEAR_MISS
 
     route_hold_form (ROUTE-HOLD-PASS, DIE-HBM-97 11-10, COORD vecd-clkroot-r2 ruling (a)): run the kit's DECLARED in-flow
@@ -951,7 +1042,8 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     res = dict(schema=SCHEMA, kind="eco", tool="tools/die_plan/eco_loop.py", kit=str(kit), root=str(root),
                mem_requested_gb=mem_in, mem_gb=mem, kit_peak_gb=peak, mem_factor=ECO_MEM_FACTOR,
                base_signoff=str(base_signoff), base_routed_db=(base_rec.get("inputs") or {}).get("odb"),
-               base_metrics=metrics(base_rec, base_signoff) if base_rec else None, max_iter=max_iter, hold_margin_ps=hold_margin,
+               base_metrics=metrics(base_rec, base_signoff) if base_rec else None,
+               hold_repair_scope=kit_hold_scope(kit), max_iter=max_iter, hold_margin_ps=hold_margin,
                started=t0, iterations=[], flow=flow_sha(tools), host=os.uname().nodename)
     if strict_one_pass:
         budget = dict(limit=1, dispatched=0, blocked=[])
@@ -969,7 +1061,7 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
                     return 73
                 budget["dispatched"] += 1
             return original_run(cmd, **kwargs)
-    ok, why = eligible(base_rec)
+    ok, why = eligible(base_rec, None if route_hold_form else base_signoff)
     res["eligibility"] = why
     declared = route_hold_declared(kit)
     res["route_hold_form"] = dict(requested=bool(route_hold_form), declared=declared)
@@ -1096,7 +1188,7 @@ def summary(res):
         return f"late-ECO not a near miss: {res.get('reason')}"
     tag = {"PASS": "late-ECO PASS", "ECO_OOM": "late-ECO OOM", "ABORTED": "late-ECO ABORTED"}.get(res.get("verdict"), "late-ECO exhausted")
     return (f"{tag} ({its} it, {res.get('wall_s')} s): TT {m0.get('tt')}->{b.get('tt')} FF {m0.get('ff')}->{b.get('ff')} "
-            + (f"(non-port {m0.get('ff_np')}/{m0.get('ff_np_n')}->{b.get('ff_np')}/{b.get('ff_np_n')}) " if "ff_np" in b else "")
+            + (f"({b.get('hold_score_scope', 'non-port')} {m0.get('ff_np')}/{m0.get('ff_np_n')}->{b.get('ff_np')}/{b.get('ff_np_n')}) " if "ff_np" in b else "")
             + f"drv {m0.get('drv')}->{b.get('drv')} drc {m0.get('drc')}->{b.get('drc')}; {res.get('reason')}")
 
 
@@ -1159,7 +1251,7 @@ def main():
     a = ap.parse_args()
     if a.cmd == "check":
         rec = load(a.record)
-        ok, why = eligible(rec)
+        ok, why = eligible(rec, a.record)
         print(("ECO_ELIGIBLE " if ok else "ECO_NOT_ELIGIBLE ") + why)
         if not ok:
             return 1
