@@ -538,54 +538,103 @@ def _col_key(e):
 
 
 def _col_chain(txt, launch, capture):
-    """reg names of the station chain launch(st) -> capture.c0 in a bound text, launch side first; None = no instance"""
-    # the bind may dissolve the leading hierarchy (r0_nx types: u_u_t0 / w_u_s0_st, no u_r0_): match the longest suffix
-    cp, lp = capture.split("."), launch.split(".")
-    for d in range(min(len(cp), len(lp))):
-        ci = "_".join(cp[d:])
-        m = re.search(r"\b\w*" + re.escape(ci) + r"\s*\((.*?)\n\s*\);", txt, re.S)
-        if m:
-            launch = ".".join(lp[d:])
-            break
+    """Find actual registers from capture pin back to the source instance's output expression.
+
+    Bound native frame sources use flat concatenations as .st expressions. A source instance's geometric centre or
+    another group's globally named cst_st_s* registers are not evidence for this chain.
+    """
+    launch = re.sub(r'(u_s\d+)_st$', r'\1.st', launch.removeprefix('core:'))
+    capture = capture.removeprefix('core:')
+    if re.search(r'\.c[01]$', capture):
+        target, cport = capture.rsplit('.', 1)
     else:
+        target, cport = capture, 'c0'
+    if not launch.endswith('.st'):
         return None
-    c0 = re.search(r"\.c0\(\s*([\w$]+)", m.group(1))
-    if not c0:
+    source, sport = launch.rsplit('.', 1)
+
+    def instance_body(path):
+        parts = path.split('.')
+        for d in range(len(parts)):
+            name = '_'.join(parts[d:])
+            matches = list(re.finditer(r'\b(?P<name>\w*' + re.escape(name) + r')\s*\((?P<body>.*?)\);', txt, re.S))
+            if matches:
+                shortest = min(len(m.group('name')) for m in matches)
+                matches = [m for m in matches if len(m.group('name')) == shortest]
+                if len(matches) == 1:
+                    return matches[0].group('body')
+                return None
         return None
-    net, regs, lw = c0.group(1), [], launch.replace(".", "_")
-    for _ in range(16):
-        if lw in net:
+
+    tb, sb = instance_body(target), instance_body(source)
+    if tb is None or sb is None:
+        return None
+    c = re.search(r'\.' + re.escape(cport) + r'\s*\(\s*([^()]*)\)', tb)
+    s = re.search(r'\.' + re.escape(sport) + r'\s*\(\s*([^()]*)\)', sb)
+    if c is None or s is None:
+        return None
+    norm = lambda x: re.sub(r'\s+', '', x)
+    net, source_expr = c.group(1).strip(), norm(s.group(1))
+    regs, seen = [], set()
+    while norm(net) not in seen:
+        if norm(net) == source_expr:
             return regs[::-1]
-        am = re.search(r"\bassign\s+" + re.escape(net) + r"\s*=\s*(\w+)\s*;", txt)
-        q = am.group(1) if am else net
-        dm = re.search(r"\belse\s+" + re.escape(q) + r"\s*<=\s*([\w$]+)", txt)
-        if not dm:
+        seen.add(norm(net))
+        if not re.fullmatch(r'[\w$]+', net):
             return []
-        regs.append(q)
-        net = dm.group(1)
+        alias = re.search(r'\bassign\s+' + re.escape(net) + r'\s*=\s*([^;]+);', txt)
+        if alias:
+            net = alias.group(1).strip()
+            continue
+        dm = re.search(r'\belse\s+' + re.escape(net) + r'\s*<=\s*([^;]+);', txt)
+        if dm is None:
+            return []
+        regs.append(net)
+        net = dm.group(1).strip()
     return []
 
 
+
 def col_st_stations(t, txt, tcl, rep):
-    """col st -> t0 entries of this type (realised by the col RTL); returns them so core_stations skips them."""
-    es = [e for e in t.get("internal_stations", []) if not e.get("conn", "").startswith("bus:") and COL_ST.match(_col_key(e))]
-    if not es:
+    """Place each real native col status chain, grouped by its exact launch and capture pins."""
+    groups, es = {}, []
+    for e in t.get('internal_stations', []):
+        if e.get('conn', '').startswith('bus:'):
+            continue
+        key = _col_key(e).removeprefix('core:')
+        a, sep, c = key.partition('|')
+        a, c = a.removeprefix('core:'), c.removeprefix('core:')
+        if not sep or not COL_ST.match(a + '|' + c):
+            continue
+        c = c if re.search(r'\.c[01]$', c) else c + '.c0'
+        groups.setdefault((a, c), []).append(e)
+        es.append(e)
+    if not groups:
         return []
-    ns = sorted({len(e["regs_um"]) for e in es})
-    regs = sorted({tuple(tuple(r) for r in e["regs_um"]) for e in es})
-    if len(ns) != 1 or len(regs) != 1:
-        raise SystemExit(f"kit_istations: col st stations: entries disagree (depths {ns}, {len(regs)} site lists; fail closed)")
-    k = _col_key(es[0]).split("|")
-    chain = _col_chain(txt, k[0].rsplit(".", 1)[0] + "_st" if k[0].endswith(".st") else k[0], k[1].split(".c")[0])
-    if chain is None:
-        have = sorted({int(j) for j in re.findall(r"cst_st_s(\d+)(?!\d)", txt)})
-        chain = [f"cst_st_s{j}" for j in have] if have == list(range(len(have))) else []
-    for q, (x, y) in zip(chain, regs[0]):
-        tcl.append(f"is_place {{*{q}*}} {x} {y} cst:st")
-    # KW-FIX-27 (OWNER 11-03 only sign-off blocks): an older bind without the chain builds as bound; sign-off judges the hop
-    rep.append(dict(col_st=dict(stages=ns[0], entries=len(es), regs=chain, sites=[list(r) for r in regs[0]],
-                                **({"bound_stages": len(chain)} if len(chain) != ns[0] else {}))))
+    rows = []
+    for (a, c), entries in sorted(groups.items()):
+        ns = {len(e['regs_um']) for e in entries}
+        sites = {tuple(tuple(p) for p in e['regs_um']) for e in entries}
+        if len(ns) != 1 or len(sites) != 1:
+            raise SystemExit(f'kit_istations: col st {a} -> {c}: entries disagree '
+                             f'(depths {sorted(ns)}, {len(sites)} site lists; fail closed)')
+        depth, points = next(iter(ns)), next(iter(sites))
+        chain = _col_chain(txt, a, c)
+        actual = chain if chain is not None else []
+        for q, (x, y) in zip(actual, points):
+            tcl.append(f'is_place {{*{q}*}} {x} {y} cst:st')
+        row = dict(stages=depth, entries=len(entries), regs=actual, sites=[list(p) for p in points])
+        if len(groups) > 1:
+            row.update(launch=a, capture=c)
+        if len(actual) != depth:
+            row['bound_stages'] = len(actual)
+        if chain is None:
+            row['source_unresolved'] = True
+        rows.append(row)
+    # Preserve the single-chain receipt shape used by existing col kits.
+    rep.append(dict(col_st=rows[0]) if len(rows) == 1 else dict(col_st_groups=rows))
     return es
+
 
 
 def core_stations(t, txt, apply, htree, tcl, rep, source_sha=None):
