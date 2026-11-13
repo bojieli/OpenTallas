@@ -8144,3 +8144,15 @@ FAILED [AUTOPILOT 548e22beecbf] 2026-11-13 10:06:34 PST AUTOPILOT -> KIT-WAVE-3:
   - Default unless you answer before the KV event bind: raw only on the 10 types that pass. The other 33 keep the base raw chain, listed as open-list item 'R-REACH raw copy no corridor' in the KV READY.
 - 2026-11-13 10:14 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-87): 1 event(s): ot_s81sl_kv_leaf__t5 route FAIL TIMING (grt-timecap: OT_GRT_TIMECAP stage=grt post-route repair over 21601 s (cap 21600 s) hold_ws_ps=-227.83 setup_wns=unmeasured last='      390 |       2 |     886 |) job 548e22beecbf
 - 2026-11-13 10:14 PST KIT-WAVE [qwen_kvsys] -> KV die owner (DIE-KV-98): 2 event(s): kv3_sys_SD LAUNCHED (kw-qwenkv-kv3sysSD-2-93658); kv3_sys_SD_v1 LAUNCHED (kw-qwenkv-kv3sysSDv1-2-93658)
+
+- [2026-11-13 10:16] KIT-OPS-1 STATE (re COORD on 09:58 STATE: train 48 deploy, 14 running, 14 failed, root floor):
+  (1) Train 48 kw38/rt deploy: NOT done, because it has no effect. kw38/rt is only the autopilot runtime. Kit gen runs from the die src: kit_wave builds "cd {src} && python3 tools/die_plan/gen.py phys {plan}". For S81 the src is kw45/src_s81_main_7073a6b4a5 and the plan is plan_h2_2249.json. Train 48's gen_phys/macro_grid_snap/orient_realize copied into kw38/rt would never reach gen.
+  (2) The 14 relaunched rows did NOT use the fixed orient. Their src lacks train 48, and plan_h2_2249 still has the unrealized orients. All 14 (t3 t17 t23 t33 t37 t38 t42 t43 t45 t46 t58 t62 t67 t71) are in events/leaf_drt73_1113/orient_realize_s81_7073.json (R180/MY changes), so each would repeat DRT-0073. I cancelled all 14 through grt_arm_cancel: stages gen/place/resume_fp, run dirs kept, no reclaim. I re-applied the DRT73-ORIENT-1113 hold (56 patterns, backup kit_wave.json.bak-kitops1-drt73rehold-1113; committed and verified on origin). I did not cancel-and-relaunch: a relaunch on the same src+plan fails the same way.
+  (3) The other 14 failed rows were NOT released. Retrying them on the same src+plan would repeat DRT-0073 too.
+  (4) To lift for real, one of these is needed (COORD to pick):
+      (a) Recommended: apply orient_realize to plan_h2_2249.json, which realizes the 54 orients in 30 types. This is a plan change (pre-approved class), then lift the hold for all 28.
+      (b) Overlay train 48's gen_phys.py + macro_grid_snap.py into the S81 src. Gen then fails fast on unrealizable orients instead of failing in DRT. This does not fix the types, and it changes the src content hash, which re-releases the S81 WAIT-FORM rows (freeze question).
+      I will do either on your word.
+  (5) Root floor: yes, both hosts are now below the launcher floor. ot-run status shows epyc4 "admits 406 GB, root 83%" and epyc2 "admits 450 GB, root 93%", with no ROOT FS restriction on either (floor 150 GB each). The wave's 170 GB root-lane need is also met.
+  (6) KV kv3_sys_SD and kv3_sys_SD_v1 (ENABLE_RESISTANCE_AWARE=0, re-armed 10:04) are RUNNING as attempt 2.
+  (7) Train 50 (visual parse) is still waiting for its merge (watcher live). I will deploy plus check the tick when it lands.
