@@ -588,7 +588,7 @@ def col_st_stations(t, txt, tcl, rep):
     return es
 
 
-def core_stations(t, txt, apply, htree, tcl, rep):
+def core_stations(t, txt, apply, htree, tcl, rep, source_sha=None):
     """Map core<->core entries onto the leaf's station chains; returns the (maybe re-parameterised) bound text.
     KW-FIX-27 (OWNER 11-03 only sign-off blocks): plan stations here are sites, the bound RTL holds the stages.  One
     interface is one chain, so its depth is the deepest entry, sited from its deepest entries.  What the bound text
@@ -691,8 +691,25 @@ def core_stations(t, txt, apply, htree, tcl, rep):
         else:
             for j in range(d):
                 sites.append((f"{LEAF_INST}.u_cst_{c}.gd.s[{j}].u", centroid(groups[(c, None)], j), c))
+    exact_globs = set()
+    exact_registers = []
+    if t.get("clock", {}).get("soft_reg_banks"):
+        if not native:
+            raise ValueError("soft CS banks require actual native-flat RTL")
+        import soft_cs_placement
+        banks, exact_globs = soft_cs_placement.prepare(t, txt, source_sha)
+        import fnmatch
+        from core_station_inventory import native_banks
+        exact_registers = [r["name"] for b in native_banks(txt) for r in b["registers"]
+                           if any(fnmatch.fnmatchcase(r["name"], g) for g in exact_globs)]
+        txt = soft_cs_placement.preserve_drivers(txt, banks)
+        tcl.extend(soft_cs_placement.emit(banks))
+        rep.append(dict(soft_reg_banks=[dict(id=b["id"], flops=len(b["bit_sites_um"]),
+                                            cell_glob=b["cell_glob"]) for b in banks]))
     for nm, (x, y), c in sites:
-        tcl.append(f"is_place {{{'*' + _flat(nm) + '_*' if native else _glob(nm)}}} {x} {y} cst:{c}")
+        pat = "*" + _flat(nm) + "_*" if native else _glob(nm)
+        if not any(fnmatch.fnmatchcase(r, pat) for r in exact_registers):
+            tcl.append(f"is_place {{{pat}}} {x} {y} cst:{c}")
     rep.append(dict(core_classes={c: dict(param=CLASS_PARAM.get(c), stages=d,
                                           entries=sum(len(v) for (cc, _), v in groups.items() if cc == c))
                                   for c, d in sorted(depth.items())},
@@ -1285,6 +1302,10 @@ def main(argv):
     if bfile.resolve().parent != kd:      # kd is resolved; a moved kit dir leaves a symlink in the recorded path (DIE-HBM-94 11-08, q_spt0)
         raise SystemExit(f"kit_istations: bound module {bfile} is not a kit-local copy (run kit_rsync.py first)")
     txt = bfile.read_text()
+    source_sha = None
+    if t.get("clock", {}).get("soft_reg_banks"):
+        import hashlib
+        source_sha = hashlib.sha256(txt.encode()).hexdigest()
     tcl = [TCL_HEAD]
     rep = []
     bad = [e.get("conn") for e in t.get("internal_stations", []) if e.get("leg_order") == "channel" and not e.get("core")]
@@ -1448,7 +1469,7 @@ def main(argv):
                         plan_width=b["width"], bound_width=W,
                         **({"bit_groups": bgrp["groups"]} if bgrp is not None and exact is None else {}),
                         **({"exact_bank_sites": True} if exact is not None else {})))
-    txt = core_stations(t, txt, apply, htree, tcl, rep)
+    txt = core_stations(t, txt, apply, htree, tcl, rep, source_sha)
     # plan cells with a FIRM site (no hard view): their flops at the site
     for c in soft_plan_cells(tn, t):
         ox, oy = c["origin_um"]
