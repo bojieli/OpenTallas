@@ -3602,3 +3602,7 @@ CODEX: 2026-11-13 13:48 PST token takeover: be5ba677 strict-bound 5-layer compil
 CODEX: 2026-11-13 13:52 PST SERDES benchmark harness fixed and H/I cycles priced on e73625e921; G region-boundary structural PLACE pilot running, existing jobs retained.
 
 CODEX: 2026-11-13 13:55 PST found current KV EX F70 signed routed provider on epyc2; registered same-DB re-sign after actual final visual review, no reroute/count claim.
+
+CODEX: 2026-11-13 13:58 PST SERDES explicit capturedRST_TREE0 was suppressing requested reset-tree form; constructor/template fixed391d806230; actualtree1 H2 fresh synth/place running.
+
+CODEX: 2026-11-13 13:59 PST GUNIT gf4 programme68ac34a51b fixes IDs+2/weights+4,3-job bench+controlsPASS; physicalgf4continues; residualbksel/T51collectedwithT51WoneECOinflight.

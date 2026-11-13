@@ -12849,3 +12849,7 @@ CODEX SVC progress: programme proof source package 7140618b36 and runner failure
 
 ## CODEX notes 2026-11-13 13:55 PST — KV EX residual core
 Current hg1101 provider F70 has existing SIGNED receipt (TT +101.89 ps, FF +0.80 ps, DRV/DRC/antenna 0, final LEC EQUIVALENT). The 33/34 residual is current-flow re-sign eligibility, not missing original closure. Same routed database survives epyc2 codex-kv-ex-closure-1131/place70; build 3796fd3dacf05d3c676f85559939cfa30aaa4f59. Actual saved final images reviewed ISSUES-ACCEPT; registered AUTO-RESIGN row for normal scheduler re-sign. No reroute, source change or count claim.
+
+2026-11-13 13:57 PST shared: committed/pushed terminal-identity street fix e206b8786f (34testsPASS) and pregrt launch-clock diagnostic fix1fc6cb6db3 (15testsPASS). Existing worktrees only. QC hard-child DSREP/RSTREP emission defect delegated to available HBM worker; cap emitter/classifier d34bfdb117 ready. T41 actual route DRC0, finish hold/slew fail diagnostics while abstract still running; no ECO/retry.
+
+2026-11-13 13:59 PST S81 hard-core milestone: GUNIT schedule68ac34a51b pushedhub; programmePASS+mutants; physicalnotSIGNED, exactpinaccessprobe/exportnext. Allfourhardcorefamiliesplusresidualbksel/t51activelyowned.
