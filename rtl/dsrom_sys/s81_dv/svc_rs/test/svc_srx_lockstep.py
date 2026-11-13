@@ -43,10 +43,14 @@ def vectors(d: Path, seed: int):
 
 def build(a, srx, mut, nkv, np_):
     ns = a.nstage if srx else 2
-    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "")
+    band = 1 if (srx and a.band) else 0
+    tag = f"{a.dut}_srx{srx}_m{mut}" + (f"_ns{ns}" if ns != 2 else "") + ("_band" if band else "")
     if (a.work / f"build_{tag}.rc").is_file() and (a.work / f"build_{tag}.rc").read_text().strip() == "0":
         return tag
     prm = dict(P, NSTAGE=ns, SRX=srx, SRXMUT=mut, NJOBMAX=len(TS), NKV=nkv, NP=np_, NSC=1, NPV=1, MAXCYC=400000)
+    if band:
+        # --band: the S81 band form (ot_s81_svc_band); the mutants are the BAND negative controls (BANDMUT 1, 2)
+        prm.update(SRXMUT=0, BANDX=1, BANDMUT=mut)
     if srx and a.srxt:
         prm["SRXT"] = f"1024'h{a.srxt}"
     r = "/work/root"
@@ -55,7 +59,8 @@ def build(a, srx, mut, nkv, np_):
              "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv", "rtl/hdc/ot_hdc_fastfp.sv", "rtl/hdc/ot_hdc_fp32_add_lat.sv",
              "rtl/hdc/ot_hdc_prefix.sv", "rtl/hdc/ot_hdc_fp32_f12.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv"]
     if a.dut == "s81":
-        files += ["rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv", "rtl/dsrom_sys/s81_dv/ot_s81_svc_merge_h4.sv"]
+        files += ["rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv", "rtl/dsrom_sys/s81_dv/ot_s81_svc_merge_h4.sv",
+                  "rtl/dsrom_sys/s81_svc/ot_s81_svc_band.sv"]
     cmd = ["verilator", "--cc", "--exe", "--build", "-j", "24", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED",
            "-Wno-BLKSEQ", "-Wno-MULTIDRIVEN", "--top-module", "tb_hdc_v41x_attn", "--prefix", "Vtb", "-Mdir",
            f"/work/out/obj_{tag}", "+define+OT_ATTN_SETCHECK",
@@ -114,9 +119,14 @@ def main():
     ap.add_argument("--mut", default="1,2,3")
     ap.add_argument("--nstage", type=int, default=2, help="DUT NSTAGE (3 = third staging buffer); the SRX 0 reference stays 2")
     ap.add_argument("--seed", type=int, default=11)
+    ap.add_argument("--band", action="store_true", help="S81 band form (BANDX 1) on top of --srx: expected shift n = srx + 2; "
+                    "--mut then names the BANDMUT controls (1 = tags only +1, 2 = band 0 merge tags early)")
     ap.add_argument("--image", default="verilator/verilator:v5.032")
     a = ap.parse_args()
     a.work = a.work.resolve(); a.work.mkdir(parents=True, exist_ok=True)
+    if a.band and a.dut != "s81":
+        sys.exit("--band needs --dut s81")
+    n = a.srx + (2 if a.band else 0)          # scores +n, P.V +2n (the band adds 2 edges to the tile round trip)
     nkv, np_ = vectors(a.work / "vec", a.seed)
     from concurrent.futures import ThreadPoolExecutor
     muts = [0] + [int(m) for m in a.mut.split(",") if m]
@@ -124,16 +134,16 @@ def main():
         tags = list(ex.map(lambda sm: build(a, sm[0], sm[1], nkv, np_), [(0, 0)] + [(a.srx, m) for m in muts]))
     ref_tag = tags[0]
     ref, rs = run(a, ref_tag)
-    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
+    rec = dict(tool="svc_srx_lockstep.py", dut=a.dut, srx=a.srx, band=bool(a.band), shift=n, nstage=a.nstage, srxt=a.srxt, seed=a.seed, params=P, T=TS,
                ref=dict(tag=ref_tag, summary=rs, beats_sc=len(ref["BSC"]), beats_pv=len(ref["BPV"])), runs={})
     with ThreadPoolExecutor(len(muts)) as ex:
         res = list(ex.map(lambda t: run(a, t), tags[1:]))
     for mut, tag, (ev, s) in zip(muts, tags[1:], res):
-        c = compare(ref, ev, a.srx)
+        c = compare(ref, ev, n)
         setchk = s.get("V41XSETCHK", {}).get("errors")
         lock = all(v["ok"] for v in c.values()) and setchk in ("0", None)
         data = all(v["data_equal"] for v in c.values()) and setchk in ("0", None)
-        first = c["BSC"]["first_shift"] == a.srx and c["BPV"]["first_shift"] == 2 * a.srx
+        first = c["BSC"]["first_shift"] == n and c["BPV"]["first_shift"] == 2 * n
         end = (ref["BPV"][-1][0], ev["BPV"][-1][0]) if ev["BPV"] and ref["BPV"] else None
         rec["runs"][tag] = dict(srxmut=mut, lockstep=lock, data_equal=data, first_job_shift_ok=first, end_cycle=end,
                                 setcheck_errors=setchk, summary=s, compare=c)
