@@ -14,28 +14,28 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "event28w_c",
+   "event": "kvN2_66e6607",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
+    "evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_40e22dd1d2",
-   "src_sha": "9446d18f5d9aa656166cf492128986e43529ee89",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f",
+   "src_sha": "66e6607e3f0ef569f504020569a30817c43278ad",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json",
-    "note": "KW-FIX-42 2026-11-09 07:14 PST KV bind9 = the KV small event (KV-PLAN-1 07:04 READY, COORD 07:1x GO): plan_zbk (plan_c 1035a005 = plan_zb6), asbuilt caba8c83, strict bind9 0 errors (160 partitions, 25 | 11-12 DIE-KV-98: vF (plan_c md5 b85b648476700cea99addc382b4560ac, strict bind RC 0, bind_report eb5154ba73ec, bands widened / resize-bands 0.5); KV src = main 40e22dd1d26c + kv99 reset_tree 0c3eb33db77f + grtm-kv 5796e77ff0 + landing Tcl-quote fix 4fd7cbd4b6d4",
-    "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2"
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out",
+    "note": "KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f (pure git archive of main 66e6607e3f0e), same command as epyc8 dkv99/bind_e.sh; replaces dkv99/bind_vN2i only because that bind names HDL sources inside the epyc8 lane worktree wt/die-kv-99-e. Mirrored to every KV gen host."
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -401,30 +401,15 @@
    "hold_items": {
     "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
-    "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
-    "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
-    "kv3_pv_v4": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
-    "kv3_sys_SD": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
-    "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
-    "kv3_pv_v7": "KW-FIX-43 11-10: kept held when kv3_pv_* was lifted (RETRY-INFRA a17, not a band row; release needs a ruling). Revert: delete this key.",
-    "kv3_pv_v1": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
-    "kv3_pv_v1n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
-    "kv3_pv_v3n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
-    "kv3_pv_v4n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
-    "kv3_pv_v6n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
-    "kv3_pv_v12": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
     "kv3_hgi_v3": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
     "kv3_hgi_v5": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
     "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
-    "kv3_pv_v5": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (b) 'physical collector_tree differs from captured bound reset identity' = plan-vs-bind mismatch, owner DIE-KV-98; held until fixed",
-    "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
     "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
     "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
     "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
-    "kv3_hg_v1p*": "WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)",
-    "kv3_hg*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
-    "kv3_hgi*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
+    "kv3_hg_v1p*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)",
+    "kv3_hg*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
+    "kv3_hgi*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -759,7 +744,7 @@
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-   "queue_src": "main@40e22dd1d26c",
+   "queue_src": "main@66e6607e3f0e",
    "hold_items_released": {
     "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
     "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -827,7 +812,8 @@
     "kv3_hgi_v6": {
      "OT_HOLD_STOP_PS": "-300",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hg": {
      "OT_HOLD_STOP_PS": "-200",
@@ -847,52 +833,62 @@
     "kv3_hgi": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v1__cl141fc26e": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v1__cl42bc8b12": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v2__cl2862d491": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v2__cle0015330": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v3": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v4": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v5": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v7": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hgi_v8": {
      "OT_HOLD_STOP_PS": "-200",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
     },
     "kv3_hroot": {
      "OT_HOLD_STOP_PS": "-200",
@@ -2422,298 +2418,7 @@
    "note_work_root_kw43": "KW-FIX-43 11-09 10:4x COORD 10:4x: new attempts in lane kw43-wave-1109. On epyc2 (scratch2 40 GB < floor 50) and epyc4 the lane is ONE symlink /srv/opentallas-scratch2/claude/kw43-wave-1109 -> real dir /srv/opentallas-scratch3/claude/kw43-wave-1109 (root fs, all-disks rule, root floor 150; no link back); a real scratch2 dir on epyc7/intel1/intel2. ot-run backend kw43-rootreal authorizes such dirs by real path. Revert: work_root <- work_root_prev_kw43",
    "queue_src_prev_kw43kv": "claude/die-kv-97-zbadd-1109@e273bd37e4ee",
    "note_kw43_kvqs": "KW-FIX-43 2026-11-09 12:2x COORD 12:1x (3): KV QUEUE_SRC kvrtt-wave 6d044488624b (= src_sha e273bd37 + kv_kvrtt hook file, KV-PLAN-2 12:04; on GitHub 6d044488624bf9cd). Revert: queue_src = queue_src_prev_kw43kv.",
-   "item_inputs": {
-    "kv3_sys_SD": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
-    },
-    "kv3_sys_SD_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
-     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
-    },
-    "kv3_pv_v12": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
-    },
-    "kv3_pv_v5n": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
-    },
-    "kv3_pv_v6n": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
-    },
-    "kv3_pv_v1n": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_pv_v7": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_sys_c": {
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hg": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hg_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hg_v1p2": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hg_v1p4": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hg_v1p5": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hg_v1p6": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hg_v3": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v1__cl141fc26e": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v1__cl42bc8b12": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v2__cl2862d491": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v2__cle0015330": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v4": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v6": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v7": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_hgi_v8": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
-     "kit_rtl_prev_kvbr1": {
-      "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
-      "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
-     },
-     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
-    },
-    "kv3_io_cor": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
-    },
-    "kv3_io_cor_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)",
-     "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
-    },
-    "kv3_hgi_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)"
-    },
-    "kv3_hgi_v2": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)"
-    },
-    "kv3_hg_v1p3": {
-     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
-     "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)"
-    }
-   },
+   "item_inputs": {},
    "item_inputs_prev_kw43sd": {
     "kv3_sys_SD": null,
     "kv3_sys_SD_v1": null
@@ -4145,7 +3850,7 @@
     "epyc7",
     "epyc2"
    ],
-   "plan_sha256": "3ad01048cacf6a1bd560ed3178ee3c06ffa98619dda7ae78eea1e485d8e27a75",
+   "plan_sha256": "cdea77f148ce56c5e830cc6e01d9f712c21db9ee1697eaeec290ffbded34b4d0",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64"
@@ -4172,7 +3877,757 @@
      "epyc4",
      "epyc5"
     ]
-   }
+   },
+   "prev_kitops1_kvn2": {
+    "event": "event28w_c",
+    "gate_events_extra": null,
+    "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+    "plan_sha256": "3ad01048cacf6a1bd560ed3178ee3c06ffa98619dda7ae78eea1e485d8e27a75",
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_40e22dd1d2",
+    "src_sha": "9446d18f5d9aa656166cf492128986e43529ee89",
+    "queue_src": "main@40e22dd1d26c",
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json",
+     "note": "KW-FIX-42 2026-11-09 07:14 PST KV bind9 = the KV small event (KV-PLAN-1 07:04 READY, COORD 07:1x GO): plan_zbk (plan_c 1035a005 = plan_zb6), asbuilt caba8c83, strict bind9 0 errors (160 partitions, 25 | 11-12 DIE-KV-98: vF (plan_c md5 b85b648476700cea99addc382b4560ac, strict bind RC 0, bind_report eb5154ba73ec, bands widened / resize-bands 0.5); KV src = main 40e22dd1d26c + kv99 reset_tree 0c3eb33db77f + grtm-kv 5796e77ff0 + landing Tcl-quote fix 4fd7cbd4b6d4",
+     "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2"
+    },
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "--native-cell-cap",
+     "517000"
+    ],
+    "item_inputs": {
+     "kv3_sys_SD": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
+     },
+     "kv3_sys_SD_v1": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
+      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
+     },
+     "kv3_pv_v12": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
+     },
+     "kv3_pv_v5n": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
+     },
+     "kv3_pv_v6n": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
+     },
+     "kv3_pv_v1n": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_pv_v7": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_sys_c": {
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hg": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hg_v1": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hg_v1p2": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hg_v1p4": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hg_v1p5": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hg_v1p6": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hg_v3": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v1__cl141fc26e": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v1__cl42bc8b12": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v2__cl2862d491": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v2__cle0015330": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v4": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v6": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v7": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_hgi_v8": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "kit_rtl": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vF2",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)",
+      "kit_rtl_prev_kvbr1": {
+       "bind_out": "/srv/opentallas-scratch2/claude/dkv98/bind_vD",
+       "asbuilt": "/srv/opentallas-scratch2/claude/dkv98/asbuilt_rel.json"
+      },
+      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 01:06 PST: canonical KV bind -> dkv98/bind_vF2 (strict bind of vF plan_c b85b64847670 + asbuilt_rel on the wave src kw45/src_kv_main_40e22dd1d2 = main 40e22dd + kv99 0c3eb33db77f; RC 0, 0 errors, 160 partitions, 2545 crossings; kit_topology.bind_matches 56/56; mirrored byte-identical on epyc7/8/9). Cause of KIT_TOPOLOGY_BIND_STALE: the 23:37 vF re-pin moved only the die kit_rtl to bind_vF; 19 item_inputs kept kit_rtl.bind_out=bind_vD (vD bind matches 18/56 types on vF), and bind_vF (built on old src kw43/src_zb_lr_sf_por15c_rh) is stale for kv3_phy/kv3_phy_v1. Revert: kit_rtl_prev_kvbr1 / item_inputs.*.kit_rtl_prev_kvbr1."
+     },
+     "kv3_io_cor": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
+     },
+     "kv3_io_cor_v1": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)",
+      "note": "KW-FIX-45 11-11 14:5x: KV vD (DIE-KV-98 BIND_OK md5 1791c1e2eb47, bind_vD, asbuilt_rel)"
+     },
+     "kv3_hgi_v1": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)"
+     },
+     "kv3_hgi_v2": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)"
+     },
+     "kv3_hg_v1p3": {
+      "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
+      "note": "KW-FIX-45 11-12 DIE-KV-98: re-pinned to KV vF (md5 b85b64847670, bind_vF)"
+     }
+    },
+    "hold_items": {
+     "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+     "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+     "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+     "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+     "kv3_pv_v4": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+     "kv3_sys_SD": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+     "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+     "kv3_pv_v7": "KW-FIX-43 11-10: kept held when kv3_pv_* was lifted (RETRY-INFRA a17, not a band row; release needs a ruling). Revert: delete this key.",
+     "kv3_pv_v1": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+     "kv3_pv_v1n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+     "kv3_pv_v3n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+     "kv3_pv_v4n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+     "kv3_pv_v6n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+     "kv3_pv_v12": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+     "kv3_hgi_v3": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+     "kv3_hgi_v5": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+     "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+     "kv3_pv_v5": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (b) 'physical collector_tree differs from captured bound reset identity' = plan-vs-bind mismatch, owner DIE-KV-98; held until fixed",
+     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
+     "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
+     "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+     "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+     "kv3_hg_v1p*": "WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)",
+     "kv3_hg*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
+     "kv3_hgi*": "WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
+    },
+    "item_env": {
+     "kv3_phy": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v6": {
+      "OT_HOLD_STOP_PS": "-300",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg_v1": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg_v3": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v1__cl141fc26e": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v1__cl42bc8b12": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v2__cl2862d491": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v2__cle0015330": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v3": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v4": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v5": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v7": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v8": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hroot": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hub_C": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hub_Ei": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hub_Eo": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hub_Wi": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hub_Wo": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_io_cor": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_io_cor_v1": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_io_ft": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_io_ft_v1": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc__cl254f2e73": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc__cl5a95b461": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc_v1__cl23f6a148": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc_v1__cl4ea58a5c": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc_v1__cl7f648944": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc_v3": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_PROV_DETAIL_ID": "4daa8ce10a8106b0",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_phy_v1": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v1": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_LAND_RESERVE": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v12": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_LAND_RESERVE": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v1n": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_LAND_RESERVE": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v2": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v2n": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v3": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v3n": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_LAND_RESERVE": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v4": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v4n": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_LAND_RESERVE": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v5": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v5n": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_LAND_RESERVE": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v6": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v6n": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_LAND_RESERVE": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v7": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_v8": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_POROUS_VIEWS": "all",
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_sys_SD": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_sys_SD_v1": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GRT_ALLOW_CONGESTION": "1",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_sys_c": {
+      "OT_HOLD_STOP_PS": "-200",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v1": {
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hgi_v2": {
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg_v1p2": {
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg_v1p3": {
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg_v1p4": {
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg_v1p5": {
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_hg_v1p6": {
+      "OT_GRT_TRANSITION_MODE": "edge_outline",
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_astk": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_head_eighth_e0": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_head_eighth_e1": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_head_eighth_e2": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_head_eighth_e5": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_head_eighth_e6": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pc_v1": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "kv3_pv_pair": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "ot_qwen_tp8_pv_join_t": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "ot_qwen_tp8_pv_join_t__v5ebb1b850396": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "ot_qwen_tp8_pv_join_t__v9d707d929550": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "ot_qwen_tp8_pv_join_t__vde688492fadf": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_ahub": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_ectlk_q0": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_ectlk_q1": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_ectlk_q2": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_ectlk_q3": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_cdc_ch": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_cdc_ci": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_cdc_hi": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_cdc_pc": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_core_guard": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_core_order": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_core_peer": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_core_prompt": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_core_queue": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_core_rx": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_core_tx": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_host_qm": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_ingest_eng": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_phy_adp": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_hr_phy_pad": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_kvs_ctl": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_kvs_pc": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_kvs_pc__v4128d4b721bf": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_kvs_pc__vc499977aa713": {
+      "OT_GEN_M8_GRANT": "1"
+     },
+     "qkd_kvs_pc_h_head_p": {
+      "OT_GEN_M8_GRANT": "1"
+     }
+    },
+    "gate": {
+     "g0c": "PASS",
+     "bind": "PASS",
+     "clock": "PASS",
+     "evidence": "DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
+    }
+   },
+   "gate_events_extra": [
+    "kvN2_66e6607"
+   ],
+   "hold_items_released_kitops1_kvn2": {
+    "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
+    "kv3_pv_v1": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v1n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v3n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v4n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v6n": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v12": "KW-FIX-43 11-10 17:5x COORD: excluded from wave relaunch (kit_rtl on epyc8 hit the partial kw32/src_27db6 copy: bind HDL sources missing); resumed at PLACE privately on epyc7 from the a11/a15/a18/a26 kits + startfit (kw43/kvsf). Lift when the bind of record points at a whole source on every KV gen host. Revert: delete this key.",
+    "kv3_pv_v2": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v2n": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v3": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_pv_v4": "KW-FIX-43 COORD 11-10 01:2x: clock-landing band family, on bindZ's changed list; no relaunch until the v2n replay is read and the KV re-bind is ruled. Revert: delete this key.",
+    "kv3_sys_SD": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+    "kv3_hub_Wo": "KW-FIX-43 COORD KW43-48 ruling: held for the KV re-bind ruling, DBs reclaimed, no rebuild now. Revert: delete this key.",
+    "kv3_pv_v5": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (b) 'physical collector_tree differs from captured bound reset identity' = plan-vs-bind mismatch, owner DIE-KV-98; held until fixed",
+    "kv3_pv_v7": "KW-FIX-43 11-10: kept held when kv3_pv_* was lifted (RETRY-INFRA a17, not a band row; release needs a ruling). Revert: delete this key."
+   },
+   "note_kitops1_kvn2": "KIT-OPS-1 2026-11-12 18:05 PST (COORD task 1): KV -> vN2 event kvN2_66e6607: plan main plan_of_record (sha256 cdea77f148ce), src /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f (main 66e6607e3f0e, real dir on epyc7/8/9/intel1 and epyc2 scratch3), bind /srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out, sidecar plan_of_record/eW_sidecar.json; item_inputs (30 vF pins) cleared; OT_CLAND_STRIP_DENS=1.0 on the 11 hgi rows; kv3_sys_SD_v1 builds the vN2 outline (= SD-GROW, DIE-KV-99 08:40). Holds released: kv3_hub_Wo, kv3_pv*, kv3_pv_v1, kv3_pv_v12, kv3_pv_v1n, kv3_pv_v2, kv3_pv_v2n, kv3_pv_v3, kv3_pv_v3n, kv3_pv_v4, kv3_pv_v4n, kv3_pv_v5, kv3_pv_v6n, kv3_pv_v7, kv3_sys_SD. Kept: kv3_hg*/kv3_hgi*/kv3_hg_v1p* (vN2 drawing verdict), hgi_v3/v5/v6 (route_supply check), hgi_v4/v8 (e2/e6), hub_Wi/Ei (qkd_hr children). Unchanged types keep their records (item key = plan block sha). Revert: restore every key from prev_kitops1_kvn2 (and hold_items from it), or the backup autopilot/kit_wave.json.bak-kitops1-kvn2-1112."
   },
   "s81": {
    "enabled": true,
