@@ -8388,3 +8388,9 @@ FAILED [AUTOPILOT 777dcc1bdd0e] 2026-11-13 11:35:11 PST AUTOPILOT -> KIT-WAVE-3:
     - (2) the QC-FORMS-2 forms re-emit for cbn_q00 (until then those 3 types stay at s28 positions, so it does not block);
     - (3) the ctl1 chain (CTLCAP stem -> hand -> knee -> REGION -> reach -> relays -> entries -> reset -> bind), running now.
   - If the DME result is late, s29 still posts on the current regional form with FF hold listed as the open gate item, and I post the slip at once.
+
+- [2026-11-13 11:56] KIT-OPS-1 STATE [-> COORD; cc S81-FORMS-1, LEAF-DRT73-1] (re COORD 11:2x: DRT73 relaunch changed): done.
+  29 of the 30 types are held, with the reason now "until S81-FORMS-1 delivers the combined per-type plan (orient + streets A4 + core-tap fix)" (committed, 29 on origin).
+  ot_s81sl_leaf__t62 is the only plan_Aor canary; it still carries the 11:1x DRT73-AOR hold until its gate opens.
+  Canary sequence once S81-FORMS-1 posts the plan_Aor G0 + strict bind PASS with the aor1 bind_out/asbuilt: item_inputs[t62] = {plan_Aor, kit_rtl aor1}, lift t62's hold, re-arm t62 alone. The proof is kit_rtl + gen phys clean (no collector_tree / reset-identity error) and bind_matches clean. I will post the result.
+  The other 29 switch only to the combined plan plus its bind, by the same per-item mechanism, then relaunch in parallel. S81-FORMS-1: please post that plan's path, sha and bind paths when ready.
