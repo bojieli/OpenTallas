@@ -28,12 +28,19 @@ set rc_q {};set rc_c {}
 foreach i [$rc_blk getInsts] {
  set n [string map [list "\\" ""] [$i getName]]
  if {[regexp {g_r1\[([0-9]+)\]\.q\[([0-9]+)\]} $n -> g bit]} {dict lappend rc_q "$g,[expr {$bit/8}]" $i}
+ # Synthesis may name the exact same q flop by its g_c1 direct wire alias.
+ # EW=37, IW=20: v[b]=r1_d[37*lane+20+b], lv=r1_d[37*lane+36].
+ if {[regexp {g_c1\[([0-9]+)\]\.(v\[([0-9]+)\]|lv)\$_DFF} $n -> lane field vb]} {
+  set absolute [expr {37*$lane + ($field eq "lv" ? 36 : 20+$vb)}]
+  set g [expr {$absolute/27}];set bit [expr {$absolute%27}]
+  dict lappend rc_q "$g,[expr {$bit/8}]" $i
+ }
  if {[regexp {g_r1\[([0-9]+)\]\.g_cp8\[([0-9]+)\]\.(rp8|mb8|u_fl_r1s)} $n -> g rs]} {
   if {[[$i getMaster] isSequential]} {dict lappend rc_c "$g,$rs" $i}
  }
 }
 set rc_groups 0;set rc_qn 0;set rc_cn 0
-set rc_f [open /work/r1c8_affinity.csv w];puts $rc_f {group,q_count,control_count,x_um,y_um}
+set rc_f [open /work/r1c8_affinity.csv w];puts $rc_f {group,subgroup,q_count,control_count,x_um,y_um}
 dict for {key qs} $rc_q {
  if {![dict exists $rc_c $key]} {error "R1C8 affinity: missing control group $key"}
  set cs [dict get $rc_c $key];set sx 0;set sy 0
