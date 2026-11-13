@@ -1,0 +1,237 @@
+{
+ "tool": "reform_rebaseline.py",
+ "die": "s81",
+ "base": "/srv/opentallas-scratch2/claude/s81-r12ba-fin/plan_r12bA3.json",
+ "batch": "/srv/opentallas-scratch2/claude/s81-r12ba-fin/s6_kdst.json",
+ "delta": {
+  "changed": 41,
+  "added": [],
+  "removed": [],
+  "lane_cycles": 52,
+  "max_inc": 2,
+  "classes": {
+   "up_s": {
+    "lanes": 36,
+    "sum": 46,
+    "max_inc": 2,
+    "max_lane": "up_s_0N_L2",
+    "min": 0
+   },
+   "dn_s": {
+    "lanes": 2,
+    "sum": 2,
+    "max_inc": 1,
+    "max_lane": "dn_s_0N_L2",
+    "min": 0
+   },
+   "unit": {
+    "lanes": 2,
+    "sum": 3,
+    "max_inc": 2,
+    "max_lane": "unit__svc_14__eng",
+    "min": 0
+   },
+   "xtier": {
+    "lanes": 1,
+    "sum": 1,
+    "max_inc": 1,
+    "max_lane": "xtier__gunit__s_3S_C",
+    "min": 0
+   }
+  }
+ },
+ "price": {
+  "model": "compose_tok_ds --plan (TOK-13/14 method)",
+  "kind": "MODEL",
+  "base": {
+   "ar": {
+    "T": 1423824.6,
+    "tok_s": 842.8
+   },
+   "mtp": {
+    "T": 1839233.8,
+    "tok_s": 2713.5
+   }
+  },
+  "batch": {
+   "ar": {
+    "T": 1423824.6,
+    "tok_s": 842.8
+   },
+   "mtp": {
+    "T": 1839233.8,
+    "tok_s": 2713.5
+   }
+  },
+  "pct": {
+   "ar": 0.0,
+   "mtp": 0.0
+  }
+ },
+ "lanes": {
+  "dn_s_0N_L2": {
+   "old": 12,
+   "new": 13
+  },
+  "dn_s_5N_L2": {
+   "old": 12,
+   "new": 13
+  },
+  "unit__seqhost__gunit": {
+   "old": 72,
+   "new": 73
+  },
+  "unit__svc_14__eng": {
+   "old": 5,
+   "new": 7
+  },
+  "up_s_0N_L0": {
+   "old": 5,
+   "new": 6
+  },
+  "up_s_0N_L2": {
+   "old": 11,
+   "new": 13
+  },
+  "up_s_0S_L0": {
+   "old": 6,
+   "new": 7
+  },
+  "up_s_0S_L2": {
+   "old": 11,
+   "new": 12
+  },
+  "up_s_1N_L1": {
+   "old": 3,
+   "new": 4
+  },
+  "up_s_1N_L3": {
+   "old": 12,
+   "new": 13
+  },
+  "up_s_1N_L4": {
+   "old": 16,
+   "new": 18
+  },
+  "up_s_1S_L0": {
+   "old": 6,
+   "new": 7
+  },
+  "up_s_1S_L2": {
+   "old": 12,
+   "new": 13
+  },
+  "up_s_1S_L4": {
+   "old": 19,
+   "new": 21
+  },
+  "up_s_2N_L1": {
+   "old": 2,
+   "new": 3
+  },
+  "up_s_2N_L3": {
+   "old": 12,
+   "new": 13
+  },
+  "up_s_2N_L4": {
+   "old": 18,
+   "new": 20
+  },
+  "up_s_2S_L0": {
+   "old": 6,
+   "new": 7
+  },
+  "up_s_2S_L2": {
+   "old": 10,
+   "new": 11
+  },
+  "up_s_3N_L1": {
+   "old": 3,
+   "new": 4
+  },
+  "up_s_3N_L3": {
+   "old": 10,
+   "new": 11
+  },
+  "up_s_3N_L4": {
+   "old": 13,
+   "new": 14
+  },
+  "up_s_3S_L3": {
+   "old": 11,
+   "new": 12
+  },
+  "up_s_3S_L4": {
+   "old": 17,
+   "new": 18
+  },
+  "up_s_4N_L2": {
+   "old": 13,
+   "new": 15
+  },
+  "up_s_4S_L1": {
+   "old": 2,
+   "new": 3
+  },
+  "up_s_4S_L3": {
+   "old": 11,
+   "new": 13
+  },
+  "up_s_5N_L0": {
+   "old": 5,
+   "new": 6
+  },
+  "up_s_5N_L2": {
+   "old": 11,
+   "new": 13
+  },
+  "up_s_5S_L1": {
+   "old": 3,
+   "new": 4
+  },
+  "up_s_5S_L3": {
+   "old": 12,
+   "new": 13
+  },
+  "up_s_5S_L4": {
+   "old": 17,
+   "new": 19
+  },
+  "up_s_6N_L0": {
+   "old": 6,
+   "new": 7
+  },
+  "up_s_6N_L2": {
+   "old": 12,
+   "new": 13
+  },
+  "up_s_6S_L2": {
+   "old": 13,
+   "new": 14
+  },
+  "up_s_6S_L4": {
+   "old": 19,
+   "new": 21
+  },
+  "up_s_7N_L1": {
+   "old": 4,
+   "new": 6
+  },
+  "up_s_7N_L3": {
+   "old": 14,
+   "new": 15
+  },
+  "up_s_7N_L4": {
+   "old": 18,
+   "new": 19
+  },
+  "up_s_7S_L2": {
+   "old": 13,
+   "new": 14
+  },
+  "xtier__gunit__s_3S_C": {
+   "old": 61,
+   "new": 62
+  }
+ }
+}

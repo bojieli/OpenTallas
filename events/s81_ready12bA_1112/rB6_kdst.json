@@ -1,0 +1,428 @@
+{
+ "tool": "stage_kit_source_table_refresh",
+ "dest": true,
+ "plan_in": "af9967df9f89",
+ "plan_out": "18c864518844",
+ "lanes": 19,
+ "cycles_added": 21,
+ "rows": [
+  {
+   "lane": "up_s_0S_L2",
+   "src_type": "ot_s81sl_leaf__t1",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 11,
+    "natural": 11
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 12,
+    "natural": 12
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_lepw_mus_C__t1",
+   "dst_bus": "leafup_i3",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_0S_L0",
+   "src_type": "ot_s81sl_leaf__t2",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 6,
+    "natural": 6
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 7,
+    "natural": 7
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_lepw_mus_C__t1",
+   "dst_bus": "leafup_i4",
+   "dst_kit": 1
+  },
+  {
+   "lane": "dn_s_0N_L2",
+   "src_type": "dsdv_slice_lepw_mu_C__t1",
+   "bus": "leafdn_o3",
+   "n": 1,
+   "lane_fixed_old": 0,
+   "lane_fixed_new": 1,
+   "table_old": {
+    "fixed": 0,
+    "cycles": 12,
+    "natural": 12
+   },
+   "table_new": {
+    "fixed": 1,
+    "cycles": 13,
+    "natural": 13
+   },
+   "src_kit": 0,
+   "dst_type": "ot_s81sl_leaf__t6",
+   "dst_bus": "leafdn_i0",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_1S_L0",
+   "src_type": "ot_s81sl_leaf__t13",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 6,
+    "natural": 6
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 7,
+    "natural": 7
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_c1x_C__t1",
+   "dst_bus": "leafup_i4",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_1N_L1",
+   "src_type": "ot_s81sl_leaf__t75",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 3,
+    "natural": 3
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 4,
+    "natural": 4
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_c1x_C__t10",
+   "dst_bus": "leafup_i2",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_2S_L0",
+   "src_type": "ot_s81sl_leaf__t22",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 6,
+    "natural": 6
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 7,
+    "natural": 7
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_c1x_C__t3",
+   "dst_bus": "leafup_i4",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_2N_L3",
+   "src_type": "ot_s81sl_leaf__t29",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 12,
+    "natural": 12
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 13,
+    "natural": 13
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_c1x_C__t4",
+   "dst_bus": "leafup_i1",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_3N_L1",
+   "src_type": "ot_s81sl_kv_leaf__t3",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 3,
+    "natural": 3
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 4,
+    "natural": 4
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_kv512_C__t1",
+   "dst_bus": "leafup_i2",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_3N_L3",
+   "src_type": "ot_s81sl_kv_leaf__t4",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 10,
+    "natural": 10
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 11,
+    "natural": 11
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_kv512_C__t1",
+   "dst_bus": "leafup_i1",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_5S_L1",
+   "src_type": "ot_s81sl_leaf__t47",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 3,
+    "natural": 3
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 4,
+    "natural": 4
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_c1x_C__t6",
+   "dst_bus": "leafup_i2",
+   "dst_kit": 1
+  },
+  {
+   "lane": "dn_s_5N_L2",
+   "src_type": "dsdv_slice_c1x_C__t7",
+   "bus": "leafdn_o3",
+   "n": 1,
+   "lane_fixed_old": 0,
+   "lane_fixed_new": 1,
+   "table_old": {
+    "fixed": 0,
+    "cycles": 12,
+    "natural": 12
+   },
+   "table_new": {
+    "fixed": 1,
+    "cycles": 13,
+    "natural": 13
+   },
+   "src_kit": 0,
+   "dst_type": "ot_s81sl_leaf__t50",
+   "dst_bus": "leafdn_i0",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_6S_L2",
+   "src_type": "ot_s81sl_leaf__t56",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 13,
+    "natural": 13
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 14,
+    "natural": 14
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_c1x_C__t8",
+   "dst_bus": "leafup_i3",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_6N_L0",
+   "src_type": "ot_s81sl_leaf__t61",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 6,
+    "natural": 6
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 7,
+    "natural": 7
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_c1x_C__t9",
+   "dst_bus": "leafup_i4",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_7S_L2",
+   "src_type": "ot_s81sl_leaf__t65",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 13,
+    "natural": 13
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 14,
+    "natural": 14
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_lepe_nh_mus_C__t1",
+   "dst_bus": "leafup_i3",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_7N_L1",
+   "src_type": "ot_s81sl_leaf__t72",
+   "bus": "leafup_o0",
+   "n": 2,
+   "lane_fixed_old": 2,
+   "lane_fixed_new": 4,
+   "table_old": {
+    "fixed": 2,
+    "cycles": 4,
+    "natural": 4
+   },
+   "table_new": {
+    "fixed": 4,
+    "cycles": 6,
+    "natural": 6
+   },
+   "src_kit": 2,
+   "dst_type": "dsdv_slice_lepe_mu_C__t1",
+   "dst_bus": "leafup_i2",
+   "dst_kit": 2
+  },
+  {
+   "lane": "up_s_7N_L3",
+   "src_type": "ot_s81sl_leaf__t73",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 14,
+    "natural": 14
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 15,
+    "natural": 15
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_lepe_mu_C__t1",
+   "dst_bus": "leafup_i1",
+   "dst_kit": 1
+  },
+  {
+   "lane": "up_s_7N_L4",
+   "src_type": "ot_s81sl_leaf__t74",
+   "bus": "leafup_o0",
+   "n": 1,
+   "lane_fixed_old": 1,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 1,
+    "cycles": 18,
+    "natural": 18
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 19,
+    "natural": 19
+   },
+   "src_kit": 1,
+   "dst_type": "dsdv_slice_lepe_mu_C__t1",
+   "dst_bus": "leafup_i0",
+   "dst_kit": 1
+  },
+  {
+   "lane": "unit__svc_14__eng",
+   "src_type": "svc_lo_dsdv_svc_rs__t7",
+   "bus": "unit_o1",
+   "n": 2,
+   "lane_fixed_old": 0,
+   "lane_fixed_new": 2,
+   "table_old": {
+    "fixed": 0,
+    "cycles": 5,
+    "natural": 5
+   },
+   "table_new": {
+    "fixed": 2,
+    "cycles": 7,
+    "natural": 7
+   },
+   "src_kit": 0,
+   "dst_type": "eng__t1",
+   "dst_bus": "unit_i0",
+   "dst_kit": 2
+  },
+  {
+   "lane": "unit__seqhost__gunit",
+   "src_type": "seqhost__t1",
+   "bus": "unit_o4",
+   "n": 1,
+   "lane_fixed_old": 0,
+   "lane_fixed_new": 1,
+   "table_old": {
+    "fixed": 0,
+    "cycles": 72,
+    "natural": 72
+   },
+   "table_new": {
+    "fixed": 1,
+    "cycles": 73,
+    "natural": 73
+   },
+   "src_kit": 0,
+   "dst_type": "gunit__t1",
+   "dst_bus": "unit_i0",
+   "dst_kit": 1
+  }
+ ]
+}
