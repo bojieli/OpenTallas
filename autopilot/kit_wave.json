@@ -7659,7 +7659,8 @@
     },
     "ot_s81sl_leaf__t61": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_FORM_RELEASE": "r12bA_newrtl_reverdict_1112"
     },
     "ot_s81sl_leaf__t10": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -7667,7 +7668,8 @@
     },
     "ot_s81sl_leaf__t34": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_FORM_RELEASE": "r12bA_newrtl_reverdict_1112"
     },
     "ot_s81sl_leaf__t24__cl81374cd8": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -22734,7 +22736,11 @@
     ]
    },
    "note_kitops1_r12bA": "KIT-OPS-1 2026-11-12 21:46: S81 wave -> ready12b-A. Re-kit = the 71 bound modules of rekit_rtl_changed_vs_m2.json (leaf__t3 WAIT-FORM); 16 moved-only types held; retries 6.",
-   "note_kitops1_oldrtl": "KIT-OPS-1 2026-11-12 22:02: COORD ruling (1) cancelled 4 old-RTL rows of the 71 (retry added): dsdv_slice_c3x_C__t1, ot_s81sl_leaf__t34, ot_s81sl_leaf__t61, dsdv_slice_kv512_C__t1"
+   "note_kitops1_oldrtl": "KIT-OPS-1 2026-11-12 22:02: COORD ruling (1) cancelled 4 old-RTL rows of the 71 (retry added): dsdv_slice_c3x_C__t1, ot_s81sl_leaf__t34, ot_s81sl_leaf__t61, dsdv_slice_kv512_C__t1",
+   "form_release_kitops1": {
+    "ot_s81sl_leaf__t34": "KIT-OPS-1 2026-11-12 22:37 COORD ruling (a): new RTL, re-verdict at place (one-shot WAIT-FORM release via gen_env OT_FORM_RELEASE=r12bA_newrtl_reverdict_1112; ISSUES verdict was on old RTL)",
+    "ot_s81sl_leaf__t61": "KIT-OPS-1 2026-11-12 22:37 COORD ruling (a): new RTL, re-verdict at place (one-shot WAIT-FORM release via gen_env OT_FORM_RELEASE=r12bA_newrtl_reverdict_1112; ISSUES verdict was on old RTL)"
+   }
   },
   "s81_head": {
    "enabled": true,
