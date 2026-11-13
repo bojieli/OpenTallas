@@ -44,3 +44,10 @@
 
 ## 2026-11-13 07:27 resume
 - HARD-S81-DSDV-1 resumed (COORD, Fable reset). Read DSDV-FORMS-2 HANDBACK 07:27. Candidate plan g4 fb7f60293915; waiting on: g4 strict bind + latency (epyc8), G0/G0C g4 (epyc7), xs4 build epyc2 unit oth-ubuntu-2195141-1794582250. Next steps = DSDV-FORMS-2 NEXT STEPS 1-5.
+
+## 2026-11-13 13:11
+- Plan g4 = m4 fb7f60293915 on main 0a4b432de8 tools: G0 74 = base 74, G0C 0 errors on C rows, R-STREET 0, strict bind h2 rc 0 (0 tied; declared tie rstopt_xo ci_b[1103:1076], sidecar installed in the bind trees), LATCHECK 873/873. Branch pushed acac09abb5 (events/s81_xs4core_1113). RULEBOOK R-CAP dsdv note written.
+- xs4 build r1 (epyc2) DIED at 07:50 after synth: FACE_GUARD RAW FAIL (g_v/g_fam/g_idx 21 kept copies per pin, is_v 2, xw_v/xw_d[0] one flop, fault flop second load, is_d[91:42] dead). Nobody saw it for 5 h (my waiter looked for place renders only).
+- FIX in progress (helper XS4-FACE): xs4 ports one bit per kept capture copy (g_v 63, g_fam 63, g_idx 441, is_v 2), own flops for xw_v and fault, wrappers replicate; dead_inputs is_d[91:42]; benches xs4_equiv + xgtxo; kit regen (kits2) and relaunch run/xs4h_r2. Contract regenerated: 4,906 pins at 0.096 (xs4_core_contract_1113.py; old pin table saved W/ot_s81sl_xs4.pins4365.json). UNCOMMITTED in WT: contract files, RTL edits to come.
+- AFTER the RTL is green: rerun W/chain6.sh (new plan sha: core pin table changes), rebind (run_bind_xs4.sh, AB=asbuilt_xs4c.json, NOSEED=1), refresh events/s81_xs4core_1113, then READY.
+- Helper DSDV-PROOF: place proofs c1x t3 + c1x t8 from out_h2 (old 4,365-pin contract; layout view only) + ft0_i pin_unreg trace.
