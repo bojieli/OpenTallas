@@ -99,3 +99,19 @@
 - OPEN LIST (COORD ruling, event scope cut): "frame reset fan-out to R-REACH reset stations, next event". Not in this event.
   The READY lists the reset net as the ONLY window-link exemption, with the hop table above, and says reach was judged on
   the 3 single-type items (cl87f3ff59, cl8b686b3e, clac068e56) that share the pv layouts.
+
+## State after the confirm run (branch claude/frame-forms-1-1113 @9b19ffb56a)
+- Confirm run epyc4 g8/cp4 (measured): cl87f3ff59 (901 links), cl8b686b3e (1019), clac068e56 (280) and the col_h9_r1 rep all
+  applied with 0 over-length links, 0 seeds moved. Street errors: only sparse-slot classes, plus "node over a bank at 25.92"
+  (2 cases), which the last commit removes by moving the bank to pair x + 276.48 (not yet re-measured: VOL2 task 0 checks it).
+- Rulings in force: sparse faces (< 3 pins/um) may face a 17.28+ slot; bank over element N pins 20.5 um and station beside a
+  ROM 19.4 um accepted; reset-only exemptions (window reset bit, u_cf.rs); bf col3 pair +26 um; 7th E-pair cfg ROM in the
+  street corner because the seq read loop is fixed at 2 edges inside the signed core (no station possible).
+- RUNNING: (1) Opus VOL2 on epyc4: rep gate, 132 pv types, taps (col_h9_r1 clk_t21), chain, G0/G0C, strict bind (reuses
+  vol/bsrc_fs), latency, 2 proofs via ot-run (intel1 / epyc4); it appends under "## VOL2 sub-agent". (2) Opus R0 sub-agent in
+  epyc4 r0v/: the r0 HUB FORM (approved second form: full-height east zone for cf, stations, nodes; cfg ROM placement being
+  sized), first on col_h9_r0 p4-p6 (4 items).
+- With DIE-S81-89 (queue REQUEST, numbers there): ft0 re-plan for col_h9_r0 p1-p3 and col_h10_r0 p1, height for col_h10_r0 p4
+  and col_h10_r1.
+- READY scope (COORD): the 11 items now; the 15 others open with owners (me: r0 hub form; DIE-S81-89: ft0 and height).
+- Lesson: a wait loop `while pgrep -f X` inside `bash -c "...X..."` matches itself; it cost 3.7 h. Wait on a DONE file.
