@@ -41,3 +41,13 @@ READY with branch + tests, stop.
   1134 -> 1034 (bin->lpad 104 -> 12, max 587 -> 434); rest = vp glue hops 410-563 um (driver -> cf/yrow, driver_lo_d ->
   leafup ist0 536). AUTO-GEOM after: s81/t21/after (geom_after.sh via ot-run). Renders viewed (place density).
   Full-die fix runs: fix/{kv,qc,head,s81}_fix.log on epyc7 (scan/run_fix.sh).
+- 2026-11-13 04:54 RULEBOOK section R-REACH posted (coord commit 0e2498bdbdd, on origin/coord/state). Branch pushed to hub:
+  claude/rules-reach-1-1113 @ 1376d26613 (4 commits; merge-tree vs origin/main 87b85b86bd clean). Tests: test_reach_rules.py
+  11 + related suites pass; test_gen_phys_bump_ports::test_refuse_mismatch is the known base failure.
+  S81 t21 a1 AUTO-GEOM (s81/t21/a1_geom): r2r_count 1134 -> 1034, relay_collapse 380 -> 327, r2r max 700 -> 827 (ONE
+  fan-out pad bit pushed out) -> guard added (1376d26613) and DPL re-run a2 (s81/t21/after; logs ~/rr1log/s81_t21_place2.log,
+  s81_t21_geom2.log). KV hub_Eo run-item in kit_rtl/gen -> place expected ~05:00-06:30.
+  NEXT: (1) read a2 AUTO-GEOM; (2) hub_Eo place: classify r2r with scratch rr/r2r_class.py (copy on epyc8 /tmp/rr1_r2r_class.py,
+  epyc9 rules-reach-1/s81/ov/), view run/layout_review/place/{density,layout}.png; route if place is clean;
+  (3) update the Proof kits paragraph of the R-REACH section (intel2 ~/rr1log/put_section.py + rulebook_reach_post.md),
+  coord-commit; (4) READY in lanes/COORD-REVIEW-QUEUE.md (branch, tests, census, proofs); stop.
