@@ -190,6 +190,8 @@ def planned_sinks(P, tn, bit_sites=False):
         for bx,by in e["face_bit_sites_um"][n:]:
             out.append((bx+cw/2,by+ch/2,"face_epoch"))
     out += per_bit_station_sites(t, pins, __import__("pathlib").Path(P.path).resolve().parent if getattr(P, "path", None) else None)
+    import soft_reg_banks
+    out += [(x, y, "soft_reg_bank") for x, y, _ in soft_reg_banks.sink_sites(t)]
     return out
 
 
@@ -318,7 +320,7 @@ def sink_sites(P, tn, control=True):
             if control and ck.get("control_sinks"):
                 domain_sites += [(x,y,1.0) for _,x,y in control_pin_sinks(P,tn)]
             return domain_sites
-        if ck.get("sink_sites_um") or ck.get("sink_bins_file"):
+        if ck.get("sink_sites_um") or ck.get("sink_bins_file") or ck.get("soft_reg_banks"):
             raise ValueError("native-domain spatial planning requires explicit per-root sink sites; aggregate bins are unqualified")
     rows = list(ck.get("sink_sites_um", []))
     if ck.get("sink_bins_file"):

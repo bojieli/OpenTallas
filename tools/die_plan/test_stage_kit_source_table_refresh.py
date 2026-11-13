@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import tempfile
+import subprocess
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -101,6 +102,44 @@ class T(unittest.TestCase):
         # native source stations are subtracted from the receiver pad too: fixed 1 = native n 1 -> pad 0 -> priced
         o, r = self.run_dest(self.with_rx(plan(1, n=1), 1), native=["src"], expect=1)
         self.assertEqual(o["lanes"][0]["fixed_cycles"], 2)
+
+    def test_native_deeper_dest_prices_exact_fixed_despite_nonzero_pad(self):
+        # Actual dn_s_2N_L1: native SRC1 + new DST3 requires4, not fixed3.
+        for pad in (0, 9):
+            d = self.with_rx(plan(3, n=1), 3)
+            d["latency"]["lanes"]["L"].update(fixed=3, cycles=5, natural=5, pad=pad)
+            o, r = self.run_dest(d, native=["src"], expect=1)
+            self.assertEqual(o["lanes"][0]["fixed_cycles"], 4)
+            row = o["latency"]["lanes"]["L"]
+            self.assertEqual((row["fixed"], row["cycles"], row["natural"], row["pad"]), (4, 6, 6, pad))
+            self.assertEqual(r["cycles_added"], 1)
+            self.assertEqual(self.run_dest(o, native=["src"])[1]["lanes"], 0)
+
+    def test_native_dest_cli_isolated_python(self):
+        with tempfile.TemporaryDirectory() as t:
+            paths = [os.path.join(t, x) for x in ("plan.json", "asbuilt.json", "out.json", "receipt.json")]
+            json.dump(self.with_rx(plan(3, n=1), 3), open(paths[0], "w"))
+            json.dump({"internal_stations_types": ["src"]}, open(paths[1], "w"))
+            run = subprocess.run([sys.executable, "-I", S.__file__, *paths, "--dest", "--expect", "1"],
+                                 cwd=t, text=True, capture_output=True)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            self.assertEqual(json.load(open(paths[2]))["lanes"][0]["fixed_cycles"], 4)
+
+    def test_native_excess_fixed_refuses_cycle_removal(self):
+        with self.assertRaisesRegex(SystemExit, "no automatic cycle removal"):
+            self.run_dest(self.with_rx(plan(5, n=1), 3), native=["src"])
+
+    def test_native_dest_core_rows_match_actual_contract(self):
+        d = self.with_rx(plan(1, n=1), 0)
+        d["partition_types"]["rx"]["internal_stations"] = [dict(conn="bus:i0", core="c0", regs_um=[[0, 0]]*2)]
+        o, _ = self.run_dest(d, native=["src"], expect=1)
+        self.assertEqual(o["lanes"][0]["fixed_cycles"], 3)
+
+    def test_native_exact_dest_metadata_conflict_refuses(self):
+        d = self.with_rx(plan(1, n=1), 1)
+        d["partition_types"]["rx"]["internal_stations"].append(dict(conn="bus:i0", bit_sites_um=[], regs_um=[[0, 0]]*3))
+        with self.assertRaisesRegex(SystemExit, "conflicting destination station counts"):
+            self.run_dest(d, native=["src"])
 
     def test_dest_native_rx_still_kit(self):
         # IN stations are never native (source_entries is OUT-only): a native receiver type is priced too
