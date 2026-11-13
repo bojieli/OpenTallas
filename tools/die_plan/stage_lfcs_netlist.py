@@ -71,6 +71,10 @@ def leaf_depths(plan):
         if not t.get("hard_cores"):
             rep.append(dict(part=p["name"], type=p["type"], skipped="no hard cores (no leaf chains)"))
             continue
+        missing = LCD.unmapped_core_rows(t)
+        if missing:
+            raise SystemExit(f"{p['name']}: {len(missing)} planned core station rows have no RTL class; "
+                             "no LF_CS source staged")
         want, dis = LCD.plan_depths(t)
         d = {x: want.get(c, 0) for x, c in CLS.items()}
         kv = "kv_leaf" in p["type"]          # DIE-S81-70 kv leaves: per-lane hi / ho stages (GS 0), as bound today
@@ -93,7 +97,11 @@ def stage(plan, net_text, rtl_root):
         if s not in slices:
             return m.group(0)
         mod = m.group("mod")
-        dft = defaults.setdefault(mod, module_defaults(rtl_root, mod))
+        # setdefault evaluates its fallback eagerly: re-reading every RTL file
+        # per slice made a 16-slice production staging take several minutes.
+        if mod not in defaults:
+            defaults[mod] = module_defaults(rtl_root, mod)
+        dft = defaults[mod]
         vals = []
         for x in CL:
             v = 0
