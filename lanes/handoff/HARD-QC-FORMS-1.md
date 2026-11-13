@@ -39,3 +39,9 @@ Design forms per family (guarded delta scripts), proof builds, RULEBOOK rows, RE
 - Running: fsta3 (st_a_v2 with patched kit RTL incl. s8_ce nb0; launcher waits for the first rtl/gen), bsuc (no-form su_c baseline: rebind then run_prov.sh). pipe/run_prov.sh = provisional child views; overlay lives in pipe/provw (ot-run --stage refuses links inside W). epyc4 root under the 150 GB guard: jobs spill to epyc2 / intel1.
 - Kit RTL comes from the bind source list (s28 event tree), NOT pipe/tree: any RTL form must be copied into K/rtl after gen and the netlist checked.
 - NEXT: st_a result; su_c DRT-0073 split; F-STM-REACH last station inside the home + lattice-position stm build; GRT / route numbers and renders; post READY for PINKEEP after the flop-count check; then stop.
+
+## CODEX 2026-11-13 14:2x PST
+- Current task details and jobs are appended to handoff/QC-FORMS-2.md. No new lanes/worktrees.
+- READY source95dd92ef230b pushed hub on existing claude/hard-qc-forms-1-tloadcap-synth-1113 (parent3a7c24cff9). Default-off PINKEEP now covers actual ce/nb0 copied tail plus normal tail, 0 cycles. Actual-g_pin lockstep2048cycles+bitflipmutant PASS; synth nb0 baseline325 FFbits vs1300 with4 independent kept copies. Evidence E7 hard-qc-forms-1/pinkeep_nb0_codex4. First bench harness drafts had syntax/command-separator errors; final suite fixed them and passes, failed draft logs preserved. No physical PINKEEP claim.
+- fsta3 E7unitoth-ubuntu-539407-1794606451 remains running as SWREG-only proof; CB output-landing E4unitoth-ubuntu-3442636-1794607533 PLACE-only; HCI new-band E9 private rebind+gen chain pending. All via canonical I2ot-run; see I2~/hqf-codexlog.
+- CBF +1 fixed PINcycle corridor candidate (514bits each cbf_q01/s2,maxhop311.130um) packaged in pipe/s29/cbf_r8_corridor_candidate.json and CBF_CORRIDOR_CODEX.md. No generated RTL edited, no contract adopted. Parent die lane owns coherent INNER/model/bundle update before any physical proof.
