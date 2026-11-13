@@ -21,7 +21,7 @@ proc pin {id dir net inst} {
   return $id
 }
 proc cell {id master name input output} {
-  object ${id}_m [dict create getName $master]
+  object ${id}_m [dict create getName $master isBlock 0]
   set ps [list [pin ${id}_out_it OUTPUT $output $id]]
   if {$input ne ""} { lappend ps [pin ${id}_in_it INPUT $input $id] }
   object $id [dict create getMaster ${id}_m getName $name getITerms $ps]
@@ -74,3 +74,33 @@ def test_two_input_buffer_master_is_not_unary():
 
 def test_constant_tap_has_no_pipeline_register_and_is_untouched():
     assert run('dict set ::graph buf_m getName TIELOx1_ASAP7_75t_R; puts x[nka_pipe_chain latch_d]x') == 'xx'
+
+
+FORWARD = r"""
+object hard_m [dict create getName hard_tile isBlock 1]
+object hard [dict create getMaster hard_m]
+pin hard_in INPUT latch_d hard
+dict set ::graph pc_q getITerms {pc_out_it inv_in_it}
+dict set ::graph inv_q getITerms {inv_out_it buf_in_it}
+dict set ::graph latch_d getITerms {buf_out_it hard_in}
+"""
+
+
+def test_generic_q_buffer_forward_path_has_unique_macro_endpoint():
+    assert run(FORWARD + 'puts [nka_macro_path pc_q]') == 'hard_in {inv buf}'
+
+
+def test_forward_multiple_sinks_refused_without_partial_chain():
+    assert run(FORWARD + 'dict set ::graph pc_q getITerms {pc_out_it inv_in_it hard_in}; puts x[nka_macro_path pc_q]x') == 'xx'
+
+
+def test_forward_non_unary_logic_refused():
+    assert run(FORWARD + 'dict set ::graph inv_m getName AND2x1; puts x[nka_macro_path pc_q]x') == 'xx'
+
+
+def test_forward_cycle_refused():
+    assert run(FORWARD + 'dict set ::graph buf_out_it getNet pc_q; puts x[nka_macro_path pc_q]x') == 'xx'
+
+
+def test_forward_depth_bounded():
+    assert run(FORWARD + 'puts x[nka_macro_path pc_q 2]x') == 'xx'
