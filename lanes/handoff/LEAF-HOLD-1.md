@@ -28,3 +28,20 @@
 1. Read 4_1_cts.log OT_TAP_CORE + hold gate, then 5_1_grt.log OT_HOLD_GUARD_GRT. On route: the 6_* reports.
 2. RESULT/READY to the queue (cc S81-FORMS-1, HOLD-TAP-1). The fix lands in the S81-FORMS-1 leaf event (leaf_post.sh already runs
    core_tap_fix + tapcap 1500). Ask S81-FORMS-1 to add kv_leaf t4 to the pocket list.
+
+## 2026-11-13 12:25 PST update
+- p1 (core_tap_fix + cap 1500): CTS gives OT_TAP_CORE 7/27 outside +-20 (was 20/27). The ln taps are at 260-274 ps, except ln_7 at 323
+  (its pin leg is 63 ps; the tap was under the 50 um far threshold). Post-CTS FF gate PASS -150.60/7,143 (a4: INFO -287.54/7,266).
+  clk_t8 keeps 1,584 sinks ('no tap with room within 200 um').
+- Bucket STA (hold_gate.tcl context; all violators dumped): epyc7 leaf-hold-1/{a4ref,t6p1}/bucket/k/lh1_hold_viol.tsv; cls.py.
+  a4: reg->lane ROM 1,181 (ws -287.5); reg->reg 3,616 (-125); vclk ports 1,473 in + 493 out; vsw 321; sram 131. <-200: 64.
+  p1: lane ROM 1 (-0.5); reg->reg 4,570 (-150.6, zero-logic cland/ft/leafdn pad chains = cross-tap); ports unchanged; <-200: 0.
+- R-CLOCK-1 hold build (train-44 pregrt_ff_hold.py from epyc7 wt/die-kv-100, guard 45) standalone on the p1 4_cts.odb copy
+  (t6p1/hbuild): class before: port_in 1,473 ws -60.9 / same_tap 82 ws -80.4 / cross_tap 5,095 ws -150.6 / port_out 493 ws -18.0.
+  After: 0/0/0/0, wns +4.34, cross-tap +45.0. 17,350 hold cells (5.9% of 296k insts), TT setup -360.6 unchanged, 1,708 s,
+  open list empty.
+- p2 = p1 kit + that hold-built 4_cts.odb, resume.json start=grt, run_kit route (intel2 ~/lh1/route_p2.log).
+  The post-CTS gate re-ran: PASS +4.34/0. GRT running since 20:22 UTC.
+- p1 GRT (no hold build) still running as the comparison arm (intel2 ~/lh1/route.log).
+- NOTE: t6 has TT setup WNS -360.6 at CTS (a4 cts_final -329.8: grid FF -> SRAM u_vp.u_b0 w_mask, ~1 ns of logic). That is a
+  separate R-RTL/setup item. The hold fix does not touch it.
