@@ -56,3 +56,30 @@ def test_unreadable_site_context_never_waives():
 def test_malformed_occupancy_never_becomes_empty(t):
     v = findings(t)
     assert v[0]["need"] == 43.2 and not v[0]["sparse"]
+
+
+
+def actual_bank(x=298, cw=4):
+    return dict(outline_um=[1000, 1000], clock=dict(soft_reg_banks=[dict(
+        id="hi0", cell_glob="*hi0*", source="core_stations",
+        bit_site_cell_um=[cw, 2], bit_sites_um=[[x, 6]])]))
+
+
+def test_actual_cs_bank_rectangles_block_occupied_outline_strip():
+    t = actual_bank()
+    assert SR.column_boxes(t) == [(298., 6., 302., 8.)]
+    # Anchor is outside x300..570 but its full FF footprint enters the strip.
+    v = findings(t)
+    assert v[0]["need"] == 43.2 and not v[0]["sparse"]
+
+
+def test_invalid_actual_cs_bank_context_fails_closed():
+    t = actual_bank(999)
+    assert SR.column_boxes(t) is None
+    assert findings(t)[0]["need"] == 43.2
+
+
+def test_actual_cs_bank_has_no_generic_grid_point_halo():
+    t = actual_bank(296, 1)
+    assert SR.column_boxes(t) == [(296., 6., 297., 8.)]
+    assert findings(t) == []
