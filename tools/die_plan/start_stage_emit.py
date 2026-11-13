@@ -517,7 +517,12 @@ def apply_relays(doc, sv, provider, ctree_v=None, ctree_tcl=None, site=None):
     head_end = sv.index(");", sv.index("module ot_die_start_stages ("))
     sv = sv[:head_end] + "".join(ports) + sv[head_end:]
     body_end = sv.index("endmodule", head_end)
-    sv = sv[:body_end] + "\n".join(body) + "\n" + sv[body_end:]
+    # relay nets are declared right after the port list: the fed stages (earlier in the body) already name them
+    decl = [b_ for b_ in body if b_.startswith("    wire ")]
+    inst = [b_ for b_ in body if not b_.startswith("    wire ")]
+    sv = sv[:body_end] + "\n".join(inst) + "\n" + sv[body_end:]
+    hdr = sv.index(");", sv.index("module ot_die_start_stages (")) + 2
+    sv = sv[:hdr] + "\n" + "\n".join(decl) + sv[hdr:]
     sv = sv.rstrip("\n") + "\n" + "\n".join(RELAY_RTL) + "\n"
     stages += entries
     if ctree_v is not None:
