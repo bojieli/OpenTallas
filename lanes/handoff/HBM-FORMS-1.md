@@ -25,3 +25,15 @@ Status (2026-11-13):
   open-list item.  q_b000: pEv12 adds no pad_landing/station_trees keys -> q_b000 RTL unchanged.
 Next: finish SU trials, compose pEv12 (AW + SU moves + ft_nudge + gen.py latency), G0 diff, strict bind, LATCHECK-1,
 private GRT kits for the new SU forms, view renders, package, READY.
+
+Update (2026-11-13 03:15, after COORD corrections "cell cap first" + "no reach tolerance"):
+- Tolerance forms N1-N4 and pEv12 70c0e7360aad WITHDRAWN (G0 there: 471 vs 468, 4 new hop rows).  cp_drv.py
+  HF1_TV_TOL / HF1_NORULE9 must not be used.  Stock gate over-reach on v4 seeds: su00/pv1 0, su20/pv1 42, su30 20,
+  su30pv1 seed rejected with rule9 ON.
+- Cell cap measured (after 3_4 resize, incl taps): su00 920k, su00pv1 790k, su20pv1 797k, su20 576k, su30 611k,
+  su31 540k, su31pv1 566k; under: su30pv1 357k, su21 394k, su21pv1 333k.  Taps ~150-170k + ~140k buffers per SU
+  outline even with no logic -> pad cut alone is not enough.
+- Chosen (posted to COORD-REVIEW-QUEUE): split over-cap SU types at lane-group boundaries (su00 x3, others x2,
+  registered boundary = the station on the broadcast links, +1 cycle) + L1278 fixed_cycles 48 -> stations in
+  q_b110/q_spb2/q_b102/q_b111/q_b103 (not q_spu1); +1 station on L3008x3, L8007x2, L5088.
+Next: build that split plan event (not started), then the gate chain as before.

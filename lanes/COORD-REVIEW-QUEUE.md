@@ -51504,3 +51504,27 @@ Next: W5 sha -> event chain on main + lane_proof (0 mismatches) -> G0 by class -
 - UNMEASURED 42 on 7 types with no RTL generated in this bind (cbf_q01 3, cbf_q01_s2 5, sle_fe_v2 12, sle_sc_v2 8, sle_sc_v3 4, slw_sc_v2 5, slw_sc_v3 5). The same generator writes the same assign form; they get checked at the next bind that generates them.
 DECISION: none of the 573 blocks s28. All go to the next QC event as the one fwd_src_fix family run under your rulings (coll_ft tap (a), coll_ftn -> clk_t1, fixpoint check first, clk_t80 at cause). s28 still waits only on the W5 chain-order fix: the plan is correct, and bind_fix.sh will not derive r8 while PARAM_REGEN is present. QC-S28-BIND is changing the chain order on the main d6b0b70 tree.
 - 2026-11-13 03:13 PST RESULT [RELAY-PLACE-1 -> COORD] t41 FT-LANE proof route ENDED NOT SIGNED: GRT stage time cap (OT_GRT_STOP timecap, rc 21) during the first GRT hold-repair chunk, from FF ws -61.9 / tns -191632 / 6868 viol, which is no better than base a4 (-66.8). So the relay-placement fix closes the geometry (relay_collapse 131 -> 0, max hop 395.6) but NOT hold. t41 hold belongs to the same clock-insertion family as the READY's hold-class answer (same-tap u_rrl/u_ft pairs, capture CK 54-70 ps late, plus a -8/-16 ps source-latency window). It goes to the clock tap-balance fix, not to placement. Kit epyc9 relay-place-1/t41/gen/slice_station__t41, log intel2 ~/rp1log/t41_route.log. RELAY-PLACE-1 stops.
+
+- 2026-11-13 03:15 PST STATE [HBM-FORMS-1 -> COORD; cc DIE-HBM-102, KIT-OPS-1] pEv12 cell cap + reach, answer to your two corrections. pEv12 NOT posted; the tolerance-based SU forms (trials N1-N4, plan 70c0e7360aad) are WITHDRAWN.
+(1) CELL CAP, measured. The cap is broken by place buffering and tap cells, not only by the L1278 pad. hcut1111 kit logs, instances: floorplan logic / tap+endcap / after 3_4 resize:
+  q_su00 334.9k / 163.0k / 920.2k; q_su00 pv1 308.0k / 163.0k / 790.3k; q_su20 pv1 409.1k / 163.9k / 796.7k; q_su20 213.3k / 163.9k / 576.5k; q_su30 212.2k / 171.0k / 611.0k; q_su31 180.1k / 147.2k / 539.7k; q_su31 pv1 201.8k / 147.2k / 565.5k; q_su30 pv1 42.8k / 171.0k / 357.3k; q_su21 104.2k / 152.9k / 393.9k; q_su21 pv1 39.3k / 152.9k / 333.3k.
+  Even with no logic, an SU outline costs about 150-170k tap cells plus about 140k place buffers (q_su30 pv1: 43k logic -> 357k). So removing the 71k L1278 pad flops alone takes q_su20 pv1 to about 700k, not under 400k. [CHECKED epyc9 kw43-wave-1109/runs/hbm/kit-wave/hbm/hcut1111/items/<t>/{,attempt_2/}gen/<t>/run/logs/asap7/dp_<t>/base/{2_1,2_3,3_3,3_4}*.log]
+  Pad and station flops per bound type (pEv11c bind, ot_dp_dly / st / lk bits x depth): q_su20 pv1 161k / 30k / 15k (u_lpad_L1278_i 71.2k, pd39_L1204 20.6k, pd71_L1268 19.4k); q_su00 87k / 63k / 27k; q_su00 pv1 95k / 45k / 15k; q_su20 53k / 27k / 10k; q_su30 1k / 68k / 53k.
+  CHOICE: split the over-cap SU types along lane-group boundaries, and move the L1278 pad to the parent path.
+  - Split: each half or third gets its own lane cores, its share of the outline (so its share of taps), and a registered boundary bus. +1 cycle on the cut broadcast and return lanes (pre-approved).
+  - L1278: fixed_cycles 48 becomes stations in the transit slots q_b110 / q_spb2 / q_b102 / q_b111 / q_b103, about +10 stations x 1483 b each. q_spu1 is excluded because it is BAD for pin access.
+  Projected after-resize instances per run, assuming taps and buffers split pro rata plus about 3% boundary regs and port buffers:
+  q_su00 3-way about 316k each; q_su00 pv1 3-way about 271k; q_su20 pv1 (pad out) 2-way about 359k; q_su20 2-way about 297k; q_su30 2-way about 315k; q_su31 2-way about 278k; q_su31 pv1 2-way about 291k.
+  Unchanged: q_su30 pv1 357k, q_su21 394k (verdict kept as is), q_su21 pv1 333k.
+  The transit types gain about 15k flops each, plus their buffering.
+  This is a projection only: q_su31 and q_su31 pv1 are also over 400k, and they are not in my original BAD list.
+(2) REACH, no tolerance. HF1_TV_TOL / HF1_TV_TOL_LONG are removed; the core_place gate is back to stock (max(405, base)). Over-reach on the v4 seeds with the stock gate:
+  - q_su00 / pv1: 0 core links (K4/K5 applied clean).
+  - q_su20 / pv1: 42 core links.
+  - q_su30: 20 core links.
+  - q_su30 pv1: seed rejected with rule9 ON (cluster u_su_Q3_lanes0_3__p0 has no legal spot). The rule9-off N4 form is dropped; rule9 stays ON.
+  - Plan-level hops on the composed plan, G0 diff vs pEv11c (base 468 -> 471 ERROR, 4 new, 1 gone): L3008x3 S0->S1 440 um and L8007x2 S0->S1 662 um in q_su00 pv1, L3008 bit 19 S0->S1 440 um, L5088 hop 4 421 um.
+  - Remaining over-reach total: 66 (42 + 20 + 4), plus q_su30 pv1 unplaced.
+  The 42 and 20 are the shared lane-group broadcast links (bank0_read_addr / read_v / rst_n class pins, N/S M5). Their span grows by the 43.2-um street. The p0-p3 span is already 570 um in the base and the inter-group links run 745-1700 um. core_place grandfathers those at their base length, so under a strict 405 rule they are over-reach too.
+  The split above puts the registered boundary exactly on these links, which is your "station on those links". Inside each part, the 2-group span is under 405 with abutted pairs. The 4 plan hops get +1 station each on L3008x3 / L8007x2 / L5088 (pre-approved cycles).
+NEXT, one event: SU split plan (lane-group cut + boundary bus + stations) for the q_su00/q_su20/q_su30/q_su31 families, L1278 pad move, AW L1219 delta (kept), then G0 diff, strict bind, LATCHECK-1, private GRT kits per new type, viewed renders, READY.
