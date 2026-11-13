@@ -400,8 +400,7 @@ def plan(raw, side, skip_unplaced=False, trunks_doc=None):
         rewrite.update(clock_build=trunks_doc.get("clock_build"), plan_sha256=trunks_doc.get("plan_sha256"),
                        legs=len(bsegs), legs_detoured=sum(1 for lg in trunks_doc["legs"] if lg.get("detour_um")))
         built = (bsegs, meta, by_region(bsegs, meta))
-        ln["start_tree"]["built_clock"] = dict(schema=trunks_doc["schema"], clock_build=trunks_doc.get("clock_build"),
-                                               plan_sha256=trunks_doc.get("plan_sha256"))
+        # the build identity goes to the report (start_tree keys are a closed declaration)
     elif trunks_doc is not None:
         _s, bsegs, meta = load_trunks(trunks_doc)
         built = (bsegs, meta, by_region(bsegs, meta))
