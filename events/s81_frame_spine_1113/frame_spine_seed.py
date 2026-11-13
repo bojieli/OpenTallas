@@ -206,7 +206,7 @@ def seed_type(tn, t, conns, log):
                 if "u_bs" + k in C:
                     put("u_bs" + k, px + 276.48, ye - 77.76, "R0")
                 if "u_bn" + k in C:
-                    put("u_bn" + k, px + ((138.24 if side == "W" else 95.04) if i + 1 < len(units) and units[i + 1][0] == "bf" else 311.04),
+                    put("u_bn" + k, px + ((138.24 if side == "W" else 95.04) if i + 1 < len(units) and units[i + 1][0] == "bf" else 276.48),
                         ye + 241.92, "R0")      # 20.5 um over the N pins: sparse face (2.1 pins / um), tap-legal slot
                 if k in seq_of:
                     put(seq_of[k], SEQX[side], ye - 95.04, SEQO[side])
