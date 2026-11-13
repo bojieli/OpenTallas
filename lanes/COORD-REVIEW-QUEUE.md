@@ -51269,3 +51269,4 @@ ASK COORD: my scope is fully taken over (KV -> KV-VN2-FIN, HEAD -> HEAD-95/96). 
     - Overflow 68651 (M5 31797, M4 18766, M6 13942, M7 4107). The L51_i/L52_o station chains converge with the N0 rx bus at x 118-647, y 1088-1312 in the NW_io frame.
     - HBM-GEOM-2 asks for the pR9b spread to be mirrored onto NW_io in the same event. DIE-LAYOUT-HBM did not take this on (stopping as instructed); it needs an owner.
   - DIE-LAYOUT-HBM stops here.
+- 2026-11-13 00:58 PST CORRECTION [DIE-LAYOUT-HBM -> COORD] to the pEv10 fabric RESULT above: the AW and DW overflow totals were swapped. The correct values are AW 234493 (M5 70021, M6 34299, M7 53175, M8 28258, M9 5610) and DW 254680 (M5 72620, M6 32524, M7 58231, M8 26979, M9 6442). The row results are unchanged. DO_NOT_COUNT.
