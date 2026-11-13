@@ -8221,3 +8221,18 @@ FAILED [AUTOPILOT f538e8c7e8f1] 2026-11-13 10:42:28 PST AUTOPILOT -> KIT-WAVE-3:
   - My proposal: keep the form and judge it on the running rp20 hd_spn build. If it is hop-limited, add one station on be_i (346 -> 288 um).
   - Say if you want the outline split in this event instead.
 - Still open: the asks (a) die clock gate re-run on rp21x and (b) hd_ctl streets.
+
+- [2026-11-13 10:52] KIT-OPS-1 STATE (re COORD 10:4x: R-FLOW 7 / epyc9 waiters / DRT73 relaunches; train 50 RESULT):
+  (3) DRT73: path (a), scoped per-item plan overlay (see my 10:3x STATE). Phase 2 committed at 10:35: the 56 DRT73 keys are gone and the 26 entries re-armed.
+      24 relaunched in parallel at 10:50, all RUNNING on plan_h2_2249_or1.json (src unchanged 7073a6b4a5): t1@8 t3@13 t13@4 t17@2 t21@4 t23@6 t29@5 t30@4 t33@2 t37@2 t38@2 t39@5 t42@2 t43@2 t44__clf4ea6d4b@2 t45@2 t46@2 t51@4 t58@2 t60@2 t62@2 t65@4 t67@2 t71@2.
+      2 not relaunched, correctly: t54__cl706d9749 and t56 sit in kit_wave_redesign.tsv for a structural FF hold (-378 and -385 ps, beyond the stop), not DRT73. That is R-CLOCK's.
+      4 more stay under the separate r12bA WAIT-FORM hold, with the overlay plan already attached: t24__cl2456157b, t24__cl81374cd8, t25__cl55642d17, t44__clf6cf8492.
+  (1) R-FLOW 7 slew-only kits: the wave srcs LACK train 61, the same issue as DRT73. S81 kw45/src_s81_main_7073a6b4a5 and HEAD kw45/src_head_main_2dd0d8c9fd both have gen_phys with no RFLOW. I made no src switch.
+      Proposed scoped fix: per-item gen settings in the die config (the existing type_args/item_env mechanism; precedent: slice_station__t22/t44/t14 already carry --slew-margin 50 --cap-margin 20). For the 7 items (HEAD hd_spn_wshim_rx, hd_spn_wshim_tx, hd_turn_a; S81 slice_station__t24, t30__cl1653104c, t45, t7__cl503f4913) set: type_args --slew-margin 50 --cap-margin 20 --max-wire 120, plus item_env OT_PLACE_MAX_FANOUT=32.
+      The old gen supports all four. GPL_KEEP_OVERFLOW 0.25 is NOT supported there (no reference in the old src); the RULEBOOK single-knob arms show the margins alone take turn_b to 0 slew pins.
+      Only those 7 rows rehash. Relaunch = KW-FIX-45 re-arm of their current item@attempt. I will do it on your word; please say whether the first three settings without GPL keep are acceptable.
+  (2) epyc9: the 2 waiters (160 GB) are not wave jobs. Both belong to lane qc-s29-reach: s29_final.sh at --mem 96 and trunk_dry.sh at --mem 64, cwd /srv/opentallas-scratch2/claude/qc-s29-reach.
+      They wait on the LOAD gate, not memory: epyc9 LOAD_CAP_FACTOR 1.1 means a cap of about 105 with load1 plus fresh threads; admit_gb is 195-214.
+      They are pinned because qc-s29-reach and qc-s28-hf1c (27 GB, whose ctlcap/v3a/side_cb.json and plan_of_record/zz_ctlcap_v3s29a.json the command names) exist ONLY on epyc9. REBALANCE needs more than one qualifying host, and SPILL refuses a command naming a /srv path outside its lane root.
+      They cannot move as submitted. I did not cancel or copy another lane's jobs (8.8). Fix for the owning lane: resubmit with --stage on the qc-s29-reach scripts plus the two qc-s28-hf1c files; LOAD SPILL then sends them to epyc7/intel1/localhost.
+  Train 50: deployed to kw38/rt at 10:31 (kit_wave.py 4ada707a = main 50ee4c99a0, only the visual-parse change; backup kit-ops-1/rt-bak-t50-1113/kit_wave.py.933c19eb). 11 tests OK in the live tree. The 10:35 tick is clean: no traceback, and the new VISUAL-PARSE WARN fired once for the unparsed GEOM line.
