@@ -74,3 +74,11 @@ def test_bad_inventory_fails_closed(change):
 def test_default_unchanged():
     assert B.sink_sites({}) == []
     assert B.area({}) == 0
+
+
+def test_unqualified_banks_cannot_bypass_native_root_requirement(monkeypatch):
+    import native_clock_domains
+    monkeypatch.setattr(native_clock_domains, "core_planning_sites", lambda *a: None)
+    P = SimpleNamespace(types={"t": dict(clock=dict(native_domains={}, soft_reg_banks=[bank()]))})
+    with pytest.raises(ValueError, match="per-root sink sites"):
+        taps.sink_sites(P, "t", control=False)

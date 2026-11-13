@@ -320,7 +320,7 @@ def sink_sites(P, tn, control=True):
             if control and ck.get("control_sinks"):
                 domain_sites += [(x,y,1.0) for _,x,y in control_pin_sinks(P,tn)]
             return domain_sites
-        if ck.get("sink_sites_um") or ck.get("sink_bins_file"):
+        if ck.get("sink_sites_um") or ck.get("sink_bins_file") or ck.get("soft_reg_banks"):
             raise ValueError("native-domain spatial planning requires explicit per-root sink sites; aggregate bins are unqualified")
     rows = list(ck.get("sink_sites_um", []))
     if ck.get("sink_bins_file"):
