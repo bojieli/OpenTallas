@@ -16,3 +16,13 @@
 - none yet (clone only).
 ## Next
 - clone done -> strict bind of plan_of_record with current main tools (model epyc8 dkv99/bind_e.sh) -> private run-item hub_Eo + hub_Wo -> view place -> post RESULT.
+## UPDATE 2026-11-13 04:01
+- Worktree epyc7 /srv/opentallas-scratch2/claude/wt/die-kv-100 (shallow depth-20 clone), branch claude/kv100-event-1113 @ origin/main 055e36edab (train 36 FT-LANE merged). Work dir epyc7 /srv/opentallas-scratch2/claude/dkv100 (scripts there); intel2 /srv/opentallas-scratch2/claude/dkv100/jobs (run-item specs); logs intel2 ~/dkv100log.
+- BASELINE CLASSIFICATION (a1/a2 geom.tsv, classifier epyc8 /srv/opentallas-scratch2/claude/dkv100_chainclass.py = geom_rules relay/r2r by name class):
+  hub_Eo r2r>405 3869: cland_origin->ring 3206 (2317 >900), datapath 400, ring->bin 168, rrl_150->fstart 35, origin->fstart 30, rrl->bin 23.
+  hub_Wo 4328: origin->ring 3837 (3081 >900), datapath 323, ring->bin 70, origin->fstart 35, rrl_216->fstart 30, rrl->bin 24.
+  relay_collapsed (272 Eo / 198 Wo) is NOT reset relays: Eo 147 ring->bin + 124 seq fan->bout; Wo 196 seq fan->bout. The 'reset collapse' items are the origin's raw-reset relay (rrl_150/rrl_216) -> fstart face flops/origin at 1.2-2.4 mm = same cland_origin locality family.
+  sys_c a2 7316: d2d_kv datapath 5693 (4418 >900), reset_regions rst_n 766, ring->bin 656, reader_start->ring 174 (<=522), rrl->bin 22.
+- Running: strict bind m055 (ot-run epyc7, dkv100/bind_m055, log intel2 ~/dkv100log/bind_m055.log) -> then run-item jobs m055_kv3_hub_Eo / m055_kv3_hub_Wo (python3 /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/kit_wave.py run-item SPEC on intel2).
+- SD-GROW-W plan: dkv100/sdgrow/p3.json = sys_SD +103.68 at cut 1855.44 (as _v1) + kv3_io_ft (io_W2 only, pure E/W ft, no N/S ports) shrunk -64.746 at 280.8 and -38.934 at 961.254 (empty bands, site-aligned), io_W2 origin +103.68 -> no die growth, no port window change. sidecar RC 0; G0 running (sd_g0.sh).
+- R-REACH not yet in RULEBOOK at this time; no cland_origin / sys_c fix built.
