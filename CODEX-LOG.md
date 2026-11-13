@@ -12911,3 +12911,7 @@ The opening CODEX-ROLE OWNER ORDER 11-12 explicitly says it supersedes watcher m
 
 ## CODEX notes 2026-11-13 14:43 PST — direct merge takeover
 Existing E8 rm60 reused at be5ba677c6. Six SOURCE-only candidates merged privately with plain --no-ff/no conflicts/no deletions: KV measuredcap4b95, capd34, CS7e036, reachab145, PINKEEP95dd, tokenTOOLS904455 (producerRTL3e9 held). Chain bec97a9fcb59; focused merged-tree tests + actual PINKEEP option/default/mutant+synth proof admitted E8 via ot-run, log intel2 ~/tmp/codex_merge67_gate.log; results E8 wt/rm60-scripts/codex67. No main push until gate. No plan/wave/source freeze switch or HBM event.
+
+S81 residual: actual T51 W count-only FF scope probe PASS 2105/255/8 ->0/0/8 ->2105/255/8 with exactSDCrestore+VERIFIED (shared21f727475c); no repair/P&R. BKSEL vC7b cleanPLACE and CTS complete, final path diagnosis before structural nextform. No adoption.
+
+- CODEX 2026-11-13 14:56 PST GUNIT Nrev bounded task complete: supported constructor, actual pin-alignment image reviewed, E4 PLACE exit0 and LEC EQUIVALENT; 4/4 stage tests. Source-only a0de150aa5 pushed hub, READY to merge owner. Same gf4+2o_* cycles, Nrev+0; no private plan/recipe adoption. Actual PLACE fanout581.9 and inherited SW clock findings retained, no route. Handoff codex_gunit_gf4nrev_private_20261113_1443.md updated.

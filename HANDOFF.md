@@ -3616,3 +3616,7 @@ CODEX: 2026-11-13 14:30 PST token: actual ARstatus producer fix3e9aa6b25c READY 
 CODEX: 2026-11-13 authority correction: OWNER11-12 supersedeswatchermode; existing ROOT-MERGE-61 now integrating gatedsource fixes. HBMpark/POR-srcfreeze retained.
 
 CODEX: 2026-11-13 14:47 PST HEADrestoredrows pastGEN; exactbadhost_e routeheld, acceptedctl_n getsoneapprovedRA0regeneration plusfreshimagehold. DSDVactualparentSYNTH220826std/11macro fanout0over64; asyncLECpreserved, measuredpreflight/PLACEcontinuing privately.
+
+CODEX: 2026-11-13 14:48 PST ROOT-MERGE-61 landed6 gatedsource fixes as main bec97a9fcb59; focused84PASS+PINKEEP actualcontrols/synthPASS; no tag/deploy/POR/sourcefreeze change.
+
+CODEX: 2026-11-13 14:56 PST GUNIT private gf4 Nrev PLACE exit0/LEC EQUIVALENT; actual images viewed. Additive source-only stage/test/pins/LEF a0de150aa5 pushed hub and SOURCE READY; physical core remains private, no CTS/route or plan adoption.
