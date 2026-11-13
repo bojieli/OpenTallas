@@ -1,3 +1,8 @@
+`ifdef OT_MESO_WCC_GROUP16
+`define OT_TEST_WCC_GROUP
+`elsif OT_MESO_WCC_GROUP
+`define OT_TEST_WCC_GROUP
+`endif
 module tb_wcc_group;
     parameter bit WNEG = 0;
     integer phase = 0;
@@ -13,7 +18,7 @@ module tb_wcc_group;
       (.fclk(fclk),.clk(clk),.rst_n(rst_n),.d(d),.q(q_ref),.ready(ready_ref),.fault(fault_ref));
     initial begin
         dut.u_ring.tc=TC_INIT; ref_dut.u_ring.tc=TC_INIT;
-`ifdef OT_MESO_WCC_GROUP
+`ifdef OT_TEST_WCC_GROUP
         dut.u_ring.g_wcc.g_grouped.group[0].u_group.tc_group=0;
         dut.u_ring.g_wcc.g_grouped.group[1].u_group.tc_group=3;
         dut.u_ring.g_wcc.g_grouped.group[2].u_group.tc_group=2;
