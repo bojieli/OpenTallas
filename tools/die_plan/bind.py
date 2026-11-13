@@ -4663,6 +4663,19 @@ def cmd_bind(a):
     rep["latency_consumers"] = dict(stats=lc["stats"], r8={k: v for k, v in lc["r8"].items() if k != "messages"},
                                     advisory=[f"{x['module']} n={x['n']} {sorted(x['params'])}" for x in lc["advisory"]][:50])
     B.errors.extend(lc["errors"])
+    # LATCHECK-1 11-12: AS-BUILT lane latency (bound RTL stages + the stations the kit will insert, source AND receiver
+    # side, + landing K + receiver pad) must equal the latency table on every lane.  A hard error: no opt-out, waiver
+    # or baseline; every failing lane is listed (bind_lane_asbuilt.json holds all of them).
+    if files and any((out / "rtl").glob("*_bound_top.sv")):
+        import lane_asbuilt_latency as LAL
+        la_recs, la_errs = LAL.bind_check(B, out, lat)
+        la_sum = LAL.summary(la_recs)
+        (out / "bind_lane_asbuilt.json").write_text(json.dumps(dict(summary=la_sum, lanes=la_recs), indent=1) + "\n")
+        rep["lane_asbuilt"] = la_sum
+        B.errors.extend(la_errs)
+        if la_errs:
+            B.errors.append(f"LANE_ASBUILT_TOTAL {len(la_errs)} of {la_sum['lanes']} lanes deliver off the latency table "
+                            f"(classes {la_sum['classes']}; full list bind_lane_asbuilt.json)")
     # TOK-VERIFY-1 / COORD 11-10: signed landing phase class (WNEG=1 rings flip +3 -> +2 at zero phase).  ADVISORY
     # (targets, not gates): reported here and in landing_phase_sign.json, never a bind error.  Arrivals at the rings
     # (routed clock, TT + FF, OCV-derated) come from OT_LANDING_PHASE_ARRIVALS; without them every ring is UNMEASURED.
