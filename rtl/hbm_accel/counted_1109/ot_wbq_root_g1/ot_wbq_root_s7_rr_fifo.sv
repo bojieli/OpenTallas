@@ -5,7 +5,7 @@
 // the registered array word at the read pointer (first-word fall-through on the array).
 // rd_freed is the number of entries the reader freed, as seen in the write domain after
 // synchronisation (0..2 per wclk), for credit return to a producer that counts credits.
-module ot_wbq_root_s7_rr_fifo #(parameter integer W = 32, parameter integer AW = 2, parameter integer MUT = 0) (
+module ot_wbq_root_s7_rr_fifo #(parameter integer W = 32, parameter integer AW = 2, parameter integer MUT = 0, parameter integer RSEL = 0, parameter integer RSLICE = 24) (
   input  wire          wclk, wrst_n, input wire we, input wire [W-1:0] wdata, output wire full,
   output wire [2:0]    rd_freed,
   input  wire          rclk, rrst_n, input wire re, output wire [W-1:0] rdata, output wire empty
@@ -45,7 +45,30 @@ module ot_wbq_root_s7_rr_fifo #(parameter integer W = 32, parameter integer AW =
   wire [AW:0] rbin_n = rbin + ((re && !empty) ? 1'b1 : 1'b0);
   assign full = stage_valid[0]&&ring_full;
   assign empty = (rgray == wg_r2);
-  assign rdata = mem[rbin[AW-1:0]];
+  // RSEL=1 (HBM-CORES-C 11-12, g1 rbin3 setup class): the read-pointer select reaches the W-bit array mux through one registered
+  // one-hot copy per RSLICE-bit slice instead of one binary pointer fanning out to every bit.  rsel_oh[s] == onehot(rbin[AW-1:0]) at
+  // every clock edge (loaded with the same next state, same reset value), so rdata is cycle-exact equal to RSEL=0: no cycle is added,
+  // the credit loop and every other seam signal are unchanged.  Default 0 = the original mux.
+  generate if (RSEL != 0) begin : g_rsel
+    localparam integer NSL = (W + RSLICE - 1) / RSLICE;
+    (* keep *) reg [D-1:0] rsel_oh [0:NSL-1];
+    genvar rs, rk;
+    for (rs = 0; rs < NSL; rs = rs + 1) begin : g_s
+      localparam integer LO = rs * RSLICE;
+      localparam integer WS = (LO + RSLICE <= W) ? RSLICE : (W - LO);
+      always @(posedge rclk or negedge rrst_n)
+        if (!rrst_n) rsel_oh[rs] <= D'(1);
+        else rsel_oh[rs] <= D'(1) << rbin_n[AW-1:0];
+      reg [WS-1:0] sl_data;
+      always @* begin
+        sl_data = {WS{1'b0}};
+        for (integer k = 0; k < D; k = k + 1) sl_data = sl_data | ({WS{rsel_oh[rs][k]}} & mem[k][LO +: WS]);
+      end
+      assign rdata[LO +: WS] = sl_data;
+    end
+  end else begin : g_rbin
+    assign rdata = mem[rbin[AW-1:0]];
+  end endgenerate
   reg [AW:0] rsync_bin_q;
   wire [AW:0] rsync_bin = g2b(rg_w2);
   assign rd_freed = 3'(rsync_bin - rsync_bin_q);

@@ -63,8 +63,11 @@ module ot_wbq_root_s7_grp #(parameter integer G=0, parameter integer CRED=4, par
   wire [31:0] sector=base[local_copy_bank]+{pending_row[g],5'b0}+lane;
   assign fifo_we[g]=copy_q&&read_pending[g]&&!fifo_full[g]&&!local_s_stop;
   assign mem_read[g]=copy_q&&(!read_pending[g]||fifo_we[g])&&row*32+int'(lane)<committed[local_copy_bank]&&!local_s_stop;
+`ifndef OT_WBQ_ROOT_S7_RSEL
+`define OT_WBQ_ROOT_S7_RSEL 0
+`endif
 `ifdef OT_WBQ_ROOT_S7_RPIPE
-  ot_wbq_root_s7_rr_fifo #(.W(288),.AW(2)) u_fifo(
+  ot_wbq_root_s7_rr_fifo #(.W(288),.AW(2),.RSEL(`OT_WBQ_ROOT_S7_RSEL)) u_fifo(
 `else
   ot_hbm_accel_cdc_fifo #(.W(288),.AW(2)) u_fifo(
 `endif
