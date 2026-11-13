@@ -100,3 +100,53 @@ def test_monitor_relay_second_pass_is_noop():
     P.ptype = lambda pn: P.types[P.parts[pn]["type"]]
     before = copy.deepcopy(P.clock)
     assert RP.mon_relays(P, P.clock["landing_network"], [], RP.Grid()) == [] and P.clock == before
+
+
+def _trunks(region_b0="R0", detour=False, extra_other=False):
+    """built clock: b0/b1 sit on built nodes c0 (2, 3) / c1 (455, 3); the built leg c0 -> c1 runs y = 3 in region R0"""
+    legs = [dict(a="c0", a_xy_um=[2.0, 3.0], b="c1", b_xy_um=[455.0, 3.0], net="n0", region="R0", region_kind="local",
+                 **({"detour_um": 40.0} if detour else {}))]
+    if extra_other:     # a nearer leg of another region (y = 0.5) must be rejected
+        legs.append(dict(a="x0", a_xy_um=[0.0, 0.5], b="x1", b_xy_um=[460.0, 0.5], net="nx", region="R9", region_kind="feed"))
+    return dict(schema="opentallas.qc_trunk_nodes.v1", clock_build="t", plan_sha256="p", legs=legs,
+                stages={"b0": dict(clock_node="c0", clock_net="n0", clock_node_xy_um=[2.0, 3.0], region=region_b0,
+                                   region_kind="local", old_clock_node="b0"),
+                        "b1": dict(clock_node="c1", clock_net="n1", clock_node_xy_um=[455.0, 3.0], region="R0",
+                                   region_kind="local", old_clock_node="b1")})
+
+
+def test_built_trunk_rewrites_provider_and_seats_relays_on_built_legs_of_the_source_region():
+    pv, P = _pv(), _P()
+    st, segs, meta = RP.load_trunks(_trunks(extra_other=True))
+    rw = RP.rewrite_provider(pv, st)
+    assert rw["nodes"] == 2 and pv["nodes"][0]["clock_node"] == "c0" and pv["nodes"][0]["clock_region"] == "R0"
+    regions = {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}
+    rej = set()
+    rows = RP.start_relays(P, pv, regions, (segs, meta), rej)
+    rl = [n for n in pv["nodes"] if n.get("kind") == "relay"][0]
+    assert rows[0]["relays"] == 1 and rl["clock_node_xy_um"][1] == 3.0 and rl["site_net"] == "n0"
+    assert rl["clock_node"] == "c0" and rl["clock_region"] == "R0" and not SP.check(P, pv)["errors"]
+    assert rej and all(r[2] == "R9" for r in rej)
+
+
+def test_built_trunk_guards():
+    pv = _pv()
+    st, *_ = RP.load_trunks(_trunks())
+    del st["b1"]
+    with pytest.raises(RP.RelayError):          # a provider node without a built node: no fallback
+        RP.rewrite_provider(pv, st)
+    with pytest.raises(RP.RelayError):
+        RP.load_trunks(dict(schema="other", legs=[], stages={}))
+    pv = _pv()
+    st, segs, meta = RP.load_trunks(_trunks(detour=True))
+    assert segs == []                           # detoured legs carry no relay
+    RP.rewrite_provider(pv, st)
+    with pytest.raises(RP.RelayError):
+        RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta), set())
+    pv = _pv()                                  # source region mismatch everywhere: no site
+    st, segs, meta = RP.load_trunks(_trunks(region_b0="R5"))
+    RP.rewrite_provider(pv, st)
+    rej = set()
+    with pytest.raises(RP.RelayError):
+        RP.start_relays(_P(), pv, {"st:b0": dict(pad=0), "st:b1": dict(pad=0)}, (segs, meta), rej)
+    assert rej
