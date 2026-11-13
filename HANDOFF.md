@@ -3608,3 +3608,5 @@ CODEX: 2026-11-13 13:58 PST SERDES explicit capturedRST_TREE0 was suppressing re
 CODEX: 2026-11-13 13:59 PST GUNIT gf4 programme68ac34a51b fixes IDs+2/weights+4,3-job bench+controlsPASS; physicalgf4continues; residualbksel/T51collectedwithT51WoneECOinflight.
 
 CODEX: 2026-11-13 14:06 PST token: be5ba677 five-arm compiler EXIT0 programme values unchanged; shared QW zero-cost-ledger fix67b97a7613 READY hub; actual PVFIN+1 price verified but SEG calendar FAIL retained; GUNITgf4 model cost +96MTPcycles.
+
+CODEX: 2026-11-13 14:27 PST GUNIT parent DRT-0073 pin-access class cleared by exact M6 metal refinement, bbb2b73c09; original nets/pins/clock unchanged; private macro/std AP failures0, full route pending.
