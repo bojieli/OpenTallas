@@ -53,6 +53,8 @@ and the same legalize.  K = street_layers x street_fill / pin_pitch = 37.5 track
   < street_min_um stands in a SLOT; with B >= pinface_min station bits in a slot of length L (the facing overlap) it
   is an ERROR when the slot is < tap_street_um (17.28) wide, or < street_min_um (43.2) wide and dense (B / L >=
   dense_per_um).  Legalize widens that slot to a street (the pair / the outline gap becomes a street requirement).
+  NOTCH: a wall or slot shorter than street_min_um along its length is exempt from both rules (open area is at most
+  21.6 um away), unless the macro is abutted to the pin face.
   Legalize moves hard cores only (never a shape, never a LEF content macro: those stay residual with their reason).
 
 OUTPUT: new plan (types changed only), event JSON + TSV rows: per type outline before/after and growth %, cores
@@ -353,8 +355,8 @@ def face_shadow_rule(W, H, boxes, wins, cfg):
         stops = [0.0, L] + [v for b_ in blk for v in b_[:2]]
         for wl in walls:
             n = span_pins(fw, wl["lo"], wl["hi"])
-            if n < pmin:
-                continue
+            if n < pmin or wl["hi"] - wl["lo"] < smin - EPS:
+                continue              # no pins behind it, or a notch shorter than one street (pins jog <= 21.6 um)
             left = max([s for s in stops if s <= wl["lo"] + EPS] or [0.0])
             right = min([s for s in stops if s >= wl["hi"] - EPS] or [L])
             ends = int(wl["lo"] - left >= smin - EPS) + int(right - wl["hi"] >= smin - EPS)
@@ -459,6 +461,8 @@ def station_alleys(t, cfg, boxes=None):
         if d["bits"] < cfg["pinface_min"]:
             continue
         L = slot_len(axis, a, b)
+        if L < smin - EPS:
+            continue                  # a notch shorter than one street is not an alley: open area is <= 21.6 um away
         dense = d["bits"] / L >= cfg["dense_per_um"]
         nd = smin if dense else tmin
         if d["gap"] < nd - EPS:
@@ -2432,7 +2436,8 @@ def cmd_legalize(a):
     Q = copy.deepcopy(P)
     rows = []
     global _JOB
-    cfg["_bins_dir"] = "physical/die_plan/%s/street_rule_bins" % die
+    # --no-bins (R-STREET classification runs): nothing is written under --repo, the types keep their base bins file
+    cfg["_bins_dir"] = "" if getattr(a, "no_bins", False) else "physical/die_plan/%s/street_rule_bins" % die
     if getattr(a, "face_anchor", None):
         cfg["_face_anchor"] = json.loads(Path(a.face_anchor).read_text())
         for n in cfg["_face_anchor"]:
@@ -2599,6 +2604,8 @@ def main(argv=None):
             s.add_argument("--rs-halving", choices=("full", "edge_outline", "none", "off"), default="edge_outline")
             s.add_argument("--rs-out")
             s.add_argument("--jobs", type=int, default=1)
+            s.add_argument("--no-bins", action="store_true",
+                           help="do not write remapped sink-bin files under --repo (read-only classification run)")
             s.add_argument("--face-anchor", help="JSON {type: {grow: {x: E|W, y: N|S}, origin_shift_um: [dx, dy], "
                            "fixed_faces: [..]}}: faces abutting FIXED partitions keep die windows, others local")
     s = sub.add_parser("sidecar", help="carry a legalized plan's republished collector trees + reattached sources into "

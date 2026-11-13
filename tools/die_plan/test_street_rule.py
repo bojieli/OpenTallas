@@ -553,6 +553,8 @@ def test_face_street_need_by_pins_and_ends():
     assert SR.face_shadow_rule(W, H, [box("m", 400, 34.56, 300, 300)], sp, CFG) == []
     v = SR.face_shadow_rule(W, H, [box("m", 400, 8.64, 300, 300)], sp, CFG)
     assert len(v) == 1 and v[0]["need"] == 17.28 and not v[0]["dense"]
+    # a notch: a 30-um macro under the dense face is no wall (pins jog <= 21.6 um to open area)
+    assert SR.face_shadow_rule(W, H, [box("m", 400, 8.64, 30, 300)], wins, CFG) == []
     # deeper than face_depth_um: not a wall of this face; a face without pins: no rule
     assert SR.face_shadow_rule(W, H, [box("m", 400, 129.6, 300, 300)], wins, CFG) == []
     assert SR.face_shadow_rule(W, H, [box("m", 400, 8.64, 300, 300)], {"S": [(0.0, 100.0, 10, "s")]}, CFG) == []
@@ -612,6 +614,12 @@ def test_station_alley():
     b = core("b", 320, 100, 200, 200)
     assert SR.pair_rule(a, b, CFG)["kind"] == "sliver"
     assert SR.pair_rule(a, b, dict(CFG, _alley=pairs))["kind"] == "street"
+    # a notch: the same dense stations between two cores that face each other over only 30 um are legal
+    t2 = json.loads(json.dumps(t))
+    t2["hard_cores"][1]["origin_um"] = [320.0, 270.0]        # a|b overlap y 270..300
+    t2["internal_stations"] = [{"regs_um": [[310.0, 285.0]], "bits": 640}]
+    t2["ft_slots"] = []
+    assert SR.station_alleys(t2, CFG) == []
     # fewer than pinface_min bits: a single relay in a slot is legal
     t["internal_stations"] = [{"regs_um": [[310.0, 150.0]], "bits": 8}]
     t["ft_slots"] = []
