@@ -30,3 +30,12 @@ Design forms per family (guarded delta scripts), proof builds, RULEBOOK rows, RE
 - Every core-moving form needs reset_pad -> reset_repick (-> tap_ident) before the re-bind, else EMIT kills kit-rtl for the whole bind.
 - Runs in flight (epyc9 pipe/runs): base stm (cts), fsta (place), fsta2, fstm3, fsuc2r. Failed and to redo with pad + repick: fsucr, fsul1r, fcbr. base cbn_q00 failed at gen.
 - RTL branch is train 46 (merge lane landing 28be9ae16c). SU double insertion (60 LATCHECK) is DIE-QC-100's; su forms wait for its order.
+
+## 13:00 state (newest; supersedes the form numbers above)
+- POSTED: queue 08:35 FINDING (18 types off-row ft bit sites; coll_core tap contradiction), 09:34 READY s29 form deltas (package lanes/HARD-QC-FORMS-1/s29, compose_hqf.sh, gates), 12:51 STATE proofs; RULEBOOK section R-QCFORM (7 rules) appended.
+- RTL: train 46 on main. Follow-up claude/hard-qc-forms-1-tloadcap-synth-1113@3a7c24cff9 (loader capture profile synthesizes; SWREG on the _nb0 copy) offered to ROOT-MERGE in the 09:34 READY. PINKEEP branch 17e7e452ca not READY.
+- Forms (final shas in s29/): f_stm 849c4c118d2a (8.64 lattice: x 77.76/250.56, y 1486.08/1598.4), f_su_coll bda9f17df6f1, f_suc2 dbf3a459cc7d, f_cb fb2dbfec33b7 (candidate), f_sta2 ab9d7dcb0cd5, f_sul1 4c4ccd4629ba (NOT ready: schema 28 errors). Composed gate plan 4a5e5065baf3: schema PASS, G0 349 -> 344, G0C 449 -> 442.
+- Proofs (epyc9 pipe/runs; post-CTS): stm base -679.0/886; fstm4 (block + stations) -578.7/666; fstm6 (+TLOADCAP, old block position) -437.3/806, all three in GRT. fsuc3 sle_su_c placed, -873.1/2533, GRT DRT-0073 u_va/ck. fcoll2 coll_core placed (epyc2), running. fsta/fsta2 INVALID (define not compiled).
+- Running: fsta3 (st_a_v2 with patched kit RTL incl. s8_ce nb0; launcher waits for the first rtl/gen), bsuc (no-form su_c baseline: rebind then run_prov.sh). pipe/run_prov.sh = provisional child views; overlay lives in pipe/provw (ot-run --stage refuses links inside W). epyc4 root under the 150 GB guard: jobs spill to epyc2 / intel1.
+- Kit RTL comes from the bind source list (s28 event tree), NOT pipe/tree: any RTL form must be copied into K/rtl after gen and the netlist checked.
+- NEXT: st_a result; su_c DRT-0073 split; F-STM-REACH last station inside the home + lattice-position stm build; GRT / route numbers and renders; post READY for PINKEEP after the flop-count check; then stop.
