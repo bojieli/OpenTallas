@@ -61,6 +61,64 @@ class T(unittest.TestCase):
         _, r2 = self.run_main(o)
         self.assertEqual(r2["lanes"], 0)
 
+    def run_dest(self, d, native=(), expect=None):
+        with tempfile.TemporaryDirectory() as t:
+            p, a, o, r = (os.path.join(t, x) for x in ("p.json", "a.json", "o.json", "r.json"))
+            json.dump(d, open(p, "w")); json.dump({"internal_stations_types": list(native)}, open(a, "w"))
+            S.main([p, a, o, r, "--dest"] + (["--expect", str(expect)] if expect is not None else []))
+            return json.load(open(o)), json.load(open(r))
+
+    @staticmethod
+    def with_rx(d, m):
+        d["partition_types"]["rx"]["internal_stations"] = [{"conn": "bus:i0", "regs_um": [[0, 0]] * m}]
+        return d
+
+    def test_dest_both_ends(self):
+        # source n=1 already priced (fixed 1), receiver m=1 unpriced -> fixed 2, cycles +1 (LATCHECK up_s_0S_L0 shape)
+        o, r = self.run_dest(self.with_rx(plan(1, n=1), 1), expect=1)
+        self.assertEqual(o["lanes"][0]["fixed_cycles"], 2)
+        row = o["latency"]["lanes"]["L"]
+        self.assertEqual((row["fixed"], row["cycles"], row["natural"]), (2, 7, 7))
+        self.assertEqual((r["rows"][0]["src_kit"], r["rows"][0]["dst_kit"], r["cycles_added"]), (1, 1, 1))
+
+    def test_dest_only(self):
+        d = self.with_rx(plan(None, n=0), 2)
+        d["partition_types"]["src"]["internal_stations"] = []
+        o, r = self.run_dest(d, expect=1)
+        self.assertEqual(o["lanes"][0]["fixed_cycles"], 2)
+        self.assertEqual(o["latency"]["lanes"]["L"]["cycles"], 7)
+
+    def test_dest_pad_absorbs(self):
+        d = self.with_rx(plan(1, n=1), 1); d["latency"]["lanes"]["L"]["pad"] = 1; d["latency"]["lanes"]["L"]["cycles"] += 1
+        o, r = self.run_dest(copy.deepcopy(d))
+        self.assertEqual(r["lanes"], 0); self.assertEqual(o["latency"], d["latency"])
+
+    def test_dest_packed_pad_absorbs_deeper_rx(self):
+        # receiver pad 1 (fixed 2 - source 1) packs all 3 IN stations (LATCHECK-1 PASS shape up_s_0N_L4): untouched
+        self.assertEqual(self.run_dest(self.with_rx(plan(2, n=1), 3))[1]["lanes"], 0)
+
+    def test_dest_native_source_counts_in_pad(self):
+        # native source stations are subtracted from the receiver pad too: fixed 1 = native n 1 -> pad 0 -> priced
+        o, r = self.run_dest(self.with_rx(plan(1, n=1), 1), native=["src"], expect=1)
+        self.assertEqual(o["lanes"][0]["fixed_cycles"], 2)
+
+    def test_dest_native_rx_still_kit(self):
+        # IN stations are never native (source_entries is OUT-only): a native receiver type is priced too
+        self.assertEqual(self.run_dest(self.with_rx(plan(1, n=1), 1), native=["rx"])[1]["lanes"], 1)
+
+    def test_dest_core_rows_ignored(self):
+        d = self.with_rx(plan(1, n=1), 0)
+        d["partition_types"]["rx"]["internal_stations"] = [{"conn": "bus:i0", "core": "c0", "regs_um": [[0, 0]]}]
+        self.assertEqual(self.run_dest(d)[1]["lanes"], 0)
+
+    def test_dest_off_ignores_rx(self):
+        self.assertEqual(self.run_main(self.with_rx(plan(1, n=1), 1))[1]["lanes"], 0)
+
+    def test_dest_idempotent(self):
+        o, _ = self.run_dest(self.with_rx(plan(None, n=2), 1))
+        self.assertEqual(o["lanes"][0]["fixed_cycles"], 3)
+        self.assertEqual(self.run_dest(o)[1]["lanes"], 0)
+
     def test_table_mismatch_refuses(self):
         d = plan(None); d["latency"]["lanes"]["L"]["fixed"] = 1
         with self.assertRaises(SystemExit):
