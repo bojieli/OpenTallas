@@ -1,0 +1,22 @@
+PROG op=0 T=52 wcount=12 nsel=40 wfirst=100 user=3 tag=5a PO=304 PVO=596 cyc=38
+SVC_ATT_WRST tb_svc_att_cut_prog.u_f t=2824000 sw_r=3 sw_w=3 wq_r=9fc066 rc=14
+dsdv_svc_mem_la tb_svc_att_cut_prog.u_f.u_sw_mem: pointer stepped by more than 1 (3 -> 0)
+SVC_ATT_WRST tb_svc_att_cut_prog.u_m3.u_a t=2825000 sw_r=3 sw_w=3 wq_r=9fc066 rc=14
+SVC_ATT_WRST tb_svc_att_cut_prog.u_m2.u_a t=2825000 sw_r=3 sw_w=3 wq_r=9fc066 rc=14
+SVC_ATT_WRST tb_svc_att_cut_prog.u_c.u_a t=2825000 sw_r=3 sw_w=3 wq_r=9fc066 rc=14
+dsdv_svc_mem_la tb_svc_att_cut_prog.u_m3.u_a.u_sw_mem: pointer stepped by more than 1 (3 -> 0)
+dsdv_svc_mem_la tb_svc_att_cut_prog.u_m2.u_a.u_sw_mem: pointer stepped by more than 1 (3 -> 0)
+dsdv_svc_mem_la tb_svc_att_cut_prog.u_c.u_a.u_sw_mem: pointer stepped by more than 1 (3 -> 0)
+PROG warm reset done cyc=2864
+PROG op=1 T=32 wcount=7 nsel=25 wfirst=125 user=9 tag=21 PO=264 PVO=538 cyc=2864
+CUT_PROG seed=2 checks=5506 frames=55 q_words=1019 go_frames=4 host_writes=24 pc_reads=50 pc_read_beats=61 pc_writes=62 pc_model_err=0
+CUT_PROG_F score_beats(l_v)=42 pv_words(pv_ov)=160 pv_beats(head words)=32 sm_starts(sm_st)=4 sm_row_beats(sm_rv)=20 sm_row_lane_active=4722 go_o=4 done=342 qrq_cycles=89 hcr_cycles=24 hack_cycles=24 fault_cycles=0 first_fault=-1 fault_code_or=00000000
+CUT_PROG_GROUPS (qrq,score,pv,smrow,o,fcx) c=0,0,0,0,0,0 m2=0,0,164,0,0,0 m3=0,0,0,37,0,0
+PASS cut form vs as built (qrq +1, other lanes +2): mismatching cycles=0 first=-1
+CAUGHT CUTMUT 2 (pv_o lane not registered): mismatching cycles=164 first=1432
+CAUGHT CUTMUT 3 (SM row lane not registered): mismatching cycles=37 first=449
+CUT_PROG_VERDICT PASS (c mismatches=0, m2 caught, m3 caught, pv_words=160, sm_row_beats=20, f fault_cycles=0)
+- rtl/dsrom_sys/s81_dv/svc_rs/tb_svc_att_cut_prog.sv:317: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 69.502 s; speed 79.400 ns/s
+- Verilator: cpu 69.470 s on 1 threads; allocated 157 MB
