@@ -449,11 +449,61 @@ def station_alleys(t, cfg, boxes=None):
     return V
 
 
-def type_cfg(cfg, t):
-    """per-type cfg for analyze(): the type pin windows and the fixed LEF content boxes of the face rule."""
+def plan_face_windows(raw, plan_path=None, names=None):
+    """{type: {face: [(lo, hi, pins, name)]}} for the types whose buses carry no face / window_um (qwen_kvsys: the
+    windows live on the die ports): the pins of the type's first instance from schema.Plan (the gen_phys.type_pins
+    walk), one window per run of a bus on a face (runs split at gaps > 8.64 um).  {} when the plan does not load."""
+    T = raw.get("partition_types") or {}
+    want = [n for n in (names if names is not None else T) if n in T and T[n].get("hard_cores")
+            and not type_face_windows(T[n])]
+    if not want:
+        return {}
+    try:
+        import schema as S
+        P = S.Plan(raw, plan_path)
+        first = {}
+        for pn, q in P.parts.items():
+            first.setdefault(q["type"], pn)
+        inst = {first[n]: n for n in want if n in first}
+        acc = collections.defaultdict(list)
+        for pid, pr in P.ports.items():
+            for side in ("src", "dst"):
+                tn = inst.get(pr[side]["part"])
+                if tn is None:
+                    continue
+                part = pr[side]["part"]
+                df = pr["face"] if (side == "src" or pr["src"]["part"] == S.DIE_PART) else S.OPP[pr["face"]]
+                tf = P.type_face(part, df)
+                line = S.Plan.rect(P, part)
+                for _bit, _ln, c in P.port_pins(pid):
+                    pt = ((line[2] if df == "E" else line[0]), c) if df in "EW" else \
+                        (c, (line[3] if df == "N" else line[1]))
+                    x, y = P.to_type(part, pt)
+                    acc[(tn, tf, pr[side]["bus"])].append(y if tf in "EW" else x)
+    except Exception as ex:      # noqa: BLE001 (a plan that does not load has no face rule; the check says so)
+        print("street_rule: plan pin windows unavailable (%s: %s); face_street skipped for %d types"
+              % (type(ex).__name__, str(ex)[:160], len(want)), file=sys.stderr)
+        return {}
+    out = collections.defaultdict(lambda: collections.defaultdict(list))
+    for (tn, tf, bus), cs in acc.items():
+        cs.sort()
+        run = [cs[0]]
+        for c in cs[1:] + [None]:
+            if c is None or c - run[-1] > 8.64:
+                out[tn][tf].append((run[0], max(run[-1], run[0] + 0.048), len(run), bus))
+                run = [c]
+            else:
+                run.append(c)
+    return {tn: {f: sorted(w) for f, w in d.items()} for tn, d in out.items()}
+
+
+def type_cfg(cfg, t, name=None):
+    """per-type cfg for analyze(): the type pin windows (type buses / ft slots, else the plan port pins in
+    cfg _planwins) and the fixed LEF content boxes of the face rule."""
     if not cfg.get("face_rule"):
         return cfg
-    return dict(cfg, _fwins=type_face_windows(t), _xboxes=extra_boxes(t))
+    wins = type_face_windows(t) or (cfg.get("_planwins") or {}).get(name) or {}
+    return dict(cfg, _fwins=wins, _xboxes=extra_boxes(t))
 
 
 def alley_force(V):
@@ -1157,7 +1207,7 @@ def _legalize_type(name, t, die_dir, repo, conns, cfg, rs_cfg, log=print):
     partners = conns_partners(conns, name, t)
     W0, H0 = M.W, M.H
     windows = type_windows(t)
-    cfg = type_cfg(cfg, t)
+    cfg = type_cfg(cfg, t, name)
     V0, c0 = analyze(W0, H0, core_models(M, partners), M.CL, cfg, windows)
     SA0 = station_alleys(t, cfg)
     if SA0:
@@ -2219,6 +2269,8 @@ def g0_check(raw, R, plan_dir, mode="warn", repo=None, ref_dirs=(), max_msgs=40,
     rs_cfg = dict(RS.DEFAULTS, derate=dict(RS.DERATE), core_ceiling=RS.DEFAULTS["core_ceiling"], views={}, kit_views={})
     conns = RS.load_conns(die_dir, None, Path(plan_dir), RS.REF_DIRS[1:])
     cfg = dict(DEFAULTS, **(cfg or {}))
+    if cfg.get("face_rule"):
+        cfg["_planwins"] = plan_face_windows(raw, Path(plan_dir) / "die_plan.json")
     ccfg = dict(gap=G, sweeps=0, topk=1, lam=1.0, reach=cfg["reach"], grid_um=21.6, grt_halving="full",
                 fixed_re="", rs=rs_cfg, flips_only=False, face_clear=[])
     summ = dict(types=0, types_with_errors=0, counts={})
@@ -2230,7 +2282,7 @@ def g0_check(raw, R, plan_dir, mode="warn", repo=None, ref_dirs=(), max_msgs=40,
         summ["types"] += 1
         M = CP.TypeModel(tn, t, die_dir, repo, conns, ccfg)
         attach_pins(M, die_dir, repo)
-        V, cnt = analyze(M.W, M.H, core_models(M, conns_partners(conns, tn, t)), M.CL, type_cfg(cfg, t), type_windows(t))
+        V, cnt = analyze(M.W, M.H, core_models(M, conns_partners(conns, tn, t)), M.CL, type_cfg(cfg, t, tn), type_windows(t))
         V += station_alleys(t, cfg)
         cnt = dict(collections.Counter(v["kind"] for v in V))
         tot.update(cnt)
@@ -2297,6 +2349,8 @@ def setup(a):
             cfg[k] = v
         else:
             cfg[k] = type(DEFAULTS[k])(float(v)) if k in DEFAULTS else float(v)
+    if cfg.get("face_rule"):
+        cfg["_planwins"] = plan_face_windows(P, plan, names)
     return repo, plan, P, sha, die, die_dir, rs_cfg, conns, names, cfg
 
 
@@ -2309,13 +2363,14 @@ def cmd_check(a):
         t = P["partition_types"][n]
         M = CP.TypeModel(n, t, die_dir, repo, conns, ccfg)
         attach_pins(M, die_dir, repo)
-        V, c = analyze(M.W, M.H, core_models(M, conns_partners(conns, n, t)), M.CL, type_cfg(cfg, t), type_windows(t))
+        V, c = analyze(M.W, M.H, core_models(M, conns_partners(conns, n, t)), M.CL, type_cfg(cfg, t, n), type_windows(t))
         V += station_alleys(t, cfg)
         c = dict(collections.Counter(v["kind"] for v in V))
         rows.append(dict(type=n, cores=M.n, counts=c, worst=sorted(V, key=lambda v: -(v["need"] - v["gap"]))[:8],
                          face=[v for v in V if v["kind"] in ("face_street", "station_alley")]))
         print("%s\t%d\t%s" % (n, M.n, json.dumps(c, sort_keys=True)), flush=True)
-    rec = dict(schema=SCHEMA, mode="check", plan=str(plan), plan_sha256=sha, die=die, cfg=cfg, rows=rows,
+    rec = dict(schema=SCHEMA, mode="check", plan=str(plan), plan_sha256=sha, die=die,
+               cfg={k: v for k, v in cfg.items() if k != "_planwins"}, rows=rows,
                types_with_violations=sum(1 for r in rows if any(k in HARD for k in r["counts"])))
     if a.out:
         Path(a.out).write_text(json.dumps(rec, indent=1) + "\n")
@@ -2477,7 +2532,8 @@ def cmd_legalize(a):
         out_sha = write_plan()
     rec = dict(schema=SCHEMA, mode="legalize", tool="tools/die_plan/street_rule.py", lane="STREET-RULE-1",
                advisory=True, base_plan=str(plan), base_plan_sha256=sha, plan_output=a.out_plan,
-               plan_output_sha256=out_sha, die=die, cfg=cfg, die_estimate=die_est,
+               plan_output_sha256=out_sha, die=die,
+               cfg={k: v for k, v in cfg.items() if k != "_planwins"}, die_estimate=die_est,
                summary=dict(types=len(rows), violating=sum(1 for r in rows if r.get("changed")),
                             applied=len(grown),
                             cycles_added=sum((r.get("cycles_added") or {}).get("total", 0) for r in rows if r.get("applied")),

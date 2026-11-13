@@ -669,3 +669,45 @@ def test_legalize_refuses_core_on_content_macro(tmp_path):
              "--event", str(ev), "--rs-halving", "off"])
     row = json.loads(ev.read_text())["rows"][0]
     assert not row["applied"] and "LEF content" in row["reason"]
+
+
+def test_plan_face_windows_fallback(tmp_path, monkeypatch):
+    # a type whose buses carry no face / window (qwen_kvsys form): the windows come from the plan's port pins
+    import types as _types
+    fake = _types.SimpleNamespace(DIE_PART="@die", OPP=SR.OPP)
+
+    class Plan:
+        def __init__(self, raw, path=None):
+            self.parts = {"p0": {"type": "toy"}, "p1": {"type": "toy"}}
+            self.ports = {"L0": {"src": {"part": "p0", "bus": "o"}, "dst": {"part": "x", "bus": "i"}, "face": "S"},
+                          "L1": {"src": {"part": "x", "bus": "o"}, "dst": {"part": "p0", "bus": "j"}, "face": "W"},
+                          "L2": {"src": {"part": "p1", "bus": "o"}, "dst": {"part": "x", "bus": "i"}, "face": "S"}}
+
+        def type_face(self, part, f):
+            return f
+
+        @staticmethod
+        def rect(P, part):
+            return (1000.0, 2000.0, 1600.0, 2300.0)
+
+        def port_pins(self, pid):
+            if pid == "L1":
+                return [(k, "M4", 2100.0 + 0.1 * k) for k in range(40)]
+            return [(k, "M5", 1050.0 + 0.25 * k) for k in range(2000)] + [(2000 + k, "M5", 1580.0 + k) for k in range(3)]
+
+        def to_type(self, part, pt):
+            return pt[0] - 1000.0, pt[1] - 2000.0
+    fake.Plan = Plan
+    monkeypatch.setitem(sys.modules, "schema", fake)
+    raw = {"partition_types": {"toy": {"hard_cores": [{"inst": "u_a"}], "buses": [{"name": "o", "width": 2003}]},
+                               "soft": {"buses": []}}}
+    w = SR.plan_face_windows(raw)
+    assert set(w) == {"toy"} and [x[2] for x in w["toy"]["S"]] == [2000, 3]       # two runs of bus o (gap > 8.64)
+    assert w["toy"]["S"][0][:2] == (50.0, 549.75)
+    e = w["toy"]["E"]                                         # the dst side of a W port sits on the type's E face
+    assert len(e) == 1 and e[0][0] == 100.0 and abs(e[0][1] - 103.9) < 1e-6 and e[0][2:] == (40, "j")
+    cfg = SR.type_cfg(dict(CFG, _planwins=w), raw["partition_types"]["toy"], "toy")
+    assert SR.span_pins(cfg["_fwins"]["S"], 50, 300) == 1001          # 2,000 pins over 499.75 um
+    # a type that carries its own windows never takes the fallback
+    raw["partition_types"]["toy"]["buses"] = [{"name": "o", "face": "N", "window_um": [0, 10], "width": 5}]
+    assert SR.plan_face_windows(raw) == {}
