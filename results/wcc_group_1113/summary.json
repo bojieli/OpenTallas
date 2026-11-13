@@ -1,0 +1,372 @@
+{
+  "schema": "opentallas.wcc_group.mechanism.v1",
+  "nominal_pass": 24,
+  "mutants_caught": 12,
+  "cases": [
+    {
+      "case": "run_group_0_0",
+      "edge": 0,
+      "phase": 0,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_0_208",
+      "edge": 0,
+      "phase": 208,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_0_416",
+      "edge": 0,
+      "phase": 416,
+      "initial_counter": 5,
+      "checks": 898,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_0_625",
+      "edge": 0,
+      "phase": 625,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_0_750",
+      "edge": 0,
+      "phase": 750,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_0_83",
+      "edge": 0,
+      "phase": 83,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_1_0",
+      "edge": 1,
+      "phase": 0,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_1_208",
+      "edge": 1,
+      "phase": 208,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_1_416",
+      "edge": 1,
+      "phase": 416,
+      "initial_counter": 5,
+      "checks": 898,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_1_625",
+      "edge": 1,
+      "phase": 625,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_1_750",
+      "edge": 1,
+      "phase": 750,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_group_1_83",
+      "edge": 1,
+      "phase": 83,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_mutant_0_0",
+      "edge": 0,
+      "phase": 0,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_0_208",
+      "edge": 0,
+      "phase": 208,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_0_416",
+      "edge": 0,
+      "phase": 416,
+      "initial_counter": 5,
+      "checks": 898,
+      "errors": 897,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_0_625",
+      "edge": 0,
+      "phase": 625,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_0_750",
+      "edge": 0,
+      "phase": 750,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_0_83",
+      "edge": 0,
+      "phase": 83,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_1_0",
+      "edge": 1,
+      "phase": 0,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_1_208",
+      "edge": 1,
+      "phase": 208,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_1_416",
+      "edge": 1,
+      "phase": 416,
+      "initial_counter": 5,
+      "checks": 898,
+      "errors": 897,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_1_625",
+      "edge": 1,
+      "phase": 625,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_1_750",
+      "edge": 1,
+      "phase": 750,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_mutant_1_83",
+      "edge": 1,
+      "phase": 83,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 898,
+      "expected_failure": true
+    },
+    {
+      "case": "run_off_0_0",
+      "edge": 0,
+      "phase": 0,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_0_208",
+      "edge": 0,
+      "phase": 208,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_0_416",
+      "edge": 0,
+      "phase": 416,
+      "initial_counter": 5,
+      "checks": 898,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_0_625",
+      "edge": 0,
+      "phase": 625,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_0_750",
+      "edge": 0,
+      "phase": 750,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_0_83",
+      "edge": 0,
+      "phase": 83,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_1_0",
+      "edge": 1,
+      "phase": 0,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_1_208",
+      "edge": 1,
+      "phase": 208,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_1_416",
+      "edge": 1,
+      "phase": 416,
+      "initial_counter": 5,
+      "checks": 898,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_1_625",
+      "edge": 1,
+      "phase": 625,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_1_750",
+      "edge": 1,
+      "phase": 750,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    },
+    {
+      "case": "run_off_1_83",
+      "edge": 1,
+      "phase": 83,
+      "initial_counter": 5,
+      "checks": 899,
+      "errors": 0,
+      "expected_failure": false
+    }
+  ],
+  "synthesis": {
+    "before": {
+      "schema": "opentallas.reg_fanout_gate.v1",
+      "top": "ot_dp_clk_landing",
+      "max_loads": 64,
+      "registers": 6551,
+      "reg_nets": 6551,
+      "over": 0,
+      "verdict": "PASS",
+      "worst": [],
+      "hist": {
+        "9-64": 74,
+        "2-8": 5289,
+        "1": 1188
+      },
+      "straps": [],
+      "strap_landing": [],
+      "netlist": "/srv/opentallas-scratch2/claude/hard-s81-dsdv-1/wcc_synth2/before.v"
+    },
+    "group": {
+      "schema": "opentallas.reg_fanout_gate.v1",
+      "top": "ot_dp_clk_landing",
+      "max_loads": 64,
+      "registers": 6561,
+      "reg_nets": 6561,
+      "over": 0,
+      "verdict": "PASS",
+      "worst": [],
+      "hist": {
+        "9-64": 74,
+        "2-8": 5299,
+        "1": 1188
+      },
+      "straps": [],
+      "strap_landing": [],
+      "netlist": "/srv/opentallas-scratch2/claude/hard-s81-dsdv-1/wcc_synth2/group.v"
+    },
+    "limitation": "Small mapping does not reproduce full-parent 74-load failure. Actual parent synth is still required."
+  },
+  "data_cycles_added": 0,
+  "ready_cycles_added": 0
+}
