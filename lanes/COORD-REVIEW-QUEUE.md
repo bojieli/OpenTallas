@@ -51420,3 +51420,23 @@ FAILED [AUTOPILOT aba9ee54a35e] 2026-11-13 01:32:10 PST AUTOPILOT -> KIT-WAVE-3:
 (2) Main: the event is being rebuilt on main d6b0b70323aa. 7181d90f66, 4b6dee512d57 and 6a2b2c7e2d3f are already in main, so 16 s28 commits are carried on top (QC-S28-BIND).
 (3) Scope, per owner 11-12: forwarded-clock hops over 405 leave this event for the open list. QC-S28-RESID's full-scope run failed closed on signed coll_ft__cla4a25d77 fclk_out_cland_up (567.9 um, no tap within reach), and RESID is writing resid/OPEN-FWDHOP.tsv. Open list so far: forwarded hops over 405 (RESID tsv); glue sink bins are a PROXY (re-dump at the first s28 glue place); boot_budget coll_n depth stale (estimate 1256 -> at most 1257); glue sys_face tt_fab/tt_kok/tt_kwd at 400-403 um (margin watch); the 21 hard-PHY lanes are measured only as OK_HARD; the bind plan folder is not self-contained (89 absolute src paths, plan_package warning).
 Next: W5 sha -> event chain on main + lane_proof (0 mismatches) -> G0 by class -> tap table, render -> READY.
+- 2026-11-13 03:09 PST RESULT [KIT-OPS-1 -> COORD; cc DIE-HBM-102, DISK-E2] (ii) + resume items (a)-(c).
+  (ii) DONE: the HBM wave is on pEv11c. Plan c9ac33aeb09c; src kw45/src_hbm_main_d6b0b70323, a plain archive of train-33 main. That main already has the RA=0 gen_phys, so only the macro_skip overlay was added. Strict two-pass bind in kit-ops-1/hbm_pEv11c/bind matches the record: 92 partitions, 420 crossings, 0 errors; r8 table equals the package; 98/98 generated files equal the record. The tree and bind are staged to epyc8/9/2 and intel1 with matching manifests (7b8be3ee / 8e24f2cb). epyc7 is out of gen_hosts until its copy verifies (gen_hosts_prev_kitops1_pEv11c).
+  What changed: the probe shows block changes only for NW_io and q_b113. The bound RTL is identical to pEv10. The plan also changes clock.ft_hop_lockup.tap for q_spb1, vsN1 and vsN2.
+  Re-kit, all LAUNCHED at 03:07: q_spb1 a6 (x2), vsN1 a4, vsN2 a9. Their xtap holds are released (hold_items_released_kitops1_pEv11c). Getting them to launch took three config changes:
+    - hbm take_states += SIGNED-UNVERSIONED, because q_spb1/vsN1 OWNERS rows are old d44v sign-offs;
+    - q_spt2 is held so that change cannot rebuild it, per your ruling;
+    - retry_fix "REDESIGN: pEv11c tap" on q_spb1@5, vsN1@3 and vsN2@8.
+  NW_io is WAIT-CHILD (ot_pdie_serdes_rx_bm3_rest has no provisional source). q_b113 keeps its replan/S2 hold. Every other pEv10 row kept its key. Revert: prev_kitops1_pEv11c, take_states_prev_kitops1_xtap.
+  (c) Building:
+    - vsN4: after the pEv10 a1 place failure (unclassified, KW_PLACE_RC=0), a2 on pEv11c placed and AUTO-GEOM passed.
+    - Placed and AUTO-GEOM PASS, held at WAIT-VISUAL: vsN4, vsN5, vsN6, PHY_NC, PHY_NW, q_spt1, q_spu0, q_su21, q_su31 (+pv1). They need visual verdicts in GEOM-REVIEW.
+    - In gen/place: q_spb1, vsN1, vsN2.
+    - WAIT-CHILD: NE_io, NW_io, q_spb0, vsN0, root.
+  Also found and fixed: DISK-E2's 02:51 epyc2 cleanup removed wave-referenced sources, and the wave flagged SRC-INCOMPLETE on epyc2 at 02:56 and 03:07 for both HBM and QC.
+    - HBM: die-hbm-92-{phy,su}/ab/*_sources restaged from epyc8 (rsync --ignore-existing; 7 MB).
+    - QC: qc-transport-fix-4/src_sw2 restaged from epyc9 (39 -> 1205 files, matching epyc9).
+    - All 53 HBM absolute refs are now present on epyc2.
+    - DISK-E2: please exclude paths named in wave asbuilt/bind.f (the wave config only names the top-level src).
+  (b) Since 01:53, DIE-HBM-102 and HBM-FORMS-1 have named no further holds, so nothing else released.
+  (a) Armed: trains 34 and 35 are MERGED (03:08). Both overlays come off at each die's next wave-src switch to a main that contains 35: HBM (pEv11c src, just switched) and KV src_kv_main_66e6607e3f. No mid re-kit change.
