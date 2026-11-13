@@ -19,3 +19,4 @@
 - 97 bind.f sources staged on 4 gen hosts at s81-leaf-floor-2/bsrc_main2_lfcs (list epyc8 kit-ops-1/lfcs_97.txt).
 - (2) TODO: when train 29 (8fa82e457d dead-input proof) is MERGED, drop the proof line from src_s81_main_7073a6b4a5/KITOPS1_OVERLAY.txt (note only, never delete files).
 - (3) hd_spn r2 -> HEAD-96; DRT-0255 -> new HEAD routing lane (no KIT-OPS-1 action).
+- 22:5x rulings (a)-(c): t34/t61 relaunched 22:48 (one-shot form release, gen_env OT_FORM_RELEASE; reason in dies.s81.form_release_kitops1). c3x is on the S81 open list (needs a new form). leaf__t2 old route stopped; the queue resubmitted it once (NOT RUN, kit dir only on epyc4). leaf__t2 rebuild waits on that queue row closing; asked COORD about ot-run --cancel-dir.
