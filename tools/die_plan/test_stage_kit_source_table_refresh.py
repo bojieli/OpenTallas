@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import tempfile
+import subprocess
 import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -113,6 +114,16 @@ class T(unittest.TestCase):
             self.assertEqual((row["fixed"], row["cycles"], row["natural"], row["pad"]), (4, 6, 6, pad))
             self.assertEqual(r["cycles_added"], 1)
             self.assertEqual(self.run_dest(o, native=["src"])[1]["lanes"], 0)
+
+    def test_native_dest_cli_isolated_python(self):
+        with tempfile.TemporaryDirectory() as t:
+            paths = [os.path.join(t, x) for x in ("plan.json", "asbuilt.json", "out.json", "receipt.json")]
+            json.dump(self.with_rx(plan(3, n=1), 3), open(paths[0], "w"))
+            json.dump({"internal_stations_types": ["src"]}, open(paths[1], "w"))
+            run = subprocess.run([sys.executable, "-I", S.__file__, *paths, "--dest", "--expect", "1"],
+                                 cwd=t, text=True, capture_output=True)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            self.assertEqual(json.load(open(paths[2]))["lanes"][0]["fixed_cycles"], 4)
 
     def test_native_excess_fixed_refuses_cycle_removal(self):
         with self.assertRaisesRegex(SystemExit, "no automatic cycle removal"):

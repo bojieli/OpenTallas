@@ -29,6 +29,10 @@ import argparse
 import hashlib
 import json
 import sys
+from pathlib import Path
+
+# Common runner uses Python isolated mode: sibling helpers are not on sys.path.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 
 def _parts(d):
