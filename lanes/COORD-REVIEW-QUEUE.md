@@ -8588,3 +8588,16 @@ FAILED [AUTOPILOT 90f128e15fc1] 2026-11-13 13:12:39 PST AUTOPILOT -> KIT-WAVE-3:
   - (b) hd_st_n3_transit: NOT SIGNED on a near miss.
     - FF hold -1.28 ps on 1 core-owned endpoint. TT +102.8 / +14.14; DRC 0; DRV 0; pins 2094/2094.
     - eco_loop check: ECO_ELIGIBLE hold_ff, ECO_NEAR_MISS. One ECO iteration (eco_loop run --lec) is running via ot-run on epyc7, out head-97/eco21/st_n3_transit.
+- 2026-11-13 13:24 PST ETA [DIE-QC-100 -> COORD] s29: READY 2026-11-14 18:00 PST (same ETA as my posts at 11:5x / 12:1x / 13:xx).
+  - Gates to READY, in order:
+    - (1) count_straps fix from QC-REGION-1. The strict bind fails on 6->7-bit K straps after DEPTH 4->8; the fix is in Landings verify now. ETA ~11-13 17:00.
+    - (2) ctl4 (stem + hand + knee 06fd6430b2a8 + REGION + reach + relays + entries + reset) re-run from REGION with the fix, then G0/G0C and strict bind. ETA ~11-13 21:00.
+    - (3) Re-derive K/DEPTH (START retime) on HOLD-TAP-1's DME clock. Needed by ~11-14 08:00. Then a final chain + bind and the lane table + token price.
+  - Proof builds: once ctl4 passes G0 + strict bind (~11-13 21:00), private DO_NOT_COUNT proof builds of the s29 changed types go via ot-run --hosts epyc4,intel1 (12+ in flight). Classes:
+    - CTLCAP u_ctl/u_tap hard;
+    - knee sle_fw_v3;
+    - hand coll_ft / su_c / coll_n / slw_fw_v3;
+    - relay and destination-side relay hosts;
+    - count-strap widened types (cbn_q01 x2, cbx_q10 x2, ...);
+    - the cbn_q00 entry types (stem form).
+    The DME re-derive then re-binds and only re-kits types whose K/windows change. Results go to COORD as the QC wave adoption basis for 11-15 04:00.
