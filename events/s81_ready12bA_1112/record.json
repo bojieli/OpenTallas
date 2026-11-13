@@ -1,0 +1,33 @@
+{
+ "event": "S81 ready12b-A (plan event)",
+ "lane": "S81-R12BA-FIN (successor of DIE-S81-88)",
+ "plan_sha256_12": "18c864518844",
+ "plan_file": "plan_ready12bA_18c864518844.json.gz",
+ "base": "ready12ng 77cad171c6ee (epyc8 /srv/opentallas-scratch2/claude/s87bind/plan_ready12ng.json)",
+ "composition": [
+  "B1 lfcs direct (r1_lfcs.json, stage_leaf_cs_direct.py @ s81-lfcs-depth-gate)",
+  "B2 TAPWIN-FLOOR (r2_tapwin.json, stage_s81_tapwin_floor.py @ f2048007ab19)",
+  "B3 svc_lo_dsdv_svc_rs__t7 hbm_i0 band rect (r3_band.json, land-ring-2 fixplan.py) -> s3_band",
+  "B3b sidecar collector sync, psplit_all + psplit_all_gear (r3b_*.json, stage_sidecar_collector_sync.py, sidecars *.sync.json.gz) -> c9f88f95e119",
+  "B5 kit SOURCE station table refresh, 22 lanes +31 cycles (rB5_ksrc.json) -> af9967df9f89",
+  "B6 kit DESTINATION station table refresh (--dest), 19 lanes +21 cycles, == LATCHECK-1 UNPRICED set (rB6_kdst.json) -> 18c864518844",
+  "asbuilt asbuilt_ist.json f969c08b916e = asbuilt_lfcs_m + kit_source_station_pricing true (switch ON)"
+ ],
+ "skipped": [
+  "REACH-FIX-2 (fallback B1-B3 approved 13:18)",
+  "X-TIER xtd9/xtd10 (r5_xtier.json)",
+  "DIEREVIEW plan stage (r6_diereview.json; re-sign list only)",
+  "LF4 (r7_lf4.json)"
+ ],
+ "tools": "bind/G0/verify tree tools = claude/s81-r12ba-fin-1112 @9489114321 (s81-lfcs-merge-main 1fa95563ba = s81-lfcs-depth-gate 0c0dcd1780 + origin/main 91a4101f18, + stage --dest); main-tools verify = origin/main 14685c8552d3; rtl = bsrc_r12bA_m (mktrees.sh, mktrees2.sh)",
+ "bind": "epyc8 /srv/opentallas-scratch2/claude/s81-r12ba-fin/out_r12bA_dst (run_r12bA_dst.sh)",
+ "gates": {
+  "G0": "74 errors = base (hops 31, geometry 19, clock_landings 19, cuts 5), identical messages to the ist bind; 0 latency rows, 0 reset rows",
+  "strict_bind": "rc 0: 398 partitions, 395 types, 873 crossings, errors 0, unbound 0, undriven 0, multiply_bound 0",
+  "latcheck1_asbuilt": "lane_asbuilt_latency.py (a6e337d5a6) as-bound: 873/873 PASS, 0 failed, 0 unobserved",
+  "token": "reform_rebaseline --die s81 c9f88 -> 18c86: 41 lanes changed, +52 lane-cycles, max +2; compose_tok_ds AR 842.8 / MTP 2713.5 unchanged (0.0%)",
+  "verify_merged_tools": "FAIL (verify_report_merged_FAIL.json): 3966 sink depth mismatches + 2 CLOCK_LANDING reset-contract errors. Depth: every sampled mismatch has want (as-built = table) - got (pre-kit bound RTL) = the lane kit SOURCE station count n; bind_verify does not add internal_kit_source_cycles (switch ON) to the bound stage count, LATCHECK-1 as-built 873/873 PASS. Reset: s_0S_L1 (ot_s81sl_leaf__t3) u_cland_collect_rst_rl_283/284, identical in GEN-CLASS-1 out_t45 (plan c9f88, switch OFF: 0 depth mismatches, same 2 reset errors) = pre-existing in c9f88.",
+  "verify_main_tools": "not run: chained on merged PASS (a copied OUT cannot be verified: bind.f carries absolute OUT paths)"
+ },
+ "rekit": "71 bound partition modules differ from out_r12bA_m2 (rekit_rtl_changed_vs_m2.json): leaf/kv_leaf sources, C-slice receivers, svc_hi/svc_lo, eng, gunit, seqhost. Signed slice_station__t45/t47 bound RTL unchanged. Re-sign list (diereview/lfcs) resign_list.tsv (144)."
+}
