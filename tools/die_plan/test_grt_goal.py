@@ -22,7 +22,7 @@ class GrtGoalTests(unittest.TestCase):
         cls.old = runner(subprocess.check_output(['git', '-C', str(ROOT), 'show',
                                                   '66d55c026ad:tools/die_plan/gen_phys.py'], text=True))
 
-    def execute(self, source, goal, margin='', fail_hold=False, fail_policy=False):
+    def execute(self, source, goal, margin='', fail_hold=False, fail_policy=False, fail_pg=False):
         with tempfile.TemporaryDirectory() as td:
             d = Path(td);k = d / 'kit';b = d / 'bin';b.mkdir();k.mkdir()
             result = k / 'run/results/asap7/test/base';result.mkdir(parents=True)
@@ -33,6 +33,7 @@ for a in "$@"; do
  case "$a" in
  print-OT_HOLD_FF_MARGIN) [ -z "$MARGIN" ] || echo "OT_HOLD_FF_MARGIN = $MARGIN"; exit 0;;
  print-BC_LIB_FILES) echo 'BC_LIB_FILES = fixture.lib'; exit 0;;
+ print-TC_LIB_FILES) echo 'TC_LIB_FILES = fixture_tt.lib'; exit 0;;
  esac
 done
 printf 'make %s\\n' "$*" >> "$TRACE"
@@ -43,6 +44,7 @@ printf 'openroad %s\\n' "${*: -1}" >> "$TRACE"
 case "$*" in
  *hold_gate.tcl*) if [ "$FAIL_HOLD" = 1 ]; then echo 'OT_HOLD_GATE FAIL';exit 1;else echo 'OT_HOLD_GATE PASS';fi;;
  *postcts_gate.tcl*) echo 'OT_POSTCTS_GATE PASS';;
+ *pregrt_ff_hold.tcl*) [ "${FAIL_PG:-0}" != 1 ] || exit 139;;
 esac
 exit 0
 ''')
@@ -61,7 +63,7 @@ exit 0
             trace = d / 'trace'
             env = dict(os.environ, PATH=str(b) + ':' + os.environ['PATH'], TRACE=str(trace),
                        RESULTS=str(result), GOAL=goal, MARGIN=margin, FAIL_HOLD=str(int(fail_hold)),
-                       FAIL_POLICY=str(int(fail_policy)), NAME='fixture', HUID=str(os.getuid()), HGID=str(os.getgid()))
+                       FAIL_POLICY=str(int(fail_policy)), FAIL_PG=str(int(fail_pg)), NAME='fixture', HUID=str(os.getuid()), HGID=str(os.getgid()))
             p = subprocess.run(['bash', '-c', 'set -uo pipefail; rc=0; M=make; ' + body], env=env,
                                text=True, capture_output=True)
             lines = trace.read_text().replace(str(k), 'KIT').splitlines() if trace.exists() else []
@@ -88,6 +90,13 @@ exit 0
                 self.assertTrue(any('legacy_gate.py' in x and x.endswith('grt') for x in lines), lines)
                 self.assertFalse(any(x in ' '.join(makes) for x in ['route', 'do-finish', 'do-generate_abstract']))
                 self.assertFalse(any('pin_audit.py' in x for x in lines))
+
+    def test_hold_build_failure_is_advisory(self):
+        # R-CLOCK (HOLD-TAP-1 11-13): a crashed pre-GRT hold build keeps 4_cts.odb and the kit goes on to GRT
+        rc, lines, err = self.execute(self.new, 'grt', fail_pg=True)
+        self.assertEqual(rc, 0, (lines, err))
+        self.assertTrue(any('pregrt_ff_hold.tcl' in x for x in lines), lines)
+        self.assertEqual(sum('grt' in x.split() for x in lines if x.startswith('make ')), 1, lines)
 
     def test_structural_failure_stops_before_grt(self):
         rc, lines, _ = self.execute(self.new, 'grt', fail_hold=True)

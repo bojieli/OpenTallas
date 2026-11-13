@@ -1,47 +1,240 @@
 #!/usr/bin/env python3
-"""HEAD-TILE-PREGRT-HOLD (DH59-TILE 11-03, opt-in plan clock.pregrt_ff_hold): placement-basis FF hold repair on 4_cts.odb
-before the first GRT, legalized and checked, for a kit whose hold debt is structural (a tap window W_t on every cross-tap
-pair: HEAD hd_tile W=130, 11,952 endpoints at -161.8 ps).  The in-flow GRT repair re-routes per iteration (measured:
-hd_spn_end 3,730 endpoints / 3,809 buffers in 5.2 h); the same work on placement parasitics took 166 s on hd_tile
-(DIE-HEAD-53 V1: +5.00 ps / 0 endpoints, 24,282 buffers).  The in-flow GRT FF repair stays and takes the residual; sign-off FF
-hold >= 0 stays the only gate.  Timing context = hold_gate.tcl verbatim (same contract, same overlay), so the kit carries the
-head of its own hold_gate.tcl.  Off (the default): no tcl, no config line, the run_kit.sh step is a grep no-op."""
+"""R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13, RULEBOOK-1113 R-CLOCK; extends HEAD-TILE-PREGRT-HOLD DH59-TILE 11-03).
+
+Every gen_phys kit repairs its FF hold debt ONCE, on the tap-balanced post-CTS database (4_cts.odb), on placement
+parasitics, before the first global route.  DEFAULT ON for every type of every die; plan clock.pregrt_ff_hold false
+opts a type out (the kit then gets no tcl and no config line, as before this rule).
+
+Why (measured 11-13, same kits that ended HOLD_STRUCTURAL / time cap at GRT):
+  - The hold debt of a kit is a CONTRACT quantity known as soon as the tap trees are balanced: a cross-tap register
+    pair pays the launch port's tap window W_p (gen_phys.tap_window_tcl: -source -early -W_p, no CRPR across ports)
+    + 25 ps hold uncertainty + the residual tree mismatch; an input port pays the seam contract in_min.  QC
+    sle_st_a_v1: 9,104 reg-to-reg violators, 8,668 of them cross-tap (median -14.5 ps, median distance 11 um).
+    S81 slice_station t41: 7,049 violators, 13 reg-to-reg, the rest input-port contract.  HEAD hd_turn_b: 2,312 = 34 + 2,278.
+  - It is NOT a tap insertion mismatch: 4_cts_final.rpt is written BEFORE cts_post.tcl (tap_balance), so its
+    120-185 ps launch/capture difference is the unbalanced tree.  After the balance the tap means sit within the window.
+  - The in-flow GRT repair re-routes per buffer (QC sle_st_a: 1,384 buffers in 9,432 s; hd_spn_end 3,809 in 5.2 h)
+    and ends on the 3 h stall guard; on placement parasitics the same work is minutes (hd_tile 24,282 buffers, 166 s).
+What changed against the 11-03 opt-in form:
+  1. default on (enabled()); the run_kit.sh step is advisory: any failure keeps 4_cts.odb and the GRT repair as before;
+  2. TWO scenes when run_kit.sh passes TLIBS (TC_LIB_FILES): TC/mode tt checks setup, BC/mode ff checks hold, so
+     repair_timing never spends TT setup slack on a hold cell (the FF-only form could only see FF setup);
+  3. ROUTE GUARD: register-to-register hold is built to +OT_PREGRT_HOLD_GUARD ps (plan clock.pregrt_hold_guard_ps,
+     default 35) = the measured placement -> routed loss + 10 (hd_turn_b proof: built to +25.0, GRT +12.0, routed
+     +2.71, so the loss is 22.3 ps; before the rule +0.45 at GRT -> -14.07 routed; hd_mesh ~25).
+     Port hold (the seam contract, judged at die STA) is built to OT_PREGRT_HOLD_PORT_MARGIN (5) only: a guard there
+     spends the input setup window (hd_turn_b t_i: TT setup 173.7 -> 39.7 with the guard on ports);
+  4. the clock network and every clock sink are FIRM while hold cells are legalized (tap balance stays as measured);
+  5. a class line before / after (port_in / same_tap / cross_tap / port_out) and pregrt_ff_hold_open.tsv = the
+     endpoints the build could not close (ESCALATE: lockup latch / same tap / +1 cycle are plan forms);
+  6. fail-safe: a TT setup loss, no hold gain or a tool error writes nothing (OT_PREGRT_FF_HOLD FALLBACK).
+The in-flow GRT FF repair stays and takes the residual; sign-off FF hold >= 0 stays the only gate.  Timing context =
+hold_gate.tcl verbatim (same contract, same overlay), so the kit carries the head of its own hold_gate.tcl."""
 from pathlib import Path
 
 MARK = "# A separate FF-only process: do not impersonate the shared multi-mode context.\n"
 CONFIG = "export OT_PREGRT_FF_HOLD = 1"
-TAIL = r"""# HEAD-TILE-PREGRT-HOLD: repair + legalize on the context above, then replace 4_cts.odb
-set pg_w0 [sta::time_sta_ui [sta::worst_slack_cmd min]]; set pg_n0 [sta::endpoint_violation_count min]
-set pg_i0 [llength [[ord::get_db_block] getInsts]]; set pg_t0 [clock seconds]
-puts "OT_PREGRT_FF_HOLD before wns $pg_w0 endpoints $pg_n0 insts $pg_i0"
-for {set pg_ps 1} {$pg_ps <= 6} {incr pg_ps} {
-  set pg_wp [sta::time_sta_ui [sta::worst_slack_cmd min]]
-  repair_timing -hold -hold_margin 5
-  set pg_wq [sta::time_sta_ui [sta::worst_slack_cmd min]]
-  puts "OT_PREGRT_FF_HOLD pass $pg_ps wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [[ord::get_db_block] getInsts]]"
-  if {$pg_wq >= 0 || $pg_wq - $pg_wp < 1.0} break
+GUARD_PS = 35.0
+# the single-scene read of hold_gate.tcl; replaced (exactly once, fail closed) by the two-scene read below
+READ = ("foreach l $::env(PLIBS) { read_liberty $l }\n"
+        "read_db $::env(ODB)\n"
+        "read_sdc $::env(SDC)\n"
+        "set_propagated_clock [all_clocks]\n")
+READ2 = r"""# R-CLOCK HOLD BUILD: TLIBS (TC_LIB_FILES) given -> scene TC / mode tt (setup) + scene BC / mode ff (hold); the
+# overlay below is applied in mode ff.  No TLIBS (a runner older than the rule): the FF-only read of hold_gate.tcl.
+set pg_two [expr {[info exists ::env(TLIBS)] && [llength $::env(TLIBS)]}]
+if {$pg_two} {
+  foreach l [concat $::env(TLIBS) $::env(PLIBS)] { read_liberty $l }
+  set_mode tt
+  set_mode ff
+  define_scene TC -mode tt -liberty $::env(TLIBS)
+  define_scene BC -mode ff -liberty $::env(PLIBS)
+  read_db $::env(ODB)
+  read_sdc -mode tt $::env(SDC)
+  read_sdc -mode ff $::env(SDC)
+  set_mode tt
+  set_propagated_clock [all_clocks]
+  set_false_path -hold -from [all_clocks]
+  set_mode ff
+  set_propagated_clock [all_clocks]
+  set_false_path -setup -from [all_clocks]
+} else {
+  foreach l $::env(PLIBS) { read_liberty $l }
+  read_db $::env(ODB)
+  read_sdc $::env(SDC)
+  set_propagated_clock [all_clocks]
 }
-# repair_timing seats a hold cell at its driver, on a macro in a macro-dominated tile (V1: 23 cells): legalize all of them
-set pg_nh 0
-foreach pg_i [[ord::get_db_block] getInsts] {
-  if {[string match "hold*" [$pg_i getName]] || [string match "*/hold*" [$pg_i getName]]} { $pg_i setPlacementStatus PLACED; incr pg_nh }
-}
-detailed_placement
-check_placement -verbose
-estimate_parasitics -placement
-puts "OT_PREGRT_FF_HOLD after wns [sta::time_sta_ui [sta::worst_slack_cmd min]] endpoints [sta::endpoint_violation_count min] hold_cells $pg_nh insts [llength [[ord::get_db_block] getInsts]] setup_wns [sta::time_sta_ui [sta::worst_slack_cmd max]] secs [expr {[clock seconds]-$pg_t0}]"
-write_db $::env(ODB)
 """
+TAIL = r"""# R-CLOCK HOLD BUILD: repair + legalize on the context above, then replace 4_cts.odb (fail-safe: FALLBACK writes nothing)
+set pg_guard [expr {[info exists ::env(OT_PREGRT_HOLD_GUARD)] && [string is double -strict $::env(OT_PREGRT_HOLD_GUARD)] ? $::env(OT_PREGRT_HOLD_GUARD) : 35.0}]
+set pg_blk [ord::get_db_block]
+proc pg_hold {} { return [sta::time_sta_ui [sta::worst_slack_cmd min]] }
+proc pg_setup {} { return [sta::time_sta_ui [sta::worst_slack_cmd max]] }
+# tap port of a clock pin: drivers followed back through the tree to the block terminal (cached per net)
+set pg_tapc [dict create]
+proc pg_tap_of {it} {
+  global pg_tapc
+  set net [$it getNet]; set chain {}; set r "?"
+  for {set h 0} {$h < 400 && $net ne "NULL" && $net ne ""} {incr h} {
+    set nn [$net getName]
+    if {[dict exists $pg_tapc $nn]} { set r [dict get $pg_tapc $nn]; break }
+    lappend chain $nn
+    set bts [$net getBTerms]
+    if {[llength $bts]} { set r [[lindex $bts 0] getName]; break }
+    set drv ""
+    foreach t [$net getITerms] { if {[$t isOutputSignal]} { set drv $t; break } }
+    if {$drv eq ""} break
+    set net "NULL"
+    foreach t [[$drv getInst] getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL"} { set net [$t getNet]; break } }
+  }
+  foreach c $chain { dict set pg_tapc $c $r }
+  return $r
+}
+proc pg_clk_iterm {inst} {
+  foreach t [$inst getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL" && [[$t getNet] getSigType] eq "CLOCK"} { return $t } }
+  return ""
+}
+# every FF hold violating endpoint by class; open != "" also writes the list (worst first, at most 5000 rows)
+proc pg_classes {when {open ""}} {
+  set cls {port_in same_tap cross_tap port_out}
+  foreach c $cls { set n($c) 0; set w($c) 0.0 }
+  set rows {}
+  if {[catch {set ps [find_timing_paths -path_delay min -group_path_count 3000000 -endpoint_path_count 1 -slack_max 0]} err]} {
+    puts "OT_PREGRT_FF_HOLD class $when unavailable ($err)"; return
+  }
+  foreach pe $ps {
+    set s [sta::time_sta_ui [$pe slack]]
+    set a [sta::sta_to_db_pin [get_property $pe startpoint]]; set b [sta::sta_to_db_pin [get_property $pe endpoint]]
+    set lt "-"; set ct "-"
+    if {$a eq "NULL" || $a eq ""} { set c port_in
+    } elseif {$b eq "NULL" || $b eq ""} { set c port_out
+    } else {
+      set lt [pg_tap_of $a]; set ci [pg_clk_iterm [$b getInst]]
+      set ct [expr {$ci eq "" ? "?" : [pg_tap_of $ci]}]
+      set c [expr {$lt eq $ct ? "same_tap" : "cross_tap"}]
+    }
+    incr n($c); if {$s < $w($c)} { set w($c) $s }
+    if {$open ne ""} { lappend rows [list $s $c [get_full_name [get_property $pe startpoint]] [get_full_name [get_property $pe endpoint]] $lt $ct] }
+  }
+  set line "OT_PREGRT_FF_HOLD class $when"
+  foreach c $cls { append line [format " %s %d ws %.2f" $c $n($c) $w($c)] }
+  puts $line
+  if {$open ne ""} {
+    set f [open $open w]; puts $f "slack_ps\tclass\tstart\tend\tlaunch_tap\tcapture_tap"
+    foreach r [lrange [lsort -real -index 0 $rows] 0 4999] { puts $f [join $r "\t"] }
+    close $f
+  }
+}
+set pg_w0 [pg_hold]; set pg_n0 [sta::endpoint_violation_count min]; set pg_s0 [pg_setup]
+set pg_i0 [llength [$pg_blk getInsts]]; set pg_t0 [clock seconds]
+puts "OT_PREGRT_FF_HOLD before wns $pg_w0 endpoints $pg_n0 insts $pg_i0 setup_wns $pg_s0 scenes [expr {$pg_two ? {TC+BC} : {BC only (no TLIBS: setup guard at FF)}}] guard $pg_guard"
+pg_classes before
+# the clock network and its sinks keep their sites: FIRM while hold cells are seated and legalized
+set pg_lock {}
+foreach pg_net [$pg_blk getNets] {
+  if {[$pg_net getSigType] ne "CLOCK"} continue
+  foreach pg_it [$pg_net getITerms] {
+    set pg_i [$pg_it getInst]
+    if {[$pg_i getPlacementStatus] eq "PLACED"} { lappend pg_lock $pg_i; $pg_i setPlacementStatus FIRM }
+  }
+}
+set pg_fail ""; set pg_rr "nan"
+set pg_pm [expr {[info exists ::env(OT_PREGRT_HOLD_PORT_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_PORT_MARGIN)] ? $::env(OT_PREGRT_HOLD_PORT_MARGIN) : 5.0}]
+set pg_in [all_inputs -no_clocks]; set pg_out [all_outputs]
+if {[catch {
+  # (A) every hold path, ports included, to the port margin: the seam contract (in_min / out_min) is padded as the GRT
+  #     repair would, with no route guard (port hold is judged at die STA against the parent's real arrivals);
+  # (B) register-to-register only (port hold excepted for the pass, then restored) to the route guard.
+  foreach {pg_tag pg_m} [list all $pg_pm rr $pg_guard] {
+    if {$pg_tag eq "rr"} {
+      if {[llength $pg_in]} { set_false_path -hold -from $pg_in }
+      if {[llength $pg_out]} { set_false_path -hold -to $pg_out }
+    }
+    for {set pg_ps 1} {$pg_ps <= 6} {incr pg_ps} {
+      set pg_wp [pg_hold]
+      if {$pg_wp >= $pg_m} break
+      repair_timing -hold -hold_margin $pg_m -max_buffer_percent 100
+      set pg_wq [pg_hold]
+      puts "OT_PREGRT_FF_HOLD pass $pg_tag $pg_ps margin $pg_m wns $pg_wq endpoints [sta::endpoint_violation_count min] insts [llength [$pg_blk getInsts]]"
+      if {$pg_wq >= $pg_m || $pg_wq - $pg_wp < 1.0} break
+    }
+    if {$pg_tag eq "rr"} {
+      set pg_rr [pg_hold]
+      if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }
+      if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }
+    }
+  }
+  # repair_timing seats a hold cell at its driver, on a macro in a macro-dominated tile (V1: 23 cells): legalize all of them
+  set pg_nh 0
+  foreach pg_i [$pg_blk getInsts] {
+    if {[string match "hold*" [$pg_i getName]] || [string match "*/hold*" [$pg_i getName]]} { $pg_i setPlacementStatus PLACED; incr pg_nh }
+  }
+  detailed_placement
+  check_placement -verbose
+  estimate_parasitics -placement
+} pg_err]} { set pg_fail "tool error: [lindex [split $pg_err "\n"] 0]" }
+foreach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }
+if {$pg_fail eq ""} {
+  set pg_w1 [pg_hold]; set pg_s1 [pg_setup]
+  if {$pg_s1 < [expr {min($pg_s0, 0.0) - 1.0}]} { set pg_fail [format "TT setup loss %.2f -> %.2f" $pg_s0 $pg_s1]
+  } elseif {$pg_w1 < $pg_w0 + 1.0 && $pg_n0 > 0} { set pg_fail [format "no hold gain %.2f -> %.2f" $pg_w0 $pg_w1] }
+}
+if {$pg_fail ne ""} {
+  puts "OT_PREGRT_FF_HOLD FALLBACK $pg_fail: 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt"
+} else {
+  set pg_open [file join [file dirname [file normalize [info script]]] pregrt_ff_hold_open.tsv]
+  if {[catch {pg_classes after $pg_open} pg_err]} { catch {pg_classes after}; puts "OT_PREGRT_FF_HOLD open list not written ($pg_err)" }
+  puts "OT_PREGRT_FF_HOLD after wns $pg_w1 endpoints [sta::endpoint_violation_count min] rr_wns $pg_rr hold_cells $pg_nh insts [llength [$pg_blk getInsts]] setup_wns $pg_s1 (before $pg_s0) guard $pg_guard locked [llength $pg_lock] secs [expr {[clock seconds] - $pg_t0}]"
+  write_db $::env(ODB).pg_tmp
+  file rename -force $::env(ODB).pg_tmp $::env(ODB)
+}
+"""
+
+
+def enabled(t):
+    """R-CLOCK: on for every type unless the plan says clock.pregrt_ff_hold false."""
+    v = (t.get("clock") or {}).get("pregrt_ff_hold")
+    return True if v is None else bool(v)
+
+
+def guard_ps(t):
+    """the route guard (ps) the build repairs to: plan clock.pregrt_hold_guard_ps, default GUARD_PS."""
+    v = (t.get("clock") or {}).get("pregrt_hold_guard_ps")
+    g = GUARD_PS if v is None else float(v)
+    if not 0 <= g <= 100:
+        raise ValueError(f"clock.pregrt_hold_guard_ps {g:g} outside [0, 100]")
+    return g
+
+
+def config_lines(t):
+    """config.mk lines of the build; [] when the type opts out."""
+    return [CONFIG, f"export OT_PREGRT_HOLD_GUARD = {guard_ps(t):g}"] if enabled(t) else []
+
+
 def tcl_text(hold_gate_text):
     if hold_gate_text.count(MARK) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl context marker not found exactly once; fails closed")
-    return hold_gate_text.split(MARK)[0] + TAIL
+    head = hold_gate_text.split(MARK)[0]
+    if head.count(READ) != 1:
+        raise ValueError("pregrt_ff_hold: hold_gate.tcl library / database read not found exactly once; fails closed")
+    return head.replace(READ, READ2) + TAIL
 
 
 def install(t, kd):
-    """Kit tcl (run_kit.sh runs it when config.mk says OT_PREGRT_FF_HOLD = 1).  False (no writes) when off."""
-    if not t.get("clock", {}).get("pregrt_ff_hold"):
+    """Kit tcl (run_kit.sh runs it when config.mk says OT_PREGRT_FF_HOLD = 1).  False (no writes) when opted out."""
+    if not enabled(t):
         return False
     kd = Path(kd)
     (kd / "pregrt_ff_hold.tcl").write_text(tcl_text((kd / "hold_gate.tcl").read_text()))
     return True
+
+
+if __name__ == "__main__":      # pregrt_ff_hold.py KIT [GUARD]: stage the build into an existing kit (private proofs)
+    import sys
+    kit = Path(sys.argv[1])
+    g = float(sys.argv[2]) if len(sys.argv) > 2 else GUARD_PS
+    install({"clock": {}}, kit)
+    c = (kit / "config.mk").read_text()
+    if CONFIG not in c:
+        (kit / "config.mk").write_text(c.rstrip("\n") + f"\n{CONFIG}\nexport OT_PREGRT_HOLD_GUARD = {g:g}\n")
+    print("staged", kit / "pregrt_ff_hold.tcl")
