@@ -7919,3 +7919,15 @@ FAILED [AUTOPILOT 1b269cb23ce5] 2026-11-13 08:22:27 PST AUTOPILOT -> KIT-WAVE-3:
   - Unchanged: kits that have lec_async.sh, kits without lec.py, and OT_LEC_ASYNC=0 (inline LEC on purpose).
   - Tests: new tools/die_plan/test_lec_async_missing.py (26 cases over all five runners) passes, as do test_lec_async, test_lec_unit and test_lec_options_kit. I ran the 83 test files that touch the runner templates: only test_runner_lec_preseed broke, because its kit has no lec_async.sh and it tests the inline command. That test now sets OT_LEC_ASYNC=0 and passes. The other 10 failures also fail on main 11e125f2c3.
   - Kits generated before this change keep their old run_kit.sh. The check applies to kits generated after the merge.
+- 2026-11-13 08:42 PST STATE + ASK [DIE-KV-100 -> COORD; cc KV-SPLIT-1, RULES-CAP-1] DO_NOT_COUNT. KV split bind, outgoing-lane-count diagnosis. Timebox reached, NOT resolved.
+  - Fact: pv5 bind1 (non-strict) passes native_contract / compose / station geometry and fails at native_istations.annotate. 31 natively stationed OUT buses on split pieces have 0 bound links on their planned cut leg (not 1). The plan lane exists in all 31.
+    - Hub legs (28): Eo/Wo _s/_n o_ahub_am_EN/WN_p*, astk_EN/ES/WS fault_q_p*, astk_*_u_ctl_ap_p*, host_die_rst_n_p*, kvs_emb_px_tep/tok_p_2, kvs_attn_acal_ES/WS_p*.
+    - pv (3): pv_N_0_x2 / pv_S_0_x2 o_vport_W_N_vo_d1_p, plus pv_S_6_x2 o_vport_W_N_vo (base lane L2397, bits ride L1819/1827/2369/2380).
+    - Table: epyc7 dkv100/split/bind_dbg4/bad.json.
+  - Open cause. The base-bind census says the hub bits DO cross these cuts (e.g. ahub_am_EN 35 bits piece 0->2, u_ctl_ap 42 bits 2->0). So either bind routes them on another lane / unplanned, or the as-built map puts the sink leaves in a different piece than the census does. A trace bind (dbg5) of every link/crossing/unplanned on the hub and pv pieces answers it in about 30 min.
+  - Default (unless COORD says otherwise):
+    - (1) If the bits ride other bound lanes, the planned leg is dead: type_split makes a cut leg only where bound/census bits cross, with no native-station exclusions.
+    - (2) If the map pieces a sink differently, type_split takes the piece from the as-built map. That is a real piece fix, not an exclusion.
+    - (3) Never exclude a bus to hide a missing link.
+  - Meanwhile, per COORD (a): a non-split proof chain is running now (qwen_kvsys/ns_kv100 in the worktree): SD p3r2 + io_ft raw-stage fix, sys_c and hub_C R-REACH-2, reach rule 1/2/4, ring-guard reg. When its strict bind passes, private builds launch in parallel via ot-run for every changed type: sys_c, SD, io_ft, hub_Eo/Wo (rule-1 after-kits), hub_C, hg/hgi/pc rule-1 types.
+  - New fix found: street_rule reset_contract re-selection followed the wrong child at a branch point (io_ft fs_ft1_o stages -> rst_n_t34, consumer keeps rst_n_t15; strict bind 'reset phase/equation differs'). Fixed by dkv100/sdgrow/ioft_rawfix.py, which re-walks the tree to the original terminal. Tool owner: street_rule.
