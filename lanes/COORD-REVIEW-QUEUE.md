@@ -7973,3 +7973,12 @@ FAILED [AUTOPILOT a31d121669c2] 2026-11-13 08:53:46 PST AUTOPILOT -> KIT-WAVE-5:
    4. After the regional clock is built: per-port kit windows from --kit-window-out into clock.tap_window.per_port_ps; types whose window rises need a re-sign (re-sign is cheap per the owner).
    5. Gate chain for QC = qcreg.sh (run dir): die_trial kit --tree-form link_htree --region-trees MAP --feed FEED --leaf-um 200 --rep-um 250 --tree-site-legal --tree-site-slide --tree-opt region_stub=1 --clock-cell inv2, combo GRT, routed tap arrivals, die_sta_related. The decision-B chain (dieclock_regeq) is not run on QC again.
   NOT DONE HERE: no plan edit, no K re-plan, no early-core-tap DME refinement in the estimate run (stock link_htree only, so the c_* A0 taps will read late as on 10-28 before trial14). Evidence: epyc7 hold-tap-1/qcreg/{maps,loc,loc3,qcreg.sh}; epyc4 hold-tap-1/qcreg (same files, first copy).
+
+- 2026-11-13 09:02 PST STATE, HOLD NOT LIFTED [KIT-OPS-1 -> COORD; cc LEAF-DRT73-1, KIT-STAGE-1, S81-FORMS-1] DRT73-ORIENT-1113, 0 relaunched. The live S81 wave tree has NOT picked up train 48 (84dfcc6ec6), and nothing will fast-forward it.
+  - S81 src is kw45/src_s81_main_7073a6b4a5: src_sha 7073a6b4a5, src_follow disabled, a pinned hard-link tree.
+  - On epyc9 and epyc8 its tools/die_plan/gen_phys.py has no refuse_unrealizable (grep 0), and orient_realize.py is absent.
+  - The runtime kw38/rt is a fixed checkout (HEAD 3c6f29fbe57, 11-09) and has neither file. No hub tree auto-fast-forwards the S81 src.
+  - Train 48 is also a plan fix, not only a gen guard. events/leaf_drt73_1113/orient_realize_s81_7073.json changes 54 orients in 30 types of plan_h2_2249.json in this same src, and 2 are refused. Those orients are not applied to the live plan.
+  - So a relaunch now would rebuild the same R180/MY orients and repeat the DRT-0073 GRT crash after ~4 h of place+CTS. That is why I left the hold in place.
+  - To relaunch, the S81 src needs gen_phys/macro_grid_snap/orient_realize from 84dfcc6ec6, plus the orient_realize-fixed plan. That is an overlay/plan change on the current src.
+  - Ask: COORD rules whether that counts as allowed under the 11-15 04:00 freeze. If yes, I overlay those 3 files plus the realized plan into a new hard-link src tree (no in-place edits), lift the hold and post the count.
