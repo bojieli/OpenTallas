@@ -100,6 +100,7 @@ dict for {key qs} $rc_q {
  incr rc_comb_n [llength $local]
 }
 
+set rc_reserved {}
 set rc_groups 0;set rc_qn 0;set rc_cn 0
 set rc_f [open /work/r1c8_affinity.csv w];puts $rc_f {group,subgroup,q_count,control_count,x_um,y_um}
 dict for {key qs} $rc_q {
@@ -107,11 +108,43 @@ dict for {key qs} $rc_q {
  set cs [dict get $rc_c $key];set sx 0;set sy 0
  foreach q $qs {lassign [$q getLocation] x y;set sx [expr {$sx+$x}];set sy [expr {$sy+$y}]}
  lassign [rc_out [expr {round($sx/double([llength $qs]))}] [expr {round($sy/double([llength $qs]))}]] x y
- set idx 0
- foreach i [concat $qs $cs [dict get $rc_combs $key]] {
-  $i setLocation [expr {round($x+($idx%4)*1.62*$rc_dbu)}] [expr {round($y+($idx/4)*0.54*$rc_dbu)}]
+ # Pack with actual master dimensions, then choose a whole-bundle location.
+ # Fixed-pitch slots overlap wide mux/buffer cells and can trap DPL at a macro wall.
+ set bundle [concat $qs $cs [dict get $rc_combs $key]]
+ set pitch [expr {round(0.108*$rc_dbu)}];set width [expr {round(12.0*$rc_dbu)}]
+ set rx 0;set ry 0;set rh 0;set offsets {}
+ foreach i $bundle {
+  set mw [[$i getMaster] getWidth];set mh [[$i getMaster] getHeight]
+  if {$rx>0 && $rx+$mw>$width} {set rx 0;set ry [expr {$ry+$rh+$pitch}];set rh 0}
+  dict set offsets $i [list $rx $ry]
+  set rx [expr {$rx+$mw+$pitch}];set rh [expr {max($rh,$mh)}]
+ }
+ set height [expr {$ry+$rh}]
+ set candidates {}
+ for {set dx -100} {$dx<=100} {incr dx 4} {
+  for {set dy -60} {$dy<=60} {incr dy 3} {lappend candidates [list [expr {$dx*$dx+$dy*$dy}] $dx $dy]}
+ }
+ set found 0
+ foreach candidate [lsort -integer -index 0 $candidates] {
+  lassign $candidate unused dx dy
+  set bx [expr {round($x-$width/2.0+$dx*$rc_dbu)}];set by [expr {round($y-$height/2.0+$dy*$rc_dbu)}]
+  set ex [expr {$bx+$width}];set ey [expr {$by+$height}]
+  if {$bx<[$rc_core xMin]+$rc_dbu || $ex>[$rc_core xMax]-$rc_dbu || $by<[$rc_core yMin]+$rc_dbu || $ey>[$rc_core yMax]-$rc_dbu} continue
+  set clear 1
+  foreach bb [concat $rc_mac $rc_reserved] {
+   lassign $bb mx0 my0 mx1 my1
+   if {$bx<$mx1 && $ex>$mx0 && $by<$my1 && $ey>$my0} {set clear 0;break}
+  }
+  if {!$clear} continue
+  set x $bx;set y $by;set found 1
+  lappend rc_reserved [list [expr {$bx-$pitch}] [expr {$by-$pitch}] [expr {$ex+$pitch}] [expr {$ey+$pitch}]]
+  break
+ }
+ if {!$found} {error "R1C8 no legal whole-bundle site for $key"}
+ foreach i $bundle {
+  lassign [dict get $offsets $i] ox oy
+  $i setLocation [expr {$x+$ox}] [expr {$y+$oy}]
   $i setPlacementStatus PLACED
-  incr idx
  }
  puts $rc_f "$key,[llength $qs],[llength $cs],[expr {$x/double($rc_dbu)}],[expr {$y/double($rc_dbu)}]"
  incr rc_groups; incr rc_qn [llength $qs]; incr rc_cn [llength $cs]
