@@ -1,0 +1,177 @@
+{
+ "schema": "opentallas.street_rule.v1",
+ "mode": "check",
+ "plan": "/srv/opentallas-scratch2/claude/wt/hard-s81-dsdv-1/physical/die_plan/s81/plan_xs4_n4.json",
+ "plan_sha256": "a4dab645c7d21463b021896d481379c4b1e46af6c52bfbf210d8a7398a79a915",
+ "die": "s81",
+ "cfg": {
+  "street_min_um": 43.2,
+  "pin_pitch_um": 0.048,
+  "street_layers": 3.0,
+  "street_fill": 0.6,
+  "abut_um": 4.32,
+  "wall_pins": 1500,
+  "wall_min_um": 43.2,
+  "pinface_min": 16,
+  "tap_street_um": 17.28,
+  "anchor_um": 21.6,
+  "rounds": 4,
+  "reach": 360.0,
+  "outline_grid_um": 8.64,
+  "max_growth_pct": 25.0,
+  "outline_margin_um": 8.64,
+  "attempts": 4,
+  "reach_limit_um": 405.0,
+  "grow_axes": "xy",
+  "reticle_fit": 1,
+  "rs_worse": 0.1,
+  "add_regs": 0,
+  "pin_reorder": 0,
+  "x_pin_factor": 1.0,
+  "band_file": "",
+  "sliver_rule": 0,
+  "face_rule": 1,
+  "face_depth_um": 129.6,
+  "face_passes": 5,
+  "dense_per_um": 3.0,
+  "transit_rule": 0,
+  "sparse_tier": 1
+ },
+ "rows": [
+  {
+   "type": "dsdv_slice_lepw_mus_C__t1",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_lepw_mu_C__t1",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t1",
+   "cores": 11,
+   "counts": {
+    "street": 1
+   },
+   "worst": [
+    {
+     "axis": "y",
+     "gap": 86.4,
+     "pins": [
+      1658,
+      1842
+     ],
+     "faces": [
+      "N",
+      "S"
+     ],
+     "span": 207.36,
+     "pin_reorder": 0,
+     "need": 95.04,
+     "kind": "street",
+     "a": "u_c.u_xr",
+     "b": "u_c.u_xg.u_s",
+     "same_cluster": false
+    }
+   ],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t10",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t3",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t4",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_iq_C__t1",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_kv512_C__t1",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c3x_C__t1",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t5",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t6",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t7",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t8",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_c1x_C__t9",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_lepe_nh_mus_C__t1",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  },
+  {
+   "type": "dsdv_slice_lepe_mu_C__t1",
+   "cores": 11,
+   "counts": {},
+   "worst": [],
+   "face": []
+  }
+ ],
+ "types_with_violations": 1
+}

@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.s81.xs4.plan_revision.v1",
+  "status": "PRIVATE_CANDIDATE_NOT_READY",
+  "source_face_fix": "2b19915e42",
+  "plan_sha256_12": "a4dab645c7d2",
+  "base_event": "../../record.json",
+  "change": "One input pin per kept capture copy; core contract 4365 -> 4906 pins. Values and external cycles preserved. Parent floorplan remains n4 family template.",
+  "plan": "plan_a4dab645c7d2.json.gz",
+  "asbuilt": "asbuilt_xs4c.json",
+  "gates": {
+    "G0": {
+      "errors": 74,
+      "baseline_errors": 74,
+      "added": 0,
+      "removed": 0
+    },
+    "G0C": {
+      "die_errors": 9456,
+      "family_errors": 0
+    },
+    "street": {
+      "errors": 0
+    },
+    "strict_bind": {
+      "returncode": 0,
+      "partitions": 398,
+      "types": 395,
+      "crossings": 873,
+      "errors": 0,
+      "unbound": 0,
+      "tied": 0,
+      "undriven": 0,
+      "multiply_bound": 0
+    },
+    "latcheck": {
+      "passed": 873,
+      "lanes": 873,
+      "failed": 0,
+      "unobserved": 0
+    },
+    "exactness": "XS4_EQUIV_BENCH and XGTXO_BENCH PASS incl seeded controls on face-fix source"
+  },
+  "physical": {
+    "core": "epyc2 hard-s81-dsdv-1/run/xs4h_r2/ot_s81sl_xs4_xs4h running synthesis; no signoff claim",
+    "parent": "Previous h2 t3/t8 proofs FAILED REG_FANOUT74 on legacy-ring root; source fix eb9408724a proven as a mechanism and pending new n4 parent synthesis/place.",
+    "review": "results/geom_review/xs4_n4_codex_1113.md"
+  },
+  "open": [
+    "Core4906pin r2 must pass boundary gate and physical closure.",
+    "Fresh n4 parent proof must pass REG_FANOUT after opt-in WCC_GROUP16 before placement.",
+    "Measure pin-to-capture distance on fresh parent proof; old ft0 unreg flag was cone-depth cutoff.",
+    "Token schedule rebaseline on adoption; prior lane pricing remains55lanes/+85aggregate lane cycles.",
+    "Source/wave switches held until owner-approved freeze release; no POR change made."
+  ]
+}
