@@ -496,8 +496,9 @@ def _child_type_with_parent(P):
 
 
 def test_reset_column_mode_straight_chain_on_the_parent_line():
-    """REACH-FIX-2 11-12 (HEAD-95 rp18 chain types): reset.column puts entry and exit on ONE line - taken from the
-    parent's exit pin, clamped into the logic span - and the relay tree is a straight chain along it."""
+    """REACH-FIX-2 11-12 (HEAD-95 rp18 chain types, COORD spec): reset.column - parent chosen by geometry (nearest exit
+    site of an earlier-released partition), entry on the parent's exit line, exit at the column child's line, cross
+    band from the DATA sinks only, and a straight relay chain on the entry line."""
     for raw0 in (PAIR, TINY):
         P0 = schema.Plan(wave(raw0))
         tn = _child_type_with_parent(P0)
@@ -507,29 +508,28 @@ def test_reset_column_mode_straight_chain_on_the_parent_line():
         raw["partition_types"][tn].setdefault("reset", {})["column"] = {}
         assert schema.validate(raw) == []
         P = schema.Plan(raw)
-        cs = RT.column_spec(P, tn)
         W = RT.wf_plan(P)
         assert W["unreachable"] == []
         cs = RT.column_spec(P, tn)
-        assert cs["at"] is not None and cs["span"][0] - 1e-6 <= cs["at"] <= cs["span"][1] + 1e-6
         k = 0 if cs["axis"] == "y" else 1
-        sites = RT.face_sites(P, tn)[:2]                  # the two line ends come first (other face sites: side exits)
-        assert abs(sites[0]["xy"][k] - sites[1]["xy"][k]) < 1.0 and abs(sites[0]["xy"][k] - cs["at"]) < 1.0
+        sinks = [(x, y) for _, x, y in RT.consumer_taps(P, tn)]
+        assert cs["span"] == (min(p[k] for p in sinks), max(p[k] for p in sinks))       # data sinks only
+        assert cs["at"] is not None and cs["span"][0] - 1e-6 <= cs["at"] <= cs["span"][1] + 1e-6
         ent = RT.in_pin(P, tn)
-        assert any(abs(ent[0] - s["xy"][0]) < 1e-6 and abs(ent[1] - s["xy"][1]) < 1e-6 for s in sites)
-        # the line is the parent's exit pin (median over instances), unless clamped into the span
-        r = next(r for p, r in sorted(W["parts"].items()) if r["type"] == tn and r["parent"] is not None)
-        par = r["parent"]
+        assert abs(ent[k] - cs["at"]) < 1.0                                              # entry on the line
+        sol = RT.wf_solve(P)
+        cp = P._reset_tree_cache["column_parent"]
+        for n, (q, j) in cp.items():                                                     # geometric parent kept
+            assert sol["parent"][n][0] == q and sol["est_rel"][q] < sol["est_rel"][n]
         T = RT.for_type(P, tn)
         assert RT.verify(T) == [] and T["topology"] == "column" and T["max_hop_um"] <= RT.relay_um(P, tn)
-        # chain relays (wire relays fed from the root or another chain relay) sit on the line
+        on_line = [r for r in T["relays"] if abs(r["xy"][k] - cs["at"]) < 1.0]
+        assert on_line                                                                   # the chain is on the line
         e, _w, _i = RT.check(P)
         assert e == []
-        # explicit at_um is taken (clamped into the span)
         raw["partition_types"][tn]["reset"]["column"] = {"at_um": -1000.0}
         P2 = schema.Plan(raw)
-        assert RT.column_spec(P2, tn)["at"] == RT.column_spec(P2, tn)["span"][0]
-        assert par in P.parts
+        assert RT.column_spec(P2, tn)["at"] == RT.column_spec(P2, tn)["span"][0]         # clamped into the band
         return
     pytest.skip("no soft child type in the examples")
 

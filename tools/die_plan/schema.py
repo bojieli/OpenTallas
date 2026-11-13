@@ -821,7 +821,7 @@ SCHEMA = {
                         "relay_um": {"type": "number", "exclusiveMinimum": 25, "maximum": 405},
                         # reset column mode (reset_tree.column_spec): entry/exit on one line, straight relay chain
                         "column": {"type": "object", "additionalProperties": False, "properties": {
-                            "axis": {"enum": ["x", "y"]}, "at_um": {"type": "number"}}},
+                            "axis": {"enum": ["x", "y"]}, "at_um": {"type": "number"}, "entry": {"enum": ["lo", "hi"]}}},
                         # reset relay obstacle model (reset_tree.blockages): default canonical placed union;
                         # "lef_origin" = the frozen pre-11-02 model a published relay graph was solved with
                         "obstacle_model": {"enum": ["canonical", "lef_origin"]},

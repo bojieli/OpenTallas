@@ -743,28 +743,38 @@ def _topo_taps(pts, root, reach, boxes, box_out):
 
 
 def _topo_column(pts, root, column, reach, boxes, box_out):
-    """reset column (column_spec): a straight relay chain from the entry along column['axis'] to column['end'] (the
-    exit site, or the farthest tap projection), relays every <= reach; every tap hangs off the chain node that gives it
-    the fewest hops (then the least wire), with reach-limited L relays on the branch.  Nodes as _topo_taps."""
+    """reset column (column_spec): a straight relay chain from the entry along column['axis'] on the entry line, with a
+    relay at each end of the data sinks' along band (column['band']) so the empty outline past the band is trunk only,
+    out to column['end'] (the exit line end, reached by an L from the last chain relay) or the band end; relays every
+    <= reach.  Every tap hangs off the chain node that gives it the fewest hops (then the least wire), with
+    reach-limited L relays on the branch.  Nodes as _topo_taps."""
     n = len(pts)
     k = 1 if column["axis"] == "y" else 0                      # along-axis coordinate index
     a0 = root[k]
-    if column.get("end") is not None:
-        a1 = column["end"][k]
+    end = column.get("end")
+    b0, b1 = column.get("band") or (min(p[k] for p in pts), max(p[k] for p in pts))
+    if end is not None:
+        a1 = end[k]
     else:
-        a1 = max((p[k] for p in pts), key=lambda v: abs(v - a0))
-    m = max(0, math.ceil(abs(a1 - a0) / reach - 1e-9) - 1)
+        a1 = b1 if abs(b1 - a0) >= abs(b0 - a0) else b0
+    lo, hi = sorted((a0, a1))
+    stops = [a0] + sorted({min(max(b, lo), hi) for b in (b0, b1)} - {a0, a1}, key=lambda v: abs(v - a0)) + [a1]
     nodes = [dict(xy=pts[v], par=None, tap=v) for v in range(n)]
     chain = [(-1, root, 0)]
-    prev = -1
-    for i in range(1, m + 1):
-        a = a0 + (a1 - a0) * i / (m + 1)
-        p = (root[0], a) if k == 1 else (a, root[1])
-        if box_out is not None and boxes:
-            p = push_off(p, boxes, box_out)
-        nodes.append(dict(xy=p, par=prev, tap=None))
-        prev = len(nodes) - 1
-        chain.append((prev, p, i))
+    prev, depth = -1, 0
+    line = lambda a: (root[0], a) if k == 1 else (a, root[1])
+    for i in range(1, len(stops)):
+        s0, s1 = stops[i - 1], stops[i]
+        m = max(1, math.ceil(abs(s1 - s0) / reach - 1e-9))
+        last = i == len(stops) - 1 and end is not None       # the exit end itself is a tap (o<k>), not a chain relay
+        for j in range(1, m + (0 if last else 1)):
+            p = line(s0 + (s1 - s0) * j / m)
+            if box_out is not None and boxes:
+                p = push_off(p, boxes, box_out)
+            nodes.append(dict(xy=p, par=prev, tap=None))
+            prev = len(nodes) - 1
+            depth += 1
+            chain.append((prev, p, depth))
     for v in range(n):
         u, pu, du = min(chain, key=lambda c: (c[2] + _hops(c[1], pts[v], reach), _man(c[1], pts[v]), c[2]))
         par = u
@@ -1321,11 +1331,15 @@ def _snap(P, x, y):
 
 
 def column_spec(P, tn):
-    """reset 'column' mode of a wavefront soft type (partition_types[t].reset.column, REACH-FIX-2 11-12 for the HEAD
-    chain types): the reset enters and leaves on ONE line - entry and exit face sites at the same cross coordinate,
-    taken from the parent's exit pin (or reset.column.at_um) and clamped into the type's logic span (its clock taps) -
-    and the relay tree is a straight chain along that line with the taps branching off it.
-    -> None or {axis ('y': chain along y, S/N faces; 'x': along x, W/E faces), at (cross coordinate or None), span}"""
+    """reset 'column' mode of a wavefront soft type (partition_types[t].reset.column, REACH-FIX-2 11-12, HEAD-95 rp18
+    chain types).  The reset enters on the face toward its parent at the cross coordinate of the parent's exit pin and
+    leaves on the opposite face at the cross coordinate of its column child's entry (else the same line), both clamped
+    into the cross band of the type's DATA sinks (consumer_taps: clock taps + local reset taps; relay flops, rst_o and
+    core reset pins are never sinks); the relay tree is a straight chain on the entry line with a relay at each end of
+    the sinks' along-axis band, the taps branching off it.  The parent of every column instance is chosen by geometry
+    (wf_solve): the nearest exit site of a partition that releases earlier.
+    -> None or {axis ('y': line along y, S/N faces; 'x': along x, W/E faces), at, exit_at, entry ('lo' S/W | 'hi'
+    N/E | None), span (cross band), band (along band)}"""
     if not wavefront(P):
         return None
     t = P.types.get(tn) or {}
@@ -1336,27 +1350,33 @@ def column_spec(P, tn):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     axis = col.get("axis") or cache.get("column_axis", {}).get(tn) or ("y" if h >= w else "x")
     k = 0 if axis == "y" else 1
-    cs = [p[1 + k] for p in _plan_taps(P, tn)]
-    span = (min(cs), max(cs)) if cs else ((INSET_UM, (w if axis == "y" else h) - INSET_UM))
+    key = ("column_sinks", tn)
+    if key not in cache:
+        cache[key] = [(float(x), float(y)) for _, x, y in consumer_taps(P, tn)]
+    pts = cache[key]
+    W = w if axis == "y" else h
+    L = h if axis == "y" else w
+    span = (min(p[k] for p in pts), max(p[k] for p in pts)) if pts else (INSET_UM, W - INSET_UM)
+    band = (min(p[1 - k] for p in pts), max(p[1 - k] for p in pts)) if pts else (INSET_UM, L - INSET_UM)
+    clamp = lambda v: None if v is None else min(max(float(v), span[0]), span[1])
     at = col.get("at_um")
     if at is None:
         at = cache.get("column_at", {}).get(tn)
-    if at is not None:
-        at = min(max(float(at), span[0]), span[1])
-    return dict(axis=axis, at=at, span=span)
+    ex = cache.get("column_exit_at", {}).get(tn)
+    return dict(axis=axis, at=clamp(at), exit_at=clamp(ex if ex is not None else at), span=span, band=band,
+                entry=col.get("entry") or cache.get("column_entry", {}).get(tn))
 
 
 def _column_sites(P, tn, cs):
+    """the two line ends (index 0 = S/W face, 1 = N/E face); the entry end at cs['at'], the other at cs['exit_at']."""
     t = P.types[tn]
     w, h = t["outline_um"]
+    lo, hi = (cs["at"], cs["exit_at"]) if cs["entry"] != "hi" else (cs["exit_at"], cs["at"])
     if cs["axis"] == "y":
-        raw = (("S", cs["at"], INSET_UM), ("N", cs["at"], h - INSET_UM))
+        raw = (("S", lo, INSET_UM), ("N", hi, h - INSET_UM))
     else:
-        raw = (("W", INSET_UM, cs["at"]), ("E", w - INSET_UM, cs["at"]))
-    out = []
-    for j, (face, x, y) in enumerate(raw):
-        out.append(dict(face=face, j=j, mid=True, xy=_snap(P, x, y)))
-    return out
+        raw = (("W", INSET_UM, lo), ("E", w - INSET_UM, hi))
+    return [dict(face=f, j=j, mid=True, xy=_snap(P, x, y)) for j, (f, x, y) in enumerate(raw)]
 
 
 def face_sites(P, tn):
@@ -1438,47 +1458,85 @@ def _root_part(P, soft):
 
 
 def wf_solve(P):
-    """die wavefront routing (see _wf_solve_once).  Column types without reset.column.at_um take their line from the
-    parent's exit pin: solve, read every instance's parent rst_o site in the type frame (median of the cross
-    coordinate), re-solve with the column sites, until the lines no longer move (<= 4 passes)."""
+    """die wavefront routing (see _wf_solve_once) with reset column types (column_spec): solve, then per column instance
+    pin its parent by GEOMETRY - the nearest exit site (any face site of a soft partition released earlier in that
+    solve, within hop) - take the entry line from that site (median over instances; axis and entry face from the side
+    the parent sits on) and the exit line from the column child's entry, re-solve with the pinned parents and the line
+    sites, until nothing moves (<= 5 passes)."""
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     if "wf_solve" in cache:
         return cache["wf_solve"]
-    cols = [tn for tn in sorted(P.types) if column_spec(P, tn) and (P.types[tn]["reset"]["column"].get("at_um") is None)]
+    cols = [tn for tn in sorted(P.types) if column_spec(P, tn)]
     if not cols:
         return _wf_solve_once(P)
-    for _pass in range(4):
+    hp = hop_um(P) - MARGIN_UM
+    soft = [n for n in P.parts if not P.types[P.parts[n]["type"]].get("hard")]
+    for _pass in range(5):
         res = _wf_solve_once(P)
-        at = dict(cache.get("column_at", {}))
-        ax = dict(cache.get("column_axis", {}))
-        moved = False
+        rel = res["est_rel"]
+        st = dict(axis=dict(cache.get("column_axis", {})), at=dict(cache.get("column_at", {})),
+                  entry=dict(cache.get("column_entry", {})), exit_at=dict(cache.get("column_exit_at", {})),
+                  parent=dict(cache.get("column_parent", {})))
+        new = dict(axis={}, at={}, entry={}, exit_at={}, parent={})
+        sites = {q: [P.to_die(q, s_["xy"]) for s_ in face_sites(P, P.parts[q]["type"])] for q in soft}
+        ent = {}                                            # column instance -> parent site in its own type frame
         for tn in cols:
             w, h = P.types[tn]["outline_um"]
-            vals = []
-            for n, pr in res["parent"].items():
-                if pr is None or P.parts[n]["type"] != tn:
+            col = P.types[tn]["reset"]["column"]
+            votes = []
+            for n in sorted(x for x in P.parts if P.parts[x]["type"] == tn):
+                if n not in rel:
                     continue
-                q, j, _d = pr
-                qt = P.parts[q]["type"]
-                if P.types[qt].get("hard"):
+                x0, y0, x1, y1 = P.rect(n)
+                best = None
+                for q in soft:
+                    if q == n or q not in rel or rel[q] >= rel[n]:
+                        continue
+                    for j, (X, Y) in enumerate(sites[q]):
+                        d = max(x0 - X, 0, X - x1) + max(y0 - Y, 0, Y - y1)
+                        if d <= hp and (best is None or (d, q, j) < best):
+                            best = (d, q, j)
+                if best is None:
                     continue
-                vals.append(P.to_type(n, P.to_die(q, face_sites(P, qt)[j]["xy"])))
-            if not vals:
+                _d, q, j = best
+                new["parent"][n] = [q, j]
+                px, py = P.to_type(n, sites[q][j])
+                ent[n] = (px, py)
+                votes.append((px, py))
+            if not votes:
                 continue
-            px = sorted(v[0] for v in vals)[len(vals) // 2]
-            py = sorted(v[1] for v in vals)[len(vals) // 2]
-            # the line runs THROUGH the parent's exit pin: a pin beyond the S/N face -> vertical line at its x (axis
-            # y); beyond the W/E face -> horizontal line at its y (axis x); explicit reset.column.axis wins
-            a = P.types[tn]["reset"]["column"].get("axis") or ("y" if 0.0 <= px <= w else "x" if 0.0 <= py <= h
-                                                                else ("y" if h >= w else "x"))
-            v = px if a == "y" else py
-            if tn not in at or abs(at[tn] - v) > 0.5 or ax.get(tn) != a:
-                at[tn], ax[tn], moved = v, a, True
-        if not moved and _pass:
+            px = sorted(v[0] for v in votes)[len(votes) // 2]
+            py = sorted(v[1] for v in votes)[len(votes) // 2]
+            a = col.get("axis") or ("y" if 0.0 <= px <= w else "x" if 0.0 <= py <= h else ("y" if h >= w else "x"))
+            new["axis"][tn] = a
+            new["at"][tn] = px if a == "y" else py
+            along = py if a == "y" else px
+            new["entry"][tn] = "lo" if along < (h if a == "y" else w) / 2.0 else "hi"
+        # exit line = the column child's entry line, seen from this type
+        for tn in cols:
+            vals = []
+            for c, (q, _j) in new["parent"].items():
+                if P.parts[q]["type"] != tn or c not in ent:
+                    continue
+                ct = P.parts[c]["type"]
+                if ct not in new["at"]:
+                    continue
+                a = new["axis"][ct]
+                cw, ch = P.types[ct]["outline_um"]
+                cx = (new["at"][ct], 0.0 if new["entry"][ct] == "lo" else ch) if a == "y" else \
+                     (0.0 if new["entry"][ct] == "lo" else cw, new["at"][ct])
+                X, Y = P.to_type(q, P.to_die(c, cx))
+                vals.append(X if new["axis"].get(tn, "y") == "y" else Y)
+            if vals:
+                new["exit_at"][tn] = sorted(vals)[len(vals) // 2]
+        same = all(all(abs(new[k_].get(t_, 0) - st[k_].get(t_, 0)) < 0.5 if k_ in ("at", "exit_at") else
+                       new[k_].get(t_) == st[k_].get(t_) for t_ in set(new[k_]) | set(st[k_])) for k_ in new)
+        if same and _pass:
             return res
-        for key in [k for k in cache if k == "wf_solve" or (isinstance(k, tuple) and k[0] in ("sites", "corners"))]:
+        for key in [k_ for k_ in cache if k_ == "wf_solve" or (isinstance(k_, tuple) and k_[0] in ("sites", "corners"))]:
             del cache[key]
-        cache["column_at"], cache["column_axis"] = at, ax
+        cache.update(column_axis=new["axis"], column_at=new["at"], column_entry=new["entry"],
+                     column_exit_at=new["exit_at"], column_parent=new["parent"])
     return _wf_solve_once(P)
 
 
@@ -1502,7 +1560,10 @@ def _wf_solve_once(P):
     cands = {}
     for tn in stypes:
         if column_spec(P, tn) and column_spec(P, tn)["at"] is not None:
-            cands[tn] = [s["xy"] for s in face_sites(P, tn)[:2]]      # entry on either end of the column (wins over in_sites)
+            cs_ = column_spec(P, tn)
+            fs_ = face_sites(P, tn)[:2]
+            cands[tn] = [fs_[1]["xy"]] if cs_["entry"] == "hi" else [fs_[0]["xy"]] if cs_["entry"] == "lo" else \
+                [s["xy"] for s in fs_]                       # the entry end of the column (wins over in_sites)
         elif tn in over:
             cands[tn] = [_snap(P, *over[tn])]
         else:          # face midpoints first (the initial choice prefers them), then corners, then every face site
@@ -1536,7 +1597,8 @@ def _wf_solve_once(P):
     # the part unreachable (flagged like any other, G0 error).
     # A pin [parent, site] also names the parent's rst_o face site; reset.keep_outs {type: [site]} keeps a published out of
     # an untouched type that no instance uses any more, so the type's tree stays as signed.
-    pins = P.reset.get("parent_pins") or {}
+    pins = dict(P.reset.get("parent_pins") or {})
+    pins.update(cache.get("column_parent", {}))            # column instances: parent chosen by geometry (wf_solve)
     pinned = lambda p, rows: (rows if p not in pins else [r for r in rows if r[0] == pins[p]] if isinstance(pins[p], str)
                               else [r for r in rows if r[0] == pins[p][0] and r[1] == pins[p][1]])
     for p in soft:
@@ -1912,8 +1974,8 @@ def _wf_type_tree(P, tn):
             ent = tuple(in_pin(P, tn))
             far = [s["xy"] for s in face_sites(P, tn)[:2] if _man(s["xy"], ent) > 1.0]
             used = {(round(x, 3), round(y, 3)) for _, x, y in outs}
-            column = dict(axis=cs["axis"], end=far[0] if far and (round(far[0][0], 3), round(far[0][1], 3)) in used
-                          else None)
+            column = dict(axis=cs["axis"], band=cs["band"],
+                          end=far[0] if far and (round(far[0][0], 3), round(far[0][1], 3)) in used else None)
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P, tn), boxes=blockages(t),
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn),
                         avoid_cores=bool(P.reset.get("relay_avoid_cores")), column=column)

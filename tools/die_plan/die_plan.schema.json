@@ -4380,6 +4380,12 @@
          },
          "at_um": {
           "type": "number"
+         },
+         "entry": {
+          "enum": [
+           "lo",
+           "hi"
+          ]
          }
         }
        },
