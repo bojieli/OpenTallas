@@ -33,7 +33,7 @@ proc ::ot_secondary_clock::apply {spec} {
   set name [$inst getName];dict set states $name [list [$inst getLocation] [$inst getOrient] [$inst getPlacementStatus]]
   if {[$inst getPlacementStatus] eq "PLACED"} {$inst setPlacementStatus FIRM;lappend frozen $name}
  }
- set overrides [dict create OT_DTAP_PORT $port OT_DTAP_ID_OFFSET 900000 OT_DTAP_TARGET [dict get $spec target] OT_DTAP_DMAX_UM [dict get $spec dmax_um] OT_DTAP_BOUNDED_F4 1 OT_DTAP_OUTLIER_LEAVES 1 OT_DTAP_SITES {} OT_DTAP_ATOMIC_GROUPS {}]
+ set overrides [dict create OT_DTAP_PORT $port OT_DTAP_CELL BUFx24_ASAP7_75t_R OT_DTAP_LAYOUT density OT_DTAP_ID_OFFSET 900000 OT_DTAP_TARGET [dict get $spec target] OT_DTAP_DMAX_UM [dict get $spec dmax_um] OT_DTAP_BOUNDED_F4 1 OT_DTAP_OUTLIER_LEAVES 1 OT_DTAP_SITES {} OT_DTAP_ATOMIC_GROUPS {}]
  set saved {}
  dict for {key value} $overrides {
   dict set saved $key [list [info exists ::env($key)] [expr {[info exists ::env($key)] ? $::env($key) : ""}]]
@@ -71,6 +71,6 @@ proc ::ot_secondary_clock::apply {spec} {
  if {$max_radius>[dict get $spec radius_um]} {error "SECONDARY_CLOCK radius $max_radius exceeds declared local bound"}
  if {[file exists /work/pg_connect.tcl]} {uplevel #0 {source /work/pg_connect.tcl};ot_pg_connect_all secondary_density;ot_pg_require_bound secondary_density}
  set ::ot_secondary_clock_active 1
- puts "SECONDARY_CLOCK_APPLIED port={$port} clock=$clock sinks=$count leaves=[dict size $leafnets] max_std_load=$max_load max_radius_um=$max_radius added_cycles=0 ordinary_sources_unchanged=1 placements_unchanged=1"
+ puts "SECONDARY_CLOCK_APPLIED port={$port} clock=$clock driver=[$::dt_master getName] sinks=$count leaves=[dict size $leafnets] max_std_load=$max_load max_radius_um=$max_radius added_cycles=0 ordinary_sources_unchanged=1 placements_unchanged=1"
 }
 ::ot_secondary_clock::apply $::ot_secondary_clock_spec
