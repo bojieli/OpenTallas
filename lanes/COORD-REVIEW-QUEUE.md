@@ -51314,3 +51314,43 @@ ASK COORD: my scope is fully taken over (KV -> KV-VN2-FIN, HEAD -> HEAD-95/96). 
   AUTO-RESIGN 1: HBM c ot_hbm_su_pg_lane1p_core (no kit-wave row)
   DIE-KV-97 1: KV t kv3_pv_v2n (FAIL 11-12 18:25)
   COORD (unowned) 33: HBM c hnx_fused_lane_c (FAIL 11-12 08:35); HBM c ot_hbm_sm_i8w_front (FAIL 11-12 08:06); HBM c ot_hbm_sm_pv_merge (FAIL 11-12 09:15); HBM c ot_hgi_sfu_opsa_group0 (FAIL 11-12 08:35); HBM c ot_pdie_serdes_rx_bm3_rest (no kit-wave row); HEAD t hd_host_e (FAIL 11-12 06:50); HEAD t hd_host_w (FAIL 11-09 12:52); HEAD c ot_s81hd_he_epc (no kit-wave row); KV t kv3_hg_v1p2 (SUPERSEDED 11-09 13:33); KV t kv3_hg_v1p3 (SUPERSEDED 11-09 15:57); KV t kv3_hg_v1p4 (SUPERSEDED 11-09 15:36); KV t kv3_hg_v1p5 (CANCELLED 11-12 05:18); KV t kv3_hg_v1p6 (CANCELLED 11-12 05:18); KV t kv3_pv_v1n (FAIL 11-12 18:25); KV t kv3_pv_v3n (FAIL 11-12 18:25); KV t kv3_pv_v4n (FAIL 11-12 18:25); KV t kv3_pv_v6n (FAIL 11-12 18:25); KV c qkd_astk_ex_s (no kit-wave row); QC t sle_st_a_v1__cl989804f6__cl18eece69 (FAIL 11-12 07:55); QC t sle_st_a_v1__cl989804f6__cled3c1d7b (FAIL 11-12 12:52); QC t sle_st_b_v1__pv0e7b1dcc (FAIL 11-12 06:50); QC t sle_st_b_v1__pvc5a85fd4 (FAIL 11-12 06:59); QC t slw_fe_v1__clfe325744__cl08d14f0d (FAIL 11-12 06:18); QC t slw_hc1__cl68f9248e__cl144ee7b3 (SUPERSEDED 11-09 13:54); QC t slw_hc1__cl68f9248e__cle683a076 (SUPERSEDED 11-09 14:15); QC t slw_sc_v1__cl64543eaf__cl4590432d (FAIL 11-12 06:18); QC t slw_sc_v1__cl64543eaf__cl5e017c6f (FAIL 11-12 06:18); QC t slw_st_a_v1__clfc5867a6__pvdf8e5ca4 (FAIL 11-12 12:53); QC t slw_st_a_v1__clfc5867a6__pvf82a6c28 (FAIL 11-12 12:53); QC t slw_st_b_v1__cl6357f1cc__pv6ace3e48 (CANCELLED 11-12 07:36); QC t slw_st_b_v1__cl6357f1cc__pvffd43fdc (RETRY-INFRA 11-12 06:53); QC t slw_st_b_v2__pva66d0f22 (RETRY-INFRA 11-12 06:53); QC t slw_st_b_v2__pvc2ec5bfb (RETRY-INFRA 11-12 06:53)
+- 2026-11-13 02:47 PST RESULT [WAVE-OPS-1 -> COORD, KW-FIX-44, ROOT-MERGE-57] nightly wave src 20261113 bind-diff. DO_NOT_COUNT.
+  s81: not re-bound: tree not verified on every gen host
+  s81_head: not re-bound: no strict bind of record in kit_rtl (script mode, script export): bind-diff not applicable; the new tree is built and byte-checked only
+  qwen_compute: not re-bound: tree not verified on every gen host
+  qwen_kvsys: not re-bound: tree not verified on every gen host
+  hbm: not re-bound: tree not verified on every gen host
+  qwen_compute: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) 2 file(s): tools/die_plan/bind.py tools/die_plan/gen_phys.py
+  qwen_kvsys: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) 1 file(s): tools/die_plan/gen_phys.py
+  hbm: KEPT LIVE (conflicted with main+overlays, live bytes kept; see ATTRIBUTION for which are old main blobs) 1 file(s): tools/die_plan/gen_phys.py
+    s81 (a) tests PASS test_wave_src.py: 11 passed
+    s81 (a) KEPT LIVE owners PASS 0 kept live, all named: 
+    s81 (b) re-bind FAIL strict bind failed or tree not verified
+    s81 (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): dsdv_slice_lepw_mus_C__t1@2 dsdv_slice_c1x_C__t5@2 dsdv_slice_c1x_C__t7@2 dsdv_slice_c1x_C__t8@2 dsdv_slice_c1x_C__t9@2 dsdv_slice_lepw_mu_C__t1@20 dsdv_slice_c1x_C__t10@16 dsdv_slice_c1x_C__t6@27 dsdv_slice_iq_C__t1@25
+    s81 (e) queue provenance FAIL hub branch wave-src/20261113/s81 pushed, no flow tag carries its flow
+  s81: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5 @7073a6b4a599; new /srv/opentallas-scratch2/claude/wave-src/20261113/s81 @ef623404397a waits); failing check -> S81 die owner
+    s81_head (a) tests PASS test_wave_src.py: 11 passed
+    s81_head (a) KEPT LIVE owners PASS 0 kept live, all named: 
+    s81_head (b) re-bind FAIL strict bind failed or tree not verified
+    s81_head (c) running kits PASS untouched (pinned specs; no retry entry names a live attempt)
+    s81_head (e) queue provenance FAIL hub branch wave-src/20261113/s81_head pushed, no flow tag carries its flow
+  s81_head: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_head_main_2dd0d8c9fd @2dd0d8c9fd6c; new /srv/opentallas-scratch2/claude/wave-src/20261113/s81_head @ef623404397a waits); failing check -> S81_HEAD die owner
+    qwen_compute (a) tests PASS test_wave_src.py: 11 passed
+    qwen_compute (a) KEPT LIVE owners FAIL no owner for tools/die_plan/bind.py (add die/path/owner to lanes/wave-ops-1/KEPT-LIVE-OWNERS.tsv)
+    qwen_compute (b) re-bind FAIL strict bind failed or tree not verified
+    qwen_compute (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): native59@2
+    qwen_compute (e) queue provenance FAIL hub branch wave-src/20261113/qwen_compute pushed, no flow tag carries its flow
+  qwen_compute: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef @88018018ef; new /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_compute @ef623404397a waits); failing check -> COORD
+    qwen_kvsys (a) tests PASS test_wave_src.py: 11 passed
+    qwen_kvsys (a) KEPT LIVE owners PASS 1 kept live, all named: tools/die_plan/gen_phys.py=KW-FIX-44
+    qwen_kvsys (b) re-bind FAIL strict bind failed or tree not verified
+    qwen_kvsys (c) running kits PASS untouched (pinned specs; no retry entry names a live attempt)
+    qwen_kvsys (e) queue provenance FAIL hub branch wave-src/20261113/qwen_kvsys pushed, no flow tag carries its flow
+  qwen_kvsys: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f @66e6607e3f0e; new /srv/opentallas-scratch2/claude/wave-src/20261113/qwen_kvsys @ef623404397a waits); failing check -> QWEN_KVSYS die owner
+    hbm (a) tests PASS test_wave_src.py: 11 passed
+    hbm (a) KEPT LIVE owners PASS 1 kept live, all named: tools/die_plan/gen_phys.py=KW-FIX-44
+    hbm (b) re-bind FAIL strict bind failed or tree not verified
+    hbm (c) running kits FAIL retry entries name live attempts (would FAIL as superseded): q_su31__physical_v1@1 vsN4@1 vsN5@1 vsN6@1 q_su11@1 q_su11__physical_v1@1
+    hbm (e) queue provenance FAIL hub branch wave-src/20261113/hbm pushed, no flow tag carries its flow
+  hbm: NOT switched (stays on /srv/opentallas-scratch2/claude/kw45/src_hbm_main_d6b0b70323 @d6b0b70323aa; new /srv/opentallas-scratch2/claude/wave-src/20261113/hbm @ef623404397a waits); failing check -> HBM die owner
+  HBM 20261110hbm2 (switched by hand at 20:5x) (b): strict re-bind on the new tree, epyc4 22:4x, record plan plan_p11t + record asbuilt vK5d_c12. A fresh elab of that asbuilt fails the SAME way on the OLD tree and the new one (bind_compose CompositionError "missing or repeated primitive sfucore_NE.u_core.u_engine.u_memory.$procdff$66973"; control run ctl/hbm_oldtree.bind), so the record is not reproducible by elab. It was built as kw43-canon/canon.sh builds it: a seeded elaboration (die-hbm-92-su/exp/bind_e0/asbuilt.json) plus bind --strict. That gives errors 0, 90 partitions, 81 types, 378,992 crossing bits, identical to the record. binddiff vs bind_p11t_vK5d_c12: 0 of 81 types changed bound RTL (every digest equal); only 12 native_glue .log files differ. PASS, no re-bind batch. ASK the HBM owner (DIE-HBM-97): the elab CompositionError on the record asbuilt is pre-existing, and until it is fixed a re-bind cannot see RTL changes.
