@@ -41,3 +41,6 @@
   instance_path_params ot_s81sl_xs4), run_bind_xs4.sh PLAN TAG}. Run b1 (plan d3) launched under ot-heavy --mem 200: logs b1.*.
 - G0 baseline (base plan, main tools): 74 errors (= record). G0 / G0C of d2b running on epyc7 (work dir g0_d2b, g0c_d2b; g0cmp.py compares).
 - xs4 kit: sub-agent XS4-KIT (kits under epyc7 work dir kits/); it edited cores/legacy/gen_core_kit_legacy.py (uncommitted; check its report).
+
+## 2026-11-13 07:27 resume
+- HARD-S81-DSDV-1 resumed (COORD, Fable reset). Read DSDV-FORMS-2 HANDBACK 07:27. Candidate plan g4 fb7f60293915; waiting on: g4 strict bind + latency (epyc8), G0/G0C g4 (epyc7), xs4 build epyc2 unit oth-ubuntu-2195141-1794582250. Next steps = DSDV-FORMS-2 NEXT STEPS 1-5.
