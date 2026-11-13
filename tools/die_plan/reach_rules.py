@@ -52,6 +52,8 @@ sys.path.insert(0, str(HERE))
 
 SCHEMA = "opentallas.reach_rules.v1"
 REACH_UM = 405.0        # METHODOLOGY 12.1e registered hop, every layer
+SITE_HOP_UM = 395.0     # hop limit used when relay sites are chosen (10 um under the reach for site legalisation)
+SITE_CLEAR_UM = 4.5     # extra macro clearance of a relay site (its +-4.32 um window stays clear of the cores)
 STEP_UM = 340.0         # planned hop of a relay trunk (kv_start_corridor_event.STEP_UM): margin for legal sites / GPL
 HUB_UM = 300.0          # a region: loads within this Manhattan distance of their hub copy
 FANOUT_MAX = 48         # loads per register copy (CLAND-RELAY-3: 65 loads = 331-336 ps routed slew, 33-48 clean)
@@ -107,18 +109,39 @@ def start_info(t):
     W, H = t["outline_um"]
     sp = pins["cland_tstart_in"]
     if rect:
-        o = _centre(rect)
+        o = None
+        try:                      # where the kit really puts the origin: the rect cleared of hard cores
+            import landing_place as LP
+            o = LP._start_origin_xy(t)
+        except Exception:
+            o = None
+        o = o or _centre(rect)
     else:
         d = {"W": sp[0], "E": W - sp[0], "S": sp[1], "N": H - sp[1]}
         f = min(d, key=d.get)
-        o = {"W": (EDGE_IN_UM, sp[1]), "E": (W - EDGE_IN_UM, sp[1]), "S": (sp[0], EDGE_IN_UM),
-             "N": (sp[0], H - EDGE_IN_UM)}[f]
+        if d[f] > 2.0 * EDGE_IN_UM:      # an interior START pin (native pin site): the home is at the pin
+            o = tuple(sp)
+        else:
+            o = {"W": (EDGE_IN_UM, sp[1]), "E": (W - EDGE_IN_UM, sp[1]), "S": (sp[0], EDGE_IN_UM),
+                 "N": (sp[0], H - EDGE_IN_UM)}[f]
     return dict(pins=pins, bands=bands, ins=ins, outs=outs, origin=(round(o[0], 3), round(o[1], 3)),
                 pinned=bool(rect), reader=rs, writer=ws)
 
 
-def _chain_hops(o, stages, end_rect=None, end_pt=None):
-    pts = [tuple(o)] + [tuple(s["xy_um"]) for s in stages]
+def _kit_sites(t, o, stages):
+    """where the kit places the stages: landing_place moves a stage planned inside a hard core to a clear site
+    (_chain_clear_of_hard_cores); the plan xy when that helper cannot run"""
+    if not stages:
+        return []
+    try:
+        import landing_place as LP
+        return [_centre(r) for r in LP._chain_clear_of_hard_cores(t, tuple(o), stages)]
+    except Exception:
+        return [tuple(s["xy_um"]) for s in stages]
+
+
+def _chain_hops(o, stages, end_rect=None, end_pt=None, t=None):
+    pts = [tuple(o)] + (_kit_sites(t, o, stages) if t is not None else [tuple(s["xy_um"]) for s in stages])
     hops = [man(a, b) for a, b in zip(pts, pts[1:])]
     hops.append(box_dist(pts[-1], end_rect) if end_rect is not None else man(pts[-1], end_pt))
     return hops
@@ -138,7 +161,7 @@ def start_findings(t, tn, reach=REACH_UM, fanout=FANOUT_MAX):
     for b in si["ins"]:
         st = (rbr.get(b) or {}).get("stages") if isinstance(rbr.get(b), dict) else None
         if st:
-            hops = _chain_hops(o, st, end_rect=si["bands"][b]["rect_um"])
+            hops = _chain_hops(o, st, end_rect=si["bands"][b]["rect_um"], t=t)
             firsts.add((owners.get(b) or [b])[0])
         else:
             hops = [box_dist(o, si["bands"][b]["rect_um"])]
@@ -155,7 +178,7 @@ def start_findings(t, tn, reach=REACH_UM, fanout=FANOUT_MAX):
             wfirsts.add((wowners.get(b) or [b])[0])
         else:
             wdirect += 1
-        hops = _chain_hops(o, st or [], end_pt=si["pins"]["cland_fstart_out_" + b])
+        hops = _chain_hops(o, st or [], end_pt=si["pins"]["cland_fstart_out_" + b], t=t)
         h = max(hops)
         worst_w = max(worst_w, h)
         if h > reach + EPS:
@@ -204,9 +227,37 @@ def start_findings(t, tn, reach=REACH_UM, fanout=FANOUT_MAX):
     return row, out
 
 
+def _free_in(p, obs, W, H, c=4.32, rmax=600.0, step=4.32):
+    """nearest point to p (Manhattan rings, deterministic order) outside every clearance-grown obstacle and inside
+    the outline; kv_start_corridor_event._free_point may step outside the outline when a macro is closed to the edge"""
+    grown = [(a - c, b - c, e + c, d + c) for a, b, e, d in obs]
+
+    def ok(x, y):
+        return c <= x <= W - c and c <= y <= H - c and not any(g[0] < x < g[2] and g[1] < y < g[3] for g in grown)
+    x0, y0 = p
+    if ok(x0, y0):
+        return (round(x0, 3), round(y0, 3))
+    k = 1
+    while k * step <= rmax:
+        r = k * step
+        for i in range(k + 1):                      # the diamond |dx| + |dy| = r, every step along it
+            dx, dy = i * step, r - i * step
+            for sx, sy in ((1, 1), (-1, 1), (1, -1), (-1, -1)):
+                x, y = x0 + sx * dx, y0 + sy * dy
+                if ok(x, y):
+                    return (round(x, 3), round(y, 3))
+        k += 1
+    raise ValueError(f"no free site within {rmax:g} um of {tuple(round(v, 1) for v in p)}")
+
+
 def _home(t, si, obs):
-    from kv_start_corridor_event import _free_point
-    return _free_point(si["origin"], obs)
+    """the START origin home: its pinned rect centre, else the free point nearest the START pin, inside the outline"""
+    W, H = t["outline_um"]
+    o = _free_in(si["origin"], obs, W, H)
+    sp = si["pins"]["cland_tstart_in"]
+    if not si["pinned"] and man(o, sp) > REACH_UM:
+        raise ValueError(f"START pin {tuple(sp)} has no free origin home within {REACH_UM:g} um (nearest {o})")
+    return o
 
 
 def _hubs(o, targets, hub_um=HUB_UM, cap=FANOUT_MAX):
@@ -241,7 +292,8 @@ def _trunk(o, h, obs, bands, W, H, reach=REACH_UM):
         try:
             r = KS._route(tuple(o), tuple(h), obs + ([list(x) for x in bands] if extra else []), W, H)
             n = max(0, math.ceil(length(r) / STEP_UM) - 1)
-            way = relay_sites(r, n, max_hop_um=reach, site_boxes=bands, clearance_um=KS.CLEAR_UM) if n else []
+            way = relay_sites(r, n, max_hop_um=min(reach, SITE_HOP_UM), site_boxes=bands,
+                              clearance_um=KS.CLEAR_UM) if n else []
             return r, [list(q) for q in way]
         except ValueError as ex:
             err = ex
@@ -250,7 +302,29 @@ def _trunk(o, h, obs, bands, W, H, reach=REACH_UM):
 
 def fix_start(P, t, tn, margin=4.32, min_um=10.8, reach=REACH_UM):
     """R-REACH-1 fix on type dict t (in place).  -> report dict.  Raises ValueError when no legal corridor / site
-    exists (the caller reports the type as NOT FIXED; nothing is half-written)."""
+    exists (the caller reports the type as NOT FIXED; nothing is half-written).  Corridors first keep clear of the
+    macros with every narrow edge channel closed (kv_start_corridor_event.corridor_obstacles); a type whose pins sit
+    in such a channel (QC cbn / cbf) falls back to the plain macro boxes."""
+    import kv_start_corridor_event as KS
+    err = None
+    for name, obs in (("edge-closed", KS.corridor_obstacles(t, margin, min_um)),
+                      ("macro-boxes", [list(b) for b in macro_boxes(t).values()])):
+        try:
+            # a relay window (+-4.32 um) must clear the cores by 4.32 um or landing_place moves it: sites keep
+            # SITE_CLEAR_UM more than the corridor clearance from every macro
+            W, H = t["outline_um"]
+            obs = [[max(0.0, a - SITE_CLEAR_UM), max(0.0, b - SITE_CLEAR_UM), min(W, c + SITE_CLEAR_UM),
+                    min(H, d + SITE_CLEAR_UM)] for a, b, c, d in obs]
+            rep = _fix_start(P, t, tn, obs, reach)
+            if rep.get("changed"):
+                rep["corridor_obstacles"] = name
+            return rep
+        except ValueError as ex:
+            err = ex
+    raise ValueError(str(err))
+
+
+def _fix_start(P, t, tn, obs, reach=REACH_UM):
     import reset_tree as RT
     import kv_start_corridor_event as KS
     from start_obstacle_path import length, relay_sites
@@ -261,7 +335,6 @@ def fix_start(P, t, tn, margin=4.32, min_um=10.8, reach=REACH_UM):
         return rep
     W, H = t["outline_um"]
     ck = t["clock"]
-    obs = KS.corridor_obstacles(t, margin, min_um)
     bands = [b["rect_um"] for b in si["bands"].values() if b.get("rect_um")]
     o = _home(t, si, obs)
     taps = RT.consumer_taps(P, tn)
@@ -274,7 +347,7 @@ def fix_start(P, t, tn, margin=4.32, min_um=10.8, reach=REACH_UM):
         return KS._route(tuple(a), tuple(b), obs, W, H)
 
     def free(p):
-        return KS._free_point(p, obs + [list(x) for x in bands])
+        return _free_in(p, obs + [list(x) for x in bands], W, H)
     kinds = {f["kind"] for f in f0}
     new = {}
     if kinds & {"start_writer_reach", "start_fanout"}:

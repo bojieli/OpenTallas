@@ -29,7 +29,7 @@ def _start_plan(n_far=6, w=2592.0, h=1728.0):
     bands = {}
     for i in range(n_far):
         b = f"f{i}"
-        bands[b] = _band(700.0 + 30.0 * (i % 4), 600.0 + 20.0 * (i // 4))
+        bands[b] = _band(740.0 + 30.0 * (i % 4), 640.0 + 30.0 * (i // 4))
         pins.append(dict(name=f"cland_fstart_in_{b}", dir="in", kind="ctl", layer="M7", xy_um=[862.0, 600.0 + i]))
     for i in range(2):
         b = f"n{i}"
@@ -235,3 +235,22 @@ def test_cli_check_fix_census(tmp_path):
     assert RR.main(["fix", str(out), "--out-plan", str(out2), "--report", str(rep2)]) == 0
     assert json.loads(out2.read_text()) == json.loads(out.read_text())                      # idempotent
     assert RR.main(["census", str(f)]) == 0
+
+
+def test_rule5_default_even_chain_config():
+    import re
+    import gen_phys
+    cfg = gen_phys.reach_even_cfg()
+    assert "set ::ot_chain_min_hop_um 405" in cfg and "set ::ot_chain_skip_sited 1" in cfg
+    head, stage = gen_phys.REACH_EVEN_CHAINS[0]
+    # the landing bin heads and the lane pad stages of the measured kits (names with the backslashes removed)
+    assert re.search(head, "u_bound.u_bin_leafdn_i0/q[5]$_DFF_P_") and not re.search(head, "u_bound.u_lpad_x.q[5]$_DFF_P_")
+    for n in ("u_bound.u_lpad_leafdn_i0.q[5]$_DFF_P_", "u_bound.u_lpad_i_ahub_am_EN.r[3][35]$_DFF_P_",
+              "u_bound.u_pd4_x_hc1_i_3.r[0]$_DFF_P_"):
+        assert re.search(stage, n), n
+    assert not re.search(stage, "u_bound.u_bin_leafdn_i0/q[5]$_DFF_P_")
+    tcl = (HERE / "chain_even.tcl").read_text()
+    for frag in ("::ot_chain_min_hop_um", "::ot_chain_skip_sited", "ot_face_flops.txt", "if {$worst <= $ce_min_hop} { return 0 }"):
+        assert frag in tcl
+    # a type with its own chain_even key keeps it; the plan opt-out is a budget
+    assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] == {"type": "boolean"}
