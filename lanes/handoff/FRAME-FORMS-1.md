@@ -54,3 +54,7 @@
   under the N window, second bfp group c5/s5 and t3 unassigned).
 - col_h10_r1 (2 items, 12 tiles): two bf groups + two rows need 1430 um of 1227: no fit; needs a variant without the bf ROM
   band (ROMs beside the bf groups) or a different unit order.
+
+## VOL sub-agent
+- 08:04 T1 all-type run (epyc4 frame-forms-1/all1): 5/11 items ACCEPTED (cl49d7a23e 54, clf32cde8d 6, cl774acf45 5, clb8d86cd5 6, clce45cab5 43 = 114 types, hard street 5112->0); 6 REFUSED at base: 4 col_h10_r2 (applied False, link-length tviol 1/143/20) + col_h9_r2 cl87f3ff59 (tviol 185, SEED-MOVED) + clc9ad8f7e (SEED-MOVED u_e13w.u_view.u_c -> 1 street/type). Chain running.
+- 08:12 T2 taps: core_place had CARRIED 152 added taps with their cores (e.g. clk_t20 1070 um west); restored to park_taps xy (all kit-legal, 0 legality moves; added_tap_legalize.py). added_tap_recentre: col_h9_r2 items 0 failing; col_h9_r1 BOTH items (60 types) fail clk_t21 radius 288.7/200 (x1.10 slack) from reset relay rst_rl_77 (1429.32,669.32), no legal single-tap move -> needs an added tap = design call: col_h9_r1 STOPPED (left at base). Chain re-run r2-only (3 items, 54 types).
