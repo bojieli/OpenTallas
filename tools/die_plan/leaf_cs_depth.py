@@ -26,6 +26,13 @@ import kit_istations as KI   # noqa: E402
 LEAF_TYPE = re.compile(r"^ot_s81sl_(kv_)?leaf__")
 
 
+def unmapped_core_rows(t):
+    """Planned nonempty core chains without an actual coherent CS RTL class."""
+    return [e for e in t.get("internal_stations") or []
+            if e.get("regs_um") and not str(e.get("conn", "")).startswith("bus:")
+            and KI.core_class(e)[0] is None]
+
+
 def plan_depths(t):
     """{class: deepest planned stage count}, {class: sorted distinct counts} where the rows of a class disagree."""
     rows = {}
@@ -63,6 +70,9 @@ def check(plan, rtl_dir, types=None):
             continue
         if not t.get("hard_cores"):
             continue                                   # e.g. kv_leaf__t2: no leaf cores, no chains
+        for e in unmapped_core_rows(t):
+            errors.append(f"LF_CS_DEPTH {tn}: unrealized core station {e.get('launch', e.get('conn'))} -> "
+                          f"{e.get('capture', e.get('conn'))}: {len(e['regs_um'])} planned registers, no RTL class")
         f = bound_file(rtl_dir, tn)
         if f is None:
             errors.append(f"LF_CS_DEPTH {tn}: no bound module file in {rtl_dir}")

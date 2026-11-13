@@ -71,6 +71,10 @@ def leaf_depths(plan):
         if not t.get("hard_cores"):
             rep.append(dict(part=p["name"], type=p["type"], skipped="no hard cores (no leaf chains)"))
             continue
+        missing = LCD.unmapped_core_rows(t)
+        if missing:
+            raise SystemExit(f"{p['name']}: {len(missing)} planned core station rows have no RTL class; "
+                             "no LF_CS source staged")
         want, dis = LCD.plan_depths(t)
         d = {x: want.get(c, 0) for x, c in CLS.items()}
         kv = "kv_leaf" in p["type"]          # DIE-S81-70 kv leaves: per-lane hi / ho stages (GS 0), as bound today
