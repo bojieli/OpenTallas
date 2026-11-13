@@ -1,0 +1,251 @@
+{
+ "base": {
+  "plan": "physical/die_plan/s81_head/plan_of_record/l48ve/source_plan.json.gz",
+  "sidecar": "physical/die_plan/s81_head/plan_of_record/l48ve/source_sidecar.json.gz"
+ },
+ "events": [
+  {
+   "id": "H2_HSPLIT",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H2",
+    "DIE-HEAD-84 l48uo_hsplit (claude/die-head-84-host-hsplit-1107@e0599ebe03b)"
+   ],
+   "why": "hd_host -> hd_host_w + hd_host_e (CAP/TIM); host_l1rx/l1tx 4, COLL_HOST0_U 11->12, COLL_HOST1_D 4->5",
+   "kind": "diff",
+   "from": "physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz",
+   "to": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48uo_hsplit_source_plan.json.gz",
+   "sidecar_to": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48uo_hsplit_source_sidecar.json.gz"
+  },
+  {
+   "id": "H5_SPN",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H5",
+    "KW-FIX-36 hold_items hd_spn 'paid station event'",
+    "DIE-HEAD-77 l48uj (epyc2 dh77/ev/prep_l48uj)",
+    "codex_stations_boot_1106 realized stations"
+   ],
+   "why": "hd_spn / hd_spn_end realized internal stations + fstart leaves (Codex station closeout); 0 lane cycles",
+   "kind": "diff",
+   "from": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48ui_prep_kw23.json.gz",
+   "to": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48uj_plan.json.gz"
+  },
+  {
+   "id": "H4_LEP",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H4",
+    "DIE-HEAD-88 LEP density entries r200/t1200 (intel1 dh88/lep/prepared_dt 371ab6f315a0)"
+   ],
+   "why": "hd_lep0N density-entry clock (clk_t entries), reset/start raw exports, Codex vF provider; 0 lane cycles",
+   "kind": "diff",
+   "from": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/l48ui_prep_kw23.json.gz",
+   "to": "physical/die_plan/s81_head/plan_of_record/l48hp1/inputs/lep_dt_plan.json.gz"
+  },
+  {
+   "id": "H1_CTL",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H1",
+    "DIE-HEAD-91 hd_ctl vH ds8 (epyc2 dh88/ctl_ds8/hd_ctl_vH_ds8)"
+   ],
+   "why": "hd_ctl read-select DSREP 8 on 5 rings (0 cycles); u_core SRAM_RAW_CAPTURE/CTL_PRE/CTL_WINDOW_PRE = x_o +1 -> lane sp_x0 fixed_cycles 1 (LAT_HD_SPX0 5->6)",
+   "kind": "ops",
+   "ops": [
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_ctl",
+      "clock",
+      "landing_ring_dsrep"
+     ],
+     "value": {
+      "buses": [
+       "a_rx_i",
+       "b7_rx_i",
+       "b_i",
+       "h_rx_i",
+       "lepk_i0"
+      ],
+      "dsrep": 8
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_ctl",
+      "contents",
+      {
+       "inst": "u_core"
+      },
+      "params"
+     ],
+     "value": {
+      "SRAM_RAW_CAPTURE": "1",
+      "CTL_PRE": "1",
+      "CTL_WINDOW_PRE": "1"
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "sp_x0"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "H2b_HOST_E_DS8",
+   "owner_rows": [
+    "DIE-HEAD-91 HSPLIT e ds8 (DSREP 8 on coll_i1)"
+   ],
+   "stacks_on": "H2_HSPLIT",
+   "why": "hd_host_e read-select DSREP 8 on coll_i1 (0 cycles)",
+   "kind": "ops",
+   "ops": [
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_host_e",
+      "clock",
+      "landing_ring_dsrep"
+     ],
+     "value": {
+      "buses": [
+       "coll_i1"
+      ],
+      "dsrep": 8
+     }
+    }
+   ]
+  },
+  {
+   "id": "H3_MESH",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H3",
+    "codex/head-mesh-collector-1113@b6d8c0d798e collector form",
+    "codex/head-mesh-split-1108@80c3c10de24 (RTL/kit only, 0 plan delta)"
+   ],
+   "why": "hd_mesh u_core RBL 1 + BQ 10 (replay landing: coll_oa/coll_ob +1 TX edge, RX 0) and DSREP 8 on coll_ia/coll_ib -> 6 mesh->serdes lanes fixed_cycles 1",
+   "kind": "ops",
+   "ops": [
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_mesh",
+      "contents",
+      {
+       "inst": "u_core"
+      },
+      "params"
+     ],
+     "value": {
+      "BQ": "10",
+      "RBL": "1"
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "partition_types",
+      "hd_mesh",
+      "clock",
+      "landing_ring_dsrep"
+     ],
+     "value": {
+      "buses": [
+       "coll_ia",
+       "coll_ib"
+      ],
+      "dsrep": 8
+     }
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_EN0_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_EN1_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_WS0_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_WS1_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_ES0_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    },
+    {
+     "op": "set",
+     "path": [
+      "lanes",
+      {
+       "id": "coll_ES1_d"
+      },
+      "fixed_cycles"
+     ],
+     "value": 1
+    }
+   ]
+  },
+  {
+   "id": "H6_TX",
+   "owner_rows": [
+    "PLAN-EVENTS-1109 H6",
+    "DIE-HEAD-91 TX hm10ff (epyc2 dh88/ot_s81hd_sc_tx_vH_fold_mw_hm10ff) CH_STAGE+1"
+   ],
+   "why": "ot_s81hd_sc_tx CH_STAGE: pma_tx +1 (off-die PMA path, SC form total +3 ck edges vs RXQ) and e_flt +1 (fault-only status); no die lane changes; link/compiler nominal term in the switch table",
+   "kind": "ops",
+   "ops": []
+  }
+ ],
+ "assets": {
+  "/srv/opentallas-scratch2/claude/dh88/lep/src_v6plusbins/assets/sink_bins_lep_dt.json": "physical/die_plan/s81_head/plan_of_record/l48hp1/assets/sink_bins_lep_dt.json"
+ }
+}

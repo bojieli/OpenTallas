@@ -1,0 +1,86 @@
+{
+ "event": "l48uo_hsplit",
+ "status": "CANDIDATE (not adopted; plan event READY for COORD/ROOT-MERGE)",
+ "by": "DIE-HEAD-84 11-07 (COORD 18:3x form A)",
+ "tool": "tools/s81_head/head_hsplit_event.sh",
+ "base_plan": "physical/die_plan/s81_head/plan_of_record/l48uo",
+ "base_plan_sha256": "f140216c876ba3186afdf3271f0f9b3ceadf63df95b5e0416a06af6dffcb54f6",
+ "plan_sha256": "f818bf93f011454e0261e76529bdd1977d5a580a8e2e8e15b20c19fdc642ed66",
+ "sidecar_sha256": "eb6e0857bad44135cfddd9d76df95980bfe29fc037b542144455497456682f14",
+ "types": {
+  "before": 25,
+  "after": 26,
+  "split": {
+   "hd_host": [
+    "hd_host_w",
+    "hd_host_e"
+   ]
+  }
+ },
+ "parts": {
+  "before": 357,
+  "after": 358
+ },
+ "data_cycles_added": {
+  "host_l1rx (E->W: host1 RX frames, lane1 faults)": 4,
+  "host_l1tx (W->E: lane1 STATUS TX)": 4,
+  "coll_HOST0_u (lane0 RX stage: HBC dates +1)": 1,
+  "coll_HOST1_d (E co_m relay)": 1
+ },
+ "lanes_changed": {
+  "LAT_COLL_HOST0_U": [
+   11,
+   12
+  ],
+  "LAT_COLL_HOST1_D": [
+   4,
+   5
+  ],
+  "LAT_HOST_L1RX": [
+   null,
+   4
+  ],
+  "LAT_HOST_L1TX": [
+   null,
+   4
+  ]
+ },
+ "boot_only": {
+  "landing_stage_depths": {
+   "hd_host_w": {
+    "R": 2,
+    "W": 1
+   },
+   "hd_host_e": {
+    "R": 3,
+    "W": 2
+   }
+  },
+  "monitor": "host_e -> host_w child over cland_mon_{ready,fault}__host_l1rx__0 (same region, registered both ends)",
+  "start": "pst_host_w + pst_host_e = die START origin stage b1745 (same cycle); host_e tstart at (10.784, 552.992), 88 um",
+  "raw_start_exports": "5 die START stages re-sourced from hd_host_e raw relays, hops <= 174 um, raw release 16 (was 14..17), span 84 + 4 <= settle 88 unchanged",
+  "reset_wavefront": "host_w/host_e K 3 (was 4); lk_HOST0/1 parent host_w.rst_o_0 (release 25 -> 24); lk_ES1 re-parented sst10 -> lk_ES0 (45 -> 40); no type tree changed"
+ },
+ "macro_snap": {
+  "hd_host_w": [
+   "agg.1",
+   353.6
+  ],
+  "hd_host_e": [
+   "reader:coll_i1.2",
+   301.1
+  ]
+ },
+ "checks": {
+  "other_types": "24/24 wrappers byte-identical (full-die gen.py rtl split vs base)",
+  "g0": "1 error = the l48uo error (serdes native reset PENDING); warnings same class",
+  "die_top": "diff vs l48uo source top = host + count-strap K literals of the host link neighbours + lk_ES1 reset parent",
+  "reproducible": "head_hsplit_event.sh from l48uo reproduces every sha"
+ },
+ "open": [
+  "strict die bind (run_source_portbind) on the new source top",
+  "kit LEC EQUIVALENT + PLACE/CTS/GRT/route + sign-off of hd_host_w / hd_host_e",
+  "lec_hints for the two kits (none carried; LEC runs unseeded)",
+  "TOK-HEAD-1 reprice with the cycles above"
+ ]
+}
