@@ -30,7 +30,9 @@ THE FORM (type frame; core E face x 306.72, tile E face x 864; all rows straight
     and every other relay_sites key are kept byte-identical.
   clock taps: the registers moved, so the type's taps are re-solved by the fixed script
       reach_fix.py fix --types '^kv3_phy(_v1)?$' --classes 1,2,3   (hard-wrapper taps, KV-KITFIX-1)
-    run from --repo (default: the die-kv-100 worktree) unless --no-taps.
+    run from --repo (default: this source repository) unless --no-taps.
+    Plain internal station banks are absent from taps.planned_sinks, so the form publishes
+    their payload+epoch counts in clock.sink_sites_um before re-solving the taps.
 
 IDEMPOTENT: the output is a pure function of the windows / core of the input; a second run returns the same bytes.
 Touches only partition_types[kv3_phy|kv3_phy_v1].{internal_stations, relay_sites, reset.port_relays, note, clock taps}.
@@ -116,9 +118,29 @@ def windows(raw, tn):
     return out
 
 
+def station_sinks(t):
+    """Weighted sites for plain pi/po station banks omitted by taps.planned_sinks.
+
+    The placer firms every payload/epoch flop near regs_um.  Publish those
+    banks explicitly rather than letting only face registers size the taps.
+    """
+    widths = {b["name"]: int(b["width"]) for b in t.get("buses", [])}
+    return [[float(x), float(y), float(widths[e["conn"][4:]] + 1)]
+            for e in t.get("internal_stations", [])
+            if e.get("conn", "").startswith("bus:") and e["conn"][4:] in PI + PO
+            for x, y in e.get("regs_um", [])]
+
+
 def form_type(raw, tn):
     t = raw["partition_types"][tn]
     W, H = t["outline_um"]
+    clock = t.setdefault("clock", {})
+    # Drop only exact matching previously published pi/po bank rows, then
+    # rebuild after re-siting.  This keeps the constructor idempotent and
+    # preserves unrelated internal sink rows.
+    old_banks = {tuple(r) for r in station_sinks(t)}
+    clock["sink_sites_um"] = [r for r in clock.get("sink_sites_um", [])
+                                if tuple(r) not in old_banks]
     mac = next(c for c in t["contents"] if c.get("physical_inst") == "u_bound.u_core")
     assert mac.get("orient", "R0") == "R0" and mac["physical_master"] == "qkd_hbm3e_phy_pc4", f"{tn}: core changed"
     mx0, my0 = mac["origin_um"]
@@ -239,6 +261,9 @@ def form_type(raw, tn):
                      "+2 stations (+2 cycles, relay_sites 0.6-route form withdrawn); reset rows pe/pm/pw/ps").strip(" |")
     rep["hop_max_um"] = max(max(r_["hops_um"]) for r_ in rep["buses"].values())
     rep["stations"] = sum(r_["stations"] for r_ in rep["buses"].values())
+    banks = station_sinks(t)
+    clock["sink_sites_um"].extend(banks)
+    rep["station_clock_sinks"] = int(sum(r[2] for r in banks))
     return rep
 
 
@@ -289,6 +314,16 @@ def main(argv):
         f.write("\n")
     if "--no-taps" not in opt:
         taps(args[1], opt.get("--repo") or REPO, report)
+    # reach_fix may append a few control sinks after our bank rows.  On the
+    # next application they predate those rows, so canonicalise this unordered
+    # inventory to keep byte-idempotence without dropping any sink.
+    final = json.load(open(args[1]))
+    for tn in TYPES:
+        rows = final["partition_types"][tn]["clock"].get("sink_sites_um", [])
+        rows.sort(key=lambda r: tuple(float(v) for v in r))
+    with open(args[1], "w") as f:
+        json.dump(final, f, indent=1)
+        f.write("\n")
     report["cycles"] = {"po lanes (pc -> phy, 4 buses x 32 instances)": "+2 data cycles each",
                         "pi lanes": "0", "boot": "0 on every observable epoch"}
     report["out_md5"] = hashlib.md5(open(args[1], "rb").read()).hexdigest()
