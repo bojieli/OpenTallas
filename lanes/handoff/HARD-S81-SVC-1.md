@@ -62,3 +62,21 @@
 - Next for whoever continues: (1) ruling A/B; (2) band wrapper RTL + benches (tb_svc_h8_protocol, tb_svc_srx_attn, svc mem benches) + LEC with
   boundary flops mapped + R-RTL-6 latency rows; (3) plan event = provider-recover + band partitions + pvso_entry + reset contract, R-STREET
   (final on main 5eefdbe2fa) on the band streets; (4) one band part to place + GRT privately, renders viewed; (5) READY after 11-15 04:00.
+
+## 2026-11-13 07:53 option A work (COORD ruling: 4 band partitions, registered boundary, provider cores per the recover plan)
+- The recover plan IS the H8 form (32 attn hard cores per tile, boxes in the 4 freed rows): it needs -DOT_SVC_H8 -DOT_SVC_H8_REUSE_RT2
+  -DOT_SVC_MERGE_H4 -DOT_SVC_ATT_MEM_MACRO in the S81 bind (today the bound is H16 with none of them). No svc row growth is needed for the boxes.
+- SIZING, measured by me (ORFS asap7 synth, hierarchy kept, current main svc RTL, H8 provider defines; epyc2 hard-s81-svc-1/hk/hk_hi,
+  hk_lo/run/reports/asap7/*/base/synth_stat.txt). hi u_rsv: 507,956 cells; boxes TRX 4 x 27.9k, SMC 66.3k, SMR 40.4k; SOFT 289,709
+  (11-09 figure was 228,760). Soft by owner: dsdv_svc_att own 120,613; engine ot_s81_svc_attn_s own 46,811; rs_c own 46,967; sx 21,907;
+  sms 18,049; smh 8,962; gw 3,587; the 4 tile wrappers 5,626 each. lo u_rsv is the same within 1% (irg/ctrl/etap come on top).
+- So a band (tile + transposer + merge) carries only about 6k soft cells + its boundary flops. 4 bands alone leave about 267k soft in the rest:
+  R-CAP projection 451k OVER. The service logic needs its own cut at the u_att module boundary:
+  band x4 about 27k each (OK); S_att (att own + engine control + its 76 SRAMs) about 261-269k (TARGET, under 400k); S_rs (rs_c, sx, sms, smh, gw
+  + SML/SMD/SMC/SMR/sx_hrow) about 179k (OK). Pin counts of S_att / S_rs are my estimates (12k / 14k).
+- RTL written (worktree branch claude/hard-s81-svc-1-band-1113 off main 5eefdbe2fa, not committed yet): rtl/dsrom_sys/s81_svc/ot_s81_svc_band.sv
+  (transposer + tile + merge, every input captured, outputs registered), BANDX / BANDMUT in ot_s81_svc_attn_s (as-built names unchanged at 0),
+  -DOT_SVC_BAND in dsdv_svc_att, tb_svc_srx_attn + svc_srx_lockstep.py --band (expected shift n = SRX + 2: scores +n, P.V +2n).
+- RUNNING: lockstep proof epyc2 hard-s81-svc-1/ls/w_band1 (--dut s81 --srx 1 --band --mut 1,2), log intel2 ~/tmp/hard_s81_svc_ls_band1.log.
+- NOT done: u_att service cut (handshakes q/kv/p ready cross it: needs skid stages, see tools/landed_parent/lp.py and dsdv_svc_rs_lp for the
+  existing landed form), SM boxes and lo IRG placement per part, LEC, plan event (pvso_entry, reset contract), floorplan, place + GRT.
