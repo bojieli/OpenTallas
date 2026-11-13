@@ -35,3 +35,4 @@ NOT mine: HEAD-95 routes (lep0N v3, hd_mesh M1, SP3n2).
 - LEC proof: epyc9 docker h96-mesh-m1-lec on a copy of VISLAYOUT3 kit_mesh_m1 (netlist 4490e862 unchanged), dir epyc9 /srv/opentallas-scratch2/claude/head-96/mesh_m1_lec. Started 2026-11-13 00:30.
 - hd_host_w spread3 NOT EQ (298) is a DIFFERENT signature (r_ce_in/w_ce_in, cones matched) -> not in r2, open item.
 - Gates: head-96/gates.sh rp18p; RTL export replay head-96/rtlx.py (prepare_plan all 26 + gen --trial + alias/private patch per export type).
+- 2026-11-13 00:39 READY r2 posted (branch 46bb7dfc34, plan rp18p cda1ecf604eb), verified on origin. Remaining: one-line RESULT when epyc9 h96-mesh-m1-lec reports (lec/lec.json); NOT EQ -> hints as r3. Then stop.
