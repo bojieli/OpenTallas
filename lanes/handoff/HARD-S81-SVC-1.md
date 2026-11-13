@@ -144,3 +144,10 @@ Floorplan starting numbers (hi tile 1442.88 x 2747.52, from v5/plan_provider_rec
 - Sub-lanes (Opus): CUT-BENCH-1 = trace-replay bench for dsdv_svc_att_cut with CUTMUT 2 (P.V) and a new CUTMUT 3 (SM row lane), epyc2
   /srv/opentallas-scratch2/claude/cut-bench-1; BAND-KIT-1 = band kit v3 (band v2 RTL, no tile pair yet), epyc2 band-kit-1.
 - Next: band kit v4 with the tile pair define once v3 reports; then pvso_entry, reset contract, bind defines, plan event, grown S_rs region.
+
+## CODEX notes 2026-11-13 13:45 PST
+Direct takeover in existing worktrees. CUT-BENCH-1 programme proof collected: seeds1/2/3 nominal0 mismatches,0 faults; each160 P.V words,20 SM row beats; CUTMUT2 caught164 cycles, CUTMUT3 caught37. This closes the earlier unexercised P.V/SM gap. Source+bench+logs pushed hub as claude/hard-s81-svc-1-tilepair-1113@7140618b36 (7 new files only; inherited tile-stage dirty edits excluded). Original OT_SVC_ATTCUT integration remains52dc675ba9; no plan/wave change. Band v5 E2 unitoth-ubuntu-3630374-1794605544 healthy in placement; tile3 lockstep E2 unitoth-ubuntu-2900932-1794605007 healthy. Next: collect these, inspect placed band, service split floorplan.
+
+## CODEX combined tile proof diagnosis
+Inherited tile3/ls fails nominal (BSC 425 vs 419, PV 72 vs 80): the helper passed OT_S81C_TILE_STAGE but omitted the enclosing OT_S81C_TILE_PAIR, selecting PAIR 0 while tags assumed PAIR 4. Fixed helper in the E7 worktree and E2 tile3/root. New proof via ot-run E2 unit oth-ubuntu-610605-1794606419, intel2 frontend 3937369, log ~/tmp/hard_s81_svc_ls_tile3_pair_codex2.log, outputs tile3/ls_pair. Initial own unit 578107 failed CLI missing --root, corrected without RTL change. Failed artifacts retained.
+Viewed E2 band-kit-1/v4/layout_review/place/layout.png and density.png: eight-head macro wall with 15.12 um gaps, sparse upper floor, narrow W-input streets. R-STREET plan adoption remains BLOCKED until geometry redesign. Band v5 inherited physical proof retained; no new route. Full service-floorplan packing limits are under OWNER? in CODEX-LOG and sent to DIE-S81-89.

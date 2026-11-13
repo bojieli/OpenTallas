@@ -73,3 +73,9 @@ epyc8 kit_gf4 + kit_gf4ds60 (ot-heavy tags gunit-core-1-kit_gf4*). Nothing kille
 - Full bench PASS (bench_full.out). Lane mapping traced: bf -> u_l1c -> u_l1 -> vo_n/vo_s; no plan lane change; owed to
   DIE-S81-89: lower_gu RT_LAT_N/RT_LAT_S 62/60 -> 64/62. Branch @98d58ab38d, READY posted to ROOT-MERGE.
 - Remaining: GRT + route renders posted for GEOM verdict, signoff.py, export_view.py, swap prov_view_sources (backup first).
+
+## CODEX notes 2026-11-13 13:59 PST
+- Direct GUNIT takeover in existing epyc7 die-s81-89/gunit/wt, branch claude/die-s81-89-gunit-1113@68ac34a51b pushed hub. Corrected inherited RW_GAP-unchanged claim: gf4 IDs +2 cycles, weights +4 because bf feedback traverses twice; RT_LAT 64/62, RW_GAP 103 (gf2 62/60,101). Actual 3-job GU programme bench PASS,1655 input beats,15 CTL rows/side,50 roots,2 rsqrt,no faults; late/wrong controls FAIL35/34;4 focused tests PASS. Results results/gunit_core_1/form_schedule_1113. No recipe/POR/view switch.
+- gf4 and gf4ds60 core physical jobs retained on epyc8 (both LEC EQUIVALENT); stock in GRT hold repair, ds60 setup repair. No signoff yet.
+- gunit__t1 a14 DRT-0073 sv_lo[175]: exact ODB probe epyc9 gunit-core-1/pin_probe.json shows S pin on M5 track, no macro within0.5um. Gutters are21.6um lower/0 upper (plan and actual ba0/ba1 heights151.2 agree); preliminary zero-lower/dimension-mismatch hypothesis corrected. Suspect blanket adjacent-layer abstract obstruction, same-ODB exact-detail export running epyc8 gunit-core-1/detail_gf3 via ot-run unit oth-ubuntu-616655-1794607075, intel2 log ~/gunit-detail-gf3-1113.log. No parent retry.
+- Private E-bay candidate in existing epyc7 die-s81-89/gunit/planB/plan_gunit_ebay.json and gunit_ebay.png reviewed HOLD:0 geometric overlaps and43.2um internal gutters, but moves band-return links1-2mm; must add declared relay stages before any use. No route authorization.

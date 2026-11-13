@@ -118,3 +118,8 @@
 
 ## VOL2 sub-agent
 - 13:36 T0 rep gate PASS (epyc4 frame-forms-1/vol2/rep11, tools @9b19ffb56a): 11/11 applied True, 0 SEED-MOVED, 0 need_more_regs, tviol 0 (single-type cl87f3ff59/cl8b686b3e/clac068e56 links 901/1019/280), street 255 hard all in accepted sparse classes (rom_x/bn_elemN/bn_rom/node_x 17.28), 0 findings; node-over-bank 25.92 gone. Starting all-type seeds/shards (vol2/all2).
+
+## CODEX notes 2026-11-13 13:49 PST
+- Collected VOL2 all11 shards:132 types all applied True, no timing/equivalence/schema errors. Private next chain started via ot-run E4 unitoth-ubuntu-3122597-1794606241; intel2 clientPID3884133, log~/codex-s81-log/frame_next.log.
+- Existing vol2/collect_codex.py,next_codex.sh merge/finalize then chain.132 types restored120 die-owned taps (0 illegal) and1848 core taps. Tap recenter still CPU-active; no P&R launched before review.
+- r0 hub form and ft0/growth open tasks retained; no POR/wave switch.

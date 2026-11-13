@@ -37,3 +37,7 @@ Open items for whoever continues:
 5. Model limit: placement blow-ups (dsdv_slice second repair pass, 230-740k buffers) are R-REACH / R-FLOW items.
 6. My RULEBOOK insert dropped the empty "## R-FLOW" header for about a minute (b6b02fe16a5); restored in the next
    commit, verified on origin/coord/state. RULES-FLOW-1 lost no text.
+
+## CODEX follow-up 2026-11-13
+READY hub claude/rules-cap-1@9b7a830e2f: gen_phys cap_budget.json emitter +5targeted tests, existing worktree E7 rules-cap-1/wt. Safe first-attempt plan estimate, no flat core totals, measured native count wins, stale unsound receipts overwritten, macro instance accounting. Focused25pass/final5pass via ot-run unit E7 oth-ubuntu-581868-1794606568. Shared owner holds integration with KV4b95fb; no P&R or merge/tag. Files committed/pushed; no source work left uncommitted.
+CODEX second READY hub d34bfdb117 after9b7a830e2f: kit_wave actual cell-budget failures -> PLAN, not retryable INFRA; summaries/NEAR/probe negative controls. 10classifier tests pass E4unit3245443. Only kit_wave.py +test_kit_wave_cell_budget.py. Shared notified; all source committed/pushed.

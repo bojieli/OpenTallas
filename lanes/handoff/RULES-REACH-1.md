@@ -63,3 +63,5 @@ READY with branch + tests, stop.
   vs origin/main 5eefdbe2fa clean). hub_Eo placed: r2r>405 3869 -> 721, START fan 3236 -> 0; leftovers classified in the
   RULEBOOK proof table. RULEBOOK R-REACH updated (opt-in wording, final proof numbers). Renders viewed (scratch rr/img).
 - 2026-11-13 08:11 branch tip ec64b8339b: rule 1 takes cland_rstart_in (relay piece of an R-CAP split) as START origin; RULING + new train-47 sha posted to DIE-KV-100 / ROOT-MERGE. Lane stopped again.
+
+CODEX2026-11-13 follow-up READY79d58ec6f0 hub branchclaude/rules-reach-1-1113 (E7existingwt). clock_landings.py signed hard DSREP/RSTREP/PLACEREP preservation +test,10focusedPASS E4unit3328160; QC ctl4d blocked1/6 vs signed8/34. Exact START34copies/K unchanged/strict mismatch gate retained. QC/shared own adoption, no plan/re-sign/P&R, untrackedKVartifacts untouched. Code committed/pushed.

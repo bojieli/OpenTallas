@@ -12,3 +12,6 @@
   - Place renders not yet seen: KV vN2e/vN2f hg/hgi, QC s28, S81 ready12b.
   - Carried: lep0N v3, hd_spn_end SP3n2, hd_mesh m1, VL3 lepw_mu_C t1 (S pin bar > 0.9 = stop), q_su10 row street, bksel vC6c GRT.
   - Owed: a summary to COORD at lane stop.
+
+## CODEX GEOM takeover 2026-11-13 14:02 PST
+Existing visual lane covered; no new worktree/jobs. Four independent actual-image records in results/geom_review: codex_frame_vol2_1113.md (3 corrected template representatives, PASS-COND private2 proofs only; local RUDY hot bands remain), codex_head_tile21v_1113_place.md (OK new spread-grid placement, DO_NOT_COUNT), codex_t41_holdtap_1113_route.md (ISSUES-ACCEPT existing route geometry, final STA pending), codex_kv_f70_1113_final.md (ISSUES-ACCEPT same-DB re-sign only, final saved placement/congestion/clock views). t62a3 orient-only canary GEN passed; actual auto_geom image reviewed ISSUES for known street/reach/tap form, GRT600s/3iters UNMEASURED. Exact verdict posted; autopilot14:00:24 withdrew unadmitted queued route units[]/containers[none], data kept. Current visual queue empty. Await new HEAD tile21v GRT and spn_end hfp placement images; root die workers own their pilots. No changes to plans, rules, wave config, source or any process.

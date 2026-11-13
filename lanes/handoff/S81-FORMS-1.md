@@ -74,3 +74,9 @@
 - Post pipeline: leaf_post.sh TAG LEGALIZED_PLAN BINS [CAP] (orient -> core_tap_fix -> tapcap 1500 -> tapknobs (pregrt_ff_hold all leaf, tap_pitch 200 on kv_leaf t1-5 + leaf t29) -> resetfix in w/vt -> checks -> run_bind.sh G0/strict bind/LATCHECK). NEVER cp onto a hard-linked repo file; rm first (rsleafA4 does).
 - Leaf hold family (COORD 10:xx/11:xx): t6 = core-tap reach (clk_c24 181 um) + port-out boundary; kv_leaf t5 = pocket tap overload (clk_t5 11,297). Posted STATE.
 - Next: A4 result -> leaf_post -> private place proofs -> READY (event branch off origin main, plan + street_rule_bins only; tools core_tap_fix/tapcap/tapknobs on separate branch).
+
+## CODEX notes 2026-11-13 13:49 PST
+- Took over existing E7 forms worktree/run dirs. A5 chain terminal: plan8aaa80ba73cf, BIND_RC0, LATCHECK873/873 unchanged; SIDECAR_RC1 makes candidate incomplete (not READY).
+- Cause: source sidecar67 leaf collector trees differ from source plan geometry (coordinates and one self-type label), not topology/depth; old run_bind also retains asbuilt.base at original source so the candidate sidecar was ignored.
+- Private repair helpers E7 s81-forms-1/sync_baseline_sidecar_codex.py and run_bind_codex.sh align only geometry after topology/depth equality, fail on sync error, and rebase asbuilt.base to private tree. A5 candidate sidecar now syncs with refused_stale_sidecar0. No production src/sidecar edited, no adoption.
+- Existing DIE-S81-89 legy CPU job retained (PID4040400 E7); fold combined leaf/frame event before next bind; no duplicate whole bind launched.
