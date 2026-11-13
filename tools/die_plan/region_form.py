@@ -234,6 +234,11 @@ def apply(base_path, out_path, side_in, side_out, reg_path, feed_path, ca_path, 
             bad.append(f"{p}: regions {pr[r['src']]}->{pr[r['dst']]} != model {m['src_region']}->{m['dst_region']}")
     if bad:
         raise Conflict(f"{len(bad)} rows: " + " | ".join(bad[:8]))
+    if sca.get("frame"):
+        raise Conflict(f"sidecar already carries count frame {sca['frame'].get('frame')}")
+    import count_frame as CF
+    fr = CF.Frame("wall_aligned", feedd["frame_offset"], regd["part_region"], prefix + Path(feed_path).name,
+                  sha(Path(feed_path).read_bytes()), sha(Path(reg_path).read_bytes()))
     # ---- write
     out = copy.deepcopy(raw)
     s2 = copy.deepcopy(side)
@@ -243,15 +248,19 @@ def apply(base_path, out_path, side_in, side_out, reg_path, feed_path, ca_path, 
         m = ca["ports"][p]
         new = int(m["sched_w"]) + (1 if c.get("output_qreg") else 0) + (1 if c.get("freg") else 0)
         old = int(c["sched_lat"])
+        # K absorbs in the COUNT FRAME (count_frame.py): K + 1 + N'_dst - N'_src = sched_w with N' = N + f and the
+        # input origins N kept (input sidecar: balanced tree, every f equal) -> K_new = K + (new - old) - shift
+        x = fr.shift(rows[p]["src"], rows[p]["dst"])
         ledger.append(dict(port=p, old=old, new=new, depth_old=int(c["depth"]), depth_new=int(m["depth"]),
-                           K_old=int(c["K"]), K_new=int(c["K"]) + new - old))
-        c["K"] = int(c["K"]) + new - old
+                           K_old=int(c["K"]), K_new=int(c["K"]) + new - old - x, frame_shift=x))
+        c["K"] = int(c["K"]) + new - old - x
         c["sched_lat"] = new
         c["depth"] = int(m["depth"])
         out["clock"]["landing_network"]["count_aligned_cycles"][p] = new
     for r in s2.get("ports", []):
         if r["port"] in sports:
             r["added_cycles"] = s2["count_aligned"]["ports"][r["port"]]["sched_lat"]
+    s2["count_aligned"]["frame"] = fr.meta()
     note = (f"QC-REGION-1 REGION FORM: link_htree feed (root {feed['root']}), wall-aligned frame; K / DEPTH / "
             f"sched_lat re-planned on {len(ledger)} crossings (K absorbs, START tree kept)")
     s2["note"] = (s2.get("note", "") + " | " + note).lstrip(" |")

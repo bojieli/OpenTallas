@@ -1471,6 +1471,32 @@ def parse_edge_pad(items, typ=int):
     return out
 
 
+def apply_frame(summ, out, frame):
+    """QC-REGION-1 COUNT FRAME (count_frame.py): lat_cycles -> the plan's wall-aligned frame, lat + f_dst - f_src (the
+    edge-index value stays in lat_cycles_edge; RTL K, origins and margins are unchanged: the frame relabels the count).
+    frame None (plan without clock.spine.feed) = no-op."""
+    if frame is None:
+        return summ
+    sh = {}
+    for o in out:
+        if o.get("lat_cycles") is None:
+            continue
+        s, d = (o.get("src_part") or o["src"]), (o.get("dst_part") or o["dst"])
+        x = frame.shift(s, d)
+        if (o.get("src_part") or o.get("dst_part")) and frame.shift(o["src"], o["dst"]) != x:
+            raise SystemExit(f"count frame: crossing {o['port']} region shift {frame.shift(o['src'], o['dst'])} != "
+                             f"partition shift {x} (the plan's regions are not the frame's region map)")
+        o["lat_cycles_edge"], o["frame_shift"], o["lat_cycles"] = o["lat_cycles"], x, o["lat_cycles"] + x
+        sh[o["port"]] = x
+    ok = [o for o in out if o.get("lat_cycles") is not None]
+    summ["frame"] = frame.meta(offsets=True)
+    summ["lat_hist_edge"] = summ.get("lat_hist")
+    summ["lat_hist"] = {str(k): sum(1 for o in ok if o["lat_cycles"] == k) for k in sorted({o["lat_cycles"] for o in ok})}
+    summ["lat_total_vs_old3"] = sum(o["lat_cycles"] - 3 for o in ok)
+    summ["frame_min_lat"] = min((o["lat_cycles"] for o in ok), default=None)
+    return summ
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("ocv_json")
@@ -1501,6 +1527,8 @@ def main(argv=None):
                     ".json) of die_sta_related; each crossing's interval becomes its hull with the STA d interval "
                     "(die_sta_related.count_align_d_intervals) on the --corner corners; needs --sta-plan")
     ap.add_argument("--sta-plan", help="die plan JSON die_sta_related --plan reads (partition pairs of the ports)")
+    ap.add_argument("--frame-plan", help="QC-REGION-1 count frame: die plan whose clock.spine.feed sets the frame of "
+                    "lat_cycles (count_frame.py; default --sta-plan; a plan without clock.spine.feed = no-op)")
     ap.add_argument("--sta-clock-cal", choices=("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell"),
                     default=None,
                     help="as die_sta_related --clock-cal (legacy default spice; ignored under --margin-policy nominal, "
@@ -1548,6 +1576,11 @@ def main(argv=None):
                            max_depth=a.max_depth, **skw)
     if sinfo:
         summ["start_tree"].update(sinfo)
+    import count_frame as CF
+    try:
+        apply_frame(summ, out, CF.load_path(a.frame_plan or a.sta_plan))
+    except CF.FrameError as ex:
+        ap.error(str(ex))
     if a.tree_parent:
         summ["tree_parent"] = parse_edge_pad(a.tree_parent, str)
     if any(a.start_skew):

@@ -5,7 +5,7 @@
 # guard did not refuse.  Siblings (clock_merge / bind_requirements / kit_pricing) are copied from IN to OUT.
 # RF = repo tree holding tools/die_plan/region_form.py (+ the link_htree schema keys) and the committed form files.
 set -u
-RF=${RF:-/srv/opentallas-scratch2/claude/qc-region-1/wt}
+RF=${RF:-/srv/opentallas-scratch2/claude/qc-region-1/repo}
 D=$RF/physical/die_plan/qwen_compute/plan_of_record
 IN=$1; SIN=$2; OUT=$3; SOUT=$4; REP=${5:-${OUT%.json}.region_form.json}
 echo "in $(sha256sum $IN | cut -c1-12) side $(sha256sum $SIN | cut -c1-12) tool $(sha256sum $RF/tools/die_plan/region_form.py | cut -c1-12) regions $(sha256sum $D/regions_s29.json | cut -c1-12) feed $(sha256sum $D/feed_s29.json | cut -c1-12) ca $(sha256sum $D/ca_s29.json | cut -c1-12)"

@@ -834,6 +834,17 @@ class Landings:
         self.ins = defaultdict(dict)
         self.outs = defaultdict(set)
         self.ca = table.get("count_aligned")
+        # QC-REGION-1 COUNT FRAME: a plan with clock.spine.feed prices count-aligned sched_lat in its wall-aligned
+        # frame; the sidecar must carry the same frame (count_align_bind writes count_aligned.frame).  No feed and no
+        # sidecar frame = legacy, nothing checked.
+        self.frame = None
+        if self.ca:
+            import count_frame as CF
+            try:
+                self.frame = CF.load(plan, plan_path)
+                CF.check_same(self.ca.get("frame"), self.frame, "clock-landing sidecar count_aligned")
+            except CF.FrameError as ex:
+                raise LandingError(str(ex)) from ex
         # CA-MIXED-1: count-aligned input / forwarded-start output buses per partition (== ins / outs without mixed)
         self.mixed = ca_mixed(self.ca)
         self.ca_ins = defaultdict(set)
@@ -2629,6 +2640,7 @@ class Landings:
                         "legacy per crossing: base3 + explicit input capture" if any(r.get("input_capture_cycles") for r in self.rows) else 3),
                     count_aligned=bool(self.ca),
                     count_straps=self.strap,
+                    **({"count_frame": self.frame.meta()} if getattr(self, "frame", None) else {}),
                     crossings=len(self.rows), ports=self.rows,
                     lane_added_cycles=dict(sorted(by_lane.items())),
                     types=self.by_type, reset_placements=self.reset_placements,
