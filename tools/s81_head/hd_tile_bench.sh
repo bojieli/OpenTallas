@@ -33,9 +33,11 @@ CV=${CV:-0}   # 10-24: CV=1 = elements as the closed-view macro models (ot_s81hd
 AIS=${AIS:-0}; MH=${MH:-0}; CS=${CS:-0}
 # 11-05 (DIE-HEAD-70): RIR / TH / FX / BSTV / KH env = tile ROW_IN_REG / TEN_HOP / FLT_XHOP / BST / KEY_HOP (defaults = unchanged)
 RIR=${RIR:-0}; RH=${RH:-0}; TH=${TH:-0}; FX=${FX:-0}; BSTV=${BSTV:-2}; KH=${KH:-0}
-OBJ=$O/obj_${M}_${CUT}_${S9}_cv${CV}_l4${L4}_a${AIS}m${MH}c${CS}_r${RIR}h${RH}t${TH}f${FX}b${BSTV}k${KH}
+# 11-13 (HEAD-97 F1c): XOH env = tile XO_HOP (x / go stages x_q -> u_xo; +XOH on the 2-tile chain, t1 sees go XOH later)
+XOH=${XOH:-0}
+OBJ=$O/obj_${M}_${CUT}_${S9}_cv${CV}_l4${L4}_a${AIS}m${MH}c${CS}_r${RIR}h${RH}t${TH}f${FX}b${BSTV}k${KH}x${XOH}
 if [ ! -x $OBJ/Vtb_s81hd_mini ]; then
-  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GFADD_L4=$L4 -GCV=$CV -GAIS=$AIS -GMH=$MH -GCS=$CS -GRIR=$RIR -GRH=$RH -GTH=$TH -GFX=$FX -GBSTP=$BSTV -GKH=$KH -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
+  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GFADD_L4=$L4 -GCV=$CV -GAIS=$AIS -GMH=$MH -GCS=$CS -GRIR=$RIR -GRH=$RH -GTH=$TH -GFX=$FX -GBSTP=$BSTV -GKH=$KH -GXOH=$XOH -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
     -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build_$M.log 2>&1 || { grep -m10 %Error $O/build_$M.log; echo "BUILD_FAILED $M"; exit 3; }
 fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
@@ -43,7 +45,7 @@ link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
 }
 EXP_CYC_A=${EXP_CYC_A:-$([ $L4 = 1 ] && echo 8304 || { [ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || { [ $CV = 1 ] && echo 8432 || echo 8430; }; })}
 # 10-24 pipelining: + AIS (A input stages) + 2 MH (bundle merge hops) + CS per tile on the 2-tile chain
-EXP_CYC_A=${EXP_CYC_X:-$((EXP_CYC_A + AIS + 2*MH + 2*CS + BSTV - 2))}  # +1 bundle pk_q stage (10-24 GEOM-REVIEW); CV 1: +2 more = the rebuilt elemB then elemA output register stages (ot_s81hd_oreg)
+EXP_CYC_A=${EXP_CYC_X:-$((EXP_CYC_A + AIS + 2*MH + 2*CS + BSTV - 2 + XOH))}  # +1 bundle pk_q stage (10-24 GEOM-REVIEW); CV 1: +2 more = the rebuilt elemB then elemA output register stages (ot_s81hd_oreg)
   # 8,429 at 0x1ff / SPLIT9 1 (10-24)   # measured go (spo input) -> spr output, 2-tile chain: bundle 8,357 (IOREG 1, SAFE 1: +2) + spo 1 + pin 1 + fire 2 x 2 + spr 5 + chain hop
 run() {    # run NAME T0SRC T1SRC args...
   local N=$1 a=$2 b=$3; shift 3; local W=$O/scen_${N}_$M; mkdir -p $W
