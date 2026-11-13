@@ -234,9 +234,13 @@ def mon_relays(P, ln, segs, taken, unplaced=None):
     rows = []
     for g, es in sorted(groups.items()):
         pts = {e["id"]: (pin_die(P, e["src"]["part"], e["src"]["bus"]), pin_die(P, e["dst"]["part"], e["dst"]["bus"])) for e in es}
+
+        def worst(e):
+            ch = [pts[e["id"]][0]] + [tuple(r["xy_um"]) for r in e.get("relays", [])] + [pts[e["id"]][1]]
+            return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(ch, ch[1:]))
+        if max(worst(e) for e in es) <= TRIGGER + 1e-6:
+            continue                                       # within reach (directly or through its relays): no-op
         h = max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in pts.values())
-        if h <= TRIGGER + 1e-6:
-            continue
         clk = [e for e in es if e["kind"] == "clock"]
         if len(clk) > 1 or any((e["src"]["part"], e["dst"]["part"]) != (es[0]["src"]["part"], es[0]["dst"]["part"]) for e in es):
             raise RelayError(f"monitor bundle {g}: not (at most one forwarded clock +) status edges on the same parts")

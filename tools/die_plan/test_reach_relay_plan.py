@@ -93,3 +93,10 @@ def test_monitor_relay_mutants_fail(bad):
          "split_sites": lambda: _lc_plan(relays=[0.0, 231.0], clk_relay_xy=[0.0, 240.0]),
          "far_site": lambda: _lc_plan(relays=[0.0, 30.0])}[bad]()
     assert LC.check(P)["errors"]
+
+
+def test_monitor_relay_second_pass_is_noop():
+    P = _lc_plan(relays=[0.0, 231.0])
+    P.ptype = lambda pn: P.types[P.parts[pn]["type"]]
+    before = copy.deepcopy(P.clock)
+    assert RP.mon_relays(P, P.clock["landing_network"], [], RP.Grid()) == [] and P.clock == before
