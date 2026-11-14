@@ -1,0 +1,6 @@
+# FIX-SELFCONT handoff (2026-11-14 05:31 PST)
+Class: KIT_NOT_SELF_CONTAINED / landed_sidecar_aor3.json. Only real item: s81 ot_s81sl_leaf__t62 (a6 on epyc8 04:12). cbn_q00__cldbcda913 in the class row failed for other reasons (KeyError src, restage) - misgrouped.
+Cause: kit_wave.json s81 type_args[ot_s81sl_leaf__t62] = --clock-landing kit-ops-1/drt73-aor3/landed_sidecar_aor3.json; file existed on epyc7 only (KIT-OPS-1 note), cleanup removed dirs elsewhere; item-incomplete filter falls back to all hosts (or hs) and gen died FileNotFoundError.
+Fix: kit_wave.sync_item_inputs (after each src probe) copies a missing item input held by another probed gen host (tar over ssh, keep-old, <=300MB, /srv/opentallas-scratch*/claude only, 5 retries). Live in rt/tools/autopilot/kit_wave.py (backup kit_wave.py.bak-fixselfcont-1114). Branch claude/fix-selfcont-itemsync-1114@5bbd9b2dfe7 (+test_kit_wave_item_sync.py, 2 tests pass).
+Done: sidecar copied to epyc8/10/9/intel1 (rc 0, sha-size 8828097).
+OPEN for KIT-OPS-3/4: a8 gen_args carries TWO --clock-landing (B3v sidecar_new.json then aor3 sidecar from stale type_args; aor3 sidecar belongs to the reverted plan). type_args_prev_kitops1_aor3 says t62 type_args should be null: remove it.
