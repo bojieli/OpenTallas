@@ -1433,6 +1433,29 @@ def job_wrap(cmd, spec_path):
     return [JOB_BIN, "run", "--spec-b64", b64, "--"] + list(cmd)
 
 
+def spec_local_inputs(spec_path):
+    """INPUTHOLD_1114: the path-only inputs (no fetch host) of an ot-job spec; they exist only on the host(s) that hold them"""
+    try:
+        return [i["path"] for i in json.load(open(spec_path)).get("inputs") or [] if isinstance(i, dict) and i.get("path") and not i.get("host")]
+    except Exception:
+        return []
+
+
+def holders_of(hosts, paths, probe_fn=None):
+    """INPUTHOLD_1114: the hosts (in order) on which every path exists (parallel ssh test -e); a host that cannot be reached holds nothing"""
+    def has(h):
+        if probe_fn:
+            return probe_fn(h, paths)
+        cmd = "for p in " + " ".join(shlex.quote(x) for x in paths) + "; do test -e \"$p\" || exit 1; done"
+        try:
+            return subprocess.run(["ssh", "-o", "ConnectTimeout=20", "-o", "BatchMode=yes", h, cmd], capture_output=True, timeout=60).returncode == 0
+        except Exception:
+            return False
+    with cf.ThreadPoolExecutor(max(1, len(hosts))) as ex:
+        ok = list(ex.map(has, hosts))
+    return [h for h, k in zip(hosts, ok) if k]
+
+
 def soft_pin_ok(spec_path, d=None):
     """SOFTPIN_1114: True only for an ot-job spec whose every input names a fetch host (the job can run on any host) and a --dir that is
     the job root, not a kit/lane directory.  Any read/parse problem -> False (hard pin)."""
@@ -1525,6 +1548,15 @@ def main():
         # their gen/run_kit.sh: ot-job exit 99).  OT_RUN_HARD_PIN=1 restores the hard pin.
         _alt = [h for h in HOSTS if h not in ("localhost", "intel2", "epyc4", "epyc5", "epyc6") and h not in held and h != hosts[0]]
         hosts = [hosts[0]] + _alt
+    if job and not os.environ.get("OT_RUN_NO_INPUT_HOLD"):
+        _li = spec_local_inputs(job)
+        if _li:    # INPUTHOLD_1114 (COORD 11-14): path-only inputs exist only where they were staged; a job placed elsewhere ends ot-job rc 99 after its queue wait
+            _hold = holders_of(hosts if len(hosts) > 1 else list(dict.fromkeys(list(hosts) + [h for h in HOSTS if h not in ("localhost", "epyc4", "epyc5", "epyc6")])), _li)
+            if _hold and _hold != hosts:
+                print(f"ot-run: INPUT HOLD: spec inputs exist only on {', '.join(_hold)}; candidates {', '.join(hosts)} -> {', '.join(_hold)}", file=sys.stderr)
+                hosts = _hold
+            elif not _hold:
+                print(f"ot-run: WARNING: no candidate host holds the spec's path-only inputs ({_li[0]} ...); the job will end rc 99", file=sys.stderr)
     if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0:
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
