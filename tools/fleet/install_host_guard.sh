@@ -13,8 +13,8 @@ command -v earlyoom >/dev/null || sudo -n env DEBIAN_FRONTEND=noninteractive apt
 # route python3s -- 9 MiB vvp at oom_score 1300 -- before the 100-300 GB cc1plus builds); the big builds (cc1plus,
 # verilator_bin, yosys) are preferred, and the closure-loop runner raises a build to oom_score_adj 900 once its stage
 # passes its declared GB.  Loop bench / route stages run at oom_score_adj 0.
-# EARLYOOM_OPENROAD_1114 (ADMIT-TUNE-1): openroad is --avoid, never --prefer (earlyoom SIGTERMs of 22-48 GB openroad runs = 'make Error 241'; yosys freed ~0); python/ssh-agent/dbus/find/git/grep are collateral
-echo 'EARLYOOM_ARGS="-m 3,2 -s 100,100 -r 300 -n --prefer ^(verilator_bin|verilator_bin_dbg|cc1plus|cc1|g\+\+|c\+\+|clang\+\+|ld)$ --avoid ^(openroad|python3|python|ssh-agent|dbus-daemon|find|git|grep|sshd|systemd|systemd-journal|dockerd|containerd|containerd-shim.*|sudo|bash)$"' | sudo -n tee /etc/default/earlyoom >/dev/null
+# EARLYOOM_OPENROAD_1114 (ADMIT-TUNE-1): openroad is neither --prefer nor --avoid (--avoid openroad on 11-14 moved the kills to 27 docker/docker.real client processes on epyc9 in 4 min = 27 lost jobs); python/ssh-agent/dbus/find/git/grep are collateral
+echo 'EARLYOOM_ARGS="-m 3,2 -s 100,100 -r 300 -n --prefer ^(verilator_bin|verilator_bin_dbg|cc1plus|cc1|g\+\+|c\+\+|clang\+\+|ld)$ --avoid ^(python3|python|ssh-agent|dbus-daemon|find|git|grep|sshd|systemd|systemd-journal|dockerd|containerd|containerd-shim.*|sudo|bash)$"' | sudo -n tee /etc/default/earlyoom >/dev/null
 sudo -n systemctl enable --now earlyoom >/dev/null 2>&1
 sudo -n systemctl restart earlyoom
 echo "HOST_GUARD_OK $(hostname) earlyoom=$(systemctl is-active earlyoom) ot-heavy=$(command -v ot-heavy) $(cat /etc/ot-heavy.conf | tr '\n' ' ')"
