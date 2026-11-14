@@ -75,3 +75,4 @@ Recipe: /srv/opentallas-scratch2/claude/tl-qcstav2/mk_rings.py (epyc9; copy in l
 | sta_cland_w632_e_s11 | 47.52x108.432 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_cland_w632_e_s11/kits/sta_cland_w632_e_s11_synth0 | kqc-...-1336376 |
 Result lands in <kit>/signoff/signoff.json on epyc2. A waiter of mine polls these; I will post if all sign. Note: other kits kqc-sta_cland_w515_s_s10/_1, w537_s_s10, w259, w1574_n on epyc10 are someone elses (v1 modules).
 TL-QCSTAV2 keeps: sta_region_nb0 (/srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_region_nb0/kits/sta_region_nb0_synth0, running on intel1 unit kqc-sta_region_nb0_synth0-2888382; mk_region.py; 5x ot_sram_1r1w_32x64_m1 sites from p7b floorplan).
+| sta_cland_w515_s_s10_1 | TL-QCRING-4 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w515_s_s10_1/kits/sta_cland_w515_s_s10_1_synth0 | SIGNED (R-MINIMAL) 06:0x | AUTO-RESIGN row added |

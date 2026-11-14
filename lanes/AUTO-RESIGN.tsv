@@ -86,3 +86,4 @@ qc	sle_cland_w537_s_s10	epyc10	/srv/opentallas-scratch2/claude/die-qc-103/rk2/sl
 qc	sta_cland_w515_s_s10	epyc10	/srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w515_s_s10/kits/sta_cland_w515_s_s10_synth0	-	TL-QCRING-3	SIGNED 11-14 TT setup 143 FF hold 9.78 DRC 0
 qc	sta_cland_w537_s_s10	epyc10	/srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w537_s_s10/kits/sta_cland_w537_s_s10_synth0	-	TL-QCRING-3	SIGNED 11-14 TT setup 127 FF hold 4.9 DRC 0
 qwen_compute	sle_cland_w517_n_s10_2	epyc10	/srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w517_n_s10_2/kits/sle_cland_w517_n_s10_2_synth0	-	TL-QCRING-1	ring child private kit SIGNED, DRC0 TT wns>=22.9 internal hold>=11.7 (ff sdc min port-only, advisory)
+qwen_compute	sta_cland_w515_s_s10_1	epyc10	/srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w515_s_s10_1/kits/sta_cland_w515_s_s10_1_synth0	-	TL-QCRING-4	11-14 ring child kit: signoff verdict SIGNED (R-MINIMAL)
