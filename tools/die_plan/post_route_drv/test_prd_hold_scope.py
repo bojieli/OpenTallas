@@ -31,6 +31,8 @@ set _pass 1
 '''
 SHARED = r'''
 set ::ot_mm_active 1
+set ::ot_mm_synced @SYNCED@
+set ::ot_mm_stage @STAGE@
 set ::ot_hold_scope_supported_modes {reg2reg nonport}
 proc ot_hold_repair_scope {body} { L shared_scope; uplevel 1 $body }
 '''
@@ -45,11 +47,11 @@ def hook_parts():
 
 
 class Scope(unittest.TestCase):
-    def run_tcl(self, scope=None, two_mode=False, drift="", old_shared=False):
+    def run_tcl(self, scope=None, two_mode=False, drift="", old_shared=False, synced=1, stage="4_cts.sdc"):
         proc, dispatch = hook_parts()
         with tempfile.TemporaryDirectory() as d:
             s = pathlib.Path(d) / "t.tcl"
-            shared = SHARED
+            shared = SHARED.replace("@SYNCED@", str(synced)).replace("@STAGE@", stage)
             if old_shared:
                 shared = shared.replace("set ::ot_hold_scope_supported_modes {reg2reg nonport}\n", "")
             body = STUB + (shared if two_mode else "") + proc + "\n"
@@ -109,6 +111,15 @@ class Scope(unittest.TestCase):
 
     def test_nonport_two_mode_uses_matching_shared_scope(self):
         self.assertEqual(self.run_tcl(scope="nonport", two_mode=True)[:2], ["rc_cal", "shared_scope"])
+
+    def test_two_mode_unsynced_or_wrong_stage_refuses_unscoped_late_repair(self):
+        # prd_hook.tcl (trains BA/AM): the shared helper returns BODY unscoped outside the validated FF scene (synced,
+        # stage 4_cts.sdc); a late ECO must refuse that, never run an unscoped repair. Must stay fail-closed.
+        for scope in ("reg2reg", "nonport"):
+            for kw in (dict(synced=0), dict(stage="4_cts_other.sdc")):
+                out = self.run_tcl(scope=scope, two_mode=True, **kw)
+                self.assertTrue(any(x.startswith("ERROR OT_HOLD_SCOPE refusing unscoped late repair") for x in out), out)
+                self.assertFalse(any(x.startswith(("guarded ", "shared_scope")) for x in out), out)
 
     def test_nonport_old_shared_hook_fails_closed(self):
         out = self.run_tcl(scope="nonport", two_mode=True, old_shared=True)
