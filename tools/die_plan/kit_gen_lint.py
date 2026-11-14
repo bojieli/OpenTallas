@@ -39,6 +39,7 @@ import kit_contract  # noqa: E402
 import rtl_lint  # noqa: E402
 
 ORFS_MEMORY_MAX_BITS = 4096                 # ORFS variables.yaml SYNTH_MEMORY_MAX_BITS default (orfs:asap7lock)
+LINT_MEMORY_MAX_BITS = 65536                # default for OT_LINT_MEMORY_MAX_BITS (die item_env)
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 TIE_FORM = "$cland_dst connect $cland_net"   # landing_contract.export_tcl legacy tie text
 
@@ -202,6 +203,13 @@ def memory_errors(rows, cfg):
     if (cfg.get("SYNTH_MOCK_LARGE_MEMORIES") or ["0"])[-1] == "1":
         return []
     lim = int((cfg.get("SYNTH_MEMORY_MAX_BITS") or [ORFS_MEMORY_MAX_BITS])[-1])
+    # FAIL-S81-1 11-14 (COORD, EXPERT-REVIEW-6 #8): OT_LINT_MEMORY_MAX_BITS (die item_env, default 65536) raises the lint
+    # bound for behavioural memories the kit synthesises as flops; it never lowers the recipe bound.  Only the memory_bits
+    # row is affected: yosys elaboration failures (rtl_check) stay blocking.
+    try:
+        lim = max(lim, int(os.environ.get("OT_LINT_MEMORY_MAX_BITS") or LINT_MEMORY_MAX_BITS))
+    except ValueError:
+        pass
     out = []
     for path, w, s in rows:
         if w * s > lim:
