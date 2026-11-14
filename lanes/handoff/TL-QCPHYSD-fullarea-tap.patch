@@ -1,0 +1,82 @@
+From c25e7a3289d315aed6c9a5ca9880cc425fd4a389 Mon Sep 17 00:00:00 2001
+From: TL-QCPHYSD <noreply@anthropic.com>
+Date: Sat, 14 Nov 2026 15:33:33 +0000
+Subject: [PATCH] gen: bare full-area hard IP types take their single clock
+ terminal, no R4 tap grid (QC phy_serdes/phy_serdes_b/phy_ucie_kv)
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ tools/die_plan/schema.py                 | 17 ++++++++++++++
+ tools/die_plan/test_full_area_hard_ip.py | 28 ++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+ create mode 100644 tools/die_plan/test_full_area_hard_ip.py
+
+diff --git a/tools/die_plan/schema.py b/tools/die_plan/schema.py
+index 4eb786124d..6894a87e26 100644
+--- a/tools/die_plan/schema.py
++++ b/tools/die_plan/schema.py
+@@ -2486,10 +2486,27 @@ def core_tap_early_ps(P, tp, corner="TT"):
+     return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner))
+ 
+ 
++def full_area_hard_ip(t):
++    """QC-PHY-1 11-14 (COORD ruling, QC phy_serdes/phy_serdes_b/phy_ucie_kv): a bare hard type whose only content is one
++    placed hard IP covering >= 95% of the partition (licensed PHY abstract used as-is).  There is no free site for an
++    R4 grid tap and no clock sink inside the abstract: its one clock terminal is clock.tap_um (same as bare_hard_single_tap).
++    False for every other type, so existing kits and budgets are unchanged."""
++    if not bare_hard_single_tap(t):
++        return False
++    cs = t.get("contents", []) or []
++    if len(cs) != 1 or not cs[0].get("lef") or not cs[0].get("origin_um") or not cs[0].get("outline_um"):
++        return False
++    w, h = t["outline_um"]
++    mw, mh = cs[0]["outline_um"]
++    return w > 0 and h > 0 and (mw * mh) >= 0.95 * (w * h)
++
++
+ def _grid_taps(P, tn):
+     """the R4 pitch grid of tap_grid (no added sink taps)."""
+     t = P.types[tn]
+     xy = t.get("clock", {}).get("tap_um")
++    if full_area_hard_ip(t) and isinstance(xy, (list, tuple)) and len(xy) == 2:
++        return [("clk", float(xy[0]), float(xy[1]))]
+     if (bare_hard(t) and t.get("clock", {}).get("tap_mode") == "grid+explicit"
+             and isinstance(xy, (list, tuple)) and len(xy) == 2):
+         # FLOW-20 11-01: the "grid" of a bare hard wrapper (grid+explicit) is its terminal at clock.tap_um, exactly
+diff --git a/tools/die_plan/test_full_area_hard_ip.py b/tools/die_plan/test_full_area_hard_ip.py
+new file mode 100644
+index 0000000000..228951c889
+--- /dev/null
++++ b/tools/die_plan/test_full_area_hard_ip.py
+@@ -0,0 +1,28 @@
++import schema as S
++
++
++def _t(**kw):
++    t = {"hard": True, "outline_um": [100.0, 200.0], "clock": {"tap_um": [50.0, 199.0]},
++         "contents": [{"inst": "u", "module": "m", "lef": "a.lef", "origin_um": [0, 0], "outline_um": [99.0, 199.0]}]}
++    t.update(kw)
++    return t
++
++
++def test_full_area_macro_detected():
++    assert S.full_area_hard_ip(_t())
++
++
++def test_small_macro_not_full_area():
++    t = _t()
++    t["contents"][0]["outline_um"] = [50.0, 50.0]
++    assert not S.full_area_hard_ip(t)
++
++
++def test_needs_lef_and_single_content_and_no_hard_cores():
++    t = _t()
++    t["contents"][0].pop("lef")
++    assert not S.full_area_hard_ip(t)
++    assert not S.full_area_hard_ip(_t(hard_cores=[{"inst": "c"}]))
++    t2 = _t()
++    t2["contents"].append(dict(t2["contents"][0], inst="v"))
++    assert not S.full_area_hard_ip(t2)
+-- 
+2.53.0
+

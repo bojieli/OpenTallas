@@ -1,0 +1,105 @@
+{
+ "schema": "type-scoped-delta",
+ "base": "zz_s29_qc103_s",
+ "note": "TL-QCPHYSD 11-14: phy_* hard IP placed-macro declaration (copied from signed kv3_phy contents form); fold into s29q103S2",
+ "types": {
+  "phy_serdes_b": {
+   "module": "ot_qfd_serdes_112g_x12_phy_s597_pw_phy_serdes_b",
+   "core_pg_connect": true,
+   "contents": [
+    {
+     "inst": "u_io_serdes_2",
+     "module": "ot_qfd_serdes_112g_x12_phy_s597",
+     "status": "reuse",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "registered_pins": true,
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "outline_um": [
+      1563.57,
+      2320.056
+     ],
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "ot_qfd_serdes_112g_x12_phy_s597"
+    }
+   ]
+  },
+  "phy_serdes": {
+   "module": "ot_qfd_serdes_112g_x12_phy_s597_pw_phy_serdes",
+   "core_pg_connect": true,
+   "contents": [
+    {
+     "inst": "u_io_serdes_1",
+     "module": "ot_qfd_serdes_112g_x12_phy_s597",
+     "status": "reuse",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "registered_pins": true,
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "outline_um": [
+      1563.57,
+      2320.056
+     ],
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "ot_qfd_serdes_112g_x12_phy_s597"
+    }
+   ]
+  },
+  "phy_ucie_kv": {
+   "module": "ot_qkvd_ucie_x64_phy_pw_phy_ucie_kv",
+   "core_pg_connect": true,
+   "contents": [
+    {
+     "inst": "u_bound.u_core",
+     "module": "ot_qkvd_ucie_x64_phy",
+     "status": "reuse",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "bump_ports": [
+      {
+       "pin": "link_v",
+       "dir": "output",
+       "width": 1
+      },
+      {
+       "pin": "link_flit",
+       "dir": "output",
+       "width": 583
+      },
+      {
+       "pin": "far_v",
+       "dir": "input",
+       "width": 1
+      },
+      {
+       "pin": "far_flit",
+       "dir": "input",
+       "width": 583
+      }
+     ],
+     "registered_pins": true,
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+     "lef": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "outline_um": [
+      777.6,
+      777.6
+     ]
+    }
+   ]
+  }
+ }
+}
