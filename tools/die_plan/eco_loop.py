@@ -233,6 +233,24 @@ def minimal_hold_only(rec):
     return g.get("hold_ff") == "FAIL" and g.get("drc") == "PASS" and g.get("setup_tt") == "PASS"
 
 
+def minimal_eco_case(rec):
+    """WF-1 11-14 (OWNER remove-limits order; COORD friction 4: HEAD hd_spn DRC 0, TT -108.51 on ONE endpoint was refused for
+    'setup worse than -30 ps'): under R-MINIMAL any routed DRC-0 record that misses setup (TT < -42 ps) or internal FF hold is an
+    ECO case, whatever the miss size or endpoint count (no 30 ps / 100 endpoint near-miss window, no structural-advisory refusal).
+    Repeats stay capped by the one-iteration loop and the retry counter."""
+    if os.environ.get("OT_SIGNOFF_PROFILE", "minimal").strip().lower() == "legacy" or not isinstance(rec, dict):
+        return False
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("signoff_profile_eco2", HERE / "signoff_profile.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        g = mod.judge(rec)["gates"]
+    except Exception:
+        return False
+    return g.get("drc") == "PASS" and (g.get("setup_tt") == "FAIL" or g.get("hold_ff") == "FAIL")
+
+
 def metrics(rec, signoff_path=None):
     """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}; with OT_HOLD_REPAIR_SCOPE=nonport and a readable
     FF census next to signoff_path also ff_np / ff_np_n (the non-port hold the ECO repairs), which the stop rule and the
@@ -292,6 +310,8 @@ def eligible(rec, signoff_path=None):
         return False, "already signed"
     if minimal_hold_only(rec):
         return True, "ECO class: R-MINIMAL only internal FF hold fails (auto hold-buffer ECO, no near-miss window)"
+    if minimal_eco_case(rec):
+        return True, "ECO class: R-MINIMAL routed DRC 0 and setup / internal hold misses (auto ECO, no near-miss limit)"
     if not m["fails"]:
         return False, "no FAIL gate (NOT RUN / parent-only reasons are not an ECO case)"
     other = sorted(set(m["fails"]) - ECO_FAILS)
@@ -362,6 +382,9 @@ def near_miss(rec, signoff_path=None):
     scores hold on the endpoints sign-off leaves to the core (KW-FIX-36 R4: without input-port starts and output-port
     endpoints, core_hold); with no readable split it scores the whole number.  Same numbers as ever: one iteration,
     NEAR_WNS_PS, NEAR_ENDPOINTS of the remaining endpoints."""
+    if minimal_eco_case(rec):
+        return True, [], ["R-MINIMAL auto ECO (WF-1): routed DRC 0 and setup / internal hold misses; the legacy "
+                          f"{NEAR_WNS_PS:g} ps / {NEAR_ENDPOINTS} endpoint / slew-net window is not applied"]
     if minimal_hold_only(rec):
         return True, [], ["R-MINIMAL auto hold ECO (WF-1): only the internal FF hold fails; the legacy "
                           f"{NEAR_WNS_PS:g} ps / {NEAR_ENDPOINTS} endpoint window is not applied"]

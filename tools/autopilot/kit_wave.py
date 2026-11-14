@@ -4127,6 +4127,25 @@ def copy_back_host(txt, default):
     return got[-1][1] if got else default
 
 
+SPILL_COPY_BACK = re.compile(r"SPILL: outputs copied back (\S+) -> (\S+)")
+
+
+def copy_back_hosts(txt, default):
+    """WF-1 11-14 (COORD friction 3: false place FAIL when the kit is not where the sealed record says): every host a copy-back
+    record names, newest first ('ot-run-sealed: copy-back A -> B' and 'SPILL: outputs copied back A -> B', by position in the text),
+    then the gen host.  s81 col_h10_r0_p1__t1__cl911743eb a21: the sealed line said epyc7, the spill copied the outputs back to the
+    gen host epyc10 (the 3_place.odb was there), and the probe looked only on epyc7."""
+    found = [(m.start(), m.group(2)) for m in SEALED_COPY_BACK.finditer(txt or "")]
+    found += [(m.start(), m.group(2)) for m in SPILL_COPY_BACK.finditer(txt or "")]
+    out = []
+    for _, h in sorted(found, reverse=True):
+        if h not in out:
+            out.append(h)
+    if default not in out:
+        out.append(default)
+    return out
+
+
 def remote_argv(host, hub, cmd):
     """ssh joins argv with spaces: send ONE quoted command (host None/local = run here)"""
     s = _ssh(host, hub)
@@ -4366,6 +4385,7 @@ def run_item(spec_path):
         """probe the placed kit on the gen host, AUTO-GEOM it, write result.json (sync PLACE, and an async PLACE
         released by its fresh physical_completion receipt while the original proof owner keeps running)"""
         kh = copy_back_host(txt, G)      # the host that holds the kit (sealed copy-back record)
+        cands = [kh] + [h for h in copy_back_hosts(txt, G) if h != kh]      # WF-1: other hosts a copy-back / spill record names, then G
         rem = lambda cmd: remote_argv(kh, hub, cmd)
         if kh != G:
             print(f"KW_KIT_HOST {T}: sealed copy-back put the kit on {kh}, not the gen host {G}", flush=True)
@@ -4381,6 +4401,14 @@ def run_item(spec_path):
                  f"ls -t {q(K)}/run/logs/asap7/*/base/*.log 2>/dev/null | head -1 | xargs -r tail -30")
         _, ptxt = run("place_probe", rem(probe), idempotent=True)
         odb = next((ln for ln in ptxt.splitlines() if ln.endswith("3_place.odb")), "")
+        if not odb:
+            for _alt in cands[1:]:           # WF-1 11-14: the kit is wherever a copy-back put it: look on the other named hosts
+                _, _p2 = run("place_probe_" + _alt, remote_argv(_alt, hub, probe), idempotent=True)
+                _o2 = next((ln for ln in _p2.splitlines() if ln.endswith("3_place.odb")), "")
+                if _o2:
+                    print(f"KW_KIT_HOST {T}: 3_place.odb found on {_alt}, not on {kh} (sealed copy-back record)", flush=True)
+                    kh, ptxt, odb = _alt, _p2, _o2
+                    break
         cells = re.search(r"Number of cells:?\s+(\d+)", ptxt)
         res["cells"] = int(cells.group(1)) if cells else None
         native = re.search(r"(?m)^NATIVE_CELL_COUNT (\{[^\n]+\})$", ptxt)

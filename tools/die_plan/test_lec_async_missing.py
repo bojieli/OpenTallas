@@ -1,6 +1,8 @@
 """KIT-OPS-1 11-13 (COORD): a kit runner with async LEC on (OT_LEC_ASYNC default 1, or lec_async.on / .identity) whose kit
-has lec.py but no lec_async.sh fails fast (exit 13, LEC_ASYNC KIT ERROR) instead of silently running the blocking inline LEC
-after synthesis.  Kits that have lec_async.sh, kits without lec.py and OT_LEC_ASYNC=0 behave as before.
+has lec.py but no lec_async.sh never runs the blocking inline LEC after synthesis.  WF-1 11-14 (COORD/OWNER: LEC is advisory under
+R-MINIMAL; exit 13 killed both TYPE-GUNIT-L1F forms): it no longer fails the build: LEC_ASYNC KIT WARNING, K/lec_preplace.off
+(the in-flow LEC is a no-op), exit 0 and the flow continues.  Kits that have lec_async.sh, kits without lec.py and
+OT_LEC_ASYNC=0 behave as before.
     python3 -m pytest -q tools/die_plan/test_lec_async_missing.py"""
 import ast
 import os
@@ -15,7 +17,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 SH_RUNNERS = ("physical/die_plan/hbm_arch_cores/run_kit_hbm.sh", "physical/die_plan/qwen_kvsys/cores/harden/run_kit_kv.sh",
               "physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py")
-BLOCK = re.compile(r"^LECA=\n.*?\n  exit 13\nfi\n", re.S | re.M)
+BLOCK = re.compile(r'^LECA=\n.*?lec_preplace\.off"\nfi\n', re.S | re.M)
 
 
 def _runner_texts():
@@ -66,25 +68,25 @@ def test_all_five_runners_carry_the_check():
 
 
 @pytest.mark.parametrize("name", NAMES)
-def test_missing_lec_async_fails_fast(tmp_path, name):
+def test_missing_lec_async_warns_and_continues(tmp_path, name):
     p, k = _run(tmp_path, name)
-    assert p.returncode == 13
-    assert "LEC_ASYNC KIT ERROR" in p.stderr and "lec_async.sh is missing" in p.stderr
-    assert "AFTER" not in p.stdout
+    assert p.returncode == 0, p.stderr
+    assert "LEC_ASYNC KIT WARNING" in p.stderr and "lec_async.sh is missing" in p.stderr and "KIT ERROR" not in p.stderr
+    assert "AFTER LECA=" in p.stdout and (k / "lec_preplace.off").exists()
 
 
 @pytest.mark.parametrize("name", NAMES)
 @pytest.mark.parametrize("flag", ["lec_async.on", "lec_async.identity"])
-def test_flag_file_with_async_off_still_fails_fast(tmp_path, name, flag):
-    p, _ = _run(tmp_path, name, env_async="0", flag=flag)
-    assert p.returncode == 13 and "LEC_ASYNC KIT ERROR" in p.stderr
+def test_flag_file_with_async_off_still_warns_and_continues(tmp_path, name, flag):
+    p, k = _run(tmp_path, name, env_async="0", flag=flag)
+    assert p.returncode == 0 and "LEC_ASYNC KIT WARNING" in p.stderr and (k / "lec_preplace.off").exists()
 
 
 @pytest.mark.parametrize("name", NAMES)
 def test_kit_with_lec_async_unchanged(tmp_path, name):
     p, k = _run(tmp_path, name, lec_async=True)
     assert p.returncode == 0, p.stderr
-    assert "AFTER LECA=1" in p.stdout and (k / "started").exists() and "KIT ERROR" not in p.stderr
+    assert "AFTER LECA=1" in p.stdout and (k / "started").exists() and "KIT ERROR" not in p.stderr and "KIT WARNING" not in p.stderr
 
 
 @pytest.mark.parametrize("name", NAMES)
