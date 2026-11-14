@@ -515,3 +515,23 @@ PROCESS:
 - Pilot one type per family before the family launches.
 - The metric is sign-offs per day.
 TOP PRIORITY: content-addressed, self-contained kit snapshots at enqueue (448 KIT_NOT_SELF_CONTAINED + 229 bind hits in 4 days; 50% of failures are tooling before place).
+
+## R-MINIMAL (OWNER 2026-11-13 17:5x: "remove all the blocking gates. just focus on the absolutely needed ones. drop others. visual review is for you to improve the layout, not for you to block sign off. bad visual designs often route out to be bad") — SUPERSEDES R-PROFILE's KEEP/RELAX lists
+The ONLY blocking sign-off gates:
+1. Detailed route completes with DRC 0.
+2. Routed TT setup WNS >= -42 ps (5% of 833); record the achieved period.
+3. Internal reg-to-reg FF hold >= 0 ps.
+4. Functional correctness: the netlist binds (connectivity), and lane latency matches the plan (LATCHECK). The token pass is checked at die level.
+Everything else is ADVISORY (reported, never blocks launch, route or sign-off) or DROPPED:
+- LEC, both pre-place and post-route: advisory/async;
+- antenna;
+- G0/G0C schema rows;
+- kit preflight (R-CAP/reach/core-tap/street);
+- the visual verdict;
+- io_hold_parent receipts;
+- slew/cap/fanout DRV;
+- the die clock gate kit-window contract;
+- no-blind-retry and unchanged_fail;
+- the route-hold and visual-wait states.
+The 400k cell cap is a tool limit, not a gate.
+VISUAL REVIEW is a layout-IMPROVEMENT tool. Bad layouts usually route badly, so use the renders to fix form/plan, never to block.
