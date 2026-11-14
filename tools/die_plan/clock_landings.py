@@ -1718,6 +1718,8 @@ class Landings:
                 # exact-param guard still checks depth, latency and FREG.
                 if hard is not None and "WRITE_CHUNK" in hard and wreg:
                     wreg = dict(wreg, write_chunk=int(hard["WRITE_CHUNK"]))
+                if hard is not None and "READ_CHUNK" in hard and wreg:
+                    wreg = dict(wreg, read_chunk=int(hard["READ_CHUNK"]))
                 # (CLAND-SLEW-1 copies below need no strap: ot_dp_clk_landing_ca carries DSREP too)
                 if wreg and dsrep is not None and dsrep != wreg["dsrep"]:
                     raise LandingError(f"{tn}.{b}: conflicting read-select copy counts in dsrep and wreg")
@@ -1733,7 +1735,7 @@ class Landings:
                 if wreg:
                     if not cat.get("straps"):
                         raise LandingError(f"{tn}.{b}: landing_ring_wreg needs the count-aligned strap form")
-                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 or (hard is not None and "WRITE_CHUNK" in hard) else "") + (", .WRITE_TAIL(1)" if wreg.get("write_tail") else "") + (f", .READ_CHUNK({wreg['read_chunk']})" if wreg.get("read_chunk") else "") + (", .FREG(1))" if wreg["freg"] else ")")
+                    ring_mod = ring_mod[:-1] + f", .WREG(1), .DSREP({wreg['dsrep']})" + (f", .WRITE_CHUNK({wreg.get('write_chunk', 64)})" if wreg.get("write_chunk", 64) != 64 or (hard is not None and "WRITE_CHUNK" in hard) else "") + (", .WRITE_TAIL(1)" if wreg.get("write_tail") else "") + (f", .READ_CHUNK({wreg['read_chunk']})" if wreg.get("read_chunk") or (hard is not None and "READ_CHUNK" in hard) else "") + (", .FREG(1))" if wreg["freg"] else ")")
                     self.reset_placements[tn][b].update(ring_wreg=1, ring_dsrep=wreg["dsrep"], ring_freg=int(wreg["freg"]),
                                                         strap_k_delta=wreg["depth"])
                     if wreg.get("write_chunk", 64) != 64:
