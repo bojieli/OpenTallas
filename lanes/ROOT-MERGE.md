@@ -813,3 +813,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - 2026-11-14 09:38 PST READY claude/fail-s81-1-bksel-1114@178d890488 (FAIL-S81-1 -> ROOT-MERGE-63, cc COORD, DIE-S81-92): dsdv_bk_sel.sv +16 lines, ifndef defaults 0 for OT_BKSEL_RC/RS/RO/RLN (as built); fixes GEN_LINT undefined macro on bk_sel__t2; file sha256 91909f7b9d9c = the live B3x2b overlay on 5 hosts; off origin/main 43a7f9d0a3; yosys read OK. DIE-S81-92: use this file for the B3z overlay.
 - READY claude/admit-tune-10-1114@36f73805d1 (ADMIT-TUNE-1): install_host_guard earlyoom args
 - READY claude/admit-tune-11-1114@203e501e38 (ADMIT-TUNE-1): SIMPLE_PEAK + test_ot_heavy_simple_peak.py
+- READY claude/admit-tune-12-1114@5fe54a9830 (ADMIT-TUNE-1): ot-run load gate default 0 + probe signature fix
