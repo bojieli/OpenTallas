@@ -1217,7 +1217,7 @@ def peak_reserve(units, hist, frac, pct=0.9, min_n=3):
     return frac * sum(max(0.0, expected_peak(c, r, hist, pct, min_n) - n) for _, r, c, n in units)
 
 
-PLAN_DEFAULT_RE = re.compile(r"(?i)(strict[-_ ]?bind|bind[-_]?strict|die[-_]?proto|(?:^|[/_ -])g0(?:[/_. -]|$)|chain[A-Za-z]*\d*\.sh|kit[-_]gen[-_]proof)")
+PLAN_DEFAULT_RE = re.compile(r"(?i)(strict[-_ ]?bind|bind[-_]?strict|die[-_]?proto|(?:^|[/_ -])g0(?:[/_. -]|$)|chain[A-Za-z]*\d*\.sh|kit[-_]gen[-_]proof|late[-_]?eco|(?:^|[/_ -])eco[A-Za-z0-9_]*\.sh|eco_loop\.py|eco\b.*--from[ =]grt|--from[ =]grt\b.*eco)")   # LATEECO_1114: a late ECO is one step from sign-off
 PLAN_FILE = f"{D}/prio_plan.re"
 
 

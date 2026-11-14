@@ -90,6 +90,7 @@ class PlanPrio(unittest.TestCase):
         self.assertTrue(R.plan_like(["x"], "", ["OT_HEAVY_PRIO=plan"]))
         self.assertTrue(R.plan_like(["x"], "", ["OT_HEAVY_PRIO=die"]))
         self.assertFalse(R.plan_like(["bash", "run_kit.sh", "route"], "/srv/x/tl-colh9"))
+        self.assertTrue(R.plan_like(["bash", "/x/eco_w.sh"]) and R.plan_like(["python3", "eco_loop.py", "run"]) and R.plan_like(["t", "late_eco", "--from", "grt"]))   # LATEECO_1114
 
     def gate(self, avail, argv, running=0, waiting=(), mem=120, cls="chainR92.sh", env=None):
         import contextlib, io
