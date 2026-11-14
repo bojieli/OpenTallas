@@ -122,123 +122,29 @@ stall_off() { [ "${OT_GRT_STALL_RESUME:-1}" = 0 ] || grep -q '^export OT_GRT_STA
 # KW-FIX-44 11-10 GRT-INCR-CONGESTED + GRT time cap (COORD rulings 11-10 (3)).  Two stops of the 5_1_grt stage, judged on
 # THIS run's 5_1_grt.tmp.log (mtime >= wrapper start), measured from the end of the full global route (first GRT-0303
 # 'Global routing runtime' line); the full route itself is never cut.
-#  (a) congested: the full route ended with congestion (GRT-0115, only possible under -allow_congestion = KW-FIX-8
-#      opt-in) and its final total overflow is >= OT_GRT_CONGESTED_FAIL_MIN (default 1000: FLOW-TIME-1 measured
-#      2,594 kit logs, no form at >= 1000 overflow at iteration 20 later reached overflow 0, DRT or sign-off).  Below
-#      that the KW-FIX-8 rule stands: DRT decides.  t53__clb66fa5cb a7: full route 13h46 at overflow 83,032, then the
-#      incremental reroute after the leaf-repeat pass was silent 6h02 until the hub watchdog.  Stops the stage at once
-#      and prints OT_GRT_CONGESTED_FAIL (autopilot: STRUCTURAL grt-overflow -> wave class ROUTING).
-#      'export OT_GRT_CONGESTED_FAIL = 0' in config.mk (or env) opts out.
+#  (a) REMOVED 11-14 (OWNER limit-removal): no overflow-based stop remains; the full route always runs all its iterations.
 #  (b) time cap: everything after the full route (repair_design, incremental reroutes, hold repair) may take
-#      OT_GRT_POST_MAX_S (default 21600 = 6 h).  t68 a5: full route 4h05, then post-GRT repair_design ran ~13 h (14,000
+#      OT_GRT_POST_MAX_S (default 43200 = 12 h, OWNER 11-14: the only GRT stop).  t68 a5: full route 4h05, then post-GRT repair_design ran ~13 h (14,000
 #      of 129,591 nets) before an outside kill; slw_fw_v1 cl592e3d37 a16: incremental route silent 6h06 at overflow 0
 #      (neither matched the GRT-STALL rule below: last line was not the bare -end_incremental command).  The hold
 #      guard alone caps hold repair at 3 h (hold_guard_grt.tcl).  Stops the stage and prints OT_GRT_TIMECAP with the
 #      last hold/setup slack the log carries (autopilot: STRUCTURAL grt-timecap -> wave class TIMING).
 #      'export OT_GRT_POST_MAX_S = 0' in config.mk (or env) opts out.
-# Either stop: no fresh-process re-run, the stage's rc is replaced by 21.
+# The stop: no fresh-process re-run, the stage's rc is replaced by 21.
 cfg_num() { local v; v=$(sed -n "s/^export $1[[:space:]]*=[[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p" "$W/config.mk" 2>/dev/null | tail -1)
   printf '%s' "${v:-$2}"; }
-cong_off() { [ "${OT_GRT_CONGESTED_FAIL:-1}" = 0 ] || grep -Eq '^export OT_GRT_CONGESTED_FAIL[[:space:]]*=[[:space:]]*0[[:space:]]*$' "$W/config.mk" 2>/dev/null; }
-CONG_MIN=${OT_GRT_CONGESTED_FAIL_MIN:-$(cfg_num OT_GRT_CONGESTED_FAIL_MIN 1000)}
-POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 21600)}
-grt_overflow() { awk '/GRT-0096\] Final congestion report/{f=1} f && /^Total[[:space:]]/{v=$NF} END{print (v==""?"":v)}' "$1"; }
+POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 43200)}
 grt_slack() {   # last slack figures the log carries (hold guard chunks / start, repair_timing tables); never a new STA
   local h s
   h=$(grep -oE 'OT_HOLD_GUARD_GRT (chunk [0-9]+|start): hold ws -?[0-9.]+' "$1" | tail -1 | sed 's/.*hold ws //')
   s=$(grep -oE '(setup|Setup)[^|]*WNS[^0-9-]*-?[0-9.]+' "$1" | tail -1 | grep -oE -- '-?[0-9.]+$')
   printf 'hold_ws_ps=%s setup_wns=%s' "${h:-unmeasured}" "${s:-unmeasured}"; }
-# KW-FIX-44 11-10 GRT-EARLY (COORD, owner: "fail fast is very important because many of the times you iterate on badly
-# congested stuff for 12 hours or more").  (c) early: INSIDE the full global route.  The flow GRT writes congestion-<N>.rpt
-# every 5 extra iterations (-congestion_report_iter_step 5); a report of THIS run whose summed 'congestion:' overflow meets
-# the rule stops the stage there (FLOW-TIME-1 grt_early_stop rule 15:10000,20:1000: across 2,594 kit logs no form above it
-# later reached overflow 0, DRT or sign-off).  t53__clb66fa5cb a7: congestion-15 = 23,535 at 01:13 -> stop then, instead
-# of the 13h46 full route (final 83,032) plus 6h02 of incremental reroute.  -allow_congestion forms are judged too (the
-# 1000 floor above already bounds KW-FIX-8).  The class line carries the H / V split and the densest 20-um tile (a
-# mid-route report has no per-layer split; the GRT-0096 per-layer table exists only at the end of the route) and its top
-# instance.  OT_GRT_EARLY_STOP = RULE (env or config.mk export) overrides the rule, 0 / off opts out.
-early_rule() { local v=${OT_GRT_EARLY_STOP:-}
-  [ -n "$v" ] || v=$(sed -n 's/^export OT_GRT_EARLY_STOP[[:space:]]*=[[:space:]]*\([0-9a-z:,]*\)[[:space:]]*$/\1/p' "$W/config.mk" 2>/dev/null | tail -1)
-  case "${v:-15:10000,20:1000}" in 0|off) ;; *) printf '%s' "${v:-15:10000,20:1000}";; esac; }
-EARLY_RULE=$(early_rule)
-early_check() {   # judge each congestion-<N>.rpt of this run once, when it is complete (20 s old); sets gstop=congested
-  local Rd f n
-  [ -n "$EARLY_RULE" ] || return 1
-  Rd=$(ls -d "$W"/run/reports/asap7/*/base 2>/dev/null | head -1); [ -n "$Rd" ] || return 1
-  for f in "$Rd"/congestion-[0-9]*.rpt; do
-    [ -f "$f" ] || continue
-    n=${f##*/congestion-}; n=${n%.rpt}
-    case " $early_done " in *" $n "*) continue;; esac
-    [ "$(stat -c %Y "$f")" -ge "$T0" ] || { early_done="$early_done $n"; continue; }
-    [ $(( $(date +%s) - $(stat -c %Y "$f") )) -ge "${OT_GRT_EARLY_SETTLE_S:-20}" ] || continue
-    early_done="$early_done $n"
-    line=$(python3 -I - "$f" "$n" "$EARLY_RULE" <<'OT_GRT_EARLY_PY'
-import collections, re, sys, time
-f, n, rule = sys.argv[1], int(sys.argv[2]), sys.argv[3]
-thr = {}
-for part in rule.split(","):
-    m = re.fullmatch(r"\s*(\d+)\s*:\s*(\d+)\s*", part)
-    if not m:
-        sys.exit(0)                                   # a malformed rule never stops a run
-    thr[int(m[1])] = int(m[2])
-if n not in thr:
-    sys.exit(0)
-tot, hv, tiles, insts = 0, collections.Counter(), collections.Counter(), {}
-kind = srcs = None
-TILE = 20.0
-for ln in open(f, errors="replace"):
-    if ln.startswith("violation type:"):
-        kind = "H" if "Horizontal" in ln else "V" if "Vertical" in ln else "?"
-    elif ln.lstrip().startswith("srcs:"):
-        srcs = ln.split()[1:]
-    else:
-        m = re.search(r"congestion:(\d+)", ln)
-        if m:
-            c = int(m[1]); tot += c; hv[kind] += c; cur = c
-            continue
-        m = re.search(r"bbox = \(([-\d.]+), ([-\d.]+)\) - \(([-\d.]+), ([-\d.]+)\)", ln)
-        if m and kind:
-            x, y = (float(m[1]) + float(m[3])) / 2, (float(m[2]) + float(m[4])) / 2
-            t = (int(x // TILE), int(y // TILE)); tiles[t] += cur
-            for s in srcs or []:
-                h = re.sub(r"^net:", "", s).split("/")[0]
-                insts.setdefault(t, collections.Counter())[h] += 1
-if tot < thr[n]:
-    sys.exit(0)
-hot = ""
-if tiles:
-    (tx, ty), tc = tiles.most_common(1)[0]
-    top = insts.get((tx, ty), collections.Counter()).most_common(1)
-    hot = (f" hotspot ({tx * TILE:g},{ty * TILE:g})-({(tx + 1) * TILE:g},{(ty + 1) * TILE:g}) overflow {tc} of {tot}"
-           + (f" top {top[0][0]}" if top else ""))
-print(f"OT_GRT_CONGESTED_FAIL stage=grt early: congestion-{n} overflow {tot} >= {thr[n]} (rule {rule}) "
-      f"H {hv['H']} / V {hv['V']}{hot}; stopping inside the full global route (KW-FIX-44 GRT-EARLY) "
-      + time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()))
-OT_GRT_EARLY_PY
-)
-    if [ -n "$line" ]; then echo "$line"; gstop=congested; return 0; fi
-  done
-  return 1
-}
+# GRT-EARLY (inside-route overflow stop, rule 15:10000,20:1000) and GRT-INCR-CONGESTED (stop on a congested end of the full route) REMOVED 11-14, OWNER: remove conservative limits; GRT runs its full iterations.
 gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop and stops the stage
-  local Tl=$1 pid=$2 now ov last
+  local Tl=$1 pid=$2 now last
   [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
-  if [ -z "$tpost" ] && early_check; then
-    kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null
-    return 0
-  fi
   if [ -z "$tpost" ]; then grep -q 'GRT-0303\]' "$Tl" && tpost=$(date +%s) || return 1; fi
   now=$(date +%s); last=$(grep -v '^[[:space:]]*$' "$Tl" | tail -1 | cut -c1-160)
-  if [ "$cong_seen" = 0 ]; then
-    cong_seen=1
-    if ! cong_off && grep -q 'GRT-0115\]' "$Tl"; then
-      ov=$(grt_overflow "$Tl")
-      if [ -n "$ov" ] && [ "$ov" -ge "$CONG_MIN" ]; then
-        echo "OT_GRT_CONGESTED_FAIL stage=grt full global route ended with congestion: total overflow $ov >= $CONG_MIN; stopping before repair/incremental reroute (KW-FIX-44 GRT-INCR-CONGESTED) $(date -u '+%F %T')"
-        gstop=congested
-      fi
-    fi
-  fi
   if [ -z "$gstop" ] && [ "$POST_MAX" -gt 0 ] && [ $((now - tpost)) -ge "$POST_MAX" ]; then
     echo "OT_GRT_TIMECAP stage=grt post-route repair over $((now - tpost)) s (cap $POST_MAX s) $(grt_slack "$Tl") last='$last' (KW-FIX-44) $(date -u '+%F %T')"
     gstop=timecap
@@ -251,8 +157,7 @@ gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop 
 # that keeps writing its log: DISK-1111 found six epyc4 GRTs 23-49 h in "extra iterations to remove congestion" (3-15 rounds of
 # 30, GRT-0273 Disabled NDR), DRT at pass 27, hold repair that hit the buffer cap and then routed anyway.  Every poll
 # /work/failfast_rules.py (kit file, copied by core_flow.stage_grt183; rules and defaults in its docstring) judges THIS run's
-# logs and prints one class line: (a) OT_GRT_NO_PROGRESS (after 60 extra iterations total overflow above OT_FF_GRT_MAX 1000 and
-# fell < 10 % over the last round), (b) OT_DRT_NO_PROGRESS (from iteration 20: > 10000 violations, < 5 % per iteration over the
+# logs and prints one class line: (a) [OT_GRT_NO_PROGRESS REMOVED 11-14, OWNER], (b) OT_DRT_NO_PROGRESS (from iteration 20: > 10000 violations, < 5 % per iteration over the
 # last 3), (c) OT_HOLD_STRUCTURAL (buffer cap hit twice, or OT_HOLD_STALL NEEDS_RTL).  The stage stops, rc 21, no re-run; the
 # autopilot classifies the line (STRUCTURAL grt-no-progress / drt-no-progress -> wave ROUTING, hold-structural -> wave TIMING).
 # Opt out: OT_FAILFAST=0 (env or 'export OT_FAILFAST = 0' in config.mk), or a single rule: OT_FF_GRT / OT_FF_DRT / OT_FF_HOLD = 0.
@@ -263,13 +168,13 @@ ff_check() {   # sets gstop, prints the class line
   line=$(timeout 120 python3 -I "$FF" judge "$W" "$T0" "$W/run/failfast_state.json" 2>/dev/null | head -n 1)
   [ -n "$line" ] || return 1
   echo "$line"
-  case "$line" in OT_GRT_NO_PROGRESS*) gstop=grt_no_progress;; OT_DRT_NO_PROGRESS*) gstop=drt_no_progress;; *) gstop=hold_structural;; esac
+  case "$line" in OT_DRT_NO_PROGRESS*) gstop=drt_no_progress;; *) gstop=hold_structural;; esac
   return 0
 }
 watch_run() {
-  stall=0; gstop=""; tpost=""; cong_seen=0; early_done=""
+  stall=0; gstop=""; tpost=""
   rm -f "$W/run/failfast_state.json" 2>/dev/null
-  if stall_off && cong_off && [ "$POST_MAX" -le 0 ] && [ -z "$EARLY_RULE" ] && [ ! -f "$FF" ]; then "$@"; return $?; fi
+  if stall_off && [ "$POST_MAX" -le 0 ] && [ ! -f "$FF" ]; then "$@"; return $?; fi
   if command -v setsid >/dev/null; then setsid "$@" & else "$@" & fi
   local pid=$! Rw Tl age last
   trap 'kill -TERM -- -$pid 2>/dev/null' TERM INT

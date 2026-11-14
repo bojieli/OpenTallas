@@ -32,31 +32,6 @@ def phase(log_rounds, total, then="sleep 3"):
     return s + then + "\n"
 
 
-def test_flat_grt_is_stopped_with_the_class_line(tmp_path):
-    k, r, l, s = with_rules(tmp_path)
-    t = time.time()
-    p = run(k, s, fake(tmp_path, phase([30], 9000) + phase([30, 30], 8800, then="sleep 60")), "grt", env=FAST)
-    assert p.returncode == 21, p.stdout + p.stderr
-    assert time.time() - t < 45
-    line = next(x for x in p.stdout.splitlines() if x.startswith("OT_GRT_NO_PROGRESS"))
-    assert "class=GRT_NO_PROGRESS" in line and "M5=8800" in line and "after 60 extra iterations in 2 rounds" in line
-    assert "OT_GRT_STOP grt_no_progress: stage rc" in p.stdout and len(calls(k)) == 1          # no fresh-process re-run
-
-
-def test_converging_grt_runs_on(tmp_path):
-    k, r, l, s = with_rules(tmp_path)
-    body = phase([30], 60000) + phase([30, 30], 20000) + phase([30, 30, 30], 5000) + phase([30, 30, 30, 30], 400) + \
-        phase([30, 30, 30, 30, 30], 0, then="sleep 3; exit 0")
-    p = run(k, s, fake(tmp_path, body), "grt", env=FAST)
-    assert p.returncode == 0 and "NO_PROGRESS" not in p.stdout and "OT_GRT_STOP" not in p.stdout, p.stdout + p.stderr
-
-
-def test_high_flat_grt_below_two_rounds_runs_on(tmp_path):
-    k, r, l, s = with_rules(tmp_path)
-    p = run(k, s, fake(tmp_path, phase([30], 9000, then="sleep 4; exit 0")), "grt", env=FAST)
-    assert p.returncode == 0 and "OT_GRT_STOP" not in p.stdout
-
-
 def test_drt_no_progress(tmp_path):
     k, r, l, s = with_rules(tmp_path)
     lines = "".join("[INFO DRT-0195] Start %dth optimization iteration.\n[INFO DRT-0199]   Number of violations = 40000.\n" % i

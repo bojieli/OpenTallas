@@ -60,51 +60,6 @@ def entry(cum, total, n=5):
     return {"cum": cum, "n": n, "total": total, "H": total // 2, "V": total - total // 2, "layers": {}, "mtime": float(cum)}
 
 
-def test_grt_stops_when_high_and_flat_after_two_rounds():
-    ser = [entry(30, 9000, 30), entry(60, 8800, 30)]                   # 2.2 % over the last round, 8,800 > 1,000
-    d = R.grt_decide(ser, 60, C)
-    assert d and d["rule"] == "GRT_NO_PROGRESS" and d["fall_pct"] == 2.2
-    line = R.grt_line(dict(d, last=dict(ser[-1], layers={"M5": 5000, "M6": 3800})), rounds=2, ndr=4, stamp=False)
-    assert line.startswith("OT_GRT_NO_PROGRESS stage=grt class=GRT_NO_PROGRESS")
-    assert "M5=5000 M6=3800" in line and "H 4400 / V 4400" in line and "after 60 extra iterations in 2 rounds" in line
-
-
-def test_grt_rising_overflow_stops():
-    assert R.grt_decide([entry(30, 5000, 30), entry(65, 8000, 5)], 65, C)
-
-
-def test_grt_converging_run_is_not_stopped():
-    """overflow falling > 10 % per round and ending at 0: no step of the run is stopped"""
-    cum, vals = 0, [60000, 40000, 30000, 25000, 20000, 15000, 9000, 6000, 3000, 1200, 400, 0]
-    ser = []
-    for v in vals:
-        cum += 30
-        ser.append(entry(cum, v, 30))
-        assert R.grt_decide(ser, cum, C) is None, (cum, v)
-
-
-def test_grt_slow_but_10_percent_is_not_stopped():
-    assert R.grt_decide([entry(30, 10000, 30), entry(60, 8900, 30)], 60, C) is None               # 11 %
-    assert R.grt_decide([entry(30, 10000, 30), entry(60, 9000, 30)], 60, C) is None               # exactly 10 %: keep going
-    assert R.grt_decide([entry(30, 10000, 30), entry(60, 9100, 30)], 60, C)                       # 9 %: stop
-
-
-def test_grt_not_before_two_rounds_nor_at_or_below_the_ceiling():
-    assert R.grt_decide([entry(10, 9000), entry(40, 9000)], 40, C) is None                         # 40 < 60 iterations
-    assert R.grt_decide([entry(30, 900, 30), entry(60, 900, 30)], 60, C) is None                   # 900 <= 1,000: DRT decides
-    assert R.grt_decide([entry(60, 9000, 30)], 60, C) is None                                      # no history one round back
-    assert R.grt_decide([], 60, C) is None
-    assert R.grt_decide([entry(30, 0, 30), entry(60, 0, 30)], 60, C) is None
-
-
-def test_grt_config_keys():
-    flat = [entry(30, 9000, 30), entry(60, 9000, 30)]
-    assert R.grt_decide(flat, 60, R.config_values({"OT_FF_GRT": "0"}))is None
-    assert R.grt_decide(flat, 60, R.config_values({"OT_FF_GRT_MAX": "20000"})) is None
-    assert R.grt_decide(flat, 60, R.config_values({"OT_FF_GRT_MIN_DROP_PCT": "0"})) is None
-    assert R.grt_decide(flat, 59, R.config_values({"OT_FF_GRT_ROUNDS": "3"})) is None
-
-
 def write_run(k, log, reports, t=None):
     lg = k / "run/logs/asap7/t/base"
     rp = k / "run/reports/asap7/t/base"
@@ -116,37 +71,6 @@ def write_run(k, log, reports, t=None):
         if t:
             os.utime(rp / ("congestion-%d.rpt" % n), (t, t))
     return lg, rp
-
-
-def test_judge_records_history_and_stops_a_flat_run(tmp_path):
-    k, st = tmp_path / "w", tmp_path / "state.json"
-    t0 = time.time() - 1000
-    write_run(k, log_iters(30), {n: rep(9000, layer="M5") for n in (5, 10, 15, 20, 25, 30)}, t0 + 100)
-    assert R.judge(str(k), t0, str(st), env={}, settle_s=0) == []                  # one round: history only
-    write_run(k, log_iters(30, 30), {n: rep(8700, layer="M5") for n in (5, 10, 15, 20, 25, 30)}, t0 + 500)
-    out = R.judge(str(k), t0, str(st), env={}, settle_s=0)
-    assert len(out) == 1 and out[0].startswith("OT_GRT_NO_PROGRESS stage=grt") and "M5=8700" in out[0]
-
-
-def test_judge_converging_run_never_stops(tmp_path):
-    k, st = tmp_path / "w", tmp_path / "state.json"
-    t0 = time.time() - 10000
-    rounds = [30]
-    for r, v in enumerate([60000, 40000, 25000, 12000, 5000, 1500, 400, 0]):
-        write_run(k, log_iters(*rounds), {n: rep(v) for n in (5, 10, 15, 20, 25, 30)} if v else {n: "" for n in (5, 10, 15, 20, 25, 30)},
-                  t0 + 100 + 500 * r)
-        assert R.judge(str(k), t0, str(st), env={}, settle_s=0) == [], (r, v)
-        rounds.append(30)
-
-
-def test_judge_ignores_reports_of_an_earlier_run_and_opt_out(tmp_path):
-    k, st = tmp_path / "w", tmp_path / "state.json"
-    now = time.time()
-    write_run(k, log_iters(30, 30), {n: rep(9000) for n in (5, 10, 15, 20, 25, 30)}, now - 5000)       # before t0
-    assert R.judge(str(k), now - 100, str(st), env={}, settle_s=0) == []
-    write_run(k, log_iters(30), {n: rep(9000) for n in (5, 10, 15, 20, 25, 30)}, now - 50)
-    write_run(k, log_iters(30, 30), {n: rep(9000) for n in (5, 10, 15, 20, 25, 30)}, now - 10)
-    assert R.judge(str(k), now - 100, str(st), env={"OT_FAILFAST": "0"}, settle_s=0) == []
 
 
 # ---------------------------------------------------------------------------------------------------- (b) DRT
@@ -234,7 +158,6 @@ def test_autopilot_and_wave_classes():
     grt = "OT_GRT_NO_PROGRESS stage=grt class=GRT_NO_PROGRESS: after 60 extra iterations total overflow 8700"
     drt_l = "OT_DRT_NO_PROGRESS stage=route class=DRT_NO_PROGRESS: iteration 20 has 29800 violations"
     hold = "OT_HOLD_STRUCTURAL stage=cts failfast class=HOLD_STRUCTURAL: hold repair hit the buffer cap (RSZ-0060) 2 times (limit 2)"
-    assert AP.classify({"grt_no_progress": grt}, {"exit": 21}) == ("STRUCTURAL", "grt-no-progress", grt)
     assert AP.classify({"drt_no_progress": drt_l}, {"exit": 21}) == ("STRUCTURAL", "drt-no-progress", drt_l)
     assert AP.classify({"hold_structural": hold}, {"exit": 21})[1] == "hold-structural"
     src = AP.PROBE_CLASSIFY
@@ -242,10 +165,9 @@ def test_autopilot_and_wave_classes():
     j = src.index("}", src.index('"orfs_error"', i)) + 1
     pat = eval(src[i + len("pat = "):j], {})
     import re
-    assert re.search(pat["grt_no_progress"], "x\n" + grt + "\n").group(0) == grt
     assert re.search(pat["drt_no_progress"], "x\n" + drt_l + "\n").group(0) == drt_l
     assert re.search(pat["hold_structural"], "x\n" + hold + "\n").group(0) == hold
-    for kind, why, cls in (("grt-no-progress", grt, "ROUTING"), ("drt-no-progress", drt_l, "ROUTING"), ("hold-structural", hold, "TIMING")):
+    for kind, why, cls in (("drt-no-progress", drt_l, "ROUTING"), ("hold-structural", hold, "TIMING")):
         stage, st, c, msg = KW.queue_class({"status": "DONE-STRUCTURAL", "kind": kind, "reasons": why, "signoff": None})
         assert (st, c) == ("FAIL", cls), (kind, c)
         assert why[:40] in msg and msg.startswith(kind)
@@ -285,3 +207,12 @@ def test_payload_runs_standalone(tmp_path):
     r = subprocess.run([sys.executable, "-I", "-c", p], capture_output=True, text=True, timeout=120, cwd=tmp_path)
     assert r.returncode == 0, r.stderr
     assert '"rows"' in r.stdout
+
+
+def test_grt_is_never_stopped_on_overflow(tmp_path):
+    """OWNER 11-14: no GRT overflow stop; judge never prints a GRT line, whatever the reports say"""
+    k, st = tmp_path / "w", tmp_path / "state.json"
+    t0 = time.time() - 1000
+    for rounds in ([30], [30, 30], [30, 30, 30]):
+        write_run(k, log_iters(*rounds), {n: rep(90000) for n in (5, 10, 15, 20, 25, 30)}, t0 + 100)
+        assert R.judge(str(k), t0, str(st), env={}, settle_s=0) == []

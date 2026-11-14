@@ -32,7 +32,7 @@ def test_probe_patterns_catch_both_lines():
 
 
 def test_classify_kinds():
-    assert AP.classify({"congestion": CONG}, {"exit": 21}) == ("STRUCTURAL", "grt-overflow", CONG)
+    assert AP.classify({"congestion": CONG}, {"exit": 21}) == ("FAIL", "grt-overflow", CONG)
     assert AP.classify({"grt_timecap": CAP}, {"exit": 21}) == ("STRUCTURAL", "grt-timecap", CAP)
 
 
