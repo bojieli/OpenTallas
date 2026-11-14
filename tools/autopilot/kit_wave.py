@@ -1892,6 +1892,8 @@ GPL_PROBE_AWK = (r"""awk '/GPL-1010/{print "KW_GPL " l; print "KW_GPL " $0; l=""
 
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
+    # WF-1 11-14: a chosen child view that is missing everywhere is infrastructure (sync / re-export), never a design verdict
+    ("INFRA", None, r"INFRA-VIEW-MISSING", "infra (INFRA-VIEW-MISSING: the die-owner / counted child view is not on any host)"),
     # KIT-FIX-F 11-13 (option kit_snap): first, because the reason quotes input paths whose words later rules key on
     # (outline, blocked, ...).  A named input that no die host holds is FLOW (never the INFRA auto-retry loop).
     ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
@@ -2750,6 +2752,38 @@ def prov_tb_last(txt):
     return tail[-1].strip()[:300] if tail else ""
 
 
+# WF-1 11-14 (COORD class fix: S81 lepe DRT-0073 on an old view, KV pcf_h stale view): when the view of the highest-priority candidate of a
+# child module is missing on the gen host path (its files did not arrive from the candidate host), prov_view.py silently fell through
+# to the next candidate / the plan-contract abstract.  Now: (1) the missing files are synced from any other fleet host that has them
+# (same absolute path), (2) a still-missing view of a die-owner / counted source (the pick that was meant) fails the stage as
+# INFRA-VIEW-MISSING (own resubmit, never the stale view), (3) every such miss logs one VIEW-FALLBACK line naming item, module, missing
+# path and what would have been chosen (sha of the next candidate lef, or the plan-contract abstract).
+def view_priority_candidate(c):
+    """a source the die owner / counter chose on purpose: its absence must not be papered over"""
+    return prov_counted(c) or str(c.get("job") or "").startswith(("die-config", "PRIVATE"))
+
+
+def view_sync_missing(errors, dst, hosts, run_rsync):
+    """try each failed '<host>:<abs path>' (or local abs path) on the other hosts; run_rsync(src, dstdir) -> rc.  -> (still missing, synced)"""
+    left, synced = [], []
+    for e in errors:
+        path = e.split(" rc=")[0]
+        abs_path = path.split(":", 1)[1] if ":" in path and not path.startswith("/") else path
+        ok = False
+        for h in hosts:
+            if run_rsync(f"{h}:{abs_path}", dst) == 0:
+                synced.append(f"{h}:{abs_path}")
+                ok = True
+                break
+        if not ok:
+            left.append(e)
+    return left, synced
+
+
+def view_fallback_line(item, module, missing, chosen):
+    return f"VIEW-FALLBACK {item} {module}: missing {', '.join(missing)[:300]}; chosen {chosen}"
+
+
 def prov_stage(sp, run, remote, fail, out, rtl=""):
     """run_item stage: stage prov_view.py + routed candidate files on the gen host, build the provisional views and the
     overlay plan -> (overlay plan path, {module: source}) or (None, fail rc)"""
@@ -2804,8 +2838,29 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
                         fetch_errors.append(f"{srcf} rc={r_.returncode}")
                     staged["source_" + key] = c[key]
                     staged[key] = name
+            if fetch_errors and i == 0:        # WF-1: the priority candidate lacks files: sync them from any other host that has them
+                _others = [h for h in dict.fromkeys(list(WJ.FLEET) + list(sp.get("hosts") or [])) if h not in (c["host"], "localhost")]
+                if hub in _others:
+                    _others.remove(hub)
+                fetch_errors, _syn = view_sync_missing(
+                    fetch_errors, str(dst) + "/", _others,
+                    lambda s, d_: subprocess.run(["rsync", "-a", "-e", SSH, s, d_], capture_output=True, timeout=900).returncode)
+                if _syn:
+                    print(f"KW_VIEW_SYNC {T} {m}: synced from another host: {' '.join(_syn)[:300]}", flush=True)
             if fetch_errors:
                 staged["fetch_errors"] = fetch_errors
+                if i == 0:
+                    nxt = next((j for j in range(1, len(cands)) if (relay / m / f"c{j}" / f"{m}.lef").exists()), None)
+                    chosen = ("plan-contract abstract" if nxt is None else
+                              f"candidate c{nxt} lef sha " + hashlib.sha256((relay / m / f"c{nxt}" / f"{m}.lef").read_bytes()).hexdigest()[:12])
+                    line = view_fallback_line(T, m, fetch_errors, chosen)
+                    print(line, flush=True)
+                    out_fb = out / "view_fallback.txt"
+                    out_fb.write_text((out_fb.read_text() if out_fb.exists() else "") + line + "\n")
+                    if view_priority_candidate(c):
+                        (dst / "meta.json").write_text(json.dumps(staged))
+                        return None, fail("prov_views", f"INFRA-VIEW-MISSING: {line}\nthe chosen source of {m} is missing on every host; "
+                                                        f"not falling back to a stale view")
             (dst / "meta.json").write_text(json.dumps(staged))
             fetched += 1
     if fetched:
@@ -7355,6 +7410,11 @@ def collect(AP, cfg, st, notices):
             except OSError:
                 pass
             res = {"verdict": "FAIL", "stage": "unit", "tail": ut[-3000:] or "unit ended without result.json"}
+        try:                                             # WF-1 11-14: VIEW-FALLBACK lines of the attempt into the wave log
+            for _vl in (jd / "view_fallback.txt").read_text().splitlines():
+                AP.log(f"KIT-WAVE {rec['die']} {_vl}")
+        except OSError:
+            pass
         rec["updated"] = time.time()
         rec["stage"] = res.get("stage")
         rec["evidence"] = res.get("evidence", "")
