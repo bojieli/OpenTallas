@@ -34,7 +34,7 @@ while [ $# -gt 0 ]; do
 done
 [ -n "$MEM" ] && [ $# -gt 0 ] || { echo "usage: ot-heavy --mem <GB> -- <command...>" >&2; exit 2; }
 HEADROOM_GB=32
-[ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf
+[ -f "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}" ] && . "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}"
 D=/var/tmp/ot-heavy; mkdir -p $D 2>/dev/null; chmod 1777 $D 2>/dev/null
 UNIT="oth-$(id -un)-$$-$(date +%s)"
 waited=0; T0=$(date +%s)
@@ -43,7 +43,7 @@ LASTRES=""
 # admission classifier for both priority and hard protection.
 if /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" || /usr/local/bin/ot-protect-die --is-die -- "$@"; then export OT_HEAVY_PRIO=die; fi
 while :; do
-  [ -f /etc/ot-heavy.conf ] && . /etc/ot-heavy.conf   # v5: every attempt, so a headroom change reaches queued waiters
+  [ -f "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}" ] && . "${OT_HEAVY_CONF:-/etc/ot-heavy.conf}"   # v5: every attempt, so a headroom change reaches queued waiters
   exec 8>>"$D/admit.lock"; flock 8
   # v8: the gate decides (class size of the request, charge of every running unit, the 25 % rule, the real floor)
   GATE=$(timeout 30 /usr/local/bin/ot-heavy-reconcile --gate "$MEM" -- "$@" 2>/dev/null)

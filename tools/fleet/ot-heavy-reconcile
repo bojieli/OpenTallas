@@ -874,7 +874,7 @@ def read_units():
 
 YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
 try:   # YOUNG_S_1114 ADMIT-TUNE-1: fresh-reservation window from /etc/ot-heavy.conf YOUNG_S (default 300)
-    YOUNG_S = int(re.search(r"^YOUNG_S=(\d+)", open("/etc/ot-heavy.conf").read(), re.M)[1])
+    YOUNG_S = int(re.search(r"^YOUNG_S=(\d+)", open(os.environ.get("OT_HEAVY_CONF", "/etc/ot-heavy.conf")).read(), re.M)[1])
 except Exception:
     pass
 DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
@@ -894,7 +894,7 @@ def conf(key):
     v = os.environ.get(key)
     if v is None:
         sign = "-?" if key == "INV_PAST_PEAK_FACTOR" else ""
-        m = re.search(rf"^{key}=({sign}[0-9.]+)", rd("/etc/ot-heavy.conf"), re.M)
+        m = re.search(rf"^{key}=({sign}[0-9.]+)", rd(os.environ.get("OT_HEAVY_CONF", "/etc/ot-heavy.conf")), re.M)
         v = m[1] if m else None
     try:
         return float(v) if v is not None else DEFAULTS[key]
@@ -1268,7 +1268,7 @@ def die_waiter_cpu_blocked(environ, load1, ncpu, factor):
 def waiter_load_cap_factor(environ):
     """ot-heavy sources /etc after inheriting its environment; invalid syntax is unknown."""
     try:
-        text = open("/etc/ot-heavy.conf").read()
+        text = open(os.environ.get("OT_HEAVY_CONF", "/etc/ot-heavy.conf")).read()
     except FileNotFoundError:
         text = ""
     except OSError:

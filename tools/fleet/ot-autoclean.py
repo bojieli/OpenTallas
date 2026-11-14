@@ -1310,6 +1310,30 @@ def never_touch(p):
     return None
 
 
+def git_tree_of(p):
+    """GITSAFE_1114 (AUTOCLEAN-7 wrote ARCHIVED.json into a tracked file of intel2's ~/OpenTallas checkout, 11-14 05:39 PST): the nearest
+    directory at or above p (path and realpath) that has a .git entry, else None"""
+    for q in {p, os.path.realpath(p)}:
+        d = q
+        while d and d != "/":
+            if os.path.exists(os.path.join(d, ".git")):
+                return d
+            d = os.path.dirname(d)
+    return None
+
+
+def write_refused(unit):
+    """why autoclean must not write a marker file (ARCHIVED.json / STUBBED.json) into this unit, or None: a never-touch tree
+    (~/OpenTallas, ~/coord, ...) or anywhere inside a git work tree"""
+    nt = never_touch(unit)
+    if nt:
+        return nt
+    g = git_tree_of(unit)
+    if g:
+        return "inside git work tree " + g
+    return None
+
+
 def dedupe_roots(roots):
     seen, out = set(), []
     for r in roots:
@@ -2501,7 +2525,7 @@ class Job:
 
     def eval_stub(self, unit):
         """-> (why or None, [(path, size, disk_bytes, mtime)], {held reason: n})"""
-        nt = never_touch(unit)
+        nt = write_refused(unit)          # GITSAFE_1114: never-touch tree, or inside a git work tree
         if nt:
             return nt, [], {}
         if os.path.realpath(unit) != os.path.normpath(unit) or any(
@@ -2968,6 +2992,10 @@ def mark_archived_main(a):
     """stdin: {"archive": path, "sha": {path: [size, sha]}, "verify": str}; writes <unit>/ARCHIVED.json when the
     unit's current files still match the hashed list"""
     d = json.load(sys.stdin)
+    why = write_refused(a.unit)          # GITSAFE_1114
+    if why:
+        say(json.dumps({"ok": False, "error": "refused: " + why}))
+        return 2
     files = unit_files(a.unit, dedupe_roots(a.roots))
     sha = d["sha"]
     if sorted(p for p, _, _ in files) != sorted(sha) or any(sha[p][0] != s for p, s, _ in files):
