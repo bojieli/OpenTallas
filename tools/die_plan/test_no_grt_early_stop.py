@@ -42,7 +42,12 @@ def test_grt183_make_has_only_the_time_cap_stop():
     assert "OT_GRT_TIMECAP" in t and "OT_GRT_POST_MAX_S" in t
 
 
-def test_failfast_grt_overflow_rule_is_cut_off_before_it_runs():
-    t = (ROOT / "physical/common_flow/failfast_rules.py").read_text()
-    assert re.search(r"(?m)^    return \[\]   # \(a\) GRT_NO_PROGRESS REMOVED 11-14", t)
-    assert '"OT_FF_GRT": 0' in t
+def test_failfast_grt_rule_is_deleted_not_disabled():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ff_rules", ROOT / "physical/common_flow/failfast_rules.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert not hasattr(mod, "grt_decide") and not hasattr(mod, "grt_line")
+    assert not [k for k in mod.DEFAULTS if k.startswith("OT_FF_GRT")]
+    src = (ROOT / "physical/common_flow/failfast_rules.py").read_text()
+    assert "GRT_NO_PROGRESS" not in "\n".join(code_lines(src)) and "OT_FF_GRT" not in "\n".join(code_lines(src))
