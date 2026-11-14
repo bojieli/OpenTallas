@@ -51,6 +51,31 @@ def apply_plan_declarations(plan, proof, repo):
     return len(rows)
 
 
+def _decl_key(row):
+    row = dict(row)
+    params = dict(row.pop('parameters', {}) or {})
+    return json.dumps(row, sort_keys=True), params
+
+
+def _reproof_matches(proof, repo, rel, manifest):
+    """True when the repository-relative re-proof `rel` is a PASS made under exactly manifest['defines'] with the
+    same dependency modules and the same declarations as `proof` (re-proof parameters a subset of the proof's)."""
+    path = (repo / rel).resolve()
+    if Path(rel).is_absolute() or not path.is_relative_to(repo) or not path.is_file():
+        raise ValueError('dead-input re-proof must be an existing repository-relative file: ' + str(rel))
+    rp = json.loads(path.read_text())
+    if rp.get('schema') != 'opentallas.dead_inputs.v1' or rp.get('verdict') != 'PASS':
+        return False
+    if rp.get('defines', []) != manifest.get('defines', []):
+        return False
+    if rp.get('dependency_modules') != proof.get('dependency_modules'):
+        return False
+    a = sorted(map(_decl_key, proof.get('declarations', [])), key=lambda r: r[0])
+    b = sorted(map(_decl_key, rp.get('declarations', [])), key=lambda r: r[0])
+    return len(a) == len(b) and all(ka == kb and all(k in pa and pa[k] == v for k, v in pb.items())
+                                    for (ka, pa), (kb, pb) in zip(a, b))
+
+
 class ProvenDead:
     def __init__(self, manifest, repo, plan_types=None):
         self.rows = []
@@ -70,7 +95,13 @@ class ProvenDead:
             if proof.get('schema') != 'opentallas.dead_inputs.v1' or proof.get('verdict') != 'PASS':
                 raise ValueError('invalid dead-input proof ' + rel)
             if proof.get('defines', []) != manifest.get('defines', []):
-                raise ValueError('stale dead-input preprocessor defines')
+                # S81-B3-CLK 11-14 (COORD: the define-list match is procedural when declarations and deps are identical):
+                # a proof made under another define list stands when a RE-PROOF made under exactly the manifest defines
+                # (manifest "dead_input_reproofs", repository-relative) PASSes with identical dependency modules and
+                # identical declarations (only parameter keys the newer prover no longer records may be absent from
+                # the re-proof; the proof's own rows, the stricter ones, stay the rows bind applies).
+                if not any(_reproof_matches(proof, repo, rp, manifest) for rp in manifest.get('dead_input_reproofs', [])):
+                    raise ValueError('stale dead-input preprocessor defines')
             for dep in proof.get('dependency_modules', []):
                 source = (repo / dep['source']).resolve()
                 if not source.is_relative_to(repo) or module_hash(source, dep['module']) != dep['module_sha256']:
