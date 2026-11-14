@@ -6,3 +6,4 @@ Form C: epyc9 rkb copy, client epyc7 pid 1876081, log epyc7 tl-qctail1/logs/rkb_
 11-14 10:18: rkw routed: DRC0 setup+17.9 hold-1.47(3 int). ECO1 running epyc2 eco_rkw (pid 2810283 epyc7). rkwb util.4 parallel form in route.
 11-14 10:22: ECO now on ko4copy (ko4-eco + cap_estimate.py) eco_rkw3, queued epyc2, pid 103243 epyc7. rkwb parallel.
 11-14 10:32: rkw ECO moved to intel1 (pid 3472648 epyc7); rkwb ECO epyc2 (pid 2667225). rkwb hold: 20 port (adv) + 3 internal -3.91.
+11-14 11:37: SIGNED via rkwb ECO eco_rkwb1 (tt +28.27, ff -2.33 port-only). AUTO-RESIGN row + ARCHIVED-BOTH (no view pack yet) + KIT-OPS-5 ask posted. rkw ECO stopped.
