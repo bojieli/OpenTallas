@@ -30,8 +30,23 @@ endmodule
 """
 
 
-def test_trace_wiring_only():
-    res = CCB.trace(dict(partition_types=dict(t=PLAN_T)), "t", bound(3))
+def _lef(tmp, name, ports):
+    rows = ["MACRO " + name]
+    for pin, (direction, width) in ports.items():
+        for i in range(width):
+            rows += [f" PIN {pin}[{i}]", f" DIRECTION {direction} ;", f" END {pin}[{i}]"]
+    p = tmp / (name + ".lef")
+    p.write_text("\n".join(rows + ["END " + name]) + "\n")
+    return str(p)
+
+
+def test_trace_wiring_only(tmp_path):
+    # The tracer takes core pin directions from the actual LEF (unknown directions fail closed), so give the fixture's
+    # hard cores real LEF views; the wiring expectations below are unchanged.
+    lefs = dict(cx=_lef(tmp_path, "cx", dict(ck=("INPUT", 1), a=("INPUT", 4), z=("OUTPUT", 4))),
+                cy=_lef(tmp_path, "cy", dict(ck=("INPUT", 1), m=("INPUT", 4), p=("INPUT", 4))))
+    plan_t = dict(PLAN_T, hard_cores=[dict(hc, lef=lefs[hc["module"]]) for hc in PLAN_T["hard_cores"]])
+    res = CCB.trace(dict(partition_types=dict(t=plan_t)), "t", bound(3))
     cc = res["core_conns"]["t"]
     assert cc["u_c.u_x"]["a"] == ["bus:i_a"]
     assert "bus:o_b" in cc["u_c.u_x"]["z"]
