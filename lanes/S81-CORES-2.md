@@ -85,3 +85,8 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## NOTE 2026-11-13 20:30 PST serdes reset tree
 - DIE-S81-91: the RST_TREE(0) cause is die-level. OT_S81_SERDES_RST_TREE is missing from the S81 as-built define list (all 14 serdes types); B2e adds it. kitI2 (per-kit RST_TREE=1 patch) keeps running ONLY as the proof that the fix works. No other serdes kit will be patched by hand; they relaunch from B2e. kitI2 result = evidence for B2e.
+
+## RESULT 2026-11-13 21:17 PST: bksel_q C9geom
+- Finish try1 ended exit 2 after 2h53 in GRT (unit oth-ubuntu-3458321-1794622764). Error GRT-0183 (maze router heap underflow on net45752) in the incremental route inside repair_design, at about iteration 83000. This is the known GRT183 class: the full GRT is fine, and the in-process incremental reroute dies. The async LEC passed (exit 0).
+- The kit predated the GRT183-RESUME wrapper. I installed the standard grt183_make.sh + grt183_resume.tcl (copied from the GF5 A0 kit) and wrapped run_kit.sh exactly as newer kits do (original kept as run_kit.sh.pre_s81c2_grt183). On a second GRT-0183 the hook saves the resized design and the wrapper reruns 5_1_grt once in a fresh process.
+- Relaunched to finish: unit oth-ubuntu-3028966-1794633424, log ~/s81-cores-2-logs/bksel_c9geom_finish.otrun.log (try1 log kept).
