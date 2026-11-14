@@ -1570,38 +1570,44 @@
    "prov_view_sources": {
     "qkd_ahub": [
      {
-      "host": "intel1",
-      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/qkd_ahub",
-      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
-      "detailed_lef": "detail_view.lef",
-      "detailed_receipt": "detail_receipt.json",
-      "detail_bloat_factor": 0
-     },
-     {
-      "host": "epyc4",
-      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/qkd_ahub",
-      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/type-kvahub/view_detail/qkd_ahub",
+      "job": "R-MINIMAL qkd_ahub AP_OFS ffe0ffdfffdfffdf late ECO i1 epyc2:/srv/opentallas-scratch2/claude/type-kvahub/k1/eco1/i1/signoff/signoff.json (TT +19.38 FF +1.57 DRC 0; TYPE-KVAHUB 11-14) + exact M6/M7 detail (bloat 0, same ODB)",
       "detailed_lef": "detail_view.lef",
       "detailed_receipt": "detail_receipt.json",
       "detail_bloat_factor": 0
      },
      {
       "host": "epyc7",
-      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/qkd_ahub",
-      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "dir": "/srv/opentallas-scratch2/claude/type-kvahub/view_detail/qkd_ahub",
+      "job": "R-MINIMAL qkd_ahub AP_OFS ffe0ffdfffdfffdf late ECO i1 epyc2:/srv/opentallas-scratch2/claude/type-kvahub/k1/eco1/i1/signoff/signoff.json (TT +19.38 FF +1.57 DRC 0; TYPE-KVAHUB 11-14) + exact M6/M7 detail (bloat 0, same ODB)",
       "detailed_lef": "detail_view.lef",
       "detailed_receipt": "detail_receipt.json",
       "detail_bloat_factor": 0
      },
      {
-      "host": "epyc4",
-      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9626f46f7f86/qkd_ahub",
-      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view)"
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/type-kvahub/view_detail/qkd_ahub",
+      "job": "R-MINIMAL qkd_ahub AP_OFS ffe0ffdfffdfffdf late ECO i1 epyc2:/srv/opentallas-scratch2/claude/type-kvahub/k1/eco1/i1/signoff/signoff.json (TT +19.38 FF +1.57 DRC 0; TYPE-KVAHUB 11-14) + exact M6/M7 detail (bloat 0, same ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      },
      {
-      "host": "intel2",
-      "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
-      "job": "SIGNED dkv73/ahub_l"
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/type-kvahub/view_detail/qkd_ahub",
+      "job": "R-MINIMAL qkd_ahub AP_OFS ffe0ffdfffdfffdf late ECO i1 epyc2:/srv/opentallas-scratch2/claude/type-kvahub/k1/eco1/i1/signoff/signoff.json (TT +19.38 FF +1.57 DRC 0; TYPE-KVAHUB 11-14) + exact M6/M7 detail (bloat 0, same ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch2/claude/type-kvahub/view_detail/qkd_ahub",
+      "job": "R-MINIMAL qkd_ahub AP_OFS ffe0ffdfffdfffdf late ECO i1 epyc2:/srv/opentallas-scratch2/claude/type-kvahub/k1/eco1/i1/signoff/signoff.json (TT +19.38 FF +1.57 DRC 0; TYPE-KVAHUB 11-14) + exact M6/M7 detail (bloat 0, same ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
      }
     ],
     "qkd_kvs_ctl": [
@@ -5426,6 +5432,44 @@
       "host": "epyc2",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/1445a073fae9/qkd_kvs_pcf_h_head_p",
       "job": "COUNTED qkd_kvs_pcf_h_head_p epyc2:/srv/opentallas-scratch2/claude/ss29/resign/pcfh_k/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ]
+   },
+   "prov_view_sources_prev_kvahub1114": {
+    "qkd_ahub": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/qkd_ahub",
+      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/qkd_ahub",
+      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/qkd_ahub",
+      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/9626f46f7f86/qkd_ahub",
+      "job": "COUNTED qkd_ahub intel2:/srv/opentallas-scratch2/claude/dkv73/ahub_l/signoff/signoff.json (KW-FIX-32 export_view)"
+     },
+     {
+      "host": "intel2",
+      "dir": "/srv/opentallas-scratch2/claude/dkv71/ahub/h1/views",
+      "job": "SIGNED dkv73/ahub_l"
      }
     ]
    }
