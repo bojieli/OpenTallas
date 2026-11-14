@@ -92,7 +92,7 @@ def _run(kit):
 
 def test_rule_is_in_the_latch_fanout_check():
     src = (HERE / "lec.py").read_text()
-    assert "def bbi_ff(cn):" in src and '(bbi_ff(ln) and lp == "D")' in src
+    assert "def bbi_ff(cn, latch_clock, latch_phase):" in src and '(bbi_ff(ln, e, phase[cn]) and lp == "D")' in src
 
 
 @needs_image
