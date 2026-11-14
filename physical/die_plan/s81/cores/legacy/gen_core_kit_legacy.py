@@ -26,7 +26,7 @@ core generators, claude/flow-fix-1025b):
   * hold is repaired ONLY in the FF frame: CTS-stage repair is setup-only, the FF-only GRT hold repair
     (OT_VCLK_CORNER=ff make grt CORNERS=bc) runs before route/finish (the old CTS MCMM hold repair against the TT vclk put
     15-36k IO hold buffers into bksel_c / xrt3 / l5_n32 / eg, GEOM-REVIEW-3 06:20);
-  * pre-synth rtl_lint (exit 8) and post-synth reg_fanout gate (exit 7: a register driving > 64 data pins);
+  * pre-synth rtl_lint (exit 8) and post-synth reg_fanout check (ADVISORY since 11-14, never exit 7: a register driving > 64 data pins is logged);
   * optional recipe "regional_taps" {nx, ny, split, protect_spine, rep_um, win_ps} (F5): structured clock = buffered
     trunk + symmetric H-tree + one regional tap per region (rt/regional_taps.tcl, S81-CORES/SPLIT + Codex spine guard),
     taps balanced <= win_ps (rt/regional_taps_balance.tcl), planned spine dont_touch + post-CTS guard.
@@ -370,8 +370,8 @@ exit $rc
 
 REG_FANOUT_STEP = ("if [ \\$rc = 0 ] && [ -f /work/reg_fanout_gate.py ]; then python3 -I /work/reg_fanout_gate.py \\$N --top $TOP "
                    "--out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\\$?; head -12 /work/reg_fanout.log; "
-                   "if [ \\$rc != 0 ]; then echo 'FAIL_PREFLOOR reg_fanout (register > 64 data loads: merged replicas; or NOT RUN), "
-                   "see reg_fanout.json' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; ")
+                   "if [ \\$rc != 0 ]; then echo 'WARN reg_fanout ADVISORY (WF-1 11-14 OWNER: no procedural gates; register > 64 data loads or NOT RUN, "
+                   "see reg_fanout.json; synthesis / placement buffering handles the fanout; not a gate)'; rc=0; fi; fi; ")
 
 
 def land_slot_contract(rec,buses_in):
@@ -424,7 +424,7 @@ def run_kit(modern):
     t = t.replace("@LECA_START@\n", LECA_START if modern else "").replace("@LECA_FINISH@\n", LECA_FINISH if modern else "")
     if modern:
         t = t.replace("; rc=0; ", "; rc=0; " + "if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; ", 1)
-        t = t.replace("  chown -R ", "  if [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R ", 1)
+        t = t.replace("  chown -R ", "  if [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \\$rc; fi; chown -R ", 1)
     if not modern:   # the old first step had no rc guard
         t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)
         t = t.replace("2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; fi; ",
