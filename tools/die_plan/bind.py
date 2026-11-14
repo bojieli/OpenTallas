@@ -2816,10 +2816,29 @@ class Binder:
             self.warns.append(f"TYPE_CANON {tn}: " + ", ".join(f"{m['inst']}->{m['ref']} ({m['renamed']} renamed)"
                                                                for m in merged if m["type"] == tn))
 
+    def r8_site_record(self, tn, site):
+        """R8 sites belong to the source type; emitted variants retain its split_of provenance."""
+        seen = set()
+        while tn is not None:
+            if tn in seen:
+                raise BindError(f"R8 strap site {site}: cyclic split_of ancestry at {tn}")
+            seen.add(tn)
+            record = getattr(self, "r8_sites", {}).get(tn, {}).get(site)
+            if record is not None:
+                return record
+            tn = getattr(self, "types", {}).get(tn, {}).get("split_of")
+        return None
+
+    def r8_bank_storage(self, tn, site):
+        record = self.r8_site_record(tn, site)
+        if record is None:
+            raise BindError(f"R8 strap site {tn}.{site}: no site in recorded source-type ancestry")
+        return record.get("storage", "flop")
+
     def r8_pad_width(self, tn, site=None):
         import r8 as R8
         capacity = R8.strap_pad_capacity(getattr(self, "types", {}).get(tn, {}))
-        record = getattr(self, "r8_sites", {}).get(tn, {}).get(site)
+        record = self.r8_site_record(tn, site)
         # Only the used span needs a selector. A larger type capacity does not widen its unchanged short banks.
         return max(4, int(record["span"]).bit_length()) if record is not None else capacity.bit_length()
 
@@ -3870,7 +3889,7 @@ class Binder:
                         decl.append(f"    wire [{W - 1}:0] {nb};")
                         bank_cw = r8_ports[site]["width"]
                         r8cw_param = f", .CW({bank_cw})" if bank_cw != 4 else ""
-                        storage = self.r8_sites[tn][site].get("storage", "flop")
+                        storage = self.r8_bank_storage(tn, site)
                         bank_module = "ot_dp_dly_cnt_sram" if storage == "sram32" else "ot_dp_dly_cnt"
                         bank_base = ", .BASE(0)" if storage == "sram32" else ""
                         if storage == "sram32":
@@ -3909,7 +3928,7 @@ class Binder:
                         decl.append(f"    wire [{W - 1}:0] {nb};")
                         bank_cw = r8_ports[site]["width"]
                         r8cw_param = f", .CW({bank_cw})" if bank_cw != 4 else ""
-                        storage = self.r8_sites[tn][site].get("storage", "flop")
+                        storage = self.r8_bank_storage(tn, site)
                         bank_module = "ot_dp_dly_cnt_sram" if storage == "sram32" else "ot_dp_dly_cnt"
                         bank_base = ", .BASE(0)" if storage == "sram32" else ""
                         if storage == "sram32":

@@ -72,3 +72,29 @@ def test_selected_tie_mismatch_fails_before_native_tools(tmp_path):
     r = S.qualify('T', [bank], [{'gold': {bank['site']:24}, 'ties': {bank['site']:19}}], tmp_path)
     assert r['verdict'] == 'FAIL' and not r['rows']
     assert 'tie differs' in r['reason']
+
+
+def test_emitted_variants_resolve_exact_source_site_storage_and_width():
+    import bind
+    b = _binder({'a': [2, 0, 0], 'b': [26, 0, 0]})
+    source = {'r8_strap_pad_max':63, 'r8_strap_pad_storage':{'u.x':'sram32'}}
+    b.types = {'T':source}
+    b.r8_strap_sites({'T':['a','b']})
+    site = next(iter(b.r8_sites['T']))
+    b.types['T__v1'] = dict(source, split_of='T')
+    b.types['T__v1__v2'] = dict(source, split_of='T__v1')
+    for tn in ['T','T__v1','T__v1__v2']:
+        assert b.r8_bank_storage(tn,site) == 'sram32'
+        assert b.r8_pad_width(tn,site) == 5  # span24, never the type capacity's six bits
+    default = _binder({'a':[0,0,0], 'b':[3,0,0]})
+    default.types={'T':{},'T__v1':{'split_of':'T'}}
+    default.r8_strap_sites({'T':['a','b']})
+    ds=next(iter(default.r8_sites['T']))
+    assert default.r8_bank_storage('T__v1',ds) == 'flop'
+    assert default.r8_pad_width('T__v1',ds) == 4
+    b.types['T__v9'] = {}  # a name that looks like a variant is no proof of ancestry
+    with pytest.raises(bind.BindError,match='recorded source-type ancestry'):
+        b.r8_bank_storage('T__v9',site)
+    b.types['cycle']={'split_of':'cycle'}
+    with pytest.raises(bind.BindError,match='cyclic split_of'):
+        b.r8_bank_storage('cycle',site)
