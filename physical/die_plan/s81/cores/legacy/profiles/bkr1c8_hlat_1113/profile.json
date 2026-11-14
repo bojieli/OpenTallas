@@ -1,0 +1,73 @@
+{
+  "VERILOG_FILES": [
+    "rtl/ot_s81ph_hq_pk2_bb.v",
+    "rtl/ot_s81ph_native_sel_hist_bank_bb.v",
+    "rtl/ot_s81ph_sel_pipeline.sv",
+    "rtl/ot_hdc_prefix.sv",
+    "rtl/ot_s81ph_sel.sv",
+    "rtl/ot_hdc_v41x_sel_lib.sv",
+    "rtl/ot_hdc_v41x_sel_slice.sv",
+    "rtl/ot_hdc_v41x_sel.sv",
+    "rtl/ot_fwd_link_stage.sv",
+    "rtl/ot_s81ph_native_sel.sv",
+    "rtl/ot_s81ph_native_sel_lib.sv",
+    "rtl/ot_s81ph_native_sel_slice.sv",
+    "rtl/ot_s81ph_sel_ctl_half.sv",
+    "rtl/ot_s81ph_sel_ctl_pp.sv",
+    "rtl/ot_s81ph_sel_tile.sv",
+    "rtl/ot_rst_relay.sv",
+    "rtl/ot_s81ph_native_sel_hist_bank.sv",
+    "rtl/ot_s81ph_hq_parts.sv",
+    "rtl/ot_s81ph_hq_slice.sv",
+    "rtl/ot_s81ph_hq_tile.sv",
+    "rtl/dsdv_bksel_c.sv",
+    "rtl/ot_sram_showahead_1r1w.sv",
+    "rtl/ot_s81ph_queue_store.sv",
+    "rtl/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+    "rtl/ot_sram_1r1w_32x128_m1_p192_rc_bb.v"
+  ],
+  "VERILOG_DEFINES": [
+    "-DSYNTHESIS",
+    "-DOT_S81PH_SEL_INDEXED13",
+    "-DOT_S81PH_FIFO_SRAM",
+    "-DOT_SRAM_P192",
+    "-DOT_S81PH_SEL_SUCC",
+    "-DOT_S81PH_SEL_FAN32",
+    "-DOT_S81PH_SEL_ACC32",
+    "-DOT_S81PH_SEL_HQ",
+    "-DOT_HARD_CHILDREN",
+    "-DOT_S81PH_HQ_INPUT_RAW",
+    "-DOT_HB_PINCOPY",
+    "-DOT_HB_PINCOPY",
+    "-DOT_S81PH_PACK_Z0FOLD",
+    "-DOT_BKQ_RCP=16",
+    "-DOT_BKQ_GBREG",
+    "-DOT_BKQ_GBREG2",
+    "-DOT_BKQ_BSTG",
+    "-DOT_BKQ_FO8",
+    "-DOT_BKQ_ORT",
+    "-DOT_BKQ_SPLIT",
+    "-DOT_BKQ_R1C8"
+  ],
+  "VERILOG_INCLUDE_DIRS": [
+    "rtl"
+  ],
+  "VERILOG_TOP_PARAMS": [
+    "OLL",
+    "2",
+    "RFH",
+    "2",
+    "HLAT",
+    "1"
+  ],
+  "SYNTH_BLACKBOXES": [
+    "ot_s81ph_native_sel_hist_bank",
+    "ot_s81ph_hq_pk2"
+  ],
+  "schema": "opentallas.bksel.unused_r1c8_hlat_profile.v1",
+  "selected_by_default": false,
+  "top": "dsdv_bksel_q",
+  "cycle_delta": 0,
+  "source_kit": "/srv/opentallas-scratch2/claude/die-s81-85/bksel_vC8e",
+  "native_proof_ref": "/srv/opentallas-scratch2/claude/die-s81-85/bksel_vC8e/lec/lec.json"
+}

@@ -1,0 +1,17 @@
+{
+  "verdict": "EQUIVALENT",
+  "top": "dsdv_bksel_q",
+  "synth_frontend": "verilog",
+  "gold_frontend": "slang",
+  "counts": {
+    "compare_points": 45318,
+    "proved": 45318,
+    "differs": 0,
+    "undecided": 0
+  },
+  "t_total_s": 3195.9,
+  "note": "45318 compare points proved; 31059 key points matched by name, 5664 register pairs / merges and 31 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 270 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+  "record_sha256": "06346c47f1df7c1d839c3df59f084fe8ee58a6e66469834665af7b1b44fc2808",
+  "record": "/srv/opentallas-scratch2/claude/die-s81-85/bksel_vC8e/lec/lec.json",
+  "last_log_line": "LEC EQUIVALENT: dsdv_bksel_q cp=45318 proved=45318 differs=0 undecided=0 45318 compare points proved; 31059 key points matched by name, 5664 register pairs / merges and 31 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 270 of them reach an RTL X (don't care: equal wherever the RTL is not X) (3195.9 s)"
+}
