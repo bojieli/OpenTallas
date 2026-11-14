@@ -702,13 +702,15 @@ def _compose_rename(m, ca, cc):
     return m2
 
 
-def core_reset_port_expr(core_reset, ci, pn, kinds, exprs):
+def core_reset_port_expr(core_reset, ci, pn, kinds, exprs, insts=(), allow=()):
     """KV-101/SPLIT 11-13 (owner: the plan's wavefront tap is authoritative): a hard-core reset port that the bind
     recorded in core_reset (bind_core_resets.json) but that arrives as a BUS input (as-built: the core's rst_n is a bit of
     a lane, e.g. hub_C u_pvfin / u_kvs_ctl rst_n on the ahub spine ri_ahub_rst_n_q[0]) is driven by that tap, so the
     emitted wiring matches the recorded one.  Reset-kind sinks keep their own path (expr handles them).
-    -> (exprs, override or None, error or None).  Only a 1-bit active-low port (name ends rst_n) is rewired."""
-    if (ci, pn) not in core_reset or all(k == "rst" for k in kinds):
+    -> (exprs, override or None, error or None).  Only a 1-bit active-low port (name ends rst_n) is rewired.
+    OPT-IN (KV-101 11-13): only when one of the plan core insts this port serves (insts) is in the type's
+    reset.core_reset_bus_inputs list (allow); default off keeps the as-built lane wiring byte-identical."""
+    if (ci, pn) not in core_reset or all(k == "rst" for k in kinds) or not set(insts) & set(allow):
         return exprs, None, None
     if len(exprs) != 1 or not pn.endswith("rst_n"):
         return exprs, None, (f"wavefront core reset port {pn}: recorded tap {core_reset[(ci, pn)]} but the port is "
@@ -4082,7 +4084,9 @@ class Binder:
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
                     e, ov, err = core_reset_port_expr(core_reset, ci, pn,
-                                                      [self.sinks[(ci, pn, i)][0] for i in range(len(bits))], e)
+                                                      [self.sinks[(ci, pn, i)][0] for i in range(len(bits))], e,
+                                                      core_reset_rows.get((ci, pn), ()),
+                                                      (t.get("reset") or {}).get("core_reset_bus_inputs", ()))
                     if err:
                         self._gap(f"wavefront core reset {tn}/{r}: {err}")
                     if ov:

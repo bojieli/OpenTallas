@@ -835,6 +835,10 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # KV-101 11-13 (opt-in): plan hard-core insts whose recorded wavefront core reset drives a 1-bit
+                        # rst_n BUS input (bind.core_reset_port_expr); absent = as-built lane wiring kept
+                        "core_reset_bus_inputs": {"type": "array", "uniqueItems": True,
+                                                  "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"}},
                         # Optional physical padding floor for a published wavefront release cohort.
                         "wavefront_min_depth": {"type": "integer", "minimum": 0},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
