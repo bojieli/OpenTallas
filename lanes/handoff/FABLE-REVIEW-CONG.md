@@ -51,3 +51,8 @@ DIE-S81-92 (plan):
 3. R-COL-7: emit relay path keys from the auto channel path for the crossings listed; col_h10_r0 before its GRT.
 4. R-COL-8 P1/P2 station sites for col_h9_r0_p1..p6 and col_h10_r0.
 KIT-OPS-4 (kit / env): nothing to roll out for leaf yet (the 17.28 um gutter blockage is unproven). For r0 column kits, offer TL-COLH9R0P2 / P6 the two forms of R-COL-8: signal max M8, and OT_MAXWIRE_UM 200 with OT_FT_MAXWIRE_UM 220.
+
+## 6. Addendum 15:2x PST: the three runs that were still going
+- t68 E2 (17.28 um gutter blockage only, re-place): 227 left after 30 iterations, against 66 for the wave placement. The lever is REJECTED as a stand-alone fix: the glue moves to the next slot (x 880-920, y 280-360). R-LEAF-3 needs the lane column moved (t68 fix: 0 in 5).
+- t75 fix (vsw, vs, ve_m, ve_s +129.6 um in y, in place): 49,604 after 15 iterations against 63,816; layer total 476,498 against 1,204,815. The S strip is clear; what remains is the W strip (x 0-80, y 160-280), where ve_m is still 43.3 um off a face with 2 x 1105 bits, plus 10,177 relocated cells. So R-LEAF-2 is PARTLY shown: the corner needs the W gap opened too (86.4 um); a re-place of a real template is the proof still owed.
+- col_h10_r0 baseline (3_place, plain GRT, 15 iterations): 23,454 left, owned by u_ist_frame_int_o0 31 percent, u_ft_ft0_o 20 percent, lpl_w 5 percent; hot bins x 1000-1080 y 1080-1200 and x 480 y 1120-1160; 15 percent of it on zero-capacity gcells. CORRECTION to line 4 of section 0: on col_h10_r0 the first owner is the frame-int / ft0 station strip (R-COL-8), and the col3_c crossings are second. R-COL-8 P1/P2 come before the relay path keys for col_h10_r0.
