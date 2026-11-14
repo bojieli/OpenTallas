@@ -52,5 +52,73 @@ class Peak(unittest.TestCase):
         self.assertIn("SIMPLE_ADMIT:", self.gate(100, [], conf={"SIMPLE_PEAK": "0"}))
 
 
+class SmallLane(unittest.TestCase):
+    def test_small_job_admitted_above_half_headroom_and_floor(self):
+        ok, why = R.small_lane(4, 80.0, 2, 64.0, 8.0, 6.0, 36.0)
+        self.assertTrue(ok, why)
+        self.assertFalse(R.small_lane(4, 39.0, 0, 64.0, 8.0, 6.0, 36.0)[0])        # 39 - 4 = 35 < max(32, 36)
+        self.assertTrue(R.small_lane(4, 40.0, 0, 64.0, 8.0, 6.0, 36.0)[0])         # 40 - 4 = 36
+
+    def test_cap_and_size_limit(self):
+        self.assertFalse(R.small_lane(4, 500.0, 6, 64.0, 8.0, 6.0, 36.0)[0])       # 6 small jobs already running
+        self.assertFalse(R.small_lane(9, 500.0, 0, 64.0, 8.0, 6.0, 36.0)[0])       # 9 GB is a route-class job
+        self.assertFalse(R.small_lane(4, 500.0, 0, 64.0, 0.0, 6.0, 36.0)[0])       # lane off
+
+    def test_gate_uses_the_lane_before_the_peak_arithmetic(self):
+        import contextlib, io
+        env = {"SIMPLE_ADMIT": "1", "SIMPLE_PEAK": "1", "INV_HEADROOM_GB": "64", "PEAK_GROWTH_FRAC": "0.05", "SIMPLE_FRESH_S": "0", "SMALL_JOB_GB": "8", "SMALL_JOB_MAX": "6", "SMALL_FLOOR_GB": "36"}
+        units = [("u%d" % i, 48.0, "route", 5.0) for i in range(10)]               # growth reserve far above free: a route job would be held
+        d = tempfile.mkdtemp()
+        with patch.dict(os.environ, env), patch.object(R, "D", d), patch.object(R, "classify", return_value="gen"), patch.object(R, "sizes", return_value={}), \
+                patch.object(R, "meminfo", return_value=(1000.0, 60.0)), patch.object(R, "peak_history", return_value=HIST), \
+                patch.object(R, "running_units_light", return_value=units), patch.object(R, "read_units", side_effect=AssertionError("slow")):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                R.gate_locked(4, ["x"])
+            self.assertTrue(out.getvalue().startswith("OK 4 gen | SMALL_JOB lane"), out.getvalue())
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                R.gate_locked(48, ["x"])
+            self.assertTrue(out.getvalue().startswith("NO "), out.getvalue())
+
+
+class PlanPrio(unittest.TestCase):
+    def test_plan_like(self):
+        self.assertTrue(R.plan_like(["bash", "/x/s81-b3-clk/chainR92.sh"]))
+        self.assertTrue(R.plan_like(["python3", "bind.py", "--strict-bind"]))
+        self.assertTrue(R.plan_like(["bash", "run_g0.sh"], "/x/qc/g0/run"))
+        self.assertTrue(R.plan_like(["x"], "", ["OT_HEAVY_PRIO=plan"]))
+        self.assertTrue(R.plan_like(["x"], "", ["OT_HEAVY_PRIO=die"]))
+        self.assertFalse(R.plan_like(["bash", "run_kit.sh", "route"], "/srv/x/tl-colh9"))
+
+    def gate(self, avail, argv, running=0, waiting=(), mem=120, cls="chainR92.sh", env=None):
+        import contextlib, io
+        e = {"SIMPLE_ADMIT": "1", "SIMPLE_PEAK": "1", "PLAN_PRIO": "1", "INV_HEADROOM_GB": "64", "PEAK_GROWTH_FRAC": "0.05", "SIMPLE_FRESH_S": "0",
+             "SMALL_JOB_GB": "8", "SMALL_FLOOR_GB": "36", "PLAN_MAX_RUNNING": "1", "PLAN_HOLD_MAX_S": "7200"}
+        d = tempfile.mkdtemp()
+        with patch.dict(os.environ, dict(e, **(env or {}))), patch.object(R, "D", d), patch.object(R, "classify", return_value=cls), \
+                patch.object(R, "sizes", return_value={}), patch.object(R, "meminfo", return_value=(1000.0, float(avail))), \
+                patch.object(R, "peak_history", return_value={}), patch.object(R, "running_units_light", return_value=[("u%d" % i, 48.0, "route", 5.0) for i in range(30)]), \
+                patch.object(R, "plan_census", return_value=(running, list(waiting))):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                R.gate_locked(mem, argv)
+        return out.getvalue()
+
+    def test_plan_job_ignores_the_growth_reserve_but_needs_free_memory(self):
+        a = ["bash", "chainR92.sh"]
+        self.assertTrue(self.gate(156, a).startswith("OK 120 chainR92.sh | PLAN_PRIO"))        # 156 - 120 = 36 = floor
+        self.assertFalse(self.gate(155, a).startswith("OK "))
+
+    def test_at_most_one_plan_job_runs_per_host(self):
+        self.assertFalse(self.gate(500, ["bash", "chainR92.sh"], running=1).startswith("OK 120 chainR92.sh | PLAN_PRIO"))
+
+    def test_route_is_held_while_a_plan_job_waits_but_not_past_the_hold_limit(self):
+        r = ["bash", "run_kit.sh", "route"]
+        self.assertTrue(self.gate(500, r, waiting=[600], mem=48, cls="route").startswith("NO 48 route | PLAN-FIRST"))
+        self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[8000], mem=48, cls="route"))
+        self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[600], mem=4, cls="gen"))          # small jobs are never held
+
+
 if __name__ == "__main__":
     unittest.main()

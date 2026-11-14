@@ -223,6 +223,38 @@ def test_rehand_off_by_default_and_never_unsealed(tmp_path, monkeypatch):
     assert rc == 0 and "--max-wait" not in seen[0][:seen[0].index("--")]
 
 
+def test_rehand_keeps_probing_when_no_other_host_qualifies_then_moves(tmp_path, monkeypatch):
+    """REPROBE_1114: with no other holder the job used to wait unbounded; it now re-probes every 3 x rehand_after_s and moves when a holder appears"""
+    monkeypatch.setattr(M, "status_rows", lambda b: ROWS)
+    monkeypatch.setattr(M, "row_admits", lambda r, mem: bool(r) and r["admit"] >= int(mem))
+    monkeypatch.setattr(M, "log", lambda c, m: None)
+    c = conf(spec_dir=str(tmp_path), ap_goals=["route"], hosts=["epyc2", "intel1"], rehand_after_s=600, rehand_max=1)
+    monkeypatch.setattr(M.sys, "argv", ["ot-run-sealed"] + ap_argv())
+    first, _ = M.decide(ap_argv(), dict(c, hosts=["epyc2"]), check=ok)
+    calls = []
+
+    def fake_run(a, conf_, orig):
+        calls.append(a)
+        if len(calls) < 4:
+            M.LAST_OUT[:] = ["ot-run: NOT RUN on x: ot-heavy exit 75\n"]
+            return 75
+        M.LAST_OUT[:] = ["ot-heavy: admitted on x\n"]
+        return 0
+    monkeypatch.setattr(M, "run_sealed", fake_run)
+    real = M.decide
+    holders = {"n": 0}
+
+    def fake_decide(a, cf, exclude=()):
+        holders["n"] += 1
+        hosts = ["epyc2"] if holders["n"] < 3 else ["epyc2", "intel1"]        # intel1 holds the kit only from the 3rd probe on
+        return real(a, dict(cf, hosts=hosts), check=ok, exclude=exclude)
+    monkeypatch.setattr(M, "decide", fake_decide)
+    rc, last = M.rehand(first, c, "SEALED")
+    assert rc == 0 and len(calls) == 4                         # more rounds than rehand_max=1: it kept probing
+    assert calls[1][calls[1].index("--max-wait") + 1] == "1800"  # slow round after a probe that found no other holder
+    assert last[last.index("--hosts") + 1] == "intel1"
+
+
 K2 = "/srv/opentallas-scratch2/claude/codex-s81-wave-1345/kit-wave/qwen_kvsys/e1/items/kv3_x/attempt_2/gen/kv3_x"
 
 
