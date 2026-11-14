@@ -2058,7 +2058,12 @@ def load(force=False, log=lambda *a: None, refresh_stale=True):
     if not force and not refresh_stale:
         return old, ('plan layer cache stale; scheduled refresh pending' if old else 'plan layer not cached; run with --refresh-plan')
     try:
-        new = merge_with_cache(carry_unreachable(refresh(log, old), old), old)
+        # ARCHIVE GATE (OWNER 11-14, EXPLORER-FABLE-1): signed = credited AND archived on AGIdock; the rest is pending archive.
+        # The carry-over logic works on the credited sets (signed + pending), the gate runs last, on what is saved.
+        import importlib.util as _ilu   # by path: the count runs under python3 -I (the script dir is not on sys.path)
+        _sp = _ilu.spec_from_file_location('archive_gate', pathlib.Path(__file__).resolve().parent / 'archive_gate.py'); archive_gate = _ilu.module_from_spec(_sp); _sp.loader.exec_module(archive_gate)
+        cred = archive_gate.ungate(old)
+        new = archive_gate.apply(merge_with_cache(carry_unreachable(refresh(log, cred), cred), cred))
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         tmp = CACHE.with_suffix('.tmp'); tmp.write_text(json.dumps(new, indent=1)); os.replace(tmp, CACHE)
         return new, ('; '.join(new['errors']) or None)
@@ -2120,6 +2125,8 @@ def die_counts(cache, key):
         rows.append(dict(plan=d, types=ent.get('types'), clean=ent.get('g0c_clean'), verdict=ent.get('g0c_verdict'),
                          errors=ent.get('g0c_errors'), bad=ent.get('g0c_bad_types') or {}, die_level=ent.get('g0c_die_level') or {},
                          signed_types=len(ent.get('signed_types') or {}), cores=len(ent.get('hard_cores') or []),
+                         pending_archive_types=len(ent.get('pending_archive_types') or {}), pending_archive_cores=len(ent.get('pending_archive_designs') or ent.get('pending_archive_cores') or {}),
+                         pending_archive_list=sorted(ent.get('pending_archive_types') or {}) + sorted(ent.get('pending_archive_cores') or {}),
                          signed_cores=len(ent.get('signed_cores') or {}), signed_list=sorted(ent.get('signed_types') or {}) + sorted(ent.get('signed_cores') or {}),
                          modules=len(ent.get('hard_cores') or []), signed_modules=len(ent.get('signed_cores') or {}),
                          stale=ent.get('stale_since'), error=ent.get('error'),
@@ -2150,8 +2157,8 @@ if __name__ == '__main__':
     if a.print:
         for key in ('s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm'):
             for r in die_counts(c, key):
-                print('%-13s %-14s G0C %s/%s clean (%s) [geom report: %s types] ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s)%s %s' % (
+                print('%-13s %-14s G0C %s/%s clean (%s) [geom report: %s types] ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s) ; PENDING ARCHIVE types %d cores %d%s %s' % (
                     key, r['plan'], r['clean'], r['types'], r['verdict'], r.get('geom_report_types'), r['signed_types'], r['types'], r['signed_cores'], r['cores'],
-                    r['signed_modules'], r['modules'], r.get('signed_instances', '?'), r.get('instances', '?'),
+                    r['signed_modules'], r['modules'], r.get('signed_instances', '?'), r.get('instances', '?'), r['pending_archive_types'], r['pending_archive_cores'],
                     (' UNMATCHED %s' % r['design_unmatched'] if r.get('design_unmatched') else '') + (
                         ' (counted; other records miss: %d modules)' % len(r['design_unmatched_extra']) if r.get('design_unmatched_extra') else ''), r['signed_list'][:8]))
