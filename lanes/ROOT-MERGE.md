@@ -823,3 +823,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-20-1114@e6dfa6a1d9 (ADMIT-TUNE-1): PLAN_PRIO, PEAK_PHASE code, ot-run --priority plan
 - READY claude/admit-tune-20-1114@caf1b2664a (ADMIT-TUNE-1): PLAN_PRIO + late ECO match, supersedes e6dfa6a1d9
 - READY claude/admit-tune-21-1114@3109d3b03d (ADMIT-TUNE-1): PEAK_FALLBACK_SHARE
+- READY claude/admit-tune-22-1114@4675a0125e (ADMIT-TUNE-1): spill tar extraction under sudo for root-owned docker files
