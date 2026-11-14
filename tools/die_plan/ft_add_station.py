@@ -60,7 +60,14 @@ def main():
                 if md(a, q) <= LIMIT and md(q, old) <= LIMIT:
                     best = q; break
             if best is None:
-                failed.append(bit); best = a + (old - a) * 0.5
+                # KV-FTGRID 11-14 (kv3_hgi_v3/v6 ft5 S3: 16 sites at half-pitch, place "explicit FT site is not on a row/site"):
+                # the raw midpoint is off the row/site grid.  Take the nearest legal row site to it with no hop limit (the hop
+                # is recorded as failed), and only if none exists within 150 um fail closed instead of emitting off-grid sites.
+                failed.append(bit); mid = a + (old - a) * 0.5
+                try:
+                    best = alloc.allocate(mid, 1, max_radius_um=150.0)[0][0]
+                except ValueError:
+                    raise SystemExit(f"{tn}:{sn} bit {bit}: no legal row site within 150 um of the midpoint {mid.tolist()}")
             worst = max(worst, md(a, best), md(best, old))
             row.append([round(float(best[0] - cw_ / 2), 6), round(float(best[1] - ch_ / 2), 6)])
         s["bit_sites_um"].insert(0, row)
