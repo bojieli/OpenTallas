@@ -199,3 +199,15 @@ proc pg_tap_of {pin} {
     result = subprocess.run([tclsh, str(f)], capture_output=True, text=True)
     assert result.returncode == 0, result.stderr
     assert "same_tap 1 ws -5.00 cross_tap 1 ws -9.00" in result.stdout
+
+
+def test_legalize_failure_keeps_the_repair(tmp_path):
+    """PREGRT-LEGAL-1: negotiation legalizer failure -> diamond retry -> residue logged, repaired DB kept (no FALLBACK)."""
+    tcl = (_kit(tmp_path, {"pregrt_ff_hold": True}) and (tmp_path / "pregrt_ff_hold.tcl").read_text())
+    i = tcl.index("PREGRT-LEGAL-1")
+    seg = tcl[i:tcl.index("estimate_parasitics -placement", i)]
+    assert seg.index("detailed_placement; check_placement -verbose") < seg.index("detailed_placement -use_diamond_legalizer")
+    assert "legalize RESIDUE" in seg and "repaired DB kept" in seg
+    # the residue branch sets no pg_fail: only the outer tool-error catch and the setup/hold gain checks can fall back
+    assert "set pg_fail" not in seg
+    assert "check_placement -verbose\n  estimate_parasitics" not in tcl
