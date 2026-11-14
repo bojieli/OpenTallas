@@ -160,7 +160,7 @@ gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop 
 # logs and prints one class line: (a) [OT_GRT_NO_PROGRESS REMOVED 11-14, OWNER], (b) OT_DRT_NO_PROGRESS (from iteration 20: > 10000 violations, < 5 % per iteration over the
 # last 3), (c) OT_HOLD_STRUCTURAL (buffer cap hit twice, or OT_HOLD_STALL NEEDS_RTL).  The stage stops, rc 21, no re-run; the
 # autopilot classifies the line (STRUCTURAL grt-no-progress / drt-no-progress -> wave ROUTING, hold-structural -> wave TIMING).
-# Opt out: OT_FAILFAST=0 (env or 'export OT_FAILFAST = 0' in config.mk), or a single rule: OT_FF_GRT / OT_FF_DRT / OT_FF_HOLD = 0.
+# Opt out: OT_FAILFAST=0 (env or 'export OT_FAILFAST = 0' in config.mk), or a single rule: OT_FF_DRT / OT_FF_HOLD = 0.
 FF=$W/failfast_rules.py
 ff_check() {   # sets gstop, prints the class line
   local line

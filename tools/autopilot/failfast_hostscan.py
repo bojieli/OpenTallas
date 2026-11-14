@@ -77,26 +77,6 @@ def item_key(work, name):
     return "name:" + nm, (sha[1] if sha else ""), False, 0
 
 
-def snapshot_series(reports, cum_now, cur, prev_len, round_len):
-    """read-only history: the reports on disk, oldest first, cum spaced by the iteration steps between them"""
-    out = []
-    for n, mt, p in reports:
-        try:
-            rep = R.parse_report(open(p, errors="replace").read())
-        except OSError:
-            continue
-        out.append(dict(rep, n=n, mtime=mt))
-    nxt_cum, nxt_n = None, None
-    for rec in reversed(out):
-        if nxt_cum is None:
-            rec["cum"] = R.report_cum(rec["n"], cum_now, cur, prev_len, round_len)
-        else:
-            step = nxt_n - rec["n"]
-            rec["cum"] = nxt_cum - (step if step > 0 else step + round_len)
-        nxt_cum, nxt_n = rec["cum"], rec["n"]
-    return out
-
-
 def judge_ro(job, cont, now):
     work = cont["work"]
     cfgt = ""
@@ -137,33 +117,13 @@ def judge_ro(job, cont, now):
         if d:
             row["verdicts"].append({"rule": "DRT_NO_PROGRESS", "evidence": R.drt_line(d, stamp=False), "log": p})
     tmp = [p for p in grt if os.path.basename(p).startswith("5_1_grt.tmp")] or grt
-    if tmp:
+    if tmp:                                  # GRT: statistics only; no GRT rule exists (deleted 11-14, OWNER)
         p = sorted(tmp)[-1]
         row["log"] = p
         s = R.scan_lines(R._read_lines(p))
         cum, cur, prev_len, rounds = R.iteration_state(s["iters"])
-        reps = R.reports_now(rp, t0, 20, now)
-        ser = snapshot_series(reps, cum, cur, prev_len, c["OT_FF_GRT_ROUND_ITERS"])
         row.update(grt_iters=cum, grt_cur="%d/%d" % (cur, s["iters"][-1][1]) if s["iters"] else "-", grt_rounds=rounds + (1 if cur else 0),
-                   grt_ndr=s["ndr"], grt_in_route=bool(s["iters"]) and not s["final"],
-                   grt_series=[(x["n"], x["total"], time.strftime("%m-%d %H:%M", time.localtime(x["mtime"]))) for x in
-                               sorted(ser, key=lambda x: x["mtime"])])
-        # the full route is still iterating (no GRT-0096 table yet): judge it
-        if row["grt_in_route"]:
-            d = R.grt_decide(ser, cum, c)
-            if d is None and ser and cum >= c["OT_FF_GRT_ROUNDS"] * c["OT_FF_GRT_ROUND_ITERS"] and ser[-1]["total"] > c["OT_FF_GRT_MAX"]:
-                # snapshot only: the files hold one report per iteration index, so the last round's older report may be
-                # overwritten; compare with the oldest report on disk when it is at least 15 iterations older (conservative)
-                old = [x for x in ser if x["cum"] <= ser[-1]["cum"] - 15]
-                if old and old[0]["total"] > 0:
-                    fall = 100.0 * (old[0]["total"] - ser[-1]["total"]) / old[0]["total"]
-                    row["grt_snapshot_fall_pct"] = round(fall, 1)
-                    if fall < c["OT_FF_GRT_MIN_DROP_PCT"] * (ser[-1]["cum"] - old[0]["cum"]) / float(c["OT_FF_GRT_ROUND_ITERS"]):
-                        d = {"rule": "GRT_NO_PROGRESS", "iterations": cum, "last": ser[-1], "ref": old[0], "fall_pct": round(fall, 1),
-                             "max": c["OT_FF_GRT_MAX"], "min_drop_pct": c["OT_FF_GRT_MIN_DROP_PCT"], "approx": True}
-            if d:
-                row["verdicts"].append({"rule": "GRT_NO_PROGRESS", "evidence": R.grt_line(d, rounds=row["grt_rounds"], ndr=s["ndr"], stamp=False)
-                                        + (" [snapshot of the report files on disk]" if d.get("approx") else ""), "log": p})
+                   grt_ndr=s["ndr"], grt_in_route=bool(s["iters"]) and not s["final"])
     return row
 
 

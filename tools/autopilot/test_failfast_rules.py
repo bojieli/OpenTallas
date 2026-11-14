@@ -49,10 +49,10 @@ def test_report_and_iteration_parsing():
 
 
 def test_config_precedence():
-    assert R.config_values({}, "export OT_FF_GRT_MAX = 500\n")["OT_FF_GRT_MAX"] == 500
-    assert R.config_values({"OT_FF_GRT_MAX": "700"}, "export OT_FF_GRT_MAX = 500\n")["OT_FF_GRT_MAX"] == 700
-    assert R.config_values({"OT_FF_GRT_MAX": "x"}, "")["OT_FF_GRT_MAX"] == 1000                     # malformed: default
-    assert C["OT_FF_GRT_MAX"] == 1000 and C["OT_FF_DRT_ITER"] == 20 and C["OT_FF_HOLD_CAPS"] == 0
+    assert R.config_values({}, "export OT_FF_DRT_MAX_VIOL = 500\n")["OT_FF_DRT_MAX_VIOL"] == 500
+    assert R.config_values({"OT_FF_DRT_MAX_VIOL": "700"}, "export OT_FF_DRT_MAX_VIOL = 500\n")["OT_FF_DRT_MAX_VIOL"] == 700
+    assert R.config_values({"OT_FF_DRT_MAX_VIOL": "x"}, "")["OT_FF_DRT_MAX_VIOL"] == 10000                 # malformed: default
+    assert C["OT_FF_DRT_MAX_VIOL"] == 10000 and C["OT_FF_DRT_ITER"] == 20 and C["OT_FF_HOLD_CAPS"] == 0
 
 
 # ---------------------------------------------------------------------------------------------------- (a) GRT
