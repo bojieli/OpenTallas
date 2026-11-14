@@ -24889,7 +24889,11 @@
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
    "hold_items": {
     "hd_tile": "HEAD-98 11-13 (EXPERT-REVIEW-4): rp21z4 hd_tile has a certain M7 pin short (rst_start_raw_7 0.064 um from start_o_4 at 8.16,172.8); rp21z5 moves the pin one 8.64 step N. Not launched under z4.",
-    "hd_lep0N": "HEAD-98 11-13: lep0N relayout + raw-export remap built by PHYS-KVHEAD (epyc7 unit oth-ubuntu-3770468-1794622103); folds in as rp21z5. rp21z4 lep0N = rp21v form, not launched by the wave."
+    "hd_lep0N": "HEAD-98 11-13: lep0N relayout + raw-export remap built by PHYS-KVHEAD (epyc7 unit oth-ubuntu-3770468-1794622103); folds in as rp21z5. rp21z4 lep0N = rp21v form, not launched by the wave.",
+    "hd_turn_a": "HEAD-98 11-13: RE-SIGN onto rp21z4 in flight (same routed DB, kit RTL byte-identical; head-98/resign21z4/hd_turn_a, intel2 ~/tmp/h98_resign_hd_turn_a.log). Release only if the re-sign fails.",
+    "hd_st_str": "HEAD-98 11-13: RE-SIGN onto rp21z4 in flight (same routed DB, kit RTL byte-identical; head-98/resign21z4/hd_st_str, intel2 ~/tmp/h98_resign_hd_st_str.log). Release only if the re-sign fails.",
+    "hd_spn_eshim_tx": "HEAD-98 11-13: RE-SIGN onto rp21z4 in flight (same routed DB, kit RTL byte-identical; head-98/resign21z4/hd_spn_eshim_tx, intel2 ~/tmp/h98_resign_hd_spn_eshim_tx.log). Release only if the re-sign fails.",
+    "hd_st_n3_transit": "HEAD-98 11-13: RE-SIGN onto rp21z4 in flight (same routed DB, kit RTL byte-identical; head-98/resign21z4/hd_st_n3_transit, intel2 ~/tmp/h98_resign_hd_st_n3_transit.log). Release only if the re-sign fails."
    },
    "retry_fix": {},
    "gen_hosts": [
