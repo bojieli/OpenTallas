@@ -17,7 +17,7 @@ def validate(spec):
         raise ValueError('unsafe native clock identity')
     if isinstance(spec['target'], bool) or not isinstance(spec['target'], int) or not 1 <= spec['target'] <= 1500:
         raise ValueError('invalid declared leaf load')
-    if not 0 < spec['dmax_um'] <= spec['radius_um'] <= 250:
+    if not 0 < spec['dmax_um'] <= spec["radius_um"]:
         raise ValueError('invalid declared leaf geometry')
     return spec
 

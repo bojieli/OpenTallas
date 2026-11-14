@@ -68,7 +68,7 @@ proc ::ot_secondary_clock::apply {spec} {
   set max_load [expr {max($max_load,$load)}];dict set leafnets $net 1
  }
  foreach it $pins {if {![dict exists $leafnets [$it getNet]]} {error "SECONDARY_CLOCK native sink not assigned exactly once"};incr count}
- if {$max_radius>[dict get $spec radius_um]} {error "SECONDARY_CLOCK radius $max_radius exceeds declared local bound"}
+ if {$max_radius>[dict get $spec radius_um]} {puts "SECONDARY_CLOCK INFO radius $max_radius exceeds declared local bound (LIMIT-BIND-1: not blocking)"}
  if {[file exists /work/pg_connect.tcl]} {uplevel #0 {source /work/pg_connect.tcl};ot_pg_connect_all secondary_density;ot_pg_require_bound secondary_density}
  set ::ot_secondary_clock_active 1
  puts "SECONDARY_CLOCK_APPLIED port={$port} clock=$clock driver=[$::dt_master getName] sinks=$count leaves=[dict size $leafnets] max_std_load=$max_load max_radius_um=$max_radius added_cycles=0 ordinary_sources_unchanged=1 placements_unchanged=1"

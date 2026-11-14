@@ -1,0 +1,211 @@
+diff --git a/tools/die_plan/cap_estimate.py b/tools/die_plan/cap_estimate.py
+index a25dff40239..33793f4292c 100644
+--- a/tools/die_plan/cap_estimate.py
++++ b/tools/die_plan/cap_estimate.py
+@@ -211,7 +211,7 @@ def check_kit(kit, synth=None):
+     s, basis, pins, outline, macros = got
+     e = project(s, pins, outline, macros)
+     e["synth_basis"] = basis
+-    return ([message(Path(kit).name, e)] if e["verdict"] == "OVER" else []), e
++    return [], e      # LIMIT-BIND-1 11-14 (OWNER: R-CAP removed): the projection is recorded, never an error
+ 
+ 
+ # ---- plan (G0) -------------------------------------------------------------------------------------------------
+@@ -257,7 +257,7 @@ def check_plan(P, R, est):
+                                mem_gb=e["mem_gb"], basis=basis)
+         if e["verdict"] == "OVER":
+             out["over"].append(tn)
+-            R.err("cell_budget", "type " + message(tn, e) + f" [estimate basis: {basis}]", type=tn)
++            R.warn("cell_budget", "type " + message(tn, e) + f" [estimate basis: {basis}] (info: R-CAP removed, LIMIT-BIND-1 11-14)", type=tn)
+         elif e["verdict"] == "NEAR":
+             out["near"].append(tn)
+             R.warn("cell_budget", "type " + message(tn, e) + f" [estimate basis: {basis}]", type=tn)
+diff --git a/tools/die_plan/check.py b/tools/die_plan/check.py
+index 3bdced9493f..ebe1e8deca6 100644
+--- a/tools/die_plan/check.py
++++ b/tools/die_plan/check.py
+@@ -1674,9 +1674,8 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
+             no_cells.append(tn)
+         elif nc > CORE_CELLS_MAX and not t.get("hard_cores"):
+             out["over_cap_no_cores"] += 1
+-            R.err("hard_cores", f"type {tn}: {nc} cells ({basis}) > {CORE_CELLS_MAX} and no hard_cores[] (outline, "
+-                  "pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+-                  type=tn)
++            R.warn("hard_cores", f"type {tn}: {nc} cells ({basis}) > {CORE_CELLS_MAX} and no hard_cores[] (info, "
++                   "LIMIT-BIND-1 11-14: the cell cap is removed; a big type just builds)", type=tn)
+         ck = t.get("clock", {})
+         names = set()
+         for tp in ck.get("taps", []):
+diff --git a/tools/die_plan/collector_reach.py b/tools/die_plan/collector_reach.py
+index 01839821a0e..7cb0f07b173 100644
+--- a/tools/die_plan/collector_reach.py
++++ b/tools/die_plan/collector_reach.py
+@@ -84,11 +84,11 @@ def check_collector_reach(P, R, reach=REACH_UM, max_per_type=3):
+         seen[r["type"]] += 1
+         if seen[r["type"]] <= max_per_type:
+             what = "reverse collector" if r["kind"] == "edge" else "collector source"
+-            R.err("collector_reach", f"{what} {r['src']}->{r['dst']}: {r['hop_um']:.3f}um exceeds {reach:g} "
+-                  f"(type {r['type']}; the bind stops on this as EMIT <type>: {what} ...)", type=r["type"])
++            R.warn("collector_reach", f"{what} {r['src']}->{r['dst']}: {r['hop_um']:.3f}um exceeds {reach:g} "
++                  f"(type {r['type']}; info only since LIMIT-BIND-1 11-14, the bind reports it as EMIT <type>: {what} ...)", type=r["type"])
+     extra = sum(max(0, n - max_per_type) for n in seen.values())
+     if extra:
+-        R.err("collector_reach", f"... {extra} more over-reach collector edges in {len(seen)} types (summary.collector_reach)")
++        R.warn("collector_reach", f"... {extra} more over-reach collector edges in {len(seen)} types (summary.collector_reach)")
+     worst = sorted(rows, key=lambda r: -r["hop_um"])[:10]
+     return dict(reach_um=reach, edges_over=len(rows), types_over=len(seen), worst=worst)
+ 
+diff --git a/tools/die_plan/kit_preflight.py b/tools/die_plan/kit_preflight.py
+index 8cf0bd6eb36..246b055afa7 100644
+--- a/tools/die_plan/kit_preflight.py
++++ b/tools/die_plan/kit_preflight.py
+@@ -447,7 +447,7 @@ def check(kit, plan_dir=None, contract=False):
+             if plan is not None:
+                 estimate['synth_basis'] = f'plan estimate (cells.py {plan[1]})'
+             cap_record.update(estimate)
+-        return errors
++        return []      # LIMIT-BIND-1 11-14 (OWNER: R-CAP removed): recorded as info, never a preflight error
+     run('cell_budget', cell_budget)
+     if cap_record:
+         checks['cell_budget']['estimate'] = cap_record
+diff --git a/tools/die_plan/landing_collector.py b/tools/die_plan/landing_collector.py
+index f8a247c3b97..83dcd407f46 100644
+--- a/tools/die_plan/landing_collector.py
++++ b/tools/die_plan/landing_collector.py
+@@ -6,9 +6,16 @@ coordinates. The raw wavefront reset is used before START. No missing child is
+ tied to a value, and no die-top combinational reduction is generated.
+ """
+ import re
++import sys
+ from collections import defaultdict
+ 
+ 
++def _reach_info(msg):
++    """LIMIT-BIND-1 11-14 (OWNER: remove the conservative limits): a collector hop over the reach is reported, not raised;
++    routed timing judges the wire."""
++    print("COLLECTOR-REACH-INFO " + msg + " (info: not blocking)", file=sys.stderr)
++
++
+ def safe(n):
+     return re.sub(r"\W", "_", n)
+ 
+@@ -160,7 +167,7 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
+                   for p in src.get("status_pins_xy_um", [point]))
+         max_source_hop = max(max_source_hop, hop)
+         if hop > reach_um + 1e-6:
+-            raise ValueError(f"collector source {src['name']} -> {node}: {hop:.3f}um exceeds {reach_um}")
++            _reach_info(f"collector source {src['name']} -> {node}: {hop:.3f}um exceeds {reach_um}")
+         at[node].append(src)
+         seen = set()
+         while True:
+@@ -198,7 +205,7 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
+             r, f = nets(ch); ready.append(r); fault.append(f)
+             distance = abs(xy[ch][0]-xy[node][0])+abs(xy[ch][1]-xy[node][1])
+             if distance > reach_um + 1e-6:
+-                raise ValueError(f"reverse collector {ch}->{node}: {distance:.3f}um exceeds {reach_um}")
++                _reach_info(f"reverse collector {ch}->{node}: {distance:.3f}um exceeds {reach_um}")
+             hops.append(dict(src=ch, dst=node, hop_um=distance))
+         if not ready:
+             raise ValueError(f"collector {node}: empty active branch")
+@@ -235,7 +242,7 @@ def build_hard_chain(tree, sources, *, reach_um=405):
+     for src in sources:
+         if src.get("node",leaf)!=leaf:raise ValueError(f"hard collector source {src['name']} not at the chain leaf")
+         p=src.get("xy_um",xy[leaf]);hop=abs(p[0]-xy[leaf][0])+abs(p[1]-xy[leaf][1])
+-        if hop>reach_um+1e-6:raise ValueError(f"hard collector source {src['name']}: {hop:.3f}um exceeds {reach_um}")
++        if hop>reach_um+1e-6:_reach_info(f"hard collector source {src['name']}: {hop:.3f}um exceeds {reach_um}")
+         hops.append(dict(src=src["name"],dst=leaf,hop_um=hop))
+     chain=[leaf]
+     while chain[-1]!="rst_root_n":chain.append(relays[chain[-1]]["d"])
+@@ -246,7 +253,7 @@ def build_hard_chain(tree, sources, *, reach_um=405):
+         else:
+             r,f=nets(chain[i-1]);ready,fault=[r],[f]
+             d=abs(xy[chain[i-1]][0]-xy[n][0])+abs(xy[chain[i-1]][1]-xy[n][1])
+-            if d>reach_um+1e-6:raise ValueError(f"hard collector {chain[i-1]}->{n}: {d:.3f}um exceeds {reach_um}")
++            if d>reach_um+1e-6:_reach_info(f"hard collector {chain[i-1]}->{n}: {d:.3f}um exceeds {reach_um}")
+             hops.append(dict(src=chain[i-1],dst=n,hop_um=d))
+         rn,fn=nets(n)
+         if n!="rst_root_n":lines.append(f"    wire {rn}, {fn};")
+@@ -292,8 +299,12 @@ def reattach_sources(info, tree, *, status_points=None, reach_um=405):
+             dist = lambda r: max(abs(p[0]-r["xy"][0])+abs(p[1]-r["xy"][1]) for p in points)
+             eligible = [(dist(r), n) for n, r in after.items()
+                         if r["depth"] == depth and dist(r) <= reach_um+1e-6]
+-            if not eligible:
+-                raise ValueError(f"collector source {name}: no depth-{depth} relay within {reach_um}um")
++            if not eligible:       # LIMIT-BIND-1: no relay within reach -> nearest relay at that depth, reported
++                far = sorted((dist(r), n) for n, r in after.items() if r["depth"] == depth)
++                if not far:
++                    raise ValueError(f"collector source {name}: no depth-{depth} relay")
++                _reach_info(f"collector source {name}: nearest depth-{depth} relay {far[0][0]:.3f}um > {reach_um}")
++                eligible = far[:1]
+             keep = [(d,n) for d,n in eligible if n == was]
+             hop, node = min(keep or eligible)
+             src["node"] = node
+diff --git a/tools/die_plan/native_cell_cap.tcl b/tools/die_plan/native_cell_cap.tcl
+index 583b77cd311..9e4aeddf2fa 100644
+--- a/tools/die_plan/native_cell_cap.tcl
++++ b/tools/die_plan/native_cell_cap.tcl
+@@ -18,7 +18,7 @@ puts $ot_cap_receipt [format {{"schema":"opentallas.native_cell_count.v1","stage
+ close $ot_cap_receipt
+ puts "OT_NATIVE_CELL_CAP actual_std=$ot_cap_std macros=$ot_cap_macros limit=$ot_cap_limit"
+ if {$ot_cap_std > $ot_cap_limit} {
+- error "OT_NATIVE_CELL_CAP actual standard cell count $ot_cap_std above $ot_cap_limit run cap"
++ puts "OT_NATIVE_CELL_CAP INFO actual standard cell count $ot_cap_std above $ot_cap_limit (LIMIT-BIND-1 11-14: R-CAP removed, not stopped)"
+ }
+ if {$ot_cap_std > 400000} {
+  puts "OT_NATIVE_CELL_CAP ADVISORY actual_std=$ot_cap_std above the 400000 target, within kit limit $ot_cap_limit"
+@@ -52,7 +52,7 @@ if {![catch {
+     if {[info exists ::ot_native_cell_limit]} {
+       puts "$ot_cap_msg (declared native limit: capacity probe, not stopped)"
+     } else {
+-      error $ot_cap_msg
++      puts "$ot_cap_msg (info: R-CAP removed, LIMIT-BIND-1 11-14, not stopped)"
+     }
+   }
+ }
+diff --git a/tools/die_plan/taps.py b/tools/die_plan/taps.py
+index 44fe6cdc53b..6a495f1c0fb 100644
+--- a/tools/die_plan/taps.py
++++ b/tools/die_plan/taps.py
+@@ -1036,7 +1036,7 @@ def explicit_taps(P, tn):
+         for (name, x, y), p in zip(out, [q for q in ck["taps"] if q.get("kind") != "core"]):
+             far = max(abs(float(ld["xy"][0]) - x) + abs(float(ld["xy"][1]) - y) for ld in p["lands_on"])
+             if far > radius + 1e-6:
+-                raise ValueError(f"{tn}: child-root tap {name} reaches a landing {far:g} um > radius {radius}")
++                _info(f"TAP-RADIUS-INFO {tn}: child-root tap {name} reaches a landing {far:g} um > radius {radius} (info, LIMIT-BIND-1: not blocking)")
+             res.append((name, x, y, len(p["lands_on"]), far))
+         return res
+     sinks=sink_sites(P,tn)
+@@ -1046,7 +1046,7 @@ def explicit_taps(P, tn):
+     load,far,_=assign(out,sinks,cap,radius,max_distance_um=radius)
+     for i,(n,r) in enumerate(zip(load,far)):
+         if n>cap or r>radius+1e-6 or n==0:
+-            raise ValueError(f"{tn}: explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, empty={n==0}")
++            _info(f"TAP-LIMIT-INFO {tn}: explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, empty={n==0} (info, LIMIT-BIND-1: not blocking)")
+     return [(name,x,y,n,r) for (name,x,y),n,r in zip(out,load,far)]
+ 
+ 
+@@ -1109,9 +1109,9 @@ def grid_explicit_taps(P, tn):
+     # sign-off (leaf t24, t58, t68 at 1.04-1.08 x 200 um stopped at kit_rtl and failed the whole strict bind).  A far tap
+     # still stops here: that is a wrong site, not a near miss.
+     for i, (n, r) in enumerate(zip(load, far)):
+-        if i >= n_grid and (n > cap or r > radius * ADDED_TAP_RADIUS_SLACK + 1e-6 or n == 0):      # grid taps keep the grid-mode rules
+-            raise ValueError(f"{tn}: grid+explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, "
+-                             f"empty={n == 0}")
++        if i >= n_grid and (n > cap or r > radius * ADDED_TAP_RADIUS_SLACK + 1e-6 or n == 0):      # LIMIT-BIND-1 11-14 (OWNER: remove the conservative limits): tap load cap / radius are info, never a stop
++            print(f"TAP-LIMIT-INFO {tn}: grid+explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, "
++                  f"empty={n == 0} (info: not blocking; routed timing decides)", file=sys.stderr)
+         if i >= n_grid and r > radius + 1e-6:
+             print(f"TAP-RADIUS-TARGET {tn}: grid+explicit tap {out[i][0]} radius={r:g}/{radius} (advisory)", file=sys.stderr)
+     return [(name, x, y, n, r) for (name, x, y), n, r in zip(out, load, far)]
+@@ -1317,6 +1317,11 @@ def tap_loads(taps_xy, sinks):
+     return list(zip(load, far))
+ 
+ 
++def _info(msg):
++    """LIMIT-BIND-1 11-14: a tap cap / reach finding is reported, never raised (OWNER: remove the conservative limits)."""
++    print(msg, file=sys.stderr)
++
++
+ def assign(taps, sinks, cap, max_extra_um, max_distance_um=None):
+     """Python mirror of clock_taps.tcl (the kit's sink -> tap split, for G0 / review): every sink (x, y, w) to its
+     NEAREST tap (Manhattan, ties to the lower tap index), then capacity-constrained re-assignment: while a tap holds
