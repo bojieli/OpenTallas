@@ -206,7 +206,8 @@ proc rm_along {pts d} {
 }
 proc rm_polyline {g ax ay bx by} {
   global rm_wpmap rm_pr rm_gd rm_x0 rm_y0 rm_x1 rm_y1 rm_dbu
-  if {[dict exists $rm_wpmap $g]} {
+  # one waypoint = the source point of a soft-source head only (plan relay_polylines with a single point): auto path from it
+  if {[dict exists $rm_wpmap $g] && [llength [dict get $rm_wpmap $g]] > 2} {
     set pts {}
     foreach v [dict get $rm_wpmap $g] { lappend pts [expr {int($v * $rm_dbu)}] }
     set pts [concat [list $ax $ay] $pts [list $bx $by]]
