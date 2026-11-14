@@ -6662,7 +6662,10 @@
     "col_h9_r1__t1__cl49d7a23e__pv4bd36c74@2",
     "col_h9_r1__t1__cl49d7a23e__pv5bdf9f51@2",
     "col_h9_r1__t1__cl49d7a23e__pv9a5bd576@2",
-    "col_h9_r1__t1__cl49d7a23e__pvadb6c679@2"
+    "col_h9_r1__t1__cl49d7a23e__pvadb6c679@2",
+    "dsdv_slice_c1x_C__t4@1",
+    "serdes__t15__cla3d02796@10",
+    "serdes__t16@18"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -6670,7 +6673,8 @@
     "GEOM-REQ",
     "KIT-PLACED",
     "REVIEW",
-    "SIGNED"
+    "SIGNED",
+    "WAIT-PARENT"
    ],
    "geom_exceptions": [
     {
@@ -6842,7 +6846,20 @@
     "col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31": "KIT-OPS-2 B1 swap: kept from glob 'col_h*' (type unchanged by B1) | COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
     "col_h9_r0_p4__t1__clcb2fbfe8__pvec137455": "KIT-OPS-2 B1 swap: kept from glob 'col_h*' (type unchanged by B1) | COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
     "col_h10*": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key. | was col_h*: COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
-    "dsdv_slice_*": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key."
+    "dsdv_slice_c1x_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_c1x_C__t10": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_c1x_C__t3": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_c1x_C__t6": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_c1x_C__t8": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_c3x_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_iq_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_kv512_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_lepe_mu_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_lepe_mu_LP__t2": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_lepe_nh_mus_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_lepe_nh_mus_LP__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_lepw_mu_LP__t2": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "dsdv_slice_lepw_mus_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -7808,7 +7825,7 @@
     "ot_s81sl_leaf__t9@6": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
     "ot_s81sl_kv_leaf__t2@12": "INFRA (KW-FIX-43 COORD 19:5x): epyc8 earlyoom SIGTERM to yosys 02:47Z (host 953/1007 GB used, VmRSS 33 GB; make Error 241 after 5 h, REHAND epyc7->epyc8); place request 48 -> 64 GB",
     "dsdv_slice_lepw_mus_C__t1@27": "REDESIGN: changed RTL (re-bind: CTAP-WIDE bind10_ctap is the current bind of record; COORD KW43-110 B lifts the J3 re-bind hold)",
-    "dsdv_slice_lepw_mu_C__t1@20": "REDESIGN: changed RTL (re-bind: CTAP-WIDE bind10_ctap is the current bind of record; COORD KW43-110 B lifts the J3 re-bind hold)",
+    "dsdv_slice_lepw_mu_C__t1@20": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
     "dsdv_slice_c1x_C__t10@16": "REDESIGN: changed RTL (re-bind: CTAP-WIDE bind10_ctap is the current bind of record; COORD KW43-110 B lifts the J3 re-bind hold)",
     "dsdv_slice_c1x_C__t4@31": "REDESIGN: changed RTL (re-bind: CTAP-WIDE bind10_ctap is the current bind of record; COORD KW43-110 B lifts the J3 re-bind hold)",
     "dsdv_slice_c1x_C__t9@13": "REDESIGN: changed RTL (re-bind: CTAP-WIDE bind10_ctap is the current bind of record; COORD KW43-110 B lifts the J3 re-bind hold)",
@@ -7943,7 +7960,13 @@
     "col_h9_r1__t1__cl49d7a23e__pv5bdf9f51@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "col_h9_r1__t1__cl49d7a23e__pv9a5bd576@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "col_h9_r1__t1__cl49d7a23e__pvadb6c679@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
-    "ot_s81sl_leaf__t44__clf6cf8492@2": "FAIL-S81-1 (COORD 23:1x): epyc7 had no docker images (gen_lint docker rc 125 / CRASH image not found); 6 orfs images loaded from epyc8; relaunch."
+    "ot_s81sl_leaf__t44__clf6cf8492@2": "FAIL-S81-1 (COORD 23:1x): epyc7 had no docker images (gen_lint docker rc 125 / CRASH image not found); 6 orfs images loaded from epyc8; relaunch.",
+    "dsdv_slice_c1x_C__t4@1": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
+    "dsdv_slice_c1x_C__t5@2": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
+    "dsdv_slice_c1x_C__t7@2": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
+    "dsdv_slice_c1x_C__t9@2": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
+    "serdes__t15__cla3d02796@10": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
+    "serdes__t16@18": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -8383,7 +8406,8 @@
      "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_GRT_POST_MAX_S": "43200"
     },
     "ot_s81sl_leaf__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9005,16 +9029,19 @@
     },
     "dsdv_slice_c1x_C__t4": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_GRT_POST_MAX_S": "43200"
     },
     "dsdv_slice_c1x_C__t5": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_GRT_POST_MAX_S": "43200"
     },
     "dsdv_slice_c1x_C__t9": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_GRT_POST_MAX_S": "43200"
     },
     "dsdv_slice_c3x_C__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9042,7 +9069,8 @@
     },
     "dsdv_slice_lepw_mu_C__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_GRT_POST_MAX_S": "43200"
     },
     "dsdv_slice_lepw_mu_LP__t2": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9232,7 +9260,8 @@
      "OT_CONS_KIT": "1",
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_CONS_STRIP_ROWS": "1"
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_GRT_POST_MAX_S": "43200"
     },
     "serdes__t16": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9240,7 +9269,8 @@
      "OT_CONS_KIT": "1",
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_CONS_STRIP_ROWS": "1"
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_GRT_POST_MAX_S": "43200"
     },
     "serdes__t1__clb45db5be": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -28418,7 +28448,16 @@
     "die_max_inflight": 140,
     "pilot_max": 4,
     "pilot_gate": false
-   }
+   },
+   "take_states_prev_kitops3_wp": [
+    "NEEDS-KIT",
+    "FIX",
+    "GEOM-REQ",
+    "KIT-PLACED",
+    "REVIEW",
+    "SIGNED"
+   ],
+   "note_kitops3_s81misc": "KIT-OPS-3 23:3x: WAIT-PARENT in take_states (only_items-gated, 1 row: slice_station__t40); 7 FAIL-S81-1 retry keys + OT_GRT_POST_MAX_S=43200; dsdv_slice_* hold glob split into 14 explicit keys so the 5 HUNG c1x_C t4/t5/t7/t9 + lepw_mu_C t1 can relaunch. Revert: take_states_prev_kitops3_wp, re-add glob."
   },
   "s81_head": {
    "enabled": true,
