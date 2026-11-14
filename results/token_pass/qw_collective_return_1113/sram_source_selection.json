@@ -1,0 +1,8 @@
+{
+  "original": "/srv/opentallas-scratch2/claude/wt/tok-verify-2/rtl/test/qwen_dv/safe_storage/sram_model.sv",
+  "original_sha256": "7791b9e805bc44cd6146c3bd6b2ac5ec6008a1f64964d3bd7b9f0d1d5797489a",
+  "retained_modules": [
+    "ot_sram_1r1w_32x64_m1"
+  ],
+  "reason": "Avoid duplicate32x546 model; complete32x64 module copied byte-for-byte with collision checker"
+}

@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.qwen.collective-status-component.v1",
+  "cases": [
+    {
+      "name": "actual",
+      "expectation": "component pass",
+      "passed": true,
+      "collective_payload_gate": true,
+      "raw_ss5": [
+        {
+          "edge": 3826,
+          "message": 0,
+          "ar_land": 1,
+          "ar_last": 0
+        },
+        {
+          "edge": 4081,
+          "message": 0,
+          "ar_land": 1,
+          "ar_last": 1
+        },
+        {
+          "edge": 4082,
+          "message": 0,
+          "ar_land": 0,
+          "ar_last": 1
+        },
+        {
+          "edge": 6094,
+          "message": 1,
+          "ar_land": 1,
+          "ar_last": 0
+        },
+        {
+          "edge": 6349,
+          "message": 1,
+          "ar_land": 1,
+          "ar_last": 1
+        },
+        {
+          "edge": 6350,
+          "message": 1,
+          "ar_land": 0,
+          "ar_last": 1
+        }
+      ],
+      "ctl_done_edges": [
+        4082,
+        6350
+      ],
+      "physical_bound_receipt": false,
+      "native_calendar_qualified": false
+    },
+    {
+      "name": "last_skew_control",
+      "expectation": "negative caught",
+      "passed": true,
+      "collective_payload_gate": true,
+      "raw_ss5": [
+        {
+          "edge": 3826,
+          "message": 0,
+          "ar_land": 1,
+          "ar_last": 0
+        },
+        {
+          "edge": 4081,
+          "message": 0,
+          "ar_land": 1,
+          "ar_last": 1
+        },
+        {
+          "edge": 4082,
+          "message": 0,
+          "ar_land": 0,
+          "ar_last": 1
+        },
+        {
+          "edge": 6094,
+          "message": 1,
+          "ar_land": 1,
+          "ar_last": 0
+        },
+        {
+          "edge": 6349,
+          "message": 1,
+          "ar_land": 1,
+          "ar_last": 1
+        },
+        {
+          "edge": 6350,
+          "message": 1,
+          "ar_land": 0,
+          "ar_last": 1
+        }
+      ],
+      "ctl_done_edges": [
+        6095
+      ],
+      "physical_bound_receipt": false,
+      "native_calendar_qualified": false
+    }
+  ],
+  "qualified_bound_receipt": false,
+  "fixture_hashes": {
+    "part.hex": "f6dcbd36c3571cf0320556f922bc8cb8f97f36ff7ca4c20b57c5d90c92f180d8",
+    "sum.hex": "a76f60b7f24d9b3ca79d31263ff131e3eab100c84017efabbb1ed54495143735",
+    "cmd.hex": "2c12ab031667fe44c35d09e379c8e16f67673480a2b1347ba26c4afe24d1b028",
+    "pw.hex": "e7d005cb6051579d1a913d26162c72966735dfe7d2cb55ee77ed06b867a93535"
+  },
+  "executed_driver_sha256": "37be052fc8254ace4deb4eb3bdf1d7129ad3f6cb1027ee55c72eca8f2cf18b7f",
+  "scope": "Real8-rank static collective/CDC/codec/CRC/link RTL, modeled PHYs only, exact emitted asbuilt logical XC programme; declared measured return age2 then actual LP-safe core/status and CTLM. No current physical bind/START/SEG-consumer qualification. Raw status tags remain message ordinals because both native XC tags are0; no priced-plan remap."
+}
