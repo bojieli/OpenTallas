@@ -1,0 +1,6 @@
+# TYPE-COLH9P5 (2026-11-14 01:45 PST)
+Target s81/col_h9_r0_p5__t1. FINDING: the plain name is no longer a partition type in B1 src_pgL plan_h2_2249 (bind: "no partition type col_h9_r0_p5__t1 in the plan"); it is split into 12 pv variants (col_h9_r0_p5__t1__pv{8995e794,eda1ecc9,c6e5797f,ee6f8140,5c8f2166,c1b82625,35382794,f731e6ec,b22875c0,c93af856,f71da13a,bca8d846}). They sit in kit_wave.json s81 hold_items with a stale reason ("col_h rows HELD until ready11p binds", 11-12; B1 strict bind is rc 0 now) -> rule 6, KIT-OPS-3 may release. The GRT-0116 failure was on the old plain item (epyc4, 11-12), whose kit is gone.
+Form A (private, plain, full-iteration GRT): run-item specs ~/type-s81-colh9p5/fa_<pv>/spec.json on intel2 (template = live col_h9_r1 B1 spec, gen_env/args unchanged), work /srv/opentallas-scratch2/claude/type-s81-col-h9-r0-p5/fa_<pv> (gen host epyc9).
+Form B (PLACE_DENSITY -0.1) via OT_CONS_KIT=1 OT_CONS_UTIL=<kit pd - 0.1> OT_CONS_MAX_LAYER=<kit top>: launched after gen of A shows the kit PLACE_DENSITY.
+Form C (outline +20%): NOT launched; per-type outline change fails plan validation (seam geometry in die frame, same finding as TYPE-S81-T29) = die-plan change -> asked DIE-S81-91.
+On pass: AUTO-RESIGN row + RESULT line.
