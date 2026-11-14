@@ -882,7 +882,7 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
             env["OT_PRD_REPAIR_RC"] = repair_rc
-        env.update(nonport_corner_env(kit, env))
+        # KIT-OPS-4: no OT_VCLK_CORNER override here: a TT-only pass must not see ff (kit_modes), the b pass gets ff from variant.env (prd_mk.sh)
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
             return end("ERROR", f"prd_mk.sh {v} failed (pass dir not staged)")
