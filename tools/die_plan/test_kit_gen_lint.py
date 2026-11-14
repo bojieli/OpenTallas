@@ -1,6 +1,8 @@
 """AUTOBUILD-PIPE-4 10-31 (OWNER 12.27 d): generation-time kit lint, static parts (the yosys part runs in the flow
 image; its parsers are tested here on the yosys text)."""
+import os
 import sys
+from unittest import mock
 import tempfile
 import unittest
 from pathlib import Path
@@ -82,12 +84,26 @@ class YosysParsers(unittest.TestCase):
 
     def test_memory_bits_vs_limit(self):
         rows = [("qkd_hr_cdc_hi/u_hx.mem", 514, 16), ("t/small", 8, 16)]
-        e = GL.memory_errors(rows, {"SYNTH_MEMORY_MAX_BITS": ["8192"]})
-        self.assertEqual(len(e), 1)
-        self.assertIn("8224 bits > SYNTH_MEMORY_MAX_BITS 8192", e[0])
-        self.assertEqual(GL.memory_errors(rows, {"SYNTH_MEMORY_MAX_BITS": ["16384"]}), [])
-        self.assertEqual(len(GL.memory_errors(rows, {})), 1)            # ORFS default 4096
+        with mock.patch.dict(os.environ, {"OT_LINT_MEMORY_MAX_BITS": "0"}):      # 0 = recipe bound only
+            e = GL.memory_errors(rows, {"SYNTH_MEMORY_MAX_BITS": ["8192"]})
+            self.assertEqual(len(e), 1)
+            self.assertIn("8224 bits > SYNTH_MEMORY_MAX_BITS 8192", e[0])
+            self.assertEqual(GL.memory_errors(rows, {"SYNTH_MEMORY_MAX_BITS": ["16384"]}), [])
+            self.assertEqual(len(GL.memory_errors(rows, {})), 1)                # ORFS default 4096
         self.assertEqual(GL.memory_errors(rows, {"SYNTH_MOCK_LARGE_MEMORIES": ["1"]}), [])
+
+    def test_memory_bits_lint_override(self):
+        """FAIL-S81-1 11-14: OT_LINT_MEMORY_MAX_BITS (default 65536) raises, never lowers, the lint bound"""
+        big = [("m", 160, 265)]                                                  # 42400 bits
+        env = {k: v for k, v in os.environ.items() if k != "OT_LINT_MEMORY_MAX_BITS"}
+        with mock.patch.dict(os.environ, env, clear=True):
+            self.assertEqual(GL.memory_errors(big, {"SYNTH_MEMORY_MAX_BITS": ["16384"]}), [])
+            self.assertEqual(len(GL.memory_errors([("m", 400, 400)], {"SYNTH_MEMORY_MAX_BITS": ["16384"]})), 1)
+        with mock.patch.dict(os.environ, {"OT_LINT_MEMORY_MAX_BITS": "1"}):
+            self.assertEqual(GL.memory_errors(big, {"SYNTH_MEMORY_MAX_BITS": ["65536"]}), [])
+            self.assertEqual(len(GL.memory_errors(big, {"SYNTH_MEMORY_MAX_BITS": ["8192"]})), 1)
+        with mock.patch.dict(os.environ, {"OT_LINT_MEMORY_MAX_BITS": "200000"}):
+            self.assertEqual(GL.memory_errors([("m", 400, 400)], {"SYNTH_MEMORY_MAX_BITS": ["16384"]}), [])
 
 
 if __name__ == "__main__":
