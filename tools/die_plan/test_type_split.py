@@ -154,7 +154,7 @@ def test_intra_cut_routes_keep_source_port_affinity_and_legacy_width(pin_rows, e
     """Splitting a two-output leaf must not turn both buses into anonymous residual capacity."""
     from types import SimpleNamespace
     ev = TS.Event.__new__(TS.Event)
-    ev.rep, ev.pmap, ev.ts = {}, {"p": []}, {"t": SimpleNamespace(legs=[])}
+    ev.rep, ev.pmap, ev.ts = {}, {"p": []}, {"t": SimpleNamespace(legs=[], parts=[{}])}
     ev.raw_type = lambda _p: "t"
     ev.census = dict(intra=[["p", "seq__g_xs_2__u_xs", "fan", 0, 2, 256]])
     if pin_rows is not None:
@@ -179,7 +179,7 @@ def test_deferred_bus_driver_routes_stay_in_their_own_split_family(tmp_path):
     ev = TS.Event.__new__(TS.Event)
     ev.ab, ev.rep, ev.spec = dict(plan_cells=str(source)), {}, {}
     ev.raw = dict(partitions=[dict(name=t, type=t) for t in ("A", "B")])
-    ev.ts = {t: SimpleNamespace(n=2, pname={t: [t+"0", t+"1"]}, t=dict(hard_cores=[]),
+    ev.ts = {t: SimpleNamespace(n=2, parts=[dict(name=t)], pname={t: [t+"0", t+"1"]}, t=dict(hard_cores=[]),
                               content_piece=dict(driver=0), keep=0, bp=lambda _b: 1,
                               tnames=[t+"0", t+"1"]) for t in ("A", "B")}
     result = ev._plan_cells({})
@@ -261,3 +261,37 @@ def test_split_output_rebases_absolute_repository_base(tmp_path):
     published = json.loads((out / "asbuilt_vN.json").read_text())
     assert not Path(published["base"]).is_absolute()
     assert (out / published["base"]).resolve() == TS.ROOT
+
+
+def test_replicated_transit_reuses_type_buses_and_interior_banks():
+    from types import SimpleNamespace
+    ev=TS.Event.__new__(TS.Event);ev.tag="TEST";ev.ab={"map":{"parts":{"hsl_EN_5":["A","hsl0"],"hsl_ES_5":["B","hsl0"]}}};ev.lmax=20;ev.req=[]
+    typ=[{"buses":[],"ft_slots":[]}for _ in range(3)]
+    ts=SimpleNamespace(tn="cohort",parts=[{"name":"A"},{"name":"B"}],T=typ,bus_piece={})
+    def new_bus(i,stem):
+        used={b["name"]for b in typ[i]["buses"]};candidate=stem;n=1
+        while candidate in used:n+=1;candidate=stem+str(n)
+        return candidate
+    ts._new_bus_name=new_bus
+    ev._mid_slot=lambda ts,i,a,z,w:typ[i]["ft_slots"].append({"name":"ft0"})or typ[i]["ft_slots"][-1]
+    a=ev._transit("A",ts,0,2,"hsl0_ao",32,"data","leaf hsl_EN_5 -> slg")
+    b=ev._transit("B",ts,0,2,"hsl0_ao",32,"data","leaf hsl_ES_5 -> slg")
+    assert a[:2]==b[:2] and a[2]!=b[2]
+    assert len(typ[0]["buses"])==len(typ[2]["buses"])==len(typ[1]["ft_slots"])==1
+    assert len(ev.req)==4
+    assert {r["base"]for r in ev.req}=={"A","B"}
+    # A distinct occurrence in the same instance remains distinct, never silently merged by name/width.
+    c=ev._transit("A",ts,0,2,"hsl0_ao",32,"data","leaf hsl_EN_5 -> slg")
+    assert c[0]!=a[0]
+
+
+def test_plancell_replica_callback_runs_once_with_shared_type_endpoints():
+    from types import SimpleNamespace
+    ev=TS.Event.__new__(TS.Event);ev.tag="TEST";ev.ab={};ev.lmax=0;ev.req=[]
+    typ=[{"buses":[],"ft_slots":[]}for _ in range(2)]
+    ts=SimpleNamespace(tn="cohort",parts=[{"name":"A"},{"name":"B"}],T=typ,bus_piece={})
+    ts._new_bus_name=lambda i,stem:stem
+    calls=[];ev.pc_routes=[(("A","B"),ts,0,1,"id",2,"data","shared id",lambda a,b:calls.append((a,b)))]
+    ev._plancell_requests()
+    assert calls==[("o_id","i_id")]
+    assert len(ev.req)==2 and len(typ[0]["buses"])==1
