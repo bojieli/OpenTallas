@@ -15,10 +15,10 @@ export const stateLegend = (counts) => h('div.legend', STATES.filter((s) => coun
 function metricTiles(m) {
   if (!m) return null;
   const drc = m.drt_drc != null ? m.drt_drc : m.drc;
-  const T = [['TT setup WNS', m.tt_wns, 'ps', (v) => v >= -42], ['FF hold WNS', m.ff_wns, 'ps', (v) => v >= 0], ['DRC', drc, '', (v) => v === 0], ['GRT overflow', m.grt_overflow, '', (v) => v === 0],
+  const T = [['Setup TT', m.tt_wns, 'ps', (v) => v >= -42], ['Hold FF', m.ff_wns, 'ps', (v) => v >= 0], ['DRC', drc, '', (v) => v === 0], ['GRT ovf', m.grt_overflow, '', (v) => v === 0],
     ['LEC', m.lec, '', (v) => /pass|equiv|ok/i.test(String(v))], ['Cells', m.cells, '', null]].filter((t) => t[1] != null);
   if (!T.length) return null;
-  return h('div.metrics', T.map(([k, v, u, good]) => h('div.metric' + (good ? (good(v) ? '.good' : '.bad') : ''), h('small', k), h('b', typeof v === 'number' ? (k === 'Cells' ? fmtCount(v) : fmt(v, /WNS/.test(k) ? 1 : 0)) : String(v), u ? ' ' + u : ''))));
+  return h('div.metrics', T.map(([k, v, u, good]) => h('div.metric' + (good ? (good(v) ? '.good' : '.bad') : ''), h('small', k), h('b', typeof v === 'number' ? (k === 'Cells' ? fmtCount(v) : fmt(v, /Setup|Hold/.test(k) ? 1 : 0)) : String(v), u ? ' ' + u : ''))));
 }
 function actions(n, view) {
   const A = [];

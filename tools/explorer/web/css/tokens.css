@@ -18,6 +18,9 @@
   /* layout / plan canvas roles */
   --macro: #7c5cd6; --cellgrey: #6b7690; --faint: #a7b0c4; --tree: #c0721a; --pin-in: #0e8fb3; --pin-out: #d9703f; --path: #d93a40; --hold: #b87a00;
   --seam: #2563eb; --ruler: #b8860b; --select: #14171f; --pg: #c88a12; --core-fill: #5a6478;
+  /* sequential ramps (data): clock arrival (viridis), congestion heat */
+  --arr-1: #440154; --arr-2: #3b528b; --arr-3: #21918c; --arr-4: #5ec962; --arr-5: #fde725;
+  --heat-1: #2c7bb6; --heat-2: #7fbfdc; --heat-3: #e6f5c9; --heat-4: #fee08b; --heat-5: #fc8d59; --heat-6: #d7191c;
   /* type scale and metrics */
   --sans: Inter, "SF Pro Text", -apple-system, "Segoe UI", system-ui, sans-serif;
   --mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;

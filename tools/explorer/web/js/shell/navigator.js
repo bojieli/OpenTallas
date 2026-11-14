@@ -20,7 +20,7 @@ export function mountNavigator(host) {
       h('small', n.level === 'type' ? (n.plan.instances || 0) + '×' : ''));
   }
   function group(key, label, n, body, state) {
-    const open = !S.closed.has(key) || !!S.filter;
+    const open = !S.closed.has(key) || !!S.filter || (key === 'cores' && S.node && S.node.includes('.c.') && !S.nodeParent);
     const b = h('button.grp' + (state ? '.' + stateCls(state) : ''), { type: 'button', 'aria-expanded': String(open), dataset: { testid: 'nav-group-' + key.replace(/\s/g, '') },
       onclick: () => { if (S.closed.has(key)) S.closed.delete(key); else S.closed.add(key); ls.set('nav.closed', [...S.closed]); paint(); } },
       h('span.car', '▾'), state ? h('i.dot') : null, label, h('span.n', n));

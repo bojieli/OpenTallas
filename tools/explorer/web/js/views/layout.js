@@ -1,7 +1,7 @@
 // Layout: the die with the real routed wires of every signed type and of its hard cores, in place (composition
 // manifest of EXPLORER-P1, /api/v1/compose/<die>).  Far out: plan rectangles + density rasters; zoom in: exact wires.
-import { h, clear, fmt, icon, stateColor, hexRgb, levelOf, dieShort, shortName, debounce, STATE_LABEL, stateCls, fmtBytes } from '../core/dom.js';
-import { LayoutEngine, xfOf, xfCompose, xfBox } from '../engine/layout-engine.js';
+import { h, clear, fmt, fmtCount, icon, stateColor, hexRgb, levelOf, dieShort, shortName, debounce, STATE_LABEL, stateCls, fmtBytes } from '../core/dom.js';
+import { LayoutEngine, xfOf, xfCompose, xfChild, xfBox, SGN } from '../engine/layout-engine.js';
 import { layersTab } from './layers-panel.js';
 import { showBusy } from '../shell/shell.js';
 
@@ -25,7 +25,7 @@ export default {
       },
     });
     wrap.append(head);
-    await eng.start();
+    await eng.start(); if (window.otx) window.otx.eng = eng;
 
     const fitBtn = h('button.btn', { type: 'button', title: 'Fit the die (F)', testid: 'layout-fit', onclick: () => eng.fit() }, icon('fit'), 'Fit');
     const selBtn = h('button.btn', { type: 'button', title: 'Zoom to the selected placement', testid: 'layout-zoomsel', onclick: () => zoomSel(true) }, 'To selection');
@@ -50,8 +50,18 @@ export default {
         const what = drawn ? (r.state === 'signed' ? 'routed wires' : 'UNSIGNED, as routed') : r.ok ? 'outline only (not signed off)' : (r.why || 'no routed pack');
         insts.push({ ii, name: r.name, node: r.node, state: r.state, orient: r.orient, bb: [r.x / 1000, r.y / 1000, (r.x + r.w) / 1000, (r.y + r.h) / 1000], col: hexRgb(stateColor(r.state)), drawn,
           label: r.name + (drawn && r.state !== 'signed' ? '  UNSIGNED' : ''), sub: `${shortName(r.node)} · ${STATE_LABEL[r.state] || r.state} · ${r.orient} · ${what}` });
-        if (!drawn) return;
-        const xf = xfOf(r.orient, r.x, r.y, r.w, r.h);
+        const xf = SGN[r.orient] ? xfOf(r.orient, r.x, r.y, r.w, r.h) : null;
+        if (!drawn) {   // no type pack to draw: its hard cores still have packs; draw them at their PLAN placement
+          const t = S.D.nodes[r.node]; let nc = 0;
+          if (xf && t) (t.plan.hard_cores || []).forEach((hc, j) => {
+            const cp = m.packs[hc[1]]; if (!cp || !SGN[hc[7]] || !(cp.state === 'signed' || S.unsigned)) return;
+            if (Math.abs((cp.die[2] - cp.die[0]) - hc[5] * 1000) > 2 || Math.abs((cp.die[3] - cp.die[1]) - hc[6] * 1000) > 2) return;   // the pack is not this plan outline
+            const cx = xfChild(xf, hc[7], hc[3], hc[4], hc[5], hc[6]);
+            items.push({ key: 'i' + ii + 'p' + j, ii, pack: hc[1], level: 'core', xf: cx, bb: xfBox(cx, ...cp.die), name: r.name, cname: hc[0], state: cp.state, plan: true }); nc++;
+          });
+          if (nc) { const q = insts[insts.length - 1]; q.cores = nc; q.sub += ` · ${nc} hard cores drawn at plan placement`; }
+          return;
+        }
         items.push({ key: 'i' + ii, ii, pack: r.pack, level: 'type', xf, bb: xfBox(xf, ...p.die), name: r.name, state: p.state });
         p.cores.forEach((c, j) => { if (!c.core || !m.packs[c.core]) return; const cx = xfCompose(xf, c.origin, c.orient); items.push({ key: 'i' + ii + 'c' + j, ii, pack: c.core, level: 'core', xf: cx, bb: xfBox(cx, ...m.packs[c.core].die), name: r.name, cname: c.name, state: m.packs[c.core].state }); });
       });
@@ -61,11 +71,12 @@ export default {
     function paintHead() {
       const s = S.man.summary, drawn = S.insts.filter((r) => r.drawn).length;
       const st = store.get(), sel = levelOf(st.sel.node) === 'type' ? S.insts.filter((r) => r.node === st.sel.node) : [];
-      clear(head).append(h('b', `${drawn} of ${s.partitions} placements drawn with routed wires`), ` · ${s.signed_with_pack} of ${s.signed_instances} signed placements have a pack · ${s.unique_packs} packs, ${fmtBytes(s.pack_bytes)}`,
+      const pc = S.items.filter((i) => i.plan).length;
+      clear(head).append(h('b', `${drawn} of ${s.partitions} placements drawn with their routed wires`), ` (${s.signed_with_pack} of ${s.signed_instances} signed placements have a pack)`, pc ? h('span', ' · ', h('b', `${fmtCount(pc)} hard cores`), ' of the other placements drawn at plan placement') : '', ` · ${Object.keys(S.man.packs).length} packs, ${fmtBytes(s.pack_bytes)}`,
         h('div.muted', 'Die-top nets, the M8/M9 power grid and clock trunks are not routed yet and are not drawn.'));
       if (sel.length && !sel.some((r) => r.drawn)) {
         const r = S.man.instances[sel[0].ii], canShow = r.ok && !S.unsigned;
-        head.append(h('div', { style: { marginTop: '4px', color: 'var(--ink)' }, dataset: { testid: 'layout-hint' } }, h('b', shortName(st.sel.node)), canShow ? ' is not signed off, so only its outline is drawn. The Unsigned switch draws its newest as-routed pack.' : r.ok ? '' : ` has no usable routed pack (${r.why || 'none cut'}).`));
+        head.append(h('div', { style: { marginTop: '4px', color: 'var(--ink)' }, dataset: { testid: 'layout-hint' } }, h('b', shortName(st.sel.node)), canShow ? (sel[0].cores ? ' is not signed off: its signed hard cores are drawn at their plan placement.' : ' is not signed off, so only its outline is drawn.') + ' The Unsigned switch draws its newest as-routed pack.' : r.ok ? '' : ` has no usable routed pack (${r.why || 'none cut'}).`));
       }
     }
     function rings(st) {
@@ -90,7 +101,7 @@ export default {
         let fresh = false;
         if (die !== S.die) {
           const busy = showBusy(wrap, 'Composing the die…');
-          try { S.man = await api.compose(die); } catch (e) { busy.remove(); throw e; }
+          try { [S.man, S.D] = await Promise.all([api.compose(die), api.die(die)]); } catch (e) { busy.remove(); throw e; }
           busy.remove(); if (my !== S.seq) return;
           S.die = die; S.unsigned = uns; fresh = true;
           eng.setScene(build());

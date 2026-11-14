@@ -115,6 +115,9 @@ export const SGN = { R0: [1, 1], MX: [1, -1], MY: [-1, 1], R180: [-1, -1] };
 export const xfOf = (orient, X, Y, W, H) => { const [sx, sy] = SGN[orient]; return { sx, sy, ox: (X + (sx < 0 ? W : 0)) / 1000, oy: (Y + (sy < 0 ? H : 0)) / 1000 }; };
 /** a macro (origin, orient in the parent's frame, DBU) under the parent's transform */
 export const xfCompose = (parent, origin, orient) => { const [sx, sy] = SGN[orient]; return { sx: parent.sx * sx, sy: parent.sy * sy, ox: parent.ox + parent.sx * origin[0] / 1000, oy: parent.oy + parent.sy * origin[1] / 1000 }; };
+/** a child placed by its bbox (um, in the parent's frame) + orient, under the parent's transform */
+export const xfChild = (parent, orient, x, y, w, hh) => { const [sx, sy] = SGN[orient]; return xfCompose(parent, [(x + (sx < 0 ? w : 0)) * 1000, (y + (sy < 0 ? hh : 0)) * 1000], orient); };
+export const XF0 = { sx: 1, sy: 1, ox: 0, oy: 0 };
 export const xfBox = (xf, x0, y0, x1, y1) => { const ax = xf.ox + xf.sx * x0 / 1000, bx = xf.ox + xf.sx * x1 / 1000, ay = xf.oy + xf.sy * y0 / 1000, by = xf.oy + xf.sy * y1 / 1000; return [Math.min(ax, bx), Math.min(ay, by), Math.max(ax, bx), Math.max(ay, by)]; };
 export const xfPoint = (xf, x, y) => [xf.ox + xf.sx * x / 1000, xf.oy + xf.sy * y / 1000];
 const meets = (a, b) => a[0] < b.x1 && a[2] > b.x0 && a[1] < b.y1 && a[3] > b.y0;
@@ -191,6 +194,14 @@ export class LayoutEngine {
     for (const k of [...this.tiles.keys()]) if (k.startsWith(id + '|')) { this.gpu -= this.tiles.get(k).bytes || 0; this.tiles.delete(k); }
     for (const k of [...this.rasters.keys()]) if (k.startsWith(id + '|')) this.rasters.delete(k);
     this.packs.set(id, { id, info, H: null, ob: info.objects || null });
+  }
+  /** register a pack and wait for its header (element scope needs the pack's die box before the scene exists) */
+  async addPack(id, info) {
+    let P = this.packs.get(id);
+    if (!P || P.info.job !== info.job) { if (P) this.dropPack(id, info); else this.packs.set(id, { id, info, H: null, ob: info.objects || null }); P = this.packs.get(id); }
+    this.needHeader(P); await P.hl;
+    if (!P.H) throw new Error(P.err || 'pack header did not load');
+    return P;
   }
   setItems(items) { this.items = items; this.miniDirty = true; this.requestUpdate(); }
   cam() { return { x: this.vs.target[0], y: this.vs.target[1], z: this.vs.zoom }; }
@@ -334,29 +345,39 @@ export class LayoutEngine {
     this.ppu = ppu;
     const ad = ppl * dpr >= 0.2; if (ad !== this.arrDetail) { this.arrDetail = ad; for (const [k, t] of this.tiles) if (t.hasArr && t.arrDetail !== ad) this.tiles.delete(k); }
     const vis = [];
-    for (const it of this.items) { if (!meets(it.bb, b)) continue; it.px = Math.min(it.bb[2] - it.bb[0], it.bb[3] - it.bb[1]) * ppu; if (it.px < 6) continue; vis.push(it); }
+    for (const it of this.items) { if (!meets(it.bb, b)) continue; it.px = Math.sqrt((it.bb[2] - it.bb[0]) * (it.bb[3] - it.bb[1])) * ppu; if (it.px < 6) continue; vis.push(it); }
+    if (vis.length > 500) { vis.sort((p, q) => q.px - p.px); vis.length = 500; }   // thousands of tiny cores: the largest carry the picture, the rest stay plan rectangles
     const cx = (b.x0 + b.x1) / 2, cy = (b.y0 + b.y1) / 2;
     const dist = (p) => { const dx = Math.max(p.bb[0] - cx, 0, cx - p.bb[2]), dy = Math.max(p.bb[1] - cy, 0, cy - p.bb[3]); return dx * dx + dy * dy; };
     vis.sort((p, q) => dist(p) - dist(q));
-    let spent = 0, nGeo = 0; const want = new Set();
+    // pass 1: headers, raster level and shape cost of everything in view
+    let total = 0, known = true; const want = new Set();
     for (const it of vis) {
-      const P = this.packs.get(it.pack); it.P = P; it.geo = false; it.ts = null;
+      const P = this.packs.get(it.pack); it.P = P; it.geo = false; it.ts = null; it.cost = 0;
       if (!P) continue; this.needHeader(P);
-      if (!P.H || !this.L) continue;
+      if (!P.H || !this.L) { known = false; continue; }
       const lb = this.localBox(it.xf, b); it.lb = lb;
       const lv = P.H.raster.levels; let level = 0;
       for (const Lr of lv) { level = Lr.level; if (Lr.px_nm * ppl <= 1.5) break; }
       it.rlv = level;
       if (level > 0 || ppu >= 0.2) this.needManifest(P);
+      if (!P.ob) known = false;
       if (lv[0]) for (const n of lv[0].nodes) this.reqRaster(P, '0/' + n[0] + '_' + n[1]);
       const ts = this.tilesIn(P, lb); it.ts = ts;
       let c = 0; for (const k of ts) c += this.shapeCost(P.tidx.get(k));
-      it.cost = c;
-      if (P.ob && ppu >= 0.25 && spent + c <= this.budget) {
-        spent += c; it.geo = true; nGeo++;
-        for (const k of ts) { const key = P.id + '|' + k; want.add(key); if (!this.tiles.has(key)) this.reqTile(P, k); }
-      } else if (level > 0 && P.ob) {
-        const Lr = lv.find((q) => q.level === level);
+      it.cost = c; total += c;
+    }
+    // pass 2: exact geometry only when the WHOLE view fits the shape budget (one decision per view, as in the one-pack
+    // viewer; a per-item decision would draw sub-pixel wires for whichever small cores happen to fit); else the rasters
+    const geoAll = known && total > 0 && total <= this.budget && ppu >= 0.25;
+    let spent = 0, nGeo = 0;
+    for (const it of vis) {
+      const P = it.P; if (!P || !P.H || !this.L || !it.ts) continue;
+      if (geoAll && P.ob) {
+        spent += it.cost; it.geo = true; nGeo++;
+        for (const k of it.ts) { const key = P.id + '|' + k; want.add(key); if (!this.tiles.has(key)) this.reqTile(P, k); }
+      } else if (it.rlv > 0 && P.ob) {
+        const lv = P.H.raster.levels, level = it.rlv, lb = it.lb, Lr = lv.find((q) => q.level === level);
         if (Lr) { const have = new Set(Lr.nodes.map((n) => n[0] + '_' + n[1])), node = Lr.node_nm, D = P.H.die;
           const nx0 = Math.max(0, Math.floor((lb.x0 - D[0]) / node)), nx1 = Math.floor((lb.x1 - D[0]) / node), ny0 = Math.max(0, Math.floor((lb.y0 - D[1]) / node)), ny1 = Math.floor((lb.y1 - D[1]) / node);
           for (let y = ny0; y <= ny1; y++) for (let x = nx0; x <= nx1; x++) if (have.has(x + '_' + y)) this.reqRaster(P, level + '/' + x + '_' + y); }
@@ -367,7 +388,7 @@ export class LayoutEngine {
       for (const [k, t] of lru) { if (this.gpu <= this.gpuCap * 0.8) break; this.gpu -= t.bytes || 0; this.tiles.delete(k); }
     }
     const now = performance.now(); want.forEach((k) => { const t = this.tiles.get(k); if (t) t.used = now; });
-    this.vis = vis; this.st = { items: vis.length, geo: nGeo, spent, cost: vis.reduce((a, i) => a + (i.cost || 0), 0) };
+    this.vis = vis; this.st = { items: vis.length, geo: nGeo, spent, cost: total };
     this.render(b, vis, dpr);
     this.drawMini(b); this.drawScale(ppu); this.stats();
   }
@@ -404,7 +425,7 @@ export class LayoutEngine {
     }
     layers.push(new D.PathLayer({ id: 'outline', data: [{ p: [[o[0], o[1]], [o[2], o[1]], [o[2], o[3]], [o[0], o[3]], [o[0], o[1]]] }], getPath: (d) => d.p, getColor: [...fg, 255], widthUnits: 'pixels', getWidth: 1.5, coordinateSystem: C }));
     if (this.show.cores) {
-      const cores = this.items.filter((i) => i.level === 'core' && meets(i.bb, b) && Math.min(i.bb[2] - i.bb[0], i.bb[3] - i.bb[1]) * ppu >= 6);
+      const cores = this.items.filter((i) => i.level === 'core' && meets(i.bb, b) && Math.sqrt((i.bb[2] - i.bb[0]) * (i.bb[3] - i.bb[1])) * ppu >= 5);
       if (cores.length) layers.push(new D.PolygonLayer({ id: 'cores', data: cores, getPolygon: (i) => rectPoly(i.bb), filled: false, getLineColor: [...macro, 220], lineWidthUnits: 'pixels', getLineWidth: 1, coordinateSystem: C }));
     }
     if (this.o.overlays) { try { for (const l of this.o.overlays(D, { b, ppu, C }) || []) layers.push(l); } catch (e) { console.warn('overlay', e); } }
@@ -466,7 +487,7 @@ export class LayoutEngine {
     if (this.rulerMode && this.rulerLive) { this.rulerLive.b = [w[0], w[1]]; this.requestUpdate(); }
     if (this.overlayHover) return;
     const hit = this.pickAt(w), tip = this.dom.tip; this.hoverHit = hit.shape || hit.inst ? hit : null;
-    if (!hit.inst && !hit.item) { tip.hidden = true; return; }
+    if (!hit.inst && !hit.shape) { tip.hidden = true; return; }
     const draw = (nn, cell) => {
       clear(tip);
       if (hit.shape) {
@@ -477,7 +498,6 @@ export class LayoutEngine {
         if (s.net > 0) tip.append(h('div', 'net ', h('b', nn ? nn.name : '#' + s.net), nn && nn.sig && nn.sig !== 'SIGNAL' ? ' · ' + nn.sig : ''), h('div.m', 'click to highlight the net'));
       }
       if (hit.inst) tip.append(h('div', { style: hit.shape ? { marginTop: '4px', paddingTop: '4px', borderTop: '1px solid var(--line)' } : null }, h('b', hit.inst.name), hit.item && hit.item.level === 'core' ? h('span.m', ' / ' + hit.item.cname) : null), h('div.m', hit.inst.sub || ''));
-      else if (hit.item && !hit.shape) tip.append(h('b', hit.item.name), h('div.m', hit.item.sub || ''));
       if (this.o.tipExtra) { const x = this.o.tipExtra(hit); if (x) tip.append(x); }
       if (!tip.childNodes.length) { tip.hidden = true; return; }
       tip.hidden = false; const r = this.host.getBoundingClientRect(); let X = e.clientX - r.left + 14, Y = e.clientY - r.top + 14;
@@ -543,9 +563,9 @@ export class LayoutEngine {
     el.querySelector('span').textContent = step >= 1000 ? fmt(step / 1000, 0) + ' mm' : step >= 1 ? fmt(step, 0) + ' µm' : fmt(step * 1000, 0) + ' nm';
   }
   stats() {
-    const s = this.st || {}, loading = this.pending.size, mode = s.geo ? (s.geo === s.items ? 'exact geometry' : `exact geometry for ${s.geo} of ${s.items} placed designs`) : s.items ? 'density raster' : 'plan';
+    const s = this.st || {}, loading = this.pending.size, mode = s.geo ? 'exact geometry' : s.items ? 'density raster' : 'plan';
     this.mode = s.geo ? 'geometry' : s.items ? 'raster' : 'plan';
-    this.dom.info.textContent = `${mode}${s.spent ? ' · ' + fmt(s.spent) + ' shapes' : ''}${loading ? ' · loading ' + loading : ''}`;
+    this.dom.info.textContent = `${mode}${s.spent ? ' · ' + fmt(s.spent) + ' shapes' : s.cost ? ' · ' + fmt(s.cost) + ' shapes in view, zoom in for wires' : ''}${loading ? ' · loading ' + loading : ''}`;
     this.dom.info.dataset.mode = this.mode; this.dom.info.dataset.loading = loading;
     if (this.o.onStats) this.o.onStats({ mouse: this.mouse, ppu: this.ppu, zoom: this.vs.zoom, mode: this.mode, gpu: this.gpu, loading, ...s });
   }

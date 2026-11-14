@@ -42,6 +42,7 @@ class _NoElements:
 DS = design_service.Service(log=lambda *a: None)
 LS = layout_service.Service(log=lambda *a: None)
 COV = coverage.Coverage(REPO, _NoElements(), TOKEN.parent, log=lambda *a: None)
+COMPOSE_V = 2
 LOCK = threading.RLock()
 CACHE = {}          # key -> (stamp, raw, gz)
 
@@ -76,9 +77,10 @@ def _iso(v):
 
 def plan_sha(path):
     """short plan id of a plan-of-record path: the 12-hex content tag in the file name when there is one, else the stem"""
-    stem = pathlib.Path(path or '').name.replace('.json.gz', '').replace('.json', '')
+    pp = pathlib.Path(path or ''); stem = pp.name.replace('.json.gz', '').replace('.json', '')
     m = re.search(r'([0-9a-f]{12})$', stem)
-    return m.group(1) if m else stem
+    if m: return m.group(1)
+    return pp.parent.name if stem in ('die_plan', 'source_plan', 'plan') and pp.parent.name else stem
 
 
 def plan_ref(p):
@@ -113,12 +115,22 @@ def compose_of(die):
     f = OWN / 'compose' / (die + '.json')
     try:
         m = json.loads(f.read_text())
-        if m.get('index_generated') == idx.get('generated'): return m
+        if m.get('index_generated') == idx.get('generated') and m.get('v') == COMPOSE_V: return m
     except (OSError, ValueError):
         pass
     with LOCK:
         m = die_compose.build(die, idx)
-        m['plan']['sha'] = plan_sha(m['plan']['path'])
+        m['plan']['sha'] = plan_sha(m['plan']['path']); m['v'] = COMPOSE_V
+        # every hard core of the die that has a pack, not only the cores of types that have one: the viewer draws the cores of
+        # an unsigned type at their PLAN placement (labelled so), which is most of the routed metal on S81 / KV / HBM today
+        extra = 0
+        for nid, n in idx['nodes'].items():
+            if n['die'] != die or n['level'] != 'core' or nid in m['packs'] or not (n.get('layout') or {}).get('store'): continue
+            p = die_compose.pack_info(nid)
+            if p and p['die'][:2] == [0, 0]:
+                m['packs'][nid] = dict({k: v for k, v in p.items() if k != 'macros'}, level='core', state=n['status']['state'], cores=[]); extra += 1
+        m['summary']['core_packs_all'] = sum(1 for p in m['packs'].values() if p['level'] == 'core')
+        m['summary']['pack_bytes'] = sum(p['bytes'] or 0 for p in m['packs'].values())
         f.parent.mkdir(parents=True, exist_ok=True)
         tmp = f.with_suffix('.tmp'); tmp.write_text(json.dumps(m, separators=(',', ':'))); os.replace(tmp, f)
     return m
