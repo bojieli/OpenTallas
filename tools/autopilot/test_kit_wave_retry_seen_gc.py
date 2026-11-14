@@ -10,11 +10,12 @@ def state(started):
     return {"items": {"k": {"die": "qwen_compute", "item": "x", "attempt": 2, "started": started}}}
 
 
-def test_entry_first_seen_before_the_attempt_started_is_stale():
+def test_entry_first_seen_before_the_attempt_started_still_releases_an_ended_latest_attempt():
     st = state(1000.0)
+    st["items"]["k"]["status"] = "FAIL"
     st["retry_seen"] = {"qwen_compute|hcut1111|x@2": 500.0}
     c = cfg(["x@2"])
-    assert KW.prune_stale_retries(c, st, now=2000.0) == {"qwen_compute": ["x@2"]} and c["dies"]["qwen_compute"]["retry"] == []
+    assert KW.prune_stale_retries(c, st, now=2000.0) == {} and c["dies"]["qwen_compute"]["retry"] == ["x@2"]
 
 
 def test_remove_then_readd_across_a_pass_releases_again():
@@ -34,9 +35,10 @@ def test_die_without_a_retry_list_wipes_nothing():
     assert st["retry_seen"] == {"qwen_compute|hcut1111|x@2": 500.0}
 
 
-def test_second_prune_in_one_pass_does_not_rearm_a_stale_entry():
-    """KW-FIX-46 11-12: the pass prunes twice; a stale entry dropped by the first call stays stale on the next tick"""
+def test_second_prune_in_one_pass_does_not_rearm_a_consumed_entry():
+    """KW-FIX-46 11-12 (WF-1 11-14 form): the pass prunes twice; an entry consumed by a later attempt stays ignored on the next tick"""
     st = state(1000.0)
+    st["items"]["k2"] = {"die": "qwen_compute", "item": "x", "attempt": 3, "started": 1500.0}
     st["retry_seen"] = {"qwen_compute|hcut1111|x@2": 500.0}
     c = cfg(["x@2"])
     assert KW.prune_stale_retries(c, st, now=2000.0) == {"qwen_compute": ["x@2"]}
