@@ -43,12 +43,12 @@ def test_added_tap_in_a_macro_halo_is_refused(monkeypatch):
         taps.grid_explicit_sites(plan([dict(name=f"clk_t{n}", xy=[204., 120.])]), "src")
 
 
-def test_empty_added_tap_is_refused(monkeypatch):
+def test_empty_added_tap_is_info_only(monkeypatch, capsys):
     n = n_grid()
     monkeypatch.setattr(taps, "sink_sites", lambda P, tn, control=True: [(432., 432., 5.)])
     monkeypatch.setattr(RT, "for_type", lambda P, tn: {"relays": []})
-    with pytest.raises(ValueError, match="empty=True"):
-        taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])]), "src")
+    taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])]), "src")
+    assert "TAP-LIMIT-INFO" in capsys.readouterr().err
 
 
 def test_tap_holding_only_relays_is_accepted(monkeypatch):
@@ -64,8 +64,7 @@ def test_grid_taps_keep_grid_rules_but_added_taps_get_radius(monkeypatch):
     monkeypatch.setattr(RT, "for_type", lambda P, tn: {"relays": []})
     # an added tap far from its only sink fails its radius; an empty grid tap is allowed (grid mode)
     monkeypatch.setattr(taps, "sink_sites", lambda P, tn, control=True: [(20., 20., 1.)])
-    with pytest.raises(ValueError, match="radius="):
-        taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=10.), "src")
+    taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=10.), "src")   # LIMIT-BIND-1: info only
 
 
 def test_added_tap_small_radius_overrun_is_a_target(monkeypatch, capsys):
@@ -75,5 +74,5 @@ def test_added_tap_small_radius_overrun_is_a_target(monkeypatch, capsys):
     monkeypatch.setattr(taps, "sink_sites", lambda P, tn, control=True: [(60., 20., 1.)])
     rows = taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=38.), "src")
     assert rows[n][0] == f"clk_t{n}" and "TAP-RADIUS-TARGET" in capsys.readouterr().err
-    with pytest.raises(ValueError, match="radius="):
-        taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=30.), "src")
+    taps.grid_explicit_taps(plan([dict(name=f"clk_t{n}", xy=[60., 60.])], tap_radius_um=30.), "src")
+    assert "TAP-LIMIT-INFO" in capsys.readouterr().err

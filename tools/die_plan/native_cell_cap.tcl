@@ -18,7 +18,7 @@ puts $ot_cap_receipt [format {{"schema":"opentallas.native_cell_count.v1","stage
 close $ot_cap_receipt
 puts "OT_NATIVE_CELL_CAP actual_std=$ot_cap_std macros=$ot_cap_macros limit=$ot_cap_limit"
 if {$ot_cap_std > $ot_cap_limit} {
- error "OT_NATIVE_CELL_CAP actual standard cell count $ot_cap_std above $ot_cap_limit run cap"
+ puts "OT_NATIVE_CELL_CAP INFO actual standard cell count $ot_cap_std above $ot_cap_limit (LIMIT-BIND-1 11-14: R-CAP removed, not stopped)"
 }
 if {$ot_cap_std > 400000} {
  puts "OT_NATIVE_CELL_CAP ADVISORY actual_std=$ot_cap_std above the 400000 target, within kit limit $ot_cap_limit"
@@ -52,7 +52,7 @@ if {![catch {
     if {[info exists ::ot_native_cell_limit]} {
       puts "$ot_cap_msg (declared native limit: capacity probe, not stopped)"
     } else {
-      error $ot_cap_msg
+      puts "$ot_cap_msg (info: R-CAP removed, LIMIT-BIND-1 11-14, not stopped)"
     }
   }
 }

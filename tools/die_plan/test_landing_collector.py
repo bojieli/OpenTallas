@@ -26,13 +26,12 @@ def test_no_active_source_emits_no_status_pin_tie():
     assert build_local(tree(),[],"")["rtl"]==[]
 
 
-def test_long_reversed_edge_fails_instead_of_unregistered_shortcut():
+def test_long_reversed_edge_is_reported_not_blocking(capsys):
+    # LIMIT-BIND-1 11-14 (OWNER: remove the conservative limits): the 405-um collector reach is info only
     t=tree();t["relays"][1]["xy"]=[600,0]
     s=[dict(name="ring",tap=1,ready="r",fault="f",xy_um=[600,0])]
-    with pytest.raises(ValueError,match="exceeds405"):
-        # Spaces are intentionally flexible in the diagnostic below.
-        try:build_local(t,s,"wire rr_t0;")
-        except ValueError as e:raise ValueError(str(e).replace(" ",""))
+    build_local(t,s,"wire rr_t0;")
+    assert "COLLECTOR-REACH-INFO" in capsys.readouterr().err
 
 
 def test_real_two_inputs_remain_two_inputs():

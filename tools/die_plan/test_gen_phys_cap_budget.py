@@ -23,7 +23,7 @@ def test_explicit_cells_is_available_before_synthesis(tmp_path):
     rec = gen_phys.write_cap_budget(plan(dict(cells=410000)), 't', tmp_path)
     assert rec['cells'] == 410000 and rec['basis'] == 'type.cells'
     errors, projection = cap_estimate.check_kit(tmp_path)
-    assert errors and projection['verdict'] == 'OVER'
+    assert errors == [] and projection['verdict'] == 'OVER'      # LIMIT-BIND-1 11-14: R-CAP removed, recorded only
 
 
 def test_cored_flat_estimate_is_not_a_movable_count(tmp_path, monkeypatch):

@@ -21,23 +21,23 @@ def run_cap(tmp_path, std, macros, limit=None):
     return subprocess.run(['tclsh', str(p)], capture_output=True, text=True), json.loads(out.read_text())
 
 
-@pytest.mark.parametrize('std,macros,fail', [(0, 1, False), (400000, 3, False), (400001, 0, True)])
+@pytest.mark.parametrize('std,macros,fail', [(0, 1, False), (400000, 3, False), (400001, 0, False)])   # LIMIT-BIND-1: R-CAP removed, never fails
 def test_actual_top_cell_cap_excludes_blocks(tmp_path, std, macros, fail):
     result, count = run_cap(tmp_path, std, macros)
     assert bool(result.returncode) == fail, result.stderr
     assert count['stdcells'] == std and count['macros'] == macros and count['limit'] == 400000
-    if fail:
-        assert 'above 400000 run cap' in result.stderr
+    if std > 400000:
+        assert 'R-CAP removed' not in result.stderr and 'ADVISORY' in result.stdout
 
 
 @pytest.mark.parametrize('std,limit,fail,seen', [(473289, 517000, False, 517000), (517000, 517000, False, 517000),
-                                                 (517001, 517000, True, 517000), (517001, 900000, True, 517000),
-                                                 (420000, 450000, False, 450000), (450001, 450000, True, 450000)])
+                                                 (517001, 517000, False, 517000), (517001, 900000, False, 517000),
+                                                 (420000, 450000, False, 450000), (450001, 450000, False, 450000)])
 def test_kit_limit_is_clamped_at_largest_closed_run(tmp_path, std, limit, fail, seen):
     result, count = run_cap(tmp_path, std, 0, limit)
     assert bool(result.returncode) == fail, result.stderr
     assert count['limit'] == seen
-    if fail:
-        assert f'above {seen} run cap' in result.stderr
+    if std > seen:
+        assert f'above {seen}' in result.stdout and 'R-CAP removed' in result.stdout
     elif std > 400000:
         assert 'ADVISORY' in result.stdout

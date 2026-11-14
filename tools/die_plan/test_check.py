@@ -564,7 +564,7 @@ def test_core_ks_rules(monkeypatch):
     monkeypatch.undo()
     assert any("no pins listed" in m for m in errs(core("R0", []), "hard_cores"))
     big = lambda n: lambda p: p["partition_types"]["src"].__setitem__("cells", n)  # noqa: E731
-    assert any("no hard_cores" in m for m in errs(big(450_000), "hard_cores"))
+    assert errs(big(450_000), "hard_cores") == []      # LIMIT-BIND-1 11-14: the >400k hard-core rule is a WARN now
     assert errs(big(350_000), "hard_cores") == []
     assert errs(lambda p: (big(450_000)(p), core("R0", m3)(p)), "hard_cores") == []
 
@@ -590,12 +590,13 @@ def test_cells_estimator(tmp_path):
     est, _ = cells.estimate(p, None, [tmp_path / "y.stat"])
     assert est["src"] == (4321, "modules 1/1")
     R, summ = check.run(p, evidence=[tmp_path / "bt.json"], completeness=True)
-    e = [i["msg"] for i in R.errors() if i["check"] == "hard_cores"]
+    e = [i["msg"] for i in R.items if i["check"] == "hard_cores" and i["level"] == "WARN"]
+    assert not [i for i in R.errors() if i["check"] == "hard_cores"]
     assert len(e) == 1 and "500000 cells (by_type bt.json)" in e[0] and summ["taps_cores"]["over_cap_no_cores"] == 1
     # auto-discovery in the plan directory
     (tmp_path / "plan_notes.json").write_text(json.dumps({"cells_per_type": {"mid": {"cells": 900_000}}}))
     R, _ = check.run(p, plan_dir=tmp_path, completeness=True)
-    assert any("type mid: 900000 cells" in i["msg"] for i in R.errors())
+    assert any("type mid: 900000 cells" in i["msg"] for i in R.items if i["level"] == "WARN")
 
 
 def _face_core(pin_faces, orient="R0", conns=None):
@@ -714,10 +715,10 @@ def test_g0c_gated():
     R, summ = check.run(p)
     assert R.errors() == [] and any(i["msg"].startswith("[G0C]") for i in R.items)
     R, summ = check.run(copy.deepcopy(p), completeness=True)
-    assert {i["check"] for i in R.errors()} == {"hard_cores", "cell_budget", "complete"}      # R-CAP: 450k is over both
+    assert {i["check"] for i in R.errors()} == {"complete"}      # LIMIT-BIND-1: R-CAP and the hard-core size rule are WARN only
     g = summ["g0c"]
-    assert g["by_type"] == {"mid": {"hard_cores": 1, "cell_budget": 1}} and g["die_level"] == {"complete:common_latency": 1}
-    assert g["g3_eligible"] == [] and g["clean"] == 2
+    assert g["by_type"] == {} and g["die_level"] == {"complete:common_latency": 1}
+    assert g["g3_eligible"] == [] and g["clean"] == 3
 
 
 def test_core_face_broadcast_station_capture_scope():

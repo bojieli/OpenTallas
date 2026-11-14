@@ -29,15 +29,16 @@ def test_rule_matches_bind():
     assert CR.type_findings("t", t) == []
 
 
-def test_g0_check_is_an_error_and_nothing_else_changes():
+def test_g0_check_is_a_warning_and_nothing_else_changes():
     class R:
         def __init__(self): self.items = []
         def err(self, c, m, **k): self.items.append(("ERROR", c, m))
+        def warn(self, c, m, **k): self.items.append(("WARN", c, m))
     class P:
         raw = dict(partition_types={"t": _type()})
     r = R()
     s = CR.check_collector_reach(P, r)
-    assert s["edges_over"] == 1 and r.items and r.items[0][:2] == ("ERROR", "collector_reach") and "543.800um exceeds 405" in r.items[0][2]
+    assert s["edges_over"] == 1 and r.items and r.items[0][:2] == ("WARN", "collector_reach") and "543.800um exceeds 405" in r.items[0][2]
     assert hasattr(check, "run")
 
 
