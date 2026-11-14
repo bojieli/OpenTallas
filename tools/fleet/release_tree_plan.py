@@ -1096,7 +1096,7 @@ print(json.dumps(out))
 """
 
 
-def fetch_rec_pins(recs, log=lambda *a: None):
+def fetch_rec_pins(recs, log=lambda *a: None, _direct=False):
     """{(scan_host, pins_path): {rows, outline_nm | None, read}} for the records' face_guard pins files (kit pins.json +
     kit config.mk DIE_AREA; <kit>/pins.json beside <kit>/signoff/ when the face_guard file is gone).  origin/main records name fleet paths of unknown host: not fetched (unmatched)."""
     # FLOW-12 10-30 (credit on pins for every module): an origin/main record uses its view's pins.json on main when it
@@ -1104,30 +1104,38 @@ def fetch_rec_pins(recs, log=lambda *a: None):
     # name fleet kit paths of unknown host; a kit pins file may sit on another host than the record that names it)
     by = {}; want = []
     out = {}
-    if SIGNED_SOURCE == 'store':
+    if SIGNED_SOURCE == 'store' and not _direct:
         for r_ in recs:
             k = (r_.get('scan_host'), r_.get('pins_path'))
             if r_.get('scan_host') == 'origin/main' and r_.get('path') in MAIN_PINS: out[('origin/main', r_.get('pins_path'))] = MAIN_PINS[r_['path']]
             elif k in STORE_PINS: out[k] = STORE_PINS[k]
+        # COUNT-FRICTION-1 11-14: a DIRECT-READ record (COUNT-DIRECT / AUTO-RESIGN / job row) is not in the store, so its pins file is read from its host
+        # (same reader; plain ssh, short timeout); without it a core counted as a module but never as a design ('pins not readable')
+        dr = [r_ for r_ in recs if r_.get('direct') and r_.get('pins_path') and (r_.get('scan_host'), r_.get('pins_path')) not in out]
+        if dr:
+            out.update(fetch_rec_pins(dr, log, _direct=True))
         return out
     for r_ in recs:
         if r_.get('scan_host') == 'origin/main' and r_.get('path') in MAIN_PINS:
             out[('origin/main', r_.get('pins_path'))] = MAIN_PINS[r_['path']]; continue
         if r_.get('pins_path'):
             want.append((r_.get('scan_host'), r_['pins_path']))
-            for h in HOSTS:
+            for h in ([r_.get('scan_host')] if _direct else HOSTS):
                 by.setdefault(h, set()).add((r_['pins_path'], r_['path'] if h == r_.get('scan_host') else r_['pins_path']))
     found = {}
     for h, ps in by.items():
         cmd = ['python3', '-c', REC_PINS_PY] if h == 'local' else \
             ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(REC_PINS_PY)]
         try:
-            r = (sh(cmd, 300, input=json.dumps(sorted(ps))) if h == 'local' else
+            r = (sh(cmd, 90 if _direct else 300, input=json.dumps(sorted(ps))) if (h == 'local' or _direct) else
                  sh_ssh(cmd, 300, input=json.dumps(sorted(ps))))
+            if _direct and r.returncode == 255 and 'resolve hostname' in r.stderr:   # the hub reading its own paths
+                r = sh(['python3', '-c', REC_PINS_PY], 90, input=json.dumps(sorted(ps)))
             if not r.stdout.strip(): raise RuntimeError('rc %d %s' % (r.returncode, r.stderr.strip()[-200:]))
             got = json.loads(r.stdout.strip().splitlines()[-1])
         except Exception as e:
-            UNREACHABLE.add(h); log('design pins fetch %s: %s' % (h, e)); continue
+            if not _direct: UNREACHABLE.add(h)
+            log('design pins fetch %s: %s' % (h, e)); continue
         for p, x in got.items():
             da = x.get('die_area')
             ol = (_nm(da[2] - da[0]), _nm(da[3] - da[1])) if da and len(da) == 4 else None
@@ -1200,6 +1208,11 @@ def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
         for ref, r_ in recs:
             got = rec_pins.get((r_.get('scan_host'), r_.get('pins_path')))
             hit = []
+            # COUNT-FRICTION-1 11-14 (COORD): a module with ONE plan design that has no pin table on main (nothing to compare) is credited by its
+            # record's outline alone (the record's pins were read; outline must equal the plan's when both are known)
+            if got and len(ds) == 1 and not rows.get(ds[0]) and (got['outline_nm'] is None or tuple(got['outline_nm']) == tuple(_nm(x) for x in designs[ds[0]]['outline_um'])):
+                signed.setdefault(ds[0], []).append(ref + ' DESIGN-MATCH outline only (plan design has no pin table on main)')
+                continue
             for did in ds:
                 if not (got and rows.get(did)) or not (got['outline_nm'] is None or tuple(got['outline_nm']) == tuple(_nm(x) for x in designs[did]['outline_um'])):
                     continue
