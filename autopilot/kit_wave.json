@@ -38129,9 +38129,34 @@
     ],
     "qfd_dv_s8_tap_bounded": [
      {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tapb-e1/qfd_dv_s8_tap_bounded",
+      "job": "SIGNED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (TL-QCTAPB form e R-MINIMAL; export_view, outline 302.4x129.6; 6_final.odb sha 790e3201db00 = archived on rtx-pro + AGIdock; pack 6_final_129852c382)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tapb-e1/qfd_dv_s8_tap_bounded",
+      "job": "SIGNED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (TL-QCTAPB form e R-MINIMAL; export_view, outline 302.4x129.6; 6_final.odb sha 790e3201db00 = archived on rtx-pro + AGIdock; pack 6_final_129852c382)"
+     },
+     {
       "host": "epyc9",
-      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/qc103-qfd_dv_s8_tap_bounded/qfd_dv_s8_tap_bounded",
-      "job": "COUNTED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (KW-FIX-32 export_view; QC-CORES hand-built form e, registered by KIT-OPS-3)"
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tapb-e1/qfd_dv_s8_tap_bounded",
+      "job": "SIGNED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (TL-QCTAPB form e R-MINIMAL; export_view, outline 302.4x129.6; 6_final.odb sha 790e3201db00 = archived on rtx-pro + AGIdock; pack 6_final_129852c382)"
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tapb-e1/qfd_dv_s8_tap_bounded",
+      "job": "SIGNED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (TL-QCTAPB form e R-MINIMAL; export_view, outline 302.4x129.6; 6_final.odb sha 790e3201db00 = archived on rtx-pro + AGIdock; pack 6_final_129852c382)"
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tapb-e1/qfd_dv_s8_tap_bounded",
+      "job": "SIGNED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (TL-QCTAPB form e R-MINIMAL; export_view, outline 302.4x129.6; 6_final.odb sha 790e3201db00 = archived on rtx-pro + AGIdock; pack 6_final_129852c382)"
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tapb-e1/qfd_dv_s8_tap_bounded",
+      "job": "SIGNED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (TL-QCTAPB form e R-MINIMAL; export_view, outline 302.4x129.6; 6_final.odb sha 790e3201db00 = archived on rtx-pro + AGIdock; pack 6_final_129852c382)"
      }
     ],
     "qfd_dv_s8_station_tail1": [
@@ -44492,7 +44517,6 @@
     "sta_cland_w537_s_s10_1",
     "sta_cland_w632_e_s11",
     "sta_region_nb0",
-    "qfd_dv_s8_tap_bounded",
     "qfd_dv_s5_ctl_repair4_leaf"
    ],
    "swap_note_kitops3_qcs2b": "KIT-OPS-3: bind_out bind_s29q103S2 + asbuilt S2; auto_core_hold = 29 hand-built QC cores (QC-CORES-HEAD double-build guard).",
