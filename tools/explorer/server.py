@@ -30,7 +30,7 @@ TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=u
          '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
          '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.map': 'application/json'}
 STALE_S = {'design_index': 3 * 3600, 'plan_now': 3 * 3600, 'compose': 3 * 3600, 'token_map': 26 * 3600,
-           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None, 'fleet': 120, 'signed_audit': None}
+           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None, 'fleet': 120, 'signed_audit': None, 'count': 6 * 3600}
 LEGACY = {'/explorer': 'plan', '/explorer/': 'plan', '/explorer/design': 'plan', '/explorer/design/': 'plan',
           '/explorer/design/diemap.html': 'layout', '/explorer/element/': 'element', '/explorer/element': 'element',
           '/explorer/dataflow/': 'dataflow', '/explorer/dataflow': 'dataflow', '/explorer/token/': 'token', '/explorer/token': 'token',
@@ -190,6 +190,8 @@ def datasets():
         ['overview', 'plan', 'layout', 'element', 'closure'], plans=plans, missing=idx is None)
     pn = STATE / 'plan_now.json'
     add('plan_now', 'Plan-now status (kit wave + signed store)', _mtime(pn), 'plan_now.py', ['overview', 'closure'])
+    rc = ((_json_file(pn) or {}).get('sources') or {}).get('release_cache_mtime')
+    add('count', 'Sign-off count cache (release_tree count, COUNT-DIRECT, AUTO-RESIGN, dedup credits)', rc, 'intel2 release_tree_plan.py; the index is rebuilt within about two minutes of every count', ['overview', 'closure', 'plan'])
     add('store', 'Routed layout packs (cut at sign-off, immutable)', _mtime(layout_service.LS.STORE / 'cuts.json') or _mtime(layout_service.LS.STORE / 'elements'), 'layout store (lv_extract + lv_tile, lv_verify IDENTICAL)', ['layout', 'element'],
         note='packs do not go stale: each is the geometry of one closure')
     cm = [_json_file(p) for p in sorted((OWN / 'compose').glob('*.json'))] if (OWN / 'compose').is_dir() else []
@@ -300,6 +302,21 @@ def closure(d):
                          layout_source=lay.get('source'), vis=v.get('verdict'), vis_cls=v.get('cls'), vis_cause=v.get('cause'), hard=bool(p.get('hard'))))
     dn = idx['nodes'][d]
     return dict(die=d, label=dn['label'], plan=plan_ref(dn['plan']), states=idx['states'], counts=dn['counts'], generated=idx['generated'], rows=rows)
+
+
+def elements_compat():
+    """/api/elements for scripts that used the old fleet-viz endpoint: one row per type and core of the current plans, with the
+    status of the design index (count cache -> plan_now -> design_index, rebuilt whenever the count runs)"""
+    idx = index(); pn = _json_file(STATE / 'plan_now.json') or {}
+    rows = []
+    for n in idx['nodes'].values():
+        if n['level'] == 'die': continue
+        st = n.get('status') or {}
+        rows.append(dict(element=n['name'], node=n['id'], die=n['die'], kind=n['level'], target=idx['nodes'][n['die']].get('target'), category=st.get('label'), state=st.get('state'),
+                         cls=st.get('cls'), stage=st.get('stage'), attempt=st.get('attempt'), reason=st.get('reason'), m=st.get('metrics') or {}, layout=bool((n.get('layout') or {}).get('store'))))
+    return dict(schema='opentallas.explorer.elements_compat.v1', t=idx.get('generated'), generated=idx.get('generated'), cats=pn.get('cats'), rows=rows,
+                source=dict(design_index=idx.get('generated'), plan_now=pn.get('generated'), count_cache_mtime=((pn.get('sources') or {}).get('release_cache_mtime'))),
+                note='status = count cache (release_tree count incl. COUNT-DIRECT, AUTO-RESIGN and dedup credits) -> plan_now -> design index; use /api/v1/closure/<die> for the full rows')
 
 
 def search(q, d=None, limit=40):
@@ -570,6 +587,11 @@ class H(BaseHTTPRequestHandler):
         try:
             if path.startswith('/api/v1/'): return self.api(path[8:], q)
             if path == '/health': return self.health()
+            if path == '/api/elements': return self.json('compat:elements', DS.index() and DS.index().get('generated'), elements_compat)
+            if path == '/api/plan_now':
+                f = STATE / 'plan_now.json'
+                if not f.is_file(): raise ApiError(404, 'no plan_now.json', str(f))
+                return self.json('compat:plan_now', _mtime(f), lambda: json.loads(f.read_text()))
             if path in LEGACY and not q:
                 self.send_response(302); self.send_header('Location', '/?legacy=' + LEGACY[path]); self.send_header('Content-Length', '0'); self.end_headers(); return
             if path.startswith('/engine/'): return self.file(ENGINE, path[8:], immutable='/vendor/' in path)
