@@ -47,3 +47,23 @@ def test_tcl_bakes_threshold(tmp_path):
         assert "set pg_auto -1\n" in P.tcl_text(hg)
     finally:
         _env(None)
+
+
+def test_module_keeps_every_name_gen_phys_calls():
+    """FIX-HOLDSTALL 11-14: an overlay of this file that predates set_die_clock / DIE_CLOCK / _clock_val broke every QC gen with
+    AttributeError (gen_phys calls pregrt_ff_hold.set_die_clock after the plan validates).  Every attribute gen_phys.py reads
+    from the module must exist, and the die-level default must work."""
+    import re
+    src = (Path(__file__).resolve().parent / "gen_phys.py").read_text()
+    used = set(re.findall(r"\b_?pregrt_ff_hold\.([A-Za-z_]\w*)\(", src))
+    assert {"install", "config_lines"} <= used
+    missing = sorted(n for n in used if not hasattr(P, n))
+    assert not missing, f"pregrt_ff_hold.py lacks {missing} that gen_phys.py calls"
+    for n in ("set_die_clock", "DIE_CLOCK", "_clock_val"):
+        assert hasattr(P, n), n
+    P.set_die_clock({"pregrt_ff_hold": True, "pregrt_hold_guard_ps": 30})
+    try:
+        assert P.enabled({}) and P.guard_ps({}) == 30.0
+        assert not P.enabled({"clock": {"pregrt_ff_hold": False}})       # a type's own value wins
+    finally:
+        P.set_die_clock({})
