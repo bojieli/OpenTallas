@@ -6597,7 +6597,13 @@
     "col_h9_r1__t1__cl49d7a23e__pv7466df46@2",
     "col_h9_r1__t1__cl49d7a23e__pv8aaf8508@2",
     "col_h9_r1__t1__cl49d7a23e__pv9c5966b7@2",
-    "col_h9_r1__t1__cl49d7a23e__pva7e46565@2"
+    "col_h9_r1__t1__cl49d7a23e__pva7e46565@2",
+    "col_h9_r1__t1__cl49d7a23e__pv11c696bc@2",
+    "col_h9_r1__t1__cl49d7a23e__pv152ea348@2",
+    "col_h9_r1__t1__cl49d7a23e__pv4bd36c74@2",
+    "col_h9_r1__t1__cl49d7a23e__pv5bdf9f51@2",
+    "col_h9_r1__t1__cl49d7a23e__pv9a5bd576@2",
+    "col_h9_r1__t1__cl49d7a23e__pvadb6c679@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -7871,7 +7877,13 @@
     "col_h9_r1__t1__cl49d7a23e__pv7466df46@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
     "col_h9_r1__t1__cl49d7a23e__pv8aaf8508@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
     "col_h9_r1__t1__cl49d7a23e__pv9c5966b7@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
-    "col_h9_r1__t1__cl49d7a23e__pva7e46565@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch."
+    "col_h9_r1__t1__cl49d7a23e__pva7e46565@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
+    "col_h9_r1__t1__cl49d7a23e__pv11c696bc@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "col_h9_r1__t1__cl49d7a23e__pv152ea348@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "col_h9_r1__t1__cl49d7a23e__pv4bd36c74@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "col_h9_r1__t1__cl49d7a23e__pv5bdf9f51@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "col_h9_r1__t1__cl49d7a23e__pv9a5bd576@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "col_h9_r1__t1__cl49d7a23e__pvadb6c679@2": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -28421,7 +28433,10 @@
     "hd_ctl_n@14",
     "hd_host_w@2",
     "hd_ctl@2",
-    "hd_spn_end@1"
+    "hd_spn_end@1",
+    "hd_host_e@1",
+    "hd_serdes@1",
+    "hd_tile@1"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -28486,7 +28501,10 @@
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
     "hd_host_w@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
     "hd_ctl@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
-    "hd_spn_end@1": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap."
+    "hd_spn_end@1": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
+    "hd_host_e@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "hd_serdes@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "hd_tile@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch."
    },
    "gen_hosts": [
     "epyc7",
