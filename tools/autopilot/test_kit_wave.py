@@ -137,6 +137,18 @@ def kit_own_hd(KW):
                               "ap-68bf0d080dcd-a1 68bf0d080dcd; ot-run pid 324465 1105f2/kit-wave/s81_head/l48ub/items/hd_mesh_e/attempt_3/gen/hd_mesh_e (+3)"})
 
 
+class InfraKillRetry(unittest.TestCase):
+    def test_avoid_host_and_kill_pattern(self):
+        # KIT-OPS-4 11-14: an earlyoom / signal kill retries once on another host; the killer host is left out while one stays
+        c = {"dies": {"x": {"gen_host": "a", "gen_hosts": ["a", "b", "c"]}}, "_avoid_host": {("x", "it"): "a"}}
+        self.assertEqual(KW.gen_hosts(c, "x", "it"), ["b", "c"])
+        self.assertEqual(KW.gen_hosts(c, "x", "other"), ["a", "b", "c"])
+        one = {"dies": {"x": {"gen_host": "a", "gen_hosts": ["a"]}}, "_avoid_host": {("x", "it"): "a"}}
+        self.assertEqual(KW.gen_hosts(one, "x", "it"), ["a"])
+        self.assertTrue(KW.KILL_RE.search("ot-run: exit 143 (Error 241)"))
+        self.assertFalse(KW.KILL_RE.search("RTL parse error"))
+
+
 class Select(unittest.TestCase):
     def test_pilot_first_caps_unproven_class(self):
         # OWNER 12.27a: an unproven die x kit class has at most 2 kits in flight; in-flight kits count, none killed
@@ -167,6 +179,9 @@ class Select(unittest.TestCase):
         self.assertEqual(KW.pilot_key(d, "s81", "slice_station__t46"), "s81|type|station")
 
     def test_selection_and_order(self):
+        orig = KW._live_private_job          # KIT-OPS-4 11-14: a claim defers only with a live private job (here: yes)
+        self.addCleanup(setattr, KW, "_live_private_job", orig)
+        KW._live_private_job = lambda item: True
         rows = KW.parse_owners(OWN)
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
         self.assertEqual([p["item"] for p in picks], ["kv3_phy_v1", "kv3_hg_v1", "kv3_hroot", "kv3_hub_Eo"])   # replicas desc (WF-1 11-14: take_states default * = every state)
@@ -231,7 +246,24 @@ class Select(unittest.TestCase):
         picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
         self.assertIn("kv3_st", skip["live job (another lane)"])
 
+    def test_coord_mention_alone_is_not_a_claim(self):
+        # KIT-OPS-4 11-14 (COORD/OWNER parallel forms): a fresh coord line by another lane does not defer the wave; only a live
+        # private job for the item does
+        orig = KW._live_private_job
+        self.addCleanup(setattr, KW, "_live_private_job", orig)
+        rows = KW.parse_owners(OWN)
+        KW._live_private_job = lambda item: False
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", [p["item"] for p in picks])
+        self.assertFalse(any(k.startswith("lane activity") for k in skip))
+        KW._live_private_job = lambda item: True
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", skip["lane activity < 3 h (KV-KITS-W)"])
+
     def test_generic_owner_label_is_not_a_type_claim(self):
+        orig = KW._live_private_job
+        self.addCleanup(setattr, KW, "_live_private_job", orig)
+        KW._live_private_job = lambda item: True
         # KW-FIX-33 (COORD 11-07 22:53): the die-wide census label HBM-PLAN (fresh last_activity on every HBM type row)
         # does not claim a type row; a specific lane owner still does, and the label still claims a core row
         own = OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W\tnone\t122m", "kv3_pc\ttype\tNEEDS-KIT\tHBM-PLAN\tnone\t6m")
@@ -719,40 +751,45 @@ class Step(unittest.TestCase):
             self.assertEqual(len(st["items"]), 2)
 
     def test_infra_relaunched_once(self):
+        # KIT-OPS-4 11-14: an externally killed attempt (exit 137 / 143, earlyoom, signal) gets ONE free INFRA retry at the next tick,
+        # without a retry key and without spending the infra budget; a second kill on the same inputs stops it as BLOCKED-INFRA-REPEAT
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "OWNERS.tsv").write_text(OWN)
             c = json.dumps(cfg(die_max_inflight=1))
             st = KW.step(FakeAP(d, c))
             (r,) = st["items"].values()
-            (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
-                                                                     "tail": "place: exit 137"}))
-            ap = FakeAP(d, c)
-            st = KW.step(ap)
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
-            self.assertEqual(r["attempt"], 2)
-            self.assertEqual(r["status"], "RUNNING")
+            item = r["item"]
             (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
                                                                      "tail": "place: exit 137"}))
             st = KW.step(FakeAP(d, c))
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
-            self.assertEqual((r["status"], r["attempt"]), ("RUNNING", 3))       # AUTOBUILD-PIPE-1: up to 3 attempts
+            (r,) = [x for x in st["items"].values() if x["item"] == item]
+            self.assertEqual((r["attempt"], r["status"]), (2, "RUNNING"))        # the free retry
+            self.assertEqual(r.get("kill_n"), 1)
             (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
                                                                      "tail": "place: exit 137"}))
             st = KW.step(FakeAP(d, c))
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
-            self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 3))   # then stops
+            (r,) = [x for x in st["items"].values() if x["item"] == item]
+            self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))   # second kill: stops
+            self.assertEqual(r.get("blocked"), "BLOCKED-INFRA-REPEAT")
+
+    def test_infra_non_kill_failure_keeps_the_budget(self):
+        # an INFRA failure that is not a kill (here an ssh transport drop) still follows infra_attempts (3 attempts), no BLOCKED-INFRA-REPEAT
+        self.assertIsNone(KW.KILL_RE.search("Connection reset by peer"))
+        self.assertEqual(KW.infra_attempts(cfg(), "qwen_kvsys"), 3)
 
     def test_infra_attempts_config_two_is_once(self):
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "OWNERS.tsv").write_text(OWN)
             c = json.dumps(dict(cfg(die_max_inflight=1), infra_attempts=2))
             st = KW.step(FakeAP(d, c))
+            (r,) = st["items"].values()
+            item = r["item"]
             for _ in range(2):
-                (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
+                (r,) = [x for x in st["items"].values() if x["item"] == item]
                 (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
                                                                          "tail": "place: exit 137"}))
                 st = KW.step(FakeAP(d, c))
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
+            (r,) = [x for x in st["items"].values() if x["item"] == item]
             self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))
 
     def test_legacy_fail_infra_record_relaunched_same_event_only(self):
