@@ -266,6 +266,32 @@ class Snap(unittest.TestCase):
         KS.snapshot(spec, ki, store_root=os.path.dirname(self.snaps), log=lambda *x: None)
         self.assertFalse(os.path.exists(ki + nd))
 
+    def test_view_refs_of_the_type_are_followed_and_a_missing_one_is_reported(self):
+        """QC slw_su_l1 canary: <view>/provenance.json in the pinned src names the original kit (src/face_guard.json)"""
+        kit = os.path.join(self.t, "scratch/claude/codex-qual/kit")
+        fg = put(os.path.join(kit, "face_guard.json"), json.dumps({"netlist": os.path.join(kit, "n.v")}))
+        nv = put(os.path.join(kit, "n.v"), "module n; endmodule\n")
+        vd = os.path.join(self.src, "physical/views/hl")
+        put(os.path.join(vd, "hl.lef"), "MACRO hl\n")
+        put(os.path.join(vd, "provenance.json"), json.dumps({"src": kit}))
+        od = os.path.join(self.src, "physical/views/other")
+        put(os.path.join(od, "other.lef"), "MACRO other\n")
+        put(os.path.join(od, "provenance.json"), json.dumps({"src": os.path.join(self.t, "scratch/claude/gone/kit")}))
+        put(self.plan, json.dumps({"partition_types": {"T1": {"kids": [{"lef": "physical/views/hl/hl.lef"}]},
+                                                       "T2": {"kids": [{"lef": "physical/views/other/other.lef"}]}}}))
+        spec = dict(self.spec(), view_refs_type="T1")
+        a = KS.snap(spec, self.snaps, log=lambda *x: None)
+        self.assertEqual(a["view_refs_missing"], [])                       # T2's dead view does not concern T1
+        self.assertGreaterEqual(a["view_refs"], 2)
+        put(nv, "module n; wire w; endmodule\n")                          # the original kit is part of the content id
+        self.assertNotEqual(KS.snap(spec, self.snaps, log=lambda *x: None)["id"], a["id"])
+        os.unlink(fg)
+        b = KS.snap(spec, self.snaps, log=lambda *x: None)
+        self.assertEqual([m["path"] for m in b["view_refs_missing"]], [fg])
+        self.assertTrue(b["view_refs_missing"][0]["by"].endswith("views/hl/provenance.json"))
+        c = KS.snap(dict(self.spec(), view_refs_type="T2"), self.snaps, log=lambda *x: None)
+        self.assertEqual(len(c["view_refs_missing"]), 1)
+
     def test_snap_gc_deletes_only_snapshots_unused_past_the_window(self):
         a = self.snap()
         self.assertEqual(KS.snap_gc(self.snaps, apply=True, log=lambda *x: None)["delete"], 0)
@@ -363,6 +389,22 @@ class KitWaveSnap(unittest.TestCase):
         self.assertIsNone(mp)
         self.assertNotIn("KIT_INPUT_MISSING", why)
         self.assertEqual(self.K.classify("kit_snap", why)[0], "INFRA")
+
+    def test_missing_view_ref_is_fetched_then_advisory_or_strict(self):
+        miss = [{"path": "/srv/x/kit/face_guard.json", "by": "/srv/src/views/hl/provenance.json"}]
+        doc = {"id": "a" * 40, "dir": "/d", "map": {}, "n_files": 1, "view_refs_missing": miss}
+        ans = {"kit_snap": (0, "KW_KIT_SNAP " + json.dumps(doc)), "kit_snap_refs": (0, "")}
+        self.sp["kind"] = "type"
+        mp, why, res = self.stage(ans)
+        self.assertEqual((mp, why), ({}, ""))                               # advisory by default: the item goes on
+        self.assertEqual([c[0] for c in self.calls], ["kit_snap", "kit_snap_refs", "kit_snap"])
+        self.assertIn("rsync -a", self.calls[1][1][-1])
+        self.assertEqual(res["kit_snap"]["view_refs_missing"], ["/srv/x/kit/face_guard.json"])
+        self.sp["kit_snap_view_refs"] = "strict"
+        mp, why, _ = self.stage(ans)
+        self.assertIsNone(mp)
+        self.assertEqual(self.K.classify("kit_snap", why)[0], "FLOW")
+        self.assertIn("face_guard.json", why)
 
     def test_flag_off_spec_has_no_snapshot_key(self):
         src = (HERE / "kit_wave.py").read_text()

@@ -1979,6 +1979,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))} \
         | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
         | ({"kit_snap": True} if kit_snap_on(cfg, die, item) else {}) \
+        | ({"kit_snap_view_refs": "strict"} if opt_get(cfg, die, "kit_snap_view_refs") == "strict" else {}) \
         | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {})  # PLAN-GEN-RULES-1 rule C (advisory)
 
 
@@ -4783,6 +4784,12 @@ def kit_snap_on(cfg, die, item):
     return v is True
 
 
+def opt_get(cfg, die, key):
+    """die > global option that has no entry in the defaults table (None when unset)"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    return d[key] if key in d else cfg.get(key)
+
+
 def kit_store_applies(sp):
     """hard cores (core_kit) and the event-shared prep bind (kit_rtl bind without bind_out) keep their own paths"""
     kr = sp.get("kit_rtl") or {}
@@ -4881,6 +4888,8 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
     for inp in spec["inputs"]:
         if inp.get("role") in ("plan", "asbuilt"):
             inp["tree"] = True          # outside the pinned src: its bounded directory moves whole (relative-path readers)
+    if sp.get("kind") == "type":
+        spec["view_refs_type"] = sp.get("item")   # original-kit paths named by this type's child views (provenance.json)
     b64 = base64.b64encode(json.dumps(spec).encode()).decode()
     root = snap_root_of(W)
     cmd = ks_cmd(f"snap --spec-b64 {q(b64)} --snap-root {q(root)}")
@@ -4920,7 +4929,32 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
     if doc is None:
         return None, (f"{KIT_INPUT_MISSING}: a kit input exists on none of the die hosts ({', '.join(tried)}); restore it or "
                       f"point the die config at a live path, then relaunch. {miss}")
-    res["kit_snap"] = {k: doc.get(k) for k in ("id", "dir", "n_files", "reused", "bytes_copied", "restored", "copied_from", "host")} \
+    vmiss = doc.get("view_refs_missing") or []
+    if vmiss:
+        # a child view's provenance.json (inside the pinned src) names files of the original signed kit by absolute path;
+        # gen reads them there.  Copy each from the first die host that holds it to the same path on G, then snapshot again.
+        donors = " ".join(q(hub if h == "localhost" else h) for h in snap_donors(sp, G, hub))
+        paths = " ".join(q(m["path"]) for m in vmiss[:200])
+        fetch = (f"for p in {paths}; do [ -e \"$p\" ] && continue; for h in {donors}; do "
+                 f"if ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 $h \"test -f '$p'\"; then "
+                 f"kb=$(ssh -o BatchMode=yes -o ControlPath=none $h \"du -sk '$p' | cut -f1\"); "
+                 f"if [ \"${{kb:-0}}\" -le {600 * 1024} ]; then mkdir -p \"$(dirname \"$p\")\" && "
+                 f"rsync -a -e \"ssh -o BatchMode=yes -o ControlPath=none\" \"$h:$p\" \"$p\" && echo KW_VIEWREF_COPIED $h $p; fi; "
+                 f"break; fi; done; done; true")
+        run("kit_snap_refs", remote(fetch), idempotent=True)
+        rc4, t4 = run("kit_snap", remote(cmd), idempotent=True)
+        d4 = None if rc4 else _snap_doc(t4)
+        if d4 is not None:
+            doc = dict(d4, copied_from=doc.get("copied_from"))
+        vmiss = doc.get("view_refs_missing") or []
+    if vmiss:
+        names = "; ".join(f"{m['path']} (named by {m['by']})" for m in vmiss[:5])
+        if sp.get("kit_snap_view_refs") == "strict":
+            return None, (f"{KIT_INPUT_MISSING}: {len(vmiss)} original-kit file(s) named by this type's child views exist on "
+                          f"no die host: {names}")
+        print(f"KW_KIT_SNAP_VIEWREF_MISSING {len(vmiss)} (advisory; gen fails if it reads them): {names}", flush=True)
+    res["kit_snap"] = {k: doc.get(k) for k in ("id", "dir", "n_files", "reused", "bytes_copied", "restored", "copied_from", "host",
+                                              "view_refs")} | {"view_refs_missing": [m["path"] for m in vmiss[:20]]} \
         | {"absent": len(doc.get("absent") or [])}
     print(f"KW_KIT_SNAP_USED {doc.get('id')} {doc.get('dir')} files {doc.get('n_files')} "
           f"{'reused' if doc.get('reused') else 'built'} on {doc.get('host')}"

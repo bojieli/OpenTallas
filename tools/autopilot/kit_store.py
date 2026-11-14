@@ -529,6 +529,71 @@ def _touch(p):
         os.utime(p, None)
 
 
+VIEW_REF_MAX_BYTES = 600 << 20
+
+
+def view_refs(plan_path, typ, roots, store=None):
+    """KIT-FIX-F follow-up (QC slw_su_l1 canary): gen reads, for each child view the plan type names (<view dir>/x.lef),
+    <view dir>/provenance.json and follows its absolute paths to the ORIGINAL signed kit (provenance.src/face_guard.json,
+    the netlist that names, the sign-off receipt).  Those paths sit in json inside the pinned src tree, are read at
+    their original place and so cannot be remapped; they must exist on the gen host.
+    -> {present: {path: sha | 'dir'}, missing: [{path, by}]} for the views of ONE type (other types' views never block)."""
+    out = {"present": {}, "missing": []}
+    try:
+        t = (jload(plan_path).get("partition_types") or {}).get(typ)
+    except (OSError, ValueError):
+        return out
+    lefs, todo = set(), [t]
+    while todo:
+        v = todo.pop()
+        if isinstance(v, dict):
+            todo += list(v.values())
+        elif isinstance(v, list):
+            todo += v
+        elif isinstance(v, str) and v.endswith(".lef"):
+            lefs.add(v)
+    seen = set()
+
+    def take(p, by):
+        p = os.path.normpath(p)
+        if p in seen or not p.startswith("/"):
+            return
+        seen.add(p)
+        if os.path.isdir(p):
+            out["present"][p] = "dir"
+        elif os.path.isfile(p):
+            st = os.stat(p)
+            out["present"][p] = store.file_sha(p, st) if store else sha256_file(p)
+        else:
+            out["missing"].append({"path": p, "by": by})
+
+    for lef in sorted(lefs):
+        cands = [lef] if os.path.isabs(lef) else [os.path.join(r, lef) for r in list(roots) + [os.path.dirname(plan_path)]]
+        vd = next((os.path.dirname(c) for c in cands if os.path.isfile(c)), None)
+        pv = os.path.join(vd, "provenance.json") if vd else ""
+        if not pv or not os.path.isfile(pv):
+            continue
+        try:
+            j = jload(pv)
+        except (OSError, ValueError):
+            continue
+        refs = [r for r in scan_refs(pv) if os.path.normpath(r) != os.path.normpath(str(j.get("src") or "/"))]
+        if isinstance(j.get("src"), str) and j["src"].startswith("/"):
+            fg = os.path.join(j["src"], "face_guard.json")
+            refs.append(fg)
+            try:
+                n = jload(fg).get("netlist")
+                if isinstance(n, str) and n.startswith("/"):
+                    refs.append(n)
+            except (OSError, ValueError, AttributeError):
+                pass
+        for r in refs:
+            if os.path.isfile(os.path.join(vd, "signoff.json")) and r == str((j.get("export") or {}).get("signoff")):
+                continue                              # the view carries its own receipt: the original is not read
+            take(r, pv)
+    return out
+
+
 def snap(spec, snap_root, store_root=None, log=print):
     """content-addressed snapshot of one kit's input closure -> {id, dir, kit_inputs, map, reused, n_files, ...}.
     A required input that is absent raises StoreError (KIT-STORE MISSING): the caller stops the item before any queue wait."""
@@ -536,6 +601,12 @@ def snap(spec, snap_root, store_root=None, log=print):
     store_root = store_root or os.path.dirname(snap_root.rstrip("/"))
     os.makedirs(snap_root, exist_ok=True)
     dry = snapshot(spec, os.path.join(snap_root, ".dry"), store_root, log=lambda *a: None, dry=True)
+    vr = {"present": {}, "missing": []}
+    vt = spec.get("view_refs_type")
+    plan_in = next((x["path"] for x in spec.get("inputs") or [] if x.get("role") == "plan"), "")
+    if vt and plan_in:
+        vr = view_refs(plan_in, vt, [r for r in spec.get("in_place") or [] if r])
+    dry["in_place"] = dict(dry.get("in_place") or {}, **{"viewref:" + k: v for k, v in vr["present"].items()})
     sid = snap_id(dry)
     d = os.path.join(snap_root, sid)
     root = os.path.join(d, "root")
@@ -547,6 +618,7 @@ def snap(spec, snap_root, store_root=None, log=print):
         else:
             os.makedirs(d, exist_ok=True)
             man = snapshot(spec, root, store_root, log=log, manifest_dir=d)
+            man["in_place"] = dict(man.get("in_place") or {}, **{"viewref:" + k: v for k, v in vr["present"].items()})
             if snap_id(man) != sid:
                 raise StoreError(f"KIT-SNAP inputs changed while the snapshot {sid} was built (a lane is still writing "
                                  "them): relaunch when the inputs are final")
@@ -557,6 +629,7 @@ def snap(spec, snap_root, store_root=None, log=print):
         _touch(os.path.join(d, ".used"))
     return {"id": sid, "dir": d, "kit_inputs": root, "map": man["map"], "reused": reused, "n_files": len(man["files"]),
             "absent": man.get("absent") or [], "restored": man.get("restored") or [], "host": socket.gethostname(),
+            "view_refs": len(vr["present"]), "view_refs_missing": vr["missing"],
             "bytes_copied": 0 if reused else man.get("bytes_copied", 0), "store": store_root}
 
 
