@@ -38,6 +38,17 @@ class SimpleAdmit(unittest.TestCase):
     def test_young_window_is_configurable_default_300(self):
         self.assertIn(R.YOUNG_S, (300,))  # no /etc/ot-heavy.conf YOUNG_S in the test env
 
+    def test_free_is_light_and_never_reads_the_unit_books(self):
+        # FREE_LIGHT_1114: --free under SIMPLE_ADMIT must not call read_units (one systemctl per unit; 326 piled-up probes hung epyc10)
+        with patch.dict(os.environ, self.env), patch.object(R, "sizes", return_value=T), patch.object(R, "meminfo", return_value=(1000.0, 300.0)), \
+                patch.object(R, "waiters", return_value=([10], [10])), patch.object(R, "read_units", side_effect=AssertionError("books read")):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                R.free("/")
+        import json
+        j = json.loads(out.getvalue())
+        self.assertEqual((j["admit_gb"], j["free_gb"], j["waiting"]), (284, 274, 1))
+
 
 if __name__ == "__main__":
     unittest.main()

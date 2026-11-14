@@ -1517,6 +1517,27 @@ def free(path):
     """the admission arithmetic of ot-heavy (the same books()), for ot-run"""
     total, avail = meminfo()
     table = sizes()
+    if conf("SIMPLE_ADMIT"):   # FREE_LIGHT_1114 ADMIT-TUNE-1: SIMPLE_ADMIT needs no per-unit books; read_units() ran one `systemctl --user show` per unit and 326 piled-up probes saturated the user manager on a loaded host (epyc10 load 200: --free > 80 s, ot-run probe timeouts)
+        wait, req = waiters(table)
+        can = max(0, math.floor(avail - conf("INV_HEADROOM_GB")))
+        try:
+            v = os.statvfs(path)
+            disk = v.f_bavail * v.f_frsize >> 30
+        except OSError:
+            disk = -1
+        try:
+            running = len(glob.glob("/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/*/oth-*.scope"))
+        except Exception:
+            running = 0
+        print(json.dumps(dict(host=os.uname().nodename, total_gb=round(total), avail_gb=round(avail), used_gb=round(total - avail),
+                              charged_gb=round(total - avail), reserved_gb=0, growth_gb=0, growth_raw_gb=0, young_gb=0, plenty=True,
+                              headroom_gb=0, floor_gb=round(conf("INV_HEADROOM_GB")), cpu_load1=float(open("/proc/loadavg").read().split()[0]),
+                              ncpu=os.cpu_count(), running=running, fresh=0, waiting=len(wait), waiting_gb=sum(wait),
+                              waiting_req_gb=sum(req), disk_gb=disk, admit_gb=can, free_gb=can - sum(wait), die_admit_gb=can,
+                              die_reserve=None, inv_free_gb=can, committed_gb=round(total - avail), inv_limit_gb=round(total - conf("INV_HEADROOM_GB")),
+                              other_gb=0, admit_gb_v16=can, inv_terms=dict(in_use=round(total - avail, 1), peak_gap=0, reserve=0, fresh=0, phase_extra=0, phase_raw=0),
+                              simple_admit=True)))
+        return
     rows = read_units()
     b = books(rows, total, avail, table)
     head, floor = 0, floor_gb(total)
