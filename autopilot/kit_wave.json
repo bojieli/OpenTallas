@@ -558,7 +558,8 @@
     "kv3_pv_v5n@2",
     "kv3_pv_v6@2",
     "kv3_pv_v6n@3",
-    "kv3_pv_v7@2"
+    "kv3_pv_v7@2",
+    "kv3_pv_v3@3"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -657,7 +658,7 @@
     "kv3_pv_v1n@2": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v2@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v2n@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
-    "kv3_pv_v3@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
+    "kv3_pv_v3@3": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
     "kv3_pv_v3n@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "kv3_pv_v4@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
     "kv3_pv_v4n@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
@@ -864,7 +865,8 @@
     "kv3_pv_v3n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_pv_v4n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_pv_v5n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
-    "kv3_pv_v6n@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]"
+    "kv3_pv_v6n@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hub_Ei@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists)."
    },
    "only_items": [
     "kv3_astk",
@@ -6665,7 +6667,13 @@
     "col_h9_r1__t1__cl49d7a23e__pvadb6c679@2",
     "dsdv_slice_c1x_C__t4@1",
     "serdes__t15__cla3d02796@10",
-    "serdes__t16@18"
+    "serdes__t16@18",
+    "ot_s81sl_leaf__t29@7",
+    "dsdv_slice_c3x_C__t1@22",
+    "ot_s81sl_leaf__t31@1",
+    "col_h9_r2__t1__clce45cab5__pv4754d912@1",
+    "col_h9_r2__t1__clce45cab5__pv31e47bd5@1",
+    "col_h9_r2__t1__clce45cab5__pv1aac64f0@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -6953,7 +6961,7 @@
     "ot_s81sl_leaf__t16@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t17@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t1@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
-    "ot_s81sl_leaf__t21@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
+    "ot_s81sl_leaf__t21@5": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
     "ot_s81sl_leaf__t22@4": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t23@4": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
     "ot_s81sl_leaf__t25__cl431c660f@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
@@ -6976,7 +6984,7 @@
     "ot_s81sl_leaf__t53__cl958451dd@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t53__clb66fa5cb@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
     "ot_s81sl_leaf__t54__cl501e5681@5": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; bind8 was stale, DIE-S81-85 17:46)",
-    "ot_s81sl_leaf__t54__cl706d9749@5": "INFRA-staging (not a design result): launched 08:05 on gen epyc4 before wt/kit-wave-15-s81b (bind of record asbuilt_kw15d readset @6defc3c2306) was staged there -> kit_rtl 'preferred HDL source missing'; staged 08:1x (same path, same sha), all 372 named paths present, smoke kit_rtl leaf__t38 PASS on epyc4; batch fix 56a09245e3f unchanged (KW-FIX-4)",
+    "ot_s81sl_leaf__t54__cl706d9749@5": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
     "col_h10_r2__t1__clac068e56@4": "a76e7edb315 (native_bb: header `ifdef defaults [SPS 'TCL interpreter ... child process exited abnormally' = OT_SIGNED_PARAM_SERIALIZE dsfd_cfifo_crs4 .LGATE unknown] + INSTANCE/VIAMAP labels on every header master [STA-0171 ot_v41_rom_elem_* #(.INSTANCE)]) in wave src 38f9fa68458 = d9824ffba02 + cherry-pick; replay plan rc0 / labels; KW-FIX-4 09:0x",
     "col_h9_r0_p1__t1@4": "a76e7edb315 (native_bb: header `ifdef defaults [SPS 'TCL interpreter ... child process exited abnormally' = OT_SIGNED_PARAM_SERIALIZE dsfd_cfifo_crs4 .LGATE unknown] + INSTANCE/VIAMAP labels on every header master [STA-0171 ot_v41_rom_elem_* #(.INSTANCE)]) in wave src 38f9fa68458 = d9824ffba02 + cherry-pick; replay plan rc0 / labels; KW-FIX-4 09:0x",
     "col_h9_r0_p3__t1__cl0cd90c0e@4": "a76e7edb315 (native_bb: header `ifdef defaults [SPS 'TCL interpreter ... child process exited abnormally' = OT_SIGNED_PARAM_SERIALIZE dsfd_cfifo_crs4 .LGATE unknown] + INSTANCE/VIAMAP labels on every header master [STA-0171 ot_v41_rom_elem_* #(.INSTANCE)]) in wave src 38f9fa68458 = d9824ffba02 + cherry-pick; replay plan rc0 / labels; KW-FIX-4 09:0x",
@@ -7931,7 +7939,7 @@
     "ot_s81sl_leaf__t61@14": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 + OT_PLACE_MAX_FANOUT=32. Prev class TIMING. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x).",
     "ot_s81sl_leaf__t73@2": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 + OT_PLACE_MAX_FANOUT=32. Prev class TIMING. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x).",
     "serdes__t13@27": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x).",
-    "slice_station__t25@5": "REBUILD-17 via COORD (B1 swap): signed record stranded on epyc5/epyc6 (unreachable), no live copy; rebuild on B1 (slice_station unchanged by B1). REDESIGN: not a design retry, host loss.",
+    "slice_station__t25@5": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
     "col_h9_r1__t1__cl49d7a23e__pv15cef3f7@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
     "col_h9_r1__t1__cl49d7a23e__pv36da905c@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
     "col_h9_r2__t1__clce45cab5__pv40e9fb5a@3": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
@@ -7966,7 +7974,14 @@
     "dsdv_slice_c1x_C__t7@2": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
     "dsdv_slice_c1x_C__t9@2": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
     "serdes__t15__cla3d02796@10": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
-    "serdes__t16@18": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix."
+    "serdes__t16@18": "FAIL-S81-1 pass1 (COORD 23:2x): 2-h watchdog HUNG cancel / routed-not-signed GRT timecap; relaunch with OT_GRT_POST_MAX_S=43200 (12 h GRT post-route cap); not a class fix.",
+    "slice_station__t42__cl4bd1432c@11": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "ot_s81sl_leaf__t29@7": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "dsdv_slice_c3x_C__t1@22": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "ot_s81sl_leaf__t31@1": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "col_h9_r2__t1__clce45cab5__pv4754d912@1": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "col_h9_r2__t1__clce45cab5__pv31e47bd5@1": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "col_h9_r2__t1__clce45cab5__pv1aac64f0@1": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists)."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -28533,7 +28548,8 @@
     "hd_spn_end@1",
     "hd_host_e@1",
     "hd_serdes@1",
-    "hd_tile@1"
+    "hd_tile@1",
+    "hd_mesh@2"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -28601,7 +28617,8 @@
     "hd_spn_end@1": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
     "hd_host_e@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "hd_serdes@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
-    "hd_tile@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch."
+    "hd_tile@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
+    "hd_mesh@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists)."
    },
    "gen_hosts": [
     "epyc7",
