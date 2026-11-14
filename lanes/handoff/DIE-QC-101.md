@@ -19,3 +19,15 @@ pilot one type per family in parallel (OWNER: do not wait for pilots). Coordinat
 
 ## State
 - 17:46 STATE posted (coord 3ba28f80475). Binds running: s29_qc101a (f547), s29_qc101w (windowed = adoption candidate).
+
+## 19:0x state (read first after a restart)
+- Plan chain (epyc9 tree2 POR, copies in die-qc-101/): f547 -> _win (per-port windows) -> _f (+clock.pregrt_ff_hold) -> _g (cbn_q00__cl622f65d2 relay 120/121
+  rebalance, fix_cbn622_relay.py) -> _h/_i (cbn_q00__cldbcda913: ALL hard ring children deferred to soft = HELD type, soft_rings_type.py)
+  -> _j (fe cl1cbb7497 start_0 local reset dropped) -> _k (ALL landing_local_resets dropped die-wide, 1213 copies/115 types) and
+  _k2 (fe family only, 130 copies). Binds k and k2 RUNNING in parallel (finish_bind_codex.sh: pre -> R8 derive -> final).
+- Bind EMITs stop at the first error; each run ~15 min (pre) + R8 derive + final.
+- Adoption packet once a final bind is 0: plan = POR/zz_s29_qc101_<x>.json, src = tree2 (protect from cleanup), kit_rtl.bind_out =
+  qc-s28-hf1c/bind/bind_s29_qc101<x>_final, asbuilt = tree2 runtime zz_manifest_iso_s29_qc101<x>_final.json, --clock-landing =
+  tree2 runtime zz_sidecar_s29_qc101<x>_final.json; hold only cbn_q00__cldbcda913 (+phy_* as before); drop PHYS-QC item_inputs.
+- D8 child local32 SIGNED (TT +40.94 / FF +14.96 / DRC 0); parent adoption needs ring knobs DSREP4/READ32/WRITE16/RSTREP73/PLACEREP1.
+- OPEN: coll_s clk_serdes/clk_coll windows + region (PHYS-QC); c_* extra clock entries; local reset re-pick after adoption.
