@@ -431,6 +431,16 @@ REQUEUE_S = int(os.environ.get("OT_RUN_REQUEUE_S", "120"))   # v6 REBALANCE: a q
 SPILL_MAX_GB = int(os.environ.get("OT_RUN_SPILL_MAX_GB", "40"))   # v8 SPILL
 LOAD_SPILL_RATIO = float(os.environ.get("OT_RUN_LOAD_SPILL_RATIO", "1.25"))   # v11 LOAD SPILL: source projected load / cores
 LOAD_SPILL_DST, LOAD_SPILL_GAP, LOAD_SPILL_MIN_THREADS = 0.85, 0.5, 4
+# OVERLOAD_1114 ADMIT-TUNE-1 (COORD 11-14: epyc10 load 434-470 on 96 cores, intel2 1.05x / epyc8 1.5x free): with the ot-heavy load gate/cap removed, placement
+# must still balance CPU.  A host projected above OVERLOAD_RATIO x cores is skipped while another eligible host is at or below it; a queued job goes to the
+# least-loaded host with the memory; a LOAD SPILL destination may be as loaded as half the source's ratio (all hosts > 0.85 x no longer blocks spill);
+# a --hosts X pin with declared --stage inputs may spill when X is above OVERLOAD_RATIO.  OT_RUN_OVERLOAD_RATIO=0 disables.  revert: ot-run.bak-at1*
+OVERLOAD_RATIO = float(os.environ.get("OT_RUN_OVERLOAD_RATIO", "2.5"))
+PIN_SPILL = [False]
+
+
+def spill_dst_ratio(src_r):
+    return min(max(LOAD_SPILL_DST, 0.5 * src_r), src_r - LOAD_SPILL_GAP)
 LOAD_SPILL_NEG_S = 3600
 LOAD_SPILL_NEG = os.path.expanduser("~/.local/state/ot-run/loadspill_no")
 # QUEUE-BAL-1 2026-11-05 (COORD 19:2x: 122 waiters / 5.9 TB on intel1 for up to 9.6 h while other hosts had room): 96 of
@@ -804,11 +814,15 @@ def choose(res, mem, threads=THREADS, die=False):
     if any(not coord(h) for h in ok) and any(not coord(h) and ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem for h in ok):
         ok = {h: r for h, r in ok.items() if not coord(h)}   # FLEET-NEW3: the shared coordinator host only as a last resort
     fits = [h for h in ok if ok[h].get("admit_gb", ok[h]["free_gb"]) >= mem and not load_capped(ok[h], mem, threads)]
+    if OVERLOAD_RATIO > 0 and len(fits) > 1 and any(ratio(ok[h], threads) <= OVERLOAD_RATIO for h in fits):
+        fits = [h for h in fits if ratio(ok[h], threads) <= OVERLOAD_RATIO]       # OVERLOAD_1114
     if not fits:                                   # nobody admits it now: queue where the most memory is free
         if any(not coord(h) for h in ok):
             ok = {h: r for h, r in ok.items() if not coord(h)}
         if die and any(not nodie(h) for h in ok):
             ok = {h: r for h, r in ok.items() if not nodie(h)}
+        if OVERLOAD_RATIO > 0 and any(ratio(ok[h], threads) <= OVERLOAD_RATIO for h in ok):
+            ok = {h: r for h, r in ok.items() if ratio(r, threads) <= OVERLOAD_RATIO}   # OVERLOAD_1114: queue on a host that is not overloaded
         return max(ok, key=lambda h: ok[h]["free_gb"]), True
     if die and any(not nodie(h) for h in fits):
         fits = [h for h in fits if not nodie(h)]
@@ -1444,11 +1458,13 @@ def main():
         sys.exit(cancel(a[1], "--all-dirs" in a[2:]))
     if a[:1] == ["--cancel-dir"] and len(a) >= 2:
         sys.exit(cancel_dir(a[1], a[a.index("--reason") + 1] if "--reason" in a[2:] and a.index("--reason") + 1 < len(a) else ""))
+    _pin_only = False
     mem, d, disk, hosts, pick, max_wait, threads = None, None, None, HOSTS, False, None, THREADS
     job = None
     spill = not os.environ.get("OT_RUN_NO_SPILL")
     if "--hosts" in a[:a.index("--") if "--" in a else len(a)]:
         spill = False                      # an explicit pin is honoured as before
+        _pin_only = "--no-spill" not in a[:a.index("--") if "--" in a else len(a)] and not os.environ.get("OT_RUN_NO_SPILL")   # OVERLOAD_1114
     while a and a[0] != "--":
         o = a.pop(0)
         if o == "--mem": mem = int(a.pop(0))
@@ -1509,6 +1525,8 @@ def main():
         # their gen/run_kit.sh: ot-job exit 99).  OT_RUN_HARD_PIN=1 restores the hard pin.
         _alt = [h for h in HOSTS if h not in ("localhost", "intel2", "epyc4", "epyc5", "epyc6") and h not in held and h != hosts[0]]
         hosts = [hosts[0]] + _alt
+    if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0:
+        spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
@@ -1544,12 +1562,13 @@ def main():
             first = False
             continue
         best, queue = choose(ok, mem, threads, die=die)
-        if spill and d and not pick and not queue and best and not direct_job() and load_spill_wanted(ok[best], threads):   # v11 LOAD SPILL
+        if spill and d and not pick and not queue and best and not direct_job() and load_spill_wanted(ok[best], threads) \
+                and (not PIN_SPILL[0] or (OVERLOAD_RATIO > 0 and ratio(ok[best], threads) > OVERLOAD_RATIO)):   # v11 LOAD SPILL (OVERLOAD_1114: pinned only when overloaded)
             src_r = ratio(ok[best], threads)
             root = spill_root(d) if not STAGE else "stage_" + __import__("hashlib").sha1(",".join(sorted(STAGE)).encode()).hexdigest()[:16]
             if not load_spill_neg(root):
                 plan, why, permanent = spill_plan(best, d, cmd, mem, threads, die, disk, held, say,
-                                                  max_ratio=min(LOAD_SPILL_DST, src_r - LOAD_SPILL_GAP))
+                                                  max_ratio=spill_dst_ratio(src_r))
                 if plan:
                     say(f"ot-run: LOAD SPILL: {best} would run at {src_r:.2f} x cores; moving to {plan[0]}")
                     left = None if max_wait is None else max(1, int(max_wait - (time.time() - t0)))
