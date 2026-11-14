@@ -66,12 +66,15 @@ def is_minimal(value=None):
     return profile(value) == "minimal"
 
 
+TIMING_ABS_MAX_PS = 1e6       # OpenSTA prints ~1e42 'INF' slack when a corner has no constrained path: not a measurement
+
+
 def _num(x):
     try:
         v = float(x)
     except (TypeError, ValueError):
         return None
-    return v if math.isfinite(v) else None
+    return v if math.isfinite(v) and abs(v) < TIMING_ABS_MAX_PS else None
 
 
 def metrics(rec):

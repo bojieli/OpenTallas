@@ -136,3 +136,8 @@ def test_rejudge_type_of_path():
         == ("s81_head", "hd_turn_a", 5)
     out = RJ.compact(dict(rec(), name="x"))
     assert out["checks"]["hold_ff"]["port_only_needs_parent"] is False and json.dumps(out)
+
+
+def test_inf_slack_is_not_a_measurement():
+    """kv3_pv_pair re-judge 11-13: TT 1e42 'slack' (no constrained path) must never sign off"""
+    assert SP.judge(dict(drc=0, tt_wns=1.0000000190432691e+42, ff_wns=1.0000000190432691e+42, die="kv"))["verdict"] == "NOT SIGNED"
