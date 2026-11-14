@@ -1,0 +1,5 @@
+# TYPE-KVIOFT (kv3_io_ft_v1) 2026-11-14 09:15 PST
+CLASSIFY (attempt_4, kv102sem_ftgrid, routed 6_final.odb epyc2 .../kv102sem_ftgrid/items/kv3_io_ft_v1/attempt_4/gen/kv3_io_ft_v1): DRC 0, TT setup +17.64 PASS. FF hold -168.5 / 4436 viol = 4264 input-port starts + 8 output-port (advisory, parent). INTERNAL FF hold: 164 reg-to-reg endpoints, WNS -30.64 (TT internal hold 0). 137 of 164 = u_cland_ftN_i u_ring dch u_dsel/y -> u_ft_ftN_o_0 q (cland ring -> ft_o flop-to-flop, FF skew + 25 ps hold unc); rest small control chains. Dump: epyc2 /srv/opentallas-scratch2/claude/typekvioft/out/hold_dump.tsv.
+Earlier ECO (b5, whole-design hold repair incl 4264 port paths) made FF -14 but TT -134: port hold buffering broke setup. Not a wide-outline issue: attempt_4 DIE_AREA already 1278.72.
+Wave attempt_5 (kvgeom4 plan bc5799a6d171) in flight from 09:05.
+PLAN: private ECO from attempt_4 routed DB with OT_PRD_PROTECT_NETS = nets on port-start hold paths (repair only internal), 2 forms (hold margin variants). Then sign R-MINIMAL, AUTO-RESIGN row, archive.
