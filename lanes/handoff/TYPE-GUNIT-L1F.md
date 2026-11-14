@@ -3,3 +3,4 @@ Forms: F2 epyc8 s81-cores-2/gunit_f2/dsdv_gunit_l1f_bf_gf5f2 (unit oth-ubuntu-26
 Launch: ot-run --mem 64 --threads 16 --hosts H --dir KIT -- env OT_HOLD_STRUCTURAL_ADVISORY=1 NONPORT_HOLD=1 bash KIT/run_kit.sh KIT finish; logs ~/type-gunit-logs.
 On first pass: add AUTO-RESIGN.tsv row (die s81, name dsdv_gunit_l1f_bf, host, dir of signoff/signoff.json), post RESULT. Cancel the other forms' units by exact unit name.
 2026-11-14 15:25 a routed DRC0, setup -250.9; F2 GRT fail; b in repair_timing
+2026-11-14 15:27 form c (FWPIPE +1 cycle, 504x201.6) launched epyc10; b and Fable g3 running
