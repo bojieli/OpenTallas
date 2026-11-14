@@ -2985,6 +2985,11 @@ def _hop_latch_frac_cfg(P, tn):
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
     density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
+    # KIT-OPS-4 11-14 (R-CLOCK-7, COORD): die_gen_env OT_TAP_MAX_SINKS (the gen process env) overrides the plan value, so the kit's
+    # config.mk line carries it (the env alone never reached the kit: config.mk assigns the variable itself)
+    _e = os.environ.get("OT_TAP_MAX_SINKS", "")
+    if _e.isdigit() and int(_e) > 0:
+        return int(_e)
     return int(t.get("clock", {}).get("tap_max_sinks", 1500 if _density(t) else 3000))
 
 
