@@ -5164,6 +5164,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13; was HEAD-TILE-PREGRT-HOLD): opt-in, plan clock.pregrt_ff_hold true
     # (COORD 11-13 07:2x, default-preserving); pregrt_ff_hold.py, run_kit.sh step below
     import pregrt_ff_hold as _pregrt_ff_hold
+    _pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))      # QC s29 overlay: die-level default, type-level wins
     cfg += _pregrt_ff_hold.config_lines(t)
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
@@ -5612,6 +5613,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import head_tile_c9
     head_tile_c9.install(P, tn, kd)
     import pregrt_ff_hold
+    pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))
     pregrt_ff_hold.install(t, kd)
     planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
     # pins.json remains the boundary-flop contract consumed by face_guard.
