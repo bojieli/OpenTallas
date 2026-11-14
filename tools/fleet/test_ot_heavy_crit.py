@@ -55,6 +55,7 @@ class Heavy(unittest.TestCase):
         env = dict(os.environ, PATH=f'{self.d}/bin:' + os.environ['PATH'], OUT_ARGS=str(self.d / 'args'), OT_VL_JCAP='0',
                    OT_HEAVY_SYSTEM_TOOLS='1')
         env.pop('OT_HEAVY_CPU', None); env.pop('OT_HEAVY_PRIO', None)
+        env.pop('OT_HEAVY_CONF', None)   # this harness rewrites the conf path in a copy of ot-heavy (HERMETIC_CONF_1114)
         if crit: env['OT_HEAVY_CPU'] = 'crit'
         try: (self.d / 'args').unlink()
         except FileNotFoundError: pass

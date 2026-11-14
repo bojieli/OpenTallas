@@ -1,4 +1,5 @@
 """Exercise actual CLI placement without creating remote jobs or waiters (v6 2026-10-18: no load hold, rebalance)."""
+import re
 import contextlib
 import importlib.machinery
 import importlib.util
@@ -251,7 +252,10 @@ class LoadSpill(unittest.TestCase):
         run, srun, splan, log, _ = self.go((('e5', ['/srv/opentallas-scratch/claude/x'], 1.0), '', False))
         self.assertTrue(srun.called, log)
         self.assertEqual(srun.call_args.args[:2], ('e6', 'e5'))
-        self.assertLessEqual(splan.call_args.kwargs['max_ratio'], 0.85)
+        # OVERLOAD_1114: the destination may be as loaded as half the source's ratio (all hosts above 0.85 x used to block every spill)
+        src_r = float(re.search(r'would run at ([0-9.]+) x cores', log).group(1))
+        self.assertAlmostEqual(splan.call_args.kwargs['max_ratio'], load(Path(__file__).with_name('ot-run')).spill_dst_ratio(src_r), places=2)
+        self.assertLessEqual(splan.call_args.kwargs['max_ratio'], max(0.85, 0.5 * src_r) + 0.01)
         self.assertFalse(run.called)
         self.assertIn('LOAD SPILL', log)
 
