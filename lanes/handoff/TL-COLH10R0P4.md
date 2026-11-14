@@ -22,3 +22,4 @@
 - Cancelled epyc7 duplicate per COORD: verified container dpkit-col_h10_r0_p4__t1__pv5b623e07-3888328 label ot-job.dir ...pv5b623e07-route-loved-redfish-3822634 and its run_kit.sh route cmdline, then docker stop + kill ot-job pid 3822634 (wrapper chain 3820217/3819383 exited). No pv5b623e07 process or container remains on epyc7.
 ## 13:33
 - Form fa (U0.4 M8 ALLOW_CONG) run-item ended at geom (auto_geom FAIL = fill/empty advisory, same as wave PASS-COND). I launched its route myself: ot-run client pid 2704909 on intel2, kit epyc10 /srv/opentallas-scratch2/claude/tl-colh10r0p4/fa/gen/col_h10_r0_p4__t1__pv5b623e07, log ~/type-s81-colh10r0p4/fa/route.log; queued on epyc10 memory admission. fb/fc still in geom; launch their routes the same way when they stop.
+- 13:38 fb/fc run-items also ended at geom (FAIL advisory); routes launched by hand: fb ot-run pid 2922042, fc pid 2922044 (logs ~/type-s81-colh10r0p4/<k>/route.log), all three queued on epyc10 admission.
