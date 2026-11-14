@@ -6911,7 +6911,8 @@
     "ot_s81sl_leaf__t34@13",
     "serdes__t14@11",
     "col_h9_r1__t1__cl49d7a23e__pv47efee8f@5",
-    "col_h9_r0_p5__t1__pvc93af856@4"
+    "col_h9_r0_p5__t1__pvc93af856@4",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@5"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -7419,7 +7420,7 @@
     "ot_s81sl_leaf__t37@11": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t38@11": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t39@10": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
-    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@5": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@5": "KIT-OPS-4 11-14 FIX-HOLDSTALL: fresh kit with OT_PREGRT_FF_HOLD_AUTO=100 (stage_resume_off)",
     "ot_s81sl_leaf__t40__clf8bbdae1@8": "REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixes the measured M6 overflow on the vs/ve_m bus: post-CTS GRT 0 on t27 vP and t42 vM (old M6 114216 and 159073). lanes/S81-LEAF-BATCH-1107.json",
     "ot_s81sl_leaf__t41@5": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
     "ot_s81sl_leaf__t43@6": "busfit 7ab21fef7ba, t45 CTS read 0 ORD-2001 (KW-FIX-6 03:40)",
@@ -21819,7 +21820,8 @@
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
-    "OT_CORE_TAP_REACH_UM": "0"
+    "OT_CORE_TAP_REACH_UM": "0",
+    "OT_PREGRT_FF_HOLD_AUTO": "100"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -31277,7 +31279,18 @@
     "svc_lo_dsdv_svc_rs__t4",
     "svc_lo_dsdv_svc_rs__t7",
     "svc_lo_dsdv_svc_rs_w__t1",
-    "col_h9_r1__t1__cl49d7a23e__pv47efee8f"
+    "col_h9_r1__t1__cl49d7a23e__pv47efee8f",
+    "eng__t1",
+    "col_h9_r2__t1__cl87f3ff59",
+    "ot_s81sl_leaf__t40__cl86ea32b3",
+    "ot_s81sl_leaf__t54__cl501e5681",
+    "ot_s81sl_leaf__t27",
+    "ot_s81sl_leaf__t35",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S",
+    "slice_station__t26",
+    "ot_s81sl_leaf__t40__clf8bbdae1",
+    "ot_s81sl_leaf__t42",
+    "ot_s81sl_leaf__t10"
    ]
   },
   "s81_head": {
