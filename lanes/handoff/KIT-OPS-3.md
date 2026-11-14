@@ -1,0 +1,1 @@
+- 2026-11-13 19:20 PST KIT-OPS-3 STATE: took over. Tick 606873 (since 18:44) still in poll_running, no wave pass since B1 swap; 60-row S81 B1/HEAD launch pending next KW.step. QC s29 / KV swaps await owner READY. kit_snap canaries (3) still no result.json. Waiters running.
