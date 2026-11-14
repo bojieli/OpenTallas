@@ -1175,6 +1175,11 @@ def latch_to_wire(src, dst, side):
     so cycle equivalence plus equal port classes (check(): latch_phase) is phase equivalence: a dropped, added or
     wrong-phase face latch is NOT EQUIVALENT.  st['port_phase'] = {lec_po cell: class} for every non-'edge' port.
 
+    Fresh BB interface metadata preserves the established hard-core input contract.
+    A synchronous SRAM WD sink additionally needs a Liberty-qualified rising edge,
+    the same actual input clock as its transparent-low latch, and a same-instance
+    clock monitor witness. Stale/unmarked BB JSON supplies no such witness.
+
     Refused (Unproven), never approximated: an enable that is not a (buffered / inverted) primary-input flop clock,
     a transparent-high latch in a latch chain, a data source that is a falling-edge flop / clock net / unknown cell
     / LEC stub, a Q load that is a clock or async pin, a falling-edge flop, a black-box compare pin, memory or
@@ -1185,11 +1190,13 @@ def latch_to_wire(src, dst, side):
         raise LecError(f"latch {side}: {len(tops)} top modules in {src}")
     m = d["modules"][tops[0]]
     cells = m["cells"]
-    name_of = {}
+    name_of, attrs_of = {}, {}
     for n, w in m["netnames"].items():
         for b in w["bits"]:
             if isinstance(b, int):
                 name_of.setdefault(b, n)
+                if w.get("attributes", {}).get("lec_bb_module"):
+                    attrs_of[b] = w["attributes"]
     pis = {b for p in m["ports"].values() if p["direction"] == "input" for b in p["bits"] if isinstance(b, int)}
     pos = {b for p in m["ports"].values() if p["direction"] != "input" for b in p["bits"] if isinstance(b, int)}
     drv, loads = {}, collections.defaultdict(list)
@@ -1240,18 +1247,44 @@ def latch_to_wire(src, dst, side):
 
     stub = re.compile(r"(^|\.)lec_(bbo|bbi|po)_")
     po_re = re.compile(r"(^|\.)lec_po_")
+    bb_clocks = collections.defaultdict(list)
+    for q, a in attrs_of.items():
+        if a.get("lec_bb_input") == "clk" and q in drv:
+            cell = cells[drv[q][0]]
+            f = FF_TYPE.match(cell["type"])
+            if f and f[2] == "P":
+                prefix = str(name_of.get(q, "")).split(".lec_bbi_", 1)[0]
+                bb_clocks[(a["lec_bb_module"], prefix)] += cell.get("connections", {}).get("D", [])
 
     def po_ff(cn):                        # the wrapper's output-port capture flop (lec_po_<port>[i])
         return bool(FF_TYPE.match(cells[cn]["type"])) and \
             bool(po_re.search(str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))))
 
-    def bbi_ff(cn):
+    def bbi_ff(cn, latch_clock, latch_phase):
         """QC-NK-HOLD 11-11: a black-box input compare point (lec_bbi_<pin>, rising-edge stub).  The hard core samples
         its input pins at its own rising clock edge, so a transparent-low lockup latch on the pin (bind
         clock.core_input_lockup) is a wire to it exactly as to a rising-edge flop of ours."""
         f = FF_TYPE.match(cells[cn]["type"])
-        return bool(f) and f[2] == "P" and \
-            bool(re.search(r"(^|\.)lec_bbi_", str(name_of.get(cells[cn]["connections"].get("Q", [None])[0], ""))))
+        q = cells[cn]["connections"].get("Q", [None])[0]
+        name = str(name_of.get(q, ""))
+        if not (f and f[2] == "P" and re.search(r"(^|\.)lec_bbi_", name)):
+            return False
+        a = attrs_of.get(q, {})
+        module = a.get("lec_bb_module", "")
+        if not module:                 # stale phase-A JSON has no sampled-interface witness
+            return False
+        if not module.startswith("ot_sram_"):
+            return True                # established hard-core input-pin contract
+        if not (latch_phase == "low" and module.startswith("ot_sram_1r1w_") and a.get("lec_bb_input") == "wd_in" and
+                a.get("lec_sample_edge") == "rising" and a.get("lec_sample_clock") == "clk"):
+            return False
+        prefix = name.split(".lec_bbi_", 1)[0]
+        witnesses = bb_clocks.get((module, prefix), [])
+        qualified = len(witnesses) == 1 and through(witnesses[0], True) == (latch_clock, False)
+        if qualified:
+            st.setdefault("synchronous_sram_input_witnesses", {})[prefix] = dict(
+                module=module, port="wd_in", clock=name_of.get(latch_clock, str(latch_clock)), edge="rising")
+        return qualified
 
     def rise_ff(cn):
         """a rising-edge flop on a primary-input clock (no LEC stub / wrapper flop) -> its FF_TYPE match, else None."""
@@ -1364,7 +1397,7 @@ def latch_to_wire(src, dst, side):
                     continue
                 if f:
                     ok = (rise_ff(ln) and (lp in ("D", "E") or (lp == "R" and f[1].startswith("SDFF")))) or \
-                        (bbi_ff(ln) and lp == "D")
+                        (bbi_ff(ln, e, phase[cn]) and lp == "D")
                     if not ok:
                         raise Unproven(f"latch {side}: {cn} Q reaches {lt} {ln}.{lp} (only D / E / sync R of "
                                        f"rising-edge flops on primary-input clocks and output ports are modelled)")
@@ -1561,7 +1594,66 @@ def bb_port_folds(bbports, libs):
     return folds, [other[k] for k in sorted(other)]
 
 
-def stub_verilog(bbports, native_parameters=None, formal_parameters=None, folds=None):
+def _lib_groups(text, kind):
+    """Balanced Liberty groups; braces in quoted table strings are ignored."""
+    pattern = re.compile(r"\b" + re.escape(kind) + r"\s*\(\s*([^)]*?)\s*\)\s*\{")
+    for match in pattern.finditer(text):
+        depth, quoted, escape = 1, False, False
+        for i in range(match.end(), len(text)):
+            char = text[i]
+            if quoted:
+                if escape:
+                    escape = False
+                elif char == "\\":
+                    escape = True
+                elif char == '"':
+                    quoted = False
+            elif char == '"':
+                quoted = True
+            elif char == "{":
+                depth += 1
+            elif char == "}":
+                depth -= 1
+                if not depth:
+                    yield match[1].strip().strip('"'), text[match.end():i]
+                    break
+
+
+def synchronous_sram_samples(bbports, libs):
+    """WD is phase-qualified only by a real RAM Liberty rising setup/hold contract.
+
+    Names select the supported interface, never supply its clock semantics.
+    Every matching view must agree; incomplete, falling or mixed-edge views
+    leave the input unqualified.
+    """
+    views = collections.defaultdict(list)
+    for path in libs:
+        op = gzip.open if str(path).endswith(".gz") else open
+        with op(path, "rt", errors="replace") as file:
+            text = file.read()
+        text = re.sub(r"/\*.*?\*/|//[^\n]*", " ", text, flags=re.S)
+        for module, body in _lib_groups(text, "cell"):
+            if module not in bbports or not module.startswith("ot_sram_1r1w_"):
+                continue
+            ports = {p: (d, w) for p, d, w, lo in bbports[module]}
+            ram = any(re.search(r"\btype\s*:\s*ram\s*;", b) for _, b in _lib_groups(body, "memory"))
+            pin = dict(_lib_groups(body, "pin"))
+            wd = dict(_lib_groups(body, "bus")).get("wd_in", pin.get("wd_in", ""))
+            clock = pin.get("clk", "")
+            arcs = []
+            for _, timing in _lib_groups(wd, "timing"):
+                typ = re.search(r"\btiming_type\s*:\s*(\w+)\s*;", timing)
+                related = re.search(r'\brelated_pin\s*:\s*"?([\w]+)"?\s*;', timing)
+                arcs.append((typ[1] if typ else None, related[1] if related else None))
+            good = (ram and ports.get("clk") == ("input", 1) and ports.get("wd_in", (None, 0))[0] == "input"
+                    and re.search(r"\bclock\s*:\s*true\s*;", clock)
+                    and set(arcs) == {("setup_rising", "clk"), ("hold_rising", "clk")}
+                    and lib_port_shapes(path, module).get("wd_in") == ports["wd_in"][1])
+            views[module].append(bool(good))
+    return {module: {"wd_in": "clk"} for module, good in views.items() if good and all(good)}
+
+
+def stub_verilog(bbports, native_parameters=None, formal_parameters=None, folds=None, sram_samples=None):
     """{module: [(port, dir, width, lsb)]} -> stubs identical for gold and gate: input bits land on keep flops
     '<inst>.lec_bbi_<pin>[i]' (compare points), output bits come from free self-loop flops '<inst>.lec_bbo_<pin>[i]'
     (shared inputs).
@@ -1569,6 +1661,7 @@ def stub_verilog(bbports, native_parameters=None, formal_parameters=None, folds=
     feeds all `width` compare flops, the master's broadcast.  The compare points stay per gold bit, so each gold bit
     must equal the one driven bit: the fold is proved by the miter, never assumed."""
     folds = folds or {}
+    sram_samples = sram_samples or {}
     out = ["// GENERATED by tools/die_plan/lec.py: black-box stubs (input pins = compare points, outputs = free)"]
     for mod, ports in sorted(bbports.items()):
         out.append(f"module \\{mod} ({', '.join(esc(p) for p, *_ in ports)});")
@@ -1586,11 +1679,14 @@ def stub_verilog(bbports, native_parameters=None, formal_parameters=None, folds=
         out.append("  wire lec_clk;")
         for p, d, w, lo in ports:
             rng = f"[{lo + w - 1}:{lo}] " if w > 1 or lo else ""
+            attr = f"lec_bb_module = {json.dumps(mod)}, lec_bb_input = {json.dumps(p)}"
+            if p in sram_samples.get(mod, {}):
+                attr += ', lec_sample_edge = "rising", lec_sample_clock = ' + json.dumps(sram_samples[mod][p])
             if d == "input" and p in folds.get(mod, {}):
-                out += [f"  input {esc(p)};", f"  (* keep *) reg {rng}{esc(BB + 'i_' + p)};",
+                out += [f"  input {esc(p)};", f"  (* {attr} *)", f"  (* keep *) reg {rng}{esc(BB + 'i_' + p)};",
                         f"  always @(posedge lec_clk) {esc(BB + 'i_' + p)} <= {{{w}{{{esc(p)}}}}};"]
             elif d == "input":
-                out += [f"  input {rng}{esc(p)};", f"  (* keep *) reg {rng}{esc(BB + 'i_' + p)};",
+                out += [f"  input {rng}{esc(p)};", f"  (* {attr} *)", f"  (* keep *) reg {rng}{esc(BB + 'i_' + p)};",
                         f"  always @(posedge lec_clk) {esc(BB + 'i_' + p)} <= {esc(p)};"]
             elif d == "output":
                 out += [f"  output {rng}{esc(p)};", f"  (* keep *) reg {rng}{esc(BB + 'o_' + p)};",
@@ -8043,12 +8139,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
                 raise Unproven("selected native metadata master missing from elaborated blackboxes")
             rec["native_stub_metadata"] = json.loads((out / "native_stub_metadata.json").read_text())
         formal_parameters = blackbox_formal_parameters(env, kit, set(bbports))
-        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters, formal_parameters))
+        sram_samples = synchronous_sram_samples(bbports, macro_libs(env, kit))
+        rec["synchronous_sram_input_samples"] = sram_samples
+        (out / "stubs.v").write_text(stub_verilog(bbports, native_parameters, formal_parameters,
+                                                sram_samples=sram_samples))
         folds, width_other = bb_port_folds(bbports, macro_libs(env, kit))
         gate_stubs = out / "stubs.v"
         if folds:
             gate_stubs = out / "stubs_gate.v"
-            gate_stubs.write_text(stub_verilog(bbports, native_parameters, formal_parameters, folds))
+            gate_stubs.write_text(stub_verilog(bbports, native_parameters, formal_parameters, folds, sram_samples))
             rec["bb_port_folds"] = [dict(module=c, port=p, gold_width=w, view_width=1, lsb=lo,
                                          basis="view pin broadcast to every gold bit; each gold bit compared")
                                     for c in sorted(folds) for p, (w, lo) in sorted(folds[c].items())]
