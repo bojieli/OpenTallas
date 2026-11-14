@@ -1535,7 +1535,21 @@ class Binder:
             return ("rst", "low")
         return None
 
+    def _local_reset_pin(self, p, ci, pn):
+        """QC-PHY-1 11-14 (COORD): a hard-IP content entry may declare local_reset_pins [pin, ...] = pins of that core that
+        the wrapper drives from its own delivered reset (arst_n) instead of an as-built source in another partition
+        (UCIe PHY rst_n, as-built glue d2d_rom.phy_rst_n -> core.rst_n).  The as-built crossing into the pin is then
+        not a lane: the pin binds like a reset (rst low).  Absent key = unchanged."""
+        t = self.types[self.parts[p]["type"]]
+        for e in t.get("contents", []) + t.get("hard_cores", []):
+            if pn in (e.get("local_reset_pins") or []) and (not e.get("module") or self.F.cells[ci].module == e["module"]):
+                return True
+        return False
+
     def _classify(self, p, ci, pn, i, s, cnt):
+        if self._local_reset_pin(p, ci, pn):
+            cnt["local_reset_pin"] += 1
+            return ("rst", "low")
         por = self._por_rule(p, ci, pn, i, s, cnt)
         if por is not None:
             return por

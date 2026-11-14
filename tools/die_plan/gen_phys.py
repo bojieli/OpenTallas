@@ -1506,7 +1506,9 @@ def declared_bumps(P, tn):
     out = []
     for e in t.get("contents", []) + t.get("hard_cores", []):
         for b in e.get("bump_ports") or []:
-            out.append((e["inst"], e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
+            # QC-PHY-1 11-14: the bind names the logical inst, the kit places the physical one (physical_inst/_master)
+            pinst = content_physical_identity(e)[0] if e.get("physical_inst") else e["inst"]
+            out.append((pinst, e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
     return out
 
 

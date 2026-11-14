@@ -810,6 +810,7 @@ SCHEMA = {
                                        # hard core of a hard type whose registered boundary pins (lib: setup+hold on
                                        # every input, clk->q on every output) are the partition's boundary registers
                                        "registered_pins": {"type": "boolean"},
+                                       "local_reset_pins": {"type": "array", "items": {"type": "string"}},
                                        # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
                                        # obstructs M1..obs_max, default partition_signal_max when absent)
                                        "obs_max": _layer,
@@ -900,6 +901,7 @@ SCHEMA = {
                                        # hard core of a hard type whose registered boundary pins (lib: setup+hold on
                                        # every input, clk->q on every output) are the partition's boundary registers
                                        "registered_pins": {"type": "boolean"},
+                                       "local_reset_pins": {"type": "array", "items": {"type": "string"}},
                                        "orient": {"enum": list(ORIENTS)},
                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
