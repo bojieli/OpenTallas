@@ -24,7 +24,10 @@ function viaArrays(){
   if (ARRS.has(H)) return ARRS.get(H);
   const arrInfo = H.vias.map(v => { const by = {}; v.boxes.forEach((b, j) => (by[b[0]] = by[b[0]] || []).push(j)); const o = {};
     for (const li in by) if (by[li].length > 4){ const bs = by[li].map(j => v.boxes[j]);
-      o[li] = [Math.min(...bs.map(b => b[1])), Math.min(...bs.map(b => b[2])), Math.max(...bs.map(b => b[3])), Math.max(...bs.map(b => b[4]))]; }
+      // loop, not Math.min(...array): a power via with >100k cuts overflowed the call stack (hbm q_mca, every tile failed)
+      const bb = [Infinity, Infinity, -Infinity, -Infinity];
+      for (const q of bs){ if (q[1] < bb[0]) bb[0] = q[1]; if (q[2] < bb[1]) bb[1] = q[2]; if (q[3] > bb[2]) bb[2] = q[3]; if (q[4] > bb[3]) bb[3] = q[4]; }
+      o[li] = bb; }
     return Object.keys(o).length ? o : null; });
   ARRS.set(H, arrInfo); return arrInfo;
 }

@@ -95,7 +95,7 @@ window.addEventListener('hashchange', () => {
 
 /** old explorer URL schemes -> the canonical one.  Returns a patch or null; names that need the resolver come back as {q}. */
 export function legacy(loc) {
-  const view = new URLSearchParams(loc.search).get('legacy');
+  const sp = new URLSearchParams(loc.search), view = sp.get('legacy');
   const raw = loc.hash.replace(/^#/, '');
   if (raw.startsWith('/')) return null;
   if (!raw && !view) return null;
@@ -105,8 +105,9 @@ export function legacy(loc) {
   if (o.v === 'layout' && p.node && p.node.includes('.')) p.view = 'element';
   if (o.net) p.net = o.net;
   if (o.q) p.q = o.q;
+  if (!p.node && !p.q && sp.get('q')) { const nm = sp.get('q'); if (/^[a-z0-9_]+(\.[tc]\..+)?$/i.test(nm) && (nm.includes('.t.') || nm.includes('.c.'))) p.node = nm; else p.q = nm; }
   if (o.element) { p.q = o.element; p.view = 'element'; }
-  if (o.design) { p.tok = o.design + (o.t ? ':' + o.t : ''); if (!view) p.view = 'token'; }
+  if (o.design) { const g = o.group || o.t; p.tok = o.design + (g ? ':' + g : ''); if (!view) p.view = 'token'; }
   if (o.die && !p.node) { const d = o.die.replace(/^plan_/, ''); p.dieHint = d; }
   return p;
 }

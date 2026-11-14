@@ -279,7 +279,7 @@ export class LayoutEngine {
   }
   hiddenLayers() { return this.L ? this.L.filter((l) => !l.vis && l.type !== 'PHYS').map((l) => l.name) : []; }
   setHidden(names) { const s = new Set(names); if (!this.L) { this.pendingHidden = s; return; } for (const l of this.L) if (l.type !== 'PHYS') l.vis = !s.has(l.name); this.afterVis(); }
-  clearTiles() { this.tiles.clear(); this.gpu = 0; for (const k of [...this.pending.keys()]) if (k[0] === 't') this.pending.delete(k); }
+  clearTiles() { this.tiles.clear(); this.gpu = 0; this.failed = 0; for (const k of [...this.pending.keys()]) if (k[0] === 't') this.pending.delete(k); }
 
   /* ------------------------------------------------------------------ LOD */
   viewBounds() {
@@ -336,7 +336,11 @@ export class LayoutEngine {
       this.rasters.set(key, { im: new ImageData(new Uint8ClampedArray(m.rgba.buffer), m.size, m.size), v: (prev ? prev.v : 0) + 1 });
       if (m.key.startsWith('0/')) this.miniDirty = true;
       this.requestUpdate();
-    } else if (m.op === 'error') { this.pending.delete((m.what === 'tile' ? 't' : 'r') + key); console.warn('layout worker', m); }
+    } else if (m.op === 'error') {   // remember the failure: no retry storm, and the raster stays on screen for that tile
+      this.pending.delete((m.what === 'tile' ? 't' : 'r') + key);
+      if (m.what === 'tile') { this.tiles.set(key, { n: 0, empty: true, failed: true, bytes: 0, used: performance.now() }); this.failed = (this.failed || 0) + 1; this.lastError = m.error; this.requestUpdate(); }
+      if (!this.warned) { this.warned = true; console.warn('layout worker', m); }
+    }
   }
 
   update() {
@@ -406,7 +410,7 @@ export class LayoutEngine {
     }
     for (const it of vis) {
       const P = it.P; if (!P || !P.H) continue;
-      const allIn = it.geo && it.ts.every((k) => this.tiles.has(P.id + '|' + k));
+      const allIn = it.geo && it.ts.every((k) => { const t = this.tiles.get(P.id + '|' + k); return t && !t.failed; });
       if (!allIn) {
         const R = P.H.raster.levels;
         const rl = (lvl) => { const Lr = R.find((q) => q.level === lvl); if (!Lr) return; const node = Lr.node_nm;
@@ -566,7 +570,7 @@ export class LayoutEngine {
   stats() {
     const s = this.st || {}, loading = this.pending.size, mode = s.geo ? 'exact geometry' : s.items ? 'density raster' : 'plan';
     this.mode = s.geo ? 'geometry' : s.items ? 'raster' : 'plan';
-    this.dom.info.textContent = `${mode}${s.spent ? ' · ' + fmt(s.spent) + ' shapes' : s.cost ? ' · ' + fmt(s.cost) + ' shapes in view, zoom in for wires' : ''}${loading ? ' · loading ' + loading : ''}`;
+    this.dom.info.textContent = `${mode}${s.spent ? ' · ' + fmt(s.spent) + ' shapes' : s.cost ? ' · ' + fmt(s.cost) + ' shapes in view, zoom in for wires' : ''}${loading ? ' · loading ' + loading : ''}${this.failed ? ` · ${this.failed} tiles could not be decoded (raster shown)` : ''}`;
     this.dom.info.dataset.mode = this.mode; this.dom.info.dataset.loading = loading;
     if (this.o.onStats) this.o.onStats({ mouse: this.mouse, ppu: this.ppu, zoom: this.vs.zoom, mode: this.mode, gpu: this.gpu, loading, ...s });
   }

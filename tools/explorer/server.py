@@ -37,6 +37,24 @@ LEGACY = {'/explorer': 'plan', '/explorer/': 'plan', '/explorer/design': 'plan',
           '/explorer/coverage/': 'closure', '/explorer/coverage': 'closure'}
 
 
+LEGACY_WORDS = [('element', 'element'), ('diemap', 'layout'), ('layout', 'layout'), ('dataflow', 'dataflow'), ('token', 'token'), ('coverage', 'closure'), ('release', 'closure'),
+                ('closure', 'closure'), ('status', 'closure'), ('design', 'plan'), ('plan', 'plan'), ('explorer', 'plan'), ('fleet', 'overview'), ('overview', 'overview')]
+
+
+def legacy_target(path, q):
+    """an old bookmark path (/release, /element?name=X, /explorer/element/X, /dataflow, /token, ...) -> the new app URL, or None
+    for a path that looks like a missing asset.  The browser keeps the #fragment across the redirect; app.js rewrites it."""
+    segs = [x for x in path.split('/') if x]
+    last = segs[-1] if segs else ''
+    if '.' in last and not last.endswith(('.html', '.htm')): return None
+    words = [x.lower().replace('.html', '').replace('.htm', '') for x in segs]
+    view = next((v for w, v in LEGACY_WORDS if w in words), 'overview')
+    name = next((q[k][0] for k in ('name', 'element', 'el', 'node', 'n', 'q', 'id', 'design', 'die') if q.get(k) and q[k][0]), None)
+    if not name and 'element' in words and words.index('element') < len(segs) - 1: name = segs[-1]
+    from urllib.parse import quote
+    return '/?legacy=' + view + ('&q=' + quote(name, safe='') if name else '')
+
+
 class _NoElements:
     def snapshot(self, legacy=False): return {'rows': []}
 
@@ -399,12 +417,15 @@ class H(BaseHTTPRequestHandler):
         try:
             if path.startswith('/api/v1/'): return self.api(path[8:], q)
             if path == '/health': return self.health()
-            if path in LEGACY and not (path.startswith('/explorer/element/') and path != '/explorer/element/'):
+            if path in LEGACY and not q:
                 self.send_response(302); self.send_header('Location', '/?legacy=' + LEGACY[path]); self.send_header('Content-Length', '0'); self.end_headers(); return
             if path.startswith('/engine/'): return self.file(ENGINE, path[8:], immutable='/vendor/' in path)
             if path.startswith('/explorer/') and path.endswith('.js') and path.split('/')[2] in ('element', 'token', 'dataflow', 'coverage'):
                 return self.file(FV / 'explorer', path[len('/explorer/'):])   # kept engine modules at the paths they import each other by
             rel = path.lstrip('/') or 'index.html'
+            if not (WEB / rel).is_file():   # an old bookmark: land on the matching view, never a 404 page
+                to = legacy_target(path, q)
+                if to: self.send_response(302); self.send_header('Location', to); self.send_header('Cache-Control', 'no-store'); self.send_header('Content-Length', '0'); self.end_headers(); return
             return self.file(WEB, rel)
         except ApiError as e:
             return self.fail(e.code, e.msg, e.detail)
