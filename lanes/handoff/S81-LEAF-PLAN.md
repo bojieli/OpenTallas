@@ -28,6 +28,15 @@ Base B3z2 92e2f585dc06 (COORD: rows restored) + t72 sidecar band sync (ev/side_z
 - strict bind B4Lb: bindB4Lb_leafplan.sh via intel2 ~/s81-leaf-plan/bind_leafplan_w3.sh (ot-run 120 GB epyc7, queued), log log/B4Lb_bind.log + intel2 ~/s81-leaf-plan/bind_B4Lb.log
 - B4L-a bind and G0 runs cancelled (old base).
 
+## B4L-b2 (CURRENT bind candidate) = B4L_b1 + slice_station__t8 band depth
+- ev/B4L_b2.json 199aadf6bac4, ev/side_B4L_b2.json a0a4bb73671c
+- t8 (TYPE-SLICET30 13:14 ask): leaf_rules.py bands --densify --per-bit 10 --max-depth 54 (new flag: also re-sites R-LEAF-1-legal bands below per-bit um2/bit): ft2_i/ft3_i 26 um strips -> 54/52 um deep, 10.35 um2/bit (multi-rect notched around reset sites); ft4_i 10.07 um2/bit. Report cp/t8_b_rep.json.
+- G0 (on b1, the 3 bad tap_offset rows dropped in both): control 296 errors / B4L 296 errors, 0 new errors; +18 WARN (path text, G0C 8.64-lattice advisories on moved lanes).
+- sdc_lint tap_offset fix 10fbea62820 (origin/claude/sdc-lint-tap-offset-1114) patched into tree/ and ovl_l/ (sdc_lint.py e3e66c8e3677, test_sdc_lint_tap_offset 2/2 pass) and cherry-picked uncommitted in wt/.
+- t68 COORD column x 880-900 y 330-420: ln_12/ln_13 gone from it in B4L; vn_a east gap 153 um; vn_b|ln_3 23.7 um left (ln_3 +19.4 um shift: 15 timing viols, not applied).
+- R-LEAF-3b class list (vn_a/vn_b to ln_* gap 4.32..40): 156 pairs in 61 types, ~/coord/lanes/handoff/S81-LEAF-PLAN-R-LEAF-3b.tsv. core_place --gap 43.2 does not clear existing slots (t62 trial: unchanged) -> needs a slot-clear objective in core_place.
+- Strict bind: bindB4Lb_leafplan.sh now BASEP/BASESC = B4L_b2 (queued ot-run epyc7 120 GB, intel2 client bind_leafplan_w3.sh).
+
 ## Fable GRT Total lines
 - epyc9 /srv/opentallas-scratch/claude/fable-review-cong/d/t68e2/grt.log (30 extra it): `Total 212813367 13867498 6.52% 13 / 6 / 8156` (8156 overflow left)
 - epyc8 .../fable-review-cong/d/t75/fix.log: still in extra iteration 14/15, no Total yet
