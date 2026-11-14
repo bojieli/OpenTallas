@@ -30,14 +30,20 @@ function actions(n, view) {
   if (view !== 'closure') A.push(h('a.btn.sm', { href: store.href({ view: 'closure', node: n.id }), dataset: { testid: 'act-closure' } }, 'Closure'));
   return h('div', { style: { display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '10px' } }, A);
 }
-function layoutFacts(l) {
-  if (!l) return h('p.note', 'No routed database yet: not built, or the newest attempt stopped before routing.');
-  const s = l.store;
-  return kv([['source', (l.source || '') + (l.legacy ? ' (legacy view)' : '')], ['stage', l.stage], ['database', h('span.mono', l.db || l.kit || '–')],
+function layoutFacts(l, src) {
+  if (!l && !(src && src.resolved)) return h('p.note', 'No routed database yet: not built, or the newest attempt stopped before routing.');
+  l = l || {};
+  const s = l.store, rs = src && src.resolved, rec = src && src.recorded;
+  const recCls = rec ? { fleet: 'build host, not the copy of record', 'off-limits': 'host is off limits, never read', archive: 'archive', none: '' }[rec.cls] : '';
+  return [kv([['source', (l.source || '') + (l.legacy ? ' (legacy view)' : '')], ['stage', l.stage],
+    ['signed database', rs ? [h('span.pos', { dataset: { testid: 'db-archive' } }, `${rs.where} ${rs.kind}`), h('br'), h('span.mono', rs.path)] : h('span.neg', { dataset: { testid: 'db-no-archive' } }, rec ? 'no archive copy found' : 'none')],
+    src && src.archives.length > 1 ? ['other copies', src.archives.filter((a) => a !== rs).map((a) => h('div', h('span.muted', `${a.where} ${a.kind} `), h('span.mono', a.path)))] : null,
+    rec ? ['built at', [h('span.mono.muted', (rec.host ? rec.host + ':' : '') + rec.path), recCls ? h('div.muted', { dataset: { testid: 'db-recorded-' + rec.cls } }, `(${recCls})`) : null]] : null,
     l.record ? ['signed record', h('span.mono', l.record.slice(0, 16) + '…')] : null, l.odb_bytes ? ['DB size', fmtBytes(l.odb_bytes)] : null,
     ['pack', s ? `${s.verify || 'unverified'} against OpenDB · ${fmtCount(s.shapes)} shapes · ${fmtBytes(s.bytes)}` : 'not cut yet'],
     s && s.made ? ['cut', String(s.made).slice(0, 16).replace('T', ' ')] : null,
-    s && s.timing ? ['timing data', s.timing.sta ? `${s.timing.setup} setup + ${s.timing.hold} hold paths (${(s.timing.corners || []).join(', ').toUpperCase()}), clock tree ${fmtCount(s.timing.clock_leaves)} sinks` : `clock tree ${fmtCount(s.timing.clock_leaves)} sinks (topology only)`] : null]);
+    s && s.timing ? ['timing data', s.timing.sta ? `${s.timing.setup} setup + ${s.timing.hold} hold paths (${(s.timing.corners || []).join(', ').toUpperCase()}), clock tree ${fmtCount(s.timing.clock_leaves)} sinks` : `clock tree ${fmtCount(s.timing.clock_leaves)} sinks (topology only)`] : null]),
+    h('p.note', 'The routed view draws the layout pack (cut once from the signed database and kept in the explorer store); it does not open the database, on any host.')];
 }
 const nodeRow = (n, extra, patch) => h('a.row.' + stateCls(n.status ? n.status.state : n.state), { href: store.href(Object.assign({ node: n.id }, patch || {})), title: n.id }, h('i.dot'), h('span.nm', n.name), extra ? h('small', extra) : null);
 
@@ -61,7 +67,7 @@ function nodeDetails(R, view, inst) {
     h('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } }, badge(st.state), h('span.muted', [st.label, st.cls && 'class ' + st.cls, st.stage && 'stage ' + st.stage, st.attempt && 'attempt ' + st.attempt].filter(Boolean).join(' · '))),
     st.reason ? h('p.note', st.reason) : null, actions(n, view))];
   const mt = metricTiles(st.metrics); if (mt) out.push(sec('Sign-off metrics', null, mt));
-  out.push(sec('Routed layout', null, layoutFacts(n.layout), R.packs && R.packs.history.length > 1 ? h('p.note', `${R.packs.history.length} closures in the store; newest ${R.packs.latest}.`) : null));
+  out.push(sec('Routed layout', null, layoutFacts(n.layout, R.sources), R.packs && R.packs.history.length > 1 ? h('p.note', `${R.packs.history.length} closures in the store; newest ${R.packs.latest}.`) : null));
   if (isType) {
     const places = R.placements || [];
     if (places.length) out.push(sec('Placements in the die', places.length, h('div.list', places.slice(0, 60).map((q) => h('a.row' + (q[0] === inst ? '.on' : ''), { href: store.href({ view: view === 'plan' ? 'plan' : 'layout', node: n.id, inst: q[0] }), title: 'Show this placement on the die', dataset: { inst: q[0] } },
