@@ -51048,5 +51048,8 @@
   "freeze_kitops1_1113": "KIT-OPS-1 2026-11-13 03:29: OWNER 48 h plan-event freeze until 2026-11-15 04:00: no die's wave switches plan event or src while its builds past place are unfinished; overlays (RA=0, macro_skip_rtlmp) stay until then.",
   "note_kitstage1_die_owner": "KIT-STAGE-1 2026-11-13 03:55: dies.*.die_owner = the owner named on kit_wave_blocked.tsv rows (retry cap, branch claude/kit-stage-1-1113); edit when a die owner lane changes",
   "hung_watch_min": 120,
-  "hung_watch_note": "KIT-OPS-1 2026-11-13 07:03: HUNG-WATCH (train 43, main 9ebef751ca) deployed to kw38/rt; a silent, alive row is cancelled (CANCELLED HUNG) only when stage logs and CPU time both stop growing for hung_watch_min; 0 = off"
+  "hung_watch_note": "KIT-OPS-1 2026-11-13 07:03: HUNG-WATCH (train 43, main 9ebef751ca) deployed to kw38/rt; a silent, alive row is cancelled (CANCELLED HUNG) only when stage logs and CPU time both stop growing for hung_watch_min; 0 = off",
+  "route_hold_items": {
+    "hd_ctl_n": "CODEX11-13 current attempt2 DRT-0255 w3u_i[259] with verified M8+RA0. Approved input-class regeneration succeeded; actual route/pin reach fault belongs HEAD-97. No unchanged route retry; require owner diagnosed class fix/new reviewed form."
+  }
 }
