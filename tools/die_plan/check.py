@@ -2575,7 +2575,40 @@ def check_r8(P, R, plan_dir=None, groups=None, landing=None):
         mode = dict(replica=ljs.get("replica", "all"), bus=ljs.get("bus", "part"))
     else:
         mode = dict(replica="all", bus="part")
-    msgs, st = r8.check(bg, P.raw, lmap, **mode)
+    # The landing table records the same options that produced its classes. Respect
+    # those options here too; another plan checked in this process must not inherit them.
+    old_exempt = list(r8.EXEMPT)
+    old_landed = dict(r8.LANDED, rx=list(r8.LANDED["rx"]))
+    try:
+        if landing is not None:
+            try:
+                import land_r8_derive as LR8
+                import math
+                if ljs.get("exempt") is not None and (not isinstance(ljs["exempt"], list)
+                        or not all(isinstance(x, str) for x in ljs["exempt"])):
+                    raise ValueError("exempt must be a list of regex strings")
+                ld = ljs.get("landed")
+                if ld is not None and not isinstance(ld, dict):
+                    raise ValueError("landed must be an object")
+                if (ld or {}).get("rx") is not None and (not isinstance(ld["rx"], list)
+                        or not all(isinstance(x, str) for x in ld["rx"])):
+                    raise ValueError("landed.rx must be a list of regex strings")
+                opts = LR8.options(ljs)
+                if opts["replica"] not in ("all", "type") or opts["bus"] not in ("part", "leaf"):
+                    raise ValueError("invalid replica or bus mode")
+                if (opts["over"] not in ("keep", "collapse") or opts["window"] < 1
+                        or not math.isfinite(opts["stage_cycles"]) or opts["stage_cycles"] <= 0):
+                    raise ValueError("invalid landed window, stage_cycles or over_margin")
+                r8.configure(opts["exempt"], opts["landed"], opts["window"], opts["stage_cycles"], opts["over"])
+                mode = dict(replica=opts["replica"], bus=opts["bus"])
+            except (ValueError, TypeError, re.error) as exc:
+                R.err("r8", f"invalid R8 landing table options in {landing}: {exc}")
+                return dict(checked=False, groups_file=str(groups), landing_file=str(landing), invalid_options=True)
+        msgs, st = r8.check(bg, P.raw, lmap, **mode)
+    finally:
+        r8.EXEMPT[:] = old_exempt
+        r8.LANDED.clear()
+        r8.LANDED.update(old_landed)
     for sev, m in msgs:
         (R.err if sev == "ERROR" else R.warn)("r8", m)
     st.update(checked=True, groups_file=str(groups), landing_file=str(landing) if landing else None)
