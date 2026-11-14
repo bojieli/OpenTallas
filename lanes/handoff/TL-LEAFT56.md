@@ -1,0 +1,2 @@
+# TL-LEAFT56 (2026-11-14 04:49)
+t56 attempt 7 (src B3v/src) failed GEN_LINT rtl_check: defparam LOCAL. Cause: bind emits .LOCAL(1) on ot_dp_clk_landing, B3v/src landing lacks the LOCAL param. Fix = overlay main landing file (md5 15ffde74...). Posted to COORD/KIT-OPS-3. Next: after overlay, relaunch t56; earlier a4 failed GRT overflow 61035 (hotspot 1100,800), a5 place RC 99; check those if lint passes.
