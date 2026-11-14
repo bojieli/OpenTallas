@@ -13,7 +13,7 @@
 # M4..MAX_ROUTING_LAYER (tracks parallel to the stripe), so GRT capacity equals the DRT-legal tracks.  The obstructions
 # are destroyed before 5_1_grt.odb / route.guide are used by DRT, so DRT, PG and sign-off geometry are unchanged.
 # A track t is illegal at a stripe [lo, hi] (across the preferred direction) when t + hw + sp > lo and t - hw - sp < hi
-# (hw = half the default wire width, sp = the layer's spacing for the stripe width).  Geometry-generic: it reads the
+# (hw = half the default wire width, sp = the layer's min spacing; see OT_PG_TRACK_TRUTH_WIDE_SPACING).  Geometry-generic: it reads the
 # stripes and the track grids of the kit, so it applies to any PDN.  OT_PG_TRACK_TRUTH=0 (or unset) turns it off.
 proc ot_pgtt_add {} {
   if {![info exists ::env(OT_PG_TRACK_TRUTH)] || $::env(OT_PG_TRACK_TRUTH) ne "1"} { return }
@@ -61,8 +61,11 @@ proc ot_pgtt_add {} {
         if {[llength $g] == 0} { continue }
         set hw [expr {[$L getWidth] / 2}]
         set sp [$L getSpacing]
-        # width-dependent spacing (spacing table / range rules) for a wide stripe, when the tech defines one
-        if {![catch {$L getSpacing [expr {$hi - $lo}] [expr {$a1 - $a0}]} sw_sp] && $sw_sp > $sp} { set sp $sw_sp }
+        # OT_PG_TRACK_TRUTH_WIDE_SPACING=1 (opt-in, not yet proven): also use the width-dependent spacing of the stripe
+        # (ASAP7 M4/M5 SPACINGTABLE 0.072 for width > 0.025).  Default = min spacing, the form HEAD-98 routed DRC 0.
+        if {[info exists ::env(OT_PG_TRACK_TRUTH_WIDE_SPACING)] && $::env(OT_PG_TRACK_TRUTH_WIDE_SPACING) eq "1"} {
+          if {![catch {$L getSpacing [expr {$hi - $lo}] [expr {$a1 - $a0}]} sw_sp] && $sw_sp > $sp} { set sp $sw_sp }
+        }
         # illegal tracks: lo - hw - sp < t < hi + hw + sp
         set kmin [expr {[lsearch -sorted -integer -bisect $g [expr {$lo - $hw - $sp}]] + 1}]
         set kmax [lsearch -sorted -integer -bisect $g [expr {$hi + $hw + $sp - 1}]]
