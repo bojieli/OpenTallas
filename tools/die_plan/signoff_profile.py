@@ -26,10 +26,10 @@ import os
 PERIOD_PS = 833.0
 SETUP_TOL_PS = 42.0          # 5 % of 833 ps
 # R-PERIOD (OWNER 11-13 "we can accept cost in area, performance, clock frequency"; EXPERT-REVIEW-3): each die signs off
-# at P_die (default 1000 ps; COORD may raise one die, e.g. 1250).  Gate 2 = routed TT WNS at 833 ps >= -(P_die - 833) - 42.
+# at P_die (PROPOSAL, HELD by COORD 11-13: default stays 833 ps = the -42 ps gate until the owner decides; 1000 / 1250 via env).  Gate 2 = routed TT WNS at 833 ps >= -(P_die - 833) - 42.
 # Override: env OT_DIE_PERIOD_PS (all dies) or OT_DIE_PERIOD_PS_<DIE> (DIE = s81, s81_head, qwen_compute, qwen_kvsys, hbm;
 # upper case), e.g. OT_DIE_PERIOD_PS_QWEN_KVSYS=1250.
-DIE_PERIOD_DEFAULT_PS = 1000.0
+DIE_PERIOD_DEFAULT_PS = 833.0   # COORD 11-13 18:2x: R-PERIOD held (owner to decide); 1000 = proposal
 DIE_ALIAS = {"qc": "qwen_compute", "kv": "qwen_kvsys", "head": "s81_head", "results": "s81_head", "cp1": "s81"}
 
 

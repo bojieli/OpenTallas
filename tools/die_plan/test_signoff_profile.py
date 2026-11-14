@@ -50,7 +50,14 @@ def test_only_three_gates_block_everything_else_advisory():
     assert any(a.startswith("io_hold_parent") for a in j["advisories"])
 
 
+def test_default_gate_is_minus_42_r_period_held():
+    """COORD 11-13: R-PERIOD is a held proposal -- the default gate stays TT WNS >= -42 ps at 833 ps"""
+    assert SP.die_period_ps("s81") == 833.0 and SP.setup_tolerance_ps("s81") == 42.0
+    assert SP.judge(rec(tt=-42.0))["verdict"] == "SIGNED" and SP.judge(rec(tt=-42.5))["verdict"] == "NOT SIGNED"
+
+
 def test_r_period_setup_tolerance_and_achieved_period(monkeypatch):
+    monkeypatch.setenv("OT_DIE_PERIOD_PS", "1000")
     assert SP.die_period_ps("s81") == 1000.0 and SP.setup_tolerance_ps("s81") == pytest.approx(209.0)
     j = SP.judge(rec(tt=-209.0))
     assert j["verdict"] == "SIGNED" and j["achieved_period_ps"] == pytest.approx(1042.0) and j["die"] == "s81"
@@ -103,10 +110,13 @@ def _related(setup, hold, contract):
 
 
 def test_die_clock_gate_minimal(monkeypatch):
+    assert PSG.from_related(_related(setup=-1.0, hold=0.0, contract=2))["verdict"] == "FAIL"   # 833 ps default
+    monkeypatch.setenv("OT_DIE_PERIOD_PS", "1000")
     v = PSG.from_related(_related(setup=-100.0, hold=0.0, contract=2))   # judged at P_die 1000: -100 + 167 >= 0
     assert v["verdict"] == "PASS" and v["profile"] == "minimal" and any("advisory" in w for w in v["warnings"])
     assert PSG.from_related(_related(setup=-200.0, hold=0.0, contract=0))["verdict"] == "FAIL"
     assert PSG.from_related(_related(setup=10.0, hold=-0.1, contract=0))["verdict"] == "FAIL"
+    assert PSG.from_related(_related(setup=10.0, hold=0.0, contract=2))["verdict"] == "PASS"
     monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")
     assert PSG.from_related(_related(setup=-100.0, hold=0.0, contract=0))["verdict"] == "FAIL"
     assert PSG.from_related(_related(setup=10.0, hold=0.0, contract=2))["verdict"] == "FAIL"
@@ -114,7 +124,7 @@ def test_die_clock_gate_minimal(monkeypatch):
 
 def test_signoff_chain_rejudges_old_records(tmp_path, monkeypatch):
     import signoff_chain as SC
-    r = rec(tt=-100.0, verdict="NOT SIGNED")
+    r = rec(tt=-30.0, verdict="NOT SIGNED")
     assert SC.signed(r) and SC.signoff_gates(r) == dict(drc="PASS", setup_tt="PASS", hold_ff="PASS")
     monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")
     assert not SC.signed(r)
