@@ -82,7 +82,7 @@ module ot_s81hd_host_w_core #(
  wire cv,crxf,ctxv;wire[552:0]cd,rxframe;wire rxv,crtxf;
  wire rxv_m;wire[552:0]rxframe_m;   // u_mux output (before the optional TX stage)
  ot_s81hd_host276_rx u_ctl_rx(.ck(ck),.rn(rst_n),.lane(h_tx_i[275:0]),.v(cv),.frame(cd),.fault(crxf));
- ot_s81hd_host276_tx u_ctl_tx(.ck(ck),.rn(rst_n),.v(rxv),.frame(rxframe),.lane(h_rx_o),.fault(crtxf));
+ ot_s81hd_host276_tx #(.HOLD_REAL(1)) u_ctl_tx(.ck(ck),.rn(rst_n),.v(rxv),.frame(rxframe),.lane(h_rx_o),.fault(crtxf));
  wire[1103:0]from_prev,to_local,next_ro;
  wire[1103:0]local_ro={571'd0,cd[527:16],8'd0,4'd0,5'd1,3'd6,cv};
  wire[3:0]return_fault;wire[11:0]hbc_stage_fault;wire[7:0]hbc_fault;
