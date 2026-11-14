@@ -4,6 +4,7 @@
  "max_launch_per_tick": 100000,
  "geom_sample": 5,
  "hosts": [
+  "epyc8",
   "epyc7",
   "epyc2",
   "intel1",
@@ -1002,6 +1003,7 @@
    },
    "hosts": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "epyc2",
@@ -1017,6 +1019,7 @@
    ],
    "place_prefer": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "epyc7",
@@ -8004,6 +8007,7 @@
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
     "epyc10",
+    "epyc8",
     "epyc7",
     "epyc9",
     "intel1"
@@ -8012,6 +8016,7 @@
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
    "hosts": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "epyc2",
@@ -8286,6 +8291,7 @@
    },
    "place_prefer": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "epyc7",
@@ -28867,6 +28873,7 @@
    ],
    "hosts": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "epyc2",
@@ -28875,6 +28882,7 @@
    "live_claim_h": 0,
    "place_prefer": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "intel2",
@@ -31879,12 +31887,14 @@
    "gen_hosts": [
     "epyc10",
     "epyc7",
+    "epyc8",
     "epyc9",
     "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "epyc2",
@@ -31893,6 +31903,7 @@
    "take_states_note": "KW-FIX-5 23:3x: NEEDS-KIT only silently skipped released relay_bay retries (OWNERS state FIX) and 23 of the 28 core-wait types (DIE-QC-67: launch on KW-PROV-1). hold_items unchanged.",
    "place_prefer": [
     "intel1",
+    "epyc8",
     "epyc10",
     "epyc9",
     "intel2",
@@ -39446,6 +39457,7 @@
    "place_prefer": [
     "epyc7",
     "epyc9",
+    "epyc8",
     "intel2",
     "epyc2",
     "intel1"
@@ -41205,6 +41217,7 @@
     "ot_hgi_dma_back_static_vp4_banks_cp": null
    },
    "hosts": [
+    "epyc8",
     "epyc9",
     "epyc7",
     "intel1",
@@ -56245,6 +56258,7 @@
  },
  "place_prefer": [
   "intel1",
+  "epyc8",
   "epyc7",
   "epyc2",
   "epyc10"
@@ -57237,5 +57251,6 @@
   "epyc2",
   "epyc10"
  ],
- "note_kitops3_e8all": "KIT-OPS-3 00:2x (COORD): epyc8 out of hosts/place_prefer for all dies until CLEAN-E8 posts >1 TB free; then restore from *_prev_kitops3_e8all."
+ "note_kitops3_e8all": "KIT-OPS-3 00:2x (COORD): epyc8 out of hosts/place_prefer for all dies until CLEAN-E8 posts >1 TB free; then restore from *_prev_kitops3_e8all.",
+ "note_kitops3_e8back": "KIT-OPS-3 00:4x (COORD: epyc8 scratch 2.6 TB free): epyc8 restored to hosts/place_prefer/gen_hosts from *_prev_kitops3_e8all / gen_hosts_prev_kitops3_e8."
 }
