@@ -2224,6 +2224,8 @@ class Plan:
         part = pr[side]["part"]
         tf, win, lays, order = self._type_geom(part, pr[side]["bus"])
         tp = dict(pr, face=tf, window_um=win, layers=lays, order=order)
+        if full_area_hard_ip(self.types[self.parts[part]["type"]]):
+            tp["pg_free"] = True          # QC-PHY-1 11-14 (COORD): the macro's own pins are fixed; no partition PG keep-out
         tp.pop("segments", None)          # type-declared geometry is one window (segments are die-frame port data)
         p = self.parts[part]
         w, h = self.types[p["type"]]["outline_um"]
@@ -2233,6 +2235,11 @@ class Plan:
         else:
             base, ext, flip = p["origin_um"][0], w, o in ("MY", "R180")
         return sorted((b, ln, round(base + (ext - c if flip else c), 6)) for b, ln, c in pin_positions(tp, self.layers))
+
+    def port_pg_free(self, pr):
+        """QC-PHY-1: True when the port's type-declared geometry belongs to a full-area hard IP type (see port_pins)."""
+        side = pr.get("_geom_from")
+        return bool(side) and full_area_hard_ip(self.types[self.parts[pr[side]["part"]]["type"]])
 
     def port_point(self, pid):
         """centre of the port window on its face, die frame."""
@@ -2797,12 +2804,13 @@ def spread(A, n, lo, hi):
     return lowh + ([(m - 1) // 2] if n % 2 else []) + [m - 1 - i for i in reversed(lowh)]
 
 
-def usable_tracks(L, ln, lo, hi):
-    """number of tracks of layer ln (dict L: pitch_um, offset_um) inside [lo, hi] off the partition PG bands."""
+def usable_tracks(L, ln, lo, hi, pg_free=False):
+    """number of tracks of layer ln (dict L: pitch_um, offset_um) inside [lo, hi] off the partition PG bands
+    (pg_free: a full-area hard IP port, QC-PHY-1: its pins are the macro's own, no PG band applies)."""
     p, off = L["pitch_um"], L["offset_um"]
     k0 = math.ceil((lo - off) / p - 1e-9)
     k1 = math.floor((hi - off) / p + 1e-9)
-    return sum(1 for k in range(k0, k1 + 1) if not pg_blocked(ln, off + k * p))
+    return sum(1 for k in range(k0, k1 + 1) if pg_free or not pg_blocked(ln, off + k * p))
 
 
 def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6):
@@ -2871,7 +2879,8 @@ def _window_pins(port, layers, window, pins):
         k0 = math.ceil((lo - off) / p - 1e-9)
         k1 = math.floor((hi - off) / p + 1e-9)
         # usable tracks: in the window and off the partition PG stripe bands (PART_PG_BANDS)
-        A = [k for k in range(k0, k1 + 1) if not pg_blocked(ln, off + k * p)]
+        pgf = bool(port.get("pg_free"))     # QC-PHY-1 11-14 (COORD): full-area hard IP pins sit on the macro's own pins
+        A = [k for k in range(k0, k1 + 1) if pgf or not pg_blocked(ln, off + k * p)]
         m = len(A)
         if m < n:
             raise ValueError(f"port {port['id']}: {n} bits on {ln} need {n} tracks, window has {m} off the PG "

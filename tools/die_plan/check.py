@@ -677,7 +677,7 @@ def check_faces(P, R, face_pins):
                 if ln not in P.layers:
                     continue
                 nb = sum(1 for k in range(b0, b1) if k % nl == li)
-                tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi))     # tracks off the PG stripes (M5-M8)
+                tr = max(1, S.usable_tracks(P.layers[ln], ln, lo, hi, pg_free=P.port_pg_free(pr)))     # tracks off the PG stripes (M5-M8)
                 if nb / tr > B["pin_track_max"] + EPS:
                     R.err("faces", f"port {pid}: {nb} pins on {tr} {ln} tracks = {nb / tr:.2f} > "
                           f"{B['pin_track_max']}", port=pid)
