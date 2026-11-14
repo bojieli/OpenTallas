@@ -164,3 +164,6 @@ largest 2.2 mm). Related pairs exist only inside a region; region-to-region port
 rd.py (gate summary), lcls.py (ring classes), alltap.py (per-partition tap spread), mkoffs.py (tap offsets), tapsp.py, frc_comp.py.
 Launch: ot-run --crit --hosts intel1 --mem 120 --threads 24 --dir B --priority die -- bash B/run_s81b.sh
 Nothing of mine is running. No waiter is armed (all chains finished).
+
+## 3. 11-14 follow-up: dropped tap_offset rows (eng__t1 clk_c0, bk_sel__t2 clk_c0/c4)
+See queue RESULT to DIE-S81-92: offsets are declared early core delivery, not imbalance; judge residual = offset + (insertion - common). eng fine (+49 TT / -22 FF); bk_sel real residual 125 ps on u_tx and g_q[1], -68..-97 on g_q[0] = regional tree item. Script intel1 fable-review-clk/ec.py.
