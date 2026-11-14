@@ -1616,7 +1616,8 @@ RULES = [
      "infra (unit stopped from outside / disk floor wait: no design result)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-job: NOT RUN: input [^\n]*not in the store, not on this host|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
-                    r"yosys elaboration failed rc[ =]+1(?:25|37)\b|"
+                    r"yosys elaboration failed rc[ =]+1(?:25|37|43)\b|"
+                    # FIX-YOSYS 11-14: gen_lint yosys "elaboration failed rc 143" = earlyoom SIGTERM (epyc9 10:51 UTC, intel1; yosys RSS 1.3-11 GB at 3 % avail), was RTL
                     # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
                     # reports 'Error 241' (256-15), selrange 'yosys exit -15', rtl_lint/selrange the KILLED marker
                     # KW-FIX-43 11-09: make Error 247 = 256-9, a SIGKILL (q_su20 cgroup kill was labelled PLAN off [INFO PDN-0001])

@@ -25,7 +25,7 @@ if not bm.startswith("s81p_svc_"):
     sys.exit(0)
 b = out / (bm + ".sv")
 txt = b.read_text() if b.is_file() else ""
-prs = [int(x) for x in re.findall(r"\bdsdv_idx_rg3(?:_fit)?\s*#\([^;]*?\.PR\((\d+)\)", txt, re.S)]
+prs = [int(x) for x in re.findall(r"\bdsdv_idx_rg3\w*\s*#\([^;]*?\.PR\((\d+)\)", txt, re.S)]
 if not any(prs):
     print("S81_IRG_PR NOT_APPLICABLE", bm)
     sys.exit(0)
