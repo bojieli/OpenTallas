@@ -52,5 +52,35 @@ class Peak(unittest.TestCase):
         self.assertIn("SIMPLE_ADMIT:", self.gate(100, [], conf={"SIMPLE_PEAK": "0"}))
 
 
+class SmallLane(unittest.TestCase):
+    def test_small_job_admitted_above_half_headroom_and_floor(self):
+        ok, why = R.small_lane(4, 80.0, 2, 64.0, 8.0, 6.0, 36.0)
+        self.assertTrue(ok, why)
+        self.assertFalse(R.small_lane(4, 39.0, 0, 64.0, 8.0, 6.0, 36.0)[0])        # 39 - 4 = 35 < max(32, 36)
+        self.assertTrue(R.small_lane(4, 40.0, 0, 64.0, 8.0, 6.0, 36.0)[0])         # 40 - 4 = 36
+
+    def test_cap_and_size_limit(self):
+        self.assertFalse(R.small_lane(4, 500.0, 6, 64.0, 8.0, 6.0, 36.0)[0])       # 6 small jobs already running
+        self.assertFalse(R.small_lane(9, 500.0, 0, 64.0, 8.0, 6.0, 36.0)[0])       # 9 GB is a route-class job
+        self.assertFalse(R.small_lane(4, 500.0, 0, 64.0, 0.0, 6.0, 36.0)[0])       # lane off
+
+    def test_gate_uses_the_lane_before_the_peak_arithmetic(self):
+        import contextlib, io
+        env = {"SIMPLE_ADMIT": "1", "SIMPLE_PEAK": "1", "INV_HEADROOM_GB": "64", "PEAK_GROWTH_FRAC": "0.05", "SIMPLE_FRESH_S": "0", "SMALL_JOB_GB": "8", "SMALL_JOB_MAX": "6", "SMALL_FLOOR_GB": "36"}
+        units = [("u%d" % i, 48.0, "route", 5.0) for i in range(10)]               # growth reserve far above free: a route job would be held
+        d = tempfile.mkdtemp()
+        with patch.dict(os.environ, env), patch.object(R, "D", d), patch.object(R, "classify", return_value="gen"), patch.object(R, "sizes", return_value={}), \
+                patch.object(R, "meminfo", return_value=(1000.0, 60.0)), patch.object(R, "peak_history", return_value=HIST), \
+                patch.object(R, "running_units_light", return_value=units), patch.object(R, "read_units", side_effect=AssertionError("slow")):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                R.gate_locked(4, ["x"])
+            self.assertTrue(out.getvalue().startswith("OK 4 gen | SMALL_JOB lane"), out.getvalue())
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                R.gate_locked(48, ["x"])
+            self.assertTrue(out.getvalue().startswith("NO "), out.getvalue())
+
+
 if __name__ == "__main__":
     unittest.main()
