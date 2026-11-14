@@ -3668,3 +3668,4 @@ CODEX: Claude back17:18PST; all workers STOPNEW/safelyparked, running jobs prese
 2026-11-14 00:3x PST COORD: epyc4 terminated; OWNER no-friction directive -> EXPERT-REVIEW-6 actions assigned (WAVE-FRICTION-1, COUNT-FRICTION-1, KIT-OPS-3, CLEAN-4); ~22 lanes live.
 2026-11-14 01:3x PST COORD: count 286; limits removed; 9 TYPE lanes + LIMIT/ADMIT/WAVE-FRICTION done or live; S81 B2v/B2ve + KV kv102sem binding; EXPLORER-FABLE-1 redesign started.
 2026-11-14 02:3x PST COORD: count 286 flat (type-lane passes were only in AUTO-RESIGN.tsv; added to COUNT-DIRECT). QC feed fix live, 85 QC rows running. Tick 295 s. Explorer M1-M4 on :8770. S81 B2w/B2we, QC s29q103S binding.
+2026-11-14 03:3x PST COORD: count 287; QC s29q103S + S81 B3v adopted (KIT-OPS-3); DIE-S81-92 owns S81 plan (B4 after svc repack); hub headroom 128; src snapshots restored + keep-set; count-hub.timer on intel2 replaces localhost count/rsync.
