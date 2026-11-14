@@ -6,7 +6,20 @@ if {[info exists ::env(OT_ECO_GRT_PRE_CHAIN)] && $::env(OT_ECO_GRT_PRE_CHAIN) ne
   if {$::env(OT_ECO_GRT_PRE_CHAIN) eq "/work/eco_grt_pre.tcl"} {
     error "OT_PRD_PIN_ACCESS recursive pre-global-route chain"
   }
+  # WF-1 11-14 (COORD friction 6: every late ECO on a kit generated with OT_GRT_NONPORT_HOLD=1 died in ~140 s at global_route
+  # 'OT_GRT_NONPORT native session must explicitly select FF'): the setup ECO session is TT / TC and the chained kit
+  # PRE_GLOBAL_ROUTE_TCL ends with the nonport hold adapter, which needs an FF native session.  Outside an FF native session (and not
+  # a two-mode session, which the adapter supports) the adapter is switched off for the chain; the ECO hold repair has its own scope
+  # (OT_HOLD_REPAIR_SCOPE) and sign-off judges FF hold afterwards, as for a kit without the adapter.
+  set _wf1_np ""
+  if {[info exists ::env(OT_GRT_NONPORT_HOLD)] && ![expr {[info exists ::ot_mm_active] && $::ot_mm_active}] &&
+      !([info exists ::env(OT_VCLK_CORNER)] && [string tolower $::env(OT_VCLK_CORNER)] eq "ff")} {
+    set _wf1_np $::env(OT_GRT_NONPORT_HOLD)
+    set ::env(OT_GRT_NONPORT_HOLD) 0
+    puts "OT_ECO_GRT nonport hold adapter skipped in this non-FF ECO session (WF-1)"
+  }
   source $::env(OT_ECO_GRT_PRE_CHAIN)
+  if {$_wf1_np ne ""} { set ::env(OT_GRT_NONPORT_HOLD) $_wf1_np }
 }
 if {![llength [info commands ::ot_prd_pin_access_original]]} {
   rename ::pin_access ::ot_prd_pin_access_original
