@@ -111,8 +111,8 @@ def archive_gate(idx):
                 if not e: continue
                 fs = {f: z for f, z in e['files'].items() if z > 0}   # a zero-byte file is not an archived file
                 empty = sorted(f for f, z in e['files'].items() if not z); have = dict(db=any(f.endswith(('6_final.odb', '6_final.odb.zst')) for f in fs), metadata=any(f.endswith('signoff.json') for f in fs), view=any(f.endswith(VIEW_EXT) for f in fs))
-                if all(have.values()): ok = dict(where='AGIdock', path=e['path'], basis='opentallas-signed-1114')
-                else: miss = dict(path=e['path'], missing=[k for k, v in have.items() if not v], zero_byte=empty)
+                if have['db'] and have['metadata']: ok = dict(where='AGIdock', path=e['path'], basis='opentallas-signed-1114')
+                else: miss = dict(path=e['path'], missing=[k for k in ('db', 'metadata') if not have[k]], zero_byte=empty)
                 if ok: break
             if ok: break
         if not ok and die not in HUBDIES and (n.get('layout') or {}).get('archive_odb') and (n['layout'].get('record')):
