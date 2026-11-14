@@ -29,3 +29,8 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
   - s81p_slice_station__t51_s81_station_t51_native_w: SIGNED OFF (R-MINIMAL) at epyc4 /srv/opentallas-scratch/claude/die-s81-85/t51pin/eco_wf_scope21b_1113/i1 (see RMINIMAL-SIGNED.tsv).
   - dsdv_bksel_q: C9geom kit epyc4 /srv/opentallas-scratch2/claude/die-s81-85/bksel_vC9geom. At CTS: TT -29.57 ps on 12 core endpoints (inside the -42 gate), FF -100.08 ps on 801 core endpoints (FIFO prevdata/m_wd0, not yet hold-repaired). Native LEC EQ 45318/45318. Launched CTS -> finish (resumed at GRT), unit oth-ubuntu-3458321-1794622764, log ~/s81-cores-2-logs/bksel_c9geom_finish.otrun.log. If routed internal hold stays < 0, next is a local hold ECO on those FIFO captures.
 - dsdv_gunit_l1c -173.7 routed: locating the build now.
+
+## RESULT 2026-11-13 18:21 PST: dsdv_gunit_l1c
+- TO PROFILE-1, sign candidate for re-judge: dsdv_gunit_l1c rf1 eco_m0 i2, re-signed t-s81 m0b on 11-03. Sign-off JSON: epyc4:/srv/opentallas-scratch2/claude/die-s81-51/rfc-gu/kits/dsdv_gunit_l1c_rf1/sign_t-s81_m0b/signoff/signoff.json. TT setup +1.71 ps, FF hold +0.05 ps, DRC 0, antenna 0, DRV 0, routed LEC EQUIVALENT, local verdict SIGNED. It was held only by io_hold_parent, which R-MINIMAL dropped. Routed views still on disk: eco_m0/i2/run/results/asap7/kl_dsdv_gunit_l1c_rf1/base/6_final.{odb,spef,v} (also archived).
+- PROFILE-1-SIGNED-1113.tsv row "dsdv_gunit_l1c ... -173.68" reads an old, unreadable epyc1 k26c record (epyc1 retired). Replace it with the record above. No pipelining is needed for l1c.
+- Caveat for DIE-S81-90: GUNIT-CORE-1 lists a compiler/token reschedule of u_l1c for the +2 cycles on bf o_* when GF4/GF5 bf is adopted. That is a latency/LATCHECK item for the event, not a core rebuild.
