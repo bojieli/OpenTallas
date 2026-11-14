@@ -32,3 +32,15 @@ def test_type_kit_runner_reg_fanout_is_advisory_too():
     m = re.search(r"reg_fanout_gate\.py[^\n]*\n?", t[t.index("python3 -I /work/reg_fanout_gate.py"):])
     seg = t[t.index("python3 -I /work/reg_fanout_gate.py"):][:600]
     assert "ADVISORY" in seg and "rc=0" in seg and "FAIL_PREFLOOR reg_fanout" not in seg
+
+
+def test_no_kit_generator_anywhere_writes_the_fatal_reg_fanout_marker():
+    bad = []
+    for base in ("tools/die_plan", "physical/die_plan"):
+        for p in (ROOT / base).rglob("*"):
+            if p.suffix not in (".py", ".sh") or not p.is_file() or "/test_" in str(p) or p.name.startswith("test_"):
+                continue
+            t = p.read_text(errors="replace")
+            if re.search(r"FAIL_PREFLOOR reg_fanout", t) and re.search(r"reg_fanout[^\n]{0,400}rc=7", t):
+                bad.append(str(p.relative_to(ROOT)))
+    assert not bad, bad
