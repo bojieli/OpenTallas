@@ -32601,7 +32601,6 @@
    "pilot_mode": "queue",
    "hold_items": {
     "phy_serdes": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
-    "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "phy_ucie_kv": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_ucie_kv: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind.",
     "coll_s": "ER4-HOLD-1113 (KIT-OPS-2 2026-11-13 18:2x, COORD via EXPERT-REVIEW-4): known-bad form, held out of launch (QC D8 parent / coll_s) until its owner posts a new form. Lift = delete this key.",
     "phy_*": "KIT-OPS-3 2026-11-13 23:11 PST QC s29 ADOPT swap (DIE-QC-102 READY+ADOPT 22:48: strict bind 0 + LATCHECK 1921/1921 bind s29q102B0; train-L patch-only applied in tree2): phy_* holds retained (DIE-QC-102 packet)"
@@ -34319,7 +34318,8 @@
     "sle_st_b_v1__pvc5a85fd4__pv38472fb8",
     "sle_st_b_v1__pvc5a85fd4__pv7b7fafb4",
     "sle_st_b_v2__cl14c98df5__pv41c959f3",
-    "sle_st_b_v2__cl14c98df5__pvcd986c42"
+    "sle_st_b_v2__cl14c98df5__pvcd986c42",
+    "phy_serdes_b"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -37594,7 +37594,11 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {},
+   "item_inputs": {
+    "phy_serdes_b": {
+     "plan": "/srv/opentallas-scratch2/claude/tl-qcphysdb/por/plan_s29_qc103_phyb.json"
+    }
+   },
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
@@ -41854,7 +41858,14 @@
       "job": "COUNTED qfd_qc_su_lane_w_l1 epyc4:/srv/opentallas-scratch2/claude/dq66-sul-l1eco/e1/resign_s_qc/signoff/signoff.json (KW-FIX-32 export_view)"
      }
     ]
-   }
+   },
+   "hold_items_prev_tlqcphysdb": {
+    "phy_serdes_b": "KW-FIX-45 11-11 COORD fail_watch 10:35: gen 'hard wrapper phy_serdes_b: requires a placed macro with LEF and TT/FF views' (hard_wrappers named it without macro views reaching the kit); HOLD until DIE-QC-99 provides the QC PHY macro LEF/lib or the item is taken off the launch list. Do not relaunch blind."
+   },
+   "hard_wrappers": [
+    "phy_serdes_b"
+   ],
+   "note_tlqcphysdb": "TL-QCPHYSDB 11-14: phy_serdes_b hold KW-FIX-45 reason gone: the s29 plan content u_io_serdes_2 had lib but no lef, so type_macros() was empty -> gen refused. Overlay plan adds lef+origin_um [0,0] (macro LEF/tt/ff/ss exist in physical/qwen_missing_phy/nface_tall_1017). Revert: restore hold_items_prev_tlqcphysdb, drop item_inputs.phy_serdes_b, hard_wrappers, only_items entry"
   },
   "hbm": {
    "enabled": true,
