@@ -3349,7 +3349,9 @@ class Binder:
         # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
         # each strap bit then gets its own TIEHI/TIELO next to the pin (die_constant_cells.tcl; strap_ties_check.tcl)
         import straps as STR
-        aud = STR.audit_top_ties(f.read_text(), man, {self.types[tn]["module"]: tn for tn in self.types})
+        import landing_tie_children as LTC
+        aud = STR.audit_top_ties(f.read_text(), man, {self.types[tn]["module"]: tn for tn in self.types},
+                                 landing_ties=LTC.landing_ties(self.types))
         (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
         if aud["verdict"] != "PASS":
             raise BindError(f"tie-off audit: {aud['reason']}")

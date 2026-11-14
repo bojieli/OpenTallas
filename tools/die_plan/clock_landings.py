@@ -2686,6 +2686,11 @@ class Landings:
                         continue
                     conn += [f"        .cland_dn_ready_{i}(cland_ready_{child})",f"        .cland_dn_fault_{i}(cland_fault_{child})"]
                     if e["seam"]:conn.append(f"        .fclk_in_cland_dn_{i}(cland_clock_{child})")
+            # CLAND-TIE-1: declared tieable children this instance does not use (or an instance outside the collector)
+            tieable = ((self.types.get(p["type"], {}).get("clock", {}).get("landing_contract") or {}).get("tieable_children"))
+            if tieable and self.collector:
+                import landing_tie_children as LTC
+                conn += LTC.tie_connections(tieable, {e["dst_index"] for e in self.collector["edges"] if e["dst"]==pn})
             body = ",\n".join(conn + [body])
             text = text[:m.start()] + m.group(1) + body + m.group(3) + text[m.end():]
         if ansi and re.search(r"\(clk\)", text):
