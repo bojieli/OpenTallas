@@ -47,8 +47,8 @@ Base B3z2 92e2f585dc06 (COORD: rows restored) + t72 sidecar band sync (ev/side_z
 
 ## Fable GRT Total lines
 - epyc9 /srv/opentallas-scratch/claude/fable-review-cong/d/t68e2/grt.log (30 extra it): `Total 212813367 13867498 6.52% 13 / 6 / 8156` (8156 overflow left)
-- epyc8 .../fable-review-cong/d/t75/fix.log: extra iteration 14/15 at last read, no Total yet
-- epyc7 .../fable-review-col/p_h10r0_base/proof.log: extra iteration 13/15, no Total yet
+- epyc8 .../fable-review-cong/d/t75/fix.log (15 extra it): `Total 213287285 34889762 16.36% 46 / 31 / 476498` (476,498 overflow left)
+- epyc7 .../fable-review-col/p_h10r0_base/proof.log: in extra iteration 15/15, no Total yet
 
 ## Second B3z2 defect (affects B3zq G0 and 2 kits)
 G0 check.py on B3z2 crashes in gen_phys.tap_offset_table: clock.tap_offset.per_port_ps rows beyond T/2 (period 833 -> 416.5 ps): eng__t1 clk_c0 TT -550.2 / FF -490.8, bk_sel__t2 clk_c4 -454.5 / -408.2, clk_c0 -470.0 / -421.5. Posted ASK to DIE-S81-92. STILL PRESENT in 92e2f585dc06. My G0 comparison uses private copies with those 3 rows dropped (ev/G0only_*_tapoff3.json; never bound).
