@@ -4,3 +4,4 @@ Cause: kit_wave.json s81 type_args[ot_s81sl_leaf__t62] = --clock-landing kit-ops
 Fix: kit_wave.sync_item_inputs (after each src probe) copies a missing item input held by another probed gen host (tar over ssh, keep-old, <=300MB, /srv/opentallas-scratch*/claude only, 5 retries). Live in rt/tools/autopilot/kit_wave.py (backup kit_wave.py.bak-fixselfcont-1114). Branch claude/fix-selfcont-itemsync-1114@5bbd9b2dfe7 (+test_kit_wave_item_sync.py, 2 tests pass).
 Done: sidecar copied to epyc8/10/9/intel1 (rc 0, sha-size 8828097).
 OPEN for KIT-OPS-3/4: a8 gen_args carries TWO --clock-landing (B3v sidecar_new.json then aor3 sidecar from stale type_args; aor3 sidecar belongs to the reverted plan). type_args_prev_kitops1_aor3 says t62 type_args should be null: remove it.
+RESULT 05:5x: a8 passed missing-file point, now fails gen LandingError lk_WN0 (stale aor3 type_args vs plan_h2_2249); needs KIT-OPS-3 type_args removal + KIT-OPS-4 retry.
