@@ -286,3 +286,12 @@ def test_place_census_stops_a_measured_over_budget_run(tmp_path):
     assert r.returncode == 0 and 'WARN OVER_CAP' in r.stdout, r.stderr
     r = run_census(tmp_path, 678_022, 0, 'place', 'set ::env(OT_CELL_BUDGET_GATE) 0')
     assert r.returncode == 0 and 'capacity probe, not stopped' in r.stdout, r.stderr
+
+
+def test_cored_flat_type_cells_above_synth_budget_is_not_judged():
+    """KV-RCAP-FLAT 11-13: an explicit type.cells of a cored split type above the synth budget is the inherited flat
+    parent estimate (hard cores counted), so it is CORED; a glue-sized type.cells stays judged."""
+    import cap_estimate as ce
+    assert ce.cored_estimate({"hard_cores": [{}], "cells": 4966000}, "plan type.cells")
+    assert not ce.cored_estimate({"hard_cores": [{}], "cells": 120000}, "plan type.cells")
+    assert not ce.cored_estimate({"cells": 4966000}, "plan type.cells")

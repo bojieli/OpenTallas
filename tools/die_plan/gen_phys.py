@@ -45,12 +45,17 @@ def write_cap_budget(P, tn, kd):
     are recorded as unjudged, so native_cell_count can supply the actual count.
     """
     import cells
+    import cap_estimate
     t = P.types[tn]
     cores = t.get("hard_cores") or []
     hard_names = {c.get("inst") for c in cores}
     macros = len(cores) + sum(1 for c in t.get("contents") or []
                               if c.get("lef") and c.get("inst") not in hard_names)
-    if "cells" in t:
+    if "cells" in t and cores and int(t["cells"]) > cap_estimate.BUDGET["synth"]:
+        # KV-RCAP-FLAT 11-13: a split type's explicit type.cells above the synth budget is the inherited flat parent
+        # estimate (hard cores' contents included); record it unjudged so the measured synth count decides.
+        count, basis = None, "CORED: type.cells is a flat estimate (>synth budget), await measured movable synth count"
+    elif "cells" in t:
         count, basis = int(t["cells"]), "type.cells"
     elif cores:
         count, basis = None, "CORED: await measured movable synth count"

@@ -155,7 +155,19 @@ def cored_estimate(type_doc, basis):
     """True when a plan estimate of a type built from hard cores is not the type's own movable logic: only plan
     type.cells is (cells.py "plan"); a flat module / partition / by_type table counts the cores' contents too, and a
     hard core's contents are never movable cells of the parent run."""
-    return bool((type_doc or {}).get("hard_cores")) and not str(basis).startswith("plan")
+    td = type_doc or {}
+    if not td.get("hard_cores"):
+        return False
+    if not str(basis).startswith("plan"):
+        return True
+    # KV-RCAP-FLAT 11-13 (kv3_hg_v1p2..p6, kv3_hgi_v3..v8, kv3_pv_v1n..v6n: 31+ R-CAP fails, 3-7 M cells projected): a
+    # split type inherits the parent flat estimate as an explicit type.cells (KV-PLAN-DELTA-9, "same contents modules"),
+    # which counts the hard cores' contents.  An explicit glue estimate above the synth budget cannot be the type's own
+    # movable logic; it is judged from the measured synthesized top (native_cell_cap.tcl), never from the plan.
+    try:
+        return float(td.get("cells") or 0) > BUDGET["synth"]
+    except (TypeError, ValueError):
+        return False
 
 
 def kit_inputs(kit, synth=None):
