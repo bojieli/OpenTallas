@@ -171,3 +171,33 @@ def test_signed_write_chunk_does_not_hide_freg_mismatch():
     _hard(p, base, params)
     with pytest.raises(LandingError, match='signed hard child'):
         Landings(p, t).type_rtl('B', B_BODY)
+
+
+@pytest.mark.parametrize('fanout', [0, 8, 32])
+@pytest.mark.parametrize('read_chunk', [0, 32])
+def test_signed_hard_d8_keeps_read_and_write_chunks(fanout, read_chunk):
+    """The signed W515/D8 child owns READ_CHUNK32 and WRITE_CHUNK16."""
+    import count_align_bind as CAB
+    from test_cland_ring_fanout import _reader_start
+    p, t = _vehicle(landing_ring_fanout_max=fanout, ring_hold=dict(write_edge='fall'))
+    _reader_start(p)
+    for row in p['ports'] + t['ports']:
+        row['width'] = 514
+    for row in t['count_aligned']['ports'].values():
+        row['depth'] = 8
+    p['partition_types']['B']['count_straps'][0]['width'] = CAB.strap_kw(8)
+    body = B_BODY.replace('[4:0]', '[514:0]')
+    params = dict(W=515, DEPTH=8, STATUS_REG=1, WFALL=1, WREG=1,
+                  DSREP=4, WRITE_CHUNK=16, READ_CHUNK=read_chunk, RSTREP=73, PLACEREP=1)
+    hcs = _hard(p, 'ot_dp_clk_landing_cas', params)
+    before = CAB.strap_ties(t['count_aligned'], p)
+    lg = Landings(p, t)
+    rtl = lg.type_rtl('B', body)
+    assert _params(rtl) == ('ot_dp_clk_landing_cas', params)
+    assert f'.READ_CHUNK({read_chunk})' in rtl and '.WRITE_CHUNK(16)' in rtl
+    assert 'wire [72:0] cland_reader_start_y_1_x;' in rtl
+    assert lg.reset_placements['B']['y']['hard_child_params'] == params
+    assert CAB.strap_ties(t['count_aligned'], p) == before
+    _, receipt, sources = param_wrap.wrap_bound(rtl, hcs)
+    assert receipt[0]['cycles_changed'] == 0
+    assert param_wrap.param_text(params) in sources['b_cland_y']
