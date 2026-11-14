@@ -11760,12 +11760,14 @@
      "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item]."
     },
     "ot_s81sl_leaf__t54__cl706d9749": {
-     "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-or1/plan_h2_2249_or1.json",
-     "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item]."
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item].",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
     },
     "ot_s81sl_leaf__t56": {
-     "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-or1/plan_h2_2249_or1.json",
-     "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item]."
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item].",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
     },
     "ot_s81sl_leaf__t58": {
      "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-or1/plan_h2_2249_or1.json",
@@ -11794,6 +11796,34 @@
     "ot_s81sl_leaf__t71": {
      "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-or1/plan_h2_2249_or1.json",
      "note_kitops1_or1": "KIT-OPS-1 2026-11-13 10:24 (COORD ruling (a) 10:3x, LEAF-DRT73-1 train 48): per-item plan overlay = plan_h2_2249.json + orient_realize (main 01fe9c8cc2 tools) on ^ot_s81sl_leaf__ only: 54 hcpost-lane cores in 30 types, MY->R0 18, R180->MX 36, track offsets; nothing else differs; native_contract + bind_matches unchanged for all 30 (stale []). sha f1add586784c, staged sha-checked epyc9/epyc7/epyc8/epyc2/intel1. Only these 30 items rehash. Revert = delete item_inputs[item]."
+    },
+    "ot_s81sl_leaf__t35": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
+    },
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
+    },
+    "ot_s81sl_leaf__t41": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
+    },
+    "ot_s81sl_leaf__t6": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
+    },
+    "ot_s81sl_leaf__t73": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
+    },
+    "eng__t1": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
+    },
+    "serdes__t4": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-s81/plan/plan_physs81_a.json",
+     "note_physs81": "PHYS-S81 2026-11-13 18:0x: per-item plan overlay 5db888c2ea25 = wave plan + core_tap_fix (R-CLOCK-5, leaf types) + tap_max_sinks 1500 + clock.pregrt_ff_hold (R-CLOCK-1). DO_NOT_COUNT until signed."
     }
    },
    "item_inputs_prev_kw43ctap": {
