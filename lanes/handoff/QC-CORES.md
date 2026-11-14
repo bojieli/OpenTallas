@@ -1,4 +1,4 @@
-# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 08:22 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
+# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 11:54 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
 columns: core | lane | form | host | unit/kit | stage | verdict | view path (signoff) | registered (AUTO-RESIGN / prov_view_sources)
 
 | core | lane | form | host | kit | stage | verdict | view path | registered |
@@ -31,8 +31,8 @@ columns: core | lane | form | host | unit/kit | stage | verdict | view path (sig
 | sta_region_nb0[old] | TL-QCSTAV2 | region 5xSRAM (FAILED face_guard) | intel1 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
 | qfd_dv_s8_station_tail1[rk] | TL-QCTAIL1 | qfd_dv a util.5 (FAILED face_guard) | intel1 | /srv/opentallas-scratch2/claude/tl-qctail1/rk/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0 | running | - |  | no |
 | qfd_dv_s8_station_tail1[rkb] | TL-QCTAIL1 | qfd_dv b util.4 (FAILED face_guard) | epyc9 | /srv/opentallas-scratch2/claude/tl-qctail1/rkb/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0 | running | - |  | no |
-| qfd_dv_s8_station_tail1[rkw] | TL-QCTAIL1 | qfd_dv w util.5 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qctail1/rkw/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0 | running | - |  | no |
-| qfd_dv_s8_station_tail1[rkwb] | TL-QCTAIL1 | qfd_dv wb util.4 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qctail1/rkwb/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0 | running | - |  | no |
+| qfd_dv_s8_station_tail1[rkw] | TL-QCTAIL1 | qfd_dv w util.5 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qctail1/rkw/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0 | signoff | NOT SIGNED DRC 0 TT 17.9 FFhold -1.47 FAIL | /srv/opentallas-scratch2/claude/tl-qctail1/rkw/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0/signoff | no |
+| qfd_dv_s8_station_tail1[rkwb] | TL-QCTAIL1 | qfd_dv wb util.4 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qctail1/rkwb/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0 | signoff | NOT SIGNED DRC 0 TT 28.12 FFhold -3.91 FAIL | /srv/opentallas-scratch2/claude/tl-qctail1/rkwb/qfd_dv_s8_station_tail1/kits/qfd_dv_s8_station_tail1_synth0/signoff | no |
 | qfd_dv_s8_tap_bounded[a] | TL-QCTAPB | qfd_dv a util.5 | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/a/kits/qfd_dv_s8_tap_bounded_synth0 | running | - |  | no |
 | qfd_dv_s8_tap_bounded[b] | TL-QCTAPB | qfd_dv b util.35 | intel1 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/b/kits/qfd_dv_s8_tap_bounded_synth0 | synth | - |  | no |
 | qfd_dv_s8_tap_bounded[c] | TL-QCTAPB | qfd_dv c no keep_hier | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/c/kits/qfd_dv_s8_tap_bounded_synth0 | running | - |  | no |
@@ -40,9 +40,12 @@ columns: core | lane | form | host | unit/kit | stage | verdict | view path (sig
 | qfd_dv_s8_tap_bounded[e] | TL-QCTAPB | qfd_dv e (TL-QCTAPB) | epyc9 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0 | signoff | SIGNED DRC 0 TT 15.26 FFhold 7.13 PASS | /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff | no |
 | qfd_dv_s5_ctl_repair4_leaf[a] | TL-QCREP4 | qfd_dv a util.5 | intel1 | /srv/opentallas-scratch2/claude/tl-qcrep4/a/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
 | qfd_dv_s5_ctl_repair4_leaf[b] | TL-QCREP4 | qfd_dv b util.3 | intel1 | /srv/opentallas-scratch2/claude/tl-qcrep4/b/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
-| sta_region_nb0[w] | QC-CORES-HEAD | region 5xSRAM w/ flt pin regs | epyc2 | /srv/opentallas-scratch2/claude/qc-cores-head/rk/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
+| sta_region_nb0[w] | QC-CORES-HEAD | region 5xSRAM w/ flt pin regs | epyc2 | /srv/opentallas-scratch2/claude/qc-cores-head/rk/sta_region_nb0/kits/sta_region_nb0_synth0 | signoff | NOT SIGNED DRC 0 TT 15.39 FFhold -3.12 FAIL | /srv/opentallas-scratch2/claude/qc-cores-head/rk/sta_region_nb0/kits/sta_region_nb0_synth0/signoff | no |
+| sta_region_nb0[rw] | TL-QCSTAV2 | rw util.5 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rw/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
+| sta_region_nb0[rwb] | TL-QCSTAV2 | rwb util.4 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rwb/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
+| qfd_dv_s8_station_tail1[eco_rkwb1] | TL-QCTAIL1 | wb ECO (signed) | ? | /srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1 | signoff | SIGNED DRC 0 TT 28.27 FFhold -2.33 PASS | /srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff | no |
 
-STATE: 26/29 signed; signoff-not-signed: none
+STATE: 27/29 signed; signoff-not-signed: ['qfd_dv_s8_station_tail1[rkw]:NOT SIGNED DRC 0 TT 17.9 FFhold -1.47 FAIL', 'qfd_dv_s8_station_tail1[rkwb]:NOT SIGNED DRC 0 TT 28.12 FFhold -3.91 FAIL', 'sta_region_nb0[w]:NOT SIGNED DRC 0 TT 15.39 FFhold -3.12 FAIL']
 
 ## Source notes
 
