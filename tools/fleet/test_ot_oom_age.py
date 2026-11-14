@@ -34,5 +34,24 @@ class Age(unittest.TestCase):
             a.kill(); b.kill()
 
 
+class Credit(unittest.TestCase):
+    def test_item_key_strips_the_client_pid(self):
+        self.assertEqual(M.item_key("dpkit-col_h9_r0_p2__t1__cl0045af7b__pve183b536-760500"), "dpkit-col_h9_r0_p2__t1__cl0045af7b__pve183b536")
+        self.assertIsNone(M.item_key(None))
+
+    def test_resubmitted_job_keeps_the_age_of_its_first_attempt(self):
+        first, now = {}, 100000.0
+        self.assertEqual(M.credited_age(first, "job", 7200, now), 7200)              # first attempt: 2 h old
+        later = now + 3000                                                           # killed, resubmitted: new process only 60 s old
+        self.assertEqual(M.credited_age(first, "job", 60, later), 10200)             # credit continues (2 h 50 min), not 60 s
+        self.assertEqual(M.target_adj(10200), 600)
+        self.assertEqual(M.credited_age(first, None, 60, later), 60)                 # no key: process age
+
+    def test_state_is_pruned_after_a_day(self):
+        d = tempfile.mkdtemp(); p = os.path.join(d, "s.json")
+        M.save_state(p, {"old": {"first": 0, "seen": 1000.0}, "new": {"first": 0, "seen": 90000.0}}, 100000.0)
+        self.assertEqual(sorted(M.load_state(p)), ["new"])
+
+
 if __name__ == "__main__":
     unittest.main()
