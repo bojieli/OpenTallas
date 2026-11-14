@@ -4940,6 +4940,10 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
                  f"kb=$(ssh -o BatchMode=yes -o ControlPath=none $h \"du -sk '$p' | cut -f1\"); "
                  f"if [ \"${{kb:-0}}\" -le {600 * 1024} ]; then mkdir -p \"$(dirname \"$p\")\" && "
                  f"rsync -a -e \"ssh -o BatchMode=yes -o ControlPath=none\" \"$h:$p\" \"$p\" && echo KW_VIEWREF_COPIED $h $p; fi; "
+                 # the original kit's own top-level files travel with its face_guard.json (gen also runs the kit's
+                 # captured face_guard.py and reads its receipts): files only, no run trees, 50 MB each
+                 f"case \"$p\" in */face_guard.json) rsync -a --max-size=50m -f \"- */\" -e \"ssh -o BatchMode=yes -o ControlPath=none\" "
+                 f"\"$h:$(dirname \"$p\")/\" \"$(dirname \"$p\")/\" && echo KW_VIEWREF_KITDIR $h $(dirname \"$p\");; esac; "
                  f"break; fi; done; done; true")
         run("kit_snap_refs", remote(fetch), idempotent=True)
         rc4, t4 = run("kit_snap", remote(cmd), idempotent=True)

@@ -399,6 +399,7 @@ class KitWaveSnap(unittest.TestCase):
         self.assertEqual((mp, why), ({}, ""))                               # advisory by default: the item goes on
         self.assertEqual([c[0] for c in self.calls], ["kit_snap", "kit_snap_refs", "kit_snap"])
         self.assertIn("rsync -a", self.calls[1][1][-1])
+        self.assertIn("*/face_guard.json) rsync -a --max-size=50m", self.calls[1][1][-1])   # the kit's top-level files too
         self.assertEqual(res["kit_snap"]["view_refs_missing"], ["/srv/x/kit/face_guard.json"])
         self.sp["kit_snap_view_refs"] = "strict"
         mp, why, _ = self.stage(ans)
