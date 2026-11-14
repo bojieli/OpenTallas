@@ -4140,8 +4140,15 @@ def self_hold_twin_closure(L, log, tried, words=8, seed=7171):
                 break
     reps = roots | taken
     for t, ks in groups.items():
-        cand = [c for c in ks if c in reps] or ks[:1]
+        # Rare controls can give different instances the same cofactor
+        # signature. Choose representatives within each exact near-input
+        # class: an anchored copy elsewhere must not strand a local pair.
+        local = collections.defaultdict(list)
+        for c in ks:
+            local[near(("gold", c))].append(c)
         for k in ks:
+            peers = local[near(("gold", k))]
+            cand = [c for c in peers if c in reps] or peers[:1]
             if k in reps or k == cand[0] or tried[("selftwin", "gold", k)] >= SELFTWIN_TRIES:
                 continue
             cs = [c for c in cand if not tried[("gold", k, c, 0)]]
