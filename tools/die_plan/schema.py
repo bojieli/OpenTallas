@@ -2220,12 +2220,12 @@ class Plan:
         pr = self.ports[pid]
         side = pr.get("_geom_from")
         if not side:
-            return pin_positions(pr, self.layers)
+            return pin_positions(dict(pr, pg_free=True) if self.port_pg_free(pr) else pr, self.layers)
         part = pr[side]["part"]
         tf, win, lays, order = self._type_geom(part, pr[side]["bus"])
         tp = dict(pr, face=tf, window_um=win, layers=lays, order=order)
-        if full_area_hard_ip(self.types[self.parts[part]["type"]]):
-            tp["pg_free"] = True          # QC-PHY-1 11-14 (COORD): the macro's own pins are fixed; no partition PG keep-out
+        if self.port_pg_free(pr):
+            tp["pg_free"] = True          # QC-PHY-1 11-14 (COORD, either end): the macro's own pins are fixed; no PG keep-out
         tp.pop("segments", None)          # type-declared geometry is one window (segments are die-frame port data)
         p = self.parts[part]
         w, h = self.types[p["type"]]["outline_um"]
@@ -2237,9 +2237,15 @@ class Plan:
         return sorted((b, ln, round(base + (ext - c if flip else c), 6)) for b, ln, c in pin_positions(tp, self.layers))
 
     def port_pg_free(self, pr):
-        """QC-PHY-1: True when the port's type-declared geometry belongs to a full-area hard IP type (see port_pins)."""
-        side = pr.get("_geom_from")
-        return bool(side) and full_area_hard_ip(self.types[self.parts[pr[side]["part"]]["type"]])
+        """QC-PHY-1: True when EITHER end of the port is a full-area hard IP instance (COORD 11-14 option b): the macro's pins
+        are fixed physical facts, so the port's window on both sides (the neighbour's too) ignores the partition PG keep-out."""
+        for side in ("src", "dst"):
+            e = pr.get(side) or {}
+            part = e.get("part")
+            if part and part != DIE_PART and part in self.parts and self.parts[part]["type"] in self.types \
+                    and full_area_hard_ip(self.types[self.parts[part]["type"]]):
+                return True
+        return False
 
     def port_point(self, pid):
         """centre of the port window on its face, die frame."""
@@ -2813,7 +2819,7 @@ def usable_tracks(L, ln, lo, hi, pg_free=False):
     return sum(1 for k in range(k0, k1 + 1) if pg_free or not pg_blocked(ln, off + k * p))
 
 
-def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6):
+def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6, pg_free=False):
     """helper for plan generators: the smallest hi (on a 0.016-um step) so that `pins` pins over the layer list `names`
     fit [lo, hi] at <= per_um pins/um and <= track_max of the usable (PG-band-free) tracks on every layer."""
     layers = layers or {L["name"]: L for L in ASAP7_LAYERS}
@@ -2821,7 +2827,7 @@ def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6):
     need = [len(range(i, pins, nl)) for i in range(nl)]
     hi = lo + max(pins / per_um, 0.016)
     while True:
-        if all(usable_tracks(layers[ln], ln, lo, hi) * track_max >= n for ln, n in zip(names, need)):
+        if all(usable_tracks(layers[ln], ln, lo, hi, pg_free) * track_max >= n for ln, n in zip(names, need)):
             return round(hi, 4)
         hi += 0.016
 
