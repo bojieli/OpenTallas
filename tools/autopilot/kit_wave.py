@@ -4930,7 +4930,11 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
         return None, (f"{KIT_INPUT_MISSING}: a kit input exists on none of the die hosts ({', '.join(tried)}); restore it or "
                       f"point the die config at a live path, then relaunch. {miss}")
     vmiss = doc.get("view_refs_missing") or []
-    if vmiss:
+    _prev, _rounds = None, 0
+    while vmiss and [m["path"] for m in vmiss] != _prev and _rounds < 3:
+        # a fetched face_guard.json names further files (its netlist), seen as missing only on the next snapshot pass:
+        # repeat while the missing set still changes, at most three rounds
+        _prev, _rounds = [m["path"] for m in vmiss], _rounds + 1
         # a child view's provenance.json (inside the pinned src) names files of the original signed kit by absolute path;
         # gen reads them there.  Copy each from the first die host that holds it to the same path on G, then snapshot again.
         donors = " ".join(q(hub if h == "localhost" else h) for h in snap_donors(sp, G, hub))
