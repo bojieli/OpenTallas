@@ -56,3 +56,54 @@ added_taps empty; tap_max_sinks removed; per_port_ps of the removed ports droppe
   die routing scatter inside a type stops mattering.
 - Every type that has more than one grid tap changes its clock ports and SDC, so it re-kits. On S81 that is nearly every type.
 - NOT measured yet: the single-tree hold count on t42 (pilot launched, section 1b), other types (S81-TAPSKEW table).
+
+## 1b. UPDATE 06:3x: pilots and the final form of R-CLOCK-7 (supersedes items a-e above where they differ)
+
+### Pilots on t42 (no hold cell added in any of them; FF hold = reg-to-reg endpoints after CTS, TT setup the same way)
+| form | hold endpoints | worst | setup endpoints | worst |
+|---|---|---|---|---|
+| as built: 36 taps, cap pass, absolute windows 60..182 | 2,923 | -206.2 | 1,351 | -260.6 |
+| ONE glue tap (WITHDRAWN): 30 buffers per path, insertion 1,578 | 1,968 | -1,082 | 6,817 | -1,270 |
+| cap pass off (clk_t23 keeps 4,335 sinks), same SDC | 2,183 | -189.2 | 1,379 | -280.5 |
+| cap off + small taps folded (min 400 sinks / 450 um) | 2,230 | -206.2 | - | - |
+| as-built kit, taps timed at their measured arrival on the regional DME die clock, tolerance +-0 / +-10 / +-20 | 438 / 777 / 1,082 | -89 / -109 / -129 | 432 / 500 / 568 | -260.6 |
+| cap off + measured arrivals, +-0 / +-10 / +-20 | 36 / 201 / 524 | -57 / -77 / -97 | 281 / 350 / 496 | -279.7 |
+Dirs: B/hs (pilot.log, pilotb.log, pilotc.log, offs_hold_*.log, offs_setup_*.log). Same-tap endpoints with the cap off: 9.
+With the cap off and the windows at 0 the kit's own floor is 21 (367 with the cap pass); a uniform 20 ps window gives 58, 45 ps 443.
+
+### What the die clock gives (S81 B3t, 98 landed regions, region DME, routed; B/s81/r98, table tap_offsets.tsv)
+- Glue taps of one partition: spread median 65 ps TT (p90 96, max 244); leaf median 70, slice_station 50, col 66, svc 81.
+  t42's partition: 59 TT / 51 FF (185 / 178 on the die-wide H-tree). The hot taps sit close: clk_t11 -7, clk_t24 -1, clk_t23 +17.
+- So even a good die clock, read as one absolute window per port, is a 60-70 ps window = about 1,300 endpoints per type.
+
+### Setup (COORD question)
+- 923 of the 1,351 setup endpoints are the same windows seen from the capture side; they go with the fix (1,351 -> 281..350).
+- The worst path (-260.6, -279.7 in the rebuilt tree) is not skew: flop driver_xwa_c_q -> SRAM u_b0 on the same tap, 1,066 ps of data. R-RTL item.
+
+### Is it a modeling artifact (S81-TAPSKEW reading)? Partly.
+- Yes: the kit charges every pair of a port the port's WORST die damage (its window), although the pair's own two taps differ by
+  far less. Timed at the taps' own arrivals the same kit has 438 endpoints, not 2,923.
+- No: the window is not free pessimism that CPPR would remove. Two taps are two die-tree leaves; their arrival difference is real
+  (59 ps across t42 on the DME clock). The kit can only time it right if it knows each tap's arrival.
+- Also real and kit-made: the cap pass (pipelines cut) and tap balance (182..365).
+
+### R-CLOCK-7 (final)
+1. Kit SDC: a tap port is timed at its ARRIVAL OFFSET on the die clock of record, with a tolerance, not at an absolute window.
+   Per port p and corner (TT in constraint.sdc, FF in the FF overlay file that core taps already have):
+     set_clock_latency -source -early [o_p - u]  /  -late [o_p + u]
+   o_p = routed arrival of tap p minus the median glue tap of its partition (mean over the type's instances; a core tap's o_p
+   already contains its early delivery), u = max(10, half the range over instances). The IO shift uses max o - min o + 2u.
+   Plan key clock.tap_offset {per_port_ps: {type: {port: {TT, FF, tol}}}, source proof}. A type without a row keeps today's window.
+2. Kit tap split: no cap pass (OT_TAP_MAX_SINKS = 100000). No tap is added for sink count; the B3t added taps are withdrawn
+   at the next plan event. Small-tap folding is NOT adopted (measured worse).
+3. Die clock: region DME on the landed regions (R-CLOCK-6). It is built before the kits and is the clock of record;
+   die gate check = every tap of every instance inside [o_p - u, o_p + u] of its partition's glue median. A tap outside =
+   STA re-sign of that type at the new offsets (no P&R unless hold then fails).
+4. Remaining hold after 1-3 is built once before the first GRT (R-CLOCK-1). Expected on t42: about 200 endpoints at +-10.
+   Under 100 needs +-5 or less, which is a frozen routed die clock; it is the target once the die clock is frozen.
+Cost: 0 cycles, 0 area. Kits are tied to the die clock of record (re-sign STA when it moves by more than u).
+Tool work: gen_phys.tap_window_tcl (emit offsets), die_sta_related (--kit-offset-out + the gate check), schema key.
+Applies to: every type with more than one clock port on S81 (all families), KV (kv3_hgi*, pv, hg, pc; multi-instance types
+get u from the instance range), QC (slw/sle_su, st). HEAD keeps its rp17 per-port windows until its next clock event.
+S81 offsets from the r98 clock: B/s81/r98/tap_offsets.json (all 395 types).
+NOT done: the tool change itself; a full kit run (route + sign-off) with the new SDC; KV/QC offsets.
