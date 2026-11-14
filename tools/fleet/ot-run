@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""ot-run: run a heavy command on the least CPU-loaded fleet host that can admit it (admission is by memory only).
+# A shell must hand this Python file to Python BEFORE reading documentation:
+# backticks in its help examples are shell command substitutions otherwise.
+""":"
+exec python3 "$0" "$@"
+exit $?
+":"""
+__doc__ = """ot-run: run a heavy command on the least CPU-loaded fleet host that can admit it (admission is by memory only).
 
   ot-run --mem GB [--threads N] [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] [--stage PATH ...] -- <command...>
   ot-run --mem GB --job SPEC.json [--hosts a,b] ... -- <command...>
