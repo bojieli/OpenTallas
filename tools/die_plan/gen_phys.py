@@ -4901,7 +4901,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # VSN6-B 11-11 S7: post-place non-tap census + max-wire buffer estimate (cell_census.tcl), loud against 400k
     cc_hook = ("\nif {[file exists /work/cell_census.tcl]} {uplevel #0 {source /work/cell_census.tcl}; ot_cell_census place}"
                " else {puts \"OT_CELL_CENSUS WARN stage=place: cell_census.tcl is not in the kit, no recount\"}\n")
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + crp_hook
+    # KIT-OPS-4 11-14 (COORD FAIL-S81-1, RSZ-0060 "Max buffer count reached" in repair_timing outside the GRT hold hook): the HBM-arch
+    # hold_cap.tcl wrapper gives every repair_timing_helper call -max_buffer_percent OT_MAX_BUFFER_PERCENT (default 100) in this step
+    _hc = Path(__file__).resolve().parents[2] / "physical/die_plan/hbm_arch_cores/hold_cap.tcl"
+    hc_hook = ""
+    if _hc.is_file():
+        shutil.copyfile(_hc, kd / "hold_cap.tcl")
+        hc_hook = "source /work/hold_cap.tcl\n"
+    (kd / "pre_cts.tcl").write_text(hc_hook + clock_phase_tcl(P, tn, before_cts=True) + leaf_check + group_hook + crp_hook
                                     + cc_hook + rsp_hook + pce_hook)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # policy uncertainty (OWNER 12.24c setup 0 / hold 25) once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
