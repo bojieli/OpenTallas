@@ -7,6 +7,17 @@ import lec
 from test_lec_memory_layout import _seq
 
 
+def _have_abc():
+    try:
+        lec.abc_bin()
+        return True
+    except lec.LecError:
+        return False
+
+
+needs_abc = pytest.mark.skipif(not _have_abc(), reason="yosys-abc not installed on this host")
+
+
 def make_model(tmp_path,kind='hold',wrong=False):
     if kind=='hold':
         def gold(m,l):return {'s':l['s'],'o':l['s']}
@@ -30,6 +41,7 @@ def native_prove(L,path,tag):
     return m,lec.prove(m,path,100,[],tag=tag)
 
 
+@needs_abc
 def test_inductive_but_unknown_reset_excluding_constraint_cannot_hide_difference(tmp_path,monkeypatch):
     monkeypatch.setenv('OT_LEC_RESET_CYCLES','4')
     L=make_model(tmp_path,wrong=True)
@@ -60,6 +72,7 @@ def test_explicit_hint_refuses_known_reset_exclusion_with_reason(tmp_path,monkey
 
 
 @pytest.mark.parametrize('wrong',[False,True])
+@needs_abc
 def test_valid_reset_zero_fsm_still_proves_induction_and_all_design_points(tmp_path,monkeypatch,wrong):
     monkeypatch.setenv('OT_LEC_RESET_CYCLES','4')
     L=make_model(tmp_path,'reset',wrong=wrong)
@@ -71,6 +84,7 @@ def test_valid_reset_zero_fsm_still_proves_induction_and_all_design_points(tmp_p
     assert st['ff:u_dut.o']==('differs' if wrong else 'proved')
 
 
+@needs_abc
 def test_unknown_native_base_complete_cover_is_accepted(tmp_path,monkeypatch):
     monkeypatch.setenv('OT_LEC_RESET_CYCLES','4')
     L=make_model(tmp_path)
@@ -112,6 +126,7 @@ def test_large_unknown_cube_does_not_enumerate_reset_assignments():
 
 
 @pytest.mark.parametrize('wrong',[False,True])
+@needs_abc
 def test_nontrivial_reset_zero_mod3_fsm_cover_and_negative(tmp_path,monkeypatch,wrong):
     monkeypatch.setenv('OT_LEC_RESET_CYCLES','4')
     def gold(m,l):

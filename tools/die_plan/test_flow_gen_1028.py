@@ -208,9 +208,13 @@ def test_status_point_in_core_margin_slides_inside_core(tmp_path):
     assert st == "FIRM" and 100000 - 4320 <= x <= 100000 - 1080
 
 
-def test_status_point_outside_core_by_more_than_window_fails_closed(tmp_path):
-    r = _run_lp(tmp_path, 110.0, inv=False)     # window 107.84..112.16 entirely outside: no slide, still an error
-    assert r.returncode != 0 and "no legal nonoverlapping" in r.stderr
+def test_status_point_outside_core_by_more_than_window_grows_start_window_to_core_edge(tmp_path):
+    # KV-CLAND-EDGE (11-14, 83fc576b53): a start window entirely outside the core (107.84..112.16 vs core x1 = 100)
+    # is grown around the core edge instead of failing closed; the status FF is placed FIRM inside the core.
+    r = _run_lp(tmp_path, 110.0, inv=False)
+    assert r.returncode == 0, r.stdout + r.stderr
+    x, _y, st = _loc(r)
+    assert st == "FIRM" and x + 1080 <= 100000
 
 
 def test_kit_rtl_prefixed_status_net_is_found(tmp_path):

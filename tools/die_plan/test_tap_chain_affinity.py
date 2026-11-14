@@ -1,6 +1,8 @@
 """Actual Tcl execution: preserve gated/hard clocks, capacity and short reach."""
 from pathlib import Path
-import tkinter
+import pytest
+
+tkinter = pytest.importorskip("tkinter", reason="tkinter (Tcl bridge) not installed on this host")
 import pytest
 
 HELPER = Path(__file__).with_name('tap_chain_affinity.tcl')

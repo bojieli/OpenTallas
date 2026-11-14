@@ -4029,6 +4029,12 @@
         "registered_pins": {
          "type": "boolean"
         },
+        "local_reset_pins": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
         "obs_max": {
          "type": "string",
          "pattern": "^M[1-9]$"
@@ -5097,6 +5103,12 @@
         },
         "registered_pins": {
          "type": "boolean"
+        },
+        "local_reset_pins": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
         },
         "orient": {
          "enum": [
