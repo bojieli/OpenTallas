@@ -422,3 +422,44 @@ def test_data_count_frames_can_be_clock_tree_leaves():
     assert not parts & {e['src'] for e in edges}
     assert all(e['clean_ok'] for e in edges)
     assert info['leaf_origins']
+
+
+def test_die_sta_ambiguous_start_port_judged_by_bind_simulation():
+    """START-AMB-MC-1: a plan-declared AMBIGUOUS start edge (sync_values 2) passes on the bind's start-up simulation
+    (0 window violations) when the STA sync count is one the simulation drew; no report / violations / a count outside
+    the simulated set fail closed."""
+    import die_sta_related as DSR
+    rows = chain_rows()
+    ctx = ctx_chain()
+    root, edges, _ = cap.clock_start_edges(rows, ctx)
+    s, out, regs = cap.plan(rows, T, AP, 0.05, start_edges=edges, start_root=root)
+    doc = dict(summary=dict(s, period_ps=T, pad=0), regions=regs, crossings=out,
+               start_edges=[{k: v for k, v in e.items() if not k.startswith("_")} for e in edges])
+    b = CAB.bind(doc)
+    k = ctx["TT"]
+    taps = {q: t for q, t in k["taps"].items() if not q.startswith("__st__")}
+    e = next(e for e in edges if e["dst"] == "R3")
+    amb = copy.deepcopy(b)
+    amb["regions"]["R3"].update(sync_values=2, start_skew_limit_ps=None,
+                                sample_lo_ps=amb["start_ports"][e["port"]]["d_lo_ps"],
+                                sample_hi_ps=amb["start_ports"][e["port"]]["d_hi_ps"])
+    old, DSR.CPPR_LCA = DSR.CPPR_LCA, True
+    try:
+        run = lambda bb, tp=taps: {r["port"]: r for r in DSR.count_align_start_ports(bb, dict(tp), k["meta"], T, {},
+                                                                                     k["ocv"])}
+        r0 = run(amb)[e["port"]]                     # no simulation report: unchanged fail-closed behaviour
+        assert r0["ok"] is False and "simulation" in r0["reason"]
+        amb["report"] = dict(verify=dict(identity_and_loop_errors=[], sim_window_violations=0))
+        r1 = run(amb)[e["port"]]
+        assert r1["ok"] is True and r1["sta_counts"] and set(r1["sta_counts"]) <= set(r1["mc_counts"])
+        bad = copy.deepcopy(amb)
+        bad["report"]["verify"]["sim_window_violations"] = 3
+        assert run(bad)[e["port"]]["ok"] is False
+        moved = dict(taps)                           # capture clock one full period later: a count never simulated
+        moved[e["capture"]] = dict(moved[e["capture"]], late_ps=moved[e["capture"]]["late_ps"] + T,
+                                   early_ps=moved[e["capture"]]["early_ps"] + T)
+        r3 = run(amb, moved)[e["port"]]
+        assert r3["ok"] is False and "outside" in r3["reason"]
+        assert all(r["ok"] for p, r in run(amb).items() if p != e["port"])   # clean ports keep the old rule
+    finally:
+        DSR.CPPR_LCA = old

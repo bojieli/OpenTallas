@@ -1145,10 +1145,20 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
     data_delay (HEAD-START-4 V1, opt-in --count-align-start-data-delay, count_align_plan.load_start_data_delay doc):
     {port: [lo, hi]} MEASURED launch CLK -> capture D per start port; it REPLACES the clk->Q skew of that port (it
     contains the launch clk->Q), so the sync samples d - dd; a port with no measured row fails closed.  None (default):
-    unchanged."""
+    unchanged.
+    START-AMB-MC-1 (COORD 11-14, DIE-PROTO-1): a port the plan declared AMBIGUOUS (sync_values 2: the planned ring K /
+    window covers both sync counts) is not failed for being ambiguous.  It PASSES iff (1) the bind's own start-up
+    simulation (bind['report']['verify'], count_align_bind.verify: metastable sync resolved both ways over the region's
+    sample interval) found 0 identity/loop errors and 0 ring window violations, and (2) every sync count this proof can
+    produce (STA interval minus the start skew, widened by the sync aperture) is one of the counts that simulation drew
+    (region sample_lo/hi or the plan d_lo/d_hi, minus the bind start_skew_ps when present, widened the same way).
+    A bind without a verify report, or a count outside the simulated set, fails closed as before."""
     leg = fleg = None
     rows = []
     reg = bind.get("regions", {})
+    ver = (bind.get("report") or {}).get("verify") or {}
+    mc_ok = (bool(ver) and not ver.get("identity_and_loop_errors") and ver.get("sim_window_violations") == 0)
+    mc_sk = bind.get("start_skew_ps") or (0.0, 0.0)
     added = [k for c in bind.get("start_ports", {}).values() for k in (c["launch"], c["capture"])
              if k and k.startswith("__st__") and k not in taps]
     for pid, c in sorted(bind.get("start_ports", {}).items()):
@@ -1192,6 +1202,20 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
             else -1.0
         row.update(d_lo_ps=round(iv[0], 1), d_hi_ps=round(iv[1], 1), plan_d_lo_ps=c["d_lo_ps"], plan_d_hi_ps=c["d_hi_ps"],
                    sta_sync_dist_ps=round(dist, 1), ok=row["sync_values"] == 1 and dist >= sync_ap)
+        if row["sync_values"] > 1:
+            row["ok"] = False
+            slo, shi = r.get("sample_lo_ps", c["d_lo_ps"]), r.get("sample_hi_ps", c["d_hi_ps"])
+            cnt = lambda lo, hi: set(range(math.floor((lo - sync_ap - off) / period),
+                                           math.floor((hi + sync_ap - off) / period) + 1))
+            sim = cnt(float(slo) - float(mc_sk[1]), float(shi) - float(mc_sk[0]))
+            sta = cnt(elo, ehi)
+            row.update(mc_counts=sorted(sim), sta_counts=sorted(sta))
+            if not mc_ok:
+                row["reason"] = "ambiguous start edge without a passing bind start-up simulation (fail closed)"
+            elif not sta <= sim:
+                row["reason"] = "ambiguous start edge: STA sync count outside the simulated counts"
+            else:
+                row.update(ok=True, covered_by="bind start-up simulation (sync_values 2, 0 window violations)")
         rows.append(row)
     for k in added:
         taps.pop(k, None)       # the virtual clock pins never leak into the other classes
