@@ -23,14 +23,14 @@ endmodule
 
 
 def test_epoch_buffers_exempt_other_cells_reported():
-    r = H.wrapper_cells(NET, "wrap", "macro_x", {"tx_up[1]", "rx_flit[4]"})
+    r = H.wrapper_cells(NET, "wrap", "macro_x", {"tx_up[1]", "rx_flit[4]"}, pin_alias=False)
     assert r["macro"] == ["\\u_bound.u_core"]
     assert [y for _, y in r["epoch_buffers"]] == ["tx_up[1]", "rx_flit[4]"]
     assert [o[3] for o in r["other"]] == ["tx_up[0]"]          # a non-epoch buffer is NOT exempt
 
 
 def test_no_epoch_declared_means_every_buffer_is_reported():
-    r = H.wrapper_cells(NET, "wrap", "macro_x", set())
+    r = H.wrapper_cells(NET, "wrap", "macro_x", set(), pin_alias=False)
     assert len(r["other"]) == 3 and not r["epoch_buffers"]
 
 
@@ -41,6 +41,12 @@ def test_epoch_pins_from_plan_flag():
     P.ports = {"a": {"src": {"part": "c", "bus": "tx"}, "dst": {"part": "io", "bus": "tx_flit"}, "width": 597, "kind": "data"},
                "b": {"src": {"part": "io", "bus": "rx_flit"}, "dst": {"part": "c", "bus": "rx"}, "width": 597, "kind": "data", "epoch": False}}
     assert H.epoch_pins(P, "phy") == {"tx_flit[597]"}
+
+
+def test_pin_alias_is_the_default_and_strict_mode_reports_it():
+    r = H.wrapper_cells(NET, "wrap", "macro_x", {"tx_up[1]", "rx_flit[4]"})
+    assert [y for _, y in r["alias_buffers"]] == ["tx_up[0]"] and not r["other"]
+    assert len(H.wrapper_cells(NET, "wrap", "macro_x", {"tx_up[1]", "rx_flit[4]"}, pin_alias=False)["other"]) == 1
 
 
 def test_pin_alias_option_exempts_macro_output_buffers_only():
