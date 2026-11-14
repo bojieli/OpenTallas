@@ -119,7 +119,8 @@ def plan_sha(path):
 
 
 def plan_ref(p):
-    return dict(path=p.get('path'), sha=plan_sha(p.get('path')), commit=(p.get('commit') or '')[:10] or None, date=p.get('date'), subject=p.get('subject'))
+    w = p.get('wave')
+    return dict(wave=w, basis='kit wave plan, as counted' if w else 'plan of record on main', path=p.get('path'), sha=plan_sha(p.get('path')), commit=(p.get('commit') or '')[:10] or None, date=p.get('date'), subject=p.get('subject'))
 
 
 def cached(key, stamp, fn):
@@ -296,7 +297,7 @@ def closure(d):
     for n in idx['nodes'].values():
         if n['die'] != d or n['level'] == 'die': continue
         st = n.get('status') or {}; m = st.get('metrics') or {}; lay = n.get('layout') or {}; s = lay.get('store') or {}; v = n.get('vis') or {}; p = n.get('plan') or {}
-        rows.append(dict(id=n['id'], name=n['name'], level=n['level'], state=st.get('state'), label=st.get('label'), cls=st.get('cls'), stage=st.get('stage'),
+        rows.append(dict(id=n['id'], name=n['name'], level=n['level'], state=st.get('state'), label=st.get('label'), basis=st.get('basis'), cls=st.get('cls'), stage=st.get('stage'),
                          attempt=st.get('attempt'), reason=st.get('reason'), tt_wns=m.get('tt_wns'), ff_wns=m.get('ff_wns'),
                          drc=m.get('drt_drc') if m.get('drt_drc') is not None else m.get('drc'), grt_overflow=m.get('grt_overflow'), lec=m.get('lec'),
                          cells=m.get('cells'), verdict=m.get('verdict'), instances=p.get('instances') if n['level'] == 'type' else p.get('placements'),
