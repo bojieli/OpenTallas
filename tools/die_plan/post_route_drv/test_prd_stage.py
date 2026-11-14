@@ -164,3 +164,30 @@ puts OK
 """
     p = subprocess.run(["tclsh"], input=script, capture_output=True, text=True)
     assert (p.returncode == 0) == ok, p.stdout + p.stderr
+
+
+def _prd_mk_hook_off_snippet():
+    """the KIT-OPS-4 block of prd_mk.sh (comment lines + the one command), run on its own"""
+    lines = (HERE / "prd_mk.sh").read_text().splitlines()
+    i = next(n for n, l in enumerate(lines) if "KIT-OPS-4 11-14 (DIE-QC-103)" in l)
+    return "\n".join(lines[i + 2:i + 3])
+
+
+def test_prd_mk_tt_only_pass_switches_the_nonport_hook_off(tmp_path):
+    # KIT-OPS-4 11-14 (DIE-QC-103): grt_nonport_hold.tcl refuses any non-FF native session, and a TT-only pass (t<N>) runs no FF hold repair:
+    # its generated config.mk carries the override, an FF pass (b<N>) does not
+    import subprocess
+    snippet = _prd_mk_hook_off_snippet()
+    assert "OT_GRT_NONPORT_HOLD = 0" in snippet
+    for v, expect in (("t5", True), ("b5", False), ("m5", False)):
+        out = tmp_path / v
+        out.mkdir()
+        (out / "config.mk").write_text("export PLACE_DENSITY = 0.3\noverride export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_nonport.tcl\nexport OT_GRT_NONPORT_HOLD = 1\n")
+        subprocess.run(["bash", "-c", snippet], env={"V": v, "OUT": str(out), "PATH": "/usr/bin:/bin"}, check=False)   # the one-liner exits 1 when its condition is false
+        assert ("override export OT_GRT_NONPORT_HOLD = 0" in (out / "config.mk").read_text()) is expect, v
+    plain = tmp_path / "plain"
+    plain.mkdir()
+    (plain / "config.mk").write_text("export PLACE_DENSITY = 0.3\n")
+    subprocess.run(["bash", "-c", snippet], env={"V": "t5", "OUT": str(plain), "PATH": "/usr/bin:/bin"}, check=False)   # the one-liner exits 1 when its condition is false
+    assert "NONPORT" not in (plain / "config.mk").read_text()      # a kit without the hook is untouched
+

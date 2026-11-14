@@ -180,6 +180,9 @@ for setting in OT_SLEW_MARGIN OT_SETUP_MARGIN OT_HOLD_ALLOW_SETUP OT_HOLD_MAXBUF
   if [[ -v $setting ]]; then printf '%s=%q\n' "$setting" "${!setting}" >> "$OUT/variant.env"; fi
 done
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
+# KIT-OPS-4 11-14 (DIE-QC-103): a TT-only pass (t<N>, OT_PRD_NO_HOLD=1, CORNER=TC) runs no non-port FF hold repair; the kit's grt_nonport_hold.tcl
+# refuses any native session that is not FF (OT_VCLK_CORNER=ff, CORNER=BC), so the hook is switched off for this pass only
+[ ${V:0:1} = t ] && grep -q '^\(override \)\{0,1\}export OT_GRT_NONPORT_HOLD *= *1' $OUT/config.mk && echo 'override export OT_GRT_NONPORT_HOLD = 0' >> $OUT/config.mk
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
 [ -n "${OT_PRD_MAX_WIRE_LENGTH:-}" ] && echo "OT_PRD_MAX_WIRE_LENGTH=$OT_PRD_MAX_WIRE_LENGTH" >> $OUT/variant.env
 # Shell-quote the Tcl list once so exact net names survive both shell sourcing
