@@ -28779,7 +28779,8 @@
    ],
    "gate_events_extra": [
     "hcut1111",
-    "head_rp18_1112"
+    "head_rp18_1112",
+    "head_rp21z4_1113"
    ],
    "plan_prev_kw45_tx": "/srv/opentallas-scratch2/claude/kw45/head_mesh1111/prep/source_plan.json",
    "prov_require_cands": true,
@@ -29526,7 +29527,11 @@
     "hd_host_w": {
      "OT_GEN_M8_GRANT": "1"
     }
-   }
+   },
+   "gate_events_extra_prev_kitops2": [
+    "hcut1111",
+    "head_rp18_1112"
+   ]
   },
   "qwen_compute": {
    "enabled": true,
