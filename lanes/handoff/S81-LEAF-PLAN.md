@@ -28,7 +28,12 @@ Base B3z2 92e2f585dc06 (COORD: rows restored) + t72 sidecar band sync (ev/side_z
 - strict bind B4Lb: bindB4Lb_leafplan.sh via intel2 ~/s81-leaf-plan/bind_leafplan_w3.sh (ot-run 120 GB epyc7, queued), log log/B4Lb_bind.log + intel2 ~/s81-leaf-plan/bind_B4Lb.log
 - B4L-a bind and G0 runs cancelled (old base).
 
-## STATE 2026-11-14 ~15:4x PST (read first; supersedes the block below)
+## UPDATE 2026-11-14 ~16:xx PST
+- Branch head d0a832c7999a: + R-LEAF-2b (leaf_rules.face_need: 86.4 um off any >= 512-pin window; used by check and core_place --window-clear).
+- B4L4 (t21, t75, t73/t9 ve_m; COORD: mine): outline growth does not solve it. t21 push vsw +43.2 / rxsb +43.2 (cp3/seed_t21_push.json, cp3/t21_push_ev.json) is space-legal but sits on 26 fixed ft-station sites and stretches 21 direct core links over limit (+1 reg each). Needs ft-station re-site in core_place + core-link re-pipelining under LATCHECK; asked COORD to OK the +1 regs. No new outlines for DIE-S81-92.
+- Watchers on intel2: adopt_watch_leafplan_a1.sh (pid 1647566), race_leafplan_r1.sh, race_leafplan_r2.sh.
+
+## STATE 2026-11-14 ~15:4x PST (supersedes the block below)
 - Branch claude/s81-leaf-plan-1114 ffbf22f844a3 pushed (core_place --slot-clear / --window-clear, multi-rect band rects; leaf_rules check/bands/--densify; side_band_sync; tests). READY (approved) posted to ROOT-MERGE-63.
 - Events (type lists ~/coord/lanes/handoff/S81-LEAF-PLAN-types/types_event_*.txt):
   - B4Lb = ev/B4L_b2.json 199aadf6bac4 / side_B4L_b2.json a0a4bb73671c (48 types). G0 = control (identical errors).
