@@ -28,6 +28,11 @@ def test_slot_and_face_rows():
     assert all(r[1] != "L1" for r in rows)
 
 
+def test_face_need_2b():
+    assert R.face_need(False, 16) == 43.2 and R.face_need(True, 16) == 86.4
+    assert R.face_need(False, 511) == 43.2 and R.face_need(False, 512) == 86.4 and R.face_need(False, 1104) == 86.4
+
+
 def test_densify_flag_wired():
     src = (Path(__file__).resolve().parent / "leaf_rules.py").read_text()
     assert "--densify" in src and "densify=False" in src and "a.densify" in src
