@@ -13,3 +13,8 @@ Counts (failed / not built): s81 66/5 (was 22/8), head 0/1, QC 0/4, KV 1/0 (kv3_
 s81 +44 failures = new Tcl class "global_place.tcl explicit FT site is not on a row/site" on col_h9/h10 types; owned by TL-COLH9R0P1..P6 (FINDING 06:01, shared cause #2), die owner DIE-S81-90. Also kv_leaf__t4 + serdes__t2 grt-timecap (21.6 ks cap, structural, serdes__t2 has HARD-S81-SERDES-1), leaf__t73 CTS flow error.
 slice_station__t6__cl0755c26e: KIT-OPS-3 did not answer ASK. Not relaunched by me: last real attempt 11-11 failed PLAN KIT_TOPOLOGY_BIND_STALE (regenerate canonical bind/kit), earlier classes STRUCTURAL routed-not-signed hold -45.9 ps; a plain relaunch would repeat it. Needs a bind regen = design lane.
 Relaunched: none. Next sweep ~10:10 PST.
+
+## Sweep 3 (10:10 PST)
+Failed / not built: s81 16/149, head 0/1, QC 0/4, KV 2/0. s81 not-built jumped because B3x2b plan swap created new col_h9/h10 identities; wave launched 94 in the last 60 min, so draining, not stranded. 14 of 16 s81 failed are DEDUP twins.
+Now owned: slice_station__t6__cl0755c26e (TYPE-SLICE-HOLD ASK to KIT-OPS-3 09:06), kv_leaf__t4 (TYPE-S81-GRTCAP, cap removed), kv3_io_ft_v1 (TYPE-KVIOFT), serdes__t2 (TL-SERDEST14).
+Unowned (no queue post): s81 ot_s81sl_leaf__t29 and qwen_kvsys kv3_hroot (both OT_HOLD_STRUCTURAL failfast), kv3_hgi_v3 (grt-overflow; KV-FTGRID 02:13 older than 90 min).
