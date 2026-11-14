@@ -59,6 +59,7 @@ def check(P,sidecar=None):
             n=uses.get((pn,name),0)
             if (pn,name) in opened:continue          # declared open START launch output (proved in _start_tree_check)
             if st is not None and name==START_PIN_OUT and n>=1:continue   # one launch pin, fanned out at the die top
+            if name=="cland_rstart_out" and n>=1:continue   # KV-SPLIT-1113: one relay tx fanned out at the die top to every relay of its origin (clock_landings top rst[origin]; clock_landing_verify._check_origins)
             if n!=1:errors.append(f"{pn}.{name}: infrastructure pin used {n} times (no absent-child ties)")
     obs=net.get("root_observer",{})
     if obs.get("part") not in P.parts or not all(obs.get(k) for k in ("module","fault_port","ready_port")):

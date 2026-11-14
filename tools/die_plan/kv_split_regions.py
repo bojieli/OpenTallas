@@ -316,14 +316,19 @@ def bind_native_measurement(raw, clock_table, cap_path, out, provisional=False):
     return table
 
 
-def compose(raw, table, source, out, oldside):
+def compose(raw, table, source, out, oldside, band_cache=None):
     import clock_landing_plan as CLP
     # Generated reset/START references belong to the previous origin/mask.
     base = copy.deepcopy(raw)
     cleared = {}
     keys = ("landing_reader_start", "landing_writer_start", "landing_raw_branches",
             "landing_local_resets", "landing_origin_rect_um")
+    native_origins = bool(table["count_aligned"].get("frame_clock_regions"))
     for tn, t in base["partition_types"].items():
+        if native_origins:
+            # This flag selects u_cland_rstart_rx physical groups and copies;
+            # a new ordinary count origin emits u_cland_origin instead.
+            t.pop("landing_relay_start_copy", None)
         ck = t.get("clock", {})
         cleared[tn] = [k for k in keys if k in ck]
         for k in keys:
@@ -332,9 +337,45 @@ def compose(raw, table, source, out, oldside):
     if not observer:
         raise ValueError("current actual monitor observer absent; refusing guessed observer")
     obs = {k: observer[k] for k in ("module", "instance_suffix", "fault_port", "ready_port")}
-    result = CLP.compose(base, table, plan_path=source, observer_part=observer["part"],
-                         observer=obs, monitor="reset", forward_source="clk",
-                         band_multi_rect=True)
+    original_band, original_multi = CLP._storage_band, CLP._storage_rects_staged
+    cache_stats = collections.Counter()
+    cache = json.loads(Path(band_cache).read_text())["partition_types"] if band_cache else {}
+    def cached(t, bus, width, used, phy=(), resets=()):
+        names = [t.get("module"), t.get("landing_base_type")]
+        candidates = [cache[n] for n in names if n in cache]
+        for ct in candidates:
+            b = ct.get("clock", {}).get("landing_contract", {}).get("bands", {}).get(bus)
+            if not b or int(b.get("width", -1)) != width or ct["outline_um"] != t["outline_um"]:
+                continue
+            rects = b.get("rects_um") or [b.get("rect_um")]
+            if any(not r for r in rects): continue
+            obs_ = CLP._band_obstacles(t, used, phy, resets)
+            px, py = CLP._bus_xy(t, bus)
+            if any(CLP._hop(r, px, py) > 405.-2.16+1e-6 or
+                   any(CLP._rect_overlap(r, o) for o in obs_) for r in rects):
+                continue
+            cache_stats["hits"] += 1
+            return copy.deepcopy(b)
+        cache_stats["misses"] += 1
+        return None
+    def band(t, bus, width, used, **kw):
+        b = cached(t, bus, width, used, kw.get("phy", ()), kw.get("resets", ()))
+        if b:
+            if b.get("rects_um"): raise ValueError("cached multi-rectangle band uses standard multi path")
+            return b
+        return original_band(t, bus, width, used, **kw)
+    def multi(t, bus, width, used, **kw):
+        return cached(t, bus, width, used, kw.get("phy", ()), kw.get("resets", ())) or original_multi(t, bus, width, used, **kw)
+    if cache: CLP._storage_band, CLP._storage_rects_staged = band, multi
+    try:
+        result = CLP.compose(base, table, plan_path=source, observer_part=observer["part"],
+                             observer=obs, monitor="reset", forward_source="clk",
+                             band_multi_rect=True)
+    finally:
+        CLP._storage_band, CLP._storage_rects_staged = original_band, original_multi
+    if cache:
+        dump(out / "band_cache_reuse.json", dict(source=band_cache, counts=dict(cache_stats),
+             guards="exact width/outline, all current macro/FT/PHY/reset/used-band obstacles and every402.84um pin-to-band corner", physical_qualified=False))
     if isinstance(result, tuple):
         plan, side = result[:2]
         extra = result[2:]
@@ -382,6 +423,7 @@ def main():
     ap.add_argument("--v-ps-mm", type=float, default=290.0)
     ap.add_argument("--compose", action="store_true")
     ap.add_argument("--measured-ca", help="released both-edge measured clock-START CA doc; independent partition origins")
+    ap.add_argument("--band-cache", help="private exact previously generated band geometry; recheck all current obstacles/reach")
     ap.add_argument("--prototype-ca", help="explicit unmeasured standard-origin body prototype; never measured qualification")
     a = ap.parse_args()
     if a.measured_ca and a.prototype_ca:
@@ -399,7 +441,7 @@ def main():
     if a.prototype_ca:
         dump(out / "prototype_scope.json", dict(prediction_only=True, physical_qualified=False, source="standard origin/START body prototype; timing/K must be replaced by measured clock START", source_ca=a.prototype_ca))
     if a.compose:
-        compose(raw, table, a.plan, out, side)
+        compose(raw, table, a.plan, out, side, band_cache=a.band_cache)
     status = json.loads((out / "status.json").read_text())
     print(json.dumps({k: status[k] for k in ("verdict", "physical_qualified", "root", "regions_after")}, sort_keys=True))
     return 0
