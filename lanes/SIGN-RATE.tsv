@@ -639,3 +639,4 @@ time	die	signed_types	signed_cores
 2026-11-14 05:3x	294	s81=62/64c+36/394t head=5/5c+19/26t qc=36/65c+3/127t kv=34/34c+4/56t hbm=91+4t	forced 05:35; denominators now = wave plans (COUNT-FRICTION-1)
 2026-11-14 06:3x	317	s81=62/64c+36/394t head=5/5c+19/26t qc=59/65c+3/127t kv=34/34c+4/56t hbm=91+4t	forced 06:35; +23 QC cores; last hour: 100 wave launches, 51 submits
 2026-11-14 07:3x	320	s81=62/64c+36/394t head=5/5c+19/26t qc=61/65c+4/127t kv=34/34c+4/56t hbm=91+4t	forced 07:34; +1 QC type +2 QC cores; since 06:35: ~137 wave launches, ~218 submit/route log lines; earlyoom kills 11 fleet-wide in 30 min (was 16+ on 2 hosts)
+2026-11-14 08:4x	321 fleet / 237 archived	s81=62/64c+36/394t head=5/5c+19/26t qc=62/65c+4/127t kv=34/34c+4/56t hbm=91+4t	forced 08:34; +1 QC core; archive gate: 53t+184c archived, 14t+65c pending archive, 66 DB-lost resubmitted
