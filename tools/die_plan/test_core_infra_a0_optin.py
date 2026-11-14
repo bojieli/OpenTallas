@@ -21,7 +21,7 @@ HERE = Path(__file__).resolve().parent
 # class fixes changed the default output on purpose: 2adc27c06 (M5 feedthrough ports snapped to the kit track grid,
 # plan_xy_um recorded) and a9498693c5a (typed clock FT ports get the 0.048x0.48 clock via-access pin shape).
 # FLOW-17 (10-31) re-based on main 400bc86b1d4, which carries both; (iv) now guards the default output from there.
-BASE_REF = "400bc86b1d4"
+BASE_REF = "f6680f1cd8"   # re-based 11-14 to the KW-FIX-24/LEAFOPT commit that intentionally changed the default cfg (clk_leaf_repeat opt-out)
 B = {"TT": 36.154, "FF": 27.549, "source": "tools/die_plan/clk_aocv_table_g021.json class B mu_stage_ps"}
 ROMLEAF = {"TT": {"min": 245.1, "max": 324.1}, "FF": {"min": 190.4, "max": 256.8}}
 LSL = {"TT": {"min": 234.9, "max": 289.0}, "FF": {"min": 182.1, "max": 221.3}}
@@ -242,9 +242,6 @@ def _outputs(mod, sl, kd):
     for p in sorted(kd.iterdir()):
         res["file:" + p.name] = p.read_bytes()
     return res
-
-
-@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: default (non-A0) icg_tree cfg is no longer byte-identical to base: core_infra now appends a KW-FIX-24/LEAFOPT comment/lines (f6680f1cd8) to the default cfg')
 
 
 def test_iv_default_outputs_byte_identical_to_base(tmp_path):
