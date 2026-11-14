@@ -531,6 +531,11 @@ def rearm_changes(state, cfg, die, d, rec):
     'hosts+h'].  Compared against the attempt's own spec.json (src_sha, src_overlay, hosts) and the tools digest seen at the
     first tick after the failure (the ledger)."""
     out = []
+    # WF-1 11-14: a unit killed from outside (earlyoom / signal 15 / ot-run NOT COMPLETED: class INFRA, reason names the kill) has no
+    # design content and the infra budget (infra_attempts) may already be spent by earlier kills: it is re-armed every time
+    if str(rec.get("class") or "") == "INFRA" and re.search(r"process terminated|interrupted \(signal|NOT COMPLETED|cancellation requested|"
+                                                             r"unit stopped from outside", str(rec.get("reason") or "")):
+        out.append("infra_kill")
     try:
         sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
     except (OSError, ValueError, KeyError, TypeError):
