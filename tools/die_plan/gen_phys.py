@@ -280,6 +280,23 @@ def _face_flop_ns_config(budgets, tn):
         return []
     return [f"export OT_FF_NS_ROW_STRIDE = {int(v.get('row_stride', 1))}",
             f"export OT_FF_NS_INSET_ROWS = {int(v.get('inset_rows', 0))}"]
+def _face_flop_ew(budgets, tn):
+    """QC-S28-VISFORM 11-12 opt-in (FW-EFACE-BIN): budgets.face_flop_ew_types {type, base or family prefix: {cpitch_sites,
+    row_stride}} -> the face_flops.tcl E/W band form (OT_FF_EW_CPITCH_SITES column pitch in sites, default 40;
+    OT_FF_EW_ROW_STRIDE s = column c takes rows with (row + c) mod s = 0, default 1).  [] = unchanged kit."""
+    per = budgets.get("face_flop_ew_types") or {}
+    # type, then its unsplit base, then the longest family prefix ("sle_fw" covers sle_fw_v1__cl.., sle_fw_v3)
+    v = per.get(tn, per.get(tn.split("__")[0])) if tn is not None else None
+    if v is None and tn is not None:
+        v = next((per[k] for k in sorted(per, key=len, reverse=True) if tn.startswith(k + "_")), None)
+    if not v:
+        return []
+    out = []
+    if int(v.get("cpitch_sites") or 0) > 0:
+        out.append(f"export OT_FF_EW_CPITCH_SITES = {int(v['cpitch_sites'])}")
+    if int(v.get("row_stride") or 0) > 1:
+        out.append(f"export OT_FF_EW_ROW_STRIDE = {int(v['row_stride'])}")
+    return out
 
 
 def _cland_pinslot_dense(budgets, tn):
@@ -4973,6 +4990,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export OT_CLAND_STRIP_ROWS = {_cland_strip_rows(P.budgets, tn)}"] if _cland_strip_rows(P.budgets, tn) else []),
            # LAND-RING-2 11-12 opt-in budgets.cland_strip_density(_types): strip rows from each ring's own flop density
            *([f"export OT_CLAND_STRIP_DENS = {_cland_strip_density(P.budgets, tn):g}"] if _cland_strip_density(P.budgets, tn) else []),
+           # QC-S28-VISFORM 11-12 opt-in budgets.face_flop_ew_types: E/W face pin-register band pitch / row spread
+           *_face_flop_ew(P.budgets, tn),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell

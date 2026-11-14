@@ -1,0 +1,635 @@
+== ERR: base 265 cand 2 new 2 gone 265
+  NEW x1 [schema] type sle_su_l1__cl5ea486db: core chain flt_su_c_i u_lane6: 2 bit L routes enter hard macros ['u_lane5'] by > 0.5 um (station sites would be moved off the planned hop)
+  NEW x1 [schema] type sle_su_l1__clc6d66f5b: core chain flt_su_c_i u_lane6: 2 bit L routes enter hard macros ['u_lane5'] by > 0.5 um (station sites would be moved off the planned hop)
+  GONE x1 [geometry] type cbn_q00__cl622f65d2 slot rsf: 515 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro cl_rsf_i)
+  GONE x1 [geometry] type cbn_q00__cldbcda913 slot rsf: 515 actual-bit station cells/sites intersect physical macros (stage 1, bit 0, macro cl_rsf_i)
+  GONE x1 [geometry] type slw_su_l1__cla2a78701 slot cws0: 63 actual-bit station cells/sites intersect physical macros (stage 4, bit 172, macro cl_rsf_i)
+  GONE x1 [geometry] type slw_su_l1__cla2a78701 slot rsf: 63 actual-bit station cells/sites intersect physical macros (stage 1, bit 172, macro cl_rsf_i)
+  GONE x1 [geometry] type slw_su_l1__clcc9d0155 slot cws0: 63 actual-bit station cells/sites intersect physical macros (stage 4, bit 172, macro cl_rsf_i)
+  GONE x1 [geometry] type slw_su_l1__clcc9d0155 slot rsf: 63 actual-bit station cells/sites intersect physical macros (stage 1, bit 172, macro cl_rsf_i)
+  GONE x1 [latency] lane sl_E0_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E0_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E0_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E0_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E0_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_E0_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E0_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_E0_su_l0__x_su_l0_stm: table says 13 cycles, plan gives 17
+  GONE x1 [latency] lane sl_E0_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E0_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E0_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E0_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_E0_su_l1__x_su_l1_stm: table says 11 cycles, plan gives 15
+  GONE x1 [latency] lane sl_E0_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E0_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E1_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E1_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E1_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E1_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E1_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_E1_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E1_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_E1_su_l0__x_su_l0_stm: table says 13 cycles, plan gives 17
+  GONE x1 [latency] lane sl_E1_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E1_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E1_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E1_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_E1_su_l1__x_su_l1_stm: table says 11 cycles, plan gives 15
+  GONE x1 [latency] lane sl_E1_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E1_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E2_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E2_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E2_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E2_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E2_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_E2_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E2_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_E2_su_l0__x_su_l0_stm: table says 13 cycles, plan gives 17
+  GONE x1 [latency] lane sl_E2_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E2_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E2_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E2_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_E2_su_l1__x_su_l1_stm: table says 11 cycles, plan gives 15
+  GONE x1 [latency] lane sl_E2_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E2_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E3_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E3_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E3_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E3_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E3_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_E3_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E3_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_E3_su_l0__x_su_l0_stm: table says 13 cycles, plan gives 17
+  GONE x1 [latency] lane sl_E3_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E3_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E3_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E3_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_E3_su_l1__x_su_l1_stm: table says 11 cycles, plan gives 15
+  GONE x1 [latency] lane sl_E3_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E3_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E4_fe__cmd_wo_cmd_ei: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_E4_fe__dr_wo_dr_ei: table says 4 cycles, plan gives 5
+  GONE x1 [latency] lane sl_E4_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E4_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E4_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E4_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E4_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_E4_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E4_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_E4_su_l0__x_su_l0_stm: table says 13 cycles, plan gives 17
+  GONE x1 [latency] lane sl_E4_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E4_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E4_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E4_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_E4_su_l1__x_su_l1_stm: table says 11 cycles, plan gives 15
+  GONE x1 [latency] lane sl_E4_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E4_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_ctl__x_ctl_fw: table says 12 cycles, plan gives 14
+  GONE x1 [latency] lane sl_E5_ctl__x_ctl_fw_p1: table says 11 cycles, plan gives 12
+  GONE x1 [latency] lane sl_E5_fw__ag_eo_ag_wi: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_fw__ard_eo_ard_wi: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_fw__arl_eo_arl_wi: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_fw__arm_eo_arm_wi: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_fw__art_eo_art_wi: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_fw__arv_eo_arv_wi: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_fw__dd_eo_dd_wi: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_fw__flte: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_fw__sc_eo_sc_wi: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_fw__st_eo_st_wi: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_fw__x_fw_ctl: table says 9 cycles, plan gives 11
+  GONE x1 [latency] lane sl_E5_fw__x_fw_ctl_p1: table says 14 cycles, plan gives 16
+  GONE x1 [latency] lane sl_E5_fw__x_fw_ctl_p2: table says 20 cycles, plan gives 22
+  GONE x1 [latency] lane sl_E5_fw__x_fw_fe: table says 10 cycles, plan gives 12
+  GONE x1 [latency] lane sl_E5_fw__x_fw_fe_p1: table says 10 cycles, plan gives 12
+  GONE x1 [latency] lane sl_E5_fw__x_fw_fe_p2: table says 11 cycles, plan gives 13
+  GONE x1 [latency] lane sl_E5_fw__x_fw_sc: table says 7 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_fw__x_fw_stm: table says 2 cycles, plan gives 4
+  GONE x1 [latency] lane sl_E5_fw__x_fw_stm_p1: table says 2 cycles, plan gives 4
+  GONE x1 [latency] lane sl_E5_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_E5_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E5_su_l0__x_su_l0_sc: table says 9 cycles, plan gives 12
+  GONE x1 [latency] lane sl_E5_su_l0__x_su_l0_stm: table says 13 cycles, plan gives 17
+  GONE x1 [latency] lane sl_E5_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_E5_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_E5_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_E5_su_l1__x_su_l1_stm: table says 11 cycles, plan gives 15
+  GONE x1 [latency] lane sl_E5_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_E5_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W0_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W0_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W0_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W0_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W0_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W0_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W0_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W0_su_l0__x_su_l0_stm: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W0_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W0_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W0_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W0_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W0_su_l1__x_su_l1_stm: table says 10 cycles, plan gives 14
+  GONE x1 [latency] lane sl_W0_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W0_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W1_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W1_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W1_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W1_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W1_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W1_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W1_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W1_su_l0__x_su_l0_stm: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W1_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W1_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W1_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W1_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W1_su_l1__x_su_l1_stm: table says 10 cycles, plan gives 14
+  GONE x1 [latency] lane sl_W1_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W1_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_ctl__b_hw_ctl_hc0: table says 9 cycles, plan gives 11
+  GONE x1 [latency] lane sl_W2_ctl__b_hw_ctl_hc1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_ctl__b_hw_ctl_hc2: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_ctl__b_hw_ctl_hc3: table says 8 cycles, plan gives 10
+  GONE x1 [latency] lane sl_W2_ctl__b_tw_data_ctl_st_a: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W2_ctl__x_ctl_fw: table says 10 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W2_ctl__x_ctl_st_b: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W2_ctl__x_ctl_su_c_p1: table says 12 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W2_fw__x_fw_ctl_p2: table says 21 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W2_hc0__x_hc0_ctl: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W2_hc1__x_hc1_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_hc2__x_hc2_ctl: table says 5 cycles, plan gives 9
+  GONE x1 [latency] lane sl_W2_hc3__x_hc3_ctl: table says 8 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W2_st_b__x_st_b_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W2_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W2_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W2_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W2_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W2_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W2_su_l0__x_su_l0_stm: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W2_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W2_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W2_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W2_su_l1__x_su_l1_stm: table says 10 cycles, plan gives 14
+  GONE x1 [latency] lane sl_W2_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W2_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_ctl__b_hw_ctl_hc0: table says 9 cycles, plan gives 11
+  GONE x1 [latency] lane sl_W3_ctl__b_hw_ctl_hc1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_ctl__b_hw_ctl_hc2: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_ctl__b_hw_ctl_hc3: table says 8 cycles, plan gives 10
+  GONE x1 [latency] lane sl_W3_ctl__b_tw_data_ctl_st_a: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W3_ctl__x_ctl_fw: table says 10 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W3_ctl__x_ctl_st_b: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W3_ctl__x_ctl_su_c_p1: table says 12 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W3_fw__x_fw_ctl_p2: table says 21 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W3_hc0__x_hc0_ctl: table says 9 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W3_hc1__x_hc1_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_hc2__x_hc2_ctl: table says 5 cycles, plan gives 9
+  GONE x1 [latency] lane sl_W3_hc3__x_hc3_ctl: table says 8 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W3_st_b__x_st_b_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W3_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W3_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W3_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W3_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W3_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W3_su_l0__x_su_l0_stm: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W3_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W3_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W3_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W3_su_l1__x_su_l1_stm: table says 10 cycles, plan gives 14
+  GONE x1 [latency] lane sl_W3_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W3_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_ctl__b_hw_ctl_hc0: table says 9 cycles, plan gives 11
+  GONE x1 [latency] lane sl_W4_ctl__b_hw_ctl_hc1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_ctl__b_hw_ctl_hc2: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_ctl__b_hw_ctl_hc3: table says 8 cycles, plan gives 10
+  GONE x1 [latency] lane sl_W4_ctl__b_tw_data_ctl_st_a: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W4_ctl__x_ctl_fw: table says 10 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W4_ctl__x_ctl_st_b: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W4_ctl__x_ctl_su_c_p1: table says 12 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W4_fw__x_fw_ctl_p2: table says 21 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W4_hc0__x_hc0_ctl: table says 9 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W4_hc1__x_hc1_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_hc2__x_hc2_ctl: table says 5 cycles, plan gives 9
+  GONE x1 [latency] lane sl_W4_hc3__x_hc3_ctl: table says 8 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W4_st_b__x_st_b_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W4_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W4_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W4_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W4_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W4_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W4_su_l0__x_su_l0_stm: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W4_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W4_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W4_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W4_su_l1__x_su_l1_stm: table says 10 cycles, plan gives 14
+  GONE x1 [latency] lane sl_W4_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W4_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_ctl__b_hw_ctl_hc0: table says 9 cycles, plan gives 11
+  GONE x1 [latency] lane sl_W5_ctl__b_hw_ctl_hc1: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_ctl__b_hw_ctl_hc2: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_ctl__b_hw_ctl_hc3: table says 8 cycles, plan gives 10
+  GONE x1 [latency] lane sl_W5_ctl__b_tw_data_ctl_st_a: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W5_ctl__x_ctl_fw: table says 11 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W5_ctl__x_ctl_st_b: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W5_ctl__x_ctl_su_c_p1: table says 12 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W5_fw__x_fw_ctl_p2: table says 21 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W5_hc0__x_hc0_ctl: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W5_hc1__x_hc1_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_hc2__x_hc2_ctl: table says 5 cycles, plan gives 9
+  GONE x1 [latency] lane sl_W5_hc3__x_hc3_ctl: table says 8 cycles, plan gives 12
+  GONE x1 [latency] lane sl_W5_st_b__x_st_b_ctl: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_su_c__flt: table says 4 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_su_c__x_su_c_su_l0: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W5_su_c__x_su_c_su_l0_p1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W5_su_c__x_su_c_su_l1: table says 4 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W5_su_c__x_su_c_su_l1_p1: table says 4 cycles, plan gives 6
+  GONE x1 [latency] lane sl_W5_su_l0__x_su_l0_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W5_su_l0__x_su_l0_sc: table says 10 cycles, plan gives 13
+  GONE x1 [latency] lane sl_W5_su_l0__x_su_l0_stm: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W5_su_l0__x_su_l0_su_c: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_su_l0__x_su_l0_su_c_p1: table says 5 cycles, plan gives 8
+  GONE x1 [latency] lane sl_W5_su_l1__x_su_l1_ctl: table says 19 cycles, plan gives 23
+  GONE x1 [latency] lane sl_W5_su_l1__x_su_l1_sc: table says 12 cycles, plan gives 16
+  GONE x1 [latency] lane sl_W5_su_l1__x_su_l1_stm: table says 10 cycles, plan gives 14
+  GONE x1 [latency] lane sl_W5_su_l1__x_su_l1_su_c: table says 5 cycles, plan gives 7
+  GONE x1 [latency] lane sl_W5_su_l1__x_su_l1_su_c_p1: table says 5 cycles, plan gives 8
+== WARN: base 366 cand 0 new 0 gone 366
+  GONE x1 [census] census[0] group cl_E0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_E5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group cl_W5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group coll spans 10 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_E0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_E1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_E2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_E3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_E4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_E5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_W0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_W1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_W2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_W3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_W4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [census] census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)
+  GONE x1 [complete] [G0C] [cells] type sle_st_b_v1__pv0e7b1dcc: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)
+  GONE x1 [complete] [G0C] [cells] type sle_st_b_v1__pvc5a85fd4: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)
+  GONE x1 [complete] [G0C] [cells] type slw_st_b_v2__pva66d0f22: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)
+  GONE x1 [complete] [G0C] [cells] type slw_st_b_v2__pvc2ec5bfb: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)
+  GONE x1 [complete] [G0C] [internal_station] type sle_su_l1__cl5ea486db: internal_stations bus:flt_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type sle_su_l1__cl5ea486db: internal_stations bus:x_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type sle_su_l1__cl5ea486db: internal_stations bus:x_su_c_p1_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type sle_su_l1__clc6d66f5b: internal_stations bus:flt_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type sle_su_l1__clc6d66f5b: internal_stations bus:x_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type sle_su_l1__clc6d66f5b: internal_stations bus:x_su_c_p1_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type slw_su_l1__cla2a78701: internal_stations bus:flt_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type slw_su_l1__cla2a78701: internal_stations bus:x_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type slw_su_l1__cla2a78701: internal_stations bus:x_su_c_p1_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type slw_su_l1__clcc9d0155: internal_stations bus:flt_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type slw_su_l1__clcc9d0155: internal_stations bus:x_su_c_i: a hop > 405 um
+  GONE x1 [complete] [G0C] [internal_station] type slw_su_l1__clcc9d0155: internal_stations bus:x_su_c_p1_i: a hop > 405 um
+  GONE x1 [complete] missing-field counts: cells 4, internal_station 12
+  GONE x1 [core_faces] [G0C] type cbf_q00__cl1b5a6458 core u_t11 port n_b: 514 pins on face E face away from its partner(s) u_t01.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type cbf_q00__cl870de686 core u_t11 port n_b: 514 pins on face E face away from its partner(s) u_t01.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type cbf_q00_s2 core u_t11 port n_a: 514 pins on face E face away from its partner(s) u_t10.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type cbf_q11 core u_t23 port n_y: 514 pins on face E face away from its partner(s) face W (y_o23): mean cos -0.45, 514 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type cbn_q00__cl622f65d2 core u_t11 port n_b: 514 pins on face E face away from its partner(s) u_t01.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type cbn_q00__cld7bf7197 core u_t11 port n_b: 514 pins on face E face away from its partner(s) u_t01.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type cbn_q00__cldbcda913 core u_t11 port n_b: 514 pins on face E face away from its partner(s) u_t01.n_y: mean cos -1.00, 514 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type cbn_q11__cl49ae4555 core u_t23 port n_y: 514 pins on face E face away from its partner(s) face W (y_o23): mean cos -0.46, 514 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type cbn_q11__cl5cc92dfe core u_t23 port n_y: 514 pins on face E face away from its partner(s) face W (y_o23): mean cos -0.46, 514 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type cbx_q10__cl89936551 core u_t21 port n_y: 514 pins on face E face away from its partner(s) face N (y_o21): mean cos -0.13, 514 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type cbx_q10__cl89936551 core u_t30 port tap: 508 pins on face E face away from its partner(s) face N (bc_o21), face N (bc_o31), face N (y_o21): mean cos -0.14, 508 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type cbx_q10__cl94a12200 core u_t21 port n_y: 514 pins on face E face away from its partner(s) face N (y_o21): mean cos -0.13, 514 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type cbx_q10__cl94a12200 core u_t30 port tap: 508 pins on face E face away from its partner(s) face N (bc_o21), face N (bc_o31), face N (y_o21): mean cos -0.14, 508 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type coll_core core u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m port r_addr_in: 5 pins on face W face away from its partner(s) u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.r_addr_in: mean cos -1.00, 5 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type coll_core core u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m port rd_out: 546 pins on face W face away from its partner(s) u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.rd_out: mean cos -1.00, 546 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type coll_core core u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m port w_addr_in: 5 pins on face W face away from its partner(s) u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.w_addr_in: mean cos -1.00, 5 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type coll_core core u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m port w_ce_in: 1 pins on face W face away from its partner(s) u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m.w_ce_in: mean cos -1.00, 1 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type coll_core core u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m port r_addr_in: 5 pins on face W face away from its partner(s) u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m.r_addr_in: mean cos -1.00, 5 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type coll_core: 12 core ports face away from their partners (7 more not listed)
+  GONE x1 [core_faces] [G0C] type coll_s core u_bound.u_g_face_3_u_face.u_rx.u_mem port r_ce_in: 1 pins on face W face away from its partner(s) face N (fltv_o): mean cos -0.41, 1 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type coll_s core u_bound.u_g_face_3_u_face.u_tx.u_mem port w_addr_in: 6 pins on face W face away from its partner(s) u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in: mean cos -0.55, 6 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type coll_s core u_bound.u_g_face_3_u_face.u_tx.u_mem port w_ce_in: 1 pins on face W face away from its partner(s) u_bound.u_g_face_4_u_face.u_tx.u_mem.w_ce_in: mean cos -0.55, 1 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type coll_s core u_bound.u_g_face_4_u_face.u_rx.u_mem port r_ce_in: 1 pins on face W face away from its partner(s) face N (fltv_o): mean cos -0.16, 1 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type glue core u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram port r_addr_in: 6 pins on face W face away from its partner(s) u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.r_addr_in, u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.r_addr_in, u_bou
+  GONE x1 [core_faces] [G0C] type glue core u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram port rd_out: 137 pins on face W face away from its partner(s) u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.rd_out, u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.rd_out, u_bound.u_d2
+  GONE x1 [core_faces] [G0C] type glue core u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram port w_addr_in: 6 pins on face W face away from its partner(s) u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram.w_addr_in, u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram.w_addr_in, u_bou
+  GONE x1 [core_faces] [G0C] type glue core u_bound.u_embed_prov.store.codes port r_ce_in: 1 pins on face W face away from its partner(s) face N (embed_prov__embed_code_q): mean cos -0.21, 1 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type glue core u_bound.u_embed_prov.store.codes port rd_out: 512 pins on face W face away from its partner(s) face N (embed_prov__embed_code_q): mean cos -0.21, 512 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type glue: 7 core ports face away from their partners (2 more not listed)
+  GONE x1 [core_faces] [G0C] type sle_stm_v1__cl27746664 core u_bound.u_core.u_tload.u_ld.m1 port addr_in: 12 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in, u_bound.u_core.u_tload.u_ld.m3.addr_in: mean cos -0.20, 12 pins on the far side (re-pin 
+  GONE x1 [core_faces] [G0C] type sle_stm_v1__cl27746664 core u_bound.u_core.u_tload.u_ld.m1 port ce_in: 1 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in, u_bound.u_core.u_tload.u_ld.m3.ce_in: mean cos -0.20, 1 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type sle_stm_v1__clbe630b9c core u_bound.u_core.u_tload.u_ld.m1 port addr_in: 12 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in, u_bound.u_core.u_tload.u_ld.m3.addr_in: mean cos -0.20, 12 pins on the far side (re-pin 
+  GONE x1 [core_faces] [G0C] type sle_stm_v1__clbe630b9c core u_bound.u_core.u_tload.u_ld.m1 port ce_in: 1 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in, u_bound.u_core.u_tload.u_ld.m3.ce_in: mean cos -0.20, 1 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type sle_su_c core u_suvm_u_vm8q_u_ch port cr_addr: 192 pins on face W face away from its partner(s) u_suvm_u_vm8q_u_cl.cr_addr: mean cos -0.79, 192 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type sle_su_c core u_suvm_u_vm8q_u_ch port cr_re: 8 pins on face W face away from its partner(s) u_suvm_u_vm8q_u_cl.cr_re: mean cos -0.79, 8 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type sle_su_c core u_suvm_u_vm8q_u_cl port tw_addr: 24 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_ch.tw_addr: mean cos -0.61, 24 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type sle_su_c core u_suvm_u_vm8q_u_cl port tw_d: 512 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_bt.tw_data, u_suvm_u_vm8q_u_pg.tw_d0: mean cos -0.40, 512 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type sle_su_c core u_suvm_u_vm8q_u_cl port tw_kind: 2 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_ch.tw_kind: mean cos -0.61, 2 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type sle_su_c: 11 core ports face away from their partners (6 more not listed)
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl2086fa2c core u_bound.u_core.u_tload.u_ld.m1 port addr_in: 12 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in, u_bound.u_core.u_tload.u_ld.m3.addr_in: mean cos -0.79, 12 pins on the far s
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl2086fa2c core u_bound.u_core.u_tload.u_ld.m1 port ce_in: 1 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in, u_bound.u_core.u_tload.u_ld.m3.ce_in: mean cos -0.79, 1 pins on the far side (re-pi
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl2086fa2c core u_bound.u_core.u_tload.u_ld.m3 port addr_in: 12 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m1.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in: mean cos -0.38, 12 pins on the far s
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl2086fa2c core u_bound.u_core.u_tload.u_ld.m3 port ce_in: 1 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m1.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in: mean cos -0.38, 1 pins on the far side (re-pi
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl389df4e9 core u_bound.u_core.u_tload.u_ld.m1 port addr_in: 12 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in, u_bound.u_core.u_tload.u_ld.m3.addr_in: mean cos -0.79, 12 pins on the far s
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl389df4e9 core u_bound.u_core.u_tload.u_ld.m1 port ce_in: 1 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in, u_bound.u_core.u_tload.u_ld.m3.ce_in: mean cos -0.79, 1 pins on the far side (re-pi
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl389df4e9 core u_bound.u_core.u_tload.u_ld.m3 port addr_in: 12 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m1.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in: mean cos -0.38, 12 pins on the far s
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cl05fc43f7__cl389df4e9 core u_bound.u_core.u_tload.u_ld.m3 port ce_in: 1 pins on face W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m1.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in: mean cos -0.38, 1 pins on the far side (re-pi
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cle34a73c3 core u_bound.u_core.u_tload.u_ld.m1 port addr_in: 12 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in, u_bound.u_core.u_tload.u_ld.m3.addr_in: mean cos -0.80, 12 pins on the far side (re-pin 
+  GONE x1 [core_faces] [G0C] type slw_stm_v1__cle34a73c3 core u_bound.u_core.u_tload.u_ld.m1 port ce_in: 1 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in, u_bound.u_core.u_tload.u_ld.m3.ce_in: mean cos -0.80, 1 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl19bb38ef core u_suvm_u_vm8q_u_ch port cr_addr: 192 pins on face W face away from its partner(s) u_suvm_u_vm8q_u_cl.cr_addr: mean cos -0.79, 192 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl19bb38ef core u_suvm_u_vm8q_u_ch port cr_re: 8 pins on face W face away from its partner(s) u_suvm_u_vm8q_u_cl.cr_re: mean cos -0.79, 8 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl19bb38ef core u_suvm_u_vm8q_u_cl port tw_addr: 24 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_ch.tw_addr: mean cos -0.61, 24 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl19bb38ef core u_suvm_u_vm8q_u_cl port tw_d: 512 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_bt.tw_data, u_suvm_u_vm8q_u_pg.tw_d0: mean cos -0.40, 512 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl19bb38ef core u_suvm_u_vm8q_u_cl port tw_kind: 2 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_ch.tw_kind: mean cos -0.61, 2 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl19bb38ef: 11 core ports face away from their partners (6 more not listed)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl92142dac core u_suvm_u_vm8q_u_ch port cr_addr: 192 pins on face W face away from its partner(s) u_suvm_u_vm8q_u_cl.cr_addr: mean cos -0.79, 192 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl92142dac core u_suvm_u_vm8q_u_ch port cr_re: 8 pins on face W face away from its partner(s) u_suvm_u_vm8q_u_cl.cr_re: mean cos -0.79, 8 pins on the far side (re-pin to face E)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl92142dac core u_suvm_u_vm8q_u_cl port tw_addr: 24 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_ch.tw_addr: mean cos -0.61, 24 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl92142dac core u_suvm_u_vm8q_u_cl port tw_d: 512 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_bt.tw_data, u_suvm_u_vm8q_u_pg.tw_d1: mean cos -0.40, 512 pins on the far side (re-pin to face N)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl92142dac core u_suvm_u_vm8q_u_cl port tw_kind: 2 pins on face S face away from its partner(s) u_suvm_u_vm8q_u_ch.tw_kind: mean cos -0.61, 2 pins on the far side (re-pin to face W)
+  GONE x1 [core_faces] [G0C] type slw_su_c__cl92142dac: 11 core ports face away from their partners (6 more not listed)
+  GONE x1 [core_faces] type cbn_q00__cl622f65d2: 5/9 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type cbn_q00__cldbcda913: 5/9 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type coll_core core u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m port wd_in: 546 pins on face E/W face away from its partner(s) u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m.wd_in: mean cos -0.02, 279 pins on the far side (re-pin to face W) [about perpend
+  GONE x1 [core_faces] type coll_core core u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m port wd_in: 546 pins on face E/W face away from its partner(s) u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m.wd_in: mean cos -0.02, 279 pins on the far side (re-pin to face W) [about perpend
+  GONE x1 [core_faces] type coll_core: 8/29 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type coll_n: 6/6 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_a_v1__cl67389ecd: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_a_v1__cl989804f6__cl18eece69: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_a_v1__cl989804f6__cled3c1d7b: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_a_v2: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_b_v1__pv0e7b1dcc: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_b_v1__pvc5a85fd4: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_b_v2__cl14c98df5: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_st_b_v2__clfde1249e: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_stm_v2__cl55be2264 core u_bound.u_core.u_tload.u_ld.m1 port addr_in: 12 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.addr_in, u_bound.u_core.u_tload.u_ld.m2.addr_in, u_bound.u_core.u_tload.u_ld.m3.addr_in: mean cos -0.09, 12 pins on the far side (re-pin to fac
+  GONE x1 [core_faces] type sle_stm_v2__cl55be2264 core u_bound.u_core.u_tload.u_ld.m1 port ce_in: 1 pins on face E face away from its partner(s) u_bound.u_core.u_tload.u_ld.m0.ce_in, u_bound.u_core.u_tload.u_ld.m2.ce_in, u_bound.u_core.u_tload.u_ld.m3.ce_in: mean cos -0.09, 1 pins on the far side (re-pin to face W) [abou
+  GONE x1 [core_faces] type sle_stm_v2__cl7b3062fa: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_su_l0__cl086d85ba: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_su_l0__cl7a55c676: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_su_l1__cl5ea486db: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type sle_su_l1__clc6d66f5b: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_a_v1__clb036e152: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_a_v1__clfc5867a6__pvf82a6c28: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_a_v2__cl9f076a5c: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_a_v2__clf4365a62: 24/24 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_b_v1__cl6357f1cc__pv6ace3e48: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_b_v1__cl6357f1cc__pvffd43fdc: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_b_v1__cle6023ec2: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_b_v2__pva66d0f22: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_st_b_v2__pvc2ec5bfb: 20/20 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_stm_v1__cl05fc43f7__cl2086fa2c core u_bound.u_core.u_tload.u_ld.m0 port rd_out: 266 pins on face E/W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m1.rd_out: mean cos -0.04, 140 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+  GONE x1 [core_faces] type slw_stm_v1__cl05fc43f7__cl389df4e9 core u_bound.u_core.u_tload.u_ld.m0 port rd_out: 266 pins on face E/W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m1.rd_out: mean cos -0.04, 140 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+  GONE x1 [core_faces] type slw_stm_v1__cle34a73c3 core u_bound.u_core.u_tload.u_ld.m0 port rd_out: 266 pins on face E/W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m1.rd_out: mean cos -0.04, 140 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+  GONE x1 [core_faces] type slw_stm_v2__cl1ca9c415 core u_bound.u_core.u_tload.u_ld.m0 port rd_out: 266 pins on face E/W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m1.rd_out: mean cos -0.05, 140 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+  GONE x1 [core_faces] type slw_stm_v2__cl9beb65e6 core u_bound.u_core.u_tload.u_ld.m0 port rd_out: 266 pins on face E/W face away from its partner(s) u_bound.u_core.u_tload.u_ld.m1.rd_out: mean cos -0.05, 140 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+  GONE x1 [core_faces] type slw_stm_v3: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_su_c__cl19bb38ef core u_suvm_u_su8 port pd1: 768 pins on face N face away from its partner(s) face E (x_su_l0_o), face E (x_su_l0_p1_o), face W (x_su_l1_o): mean cos -0.01, 768 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+  GONE x1 [core_faces] type slw_su_c__cl92142dac core u_suvm_u_su8 port pd1: 768 pins on face N face away from its partner(s) face E (x_su_l0_o), face E (x_su_l0_p1_o), face W (x_su_l1_o): mean cos -0.01, 768 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+  GONE x1 [core_faces] type slw_su_l0__cl1a1c1f8f: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_su_l0__cl1e5219ea: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_su_l0__cl76fb247e: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_su_l1__cla2a78701: 10/10 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type slw_su_l1__clcc9d0155: 10/10 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [core_faces] type tt_ctlm: 15/15 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+  GONE x1 [geometry] type cbx_q10__cl89936551 slot a22: crossing ~1884 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type cbx_q10__cl94a12200 slot a22: crossing ~1884 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type coll_ftc slot out_data_rd_wi: crossing ~912 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type coll_ftc slot out_err_re_wi: crossing ~912 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type coll_ftm slot cmd_free_io_cmd_free: crossing ~1128 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type coll_ftm slot fault_io_fault: crossing ~1128 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type coll_ftm slot fltc: crossing ~1128 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type coll_ftm slot fltvc: crossing ~1128 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_ctl__cl372cea1c slot x_hc1_st_b: crossing ~1283 um > 3 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_ctl__cl503337ff slot x_hc1_st_b: crossing ~1283 um > 3 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_ctl__cl67434795 slot x_hc1_st_b: crossing ~1283 um > 3 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_ctl__cla4f6f12f slot x_hc1_st_b: crossing ~1283 um > 3 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_fe_v1__cl1cbb7497 slot x_fw_st_b: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_fe_v1__cl8210183c slot x_fw_st_b: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc0__cl05696ed1 slot x_hc1_st_a: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc0__cl929603c0__cl38badc56 slot x_hc1_st_a: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc0__cl929603c0__cl4baa7c9c slot x_hc1_st_a: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc1__cl22c1ff36 slot x_hc0_ctl: crossing ~976 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc1__cl7d360508 slot x_hc0_ctl: crossing ~976 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc2__cl9c4c4509__cl3edce1b8 slot x_hc3_ctl: crossing ~976 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc2__cl9c4c4509__clf60c5152 slot x_hc3_ctl: crossing ~976 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_hc2__clcc5e3e61 slot x_hc3_ctl: crossing ~976 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_st_b_v1__pv0e7b1dcc slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_st_b_v1__pvc5a85fd4 slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_st_b_v2__cl14c98df5 slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_st_b_v2__clfde1249e slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_su_c slot x_su_l1_stm: crossing ~1283 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_su_l0__cl086d85ba slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_su_l0__cl7a55c676 slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_su_l1__cl5ea486db slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type sle_su_l1__clc6d66f5b slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fe_v1__cl95cd1d0c slot x_fw_st_b: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fe_v1__clfe325744__cl08d14f0d slot x_fw_st_b: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fe_v1__clfe325744__cldb4efe33 slot x_fw_st_b: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fw_v1__cl51d45468 slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fw_v1__clf51c11d8__cl592e3d37 slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fw_v1__clf51c11d8__clc7ddab13 slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fw_v2__cl8537f156 slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fw_v2__cl8f84514c slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_fw_v3 slot x_st_a_fe: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc0__cl1bc59e1c slot x_hc1_st_a: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc0__cl4f54b7a3 slot x_hc1_st_a: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc1__cl3449ea95 slot x_hc0_ctl: crossing ~976 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc1__cl68f9248e__cl144ee7b3 slot x_hc0_ctl: crossing ~976 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc1__cl68f9248e__cle683a076 slot x_hc0_ctl: crossing ~976 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc2__cl6bcaba89 slot x_hc3_ctl: crossing ~976 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc2__cla3497502__cl16607c7a slot x_hc3_ctl: crossing ~976 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_hc2__cla3497502__cldc737267 slot x_hc3_ctl: crossing ~976 um > 1 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_st_b_v1__cl6357f1cc__pv6ace3e48 slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_st_b_v1__cl6357f1cc__pvffd43fdc slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_st_b_v1__cle6023ec2 slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_st_b_v2__pva66d0f22 slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_st_b_v2__pvc2ec5bfb slot x_fw_ctl_p2: crossing ~981 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_su_c__cl19bb38ef slot x_su_l1_stm: crossing ~1283 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [geometry] type slw_su_c__cl92142dac slot x_su_l1_stm: crossing ~1283 um > 2 station(s) x reach 405 (see hops)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cl622f65d2 core cl_bc_i00: origin [436.32, 17.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cl622f65d2 core cl_bc_i10: origin [643.68, 17.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cl622f65d2 core cl_na_i00: origin [17.28, 2466.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cl622f65d2 core cl_nb_i00: origin [1129.68, 2466.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cl622f65d2 core cl_rsf_i: origin [187.92, 2466.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cldbcda913 core cl_bc_i00: origin [436.32, 17.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cldbcda913 core cl_bc_i10: origin [643.68, 17.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cldbcda913 core cl_na_i00: origin [17.28, 2466.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cldbcda913 core cl_nb_i00: origin [1129.68, 2466.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type cbn_q00__cldbcda913 core cl_rsf_i: origin [187.92, 2466.72] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type coll_core core g_pf_3: origin [8.64, 1319.04] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type coll_core core g_xf_1: origin [203.04, 1105.92] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type coll_core core g_xf_3: origin [406.08, 1343.52] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__cla2a78701 core cl_cws0_i: origin [439.776, 1280.88] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__cla2a78701 core cl_flt_su_c_i: origin [581.04, 17.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__cla2a78701 core cl_rsn_i: origin [4.32, 25.92] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__cla2a78701 core cl_x_su_c_i: origin [527.04, 179.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__cla2a78701 core cl_x_su_c_p1_i: origin [539.136, 400.896] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__clcc9d0155 core cl_cws0_i: origin [439.776, 1280.88] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__clcc9d0155 core cl_flt_su_c_i: origin [581.04, 17.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__clcc9d0155 core cl_rsn_i: origin [4.32, 25.92] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__clcc9d0155 core cl_x_su_c_i: origin [527.04, 179.28] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [hard_cores] [G0C] type slw_su_l1__clcc9d0155 core cl_x_su_c_p1_i: origin [539.136, 400.896] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)
+  GONE x1 [pg_domain] serdes window io_io_serdes_1_u_io_serdes_1: no separate PHY supply / bump rows (OWNER decision 7)
+  GONE x1 [pg_domain] serdes window io_io_serdes_2_u_io_serdes_2: no separate PHY supply / bump rows (OWNER decision 7)
+  GONE x1 [pg_domain] serdes window io_io_serdes_u_io_serdes_1: no separate PHY supply / bump rows (OWNER decision 7)
+  GONE x1 [r8] R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)
+  GONE x1 [street_die_leg] lane_station c_E0_bf_00__rsf#11 at (16649.3, 7663.7) inside hard core c_E0_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E0_tf_00__rsf#11 at (16649.3, 17979.8) inside hard core c_E0_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E1_bf_00__rsf#11 at (19120.3, 7663.7) inside hard core c_E1_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E1_tf_00__rsf#11 at (19120.3, 17979.8) inside hard core c_E1_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E2_bf_00__rsf#11 at (21591.4, 7663.7) inside hard core c_E2_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E2_tf_00__rsf#11 at (21591.4, 17979.8) inside hard core c_E2_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E3_bf_00__rsf#11 at (24062.4, 7663.7) inside hard core c_E3_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E3_tf_00__rsf#11 at (24062.4, 17979.8) inside hard core c_E3_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E4_bf_00__rsf#11 at (26533.4, 7663.7) inside hard core c_E4_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E4_tf_00__rsf#11 at (26533.4, 17979.8) inside hard core c_E4_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E5_bf_00__rsf#11 at (29004.5, 7663.7) inside hard core c_E5_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_E5_tf_00__rsf#11 at (29004.5, 17979.8) inside hard core c_E5_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W0_bf_00__rsf#11 at (14178.2, 7663.7) inside hard core c_W0_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W0_tf_00__rsf#11 at (14178.2, 17979.8) inside hard core c_W0_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W1_bf_00__rsf#11 at (11707.2, 7663.7) inside hard core c_W1_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W1_tf_00__rsf#11 at (11707.2, 17979.8) inside hard core c_W1_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W2_bf_00__rsf#11 at (9236.2, 7663.7) inside hard core c_W2_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W2_tf_00__rsf#11 at (9236.2, 17979.8) inside hard core c_W2_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W3_bf_00__rsf#11 at (6765.1, 7663.7) inside hard core c_W3_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W3_tf_00__rsf#11 at (6765.1, 17979.8) inside hard core c_W3_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W4_bf_00__rsf#11 at (4294.1, 7663.7) inside hard core c_W4_bn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W4_tf_00__rsf#11 at (4294.1, 17979.8) inside hard core c_W4_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [street_die_leg] lane_station c_W5_tf_00__rsf#11 at (1823.0, 17979.8) inside hard core c_W5_tn_00/cl_rsf_i (12.10c: on a street)
+  GONE x1 [tap_sink_cap] [tapcap-count] 77 taps over cap in 39 types (max 3738 sinks/tap; 123/123 types computed, 0 not computable; 107 with a sink inventory, 16 planned face/ft sinks only = lower bound)
+  GONE x1 [tap_sink_cap] [tapcap] ... 57 more taps over the cap
+  GONE x1 [tap_sink_cap] [tapcap] type coll_core tap clk: 3738 clock sinks > cap 3000
+  GONE x1 [tap_sink_cap] [tapcap] type sle_fw_v2__cl6740750e tap clk_t4: 1346 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_st_a_v1__cl67389ecd tap clk: 1607 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_st_a_v1__cl67389ecd tap clk_t124: 1362 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_st_a_v1__cl67389ecd tap clk_t77: 1342 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_st_a_v1__cl989804f6__cl18eece69 tap clk: 1402 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_st_a_v1__cl989804f6__cl18eece69 tap clk_t114: 1538 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_st_a_v1__cl989804f6__cl18eece69 tap clk_t19: 1363 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_stm_v3 tap clk_t19: 1354 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type sle_stm_v3 tap clk_t65: 1492 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_fe_v1__cl95cd1d0c tap clk_t91: 1581 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_fe_v2__cle312294d tap clk_t43: 1350 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_sc_v1__cl63e5a7a2 tap clk_t5: 1540 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clb036e152 tap clk: 1521 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clb036e152 tap clk_t111: 1444 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t113: 1458 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 tap clk_t19: 1357 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t113: 1458 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_st_a_v1__clfc5867a6__pvf82a6c28 tap clk_t19: 1357 clock sinks > cap 1200
+  GONE x1 [tap_sink_cap] [tapcap] type slw_su_c__cl92142dac tap clk_t105: 1346 clock sinks > cap 1200
+  GONE x1 [types] near-duplicate types ['cbf_q00__cl1b5a6458', 'cbf_q00__cl870de686'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['cbn_q00__cl622f65d2', 'cbn_q00__cld7bf7197', 'cbn_q00__cldbcda913'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['cbn_q01__clab6e67f2', 'cbn_q01__cld9ff4c40', 'cbn_q01__cldd6ea846'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['cbn_q11__cl49ae4555', 'cbn_q11__cl5cc92dfe'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['cbx_q10__cl89936551', 'cbx_q10__cl94a12200'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['phy_serdes', 'phy_serdes_b'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_ctl__cl372cea1c', 'sle_ctl__cl503337ff', 'sle_ctl__cl67434795', 'sle_ctl__cla4f6f12f'] (4): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_fe_v1__cl1cbb7497', 'sle_fe_v1__cl8210183c'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_fw_v1__cl9d029624', 'sle_fw_v1__clf58b4dfb'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_fw_v2__cl6740750e', 'sle_fw_v2__cl69f5e854'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_hc0__cl05696ed1', 'sle_hc0__cl929603c0__cl38badc56', 'sle_hc0__cl929603c0__cl4baa7c9c', 'slw_hc0__cl1bc59e1c', 'slw_hc0__cl4f54b7a3'] (5): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_hc1__cl22c1ff36', 'sle_hc1__cl7d360508', 'slw_hc1__cl3449ea95', 'slw_hc1__cl68f9248e__cl144ee7b3', 'slw_hc1__cl68f9248e__cle683a076'] (5): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_hc2__cl9c4c4509__cl3edce1b8', 'sle_hc2__cl9c4c4509__clf60c5152', 'sle_hc2__clcc5e3e61', 'slw_hc2__cl6bcaba89', 'slw_hc2__cla3497502__cl16607c7a', 'slw_hc2__cla3497502__cldc737267'] (6): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origi
+  GONE x1 [types] near-duplicate types ['sle_sc_v1__cl115da35f', 'sle_sc_v1__cl7479a5ec'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_st_a_v1__cl67389ecd', 'sle_st_a_v1__cl989804f6__cl18eece69', 'sle_st_a_v1__cl989804f6__cled3c1d7b', 'slw_st_a_v1__clb036e152', 'slw_st_a_v1__clfc5867a6__pvdf8e5ca4', 'slw_st_a_v1__clfc5867a6__pvf82a6c28'] (6): same outline, buses and slots -- merge into one type (orient MX
+  GONE x1 [types] near-duplicate types ['sle_st_a_v2', 'slw_st_a_v2__cl9f076a5c', 'slw_st_a_v2__clf4365a62'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_st_b_v1__pv0e7b1dcc', 'sle_st_b_v1__pvc5a85fd4', 'slw_st_b_v1__cl6357f1cc__pv6ace3e48', 'slw_st_b_v1__cl6357f1cc__pvffd43fdc', 'slw_st_b_v1__cle6023ec2'] (5): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the typ
+  GONE x1 [types] near-duplicate types ['sle_st_b_v2__cl14c98df5', 'sle_st_b_v2__clfde1249e', 'slw_st_b_v2__pva66d0f22', 'slw_st_b_v2__pvc2ec5bfb'] (4): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_stm_v1__cl27746664', 'sle_stm_v1__clbe630b9c'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_stm_v2__cl55be2264', 'sle_stm_v2__cl7b3062fa'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_su_l0__cl086d85ba', 'sle_su_l0__cl7a55c676'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['sle_su_l1__cl5ea486db', 'sle_su_l1__clc6d66f5b'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_fe_v1__cl95cd1d0c', 'slw_fe_v1__clfe325744__cl08d14f0d', 'slw_fe_v1__clfe325744__cldb4efe33'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_fe_v2__cle312294d', 'slw_fe_v2__clf110fab2'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_fw_v1__cl51d45468', 'slw_fw_v1__clf51c11d8__cl592e3d37', 'slw_fw_v1__clf51c11d8__clc7ddab13'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_fw_v2__cl8537f156', 'slw_fw_v2__cl8f84514c'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_hc3__clccfc3e6b', 'slw_hc3__cld86a7ad4'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_sc_v1__cl63e5a7a2', 'slw_sc_v1__cl64543eaf__cl4590432d', 'slw_sc_v1__cl64543eaf__cl5e017c6f'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_stm_v1__cl05fc43f7__cl2086fa2c', 'slw_stm_v1__cl05fc43f7__cl389df4e9', 'slw_stm_v1__cle34a73c3'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_stm_v2__cl1ca9c415', 'slw_stm_v2__cl9beb65e6'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_su_c__cl19bb38ef', 'slw_su_c__cl92142dac'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_su_l0__cl1a1c1f8f', 'slw_su_l0__cl1e5219ea', 'slw_su_l0__cl76fb247e'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [types] near-duplicate types ['slw_su_l1__cla2a78701', 'slw_su_l1__clcc9d0155'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+  GONE x1 [xtap_latency] ... 674 more unlocked cross-tap hops (see summary)
+  GONE x1 [xtap_latency] [xtap-count] 694 unlocked hops with tap latency delta > 50 ps (worst 160 ps; 1824 hops, 1032 unknown sites, 0 latch-only); flat tap window 180 ps on every port
+  GONE x1 [xtap_latency] type cbf_q01 slot a00 hop 0->1: clk_t62 -> clk_t40 different tap ports, window 120 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbf_q01 slot a00 hop 1->2: clk_t40 -> clk_t22 different tap ports, window 120 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbf_q01 slot a00 hop 2->3: clk_t22 -> clk_t18 different tap ports, window 120 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 0->1: clk_t129 -> clk_t130 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 1->2: clk_t130 -> clk_t121 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 2->3: clk_t121 -> clk_t101 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 3->4: clk_t101 -> clk_t93 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 4->5: clk_t93 -> clk_t80 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 5->6: clk_t80 -> clk_t56 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 6->7: clk_t56 -> clk_t40 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 7->8: clk_t40 -> clk_t31 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cl622f65d2 slot rsf hop 8->9: clk_t31 -> clk_t25 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 1->2: clk_t24 -> clk_t25 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 2->3: clk_t25 -> clk_t21 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 3->4: clk_t21 -> clk_t17 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 4->5: clk_t21 -> clk_t17 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 5->6: clk_t17 -> clk_t13 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 6->7: clk_t13 -> clk_t9 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 7->8: clk_t9 -> clk_t5 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)
+  GONE x1 [xtap_latency] type cbn_q00__cldbcda913 slot rsf hop 8->9: clk_t5 -> clk_t1 different tap ports, window 160 ps (> 50), no clock.ft_hop_lockup (xtap flop / latch)

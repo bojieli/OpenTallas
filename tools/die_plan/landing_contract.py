@@ -30,7 +30,7 @@ def check(P,sidecar=None):
                 ec=[e for e in t.get("clock",{}).get("edge_clocks",[]) if e["port"]==name]
                 if len(ec)!=1 or ec[0].get("period_mult",1)!=1:errors.append(f"{tn}.{name}: declared same-frequency clock required")
         pinmap[tn]=ps
-    uses={};maxhop=0
+    uses={};maxhop=0;groups={}
     for edge in net.get("edges",[]):
         points=[]
         if edge.get("width")!=1 or edge.get("epoch") is not False or edge.get("kind") not in ("ctl","clock"):
@@ -44,10 +44,32 @@ def check(P,sidecar=None):
             if not p:errors.append(f"{edge.get('id')}: missing physical {pn}.{name}");continue
             if p["dir"]!=d or p["kind"]!=edge["kind"]:errors.append(f"{edge.get('id')}: endpoint role mismatch {pn}.{name}")
             points.append(P.to_die(pn,p["xy_um"]));uses[(pn,name)]=uses.get((pn,name),0)+1
+        relays=edge.get("relays")
+        if relays is not None:
+            # R-REACH-1 monitor relays: a forwarded-clock status bundle (one clock edge + its ctl edges, same relay_group)
+            # re-registered on its own forwarded clock at each relay site (ctl: one flop per relay; clock: a buffer);
+            # every segment keeps the reach limit.  Same sites for every edge of the group (checked below).
+            if not isinstance(relays,list) or not relays or not edge.get("relay_group") or any(
+                    r.get("kind") not in ("fwd_clock_relay","die_clock_relay") or len(r.get("xy_um",[]))!=2 or not all(math.isfinite(float(v)) for v in r["xy_um"])
+                    for r in relays):
+                errors.append(f"{edge.get('id')}: relays need relay_group + fwd/die_clock_relay sites with finite xy_um");relays=[]
+            else:groups.setdefault(edge["relay_group"],[]).append(edge)
         if len(points)==2:
-            hop=sum(abs(a-b) for a,b in zip(*points));maxhop=max(maxhop,hop)
+            pts=[points[0]]+[tuple(float(v) for v in r["xy_um"]) for r in relays or []]+[points[1]]
+            hop=max(sum(abs(a-b) for a,b in zip(p,q)) for p,q in zip(pts,pts[1:]));maxhop=max(maxhop,hop)
             limit=float(edge.get("max_hop_um",405))
             if limit>405 or hop>limit+1e-6:errors.append(f"{edge.get('id')}: actual endpoint hop {hop:.3f}um exceeds405")
+    for g,es in sorted(groups.items()):
+        # fwd_clock_relay: one forwarded clock edge carries the relay clock; die_clock_relay: status only, each site
+        # clocked from a declared die clock-tree node
+        clk=[e for e in es if e["kind"]=="clock"];lead=(clk or es)[0]
+        kinds={r["kind"] for e in es for r in e["relays"]}
+        if kinds!={"fwd_clock_relay" if clk else "die_clock_relay"} or len(clk)>1 or any(
+                (e["src"]["part"],e["dst"]["part"])!=(lead["src"]["part"],lead["dst"]["part"]) or
+                [r["xy_um"] for r in e["relays"]]!=[r["xy_um"] for r in lead["relays"]] for e in es) or (
+                not clk and any(not r.get("clock_node") or len(r.get("clock_node_xy_um",[]))!=2 for e in es for r in e["relays"])):
+            errors.append(f"relay group {g}: needs one forwarded clock edge (fwd_clock_relay) or die clock nodes "
+                          f"(die_clock_relay), every edge on the same parts and relay sites")
     st=net.get("start_tree")
     st_sum=None;opened=set()
     if st is not None:

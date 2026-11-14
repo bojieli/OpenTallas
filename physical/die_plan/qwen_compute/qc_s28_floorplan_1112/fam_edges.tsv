@@ -1,0 +1,120 @@
+src	dst	rel	bits_total	lanes	bits_per_slice	cyc_min	cyc_max	bit_mm	kinds
+fw	stm	same	49044	107	4087.0	2	21	30297	{'data': 107}
+stm	sc	same	48936	107	4078.0	7	21	30019	{'data': 107}
+sc	fe	same	42552	96	3546.0	2	21	26287	{'data': 96}
+ctl	st_a	same	39504	48	3292.0	4	12	36521	{'data': 48}
+stm	fw	same	36443	88	3036.9166666666665	2	29	22513	{'data': 76, 'ctl': 12}
+ctl	st_b	same	33252	48	2771.0	4	11	30741	{'data': 48}
+fe	fw	xslice	31814	124	2651.1666666666665	4	5	19791	{'data': 80, 'ctl': 44}
+fe	sc	same	28191	84	2349.25	2	29	17415	{'data': 73, 'ctl': 11}
+ctl	sc	same	27972	60	2331.0	5	26	46040	{'data': 60}
+sc	stm	same	27783	62	2315.25	7	29	17043	{'data': 62}
+stm	ctl	same	26352	24	2196.0	3	13	43373	{'data': 24}
+fw	fe	xslice	26193	113	2182.75	4	29	16294	{'data': 69, 'ctl': 44}
+sc	su_c	same	26052	48	2171.0	12	26	42880	{'data': 48}
+bf_10	bf_11	same	24720	48	2060.0	4	10	62686	{'data': 48}
+bn_10	bn_11	same	24720	48	2060.0	4	9	62686	{'data': 48}
+tn_10	tn_11	same	24720	48	2060.0	4	10	62686	{'data': 48}
+tf_10	tf_11	same	24720	48	2060.0	4	9	62686	{'data': 48}
+fw	st_a	same	20316	42	1693.0	3	52	27207	{'data': 42}
+su_l1	su_c	same	20316	66	1693.0	5	29	18782	{'data': 66}
+su_c	su_l0	same	19920	30	1660.0	4	29	18416	{'data': 30}
+st_b	hc3	same	18888	12	1574.0	8	8	25295	{'data': 12}
+st_a	hc0	same	18876	12	1573.0	9	9	25279	{'data': 12}
+ctl	hc1	same	18876	12	1573.0	4	4	31068	{'data': 12}
+ctl	hc2	same	18876	12	1573.0	4	4	31068	{'data': 12}
+bn_01	bn_00	same	18504	36	1542.0	15	52	46923	{'data': 36}
+tn_01	tn_00	same	18504	36	1542.0	15	43	46923	{'data': 36}
+su_c	su_l1	same	18372	36	1531.0	4	4	16985	{'data': 24, 'ctl': 12}
+st_a	ctl	same	17472	36	1456.0	5	11	16153	{'data': 36}
+st_a	fw	same	16860	36	1405.0	10	29	22579	{'data': 36}
+st_b	ctl	same	15072	48	1256.0	5	21	13934	{'data': 48}
+ctl	stm	same	14184	48	1182.0	5	26	23346	{'data': 36, 'ctl': 12}
+su_l0	su_c	same	13572	48	1131.0	5	13	12547	{'data': 36, 'ctl': 12}
+fe	st_b	same	13452	30	1121.0	14	21	18015	{'data': 30}
+sc	ctl	same	13332	36	1111.0	4	19	21943	{'data': 36}
+bf_00	bf_01	same	12982	26	1081.8333333333333	4	25	32920	{'data': 25, 'ctl': 1}
+bf_01	bf_00	same	12935	27	1077.9166666666667	15	29	32801	{'data': 25, 'ctl': 2}
+hc1	ctl	same	12588	60	1049.0	5	26	20719	{'data': 48, 'ctl': 12}
+hc0	hc1	same	12444	36	1037.0	9	43	7687	{'data': 36}
+bn_00	bn_01	same	12384	24	1032.0	4	4	31404	{'data': 24}
+tn_00	tn_01	same	12384	24	1032.0	4	4	31404	{'data': 24}
+tf_00	tf_01	same	12384	24	1032.0	4	4	31404	{'data': 24}
+tn_01	tf_00	same	12384	24	1032.0	4	4	31404	{'data': 24}
+tn_11	tf_10	same	12384	24	1032.0	4	4	31404	{'data': 24}
+hc0	st_a	same	12384	24	1032.0	6	25	16585	{'data': 24}
+bn_01	bf_00	same	12384	24	1032.0	4	4	31404	{'data': 24}
+bn_11	bf_10	same	12384	24	1032.0	4	4	31404	{'data': 24}
+bf_11	bf_01	same	12336	24	1028.0	9	22	15241	{'data': 24}
+bn_11	bn_01	same	12336	24	1028.0	10	22	15241	{'data': 24}
+tn_11	tn_01	same	12336	24	1028.0	10	22	15241	{'data': 24}
+tf_11	tf_01	same	12336	24	1028.0	10	22	15241	{'data': 24}
+tf_01	tf_00	same	12336	24	1028.0	15	22	31282	{'data': 24}
+tn_00	hc0	same	12336	24	1028.0	15	43	27658	{'data': 24}
+bn_00	su_l1	same	12336	24	1028.0	21	52	27658	{'data': 24}
+su_l1	fw	same	12336	24	1028.0	21	52	16520	{'data': 24}
+st_b	fe	same	9264	24	772.0	6	22	12406	{'data': 24}
+fw	su_l1	same	7740	18	645.0	22	29	10365	{'data': 18}
+su_l0	fe	same	7476	30	623.0	9	29	10012	{'data': 30}
+su_c	stm	same	6588	36	549.0	10	13	10843	{'data': 36}
+hc2	ctl	same	6384	48	532.0	5	26	10508	{'data': 36, 'ctl': 12}
+hc1	hc0	same	6204	24	517.0	4	6	3833	{'data': 24}
+su_c	sc	same	6204	36	517.0	5	19	10211	{'data': 36}
+hc0	tn_00	same	6192	12	516.0	7	7	13883	{'data': 12}
+hc1	tn_00	same	6192	12	516.0	6	7	13910	{'data': 12}
+hc2	tn_10	same	6192	12	516.0	6	6	13910	{'data': 12}
+hc3	tn_10	same	6192	12	516.0	3	3	13883	{'data': 12}
+su_l1	bn_00	same	6192	12	516.0	22	25	13883	{'data': 12}
+stm	su_c	same	6192	12	516.0	25	26	10192	{'data': 12}
+su_c	bn_00	same	6192	12	516.0	25	26	15809	{'data': 12}
+su_c	bn_10	same	6192	12	516.0	26	26	15809	{'data': 12}
+hc3	st_b	same	6192	12	516.0	21	22	8292	{'data': 12}
+fe	su_l0	same	6192	12	516.0	21	22	8292	{'data': 12}
+su_l0	bn_10	same	6192	12	516.0	21	22	13883	{'data': 12}
+bf_00	bf_10	same	6168	12	514.0	9	10	7621	{'data': 12}
+bn_00	bn_10	same	6168	12	514.0	9	9	7621	{'data': 12}
+tn_00	tn_10	same	6168	12	514.0	9	10	7621	{'data': 12}
+tf_00	tf_10	same	6168	12	514.0	9	9	7621	{'data': 12}
+tf_00	tn_01	same	6168	12	514.0	42	43	15641	{'data': 12}
+bf_00	bn_01	same	6168	12	514.0	51	52	15641	{'data': 12}
+coll_f4	fw	x	2704	10	2704	11	18	3131	{'data': 6, 'ctl': 4}
+tt_ctlm	coll_f4	same	1666	4	138.83333333333334	11	11	1735	{'data': 4}
+native59	glue	same	1643	27	136.91666666666666	4	9	1632	{'data': 14, 'ctl': 13}
+glue	native59	same	1590	32	132.5	5	10	1580	{'ctl': 24, 'data': 8}
+fw	coll_f4	x	1262	12	1262	9	15	1461	{'data': 7, 'ctl': 5}
+coll_core	coll_ucie	same	1168	2	97.33333333333333	4	4	1852	{'data': 2}
+coll_ucie	coll_core	same	1168	3	97.33333333333333	5	5	1852	{'data': 2, 'ctl': 1}
+coll_f4	coll_f3	same	1157	12	96.41666666666667	15	21	1449	{'data': 5, 'ctl': 7}
+coll_f3	coll_core	same	1157	12	96.41666666666667	15	21	1769	{'data': 5, 'ctl': 7}
+coll_core	coll_f3	same	1139	10	94.91666666666667	8	21	1742	{'ctl': 8, 'data': 2}
+coll_s	coll_f0	same	1120	4	93.33333333333333	23	23	890	{'data': 2, 'ctl': 2}
+coll_f0	coll_f1	same	1120	4	93.33333333333333	23	23	968	{'data': 2, 'ctl': 2}
+coll_f1	coll_f2	same	1120	4	93.33333333333333	23	23	1055	{'data': 2, 'ctl': 2}
+coll_f2	coll_core	same	1120	4	93.33333333333333	23	23	1418	{'data': 2, 'ctl': 2}
+coll_core	coll_f2	same	1097	2	91.41666666666667	23	23	1389	{'data': 2}
+coll_f2	coll_f1	same	1097	2	91.41666666666667	23	23	1033	{'data': 2}
+coll_f1	coll_f0	same	1097	2	91.41666666666667	23	23	948	{'data': 2}
+coll_f0	coll_s	same	1097	2	91.41666666666667	23	23	872	{'data': 2}
+coll_f3	coll_f4	same	1066	6	88.83333333333333	17	21	1335	{'data': 2, 'ctl': 4}
+tt_ctlm	native59	same	804	22	67.0	4	9	417	{'data': 12, 'ctl': 10}
+io_serdes	coll_n	same	599	3	49.916666666666664	2	2	1164	{'data': 1, 'ctl': 2}
+io_serdes_1	coll_s	same	599	3	49.916666666666664	2	2	1170	{'data': 1, 'ctl': 2}
+io_serdes_2	bf_01	x	599	3	599	29	29	903	{'data': 1, 'ctl': 2}
+bf_00	coll_s	x	599	3	599	29	29	1351	{'data': 1, 'ctl': 2}
+coll_n	io_serdes	same	598	2	49.833333333333336	2	2	1163	{'data': 1, 'ctl': 1}
+coll_s	io_serdes_1	same	598	2	49.833333333333336	2	2	1168	{'data': 1, 'ctl': 1}
+coll_s	bf_00	x	598	2	598	25	25	1349	{'data': 1, 'ctl': 1}
+bf_01	io_serdes_2	x	598	2	598	25	25	902	{'data': 1, 'ctl': 1}
+glue	ucie_kv	same	585	3	48.75	2	2	657	{'data': 1, 'ctl': 2}
+ucie_kv	glue	same	585	3	48.75	2	2	657	{'data': 1, 'ctl': 2}
+coll_n	coll_f5	same	560	3	46.666666666666664	21	21	414	{'data': 1, 'ctl': 2}
+coll_f5	coll_f4	same	560	3	46.666666666666664	21	21	484	{'data': 1, 'ctl': 2}
+coll_f4	native59	same	548	1	45.666666666666664	9	9	571	{'data': 1}
+coll_f4	coll_f5	same	548	1	45.666666666666664	21	21	473	{'data': 1}
+coll_f5	coll_n	same	548	1	45.666666666666664	21	21	405	{'data': 1}
+native59	coll_f4	same	520	1	43.333333333333336	11	11	541	{'data': 1}
+native59	tt_ctlm	same	493	9	41.083333333333336	4	10	256	{'data': 4, 'ctl': 5}
+coll_f4	tt_ctlm	same	117	2	9.75	9	9	122	{'data': 2}
+hc3	hc2	same	108	24	9.0	4	9	67	{'data': 24}
+coll_f3	glue	same	73	4	6.083333333333333	8	8	57	{'ctl': 4}
+hc2	hc1	same	12	12	1.0	2	2	7	{'data': 12}

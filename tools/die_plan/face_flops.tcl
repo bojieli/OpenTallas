@@ -44,6 +44,15 @@ if {[info exists ::env(OT_FF_NS_INSET_ROWS)]} { set ff_ns_inset $::env(OT_FF_NS_
 if {![string is integer -strict $ff_ns_stride] || $ff_ns_stride < 1 || $ff_ns_stride > 16} { error "invalid NS face row stride" }
 if {![string is integer -strict $ff_ns_inset] || $ff_ns_inset < 0 || $ff_ns_inset > 64} { error "invalid NS face inset" }
 
+# QC-S28-VISFORM 11-12 (FW-EFACE-BIN; opt-in, unset = unchanged): an E/W face band of real depth.  The fw / st_a E faces
+# carry 5.6-5.9 pins/um per window (1.5 pins per 0.27-um row); at the fixed 40-site pitch with +-2 rows EVERY pin register
+# found a row in column 0 (x 609-611 on a 622-um slot), so pin wires, flops and their fanout shared one gcell column
+# (slw_fw_v1__cl51d45468 GRT H 25-27/24, sle_fw_v1/v2 col_v 3.4-3.8 at place).  OT_FF_EW_ROW_STRIDE=s lets column c take
+# only rows with (row + c) mod s = 0 (a staggered 1/s comb per column), so a dense window fills ~s x more columns;
+# OT_FF_EW_CPITCH_SITES sets the E/W column pitch (default 40 sites = 2.16 um).  Plan budgets.face_flop_ew_types,
+# gen_phys._face_flop_ew.  N/S faces are unchanged.
+set ff_ew_cpitch [expr {$ff_sw * ([info exists ::env(OT_FF_EW_CPITCH_SITES)] && $::env(OT_FF_EW_CPITCH_SITES) > 0 ? $::env(OT_FF_EW_CPITCH_SITES) : 40)}]
+set ff_ew_stride [expr {[info exists ::env(OT_FF_EW_ROW_STRIDE)] && $::env(OT_FF_EW_ROW_STRIDE) > 1 ? int($::env(OT_FF_EW_ROW_STRIDE)) : 1}]
 proc ff_is_ff {inst} { return [string match "*DFF*" [[$inst getMaster] getName]] }
 # LATCH-FACE 11-03 (CLK table row 1; FLOW-LATCH-1): an out-face lockup latch (ASAP7 DLL / DHL) between the face flop
 # and its port is part of the face chain: the output walker passes ONE latch through its D pin (never CLK) to the
@@ -228,9 +237,10 @@ foreach pass {INPUT OUTPUT} {
         foreach dr {0 1 -1 2 -2} {
           set r [expr {$row + $dr}]
           if {$r < 0 || $r >= [llength $ff_rows] || [dict exists $ff_occ "$face,$r,$c"]} continue
+          if {$ff_ew_stride > 1 && ($r + $c) % $ff_ew_stride} continue
           dict set ff_occ "$face,$r,$c" 1
           set cy [expr {$ff_y0 + $r * $ff_rh}]
-          set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_cpitch : $ff_x1 - $c * $ff_cpitch - $w}]
+          set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_ew_cpitch : $ff_x1 - $c * $ff_ew_cpitch - $w}]
           set placed 1; break
         }
       }

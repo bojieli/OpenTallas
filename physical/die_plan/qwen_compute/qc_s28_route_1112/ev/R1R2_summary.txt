@@ -1,0 +1,8 @@
+# a_none: G0 faces as-is (my ports only) PASS; with every foreign window on the seam re-sized PASS
+# b_R2: G0 faces as-is (my ports only) FAIL; with every foreign window on the seam re-sized FAIL
+# c_R2+p2_st_a: G0 faces as-is (my ports only) FAIL; with every foreign window on the seam re-sized FAIL
+# d_R2+p1_stm+p2_st_a: G0 faces as-is (my ports only) FAIL; with every foreign window on the seam re-sized FAIL
+# R1_as_drawn(p1,p2_stm)+R2: G0 faces as-is (my ports only) FAIL; with every foreign window on the seam re-sized FAIL
+# e1_p2_sc+R2_detour_fe_st_b: G0 faces as-is (my ports only) FAIL; with every foreign window on the seam re-sized PASS
+# e2_p2_st_a_only: G0 faces as-is (my ports only) FAIL; with every foreign window on the seam re-sized FAIL
+# e3_p2_sc_only: G0 faces as-is (my ports only) FAIL; with every foreign window on the seam re-sized FAIL

@@ -1,0 +1,43 @@
+{
+ "real_sinks": 22796,
+ "base": {
+  "mode": "grid",
+  "cap": 3000,
+  "radius_um": 200.0,
+  "taps": 8,
+  "nearest_max": 14033,
+  "kit_max": 14000,
+  "kit_over_cap": 2,
+  "kit_far_um": 367.2,
+  "kit_hist": [
+   14000,
+   4118,
+   1768,
+   1362,
+   1189,
+   330,
+   17,
+   12
+  ]
+ },
+ "new": {
+  "mode": "density",
+  "cap": 1200,
+  "radius_um": 200.0,
+  "taps": 61,
+  "nearest_max": 970,
+  "kit_max": 970,
+  "kit_over_cap": 0,
+  "kit_far_um": 184.7,
+  "kit_hist": [
+   970,
+   910,
+   875,
+   848,
+   828,
+   821,
+   820,
+   764
+  ]
+ }
+}

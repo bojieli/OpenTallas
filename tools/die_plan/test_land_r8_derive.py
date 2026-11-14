@@ -79,3 +79,17 @@ def test_cli_derive_writes_atomically_and_check_gates(tmp_path, monkeypatch):
     assert D.main(["check", "plan.json", str(bg), "--table", str(tab)]) == 0
     r = json.loads(rep.read_text())
     assert r["diff"]["changed"] == 2 and r["diff"]["lanes"] == {"L2": 2} and r["out_sha256"]
+
+
+def test_check_refuses_pinned_table_without_pin(tmp_path, capsys):
+    """a table marked as the deliberate pin must not be checked against a plain derivation (that would pass a re-derive
+    that dropped the pin); without --pin-pre the check exits 2"""
+    import pin_r8_v2 as P
+    t = tmp_path / "t.json"
+    t.write_text(json.dumps({"note": f"x | DIE-QC-102 {P.PIN_MARK} extra=0", "members": []}))
+    plan = tmp_path / "p.json"
+    plan.write_text(json.dumps(RAW))
+    bg = tmp_path / "bg.json"
+    bg.write_text(json.dumps(bus_groups()))
+    assert D.main(["check", str(plan), str(bg), "--table", str(t)]) == 2
+    assert "PIN MISSING" in capsys.readouterr().out

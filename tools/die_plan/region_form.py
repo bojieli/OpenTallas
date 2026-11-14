@@ -36,6 +36,9 @@ APPLY (one guarded step, row/type-level guards so it composes after any delta th
   relative to what it reads).  A crossing marked output_qreg keeps its +1 inside sched_lat.
   POST-CHECK (4): schema.validate error set not larger than BASE's; count_aligned_cycles == sidecar sched_lat ==
   sidecar ports[].added_cycles; every latency.lanes entry == lane_latency; clock_landings.network_lane_cycles OK.
+COUNT STRAPS (apply and sta, same step as K / DEPTH; sync_count_straps): types[].count_straps widths follow the new ring
+  DEPTH (strap_ca_k_<bus> = log2(DEPTH) + 4 bits of the type's widest copy, count_align_bind.strap_ties; K tied mod
+  2^width), existing bits keep their sites_um, a widened strap gets new strap-lattice sites; listed in the report.
 K and the START tree are PLAN values (landing_network.physical_qualified stays false): the built regional clock
 (qcreg.sh) re-derives them with count_align_plan --sta-proof before any physical adoption.
 STA (follow-on delta on a REGION FORM plan, built clock proof DIR = qcreg reg/proof tap_arrivals_{TT,FF}.json):
@@ -71,6 +74,120 @@ def jdump(o):
 
 class Conflict(Exception):
     pass
+
+
+# ----------------------------------------------------------------------------------------------------- count straps
+STRAP_PITCH_UM = 4.32      # count / ID strap pin lattice (head_count_strap_sites: M5, 4.32 um pitch, 4.32 um halo)
+
+
+def _strap_lattice_free(raw, plan_path, tn, need, taken, cache=None):
+    """`need` free interior strap pin sites of type tn on the strap lattice (4.32 um, M5), nearest (Manhattan) to the
+    type's strap anchor (landing_ring_bank reserved site / clock tap / outline centre, as head_count_strap_sites placed
+    them).  PLAN-ONLY geometry, so the step gives the same answer on every host and needs no staged view: off every
+    placed hard_cores[] / contents[] footprint (origin_um + outline_um, rotated for R90-class orients) + 5.4 um (the
+    4.32 um macro halo plus half a pin), off clock reserved sites + 1.08 um, and >= 2.16 um from every declared strap
+    site and the clock / reset tap points.  The existing strap bits must pass the same rule (else CONFLICT: the rule
+    would disagree with the placement it extends).  plan_path / cache: unused (signature kept for callers)."""
+    t = raw["partition_types"][tn]
+    w, h = t["outline_um"]
+    blocked = []
+    for c in (t.get("hard_cores") or []) + (t.get("contents") or []):
+        if not (c.get("origin_um") and c.get("outline_um")):
+            continue
+        (x, y), (mw, mh) = c["origin_um"], c["outline_um"]
+        if c.get("orient") in ("R90", "R270", "E", "W", "FE", "FW", "MXR90", "MYR90"):
+            mw, mh = mh, mw
+        blocked.append((x - 5.4, y - 5.4, x + mw + 5.4, y + mh + 5.4))
+    clk = t.get("clock") or {}
+    for r in clk.get("reserved_sites_um", []):
+        x0, y0, x1, y1 = r["rect_um"]
+        blocked.append((x0 - 1.08, y0 - 1.08, x1 + 1.08, y1 + 1.08))
+
+    def inside(x, y):
+        return any(a <= x <= c and b <= y <= d for a, b, c, d in blocked)
+    bad = [xy for xy in taken if inside(*xy)]
+    if bad:
+        raise Conflict(f"count strap sites {tn}: {len(bad)} declared strap sites sit on a macro / reserved box "
+                       f"under the plan-only rule ({bad[:3]})")
+    occ = list(taken) + [tuple(p) for p in (clk.get("tap_um"), (t.get("reset") or {}).get("tap_um")) if p]
+    anchors = [((r["rect_um"][0] + r["rect_um"][2]) / 2, (r["rect_um"][1] + r["rect_um"][3]) / 2)
+               for r in clk.get("reserved_sites_um", []) if r.get("kind") == "landing_ring_bank"]
+    ax, ay = anchors[0] if anchors else clk.get("tap_um", [w / 2, h / 2])
+    cand = []
+    for ix in range(2, int(w / STRAP_PITCH_UM) - 1):
+        x = round(ix * STRAP_PITCH_UM, 4)
+        for iy in range(2, int(h / STRAP_PITCH_UM) - 1):
+            y = round(iy * STRAP_PITCH_UM, 4)
+            if not inside(x, y):
+                cand.append((abs(x - ax) + abs(y - ay), x, y))
+    out = []
+    for _d, x, y in sorted(cand):
+        if any(abs(x - a) < 2.16 and abs(y - b) < 2.16 for a, b in occ):
+            continue
+        out.append([x, y])
+        occ.append((x, y))
+        if len(out) == need:
+            return out
+    raise Conflict(f"count strap sites {tn}: no room for {need} more strap pins")
+
+
+def sync_count_straps(raw, ca, plan_path=None):
+    """COUNT-STRAP WIDTH follows the re-planned ring (QC-REGION-1 11-13, s29 bind: 'declare count strap
+    strap_ca_k_bc_i20[7] in types[].count_straps'): a type's strap_ca_k_<bus> is log2(DEPTH)+4 bits of its widest
+    copy (count_align_bind.strap_kw; K is tied mod 2^width, count_align_bind.strap_bits), so a DEPTH change of any ring
+    choice (4 -> 8, an allowed 16, a retime) changes the declared width clock_landings requires.  In place on raw
+    (the plan written by the same step that wrote K / DEPTH into ca = sidecar count_aligned): every
+    types[].count_straps entry is set to count_align_bind.strap_ties(ca, raw) widths; existing bits keep their
+    sites_um, a widened strap gets new lattice sites (_strap_lattice_free, plan-only geometry), a narrowed one drops
+    its top bits.  The kit RTL ports, die_trial free ports, SDC false paths, pin records and parent ties all size from this declaration.
+    No-op without count_aligned.strap_form.  -> [dict(type, strap, old, new, sites_added, sites_dropped)]"""
+    if not ca.get("strap_form"):
+        return []
+    import count_align_bind as CAB
+    st = CAB.strap_ties(ca, raw)
+    plan_types = raw["partition_types"]
+    ledger, grow = [], {}
+    for tn, info in sorted(st["types"].items()):
+        decl = {x["name"]: x for x in plan_types[tn].get("count_straps") or []}
+        for sp, w in sorted(info["straps"].items()):
+            x = decl.get(sp)
+            if x is None:
+                raise Conflict(f"count strap {tn}.{sp}: not declared in types[].count_straps on input "
+                               f"(plan not composed in the strap form)")
+            if int(x["width"]) == int(w):
+                continue
+            row = dict(type=tn, strap=sp, old=int(x["width"]), new=int(w), sites_added=[], sites_dropped=[])
+            if x.get("sites_um") and w < len(x["sites_um"]):
+                row["sites_dropped"] = x["sites_um"][w:]
+                x["sites_um"] = x["sites_um"][:w]
+            elif x.get("sites_um"):
+                grow.setdefault(tn, []).append((x, row))
+            x["width"] = int(w)
+            ledger.append(row)
+    for tn, rows in grow.items():
+        t = plan_types[tn]
+        taken = [tuple(xy) for sp in (t.get("id_straps") or []) + (t.get("count_straps") or [])
+                 for xy in sp.get("sites_um") or []]
+        need = sum(x["width"] - len(x["sites_um"]) for x, _ in rows)
+        new = _strap_lattice_free(raw, plan_path, tn, need, taken)
+        for x, row in rows:
+            k = x["width"] - len(x["sites_um"])
+            row["sites_added"], new = new[:k], new[k:]
+            x["sites_um"] = x["sites_um"] + row["sites_added"]
+    st2 = CAB.strap_ties(ca, raw)
+    for tn, info in st2["types"].items():
+        cs = {x["name"]: int(x["width"]) for x in plan_types[tn].get("count_straps") or []}
+        bad = [sp for sp, w in info["straps"].items() if cs.get(sp) != int(w)]
+        if bad:
+            raise Conflict(f"count strap {tn}: widths still differ after sync: {bad[:4]}")
+    return ledger
+
+
+def strap_summary(ledger):
+    c = collections.Counter((r["old"], r["new"]) for r in ledger)
+    return dict(straps=len(ledger), types=len({r["type"] for r in ledger}),
+                widened=sum(r["new"] > r["old"] for r in ledger), narrowed=sum(r["new"] < r["old"] for r in ledger),
+                width_change={f"{a}->{b}": n for (a, b), n in sorted(c.items())})
 
 
 # ----------------------------------------------------------------------------------------------------------- regions
@@ -269,6 +386,7 @@ def apply(base_path, out_path, side_in, side_out, reg_path, feed_path, ca_path, 
         if r["port"] in sports:
             r["added_cycles"] = s2["count_aligned"]["ports"][r["port"]]["sched_lat"]
     s2["count_aligned"]["frame"] = fr.meta()
+    straps = sync_count_straps(out, s2["count_aligned"], base_path)
     note = (f"QC-REGION-1 REGION FORM: link_htree feed (root {feed['root']}), wall-aligned frame; K / DEPTH / "
             f"sched_lat re-planned on {len(ledger)} crossings (K absorbs, START tree kept)")
     s2["note"] = (s2.get("note", "") + " | " + note).lstrip(" |")
@@ -325,18 +443,26 @@ def apply(base_path, out_path, side_in, side_out, reg_path, feed_path, ca_path, 
                 depth_changed=sum(x["depth_new"] != x["depth_old"] for x in ledger),
                 lanes_changed=len(lanes), lane_cycles_old=sum(x["old"] for x in lanes),
                 lane_cycles_new=sum(x["new"] for x in lanes), lane_table_stale_on_input=len(stale_in),
-                ca=ca["summary"])
+                count_straps=strap_summary(straps), ca=ca["summary"])
     rep = dict(schema=SCHEMA + ".report", base=dict(path=str(base_path), sha256=sha(btext)),
                out=dict(path=str(out_path), sha256=sha(otext.encode())),
                side_in=sha(Path(side_in).read_bytes()), side_out=sha(stext.encode()),
                regions=rsha, feed=fsha, ca=sha(Path(ca_path).read_bytes()), summary=summ, post_check=post,
-               stale_lanes_on_input=stale_in[:50], ports=ledger, lanes=lanes)
+               stale_lanes_on_input=stale_in[:50], ports=ledger, lanes=lanes, count_straps=straps)
     if report:
         Path(report).write_text(jdump(rep))
     return rep
 
 
-def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_out=None, cap_args=()):
+# s29 ring choice (DIE-QC-100 11-13): on a clock START sidecar the sta step retimes unclean START edges (retime flops on
+# ancestor tap nodes, lift into mesh regions) so every crossing fits at DEPTH <= 8 (s29reg: 2525/2525, +343 crossing
+# cycles) instead of DEPTH-16 rings (2521/2525, +907).  --no-start-retime = the plain clock START tree; the COORD
+# DEPTH-16 allow-list stays an opt-in count_align_plan option (--cap-arg=--depth16-allow --cap-arg=FILE).
+START_RETIME = ("--start-retime-up", "--start-lift")
+
+
+def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_out=None, cap_args=(),
+        start_retime=True):
     import count_frame as CF
     import locality as LO
     import count_align_plan as CAP
@@ -361,6 +487,7 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
     pr = plain_regions(raw)
     if pr != fr.part_region:
         raise Conflict("plan regions differ from the frame's region map")
+    retime = [x for x in START_RETIME if x not in cap_args] if start_retime and start_form == "clock" else []
     D = LO.load_plan(base_path)
     with contextlib.redirect_stderr(io.StringIO()):
         S = LO.score(D, dict(pr), v, "fwd")
@@ -378,7 +505,7 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
             rc = CAP.main([str(fi), "--corner", ",".join(rows), "--period", str(D["period"]), "--aperture",
                            str(D["period"] / 8), "--wander-frac", "0.05", "--sta-proof", str(proof), "--sta-plan",
                            str(base_path), "--sta-cppr-lca", "--sta-clock-cell", "inv2", "--start-tree", start_form,
-                           "--out", str(fo)] + list(cap_args))
+                           "--out", str(fo)] + retime + list(cap_args))
         cap = json.loads(fo.read_text())
     if ca_out:
         Path(ca_out).write_text(json.dumps(cap, indent=0) + "\n")
@@ -406,6 +533,7 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
     for r in s2.get("ports", []):
         if r["port"] in sports:
             r["added_cycles"] = s2["count_aligned"]["ports"][r["port"]]["sched_lat"]
+    straps = sync_count_straps(out, s2["count_aligned"], base_path)
     note = f"QC-REGION-1 STA: K / DEPTH / sched_lat on the built regional clock proof {proof} ({len(ledger)} crossings)"
     s2["note"] = (s2.get("note", "") + " | " + note).lstrip(" |")
     old_tab = raw.get("latency", {}).get("lanes", {})
@@ -444,11 +572,12 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
                 lane_cycles_new=sum(x["new"] for x in lanes),
                 worst_margin_lo_ps=cap["summary"].get("worst_margin_lo_ps"),
                 worst_margin_hi_ps=cap["summary"].get("worst_margin_hi_ps"),
-                below_100ps=cap["summary"].get("below_100ps"), sta_interval=cap["summary"].get("sta_interval"))
+                below_100ps=cap["summary"].get("below_100ps"), sta_interval=cap["summary"].get("sta_interval"),
+                start_retime=retime, count_straps=strap_summary(straps))
     rep = dict(schema=SCHEMA + ".sta_report", base=dict(path=str(base_path), sha256=sha(btext)),
                out=dict(path=str(out_path), sha256=sha(otext.encode())), side_in=sha(Path(side_in).read_bytes()),
                side_out=sha(stext.encode()), proof=str(proof), summary=summ, post_check=post, ports=ledger,
-               lanes=lanes)
+               lanes=lanes, count_straps=straps)
     if report:
         Path(report).write_text(jdump(rep))
     return rep
@@ -485,10 +614,13 @@ def main(argv=None):
     t.add_argument("--cap-arg", action="append", default=[], metavar="ARG",
                    help="extra count_align_plan argument (e.g. --start-retime-up), repeatable")
     t.add_argument("--v-ps-mm", type=float, default=290.0)
+    t.add_argument("--no-start-retime", action="store_true",
+                   help="clock START sidecar: plain START tree (default: " + " ".join(START_RETIME) + ")")
     a = ap.parse_args(argv)
     if a.cmd == "sta":
         try:
-            rep = sta(a.base, a.out, a.sidecar[0], a.sidecar[1], a.proof, a.v_ps_mm, a.report, a.ca_out, a.cap_arg)
+            rep = sta(a.base, a.out, a.sidecar[0], a.sidecar[1], a.proof, a.v_ps_mm, a.report, a.ca_out, a.cap_arg,
+                      start_retime=not a.no_start_retime)
         except Conflict as ex:
             print(f"CONFLICT {ex}")
             return 3
@@ -531,7 +663,7 @@ def main(argv=None):
         return 3
     print(json.dumps(dict(out=rep["out"]["sha256"][:12], side=rep["side_out"][:12], **{k: rep["summary"][k] for k in (
         "crossings", "changed", "cycles_old", "cycles_new", "depth_new", "lanes_changed", "lane_cycles_old",
-        "lane_cycles_new", "lane_table_stale_on_input")})))
+        "lane_cycles_new", "lane_table_stale_on_input", "count_straps")})))
     if rep["post_check"]:
         print("POST-CHECK FAIL: " + " | ".join(rep["post_check"]))
         return 4

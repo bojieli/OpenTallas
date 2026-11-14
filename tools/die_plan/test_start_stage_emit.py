@@ -443,3 +443,109 @@ def test_current_native_home_converter_ot_place():
     assert E.ctree_cells(v, native) == E.ctree_cells(v, t)
     doc, *_ = E.emit(_bind(), _meta(), v, native)
     assert len(doc['stages']) == 2
+
+
+def _relay_provider(k=1, dst_side=False):
+    """reach_relay_plan form: st:P_L fed through k relays from its parent st:P_ROOT (dst_side: the last relay sits on
+    st:P_L's own clock)"""
+    nodes = [dict(region=f"st:{P_ROOT}", id="b1", parent=None), dict(region=f"st:{P_L}", id="b2", parent=f"st:{P_ROOT}",
+                                                                   fed_by=f"st:{P_L}#rl{k}", relay_cycles=k)]
+    for i in range(1, k + 1):
+        nodes.append(dict(id=f"b2_rl{i}", region=f"st:{P_L}#rl{i}", kind="relay", relay_for=f"st:{P_L}",
+                          parent=f"st:{P_ROOT}" if i == 1 else f"st:{P_L}#rl{i - 1}",
+                          rect_um=[40.0 + 5 * i, 55.0, 42.16 + 5 * i + (2.16 if dst_side else 0), 55.27], flops=4 if dst_side else 2,
+                          **({"clock_side": "dst"} if dst_side and i == k else {})))
+    return dict(nodes=nodes)
+
+
+def test_relays_emitted_at_planned_sites_and_pad_moves_out_of_stage():
+    v, t = _tree()
+    doc, sv, *_ = E.emit(_bind(), _meta(), v, t)
+    d2, s2, v2, t2 = E.apply_relays(doc, sv, _relay_provider(), v, t)
+    rl = next(s for s in d2["stages"] if s.get("relay"))
+    assert (rl["id"], rl["rect_um"], rl["clock_port"], rl["clock_net"]) == ("b2_rl1", [45.0, 55.0, 47.16, 55.27],
+                                                                           "t_st_b2_rl1__clk", "n1")
+    assert ("ot_die_start_relay #(.RESET_RELAY(0)) u_st_b2_rl1 (.clk(t_st_b2_rl1__clk), .rst_raw_n_in(rst_raw_n), "
+            ".p_start(st_b1_start), .rst_raw_n_out(st_b2_rl1_rraw), .start(st_b2_rl1_start));") in s2
+    assert "#(.PAD(1), .EDGE_FALL(1)) u_st_b2 (.clk(t_st_b2__clk), .rst_raw_n(rst_raw_n), .p_start(st_b2_rl1_start)" in s2
+    assert "input  wire t_st_b2_rl1__clk" in s2 and "module ot_die_start_relay" in s2
+    assert "  assign t_st_b2_rl1__clk = n1;" in v2 and "place_pin -pin_name t_st_b2_rl1__clk -layer M9 -location {45.000 55.000}" in t2
+    b2 = next(s for s in d2["stages"] if s["id"] == "b2")
+    assert (b2["pad"], b2["pad_in_stage"], b2["relay_cycles"]) == (2, 1, 1)
+    assert d2["counts"]["relays"] == 1 and d2["counts"]["flops"] == doc["counts"]["flops"] - 1 + 1
+    assert rl["hop_in_um"] > 0 and b2["hop_from_last_relay_um"] == rl["hop_out_um"]
+    assert doc["counts"].get("relays") is None                          # input unchanged
+
+
+@pytest.mark.parametrize("bad", ["pad_short", "overlap", "wrong_relay_for", "twice"])
+def test_relay_emit_guards(bad):
+    v, t = _tree()
+    doc, sv, *_ = E.emit(_bind(), _meta(), v, t)
+    pv = _relay_provider(3 if bad == "pad_short" else 1)
+    if bad == "overlap":
+        pv["nodes"][-1]["rect_um"] = list(next(s for s in doc["stages"] if s["id"] == "b1")["rect_um"])
+    if bad == "wrong_relay_for":
+        pv["nodes"][-1]["relay_for"] = f"st:{P_ROOT}"
+    if bad == "twice":
+        doc, sv, *_ = E.apply_relays(doc, sv, pv, v, t)
+    with pytest.raises(E.StageError):
+        E.apply_relays(doc, sv, pv, v, t)
+
+
+@pytest.mark.parametrize("dst_side", [False, True])
+@pytest.mark.parametrize("wave", [False, True])
+def test_relayed_stages_match_unrelayed_cycle_for_cycle(tmp_path, wave, dst_side):
+    """moving one PAD cycle out of u_st_b2 into the relay (clocked by the parent's clock) keeps every pst_* output
+    identical cycle for cycle, including the EDGE_FALL crossing into b2 (child clock 3 ns off the parent)"""
+    import shutil
+    import subprocess
+    iv = shutil.which("iverilog")
+    if iv is None:
+        pytest.skip("iverilog not installed")
+    v, t = _tree()
+    doc, ref, *_ = E.emit(_bind(), _meta(), v, t, root_settle=8, reset_wave=wave)
+    _d, dut, *_ = E.apply_relays(doc, ref, _relay_provider(dst_side=dst_side), v, t)
+    if dst_side:
+        assert ", .EDGE_FALL(1)) u_st_b2_rl1" in dut and ".EDGE_FALL(0)) u_st_b2 (" in dut
+    common = Path(__file__).resolve().parents[2] / "rtl/common/ot_dp_clk_landing_ca.sv"
+    (tmp_path / "ref.sv").write_text("`default_nettype none\n" + ref.replace("module ot_die_start_stages", "module reference_stages")
+                                     .replace("ot_die_start_reset_relay", "reference_reset_relay"))
+    (tmp_path / "dut.sv").write_text("`default_nettype none\n" + dut)
+    tb = '''module tb;
+reg clk=0,child=0,raw=0; wire a,b,ga,gb; integer errors=0,compares=0;
+always #5 clk=~clk;
+initial begin #3;forever #5 child=~child;end
+reference_stages ref0(.rst_raw_n(raw),.t_st_b1__clk(clk),.t_st_b2__clk(child),.pst_a(ga),.pst_b(gb));
+ot_die_start_stages dut(.rst_raw_n(raw),.t_st_b1__clk(clk),.t_st_b2__clk(child),.t_st_b2_rl1__clk(RLCLK),.pst_a(a),.pst_b(b));
+always @(posedge child) begin #1;if(raw)begin compares=compares+1;if(a!==ga || b!==gb)errors=errors+1;end end
+initial begin repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);raw=0;
+repeat(12)@(negedge clk);raw=1;repeat(60)@(negedge clk);
+$display("COMPARES %0d ERRORS %0d",compares,errors);if(errors)$fatal(1,"mismatch");$finish;end
+endmodule
+'''
+    tb = tb.replace("RLCLK", "child" if dst_side else "clk")
+    (tmp_path / "tb.sv").write_text(tb)
+    p = subprocess.run([iv, "-g2012", "-Wimplicit", "-s", "tb", "-o", str(tmp_path / "sim"), str(common),
+                        str(tmp_path / "ref.sv"), str(tmp_path / "dut.sv"), str(tmp_path / "tb.sv")], capture_output=True, text=True)
+    assert p.returncode == 0 and "implicit" not in p.stderr.lower(), p.stderr
+    q = subprocess.run(["vvp", str(tmp_path / "sim")], capture_output=True, text=True)
+    assert q.returncode == 0 and "ERRORS 0" in q.stdout, q.stdout + q.stderr
+    # every relay net is declared before the stage that reads it (no implicit nets in the relayed module)
+    m = dut[dut.index("module ot_die_start_stages ("):]
+    m = m[:m.index("endmodule")]
+    first_use = m.index("st_b2_rl1_start")
+    assert m.index("wire st_b2_rl1_start;") <= first_use
+
+
+def test_relay_manifest_materializes_into_a_checked_provider():
+    import start_provider_plan as SP
+    v, t = _tree()
+    doc, sv, *_ = E.emit(_bind(), _meta(), v, t)
+    d2, *_ = E.apply_relays(doc, sv, _relay_provider(), v, t)
+    nodes = {s["region"]: s for s in d2["stages"]}
+    assert nodes[f"st:{P_L}#rl1"]["relay"] and nodes[f"st:{P_L}"]["fed_by"] == f"st:{P_L}#rl1"
+    # the same chain fields the plan check reads
+    pv = dict(nodes=[dict(id=s["id"], region=s["region"], parent=s["parent"], root=s["root"],
+                          **{k: s[k] for k in ("relay_for", "fed_by", "relay_cycles") if k in s},
+                          **({"kind": "relay"} if s.get("relay") else {})) for s in d2["stages"]])
+    assert SP.relay_chains(pv["nodes"]) == []
