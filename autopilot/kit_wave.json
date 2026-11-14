@@ -23,13 +23,13 @@
     "clock": "PASS",
     "evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL",
    "src_sha": "3465fe9c32fdac1e0ddc5653845a3e81890324c8",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
     "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
    },
@@ -37,7 +37,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -5055,7 +5055,26 @@
     "kv3_hg*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
     "kv3_hgi*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
    },
-   "swap_note_kitops3_kvadopt": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): all 56 plan types changed -> new block keys; 17 kvN2 units cancel via cancel_superseded. All other holds (hg/hgi/hub_Ei/Wi) lifted per KV-101 (children views exist). Revert: prev_kitops3_kvadopt, hold_items_lifted_kitops3_kvadopt."
+   "swap_note_kitops3_kvadopt": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): all 56 plan types changed -> new block keys; 17 kvN2 units cancel via cancel_superseded. All other holds (hg/hgi/hub_Ei/Wi) lifted per KV-101 (children views exist). Revert: prev_kitops3_kvadopt, hold_items_lifted_kitops3_kvadopt.",
+   "prev_kitops3_pgL": {
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "--native-cell-cap",
+     "517000"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
+     "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
+    }
+   },
+   "note_kitops3_pgL": "KIT-OPS-3 11-13 train L (main 55713eb3c46) PG-track overlay: src copy + 8 files (kit_resume,core_flow,gen_phys,grt_post,grt_pre,pg_track_census,pg_track_truth,test_rflow_defaults); plan/src_sha/bind unchanged (bind_matches 0 stale). Revert: prev_kitops3_pgL."
   },
   "s81": {
    "enabled": true,
@@ -5066,9 +5085,9 @@
     "clock": "PASS",
     "evidence": "KIT-OPS-1 2026-11-12 21:46: ready12b-A = events/s81_ready12bA_1112 (train 23) + fin rtl (train 25), plan 18c864518844, strict bind rc 0 on main 7073a6b4a599 (KIT-OPS-1 rebind, bound rtl = out_r12bA_dst). | DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src/physical/die_plan/s81/plan_h2_2249.json",
+   "plan": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src_pgL/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src",
+   "src": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src_pgL",
    "src_sha": "7073a6b4a599c1de9e041896421b3b779045df1d",
    "kit_rtl": {
     "mode": "bind",
@@ -5082,7 +5101,7 @@
     "--max-wire-um",
     "100",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json"
+    "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src_pgL/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json"
    ],
    "owner_lane": "S81 die owner (DIE-S81-90)",
    "lane": "KIT-WAVE-3",
@@ -28250,7 +28269,26 @@
     "svc_lo_dsdv_svc_rs__t5": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key).",
     "svc_lo_dsdv_svc_rs__t5__*": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key)."
    },
-   "note_kitops3_svc": "KIT-OPS-3 11-13 (COORD, train K deployed): SVC-MACRO-1113 lifted for the 3 types SVC-BAND-3 proved GEN_LINT PASS (hi pvso_entry t1, lo rs t2, lo rs t5) as pilots; the other 13 stay held (all 16 are flat H16 ~4.1M-cell bodies over the cap; S81-CORES-2: no big relaunch). Revert: re-add keys from hold_items_lifted_kitops3_svc."
+   "note_kitops3_svc": "KIT-OPS-3 11-13 (COORD, train K deployed): SVC-MACRO-1113 lifted for the 3 types SVC-BAND-3 proved GEN_LINT PASS (hi pvso_entry t1, lo rs t2, lo rs t5) as pilots; the other 13 stay held (all 16 are flat H16 ~4.1M-cell bodies over the cap; S81-CORES-2: no big relaunch). Revert: re-add keys from hold_items_lifted_kitops3_svc.",
+   "prev_kitops3_pgL": {
+    "src": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src",
+    "plan": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src/physical/die_plan/s81/plan_h2_2249.json",
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--max-wire-um",
+     "100",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/src/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "bind_out": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/out",
+     "asbuilt": "/srv/opentallas-scratch2/claude/die-s81-90/run/b/B1/asbuilt_run.json",
+     "note": "KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24): strict bind rc 0, LATCHECK 873/873; tree B1/src = cp -al of src_s81_main_7073a6b4a5 + A leaf types + FRAME-FORMS-1 e0f1260ba305 + gunit nrev_1113; bind_matches 395/395 (0 stale) probed on epyc7 | was: KIT-OPS-1 2026-11-12 21:46: S81 ready12b-A (train 23 event + train 25 rtl) strict bind on plain main archive 7073a6b4a599 | KW-FIX-46 11-12 COORD 06:3x (c): S81 wave on ready12 = ready12ng (DIE-S81-87 3d254c4a7973, strict bind rc 0, bind_report 42dc708ab529, plan 77cad171c6ee, asbuilt 28a2355ef1cb);"
+    }
+   },
+   "note_kitops3_pgL": "KIT-OPS-3 11-13 train L (main 55713eb3c46) PG-track overlay: src copy + 8 files (kit_resume,core_flow,gen_phys,grt_post,grt_pre,pg_track_census,pg_track_truth,test_rflow_defaults); plan/src_sha/bind unchanged (bind_matches 0 stale). Revert: prev_kitops3_pgL."
   },
   "s81_head": {
    "enabled": true,
