@@ -2870,7 +2870,11 @@ REFUSED_SRC_MIN_GB = int(os.environ.get("OT_RUN_REFUSED_SRC_MIN_GB", "5"))   # r
 def place(hosts, d, disk, mem, quiet=False):
     """probe the hosts; return host -> row for every host that qualifies (dir, disk, physical RAM).  No load test."""
     with cf.ThreadPoolExecutor(len(hosts)) as ex:
-        res = dict(ex.map(lambda h: probe(h, d), hosts))
+        # PINSPILL_1114 ADMIT-TUNE-1: an explicit single-host pin (--hosts X) names the host on purpose; a lane root there carrying the
+        # .ot-run-spill-copy marker (an old LOAD SPILL copy the lane has since worked in) must not read as "no <dir>" (TL-COLH9R0P2,
+        # TL-SERDEST14: NOT RUN: no host qualifies although the dir exists on epyc9).  Unpinned placement still refuses stale spill copies.
+        _pin_ok = len(hosts) == 1 and hosts is not HOSTS and not os.environ.get("OT_RUN_PIN_NO_SPILL_OK")
+        res = dict(ex.map(lambda h: probe(h, d, spill_ok=_pin_ok), hosts))
     ok = {}
     REFUSED_SRC.clear()
     for h, r in res.items():
