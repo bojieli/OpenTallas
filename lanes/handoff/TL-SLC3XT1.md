@@ -3,3 +3,5 @@ Finding: the "route failure" is not a route result. Attempt 22 (event 7073a6b4a5
 State: dies/s81/retry already has dsdv_slice_c3x_C__t1@22 (retry_fix text DRAIN-EPYC4 relaunch on other hosts), but dies/s81/hold_items still has B2-HOLD-1113 (KIT-OPS-2, until S81 UPDATE B2), so it does not launch. Kit gen dir on epyc7 was pruned (only run/logs, reports left), so a private rerun needs a fresh gen anyway; the wave does that.
 Advisory only: a22 AUTO-GEOM fill 0.053 / empty 0.75, preflight clock M7 vs M8 and macro channel 8.64<10.8; a21 visual BAD (WAIT-FORM) is for a21 form, a22 form fingerprint changed.
 Action: asked KIT-OPS-3 to delete hold_items key; same src/plan (freeze-safe), runs gen+place+route on epyc7/epyc10/epyc2/intel1.
+
+Update 06:4x: hold lifted; a23 launched 04:58 and failed 06:36 INFRA @gen_lint: yosys rc 143 (SIGTERM) on epyc8 (MemAvailable 58 GB, disk-tight host; kill from outside, not an RTL error). Needs retry key @23 and gen_lint off epyc8. Waiter re-armed.
