@@ -141,3 +141,19 @@ no database placement or ODB write occurred. Eight focused tests PASS including
 full-bank row demand, macro-clear fit and unfittable-bank refusal (E7unit1948094).
 The earlier327.43um skeleton estimate excludes bank area and is superseded by the
 387.27um exact/393.03um rectangle-envelope bounds above.
+
+CODEX singleton completion PUSHED287bd55432; complete CBF source4ad3e1b02c+b869e17362+287bd55432. Actual adapter generation held until parent strict seed is clean.
+
+Singleton correction: actual E9 bind_fsuc3 RTL confirms cbf_q01_s2 has ordinary
+u_d3_u_t_1_2_t_out D3 -> u_pc_nk_u_t_0_2_n_b D1, no INNER/count bank. The original
+hardcoded span1 candidate was wrong for that type. The adapter now derives span
+from real rows, allows singleton span0, and applies fixed3->4 with companion/tree
+propagation while preserving its ordinary chain. It reports actual optional_span
+per type. No generated event used the earlier assumption.
+The placer supports this explicit source/PC fixed chain under BOTH
+OT_NK_R8_COUNT_CHAIN=1 and OT_NK_CBF_FIXED_CHAIN=1; same area/hop preflight, span0
+creates no count FF/site. Replicated cbf_q01 span1 remains unchanged. The ordinary
+singleton branch is source-tested, not an actual s2 physical claim; measure its
+new synthesized kit and legalized hops in the next pilot. Nine focused tests PASS
+(E7unit2044346-1794613279), including actual Binder singleton ordinary chain and
+no invented optional count, plus old replicated count/RTL/row-area tests.
