@@ -1055,7 +1055,8 @@ def classify(c, client):
     if c.get("drt_no_progress"):
         return "STRUCTURAL", "drt-no-progress", c["drt_no_progress"]
     if c.get("congestion"):
-        return "STRUCTURAL", "grt-overflow", c["congestion"]
+        # OWNER 11-14: GRT overflow is just a FAIL with the numbers, not a STRUCTURAL verdict
+        return "FAIL", "grt-overflow", c["congestion"]
     if c.get("grt_timecap"):
         # KW-FIX-44 11-10 (COORD (3)): GRT stage stopped at its post-route time cap; the line carries the last slack
         return "STRUCTURAL", "grt-timecap", c["grt_timecap"]
@@ -1088,7 +1089,7 @@ def classify(c, client):
         return "STRUCTURAL", "cell-cap", f"{cells} std cells > {CELL_CAP}"
     if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
         if c.get("grt_overflow") not in (None, 0):
-            return "STRUCTURAL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"
+            return "FAIL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"
         return "GRT-DONE", "grt-only", (f"GRT-only diagnostic finished: {c['grt_odb']}; overflow {c.get('grt_overflow')} "
                                         "-- no sign-off scope; collect routed-RC timing/clock and review before DRT")
     if client.get("exit") == 0 and c.get("goal") == "cts" and c.get("cts_odb"):
@@ -2670,7 +2671,7 @@ def after_class(st, j):
                    ssh_host(j.get("probe") or j["host"]), j["kit"],
                    (j.get("signoff") or {}).get("local_verdict"), j.get("reasons", ""), j.get("lane", "")])
         log(f"KEEP {j['id']} local physical PASS needs actual parent receipt; no release archive or failure cleanup")
-    elif cls in ("NEAR-MISS", "STRUCTURAL", "CRASH"):
+    elif cls in ("NEAR-MISS", "STRUCTURAL", "CRASH", "FAIL"):
         if j.get("kind") == "proof-oom":
             record_failure(st, j)  # proof admission failure; no geometry reroute
         elif (j.get("signoff") or {}).get("odb"):
@@ -2899,7 +2900,7 @@ def minimal_rejudge_candidate(j):
     minimal gates (DRC 0, TT setup >= -42 ps, FF hold >= 0) and whose data is still on disk is re-probed once and
     re-finished, so it archives / counts like a new sign-off"""
     so = j.get("signoff") or {}
-    return (SP.is_minimal() and j.get("status") in ("DONE-NEAR-MISS", "DONE-STRUCTURAL") and isinstance(so, dict)
+    return (SP.is_minimal() and j.get("status") in ("DONE-NEAR-MISS", "DONE-STRUCTURAL", "DONE-FAIL") and isinstance(so, dict)
             and so and not j.get("data_deleted") and not j.get("minimal_rejudged") and canonical_die(j.get("die")) != "hbm"
             and SP.judge(so)["verdict"] == "SIGNED")
 

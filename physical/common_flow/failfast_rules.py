@@ -39,7 +39,7 @@ import time
 
 DEFAULTS = {
     "OT_FAILFAST": 1,
-    "OT_FF_GRT": 1, "OT_FF_GRT_MAX": 1000, "OT_FF_GRT_MIN_DROP_PCT": 10, "OT_FF_GRT_ROUNDS": 2, "OT_FF_GRT_ROUND_ITERS": 30,
+    "OT_FF_GRT": 0, "OT_FF_GRT_MAX": 1000, "OT_FF_GRT_MIN_DROP_PCT": 10, "OT_FF_GRT_ROUNDS": 2, "OT_FF_GRT_ROUND_ITERS": 30,
     "OT_FF_DRT": 1, "OT_FF_DRT_ITER": 20, "OT_FF_DRT_MAX_VIOL": 10000, "OT_FF_DRT_MIN_DROP_PCT": 5, "OT_FF_DRT_WINDOW": 3,
     "OT_FF_HOLD": 1, "OT_FF_HOLD_CAPS": 0,
 }
@@ -317,6 +317,7 @@ def judge(work, t0, state_path=None, env=None, settle_s=None, now=None):
             return [drt_line(d)]
     # (a) GRT
     tmp = [p for p in grt if os.path.basename(p).startswith("5_1_grt.tmp")] or grt
+    return []   # (a) GRT_NO_PROGRESS REMOVED 11-14 (OWNER: remove conservative limits): GRT is never stopped on overflow progress
     if not tmp or not c["OT_FF_GRT"]:
         return []
     s = scan_lines(_read_lines(sorted(tmp)[-1]))
