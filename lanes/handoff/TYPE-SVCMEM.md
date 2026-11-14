@@ -16,3 +16,6 @@ t5/t6/pvso t2 launched 08:23 by KIT-OPS-3. Following hi t1-t6 + pvso t1/t2 throu
 
 ## 09:10
 reg_fanout (old 11-05 attempts) and BIND_STALE (old bind) do not reproduce on live attempts. Live: pvso t1 a12 place, t4 a4 place, t1 a7 place + a8 B3x2b; t2 gen_lint, t3 gen, t5/t6/pvso t2 kit_rtl. Next check 09:40.
+
+## 09:33
+Private builds: intel2 ~/svcmem/<item>/ (run-item PIDs 2660709 2662150 2663954 2666128 2668687), work /srv/opentallas-scratch2/claude/type-svcmem/<item>/attempt_p1 on epyc8/epyc9. Check result.json per item. Cancel loser vs wave attempt by exact unit/PID.
