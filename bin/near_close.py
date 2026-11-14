@@ -4,7 +4,7 @@ re-sign, routed LEC).  Refreshes the 'miss' column of each row from its sign-off
 sign-off JSONs of the last --hours.  Die owners keep next_step, owner and path by hand; rows are never deleted here
 (an owner deletes a row when it is counted).  Read-only on the fleet.  Usage: near_close.py [--hours 3] [--write] [--commit]"""
 import argparse, concurrent.futures as cf, json, os, re, subprocess, sys, time
-HOSTS = ["intel1", "intel2", "epyc2", "epyc4", "epyc7", "epyc8", "epyc9", "epyc10"]
+HOSTS = ["intel1", "intel2", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10"]
 COLS = ["die", "block", "host", "path", "miss", "next_step", "owner", "updated"]
 TSV = os.path.expanduser("~/coord/lanes/NEAR-CLOSE.tsv")
 HEAD = ("# NEAR-CLOSE (SCHED-1 2026-11-07, OWNER closure first). One bounded step from sign-off. New "

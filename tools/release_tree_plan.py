@@ -327,7 +327,7 @@ def fetch_results_refs(root, plan_path, rev='origin/main'):
     return have
 
 
-HOSTS = ['local', 'epyc2', 'intel1', 'intel2', 'epyc4', 'epyc7', 'epyc8', 'epyc9', 'epyc10']   # ONBOARD-4 11-10: epyc8. ONBOARD-4 11-09: epyc7. ONBOARD-2 11-05: epyc5/epyc6 rented (same SCAN_ROOTS)
+HOSTS = ['local', 'epyc2', 'intel1', 'intel2', 'epyc7', 'epyc8', 'epyc9', 'epyc10']   # ONBOARD-4 11-10: epyc8. ONBOARD-4 11-09: epyc7. ONBOARD-2 11-05: epyc5/epyc6 rented (same SCAN_ROOTS)
 # DIE-KV-64 11-03 (COORD 10:5x KV 17->14): PRUNE-1103D moved intel2 scratch2 dirs (die-kv-49 pv/tx, die-kv-51 ectl, ...) to
 # epyc4:/srv/opentallas-scratch3/claude/from-intel2-1103d and left symlinks (find -xdev does not follow them), so their SIGNED
 # records (kv3_pv_pair pv_bkv_eA b-kv re-sign, ...) left the scan. Scan epyc4 (rented 11-03) and every host's scratch3.
