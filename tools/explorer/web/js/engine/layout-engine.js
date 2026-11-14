@@ -142,6 +142,7 @@ export class LayoutEngine {
     this.budget = this.phone ? 1.2e6 : 3e6; this.gpuCap = this.phone ? 150e6 : 300e6;
     this.palette = 'classic'; this.L = null; this.kindVis = Object.fromEntries(KINDS.map((k) => [k[0], !!k[2]]));
     this.show = { plan: true, labels: true, cores: true, minimap: true, macroLabels: true };
+    this.tries = new Map(); this.failLog = [];   // tile failures: every one with its reason
     this.marks = []; this.selMark = null; this.hotMark = null;   // macros / hard cores: {key, bb, label, sub, ci (colour slot 0-7 or -1), tip: [lines]}
     this.names = { net: new Map(), inst: new Map() };
     this.dom = {};
@@ -286,7 +287,14 @@ export class LayoutEngine {
   }
   hiddenLayers() { return this.L ? this.L.filter((l) => !l.vis && l.type !== 'PHYS').map((l) => l.name) : []; }
   setHidden(names) { const s = new Set(names); if (!this.L) { this.pendingHidden = s; return; } for (const l of this.L) if (l.type !== 'PHYS') l.vis = !s.has(l.name); this.afterVis(); }
-  clearTiles() { this.tiles.clear(); this.gpu = 0; this.failed = 0; for (const k of [...this.pending.keys()]) if (k[0] === 't') this.pending.delete(k); }
+  /** the reason of the tile failures now on screen, most frequent first */
+  failReason() {
+    const n = new Map(); let pending = 0;
+    for (const t of this.tiles.values()) if (t.failed) { const k = t.cls === 'fetch' ? 'the server did not deliver the tile (' + t.why.replace(/^fetch: /, '').replace(/ \(.*$/, '') + ')' : t.cls === 'build' ? 'not enough memory in the browser (' + t.why.replace(/^build: /, '') + ')' : t.cls === 'decode' ? 'bad tile data (' + t.why.replace(/^decode: /, '') + ')' : t.why; n.set(k, (n.get(k) || 0) + 1); if (t.retryAt) pending++; }
+    const top = [...n.entries()].sort((a, b) => b[1] - a[1])[0];
+    return top ? top[0] + (pending ? ', retrying' : '') : (this.lastError || 'unknown');
+  }
+  clearTiles() { this.tiles.clear(); this.gpu = 0; this.failed = 0; this.lastNote = null; for (const k of [...this.pending.keys()]) if (k[0] === 't') this.pending.delete(k); }
 
   /* ------------------------------------------------------------------ LOD */
   viewBounds() {
@@ -315,12 +323,14 @@ export class LayoutEngine {
     }
     return out;
   }
-  reqTile(P, k) {
+  reqTile(P, k, lb) {
     const key = P.id + '|' + k; if (this.pending.has('t' + key)) return;
     const secs = this.secsOf(P, k), parts = secs.map((s) => ({ name: s, url: this.objUrl(P, 't/' + k + '/' + s) }));
     if (!secs.length || parts.some((p) => !p.url)) { this.tiles.set(key, { n: 0, empty: true, bytes: 0, used: performance.now() }); return; }
     this.pending.set('t' + key, 1);
-    this.workers[this.wnext++ % this.workers.length].postMessage({ op: 'tile', pack: P.id, key: k, parts, phys: this.L[this.nl + 1].vis, arrDetail: this.arrDetail });
+    // via-array cuts are built only for the part of the tile on screen (padded by one screen): see lv_worker.js buildTile
+    const win = this.arrDetail && lb ? [lb.x0 - (lb.x1 - lb.x0), lb.y0 - (lb.y1 - lb.y0), lb.x1 + (lb.x1 - lb.x0), lb.y1 + (lb.y1 - lb.y0)] : null;
+    this.workers[this.wnext++ % this.workers.length].postMessage({ op: 'tile', pack: P.id, key: k, parts, phys: this.L[this.nl + 1].vis, arrDetail: this.arrDetail, win });
   }
   reqRaster(P, k) {
     const key = P.id + '|' + k; if (this.rasters.has(key) || this.pending.has('r' + key)) return;
@@ -334,7 +344,9 @@ export class LayoutEngine {
       this.pending.delete('t' + key);
       const old = this.tiles.get(key); if (old) this.gpu -= old.bytes || 0;
       const bytes = m.n * 28;
-      this.tiles.set(key, { n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, bytes, used: performance.now(), hasArr: m.hasArr, arrDetail: m.arrDetail }); this.gpu += bytes;
+      this.tiles.set(key, { n: m.n, rects: m.rects, meta: m.meta, pick: m.pick, bytes, used: performance.now(), hasArr: m.hasArr, arrDetail: m.arrDetail, win: m.win || null, note: m.note || null }); this.gpu += bytes;
+      if (m.note) this.lastNote = m.note;
+      this.tries.delete(key);
       if (!this.firstGeo) this.firstGeo = performance.now();
       this.requestUpdate();
     } else if (m.op === 'raster') {
@@ -343,9 +355,20 @@ export class LayoutEngine {
       this.rasters.set(key, { im: new ImageData(new Uint8ClampedArray(m.rgba.buffer), m.size, m.size), v: (prev ? prev.v : 0) + 1 });
       if (m.key.startsWith('0/')) this.miniDirty = true;
       this.requestUpdate();
-    } else if (m.op === 'error') {   // remember the failure: no retry storm, and the raster stays on screen for that tile
+    } else if (m.op === 'error') {
+      // every failed tile keeps its reason.  "fetch:" (network / HTTP) and "build:" (memory) are tried again up to three times;
+      // "decode:" (bad tile data) is final.  The raster stays on screen for that tile and the read-out names the reason.
       this.pending.delete((m.what === 'tile' ? 't' : 'r') + key);
-      if (m.what === 'tile') { this.tiles.set(key, { n: 0, empty: true, failed: true, bytes: 0, used: performance.now() }); this.failed = (this.failed || 0) + 1; this.lastError = m.error; this.requestUpdate(); }
+      if (m.what === 'tile') {
+        const why = String(m.error || 'unknown error'), cls = /^fetch:/.test(why) ? 'fetch' : /^decode:/.test(why) ? 'decode' : /^build:/.test(why) ? 'build' : 'worker';
+        const n = (this.tries.get(key) || 0) + 1; this.tries.set(key, n);
+        const retry = cls !== 'decode' && n < 4;
+        this.tiles.set(key, { n: 0, empty: true, failed: true, bytes: 0, used: performance.now(), why, cls, retryAt: retry ? performance.now() + 1500 * n * n : 0 });
+        this.failed = (this.failed || 0) + 1; this.lastError = why;
+        this.failLog.push({ pack: m.pack, tile: m.key, why, cls, tries: n, t: Date.now() }); if (this.failLog.length > 200) this.failLog.shift();
+        if (retry) setTimeout(() => this.requestUpdate(), 1500 * n * n + 50);
+        this.requestUpdate();
+      }
       if (!this.warned) { this.warned = true; console.warn('layout worker', m); }
     }
   }
@@ -382,12 +405,17 @@ export class LayoutEngine {
     // pass 2: exact geometry only when the WHOLE view fits the shape budget (one decision per view, as in the one-pack
     // viewer; a per-item decision would draw sub-pixel wires for whichever small cores happen to fit); else the rasters
     const geoAll = known && total > 0 && total <= this.budget && ppu >= 0.25;
-    let spent = 0, nGeo = 0;
+    let spent = 0, nGeo = 0; const now0 = performance.now();
     for (const it of vis) {
       const P = it.P; if (!P || !P.H || !this.L || !it.ts) continue;
       if (geoAll && P.ob) {
         spent += it.cost; it.geo = true; nGeo++;
-        for (const k of it.ts) { const key = P.id + '|' + k; want.add(key); if (!this.tiles.has(key)) this.reqTile(P, k); }
+        for (const k of it.ts) {
+          const key = P.id + '|' + k, t = this.tiles.get(key); want.add(key);
+          if (!t) this.reqTile(P, k, it.lb);
+          else if (t.failed && t.retryAt && now0 > t.retryAt) { this.tiles.delete(key); this.failed = Math.max(0, (this.failed || 0) - 1); this.reqTile(P, k, it.lb); }   // a fetch / memory failure is tried again
+          else if (t.win && this.arrDetail && t.hasArr && (it.lb.x0 < t.win[0] || it.lb.y0 < t.win[1] || it.lb.x1 > t.win[2] || it.lb.y1 > t.win[3])) this.reqTile(P, k, it.lb);   // the view left the window the cuts were built for
+        }
       } else if (it.rlv > 0 && P.ob) {
         const lv = P.H.raster.levels, level = it.rlv, lb = it.lb, Lr = lv.find((q) => q.level === level);
         if (Lr) { const have = new Set(Lr.nodes.map((n) => n[0] + '_' + n[1])), node = Lr.node_nm, D = P.H.die;
@@ -400,6 +428,7 @@ export class LayoutEngine {
       for (const [k, t] of lru) { if (this.gpu <= this.gpuCap * 0.8) break; this.gpu -= t.bytes || 0; this.tiles.delete(k); }
     }
     const now = performance.now(); want.forEach((k) => { const t = this.tiles.get(k); if (t) t.used = now; });
+    { let f = 0; for (const t of this.tiles.values()) if (t.failed) f++; this.failed = f; }
     this.vis = vis; this.st = { items: vis.length, geo: nGeo, spent, cost: total };
     this.render(b, vis, dpr);
     this.drawMini(b); this.drawScale(ppu); this.stats();
@@ -590,7 +619,8 @@ export class LayoutEngine {
   stats() {
     const s = this.st || {}, loading = this.pending.size, mode = s.geo ? 'exact geometry' : s.items ? 'density raster' : 'plan';
     this.mode = s.geo ? 'geometry' : s.items ? 'raster' : 'plan';
-    this.dom.info.textContent = `${mode}${s.spent ? ' · ' + fmt(s.spent) + ' shapes' : s.cost ? ' · ' + fmt(s.cost) + ' shapes in view, zoom in for wires' : ''}${loading ? ' · loading ' + loading : ''}${this.failed ? ` · ${this.failed} tiles could not be decoded (raster shown)` : ''}`;
+    this.dom.info.textContent = `${mode}${s.spent ? ' · ' + fmt(s.spent) + ' shapes' : s.cost ? ' · ' + fmt(s.cost) + ' shapes in view, zoom in for wires' : ''}${loading ? ' · loading ' + loading : ''}${this.failed ? ` · ${this.failed} tile${this.failed === 1 ? '' : 's'} not drawn, raster shown: ${this.failReason()}` : ''}${this.lastNote && this.arrDetail ? ' · ' + this.lastNote : ''}`;
+    this.dom.info.dataset.failed = this.failed || 0; this.dom.info.title = this.failed ? this.failLog.slice(-8).map((f) => `${f.tile}: ${f.why}`).join('\n') : '';
     this.dom.info.dataset.mode = this.mode; this.dom.info.dataset.loading = loading;
     if (this.o.onStats) this.o.onStats({ mouse: this.mouse, ppu: this.ppu, zoom: this.vs.zoom, mode: this.mode, gpu: this.gpu, loading, ...s });
   }

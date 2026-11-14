@@ -81,8 +81,10 @@ def test_dataflow_token_coverage():
     if j['records']:
         rid = j['records'][0].get('id') or j['records'][0].get('record')
         if rid:
-            st, h, b = http('/api/v1/dataflow/record/' + rid)
+            st, h, b = http('/api/v1/dataflow/record/' + rid, {'Accept-Encoding': 'gzip'})
             assert st == 200 and h.get('content-encoding') == 'gzip'
+            st2, h2, b2 = http('/api/v1/dataflow/record/' + rid)   # a client that did not ask gets plain JSON
+            assert st2 == 200 and 'content-encoding' not in h2 and json.loads(b2)
             json.loads(gzip.decompress(b))
     st, _, t = jget('/api/v1/token/index')
     assert st == 200 and set(['index', 'map_generated', 'mapped']) <= set(t)

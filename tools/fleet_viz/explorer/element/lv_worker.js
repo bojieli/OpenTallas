@@ -31,17 +31,25 @@ function viaArrays(){
     return Object.keys(o).length ? o : null; });
   ARRS.set(H, arrInfo); return arrInfo;
 }
-function buildTile(T, phys, arrDetail){
+const MAX_CUTS = 3e6;   // via-array cuts per tile build; above it the arrays are drawn merged (reported, not an error)
+function CutLimit(){ this.cutLimit = true; }
+function buildTile(T, phys, arrDetail, win){
+  // win = [x0, y0, x1, y1] local DBU (optional): via-array cuts are emitted only inside it.  A power via can carry >100k cuts and a
+  // tile hundreds of such vias; cut by cut for the whole tile that is tens of millions of shapes and the allocation fails in
+  // the browser.  At the zoom where cuts are drawn the screen shows a few um, so the window bounds the work.
   // gather per layer (dense lists) so the output is in draw order
   const per = Array.from({length: NL + 2}, () => []);
-  let hasArr = false;
+  let hasArr = false, ncut = 0;
   // wire pieces (aux = shape id); cell shapes are built below so they carry their instance and pin
   D.forEachShape({rects: T.rects, vias: null, cells: null}, H, (li, x0, y0, x1, y1, net, kind, clip, id) => { per[li].push(x0, y0, x1, y1, net, kind, clip, id, -1, -1); });
   if (T.vias){ const v = T.vias, VT = H.vias, AI = viaArrays();
     for (let i = 0; i < v.n; i++){ const t = v.type[i], bx = VT[t].boxes, arr = AI[t], k = v.kind[i] ? 10 : 9, X = v.x[i], Y = v.y[i];
       if (arr) hasArr = true;
       for (let j = 0; j < bx.length; j++){ const q = bx[j];
-        if (arr && arr[q[0]]){ if (!arrDetail) continue; per[q[0]].push(X + q[1], Y + q[2], X + q[3], Y + q[4], v.net[i], 16, 0, t, -1, -1); continue; }
+        if (arr && arr[q[0]]){ if (!arrDetail) continue;
+          if (win && (X + q[3] < win[0] || X + q[1] > win[2] || Y + q[4] < win[1] || Y + q[2] > win[3])) continue;
+          if (++ncut > MAX_CUTS) throw new CutLimit();
+          per[q[0]].push(X + q[1], Y + q[2], X + q[3], Y + q[4], v.net[i], 16, 0, t, -1, -1); continue; }
         per[q[0]].push(X + q[1], Y + q[2], X + q[3], Y + q[4], v.net[i], k, 0, t, -1, -1); }
       if (arr && !arrDetail) for (const li in arr){ const a = arr[li]; per[+li].push(X + a[0], Y + a[1], X + a[2], Y + a[3], v.net[i], 15, 0, t, -1, -1); } } }
   if (T.cells){ const c = T.cells, M = H.masters;
@@ -89,17 +97,32 @@ function composite(R){
   return out;
 }
 
+// every failure carries its class: "fetch: ..." (network / HTTP, retried), "decode: ..." (bad tile data), "build: ..." (memory)
 async function get(url){
-  const r = await fetch(url); if (!r.ok) throw new Error(r.status + ' ' + url);
-  return new Uint8Array(await r.arrayBuffer());
+  let last = '';
+  for (let k = 0; k < 4; k++){
+    if (k) await new Promise(res => setTimeout(res, 250 * k * k));
+    try {
+      const r = await fetch(url);
+      if (r.ok){ const b = new Uint8Array(await r.arrayBuffer()); if (!b.length) { last = 'empty object'; continue; } return b; }
+      last = 'HTTP ' + r.status; if (r.status < 500 && r.status !== 429 && r.status !== 408) break;   // 4xx will not get better
+    } catch (e) { last = String(e && e.message || e); }
+  }
+  throw new Error('fetch: ' + last + ' (' + String(url).split('/').pop().slice(0, 16) + ')');
 }
 // decoded tile sections, kept so a layer switched on later costs only its own section (LRU by count)
-const secCache = new Map();
+const secCache = new Map(); let secMem = 0; const SEC_CAP = 160e6;
+function memOf(T){ let n = 0; const add = o => { for (const k in o){ const v = o[k]; if (v && v.byteLength != null) n += v.byteLength; } };
+  for (const li in T.rects) add(T.rects[li]); if (T.vias) add(T.vias); if (T.cells) add(T.cells); return n + 256; }
 async function section(p, Hd){
   let T = secCache.get(p.url);
   if (T){ secCache.delete(p.url); secCache.set(p.url, T); return T; }
-  const buf = await get(p.url); T = D.decodeTile(buf, Hd); T.bytes = buf.length;
-  secCache.set(p.url, T); if (secCache.size > 6000) secCache.delete(secCache.keys().next().value);
+  const buf = await get(p.url);
+  try { T = D.decodeTile(buf, Hd); } catch (e) { throw new Error('decode: ' + String(e && e.message || e) + ' (section ' + p.name + ', ' + buf.length + ' bytes)'); }
+  T.bytes = buf.length; T.mem = memOf(T);
+  secCache.set(p.url, T); secMem += T.mem;
+  // bounded by decoded bytes (was: 6000 sections, which on dense types is several GB per worker and ends in failed allocations)
+  while (secMem > SEC_CAP && secCache.size > 1){ const k = secCache.keys().next().value; secMem -= secCache.get(k).mem; secCache.delete(k); }
   return T;
 }
 
@@ -116,7 +139,13 @@ self.onmessage = async (ev) => {
       let bytes = 0;
       for (const P of parts){ Object.assign(T.rects, P.rects); if (P.vias) T.vias = P.vias; if (P.cells) T.cells = P.cells; bytes += P.bytes; }
       usePack(m.pack);
-      const r = buildTile(T, m.phys, m.arrDetail);
+      let r, note = null;
+      try { r = buildTile(T, m.phys, m.arrDetail, m.win || null); }
+      catch (e) {
+        if (e && e.cutLimit){ r = buildTile(T, m.phys, false, null); r.arrDetail = m.arrDetail; note = 'via arrays drawn merged: more than ' + MAX_CUTS + ' cuts in view'; }
+        else throw new Error('build: ' + String(e && e.message || e));
+      }
+      r.note = note; r.win = m.win || null;
       r.op = 'tile'; r.key = m.key; r.pack = m.pack || ''; r.secs = m.parts.map(p => p.name); r.bytes = bytes; r.ms = [t1 - t0, performance.now() - t1];
       const p = r.pick;
       self.postMessage(r, [r.rects.buffer, r.meta.buffer, p.x0.buffer, p.y0.buffer, p.x1.buffer, p.y1.buffer, p.layer.buffer, p.kind.buffer, p.net.buffer, p.aux.buffer, p.pin.buffer]);
