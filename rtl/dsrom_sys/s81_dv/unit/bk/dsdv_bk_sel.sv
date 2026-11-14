@@ -1,4 +1,17 @@
 `timescale 1ns/1ps
+// FAIL-S81-1 11-14 (COORD): station depths default 0 = as built; defined here so file order never matters
+`ifndef OT_BKSEL_RC
+`define OT_BKSEL_RC 0
+`endif
+`ifndef OT_BKSEL_RS
+`define OT_BKSEL_RS 0
+`endif
+`ifndef OT_BKSEL_RO
+`define OT_BKSEL_RO 0
+`endif
+`ifndef OT_BKSEL_RLN
+`define OT_BKSEL_RLN 0
+`endif
 // ---------------------------------------------------------------------------------------------------------------------
 // S81U-BK2 / S81U-BK3 (2026-10-17): dsdv_bk_sel, the S81-DV index selector unit (plan p4h block bk_sel, column 4 V
 // rung), as a WIRES-ONLY hardened cluster (no flops of its own) of hard children, each with its own clock tree.
