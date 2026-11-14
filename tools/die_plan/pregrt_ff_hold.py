@@ -225,8 +225,23 @@ if {[catch {
   foreach pg_i [$pg_blk getInsts] {
     if {[string match "hold*" [$pg_i getName]] || [string match "*/hold*" [$pg_i getName]]} { $pg_i setPlacementStatus PLACED; incr pg_nh }
   }
-  detailed_placement
-  check_placement -verbose
+  # PREGRT-LEGAL-1 (TYPE-KVHROOT 11-14, COORD): a repair that succeeded must not be thrown away by its final legalize.
+  # kv3_hroot: 12k hold cells, wns +5.0, then the negotiation legalizer left 79 overlaps in FIRM landing rings, DPL-0033,
+  # FALLBACK, and the whole debt went back to the GRT repair (stalled -19.7 / 580).  Order: negotiation legalizer, then
+  # the diamond search; if overlaps still remain keep the repaired DB, log the count, later stages re-legalize.
+  set pg_legal negotiation; set pg_ovl 0
+  if {[catch {detailed_placement; check_placement -verbose} pg_dpe]} {
+    puts "OT_PREGRT_FF_HOLD legalize negotiation failed ([lindex [split $pg_dpe "\n"] 0]); retry detailed_placement -use_diamond_legalizer"
+    set pg_legal diamond
+    if {[catch {detailed_placement -use_diamond_legalizer} pg_dpe2]} { puts "OT_PREGRT_FF_HOLD legalize diamond error ([lindex [split $pg_dpe2 "\n"] 0])" }
+    set pg_rep [file join [file dirname [file normalize [info script]]] pregrt_ff_hold_check_placement.rpt]
+    if {[catch {check_placement -verbose -report_file_name $pg_rep} pg_dpe3]} {
+      set pg_legal diamond+overlaps
+      if {[catch {set pg_f [open $pg_rep]; set pg_ovl [regexp -all -line {overlaps|overlap} [read $pg_f]]; close $pg_f}]} { set pg_ovl unknown }
+      puts "OT_PREGRT_FF_HOLD legalize RESIDUE overlap_lines $pg_ovl ([lindex [split $pg_dpe3 "\n"] 0]): repaired DB kept, later stages re-legalize"
+    }
+  }
+  puts "OT_PREGRT_FF_HOLD legalize $pg_legal overlaps $pg_ovl"
   estimate_parasitics -placement
 } pg_err]} { set pg_fail "tool error: [lindex [split $pg_err "\n"] 0]" }
 foreach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }
