@@ -295,3 +295,12 @@ def test_plancell_replica_callback_runs_once_with_shared_type_endpoints():
     ev._plancell_requests()
     assert calls==[("o_id","i_id")]
     assert len(ev.req)==2 and len(typ[0]["buses"])==1
+
+
+def test_invalid_output_location_fails_before_expensive_constructor(tmp_path, monkeypatch, capsys):
+    spec=tmp_path/"spec.json";spec.write_text("{}")
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("constructor ran before output validation")
+    monkeypatch.setattr(TS,"Event",forbidden)
+    assert TS.main(["split",str(spec),"--out",str(tmp_path/"outside")])==2
+    assert "outside repository" in capsys.readouterr().err

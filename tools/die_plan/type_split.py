@@ -193,6 +193,9 @@ class TypeSplit:
             count, basis = estimates[tn]
             self.t = copy.deepcopy(self.t)
             self.t["cells"] = int(count)
+            self.cohort_projection = dict(role="CORED_PLANNED", trusted_native=False, source_total=int(count),
+                                          source_basis=basis, includes_hard_core_internals=True,
+                                          new_hardware="unpriced until actual per-piece native synthesis")
             raw["partition_types"][tn] = self.t
             ev.rep["notes"].append(f"{tn}: materialized cohort cells {count} ({basis}); new split hardware counted separately")
         # internal-station rows repeated with identical geometry (one per core of the same chain; bind and the kit
@@ -347,6 +350,8 @@ class TypeSplit:
                     T[i][k] = copy.deepcopy(t[k])
             T[i]["note"] = (f"{self.ev.tag}: piece {i} of {self.tn} ({'xy'[cut.ax]} {cut.lo(i)}..{cut.hi(i)} of the "
                             f"type frame, shifted by -{cut.lo(i)}) | " + t.get("note", ""))
+            if hasattr(self, "cohort_projection"):
+                T[i]["note"] += " | CORED_PLANNED cell projection includes opaque core internals; not a measured glue/native count or R-CAP pass; new hardware awaits per-piece native synthesis"
         self.T = T
         # buses
         for i in range(n):
@@ -393,6 +398,8 @@ class TypeSplit:
             T[-1]["cells"] += int(t["cells"]) - sum(q["cells"] for q in T)
             self.rep["cells_split"] = dict(base=t["cells"], by="registers" if sb else "area",
                                            pieces=[T[i]["cells"] for i in range(n)])
+            if hasattr(self, "cohort_projection"):
+                self.rep["cells_split"]["provenance_class"] = dict(self.cohort_projection)
         for i in range(n):
             if "core_pg_connect" in t and T[i].get("hard_cores"):
                 T[i]["core_pg_connect"] = copy.deepcopy(t["core_pg_connect"])   # the piece places hard-core macros
@@ -3492,11 +3499,14 @@ def main(argv=None):
                               unknown=cen["unknown"][:5], missed_sinks=cen["missed_sinks"][:5])))
         return 1 if cen["unplaced"] else 0
     try:
-        ev = Event(spec)
-        ev.out_dir = Path(a.out).resolve()
-        ev.run()
         out = Path(a.out).resolve()
-        rel = a.rel or str(out.relative_to(ROOT))
+        try:
+            rel = a.rel or str(out.relative_to(ROOT))
+        except ValueError as exc:
+            raise SplitError(f"output {out} is outside repository {ROOT}; choose an in-repository output or an explicit --rel before generation") from exc
+        ev = Event(spec)
+        ev.out_dir = out
+        ev.run()
         md5 = ev.write(out, rel)
     except SplitError as e:
         print(f"type_split: FAIL {e}", file=sys.stderr)
