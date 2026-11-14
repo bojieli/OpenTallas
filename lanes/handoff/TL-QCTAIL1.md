@@ -3,3 +3,4 @@ Target: qfd_dv_s8_station_tail1 hard core (162x162, 5 SRAM, pins cores/st_a/qfd_
 NEXT: on pass -> AUTO-RESIGN row, ask KIT-OPS-3 for prov_view_sources, RESULT.
 Form C: epyc9 rkb copy, client epyc7 pid 1876081, log epyc7 tl-qctail1/logs/rkb_epyc9.log (11-14 06:14).
 11-14 06:51: forms rk/rkb FAIL face_guard (flt_* unregistered). New forms rkw (epyc9, util .5, client epyc7 pid 701752) and rkwb (epyc10, util .4, pid 701754) with pin-register wrapper; logs epyc7 tl-qctail1/logs/rkw.log rkwb.log. Old epyc9 form killed.
+11-14 10:18: rkw routed: DRC0 setup+17.9 hold-1.47(3 int). ECO1 running epyc2 eco_rkw (pid 2810283 epyc7). rkwb util.4 parallel form in route.
