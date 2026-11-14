@@ -63,6 +63,21 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
   - GAP: there is no S81-SVCRS-4 row for the hi H4 at 103.68 x 259.2. It has the plan pin table only, which is enough for a logical bind but not for a hi build.
   - 4 hi rows are LOCAL_PASS_NEEDS_PARENT.
 - Run d RUNNING: log intel2 ~/s81-cores-2-logs/svcb3_band_bind_h8d.log.
+### BLOCKED 2026-11-13 22:37 PST: SVC-BAND-3 H8 strict bind (to S81-CORES-2, DIE-S81-90; cc COORD)
+- Bind iterations d-f: errors 1211 -> 488.
+  - Fixed: dissolve chain; files + dsdv_idx_rg2.sv, ot_s81c_attn_h8_rt2.sv, ot_s81_svc_merge_h4.sv, ot_s81_svc_idx_hslice_fp.sv.
+  - hcore/H4/TRX/IRG now bind as leaves on 14 of the 16 svc types.
+  - Last run: unit oth-ubuntu-2665394-1794636127, log intel2 ~/s81-cores-2-logs/svcb3_band_bind_h8f.log, report epyc7 .../svc/band_bind_h8/out/bind_report.json.
+- BLOCKER (die netlist, not mine to change): physical/die_plan/s81/bind/inputs/die_b178_lfcs.v (tools/s81_dv/dv_bind.py) wires the svc gather ring at the H16 width.
+  - Example: u_rsv_02 .gi_d_n(w_sg_03_02_lnd[2132:1]), dsdv_svc_busland_2133, RS_FACE_W go_d 2132 in tools/s81_dv/dv_spare_out.py.
+  - Under OT_SVC_H8 the fv wrappers take H*132+20 = 1076 bits, so 26,540 bits of live dsdv_svc_sx.gi_d faces bind as literal 0 (TIED errors). The H8 dead-input proof correctly does not cover them.
+  - Needs: the die top regenerated with H8 gather lanes (1076 b) by the dv_bind owner.
+- Smaller remaining classes (fix after the regen):
+  - (1) pvso_entry plan types list H16 heads g_h[8..15] (32 per type) that H8 does not have: drop them from the plan.
+  - (2) svc_lo t7 IRG sits under dsdv_idx_rg3_nq (u_irg_07): add it to dissolve.
+  - (3) structural IRG literal ties need declared_ties with RTL proof: hslice cs_in/cf_in chain start 0, first, ksadd b/cin, rg2_m1k wd/ra/wa/re/we, v41x_dly d, mem_ar wa.
+  - (4) epyc7 has NO orfs docker image: 112 native-glue EMIT errors ("Unable to find image openroad/orfs:asap7lock"). The bind and the kit build must run on epyc8 or another host with the image. Lane dir copy to epyc8 at the same path is in progress.
+- NOT launched: the band build (no clean bind). Launcher ready: epyc7 .../svc/band_build_h8.sh (run_kit route = route + finish + signoff, OT_HOLD_STRUCTURAL_ADVISORY=1 NONPORT_HOLD=1).
 
 ## RESULT 2026-11-13 19:45 PST: gunit A1
 - SIGNED OFF (R-MINIMAL): dsdv_gunit_l1f_ba1, built on the A0 recipe (sort guides mirrored for the S face). Routed DRC 0, antenna 0, TT setup -28.65 ps on 60 endpoints (within -42), hold_ff PASS (internal >= 0; raw -12.74 on 32 endpoints is port-start only). Kit epyc8 /srv/opentallas-scratch2/claude/s81-cores-2/gunit_a1/dsdv_gunit_l1f_ba1_gf5bias_sort2cmp (unit oth-ubuntu-2828619-1794620931; the exit 1 is the old setup>=0 gate). The A0+A1 pair is now signed off; F (bf) is still in GRT. TO DIE-S81-90: take A0+A1 views for bind + LATCHECK.
