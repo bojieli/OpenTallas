@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.kv.plan_event.v1",
+ "event": "kv102sem_1113",
+ "date": "2026-11-14",
+ "base": "kv101_ns_1113 (kv101ns_3465fe9) + kv102fx tools",
+ "deltas": [
+  "r8_ev.json = semantic table dkv100/r8_semantic/pc_and_pv_part/r8_candidate.json (30 source-explicit equal-added-offset PV couplings, 32 PC TEP/TOK sublabels, max pad 26, trunk-only +24 cycles); replaces the blanket grouping that fails the PV native trunk replay (88/88, 175 errors)",
+  "kv3_pc_v3.r8_strap_pad_max = 26 (PC capacity exception, COORD/OWNER 11-14)",
+  "tools: landing_placement.tcl KV-CLAND-EDGE2 (1 dbu tolerance on start-window grow bounds)"
+ ],
+ "gates": {
+  "G0": "PASS 0 errors (kv-102/sem/g0)",
+  "strict_bind": "RC 0: 160 partitions, 56 types, 2545 crossings, 429530 bits, 0 errors, 0 unbound/tied/undriven; LATCHECK lane_asbuilt 2404/2404 PASS",
+  "pv_trunk_replay": "NATIVE_TRUNKS bound counts128/128 first224/224 errors0 PASS (tok-verify-2/pv_trunk/sem_kv102)"
+ },
+ "known_open": [
+  "pair image (mu833) recompile on this bind pending/see handoff",
+  "hub_C over cell cap (split lane); pv_v4n split (KV-CAP patch)",
+  "PC has no native token replay"
+ ]
+}
