@@ -709,6 +709,10 @@ def _col_chain(txt, launch, capture):
         if norm(net) == source_expr:
             return regs[::-1]
         seen.add(norm(net))
+        # a full-width slice of a declared vector (w_Q[1:0] of 'wire [1:0] w_Q') is the vector itself
+        full = re.fullmatch(r'([\w$]+)\s*\[\s*(\d+)\s*:\s*0\s*\]', net)
+        if full and re.search(r'\b(?:wire|reg)\s*\[\s*' + full.group(2) + r'\s*:\s*0\s*\]\s*' + re.escape(full.group(1)) + r'\b', txt):
+            net = full.group(1)
         if not re.fullmatch(r'[\w$]+', net):
             return []
         alias = re.search(r'\bassign\s+' + re.escape(net) + r'\s*=\s*([^;]+);', txt)
