@@ -6915,7 +6915,8 @@
     "col_h9_r1__t1__cl49d7a23e__pv47efee8f@5",
     "col_h9_r0_p5__t1__pvc93af856@4",
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@5",
-    "ot_s81sl_leaf__t62@8"
+    "ot_s81sl_leaf__t62@8",
+    "dsdv_slice_c3x_C__t1@23"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -8155,7 +8156,8 @@
     "serdes__t14@11": "OWNER 11-14: native cell cap deleted (advisory in every wave src: native_cell_cap.tcl LIMIT-BIND-1; --native-cell-cap removed from KV gen_args and S81 serdes type_args); relaunch.",
     "col_h9_r1__t1__cl49d7a23e__pv47efee8f@5": "FABLE-REVIEW-COL R-COL-3 canary: OT_RELAY_MID_RE=^(.*[._]u_y_...)[.] + OT_RELAY_MID_FIT=1 (gen_phys overlay reads OT_RELAY_MID_RE from env), fresh kit (stage_resume_off). Gate: relay hop median <= 405 um at place.",
     "col_h9_r0_p5__t1__pvc93af856@4": "FABLE-REVIEW-COL R-COL-3 canary: OT_RELAY_MID_RE=^(.*[._]u_y_...)[.] + OT_RELAY_MID_FIT=1 (gen_phys overlay reads OT_RELAY_MID_RE from env), fresh kit (stage_resume_off). Gate: relay hop median <= 405 um at place.",
-    "ot_s81sl_leaf__t62@8": "KIT-OPS-4 11-14 COORD: a8 gen failed (lk_WN0 two --clock-landing) on old gen_args; type_args entry removed; fresh kit"
+    "ot_s81sl_leaf__t62@8": "KIT-OPS-4 11-14 COORD: a8 gen failed (lk_WN0 two --clock-landing) on old gen_args; type_args entry removed; fresh kit",
+    "dsdv_slice_c3x_C__t1@23": "KIT-OPS-4 11-14 COORD: earlyoom kill (rc143/Error 241, INFRA) gen_lint on epyc8; retry now"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -21821,7 +21823,8 @@
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
-    "OT_PREGRT_FF_HOLD_AUTO": "100"
+    "OT_PREGRT_FF_HOLD_AUTO": "100",
+    "OT_TAP_MAX_SINKS": "100000"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
