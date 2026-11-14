@@ -2537,7 +2537,7 @@ def check_registered_pins(P, R, plan_dir=None):
     return summ
 
 
-def check_r8(P, R, plan_dir=None, groups=None, landing=None):
+def check_r8(P, R, plan_dir=None, groups=None, landing=None, strap_pads=False):
     """COORD R8 (r8.py) on BINDER2's bus groups.  No bus groups -> WARN (R8 cannot be judged without the bind)."""
     import r8
     pd = Path(plan_dir) if plan_dir else None
@@ -2604,7 +2604,7 @@ def check_r8(P, R, plan_dir=None, groups=None, landing=None):
             except (ValueError, TypeError, re.error) as exc:
                 R.err("r8", f"invalid R8 landing table options in {landing}: {exc}")
                 return dict(checked=False, groups_file=str(groups), landing_file=str(landing), invalid_options=True)
-        msgs, st = r8.check(bg, P.raw, lmap, **mode)
+        msgs, st = r8.check(bg, P.raw, lmap, strap_pads=strap_pads, **mode)
     finally:
         r8.EXEMPT[:] = old_exempt
         r8.LANDED.clear()
@@ -2691,7 +2691,7 @@ def _plan_geom_default():
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
-        street_rule="off"):
+        street_rule="off", r8_strap_pads=False):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2755,7 +2755,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         summ["tap_sink_cap"] = check_tap_sink_cap(P, R, severity=tap_sink_cap)
     summ["cuts"] = check_cuts(P, R, geo, full_cut)
     summ["latency"] = check_latency(P, R)
-    summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
+    summ["r8"] = check_r8(P, R, plan_dir, groups, landing, strap_pads=r8_strap_pads)
     rp = check_registered_pins(P, R, plan_dir)
     if rp:
         summ["registered_pins"] = rp
@@ -2840,6 +2840,9 @@ def main(argv=None):
     ap.add_argument("--quiet", action="store_true")
     ap.add_argument("--groups", help="R8: BINDER2 bus_groups.json (default PLANDIR/bind/bus_groups.json)")
     ap.add_argument("--landing", help="R8: <die>_r8_landing.json (default PLANDIR/*/<die>_r8_landing.json)")
+    ap.add_argument("--r8-strap-pads", action="store_true",
+                    help="R8: check static-count pad banks when the actual asbuilt manifest enables "
+                         "land_r8_strap_pads; default off. Does not waive bank-capacity checks.")
     ap.add_argument("--cells-evidence", action="append", default=[],
                     help="cells.py evidence file (type / partition / module cell table or Yosys stat); repeatable; "
                          "PLANDIR cells_est.json, plan_notes.json, l1_cores_v3*.json, cells_evidence.json are read too")
@@ -2885,7 +2888,8 @@ def main(argv=None):
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
     out.mkdir(parents=True, exist_ok=True)
     R, summ = run(raw, png=(out / "die_plan.png") if a.png else None, plan_dir=Path(a.plan).resolve().parent,
-                  groups=a.groups, landing=a.landing, evidence=a.cells_evidence, core_conns=a.core_conns,
+                  groups=a.groups, landing=a.landing, r8_strap_pads=a.r8_strap_pads,
+                  evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
                   core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, core_shape_index=a.core_shape_index,
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
