@@ -6,3 +6,4 @@
 - COORD 08:3x: kills were deliberate dedup; keeper pv082a7609 (epyc10). Follow it only; credit all 12 on pass; relaunch only the keeper if it dies.
 - 08:40 keeper pv082a7609 died grt-overflow (106%, 36026 gcells>90%) on unsnapped B3v; asked DIE-S81-92/COL-SNAP-BUILD to move p6 to snapped plan + landing/street fix. Next: watch for p6 relaunch on new plan.
 - 08:5x hotspot map done (see queue line). fa/fb launched via kit_wave.py run-item (intel2 ~/tl-colh9r0p6/{fa,fb}), work epyc10/epyc7 tl-colh9r0p6. After geom run route (ot-run run_kit.sh route) per COL-SNAP-BUILD practice; credit all 12 pv on pass. Waiter b4gmnfcj8 stopped.
+- 15:5x fa route failed grt (850 units, o0_3 frame channel). fc (orig + ALLOW_CONGESTION=1) launched intel2 ~/tl-colh9r0p6/fc; fb route queued. Next: route fc after geom; check fb.
