@@ -6709,7 +6709,8 @@
     "svc_lo_dsdv_svc_rs__t6@1",
     "svc_lo_dsdv_svc_rs_w__t1@1",
     "svc_hi_dsdv_svc_rs__t3@2",
-    "ot_s81sl_leaf__t2@8"
+    "ot_s81sl_leaf__t2@8",
+    "dsdv_slice_lepe_nh_mus_LP__t1@7"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -6872,7 +6873,6 @@
     "dsdv_slice_lepe_mu_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
     "dsdv_slice_lepe_mu_LP__t2": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
     "dsdv_slice_lepe_nh_mus_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
-    "dsdv_slice_lepe_nh_mus_LP__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
     "dsdv_slice_lepw_mu_LP__t2": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
     "dsdv_slice_lepw_mus_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
     "col_h10_r0_p4__t1__pv07945c1e": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key. | was col_h*: COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
@@ -8015,7 +8015,8 @@
     "dsdv_slice_c1x_C__t8@2": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
     "ot_s81sl_leaf__t2@8": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
     "ot_s81sl_leaf__t53__clb66fa5cb@2": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
-    "ot_s81sl_leaf__t68@2": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch."
+    "ot_s81sl_leaf__t68@2": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
+    "dsdv_slice_lepe_nh_mus_LP__t1@7": "TYPE-LEPE (COORD 01:xx): B2-HOLD-1113 lifted for this item only; builds on B1 with the spliced M6 view in parallel with B2 (rebuilt if B2 adopts)."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -21499,7 +21500,8 @@
     "slice_station__t8",
     "slice_station__t29",
     "slice_station__t40",
-    "slice_station__t42"
+    "slice_station__t42",
+    "dsdv_slice_lepe_nh_mus_LP__t1"
    ],
    "prov_require_cands": true,
    "hosts_base_prev_kw45_epyc4off": [
@@ -28570,6 +28572,9 @@
    "die_gen_env_prev_kitops3_lb": {
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1"
+   },
+   "hold_items_lifted_kitops3_lepe": {
+    "dsdv_slice_lepe_nh_mus_LP__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key."
    }
   },
   "s81_head": {
