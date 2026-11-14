@@ -38,6 +38,15 @@ class Overload(unittest.TestCase):
         self.assertAlmostEqual(M.spill_dst_ratio(1.4), 0.85)  # max(0.85, 0.7) capped by source minus gap 0.9
         self.assertAlmostEqual(M.spill_dst_ratio(1.2), 0.7)
 
+    def test_unreachable_host_is_never_picked_or_queued_on(self):
+        # an ssh/probe failure row ({"error": ...}) must not win placement even with the most free memory
+        bad = {"error": "SSH probe exit 255: Connection closed"}
+        h, q = M.choose({"intel1": bad, "epyc8": row(140, admit=100)}, 48, 8)
+        self.assertEqual((h, q), ("epyc8", False))
+        h, q = M.choose({"intel1": bad, "epyc8": row(140, admit=10, free=50)}, 48, 8)
+        self.assertEqual((h, q), ("epyc8", True))
+        self.assertEqual(M.choose({"intel1": bad}, 48, 8), (None, False))
+
 
 if __name__ == "__main__":
     unittest.main()
