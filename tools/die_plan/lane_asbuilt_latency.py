@@ -38,6 +38,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import core_latency as CL  # noqa: E402  (declared hard-core cycles, CORE-LAT-1)
 
 INST_RX = re.compile(r"^[ \t]*(\w+)[ \t]*(#\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\))?\s*(u_(?:bout|bin|lpad|ist|ft|fx|rs)_\w+)\s*\(",
                      re.M)
@@ -96,7 +97,7 @@ def kit_depth(typ, bus):
     Bus chain = the deepest non-core entry (bus_entries merges per-core rows; bit_route / exact rows of one conn extend
     one chain to the deepest); core chains (entries with 'core') all carry one depth (core_pin_stations)."""
     rows = [e for e in (typ or {}).get("internal_stations", []) if e.get("conn") == "bus:" + bus]
-    return (max((len(e.get("regs_um", [])) for e in rows if not e.get("core")), default=0),
+    return (max((len(e.get("regs_um", [])) for e in rows if not e.get("core")), default=0) + CL.out_cycles(typ, bus),
             max((len(e.get("regs_um", [])) for e in rows if e.get("core")), default=0))
 
 
