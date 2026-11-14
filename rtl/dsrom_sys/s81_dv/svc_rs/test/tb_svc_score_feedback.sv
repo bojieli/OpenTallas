@@ -2,11 +2,12 @@
 // Staged partition: real native SCORE trace -> actual 16-node protected SX
 // -> active head0's production row glue -> actual fold2 -> SRAM -> P source
 // -> actual SX -> production P packet glue. Other SM heads are zero providers.
-// Trace source replication and rs_c glue are explicit; no full die/PIO claim.
+// Trace source replication and rs_c glue are explicit; no full die/pio_base claim.
 module tb_svc_score_feedback;
  `include "dsdv_svc_rs_roles.svh"
  `include "dsdv_svc_sx_roles_h8.svh"
- localparam integer H=8,W=1076,SRC_GO=128,PIO=800,SEL=10;
+ localparam integer H=8,W=1076,SRC_GO=128,SEL=10;
+ integer pio_base=800,early=0;
  reg ck=0;always #0.5 ck=~ck;reg rn=0;
  integer cyc=0,drop=0,errors=0,root_scores=0,taps=0,serows=0,writes=0,nzrows=0,pfires=0,proots=0,pheaders=0,pwords=0,missing_n=0;
  integer first_root=-1,last_root=-1,first_tap=-1,last_tap=-1,first_se=-1,last_se=-1,first_sm=-1,last_sm=-1,first_pf=-1,last_pf=-1,first_pr=-1,last_pr=-1,header_date=-1,first_pw=-1,last_pw=-1;
@@ -16,7 +17,7 @@ module tb_svc_score_feedback;
  wire[15:0]rt_v,t_v,xf;wire[W-1:0]rt_d[0:15];wire[19:0]t_tag[0:15];wire[127:0]t_y[0:15];wire[3:0]t_f[0:15];
  reg[15:0]lv;reg[W-1:0]ld[0:15];
  wire[15:0]pfire,pmissing;wire[W-1:0]pbeat[0:15];reg[7:0]pk[0:15];
- wire pwin=cyc>=PIO-8;
+ wire pwin=cyc>=pio_base-8;
  function automatic integer neighbor(input integer s,input integer f);integer r,c;r=s%2;c=s/2;case(f)0:return r==0?2*c+1:-1;1:return c<7?2*(c+1)+r:-1;2:return r==1?2*c:-1;default:return c>0?2*(c-1)+r:-1;endcase endfunction
  function automatic integer tile_of(input integer s);reg[21:0]r;r=rs_role(4'(s));return r[3:0];endfunction
  function automatic[31:0]times16(input[31:0]x);if(x==0)return 0;return {x[31],8'(x[30:23]+8'd4),x[22:0]};endfunction
@@ -32,7 +33,7 @@ module tb_svc_score_feedback;
    else begin assign gi_v[s][f]=0;assign gi_d[s][W*f+:W]=0;assign si_v[s][f]=0;assign si_d[s][W*f+:W]=0;end
   end
   dsdv_svc_sx_pl u(.ck(ck),.rst(rn),.sid(4'(s)),.l_v(lv[s]),.l_d(ld[s]),.gi_v(gi_v[s]),.gi_d(gi_d[s]),.go_v(go_v[s]),.go_d(go_d[s]),.si_v(si_v[s]),.si_d(si_d[s]),.so_v(so_v[s]),.so_d(so_d[s]),.rt_v(rt_v[s]),.rt_d(rt_d[s]),.t_v(t_v[s]),.t_tag(t_tag[s]),.t_y(t_y[s]),.t_f(t_f[s]),.fault(xf[s]));
-  dsdv_svc_p_source #(.H(8))u_p(.pon(rn&&pwin),.hsel(tile_of(s)<8),.pk(pk[s]),.tile(4'(tile_of(s))),.tjob(10'd32),.jcs(16'(cyc)),.pio(16'(PIO+sx_role_off(s))),.prw(s==SEL?prw:256'd0),.rows_ready(s==SEL?pb_n:6'd2),.fire(pfire[s]),.missing(pmissing[s]),.beat(pbeat[s]));
+  dsdv_svc_p_source #(.H(8))u_p(.pon(rn&&pwin),.hsel(tile_of(s)<8),.pk(pk[s]),.tile(4'(tile_of(s))),.tjob(10'd32),.jcs(16'(cyc)),.pio(16'(pio_base+sx_role_off(s))),.prw(s==SEL?prw:256'd0),.rows_ready(s==SEL?pb_n:6'd2),.fire(pfire[s]),.missing(pmissing[s]),.beat(pbeat[s]));
  end endgenerate
  always@(posedge ck)begin
   cyc<=cyc+1;
@@ -139,6 +140,8 @@ module tb_svc_score_feedback;
  end
  initial begin
   void'($value$plusargs("drop=%d",drop));
+  void'($value$plusargs("pio=%d",pio_base));
+  void'($value$plusargs("early=%d",early));
   if(!$value$plusargs("scores=%s",scores_file)||!$value$plusargs("dates=%s",dates_file))$fatal(1,"missing trace files");
   $readmemh(scores_file,src);$readmemh(dates_file,dates);
   for(integer k=0;k<16;k++)begin pk[k]=0;ld[k]=0;end
@@ -147,7 +150,10 @@ module tb_svc_score_feedback;
   if(root_scores!=8||taps!=8||serows!=2||writes!=2||nzrows!=2||pfires!=8||proots!=8||pheaders!=1||pwords!=8||missing_n||fu||fo||(|xf))errors++;
   $display("FEEDBACK_DATES sourceGO%0d root%0d:%0d tap%0d:%0d SE%0d:%0d SM%0d:%0d Pfire%0d:%0d Proot%0d:%0d Pheader%0d Pbody%0d:%0d",SRC_GO,first_root,last_root,first_tap,last_tap,first_se,last_se,first_sm,last_sm,first_pf,last_pf,first_pr,last_pr,header_date,first_pw,last_pw);
   $display("FEEDBACK_COUNTS drop%0d roots%0d taps%0d SE%0d SM%0d nonzero%0d Pfire%0d Proot%0d headers%0d words%0d missing%0d errors%0d sxFault%h fu%0d fo%0d",drop,root_scores,taps,serows,writes,nzrows,pfires,proots,pheaders,pwords,missing_n,errors,xf,fu,fo);
-  if(drop)begin if(errors==0)$fatal(1,"FEEDBACK_DROP MISSED");$display("SCORE_FEEDBACK NEGATIVE_CAUGHT");end
+  $display("FEEDBACK_SCHEDULE pioBase%0d selectedFirst%0d earlyControl%0d",pio_base,pio_base+sx_role_off(SEL),early);
+  if(early&&(missing_n==0||(|xf)||fu||fo))$fatal(1,"EARLY control did not isolate missing P rows");
+  if(drop&&!(|xf))$fatal(1,"DROP control missed SX fault");
+  if(drop||early)begin if(errors==0)$fatal(1,"FEEDBACK_DROP MISSED");$display("SCORE_FEEDBACK NEGATIVE_CAUGHT");end
   else if(errors)$fatal(1,"SCORE_FEEDBACK FAIL");else $display("SCORE_FEEDBACK PASS");
   $finish;
  end

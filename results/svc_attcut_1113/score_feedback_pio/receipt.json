@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "scope": "named fixedT32 head0 actual P-buffer prefetchedread/return schedule; not globalPIO/minimum",
+  "unit": "oth-ubuntu-2836674-1794616601",
+  "source_virtual_go": 128,
+  "same_observed_native_root_tap_SE_SM_dates_as": "aa7281b932",
+  "observed_first_sm_pbuffer_write": 391,
+  "observed_final_sm_pbuffer_write": 393,
+  "tested_conservative": {
+    "pio_base": 384,
+    "selected_first_fire": 394,
+    "relative_to_first_sm_write": 3,
+    "relative_to_last_sm_write": 1,
+    "selected_fire_dates": [
+      394,
+      408
+    ],
+    "p_root_dates": [
+      436,
+      450
+    ],
+    "header_date": 437,
+    "body_dates": [
+      438,
+      452
+    ],
+    "go_relative_fire": [
+      266,
+      280
+    ],
+    "go_relative_root": [
+      308,
+      322
+    ],
+    "go_relative_header": 309,
+    "go_relative_body": [
+      310,
+      324
+    ],
+    "missing": 0,
+    "data_errors": 0,
+    "sx_fault": 0,
+    "sm_fu_fo": [
+      0,
+      0
+    ],
+    "Pwords8exact": true
+  },
+  "too_early_control": {
+    "pio_base": 380,
+    "selected_first_fire": 390,
+    "before_first_write_by": 1,
+    "missing": 1,
+    "data_errors": 6,
+    "error_diagnosis": "4rootFP32coefficientslost +1packedPwordmismatch +finalmissingpredicate",
+    "sx_fault": 0,
+    "sm_fu_fo": [
+      0,
+      0
+    ],
+    "caught": true
+  },
+  "not_tested": [
+    "firstfire392",
+    "firstfire393",
+    "globalallheadPIO",
+    "otherT"
+  ],
+  "protected_sx_cache_reused": "score_feedback/out/pl/libdsdv_svc_sx_pl.a",
+  "new_native_compile": false,
+  "sources_sha256": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_svc_score_feedback.sv": "65dd61eb42a82f4cbb3a8a7f8cf39f79d065159c62eddddc44d8b6d8c8db5c66",
+    "tools/s81_dv/svc_rs/run_score_feedback.sh": "f9db6297762f1d26835d0e06ca7fe00a346570668286d4d3e67c5dd3a24b2f12"
+  }
+}
