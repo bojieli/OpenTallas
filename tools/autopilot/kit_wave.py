@@ -175,7 +175,7 @@ GATE_KEYS = ("bind", "clock")                 # plan event checks that must be P
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["*"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
-            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2", "epyc4"],
+            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
             # steps up to the first step whose input fingerprint changed (kit_resume.py); die/global false opts out
@@ -1200,6 +1200,25 @@ def wait_child_summary(AP, cfg, st):
                           "held-by-hand = dies.%s.auto_core_hold." % die)
 
 
+_LIVE_PRIV_CACHE = {"t": 0.0, "txt": ""}
+
+
+def _live_private_job(item):
+    """KIT-OPS-4 11-14 (COORD/OWNER parallel forms, first pass wins): a coord mention alone is not a claim.  A lane defers the wave
+    only while it has a LIVE private job for the item: an ot-run / ot-job / docker process on this hub whose command line names the
+    item outside the wave's own kit-wave dirs.  On a ps failure the old behaviour (defer) stands."""
+    try:
+        if time.time() - _LIVE_PRIV_CACHE["t"] > 60:
+            out = subprocess.run(["ps", "-eo", "args"], capture_output=True, text=True, timeout=20).stdout
+            _LIVE_PRIV_CACHE["txt"] = "\n".join(l for l in out.splitlines()
+                                                 if ("ot-run" in l or "ot-job" in l or "ot-heavy" in l or "docker" in l)
+                                                 and "/kit-wave/" not in l)
+            _LIVE_PRIV_CACHE["t"] = time.time()
+        return item in _LIVE_PRIV_CACHE["txt"]
+    except Exception:
+        return True
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -1315,7 +1334,8 @@ def select(rows, cfg, die, state, plan_types=None):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
                 and not str(r["owner"]).startswith("KIT-WAVE") \
-                and not (r["kind"] == "type" and r["owner"] in generic):
+                and not (r["kind"] == "type" and r["owner"] in generic) \
+                and _live_private_job(r["item"]):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
             # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
