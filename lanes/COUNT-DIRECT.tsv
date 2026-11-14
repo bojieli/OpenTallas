@@ -1,0 +1,5 @@
+# COUNT-FRICTION-1 11-14: <host><TAB><signoff.json path>.  Read straight from the host by the counter (no walk, no commit/tag, no archive wait);
+# counts when the record passes counts_signed (verdict SIGNED or R-MINIMAL gates).  Add a row, the next count picks it up.
+epyc10	/srv/opentallas-scratch3/claude/kv-pvfin-1/signoff_s8pin2b/signoff.json
+epyc7	/srv/opentallas-scratch2/claude/die-s81-85/t51w_c/s81p_slice_station__t51_ot_s81_station_t51_native_w_rc51c/signoff/signoff.json
+epyc2	/srv/opentallas-scratch2/claude/codex-kv-ex-closure-1131/place70/signoff/signoff.json

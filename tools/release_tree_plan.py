@@ -37,7 +37,9 @@ CACHE = pathlib.Path(os.environ.get('OT_COUNT_CACHE') or pathlib.Path.home() / '
 # inside the directory"): SIGNED records come from the durable store (signed_store.py, ~/coord/signed-store + AGIdock), not from
 # a walk of the fleet.  OT_COUNT_SOURCE=hosts is the old walk; 'store' reads no host and any ssh raises (NoHostAccess).
 SIGNED_SOURCE = os.environ.get('OT_COUNT_SOURCE', 'store')   # live since 2026-11-08: count from the store; OT_COUNT_SOURCE=hosts is the old walk
-SKIP_G0C = bool(os.environ.get('OT_COUNT_SKIP_G0C'))   # private proof runs only: no G0C, signed matching only
+# COUNT-FRICTION-1 11-14 (OWNER 00:3x: no full plan check in the count): the count never waits on tools/die_plan/check.py (G0C, ~10-30 min);
+# merge_with_cache carries the last G0C values per plan (g0c_stale_since).  OT_COUNT_G0C=1 runs the plan check again (private / die-owner use).
+SKIP_G0C = not bool(os.environ.get('OT_COUNT_G0C'))
 STORE_PINS = {}
 REFRESH_S = 50 * 60
 # release-tree die key -> (plan dir under physical/die_plan, plan-of-record file relative to the repo root).
@@ -583,8 +585,30 @@ def counts_signed(d):
     # sign-off is SIGNED and the only open reason is io_hold_parent (that receipt moves to the die STA FF row).
     v = d.get('verdict')
     if v == 'SIGNED': return True
-    if v != 'LOCAL_PASS_NEEDS_PARENT' or d.get('local_verdict') != 'SIGNED': return False
-    return all(str(r).startswith('io_hold_parent') for r in (d.get('reasons') or []))
+    if v == 'LOCAL_PASS_NEEDS_PARENT' and d.get('local_verdict') == 'SIGNED' and all(str(r).startswith('io_hold_parent') for r in (d.get('reasons') or [])): return True
+    return rminimal(d)
+def _fin(x):
+    try: x = float(x)
+    except (TypeError, ValueError): return None
+    return x if abs(x) < 1e6 else None
+def rminimal(d):
+    # COUNT-FRICTION-1 11-14 (R-MINIMAL, OWNER 11-13 17:5x; same metrics as tools/die_plan/signoff_profile.py): a record counts when detailed-route
+    # DRC is 0, TT setup WNS >= -42 ps (833 ps) and the INTERNAL FF hold >= 0 (a hold miss only at input ports is allowed); every other
+    # check is advisory.  This lets a record whose legacy verdict is NOT SIGNED for an advisory reason count.
+    try:
+        ch = d.get('checks') or {}
+        drc = (ch.get('drc') or {}).get('count') if isinstance(ch.get('drc'), dict) else None
+        if drc is None: drc = (d.get('route') or {}).get('drc')
+        st = ch.get('setup_tt') if isinstance(ch.get('setup_tt'), dict) else {}
+        tt = _fin(st.get('wns_ps'))
+        if tt is None: tt = _fin(st.get('sdc_wns_ps'))
+        hf = ch.get('hold_ff') if isinstance(ch.get('hold_ff'), dict) else {}
+        ff = _fin(hf.get('wns_ps'))
+        if ff is None: ff = _fin(hf.get('sdc_wns_ps'))
+        if drc is None or int(drc) != 0 or tt is None or tt < -42.0 or ff is None: return False
+        return ff >= 0.0 or (bool(hf.get('port_only_needs_parent')) and hf.get('verdict') == 'PASS')
+    except Exception:
+        return False
 def resign(f, x, load):
     # COORD ruling 2026-10-30 02:03 (3b): RE-SIGN record = a routed DB re-checked (signoff.py TT/FF/DRC + post-route LEC)
     # with tools at a released flow tag.  PROVENANCE.json {kind: resign, src_commit: tag commit, flow_tag, routed_db,
@@ -738,6 +762,67 @@ def scan_host(h, known=()):
     return recs
 
 
+# COUNT-FRICTION-1 11-14 (OWNER: count a result without waiting for commit / tag / archive; COORD EXPERT-REVIEW-6 #5): sign-off paths of
+# autopilot rows SIGNED-UNVERSIONED / WAIT-PARENT / TRIAL-SIGNED (state.json) and the rows of lanes/COUNT-DIRECT.tsv ('<host>\t<signoff.json path>')
+# are read straight from their host (no walk: the paths only, parallel, short timeout) and judged by the same counts_signed (verdict SIGNED /
+# R-MINIMAL gates).  A host that does not answer keeps its last read (direct_records.json).  The ingest still archives them for later.
+DIRECT_STATUS = ('SIGNED-UNVERSIONED', 'WAIT-PARENT', 'TRIAL-SIGNED')
+DIRECT_READ_S = 120
+COORD_DIR = pathlib.Path(__file__).resolve().parent.parent
+
+
+def direct_paths():
+    out = {}
+    try:
+        jobs = json.loads((COORD_DIR / 'autopilot/state.json').read_text()).get('jobs') or {}
+        for j in (jobs.values() if isinstance(jobs, dict) else jobs):
+            if not isinstance(j, dict) or j.get('status') not in DIRECT_STATUS: continue
+            c = j.get('chain') if isinstance(j.get('chain'), dict) else {}
+            p = c.get('signoff') or j.get('signoff')
+            if isinstance(p, str) and p.startswith('/') and j.get('host'):
+                out.setdefault(j['host'], set()).add(p)
+    except Exception:
+        pass
+    try:
+        for l in (COORD_DIR / 'lanes/COUNT-DIRECT.tsv').read_text().splitlines():
+            f = l.split('\t')
+            if len(f) >= 2 and not l.startswith('#') and f[1].startswith('/'): out.setdefault(f[0], set()).add(f[1].strip())
+    except OSError:
+        pass
+    return {h: sorted(v) for h, v in out.items() if h in HOSTS}
+
+
+def read_direct(h, paths):
+    cmd = ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, scan_cmd(roots=' ')]
+    if h == 'local': cmd = ['bash', '-c', scan_cmd(roots=' ')]
+    r = sh(cmd, DIRECT_READ_S, input=''.join(p + '\n' for p in paths))
+    if r.returncode == 255 and not r.stdout.strip() and 'resolve hostname' in r.stderr:   # the hub reading its own paths (it has no name for itself)
+        r = sh(['bash', '-c', scan_cmd(roots=' ')], DIRECT_READ_S, input=''.join(p + '\n' for p in paths))
+    lines = r.stdout.strip().splitlines()
+    recs = json.loads(lines[-1])
+    for x in recs: x['scan_host'] = h; x['direct'] = True
+    return recs
+
+
+def direct_records(log=lambda *a: None):
+    f = CACHE.parent / 'direct_records.json'
+    try: last = json.loads(f.read_text())
+    except Exception: last = {}
+    want = direct_paths()
+    out, new = [], {}
+    with cf.ThreadPoolExecutor(max(1, len(want))) as ex:
+        futs = {ex.submit(read_direct, h, ps): h for h, ps in want.items()}
+        for fu, h in futs.items():
+            try: rs = fu.result(timeout=DIRECT_READ_S + 30)
+            except Exception as e:
+                rs = last.get(h) or []; log('direct read %s failed (%s); last read kept (%d)' % (h, str(e)[:80], len(rs)))
+            new[h] = rs; out += rs
+    try:
+        t = f.with_suffix('.tmp'); t.write_text(json.dumps(new)); os.replace(t, f)
+    except OSError: pass
+    return out
+
+
 def known_paths(old, h):
     """record paths of host h in the last cache: its records, and the refs of a credit carried while the host was down"""
     ps = {r_['path'] for r_ in (old or {}).get('signed_records') or [] if r_.get('scan_host') == h and r_.get('path')}
@@ -764,7 +849,16 @@ def first_flow_tag_ts():
     return min(ts) if ts else None
 
 
+_TAG_MEMO = {}
+
+
 def tag_commit(tag):
+    # COUNT-FRICTION-1 11-14: one git call per distinct tag, not per record (30,409 git subprocesses = 350 s of a count)
+    if tag not in _TAG_MEMO: _TAG_MEMO[tag] = _tag_commit(tag)
+    return _TAG_MEMO[tag]
+
+
+def _tag_commit(tag):
     if TAGS_FILE: return (json.load(open(TAGS_FILE))['tags'].get(tag) or '')
     r = sh(['git', '-C', str(REPO), 'rev-parse', '-q', '--verify', 'refs/tags/%s^{commit}' % tag], 30)
     return r.stdout.strip() if r.returncode == 0 else ''
@@ -858,7 +952,17 @@ def main_view_pins(d):
     return out
 
 
+_KEYS_MEMO = {}
+
+
 def rec_keys(r):
+    # COUNT-FRICTION-1 11-14: 8 M calls per count; the key set depends on (top, name) only
+    k = (r.get('top'), r.get('name'))
+    if k not in _KEYS_MEMO: _KEYS_MEMO[k] = frozenset(_rec_keys(r))
+    return _KEYS_MEMO[k]
+
+
+def _rec_keys(r):
     ks = set()
     for v in (r.get('top'), r.get('name')):
         if not v: continue
@@ -1613,6 +1717,12 @@ def refresh(log=lambda *a: None, old=None):
                     STORE_PINS[k] = dict(v, shapes={a: [tuple(x) for x in b] for a, b in v['shapes'].items()}) if v.get('shapes') else v
                 recs += srecs; scanned.append('signed-store')
                 log('signed-store: %d records, %d pin tables' % (len(srecs), len(pins)))
+            try:
+                have_ = {(x.get('scan_host'), x.get('path')) for x in recs}
+                dr = [x for x in direct_records(log) if (x.get('scan_host'), x.get('path')) not in have_]
+                recs += dr; scanned.append('direct:%d' % len(dr)); log('direct reads: %d records not in the store' % len(dr))
+            except Exception as e:
+                errs.append('DIRECT read: %s' % e)
             for f, h in futs.items():
                 try:
                     recs += f.result(timeout=SCAN_SSH_S + 60); scanned.append(h)
@@ -1644,7 +1754,7 @@ def refresh(log=lambda *a: None, old=None):
             for r_ in recs:
                 ks = rec_keys(r_)
                 ref = r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path']
-                if r_.get('versioned') or r_.get('legacy'): live.add(ref)
+                live.add(ref)   # COUNT-FRICTION-1: every counting record is live, tagged or not
                 if r_.get('versioned'):
                     ref += ' src %s flow %s' % (str(r_['src_commit'])[:12], r_['flow_tag'])
                     if r_.get('resign'):
@@ -1652,10 +1762,13 @@ def refresh(log=lambda *a: None, old=None):
                     if r_.get('credit'):
                         ref += ' COUNT-CREDIT ' + r_['credit']
                 elif r_.get('resign_error'):
-                    ref += ' RE-SIGN-INVALID ' + r_['resign_error']
+                    ref += ' SIGNED-NO-TAG (re-sign provenance not used: ' + r_['resign_error'] + ')'
                 elif r_.get('legacy'):
                     ref += ' SIGNED-LEGACY'
-                T, C = (st, sc) if (r_.get('versioned') or r_.get('legacy')) else (ut, uc)
+                else:
+                    ref += ' SIGNED-NO-TAG'   # COUNT-FRICTION-1 11-14 (OWNER): no src commit / flow tag needed to count
+                if r_.get('direct'): ref += ' DIRECT-READ (not yet in signed-store)'
+                T, C = st, sc
                 for k, m in tm.items():
                     if k in ks or m in ks:
                         why = name_retired(r_, ent['die'], names, (k, m))
