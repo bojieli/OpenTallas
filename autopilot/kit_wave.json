@@ -28628,7 +28628,8 @@
     "hd_host_e@1",
     "hd_serdes@1",
     "hd_tile@1",
-    "hd_mesh@2"
+    "hd_mesh@2",
+    "hd_serdes@3"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -28697,7 +28698,8 @@
     "hd_host_e@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "hd_serdes@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "hd_tile@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
-    "hd_mesh@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists)."
+    "hd_mesh@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "hd_serdes@3": "TYPE-HDSERDES (COORD 00:5x): third parallel form, OT_GEN_SECONDARY_CLOCK=hd_serdes:pma_rck[0]:pma_rck:1000:80:210 via HEAD-SERDES-SECONDARY overlay on src_head_rp21z_pgcap1d724b73; running attempt cancelled (kit_rtl stage) and relaunched."
    },
    "gen_hosts": [
     "epyc7",
@@ -28753,7 +28755,8 @@
      "OT_GEN_M8_GRANT": "1",
      "OT_PLACE_MAX_FANOUT": "32",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_CONS_STRIP_ROWS": "1"
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_GEN_SECONDARY_CLOCK": "hd_serdes:pma_rck[0]:pma_rck:1000:80:210"
     },
     "hd_spn": {
      "OT_IO_HOLD": "sender_min",
