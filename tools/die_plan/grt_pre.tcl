@@ -44,3 +44,9 @@ if {[info exists ::env(OT_HOP_LATCH_CAPTURE_TAP)] && [string trim $::env(OT_HOP_
     puts "OT_HOP_LATCH_HOLD [llength $::ot_hlh_pins] hop latch clock pins carry -hold uncertainty $ot_hlh_ps ps for the GRT hold repair"
   }
 }
+# FLOW-PGCAP-1 11-13 PG-TRACK-TRUTH (default on for the R-FLOW kit classes, OT_PG_TRACK_TRUTH=1): temporary GRT
+# obstructions over the spacing-illegal tracks of every PG stripe, so GRT capacity = DRT-legal tracks (DRT-0255 class);
+# grt_post.tcl removes them before 5_1_grt.odb is written.  Last, so every earlier hook sees the kit unchanged.
+if {[info exists ::env(OT_PG_TRACK_TRUTH)] && $::env(OT_PG_TRACK_TRUTH) eq "1"} {
+  source [file join [file dirname [file normalize [info script]]] pg_track_truth.tcl]; ot_pgtt_add
+}
