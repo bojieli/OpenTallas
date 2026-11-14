@@ -94,6 +94,19 @@ class NativeStations(unittest.TestCase):
   with self.assertRaisesRegex(ValueError,'unique bound payload width'):
    native_istations.materialize(b,'sys',Path('/tmp/never_native_width.sv'))
 
+ def test_strict_bind_collects_width_errors(self):
+  # KV-101/SPLIT: with a bind error list the width guards are collected (type not materialized, file untouched)
+  b,L=self.fixture();L['width']=9;b.errors=[]
+  with tempfile.TemporaryDirectory() as tmp:
+   f=Path(tmp)/'vehicle.sv';f.write_text('module vehicle();endmodule\n')
+   native_istations.materialize(b,'sys',f)
+   self.assertEqual(f.read_text(),'module vehicle();endmodule\n')
+  self.assertEqual(len(b.errors),1)
+  self.assertRegex(b.errors[0],r'^NATIVE_ISTATION_WIDTH native stations sys.o: bound width exceeds plan capacity \(bound 9, plan 8\)')
+  b,L=self.fixture();b.errors=[];b.by_type['sys'].append('q');b.out_bus['q']=[dict(L,width=7)]
+  native_istations.materialize(b,'sys',Path('/tmp/never_native_width.sv'))
+  self.assertRegex(b.errors[0],'no unique bound payload width')
+
  def test_cycle_and_mutants(self):
   b,L=self.fixture();b.types['sys']['buses'].append(dict(name='i',dir='in',width=8));b.types['sys']['internal_stations'].append(dict(conn='bus:i',regs_um=[[99,99]]));native_istations.annotate(b)
   with tempfile.TemporaryDirectory() as tmp:

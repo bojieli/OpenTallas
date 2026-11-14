@@ -190,13 +190,22 @@ def materialize(b,tn,file):
     for part in b.by_type.get(tn,[]):
         for lane in b.out_bus.get(part,[]):
             widths.setdefault(lane['oname'],set()).add(int(lane['width']))
+    # KV-101/SPLIT 11-13: a strict bind collects these per type (error class NATIVE_ISTATION_WIDTH, type not
+    # materialized, bind fails) instead of stopping at the first type, so one run lists the whole family.
+    errs=getattr(b,'errors',None);bad=[]
     for entry in typ['internal_stations']:
         name=entry['conn'][4:]
         actual=widths.get(name,set())
-        if len(actual)!=1:raise ValueError(f'native stations {tn}.{name}: no unique bound payload width')
-        width=next(iter(actual));bus=next(v for v in typ['buses'] if v['name']==name)
-        if not 0<width<=int(bus['width']):raise ValueError(f'native stations {tn}.{name}: bound width exceeds plan capacity')
+        bus=next(v for v in typ['buses'] if v['name']==name)
+        if len(actual)!=1:
+            bad.append(f'native stations {tn}.{name}: no unique bound payload width (bound {sorted(actual)}, plan {bus["width"]})');continue
+        width=next(iter(actual))
+        if not 0<width<=int(bus['width']):
+            bad.append(f'native stations {tn}.{name}: bound width exceeds plan capacity (bound {width}, plan {bus["width"]})');continue
         bus['width']=width
+    if bad:
+        if errs is None:raise ValueError(bad[0])
+        errs.extend('NATIVE_ISTATION_WIDTH '+m for m in bad);return
     import kit_istations
     file=Path(file).resolve();kd=file.parent.parent/'native_internal_stations'/tn;kd.mkdir(parents=True,exist_ok=True)
     local=kd/file.name;shutil.copyfile(file,local)
