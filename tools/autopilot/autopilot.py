@@ -2538,6 +2538,52 @@ def probe_job(j):
     return best
 
 
+ORPHAN_DEAD_S = 600
+
+
+def job_alive_remote(j, alive_probe=None):
+    """WF-1 11-14: does anything of this autopilot job still live on its target host(s)?  A docker container whose name holds the item,
+    or any process naming the kit dir (ssh, cached 5 min per host and kit by remote_job_alive's table).  Unknown (ssh fails) = alive."""
+    path = j.get("path") or ""
+    item = os.path.basename(path.rstrip("/"))
+    if not path:
+        return True
+    now = time.time()
+    hosts = [h for h in dict.fromkeys(ssh_host(x) for x in (j.get("ran_on"), j.get("host"), j.get("probe")) if x)
+             if h not in ("localhost", HUB_NAME)]
+    if not hosts:
+        return False
+    for h in hosts:
+        key = (h, path)
+        hit = _REMOTE_ALIVE.get(key)
+        if hit and now - hit[0] < 300:
+            alive = hit[1]
+        else:
+            cmd = (f"docker ps --format '{{{{.Names}}}}' 2>/dev/null | grep -c -- {shlex.quote(item)}; "
+                   f"ps -eo args | grep -F -- {shlex.quote(path.rstrip('/'))} | grep -vc grep")
+            rc, o, _ = (alive_probe or sh)(["ssh", "-n", "-o", "ConnectTimeout=15", "-o", "BatchMode=yes", h, cmd], timeout=40)
+            nums = [int(x) for x in o.split() if x.isdigit()]
+            alive = True if (rc != 0 and not nums) else any(n > 0 for n in nums)
+            _REMOTE_ALIVE[key] = (now, alive)
+        if alive:
+            return True
+    return False
+
+
+def orphan_is_dead(j, now=None, procs=None, remote_alive=None):
+    """WF-1 11-14 (COORD: 4 ENQUEUED rows whose ot-run client died, earlyoom on epyc9): a job whose client unit is gone counts as DEAD
+    (-> infra-orphan, resubmitted) once it has been without a live client for ORPHAN_DEAD_S: no hub ot-run / ot-job process for its kit
+    dir (procs), nothing alive on the target host (container or process, job_alive_remote).  The 3 h kit-log idle wait stays for jobs
+    that still show life."""
+    now = time.time() if now is None else now
+    done = j.get("client_done_at")
+    if not done or now - float(done) < ORPHAN_DEAD_S:
+        return False
+    if (procs if procs is not None else hub_procs)(j.get("path") or "") if callable(procs) or procs is None else procs:
+        return False
+    return not (remote_alive or job_alive_remote)(j)
+
+
 def poll_running(st):
     poll_pending_proofs(st)
     for j in list(st["jobs"].values()):
@@ -2583,6 +2629,10 @@ def poll_running(st):
                 finish(st, j, c, client)
                 continue
             idle = time.time() - max((c or {}).get("last_log_mtime", 0), j.get("started", 0))
+            if idle < ORPHAN_IDLE_S and orphan_is_dead(j):
+                log(f"ORPHAN-DEAD {j['id']} {j['die']}/{j['type']}: no live ot-run client, container or process for {ORPHAN_DEAD_S // 60}+ min "
+                    f"(kit logs {idle / 60:.0f} min old): infra-orphan, resubmitted")
+                idle = ORPHAN_IDLE_S
             if idle < ORPHAN_IDLE_S:
                 if j["status"] != "ORPHAN":
                     log(f"ORPHAN {j['id']}: ot-run client ended without a result; watching the kit logs")
@@ -2591,7 +2641,10 @@ def poll_running(st):
             client = {"orphan": True, "msg": f"client lost, kit logs idle {idle / 3600:.1f} h"}
         if client.get("not_completed"):
             c = probe_job(j)
-            if c and not c.get("signoff") and time.time() - c.get("last_log_mtime", 0) < ORPHAN_IDLE_S:
+            if c and not c.get("signoff") and time.time() - c.get("last_log_mtime", 0) < ORPHAN_IDLE_S and orphan_is_dead(j):
+                log(f"ORPHAN-DEAD {j['id']} {j['die']}/{j['type']}: no live ot-run client, container or process for {ORPHAN_DEAD_S // 60}+ min: infra-orphan")
+                client = dict(client, orphan=True, msg=f"client lost, nothing alive for {ORPHAN_DEAD_S // 60}+ min")
+            elif c and not c.get("signoff") and time.time() - c.get("last_log_mtime", 0) < ORPHAN_IDLE_S:
                 if j["status"] != "ORPHAN":
                     log(f"ORPHAN {j['id']}: {client['msg']}; remote job may still run, watching its logs")
                     set_status(st, j, "ORPHAN", client["msg"])
