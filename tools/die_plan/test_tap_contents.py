@@ -15,9 +15,17 @@ def test_clock_tap_honours_rotated_content_footprint():
     x,y=S.tap_clear(t,250,120)
     assert not 91.36<x<308.64 or not 91.36<y<148.64
 
-def test_logic_contents_and_unplaced_non_lef_contents_preserve_old_clock_taps():
-    t=dict(outline_um=[500,500],contents=[dict(inst="logic",origin_um=[100,100],outline_um=[200,200]),dict(inst="planned")])
+def test_unplaced_non_lef_content_preserves_old_clock_taps():
+    t=dict(outline_um=[500,500],contents=[dict(inst="planned")])
     assert S.tap_clear(t,250,250)==(250,250)
+
+
+def test_placed_logic_content_is_a_footprint_obstacle():
+    # placement_obstacles.placement_boxes (KV-PLAN 10-25): reuse leaves without a LEF but with an origin and outline
+    # reserve their footprint, so a tap inside it moves out (the old test expected it to stay)
+    t=dict(outline_um=[500,500],contents=[dict(inst="logic",origin_um=[100,100],outline_um=[200,200])])
+    x,y=S.tap_clear(t,250,250)
+    assert not 91.36<x<308.64 or not 91.36<y<308.64
 
 
 def test_lef_content_without_origin_fails_closed():
