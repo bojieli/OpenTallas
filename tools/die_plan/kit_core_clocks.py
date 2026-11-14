@@ -326,7 +326,7 @@ def swap_ahub_boundary(bound, hard_cores):
         head = heads[0]
         params = dict(re.findall(r"\.(\w+)\(([^()]*)\)", head.group(2)))
         params = {k: re.sub(r"[\s_]", "", v).lower() for k, v in params.items()}
-        expected = {"AP_OFS": "64'hffddffdcffdfffdf", "FR_OFS": "-7", "Z_IN_STRIDE": "4"}
+        expected = {"AP_OFS": "64'hffe0ffdfffdfffdf", "FR_OFS": "-7", "Z_IN_STRIDE": "4"}
         if params != expected:
             raise ValueError(f"AHUB boundary: native parameter signature changed: {params}")
         end = bound.find("\n" + head.group(1) + ");", head.end())
