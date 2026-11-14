@@ -9378,6 +9378,37 @@ def _retry_key_migrate(tab, die, event, ia):
     return k
 
 
+def retry_key_decision(st, die, item, n):
+    """WF-1 11-14 (COORD: KW-FIX-23's first-seen epoch silently dropped item@N when attempt N launched after the key was first seen,
+    and 'first seen' lingers for days: lepe@2, bk_sel@4 after 36 h).  Rule: item@N releases exactly once, when attempt N is the
+    item's LATEST attempt (the record of the die and item that started last) and it has ended (FAIL, CANCELLED, or ENQUEUED with a
+    FAIL / CANCELLED queue job), whatever the key's age.  A later attempt means the key is consumed (the relaunch happened).
+    -> (True, why) release | (False, why) ignore | (None, '') no judgement (no record of N yet, or N still in flight)"""
+    recs = [r for r in (st.get("items") or {}).values() if r.get("die") == die and r.get("item") == item]
+    if not recs:
+        return None, ""
+
+    def started(r):
+        try:
+            return float(r.get("started") or 0)
+        except (TypeError, ValueError):
+            return 0.0
+    last = max(recs, key=lambda r: (started(r), int(r.get("attempt") or 0)))
+    try:
+        ln = int(last.get("attempt") or 0)
+        nn = int(n)
+    except (TypeError, ValueError):
+        return None, ""
+    if nn > ln:
+        return None, ""                              # an attempt that does not exist yet: pre-release, keeps working
+    if nn < ln:
+        return False, f"attempt {ln} is the latest of {item}; {item}@{nn} was consumed by its relaunch (or names an older attempt)"
+    ended = last.get("status") in ("FAIL", "CANCELLED") or (last.get("status") == "ENQUEUED" and last.get("q_status") in ("FAIL", "CANCELLED"))
+    if ended:
+        return True, f"attempt {nn} is {item}'s latest and ended ({last.get('status')}/{last.get('q_status') or '-'}): released once"
+    return None, ""
+
+
 def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
     # KW-FIX-23 14:0x hot-fix: epoch seconds on both sides (now_s() is a display string; 13:57 TypeError)
     now = time.time() if now is None else float(now)
@@ -9418,16 +9449,29 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         ev = d.get("event") or ""
         for ia in d["retry"]:
             sk = _retry_key_migrate(seen, die, ev, ia)
-            try:
-                first = float(seen.setdefault(sk, now))
+            try:                                     # kept for the operator view; the release decision no longer reads it
+                seen[sk] = float(seen.setdefault(sk, now))
             except (TypeError, ValueError):
-                first = seen[sk] = now      # unparsable (old string) -> first seen now
+                seen[sk] = now
             item, _, n = str(ia).rpartition("@")
-            started = latest.get((die, item, n), 0.0)
-            if started and started > first:
-                dropped.setdefault(die, []).append(ia)
+            ok, why = retry_key_decision(st, die, item, n)
+            if ok is None:                           # nothing to judge (no such attempt yet / still running): the key stays
+                keep.append(ia)
                 continue
-            keep.append(ia)
+            ckey = f"{die}|{ia}"
+            if ok:
+                keep.append(ia)
+                if ckey not in st.setdefault("retry_release_logged", {}):
+                    st["retry_release_logged"][ckey] = now
+                    if log:
+                        log(f"KIT-WAVE RETRY-RELEASE {die}/{ia}: {why}")
+                continue
+            dropped.setdefault(die, []).append(ia)
+            why_log = st.setdefault("retry_ignored_logged", {})
+            if why_log.get(ckey) != why:
+                why_log[ckey] = why
+                if log:
+                    log(f"KIT-WAVE RETRY-IGNORED {die}/{ia}: {why}")
         d["retry"] = keep
     logged = st.setdefault("retry_stale_logged", {})
     for die, xs in dropped.items():
@@ -9435,9 +9479,7 @@ def prune_stale_retries(cfg, st, notices=None, log=None, now=None):
         new = [x for x in xs if _retry_key_migrate(logged, die, ev, x) not in logged]
         for x in new:
             logged[retry_seen_key(die, ev, x)] = now
-        if new and log:
-            log(f"KIT-WAVE retry stale {die}: {len(new)} entries name an attempt launched after the entry "
-                f"(KW-FIX-23 retry epoch; not released): {' '.join(new[:12])}")
+        # WF-1 11-14: the per-key RETRY-IGNORED lines above replace the old summary line
     return dropped
 
 

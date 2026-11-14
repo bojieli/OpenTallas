@@ -1,4 +1,5 @@
-"""KW-FIX-23: a retry item@N releases attempt N only if N launched before the entry was first seen."""
+"""KW-FIX-23 retry epoch, replaced 11-14 (WF-1): item@N releases exactly once when attempt N is the latest and ended; a later attempt
+consumes the key (see test_kit_wave_retry_release.py).  The first-seen table is kept for the operator view only."""
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -28,9 +29,10 @@ def test_future_attempt_entry_is_stale_when_reached():
     cfg = _cfg(["t50@3", "t50@4", "t50@5"])             # config reloads each tick
     logs = []
     kw.prune_stale_retries(cfg, st, log=logs.append, now=400.0)
-    assert cfg["dies"]["s81"]["retry"] == ["t50@3", "t50@5"]
-    assert logs and "t50@4" in logs[0]
-    cfg = _cfg(["t50@4"])
+    # attempt 4 is now the latest and in flight: @3 is consumed (ignored, logged), @4 and the future @5 stay
+    assert cfg["dies"]["s81"]["retry"] == ["t50@4", "t50@5"]
+    assert logs and "RETRY-IGNORED s81/t50@3" in logs[0]
+    cfg = _cfg(["t50@3"])
     kw.prune_stale_retries(cfg, st, log=logs.append, now=500.0)
     assert cfg["dies"]["s81"]["retry"] == [] and len(logs) == 1   # logged once
 
@@ -76,14 +78,13 @@ def test_new_event_release_not_judged_by_older_event():
 def test_legacy_key_migrates_to_current_event_without_rearm():
     """rollout: a legacy die|item@N time moves to the current event key once, so a stale entry stays stale"""
     st = _st(4, 300.0)
+    st["items"]["s81|t50|babc"]["status"] = "FAIL"                  # the latest attempt ended: released whatever the key age
     st["retry_seen"] = {"s81|t50@4": 200.0}
-    st["retry_stale_logged"] = {"s81|t50@4": 250.0}
     cfg = {"dies": {"s81": {"event": "E1", "retry": ["t50@4"]}}}
     logs = []
     kw.prune_stale_retries(cfg, st, log=logs.append, now=500.0)
-    assert cfg["dies"]["s81"]["retry"] == [] and logs == []          # still stale, already logged
-    assert st["retry_seen"] == {"s81|E1|t50@4": 200.0}
-    assert st["retry_stale_logged"] == {"s81|E1|t50@4": 250.0}
+    assert cfg["dies"]["s81"]["retry"] == ["t50@4"]
+    assert st["retry_seen"] == {"s81|E1|t50@4": 200.0}              # legacy key moved to the event key, time kept
     st["items"]["s81|t50|babc"].update(attempt=4, started=600.0)    # a later event: fresh entries
     cfg = {"dies": {"s81": {"event": "E2", "retry": ["t50@4"]}}}
     kw.prune_stale_retries(cfg, st, log=logs.append, now=700.0)
@@ -91,11 +92,10 @@ def test_legacy_key_migrates_to_current_event_without_rearm():
     assert st["retry_seen"]["s81|E2|t50@4"] == 700.0
 
 
-def test_stale_logged_once_per_event():
-    st = _st(3, 300.0)
-    st["retry_seen"] = {"s81|E1|t50@3": 200.0}
+def test_ignored_logged_once():
+    st = _st(4, 300.0)
     logs = []
     for now in (400.0, 500.0):
         cfg = {"dies": {"s81": {"event": "E1", "retry": ["t50@3"]}}}
         kw.prune_stale_retries(cfg, st, log=logs.append, now=now)
-    assert len(logs) == 1 and "s81|E1|t50@3" in st["retry_stale_logged"]
+    assert len(logs) == 1 and "RETRY-IGNORED" in logs[0]
