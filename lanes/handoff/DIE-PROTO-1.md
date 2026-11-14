@@ -1,14 +1,11 @@
-# DIE-PROTO-1 handoff (11-14 04:3x PST, Opus) -- DONE, no jobs running
+# DIE-PROTO-1 handoff (11-14 08:0x PST, Opus, round 2) -- RUNNING
 ## Scope
-Die GRT + die STA prototypes, all 4 dies, current plans, plan-shape abstracts (OWNER 11-14 00:4x). ADVISORY, DO_NOT_COUNT. RESULT lines posted (HEAD 01:4x, S81/KV/QC 04:3x).
-## Where
-epyc10 /srv/opentallas-scratch2/claude/die-proto-1b/<die>/cur1114: CHAIN.log (proto_die.sh: kit, GRT TT/FF/off, stock-tree STA), c2/ or ../c2_cur1114 (dieclock_regeq model + --routed), dsta/ (die_sta flat data STA; HEAD only finished).
-Scripts in that dir: run_die.sh <kv|s81|head|qc> [tag] (W/P per die; QCP env override), proto_die.sh, chain2.sh/chain2b.sh/chain2r.sh (balanced clock leg; chain2r = routed only, reuse model), dsta.sh, typepairs.py (per type-pair clock damage; works on proto proofs, not routed proofs), qcscan.py (drops orphan core taps -> qc_s29_dp1b.json).
-Launch from intel2: ot-run --crit --hosts epyc10 --mem 64 --threads 24 --dir $B --priority die -- bash $B/run_die.sh <d>.
-## Gotchas
-- dieclock_regeq --routed uses fixed docker names (rf2regeq-it0-grt-FF): never run two dies' routed legs at once (KV collided with HEAD).
-- proto_die.sh rm -rf's the run dir: start chain2 legs only after it (or use chain2b, outside D).
-- die_sta flat data STA: ft nets of the GRT SPEF are not named as in die_top.v (ft wire RC not annotated); S81/KV runs did not finish in 3 h.
-- S81 and QC need their regional clock forms (regions-from / qcreg3); the die-wide tree is refused (structural).
+COORD 11-14 ~07:4x: die GRT + die STA prototype with the REAL REGIONAL clock, QC first (s3d = S3D2 bind plan, owner DIE-QC-103), then KV (kvgeom4, owner KV-102). ADVISORY, DO_NOT_COUNT. Round 1 (00:2x-04:3x, die-wide tree on all 4 dies) is in epyc10 /srv/opentallas-scratch2/claude/die-proto-1b (see git history of this file).
+## Where (epyc9 B=/srv/opentallas-scratch2/claude/die-proto-1c)
+- wtmain = my detached worktree of origin/main 35d2a30df8 (git dir wt/rxs-reflood-1) for die_sta_related (tap_offset_gate, --kit-offset-out) and region_form.py.
+- maps/: QC region map regions_s3d.json (region_form regions on s3d = identical to qc-clkgate-1 regions_plain), feed_plain_fwd.json, c/su/early-other region lists, inv2_stage_cal_s28dme.json, edge_readout_patch.py, mk_combo_kv.py (both-edge, qc-clkgate-1). kv_regions_kvgeom4.json (= kv_land128 components).
+- qc_chain.sh [tag]: qcreg3 recipe with tree3 tools (die-qc-103/tree3, read-only) for kit/GRT/arrivals/LPO/CA; main die_sta_related. Run qc/s3d/CHAIN.log.
+- kv/kv_chain.sh [tag]: ot_clk kit kv/kv_g4.yaml (FABLE kv_a on kvgeom4) with src kw45/src_kv_kvgeom4_pgL; main die_sta_related. Run kv/g4/CHAIN.log.
+- Launch from intel2: setsid nohup ot-run --crit --hosts epyc9 --mem 128 --threads 24 --dir $B --priority die -- bash $B/qc_chain.sh s3d (logs intel2 ~/dp1c/*.ot). Chains skip the kit if kit/grt/route.v exists (rerun GRT/STA only).
 ## Next
-S81: re-run die STA on B2u per region once S81-B3-CLK posts the region map. KV: re-run chain on kv102sem. QC: after DIE-QC-103 fixes the cbn_q00 taps + sle_su_c pins, run qcreg3.
+Read CHAIN.log lines (REG_GRT/GRT ovf, REG_STA/STA proof lines + TAP-OFFSET-GATE, CA_*, STA_*), per-region overflow from grt combo logs, classify failures (plan vs type-local vs view), post RESULT per die cc owner.
