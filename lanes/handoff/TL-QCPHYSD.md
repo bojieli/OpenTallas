@@ -7,3 +7,4 @@
 - 08:3x: HARD-IP conditions fail (5 BUFx2 per wrapper; macro pins outside plan windows). Needs DIE-QC-103 window delta + epoch-bit decision. Scripts epyc10 /tmp/qcpins2.py /tmp/qccells.sh.
 - 08:5x: waiting on S3E READY+ADOPT from DIE-QC-103 (bg waiter). Then regen + both checks + HARD-IP rows.
 - S3F files posted (contents-delta-s3f.json, c3 patch). pending: private ucie gen validation of declared_bumps change.
+- S3Y exploratory: gen/preflight/floorplan pass, PDN fails (full-area macro); cells + pin-window checks pass; HARD-IP rows wait for S3P bind.
