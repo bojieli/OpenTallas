@@ -14,7 +14,7 @@ def scan(pins,occupied=''):
     start=SRC.index('      # Face pins may lie in the core margin.')
     end=SRC.index('\n    }\n    if {!$placed}',start)
     branch=SRC[start:end]
-    script='''set ff_x0 4320;set ff_x1 388800;set ff_y0 4320;set ff_y1 172800
+    script='''set ff_ns_stride 1;set ff_ns_inset 0;set ff_x0 4320;set ff_x1 388800;set ff_y0 4320;set ff_y1 172800
 set ff_cpitch 2160;set ff_rh 270;set w 1080;set face N;set ff_occ {};set ff_miss 0
 '''+occupied+'\nforeach px {'+' '.join(map(str,pins))+'} {\n'+branch+'''
 if {!$placed} {error "unplaced margin pin $px"}
