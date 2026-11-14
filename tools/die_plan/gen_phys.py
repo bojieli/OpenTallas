@@ -1316,6 +1316,10 @@ def core_tap_ff_sdc(P, tn):
     if lines and tap_window_ps(P, tn):
         lines.append(f"# plan clock.tap_window {tap_window_ps(P, tn):g} ps on the FF core taps (early end only)\n"
                      + core_tap_window_tcl(P, tn, "FF"))
+    if tap_offset_table(P, tn):
+        gports = [n for _ck, ps in tap_window_ports(P, tn) for n in ps]
+        lines.append(f"# R-CLOCK-7 plan clock.tap_offset FF arrival offsets on the grid / edge taps\n"
+                     + "".join(tap_offset_lines(P, tn, [n], "FF", ck) for ck, ps in tap_window_ports(P, tn) for n in ps if n in gports))
     return "".join(lines)
 
 
@@ -2189,6 +2193,57 @@ def tap_window_measured(P, tn):
     return tn is not None and (tn in (tw.get("per_type_ps") or {}) or bool((tw.get("per_port_ps") or {}).get(tn)))
 
 
+# R-CLOCK-7 (FABLE-REVIEW-CLK 1b, COORD 11-14): kit tap arrival OFFSETS.  A type with a plan clock.tap_offset.per_port_ps row times
+# each of its tap ports at its measured arrival offset o_p on the die clock of record with a tolerance u instead of an absolute
+# window: set_clock_latency -source -early (o_p - u) / -late (o_p + u), per corner (TT: constraint.sdc, FF: core_taps_ff.sdc).  The
+# IO shift keeps the window form with W = the span max(o + u) - min(o - u) (tap_window_ps), so the seam contract is exact for the
+# median glue tap.  A port missing from the row takes early -W / late 0 (today's window, W = the span); a type without a row is
+# unchanged.  o_p = routed arrival minus the median glue tap of the partition, mean over instances (die_sta_related --kit-offset-out).
+def tap_offset_table(P, tn):
+    """{port: {"TT": o, "FF": o, "tol": u}} of type tn (plan clock.tap_offset.per_port_ps[tn]); {} = none (window form)."""
+    if tn is None:
+        return {}
+    tab = ((P.clock.get("tap_offset") or {}).get("per_port_ps") or {}).get(tn) or {}
+    per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
+    out = {}
+    for n, v in tab.items():
+        row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
+        if row["tol"] < 0 or abs(row["TT"]) > per / 2 or abs(row["FF"]) > per / 2:
+            raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} outside tol >= 0, |o| <= T/2")
+        out[n] = row
+    if out and not P.clock.get("seam_hold"):
+        raise ValueError("clock.tap_offset needs clock.seam_hold (same seam contract as clock.tap_window)")
+    return out
+
+
+def tap_offset_span_ps(P, tn):
+    """W of an offsets type: max(o + u) - min(o - u) over its ports and corners (ceil 0.1 ps); 0.0 without a row."""
+    tab = tap_offset_table(P, tn)
+    if not tab:
+        return 0.0
+    span = 0.0
+    for c in ("TT", "FF"):
+        span = max(span, max(r[c] + r["tol"] for r in tab.values()) - min(r[c] - r["tol"] for r in tab.values()))
+    return math.ceil(span * 10 - 1e-9) / 10.0
+
+
+def tap_offset_lines(P, tn, ports, corner, clock="clk"):
+    """the -early / -late lines of `ports` at corner (TT/FF): a row port gets (o - u, o + u), a port without a row the window
+    (-W, 0); ports of equal values share one line pair."""
+    tab, w = tap_offset_table(P, tn), tap_offset_span_ps(P, tn)
+    grp = {}
+    for n in ports:
+        r = tab.get(n)
+        key = (r[corner] - r["tol"], r[corner] + r["tol"]) if r else (-w, 0.0)
+        grp.setdefault(key, []).append(n)
+    out = ""
+    for (e, l), ps in grp.items():
+        sel = f"[get_ports {{{' '.join(ps)}}}]"
+        out += (f"set_clock_latency -source -early -clock {clock} {t_lib(e) + 0.0:.4f} {sel}\n"
+                f"set_clock_latency -source -late -clock {clock} {t_lib(l) + 0.0:.4f} {sel}\n")
+    return out
+
+
 def tap_window_ps(P, tn=None):
     """the per-tap latency window W (ps) the kit SDC charges, 0.0 when absent (legacy kits unchanged).
     DIE-S81-41 (COORD 2026-10-31 05:0x, FLOW-15 04:54): clock.tap_window.per_type_ps {type: W_t} overrides the die
@@ -2196,6 +2251,8 @@ def tap_window_ps(P, tn=None):
     that type's regions); types not listed keep window_ps.  die_sta_related checks each region against its type's W.
     TAPWIN-1109: an unmeasured type (and the die value, tn None) charges min(window_ps, plan related_pair_ps X); with no
     plan X (TAPWIN-FIX-1109) it charges window_ps.  The full band is tap_window_band_ps."""
+    if tap_offset_table(P, tn):
+        return tap_offset_span_ps(P, tn)          # R-CLOCK-7: the offsets form; W = its span (IO shift, hold gate screen)
     w = tap_window_band_ps(P, tn)
     x = tap_related_pair_ps(P)
     if not w or tap_window_measured(P, tn) or x is None:
@@ -2222,6 +2279,8 @@ def tap_window_ps(P, tn=None):
 # SMALLEST (output/sender hold never looser than the contract).  Without a table both shifts are W_t, as before.
 def tap_window_port_table(P, tn):
     """{port: D_p}: the type's measured per-port windows (plan clock.tap_window.per_port_ps[tn]); {} = none (flat W)."""
+    if tap_offset_table(P, tn):
+        return {}                                  # R-CLOCK-7: the offsets form replaces the per-port window table
     tw = P.clock.get("tap_window") or {}
     tab = (tw.get("per_port_ps") or {}).get(tn) or {}
     if not tab:
@@ -2322,7 +2381,11 @@ def tap_window_tcl(P, tn, value_ps=None, core=True):
         return ""
     tab = tap_window_port_table(P, tn) if value_ps is None else {}
     out = ""
+    off = value_ps is None and bool(tap_offset_table(P, tn))
     for ck, ports in tap_window_ports(P, tn):
+        if off:
+            out += tap_offset_lines(P, tn, ports, "TT", ck)
+            continue
         if tab:
             grp = {}
             for n in ports:
@@ -2347,10 +2410,14 @@ def core_tap_window_tcl(P, tn, corner="TT", value_ps=None):
     if not w:
         return ""
     out, seen = "", set()
+    offs = tap_offset_table(P, tn) if value_ps is None else {}
     for n, _inst, _pin, early, _ins in core_tap_rows(P, tn, corner):
         if n in seen:
             continue
         seen.add(n)
+        if n in offs:                              # R-CLOCK-7: o_p already contains the core tap's early delivery
+            out += tap_offset_lines(P, tn, [n], "FF" if corner == "FF" else "TT")
+            continue
         v = port_window_ps(P, tn, n) if value_ps is None else float(value_ps)
         out += f"set_clock_latency -source -early -clock clk {t_lib(-(early + v)) + 0.0:.4f} [get_ports {n}]\n"
     return out
@@ -3067,7 +3134,7 @@ def sdc(P, tn, pins):
            f"set_input_delay -max {io + t_lib(tw_in):.4f} -clock vclk $non_clk_in\n"
            f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
     source_ports = set()
-    if core_tap_rows(P, tn) or edge_clock_latency(P, tn):
+    if core_tap_rows(P, tn) or edge_clock_latency(P, tn) or tap_offset_table(P, tn):
         out += "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc\n"
     for n, inst, pin, early, ins in core_tap_rows(P, tn):
         if n in source_ports:
@@ -4854,7 +4921,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                          "".join(f"source {f}\n" for f in post_pdn))
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
-    if core_tap_rows(P, tn) or edge_clock_latency(P, tn):
+    if core_tap_rows(P, tn) or edge_clock_latency(P, tn) or tap_offset_table(P, tn):
         (kd / "core_taps_ff.sdc").write_text(core_tap_ff_sdc(P, tn) + edge_clock_latency_tcl(P, tn, "ff"))
     ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
     if ioh:

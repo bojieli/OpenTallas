@@ -1528,6 +1528,52 @@ def kit_port_needs(pair_lists, taps, rng, kit_offset=None):
     return need
 
 
+def kit_offset_arrivals(taps):
+    """R-CLOCK-7 (FABLE-REVIEW-CLK 1b, COORD 11-14): {(part, kit port): arrival ps} of one corner = the tap's routed mid arrival
+    (late + early) / 2 on the die clock of record (abs_* when a mesh re-reference keeps it)."""
+    out = {}
+    for p, r in taps.items():
+        if r.get("part") is None:
+            continue
+        late = float(r.get("abs_late_ps", r["late_ps"]))
+        early = float(r.get("abs_early_ps", r["early_ps"]))
+        out[(r["part"], kit_port(p, r))] = (late + early) / 2.0
+    return out
+
+
+def kit_offset_table(arr_by_corner, plan, min_tol_ps=10.0):
+    """R-CLOCK-7: plan clock.tap_offset.per_port_ps {type: {port: {TT, FF, tol}}}.  o_p (per corner) = the tap's routed arrival
+    minus the median glue tap of its partition (a core tap's arrival already contains its early delivery), averaged over the
+    type's instances; tol u = max(min_tol_ps, half the range of o_p over the instances, over corners).  gen_phys.tap_offset_table
+    emits set_clock_latency -source -early (o_p - u) / -late (o_p + u) per corner from it."""
+    ptype = {q["name"]: q["type"] for q in plan.get("partitions", [])}
+
+    def median(v):
+        v = sorted(v)
+        n = len(v)
+        return v[n // 2] if n % 2 else (v[n // 2 - 1] + v[n // 2]) / 2.0
+
+    per = {}          # (type, port) -> {corner: [o_p per instance]}
+    for c, arr in arr_by_corner.items():
+        byp = defaultdict(list)
+        for (part, _port), a in arr.items():
+            byp[part].append(a)
+        for (part, port), a in arr.items():
+            t = ptype.get(part)
+            if t is None:
+                continue
+            per.setdefault((t, port), {}).setdefault(c, []).append(a - median(byp[part]))
+    out = {}
+    for (t, port), cc in sorted(per.items()):
+        row, u = {}, min_tol_ps
+        for c, v in cc.items():
+            row[c] = round(sum(v) / len(v), 1)
+            u = max(u, (max(v) - min(v)) / 2.0)
+        row["tol"] = round(u, 1)
+        out.setdefault(t, {})[port] = row
+    return out
+
+
 def kit_window_table(needs, plan):
     """{type: {kit port: D_p}} from kit_port_needs of every corner: max over corners and over the type's regions,
     ceil 1 ps (no margin, OWNER 11-02).  This is plan clock.tap_window.per_port_ps (gen_phys.tap_window_port_table)."""
@@ -2763,6 +2809,10 @@ def main(argv=None):
                     help="KW-FIX-4-SDC (opt-in): write the measured per-port kit windows {per_port_ps: {type: {port: "
                          "ps}}} (max over corners / regions of the cross-port damage with CPPR credit) for plan "
                          "clock.tap_window.per_port_ps; default = not written")
+    ap.add_argument("--kit-offset-out", metavar="JSON",
+                    help="R-CLOCK-7 (opt-in): write the kit tap arrival offsets {per_port_ps: {type: {port: {TT, FF, tol}}}} "
+                         "(routed arrival minus the partition's median glue tap, tol = max(10, half the instance range)) for plan "
+                         "clock.tap_offset; default = not written")
     ap.add_argument("--intra-window-ps", type=float,
                     help="WHAT-IF override of the intra-partition kit window (default: the plan's clock.tap_window."
                          "window_ps, else 0 = the one-ideal-clock kit SDC)")
@@ -2890,8 +2940,11 @@ def main(argv=None):
     hbrec, hbbits = {}, None
     ecm, ci_recs = None, []
     kw_needs = []
+    ko_arr = {}
     for c in corners:
         meta, taps = load_taps(d, c)
+        if a.kit_offset_out:
+            ko_arr[c] = kit_offset_arrivals(taps)
         ccell, cbasis = resolve_clock_cell(a.clock_cell, d, meta)
         if ccell != "buf":              # CLK-INV-CAL-1 record (BUFx24 records stay byte-identical)
             res.setdefault("clock_cell", {})[c] = dict(cell=ccell, basis=cbasis, aocv_class=CLOCK_CELL_AOCV_CLASS[ccell],
@@ -3159,6 +3212,14 @@ def main(argv=None):
                   "- CPPR credit (+ core-tap offset), ceil 1 ps; KW-FIX-4-SDC (COORD 11-03 10:49)"), indent=1) + "\n")
         print(f"KIT-WINDOW per-port table: {len(kwt)} types, {sum(len(v) for v in kwt.values())} ports -> "
               f"{a.kit_window_out}")
+    if a.kit_offset_out:
+        kot = kit_offset_table(ko_arr, plan)
+        Path(a.kit_offset_out).write_text(json.dumps(dict(
+            per_port_ps=kot, plan_sha256=res["plan_sha256"], proof=res["proof"], corners=corners,
+            basis="die_sta_related.kit_offset_table: per kit clock port and corner, routed arrival minus the partition's median glue "
+                  "tap, mean over the type's instances; tol = max(10, half the instance range); R-CLOCK-7 (COORD 11-14)"),
+            indent=1) + "\n")
+        print(f"KIT-OFFSET per-port table: {len(kot)} types, {sum(len(v) for v in kot.values())} ports -> {a.kit_offset_out}")
     (out / "die_sta_related.json").write_text(json.dumps(res, indent=1) + "\n")
     for c, cr in res["corners"].items():
         for k, v in cr["classes"].items():
