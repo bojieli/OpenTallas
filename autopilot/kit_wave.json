@@ -38129,6 +38129,11 @@
     ],
     "qfd_dv_s8_tap_bounded": [
      {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/qc103-qfd_dv_s8_tap_bounded/qfd_dv_s8_tap_bounded",
+      "job": "COUNTED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (KW-FIX-32 export_view; QC-CORES hand-built, registered by KIT-OPS-3)"
+     },
+     {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tapb-e1/qfd_dv_s8_tap_bounded",
       "job": "SIGNED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (TL-QCTAPB form e R-MINIMAL; export_view, outline 302.4x129.6; 6_final.odb sha 790e3201db00 = archived on rtx-pro + AGIdock; pack 6_final_129852c382)"
