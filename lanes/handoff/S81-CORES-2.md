@@ -139,3 +139,6 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## 2026-11-14 00:25 PST xs4 r4
 - GRT TERMINAL congested (~100k overflow, flat over iterations 5-15); the epyc10 copy is stopped. Next: a structural re-floor (outline growth). Last cores first: F2 (epyc8, waiter on gunit_f2_finish), bksel e10 (epyc10), bksel epyc4 (until drain).
+
+## 2026-11-14 00:37 PST scope
+- Mine now: bksel_q e10 (waiter on bksel_c9geom_e10.otrun.log), serdes kitI route + kitI2, seqhost S5 (waiter on container dpkit-seqhost__t1-3517806). gunit l1f_bf -> TYPE-GUNIT-L1F, xs4 -> TYPE-XS4 (handoff files written).

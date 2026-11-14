@@ -147,3 +147,7 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 - T51 W: the autopilot recorded the re-sign at 23:38 (flow-20261113-ai-s81 55713eb3c463, LEC EQUIVALENT, PROVENANCE at epyc7 /srv/opentallas-scratch3/claude/auto-resign/s81/s81p_slice_station__t51_ot_s81_station_t51_native_w__flow-20261113-ai-s81__c2133025), so it should count (S81 62/64). release_tree_plan.py --print timed out after 380 s on intel2, so I have not confirmed the number from the counter itself yet.
 - bksel_q C9geom epyc4 unit oth-ubuntu-3028966-1794633424: exit 137 (killed during GRT extra iteration 5, epyc4 drain); epyc4 no longer answers ssh.
 - bksel_q epyc10 copy (oth-ubuntu-3547150-1794640547): GRT overflow 25,226 / 20,074 / 20,268 / 18 at iterations 5/10/15/20, so it is converging to 0. Waiter armed; I judge under R-MINIMAL on finish.
+
+## NOTE 2026-11-14 00:37 PST scope change (COORD, one lane per problem)
+- gunit l1f_bf -> TYPE-GUNIT-L1F; xs4 -> TYPE-XS4. Hand-over notes are in lanes/handoff/TYPE-GUNIT-L1F.md and lanes/handoff/TYPE-XS4.md. I answer any request from them.
+- S81-CORES-2 keeps: bksel_q (epyc10 C9geom copy, GRT converging), serdes kitI route + kitI2 proof (epyc9), seqhost S5 (epyc9).
