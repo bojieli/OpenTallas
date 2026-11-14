@@ -32,12 +32,15 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools/fleet_viz"))
 
 DESIGN_DIES = {"ds_rom": ["s81", "s81_head"], "qwen_rom": ["qwen_compute", "qwen_kvsys"],
-               "hbm_gen_qwen": ["hbm"], "hbm_gen_ds": ["hbm"]}
-RULE_KEY = {"hbm_gen_qwen": "hbm_gen", "hbm_gen_ds": "hbm_gen"}
+               "hbm_gen_qwen": ["hbm"], "hbm_gen_ds": ["hbm"],
+               "qwen_kvdie": ["qwen_compute", "qwen_kvsys"], "qwen_hbm": ["hbm"]}
+RULE_KEY = {"hbm_gen_qwen": "hbm_gen", "hbm_gen_ds": "hbm_gen", "qwen_kvdie": "qwen_rom", "qwen_hbm": "hbm_gen"}
 # release-tree TOK lines and token_pass directory keywords that speak for a design
-TOK_PREFIX = {"ds_rom": ("TOK.DS",), "qwen_rom": ("TOK.QW", "KV.FN"), "hbm_gen_qwen": ("TOK.HBM",), "hbm_gen_ds": ("TOK.HBM",)}
+TOK_PREFIX = {"ds_rom": ("TOK.DS",), "qwen_rom": ("TOK.QW", "KV.FN"), "hbm_gen_qwen": ("TOK.HBM",), "hbm_gen_ds": ("TOK.HBM",),
+              "qwen_kvdie": ("TOK.QW", "KV.FN"), "qwen_hbm": ("TOK.HBM",)}
 TOK_DIR = {"ds_rom": re.compile(r"(^|_)(s81|ds|head|svc|xtier|lep)(_|\d|$)"), "qwen_rom": re.compile(r"(^|_)(qw|qwen|qc|kv|bc4)(_|\d|$)"),
-           "hbm_gen_qwen": re.compile(r"(^|_)hbm(_|\d|$)"), "hbm_gen_ds": re.compile(r"(^|_)hbm(_|\d|$)")}
+           "hbm_gen_qwen": re.compile(r"(^|_)hbm(_|\d|$)"), "hbm_gen_ds": re.compile(r"(^|_)hbm(_|\d|$)"),
+           "qwen_kvdie": re.compile(r"(^|_)(qw|qwen|qc|kv|bc4)(_|\d|$)"), "qwen_hbm": re.compile(r"(^|_)hbm(_|\d|$)")}
 ALL_TOK = ("TOK.PROGRAM", "TOK.E2E")
 
 # stage -> input records of token_path_export.py (repo paths; a directory counts as its newest file)
