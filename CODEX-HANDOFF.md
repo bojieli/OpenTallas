@@ -96,3 +96,74 @@ Park safely and let jobs run. Then:
 - refresh every touched `lanes/handoff/<LANE>.md`;
 - append `## Handoff to Claude <date time PST>` to CODEX-LOG.md (what you did per lane with shas, jobs started host:path/unit, results, open failures, OWNER? items);
 - reply `HANDOFF DONE`.
+
+## CODEX WAVE HAND BACK — Claude reset, 2026-11-13 17:16 PST
+
+Parked on root instruction. No new admissions/changes after this handoff; no progressing job stopped. No descendants. No new lanes/worktrees, merges/tags/POR/source switches or AUTO-RESIGN edits by wave. Read-only status at handback follows.
+
+### ACTIVE — preserve, do not duplicate
+
+1. **SerDes H2 fresh LEC128**, owner HARD-S81-SERDES/core team:
+   - I1 unit `oth-ubuntu-2478837-1794615505`; intel2 client1836151.
+   - I1 `/srv/opentallas-scratch2/claude/hard-s81-serdes-1/kitH2_lec128/gen/serdes__t2`, output `lec/`.
+   - intel2 log `~/serdes-H2-lec128-1113.log`.
+   - Original E9 H2 physical PLACE/source preserved. Original async LEC64 died137 with confirmed OOM/no verdict at00:07:53Z. Fresh private source-only copy staged pinned9aed future cohort BEFORE run/proof state; canonical TYPE runner already resume-capable; then exact original mapped netlist seeded. One fresh proof at128GiB, not physical rerun. gate.aig16:21/gold.aig16:24 exist, no terminal verdict at handback.
+   - No CTS/pad/RTL/programme change, no stale owner/PID hacks. External RX eye remains unqualified; no route/release claim.
+   - Check: `ssh intel2 'tail -20 ~/serdes-H2-lec128-1113.log'`; inspect I1 kit/lec/lec.json only when produced.
+
+2. **GUNIT FINAL actual-M6 + repaired-PDN private GRT**, core owner + GEOM callback:
+   - E8 unit `oth-ubuntu-1897702-1794615952`; intel2 client1933604.
+   - E8 `/srv/opentallas-scratch2/claude/gunit-core-1/detail_gf3/provider_replay_actual_m6/gen/gunit__t1`.
+   - intel2 `~/gunit-final-pdn-grt2-1113.log`; E8 kit/run_grt.log. At handback extraGRT12/30, preflightPASS.
+   - Final honest LEF SHA167fe475c97c33e31bb445030fd4ba043ded699156022df6ff9983e543f24883 uses actual routed BASE, default-M6 bloat0 splice, strict export PIN/header equality, no pin-clear/artificial OBS holes. Deployed routed_detail private ingestion PASS. Package `detail_gf3/provider_actual_detail/ingest_default_m6` is NOT ADOPTED.
+   - Exact final AP before PDN passed0missing. Real PG delta subsequently rebuilt using existing core_pg_grids supported strict opt-in for only4missing BF M5→M6 bridges, same top grid/18other macro grids. Repaired CTS `detail_gf3/parent_cts_actual_default_m6_pdn.odb` SHA3ddea243a35a9f2dc10d9f8f9f80468642697afc338c3373c1c01c8751fc21b9. Original master names, placement and signal CTS retained.
+   - Actual same-net wire/via contacts were original0/8 and LEF-swap-only0/8; after PDN regeneration8/8 PASS (unit1826765). FINAL GRT already ran post-PDN pin_access: run_grt.log143-179, stdCellPinNoAp0/macroNoAp0/complete84s. No repeat AP needed unless metal changes again.
+   - No DRT until fresh FINAL GRT images/overflow review by GEOM. No live provider override/count/POR/source adoption. Frozen gen_phys implicit core_pg_landing rejects ANY M6 OBS; honest detailed M6 still needs correct supported PG opt-in in a future generation. This live-adoption issue remains owned core/shared/root.
+   - Check: ssh E8 tail kit/run_grt.log; render outputs normally kit/run/layout_review/grt/{layout,density}.png. GEOM is waiting for final callbacks.
+   - First final-copy preflight missing lec.py was my broad copy-exclude mistake; exact existing original tool restored, failed log retained. No physical work ran in failed preflight. Current preflightPASS; old FAIL marker/history not concealed.
+
+3. **DSDV n4 WCCG16 t3 PLACE ONLY**, XS4 owner:
+   - E8 unit `oth-ubuntu-1096458-1794610706`; intel2 place client719187/continuation wrapper662796.
+   - E8 `/srv/opentallas-scratch2/claude/hard-s81-dsdv-1/proof_wccg16_n4/root/items/dsdv_slice_c1x_C__t3/gen/dsdv_slice_c1x_C__t3`.
+   - intel2 `/srv/opentallas-scratch2/claude/hard-s81-dsdv-1/proof/wccg16_n4/t3/place_from_receipt3.log`.
+   - At handback actual GPL6570, still repeated routability snapshots, no3_place/census terminal. No config tweak/retry. Preserve progressing job.
+   - Measured parent SYNTH220826std+11macros/80222registers; reg_fanout.json over64=0 clears original74-load class. Full LEC EQUIVALENT117448/117448,0diff/undecided. Selected new FIFO exact4a0c22 sourceSHA9f95f9... via private bind/filelist, bare OT_MESO_WCC_GROUP16.
+   - Actual4906-pin XS4 LEF/table checked. Floorplan census221532movable+91856taps; modeled place320434 is NOT final measured postresize count. Hard400k post-place gate armed. No family expansion/GRT/count before actual post-place census + real image review (GEOM waiting).
+   - Source/plan/private substitutions recorded in proof_wccg16_n4/PROFILE.json. Original out_n4/bbase preserved; no global switch.
+   - Check: ssh E8 tail kit/run_place.log and kit/cell_census.jsonl; await3_place.odb+actual PNGs.
+
+4. **Current approved wave routes**, state RUNNING at17:15:
+   - t50@3 job6b13c99b37ea, E8 unitap-6b13c99b37ea-a1. Kit `/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/ot_s81sl_leaf__t50/attempt_3/gen/ot_s81sl_leaf__t50`.
+   - KVt4@9 job3dae609c1c19, E9 unitap-3dae609c1c19-a1; same wave prefix items/ot_s81sl_kv_leaf__t4/attempt_9/gen/ot_s81sl_kv_leaf__t4.
+   - KVt5@9 job72bb02f6cbf6, E9 unitap-72bb02f6cbf6-a1; analogous t5 path.
+   - GEOM actual-image ISSUES-ACCEPT for both KV rows posted17:05; deployed parser verified accept, route admissions17:06 occurred after review. Same accepted forms, no extra unchanged retry.
+   - Check intel2 ~/coord/autopilot/state.json jobs and corresponding ~/coord/autopilot/jobs/<id>/a1.log.
+
+### New failures / holds / parent receipts — all assigned
+
+- **hd_ctl_n@2** job9d9124d6a1b6 DONE-CRASH DRT-0255 w3u_i[259], routeBox(1187880,661200)-(1191870,665190). Exact fresh config M8+ENABLE_RESISTANCE_AWARE0 proves prior RA0 class fix propagated. Actual remaining route/pin fault belongs HEAD-97; no unchanged retry.
+  - Exact route_hold_items.hd_ctl_n set again under lock and PUBLISHED (both local+origin config confirmed after normal concurrent-push ref race; config git status clean).
+  - E9 head_rp18_1112/items/hd_ctl_n/attempt_2/gen/hd_ctl_n has native run/logs/asap7/dp_hd_ctl_n/base/5_2_route.{log,json} and3_place/4_cts/5_1_grt ODB intact. HEAD has them.
+- Existing negative t7@11/t62@3/host_e@6 route holds retained. t7 normal negative-verdict cancellation completed15:13 with no remote process remaining. No manual kills of others.
+- turn_a@5 jobc70a3133f93d local physical+LEC pass, WAIT-PARENT; TT+106.87/FF+.23. wshim_rx@4 job32c84df0b33c WAIT-PARENT, TT+7.15; rawFF-7.47/390 is port-only obligation, NOT real-parent closure. HEAD owns exact matching io_hold_parent.v2 receipt with same routed netlist/SPEF; no older rp21 proof reused. No counts/retries.
+- Earlier PLAN-contract GUNIT provider_replay diagnostic unit942870 exited2 GRT-0116: totaloverflow258669, M6=209342/M8=38997 after30iterations. FailedODB and actual PLACE/GRT PNGs retained. GEOM saw true E-W spills through l2/l1/l0 neck/l1→l4/l5/SWpin strip; hot red mostly macro bodies, no std-cell pile. NOT final actual-M6 verdict.
+  - Existing log capacity comparison: old deratedM6 46740910 vs final47062516 (+0.688%). No same-iteration overflow logging exists; no invented causal comparison/new run.
+  - PG diagnostics classified in provider_actual_detail/PG_DIAGNOSTIC_STATUS.json:32GiB true OOM;64 baseline VDD PSMfailed all4BF; after root-cause/contact proof ONLY own diagnostic OpenROAD PIDs1453792/1673530 intentionally stopped (137 not OOM). No progressing physical job stopped.
+
+### Staging completed / source gaps
+
+- QC exact frozen inputs restored from E8 donor to E4 and E2 scratch3; source completeness cleared. No cleanup-chain changes. E2 scratch2 remains below150GB floor: target new work only approved scratch3; HBM remains explicit PARK (source warnings not chased).
+- HEAD missing original receipt asset root restored to E7/E9/E2/I1; dies.s81_head.kit_rtl.receipt_inputs declares same original prep/assets. Existing deep_inputs and cleanup protection consume it. Exact input-class re-arms passed GEN; no SRC/head warnings since.
+- Frame eventfull48GiB OOM recovered by same strict bind128GiB, unit1510226 exit0:398partitions/395types,873crossings, all bind errors0; latency873/873PASS. After BIND_SH_DONE staged full tracked tools06a9 into E4 vol2/eventfull/bsrc_fs with new inodes; original tools preserved. S81 owns private2place-only proofs/G0C classification. E4 scratch3 is root-backed /dev/md0 (687GBfree at check); root informed, no new move/cleanup.
+- New actual leaf bound source E7 s81-forms-1/b/t28_grid4_real/src: exact full tracked tools35d6c74a865d6d3e98afc25a4caaa6f784bd28cf installed after leaf_template explicit idleACK. Original tools_before_35d6c74a865/newinodes/TOOLS_35D_STAGED.txt retained; RTL/asbuilt/out unchanged. Leaf helper owns narrow52bank fixture.
+- SVC current frozen post-hook still absent; all16SVC held, do not release based only new source. Bounded requested SIGNED77.76x276.48 IDX donor not found in known registry/staging: SVCRS4 has only285.12 signed; no substitution. SVC/core owner notified.
+- KV retained PHY mapping reference found by KV parent E8 dkv100/rtlcls/phy/kv3_phy and phy_proof.sh; helper uses FRESH actual bound source, no stale identity borrowing.
+- BKSEL C9 formal issue belongs /root/lec: my rise_ff-only inference was corrected; current main has separate generic bbi_ff path, C9 tool old. Exact real-SRAM-clock witness qualification remains unproven; no guard bypass.
+- HBM diagnosed bash-of-Python ot-run doc-backtick pkill incident, exactlyone frontend victim; payload preserved. HBM patched existing fleet WT with shell→Python guard; my read-only prefix review PASS. Never execute legacy Python launcher with bash/help. No reproduction by wave.
+
+### Sync and final check commands
+
+- Canonical machine intel2 ~/coord. Wave config has published ctl_n hold; no pending wave config edit at handback. Append-only KIT-OPS-1 notes carry detailed earlier actions; root owns final handoff publication/main28cf/source9615/private78 rollup.
+- `ssh intel2 '~/.local/bin/ot-run --status'` is safe; do NOT run Python launcher via bash.
+- Inspect current jobs with Python reading ~/coord/autopilot/state.json; kit_wave_state.json can lag live workers.
+- Preserve all listed running units. No new admissions, source switches, route releases or validations from wave after Claude-back parking.

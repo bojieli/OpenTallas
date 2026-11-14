@@ -45,3 +45,7 @@
 - p1 GRT (no hold build) still running as the comparison arm (intel2 ~/lh1/route.log).
 - NOTE: t6 has TT setup WNS -360.6 at CTS (a4 cts_final -329.8: grid FF -> SRAM u_vp.u_b0 w_mask, ~1 ns of logic). That is a
   separate R-RTL/setup item. The hold fix does not touch it.
+
+## CODEX handoff 2026-11-13 17:15 PST
+
+CLAUDE BACK; new launches stopped, active jobs preserved. Complete exact S81 frame/leaf source, geometry, jobs, failures and next-step packet: `~/coord/handoff/codex_s81_to_claude_20261113_1715.md`. Keyterminal: joint216refloor32244.48x25980.48/0conflicts/checkclean (geometry-only); freshleafstrictbind+873/873latPASS; K52/K72actualKI source materializationPASS, mapped synth/clock/P&R stillpending. ProvideraliascurrentTT TIMING HOLD/RC2notbuilt; fullvectorreset/sourcegraph/softsites remain gated. Descendant lane-specific records appended separately.
