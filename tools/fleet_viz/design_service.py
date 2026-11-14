@@ -7,6 +7,7 @@
   GET /api/design/node/<id>        one node + its die summary + its child nodes (a type's cores)
   GET /api/design/token/<design>   token step classes -> current type / core nodes (token_design_map.py), with each
                                    node's status; the token page's "runs on" panel
+  GET /api/design/compose/<die>    die composition manifest of the routed die map (die_compose.py)
   GET /api/design/resolve?q=<name> name (type, core module, partition, old element name) -> node ids, for the token,
                                    dataflow and coverage pages
 """
@@ -115,6 +116,13 @@ class Service:
             try: mt = TOKEN_MAP.stat().st_mtime
             except OSError: mt = 0
             return self.send_json(h, 'token:%s:%s' % (k, mt), lambda: self.token(k))
+        if path.startswith('compose/'):   # die composition manifest (die_compose.py): plan + pinned packs + placements; EXPLORER-P1
+            d = path[8:]
+            f = STATE / 'die_compose' / d / 'latest.json'
+            if not re.fullmatch(r'[a-z0-9_]+', d) or not f.is_file(): return h.send(404, b'{"error":"no die composition (run die_compose.py)"}', 'application/json')
+            raw = f.read_bytes()
+            if 'gzip' in (h.headers.get('Accept-Encoding') or ''): return h.send(200, gzip.compress(raw, 5), 'application/json', (('Content-Encoding', 'gzip'), ('Cache-Control', 'no-cache')))
+            return h.send(200, raw, 'application/json', (('Cache-Control', 'no-cache'),))
         if path == 'resolve':
             names = [x for x in (q.get('q', [''])[0] or '').split(',') if x][:400]
             return h.send(200, json.dumps({n: self.resolve(n) for n in names}).encode(), 'application/json')

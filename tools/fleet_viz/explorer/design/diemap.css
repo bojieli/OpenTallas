@@ -1,0 +1,22 @@
+/* die map: every colour is a design token (--bg --panel --line --ink --dim --faint --accent --canvas --macro --s-*), supplied by the host page / shell */
+.dm{display:flex;flex-direction:column;height:100%;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+.dm *{box-sizing:border-box}
+.dm [hidden]{display:none!important}
+.dm-top{flex:none;display:flex;gap:6px 14px;align-items:center;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid var(--line);background:var(--panel);font-size:12px}
+.dm-sp{flex:1}
+.dm code{font-family:var(--mono)}
+.dm-btn,.dm input[type=search]{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font:600 12px var(--sans);color:var(--ink)}
+.dm-btn{cursor:pointer}
+.dm-main{flex:1;min-height:0;display:flex}
+.dm-root{flex:1;position:relative;min-width:0;background:var(--canvas)}
+.dm [data-canvas]{position:absolute;inset:0}
+.dm-side{flex:none;width:210px;overflow:auto;border-left:1px solid var(--line);background:var(--panel);padding:8px 10px;font-size:12px}
+.dm-side h4{margin:10px 0 4px;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.dm-side p{color:var(--dim);margin:0}
+.dm .lyr{display:flex;align-items:center;gap:6px;padding:1px 0;font:11px var(--mono)}.dm .lyr i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.dm [data-legend] i{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 3px 0 8px}
+.dm-ov{position:absolute;font:11px var(--mono);color:var(--dim);background:var(--topbg);padding:3px 7px;border-radius:6px;pointer-events:none}
+.dm [data-info]{left:8px;bottom:8px}.dm [data-coord]{right:8px;bottom:8px}
+.dm-tip{position:absolute;background:var(--tipbg);border:1px solid var(--line);padding:6px 9px;border-radius:8px;font:11px/1.4 var(--mono);pointer-events:none;max-width:260px;overflow-wrap:anywhere}
+.dm .busy{padding:30px;color:var(--dim)}
+@media (max-width:980px){.dm-side{display:none}}

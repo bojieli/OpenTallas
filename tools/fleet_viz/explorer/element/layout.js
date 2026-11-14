@@ -895,6 +895,9 @@ function selectFinding(id, zoom){
   const el = V.side.querySelector('.lv-fd'); if (el && !zoom) el.scrollIntoView({block: 'nearest'});
 }
 
+/* shared with the die viewer (explorer/design/diemap.js) */
+window.LVShared = {VS, FS, PAL, KINDS, hex, fmt, esc, ramp, defineLayer: () => { if (!RectLayer) defineLayer(); return RectLayer; }};
+
 /* ------------------------------------------------------------------ public */
 window.LayoutViewer = {
   open, close: () => { V.open = false; if (V.root) V.root.hidden = true; if (V.side) V.side.hidden = true; if (V.nav) V.nav.hidden = true; },
