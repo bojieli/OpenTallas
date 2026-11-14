@@ -1716,14 +1716,23 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--viz-dir", type=Path, default=None, help="also write data/ + geometry snapshots for the views here")
+    ap.add_argument("--today", type=Path, default=None, metavar="PLAN_NOW_JSON",
+                    help="re-point geometry, class->hardware and the stage currency labels at today's plans of record "
+                         "(fleet-viz plan_now.json); cycles stay the recorded ones (tools/token_today.py)")
     ap.add_argument("--only", default=None, help="comma-separated targets; default: all implemented targets")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     fns, mtps = target_functions(globals())
     index = []
+    today = None
+    if a.today:
+        import token_today
+        today = token_today.Today(a.today)
 
     def write(name, rec):
         prog = rec.pop("_program", None)
+        if today:
+            today.apply(rec, name[:-4] if name.endswith("_mtp") else name)
         if prog is not None:
             pp = a.out / f"{name}_program.json"
             pp.write_text(json.dumps(prog, separators=(",", ":")) + "\n")
@@ -1770,8 +1779,11 @@ def main():
         index.append(dict(design=k, title=rec["title"], file=p.name, tok_s=t["tok_s_published"], cycles=t["cycles"],
                           mtp=dict(rec["mtp"], reason=None) if mrec else rec["mtp"]))
         if a.viz_dir:
-            gk = rec["geometry"]["key"]
-            geo = hgi_geo_snapshot() if gk == HGI_DIE else geo_snapshot(gk)
+            gk = (rec["geometry"].get("october") or rec["geometry"])["key"] if today else rec["geometry"]["key"]
+            if today:
+                geo = today.geo_file(k)
+            else:
+                geo = hgi_geo_snapshot() if gk == HGI_DIE else geo_snapshot(gk)
             (a.viz_dir / "data" / f"geo_{k}.json").write_text(json.dumps(geo, separators=(",", ":")) + "\n")
     if a.only and (a.out / "index.json").is_file():
         # a partial run keeps the other view designs' entries (and drops designs that are no longer views)
