@@ -25,7 +25,37 @@ def load(path):
 REQUIRED_GATES = ("setup_tt", "hold_ff", "drv", "clock", "drc", "antenna", "pg")
 
 
+def _profile_module():
+    """tools/die_plan/signoff_profile.py: in the admission bundle (die_plan/ beside this file) or a repo checkout"""
+    here = Path(__file__).resolve().parent
+    for d in (here / "die_plan", here.parent / "die_plan"):
+        if (d / "signoff_profile.py").is_file():
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("signoff_profile", d / "signoff_profile.py")
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
+    raise RuntimeError("signoff_profile.py not staged with the chain (R-MINIMAL profile)")
+
+
+def minimal():
+    """OWNER 11-13 R-MINIMAL (default) vs OT_SIGNOFF_PROFILE=legacy"""
+    return os.environ.get("OT_SIGNOFF_PROFILE", "minimal").strip().lower() != "legacy"
+
+
+def signed(physical):
+    """the record passes sign-off under the active profile.  minimal: re-judged here from the record's measured numbers
+    (DRC 0, TT setup >= -42 ps, FF hold >= 0), so a record from an older kit-frozen signoff.py is judged by R-MINIMAL
+    too; legacy: SIGNED or LOCAL_PASS_NEEDS_PARENT as before"""
+    if minimal():
+        return _profile_module().judge(physical)["verdict"] == "SIGNED"
+    return physical.get("verdict") in ("SIGNED", "LOCAL_PASS_NEEDS_PARENT")
+
+
 def signoff_gates(physical):
+    if minimal():
+        j = _profile_module().judge(physical)
+        return dict(j["gates"])
     checks = physical.get("checks") or {}
     out = {}
     for k in REQUIRED_GATES:
@@ -113,6 +143,10 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
             else [])
         rc = run([sys.executable, str(preflight), str(kit), "--out",
                   str(kit / ("preflight_autopilot_" + str(time.time_ns()) + ".json"))] + extra)
+        if rc and minimal():
+            # R-MINIMAL: kit preflight (R-CAP / reach / core-tap / street) is ADVISORY -- reported, never blocks
+            print(f"KIT_PREFLIGHT ADVISORY: preflight exit {rc} (R-MINIMAL: not blocking)", flush=True)
+            rc = 0
         if rc:
             print("KIT_PREFLIGHT FAIL: autopilot stopped before physical runner", flush=True)
             return rc
@@ -138,7 +172,7 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
     # routed DB (one ECO iteration on a real near miss, OWNER 11-07; eco_loop.py) BEFORE it is reported as a failure; sign-off + routed LEC unchanged.
     if records and not proof_only and rc in (0, 1) and late_eco_enabled(kit, late):
         latest = max(records, key=lambda p: p.stat().st_mtime)
-        if load(latest).get("verdict") not in ("SIGNED", "LOCAL_PASS_NEEDS_PARENT"):
+        if not signed(load(latest)):
             res = eco_loop(kit, latest, runner, mem, threads, run=run) or {}
             receipt["eco"] = eco_receipt(res)
             best = res.get("best") or {}
@@ -146,12 +180,15 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
                 link = kit / ("signoff_eco_" + str(time.time_ns()))
                 os.symlink(Path(best["signoff"]).parent, link)
                 records = [link / "signoff.json"]
-                rc = 0 if load(records[0]).get("verdict") == "SIGNED" else 1
+                rc = 0 if signed(load(records[0])) else 1
                 receipt["eco"]["signoff_link"] = str(link)
     # signoff.py returns 1 for local-PASS-needs-parent. It is a valid
     # provisional result, so prove the route while preserving WAIT-PARENT.
     pending_parent = (rc == 1 and records and
                       load(max(records, key=lambda p: p.stat().st_mtime)).get("verdict") == "LOCAL_PASS_NEEDS_PARENT")
+    if rc == 1 and records and minimal() and signed(load(max(records, key=lambda p: p.stat().st_mtime))):
+        # R-MINIMAL: the kit's own (frozen, legacy) signoff.py said NOT SIGNED / NEEDS_PARENT on an advisory gate
+        rc, pending_parent = 0, False
     if rc and not pending_parent:
         return done(rc, "RUNNER_FAIL", "physical runner did not complete")
     if proof_only and not records:
@@ -172,16 +209,28 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
     so = max(records, key=lambda p: p.stat().st_mtime)
     physical = load(so)
     receipt["signoff"] = str(so)
-    if physical.get("verdict") not in ("SIGNED", "LOCAL_PASS_NEEDS_PARENT"):
-        return done(1, "NOT_SIGNED", "physical signoff did not pass")
+    if not signed(physical):
+        return done(1, "NOT_SIGNED", "physical signoff did not pass" + (
+            " (R-MINIMAL: " + "; ".join(_profile_module().judge(physical)["reasons"]) + ")" if minimal() else ""))
     gates = signoff_gates(physical)
     receipt["gates"] = gates
+    if minimal():
+        j = _profile_module().judge(physical)
+        receipt.update(profile="minimal", advisories=j["advisories"], achieved_period_ps=j["achieved_period_ps"],
+                       legacy_verdict=physical.get("verdict"))
     bad = sorted(k for k, v in gates.items() if v != "PASS")
     if bad:
         # an older frozen kit signoff.py can say SIGNED without running a gate (AUTOPILOT-SIGNOFF-2)
         return done(1, "NOT_SIGNED", "signoff gates not PASS: " + ", ".join(f"{k}={gates[k]}" for k in bad))
     base = Path((physical.get("inputs") or {}).get("base", ""))
     netlist = base / "6_final.v"
+    if minimal() and os.environ.get("OT_CHAIN_LEC", "async") != "sync":
+        # R-MINIMAL: the post-route LEC is ADVISORY / async -- sign-off never waits for it.  The routed netlist is
+        # recorded; the LEC report runs off the sign-off path (future_kit_lec scheduler / lec lane).
+        # OT_CHAIN_LEC=sync runs it here as before but never fails the chain on it.
+        receipt.update(netlist=str(netlist), routed_lec="ADVISORY_ASYNC")
+        return done(0, "PASS", "physical signoff complete (R-MINIMAL: DRC 0, TT setup >= -42 ps, FF hold >= 0); "
+                               "routed LEC advisory/async")
     tool = Path(lec) if lec else kit / "lec.py"
     receipt["lec_tool"] = str(tool)
     if not netlist.is_file() or not tool.is_file():
@@ -194,6 +243,9 @@ def continue_kit(kit, runner, goal, mem, threads, run=subprocess.call, preflight
     sv = result.get("superset_vec") or {}
     receipt.update(netlist=str(netlist), lec=str(proof / "lec.json"),
                    lec_verdict=result.get("verdict"), lec_exit=code, lec_all_shown=sv.get("all_shown"))
+    if minimal():
+        receipt["routed_lec"] = "ADVISORY " + str(result.get("verdict"))
+        return done(0, "PASS", f"physical signoff complete; routed LEC advisory: {result.get('verdict')} exit {code}")
     if code in (137, -9) or "out of memory" in str(result.get("reason", "")).lower():
         return done(code or 137, "LEC_OOM", f"routed proof stopped in {mem} GB; route kept; re-admit --proof-only at measured memory")
     if code or result.get("verdict") != "EQUIVALENT":

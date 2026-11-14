@@ -5,6 +5,13 @@ import unittest
 from pathlib import Path
 
 from signoff_chain import continue_kit
+import pytest  # noqa: E402
+
+@pytest.fixture(autouse=True)
+def _legacy_signoff_profile(monkeypatch):
+    """this module pins the pre-R-MINIMAL gates (OT_SIGNOFF_PROFILE=legacy); R-MINIMAL is covered by
+    tools/die_plan/test_signoff_profile.py"""
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")
 
 
 class ChainTest(unittest.TestCase):

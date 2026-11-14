@@ -10,6 +10,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import kit_wave as KW  # noqa: E402
+import pytest  # noqa: E402
+
+@pytest.fixture(autouse=True)
+def _legacy_signoff_profile(monkeypatch):
+    """this module pins the pre-R-MINIMAL gates (OT_SIGNOFF_PROFILE=legacy); R-MINIMAL is covered by
+    tools/die_plan/test_signoff_profile.py"""
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")
 
 GATE = {"g0c": "PASS", "bind": "PASS", "clock": "PASS", "evidence": "DIE-KV-40 21:07"}
 

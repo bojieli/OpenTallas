@@ -109,6 +109,7 @@ OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 PERIOD_PS = 833.0
 import sdc_lint as _SL  # noqa: E402  (bundle member; holds the sign-off margin policy)
+import signoff_profile as _SP  # noqa: E402  (bundle member; R-MINIMAL profile, env OT_SIGNOFF_PROFILE=minimal|legacy)
 # import-time snapshot of the sign-off clock uncertainty policy (OWNER 12.24b/c nominal setup 0 / hold 25); cmd_run uses
 # _SL.policy_uncertainty(--margin-policy) at run time
 UNC_SETUP_PS, UNC_HOLD_PS = _SL.policy_uncertainty()
@@ -300,7 +301,7 @@ def macro_libs(kit, corner):
 
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
-                  "kit_modes.py", "data_droop.py", "core_io_reference.py")
+                  "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py")
 OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
 
 
@@ -2438,6 +2439,10 @@ def evaluate(rec, insertion_target=None):
     if rec.get('io_hold') or a_context:
         from io_hold_qualification import apply_obligation
         apply_obligation(rec)
+    # OWNER 11-13 R-MINIMAL (default; OT_SIGNOFF_PROFILE=legacy keeps everything above as the verdict): the verdict is
+    # DRC 0 + TT setup WNS >= -42 ps + FF hold >= 0; every other check above (and io_hold_parent) is an advisory.
+    # The full legacy verdict/reasons stay in the record as legacy_verdict / legacy_reasons.
+    _SP.apply(rec)
     return rec
 
 
@@ -2497,7 +2502,9 @@ def summary_line(rec):
         ck = (((((C.get("clock") or {}).get("by_corner") or {}).get(c) or {}).get("pair_skew") or {}).get("checks") or {})
         w = [v.get("worst_abs_ps") for v in ck.values() if v.get("worst_abs_ps") is not None]
         ps[c] = max(w) if w else float("nan")
-    return (f"{rec.get('name')}: {rec.get('verdict')} | TT setup {g('setup_tt', 'wns_ps')} | FF hold "
+    prof = (f" [{rec.get('profile')} profile, legacy {rec.get('legacy_verdict')}, achieved period "
+            f"{rec.get('achieved_period_ps')} ps]") if rec.get("profile") == "minimal" else ""
+    return (f"{rec.get('name')}: {rec.get('verdict')}{prof} | TT setup {g('setup_tt', 'wns_ps')} | FF hold "
             f"{g('hold_ff', 'wns_ps')} (sdc {g('hold_ff', 'sdc_wns_ps')}) | SS setup (info) {g('ss', 'setup_wns_ps')} | "
             f"pair skew TT/FF {ps['tt']:.1f}/{ps['ff']:.1f} (spread info {pf['tt']}/{pf['ff']}) | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "
             f"sdc_lint {g('sdc_lint', 'verdict')} face_guard {g('face_guard', 'verdict')}")

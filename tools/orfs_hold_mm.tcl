@@ -601,6 +601,8 @@ proc ot_io_hold_pad {} {
 # tools/orfs_hold_mm.tcl and physical/die_plan/hbm_arch_cores/hold_gate.tcl (test_hold_structural_gate pins it).
 # COORD 11-05 07:36: default stop -200 (was -150): GRT hold repair closed 9 of 11 kits from -109 to -172 (DIE-HBM-70 07:04); routed sign-off still decides.
 set ::OT_HOLD_STOP_PS -200.0
+# R-MINIMAL (PROFILE-1 11-13): a kit config.mk 'export OT_HOLD_STOP_PS = <ps>' (gen_phys writes -1000000 = advisory) overrides
+if {[info exists ::env(OT_HOLD_STOP_PS)] && [string is double -strict $::env(OT_HOLD_STOP_PS)]} { set ::OT_HOLD_STOP_PS $::env(OT_HOLD_STOP_PS) }
 # KW-FIX-17 11-05 (COORD 16:2x class fix, default-on): the structural stop counts REGISTER-TO-REGISTER FF hold only,
 # the same scope as the post-CTS check (physical/die_plan/hbm_arch_cores/hold_gate.tcl reg2reg).  In/out-port hold
 # paths (port startpoint or endpoint, timed against the kit's boundary vclk contract) are an ADVISORY report line: die

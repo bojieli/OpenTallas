@@ -13,11 +13,18 @@ One verdict function for every die clock report (die_sta_related summary, die_in
 from __future__ import annotations
 
 import math
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import signoff_profile as _SP  # noqa: E402  (R-MINIMAL profile switch, OT_SIGNOFF_PROFILE)
 
 RULE = "OWNER 12.25/11-02: TT setup >= 0, FF hold >= 0 ps, block arrival-contract violations = 0; skew > 150 ps = WARN only"
 SETUP_MIN_PS = 0.0
 HOLD_MIN_PS = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was +10 (12.25)
 SKEW_TARGET_PS = 150.0
+RULE_MINIMAL = ("OWNER 11-13 R-MINIMAL: routed related-pair TT setup >= 0 at the achieved period, FF hold >= 0 ps, one "
+                "corner pair; kit-window / arrival contract advisory; skew > 150 ps = WARN only")
 BLOCKED = "BLOCKED(kits)"
 
 
@@ -25,11 +32,31 @@ def _num(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
-def verdict(tt_setup_ps, ff_hold_ps, contract_violations, skew_max_ps=None, hold_unmeasured=0, setup_neg_pairs=None):
-    """-> dict(verdict PASS/FAIL/BLOCKED(kits)/NOT RUN, reasons, warnings, the inputs, rule)."""
+def verdict(tt_setup_ps, ff_hold_ps, contract_violations, skew_max_ps=None, hold_unmeasured=0, setup_neg_pairs=None,
+            achieved_period_ps=None, profile=None):
+    """-> dict(verdict PASS/FAIL/BLOCKED(kits)/NOT RUN, reasons, warnings, the inputs, rule).
+    R-MINIMAL (OT_SIGNOFF_PROFILE=minimal, default): setup is judged at the die's ACHIEVED period (the max routed type
+    period, signoff_profile.achieved_period_ps): slack + (achieved - 833); the kit-window / block arrival contract is
+    ADVISORY (a warning) and its absence never makes the gate NOT RUN.  legacy: unchanged."""
+    minimal = _SP.is_minimal(profile)
     out = dict(rule=RULE, tt_setup_ps=tt_setup_ps, ff_hold_ps=ff_hold_ps, hold_min_ps=HOLD_MIN_PS,
                contract_violations=contract_violations, skew_max_ps=skew_max_ps, skew_target_ps=SKEW_TARGET_PS,
-               skew_role="TARGET (WARN only, never FAIL)", reasons=[], warnings=[])
+               skew_role="TARGET (WARN only, never FAIL)", reasons=[], warnings=[],
+               profile="minimal" if minimal else "legacy")
+    if minimal:
+        out["rule"] = RULE_MINIMAL
+        if _num(achieved_period_ps) and achieved_period_ps > _SP.PERIOD_PS:
+            out["achieved_period_ps"] = achieved_period_ps
+            out["tt_setup_ps_833"] = tt_setup_ps
+            if _num(tt_setup_ps):
+                tt_setup_ps = out["tt_setup_ps"] = tt_setup_ps + (achieved_period_ps - _SP.PERIOD_PS)
+                setup_neg_pairs = None if tt_setup_ps >= SETUP_MIN_PS else setup_neg_pairs
+        if not (isinstance(contract_violations, int) and not isinstance(contract_violations, bool)
+                and contract_violations >= 0):
+            out["warnings"].append("kit-window / block arrival contract not measured (advisory, R-MINIMAL)")
+        elif contract_violations > 0:
+            out["warnings"].append(f"{contract_violations} block arrival-contract violation(s) (advisory, R-MINIMAL)")
+        contract_violations = 0
     missing = [n for n, v in (("tt_setup_ps", tt_setup_ps), ("ff_hold_ps", ff_hold_ps)) if not _num(v)
                and not (n == "ff_hold_ps" and v is None and hold_unmeasured)]   # all hold pairs unmeasured -> BLOCKED
     if not (isinstance(contract_violations, int) and not isinstance(contract_violations, bool)
@@ -78,7 +105,7 @@ def count_aligned_violations(ca):
     return viol, info
 
 
-def from_related(res):
+def from_related(res, profile=None):
     """the 12.25 verdict of a die_sta_related record ({corners: {TT, FF: {classes}}}) over the gated classes
     (intra, seam, intra_cross_region; landed via its own plan landing window, or via the count-aligned crossings when
     the record has res["count_aligned"]; *_INFO excluded)."""
@@ -128,7 +155,14 @@ def from_related(res):
     wh = (min(hs) if hs else (math.inf if holds else None)) if all(_num(x) or x == math.inf for x in holds) else None
     if wh == math.inf:          # every hold pair unmeasured: no number (BLOCKED(kits) via hold_unmeasured)
         wh = None
-    v = verdict(ws, wh, None if missing else contract, max(skews) if skews else None, unmeas, neg)
+    if _SP.is_minimal(profile):          # R-MINIMAL: kit-window contract rows are advisory, never "missing"
+        adv = [m for m in missing if m.endswith("kit_contract_hold (FF)") or m.endswith(": plan_landing")]
+        missing = [m for m in missing if m not in adv]
+    v = verdict(ws, wh, None if missing else contract, max(skews) if skews else None, unmeas, neg,
+                achieved_period_ps=(res.get("achieved_period_ps") or (_SP.die_period_ps(res.get("die"))
+                                    if _SP.is_minimal(profile) else None)), profile=profile)
+    if _SP.is_minimal(profile) and adv:
+        v["warnings"].append("advisory (R-MINIMAL): " + "; ".join(adv))
     if missing:
         v["missing"] = missing
     if ca_info is not None:

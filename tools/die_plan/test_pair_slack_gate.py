@@ -9,6 +9,13 @@ from types import SimpleNamespace
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pair_slack_gate as PSG  # noqa: E402
 import die_infra as DI  # noqa: E402
+import pytest  # noqa: E402
+
+@pytest.fixture(autouse=True)
+def _legacy_signoff_profile(monkeypatch):
+    """this module pins the pre-R-MINIMAL gates (OT_SIGNOFF_PROFILE=legacy); R-MINIMAL is covered by
+    tools/die_plan/test_signoff_profile.py"""
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "legacy")
 
 
 def _rec(skew=200.0, setup=12.0, hold=10.0, contract=0, unmeasured=0):

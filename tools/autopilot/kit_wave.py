@@ -435,6 +435,45 @@ def age_min(s):
     return float(m.group(1)) if m else None
 
 
+def minimal_profile():
+    """OWNER 11-13 R-MINIMAL (PROFILE-1; default) vs OT_SIGNOFF_PROFILE=legacy.  Minimal: kit preflight, the visual verdict
+    (route hold / WAIT-FORM / sign-off wait), no-blind-retry, unchanged_fail and FLOW-REPEAT are ADVISORY; a failed row gets
+    ONE automatic retry (the generator's R-FLOW defaults) and then waits for a named owner (COORD retry / pending row)."""
+    return os.environ.get("OT_SIGNOFF_PROFILE", "minimal").strip().lower() != "legacy"
+
+
+MINIMAL_RETRY = "minimal_retry"       # state ledger {die|item: failed attempt that got the one automatic retry}
+
+
+def minimal_auto_retry(state, die, ev, d, retry, plan_types=None, log=print):
+    """R-MINIMAL one automatic retry: every FAILED wave row (design FAIL or queue FAIL; INFRA has its own resubmit) of this
+    die whose item has not used its automatic retry joins the in-memory retry set; the ledger keeps the failed attempt, so a
+    row still waiting to launch stays released and a second failure (a later attempt) waits for its owner.  -> new set"""
+    if not minimal_profile():
+        return retry
+    led = state.setdefault(MINIMAL_RETRY, {})
+    out = set(retry)
+    for rec in (state.get("items") or {}).values():
+        if rec.get("die") != die or not rec.get("item"):
+            continue
+        failed = rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL")
+        cls = str((rec.get("q_class") if rec.get("q_status") == "FAIL" else "") or rec.get("class") or "")
+        if not failed or cls == "INFRA":
+            continue
+        k, a = f"{die}|{rec['item']}", int(rec.get("attempt") or 0)
+        rf = d.get("retry_fix") if isinstance(d.get("retry_fix"), dict) else {}
+        used = [int(x.rsplit("@", 1)[1]) for x, why in rf.items() if x.rsplit("@", 1)[0] == rec["item"]
+                and x.rsplit("@", 1)[-1].isdigit() and "R-MINIMAL auto retry" in str(why)]
+        if led.get(k) is None and used and max(used) < a:
+            led[k] = max(used)              # KIT-OPS-2 11-13 config retry (tagged) already was this item's automatic retry
+        if led.get(k) is None:
+            led[k] = a
+            log(f"KW_MINIMAL_RETRY {die}/{rec['item']}@{a}: one automatic retry (R-MINIMAL; R-FLOW generator defaults)")
+        if led.get(k) == a:
+            out.add(f"{rec['item']}@{a}")
+    return out
+
+
 def item_key(die, event, item, block=None):
     """OWNER 12.20 (plans hard-frozen): a kit is keyed on its plan block sha, so a new event with the same
     block reuses the record (no regeneration); only a changed block makes a new wave item"""
@@ -957,6 +996,7 @@ def select(rows, cfg, die, state, plan_types=None):
     claim_m = float(opt(cfg, die, "live_claim_h")) * 60
     generic = set(opt(cfg, die, "generic_owner_labels") or [])
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
+    retry = minimal_auto_retry(state, die, ev, d, retry)   # R-MINIMAL: + one automatic retry per failed item
     skip = {}
     picked = []
     orphans = no_row_source(rows, d, die, plan_types)
@@ -1045,11 +1085,11 @@ def select(rows, cfg, die, state, plan_types=None):
             pass        # KW-PROV-1: a gen-time WAIT-DEP stop (child view missing) relaunches on provisional child views
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
-        elif rec and cfg.get("hold_unchanged") and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+        elif rec and cfg.get("hold_unchanged") and not minimal_profile() and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = HOLD_UNCHANGED
-        elif rec and cfg.get("form_gate", True) and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+        elif rec and cfg.get("form_gate", True) and not minimal_profile() and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = WAIT_FORM
-        elif rec and cfg.get("flow_repeat_gate", True) and flow_repeat(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+        elif rec and cfg.get("flow_repeat_gate", True) and not minimal_profile() and flow_repeat(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = FLOW_REPEAT
         elif r["live_job"] not in ("", "none") and not _own_wave_unit(r):
             why = "live job (another lane)"
@@ -4646,6 +4686,11 @@ def run_item(spec_path):
     pf = (f"{pstage}cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(pdir)} "
           f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/{pfo}")
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
+    if rc and minimal_profile():
+        # R-MINIMAL: kit preflight (R-CAP / reach / core-tap / street) is ADVISORY: recorded, the kit goes on to place
+        res["preflight_fail_advisory"] = error_lines(txt)[:20] or [txt[-500:]]
+        print(f"KW_PREFLIGHT_ADVISORY exit {rc} (R-MINIMAL: not blocking)", flush=True)
+        rc = 0
     if rc:
         return fail("preflight", "KIT_PREFLIGHT FAIL\n" + txt, f"{G}:{W}/{pfo}")
     # KW-FIX-44 11-10 (DIE-KV-97): the contract advisories of this --plan-dir run (macro_pin_grid, macro_channels ...)
@@ -6839,6 +6884,10 @@ def visual_gate_mode(cfg):
     """'route' (COORD 11-12: a placed type row holds its ROUTE until a visual verdict) or 'signoff' (OWNER 11-13 03:5x: it routes
     at once and the verdict gates the count: no SIGNED archive without GOOD / OK / ISSUES-ACCEPT, BAD / ISSUES discard the routed
     build).  Global kit_wave.json option visual_gate, default 'route'."""
+    if minimal_profile():
+        # R-MINIMAL: the visual verdict is a layout-improvement tool, never a gate on launch / route / sign-off; only a BAD
+        # verdict already on THIS build withholds its count (BAD demotes).  No WAIT-VISUAL / WAIT-FORM / routed discard.
+        return "advisory"
     return "signoff" if str(cfg.get("visual_gate") or "route").strip().lower() == "signoff" else "route"
 
 
@@ -6855,7 +6904,7 @@ def visual_signoff_gated(cfg, rec):
     """True: a TYPE row whose sign-off needs a visual verdict (signoff mode).  Builds placed before the visual gate start are
     gated too: under the route gate they were held as stale WAIT-FORM and never routed; in signoff mode they route, so their
     count needs a verdict like any other."""
-    return not (visual_gate_mode(cfg) != "signoff" or cfg.get("wait_visual", True) is False
+    return not (visual_gate_mode(cfg) not in ("signoff", "advisory") or cfg.get("wait_visual", True) is False
                 or (rec.get("kind") or "type") != "type")
 
 
@@ -6865,7 +6914,7 @@ def signoff_visual_gate(ap_dir, job):
     (the wave row is discarded to WAIT-FORM by visual_reject_discard).  Jobs without a kit-wave row are never gated."""
     try:
         cfg = json.loads((Path(ap_dir) / "kit_wave.json").read_text())
-        if visual_gate_mode(cfg) != "signoff":
+        if visual_gate_mode(cfg) not in ("signoff", "advisory"):
             return "", ""
         items = json.loads((Path(ap_dir) / STATE_FILE).read_text()).get("items") or {}
     except (OSError, ValueError):
@@ -6878,8 +6927,8 @@ def signoff_visual_gate(ap_dir, job):
     if not visual_signoff_gated(cfg, rec):
         return "", ""
     s, v = visual_signoff_state(cfg, rec)
-    if s == "accept":
-        return "", ""
+    if s == "accept" or (visual_gate_mode(cfg) == "advisory" and v != "BAD"):
+        return "", ""                    # R-MINIMAL: no verdict / ISSUES = counted now (sample reviewed after sign-off)
     if s == "reject":
         return "reject", (f"archive withheld: visual verdict {v} for {rec['die']}/{rec['item']} attempt {rec.get('attempt')} "
                           f"(visual gate at sign-off, OWNER 11-13): not counted; the type rebuilds on a new form (WAIT-FORM)")
@@ -6914,6 +6963,8 @@ def visual_hold(cfg, rec):
     from relaunching until its form fingerprint changes); no verdict = WAIT-VISUAL.  Hard cores are exempt.  Returns None | hold text."""
     if cfg.get("wait_visual", True) is False or (rec.get("kind") or "type") != "type":
         return None
+    if visual_gate_mode(cfg) == "advisory":
+        return None                      # R-MINIMAL: never a route hold / WAIT-FORM
     if visual_gate_mode(cfg) == "signoff":
         # OWNER 11-13 03:5x (KIT-OPS-1): the visual verdict gates sign-off, not route.  A placed build routes at once; only a
         # verdict that already rejects THIS build (BAD / ISSUES, bound to its form) keeps it at WAIT-FORM.
