@@ -1311,3 +1311,15 @@ def test_postroute_lec_without_any_lec_py_is_a_named_tool_gap(tmp_path):
     assert not E.run_lec(k, res, 8, 2, run=lambda *a, **k: ran.append(a) or 0, tools=empty)
     assert not ran and res["lec"]["verdict"] == "NO_LEC_TOOL" and "not a design verdict" in res["lec"]["reason"]
     assert json.loads((d / "eco_loop.json").read_text())["lec"]["verdict"] == "NO_LEC_TOOL"
+
+
+def test_nonport_corner_env_inherited_from_the_kit(tmp_path):
+    # KIT-OPS-4 11-14 (DIE-QC-103): a kit with OT_GRT_NONPORT_HOLD = 1 makes the ECO route select the FF corner like the kit route
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    (kit / "config.mk").write_text("export PLACE_DENSITY = 0.3\noverride export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_nonport.tcl\nexport OT_GRT_NONPORT_HOLD = 1\n")
+    assert E.nonport_corner_env(kit) == {"OT_VCLK_CORNER": "ff", "CORNER": "BC"}
+    assert E.nonport_corner_env(kit, {"OT_VCLK_CORNER": "ff", "CORNER": "TC"}) == {}      # explicit values win
+    (kit / "config.mk").write_text("export PLACE_DENSITY = 0.3\n")
+    assert E.nonport_corner_env(kit) == {}                                                # other kits unchanged
+    assert E.nonport_corner_env(tmp_path / "missing") == {}
