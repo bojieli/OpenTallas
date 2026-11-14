@@ -105,7 +105,7 @@ def test_element_checks_tab(page):
     cb = page.get_by_test_id('el-ov-cong'); cb.check()
     page.wait_for_function("() => (otx.store.get().params.ov || '').includes('cong')")
     page.get_by_test_id('el-cong-layer').select_option(index=1)
-    expect(page.get_by_test_id('el-ov-macros')).to_be_visible()
+    expect(page.get_by_test_id('insp-tab-macros')).to_be_visible()   # macros have their own inspector tab now
 
 
 def test_element_pack_search_highlights_net(page):

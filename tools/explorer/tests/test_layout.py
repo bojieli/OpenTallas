@@ -34,7 +34,7 @@ def test_layout_loads_clean_far_view(page, die):
     assert mode in ('raster', 'plan'), mode
     if mode == 'raster': assert eng(page, 'e.rasters.size') > 0
     info = page.get_by_test_id('layout-info')
-    expect(info).to_have_attribute('data-mode', mode); expect(info).to_have_attribute('data-loading', '0')
+    expect(info).to_have_attribute('data-mode', mode); expect(info).to_have_attribute('data-loading', '0', timeout=90000)   # rasters of many core packs on software GL
     expect(page.get_by_test_id('layout-summary')).to_contain_text('placements drawn')
     expect(page.get_by_test_id('fresh-chip')).to_contain_text(re.compile(r'Data|Stale'))
     expect(page.get_by_test_id('view-scope')).to_contain_text('routed die map')

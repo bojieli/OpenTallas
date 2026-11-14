@@ -76,6 +76,8 @@ function nodeDetails(R, view, inst) {
     const uses = R.uses || [];
     out.push(sec('Used by', uses.length + ' types', h('div.list', uses.map((u) => nodeRow({ id: u.type, name: u.name, state: u.state }, `${u.count}× · ${u.placements || 0} placements`)))));
   }
+  if (R.archive && R.archive.length) out.push(sec('Signed-layout archive', 'SIGNED-DB-AUDIT', R.archive.map((a) => kv(Object.entries(a).filter(([, v]) => v).slice(0, 12).map(([k, v]) => [k, h('span.mono', String(v))]))),
+    h('p.note', 'Where the signed routed database lives after it left the fleet hosts. The routed view itself reads the layout pack cut from that database, so it keeps working when the fleet path is gone.')));
   if (n.vis) out.push(sec('Visual review', null, kv([['verdict', h('b', n.vis.verdict)], ['class', n.vis.cls], ['attempt', `${n.vis.attempt || ''} ${n.vis.stage || ''}`], ['cause', n.vis.cause]])));
   out.push(sec('Identity', null, kv([['node id', h('span.mono', n.id)], ['plan', h('span.mono', R.plan.sha)], ['index built', fmtTime(R.generated)]])));
   return out;

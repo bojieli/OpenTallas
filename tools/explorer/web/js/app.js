@@ -10,8 +10,9 @@ import element from './views/element.js';
 import dataflow from './views/dataflow.js';
 import token from './views/token.js';
 import closure from './views/closure.js';
+import fleet from './views/fleet.js';
 
-const VIEWS = [overview, plan, layout, element, dataflow, token, closure];
+const VIEWS = [overview, plan, layout, element, dataflow, token, closure, fleet];
 
 async function boot() {
   const root = document.getElementById('root');

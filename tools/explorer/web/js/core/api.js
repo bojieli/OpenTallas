@@ -43,5 +43,6 @@ export const api = {
   tokenRecord: (id) => get('token/record/' + e(id)),
   tokenMap: (design) => get('token/map/' + e(design)),
   coverage: () => get('coverage'),
+  fleet: (name) => get('fleet/' + name, { fresh: true }),
   clear: () => cache.clear(),
 };

@@ -30,7 +30,7 @@ TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=u
          '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
          '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.map': 'application/json'}
 STALE_S = {'design_index': 3 * 3600, 'plan_now': 3 * 3600, 'compose': 3 * 3600, 'token_map': 26 * 3600,
-           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None}
+           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None, 'fleet': 120, 'signed_audit': None}
 LEGACY = {'/explorer': 'plan', '/explorer/': 'plan', '/explorer/design': 'plan', '/explorer/design/': 'plan',
           '/explorer/design/diemap.html': 'layout', '/explorer/element/': 'element', '/explorer/element': 'element',
           '/explorer/dataflow/': 'dataflow', '/explorer/dataflow': 'dataflow', '/explorer/token/': 'token', '/explorer/token': 'token',
@@ -38,7 +38,7 @@ LEGACY = {'/explorer': 'plan', '/explorer/': 'plan', '/explorer/design': 'plan',
 
 
 LEGACY_WORDS = [('element', 'element'), ('diemap', 'layout'), ('layout', 'layout'), ('dataflow', 'dataflow'), ('token', 'token'), ('coverage', 'closure'), ('release', 'closure'),
-                ('closure', 'closure'), ('status', 'closure'), ('design', 'plan'), ('plan', 'plan'), ('explorer', 'plan'), ('fleet', 'overview'), ('overview', 'overview')]
+                ('closure', 'closure'), ('status', 'closure'), ('design', 'plan'), ('plan', 'plan'), ('explorer', 'plan'), ('fleet', 'fleet'), ('overview', 'overview')]
 
 
 def legacy_target(path, q):
@@ -210,6 +210,13 @@ def datasets():
     gens = [g for g in (_iso(r.get('generated')) for r in own) if g]
     add('dataflow', 'Data-flow link records of the plans of record', min(gens) if gens else None, 'tools/explorer/refresh_data.py (plan_now.plan_geometry + dataflow_links.py), rebuilt when a plan changes', ['dataflow'],
         note='%d of %d dies have a current record; older revisions stay selectable and are labelled' % (len(own), len(idx['dies']) if idx else 0), missing=not own)
+    f = _FLEET.get('fleet')
+    try:
+        fleet_get('fleet'); f = _FLEET.get('fleet'); ferr = None
+    except ApiError as e: ferr = e.detail
+    add('fleet', 'Fleet hosts and jobs (fleet-viz collectors, 5 s poll)', f[2] if f and not ferr else None, 'tools/fleet_viz server.py pollers via ' + FLEET_API, ['fleet'], note=ferr, missing=bool(ferr))
+    au = signed_audit()
+    add('signed_audit', 'Signed-layout archive table (SIGNED-DB-AUDIT)', au.get('mtime'), AUDIT_SRC, ['element'], note=au.get('error') or ('%d rows' % au.get('n', 0)), missing=False)
     try:
         cv = COV.version()
         add('coverage', 'Architecture coverage ledger', None if cv.get('err') else now, cv.get('source') or 'results/arch/coverage', ['closure'], note=cv.get('err'))
@@ -266,6 +273,7 @@ def node(nid):
     r = DS.node(nid); n = r['node']
     r['plan'] = plan_ref(idx['nodes'][n['die']]['plan'])
     r['packs'] = history(nid)
+    r['archive'] = audit_rows(n)   # SIGNED-DB-AUDIT: where the signed routed database lives now
     if n['level'] == 'core':   # where the core sits: every (type, core instance) that places it
         uses = []
         for u in (n.get('plan') or {}).get('used_by') or []:
@@ -369,6 +377,146 @@ def dataflow_index():
     return dict(schema='opentallas.dataflow.links_index.v1', records=recs, refresh=_DF['result'], building=bool(_DF['thread'] and _DF['thread'].is_alive()))
 
 
+# ---------------------------------------------------------------------------------------------- fleet
+# The Fleet view reuses the old fleet-viz collectors: /api/fleet, /api/fleetjobs, /api/jobs, /api/verdicts of the fleet-viz
+# service (FLEET_API; on epyc8 a reverse tunnel to the owner's host).  Added here: per-job die / item / stage parsed from the
+# job's directory and command, and a light probe of RAM admission (ot-heavy-reconcile --free) and disks (df) per host.
+FLEET_API = os.environ.get('FLEET_API', 'http://127.0.0.1:8764')
+FLEET_TTL = dict(fleet=4, fleetjobs=12, jobs=12, verdicts=45)
+PROBE_HOSTS = [h for h in os.environ.get('FLEET_PROBE_HOSTS', 'intel1,intel2,epyc2,epyc7,epyc8,epyc9,epyc10').split(',') if h]
+_FLEET = {}; _FLEET_FAIL = dict(t=0, err=None); _PROBE = dict(t=0, hosts={}, thread=None); _AUDIT = dict(t=0, rows=None, error=None)
+DIE_RE = re.compile(r'/runs/(s81_head|s81|qwen_compute|qwen_kvsys|hbm)/|[/_-](s81_head|qwen_compute|qwen_kvsys)[/_-]|/(?:die-)?(s81|hbm|head|kv|qc)[-_/]', re.I)
+ITEM_RE = re.compile(r'/items/([^/\s"\']+)/attempt_(\d+)(?:/([a-z0-9_]+))?')
+STAGE_RE = re.compile(r'(?:^|[-_ /])(synth|floorplan|place|cts|grt|route|drt|fill|final|signoff|sta|lec|drc|rcx|gen|bind|export|verify)(?:[-_ /.]|$)', re.I)
+DIE_ALIAS = dict(head='s81_head', kv='qwen_kvsys', qc='qwen_compute')
+
+
+def job_fields(r):
+    """die / item / attempt / stage of one fleet job row, from its directory, name and command (best effort, None when unknown)"""
+    import base64
+    text = ' '.join(str(r.get(k) or '') for k in ('cwd', 'name', 'detail'))
+    spec = re.search(r'--spec-b64 ([A-Za-z0-9+/=_-]{40,})', text)
+    if spec:
+        try:
+            raw = spec.group(1); o = json.loads(base64.b64decode(raw + '=' * (-len(raw) % 4)))
+            text += ' ' + str(o.get('name') or '') + ' ' + ' '.join(str(i.get('path') or '') for i in o.get('inputs') or [])
+            r['job'] = o.get('name')
+        except Exception:
+            pass
+    m = ITEM_RE.search(text); d = DIE_RE.search(text)
+    die = next((g for g in d.groups() if g), None).lower() if d else None
+    out = dict(die=DIE_ALIAS.get(die, die), item=m.group(1) if m else None, attempt=int(m.group(2)) if m else None, stage=None)
+    # the job name says the stage best (<item>-place); the directory after attempt_N is the kit dir ("gen"), used only as a last resort
+    for c in [str(r.get('job') or ''), str(r.get('name') or ''), str(r.get('detail') or '')[-500:], m.group(3) if m and m.group(3) else '']:
+        st = [x.lower() for x in STAGE_RE.findall(c)]
+        real = [x for x in st if x != 'gen']
+        if real: out['stage'] = real[-1]; break
+        if st and not out['stage']: out['stage'] = 'kit gen'
+    return out
+
+
+def fleet_get(name):
+    import urllib.request
+    if name not in FLEET_TTL: raise ApiError(404, 'unknown fleet endpoint', name)
+    now = time.time(); c = _FLEET.get(name)
+    if c and now - c[0] < FLEET_TTL[name]: return c[1]
+    if now - _FLEET_FAIL['t'] < 20 and not (c and now - c[0] < 180): raise ApiError(502, 'the fleet collector did not answer', _FLEET_FAIL['err'])   # do not hammer a dead collector
+    try:
+        o = json.loads(urllib.request.urlopen(FLEET_API + '/api/' + name, timeout=8).read())
+    except Exception as e:
+        _FLEET_FAIL.update(t=now, err='%s (%s: %s)' % (FLEET_API, type(e).__name__, e))
+        if c and now - c[0] < 180: return c[1]   # a short outage: the last answer, its own generated_at says how old it is
+        raise ApiError(502, 'the fleet collector did not answer', '%s (%s: %s)' % (FLEET_API, type(e).__name__, e))
+    if name == 'fleetjobs':
+        for r in o.get('rows') or []:
+            r.update(job_fields(r)); d = str(r.get('detail') or '')
+            if len(d) > 600: r['detail'] = d[:600] + ' …'
+    if name == 'fleet': o.pop('regions', None)
+    raw = json.dumps(o, separators=(',', ':')).encode(); body = gzip.compress(raw, 4)
+    _FLEET[name] = (now, body, o.get('generated_at') or o.get('t'))
+    return body
+
+
+def _probe_one(host):
+    me = os.uname().nodename
+    cmd = 'ot-heavy-reconcile --free 2>/dev/null | tail -1; echo ---; df -BG --output=target,size,avail,pcent / /srv/opentallas-scratch* 2>/dev/null | tail -n +2 | sort -u'
+    local = host == os.environ.get('FLEET_PROBE_SELF', 'epyc8')
+    argv = ['bash', '-c', cmd] if local else ['ssh', '-n', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=6', '-o', 'ControlPath=none', host, cmd]
+    try:
+        out = subprocess.run(argv, capture_output=True, text=True, timeout=20).stdout
+        a, _, d = out.partition('---')
+        try: adm = json.loads(a.strip().splitlines()[-1])
+        except Exception: adm = None
+        disks = []; seen = set()
+        for ln in d.strip().splitlines():
+            f = ln.split()
+            if len(f) == 4 and f[1].endswith('G'):
+                key = (f[1], f[2])   # scratch2/scratch3 are often one file system
+                disks.append(dict(mount=f[0], size_gb=int(f[1][:-1]), avail_gb=int(f[2][:-1]), pct=int(f[3].rstrip('%')), same_as=None if key not in seen or f[0] == '/' else True)); seen.add(key)
+        keep = ('total_gb', 'avail_gb', 'used_gb', 'reserved_gb', 'floor_gb', 'headroom_gb', 'admit_gb', 'free_gb', 'cpu_load1', 'ncpu', 'running', 'waiting', 'waiting_gb', 'disk_gb', 'plenty')
+        return dict(t=time.time(), admit={k: adm.get(k) for k in keep} if adm else None, disks=disks, error=None if (adm or disks) else 'no answer')
+    except Exception as e:
+        return dict(t=time.time(), admit=None, disks=[], error='%s: %s' % (type(e).__name__, str(e)[:120]))
+
+
+def fleet_probe():
+    """RAM admission + disks per host, refreshed in the background at most every 90 s while somebody looks at the Fleet view"""
+    now = time.time()
+    if now - _PROBE['t'] > 90 and not (_PROBE['thread'] and _PROBE['thread'].is_alive()):
+        _PROBE['t'] = now
+
+        def run():
+            ths = []
+            def one(h): _PROBE['hosts'][h.upper()] = _probe_one(h)
+            for h in PROBE_HOSTS: t = threading.Thread(target=one, args=(h,), daemon=True); t.start(); ths.append(t)
+            for t in ths: t.join(25)
+        _PROBE['thread'] = threading.Thread(target=run, daemon=True); _PROBE['thread'].start()
+    return dict(t=_PROBE['t'], hosts=_PROBE['hosts'], probed=[h.upper() for h in PROBE_HOSTS], note='hosts not listed are not reachable from the service host (the owner machine is not probed)')
+
+
+# signed-layout archive table (SIGNED-DB-AUDIT lane): where the signed routed databases live after they left the fleet hosts
+AUDIT_SRC = os.environ.get('SIGNED_DB_AUDIT', 'intel2:coord/lanes/SIGNED-DB-AUDIT.tsv')
+
+
+def signed_audit():
+    now = time.time()
+    if now - _AUDIT['t'] > 600:
+        _AUDIT['t'] = now
+
+        def run():
+            try:
+                f = OWN / 'SIGNED-DB-AUDIT.tsv'
+                if ':' in AUDIT_SRC and not os.path.exists(AUDIT_SRC):
+                    host, path = AUDIT_SRC.split(':', 1)
+                    r = subprocess.run(['ssh', '-n', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=8', '-o', 'ControlPath=none', host, 'cat ' + path], capture_output=True, text=True, timeout=40)
+                    if r.returncode == 0 and r.stdout.strip(): OWN.mkdir(parents=True, exist_ok=True); f.write_text(r.stdout)
+                    elif not f.is_file(): _AUDIT['error'] = 'not posted yet (%s)' % AUDIT_SRC; return
+                else: f = pathlib.Path(AUDIT_SRC)
+                lines = [ln for ln in f.read_text().splitlines() if ln.strip() and not ln.startswith('#')]
+                head = [h.strip().lower() for h in lines[0].split('\t')]
+                rows = {}
+                for ln in lines[1:]:
+                    o = dict(zip(head, [c.strip() for c in ln.split('\t')]))
+                    for v in set(o.values()):   # index by every cell: node id, die/name, bare name
+                        if v and len(v) < 160 and re.match(r'^[A-Za-z0-9_./-]+$', v): rows.setdefault(v.split('/')[-1] if '/' in v and len(v.split('/')) == 2 else v, []).append(o)
+                _AUDIT['rows'] = rows; _AUDIT['error'] = None; _AUDIT['mtime'] = f.stat().st_mtime; _AUDIT['n'] = len(lines) - 1
+            except Exception as e:
+                _AUDIT['error'] = '%s: %s' % (type(e).__name__, str(e)[:160])
+        threading.Thread(target=run, daemon=True).start()
+    return _AUDIT
+
+
+def audit_rows(n):
+    a = signed_audit()
+    if not a.get('rows'): return None
+    hits = a['rows'].get(n['id']) or a['rows'].get(n['name']) or a['rows'].get((n.get('plan') or {}).get('module') or '') or []
+    hits = [h for h in hits if not h.get('die') or h['die'] in (n['die'], DIE_SHORT.get(n['die'], ''))] or hits
+    return hits[:4] or None
+
+
+DIE_SHORT = dict(s81='S81', s81_head='HEAD', qwen_compute='QC', qwen_kvsys='KV', hbm='HBM')
+
+
 # ---------------------------------------------------------------------------------------------- HTTP
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
@@ -387,6 +535,11 @@ class H(BaseHTTPRequestHandler):
         if 'gzip' in (self.headers.get('Accept-Encoding') or ''):
             return self.send(200, gz, 'application/json', (('Content-Encoding', 'gzip'), ('Cache-Control', 'no-cache'), ('Vary', 'Accept-Encoding')))
         return self.send(200, raw, 'application/json', (('Cache-Control', 'no-cache'),))
+
+    def gz(self, body, cache='no-cache'):
+        """a gzip body, plain for a client that did not ask for gzip"""
+        if 'gzip' in (self.headers.get('Accept-Encoding') or ''): return self.send(200, body, 'application/json', (('Content-Encoding', 'gzip'), ('Cache-Control', cache), ('Vary', 'Accept-Encoding')))
+        return self.send(200, gzip.decompress(body), 'application/json', (('Cache-Control', cache),))
 
     def fail(self, code, msg, detail=None):
         return self.send(code, json.dumps(dict(error=msg, detail=detail)).encode(), 'application/json', (('Cache-Control', 'no-store'),))
@@ -454,7 +607,7 @@ class H(BaseHTTPRequestHandler):
             f = DF_OWN / (rid + '.links.json.gz')
             if not f.is_file(): f = DATAFLOW / (rid + '.links.json.gz')
             if not f.is_file(): raise ApiError(404, 'no such data-flow record', rid)
-            return self.send(200, f.read_bytes(), 'application/json', (('Content-Encoding', 'gzip'), ('Cache-Control', 'no-cache')))
+            return self.gz(f.read_bytes())
         if p == 'token/index': return self.json('tok:index', (_mtime(TOKEN / 'index.json'), _mtime(design_service.TOKEN_MAP)), token_index)
         if p.startswith('token/record/'):
             rid = p[len('token/record/'):]
@@ -465,9 +618,11 @@ class H(BaseHTTPRequestHandler):
         if p.startswith('token/map/'):
             k = p[len('token/map/'):]
             return self.json('tok:map:' + k, (stamp, _mtime(design_service.TOKEN_MAP)), lambda: token_map(k))
+        if p == 'fleet/probe': return self.send(200, json.dumps(fleet_probe(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
+        if p.startswith('fleet/'): return self.gz(fleet_get(p[6:]), 'no-store')
         if p == 'coverage':
             now = time.time(); o = dict(COV.api(), generated_at=now)
-            return self.send(200, gzip.compress(json.dumps(o, separators=(',', ':')).encode(), 5), 'application/json', (('Content-Encoding', 'gzip'), ('Cache-Control', 'no-cache')))
+            return self.gz(gzip.compress(json.dumps(o, separators=(',', ':')).encode(), 5))
         raise ApiError(404, 'unknown endpoint', p)
 
     def health(self):

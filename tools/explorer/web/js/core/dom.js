@@ -63,6 +63,7 @@ export const ICON = {
   element: I('<rect x="4" y="4" width="12" height="12" rx="1.5"/><path d="M8 4V2M12 4V2M8 18v-2M12 18v-2M4 8H2M4 12H2M18 8h-2M18 12h-2"/><rect x="8" y="8" width="4" height="4"/>'),
   dataflow: I('<circle cx="4.5" cy="5" r="2"/><circle cx="15.5" cy="10" r="2"/><circle cx="4.5" cy="15" r="2"/><path d="M6.5 5c4 0 3 5 7 5M6.5 15c4 0 3-5 7-5"/>'),
   token: I('<path d="M3 16V8M7.5 16V4M12 16v-6M16.5 16V7"/><path d="M2 16h16"/>'),
+  fleet: I('<rect x="3" y="3" width="14" height="5" rx="1"/><rect x="3" y="12" width="14" height="5" rx="1"/><path d="M6 5.5h.01M6 14.5h.01M10 8v4"/>'),
   closure: I('<path d="M4 4h12v12H4z"/><path d="M7 10l2.2 2.2L13.5 8"/>'),
   search: I('<circle cx="9" cy="9" r="5"/><path d="M13 13l4 4"/>'),
   chevL: I('<path d="M12 5l-5 5 5 5"/>'), chevR: I('<path d="M8 5l5 5-5 5"/>'), chevD: I('<path d="M5 8l5 5 5-5"/>'),

@@ -3,7 +3,7 @@
 // Selection keys survive a view change; view params are remembered per view for the session.
 import { dieOf } from './dom.js';
 
-export const VIEWS = ['overview', 'plan', 'layout', 'element', 'dataflow', 'token', 'closure'];
+export const VIEWS = ['overview', 'plan', 'layout', 'element', 'dataflow', 'token', 'closure', 'fleet'];
 const SEL_KEYS = ['inst', 'net', 'lane', 'tok'];
 const subs = new Set();
 const memory = {};   // view -> params (session)

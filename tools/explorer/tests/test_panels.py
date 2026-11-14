@@ -3,22 +3,18 @@ Collapsing a panel must give its width back to the stage at once, in every view,
 Self-contained (own browser) so it can run alone:  pytest tests/test_panels.py -q"""
 import os, time
 import pytest
-from playwright.sync_api import sync_playwright
 
 BASE = os.environ.get('EXPLORER_URL', 'http://127.0.0.1:8770')
 ARGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
 VW, VH = 1600, 1000
 VIEWS = [('overview', 's81', None), ('plan', 's81', '[data-testid=plan-canvas]'), ('layout', 's81_head', '[data-testid=layout-canvas] canvas'),
-         ('element', 's81.c.dsfd_qbank_S', '[data-testid=layout-canvas] canvas'), ('dataflow', 'hbm', '[data-testid=plan-canvas]'), ('token', 's81', None), ('closure', 'qwen_kvsys', None)]
+         ('element', 's81.c.dsfd_qbank_S', '[data-testid=layout-canvas] canvas'), ('dataflow', 'hbm', '[data-testid=plan-canvas]'), ('token', 's81', None), ('closure', 'qwen_kvsys', None), ('fleet', 's81', None)]
 GEOM = """(sel) => { const r = (q) => { const e = document.querySelector(q); if (!e) return null; const b = e.getBoundingClientRect(); return b.width ? [Math.round(b.left), Math.round(b.width), Math.round(b.height)] : null; };
   const app = document.querySelector('.app'); return { stage: r('.stage'), body: r('[data-testid=stage]'), nav: r('.nav'), insp: r('.insp'), rail: r('.rail'), canvas: sel ? r(sel) : null,
     navState: app.dataset.nav, inspState: app.dataset.insp, focus: app.dataset.focus, vw: innerWidth, vh: innerHeight }; }"""
 
 
-@pytest.fixture(scope='module')
-def browser():
-    with sync_playwright() as p:
-        b = p.chromium.launch(args=ARGS); yield b; b.close()
+# the browser fixture comes from conftest.py (one Chromium per session)
 
 
 def settle(pg, sel, want_w, timeout=20):

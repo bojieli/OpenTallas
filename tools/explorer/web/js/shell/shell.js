@@ -7,7 +7,7 @@ import { mountNavigator } from './navigator.js';
 import { mountInspector } from './inspector.js';
 
 const NAV = { min: 180, max: 520, def: 280 }, INSP = { min: 260, max: 720, def: 348 };
-const KEYS = [['/', 'Search'], ['1 – 7', 'Switch view'], ['[', 'Hide or show the navigator'], [']', 'Hide or show the inspector'], ['\\', 'Focus mode: canvas only'],
+const KEYS = [['/', 'Search'], ['1 – 8', 'Switch view'], ['[', 'Hide or show the navigator'], [']', 'Hide or show the inspector'], ['\\', 'Focus mode: canvas only'],
   ['Shift + \\', 'Browser full screen'], ['F', 'Fit the canvas'], ['R', 'Ruler (layout)'], ['Esc', 'Leave focus mode, clear highlight'], ['?', 'This list']];
 
 export function createShell(root, { views, meta }) {
@@ -198,7 +198,7 @@ export function createShell(root, { views, meta }) {
     else if (e.key === '\\') setFocus(app.dataset.focus !== '1');
     else if (e.key === '|') toggleFull();
     else if (e.key === '?') helpPop(help);
-    else if (/^[1-7]$/.test(e.key)) { const v = views[+e.key - 1]; if (v) store.go({ view: v.id }); }
+    else if (/^[1-8]$/.test(e.key)) { const v = views[+e.key - 1]; if (v) store.go({ view: v.id }); }
     else return;
     e.preventDefault();
   });

@@ -3,7 +3,6 @@ Macro identity: outline + label, colour by master with a legend, hover tooltip, 
 navigator rows (hover highlights, click zooms).  Self-contained:  pytest tests/test_macros.py -q"""
 import os, time
 import pytest
-from playwright.sync_api import sync_playwright
 
 BASE = os.environ.get('EXPLORER_URL', 'http://127.0.0.1:8770')
 ARGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
@@ -16,10 +15,7 @@ PICK = """() => { const e = window.otx.eng, vp = e.deck.getViewports()[0], r = d
 LAYERS = "() => Object.fromEntries(window.otx.eng.deck.props.layers.filter((l) => l.id === 'marks' || l.id === 'marklabels').map((l) => [l.id, l.props.data.length]))"
 
 
-@pytest.fixture(scope='module')
-def browser():
-    with sync_playwright() as p:
-        b = p.chromium.launch(args=ARGS); yield b; b.close()
+# the browser fixture comes from conftest.py (one Chromium per session)
 
 
 def open_page(browser, hash_):
