@@ -1,3 +1,41 @@
+# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 05:13 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
+columns: core | lane | form | host | unit/kit | stage | verdict | view path (signoff) | registered (AUTO-RESIGN / prov_view_sources)
+
+| core | lane | form | host | kit | stage | verdict | view path | registered |
+|---|---|---|---|---|---|---|---|---|
+| sle_cland_w120_s_s3 | TL-QCRING-1 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w120_s_s3/kits/sle_cland_w120_s_s3_synth0 | global-place | - |  | no |
+| sle_cland_w2104_s_s34 | TL-QCRING-2 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w2104_s_s34/kits/sle_cland_w2104_s_s34_synth0 | running | - |  | no |
+| sle_cland_w257_e_s6 | TL-QCRING-3 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w257_e_s6/kits/sle_cland_w257_e_s6_synth0 | global-place | - |  | no |
+| sle_cland_w269_w_s6 | TL-QCRING-4 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w269_w_s6/kits/sle_cland_w269_w_s6_synth0 | global-place | - |  | no |
+| sle_cland_w457_e_s9 | TL-QCRING-1 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w457_e_s9/kits/sle_cland_w457_e_s9_synth0 | global-place | - |  | no |
+| sle_cland_w457_s_s9 | TL-QCRING-2 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w457_s_s9/kits/sle_cland_w457_s_s9_synth0 | global-place | - |  | no |
+| sle_cland_w517_n_s10 | TL-QCRING-3 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w517_n_s10/kits/sle_cland_w517_n_s10_synth0 | global-place | - |  | no |
+| sle_cland_w517_n_s10_1 | TL-QCRING-4 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w517_n_s10_1/kits/sle_cland_w517_n_s10_1_synth0 | global-place | - |  | no |
+| sle_cland_w517_n_s10_2 | TL-QCRING-1 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w517_n_s10_2/kits/sle_cland_w517_n_s10_2_synth0 | global-place | - |  | no |
+| sle_cland_w537_e_s10 | TL-QCRING-2 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w537_e_s10/kits/sle_cland_w537_e_s10_synth0 | global-place | - |  | no |
+| sle_cland_w537_s_s10 | TL-QCRING-3 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w537_s_s10/kits/sle_cland_w537_s_s10_synth0 | global-place | - |  | no |
+| sle_cland_w537_w_s10 | TL-QCRING-4 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w537_w_s10/kits/sle_cland_w537_w_s10_synth0 | global-place | - |  | no |
+| sle_cland_w653_w_s12 | TL-QCRING-1 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w653_w_s12/kits/sle_cland_w653_w_s12_synth0 | global-place | - |  | no |
+| sle_cland_w94_s_s3 | TL-QCRING-2 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w94_s_s3/kits/sle_cland_w94_s_s3_synth0 | running | - |  | no |
+| sta_cland_w1081_e_s18 | TL-QCRING-3 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_cland_w1081_e_s18/kits/sta_cland_w1081_e_s18_synth0 | drt | - |  | no |
+| sta_cland_w1574_e_s26 | TL-QCRING-4 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_cland_w1574_e_s26/kits/sta_cland_w1574_e_s26_synth0 | global-place | - |  | no |
+| sta_cland_w1574_n_s26 | TL-QCRING-1 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w1574_n_s26/kits/sta_cland_w1574_n_s26_synth0 | running | - |  | no |
+| sta_cland_w259_s_s6 | TL-QCRING-2 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w259_s_s6/kits/sta_cland_w259_s_s6_synth0 | global-place | - |  | no |
+| sta_cland_w515_s_s10 | TL-QCRING-3 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w515_s_s10/kits/sta_cland_w515_s_s10_synth0 | global-place | - |  | no |
+| sta_cland_w515_s_s10_1 | TL-QCRING-4 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w515_s_s10_1/kits/sta_cland_w515_s_s10_1_synth0 | global-place | - |  | no |
+| sta_cland_w515_s_s10_2 | TL-QCRING-1 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_cland_w515_s_s10_2/kits/sta_cland_w515_s_s10_2_synth0 | drt | - |  | no |
+| sta_cland_w515_s_s10_3 | TL-QCRING-2 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_cland_w515_s_s10_3/kits/sta_cland_w515_s_s10_3_synth0 | grt | - |  | no |
+| sta_cland_w537_s_s10 | TL-QCRING-3 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc10 | /srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w537_s_s10/kits/sta_cland_w537_s_s10_synth0 | global-place | - |  | no |
+| sta_cland_w537_s_s10_1 | TL-QCRING-4 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_cland_w537_s_s10_1/kits/sta_cland_w537_s_s10_1_synth0 | drt | - |  | no |
+| sta_cland_w632_e_s11 | TL-QCRING-1 | ring ot_dp_clk_landing_cas D4 hold_mux | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rk/sta_cland_w632_e_s11/kits/sta_cland_w632_e_s11_synth0 | drt | - |  | no |
+| sta_region_nb0 | TL-QCSTAV2 | region 5xSRAM | ? | - | no kit yet | - |  | no |
+| qfd_dv_s8_station_tail1 | TL-QCTAIL1 | non-ring qfd_dv | ? | - | no kit yet | - |  | no |
+| qfd_dv_s8_tap_bounded | TL-QCTAPB | non-ring qfd_dv | ? | - | no kit yet | - |  | no |
+| qfd_dv_s5_ctl_repair4_leaf | TL-QCREP4 | non-ring qfd_dv | ? | - | no kit yet | - |  | no |
+
+STATE: 0/29 signed; signoff-not-signed: none
+
+## Source notes (original hand-offs, unchanged)
 
 ## DIE-QC-103 hand-off of 19 ring-child kits (2026-11-14, per COORD/OWNER: QC-CORES-HEAD owns all 29 unbuilt s29q103S hard cores). Jobs are RUNNING; the ring lanes adopt them, do not relaunch.
 RECIPE (same for all 19): plan zz_s29_qc103_s2.json (epyc9 wt/qc-s29-tree2 plan_of_record, sha f84e7f271c14) hard_cores row per module -> param_wrap.params (W, DEPTH 4, STATUS_REG 1, WFALL 1, WREG 1, DSREP 8, RSTREP n, PLACEREP 1) and outline_um and pins_file (plan_of_record/cores/{sle_ctl,st_a}/<m>_pins.json, already holds rst_xn/strap_k pins, taken as-is). Kit dir = rk2/<m>/ with <m>.sv wrapper (ot_dp_clk_landing_cas u_ring, ports clk,fclk,rst_n,t_rst_n,rst_xn[RSTREP-1:0],strap_k[5:0],d,q,ready,fault), spec.json/recipes.json/plan.json from the QC-RING D8 template (land_slots d D=DEPTH hold_mux, t_rst_n ring_start, insertion 250/202.5 tol 40, util 0.5, core_margin 1.08, max_routing_layer M5), generated with gen_core_kit_qc.py (epyc9 die-qc-103/wt_r8pin, branch claude/die-qc-103-r8pin-1113) --module <m> --recipes rk2/<m>/recipes.json --plan rk2/<m>/plan.json --out rk2/<m>/kits, rsynced to epyc10, run: ot-run --mem 40 (90 for w2104 and w1574) --threads 16 --dir <kit> --hosts epyc10 -- bash run_kit.sh <kit> finish <mem> 16 (client = epyc7 ~/.local/bin/ot-run). Generator script: epyc9 /srv/opentallas-scratch2/claude/die-qc-103/mkring2.py-equivalent (scratchpad copy of it is the 19-module loop); QC-RING precedent for the 4 earlier ring kits: epyc10 die-qc-103/rk/<m> (signed). On pass: add a row to lanes/AUTO-RESIGN.tsv (die qwen_compute, host epyc10, dir = the kit path, lane = your lane) and copy LEF/libs into tree2 qcviews_1111/views/<m>/ only if the plan needs a lef path (plan rows currently carry none; the wave finds the routed provisional source by prov_view_sources_auto.json / closed store).
