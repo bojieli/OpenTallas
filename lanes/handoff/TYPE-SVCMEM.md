@@ -10,3 +10,6 @@ Next: when they launch, watch gen_lint/place/route; add AUTO-RESIGN row on pass 
 
 ## 08:05
 COORD approved release. Owning hi t1-t4/pvso t1. t1 a7 memory_bits PASS (place). Deadline for KIT-OPS-3 launch of t5/t6/pvso t2: 30 min, else self-launch.
+
+## 08:37
+t5/t6/pvso t2 launched 08:23 by KIT-OPS-3. Following hi t1-t6 + pvso t1/t2 through route; check 09:10. On pass: AUTO-RESIGN row + RESULT. Size fail -> evidence + split proposal.
