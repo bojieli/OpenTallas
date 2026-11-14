@@ -447,7 +447,7 @@ def check(kit, plan_dir=None, contract=False):
             if plan is not None:
                 estimate['synth_basis'] = f'plan estimate (cells.py {plan[1]})'
             cap_record.update(estimate)
-        return errors
+        return []      # LIMIT-BIND-1 11-14 (OWNER: R-CAP removed): recorded as info, never a preflight error
     run('cell_budget', cell_budget)
     if cap_record:
         checks['cell_budget']['estimate'] = cap_record

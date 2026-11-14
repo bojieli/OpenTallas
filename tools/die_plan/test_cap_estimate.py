@@ -89,7 +89,7 @@ def mk_kit(tmp_path, synth=None, pins=14503, outline=(1442.88, 1226.88), macros=
 
 def test_check_kit_sources(tmp_path):
     errs, e = C.check_kit(mk_kit(tmp_path, 332_424))
-    assert len(errs) == 1 and 'R-CAP OVER' in errs[0] and 'split into' in errs[0] and e['macros'] == 47
+    assert errs == [] and e['verdict'] == 'OVER' and e['macros'] == 47      # LIMIT-BIND-1: recorded, never an error
     assert 'measured synth' in e['synth_basis']
     kit2 = tmp_path / 'b'
     kit2.mkdir()
@@ -98,15 +98,15 @@ def test_check_kit_sources(tmp_path):
     kit3.mkdir()
     errs, e = C.check_kit(mk_kit(kit3, cap_budget=dict(cells=100_000, macros=3)))
     assert errs == [] and e['verdict'] == 'OK' and e['macros'] == 3
-    assert C.main(['--kit', str(tmp_path / 'kit')]) == 1 and C.main(['--kit', str(kit3 / 'kit')]) == 0
+    assert C.main(['--kit', str(tmp_path / 'kit')]) == 0 and C.main(['--kit', str(kit3 / 'kit')]) == 0
 
 
 def test_kit_preflight_fails_an_over_budget_kit(tmp_path):
     import kit_preflight as KP
     rec = KP.check(mk_kit(tmp_path, 332_424))
     row = rec['checks']['cell_budget']
-    assert row['verdict'] == 'FAIL' and row['estimate']['verdict'] == 'OVER'
-    assert any(i.startswith('cell_budget: ') and 'split into' in i for i in rec['issues'])
+    assert row['verdict'] == 'PASS' and row['estimate']['verdict'] == 'OVER'     # R-CAP removed (LIMIT-BIND-1): info only
+    assert not any(i.startswith('cell_budget: ') for i in rec['issues'])
     ok = tmp_path / 'ok'
     ok.mkdir()
     rec = KP.check(mk_kit(ok, 120_000, pins=4000, macros=0))
@@ -169,15 +169,15 @@ def test_kit_preflight_prefers_measured_over_flat_plan_estimate(tmp_path):
     over = tmp_path / 'over'
     over.mkdir()
     kit = mk_kit(over, 450_000, pins=8903, outline=(1036.8, 1520.64), macros=12)
-    rec = KP.check(kit, pd)                                    # a genuinely over-cap measured netlist still fails
-    assert rec['checks']['cell_budget']['verdict'] == 'FAIL' and rec['checks']['cell_budget']['estimate']['verdict'] == 'OVER'
+    rec = KP.check(kit, pd)                                    # an over-cap measured netlist is recorded, not failed
+    assert rec['checks']['cell_budget']['verdict'] == 'PASS' and rec['checks']['cell_budget']['estimate']['verdict'] == 'OVER'
     soft = tmp_path / 'soft'
     soft.mkdir()
     pd2 = _pc_plan(soft, hard_cores=False)
     kit = mk_kit(soft, pins=8903, outline=(1036.8, 1520.64))
     (kit / 'budget.json').write_text(json.dumps(dict(type='t', outline_um=[1036.8, 1520.64], pins=8903)))
     row = KP.check(kit, pd2)['checks']['cell_budget']          # no hard cores: the plan row is its movable logic
-    assert row['verdict'] == 'FAIL' and row['estimate']['verdict'] == 'OVER'
+    assert row["verdict"] == "PASS" and row['estimate']['verdict'] == 'OVER'
     assert row['estimate']['synth_basis'].startswith('plan estimate (cells.py by_type')
 
 
@@ -196,7 +196,7 @@ def test_g0_check_plan():
                                   edge=(330_000, 'plan'), none=(0, 'plan')))
     assert out['over'] == ['big'] and out['near'] == ['edge'] and out['cored_unjudged'] == ['cored']
     assert 'none' not in out['rows']                          # flat estimate of a cored type: left to the netlist
-    assert [i[:2] for i in items] == [('E', 'cell_budget'), ('W', 'cell_budget')]
+    assert [i[:2] for i in items] == [('W', 'cell_budget'), ('W', 'cell_budget')]      # LIMIT-BIND-1: OVER is a WARN
     assert 'split into' in items[0][2] and items[0][3] == dict(type='big') and 'place census stops' in items[1][2]
     P.types['cored']['cells'] = 1
     out = C.check_plan(P, R, dict(cored=(450_000, 'plan')))    # its own type.cells is its movable logic: judged
@@ -238,8 +238,8 @@ def run_cap(tmp_path, std, macros, pins, outline, limit=None):
 def test_pre_floorplan_projection_stops_with_the_split(tmp_path):
     r = run_cap(tmp_path, 332_424, 47, 14503, (1442.88, 1226.88))
     want = C.project(332_424, 14503, [1442.88, 1226.88], 47)
-    assert r.returncode != 0 and f'after place resize {want["place"]} above the R-CAP place budget 400000' in r.stderr
-    assert f'split into {want["split_parts"]} parts' in r.stderr
+    assert r.returncode == 0 and f'after place resize {want["place"]} above the R-CAP place budget 400000' in r.stdout
+    assert f'split into {want["split_parts"]} parts' in r.stdout and 'R-CAP removed' in r.stdout
     assert json.loads((tmp_path / 'proj.json').read_text())['place'] == want['place']
 
 

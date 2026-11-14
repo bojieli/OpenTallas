@@ -1674,9 +1674,8 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             no_cells.append(tn)
         elif nc > CORE_CELLS_MAX and not t.get("hard_cores"):
             out["over_cap_no_cores"] += 1
-            R.err("hard_cores", f"type {tn}: {nc} cells ({basis}) > {CORE_CELLS_MAX} and no hard_cores[] (outline, "
-                  "pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
-                  type=tn)
+            R.warn("hard_cores", f"type {tn}: {nc} cells ({basis}) > {CORE_CELLS_MAX} and no hard_cores[] (info, "
+                   "LIMIT-BIND-1 11-14: the cell cap is removed; a big type just builds)", type=tn)
         ck = t.get("clock", {})
         names = set()
         for tp in ck.get("taps", []):

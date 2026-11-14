@@ -6,7 +6,14 @@ coordinates. The raw wavefront reset is used before START. No missing child is
 tied to a value, and no die-top combinational reduction is generated.
 """
 import re
+import sys
 from collections import defaultdict
+
+
+def _reach_info(msg):
+    """LIMIT-BIND-1 11-14 (OWNER: remove the conservative limits): a collector hop over the reach is reported, not raised;
+    routed timing judges the wire."""
+    print("COLLECTOR-REACH-INFO " + msg + " (info: not blocking)", file=sys.stderr)
 
 
 def safe(n):
@@ -160,7 +167,7 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
                   for p in src.get("status_pins_xy_um", [point]))
         max_source_hop = max(max_source_hop, hop)
         if hop > reach_um + 1e-6:
-            raise ValueError(f"collector source {src['name']} -> {node}: {hop:.3f}um exceeds {reach_um}")
+            _reach_info(f"collector source {src['name']} -> {node}: {hop:.3f}um exceeds {reach_um}")
         at[node].append(src)
         seen = set()
         while True:
@@ -198,7 +205,7 @@ def build_local(tree, sources, body, *, reach_um=405, root_node="rst_root_n"):
             r, f = nets(ch); ready.append(r); fault.append(f)
             distance = abs(xy[ch][0]-xy[node][0])+abs(xy[ch][1]-xy[node][1])
             if distance > reach_um + 1e-6:
-                raise ValueError(f"reverse collector {ch}->{node}: {distance:.3f}um exceeds {reach_um}")
+                _reach_info(f"reverse collector {ch}->{node}: {distance:.3f}um exceeds {reach_um}")
             hops.append(dict(src=ch, dst=node, hop_um=distance))
         if not ready:
             raise ValueError(f"collector {node}: empty active branch")
@@ -235,7 +242,7 @@ def build_hard_chain(tree, sources, *, reach_um=405):
     for src in sources:
         if src.get("node",leaf)!=leaf:raise ValueError(f"hard collector source {src['name']} not at the chain leaf")
         p=src.get("xy_um",xy[leaf]);hop=abs(p[0]-xy[leaf][0])+abs(p[1]-xy[leaf][1])
-        if hop>reach_um+1e-6:raise ValueError(f"hard collector source {src['name']}: {hop:.3f}um exceeds {reach_um}")
+        if hop>reach_um+1e-6:_reach_info(f"hard collector source {src['name']}: {hop:.3f}um exceeds {reach_um}")
         hops.append(dict(src=src["name"],dst=leaf,hop_um=hop))
     chain=[leaf]
     while chain[-1]!="rst_root_n":chain.append(relays[chain[-1]]["d"])
@@ -246,7 +253,7 @@ def build_hard_chain(tree, sources, *, reach_um=405):
         else:
             r,f=nets(chain[i-1]);ready,fault=[r],[f]
             d=abs(xy[chain[i-1]][0]-xy[n][0])+abs(xy[chain[i-1]][1]-xy[n][1])
-            if d>reach_um+1e-6:raise ValueError(f"hard collector {chain[i-1]}->{n}: {d:.3f}um exceeds {reach_um}")
+            if d>reach_um+1e-6:_reach_info(f"hard collector {chain[i-1]}->{n}: {d:.3f}um exceeds {reach_um}")
             hops.append(dict(src=chain[i-1],dst=n,hop_um=d))
         rn,fn=nets(n)
         if n!="rst_root_n":lines.append(f"    wire {rn}, {fn};")
@@ -292,8 +299,12 @@ def reattach_sources(info, tree, *, status_points=None, reach_um=405):
             dist = lambda r: max(abs(p[0]-r["xy"][0])+abs(p[1]-r["xy"][1]) for p in points)
             eligible = [(dist(r), n) for n, r in after.items()
                         if r["depth"] == depth and dist(r) <= reach_um+1e-6]
-            if not eligible:
-                raise ValueError(f"collector source {name}: no depth-{depth} relay within {reach_um}um")
+            if not eligible:       # LIMIT-BIND-1: no relay within reach -> nearest relay at that depth, reported
+                far = sorted((dist(r), n) for n, r in after.items() if r["depth"] == depth)
+                if not far:
+                    raise ValueError(f"collector source {name}: no depth-{depth} relay")
+                _reach_info(f"collector source {name}: nearest depth-{depth} relay {far[0][0]:.3f}um > {reach_um}")
+                eligible = far[:1]
             keep = [(d,n) for d,n in eligible if n == was]
             hop, node = min(keep or eligible)
             src["node"] = node

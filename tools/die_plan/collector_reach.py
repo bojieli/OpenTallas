@@ -84,11 +84,11 @@ def check_collector_reach(P, R, reach=REACH_UM, max_per_type=3):
         seen[r["type"]] += 1
         if seen[r["type"]] <= max_per_type:
             what = "reverse collector" if r["kind"] == "edge" else "collector source"
-            R.err("collector_reach", f"{what} {r['src']}->{r['dst']}: {r['hop_um']:.3f}um exceeds {reach:g} "
-                  f"(type {r['type']}; the bind stops on this as EMIT <type>: {what} ...)", type=r["type"])
+            R.warn("collector_reach", f"{what} {r['src']}->{r['dst']}: {r['hop_um']:.3f}um exceeds {reach:g} "
+                  f"(type {r['type']}; info only since LIMIT-BIND-1 11-14, the bind reports it as EMIT <type>: {what} ...)", type=r["type"])
     extra = sum(max(0, n - max_per_type) for n in seen.values())
     if extra:
-        R.err("collector_reach", f"... {extra} more over-reach collector edges in {len(seen)} types (summary.collector_reach)")
+        R.warn("collector_reach", f"... {extra} more over-reach collector edges in {len(seen)} types (summary.collector_reach)")
     worst = sorted(rows, key=lambda r: -r["hop_um"])[:10]
     return dict(reach_um=reach, edges_over=len(rows), types_over=len(seen), worst=worst)
 

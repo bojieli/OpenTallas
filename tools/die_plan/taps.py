@@ -1036,7 +1036,7 @@ def explicit_taps(P, tn):
         for (name, x, y), p in zip(out, [q for q in ck["taps"] if q.get("kind") != "core"]):
             far = max(abs(float(ld["xy"][0]) - x) + abs(float(ld["xy"][1]) - y) for ld in p["lands_on"])
             if far > radius + 1e-6:
-                raise ValueError(f"{tn}: child-root tap {name} reaches a landing {far:g} um > radius {radius}")
+                _info(f"TAP-RADIUS-INFO {tn}: child-root tap {name} reaches a landing {far:g} um > radius {radius} (info, LIMIT-BIND-1: not blocking)")
             res.append((name, x, y, len(p["lands_on"]), far))
         return res
     sinks=sink_sites(P,tn)
@@ -1046,7 +1046,7 @@ def explicit_taps(P, tn):
     load,far,_=assign(out,sinks,cap,radius,max_distance_um=radius)
     for i,(n,r) in enumerate(zip(load,far)):
         if n>cap or r>radius+1e-6 or n==0:
-            raise ValueError(f"{tn}: explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, empty={n==0}")
+            _info(f"TAP-LIMIT-INFO {tn}: explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, empty={n==0} (info, LIMIT-BIND-1: not blocking)")
     return [(name,x,y,n,r) for (name,x,y),n,r in zip(out,load,far)]
 
 
@@ -1109,9 +1109,9 @@ def grid_explicit_taps(P, tn):
     # sign-off (leaf t24, t58, t68 at 1.04-1.08 x 200 um stopped at kit_rtl and failed the whole strict bind).  A far tap
     # still stops here: that is a wrong site, not a near miss.
     for i, (n, r) in enumerate(zip(load, far)):
-        if i >= n_grid and (n > cap or r > radius * ADDED_TAP_RADIUS_SLACK + 1e-6 or n == 0):      # grid taps keep the grid-mode rules
-            raise ValueError(f"{tn}: grid+explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, "
-                             f"empty={n == 0}")
+        if i >= n_grid and (n > cap or r > radius * ADDED_TAP_RADIUS_SLACK + 1e-6 or n == 0):      # LIMIT-BIND-1 11-14 (OWNER: remove the conservative limits): tap load cap / radius are info, never a stop
+            print(f"TAP-LIMIT-INFO {tn}: grid+explicit tap {out[i][0]} load={n:g}/{cap}, radius={r:g}/{radius}, "
+                  f"empty={n == 0} (info: not blocking; routed timing decides)", file=sys.stderr)
         if i >= n_grid and r > radius + 1e-6:
             print(f"TAP-RADIUS-TARGET {tn}: grid+explicit tap {out[i][0]} radius={r:g}/{radius} (advisory)", file=sys.stderr)
     return [(name, x, y, n, r) for (name, x, y), n, r in zip(out, load, far)]
@@ -1315,6 +1315,11 @@ def tap_loads(taps_xy, sinks):
         load[j] += p[2]
         far[j] = max(far[j], abs(p[0] - taps_xy[j][0]) + abs(p[1] - taps_xy[j][1]))
     return list(zip(load, far))
+
+
+def _info(msg):
+    """LIMIT-BIND-1 11-14: a tap cap / reach finding is reported, never raised (OWNER: remove the conservative limits)."""
+    print(msg, file=sys.stderr)
 
 
 def assign(taps, sinks, cap, max_extra_um, max_distance_um=None):

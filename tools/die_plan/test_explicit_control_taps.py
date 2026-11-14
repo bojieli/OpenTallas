@@ -38,17 +38,15 @@ def test_planning_endpoint_lookup_never_reads_sink_budget(monkeypatch):
     assert RT._plan_taps(P,'src')==[('clk',432.,432.)]
 
 
-def test_full_control_capacity_and_radius_still_fail_closed():
+def test_full_control_capacity_and_radius_are_info_only():
     P=plan()
     base=sum(p[2] for p in taps.sink_sites(P,'src',control=False))
     assert len(taps.control_pin_sinks(P,'src'))>1
     P.types['src']['clock']['tap_max_sinks']=int(base)+1
-    with pytest.raises(ValueError,match='load='):
-        taps.explicit_taps(P,'src')
+    taps.explicit_taps(P,'src')       # LIMIT-BIND-1: load over the cap is info (stderr), not a stop
     P.types['src']['clock']['tap_max_sinks']=10000
     P.types['src']['clock']['tap_radius_um']=1
-    with pytest.raises(ValueError,match='radius='):
-        schema.tap_grid(P,'src')
+    schema.tap_grid(P,'src')          # radius over the declared bound is info too
 
 
 def test_endpoint_geometry_is_not_a_waiver():

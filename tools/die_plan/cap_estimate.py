@@ -211,7 +211,7 @@ def check_kit(kit, synth=None):
     s, basis, pins, outline, macros = got
     e = project(s, pins, outline, macros)
     e["synth_basis"] = basis
-    return ([message(Path(kit).name, e)] if e["verdict"] == "OVER" else []), e
+    return [], e      # LIMIT-BIND-1 11-14 (OWNER: R-CAP removed): the projection is recorded, never an error
 
 
 # ---- plan (G0) -------------------------------------------------------------------------------------------------
@@ -257,7 +257,7 @@ def check_plan(P, R, est):
                                mem_gb=e["mem_gb"], basis=basis)
         if e["verdict"] == "OVER":
             out["over"].append(tn)
-            R.err("cell_budget", "type " + message(tn, e) + f" [estimate basis: {basis}]", type=tn)
+            R.warn("cell_budget", "type " + message(tn, e) + f" [estimate basis: {basis}] (info: R-CAP removed, LIMIT-BIND-1 11-14)", type=tn)
         elif e["verdict"] == "NEAR":
             out["near"].append(tn)
             R.warn("cell_budget", "type " + message(tn, e) + f" [estimate basis: {basis}]", type=tn)
