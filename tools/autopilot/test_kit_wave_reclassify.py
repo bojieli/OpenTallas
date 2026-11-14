@@ -25,7 +25,7 @@ def log(body, rc=1):
 class Reasons(unittest.TestCase):
     def test_traceback_reason_is_the_exception_not_admission(self):
         cls, why = KW.classify("gen", log(TB + "IndexError: list index out of range"))
-        self.assertEqual(cls, "FLOW")
+        self.assertEqual(cls, "INFRA")      # WF-1 11-14 (owner #2): a Python exception at kit_rtl/gen no rule names PLAN/RTL is INFRA
         self.assertIn("IndexError: list index out of range", why)
         self.assertNotIn("key-cardinal", why)
         self.assertNotIn("Traceback", why)

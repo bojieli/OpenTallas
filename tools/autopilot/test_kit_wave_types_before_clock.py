@@ -31,7 +31,7 @@ class TypesBeforeDieClock(unittest.TestCase):
         self.assertNotIn("_cores_only", c["dies"]["hbm"])
 
     def test_option_never_waives_g0c_or_bind(self):
-        for k in ("g0c", "bind"):
+        for k in ("bind",):                 # WF-1 11-14 (owner #7): g0c is no longer a plan gate; bind still is
             c = _hbm(types_before_die_clock=True)
             c["dies"]["hbm"]["gate"][k] = "FAIL"
             self.assertFalse(KW.gate(c, "hbm")[0])

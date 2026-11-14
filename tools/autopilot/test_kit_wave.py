@@ -695,8 +695,11 @@ class Step(unittest.TestCase):
             self.assertEqual(len(enq), 1)
             self.assertIn("main@620077f42", enq[0])
             self.assertTrue(any(a[0] == "lanes/GEOM-REVIEW.md" for a in ap2.appends))   # 1st PASS sampled (1 in 5)
-            self.assertEqual(len(ap2.units), 1)                                 # next pick kv3_hub_Eo; failed not retried
-            self.assertIn("kv3hubEo", ap2.units[0][0])
+            # WF-1 11-14: take_states default * also takes the KIT-PLACED row kv3_hroot, so with 2 slots free the next picks are
+            # kv3_hub_Eo and kv3_hroot (owner #7: take_states = all states); the failed kv3_hg_v1 is still not retried
+            self.assertEqual(len(ap2.units), 2)
+            self.assertTrue(any("kv3hubEo" in u[0] for u in ap2.units))
+            self.assertTrue(any("kv3hroot" in u[0] for u in ap2.units))
 
     def test_canary_lifetime_cap_and_type_args(self):
         with tempfile.TemporaryDirectory() as d:
