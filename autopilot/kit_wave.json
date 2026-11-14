@@ -6699,7 +6699,8 @@
     "svc_lo_dsdv_svc_rs__t5@3",
     "svc_lo_dsdv_svc_rs__t6@1",
     "svc_lo_dsdv_svc_rs_w__t1@1",
-    "svc_hi_dsdv_svc_rs__t3@2"
+    "svc_hi_dsdv_svc_rs__t3@2",
+    "ot_s81sl_leaf__t2@8"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -6896,7 +6897,7 @@
     "col_h9_r0_p5__t1@4": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
     "col_h9_r2__t1__clc9ad8f7e@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
     "ot_s81sl_leaf__t10@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
-    "ot_s81sl_leaf__t11@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
+    "ot_s81sl_leaf__t11@3": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
     "ot_s81sl_leaf__t12@3": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 + OT_PLACE_MAX_FANOUT=32. Prev class ROUTING. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: REDESIGN: macros moved, not a retry. Escape-open form (S81-TYPES-9-LEAFRF rule, tools at intel-host s81-types-10/leafbatch): rigid 8.64-um pushes per row to bring every M4-M7 channel to demand/supply ",
     "ot_s81sl_leaf__t13@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
     "ot_s81sl_leaf__t14@3": "56a09245e3f (merged main 31d4c8daaf, OWNER 11-03 07:0x: kit_contract macro_channels + every non-tool-failure contract check advisory) in wave src d9824ffba02 = 84291033b77 + cherry-pick; KW-FIX-4 07:4x",
@@ -7090,14 +7091,14 @@
     "ot_s81sl_leaf__t41@3": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 + OT_PLACE_MAX_FANOUT=32. Prev class TIMING. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: REDESIGN: macros moved, not a retry. vs pin edge faces ve_m at gap >= 17.28 um and vn/VP channel widened, per row, OT_MACRO_MOVES in item_env, macro_place.tcl only; plan, pins and taps unchanged. Fixe",
     "ot_s81sl_leaf__t42@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t45@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
-    "ot_s81sl_leaf__t47@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+    "ot_s81sl_leaf__t47@5": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
     "ot_s81sl_leaf__t5@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t50@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t52@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t53__cl958451dd@7": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
     "ot_s81sl_leaf__t53__clb66fa5cb@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t54__cl501e5681@7": "I5 FACE-LOCK-1 lockface a801173ebee (ot_pdie_pma_reset_hold 2-FF release sync) on main 53d88982081, src kw-fix-4-s81i5; leaf rows ran on pre-RF1 src; KW-FIX-4 19:4x one batch",
-    "ot_s81sl_leaf__t55@4": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+    "ot_s81sl_leaf__t55@4": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
     "ot_s81sl_leaf__t56@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t58@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "ot_s81sl_leaf__t59@5": "REDESIGN: changed RTL (bind_ctl current-src bind: cland_reset ot_dp_rrelay chains; stale bind8 attempt cancelled, COORD + owner 11-10 18:4x)",
@@ -8001,7 +8002,11 @@
     "svc_lo_dsdv_svc_rs__t5@3": "FAIL-S81-1 \\$fatal fix (dsdv_idx_rg2.sv c362b38acbe7 overlaid on B1/src_pgL, ifndef SYNTHESIS around 3 sim-only \\$fatal); standing rule: tool/RTL-sim fix = file overlay at READY (COORD 00:3x).",
     "svc_lo_dsdv_svc_rs_w__t1@1": "FAIL-S81-1 \\$fatal fix (dsdv_idx_rg2.sv c362b38acbe7 overlaid on B1/src_pgL, ifndef SYNTHESIS around 3 sim-only \\$fatal); standing rule: tool/RTL-sim fix = file overlay at READY (COORD 00:3x).",
     "svc_hi_dsdv_svc_rs__t2@1": "FAIL-S81-1 lintmem overlay (kit_gen_lint LINT_MEMORY_MAX_BITS=65536 on B1/src_pgL) + post-gen SYNTH_MEMORY_MAX_BITS=65536 in svc kit config.mk (watcher); not in B2u changed list.",
-    "svc_hi_dsdv_svc_rs__t4@1": "FAIL-S81-1 lintmem overlay (kit_gen_lint LINT_MEMORY_MAX_BITS=65536 on B1/src_pgL) + post-gen SYNTH_MEMORY_MAX_BITS=65536 in svc kit config.mk (watcher); not in B2u changed list."
+    "svc_hi_dsdv_svc_rs__t4@1": "FAIL-S81-1 lintmem overlay (kit_gen_lint LINT_MEMORY_MAX_BITS=65536 on B1/src_pgL) + post-gen SYNTH_MEMORY_MAX_BITS=65536 in svc kit config.mk (watcher); not in B2u changed list.",
+    "dsdv_slice_c1x_C__t8@2": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
+    "ot_s81sl_leaf__t2@8": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
+    "ot_s81sl_leaf__t53__clb66fa5cb@2": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch.",
+    "ot_s81sl_leaf__t68@2": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -28629,7 +28634,8 @@
     "hd_serdes@1",
     "hd_tile@1",
     "hd_mesh@2",
-    "hd_serdes@3"
+    "hd_serdes@3",
+    "hd_host_e@3"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -28699,7 +28705,8 @@
     "hd_serdes@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "hd_tile@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "hd_mesh@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
-    "hd_serdes@3": "TYPE-HDSERDES (COORD 00:5x): third parallel form, OT_GEN_SECONDARY_CLOCK=hd_serdes:pma_rck[0]:pma_rck:1000:80:210 via HEAD-SERDES-SECONDARY overlay on src_head_rp21z_pgcap1d724b73; running attempt cancelled (kit_rtl stage) and relaunched."
+    "hd_serdes@3": "TYPE-HDSERDES (COORD 00:5x): third parallel form, OT_GEN_SECONDARY_CLOCK=hd_serdes:pma_rck[0]:pma_rck:1000:80:210 via HEAD-SERDES-SECONDARY overlay on src_head_rp21z_pgcap1d724b73; running attempt cancelled (kit_rtl stage) and relaunched.",
+    "hd_host_e@3": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch."
    },
    "gen_hosts": [
     "epyc7",
