@@ -82,9 +82,31 @@ def test_timing_blocks_and_reports():
     assert M.cpos[1] == (323.76, 120)
 
 
+def one_core_model(win):
+    """a 1-cluster TypeModel stand-in that runs the real TypeModel.legal (face windows WIN, no other rule active)."""
+    M = SimpleNamespace(m=1, W=600.0, H=400.0, cfg={"gap": 4.32}, bands=None, FR=[], WIN=win, cslot=[False], cfix=[False],
+                        cclr=[{}], cpos=[(0.0, 0.0)], FP=np.zeros((0, 2)), FPH=np.zeros(0))
+    M.cbb = np.array([[0.0, 0.0, 100.0, 100.0]])
+    M.cface = [{"R0": {"W": 0, "E": 0, "S": 0, "N": 0}}]
+    M.cflip = ["R0"]
+    M.need = lambda pins: 0.0
+    return M
+
+
+def test_window_clear_in_legal():
+    # S-face window x 50..150 (landed: 86.4 um): a core over it must sit >= 86.4 off the S face
+    M = one_core_model([("S", 50.0, 150.0, 86.4)])
+    leg = lambda x, y: CP.TypeModel.legal(M, 0, x, y)  # noqa: E731
+    assert not leg(60.0, 43.2) and leg(60.0, 86.4)
+    # beside the window (no along overlap) any gap is fine
+    assert leg(200.0, 8.64)
+    M2 = one_core_model([])
+    assert CP.TypeModel.legal(M2, 0, 60.0, 8.64)
+
+
 def test_cli_flag_present():
     src = (Path(__file__).resolve().parent / "core_place.py").read_text()
-    assert "--slot-clear" in src and "slot_clear_end" in src
+    assert "--slot-clear" in src and "slot_clear_end" in src and "--window-clear" in src
 
 
 if __name__ == "__main__":
