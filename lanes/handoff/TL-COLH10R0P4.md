@@ -6,3 +6,7 @@
 - LOCAL lint fixed; pv5b623e07 (a3) and pv07945c1e (a6, dedups pvcc166a6d/pvc9270d09/pvd11cc58b/pvd8c0565f) passed gen+place; geom PASS-COND (fill/empty advisory).
 - Route jobs submitted: 2660187bad7f (pv5b623e07, 06:30) and ae2abae11aa1 (pv07945c1e, 07:39); ot-run clients alive on intel2 3.5 h, both queued on epyc9 admission (waiters 43, MemAvailable 160-64 headroom). Not dead, not started.
 - Waiter armed on terminal lines (CLASSIFY/FINISH/FAIL) for both. On pass: AUTO-RESIGN row + RESULT.
+## 10:14 correction
+- 2660187bad7f (pv5b623e07) is NOT blocked on LEC: container dpkit-...-225259 (epyc9) is in 5_1_grt, openroad 108% CPU, log at extra iteration 30/30 (congestion not converging, GRT-0116 likely next). A second container dpkit-...-3888328 (epyc7, 5.7 h, 93% CPU) also runs GRT for the same item, at extra iteration 10/30; the LEC reuse-proof owner id 2563149 is not a live container (stale reference, harmless).
+- ae2abae11aa1 (pv07945c1e): a1.log last 09:47, still waiting on memory admission (epyc9 load 115/96, waiters 43). Not yet admitted; ADMIT-TUNE-1 did not free it.
+- If epyc9 GRT fails: read overflow map, apply COLH9R1 forms (UTIL 0.3-0.4, MAX_LAYER M8/M9), share with TL-COLH10R0P1.
