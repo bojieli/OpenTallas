@@ -59,6 +59,8 @@ import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
 import kit_wave as KW  # noqa: E402
+sys.path.insert(1, str(Path(__file__).resolve().parents[1] / "die_plan"))
+import signoff_profile as SP  # noqa: E402  (OWNER 11-13 R-MINIMAL; OT_SIGNOFF_PROFILE=legacy keeps the old gates)
 import wave_balance as WB  # noqa: E402
 import auto_resign as AR  # noqa: E402
 import wave_jobs as WJ  # noqa: E402
@@ -948,7 +950,8 @@ def view_payload(r, j, so):
                  routed_lec_all_shown=chain.get("lec_all_shown"), routed_lec_record=chain.get("lec"),
                  lec_tool=chain.get("lec_tool"), admission_tools_sha256=j.get("admission_tools_sha256"),
                  view_complete=not problems, view_problems=problems)
-    prov = dict(kit=kitblk, verdict="SIGNED (autopilot: signoff.py + routed LEC EQUIVALENT all_shown)",
+    prov = dict(kit=kitblk, verdict=("SIGNED (autopilot R-MINIMAL: DRC 0, TT setup >= -42 ps, FF hold >= 0; LEC advisory)"
+                                     if SP.is_minimal() else "SIGNED (autopilot: signoff.py + routed LEC EQUIVALENT all_shown)"),
                 views_status="signoff" if not problems else "incomplete: " + "; ".join(problems),
                 src=j["src"], src_commit=j.get("src_commit"), flow_tag=j.get("flow_tag"), autopilot_id=j["id"])
     if r.get("clock_witness"):
@@ -1001,6 +1004,14 @@ def classify(c, client):
     so = c.get("signoff")
     if c.get("goal") == "grt" and (so or c.get("route_odb")):
         return "STRUCTURAL", "diagnostic-overrun", "GRT-only runner produced detailed-route/signoff output; no release scope"
+    if so and SP.is_minimal():
+        # R-MINIMAL: DRC 0 + TT setup >= -42 ps + FF hold >= 0 from the measured numbers; io_hold_parent (WAIT-PARENT), PG,
+        # DRV, antenna, clock band ... are advisories (so a record of an older kit-frozen signoff.py is judged the same way)
+        jm = SP.judge(so)
+        if jm["verdict"] == "SIGNED":
+            adv = "; ".join(jm["advisories"])[:300]
+            return "SIGNED", "signed", (f"SIGNED (R-MINIMAL, achieved period {jm['achieved_period_ps']} ps"
+                                        + (f"; advisory: {adv}" if adv else "") + ")")
     if so:
         if so.get("verdict") == "LOCAL_PASS_NEEDS_PARENT" and so.get("local_verdict") == "SIGNED":
             return "WAIT-PARENT", "parent-receipt-pending", "; ".join(so.get("reasons") or []) or "matching actual parent seam receipt required"
@@ -1898,7 +1909,10 @@ def die_frozen(die):
 
 def path_gate_hold(r):
     """'' when the path part may route to sign-off, else why it is limited to trial builds.  A row whose DIE is FROZEN
-    passes regardless of its path (rule 1 amendment: e.g. s81_head rows on path S81 once 'FROZEN S81-HEAD' is recorded)"""
+    passes regardless of its path (rule 1 amendment: e.g. s81_head rows on path S81 once 'FROZEN S81-HEAD' is recorded).
+    R-MINIMAL (default): the path die gate is advisory -- never a route hold, never a TRIAL-SIGNED demotion."""
+    if SP.is_minimal():
+        return ""
     path = path_of(r)
     if not path or die_frozen(r.get("die") or ""):
         return ""
@@ -2313,7 +2327,13 @@ def admit_new(st, rows, only_new=False, budget=None):
                 j["auto_geom_note"] = note
                 set_status(st, j, "WAIT-GEOM", note)
             continue
-        if r["mode"] != "adopt" and (r["geom"].upper() not in GEOM_OK or not r["geom_ref"]):
+        if (r["mode"] != "adopt" and (r["geom"].upper() not in GEOM_OK or not r["geom_ref"]) and SP.is_minimal()
+                and r["geom"].upper() != "AUTO"):
+            # R-MINIMAL: the geometry / visual verdict never blocks launch or route; recorded as an advisory
+            if not (j or {}).get("geom_advisory"):
+                log(f"GEOM-ADVISORY {rid} {r['die']}/{r['type']}: GEOM '{r['geom']}' not PASS -- submitted (R-MINIMAL)")
+            r = dict(r, geom_advisory=f"GEOM '{r['geom']}' {r.get('geom_auto') or ''}".strip())
+        elif r["mode"] != "adopt" and (r["geom"].upper() not in GEOM_OK or not r["geom_ref"]):
             if not j:
                 j = st["jobs"][rid] = dict(r)
                 log(f"WAIT {rid} {r['die']}/{r['type']}: GEOM '{r['geom']}' (needs PASS + geom_ref)")
@@ -2542,6 +2562,11 @@ def finish(st, j, c, client):
         chain = c.get("chain") or {}
         if chain.get("verdict") == "LEC_OOM":
             cls, kind, reasons = "CRASH", "proof-oom", str(chain.get("reason"))
+        elif SP.is_minimal() and cls == "SIGNED":
+            # R-MINIMAL: the routed LEC is advisory/async -- a missing / failed chain LEC never blocks the count; a
+            # NOT EQUIVALENT receipt is recorded as an advisory on the job
+            if chain.get("lec_verdict") not in (None, "EQUIVALENT"):
+                reasons = f"{reasons}; advisory: routed LEC {chain.get('lec_verdict')}"
         elif (chain.get("started", 0) < j.get("started", 0) - 120
                 or chain.get("verdict") != "PASS" or chain.get("lec_verdict") != "EQUIVALENT"
                 or chain.get("lec_exit") != 0 or (j.get("chain_version", 1) >= 2 and chain.get("lec_all_shown") is not True)):
@@ -2866,9 +2891,33 @@ def failure_resolutions():
     return resolved
 
 
+MINIMAL_REJUDGE_PER_TICK = int(os.environ.get("AP_MINIMAL_REJUDGE_PER_TICK", "8"))
+
+
+def minimal_rejudge_candidate(j):
+    """R-MINIMAL (PROFILE-1): a finished routed NEAR-MISS / STRUCTURAL job whose recorded sign-off numbers pass the
+    minimal gates (DRC 0, TT setup >= -42 ps, FF hold >= 0) and whose data is still on disk is re-probed once and
+    re-finished, so it archives / counts like a new sign-off"""
+    so = j.get("signoff") or {}
+    return (SP.is_minimal() and j.get("status") in ("DONE-NEAR-MISS", "DONE-STRUCTURAL") and isinstance(so, dict)
+            and so and not j.get("data_deleted") and not j.get("minimal_rejudged") and canonical_die(j.get("die")) != "hbm"
+            and SP.judge(so)["verdict"] == "SIGNED")
+
+
 def retry_pending(st):
     released = failure_resolutions()
+    budget = MINIMAL_REJUDGE_PER_TICK
     for j in list(st["jobs"].values()):
+        if budget > 0 and not DRY and minimal_rejudge_candidate(j) and not hub_procs(j["path"]):
+            budget -= 1
+            j["minimal_rejudged"] = time.time()
+            c = probe_job(j)
+            so = (c or {}).get("signoff") or {}
+            if so and SP.judge(so)["verdict"] == "SIGNED":
+                log(f"MINIMAL-REJUDGE {j['id']} {j['die']}/{j['type']}: {j.get('status')} -> re-finish under R-MINIMAL")
+                finish(st, j, c, {"minimal_rejudge": True})
+            save_state(st)
+            continue
         if j.get("status") == "SIGNED" and not DRY:
             after_class(st, j)                         # trial check (rule 1) before an archive retry
         elif j.get("status") == "DONE-CRASH" and j.get("kind") == "proof-oom":
@@ -2883,7 +2932,9 @@ def retry_pending(st):
                 continue
             c = probe_job(j)
             so = (c or {}).get("signoff") or {}
-            if so and so.get("verdict") != "LOCAL_PASS_NEEDS_PARENT":
+            if so and (so.get("verdict") != "LOCAL_PASS_NEEDS_PARENT"
+                       or (SP.is_minimal() and SP.judge(so)["verdict"] == "SIGNED")):
+                # R-MINIMAL: io_hold_parent receipts are advisory -- a WAIT-PARENT local pass counts now
                 finish(st, j, c, {"parent_receipt_recheck": True})
         elif str(j.get("status", "")).startswith("DONE-") and not j.get("data_deleted"):
             if j["id"] not in released or hub_procs(j["path"]):
