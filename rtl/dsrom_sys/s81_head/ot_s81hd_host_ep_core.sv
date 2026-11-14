@@ -75,7 +75,7 @@ module ot_s81hd_host_ep_core #(
   .rx_v(lv[1]),.rx_d(ld[1105:553]),.flt(lf1));
  wire cv,crxf,ctxv;wire[552:0]cd,rxframe;wire rxv,crtxf;
  ot_s81hd_host276_rx u_ctl_rx(.ck(ck),.rn(rst_n),.lane(h_tx_i[275:0]),.v(cv),.frame(cd),.fault(crxf));
- ot_s81hd_host276_tx u_ctl_tx(.ck(ck),.rn(rst_n),.v(rxv),.frame(rxframe),.lane(h_rx_o),.fault(crtxf));
+ ot_s81hd_host276_tx #(.HOLD_REAL(1)) u_ctl_tx(.ck(ck),.rn(rst_n),.v(rxv),.frame(rxframe),.lane(h_rx_o),.fault(crtxf));
  wire[1103:0]from_prev,to_local,next_ro;
  // HOST_FRAMES=1 omits the S81 HBE consumer and layer return TX at the head.
  // The live ctl frames remain visible to the diagnostic pass-through output;
