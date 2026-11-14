@@ -7069,7 +7069,9 @@
     "col_h10_r2__t1__cl1f5d6c2a__pvcd889288@2",
     "ot_s81sl_leaf__t43@4",
     "dsdv_slice_iq_C__t1@27",
-    "serdes__t3@27"
+    "serdes__t3@27",
+    "slice_station__t22@16",
+    "slice_station__t37@3"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -9241,7 +9243,11 @@
     "slice_station__t24__cleece78ec": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "col_h10_r0_p1__t1__cl911743eb": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9702,7 +9708,11 @@
     },
     "slice_station__t22": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t23": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9711,7 +9721,11 @@
     "slice_station__t24__cl64811a5d": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t24__cl66b71008": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9730,11 +9744,19 @@
     },
     "slice_station__t27": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t28": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t29__cl2e5c855a": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9768,7 +9790,11 @@
     "slice_station__t37": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t38": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9838,7 +9864,11 @@
     },
     "slice_station__t52": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t6__cl0755c26e": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9865,7 +9895,11 @@
     },
     "slice_station__t8": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "svc_hi_dsdv_svc_pvso_entry__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -18932,7 +18966,15 @@
    ],
    "place_mem_gb_by_item_prev_kw43kvl2": null,
    "place_mem_gb_by_item": {
-    "ot_s81sl_kv_leaf__t2": 64
+    "ot_s81sl_kv_leaf__t2": 64,
+    "slice_station__t8": 56,
+    "slice_station__t22": 56,
+    "slice_station__t24__cleece78ec": 56,
+    "slice_station__t24__cl64811a5d": 56,
+    "slice_station__t27": 56,
+    "slice_station__t28": 56,
+    "slice_station__t37": 56,
+    "slice_station__t52": 56
    },
    "note_kw43kvl2": "KW-FIX-43 11-10: kv_leaf t2 place 64 GB + retry @12. Revert place_mem_gb_by_item <- *_prev_kw43kvl2.",
    "hold_items_prev_kw43dsdv": {
