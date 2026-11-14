@@ -1346,6 +1346,59 @@ def miss_why(got, ds, designs, rows, plan_shapes=None):
     return 'pins match no plan design: ' + '; '.join(out[:2])
 
 
+# DIGEST-KEEP (EXPERT-REVIEW-4 / COORD 2026-11-13 18:1x, lane PROFILE-1): a plan event must not drop a counted type
+# whose plan block is unchanged.  Block digest = the kit wave's plan block identity (plan_block_identity RAW:
+# sha256 of {'type': partition_types[t], 'budget': budgets[t]}, sort_keys) -- the type NAME is not in it, so a class
+# re-split that renames an unchanged block (slice_station__t30__cl<old> -> __cl<new>) keeps the same digest.  Every
+# refresh records, per die, digest -> the type + refs it was counted with (BLOCK_LEDGER).  A plan type with no
+# name-matched SIGNED record whose digest is in the ledger is credited with those refs, tagged DIGEST-KEEP, while at
+# least one of the refs is still a live counted record in this refresh (a retired / revoked / DNC record never
+# carries).  A changed block gets no carry (it builds again); name matching is unchanged.
+BLOCK_LEDGER = pathlib.Path(os.environ.get('OT_BLOCK_LEDGER') or CACHE.parent / 'release_tree_block_ledger.json')
+DIGEST_TAG = ' DIGEST-KEEP '
+
+
+def type_blocks(P):
+    """{plan type: block digest} -- identical to kit_wave / plan_block_identity RAW block_sha"""
+    T = P.get('partition_types') or {}
+    bud = P.get('budgets'); bud = bud if isinstance(bud, dict) else {}
+    return {k: hashlib.sha256(json.dumps({'type': v, 'budget': bud.get(k)}, sort_keys=True, default=str).encode()).hexdigest()
+            for k, v in T.items()}
+
+
+def load_ledger(path=None):
+    try: d = json.loads(pathlib.Path(path or BLOCK_LEDGER).read_text())
+    except Exception: return {}
+    return d if isinstance(d, dict) else {}
+
+
+def save_ledger(led, path=None):
+    q = pathlib.Path(path or BLOCK_LEDGER); q.parent.mkdir(parents=True, exist_ok=True)
+    tmp = q.with_suffix('.tmp'); tmp.write_text(json.dumps(led, indent=1, sort_keys=True)); os.replace(tmp, q)
+
+
+def digest_keep(die, blocks, signed, ledger, live, plan_sha=None, now=None):
+    """blocks {type: digest} of the counted plan; signed {type: [refs]} (name-matched, mutated: kept types added);
+    ledger {die: {digest: {type, refs, plan_sha, ts}}} (mutated: this plan's counted types recorded); live = the
+    '<host>:<path>' / path heads of every counted record in this refresh.  -> {type: why} for the kept types."""
+    L = ledger.setdefault(die, {})
+    kept = {}
+    for t, b in sorted(blocks.items()):
+        if t in signed: continue
+        e = L.get(b)
+        if not e or not e.get('refs'): continue
+        refs = [r for r in e['refs'] if r.split(' ', 1)[0] in live]
+        if not refs: continue
+        why = 'block %s unchanged: counted as %s in plan %s' % (b[:12], e.get('type'), e.get('plan_sha'))
+        signed[t] = [r.split(DIGEST_TAG, 1)[0] + DIGEST_TAG + why for r in refs]
+        kept[t] = why
+    for t, refs in signed.items():
+        b = blocks.get(t)
+        if b and t not in kept and refs:
+            L[b] = dict(type=t, refs=[r.split(DIGEST_TAG, 1)[0] for r in refs], plan_sha=plan_sha, ts=now or time.time())
+    return kept
+
+
 def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
     """-> (signed {design id: [refs]}, unmatched {module: [refs]}).  core_recs {module: [(ref, record)]} are the
     counted (versioned / legacy, not retired) records of each module.  A record credits the plan-of-record design(s)
@@ -1523,6 +1576,7 @@ def refresh(log=lambda *a: None, old=None):
                     ent['hard_ip_types'] = hip; ent['types_incl_hard_ip'] = len(T)
                     ent['types'] = len(T) - len(hip); ent['partitions'] = len(P.get('partitions') or [])
                     ent['type_modules'] = {k: (v.get('module') or k) for k, v in T.items() if k not in hip}
+                    ent['type_blocks'] = {k: b for k, b in type_blocks(P).items() if k not in hip}
                     ent['hard_cores'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and not is_mem_macro(h)})
                     ent['memory_macros'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and is_mem_macro(h)})
                     ent['designs'], design_rows[d] = plan_designs(P, pj.parent)
@@ -1578,6 +1632,8 @@ def refresh(log=lambda *a: None, old=None):
         recs, gone = split_dnc(recs, dnc_rows()); res['retired_records'] += gone
         names = retired_names()
         res['signed_records'] = recs; res['scanned'] = scanned
+        ledger = load_ledger()
+        live = set()
         # match SIGNED records to plan types / hard cores
         for d, ent in res['plans'].items():
             if 'types' not in ent: continue
@@ -1588,6 +1644,7 @@ def refresh(log=lambda *a: None, old=None):
             for r_ in recs:
                 ks = rec_keys(r_)
                 ref = r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path']
+                if r_.get('versioned') or r_.get('legacy'): live.add(ref)
                 if r_.get('versioned'):
                     ref += ' src %s flow %s' % (str(r_['src_commit'])[:12], r_['flow_tag'])
                     if r_.get('resign'):
@@ -1612,12 +1669,21 @@ def refresh(log=lambda *a: None, old=None):
                             C.setdefault(m, []).append(ref)
                             if C is sc: core_recs.setdefault(m, []).append((ref, r_))
             ent['signed_types'] = st; ent['signed_cores'] = sc
+            if ent.get('type_blocks'):
+                try:
+                    ent['digest_kept'] = digest_keep(ent['die'], ent.pop('type_blocks'), st, ledger, live, ent.get('plan_sha'))
+                    for k in ent['digest_kept']: ut.pop(k, None)
+                except Exception as e:
+                    errs.append('DIGEST-KEEP %s: %s' % (d, e))
             if ent.get('designs') is not None:
                 rp = fetch_rec_pins([r_ for m in core_recs for _, r_ in core_recs[m]], log) if core_recs else {}
                 ent['signed_designs'], ent['design_unmatched'] = credit_designs(ent['designs'], design_rows.get(d) or {}, core_recs, rp)
                 ent['replica_sample'] = replica_sample(ent['designs'], ent['signed_designs'])
             ent['unversioned_types'] = {k: v for k, v in ut.items() if k not in st}
             ent['unversioned_cores'] = {k: v for k, v in uc.items() if k not in sc}
+        if live:
+            try: save_ledger(ledger)
+            except Exception as e: errs.append('DIGEST-KEEP ledger save: %s' % e)
     except Exception as e:
         errs.append('refresh: %s' % e)
     finally:
