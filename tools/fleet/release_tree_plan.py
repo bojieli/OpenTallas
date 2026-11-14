@@ -192,6 +192,54 @@ SCAN_PRUNE = ('.git', '__pycache__', 'rtl', 'tools', 'arch', 'uarch', 'logs', 'r
 #  (b) NAME line 'name:<die>:<type key or module>\t<date>\t<lane>\t<reason>' (<die> = release-tree die key, e.g. s81)
 #      retires every SIGNED record of that die type / hard core generated BEFORE <date> ('YYYY-MM-DD[ HH:MM[ TZ]]', local
 #      time; a record without a readable 'generated' is retired).  A fresh build signed off after <date> counts again.
+# COUNT-FRICTION-1 11-14 (COORD 05:2x "point EVERY die's count at the plan the kit wave builds"): a wave plan that is not on origin/main used to
+# be a PLAN DRIFT note and the die was counted against its last main plan (QC 31/31 against plan_qc99_s28 while the wave builds s29 with 65 cores).
+# The plan file (sha256 == kit_wave.json plan_sha256) is now read from the host that holds it, with the pins tables it names, into the tmp tree and
+# counted; the pinned main plan remains the fallback when no host has it.  OT_COUNT_NO_HOST_PLAN=1 turns this off.
+def stage_host_plan(tmp, pdir, w, log=lambda *a: None):
+    """-> (rel path under tmp, info dict) or None.  w = wave_plan_shas entry (sha, path)"""
+    import base64
+    path, sha = (w or {}).get('path'), (w or {}).get('sha')
+    if os.environ.get('OT_COUNT_NO_HOST_PLAN') or not path or not sha: return None
+    for h in HOSTS:
+        cmd = ['bash', '-c', 'cat %s' % shlex_quote(path)] if h == 'local' else \
+            ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'cat %s' % shlex_quote(path)]
+        try:
+            r = subprocess.run(cmd, capture_output=True, timeout=180)
+            if r.returncode == 255 and b'resolve hostname' in r.stderr: r = subprocess.run(['bash', '-c', 'cat %s' % shlex_quote(path)], capture_output=True, timeout=180)
+        except Exception:
+            continue
+        if r.returncode or _sha12(r.stdout, path.endswith('.gz')) != sha: continue
+        data = r.stdout
+        name = 'wave__' + pathlib.Path(path[:-3] if path.endswith('.gz') else path).name
+        rel = 'physical/die_plan/%s/%s' % (pdir, name)
+        f = pathlib.Path(tmp) / rel; f.parent.mkdir(parents=True, exist_ok=True)
+        import gzip
+        f.write_bytes(gzip.decompress(data) if path.endswith('.gz') else data)
+        # pins tables the plan names: from the plan's own tree (its dir, then each parent up to physical/die_plan/<top>)
+        P = json.loads(f.read_bytes())
+        want = sorted({hc.get('pins_file') for v in (P.get('partition_types') or {}).values() for hc in (v.get('hard_cores') or []) if hc.get('pins_file')})
+        got = 0
+        if want:
+            script = ("import sys,os,json,base64\n"
+                      "pp,want=json.loads(sys.stdin.read())\nout={}\nb=os.path.dirname(pp)\nbases=[]\n"
+                      "while b and b!='/':\n    bases.append(b)\n    if b.endswith('physical/die_plan') or b.endswith('physical'): break\n    b=os.path.dirname(b)\n"
+                      "for f in want:\n    for b in bases:\n        q=os.path.join(b,f)\n"
+                      "        if os.path.isfile(q) and os.path.getsize(q)<30000000:\n            out[f]=base64.b64encode(open(q,'rb').read()).decode(); break\n"
+                      "print(json.dumps(out))\n")
+            c2 = ['python3', '-c', script] if h == 'local' else ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(script)]
+            try:
+                r2 = subprocess.run(c2, capture_output=True, text=True, timeout=300, input=json.dumps([path, want]))
+                if r2.returncode == 255 and 'resolve hostname' in r2.stderr: r2 = subprocess.run(['python3', '-c', script], capture_output=True, text=True, timeout=300, input=json.dumps([path, want]))
+                for pf, b64 in json.loads(r2.stdout.strip().splitlines()[-1]).items():
+                    t = pathlib.Path(tmp) / 'physical/die_plan' / pdir / pf; t.parent.mkdir(parents=True, exist_ok=True)
+                    t.write_bytes(base64.b64decode(b64)); got += 1
+            except Exception as e:
+                log('wave plan pins %s: %s' % (h, str(e)[:100]))
+        return rel, dict(host=h, path=path, sha=sha, pins_staged=got, pins_named=len(want))
+    return None
+
+
 RETIRED = pathlib.Path(__file__).resolve().parent.parent / 'RETIRED_SIGNOFFS.tsv'
 
 
@@ -1334,6 +1382,8 @@ def refresh(log=lambda *a: None, old=None):
         p1.wait(60)
         if r.returncode or p1.returncode: raise RuntimeError('git archive origin/main failed')
         design_rows = {}
+        try: wave_by_die = {} if NO_WAVE else wave_plan_shas()
+        except Exception: wave_by_die = {}
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
             futs = {} if SIGNED_SOURCE == 'store' else {ex.submit(scan_host, h, known_paths(old, h)): h for h in HOSTS}
@@ -1342,7 +1392,11 @@ def refresh(log=lambda *a: None, old=None):
                 d = plan_label(src)
                 ent = dict(plan=d, plan_src=src)
                 try:
-                    pj = materialize_plan(tmp, pdir, src, ovl)
+                    st_ = stage_host_plan(tmp, pdir, wave_by_die.get(key), log) if inf.get('drift') and wave_by_die.get(key, {}).get('sha') else None
+                    if st_:
+                        ent['plan_counted'] = st_[1]; inf = dict(inf, drift=None); errs[:] = [e_ for e_ in errs if not e_.startswith('PLAN DRIFT %s:' % key)]
+                        log('wave plan %s counted from %s:%s (%d/%d pins tables)' % (key, st_[1]['host'], st_[1]['path'], st_[1]['pins_staged'], st_[1]['pins_named']))
+                    pj = materialize_plan(tmp, pdir, st_[0] if st_ else src, ovl)
                     ent['refs_fetched'] = len(fetch_results_refs(tmp, pj))
                     ent['pin_aliases'] = materialize_pin_aliases(pj.parent, PIN_ALIASES.get(key))
                     P = json.loads(pj.read_text())
@@ -1533,6 +1587,7 @@ def merge_with_cache(new, old):
     for d, ent in (old.get('plans') or {}).items():
         if d not in cur: continue   # plan no longer of record (e.g. hbm_arch/B2n -> d41v): drop, never carry it forward
         n = new['plans'].get(d)
+        if n and n.get('plan_counted'): continue   # COUNT-FRICTION-1: the G0C values of the old main plan do not describe the wave plan
         if n and 'types' in n and 'signed_cores' in n and 'g0c_clean' not in n and 'g0c_clean' in ent:
             # DIE-KV-93 11-08 (COUNT-STALE-G0C): only the G0C check failed (KV check.py 886 s, then > the 900 s cap):
             # the plan materialized and this refresh matched the SIGNED records, so keep them and carry ONLY the last
