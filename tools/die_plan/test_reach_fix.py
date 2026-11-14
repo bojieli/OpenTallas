@@ -427,3 +427,47 @@ def test_per_type_error_is_a_nonzero_exit_with_the_type_list(tmp_path, monkeypat
     assert "REACH-FIX-FAIL fix" in err and "mid:" in err and out.exists() and ev.exists()
     monkeypatch.setattr(RF, "type_row", real)
     assert RF.main(["check", str(base), "--json", str(chk)]) == 0
+
+
+def _hard_wrapper(stale_xy=(800.0, 800.0)):
+    # KV-KITFIX-1 11-13 (DIEVIEW-KV U2, KV kv3_phy / kv3_phy_v1 at kit_rtl "grid+explicit tap clk_t1 load=0 ...
+    # empty=True"): a bare hard wrapper with its own grid+explicit taps whose stored added tap no longer has a sink
+    p = copy.deepcopy(EX)
+    t = p["partition_types"]["sink"]
+    t["hard"] = True
+    t["clock"].update(tap_mode="grid+explicit", added_taps=[dict(name="clk_t1", xy=list(stale_xy))])
+    return p
+
+
+def test_tap_wrapper_selected_plain_hard_not():
+    import schema as S
+    p = _hard_wrapper()
+    P = S.Plan(p, HERE / "examples" / "tiny_plan.json")
+    assert "sink" in RF.soft_types(P)
+    p2 = copy.deepcopy(EX)
+    p2["partition_types"]["sink"]["hard"] = True                    # one tap_um entry: a plain hard core stays out
+    assert "sink" not in RF.soft_types(S.Plan(p2, HERE / "examples" / "tiny_plan.json"))
+    p3 = _hard_wrapper()
+    p3["partition_types"]["sink"]["hard_cores"] = [dict(inst="u_x", module="x")]   # hard_cores parent: not bare
+    assert "sink" not in RF.soft_types(S.Plan(p3, HERE / "examples" / "tiny_plan.json"))
+
+
+def test_hard_wrapper_empty_tap_fixed(tmp_path):
+    base = _write(tmp_path, _hard_wrapper())
+    chk = tmp_path / "chk.json"
+    assert RF.main(["check", str(base), "--types", "^sink$", "--json", str(chk)]) == 3
+    row = json.loads(chk.read_text())["rows"][0]
+    # the stale tap stops the export (here: far, 2 sinks at 759 um; KV kv3_phy: empty) = what bind kit-rtl raises
+    assert "grid+explicit tap clk_t1 load=" in row["error"] and row["c5"] == 0 and row["reset"].get("skip")
+    out, ev = _fix(tmp_path, base, "hw", "--types", "^sink$")
+    assert ev["applied"] == 1 and ev["summary_after"]["errors"] == 0 and ev["summary_after"]["types_viol"] == 0
+    ck = json.loads(out.read_text())["partition_types"]["sink"]["clock"]
+    assert [800.0, 800.0] not in [r["xy"] for r in ck["added_taps"]]
+    assert [r["name"] for r in ck["added_taps"]] == ["clk_t%d" % (i + 1) for i in range(len(ck["added_taps"]))]
+    import schema as S
+    import taps as TP
+    P2 = S.Plan(json.loads(out.read_text()), out)
+    got = TP.grid_explicit_taps(P2, "sink")                     # = bind kit-rtl's check (raises on an empty added tap)
+    assert all(n > 0 for _n, _x, _y, n, _r in got[len(S._grid_taps(P2, "sink")):])
+    out2, ev2 = _fix(tmp_path, out, "hw2", "--types", "^sink$")                     # idempotent
+    assert ev2["applied"] == 0 and out2.read_text() == out.read_text()

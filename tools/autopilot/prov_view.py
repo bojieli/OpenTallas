@@ -625,6 +625,57 @@ def contract_lib(module, corner, w, h, pins, dirs, clocks, period_ps):
 
 
 # ------------------------------------------------------------------------------------------------------ make
+BLANKET_FRAC = 0.9     # one OBS rect over >= 90% of the macro = blanket (OBS-SYNC-1 11-12 PDN-0006 census limit)
+
+
+def pg_blanket_layers(path, frac=BLANKET_FRAC):
+    """KV-KITFIX-1 11-13 (DIEVIEW-KV U1, PDN-0006 class): routing layers ABOVE the highest PG pin layer where ONE OBS
+    rect covers >= frac of the macro (a parent's core_pg_connect has no landing through it: PDN-0006 "VSS on M5 is
+    blocked by obstructions on M6, M7").  [] = no PG pins, no OBS or no blanket.  Self-contained LEF read."""
+    size, pg, obs, pin, use, layers, in_obs, cur = None, set(), {}, None, None, set(), False, None
+    for line in open(path, errors="replace"):
+        s = line.strip()
+        m = re.match(r"^SIZE\s+([\d.]+)\s+BY\s+([\d.]+)", s)
+        if m and size is None:
+            size = float(m.group(1)) * float(m.group(2))
+            continue
+        if s == "OBS":
+            in_obs, cur = True, None
+            continue
+        if in_obs:
+            if s == "END":
+                in_obs = False
+                continue
+            m = re.match(r"^LAYER\s+M(\d+)\b", s)
+            if m:
+                cur = int(m.group(1))
+                continue
+            m = re.match(r"^RECT\s+(?:MASK\s+\d+\s+)?([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", s)
+            if m and cur is not None:
+                x0, y0, x1, y1 = map(float, m.groups())
+                obs[cur] = max(obs.get(cur, 0.0), abs(x1 - x0) * abs(y1 - y0))
+            continue
+        m = re.match(r"^PIN\s+(\S+)", s)
+        if m:
+            pin, use, layers = m.group(1), None, set()
+            continue
+        if pin is None:
+            continue
+        m = re.match(r"^USE\s+(\w+)", s)
+        if m:
+            use = m.group(1).upper()
+        m = re.match(r"^LAYER\s+M(\d+)\b", s)
+        if m:
+            layers.add(int(m.group(1)))
+        if s == f"END {pin}":
+            if use in ("POWER", "GROUND"):
+                pg |= layers
+            pin = None
+    if not size or not pg:
+        return []
+    return ["M%d" % k for k in sorted(obs) if k > max(pg) and obs[k] >= frac * size]
+
+
 def routed_detail(cdir, module, meta, source_root):
     """Explicit pre-exported detailed abstract only; no OpenROAD/export or guessed bloat policy here.
 
@@ -789,15 +840,24 @@ def make(a):
             continue
         vd = os.path.join(vroot, m)
         os.makedirs(vd, exist_ok=True)
-        rec, tried = None, []
+        rec, tried, blanket_refused = None, [], False
         rd = os.path.join(a.routed or "", m)
-        for c in sorted(os.listdir(rd)) if a.routed and os.path.isdir(rd) else []:
-            cdir = os.path.join(rd, c)
-            meta = {}
+        cands = sorted(os.listdir(rd)) if a.routed and os.path.isdir(rd) else []
+        metas = {}
+        for c in cands:
             try:
-                meta = json.load(open(os.path.join(cdir, "meta.json")))
+                metas[c] = json.load(open(os.path.join(rd, c, "meta.json")))
             except (OSError, ValueError):
-                pass
+                metas[c] = {}
+        # KV-KITFIX-1 11-13 (DIEVIEW-KV U1): a configured detailed abstract is the module's PDN-0006 / DRT-0073 fix.  When
+        # every detailed candidate is refused (stale receipt, files not fetched), a later candidate WITHOUT detail must
+        # not silently take the module back to its blanket OBS over the PG pins (kvN2 pc x6: pcf c0 receipt
+        # check_ok false, c1 never fetched, c2 = blanket base -> PDN-0006 hours later at floorplan).
+        detail_configured = not plan_lef and any(isinstance(v.get("detailed_lef"), str) and v.get("detailed_lef")
+                                                 for v in metas.values())
+        for c in cands:
+            cdir = os.path.join(rd, c)
+            meta = metas[c]
             detail = None
             selected_lef = os.path.join(cdir, m + ".lef")
             try:
@@ -807,6 +867,14 @@ def make(a):
                 ok, why = check_routed(cdir, m, entry, ppins, plan_lef, a.src, selected_lef, receipt)
             except (OSError, ValueError, KeyError, TypeError, ImportError) as exc:
                 ok, why = False, "detailed abstract: " + str(exc)
+                if meta.get("fetch_errors"):
+                    why += " (staging fetch failed: " + "; ".join(map(str, meta["fetch_errors"]))[:300] + ")"
+            if ok and detail is None and detail_configured:
+                bl = pg_blanket_layers(selected_lef)
+                if bl:
+                    ok, why, blanket_refused = False, (
+                        f"blanket OBS over the PG pins on {','.join(bl)} while a detailed abstract is configured "
+                        "for this module and none was accepted (PDN-0006 class; KV-KITFIX-1)"), True
             tried.append(f"{meta.get('job', c)}: {why}")
             if ok:
                 for suffix in ("_tt.lib", "_ff.lib"):
@@ -829,6 +897,9 @@ def make(a):
                 if why.endswith("signed_view_ok via detail receipt"):
                     rec["physical_ft_view"] = "signed_view_ok via detail receipt"
                 break
+        if rec is None and blanket_refused:
+            errors.append(f"{m}: configured detailed abstract not accepted, blanket fallback refused ({'; '.join(tried)})")
+            continue
         if rec is None and entry.get("physical_ft"):
             errors.append(f"{m}: explicit physical FT requires its exact routed view ({'; '.join(tried)})")
             continue

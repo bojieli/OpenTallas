@@ -8,7 +8,8 @@ again changes nothing).
 
 PLAN is any die plan (S81, s81_head, qwen_compute, qwen_kvsys, hbm).  --repo is the source tree the plan's repo-relative
 side files (clock.sink_bins_file, pins files) resolve against (default: this checkout).  Only non-hard partition types
-are evaluated (hard cores are built and signed on their own kit).
+are evaluated (hard cores are built and signed on their own kit), plus hard WRAPPERS with their own multi-entry taps
+(tap_wrapper: clock.tap_mode explicit / grid+explicit, KV kv3_phy*) on classes 1-3 only (KV-KITFIX-1 11-13).
 
 CLASSES (limits from the canonical rules; METHODOLOGY 12.1e / 12.8b, geom_rules for the AUTO-GEOM limits):
   1 clock_tap_radius   every die-clock sink within RADIUS_UM (200, 12.8b) of the tap it is assigned to under the kit's
@@ -171,9 +172,20 @@ def plan_obj(raw, path):
     return S.Plan(raw, Path(path).resolve())
 
 
+def tap_wrapper(t):
+    """KV-KITFIX-1 11-13 (DIEVIEW-KV U2): a hard WRAPPER with its own multi-entry clock taps (bare hard type with
+    clock.tap_mode "explicit" / "grid+explicit", schema.bare_hard_single_tap False: KV kv3_phy / kv3_phy_v1).  Its kit
+    is built from the plan like a soft type and bind kit-rtl validates the taps (taps.grid_explicit_taps: an empty or
+    far ADDED tap stops the kit), so the reach stage must re-solve those taps too.  Plain hard cores (one tap_um entry,
+    or hard_cores children) stay out: they are built and signed on their own kit."""
+    import schema as S
+    return bool(t.get("hard")) and S.bare_hard(t) and not S.bare_hard_single_tap(t)
+
+
 def soft_types(P, rx=None):
     used = {p["type"] for p in P.parts.values()} if hasattr(P, "parts") else set(P.types)
-    return [tn for tn in sorted(used) if not P.types[tn].get("hard") and (not rx or re.search(rx, tn))]
+    return [tn for tn in sorted(used) if (not P.types[tn].get("hard") or tap_wrapper(P.types[tn]))
+            and (not rx or re.search(rx, tn))]
 
 
 def _d(a, b):
@@ -401,6 +413,9 @@ def reset_metrics(P, tn, G=None, reach=REACH_UM):
     t = P.types[tn]
     ck = t.get("clock") or {}
     out = dict(hops_over=0, hop_max_um=0.0, raw_bad=0, raw_detail=[])
+    if tap_wrapper(t):
+        out["skip"] = "hard wrapper: no generated reset tree (reset_tree.for_type covers soft types only)"
+        return out
     try:
         T = RT.for_type(P, tn)
     except Exception as e:  # noqa: BLE001
@@ -759,8 +774,12 @@ def fix_taps(P, Q, tn, cap=CAP_SINKS, radius=RADIUS_UM, max_rounds=10, log=print
                 rows_ = ck["taps"]
             else:
                 rows_ = ck["added_taps"]
-            idx = next((i for i, r in enumerate(rows_) if r.get("name") == drop
-                        and (float(r["xy"][0]), float(r["xy"][1])) in mine), None)
+            # an EMPTY stored tap goes too (KV-KITFIX-1 11-13: the taps added for the new sinks take every sink of a
+            # stale stored tap; kit-rtl refuses an empty tap, so keeping it only blocks the type); an illegal site is
+            # dropped only when this tool added it
+            empty = "empty=True" in m.group(0)
+            idx = next((i for i, r in enumerate(rows_) if r.get("name") == drop and r.get("kind") != "core"
+                        and (empty or (float(r["xy"][0]), float(r["xy"][1])) in mine)), None)
             if idx is None:
                 break
             rows_.pop(idx)
@@ -1212,6 +1231,9 @@ def fix_type(P, Q, tn, classes, base_row, cap, radius, reach, span, plan_path):
     """apply the stages to type tn of plan dict Q in place (Q holds a deep copy of the base type).  Returns record."""
     rec = dict(type=tn)
     t = Q["partition_types"][tn]
+    if tap_wrapper(t):
+        # a hard wrapper has no generated reset tree: only its own taps (1+2) and forwarded clocks (3) are re-solved
+        classes = [c for c in classes if c in ("1", "2", "3")]
     if "landing group override" in str(base_row.get("error") or "") or "5" in classes:
         go = fix_group_overrides(Q, tn, plan_path, reach)
         if go:
