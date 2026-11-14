@@ -97,3 +97,47 @@ def test_svc_bound_without_native_helpers_passes(tmp_path):
     assert r.returncode == 0, r.stdout + r.stderr
     assert "S81_KIT_RTL_POST PASS" in r.stdout and "NOT_APPLICABLE" in r.stdout
     assert b.read_text() == "module s81p_svc_hi_dsdv_svc_rs__t1_bound; endmodule\n"
+
+
+IRG = ROOT / "tools/autopilot/kit_rtl_post.d/s81_svc_pr_irg.sh"
+
+
+def _irg_kit(tmp_path, pr, files=True):
+    bm = "s81p_svc_lo_dsdv_svc_rs__t2_bound"
+    (tmp_path / "kit_rtl.json").write_text(json.dumps({"bound_module": bm, "defines": ["OT_SVC_ALLQ"]}))
+    (tmp_path / (bm + ".sv")).write_text(
+        "    dsdv_idx_rg3_fit #(.DQR(24), .EL(140), .PR(%d), .SRAM_MACRO(1'b1)) u_u_irg_02 (\n);\n" % pr)
+    (tmp_path / "kit_rtl.f").write_text(
+        "a/dsdv_idx_rg2.sv\nb/ot_s81_svc_idx_hslice_fp.sv\nc/ot_hdc_v41x_idx_hslice_fp.sv\n" if files else "a/x.sv\n")
+
+
+def _run_irg(tmp_path):
+    return subprocess.run(["bash", str(IRG)], cwd=tmp_path, env=dict(os.environ, TYPE="t", OUT=str(tmp_path), PLAN="x"),
+                          capture_output=True, text=True)
+
+
+def test_irg_pr_adds_the_fastpad_defines(tmp_path):
+    _irg_kit(tmp_path, 1)
+    r = _run_irg(tmp_path)
+    assert r.returncode == 0, r.stderr
+    d = json.loads((tmp_path / "kit_rtl.json").read_text())["defines"]
+    assert d == ["OT_SVC_ALLQ", "OT_IDX_HSLICE_FASTPAD", "OT_IDX_HSLICE_FP_CS"]
+    r = _run_irg(tmp_path)                                   # idempotent
+    assert json.loads((tmp_path / "kit_rtl.json").read_text())["defines"] == d
+
+
+def test_irg_pr0_and_other_kits_untouched(tmp_path):
+    _irg_kit(tmp_path, 0)
+    before = (tmp_path / "kit_rtl.json").read_text()
+    assert _run_irg(tmp_path).returncode == 0
+    assert (tmp_path / "kit_rtl.json").read_text() == before
+
+
+def test_irg_pr_without_fastpad_sources_fails(tmp_path):
+    _irg_kit(tmp_path, 1, files=False)
+    assert _run_irg(tmp_path).returncode != 0
+
+
+def test_irg_step_runs_after_the_memory_closure():
+    names = [p.name for p in sorted((ROOT / "tools/autopilot/kit_rtl_post.d").glob("*.sh"))]
+    assert names.index("s81_svc_memory.sh") < names.index("s81_svc_pr_irg.sh")
