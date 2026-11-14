@@ -134,7 +134,7 @@ def test_spec_place_spill_default_and_epyc4_host():
     c = cfg(); c["dies"]["s81"]["hosts"] = None
     c["dies"]["s81"].pop("hosts")
     sp = K.spec_for(c, "s81", "t1", "intel2")
-    assert sp["place_spill"] is True and "epyc4" in sp["hosts"] and sp["gen_host"] == "intel1"
+    assert sp["place_spill"] is True and "epyc4" not in sp["hosts"] and sp["gen_host"] == "intel1"   # epyc4 retired 11-13 (KIT-OPS-4)
     c["dies"]["s81"]["place_spill"] = False
     assert K.spec_for(c, "s81", "t1", "intel2")["place_spill"] is False
 

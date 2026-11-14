@@ -751,40 +751,45 @@ class Step(unittest.TestCase):
             self.assertEqual(len(st["items"]), 2)
 
     def test_infra_relaunched_once(self):
+        # KIT-OPS-4 11-14: an externally killed attempt (exit 137 / 143, earlyoom, signal) gets ONE free INFRA retry at the next tick,
+        # without a retry key and without spending the infra budget; a second kill on the same inputs stops it as BLOCKED-INFRA-REPEAT
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "OWNERS.tsv").write_text(OWN)
             c = json.dumps(cfg(die_max_inflight=1))
             st = KW.step(FakeAP(d, c))
             (r,) = st["items"].values()
-            (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
-                                                                     "tail": "place: exit 137"}))
-            ap = FakeAP(d, c)
-            st = KW.step(ap)
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
-            self.assertEqual(r["attempt"], 2)
-            self.assertEqual(r["status"], "RUNNING")
+            item = r["item"]
             (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
                                                                      "tail": "place: exit 137"}))
             st = KW.step(FakeAP(d, c))
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
-            self.assertEqual((r["status"], r["attempt"]), ("RUNNING", 3))       # AUTOBUILD-PIPE-1: up to 3 attempts
+            (r,) = [x for x in st["items"].values() if x["item"] == item]
+            self.assertEqual((r["attempt"], r["status"]), (2, "RUNNING"))        # the free retry
+            self.assertEqual(r.get("kill_n"), 1)
             (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
                                                                      "tail": "place: exit 137"}))
             st = KW.step(FakeAP(d, c))
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
-            self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 3))   # then stops
+            (r,) = [x for x in st["items"].values() if x["item"] == item]
+            self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))   # second kill: stops
+            self.assertEqual(r.get("blocked"), "BLOCKED-INFRA-REPEAT")
+
+    def test_infra_non_kill_failure_keeps_the_budget(self):
+        # an INFRA failure that is not a kill (here an ssh transport drop) still follows infra_attempts (3 attempts), no BLOCKED-INFRA-REPEAT
+        self.assertIsNone(KW.KILL_RE.search("Connection reset by peer"))
+        self.assertEqual(KW.infra_attempts(cfg(), "qwen_kvsys"), 3)
 
     def test_infra_attempts_config_two_is_once(self):
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "OWNERS.tsv").write_text(OWN)
             c = json.dumps(dict(cfg(die_max_inflight=1), infra_attempts=2))
             st = KW.step(FakeAP(d, c))
+            (r,) = st["items"].values()
+            item = r["item"]
             for _ in range(2):
-                (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
+                (r,) = [x for x in st["items"].values() if x["item"] == item]
                 (Path(r["dir"]) / "result.json").write_text(json.dumps({"verdict": "FAIL", "stage": "place",
                                                                          "tail": "place: exit 137"}))
                 st = KW.step(FakeAP(d, c))
-            (r,) = [x for x in st["items"].values() if x["item"] == "kv3_phy_v1"]
+            (r,) = [x for x in st["items"].values() if x["item"] == item]
             self.assertEqual((r["status"], r["class"], r["attempt"]), ("FAIL", "INFRA", 2))
 
     def test_legacy_fail_infra_record_relaunched_same_event_only(self):
