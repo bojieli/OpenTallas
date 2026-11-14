@@ -1,0 +1,621 @@
+type	rule	bus	face	detail
+ot_s81sl_kv_leaf__t1	L1b	ft3_i	S	band 6.1 um2/bit < 10
+ot_s81sl_kv_leaf__t1	L1b	ft4_i	S	band 5.6 um2/bit < 10
+ot_s81sl_kv_leaf__t1	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 17.3), total length 3355 um
+ot_s81sl_kv_leaf__t3	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_kv_leaf__t3	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_kv_leaf__t3	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_kv_leaf__t3	L2	ft2_o	S	core ve_u_m gap 34.6 < 43.2 over 57 um of the 669-bit window
+ot_s81sl_kv_leaf__t3	L1b	ft3_i	N	band 5.2 um2/bit < 10
+ot_s81sl_kv_leaf__t3	L2	ft7_i	S	core ve_u_m gap 34.6 < 43.2 over 114 um of the 598-bit window
+ot_s81sl_kv_leaf__t3	L3	-	-	29 core-core slots 4.32..43.2 um (narrowest 15.1), total length 3469 um
+ot_s81sl_kv_leaf__t5	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_kv_leaf__t5	L2	ft0_o	S	core vp_g_ln_12_u_l gap 34.2 < 43.2 over 56 um of the 277-bit window
+ot_s81sl_kv_leaf__t5	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_kv_leaf__t5	L2	ft1_o	S	core vp_g_ln_12_u_l gap 34.2 < 43.2 over 57 um of the 277-bit window
+ot_s81sl_kv_leaf__t5	L2	ft4_i	S	core vp_g_ln_2_u_l gap 34.2 < 43.2 over 49 um of the 277-bit window
+ot_s81sl_kv_leaf__t5	L2	leafup_o0	S	core vp_g_ln_2_u_l gap 34.2 < 43.2 over 64 um of the 669-bit window
+ot_s81sl_kv_leaf__t5	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3446 um
+ot_s81sl_leaf__t1	L1b	ft0_i	E	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t1	L1a	ft10_i	S	band 17x41 at [543,17,560,58] is not under its window 544..560
+ot_s81sl_leaf__t1	L1a	ft11_i	S	band 17x41 at [562,17,579,58] is not under its window 562..578
+ot_s81sl_leaf__t1	L1a	ft12_i	S	band 17x41 at [580,17,597,58] is not under its window 580..597
+ot_s81sl_leaf__t1	L2	ft14_i	W	core ve_u_s gap 34.7 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t1	L2	ft15_i	W	core ve_u_s gap 34.7 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t1	L2	ft16_i	W	core ve_u_s gap 34.7 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t1	L2	ft17_i	W	core ve_u_s gap 34.7 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t1	L2	ft18_i	W	core ve_u_s gap 34.7 < 43.2 over 7 um of the 71-bit window
+ot_s81sl_leaf__t1	L1b	ft1_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t1	L1a	ft3_i	E	band 16x26 at [1400,507,1426,522] is not under its window 507..522
+ot_s81sl_leaf__t1	L1a	ft7_i	S	band 17x41 at [488,17,506,58] is not under its window 489..505
+ot_s81sl_leaf__t1	L1a	ft8_i	S	band 17x41 at [507,17,524,58] is not under its window 507..523
+ot_s81sl_leaf__t1	L1a	ft9_i	S	band 15x48 at [525,17,540,65] is not under its window 525..540
+ot_s81sl_leaf__t1	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3605 um
+ot_s81sl_leaf__t10	L1a	ft0_i	N	band 17x41 at [488,1169,506,1210] is not under its window 489..505
+ot_s81sl_leaf__t10	L1a	ft1_i	N	band 17x41 at [507,1169,524,1210] is not under its window 507..523
+ot_s81sl_leaf__t10	L1a	ft2_i	N	band 15x48 at [525,1162,540,1210] is not under its window 525..540
+ot_s81sl_leaf__t10	L1a	ft3_i	N	band 17x41 at [543,1169,560,1210] is not under its window 544..560
+ot_s81sl_leaf__t10	L1a	ft4_i	N	band 17x41 at [562,1169,579,1210] is not under its window 562..578
+ot_s81sl_leaf__t10	L1a	ft5_i	N	band 17x41 at [580,1169,597,1210] is not under its window 580..597
+ot_s81sl_leaf__t10	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3312 um
+ot_s81sl_leaf__t11	L2	leafdn_i0	N	core lf4_u_vp_g_ln_11_u_l gap 50.1 < 86.4 over 114 um of the 598-bit window
+ot_s81sl_leaf__t11	L1b	leafdn_i0	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t11	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3073 um
+ot_s81sl_leaf__t12	L2	ft10_i	W	core vp_g_ln_14_u_l gap 43.3 < 86.4 over 17 um of the 71-bit window
+ot_s81sl_leaf__t12	L2	ft11_i	W	core vp_g_ln_14_u_l gap 43.3 < 86.4 over 1 um of the 71-bit window
+ot_s81sl_leaf__t12	L1a	ft11_i	W	band 17x41 at [17,1186,58,1203] is not under its window 1167..1184
+ot_s81sl_leaf__t12	L1a	ft12_i	W	band 17x41 at [58,1185,99,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t12	L1a	ft13_i	W	band 17x41 at [102,1193,143,1210] is not under its window 1204..1220
+ot_s81sl_leaf__t12	L2	ft1_o	W	core vp_g_ln_9_u_l gap 34.7 < 43.2 over 114 um of the 1105-bit window
+ot_s81sl_leaf__t12	L1a	ft5_i	S	band 145x24 at [40,49,185,73] is not under its window 6..151
+ot_s81sl_leaf__t12	L1b	ft5_i	S	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t12	L2	ft7_i	W	core vp_g_ln_3_u_l gap 77.9 < 86.4 over 3 um of the 33-bit window
+ot_s81sl_leaf__t12	L1a	ft7_i	W	band 13x30 at [17,525,48,538] is not under its window 526..538
+ot_s81sl_leaf__t12	L2	ft8_i	W	core vp_g_ln_14_u_l gap 43.3 < 86.4 over 17 um of the 71-bit window
+ot_s81sl_leaf__t12	L1a	ft8_i	W	band 41x17 at [17,1062,34,1103] is not under its window 1112..1129
+ot_s81sl_leaf__t12	L2	ft9_i	W	core vp_g_ln_14_u_l gap 43.3 < 86.4 over 17 um of the 71-bit window
+ot_s81sl_leaf__t12	L1a	ft9_i	W	band 41x17 at [17,1019,34,1060] is not under its window 1131..1148
+ot_s81sl_leaf__t12	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3664 um
+ot_s81sl_leaf__t13	L2	ft0_i	N	core lf0_u_ve_u_m gap 43.2 < 86.4 over 63 um of the 598-bit window
+ot_s81sl_leaf__t13	L1a	ft0_i	N	band 130x24 at [404,1186,533,1210] is not under its window 153..282
+ot_s81sl_leaf__t13	L1b	ft0_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t13	L1b	ft1_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t13	L2	ft4_o	N	core lf0_u_vp_g_ln_14_u_l gap 11.2 < 43.2 over 28 um of the 133-bit window
+ot_s81sl_leaf__t13	L1b	leafdn_i0	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t13	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3255 um
+ot_s81sl_leaf__t14	L2	ft0_i	E	core lf1_u_vp_g_ln_3_u_l gap 19.3 < 43.2 over 114 um of the 1105-bit window
+ot_s81sl_leaf__t14	L2	ft0_o	W	core lf1_u_ve_u_s gap 34.7 < 43.2 over 211 um of the 1105-bit window
+ot_s81sl_leaf__t14	L1a	ft10_i	W	band 17x41 at [17,1167,58,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t14	L1a	ft11_i	W	band 17x41 at [17,1185,58,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t14	L1a	ft12_i	W	band 41x17 at [60,1169,78,1210] is not under its window 1204..1220
+ot_s81sl_leaf__t14	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t14	L2	ft1_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 31 um of the 277-bit window
+ot_s81sl_leaf__t14	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t14	L2	ft2_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 79 um of the 669-bit window
+ot_s81sl_leaf__t14	L2	ft3_i	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 59 um of the 277-bit window
+ot_s81sl_leaf__t14	L2	ft5_o	W	core lf1_u_ve_u_s gap 34.7 < 43.2 over 133 um of the 1105-bit window
+ot_s81sl_leaf__t14	L1a	ft7_i	W	band 17x41 at [17,1112,58,1129] is not under its window 1112..1129
+ot_s81sl_leaf__t14	L1a	ft8_i	W	band 17x41 at [78,1130,119,1148] is not under its window 1131..1148
+ot_s81sl_leaf__t14	L1a	ft9_i	W	band 17x41 at [78,1149,119,1166] is not under its window 1149..1166
+ot_s81sl_leaf__t14	L3	-	-	24 core-core slots 4.32..43.2 um (narrowest 8.5), total length 3266 um
+ot_s81sl_leaf__t15	L2	ft1_i	S	core lf3_u_vp_g_ln_0_u_l gap 34.2 < 86.4 over 58 um of the 277-bit window
+ot_s81sl_leaf__t15	L1a	ft1_i	S	band 26x60 at [37,45,63,105] is not under its window 68..127
+ot_s81sl_leaf__t15	L1b	ft1_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t15	L2	ft2_i	S	core lf3_u_ve_u_m gap 60.5 < 86.4 over 28 um of the 133-bit window
+ot_s81sl_leaf__t15	L2	leafdn_i0	S	core lf3_u_vp_g_ln_1_u_l gap 34.2 < 86.4 over 32 um of the 598-bit window
+ot_s81sl_leaf__t15	L1a	leafdn_i0	S	band 126x24 at [311,214,437,238] is not under its window 275..401
+ot_s81sl_leaf__t15	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t15	L2	leafup_o0	S	core lf3_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 55 um of the 669-bit window
+ot_s81sl_leaf__t15	L3	-	-	27 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3280 um
+ot_s81sl_leaf__t16	L1a	ft10_i	W	band 41x17 at [17,1169,34,1210] is not under its window 1204..1220
+ot_s81sl_leaf__t16	L1b	ft3_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t16	L1a	ft5_i	W	band 17x41 at [17,1112,58,1129] is not under its window 1112..1129
+ot_s81sl_leaf__t16	L1a	ft6_i	W	band 17x41 at [17,1130,58,1148] is not under its window 1131..1148
+ot_s81sl_leaf__t16	L1a	ft7_i	W	band 17x41 at [17,1149,58,1166] is not under its window 1149..1166
+ot_s81sl_leaf__t16	L1a	ft9_i	W	band 17x41 at [54,1185,95,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t16	L3	-	-	23 core-core slots 4.32..43.2 um (narrowest 15.1), total length 2603 um
+ot_s81sl_leaf__t17	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t17	L2	ft1_i	N	core lf0_u_ve_u_s gap 43.2 < 86.4 over 5 um of the 1105-bit window
+ot_s81sl_leaf__t17	L1b	ft1_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t17	L2	ft2_i	N	core lf0_u_ve_u_s gap 43.2 < 86.4 over 19 um of the 598-bit window
+ot_s81sl_leaf__t17	L1a	ft2_i	N	band 128x24 at [542,1186,670,1210] is not under its window 516..644
+ot_s81sl_leaf__t17	L1b	ft2_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t17	L1b	leafdn_i0	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t17	L3	-	-	22 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2988 um
+ot_s81sl_leaf__t2	L1b	ft0_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t2	L2	ft1_i	N	core lf0_u_ve_u_m gap 43.2 < 86.4 over 147 um of the 1105-bit window
+ot_s81sl_leaf__t2	L1a	ft1_i	N	band 24x237 at [307,972,330,1210] is not under its window 248..484
+ot_s81sl_leaf__t2	L1b	ft1_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t2	L1b	ft2_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t2	L2	ft3_i	N	core lf0_u_vp_g_ln_9_u_l gap 50.1 < 86.4 over 15 um of the 572-bit window
+ot_s81sl_leaf__t2	L1b	ft3_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t2	L2	leafdn_i0	N	core lf0_u_vp_g_ln_12_u_l gap 67.3 < 86.4 over 17 um of the 598-bit window
+ot_s81sl_leaf__t2	L1b	leafdn_i0	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t2	L3	-	-	33 core-core slots 4.32..43.2 um (narrowest 8.6), total length 4224 um
+ot_s81sl_leaf__t22	L1b	ft0_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t22	L2	ft1_i	N	core lf0_u_ve_u_m gap 43.2 < 86.4 over 147 um of the 1105-bit window
+ot_s81sl_leaf__t22	L1a	ft1_i	N	band 24x237 at [307,972,330,1210] is not under its window 248..484
+ot_s81sl_leaf__t22	L1b	ft1_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t22	L2	ft2_i	N	core lf0_u_ve_u_s gap 51.8 < 86.4 over 82 um of the 598-bit window
+ot_s81sl_leaf__t22	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t22	L2	leafdn_i0	N	core lf0_u_vp_g_ln_0_u_l gap 67.3 < 86.4 over 17 um of the 598-bit window
+ot_s81sl_leaf__t22	L1b	leafdn_i0	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t22	L3	-	-	33 core-core slots 4.32..43.2 um (narrowest 8.6), total length 4224 um
+ot_s81sl_leaf__t23	L1b	ft0_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t23	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t23	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t23	L1b	ft3_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t23	L2	ft3_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 68 um of the 669-bit window
+ot_s81sl_leaf__t23	L2	ft6_i	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 98 um of the 598-bit window
+ot_s81sl_leaf__t23	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3394 um
+ot_s81sl_leaf__t24__cl2456157b	L1b	ft2_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t24__cl2456157b	L2	ft3_i	S	core lf3_u_ve_u_s gap 69.2 < 86.4 over 60 um of the 277-bit window
+ot_s81sl_leaf__t24__cl2456157b	L1b	ft3_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t24__cl2456157b	L2	ft4_i	S	core lf3_u_ve_u_m gap 51.9 < 86.4 over 124 um of the 598-bit window
+ot_s81sl_leaf__t24__cl2456157b	L1b	ft4_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t24__cl2456157b	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t24__cl2456157b	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3615 um
+ot_s81sl_leaf__t24__cl81374cd8	L1b	ft2_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t24__cl81374cd8	L2	ft3_i	S	core lf3_u_ve_u_s gap 43.2 < 86.4 over 60 um of the 277-bit window
+ot_s81sl_leaf__t24__cl81374cd8	L1b	ft3_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t24__cl81374cd8	L2	ft4_i	S	core lf3_u_ve_u_m gap 43.2 < 86.4 over 124 um of the 598-bit window
+ot_s81sl_leaf__t24__cl81374cd8	L1b	ft4_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t24__cl81374cd8	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t24__cl81374cd8	L3	-	-	26 core-core slots 4.32..43.2 um (narrowest 15.1), total length 3494 um
+ot_s81sl_leaf__t25__cl431c660f	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t25__cl431c660f	L2	ft0_o	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 59 um of the 277-bit window
+ot_s81sl_leaf__t25__cl431c660f	L2	ft1_i	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 23 um of the 277-bit window
+ot_s81sl_leaf__t25__cl431c660f	L2	ft2_i	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 29 um of the 277-bit window
+ot_s81sl_leaf__t25__cl431c660f	L2	leafup_o0	S	core lf4_u_vp_g_ln_1_u_l gap 34.2 < 43.2 over 97 um of the 669-bit window
+ot_s81sl_leaf__t25__cl431c660f	L3	-	-	31 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3571 um
+ot_s81sl_leaf__t25__cl55642d17	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t25__cl55642d17	L2	ft0_o	S	core lf4_u_vp_g_ln_15_u_l gap 34.2 < 43.2 over 58 um of the 277-bit window
+ot_s81sl_leaf__t25__cl55642d17	L2	ft2_i	S	core lf4_u_vp_g_ln_15_u_l gap 34.2 < 43.2 over 55 um of the 277-bit window
+ot_s81sl_leaf__t25__cl55642d17	L2	leafdn_i0	S	core lf4_u_vn_u_b gap 34.6 < 43.2 over 124 um of the 598-bit window
+ot_s81sl_leaf__t25__cl55642d17	L2	leafup_o0	S	core lf4_u_vp_g_ln_12_u_l gap 12.6 < 43.2 over 114 um of the 669-bit window
+ot_s81sl_leaf__t25__cl55642d17	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3610 um
+ot_s81sl_leaf__t26	L1b	ft2_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t26	L1b	ft3_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t26	L2	ft4_i	W	core vp_g_ln_10_u_l gap 34.7 < 43.2 over 9 um of the 71-bit window
+ot_s81sl_leaf__t26	L3	-	-	27 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3203 um
+ot_s81sl_leaf__t27	L3	-	-	17 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2238 um
+ot_s81sl_leaf__t28	L1b	ft0_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t28	L2	ft0_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 103 um of the 669-bit window
+ot_s81sl_leaf__t28	L2	ft10_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 12 um of the 71-bit window
+ot_s81sl_leaf__t28	L1b	ft1_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t28	L2	ft1_o	S	core lf1_u_vn_u_b gap 34.6 < 43.2 over 126 um of the 669-bit window
+ot_s81sl_leaf__t28	L2	ft2_i	S	core lf1_u_vp_g_ln_13_u_l gap 34.2 < 43.2 over 17 um of the 598-bit window
+ot_s81sl_leaf__t28	L2	ft3_i	S	core lf1_u_vp_g_ln_14_u_l gap 34.2 < 43.2 over 21 um of the 598-bit window
+ot_s81sl_leaf__t28	L2	ft4_o	W	core lf1_u_vp_g_ln_11_u_l gap 34.7 < 43.2 over 114 um of the 1105-bit window
+ot_s81sl_leaf__t28	L2	ft5_o	W	core lf1_u_vp_g_ln_12_u_l gap 34.7 < 43.2 over 82 um of the 1105-bit window
+ot_s81sl_leaf__t28	L2	ft7_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 15 um of the 71-bit window
+ot_s81sl_leaf__t28	L2	ft8_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 13 um of the 71-bit window
+ot_s81sl_leaf__t28	L2	ft9_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 16 um of the 71-bit window
+ot_s81sl_leaf__t28	L2	leafdn_i0	S	core lf1_u_vp_g_ln_13_u_l gap 34.2 < 43.2 over 95 um of the 598-bit window
+ot_s81sl_leaf__t28	L2	leafup_o0	S	core lf1_u_vn_u_b gap 34.6 < 43.2 over 137 um of the 669-bit window
+ot_s81sl_leaf__t28	L3	-	-	29 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3700 um
+ot_s81sl_leaf__t29	L1a	ft1_i	S	band 26x60 at [28,17,54,77] is not under its window 6..66
+ot_s81sl_leaf__t29	L1b	ft1_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t29	L2	ft2_i	S	core lf3_u_vp_g_ln_3_u_l gap 42.9 < 86.4 over 99 um of the 598-bit window
+ot_s81sl_leaf__t29	L1a	ft2_i	S	band 128x24 at [108,17,235,41] is not under its window 214..341
+ot_s81sl_leaf__t29	L1b	ft2_i	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t29	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t29	L2	leafup_o0	S	core lf3_u_vp_g_ln_3_u_l gap 42.9 < 43.2 over 11 um of the 669-bit window
+ot_s81sl_leaf__t29	L3	-	-	21 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2605 um
+ot_s81sl_leaf__t3	L2	ft0_i	E	core lf1_u_vp_g_ln_6_u_l gap 75.5 < 86.4 over 61 um of the 1105-bit window
+ot_s81sl_leaf__t3	L1b	ft0_i	E	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t3	L2	ft1_i	E	core lf1_u_vp_g_ln_6_u_l gap 75.5 < 86.4 over 52 um of the 1105-bit window
+ot_s81sl_leaf__t3	L1b	ft1_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t3	L1b	ft2_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t3	L1b	ft3_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t3	L1b	ft4_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t3	L1b	ft5_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t3	L2	ft5_o	S	core lf1_u_vp_g_ln_4_u_l gap 34.2 < 43.2 over 67 um of the 572-bit window
+ot_s81sl_leaf__t3	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3242 um
+ot_s81sl_leaf__t30	L2	ft0_i	S	core lf4_u_vp_g_ln_11_u_l gap 29.9 < 43.2 over 10 um of the 277-bit window
+ot_s81sl_leaf__t30	L2	leafdn_i0	S	core lf4_u_vp_g_ln_7_u_l gap 34.2 < 43.2 over 82 um of the 598-bit window
+ot_s81sl_leaf__t30	L2	leafup_o0	S	core lf4_u_vp_g_ln_11_u_l gap 29.9 < 43.2 over 103 um of the 669-bit window
+ot_s81sl_leaf__t30	L3	-	-	29 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3450 um
+ot_s81sl_leaf__t31	L2	ft9_i	W	core vsw gap 77.9 < 86.4 over 13 um of the 33-bit window
+ot_s81sl_leaf__t31	L1a	ft9_i	W	band 13x30 at [17,525,48,538] is not under its window 526..538
+ot_s81sl_leaf__t31	L3	-	-	21 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2858 um
+ot_s81sl_leaf__t32	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t32	L2	ft2_i	N	core ve_u_m gap 43.2 < 86.4 over 108 um of the 514-bit window
+ot_s81sl_leaf__t32	L1a	ft2_i	N	band 26x108 at [516,1102,542,1210] is not under its window 373..480
+ot_s81sl_leaf__t32	L1b	ft2_i	N	band 5.5 um2/bit < 10
+ot_s81sl_leaf__t32	L2	ft3_i	N	core ve_u_m gap 43.2 < 86.4 over 24 um of the 514-bit window
+ot_s81sl_leaf__t32	L1a	ft3_i	N	band 107x26 at [575,1184,683,1210] is not under its window 485..592
+ot_s81sl_leaf__t32	L1b	ft3_i	N	band 5.4 um2/bit < 10
+ot_s81sl_leaf__t32	L1b	ft4_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t32	L2	leafdn_i0	N	core vp_g_ln_0_u_l gap 54.4 < 86.4 over 112 um of the 598-bit window
+ot_s81sl_leaf__t32	L1b	leafdn_i0	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t32	L3	-	-	23 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3304 um
+ot_s81sl_leaf__t33	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t33	L1a	ft10_i	W	band 17x41 at [17,1185,58,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t33	L1a	ft11_i	W	band 41x17 at [17,1142,34,1183] is not under its window 1204..1220
+ot_s81sl_leaf__t33	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t33	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t33	L1b	ft3_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t33	L2	ft3_o	S	core ve_u_m gap 34.6 < 43.2 over 52 um of the 669-bit window
+ot_s81sl_leaf__t33	L2	ft6_i	S	core ve_u_m gap 34.6 < 43.2 over 116 um of the 598-bit window
+ot_s81sl_leaf__t33	L2	ft7_i	S	core ve_u_s gap 34.6 < 43.2 over 87 um of the 598-bit window
+ot_s81sl_leaf__t33	L1a	ft9_i	W	band 17x41 at [188,1167,229,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t33	L2	leafdn_i0	S	core vp_g_ln_5_u_l gap 34.2 < 43.2 over 72 um of the 598-bit window
+ot_s81sl_leaf__t33	L2	leafup_o0	S	core vp_g_ln_5_u_l gap 34.2 < 43.2 over 41 um of the 669-bit window
+ot_s81sl_leaf__t33	L3	-	-	21 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2588 um
+ot_s81sl_leaf__t34	L2	ft2_o	S	core ve_u_s gap 34.6 < 43.2 over 140 um of the 669-bit window
+ot_s81sl_leaf__t34	L2	ft3_i	S	core ve_u_m gap 77.8 < 86.4 over 29 um of the 268-bit window
+ot_s81sl_leaf__t34	L1b	ft3_i	S	band 6.1 um2/bit < 10
+ot_s81sl_leaf__t34	L2	ft4_i	S	core ve_u_s gap 34.6 < 86.4 over 32 um of the 277-bit window
+ot_s81sl_leaf__t34	L1a	ft4_i	S	band 60x26 at [158,25,218,51] is not under its window 188..248
+ot_s81sl_leaf__t34	L1b	ft4_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t34	L1b	ft5_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t34	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t34	L3	-	-	33 core-core slots 4.32..43.2 um (narrowest 8.6), total length 4009 um
+ot_s81sl_leaf__t35	L2	ft0_o	S	core vp_g_ln_0_u_l gap 34.2 < 43.2 over 56 um of the 277-bit window
+ot_s81sl_leaf__t35	L1a	ft1_i	N	band 194x17 at [210,1192,404,1210] is not under its window 127..186
+ot_s81sl_leaf__t35	L2	ft1_o	S	core vp_g_ln_0_u_l gap 34.2 < 43.2 over 57 um of the 277-bit window
+ot_s81sl_leaf__t35	L2	ft3_i	S	core vp_g_ln_1_u_l gap 34.2 < 43.2 over 55 um of the 277-bit window
+ot_s81sl_leaf__t35	L2	leafdn_i0	S	core vn_u_b gap 34.6 < 43.2 over 127 um of the 598-bit window
+ot_s81sl_leaf__t35	L2	leafup_o0	S	core vp_g_ln_1_u_l gap 34.2 < 43.2 over 58 um of the 669-bit window
+ot_s81sl_leaf__t35	L3	-	-	32 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3770 um
+ot_s81sl_leaf__t36	L1b	ft6_i	W	band 5.7 um2/bit < 10
+ot_s81sl_leaf__t36	L2	ft8_i	W	core lf4_u_vp_g_ln_4_u_l gap 51.9 < 86.4 over 15 um of the 563-bit window
+ot_s81sl_leaf__t36	L1a	ft8_i	W	band 122x22 at [17,334,39,456] is not under its window 237..359
+ot_s81sl_leaf__t36	L1b	ft8_i	W	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t36	L2	ft9_i	W	core lf4_u_vp_g_ln_5_u_l gap 51.9 < 86.4 over 91 um of the 605-bit window
+ot_s81sl_leaf__t36	L1a	ft9_i	W	band 128x24 at [17,458,41,586] is not under its window 361..488
+ot_s81sl_leaf__t36	L1b	ft9_i	W	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t36	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3615 um
+ot_s81sl_leaf__t37	L2	leafdn_i0	N	core vp_g_ln_12_u_l gap 32.8 < 43.2 over 32 um of the 598-bit window
+ot_s81sl_leaf__t37	L2	leafup_o0	N	core vp_g_ln_12_u_l gap 32.8 < 43.2 over 79 um of the 669-bit window
+ot_s81sl_leaf__t37	L3	-	-	24 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3236 um
+ot_s81sl_leaf__t39	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t39	L1b	ft1_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t39	L1a	ft5_i	W	band 17x41 at [78,1167,119,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t39	L1a	ft6_i	W	band 17x41 at [78,1185,119,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t39	L1a	ft7_i	W	band 41x17 at [17,1143,34,1184] is not under its window 1204..1220
+ot_s81sl_leaf__t39	L3	-	-	24 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2896 um
+ot_s81sl_leaf__t4	L2	ft2_o	S	core lf3_u_ve_u_s gap 34.6 < 43.2 over 48 um of the 572-bit window
+ot_s81sl_leaf__t4	L1b	ft3_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t4	L2	ft4_i	S	core lf3_u_vp_g_ln_4_u_l gap 51.5 < 86.4 over 51 um of the 598-bit window
+ot_s81sl_leaf__t4	L1b	ft4_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t4	L1b	leafdn_i0	S	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t4	L3	-	-	29 core-core slots 4.32..43.2 um (narrowest 10.8), total length 3659 um
+ot_s81sl_leaf__t40__cl86ea32b3	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t40__cl86ea32b3	L2	ft1_i	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 58 um of the 277-bit window
+ot_s81sl_leaf__t40__cl86ea32b3	L2	leafdn_i0	S	core lf4_u_vp_g_ln_1_u_l gap 34.2 < 43.2 over 38 um of the 598-bit window
+ot_s81sl_leaf__t40__cl86ea32b3	L2	leafup_o0	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 55 um of the 669-bit window
+ot_s81sl_leaf__t40__cl86ea32b3	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3527 um
+ot_s81sl_leaf__t40__clf8bbdae1	L2	ft1_i	S	core lf3_u_vp_g_ln_0_u_l gap 34.2 < 86.4 over 58 um of the 277-bit window
+ot_s81sl_leaf__t40__clf8bbdae1	L1a	ft1_i	S	band 26x60 at [37,45,63,105] is not under its window 68..127
+ot_s81sl_leaf__t40__clf8bbdae1	L1b	ft1_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t40__clf8bbdae1	L2	leafdn_i0	S	core lf3_u_vp_g_ln_1_u_l gap 34.2 < 86.4 over 32 um of the 598-bit window
+ot_s81sl_leaf__t40__clf8bbdae1	L1a	leafdn_i0	S	band 126x24 at [311,214,437,238] is not under its window 275..401
+ot_s81sl_leaf__t40__clf8bbdae1	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t40__clf8bbdae1	L2	leafup_o0	S	core lf3_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 55 um of the 669-bit window
+ot_s81sl_leaf__t40__clf8bbdae1	L3	-	-	27 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3280 um
+ot_s81sl_leaf__t41	L1b	ft0_i	N	band 2.8 um2/bit < 10
+ot_s81sl_leaf__t41	L1a	ft1_i	N	band 240x22 at [354,1175,594,1197] is not under its window 129..368
+ot_s81sl_leaf__t41	L1b	ft1_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t41	L1b	ft2_i	S	band 4.3 um2/bit < 10
+ot_s81sl_leaf__t41	L1b	leafdn_i0	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t41	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2821 um
+ot_s81sl_leaf__t42	L3	-	-	18 core-core slots 4.32..43.2 um (narrowest 15.1), total length 2025 um
+ot_s81sl_leaf__t43	L2	dn_s_4N_L0x1_i	S	core lf1_u_vp_g_ln_1_u_l gap 42.9 < 43.2 over 55 um of the 598-bit window
+ot_s81sl_leaf__t43	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t43	L1b	ft1_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t43	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t43	L1b	up_s_4N_L0x4_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t43	L2	up_s_4N_L0x4_o	S	core lf1_u_vp_g_ln_1_u_l gap 42.9 < 43.2 over 57 um of the 669-bit window
+ot_s81sl_leaf__t43	L3	-	-	31 core-core slots 4.32..43.2 um (narrowest 8.6), total length 4015 um
+ot_s81sl_leaf__t44__clf4ea6d4b	L1b	ft2_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t44__clf4ea6d4b	L2	ft3_i	S	core lf3_u_vp_g_ln_5_u_l gap 81.7 < 86.4 over 30 um of the 598-bit window
+ot_s81sl_leaf__t44__clf4ea6d4b	L1b	ft3_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t44__clf4ea6d4b	L1b	leafdn_i0	S	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t44__clf4ea6d4b	L2	leafup_o0	S	core lf3_u_vp_g_ln_13_u_l gap 21.2 < 43.2 over 114 um of the 669-bit window
+ot_s81sl_leaf__t44__clf4ea6d4b	L3	-	-	26 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3511 um
+ot_s81sl_leaf__t44__clf6cf8492	L2	ft1_o	S	core lf3_u_vp_g_ln_1_u_l gap 21.2 < 43.2 over 114 um of the 669-bit window
+ot_s81sl_leaf__t44__clf6cf8492	L1b	ft2_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t44__clf6cf8492	L2	ft3_i	S	core lf3_u_vp_g_ln_7_u_l gap 81.7 < 86.4 over 81 um of the 598-bit window
+ot_s81sl_leaf__t44__clf6cf8492	L1b	ft3_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t44__clf6cf8492	L1b	leafdn_i0	S	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t44__clf6cf8492	L2	up_s_4N_L0x3_i	W	core lf3_u_vp_g_ln_3_u_l gap 43.3 < 86.4 over 45 um of the 669-bit window
+ot_s81sl_leaf__t44__clf6cf8492	L1a	up_s_4N_L0x3_i	W	band 112x30 at [17,742,48,854] is not under its window 665..777
+ot_s81sl_leaf__t44__clf6cf8492	L1b	up_s_4N_L0x3_i	W	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t44__clf6cf8492	L2	up_s_4N_L0x3_o	S	core lf3_u_ve_u_m gap 34.6 < 43.2 over 62 um of the 669-bit window
+ot_s81sl_leaf__t44__clf6cf8492	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3452 um
+ot_s81sl_leaf__t45	L2	ft7_o	N	core vp_g_ln_11_u_l gap 15.5 < 43.2 over 5 um of the 71-bit window
+ot_s81sl_leaf__t45	L2	ft8_o	N	core vp_g_ln_11_u_l gap 15.5 < 43.2 over 14 um of the 71-bit window
+ot_s81sl_leaf__t45	L3	-	-	21 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2829 um
+ot_s81sl_leaf__t46	L1b	ft0_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t46	L1b	ft1_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t46	L2	ft2_i	N	core lf0_u_ve_u_m gap 43.2 < 86.4 over 173 um of the 1105-bit window
+ot_s81sl_leaf__t46	L1b	ft2_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t46	L2	ft3_i	N	core lf0_u_ve_u_s gap 43.2 < 86.4 over 13 um of the 598-bit window
+ot_s81sl_leaf__t46	L1b	ft3_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t46	L2	leafdn_i0	N	core lf0_u_vp_g_ln_4_u_l gap 41.4 < 86.4 over 107 um of the 598-bit window
+ot_s81sl_leaf__t46	L1a	leafdn_i0	N	band 150x19 at [1088,1190,1238,1210] is not under its window 1135..1264
+ot_s81sl_leaf__t46	L1b	leafdn_i0	N	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t46	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3158 um
+ot_s81sl_leaf__t47	L2	ft0_i	E	core lf1_u_vp_g_ln_13_u_l gap 40.9 < 86.4 over 82 um of the 1105-bit window
+ot_s81sl_leaf__t47	L1b	ft0_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t47	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t47	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t47	L1b	ft3_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t47	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3478 um
+ot_s81sl_leaf__t5	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t5	L2	ft0_o	S	core lf4_u_vp_g_ln_2_u_l gap 42.9 < 43.2 over 31 um of the 277-bit window
+ot_s81sl_leaf__t5	L1b	ft1_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t5	L2	ft2_i	S	core lf4_u_vp_g_ln_2_u_l gap 42.9 < 43.2 over 59 um of the 277-bit window
+ot_s81sl_leaf__t5	L2	leafdn_i0	S	core lf4_u_vn_u_b gap 34.6 < 43.2 over 90 um of the 598-bit window
+ot_s81sl_leaf__t5	L2	leafup_o0	S	core lf4_u_vp_g_ln_1_u_l gap 42.9 < 43.2 over 109 um of the 669-bit window
+ot_s81sl_leaf__t5	L3	-	-	32 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3825 um
+ot_s81sl_leaf__t50	L1b	ft2_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t50	L2	ft2_o	N	core vp_g_ln_2_u_l gap 41.4 < 43.2 over 58 um of the 277-bit window
+ot_s81sl_leaf__t50	L2	leafdn_i0	N	core vp_g_ln_1_u_l gap 41.4 < 43.2 over 38 um of the 598-bit window
+ot_s81sl_leaf__t50	L2	leafup_o0	N	core vp_g_ln_1_u_l gap 41.4 < 43.2 over 75 um of the 669-bit window
+ot_s81sl_leaf__t50	L3	-	-	34 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3973 um
+ot_s81sl_leaf__t51	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t51	L2	ft1_i	N	core lf0_u_vp_g_ln_13_u_l gap 45.8 < 86.4 over 30 um of the 598-bit window
+ot_s81sl_leaf__t51	L1b	ft1_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t51	L1b	leafdn_i0	N	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t51	L2	leafup_o0	N	core lf0_u_vp_g_ln_15_u_l gap 37.1 < 43.2 over 114 um of the 669-bit window
+ot_s81sl_leaf__t51	L3	-	-	20 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2757 um
+ot_s81sl_leaf__t52	L2	dn_s_4N_L0x2_i	E	core lf1_u_vp_g_ln_12_u_l gap 49.6 < 86.4 over 37 um of the 598-bit window
+ot_s81sl_leaf__t52	L1a	dn_s_4N_L0x2_i	E	band 30x100 at [1294,17,1393,48] is not under its window 127..227
+ot_s81sl_leaf__t52	L1b	dn_s_4N_L0x2_i	E	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t52	L1b	ft0_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t52	L1b	ft1_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t52	L2	ft1_o	S	core lf1_u_ve_u_m gap 34.6 < 43.2 over 22 um of the 669-bit window
+ot_s81sl_leaf__t52	L2	ft3_i	S	core lf1_u_ve_u_m gap 34.6 < 43.2 over 127 um of the 598-bit window
+ot_s81sl_leaf__t52	L2	ft4_i	S	core lf1_u_ve_u_m gap 34.6 < 43.2 over 18 um of the 1105-bit window
+ot_s81sl_leaf__t52	L2	leafdn_i0	S	core lf1_u_vp_g_ln_15_u_l gap 34.2 < 43.2 over 74 um of the 598-bit window
+ot_s81sl_leaf__t52	L2	leafup_o0	S	core lf1_u_vp_g_ln_15_u_l gap 34.2 < 43.2 over 39 um of the 669-bit window
+ot_s81sl_leaf__t52	L3	-	-	34 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3962 um
+ot_s81sl_leaf__t53__cl958451dd	L1b	dn_s_4N_L0x3_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t53__cl958451dd	L2	ft0_o	S	core lf3_u_vp_g_ln_10_u_l gap 42.8 < 43.2 over 90 um of the 669-bit window
+ot_s81sl_leaf__t53__cl958451dd	L2	ft1_i	S	core lf3_u_vp_g_ln_9_u_l gap 29.9 < 86.4 over 1 um of the 598-bit window
+ot_s81sl_leaf__t53__cl958451dd	L1a	ft1_i	S	band 130x24 at [54,17,184,41] is not under its window 153..282
+ot_s81sl_leaf__t53__cl958451dd	L1b	ft1_i	S	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t53__cl958451dd	L1b	leafdn_i0	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t53__cl958451dd	L2	leafup_o0	S	core lf3_u_vp_g_ln_9_u_l gap 29.9 < 43.2 over 112 um of the 669-bit window
+ot_s81sl_leaf__t53__cl958451dd	L3	-	-	23 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2881 um
+ot_s81sl_leaf__t53__clb66fa5cb	L2	dn_s_2N_L0x3_i	S	core lf3_u_ve_u_s gap 34.6 < 86.4 over 56 um of the 598-bit window
+ot_s81sl_leaf__t53__clb66fa5cb	L1a	dn_s_2N_L0x3_i	S	band 30x100 at [1268,17,1298,117] is not under its window 1206..1305
+ot_s81sl_leaf__t53__clb66fa5cb	L1b	dn_s_2N_L0x3_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t53__clb66fa5cb	L2	ft0_o	S	core lf3_u_vp_g_ln_10_u_l gap 42.8 < 43.2 over 90 um of the 669-bit window
+ot_s81sl_leaf__t53__clb66fa5cb	L2	ft1_i	S	core lf3_u_vp_g_ln_9_u_l gap 29.9 < 86.4 over 1 um of the 598-bit window
+ot_s81sl_leaf__t53__clb66fa5cb	L1a	ft1_i	S	band 130x24 at [54,17,184,41] is not under its window 153..282
+ot_s81sl_leaf__t53__clb66fa5cb	L1b	ft1_i	S	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t53__clb66fa5cb	L1b	leafdn_i0	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t53__clb66fa5cb	L2	leafup_o0	S	core lf3_u_vp_g_ln_9_u_l gap 29.9 < 43.2 over 112 um of the 669-bit window
+ot_s81sl_leaf__t53__clb66fa5cb	L3	-	-	21 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2670 um
+ot_s81sl_leaf__t54__cl501e5681	L2	dn_s_4N_L0x4_i	S	core lf4_u_vp_g_ln_1_u_l gap 34.2 < 43.2 over 3 um of the 598-bit window
+ot_s81sl_leaf__t54__cl501e5681	L2	leafdn_i0	S	core lf4_u_vp_g_ln_1_u_l gap 34.2 < 43.2 over 109 um of the 598-bit window
+ot_s81sl_leaf__t54__cl501e5681	L2	leafup_o0	S	core lf4_u_vp_g_ln_0_u_l gap 42.9 < 43.2 over 108 um of the 669-bit window
+ot_s81sl_leaf__t54__cl501e5681	L3	-	-	32 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3660 um
+ot_s81sl_leaf__t54__cl706d9749	L2	leafdn_i0	S	core lf4_u_vp_g_ln_1_u_l gap 34.2 < 43.2 over 83 um of the 598-bit window
+ot_s81sl_leaf__t54__cl706d9749	L2	leafup_o0	S	core lf4_u_vp_g_ln_0_u_l gap 5.1 < 43.2 over 114 um of the 669-bit window
+ot_s81sl_leaf__t54__cl706d9749	L1b	up_s_2N_L0x2_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t54__cl706d9749	L3	-	-	29 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3371 um
+ot_s81sl_leaf__t55	L2	ft1_o	N	core lf4_u_vp_g_ln_12_u_l gap 41.4 < 43.2 over 60 um of the 277-bit window
+ot_s81sl_leaf__t55	L2	ft4_i	N	core lf4_u_vp_g_ln_12_u_l gap 41.4 < 86.4 over 23 um of the 277-bit window
+ot_s81sl_leaf__t55	L1a	ft4_i	N	band 60x26 at [37,1184,97,1210] is not under its window 68..127
+ot_s81sl_leaf__t55	L1b	ft4_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t55	L2	ft5_i	N	core lf4_u_vp_g_ln_13_u_l gap 41.4 < 86.4 over 35 um of the 277-bit window
+ot_s81sl_leaf__t55	L1a	ft5_i	N	band 56x28 at [354,1182,410,1210] is not under its window 312..368
+ot_s81sl_leaf__t55	L1b	ft5_i	N	band 5.7 um2/bit < 10
+ot_s81sl_leaf__t55	L2	ft7_o	N	core lf4_u_vp_g_ln_12_u_l gap 41.4 < 43.2 over 28 um of the 277-bit window
+ot_s81sl_leaf__t55	L2	ft8_o	N	core lf4_u_vp_g_ln_13_u_l gap 41.4 < 43.2 over 57 um of the 277-bit window
+ot_s81sl_leaf__t55	L1b	ft9_i	W	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t55	L1b	leafdn_i0	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t55	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3411 um
+ot_s81sl_leaf__t56	L1a	ft10_i	W	band 17x41 at [17,1112,58,1129] is not under its window 1112..1129
+ot_s81sl_leaf__t56	L1a	ft11_i	W	band 17x41 at [17,1130,58,1148] is not under its window 1131..1148
+ot_s81sl_leaf__t56	L1a	ft12_i	W	band 17x41 at [17,1149,58,1166] is not under its window 1149..1166
+ot_s81sl_leaf__t56	L1a	ft13_i	W	band 17x41 at [17,1167,58,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t56	L1a	ft14_i	W	band 17x41 at [17,1185,58,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t56	L1a	ft15_i	W	band 41x17 at [60,1169,78,1210] is not under its window 1204..1220
+ot_s81sl_leaf__t56	L1b	ft5_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t56	L1b	ft6_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t56	L1b	ft7_i	S	band 5.5 um2/bit < 10
+ot_s81sl_leaf__t56	L1b	ft8_i	S	band 5.8 um2/bit < 10
+ot_s81sl_leaf__t56	L1b	ft9_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t56	L3	-	-	24 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2827 um
+ot_s81sl_leaf__t57	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t57	L1b	ft1_i	N	band 5.7 um2/bit < 10
+ot_s81sl_leaf__t57	L2	ft2_i	N	core lf0_u_ve_u_m gap 43.2 < 86.4 over 59 um of the 598-bit window
+ot_s81sl_leaf__t57	L1a	ft2_i	N	band 125x24 at [767,1186,891,1210] is not under its window 520..644
+ot_s81sl_leaf__t57	L1b	ft2_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t57	L2	ft3_i	N	core lf0_u_vn_u_b gap 77.7 < 86.4 over 127 um of the 598-bit window
+ot_s81sl_leaf__t57	L1b	ft3_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t57	L2	leafdn_i0	N	core lf0_u_vp_g_ln_15_u_l gap 41.4 < 86.4 over 55 um of the 598-bit window
+ot_s81sl_leaf__t57	L1a	leafdn_i0	N	band 130x24 at [1013,1186,1143,1210] is not under its window 1075..1204
+ot_s81sl_leaf__t57	L1b	leafdn_i0	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t57	L3	-	-	29 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3413 um
+ot_s81sl_leaf__t58	L1a	ft10_i	W	band 17x41 at [17,1149,58,1166] is not under its window 1149..1166
+ot_s81sl_leaf__t58	L2	ft10_o	S	core lf1_u_vp_g_ln_12_u_l gap 34.2 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t58	L1a	ft11_i	W	band 17x41 at [17,1167,58,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t58	L1a	ft12_i	W	band 17x41 at [17,1185,58,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t58	L1a	ft13_i	W	band 41x17 at [60,1169,78,1210] is not under its window 1204..1220
+ot_s81sl_leaf__t58	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t58	L1b	ft2_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t58	L1a	ft8_i	W	band 17x41 at [17,1112,58,1129] is not under its window 1112..1129
+ot_s81sl_leaf__t58	L2	ft8_o	S	core lf1_u_vp_g_ln_12_u_l gap 34.2 < 43.2 over 16 um of the 71-bit window
+ot_s81sl_leaf__t58	L1a	ft9_i	W	band 17x41 at [17,1130,58,1148] is not under its window 1131..1148
+ot_s81sl_leaf__t58	L2	ft9_o	S	core lf1_u_vp_g_ln_12_u_l gap 34.2 < 43.2 over 14 um of the 71-bit window
+ot_s81sl_leaf__t58	L2	leafdn_i0	S	core lf1_u_vp_g_ln_12_u_l gap 34.2 < 43.2 over 6 um of the 598-bit window
+ot_s81sl_leaf__t58	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3616 um
+ot_s81sl_leaf__t59	L2	ft0_o	S	core lf3_u_vp_g_ln_0_u_l gap 42.9 < 43.2 over 59 um of the 277-bit window
+ot_s81sl_leaf__t59	L2	ft1_i	S	core lf3_u_vp_g_ln_0_u_l gap 42.9 < 86.4 over 14 um of the 277-bit window
+ot_s81sl_leaf__t59	L1a	ft1_i	S	band 26x60 at [23,105,49,165] is not under its window 6..66
+ot_s81sl_leaf__t59	L1b	ft1_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t59	L2	ft2_i	S	core lf3_u_vp_g_ln_0_u_l gap 42.9 < 86.4 over 38 um of the 277-bit window
+ot_s81sl_leaf__t59	L1a	ft2_i	S	band 26x60 at [28,167,54,227] is not under its window 129..188
+ot_s81sl_leaf__t59	L1b	ft2_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t59	L2	ft3_i	S	core lf3_u_vp_g_ln_1_u_l gap 42.9 < 86.4 over 59 um of the 277-bit window
+ot_s81sl_leaf__t59	L1a	ft3_i	S	band 26x59 at [311,214,337,273] is not under its window 190..248
+ot_s81sl_leaf__t59	L1b	ft3_i	S	band 5.5 um2/bit < 10
+ot_s81sl_leaf__t59	L2	leafdn_i0	S	core lf3_u_vn_u_b gap 40.4 < 86.4 over 123 um of the 598-bit window
+ot_s81sl_leaf__t59	L1b	leafdn_i0	S	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t59	L2	leafup_o0	S	core lf3_u_vn_u_b gap 40.4 < 43.2 over 60 um of the 669-bit window
+ot_s81sl_leaf__t59	L3	-	-	27 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3299 um
+ot_s81sl_leaf__t6	L1b	ft0_i	E	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t6	L1b	ft1_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t6	L1b	ft4_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t6	L2	ft6_i	W	core vp_g_ln_10_u_l gap 34.7 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t6	L2	ft7_i	W	core vp_g_ln_10_u_l gap 34.7 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t6	L2	ft8_i	W	core vp_g_ln_10_u_l gap 34.7 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t6	L2	ft9_i	W	core vp_g_ln_10_u_l gap 34.7 < 43.2 over 9 um of the 71-bit window
+ot_s81sl_leaf__t6	L3	-	-	31 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3635 um
+ot_s81sl_leaf__t60	L1a	ft10_i	W	band 17x41 at [17,1185,58,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t60	L1a	ft11_i	W	band 41x17 at [17,1142,34,1183] is not under its window 1204..1220
+ot_s81sl_leaf__t60	L1a	ft3_i	S	band 26x60 at [35,17,61,77] is not under its window 6..66
+ot_s81sl_leaf__t60	L1b	ft3_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t60	L1b	ft4_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t60	L1b	ft5_i	S	band 5.5 um2/bit < 10
+ot_s81sl_leaf__t60	L1a	ft6_i	W	band 17x41 at [17,1112,58,1129] is not under its window 1112..1129
+ot_s81sl_leaf__t60	L1a	ft7_i	W	band 17x41 at [35,1130,76,1148] is not under its window 1131..1148
+ot_s81sl_leaf__t60	L1a	ft8_i	W	band 17x41 at [35,1149,76,1166] is not under its window 1149..1166
+ot_s81sl_leaf__t60	L1a	ft9_i	W	band 17x41 at [35,1167,76,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t60	L3	-	-	21 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2697 um
+ot_s81sl_leaf__t61	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t61	L1b	ft1_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t61	L1a	ft2_i	N	band 125x24 at [732,1186,857,1210] is not under its window 639..763
+ot_s81sl_leaf__t61	L1b	ft2_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t61	L1b	leafdn_i0	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t61	L3	-	-	32 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3398 um
+ot_s81sl_leaf__t62	L1a	ft10_i	W	band 17x41 at [17,1130,58,1148] is not under its window 1131..1148
+ot_s81sl_leaf__t62	L1a	ft11_i	W	band 17x41 at [17,1149,58,1166] is not under its window 1149..1166
+ot_s81sl_leaf__t62	L1a	ft12_i	W	band 17x41 at [17,1167,58,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t62	L1a	ft13_i	W	band 17x41 at [17,1185,58,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t62	L1a	ft14_i	W	band 17x41 at [60,1193,101,1210] is not under its window 1204..1220
+ot_s81sl_leaf__t62	L1b	ft2_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t62	L1b	ft3_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t62	L1b	ft4_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t62	L2	ft4_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 68 um of the 669-bit window
+ot_s81sl_leaf__t62	L2	ft7_i	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 98 um of the 598-bit window
+ot_s81sl_leaf__t62	L1a	ft9_i	W	band 17x41 at [17,1112,58,1129] is not under its window 1112..1129
+ot_s81sl_leaf__t62	L3	-	-	24 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3014 um
+ot_s81sl_leaf__t65	L2	ft0_i	E	core vp_g_ln_6_u_l gap 79.8 < 86.4 over 114 um of the 1105-bit window
+ot_s81sl_leaf__t65	L1b	ft0_i	E	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t65	L1a	ft10_i	S	band 16x43 at [641,17,657,60] is not under its window 641..657
+ot_s81sl_leaf__t65	L2	ft11_o	E	core vp_g_ln_11_u_l gap 40.9 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t65	L2	ft12_o	E	core vp_g_ln_11_u_l gap 40.9 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t65	L2	ft13_o	E	core vp_g_ln_11_u_l gap 40.9 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t65	L2	ft14_o	E	core vp_g_ln_11_u_l gap 40.9 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t65	L2	ft15_o	E	core vp_g_ln_11_u_l gap 40.9 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t65	L2	ft16_o	E	core vp_g_ln_11_u_l gap 40.9 < 43.2 over 12 um of the 71-bit window
+ot_s81sl_leaf__t65	L1b	ft1_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t65	L1a	ft5_i	S	band 17x41 at [550,17,567,58] is not under its window 550..566
+ot_s81sl_leaf__t65	L1a	ft6_i	S	band 16x45 at [568,17,583,63] is not under its window 568..583
+ot_s81sl_leaf__t65	L1a	ft7_i	S	band 13x52 at [586,17,600,69] is not under its window 586..599
+ot_s81sl_leaf__t65	L1a	ft8_i	S	band 17x41 at [605,17,622,58] is not under its window 605..621
+ot_s81sl_leaf__t65	L1a	ft9_i	S	band 17x41 at [623,17,640,58] is not under its window 623..640
+ot_s81sl_leaf__t65	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3015 um
+ot_s81sl_leaf__t66	L1b	ft0_i	N	band 5.7 um2/bit < 10
+ot_s81sl_leaf__t66	L1b	ft1_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t66	L2	ft2_i	N	core lf0_u_ve_u_m gap 43.2 < 86.4 over 138 um of the 1105-bit window
+ot_s81sl_leaf__t66	L1a	ft2_i	N	band 236x24 at [164,1138,400,1161] is not under its window 309..544
+ot_s81sl_leaf__t66	L1b	ft2_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t66	L2	ft3_i	N	core lf0_u_vn_u_b gap 77.7 < 86.4 over 127 um of the 598-bit window
+ot_s81sl_leaf__t66	L1b	ft3_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t66	L2	leafdn_i0	N	core lf0_u_vp_g_ln_15_u_l gap 41.4 < 86.4 over 64 um of the 598-bit window
+ot_s81sl_leaf__t66	L1a	leafdn_i0	N	band 130x24 at [1013,1186,1143,1210] is not under its window 1084..1213
+ot_s81sl_leaf__t66	L1b	leafdn_i0	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t66	L3	-	-	31 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3627 um
+ot_s81sl_leaf__t67	L1b	ft0_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t67	L2	ft1_i	E	core lf1_u_vp_g_ln_5_u_l gap 84.1 < 86.4 over 114 um of the 1105-bit window
+ot_s81sl_leaf__t67	L1b	ft1_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t67	L1b	ft2_i	N	band 5.7 um2/bit < 10
+ot_s81sl_leaf__t67	L1b	ft3_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t67	L1b	ft4_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t67	L1b	ft5_i	N	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t67	L2	ft5_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 68 um of the 669-bit window
+ot_s81sl_leaf__t67	L2	ft8_i	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 98 um of the 598-bit window
+ot_s81sl_leaf__t67	L3	-	-	26 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3226 um
+ot_s81sl_leaf__t68	L2	ft4_i	S	core lf3_u_ve_u_s gap 69.2 < 86.4 over 60 um of the 277-bit window
+ot_s81sl_leaf__t68	L1b	ft4_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t68	L2	ft5_i	S	core lf3_u_ve_u_m gap 51.9 < 86.4 over 124 um of the 598-bit window
+ot_s81sl_leaf__t68	L1b	ft5_i	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t68	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t68	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 15.1), total length 3285 um
+ot_s81sl_leaf__t69	L1b	ft0_i	N	band 5.7 um2/bit < 10
+ot_s81sl_leaf__t69	L2	ft0_o	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 14 um of the 277-bit window
+ot_s81sl_leaf__t69	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t69	L2	ft1_o	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 59 um of the 277-bit window
+ot_s81sl_leaf__t69	L2	ft3_i	S	core lf4_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 38 um of the 277-bit window
+ot_s81sl_leaf__t69	L2	leafdn_i0	S	core lf4_u_vn_u_b gap 34.6 < 43.2 over 124 um of the 598-bit window
+ot_s81sl_leaf__t69	L2	leafup_o0	S	core lf4_u_vp_g_ln_1_u_l gap 34.2 < 43.2 over 106 um of the 669-bit window
+ot_s81sl_leaf__t69	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3569 um
+ot_s81sl_leaf__t7	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t7	L2	ft1_i	N	core lf0_u_vp_g_ln_10_u_l gap 71.7 < 86.4 over 77 um of the 598-bit window
+ot_s81sl_leaf__t7	L1b	ft1_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t7	L2	ft2_i	N	core lf0_u_ve_u_s gap 77.7 < 86.4 over 48 um of the 572-bit window
+ot_s81sl_leaf__t7	L1b	ft2_i	N	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t7	L1b	leafdn_i0	N	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t7	L3	-	-	28 core-core slots 4.32..43.2 um (narrowest 15.1), total length 3405 um
+ot_s81sl_leaf__t70	L1b	ft0_i	E	band 4.9 um2/bit < 10
+ot_s81sl_leaf__t70	L1b	ft1_i	E	band 4.7 um2/bit < 10
+ot_s81sl_leaf__t70	L2	ft2_o	S	core vp_g_ln_3_u_l gap 42.8 < 43.2 over 5 um of the 277-bit window
+ot_s81sl_leaf__t70	L2	ft3_o	S	core vp_g_ln_3_u_l gap 42.8 < 43.2 over 59 um of the 277-bit window
+ot_s81sl_leaf__t70	L2	ft5_i	S	core vp_g_ln_3_u_l gap 42.8 < 86.4 over 46 um of the 277-bit window
+ot_s81sl_leaf__t70	L1a	ft5_i	S	band 26x60 at [191,17,217,77] is not under its window 129..188
+ot_s81sl_leaf__t70	L1b	ft5_i	S	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t70	L3	-	-	22 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2428 um
+ot_s81sl_leaf__t71	L2	ft0_i	N	core lf0_u_ve_u_m gap 51.8 < 86.4 over 31 um of the 277-bit window
+ot_s81sl_leaf__t71	L1a	ft0_i	N	band 60x26 at [161,1184,220,1210] is not under its window 6..66
+ot_s81sl_leaf__t71	L1b	ft0_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t71	L2	ft1_i	N	core lf0_u_ve_u_m gap 51.8 < 86.4 over 59 um of the 277-bit window
+ot_s81sl_leaf__t71	L1a	ft1_i	N	band 26x60 at [223,1150,248,1210] is not under its window 68..127
+ot_s81sl_leaf__t71	L1b	ft1_i	N	band 5.6 um2/bit < 10
+ot_s81sl_leaf__t71	L2	ft2_i	N	core lf0_u_ve_u_s gap 51.8 < 86.4 over 113 um of the 598-bit window
+ot_s81sl_leaf__t71	L1b	ft2_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t71	L1b	leafdn_i0	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t71	L3	-	-	24 core-core slots 4.32..43.2 um (narrowest 8.6), total length 2998 um
+ot_s81sl_leaf__t73	L2	ft0_o	S	core lf3_u_ve_u_m gap 34.6 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t73	L2	ft1_o	S	core lf3_u_ve_u_m gap 34.6 < 43.2 over 3 um of the 71-bit window
+ot_s81sl_leaf__t73	L1b	ft7_i	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t73	L2	ft8_i	S	core lf3_u_ve_u_m gap 34.6 < 86.4 over 147 um of the 1105-bit window
+ot_s81sl_leaf__t73	L1a	ft8_i	S	band 24x237 at [307,17,330,255] is not under its window 248..484
+ot_s81sl_leaf__t73	L1b	ft8_i	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t73	L2	ft9_i	S	core lf3_u_vq gap 60.5 < 86.4 over 122 um of the 598-bit window
+ot_s81sl_leaf__t73	L1b	ft9_i	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t73	L2	leafdn_i0	S	core lf3_u_vp_g_ln_0_u_l gap 47.1 < 86.4 over 64 um of the 598-bit window
+ot_s81sl_leaf__t73	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t73	L3	-	-	29 core-core slots 4.32..43.2 um (narrowest 15.1), total length 3779 um
+ot_s81sl_leaf__t74	L1a	ft0_i	N	band 17x41 at [488,1169,506,1210] is not under its window 489..505
+ot_s81sl_leaf__t74	L1a	ft1_i	N	band 17x41 at [507,1169,524,1210] is not under its window 507..523
+ot_s81sl_leaf__t74	L1a	ft2_i	N	band 15x48 at [525,1162,540,1210] is not under its window 525..540
+ot_s81sl_leaf__t74	L1a	ft3_i	N	band 17x41 at [543,1169,560,1210] is not under its window 544..560
+ot_s81sl_leaf__t74	L1a	ft4_i	N	band 17x41 at [562,1169,579,1210] is not under its window 562..578
+ot_s81sl_leaf__t74	L1a	ft5_i	N	band 17x41 at [580,1169,597,1210] is not under its window 580..597
+ot_s81sl_leaf__t74	L3	-	-	25 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3312 um
+ot_s81sl_leaf__t75	L2	dn_s_2N_L0x2_i	S	core lf1_u_vp_g_ln_5_u_l gap 34.2 < 43.2 over 15 um of the 598-bit window
+ot_s81sl_leaf__t75	L1a	ft10_i	W	band 17x41 at [17,1185,58,1202] is not under its window 1186..1202
+ot_s81sl_leaf__t75	L1a	ft11_i	W	band 41x17 at [17,1142,34,1183] is not under its window 1204..1220
+ot_s81sl_leaf__t75	L1a	ft2_i	N	band 145x24 at [59,1186,204,1210] is not under its window 6..151
+ot_s81sl_leaf__t75	L1b	ft2_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t75	L2	ft2_o	S	core lf1_u_ve_u_m gap 34.6 < 43.2 over 108 um of the 669-bit window
+ot_s81sl_leaf__t75	L1b	ft3_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t75	L2	ft3_o	S	core lf1_u_ve_u_s gap 34.6 < 43.2 over 114 um of the 669-bit window
+ot_s81sl_leaf__t75	L2	ft4_i	S	core lf1_u_ve_u_m gap 34.6 < 43.2 over 63 um of the 598-bit window
+ot_s81sl_leaf__t75	L1a	ft6_i	W	band 17x41 at [17,1112,58,1129] is not under its window 1112..1129
+ot_s81sl_leaf__t75	L1a	ft7_i	W	band 17x41 at [35,1130,76,1148] is not under its window 1131..1148
+ot_s81sl_leaf__t75	L1a	ft8_i	W	band 17x41 at [35,1149,76,1166] is not under its window 1149..1166
+ot_s81sl_leaf__t75	L1a	ft9_i	W	band 17x41 at [35,1167,76,1184] is not under its window 1167..1184
+ot_s81sl_leaf__t75	L1b	up_s_2N_L0x4_i	N	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t75	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3830 um
+ot_s81sl_leaf__t8	L2	ft0_i	E	core lf1_u_vp_g_ln_4_u_l gap 40.9 < 86.4 over 114 um of the 1105-bit window
+ot_s81sl_leaf__t8	L1a	ft0_i	E	band 153x17 at [1408,168,1426,322] is not under its window 6..246
+ot_s81sl_leaf__t8	L1b	ft0_i	E	band 2.4 um2/bit < 10
+ot_s81sl_leaf__t8	L2	ft12_i	S	core lf1_u_vn_u_b gap 34.6 < 43.2 over 96 um of the 598-bit window
+ot_s81sl_leaf__t8	L2	ft13_i	S	core lf1_u_vn_u_b gap 34.6 < 43.2 over 112 um of the 598-bit window
+ot_s81sl_leaf__t8	L2	ft14_o	E	core lf1_u_vp_g_ln_13_u_l gap 40.9 < 43.2 over 12 um of the 71-bit window
+ot_s81sl_leaf__t8	L2	ft1_i	E	core lf1_u_vp_g_ln_11_u_l gap 40.9 < 86.4 over 114 um of the 1105-bit window
+ot_s81sl_leaf__t8	L1a	ft1_i	E	band 186x19 at [1406,447,1426,633] is not under its window 248..487
+ot_s81sl_leaf__t8	L1b	ft1_i	E	band 3.3 um2/bit < 10
+ot_s81sl_leaf__t8	L2	ft1_o	W	core lf1_u_vsw gap 34.7 < 43.2 over 90 um of the 1105-bit window
+ot_s81sl_leaf__t8	L1a	ft2_i	N	band 17x41 at [488,1169,506,1210] is not under its window 489..505
+ot_s81sl_leaf__t8	L1a	ft3_i	N	band 17x41 at [507,1169,524,1210] is not under its window 507..523
+ot_s81sl_leaf__t8	L1a	ft4_i	N	band 15x48 at [525,1162,540,1210] is not under its window 525..540
+ot_s81sl_leaf__t8	L1a	ft5_i	N	band 17x41 at [543,1169,560,1210] is not under its window 544..560
+ot_s81sl_leaf__t8	L1a	ft6_i	N	band 17x41 at [562,1169,579,1210] is not under its window 562..578
+ot_s81sl_leaf__t8	L1a	ft7_i	N	band 17x41 at [580,1169,597,1210] is not under its window 580..597
+ot_s81sl_leaf__t8	L1b	ft8_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t8	L1b	ft9_i	N	band 5.2 um2/bit < 10
+ot_s81sl_leaf__t8	L2	ft9_o	S	core lf1_u_vn_u_b gap 34.6 < 43.2 over 145 um of the 669-bit window
+ot_s81sl_leaf__t8	L2	leafdn_i0	S	core lf1_u_vp_g_ln_4_u_l gap 34.2 < 43.2 over 102 um of the 598-bit window
+ot_s81sl_leaf__t8	L2	leafup_o0	S	core lf1_u_vp_g_ln_4_u_l gap 34.2 < 43.2 over 11 um of the 669-bit window
+ot_s81sl_leaf__t8	L3	-	-	30 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3877 um
+ot_s81sl_leaf__t9	L2	ft0_o	S	core lf3_u_ve_u_m gap 34.6 < 43.2 over 17 um of the 71-bit window
+ot_s81sl_leaf__t9	L2	ft1_o	S	core lf3_u_ve_u_m gap 34.6 < 43.2 over 3 um of the 71-bit window
+ot_s81sl_leaf__t9	L1b	ft7_i	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t9	L2	ft8_i	S	core lf3_u_ve_u_m gap 34.6 < 86.4 over 147 um of the 1105-bit window
+ot_s81sl_leaf__t9	L1a	ft8_i	S	band 24x237 at [307,17,330,255] is not under its window 248..484
+ot_s81sl_leaf__t9	L1b	ft8_i	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t9	L1b	ft9_i	S	band 5.1 um2/bit < 10
+ot_s81sl_leaf__t9	L1b	leafdn_i0	S	band 5.0 um2/bit < 10
+ot_s81sl_leaf__t9	L2	leafup_o0	S	core lf3_u_vp_g_ln_0_u_l gap 34.2 < 43.2 over 114 um of the 669-bit window
+ot_s81sl_leaf__t9	L3	-	-	27 core-core slots 4.32..43.2 um (narrowest 8.6), total length 3545 um
