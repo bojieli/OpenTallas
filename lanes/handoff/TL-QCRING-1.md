@@ -1,0 +1,2 @@
+# TL-QCRING-1 (2026-11-14 05:14 PST)
+Scope (sorted idx i mod 4 == 0 of 25): sle_cland_w120_s_s3, w457_e_s9, w517_n_s10_2, w653_w_s12, sta_cland_w1574_n_s26 (DIE-QC-103 kits, epyc10 die-qc-103/rk2/<m>/kits/<m>_synth0, running), plus sta_cland_w515_s_s10_2, sta_cland_w632_e_s11 (TL-QCSTAV2 kits, epyc2 tl-qcstav2/rk/<m>/kits/<m>_synth0, running). ADOPTED, none relaunched. Waiter on localhost polls signoff.json every 10 min.
