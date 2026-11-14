@@ -1,0 +1,44 @@
+--- a/tools/die_plan/gen_phys.py
++++ b/tools/die_plan/gen_phys.py
+@@ -185,7 +185,7 @@
+ def _macros_all_plan_fixed(t):
+     """KW-FIX-45 11-12 (COORD ruling, PHY MPL-0006): a hard-wrapper type (type.hard) has every macro placed and fixed by the plan
+     (macro_place.tcl place_macro -exact), so rtl_macro_placer is skipped (macro_skip_rtlmp.tcl).  Other types: False."""
+-    return bool(t.get("hard")) and bool(t.get("hard_cores"))
++    return bool(t.get("hard")) and (bool(t.get("hard_cores")) or S.full_area_hard_ip(t))
+ 
+ 
+ def _gutter_block_min_span_um(budgets):
+@@ -1458,7 +1458,9 @@
+     out = []
+     for e in t.get("contents", []) + t.get("hard_cores", []):
+         for b in e.get("bump_ports") or []:
+-            out.append((e["inst"], e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
++            # QC-PHY-1 11-14: the bind names the logical inst, the kit places the physical one (physical_inst/_master)
++            pinst = content_physical_identity(e)[0] if e.get("physical_inst") else e["inst"]
++            out.append((pinst, e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
+     return out
+ 
+ 
+@@ -4144,6 +4146,8 @@
+         # origin / spans the frozen outline, so a 4.32 um inset core can neither contain nor place it.  Every other type is
+         # unchanged; an explicit kit_core_margins_um still wins.
+         hc=[c for c in t.get("hard_cores",[]) if c.get("lef") and c.get("outline_um") and c.get("origin_um")]
++        if not hc and S.full_area_hard_ip(t):       # QC-PHY-1 11-14: bare full-area hard IP in contents[] (same rule)
++            hc=list(t["contents"])
+         if t.get("hard") and len(hc)==1:
+             (ox,oy),(mw,mh)=hc[0]["origin_um"],hc[0]["outline_um"]
+             eps=1e-6
+@@ -5472,6 +5476,12 @@
+         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
+     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
+     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
++    if S.full_area_hard_ip(t) and any(c.get("registered_pins") for c in t.get("contents", []) or []):
++        # QC-PHY-1 11-14 (COORD ruling): a bare full-area hard IP has no face flops, its registered FDI pins are the
++        # boundary registers; the macro pin is timed from its lib, so every plan bus is a declared timed face.
++        (kd / "timed_face.json").write_text(json.dumps(dict(
++            schema="opentallas.kit_timed_face.v1", buses=sorted({b["name"] for b in t.get("buses", [])}),
++            ruling="COORD 11-14 QC-PHY-1", reason="bare hard IP with registered FDI pins: no face flops, macro pin timed from its lib"), indent=1) + "\n")
+     if spare_out:                               # DIE-S81-46: declared spare-out bits (kit_rtl.json), face_guard
+         from face_guard import SPARE_SCHEMA
+         (kd / "spare_out.json").write_text(json.dumps(dict(schema=SPARE_SCHEMA, bits=list(spare_out)), indent=1) + "\n")
