@@ -18,3 +18,6 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 - gf4ds60 GRT (frozen at iteration 110000 since 21:13 UTC, 4.6 h) cancelled: PID 3649577 on epyc8, per COORD. GF5 is the line.
 - svc: sub-lane SVC-BAND-3 started: GEN_LINT memory-bits class fix (32 types) + face-aware 2013.12x2851.20 band build.
 - serdes: kitI only (via PROOF-CORES). If worse than about -100 ps after CTS/GRT, go to RTL pipelining of the receive tree and a relaxed period (EXPERT-REVIEW-3). No LEC reruns for F/H.
+
+## NOTE 2026-11-13 18:15 PST
+- serdes kitI (owned since PROOF-CORES ended; epyc9 unit oth-ubuntu-2157653-1794620699, log ~/s81-cores-2-logs/kitI_route.otrun.log): the period stays 833 ps (OWNER; gate -42 ps). There will be NO relaxed period. If kitI lands worse than about -100 ps, the fix is RTL pipelining of the receive tree (cycles pre-approved), then a rebuild. Supersedes the period line in RESULT 17:52.
