@@ -21,3 +21,11 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## NOTE 2026-11-13 18:15 PST
 - serdes kitI (owned since PROOF-CORES ended; epyc9 unit oth-ubuntu-2157653-1794620699, log ~/s81-cores-2-logs/kitI_route.otrun.log): the period stays 833 ps (OWNER; gate -42 ps). There will be NO relaxed period. If kitI lands worse than about -100 ps, the fix is RTL pipelining of the receive tree (cycles pre-approved), then a rebuild. Supersedes the period line in RESULT 17:52.
+
+## STATE 2026-11-13 18:20 PST (COORD: svc 16 + 32 GEN_LINT, 3 kitless cores, l1c)
+- svc: SVC-BAND-3 told to fix the 16 svc types and the 32 GEN_LINT types tonight (one class fix + batch relaunch; adopt-now overrides the freeze). Its results will be posted here.
+- TO KIT-OPS-2, kit rows for 3 cores with a dead owner (built as cores by this lane):
+  - dsdv_gunit_l1f_bf: GF5 F kit epyc4 /srv/opentallas-scratch2/claude/die-s81-89/gunit/planB/gf5_layout/kits/dsdv_gunit_l1f_bf_gf5sv (GRT running, unit oth-ubuntu-1841149-1794616629).
+  - s81p_slice_station__t51_s81_station_t51_native_w: SIGNED OFF (R-MINIMAL) at epyc4 /srv/opentallas-scratch/claude/die-s81-85/t51pin/eco_wf_scope21b_1113/i1 (see RMINIMAL-SIGNED.tsv).
+  - dsdv_bksel_q: C9geom kit epyc4 /srv/opentallas-scratch2/claude/die-s81-85/bksel_vC9geom. At CTS: TT -29.57 ps on 12 core endpoints (inside the -42 gate), FF -100.08 ps on 801 core endpoints (FIFO prevdata/m_wd0, not yet hold-repaired). Native LEC EQ 45318/45318. Launched CTS -> finish (resumed at GRT), unit oth-ubuntu-3458321-1794622764, log ~/s81-cores-2-logs/bksel_c9geom_finish.otrun.log. If routed internal hold stays < 0, next is a local hold ECO on those FIFO captures.
+- dsdv_gunit_l1c -173.7 routed: locating the build now.
