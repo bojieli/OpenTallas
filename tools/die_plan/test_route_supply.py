@@ -396,7 +396,10 @@ def test_glue_destination_is_a_local_escape(tmp_path):
 
 def test_core_conns_from_gate_netlist(tmp_path):
     import core_conns_netlist as ccn
-    (tmp_path / "n.v").write_text("""module leaf(a, y);
+    (tmp_path / "n.v").write_text("""module BUFx2_ASAP7_75t_R(input A, output Y); endmodule
+module INVx1_ASAP7_75t_R(input A, output Y); endmodule
+module NAND2x1_ASAP7_75t_R(input A, input B, output Y); endmodule
+module leaf(a, y);
   input a; output y;
 endmodule
 module top(clk, bi, bo);
@@ -405,6 +408,7 @@ module top(clk, bi, bo);
   output [1:0] bo;
   wire [1:0] x;
   wire [1:0] z;
+  wire n1; wire w0; wire w1; wire n2; wire n3;
   BUFx2_ASAP7_75t_R _1_ (.A(bi[0]), .Y(x[0]));
   BUFx2_ASAP7_75t_R _2_ (.A(bi[1]), .Y(x[1]));
   cA \\u_w.u_a  (.clk(clk), .d({ x[1], x[0] }), .q({ z[1], z[0] }), .s(n1));
@@ -415,10 +419,16 @@ module top(clk, bi, bo);
   leaf u_l (.a(n2), .y(n3));
 endmodule
 """)
+    for mod, dirs in {"cA": {"clk": "INPUT", "d": "INPUT", "q": "OUTPUT", "s": "OUTPUT"},
+                      "cB": {"i": "INPUT", "o": "OUTPUT"}}.items():
+        (tmp_path / (mod + ".lef")).write_text("MACRO " + mod + "\n" + "".join(
+            "PIN " + pin + "\n DIRECTION " + direction + " ;\nEND " + pin + "\n"
+            for pin, direction in dirs.items()) + "END " + mod + "\n")
     P = {"partition_types": {"t": {"module": "top", "outline_um": [100, 100],
                                    "buses": [{"name": "bi", "face": "W", "dir": "in"},
                                              {"name": "bo", "face": "E", "dir": "out"}],
-                                   "hard_cores": [{"inst": "u_a"}, {"inst": "u_b"}]}}}
+                                   "hard_cores": [{"inst": "u_a", "module": "cA", "lef": str(tmp_path / "cA.lef")},
+                                                  {"inst": "u_b", "module": "cB", "lef": str(tmp_path / "cB.lef")}]}}}
     r = ccn.derive(P, "t", tmp_path / "n.v", top="top")
     cc = r["core_conns"]["t"]
     assert cc["u_a"]["d"] == ["bus:bi"]
@@ -515,10 +525,22 @@ def test_batch_fills_intra_type_header_pairs_from_netlist(tmp_path, capsys):
   cB \\u_w.u_b  (.i({ z[1], z[0] }), .o(bo));
 endmodule
 """)
+    # The fallback must use actual HC pin directions, not infer them from
+    # q/i spelling or treat two inputs of a parent cell as connected.
+    for module, pins in {"cA": {"clk": "INPUT", "d": "INPUT", "q": "OUTPUT"},
+                         "cB": {"i": "INPUT", "o": "OUTPUT"}}.items():
+        lines = ["MACRO " + module]
+        for pin, direction in pins.items():
+            for bit in ([0] if pin == "clk" else [0, 1]):
+                name = pin + f"[{bit}]"
+                lines += [" PIN " + name, " DIRECTION " + direction + " ;", " END " + name]
+        lines.append("END " + module)
+        (tmp_path / (module + ".lef")).write_text("\n".join(lines) + "\n")
     P = {"partition_types": {"t": {"module": "top", "outline_um": [100, 100],
                                    "buses": [{"name": "bi", "face": "W", "dir": "in"},
                                              {"name": "bo", "face": "E", "dir": "out"}],
-                                   "hard_cores": [{"inst": "u_w.u_a"}, {"inst": "u_w.u_b"}]}}}
+                                   "hard_cores": [{"inst": "u_w.u_a", "module": "cA", "lef": str(tmp_path / "cA.lef")},
+                                                      {"inst": "u_w.u_b", "module": "cB", "lef": str(tmp_path / "cB.lef")}]}}}
     (tmp_path / "p.json").write_text(json.dumps(P))
     (tmp_path / "k0.json").write_text(json.dumps({"t": str(tmp_path / "b.sv")}))
     (tmp_path / "k1.json").write_text(json.dumps({"t": {"bound": str(tmp_path / "b.sv"), "netlist": str(tmp_path / "n.v")}}))
