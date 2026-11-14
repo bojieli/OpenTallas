@@ -6,7 +6,7 @@ import pytest
 
 BASE = os.environ.get('EXPLORER_URL', 'http://127.0.0.1:8770')
 ARGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
-TYPE = 's81.t.col_h10_r0_p4__t1'      # no pack of its own: 95 macros at plan placement, many masters
+TYPE = 's81.t.col_h10_r0_p4__t1__pvc9270d09'      # no pack of its own: 95 macros at plan placement, many masters
 READY = "window.otx && window.otx.eng && window.otx.eng.marks.length > 0 && window.otx.eng.deck && window.otx.eng.deck.getViewports()[0]"
 # screen position of the centre of a mark, and the largest mark that is a hard core
 PICK = """() => { const e = window.otx.eng, vp = e.deck.getViewports()[0], r = document.querySelector('[data-testid=layout-canvas]').getBoundingClientRect();

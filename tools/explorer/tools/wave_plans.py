@@ -73,6 +73,7 @@ def main():
 
 
 PENDING = 'pending archive'
+HUB = {}; HUBDIES = set()   # node id -> why (pending by the hub count's gate); dies the hub gated
 EXPORT_DIES = dict(s81=('s81', 'DeepSeek_ROM', '_'), s81_head=('s81_head', 'DeepSeek_ROM', '_'), qwen_compute=('qwen_compute', 'Qwen_ROM', '_'), qwen_kvsys=('qwen_kvsys', 'Qwen_ROM', '_'), hbm=('hbm', 'HBM_accelerator', '_'))
 VIEW_EXT = ('.v', '.def', '.spef', '.gds', '.lef', '.lib', '.v.zst', '.def.zst', '.spef.zst', '.gds.zst')
 
@@ -101,6 +102,9 @@ def archive_gate(idx):
         die = n['die']; o = out.setdefault(die, dict(type=dict(before=0, counted=0, pending=0), core=dict(before=0, counted=0, pending=0), pending_list=[]))[n['level']]
         o['before'] += 1; names = [x for x in dict.fromkeys([n.get('name'), (n.get('plan') or {}).get('module')]) if x]
         ok = None; miss = None
+        if die in HUBDIES:
+            if n['id'] in HUB.get(die, {}): miss = HUB[die][n['id']] or dict(missing=['db', 'view', 'metadata'], path=None); names = []
+            else: ok = dict(where='AGIdock', basis='hub count archive gate'); names = []
         for nm in names:
             for d in EXPORT_DIES.get(die, (die,)):
                 e = ent.get((d, nm))
@@ -111,9 +115,9 @@ def archive_gate(idx):
                 else: miss = dict(path=e['path'], missing=[k for k, v in have.items() if not v], zero_byte=empty)
                 if ok: break
             if ok: break
-        if not ok and (n.get('layout') or {}).get('archive_odb') and (n['layout'].get('record')):
+        if not ok and die not in HUBDIES and (n.get('layout') or {}).get('archive_odb') and (n['layout'].get('record')):
             ok = dict(where='AGIdock', path=n['layout']['archive_odb'], basis='earlier AGIdock archive named by the signed-store record')
-        if not ok and (n['id'] in rows or any(x in rows for x in names)): ok = dict(where='AGIdock', basis='INDEX.tsv row')
+        if not ok and die not in HUBDIES and (n['id'] in rows or any(x in rows for x in names)): ok = dict(where='AGIdock', basis='INDEX.tsv row')
         if ok: st['archive'] = ok; o['counted'] += 1
         else:
             st.update(state=PENDING, label='signed, pending archive' + (' (R-MINIMAL)' if st.get('basis') else ''), pending=miss or dict(missing=['db', 'view', 'metadata'], path=None))
@@ -131,7 +135,9 @@ def overlay(W):
         die = v.get('die')
         if die not in N: continue
         for level, key, mk in (('type', 'signed_types', '%s.t.%s'), ('core', 'signed_cores', '%s.c.%s')):
-            src = v.get(key) or {}
+            src = dict(v.get(key) or {}); pend = v.get('pending_archive_' + key[7:])
+            if isinstance(pend, dict):   # the hub count already ran the archive gate: its decision is THE decision (one number)
+                src.update(pend); HUB.setdefault(die, {}).update({mk % (die, k): (v.get('archive_gate') or {}).get('why', {}).get(k) or {} for k in pend}); HUBDIES.add(die)
             for name in (src if isinstance(src, (dict, list)) else []):
                 n = N.get(mk % (die, name))
                 if not n: continue
@@ -144,7 +150,7 @@ def overlay(W):
         for name in (ded if isinstance(ded, (dict, list)) else []):
             n = N.get('%s.t.%s' % (die, name))
             if n and n['status'].get('state') != 'signed': n['status'].update(was=dict(state=n['status'].get('state')), state='signed', label='signed off (dedup credit)', counted=True); fixed[die] = fixed.get(die, 0) + 1
-        dn = N[die]; dn['count'] = dict(types=v.get('types'), signed_types=len(v.get('signed_types') or []), signed_cores=len(v.get('signed_cores') or []), plan_sha=(W.get(die) or {}).get('sha') or v.get('plan_sha'), generated=c.get('generated'))
+        dn = N[die]; dn['count'] = dict(types=v.get('types'), signed_types=len(v.get('signed_types') or []), signed_cores=len(v.get('signed_cores') or []), pending_archive_types=len(v.get('pending_archive_types') or []), pending_archive_cores=len(v.get('pending_archive_cores') or []), plan_sha=(W.get(die) or {}).get('sha') or v.get('plan_sha'), generated=c.get('generated'))
         w = W.get(die) or {}
         if w.get('rel'): dn['plan']['wave'] = dict(sha=w['sha'], host=w['host'], path=w['path'], pinned=w.get('pinned_src') or w.get('pinned'))
     for n in N.values():
