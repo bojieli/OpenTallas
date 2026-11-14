@@ -7361,6 +7361,60 @@ def auto_twins(L, rec, work, conflicts, log):
     rec["auto_twins"] = dict(proposed=len(proposals), kept=len(kept), passes=passes, first=kept[:20])
 
 
+def native_anonymous_aliases(L, anon, log):
+    """Propose same-side aliases by exact RAW D identity and native reset base.
+
+    A Liberty flop can expose an unnamed complement state as well as its named
+    Q. Its true native partner can already have a cross-side correspondence;
+    signature discovery skipped that partner and picked an unrelated gold copy.
+    Compare native functions without ANY correspondence applied, and require
+    known, compatible native reset values. These remain ordinary induction
+    obligations, never waived aliases or constant guesses.
+    """
+    if not anon:
+        return 0
+    saved = L.hyp
+    L.hyp = {}
+    try:
+        L.build(with_compare=False, with_hyp=False)
+        raw = dict(L.dlit)
+    finally:
+        L.hyp = saved
+    if getattr(L, "_rst_stamp", None) != _native_reset_stamp(L):
+        noreset_classify(L)
+
+    def value(side, key):
+        points = L.gp if side == "gold" else L.tp
+        lit = points[key]
+        state = L._rst_state[side]
+        v = state.get(lit >> 1)
+        return None if v is None else v ^ (lit & 1)
+
+    roots = collections.defaultdict(list)
+    for side, points in (("gold", L.gp), ("gate", L.tp)):
+        for key in sorted(points):
+            d = raw.get((side, key), 0)
+            v = value(side, key)
+            if key.startswith("ff:") and "__" not in key and d > 1 and v is not None:
+                roots[(side, d >> 1)].append((key, d, v))
+    count = 0
+    for side, key in anon:
+        if (side, key) in L.hyp:
+            continue
+        d, v = raw.get((side, key), 0), value(side, key)
+        if d <= 1 or v is None:
+            continue
+        for root, rd, rv in roots.get((side, d >> 1), ()):
+            inv = (d ^ rd) & 1
+            if v == rv ^ inv:
+                L.hyp[(side, key)] = ("eq", side, root, inv)
+                count += 1
+                break
+    if count:
+        log.append(f"native anonymous aliases: {count} exact same-side D/reset candidates proposed")
+    return count
+
+
 def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
     """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
     [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
@@ -7546,6 +7600,8 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
             anon.append((side, k))
     L.ganon, L.tanon = [], []
     if anon:
+        rec["native_anon_aliases"] = native_anonymous_aliases(L, anon, log)
+        rec["anon"] += rec["native_anon_aliases"]
         m, _ = L.build(with_compare=False, with_hyp=False)
         val, mask = m.simulate(32, seed=20261025)
         sv = lambda sd, k: lit_val(val, mask, L.dlit[(sd, k)])
@@ -7557,6 +7613,8 @@ def apply_hints(L, hints, work, conflicts, log, rounds=40, propose_only=False):
                     sigs[s].add((sd if c not in L.matched else "gold", c, 0))
                     sigs[s ^ mask].add((sd if c not in L.matched else "gold", c, 1))
         for side, k in anon:
+            if (side, k) in L.hyp:
+                continue
             s = sv(side, k)
             hits = sigs.get(s, set())
             if s not in (0, mask) and len(hits) == 1:
