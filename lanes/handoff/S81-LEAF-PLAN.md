@@ -28,7 +28,20 @@ Base B3z2 92e2f585dc06 (COORD: rows restored) + t72 sidecar band sync (ev/side_z
 - strict bind B4Lb: bindB4Lb_leafplan.sh via intel2 ~/s81-leaf-plan/bind_leafplan_w3.sh (ot-run 120 GB epyc7, queued), log log/B4Lb_bind.log + intel2 ~/s81-leaf-plan/bind_B4Lb.log
 - B4L-a bind and G0 runs cancelled (old base).
 
-## STATE 2026-11-14 late PST (read first)
+## STATE 2026-11-14 ~15:4x PST (read first; supersedes the block below)
+- Branch claude/s81-leaf-plan-1114 ffbf22f844a3 pushed (core_place --slot-clear / --window-clear, multi-rect band rects; leaf_rules check/bands/--densify; side_band_sync; tests). READY (approved) posted to ROOT-MERGE-63.
+- Events (type lists ~/coord/lanes/handoff/S81-LEAF-PLAN-types/types_event_*.txt):
+  - B4Lb = ev/B4L_b2.json 199aadf6bac4 / side_B4L_b2.json a0a4bb73671c (48 types). G0 = control (identical errors).
+  - B4L2 = ev/B4L2f.json 0eed18fe0e6d / side_B4L2f_s.json 204d809d818b (120 types vs b2). G0 296 = 296 (one die-cut density error moved s_5S_L0 -> s_6S_L0 at y 10750, same class).
+  - B4L3 = ev/B4L3f.json 87f3d1b78812 / side_B4L3f_s.json 525af5c97f07 (13 types vs B4L2f; --window-clear slot-clear). R-LEAF-3b 156 -> 103 (B4L2) -> 89 (B4L3). G0L3f running (log/G0L3f.log).
+- Strict binds: twins per event on epyc7 (bind_leafplan_w4/w5/w6.sh) and epyc8 (bind_leafplan_e8b8/e828/e83.sh), all ot-run --priority plan, all queued for memory. intel2 ~/s81-leaf-plan/race_leafplan_r1.sh (B4Lb, B4L2) and race_leafplan_r2.sh (B4L3) kill the loser by exact PID when one is admitted. adopt_watch_leafplan_a1.sh posts READY+ADOPT (KIT-OPS-5) per event on BIND_RC=0 + LATCHECK_RC=0, or a FAIL STATE.
+  - Fixed bug: wrappers had passed the stale B4L-a plan as the candidate positional arg; first epyc8 attempts failed at sidecar (nothing bound); watcher posted 2 false FAIL lines, corrected in the queue.
+  - epyc8 copies of the plan files + ovl_l (old core_place, unused by bind) under the same path.
+- t21 / t75 (W face 2 x 1104-bit output windows, core 43.3 um off): face-clear 86.4 / 64.8 finds no legal timing-clean spot (t21 vsw: rxsb blocks; t75 ve_m: ve_s blocks) -> needs W-axis outline growth (B4L4 or DIE-S81-92). Rule ask R-LEAF-2b (>= 86.4 off windows >= 512 bits). t75 growth search cp3/t75_w_ev.json may still be running.
+- Not in any event: t2, t22, kv_leaf t5 (+regs), t47 (band under lane), t73/t9 ve_m, kv_leaf t4 t11 t15 t3 t45 t68 (B4L3 gate).
+- Proofs epyc9: t32 overflow 0; t2/t61/t75 GRT running.
+
+## STATE 2026-11-14 late PST (older)
 - Event 1 = B4L_b2 (ev/B4L_b2.json 199aadf6bac4 / side_B4L_b2.json a0a4bb73671c): G0 296 = control 296, identical error sets (full plans, gen_phys efd8a710944 + sdc_lint 10fbea62820 in tree/ + ovl_l/). Strict bind queued: intel2 ~/s81-leaf-plan/bind_leafplan_w4.sh (ot-run --priority plan, epyc7 120 GB) -> log/B4Lb_bind.log, writes B4LB_RC.
 - Event 2 = B4L2 (ev/B4L2f.json 0eed18fe0e6d / side_B4L2f_s.json 204d809d818b): B4L_b2 + slot-clear core moves in 39 types (cp2/, types ev/types_B4L2f.txt) + reset re-publish + slice_station/col --densify (183 bands). R-LEAF-3b 156 -> 103 pairs. G0L2f running (log/G0L2f.log); strict bind queued: intel2 ~/s81-leaf-plan/bind_leafplan_w5.sh -> log/B4L2_bind.log, writes B4L2_RC.
 - core_place.py --slot-clear REGEX + test_core_place_slot_clear.py (6 pass), leaf_rules.py --densify: in tree/, ovl_l/, wt/ (uncommitted, not pushed).
