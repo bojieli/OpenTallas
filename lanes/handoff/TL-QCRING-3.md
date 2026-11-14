@@ -1,0 +1,1 @@
+TL-QCRING-3 11-14: all 6 cores signed first pass, no failures. sle_cland_w257_e_s6, sle_cland_w517_n_s10, sle_cland_w537_s_s10, sta_cland_w1081_e_s18, sta_cland_w515_s_s10, sta_cland_w537_s_s10. TT setup +127..+199 ps, FF hold +4.9..+13.7, DRC 0. AUTO-RESIGN rows added. Nothing running.
