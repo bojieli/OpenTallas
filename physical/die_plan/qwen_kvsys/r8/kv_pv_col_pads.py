@@ -130,8 +130,43 @@ class LegView:
         return vals.pop()
 
 
-def pads(bind_dir, r8):
+class TableLanded:
+    """KV-101/SPLIT 11-13: the bind's legs with landed = bound + the MAIN R8 table pad.
+
+    A bind that carried a STALE land_r8_extra (an older column table whose bound depths no longer match) reports
+    landed = bound on the stale ids, so its landed column is neither the main table's nor the new table's.  The bound
+    and as-built depths are bind facts (independent of pads), the pads are table facts: every PV member is taken from
+    the bind only if the main table has exactly one member with the SAME as-built and bound depth; landed is that
+    member's bound + pad.  Anything else fails closed (a stale MAIN table is not repaired here)."""
+
+    def __init__(self, B, r8):
+        self.B = B
+        self.by_key = defaultdict(list)
+        for x in r8["members"]:
+            self.by_key[(x["sink"], x["sink_port"], x["source"])].append(x)
+        self.rebased = 0
+
+    def asbuilt_param(self, *a, **k):
+        return self.B.asbuilt_param(*a, **k)
+
+    def members(self, **kw):
+        out = []
+        for m in self.B.members(**kw):
+            c = self.by_key.get((m["sink"], m["port"], m["source"]), [])
+            if len(c) != 1 or c[0]["asbuilt"] != m["asb"] or c[0]["bound"] != m["bound"]:
+                raise SystemExit(f"{m['sink']}.{m['port']} <- {m['source']}: main R8 table members "
+                                 f"{[(x['asbuilt'], x['bound']) for x in c]} vs bind (asb {m['asb']} bound {m['bound']}):"
+                                 " stale main R8 table")
+            landed = c[0]["bound"] + c[0]["pad"]
+            self.rebased += landed != m["landed"]
+            out.append(dict(m, landed=landed))
+        return out
+
+
+def pads(bind_dir, r8, table_landed=False):
     B = RC.Bound(bind_dir)
+    if table_landed:
+        B = TableLanded(B, r8)
     law, members = plan(B)
     by_key = defaultdict(list)
     for x in r8["members"]:
@@ -151,7 +186,8 @@ def pads(bind_dir, r8):
             flops["cmd" if x["sink_port"] in ("join_go", "bc", "bcx") else "flag"] += add * _bits(x)
     cols = law["columns"].values()
     return dict(schema="opentallas.die_plan.r8_extra.v1", die="qwen_kvsys", kind="kv_pv_column_equalisation",
-                source_bind=str(bind_dir),
+                source_bind=str(bind_dir), landed_from=("main R8 table bound + pad (TableLanded)" if table_landed
+                                                        else "bind landed"),
                 source_r8_sha256=hashlib.sha256(json.dumps(r8, sort_keys=True).encode()).hexdigest(),
                 note=(f"DIE-KV-14d PV column equalisation: every column command lands at as-built + {law['C']}, every column "
                       f"cmd + flag total equal per side -> regen_constants kv_pv_trunk law TRUNK_D {law['TRUNK_D']} / FLAG_D "
@@ -174,8 +210,10 @@ def main(argv=None):
     ap.add_argument("bind_dir")
     ap.add_argument("r8", help="the land_r8 table the bind used (members carry pad / landed)")
     ap.add_argument("out")
+    ap.add_argument("--table-landed", action="store_true",
+                    help="take landed = bound + main-table pad (bind carried a stale column extra); see TableLanded")
     a = ap.parse_args(argv)
-    t = pads(a.bind_dir, json.load(open(a.r8)))
+    t = pads(a.bind_dir, json.load(open(a.r8)), table_landed=a.table_landed)
     Path(a.out).write_text(json.dumps(t, indent=1) + "\n")
     print(json.dumps(t["summary"]))
     return 0

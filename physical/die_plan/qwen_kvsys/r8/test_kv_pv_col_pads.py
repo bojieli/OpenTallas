@@ -184,3 +184,36 @@ def test_import_leaves_sys_path_unchanged():
     spec.loader.exec_module(m)
     assert sys.path == before
     assert hasattr(m.RC, "Bound")
+
+
+def test_table_landed_ignores_stale_extra_landed():
+    """KV-101/SPLIT: a bind whose flag legs report landed = bound (stale extra not applied) gives the SAME table as the
+    bind that applied the main table, when the generator takes landed = bound + main-table pad."""
+    import copy
+    with tempfile.TemporaryDirectory() as t:
+        g = landing()
+        tab0 = r8_table(g)
+        for m in tab0["members"]:                      # main table pads every column flag by 1
+            if m["sink_port"] in ("col_fault", "col_valid"):
+                m["pad"], m["landed"] = 1, m["bound"] + 1
+        good = copy.deepcopy(g)
+        for gg in good:
+            for m in gg["members"]:
+                if m["sink_port"] in ("col_fault", "col_valid"):
+                    m["landed_stages"] += 1
+        write_bind(Path(t) / "good", good)
+        write_bind(Path(t) / "stale", g)                # stale bind: flag landed = bound
+        a = P.pads(Path(t) / "good", tab0)
+        b = P.pads(Path(t) / "stale", tab0, table_landed=True)
+        assert a["law"] == b["law"] and a["members"] == b["members"]
+
+
+def test_table_landed_fails_on_bound_mismatch():
+    import pytest
+    with tempfile.TemporaryDirectory() as t:
+        g = landing()
+        tab = r8_table(g)
+        tab["members"][0]["bound"] += 1
+        write_bind(Path(t) / "b", g)
+        with pytest.raises(SystemExit):
+            P.pads(Path(t) / "b", tab, table_landed=True)
