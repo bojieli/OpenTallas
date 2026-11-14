@@ -2579,7 +2579,7 @@ def placed_macro_boxes(t, halo=0.0):
     Planned hard cores remain obstacles even before a view exists. Physical
     contents (LEF-bearing SRAM/ROM/hard leaves) are equally real obstacles.
     Match kit placement: a hard-core record wins over the same content instance,
-    and its track offset is applied once. R0/MX/MY/R180 preserve box dimensions.
+    and its track offset is applied once. R0/MX/MY/R180 preserve box dimensions; R90/R270/MXR90/MYR90 swap them.
     Logical contents without a physical view do not reserve a macro footprint.
     """
     entries = {c['inst']: c for c in t.get('hard_cores', []) or []}
@@ -2596,6 +2596,10 @@ def placed_macro_boxes(t, halo=0.0):
         x, y = map(float, c['origin_um']); w, h = map(float, c['outline_um'])
         dx, dy = c.get('track_offset_um', [0.0, 0.0]) if name in cores else (0.0, 0.0)
         x += dx; y += dy
+        # outline_um is the unrotated cell size; a quarter turn swaps the placed footprint (same rule as gen_phys
+        # _hard_obstacles, master_slice and pg_placed_blocks)
+        if c.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+            w, h = h, w
         if not all(math.isfinite(v) for v in (x, y, w, h, halo)) or w <= 0 or h <= 0:
             raise ValueError(f"physical macro {name}: nonphysical footprint")
         boxes[name] = (x-halo, y-halo, x+w+halo, y+h+halo)
