@@ -2489,6 +2489,74 @@ def prov_counted(c):
     return bool(c.get("counted")) or str(c.get("job") or "").startswith("COUNTED ")
 
 
+# WF-1 11-14 (COORD: slw_st_a_v1/v2 stayed WAIT-CHILD on QC cores signed at 05:45-05:48 by hand lanes): prov_sources only looked at
+# autopilot queue jobs (state.json), and a private kit built by a lane is not a queue job.  Rows of lanes/AUTO-RESIGN.tsv
+# (die, module, host, dir holding signoff/signoff.json, build commit, lane, note: the registry hand-built kits already go into) are
+# now candidates too, when the module has no other routed candidate: the kit's signoff record must show DRC 0 and the kit must hold
+# views/<m>_tt.lib + <m>_ff.lib and a routed <m>.lef (probed on its host, cached 30 min / 5 min).  dir = <kit>/views, base = the
+# routed results dir (rsync expands the glob on the host), so prov_view stages it like any other candidate.
+PRIVATE_DIE_ALIAS = {"qc": "qwen_compute", "kv": "qwen_kvsys", "head": "s81_head", "results": "s81_head", "cp1": "s81"}
+PRIVATE_CACHE = os.path.expanduser("~/coord/autopilot/prov_private_cache.json")
+PRIVATE_PROBE = r"""
+import glob, json, os, sys
+K, m = sys.argv[1].rstrip("/"), sys.argv[2]
+try:
+    r = json.load(open(os.path.join(K, "signoff", "signoff.json")))
+    drc = (r.get("checks") or {}).get("drc") or {}
+    if str(drc.get("verdict")) != "PASS" and int(drc.get("count") or 0) != 0:
+        print("NO drc not 0"); sys.exit()
+    base = sorted(glob.glob(os.path.join(K, "run/results/asap7/*/base")))
+    ok = [b for b in base if os.path.isfile(os.path.join(b, m + ".lef"))]
+    libs = all(os.path.isfile(os.path.join(K, "views", m + s)) for s in ("_tt.lib", "_ff.lib"))
+    print("OK " + ok[0] if ok and libs else "NO missing views/lef")
+except Exception as e:
+    print("NO " + str(e)[:80])
+"""
+
+
+def private_candidates(die, modules, hub):
+    """{module: candidate} from lanes/AUTO-RESIGN.tsv rows of this die whose kit is DRC 0 with exported views"""
+    try:
+        text = open(os.path.expanduser("~/coord/lanes/AUTO-RESIGN.tsv"), errors="replace").read()
+    except OSError:
+        return {}
+    try:
+        cache = json.loads(open(PRIVATE_CACHE).read())
+    except (OSError, ValueError):
+        cache = {}
+    out, now, dirty = {}, time.time(), False
+    for ln in text.splitlines():
+        f = ln.split("\t")
+        if len(f) < 4 or ln.startswith("#"):
+            continue
+        rdie = PRIVATE_DIE_ALIAS.get(f[0], f[0])
+        m, host, kdir = f[1], f[2], f[3].rstrip("/")
+        if rdie != die or m not in modules or m in out or "*" in kdir:
+            continue
+        ck = f"{host}:{kdir}:{m}"
+        e = cache.get(ck)
+        if not e or now - float(e.get("t") or 0) > (1800 if e.get("ok") else 300):
+            try:
+                argv = (["python3", "-I", "-c", PRIVATE_PROBE, kdir, m] if host in ("localhost", hub) else
+                        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", "-o", "ControlPath=none", host,
+                         f"python3 -I -c {shlex.quote(PRIVATE_PROBE)} {shlex.quote(kdir)} {shlex.quote(m)}"])
+                r = subprocess.run(argv, capture_output=True, text=True, timeout=60)
+                o = (r.stdout or "").strip().splitlines()[-1] if r.stdout.strip() else "NO empty"
+            except (OSError, subprocess.SubprocessError):
+                o = "NO probe failed"
+            e = cache[ck] = {"t": now, "ok": o.startswith("OK "), "base": o[3:] if o.startswith("OK ") else "", "why": o[:80]}
+            dirty = True
+        if e.get("ok"):
+            out[m] = dict(host=hub if host == "localhost" else host, dir=f"{kdir}/views", base=e["base"], job=f"PRIVATE {f[5] if len(f) > 5 else 'lane'} {kdir}",
+                          status="SIGNED", drc=0, signoff=f"{kdir}/signoff/signoff.json")
+    if dirty:
+        try:
+            Path(PRIVATE_CACHE).write_text(json.dumps(cache))
+        except OSError:
+            pass
+    return out
+
+
 def prov_sources(jobs, die, modules, d=None, hub="intel2"):
     """{module: [candidate]} routed DRC-clean abstracts of each child module, best first: die option
     prov_view_sources {module: [{host, dir[, base]}]} (die owner pick: dir holds <m>_tt.lib, <m>_ff.lib, <m>.lef) first, then autopilot queue jobs of the die whose
@@ -2520,6 +2588,10 @@ def prov_sources(jobs, die, modules, d=None, hub="intel2"):
             signoff=so["path"])))
     for m, _t, c in sorted(cands, key=lambda x: -x[1]):
         if len(out[m]) < PROV_MAX_CANDS:
+            out[m].append(c)
+    need = {m for m in modules if not out[m]}
+    if need:                                              # WF-1 11-14: hand-built private kits of lanes/AUTO-RESIGN.tsv
+        for m, c in private_candidates(die, need, hub).items():
             out[m].append(c)
     return out
 
