@@ -16,20 +16,20 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "kv101ns_3465fe9",
+   "event": "kv102fx_e7d0118c2c",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
     "evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL",
-   "src_sha": "3465fe9c32fdac1e0ddc5653845a3e81890324c8",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL",
+   "src_sha": "e7d0118c2c0dc83a102fb8770c143b679ea021b0",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
     "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
    },
@@ -37,7 +37,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -538,7 +538,28 @@
     "kv3_pv_v3@2",
     "kv3_pv_v4@2",
     "kv3_pv_v5@2",
-    "kv3_pv_v12@2"
+    "kv3_pv_v12@2",
+    "kv3_hg_v1p2@2",
+    "kv3_hg_v1p3@4",
+    "kv3_hg_v1p4@4",
+    "kv3_hg_v1p5@4",
+    "kv3_hg_v1p6@3",
+    "kv3_hgi_v5@2",
+    "kv3_hgi_v6@3",
+    "kv3_hgi_v7@12",
+    "kv3_hub_Wo@2",
+    "kv3_pc_v1__cl23f6a148@2",
+    "kv3_pc_v1__cl4ea58a5c@1",
+    "kv3_pc_v1__cl7f648944@1",
+    "kv3_pv_v1n@3",
+    "kv3_pv_v2@2",
+    "kv3_pv_v2n@2",
+    "kv3_pv_v3n@2",
+    "kv3_pv_v4n@2",
+    "kv3_pv_v5n@2",
+    "kv3_pv_v6@2",
+    "kv3_pv_v6n@3",
+    "kv3_pv_v7@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -595,11 +616,11 @@
     "kv3_hg_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_hgi@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_hgi_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
-    "kv3_hgi_v4@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hgi_v4@1": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_hgi_v5@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_hgi_v6@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_hgi_v7@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v8@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_hgi_v8@1": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_hub_Eo@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_hub_Wo@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pv@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
@@ -615,19 +636,19 @@
     "kv3_pv_v1n@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "kv3_pv_v3@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
     "kv3_pv_v5@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
-    "kv3_pv_v6@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v7@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
+    "kv3_pv_v6@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
+    "kv3_pv_v7@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
     "kv3_pv_v8@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "kv3_pv_v12@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
     "kv3_hgi@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v3@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
+    "kv3_hgi_v3@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_hgi_v4@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_hgi_v5@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
+    "kv3_hgi_v5@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_io_cor_v1@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "__batch_kv64_pvbind": "20 rows: DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "kv3_pv@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
     "kv3_pv_v1@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
-    "kv3_pv_v2@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
+    "kv3_pv_v2@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
     "kv3_pv_v4@2": "KIT-OPS-3 11-13 22:xx (COORD URGENT): kit_rtl AttributeError reset_tree.pin_root_copies = train-L whole-file overlay on frozen srcs (src_pgL/_pgL/pgcap). Fixed: srcs restored to base files + train-L patch only (gen_phys/core_flow/grt_pre/post hunks); changed input -> relaunch.",
     "kv3_hroot@3": "plan_c budgets-note schema fix 98e13b8bfec (gen phys plan invalid on 4b0a73deb5f follow src); KW-FIX-4 14:0x",
     "kv3_io_cor_v1@3": "DIE-KV-64 pvname 08f0c9828bf (PORT_BIND extra ri_pv_u_g0_j_rst_n[0] + io_cor_v1 cland pinslot off) on main 4b09653bef8, bind_pv2; one batch (KW-FIX-4 16:58)",
@@ -677,7 +698,7 @@
     "kv3_hgi_v7@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pc__cl254f2e73@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_pc__cl5a95b461@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
-    "kv3_pc_v3@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+    "kv3_pc_v3@1": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_sys_SD@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
     "kv3_io_ft_v1@4": "ring ft form A + hold guard; hold lifted on FT-ROUTE-READ-1 05:50",
     "kv3_hg@4": "COORD 06:00 (2) cap batch: src j + --native-cell-cap 517000 on bind_e2; @4 was on the old src, stopped by KW-FIX-7 06:5x",
@@ -734,8 +755,8 @@
     "kv3_pc__cl5a95b461@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pc_v3@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pc_v1__cl23f6a148@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
-    "kv3_pc_v1__cl4ea58a5c@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
-    "kv3_pc_v1__cl7f648944@1": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pc_v1__cl4ea58a5c@1": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
+    "kv3_pc_v1__cl7f648944@1": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
     "kv3_phy@2": "KW-FIX-8 11-04 COORD 13:21 (2) DIE-KV-70 13:12: item_env OT_HOLD_STOP_PS, only sign-off blocks: one endpoint 3.45 ps past the stop",
     "kv3_hgi_v6@7": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "kv3_hub_Wo@6": "infra ssh 255 on epyc4, not a strike",
@@ -755,8 +776,8 @@
     "kv3_pv_v8@9": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "kv3_pc_v1__cl4ea58a5c@9": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
     "kv3_pv_v5n@6": "KW-FIX-19 21:2x EP4-DISK-WAIT b: launched on gen epyc4 before gen_hosts_base fix; client stopped, relaunch on epyc5/epyc6",
-    "kv3_pc__cl254f2e73@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
-    "kv3_pc__cl5a95b461@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
+    "kv3_pc__cl254f2e73@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
+    "kv3_pc__cl5a95b461@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
     "kv3_pc_v3@2": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
     "kv3_pc_v1__cl23f6a148@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
     "kv3_pc_v1__cl7f648944@5": "CODEX KV-PC class recovery: current2c705 contractoverlay PASS all4 emittednativechildren, kitRTL32files unbound0; PROVOBS M1-M5 alreadyfixes obsoleteM7 PDN blockage. Preserve livecl4ea@11.",
@@ -829,7 +850,22 @@
     "kv3_phy@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x).",
     "kv3_phy_v1@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x).",
     "kv3_sys_SD@2": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x).",
-    "kv3_sys_SD_v1@2": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class TIMING. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x)."
+    "kv3_sys_SD_v1@2": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class TIMING. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x).",
+    "kv3_hg_v1p2@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hg_v1p3@4": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hg_v1p4@4": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hg_v1p5@4": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hg_v1p6@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hgi_v6@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hgi_v7@12": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hub_Wo@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
+    "kv3_pc_v1__cl23f6a148@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
+    "kv3_pv_v1n@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_pv_v2n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_pv_v3n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_pv_v4n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_pv_v5n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_pv_v6n@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]"
    },
    "only_items": [
     "kv3_astk",
@@ -4801,7 +4837,8 @@
    },
    "gate_events_extra": [
     "kvN2_66e6607",
-    "kv101ns_3465fe9"
+    "kv101ns_3465fe9",
+    "kv102fx_e7d0118c2c"
    ],
    "hold_items_released_kitops1_kvn2": {
     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
@@ -5084,7 +5121,32 @@
     "die_max_inflight": 60,
     "pilot_max": 4,
     "pilot_gate": false
-   }
+   },
+   "prev_kitops3_kv102": {
+    "event": "kv101ns_3465fe9",
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL",
+    "src_sha": "3465fe9c32fdac1e0ddc5653845a3e81890324c8",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "--native-cell-cap",
+     "517000"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
+     "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
+    },
+    "gate_events_extra": [
+     "kvN2_66e6607",
+     "kv101ns_3465fe9"
+    ]
+   },
+   "swap_note_kitops3_kv102": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. Revert: prev_kitops3_kv102."
   },
   "s81": {
    "enabled": true,
