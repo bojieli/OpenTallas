@@ -31,10 +31,11 @@ class KilledIsInfra(unittest.TestCase):
                 "FAIL_PREFLOOR rtl_lint KILLED (yosys signal, host memory; not a design result)" + RAN)
         self.assertEqual(KW.classify("place", text)[0], "INFRA")
 
-    def test_own_cap_sigkill_247_is_not_made_infra_here(self):
-        # memcg OOM at the job's own cap (kv_leaf__t2 50 GB) is a sizing / form problem: a same-cap relaunch repeats it
+    def test_sigkill_247_is_infra(self):
+        # KW-FIX-43 11-09 (ec524673e0) superseded the 11-08 "own-cap 247 stays as is": make Error 247 = 256-9 is a SIGKILL
+        # (q_su20 cgroup kill was labelled PLAN); a kill has no design content. Memory caps are lifted since 11-14.
         text = "make[1]: *** [Makefile:297: do-yosys] Error 247\nmake: *** [Makefile:311: /work/x/1_2_yosys.v] Error 2" + RAN
-        self.assertNotEqual(KW.classify("place", text)[0], "INFRA")
+        self.assertEqual(KW.classify("place", text)[0], "INFRA")
 
     def test_real_rtl_lint_fail_stays_rtl(self):
         text = "ERROR: Found 65 problems in 'check -assert'.\nFAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)" + RAN
