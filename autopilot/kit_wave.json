@@ -36,9 +36,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
-    "--native-cell-cap",
-    "517000"
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -5330,7 +5328,15 @@
       "job": "COUNTED qkd_hr_core_tx intel2:/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k/signoff/signoff.json (KW-FIX-32 export_view)"
      }
     ]
-   }
+   },
+   "gen_args_prev_kitops3_cap": [
+    "--hold-ff-margin",
+    "0",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "--native-cell-cap",
+    "517000"
+   ]
   },
   "s81": {
    "enabled": true,
@@ -6898,7 +6904,8 @@
     "col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b@4",
     "col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47@3",
     "ot_s81sl_kv_leaf__t5@14",
-    "ot_s81sl_leaf__t34@13"
+    "ot_s81sl_leaf__t34@13",
+    "serdes__t14@11"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -8134,7 +8141,8 @@
     "ot_s81sl_kv_leaf__t5@14": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
     "ot_s81sl_leaf__t25__cl431c660f@3": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
     "ot_s81sl_leaf__t34@13": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
-    "slice_station__t24__cleece78ec@1": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed."
+    "slice_station__t24__cleece78ec@1": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
+    "serdes__t14@11": "OWNER 11-14: native cell cap deleted (advisory in every wave src: native_cell_cap.tcl LIMIT-BIND-1; --native-cell-cap removed from KV gen_args and S81 serdes type_args); relaunch."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -8159,42 +8167,19 @@
    "note_gen_hosts_kwf5": "KW-FIX-5 23:1x (COORD 23:0x: epyc4 36 waiters / admits <0, intel1 admits 352 with 0 waiters; PRUNE + worktree removal freed intel1 to 264 GB): s81 gen_hosts [epyc4, intel1]; src s81i8, plan, kit_rtl_h10.sh present on intel1; pick_gen_host sends new attempts to the host with most admits. Back to [epyc4] if intel1 scratch2 <100 GB.",
    "note_hosts_1104": "KW-FIX-6 04:2x COORD 04:20: intel1 scratch 160 GB falling; S81/HEAD/QC stop PLACE spill and gen sync to intel1. epyc2 stays off for S81: scratch2 127 GB, below the 147 floor. KV gen stays on intel1 until its plan event.",
    "type_args": {
-    "serdes__t4": [
-     "--native-cell-cap",
-     "517000"
-    ],
-    "serdes__t12": [
-     "--native-cell-cap",
-     "517000"
-    ],
+    "serdes__t4": [],
+    "serdes__t12": [],
     "serdes__t13": [
-     "--native-cell-cap",
-     "517000",
      "--slew-margin",
      "50",
      "--cap-margin",
      "20"
     ],
-    "serdes__t14": [
-     "--native-cell-cap",
-     "517000"
-    ],
-    "serdes__t15": [
-     "--native-cell-cap",
-     "517000"
-    ],
-    "serdes__t15__cla2127225": [
-     "--native-cell-cap",
-     "517000"
-    ],
-    "serdes__t15__cla3d02796": [
-     "--native-cell-cap",
-     "517000"
-    ],
-    "serdes__t16": [
-     "--native-cell-cap",
-     "517000"
-    ],
+    "serdes__t14": [],
+    "serdes__t15": [],
+    "serdes__t15__cla2127225": [],
+    "serdes__t15__cla3d02796": [],
+    "serdes__t16": [],
     "slice_station__t22": [
      "--slew-margin",
      "50",
@@ -21717,7 +21702,8 @@
     "slice_station__t49",
     "slice_station__t51",
     "slice_station__t6__cl0755c26e",
-    "slice_station__t6__cl54a9ceeb"
+    "slice_station__t6__cl54a9ceeb",
+    "serdes__t14"
    ],
    "prov_require_cands": true,
    "hosts_base_prev_kw45_epyc4off": [
@@ -30788,6 +30774,44 @@
     "dsdv_slice_lepe_nh_mus_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
     "dsdv_slice_lepw_mu_LP__t2": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
     "dsdv_slice_lepw_mus_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key."
+   },
+   "type_args_prev_kitops3_cap": {
+    "serdes__t4": [
+     "--native-cell-cap",
+     "517000"
+    ],
+    "serdes__t12": [
+     "--native-cell-cap",
+     "517000"
+    ],
+    "serdes__t13": [
+     "--native-cell-cap",
+     "517000",
+     "--slew-margin",
+     "50",
+     "--cap-margin",
+     "20"
+    ],
+    "serdes__t14": [
+     "--native-cell-cap",
+     "517000"
+    ],
+    "serdes__t15": [
+     "--native-cell-cap",
+     "517000"
+    ],
+    "serdes__t15__cla2127225": [
+     "--native-cell-cap",
+     "517000"
+    ],
+    "serdes__t15__cla3d02796": [
+     "--native-cell-cap",
+     "517000"
+    ],
+    "serdes__t16": [
+     "--native-cell-cap",
+     "517000"
+    ]
    }
   },
   "s81_head": {
