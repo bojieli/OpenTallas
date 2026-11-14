@@ -606,9 +606,7 @@
     "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
     "critical": true
    },
-   "hold_items": {
-    "kv3_hub_C": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): hub_C OT_NATIVE_CELL_CAP 706641 > 517000 not fixed by the non-split plan; held for the hub_C split event (KV-101/SPLIT, main >= 406c3610f29). Lift = delete this key."
-   },
+   "hold_items": {},
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
@@ -868,7 +866,7 @@
     "kv3_pv_v5n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_pv_v6n@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_hub_Ei@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
-    "kv3_hub_C@13": "LIMIT-BIND-1 (COORD 01:5x): tap/cell-cap/R-CAP limits removed (overlay on die srcs + OT_CORE_TAP_REACH_UM=0); changed input, counters reset; relaunch."
+    "kv3_hub_C@13": "KV splits cancelled (KV-CAP closed, cap removed; COORD 01:xx): split/cap hold removed, launch unsplit on the current KV plan."
    },
    "only_items": [
     "kv3_astk",
@@ -5169,7 +5167,11 @@
    "die_gen_env_prev_kitops3_lb": {
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1"
-   }
+   },
+   "hold_items_lifted_kitops3_kvsplit": {
+    "kv3_hub_C": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): hub_C OT_NATIVE_CELL_CAP 706641 > 517000 not fixed by the non-split plan; held for the hub_C split event (KV-101/SPLIT, main >= 406c3610f29). Lift = delete this key."
+   },
+   "note_kitops3_kvsplit": "KIT-OPS-3 01:xx: all KV split/cap holds removed (KV-CAP closed). Revert: hold_items_lifted_kitops3_kvsplit."
   },
   "s81": {
    "enabled": true,
