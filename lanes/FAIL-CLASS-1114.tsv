@@ -1,0 +1,47 @@
+class	items	attempt_lines	dies	first	last	fix_status	fix_time	recurred_after_fix	owner	example_item
+QC kit tool/plan skew: count_frame/clock_landings FrameError feed_s29.json -> None	99	198	QC	11-14 00:22	11-14 01:48	LIVE	11-14 ~02:00 (QC wave moved to plan s29q103S/tree2 with frame files)	n/a	DIE-QC-103	cbf_q00__cl1b5a6458
+GEN_LINT defparam LOCAL (ot_dp_clk_landing.sv:10; B3v src predates CLAND-RING-LOCALITY)	93	101	S81	11-14 04:12	11-14 05:16	LIVE	11-14 04:51 (rtl/common overlay on epyc7/8/9/10/intel1; epyc9 ~04:3x)	YES: 38 items/38 lines after, last 11-14 05:16	KIT-OPS-3/TL-LEAFT14; restage via retry keys	col_h10_r0_p1__t1__cl574cc59d__pvd7af8531
+operator unit kill sweep 02:23 (KW_STAGE ... Terminated; wave stop at plan swap/restart)	71	71	HEAD,KV,QC,S81	11-14 02:23	11-14 02:23	ONE-OFF	11-14 02:23 single sweep, not design	n/a	KIT-OPS-3	cbf_q00_s2
+kit_rtl unit never returned, swept 00:08 on epyc8 (started 23:33; cause unverified)	58	58	QC	11-14 00:08	11-14 00:08	ONE-OFF	11-14 00:08 single sweep	n/a	none	sle_st_b_v1__pvc5a85fd4
+exit 99 ot-job NOT RUN: run_kit.sh not in store/no host to fetch from (KW_PLACE_RC=99)	55	56	HEAD,KV,QC,S81	11-14 03:04	11-14 03:36	LIVE	11-14 04:29 (KIT-OPS-4 exit99 INFRA merged; soft-pin fix 03:33)	no	KIT-OPS-4	coll_ft__cla4a25d77
+QC kit tool/plan skew: plan invalid unknown key hard_cores_deferred/pregrt_ff_hold	48	69	QC	11-13 23:51	11-14 01:48	LIVE	11-14 ~02:00 (same QC plan/src swap to s29q103S)	n/a	DIE-QC-103	cbf_q00__cl1b5a6458
+ROUTE grt-overflow GRT-0116 localized M6-H strip x600-900 y1050-1200 (S81 col_h9_r1__t1, 35 pv variants + leaf t14/t24/t32)	38		S81	11-14 01:xx	11-14 05:02	IN-FLIGHT	B3w ROM/s pin-face orientation fix binding 04:3x (DIE-S81-92)	n/a (fix not adopted)	TYPE-COLH9R1/DIE-S81-92	col_h9_r1__t1__cl49d7a23e
+kit-busy false HOLD (container false, log < 15 min) blocking relaunch	33		all	11-14 02:00	11-14 05:19	IN-FLIGHT	window 15->10 min, process-owner test; branch merged train AJ 05:11, live next tick	YES: 15 items still HOLD after 04:45 (27 lines in 05h to 05:19)	WAVE-FRICTION-1	slw_su_l1__cla2a78701
+S81/KV kit src skew: reset_tree has no attribute pin_root_copies (gen_phys vs old reset_tree src)	32	43	KV,S81	11-13 22:01	11-13 22:38	STOPPED-UNEXPLAINED	last seen 11-13 22:38; no fix post found	n/a	none	kv3_pv_v12
+OT_CLAND no legal nonoverlapping row/site in reserved band (edge-stack start-relay stage geometry)	29	69	KV,QC,S81	11-13 19:24	11-14 04:55	IN-FLIGHT	11-14 05:11 CLAND-GEOM stage-inset tool merged (train AJ) but NOT adopted by a plan; 9 stages need MAX_MOVE 400	n/a (fix not adopted)	CLAND-GEOM/KV-102/DIE-QC-103	sle_fe_v1__cl1cbb7497
+GEN_LINT yosys rc125 / docker rc125 container not created (epyc7 containerd restart after libc6 upgrade 22:19)	21	21	HEAD,KV,S81	11-13 22:59	11-13 23:09	LIVE	11-14 ~04:3x (needrestart never restarts containerd/docker; zombie containers cleaned)	n/a	KIT-OPS-4/CLEAN-E8	kv3_hgi_v1__cl42bc8b12
+R-CAP cell_budget OVER / OT_NATIVE_CELL_CAP (KV hg/hgi/pv > 400k movable)	19	32	KV	11-13 20:17	11-13 21:49	LIVE	11-14 04:54 (native cell cap advisory, KIT-OPS-3; src carries LIMIT-BIND-1)	no	KIT-OPS-3	kv3_hg_v1p2
+infra-stopped exit 137/143 from outside (epyc4 drain, wave unit stops)	19		S81,KV,HEAD	11-13 21:17	11-14 04:17	LIVE	11-14 DRAIN-EPYC4 retry keys; epyc4 gone	no new after 04:17	KIT-OPS-3	dsdv_slice_c3x_C__t1
+ROUTE OT_HOLD_STRUCTURAL / OT_HOLD_STALL NEEDS_RTL (hold repair > 3 h; leaf t25, eng__t1, ...)	16		S81,KV	11-14 01:54	11-14 04:52	NONE	-	n/a	NEEDS-LANE (class-level; some TL-LEAF* per type)	eng__t1
+infra-orphan client-lost sweep 03:58	16		S81	11-14 03:58	11-14 03:59	ONE-OFF	single sweep	n/a	none	-
+gen: macro u_bound.u_tNN view missing (QC hard cores u_t00..u_t11 unbuilt, epyc4 views gone)	14	17	QC	11-14 01:57	11-14 03:48	IN-FLIGHT	QC-CORES-HEAD 05:20 table (29 cores) building	n/a (fix not adopted)	QC-CORES-HEAD	cbf_q00__cl1b5a6458
+ROUTE GRT early stop OT_GRT_CONGESTED_FAIL (kits generated before LIMIT-GRT-1)	13		S81,KV,HEAD	11-13 18:44	11-14 04:32	LIVE	11-14 01:10 (LIMIT-GRT-1)	YES: 12 classifications after 01:10, last 04:32 (stale pre-fix kits e.g. leaf t22/t13; only re-generated kits clear it)	KIT-OPS-3 (restage); TL-SLC1XT8 private forms	ot_s81sl_leaf__t22
+GEN_LINT bits_q implicitly declared (qfd_dv_table_rom_loader.sv:89; tree2 lacked main 3a7c24c)	11	15	QC	11-14 02:15	11-14 03:48	LIVE	11-14 ~04:1x (main 3a7c24c into tree2)	n/a	TYPE-QCLINT	sle_stm_v1__cl27746664
+ot-run NOT RUN: no host qualifies / ssh probe timeout (epyc10 banner timeouts)	10	10	KV,QC,S81	11-13 23:51	11-14 01:58	SELF-CLEARED	last 11-14 01:57	n/a	none	slw_sc_v1__cl63e5a7a2
+KIT_NOT_SELF_CONTAINED / SRC-INCOMPLETE / FileNotFound landed_sidecar_aor3.json (kit-ops-1/drt73-aor3 dir gone)	9	9	QC,S81	11-14 01:33	11-14 04:12	NONE	-	n/a	NEEDS-LANE	cbn_q00__cldbcda913
+LEC_ASYNC aborted with flow, exit 13 (lec_async.sh missing)	7		QC,KV	11-13 17:15	11-14 ~03:00	LIVE	LEC async warning WAVE-FRICTION-1 05:10 (branch; 0 error signatures in last 48 h scan 05:30)	no after fix	WAVE-FRICTION-1	kv3_pv_v3
+PROVISIONAL/WAIT-CHILD: hard child core has no routed abstract (kv3_pc*, sta/sle cland, qfd_dv)	6	21	KV	11-14 01:19	11-14 02:33	IN-FLIGHT	11-14 05:10 KVPCF views staged; WAVE-FRICTION-1 auto core build deployed ~05:1x	n/a (fix not adopted)	WAVE-FRICTION-1/QC-CORES-HEAD/TYPE-KVPCF	kv3_pc__cl254f2e73
+bind: no partition type col_h9_r0_pN__t1 in the plan (plain name; only pv variants exist)	5	5	S81	11-13 19:51	11-13 19:51	LIVE	11-14 04:52 (pv rows used; plain names not launched)	no	TL-COLH9R0P1..P6	col_h9_r0_p1__t1
+FAIL misparse: place/cts log tail shows finished 4_1_cts/3_5_place .odb lines (HEAD hd_ctl/turn_b/wshim, QC tt_ctlm) classified FAIL	5	5	HEAD,QC	11-13 21:49	11-14 04:34	NONE	-	n/a	NEEDS-LANE	tt_ctlm
+unclassified remainder	5	6	S81	11-14 02:53	11-14 05:16	UNKNOWN	-	n/a	NEEDS-LANE	col_h10_r0_p1__t1__cl911743eb
+RENDER_MISSING place finished but no layout_review PNG (QC/HEAD)	5		QC,HEAD	11-13 21:46	11-14 ~04:00	NONE	-	n/a	NEEDS-LANE	hd_spn_wshim_tx
+HEAD relaunch refused: all kit inputs equal previous attempt (no-blind-retry guard)	4	6	HEAD	11-13 20:31	11-14 04:12	BY-DESIGN	guard working as intended	n/a	HEAD-99	hd_spn_eshim_rx
+S81 yosys do-yosys Makefile Error 241 (svc_*_dsdv_svc_rs t2/t3/t4 synth)	4	4	S81	11-14 02:34	11-14 05:07	NONE	-	n/a	NEEDS-LANE	svc_hi_dsdv_svc_rs__t2
+PLAN outline/GRTM geometry stage refusals (S81 KW_STAGE outline, GRTM edge_outline)	4	4	S81	11-14 00:08	11-14 04:27	NONE	-	n/a	NEEDS-LANE	col_h9_r1__t1__cl49d7a23e__pv11c696bc
+HEAD kit_rtl bootstrap GEN failed (hd_tile: sink has no legal clock tap within 200 um)	3	9	HEAD	11-13 19:50	11-14 01:33	IN-FLIGHT	outline growth / clock tap plan pending	n/a (fix not adopted)	HEAD-97/HEAD-99	hd_host_e
+GEN_LINT yosys elaboration rc 143 (SIGTERM/timeout during gen_lint; S81 svc_lo_dsdv_svc_rs, QC sle_hc2)	3	3	QC,S81	11-14 01:57	11-14 02:54	NONE	-	n/a	NEEDS-LANE	sle_hc2__clcc5e3e61
+KV place unit stale (KW_STAGE place from 11-13 23:16 swept 04:20)	3	3	KV	11-14 04:20	11-14 04:20	ONE-OFF	11-14 04:20 sweep	n/a	none	kv3_hg_v1
+ROUTE GRT-0183 col_h9_r2 ROM/seq pin-face orientation wrap (3 pv variants)	3		S81	11-14 05:05	11-14 05:05	IN-FLIGHT	same B3w orientation fix	n/a (fix not adopted)	TYPE-COLH9R2	col_h9_r2__t1__clc9ad8f7e
+param-class split needed: per-instance LOGIC parameters differ (sle_st_b_v1/v2)	2	8	QC	11-14 00:22	11-14 02:33	IN-FLIGHT	param-split forms pv38472fb8/pv7b7fafb4 placing 04:43	n/a (fix not adopted)	TL-QCSTBV1	sle_st_b_v1__pvc5a85fd4
+PORT_BIND bad straps strap_r8pad_core_red_* (sle_sc_v1/v2 count_straps changed)	2	2	QC	11-14 03:14	11-14 03:24	IN-FLIGHT	s29q103S2 rebind 04:1x, swap pending	n/a (fix not adopted)	TYPE-QCSTRAP	sle_sc_v1__cl115da35f
+KV global_place: explicit FT site not on a row/site	2	4	KV	11-14 00:22	11-14 02:33	NONE	-	n/a	NEEDS-LANE	kv3_hgi_v3
+SSH to build host/hub timeouts: epyc7 SSH probe 255, mkdir banner timeout 93.115.25.103	2	2	S81	11-14 03:24	11-14 05:16	SELF-CLEARED	-	n/a	none	col_h9_r0_p2__t1__cl0045af7b__pva2793873
+kit_rtl bind other (cland/ring unclassified @kit_rtl)	2	2	KV	11-13 19:50	11-13 19:50	NONE	-	n/a	NEEDS-LANE	kv3_phy
+ROUTE OT_GRT_TIMECAP 6 h post-route repair (leaf t30, t42, t74, kv_leaf t3)	2		S81	11-13 12:52	11-14 05:02	NONE	-	n/a	none (hold_ws -94.5 on t30)	ot_s81sl_leaf__t30
+KV AHUB boundary native parameter signature changed (kv3_hub_C)	1	3	KV	11-14 01:48	11-14 02:33	IN-FLIGHT	TYPE-KVAHUB patch held for VIEW-READY	n/a (fix not adopted)	TYPE-KVAHUB	kv3_hub_C
+S81 geom_run/aux input file missing (stale path / pruned worktree)	1	1	S81	11-13 23:09	11-13 23:09	NONE	-	n/a	NEEDS-LANE	ot_s81sl_kv_leaf__t5
+INFRA KeyError src / generic kit-tool exception (QC cbn_q00 05:06)	1	1	QC	11-14 05:06	11-14 05:06	NONE	-	n/a	NEEDS-LANE	cbn_q00__cldbcda913
+GEN_LINT Cant resolve task name $fatal (dsdv_idx_rg2.sv:1096, yosys SV subset)	1	1	S81	11-14 02:44	11-14 02:44	NONE	-	n/a	NEEDS-LANE	svc_lo_dsdv_svc_rs__t7
+TCL could not create error file (S81 kv_leaf__t2 place)	1	1	S81	11-14 03:14	11-14 03:14	NONE	-	n/a	NEEDS-LANE	ot_s81sl_kv_leaf__t2
+HEAD late ECO NONPORT corner: OT_GRT_NONPORT native session must select FF corner (all HEAD kits with OT_GRT_NONPORT_HOLD=1)	1		HEAD	11-14 05:12	11-14 05:12	IN-FLIGHT	WAVE-FRICTION-1 fix pending	n/a	WAVE-FRICTION-1/HEAD-99	hd_spn
+LEC OOM exit 21 (hd_serdes private route)	1		HEAD	11-14 04:5x	11-14 04:5x	NONE	-	n/a	TYPE-HDSERDES	hd_serdes
