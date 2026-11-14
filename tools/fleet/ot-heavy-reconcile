@@ -873,6 +873,10 @@ def read_units():
 
 
 YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
+try:   # YOUNG_S_1114 ADMIT-TUNE-1: fresh-reservation window from /etc/ot-heavy.conf YOUNG_S (default 300)
+    YOUNG_S = int(re.search(r"^YOUNG_S=(\d+)", open("/etc/ot-heavy.conf").read(), re.M)[1])
+except Exception:
+    pass
 DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
                 GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120,    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
                 RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.0,   # v13 GROWTH RATE (SCHED-TUNE 10-21); OWNER 10-22 20:10: 0
@@ -882,7 +886,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
-                REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                SIMPLE_ADMIT=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1173,6 +1177,13 @@ def gate_locked(mem, argv):
     a = admit_size(mem, cls, table, argv)
     res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a specific uncapped class peak may raise the charge
     total, avail = meminfo()
+    if conf("SIMPLE_ADMIT"):   # SIMPLE_ADMIT_1114 ADMIT-TUNE-1 (OWNER 11-14): one check, real MemAvailable - INV_HEADROOM_GB >= class measured RSS (16 GB if unknown); no fresh/past-peak/declared charge; revert: SIMPLE_ADMIT=0 in /etc/ot-heavy.conf
+        _e = table.get(cls) if cls not in ("?", "cd") else None
+        _pk = _e.get("peak_gb", 0) if _e and capacity_sample_count(cls, _e) >= 1 else 0
+        _need = math.ceil(_pk) if _pk > 0 else 16
+        _ok = avail - conf("INV_HEADROOM_GB") >= _need
+        print(f"{'OK' if _ok else 'NO'} {_need} {cls} | SIMPLE_ADMIT: MemAvailable {avail:.0f} GB - {conf('INV_HEADROOM_GB'):g} headroom = {avail - conf('INV_HEADROOM_GB'):.0f} GB vs class '{cls}' measured RSS {_need} GB ({'measured' if _pk > 0 else 'unknown, 16 GB'}), admissible {max(0, avail - conf('INV_HEADROOM_GB')):.0f} GB")
+        return
     rows = read_units()
     for r in rows:                                     # finished long ago: drop the reservation and its side files
         if not r["active"] and r["file_age"] > 120:
@@ -1506,6 +1517,27 @@ def free(path):
     """the admission arithmetic of ot-heavy (the same books()), for ot-run"""
     total, avail = meminfo()
     table = sizes()
+    if conf("SIMPLE_ADMIT"):   # FREE_LIGHT_1114 ADMIT-TUNE-1: SIMPLE_ADMIT needs no per-unit books; read_units() ran one `systemctl --user show` per unit and 326 piled-up probes saturated the user manager on a loaded host (epyc10 load 200: --free > 80 s, ot-run probe timeouts)
+        wait, req = waiters(table)
+        can = max(0, math.floor(avail - conf("INV_HEADROOM_GB")))
+        try:
+            v = os.statvfs(path)
+            disk = v.f_bavail * v.f_frsize >> 30
+        except OSError:
+            disk = -1
+        try:
+            running = len(glob.glob("/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/*/oth-*.scope"))
+        except Exception:
+            running = 0
+        print(json.dumps(dict(host=os.uname().nodename, total_gb=round(total), avail_gb=round(avail), used_gb=round(total - avail),
+                              charged_gb=round(total - avail), reserved_gb=0, growth_gb=0, growth_raw_gb=0, young_gb=0, plenty=True,
+                              headroom_gb=0, floor_gb=round(conf("INV_HEADROOM_GB")), cpu_load1=float(open("/proc/loadavg").read().split()[0]),
+                              ncpu=os.cpu_count(), running=running, fresh=0, waiting=len(wait), waiting_gb=sum(wait),
+                              waiting_req_gb=sum(req), disk_gb=disk, admit_gb=can, free_gb=can - sum(wait), die_admit_gb=can,
+                              die_reserve=None, inv_free_gb=can, committed_gb=round(total - avail), inv_limit_gb=round(total - conf("INV_HEADROOM_GB")),
+                              other_gb=0, admit_gb_v16=can, inv_terms=dict(in_use=round(total - avail, 1), peak_gap=0, reserve=0, fresh=0, phase_extra=0, phase_raw=0),
+                              simple_admit=True)))
+        return
     rows = read_units()
     b = books(rows, total, avail, table)
     head, floor = 0, floor_gb(total)
