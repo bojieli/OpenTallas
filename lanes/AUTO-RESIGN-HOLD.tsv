@@ -1,6 +1,5 @@
 # FLOW-29 2026-11-04: never re-signed by the autopilot, whatever the sign-off says.  die (or *) <TAB> name pattern (fnmatch, on record name, top, row name) <TAB> ruling.
 # An empty or unreadable file stops every auto re-sign.  A line leaves when its ruling ends.
-qwen_kvsys	*astk*	DIE-KV hold: astk stays under its ruling
 qwen_kvsys	*kp_hub*	DIE-KV hold: kp_hub stays under its ruling
 qwen_kvsys	*cprxs*	DIE-KV hold: cprxs stays under its ruling
 qwen_kvsys	*qkd_hr_core_*	RF-C: HR cores stay under their ruling
