@@ -1,0 +1,129 @@
+{
+  "status": "PASS",
+  "scope": "staged selected head0 actual score trace\u219216nodeSX\u2192fold2\u2192macroPbuffer\u2192Psource\u2192SX\u2192Ppacket; zero providers for other heads; no native replay/globalPIO/G5 claim",
+  "source_go_virtual_cycle": 128,
+  "absolute_dates": {
+    "native_score": [
+      205,
+      212
+    ],
+    "sx_root": [
+      257,
+      264
+    ],
+    "selected_tap": [
+      277,
+      284
+    ],
+    "se_operand_rows": [
+      281,
+      285
+    ],
+    "sm_writes": [
+      391,
+      393
+    ],
+    "selected_p_source": [
+      810,
+      824
+    ],
+    "p_root": [
+      852,
+      866
+    ],
+    "p_header": 853,
+    "p_body": [
+      854,
+      868
+    ]
+  },
+  "go_relative_dates": {
+    "native_score": [
+      77,
+      84
+    ],
+    "sx_root": [
+      129,
+      136
+    ],
+    "selected_tap": [
+      149,
+      156
+    ],
+    "se_operand_rows": [
+      153,
+      157
+    ],
+    "sm_writes": [
+      263,
+      265
+    ],
+    "selected_p_source": [
+      682,
+      696
+    ],
+    "p_root": [
+      724,
+      738
+    ],
+    "p_header": 725,
+    "p_body": [
+      726,
+      740
+    ]
+  },
+  "observed_final_pbuffer_write": 393,
+  "all_rows_committed_after_edge": 393,
+  "next_edge_after_final_write": 394,
+  "earliest_p_source_execution_tested": false,
+  "declared_test_pio_base": 800,
+  "selected_p_source_pio_with_role": 810,
+  "independent_oracle": {
+    "uniform_global_score_fp32": "430f8000",
+    "gain_fp32": "3e800000",
+    "scaled_score_and_max_fp32": "420f8000",
+    "sink_fp32": "3f000000",
+    "se_unnormalized_e": "exp(0)=1",
+    "all_32_e_fp32": "3f800000",
+    "all_32_p_bf16": "3f80",
+    "other_head_provider_value": 0,
+    "normalized_1_over_32_or_SO_claim": false
+  },
+  "counts": {
+    "score_root_beats": 8,
+    "selected_tap_beats": 8,
+    "se_rows": 2,
+    "sm_rows": 2,
+    "nonzero_sm_rows": 2,
+    "selected_p_fires": 8,
+    "p_root_beats": 8,
+    "p_headers": 1,
+    "p_body_words": 8,
+    "errors": 0,
+    "missing": 0,
+    "sx_fault": 0,
+    "sm_fu": 0,
+    "sm_fo": 0
+  },
+  "negative_control": {
+    "drop": "first valid from leaf sid0; data held",
+    "caught": true,
+    "actual_sx_fault": "002a",
+    "error_count": 1,
+    "numerical_outputs_still_match": true
+  },
+  "unit": "oth-ubuntu-2302260-1794614282",
+  "sources_sha256": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_svc_score_feedback.sv": "d9fc5878364bfadef635e555b5b81ec28803e455553c8d933fca87c00ee02bcc",
+    "tools/s81_dv/svc_rs/run_score_feedback.sh": "297d5bc1e3f5711269272246b4a2ff60c8f20eb9797bcaa33cc172f7bc456f47",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx.sv": "eaa32100158f13f241b31729a509c234edfee3d1a6f3eb28c27a49e45526a132",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles_h8.svh": "f64595c619aac357affa397bca841bf101b11ca5182434a5b7a54d2236a77f24",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles.svh": "002d869f660b0f45b585e64cfa7cd6e8e0d04cbb8a48ea3966595a03dcfca130"
+  },
+  "logs_sha256": {
+    "run_drop0.log": "3fe16e098410dfff71b98c91f9c241e2d6eb385acb76c129b317b4a22053c4b7",
+    "run_drop1.log": "555abf7ceadc08de0139a2265c2b0d7d12e3847d94b7b88b17973bf841bac3a5",
+    "returned_p.hex": "04508dc339ee1a55030cd2ce96ed10a51d1536361cb6f0692c1a78e22a0950af",
+    "source_trace.json": "66ce8155d2ce51b6a93216f3a820b3ca1aac331a38e258d036e312ca4ae32be1"
+  }
+}
