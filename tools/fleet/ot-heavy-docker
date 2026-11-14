@@ -52,4 +52,25 @@ elif [ -z "$hadj" ]; then out=("--oom-score-adj=0" "${out[@]}"); fi
 # the kit containers in system.slice: --cpu-shares 17600 = cpu.weight ~1000 (Docker 29 cgroup v2 mapping; default 100).
 # An explicit --cpu-shares is kept.
 if [ "${OT_HEAVY_CPU:-}" = crit ] && [ -z "$hshares" ]; then out=("--cpu-shares=17600" "${out[@]}"); fi
+# ORPHANSTOP_1114 (ADMIT-TUNE-1, COORD 11-14): a foreground `docker run` client that dies (its scope is stopped, ot-run is cancelled)
+# leaves the CONTAINER running (dockerd owns it) with its root openroad holding memory: 9 orphans / ~90 GB found on 11-14 on one host,
+# a 14 GB GRT for 8 h.  Run the client as a child instead of exec, name the container, and stop it when this shim gets TERM/INT/HUP
+# (a scope stop sends SIGTERM first).  Not for -d, -i, -t, create, or when OT_HEAVY_DOCKER_TRAP=0 (exec as before).
+if [ "${OT_HEAVY_DOCKER_TRAP:-1}" != 0 ]; then
+  _isrun=; for _x in "${pre[@]}"; do [ "$_x" = run ] && _isrun=1; done
+  _skip=; _name=; _k=0
+  for _x in "${out[@]}"; do
+    case "$_x" in -d|--detach|-i|-t|-it|-ti|--interactive|--tty|--cidfile|--cidfile=*|--rm=false) _skip=1;; --name=*) _name=${_x#--name=};; --name) _name=${out[$((_k+1))]};; esac
+    _k=$((_k+1))
+  done
+  if [ -n "$_isrun" ] && [ -z "$_skip" ]; then
+    [ -n "$_name" ] || { _name="otc-$$-$RANDOM"; out=("--name=$_name" "${out[@]}"); }
+    "$REAL" "${pre[@]}" "--memory-swap=$lim" "${out[@]}" <&0 &
+    _cp=$!
+    trap '"$REAL" stop -t "${OT_HEAVY_STOP_S:-20}" "$_name" >/dev/null 2>&1; kill -TERM $_cp 2>/dev/null; wait $_cp 2>/dev/null; exit 143' TERM INT HUP
+    wait $_cp; _rc=$?
+    trap - TERM INT HUP
+    exit $_rc
+  fi
+fi
 exec "$REAL" "${pre[@]}" "--memory-swap=$lim" "${out[@]}"
