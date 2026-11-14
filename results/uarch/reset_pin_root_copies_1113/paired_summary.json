@@ -1,0 +1,128 @@
+{
+ "status": "PAIRED_SOURCE_READY_DEFAULT_OFF_NO_PHYSICAL_ADOPTION",
+ "signals_default": [
+  "reset"
+ ],
+ "explicit_paired_opt_in": {
+  "max_loads": 48,
+  "signals": [
+   "reset",
+   "start"
+  ],
+  "sites_um": [
+   [
+    8.16,
+    4.64
+   ],
+   [
+    10.32,
+    4.64
+   ]
+  ],
+  "start_sites_um": [
+   [
+    10.336,
+    8.608
+   ],
+   [
+    12.496,
+    8.608
+   ]
+  ]
+ },
+ "units": {
+  "passed": 37,
+  "skipped": 0,
+  "command": "python3 -m pytest -q tools/die_plan/test_reset_pin_start_copies.py tools/die_plan/test_reset_pin_root_copies.py tools/die_plan/test_explicit_control_taps.py"
+ },
+ "synthesis": {
+  "nominal_ff": 527,
+  "copies_ff": 529,
+  "extra_ff": 2,
+  "root_cells": [
+   "u_rst_in",
+   "u_rst_in_c1",
+   "u_run_in",
+   "u_run_in_c1"
+  ],
+  "direct_loads": {
+   "u_rst_in": 48,
+   "u_rst_in_c1": 27,
+   "u_run_in": 48,
+   "u_run_in_c1": 27
+  },
+  "same_data_per_control": true,
+  "same_clock": true,
+  "distinct_q": true,
+  "added_cycles": 0
+ },
+ "actual_hci_component": {
+  "status": "ACTUAL_HCI_RESET_COMPONENT_ONLY_NO_PHYSICAL_ADOPTION",
+  "old_source_tree_sha256": "b4db4f2877baf2a827f83dcf82616e05d4f62804d9a68cfbef72ab1840d83fb7",
+  "new_source_tree_sha256": "9d90f734dbd085b9a2060f1009ae169589f147d65a16c9650a7992b30466e670",
+  "type": "sle_hc1__cl7d360508",
+  "taps": 136,
+  "logical_relays": 378,
+  "canonical_relays_unchanged": true,
+  "release_clocks_old": 5,
+  "release_clocks_new": 5,
+  "root_loads": {
+   "u_rst_in": 48,
+   "u_rst_in_c1": 27,
+   "u_run_in": 48,
+   "u_run_in_c1": 27
+  },
+  "root_copies": 4,
+  "extra_flops": 2,
+  "old_start_root_loads": 75,
+  "explicit_signals": [
+   "reset",
+   "start"
+  ],
+  "native_source_verified": true,
+  "native_paths": 624,
+  "planned_native_max_hop_um": 379.9680000000001,
+  "miter_output": "PASS checks=371 mutant=16\n/srv/opentallas-scratch2/claude/rules-reach-1/root_copy_hci_pair_canary/miter.sv:3923: $finish called at 320289500 (1ps)"
+ },
+ "default_and_reset_only_byte_compatibility": [
+  {
+   "case": "plain",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  },
+  {
+   "case": "start",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  },
+  {
+   "case": "actual_hci",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  },
+  {
+   "case": "plain_reset_only",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  },
+  {
+   "case": "start_reset_only",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  },
+  {
+   "case": "actual_hci_reset_only",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  }
+ ],
+ "clock_model": "control_pin_sinks includes explicit/captured entry-copy sites without recursive reset solve; existing bins/native-domain paths are unchanged",
+ "limitations": [
+  "No full HCI bind/P&R/signoff; regenerate coherent source/captured contract before physical use",
+  "No extra release/mission cycle or source clock domain",
+  "Only explicitly selected control entries are replicated; no implicit START change"
+ ],
+ "preserved_failures": [
+  "First paired sink authority fixture failed old native START geometry guard because fixture sites disagreed; fixed fixture supplies its coherent captured geometry, source guard unchanged"
+ ]
+}
