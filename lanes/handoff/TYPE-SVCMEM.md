@@ -13,3 +13,6 @@ COORD approved release. Owning hi t1-t4/pvso t1. t1 a7 memory_bits PASS (place).
 
 ## 08:37
 t5/t6/pvso t2 launched 08:23 by KIT-OPS-3. Following hi t1-t6 + pvso t1/t2 through route; check 09:10. On pass: AUTO-RESIGN row + RESULT. Size fail -> evidence + split proposal.
+
+## 09:10
+reg_fanout (old 11-05 attempts) and BIND_STALE (old bind) do not reproduce on live attempts. Live: pvso t1 a12 place, t4 a4 place, t1 a7 place + a8 B3x2b; t2 gen_lint, t3 gen, t5/t6/pvso t2 kit_rtl. Next check 09:40.
