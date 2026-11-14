@@ -6914,7 +6914,8 @@
     "serdes__t14@11",
     "col_h9_r1__t1__cl49d7a23e__pv47efee8f@5",
     "col_h9_r0_p5__t1__pvc93af856@4",
-    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@5"
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@5",
+    "ot_s81sl_leaf__t62@8"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -8153,7 +8154,8 @@
     "slice_station__t24__cleece78ec@1": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
     "serdes__t14@11": "OWNER 11-14: native cell cap deleted (advisory in every wave src: native_cell_cap.tcl LIMIT-BIND-1; --native-cell-cap removed from KV gen_args and S81 serdes type_args); relaunch.",
     "col_h9_r1__t1__cl49d7a23e__pv47efee8f@5": "FABLE-REVIEW-COL R-COL-3 canary: OT_RELAY_MID_RE=^(.*[._]u_y_...)[.] + OT_RELAY_MID_FIT=1 (gen_phys overlay reads OT_RELAY_MID_RE from env), fresh kit (stage_resume_off). Gate: relay hop median <= 405 um at place.",
-    "col_h9_r0_p5__t1__pvc93af856@4": "FABLE-REVIEW-COL R-COL-3 canary: OT_RELAY_MID_RE=^(.*[._]u_y_...)[.] + OT_RELAY_MID_FIT=1 (gen_phys overlay reads OT_RELAY_MID_RE from env), fresh kit (stage_resume_off). Gate: relay hop median <= 405 um at place."
+    "col_h9_r0_p5__t1__pvc93af856@4": "FABLE-REVIEW-COL R-COL-3 canary: OT_RELAY_MID_RE=^(.*[._]u_y_...)[.] + OT_RELAY_MID_FIT=1 (gen_phys overlay reads OT_RELAY_MID_RE from env), fresh kit (stage_resume_off). Gate: relay hop median <= 405 um at place.",
+    "ot_s81sl_leaf__t62@8": "KIT-OPS-4 11-14 COORD: a8 gen failed (lk_WN0 two --clock-landing) on old gen_args; type_args entry removed; fresh kit"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -31295,7 +31297,12 @@
      "--clock-landing",
      "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-aor3/landed_sidecar_aor3.json"
     ]
-   }
+   },
+   "generic_owner_labels": [
+    "HBM-PLAN",
+    "S81-PLAN"
+   ],
+   "note_kitops4_claim": "KIT-OPS-4 11-14 COORD: phy__t1 (owner S81-PLAN) was skipped 'lane activity < 3 h' (recent coord lines by TL-S81PHY count as a claim); S81-PLAN is the generic plan owner, not a working lane, so it no longer claims types (generic_owner_labels)."
   },
   "s81_head": {
    "enabled": true,
