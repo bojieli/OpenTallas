@@ -387,6 +387,11 @@ COL_BOUND = """module col_part_bound (input wire ck_r0, input wire lpr_c_u_t0, i
     assign so = u_r0_cst_st_s1;
 endmodule
 """
+# 9615a697f7/c62b845496: _col_chain resolves a chain only between the actual source and target instances
+# (their .st / .c0 expressions), never from globally named cst_st_s* registers: the fixtures carry both.
+COL_BOUND_NO_INST = COL_BOUND
+COL_BOUND = COL_BOUND.replace("    assign so = u_r0_cst_st_s1;\n",
+    "    assign so = u_r0_cst_st_s1;\n    ot_src u_u_r0_u_s0 (.st(st));\n    ot_tgt u_u_r0_u_t0 (.c0(u_r0_cst_st_s1));\n")
 
 
 def _col_run(tmp_path, depth, bound):
@@ -403,26 +408,20 @@ def _col_run(tmp_path, depth, bound):
                               capture_output=True, text=True)
 
 
-@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
-
-
 def test_col_st_stations_counted_and_sited(tmp_path):
     kd, r = _col_run(tmp_path, 2, COL_BOUND)
     assert r.returncode == 0, r.stderr
     tcl = (kd / "istations.tcl").read_text()
-    assert "is_place {*cst_st_s0*} 648.108 172.812 cst:st" in tcl
-    assert "is_place {*cst_st_s1*} 933.228 172.812 cst:st" in tcl
+    assert "is_place {*u_r0_cst_st_s0*} 648.108 172.812 cst:st" in tcl
+    assert "is_place {*u_r0_cst_st_s1*} 933.228 172.812 cst:st" in tcl
     rep = json.loads((kd / "kit_rtl.json").read_text())["kit_istations"]
-    assert rep == [dict(col_st=dict(stages=2, entries=2, regs=["cst_st_s0", "cst_st_s1"],
+    assert rep == [dict(col_st=dict(stages=2, entries=2, regs=["u_r0_cst_st_s0", "u_r0_cst_st_s1"],
                                   sites=[[648.108, 172.812], [933.228, 172.812]]))]
     assert (kd / "col_part_bound.sv").read_text() == COL_BOUND
 
 
 def _col_receipt(kd):
     return json.loads((kd / "kit_rtl.json").read_text())["kit_istations"][0]["col_st"]
-
-
-@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
 
 
 def test_col_st_stations_depth_differs_is_reported(tmp_path):
@@ -433,7 +432,7 @@ def test_col_st_stations_depth_differs_is_reported(tmp_path):
 
 def test_col_st_stations_missing_rtl_is_reported(tmp_path):
     """an older bind without the chain: builds as bound, sign-off judges the hop"""
-    kd, r = _col_run(tmp_path, 2, COL_BOUND.replace("cst_st_s", "xx_s"))
+    kd, r = _col_run(tmp_path, 2, COL_BOUND_NO_INST.replace("cst_st_s", "xx_s"))
     assert r.returncode == 0, r.stderr
     assert _col_receipt(kd)["bound_stages"] == 0
 
@@ -450,6 +449,7 @@ COL_BOUND_B = """module col_part_bound (input wire ck, input wire rs, input wire
     assign w_u_r0_src_bbb_Q = g_u_r0_src_bbb_q;
     always @(posedge ck or negedge rs)
         if (!rs) g_u_r0_src_bbb_q <= {2{1'b0}}; else g_u_r0_src_bbb_q <= w_u_r0_u_s0_st[1:0];  // x.sv:2.162
+    ot_src u_u_r0_u_s0 (.st(w_u_r0_u_s0_st[1:0]));
     ot_s81_sstn_base566 u_u_r0_u_t0 (
         .c0(w_u_r0_src_aaa_Q[1:0]),
         .so(so)
@@ -458,18 +458,12 @@ endmodule
 """
 
 
-@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
-
-
 def test_col_st_stations_bound_chain(tmp_path):
     kd, r = _col_run(tmp_path, 2, COL_BOUND_B)
     assert r.returncode == 0, r.stderr
     tcl = (kd / "istations.tcl").read_text()
     assert "is_place {*g_u_r0_src_bbb_q*} 648.108 172.812 cst:st" in tcl
     assert "is_place {*g_u_r0_src_aaa_q*} 933.228 172.812 cst:st" in tcl
-
-
-@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
 
 
 def test_col_st_stations_bound_chain_depth_differs_is_reported(tmp_path):
