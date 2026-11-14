@@ -6,3 +6,10 @@
 .card.sticky-head table.grid th { top: 45px; }
 .card.sticky-head table.grid th:first-child { border-top-left-radius: 10px; }
 .card.sticky-head table.grid th:last-child { border-top-right-radius: 10px; }
+
+/* token: the kept flow / timeline renderers draw on a dark canvas in both themes (their palette is data of the engine) */
+.tokpage { max-width: none; padding: 14px 16px 30px; display: flex; flex-direction: column; gap: 12px; }
+.tokpage .card h3 { flex-wrap: wrap; }
+.tokgrid { display: grid; grid-template-columns: minmax(260px, 340px) minmax(0, 1fr); gap: 12px; align-items: start; }
+.tokdark { background: var(--tok-canvas); border-radius: var(--r); padding: 10px; overflow: auto; min-height: 120px; color-scheme: dark; }
+@media (max-width: 1100px) { .tokgrid { grid-template-columns: minmax(0, 1fr); } }

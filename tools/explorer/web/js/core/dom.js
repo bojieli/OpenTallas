@@ -11,7 +11,7 @@ export function h(spec, attrs, ...kids) {
     if (v == null || v === false) continue;
     if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2), v);
     else if (k === 'dataset') Object.assign(e.dataset, v);
-    else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
+    else if (k === 'style' && typeof v === 'object') { for (const [sk, sv] of Object.entries(v)) { if (sk.startsWith('--')) e.style.setProperty(sk, sv); else e.style[sk] = sv; } }
     else if (k === 'html') e.innerHTML = v;
     else if (k === 'testid') e.dataset.testid = v;
     else if (k in e && k !== 'list' && typeof v !== 'string') e[k] = v;

@@ -55,6 +55,21 @@ def _sha():
 SERVICE = dict(sha=_sha(), started=time.time())
 
 
+_GIT_DATES = {}
+
+
+def git_date(path):
+    """commit time (epoch) of the last change of a repo file: the honest date of committed data records"""
+    path = pathlib.Path(path); key = str(path)
+    if key not in _GIT_DATES:
+        try:
+            out = subprocess.run(['git', '-C', str(path.parent), 'log', '-1', '--format=%ct', '--', path.name], capture_output=True, text=True, timeout=20).stdout.strip()
+            _GIT_DATES[key] = float(out) if out else None
+        except Exception:
+            _GIT_DATES[key] = None
+    return _GIT_DATES[key]
+
+
 def _mtime(p):
     try: return pathlib.Path(p).stat().st_mtime
     except OSError: return None
@@ -164,10 +179,8 @@ def datasets():
     ti = _json_file(TOKEN / 'index.json')
     tgen = None; tnote = None
     if ti:
-        recs = ti.get('records') or ti.get('designs') or []
-        gens = [_iso(r.get('generated') or r.get('exported')) for r in recs if isinstance(r, dict)]
-        gens = [g for g in gens if g]
-        tgen = min(gens) if gens else _mtime(TOKEN / 'index.json')
+        gens = [g for g in (git_date(TOKEN / r['file']) for r in ti.get('designs') or [] if isinstance(r, dict) and r.get('file')) if g]
+        tgen = min(gens) if gens else None
         tnote = 'token records are exported from the simulator at a repo head; they describe the die revision named in each record'
     add('token', 'Token path records (simulator export)', tgen, 'tools/token_path_export.py', ['token'], note=tnote, missing=ti is None)
     tm = _json_file(design_service.TOKEN_MAP)
@@ -301,7 +314,8 @@ def token_index():
     ti = _json_file(TOKEN / 'index.json')
     if ti is None: raise ApiError(404, 'no token records', str(TOKEN))
     tm = _json_file(design_service.TOKEN_MAP) or {}
-    return dict(index=ti, map_generated=tm.get('generated'), mapped=sorted((tm.get('designs') or {}).keys()))
+    dates = {r['design']: git_date(TOKEN / r['file']) for r in ti.get('designs') or [] if isinstance(r, dict) and r.get('file')}
+    return dict(index=ti, dates=dates, map_generated=_iso(tm.get('generated')), mapped=sorted((tm.get('designs') or {}).keys()))
 
 
 def dataflow_index():
@@ -361,8 +375,8 @@ class H(BaseHTTPRequestHandler):
             if path in LEGACY and not (path.startswith('/explorer/element/') and path != '/explorer/element/'):
                 self.send_response(302); self.send_header('Location', '/?legacy=' + LEGACY[path]); self.send_header('Content-Length', '0'); self.end_headers(); return
             if path.startswith('/engine/'): return self.file(ENGINE, path[8:], immutable='/vendor/' in path)
-            if path.startswith('/explorer/element/'): return self.file(ENGINE, path[len('/explorer/element/'):])   # the worker's importScripts path
-            if path.startswith('/fv/'): return self.file(FV / 'explorer', path[4:])   # kept view modules (token / data-flow models)
+            if path.startswith('/explorer/') and path.endswith('.js') and path.split('/')[2] in ('element', 'token', 'dataflow', 'coverage'):
+                return self.file(FV / 'explorer', path[len('/explorer/'):])   # kept engine modules at the paths they import each other by
             rel = path.lstrip('/') or 'index.html'
             return self.file(WEB, rel)
         except ApiError as e:

@@ -243,3 +243,5 @@ h2.sect { font-size: var(--fs-xs); letter-spacing: .08em; text-transform: upperc
   .searchbox { flex: 1; }
   .page { padding: 14px 12px 30px; }
 }
+.app[data-focus="1"] .minimap { top: 56px; }
+.app[data-focus="1"] .hud.tl { right: 300px !important; }
