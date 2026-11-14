@@ -1316,6 +1316,11 @@ GPL_PROBE_AWK = (r"""awk '/GPL-1010/{print "KW_GPL " l; print "KW_GPL " $0; l=""
 
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
+    # KIT-FIX-F 11-13 (option kit_snap): first, because the reason quotes input paths whose words later rules key on
+    # (outline, blocked, ...).  A named input that no die host holds is FLOW (never the INFRA auto-retry loop).
+    ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
+    ("INFRA-SSH", r"^kit_snap$", SSH_DROP.pattern, "infra (ssh transport)"),
+    ("FLOW", r"^kit_snap$", r"KIT-SNAP[^\n]*", "kit snapshot could not be built, copied or verified"),
     # DIE-HBM-97 11-10 (COORD): before INFRA and the PLAN geometry rules.  The capped unconverged placement is the cause;
     # the DPL-0038 / utilisation / OOM / watchdog lines after it are its consequence, so it wins whatever surrounds it.
     ("STRUCTURAL", r"^place$", lambda s: gpl_cap_noconverge(s),
@@ -1973,6 +1978,8 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": capture_ot_run(cfg),
             "crit": near_count_hit(cfg.get("_near_count") or set(), die, item, parent, core_module(item))} \
         | ({"kit_store": True} if kit_store_on(cfg, die, item) else {}) \
+        | ({"kit_snap": True} if kit_snap_on(cfg, die, item) else {}) \
+        | ({"kit_snap_view_refs": "strict"} if opt_get(cfg, die, "kit_snap_view_refs") == "strict" else {}) \
         | ({"cell_check": True} if d.get("cell_check") and kind == "type" else {})  # PLAN-GEN-RULES-1 rule C (advisory)
 
 
@@ -4395,13 +4402,20 @@ def run_item(spec_path):
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
     core = sp.get("kind") == "core" and bool(sp.get("core_kit"))
-    ks_on = bool(sp.get("kit_store")) and kit_store_applies(sp)
+    snap_on = bool(sp.get("kit_snap")) and kit_store_applies(sp)
+    ks_on = snap_on or (bool(sp.get("kit_store")) and kit_store_applies(sp))
     if ks_on:
         # KIT-INPUT-STORE-1: every input this kit reads -> W/kit_inputs (hardlinks from the per-host dedupe store); the
         # rest of the pipeline sees only kit-local paths, so a pruned lane worktree can no longer break a relaunch
-        mp, why = kit_store_stage(sp, run, remote, res, W, plan)
+        # KIT-FIX-F 11-13 (option kit_snap): the same closure as ONE content-addressed, sha256-verified snapshot shared by
+        # every item with the same inputs; built on the gen host or, when that host lacks an input, on the first die host
+        # that holds it and copied over.  It is the first stage, before any ot-run queue wait: a missing input stops here.
+        if snap_on:
+            mp, why = kit_snap_stage(sp, run, remote, res, W, plan, G, hub)
+        else:
+            mp, why = kit_store_stage(sp, run, remote, res, W, plan)
         if mp is None:
-            return fail("kit_store", why)
+            return fail("kit_snap" if snap_on else "kit_store", why)
         plan = plan0 = ks_map(plan, mp)
         kr = ks_map(kr, mp)
         if sp.get("type_overlay"):
@@ -4770,6 +4784,21 @@ def kit_store_on(cfg, die, item):
     return v is True
 
 
+def kit_snap_on(cfg, die, item):
+    """option kit_snap (die > global), same forms as kit_store: true = every item; a list = fnmatch patterns (pilot);
+    absent / false = off (the launch path is then unchanged)"""
+    v = opt(cfg, die, "kit_snap")
+    if isinstance(v, list):
+        return any(fnmatch.fnmatch(item, str(x)) for x in v)
+    return v is True
+
+
+def opt_get(cfg, die, key):
+    """die > global option that has no entry in the defaults table (None when unset)"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    return d[key] if key in d else cfg.get(key)
+
+
 def kit_store_applies(sp):
     """hard cores (core_kit) and the event-shared prep bind (kit_rtl bind without bind_out) keep their own paths"""
     kr = sp.get("kit_rtl") or {}
@@ -4814,16 +4843,140 @@ def ks_map(v, mp):
     return v
 
 
+def ks_spec(sp, plan, W):
+    """the kit_store.py snapshot spec of one item (inputs, the in-place src tree, the rebuild recipe)"""
+    kr = {k: v for k, v in (sp.get("kit_rtl") or {}).items() if not str(k).startswith("note")}
+    return {"inputs": ks_inputs(sp, plan), "in_place": [sp["src"]] if str(sp.get("src") or "").startswith("/") else [],
+            "rebuild": {"src": sp.get("src"), "src_sha": sp.get("src_sha"), "queue_src": sp.get("queue_src"),
+                        "plan": plan, "kit_rtl": kr, "gen_args": sp.get("gen_args"), "event": sp.get("event")},
+            "meta": {"die": sp.get("die"), "item": sp.get("item"), "attempt": os.path.basename(W), "work": W}}
+
+
+KIT_INPUT_MISSING = "KIT_INPUT_MISSING"
+SNAP_COPY_MAX_GB = 40                # a snapshot larger than this is not copied between hosts (a tree, not a kit input)
+
+
+def snap_root_of(W):
+    """<scratch root>/kit-store/snaps of the filesystem the item works on (same rule as kit_store.store_root_for)"""
+    p = W.split("/")
+    if len(p) > 2 and p[1] == "srv" and p[2].startswith("opentallas-scratch"):
+        return f"/srv/{p[2]}/kit-store/snaps"
+    return f"{HOME}/scratch-root/kit-store/snaps"
+
+
+def snap_donors(sp, G, hub):
+    """die hosts other than the gen host, in config order: where a snapshot may be built when G lacks an input"""
+    out = []
+    for h in list(sp.get("hosts") or []) + list(sp.get("gen_hosts") or []):
+        h = "localhost" if h == hub else h
+        if h and h != G and h not in out:
+            out.append(h)
+    return out
+
+
+def _snap_doc(txt):
+    got = [ln[len("KW_KIT_SNAP "):] for ln in txt.splitlines() if ln.startswith("KW_KIT_SNAP ")]
+    try:
+        return json.loads(got[-1]) if got else None
+    except ValueError:
+        return None
+
+
+def _snap_missing(txt):
+    """the kit_store.py verdict line only (the script source that travels with the command also holds the words)"""
+    return next((ln.strip()[:400] for ln in txt.splitlines() if ln.startswith("KIT-STORE FAIL KIT-STORE MISSING")), "")
+
+
+def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
+    """-> ({orig: snapshot path}, '') or (None, why).  kit_store.py snap on the gen host; when G lacks a required input,
+    snap on the first other die host that holds it, copy <snaps>/<id> to the same path on G and verify every sha256
+    there (.verified is written only by a passing verify).  No host holds the inputs -> KIT_INPUT_MISSING, named."""
+    import base64
+    q = shlex.quote
+    spec = ks_spec(sp, plan, W)
+    for inp in spec["inputs"]:
+        if inp.get("role") in ("plan", "asbuilt"):
+            inp["tree"] = True          # outside the pinned src: its bounded directory moves whole (relative-path readers)
+    if sp.get("kind") == "type":
+        spec["view_refs_type"] = sp.get("item")   # original-kit paths named by this type's child views (provenance.json)
+    b64 = base64.b64encode(json.dumps(spec).encode()).decode()
+    root = snap_root_of(W)
+    cmd = ks_cmd(f"snap --spec-b64 {q(b64)} --snap-root {q(root)}")
+    rc, txt = run("kit_snap", remote(cmd), idempotent=True)
+    doc = None if rc else _snap_doc(txt)
+    tried, unreach = [G], []
+    miss = _snap_missing(txt)
+    if doc is None and not miss:
+        return None, "KIT-SNAP snapshot failed on %s (rc %s)\n%s" % (G, rc, txt[-3000:])
+    if doc is None:
+        for h in snap_donors(sp, G, hub):
+            tried.append(h)
+            rc2, t2 = run("kit_snap_donor", remote_argv(h, hub, cmd), idempotent=True)
+            d2 = None if rc2 else _snap_doc(t2)
+            if d2 is None:
+                if _snap_missing(t2):
+                    miss = _snap_missing(t2)
+                else:
+                    unreach.append(f"{h}: rc {rc2} {(t2.strip().splitlines() or [''])[-1][:200]}")
+                continue
+            sd = d2["dir"]
+            hh = hub if h == "localhost" else h
+            fetch = (f"set -e; kb=$(ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 {q(hh)} \"du -sk {q(sd)} | cut -f1\"); "
+                     f"if [ \"${{kb:-0}}\" -gt {SNAP_COPY_MAX_GB * 1024 * 1024} ]; then echo KIT-SNAP COPY refused: $kb KB over the "
+                     f"{SNAP_COPY_MAX_GB} GB cap; exit 4; fi; mkdir -p {q(sd)}; "
+                     f"rsync -a --delete --exclude .verified --exclude .used -e \"ssh -o BatchMode=yes -o ControlPath=none\" "
+                     f"{q(hh)}:{q(sd)}/ {q(sd)}/; echo KW_SNAP_COPIED {q(hh)} $kb KB; " + ks_cmd(f"verify {q(sd)}"))
+            rc3, t3 = run("kit_snap_fetch", remote(fetch), idempotent=True)
+            if rc3 or "KW_KIT_SNAP_VERIFY " not in t3:
+                return None, "KIT-SNAP copy %s -> %s failed or did not verify (rc %s)\n%s" % (h, G, rc3, t3[-3000:])
+            doc = dict(d2, copied_from=h)
+            break
+    if doc is None and unreach:
+        # a donor that could not answer may hold the input: not a verdict on the kit, so no KIT_INPUT_MISSING
+        return None, ("KIT-SNAP: input absent on %s and %d donor host(s) did not answer: %s. %s"
+                      % (G, len(unreach), "; ".join(unreach), miss))
+    if doc is None:
+        return None, (f"{KIT_INPUT_MISSING}: a kit input exists on none of the die hosts ({', '.join(tried)}); restore it or "
+                      f"point the die config at a live path, then relaunch. {miss}")
+    vmiss = doc.get("view_refs_missing") or []
+    if vmiss:
+        # a child view's provenance.json (inside the pinned src) names files of the original signed kit by absolute path;
+        # gen reads them there.  Copy each from the first die host that holds it to the same path on G, then snapshot again.
+        donors = " ".join(q(hub if h == "localhost" else h) for h in snap_donors(sp, G, hub))
+        paths = " ".join(q(m["path"]) for m in vmiss[:200])
+        fetch = (f"for p in {paths}; do [ -e \"$p\" ] && continue; for h in {donors}; do "
+                 f"if ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 $h \"test -f '$p'\"; then "
+                 f"kb=$(ssh -o BatchMode=yes -o ControlPath=none $h \"du -sk '$p' | cut -f1\"); "
+                 f"if [ \"${{kb:-0}}\" -le {600 * 1024} ]; then mkdir -p \"$(dirname \"$p\")\" && "
+                 f"rsync -a -e \"ssh -o BatchMode=yes -o ControlPath=none\" \"$h:$p\" \"$p\" && echo KW_VIEWREF_COPIED $h $p; fi; "
+                 f"break; fi; done; done; true")
+        run("kit_snap_refs", remote(fetch), idempotent=True)
+        rc4, t4 = run("kit_snap", remote(cmd), idempotent=True)
+        d4 = None if rc4 else _snap_doc(t4)
+        if d4 is not None:
+            doc = dict(d4, copied_from=doc.get("copied_from"))
+        vmiss = doc.get("view_refs_missing") or []
+    if vmiss:
+        names = "; ".join(f"{m['path']} (named by {m['by']})" for m in vmiss[:5])
+        if sp.get("kit_snap_view_refs") == "strict":
+            return None, (f"{KIT_INPUT_MISSING}: {len(vmiss)} original-kit file(s) named by this type's child views exist on "
+                          f"no die host: {names}")
+        print(f"KW_KIT_SNAP_VIEWREF_MISSING {len(vmiss)} (advisory; gen fails if it reads them): {names}", flush=True)
+    res["kit_snap"] = {k: doc.get(k) for k in ("id", "dir", "n_files", "reused", "bytes_copied", "restored", "copied_from", "host",
+                                              "view_refs")} | {"view_refs_missing": [m["path"] for m in vmiss[:20]]} \
+        | {"absent": len(doc.get("absent") or [])}
+    print(f"KW_KIT_SNAP_USED {doc.get('id')} {doc.get('dir')} files {doc.get('n_files')} "
+          f"{'reused' if doc.get('reused') else 'built'} on {doc.get('host')}"
+          + (f" copied from {doc['copied_from']}" if doc.get("copied_from") else ""), flush=True)
+    return doc["map"], ""
+
+
 def kit_store_stage(sp, run, remote, res, W, plan):
     """-> ({orig: kit-local}, '') or (None, why).  Manifest W/kit_inputs/MANIFEST.json (+ store manifests/ for the
     14-day retention rule) records each file's sha and the rebuild recipe (src_sha, queue_src, plan, kit_rtl)."""
     import base64
     q = shlex.quote
-    kr = {k: v for k, v in (sp.get("kit_rtl") or {}).items() if not str(k).startswith("note")}
-    spec = {"inputs": ks_inputs(sp, plan), "in_place": [sp["src"]] if str(sp.get("src") or "").startswith("/") else [],
-            "rebuild": {"src": sp.get("src"), "src_sha": sp.get("src_sha"), "queue_src": sp.get("queue_src"),
-                        "plan": plan, "kit_rtl": kr, "gen_args": sp.get("gen_args"), "event": sp.get("event")},
-            "meta": {"die": sp.get("die"), "item": sp.get("item"), "attempt": os.path.basename(W), "work": W}}
+    spec = ks_spec(sp, plan, W)
     b64 = base64.b64encode(json.dumps(spec).encode()).decode()
     rc, txt = run("kit_store", remote(ks_cmd(f"snapshot --spec-b64 {q(b64)} --kit-inputs {q(W)}/kit_inputs")),
                   idempotent=True)

@@ -22,6 +22,13 @@ Design (COORD amendment 11-10):
      (st_nlink > 1: live kits, counted records, archived units) or a launch manifest of the last 14 days names its
      sha, or an extra referenced-sha list names it; otherwise it is deleted.  No heuristics, dry run unless --apply.
 
+  5. SNAPSHOT (KIT-FIX-F 11-13, wave option kit_snap): `snap` builds the same closure once per content under
+     <scratch root>/kit-store/snaps/<id>/root/<original absolute path>, where <id> is the sha256 of the sorted
+     (original path, content sha) list, so every item and attempt with the same inputs shares one immutable snapshot.
+     A required input that is absent stops the item there, before any queue wait (KIT-STORE MISSING).  The snapshot
+     moves to another host as a plain directory copy at the same absolute path; `verify` re-hashes every file against
+     MANIFEST.json and only then writes .verified, the marker every reader requires.
+
 Stdlib only; the wave runs it on a gen host as `python3 - <args> <<EOF <this file> EOF` (no repo checkout needed).
 """
 import argparse
@@ -52,6 +59,7 @@ DEEP_FILE_MAX_BYTES = 4 << 30
 DATA_FILE_MAX_BYTES = 512 << 20                     # a file a data json names (views, sidecars): larger = not a kit input
 SCRATCH_FLOOR_GB = 50                               # never copy into a store fs below this (gen_disk_min_gb is 70)
 DIR_MAX_FILES = 20000                               # a referenced directory bigger than this is a tree, not a kit input
+TREE_MAX_BYTES = 2 << 30                            # an input's own directory is taken whole up to this size ('tree')
 MIN_LANE_DEPTH = 5                                  # /srv/<scratch>/claude/<lane>/<x>: never a lane root or claude/
 ROOT_FLOOR_GB = 150
 
@@ -242,6 +250,37 @@ def scan_refs(path):
     return [m.rstrip(".") for m in abs_re().findall(txt)]
 
 
+def _scan_refs_as(path, name):
+    """scan_refs of the content at path, read as a file called name (the .f rule goes by the name)"""
+    if path == name:
+        return scan_refs(path)
+    try:
+        if os.path.getsize(path) > SCAN_MAX_BYTES:
+            return []
+        with open(path, errors="replace") as f:
+            txt = f.read()
+    except OSError:
+        return []
+    if name.endswith(".f"):
+        return [ln.strip() for ln in txt.splitlines() if ln.strip().startswith(SCAN_PREFIX)]
+    return [m.rstrip(".") for m in abs_re().findall(txt)]
+
+
+def _small_tree(d):
+    """a directory of at most DIR_MAX_FILES files and TREE_MAX_BYTES bytes"""
+    n = b = 0
+    for dp, _, fns in os.walk(d, followlinks=True):
+        for f in fns:
+            n += 1
+            try:
+                b += os.path.getsize(os.path.join(dp, f))
+            except OSError:
+                pass
+            if n > DIR_MAX_FILES or b > TREE_MAX_BYTES:
+                return False
+    return True
+
+
 def lane_depth_ok(p):
     return len([x for x in p.split("/") if x]) >= MIN_LANE_DEPTH
 
@@ -251,11 +290,13 @@ def free_gb(path):
     return s.f_bavail * s.f_frsize / 1e9
 
 
-def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
+def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print, dry=False, manifest_dir=None):
     """spec: {inputs: [{role, path, kind: file|dir, required: bool, deep: bool}], rebuild: {...}, meta: {...}}
     -> manifest {map: {orig: local}, files: {orig_file: sha}, restored, absent, ...}; writes <kit_inputs>/MANIFEST.json"""
+    # dry: walk the same closure and hash it, link nothing and write nothing into kit_inputs (snap id computation)
     store = Store(store_root or store_root_for(kit_inputs))
-    os.makedirs(kit_inputs, exist_ok=True)
+    if not dry:
+        os.makedirs(kit_inputs, exist_ok=True)
     files, mp, restored, absent, roles = {}, {}, [], [], {}
     seen = set()
     # KIT-STAGE-1 11-13 (KV kv3_pv x15 'preferred HDL source missing' 18:25): an input inside the wave's own source tree
@@ -316,13 +357,17 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
                     absent.append({"path": p, "role": inp.get("role"), "why": "file over the deep-input size cap"})
                     continue
                 lst = {"": p}
-            floor = ROOT_FLOOR_GB if on_root else SCRATCH_FLOOR_GB
-            need = sum(os.path.getsize(f) for f in lst.values() if not store.linkable(f)) / 1e9
-            if need and free_gb(store.root) - need < floor:
-                raise StoreError(f"store floor {floor} GB on {store.root}: copying {need:.1f} GB for {p} would cross it")
-            for rel, f in lst.items():
-                got[rel] = store.ingest(f)[0]
-            store.remember(p, kind, got)
+            if dry:
+                for rel, f in lst.items():
+                    got[rel] = store.file_sha(f, os.stat(f))
+            else:
+                floor = ROOT_FLOOR_GB if on_root else SCRATCH_FLOOR_GB
+                need = sum(os.path.getsize(f) for f in lst.values() if not store.linkable(f)) / 1e9
+                if need and free_gb(store.root) - need < floor:
+                    raise StoreError(f"store floor {floor} GB on {store.root}: copying {need:.1f} GB for {p} would cross it")
+                for rel, f in lst.items():
+                    got[rel] = store.ingest(f)[0]
+                store.remember(p, kind, got)
         else:
             rec = store.recall(p)
             if rec is None:
@@ -336,15 +381,24 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
             log(f"KIT-STORE RESTORED {p} ({len(got)} files) from {store.root}")
         for rel, sha in got.items():
             dest = os.path.join(local, rel) if rel else local
-            link_into(store, sha, dest)
+            if not dry:
+                link_into(store, sha, dest)
             files[os.path.join(p, rel) if rel else p] = sha
         if not inp.get("flat"):
             mp[p] = local                             # a flat (partial) neighbour dir is not a path prefix to rewrite
         if kind == "file" and inp.get("siblings") is not None and lane_depth_ok(os.path.dirname(p)):
             # plan / asbuilt neighbours read by relative path (gen die_io.json, bind r8/ landings, die_plan.json, views)
             pd = os.path.dirname(p)
-            queue.insert(0, ({"role": (inp.get("role") or "") + "_dir", "path": pd, "kind": "dir", "required": False,
-                              "deep": False, "flat": True, "subdirs": list(inp.get("siblings") or [])}, lvl))
+            # KIT-FIX-F 11-13 ('tree', set by the wave's kit_snap): a plan / as-built outside the pinned src is read
+            # together with files below its own directory by relative path (HEAD prep/native_domains, assets, published;
+            # hd_spn canary: FileNotFoundError .../prep/native_domains/parent_clock_contract.json).  A bounded directory
+            # moves whole; a large one (it also holds a bind output or run trees) keeps the flat rule.
+            if inp.get("tree") and _small_tree(pd):
+                queue.insert(0, ({"role": (inp.get("role") or "") + "_tree", "path": pd, "kind": "dir", "required": False,
+                                  "deep": False}, lvl))
+            else:
+                queue.insert(0, ({"role": (inp.get("role") or "") + "_dir", "path": pd, "kind": "dir", "required": False,
+                                  "deep": False, "flat": True, "subdirs": list(inp.get("siblings") or [])}, lvl))
         roles.setdefault(inp.get("role") or "deep", []).append(p)
         if inp.get("deep", True) and lvl < depth:
             scan = [local + ("/" + r if r else "") for r in got if (r or local).endswith(SCAN_SUFFIX)] \
@@ -353,7 +407,11 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
                 if kind == "dir" and not s.endswith(("bind.f",)) and not s.endswith(".sh"):
                     continue                          # inside a bind dir: only its file list names further inputs
                 files_only = s.endswith((".json", ".tcl", ".mk"))   # data names files; recipes may name dirs
-                for r in scan_refs(s):
+                src_s = s
+                if dry:                               # nothing was linked: read the content from its blob or original
+                    o = p + s[len(local):]
+                    src_s = o if os.path.exists(o) else store.blob(files.get(o, ""))
+                for r in _scan_refs_as(src_s, s):
                     r = os.path.normpath(r)
                     if r not in seen and not any(r.startswith(m + "/") for m in mp):
                         queue.append(({"role": "deep", "path": r, "required": False, "deep": True,
@@ -362,7 +420,7 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
     keys = sorted(mp, key=len, reverse=True)
     rewritten = {}
     for orig, sha in sorted(files.items()):
-        if not orig.endswith(RECIPE_SUFFIX) or not keys:
+        if dry or not orig.endswith(RECIPE_SUFFIX) or not keys:
             continue
         local = kit_inputs.rstrip("/") + orig
         with open(store.blob(sha), "rb") as f:
@@ -383,13 +441,14 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print):
            "in_place": kept_in_place,
            "bytes_copied": store.bytes_copied, "blobs_new": store.files_new,
            "rebuild": spec.get("rebuild") or {}, "meta": spec.get("meta") or {}}
-    write_manifest(store, kit_inputs, man)
+    if not dry:
+        write_manifest(store, kit_inputs, man, manifest_dir)
     return man
 
 
-def write_manifest(store, kit_inputs, man):
+def write_manifest(store, kit_inputs, man, manifest_dir=None):
     body = json.dumps(man, indent=1, sort_keys=True)
-    with open(os.path.join(kit_inputs, "MANIFEST.json"), "w") as f:
+    with open(os.path.join(manifest_dir or kit_inputs, "MANIFEST.json"), "w") as f:
         f.write(body)
     tag = re.sub(r"[^A-Za-z0-9_.-]", "_", "-".join(str(man.get("meta", {}).get(k, "")) for k in ("die", "item", "attempt")))
     name = f"{time.strftime('%Y%m%dT%H%M%S')}-{tag}-{hashlib.sha1(kit_inputs.encode()).hexdigest()[:8]}.json"
@@ -442,6 +501,203 @@ def localize_filelist(flist, kit_root, kit_inputs, store_root=None):
         with open(flist + ".orig_paths", "w") as f:
             f.write("\n".join(lines) + "\n")
     return {"n_lines": len(lines), "n_moved": moved, "missing": missing}
+
+
+SNAP_DIR = "snaps"
+SNAP_SCHEMA = "opentallas.kit_snap.v1"
+SNAP_KEEP_DAYS = 14
+
+
+def snap_root_for(path):
+    """the snapshot root of the filesystem a kit dir lives on: <scratch root>/kit-store/snaps"""
+    return os.path.join(store_root_for(path), SNAP_DIR)
+
+
+def snap_id(man):
+    """content address of a closure: sha256 over the sorted (original path, content sha) of every file the kit reads,
+    the files kept in place in the pinned source tree included.  Host, time and the snapshot's own location are not in it."""
+    h = hashlib.sha256()
+    for k, v in sorted((man.get("files") or {}).items()):
+        h.update(f"F\t{k}\t{v}\n".encode())
+    for k, v in sorted((man.get("in_place") or {}).items()):
+        h.update(f"P\t{k}\t{v}\n".encode())
+    return h.hexdigest()[:40]
+
+
+def _touch(p):
+    with open(p, "a"):
+        os.utime(p, None)
+
+
+VIEW_REF_MAX_BYTES = 600 << 20
+
+
+def view_refs(plan_path, typ, roots, store=None):
+    """KIT-FIX-F follow-up (QC slw_su_l1 canary): gen reads, for each child view the plan type names (<view dir>/x.lef),
+    <view dir>/provenance.json and follows its absolute paths to the ORIGINAL signed kit (provenance.src/face_guard.json,
+    the netlist that names, the sign-off receipt).  Those paths sit in json inside the pinned src tree, are read at
+    their original place and so cannot be remapped; they must exist on the gen host.
+    -> {present: {path: sha | 'dir'}, missing: [{path, by}]} for the views of ONE type (other types' views never block)."""
+    out = {"present": {}, "missing": []}
+    try:
+        t = (jload(plan_path).get("partition_types") or {}).get(typ)
+    except (OSError, ValueError):
+        return out
+    lefs, todo = set(), [t]
+    while todo:
+        v = todo.pop()
+        if isinstance(v, dict):
+            todo += list(v.values())
+        elif isinstance(v, list):
+            todo += v
+        elif isinstance(v, str) and v.endswith(".lef"):
+            lefs.add(v)
+    seen = set()
+
+    def take(p, by):
+        p = os.path.normpath(p)
+        if p in seen or not p.startswith("/"):
+            return
+        seen.add(p)
+        if os.path.isdir(p):
+            out["present"][p] = "dir"
+        elif os.path.isfile(p):
+            st = os.stat(p)
+            out["present"][p] = store.file_sha(p, st) if store else sha256_file(p)
+        else:
+            out["missing"].append({"path": p, "by": by})
+
+    for lef in sorted(lefs):
+        cands = [lef] if os.path.isabs(lef) else [os.path.join(r, lef) for r in list(roots) + [os.path.dirname(plan_path)]]
+        vd = next((os.path.dirname(c) for c in cands if os.path.isfile(c)), None)
+        pv = os.path.join(vd, "provenance.json") if vd else ""
+        if not pv or not os.path.isfile(pv):
+            continue
+        try:
+            j = jload(pv)
+        except (OSError, ValueError):
+            continue
+        refs = [r for r in scan_refs(pv) if os.path.normpath(r) != os.path.normpath(str(j.get("src") or "/"))]
+        if isinstance(j.get("src"), str) and j["src"].startswith("/"):
+            fg = os.path.join(j["src"], "face_guard.json")
+            refs.append(fg)
+            try:
+                n = jload(fg).get("netlist")
+                if isinstance(n, str) and n.startswith("/"):
+                    refs.append(n)
+            except (OSError, ValueError, AttributeError):
+                pass
+        for r in refs:
+            if os.path.isfile(os.path.join(vd, "signoff.json")) and r == str((j.get("export") or {}).get("signoff")):
+                continue                              # the view carries its own receipt: the original is not read
+            take(r, pv)
+    return out
+
+
+def snap(spec, snap_root, store_root=None, log=print):
+    """content-addressed snapshot of one kit's input closure -> {id, dir, kit_inputs, map, reused, n_files, ...}.
+    A required input that is absent raises StoreError (KIT-STORE MISSING): the caller stops the item before any queue wait."""
+    import fcntl
+    store_root = store_root or os.path.dirname(snap_root.rstrip("/"))
+    os.makedirs(snap_root, exist_ok=True)
+    dry = snapshot(spec, os.path.join(snap_root, ".dry"), store_root, log=lambda *a: None, dry=True)
+    vr = {"present": {}, "missing": []}
+    vt = spec.get("view_refs_type")
+    plan_in = next((x["path"] for x in spec.get("inputs") or [] if x.get("role") == "plan"), "")
+    if vt and plan_in:
+        vr = view_refs(plan_in, vt, [r for r in spec.get("in_place") or [] if r])
+    dry["in_place"] = dict(dry.get("in_place") or {}, **{"viewref:" + k: v for k, v in vr["present"].items()})
+    sid = snap_id(dry)
+    d = os.path.join(snap_root, sid)
+    root = os.path.join(d, "root")
+    with open(d + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)                # one builder per content; later items reuse the finished dir
+        reused = os.path.exists(os.path.join(d, ".verified"))
+        if reused:
+            man = jload(os.path.join(d, "MANIFEST.json"))
+        else:
+            os.makedirs(d, exist_ok=True)
+            man = snapshot(spec, root, store_root, log=log, manifest_dir=d)
+            man["in_place"] = dict(man.get("in_place") or {}, **{"viewref:" + k: v for k, v in vr["present"].items()})
+            if snap_id(man) != sid:
+                raise StoreError(f"KIT-SNAP inputs changed while the snapshot {sid} was built (a lane is still writing "
+                                 "them): relaunch when the inputs are final")
+            man.update(snap_schema=SNAP_SCHEMA, snap_id=sid)
+            with open(os.path.join(d, "MANIFEST.json"), "w") as f:
+                f.write(json.dumps(man, indent=1, sort_keys=True))
+            verify(d, mark=True)
+        _touch(os.path.join(d, ".used"))
+    return {"id": sid, "dir": d, "kit_inputs": root, "map": man["map"], "reused": reused, "n_files": len(man["files"]),
+            "absent": man.get("absent") or [], "restored": man.get("restored") or [], "host": socket.gethostname(),
+            "view_refs": len(vr["present"]), "view_refs_missing": vr["missing"],
+            "bytes_copied": 0 if reused else man.get("bytes_copied", 0), "store": store_root}
+
+
+def verify(snap_dir, mark=True):
+    """re-hash every file of a snapshot against its MANIFEST.json; write .verified only when all match.
+    Run after the snapshot is built and again on every host it is copied to.  -> {id, n_files}"""
+    d = snap_dir.rstrip("/")
+    try:
+        man = jload(os.path.join(d, "MANIFEST.json"))
+    except (OSError, ValueError) as e:
+        raise StoreError(f"KIT-SNAP VERIFY {d}: MANIFEST.json unreadable ({e})")
+    sid = snap_id(man)
+    if sid != os.path.basename(d) or man.get("snap_id") != sid:
+        raise StoreError(f"KIT-SNAP VERIFY {d}: manifest content id {sid} is not the directory name")
+    root = os.path.join(d, "root")
+    if man.get("kit_inputs") != root:
+        raise StoreError(f"KIT-SNAP VERIFY {d}: built for {man.get('kit_inputs')}; a snapshot must sit at the same "
+                         "absolute path on every host (its recipes name that path)")
+    bad = []
+    rew = man.get("rewritten") or {}
+    for orig, sha in sorted(man["files"].items()):
+        want = rew[orig]["kit_sha"] if orig in rew else sha
+        f = root + orig
+        try:
+            got = sha256_file(f)
+        except OSError:
+            got = "missing"
+        if got != want:
+            bad.append(f"{orig} ({got[:12]} != {want[:12]})")
+            if len(bad) >= 20:
+                break
+    if bad:
+        try:
+            os.unlink(os.path.join(d, ".verified"))
+        except OSError:
+            pass
+        raise StoreError(f"KIT-SNAP VERIFY {d}: {len(bad)} file(s) differ from the manifest: " + "; ".join(bad[:5]))
+    if mark:
+        with open(os.path.join(d, ".verified"), "w") as f:
+            f.write(json.dumps({"id": sid, "host": socket.gethostname(), "t": now_s(), "n_files": len(man["files"])}))
+        _touch(os.path.join(d, ".used"))
+    return {"id": sid, "dir": d, "n_files": len(man["files"]), "host": socket.gethostname()}
+
+
+def snap_gc(snap_root, keep_days=SNAP_KEEP_DAYS, apply=False, now=None, log=print):
+    """delete snapshots no item used for keep_days (.used mtime); dry run unless apply.  Blobs follow the store gc."""
+    now = now or time.time()
+    out = {"snap_root": snap_root, "kept": 0, "delete": 0, "apply": apply}
+    for n in sorted(os.listdir(snap_root)) if os.path.isdir(snap_root) else []:
+        d = os.path.join(snap_root, n)
+        if not os.path.isdir(d) or not re.fullmatch(r"[0-9a-f]{40}", n):
+            continue
+        try:
+            used = max(os.path.getmtime(os.path.join(d, x)) for x in (".used", ".verified", "MANIFEST.json")
+                       if os.path.exists(os.path.join(d, x)))
+        except ValueError:
+            used = os.path.getmtime(d)
+        if now - used <= keep_days * 86400:
+            out["kept"] += 1
+            continue
+        out["delete"] += 1
+        if apply:
+            shutil.rmtree(d)
+            for x in (d + ".lock",):
+                if os.path.exists(x):
+                    os.unlink(x)
+            log(f"KIT-SNAP GC deleted {d}: unused for more than {keep_days} d")
+    return out
 
 
 def referenced(store_root, extra=(), keep_days=KEEP_DAYS, now=None):
@@ -533,6 +789,16 @@ def main(argv=None):
     s.add_argument("--referenced", action="append", default=[], help="file of extra referenced shas (one per line)")
     s.add_argument("--keep-days", type=float, default=KEEP_DAYS)
     s.add_argument("--apply", action="store_true")
+    s = sp.add_parser("snap", help="content-addressed snapshot of a kit's input closure (wave option kit_snap)")
+    s.add_argument("--spec-b64", required=True)
+    s.add_argument("--snap-root", required=True)
+    s.add_argument("--store-root")
+    s = sp.add_parser("verify", help="re-hash a snapshot against its manifest; writes .verified when it matches")
+    s.add_argument("snap_dir")
+    s = sp.add_parser("snap-gc")
+    s.add_argument("--snap-root", required=True)
+    s.add_argument("--keep-days", type=float, default=SNAP_KEEP_DAYS)
+    s.add_argument("--apply", action="store_true")
     s = sp.add_parser("du")
     s.add_argument("--store-root", nargs="+", required=True)
     a = ap.parse_args(argv)
@@ -543,6 +809,12 @@ def main(argv=None):
             print("KW_KIT_STORE " + json.dumps({k: man[k] for k in ("map", "restored", "absent", "bytes_copied",
                                                                      "blobs_new", "store")}
                                                | {"n_files": len(man["files"]), "rewritten": sorted(man["rewritten"])}))
+        elif a.cmd == "snap":
+            print("KW_KIT_SNAP " + json.dumps(snap(json.loads(base64.b64decode(a.spec_b64)), a.snap_root, a.store_root)))
+        elif a.cmd == "verify":
+            print("KW_KIT_SNAP_VERIFY " + json.dumps(verify(a.snap_dir)))
+        elif a.cmd == "snap-gc":
+            print("KW_KIT_SNAP_GC " + json.dumps(snap_gc(a.snap_root, a.keep_days, a.apply)))
         elif a.cmd == "localize-filelist":
             print("KW_KIT_STORE_FL " + json.dumps(localize_filelist(a.flist, a.kit_root, a.kit_inputs, a.store_root)))
         elif a.cmd == "ingest":
