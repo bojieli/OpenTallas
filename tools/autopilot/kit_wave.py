@@ -1113,7 +1113,7 @@ DEDUP_MEMBERS = "dedup_members.tsv"
 KIT_HASH_PY = r"""
 import hashlib, os, re, sys
 K, T = sys.argv[1].rstrip("/"), sys.argv[2]
-h = hashlib.sha256(); n = 0
+h = hashlib.sha256(b"kit-identity-v2"); n = 0
 for f in ("io.tcl", "macro_place.tcl", "constraint.sdc", "pins.json", "config.mk"):
     p = os.path.join(K, f)
     if not os.path.isfile(p):
@@ -1123,6 +1123,10 @@ for f in ("io.tcl", "macro_place.tcl", "constraint.sdc", "pins.json", "config.mk
         t = "".join(l for l in t.splitlines(True) if not re.search(r"INSTANCE|__pv|OT_PARAM|PARAM_SET", l))
     t = t.replace(K, "<K>").replace(T, "<T>")
     t = re.sub(r"attempt_\d+", "attempt_N", t)
+    # v2 (DIE-S81-92): purely per-type names never separate two kits: every token carrying a __pv<hash> parameter-variant label
+    # (the collector_tree.type name, type / top labels) and every comment (the type labels in io.tcl / SDC / config.mk comments)
+    t = re.sub(r"[A-Za-z0-9_.]*__pv[0-9a-f]{6,}[A-Za-z0-9_.]*", "<PV>", t)
+    t = re.sub(r"(?m)[ \t]*;?#.*$", "", t)
     h.update(f.encode() + b"\0" + t.encode()); n += 1
 print("KW_KIT_HASH " + h.hexdigest() if n >= 3 else "KW_KIT_HASH_NONE")
 """
