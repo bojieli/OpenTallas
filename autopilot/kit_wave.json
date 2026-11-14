@@ -33003,7 +33003,7 @@
     "hd_spn_end@10",
     "hd_mesh_e@5",
     "hd_host_e@8",
-    "hd_st_n4@11"
+    "hd_st_n4@4"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -34915,7 +34915,13 @@
    "pilot_mode": "queue",
    "hold_items": {
     "coll_s": "ER4-HOLD-1113 (KIT-OPS-2 2026-11-13 18:2x, COORD via EXPERT-REVIEW-4): known-bad form, held out of launch (QC D8 parent / coll_s) until its owner posts a new form. Lift = delete this key.",
-    "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes."
+    "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
+    "sle_st_a_v1__cl67389ecd": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
+    "sle_st_a_v1__cl989804f6__cl18eece69": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
+    "slw_st_a_v1__clb036e152": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
+    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
