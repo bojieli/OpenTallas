@@ -22,3 +22,8 @@ Unowned (no queue post): s81 ot_s81sl_leaf__t29 and qwen_kvsys kv3_hroot (both O
 ## Sweep 4 (11:10 PST)
 Failed / not built: s81 25/149, head 0/1, QC 0/4, KV 0/0 (kv3_hgi_v3 and kv3_hroot cleared; TYPE-KVHROOT READY 11:05; leaf__t29 owned by TYPE-S81LEAF29). Wave launched 104 in 60 min (s81 80, QC 12, KV 10, head 2). 149 s81 not-built = col twins in DEDUP-RELEASE/wait, not stranded. QC not-built cores sta_region_nb0 / station_tail1 are WAIT-CHILD (prov_require_cands), owned by DIE-QC-103.
 Unowned: s81 ot_s81sl_leaf__t28 (flow-error exit 11), s81 slice_station__t27 (grt-overflow, GRT-0116). slice_station__t6__cl0755c26e: TYPE-SLICE-HOLD ASK to KIT-OPS-3 (09:06) still unanswered 2 h.
+
+## Sweep 5 (12:10 PST)
+Failed / not built: s81 25/148, head 0/1, QC 0/4, KV 1/0. Wave launched 78 in 60 min. leaf__t28 (TYPE-S81-T29, lec_async fix live 11:50), slice_station__t27 (TYPE-SLICE-HOLD) now owned. QC/HEAD not-built unchanged (WAIT-CHILD / dsdv cores).
+New unowned: s81 serdes__t3 (attempt 24, labelled INFRA but real cause is plan: "macro u_bound.u_core.u_prx straddles PG domain phy_lk_WN0", so relaunch will not help); qwen_kvsys kv3_hgi (STRUCTURAL grt-overflow GRT-0116, recorded 11:53, no lane post in 90 min).
+slice_station__t6__cl0755c26e still unstarted; escalated 11:10 to KIT-OPS-5, no reply.
