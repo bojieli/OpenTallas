@@ -2879,15 +2879,29 @@ def src_incomplete(AP, cfg, run=None):
                 need.setdefault(h, set()).add(die)
     counts, missing, deep, nmiss, probed = {}, {}, {}, {}, {}
     pkgbad = {}
-    for h, ds in sorted(need.items()):
+
+    def _cmd_of(h, ds):
         trees = sorted({t for die in ds for t in src_inputs(cfg, die)[0]})
         files = sorted({f for die in ds for f in src_inputs(cfg, die)[1]})
         dps = sorted({p for die in ds for p in deep_inputs(cfg, die)}
                      | {p for die in ds for ps in item_inputs(cfg, die).values() for p in ps})
-        try:
-            rc, o = run(h, _src_probe_cmd(trees, files) + ("; " + _deep_probe_cmd(dps) if dps else ""))
-        except Exception:
+        return dps, _src_probe_cmd(trees, files) + ("; " + _deep_probe_cmd(dps) if dps else "")
+    # WF-1 11-14 (#4): one probe per host, all hosts at once (was serial: 49 s of a 149 s wave step); results are consumed in the
+    # same sorted order below
+    from concurrent.futures import ThreadPoolExecutor
+    hosts_sorted = sorted(need.items())
+    with ThreadPoolExecutor(max_workers=max(1, min(12, len(hosts_sorted)))) as _ex:
+        def _probe(hd):
+            try:
+                return run(hd[0], _cmd_of(*hd)[1])
+            except Exception as e:
+                return e
+        probes = dict(zip([h for h, _ in hosts_sorted], _ex.map(_probe, hosts_sorted)))
+    for h, ds in hosts_sorted:
+        dps = _cmd_of(h, ds)[0]
+        if isinstance(probes[h], Exception):
             continue
+        rc, o = probes[h]
         if rc != 0:
             continue                                   # unreachable / failed probe = unknown, never dropped
         counts[h], missing[h], deep[h], nmiss[h], probed[h] = {}, set(), {}, {}, set(dps)
@@ -7848,10 +7862,56 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
     return n
 
 
+# WF-1 11-14 (#4): per-call wall timers of the functions _step calls, one KW-STEP-TIMES line per pass (top consumers), so the slow part
+# of the wave step is measured, not guessed.  Wrapping is idempotent and adds one time.time() pair per call.
+STEP_TIMED = ("load_config", "merge_auto_views", "merge_src_overlay", "load_state", "prune_stale_retries", "collect", "reap_dead",
+              "retry_enqueue", "follow_queue", "visual_reject_discard", "stop_cancelled_rows", "auto_rejudge", "release_pending",
+              "leafslew_step", "cancel_class_volume", "cancel_superseded", "reap_stale_attempts", "grt_arm_step", "parse_otrun_status",
+              "gen_disk_low", "workroot_low", "spill_marked", "src_incomplete", "load_counter_signed", "restage_waiters",
+              "reap_orphan_waiters", "save_state", "write_stages", "infra_relaunch_due", "launch_safe", "ensure_plan_view", "plan_dies",
+              "auto_views_step", "write_redesign", "write_blocked", "grt_arm_launches", "prov_resign_step", "protect_sources")
+STEP_T = {}
+
+
+def _instrument_step():
+    g = globals()
+    for name in STEP_TIMED:
+        fn = g.get(name)
+        if fn is None or getattr(fn, "_wf1_timed", False):
+            continue
+
+        def mk(name, fn):
+            def timed(*a, **k):
+                t0 = time.time()
+                try:
+                    return fn(*a, **k)
+                finally:
+                    c = STEP_T.setdefault(name, [0, 0.0])
+                    c[0] += 1
+                    c[1] += time.time() - t0
+            timed._wf1_timed = True
+            timed.__name__ = fn.__name__
+            timed.__doc__ = fn.__doc__
+            return timed
+        g[name] = mk(name, fn)
+
+
 def step(AP, ap_dir=None):
     """one wave pass; a non-blocking lock keeps two passes (tick + CLI step) from double-launching"""
     import fcntl
     ap_dir = ap_dir or AP.AP_DIR
+    _instrument_step()
+    STEP_T.clear()
+    t_step = time.time()
+    try:
+        return _step_locked(AP, ap_dir)
+    finally:
+        top = sorted(STEP_T.items(), key=lambda kv: -kv[1][1])[:10]
+        AP.log(f"KW-STEP-TIMES total={time.time() - t_step:.0f}s " + " ".join(f"{k}={v[0]}x/{v[1]:.0f}s" for k, v in top))
+
+
+def _step_locked(AP, ap_dir):
+    import fcntl
     if os.environ.get("KW_LOCK_HELD") == "1":           # reload_step child: the parent pass holds kit_wave.lock
         return _step(AP, ap_dir)
     lk = open(Path(ap_dir) / "kit_wave.lock", "w")
