@@ -7,3 +7,9 @@ Sweep 1 counts (failed / not-built / unowned):
 - qwen_kvsys KV: 1 failed (kv3_hgi_v6, plan-B owner TYPE-KVHGI2) / 0 / 0
 Relaunched: none (no infra-kill items; no rc137/143/241 rows).
 NEEDS-LANE class: GEN_LINT memory_bits over SYNTH_MEMORY_MAX_BITS (3 svc_hi types).
+
+## Sweep 2 (09:10 PST)
+Counts (failed / not built): s81 66/5 (was 22/8), head 0/1, QC 0/4, KV 1/0 (kv3_io_ft_v1 routed-not-signed TT 17.6 FF -168.5 late-ECO exhausted, no lane post found = UNOWNED).
+s81 +44 failures = new Tcl class "global_place.tcl explicit FT site is not on a row/site" on col_h9/h10 types; owned by TL-COLH9R0P1..P6 (FINDING 06:01, shared cause #2), die owner DIE-S81-90. Also kv_leaf__t4 + serdes__t2 grt-timecap (21.6 ks cap, structural, serdes__t2 has HARD-S81-SERDES-1), leaf__t73 CTS flow error.
+slice_station__t6__cl0755c26e: KIT-OPS-3 did not answer ASK. Not relaunched by me: last real attempt 11-11 failed PLAN KIT_TOPOLOGY_BIND_STALE (regenerate canonical bind/kit), earlier classes STRUCTURAL routed-not-signed hold -45.9 ps; a plain relaunch would repeat it. Needs a bind regen = design lane.
+Relaunched: none. Next sweep ~10:10 PST.
