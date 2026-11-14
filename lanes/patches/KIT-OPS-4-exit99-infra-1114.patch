@@ -1,0 +1,20 @@
+--- a/tools/autopilot/kit_wave.py	2026-11-14 04:17:33.977626104 -0800
++++ b/tools/autopilot/kit_wave.py	2026-11-14 04:17:34.015240559 -0800
+@@ -285,7 +285,7 @@
+ # 12 QC rows were charged to RETRY-INFRA although no command ran.  An ot-run / ot-heavy 'NOT RUN' (admission refusal, usage text,
+ # held host) means the command never started: such an attempt is no attempt.  The row waits NO_HOST_RETRY_S and is relaunched;
+ # NOT_RUN_FREE_MAX bounds the free tries of one row, then the budget is charged as before (a permanent tool fault still ends).
+-NOT_RUN_LINE = re.compile(r"(?m)^\s*(?:ot-run|ot-heavy): NOT RUN\b|^\s*(?:usage|Usage): ot-run\b|ot-run: unknown option|ot-run: unrecognized")
++NOT_RUN_LINE = re.compile(r"(?m)^\s*(?:ot-run|ot-heavy|ot-job): NOT RUN\b|^\s*(?:usage|Usage): ot-run\b|ot-run: unknown option|ot-run: unrecognized")
+ NOT_RUN_FREE_MAX = 8
+ 
+ 
+@@ -1511,7 +1511,7 @@
+     ("INFRA", None, r"ot-run: interrupted \(signal 15|cancellation requested on|stopped by operator|"
+                     r"below the (?:gen |scratch |root )?disk floor|scratch floor|disk floor",
+      "infra (unit stopped from outside / disk floor wait: no design result)"),
+-    ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
++    ("INFRA", None, r"ot-run: NOT RUN|ot-job: NOT RUN: input [^\n]*not in the store, not on this host|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
+                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
+                     r"yosys elaboration failed rc[ =]+1(?:25|37)\b|"
+                     # S81-OTHERFAIL-1 11-07: host earlyoom SIGTERMs yosys (epyc2 16:01/16:09 PST, mem 3%): the synth make
