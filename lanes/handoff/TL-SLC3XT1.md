@@ -5,3 +5,5 @@ Advisory only: a22 AUTO-GEOM fill 0.053 / empty 0.75, preflight clock M7 vs M8 a
 Action: asked KIT-OPS-3 to delete hold_items key; same src/plan (freeze-safe), runs gen+place+route on epyc7/epyc10/epyc2/intel1.
 
 Update 06:4x: hold lifted; a23 launched 04:58 and failed 06:36 INFRA @gen_lint: yosys rc 143 (SIGTERM) on epyc8 (MemAvailable 58 GB, disk-tight host; kill from outside, not an RTL error). Needs retry key @23 and gen_lint off epyc8. Waiter re-armed.
+
+Update 14:5x: a24 (06:39), a25 (12:17), a26 (13:26) relaunched by wave (restaged epyc9->epyc7). a26 FAIL FLOW @lec_tools 14:56: ValueError runner template differs from pinned scheduler snapshot (scheduler/tool pin mismatch, not RTL or route). Still no GRT/DRT result.
