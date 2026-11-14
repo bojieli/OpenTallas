@@ -559,7 +559,8 @@
     "kv3_pv_v6@2",
     "kv3_pv_v6n@3",
     "kv3_pv_v7@2",
-    "kv3_pv_v3@3"
+    "kv3_pv_v3@3",
+    "kv3_hub_C@13"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -866,7 +867,8 @@
     "kv3_pv_v4n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_pv_v5n@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_pv_v6n@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
-    "kv3_hub_Ei@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists)."
+    "kv3_hub_Ei@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
+    "kv3_hub_C@13": "LIMIT-BIND-1 (COORD 01:5x): tap/cell-cap/R-CAP limits removed (overlay on die srcs + OT_CORE_TAP_REACH_UM=0); changed input, counters reset; relaunch."
    },
    "only_items": [
     "kv3_astk",
@@ -4080,7 +4082,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
-    "OT_GRT_NONPORT_HOLD": "1"
+    "OT_GRT_NONPORT_HOLD": "1",
+    "OT_CORE_TAP_REACH_UM": "0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -5162,7 +5165,11 @@
     "epyc7",
     "intel2",
     "epyc2"
-   ]
+   ],
+   "die_gen_env_prev_kitops3_lb": {
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
+   }
   },
   "s81": {
    "enabled": true,
@@ -21556,7 +21563,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
-    "OT_GRT_NONPORT_HOLD": "1"
+    "OT_GRT_NONPORT_HOLD": "1",
+    "OT_CORE_TAP_REACH_UM": "0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -28556,7 +28564,11 @@
     "svc_hi_dsdv_svc_rs__t4__*": "SVC-MACRO-1113 (KIT-OPS-1 2026-11-13 06:30; HARD-S81-SVC-1 ASK 06:13, COORD 06:3x APPROVED): GEN_LINT memory_bits 42,400 > 16,384 repeats (242 FAIL events); the form changes (generated staging-memory macro + R-CAP-3 split + new floorplan) in one S81 event after the 11-15 04:00 freeze. Release = HARD-S81-SVC-1 / S81 die owner (delete this key)."
    },
    "note_kitops3_fx": "KIT-OPS-3 00:4x (COORD EXPERT-REVIEW-6): svc_lo 7 types held-lifted + keyed after $fatal overlay; 10 explicit col_h holds released (not in B2u changed list, 140 changed types) and col_h10* glob split to explicit changed types. Revert: hold_items_lifted_kitops3_fx.",
-   "note_kitops3_svc3": "KIT-OPS-3 00:4x: svc_hi rs t2/t3/t4 released+keyed; svc_hi pvso t2, rs t1, t5, t6 stay held (in B2u changed list)."
+   "note_kitops3_svc3": "KIT-OPS-3 00:4x: svc_hi rs t2/t3/t4 released+keyed; svc_hi pvso t2, rs t1, t5, t6 stay held (in B2u changed list).",
+   "die_gen_env_prev_kitops3_lb": {
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -28705,7 +28717,7 @@
     "hd_serdes@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "hd_tile@1": "KIT-OPS-3 11-13 22:4x (COORD): kit_rtl pin_root_copies failure on the train-L overlay srcs, srcs fixed (patch-only); relaunch.",
     "hd_mesh@2": "DRAIN-EPYC4 (COORD 00:4x): epyc4 terminating; running container stopped by exact name; relaunch on other hosts (epyc4 out of host lists).",
-    "hd_serdes@3": "TYPE-HDSERDES (COORD 00:5x): third parallel form, OT_GEN_SECONDARY_CLOCK=hd_serdes:pma_rck[0]:pma_rck:1000:80:210 via HEAD-SERDES-SECONDARY overlay on src_head_rp21z_pgcap1d724b73; running attempt cancelled (kit_rtl stage) and relaunched.",
+    "hd_serdes@3": "LIMIT-BIND-1 (COORD 01:5x): tap/cell-cap/R-CAP limits removed (overlay on die srcs + OT_CORE_TAP_REACH_UM=0); changed input, counters reset; relaunch.",
     "hd_host_e@3": "LIMIT-GRT-1 (COORD 01:1x): GRT early-stop removed (grt183_make.sh 7be13e6b09c7, failfast_rules.py 6330beac49ec on the die src; 12 h OT_GRT_POST_MAX_S is the only stop); regenerate + relaunch."
    },
    "gen_hosts": [
@@ -29565,7 +29577,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
-    "OT_GRT_NONPORT_HOLD": "1"
+    "OT_GRT_NONPORT_HOLD": "1",
+    "OT_CORE_TAP_REACH_UM": "0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -30302,7 +30315,11 @@
     "epyc9",
     "intel2",
     "epyc2"
-   ]
+   ],
+   "die_gen_env_prev_kitops3_lb": {
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -38572,7 +38589,8 @@
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
-    "OT_GRT_NONPORT_HOLD": "1"
+    "OT_GRT_NONPORT_HOLD": "1",
+    "OT_CORE_TAP_REACH_UM": "0"
    },
    "item_inputs_prev_kw45_s28a": {
     "cbf_q00__cl1b5a6458": null,
@@ -39299,7 +39317,11 @@
     "epyc9",
     "intel2",
     "epyc2"
-   ]
+   ],
+   "die_gen_env_prev_kitops3_lb": {
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
+   }
   },
   "hbm": {
    "enabled": true,
@@ -56263,7 +56285,11 @@
     "intel2",
     "epyc2",
     "intel1"
-   ]
+   ],
+   "die_gen_env_prev_kitops3_lb": {},
+   "die_gen_env": {
+    "OT_CORE_TAP_REACH_UM": "0"
+   }
   }
  },
  "place_prefer": [
@@ -57262,5 +57288,6 @@
   "epyc10"
  ],
  "note_kitops3_e8all": "KIT-OPS-3 00:2x (COORD): epyc8 out of hosts/place_prefer for all dies until CLEAN-E8 posts >1 TB free; then restore from *_prev_kitops3_e8all.",
- "note_kitops3_e8back": "KIT-OPS-3 00:4x (COORD: epyc8 scratch 2.6 TB free): epyc8 restored to hosts/place_prefer/gen_hosts from *_prev_kitops3_e8all / gen_hosts_prev_kitops3_e8."
+ "note_kitops3_e8back": "KIT-OPS-3 00:4x (COORD: epyc8 scratch 2.6 TB free): epyc8 restored to hosts/place_prefer/gen_hosts from *_prev_kitops3_e8all / gen_hosts_prev_kitops3_e8.",
+ "note_kitops3_lb": "KIT-OPS-3 01:xx LIMIT-BIND-1 overlay deployed on die srcs; die_gen_env OT_CORE_TAP_REACH_UM=0 all dies (old in die_gen_env_prev_kitops3_lb); retry keys for tap/cap-limit failures + hd_serdes."
 }
