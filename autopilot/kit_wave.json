@@ -38115,6 +38115,38 @@
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/qc103-qfd_dv_s8_tap_bounded/qfd_dv_s8_tap_bounded",
       "job": "COUNTED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (KW-FIX-32 export_view; QC-CORES hand-built form e, registered by KIT-OPS-3)"
      }
+    ],
+    "qfd_dv_s8_station_tail1": [
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tail1-rkwb1/qfd_dv_s8_station_tail1",
+      "job": "SIGNED qfd_dv_s8_station_tail1 epyc2:/srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff/signoff.json (TL-QCTAIL1 rkwb1 R-MINIMAL; export_view, outline 162x162, 560 pins; archived AGIdock /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tail1-rkwb1/qfd_dv_s8_station_tail1",
+      "job": "SIGNED qfd_dv_s8_station_tail1 epyc2:/srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff/signoff.json (TL-QCTAIL1 rkwb1 R-MINIMAL; export_view, outline 162x162, 560 pins; archived AGIdock /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1)"
+     },
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tail1-rkwb1/qfd_dv_s8_station_tail1",
+      "job": "SIGNED qfd_dv_s8_station_tail1 epyc2:/srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff/signoff.json (TL-QCTAIL1 rkwb1 R-MINIMAL; export_view, outline 162x162, 560 pins; archived AGIdock /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1)"
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tail1-rkwb1/qfd_dv_s8_station_tail1",
+      "job": "SIGNED qfd_dv_s8_station_tail1 epyc2:/srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff/signoff.json (TL-QCTAIL1 rkwb1 R-MINIMAL; export_view, outline 162x162, 560 pins; archived AGIdock /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1)"
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tail1-rkwb1/qfd_dv_s8_station_tail1",
+      "job": "SIGNED qfd_dv_s8_station_tail1 epyc2:/srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff/signoff.json (TL-QCTAIL1 rkwb1 R-MINIMAL; export_view, outline 162x162, 560 pins; archived AGIdock /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1)"
+     },
+     {
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/tail1-rkwb1/qfd_dv_s8_station_tail1",
+      "job": "SIGNED qfd_dv_s8_station_tail1 epyc2:/srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff/signoff.json (TL-QCTAIL1 rkwb1 R-MINIMAL; export_view, outline 162x162, 560 pins; archived AGIdock /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1)"
+     }
     ]
    },
    "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
@@ -44442,7 +44474,6 @@
     "sta_cland_w537_s_s10_1",
     "sta_cland_w632_e_s11",
     "sta_region_nb0",
-    "qfd_dv_s8_station_tail1",
     "qfd_dv_s8_tap_bounded",
     "qfd_dv_s5_ctl_repair4_leaf"
    ],
