@@ -45,8 +45,6 @@ class ExactTimingLibraries(unittest.TestCase):
         self.assertTrue(all('250407' not in x['path'] for x in d['libraries']))
         self.assertTrue(all(len(x['sha256'])==64 for x in d['libraries']))
 
-    @pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: signoff.py EXACT_TIMING_LIBRARIES_TCL embeds a KW-FIX-5 variant of the selector that differs from timing_libs.tcl (drifted copy; postcts_gate.tcl embed must also be re-synced)')
-
     def test_standalone_tools_embed_identical_selector_without_sibling(self):
         import ast
         canonical=(HERE/'timing_libs.tcl').read_text()
