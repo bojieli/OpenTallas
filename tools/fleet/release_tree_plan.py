@@ -1362,6 +1362,37 @@ def keep_g0c_report(label, rep):
         pass
 
 
+# COUNT-FRICTION-1 port: main's copy of this file has no COORD_DIR (the deployed coord copy defines it); same value as there
+COORD_DIR = globals().get('COORD_DIR') or pathlib.Path(os.environ.get('OT_COORD_DIR') or pathlib.Path(__file__).resolve().parent.parent)
+DEDUP_FILE = pathlib.Path(os.environ.get('OT_COUNT_DEDUP') or COORD_DIR / 'autopilot' / 'dedup_members.tsv')
+
+
+def dedup_rows(path=None):
+    """autopilot/dedup_members.tsv (WAVE-FRICTION-1 friction 7): die, member type, owner type, owner job, credit id, identity.  -> [dict]"""
+    out = []
+    try:
+        for l in pathlib.Path(path or DEDUP_FILE).read_text().splitlines():
+            f = l.split('\t')
+            if len(f) < 3 or not f[0] or f[0].startswith('#') or f[0] in ('die', 'time'): continue
+            out.append(dict(die=f[0], member=f[1], owner=f[2], owner_job=f[3] if len(f) > 3 else '', credit_id=f[4] if len(f) > 4 else '',
+                            identity=f[5] if len(f) > 5 else ''))
+    except OSError:
+        pass
+    return out
+
+
+def dedup_credit(die, st, tm, rows):
+    """kit dedup (COORD 11-14): a member type whose kit has the owner's identity counts when the owner counts.  st {type: [refs]} (mutated), tm {type: module}
+    of the plan.  The ref is the owner's, with 'via dedup <owner>' appended.  -> [member types credited].  An owner that is not counted credits nothing."""
+    done = []
+    for r in rows:
+        m, o = r['member'], r['owner']
+        if r['die'] != die or m in st or m not in tm or not st.get(o): continue
+        st[m] = [x + ' via dedup %s (job %s, identity %s)' % (o, r['owner_job'], r['identity'][:12]) for x in st[o]]
+        done.append(m)
+    return done
+
+
 def refresh(log=lambda *a: None, old=None):
     errs = []
     for g in sweep_stale_tmp():
@@ -1491,6 +1522,10 @@ def refresh(log=lambda *a: None, old=None):
                         else:
                             C.setdefault(m, []).append(ref)
                             if C is sc: core_recs.setdefault(m, []).append((ref, r_))
+            try:
+                ent['dedup_credited'] = dedup_credit(ent['die'], st, tm, dedup_rows())
+            except Exception as e:
+                errs.append('DEDUP credit %s: %s' % (d, e))
             ent['signed_types'] = st; ent['signed_cores'] = sc
             if ent.get('designs') is not None:
                 rp = fetch_rec_pins([r_ for m in core_recs for _, r_ in core_recs[m]], log) if core_recs else {}
