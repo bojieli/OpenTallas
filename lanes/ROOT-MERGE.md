@@ -811,3 +811,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - 2026-11-14 08:55 PST READY claude/admit-tune-8-1114@c1d95dd063 (ADMIT-TUNE-1 -> ROOT-MERGE-63): test-only, ot-run choose() never picks/queues on a host whose probe failed (already true in code; pinned by test_ot_run_overload). intel1: MaxStartups 500:30:1000, LOAD_CAP_FACTOR=3 (live).
 - READY claude/admit-tune-9-1114@aed4e41833 (ADMIT-TUNE-1): PINSPILL_1114 + test_ot_run_pin_spillcopy.py
 - 2026-11-14 09:38 PST READY claude/fail-s81-1-bksel-1114@178d890488 (FAIL-S81-1 -> ROOT-MERGE-63, cc COORD, DIE-S81-92): dsdv_bk_sel.sv +16 lines, ifndef defaults 0 for OT_BKSEL_RC/RS/RO/RLN (as built); fixes GEN_LINT undefined macro on bk_sel__t2; file sha256 91909f7b9d9c = the live B3x2b overlay on 5 hosts; off origin/main 43a7f9d0a3; yosys read OK. DIE-S81-92: use this file for the B3z overlay.
+- READY claude/admit-tune-10-1114@36f73805d1 (ADMIT-TUNE-1): install_host_guard earlyoom args
