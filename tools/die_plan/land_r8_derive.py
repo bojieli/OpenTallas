@@ -55,6 +55,13 @@ def derive(raw, bg, opts):
         return p.read_text(), sm
 
 
+def pinned(text, pre, extra):
+    """DIE-QC-102 deliberate R8 pin (pin_r8_v2.py) applied on a derivation: returns the pinned table text"""
+    import pin_r8_v2 as P
+    t = P.apply_pin(json.loads(text), P.load(pre), extra, log=lambda *a: None)
+    return json.dumps(t, indent=1) + "\n"
+
+
 def diff(old, new, limit=60):
     """member-level comparison of two tables: {added, removed, changed, lanes, equal}"""
     om = {m["id"]: m for m in old.get("members", [])}
@@ -99,17 +106,28 @@ def main(argv=None):
     a.add_argument("--like", required=True, help="current table: its r8 options are reused, its members diffed")
     a.add_argument("--out", required=True)
     a.add_argument("--json")
+    a.add_argument("--pin-pre", help="pre-derive table (.json/.json.gz): apply pin_r8_v2.py to the derivation (the deliberate QC s29 R8 pin)")
+    a.add_argument("--pin-extra", type=int, default=0)
     c = sub.add_parser("check")
     c.add_argument("plan")
     c.add_argument("bus_groups")
     c.add_argument("--table", required=True)
     c.add_argument("--json")
+    c.add_argument("--pin-pre", help="pre-derive table (.json/.json.gz): apply pin_r8_v2.py to the derivation (the deliberate QC s29 R8 pin)")
+    c.add_argument("--pin-extra", type=int, default=0)
     a = ap.parse_args(argv)
     import schema as S
     raw = S.load(a.plan)
     bg = json.loads(Path(a.bus_groups).read_text())
     ref = json.loads(Path(a.like if a.cmd == "derive" else a.table).read_text())
     text, sm = derive(raw, bg, options(ref))
+    import pin_r8_v2 as P
+    if a.pin_pre:
+        text = pinned(text, a.pin_pre, a.pin_extra)
+    elif a.cmd == "check" and P.PIN_MARK in str(ref.get("note", "")):
+        print(f"LAND_R8 PIN MISSING {a.table}: the table is a deliberate pin ({P.PIN_MARK}) but check got no --pin-pre; "
+              "a plain derivation would silently drop it")
+        return 2
     d = diff(ref, json.loads(text))
     rep = dict(cmd=a.cmd, plan=str(a.plan), bus_groups=str(a.bus_groups), bus_groups_digest=R8.bg_digest(bg),
                options=options(ref), summary=sm, diff=d)
