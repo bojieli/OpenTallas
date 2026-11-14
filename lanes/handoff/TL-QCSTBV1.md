@@ -1,3 +1,5 @@
 # TL-QCSTBV1 (QC sle_st_b_v1) 2026-11-14 04:43 PST
 - Old failures: pvc5a85fd4 kit_rtl PLAN (mixed HI_PAD 28/30) -> already fixed by plan split into pvc5a85fd4__pv38472fb8 / __pv7b7fafb4 (event s29q103S); pv0e7b1dcc a6 place RC=99 = INFRA (ot-job input run_kit.sh not in store when dispatched intel1->epyc2), relaunched as a7 on s29q103S.
 - Now: 3 forms in flight in place (splits since 03:48, a7 since 04:29). No same-input rerun needed. Next: on result.json, classify; pass -> AUTO-RESIGN.tsv row.
+- 2026-11-14 12:50 a3103b045128 (a7, event s29q103S) NOT a hold failure: kit already had OT_PREGRT_FF_HOLD=1 guard 45 (pregrt ran 9608 s, FF hold ok except port_in -99.75 = advisory). FAIL_POSTCTS = TT postcts gate process died at 20:35 UTC (log cut at GRT-9104, no postcts_gate_tt.json; rotated to .previous; epyc10 had 6 GB free of 1007) -> OOM/infra; the 20:28 TT run said PASS (pinreg dev 12.43, setup_est -198.97 pre-route est, hold_est -113).
+- a8 (newer plan s29q103S2, epyc9 geom stage since 10:13 PST) is the live form; no relaunch of a7 inputs. Risk to watch: setup_est TT -199 at GRT -> if routed WNS < -100 hand to family owner for pipelining.
