@@ -12,19 +12,21 @@
 importScripts('/explorer/element/lv_decode.js');
 const D = self.LVDecode;
 let H = null, NL = 0;
+const HS = new Map();   // multi-pack (die viewer): pack id -> header; a message's `pack` field selects it (default '' = the single-pack element page)
+function usePack(id){ const h = HS.get(id || ''); if (!h) throw new Error('no header for pack ' + id); H = h; NL = h.layers.length; return h; }
 const planes = new Map();   // raster key -> {layers, planes}
 let style = null;
 
 // via arrays (power-grid vias with many cuts per layer): drawn as one merged box per (via, cut layer) until the cuts
 // are at least a couple of pixels wide (arrDetail), then cut by cut.  Enclosures are always drawn exactly.
-let arrInfo = null;   // via type -> {layer: [cut box indices]} for layers with > 4 boxes
+const ARRS = new Map();   // via type -> {layer: [cut box indices]} for layers with > 4 boxes
 function viaArrays(){
-  if (arrInfo) return arrInfo;
-  arrInfo = H.vias.map(v => { const by = {}; v.boxes.forEach((b, j) => (by[b[0]] = by[b[0]] || []).push(j)); const o = {};
+  if (ARRS.has(H)) return ARRS.get(H);
+  const arrInfo = H.vias.map(v => { const by = {}; v.boxes.forEach((b, j) => (by[b[0]] = by[b[0]] || []).push(j)); const o = {};
     for (const li in by) if (by[li].length > 4){ const bs = by[li].map(j => v.boxes[j]);
       o[li] = [Math.min(...bs.map(b => b[1])), Math.min(...bs.map(b => b[2])), Math.max(...bs.map(b => b[3])), Math.max(...bs.map(b => b[4]))]; }
     return Object.keys(o).length ? o : null; });
-  return arrInfo;
+  ARRS.set(H, arrInfo); return arrInfo;
 }
 function buildTile(T, phys, arrDetail){
   // gather per layer (dense lists) so the output is in draw order
@@ -90,10 +92,10 @@ async function get(url){
 }
 // decoded tile sections, kept so a layer switched on later costs only its own section (LRU by count)
 const secCache = new Map();
-async function section(p){
+async function section(p, Hd){
   let T = secCache.get(p.url);
   if (T){ secCache.delete(p.url); secCache.set(p.url, T); return T; }
-  const buf = await get(p.url); T = D.decodeTile(buf, H); T.bytes = buf.length;
+  const buf = await get(p.url); T = D.decodeTile(buf, Hd); T.bytes = buf.length;
   secCache.set(p.url, T); if (secCache.size > 6000) secCache.delete(secCache.keys().next().value);
   return T;
 }
@@ -101,34 +103,36 @@ async function section(p){
 self.onmessage = async (ev) => {
   const m = ev.data;
   try {
-    if (m.op === 'init'){ H = m.header; NL = H.layers.length; return; }
+    if (m.op === 'init'){ HS.set(m.pack || '', m.header); usePack(m.pack); return; }
     if (m.op === 'tile'){
       const t0 = performance.now();
-      const parts = await Promise.all(m.parts.map(section));
+      const Hp = usePack(m.pack);
+      const parts = await Promise.all(m.parts.map(q => section(q, Hp)));
       const t1 = performance.now();
       const T = {ox: parts[0].ox, oy: parts[0].oy, size: parts[0].size, rects: {}, vias: null, cells: null};
       let bytes = 0;
       for (const P of parts){ Object.assign(T.rects, P.rects); if (P.vias) T.vias = P.vias; if (P.cells) T.cells = P.cells; bytes += P.bytes; }
+      usePack(m.pack);
       const r = buildTile(T, m.phys, m.arrDetail);
-      r.op = 'tile'; r.key = m.key; r.secs = m.parts.map(p => p.name); r.bytes = bytes; r.ms = [t1 - t0, performance.now() - t1];
+      r.op = 'tile'; r.key = m.key; r.pack = m.pack || ''; r.secs = m.parts.map(p => p.name); r.bytes = bytes; r.ms = [t1 - t0, performance.now() - t1];
       const p = r.pick;
       self.postMessage(r, [r.rects.buffer, r.meta.buffer, p.x0.buffer, p.y0.buffer, p.x1.buffer, p.y1.buffer, p.layer.buffer, p.kind.buffer, p.net.buffer, p.aux.buffer, p.pin.buffer]);
       return;
     }
     if (m.op === 'raster'){
       if (m.style) style = m.style;
-      let R = planes.get(m.key);
-      if (!R){ R = D.decodeRaster(await get(m.url)); planes.set(m.key, R); if (planes.size > 400) planes.delete(planes.keys().next().value); }
+      const pk = (m.pack || '') + '|' + m.key; let R = planes.get(pk);
+      if (!R){ R = D.decodeRaster(await get(m.url)); planes.set(pk, R); if (planes.size > 400) planes.delete(planes.keys().next().value); }
       const rgba = composite(R);
-      self.postMessage({op: 'raster', key: m.key, rgba, size: R.size, layers: R.layers}, [rgba.buffer]);
+      self.postMessage({op: 'raster', key: m.key, pack: m.pack || '', rgba, size: R.size, layers: R.layers}, [rgba.buffer]);
       return;
     }
     if (m.op === 'restyle'){
       style = m.style;
-      for (const [key, R] of planes){ const rgba = composite(R); self.postMessage({op: 'raster', key, rgba, size: R.size, layers: R.layers, restyle: true}, [rgba.buffer]); }
+      for (const [pk2, R] of planes){ const i2 = pk2.indexOf('|'), key = pk2.slice(i2 + 1); const rgba = composite(R); self.postMessage({op: 'raster', key, pack: pk2.slice(0, i2), rgba, size: R.size, layers: R.layers, restyle: true}, [rgba.buffer]); }
       return;
     }
   } catch (e) {
-    self.postMessage({op: 'error', key: m.key, what: m.op, error: String(e && e.message || e)});
+    self.postMessage({op: 'error', key: m.key, pack: m.pack || '', what: m.op, error: String(e && e.message || e)});
   }
 };

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Die map (routed)</title>
+<style>
+/* stand-in for the shell's tokens.css (same names as design/index.html) */
+:root{--bg:#05070d;--panel:#0b1020;--line:#1b2540;--ink:#e8eefc;--dim:#8a97b8;--faint:#4a5678;--accent:#5ee7ff;--canvas:#03050b;--macro:#a78bfa;--cellgrey:#8a97b8;--topbg:#070b16cc;--tipbg:#0b1020f2;
+ --s-signed:#3fbf6f;--s-failed:#e5484d;--s-building:#3b9eff;--s-queued:#c79a2b;--s-waiting:#8d7ad1;--s-notbuilt:#3a4560;--s-hardip:#6b5a3a;
+ --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--sans:Inter,ui-sans-serif,system-ui,sans-serif;color-scheme:dark}
+html,body{margin:0;height:100%;background:var(--bg)}#app{height:100%}
+</style>
+<link rel="stylesheet" href="/explorer/design/diemap.css">
+</head>
+<body><div id="app"></div>
+<script src="/explorer/element/vendor/deck.gl-8.9.36.min.js"></script>
+<script src="/explorer/element/layout.js"></script>
+<script src="/explorer/design/diemap.js"></script>
+<script>mountDieLayout(document.getElementById('app'), {onSelect: function(n){ location.hash = location.hash.replace(/n=[^&]*/, 'n=' + encodeURIComponent(n)); }});</script>
+</body></html>
