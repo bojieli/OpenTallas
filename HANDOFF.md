@@ -3665,3 +3665,4 @@ CODEX: Claude back17:18PST; all workers STOPNEW/safelyparked, running jobs prese
 2026-11-13 21:3x PST COORD: train L PG-track fix landed (KIT-OPS-3 deploy + verify it reaches S81/KV/QC kits); kit_snap live on HEAD; HE-EPC signed pending re-sign; QC s29 final R8 bind.
 2026-11-13 22:3x PST COORD: OWNER removed all wave launch limits; VARIANTS-1 (Sonnet) runs 2nd-recipe builds; QC-102 and S81-91 (Opus) on final binds.
 2026-11-14 00:0x PST COORD: QC s29 adopted; KV token replay fail -> kv102sem; S81 B2t binding; epyc4 drain near done; CLEAN-E8 (Sonnet) frees epyc8/epyc7 scratch.
+2026-11-14 00:3x PST COORD: epyc4 terminated; OWNER no-friction directive -> EXPERT-REVIEW-6 actions assigned (WAVE-FRICTION-1, COUNT-FRICTION-1, KIT-OPS-3, CLEAN-4); ~22 lanes live.

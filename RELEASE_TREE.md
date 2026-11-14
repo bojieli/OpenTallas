@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-14 00:0x PST count 276 (types S81 35/204, HEAD 19/26, QC 2/120, KV 1/56, HBM 1/81; cores S81 61/64, HEAD 4/5, QC 31/31, KV 33/34). Main 83fc576b530 (train M); N gating, O+P queued. QC s29 swapped 23:11 (124 types); 58 QC rows 'no host' -> KIT-OPS-3 adding epyc10/intel1. S81 B2t bind running (reset-tree to B3). KV token replay FAILED on adopted R8 -> kv102sem semantic bind running. epyc4 drain: closure records verified on epyc10+AGIdock; terminate ~00:30. epyc8 disk full, epyc7 97% -> CLEAN-E8.
+2026-11-14 00:3x PST count 276 (last forced 00:01; COUNT-FRICTION-1 removing commit/tag + plan-check from the counter, re-count after). epyc4 TERMINATED 00:3x (Cherry 204/404). OWNER: no-friction -> auto re-arm/parallel tick (WAVE-FRICTION-1), overlay-at-READY rule, worktrees all deleted (CLEAN-4), die-level protos (DIE-PROTO-1), B3 split (S81-B3-SVC/CLK), KV-CAP, QC-RING, FAIL-QCKV-1. Fleet load: intel1 105/112, epyc7 98/96, epyc10 90/96, epyc2 83/128, epyc8/9 50/96 (ot-heavy peak factor 0.5 now).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
