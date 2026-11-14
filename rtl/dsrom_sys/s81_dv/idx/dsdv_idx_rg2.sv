@@ -67,7 +67,9 @@ module dsdv_idx_rg2 #(
     output reg  [561:0]  rdo1,
     output reg  [9:0]    st
 );
+`ifndef SYNTHESIS
     initial if (IQD > 1024 || SQD > 1024 || LFD > 1024 || DQ > 8) $fatal(1, "dsdv_idx_rg2: queue / owner sizes");
+`endif
     localparam integer LFW = $clog2(LFD);
     localparam integer IW = 35;         // item {u 2, slot 4, cell 4, w 16, lane 4, lw, v, idx 3}
     localparam integer MW = 22;         // metadata {w 16, lane 4, lw, v}
@@ -1093,10 +1095,14 @@ module dsdv_idx_rg2_chunk #(
 );
     localparam integer NB = 4, FPL = 7, FML = 5, QL = 5, HC = 8, KW = NB * 136;
 `ifndef OT_IDX_HSLICE_FP_CS
+`ifndef SYNTHESIS
     if (PR != 0) begin : g_pr_bad initial $fatal(1, "dsdv_idx_rg2_chunk: PR needs OT_IDX_HSLICE_FP_CS"); end
+`endif
 `elsif OT_IDX_HSLICE_FASTPAD
 `else
+`ifndef SYNTHESIS
     if (PR != 0) begin : g_pr_bad initial $fatal(1, "dsdv_idx_rg2_chunk: PR needs OT_IDX_HSLICE_FASTPAD"); end
+`endif
 `endif
 `ifdef OT_IDX_HSLICE_FASTPAD
     // early-load guard (fail-closed, die-s81-85 11-09): the slices' q pin opens 4 edges after rr (slice relay 2 + 1,
