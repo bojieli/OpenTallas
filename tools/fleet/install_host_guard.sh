@@ -17,4 +17,10 @@ command -v earlyoom >/dev/null || sudo -n env DEBIAN_FRONTEND=noninteractive apt
 echo 'EARLYOOM_ARGS="-m 3,2 -s 100,100 -r 300 -n --prefer ^(verilator_bin|verilator_bin_dbg|cc1plus|cc1|g\+\+|c\+\+|clang\+\+|ld)$ --avoid ^(python3|python|ssh-agent|dbus-daemon|find|git|grep|sshd|systemd|systemd-journal|dockerd|containerd|containerd-shim.*|sudo|bash)$"' | sudo -n tee /etc/default/earlyoom >/dev/null
 sudo -n systemctl enable --now earlyoom >/dev/null 2>&1
 sudo -n systemctl restart earlyoom
+# OOMAGE_1114 (ADMIT-TUNE-1): ot-oom-age lowers build processes' oom_score_adj with age (800 new, -100/h, floor 0) so earlyoom / the kernel
+# kill the youngest first; root timer every 2 min.
+sudo -n install -m 755 "$(dirname "$0")/ot-oom-age" /usr/local/bin/ot-oom-age
+printf '[Unit]\nDescription=ot-oom-age\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/ot-oom-age\n' | sudo -n tee /etc/systemd/system/ot-oom-age.service >/dev/null
+printf '[Unit]\nDescription=ot-oom-age every 2 min\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=2min\nAccuracySec=10s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-oom-age.timer >/dev/null
+sudo -n systemctl daemon-reload; sudo -n systemctl enable --now ot-oom-age.timer >/dev/null 2>&1
 echo "HOST_GUARD_OK $(hostname) earlyoom=$(systemctl is-active earlyoom) ot-heavy=$(command -v ot-heavy) $(cat /etc/ot-heavy.conf | tr '\n' ' ')"
