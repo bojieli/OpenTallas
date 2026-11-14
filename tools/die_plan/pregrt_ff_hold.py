@@ -229,14 +229,30 @@ if {$pg_fail ne ""} {
 """
 
 
+DIE_CLOCK = {}      # the plan's DIE-level clock block (QC s29 form): a partition type's own clock value wins
+
+
+def set_die_clock(clock):
+    """gen_phys calls this once after the plan validates: DIE-level clock.pregrt_ff_hold / pregrt_hold_guard_ps become the default
+    of every type that does not name its own (type-level wins).  Absent = unchanged behaviour."""
+    DIE_CLOCK.clear()
+    DIE_CLOCK.update({k: v for k, v in (clock or {}).items() if k in ("pregrt_ff_hold", "pregrt_hold_guard_ps")})
+
+
+def _clock_val(t, key):
+    c = t.get("clock") or {}
+    return c[key] if key in c else DIE_CLOCK.get(key)
+
+
 def enabled(t):
-    """R-CLOCK: opt-in (COORD 11-13 07:2x, default-preserving): on only when the plan says clock.pregrt_ff_hold true."""
-    return (t.get("clock") or {}).get("pregrt_ff_hold") is True
+    """R-CLOCK: opt-in (COORD 11-13 07:2x, default-preserving): on when the type's clock.pregrt_ff_hold is true, or (type silent) the
+    plan's die-level clock.pregrt_ff_hold is true."""
+    return _clock_val(t, "pregrt_ff_hold") is True
 
 
 def guard_ps(t):
     """the route guard (ps) the build repairs to: plan clock.pregrt_hold_guard_ps, default GUARD_PS."""
-    v = (t.get("clock") or {}).get("pregrt_hold_guard_ps")
+    v = _clock_val(t, "pregrt_hold_guard_ps")
     g = GUARD_PS if v is None else float(v)
     if not 0 <= g <= 100:
         raise ValueError(f"clock.pregrt_hold_guard_ps {g:g} outside [0, 100]")

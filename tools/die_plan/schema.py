@@ -1423,6 +1423,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {
     "type": "number", "minimum": 0, "maximum": 100}
+
+# QC s29 (COORD 11-14, KIT-OPS-3 overlay): DIE-level R-CLOCK hold build default + note (a partition type's own clock.pregrt_ff_hold wins;
+# pregrt_ff_hold.set_die_clock merges it) and bind-side bookkeeping hard_cores_deferred (accepted, ignored at gen).
+SCHEMA["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
+SCHEMA["properties"]["clock"]["properties"]["pregrt_ff_hold_note"] = {"type": "string"}
+SCHEMA["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {"type": "number", "minimum": 0, "maximum": 100}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores_deferred"] = {"type": "array"}
 # HEAD START-export fanout: retained copies of existing data states, zero added cycles.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
 # Uniform, physically planned reader-only START delivery.  K is compensated
