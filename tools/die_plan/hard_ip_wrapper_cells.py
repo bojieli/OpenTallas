@@ -28,9 +28,9 @@ def epoch_pins(P, tn):
     return out
 
 
-def wrapper_cells(netlist_text, top, macro_module, epoch, pin_alias=False):
+def wrapper_cells(netlist_text, top, macro_module, epoch, pin_alias=True):
     """-> dict(macro=[inst], epoch_buffers=[(cell, port bit)], alias_buffers=[...], other=[...]).
-    pin_alias (default False, COORD decision): also exempt a BUF whose input is a net inside the macro hierarchy (the macro
+    pin_alias (default True, COORD 11-14: a macro-output-pin -> port buffer is a harmless pass-through; --no-pin-alias = strict): also exempt a BUF whose input is a net inside the macro hierarchy (the macro
     output pin, e.g. \\u_bound.w_core_tx_up[0]) and whose output is a port bit: synthesis INSBUF on a direct pin-to-port wire."""
     m = re.search(r"\nmodule\s+" + re.escape(top) + r"\b.*?\nendmodule", netlist_text, re.S)
     if not m:
@@ -57,9 +57,11 @@ def main(argv):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import schema as S
     P = S.Plan(S.load(plan), plan)
-    r = wrapper_cells(Path(nl).read_text(), top, macro, epoch_pins(P, tn), pin_alias="--pin-alias" in argv)
-    print(json.dumps(dict(r, ok=bool(r["macro"]) and not r["other"]), indent=1))
-    return 0 if r["macro"] and not r["other"] else 1
+    r = wrapper_cells(Path(nl).read_text(), top, macro, epoch_pins(P, tn), pin_alias="--no-pin-alias" not in argv)
+    ok = bool(r["macro"]) and not r["other"]
+    # R-MINIMAL: the zero-cell check is ADVISORY (COORD 11-14), it never blocks a phy type: exit 0 unless --strict
+    print(json.dumps(dict(r, ok=ok, advisory="--strict" not in argv), indent=1))
+    return 0 if (ok or "--strict" not in argv) else 1
 
 
 if __name__ == "__main__":
