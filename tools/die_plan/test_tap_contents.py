@@ -10,13 +10,18 @@ def test_clock_tap_avoids_sys_c_phy_content():
     x,y=S.tap_clear(t,1080,518.4)
     assert not 682.56<x<1477.44 or not 8.64<y<803.52
 
-@pytest.mark.xfail(reason="main placed_macro_boxes keeps R0 dimensions for R90 contents (open gap, PATH-KV-SYSC2 10-25)", strict=True)
 def test_clock_tap_honours_rotated_content_footprint():
     t=dict(outline_um=[500,500],contents=[dict(inst="u_sram",lef="sram.lef",origin_um=[100,100],outline_um=[40,200],orient="R90")])
     x,y=S.tap_clear(t,250,120)
     assert not 91.36<x<308.64 or not 91.36<y<148.64
 
-@pytest.mark.xfail(reason="main placed_macro_boxes rejects a lef content without origin_um (fail-closed by design)", strict=True)
-def test_unplaced_or_logic_contents_preserve_old_clock_taps():
-    t=dict(outline_um=[500,500],contents=[dict(inst="logic",origin_um=[100,100],outline_um=[200,200]),dict(inst="planned",lef="planned.lef")])
+def test_logic_contents_and_unplaced_non_lef_contents_preserve_old_clock_taps():
+    t=dict(outline_um=[500,500],contents=[dict(inst="logic",origin_um=[100,100],outline_um=[200,200]),dict(inst="planned")])
     assert S.tap_clear(t,250,250)==(250,250)
+
+
+def test_lef_content_without_origin_fails_closed():
+    # a LEF-bearing content is a real macro: an unknown position must not silently reserve nothing (0302d3b06a)
+    t=dict(outline_um=[500,500],contents=[dict(inst="planned",lef="planned.lef")])
+    with pytest.raises(ValueError,match="origin_um and outline_um required"):
+        S.tap_clear(t,250,250)
