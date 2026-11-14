@@ -1,0 +1,5 @@
+# TL-SLC3XT1 s81/dsdv_slice_c3x_C__t1 (2026-11-14 04:5x PST)
+Finding: the "route failure" is not a route result. Attempt 22 (event 7073a6b4a59) placed OK on epyc7 (place rc 0, 3_5_place_dp 21:21 PST 11-13). Route job 14a1abcee0e7 went to epyc4, restarted synth from scratch (no resume.json) and died exit 137 at 23:57 when epyc4 was drained (DRAIN-EPYC4); CLASSIFY CRASH infra-stopped. No GRT/DRT ever ran, so no routing evidence exists for this type.
+State: dies/s81/retry already has dsdv_slice_c3x_C__t1@22 (retry_fix text DRAIN-EPYC4 relaunch on other hosts), but dies/s81/hold_items still has B2-HOLD-1113 (KIT-OPS-2, until S81 UPDATE B2), so it does not launch. Kit gen dir on epyc7 was pruned (only run/logs, reports left), so a private rerun needs a fresh gen anyway; the wave does that.
+Advisory only: a22 AUTO-GEOM fill 0.053 / empty 0.75, preflight clock M7 vs M8 and macro channel 8.64<10.8; a21 visual BAD (WAIT-FORM) is for a21 form, a22 form fingerprint changed.
+Action: asked KIT-OPS-3 to delete hold_items key; same src/plan (freeze-safe), runs gen+place+route on epyc7/epyc10/epyc2/intel1.
