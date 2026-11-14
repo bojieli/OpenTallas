@@ -151,3 +151,10 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 ## NOTE 2026-11-14 00:37 PST scope change (COORD, one lane per problem)
 - gunit l1f_bf -> TYPE-GUNIT-L1F; xs4 -> TYPE-XS4. Hand-over notes are in lanes/handoff/TYPE-GUNIT-L1F.md and lanes/handoff/TYPE-XS4.md. I answer any request from them.
 - S81-CORES-2 keeps: bksel_q (epyc10 C9geom copy, GRT converging), serdes kitI route + kitI2 proof (epyc9), seqhost S5 (epyc9).
+
+## RESULT 2026-11-14 00:45 PST serdes kitI route: GRT TERMINAL congested; kitI3 (wider KP4 island) launched
+- kitI (epyc9 unit oth-ubuntu-3888768-1794629319, advisory hold stop): exit 21, OT_GRT_CONGESTED_FAIL congestion-15 114,097 >= 10,000 (H 55,624 / V 58,473); overflow 120,177 / 128,413 / 114,097 at iterations 5/10/15, not converging. Its async LEC was OOM-killed (137); no verdict.
+- Cause (structural): about 95% of the overflow is in x 600-1000, y 700-1000, in a 2886 x 1227 um core at 20% util. serdes_lanes_cfg.tcl blocks GPL from everything outside the KP4 island (245..1005 x 640..944, which also holds dchn + 2 SRAMs), so the whole dec/enc/txl/lrxi logic packs into 0.23 mm2; the hot tiles sit against the east blockage edge at x 1005. Top source nets: u_dec.u_dly.g_xd (10k), cland_coll, txl/lrxi rows, enc d1/d2, dec u_syn.
+- kitI2 (RST_TREE(1) proof, same cfg) is equally congested: 101,046 / 108,148 / 94,610 at 5/10/15, so the early stop will end it too.
+- kitI3 = kitI2 (RST_TREE(1) synth + floorplan reused) + the island widened east to x 1605 (1360 x 304 um, 1.8x; no macros in the added strip; release script unchanged, it removes exactly the blocks it made). Resume start=place, route goal, advisory hold settings kept. epyc9 /srv/opentallas-scratch2/claude/s81-cores-2/serdes/kitI3/serdes__t2 (original cfg as serdes_lanes_cfg.tcl.kitI2); queued (log ~/s81-cores-2-logs/kitI3_route.otrun.log). Plan-geometry change, pre-approved.
+- The CTS STA split stands (74 setup endpoints < -42 ps; worst -2232 ps = RST_TREE(0)); kitI3 carries the RST_TREE(1) fix, and the u_rrl relays (-376..-160 ps) are next after GRT passes.
