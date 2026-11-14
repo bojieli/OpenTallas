@@ -56,6 +56,18 @@ class SimpleAdmit(unittest.TestCase):
         T["big.sh:big"] = dict(n=3, live=0, proved=0, peak_gb=80.0, req_gb=96)
         self.assertTrue(gate(100, "big.sh:big", env).startswith("OK 40 "))         # min(80 peak, 96 request) x 0.5
 
+    def test_fresh_units_are_charged_for_simple_fresh_s(self):
+        import tempfile, time
+        d = tempfile.mkdtemp()
+        open(f"{d}/res.u1", "w").write("u1 40\n")                                   # admitted just now: not ramped yet
+        old = open(f"{d}/res.u2", "w"); old.write("u2 40\n"); old.close()
+        os.utime(f"{d}/res.u2", (time.time() - 600, time.time() - 600))             # old: already in MemAvailable
+        env = dict(self.env, SIMPLE_FRESH_S="60")
+        with patch.object(R, "D", d):
+            self.assertTrue(gate(60, "never.sh:x", env).startswith("NO 16 "))       # 60 - 16 headroom - 40 fresh = 4 < 16
+            self.assertIn("fresh 40 GB", gate(60, "never.sh:x", env))
+            self.assertTrue(gate(60, "never.sh:x", dict(self.env)).startswith("OK 16 "))   # SIMPLE_FRESH_S off: no charge
+
 
 if __name__ == "__main__":
     unittest.main()
