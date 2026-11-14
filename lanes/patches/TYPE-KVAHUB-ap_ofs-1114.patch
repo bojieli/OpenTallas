@@ -1,0 +1,42 @@
+--- a/tools/die_plan/kit_core_clocks.py	2026-11-14 12:13:11.053778561 +0000
++++ b/tools/die_plan/kit_core_clocks.py	2026-11-14 12:13:11.068539106 +0000
+@@ -326,7 +326,7 @@
+         head = heads[0]
+         params = dict(re.findall(r"\.(\w+)\(([^()]*)\)", head.group(2)))
+         params = {k: re.sub(r"[\s_]", "", v).lower() for k, v in params.items()}
+-        expected = {"AP_OFS": "64'hffddffdcffdfffdf", "FR_OFS": "-7", "Z_IN_STRIDE": "4"}
++        expected = {"AP_OFS": "64'hffe0ffdfffdfffdf", "FR_OFS": "-7", "Z_IN_STRIDE": "4"}
+         if params != expected:
+             raise ValueError(f"AHUB boundary: native parameter signature changed: {params}")
+         end = bound.find("\n" + head.group(1) + ");", head.end())
+--- /dev/null	2026-11-12 17:05:59.261809156 +0000
++++ b/tools/die_plan/test_kit_core_clocks_ahub.py	2026-11-14 12:13:11.073039563 +0000
+@@ -0,0 +1,28 @@
++"""swap_ahub_boundary pins the AP_OFS of the hardened qkd_ahub ck7_r27 view (KV AP_OFS re-harden 11-14:
++ffe0ffdfffdfffdf = the bound hub_C value, derived by kv_regen from the landed ES/EN ap depth; ffddffdc.. is stale)."""
++import sys
++from pathlib import Path
++
++import pytest
++
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++import kit_core_clocks as K  # noqa: E402
++
++CORES = [dict(inst="ahub", module="qkd_ahub", native_boundary_adapter="qkd_ahub_ck7_r27")]
++
++
++def _bound(ap):
++    return ("module t(input ck, input [35:0] am0,am1,am2,am3);\n"
++            f"    qkd_ahub_static_dw #(.AP_OFS({ap}), .FR_OFS(-7), .Z_IN_STRIDE(4)) u_ahub (\n"
++            "        .ck(ck),\n        .am0(am0),\n        .am1(am1),\n        .am2(am2),\n        .am3(am3)\n    );\nendmodule\n")
++
++
++def test_new_ap_ofs_accepted():
++    out, receipt = K.swap_ahub_boundary(_bound("64'hffe0ffdfffdfffdf"), CORES)
++    assert "qkd_ahub u_ahub (" in out
++    assert receipt[0]["native_params"]["AP_OFS"] == "64'hffe0ffdfffdfffdf"
++
++
++def test_old_ap_ofs_refused():
++    with pytest.raises(ValueError, match="native parameter signature changed"):
++        K.swap_ahub_boundary(_bound("64'hffddffdcffdfffdf"), CORES)
