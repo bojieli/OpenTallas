@@ -10,7 +10,8 @@ G = M.GB
 
 class Grow(unittest.TestCase):
     def test_below_85_percent_nothing(self):
-        self.assertIsNone(M.decide(32 * G, 32 * G, int(27 * G), 200, 48))        # 27 / 32 = 84 %
+        self.assertIsNone(M.decide(32 * G, 32 * G, int(23 * G), 200, 48))        # 23 / 32 = 72 %
+        self.assertEqual(M.decide(32 * G, 32 * G, int(24 * G), 200, 48), 48 * G)  # 75 %: the trigger moved down from 85 %
 
     def test_t28_case_32_to_48(self):
         self.assertEqual(M.decide(32 * G, 32 * G, int(28.7 * G), 200, 48), 48 * G)
@@ -25,6 +26,23 @@ class Grow(unittest.TestCase):
 
     def test_no_cap_no_action(self):
         self.assertIsNone(M.decide(0, 0, 10 * G, 200, 48))
+
+
+    def test_scope_rows_read_memory_max_and_current(self):
+        import tempfile, os
+        d = tempfile.mkdtemp()
+        base = os.path.join(d, "user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1-2.scope"); os.makedirs(base)
+        open(base + "/memory.max", "w").write(str(48 * G)); open(base + "/memory.current", "w").write(str(40 * G))
+        un = os.path.join(d, "user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-3-4.scope"); os.makedirs(un)
+        open(un + "/memory.max", "w").write("max"); open(un + "/memory.current", "w").write("1")
+        import glob
+        orig = glob.glob
+        glob.glob = lambda pat: orig(pat.replace("/sys/fs/cgroup", d))
+        try:
+            rows = M.scope_rows()
+        finally:
+            glob.glob = orig
+        self.assertEqual([(os.path.basename(r[0]), r[1], r[2]) for r in rows], [("oth-ubuntu-1-2.scope", 48 * G, 40 * G)])
 
 
 if __name__ == "__main__":
