@@ -34,6 +34,12 @@ def checked_calendar(c):
  if any(type(x)is not int or x<0 for x in (trunk,pin)):
   raise ValueError('PV result cycles must be nonnegative integers')
  return trunk,pin
+def verify_trunk_identity(calendar,groups,producer):
+ identity=calendar.get('input_identity')or{}
+ if identity.get('bus_groups_sha256')!=sha(groups):
+  raise ValueError('trunk calendar bind identity mismatch')
+ if identity.get('producer_sha256')!=sha(producer):
+  raise ValueError('trunk calendar reviewed producer identity mismatch')
 def selected_pin_component(pl,ab,repo,proof_root):
  proof_file=proof_root/'results/kv-pvfin-1/pin_stage_1113/impact.json'
  proof=read(proof_file);master=proof['master'];wrapper=proof['asbuilt_fixed_i1_wrapper']
@@ -97,8 +103,8 @@ def derive(plan,asbuilt,bind,repo=ROOT,proof_root=ROOT,prototype=False,base_cale
  else:
   trunk=read(trunk_calendar);_,already_pin=checked_calendar(trunk)
   if already_pin or trunk.get('source_pin_components'):raise ValueError('trunk input already includes source pin cycles')
-  ti=trunk.get('input_identity')or{}
-  if ti.get('bus_groups_sha256')!=sha(bg_file)or not re.fullmatch('[0-9a-f]{64}',ti.get('producer_sha256','')):
+  try:verify_trunk_identity(trunk,bg_file,producer)
+  except ValueError:
    mismatch.append('trunk_calendar')
    if not prototype:raise ValueError('final trunk calendar must identify the exact coherent bind and producer')
  trunk_extra,_=checked_calendar(trunk)
@@ -112,6 +118,7 @@ def derive(plan,asbuilt,bind,repo=ROOT,proof_root=ROOT,prototype=False,base_cale
           source_pin_components=[component],
           input_identity=dict(plan=str(plan),plan_sha256=sha(plan),asbuilt=str(asbuilt),asbuilt_sha256=sha(asbuilt),
                               bind=str(bind),bus_groups_sha256=sha(bg_file),
+                              trunk_producer=str(producer),
                               trunk_producer_sha256=(trunk.get('input_identity')or{}).get('producer_sha256')if trunk_calendar else sha(producer),
                               trunk_calendar=str(trunk_calendar)if trunk_calendar else None,
                               trunk_calendar_sha256=sha(trunk_calendar)if trunk_calendar else None),
