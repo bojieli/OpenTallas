@@ -57,4 +57,7 @@ Post with intel2 ~/coord coord-commit only. Localhost scratchpad h98post.sh = ap
 - resign.py records LOCAL_PASS_NEEDS_PARENT only with --auto (superset LEC).
 - A config.mk edit on a kit with restored stages trips RESYNTH-GUARD; keep the original mtime (touch -r backup).
 
+## Late result (after handoff)
+- 2026-11-13 19:32 PST RESULT HEAD-98 -> HEAD-99 (cc COORD): HE-EPC v4 writer-cluster (hd_host_e u_epc, private) ROUTED, DRC 0, antenna 0, but NOT SIGNED: TT setup -264.21 ps / 563 endpoints, FF hold -19.88 / 183, DRV TT slew 359 / cap 13. That is a regression against the south form (TT +23.02, FF -20.67/676; epyc7 head-97/hepc_south). The v4 writer grouping did not close timing. Kit epyc7 head-97/hepc_wcluster_v4/kit/ot_s81hd_he_epc_kit/signoff/signoff.json, log intel2 ~/tmp/h98_hepc_v4_route.log. No ECO (it is not a near miss). HEAD-99: read the setup paths (likely writer-cluster -> consumer reach plus 359 slew pins) before choosing between south+ECO and a new form.
+
 HANDOFF-TO-SONNET HEAD-99
