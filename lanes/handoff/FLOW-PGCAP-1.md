@@ -2,8 +2,8 @@
 Updated 2026-11-13 PST.
 
 ## Fix
-Branch `claude/flow-pgcap-1-1113` @ d865e9ef820 (off origin/main 4702c3c43a6), pushed. Clone: intel1 /srv/opentallas-scratch2/claude/flow-pgcap-1/wt (sparse: tools, physical/common_flow, rtl).
-- tools/die_plan/pg_track_truth.tcl (generalized HEAD-98 hook): temporary GRT obstructions over spacing-illegal tracks of every PG stripe M4..MAX; real track grid; width-dependent spacing.
+Branch `claude/flow-pgcap-1-1113` @ 1d724b73cc (READY posted 20:50 PST to ROOT-MERGE-63, COORD-approved on post; evidence HEAD-98 ctl_n DRC 0 / antenna 0, HEAD-99 RESULT 19:55) (off origin/main 4702c3c43a6), pushed. Clone: intel1 /srv/opentallas-scratch2/claude/flow-pgcap-1/wt (sparse: tools, physical/common_flow, rtl).
+- tools/die_plan/pg_track_truth.tcl (generalized HEAD-98 hook): temporary GRT obstructions over spacing-illegal tracks of every PG stripe M4..MAX; real track grid; min spacing (width-dependent spacing opt-in OT_PG_TRACK_TRUTH_WIDE_SPACING=1, unproven).
 - grt_pre.tcl adds them last when OT_PG_TRACK_TRUTH=1; grt_post.tcl removes them first (before route.guide use / 5_1_grt.odb). DRT/PG/sign-off geometry unchanged.
 - gen_phys RFLOW: `export OT_PG_TRACK_TRUTH = 1` for s81, s81_head, qwen_compute, qwen_kvsys (rflow_cfg). HBM off. OT_RFLOW=0 = old kit.
 - kit_resume: OT_PG_TRACK_TRUTH is a grt-stage var. core_flow copies the file (off).
@@ -20,4 +20,4 @@ S81 leaf__t6 (LEAF-HOLD-1 t6p2 5_1_grt.odb): failing net u_bound.u_ft_ft0_o_5/ne
 - HEAD-98 runs ctl_n (epyc8) / host_e (intel1) with its own per-kit copy of the hook: not relaunched.
 
 ## Next
-On DRT 0 violations in both proofs: post READY to ROOT-MERGE-63, HEAD-98, DIE-S81-90. Kits in flight are untouched; the setting applies at next kit generation.
+The 2 proofs run the WIDE_SPACING superset (installed before it became opt-in). Post each as a follow-up RESULT when DRT ends (DRC count, or the DRT-0255 net + census). If both route DRC 0, the opt-in may become default; a follow-up rollout goes to a Sonnet lane (COORD/OWNER). Kits in flight are untouched; the setting applies at next kit generation.
