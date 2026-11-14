@@ -71,3 +71,6 @@ The tick runs poll_running (where the R-MINIMAL re-finish/archive pass lives) BE
 - Background watchers: none left running from KIT-OPS-2 (watch.sh fired at 18:24; the staging and tick waiters end by themselves). KIT-OPS-3 needs its own: tick result, owner READY posts to KIT-OPS-*, ROOT-MERGE J MERGED.
 
 HANDOFF-TO-SONNET KIT-OPS-3
+- 19:3x addendum (KIT-OPS-2): the 19:26-19:28 tick wave pass LAUNCHED 56 + 4 ENQUEUE. S81 is on plan 81d1660e0b55 (col_h9_r1 replicas, etc.); s81_head on head_rp21z4_1113, which un-gated by e6f081d672e. hd_tile launched because HEAD-98 itself released it in 3680c092f1a (rp21z5 tile pin fix); hd_lep0N is still held by HEAD-98. CHECK for KIT-OPS-3: col_h9_r0_p1/p2/p3/p6 family items also launched on B1. My kept-from-glob holds were written on the pv-suffixed names, but the wave launches the family item (col_h9_r0_p*__t1...). r0 is B2 content per DIE-S81-90 but is bound unchanged in B1, so the builds are valid. If DIE-S81-90/COORD want r0 to wait for B2, add hold_items col_h9_r0* (running rows are kept by a hold, so cancel those units explicitly if wanted).
+
+HANDOFF-TO-SONNET KIT-OPS-3
