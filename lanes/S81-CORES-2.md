@@ -55,3 +55,7 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
   - dsdv_bksel_q: C9geom build is running to finish.
 - AUTO-RESIGN rows: T51 W, plus GF5 A0/A1 (newer forms for the event; the gf3 records already count). Dropped the l1c row as redundant.
 - RMINIMAL-SIGNED.tsv is an index only; it does not count.
+
+## RESULT 2026-11-13 20:07 PST: serdes kitI
+- kitI CTS -> route ended exit 4 (epyc9 unit oth-ubuntu-2157653-1794620699). The kit structural hold gate stopped it after CTS: FF hold -297.51 ps on 4397 endpoints, beyond the stop at -269 (contract in_min -40, tap window 69; 513 forwarded ring inputs). Async LEC was OOM-killed (137); not rerun, per COORD.
+- Read-only CTS STA is running to split TT setup and the internal vs port FF hold classes (log ~/s81-cores-2-logs/kitI_sta_{TT,FF}.otrun.log). Decision rule: if internal reg-to-reg hold is small and setup is within about -100 ps, route with the hold gate as advisory (R-MINIMAL) and let GRT hold repair close it. If the rck capture tree is structurally deep (as with kitF, -504 hold / -779 setup), go to RTL pipelining of the receive tree at 833 ps.
