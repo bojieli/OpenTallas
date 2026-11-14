@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+"""ot-mem-grow (ADMIT-TUNE-1 11-14, COORD): build containers die at their docker memory cap (= the --mem request): slice_station t28 form c was
+killed at 28.7 / 32 GB in post-GRT hold repair, t30 c at 29.2 / 32, t8 c at 28 / 32.  Run every minute as root: a container above GROW_AT (85 %)
+of its cap gets its cap raised by GROW_BY (50 %), up to MAX_MULT (2x) of the cap it first had (its request), when this host's MemAvailable minus
+INV_HEADROOM_GB (/etc/ot-heavy.conf) covers the increase.  That turns a cap kill into growth, which admission already prices from measured RSS.
+  ot-mem-grow [--dry-run]"""
+import argparse, json, os, re, subprocess, sys, time
+
+GROW_AT, GROW_BY, MAX_MULT = 0.85, 0.5, 2.0
+DIR = "/var/tmp/ot-mem-grow"
+GB = 1 << 30
+
+
+def decide(cap, req, usage, avail_gb, headroom_gb, grow_at=GROW_AT, grow_by=GROW_BY, max_mult=MAX_MULT):
+    """-> new cap in bytes, or None.  cap, req, usage in bytes; avail_gb / headroom_gb in GB"""
+    if cap <= 0 or usage < grow_at * cap:
+        return None
+    new = min(int(cap * (1 + grow_by)), int(req * max_mult))
+    if new <= cap:
+        return None                                    # already at 2x the request
+    if avail_gb - headroom_gb < (new - cap) / GB:
+        return None
+    return new
+
+
+def sh(*a):
+    return subprocess.run(list(a), capture_output=True, text=True, timeout=120).stdout
+
+
+def conf_headroom():
+    try:
+        m = re.search(r"^INV_HEADROOM_GB=([0-9.]+)", open("/etc/ot-heavy.conf").read(), re.M)
+        return float(m[1]) if m else 32.0
+    except OSError:
+        return 32.0
+
+
+def avail_gb():
+    for ln in open("/proc/meminfo"):
+        if ln.startswith("MemAvailable"):
+            return int(ln.split()[1]) / 1048576
+    return 0.0
+
+
+def usage_of(cid):
+    for p in (f"/sys/fs/cgroup/system.slice/docker-{cid}.scope/memory.current", f"/sys/fs/cgroup/docker/{cid}/memory.current"):
+        try:
+            return int(open(p).read())
+        except OSError:
+            pass
+    return None
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dry-run", action="store_true")
+    a = ap.parse_args(argv)
+    os.makedirs(DIR, exist_ok=True)
+    try:
+        orig = json.load(open(DIR + "/orig.json"))
+    except (OSError, ValueError):
+        orig = {}
+    ids = sh("docker", "ps", "-q", "--no-trunc").split()
+    info = json.loads(sh("docker", "inspect", *ids) or "[]") if ids else []
+    live, raised, seen = set(), 0, 0
+    hr = conf_headroom()
+    for c in info:
+        cid, name, cap = c["Id"], c["Name"].lstrip("/"), c["HostConfig"].get("Memory", 0)
+        live.add(cid)
+        if cap <= 0:
+            continue
+        req = orig.setdefault(cid, cap)               # the first cap seen is the request
+        use = usage_of(cid)
+        seen += 1
+        if use is None:
+            continue
+        new = decide(cap, req, use, avail_gb(), hr)
+        if new:
+            line = f"{time.strftime('%F %T')} {name} {cid[:12]} usage {use / GB:.1f} GB of cap {cap / GB:.1f} GB -> {new / GB:.1f} GB (request {req / GB:.1f}, avail {avail_gb():.0f}, headroom {hr:g})"
+            if not a.dry_run:
+                r = subprocess.run(["docker", "update", f"--memory={new}", f"--memory-swap={new}", cid], capture_output=True, text=True)
+                if r.returncode:
+                    line += " FAILED " + r.stderr.strip()[:100]
+                else:
+                    raised += 1
+            print(line)
+            open(DIR + "/log", "a").write(line + "\n")
+    orig = {k: v for k, v in orig.items() if k in live}
+    if not a.dry_run:
+        json.dump(orig, open(DIR + "/orig.json.tmp", "w")); os.replace(DIR + "/orig.json.tmp", DIR + "/orig.json")
+    print(f"ot-mem-grow: {seen} capped containers, {raised} raised")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
