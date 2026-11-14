@@ -18,3 +18,7 @@ Relaunched: none. Next sweep ~10:10 PST.
 Failed / not built: s81 16/149, head 0/1, QC 0/4, KV 2/0. s81 not-built jumped because B3x2b plan swap created new col_h9/h10 identities; wave launched 94 in the last 60 min, so draining, not stranded. 14 of 16 s81 failed are DEDUP twins.
 Now owned: slice_station__t6__cl0755c26e (TYPE-SLICE-HOLD ASK to KIT-OPS-3 09:06), kv_leaf__t4 (TYPE-S81-GRTCAP, cap removed), kv3_io_ft_v1 (TYPE-KVIOFT), serdes__t2 (TL-SERDEST14).
 Unowned (no queue post): s81 ot_s81sl_leaf__t29 and qwen_kvsys kv3_hroot (both OT_HOLD_STRUCTURAL failfast), kv3_hgi_v3 (grt-overflow; KV-FTGRID 02:13 older than 90 min).
+
+## Sweep 4 (11:10 PST)
+Failed / not built: s81 25/149, head 0/1, QC 0/4, KV 0/0 (kv3_hgi_v3 and kv3_hroot cleared; TYPE-KVHROOT READY 11:05; leaf__t29 owned by TYPE-S81LEAF29). Wave launched 104 in 60 min (s81 80, QC 12, KV 10, head 2). 149 s81 not-built = col twins in DEDUP-RELEASE/wait, not stranded. QC not-built cores sta_region_nb0 / station_tail1 are WAIT-CHILD (prov_require_cands), owned by DIE-QC-103.
+Unowned: s81 ot_s81sl_leaf__t28 (flow-error exit 11), s81 slice_station__t27 (grt-overflow, GRT-0116). slice_station__t6__cl0755c26e: TYPE-SLICE-HOLD ASK to KIT-OPS-3 (09:06) still unanswered 2 h.
