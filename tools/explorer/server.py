@@ -439,11 +439,14 @@ def db_sources(n):
             if e['die'] in dies: out['archives'].append(dict(where='rtx-pro', kind='signed-export-1114', path=e['path'] + ('/' + e['odb'] if e.get('odb') else ''), odb=bool(e.get('odb')), signoff=bool(e.get('signoff')), bytes=e.get('bytes')))
     if lay.get('archive_odb'): out['archives'].append(dict(where='AGIdock', kind='archive', path=str(lay['archive_odb']), odb=True))
     for nm in names:
-        for c in A['closed'].get(nm, [])[-2:]: out['archives'].append(dict(where='rtx-pro', kind='closed_archive', path=c['path'] + ('/' + c['odb'] if c.get('odb') else ''), odb=bool(c.get('odb')), job=c.get('job')))
+        for c in A['closed'].get(nm, [])[-2:]:
+            here = c.get('present', True)   # REMOTE_ONLY closed-archive jobs keep only links on rtx-pro: the database itself is on AGIdock
+            out['archives'].append(dict(where='rtx-pro' if here else 'AGIdock', kind='closed_archive' if here else 'closed_archive (remote only, links on rtx-pro)', path=c['path'] + ('/' + c['odb'] if c.get('odb') else ''), odb=bool(c.get('odb')), job=c.get('job'), local=here))
     for a in audit_rows(n) or []:
         pth = next((v for k, v in a.items() if 'path' in k or 'archive' in k), None)
         if pth: out['archives'].append(dict(where=a.get('host') or 'archive', kind='SIGNED-DB-AUDIT', path=pth, odb=pth.endswith(('.odb', '.odb.zst'))))
-    out['resolved'] = next((a for a in out['archives'] if a['odb']), None) or (out['archives'][0] if out['archives'] else None)
+    out['resolved'] = next((a for a in out['archives'] if a['odb'] and a['where'] == 'rtx-pro'), None) or next((a for a in out['archives'] if a['odb']), None) or (out['archives'][0] if out['archives'] else None)
+    out['on_rtx_pro'] = any(a['odb'] and a['where'] == 'rtx-pro' for a in out['archives']); out['on_agidock'] = any(a['odb'] and a['where'] == 'AGIdock' for a in out['archives'])
     out['cls'] = 'archive' if out['resolved'] else (out['recorded'] or {}).get('cls', 'none')
     return out
 
@@ -454,7 +457,7 @@ def archive_summary():
         if n['level'] == 'die': continue
         st = (n.get('status') or {}).get('state'); s = db_sources(n)
         if st != 'signed' and not (n.get('layout') or {}).get('store'): continue
-        rows.append(dict(id=n['id'], die=n['die'], level=n['level'], state=st, pack=bool((n.get('layout') or {}).get('store')), cls=s['cls'], recorded=s['recorded'], resolved=s['resolved']))
+        rows.append(dict(id=n['id'], die=n['die'], level=n['level'], state=st, pack=bool((n.get('layout') or {}).get('store')), cls=s['cls'], recorded=s['recorded'], resolved=s['resolved'], rtx=s['on_rtx_pro'], agi=s['on_agidock']))
     signed = [r for r in rows if r['state'] == 'signed']
     def tally(R):
         out = {}
@@ -463,9 +466,14 @@ def archive_summary():
     rec_cls = {}
     for r in signed:
         k = (r['recorded'] or {}).get('cls', 'none'); rec_cls[k] = rec_cls.get(k, 0) + 1
-    return dict(index=A['meta'], signed=len(signed), signed_by_source=tally(signed), signed_recorded_host_class=rec_cls,
+    where = {}
+    for r in signed:
+        k = (r['resolved'] or {}).get('where', 'none') if r['cls'] == 'archive' else 'none'; where[k] = where.get(k, 0) + 1
+    return dict(index=A['meta'], signed=len(signed), signed_by_source=tally(signed), signed_resolved_where=where, signed_recorded_host_class=rec_cls,
                 signed_recorded_hosts={h: sum(1 for r in signed if (r['recorded'] or {}).get('host') == h) for h in sorted({(r['recorded'] or {}).get('host') or '-' for r in signed})},
                 signed_not_in_archive=[dict(id=r['id'], recorded=r['recorded'], pack=r['pack']) for r in signed if r['cls'] != 'archive'],
+                signed_on_both=sum(1 for r in signed if r['rtx'] and r['agi']), signed_rtx_pro_only=sum(1 for r in signed if r['rtx'] and not r['agi']), signed_agidock_only=sum(1 for r in signed if r['agi'] and not r['rtx']),
+                signed_agidock_only_list=[r['id'] for r in signed if r['agi'] and not r['rtx']],
                 signed_pack_missing_but_archived=[r['id'] for r in signed if not r['pack'] and r['cls'] == 'archive'],
                 off_limits=sorted(OFF_LIMITS), rule='signed records live on rtx-pro (signed-export-1114, closed_archive) and AGIdock /archive; fleet paths are provenance only and are never read by the explorer')
 

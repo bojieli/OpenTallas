@@ -44,8 +44,11 @@ def main():
             d = json.load(open(ix))
             for r in d.get('rows') or []:
                 fin = r.get('final') or {}
-                out['closed'].append(dict(name=r.get('element') or r.get('block'), job=r.get('job'), status=r.get('status'), path=os.path.join(a.closed, r.get('dir') or ''),
-                                          odb=fin.get('final_odb'), from_host=r.get('host')))
+                base = os.path.join(a.closed, r.get('dir') or ''); odb = fin.get('final_odb')
+                # REMOTE_ONLY jobs keep only links here: the heavy files are on the remote archive (AGIdock)
+                present = bool(odb) and os.path.exists(os.path.join(base, odb))
+                out['closed'].append(dict(name=r.get('element') or r.get('block'), job=r.get('job'), status=r.get('status'), path=base, odb=odb, present=present,
+                                          remote_only=bool(odb) and not present and os.path.exists(os.path.join(base, 'REMOTE_ONLY.json')), from_host=r.get('host')))
             out['closed_generated'] = d.get('generated_at')
         except Exception as e:
             out['closed_error'] = str(e)
