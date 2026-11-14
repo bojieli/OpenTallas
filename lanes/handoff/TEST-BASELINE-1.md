@@ -24,3 +24,6 @@ Class (c) real defects, NOT fixed here (owner needed):
 Flaky (not marked): test_xdie::test_cut_lines_count_abutted_bits failed once under xdist (AttributeError census_cov.coverage): module-name collision, physical/die_plan/s81/census_cov.py shadows tools/die_plan/census_cov.py when another test inserts the s81 dir on sys.path first. Passes alone. Needs sys.path hygiene in the polluting test.
 
 Gate advice for ROOT-MERGE-63: after landing, base list = only xfail/skip-free family; any FAILED/ERROR is new breakage (retire base63.fails die_plan lines). The host lacking tkinter/yosys-abc/shapely now skips instead of failing; check those 3 tools exist on at least one gate host or the skipped tests cover nothing.
+
+## Later scopes (2026-11-14 PM)
+Fix branches (all on hub): claude/fix-ftfull-hopflop-1114, fix-lec-cons-1114, fix-kistations-colst-1114, fix-census-cov-collision-1114, fix-timing-libs-drift-1114, fix-rest-tests-1114, fix-prd-hold-scope-1114, fix-macro-box-rotation-1114 (approved, impact = none: 0 rotated orients in any plan of record), fix-autopilot-tests-1114 (incl. kit_wave prov_stage VIEW-FALLBACK TypeError fix). Integration run of 1-5: claude/test-baseline-integ-1114, die_plan family rc=0. Clone epyc8 /srv/opentallas-scratch2/claude/test-baseline-1/repo (identity TEST-BASELINE-1), runs via ../run.sh <tag>.
