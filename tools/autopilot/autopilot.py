@@ -648,7 +648,7 @@ pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[
        "grt_no_progress": r"OT_GRT_NO_PROGRESS[^\n]*", "drt_no_progress": r"OT_DRT_NO_PROGRESS[^\n]*",
        "grt_timecap": r"OT_GRT_TIMECAP[^\n]*",
        "segfault": r"Segmentation fault[^\n]*|Signal 11 received[^\n]*|SIGSEGV[^\n]*|core dumped[^\n]*",
-       "oom": r"Error 137[^\n]*|\] Error 247[^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
+       "oom": r"Error 137[^\n]*|\] Error 24[17][^\n]*|\bKilled\b[^\n]*|[Oo]ut of memory[^\n]*|std::bad_alloc[^\n]*|OOMKilled[^\n]*",
        # design gates that print their verdict but write no FAIL_PREFLOOR/FAIL_POSTCTS marker (custom runners)
        "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|KIT_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
@@ -2667,7 +2667,35 @@ def sealed_job_dir(j):
     return m[-1] if m else ""
 
 
+EARLYOOM_NEAR_S = 60
+OOMKILL_MAX = 4
+
+
+def is_earlyoom_kill(reasons):
+    """WF-1 11-14: a job killed by the host low-memory killer (make 'Error 241' = 256-15, or an earlyoom-matched SIGTERM 143)"""
+    return bool(re.search(r"Error 241\b|earlyoom", str(reasons or "")))
+
+
+def earlyoom_kill_near(host, t, probe=None):
+    """True when earlyoom on `host` sent a SIGTERM within +-EARLYOOM_NEAR_S of epoch t (journal over ssh; unknown = False)"""
+    if not host or not t:
+        return False
+    cmd = (f"sudo -n journalctl -u earlyoom --since @{int(t) - EARLYOOM_NEAR_S} --until @{int(t) + EARLYOOM_NEAR_S} --no-pager 2>/dev/null "
+           f"| grep -c 'sending SIGTERM'")
+    argv = ["bash", "-c", cmd] if host in ("localhost", HUB_NAME) else ["ssh", "-n", "-o", "ConnectTimeout=15", "-o", "BatchMode=yes", host, cmd]
+    rc, o, _ = (probe or sh)(argv, timeout=60)
+    nums = [int(x) for x in o.split() if x.isdigit()]
+    return bool(nums and nums[-1] > 0)
+
+
 def finish(st, j, c, client):
+    if client.get("exit") == 143 and not c.get("oom") and not client.get("watchdog") and not client.get("cancelled"):
+        try:                                             # WF-1 11-14: SIGTERM 143 with an earlyoom kill on the host within +-60 s is an OOM kill
+            _t = Path(j.get("client_log") or "").stat().st_mtime
+        except OSError:
+            _t = 0
+        if _t and earlyoom_kill_near(j.get("ran_on") or j.get("host"), _t):
+            c = dict(c, oom=f"earlyoom SIGTERM on {j.get('ran_on') or j.get('host')} within {EARLYOOM_NEAR_S} s of the exit (client exit 143)")
     if client.get("exit") in (137, 143) and client.get("unit") and not c.get("oom"):
         w = watchdog_stop(client["unit"], j.get("started", 0))
         sj = "" if w else sealed_job_dir(j)
@@ -2718,6 +2746,14 @@ def finish(st, j, c, client):
         if notrun and j.get("notrun_retries", 0) < MAX_NOTRUN:
             j["notrun_retries"] = j.get("notrun_retries", 0) + 1
             submit(st, j, f"(resubmit: never admitted, {j['notrun_retries']}/{MAX_NOTRUN})")
+            return
+        if kind == "infra-oom" and is_earlyoom_kill(reasons) and j.get("oomkill_retries", 0) < OOMKILL_MAX:
+            # WF-1 11-14: killed by the host's earlyoom, not by the job's own cap: resubmit from the run dir checkpoint without raising --mem
+            j["oomkill_retries"] = j.get("oomkill_retries", 0) + 1
+            j["infra_retry"] = True
+            log(f"EARLYOOM-RESUBMIT {j['id']} {j['die']}/{j['type']}: host low-memory kill ({j['oomkill_retries']}/{OOMKILL_MAX}); "
+                f"resumes the run dir, --mem {j['mem_gb']} unchanged")
+            submit(st, j, f"(resubmit {j['oomkill_retries']}/{OOMKILL_MAX} after an earlyoom kill; resumes the run dir; --mem {j['mem_gb']})")
             return
         if kind == "infra-oom" and j.get("oom_retries", 1 if j.get("infra_retry") else 0) < MAX_OOM_RESUBMITS:
             j["oom_retries"] = j.get("oom_retries", 1 if j.get("infra_retry") else 0) + 1
