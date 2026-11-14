@@ -65,7 +65,9 @@ function nodeDetails(R, view, inst) {
   const out = [h('section.sec', h('h1.mono', n.name), h('p.sub', isType ? `Type of ${dieShort(n.die)} · ${p.instances} placement${p.instances === 1 ? '' : 's'} · ${fmt(p.outline[0], 1)} × ${fmt(p.outline[1], 1)} µm` + (p.hard ? ' · hard IP' : '')
     : `Hard core of ${dieShort(n.die)}${p.outline ? ' · ' + fmt(p.outline[0], 1) + ' × ' + fmt(p.outline[1], 1) + ' µm' : ''} · placed ${p.placements || 0}×`),
     h('div', { style: { display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' } }, badge(st.state, null, st.basis), h('span.muted', [st.label, st.cls && 'class ' + st.cls, st.stage && 'stage ' + st.stage, st.attempt && 'attempt ' + st.attempt].filter(Boolean).join(' · '))),
-    st.reason ? h('p.note', st.reason) : null, actions(n, view))];
+    st.reason ? h('p.note', st.reason) : null,
+    st.state === 'pending archive' ? h('div.banner', { dataset: { testid: 'pending-archive' } }, h('div', h('b', 'Not counted yet. '), `The count credits this design, but the AGIdock archive does not hold all of it: missing ${((st.pending || {}).missing || []).join(', ')}${(st.pending || {}).path ? ' in ' + st.pending.path : ''}. It counts as signed off once database, view files and signoff.json are archived.`)) : null,
+    st.archive ? h('p.note', { dataset: { testid: 'archived-at' } }, `Counted from the AGIdock archive: ${st.archive.path || st.archive.basis}`) : null, actions(n, view))];
   const mt = metricTiles(st.metrics); if (mt) out.push(sec('Sign-off metrics', null, mt));
   out.push(sec('Routed layout', null, layoutFacts(n.layout, R.sources), R.packs && R.packs.history.length > 1 ? h('p.note', `${R.packs.history.length} closures in the store; newest ${R.packs.latest}.`) : null));
   if (isType) {

@@ -72,6 +72,55 @@ def main():
     overlay(W)
 
 
+PENDING = 'pending archive'
+EXPORT_DIES = dict(s81=('s81', 'DeepSeek_ROM', '_'), s81_head=('s81_head', 'DeepSeek_ROM', '_'), qwen_compute=('qwen_compute', 'Qwen_ROM', '_'), qwen_kvsys=('qwen_kvsys', 'Qwen_ROM', '_'), hbm=('hbm', 'HBM_accelerator', '_'))
+VIEW_EXT = ('.v', '.def', '.spef', '.gds', '.lef', '.lib', '.v.zst', '.def.zst', '.spef.zst', '.gds.zst')
+
+
+def archive_gate(idx):
+    """OWNER 2026-11-14: "always refer to the agidock archive when you count the signed records; the fleet is temporary."
+    A design counts as signed only when the AGIdock archive holds its database, its view files and its metadata:
+      /archive/opentallas-signed-1114/<die>/<element>/  with 6_final.odb, signoff.json and at least one view file
+      (INDEX.tsv rows of that archive are used as well once SIGNED-RECOVER writes it), or
+      the earlier AGIdock archive named by the signed-store record of the design (layout.archive_odb: DB + stored record).
+    Everything the count credits that is not there becomes "pending archive": shown, never counted."""
+    ai = pathlib.Path(os.environ.get('ARCHIVE_INDEX') or pathlib.Path(os.environ.get('EXPLORER_STATE', STATE / 'explorer_v1')) / 'archive_index.json')
+    try: A = json.loads(ai.read_text())
+    except Exception as e: return dict(error='archive index not readable (%s): gate not applied' % e)
+    if 'agidock' not in A: return dict(error='no AGIdock listing in the archive index (%s): gate not applied' % A.get('agidock_error'))
+    ent = {}
+    for e in A['agidock']: ent[(e['die'], e['name'])] = e
+    rows = set()
+    for ln in (A.get('agidock_index_tsv') or '').splitlines():
+        if ln.strip() and not ln.startswith('#'): rows.update(c.strip() for c in ln.split('\t') if c.strip())
+    N = idx['nodes']; out = {}
+    if PENDING not in idx['states']: idx['states'].insert(1, PENDING)
+    for n in N.values():
+        st = n.get('status') or {}
+        if n['level'] == 'die' or st.get('state') != 'signed': continue
+        die = n['die']; o = out.setdefault(die, dict(type=dict(before=0, counted=0, pending=0), core=dict(before=0, counted=0, pending=0), pending_list=[]))[n['level']]
+        o['before'] += 1; names = [x for x in dict.fromkeys([n.get('name'), (n.get('plan') or {}).get('module')]) if x]
+        ok = None; miss = None
+        for nm in names:
+            for d in EXPORT_DIES.get(die, (die,)):
+                e = ent.get((d, nm))
+                if not e: continue
+                fs = {f: z for f, z in e['files'].items() if z > 0}   # a zero-byte file is not an archived file
+                empty = sorted(f for f, z in e['files'].items() if not z); have = dict(db=any(f.endswith(('6_final.odb', '6_final.odb.zst')) for f in fs), metadata=any(f.endswith('signoff.json') for f in fs), view=any(f.endswith(VIEW_EXT) for f in fs))
+                if all(have.values()): ok = dict(where='AGIdock', path=e['path'], basis='opentallas-signed-1114')
+                else: miss = dict(path=e['path'], missing=[k for k, v in have.items() if not v], zero_byte=empty)
+                if ok: break
+            if ok: break
+        if not ok and (n.get('layout') or {}).get('archive_odb') and (n['layout'].get('record')):
+            ok = dict(where='AGIdock', path=n['layout']['archive_odb'], basis='earlier AGIdock archive named by the signed-store record')
+        if not ok and (n['id'] in rows or any(x in rows for x in names)): ok = dict(where='AGIdock', basis='INDEX.tsv row')
+        if ok: st['archive'] = ok; o['counted'] += 1
+        else:
+            st.update(state=PENDING, label='signed, pending archive' + (' (R-MINIMAL)' if st.get('basis') else ''), pending=miss or dict(missing=['db', 'view', 'metadata'], path=None))
+            o['pending'] += 1; out[die]['pending_list'].append(n['id'])
+    return dict(index_listed=A.get('agidock_listed'), entries=len(A['agidock']), index_tsv=bool(A.get('agidock_index_tsv')), dies=out)
+
+
 def overlay(W):
     """The sign-off count is the authority on what is signed: every type / core the count credits (signed_types, signed_cores,
     dedup credits) is signed in the index, with the record the count used.  A design the count credits on the R-MINIMAL gates
@@ -103,6 +152,7 @@ def overlay(W):
         if n['level'] != 'die' and st.get('state') == 'signed':
             verdict = str((st.get('metrics') or {}).get('verdict') or '')
             if verdict and not verdict.startswith(('SIGNED', 'LOCAL_PASS')): st['basis'] = 'R-MINIMAL'; st['label'] = 'signed off (R-MINIMAL)'
+    gate = archive_gate(idx)
     for die in idx['dies']:   # the per-state counts follow
         dn = N.get(die)
         if not dn: continue
@@ -112,9 +162,9 @@ def overlay(W):
             for n in N.values():
                 if n['die'] == die and n['level'] == level: cnt['hard ip' if n['id'] in hip else n['status'].get('state', 'not built')] = cnt.get('hard ip' if n['id'] in hip else n['status'].get('state', 'not built'), 0) + 1
             dn['counts'][level] = cnt
-    idx['count_overlay'] = dict(fixed=fixed, count_generated=c.get('generated'))
+    idx['count_overlay'] = dict(fixed=fixed, count_generated=c.get('generated'), archive_gate=gate)
     tmp = f.with_suffix('.tmp3'); tmp.write_text(json.dumps(idx, separators=(',', ':'))); os.replace(tmp, f)
-    print('count overlay: set signed', fixed)
+    print('count overlay: set signed', fixed); print('archive gate:', json.dumps(gate))
 
 
 if __name__ == '__main__':

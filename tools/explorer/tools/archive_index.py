@@ -14,6 +14,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--export', default='/home/ubuntu/signed-export-1114'); ap.add_argument('--closed', default='/home/ubuntu/closed_archive')
     ap.add_argument('--host', default='rtx-pro')
+    ap.add_argument('--agidock', default='ubuntu@155.103.253.53'); ap.add_argument('--agiroot', default='/archive/opentallas-signed-1114'); ap.add_argument('--key', default='~/.ssh/agidock_ot')
     a = ap.parse_args()
     out = dict(schema='opentallas.explorer.archive_index.v1', generated=time.time(), host=a.host, hostname=socket.gethostname(), roots=dict(export=a.export, closed=a.closed), export=[], closed=[])
     if os.path.isdir(a.export):
@@ -52,6 +53,22 @@ def main():
             out['closed_generated'] = d.get('generated_at')
         except Exception as e:
             out['closed_error'] = str(e)
+    # AGIdock /archive/opentallas-signed-1114: the archive of record for the count (owner 2026-11-14).  Listing + INDEX.tsv only.
+    if a.agidock:
+        import subprocess
+        ssh = ['ssh', '-n', '-i', os.path.expanduser(a.key), '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', a.agidock]
+        try:
+            cmd = "cd " + a.agiroot + " && find . -mindepth 3 -maxdepth 4 -type f -printf '%P|%s\\n'; echo ---INDEX---; cat INDEX.tsv 2>/dev/null; true"
+            r = subprocess.run(ssh + [cmd], capture_output=True, text=True, timeout=300)
+            if r.returncode: raise RuntimeError(r.stderr.strip()[-200:])
+            listing, _, index = r.stdout.partition('---INDEX---\n'); ent = {}
+            for ln in listing.splitlines():
+                f, _, sz = ln.rpartition('|'); parts = f.split('/')
+                if len(parts) >= 3: ent.setdefault((parts[0], parts[1]), {})['/'.join(parts[2:])] = int(sz or 0)
+            out['agidock'] = [dict(die=d, name=n, path='%s/%s/%s' % (a.agiroot, d, n), files=fs) for (d, n), fs in sorted(ent.items())]
+            out['agidock_index_tsv'] = index if index.strip() else None; out['agidock_root'] = a.agiroot; out['agidock_listed'] = time.time()
+        except Exception as e:
+            out['agidock_error'] = '%s: %s' % (type(e).__name__, e)
     json.dump(out, sys.stdout, separators=(',', ':'))
 
 

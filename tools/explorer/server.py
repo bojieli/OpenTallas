@@ -754,6 +754,14 @@ class H(BaseHTTPRequestHandler):
         if p.startswith('token/map/'):
             k = p[len('token/map/'):]
             return self.json('tok:map:' + k, (stamp, _mtime(design_service.TOKEN_MAP)), lambda: token_map(k))
+        if p == 'count':   # the archive-gated count: signed = credited by the count AND archived on AGIdock; the rest is pending archive
+            def count():
+                i = index(); g = (i.get('count_overlay') or {}).get('archive_gate') or {}
+                return dict(schema='opentallas.explorer.count.v1', rule='signed = credited by the sign-off count AND database + view files + signoff.json present (non-empty) in the AGIdock archive; otherwise pending archive, not counted',
+                            generated=i.get('generated'), count_generated=(i.get('count_overlay') or {}).get('count_generated'), archive_listed=g.get('index_listed'), index_tsv=g.get('index_tsv'), error=g.get('error'),
+                            dies={d: dict(types=i['nodes'][d].get('type_count'), signed_types=v['type']['counted'], pending_archive_types=v['type']['pending'], credited_types=v['type']['before'],
+                                          signed_cores=v['core']['counted'], pending_archive_cores=v['core']['pending'], credited_cores=v['core']['before'], pending=v['pending_list']) for d, v in (g.get('dies') or {}).items()})
+            return self.json('count', stamp, count)
         if p == 'archive/summary': return self.json('archive:summary', (stamp, _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime')), archive_summary)
         if p == 'fleet/probe': return self.send(200, json.dumps(fleet_probe(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
         if p.startswith('fleet/'): return self.gz(fleet_get(p[6:]), 'no-store')

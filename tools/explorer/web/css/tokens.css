@@ -10,7 +10,7 @@
   --shadow: 0 8px 28px rgba(16, 24, 40, .14), 0 1px 3px rgba(16, 24, 40, .1);
   --scrim: rgba(16, 24, 40, .32);
   /* sign-off states (reserved; always shown with a label) */
-  --s-signed: #1a9d55; --s-failed: #d93a40; --s-building: #2a7fe0; --s-queued: #c88a12; --s-waiting: #7c63d6; --s-notbuilt: #98a0b0; --s-hardip: #a08467;
+  --s-signed: #1a9d55; --s-pending: #7fb89a; --s-failed: #d93a40; --s-building: #2a7fe0; --s-queued: #c88a12; --s-waiting: #7c63d6; --s-notbuilt: #98a0b0; --s-hardip: #a08467;
   /* verdicts / severity */
   --ok: #1a9d55; --warn: #c88a12; --serious: #d9703f; --bad: #d93a40; --info: #2a7fe0;
   /* categorical series, fixed order (validated palette) */
@@ -36,7 +36,7 @@
   --accent: #5b9bff; --accent-ink: #8bb8ff; --accent-soft: #1a2a4a; --focus: #5b9bff;
   --shadow: 0 10px 32px rgba(0, 0, 0, .55), 0 1px 3px rgba(0, 0, 0, .4);
   --scrim: rgba(0, 0, 0, .5);
-  --s-signed: #35b872; --s-failed: #ef5a5f; --s-building: #4d9dff; --s-queued: #dba236; --s-waiting: #9d87f0; --s-notbuilt: #5a6377; --s-hardip: #9a8368;
+  --s-signed: #35b872; --s-pending: #6f9c84; --s-failed: #ef5a5f; --s-building: #4d9dff; --s-queued: #dba236; --s-waiting: #9d87f0; --s-notbuilt: #5a6377; --s-hardip: #9a8368;
   --ok: #35b872; --warn: #dba236; --serious: #ec835a; --bad: #ef5a5f; --info: #4d9dff;
   --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181; --c6: #2f9a2f; --c7: #9085e9; --c8: #e66767; --c-other: #6b7488;
   --macro: #a78bfa; --cellgrey: #8a97b8; --faint: #4a5678; --tree: #f2a94b; --pin-in: #4fd1ec; --pin-out: #ff9a62; --path: #ff5d73; --hold: #fbbf24;
@@ -51,7 +51,7 @@
     --accent: #5b9bff; --accent-ink: #8bb8ff; --accent-soft: #1a2a4a; --focus: #5b9bff;
     --shadow: 0 10px 32px rgba(0, 0, 0, .55), 0 1px 3px rgba(0, 0, 0, .4);
     --scrim: rgba(0, 0, 0, .5);
-    --s-signed: #35b872; --s-failed: #ef5a5f; --s-building: #4d9dff; --s-queued: #dba236; --s-waiting: #9d87f0; --s-notbuilt: #5a6377; --s-hardip: #9a8368;
+    --s-signed: #35b872; --s-pending: #6f9c84; --s-failed: #ef5a5f; --s-building: #4d9dff; --s-queued: #dba236; --s-waiting: #9d87f0; --s-notbuilt: #5a6377; --s-hardip: #9a8368;
     --ok: #35b872; --warn: #dba236; --serious: #ec835a; --bad: #ef5a5f; --info: #4d9dff;
     --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181; --c6: #2f9a2f; --c7: #9085e9; --c8: #e66767; --c-other: #6b7488;
     --macro: #a78bfa; --cellgrey: #8a97b8; --faint: #4a5678; --tree: #f2a94b; --pin-in: #4fd1ec; --pin-out: #ff9a62; --path: #ff5d73; --hold: #fbbf24;
