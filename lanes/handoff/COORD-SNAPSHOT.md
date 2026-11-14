@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-14 02:45 PST
+# COORD snapshot 2026-11-14 03:00 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -16,151 +16,142 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-14 01:5x PST ASK [LIMIT-BIND-1 -> KIT-OPS-3; cc COORD] after deploying the overlay on all gen hosts: release + retry-key (a) every S81 B2/B2t/B2u bind and item failed or held on "tap ... load=N/1500", "radius=R/200", "exceeds 405" collector (the 30 overloaded-tap types, 6 held col_h10_r0_p1 forms, leaf__t1, 4 re-bind types); (b) every item whose preflight or place failed on cell_budget / R-CAP / "above 4000
 
 ## Lane handoff files (age) and last queue post
-- BUS-GEAR-2: handoff 2486 min old; last post 2026-11-12 09:17 RESULT
-- CLAND-RELAY-2: handoff 1550 min old; last post 2026-11-13 00:52 READY
-- CLAND-RELAY-3: handoff 1485 min old; last post 2026-11-13 01:59 READY
-- CLEAN-2: handoff 1722 min old; last post 2026-11-12 22:02 RESULT
-- COORD-COMMIT-SPEED-1: handoff 983 min old; last post 2026-11-13 10:27 RESULT
-- DIE-HBM-100: handoff 1583 min old; last post 2026-11-12 12:43 HANDOFF
-- DIE-HBM-101: handoff 1992 min old; last post 2026-11-12 20:02 READY
-- DIE-HBM-102: handoff 1490 min old; last post 2026-11-13 01:53 READY
-- DIE-KV-100: handoff 565 min old; last post 2026-11-13 13:37 STATE
-- DIE-KV-99: handoff 2081 min old; last post 2026-11-12 16:10 STATE
-- DIE-PROTO-1: handoff 142 min old; last post 2026-11-14 01:4x RESULT
-- DIE-PROTO-2: handoff 2562 min old; last post 2026-11-12 08:05 RESULT
-- DIE-QC-100: handoff 564 min old; last post 2026-11-13 13:35 STATE
-- DIE-QC-101: handoff 278 min old; last post 2026-11-13 22:06 STATE
-- DIE-QC-102: handoff 235 min old; last post 2026-11-13 22:08 STATE
-- DIE-QC-103: handoff 143 min old; last post none in recent queue
-- DIE-S81-88: handoff 564 min old; last post 2026-11-12 16:24 FINDING
-- DIE-S81-89: handoff 566 min old; last post 2026-11-13 12:47 STATE
-- DIE-S81-90: handoff 215 min old; last post 2026-11-13 23:09 STATE
-- DIE-S81-91: handoff 154 min old; last post 2026-11-14 02:04 STATE
-- DRAIN-EPYC4: handoff 139 min old; last post 2026-11-14 00:24 READY-TO-TERMINATE
-- DSDV-FORMS-2: handoff 1157 min old; last post none in recent queue
-- EXPLORER-P1: handoff 72 min old; last post none in recent queue
-- EXPLORER-REVIEW-1: handoff 99 min old; last post 2026-11-14 01:05 REVIEW
-- EXPLORER-REVIEW-2: handoff 78 min old; last post 2026-11-14 01:26 REVIEW
-- FAIL-QCKV-1: handoff 60 min old; last post 2026-11-14 01:44 STATE
-- FAIL-S81-1: handoff 64 min old; last post none in recent queue
-- FLEET-2: handoff 2339 min old; last post 2026-11-12 13:5x READY
-- FLOW-FIN-2: handoff 1148 min old; last post none in recent queue
-- FLOW-PGCAP-1: handoff 335 min old; last post 2026-11-13 22:24 RESULT
-- FRAME-FORMS-1: handoff 566 min old; last post 2026-11-13 13:28 REQUEST
-- FRAME-FORMS-2: handoff 1158 min old; last post none in recent queue
-- GEN-CLASS-1: handoff 2115 min old; last post 2026-11-12 15:33 STATE
-- GEOM-VIS-5: handoff 2599 min old; last post 2026-11-12 07:25 HANDOFF
-- GEOM-VIS-6: handoff 2547 min old; last post 2026-11-12 08:17 HANDOFF
-- GEOM-VIS-7: handoff 2457 min old; last post 2026-11-12 09:5x HANDOFF
-- GEOM-VIS-8: handoff 2170 min old; last post 2026-11-12 14:34 SUMMARY
-- GEOM-VIS-9: handoff 569 min old; last post none in recent queue
-- GUNIT-CORE-1: handoff 631 min old; last post 2026-11-13 12:46 READY
-- HARD-QC-FORMS-1: handoff 677 min old; last post 2026-11-13 12:51 STATE
-- HARD-S81-DSDV-1: handoff 691 min old; last post 2026-11-13 13:11 STATE
-- HARD-S81-SERDES-1: handoff 615 min old; last post none in recent queue
-- HARD-S81-SVC-1: handoff 566 min old; last post 2026-11-13 11:03 READY
-- HBM-CORES-B: handoff 2614 min old; last post 2026-11-12 07:17 RESULT
-- HBM-FORMS-1: handoff 1406 min old; last post 2026-11-13 03:15 STATE
-- HEAD-95: handoff 2086 min old; last post 2026-11-12 16:5x STATE
-- HEAD-96: handoff 1268 min old; last post 2026-11-13 05:36 RESULT
-- HEAD-97: handoff 848 min old; last post 2026-11-13 13:35 RESULT
-- HEAD-98: handoff 432 min old; last post none in recent queue
-- HEAD-99: handoff 118 min old; last post none in recent queue
-- HEAD-ROUTE-1: handoff 1182 min old; last post none in recent queue
-- HOLD-TAP-1: handoff 568 min old; last post 2026-11-13 13:35 RESULT
-- HOLDTAP-FIN-2: handoff 1158 min old; last post 2026-11-13 07:12 READY
-- KIT-FIX-F: handoff 457 min old; last post 2026-11-13 19:07 RESULT
-- KIT-OPS-1: handoff 616 min old; last post 2026-11-13 09:58 STATE
-- KIT-OPS-2: handoff 435 min old; last post 2026-11-13 19:19 RESULT
-- KIT-OPS-3: handoff 27 min old; last post 2026-11-14 00:32 STATE
-- KIT-OPS-4: handoff 52 min old; last post none in recent queue
-- KIT-SNAP-1: handoff 545 min old; last post 2026-11-13 17:39 STATE
-- KIT-STAGE-1: handoff 1173 min old; last post 2026-11-13 07:39 STATE
-- KV-101-PC: handoff 503 min old; last post none in recent queue
-- KV-101-PVFIN: handoff 521 min old; last post none in recent queue
-- KV-101-SPLIT: handoff 473 min old; last post none in recent queue
-- KV-101: handoff 430 min old; last post 2026-11-13 19:21 RESULT
-- KV-VN2-FIN: handoff 2011 min old; last post 2026-11-12 17:13 PLAN-EVENT
-- KW-FIX-46: handoff 2083 min old; last post 2026-11-12 16:01 RESULT
-- LATCHECK-1: handoff 2024 min old; last post 2026-11-12 17:00 READY
-- LEAF-HOLD-1: handoff 566 min old; last post 2026-11-13 10:44 STATE
-- ONBOARD-EPYC10: handoff 493 min old; last post 2026-11-13 18:31 RESULT
-- PHYS-KVHEAD: handoff 515 min old; last post 2026-11-13 18:09 STATE
-- PHYS-QC: handoff 528 min old; last post 2026-11-13 17:56 STATE
-- PHYS-S81: handoff 521 min old; last post 2026-11-13 18:04 STATE
-- PROFILE-1: handoff 500 min old; last post 2026-11-13 18:24 READY
-- PROOF-CORES: handoff 535 min old; last post 2026-11-13 17:49 RESULT
-- PROOF-QCKV: handoff 535 min old; last post 2026-11-13 17:55 RESULT
-- PROOF-S81: handoff 537 min old; last post none in recent queue
-- QC-FORMS-2: handoff 663 min old; last post 2026-11-13 07:03 READY
-- QC-RING: handoff 60 min old; last post none in recent queue
-- REACH-FIN-2: handoff 1156 min old; last post 2026-11-13 07:25 READY
-- REACH-FIX-2: handoff 2065 min old; last post 2026-11-12 16:19 RESULT
-- REBUILD-17: handoff 205 min old; last post 2026-11-13 23:19 STATE
-- RELAY-PLACE-1: handoff 1410 min old; last post 2026-11-13 03:13 RESULT
-- ROOT-MERGE-60: handoff 2042 min old; last post 2026-11-12 15:41 MERGED
-- ROOT-MERGE-62: handoff 527 min old; last post 2026-11-13 17:57 MERGED
-- ROOT-MERGE-63: handoff 6 min old; last post 2026-11-14 02:38 MERGED
-- RULES-CAP-1: handoff 771 min old; last post 2026-11-13 04:12 READY
-- RULES-FLOW-1: handoff 1011 min old; last post none in recent queue
-- RULES-REACH-1: handoff 720 min old; last post none in recent queue
-- RULES-STREET-1: handoff 749 min old; last post 2026-11-13 07:56 RESULT
-- S81-B3-CLK: handoff 42 min old; last post 2026-11-14 02:02 PROGRESS
-- S81-CORES-2: handoff 119 min old; last post none in recent queue
-- S81-FORMS-1: handoff 566 min old; last post 2026-11-13 12:08 STATE
-- S81-R12BA-FIN: handoff 1816 min old; last post 2026-11-12 20:25 READY
-- SERDES-FIN-2: handoff 1158 min old; last post none in recent queue
-- STA2204-1: handoff 2297 min old; last post 2026-11-12 13:32 RESULT
-- SVC-BAND-3: handoff 247 min old; last post none in recent queue
-- SVC-MACRO-2: handoff 1158 min old; last post 2026-11-13 07:24 PLAN
-- TOK-VERIFY-2: handoff 2524 min old; last post 2026-11-12 08:40 HANDOFF
-- TOK-VERIFY-3: handoff 2278 min old; last post 2026-11-12 12:46 RESULT
-- TYPE-COLH9P5: handoff 58 min old; last post 2026-11-14 01:46 STATE
-- TYPE-GUNIT-L1F: handoff 124 min old; last post 2026-11-14 00:40 STATE
-- TYPE-HDCTLN: handoff 122 min old; last post 2026-11-14 01:46 RESULT
-- TYPE-KVHGI2: handoff 123 min old; last post 2026-11-14 00:41 STATE
-- TYPE-KVPHY: handoff 56 min old; last post 2026-11-14 01:48 RESULT
-- TYPE-LEPE: handoff 65 min old; last post none in recent queue
-- TYPE-S81-T29: handoff 121 min old; last post 2026-11-14 00:43 STATE
-- TYPE-SERDES-T4: handoff 110 min old; last post 2026-11-14 01:25 STATE
-- TYPE-SLICE-HOLD: handoff 66 min old; last post 2026-11-14 00:48 STATE
-- TYPE-XS4: handoff 125 min old; last post 2026-11-14 00:39 STATE
-- VARIANTS-1: handoff 233 min old; last post none in recent queue
-- VERIFY-PRICING-1: handoff 1328 min old; last post 2026-11-13 04:36 READY
-- VISLAYOUT2-QC: handoff 2554 min old; last post 2026-11-12 08:09 RESULT
-- VISLAYOUT3-KVHEAD: handoff 1578 min old; last post 2026-11-12 06:24 STATE
-- WAVE-FRICTION-1: handoff 113 min old; last post 2026-11-14 02:10 STATE
-- WBQ: handoff 2536 min old; last post none in recent queue
+- BUS-GEAR-2: handoff 2501 min old; last post 2026-11-12 09:17 RESULT
+- CLAND-RELAY-2: handoff 1565 min old; last post 2026-11-13 00:52 READY
+- CLAND-RELAY-3: handoff 1500 min old; last post 2026-11-13 01:59 READY
+- CLEAN-2: handoff 1737 min old; last post 2026-11-12 22:02 RESULT
+- COORD-COMMIT-SPEED-1: handoff 998 min old; last post 2026-11-13 10:27 RESULT
+- DIE-HBM-100: handoff 1598 min old; last post 2026-11-12 12:43 HANDOFF
+- DIE-HBM-101: handoff 2007 min old; last post 2026-11-12 20:02 READY
+- DIE-HBM-102: handoff 1505 min old; last post 2026-11-13 01:53 READY
+- DIE-KV-100: handoff 580 min old; last post 2026-11-13 13:37 STATE
+- DIE-KV-99: handoff 2096 min old; last post 2026-11-12 16:10 STATE
+- DIE-PROTO-1: handoff 157 min old; last post 2026-11-14 01:4x RESULT
+- DIE-PROTO-2: handoff 2577 min old; last post 2026-11-12 08:05 RESULT
+- DIE-QC-100: handoff 579 min old; last post 2026-11-13 13:35 STATE
+- DIE-QC-101: handoff 293 min old; last post 2026-11-13 22:06 STATE
+- DIE-QC-102: handoff 250 min old; last post 2026-11-13 22:08 STATE
+- DIE-QC-103: handoff 158 min old; last post none in recent queue
+- DIE-S81-88: handoff 579 min old; last post 2026-11-12 16:24 FINDING
+- DIE-S81-89: handoff 581 min old; last post 2026-11-13 12:47 STATE
+- DIE-S81-90: handoff 230 min old; last post 2026-11-13 23:09 STATE
+- DIE-S81-91: handoff 169 min old; last post 2026-11-14 02:04 STATE
+- DRAIN-EPYC4: handoff 154 min old; last post 2026-11-14 00:24 READY-TO-TERMINATE
+- DSDV-FORMS-2: handoff 1172 min old; last post none in recent queue
+- EXPLORER-P1: handoff 87 min old; last post none in recent queue
+- EXPLORER-REVIEW-1: handoff 114 min old; last post 2026-11-14 01:05 REVIEW
+- EXPLORER-REVIEW-2: handoff 93 min old; last post 2026-11-14 01:26 REVIEW
+- FAIL-QCKV-1: handoff 0 min old; last post 2026-11-14 02:59 STATE
+- FAIL-S81-1: handoff 3 min old; last post none in recent queue
+- FLEET-2: handoff 2354 min old; last post 2026-11-12 13:5x READY
+- FLOW-FIN-2: handoff 1163 min old; last post none in recent queue
+- FLOW-PGCAP-1: handoff 350 min old; last post 2026-11-13 22:24 RESULT
+- FRAME-FORMS-1: handoff 581 min old; last post 2026-11-13 13:28 REQUEST
+- FRAME-FORMS-2: handoff 1173 min old; last post none in recent queue
+- GEN-CLASS-1: handoff 2130 min old; last post 2026-11-12 15:33 STATE
+- GEOM-VIS-5: handoff 2614 min old; last post 2026-11-12 07:25 HANDOFF
+- GEOM-VIS-6: handoff 2562 min old; last post 2026-11-12 08:17 HANDOFF
+- GEOM-VIS-7: handoff 2472 min old; last post 2026-11-12 09:5x HANDOFF
+- GEOM-VIS-8: handoff 2185 min old; last post 2026-11-12 14:34 SUMMARY
+- GEOM-VIS-9: handoff 584 min old; last post none in recent queue
+- GUNIT-CORE-1: handoff 646 min old; last post 2026-11-13 12:46 READY
+- HARD-QC-FORMS-1: handoff 692 min old; last post 2026-11-13 12:51 STATE
+- HARD-S81-DSDV-1: handoff 706 min old; last post 2026-11-13 13:11 STATE
+- HARD-S81-SERDES-1: handoff 630 min old; last post none in recent queue
+- HARD-S81-SVC-1: handoff 582 min old; last post 2026-11-13 11:03 READY
+- HBM-CORES-B: handoff 2629 min old; last post 2026-11-12 07:17 RESULT
+- HBM-FORMS-1: handoff 1421 min old; last post 2026-11-13 03:15 STATE
+- HEAD-95: handoff 2101 min old; last post 2026-11-12 16:5x STATE
+- HEAD-96: handoff 1283 min old; last post 2026-11-13 05:36 RESULT
+- HEAD-97: handoff 863 min old; last post 2026-11-13 13:35 RESULT
+- HEAD-98: handoff 447 min old; last post none in recent queue
+- HEAD-99: handoff 133 min old; last post none in recent queue
+- HEAD-ROUTE-1: handoff 1197 min old; last post none in recent queue
+- HOLD-TAP-1: handoff 583 min old; last post 2026-11-13 13:35 RESULT
+- HOLDTAP-FIN-2: handoff 1173 min old; last post 2026-11-13 07:12 READY
+- KIT-FIX-F: handoff 472 min old; last post 2026-11-13 19:07 RESULT
+- KIT-OPS-1: handoff 631 min old; last post 2026-11-13 09:58 STATE
+- KIT-OPS-2: handoff 450 min old; last post 2026-11-13 19:19 RESULT
+- KIT-OPS-3: handoff 42 min old; last post 2026-11-14 00:32 STATE
+- KIT-OPS-4: handoff 67 min old; last post none in recent queue
+- KIT-SNAP-1: handoff 560 min old; last post 2026-11-13 17:39 STATE
+- KIT-STAGE-1: handoff 1188 min old; last post 2026-11-13 07:39 STATE
+- KV-101-PC: handoff 518 min old; last post none in recent queue
+- KV-101-PVFIN: handoff 536 min old; last post none in recent queue
+- KV-101-SPLIT: handoff 488 min old; last post none in recent queue
+- KV-101: handoff 445 min old; last post 2026-11-13 19:21 RESULT
+- KV-VN2-FIN: handoff 2026 min old; last post 2026-11-12 17:13 PLAN-EVENT
+- KW-FIX-46: handoff 2098 min old; last post 2026-11-12 16:01 RESULT
+- LATCHECK-1: handoff 2039 min old; last post 2026-11-12 17:00 READY
+- LEAF-HOLD-1: handoff 581 min old; last post 2026-11-13 10:44 STATE
+- ONBOARD-EPYC10: handoff 508 min old; last post 2026-11-13 18:31 RESULT
+- PHYS-KVHEAD: handoff 530 min old; last post 2026-11-13 18:09 STATE
+- PHYS-QC: handoff 543 min old; last post 2026-11-13 17:56 STATE
+- PHYS-S81: handoff 536 min old; last post 2026-11-13 18:04 STATE
+- PROFILE-1: handoff 515 min old; last post 2026-11-13 18:24 READY
+- PROOF-CORES: handoff 550 min old; last post 2026-11-13 17:49 RESULT
+- PROOF-QCKV: handoff 550 min old; last post 2026-11-13 17:55 RESULT
+- PROOF-S81: handoff 552 min old; last post none in recent queue
+- QC-FORMS-2: handoff 678 min old; last post 2026-11-13 07:03 READY
+- QC-RING: handoff 75 min old; last post none in recent queue
+- REACH-FIN-2: handoff 1171 min old; last post 2026-11-13 07:25 READY
+- REACH-FIX-2: handoff 2080 min old; last post 2026-11-12 16:19 RESULT
+- REBUILD-17: handoff 220 min old; last post 2026-11-13 23:19 STATE
+- RELAY-PLACE-1: handoff 1425 min old; last post 2026-11-13 03:13 RESULT
+- ROOT-MERGE-60: handoff 2057 min old; last post 2026-11-12 15:41 MERGED
+- ROOT-MERGE-62: handoff 542 min old; last post 2026-11-13 17:57 MERGED
+- ROOT-MERGE-63: handoff 21 min old; last post 2026-11-14 02:38 MERGED
+- RULES-CAP-1: handoff 786 min old; last post 2026-11-13 04:12 READY
+- RULES-FLOW-1: handoff 1026 min old; last post none in recent queue
+- RULES-REACH-1: handoff 735 min old; last post none in recent queue
+- RULES-STREET-1: handoff 764 min old; last post 2026-11-13 07:56 RESULT
+- S81-B3-CLK: handoff 57 min old; last post 2026-11-14 02:02 PROGRESS
+- S81-CORES-2: handoff 134 min old; last post none in recent queue
+- S81-FORMS-1: handoff 581 min old; last post 2026-11-13 12:08 STATE
+- S81-R12BA-FIN: handoff 1831 min old; last post 2026-11-12 20:25 READY
+- SERDES-FIN-2: handoff 1173 min old; last post none in recent queue
+- STA2204-1: handoff 2312 min old; last post 2026-11-12 13:32 RESULT
+- SVC-BAND-3: handoff 262 min old; last post none in recent queue
+- SVC-MACRO-2: handoff 1173 min old; last post 2026-11-13 07:24 PLAN
+- TOK-VERIFY-2: handoff 2539 min old; last post 2026-11-12 08:40 HANDOFF
+- TOK-VERIFY-3: handoff 2293 min old; last post 2026-11-12 12:46 RESULT
+- TYPE-COLH9P5: handoff 73 min old; last post 2026-11-14 01:46 STATE
+- TYPE-GUNIT-L1F: handoff 139 min old; last post 2026-11-14 00:40 STATE
+- TYPE-HDCTLN: handoff 137 min old; last post 2026-11-14 01:46 RESULT
+- TYPE-KVHGI2: handoff 138 min old; last post 2026-11-14 00:41 STATE
+- TYPE-KVPHY: handoff 71 min old; last post 2026-11-14 01:48 RESULT
+- TYPE-LEPE: handoff 80 min old; last post none in recent queue
+- TYPE-S81-T29: handoff 136 min old; last post 2026-11-14 00:43 STATE
+- TYPE-SERDES-T4: handoff 125 min old; last post 2026-11-14 01:25 STATE
+- TYPE-SLICE-HOLD: handoff 81 min old; last post 2026-11-14 00:48 STATE
+- TYPE-XS4: handoff 140 min old; last post 2026-11-14 00:39 STATE
+- VARIANTS-1: handoff 248 min old; last post none in recent queue
+- VERIFY-PRICING-1: handoff 1343 min old; last post 2026-11-13 04:36 READY
+- VISLAYOUT2-QC: handoff 2569 min old; last post 2026-11-12 08:09 RESULT
+- VISLAYOUT3-KVHEAD: handoff 1593 min old; last post 2026-11-12 06:24 STATE
+- WAVE-FRICTION-1: handoff 128 min old; last post 2026-11-14 02:10 STATE
+- WBQ: handoff 2551 min old; last post none in recent queue
 
 ## ot-run status
-    ot-run status: epyc2 admits 322 GB (avail 339, reserve 0, fresh 0, peak 0) load 174/128 run 98 LOADCAP root 39% scratch 218 GB
-    intel1 admits 52 GB (avail 69, reserve 0, fresh 0, peak 0) load 191/112 waiters 17:916 GB run 111 LOADCAP root 34% scratch 609 GB
-    localhost admits 17 GB (avail 33, reserve 0, fresh 0, peak 0) load 67/112 run 51 root 67% scratch 1475 GB
+    ot-run status: epyc2 admits 333 GB (avail 350, reserve 0, fresh 0, peak 0) load 155/128 run 88 root 39% scratch 218 GB
+    intel1 admits 52 GB (avail 68, reserve 0, fresh 0, peak 0) load 170/112 run 99 LOADCAP root 34% scratch 598 GB
+    localhost admits 49 GB (avail 66, reserve 0, fresh 0, peak 0) load 140/112 waiters 1:48 GB run 93 root 67% scratch 1466 GB
     epyc4 HELD (DRAIN DRAIN-EPYC4 11-13 23:xx OWNER terminate epyc4: no new ot-run job (running jobs untouched). Revert: delete this line (backup held_hosts.bak-dra
-    epyc7 admits 67 GB (avail 83, reserve 0, fresh 0, peak 0) load 198/96 run 100 LOADCAP root 35% scratch 1937 GB
-    epyc8 admits 50 GB (avail 66, reserve 0, fresh 0, peak 0) load 101/96 waiters 13:624 GB run 66 root 6% scratch 2950 GB
-    epyc9 admits 30 GB (avail 47, reserve 0, fresh 0, peak 0) load 219/96 run 121 LOADCAP root 5% scratch 2971 GB
-    epyc10 admits 307 GB (avail 323, reserve 0, fresh 0, peak 0) load 128/96 run 81 LOADCAP root 4% scratch 6190 GB
-    next 16-thread 32 GB job -> epyc8
+    epyc7 admits 62 GB (avail 78, reserve 0, fresh 0, peak 0) load 160/96 run 91 LOADCAP root 35% scratch 1924 GB
+    epyc8 admits 61 GB (avail 78, reserve 0, fresh 0, peak 0) load 227/96 run 80 LOADCAP root 6% scratch 2914 GB
+    epyc9 admits 41 GB (avail 57, reserve 0, fresh 0, peak 0) load 160/96 run 104 LOADCAP root 5% scratch 2952 GB
+    epyc10 admits 288 GB (avail 305, reserve 0, fresh 0, peak 0) load 149/96 run 90 LOADCAP root 4% scratch 6168 GB
+    next 16-thread 32 GB job -> epyc2
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-14 02:44:54 PST AUTOPILOT: KIT-WAVE RESTAGE s81/col_h9_r0_p6__t1__pvb38a9d6c unit kw-s81-colh9r0p6t1pvb38a9d6c-1-50592 (epyc8 -> epyc10)
-    2026-11-14 02:44:54 PST AUTOPILOT: KIT-WAVE RESTAGE-PICK s81/col_h9_r0_p6__t1__pvb38a9d6c gen_hosts=['epyc10', 'epyc8', 'epyc7', 'epyc9', 'intel1'] guard=['epyc10', 'epyc8', 'epyc7', 'epyc9', 'intel1'
-    2026-11-14 02:44:54 PST AUTOPILOT: KIT-WAVE RESTAGE s81_head/hd_ctl unit kw-s81hea-hdctl-4-48126 (epyc7 -> epyc10)
-    2026-11-14 02:44:54 PST AUTOPILOT: KIT-WAVE RESTAGE-PICK s81_head/hd_ctl gen_hosts=['epyc7', 'intel1', 'epyc10'] guard=['epyc7', 'intel1', 'epyc10'] epyc7:room=0,cap=0,sc=18,w=None,ld=187.0 intel1:roo
-    2026-11-14 02:44:54 PST AUTOPILOT: KIT-WAVE RESTAGE qwen_compute/sle_stm_v3 unit kw-qwenco-slestmv3-8-49959 (intel1 -> epyc8)
-    2026-11-14 02:44:54 PST AUTOPILOT: KIT-WAVE RESTAGE-PICK qwen_compute/sle_stm_v3 gen_hosts=['epyc10', 'epyc7', 'epyc8', 'epyc9', 'intel1'] guard=['epyc10', 'epyc7', 'epyc8', 'epyc9', 'intel1'] epyc10:
+    2026-11-14 02:55:19 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_compute/slw_st_a_v1__clb036e152: no routed PROVISIONAL source yet for child core(s) qfd_dv_s8_station_tail1 sta_cland_w1081_e_s18 sta_cland_
+    2026-11-14 02:55:20 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_compute/slw_st_a_v1__clfc5867a6__pvdf8e5ca4: no routed PROVISIONAL source yet for child core(s) qfd_dv_s8_station_tail1 sta_cland_w1081_e_s1
+    2026-11-14 02:55:20 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_compute/slw_st_a_v1__clfc5867a6__pvf82a6c28: no routed PROVISIONAL source yet for child core(s) qfd_dv_s8_station_tail1 sta_cland_w1081_e_s1
+    2026-11-14 02:55:20 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_compute/slw_st_a_v2__cl9f076a5c: no routed PROVISIONAL source yet for child core(s) sta_cland_w1081_e_s18 sta_cland_w1574_e_s26 sta_cland_w5
+    2026-11-14 02:55:20 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_compute/slw_st_a_v2__clf4365a62: no routed PROVISIONAL source yet for child core(s) sta_cland_w1081_e_s18 sta_cland_w1574_n_s26 sta_cland_w5
+    2026-11-14 02:55:38 PST AUTOPILOT: SUBMIT 6f1ed75ba82a s81/col_h9_r1__t1__cl49d7a23e__pv2f96c04f epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/col_h9_r
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-14 01:22 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-90): 5 event(s): col_h9_r1__t1__cl49d7a23e__pv70f04488 AUTO-GEOM PASS GEOM-ADVISORY channel_h,channel_v,clock_tap_sinks,col_v,empty,fill,grt,partial_face,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/70
-- 2026-11-14 01:24 PST MERGED [ROOT-MERGE-63] train N KV-102 plan of record (COORD APPROVED, blob decision by COORD) claude/kv-102-plan-1113@b2ea156a14 SQUASHED into one commit main 5688de7798f -> af7bfe93a89 (squash because the branch history carries the 494 MB composed_rtl/receipt.json, which the push limit refuses even when the tip replaces it; the branch commits are therefore not ancestors of main). Content = KV-
-- 2026-11-14 01:26 PST REVIEW [EXPLORER-REVIEW-2 (Fable) -> COORD; for OWNER] rebuild the 4 explorers as one tool? UNIFY YES, FROM-SCRATCH REWRITE NO. All four already live in tools/fleet_viz (about 21k lines, plain ES modules + stdlib server) with good engines (lossless pack viewer, mountable token and data-flow modules). What is legacy: (1) DATA: token records exported 10-20 and data-flow link records 10-15/16 show
-- 2026-11-14 01:4x PST RESULT [DIE-PROTO-1 -> COORD, HEAD-99] HEAD die GRT + die STA prototype on the CURRENT plan rp21z4 (head-98/prep21z5/prep/source_plan.json 0c3b45871907, tools src_head_rp21z_pgcap1d724b73), plan-shape abstracts for all 26 types (no signed views fed). ADVISORY, DO_NOT_COUNT. Run epyc10 /srv/opentallas-scratch2/claude/die-proto-1b/s81_head/cur1114 (kit 1 min, GRT 1 min, routed clock re-balance 30
-- 2026-11-14 09:35 PST READY [EXPLORER-U0 -> ROOT-MERGE-63; cc COORD] claude/explorer-u0-1114@04d2e3dbb92bb5f813a1338aea31c47d584f784e (base main af7bfe93a89; 1 file: tools/fleet_viz/plan_now.py, 2 lines). Adds env PLAN_NOW_SKIP_HOSTS (terminated hosts) so the served copy needs no in-place patch. Of the 3 files that differed from main, explorer_dies.json and design_export.py in the served copy were OLDER than main (m
-- 2026-11-14 09:36 PST RESULT [EXPLORER-U0 (Sonnet) -> COORD; for OWNER] U0 done. (1) Data-flow: DATAFLOW_DATA removed from explorer2.env/env.sh; the service now serves the 23 committed link records from the checkout; :8760/explorer/dataflow/data/index.json 200 (44913 B). Token map: refresh.sh now ends with token_design_map.py; built, /api/design/token/ds_rom 200 (32717 B, was error), refresh service run green end to
-- 2026-11-14 01:36 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-101): 73 event(s): cbf_q00__cl1b5a6458 FAIL INFRA (infra (python exception / plan-schema refusal in the kit tool: tool or source skew) @gen: gen phys: ERROR plan invalid:) evid epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q102B0/items/cbf_q00__cl1b5a6458/attempt_22; cbf_q00__cl870de686 FAIL INFRA
-- 2026-11-14 01:36 PST KIT-WAVE [qwen_kvsys] -> KV die owner (KV-101): 22 event(s): kv3_io_cor_v1 PREFLIGHT-ADVISORY clock_pin_geometry 94 (landing_contract.json: clock fclk_in_ft0_i on M7, not M8); kv3_io_cor_v1 AUTO-GEOM PASS GEOM-ADVISORY clock_tap_sinks,col_v,empty,fill,partial_face,pin_reg_max,pin_reg_p90,pin_unreg,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geo
-- 2026-11-14 01:36 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-98): 3 event(s): hd_spn_wshim_tx PREFLIGHT-ADVISORY clock_pin_geometry 4 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); hd_spn_wshim_tx AUTO-GEOM PASS GEOM-ADVISORY empty,fill,pin_reg_max: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (intel1:/srv/opentallas-scratch2/cl
 - 2026-11-14 01:36 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-90): 8 event(s): col_h9_r1__t1__cl49d7a23e__pv4bd36c74 AUTO-GEOM PASS GEOM-ADVISORY channel_h,channel_v,clock_tap_sinks,col_v,empty,fill,grt,partial_face,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/70
 - 2026-11-14 01:37 PST MERGED [ROOT-MERGE-63] trains O+R+S (COORD APPROVED each, relayed by ROOT-MERGE-63) main af7bfe93a89 -> 235ca3a3123 (stack, no-ff each): O DIE-QC-103 r8pin 4ba0209df4f1 -> 2ed86dbdbf3 (additive conflicts hand-resolved by keeping both sides in tools/die_plan/{clock_landings.py,face_flops.tcl,gen_phys.py,test_param_wrap_hard_ring.py}; py_compile ok), R limit-grt-1 a78e4cfb6ac -> 541a6b628d8, S li
 - 2026-11-14 01:39 PST STATE [KV-102 -> COORD] DO_NOT_COUNT. (1) SD_v1: no tap-balance lane needed for R-MINIMAL. kv3_sys_SD_v1 already has an AUTO-RESIGN record SIGNED (22ef35929a8d, 23:24 PST, build 66e6607e3f, ECO i1 eco_20261113_222034 on the kv101ns kit): setup TT +17.56, hold FF +4.44 (0 violators), DRV/DRC/antenna/PG/face PASS, io_hold_parent NOT RUN (port-only, parent). The wave's late ECO (rule 2: internal h
@@ -212,4 +203,13 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-14 02:37 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-90): 18 event(s): ot_s81sl_leaf__t25__cl55642d17 PREFLIGHT-ADVISORY clock_pin_geometry 64 (landing_contract.json: clock fclk_in_ft0_i on M7, not M8); ot_s81sl_leaf__t25__cl55642d17 AUTO-GEOM PASS GEOM-ADVISORY channel_v,clock_tap_sinks,col_v,empty,fill,partial_face,pin_reg_max,pin_reg_p90,pin_unreg,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-ga
 - 2026-11-14 02:38 PST MERGED [ROOT-MERGE-63] train AA WAVE-FRICTION-1 claude/wave-friction-1-1114@9b738bb819b (COORD APPROVED, relayed by ROOT-MERGE-63; kit_wave.py only: KW-STEP-TIMES step timers + parallel per-host source-completeness probe) main 85b85a68f2e -> fd6308047a2, no-ff, no conflicts. Gate: kit_wave.py compiles; all tools/autopilot/test_kit_wave*.py + test_autopilot run, only test_own_cap_sigkill_247 fai
 - 2026-11-14 02:42 PST RESULT [COUNT-FRICTION-1 -> COORD] No union bug: records that fail counts_signed are dropped at scan and never replace a passing record; a re-run against the pre-drop cache loses nothing (diff: 0 stale-only, additions only). CAUSE of 91->88 / 34->33: localhost (user crontab :08,:18..:58 rsync -a of its OWN release_tree_plan_cache.json to intel2) overwrote the hub cache at 02:38 with localhost c
+- 2026-11-14 02:45 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-101): 3 event(s): slw_su_l0__cl1e5219ea PREFLIGHT-ADVISORY clock_pin_geometry 59 (landing_contract.json: clock fclk_in_cws3_i on M7, not M8); slw_su_l0__cl1e5219ea AUTO-GEOM PASS GEOM-ADVISORY aspect,channel_v,clock_on_macro,col_v,partial_face,pin_reg_max,pin_reg_p90,r2r,r2r_count: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x g
+- 2026-11-14 02:45 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-90): 16 event(s): col_h10_r2__t1__cl1f5d6c2a__pv16277ca6 AUTO-GEOM PASS GEOM-ADVISORY channel_h,channel_v,clock_tap_sinks,col_v,empty,fill,grt,partial_face,r2r,r2r_count,relay_collapse: OWNER 11-03 targets-not-gates (only sign-off blocks; COORD 09:0x geom advisory) -> enqueued (epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/
+- 2026-11-14 02:45 PST KIT-WAVE [qwen_kvsys] -> KV die owner (KV-101): 2 event(s): kv3_hgi_v3@2 SUPERSEDED: superseded by attempt 3 of the same item; kv3_sys_SD LAUNCHED (kw-qwenkv-kv3sysSD-3-53126)
+- 2026-11-14 02:45 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-98): 1 event(s): hd_ctl unstarted waiter RESTAGED (epyc7 -> epyc10)
+- 2026-11-14 02:55 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-101): 6 event(s): cbf_q11 FAIL FLOW (tool input file missing (stale path / pruned worktree) @gen: FileNotFoundError: type cbf_q11: macro u_bound.u_t22 view /srv/opentallas-scratch2/claude/wt/qc-s29) evid intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q102B0/items/cbf_q11/attempt_9; cbn_q11__cl49ae
+- 2026-11-14 02:55 PST KIT-WAVE [qwen_kvsys] -> KV die owner (KV-101): 4 event(s): kv3_hub_Wo PREFLIGHT-ADVISORY clock_pin_geometry 200 (landing_contract.json: clock fclk_in_ft0_i on M7, not M8); kv3_hub_Wo FAIL FLOW (clock-landing band too small or blocked (band plan, or tool: this kit already reads its pinslot setting from spec cland_pinslot) @place: Error: global_place.tcl) evid epyc2:/srv/opentallas-scratch2/clau
+- 2026-11-14 02:55 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-90): 19 event(s): col_h10_r0_p1__t1__cl911743eb PREFLIGHT-ADVISORY clock_pin_geometry 53 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); macro_channels 1 (macro column 0 x[17.388,1430.03]: E vertical channel 8.532 um < 10.8); col_h10_r0_p1__t1__cl911743eb FAIL FLOW (unclassified failure @place (see log): KW_PLACE_RC=0)
+- 2026-11-14 02:55 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-98): 3 event(s): hd_ctl_n route FAIL FLOW (flow-error: [ERROR DRT-0255] Maze Route cannot find path of net w3u_i[427] in worker of routeBox ( 1116060 653220 ) ( 1120050 657210 ).) job 175046e339be; hd_turn_b signoff FAIL TIMING (routed-not-signed: TT 163.87 FF -111.91 ps late-ECO exhausted (1 it, 1222.1 s): TT 163.87->102.17 FF -111.91->-3.32 drv 0->0
+- 2026-11-14 02:59 PST STATE [FAIL-QCKV-1 pass 3, 01:42..02:59] 0 new QC/KV/HEAD KIT-WAVE FAIL lines (last any-die FAIL 02:54 is S81, not mine). Closed since pass 2: (A) QC feed_s29 = fix-qcfeed-1 merged (ROOT-MERGE-63 train X, CL.Landings plan_path); (C) KV hgi_v3/v6 ft5 = KV-FTGRID merged (train Z, relaunch hgi_v3/v6 via KIT-OPS-3); (B) 16 KV CLAND = kv102sem CLAND-EDGE2. QC swap to s29q103S (DIE-QC-103 READY+ADOPT
 
