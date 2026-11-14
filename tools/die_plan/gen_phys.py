@@ -202,6 +202,35 @@ def _relay_mid_fit(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _relay_polylines(P, tn):
+    """FIX-RELAYPOLY 11-14 (FABLE-REVIEW-COL R-COL-4): opt-in plan partition_types.<t>.relay_polylines = [{group_re, sink,
+    polyline_um [[x, y], ...], max_hop_um}], absent = unchanged kits.  One point = the source point of a soft-source head
+    (GPL-placed lpl flop): the chain becomes placeable and takes the automatic wall-avoiding path from it.  relay_mid.tcl (OT_RELAY_POLY=1) spreads the stations of
+    every chain with a group matching group_re evenly along the polyline (round the macro wall) instead of on the straight
+    source-sink line.  Returns the validated entries (a list, possibly empty)."""
+    t = (getattr(P, "types", None) or {}).get(tn) or {}
+    out = []
+    for e in t.get("relay_polylines") or []:
+        pts = [(float(p[0]), float(p[1])) for p in e.get("polyline_um") or []]
+        if not e.get("group_re") or len(pts) < 1:
+            raise SystemExit(f"relay_polylines[{tn}]: group_re and >= 1 polyline_um point (1 = soft-head source point, auto path) required: {e}")
+        out.append(dict(group_re=str(e["group_re"]), pts=pts, max_hop_um=float(e.get("max_hop_um", 405))))
+    return out
+
+
+def write_relay_polylines(P, tn, kd):
+    """kd/relay_polylines.txt for OT_RELAY_POLY_FILE (lines: re:<group_re> x y x y ...); returns the entry count."""
+    ents = _relay_polylines(P, tn)
+    if ents:
+        (Path(kd) / "relay_polylines.txt").write_text("".join(
+            "re:%s %s\n" % (e["group_re"], " ".join("%g %g" % p for p in e["pts"])) for e in ents))
+    return len(ents)
+
+
+def _relay_poly_on(P, tn):
+    return bool(_relay_polylines(P, tn)) or os.environ.get("OT_RELAY_POLY") == "1"
+
+
 def _gutter_block_um(budgets, tn):
     """S81-TYPES-5 11-07 NARROW-GUTTER class (gutter_block.tcl + gutter_release.tcl): the gap threshold in um, or None.
     GEN env OT_GUTTER_BLOCK_UM (kit-wave item_env) wins; else budgets.gutter_block_um, for every macro type, or only
@@ -5185,6 +5214,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
+           *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
+           *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
            *([f"export OT_GUTTER_BLOCK_MIN_SPAN_UM = {_gutter_block_min_span_um(P.budgets)}"]
              if macros and _gutter_block_um(P.budgets, tn) and _gutter_block_min_span_um(P.budgets) else []),
@@ -5524,6 +5556,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("reset_pair_place.tcl"), kd / "reset_pair_place.tcl")
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
+        write_relay_polylines(P, tn, kd)
         if _gutter_block_um(P.budgets, tn):     # S81-TYPES-5 11-07 NARROW-GUTTER class (opt-in)
             shutil.copyfile(Path(__file__).with_name("gutter_block.tcl"), kd / "gutter_block.tcl")
             shutil.copyfile(Path(__file__).with_name("gutter_release.tcl"), kd / "gutter_release.tcl")

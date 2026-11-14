@@ -18,6 +18,8 @@ uplevel #0 {
 set rm_blk [ord::get_db_block]
 set rm_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set rm_re $::env(OT_RELAY_MID_RE)
+# OT_RELAY_MID_DEPTH: buffers/inverters traced through to an endpoint (default 4)
+set ::rm_depth [expr {[info exists ::env(OT_RELAY_MID_DEPTH)] ? $::env(OT_RELAY_MID_DEPTH) : 4}]
 set rm_min [expr {[info exists ::env(OT_RELAY_MID_MIN_UM)] ? $::env(OT_RELAY_MID_MIN_UM) : 200.0}]
 set rm_core [$rm_blk getCoreArea]
 set rm_x0 [$rm_core xMin]; set rm_y0 [$rm_core yMin]; set rm_x1 [$rm_core xMax]; set rm_y1 [$rm_core yMax]
@@ -73,7 +75,7 @@ proc rm_drv {net depth} {
     if {[[$it getMTerm] getIoType] ne "OUTPUT"} continue
     set inst [$it getInst]
     if {[string match "TIE*" [[$inst getMaster] getName]]} { return {} }
-    if {$depth < 4 && ![[$inst getMaster] isBlock] && [rm_isbuf $inst]} {
+    if {$depth < $::rm_depth && ![[$inst getMaster] isBlock] && [rm_isbuf $inst]} {
       foreach i2 [rm_sig $inst INPUT] { return [rm_drv [$i2 getNet] [expr {$depth + 1}]] }
     }
     set e [rm_end $it]
@@ -96,7 +98,7 @@ proc rm_loads {net depth} {
     set inst [$it getInst]
     # flop async set/reset / clock pins are not data sinks (a relay's reset-pin register drives its own RESETNs)
     if {[string match "*DFF*" [[$inst getMaster] getName]] && [[$it getMTerm] getName] ne "D"} continue
-    if {$depth < 4 && ![[$inst getMaster] isBlock] && ([rm_isbuf $inst] || [rm_isgate $inst])} {
+    if {$depth < $::rm_depth && ![[$inst getMaster] isBlock] && ([rm_isbuf $inst] || [rm_isgate $inst])} {
       foreach o [rm_sig $inst OUTPUT] { set r [concat $r [rm_loads [$o getNet] [expr {$depth + 1}]]] }
       continue
     }
@@ -130,13 +132,218 @@ proc rm_cent {pts} {
   set n [llength $pts]
   return [list [expr {$x / $n}] [expr {$y / $n}]]
 }
+# ---- OT_RELAY_POLY: polyline stations around hard macros --------------------------------------------------------
+# rm_polyline g ax ay bx by -> {x0 y0 x1 y1 ... xn yn total_len} (Manhattan, DBU) or {} (straight line is clear: old behaviour)
+# 1. OT_RELAY_POLY_FILE lines "<glob on head group> x y x y ..." (um) give the full polyline explicitly (plan waypoints)
+# 2. otherwise the line is tested against every macro grown by OT_RELAY_POLY_PAD um (default 6.5, so gaps < 13 um close);
+#    if it crosses one, a turn-penalised shortest path on an OT_RELAY_POLY_GRID um grid (default 8) avoiding them is used.
+set rm_poly [expr {[info exists ::env(OT_RELAY_POLY)] && $::env(OT_RELAY_POLY) eq "1"}]
+set rm_wp {}
+if {$rm_poly && [info exists ::env(OT_RELAY_POLY_FILE)] && [file exists $::env(OT_RELAY_POLY_FILE)]} {
+  set rm_f [open $::env(OT_RELAY_POLY_FILE)]
+  foreach rm_l [split [read $rm_f] "\n"] {
+    set rm_l [string trim $rm_l]
+    if {$rm_l eq "" || [string index $rm_l 0] eq "#"} continue
+    dict set rm_wp [lindex $rm_l 0] [lrange $rm_l 1 end]
+  }
+  close $rm_f
+}
+set rm_pad [expr {int(([info exists ::env(OT_RELAY_POLY_PAD)] ? $::env(OT_RELAY_POLY_PAD) : 6.5) * $rm_dbu)}]
+set rm_gd [expr {int((([info exists ::env(OT_RELAY_POLY_GRID)] ? $::env(OT_RELAY_POLY_GRID) : 8.0)) * $rm_dbu)}]
+set rm_pr {}
+if {$rm_poly} {
+  foreach i [$rm_blk getInsts] {
+    if {[[$i getMaster] isBlock]} {
+      set b [$i getBBox]
+      lappend rm_pr [list [expr {[$b xMin]-$rm_pad}] [expr {[$b yMin]-$rm_pad}] [expr {[$b xMax]+$rm_pad}] [expr {[$b yMax]+$rm_pad}]]
+    }
+  }
+}
+proc rm_blocked {x y} {
+  global rm_pr
+  foreach m $rm_pr { lassign $m a b c d; if {$x > $a && $x < $c && $y > $b && $y < $d} { return 1 } }
+  return 0
+}
+proc rm_seg_clear {x0 y0 x1 y1} {
+  global rm_gd
+  set len [expr {abs($x1 - $x0) + abs($y1 - $y0)}]
+  set k [expr {max(1, int($len / ($rm_gd / 2)))}]
+  for {set t 0} {$t <= $k} {incr t} {
+    if {[rm_blocked [expr {int($x0 + ($x1 - $x0) * double($t) / $k)}] [expr {int($y0 + ($y1 - $y0) * double($t) / $k)}]]} { return 0 }
+  }
+  return 1
+}
+proc rm_plen {pts} {
+  set tot 0
+  for {set i 2} {$i < [llength $pts]} {incr i 2} {
+    set tot [expr {$tot + abs([lindex $pts $i] - [lindex $pts [expr {$i-2}]]) + abs([lindex $pts [expr {$i+1}]] - [lindex $pts [expr {$i-1}]])}]
+  }
+  return $tot
+}
+# Manhattan walk A -> B through the polyline vertices: every leg is an L (x first); the walk's length is the polyline's
+proc rm_walk {pts} {
+  set w [list [lindex $pts 0] [lindex $pts 1]]
+  for {set i 2} {$i < [llength $pts]} {incr i 2} {
+    set x [lindex $pts $i]; set y [lindex $pts [expr {$i+1}]]
+    if {$x != [lindex $w end-1] && $y != [lindex $w end]} { lappend w $x [lindex $w end] }
+    lappend w $x $y
+  }
+  return $w
+}
+proc rm_along {pts d} {
+  set w [rm_walk [lrange $pts 0 end-1]]
+  set acc 0
+  for {set i 2} {$i < [llength $w]} {incr i 2} {
+    set x0 [lindex $w [expr {$i-2}]]; set y0 [lindex $w [expr {$i-1}]]; set x1 [lindex $w $i]; set y1 [lindex $w [expr {$i+1}]]
+    set l [expr {abs($x1 - $x0) + abs($y1 - $y0)}]
+    if {$l > 0 && $acc + $l >= $d} {
+      set f [expr {($d - $acc) / double($l)}]
+      return [list [expr {int($x0 + ($x1 - $x0) * $f)}] [expr {int($y0 + ($y1 - $y0) * $f)}]]
+    }
+    set acc [expr {$acc + $l}]
+  }
+  return [list [lindex $w end-1] [lindex $w end]]
+}
+proc rm_polyline {g ax ay bx by} {
+  global rm_wpmap rm_pr rm_gd rm_x0 rm_y0 rm_x1 rm_y1 rm_dbu
+  # one waypoint = the source point of a soft-source head only (plan relay_polylines with a single point): auto path from it
+  if {[dict exists $rm_wpmap $g] && [llength [dict get $rm_wpmap $g]] > 2} {
+    set pts {}
+    foreach v [dict get $rm_wpmap $g] { lappend pts [expr {int($v * $rm_dbu)}] }
+    set pts [concat [list $ax $ay] $pts [list $bx $by]]
+    return [concat $pts [rm_plen $pts]]
+  }
+  # straight (Manhattan-by-L is not the placement line; the old line is the diagonal): test the diagonal
+  if {[rm_seg_clear $ax $ay $bx $by]} { return {} }
+  set gd $rm_gd
+  set nx [expr {($rm_x1 - $rm_x0) / $gd + 1}]; set ny [expr {($rm_y1 - $rm_y0) / $gd + 1}]
+  # blocked grid (rasterise macro rectangles)
+  set blk [dict create]
+  foreach m $rm_pr {
+    lassign $m a b c d
+    set i0 [expr {max(0, ($a - $rm_x0) / $gd)}]; set i1 [expr {min($nx - 1, ($c - $rm_x0) / $gd + 1)}]
+    set j0 [expr {max(0, ($b - $rm_y0) / $gd)}]; set j1 [expr {min($ny - 1, ($d - $rm_y0) / $gd + 1)}]
+    for {set i $i0} {$i <= $i1} {incr i} {
+      set cx [expr {$rm_x0 + $i * $gd}]
+      if {$cx <= $a || $cx >= $c} continue
+      for {set j $j0} {$j <= $j1} {incr j} {
+        set cy [expr {$rm_y0 + $j * $gd}]
+        if {$cy > $b && $cy < $d} { dict set blk "$i,$j" 1 }
+      }
+    }
+  }
+  # snap endpoints to the nearest free grid node
+  foreach {nm px py} [list s $ax $ay t $bx $by] {
+    set ci [expr {min($nx - 1, max(0, ($px - $rm_x0 + $gd / 2) / $gd))}]
+    set cj [expr {min($ny - 1, max(0, ($py - $rm_y0 + $gd / 2) / $gd))}]
+    set found {}
+    for {set r 0} {$r < 200 && $found eq {}} {incr r} {
+      for {set di -$r} {$di <= $r && $found eq {}} {incr di} {
+        foreach dj [list [expr {-$r}] $r] {
+          set ii [expr {$ci + $di}]; set jj [expr {$cj + $dj}]
+          if {$ii < 0 || $jj < 0 || $ii >= $nx || $jj >= $ny} continue
+          if {![dict exists $blk "$ii,$jj"]} { set found [list $ii $jj]; break }
+        }
+      }
+      if {$found eq {}} {
+        for {set dj [expr {-$r}]} {$dj <= $r && $found eq {}} {incr dj} {
+          foreach di [list [expr {-$r}] $r] {
+            set ii [expr {$ci + $di}]; set jj [expr {$cj + $dj}]
+            if {$ii < 0 || $jj < 0 || $ii >= $nx || $jj >= $ny} continue
+            if {![dict exists $blk "$ii,$jj"]} { set found [list $ii $jj]; break }
+          }
+        }
+      }
+    }
+    if {$found eq {}} { return {} }
+    set e$nm $found
+  }
+  lassign $es si sj
+  lassign $et ti tj
+  # turn-penalised Dijkstra (bucket queue); state = i,j,dir
+  set turn 4
+  set dist [dict create]
+  set prev [dict create]
+  set bucket [dict create 0 [list [list $si $sj 4]]]
+  dict set dist "$si,$sj,4" 0
+  set cost 0; set goal {}
+  set maxc [expr {($nx + $ny) * 6}]
+  while {$goal eq {} && $cost <= $maxc} {
+    if {![dict exists $bucket $cost]} { incr cost; continue }
+    foreach st [dict get $bucket $cost] {
+      lassign $st i j dr
+      if {[dict get $dist "$i,$j,$dr"] != $cost} continue
+      if {$i == $ti && $j == $tj} { set goal "$i,$j,$dr"; break }
+      set k 0
+      foreach {di dj} {1 0 0 1 -1 0 0 -1} {
+        set ni [expr {$i + $di}]; set nj [expr {$j + $dj}]
+        if {$ni < 0 || $nj < 0 || $ni >= $nx || $nj >= $ny || [dict exists $blk "$ni,$nj"]} { incr k; continue }
+        set nc [expr {$cost + 1 + (($dr != 4 && $dr != $k) ? $turn : 0)}]
+        set key "$ni,$nj,$k"
+        if {![dict exists $dist $key] || [dict get $dist $key] > $nc} {
+          dict set dist $key $nc
+          dict set prev $key "$i,$j,$dr"
+          dict lappend bucket $nc [list $ni $nj $k]
+        }
+        incr k
+      }
+    }
+    dict unset bucket $cost
+    incr cost
+  }
+  if {$goal eq {}} { return {} }
+  set path {}
+  set cur $goal
+  while {1} {
+    lassign [split $cur ,] i j dr
+    set path [linsert $path 0 [list $i $j $dr]]
+    if {![dict exists $prev $cur]} break
+    set cur [dict get $prev $cur]
+  }
+  # corner points only; the true endpoints A and B bracket the path
+  set pts [list $ax $ay]
+  set last -1
+  for {set q 0} {$q < [llength $path]} {incr q} {
+    lassign [lindex $path $q] i j dr
+    set nxt [expr {$q + 1 < [llength $path] ? [lindex $path [expr {$q + 1}] 2] : -2}]
+    if {$q == 0 || $nxt != $dr} { lappend pts [expr {$rm_x0 + $i * $gd}] [expr {$rm_y0 + $j * $gd}] }
+  }
+  lappend pts $bx $by
+  return [concat $pts [rm_plen $pts]]
+}
 # chains: head = fixed sources only; follow the unique successor group (whose unique predecessor is this group)
+# waypoint patterns -> head group: a pattern ("re:<regex>" = plan relay_polylines group_re, else a glob) selects any group of a
+# chain; the chain's head (walk back over the unique predecessor group) owns the polyline
+set rm_wpmap [dict create]
+if {$rm_poly} {
+  dict for {pat wp} $rm_wp {
+    dict for {g inf} $rm_info {
+      set hit [expr {[string range $pat 0 2] eq "re:" ? [regexp [string range $pat 3 end] $g] : [string match $pat $g]}]
+      if {!$hit} continue
+      set h $g; set seen [list $g]
+      while {1} {
+        set pg [lindex $inf 1]
+        if {[llength $pg] != 1 || [lsearch $seen [lindex $pg 0]] >= 0} break
+        set h [lindex $pg 0]; lappend seen $h; set inf [dict get $rm_info $h]
+      }
+      dict set rm_wpmap $h $wp
+    }
+  }
+}
 set rm_station {}
 set rm_seg {}
 dict for {g inf} $rm_info {
   lassign $inf sp sg kp kg soft
   # a few soft endpoints (<= 2% of the fixed ones: status / debug taps) do not move the station
-  if {$soft > 0.02 * ([llength $sp] + [llength $kp]) || [llength $sp] == 0 || [llength $sg] > 0} continue
+  # OT_RELAY_POLY_FILE waypoints for this head group make a soft-source head (a chain that starts at an lpl / GPL-placed
+  # flop, e.g. lpl_18_r.u_y_q -> y_rt_20a_5 -> n20) a legal chain: the first waypoint is its source point
+  set wpk {}
+  if {$rm_poly && [dict exists $rm_wpmap $g]} { set wpk [dict get $rm_wpmap $g] }
+  if {$wpk ne {}} {
+    if {[llength $sg] > 0 || [llength $sp] > 0} { set wpk {} }
+  }
+  if {$wpk eq {} && ($soft > 0.02 * ([llength $sp] + [llength $kp]) || [llength $sp] == 0 || [llength $sg] > 0)} continue
+  if {$wpk ne {} && [llength $sp] == 0} { set sp [list [list [expr {int([lindex $wpk 0] * $rm_dbu)}] [expr {int([lindex $wpk 1] * $rm_dbu)}]]] }
   set chain [list $g]; set cur $g
   while {1} {
     lassign [dict get $rm_info $cur] csp csg ckp ckg csoft
@@ -152,6 +359,22 @@ dict for {g inf} $rm_info {
   lassign [rm_cent [lindex [dict get $rm_info [lindex $chain end]] 2]] bx by
   if {abs($bx - $ax) + abs($by - $ay) < $rm_min * $rm_dbu} continue
   set n [llength $chain]
+  # OT_RELAY_POLY=1 (FIX-RELAYPOLY, R-COL-4): when the straight source-sink line crosses a hard macro (or a sub-12-um gap
+  # between macros) the n stations are spread evenly along a polyline that avoids them, not on the line
+  set rm_pts {}
+  if {$rm_poly} { set rm_pts [rm_polyline $g $ax $ay $bx $by] }
+  if {$rm_pts ne {}} {
+    set rm_tot [lindex $rm_pts end]
+    set rm_tn [expr {$n + 1}]
+    if {$rm_tot / double($rm_tn) > 405.0 * $rm_dbu} { puts "OT_RELAY_POLY WARN $g path [expr {$rm_tot / $rm_dbu}] um, $rm_tn hops > 405 um" }
+    set j 0
+    foreach c $chain {
+      incr j
+      dict set rm_station $c [rm_along $rm_pts [expr {$rm_tot * $j / double($rm_tn)}]]
+    }
+    puts "OT_RELAY_POLY chain [lindex $chain 0]..[lindex $chain end] ($n stations): path [expr {$rm_tot / $rm_dbu}] um, hop [expr {$rm_tot / $rm_dbu / $rm_tn}] um"
+    continue
+  }
   set j 0
   foreach c $chain {
     incr j
