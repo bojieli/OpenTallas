@@ -469,16 +469,24 @@ def prov_item(d, item):
     return prov_on(d) and (f == "noview" or (f == "planned" and not d.get("planned_core_flat")))
 
 
-def kit_rtl_post_cmd(T, W, plan):
-    """HARD-S81-SVC-1 11-13: shell suffix of the kit_rtl stage in kit_rtl mode "bind" (cwd = wave source checkout): run
-    every die-owned physical/die_plan/*/kit_wave/kit_rtl_post.sh of the wave source on the kit RTL dir just written.
-    Each script selects itself from the kit content and leaves any other kit untouched (exit 0).  Class: the S81 svc
-    memory closure was a line of the script-mode kit_rtl.sh only; the move of the S81 wave to mode "bind" (11-12 21:46)
-    dropped it and all 16 svc items failed GEN_LINT memory_bits.  A step the kit needs must not depend on which
-    kit_rtl mode the wave configuration names."""
+KIT_RTL_POST_DIR = Path(__file__).resolve().parent / "kit_rtl_post.d"
+
+
+def kit_rtl_post_cmd(T, W, plan, steps_dir=None):
+    """HARD-S81-SVC-1 / SVC-BAND-3 11-13: shell suffix of the kit_rtl stage in kit_rtl mode "bind" (cwd = wave source
+    checkout).  Every tools/autopilot/kit_rtl_post.d/*.sh of the RUNNING kit_wave.py is inlined (bash -c <text>) and
+    run on the kit RTL dir just written; each step selects itself from the kit content and leaves any other kit
+    untouched (exit 0).  Class: the steps used to be looked up in the wave SOURCE and skipped when absent, so a frozen
+    source that predates a step (S81 7073a6b4a5 vs the svc memory closure 3856aafc01) silently lost it and all 16 svc
+    types failed GEN_LINT memory_bits.  A step the kit needs must depend neither on the kit_rtl mode nor on the age of
+    the wave source.  No step file next to kit_wave.py = broken deployment: the stage fails, never passes silently."""
     q = shlex.quote
-    return (' && for P in physical/die_plan/*/kit_wave/kit_rtl_post.sh; do [ -f "$P" ] || continue; '
-            f'TYPE={q(T)} OUT={q(W + "/rtl")} PLAN={q(plan)} bash "$P" || exit $?; done')
+    d = Path(steps_dir) if steps_dir else KIT_RTL_POST_DIR
+    steps = sorted(d.glob("*.sh")) if d.is_dir() else []
+    if not steps:
+        return " && { echo " + q(f"KIT_RTL_POST: no step in {d} (kit_wave.py deployment incomplete)") + " >&2; false; }"
+    env = f"TYPE={q(T)} OUT={q(W + '/rtl')} PLAN={q(plan)}"
+    return "".join(f" && {env} bash -c {q(p.read_text())} {q('kit_rtl_post.d/' + p.name)}" for p in steps)
 
 
 def kit_rtl_mode(d):
