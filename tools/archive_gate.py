@@ -4,8 +4,8 @@ archive when you count the signed records; the fleet is temporary").  ONE gate f
 forced count, RELEASE_TREE, SIGN-RATE) and the explorer, which reads the gated count cache.
 
 A type / hard-core design the count credits stays in signed_types / signed_cores / signed_designs only when
-  (a) /archive/opentallas-signed-1114/<die or target>/<name>/ on AGIdock holds, non-empty: the database (6_final.odb[.zst]),
-      at least one view file (.v .def .spef .gds .lef .lib, also .zst) and the metadata (signoff.json); or
+  (a) /archive/opentallas-signed-1114/<die or target>/<name>/ on AGIdock holds, non-empty: the database (6_final.odb[.zst])
+      and the metadata (signoff.json) (COORD 11-14: a missing view pack is a separate column, never a count drop); or
   (b) an INDEX.tsv row of that archive names it (SIGNED-RECOVER); or
   (c) the signed store holds a record of it whose files (incl. 6_final.odb) are in an AGIdock archive (the earlier archives).
 Everything else moves to pending_archive_types / pending_archive_cores / pending_archive_designs (same refs): reported,
@@ -45,12 +45,12 @@ def store_archived(root=None):
 def entry_state(files):
     fs = {f: z for f, z in files.items() if z and z > 0}   # a zero-byte file is not an archived file
     have = dict(db=any(f.endswith(('6_final.odb', '6_final.odb.zst')) for f in fs), view=any(f.endswith(VIEW_EXT) for f in fs), metadata=any(f.endswith('signoff.json') for f in fs))
-    return [k for k, v in have.items() if not v]
+    return [k for k in ('db', 'metadata') if not have[k]]
 
 
 class Gate:
     def __init__(self, listing=None, store=None, now=None):
-        self.error = None; self.ent = {}; self.rows = set(); self.store = set()
+        self.error = None; self.ent = {}; self.rows = set(); self.store = set(); self.index = {}
         p = pathlib.Path(listing or LISTING)
         try: A = json.loads(p.read_text())
         except Exception as e: self.error = 'ARCHIVE GATE NOT APPLIED: no archive listing (%s: %s)' % (p, e); return
@@ -58,13 +58,37 @@ class Gate:
         self.listed = A.get('agidock_listed') or 0
         if (now or time.time()) - self.listed > MAX_AGE_S: self.error = 'ARCHIVE GATE NOT APPLIED: archive listing is %.1f h old' % (((now or time.time()) - self.listed) / 3600); return
         for e in A['agidock']: self.ent[(e['die'], e['name'])] = e
-        for ln in (A.get('agidock_index_tsv') or '').splitlines():
-            if ln.strip() and not ln.startswith('#'): self.rows.update(c.strip() for c in ln.split('\t') if c.strip())
+        # INDEX.tsv (SIGNED-RECOVER): die element kind record db rtx_db size sha256 pack meta status src
+        lines = [l for l in (A.get('agidock_index_tsv') or '').splitlines() if l.strip() and not l.startswith('#')]
+        self.index = {}
+        if lines and lines[0].split('\t')[:2] == ['die', 'element']:
+            head = lines[0].split('\t')
+            for ln in lines[1:]:
+                r = dict(zip(head, ln.split('\t')))
+                self.index[(r.get('die'), r.get('element'))] = r
+        else:
+            for ln in lines: self.rows.update(c.strip() for c in ln.split('\t') if c.strip())
         self.store = store_archived(store)
+
+    def view_pack(self, die, names):
+        """is the routed-layout view pack of the design in the archive (_view-packs/<die>.<t|c>.<name>.lvp or <name>/...)"""
+        for nm in names:
+            for d in EXPORT_DIES.get(die, (die,)):
+                r = self.index.get((d, nm))
+                if r and r.get('pack') and 'NO-VIEWPACK' not in (r.get('status') or ''): return True
+        vp = self.ent.get(('_view-packs', die)) or {}
+        fs = [f for f, z in (vp.get('files') or {}).items() if z]
+        return any(('.%s.lvp' % nm) in f or f.startswith(nm + '/') or f.split('/')[0] in ('%s.t.%s' % (die, nm), '%s.c.%s' % (die, nm)) for nm in names for f in fs)
 
     def check(self, die, names):
         """-> (archived basis | None, why-not dict)"""
-        miss = dict(missing=['db', 'view', 'metadata'], path=None)
+        miss = dict(missing=['db', 'metadata'], path=None)
+        for nm in names:   # the archive's own index first: ARCHIVED-BOTH[-NO-VIEWPACK] = DB + metadata in both archives, sha256 equal
+            for d in EXPORT_DIES.get(die, (die,)):
+                r = self.index.get((d, nm))
+                if not r: continue
+                if (r.get('status') or '').startswith('ARCHIVED-BOTH'): return 'INDEX.tsv ' + r['status'], None
+                miss = dict(missing=['db'] if 'NO-DB' in (r.get('status') or '') else ['db', 'metadata'], path=r.get('db') or None, index_status=r.get('status'))
         for nm in names:
             for d in EXPORT_DIES.get(die, (die,)):
                 e = self.ent.get((d, nm))
@@ -102,20 +126,23 @@ def apply(cache, gate=None):
     for ent in (cache.get('plans') or {}).values():
         die = ent.get('die'); D = ent.get('designs') or {}; why = {}; basis = {}
         names_of = dict(signed_types=lambda k: [k], signed_cores=lambda k: [k], signed_designs=lambda k: [x for x in [(D.get(k) or {}).get('module'), k] if x])
-        cnt = {}
+        cnt = {}; novp = []
         for sk, pk in KEYS:
             s = ent.get(sk)
             if not isinstance(s, dict): continue
             pend = {}
             for k in list(s):
                 ok, miss = g.check(die, names_of[sk](k))
-                if ok: basis[k] = ok
+                if ok:
+                    basis[k] = ok
+                    if sk != 'signed_designs' and not g.view_pack(die, names_of[sk](k)): novp.append(k)
                 else: pend[k] = s.pop(k); why[k] = miss
             ent[pk] = pend; cnt[sk] = len(s); cnt[pk] = len(pend)
-        ent['archive_gate'] = dict(counts=cnt, why=why, basis=basis)
+        cnt['no_view_pack'] = len(novp)
+        ent['archive_gate'] = dict(counts=cnt, why=why, basis=basis, no_view_pack=sorted(novp))
         tot[die] = cnt
-    cache['archive_gate'] = dict(applied=True, listed=g.listed, entries=len(g.ent), index_tsv=bool(g.rows), store_records=len(g.store), dies=tot,
-                                 rule='signed = credited AND database + view file + signoff.json non-empty in the AGIdock archive (or INDEX.tsv row, or signed-store record in an AGIdock archive); else pending archive, not counted')
+    cache['archive_gate'] = dict(applied=True, listed=g.listed, entries=len(g.ent), index_tsv=bool(g.rows or g.index), index_rows=len(g.index), store_records=len(g.store), dies=tot,
+                                 rule='signed = credited AND database + signoff.json non-empty in the AGIdock archive; a missing view pack is listed, not a count drop (or INDEX.tsv row, or signed-store record in an AGIdock archive); else pending archive, not counted')
     return cache
 
 
