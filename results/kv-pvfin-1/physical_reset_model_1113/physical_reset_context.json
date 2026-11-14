@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.kv_pvfin_physical_reset_context.v1",
+ "verdict": "SOURCE_MODEL_READY_PHYSICAL_UNSIGNED",
+ "selected_parent_pair": "qkd_pv_fin_s2x8_pin_i1_rst2",
+ "logical_model": "qkd_pv_fin_s8_pin",
+ "logical_model_kind": "fixed emitted physical wrapper; no public parameters",
+ "physical_master": "qkd_pv_fin_s8_pin",
+ "bare_core": "qkd_pv_fin_s8_pin__ot_pr_core",
+ "params": {
+  "ADD_LAT": 7,
+  "MUL_LAT": 6,
+  "SKEW": 1,
+  "MUT": 0,
+  "NL": 8,
+  "IN_STAGE": 1
+ },
+ "emitted_wrapper": {
+  "path": "/srv/opentallas-scratch3/claude/kv-pvfin-1/run_s8pin2/routes/s8pin2/work/orfs/results/asap7/opentallas_qkd_pv_fin_s8_pin_asap7_ref_s8pin2/base/ot_rst_land_wrapper.v",
+  "sha256": "f30deb148690f72cf14bb8d5b5cac8257310200ac2dce0db44abd4cca00f36b8",
+  "archived_path": "results/kv-pvfin-1/physical_reset_model_1113/emitted_wrapper.v"
+ },
+ "sources": [
+  {
+   "path": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s8_pin_physical_model.sv",
+   "sha256": "9b7d02d5816224f94d5eddcc1f48c957a643a7e3d0ca109fdb04c10c1ceb0522"
+  }
+ ],
+ "replaces_source": "rtl/qwen_sys/split_20261014/qkd_pv_fin_s8_pin.sv",
+ "source_commit_before_donor": "c52a76692d",
+ "physical_run_source": "d5d69e912dbbec7cd163b38677c56438814836d8",
+ "reset_landing_stages": 2,
+ "data_CPC_delta": 2,
+ "quiet_context_required": false,
+ "assumptions": "Corresponding hardware state; no quiet interval or reset-output masking assumption. Not equivalent to bare source at reset edges.",
+ "proof_scope": "Emitted physical RTL wrapper plus exact core versus selected parent model; full535bits each sampled edge including warm reset and invalid payload; bare-reset bypass negative",
+ "routed_eq": {
+  "verdict": "PENDING",
+  "netlist_stage": "6_final",
+  "receipt": null,
+  "sha256": null
+ },
+ "proof": {
+  "kind": "exact emitted-wrapper construction plus full-compute simulation witness",
+  "observed_bits": 535,
+  "positive": {
+   "seeds": [
+    3,
+    11
+   ],
+   "commands_per_seed": 60,
+   "verdict": "PASS"
+  },
+  "negative": {
+   "kind": "bare reset bypass",
+   "verdict": "CAUGHT",
+   "mismatches": 932
+  },
+  "qualification": "Every sampled edge after initial4, including warm reset/fault and unqualified payload; no reset masking or quiet-window assumption in comparison. Exact wrapper/state equations preserve arbitrary reset behavior with corresponding hardware state. Full routed EQ remains pending.",
+  "receipts": [
+   "results/kv-pvfin-1/physical_reset_model_1113/run_3.log",
+   "results/kv-pvfin-1/physical_reset_model_1113/run_11.log",
+   "results/kv-pvfin-1/physical_reset_model_1113/negative_bare_reset.log"
+  ]
+ }
+}

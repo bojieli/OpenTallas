@@ -1,0 +1,6 @@
+COVER healthy 26 inj1..10 7 1 5 3 2 2 2 4 2 5 edges 16432 valid_beats 944 payload_edges 0
+PVFIN_RESET_MODEL PASS mut=0 skew=1 in_stage=1 seed=-1952898006 shift=1
+- /srv/opentallas-scratch3/claude/kv-pvfin-1/reset_model_proof/tb_reset_model.sv:108: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 33us; walltime 1.090 s; speed 30.147 us/s
+- Verilator: cpu 1.090 s on 1 threads; allocated 11 MB
