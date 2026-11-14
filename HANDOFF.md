@@ -3664,3 +3664,4 @@ CODEX: Claude back17:18PST; all workers STOPNEW/safelyparked, running jobs prese
 2026-11-13 20:3x PST COORD: three dies relaunching on new plans; QC s29 last; S81 B2/B2e bind via DIE-S81-91 (Opus); KV-102 Sonnet owns KV; train K svc lint gating.
 2026-11-13 21:3x PST COORD: train L PG-track fix landed (KIT-OPS-3 deploy + verify it reaches S81/KV/QC kits); kit_snap live on HEAD; HE-EPC signed pending re-sign; QC s29 final R8 bind.
 2026-11-13 22:3x PST COORD: OWNER removed all wave launch limits; VARIANTS-1 (Sonnet) runs 2nd-recipe builds; QC-102 and S81-91 (Opus) on final binds.
+2026-11-14 00:0x PST COORD: QC s29 adopted; KV token replay fail -> kv102sem; S81 B2t binding; epyc4 drain near done; CLEAN-E8 (Sonnet) frees epyc8/epyc7 scratch.
