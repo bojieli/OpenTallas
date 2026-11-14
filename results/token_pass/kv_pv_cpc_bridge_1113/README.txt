@@ -38,3 +38,13 @@ Fleet proof: E7 /srv/opentallas-scratch2/claude/tok-verify-2/kv_cpc_bridge.
 Original proof, followup, source-identity guards and v1 compatibility logs are
 retained separately. The actual source selection is hubc_pair_1113/native1,
 not the obsolete native_pair3 prototype.
+
+Final physical-reset context guard (newly identified by PVFIN owner): the
+RefTile inserts OT_RST_LAND2, which the old bare pair does not model during
+the first two reset edges. Final v2 generation/consumption now rejects missing
+physical-reset context and source-model READY without routed EQ. It requires
+the exact selected parent, model/parameter identity, emitted wrapper/source
+hashes and routed receipt. The pending new physical-model receipt has not
+been manufactured or accepted; adapting its actual final parent selection
+remains required. Prototype stays unqualified. Reset landing2 is not another
+two data cycles: the proved data CPC remains2.

@@ -257,6 +257,13 @@ def prep(a):
                 expected = result_calendar['input_identity']['bus_groups_sha256']
                 if hashlib.sha256(Path(a.groups).read_bytes()).hexdigest() != expected:
                     raise ValueError('PV result calendar is stale for selected bind groups')
+                if not result_calendar.get('reset_context_qualified'):
+                    raise ValueError('final PV result calendar lacks qualified physical reset context')
+                from tools.token_pass.kv_pv_cpc_calendar import verify_final_reset_context
+                identity = result_calendar['physical_reset_context']
+                if hashlib.sha256(Path(identity['path']).read_bytes()).hexdigest() != identity['sha256']:
+                    raise ValueError('physical reset context receipt changed')
+                verify_final_reset_context(identity['path'], result_calendar['source_pin_components'][0], ROOT)
             for component in result_calendar['source_pin_components']:
                 for key in ('source', 'tsv', 'proof'):
                     if hashlib.sha256(Path(component[key]).read_bytes()).hexdigest() != component[key + '_sha256']:

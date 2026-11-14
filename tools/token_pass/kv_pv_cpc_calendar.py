@@ -40,6 +40,31 @@ def verify_trunk_identity(calendar,groups,producer):
   raise ValueError('trunk calendar bind identity mismatch')
  if identity.get('producer_sha256')!=sha(producer):
   raise ValueError('trunk calendar reviewed producer identity mismatch')
+def verify_final_reset_context(path,component,repo=ROOT):
+ if path is None:
+  raise ValueError('final PV calendar requires qualified physical reset-model context and routed EQ')
+ c=read(path)
+ if c.get('schema')!='opentallas.kv_pvfin_physical_reset_context.v1':
+  raise ValueError('unsupported physical reset-context receipt schema')
+ if c.get('physical_master')!='qkd_pv_fin_s8_pin'or c.get('data_CPC_delta')!=2 or c.get('reset_landing_stages')!=2:
+  raise ValueError('physical reset/data-cycle context mismatch')
+ if c.get('logical_model')!='qkd_pv_fin_s8_pin_physical'or c.get('params')!={'ADD_LAT':7,'MUL_LAT':6,'SKEW':1,'MUT':0,'NL':8,'IN_STAGE':1}:
+  raise ValueError('physical reset model/parameter context mismatch')
+ if c.get('selected_parent_pair')!=component['module']:
+  raise ValueError('physical reset receipt selects a different parent pair')
+ eq=c.get('routed_eq')or{}
+ if eq.get('verdict')!='EQUIVALENT'or eq.get('netlist_stage')!='routed':
+  raise ValueError('source-model READY is insufficient: routed reset-model EQ required')
+ def resolve(p):
+  p=Path(p);return p if p.is_absolute()else Path(repo)/p
+ receipt=resolve(eq['receipt'])
+ if sha(receipt)!=eq.get('sha256'):raise ValueError('routed reset EQ receipt identity mismatch')
+ files=[c.get('emitted_wrapper')]+list(c.get('sources')or[])
+ if len(files)<3:raise ValueError('physical reset wrapper/model source identities missing')
+ for item in files:
+  if not isinstance(item,dict)or sha(resolve(item['path']))!=item.get('sha256'):
+   raise ValueError('physical reset wrapper/model source identity mismatch')
+ return dict(path=str(path),sha256=sha(path),routed_eq_sha256=sha(receipt),data_CPC_delta=2,reset_landing_stages=2)
 def selected_pin_component(pl,ab,repo,proof_root):
  proof_file=proof_root/'results/kv-pvfin-1/pin_stage_1113/impact.json'
  proof=read(proof_file);master=proof['master'];wrapper=proof['asbuilt_fixed_i1_wrapper']
@@ -70,7 +95,7 @@ def selected_pin_component(pl,ab,repo,proof_root):
  component=dict(id='pvfin-output-pin',inst='pvfin',module=wrapper,cycles=2,ports=sorted(PORTS),
                 tsv=str(tsv),tsv_sha256=sha(tsv),source=str(selected),source_sha256=sha(selected),proof=str(proof_file),proof_sha256=sha(proof_file))
  return component
-def derive(plan,asbuilt,bind,repo=ROOT,proof_root=ROOT,prototype=False,base_calendar=None,trunk_calendar=None):
+def derive(plan,asbuilt,bind,repo=ROOT,proof_root=ROOT,prototype=False,base_calendar=None,trunk_calendar=None,reset_context=None):
  plan,asbuilt,bind,repo,proof_root=map(lambda p:Path(p).resolve(),(plan,asbuilt,bind,repo,proof_root))
  ab=read(asbuilt);pl=read(plan);br=read(bind/'bind_report.json')
  errors=br.get('errors',[])
@@ -85,6 +110,8 @@ def derive(plan,asbuilt,bind,repo=ROOT,proof_root=ROOT,prototype=False,base_cale
  if not prototype and (unresolved or mismatch):
   raise ValueError('final calendar requires coherent matching bind; errors='+str(unresolved[:3])+' context='+str(mismatch))
  component=selected_pin_component(pl,ab,repo,proof_root)
+ reset_identity=None
+ if not prototype:reset_identity=verify_final_reset_context(reset_context,component,repo)
  if base_calendar is not None:
   prior=read(base_calendar);checked_calendar(prior)
   if prior['schema'].endswith('.v2')or prior.get('source_pin_components'):
@@ -116,6 +143,8 @@ def derive(plan,asbuilt,bind,repo=ROOT,proof_root=ROOT,prototype=False,base_cale
           kind='PROTOTYPE_NOT_BOUND'if prototype else'BOUND_INPUT_CONTRACT_RUNTIME_PENDING',
           result_cycles_added=trunk_extra+2,result_trunk_cycles_added=trunk_extra,result_pin_cycles_added=2,
           source_pin_components=[component],
+          physical_reset_context=reset_identity,
+          reset_context_qualified=reset_identity is not None,
           input_identity=dict(plan=str(plan),plan_sha256=sha(plan),asbuilt=str(asbuilt),asbuilt_sha256=sha(asbuilt),
                               bind=str(bind),bus_groups_sha256=sha(bg_file),
                               trunk_producer=str(producer),
@@ -130,7 +159,7 @@ if __name__=='__main__':
  p=argparse.ArgumentParser(description=__doc__)
  for k in ('plan','asbuilt','bind','out'):p.add_argument('--'+k,type=Path,required=True)
  p.add_argument('--repo-root',type=Path,default=ROOT);p.add_argument('--proof-root',type=Path,default=ROOT)
- p.add_argument('--prototype',action='store_true');p.add_argument('--base-calendar',type=Path);p.add_argument('--trunk-calendar',type=Path)
- a=p.parse_args();r=derive(a.plan,a.asbuilt,a.bind,a.repo_root,a.proof_root,a.prototype,a.base_calendar,a.trunk_calendar)
+ p.add_argument('--prototype',action='store_true');p.add_argument('--base-calendar',type=Path);p.add_argument('--trunk-calendar',type=Path);p.add_argument('--reset-context',type=Path)
+ a=p.parse_args();r=derive(a.plan,a.asbuilt,a.bind,a.repo_root,a.proof_root,a.prototype,a.base_calendar,a.trunk_calendar,a.reset_context)
  a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(r,indent=2)+'\n')
  print(json.dumps({k:r[k]for k in ('kind','result_cycles_added','result_trunk_cycles_added','result_pin_cycles_added','bind_context_mismatch')},sort_keys=True))

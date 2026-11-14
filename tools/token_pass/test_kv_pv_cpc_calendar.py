@@ -26,5 +26,13 @@ class TrunkIdentityTest(unittest.TestCase):
   self.groups.write_text('{"landing":[],"changed":true}')
   with self.assertRaisesRegex(ValueError,'bind identity'):
    C.verify_trunk_identity(self.calendar,self.groups,self.producer)
+ def test_missing_physical_reset_context_rejected(self):
+  with self.assertRaisesRegex(ValueError,'reset-model context'):
+   C.verify_final_reset_context(None,{'module':'qkd_pv_fin_s2x8_pin_i1'})
+ def test_source_ready_without_routed_eq_rejected(self):
+  p=Path(self.tmp.name)/'reset_ready.json'
+  p.write_text(json.dumps(dict(schema='opentallas.kv_pvfin_physical_reset_context.v1',physical_master='qkd_pv_fin_s8_pin',logical_model='qkd_pv_fin_s8_pin_physical',params={'ADD_LAT':7,'MUL_LAT':6,'SKEW':1,'MUT':0,'NL':8,'IN_STAGE':1},data_CPC_delta=2,reset_landing_stages=2,selected_parent_pair='qkd_pv_fin_s2x8_pin_i1',routed_eq={'verdict':'PENDING','netlist_stage':'routed'})))
+  with self.assertRaisesRegex(ValueError,'READY is insufficient'):
+   C.verify_final_reset_context(p,{'module':'qkd_pv_fin_s2x8_pin_i1'})
 
 if __name__=='__main__':unittest.main()
