@@ -2105,11 +2105,16 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
                 [f"{c['base']}/{m}.lef"] if c.get("base") else []) + (
                 [f"{c['dir']}/gates.json", f"{c['dir']}/provenance.json",
                  f"{c['dir']}/landing_evidence"] if counted else [])   # KW-FIX-40 (QC-TYPES-10 11-08 class N): hard_landing reads it beside the LEF
+            # KV-KITFIX-1 11-13: a candidate whose required files did not arrive (wrong host in the config: kvN2 pcf
+            # c1 'intel2' while the view is on epyc4) says so in its meta; prov_view reports it with the refusal
+            fetch_errors = []
             for f in files:
                 if (dst / os.path.basename(f)).exists():
                     continue
                 srcf = f if c["host"] in ("localhost", hub) else f"{c['host']}:{f}"
-                subprocess.run(["rsync", "-a", "-e", SSH, srcf, str(dst) + "/"], capture_output=True, timeout=900)
+                r_ = subprocess.run(["rsync", "-a", "-e", SSH, srcf, str(dst) + "/"], capture_output=True, timeout=900)
+                if r_.returncode and not f.endswith(("/gates.json", "/provenance.json", "/landing_evidence")):
+                    fetch_errors.append(f"{srcf} rc={r_.returncode}")
             # Explicit already-exported precise abstract; no hidden OpenROAD work in the provisional stage.
             # Fixed staging names avoid a detailed source named <module>.lef overwriting the captured base.
             staged = dict(c)
@@ -2119,10 +2124,14 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
                 if isinstance(c.get(key), str) and c[key]:
                     f = c[key] if os.path.isabs(c[key]) else os.path.join(c["dir"], c[key])
                     srcf = f if c["host"] in ("localhost", hub) else f"{c['host']}:{f}"
-                    subprocess.run(["rsync", "-a", "-e", SSH, srcf, str(dst / name)],
-                                   capture_output=True, timeout=900)
+                    r_ = subprocess.run(["rsync", "-a", "-e", SSH, srcf, str(dst / name)],
+                                        capture_output=True, timeout=900)
+                    if r_.returncode:
+                        fetch_errors.append(f"{srcf} rc={r_.returncode}")
                     staged["source_" + key] = c[key]
                     staged[key] = name
+            if fetch_errors:
+                staged["fetch_errors"] = fetch_errors
             (dst / "meta.json").write_text(json.dumps(staged))
             fetched += 1
     if fetched:
