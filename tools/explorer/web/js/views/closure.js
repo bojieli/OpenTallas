@@ -9,7 +9,7 @@ const COLS = [
   ['state', 'State', (r) => STATES.indexOf(r.state), null], ['name', 'Design', (r) => r.name, null], ['level', 'Level', (r) => r.level, null], ['stage', 'Stage', (r) => r.stage || '', null],
   ['attempt', 'Att.', (r) => r.attempt ?? -1, 'r'], ['tt_wns', 'Setup TT ps', (r) => r.tt_wns ?? -1e9, 'r'], ['ff_wns', 'Hold FF ps', (r) => r.ff_wns ?? -1e9, 'r'], ['drc', 'DRC', (r) => r.drc ?? 1e9, 'r'],
   ['grt_overflow', 'GRT ovf', (r) => r.grt_overflow ?? 1e9, 'r'], ['lec', 'LEC', (r) => r.lec || '', null], ['cells', 'Cells', (r) => r.cells ?? -1, 'r'], ['instances', 'Placed', (r) => r.instances ?? 0, 'r'],
-  ['pack', 'Routed pack', (r) => (r.pack ? 1 : 0), null], ['vis', 'Visual', (r) => r.vis || '', null], ['reason', 'Class / reason', (r) => (r.cls || '') + (r.reason || ''), null]];
+  ['pack', 'Routed pack', (r) => (r.pack ? 1 : 0), null], ['db_cls', 'Signed DB', (r) => r.db_cls || '', null], ['vis', 'Visual', (r) => r.vis || '', null], ['reason', 'Class / reason', (r) => (r.cls || '') + (r.reason || ''), null]];
 const TABS = [['table', 'Status table'], ['matrix', 'Die matrix'], ['failures', 'Failure groups'], ['ledger', 'Coverage ledger']];
 
 export default {
@@ -55,7 +55,7 @@ export default {
         h('td', h('span.st.' + stateCls(r.state), h('i.dot'), STATE_LABEL[r.state] || r.state)), h('td', h('a.mono', { href: store.href({ view: 'element', node: r.id }), title: 'Open the element' }, r.name)), h('td.muted', r.level), h('td', r.stage || ''), h('td.r', r.attempt ?? ''),
         num(r.tt_wns, 1, r.tt_wns == null ? null : GATE.tt_wns(r.tt_wns)), num(r.ff_wns, 1, r.ff_wns == null ? null : GATE.ff_wns(r.ff_wns)), num(r.drc, 0, r.drc == null ? null : GATE.drc(r.drc)), num(r.grt_overflow, 0, null),
         h('td' + (r.lec ? (/EQUIV|PASS/i.test(r.lec) ? '.pos' : '.neg') : '.muted'), r.lec || '–'), h('td.r', r.cells == null ? '–' : fmtCount(r.cells)), h('td.r', r.instances ?? ''),
-        h('td', r.pack ? h('span.pos', r.pack_verify === 'IDENTICAL' ? 'identical' : 'cut') : h('span.muted', r.layout_stage ? 'not cut' : '–')), h('td' + (r.vis === 'BAD' ? '.neg' : ''), r.vis || ''), h('td.muted', { title: r.reason || '' }, [r.cls, r.reason].filter(Boolean).join(' · '))));
+        h('td', r.pack ? h('span.pos', r.pack_verify === 'IDENTICAL' ? 'identical' : 'cut') : h('span.muted', r.layout_stage ? 'not cut' : '–')), h('td', { title: r.db_host || '' }, r.db_cls === 'archive' ? h('span.pos', 'archive') : r.db_cls === 'off-limits' ? h('span.neg', 'off-limits host') : r.db_cls === 'fleet' ? h('span' + (r.state === 'signed' ? '.neg' : '.muted'), 'fleet host') : h('span.muted', '–')), h('td' + (r.vis === 'BAD' ? '.neg' : ''), r.vis || ''), h('td.muted', { title: r.reason || '' }, [r.cls, r.reason].filter(Boolean).join(' · '))));
       tb.addEventListener('click', (e) => { if (e.target.closest('a')) return; const tr = e.target.closest('tr'); if (tr) store.go({ node: tr.dataset.node }); });
       return h('div.page', { style: { maxWidth: 'none', padding: '0 14px 30px' } },
         h('p.note', { style: { margin: '8px 0' } }, 'Blocking gates of the academic profile are coloured: routed DRC 0, setup TT at least -42 ps, hold FF at least 0. Everything else is advisory. A row counts as signed off only with a signed record.'),

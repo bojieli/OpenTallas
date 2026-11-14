@@ -30,7 +30,7 @@ TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=u
          '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
          '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.map': 'application/json'}
 STALE_S = {'design_index': 3 * 3600, 'plan_now': 3 * 3600, 'compose': 3 * 3600, 'token_map': 26 * 3600,
-           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None, 'fleet': 120, 'signed_audit': None}
+           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None, 'fleet': 120, 'signed_audit': None, 'count': 6 * 3600, 'archive_index': None}
 LEGACY = {'/explorer': 'plan', '/explorer/': 'plan', '/explorer/design': 'plan', '/explorer/design/': 'plan',
           '/explorer/design/diemap.html': 'layout', '/explorer/element/': 'element', '/explorer/element': 'element',
           '/explorer/dataflow/': 'dataflow', '/explorer/dataflow': 'dataflow', '/explorer/token/': 'token', '/explorer/token': 'token',
@@ -190,6 +190,8 @@ def datasets():
         ['overview', 'plan', 'layout', 'element', 'closure'], plans=plans, missing=idx is None)
     pn = STATE / 'plan_now.json'
     add('plan_now', 'Plan-now status (kit wave + signed store)', _mtime(pn), 'plan_now.py', ['overview', 'closure'])
+    rc = ((_json_file(pn) or {}).get('sources') or {}).get('release_cache_mtime')
+    add('count', 'Sign-off count cache (release_tree count, COUNT-DIRECT, AUTO-RESIGN, dedup credits)', rc, 'intel2 release_tree_plan.py; the index is rebuilt within about two minutes of every count', ['overview', 'closure', 'plan'])
     add('store', 'Routed layout packs (cut at sign-off, immutable)', _mtime(layout_service.LS.STORE / 'cuts.json') or _mtime(layout_service.LS.STORE / 'elements'), 'layout store (lv_extract + lv_tile, lv_verify IDENTICAL)', ['layout', 'element'],
         note='packs do not go stale: each is the geometry of one closure')
     cm = [_json_file(p) for p in sorted((OWN / 'compose').glob('*.json'))] if (OWN / 'compose').is_dir() else []
@@ -215,6 +217,8 @@ def datasets():
         fleet_get('fleet'); f = _FLEET.get('fleet'); ferr = None
     except ApiError as e: ferr = e.detail
     add('fleet', 'Fleet hosts and jobs (fleet-viz collectors, 5 s poll)', f[2] if f and not ferr else None, 'tools/fleet_viz server.py pollers via ' + FLEET_API, ['fleet'], note=ferr, missing=bool(ferr))
+    ai = archive_index()['meta']
+    add('archive_index', 'Signed-layout archive index (rtx-pro signed-export-1114 + closed_archive)', ai.get('generated'), 'tools/explorer/tools/archive_index.py on the archive host', ['element', 'closure'], note='%s export entries, %s closed rows' % (ai.get('export'), ai.get('closed')) if ai else None)
     au = signed_audit()
     add('signed_audit', 'Signed-layout archive table (SIGNED-DB-AUDIT)', au.get('mtime'), AUDIT_SRC, ['element'], note=au.get('error') or ('%d rows' % au.get('n', 0)), missing=False)
     try:
@@ -274,6 +278,7 @@ def node(nid):
     r['plan'] = plan_ref(idx['nodes'][n['die']]['plan'])
     r['packs'] = history(nid)
     r['archive'] = audit_rows(n)   # SIGNED-DB-AUDIT: where the signed routed database lives now
+    r['sources'] = db_sources(n)
     if n['level'] == 'core':   # where the core sits: every (type, core instance) that places it
         uses = []
         for u in (n.get('plan') or {}).get('used_by') or []:
@@ -297,9 +302,24 @@ def closure(d):
                          cells=m.get('cells'), verdict=m.get('verdict'), instances=p.get('instances') if n['level'] == 'type' else p.get('placements'),
                          area_um2=(p['outline'][0] * p['outline'][1]) if p.get('outline') else None, cores=len(n.get('children') or []) if n['level'] == 'type' else None,
                          pack=bool(s), pack_verify=s.get('verify'), pack_shapes=s.get('shapes'), pack_made=s.get('made'), layout_stage=lay.get('stage'),
-                         layout_source=lay.get('source'), vis=v.get('verdict'), vis_cls=v.get('cls'), vis_cause=v.get('cause'), hard=bool(p.get('hard'))))
+                         layout_source=lay.get('source'), db_cls=db_sources(n)['cls'], db_host=((db_sources(n)['resolved'] or {}).get('where') or (db_sources(n)['recorded'] or {}).get('host')), vis=v.get('verdict'), vis_cls=v.get('cls'), vis_cause=v.get('cause'), hard=bool(p.get('hard'))))
     dn = idx['nodes'][d]
     return dict(die=d, label=dn['label'], plan=plan_ref(dn['plan']), states=idx['states'], counts=dn['counts'], generated=idx['generated'], rows=rows)
+
+
+def elements_compat():
+    """/api/elements for scripts that used the old fleet-viz endpoint: one row per type and core of the current plans, with the
+    status of the design index (count cache -> plan_now -> design_index, rebuilt whenever the count runs)"""
+    idx = index(); pn = _json_file(STATE / 'plan_now.json') or {}
+    rows = []
+    for n in idx['nodes'].values():
+        if n['level'] == 'die': continue
+        st = n.get('status') or {}
+        rows.append(dict(element=n['name'], node=n['id'], die=n['die'], kind=n['level'], target=idx['nodes'][n['die']].get('target'), category=st.get('label'), state=st.get('state'),
+                         cls=st.get('cls'), stage=st.get('stage'), attempt=st.get('attempt'), reason=st.get('reason'), m=st.get('metrics') or {}, layout=bool((n.get('layout') or {}).get('store'))))
+    return dict(schema='opentallas.explorer.elements_compat.v1', t=idx.get('generated'), generated=idx.get('generated'), cats=pn.get('cats'), rows=rows,
+                source=dict(design_index=idx.get('generated'), plan_now=pn.get('generated'), count_cache_mtime=((pn.get('sources') or {}).get('release_cache_mtime'))),
+                note='status = count cache (release_tree count incl. COUNT-DIRECT, AUTO-RESIGN and dedup credits) -> plan_now -> design index; use /api/v1/closure/<die> for the full rows')
 
 
 def search(q, d=None, limit=40):
@@ -375,6 +395,87 @@ def dataflow_index():
     recs = own + [dict(r, role='previous' if r.get('role') == 'canonical' else r.get('role'), current=False) for r in old if r['id'] not in have]
     if not recs: raise ApiError(404, 'no data-flow records', str(DATAFLOW))
     return dict(schema='opentallas.dataflow.links_index.v1', records=recs, refresh=_DF['result'], building=bool(_DF['thread'] and _DF['thread'].is_alive()))
+
+
+# ---------------------------------------------------------------------------------------------- signed-layout archives
+# Owner rule: signed records live on the archive host (rtx-pro: signed-export-1114 and closed_archive) and on AGIdock /archive,
+# never on the fleet.  The explorer resolves every design to its archive copy and shows that path; the build path recorded at
+# sign-off (often a fleet host, some of them gone or off limits) is kept only as provenance.  Nothing here opens a database.
+ARCHIVE_INDEX = pathlib.Path(os.environ.get('ARCHIVE_INDEX', OWN / 'archive_index.json'))   # tools/archive_index.py, run on the archive host
+OFF_LIMITS = set(os.environ.get('OFF_LIMITS_HOSTS', 'epyc4,epyc5,epyc6').split(','))
+ARCHIVE_HOSTS = {'rtx-pro', 'localhost', 'agidock', 'AGIdock'}
+EXPORT_DIES = dict(s81=('s81', 'DeepSeek_ROM', '_'), s81_head=('s81_head', 'DeepSeek_ROM', '_'), qwen_compute=('qwen_compute', 'Qwen_ROM', '_'), qwen_kvsys=('qwen_kvsys', 'Qwen_ROM', '_'), hbm=('hbm', 'HBM_accelerator', '_'))
+_ARCH = dict(mt=None, exp={}, closed={}, meta={})
+
+
+def archive_index():
+    mt = _mtime(ARCHIVE_INDEX)
+    if mt != _ARCH['mt']:
+        d = _json_file(ARCHIVE_INDEX) or {}
+        exp, closed = {}, {}
+        for e in d.get('export') or []: exp.setdefault(e['name'], []).append(e)
+        for c in d.get('closed') or []:
+            if c.get('status') == 'archived' and c.get('name'): closed.setdefault(c['name'], []).append(c)
+        _ARCH.update(mt=mt, exp=exp, closed=closed, meta=dict(generated=d.get('generated'), host=d.get('host'), export=len(d.get('export') or []), closed=len(d.get('closed') or [])))
+    return _ARCH
+
+
+def host_class(h):
+    h = (h or '').lower().replace('ot-', '')
+    return 'none' if not h else 'archive' if h in {x.lower() for x in ARCHIVE_HOSTS} else 'off-limits' if h in OFF_LIMITS else 'fleet'
+
+
+def db_sources(n):
+    """where the routed database of a design is: the archive copies (resolved, preferred) and the build path recorded at sign-off"""
+    lay = n.get('layout') or {}; A = archive_index(); out = dict(recorded=None, archives=[], resolved=None)
+    rec = lay.get('db') or lay.get('kit')
+    if rec:
+        host, _, path = rec.partition(':') if ':' in rec.split('/')[0] else ('', '', rec)
+        out['recorded'] = dict(host=host or None, path=path, cls=host_class(host))
+    names = [x for x in dict.fromkeys([n.get('name'), (n.get('plan') or {}).get('module')]) if x]
+    dies = EXPORT_DIES.get(n['die'], (n['die'], '_'))
+    for nm in names:
+        for e in A['exp'].get(nm, []):
+            if e['die'] in dies: out['archives'].append(dict(where='rtx-pro', kind='signed-export-1114', path=e['path'] + ('/' + e['odb'] if e.get('odb') else ''), odb=bool(e.get('odb')), signoff=bool(e.get('signoff')), bytes=e.get('bytes')))
+    if lay.get('archive_odb'): out['archives'].append(dict(where='AGIdock', kind='archive', path=str(lay['archive_odb']), odb=True))
+    for nm in names:
+        for c in A['closed'].get(nm, [])[-2:]:
+            here = c.get('present', True)   # REMOTE_ONLY closed-archive jobs keep only links on rtx-pro: the database itself is on AGIdock
+            out['archives'].append(dict(where='rtx-pro' if here else 'AGIdock', kind='closed_archive' if here else 'closed_archive (remote only, links on rtx-pro)', path=c['path'] + ('/' + c['odb'] if c.get('odb') else ''), odb=bool(c.get('odb')), job=c.get('job'), local=here))
+    for a in audit_rows(n) or []:
+        pth = next((v for k, v in a.items() if 'path' in k or 'archive' in k), None)
+        if pth: out['archives'].append(dict(where=a.get('host') or 'archive', kind='SIGNED-DB-AUDIT', path=pth, odb=pth.endswith(('.odb', '.odb.zst'))))
+    out['resolved'] = next((a for a in out['archives'] if a['odb'] and a['where'] == 'rtx-pro'), None) or next((a for a in out['archives'] if a['odb']), None) or (out['archives'][0] if out['archives'] else None)
+    out['on_rtx_pro'] = any(a['odb'] and a['where'] == 'rtx-pro' for a in out['archives']); out['on_agidock'] = any(a['odb'] and a['where'] == 'AGIdock' for a in out['archives'])
+    out['cls'] = 'archive' if out['resolved'] else (out['recorded'] or {}).get('cls', 'none')
+    return out
+
+
+def archive_summary():
+    idx = index(); A = archive_index(); rows = []
+    for n in idx['nodes'].values():
+        if n['level'] == 'die': continue
+        st = (n.get('status') or {}).get('state'); s = db_sources(n)
+        if st != 'signed' and not (n.get('layout') or {}).get('store'): continue
+        rows.append(dict(id=n['id'], die=n['die'], level=n['level'], state=st, pack=bool((n.get('layout') or {}).get('store')), cls=s['cls'], recorded=s['recorded'], resolved=s['resolved'], rtx=s['on_rtx_pro'], agi=s['on_agidock']))
+    signed = [r for r in rows if r['state'] == 'signed']
+    def tally(R):
+        out = {}
+        for r in R: out[r['cls']] = out.get(r['cls'], 0) + 1
+        return out
+    rec_cls = {}
+    for r in signed:
+        k = (r['recorded'] or {}).get('cls', 'none'); rec_cls[k] = rec_cls.get(k, 0) + 1
+    where = {}
+    for r in signed:
+        k = (r['resolved'] or {}).get('where', 'none') if r['cls'] == 'archive' else 'none'; where[k] = where.get(k, 0) + 1
+    return dict(index=A['meta'], signed=len(signed), signed_by_source=tally(signed), signed_resolved_where=where, signed_recorded_host_class=rec_cls,
+                signed_recorded_hosts={h: sum(1 for r in signed if (r['recorded'] or {}).get('host') == h) for h in sorted({(r['recorded'] or {}).get('host') or '-' for r in signed})},
+                signed_not_in_archive=[dict(id=r['id'], recorded=r['recorded'], pack=r['pack']) for r in signed if r['cls'] != 'archive'],
+                signed_on_both=sum(1 for r in signed if r['rtx'] and r['agi']), signed_rtx_pro_only=sum(1 for r in signed if r['rtx'] and not r['agi']), signed_agidock_only=sum(1 for r in signed if r['agi'] and not r['rtx']),
+                signed_agidock_only_list=[r['id'] for r in signed if r['agi'] and not r['rtx']],
+                signed_pack_missing_but_archived=[r['id'] for r in signed if not r['pack'] and r['cls'] == 'archive'],
+                off_limits=sorted(OFF_LIMITS), rule='signed records live on rtx-pro (signed-export-1114, closed_archive) and AGIdock /archive; fleet paths are provenance only and are never read by the explorer')
 
 
 # ---------------------------------------------------------------------------------------------- fleet
@@ -570,6 +671,11 @@ class H(BaseHTTPRequestHandler):
         try:
             if path.startswith('/api/v1/'): return self.api(path[8:], q)
             if path == '/health': return self.health()
+            if path == '/api/elements': return self.json('compat:elements', DS.index() and DS.index().get('generated'), elements_compat)
+            if path == '/api/plan_now':
+                f = STATE / 'plan_now.json'
+                if not f.is_file(): raise ApiError(404, 'no plan_now.json', str(f))
+                return self.json('compat:plan_now', _mtime(f), lambda: json.loads(f.read_text()))
             if path in LEGACY and not q:
                 self.send_response(302); self.send_header('Location', '/?legacy=' + LEGACY[path]); self.send_header('Content-Length', '0'); self.end_headers(); return
             if path.startswith('/engine/'): return self.file(ENGINE, path[8:], immutable='/vendor/' in path)
@@ -593,9 +699,9 @@ class H(BaseHTTPRequestHandler):
         if p == 'meta': return self.send(200, json.dumps(meta(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
         if p == 'dies': return self.json('dies', stamp, dies)
         if p.startswith('die/'): d = p[4:]; return self.json('die:' + d, stamp, lambda: die(d))
-        if p.startswith('node/'): n = p[5:]; return self.json('node:' + n, (stamp, _mtime(layout_service.LS.STORE / 'elements' / n / 'index.json')), lambda: node(n))
+        if p.startswith('node/'): n = p[5:]; return self.json('node:' + n, (stamp, _mtime(layout_service.LS.STORE / 'elements' / n / 'index.json'), _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime')), lambda: node(n))
         if p.startswith('compose/'): d = p[8:]; return self.json('compose:' + d, stamp, lambda: compose_of(d))
-        if p.startswith('closure/'): d = p[8:]; return self.json('closure:' + d, stamp, lambda: closure(d))
+        if p.startswith('closure/'): d = p[8:]; return self.json('closure:' + d, (stamp, _mtime(ARCHIVE_INDEX)), lambda: closure(d))
         if p == 'resolve': return self.send(200, json.dumps(resolve([x for x in g('q').split(',') if x][:400])).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p == 'search': return self.send(200, json.dumps(search(g('q'), g('die') or None, min(200, int(g('limit', '40') or 40)))).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p.startswith('layout/'): return LS.handle(self, p[7:], q, False)
@@ -618,6 +724,7 @@ class H(BaseHTTPRequestHandler):
         if p.startswith('token/map/'):
             k = p[len('token/map/'):]
             return self.json('tok:map:' + k, (stamp, _mtime(design_service.TOKEN_MAP)), lambda: token_map(k))
+        if p == 'archive/summary': return self.json('archive:summary', (stamp, _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime')), archive_summary)
         if p == 'fleet/probe': return self.send(200, json.dumps(fleet_probe(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
         if p.startswith('fleet/'): return self.gz(fleet_get(p[6:]), 'no-store')
         if p == 'coverage':
