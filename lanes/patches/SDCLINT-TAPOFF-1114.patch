@@ -1,0 +1,150 @@
+From 10fbea62820193ce61ce2f7c84f67e8a129137c8 Mon Sep 17 00:00:00 2001
+From: DIE-S81-92 <noreply@anthropic.com>
+Date: Sat, 14 Nov 2026 13:40:28 -0800
+Subject: [PATCH] sdc_lint: accept the plan clock.tap_offset SDC form (per-port
+ set_clock_latency -source -early o-u / -late o+u)
+
+gen_phys.tap_offset_lines writes, for a type with clock.tap_offset rows, an -early (o - u) and -late (o + u) source latency per
+clock port (core taps after their own latency line); sdc_lint only knew the clock.tap_window -W / 0 form, so write_type_kit
+raised SdcLintError on the first offset type (QC slw_fe_v2__clf110fab2 S3M2: 67 errors, blocking the 130-type QC hold fix; S81 B3z2
+would hit the same).  lint() takes tap_offset_ps {port: (early, late)} (kit_context builds it from the plan, TT); offset ports are
+checked against it, other ports keep the window check.  Test: test_sdc_lint_tap_offset.py (offset SDC passes, wrong value and a
+context without the rows fail, window-only type unchanged).
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ tools/die_plan/sdc_lint.py                 | 23 +++++++++-
+ tools/die_plan/test_sdc_lint_tap_offset.py | 52 ++++++++++++++++++++++
+ 2 files changed, 74 insertions(+), 1 deletion(-)
+ create mode 100644 tools/die_plan/test_sdc_lint_tap_offset.py
+
+diff --git a/tools/die_plan/sdc_lint.py b/tools/die_plan/sdc_lint.py
+index 4d88ca90ae0..6e7ccb4f125 100644
+--- a/tools/die_plan/sdc_lint.py
++++ b/tools/die_plan/sdc_lint.py
+@@ -371,7 +371,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
+          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
+          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
+          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
+-         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, source_sync_inputs=None):
++         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, tap_offset_ps=None, source_sync_inputs=None):
+     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
+     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
+     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
+@@ -487,6 +487,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
+     tw_ports = {k: float(v) for k, v in (tap_window_port_ps or {}).items()}
+     tw_in = tw if tap_window_in_ps is None else float(tap_window_in_ps)
+     win_on = bool(tw) or bool(tw_ports)
++    to_ = {k: (float(v[0]), float(v[1])) for k, v in (tap_offset_ps or {}).items()}   # R-CLOCK-7 plan clock.tap_offset: port -> TT (early, late) = (o - u, o + u)
+     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
+     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
+     odly = {p: {} for p in ctx.allp}
+@@ -925,6 +926,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
+     wports = [p_ for p_ in ctx.clock_ports if p_ not in want and p_ not in pad_in and p_ not in (ring_clock_ports or ())]
+     for p_, d in port_win.items():
+         wp = tw_ports.get(p_, tw)
++        if p_ in to_:             # R-CLOCK-7: an offset row port carries exactly (o - u) / (o + u), on a core tap after its own latency line
++            if not win_on:
++                err.append(f"clocks: source -early/-late offset on port {p_} without a plan clock.tap_window / clock.tap_offset")
++            elif abs(d.get("early", 1e9) - to_[p_][0]) > EPS or abs(d.get("late", 1e9) - to_[p_][1]) > EPS:
++                err.append(f"clocks: clock port {p_} offset early {d.get('early')} / late {d.get('late')} ps, plan "
++                           f"clock.tap_offset {to_[p_][0]:g} / {to_[p_][1]:g}")
++            continue
+         if not win_on:
+             err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
+         elif p_ in want:      # DIE-S81-10: early core tap keeps its own latency as late, early end -(early + W)
+@@ -939,6 +947,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
+                 err.append(f"clocks: plan early core tap {p_} has no clock.tap_window early line")
+     if win_on:
+         for p_ in wports:
++            if p_ in to_:
++                if p_ not in port_win:
++                    err.append(f"clocks: plan clock.tap_offset port {p_} has no -early/-late offset lines")
++                continue
+             d = port_win.get(p_, {})
+             wp = tw_ports.get(p_, tw)
+             if abs(d.get("early", 1e9) + wp) > EPS or abs(d.get("late", 1e9)) > EPS:
+@@ -1133,6 +1145,7 @@ def kit_context(P, tn):
+                 **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn)
+                    and not gen_phys.tap_window_port_table(P, tn) else {}),
+                 **_tap_window_port_ctx(P, tn),
++                **_tap_offset_ctx(P, tn),
+                 **({"ring_clock_ports": sorted(gen_phys.ring_writer_clocks(P, tn))} if gen_phys.ring_writer_clocks(P, tn) else {}),
+                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
+                 **({"root_reset_hier": RT.bound_native_contract(P, tn)["entry_path"]}
+@@ -1140,6 +1153,14 @@ def kit_context(P, tn):
+                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))
+ 
+ 
++def _tap_offset_ctx(P, tn):
++    """R-CLOCK-7: lint context of a type with clock.tap_offset rows: {port: (TT early, TT late)} = (o - u, o + u), the lines
++    gen_phys.tap_offset_lines writes into constraint.sdc.  {} for a type without rows."""
++    import gen_phys
++    tab = gen_phys.tap_offset_table(P, tn)
++    return {"tap_offset_ps": {n: (r["TT"] - r["tol"], r["TT"] + r["tol"]) for n, r in tab.items()}} if tab else {}
++
++
+ def _tap_window_port_ctx(P, tn):
+     """KW-FIX-4-SDC measured per-port window (none without a per_port_ps table: byte-identical json): every window
+     port's D_p (fallback W_t filled in), the input shift (largest) and the output shift (smallest) as tap_window_ps."""
+diff --git a/tools/die_plan/test_sdc_lint_tap_offset.py b/tools/die_plan/test_sdc_lint_tap_offset.py
+new file mode 100644
+index 00000000000..ff4cc6e1283
+--- /dev/null
++++ b/tools/die_plan/test_sdc_lint_tap_offset.py
+@@ -0,0 +1,52 @@
++"""R-CLOCK-7: the kit SDC of a type with plan clock.tap_offset rows (per-port set_clock_latency -source -early o-u / -late o+u)
++must pass sdc_lint (QC slw_fe_v2 S3M2 write_type_kit raised SdcLintError, 67 errors: the lint only knew the -W/0 window)."""
++import copy
++import json
++from pathlib import Path
++
++import gen_phys as G
++import schema as S
++import sdc_lint
++
++HERE = Path(__file__).resolve().parent
++TINY = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
++
++
++def _plan(rows=True, win=80.0):
++    raw = copy.deepcopy(TINY)
++    P0 = S.Plan(raw)
++    tn = next(t for t in P0.types if not P0.types[t].get("hard") and any(p["type"] == t for p in P0.parts.values()))
++    raw["clock"]["tap_window"] = dict(window_ps=win, related_pair_ps=win)
++    raw["clock"].setdefault("seam_hold", dict(sender_ps=25, seam_ps=80))
++    P1 = S.Plan(raw)
++    ports = [n for _ck, ps in G.tap_window_ports(P1, tn) for n in ps]
++    if rows:
++        raw["clock"]["tap_offset"] = {"per_port_ps": {tn: {n: dict(TT=float(7 * i + 3), FF=float(5 * i + 2), tol=float(10 + i))
++                                                           for i, n in enumerate(ports)}}}
++    return raw, tn, ports
++
++
++def test_offset_sdc_passes_lint_and_wrong_value_fails():
++    raw, tn, ports = _plan()
++    P = S.Plan(raw)
++    assert ports and G.tap_offset_table(P, tn)
++    s = G.sdc(P, tn, G.type_pins(P, tn))
++    assert "set_clock_latency -source -early" in s
++    ctx = sdc_lint.kit_context(P, tn)
++    assert "tap_offset_ps" in ctx
++    assert sdc_lint.lint(s, **ctx) == []
++    # the same SDC against a lint context without the offset rows is the old failure (window form expected)
++    bare = {k: v for k, v in ctx.items() if k != "tap_offset_ps"}
++    assert sdc_lint.lint(s, **bare) != []
++    # a changed late value fails closed
++    bad = s.replace("-late -clock clk", "-late -clock clk 99.0 [get_ports {zz}]\nset_clock_latency -source -late -clock clk", 1)
++    assert sdc_lint.lint(bad, **ctx) != []
++
++
++def test_window_only_type_unchanged():
++    raw, tn, ports = _plan(rows=False)
++    P = S.Plan(raw)
++    s = G.sdc(P, tn, G.type_pins(P, tn))
++    ctx = sdc_lint.kit_context(P, tn)
++    assert "tap_offset_ps" not in ctx
++    assert sdc_lint.lint(s, **ctx) == []
+-- 
+2.53.0
+
