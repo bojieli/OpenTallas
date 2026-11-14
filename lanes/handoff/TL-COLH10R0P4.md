@@ -18,3 +18,5 @@
 - Cancelled ae2abae11aa1 (old-plan pv07945c1e, never admitted) by exact PIDs 3901872/3582093/3581956 per COORD.
 - 2660187bad7f (pv5b623e07, old plan) CLASSIFIED STRUCTURAL grt-overflow GRT-0116 at 10:27 (extra iterations 30/30 not converged), as predicted. Epyc7 duplicate (-3888328) still in GRT, kept.
 - Main path: B3x2b forms fa/fb/fc (UTIL 0.4 M8 / 0.3 M9 / 0.5 M9, ALLOW_CONGESTION), waiter armed on run-item exit.
+## 10:28
+- Cancelled epyc7 duplicate per COORD: verified container dpkit-col_h10_r0_p4__t1__pv5b623e07-3888328 label ot-job.dir ...pv5b623e07-route-loved-redfish-3822634 and its run_kit.sh route cmdline, then docker stop + kill ot-job pid 3822634 (wrapper chain 3820217/3819383 exited). No pv5b623e07 process or container remains on epyc7.
