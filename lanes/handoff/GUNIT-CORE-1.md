@@ -92,3 +92,6 @@ Selfcontainedkit staged E4 samepath /srv/opentallas-scratch2/claude/die-s81-89/g
 - CODEX14:58: actual private gf4nrev PLACE exit0 and LEC EQUIVALENT, fresh density/layout viewed; stage tests4/4. Additive source-only a0de150aa5 (4files, basebbb2) pushed hub; authorized GitHub mirror from canonicalintel2 is pending terminal result. SOURCE READY to ROOT-MERGE; no private plan/recipe adoption or CTS/GRT. Remaining fanout581.9/SWclock advisories retained; parent owns strategy. Full checkpoint handoff/codex_gunit_gf4nrev_private_20261113_1443.md updated; worker safely parked by parent request.
 
 - CODEX 2026-11-13 14:58 PST GitHub mirror SUCCESS for source-only a0de150aa5; ROOT-MERGE notified, worker safely parked.
+
+## CODEX GF5 paired impact 2026-11-13 15:21 PST
+Coordinator approval recorded before RTL edits: private default-off F534+A512flop variant, 3 affected masters dsdv_gunit_l1f_bf/ba0/ba1. Exact old signed A receipts, proposed sibling variant names, neighbor/read-write/bias hazards and RT/RW/PIN/compiler impacts recorded E7 die-s81-89/gunit/wt/physical/die_plan/s81/cores/legacy/profiles/bf_svreg_1113/IMPACT.txt; model ANALYTIC_MODEL.txt. Old views/defaults/recipes/plans preserved. Full-band and known-calendar proof precede any physical launch. Token private A/B price recorded; no P&R.
