@@ -5,3 +5,4 @@
 - 11-14 13:5x UPDATE: root cause chain fixed in private form (see queue line). Waiting on 3 route kits (logs intel2 /tmp/tl-qcphysd-<type>.log). On pass: AUTO-RESIGN rows for qwen_compute phy_serdes/phy_serdes_b/phy_ucie_kv (host epyc10, dir /srv/opentallas-scratch2/claude/tl-qcphysd/<type>/gen/<type>).
 - 08:0x: blocker = no free rows/M5 obstruction at PDN (see queue). Awaiting A/B.
 - 08:3x: HARD-IP conditions fail (5 BUFx2 per wrapper; macro pins outside plan windows). Needs DIE-QC-103 window delta + epoch-bit decision. Scripts epyc10 /tmp/qcpins2.py /tmp/qccells.sh.
+- 08:5x: waiting on S3E READY+ADOPT from DIE-QC-103 (bg waiter). Then regen + both checks + HARD-IP rows.
