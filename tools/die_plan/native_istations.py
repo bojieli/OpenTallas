@@ -1,5 +1,6 @@
 """Opt-in native realization of the same FIRM stations used by physical kits."""
 import contextlib,io,json,shutil,copy
+import core_latency as CL
 from pathlib import Path
 
 
@@ -87,7 +88,7 @@ def kit_source_depth(typ,bus):
     """Depth of the KIT-built (kit_istations.py) OUT station chain of one bus: the deepest bus:<bus> entry
     (kit_istations.bus_entries merges per-core rows to the deepest chain; bit_route rows share one stage count)."""
     rows=[e for e in typ.get('internal_stations',[]) if e.get('conn')=='bus:'+bus]
-    return max((len(e['regs_um']) for e in rows),default=0)
+    return max((len(e['regs_um']) for e in rows),default=0)+CL.out_cycles(typ,bus)   # + declared hard-core cycles (CORE-LAT-1)
 
 
 def annotate_kit(b):
