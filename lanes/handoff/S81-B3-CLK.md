@@ -38,3 +38,15 @@ Started 2026-11-14 ~00:10 PST. Work dir: epyc7 /srv/opentallas-scratch2/claude/s
   follow-on); no dead-input error -> the serdes define + re-proof are accepted. B3t run stopped (in G0) per COORD.
 - B3v = ev/B3t.json + LIMIT-BIND-1 overlay (M/limit_bind_1, apply.sh) + define + re-proof, elab reused from B3s/out (same asbuilt + define),
   G0 skipped. Runner M/chainU.sh, log M/log/B3v.log, out M/run/b/B3v. (B3u failed only on a SIGPIPE in my overlay step; fixed.)
+
+## RESULT 11-14 (READY to DIE-S81-91)
+- B3v strict bind: BIND_RC=0, 0 errors, LATCHECK 873/873 PASS (G0_RC=0). Plan M/ev/B3t.json 4b7f1e087434; run sidecar
+  M/run/b/B3v/sidecar_new.json 42aaeeb2c47b; BASESC M/ev/side_b3.json 4a3caa49ba05; BASEP M/ev/base_b3.json 4f3c0e550fcf;
+  asbuilt M/run/b/B3v/asbuilt_run.json 2fb5d6ba9691 (defines + OT_S81_SERDES_RST_TREE, dead_input_reproofs); bind out M/run/b/B3v/out.
+- Patch set: M/dead_inputs_reproof.patch (+ M/test_dead_inputs_reproof.py) -> needs a main merge; re-proof file goes to
+  results/token_pass/s81_dead_inputs_2148/proof_rsttree_reprove_1114.json; overlay M/ovl_b3; LIMIT-BIND-1 was applied (M/limit_bind_1).
+- Tools: M/b3taps.py (tap split/reach), M/collector_fix_b3.py (advisory zero-cycle collector reach), runner M/run_bind_b3.sh.
+- Integration: DIE-S81-91 composes B3t's 36 types (list M/ev/types36.txt) onto B2v (or adopts B3t over B2u), with the define,
+  re-proof and patch. Changed types vs B2u = those 36 (30 with +1 tap, 6 col_h10_r0_p1 now in frame form) plus refloor moves.
+- Open: svc_lo collector chains stay over 405 um only as info under LIMIT-BIND-1; re-run collector_fix_b3.py after the S81-B3-SVC re-pack.
+- Lane stopped; nothing of mine is running.
