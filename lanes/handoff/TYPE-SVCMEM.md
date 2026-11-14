@@ -7,3 +7,6 @@ Findings (checked):
 - Why t5/t6/pvso t2 still fail: only the stale 11-13 attempts. Kit_wave.json dies.s81.hold_items keys svc_hi_dsdv_svc_rs__t5, _t5__*, _t6, _t6__*, svc_hi_dsdv_svc_pvso_entry__t2, _t2__* (SVC-MACRO-1113) still hold them; no attempt since.
 Action: ASK KIT-OPS-3 to delete those 6 hold keys and add retry keys. No plan change; nothing for DIE-S81-92.
 Next: when they launch, watch gen_lint/place/route; add AUTO-RESIGN row on pass (R-MINIMAL). Poll every >=10 min.
+
+## 08:05
+COORD approved release. Owning hi t1-t4/pvso t1. t1 a7 memory_bits PASS (place). Deadline for KIT-OPS-3 launch of t5/t6/pvso t2: 30 min, else self-launch.
