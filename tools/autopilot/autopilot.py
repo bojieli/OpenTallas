@@ -641,6 +641,19 @@ if ("TT global-routing insertion gate failed: PASS exit 1" in marker
     m = re.search(r"(?m)^Error: grt_policy_tt\.tcl, \d+ clock [^\n]+ has no unique rise source insertion arrival\s*$", rd(q))
     if m:
         out["clock_source_error"] = m.group(0).strip()[:300]
+# WF-1 11-14 (COORD: sle_st_b_v1 a7 STRUCTURAL post-cts-hold, really the TT post-CTS gate process dying, OOM on a full host): a FAIL_POSTCTS
+# whose gate record postcts_gate_tt.json is missing or older than this run, or whose gate log is missing / older / has no verdict
+# line, did not judge anything: infra (gate lost), never a hold verdict.
+if marker:
+    _lost = []
+    if not os.path.isfile(p) or os.path.getmtime(p) < since:
+        _lost.append("postcts_gate_tt.json " + ("missing" if not os.path.isfile(p) else "older than this run"))
+    if not os.path.isfile(q) or os.path.getmtime(q) < since:
+        _lost.append("postcts_gate_TT.log " + ("missing" if not os.path.isfile(q) else "older than this run"))
+    elif not re.search(r"(?im)\b(PASS|FAIL|verdict|WNS|slack)\b|^Error\b", rd(q, 400000)):
+        _lost.append("postcts_gate_TT.log truncated (no verdict or error line)")
+    if marker and _lost:
+        out["gate_lost"] = "; ".join(_lost)
 # KW-FIX-44 11-10 (COORD (3)): grt183_make.sh OT_GRT_CONGESTED_FAIL (full GRT ended congested, overflow over the floor)
 # is the congestion class; OT_GRT_TIMECAP (post-route repair over the stage cap) is its own TIMING kind
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*|OT_GRT_CONGESTED_FAIL[^\n]*",
@@ -1045,6 +1058,9 @@ def classify(c, client):
         # Not in INFRA_KINDS: keep the physical checkpoint and await the fixed
         # flow/source refresh; retrying the same broken gate cannot help.
         return "CRASH", "infra-clock-source", c["clock_source_error"]
+    if c.get("FAIL_POSTCTS") and c.get("gate_lost") and not c.get("clock_source_error"):
+        # WF-1 11-14: the gate never produced a verdict (process killed, host out of memory): infra, resubmitted like an oom kill
+        return "CRASH", "infra-oom", f"post-CTS gate lost ({c['gate_lost']}); FAIL_POSTCTS {c['FAIL_POSTCTS'][:160]}"
     if c.get("FAIL_POSTCTS"):
         return "STRUCTURAL", "post-cts-hold", "FAIL_POSTCTS " + c["FAIL_POSTCTS"]
     if c.get("hold_structural"):
@@ -2673,7 +2689,7 @@ OOMKILL_MAX = 4
 
 def is_earlyoom_kill(reasons):
     """WF-1 11-14: a job killed by the host low-memory killer (make 'Error 241' = 256-15, or an earlyoom-matched SIGTERM 143)"""
-    return bool(re.search(r"Error 241\b|earlyoom", str(reasons or "")))
+    return bool(re.search(r"Error 241\b|earlyoom|post-CTS gate lost", str(reasons or "")))
 
 
 def earlyoom_kill_near(host, t, probe=None):
