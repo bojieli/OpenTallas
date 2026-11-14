@@ -33246,7 +33246,16 @@
     "sle_hc2__cl9c4c4509__clf60c5152@2",
     "sle_hc2__clcc5e3e61@2",
     "sle_st_b_v1__pv0e7b1dcc@6",
-    "slw_st_b_v2__pvc2ec5bfb@7"
+    "slw_st_b_v2__pvc2ec5bfb@7",
+    "sle_su_l1__clc6d66f5b@5",
+    "slw_fe_v1__clfe325744__cl08d14f0d@5",
+    "slw_su_l1__cla2a78701@4",
+    "cbf_q00__cl1b5a6458@23",
+    "cbf_q00__cl870de686@25",
+    "cbf_q11@9",
+    "cbx_q10__cl89936551_h@6",
+    "cbx_q10__cl89936551@28",
+    "cbx_q10__cl94a12200_h@7"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -33960,7 +33969,18 @@
     "sle_hc1__cl7d360508@2": "KIT-OPS-3 00:4x (COORD B): QC plan-invalid class fixed by tree2 overlay (schema accepts die-level clock.pregrt_ff_hold/_note + partition_types.*.hard_cores_deferred; pregrt_ff_hold merges die default into types); relaunch.",
     "sle_hc2__cl9c4c4509__clf60c5152@2": "KIT-OPS-3 00:4x (COORD B): QC plan-invalid class fixed by tree2 overlay (schema accepts die-level clock.pregrt_ff_hold/_note + partition_types.*.hard_cores_deferred; pregrt_ff_hold merges die default into types); relaunch.",
     "sle_st_b_v1__pv0e7b1dcc@6": "KIT-OPS-4 11-14 03:4x INFRA: ot-job exit 99 input (gen/run_kit.sh) on another gen host, no fetch host in spec / ADMIT-TUNE-1 soft-pin REBALANCE regression (fixed)",
-    "slw_st_b_v2__pvc2ec5bfb@7": "KIT-OPS-4 11-14 03:4x INFRA: ot-job exit 99 input (gen/run_kit.sh) on another gen host, no fetch host in spec / ADMIT-TUNE-1 soft-pin REBALANCE regression (fixed)"
+    "slw_st_b_v2__pvc2ec5bfb@7": "KIT-OPS-4 11-14 03:4x INFRA: ot-job exit 99 input (gen/run_kit.sh) on another gen host, no fetch host in spec / ADMIT-TUNE-1 soft-pin REBALANCE regression (fixed)",
+    "sle_su_l1__clc6d66f5b@5": "FAIL-QCKV-1 (COORD): CLAND edge overlay (landing_placement.tcl a7d4d4541fa9 = KV-CLAND-EDGE2) in QC tree2 on all gen hosts; relaunch.",
+    "slw_fe_v1__clfe325744__cl08d14f0d@5": "FAIL-QCKV-1 (COORD): CLAND edge overlay (landing_placement.tcl a7d4d4541fa9 = KV-CLAND-EDGE2) in QC tree2 on all gen hosts; relaunch.",
+    "slw_su_l1__cla2a78701@4": "FAIL-QCKV-1 (COORD): CLAND edge overlay (landing_placement.tcl a7d4d4541fa9 = KV-CLAND-EDGE2) in QC tree2 on all gen hosts; relaunch.",
+    "cbf_q00__cl1b5a6458@23": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "cbf_q00__cl870de686@25": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "cbf_q11@9": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "cbx_q10__cl89936551_h@6": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "cbx_q10__cl89936551@28": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "cbx_q10__cl94a12200_h@7": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "sle_st_a_v1__cl989804f6__cl18eece69@2": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "slw_st_a_v1__clb036e152@1": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch."
    },
    "gen_hosts": [
     "epyc10",
