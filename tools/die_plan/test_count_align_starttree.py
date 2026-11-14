@@ -463,3 +463,20 @@ def test_die_sta_ambiguous_start_port_judged_by_bind_simulation():
         assert all(r["ok"] for p, r in run(amb).items() if p != e["port"])   # clean ports keep the old rule
     finally:
         DSR.CPPR_LCA = old
+
+
+def test_plan_exit_unclean_start_covered_by_mc():
+    """START-AMB-MC-1: unclean start ports fail the plan only without a passing start-up MC over the start edges"""
+    base = dict(fail=0, regions_reached=4, regions=4, start_tree=dict(start_fail=3))
+    s = copy.deepcopy(base)
+    assert cap.exit_code(s, True) == 1                                   # no MC: old behaviour
+    s = copy.deepcopy(base); s["mc"] = dict(chips=300, violations=2)
+    assert cap.exit_code(s, True) == 1                                   # MC violations: still fails
+    s = copy.deepcopy(base); s["mc"] = dict(chips=300, violations=0)
+    assert cap.exit_code(s, False) == 1                                  # MC did not include start edges
+    s = copy.deepcopy(base); s["mc"] = dict(chips=300, violations=0)
+    assert cap.exit_code(s, True) == 0 and s["start_tree"]["mc_covered"]["ports"] == 3
+    s = copy.deepcopy(base); s["mc"] = dict(chips=300, violations=0); s["fail"] = 1
+    assert cap.exit_code(s, True) == 1                                   # crossing failures are untouched
+    s = dict(fail=0, regions_reached=4, regions=4)
+    assert cap.exit_code(s, False) == 0                                  # no start tree: unchanged

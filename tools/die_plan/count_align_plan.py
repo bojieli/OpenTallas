@@ -1634,7 +1634,22 @@ def _main(a, ap, allow):
                     continue
                 for L in (o["L_lo_ps"], 0.5 * (o["L_lo_ps"] + o["L_hi_ps"]), o["L_hi_ps"]):
                     f.write(f"{o['port']}\t{o['depth']}\t{int(round(L))}\n")
-    sfail = summ.get("start_tree", {}).get("start_fail", 0)
+    return exit_code(summ, bool(sedges))
+
+
+def exit_code(summ, start_simulated):
+    """0 = plan usable.  START-AMB-MC-1 (COORD 11-14 ruling, DIE-PROTO-1): the static 12.16b(iv) unclean-start count
+    no longer fails a plan on its own.  Unclean start ports are COVERED when the start-up Monte Carlo of THIS plan
+    (mc_check over the crossings AND the start edges, --mc-chips > 0) ran on the start edges and found 0 violations;
+    the routed die STA (die_sta_related count_align_start_ports) then judges them on the proof.  Without that MC, or
+    with any MC violation, an unclean start port still fails the plan (exit 1).  Records start_tree.mc_covered."""
+    st = summ.get("start_tree") or {}
+    sfail = st.get("start_fail", 0)
+    mc = summ.get("mc") or {}
+    if sfail and start_simulated and mc.get("chips") and mc.get("violations") == 0:
+        st["mc_covered"] = dict(ports=sfail, chips=mc["chips"],
+                                rule="START-AMB-MC-1: unclean start ports covered by the start-up MC (0 violations)")
+        sfail = 0
     return 0 if summ["fail"] == 0 and summ["regions_reached"] == summ["regions"] and not sfail else 1
 
 
