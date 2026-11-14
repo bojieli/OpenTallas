@@ -789,12 +789,39 @@ def direct_paths():
             if len(f) >= 2 and not l.startswith('#') and f[1].startswith('/'): out.setdefault(f[0], set()).add(f[1].strip())
     except OSError:
         pass
+    # lanes/AUTO-RESIGN.tsv: die, name, host, dir (glob ok), ...: <dir>/signoff/signoff.json, else <dir>/signoff.json (glob expanded on the host)
+    try:
+        for l in (COORD_DIR / 'lanes/AUTO-RESIGN.tsv').read_text().splitlines():
+            f = l.split('\t')
+            if len(f) >= 4 and not l.startswith('#') and f[3].startswith('/') and f[2]:
+                d = f[3].strip().rstrip('/')
+                out.setdefault(f[2], set()).update([d + '/signoff/signoff.json', d + '/signoff.json'])
+    except OSError:
+        pass
     return {h: sorted(v) for h, v in out.items() if h in HOSTS}
+
+
+def expand_globs(h, paths):
+    """paths with a glob character are expanded on their host (one ssh); plain paths pass through; a missing file is just not read"""
+    g = [p for p in paths if any(c in p for c in '*?[')]
+    if not g: return paths
+    script = "import glob,sys\nfor p in sys.stdin.read().split():\n    print(*glob.glob(p), sep='\\n')\n"
+    cmd = ['python3', '-c', script]
+    try:
+        r = sh(['bash', '-c', 'python3 -c %s' % shlex_quote(script)] if h == 'local' else ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(script)],
+               60, input=''.join(p + '\n' for p in g))
+        if r.returncode == 255 and 'resolve hostname' in r.stderr:
+            r = sh(['bash', '-c', 'python3 -c %s' % shlex_quote(script)], 60, input=''.join(p + '\n' for p in g))
+        ex = [x for x in r.stdout.split('\n') if x.startswith('/')]
+    except Exception:
+        ex = []
+    return sorted(set([p for p in paths if p not in g] + ex))
 
 
 def read_direct(h, paths):
     cmd = ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, scan_cmd(roots=' ')]
     if h == 'local': cmd = ['bash', '-c', scan_cmd(roots=' ')]
+    paths = expand_globs(h, paths)
     r = sh(cmd, DIRECT_READ_S, input=''.join(p + '\n' for p in paths))
     if r.returncode == 255 and not r.stdout.strip() and 'resolve hostname' in r.stderr:   # the hub reading its own paths (it has no name for itself)
         r = sh(['bash', '-c', scan_cmd(roots=' ')], DIRECT_READ_S, input=''.join(p + '\n' for p in paths))
