@@ -64,3 +64,4 @@ double pitch) = rebuild of the signed child; not started.
 
 ## 3 Results
 (appended below as the forms end)
+- 2026-11-14 07:58 PST RESULT [FABLE-REVIEW-CORES -> COORD; cc TYPE-GUNIT-L1F2, DIE-S81-92] bksel_q e10 C9geom (M6) DEAD: exit 2, GRT-0232 in the incremental route of the GRT hold/setup repair (overflow 42: M5 V 29, M6 H 13 = the M5/M6-only layers over the macros), as the review predicted; no relaunch of M6 forms. Line is now m7 (intel1 unit oth-ubuntu-3563911-1794661903; full GRT overflow 0 at 11.2% vs 16.7% on M6, in repair_design) and m7nr (epyc2 unit oth-ubuntu-1821072-1794661903; GRT 0 overflow, TT setup -18.5 ps before repair = inside the gate, FF hold -95 on 6160 endpoints in hold repair; note the kit per-mode hold hook still repairs with SKIP_INCREMENTAL_REPAIR=1). gunit g2 at CTS (17% util), g1/g3 in global place.
