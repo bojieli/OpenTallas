@@ -9,13 +9,8 @@ Stdlib only, no repo imports: the file is copied into every kit as /work/failfas
 sent verbatim to a host by tools/autopilot/failfast_scan.py (read-only dry run on live jobs).
 
 Rules (config key, default; env wins over `export KEY = value` in the kit's config.mk; OT_FAILFAST=0 turns all off):
-  (a) GRT_NO_PROGRESS   OT_FF_GRT=1  OT_FF_GRT_MAX=1000  OT_FF_GRT_MIN_DROP_PCT=10  OT_FF_GRT_ROUNDS=2  OT_FF_GRT_ROUND_ITERS=30
-      After OT_FF_GRT_ROUNDS x OT_FF_GRT_ROUND_ITERS (60) extra iterations: stop when the latest congestion-<N>.rpt total is
-      ABOVE OT_FF_GRT_MAX and fell by less than OT_FF_GRT_MIN_DROP_PCT % against the report one round (30 iterations) older.
-      Both conditions must hold ("above the ceiling AND not falling"): a run that is high but falling >= 10 % per round is
-      converging and keeps going; a run at or below the ceiling is left to DRT (KW-FIX-8).  The OpenROAD log prints no overflow
-      count, only the iteration counter, so the totals come from congestion-<N>.rpt (written every 5 iterations, overwritten in
-      each round): the watcher records every new report with its cumulative iteration, which is the history.
+  (a) [GRT overflow / no-progress rule DELETED 11-14, OWNER: delete the conservative limits; GRT is never stopped on overflow, only by
+      grt183_make.sh's post-route time cap OT_GRT_POST_MAX_S.]
   (b) DRT_NO_PROGRESS   OT_FF_DRT=1  OT_FF_DRT_ITER=20  OT_FF_DRT_MAX_VIOL=10000  OT_FF_DRT_MIN_DROP_PCT=5  OT_FF_DRT_WINDOW=3
       From completed iteration OT_FF_DRT_ITER: stop when the violation count is above OT_FF_DRT_MAX_VIOL and over the last
       OT_FF_DRT_WINDOW iterations it fell by less than OT_FF_DRT_MIN_DROP_PCT % per iteration (compound: v_last >
@@ -25,7 +20,6 @@ Rules (config key, default; env wins over `export KEY = value` in the kit's conf
       OT_FF_HOLD_CAPS times in this run's CTS + GRT logs: the run ends as hold-structural instead of continuing to route.  A kit with
       'export OT_HOLD_STRUCTURAL_ADVISORY = 1' is exempt (owner: advisory kits keep going).
 Classes (the first token of the stop line, read by tools/autopilot/autopilot.py):
-  OT_GRT_NO_PROGRESS stage=grt ...  carries the last overflow per layer (H / V split and every named layer of the report)
   OT_DRT_NO_PROGRESS stage=route ...
   OT_HOLD_STRUCTURAL stage=cts|grt failfast ...
 """
@@ -39,7 +33,6 @@ import time
 
 DEFAULTS = {
     "OT_FAILFAST": 1,
-    "OT_FF_GRT": 0, "OT_FF_GRT_MAX": 1000, "OT_FF_GRT_MIN_DROP_PCT": 10, "OT_FF_GRT_ROUNDS": 2, "OT_FF_GRT_ROUND_ITERS": 30,
     "OT_FF_DRT": 1, "OT_FF_DRT_ITER": 20, "OT_FF_DRT_MAX_VIOL": 10000, "OT_FF_DRT_MIN_DROP_PCT": 5, "OT_FF_DRT_WINDOW": 3,
     "OT_FF_HOLD": 1, "OT_FF_HOLD_CAPS": 0,
 }
@@ -156,41 +149,6 @@ def report_cum(n, cum_now, cur, prev_len, round_len=30):
     if cur >= n:
         return cum_now - (cur - n)
     return cum_now - cur - ((prev_len or round_len) - n)
-
-
-def grt_decide(series, total_iters, c):
-    """series [{cum, n, total, H, V, layers, mtime}] oldest first (one entry per report write); total_iters = cumulative
-    iterations started.  -> None or the stop record.  See the module doc, rule (a)."""
-    if not c["OT_FF_GRT"] or not series:
-        return None
-    rnd = c["OT_FF_GRT_ROUND_ITERS"]
-    if total_iters < c["OT_FF_GRT_ROUNDS"] * rnd:
-        return None
-    last = series[-1]
-    if last["total"] <= c["OT_FF_GRT_MAX"]:
-        return None
-    older = [s for s in series if s["cum"] <= last["cum"] - rnd]
-    if not older:
-        return None
-    ref = older[-1]
-    if ref["total"] <= 0:
-        return None
-    fall = 100.0 * (ref["total"] - last["total"]) / ref["total"]
-    if fall >= c["OT_FF_GRT_MIN_DROP_PCT"]:
-        return None
-    return {"rule": "GRT_NO_PROGRESS", "iterations": total_iters, "last": last, "ref": ref, "fall_pct": round(fall, 1),
-            "max": c["OT_FF_GRT_MAX"], "min_drop_pct": c["OT_FF_GRT_MIN_DROP_PCT"]}
-
-
-def grt_line(d, rounds=None, ndr=None, stamp=True):
-    last, ref = d["last"], d["ref"]
-    lay = " ".join("%s=%d" % (k, v) for k, v in sorted(last.get("layers", {}).items())) or "unnamed(mid-route report)"
-    return ("OT_GRT_NO_PROGRESS stage=grt class=GRT_NO_PROGRESS: after %d extra iterations%s total overflow %d (congestion-%d) "
-            "> %d and fell %.1f%% (< %d%%) over the last round (%d at iteration %d -> %d at iteration %d); last overflow H %d / V %d, "
-            "per layer %s%s; stopping the stage (FAILFAST-1)%s"
-            % (d["iterations"], "" if rounds is None else " in %d rounds" % rounds, last["total"], last["n"], d["max"],
-               d["fall_pct"], d["min_drop_pct"], ref["total"], ref["cum"], last["total"], last["cum"], last["H"], last["V"], lay,
-               "" if ndr is None else ", %d NDR relaxations" % ndr, time.strftime(" %Y-%m-%d %H:%M:%S", time.gmtime()) if stamp else ""))
 
 
 # ------------------------------------------------------------------------------------------------ (b) DRT
@@ -315,43 +273,7 @@ def judge(work, t0, state_path=None, env=None, settle_s=None, now=None):
         d = drt_decide(s["drt"], c)
         if d:
             return [drt_line(d)]
-    # (a) GRT
-    tmp = [p for p in grt if os.path.basename(p).startswith("5_1_grt.tmp")] or grt
-    return []   # (a) GRT_NO_PROGRESS REMOVED 11-14 (OWNER: remove conservative limits): GRT is never stopped on overflow progress
-    if not tmp or not c["OT_FF_GRT"]:
-        return []
-    s = scan_lines(_read_lines(sorted(tmp)[-1]))
-    cum, cur, prev_len, rounds = iteration_state(s["iters"])
-    state = {"series": []}
-    if state_path:
-        try:
-            state = json.load(open(state_path))
-        except (OSError, ValueError):
-            pass
-    seen = {(x["n"], x["mtime"]) for x in state["series"]}
-    changed = False
-    for n, mt, p in reports_now(rp, t0, settle_s, now):
-        if (n, mt) in seen:
-            continue
-        try:
-            rep = parse_report(open(p, errors="replace").read())
-        except OSError:
-            continue
-        state["series"].append(dict(rep, n=n, mtime=mt, cum=report_cum(n, cum, cur, prev_len, c["OT_FF_GRT_ROUND_ITERS"])))
-        changed = True
-    state["series"].sort(key=lambda x: (x["mtime"], x["cum"]))
-    if state_path and changed:
-        tmpf = state_path + ".tmp.%d" % os.getpid()
-        try:
-            with open(tmpf, "w") as f:
-                json.dump(state, f)
-            os.replace(tmpf, state_path)
-        except OSError:
-            pass
-    d = grt_decide(state["series"], cum, c)
-    if d:
-        return [grt_line(d, rounds=rounds + (1 if cur else 0), ndr=s["ndr"])]
-    return []
+    return []   # no GRT rule: GRT is never stopped on overflow (OWNER 11-14, rule deleted)
 
 
 def main(argv=None):
