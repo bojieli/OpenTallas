@@ -44944,7 +44944,10 @@
     "PHY_NE@5",
     "PHY_NC@1",
     "PHY_NW@1",
-    "vsN2@8"
+    "vsN2@8",
+    "q_spb1@6",
+    "q_spt2@5",
+    "vsN1@4"
    ],
    "pilot_max": 12,
    "owner_lane": "HBM die owner (DIE-HBM-101)",
@@ -45057,7 +45060,6 @@
     "q_b013": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_b013__physical_v1": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (DIE-HBM-100, queue tag die-layout-hbm-bank-chain): kit_istations.bus_entries merges each bus's per-core station rows into ONE chain at the deepest row's sites, so every multi-core bank type shows the 3_place pile; no new launch, no route submission; running kits' place stays for diagnosis; DIE-HBM-100 lifts after the KIT-ISTATIONS class fix (aa813f0af9a8ea132) merges",
     "q_su21__physical_v1": "KIT-OPS-1 2026-11-13 00:54: pEv10 re-kit: route_hold_items says no new launch for this type (kept as a hold so the new key does not launch it): KW-FIX-45 11-11 (COORD GEOM 15:4x, DIE-HBM-100): q_su21__physical_v1 a2 3_place BAD (pin_unreg 568, glue in one NE cluster, fill 0.013, taps clk_t18 4109): no relaunch, no route; dir kept",
-    "q_spt2": "KIT-OPS-1 2026-11-13 02:58: COORD 11-13: q_spt2 signed, pEv10/pEv11c do not change it, no rebuild (held because take_states now includes SIGNED-UNVERSIONED for the pEv11c xtap types q_spb1/vsN1)",
     "*": "PARKED-OWNER-1113 (KIT-OPS-1 2026-11-13 03:29): OWNER 11-13 03:5x 'park HBM': no new HBM kit-wave launches or route submissions; running HBM jobs finish; no HBM src switches. Lift = delete this key."
    },
    "gen_hosts": [
@@ -46005,7 +46007,8 @@
     "q_b000": "KW-FIX-42 2026-11-09 05:14 PST COORD 05:1x: pdn-col 075832317c landed on main (M5 strip rule for PDN-0179); partition_ft_reserve.py 0591baed already in kw41/src_hbmf4 on epyc7+intel1 -> released. Was: KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
     "q_b000__physical_v1": "KW-FIX-42 2026-11-09 05:14 PST COORD 05:1x: pdn-col 075832317c landed on main (M5 strip rule for PDN-0179); partition_ft_reserve.py 0591baed already in kw41/src_hbmf4 on epyc7+intel1 -> released. Was: KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
     "q_b001": "KW-FIX-42 2026-11-09 05:14 PST COORD 05:1x: pdn-col 075832317c landed on main (M5 strip rule for PDN-0179); partition_ft_reserve.py 0591baed already in kw41/src_hbmf4 on epyc7+intel1 -> released. Was: KW-FIX-42 02:25 COORD 02:19: PDN-0179 class open; no relaunch until DIE-HBM-97 posts the class fix",
-    "q_b001__physical_v1": "KW-FIX-42 2026-11-09 05:14 PST COORD 05:1x: pdn-col 075832317c landed on main (M5 strip rule for PDN-0179); partition_ft_reserve.py 0591baed already in kw41/src_hbmf4 on epyc7+intel1 -> released. Was: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix"
+    "q_b001__physical_v1": "KW-FIX-42 2026-11-09 05:14 PST COORD 05:1x: pdn-col 075832317c landed on main (M5 strip rule for PDN-0179); partition_ft_reserve.py 0591baed already in kw41/src_hbmf4 on epyc7+intel1 -> released. Was: KW-FIX-37 2026-11-08 19:05 PST (COORD 18:5x, DIE-HBM-93 18:51 READY): PDN-0179 class still open on plan_final2 (DIE-HBM-93 18:51 (b)); release with its PDN fix",
+    "q_spt2": "KIT-OPS-5 11-14 (owner: resubmit sign-off for records without layout file): was: KIT-OPS-1 2026-11-13 02:58: COORD 11-13: q_spt2 signed, pEv10/pEv11c do not change it, no rebuild (held because take_states now includes SIGNED-UNVERSIONED for the pEv11c xtap types q_spb1/vsN1)"
    },
    "gen_hosts_prev_kw32f": [
     "epyc4",
