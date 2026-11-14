@@ -2185,7 +2185,12 @@ def spill_lock(roots):
 # FLEET-NEW3 2026-10-24: Ubuntu 26.04 GNU tar 1.35 prefixes its messages "/usr/bin/tar: " (was "tar: "), so the
 # forgiven existing-directory errors were not recognised and every re-spill FAILED (test_ot_run_spill 5 failures); the
 # real tar now emits them itself, so the directory test is relative to the extraction root (cd /, as tar -C /).
-TAR_X = ("cd / || exit 97; e=$(mktemp); zstd -q -d | tar -C / \"${OT_TAR_TRANSFORMS[@]}\" --keep-newer-files --warning=no-ignore-newer -xf - 2>$e; s=(${PIPESTATUS[@]}); "
+# ROOTOWNED_1114 (ADMIT-TUNE-1, VARIANTS-1: ~45 of 56 runs lost): a docker job writes its run/ tree as ROOT; the next spill copy (or the back-copy of
+# a finished one) onto a host that already holds those files fails as the ubuntu user -- tar cannot replace a root-owned file or write into a
+# root-owned directory: "Cannot open: File exists" (its unlink failed) / "Cannot open: Permission denied" -- so the copy is FAILED, the job is
+# NOT RUN (exit 2/21) and no verdict is written.  The extraction now runs under sudo -n when available (OT_SPILL_NO_SUDO=1 turns it off); as
+# root tar restores the archived owners, so the copied files keep their uid/gid.
+TAR_X = ("cd / || exit 97; e=$(mktemp); T=tar; if [ -z \"$OT_SPILL_NO_SUDO\" ] && sudo -n true 2>/dev/null; then T=\"sudo -n tar\"; fi; zstd -q -d | $T -C / \"${OT_TAR_TRANSFORMS[@]}\" --keep-newer-files --warning=no-ignore-newer -xf - 2>$e; s=(${PIPESTATUS[@]}); "
          "if [ ${s[0]} -ne 0 ]; then cat $e >&2; rm -f $e; exit ${s[0]}; fi; rc=${s[1]}; "
          "if grep -q 'Warning: Cannot stat:' $e; then cat $e >&2; rm -f $e; exit 97; fi; "
          "if [ $rc -ne 0 ]; then bad=$(grep -v -x -E '(/usr/bin/)?tar: Exiting with failure status due to previous errors' $e | "
