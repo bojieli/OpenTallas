@@ -28,6 +28,14 @@ Base B3z2 92e2f585dc06 (COORD: rows restored) + t72 sidecar band sync (ev/side_z
 - strict bind B4Lb: bindB4Lb_leafplan.sh via intel2 ~/s81-leaf-plan/bind_leafplan_w3.sh (ot-run 120 GB epyc7, queued), log log/B4Lb_bind.log + intel2 ~/s81-leaf-plan/bind_B4Lb.log
 - B4L-a bind and G0 runs cancelled (old base).
 
+## STATE 2026-11-14 late PST (read first)
+- Event 1 = B4L_b2 (ev/B4L_b2.json 199aadf6bac4 / side_B4L_b2.json a0a4bb73671c): G0 296 = control 296, identical error sets (full plans, gen_phys efd8a710944 + sdc_lint 10fbea62820 in tree/ + ovl_l/). Strict bind queued: intel2 ~/s81-leaf-plan/bind_leafplan_w4.sh (ot-run --priority plan, epyc7 120 GB) -> log/B4Lb_bind.log, writes B4LB_RC.
+- Event 2 = B4L2 (ev/B4L2f.json 0eed18fe0e6d / side_B4L2f_s.json 204d809d818b): B4L_b2 + slot-clear core moves in 39 types (cp2/, types ev/types_B4L2f.txt) + reset re-publish + slice_station/col --densify (183 bands). R-LEAF-3b 156 -> 103 pairs. G0L2f running (log/G0L2f.log); strict bind queued: intel2 ~/s81-leaf-plan/bind_leafplan_w5.sh -> log/B4L2_bind.log, writes B4L2_RC.
+- core_place.py --slot-clear REGEX + test_core_place_slot_clear.py (6 pass), leaf_rules.py --densify: in tree/, ovl_l/, wt/ (uncommitted, not pushed).
+- GRT proofs (epyc9 k/<t>/proof/grt.log, B4L bands only): t32 Total overflow 0 after 4 extra it; t2/t61/t75 running.
+- Rejected from B4L2: 16 types L2 up (kv_leaf t4; leaf t11 t15 t25__cl55642d17 t26 t35 t3 t40 x2 t45 t54 t58 t62 t68 t6 t7), 4 new band-under-lane (t47 t57 t66 t8), not applied (+regs) t2 t22 kv_leaf t5; t73/t9 ve_m face-clear no legal spot. Next: face-window (R-LEAF-2) term in slot-clear legaliser.
+- slice_station densify: 143 bands / 44 types, 22 no-strip; col: 40 bands / 35 types (col_h9_r0_p1 ft0_i 4.69 -> 10.04 um2/bit), 42 no-strip (cp/ss_dens_rep.json, cp/col_dens_rep.json).
+
 ## B4L-b2 (CURRENT bind candidate) = B4L_b1 + slice_station__t8 band depth
 - ev/B4L_b2.json 199aadf6bac4, ev/side_B4L_b2.json a0a4bb73671c
 - t8 (TYPE-SLICET30 13:14 ask): leaf_rules.py bands --densify --per-bit 10 --max-depth 54 (new flag: also re-sites R-LEAF-1-legal bands below per-bit um2/bit): ft2_i/ft3_i 26 um strips -> 54/52 um deep, 10.35 um2/bit (multi-rect notched around reset sites); ft4_i 10.07 um2/bit. Report cp/t8_b_rep.json.
@@ -39,7 +47,7 @@ Base B3z2 92e2f585dc06 (COORD: rows restored) + t72 sidecar band sync (ev/side_z
 
 ## Fable GRT Total lines
 - epyc9 /srv/opentallas-scratch/claude/fable-review-cong/d/t68e2/grt.log (30 extra it): `Total 212813367 13867498 6.52% 13 / 6 / 8156` (8156 overflow left)
-- epyc8 .../fable-review-cong/d/t75/fix.log: still in extra iteration 14/15, no Total yet
+- epyc8 .../fable-review-cong/d/t75/fix.log: extra iteration 14/15 at last read, no Total yet
 - epyc7 .../fable-review-col/p_h10r0_base/proof.log: extra iteration 13/15, no Total yet
 
 ## Second B3z2 defect (affects B3zq G0 and 2 kits)
