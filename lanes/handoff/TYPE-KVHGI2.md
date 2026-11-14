@@ -1,0 +1,7 @@
+# TYPE-KVHGI2 (Sonnet) 2026-11-14 00:41 PST
+Target kv3_hgi_v2__cl2862d491 (qwen_kvsys). Latest attempt: job 23f38979dc94, kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kv101ns_3465fe9/items/kv3_hgi_v2__cl2862d491/attempt_5/gen/kv3_hgi_v2__cl2862d491 (GRT-0116, run/logs/.../5_1_grt.log).
+GRT: overflow is small and local: M5 71, M6 17, M7 276 total congestion (M5-M7 usage 5.5/3.2/1.9 pct); 18978 gcells >90 pct; layout render flags local_density=1.385, fanout_spread 2666. Die 1278.72x1520.64, 105k stdcells, 16 head macros (216x216), fill 0.02 / empty 0.90 => macro-dominated, hot spots near macros. GPL routability was already on by default (no GPL_ROUTABILITY_DRIVEN override in config.mk).
+Forms (private, intel1 /srv/opentallas-scratch2/claude/type-kvhgi2/<form>/kit, launch logs intel2 ~/typekv/<form>.log, OT_ALLOW_RESYNTH=1, goal route):
+ fd04 = PLACE_DENSITY 0.4 + GPL_ROUTABILITY_DRIVEN 1 ; fd03 = PLACE_DENSITY 0.3 + routability 1.
+Outline +20 pct (a)/(c): NOT launchable privately: outline is baked in plan_c.json (outline_um, ft_slots regs_um on E/W faces, 4327 pin slots, 16 hard_cores origins, clock taps). Requested shape for KV-102: 1401.12 x 1666.08 (1946x2314 grid of 0.72 = +20.1 pct area), macros keep origins, growth on N/E with E/N face pins and ft regs shifted.
+Next: wait for fd04/fd03 (intel1 queued for memory), then check 5_1_grt.log overflow; on pass add AUTO-RESIGN row.
