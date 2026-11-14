@@ -46,3 +46,12 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## RESULT 2026-11-13 19:45 PST: gunit A1
 - SIGNED OFF (R-MINIMAL): dsdv_gunit_l1f_ba1, built on the A0 recipe (sort guides mirrored for the S face). Routed DRC 0, antenna 0, TT setup -28.65 ps on 60 endpoints (within -42), hold_ff PASS (internal >= 0; raw -12.74 on 32 endpoints is port-start only). Kit epyc8 /srv/opentallas-scratch2/claude/s81-cores-2/gunit_a1/dsdv_gunit_l1f_ba1_gf5bias_sort2cmp (unit oth-ubuntu-2828619-1794620931; the exit 1 is the old setup>=0 gate). The A0+A1 pair is now signed off; F (bf) is still in GRT. TO DIE-S81-90: take A0+A1 views for bind + LATCHECK.
+
+## COUNT 2026-11-13 19:47 PST (release_tree_plan.py --print: S81 hard cores 61/64)
+- Already credited, no action needed: dsdv_gunit_l1c (m0b re-sign, flow-20261103-t-s81) and dsdv_gunit_l1f_ba0/ba1 (gf3 re-signs, flow-20261108-eg-s81).
+- The 3 missing cores, and what each is waiting on:
+  - s81p_slice_station__t51_ot_s81_station_t51_native_w: record exists but is unversioned; AUTO-RESIGN row added so the autopilot re-signs it on the newest tag.
+  - dsdv_gunit_l1f_bf: GF5 F build is in GRT.
+  - dsdv_bksel_q: C9geom build is running to finish.
+- AUTO-RESIGN rows: T51 W, plus GF5 A0/A1 (newer forms for the event; the gf3 records already count). Dropped the l1c row as redundant.
+- RMINIMAL-SIGNED.tsv is an index only; it does not count.
