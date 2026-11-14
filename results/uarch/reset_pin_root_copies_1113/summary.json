@@ -1,0 +1,96 @@
+{
+ "status": "SOURCE_READY_DEFAULT_OFF_NO_PHYSICAL_ADOPTION",
+ "scope": "parallel synchronous RESET pin source copies only; START root75 remains a separately explicit followup",
+ "opt_in": {
+  "pin_root_copies": {
+   "max_loads": 48,
+   "sites_um": [
+    [
+     8.16,
+     4.64
+    ],
+    [
+     10.32,
+     4.64
+    ]
+   ]
+  }
+ },
+ "unit_tests": {
+  "passed": 47,
+  "skipped": 1,
+  "command": "python3 -m pytest -q tools/die_plan/test_reset_pin_root_copies.py tools/die_plan/test_bound_native_reset.py tools/die_plan/test_reset_leaf_equivalence.py"
+ },
+ "synthesis": {
+  "nominal_ff": 301,
+  "copies_ff": 302,
+  "extra_ff": 1,
+  "root_cells": [
+   "u_rst_in",
+   "u_rst_in_c1"
+  ],
+  "direct_loads": {
+   "u_rst_in": 48,
+   "u_rst_in_c1": 27
+  },
+  "same_data": true,
+  "same_clock": true,
+  "distinct_q": true,
+  "added_cycles": 0
+ },
+ "actual_hci_component": {
+  "status": "ACTUAL_HCI_RESET_COMPONENT_ONLY_NO_PHYSICAL_ADOPTION",
+  "old_source_tree_sha256": "b4db4f2877baf2a827f83dcf82616e05d4f62804d9a68cfbef72ab1840d83fb7",
+  "new_source_tree_sha256": "06967c757e61b83b365916c8e1d6f661800162867bc52b8810f6eb3ece5bb54c",
+  "type": "sle_hc1__cl7d360508",
+  "taps": 136,
+  "logical_relays": 378,
+  "canonical_relays_unchanged": true,
+  "release_clocks_old": 5,
+  "release_clocks_new": 5,
+  "root_loads": {
+   "u_rst_in": 48,
+   "u_rst_in_c1": 27
+  },
+  "root_copies": 2,
+  "extra_flops": 1,
+  "unchanged_start_root_loads": 75,
+  "native_source_verified": true,
+  "native_paths": 623,
+  "planned_native_max_hop_um": 379.9680000000001,
+  "miter_output": "PASS checks=371 mutant=10\n/srv/opentallas-scratch2/claude/rules-reach-1/root_copy_hci_canary2/miter.sv:3919: $finish called at 320289500 (1ps)"
+ },
+ "default_byte_compatibility": [
+  {
+   "case": "plain",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  },
+  {
+   "case": "start",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  },
+  {
+   "case": "actual_hci",
+   "rtl_byte_identical": true,
+   "tcl_byte_identical": true
+  }
+ ],
+ "limitations": [
+  "No full HCI bind/P&R/signoff performed",
+  "Existing captured single-root source cannot gain copies by placement-only metadata",
+  "New coherent source must be emitted and captured before physical use",
+  "Observed START root75 direct loads deliberately unchanged by reset-only opt-in"
+ ],
+ "failures_preserved": [
+  "Initial new START placement-label test failed: attempted to map run relay label as RESET consumer; corrected mapping affects only actual RESET D loads",
+  "Initial actual-HCI bench counted registered OUT tap as consumer rst_n_t136; compile failure preserved, canary2 uses consumer_count and passes"
+ ],
+ "artifacts": {
+  "root": "epyc7:/srv/opentallas-scratch2/claude/rules-reach-1",
+  "canary": "root_copy_hci_canary2",
+  "synth": "root_copy_synth",
+  "default": "root_copy_default_compat"
+ }
+}

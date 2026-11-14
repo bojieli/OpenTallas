@@ -112,6 +112,9 @@ def placement(P,tn,tree,nodes,paths,source_record=None):
    elif r.get('optional') and r['name'].endswith('_t') and r['name'][:-2] in sites:r['xy']=list(sites[r['name'][:-2]])
  root='u_rst_root' if tree['entry']=='sync' else 'u_rst_in'
  xy={'rst_root_n':sites.get(root,tree['root'])}
+ import reset_tree as RT
+ for c in RT.pin_root_copies(tree):
+  xy[c['q']]=sites.get(c['name'],c['xy'])
  if tree.get('start'):xy['run_root']=sites.get('u_run_root' if tree['entry']=='sync' else 'u_run_in',tree['start_in'])
  xy.update({r['q']:r['xy'] for r in nodes})
  maximum=0

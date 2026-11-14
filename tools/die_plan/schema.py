@@ -846,6 +846,10 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        "pin_root_copies": {"type": "object", "additionalProperties": False,
+                            "required": ["max_loads", "sites_um"], "properties": {
+                                "max_loads": {"type": "integer", "minimum": 1, "maximum": 48},
+                                "sites_um": {"type": "array", "minItems": 1, "maxItems": 48, "items": _xy}}},
                         # Optional physical padding floor for a published wavefront release cohort.
                         "wavefront_min_depth": {"type": "integer", "minimum": 0},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
