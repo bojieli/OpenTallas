@@ -814,3 +814,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-10-1114@36f73805d1 (ADMIT-TUNE-1): install_host_guard earlyoom args
 - READY claude/admit-tune-11-1114@203e501e38 (ADMIT-TUNE-1): SIMPLE_PEAK + test_ot_heavy_simple_peak.py
 - READY claude/admit-tune-12-1114@5fe54a9830 (ADMIT-TUNE-1): ot-run load gate default 0 + probe signature fix
+- READY claude/admit-tune-14-1114@e07782695c (ADMIT-TUNE-1): earlyoom neutral on openroad
