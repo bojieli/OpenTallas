@@ -132,6 +132,11 @@ def capture(lef, lib, master, depth, width, dest):
     lef, lib, dest = Path(lef), Path(lib), Path(dest)
     pv = lef.parent / 'provenance.json'
     provenance = read(pv)
+    # FIX-CLASSIFY 11-14: a stub provenance (no 'src', empty 'export': a view written only so gen finds the file) carries
+    # no landing evidence; say so instead of KeyError 'src' (classified as tool skew) -- the view must be built/exported
+    if not provenance.get('src') or not provenance.get('export', {}).get('signoff'):
+        raise ValueError(f'hard landing evidence unavailable: {pv} has no src/export.signoff (stub provenance, view not '
+                         f'exported from a signed-off build); WAIT-DEP child view {master} needs a signed export')
     src = Path(provenance['src'])
     signoff = lef.parent / 'signoff.json'
     if not signoff.is_file():

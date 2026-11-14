@@ -1542,7 +1542,7 @@ RULES = [
     ("PLAN", r"^prov_", r"PROVISIONAL view FAIL|PROV_FAIL", "PROVISIONAL child view: no routed abstract / plan contract"),
     # AUTOBUILD-PIPE-1 10-30: dependency, not a flow bug -- a child hard core / ROM / PHY of the type has no signed view
     # (lef+lib) in the plan of record yet; the type relaunches on its own when the plan carries the view (new block sha)
-    ("PLAN", None, r"macros have LEF but no timing liberty|has no macro view \(lef/lib\)|KeyError: 'u_phy'|"
+    ("PLAN", None, r"macros have LEF but no timing liberty|has no macro view \(lef/lib\)|KeyError: 'u_phy'|hard landing evidence unavailable|"
                    r"per-instance PHY PG domains differ|holds no macro \(a PHY domain", "WAIT-DEP child view (lef/lib) missing in the plan"),
     # fail-closed kit-RTL contracts whose own message names a plan fix (S81 kit_rtl.sh / image_params.py)
     # AUTOBUILD-PIPE-2: core-kit mode (HBM gen_core_kit_hbm): a view the plan names with no harden recipe / an
@@ -4411,9 +4411,10 @@ def run_item(spec_path):
                     ptxt += "\nLAYOUT_PNG"
                     break
         if cfg_require_render(sp) and "LAYOUT_PNG" not in ptxt:
-            # COORD 11-12 (GEOM-VIS-1: 25 types had results and no renders): the place render (layout + density PNG) is a required step
-            return fail("place", "RENDER_MISSING: place finished (3_place.odb present) but run/layout_review has no PNG; "
-                        "the place render is required (visual review); relaunch renders it\n" + ptxt[-1500:], f"{kh}:{K}")
+            # FIX-CLASSIFY 11-14 (OWNER: visual is advisory): a missing place render never fails the item (resumed attempts
+            # reuse the finished place DB and so carry no layout_review); warn and go on to geom/sign-off
+            res["render_missing"] = True
+            print(f"KW_RENDER_WARN {T}: place finished (3_place.odb present) but run/layout_review has no PNG; advisory only", flush=True)
         if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
             return fail("cells", f"{res['cells']} cells", f"{kh}:{K}")
         olc = outline_cmd(K)
