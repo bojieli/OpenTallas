@@ -827,3 +827,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-23-1114@3c0a9b0a8d (ADMIT-TUNE-1): ot-heavy-stop
 - READY claude/admit-tune-24-1114@18869a3dac (ADMIT-TUNE-1): ot-mem-grow
 - READY claude/admit-tune-25-1114@f5b41f6120 (ADMIT-TUNE-1): ot-tmpfs-clean + timer
+- READY claude/admit-tune-24-1114@58959b84e2 (ADMIT-TUNE-1): ot-mem-grow 75 percent / 15 s / scope MemoryMax, supersedes 18869a3dac
