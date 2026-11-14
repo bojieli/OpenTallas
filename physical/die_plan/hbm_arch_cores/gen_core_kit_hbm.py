@@ -2751,10 +2751,11 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         flow["cts_delaybuf_strip"] = dict(previous_post_cts=prev_)
     if not a.no_cts_setup:
         flow["cts_setup_tt"] = post_cts_setup_hook(kd, cfg)
-    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
-    MS.plan_tree_cts(kd, cfg)
+    # KW-FIX-45: the GRT-only hold adapter chains PRE_GLOBAL_ROUTE_TCL; it must not edit cfg after the shared CTS hook
     if a.grt_nonport_hold:
         cfg += grt_nonport_hold_setup(kd, cfg)
+    # CTS-HOOK-PORT-1: plan-built core tree -> shared PRE/POST_CTS hook (no plan tree: kit unchanged)
+    MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     flow["timing_modes"] = timing_modes_stage(kd, not a.single_mode_grt)
     # ROUTE-HOLD-PASS (DIE-HBM-97 11-10, COORD vecd-clkroot-r2 (a)): the declared in-flow routed-RCX hold pass is part of
