@@ -34867,7 +34867,7 @@
   },
   "qwen_compute": {
    "enabled": true,
-   "event": "s29q103S3M",
+   "event": "s29q103S3M2",
    "coord_enable": "COORD 00:43 + 01:0x ruling (1) to KIT-WAVE-12: QC on at the collector-fix merge 5346b95c915 (claude/die-qc-58-coll-1031@00452027cbe, strict bind 0)",
    "gate": {
     "g0c": "PASS",
@@ -34875,15 +34875,15 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s3m.json",
+   "plan": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s3m2.json",
    "gen_host": "epyc9",
    "src": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2",
    "src_sha": "1e3b302be85085f4c4aca8a0dc93b4e5063d2b55",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_manifest_iso_s29q103S3M.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S3M",
-    "note": "KIT-OPS-5 QC s29q103S3M (DIE-QC-103 READY+ADOPT 11:25: BIND_RC 0, LATCHECK 1921/1921, plan 3d5cb18d1ac3, sidecar c71a3febc5b0, asbuilt a47cfd0bf892); type-scoped | KIT-OPS-3 QC s29q103S2 (DIE-QC-103 READY+ADOPT 05:17: bind rc 0, LATCHECK 1921/1921); bind_matches checked | KIT-OPS-3 03:13 PST QC s29q103S (DIE-QC-103 READY+ADOPT 02:58: strict bind 0, LATCHECK 1921/1921; rings hard + param split); bind_matches checked | KIT-OPS-3 2026-11-13 23:11 PST QC s29 ADOPT swap (DI",
+    "asbuilt": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_manifest_iso_s29q103S3M2.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S3M2",
+    "note": "KIT-OPS-5 QC s29q103S3M2 (DIE-QC-103 READY+ADOPT 12:58: BIND_RC 0, LATCHECK 1921/1921, plan 28ea2ea6e3ff, asbuilt 64dee41dff0c, sidecar c71a3febc5b0; S3M + station_tail1 pin y958 only); type-scoped | KIT-OPS-5 QC s29q103S3M (DIE-QC-103 READY+ADOPT 11:25: BIND_RC 0, LATCHECK 1921/1921, plan 3d5cb18d1ac3, sidecar c71a3febc5b0, asbuilt a47cfd0bf892); type-scoped | KIT-OPS-3 QC s29q103S2 (DIE-QC-103 READY+ADOPT 05:17: bind rc 0, LATCHECK 1921/1921); bind_matches checked | KIT-OPS-3 03:13 PST QC s29q103S (DIE-QC-103 READY+ADOPT 02:58: strict bind 0, LATCHECK 1921/1921; rings hard + param split); bind_matches checked | KIT-OPS-3 2026-11-13 23:11 PST QC s29 ADOPT swap (DI",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
    },
@@ -34893,7 +34893,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S3M.json"
+    "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S3M2.json"
    ],
    "kinds": [
     "type"
@@ -34916,13 +34916,7 @@
    "pilot_mode": "queue",
    "hold_items": {
     "coll_s": "ER4-HOLD-1113 (KIT-OPS-2 2026-11-13 18:2x, COORD via EXPERT-REVIEW-4): known-bad form, held out of launch (QC D8 parent / coll_s) until its owner posts a new form. Lift = delete this key.",
-    "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
-    "sle_st_a_v1__cl67389ecd": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
-    "sle_st_a_v1__cl989804f6__cl18eece69": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
-    "sle_st_a_v1__cl989804f6__cled3c1d7b": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
-    "slw_st_a_v1__clb036e152": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
-    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift.",
-    "slw_st_a_v1__clfc5867a6__pvf82a6c28": "KIT-OPS-5 11-14 (COORD): HOLD until DIE-QC-103 S3M2 delta (corrected pins): plan pins differ from the signed qfd_dv_s8_station_tail1 view by 0.006 um on 153 pins, bind_view_check would fail PIN_SHAPE; adopt type-scoped when READY arrives, then lift."
+    "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -43512,7 +43506,7 @@
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
-   "plan_sha256": "3d5cb18d1ac3951128a61f50114c9c2c8216b8b1c5f3095b8f7270203272541e",
+   "plan_sha256": "28ea2ea6e3ff594652b1c458c93d31aad45fb73d4eb2b714fe166a30af7e5f9c",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -44201,7 +44195,8 @@
     "s29q102B0",
     "s29q103S",
     "s29q103S2",
-    "s29q103S3M"
+    "s29q103S3M",
+    "s29q103S3M2"
    ],
    "hold_items_lifted_kitops3_qcs29": {
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
@@ -44550,6 +44545,33 @@
      "s29q102B0",
      "s29q103S",
      "s29q103S2"
+    ]
+   },
+   "prev_kitops5_qcs3m2": {
+    "event": "s29q103S3M",
+    "plan": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s3m.json",
+    "plan_sha256": "3d5cb18d1ac3951128a61f50114c9c2c8216b8b1c5f3095b8f7270203272541e",
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_manifest_iso_s29q103S3M.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S3M",
+     "note": "KIT-OPS-5 QC s29q103S3M (DIE-QC-103 READY+ADOPT 11:25: BIND_RC 0, LATCHECK 1921/1921, plan 3d5cb18d1ac3, sidecar c71a3febc5b0, asbuilt a47cfd0bf892); type-scoped | KIT-OPS-3 QC s29q103S2 (DIE-QC-103 READY+ADOPT 05:17: bind rc 0, LATCHECK 1921/1921); bind_matches checked | KIT-OPS-3 03:13 PST QC s29q103S (DIE-QC-103 READY+ADOPT 02:58: strict bind 0, LATCHECK 1921/1921; rings hard + param split); bind_matches checked | KIT-OPS-3 2026-11-13 23:11 PST QC s29 ADOPT swap (DI",
+     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
+    },
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--max-wire-um",
+     "120",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S3M.json"
+    ],
+    "gate_events_extra": [
+     "s29q102B0",
+     "s29q103S",
+     "s29q103S2",
+     "s29q103S3M"
     ]
    }
   },
