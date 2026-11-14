@@ -470,7 +470,7 @@ def db_sources(n):
     names = [x for x in dict.fromkeys([n.get('name'), (n.get('plan') or {}).get('module')]) if x]
     dies = EXPORT_DIES.get(n['die'], (n['die'], '_'))
     for nm in names:
-        for e in A['exp'].get(nm, []):
+        for e in sorted(A['exp'].get(nm, []), key=lambda e: dies.index(e['die']) if e['die'] in dies else 9):   # the die-named directory holds the newest record (ECO re-signs); the ROM-named ones are the 11-05 export
             if e['die'] in dies: out['archives'].append(dict(where='rtx-pro', kind='signed-export-1114', path=e['path'] + ('/' + e['odb'] if e.get('odb') else ''), odb=bool(e.get('odb')), signoff=bool(e.get('signoff')), bytes=e.get('bytes')))
             if e['die'] in dies and A.get('agi', {}).get((e['die'], nm)): out['archives'].append(dict(where='AGIdock', kind='opentallas-signed-1114', path='/archive/opentallas-signed-1114/%s/%s/6_final.odb' % (e['die'], nm), odb=True))
     if lay.get('archive_odb'): out['archives'].append(dict(where='AGIdock', kind='archive', path=str(lay['archive_odb']), odb=True))
