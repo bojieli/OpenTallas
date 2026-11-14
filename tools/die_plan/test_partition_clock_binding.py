@@ -95,7 +95,8 @@ class BindingTests(unittest.TestCase):
         with self.assertRaises(ValueError): self.call(expected_binding_sha256=old_binding)
 
     def test_consumer_default_off_preserves_legacy_tolerance(self):
-        import tkinter
+        import pytest
+        tkinter = pytest.importorskip("tkinter", reason="tkinter (Tcl bridge) not installed on this host")
         t = tkinter.Tcl()
         source = Path(__file__).with_name("postcts_gate.tcl").read_text()
         a = source.index("# SOURCE-ONLY opt-in proposal:")

@@ -33,6 +33,10 @@ CUT=[['VDD','M9',11,0,12,4],['VDD','M9',11,4.5,12,8],['VDD','M9',11,12,12,20],['
 # 2: covering M9 column, hard M8 clock band over the landing ys, same-net M8 grid stripe at y 12.9-13.38 um.
 LEG=[['VDD','M9',20,0,21,20],['VDD','M8',0,12.9,40,13.38]]
 
+import importlib.util
+
+
+@unittest.skipUnless(importlib.util.find_spec("shapely"), "shapely not installed (pg_access_plan.py needs it)")
 class T(unittest.TestCase):
  @classmethod
  def setUpClass(c):c.tmp=tempfile.TemporaryDirectory();c.d=Path(c.tmp.name);c.cut=source(c.d/'cut',CUT);c.leg=source(c.d/'leg',LEG,[('BLOCK','M8',*CLOCK)])

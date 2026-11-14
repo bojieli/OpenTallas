@@ -76,8 +76,8 @@ class BandReserve(unittest.TestCase):
         CP.BAND_RESERVE = "ring_ff"
         CP.BAND_SPREAD = 4.0
         ty = _type()
-        ty["hard_cores"] = [dict(origin_um=[0.0, 40.0], outline_um=[400.0, 260.0]),
-                            dict(origin_um=[150.0, 0.0], outline_um=[250.0, 40.0])]   # pocket ~128 x 18 um: 4x does not fit
+        ty["hard_cores"] = [dict(inst="u_hc0", origin_um=[0.0, 40.0], outline_um=[400.0, 260.0]),
+                            dict(inst="u_hc1", origin_um=[150.0, 0.0], outline_um=[250.0, 40.0])]   # pocket ~128 x 18 um: 4x does not fit
         s = CP._storage_band(ty, "wide_i", 63, [])
         r = s["rect_um"]
         self.assertLess(s["spread"], 4.0)

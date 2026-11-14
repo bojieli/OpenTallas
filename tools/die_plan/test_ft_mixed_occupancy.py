@@ -7,7 +7,8 @@ import pytest
 def run(explicit='', full='', before=False, y=0):
     src=Path(__file__).with_name('face_flops.tcl').read_text()
     body='set ff_gocc {}'+src.split('set ff_gocc {}',1)[1].split('set ff_st 0',1)[0]
-    script='''set ff_x0 0; set ff_y0 0; set ff_x1 100; set ff_y1 30
+    script='''set ff_ns_stride 1;set ff_ns_inset 0
+set ff_x0 0; set ff_y0 0; set ff_x1 100; set ff_y1 30
 set ff_rh 10; set ff_sw 1; set ff_cpitch 10; set ff_dbu 1
 set ff_orient [dict create 0 R0 10 R0 20 R0]
 set ff_bit_sites [dict create %s]
