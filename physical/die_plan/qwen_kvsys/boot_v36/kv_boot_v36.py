@@ -245,6 +245,31 @@ def prep(a):
     for k, v in P_asb.items():
         P_bnd[k], r = bound_value(v, path_members(G, k), k)
         prow.append(r)
+    result_calendar = None
+    result_trunk_extra = result_pin_extra = 0
+    if a.pv_result_calendar:
+        from tools.token_pass.kv_pv_cpc_calendar import checked_calendar
+        result_calendar = json.loads(Path(a.pv_result_calendar).read_text())
+        result_trunk_extra, result_pin_extra = checked_calendar(result_calendar)
+        if result_calendar['schema'].endswith('.v2'):
+            import hashlib
+            if result_calendar.get('kind') == 'BOUND_INPUT_CONTRACT_RUNTIME_PENDING':
+                expected = result_calendar['input_identity']['bus_groups_sha256']
+                if hashlib.sha256(Path(a.groups).read_bytes()).hexdigest() != expected:
+                    raise ValueError('PV result calendar is stale for selected bind groups')
+            for component in result_calendar['source_pin_components']:
+                for key in ('source', 'tsv', 'proof'):
+                    if hashlib.sha256(Path(component[key]).read_bytes()).hexdigest() != component[key + '_sha256']:
+                        raise ValueError('PV result source identity changed: ' + key)
+    if result_pin_extra:
+        # A source output register is AFTER PVFIN arithmetic. Price it in
+        # the actual fin path/F_DLY, never by delaying its P0/P1 inputs.
+        fin = next(r for r in prow if r['key'] == 'fin')
+        if fin['cls'] != 'INTRA_OR_UNMAPPED' or P_bnd['fin'] != P_asb['fin']:
+            raise ValueError('PVFIN output pin cycles already priced in fin path')
+        P_bnd['fin'] += result_pin_extra
+        fin.update(bound=P_bnd['fin'], cls='CORE_PIN', delta=result_pin_extra,
+                   source=result_calendar['source_pin_components'])
     rs_bnd, rrow = overlay_relay_stages(rs, G)
     G.require_inner_priced()
     (out / 'relay_stages_asbuilt.json').write_text(json.dumps(rs) + '\n')
@@ -274,13 +299,14 @@ def prep(a):
     for tag, P, rtab, k_rt in (('asbuilt', P_asb, rs, 80), ('bound', P_bnd, rs_bnd, None), ('bound_padded', P_pad, rs_bnd, None)):
         natural = max(8 + P[f'krq_{st}_{g}'] + P[f'krs_{st}_{g}'] for st in STACKS for g in range(8))
         ages = derive_ages(P, rtab, k_rt or natural)
-        if a.pv_result_calendar and tag != 'asbuilt':
-            cal = json.loads(Path(a.pv_result_calendar).read_text())
-            extra = cal.get('result_cycles_added')
-            if cal.get('schema') != 'opentallas.kv.pv_landed_calendar.v1' or type(extra) is not int or extra < 0 or cal.get('first_input_age_cycles_added') != 0 or cal.get('arithmetic_cycles_added') != 0:
-                raise ValueError('PV result calendar must preserve the input/arithmetic age contracts')
-            ages['pv']['RESULT_TRUNK_EXTRA'] = extra
-            ages['pv']['result_calendar'] = cal
+        if result_calendar is not None and tag != 'asbuilt':
+            ages['pv']['RESULT_TRUNK_EXTRA'] = result_trunk_extra
+            ages['pv']['result_calendar'] = result_calendar
+            if result_pin_extra:
+                ages['pv']['RESULT_PIN_EXTRA'] = result_pin_extra
+                # The native 96-word DIECFG and the programme's profile must
+                # consume the SAME generated boot F_DLY (including source pins).
+                ages['boot_ages'] = boot_words(ages['schedule'], ages['qk']['QK_ISSUE_AGE'])['ages']
         (out / f'die_ages_{tag}.json').write_text(json.dumps(ages, indent=1) + '\n')
         qk = ages['qk']['QK_ISSUE_AGE']
         img = boot_words(ages['schedule'], qk)

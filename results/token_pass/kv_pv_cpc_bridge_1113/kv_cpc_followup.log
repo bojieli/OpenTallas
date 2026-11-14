@@ -1,0 +1,8 @@
+ot-run: epyc7          admits   603 GB (avail 780, reserve 0, fresh 116.2, peak 28.1, headroom 0, waiters 0/0 GB) load 51/96 running 17 disk 812 GB 
+ot-run: -> epyc7
+ot-heavy: admitted on loved-redfish as oth-ubuntu-2634891-1794615705 after 1 s
+final_coherence_guard CAUGHT final calendar requires coherent matching bind; errors=['R8_STALE ahub.ap0[0:0]<-native_composite_hub_Wo_astk_WS.u_strip_u_strip_u_ctl__ap@19 bit 0: bind has native_composite_hub_Wo_astk_WS.u_strip_u_strip_u_ctl__ap as-built 19 bound 21, table native_composite
+CPC_reapply_guard CAUGHT PVFIN CPC already present: refusing double count
+unmapped_actual_trunk_guard CAUGHT unmapped changed PV path: ('pvw_0__u_T0Q0_12_r0', {'sink_port': 'a', 'sink_bits': [[0, 257]], 'source': 'pvw_0__u_T0Q0_9_r0.b', 'source_bits': [[0, 257]], 'asbuilt_stages': 2, 'bound_stages': 5, 'landed_stages': 5, 'lane': 'L1806'})
+CPC_FOLLOWUP PASS {'old_generated_F_DLY': 55, 'old_profile_fallback': 1, 'new_generated_F_DLY': 57, 'new_profile_F_DLY': 57, 'scope': 'Pre-existing missing boot-age field; selected v2 path attaches real generated age. Source increment remains exactly2, not56. Legacy default prep remains byte-preserved.'}
+ot-run: RAN on epyc7 (unit oth-ubuntu-2634891-1794615705): exit 0
