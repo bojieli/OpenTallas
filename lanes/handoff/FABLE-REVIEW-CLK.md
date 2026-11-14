@@ -107,3 +107,60 @@ Applies to: every type with more than one clock port on S81 (all families), KV (
 get u from the instance range), QC (slw/sle_su, st). HEAD keeps its rp17 per-port windows until its next clock event.
 S81 offsets from the r98 clock: B/s81/r98/tap_offsets.json (all 395 types).
 NOT done: the tool change itself; a full kit run (route + sign-off) with the new SDC; KV/QC offsets.
+
+## 2. Die clock architecture, S81 and KV (the original review task)
+
+Gate (owner): routed related-pair setup >= 0 and hold >= 0; kit-window contract advisory. All numbers below: routed combo
+GRT RC (50 it, overflow 0 / 0 / 0 on every run), nominal, CPPR at the last common node, declared core insertion.
+Hold is NOT measured on any run (die_sta_related needs signed kit views: BLOCKED(kits)); what is measured for hold is the
+per-port need against the kit window, and the t42 kit proof of section 1.
+
+### Finding common to both dies
+DIE-PROTO-1 ran a die-wide balanced tree. Neither plan is that form: both are landed plans. The clock regions are the
+connected components of the plain-seam graph (ports not in clock.landing_network): S81 B3t 98 regions (= the regions of
+the B3v sidecar, largest 10.1 x 4.2 mm), KV kv102sem_ftgrid 128 regions (= results/locality_1027/kv_land128_regions.json,
+largest 2.2 mm). Related pairs exist only inside a region; region-to-region ports are rings.
+
+### S81 (plan B3t 4b7f1e087434; B3w only rotates macros inside types, no clock change)
+- Wrong today: the feed of record (clock.cohort s81_feed_bal19_1111) is per partition, 398 roots, and cuts 63 of the 98
+  regions across feed branches. That is where the 1.1 ns related-pair skew and the -470 ps came from.
+- Architecture: 98 regions from the sidecar; one root per region at the tap centroid; die feed along the region links
+  (locality.py score --feed spt, root std_bg_54_0, depth <= 13, no balancing, no pads); region tree = delay-mode DME with
+  early core taps merged; inv2, repeaters 250 um, stage model inv2_ndr_s81_g03b_refit.
+- MEASURED (B/s81/r98): intra TT setup +420.3 (0 negative of 1,182,934 pairs), plain-seam TT setup +363.9. Die-wide tree was
+  -470 / -409. Kit contract (advisory): intra need 208.5 against 39, seam 332.7 against 40; replaced by R-CLOCK-7 offsets.
+  Worst region: bk_sel (damage 701.7 on its core tap clk_c0; glue spread 244), then s_7N_x13 slice_station__t51 (244).
+- Rings: the bind has fixed 3-cycle rings (count_aligned false, 993 ports, landing_phase_sign UNMEASURED). On this clock
+  |d| is median 1,018 ps, max 3,501: only 25 of 993 keep a stable sign at TT and FF (12 LEAD, 13 LAG); 968 need the
+  count-aligned ring. All 993 fit DEPTH 4 on nominal arrivals (partition-level estimate, B/s81/r98/landed_classes.json).
+  Model check with OCV (locality v3, r99 map): fish feed 934 DEPTH-4 + 59 DEPTH-8, 0 fail; DME region trees 200 fail.
+- PLAN for DIE-S81-92 (one event, B4-CLK, after or with B3x):
+  1. regions = sidecar regions (tool: B/frc_comp.py or the sidecar itself); feed: locality.py score --regions MAP --feed spt.
+  2. die clock: ot_clk.py kit B/s81_r98.yaml (66 min on a loaded host), then B/proto_reg.sh (GRT + arrivals + die STA, 25 min).
+  3. clock.tap_offset from B/mkoffs.py on the proof (R-CLOCK-7); bk_sel and slice_station__t51 get their own look first.
+  4. rings: landing_network data_cycles_per_crossing -> count_aligned for all 993 ports, K and DEPTH from count_align_plan on
+     this proof, K as straps (KV form) so a later clock move re-ties straps only; bind + LATCHECK + lane latency rows.
+     Cycles move (pre-approved). This is the large item: every type with a ring input re-kits.
+  5. phy_hbm has no clock tap and glues eng + six svc_lo columns into the 10.1-mm region; its dfi/hbmrd ports are PHY timing.
+     Leave it out of the region graph (regions then: the svc_lo chain and eng alone).
+- NOT measured: hold on real views, reset release, the count-aligned plan with OCV on routed arrivals, clock reach (the kit
+  ran without --rep-reach-max / --rep-actual-max).
+
+### KV (plan kv102sem_ftgrid plan_c f9abb1802590)
+- The clock of record form (cohort tree_kv58: link_htree feed on 128 regions, inverter stages, DME only on pv_S_6, pv_S_7,
+  sys_SW, sys_SE) is the right architecture; rings are already count-aligned with strap K.
+- MEASURED: kva = that form on the current plan: intra TT setup +447.1, plain-seam +545.1 (0 negative); intra need 207.3
+  against 130, seam 155.8 against 180; glue spread per partition median 85 ps. kvb = DME in every region: +444.7 / +591.1,
+  need 232.6, glue spread median 98: no gain, NOT adopted. DIE-PROTO-1 die-wide wire-balanced tree: +555 / +554, need 113.9,
+  but 4.26 ns mean insertion and wire pads; it is not needed because every long hop is a ring.
+- Rings on kva: |d| median 528, max 1,290; all 3,754 clock landings fit DEPTH 4 on nominal arrivals. K must be re-derived on
+  the clock of record (straps only).
+- PLAN for KV-102: 1. keep tree_kv58 form; rebuild it on the current plan with B/kv_a.yaml + proto_reg.sh (33 + 17 min).
+  2. count_align_plan / bind on that proof, re-tie straps. 3. hold: R-CLOCK-7 offsets (multi-instance types: tolerance =
+  instance range; B/qwen_kvsys/kva/tap_offsets.json) instead of raising per-port windows to 160. 4. cap pass off in KV kits.
+- NOT measured: hold on real views; CA plan with the bind's own K; data-path die STA.
+
+### Scripts (intel1 B): proto_reg.sh (chain), s81_r98.yaml / kv_a.yaml / kv_b.yaml (ot_clk configs), run_s81b.sh / run_kva.sh,
+rd.py (gate summary), lcls.py (ring classes), alltap.py (per-partition tap spread), mkoffs.py (tap offsets), tapsp.py, frc_comp.py.
+Launch: ot-run --crit --hosts intel1 --mem 120 --threads 24 --dir B --priority die -- bash B/run_s81b.sh
+Nothing of mine is running. No waiter is armed (all chains finished).
