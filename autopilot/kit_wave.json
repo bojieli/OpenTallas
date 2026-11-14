@@ -4050,7 +4050,8 @@
    "plan_sha256": "cdea77f148ce56c5e830cc6e01d9f712c21db9ee1697eaeec290ffbded34b4d0",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -5006,7 +5007,10 @@
     "epyc9",
     "epyc2",
     "intel1"
-   ]
+   ],
+   "die_gen_env_prev_kitops2_er3": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   }
   },
   "s81": {
    "enabled": true,
@@ -8054,68 +8058,116 @@
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t26": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t11": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t44__clf4ea6d4b": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t25__cl55642d17": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_kv_leaf__t2": {
      "OT_SYNTH_ARGS": "-noshare",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t27": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t42": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t53__cl958451dd": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t53__clb66fa5cb": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t56": {
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "dsdv_slice_lepe_mu_C__t1": {
      "OT_LEC_SLANG_UNROLL_LIMIT": "32912",
@@ -8148,240 +8200,440 @@
     "ot_s81sl_leaf__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t14": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t16": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t17": {
      "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t21": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t29": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t31": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t32": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t35": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t37": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t38": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t39": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t4": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t40__cl86ea32b3": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t40__clf8bbdae1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t41": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t46": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t5": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t50": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t51": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t54__cl501e5681": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t54__cl706d9749": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t57": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t6": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t65": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t67": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t69": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t70": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t72": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t8": {
      "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44",
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t24__cl2456157b": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t36": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t7": {
      "OT_MACRO_MOVES": "u_lf.u_ve.u_s:1028.16:803.52:MY,u_lf.u_vn.u_a:475.2:665.28:R0,u_lf.u_vp.u_b0:216:717.12:R0,u_lf.u_vq:1105.92:656.64:R0,u_lf.u_vs:846.72:648:MY,u_lf.u_vsw:1149.12:406.08:R0",
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t15": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t13": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t59": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t61": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
      "OT_FORM_RELEASE": "r12bA_newrtl_reverdict_1112",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t10": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t34": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
      "OT_FORM_RELEASE": "r12bA_newrtl_reverdict_1112",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t24__cl81374cd8": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t43": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t71": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t23": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t3": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t25__cl431c660f": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t30": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t12": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t33": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t2": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t74": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "col_h9_r0_p1__t1": {
      "OT_MACRO_MOVES": "u_r0.u_e1:596.16:216.0,u_r0.u_e3:596.16:604.8,u_r0.u_cf:1149.12:604.8,u_r0.u_t0:1157.76:250.56",
@@ -8390,19 +8642,35 @@
     },
     "ot_s81sl_leaf__t9": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t22": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t44__clf6cf8492": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t60": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "slice_station__t14": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -8612,65 +8880,121 @@
     },
     "ot_s81sl_kv_leaf__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_kv_leaf__t3": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_kv_leaf__t4": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_kv_leaf__t5": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t28": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t45": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t47": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t52": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t58": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t62": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t66": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t68": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t73": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "ot_s81sl_leaf__t75": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "phy__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -8682,50 +9006,94 @@
     },
     "serdes__t12": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t13": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t14": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t15__cla2127225": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t15__cla3d02796": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t16": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t1__clb45db5be": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t1__clfe1f0815": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t2": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t3": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "serdes__t4": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_POROUS_VIEWS": "all",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "slice_station__t12": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -21314,7 +21682,8 @@
    "plan_sha256": "18c864518844f940cdf7df6d8d954ca4b9c1a8208b2b5b6a6e92805763ff81e9",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -23943,7 +24312,442 @@
     "epyc9",
     "epyc2",
     "intel1"
-   ]
+   ],
+   "die_gen_env_prev_kitops2_er3": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   },
+   "item_env_prev_kitops2_er3": {
+    "ot_s81sl_kv_leaf__t1": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_kv_leaf__t2": {
+     "OT_SYNTH_ARGS": "-noshare",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_kv_leaf__t3": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_kv_leaf__t4": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_kv_leaf__t5": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t1": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t10": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t11": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t12": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t13": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t14": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t15": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t16": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t17": {
+     "OT_MACRO_MOVES": "u_lf.u_vn.u_b:725.76:881.28,u_lf.u_vs:216.0:604.8,u_lf.u_vn.u_a:734.4:699.84,u_lf.u_vq:397.44:622.08,u_lf.u_vsw:190.08:371.52",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t2": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t21": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t22": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t23": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t24__cl2456157b": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t24__cl81374cd8": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t25__cl431c660f": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t25__cl55642d17": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t26": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t27": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t28": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t29": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t3": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t30": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t31": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t32": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t33": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t34": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_FORM_RELEASE": "r12bA_newrtl_reverdict_1112",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t35": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t36": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t37": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t38": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t39": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t4": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t40__cl86ea32b3": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t40__clf8bbdae1": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t41": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t42": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t43": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t44__clf4ea6d4b": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t44__clf6cf8492": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t45": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t46": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t47": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t5": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t50": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t51": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t52": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t53__cl958451dd": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t53__clb66fa5cb": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t54__cl501e5681": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t54__cl706d9749": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t55": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t56": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t57": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t58": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t59": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t6": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t60": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t61": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_FORM_RELEASE": "r12bA_newrtl_reverdict_1112",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t62": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t65": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t66": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t67": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t68": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t69": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t7": {
+     "OT_MACRO_MOVES": "u_lf.u_ve.u_s:1028.16:803.52:MY,u_lf.u_vn.u_a:475.2:665.28:R0,u_lf.u_vp.u_b0:216:717.12:R0,u_lf.u_vq:1105.92:656.64:R0,u_lf.u_vs:846.72:648:MY,u_lf.u_vsw:1149.12:406.08:R0",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t70": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t71": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t72": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t73": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t74": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "ot_s81sl_leaf__t75": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t8": {
+     "OT_MACRO_MOVES": "u_lf.u_vn.u_b:777.6:34.56,u_lf.u_vs:362.88:423.36,u_lf.u_vn.u_a:777.6:224.64,u_lf.u_vq:544.32:440.64,u_lf.u_vsw:34.56:397.44",
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "ot_s81sl_leaf__t9": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t12": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t13": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "serdes__t14": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t15__cla2127225": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t15__cla3d02796": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t16": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t1__clb45db5be": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t1__clfe1f0815": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t2": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t3": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "serdes__t4": {
+     "OT_NATIVE_RESET_SCOPE": "selected",
+     "OT_POROUS_VIEWS": "all",
+     "OT_GEN_M8_GRANT": "1"
+    }
+   }
   },
   "s81_head": {
    "enabled": true,
@@ -24284,9 +25088,11 @@
     "hd_serdes": {
      "OT_IO_HOLD": "sender_min",
      "OT_CONS_KIT": "1",
-     "OT_CONS_UTIL": "0.40",
+     "OT_CONS_UTIL": "0.25",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "hd_spn": {
      "OT_IO_HOLD": "sender_min",
@@ -25088,7 +25894,8 @@
    "plan_sha256": "6d283b65ff9ab91d2c8c735142fb978cd184e58ad87594713ea2cd8db6b1e46b",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -25404,7 +26211,19 @@
     "epyc8",
     "epyc2",
     "intel1"
-   ]
+   ],
+   "die_gen_env_prev_kitops2_er3": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   },
+   "item_env_prev_kitops2_er3": {
+    "hd_serdes": {
+     "OT_IO_HOLD": "sender_min",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.40",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    }
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -27104,7 +27923,11 @@
      "OT_GRT_ALLOW_CONGESTION": "1",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "cbf_q11": {
      "OT_CONS_KIT": "1",
@@ -27251,7 +28074,11 @@
     },
     "slw_st_a_v1__clfc5867a6": {
      "OT_GRT_ALLOW_CONGESTION": "1",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "sle_fw_v1__clf58b4dfb": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -27435,7 +28262,11 @@
     "slw_st_a_v1__clb036e152": {
      "OT_KW43_FIX": "pvschema-0409748de8de",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "coll_ftc": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -27495,7 +28326,11 @@
     "slw_st_a_v2__cl9f076a5c": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_CLAND_STRIP_DENS": "1.0",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "slw_fw_v3": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -27515,17 +28350,29 @@
     "sle_st_a_v1__cl67389ecd": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "sle_st_a_v1__cl989804f6__cled3c1d7b": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "sle_st_a_v2": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "sle_st_b_v1__pv0e7b1dcc": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -27699,15 +28546,27 @@
     },
     "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": {
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "slw_st_a_v1__clfc5867a6__pvf82a6c28": {
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "slw_st_a_v2__clf4365a62": {
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.25",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_CONS_STRIP_ROWS": "1"
     },
     "slw_st_b_v1__cl6357f1cc": {
      "OT_GEN_M8_GRANT": "1"
@@ -33575,7 +34434,8 @@
    "plan_sha256": "2f0c17d5f1a31e5a73baf57acd263c9924fc96c28e3fa4e8729bc7f1c9e7cf44",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_PLACE_MAX_FANOUT": "64"
+    "OT_PLACE_MAX_FANOUT": "64",
+    "OT_GRT_NONPORT_HOLD": "1"
    },
    "item_inputs_prev_kw45_s28a": {
     "cbf_q00__cl1b5a6458": null,
@@ -33984,7 +34844,59 @@
     "epyc8",
     "epyc2",
     "intel1"
-   ]
+   ],
+   "die_gen_env_prev_kitops2_er3": {
+    "OT_PLACE_MAX_FANOUT": "64"
+   },
+   "item_env_prev_kitops2_er3": {
+    "sle_st_a_v1__cl67389ecd": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "sle_st_a_v1__cl989804f6__cl18eece69": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "sle_st_a_v2": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "slw_st_a_v1__clb036e152": {
+     "OT_KW43_FIX": "pvschema-0409748de8de",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "slw_st_a_v1__clfc5867a6": {
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": {
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28": {
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    },
+    "slw_st_a_v2__cl9f076a5c": {
+     "OT_GRT_TRANSITION_MODE": "edge_outline",
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_GEN_M8_GRANT": "1"
+    },
+    "slw_st_a_v2__clf4365a62": {
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CLAND_STRIP_DENS": "1.0"
+    }
+   }
   },
   "hbm": {
    "enabled": true,
@@ -51905,5 +52817,6 @@
   "intel1",
   "epyc4"
  ],
- "note_kitops2_e10": "KIT-OPS-2 2026-11-13 18:0x COORD 17:5x: epyc10 (civil-redfish, ot-run admits ~962 GB) joins hosts/place_prefer/gen_hosts of s81/s81_head/qwen_kvsys/qwen_compute, host_share 2.0. Src staging by another lane's epyc9 rsync (kw45) + KIT-OPS-2 rsync of kit-ops-1 bind inputs (--ignore-existing); the wave SRC probe skips epyc10 as gen host until complete. Revert: *_prev_kitops2_e10."
+ "note_kitops2_e10": "KIT-OPS-2 2026-11-13 18:0x COORD 17:5x: epyc10 (civil-redfish, ot-run admits ~962 GB) joins hosts/place_prefer/gen_hosts of s81/s81_head/qwen_kvsys/qwen_compute, host_share 2.0. Src staging by another lane's epyc9 rsync (kw45) + KIT-OPS-2 rsync of kit-ops-1 bind inputs (--ignore-existing); the wave SRC probe skips epyc10 as gen host until complete. Revert: *_prev_kitops2_e10.",
+ "note_kitops2_er3": "KIT-OPS-2 2026-11-13 18:1x EXPERT-REVIEW-3 via COORD: die_gen_env OT_GRT_NONPORT_HOLD=1 on s81/s81_head/qwen_kvsys/qwen_compute (port-input hold excluded from the FF GRT repair; port hold advisory under R-MINIMAL). Density 0.25 on the next gen of S81 leaf/kv_leaf/serdes, QC st_a, HEAD hd_serdes via the conservative-kit knob OT_CONS_KIT=1 OT_CONS_UTIL=0.25 with OT_CONS_MAX_LAYER=M9 (no layer cap) and OT_CONS_STRIP_ROWS=1 (landing strip unchanged); GPL floors the density at its own lower bound + 0.01. Revert: die_gen_env_prev_kitops2_er3 / item_env_prev_kitops2_er3 (or kit_wave.json.bak-kitops2-er3-1113)."
 }
