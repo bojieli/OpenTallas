@@ -6061,9 +6061,12 @@ if { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_a
 fi
 # KIT-OPS-1 11-13 (COORD: two serdes kits sat >1 h in a blocking inline LEC): async LEC requested but the kit has no
 # lec_async.sh = fail fast; the inline LEC runs only when asked for (OT_LEC_ASYNC=0, no lec_async.on/.identity).
+# WF-1 11-14 (COORD/OWNER: LEC is advisory under R-MINIMAL; a missing LEC script must never fail a build; it killed both TYPE-GUNIT-L1F
+# forms with exit 13): async LEC requested but the kit has no lec_async.sh = WARN, mark the in-flow LEC a no-op and go on (never the
+# blocking inline LEC, never exit 13).  The routed LEC is the advisory post-route one.
 if [ -z "$LECA" ] && { [ "${OT_LEC_ASYNC:-1}" != 0 ] || [ -f "$K/lec_async.on" ] || [ -f "$K/lec_async.identity" ]; } && [ -f "$K/lec.py" ] && [ ! -f "$K/lec_async.sh" ]; then
-  echo "LEC_ASYNC KIT ERROR: async LEC is on (OT_LEC_ASYNC default 1) but $K/lec_async.sh is missing; refusing the blocking inline LEC after synthesis (can run for hours). Regenerate the kit or copy tools/die_plan/lec_async.sh into it; OT_LEC_ASYNC=0 runs the inline LEC on purpose." >&2
-  exit 13
+  echo "LEC_ASYNC KIT WARNING: async LEC is on but $K/lec_async.sh is missing; LEC skipped, flow continues (LEC is advisory, R-MINIMAL). Copy tools/die_plan/lec_async.sh into the kit to get the async LEC." >&2
+  echo "LEC skipped: lec_async.sh missing" > "$K/lec_preplace.off"
 fi
 # KW-FIX-30 11-07 (COORD 15:01 (b), FLOW-CHILD-ETM-CONTEXT from DIE-HBM-87): the GRT clock gate counts a composed child
 # ETM only with the parent's flow tag (OT_FLOW_TAG) and the child's signed record (signoff.json, PROVENANCE.json, lec.json at
@@ -6124,7 +6127,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --types-from \$N --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \
     if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard_odb' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
-  if [ \$rc = 0 ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh check-synth /work '$NAME'; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh check-synth /work '$NAME'; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then if [ -f /work/lec_preplace.off ]; then printf '1\\necho LEC_PREPLACE_DROPPED R-MINIMAL\\n' > /work/lec_async.ready; else printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; fi; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_preplace.off ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
@@ -6181,7 +6184,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/m8_grant.json ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then for L in /work/run/results/asap7/*/base/*.lef; do [ -f \"\$L\" ] && python3 -I /work/m8_grant.py fixlef --grant /work/m8_grant.json \"\$L\"; done; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != grt ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/audit_pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; fi; \
-  if { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
+  if [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \$rc; fi; chown -R \$HUID:\$HGID /work; exit \$rc" > "$K/run_$GOAL.log" 2>&1
 rc=$?
 [ -z "$LECA" ] || rc=$(bash "$K/lec_async.sh" finish "$K" "$rc" 5 "$NAME" "$GOAL")
 if [ -n "$GRTM" ] && [ $rc = 0 ]; then GL=$(ls "$K"/run/logs/asap7/*/base/5_1_grt.log 2>/dev/null | tail -1)  # GRTM
