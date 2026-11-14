@@ -271,10 +271,20 @@ class TypeModel:
         self.FP = np.array([fp[k][:2] for k in keep], float).reshape(-1, 2)
         self.FPH = np.array([hal[k] for k in keep], float)
         rects = [c["rect_um"] for c in t.get("channels") or [] if c.get("rect_um")]
-        for bn, bd in (((ck.get("landing_contract") or {}).get("bands")) or {}).items():
-            if isinstance(bd, dict) and bd.get("rect_um"):
-                rects.append(bd["rect_um"])
+        lbands = ((ck.get("landing_contract") or {}).get("bands")) or {}
+        for bn, bd in lbands.items():
+            # a multi-rect band (rects_um, notched around small obstacles) keeps every rect free, not only rect_um
+            if isinstance(bd, dict) and (bd.get("rects_um") or bd.get("rect_um")):
+                rects.extend(bd.get("rects_um") or [bd["rect_um"]])
         self.FR = rects
+        # --window-clear (R-LEAF-2): no hard core nearer a >= 16-pin face window than 43.2 um (86.4 when landed)
+        self.WIN = []
+        if self.cfg.get("window_clear"):
+            import leaf_rules as LR
+            for bus, f, lo, hi, bits in LR.windows(t):
+                if bits >= 16:
+                    landed = isinstance(lbands.get(bus), dict) and bool(LR.band_rects(lbands[bus]))
+                    self.WIN.append((f, lo, hi, 2 * SLOT_STREET if landed else SLOT_STREET))
         self.bands = []
         for b in t.get("die_ft_bands") or []:
             sp = b.get("span_um")
@@ -469,6 +479,10 @@ class TypeModel:
         for r in self.FR:
             if not (r[2] <= x or r[0] >= x + w or r[3] <= y or r[1] >= y + h):
                 return False
+        for f, lo, hi, need in self.WIN:
+            a0, a1 = (x, x + w) if f in "NS" else (y, y + h)
+            if min(a1, hi) - max(a0, lo) > 0 and {"S": y, "N": H - (y + h), "W": x, "E": W - (x + w)}[f] < need - EPS:
+                return False
         if self.bands:
             cur = self.band_now - self._band_k(k) + self._band_at(k, x, y)
             if (cur > self.band_base + 1.0).any():
@@ -522,6 +536,10 @@ class TypeModel:
         for r in self.FR:
             if not (r[2] <= x or r[0] >= x + w or r[3] <= y or r[1] >= y + h):
                 return 'rule8 %s' % (locals().get('j', ''),)
+        for f, lo, hi, need in self.WIN:
+            a0, a1 = (x, x + w) if f in "NS" else (y, y + h)
+            if min(a1, hi) - max(a0, lo) > 0 and {"S": y, "N": H - (y + h), "W": x, "E": W - (x + w)}[f] < need - EPS:
+                return 'rule10 window %s %.1f' % (f, need)
         if self.bands:
             cur = self.band_now - self._band_k(k) + self._band_at(k, x, y)
             if (cur > self.band_base + 1.0).any():
@@ -1603,6 +1621,8 @@ def main(argv=None):
     ap.add_argument("--slot-clear", action="append", default=[], metavar="REGEX",
                     help="R-LEAF-3 slot rule: a facing core pair with a REGEX (inst or module) cluster on either side "
                          "abuts (< 4.32 um) or keeps >= 43.2 um; base slots are legalised to the nearest timing-clean spot")
+    ap.add_argument("--window-clear", action="store_true",
+                    help="R-LEAF-2: a moved core keeps >= 43.2 um (86.4 when landed) off every >= 16-pin face window it faces")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
@@ -1632,7 +1652,7 @@ def main(argv=None):
                flips_only=a.flips_only,
                gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
                face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
-               slot_clear=list(a.slot_clear))
+               slot_clear=list(a.slot_clear), window_clear=a.window_clear)
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
     rows = []
