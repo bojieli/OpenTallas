@@ -24,6 +24,12 @@ module tb_gf5_fullband;
       .g_go(g_go),.g_hit(g_hit),.g_a(g_a),
       .o_v(nv),.o_f(nf),.o_l(nl),.o_g(ng),.o_d(nd),.o_flt(nflt));
 
+`ifdef OT_GUNIT_BF_FWPIPE
+    reg [539:0] svprev2=0; reg [1314:0] aprev2=0; reg [249:0] prev2=0; reg [47:0] vfprev2=0; reg [2:0] sfprev2=0;
+    `define TBD(x) x``2
+`else
+    `define TBD(x) x
+`endif
     reg [539:0] svprev=0;
     reg [1314:0] aprev=0;
     reg [249:0] prev=0;
@@ -39,22 +45,25 @@ module tb_gf5_fullband;
       #1;
       if(age>24) begin
         checks=checks+1;
-        if({u_dut.sv_hi,u_dut.sv_lo,u_dut.ctl_hi,u_dut.ctl_lo}!==svprev) mismatch("SV_CTL");
-        if({nv,nf,nl}!==prev[249:247]) mismatch("SELECT_FLAGS");
+        if({u_dut.sv_hi,u_dut.sv_lo,u_dut.ctl_hi,u_dut.ctl_lo}!==`TBD(svprev)) mismatch("SV_CTL");
+        if({nv,nf,nl}!==`TBD(prev)[249:247]) mismatch("SELECT_FLAGS");
         if(ng!==gg) mismatch("GATHER_VALID");
-        if(u_dut.sf0!==sfprev)mismatch("A_FLAGS");
-        if({u_dut.vf_hi,u_dut.vf_lo}!==vfprev)mismatch("A_ERROR_VALID");
-        if(nv) begin selects=selects+1;if(nd!==prev[244:0])mismatch("SELECT_DATA");end
+        if(u_dut.sf0!==`TBD(sfprev))mismatch("A_FLAGS");
+        if({u_dut.vf_hi,u_dut.vf_lo}!==`TBD(vfprev))mismatch("A_ERROR_VALID");
+        if(nv) begin selects=selects+1;if(nd!==`TBD(prev)[244:0])mismatch("SELECT_DATA");end
         if(ng) begin gathers=gathers+1;if(nd!==gd)mismatch("GATHER_DATA");end
         if(nflt||gflt)mismatch("FAULT_ON_LEGAL_STREAM");
-        if(aprev[1314])begin
+        if(`TBD(aprev)[1314])begin
           acmp=acmp+1;
-          if({u_dut.s1b,u_dut.s1a,u_dut.s0b,u_dut.s0a}!==aprev[1311:0])mismatch("A_RECORDS");
+          if({u_dut.s1b,u_dut.s1a,u_dut.s0b,u_dut.s0a}!==`TBD(aprev)[1311:0])mismatch("A_RECORDS");
         end
         if((|u_gold.u_f.whf)&&(|u_gold.u_f.cfwc))forwards=forwards+1;
         if(u_gold.u_alo.u_a.bwe&&u_gold.u_alo.u_a.rdq)biasrw=biasrw+1;
         if({u_gold.u_ahi.u_a.s_bias,u_gold.u_alo.u_a.s_bias}!==biasprev)biaschanges=biaschanges+1;
       end
+`ifdef OT_GUNIT_BF_FWPIPE
+      vfprev2=vfprev;sfprev2=sfprev;svprev2=svprev;aprev2=aprev;prev2=prev;
+`endif
       vfprev={u_gold.vf_hi,u_gold.vf_lo};sfprev=u_gold.sf0;
       svprev={u_gold.sv_hi,u_gold.sv_lo,u_gold.ctl_hi,u_gold.ctl_lo};
       aprev={u_gold.sf0[0],2'b00,u_gold.s1b,u_gold.s1a,u_gold.s0b,u_gold.s0a};

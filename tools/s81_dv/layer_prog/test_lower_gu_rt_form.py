@@ -52,3 +52,11 @@ def test_svreg_select_stage_does_not_double_charge_gather_feedback():
 def test_unknown_feedback_form_fails_closed():
     with pytest.raises(ValueError):
         L.rw_form_delta(('OT_GUNIT_BF_UNMEASURED',))
+
+
+def test_fwpipe_adds_one_select_cycle_and_no_gather_cycle():
+    gf5 = ('OT_GUNIT_BF_M1REG', 'OT_GUNIT_BF_C1REG', 'OT_GUNIT_BF_SVREG')
+    gf5b = gf5 + ('OT_GUNIT_BF_FWPIPE',)
+    assert L.rt_form_delta(gf5b) == L.rt_form_delta(gf5) + 1 == 4
+    assert L.rw_form_delta(gf5b) == L.rw_form_delta(gf5) == 2
+    assert (L.RT_LAT_BASE_N + L.rt_form_delta(gf5b), L.RT_LAT_BASE_S + L.rt_form_delta(gf5b)) == (66, 64)

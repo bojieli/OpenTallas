@@ -8,7 +8,7 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 test -x "$V"
 "$V" --version
 D="+define+OT_GUNIT_BF_M1REG+OT_GUNIT_BF_C1REG+OT_GUNIT_BF_SVREG"
-case "$MODE" in nominal);;mut_ctl)D="$D +define+OT_GUNIT_BF_SVREG_MUT_CTL";;mut_bias)D="$D +define+OT_GUNIT_BF_SVREG_MUT_BIAS";;*)exit 2;;esac
+case "$MODE" in nominal);;fwpipe)D="$D +define+OT_GUNIT_BF_FWPIPE";;mut_fwpipe_bias)D="$D +define+OT_GUNIT_BF_FWPIPE +define+OT_GUNIT_BF_SVREG_MUT_BIAS";;mut_ctl)D="$D +define+OT_GUNIT_BF_SVREG_MUT_CTL";;mut_bias)D="$D +define+OT_GUNIT_BF_SVREG_MUT_BIAS";;*)exit 2;;esac
 F="$W/rtl/lib/ot_rst_relay.sv $W/rtl/hdc/ot_hdc_fastfp.sv $W/rtl/hdc/ot_hdc_prefix.sv
  $W/rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv $W/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_sel_n32.sv
  $W/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
@@ -20,7 +20,7 @@ sha256sum $F > "$O/sources.sha256"
 for SEED in 11 37;do
  "$O/obj/tb" +SEED=$SEED > "$O/run_$SEED.log" 2>&1
  tail -3 "$O/run_$SEED.log"
- if [ "$MODE" = nominal ];then grep -q '^GF5_FULLBAND PASS$' "$O/run_$SEED.log"
+ if [ "$MODE" = nominal ] || [ "$MODE" = fwpipe ];then grep -q '^GF5_FULLBAND PASS$' "$O/run_$SEED.log"
  else grep -q '^GF5_FULLBAND FAIL$' "$O/run_$SEED.log";grep -q '^GF5 MISMATCH' "$O/run_$SEED.log";fi
 done
 echo "GF5_EXPECTED_RESULT_PASS mode=$MODE"
