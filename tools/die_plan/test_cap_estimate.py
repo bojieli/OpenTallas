@@ -276,16 +276,16 @@ def run_census(tmp_path, std, tap, stage, env=''):
     return subprocess.run(['tclsh', str(tmp_path / 'census.tcl')], text=True, capture_output=True)
 
 
-def test_place_census_stops_a_measured_over_budget_run(tmp_path):
+def test_place_census_never_stops_an_over_budget_run(tmp_path):
+    """OWNER 11-14 (delete the cell cap): the place-stage census reports a run above 400k movable cells and goes on."""
     r = run_census(tmp_path, 678_022, 92_298, 'place')        # S81 dsdv_slice_c1x_C__t3 as measured
-    assert r.returncode != 0 and 'OT_CELL_BUDGET stage=place movable=678022' in r.stderr and 'split into 3 parts' in r.stderr
-    assert 'OT_CELL_CENSUS stage=place nontap=678022 tap_endcap=92298' in r.stdout          # the census line still prints
-    r = run_census(tmp_path, 400_000, 300_000, 'place')       # taps never count
     assert r.returncode == 0, r.stderr
-    r = run_census(tmp_path, 678_022, 0, 'cts')               # only the place stage stops
+    assert 'OT_CELL_BUDGET stage=place movable=678022' in r.stdout and 'not stopped' in r.stdout
+    assert 'OT_CELL_CENSUS stage=place nontap=678022 tap_endcap=92298' in r.stdout
+    r = run_census(tmp_path, 400_000, 300_000, 'place')       # taps never count
+    assert r.returncode == 0 and 'OT_CELL_BUDGET' not in r.stdout, r.stderr
+    r = run_census(tmp_path, 678_022, 0, 'cts')
     assert r.returncode == 0 and 'WARN OVER_CAP' in r.stdout, r.stderr
-    r = run_census(tmp_path, 678_022, 0, 'place', 'set ::env(OT_CELL_BUDGET_GATE) 0')
-    assert r.returncode == 0 and 'capacity probe, not stopped' in r.stdout, r.stderr
 
 
 def test_cored_flat_type_cells_above_synth_budget_is_not_judged():
