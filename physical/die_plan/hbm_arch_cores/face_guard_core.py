@@ -1,5 +1,5 @@
 """ELEM-HBM: tools/die_plan/face_guard.py on a hard-core netlist (CP1-R10 gate, unchanged checker).
-Differences from the partition call only in the inputs: the skip regex = the core's clock AND reset pins (freeze.json:
+Differences from the partition call only in the inputs: the skip regex = the core's clock AND reset pins (plus declared ft_ports.json ports) (freeze.json:
 reset pins are async reset taps, not face registers), and scalar plan pins are matched by name (face_guard's planned-bit
 list formats every row as bus[bit]).
     python3 face_guard_core.py NETLIST.v KITDIR      -> KITDIR/face_guard.json, exit 1 = FAIL
@@ -15,6 +15,13 @@ import face_guard as FG  # noqa: E402
 net, kd = sys.argv[1], Path(sys.argv[2])
 fz = json.loads((kd / "freeze.json").read_text())
 skip = "^(" + "|".join(re.escape(re.sub(r"\[\d+\]$", "", n)) for n in fz["clocks"] + fz["resets"]) + ")$"
+# TYPE-HDCORE-ELEMAB 11-14: ports declared in the kit ft_ports.json (12.2a1 pushdown feed-through pairs, die-timed, not core IO;
+# signoff.py already exempts them from the face-register rule) are skipped like the clock/reset pins.  Without the file: unchanged.
+_ftp = kd / "ft_ports.json"
+if _ftp.is_file():
+    _ft = [x["name"] for x in json.loads(_ftp.read_text()).get("ports", [])]
+    if _ft:
+        skip = skip[:-2] + "|" + "|".join(re.escape(re.sub(r"\[\d+\]$", "", n)) for n in _ft) + ")$"
 pins = [p for p in json.loads((kd / "pins.json").read_text()) if p["bit"] is not None and not re.match(skip, p["bus"])]
 contract = (fz.get("source_profile") or {}).get("endpoint_contract")
 if contract:
