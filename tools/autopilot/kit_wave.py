@@ -2784,7 +2784,7 @@ def view_fallback_line(item, module, missing, chosen):
     return f"VIEW-FALLBACK {item} {module}: missing {', '.join(missing)[:300]}; chosen {chosen}"
 
 
-def prov_stage(sp, run, remote, fail, out, rtl=""):
+def prov_stage(sp, run, remote, fail, out, rtl="", jobdir=None):
     """run_item stage: stage prov_view.py + routed candidate files on the gen host, build the provisional views and the
     overlay plan -> (overlay plan path, {module: source}) or (None, fail rc)"""
     q = shlex.quote
@@ -2855,8 +2855,10 @@ def prov_stage(sp, run, remote, fail, out, rtl=""):
                               f"candidate c{nxt} lef sha " + hashlib.sha256((relay / m / f"c{nxt}" / f"{m}.lef").read_bytes()).hexdigest()[:12])
                     line = view_fallback_line(T, m, fetch_errors, chosen)
                     print(line, flush=True)
-                    out_fb = out / "view_fallback.txt"
-                    out_fb.write_text((out_fb.read_text() if out_fb.exists() else "") + line + "\n")
+                    # `out` is the result dict; the attempt dir (where the tick reads view_fallback.txt) is `jobdir`
+                    if jobdir is not None:
+                        out_fb = Path(jobdir) / "view_fallback.txt"
+                        out_fb.write_text((out_fb.read_text() if out_fb.exists() else "") + line + "\n")
                     if view_priority_candidate(c):
                         (dst / "meta.json").write_text(json.dumps(staged))
                         return None, fail("prov_views", f"INFRA-VIEW-MISSING: {line}\nthe chosen source of {m} is missing on every host; "
@@ -5270,7 +5272,7 @@ def run_item(spec_path):
     prov_first = bool(sp.get("prov_views") and not core and sp.get("prov_first_re")
                       and re.search(sp["prov_first_re"], T))
     if prov_first:
-        plan, prc = prov_stage(sp, run, remote, fail, res)
+        plan, prc = prov_stage(sp, run, remote, fail, res, jobdir=out)
         if plan is None:
             return prc
     if core:
@@ -5351,7 +5353,7 @@ def run_item(spec_path):
         # KW-PROV-1: build against PROVISIONAL child views (latest routed DRC-clean abstract, else the plan-contract
         # abstract) through an overlay plan; the kit is marked PROVISIONAL and never counted until the STA-only re-sign.
         # After kit RTL (bind kit-rtl reads no child view): the kit RTL is the first source of child port directions
-        plan, prc = prov_stage(sp, run, remote, fail, res, rtl=f"{W}/rtl" if kit_rtl_arg else "")
+        plan, prc = prov_stage(sp, run, remote, fail, res, rtl=f"{W}/rtl" if kit_rtl_arg else "", jobdir=out)
         if plan is None:
             return prc
     plan_ov = plan                       # plan the station preparation reads (istations.tcl sites follow the overlay)

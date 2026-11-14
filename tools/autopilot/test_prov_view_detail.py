@@ -65,6 +65,7 @@ def test_stage_detail_named_like_base_does_not_overwrite_it(tmp_path):
  def run(stage,*args,**kwargs):
   return 0,('PROV_JSON '+json.dumps({'ok':True,'overlay_plan':'/overlay','children':{}}) if stage=='prov_views' else '')
  with patch.object(K.subprocess,'run') as called:
+  called.return_value.returncode=0          # every rsync succeeds (a bare MagicMock returncode is truthy = fetch error)
   out={};assert K.prov_stage(sp,run,lambda x:x,lambda *a:99,out)==('/overlay',0)
  calls=[x.args[0] for x in called.call_args_list]
  assert any(x[-2:]==['/source/exact/core.lef',str(tmp_path/'prov_relay/core/c0/detail_view.lef')] for x in calls)
@@ -89,3 +90,23 @@ def test_pin_window_receipt_is_rechecked(tmp_path):
  win['windows']={'a':dict(layer='M4',rect=[40,40,42,42],layers=['M5'])}
  (tmp_path/'detail_receipt.json').write_text(json.dumps(r))
  with pytest.raises(ValueError):P.routed_detail(str(tmp_path),'core',m,str(ROOT))
+
+
+def test_view_fallback_line_is_written_to_the_attempt_dir_not_the_result_dict(tmp_path):
+ import sys
+ sys.path.insert(0,str(HERE))
+ import kit_wave as K
+ c=dict(host='intel2',dir='/source/base',detailed_lef='/source/exact/core.lef',
+        detailed_receipt='/source/exact/proof.json',detail_bloat_factor=0)
+ sp=dict(gen_host='intel2',hub='intel2',work=str(tmp_path),item='t',plan='/p',src='/src',
+         prov_views={'cands':{'core':[c]}})
+ def run(stage,*args,**kwargs):
+  return 0,('PROV_JSON '+json.dumps({'ok':True,'overlay_plan':'/overlay','children':{}}) if stage=='prov_views' else '')
+ jd=tmp_path/'job';jd.mkdir()
+ with patch.object(K.subprocess,'run') as called:
+  called.return_value.returncode=23        # every fetch fails: the VIEW-FALLBACK path (TypeError dict / str before the fix)
+  out={}
+  r=K.prov_stage(sp,run,lambda x:x,lambda *a:99,out,jobdir=jd)
+ assert r[0]=='/overlay' or r[0] is None
+ assert not isinstance(out,Path)
+ assert 'core' in (jd/'view_fallback.txt').read_text()
