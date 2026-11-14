@@ -486,3 +486,32 @@ Written 2026-11-13 12:53 PST by HARD-QC-FORMS-1 (Fable). Status: rules final; fo
 **Proof (INTERIM, post-CTS TT setup, placement parasitics, same STA script; private kits on the s28 bound plan 9f3ed3486d81, epyc9 hard-qc-forms-1/pipe).** sle_stm_v2__cl7b3062fa: baseline WNS -679.0 / TNS -288,164 / 886 endpoints (worst: S-window stream path, 1,630 um); ROM block + stations, no RTL: -578.7 / -94,869 / 666 (worst: ROM m3 -> write-enable copies, the ROM class alone); + OT_QC_TLOADCAP: -437.3 / -85,355 / 806 with no ROM-launched path in the worst-path report. Remaining: the START fan u_cland_origin -> reader_start over 1,150-1,210 um (R-REACH-1, DIE-QC-100), the 1 mm stream stage of R-QCFORM-5, stream reset copies. sle_su_c (F-SUC + F-SUC2, provisional child views): first placement on this floor, streets at 10-30 %; post-CTS -873.1 / 2,533 endpoints (a 1.4 mm reach class to the output pin registers); GRT stops on DRT-0073 at u_va/ck, cause not yet split from the contract view. coll_core (F-COLLCORE): first placement. st_a: proof being rebuilt (the first builds did not compile the define). Renders: `lanes/HARD-QC-FORMS-1/png/build_*.png`. No type is signed off by these forms alone.
 
 **Head-plan blockers found on the way (DIE-QC-100, queue 08:35):** 18 types (su_c, su_l1, su_l0, sc) carry ft bit sites off the 0.27 um row pitch after HF-1c ("explicit FT site is not on a row/site" at global placement); coll_core cannot be kitted (tap radius 600 um against the 400 um post-merge limit, and no legal tap within 400).
+
+## R-PROFILE (OWNER 2026-11-13 17:4x: "yes, adopt the full profile and start the kit fix") — ACADEMIC SIGN-OFF PROFILE, supersedes stricter rules above where they conflict
+Source: EXPERT-REVIEW-2 (Fable), relayed by COORD.
+KEEP (blocking):
+- detailed-route DRC 0 and antenna 0;
+- strict bind;
+- LATCHECK lane latency;
+- token pass;
+- functional reset identity rows;
+- one post-route LEC per type;
+- 400k cell cap on the MEASURED count only.
+RELAX:
+- G0/G0C blocks only on NEW functional errors against baseline; geometry-schema rows are advisory.
+- Internal reg-to-reg FF hold >= 0 ps (no +10 margin).
+- TT setup: a type is SIGNED OFF when WNS >= -42 ps (5% of 833). Record the routed achieved period per type; the die reports the minimum. Hold gets no tolerance.
+- Die clock gate: routed related-pair setup >= 0 at the achieved period and hold >= 0, one corner pair. The kit-window contract is advisory.
+- No-blind-retry / unchanged_fail: one automatic retry with the R-FLOW recipe, then a named owner.
+ADVISORY (reported, never blocking):
+- the visual verdict (1-in-10 sample after sign-off; BAD demotes);
+- kit preflight R-CAP, reach and core-tap;
+- io_hold_parent receipts (port hold is measured once at die STA on signed views);
+- slew/cap DRV.
+DROP: pre-place LEC.
+PROCESS:
+- One FINAL event per die (S81 re-floor, QC s29, KV split), adopted as soon as its proofs pass (an early exception to the 11-15 04:00 freeze); then a hard freeze until that die closes, and only functional lane/reset errors reopen it.
+- About 6 lanes.
+- Pilot one type per family before the family launches.
+- The metric is sign-offs per day.
+TOP PRIORITY: content-addressed, self-contained kit snapshots at enqueue (448 KIT_NOT_SELF_CONTAINED + 229 bind hits in 4 days; 50% of failures are tooling before place).
