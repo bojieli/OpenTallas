@@ -2,7 +2,7 @@
 Updated 2026-11-13 PST.
 
 ## Fix
-Branch `claude/flow-pgcap-1-1113` @ 1d724b73cc (READY posted 20:50 PST to ROOT-MERGE-63, COORD-approved on post; evidence HEAD-98 ctl_n DRC 0 / antenna 0, HEAD-99 RESULT 19:55) (off origin/main 4702c3c43a6), pushed. Clone: intel1 /srv/opentallas-scratch2/claude/flow-pgcap-1/wt (sparse: tools, physical/common_flow, rtl).
+Branch `claude/flow-pgcap-1-1113` @ af98cc6b3d (READY re-posted for train L after the helper-order fix; first READY 20:50 PST to ROOT-MERGE-63, COORD-approved on post; evidence HEAD-98 ctl_n DRC 0 / antenna 0, HEAD-99 RESULT 19:55) (off origin/main 4702c3c43a6), pushed. Clone: intel1 /srv/opentallas-scratch2/claude/flow-pgcap-1/wt (sparse: tools, physical/common_flow, rtl).
 - tools/die_plan/pg_track_truth.tcl (generalized HEAD-98 hook): temporary GRT obstructions over spacing-illegal tracks of every PG stripe M4..MAX; real track grid; min spacing (width-dependent spacing opt-in OT_PG_TRACK_TRUTH_WIDE_SPACING=1, unproven).
 - grt_pre.tcl adds them last when OT_PG_TRACK_TRUTH=1; grt_post.tcl removes them first (before route.guide use / 5_1_grt.odb). DRT/PG/sign-off geometry unchanged.
 - gen_phys RFLOW: `export OT_PG_TRACK_TRUTH = 1` for s81, s81_head, qwen_compute, qwen_kvsys (rflow_cfg). HBM off. OT_RFLOW=0 = old kit.
