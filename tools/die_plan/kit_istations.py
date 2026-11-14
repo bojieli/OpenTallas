@@ -766,7 +766,7 @@ def col_st_stations(t, txt, tcl, rep):
 
 
 
-def core_stations(t, txt, apply, htree, tcl, rep, source_sha=None):
+def core_stations(t, txt, apply, htree, tcl, rep, source_sha=None, native_manifest=None, wrapper_sources=None):
     """Map core<->core entries onto the leaf's station chains; returns the (maybe re-parameterised) bound text.
     KW-FIX-27 (OWNER 11-03 only sign-off blocks): plan stations here are sites, the bound RTL holds the stages.  One
     interface is one chain, so its depth is the deepest entry, sited from its deepest entries.  What the bound text
@@ -877,7 +877,7 @@ def core_stations(t, txt, apply, htree, tcl, rep, source_sha=None):
         if not native:
             raise ValueError("soft CS banks require actual native-flat RTL")
         import soft_cs_placement
-        banks, exact_globs = soft_cs_placement.prepare(t, txt, source_sha)
+        banks, exact_globs = soft_cs_placement.prepare(t, txt, source_sha, native_manifest, wrapper_sources)
         import fnmatch
         from core_station_inventory import native_banks
         exact_registers = [r["name"] for b in native_banks(txt) for r in b["registers"]
@@ -1467,6 +1467,13 @@ def main(argv):
     bit_groups = "off" if "--no-bit-groups" in argv else ("force" if "--bit-groups" in argv else "auto")
     station_forms = "--no-station-forms" not in argv       # HBM-KITIST-1: opt-in plan keys pad_landing / station_trees
     argv = [a for a in argv if a not in ("--apply", "--bit-groups", "--no-bit-groups", "--no-station-forms")]
+    native_manifest_path = None
+    if "--native-source-banks" in argv:
+        i = argv.index("--native-source-banks")
+        if i+1 >= len(argv):
+            raise SystemExit("--native-source-banks requires a manifest file")
+        native_manifest_path = Path(argv[i+1])
+        del argv[i:i+2]
     htree = (4, 0, 0)
     if "--h-tree" in argv:
         i = argv.index("--h-tree")
@@ -1486,6 +1493,18 @@ def main(argv):
     if t.get("clock", {}).get("soft_reg_banks"):
         import hashlib
         source_sha = hashlib.sha256(txt.encode()).hexdigest()
+    native_manifest = None
+    wrapper_sources = {}
+    wrapper_paths = {}
+    if native_manifest_path is not None:
+        import native_source_banks as NSB
+        import soft_cs_placement
+        if bfile.stat().st_nlink != 1:
+            raise ValueError('native source bound body must have a private inode')
+        native_manifest = json.loads(native_manifest_path.read_text())
+        wrapper_sources, wrapper_paths = NSB.kit_wrappers(kd, man, native_manifest)
+        # Validate against the ORIGINAL kit body, before any station rewrite.
+        soft_cs_placement.prepare(t, txt, source_sha, native_manifest, wrapper_sources)
     tcl = [TCL_HEAD]
     rep = []
     bad = [e.get("conn") for e in t.get("internal_stations", []) if e.get("leg_order") == "channel" and not e.get("core")]
@@ -1655,7 +1674,7 @@ def main(argv):
                         plan_width=b["width"], bound_width=W,
                         **({"bit_groups": bgrp["groups"]} if bgrp is not None and exact is None else {}),
                         **({"exact_bank_sites": True} if exact is not None else {})))
-    txt = core_stations(t, txt, apply, htree, tcl, rep, source_sha)
+    txt = core_stations(t, txt, apply, htree, tcl, rep, source_sha, native_manifest, wrapper_sources)
     # plan cells with a FIRM site (no hard view): their flops at the site
     for c in soft_plan_cells(tn, t):
         ox, oy = c["origin_um"]
@@ -1682,6 +1701,15 @@ def main(argv):
     if epochs:
         import hashlib
         man['kit_epoch_observability'] = dict(source_sha256=hashlib.sha256(txt.encode()).hexdigest(), stations=epochs)
+    if native_manifest is not None:
+        txt, preserved_wrappers = NSB.preserve(txt, native_manifest, wrapper_sources)
+        # Every source check and all station transforms finished before writes.
+        for module, body in preserved_wrappers.items():
+            wrapper_paths[module].write_text(body)
+        man['kit_native_source_banks'] = dict(source_sha256=source_sha,
+            banks=len(native_manifest['banks']),
+            scalars=sum(b['live_referenced_scalar_count'] for b in native_manifest['banks']),
+            physical_realization_proven=False)
     bfile.write_text(txt)
     (kd / "istations.tcl").write_text("\n".join(tcl) + "\n")
     man["kit_istations"] = rep
