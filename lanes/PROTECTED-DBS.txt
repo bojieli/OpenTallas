@@ -547,5 +547,13 @@ epyc8	/srv/opentallas-scratch2/claude/explorer-2-work	2026-11-14 EXPLORER-P0 (CO
 epyc8	/srv/opentallas-scratch2/claude/explorer-2	2026-11-14 EXPLORER-P0 (COORD): explorer-2 git checkout used by design_index (plans); keep
 epyc8	/srv/opentallas-scratch2/claude/explorer-2-work/code	2026-11-14 EXPLORER-U0 (COORD): pinned git worktree the explorer2.service runs from (sha in explorer-2-work/code.pin); children of explorer-2-work (state, store, signed-store, serve-code, u0-wt, health.sh) are protected by the parent line; never delete
 epyc8:/srv/opentallas-scratch2/claude/explorer-fable-1  # EXPLORER-FABLE-1 new explorer (COORD 11-14 02:1x)
-/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S2
-/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S
+epyc9:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S2  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+epyc7:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S2  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+epyc8:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S2  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+intel1:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S2  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+epyc10:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S2  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+epyc9:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+epyc7:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+epyc8:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+intel1:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
+epyc10:/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S  # QC s29 strict bind of record (KIT-OPS-3 11-14, wave kit_rtl bind_out)
