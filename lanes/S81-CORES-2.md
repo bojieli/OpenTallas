@@ -76,3 +76,6 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 - Flat svc types are about 4.1M cells, far over the 400k cap, so they were NOT mass-relaunched.
 - TO DIE-S81-90, plan delta: epyc7 /srv/opentallas-scratch2/claude/s81-cores-2/svc/plan_delta/ (DELTA_README.txt). svc_lo rs t1 outline 1442.88 -> 2013.12 x 2851.20, all 32 IRG boxes on the signed 285.12 donor. Die frame needs +1140.48 um die X, which is 384.96 over current headroom (growth pre-approved). Other lo types: name map pending. hi: own pack; estimate ~290k soft -> 555-819k placed (over cap); fallback split S_att ~265k + S_rs ~179k.
 - Band build blocked at the provider-form strict bind: "stale dead-input preprocessor defines". The dead inputs must be re-proved under the H8 defines (s81_dead_prove.py); then re-point provider views to S81-SVCRS-4 (epyc9, 12 signed / 9 local). SVC-BAND-3 continues tonight.
+
+## NOTE 2026-11-13 20:30 PST serdes reset tree
+- DIE-S81-91: the RST_TREE(0) cause is die-level. OT_S81_SERDES_RST_TREE is missing from the S81 as-built define list (all 14 serdes types); B2e adds it. kitI2 (per-kit RST_TREE=1 patch) keeps running ONLY as the proof that the fix works. No other serdes kit will be patched by hand; they relaunch from B2e. kitI2 result = evidence for B2e.
