@@ -731,7 +731,8 @@ def compile_slice(sl, kd=None):
             raise InfraError(f"{rep.get('name')}: exactly one in/out feedthrough pair required")
         n = add_cell(dict(name=f"mp_{rep['name']}", master=rep.get("cell"), xy_um=rep.get("xy_um")),
                      rep.get("rect_um"))
-        arcs.append(dict(cell=n, source=ip[0], sink=op[0]))
+        # a leg repeater is a clock cell by construction; its mp_crep<k>_i/_o ports carry no ck/clk in the name
+        arcs.append(dict(cell=n, source=ip[0], sink=op[0], kind="clock"))
     for a in arcs:
         if a["source"] not in seen_ports or a["sink"] not in seen_ports:
             raise InfraError(f"{a['cell']}: feedthrough arc references an undeclared port")
