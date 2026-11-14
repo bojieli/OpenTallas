@@ -66,3 +66,12 @@ def test_index_tsv_status_decides(tmp_path):
     assert 't_fleet' in e['signed_types'] and 't_zero' in e['signed_types'] and 't_full' in e['signed_types']
     assert 't_zero' in e['archive_gate']['no_view_pack'] and 't_fleet' not in e['archive_gate']['no_view_pack']
     assert 'core_b' in e['pending_archive_cores'] and e['archive_gate']['why']['core_b']['index_status'] == 'NO-DB'
+
+
+def test_index_tsv_newest_row_per_element_wins(tmp_path):
+    head = 'die\telement\tkind\trecord\tdb\trtx_db\tsize\tsha256\tpack\tmeta\tstatus\tsrc\n'
+    tsv = head + 's81\tt_fleet\tt\tr\t\t\t\t\t\t\tNO-DB\texplorer\n' + 's81\tt_fleet\tt\tr\t/a/db\t/h/db\t1\tx\t\t/a/m\tARCHIVED-BOTH\texplorer\n' \
+               + 's81\tt_zero\tt\tr\t/a/db\t/h/db\t1\tx\t\t/a/m\tARCHIVED-BOTH\texplorer\n' + 's81\tt_zero\tt\tr\t\t\t\t\t\t\tNO-DB\texplorer\n'
+    c = G.apply(cache(), G.Gate(listing=listing(tmp_path, [], tsv=tsv), store=tmp_path / 'nostore')); e = c['plans']['s81/p.json']
+    assert 't_fleet' in e['signed_types'], 'older NO-DB row then ARCHIVED-BOTH: the later row decides'
+    assert 't_zero' in e['pending_archive_types'], 'the later row decides also when it is the worse one'
