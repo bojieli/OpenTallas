@@ -1098,6 +1098,108 @@ def plan_core_not_in_only(d, plan_types):
                    if c not in allowed and (plan_types is None or c in plan_types)})
 
 
+# WF-1 11-14 (COORD friction 5, structural): a plan adds hard cores and nothing built them: every parent type parked as WAIT-CHILD
+# (prov_require_cands) for days (QC s29q103S: 29 cores without a view, about 30 types).  Now a WAIT-CHILD records the child
+# modules it waits on (state wait_child[die][module]); select() turns each one that has no OWNERS row, no running build and no
+# die-owner hold into a kind=core wave row (the same gen / place / sign-off path as any plan core); the signed DRC-0 sign-off is a
+# prov_sources candidate, so the parents release by themselves.  Die options: auto_core_build false = off, auto_core_hold [modules]
+# = being built by hand (never requested), auto_core_min_wait_h (default 0.5) = how long a module waits before the first request.
+CORE_INFLIGHT_STATUS = ("RUNNING", "QUEUED", "ROUTING", "WAIT-GEOM", "WAIT-CANARY", "ENQUEUED", "SUBMITTED")
+
+
+def core_in_flight(jobs, die, module):
+    """an autopilot queue job of the die that builds `module` (type = module or <module>__v<sha12>) and has not finished"""
+    for j in (jobs or {}).values():
+        if j.get("die") != die:
+            continue
+        if prov_job_module(j, {module}) and (str(j.get("status")) in CORE_INFLIGHT_STATUS or str(j.get("status")).startswith("REVIEW-")):
+            return j.get("id") or True
+    return None
+
+
+def note_wait_child(AP, st, die, parent, modules):
+    """record the child modules a WAIT-CHILD parent waits on (called by launch)"""
+    wc = st.setdefault("wait_child", {}).setdefault(die, {})
+    now = time.time()
+    for m in modules:
+        e = wc.setdefault(m, {"first": now, "parents": []})
+        e["seen"] = now
+        if parent not in e["parents"]:
+            e["parents"] = (e["parents"] + [parent])[-60:]
+
+
+def auto_core_rows(cfg, state, die, d, rows, plan_types):
+    """kind=core rows for the WAIT-CHILD modules of this die that nothing builds yet (see above)"""
+    if d.get("auto_core_build", True) is False or plan_types is None:
+        return []
+    wc = (state.get("wait_child") or {}).get(die) or {}
+    if not wc:
+        return []
+    known = {r["item"] for r in rows if r["die"] == die}
+    hold = set(d.get("auto_core_hold") or [])
+    min_wait = float(d.get("auto_core_min_wait_h", 0.5)) * 3600.0
+    now = time.time()
+    out = []
+    for m, e in sorted(wc.items()):
+        if now - float(e.get("seen") or 0) > 3 * 3600 or now - float(e.get("first") or now) < min_wait:
+            continue                         # no longer waited on, or not waiting long enough to need a request
+        if m in known or m in hold or any(fnmatch.fnmatchcase(m, pat) for pat in (d.get("hold_items") or {})):
+            continue
+        if not any(x == m or core_module(x) == m for x in plan_types):
+            continue                         # the plan of record has no such core: nothing to build
+        out.append(dict(die=die, item=m, kind="core", state="NEEDS-KIT", owner="KIT-WAVE", live_job="none", last_activity="",
+                        next_step="auto core build (WAIT-CHILD)", evidence=d.get("plan", ""), default_owner=d.get("owner_lane", ""),
+                        replicas="1", members=m, _auto_core=True))
+    return out
+
+
+WAIT_CHILD_SUMMARY_S = 3600
+
+
+def wait_child_summary(AP, cfg, st):
+    """one queue line per die and hour: parents waiting on child cores without a view, and what happens to each core"""
+    wc_all = st.get("wait_child") or {}
+    posted = st.setdefault("wait_child_posted", {})
+    now = time.time()
+    try:
+        jobs = json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}
+    except (OSError, ValueError):
+        jobs = {}
+    for die, wc in sorted(wc_all.items()):
+        live = {m: e for m, e in wc.items() if now - float(e.get("seen") or 0) <= 3 * 3600}
+        for m in [m for m in wc if m not in live]:
+            wc.pop(m, None)
+        if not live or now - float(posted.get(die) or 0) < WAIT_CHILD_SUMMARY_S:
+            continue
+        d = (cfg.get("dies") or {}).get(die) or {}
+        hold = set(d.get("auto_core_hold") or [])
+        items = st.get("items") or {}
+        cats = {"building": [], "wave-queued": [], "held-by-hand": [], "requested": [], "waiting": []}
+        for m, e in sorted(live.items()):
+            rec = next((r for r in items.values() if r.get("die") == die and core_module(r.get("item")) == m
+                        and r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED", "ROUTE-HELD")), None)
+            if rec:
+                cats["wave-queued"].append(m)
+            elif core_in_flight(jobs, die, m):
+                cats["building"].append(m)
+            elif m in hold:
+                cats["held-by-hand"].append(m)
+            elif d.get("auto_core_build", True) is not False and now - float(e.get("first") or now) >= float(d.get("auto_core_min_wait_h", 0.5)) * 3600:
+                cats["requested"].append(m)
+            else:
+                cats["waiting"].append(m)
+        parents = sorted({x for e in live.values() for x in e.get("parents", [])})
+        posted[die] = now
+        if AP.DRY:
+            continue
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                        f"- {now_s()} STATE [KIT-WAVE -> COORD, {d.get('owner_lane', die + ' owner')}] WAIT-CHILD {die}: {len(parents)} parent type(s) "
+                        f"wait on {len(live)} child core(s) without a routed view: " + "; ".join(
+                            f"{k} {len(v)} ({' '.join(v[:12])}{' ...' if len(v) > 12 else ''})" for k, v in cats.items() if v)
+                        + ". requested = the wave builds it as a core row; building = an autopilot job already runs it (no second build); "
+                          "held-by-hand = dies.%s.auto_core_hold." % die)
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -1148,6 +1250,7 @@ def select(rows, cfg, die, state, plan_types=None):
                              owner="KIT-WAVE", live_job="none", last_activity="",
                              next_step="adopted plan core allowlist", evidence=d.get("plan", ""),
                              default_owner=d.get("owner_lane", ""), replicas="1", members=item))
+    rows = list(rows) + auto_core_rows(cfg, state, die, d, rows, plan_types)       # WF-1 11-14: WAIT-CHILD cores with no builder
     for r in rows:
         if r["die"] != die:
             continue
@@ -1295,9 +1398,9 @@ def select(rows, cfg, die, state, plan_types=None):
     if d.get("only_items") is not None:
         allowed = set(d["only_items"])
         for r in picked:
-            if r["item"] not in allowed:
+            if r["item"] not in allowed and not r.get("_auto_core"):
                 skip.setdefault("outside configured only_items", []).append(r["item"])
-        picked = [r for r in picked if r["item"] in allowed]
+        picked = [r for r in picked if r["item"] in allowed or r.get("_auto_core")]
 
     def rep(r):
         try:
@@ -5934,6 +6037,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         miss = prov_missing_cands(sp["prov_views"]) if opt(cfg, die, "prov_require_cands") is True else []
         if miss:           # KW-FIX-45 11-11 (COORD, hbm q_su01 PLAN): wait for the child cores, no attempt consumed
             AP.log(f"KIT-WAVE WAIT-CHILD {die}/{r['item']}: no routed PROVISIONAL source yet for child core(s) {' '.join(miss)} (prov_require_cands)")
+            note_wait_child(AP, st, die, r["item"], miss)           # WF-1 11-14: select() requests a core build for each
             return None
     if (not arm and prev.get("grt_overflow") and opt(cfg, die, "auto_grt_edge") is not False
             and "OT_GRT_TRANSITION_MODE" not in sp["gen_env"]):
@@ -8135,6 +8239,10 @@ def _step(AP, ap_dir):
         lane = (cfg["dies"].get(die) or {}).get("owner_lane", f"{die} owner")
         AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
                         f"- {now_s()} KIT-WAVE [{die}] -> {lane}: {len(msgs)} event(s): " + "; ".join(msgs)[:1800])
+    try:
+        wait_child_summary(AP, cfg, st)                  # WF-1 11-14: hourly per-die WAIT-CHILD line
+    except Exception as e:
+        AP.log(f"KIT-WAVE WAIT-CHILD summary skipped: {type(e).__name__}: {e}")
     protect_sources(AP, cfg, st, ap_dir)
     if not AP.DRY:
         save_state(st, ap_dir)
