@@ -998,6 +998,10 @@ def verify(T):
         if q is None or _man(q["xy"], c["pin_um"]) > T["reach_um"]:
             errs.append(f"hard-core reset {c['inst']}.{c['pin']}: missing or over-reach relay")
     del drv
+    try:
+        pin_root_copies(T)
+    except ResetError as exc:
+        errs.append(str(exc))
     if T["max_hop_um"] > T["reach_um"] + 1e-6:
         errs.append(f"max hop {T['max_hop_um']} > {T['reach_um']}")
     return errs
@@ -1149,7 +1153,11 @@ def for_type(P, tn, reach=None):
     native = bound_native_contract(P, tn)
     if native:
         import copy
-        return copy.deepcopy(native["tree"])
+        tree = copy.deepcopy(native["tree"])
+        configured = _type_pin_root_copies(P, tn, tree)
+        if configured != tree:
+            raise ResetError(f"type {tn}: pin root copies require regenerated bound RTL and a fresh native source contract")
+        return tree
     reach = float(reach or relay_um(P, tn))
     boot_buses, boot_contents = bootstrap_consumers(P, tn)
     if wavefront(P):
@@ -1187,7 +1195,7 @@ def for_type(P, tn, reach=None):
             if boot_buses or boot_contents:
                 T.update(bootstrap_buses=boot_buses, bootstrap_contents=boot_contents,
                          bootstrap_taps=list(range(nck)))
-        return T
+        return _type_pin_root_copies(P, tn, T)
     if pipelined(P):
         K = part_depth(P)
         T = _type_tree(P, tn, K, reach)
@@ -1204,7 +1212,7 @@ def for_type(P, tn, reach=None):
         T["relay_lockup"] = relay_lockup_form(P)
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
-    return T
+    return _type_pin_root_copies(P, tn, T)
 
 
 def entry_stages(T):
@@ -2327,6 +2335,130 @@ def start_relays(T):
     return out
 
 
+def _pin_root_loads(T):
+    """Actual relay D consumers of the synchronous reset entry, including out copies."""
+    rel = start_relays(T) if T.get('start') else T['relays']
+    outs = out_relays(T)
+    loads = []
+    for r in rel:
+        if r['d'] != 'rst_root_n':
+            continue
+        names = [r['name']]
+        if not T.get('start') and r['q'] in outs:
+            names.append(r['name'] + '_t')
+        loads.append((r['xy'], names))
+    return loads
+
+
+def with_pin_root_copies(T, spec, outline=None):
+    """Explicit same-edge parallel pin registers; logical relay ancestry stays canonical.
+
+    The metadata is part of a NEW bound source contract, never a sites-only
+    reinterpretation of a previously emitted single-entry tree.
+    """
+    if spec is None:
+        return T
+    import copy
+    if (not isinstance(spec, dict) or set(spec) != {'max_loads', 'sites_um'}
+            or type(spec['max_loads']) is not int or not 1 <= spec['max_loads'] <= 48):
+        raise ResetError('reset.pin_root_copies requires max_loads in 1..48 and explicit sites_um')
+    if T.get('entry') != 'relayed':
+        raise ResetError('reset.pin_root_copies supports synchronous relayed pin entries only (never async synchronizers)')
+    loads = _pin_root_loads(T)
+    total = sum(len(names) for _, names in loads)
+    if not total:
+        raise ResetError('reset.pin_root_copies has no actual root relay D loads')
+    limit = spec['max_loads']; count = math.ceil(total / limit)
+    if count > 48:
+        raise ResetError('pin root copy input fanout would exceed 48; a new latency/topology contract is required')
+    sites = spec['sites_um']
+    if not isinstance(sites, list) or len(sites) != count:
+        raise ResetError(f'reset.pin_root_copies requires {count} explicit sites for {total} loads')
+    for xy in sites:
+        if (not isinstance(xy, (list, tuple)) or len(xy) != 2
+                or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in xy)):
+            raise ResetError('reset.pin_root_copies requires finite x/y sites')
+        if outline and not (0 <= xy[0] <= outline[0] and 0 <= xy[1] <= outline[1]):
+            raise ResetError('reset.pin_root_copies site outside type outline')
+    if list(sites[0]) != list(T['root']):
+        raise ResetError('reset.pin_root_copies first site must preserve the original pin register')
+    # Pair copies at rst_o remain together. First-fit handles their two physical
+    # D loads explicitly rather than counting only the canonical logical relay.
+    groups = [[] for _ in range(count)]
+    for xy, names in sorted(loads, key=lambda item: (item[0][0], item[0][1], item[1])):
+        group = next((g for g in groups if len(g) + len(names) <= limit), None)
+        if group is None:
+            raise ResetError('reset.pin_root_copies cannot pack the actual relay load groups')
+        group.extend(names)
+    copies = [dict(name='u_rst_in' if i == 0 else f'u_rst_in_c{i}',
+                   q='rst_root_n' if i == 0 else f'rst_root_copy_{i}_n',
+                   xy=list(xy), loads=names)
+              for i, (xy, names) in enumerate(zip(sites, groups))]
+    result = copy.deepcopy(T)
+    physical = {name: c['xy'] for c in copies for name in c['loads']}
+    maximum = max([_man(T['root'], c['xy']) for c in copies] +
+                  [_man(physical[name], xy) for xy, names in loads for name in names])
+    if maximum > T['reach_um'] + 1e-6:
+        raise ResetError(f'pin root copy physical hop {maximum:.3f} exceeds reach {T["reach_um"]}')
+    result['pin_root_copies'] = dict(max_loads=limit, physical_direct_loads=total,
+                                     physical_max_hop_um=round(maximum, 6), copies=copies)
+    return result
+
+
+def pin_root_copies(T):
+    """Validate captured copy metadata against the actual emission consumer set."""
+    meta = T.get('pin_root_copies')
+    if meta is None:
+        return []
+    if not isinstance(meta, dict) or set(meta) != {'max_loads', 'physical_direct_loads', 'physical_max_hop_um', 'copies'}:
+        raise ResetError('malformed captured pin-root-copy metadata')
+    copies = meta.get('copies')
+    if not isinstance(copies, list) or not copies:
+        raise ResetError('captured pin-root copies are empty')
+    try:
+        spec = dict(max_loads=meta['max_loads'], sites_um=[c['xy'] for c in copies])
+        rebuilt = with_pin_root_copies(T, spec)['pin_root_copies']
+    except (KeyError, TypeError) as exc:
+        raise ResetError('malformed captured pin-root-copy records') from exc
+    if rebuilt != meta:
+        raise ResetError('captured pin-root copies differ from actual relay D consumer inventory')
+    return copies
+
+
+def pin_root_data(T, name, logical_d):
+    if logical_d != 'rst_root_n' or not T.get('pin_root_copies'):
+        return logical_d
+    copies = pin_root_copies(T)
+    matches = [c['q'] for c in copies if name in c['loads']]
+    if len(matches) != 1:
+        raise ResetError('pin-root-copy consumer is missing or multiply assigned: ' + name)
+    return matches[0]
+
+
+def physical_reset_relays(T):
+    """Relay nodes with actual pin-copy D nets; logical T['relays'] is unchanged."""
+    rel = start_relays(T) if T.get('start') else T['relays']
+    return [dict(r, d=pin_root_data(T, r['name'], r['d']),
+                 **({'dlab': pin_root_data(T, r['name'], r['dlab'])
+                     if r['d'] == 'rst_root_n' else r['dlab']} if 'dlab' in r else {})) for r in rel]
+
+
+def _pin_copy_entry_lines(T, ind, src):
+    out = []
+    for i, c in enumerate(pin_root_copies(T)):
+        if i:
+            out.append(f"{ind}wire {c['q']};")
+        out.append(f"{ind}(* keep_hierarchy = 1, keep = 1 *) ot_dp_rrelay {c['name']} "
+                   f"(.clk(clk), .d({src}), .q({c['q']}));  // same-edge synchronous pin copy, "
+                   f"{len(c['loads'])} direct relay D loads")
+    return out
+
+
+def _type_pin_root_copies(P, tn, T):
+    spec = P.types[tn].get('reset', {}).get('pin_root_copies')
+    return with_pin_root_copies(T, spec, P.types[tn]['outline_um'])
+
+
 LOCK_SRC = "pll_locked_i"     # the root type's PLL lock net (bind.py aliases the declared lock leaf output to it)
 
 
@@ -2427,6 +2559,8 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SR
     if T["entry"] == "sync":
         out += _root_entry_lines(T, ind, src, lock_src, "the region's ONE root synchroniser: its async input is the "
                                  "only reset false path")
+    elif T.get('pin_root_copies'):
+        out += _pin_copy_entry_lines(T, ind, src)
     else:
         out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
                    "// pin register of the SYNCHRONOUS reset input (die reset tree)")
@@ -2434,7 +2568,7 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SR
     nck = consumer_count(T)
     oq = out_relays(T)
     lkd = {r["name"]: lockup_latch_names(r["name"]) for r in lockup_hops(T)}
-    for r in T["relays"]:
+    for r in physical_reset_relays(T):
         if not r["q"].startswith("rst_n_t"):
             out.append(f"{ind}wire {r['q']};")
         where = f"depth {r['depth']} @ ({r['xy'][0]:.1f}, {r['xy'][1]:.1f})"
@@ -2488,9 +2622,12 @@ def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
                                  "the only reset false path")
         out.append(f"{ind}ot_dp_rsync_s{ns} u_run_root (.clk(clk), .async_rst_n({start_src}), .sync_rst_n(run_root));  "
                    "// the die's ONE START synchroniser (die start pin, asynchronous level): the only START false path")
+    elif T.get('pin_root_copies'):
+        out += _pin_copy_entry_lines(T, ind, src)
     else:
         out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
                    "// pin register of the SYNCHRONOUS reset input (neighbour's rst_o)")
+    if T["entry"] != "sync":
         out.append(f"{ind}ot_dp_rrelay u_run_in (.clk(clk), .d({start_src}), .q(run_root));  "
                    "// pin register of the SYNCHRONOUS START input (neighbour's start_o)")
     nck = consumer_count(T)
@@ -2505,7 +2642,7 @@ def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
                                              if v != T["start_role"]) if any(v != T["start_role"] for v in
                                                                               T["tap_roles"].values()) else ""))
     declared = {f"rst_n_t{i}" for i in taps} | {"rst_root_n", "run_root"}
-    for r in start_relays(T):
+    for r in physical_reset_relays(T):
         if r["q"] not in declared:
             out.append(f"{ind}wire {r['q']};")
             declared.add(r["q"])
@@ -2702,7 +2839,10 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
     root_xy = (native_sites or {}).get(ent, T['root'])
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
          f"rtr_place rst_root_n {{*{ent}[./]*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
-    rel = start_relays(T) if T.get("start") else [dict(r, dlab=r["d"]) for r in T["relays"]]
+    rel = [dict(r, dlab=r.get("dlab", r["d"])) for r in physical_reset_relays(T)]
+    for c in pin_root_copies(T)[1:]:
+        x, y = (native_sites or {}).get(c['name'], c['xy'])
+        t.append(f"rtr_place {c['q']} {{*{c['name']}[./]*}} {x:.3f} {y:.3f} rentry_copy")
     omitted = set(unused_bootstrap)
     eligible = {r['name'] for r in rel if r.get('role') == 'bootstrap_transport' and r['name'].endswith('_b')}
     if omitted - eligible:
