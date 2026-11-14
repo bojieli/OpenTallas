@@ -1,5 +1,5 @@
 {
- "verdict": "SOURCE_FUNCTION_UNCHANGED_SYNTH_FACE_PENDING",
+ "verdict": "SOURCE_READY_NATIVE_SYNTH_FACE_PASS_PHYSICAL_UNSIGNED",
  "old_stage_fail": {
   "checked": 1045,
   "ok": 1043,
@@ -12,5 +12,6 @@
  "change": "Remove exactly five keep attributes on NEW PIN-stage registers only; original modules/ports/cycles/reset identical",
  "semantic_normalization": "Old source after removing keep attributes byte-identical to new source",
  "semantic_sha256": "e425d0c87057d39c95125e86112a7138385398c05c9e659c080045d9ecfb358b",
- "placement": "First newPINplace retained unsigned; fresh actualsource place required"
+ "placement": "First newPINplace retained unsigned; fresh actualsource place required",
+ "actual_native_face": "1045/1045 PASS fresh synthesized d5d69e912d"
 }
