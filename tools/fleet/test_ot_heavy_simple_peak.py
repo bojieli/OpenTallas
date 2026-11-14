@@ -121,5 +121,17 @@ class PlanPrio(unittest.TestCase):
         self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[600], mem=4, cls="gen"))          # small jobs are never held
 
 
+class Fallback(unittest.TestCase):
+    def test_no_history_uses_a_share_of_the_request_only_for_running_jobs(self):
+        self.assertEqual(R.expected_peak("never", 48, HIST), 48.0)                       # a NEW job without history is charged its request
+        self.assertEqual(R.expected_peak("never", 48, HIST, fallback=0.5), 24.0)
+        self.assertEqual(R.expected_peak("route", 48, HIST, fallback=0.5), 40.0)         # history wins when present
+
+    def test_reserve_uses_the_fallback_for_unknown_classes(self):
+        units = [("u", 48.0, "never", 8.0)]
+        self.assertAlmostEqual(R.peak_reserve(units, HIST, 1.0), 40.0)
+        self.assertAlmostEqual(R.peak_reserve(units, HIST, 1.0, fallback=0.5), 16.0)
+
+
 if __name__ == "__main__":
     unittest.main()
