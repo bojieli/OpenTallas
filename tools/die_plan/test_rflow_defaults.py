@@ -91,4 +91,31 @@ def test_hold_budget_line_reports_and_never_stops():
 
 def test_values_are_the_rulebook_set():
     assert gen_phys.RFLOW == {"slew_margin": 50.0, "cap_margin": 20.0, "gpl_keep_overflow": 0.25,
-                              "place_max_fanout": 32, "max_wire_um": 120.0, "hold_budget_pct": 10.0}
+                              "place_max_fanout": 32, "max_wire_um": 120.0, "hold_budget_pct": 10.0,
+                              "pg_track_truth": 1}
+
+
+def test_pg_track_truth_default_on(tmp_path, monkeypatch):
+    # FLOW-PGCAP-1 11-13: GRT capacity = DRT-legal tracks at PG stripes, default on for the R-FLOW kit classes
+    kd, c = kit(tmp_path)
+    assert c["OT_PG_TRACK_TRUTH"] == "1" and (Path(kd) / "pg_track_truth.tcl").is_file()
+    for die in gen_phys.RFLOW_DIES:
+        assert "export OT_PG_TRACK_TRUTH = 1" in gen_phys.rflow_cfg(die=die)
+    assert gen_phys.rflow_cfg(die="hbm") == []
+    monkeypatch.setenv("OT_RFLOW", "0")
+    assert not any("OT_PG_TRACK_TRUTH" in line for line in gen_phys.rflow_cfg(die="s81"))
+
+
+def test_pg_track_truth_hooks_are_grt_only():
+    pre = (HERE / "grt_pre.tcl").read_text()
+    post = (HERE / "grt_post.tcl").read_text()
+    tcl = (HERE / "pg_track_truth.tcl").read_text()
+    # added last in the PRE hook, gated on the kit variable; removed first in the POST hook (before 5_1_grt.odb)
+    assert pre.rstrip().endswith("pg_track_truth.tcl]; ot_pgtt_add\n}") and '$::env(OT_PG_TRACK_TRUTH) eq "1"' in pre
+    assert post.index("ot_pgtt_remove") < post.index("if {[info exists ::env(OT_TAP_GRT_MODE)]")
+    assert "dbObstruction_create" in tcl and "dbObstruction_destroy" in tcl
+    assert 'OT_PG_TRACK_TRUTH) ne "1"' in tcl
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("kit_resume", HERE.parent / "autopilot" / "kit_resume.py")
+    kr = importlib.util.module_from_spec(spec); spec.loader.exec_module(kr)
+    assert kr.VAR_STAGE["OT_PG_TRACK_TRUTH"] == "grt"

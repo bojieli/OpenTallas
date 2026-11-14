@@ -237,7 +237,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     kd = Path(kd)
     shutil.copyfile(TOOL.parent / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
     stage_grt183(kd)
-    for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_maxwire.tcl", "hold_guard_grt.tcl","grt_layers.tcl", "grt_post.tcl", "pg_connect.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
+    for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_maxwire.tcl", "hold_guard_grt.tcl","grt_layers.tcl", "grt_post.tcl", "pg_connect.tcl", "pg_track_truth.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
         shutil.copyfile(TOOL / f, kd / f)
     # KIT-TRIAGE-1/G5 11-01 (COORD 05:0x: extend the HBM-CORES-KITS-40 HB4 hook b26a827db45 to the S81 / KV / QC core
     # kits as one class form): every core kit's FF GRT hold repair may pad with HB4xp67 (physical/common_flow/

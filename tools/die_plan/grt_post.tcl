@@ -2,6 +2,9 @@
 # pass (tap_balance_grt.tcl, OT_TAP_GRT_MODE), then the IO virtual clock back to the kit SDC (TT) value so 5_1_grt.sdc
 # and every later stage carry constraint.sdc unchanged.
 set gq_dir [file dirname [file normalize [info script]]]
+# FLOW-PGCAP-1 11-13: the PG-TRACK-TRUTH obstructions (grt_pre.tcl) come off first: 5_1_grt.odb, DRT and sign-off
+# see the kit geometry unchanged.
+if {[llength [info procs ot_pgtt_remove]]} { ot_pgtt_remove }
 if {[info exists ::env(OT_TAP_GRT_MODE)] && $::env(OT_TAP_GRT_MODE) ne ""} { source [file join $gq_dir tap_balance_grt.tcl] }
 if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} { ot_vclk_bind tt }
 # DIE-HBM-97 11-09 HOPLATCH-HOLD: the GRT-repair-only hop latch -hold uncertainty (grt_pre.tcl) comes off before the SDC is written

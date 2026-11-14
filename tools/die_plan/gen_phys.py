@@ -1938,9 +1938,15 @@ SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the lim
 #   max_wire_um                post-GRT repair_design -max_wire_length (grt_maxwire.tcl); a smaller explicit value wins
 #   hold_budget_pct            OT_HOLD_BUDGET report line: repair_timing cells / placed logic cells (OVER = R-CLOCK).
 #                              Hold repair itself is unchanged: once, at the FF GRT step, target slack 0, HB4 pads.
+#   pg_track_truth             FLOW-PGCAP-1 11-13 (EXPERT-REVIEW-4, DRT-0255 "maze route found no path" on HEAD hd_ctl_n /
+#                              hd_host_e / hd_spn_end and S81 ot_s81sl_leaf__t6): FastRoute derates only the tracks a PG
+#                              stripe overlaps, not the ones its min spacing kills, so a gcell row inside an M6 pair
+#                              (column inside an M7 pair) had GRT capacity with 0..1 legal tracks (t6: 547 M6 + 178 M7
+#                              guides on 0-legal rows).  pg_track_truth.tcl (grt_pre.tcl) blocks the spacing-illegal tracks
+#                              at GRT only; grt_post.tcl removes the obstructions before 5_1_grt.odb (DRT/PG unchanged).
 # CTS is unchanged (BUFx24 root and sink buffers, clusters of <= ~42 sinks; 0 clock pins among the violators).
 RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_PCT), "gpl_keep_overflow": 0.25, "place_max_fanout": 32,
-         "max_wire_um": 120.0, "hold_budget_pct": 10.0}
+         "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1}
 # Kit classes (die plans) that take the defaults, each with its proof kit (old vs new settings on one synthesized
 # netlist, through route and sign-off; epyc7 rules-flow-1/ab).  A die plan not listed keeps its old kit until its own
 # proof exists: HBM is parked and passes explicit margins.
@@ -1980,7 +1986,9 @@ def rflow_cfg(gpl_plain=False, die=None):
         return []
     return ["# R-FLOW (RULEBOOK-1113): timing-driven GPL keeps repair buffers only on a settled placement; hold budget report",
             *([] if gpl_plain else [f"export GPL_KEEP_OVERFLOW = {RFLOW['gpl_keep_overflow']:g}"]),
-            f"export OT_HOLD_BUDGET_PCT = {RFLOW['hold_budget_pct']:g}"]
+            f"export OT_HOLD_BUDGET_PCT = {RFLOW['hold_budget_pct']:g}",
+            "# FLOW-PGCAP-1: GRT capacity = DRT-legal tracks at PG stripes (pg_track_truth.tcl, GRT only)",
+            f"export OT_PG_TRACK_TRUTH = {RFLOW['pg_track_truth']:d}"]
 FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
 # COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
 # keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
@@ -5171,7 +5179,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
