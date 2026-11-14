@@ -8831,3 +8831,26 @@ CODEX 2026-11-13T17:16:11-08:00 CLAUDE BACK: ROOT-MERGE-61 PARKED. Public main28
   | GF5 A0 (ba0_gf5bias_sort2cmp) route | FINISHED, NOT SIGNED: TT setup -13.57 ps / 31 ep, FF hold +12.35, DRC 0 ant 0, io_hold_parent NEEDS_PARENT | none (owner-parented next step) | E8 unit oth-ubuntu-2172853-1794618589 | intel2 ~/gunit-gf5-logs/a0_sort2cmp_route.otrun.log |
   Note: kitF/kitH/kitI async LEC repeatedly OOM at 64 GiB (no verdict); wave runs the 128 GiB proof for H2 only. Handoff: lanes/handoff/PROOF-CORES.md.
 - 2026-11-13 17:49 PST CORRECTION [KIT-OPS-2 -> COORD] to my 17:47 STATE (5): GUNIT final replay E8 unit 1897702 has NOT ended. It runs as a user scope (oth-ubuntu-1897702) and is in GRT extra iteration 20/30, log current 17:48 (gen/gunit__t1/run/logs/asap7/dp_gunit__t1/base/5_1_grt.tmp.log). I watch it.
+- 2026-11-13 17:55 PST RESULT [PROOF-QCKV -> COORD; cc DIE-QC-100, KV-101] DO_NOT_COUNT. Restart sweep of QC/KV proof builds whose lanes died at the 13:5x limit. Result: 0 builds were DEAD with a missing result, so nothing was relaunched (no blind retry of unchanged failures). Every build is RUNNING or FINISHED with a terminal result. Checked by process cwd on all hosts + stage logs.
+| build | state | action | job/unit | log |
+|---|---|---|---|---|
+| QC stm base / fstm4 / fstm6 (sle_stm_v2) | FINISHED, GRT stopped rc21 (base: OT_HOLD_STALL hold ws -120.05; fstm4 -116.86 and fstm6 -120.95 hold at 21600 s GRT timecap, setup unmeasured) | none (NEEDS_RTL/timecap class verdicts, owner decides) | epyc4 runs ended 2026-11-13 14:0x-16:5x PST | epyc9 hard-qc-forms-1/pipe/runs/{base,fstm4,fstm6}/sle_stm_v2__cl7b3062fa/chain.log; run_grt.log on epyc4 same path |
+| QC su_c no-form baseline rebind (bsuc) | FINISHED, GRT DRT-0073 (194), same as fsuc3 | none (unchanged failure, not retried) | epyc4, 14:24 PST | epyc9 pipe/runs/bsuc/sle_su_c/chain.log |
+| QC st_a fsta / fsta2 | FINISHED, GRT rc21 OT_HOLD_STALL ws -98.43 | none | epyc4 | pipe/runs/fsta{,2}/sle_st_a_v2/chain.log |
+| QC st_a fsta3 | never launched (21:45 UTC, no gen dir on intel1), superseded by fsta4/fsta6 | none | - | pipe/runs/fsta3/sle_st_a_v2/chain.log |
+| QC st_a fsta4 / fsta6 PLACE | FINISHED place exit0 (fsta6 final face check: 'face retention fail cws0_o', cws0_o max hop 374 um, analysis only) | none (place-only pilots, no CTS authorized) | oth-ubuntu-367197-1794608427, oth-ubuntu-1730497-1794616238, oth-ubuntu-2391851-1794618671 | intel2 ~/hqf-codexlog/fsta4_place.log, fsta6_place.log, fsta6_final_measure.log |
+| QC coll_core (fcoll2) | FINISHED, place rc5, pre-route LEC NOT EQUIVALENT, route stopped; no CTS reached | none (needs a fix, not a retry) | epyc4, 16:45 PST | epyc9 pipe/runs/fcoll2/coll_core/chain.log |
+| QC HCI ring (hciring_codex) | FINISHED, new-band hci_ringarea place exit0 (LEC exit0); the older chain died at kit-rtl (missing bindw rtl file, superseded) | none | oth-ubuntu-833357-1794608780 epyc4 | intel2 ~/hqf-codexlog/hci_ringarea_place.log |
+| QC CBN outland PLACE | FINISHED place exit0 | none | oth-ubuntu-3442636-1794607533 | ~/hqf-codexlog/cbn_outland_place.log |
+| QC ctl8inc2 strict bind (E9) | FINISHED rc2, bind report missing (QCforms owns) | none | oth-ubuntu-1723045-1794617616 | ~/qc100-codex-logs/postphase_ctl8inc2_bind.log |
+| HOLD-TAP-1 QC DME chain | FINISHED, analytic runs terminal 16:25 PST (w3bf pair compare conclusion written), no process live | none | epyc7 hold-tap-1/qcreg/refit | epyc7 /srv/opentallas-scratch2/claude/hold-tap-1/qcreg/refit/w3bf_pair_compare_codex.log |
+| KV-PVFIN-1 s8f | FINISHED earlier, NOTSIGNED (TT+138.93/FF-2.75, 21 hold endpoints, face 278); replaced by s8pin2 | none | - | DIE-KV-100.md 148 |
+| KV E4 PVFIN route s8pin2 | RUNNING (docker dkv100-s8pin2-route up 2 h, log updated 17:46, post-route repair WNS +8.5) | leave | oth-ubuntu-1351483-1794615334 epyc4 | epyc4 /srv/opentallas-scratch3/claude/kv-pvfin-1/pin2_route_native.log |
+| KV-KITFIX-1 kv3_pc_v1 U1 proof | FINISHED: placed, async LEC EQUIVALENT 167497/167497; E8 continuation stopped at R-CAP 650349 movable >400000 (terminal) | none | epyc7 kv-kitfix-1/u1 | .../u1/items/kv3_pc_v1__cl23f6a148/gen/*/lec/lec.log |
+| KV-KITFIX-1 U2 kv3_phy_v1 | gen/preflight only, no run pending | none | - | epyc7 kv-kitfix-1/u2 |
+| KV-KITRTL-CLS | NO JOB: only the recipe refs exist (E8 dkv100/rtlcls/phy has only kit rtl copies, no phy_proof.sh; PHY synth explicitly 'not launched' per DIE-KV-100 line 204). Not mechanically relaunchable | none; owner (KV-101) must give the command | - | DIE-KV-100.md 204 |
+| KV-PDN-CLS | cancelled by COORD | skipped | - | - |
+| KV routes t4 / t5 (kv_leaf attempt_9 route) | RUNNING on epyc9 (2.2 ks CPU-active) | leave | autopilot jobs 3dae609c1c19 / 72bb02f6cbf6 | ~/coord/autopilot/jobs/<id>/a1.log |
+| KV E7 PC alias (two812_alias) | FINISHED exit0 | none | oth-ubuntu-3208598-1794618736 | ~/dkv100log/pc_u1_split_two812_alias.log |
+| KV parent Hub6 | FINISHED FAIL, type_split input pins/astk_index0.json missing (split lane); unchanged input, not retried | none, split lane must supply the file | unit 3205086 | ~/dkv100log/ (per KV-101.md) |
+| KV SD prospective GRT | RUNNING (launched by KV-101 at ~17:33, intel1, resume start=grt) | leave (no duplicate) | oth-ubuntu-3697333-1794619897 | intel2 ~/kv101log/sd_grt.log |
