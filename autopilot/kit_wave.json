@@ -585,7 +585,10 @@
     "kv3_hgi_v8@4",
     "kv3_hgi_v3@7",
     "kv3_hgi_v6@8",
-    "kv3_pv_v3n@6"
+    "kv3_pv_v3n@6",
+    "kv3_pc_v1__cl23f6a148@6",
+    "kv3_pc_v1__cl4ea58a5c@6",
+    "kv3_pc_v1__cl7f648944@8"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -748,7 +751,7 @@
     "kv3_io_cor@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class TIMING. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
     "kv3_pc__cl254f2e73@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
     "kv3_pc__cl5a95b461@4": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
-    "kv3_pc_v3@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
+    "kv3_pc_v3@4": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
     "kv3_pv_v12@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
     "kv3_pv_v1n@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
     "kv3_pv_v1@4": "KW-FIX-7 11-04 KV wave root: scratch3 does not exist on hub intel2, sync_hub mkdir refused; root now scratch2 on all hosts",
@@ -819,7 +822,7 @@
     "kv3_pv_v12@13": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows.",
     "kv3_pv_v7@9": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows.",
     "kv3_pc__cl254f2e73@7": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
-    "kv3_pc__cl5a95b461@8": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
+    "kv3_pc__cl5a95b461@8": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
     "kv3_pc_v1__cl23f6a148@7": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
     "kv3_hroot@5": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
     "kv3_hub_Wo@9": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
@@ -837,7 +840,7 @@
     "kv3_hub_Wo@12": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
     "kv3_pc_v1__cl23f6a148@11": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
     "kv3_pc_v1__cl7f648944@12": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
-    "kv3_pc__cl254f2e73@11": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
+    "kv3_pc__cl254f2e73@11": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
     "kv3_pc__cl5a95b461@13": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
     "kv3_sys_SD_v1@9": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
     "kv3_sys_SD@6": "KW-FIX-32 2026-11-08 00:09 PST: class fix KV u_fdi_cdc SEL_CHUNK (KV-TYPES-3 dff767a167, strict equiv PROVEN) on main 27db658adf1 / dk-kv; bind of record re-based to src_27db6 (kvbind_27db6, strict 0 errors); COORD 22:4x relaunch",
@@ -906,7 +909,10 @@
     "kv3_hub_C@1": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_hgi_v3@7": "KV-FTGRID (KV-102 READY 02:13): plan_c.json re-sites 16 off-grid ft5 bits in kv3_hgi_v3/v6 (G0 0 errors, bind_matches 56/56) + ft_add_station.py nearest-legal-site fallback; relaunch only these two.",
     "kv3_hgi_v6@8": "KV-FTGRID (KV-102 READY 02:13): plan_c.json re-sites 16 off-grid ft5 bits in kv3_hgi_v3/v6 (G0 0 errors, bind_matches 56/56) + ft_add_station.py nearest-legal-site fallback; relaunch only these two.",
-    "kv3_pv_v3n@6": "KIT-OPS-4 11-14 03:4x INFRA: ot-job exit 99 input (gen/run_kit.sh) on another gen host, no fetch host in spec / ADMIT-TUNE-1 soft-pin REBALANCE regression (fixed)"
+    "kv3_pv_v3n@6": "KIT-OPS-4 11-14 03:4x INFRA: ot-job exit 99 input (gen/run_kit.sh) on another gen host, no fetch host in spec / ADMIT-TUNE-1 soft-pin REBALANCE regression (fixed)",
+    "kv3_pc_v1__cl23f6a148@6": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
+    "kv3_pc_v1__cl4ea58a5c@6": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
+    "kv3_pc_v1__cl7f648944@8": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone."
    },
    "only_items": [
     "kv3_astk",
@@ -1767,6 +1773,22 @@
      }
     ],
     "qkd_kvs_pcf": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/kvpcf-view-1114/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf signed ODB bd980c62 detail (DIEKV-100 pdncls, sha 2a908d42)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch2/claude/kvpcf-view-1114/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf signed ODB bd980c62 detail (DIEKV-100 pdncls, sha 2a908d42)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
      {
       "host": "epyc4",
       "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf",
@@ -5245,7 +5267,24 @@
     "event": "kv102sem_96f13b36a2",
     "plan_sha256": "1fd99da8d31abcb218fcc37d38d3a261a8f5df74e5d345c38b1248d19b05d176"
    },
-   "note_kitops3_ftgrid": "KIT-OPS-3: plan_c.json f9abb180.. + ft_add_station.py d5514171.. overlaid on src_kv_96f13b36a2_pgL (all KV gen hosts); event label kv102sem_ftgrid; only hgi_v3/v6 blocks change."
+   "note_kitops3_ftgrid": "KIT-OPS-3: plan_c.json f9abb180.. + ft_add_station.py d5514171.. overlaid on src_kv_96f13b36a2_pgL (all KV gen hosts); event label kv102sem_ftgrid; only hgi_v3/v6 blocks change.",
+   "prov_view_sources_prev_kitops3_pcf": {
+    "qkd_kvs_pcf": [
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/kv-types-6/pc_detail/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view) + KV-TYPES-6 detail M6/M7 OBS (codex exact f90cb5cb9e)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 0
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_kvsys/388dc9658f5c/qkd_kvs_pcf",
+      "job": "COUNTED qkd_kvs_pcf epyc4:/srv/opentallas-scratch2/claude/ss25/resign/pcf_fmx_x/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ]
+   }
   },
   "s81": {
    "enabled": true,
