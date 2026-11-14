@@ -8267,10 +8267,6 @@
      "--max-wire-um",
      "120"
     ],
-    "ot_s81sl_leaf__t62": [
-     "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-aor3/landed_sidecar_aor3.json"
-    ],
     "ot_s81sl_leaf__t50": [
      "--slew-margin",
      "50",
@@ -31293,7 +31289,13 @@
     "ot_s81sl_leaf__t40__clf8bbdae1",
     "ot_s81sl_leaf__t42",
     "ot_s81sl_leaf__t10"
-   ]
+   ],
+   "type_args_prev_kitops4_aor3": {
+    "ot_s81sl_leaf__t62": [
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kit-ops-1/drt73-aor3/landed_sidecar_aor3.json"
+    ]
+   }
   },
   "s81_head": {
    "enabled": true,
