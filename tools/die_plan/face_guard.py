@@ -981,7 +981,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         return seam.get(re.sub(r"\[\d+\]$", "", str(b)), frozenset())
 
     def fail(cls, b, why):
-        if timed and cls in TIMED_CLASSES and re.sub(r"\[\d+\]$", "", str(b)) in timed:
+        if timed and re.sub(r"\[\d+\]$", "", str(b)) in timed and (
+                cls in TIMED_CLASSES or (cls == "feedthrough" and why == "buffered from port arst_n")):
+            # QC-PHY-1 11-14: a bare registered-pin hard IP drives its epoch bit with the delivered reset level (bind.py reg_hard)
             res["timed_declared"].append(f"{b}: {cls} {why}")   # DIE-KV-61/hr: declared timed-face bit
             return
         if cls != "merged" and cls in seam_cls(b):

@@ -2498,10 +2498,27 @@ def core_tap_early_ps(P, tp, corner="TT"):
     return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner))
 
 
+def full_area_hard_ip(t):
+    """QC-PHY-1 11-14 (COORD ruling, QC phy_serdes/phy_serdes_b/phy_ucie_kv): a bare hard type whose only content is one
+    placed hard IP covering >= 95% of the partition (licensed PHY abstract used as-is).  There is no free site for an
+    R4 grid tap and no clock sink inside the abstract: its one clock terminal is clock.tap_um (same as bare_hard_single_tap).
+    False for every other type, so existing kits and budgets are unchanged."""
+    if not bare_hard_single_tap(t):
+        return False
+    cs = t.get("contents", []) or []
+    if len(cs) != 1 or not cs[0].get("lef") or not cs[0].get("origin_um") or not cs[0].get("outline_um"):
+        return False
+    w, h = t["outline_um"]
+    mw, mh = cs[0]["outline_um"]
+    return w > 0 and h > 0 and (mw * mh) >= 0.95 * (w * h)
+
+
 def _grid_taps(P, tn):
     """the R4 pitch grid of tap_grid (no added sink taps)."""
     t = P.types[tn]
     xy = t.get("clock", {}).get("tap_um")
+    if full_area_hard_ip(t) and isinstance(xy, (list, tuple)) and len(xy) == 2:
+        return [("clk", float(xy[0]), float(xy[1]))]
     if (bare_hard(t) and t.get("clock", {}).get("tap_mode") == "grid+explicit"
             and isinstance(xy, (list, tuple)) and len(xy) == 2):
         # FLOW-20 11-01: the "grid" of a bare hard wrapper (grid+explicit) is its terminal at clock.tap_um, exactly
