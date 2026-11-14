@@ -11,3 +11,8 @@
 - AGIdock archive route not documented in SIGNED-RECOVER.md (paths only).
 - Pin-match gate: compare PIN rects of new LEF vs results/head_core_clockfreeze_release/elem{A,B}_signed/*.lef.
 - ARCHIVE route (from SIGNED-RECOVER.md ARCHIVE HOW-TO): stage on rtx-pro /home/ubuntu/signed-export-1114/s81_head/<core>/, push to ubuntu@155.103.253.53:/archive/opentallas-signed-1114/ with identity ~/.ssh/agidock_ot (rsync -a -R, no --delete, <=3 sessions, INDEX.tsv append only, never print key). Fleet hosts have no route.
+## 11-14 LAUNCHED (typed-kit path, COORD approved)
+- Generator: gen_core_kit_hbm_rw.py (HBM core-kit gen, reused as generic hard-core kit gen) from wave src 20261113/s81_head, overlay epyc9 /srv/opentallas-scratch2/claude/type-hdcore-elemab/ov (hardlinks; patched CLK_RE += ft_mstrap_i, HDCORE_SKIP_LATTICE env). Inputs: views_hdcore.json, recipes_b2.json (ot_s81hd_elem{A,B}_cv), wrappers/ot_s81hd_elem{A,B}_cv.sv (BUFx24 u_isl_* ft pairs), pins = wave-src cores/elem{A,B}_pins.json (= signed LEF sha 17786be2 / da3694b4). RTL = f11f3cc47 closed element + CY_COPY + oreg + rb wrapper.
+- post_kit.py: interior ft/rst_n pins from rect_centre, ft_ports.py declare+install, pregrt_ff_hold.tcl + OT_PREGRT_FF_HOLD=1 + OT_GRT_POST_MAX_S=0 + run_kit_hbm.sh step. SDC: vclk TT 250 / FF 202.5 (io-tt-ps/io-ff-ps), setup unc 0 / hold 25 (current policy).
+- Forms: A1/B1 util 0.50 on intel1, A2/B2 util 0.40 on epyc9; dirs .../type-hdcore-elemab/runs/<form>/kit on those hosts; GOAL=route 64 GB 16 thr; ot-run client logs intel2 ~/tmp/hdcore_<form>.log (queued 11-14, waiting load/memory).
+- On finish: pin-match vs signed LEF, LEC (kit lec/lec.json), signoff.json; then archive per SIGNED-RECOVER ARCHIVE HOW-TO + AUTO-RESIGN row + tell EXPLORER-FABLE-1.
