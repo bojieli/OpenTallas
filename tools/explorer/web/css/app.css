@@ -19,8 +19,10 @@ code, .mono { font-family: var(--mono); font-size: .93em; }
   grid-template-columns: var(--rail) var(--nav-w) minmax(0, 1fr) var(--insp-w);
   grid-template-rows: var(--top) minmax(0, 1fr) var(--status);
   grid-template-areas: "top top top top" "rail nav stage insp" "status status status status"; }
-.app[data-nav="closed"] { --nav-w: 0px; }
-.app[data-insp="closed"] { --insp-w: 0px; }
+/* !important: the panel width is an inline custom property (set by the splitter), which would otherwise win and keep the
+   empty column, so a hidden panel would not give its width back to the stage */
+.app[data-nav="closed"] { --nav-w: 0px !important; }
+.app[data-insp="closed"] { --insp-w: 0px !important; }
 .app[data-nav="closed"] .nav, .app[data-insp="closed"] .insp { display: none; }
 .app[data-focus="1"] { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); grid-template-areas: "stage"; }
 .app[data-focus="1"] > :not(.stage) { display: none; }
