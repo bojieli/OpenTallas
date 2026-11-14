@@ -49,6 +49,13 @@ class SimpleAdmit(unittest.TestCase):
         j = json.loads(out.getvalue())
         self.assertEqual((j["admit_gb"], j["free_gb"], j["waiting"]), (284, 274, 1))
 
+    def test_need_factor_scales_the_class_peak_capped_at_the_request(self):
+        env = dict(self.env, SIMPLE_NEED_FACTOR="0.5")
+        self.assertTrue(gate(100, "run_sim.sh:sim", env).startswith("OK 15 "))     # 30 GB class peak x 0.5
+        self.assertTrue(gate(100, "never.sh:x", env).startswith("OK 16 "))         # unknown class keeps 16 GB
+        T["big.sh:big"] = dict(n=3, live=0, proved=0, peak_gb=80.0, req_gb=96)
+        self.assertTrue(gate(100, "big.sh:big", env).startswith("OK 40 "))         # min(80 peak, 96 request) x 0.5
+
 
 if __name__ == "__main__":
     unittest.main()
