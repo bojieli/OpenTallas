@@ -2986,7 +2986,11 @@ def tick(args):
     _mark("poll_running")
     poll_reviews(st)
     retry_pending(st)
-    retry_unversioned(st)
+    # WF-1 11-14 (COORD/OWNER: the commit / flow-tag tie is removed from counting; COUNT-FRICTION-1 credits SIGNED-UNVERSIONED
+    # directly): promoting unversioned records only to get provenance cost 476 s of a 1033 s tick, so it is OFF by default.
+    # AP_RETRY_UNVERSIONED=1 (or the marker autopilot/RETRY-UNVERSIONED) turns it back on.
+    if os.environ.get("AP_RETRY_UNVERSIONED") == "1" or (AP_DIR / "RETRY-UNVERSIONED").exists():
+        retry_unversioned(st)
     _mark("reviews_retry")
     submitted = admit_new(st, rows)
     save_state(st)
@@ -3008,7 +3012,10 @@ def tick(args):
         except Exception as e:                         # the next tick admits these rows anyway
             log(f"ADMIT-AFTER-WAVE failed: {type(e).__name__}: {e}")
     _mark("kit_wave_step+admit")
-    if os.environ.get("AP_AUTO_RESIGN", "1") != "0":   # FLOW-29 owner 11-04: signed runs re-signed on the newest tag, no agent
+    # WF-1 11-14 (#4): auto-resign has its own lock and state file and no tick state; while autopilot/AUX-RESIGN exists it runs in
+    # its own timer (autopilot-aux.timer: autopilot.py aux) instead of serially here (164 s of the tick).  Remove the marker to put
+    # it back into the tick.
+    if os.environ.get("AP_AUTO_RESIGN", "1") != "0" and not (AP_DIR / "AUX-RESIGN").exists():   # FLOW-29 owner 11-04: signed runs re-signed on the newest tag, no agent
         try:
             AR.step(sys.modules[__name__])
         except Exception as e:                         # a re-sign pass must never stop the chain
@@ -3025,6 +3032,18 @@ def tick(args):
         counts[j.get("status")] = counts.get(j.get("status"), 0) + 1
     print(f"{now_s()} autopilot tick done: queue {len(rows)} rows; " +
           ", ".join(f"{k} {v}" for k, v in sorted(counts.items(), key=lambda kv: str(kv[0]))))
+    return 0
+
+
+def aux(args):
+    """WF-1 11-14 (#4): the auto-resign pass outside the tick (own timer); auto_resign.step holds its own flock"""
+    global DRY
+    DRY = getattr(args, "dry_run", False)
+    try:
+        AR.step(sys.modules[__name__])
+    except Exception as e:
+        log(f"AUTO-RESIGN (aux) failed: {type(e).__name__}: {e}")
+        return 1
     return 0
 
 
@@ -3286,6 +3305,8 @@ def main(argv=None):
     t = sp.add_parser("tick")
     t.add_argument("--dry-run", action="store_true")
     sp.add_parser("status")
+    x = sp.add_parser("aux")
+    x.add_argument("--dry-run", action="store_true")
     c = sp.add_parser("classify")
     c.add_argument("kit")
     c.add_argument("--since", type=float, default=0)
@@ -3293,7 +3314,7 @@ def main(argv=None):
     c.add_argument("--exit", type=int, default=None)
     sp.add_parser("reconcile-wave", help="read-only current-row/terminal-job report and approved recovery suggestions")
     a = ap.parse_args(argv)
-    return {"tick": tick, "status": status, "classify": classify_cmd}[a.cmd](a)
+    return {"tick": tick, "status": status, "classify": classify_cmd, "aux": aux}[a.cmd](a)
 
 
 if __name__ == "__main__":
