@@ -1,6 +1,8 @@
 """Exercise real/virtual clock classification with native Tcl semantics, no STA."""
 from pathlib import Path
-import tkinter
+import pytest
+
+tkinter = pytest.importorskip("tkinter", reason="tkinter (Tcl bridge) not installed on this host")
 import unittest
 
 

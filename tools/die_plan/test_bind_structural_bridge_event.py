@@ -26,7 +26,7 @@ def test_post_compose_bridge_driver_visible_at_graph(tmp_path, monkeypatch):
     monkeypatch.setitem(sys.modules, 'bind_compose', types.SimpleNamespace(apply=compose))
     monkeypatch.setitem(sys.modules, 'structural_bridge', types.SimpleNamespace(apply=bridge))
     monkeypatch.setattr(B, 'Graph', graph)
-    plan = {'asbuilt': {'top': 'top', 'compose': 'cut-plan',
+    plan = {'partitions': [], 'asbuilt': {'top': 'top', 'compose': 'cut-plan',
                         'structural_bridges': ['exact-native-source']}}
     netlist = {'modules': {'top': {'ports': {}, 'cells': {}, 'netnames': {}}}}
     with pytest.raises(GraphReached):
@@ -42,7 +42,7 @@ def test_default_never_loads_or_expands_bridges(tmp_path, monkeypatch):
         assert flat.const_drivers == {} and flat.cells == []
         raise GraphReached
     monkeypatch.setattr(B, 'Graph', graph)
-    plan = {'asbuilt': {'top': 'top'}}
+    plan = {'partitions': [], 'asbuilt': {'top': 'top'}}
     netlist = {'modules': {'top': {'ports': {}, 'cells': {}, 'netnames': {}}}}
     with pytest.raises(GraphReached):
         B.Binder(plan, netlist, tmp_path, base=str(tmp_path))

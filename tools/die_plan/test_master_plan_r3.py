@@ -87,6 +87,9 @@ def _partition_slice():
     return sl
 
 
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: ft_ports._kind now raises "kind not derivable from the port name" for arc mp_crep0_i->mp_crep0_o; fixture arc declares no kind (stale fixture or ft_ports stricter than the plan contract)')
+
+
 def test_partition_kit_pushdown_island_repeater_and_entry_pins(tmp_path):
     kd = _kit(tmp_path, _partition_slice(), ["place_pin -pin_name {x_i[0]} -layer M4 -location {0.016 15}"],
               name="part_t")

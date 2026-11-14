@@ -98,7 +98,7 @@ def test_run_skip_writes_record_and_returns_0(tmp_path):
 
 
 def _stub(monkeypatch):
-    monkeypatch.setattr(eco_loop, "eligible", lambda rec: (True, "ECO class: hold_ff"))
+    monkeypatch.setattr(eco_loop, "eligible", lambda rec, signoff_path=None: (True, "ECO class: hold_ff"))
     monkeypatch.setattr(eco_loop, "eco_mem", lambda kit_, mem: (mem, None))
 
     class Staged(Exception):

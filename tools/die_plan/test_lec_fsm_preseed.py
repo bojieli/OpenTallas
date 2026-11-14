@@ -7,6 +7,17 @@ import lec
 from test_lec_memory_layout import _seq
 
 
+def _have_abc():
+    try:
+        lec.abc_bin()
+        return True
+    except lec.LecError:
+        return False
+
+
+needs_abc = pytest.mark.skipif(not _have_abc(), reason="yosys-abc not installed on this host")
+
+
 def _run(tmp_path, bad=None):
     def gold(m,l):
         return {'s0':m.AND(l['rn'],l['s0']^1),
@@ -33,6 +44,7 @@ def _run(tmp_path, bad=None):
     return L,st,log
 
 
+@needs_abc
 def test_explicit_seed_proves_normal_abc_miter(tmp_path):
     L,st,log=_run(tmp_path)
     assert st and set(st.values())=={'proved'}
@@ -41,6 +53,7 @@ def test_explicit_seed_proves_normal_abc_miter(tmp_path):
 
 
 @pytest.mark.parametrize('bad',['encoding','reachable_state'])
+@needs_abc
 def test_bad_seed_is_dropped_and_function_still_fails(tmp_path,bad):
     L,st,log=_run(tmp_path,bad)
     assert st['ff:u_dut.o']=='differs'
