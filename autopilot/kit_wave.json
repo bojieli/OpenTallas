@@ -28263,11 +28263,11 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/head-98/prep21z5/prep/source_plan.json",
    "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_fb5f5a8db8",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcap1d724b73",
    "src_sha": "fb5f5a8db87d691b25ba0e93096fb8e07c00ca3b",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_fb5f5a8db8/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcap1d724b73/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
    },
    "gen_args": [
@@ -29945,7 +29945,15 @@
     "hd_spn_eshim_tx": "HEAD-98 11-13: RE-SIGN onto rp21z4 in flight (same routed DB, kit RTL byte-identical; head-98/resign21z4/hd_spn_eshim_tx, intel2 ~/tmp/h98_resign_hd_spn_eshim_tx.log). Release only if the re-sign fails.",
     "hd_st_n3_transit": "HEAD-98 11-13: RE-SIGN onto rp21z4 in flight (same routed DB, kit RTL byte-identical; head-98/resign21z4/hd_st_n3_transit, intel2 ~/tmp/h98_resign_hd_st_n3_transit.log). Release only if the re-sign fails."
    },
-   "kit_snap": true
+   "kit_snap": true,
+   "src_prev_h99_pgcap": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_fb5f5a8db8",
+   "src_sha_prev_h99_pgcap": "fb5f5a8db87d691b25ba0e93096fb8e07c00ca3b",
+   "kit_rtl_prev_h99_pgcap": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_fb5f5a8db8/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "note": "HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+   },
+   "note_h99_pgcap": "HEAD-99 11-13 (COORD: freeze lifted, apply FLOW-PGCAP-1 now): wave src -> snapshot kw45/src_head_rp21z_pgcap1d724b73 = fb5f5a8 + patch tools/die_plan pg_track_truth/grt_pre/grt_post/gen_phys/core_flow/kit_resume (branch claude/flow-pgcap-1-1113 @1d724b73cc6, OT_PG_TRACK_TRUTH=1 in rflow cfg for s81_head). Same plan/event rp21z5. On gen hosts epyc7/intel1/epyc10."
   },
   "qwen_compute": {
    "enabled": true,
