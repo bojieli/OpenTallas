@@ -371,7 +371,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None, ring_clock_ports=None,
          landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None,
-         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, source_sync_inputs=None):
+         pad_clock_cdc=None, edge_clock_cdc=None, pad_clock_data_inputs=None, pad_clock_data_outputs=None, root_reset_hier=None, tap_window_port_ps=None, tap_window_in_ps=None, tap_offset_ps=None, source_sync_inputs=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -487,6 +487,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     tw_ports = {k: float(v) for k, v in (tap_window_port_ps or {}).items()}
     tw_in = tw if tap_window_in_ps is None else float(tap_window_in_ps)
     win_on = bool(tw) or bool(tw_ports)
+    to_ = {k: (float(v[0]), float(v[1])) for k, v in (tap_offset_ps or {}).items()}   # R-CLOCK-7 plan clock.tap_offset: port -> TT (early, late) = (o - u, o + u)
     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
     odly = {p: {} for p in ctx.allp}
@@ -925,6 +926,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     wports = [p_ for p_ in ctx.clock_ports if p_ not in want and p_ not in pad_in and p_ not in (ring_clock_ports or ())]
     for p_, d in port_win.items():
         wp = tw_ports.get(p_, tw)
+        if p_ in to_:             # R-CLOCK-7: an offset row port carries exactly (o - u) / (o + u), on a core tap after its own latency line
+            if not win_on:
+                err.append(f"clocks: source -early/-late offset on port {p_} without a plan clock.tap_window / clock.tap_offset")
+            elif abs(d.get("early", 1e9) - to_[p_][0]) > EPS or abs(d.get("late", 1e9) - to_[p_][1]) > EPS:
+                err.append(f"clocks: clock port {p_} offset early {d.get('early')} / late {d.get('late')} ps, plan "
+                           f"clock.tap_offset {to_[p_][0]:g} / {to_[p_][1]:g}")
+            continue
         if not win_on:
             err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
         elif p_ in want:      # DIE-S81-10: early core tap keeps its own latency as late, early end -(early + W)
@@ -939,6 +947,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 err.append(f"clocks: plan early core tap {p_} has no clock.tap_window early line")
     if win_on:
         for p_ in wports:
+            if p_ in to_:
+                if p_ not in port_win:
+                    err.append(f"clocks: plan clock.tap_offset port {p_} has no -early/-late offset lines")
+                continue
             d = port_win.get(p_, {})
             wp = tw_ports.get(p_, tw)
             if abs(d.get("early", 1e9) + wp) > EPS or abs(d.get("late", 1e9)) > EPS:
@@ -1133,11 +1145,20 @@ def kit_context(P, tn):
                 **({"tap_window_ps": gen_phys.tap_window_ps(P, tn)} if gen_phys.tap_window_ps(P, tn)
                    and not gen_phys.tap_window_port_table(P, tn) else {}),
                 **_tap_window_port_ctx(P, tn),
+                **_tap_offset_ctx(P, tn),
                 **({"ring_clock_ports": sorted(gen_phys.ring_writer_clocks(P, tn))} if gen_phys.ring_writer_clocks(P, tn) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
                 **({"root_reset_hier": RT.bound_native_contract(P, tn)["entry_path"]}
                    if RT.bound_native_contract(P, tn) and gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))
+
+
+def _tap_offset_ctx(P, tn):
+    """R-CLOCK-7: lint context of a type with clock.tap_offset rows: {port: (TT early, TT late)} = (o - u, o + u), the lines
+    gen_phys.tap_offset_lines writes into constraint.sdc.  {} for a type without rows."""
+    import gen_phys
+    tab = gen_phys.tap_offset_table(P, tn)
+    return {"tap_offset_ps": {n: (r["TT"] - r["tol"], r["TT"] + r["tol"]) for n, r in tab.items()}} if tab else {}
 
 
 def _tap_window_port_ctx(P, tn):
