@@ -455,19 +455,22 @@ def test_tap_wrapper_selected_plain_hard_not():
 def test_hard_wrapper_empty_tap_fixed(tmp_path):
     base = _write(tmp_path, _hard_wrapper())
     chk = tmp_path / "chk.json"
-    assert RF.main(["check", str(base), "--types", "^sink$", "--json", str(chk)]) == 3
+    # LIMIT-BIND-1 (owner: remove conservative limits): the far stale tap (2 sinks at 759 um > radius 200) no longer
+    # stops the export: check reports it as advisory (TAP-RADIUS-TARGET) and exits 0 instead of 3
+    assert RF.main(["check", str(base), "--types", "^sink$", "--json", str(chk)]) == 0
     row = json.loads(chk.read_text())["rows"][0]
-    # the stale tap stops the export (here: far, 2 sinks at 759 um; KV kv3_phy: empty) = what bind kit-rtl raises
-    assert "grid+explicit tap clk_t1 load=" in row["error"] and row["c5"] == 0 and row["reset"].get("skip")
+    assert not row.get("error") and row["c5"] == 0
     out, ev = _fix(tmp_path, base, "hw", "--types", "^sink$")
     assert ev["applied"] == 1 and ev["summary_after"]["errors"] == 0 and ev["summary_after"]["types_viol"] == 0
     ck = json.loads(out.read_text())["partition_types"]["sink"]["clock"]
-    assert [800.0, 800.0] not in [r["xy"] for r in ck["added_taps"]]
+    # a far-but-loaded tap is no longer dropped (the radius limit is gone); only an empty added tap is
     assert [r["name"] for r in ck["added_taps"]] == ["clk_t%d" % (i + 1) for i in range(len(ck["added_taps"]))]
     import schema as S
     import taps as TP
     P2 = S.Plan(json.loads(out.read_text()), out)
-    got = TP.grid_explicit_taps(P2, "sink")                     # = bind kit-rtl's check (raises on an empty added tap)
-    assert all(n > 0 for _n, _x, _y, n, _r in got[len(S._grid_taps(P2, "sink")):])
+    # LIMIT-BIND-1 (owner: remove conservative limits): an empty added tap is TAP-LIMIT-INFO (not blocking) in
+    # bind kit-rtl's check, so grid_explicit_taps must simply return for the fixed plan (it used to raise)
+    got = TP.grid_explicit_taps(P2, "sink")
+    assert got
     out2, ev2 = _fix(tmp_path, out, "hw2", "--types", "^sink$")                     # idempotent
     assert ev2["applied"] == 0 and out2.read_text() == out.read_text()

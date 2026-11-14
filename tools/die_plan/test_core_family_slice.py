@@ -275,9 +275,10 @@ def test_calibrated_summary_matches_d1_kernel_and_keeps_sink_extrema(monkeypatch
         if detail is not None:
             detail["a"] = dict(sinks=vals, slew_in=2., slew_out=4.)
             detail["b"] = dict(sinks=[30.], slew_in=3., slew_out=5.)
-        return {"a":sum(vals)/2, "b":30.}, {}
+        return {"a":sum(vals)/2, "b":30.}, {"a": (0., 2.), "b": (0., 3.)}
     monkeypatch.setattr(A.V3, "predict3", predict)
-    q = A.calibrated_summary(None, None, {}, {})
+    import types
+    q = A.calibrated_summary(types.SimpleNamespace(nodes={"a": 0, "b": 0}), None, {}, {})
     assert q["TT"]["window"] == 15. and q["FF"]["window"] == 15.
     assert q["TT"]["sink_min"] == 10. and q["TT"]["sink_max"] == 30.
     assert q["FF"]["mean"] == round((10+18+30)/3,2)

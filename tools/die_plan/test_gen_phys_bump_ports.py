@@ -69,7 +69,7 @@ def test_no_declaration_no_change(tmp_path):
 def test_refuse_mismatch(tmp_path):
     rows = [dict(die_port="p0_link_v", dir="output", width=1, partition="p0", leaf="p0.u", pin="link_v",
                  part_port="bump_ucie_rom_link_v")]
-    with pytest.raises(gen_rtl.GenError, match="not bound"):
+    with pytest.raises(gen_rtl.GenError, match="not (all )?bound"):
         G.kit_bump_ports(_plan(), "ts", _bind(tmp_path, rows=rows))
     with pytest.raises(gen_rtl.GenError, match="bound-only pin"):
         G.kit_bump_ports(_plan(), "ts", _bind(tmp_path, bop=[]))

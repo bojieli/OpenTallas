@@ -66,8 +66,9 @@ def test_child_root_tap_fails_closed():
     p = copy.deepcopy(EX)
     child_parent(p)
     p["partition_types"]["src"]["clock"]["tap_radius_um"] = 100.0
-    with pytest.raises(ValueError, match="radius"):
-        taps.explicit_taps(schema.Plan(p), "src")
+    # LIMIT-BIND-1 (owner: remove conservative limits): a child-root tap beyond tap_radius_um is reported
+    # (TAP-RADIUS-INFO) but no longer fails closed.
+    assert taps.explicit_taps(schema.Plan(p), "src")
 
 
 def test_child_root_landing_must_be_the_pin():

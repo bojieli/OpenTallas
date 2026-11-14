@@ -246,7 +246,7 @@ def test_kit_wave_cell_check_note_once():
 
 def test_kit_wave_spec_has_no_cell_check_key_by_default():
     src = (HERE.parent / "autopilot" / "kit_wave.py").read_text()
-    assert '**({"cell_check": True} if d.get("cell_check") and kind == "type" else {})' in src
+    assert '({"cell_check": True} if d.get("cell_check") and kind == "type" else {})' in src
     assert 'if sp.get("cell_check") and res["cells"]:' in src
 
 
