@@ -49,6 +49,35 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 - Plan delta extended to ALL 8 svc_lo types through a per-family index name map (rsv/ctrl/etap/irg; t7 u_rg3 level): 98 hard + 97 SRAM each, 0 overlaps. Providers re-pointed from the missing prov_1109 views to 13 S81-SVCRS-4 signed rows (copied from epyc9). Plan src_h8/physical/die_plan/s81/plan_svc_lo_band_h8_1113.json sha 3839b59c1ddd.
 - hi estimate (no build): rs t1-t6 macro area 2.37 mm2, 555-614k placed, outline about 1745.28 x 2851.20; pvso_entry 2.98 mm2, about 1961.28 x 2851.20 (its soft cell count still needs one H8 synth). Details: svc/plan_delta/DELTA_README.txt.
 - Strict bind of the H8 provider form RUNNING: unit oth-ubuntu-1326038-1794630848, log intel2 ~/s81-cores-2-logs/svcb3_band_bind_h8.log.
+### STATE 2026-11-13 21:54 PST: SVC-BAND-3 strict bind of the H8 provider form, iteration 4
+- Run c (unit oth-ubuntu-2038575-1794633096): the dead-input check now PASSES. The bind completed with 1211 errors in 2 classes, both from the H8 manifest:
+  - (a) 1010 "wavefront core reset ... found 0": the H8 engine parents were leaves, so hcore/H4/TRX/IRG were never bound as leaves.
+  - (b) 201 TIED literal errors: the dsdv_svc_mem_ar stub default width, plus inputs of the undissolved engine.
+- Fixes in the src_h8 manifest:
+  - dissolve + ot_s81_svc_attn_s, ot_s81c_attn_tile_hc_h8_rt2, ot_s81_svc_merge_h8_split, dsdv_idx_rg3, dsdv_idx_rg2_chunk
+  - slang_parameterized_blackboxes + dsdv_svc_mem_ar, dsdv_svc_mem_lr
+  - base/hard_params/map_file made repository-relative (the manifest_paths gate)
+- Band plan = the wave plan plan_h2_2249 with the 16 svc types grafted from the H8 form: src_h8/physical/die_plan/s81/plan_band_h8_1113.json, sha dc2656adddbc.
+  - svc_lo is face-packed.
+  - svc_hi providers moved to the 259.2 rows.
+  - GAP: there is no S81-SVCRS-4 row for the hi H4 at 103.68 x 259.2. It has the plan pin table only, which is enough for a logical bind but not for a hi build.
+  - 4 hi rows are LOCAL_PASS_NEEDS_PARENT.
+- Run d RUNNING: log intel2 ~/s81-cores-2-logs/svcb3_band_bind_h8d.log.
+### BLOCKED 2026-11-13 22:37 PST: SVC-BAND-3 H8 strict bind (to S81-CORES-2, DIE-S81-90; cc COORD)
+- Bind iterations d-f: errors 1211 -> 488.
+  - Fixed: dissolve chain; files + dsdv_idx_rg2.sv, ot_s81c_attn_h8_rt2.sv, ot_s81_svc_merge_h4.sv, ot_s81_svc_idx_hslice_fp.sv.
+  - hcore/H4/TRX/IRG now bind as leaves on 14 of the 16 svc types.
+  - Last run: unit oth-ubuntu-2665394-1794636127, log intel2 ~/s81-cores-2-logs/svcb3_band_bind_h8f.log, report epyc7 .../svc/band_bind_h8/out/bind_report.json.
+- BLOCKER (die netlist, not mine to change): physical/die_plan/s81/bind/inputs/die_b178_lfcs.v (tools/s81_dv/dv_bind.py) wires the svc gather ring at the H16 width.
+  - Example: u_rsv_02 .gi_d_n(w_sg_03_02_lnd[2132:1]), dsdv_svc_busland_2133, RS_FACE_W go_d 2132 in tools/s81_dv/dv_spare_out.py.
+  - Under OT_SVC_H8 the fv wrappers take H*132+20 = 1076 bits, so 26,540 bits of live dsdv_svc_sx.gi_d faces bind as literal 0 (TIED errors). The H8 dead-input proof correctly does not cover them.
+  - Needs: the die top regenerated with H8 gather lanes (1076 b) by the dv_bind owner.
+- Smaller remaining classes (fix after the regen):
+  - (1) pvso_entry plan types list H16 heads g_h[8..15] (32 per type) that H8 does not have: drop them from the plan.
+  - (2) svc_lo t7 IRG sits under dsdv_idx_rg3_nq (u_irg_07): add it to dissolve.
+  - (3) structural IRG literal ties need declared_ties with RTL proof: hslice cs_in/cf_in chain start 0, first, ksadd b/cin, rg2_m1k wd/ra/wa/re/we, v41x_dly d, mem_ar wa.
+  - (4) epyc7 has NO orfs docker image: 112 native-glue EMIT errors ("Unable to find image openroad/orfs:asap7lock"). The bind and the kit build must run on epyc8 or another host with the image. Lane dir copy to epyc8 at the same path is in progress.
+- NOT launched: the band build (no clean bind). Launcher ready: epyc7 .../svc/band_build_h8.sh (run_kit route = route + finish + signoff, OT_HOLD_STRUCTURAL_ADVISORY=1 NONPORT_HOLD=1).
 
 ## RESULT 2026-11-13 19:45 PST: gunit A1
 - SIGNED OFF (R-MINIMAL): dsdv_gunit_l1f_ba1, built on the A0 recipe (sort guides mirrored for the S face). Routed DRC 0, antenna 0, TT setup -28.65 ps on 60 endpoints (within -42), hold_ff PASS (internal >= 0; raw -12.74 on 32 endpoints is port-start only). Kit epyc8 /srv/opentallas-scratch2/claude/s81-cores-2/gunit_a1/dsdv_gunit_l1f_ba1_gf5bias_sort2cmp (unit oth-ubuntu-2828619-1794620931; the exit 1 is the old setup>=0 gate). The A0+A1 pair is now signed off; F (bf) is still in GRT. TO DIE-S81-90: take A0+A1 views for bind + LATCHECK.
@@ -90,3 +119,9 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 - Finish try1 ended exit 2 after 2h53 in GRT (unit oth-ubuntu-3458321-1794622764). Error GRT-0183 (maze router heap underflow on net45752) in the incremental route inside repair_design, at about iteration 83000. This is the known GRT183 class: the full GRT is fine, and the in-process incremental reroute dies. The async LEC passed (exit 0).
 - The kit predated the GRT183-RESUME wrapper. I installed the standard grt183_make.sh + grt183_resume.tcl (copied from the GF5 A0 kit) and wrapped run_kit.sh exactly as newer kits do (original kept as run_kit.sh.pre_s81c2_grt183). On a second GRT-0183 the hook saves the resized design and the wrapper reruns 5_1_grt once in a fresh process.
 - Relaunched to finish: unit oth-ubuntu-3028966-1794633424, log ~/s81-cores-2-logs/bksel_c9geom_finish.otrun.log (try1 log kept).
+
+## RESULT 2026-11-13 22:38 PST: svc band (SVC-BAND-3 stopped)
+- Done: dead inputs re-proved under the H8 defines (36 decl / 21 spec, unit 1249246). Plan delta covers all 8 svc_lo types (name map; 98 hard + 97 SRAM each, 0 overlap). Provider views re-pointed to 21 S81-SVCRS-4 rows (4 hi rows LOCAL_PASS_NEEDS_PARENT). Band plan = plan_h2_2249 + 16 svc grafted (sha dc2656adddbc). Strict bind errors 1211 -> 488.
+- BLOCKER (die-level, not core): the die netlist physical/die_plan/s81/bind/inputs/die_b178_lfcs.v (generated by tools/s81_dv/dv_bind.py; RS_FACE_W go_d 2132 in dv_spare_out.py) carries the svc gather ring at H16 width. H8 needs 1076-bit lanes, so 26,540 live dsdv_svc_sx.gi_d bits bind as constant 0 (real ties). TO DIE-S81-90/91 (dv_bind owner): regenerate the die netlist for H8. After that, fix: pvso_entry heads g_h[8..15] still listed; add dsdv_idx_rg3_nq (lo t7) to dissolve; IRG structural literal ties need declared_ties with RTL proof. Run the bind/build on a host that has the orfs image (epyc8, not epyc7).
+- hi estimate (no build): rs t1-t6 555-614k placed (over the 400k cap), outline about 1745.28 x 2851.20; pvso_entry about 1961.28 x 2851.20. Die growth is about +872 um in X with hi.
+- Ready to launch once it binds: epyc7 /srv/opentallas-scratch2/claude/s81-cores-2/svc/band_build_h8.sh. Handoff: lanes/handoff/SVC-BAND-3.md. GEN_LINT fix 2845e7a35b is still waiting on ROOT-MERGE and the KIT-OPS-2 deploy.
