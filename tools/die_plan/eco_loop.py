@@ -656,25 +656,6 @@ def pin_late_hold_scope(pd):
     return scope
 
 
-def nonport_corner_env(kit, env=None):
-    """KIT-OPS-4 11-14 (DIE-QC-103: every late ECO on a kit with non-port FF hold repair died in a minute): the kit route exports
-    OT_VCLK_CORNER=ff (CORNER=BC) because tools/grt_nonport_hold.tcl refuses a native session that does not select FF; the ECO
-    route step ran without it.  Whenever the kit's config.mk enables OT_GRT_NONPORT_HOLD, the ECO route inherits the same corner
-    env (an explicit value already in env wins).  -> {} for any other kit."""
-    env = env or {}
-    try:
-        cfg = (Path(kit) / "config.mk").read_text()
-    except OSError:
-        return {}
-    if not re.search(r"^\s*(?:override\s+)?export\s+OT_GRT_NONPORT_HOLD\s*=\s*1\s*$", cfg, re.M):
-        return {}
-    out = {}
-    for k, v in (("OT_VCLK_CORNER", "ff"), ("CORNER", "BC")):
-        if not env.get(k):
-            out[k] = v
-    return out
-
-
 def refresh_hold_mm(pd, so, kit):
     """after prd_mk.sh: a pass dir whose orfs_hold_mm.tcl is missing or lacks the needed scope gets the SO pair (staged
     from the current tools by stage_so).  -> list of refreshed names; raises ValueError when the SO copy lacks it too"""
