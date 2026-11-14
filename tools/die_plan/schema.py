@@ -849,6 +849,9 @@ SCHEMA = {
                         "pin_root_copies": {"type": "object", "additionalProperties": False,
                             "required": ["max_loads", "sites_um"], "properties": {
                                 "max_loads": {"type": "integer", "minimum": 1, "maximum": 48},
+                                "signals": {"type": "array", "minItems": 1, "maxItems": 2,
+                                            "uniqueItems": True, "items": {"enum": ["reset", "start"]}},
+                                "start_sites_um": {"type": "array", "minItems": 1, "maxItems": 48, "items": _xy},
                                 "sites_um": {"type": "array", "minItems": 1, "maxItems": 48, "items": _xy}}},
                         # Optional physical padding floor for a published wavefront release cohort.
                         "wavefront_min_depth": {"type": "integer", "minimum": 0},

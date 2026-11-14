@@ -6407,12 +6407,13 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
         raise gen_rtl.GenError(f"type {tn}: bound native paired reset drivers require a separately qualified placement contract")
     try:
         pin_copies = RT.pin_root_copies(tree)
+        start_copies = RT.pin_start_copies(tree)
     except RT.ResetError as exc:
         raise gen_rtl.GenError(f"type {tn}: {exc}") from exc
     w, h = P.types[tn]["outline_um"]
     for label, xy in [("root", tree.get("root")), ("start_in", tree.get("start_in"))] + [
             (r.get("name", "relay"), r.get("xy")) for r in tree.get("relays", [])] + [
-            (c['name'], c['xy']) for c in pin_copies]:
+            (c['name'], c['xy']) for c in pin_copies + start_copies]:
         if label == "start_in" and not tree.get("start"):
             continue
         if (not isinstance(xy, (list, tuple)) or len(xy) != 2
@@ -6496,8 +6497,10 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
                             "sync_rst_n" if sync else "q": "rst_por_n" if lock else "rst_root_n"})
     for c in pin_copies[1:]:
         check(c['name'], "ot_dp_rrelay", {"clk": "clk", "d": "arst_n", "q": c['q']})
-    if pin_copies:
-        for c in pin_copies:
+    for c in start_copies[1:]:
+        check(c['name'], "ot_dp_rrelay", {"clk": "clk", "d": "start_i", "q": c['q']})
+    if pin_copies or start_copies:
+        for c in pin_copies + start_copies:
             references = len(re.findall(r"\b" + re.escape(c['q']) + r"\b", body))
             if references != 2 + len(c['loads']):
                 raise gen_rtl.GenError(f"type {tn}: pin reset copy {c['name']} has undeclared loads or drivers")
@@ -6571,7 +6574,7 @@ def install_bound_native_reset(P, tn, rtl_files, source_contract=None):
         raise gen_rtl.GenError(f"type {tn}: native reset has undeclared or missing relay nodes")
     entries = set(re.findall(r"\bot_dp_r\w+\s+(u_(?:rst|run)_(?:in|root)(?:_\w+)?)\s*\(", body))
     expected_entries = {ent} | ({"u_run_root" if sync else "u_run_in"} if tree.get("start") else set())
-    expected_entries |= {c['name'] for c in pin_copies}
+    expected_entries |= {c['name'] for c in pin_copies + start_copies}
     if entries != expected_entries:
         raise gen_rtl.GenError(f"type {tn}: native reset entry role disagrees with the actual wrapper")
     if source_contract and source_contract.get("native_paths") and source_contract["native_paths"] != paths:
