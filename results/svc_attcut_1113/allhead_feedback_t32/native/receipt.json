@@ -1,0 +1,521 @@
+{
+  "status": "PASS",
+  "rows": 32,
+  "scope": "all16logicalheads via two H8 passes, stagedactualSX/fold2/macroP/Psource/packet\u2192actualouter/native; selectedD32provider duplicated16times forSX; no globalminimum/G5/drainedpayload/identity/SOclaim",
+  "virtual_stage_go": 128,
+  "same_qualified_native_archive": "4b3430fb52",
+  "new_native_rtl_compile": false,
+  "head_profiles": {
+    "0": [
+      {
+        "sid": 0,
+        "tile": 12,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 1,
+        "tile": 13,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 2,
+        "tile": 15,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 3,
+        "tile": 14,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 4,
+        "tile": 8,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 5,
+        "tile": 9,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 6,
+        "tile": 11,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 7,
+        "tile": 10,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 8,
+        "tile": 2,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          276,
+          280
+        ],
+        "SMdates": [
+          386,
+          388
+        ]
+      },
+      {
+        "sid": 9,
+        "tile": 3,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          281,
+          285
+        ],
+        "SMdates": [
+          391,
+          393
+        ]
+      },
+      {
+        "sid": 10,
+        "tile": 0,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          281,
+          285
+        ],
+        "SMdates": [
+          391,
+          393
+        ]
+      },
+      {
+        "sid": 11,
+        "tile": 4,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          286,
+          290
+        ],
+        "SMdates": [
+          396,
+          398
+        ]
+      },
+      {
+        "sid": 12,
+        "tile": 1,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          276,
+          280
+        ],
+        "SMdates": [
+          386,
+          388
+        ]
+      },
+      {
+        "sid": 13,
+        "tile": 5,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          281,
+          285
+        ],
+        "SMdates": [
+          391,
+          393
+        ]
+      },
+      {
+        "sid": 14,
+        "tile": 6,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          281,
+          285
+        ],
+        "SMdates": [
+          391,
+          393
+        ]
+      },
+      {
+        "sid": 15,
+        "tile": 7,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          286,
+          290
+        ],
+        "SMdates": [
+          396,
+          398
+        ]
+      }
+    ],
+    "1": [
+      {
+        "sid": 0,
+        "tile": 12,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          286,
+          290
+        ],
+        "SMdates": [
+          396,
+          398
+        ]
+      },
+      {
+        "sid": 1,
+        "tile": 13,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          281,
+          285
+        ],
+        "SMdates": [
+          391,
+          393
+        ]
+      },
+      {
+        "sid": 2,
+        "tile": 15,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          281,
+          285
+        ],
+        "SMdates": [
+          391,
+          393
+        ]
+      },
+      {
+        "sid": 3,
+        "tile": 14,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          286,
+          290
+        ],
+        "SMdates": [
+          396,
+          398
+        ]
+      },
+      {
+        "sid": 4,
+        "tile": 8,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          286,
+          290
+        ],
+        "SMdates": [
+          396,
+          398
+        ]
+      },
+      {
+        "sid": 5,
+        "tile": 9,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          291,
+          295
+        ],
+        "SMdates": [
+          401,
+          403
+        ]
+      },
+      {
+        "sid": 6,
+        "tile": 11,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          291,
+          295
+        ],
+        "SMdates": [
+          401,
+          403
+        ]
+      },
+      {
+        "sid": 7,
+        "tile": 10,
+        "SE": 2,
+        "SM": 2,
+        "SEdates": [
+          286,
+          290
+        ],
+        "SMdates": [
+          396,
+          398
+        ]
+      },
+      {
+        "sid": 8,
+        "tile": 2,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 9,
+        "tile": 3,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 10,
+        "tile": 0,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 11,
+        "tile": 4,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 12,
+        "tile": 1,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 13,
+        "tile": 5,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 14,
+        "tile": 6,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      },
+      {
+        "sid": 15,
+        "tile": 7,
+        "SE": 0,
+        "SM": 0,
+        "SEdates": [
+          -1,
+          -1
+        ],
+        "SMdates": [
+          -1,
+          -1
+        ]
+      }
+    ]
+  },
+  "uniform_e_oracle": {
+    "gain": "3b800000",
+    "sink": "c2000000",
+    "e": "exp(uniformscaledscore\u2212selfmax)=1",
+    "rawFP32": "3f800000",
+    "bf16": "3f80"
+  },
+  "fresh_source": {
+    "all_fp32_fields_equal_staged_inputs": true,
+    "rows_metadata_flags_dates_equal": true,
+    "headbase1_Q": "quarterheadbase0, deliberatelydistinct; exactexpectedcandidate nowverifiedfreshnative",
+    "fp32_fields_verified": 512
+  },
+  "native_two_pass": {
+    "GO": [
+      402,
+      1702
+    ],
+    "phases": [
+      1,
+      1
+    ],
+    "first_more": 1,
+    "landing_retained_before_second": true,
+    "second_Qreload_hb": 1,
+    "second_more": 0,
+    "PO": 800,
+    "PVO": 1024,
+    "KVperpass": 8,
+    "KVdates": [
+      2,
+      9
+    ],
+    "Pinput_words_perpass": 8,
+    "Pconsumes_perpass": 4,
+    "Pbodydates": [
+      726,
+      740
+    ],
+    "rawPVbeats_perpass": 8,
+    "rawPV_each_fp32": "42000000",
+    "rawPV_fp32fields_verified": 512,
+    "PW_PR_final": 16,
+    "drain_slots_perpass": 40,
+    "drainedpayload_checked": false,
+    "tag_HB_outputs_unobservable_in_cache": true,
+    "done": 1,
+    "jobOpen": 0,
+    "fc": 0,
+    "actual_af": 0,
+    "errors": 0,
+    "bench_driver_interpositions": 1
+  },
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/test/tb_svc_allhead_feedback.sv": "5c3c2c7f659e4bffeee43521bcd7628b5458a7eee48f307795a20cefaccd81b9",
+    "tools/s81_dv/svc_rs/run_allhead_feedback.sh": "87c56e9bc0987510e1cce1af48618d8abff95176140d009c13bb1f2b96cc3abd",
+    "tools/s81_dv/svc_rs/svc_allhead_native_replay.cpp": "8819aaeda9e30acdfdd7fe4307be38443194c4b4a5c2f3f84f8a57fab38c5b6f",
+    "tools/s81_dv/svc_rs/run_allhead_native_replay.sh": "c8a6826be4a6890dd4909dfaa56652e601be39f402815008df2fe8779f585898"
+  }
+}
