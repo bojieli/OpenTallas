@@ -1911,7 +1911,7 @@ def path_gate_hold(r):
     """'' when the path part may route to sign-off, else why it is limited to trial builds.  A row whose DIE is FROZEN
     passes regardless of its path (rule 1 amendment: e.g. s81_head rows on path S81 once 'FROZEN S81-HEAD' is recorded).
     R-MINIMAL (default): the path die gate is advisory -- never a route hold, never a TRIAL-SIGNED demotion."""
-    if SP.is_minimal():
+    if SP.is_minimal() and canonical_die(r.get("die") or "") != "hbm":     # HBM is PARKED: its holds stay
         return ""
     path = path_of(r)
     if not path or die_frozen(r.get("die") or ""):
@@ -2328,7 +2328,7 @@ def admit_new(st, rows, only_new=False, budget=None):
                 set_status(st, j, "WAIT-GEOM", note)
             continue
         if (r["mode"] != "adopt" and (r["geom"].upper() not in GEOM_OK or not r["geom_ref"]) and SP.is_minimal()
-                and r["geom"].upper() != "AUTO"):
+                and r["geom"].upper() != "AUTO" and canonical_die(r.get("die") or "") != "hbm"):
             # R-MINIMAL: the geometry / visual verdict never blocks launch or route; recorded as an advisory
             if not (j or {}).get("geom_advisory"):
                 log(f"GEOM-ADVISORY {rid} {r['die']}/{r['type']}: GEOM '{r['geom']}' not PASS -- submitted (R-MINIMAL)")

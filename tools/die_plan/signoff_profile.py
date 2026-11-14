@@ -77,6 +77,19 @@ def metrics(rec):
     return (None if drc is None else int(drc)), tt, ff, src
 
 
+def internal_hold_port_only(rec):
+    """True when the record shows every negative FF hold endpoint starts at an INPUT PORT (signoff.py port_only_hold,
+    OWNER rule COORD 11-06: such a miss is the io_hold_parent obligation, i.e. port hold, measured once at die STA), so
+    the INTERNAL reg-to-reg hold is >= 0.  Full records: checks.hold_ff.port_only_needs_parent; autopilot summaries:
+    hold_ff absent from 'fails' while the local verdict is SIGNED (the local hold check passed)."""
+    hf = (rec.get("checks") or {}).get("hold_ff")
+    if isinstance(hf, dict):
+        return bool(hf.get("port_only_needs_parent")) and hf.get("verdict") == "PASS"
+    fails = rec.get("fails")
+    return (isinstance(fails, list) and "hold_ff" not in fails and rec.get("local_verdict") == "SIGNED"
+            and not any(str(r).startswith("hold_ff") for r in rec.get("reasons") or []))
+
+
 def achieved_period_ps(tt_wns):
     """the routed period this type closes at: 833 - min(0, WNS) (a positive slack keeps the plan period)"""
     return None if tt_wns is None else round(PERIOD_PS - min(0.0, tt_wns), 2)
@@ -94,6 +107,9 @@ def judge(rec):
             achieved_period_ps, setup_within_tolerance, legacy_verdict)"""
     drc, tt, ff, src = metrics(rec)
     gates = gate_verdicts(drc, tt, ff)
+    port_only = ff is not None and ff < HOLD_MIN_PS and internal_hold_port_only(rec)
+    if port_only:
+        gates["hold_ff"] = "PASS"          # internal reg-to-reg hold >= 0; the port-start hold is the die STA's (advisory)
     reasons = []
     if gates["drc"] != "PASS":
         reasons.append(f"drc: {gates['drc']}" + ("" if drc is None else f" {drc}"))
@@ -112,7 +128,8 @@ def judge(rec):
         if k not in MINIMAL_GATES and not any(a.startswith(k + ":") for a in adv):
             adv.append(str(r)[:160])
     return dict(verdict="SIGNED" if not reasons else "NOT SIGNED", profile="minimal", gates=gates, reasons=reasons,
-                advisories=adv, drc=drc, tt_wns_ps=tt, ff_hold_wns_ps=ff, hold_source=src,
+                advisories=adv + ([f"hold_ff: port-start hold {ff:+.2f} ps (io_hold_parent, die STA)"] if port_only else []),
+                drc=drc, tt_wns_ps=tt, ff_hold_wns_ps=ff, hold_source=src, hold_port_only=port_only,
                 setup_within_tolerance=tt is not None and -SETUP_TOL_PS <= tt < 0,
                 achieved_period_ps=achieved_period_ps(tt), legacy_verdict=rec.get("verdict"))
 
