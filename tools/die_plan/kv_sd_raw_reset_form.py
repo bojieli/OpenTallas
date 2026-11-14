@@ -13,6 +13,7 @@ ap=argparse.ArgumentParser(description=__doc__)
 ap.add_argument('plan');ap.add_argument('--out-plan',required=True);ap.add_argument('--report',required=True)
 ap.add_argument('--reference-plan',required=True,help='Exact plan from which --bind-rtl was emitted; all SD semantic fields must still match')
 ap.add_argument('--bind-rtl',required=True,help='Explicit completed bind RTL directory, not a cache guessed by this tool')
+ap.add_argument('--types',default='kv3_sys_SD,kv3_sys_SD_v1',help='KV-101/SPLIT: SD types to re-form; a type left out keeps its literal branches (its reference RTL carries the generated copies, not the default raw terminal)')
 args=ap.parse_args()
 p=json.load(open(args.plan));reference=json.load(open(args.reference_plan));reports={}
 assert p.get('clock')==reference.get('clock'),'global clock/landing semantics changed; regenerate bind RTL from the new reference plan'
@@ -23,7 +24,9 @@ def semantic(t):
   if pin.get('kind')=='clock' and pin.get('dir')=='out':
    pin.pop('source_clock_port',None);pin.pop('source_clock_tap',None)
  return t
-for tn in ('kv3_sys_SD','kv3_sys_SD_v1'):
+TYPES=args.types.split(',')
+assert TYPES and set(TYPES)<={'kv3_sys_SD','kv3_sys_SD_v1'},TYPES
+for tn in TYPES:
  t=p['partition_types'][tn];assert semantic(t)==semantic(reference['partition_types'][tn]),f'{tn}: reference-plan semantic mapping changed; regenerate bind RTL, never remap numeric terminals by guess';ck=t['clock'];lc=ck['landing_contract'];pins={r['name']:r['xy_um'] for r in lc['pins']}
  f=pathlib.Path(args.bind_rtl)/f'{tn}_part.sv';text=f.read_text();raw=re.search(r'assign cland_start_raw = (\w+);',text).group(1)
  byq={q:dict(d=d,depth=int(dep),xy=[float(x),float(y)]) for _,d,q,dep,x,y in K.REL.findall(text)}
