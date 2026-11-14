@@ -1112,6 +1112,219 @@ def plan_core_not_in_only(d, plan_types):
                    if c not in allowed and (plan_types is None or c in plan_types)})
 
 
+# WF-1 11-14 (COORD friction 7, FABLE-REVIEW-COL step A): S81 col types are mostly duplicate kits.  "pv" is a per-instance ROM image
+# parameter: item <base>__pv<hash> kits of one base are byte-identical (netlist, io.tcl, macro_place.tcl, SDC) -> 216 types, about
+# 95 distinct kits.  After kit_rtl / gen / lint / preflight the unit hashes the kit identity (io.tcl, macro_place.tcl, constraint.sdc,
+# pins.json, config.mk without paths, the item name and the per-instance parameter lines); the first member to claim an identity
+# (die|base|hash, registry autopilot/kit_identity.json under a flock) builds, every later member with the SAME hash stops with
+# verdict DEDUP and is credited when the owner signs (signed.tsv / unversioned.tsv clones + dedup_members.tsv).  A different
+# hash = a distinct kit = built on its own.  Die option kit_dedup [item globs] (default s81: col_h*; [] = off), kit_dedup_cancel
+# false = never cancel an in-flight duplicate.
+DEDUP_DEFAULT = {"s81": ["col_h*"]}
+PV_RE = re.compile(r"^(?P<base>.+)__pv[0-9a-f]{6,}$")
+IDENT_FILE = os.environ.get("KW_IDENT_FILE") or os.path.expanduser("~/coord/autopilot/kit_identity.json")
+DEDUP_MEMBERS = "dedup_members.tsv"
+KIT_HASH_PY = r"""
+import hashlib, os, re, sys
+K, T = sys.argv[1].rstrip("/"), sys.argv[2]
+h = hashlib.sha256(b"kit-identity-v2"); n = 0
+for f in ("io.tcl", "macro_place.tcl", "constraint.sdc", "pins.json", "config.mk"):
+    p = os.path.join(K, f)
+    if not os.path.isfile(p):
+        h.update(f.encode() + b"\0MISSING\0"); continue
+    t = open(p, errors="replace").read()
+    if f == "config.mk":
+        t = "".join(l for l in t.splitlines(True) if not re.search(r"INSTANCE|__pv|OT_PARAM|PARAM_SET", l))
+    t = t.replace(K, "<K>").replace(T, "<T>")
+    t = re.sub(r"attempt_\d+", "attempt_N", t)
+    # v2 (DIE-S81-92): purely per-type names never separate two kits: every token carrying a __pv<hash> parameter-variant label
+    # (the collector_tree.type name, type / top labels) and every comment (the type labels in io.tcl / SDC / config.mk comments)
+    t = re.sub(r"[A-Za-z0-9_.]*__pv[0-9a-f]{6,}[A-Za-z0-9_.]*", "<PV>", t)
+    t = re.sub(r"(?m)[ \t]*;?#.*$", "", t)
+    h.update(f.encode() + b"\0" + t.encode()); n += 1
+print("KW_KIT_HASH " + h.hexdigest() if n >= 3 else "KW_KIT_HASH_NONE")
+"""
+
+
+def dedup_group(cfg, die, item):
+    """'<die>|<base>' of a col-type member (item <base>__pv<hash>) when kit dedup applies to it, else ''"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    pats = d["kit_dedup"] if "kit_dedup" in d else DEDUP_DEFAULT.get(die)
+    m = PV_RE.match(str(item or ""))
+    if not pats or not m or not any(fnmatch.fnmatchcase(item, pt) for pt in pats):
+        return ""
+    return f"{die}|{m.group('base')}"
+
+
+def ident_claim(group, h, item, hash_of=None, state_path=None):
+    """-> ('owner' | 'member', owner item).  Registry key die|base|hash; the claim is atomic (flock).  A member needs an owner that is
+    still alive in the wave state; with no entry, a legacy sibling (already past gen: ENQUEUED / PASS with a kit path) whose kit
+    hashes the same becomes the owner (hash_of(host, kit path, item) -> hash or '')"""
+    import fcntl
+    die = group.split("|", 1)[0]
+    key = f"{group}|{h}"
+    Path(IDENT_FILE).parent.mkdir(parents=True, exist_ok=True)
+    lk = open(IDENT_FILE + ".lock", "w")
+    fcntl.flock(lk, fcntl.LOCK_EX)
+    try:
+        try:
+            reg = json.loads(Path(IDENT_FILE).read_text())
+        except (OSError, ValueError):
+            reg = {}
+        try:
+            items = (json.loads(Path(state_path or (Path(IDENT_FILE).parent / "kit_wave_state.json")).read_text()).get("items") or {}).values()
+        except (OSError, ValueError):
+            items = []
+        items = list(items)
+        alive_st = ("RUNNING", "LAUNCHING", "PASS", "ROUTE-HELD", "ENQUEUED")
+
+        def alive(it):
+            best = [r for r in items if r.get("die") == die and r.get("item") == it]
+            best = max(best, key=lambda r: float(r.get("updated") or 0), default=None)
+            return bool(best) and best.get("status") in alive_st and best.get("q_status") not in ("FAIL", "CANCELLED")
+        e = reg.get(key)
+        if e and e.get("owner") != item and alive(e["owner"]):
+            return "member", e["owner"]
+        if not e and hash_of:
+            base = group.split("|", 1)[1]
+            cands = [r for r in items if r.get("die") == die and r.get("item") != item and PV_RE.match(str(r.get("item")))
+                     and PV_RE.match(r["item"]).group("base") == base and r.get("status") in ("ENQUEUED", "PASS") and r.get("kit")
+                     and ":" in str(r.get("kit")) and r.get("q_status") not in ("FAIL", "CANCELLED")]
+            for r in sorted(cands, key=lambda r: -float(r.get("updated") or 0))[:3]:
+                host, _, kp = str(r["kit"]).partition(":")
+                if hash_of(host, kp, r["item"]) == h:
+                    reg[key] = {"owner": r["item"], "t": time.time(), "hash": h, "legacy": True}
+                    Path(IDENT_FILE).write_text(json.dumps(reg, indent=1))
+                    return "member", r["item"]
+        reg[key] = {"owner": item, "t": time.time(), "hash": h}
+        tmp = IDENT_FILE + ".tmp"
+        Path(tmp).write_text(json.dumps(reg, indent=1))
+        os.replace(tmp, IDENT_FILE)
+        return "owner", item
+    finally:
+        lk.close()
+
+
+def ident_release(group, h):
+    """drop the registry entry of an identity whose owner failed (the next member to start claims it)"""
+    import fcntl
+    try:
+        lk = open(IDENT_FILE + ".lock", "w")
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        reg = json.loads(Path(IDENT_FILE).read_text())
+        if reg.pop(f"{group}|{h}", None) is not None:
+            Path(IDENT_FILE).write_text(json.dumps(reg, indent=1))
+        lk.close()
+    except (OSError, ValueError):
+        pass
+
+
+SIGNED_Q = ("SIGNED", "SIGNED-UNVERSIONED", "ARCHIVED", "WAIT-PARENT", "TRIAL-SIGNED")
+
+
+def dedup_step(AP, cfg, st, notices, ap_dir):
+    """DEDUP members: credit them when their owner signs (signed.tsv / unversioned.tsv clone of the owner row with the member type +
+    a dedup_members.tsv record), release them (back to the normal launch path) when the owner failed; cancel in-flight legacy
+    duplicates of an advanced sibling when both kits hash the same (exact unit, at most 8 hash probes per pass)"""
+    items = st.get("items") or {}
+    try:
+        jobs = json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}
+    except (OSError, ValueError):
+        jobs = {}
+    now = time.time()
+    for key, rec in list(items.items()):
+        if rec.get("status") != "DEDUP":
+            continue
+        die, owner = rec.get("die"), rec.get("dedup_owner")
+        orecs = [r for r in items.values() if r.get("die") == die and r.get("item") == owner and r is not rec]
+        orec = max(orecs, key=lambda r: float(r.get("updated") or 0), default=None)
+        group, h = f"{die}|{PV_RE.match(rec['item']).group('base')}" if PV_RE.match(rec.get("item", "")) else "", rec.get("dedup_hash")
+        if orec is None or orec.get("status") in ("FAIL", "CANCELLED") or orec.get("q_status") in ("FAIL", "CANCELLED"):
+            AP.log(f"KIT-WAVE DEDUP RELEASE {die}/{rec['item']}: owner {owner} did not sign off (status "
+                   f"{(orec or {}).get('status')}/{(orec or {}).get('q_status')}); relaunches on the normal path")
+            if group and h:
+                ident_release(group, h)
+            items.pop(key, None)
+            continue
+        if orec.get("q_status") not in SIGNED_Q and orec.get("status") not in SIGNED_Q:
+            continue
+        j = jobs.get(orec.get("q_id")) or {}
+        cid = f"dd{str(orec.get('q_id') or '')[:8]}-{hashlib.sha1(rec['item'].encode()).hexdigest()[:6]}"
+        if not AP.DRY and j:
+            j2 = dict(j, id=cid, type=rec["item"])
+            so = j.get("signoff") if isinstance(j.get("signoff"), dict) else {}
+            if j.get("status") == "ARCHIVED" and j.get("src_commit") and j.get("flow_tag"):
+                AP.tsv_append("signed.tsv", cid, [j2["die"], j2["type"], j2.get("src", ""), j2.get("host", ""), j2.get("kit", ""),
+                                                   j2.get("archive", ""), j2.get("mirror", ""), so.get("tt_wns"), so.get("ff_wns"),
+                                                   j2.get("lane", ""), j2["src_commit"], j2["flow_tag"]])
+            elif j.get("status") == "SIGNED-UNVERSIONED":
+                AP.tsv_append("unversioned.tsv", cid, [j2["die"], j2["type"], j2.get("src", ""), j2.get("host", ""), j2.get("kit", ""),
+                                                        j2.get("archive", ""), so.get("tt_wns"), so.get("ff_wns"),
+                                                        f"DEDUP of {owner}", j2.get("lane", "")])
+            p = Path(ap_dir) / DEDUP_MEMBERS
+            new = not p.exists()
+            with open(p, "a") as f:
+                if new:
+                    f.write("time\tdie\tmember\towner\towner_job\tcredit_id\tkit_identity\n")
+                f.write(f"{now_s()}\t{die}\t{rec['item']}\t{owner}\t{orec.get('q_id')}\t{cid}\t{(h or '')[:16]}\n")
+        rec.update(status="DEDUP-CREDITED", q_status="SIGNED-LINKED", credited_via=orec.get("q_id"), credit_id=cid, updated=now,
+                   reason=f"DEDUP-CREDITED: kit identical to {owner}; signed record {orec.get('q_id')} credited")
+        notices.setdefault(die, []).append(f"{rec['item']} DEDUP-CREDITED via {owner}")
+        AP.log(f"KIT-WAVE DEDUP CREDIT {die}/{rec['item']} <- {owner} job {orec.get('q_id')} ({cid})")
+    # in-flight legacy duplicates: running wave rows of one group, no identity file yet
+    probes = 0
+    groups = {}
+    for key, rec in items.items():
+        if rec.get("status") in ("RUNNING", "LAUNCHING") and not rec.get("arm"):
+            g = dedup_group(cfg, rec.get("die"), rec.get("item"))
+            if g and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("kit_dedup_cancel", True) is not False:
+                groups.setdefault(g, []).append(rec)
+    for g, recs in groups.items():
+        if len(recs) < 2 or probes >= 8:
+            continue
+        recs.sort(key=lambda r: float(r.get("started") or 0))
+        keeper = recs[0]                                  # the most advanced running member (started first)
+
+        def khash(r):
+            try:
+                sp = json.loads((Path(r["dir"]) / "spec.json").read_text())
+            except (OSError, ValueError, KeyError):
+                return ""
+            Kp = f"{sp['work']}/gen/{r['item']}"
+            rc, o, _ = AP.sh(remote_argv(sp.get("gen_host"), AP.HUB_NAME, f"python3 -I -c {shlex.quote(KIT_HASH_PY)} {shlex.quote(Kp)} {shlex.quote(r['item'])}"), timeout=120)
+            m = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", o or "")
+            return m.group(1) if m else ""
+        kh = khash(keeper)
+        probes += 1
+        if not kh:
+            continue
+        for r in recs[1:]:
+            if probes >= 8:
+                break
+            probes += 1
+            if khash(r) == kh:
+                stop_attempt(AP, r)
+                r.update(status="DEDUP", dedup_owner=keeper["item"], dedup_hash=kh, updated=now,
+                         reason=f"DEDUP: in-flight duplicate of {keeper['item']} (same kit identity {kh[:12]}); stopped by exact unit")
+                notices.setdefault(r["die"], []).append(f"{r['item']} DEDUP cancelled (same kit as {keeper['item']})")
+                AP.log(f"KIT-WAVE DEDUP CANCEL {r['die']}/{r['item']}@{r.get('attempt')}: same kit identity as running {keeper['item']}")
+
+
+def stop_attempt(AP, rec):
+    """stop an attempt by its exact units (wave unit + PLACE service) and the containers under its attempt root"""
+    units = [rec.get("unit")]
+    try:
+        units.append(json.loads((Path(rec["dir"]) / "place_service.json").read_text())["unit"])
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    for u in units:
+        if u:
+            AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+    r = attempt_root(rec)
+    if r:
+        WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [r])
+
+
 # WF-1 11-14 (COORD friction 5, structural): a plan adds hard cores and nothing built them: every parent type parked as WAIT-CHILD
 # (prov_require_cands) for days (QC s29q103S: 29 cores without a view, about 30 types).  Now a WAIT-CHILD records the child
 # modules it waits on (state wait_child[die][module]); select() turns each one that has no OWNERS row, no running build and no
@@ -2187,8 +2400,13 @@ def item_env(d, item):
         # OT_MACRO_MOVES names hard-core instances such as u_vp.g_ln[14].u_l: [ ] are the only extra characters, the value is
         # shell-quoted at its one consumer (export in run_item)
         moves = k in ("OT_MACRO_MOVES", "OT_GEN_SECONDARY_CLOCK") and bool(ENV_VAL_RE.fullmatch(str(v).replace("[", "").replace("]", "")))
-        if not ENV_KEY_RE.fullmatch(str(k)) or not (ENV_VAL_RE.fullmatch(str(v)) or capture_path or moves):
-            raise ValueError(f"item_env {item}: {k}={v!r} (OT_* names, safe values; producer context may be an absolute path)")
+        # WF-1 11-14 (COORD class bug: 416 LAUNCH-SKIP, the R-COL-3 canary OT_RELAY_MID_RE='^(.*[._]u_y_[A-Za-z0-9_]+)[.]' never
+        # launched; same class as the OT_GEN_SECONDARY_CLOCK bracket case): the only consumer of these values (export in run_item)
+        # shell-quotes every one (shlex.quote), so any printable value is safe.  Reject only control characters (newline, NUL ...).
+        printable = (isinstance(v, (str, int, float)) and not re.search(r"[\x00-\x1f\x7f]", str(v))
+                     and k != "OT_NATIVE_PRODUCER_CONTEXT")     # the producer context keeps its strict absolute-path rule
+        if not ENV_KEY_RE.fullmatch(str(k)) or not (printable or ENV_VAL_RE.fullmatch(str(v)) or capture_path or moves):
+            raise ValueError(f"item_env {item}: {k}={v!r} (OT_* names; printable values only, no newline / NUL)")
     if "OT_NATIVE_PRODUCER_CONTEXT" in env and env.get("OT_NATIVE_RESET_SCOPE") != "selected":
         raise ValueError("producer context needs OT_NATIVE_RESET_SCOPE=selected")
     return {str(k): str(v) for k, v in sorted(env.items())}
@@ -2244,7 +2462,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "gen_host": pick_gen_host(cfg, die, take=pick_charge_gb(cfg, die, item),
                                       threads=int(opt(cfg, die, "place_threads")), item=item),
             "src": item_in.get("src") or d["src"], "src_sha": item_in.get("src_sha") or d.get("src_sha", ""), "src_base": d.get("src_base", ""), "src_overlay": d.get("_src_overlay", ""), "queue_src": item_in.get("queue_src") or d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
-            "kit_rtl": item_kr,
+            "kit_rtl": item_kr, "dedup_group": dedup_group(cfg, die, item),
             # KIT-OVERLAY-1: item_inputs {item: {type_overlay: <path>}} = positions-only intra-type overlay (type_overlay.py) on
             # the die plan of record; gen phys --type-overlay + the overlaid plan for station preparation.  Absent = unchanged.
             **({"type_overlay": str(item_in["type_overlay"]), "type_overlay_sha": overlay_sha(item_in["type_overlay"])}
@@ -2312,6 +2530,74 @@ def prov_counted(c):
     return bool(c.get("counted")) or str(c.get("job") or "").startswith("COUNTED ")
 
 
+# WF-1 11-14 (COORD: slw_st_a_v1/v2 stayed WAIT-CHILD on QC cores signed at 05:45-05:48 by hand lanes): prov_sources only looked at
+# autopilot queue jobs (state.json), and a private kit built by a lane is not a queue job.  Rows of lanes/AUTO-RESIGN.tsv
+# (die, module, host, dir holding signoff/signoff.json, build commit, lane, note: the registry hand-built kits already go into) are
+# now candidates too, when the module has no other routed candidate: the kit's signoff record must show DRC 0 and the kit must hold
+# views/<m>_tt.lib + <m>_ff.lib and a routed <m>.lef (probed on its host, cached 30 min / 5 min).  dir = <kit>/views, base = the
+# routed results dir (rsync expands the glob on the host), so prov_view stages it like any other candidate.
+PRIVATE_DIE_ALIAS = {"qc": "qwen_compute", "kv": "qwen_kvsys", "head": "s81_head", "results": "s81_head", "cp1": "s81"}
+PRIVATE_CACHE = os.path.expanduser("~/coord/autopilot/prov_private_cache.json")
+PRIVATE_PROBE = r"""
+import glob, json, os, sys
+K, m = sys.argv[1].rstrip("/"), sys.argv[2]
+try:
+    r = json.load(open(os.path.join(K, "signoff", "signoff.json")))
+    drc = (r.get("checks") or {}).get("drc") or {}
+    if str(drc.get("verdict")) != "PASS" and int(drc.get("count") or 0) != 0:
+        print("NO drc not 0"); sys.exit()
+    base = sorted(glob.glob(os.path.join(K, "run/results/asap7/*/base")))
+    ok = [b for b in base if os.path.isfile(os.path.join(b, m + ".lef"))]
+    libs = all(os.path.isfile(os.path.join(K, "views", m + s)) for s in ("_tt.lib", "_ff.lib"))
+    print("OK " + ok[0] if ok and libs else "NO missing views/lef")
+except Exception as e:
+    print("NO " + str(e)[:80])
+"""
+
+
+def private_candidates(die, modules, hub):
+    """{module: candidate} from lanes/AUTO-RESIGN.tsv rows of this die whose kit is DRC 0 with exported views"""
+    try:
+        text = open(os.path.expanduser("~/coord/lanes/AUTO-RESIGN.tsv"), errors="replace").read()
+    except OSError:
+        return {}
+    try:
+        cache = json.loads(open(PRIVATE_CACHE).read())
+    except (OSError, ValueError):
+        cache = {}
+    out, now, dirty = {}, time.time(), False
+    for ln in text.splitlines():
+        f = ln.split("\t")
+        if len(f) < 4 or ln.startswith("#"):
+            continue
+        rdie = PRIVATE_DIE_ALIAS.get(f[0], f[0])
+        m, host, kdir = f[1], f[2], f[3].rstrip("/")
+        if rdie != die or m not in modules or m in out or "*" in kdir:
+            continue
+        ck = f"{host}:{kdir}:{m}"
+        e = cache.get(ck)
+        if not e or now - float(e.get("t") or 0) > (1800 if e.get("ok") else 300):
+            try:
+                argv = (["python3", "-I", "-c", PRIVATE_PROBE, kdir, m] if host in ("localhost", hub) else
+                        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", "-o", "ControlPath=none", host,
+                         f"python3 -I -c {shlex.quote(PRIVATE_PROBE)} {shlex.quote(kdir)} {shlex.quote(m)}"])
+                r = subprocess.run(argv, capture_output=True, text=True, timeout=60)
+                o = (r.stdout or "").strip().splitlines()[-1] if r.stdout.strip() else "NO empty"
+            except (OSError, subprocess.SubprocessError):
+                o = "NO probe failed"
+            e = cache[ck] = {"t": now, "ok": o.startswith("OK "), "base": o[3:] if o.startswith("OK ") else "", "why": o[:80]}
+            dirty = True
+        if e.get("ok"):
+            out[m] = dict(host=hub if host == "localhost" else host, dir=f"{kdir}/views", base=e["base"], job=f"PRIVATE {f[5] if len(f) > 5 else 'lane'} {kdir}",
+                          status="SIGNED", drc=0, signoff=f"{kdir}/signoff/signoff.json")
+    if dirty:
+        try:
+            Path(PRIVATE_CACHE).write_text(json.dumps(cache))
+        except OSError:
+            pass
+    return out
+
+
 def prov_sources(jobs, die, modules, d=None, hub="intel2"):
     """{module: [candidate]} routed DRC-clean abstracts of each child module, best first: die option
     prov_view_sources {module: [{host, dir[, base]}]} (die owner pick: dir holds <m>_tt.lib, <m>_ff.lib, <m>.lef) first, then autopilot queue jobs of the die whose
@@ -2343,6 +2629,10 @@ def prov_sources(jobs, die, modules, d=None, hub="intel2"):
             signoff=so["path"])))
     for m, _t, c in sorted(cands, key=lambda x: -x[1]):
         if len(out[m]) < PROV_MAX_CANDS:
+            out[m].append(c)
+    need = {m for m in modules if not out[m]}
+    if need:                                              # WF-1 11-14: hand-built private kits of lanes/AUTO-RESIGN.tsv
+        for m, c in private_candidates(die, need, hub).items():
             out[m].append(c)
     return out
 
@@ -3514,7 +3804,7 @@ def counted_now(cfg, st, die, item, block=None):
 INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
-              "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items"}
+              "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group"}
 
 
 def input_hash(sp, prov_key=None):
@@ -5083,6 +5373,28 @@ def run_item(spec_path):
     # were only in the receipt and one log line; they go into result.json and the row.  Advisory: never stops the kit.
     _, rtxt = run("preflight_adv", remote(f"cat {q(W)}/{pfo}"), idempotent=True)
     res["preflight_advisory"] = preflight_advisory(rtxt)
+    _dg = sp.get("dedup_group") or ""
+    if _dg:                                       # WF-1 11-14 (friction 7): one build per kit identity
+        try:
+            _hrc, _ht = run("kit_identity", remote(f"python3 -I -c {q(KIT_HASH_PY)} {q(K)} {q(T)}"), idempotent=True)
+            _hm = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", _ht or "")
+            if _hm:
+                _kh = _hm.group(1)
+                (out / "kit_identity.json").write_text(json.dumps({"group": _dg, "hash": _kh, "item": T}))
+
+                def _hash_of(host, kpath, it):
+                    _r, _t = run("kit_identity_" + re.sub(r"\W", "_", it)[-30:], remote_argv(host, hub, f"python3 -I -c {q(KIT_HASH_PY)} {q(kpath)} {q(it)}"), idempotent=True)
+                    _m2 = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", _t or "")
+                    return _m2.group(1) if _m2 else ""
+                _role, _owner = ident_claim(_dg, _kh, T, hash_of=_hash_of)
+                res["kit_identity"] = dict(group=_dg, hash=_kh, role=_role, owner=_owner)
+                print(f"KW_KIT_IDENTITY {T}: {_role} of {_dg} ({_kh[:12]})" + ("" if _role == "owner" else f" owner {_owner}"), flush=True)
+                if _role == "member":
+                    res.update(verdict="DEDUP", stage="identity", dedup_owner=_owner, dedup_hash=_kh, evidence=f"{G}:{K}")
+                    (out / "result.json").write_text(json.dumps(res, indent=1))
+                    return 0
+        except Exception as _e:
+            print(f"KW_DEDUP_SKIP {type(_e).__name__}: {_e}", flush=True)
     # the kit (a few MB) goes to the same path on every allowed host; ot-run then picks the least-loaded one.
     # Fleet hosts do not resolve each other by name (intel1 -> intel2/epyc2 fails), so the hub (where this unit
     # runs) relays: gen host -> hub -> other hosts, and the placed kit comes back the same way.
@@ -6991,6 +7303,12 @@ def collect(AP, cfg, st, notices):
                                   if (v.get("source") if isinstance(v, dict) else v) != "signed"}
             rec["prov_signed"] = sorted(m for m, v in res["provisional"].items()
                                         if (v.get("source") if isinstance(v, dict) else v) == "signed")
+        if res.get("verdict") == "DEDUP":                # WF-1 11-14 (friction 7): same kit as another member, credited when it signs
+            rec.update(status="DEDUP", dedup_owner=res.get("dedup_owner"), dedup_hash=res.get("dedup_hash"), kit_identity=res.get("kit_identity"),
+                       evidence=res.get("evidence") or rec.get("evidence"), updated=time.time(),
+                       reason=f"DEDUP: kit identical to {res.get('dedup_owner')} (identity {str(res.get('dedup_hash'))[:12]}); credited when it signs")
+            AP.log(f"KIT-WAVE DEDUP {rec['die']}/{rec['item']}: same kit as {res.get('dedup_owner')}")
+            continue
         if res.get("verdict") == "PASS":
             for k in ("resume", "stage_fp"):
                 if res.get(k):
@@ -8204,6 +8522,10 @@ def _step(AP, ap_dir):
     retry_enqueue(AP, cfg, st, notices)
     stops = []
     follow_queue(st, ap_dir, notices, stops)
+    try:
+        dedup_step(AP, cfg, st, notices, ap_dir)         # WF-1 11-14 (friction 7): credit / release / cancel duplicates
+    except Exception as e:
+        AP.log(f"KIT-WAVE DEDUP step skipped: {type(e).__name__}: {e}")
     try:
         visual_reject_discard(AP, cfg, st, notices,
                               json.loads((Path(ap_dir or AP.AP_DIR) / "state.json").read_text()).get("jobs") or {})
