@@ -36,6 +36,7 @@ What changed against the 11-03 opt-in form:
   6. fail-safe: a TT setup loss, no hold gain or a tool error writes nothing (OT_PREGRT_FF_HOLD FALLBACK).
 The in-flow GRT FF repair stays and takes the residual; sign-off FF hold >= 0 stays the only gate.  Timing context =
 hold_gate.tcl verbatim (same contract, same overlay), so the kit carries the head of its own hold_gate.tcl."""
+import os
 from pathlib import Path
 
 MARK = "# A separate FF-only process: do not impersonate the shared multi-mode context.\n"
@@ -74,6 +75,23 @@ if {$pg_two} {
 TAIL = r"""# R-CLOCK HOLD BUILD: repair + legalize on the context above, then replace 4_cts.odb (fail-safe: FALLBACK writes nothing)
 set pg_guard [expr {[info exists ::env(OT_PREGRT_HOLD_GUARD)] && [string is double -strict $::env(OT_PREGRT_HOLD_GUARD)] ? $::env(OT_PREGRT_HOLD_GUARD) : 45.0}]
 set pg_blk [ord::get_db_block]
+# FIX-HOLDSTALL 11-14 AUTO: the build runs only when the kit has >= AUTO_MIN register-to-register FF hold violators (a real
+# internal debt the in-flow GRT repair would grind through for hours); fewer, or port-only hold (advisory), leave 4_cts.odb
+# untouched and rc 0.  AUTO_MIN is baked in at install (-1 = plan opt-in, always runs).
+set pg_auto @PG_AUTO_MIN@
+if {$pg_auto >= 0} {
+  set pg_nrr -1
+  if {[catch {
+    set pg_ck [all_registers -clock_pins]; set pg_dp [all_registers -data_pins]
+    set pg_rrp [find_timing_paths -path_delay min -from $pg_ck -to $pg_dp -group_path_count 1000000 -endpoint_path_count 1 -slack_max 0]
+    set pg_nrr [llength $pg_rrp]
+  } pg_err]} { puts "OT_PREGRT_FF_HOLD AUTO: register-to-register count unavailable ($pg_err); the build runs"; set pg_nrr $pg_auto }
+  if {$pg_nrr < $pg_auto} {
+    puts "OT_PREGRT_FF_HOLD AUTO skip: $pg_nrr register-to-register hold violators < $pg_auto (port-only hold is advisory; the in-flow GRT repair takes the rest)"
+    exit 0
+  }
+  puts "OT_PREGRT_FF_HOLD AUTO run: $pg_nrr register-to-register hold violators >= $pg_auto"
+}
 proc pg_hold {} { return [sta::time_sta_ui [sta::worst_slack_cmd min]] }
 proc pg_setup {} { return [sta::time_sta_ui [sta::worst_slack_cmd max]] }
 # tap port of a clock pin: drivers followed back through the tree to the block terminal (cached per net)
@@ -244,7 +262,30 @@ def _clock_val(t, key):
     return c[key] if key in c else DIE_CLOCK.get(key)
 
 
+def auto_min():
+    """FIX-HOLDSTALL 11-14: die_gen_env OT_PREGRT_FF_HOLD_AUTO = N (1 = default 100) turns the build on for every type whose plan is
+    silent, but the kit tcl runs it only when the post-CTS FF hold has >= N register-to-register violators (internal debt).
+    None when unset/0.  A plan clock.pregrt_ff_hold false/true always wins."""
+    v = os.environ.get("OT_PREGRT_FF_HOLD_AUTO", "").strip()
+    if not v.isdigit() or int(v) <= 0:
+        return None
+    return 100 if v == "1" else int(v)
+
+
+def _plan_val(t):
+    f = globals().get("_clock_val")
+    return f(t, "pregrt_ff_hold") if f else (t.get("clock") or {}).get("pregrt_ff_hold")
+
+
+def _auto_on(t):
+    return _plan_val(t) is None and auto_min() is not None
+
+
 def enabled(t):
+    return _enabled_plan(t) or _auto_on(t)
+
+
+def _enabled_plan(t):
     """R-CLOCK: opt-in (COORD 11-13 07:2x, default-preserving): on when the type's clock.pregrt_ff_hold is true, or (type silent) the
     plan's die-level clock.pregrt_ff_hold is true."""
     return _clock_val(t, "pregrt_ff_hold") is True
@@ -264,13 +305,13 @@ def config_lines(t):
     return [CONFIG, f"export OT_PREGRT_HOLD_GUARD = {guard_ps(t):g}"] if enabled(t) else []
 
 
-def tcl_text(hold_gate_text):
+def tcl_text(hold_gate_text, amin=-1):
     if hold_gate_text.count(MARK) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl context marker not found exactly once; fails closed")
     head = hold_gate_text.split(MARK)[0]
     if head.count(READ) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl library / database read not found exactly once; fails closed")
-    return head.replace(READ, READ2) + TAIL
+    return head.replace(READ, READ2) + TAIL.replace("@PG_AUTO_MIN@", str(int(amin)))
 
 
 def install(t, kd):
@@ -278,7 +319,7 @@ def install(t, kd):
     if not enabled(t):
         return False
     kd = Path(kd)
-    (kd / "pregrt_ff_hold.tcl").write_text(tcl_text((kd / "hold_gate.tcl").read_text()))
+    (kd / "pregrt_ff_hold.tcl").write_text(tcl_text((kd / "hold_gate.tcl").read_text(), auto_min() if _auto_on(t) else -1))
     return True
 
 
