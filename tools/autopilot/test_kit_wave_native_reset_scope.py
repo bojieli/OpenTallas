@@ -38,7 +38,6 @@ def test_item_env_narrow_capture_path_support():
     for bad in (
         dict(OT_NATIVE_PRODUCER_CONTEXT='/srv/own/capture.json'),
         dict(OTHER='/srv/own/capture.json'),
-        dict(OT_OTHER='/srv/own/capture.json'),
         dict(OT_NATIVE_RESET_SCOPE='selected',OT_NATIVE_PRODUCER_CONTEXT='/tmp/$(touch_BAD)'),
     ):
         with pytest.raises(ValueError): K.item_env(dict(item_env={'T':bad}),'T')

@@ -2369,7 +2369,8 @@ def item_env(d, item):
         # WF-1 11-14 (COORD class bug: 416 LAUNCH-SKIP, the R-COL-3 canary OT_RELAY_MID_RE='^(.*[._]u_y_[A-Za-z0-9_]+)[.]' never
         # launched; same class as the OT_GEN_SECONDARY_CLOCK bracket case): the only consumer of these values (export in run_item)
         # shell-quotes every one (shlex.quote), so any printable value is safe.  Reject only control characters (newline, NUL ...).
-        printable = isinstance(v, (str, int, float)) and not re.search(r"[\x00-\x1f\x7f]", str(v))
+        printable = (isinstance(v, (str, int, float)) and not re.search(r"[\x00-\x1f\x7f]", str(v))
+                     and k != "OT_NATIVE_PRODUCER_CONTEXT")     # the producer context keeps its strict absolute-path rule
         if not ENV_KEY_RE.fullmatch(str(k)) or not (printable or ENV_VAL_RE.fullmatch(str(v)) or capture_path or moves):
             raise ValueError(f"item_env {item}: {k}={v!r} (OT_* names; printable values only, no newline / NUL)")
     if "OT_NATIVE_PRODUCER_CONTEXT" in env and env.get("OT_NATIVE_RESET_SCOPE") != "selected":

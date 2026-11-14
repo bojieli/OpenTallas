@@ -207,8 +207,13 @@ def test_item_env():
     import pytest
     with pytest.raises(ValueError):
         K.item_env({"item_env": {"x": {"PATH": "/tmp"}}}, "x")
+    # WF-1 11-14 (approved printable-value rule): any printable OT_* value is accepted (the one consumer shell-quotes it);
+    # non-OT_ names and control characters stay rejected
+    assert K.item_env({"item_env": {"x": {"OT_A": "a; rm -rf /"}}}, "x") == {"OT_A": "a; rm -rf /"}
     with pytest.raises(ValueError):
-        K.item_env({"item_env": {"x": {"OT_A": "a; rm -rf /"}}}, "x")
+        K.item_env({"item_env": {"x": {"OT_A": "a\nb"}}}, "x")
+    with pytest.raises(ValueError):
+        K.item_env({"item_env": {"x": {"OT_A": "a\x00b"}}}, "x")
 
 
 def test_place_service_asks_for_the_spill_handoff():
