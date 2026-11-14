@@ -1,0 +1,97 @@
+From efd8a71094482aa4d4a9a98fb79f99f5e1c534a3 Mon Sep 17 00:00:00 2001
+From: DIE-S81-92 <noreply@anthropic.com>
+Date: Sat, 14 Nov 2026 13:20:09 -0800
+Subject: [PATCH] gen_phys.tap_offset_table: bound a core tap's RESIDUAL by
+ T/2, not its raw offset
+
+A core tap's raw clock.tap_offset carries its declared early delivery (insertion - common latency), so any core
+with insertion above ~666 ps is beyond T/2 by design (eng__t1 clk_c0 -550.2, bk_sel__t2 clk_c4 -454.5, clk_c0
+-470.0 on S81 B3z2 crashed every caller: kit gen, G0 xtap_latency_hops). The T/2 check now uses
+offset + (insertion - common latency) per corner for core taps and the raw offset for glue ports
+(FABLE-REVIEW-CLK 12:46). Test: test_tap_offset_residual.py (3 cases).
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ tools/die_plan/gen_phys.py                 | 14 ++++++--
+ tools/die_plan/test_tap_offset_residual.py | 42 ++++++++++++++++++++++
+ 2 files changed, 54 insertions(+), 2 deletions(-)
+ create mode 100644 tools/die_plan/test_tap_offset_residual.py
+
+diff --git a/tools/die_plan/gen_phys.py b/tools/die_plan/gen_phys.py
+index 1a671a4b957..27a060aede3 100644
+--- a/tools/die_plan/gen_phys.py
++++ b/tools/die_plan/gen_phys.py
+@@ -2237,10 +2237,20 @@ def tap_offset_table(P, tn):
+     tab = ((P.clock.get("tap_offset") or {}).get("per_port_ps") or {}).get(tn) or {}
+     per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
+     out = {}
++    # R-CLOCK-7 (FABLE-REVIEW-CLK 12:46): a CORE tap's raw offset carries its declared early delivery (insertion - common latency), so a core with
++    # insertion above ~666 ps is beyond T/2 by design.  The T/2 bound applies to the RESIDUAL (offset + insertion - common) of a core tap and to the
++    # raw offset of a glue port.
++    core = {}
++    if tab:
++        for cn, _cx, _cy, ctp in S.core_taps(P, tn):
++            core[cn] = ctp
+     for n, v in tab.items():
+         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
+-        if row["tol"] < 0 or abs(row["TT"]) > per / 2 or abs(row["FF"]) > per / 2:
+-            raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} outside tol >= 0, |o| <= T/2")
++        res = {}
++        for c in ("TT", "FF"):
++            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c)) if n in core else 0.0)
++        if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
++            raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
+         out[n] = row
+     if out and not P.clock.get("seam_hold"):
+         raise ValueError("clock.tap_offset needs clock.seam_hold (same seam contract as clock.tap_window)")
+diff --git a/tools/die_plan/test_tap_offset_residual.py b/tools/die_plan/test_tap_offset_residual.py
+new file mode 100644
+index 00000000000..5c3d6485753
+--- /dev/null
++++ b/tools/die_plan/test_tap_offset_residual.py
+@@ -0,0 +1,42 @@
++"""R-CLOCK-7 tap_offset_table: the T/2 bound applies to a core tap's RESIDUAL (offset + insertion - common), not its raw offset."""
++import sys
++from pathlib import Path
++import pytest
++sys.path.insert(0, str(Path(__file__).resolve().parent))
++import gen_phys as G  # noqa: E402
++
++
++class FakeP:
++    def __init__(self, rows, seam=True):
++        self.die = {"period_ps": 833}
++        self.clock = {"seam_hold": {"x": 1}} if seam else {}
++        self.clock["tap_offset"] = {"per_port_ps": {"t": rows}}
++
++
++def _patch(monkeypatch, core_ins):
++    monkeypatch.setattr(G.S, "core_taps", lambda P, tn: [(n, 0, 0, {"name": n, "ins": v}) for n, v in core_ins.items()])
++    monkeypatch.setattr(G.S, "core_tap_insertion_ps", lambda tp, corner="TT": tp["ins"][0 if corner == "TT" else 1])
++    monkeypatch.setattr(G.S, "common_latency_ps", lambda P, corner="TT": 250.0 if corner == "TT" else 200.0)
++
++
++def test_core_tap_beyond_half_period_raw_ok_when_residual_small(monkeypatch):
++    _patch(monkeypatch, {"clk_c0": (848.98, 671.43)})
++    P = FakeP({"clk_c0": {"TT": -550.2, "FF": -490.8, "tol": 0.0}})
++    out = G.tap_offset_table(P, "t")
++    assert out["clk_c0"]["TT"] == -550.2   # residual TT = -550.2 + 598.98 = +48.8 ; FF = -490.8 + 471.43 = -19.4
++
++
++def test_core_tap_residual_too_large_fails(monkeypatch):
++    _patch(monkeypatch, {"clk_c0": (848.98, 671.43)})
++    P = FakeP({"clk_c0": {"TT": 100.0, "FF": 0.0, "tol": 0.0}})   # residual TT = 698.98 > 416.5
++    with pytest.raises(ValueError, match="residual"):
++        G.tap_offset_table(P, "t")
++
++
++def test_glue_port_keeps_raw_bound(monkeypatch):
++    _patch(monkeypatch, {"clk_c0": (848.98, 671.43)})
++    P = FakeP({"clk_t5": {"TT": -450.0, "FF": 0.0, "tol": 0.0}})
++    with pytest.raises(ValueError):
++        G.tap_offset_table(P, "t")
++    P2 = FakeP({"clk_t5": {"TT": -300.0, "FF": 0.0, "tol": 5.0}})
++    assert G.tap_offset_table(P2, "t")["clk_t5"]["tol"] == 5.0
+-- 
+2.53.0
+
