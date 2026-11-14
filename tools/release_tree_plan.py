@@ -1074,6 +1074,12 @@ def _rec_keys(r):
         m = re.match(r'^(dp|kr)_(.+)$', v)
         if m:
             ks.add(m.group(2)); ks.add(re.sub(r'_(lfp|r\d+|c\d+)$', '', m.group(2)))
+    # EXPLORER-FABLE-1 11-14 (COORD): a sign-off whose face_guard names no top (ECO re-signs of kit runs) is known only
+    # by its run name k<die letter>_<module>_synth<N>; that run name is the module (30 of 30 store records that carry
+    # both agree).  Without this the record matches no plan core (QC sta_region_nb0, qfd_dv_s8_station_tail1).
+    if not r.get('top'):
+        m = re.match(r'^k[a-z]_(.+)_synth\d+$', r.get('name') or '')
+        if m: ks.add(m.group(1))
     return ks
 
 
