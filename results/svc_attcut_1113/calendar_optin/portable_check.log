@@ -1,0 +1,58 @@
+ot-run: epyc7          admits   426 GB (avail 721, reserve 0, fresh 199.2, peak 63.5, headroom 0, waiters 0/0 GB) load 49/96 running 27 disk 815 GB 
+ot-run: -> epyc7
+ot-heavy: admitted on loved-redfish as oth-ubuntu-2337560-1794614418 after 0 s
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+      "selected": false,
+      "reference": "84b3a53d7e^",
+      "equal": true
+    },
+    {
+      "source": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv",
+      "selected": true,
+      "reference": "4b3430fb52",
+      "equal": true
+    },
+    {
+      "source": "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv",
+      "selected": false,
+      "reference": "7239ea0c89^",
+      "equal": true
+    },
+    {
+      "source": "rtl/dsrom_sys/s81_svc/ot_s81_svc_attn_s.sv",
+      "selected": true,
+      "reference": "4b3430fb52",
+      "equal": true
+    },
+    {
+      "source": "tools/s81_dv/layer_prog/lower_svc.py",
+      "selection": "default",
+      "reference": "9556712d49",
+      "heads": 16,
+      "rows": 128,
+      "equal": true
+    },
+    {
+      "source": "tools/s81_dv/layer_prog/lower_svc.py",
+      "selection": "default",
+      "reference": "9556712d49",
+      "heads": 8,
+      "rows": 32,
+      "equal": true
+    },
+    {
+      "source": "tools/s81_dv/layer_prog/lower_svc.py",
+      "selection": "default",
+      "reference": "9556712d49",
+      "heads": 8,
+      "rows": 128,
+      "equal": true
+    }
+  ],
+  "scope": "Source preprocessing and default production compiler bytes/schedule only. No global H8 timing or geometry qualification."
+}
+ot-run: RAN on epyc7 (unit oth-ubuntu-2337560-1794614418): exit 0

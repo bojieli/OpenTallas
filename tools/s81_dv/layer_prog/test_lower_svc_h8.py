@@ -297,3 +297,20 @@ def test_h8_folded_sm_operand_rows_and_booking_follow_two_cycle_cadence():
     cyc = {c for c,_ in s['words']}
     first = s['at']['SMJ_OP0']
     assert first + 2 not in cyc
+
+
+@pytest.mark.parametrize("selected", [False, True])
+def test_native_rt2_optin_record_does_not_change_go(selected):
+    job = synth(heads=8, T=32, so=False)
+    old_word, old_record = job.pass_go(0, 100)
+    job.native_rt2_prospective = selected
+    word, record = job.pass_go(0, 100)
+    assert word == old_word
+    if selected:
+        calendars = record.pop("native_rt2_calendar")
+        assert [item["go_phase"] for item in calendars] == [0, 1]
+        assert all("OT_SVC_NATIVE_RT2_CALENDAR" in item["build_defines"] for item in calendars)
+        assert all(item["h8_calibrated"] is False for item in calendars)
+    else:
+        assert "native_rt2_calendar" not in record
+    assert record == old_record

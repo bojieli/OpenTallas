@@ -1,0 +1,37 @@
+{
+  "verdict": "BLOCKED_FOR_ROUTE",
+  "scope": "Private rectangular packing only; approved four-band decomposition is unchanged.",
+  "image": "packing_345.6.png",
+  "outline_um": [
+    1442.88,
+    3093.12
+  ],
+  "growth_y_um": 345.6,
+  "total_providers": 66,
+  "placed_providers": 66,
+  "grid_um": 8.64,
+  "street_um": 43.2,
+  "edge_um": 34.56,
+  "box_check_failures": [],
+  "assumed_control_memory_strip_um": [
+    1373.76,
+    328.32
+  ],
+  "findings": [
+    "Viewed actual drawing: provider areas fit but randomized head labels and scattered TRX/H4 break locality. Long control-to-head routes require source-selected relay and clock/reset design.",
+    "S_att control-only source cut does not exist; its 76-memory placement and 328.32 um strip assumption remain unproven.",
+    "Actual svc_hi and svc_lo parent soft plus registered faces need new measured counts; analytic estimate is not acceptance evidence.",
+    "No pin alignment, PDN, reset-root, clock insertion, macro-channel, signoff, or programme timing qualification."
+  ],
+  "next": "Build a topology-aware provider assignment and actual control-only source cut only as private candidate; retain OWNER? decomposition question and all production holds.",
+  "die_budget": "UNPROVEN: 345.60 um is per partition, not summed die-row growth. If three row maxima grow by this amount, 1036.80 um exceeds current 356.48 um remaining after frame. Selected row impact must come from actual planner.",
+  "small_growth_search": {
+    "attempts_per_height": 10000,
+    "placed_out_of_66": {
+      "0": 61,
+      "103.68": 62,
+      "112.32": 62
+    },
+    "scope": "Heuristic failures only; not a mathematical packing lower bound. Original 1000-attempt receipts are preserved."
+  }
+}

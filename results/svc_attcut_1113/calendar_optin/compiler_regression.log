@@ -1,0 +1,82 @@
+ot-run: epyc7          admits   482 GB (avail 720, reserve 0, fresh 142.4, peak 63.8, headroom 0, waiters 0/0 GB) load 50/96 running 25 disk 816 GB 
+ot-run: -> epyc7
+ot-heavy: admitted on loved-redfish as oth-ubuntu-2321233-1794614360 after 0 s
+............................                                             [100%]
+=============================== warnings summary ===============================
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:102
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:102: PytestWarning: (rm_rf) unknown function <built-in function scandir> when removing /tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0/producer/lec:
+  <class 'PermissionError'>: [Errno 1] Operation not permitted: '/tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0/producer/lec'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0/producer/lec
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0/producer/lec'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0/producer
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0/producer'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744/real_completed_proof0'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-f878bc3c-4b95-4091-b2b3-bc0203017744'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:102
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:102: PytestWarning: (rm_rf) unknown function <built-in function scandir> when removing /tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0/producer/lec:
+  <class 'PermissionError'>: [Errno 1] Operation not permitted: '/tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0/producer/lec'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0/producer/lec
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0/producer/lec'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0/producer
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0/producer'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205/real_completed_proof0'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-3e0d8dea-19e1-431e-a95c-22ba4671a205'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:102
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:102: PytestWarning: (rm_rf) unknown function <built-in function scandir> when removing /tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0/producer/lec:
+  <class 'PermissionError'>: [Errno 1] Operation not permitted: '/tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0/producer/lec'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0/producer/lec
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0/producer/lec'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0/producer
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0/producer'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c/real_completed_proof0'
+    warnings.warn(
+
+../../../../../home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95
+  /home/ubuntu/.local/lib/python3.14/site-packages/_pytest/pathlib.py:95: PytestWarning: (rm_rf) error removing /tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c
+  <class 'OSError'>: [Errno 39] Directory not empty: '/tmp/pytest-of-ubuntu/garbage-912150c6-5070-4041-8248-6f59d520cd8c'
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+ot-run: RAN on epyc7 (unit oth-ubuntu-2321233-1794614360): exit 0
