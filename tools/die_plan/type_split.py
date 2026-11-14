@@ -183,6 +183,18 @@ class TypeSplit:
         self.ev, self.tn = ev, tn
         raw = ev.raw
         self.t = raw["partition_types"][tn]
+        if self.t.get("landing_base_type") and "cells" not in self.t:
+            # A cohort can inherit an estimate from a base no longer present in the raw plan.
+            # Materialize it once before allocating shares, so each child does not inherit the whole base.
+            import cells
+            estimates, _ = cells.estimate(raw, getattr(ev, "plan_dir", None))
+            if tn not in estimates:
+                raise SplitError(f"{tn}: landing cohort has no resolvable cell estimate")
+            count, basis = estimates[tn]
+            self.t = copy.deepcopy(self.t)
+            self.t["cells"] = int(count)
+            raw["partition_types"][tn] = self.t
+            ev.rep["notes"].append(f"{tn}: materialized cohort cells {count} ({basis}); new split hardware counted separately")
         # internal-station rows repeated with identical geometry (one per core of the same chain; bind and the kit
         # merge them) are ONE chain: kept once so the cut gives it one leg / one cut bus (notes joined)
         ist, seen, ndup = [], {}, 0
@@ -320,7 +332,7 @@ class TypeSplit:
         T = [dict() for _ in range(n)]
         handled = {"outline_um", "buses", "ft_slots", "clock", "reset", "contents", "hard_cores", "internal_stations",
                    "count_straps", "module", "note", "hard", "face_pins_per_um", "face_budget_g2", "core_pg_connect",
-                   "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells"}
+                   "landing_control_status_copy", "reset_spine_pins", "pads", "reach_homes", "cells", "landing_base_type"}
         unknown = set(t) - handled
         if unknown:
             raise SplitError(f"{self.tn}: unhandled type keys {sorted(unknown)} (extend type_split.py)")
@@ -330,7 +342,7 @@ class TypeSplit:
             o[cut.ax] = cut.ext(i)
             T[i]["outline_um"] = o
             T[i]["hard"] = False
-            for k in ("face_pins_per_um", "face_budget_g2"):       # type-wide face budget: every piece keeps it
+            for k in ("face_pins_per_um", "face_budget_g2", "landing_base_type"):       # retain semantic identity on every piece
                 if k in t:
                     T[i][k] = copy.deepcopy(t[k])
             T[i]["note"] = (f"{self.ev.tag}: piece {i} of {self.tn} ({'xy'[cut.ax]} {cut.lo(i)}..{cut.hi(i)} of the "
@@ -378,6 +390,7 @@ class TypeSplit:
                 [T[i]["outline_um"][0] * T[i]["outline_um"][1] for i in range(n)]
             for i in range(n):
                 T[i]["cells"] = int(round(int(t["cells"]) * w[i] / sum(w)))
+            T[-1]["cells"] += int(t["cells"]) - sum(q["cells"] for q in T)
             self.rep["cells_split"] = dict(base=t["cells"], by="registers" if sb else "area",
                                            pieces=[T[i]["cells"] for i in range(n)])
         for i in range(n):
@@ -2032,27 +2045,56 @@ class Event:
         ts.bus_piece[nm + "_i"] = ts.bus_piece[nm + "_o"] = piece
         return f
 
+    def _canonical_transit_text(self, base, text):
+        """Use declared instance-local identities when sharing one physical type across replicas."""
+        if not hasattr(self, "_transit_local_maps"):
+            maps = {}
+            if self.ab and self.ab.get("map_file"):
+                candidates = [self.ab_path.parent / self.ab["map_file"], self.plan_dir / self.ab["map_file"]]
+                file = next((q for q in candidates if q.is_file()), None)
+                if file is None:
+                    raise SplitError("transit replica map_file is missing")
+                maps.update(json.loads(file.read_text()).get("parts", {}))
+            maps.update((self.ab or {}).get("map", {}).get("parts", {}))
+            self._transit_local_maps = maps
+        aliases = [(str(name), value[1]) for name, value in self._transit_local_maps.items()
+                   if isinstance(value, list) and len(value) == 2 and value[0] == base]
+        for name, local in sorted(aliases, key=lambda q: -len(q[0])):
+            text = re.sub(r"(?<![A-Za-z0-9_$])" + re.escape(name) + r"(?![A-Za-z0-9_$])", lambda _m, local=local: local, text)
+        return text
+
     def _transit(self, base, ts, frm, to, stem, width, kind, how, pc=None):
-        """a cut route from piece frm to piece to: one lane, through pass-through slots of the pieces between"""
+        """One lane per instance, with one shared physical bus/slot definition per replicated type route."""
+        multi = len(ts.parts) > 1
+        if multi:
+            stem = self._canonical_transit_text(base, stem)
+            how = self._canonical_transit_text(base, how)
         self.lmax += 1
         lid = f"L{self.lmax}"
         step = 1 if to > frm else -1
         path = list(range(frm, to + step, step))
-        hops = []
-        for a, b in zip(path, path[1:]):
-            hops.append((a, b))
-        sb = ts._new_bus_name(frm, "o_" + stem)
-        ts.T[frm]["buses"].append(dict(name=sb, dir="out", width=width, kind=kind))
-        db = ts._new_bus_name(to, "i_" + stem)
-        ts.T[to]["buses"].append(dict(name=db, dir="in", width=width, kind=kind))
-        ts.bus_piece[sb], ts.bus_piece[db] = frm, to
-        slots = {}
-        for m in path[1:-1]:
-            slots[m] = self._mid_slot(ts, m, frm, to, width)
+        hops = list(zip(path, path[1:]))
+        cache = self.__dict__.setdefault("shared_transits", {})
+        key = (ts.tn, frm, to, stem, int(width), kind, how, bool(pc))
+        entries = cache.setdefault(key, []) if multi else []
+        shared = next((r for r in entries if base not in r["bases"]), None)
+        if shared is None:
+            sb = ts._new_bus_name(frm, "o_" + stem)
+            ts.T[frm]["buses"].append(dict(name=sb, dir="out", width=width, kind=kind))
+            db = ts._new_bus_name(to, "i_" + stem)
+            ts.T[to]["buses"].append(dict(name=db, dir="in", width=width, kind=kind))
+            ts.bus_piece[sb], ts.bus_piece[db] = frm, to
+            slots = {m: self._mid_slot(ts, m, frm, to, width) for m in path[1:-1]}
+            shared = dict(sb=sb, db=db, slots=slots, bases=set())
+            if multi:
+                entries.append(shared)
+        else:
+            sb, db, slots = shared["sb"], shared["db"], shared["slots"]
+        shared["bases"].add(base)
         for k, (a, b) in enumerate(hops):
-            s = sb if a == frm else slots[a]["name"] + "_o"
-            d = db if b == to else slots[b]["name"] + "_i"
-            self._req(kind_="transit", base=base, ts=ts, a=a, b=b, sbus=s, dbus=d, width=width, kind=kind, xpref=None,
+            sbus = sb if a == frm else slots[a]["name"] + "_o"
+            dbus = db if b == to else slots[b]["name"] + "_i"
+            self._req(kind_="transit", base=base, ts=ts, a=a, b=b, sbus=sbus, dbus=dbus, width=width, kind=kind, xpref=None,
                       key=f"tr:{lid}:{k}", lane=lid, new_lane=k == 0, hop=k, pid=f"{lid}_{k}", slot_b=slots.get(b),
                       slot_a=slots.get(a), note=f"{self.tag}: cut route {how} piece {frm} -> {to}", plancell=pc)
         return sb, db, lid
@@ -2090,15 +2132,20 @@ class Event:
                 for h, sc, kc, frm, to, n, pin in intra_rows:
                     if h != base:
                         continue
-                    stem = re.sub(r"_\d+__", "_N__", sc) + ("_" + pin if pin else "")
-                    sb, db, lid = self._transit(base, ts, int(frm), int(to), stem, int(n), "data", f"leaf {sc} -> {kc}")
+                    skey = self._canonical_transit_text(base, sc) if len(ts.parts) > 1 else sc
+                    dkey = self._canonical_transit_text(base, kc) if len(ts.parts) > 1 else kc
+                    stem = re.sub(r"_\d+__", "_N__", skey) + ("_" + pin if pin else "")
+                    sb, db, lid = self._transit(base, ts, int(frm), int(to), stem, int(n), "data", f"leaf {skey} -> {dkey}")
                     self.rep["census_routes"].append(dict(part=base, src=sc, dst=kc, frm=frm, to=to, bits=n, lane=lid,
                                                           src_bus=sb, dst_bus=db))
 
     def _plancell_requests(self):
         for (base, ts, frm, to, stem, width, kind, tag, cb) in getattr(self, "pc_routes", []):
-            sb, db, lid = self._transit(base, ts, frm, to, stem, width, kind, tag, pc=True)
-            cb(sb, db)
+            bases = base if isinstance(base, tuple) else (base,)
+            endpoints = [self._transit(part, ts, frm, to, stem, width, kind, tag, pc=True)[:2] for part in bases]
+            if len(set(endpoints)) != 1:
+                raise SplitError(f"{ts.tn}: replica plan-cell route has inconsistent shared endpoints")
+            cb(*endpoints[0])
 
     # ---------------------------------------------------------------- windows + ports + lanes
     def _ft_station_on_window(self, ts, r):
@@ -2341,6 +2388,9 @@ class Event:
     # ---------------------------------------------------------------- plan cells
     def _plan_cells(self, T):
         """split asbuilt.plan_cells per piece.  Returns the new document; cut routes for cell drivers are queued."""
+        if any(ts.t.get("landing_base_type") or len(ts.parts) > 1 for ts in self.ts.values()):
+            import split_plan_cells
+            return split_plan_cells.split(self, T)
         src = self.ab.get("plan_cells")
         if not src:
             return None
