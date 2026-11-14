@@ -6,3 +6,4 @@
   | kit-rtl no partition type col_h9_r0_p* | 5 | stale r0 names (known) | none | - |
   | clock-landing band, 1 | 1 | single, below threshold | - | - |
   Note to KIT-OPS-3: epyc7 had no images; the 11 col_h9_r2 gen_lint rc125 and 2 leaf CRASH items are unchanged-input failures that now should pass on relaunch (inputs changed = host fixed). Check other newly provisioned hosts (epyc10) for images. No near-miss ECO candidates this pass.
+- 2026-11-13 23:09 PST FAIL-S81-1: per COORD checked epyc10, intel1, epyc8, epyc9 docker images: all have the 6 orfs images (asap7lock, latest, grtT1/T2/T3/grtoff). No gaps; epyc7 was the only one (fixed). Next pass in ~75 min.
