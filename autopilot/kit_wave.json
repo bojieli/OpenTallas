@@ -34264,7 +34264,12 @@
     "cbx_q10__cl89936551_h@6",
     "cbx_q10__cl89936551@28",
     "cbx_q10__cl94a12200_h@7",
-    "sle_sc_v2@5"
+    "sle_sc_v2@5",
+    "sle_ctl__cl372cea1c@1",
+    "sle_ctl__cl503337ff__v1@1",
+    "sle_ctl__cl67434795@1",
+    "sle_ctl__cl67434795__v1@1",
+    "sle_ctl__cla4f6f12f@1"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -34990,7 +34995,13 @@
     "cbx_q10__cl94a12200_h@7": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
     "sle_st_a_v1__cl989804f6__cl18eece69@2": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
     "slw_st_a_v1__clb036e152@1": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
-    "sle_sc_v2@5": "QC s29q103S2: plan minus 3 stale r8pad count_straps, rebound (bind_s29q103S2); only these two relaunch."
+    "sle_sc_v2@5": "QC s29q103S2: plan minus 3 stale r8pad count_straps, rebound (bind_s29q103S2); only these two relaunch.",
+    "sle_ctl__cl372cea1c@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
+    "sle_ctl__cl503337ff@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
+    "sle_ctl__cl503337ff__v1@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
+    "sle_ctl__cl67434795@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
+    "sle_ctl__cl67434795__v1@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
+    "sle_ctl__cla4f6f12f@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch."
    },
    "gen_hosts": [
     "epyc10",
@@ -36605,6 +36616,13 @@
       "host": "epyc10",
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/qc103-sta_cland_w1574_n_s26/sta_cland_w1574_n_s26",
       "job": "COUNTED sta_cland_w1574_n_s26 epyc10:/srv/opentallas-scratch2/claude/die-qc-103/rk2/sta_cland_w1574_n_s26/kits/sta_cland_w1574_n_s26_synth0/signoff/signoff.json (KW-FIX-32 export_view; QC-CORES hand-built, registered by KIT-OPS-3)"
+     }
+    ],
+    "qfd_dv_s8_tap_bounded": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/qc103-qfd_dv_s8_tap_bounded/qfd_dv_s8_tap_bounded",
+      "job": "COUNTED qfd_dv_s8_tap_bounded epyc9:/srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff/signoff.json (KW-FIX-32 export_view; QC-CORES hand-built form e, registered by KIT-OPS-3)"
      }
     ]
    },
