@@ -13128,3 +13128,134 @@ Next: use actual IR to place every native soft relay/seam FF bank and reset targ
 Terminal job collection/checks: intel2 logs `~/codex-s81-log/r3face_bind_tests_v4.log` (unit oth-ubuntu-2171912-1794617741), `r3face_reset_graph_v3.log` (oth-ubuntu-2259553-1794618096), `r3face_actual_component.log` (oth-ubuntu-2271634-1794618144), `r3face_actual_synth.log` (oth-ubuntu-2272599-1794618145). All show exit0. Earlier failed census syntax/test attempts and successful superseded31-pin/N120 fixtures remain in their separate logs. No retry or new launch after Claude reset notice.
 
 2026-11-13 17:13 PST — /root/kv/split stopped on CLAUDE BACK. Canonical DIE-KV-100 STOP/HANDOFF appended with exact source commits, clean index, zero data-binding defects, remaining91 strict classes/19 CA G0, aux72/73 law owner (no patch), PC812 alias active PID3208724/unit3208598 preserved, and parent hub6 PID3205086 preserved. No new launches after stop notice; descendants notified; no OWNER? question pending.
+
+## Handoff to Claude 2026-11-13 17:15 PST
+SVC detailed handoff: handoff/codex_svc_20261113_1715.md. No own jobs live; all new launches/adoption stopped, other jobs untouched. Hub/GitHub through9d2710b8c2. All-headT32two-pass completePASS being checkpointed; T128NOTRUN. Global compiler/POR/geometry holds remain; no budget-integrable fullLOlayout, missing276.48IRGnativeview explicitlydiagnosed.
+
+## Handoff to Claude 2026-11-13 17:14 PST — LEC child
+
+Work is safely parked; no new proof/build launches after the CLAUDE BACK notice. Existing leased source worktree E7 `/srv/opentallas-scratch2/claude/rules-cap-1/wt` is CLEAN on `claude/rules-cap-1@f9b72b0b1d`, pushed to hub. No new project lane/worktree was created.
+
+Source results:
+- `2fbcfcfe82`: choose self-hold representatives within each near-input support class; old two-scope regression failed and fixed26 focused tests passed. Merged main74541c14bef. This was a separate generic bug, not the complete fcoll2 fix.
+- `89e6005ace`: synchronous SRAM WD latch qualification derives real RAM Liberty rising setup/hold/width evidence, emits fresh module/port/clock/edge stub metadata, and requires the same actual primary-clock witness at a transparent-low latch. Stale/unmarked JSON remains unqualified; fresh hard-core policy preserved.45 focused tests passed, including actual hard-core integration/mutants and BB fold behavior. Actual C9 TT/FF libs qualify both32x128 and128x256 WD. Merged main28cf40797342.
+- `f9b72b0b1d`: READY/pushed, root approved ordinary source intake; merge agent reviewing (do not claim merged unless checked by coordinator). Before broad anonymous signature matching, propose same-side aliases by EXACT RAW native next-state literal identity with ALL correspondence disabled and compatible KNOWN native reset values. Constants and unknown bases never qualify; no cross-side target. Already cross-side-bound public FFs remain native partners. Every candidate is still an ordinary joint-induction output. Two files122 insertions. Admitted E7 unit `oth-ubuntu-3102748-1794618137`:96 PASS/1 optional pycryptosat SKIP from test_lec.py82 + native_anonymous_alias6 + selftwin7 + scope_twin_refine2. Actual CSA31 pre fixture retained7 differences; corrected fixture109/109 EQ.
+
+QC fcoll2 original:
+- E2 K `/srv/opentallas-scratch2/claude/hard-qc-forms-1/pipe/runs/fcoll2/coll_core/gen/coll_core`.
+- QCforms collected TERMINAL original/hint0: async rc1,157771 compare outputs,157751 proved,20 differs,0 undecided. Same three face1 codec control failures epoch_abort/fault_cause[1]/rx_v plus17 e3 state-identity splits; missing gold face1 re[0] remains. Original files/logs/hypotheses untouched. Physical CTS independently remains held by clock/start/reset fanout/span failures.
+- Exact RTL re/e1 same-face alias independently proved from actual AIGs on BOTH faces: native declared reset_contract64 edges gives[0,0], induction output literal0; inverted-polarity mutants DIFFER. No constant waiver.
+- Actual native gate anonymous134628 is the complement of SAME-FACE gate e1#t. Native reset64 is[1,0], independent same-side alias induction literal0, raw D literals1921211/1921210 with NO correspondence. E7 unit2577083 independent proof; actual new candidate producer unit3104328 proposes `gate anon134628 = ~gate face1 e1#t` (not gold face0).
+
+Targeted diagnostics, all under E7 `/srv/opentallas-scratch2/claude/rules-cap-1/lec_fcoll2_diag`:
+- Four local REPLACEMENTS initially left the old anonymous cross-face binding inconsistent. Concrete FAIL is preserved in `targeted_proof/failed_four_repairs_witness.json`, output24600 anon134628, seed99/8 words/lane11. Stopped ONLY this already-failed own Python2457838/ABC2469505 after identity checks; no foreign job was touched.
+- Correct monotonic four-ADDITION diagnostic unit `oth-ubuntu-2605183-1794615532` is NOW TERMINAL, not live: exit0; report at `targeted_proof_monotonic/targeted_report.json`, log `proof.log`, names `output_names.json`.67,097/67,099 PROVED,0 differs,2 UNDECIDED ONLY face1 epoch_abort/rx_v. ALL67,079 existing+new induction obligations and18/20 selected design points proved. Four new raw reset64 bases are[0,0]. This diagnostic explicitly proposed the gold cross-face e1 replica and jointly PROVED it with the entire invariant set; it was never accepted as an unproved assumption. It is NOT an official whole-design EQ/KEEP receipt.
+- The existing exact Boolean normalization option OT_LEC_PARITY_TERMS=1024 was tried BUILD-ONLY (no SAT), unit2978099; `targeted_build_parity1024/targeted_report.json`. Same selected profile: raw structural zeros improved12/20 to17/20 design points (five CRC outputs), overall60228 to60271/67099. Remaining not-collapsed outputs are NOT a failure verdict. No defaults changed; this is an optional future exact algebraic capacity setting, not a model waiver.
+- `fcoll2_local_face1_preseed_plan.json` contains ONLY four LOCAL untrusted preseed relations: gold face1 re=e1, gate face1 e1/e2/e3#t=gold same-face counterparts; existing structured hint schema/discovery24/post empty. Use alongside new native anonymous alias producer for the next standard run. All ordinary reset/induction/KEEP/final comparisons remain required.
+- FUTURE STANDARD FCOLL2 RUN WAS NOT LAUNCHED. Only an EMPTY directory E7 `/srv/opentallas-scratch2/claude/rules-cap-1/lec_fcoll2_native_f9b/kit` was created while preparing staging. No driver/input copy, no new native receipt or new full proof job exists there. Coordinate with QCforms before launching one new-out standard run; old original is terminal.
+- Private replay adapters initially omitted anonymous key projection and446 saved #t naming projections; corrected cache `prepared_point_maps.pickle` restores native literal names. Those errors produced no receipts. Candidate-only apply_hints(rounds=0) clears H, so prior final-null observations were invalid; they were corrected and never used as proofs. Gold-control subset reports are NOT production failures/proofs: converting both->gold does not bind matched Q in Lec.build and some auxiliary replicas have unknown concrete base. Do not promote those diagnostic results. The direct native alias proof/producer and full monotonic joint report above are the reliable results.
+
+C9 BKSEL LIVE proof to preserve:
+- E4 K `/srv/opentallas-scratch2/claude/die-s81-85/bksel_vC9`.
+- Old `lec/lec.json` UNPROVEN31.8s/no compares remains untouched: latch Q reached synthetic SRAM lec_bbi_wd_in[0].D. Its old driver SHA313d77 had no BB input sink support; current source qualification is deliberately narrower than a blanket stub allowance.
+- Exact pinned driver staged at `K/lec_driver_qualified/89e6005ace/lec.py`.
+- Residual launched ONE fresh standard CLI, NO --reuse,64GB/8 threads, out `K/lec_clocked_sram`.
+- LIVE E4 unit `oth-ubuntu-1851980-1794616659`, I2 frontend2089227, log I2 `~/s81-residual-logs/bksel_vC9_clocked_sram_lec.log`.
+- Latest handoff inspection: no terminal lec.json yet; fresh stubs/wrappers and raw bases/prefixes exist, and `rawprefix1_gate_64_cones_0_67_n10_C100000-m.abc` is latest at01:12UTC. It PASSED the prior failing latch-to-SRAM modeling point and is in ordinary AIG/ABC work. Do NOT restart it to adopt f9b; source89 cohort is immutable and adequate for this run. No C9 physical continuation before actual native EQ.
+- Residual actual sampled-edge mechanism evidence: W137 two-bank/partial-bank vehicle,4096 cycles;4074 receiving-posedge checks plus261760 explicit SRAM-word checks PASS; stale extra-cycle mutant killed73448 mismatches. Source/state proof and actual timing remain separate.
+
+Check commands (read-only):
+`ssh intel2 'tail -20 ~/s81-residual-logs/bksel_vC9_clocked_sram_lec.log'`
+`ssh epyc4 'ls -lt /srv/opentallas-scratch2/claude/die-s81-85/bksel_vC9/lec_clocked_sram | head'`
+`ssh epyc7 'cat /srv/opentallas-scratch2/claude/rules-cap-1/lec_fcoll2_diag/targeted_proof_monotonic/targeted_report.json'`
+`ssh epyc7 'git -C /srv/opentallas-scratch2/claude/rules-cap-1/wt status --short'`
+
+No new OWNER decisions/questions. No HBM work, POR/source-freeze switch, clock relaxation or physical launch from this child.
+
+Completed safe checkpoint c3bd38ae82 is now on canonical hub branch claude/hard-s81-svc-1-tilepair-1113. Completed all-head T32 source/evidence only, no new test/launch/adoption. Evidence results/svc_attcut_1113/allhead_feedback_t32/{README.txt,staged,native}. T128 runtime support NOT RUN, T640 deferred. All descendant work parked, no own live jobs or pending owned edits; unrelated donor files untouched. Canonical GitHub mirror for checkpoint is in flight; intel2 command git -C ~/OpenTallas push origin claude/hard-s81-svc-1-tilepair-1113.
+
+CLAUDE BACK — leaf_template stopped new work and notified both descendants. Handoff appended to ~/coord/lanes/handoff/S81-FORMS-1.md with actual K72 paths, source/bus/native geometry results, failures and exact next synth-only script. All leaf-owned jobs terminal; latest K72 KI actualPASS0 unitoth-ubuntu-3151360-1794618377 (I2frontend2441190), check tail -1 ~/codex-s81-log/t28_actual_source72_ki_r2.log. NO synth/P&R launch. Unexecuted E7 w/leaf_template_codex/synth_source72_handoff.sh left ready. No blocking owner question. Native72 records25620FF prepared, source2843 finite geometry; full mapped/bus/control-source clock inventory remains explicitly unclosed. K52, clean bind and all failed evidence preserved.
+# FRAME-FORMS-1 R3 / CFGROM W-face return handoff
+
+Claude returned; this helper STOPPED new work/launches/edits on notice. All owned CAD/probe jobs are terminal. No active healthy job was killed. No new retry was launched after the notice. No live plan, deployed sidecar or RTL/tool edit was made by this helper; source/provider actors committed their own isolated changes.
+
+## Concrete current artifacts (E4)
+
+Base lane: /srv/opentallas-scratch3/claude/frame-forms-1/r0v
+Existing source WT: /srv/opentallas-scratch3/claude/wt/frame-forms-1
+
+- r3walk_joint216_wface_alias_private.json (139MB): concrete joint216 input caller with ONLY THREE selected R2 types modified,105actual distinct-master ROM selections, actualV3 geometry+3existing-bank entries. It starts from EXACT parent w/plan_frame216_p1compact_n_r1trim_private.json. All other392types and die-level geometry/clock/reset/latency plus caller type outlines/buses/FT/clocks/resets are preserved. This caller PRECEDES the latest parent P4 H1296 recovery: final composition MUST rerun on parent's newest caller; do not replace it with this older snapshot.
+- r3walk_joint216_wface_alias_report.json: exact selected types,105selectedROMs, changed origins/orients,3native-bank records and preserved metadata.
+- Selected types: col_h10_r2__t1__cl8b686b3e, col_h10_r2__t1__clac068e56, col_h9_r2__t1__cl87f3ff59. Each has one active instance. This is NOT a whole216-provider adoption/audit. Other213 active frame types retain old provider/source and remain unqualified by this prototype.
+- r3walk_compose_joint216_wface.py CALLER.json: reproducible overlay, currently hardcodes the first alias provider directory. Must take/update the fresh immutable RC2 provider path before any STA; RC2 was NOT generated when work stopped.
+
+## Alias provider: geometry/behavior proven, TIMING HOLD
+
+Actual distinct master: ot_rom_4096x72_m8_wface_1113.
+Provider files: existing WT results/cfgrom_wface_alias_1113/ot_rom_4096x72_m8_wface_1113/{samebasename.lef,_tt.lib,_ff.lib,.v,_bb.v,.json}.
+Provider owner /root/s81cores, isolated packet commit5e0bfa195f pushed. Actual compiler-produced pin layout: R0 all clk/CE/addr/72return pins W; MY all E.38.040x62.952um; all86signalpins track-pass R0/MX/MY/R180, noR90. Behavioral and blackbox bodies match old master after module-name normalization; actual old-vs-alias image miter passed all4096addresses/49152word/3538944bit checks including INSTANCE+OT_ROM_DIR and VIAMAP; wrong-bit/late mutants caught.
+
+IMPORTANT TIMING HOLD from provider owner at stop: current TT envelope misses the0.72fF Liberty reference-load term and needs actual M3 vertical4.128um +twoV3pricing (V3=.0172kohm each). RC2 not yet generated. Alias/pin/behavior proof remains valid; NO STA, timing carry, SIGNED or adoption claim from current libs. Provider packet is explicitly PRIVATE_COMPILER_ABSTRACT_NOT_SIGNED, not a routed/signed donor. Old mixed provider/default catalog remains untouched.
+
+Actual alias LEF-extracted pin table: r3walk_CFGROM_wface_alias_actual_pins.json. No pin JSON was manually re-pinned.
+
+## Three-type physical role/bit result
+
+- r3walk_provider_wface_three_role_report.json, typed three-case file r3walk_provider_wface_three_all_rom_toward_seq_plus_SEQMY_shift8_types.json.
+- Actual Wface candidate eliminates all ROM addr/CE/return away groups, ILLEGAL0, R-STREET ERROR kinds0 on all three representatives; only WARN slivers remain.105ROM-roleports/type,2303activebits/type, max392.022um,zero>405/unresolved. PlainSEQ q0..q6 are48bits; ROM[71:48] unconnected to those captures, proved native source/boundwidth. BFP q ports72bits.
+- Ordinary plainSEQs mirror MY and move left8.64: cl8b/clac S11/S13; cl87 S10/S12; original518.4→509.76. This repairs true go_tag to403.644um after reflection-alone failed412.284. Last BFP SEQ staysV3MX at518.4. All macro origins8.64; no4.32 exception.
+- V3 h10 functional row: T9payload[596.16,889.92],baseT9[699.84,881.28],C15_6[855.36,855.36]. No extra cycles.
+- V4 half-grid branch is explicitly FAIL/DO_NOT_ADOPT in r3walk_frame132_v4_report.json and _DO_NOT_ADOPT.txt. Preserve validV3; do not accidentally use514.08 sequencer origins.
+
+## Actual source event, NOT a cached module rename
+
+r3walk_wface_source_event.py ASBUILT.json OUTPUT_DIR is a caller-parameterized pre-ELAB source generator. Prototype output directory r3walk_wface_source_event/ contains:
+- asbuilt_wface_selected.json
+- frame_wface_r2_selected_sources.sv: actual H10/H9R2 module clones, each exactly35ROM master changes; normalized remaining source bytes identical. Actual asb_x wrapper clones change ONLY R2 child master; R0/R1 references remain caller source.
+- die_selected_frame_wface_source.v: ONLY top instances u_f_0L01,u_f_0R01,u_f_1L12 select those wrappers. Expected alias leaf paths105, original instance names/hierarchy retained.
+- source_event_manifest.json: exact constructor paths, expected paths, parent source prototype/HOLD semantics.
+
+Alias was added to instance_path_params as {module:ot_rom_4096x72_m8_wface_1113,param:INSTANCE}. This must preserve ORIGINAL hierarchical image identity. A mere substitute_inst edit is insufficient: Binder.instance_path_params runs before substitute_inst, so the alias must exist in actual source BEFORE freshELAB. Source clone selection satisfies that structurally; no successful freshELAB/bind/image-path audit has yet validated it.
+
+Prototype source input was vol2/eventfull/asbuilt_fs.json with its current base directory. Parent will publish a fresh canonical source/tap/reset/collector cohort; generator MUST rerun on that final ASBUILT and latest geometry caller. Do not freeze this prototype as final source. Current native W already has per-core reset forests while old7073bound fixtures show sharedD8; no reset/data acceptance is transferred from those stale bounds. Parent R0T0D2 source event is separate and must be preserved.
+
+## Prototype ELAB exact job/failure: NO128GB retry exists
+
+Owned unit: oth-ubuntu-2352375-1794618470.scope on E4. ot-run client on intel2 /tmp/r3walk_alias_fresh_elab_client.log. Unit inactive; ot-run reported EXIT1. Peak observed early2.73GB, so this was NOT an OOM.
+Command script: E4 r0v/r3walk_alias_fresh_elab.sh.
+Attempt output: r3walk_wface_source_event/elab_prototype/
+Failure log: r3walk_wface_source_event/elab_prototype.log
+Check command: ssh epyc4 'tail -25 /srv/opentallas-scratch3/claude/frame-forms-1/r0v/r3walk_wface_source_event/elab_prototype.log'
+
+Failure BEFORE Yosys: prototype input ASBUILT hard_params still references deleted /srv/opentallas-scratch2/claude/type-safe-4/s81p3/romq_rtl/col_h9_l4_lp_kit_vg_romq_split.hard_params.json (H10 counterpart also stale). Current same-basename committed caller-base files exist under bsrc_fs/rtl/dsrom_sys/s81_dv/frame_lp/kit/. Their tables specify plainSEQ LAYOUT1/PINREG1/PQ1 and BFP LAYOUT1/PINREG1; ROM master has empty hardparams. Resolving those two refs to current caller-owned constructor metadata was identified, but NO fix/retry was made after Claude-return notice.
+
+Root measured full source/parser class about72GB and requested next attempt >=96/128GB. The64GB prototype was already healthy/admitted, not killed; it failed missing metadata first. There is NO running/launched128GB retry/PID/unit. Preserve attempt1 failure and use a fresh output directory after fixing metadata from FINAL parent cohort.
+
+## Full regenerated source graph and newly exposed REAL paths
+
+Source actor /root/hbm committed/pushed955741b20a (C/CN+focusedtests only),54tests pass. Full actual donor r0v/core_conns_full_regenerated_codex.json; receipts core_trace_full_codex.json; reclassification core_trace_actual_reclassification_codex2.json. All182falsebus ancestors removed,4falseinput↔input peers gone,5genuine direct paths retained, actual relay/seam stages retained. Generic trace includes true reciprocal roles and logical masks; opaque BF headers remain loud.
+
+Fresh donor against concrete3alias caller: r3walk_alias_fullgraph_report.json (1481groups/225cores/18opaqueBFheaders,59away). ILLEGAL0, zeroROMaway and zeroR-STREET ERROR, but it exposes additional actual roles/stages. DO NOT reuse the older27-away partial-role count as whole-source acceptance.
+
+CRITICAL correction: raw409.044 links now name TRUE element.bank_free ->SEQ.ef, with CP mate ambiguity between ef/go_tag. They are NOT the old false cfg/xs ancestry. Exact EF bit-mask reach remains pending; no waiver. OrdinarySEQ one more legal8.64 shift may repair, but was NOT tested/launched.
+Other raw functional classes, all preserved in the report:
+- Node a bus-to-face: H10N25 length1917.812um; H9N23 length1207.22um. Need actual existing transport-stage/source placement assignment.
+- Incoming xai/xbi/cci and payload chains via actual pads/seam; expanded H10/H9 fields need actual full-width bank assignment, not just536payload.
+- H9 cc/lc direct/relay classes (570.767/505.606), H9 payload T7->T8 existing relay604.861, H9 payload->BFfront468.666 now revealed. Need exact actual source stages and physical bank/rehome; not skipped.
+- Fresh core-face additional st/go_e/fo/lc roles are recorded. Reset32rawlinks/type are assigned to parent native-forest refresh, not provider re-pin exemption.
+No raw go/control class was silently skipped. Pending work is explicit, not a PASS.
+
+## Existing native register banks/materializer
+
+V3 files r3walk_frame132_v3_{native_bank_input,actual_bank_bit_proof,delta,plan,report}.json remain parked. Actual relay536 per-bit bank hops358.770/344.730; clac4pad+seam536 hops112.031/60.48/60.48/86.4/60.48/240.256, all<405,zeroaddedcycles. Full per-bit register indices/coordinates included.
+Rpad helper /root/s81/frame_r0/rpad_bank reported privateR2consumer22tests +actualOpenROAD3216FIRM/2780unselectedpad unchanged, known-rowclaim13tests; prototype claim builder r2_native_claim_requests_codex.py was pointed at actualV3plan. Parent/shared own review/transplant. Canonical fresh wrappers/source SHA must replace old stable fixtures; old claims may never transfer silently.
+P1 bank final16x70 and exact consumer/site proof remain valid scoped prototypes; parent owns canonical source and actual kit gate.
+
+## Next authorized work for Claude
+
+1. Use newest parent P4-recovered joint216 caller +final canonical source cohort; rerun source-event generator and alias composition, preserving all caller clock/reset/bus/FT metadata.
+2. Resolve stale hard_params references from FINAL source constructor, use >=96/128GB freshELAB output, verify EXACT105alias leaves and original INSTANCE identities; then fresh bind/source/LATCHECK, not cachedELAB reuse.
+3. Consume immutable RC2 provider packet before any STA. Current timing is HOLD.
+4. Resolve six-per-type opaque BF headers from actual hierarchy; assign every newly exposed EF/go/control/node/input transport class using full trace masks and actual native stages/geometry.
+5. Parent explicitly requested WHOLE-ROLE R0/R1 and all132expanded+84new=216 active frame families. This audit is NOT DONE; prototype is only3selectedR2vehicles. Oldone-way/truncated checks are insufficient. Branch-specific address broadcast directions cannot be declared solved by a best-of-partners orientation score; actual per-branch anchors/SEQ port form may be required.
+6. No P&R until source/banks/taps/reset/corefaces/traffic/PG and actual rendered successor geometry are reviewed. Original POR/default provider not adopted or changed here.
