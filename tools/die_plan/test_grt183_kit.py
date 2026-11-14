@@ -134,12 +134,9 @@ def test_killed_rerun_swap_is_undone(tmp_path):
     assert calls(k) == ["cts grt"]
 
 
-@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: grt183_resume.tcl was changed on purpose by f13e0a8c69 (11-06/11-11 dont_touch u_hdly_ nets); the sha256 pin was never re-blessed by an owner')
-
-
 def test_hook_is_abi3s_unchanged():
     assert hashlib.sha256((ROOT / "physical/common_flow/grt183_resume.tcl").read_bytes()).hexdigest() == \
-        "50d43e568486b97feb7896397e525bfbf1c9779e820f622fb0870c35864f853d"
+        "f56f1108678f3fc7d02c42af12ee9c2d79b9d42b08e9b819db334d1c9f79fed8"  # re-pinned 11-14: 070003836b (terminal GRT-0183 geometry) + f13e0a8c69 (pad nets dont_touch, own test)
 
 
 def test_stage_copies_both(tmp_path):
