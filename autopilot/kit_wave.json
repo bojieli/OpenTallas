@@ -7068,7 +7068,8 @@
     "col_h10_r2__t1__cl99efd374__pv7a8a5452@2",
     "col_h10_r2__t1__cl1f5d6c2a__pvcd889288@2",
     "ot_s81sl_leaf__t43@4",
-    "dsdv_slice_iq_C__t1@27"
+    "dsdv_slice_iq_C__t1@27",
+    "serdes__t3@27"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -22850,7 +22851,7 @@
     "serdes__t2": "copy",
     "serdes__t15__cla2127225": "copy"
    },
-   "plan_sha256": "f272fe26b84d8e20164dff1ff3edaa643c357296704235fd108bab9ed6090071",
+   "plan_sha256": "2aab0d3f149331c6b9c630d4f172a9e27f8757a20cfb078ee540842e31a262ba",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -32914,7 +32915,9 @@
     "col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a": "owned by COL-SNAP-BUILD (private B3x2 snapped): not a pause, the lane builds it; lifted by KIT-OPS-3 at B3x2 adoption (prefix 'owned by COL-SNAP-BUILD')",
     "svc_hi_dsdv_svc_rs__t1": "owned by COL-SNAP-BUILD (private B3x2 snapped): not a pause, the lane builds it; lifted by KIT-OPS-3 at B3x2 adoption (prefix 'owned by COL-SNAP-BUILD')"
    },
-   "swap_note_kitops3_b3x2": "KIT-OPS-3 B3x2 type-scoped: 182 types changed vs B3t (0 added to only_items), 37 COL-SNAP/awaiting holds lifted; new block keys relaunch them, rest digest-keep. Revert prev_kitops3_b3x2."
+   "swap_note_kitops3_b3x2": "KIT-OPS-3 B3x2 type-scoped: 182 types changed vs B3t (0 added to only_items), 37 COL-SNAP/awaiting holds lifted; new block keys relaunch them, rest digest-keep. Revert prev_kitops3_b3x2.",
+   "prev_kitops5_serdes_plan_sha256": "f272fe26b84d8e20164dff1ff3edaa643c357296704235fd108bab9ed6090071",
+   "note_kitops5_serdes_plan": "KIT-OPS-5 11-14 (TL-SERDEST14 ASK 13:52, plan change pre-approved): B3x2b plan_h2_2249.json die.pg.domains phy_lk_WN0 rect_um -> [6022.08, 25433, 8757.84, 26421.12], bumps.rect_um -> [6085.72, 25496.64, 8694.2, 26421.12] (as WN1/WN2); only those two values differ (checked); installed on epyc7/8/9/10/intel1 (.bak-serdes-1114); bind_matches stays True; sha f272fe26b84d -> 2aab0d3f1493."
   },
   "s81_head": {
    "enabled": true,
