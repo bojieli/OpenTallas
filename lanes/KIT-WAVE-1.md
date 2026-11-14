@@ -245,3 +245,8 @@ Elapsed time: 1:14.45[h:]min:sec. CPU time: user 68.79 sys 3.12 (96%). Peak memo
 make[1]: *** [Makefile:548: do-4_1_cts] Error 1
 make: *** [Makefile:548: /work/run/results/asap7/dp_kv3_hub_Ei/base/4_1_cts.odb] Error 2
  | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kv102sem_ftgrid/items/kv3_hub_Ei/attempt_4/gen/kv3_hub_Ei src main@66e6607e3f0e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-14 14:42:11 PST AUTOPILOT -> KIT-WAVE-1: FAILED 00d4ff83e12a qwen_kvsys/kv3_hg_v1p4 (CRASH/flow-error): ries with registered boundary buses, or harden logic into cores
+Elapsed time: 21:06.50[h:]min:sec. CPU time: user 1258.13 sys 3.83 (99%). Peak memory: 1957876KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/dp_kv3_hg_v1p4/base/4_1_cts.odb] Error 2
+ | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kv102sem_ftgrid/items/kv3_hg_v1p4/attempt_8/gen/kv3_hg_v1p4 src main@66e6607e3f0e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
