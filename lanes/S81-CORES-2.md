@@ -49,6 +49,20 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 - Plan delta extended to ALL 8 svc_lo types through a per-family index name map (rsv/ctrl/etap/irg; t7 u_rg3 level): 98 hard + 97 SRAM each, 0 overlaps. Providers re-pointed from the missing prov_1109 views to 13 S81-SVCRS-4 signed rows (copied from epyc9). Plan src_h8/physical/die_plan/s81/plan_svc_lo_band_h8_1113.json sha 3839b59c1ddd.
 - hi estimate (no build): rs t1-t6 macro area 2.37 mm2, 555-614k placed, outline about 1745.28 x 2851.20; pvso_entry 2.98 mm2, about 1961.28 x 2851.20 (its soft cell count still needs one H8 synth). Details: svc/plan_delta/DELTA_README.txt.
 - Strict bind of the H8 provider form RUNNING: unit oth-ubuntu-1326038-1794630848, log intel2 ~/s81-cores-2-logs/svcb3_band_bind_h8.log.
+### STATE 2026-11-13 21:54 PST: SVC-BAND-3 strict bind of the H8 provider form, iteration 4
+- Run c (unit oth-ubuntu-2038575-1794633096): the dead-input check now PASSES. The bind completed with 1211 errors in 2 classes, both from the H8 manifest:
+  - (a) 1010 "wavefront core reset ... found 0": the H8 engine parents were leaves, so hcore/H4/TRX/IRG were never bound as leaves.
+  - (b) 201 TIED literal errors: the dsdv_svc_mem_ar stub default width, plus inputs of the undissolved engine.
+- Fixes in the src_h8 manifest:
+  - dissolve + ot_s81_svc_attn_s, ot_s81c_attn_tile_hc_h8_rt2, ot_s81_svc_merge_h8_split, dsdv_idx_rg3, dsdv_idx_rg2_chunk
+  - slang_parameterized_blackboxes + dsdv_svc_mem_ar, dsdv_svc_mem_lr
+  - base/hard_params/map_file made repository-relative (the manifest_paths gate)
+- Band plan = the wave plan plan_h2_2249 with the 16 svc types grafted from the H8 form: src_h8/physical/die_plan/s81/plan_band_h8_1113.json, sha dc2656adddbc.
+  - svc_lo is face-packed.
+  - svc_hi providers moved to the 259.2 rows.
+  - GAP: there is no S81-SVCRS-4 row for the hi H4 at 103.68 x 259.2. It has the plan pin table only, which is enough for a logical bind but not for a hi build.
+  - 4 hi rows are LOCAL_PASS_NEEDS_PARENT.
+- Run d RUNNING: log intel2 ~/s81-cores-2-logs/svcb3_band_bind_h8d.log.
 
 ## RESULT 2026-11-13 19:45 PST: gunit A1
 - SIGNED OFF (R-MINIMAL): dsdv_gunit_l1f_ba1, built on the A0 recipe (sort guides mirrored for the S face). Routed DRC 0, antenna 0, TT setup -28.65 ps on 60 endpoints (within -42), hold_ff PASS (internal >= 0; raw -12.74 on 32 endpoints is port-start only). Kit epyc8 /srv/opentallas-scratch2/claude/s81-cores-2/gunit_a1/dsdv_gunit_l1f_ba1_gf5bias_sort2cmp (unit oth-ubuntu-2828619-1794620931; the exit 1 is the old setup>=0 gate). The A0+A1 pair is now signed off; F (bf) is still in GRT. TO DIE-S81-90: take A0+A1 views for bind + LATCHECK.
