@@ -136,3 +136,6 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## NOTE 2026-11-13 23:16 PST epyc4 drain
 - Parallel copies on epyc10 from CTS: bksel C9geom (bksel_vC9geom_e10, with GRT183) and xs4 r4 (xs4_r4_e10). Both are queued behind the epyc10 load gate (14 waiters). The epyc4 runs continue until DRAIN cancels them; whichever finishes first wins. DRAIN-EPYC4 told.
+
+## 2026-11-14 00:25 PST xs4 r4
+- GRT TERMINAL congested (~100k overflow, flat over iterations 5-15); the epyc10 copy is stopped. Next: a structural re-floor (outline growth). Last cores first: F2 (epyc8, waiter on gunit_f2_finish), bksel e10 (epyc10), bksel epyc4 (until drain).

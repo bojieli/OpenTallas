@@ -136,3 +136,9 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## NOTE 2026-11-13 23:16 PST epyc4 drain
 - Parallel copies on epyc10 from CTS: bksel C9geom (bksel_vC9geom_e10, with GRT183) and xs4 r4 (xs4_r4_e10). Both are queued behind the epyc10 load gate (14 waiters). The epyc4 runs continue until DRAIN cancels them; whichever finishes first wins. DRAIN-EPYC4 told.
+
+## RESULT 2026-11-14 00:25 PST: DSDV xs4 r4 (LEC skipped) GRT TERMINAL
+- epyc4 unit oth-ubuntu-3890647-1794624839 exit 21: OT_GRT_STOP congested (KW-FIX-44 early rule 15:10000). The congestion reports are flat, not converging: congestion-5 105,572 / -10 88,717 / -15 102,957 overflow (H and V both hit the 10,000-entry report cap). This is the GRT watchdog's verdict, not the drain cancel.
+- Form: 648 x 518.4 um, 43% util (139,816 um^2), PLACE_DENSITY 0.5, M2-M5. Structural (routing supply), not ECO-able.
+- The epyc10 copy (xs4_r4_e10, unit oth-ubuntu-3547113-1794640547) re-runs the same deterministic GRT from the same CTS odb, so I stopped its container (klegacy-ot_s81sl_xs4_xs4h-3580069) to free epyc10.
+- xs4 is not in the S81 64-core counter. The next form needs a structural lever (outline growth, pre-approved; or a lower density / RTL split of the wide gather). I am keeping the last 2 counted cores (gunit l1f_bf F2, bksel_q C9geom e10) first; xs4 re-floor follows once they have landed.
