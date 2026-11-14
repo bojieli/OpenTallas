@@ -16,7 +16,7 @@ from test_kit_istations import BOUND
 def test_partition_realizes_all_stations_before_generation(tmp_path):
     source = F.HERE.parents[1]
     plan = tmp_path / 'plan.json'
-    plan.write_text(json.dumps(dict(partition_types=dict(t=dict(
+    plan.write_text(json.dumps(dict(partition_types=dict(t=dict(module='t_part',
         buses=[dict(name='i_a', dir='in', width=1, kind='data')], contents=[],
         internal_stations=[dict(conn='bus:i_a', from_um=[0, 0], to_um=[10, 20],
                                 regs_um=[[j+1, 0] for j in range(8)])])))))
