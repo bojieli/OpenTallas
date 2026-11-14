@@ -654,12 +654,19 @@ def strap_pin_sites(P, tn):
             raise ValueError(f"type {tn}: strap {sp['name']} needs layer and exactly {sp['width']} sites_um")
         # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 1): a count strap the RTL declares scalar gets a pin without a bit index
         # (io.tcl strap_ca_efall[0] on the scalar port was PPL-0061); id straps are always [w-1:0] vectors (gen_rtl)
+        # QC-STRAP-TRACK 11-14 (TYPE-QCCOLLN, fw_v1 DRT-0206 route collapse): the plan sites sat exactly half a pitch off the
+        # layer track grid (M5 x = 0.048 k + 0.024 +- 0.024 on all 100 sle_fw_v1 straps), a narrow pin off its track is the
+        # DIE-KV-88 / FLOW-KITFAIL-2 class (reset_spine_pin_sites, landing pins).  Snap the crossing coordinate to the plan
+        # track; a site already on a track keeps its bytes.  io.tcl and plan_pin_records both read this function.
+        import landing_contract as LC
         if sp not in ids and sp["name"] in SCALAR_STRAPS:
             if sp["width"] != 1:
                 raise ValueError(f"type {tn}: strap {sp['name']} is a scalar RTL port, width must be 1")
-            out.append((sp["name"], sp["layer"], float(xy[0][0]), float(xy[0][1])))
+            sx, sy = LC.on_track(P, sp["layer"], float(xy[0][0]), float(xy[0][1]))
+            out.append((sp["name"], sp["layer"], sx, sy))
             continue
-        out += [(f"{sp['name']}[{i}]", sp["layer"], float(x), float(y)) for i, (x, y) in enumerate(xy)]
+        out += [(f"{sp['name']}[{i}]", sp["layer"], *LC.on_track(P, sp["layer"], float(x), float(y)))
+                for i, (x, y) in enumerate(xy)]
     return out
 
 
