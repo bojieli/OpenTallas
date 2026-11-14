@@ -14,7 +14,7 @@
 - s29q101P (R8_SEED=r8_s29q101O + R8_EXTRA_SPEC, all-gaps): 2 errors:
   1. PARAM_REGEN W5: r_d of region 0 is not the latest; its r_v would need a pad  (R8-dependent class -> iterate derive)
   2. EMIT u_lane0: grouped source differs from committed actual module (tools/die_plan/bound_groups.py:89). sle_su_l0__cl086d85ba (and the other su_l0/su_l1 bound_group lanes): the derived R8 changes the lane cut so qc_su_lane_cut output != rtl/physical/qfd_qc_su_lane_w_l*.sv. In O_g0 (pre-derive R8) they matched. Fix: keep su-lane-internal R8 members at their O_g0 values (diff zz_r8_s29q101O_g0.json vs r8_s29q101O.json on sl?_su_l* members), OR regenerate+commit the lane modules in tree2 and re-sign those lane hard cores (re-sign is fast per owner). Fallback per COORD: hold the su_l0/su_l1 types - but holding does not remove them from the global bind; would need the lanes moved to soft (hard_cores_deferred style) in the plan.
-- Running at handoff: s29q101Q = second derive from P (r8_s29q101Q.json) + all-gaps bind (log qc-s28-hf1c/bind/bind_s29q101Q.log). Expect W5 resolved; u_lane0 likely remains.
+- s29q101Q DONE: 2nd derive changed 0 members (R8 converged); same 2 errors (W5 pad + u_lane0). Both need structural fixes; W5 is not an R8-iteration item.
 
 ## Adopt packet once bind is 0 (post READY+ADOPT to KIT-OPS-3)
 - plan: tree2 POR final plan; src: tree2 @1e3b302be8 + overlay of the 8 train-L files (main 55713eb3c46).
