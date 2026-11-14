@@ -813,11 +813,19 @@ if {[file exists [file join [file dirname [file normalize [info script]]] cell_c
 # GPL_TIMING_DRIVEN and calls global_placement.  It generalises the opt-in plain-GPL form (gen phys --gpl-plain,
 # KV-KITS-5 10-27 kv3_hub_Ei: routability +1495 %, GPL-0305 after 2 h 25 m; plain GPL converged in 438 s):
 #  (1) SPARSE rule (judged when global_placement is called, after every PRE_GLOBAL_PLACE hook): movable std-cell area / (core area - FIRM area inside the core) below OT_GPL_SPARSE_UTIL (default
-#      0.02) -> routability-driven mode dropped up front (QC sle_fw_v1__cl9d029624 / __clf58b4dfb: util 0.60 / 0.67 %,
+#      0.05) -> routability-driven mode dropped up front (QC sle_fw_v1__cl9d029624 / __clf58b4dfb: util 0.60 / 0.67 %,
 #      routability inflation +1692 / +1525 %, GPL-0305 after 1 h 12 m).  Timing-driven mode is KEPT (FLOW-21 canary
 #      11-01: dropping it too on S81 hd_turn_a, util 0.095 %, moved TT pinreg insertion 247 -> 236 ps, sign-off TT
 #      setup -3.8 -> -36.4 ps, FF hold endpoints 109 -> 220).  A sparse call that still diverges takes the FALLBACK.
 #      OT_GPL_SPARSE_UTIL=0 disables the rule.
+#      KV-101/PC 11-13: default 0.02 -> 0.05.  Between 2 and 5 % routability mode does not end in GPL-0305; it fails
+#      silently: the routability loop cannot reach its target (GPL-0089, reverts to the minimum-congestion snapshot), the
+#      Nesterov run then spreads the cells (HPWL x5-6 in ~150 iterations at overflow 0.24 -> 0.20), and the second
+#      timing-driven repair_design (kept, overflow ~0.19) buffers every stretched net.  KV kv3_pc_v1 util 2.40 %:
+#      HPWL 1.15e7 -> 6.9e7 um, 393,127 buffers on 119,844 nets (118,785 long wires; 84 % of the buffers on 1-2 sink
+#      nets), movable 238,849 -> 650,349; S81 dsdv_slice_iq_C t1 3.08 % (866,785 buffers, 1.43 M movable) and c1x_C t1
+#      2.86 % (573,207 buffers, 1.11 M) show the same signature.  The congestion it chases there is FIRM pin-face ring
+#      strips and macro pin access, which inflating 2-5 % of movable area cannot relieve.
 #  (2) FALLBACK: a routability- or timing-driven global_placement that diverges (GPL-0305) is retried ONCE on plain
 #      wirelength GPL (same density / padding / seed / phi; -routability_* / -timing_driven* / -keep_resize_below_overflow
 #      / -virtual_cts* removed) instead of failing the kit (HBM ot_hfd_coll_q3_vm_core util 4.9 %, +85 %, GPL-0305 after
@@ -846,7 +854,7 @@ proc ot_gpl_sparse_util {blk} {
  return [expr {$mov/$free}]
 }
 proc ot_gpl_sparse {} {
- set thr 0.02
+ set thr 0.05
  if {[info exists ::env(OT_GPL_SPARSE_UTIL)] && $::env(OT_GPL_SPARSE_UTIL) ne ""} { set thr $::env(OT_GPL_SPARSE_UTIL) }
  if {$thr <= 0} { puts "OT_GPL_SPARSE off (OT_GPL_SPARSE_UTIL=$thr)"; return 0 }
  set u [ot_gpl_sparse_util [ord::get_db_block]]

@@ -1,6 +1,6 @@
 """KIT-TRIAGE-1/G4 11-01: the OT_GPL_GUARD section of the shared face_flops.tcl (PRE_GLOBAL_PLACE of gen_phys type kits
 and of every core kit generator that copies it) is the default-on GPL-0305 class fix:
-  sparse kit (movable util < OT_GPL_SPARSE_UTIL, default 2 %) -> routability mode off, timing-driven KEPT (QC sle_fw_v1,
+  sparse kit (movable util < OT_GPL_SPARSE_UTIL, default 5 % since KV-101/PC 11-13, was 2 %) -> routability mode off, timing-driven KEPT (QC sle_fw_v1,
   0.6 %; FLOW-21 11-01: S81 hd_turn_a canary regressed when timing-driven was dropped too);
   routability/timing-driven GPL that diverges with GPL-0305 -> one plain retry (HBM q3_vm_core, programme_store_r10);
   every other kit / error unchanged.  OpenDB and global_placement are mocked in tclsh."""
@@ -145,3 +145,17 @@ def test_firm_outside_core_and_movable_macro_ignored():
 def test_sourcing_twice_wraps_once():
     out = _run(DENSE, "diverge_all", sources=2)
     assert "RC=1 RES=GPL-0305 CALLS=2" in out, out
+
+
+@needs_tcl
+def test_default_threshold_covers_the_silent_blowup_band():
+    """KV-101/PC 11-13: kv3_pc_v1 (2.40 %) and S81 dsdv C t1 (2.86 / 3.08 %) diverged silently under routability mode
+    (GPL-0089 revert, HPWL x5-6, 0.4-0.9 M buffers from the second timing-driven pass).  Default 5 %: those drop
+    routability and keep timing-driven; a kit at 6 % and the 10 % DENSE kit are unchanged."""
+    pc = [("FIRM", 500, 1000, 0, 0, 0), ("PLACED", 100, 120, 0, 0, 0)]                 # 2.4 % of the free half
+    out = _run(pc)
+    assert re.search(r"movable util 2\.400 % < 5\.000 %", out) and "CALLS=1 RD=0 TD=1" in out, out
+    six = [("FIRM", 500, 1000, 0, 0, 0), ("PLACED", 100, 300, 0, 0, 0)]                # 6 %
+    out = _run(six)
+    assert "GPL modes unchanged" in out and "CALLS=1 RD=1 TD=1" in out, out
+    assert "CALLS=1 RD=1 TD=1" in _run(pc, env="set ::env(OT_GPL_SPARSE_UTIL) 0.02")   # old default still selectable
