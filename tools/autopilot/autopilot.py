@@ -1261,6 +1261,69 @@ def hub_procs(path):
     return res
 
 
+_REMOTE_ALIVE = {}
+_REMOTE_ALIVE_FILE = Path.home() / ".local/state/ap_remote_alive.json"      # cross-tick cache (each tick is a new process)
+
+
+def remote_job_alive(path, procs):
+    """KIT-OPS-4 11-14 (COORD): a hub ot-run / ot-job client for the kit dir counts as busy only while the job is alive on the host
+    it runs on: a docker container whose name holds the item, or any process naming the kit dir (checked over ssh, cached 5 min per
+    host and kit).  A client with no ssh child runs local to the hub and stays busy.  Anything unknown (ssh fails, no host found)
+    stays busy: the probe only releases a client whose remote host answers and shows nothing running."""
+    item = os.path.basename(path.rstrip("/"))
+    now = time.time()
+    try:
+        if not _REMOTE_ALIVE:
+            try:
+                _REMOTE_ALIVE.update({tuple(k.split("|", 1)): v for k, v in json.loads(_REMOTE_ALIVE_FILE.read_text()).items()
+                                      if now - v[0] < 300})
+            except (OSError, ValueError):
+                pass
+        rc, out, _ = sh(["ps", "-eo", "pid=,ppid=,args="], timeout=30)
+        kids, args = {}, {}
+        for line in out.splitlines():
+            f = line.split(None, 2)
+            if len(f) == 3 and f[0].isdigit() and f[1].isdigit():
+                kids.setdefault(int(f[1]), []).append(int(f[0]))
+                args[int(f[0])] = f[2]
+        hosts, st = set(), [pid for pid, _ in procs]
+        while st:
+            x = st.pop()
+            for k in kids.get(x, []):
+                st.append(k)
+                a = args.get(k, "")
+                if a.startswith("ssh "):
+                    w, i = a.split(), 1
+                    while i < len(w) and w[i] == "-o":
+                        i += 2
+                    if i < len(w):
+                        hosts.add(w[i])
+        if not hosts:
+            return True
+        for h in sorted(hosts):
+            key = (h, path)
+            hit = _REMOTE_ALIVE.get(key)
+            if hit and now - hit[0] < 300:
+                alive = hit[1]
+            else:
+                cmd = (f"docker ps --format '{{{{.Names}}}}' 2>/dev/null | grep -c -- {shlex.quote(item)}; "
+                       f"ps -eo args | grep -F -- {shlex.quote(path.rstrip('/'))} | grep -vc grep")
+                rc, o, _ = sh(["ssh", "-n", "-o", "ConnectTimeout=15", "-o", "BatchMode=yes", h, cmd], timeout=40)
+                nums = [int(t) for t in o.split() if t.isdigit()]
+                alive = True if (rc != 0 and not nums) else any(n > 0 for n in nums)
+                _REMOTE_ALIVE[key] = (now, alive)
+                try:
+                    _REMOTE_ALIVE_FILE.parent.mkdir(parents=True, exist_ok=True)
+                    _REMOTE_ALIVE_FILE.write_text(json.dumps({"|".join(k): v for k, v in _REMOTE_ALIVE.items() if now - v[0] < 300}))
+                except OSError:
+                    pass
+            if alive:
+                return True
+        return False
+    except Exception:
+        return True
+
+
 def proc_args(pid):
     """the command line of a hub process, '' when it is gone"""
     try:
@@ -2406,7 +2469,8 @@ def admit_new(st, rows, only_new=False, budget=None):
             procs = [x for x in procs if not place_client(x[0], r["path"])]
         # WF-1 11-14 (COORD/OWNER friction): busy = a live container, a live ot-run / ot-job process for the kit dir (procs), or a
         # log updated within 10 min (was 15).  A kit with none of them is not busy: the row is submitted, not held.
-        busy = (p.get("busy") is not False and not beside_proof) or (la is not None and la < 600) or bool(procs)
+        busy = (p.get("busy") is not False and not beside_proof) or (la is not None and la < 600) \
+            or (bool(procs) and remote_job_alive(r["path"], procs))
         if not why and busy and r["mode"] != "adopt":
             log(f"HOLD {rid} {r['die']}/{r['type']}: kit busy (container: {p.get('busy')}, logs "
                 f"{'none' if la is None else f'{la / 60:.0f} min old'}); retry next tick")

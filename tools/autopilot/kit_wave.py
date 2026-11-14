@@ -175,7 +175,7 @@ GATE_KEYS = ("bind", "clock")                 # plan event checks that must be P
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["*"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
-            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2", "epyc4"],
+            "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
             # KW-RESUME-1 (OWNER 11-01 19:5x / COORD 20:0x default-on): a relaunch reuses the previous attempt's ORFS
             # steps up to the first step whose input fingerprint changed (kit_resume.py); die/global false opts out
@@ -352,6 +352,20 @@ def place_mem_gb(cfg, die, item):
         if fnmatch.fnmatchcase(str(item), pat):
             return int(gb)
     return int(opt(cfg, die, "place_mem_gb"))
+
+
+def pick_charge_gb(cfg, die, item):
+    """KIT-OPS-4 11-14 (ADMIT-TUNE-1: epyc8 / epyc10 filled to 39 waiters while epyc9 / epyc2 had 190-215 GB free): GB one new launch
+    books on its picked gen host until ot-run reports it.  A launch queues PLACE (place_mem_gb) and its gen / bind / lint stages on
+    that host, so the burst charge is the larger of the place memory and the gen + bind + lint peak, times pick_charge_factor
+    (die > global option, default 1.5; 1 = old behaviour), so one tick's burst spreads once a host's headroom is used."""
+    base = max(place_mem_gb(cfg, die, item),
+               int(opt(cfg, die, "gen_mem_gb")) + int(opt(cfg, die, "bind_mem_gb")) + int(opt(cfg, die, "lint_mem_gb")))
+    try:
+        f = float(opt(cfg, die, "pick_charge_factor") or 1.5)
+    except (TypeError, ValueError):
+        f = 1.5
+    return int(round(base * max(f, 1.0)))
 
 
 def stop_reason(cfg, die, ap_dir=None):
@@ -1411,6 +1425,23 @@ def wait_child_summary(AP, cfg, st):
                             f"{k} {len(v)} ({' '.join(v[:12])}{' ...' if len(v) > 12 else ''})" for k, v in cats.items() if v)
                         + ". requested = the wave builds it as a core row; building = an autopilot job already runs it (no second build); "
                           "held-by-hand = dies.%s.auto_core_hold." % die)
+_LIVE_PRIV_CACHE = {"t": 0.0, "txt": ""}
+
+
+def _live_private_job(item):
+    """KIT-OPS-4 11-14 (COORD/OWNER parallel forms, first pass wins): a coord mention alone is not a claim.  A lane defers the wave
+    only while it has a LIVE private job for the item: an ot-run / ot-job / docker process on this hub whose command line names the
+    item outside the wave's own kit-wave dirs.  On a ps failure the old behaviour (defer) stands."""
+    try:
+        if time.time() - _LIVE_PRIV_CACHE["t"] > 60:
+            out = subprocess.run(["ps", "-eo", "args"], capture_output=True, text=True, timeout=20).stdout
+            _LIVE_PRIV_CACHE["txt"] = "\n".join(l for l in out.splitlines()
+                                                 if ("ot-run" in l or "ot-job" in l or "ot-heavy" in l or "docker" in l)
+                                                 and "/kit-wave/" not in l)
+            _LIVE_PRIV_CACHE["t"] = time.time()
+        return item in _LIVE_PRIV_CACHE["txt"]
+    except Exception:
+        return True
 
 
 def select(rows, cfg, die, state, plan_types=None):
@@ -1528,7 +1559,8 @@ def select(rows, cfg, die, state, plan_types=None):
             why = "live job (another lane)"
         elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m \
                 and not str(r["owner"]).startswith("KIT-WAVE") \
-                and not (r["kind"] == "type" and r["owner"] in generic):
+                and not (r["kind"] == "type" and r["owner"] in generic) \
+                and _live_private_job(r["item"]):
             # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
             # (any KIT-WAVE-<n> runner lane: the wave's lane name changes with each successor)
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
@@ -2427,7 +2459,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     # item builds from its own source tree (cp -al copy plus real copies of the approved files); the die src stays shared.
     item_kr = dict(d.get("kit_rtl") or {}, **(item_in.get("kit_rtl") or {})) if item_in.get("kit_rtl") else (d.get("kit_rtl") or {})
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": item_in.get("plan") or d["plan"],
-            "gen_host": pick_gen_host(cfg, die, take=place_mem_gb(cfg, die, item),
+            "gen_host": pick_gen_host(cfg, die, take=pick_charge_gb(cfg, die, item),
                                       threads=int(opt(cfg, die, "place_threads")), item=item),
             "src": item_in.get("src") or d["src"], "src_sha": item_in.get("src_sha") or d.get("src_sha", ""), "src_base": d.get("src_base", ""), "src_overlay": d.get("_src_overlay", ""), "queue_src": item_in.get("queue_src") or d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": item_kr, "dedup_group": dedup_group(cfg, die, item),
@@ -2955,9 +2987,12 @@ def gen_hosts(cfg, die, item=None):
     if item:
         hs = [h for h in hs if item not in (imiss.get(h) or {}).get(die, {})
               and core_module(item) not in (imiss.get(h) or {}).get(die, {})] or hs   # WAVE-OPS-1: core_kit.item_args
-    return ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
-            or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
-            or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
+    res = ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
+           or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
+           or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
+    # KIT-OPS-4 11-14 (COORD): the free INFRA retry of an earlyoom / signal kill leaves the host that killed it while another stays
+    av = (cfg.get("_avoid_host") or {}).get((die, item)) if item else None
+    return [h for h in res if h != av] or res if av else res
 
 
 # KW-FIX-24 11-06 (COORD 19:2x (5) stale-source class): a gen host whose copy of a die's src tree or plan dir is
@@ -6453,7 +6488,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
            # design FAILs before must still get its infra_attempts after a class fix relaunch
            "infra_base": (int(prev.get("infra_base") or 0) if prev.get("class") == "INFRA"
-                          else int(prev.get("attempt") or 0))}
+                          else int(prev.get("attempt") or 0)),
+           "kill_digest": prev.get("kill_digest"), "kill_n": prev.get("kill_n"), "kill_host": prev.get("kill_host")}
     if arm:
         rec["arm"] = {k: arm.get(k) for k in ("of", "key", "mode", "gen_host")}
     if sp.get("prov_views"):
@@ -7314,7 +7350,28 @@ def collect(AP, cfg, st, notices):
             rec["status"] = "RETRY-INFRA"
         elif cls == "INFRA":
             free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
-        if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
+        if cls == "INFRA" and KILL_RE.search(why or "") and not NO_HOST.search(why or ""):
+            # KIT-OPS-4 11-14 (COORD class fix): an attempt killed from outside (earlyoom rc 143 / Error 241, signal) is retried ONCE,
+            # at the next tick, on another host (the killer host is avoided), charge-free and without a retry key.  A second kill on
+            # the same inputs stops here and is posted (the budget below would otherwise count every attempt number)
+            try:
+                _kh = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
+            except (OSError, ValueError, KeyError, TypeError):
+                _kh = None
+            _dg = input_digest(cfg, rec["die"])
+            if rec.get("kill_digest") == _dg and int(rec.get("kill_n") or 0) >= 1:
+                rec["blocked"] = "BLOCKED-INFRA-REPEAT"
+                AP.log(f"KIT-WAVE INFRA-REPEAT {rec['die']}/{rec['item']}@{rec.get('attempt')}: killed again on the same inputs "
+                       f"({why[:120]}); no auto retry, posted (retry key or inputs change releases it)")
+                notices.setdefault(rec["die"], []).append(f"{rec['item']} INFRA-REPEAT killed twice on the same inputs ({why[:120]}); retry key needed")
+            else:
+                rec["kill_digest"], rec["kill_n"], rec["kill_host"] = _dg, 1, _kh
+                rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
+                rec["no_host_at"] = 0
+                rec["status"] = "RETRY-INFRA"
+                AP.log(f"KIT-WAVE INFRA-FREE-RETRY {rec['die']}/{rec['item']}@{rec.get('attempt')}: killed ({why[:100]}) on {_kh}; "
+                       f"one free retry on another host next tick")
+        elif cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
         c = note_fail_sig(st, rec, cls, why, inp=input_digest(cfg, rec["die"]))
         if c and int(c.get("n") or 0) >= RETRY_CAP and blocked_why(cfg, st, rec["die"], rec["item"]):
@@ -7349,6 +7406,9 @@ def cell_check_note(AP, st, rec, res, notices):
         cc.get("density"), round(max((cc["density"] / cc["density_flag"]) if cc.get("density") else 0.0,
                                      (cc["ratio"] / cc["ratio_flag"]) if cc.get("ratio") else 0.0), 3),
         "; ".join(cc["flags"]), cc.get("plan_change") or "-", "-", "-")))
+
+
+KILL_RE = re.compile(r"Error 241|exit 143|rc 143|exit 137|process terminated|earlyoom|interrupted \(signal|\bKilled\b")
 
 
 def infra_attempts(cfg, die):
@@ -8571,6 +8631,8 @@ def _step(AP, ap_dir):
             if not ensure_plan_view(AP, st, cfg["dies"].get(rec["die"])):
                 continue                                 # plan unreadable: stays RETRY-INFRA, next tick
             rec["status"] = "FAIL"
+            if rec.get("kill_host"):
+                cfg.setdefault("_avoid_host", {})[(rec["die"], rec["item"])] = rec["kill_host"]
             launch_safe(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
                                               "replicas": rec.get("replicas"), "arm": rec.get("arm")},
