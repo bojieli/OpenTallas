@@ -4,7 +4,7 @@
 Reads the banded seam kits (frame_seam_pipe.py output: one band module per lp region r0/r1/r2 + the wiring top) and
 writes inputs/frame_band_census.json = band-to-band bits per master (driver band -> reader band, every band port net of
 the wiring top; the lpr_root reset feedthrough through b1 included).  gen_plan_v4.py takes the frame-internal lane
-widths from it, census_cov.py checks every frame's fi_* lanes against it.
+widths from it, s81_census_cov.py checks every frame's fi_* lanes against it.
 
   frame_band_census.py [--out physical/die_plan/s81/inputs/frame_band_census.json]
 """

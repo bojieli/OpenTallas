@@ -2068,7 +2068,7 @@ def census_map(plan, lanes, fmap, out):
     groups: a slice (hub C + leaf bands + LP + X stations) is one as-built block; the frames fed by one x relay chain
     (slice -> fA, then xo fA -> fB -> fC) form one group, because the plan re-topologises the as-built slice -> fB/fC x
     broadcast through fA's relay port (the extra hop is in the latency table).  Traffic inside a group is checked at
-    partition level by physical/die_plan/s81/census_cov.py (v3/census_cov.json, dropped 0)."""
+    partition level by physical/die_plan/s81/s81_census_cov.py (v3/census_cov.json, dropped 0)."""
     names = [p_["name"] for p_ in plan["partitions"]]
     frame_of = {}                                   # plan frame position fW0_p1 -> as-built f_0L01
     for pos, ab in fmap["frames"].items():
@@ -2607,7 +2607,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                   "release": "wavefront"},
         "census": [{"rows": "census/s81_lanes.tsv", "map": "census_map.json",
                     "note": "FT census of the bound as-built die (1364 rows); finer partition-level check incl. "
-                            "bus-aware lep rx/tx and src-bus dedup: census_cov.py -> v3/census_cov.json"}],
+                            "bus-aware lep rx/tx and src-bus dedup: s81_census_cov.py -> v3/census_cov.json"}],
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
                     "cut_ratio_max": 0.6, "cut_step_um": 250,
                     # S81/LEAFPLAN 10-24 (coordinator ruling (a)): R3 inside the hardened leaf / svc / eng types at the
