@@ -353,6 +353,23 @@ def control_pin_sinks(P, tn):
     if RT.start_broadcast(P):
         out.append(("start_i",) + tuple(RT.start_in_pin(P, tn)))
     out += [tuple(q) for q in RT.out_pins(P, tn) + RT.start_out_pins(P, tn)]
+    native = RT.bound_native_contract(P, tn)
+    if native:
+        # Actual captured copy inventory wins over an absent/stale planner flag.
+        sites = native.get("placement_sites", {})
+        for copies in (RT.pin_root_copies(native["tree"]), RT.pin_start_copies(native["tree"])):
+            out += [(c["name"], *sites.get(c["name"], c["xy"])) for c in copies[1:]]
+    else:
+        # No for_type(): that needs tap geometry and would close a reset/tap
+        # planning recursion. Source emission checks actual load groups later.
+        for signal, spec in RT.pin_copy_specs(t.get("reset", {}).get("pin_root_copies")):
+            if signal == "start" and not RT.start_broadcast(P):
+                raise ValueError("START pin copies require a START broadcast")
+            prefix = "u_run_in" if signal == "start" else "u_rst_in"
+            for i, (x, y) in enumerate(spec["sites_um"][1:], 1):
+                if not 0 <= x <= t["outline_um"][0] or not 0 <= y <= t["outline_um"][1]:
+                    raise ValueError("control pin copy outside outline")
+                out.append((f"{prefix}_c{i}", x, y))
     return [(n, float(x), float(y)) for n, x, y in out]
 
 
