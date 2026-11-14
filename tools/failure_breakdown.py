@@ -45,8 +45,20 @@ FAIL_MAP = [
     (r'relay-bay', 'relay-bay hop'),
     (r'pending plan delta', 'plan-delta hold'),
     (r'no host qualif|NOT RUN on', 'no host'),
-    (r'PORT_MISMATCH|port', 'port mismatch'),
-    (r'kit_rtl|KIT_RTL', 'kit_rtl'),
+    # KIT-FIX-F 11-13: the 173 "tooling" rows read by their error lines.  'port' matched "Connection closed ... port 22" and
+    # "tie clock export form"; 'kit_rtl' matched any stage name; stopped / held / post-place rows fell to 'other flow error'.
+    (r'@unit[^\n]*: KW_STAGE|restaged: unstarted', 'stopped by the wave (not a kit failure)'),
+    (r'grt-timecap|OT_GRT_TIMECAP', 'GRT time cap (placed)'),
+    (r'DRT-0255|DRT-0073|No access point|Maze Route', 'detail route error (placed)'),
+    (r'ssh transport|Connection closed by', 'infra (ssh)'),
+    (r'memory_bits|SYNTH_MEMORY_MAX_BITS', 'memory over synth cap (needs macro)'),
+    (r"Can't resolve task name|GEN_LINT FAIL rtl_check", 'RTL lint at gen'),
+    (r'differs from captured bound reset identity|KIT_TOPOLOGY_BIND_STALE|KIT_TOPOLOGY_', 'bind stale vs plan (re-bind)'),
+    (r'KIT_NOT_SELF_CONTAINED|KIT_INPUT_MISSING|preferred HDL source missing|names missing files|tool input file missing',
+     'kit input missing'),
+    (r'gpl-noconverge|KW_PLACE_RC', 'place error'),
+    (r'PORT_MISMATCH|PORT_BIND|port mismatch', 'port mismatch'),
+    (r'@kit_rtl\b|KIT_RTL', 'kit_rtl'),
     # S81-OTHERFAIL-2 11-07: the remaining S81 'other flow error' signatures
     (r'FAIL_PREFLOOR reg_fanout', 'reg_fanout preflight'),
     (r'queue row rejected: kit carries FAIL_PREFLOOR', 'stale FAIL_PREFLOOR kit (LEC reject)'),
@@ -68,6 +80,8 @@ def label(r):
         return 'needs parent receipt (re-sign)'
     if st == 'WITHDRAWN':
         return 'withdrawn (lane form)'
+    if st == 'ROUTE-HELD':
+        return 'placed, route held'
     text = (r.get('class') or '') + ' ' + (r.get('reason') or '')
     if st == 'LINT-ADVISORY':
         if 'without a signed view' in text:
@@ -81,6 +95,21 @@ def label(r):
     if st == 'RETRY-INFRA':
         return 'infra (relaunch queued)'
     return 'other flow error'
+
+
+def die_holds():
+    """{die: [hold_items patterns]} from the wave config; a held type waits for its die owner, whatever its last row says"""
+    try:
+        cfg = json.load(open(os.path.join(COORD, 'autopilot/kit_wave.json')))
+        return {d: list((v.get('hold_items') or {}).keys()) for d, v in cfg.get('dies', {}).items()}
+    except (OSError, ValueError):
+        return {}
+
+
+def held(holds, die, item, r):
+    import fnmatch
+    names = [item, r.get('parent_item') or '']
+    return any(fnmatch.fnmatchcase(n, pat) for n in names if n for pat in holds.get(die, []))
 
 
 def is_core_row(item, r, core_mods):
@@ -135,6 +164,7 @@ def main():
         f = l.rstrip('\n').split('\t')
         ovr.append((f[0], f[1], f[2]))
 
+    holds = die_holds()
     out = [BEGIN, '## FAILURES · unsigned cores and types by class (auto, %s)' % time.strftime('%Y-%m-%d %H:%M %Z')]
     for die, tag in DIES:
         plan = next(p for k, p in cache['plans'].items() if PLAN_DIE.get(k.split('/')[0]) == die)
@@ -163,6 +193,9 @@ def main():
             if d != die or is_core_row(item, r, core_mods):
                 continue
             lab = label(r)
+            if lab not in ('running', 'signed (count pending)', 'cancelled (superseded)', 'needs parent receipt (re-sign)') \
+                    and held(holds, die, item, r):
+                lab = 'held by die owner (plan event pending)'
             # COORD 11-06: a SIGNED row already in the official count is not "count pending".
             if lab in ('signed (count pending)', 'needs parent receipt (re-sign)') and (
                     item.split('#')[0] in stset or short(item) in stset):
