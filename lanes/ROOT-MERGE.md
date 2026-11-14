@@ -820,3 +820,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-17-1114@95276ed31a (ADMIT-TUNE-1): ot-oom-age timer, oom_score_adj by age
 - READY claude/admit-tune-18-1114@3b296bb188 (ADMIT-TUNE-1): SMALL_JOB lane + rehand re-probe
 - READY claude/admit-tune-19-1114@97a11e2337 (ADMIT-TUNE-1): ot-oom-age age credit for resubmitted jobs (includes admit-tune-17 timer/install)
+- READY claude/admit-tune-20-1114@e6dfa6a1d9 (ADMIT-TUNE-1): PLAN_PRIO, PEAK_PHASE code, ot-run --priority plan
