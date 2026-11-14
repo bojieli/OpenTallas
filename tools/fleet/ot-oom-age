@@ -3,7 +3,7 @@
 the biggest.  earlyoom and the kernel both rank victims by /proc/PID/oom_score = RSS share + oom_score_adj, so an 8 h GRT (50 GB) dies
 before a fresh job.  This root helper sets each build process's oom_score_adj from its age: STARTADJ (800) when new, minus STEP (100)
 per hour, floor 0.  An adj of 800 outweighs any RSS (1 GB of 1 TB = 1 point), so the youngest die first; among old ones RSS decides.
-Only these tool comms are touched, and never a process whose current adj is outside [0, 800] (die containers run at -999, the
+Stage: an openroad in DRT or past GRT is set to 0, one in GRT to 3/8 of its age value, 300 for a new one (stage_adj).  Only these tool comms are touched, and never a process whose current adj is outside [0, 800] (die containers run at -999, the
 closure-loop runner at 900).  Lowering an adj needs root (CAP_SYS_RESOURCE): run from root cron / systemd timer.
   ot-oom-age [--dry-run] [--now-offset SECONDS] [--comm a,b] [--pid N ...]"""
 import argparse, json, os, re, subprocess, sys, time
@@ -74,6 +74,21 @@ def save_state(path, first, now):
         pass
 
 
+LATE_RE = re.compile(r"/(detail_route|detailed_route|fillcell|final_report|route_cleanup)\.tcl\b")      # past GRT: routing / fill / final: most sunk work
+GRT_RE = re.compile(r"/global_route\.tcl\b")
+GRT_CAP = 300
+
+
+def stage_adj(cmdline, age_adj):
+    """STAGEADJ (COORD 11-14): the job that loses the least work dies first.  Jobs in DRT or past GRT (detail_route / fillcell / final_report) get 0 -- the
+    lowest score; a job inside GRT is scaled to GRT_CAP/STARTADJ of its age value (800 -> 300); everything earlier keeps the age-based value (800 new, -100 per hour)."""
+    if LATE_RE.search(cmdline):
+        return FLOOR
+    if GRT_RE.search(cmdline):
+        return age_adj * GRT_CAP // STARTADJ        # scaled, not clipped: young GRT jobs still die before older ones
+    return age_adj
+
+
 def managed(cur):
     return 0 <= cur <= MAXMANAGED
 
@@ -102,7 +117,7 @@ def main(argv=None):
                 continue
             age = proc_age(p, now, hz)
             key = item_key(names.get(container_id(p) or ""))
-            want = target_adj(credited_age(first, key, age, now))
+            want = stage_adj(open(f"/proc/{p}/cmdline").read().replace("\0", " "), target_adj(credited_age(first, key, age, now)))
             seen += 1
             if want != cur:
                 if not a.dry_run:

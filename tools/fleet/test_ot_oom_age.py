@@ -53,5 +53,26 @@ class Credit(unittest.TestCase):
         self.assertEqual(sorted(M.load_state(p)), ["new"])
 
 
+class Stage(unittest.TestCase):
+    def test_late_stages_get_the_lowest_score(self):
+        drt = "openroad -exit /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics x"
+        self.assertEqual(M.stage_adj(drt, 800), 0)                                   # a new job already in DRT is the last victim
+        self.assertEqual(M.stage_adj("openroad /x/scripts/fillcell.tcl", 700), 0)
+        self.assertEqual(M.stage_adj("openroad /x/scripts/final_report.tcl", 500), 0)
+
+    def test_grt_is_capped_and_early_stages_keep_the_age_value(self):
+        grt = "openroad /OpenROAD-flow-scripts/flow/scripts/global_route.tcl"
+        self.assertEqual(M.stage_adj(grt, 800), 300)
+        self.assertEqual(M.stage_adj(grt, 100), 37)
+        self.assertEqual(M.stage_adj(grt, 400), 150)                                   # order kept inside GRT
+        self.assertEqual(M.stage_adj("openroad /x/scripts/global_place.tcl", 800), 800)
+        self.assertEqual(M.stage_adj("openroad /x/scripts/detail_place.tcl", 600), 600)
+
+    def test_ordering_young_early_first_then_grt_then_drt(self):
+        order = sorted([("early_young", M.stage_adj("openroad global_place.tcl", 800)), ("early_old", M.stage_adj("openroad global_place.tcl", 200)),
+                        ("grt_young", M.stage_adj("openroad /a/global_route.tcl", 800)), ("drt", M.stage_adj("openroad /a/detail_route.tcl", 800))], key=lambda x: -x[1])
+        self.assertEqual([n for n, _ in order], ["early_young", "grt_young", "early_old", "drt"])
+
+
 if __name__ == "__main__":
     unittest.main()

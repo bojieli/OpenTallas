@@ -21,7 +21,7 @@ sudo -n systemctl restart earlyoom
 # kill the youngest first; root timer every 2 min.
 sudo -n install -m 755 "$(dirname "$0")/ot-oom-age" /usr/local/bin/ot-oom-age
 printf '[Unit]\nDescription=ot-oom-age\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/ot-oom-age\n' | sudo -n tee /etc/systemd/system/ot-oom-age.service >/dev/null
-printf '[Unit]\nDescription=ot-oom-age every 2 min\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=2min\nAccuracySec=10s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-oom-age.timer >/dev/null
+printf '[Unit]\nDescription=ot-oom-age every minute\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=1min\nAccuracySec=10s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-oom-age.timer >/dev/null
 sudo -n systemctl daemon-reload; sudo -n systemctl enable --now ot-oom-age.timer >/dev/null 2>&1
 # MEMGROW_1114 (ADMIT-TUNE-1): ot-mem-grow raises a build container docker cap by 50 percent (max 2x the request) when it is above 85 percent and the host
 # can pay for it, every minute (cap kills at 28.7 of 32 GB on slice_station t28/t30/t8).
