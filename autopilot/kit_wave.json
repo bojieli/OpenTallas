@@ -16,28 +16,28 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "kvN2_66e6607",
+   "event": "kv101ns_3465fe9",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
     "evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f",
-   "src_sha": "66e6607e3f0ef569f504020569a30817c43278ad",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32",
+   "src_sha": "3465fe9c32fdac1e0ddc5653845a3e81890324c8",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out",
-    "note": "KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f (pure git archive of main 66e6607e3f0e), same command as epyc8 dkv99/bind_e.sh; replaces dkv99/bind_vN2i only because that bind names HDL sources inside the epyc8 lane worktree wt/die-kv-99-e. Mirrored to every KV gen host."
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
+    "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -581,17 +581,7 @@
     "critical": true
    },
    "hold_items": {
-    "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
-    "kv3_hgi_v3": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
-    "kv3_hgi_v5": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
-    "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
-    "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
-    "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
-    "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
-    "kv3_hg_v1p*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)",
-    "kv3_hg*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
-    "kv3_hgi*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
+    "kv3_hub_C": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): hub_C OT_NATIVE_CELL_CAP 706641 > 517000 not fixed by the non-split plan; held for the hub_C split event (KV-101/SPLIT, main >= 406c3610f29). Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -4047,7 +4037,7 @@
     "epyc7",
     "epyc2"
    ],
-   "plan_sha256": "cdea77f148ce56c5e830cc6e01d9f712c21db9ee1697eaeec290ffbded34b4d0",
+   "plan_sha256": "2d7f1667a19851a9272162eb5672f07565d7040a2aa54e831a3466ccfaed9035",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -4806,7 +4796,8 @@
     }
    },
    "gate_events_extra": [
-    "kvN2_66e6607"
+    "kvN2_66e6607",
+    "kv101ns_3465fe9"
    ],
    "hold_items_released_kitops1_kvn2": {
     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
@@ -5012,7 +5003,59 @@
     "OT_PLACE_MAX_FANOUT": "64"
    },
    "die_owner_prev_kitops2": "DIE-KV-99",
-   "owner_lane_prev_kitops2": "KV die owner (DIE-KV-98)"
+   "owner_lane_prev_kitops2": "KV die owner (DIE-KV-98)",
+   "prev_kitops3_kvadopt": {
+    "event": "kvN2_66e6607",
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f",
+    "src_sha": "66e6607e3f0ef569f504020569a30817c43278ad",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "plan_sha256": "cdea77f148ce56c5e830cc6e01d9f712c21db9ee1697eaeec290ffbded34b4d0",
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out",
+     "note": "KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f (pure git archive of main 66e6607e3f0e), same command as epyc8 dkv99/bind_e.sh; replaces dkv99/bind_vN2i only because that bind names HDL sources inside the epyc8 lane worktree wt/die-kv-99-e. Mirrored to every KV gen host."
+    },
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "--native-cell-cap",
+     "517000"
+    ],
+    "hold_items": {
+     "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+     "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+     "kv3_hgi_v3": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+     "kv3_hgi_v5": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+     "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+     "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
+     "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+     "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+     "kv3_hg_v1p*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)",
+     "kv3_hg*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
+     "kv3_hgi*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
+    },
+    "gate_events_extra": [
+     "kvN2_66e6607"
+    ],
+    "gen_host": "epyc9"
+   },
+   "hold_items_lifted_kitops3_kvadopt": {
+    "kv3_hgi_v4": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v8": "KW-FIX-35 2026-11-08 05:02 PST (OWNER 04:46): HG/HGI wait on child cores kv3_head_eighth e2/e6 (M5 re-forms building, DIE-KV-92); a launch now has no class fix (replaces the stale KW-FIX-25 22:2x holds). Lift when e2/e6 sign off or KV-TYPES-4 posts a form | KW-FIX-42 03:00: not in the KV switch fresh list (only hgi_v3/v5/v6), kept",
+    "kv3_hgi_v3": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+    "kv3_hgi_v5": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+    "kv3_hgi_v6": "KW-FIX-45 11-11 DIE-KV-98 per COORD ruling: no 12:00 relaunch; waits for the post-cut KV event (STREET-WIDEN + K1-K3); needs a route_supply/Steiner check on the post-cut plan before its next build",
+    "kv3_hg_ONE_PROOF": "note: kv3_hg (alone) is released as the single ff-lib proof (the e2 view dir was staged complete on epyc8+epyc9 AFTER the failed gens at 11:03/11:06); the other kv3_hg_* stay held until it passes gen",
+    "kv3_hub_Wi": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+    "kv3_hub_Ei": "KW-FIX-45 11-11 20:5x COORD fail_watch: kv3_hub_Wi/Ei hold until the qkd_hr_* child cores sign/bind (PROVISIONAL child views missing; also gen error: reset_tree cannot uniquely resolve pins/qkd_hr_ingest_eng_pins_r26q5.json in src_kv_main_2041e424bb)",
+    "kv3_hg_v1p*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12): pre-vN rows, recipe reads dkv98/bind_vF2 outside the kit (KIT_NOT_SELF_CONTAINED); vH1 is folded into vN; rebuild on vN's package after the wave repoints KV to vN (plan sha256 77533c39...)",
+    "kv3_hg*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hg class on the pre-vN form; releases on the vN/vN2 switch",
+    "kv3_hgi*": "KIT-OPS-1 2026-11-12 18:05 PST vN2 switch: kept held; KV-VN2-FIN 17:13 plan event: hg/hgi build after GEOM-VIS-7's verdict on the vN2 drawing (not yet run). Lift on that verdict | was: WAIT-FORM (COORD 11-12 06:3x, KW-FIX-46): KV hgi class on the pre-vN form; releases on the vN/vN2 switch"
+   },
+   "swap_note_kitops3_kvadopt": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): all 56 plan types changed -> new block keys; 17 kvN2 units cancel via cancel_superseded. All other holds (hg/hgi/hub_Ei/Wi) lifted per KV-101 (children views exist). Revert: prev_kitops3_kvadopt, hold_items_lifted_kitops3_kvadopt."
   },
   "s81": {
    "enabled": true,
