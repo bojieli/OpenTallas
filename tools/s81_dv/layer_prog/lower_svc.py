@@ -728,7 +728,7 @@ class Job:
         pv_first = go + pvo + PV_LAT
         rec = dict(k=k, go=go, pio=pio, pvs=pvs, po=po, pvo=pvo, npw=npw, more=more, pv_first=pv_first,
                    pv_last=pv_first + npv - 1, npv=npv, feed_interval=H8_FEED_INTERVAL)
-        if self.native_rt2_prospective:
+        if getattr(self, 'native_rt2_prospective', False):
             rec['native_rt2_calendar'] = [h8_native_rt2_calendar_record(po, phase, T) for phase in (0, 1)]
         return w, rec
 
