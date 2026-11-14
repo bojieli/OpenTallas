@@ -51868,7 +51868,8 @@
   "intel1",
   "epyc8",
   "epyc7",
-  "epyc2"
+  "epyc2",
+  "epyc10"
  ],
  "queue_fill": true,
  "note_onboard_epyc4": "ONBOARD-1 2026-11-03 07:4x (COORD: fill epyc4, 0 waiters at 628 GB admits / load 7/256): PLACE hosts += epyc4 (Cherry 1052890, 256T/755 GiB, scratch2 3.5 TB, selftest PASS); hbm place_prefer += epyc4 first. Pinned waiters already queued are left as they are (no kill/relaunch).",
@@ -52600,7 +52601,8 @@
  "gen_overflow_hosts_prev_wb1": null,
  "gen_overflow_hosts": [
   "epyc7",
-  "epyc8"
+  "epyc8",
+  "epyc10"
  ],
  "wave_balance": {
   "enabled": true,
@@ -52832,5 +52834,6 @@
   "epyc4"
  ],
  "note_kitops2_e10": "KIT-OPS-2 2026-11-13 18:0x COORD 17:5x: epyc10 (civil-redfish, ot-run admits ~962 GB) joins hosts/place_prefer/gen_hosts of s81/s81_head/qwen_kvsys/qwen_compute, host_share 2.0. Src staging by another lane's epyc9 rsync (kw45) + KIT-OPS-2 rsync of kit-ops-1 bind inputs (--ignore-existing); the wave SRC probe skips epyc10 as gen host until complete. Revert: *_prev_kitops2_e10.",
- "note_kitops2_er3": "KIT-OPS-2 2026-11-13 18:1x EXPERT-REVIEW-3 via COORD: die_gen_env OT_GRT_NONPORT_HOLD=1 on s81/s81_head/qwen_kvsys/qwen_compute (port-input hold excluded from the FF GRT repair; port hold advisory under R-MINIMAL). Density 0.25 on the next gen of S81 leaf/kv_leaf/serdes, QC st_a, HEAD hd_serdes via the conservative-kit knob OT_CONS_KIT=1 OT_CONS_UTIL=0.25 with OT_CONS_MAX_LAYER=M9 (no layer cap) and OT_CONS_STRIP_ROWS=1 (landing strip unchanged); GPL floors the density at its own lower bound + 0.01. Revert: die_gen_env_prev_kitops2_er3 / item_env_prev_kitops2_er3 (or kit_wave.json.bak-kitops2-er3-1113)."
+ "note_kitops2_er3": "KIT-OPS-2 2026-11-13 18:1x EXPERT-REVIEW-3 via COORD: die_gen_env OT_GRT_NONPORT_HOLD=1 on s81/s81_head/qwen_kvsys/qwen_compute (port-input hold excluded from the FF GRT repair; port hold advisory under R-MINIMAL). Density 0.25 on the next gen of S81 leaf/kv_leaf/serdes, QC st_a, HEAD hd_serdes via the conservative-kit knob OT_CONS_KIT=1 OT_CONS_UTIL=0.25 with OT_CONS_MAX_LAYER=M9 (no layer cap) and OT_CONS_STRIP_ROWS=1 (landing strip unchanged); GPL floors the density at its own lower bound + 0.01. Revert: die_gen_env_prev_kitops2_er3 / item_env_prev_kitops2_er3 (or kit_wave.json.bak-kitops2-er3-1113).",
+ "note_onboard_epyc10": "ONBOARD-EPYC10 2026-11-13 (OWNER via COORD: full type-level build host): epyc10 = Cherry 1062383 civil-redfish 185.8.107.162, 2x EPYC 7443 96T, 1 TB, 7.3 TB scratch2; += hosts/place_prefer/gen_overflow_hosts and s81, s81_head, qwen_compute, qwen_kvsys hosts/gen_hosts/place_prefer (HBM parked: unchanged). Src trees of those dies copied from epyc9 (same paths). Revert: remove \"epyc10\" from those lists."
 }
