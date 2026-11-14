@@ -28319,7 +28319,12 @@
     "SIGNED",
     "SIGNED-UNVERSIONED"
    ],
-   "retry": [],
+   "retry": [
+    "hd_ctl_n@14",
+    "hd_host_w@2",
+    "hd_ctl@2",
+    "hd_spn_end@1"
+   ],
    "pilot_max": 12,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
    "pilot_mode": "queue",
@@ -28379,7 +28384,12 @@
     "hd_spn_eshim_tx": "HEAD-98 11-13: SIGNED OFF by re-sign onto rp21z4 (RESIGN RECORDED head-98/resign21z4/hd_spn_eshim_tx/rs_auto/PROVENANCE.json, tag flow-20261109-fm-head); kit RTL byte-identical in rp21z5; no rebuild.",
     "hd_st_n3_transit": "HEAD-98 11-13: SIGNED OFF by re-sign onto rp21z4 (RESIGN RECORDED head-98/resign21z4/hd_st_n3_transit/rs_auto/PROVENANCE.json, tag flow-20261109-fm-head); kit RTL byte-identical in rp21z5; no rebuild."
    },
-   "retry_fix": {},
+   "retry_fix": {
+    "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
+    "hd_host_w@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
+    "hd_ctl@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
+    "hd_spn_end@1": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap."
+   },
    "gen_hosts": [
     "epyc7",
     "intel1",
