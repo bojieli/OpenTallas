@@ -6909,7 +6909,9 @@
     "col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47@3",
     "ot_s81sl_kv_leaf__t5@14",
     "ot_s81sl_leaf__t34@13",
-    "serdes__t14@11"
+    "serdes__t14@11",
+    "col_h9_r1__t1__cl49d7a23e__pv47efee8f@5",
+    "col_h9_r0_p5__t1__pvc93af856@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -8146,7 +8148,9 @@
     "ot_s81sl_leaf__t25__cl431c660f@3": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
     "ot_s81sl_leaf__t34@13": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
     "slice_station__t24__cleece78ec@1": "COORD class fix: main ot_dp_clk_landing/_ca/dly_cnt/meso_fifo (CLAND-RING-LOCALITY, LOCAL default 0, eq 80/80) overlaid into B3v/src (epyc7/8/9/intel1/epyc10) + B3w/src (epyc7); GEN_LINT defparam LOCAL fixed.",
-    "serdes__t14@11": "OWNER 11-14: native cell cap deleted (advisory in every wave src: native_cell_cap.tcl LIMIT-BIND-1; --native-cell-cap removed from KV gen_args and S81 serdes type_args); relaunch."
+    "serdes__t14@11": "OWNER 11-14: native cell cap deleted (advisory in every wave src: native_cell_cap.tcl LIMIT-BIND-1; --native-cell-cap removed from KV gen_args and S81 serdes type_args); relaunch.",
+    "col_h9_r1__t1__cl49d7a23e__pv47efee8f@5": "FABLE-REVIEW-COL R-COL-3 canary: OT_RELAY_MID_RE=^(.*[._]u_y_...)[.] + OT_RELAY_MID_FIT=1 (gen_phys overlay reads OT_RELAY_MID_RE from env), fresh kit (stage_resume_off). Gate: relay hop median <= 405 um at place.",
+    "col_h9_r0_p5__t1__pvc93af856@4": "FABLE-REVIEW-COL R-COL-3 canary: OT_RELAY_MID_RE=^(.*[._]u_y_...)[.] + OT_RELAY_MID_FIT=1 (gen_phys overlay reads OT_RELAY_MID_RE from env), fresh kit (stage_resume_off). Gate: relay hop median <= 405 um at place."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
@@ -9721,6 +9725,14 @@
     "svc_lo_dsdv_svc_rs_w__t1": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GEN_M8_GRANT": "1"
+    },
+    "col_h9_r1__t1__cl49d7a23e__pv47efee8f": {
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1"
+    },
+    "col_h9_r0_p5__t1__pvc93af856": {
+     "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+     "OT_RELAY_MID_FIT": "1"
     }
    },
    "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
@@ -31264,7 +31276,8 @@
     "svc_lo_dsdv_svc_rs__t1",
     "svc_lo_dsdv_svc_rs__t4",
     "svc_lo_dsdv_svc_rs__t7",
-    "svc_lo_dsdv_svc_rs_w__t1"
+    "svc_lo_dsdv_svc_rs_w__t1",
+    "col_h9_r1__t1__cl49d7a23e__pv47efee8f"
    ]
   },
   "s81_head": {
