@@ -62,3 +62,10 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## NOTE 2026-11-13 20:09 PST serdes kitI relaunched
 - COORD ruling: the post-CTS structural hold stop is advisory (R-MINIMAL, train H). kitI predates train H, so its hold_gate.tcl lacks the switch. Added to its config.mk (original kept as config.mk.pre_s81c2_advisory, mtime kept): OT_HOLD_STRUCTURAL_ADVISORY=1, NONPORT_HOLD=1, OT_HOLD_STOP_PS=-100000. Old FAIL_POSTCTS marker moved to ../s81c2_prev. Relaunched CTS -> route (epyc9, log ~/s81-cores-2-logs/kitI_route.otrun.log; try1 log kept as kitI_route_try1). The CTS timing split runs in parallel; if it shows deep internal receive-tree setup/hold, RTL pipelining starts in parallel.
+
+## RESULT 2026-11-13 20:12 PST: serdes kitI CTS timing split (read-only STA on 4_cts.odb, placement RC)
+- FF hold -297.5 ps: ALL 4428 failing endpoints are internal reg-to-reg. Main groups: u_txl rows 645, u_dec xd delay 499, u_lpin rows 448, u_enc p_d/d3/pp1 825, u_prx 191. These are short paths between lane rows; hold repair during GRT pads them (the gate is now advisory).
+- TT setup: 605 violating endpoints, only 74 below -42 and 15 below -100. rck group 520 (u_dec lpl_5/6 b[] up to -103); clk 46; async 36; delay 3.
+  - WNS -2232 is ONE endpoint: rs_t[1] (reset sync) -> u_lpin.g_reg.r[0][512].D through a ~2.7 ns buffer chain across the die. This is the known captured RST_TREE(0) bug: bind overrides the requested reset tree.
+  - u_rrl_* relay states -376..-160.
+- Verdict: the receive tree is NOT structurally deep in setup at kitI; the large miss is the reset path. RTL fix in parallel = kitI2 = kitI form + RST_TREE=1 (constructor tools/s81_link/serdes_form_params.py, receipt next to the kit; +1 reset release edge, pre-approved). Kit epyc9 /srv/opentallas-scratch2/claude/s81-cores-2/serdes/kitI2/serdes__t2, full build to route with the hold stop advisory, log ~/s81-cores-2-logs/kitI2_route.otrun.log. kitI itself keeps routing.
