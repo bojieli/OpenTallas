@@ -1,0 +1,83 @@
+{
+ "status": "PASS",
+ "removed_nonexistent_reset_consumers_per_type": 8,
+ "actual_packed_buses": 4,
+ "packed_delay_bytes_unchanged": true,
+ "old_sink_mutant": "REJECTED",
+ "other_fields_unchanged": true,
+ "idempotent": true,
+ "reset_application": [
+  {
+   "name": "hrst",
+   "depth": 2,
+   "relays": [
+    "u_prl_hrst_0",
+    "u_prl_hrst_1"
+   ],
+   "sinks": [
+    "u_bin_i_host_hbm_rst_n"
+   ],
+   "reset": "prl_hrst_1"
+  },
+  {
+   "name": "pe",
+   "depth": 1,
+   "relays": [
+    "u_prl_pe_0"
+   ],
+   "sinks": [
+    "u_bin_i_kvpc_Q_N_pc__po",
+    "u_bin_i_kvpc_Q_N_pc__po_d1",
+    "u_bin_i_kvpc_Q_N_pc__po_d2",
+    "u_bin_i_kvpc_Q_N_pc__po_d3",
+    "u_bout_o_phy_Q__sN_fhN",
+    "u_bout_o_phy_Q__sN_piN",
+    "u_bout_o_phy_Q__sN_piN_d1",
+    "u_bout_o_phy_Q__sN_piN_d2",
+    "u_bout_o_phy_Q__sN_piN_d3",
+    "u_bout_o_phy_Q__sN_rhN",
+    "u_ist_o_phy_Q__sN_fhN_2",
+    "u_ist_o_phy_Q__sN_piN_2",
+    "u_ist_o_phy_Q__sN_piN_d1_2",
+    "u_ist_o_phy_Q__sN_piN_d2_2",
+    "u_ist_o_phy_Q__sN_piN_d3_2",
+    "u_ist_o_phy_Q__sN_rhN_2"
+   ],
+   "reset": "prl_pe_0"
+  },
+  {
+   "name": "pm",
+   "depth": 2,
+   "relays": [
+    "u_prl_pm_0",
+    "u_prl_pm_1"
+   ],
+   "sinks": [
+    "u_ist_o_phy_Q__sN_fhN_1",
+    "u_ist_o_phy_Q__sN_piN_1",
+    "u_ist_o_phy_Q__sN_piN_d1_1",
+    "u_ist_o_phy_Q__sN_piN_d2_1",
+    "u_ist_o_phy_Q__sN_piN_d3_1",
+    "u_ist_o_phy_Q__sN_rhN_1"
+   ],
+   "reset": "prl_pm_1"
+  },
+  {
+   "name": "pw",
+   "depth": 2,
+   "relays": [
+    "u_prl_pw_0",
+    "u_prl_pw_1"
+   ],
+   "sinks": [
+    "u_ist_o_phy_Q__sN_fhN_0",
+    "u_ist_o_phy_Q__sN_piN_0",
+    "u_ist_o_phy_Q__sN_piN_d1_0",
+    "u_ist_o_phy_Q__sN_piN_d2_0",
+    "u_ist_o_phy_Q__sN_piN_d3_0",
+    "u_ist_o_phy_Q__sN_rhN_0"
+   ],
+   "reset": "prl_pw_1"
+  }
+ ]
+}

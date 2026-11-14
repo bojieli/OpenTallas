@@ -17,7 +17,7 @@ THE FORM (type frame; core E face x 306.72, tile E face x 864; all rows straight
   C       686.24   pi stage 2
   FACE    ~857     u_bout (pi) and u_bin (po) face registers at their pins (the po relay_sites are removed)
   pi (6 out buses): depth 3, unchanged (0 cycles); hops 24 / 178 / 178 / 178.
-  po (4 in buses):  +2 stations (internal_stations, bind native stations as on the pi side), hops 237 / 289 / 24;
+  po (4 in buses):  +2 packed resetless data+epoch delay stages, physically sited by internal_stations; hops 237 / 289 / 24;
                     DECLARED +2 data cycles on every po lane (pc -> phy), priced by reach_fix.sync_fixed_cycles.
   reset (reset.port_relays, relays FIRM by relay_sites; every hop <= 340 um):
       pe depth 1  (770, 820)                         face registers + column C
@@ -26,7 +26,9 @@ THE FORM (type frame; core E face x 306.72, tile E face x 864; all rows straight
       ps depth 3  (516, 760) (432, 518) (432, 193)   kv3_phy_v1: u_ft_ft0_o_2 / _3 (was depth 2 from a relay 524 um away)
     Release rule kept: stage k of a chain is released no later than the epoch reaches it (depth_k <= depth_0 + k) and
     stage 0 of every observable chain keeps its depth (pi stage 0: 2; ft0 stage 0: rg5, untouched), so no output epoch
-    moves.  The po epochs are read by nothing (the core takes po data only).  Rows without a po/pi register (hrst, rg5)
+    moves.  The po epochs are read by nothing (the core takes po data only).
+    Native PO stages are ot_dp_dly over data+epoch and have no reset pins; reset rows target only their real u_bin.
+    The packed stages retain their existing resetless behavior and exact two-cycle delay.  Rows without a po/pi register (hrst, rg5)
     and every other relay_sites key are kept byte-identical.
   clock taps: the registers moved, so the type's taps are re-solved by the fixed script
       reach_fix.py fix --types '^kv3_phy(_v1)?$' --classes 1,2,3   (hard-wrapper taps, KV-KITFIX-1)
@@ -194,11 +196,12 @@ def form_type(raw, tn):
             st[i] = ent
         else:
             st.append(ent)
-        names = [f"u_bin_{bus}"] + [f"u_ist_{bus}_{j}" for j in range(2)]
-        for nm, p in zip(names, [(x_face, y1)] + regs):
-            sink_xy[nm] = p
+        # The native binder realizes this input delay as one packed ot_dp_dly over data+epoch.
+        # It has no reset pins or u_ist instances. Only the actual face register consumes reset.
+        names = [f"u_bin_{bus}"]
+        sink_xy[names[0]] = (x_face, y1)
         chains.append((False, names))
-        rep["buses"][bus] = dict(dir="in", stations=2, cycles_added=2, hops_um=[round(h, 1) for h in hops],
+        rep["buses"][bus] = dict(dir="in", stations=2, cycles_added=2, resetless_packed_delay=True, hops_um=[round(h, 1) for h in hops],
                                  window_y=[y0, y1], core_pin_y=round(cy, 3))
     for b_, r_ in rep["buses"].items():
         assert max(r_["hops_um"]) <= PLAN_HOP, f"{tn}.{b_}: hop {max(r_['hops_um'])} > {PLAN_HOP}"
@@ -211,10 +214,12 @@ def form_type(raw, tn):
     # ---- reset rows
     rows = t["reset"].get("port_relays") or []
     mine = set(sink_xy)
+    # Retire only this form's old impossible PO reset consumers on replay.
+    owned = mine | {f"u_ist_{bus}_{j}" for bus in PO for j in range(2)}
     keep, foreign = [], []
     for row in rows:
-        if row["name"] in RESET or mine & set(row["sinks"]):     # the old rg rows and this form's own rows
-            foreign += [s for s in row["sinks"] if s not in mine]
+        if row["name"] in RESET or owned & set(row["sinks"]):     # the old rg rows and this form's own rows
+            foreign += [s for s in row["sinks"] if s not in owned]
             for j in range(int(row["depth"])):
                 rs.pop(f"u_prl_{row['name']}_{j}/q", None)
         else:
