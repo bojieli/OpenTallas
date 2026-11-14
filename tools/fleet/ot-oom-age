@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+"""ot-oom-age (ADMIT-TUNE-1 11-14, COORD): when a host runs out of memory the kill should hit the job with the LEAST sunk work, not
+the biggest.  earlyoom and the kernel both rank victims by /proc/PID/oom_score = RSS share + oom_score_adj, so an 8 h GRT (50 GB) dies
+before a fresh job.  This root helper sets each build process's oom_score_adj from its age: STARTADJ (800) when new, minus STEP (100)
+per hour, floor 0.  An adj of 800 outweighs any RSS (1 GB of 1 TB = 1 point), so the youngest die first; among old ones RSS decides.
+Only these tool comms are touched, and never a process whose current adj is outside [0, 800] (die containers run at -999, the
+closure-loop runner at 900).  Lowering an adj needs root (CAP_SYS_RESOURCE): run from root cron / systemd timer.
+  ot-oom-age [--dry-run] [--now-offset SECONDS] [--comm a,b] [--pid N ...]"""
+import argparse, os, sys, time
+
+COMMS = {"openroad", "yosys", "yosys-abc", "verilator_bin", "verilator_bin_dbg", "cc1plus", "cc1", "klayout", "vvp"}
+STARTADJ, STEP, FLOOR, MAXMANAGED = 800, 100, 0, 800
+
+
+def target_adj(age_s, start=STARTADJ, step=STEP, floor=FLOOR):
+    return max(floor, start - step * int(max(0, age_s) // 3600))
+
+
+def proc_age(pid, now, hz):
+    st = open(f"/proc/{pid}/stat").read().rsplit(")", 1)[1].split()
+    up = float(open("/proc/uptime").read().split()[0])
+    return up - int(st[19]) / hz + (now - time.time())
+
+
+def managed(cur):
+    return 0 <= cur <= MAXMANAGED
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--now-offset", type=float, default=0.0)
+    ap.add_argument("--comm", default="")
+    ap.add_argument("--pid", type=int, nargs="*", default=[])
+    a = ap.parse_args(argv)
+    comms = set(a.comm.split(",")) if a.comm else COMMS
+    hz = os.sysconf("SC_CLK_TCK")
+    now = time.time() + a.now_offset
+    pids = [str(p) for p in a.pid] or [p for p in os.listdir("/proc") if p.isdigit()]
+    changed = seen = 0
+    for p in pids:
+        try:
+            comm = open(f"/proc/{p}/comm").read().strip()
+            if comm not in comms:
+                continue
+            cur = int(open(f"/proc/{p}/oom_score_adj").read())
+            if not managed(cur):
+                continue
+            want = target_adj(proc_age(p, now, hz))
+            seen += 1
+            if want != cur:
+                if not a.dry_run:
+                    open(f"/proc/{p}/oom_score_adj", "w").write(str(want))
+                changed += 1
+        except (OSError, ValueError, IndexError):
+            continue
+    print(f"ot-oom-age: {seen} managed, {changed} {'would change' if a.dry_run else 'changed'}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
