@@ -1,0 +1,51 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+FENCE_FIXTURE removed exactly 6 groups; clocks 51054
+OT_SERDES_LANES released 6 GPL-only region fences; original membership/bounds recorded
+[INFO DPL-0006] Core area: 3505022.67 um^2
+[INFO DPL-0007] Movable instances area: 48940.51 um^2
+[INFO DPL-0008] Fixed instances area within core: 656534.28 um^2
+[INFO DPL-0009] Utilization: 20.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 570456 cells
+[INFO DPL-0393]   height 300 row(s): 2 cells
+[INFO DPL-0393]   height 480 row(s): 2 cells
+[INFO DPL-0393]   height 512 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        857 |       183 |       674
+        1 |        413 |        75 |       338
+        2 |        261 |        39 |       213
+        3 |        184 |        32 |       152
+        4 |        201 |        25 |       158
+        5 |        165 |        19 |       146
+        6 |         80 |        12 |        68
+        7 |          8 |         2 |         6
+        8 |         15 |         3 |        12
+        9 |          8 |         2 |         6
+       10 |         17 |         3 |        14
+       20 |         12 |         2 |        10
+       27 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 27.
+[INFO DPL-0500] Runtime: 27.50s
+Placement Analysis
+---------------------------------
+total displacement      60852.9 u
+average displacement        0.1 u
+max displacement            3.4 u
+original HPWL        11094720.8 u
+legalized HPWL       11136041.8 u
+delta HPWL                    0 %
+
+FENCE_FIXTURE check_placement_rc 0 detail 
+FENCE_FIXTURE clock_net_changes 0
