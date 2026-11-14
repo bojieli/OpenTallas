@@ -522,9 +522,33 @@ if {[info exists ff_full_targets]} {
 proc ff_put_near {f x y} {
   # nearest free (column, row) cell of the global station grid around (x, y), spiral search
   global ff_gocc ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_cpitch ff_orient
+  global ff_ns_stride ff_ns_inset ff_dbu
+  set nsface ""
+  if {($ff_ns_stride > 1 || $ff_ns_inset > 0) && min(abs($y-$ff_y0),abs($ff_y1-$y)) <= 10*$ff_dbu} {
+    set nsface [expr {abs($y-$ff_y0) < abs($ff_y1-$y) ? "S" : "N"}]
+  }
   set w [[$f getMaster] getWidth]
   set c0 [expr {int(($x - $ff_x0) / $ff_cpitch)}]; set r0 [expr {int(($y - $ff_y0) / $ff_rh)}]
   set cmax [expr {int(($ff_x1 - $ff_x0 - $w) / $ff_cpitch)}]; set rmax [expr {int(($ff_y1 - $ff_y0) / $ff_rh) - 1}]
+  if {$nsface ne ""} {
+    # A face bank searches nearby columns then inward rows; a spiral can drift tens of um along the face.
+    set c0 [expr {max(0,min($cmax,$c0))}]
+    for {set depth $ff_ns_inset} {$depth < 120} {incr depth} {
+      foreach dc {0 1 -1} {
+        set c [expr {$c0+$dc}];set r [expr {$nsface eq "N" ? $rmax-$depth : $depth}]
+        if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_ns_stride || [dict exists $ff_gocc "$c,$r"]} continue
+        set cx [expr {$ff_x0+$c*$ff_cpitch}];set cy [expr {$ff_y0+$r*$ff_rh}]
+        if {abs($x-($cx+$w/2))+abs($y-($cy+$ff_rh/2))>27*$ff_dbu} continue
+        if {[llength [info commands ff_hits_explicit]] && [ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
+        dict set ff_gocc "$c,$r" 1
+        if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
+        if {[dict exists $ff_orient $cy]} { $f setOrient [dict get $ff_orient $cy] }
+        $f setLocation $cx $cy;$f setPlacementStatus FIRM
+        return [list $cx $cy]
+      }
+    }
+    error "NS face bank cannot fit within 30um pin retention: [$f getName]"
+  }
   for {set rad 0} {$rad < 200} {incr rad} {
     for {set dr [expr {-$rad}]} {$dr <= $rad} {incr dr} {
       foreach dc [lsort -unique [list [expr {$rad - abs($dr)}] [expr {abs($dr) - $rad}]]] {
