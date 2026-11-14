@@ -275,6 +275,9 @@ def dies():
         ns = [n for n in idx['nodes'].values() if n['die'] == d['id'] and n['level'] != 'die']
         d['packs'] = dict(type=sum(1 for n in ns if n['level'] == 'type' and (n.get('layout') or {}).get('store')),
                           core=sum(1 for n in ns if n['level'] == 'core' and (n.get('layout') or {}).get('store')))
+        # a pack of a design that is not signed off is a view of a build in progress (wave run, any stage): shown, never counted
+        d['packs_unsigned'] = dict(type=sum(1 for n in ns if n['level'] == 'type' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')),
+                                   core=sum(1 for n in ns if n['level'] == 'core' and (n.get('layout') or {}).get('store') and (n.get('status') or {}).get('state') not in ('signed', 'pending archive')))
         d['cores'] = sum(1 for n in ns if n['level'] == 'core')
         d['instances'] = dict(total=len(p['partitions']))
         st = {}
@@ -446,7 +449,9 @@ def archive_index():
         for e in d.get('export') or []: exp.setdefault(e['name'], []).append(e)
         for c in d.get('closed') or []:
             if c.get('status') == 'archived' and c.get('name'): closed.setdefault(c['name'], []).append(c)
-        _ARCH.update(mt=mt, exp=exp, closed=closed, meta=dict(generated=d.get('generated'), host=d.get('host'), export=len(d.get('export') or []), closed=len(d.get('closed') or [])))
+        # AGIdock listing of /archive/opentallas-signed-1114 (the archive of record): (die dir, name) -> has a routed database
+        agi = {(e.get('die'), e.get('name')): any(str(f if isinstance(f, str) else (f or {}).get('name') or (f or [''])[0]).endswith(('.odb', '.odb.zst')) for f in (e.get('files') or [])) for e in d.get('agidock') or []}
+        _ARCH.update(mt=mt, exp=exp, closed=closed, agi=agi, meta=dict(generated=d.get('generated'), host=d.get('host'), export=len(d.get('export') or []), closed=len(d.get('closed') or [])))
     return _ARCH
 
 
@@ -467,6 +472,7 @@ def db_sources(n):
     for nm in names:
         for e in A['exp'].get(nm, []):
             if e['die'] in dies: out['archives'].append(dict(where='rtx-pro', kind='signed-export-1114', path=e['path'] + ('/' + e['odb'] if e.get('odb') else ''), odb=bool(e.get('odb')), signoff=bool(e.get('signoff')), bytes=e.get('bytes')))
+            if e['die'] in dies and A.get('agi', {}).get((e['die'], nm)): out['archives'].append(dict(where='AGIdock', kind='opentallas-signed-1114', path='/archive/opentallas-signed-1114/%s/%s/6_final.odb' % (e['die'], nm), odb=True))
     if lay.get('archive_odb'): out['archives'].append(dict(where='AGIdock', kind='archive', path=str(lay['archive_odb']), odb=True))
     for nm in names:
         for c in A['closed'].get(nm, [])[-2:]:
@@ -504,6 +510,7 @@ def archive_summary():
                 signed_not_in_archive=[dict(id=r['id'], recorded=r['recorded'], pack=r['pack']) for r in signed if r['cls'] != 'archive'],
                 signed_on_both=sum(1 for r in signed if r['rtx'] and r['agi']), signed_rtx_pro_only=sum(1 for r in signed if r['rtx'] and not r['agi']), signed_agidock_only=sum(1 for r in signed if r['agi'] and not r['rtx']),
                 signed_agidock_only_list=[r['id'] for r in signed if r['agi'] and not r['rtx']],
+                signed_rtx_pro_only_list=[dict(id=r['id'], kind=(r['resolved'] or {}).get('kind'), path=(r['resolved'] or {}).get('path')) for r in signed if r['rtx'] and not r['agi']],
                 signed_pack_missing_but_archived=[r['id'] for r in signed if not r['pack'] and r['cls'] == 'archive'],
                 off_limits=sorted(OFF_LIMITS), rule='signed records live on rtx-pro (signed-export-1114, closed_archive) and AGIdock /archive; fleet paths are provenance only and are never read by the explorer')
 
