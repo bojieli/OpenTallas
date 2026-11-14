@@ -142,3 +142,8 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 - Form: 648 x 518.4 um, 43% util (139,816 um^2), PLACE_DENSITY 0.5, M2-M5. Structural (routing supply), not ECO-able.
 - The epyc10 copy (xs4_r4_e10, unit oth-ubuntu-3547113-1794640547) re-runs the same deterministic GRT from the same CTS odb, so I stopped its container (klegacy-ot_s81sl_xs4_xs4h-3580069) to free epyc10.
 - xs4 is not in the S81 64-core counter. The next form needs a structural lever (outline growth, pre-approved; or a lower density / RTL split of the wide gather). I am keeping the last 2 counted cores (gunit l1f_bf F2, bksel_q C9geom e10) first; xs4 re-floor follows once they have landed.
+
+## NOTE 2026-11-14 00:29 PST T51 W re-signed; bksel epyc4 killed, epyc10 converging
+- T51 W: the autopilot recorded the re-sign at 23:38 (flow-20261113-ai-s81 55713eb3c463, LEC EQUIVALENT, PROVENANCE at epyc7 /srv/opentallas-scratch3/claude/auto-resign/s81/s81p_slice_station__t51_ot_s81_station_t51_native_w__flow-20261113-ai-s81__c2133025), so it should count (S81 62/64). release_tree_plan.py --print timed out after 380 s on intel2, so I have not confirmed the number from the counter itself yet.
+- bksel_q C9geom epyc4 unit oth-ubuntu-3028966-1794633424: exit 137 (killed during GRT extra iteration 5, epyc4 drain); epyc4 no longer answers ssh.
+- bksel_q epyc10 copy (oth-ubuntu-3547150-1794640547): GRT overflow 25,226 / 20,074 / 20,268 / 18 at iterations 5/10/15/20, so it is converging to 0. Waiter armed; I judge under R-MINIMAL on finish.
