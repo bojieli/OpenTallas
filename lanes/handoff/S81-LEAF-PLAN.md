@@ -13,10 +13,28 @@ Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.ts
 - Also found in the plan: 30 leaf types have outline 1278.72 / 1356.48 but their N ring bands still end at 1209.6 (69 um off the N face) and the first ft reg sits at y 1226.88; B4L moves those bands to the real face strip.
 
 ## Sidecar defect found (affects B3zq)
-run_bind_b3.sh sidecar sync fails on B3z2 + side_z2: RuntimeError((ot_s81sl_leaf__t72, local_sources, band semantics differ)) RC=5 (b3z2.py added rects_um to the plan t72 ft0_i band, not to the sidecar copy). Fixed sidecar for B3zq: ev/side_z2_t72fix.json (93c4de451072, 1 record synced, tool bin_side_band_sync_leafplan.py). Posted ASK to DIE-S81-92.
+run_bind_b3.sh sidecar sync fails on B3z2 + side_z2: RuntimeError((ot_s81sl_leaf__t72, local_sources, band semantics differ)) RC=5 (b3z2.py added rects_um to the plan t72 ft0_i band, not to the sidecar copy). Fixed sidecar for B3zq: ev/side_z2_t72fix.json (93c4de451072, 1 record synced, tool bin_side_band_sync_leafplan.py). Posted ASK to DIE-S81-92. STILL PRESENT in 92e2f585dc06.
+
+## B4L-b (CURRENT candidate, 2026-11-14 ~21:3x PST) -- supersedes B4L-a
+Base B3z2 92e2f585dc06 (COORD: rows restored) + t72 sidecar band sync (ev/side_z2_92e2_fix.json).
+- bands: leaf_rules.py bands -> ev/B4L_b0.json (106 moved / 10 need core move / 4 skipped, same as B4L-a)
+- core moves (core_place, eq OK, 0 timing viol, station regs unchanged):
+  - leaf__t69 (COORD DRT-0255 evidence, ft0_o/ft1_o S-face window, box column x=19.38 um): --face-clear "S:43.2:g_ln[(0|1)]", --fixed incl u_vn -> cp/t69_fl.json; L2 7->2 (left: vn_b 34.6 um under leafdn_i0/leafup_o0; moving vn_b = +1 reg on 4 stations (idx 140-143), not taken)
+  - leaf__t25__cl431c660f: face-clear S 43.2 on ln_0/ln_1 -> cp/t25__cl431c660f_fc.json; L2 5->0
+  - leaf__t68: Fable lane form seed + search -> cp/t68_f.json; R-LEAF-3 30->21
+- reset re-publish of the 3 types: die-s81-90/h/tapleg.py (moved 0) + frame-forms-1 delta_frame_collector_1113.py (PUBLISH_RC 0; depth unchanged; relays t25 237->256, t68 278->276, t69 247->252) -> ev/B4L_b1.json 625b7c6b777c, ev/side_B4L_b1.json b9589178a764; audit cp/merge_cp_leafplan.py: 0 reset sites under cores, 0 bands under cores. Band x reset-site overlaps 458 (base) -> 370 (B4L), none new.
+- rule counts B4L_b1: L1 19/14 types, L2 288/65, L3 2858/80 (base 120/298/2864)
+- G0 pair: control G0ctl2 (92e2) vs G0L1b (B4L_b1), both with the 3 bad tap_offset rows dropped (G0-only copies); logs log/G0ctl2.log, log/G0L1b.log
+- strict bind B4Lb: bindB4Lb_leafplan.sh via intel2 ~/s81-leaf-plan/bind_leafplan_w3.sh (ot-run 120 GB epyc7, queued), log log/B4Lb_bind.log + intel2 ~/s81-leaf-plan/bind_B4Lb.log
+- B4L-a bind and G0 runs cancelled (old base).
+
+## Fable GRT Total lines
+- epyc9 /srv/opentallas-scratch/claude/fable-review-cong/d/t68e2/grt.log (30 extra it): `Total 212813367 13867498 6.52% 13 / 6 / 8156` (8156 overflow left)
+- epyc8 .../fable-review-cong/d/t75/fix.log: still in extra iteration 14/15, no Total yet
+- epyc7 .../fable-review-col/p_h10r0_base/proof.log: extra iteration 13/15, no Total yet
 
 ## Second B3z2 defect (affects B3zq G0 and 2 kits)
-G0 check.py on B3z2 crashes in gen_phys.tap_offset_table: clock.tap_offset.per_port_ps rows beyond T/2 (period 833 -> 416.5 ps): eng__t1 clk_c0 TT -550.2 / FF -490.8, bk_sel__t2 clk_c4 -454.5 / -408.2, clk_c0 -470.0 / -421.5. Posted ASK to DIE-S81-92. My G0 comparison uses private copies with those 3 rows dropped (ev/G0only_*_tapoff3.json; never bound).
+G0 check.py on B3z2 crashes in gen_phys.tap_offset_table: clock.tap_offset.per_port_ps rows beyond T/2 (period 833 -> 416.5 ps): eng__t1 clk_c0 TT -550.2 / FF -490.8, bk_sel__t2 clk_c4 -454.5 / -408.2, clk_c0 -470.0 / -421.5. Posted ASK to DIE-S81-92. STILL PRESENT in 92e2f585dc06. My G0 comparison uses private copies with those 3 rows dropped (ev/G0only_*_tapoff3.json; never bound).
 
 ## R-LEAF-2/3 (core moves): NOT in B4L-a
 core_place.py --seed / --face-clear trials (cp/): t68 ln_12/ln_13 -> (650.88,920.16)/(799.92,920.16) (Fable form): eq OK, 0 overlaps, but 2 timing limits over (core link 429 > 412 um, station 884 > 864 um) -> not applied; t68 vn_a -> x 507.6: 1 station needs +1 register -> not applied; t75 ve_m/ve_s/vsw/vs +43.2 or +129.6 um: every seeded core lands on fixed ft-slot station sites (core_place rule7, 26 points), so the move needs the ft stations re-sited in the same event (core_place keeps ft_slots fixed). face-clear S 86.4 on t68 ve_m/ve_s: no timing-clean spot. - t68 WORKS with search: seed ln_12/ln_13 = Fable form + core_place search (sweeps 6, big cores --fixed "u_ve|u_vsw|u_vs$|u_vn|u_rxs|u_vq", gap 4.32): applied True, eq OK, 0 timing violations, 605 -> 605 station regs, R-LEAF-3 slots 30 -> 21 (vn_a|ln_12, vn_a|ln_13, vn_a|vp_b0 gone: the GRT-proven class), RUDY ovf H 1.62M -> 0.78M; 10 vp cores moved (lane swaps). Plan cp/t68_f.json (type t68 only). Blocker before it can join B4L: 2 reset relay sites (981.9,151.2) and (1120.1,419.0) now sit under ln_0 / ln_8 (core_place does not see collector relays): needs the collector publish / re-site step of the DIE-S81-92 chain for t68.
