@@ -44,7 +44,16 @@ export function mountNavigator(host) {
       const rows = types.filter((n) => n.status.state === st); if (!rows.length) continue;
       const body = rows.map((n) => {
         const out = [row(n)];
-        if (n.id === S.node || (S.nodeParent === n.id)) for (const c of n.children || []) { const cn = S.data.nodes[c]; if (cn) out.push(row(cn, '.core')); }
+        if (n.id === S.node) {   // the macros placed inside the selected type: hover highlights on the canvas, click selects and zooms
+          const hc = (n.plan.hard_cores || []).slice().sort((a, b) => a[0].localeCompare(b[0], 'en', { numeric: true }));
+          if (hc.length) out.push(h('div.more', { dataset: { testid: 'nav-macros-head' } }, `${hc.length} macros in this type`));
+          for (const c of hc.slice(0, 300)) { const cn = S.data.nodes[c[1]];
+            out.push(h('a.row.core.' + stateCls(cn ? cn.status.state : 'not built'), { href: store.href({ view: S.view === 'overview' || S.view === 'closure' || S.view === 'token' || S.view === 'dataflow' ? 'element' : S.view, node: n.id, inst: c[0] }), 'aria-current': S.inst === c[0] ? 'true' : null,
+              title: `${c[0]} · ${c[2]}${cn ? ' · hard core, ' + cn.status.state : ' · generated memory macro'}`, dataset: { macro: c[0] },
+              onmouseenter: () => window.dispatchEvent(new CustomEvent('otx:hover-inst', { detail: c[0] })), onmouseleave: () => window.dispatchEvent(new CustomEvent('otx:hover-inst', { detail: null })) },
+              h('i.dot'), h('span.nm', c[0]), h('small', c[2].length > 16 ? '…' + c[2].slice(-14) : c[2]))); }
+          if (hc.length > 300) out.push(h('div.more', `${hc.length - 300} more: see the Macros tab of the inspector.`));
+        } else if (S.nodeParent === n.id) for (const c of n.children || []) { const cn = S.data.nodes[c]; if (cn) out.push(row(cn, '.core')); }
         return out;
       });
       tree.append(...group(st, STATE_LABEL[st] + ' types', rows.length, body, st).flat(3).filter(Boolean));
@@ -55,7 +64,7 @@ export function mountNavigator(host) {
   }
   async function update(st) {
     const { die, node } = st.sel;
-    S.view = st.view;
+    S.view = st.view; S.inst = st.sel.inst;
     if (node !== S.node) S.scroll = true;
     S.node = node;
     if (die !== S.die) {

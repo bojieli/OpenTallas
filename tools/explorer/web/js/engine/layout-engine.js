@@ -110,6 +110,7 @@ function rectLayer() {
   return (RectLayer = OtxRectLayer);
 }
 
+export const MARK_VARS = ['--c1', '--c2', '--c3', '--c4', '--c5', '--c6', '--c7', '--c8'];
 export const SGN = { R0: [1, 1], MX: [1, -1], MY: [-1, 1], R180: [-1, -1] };
 /** plan bbox (DBU) + orient -> transform {sx, sy, ox, oy}: world um = o + s * local DBU / 1000 */
 export const xfOf = (orient, X, Y, W, H) => { const [sx, sy] = SGN[orient]; return { sx, sy, ox: (X + (sx < 0 ? W : 0)) / 1000, oy: (Y + (sy < 0 ? H : 0)) / 1000 }; };
@@ -140,7 +141,8 @@ export class LayoutEngine {
     this.phone = innerWidth <= 980 || matchMedia('(pointer: coarse)').matches;
     this.budget = this.phone ? 1.2e6 : 3e6; this.gpuCap = this.phone ? 150e6 : 300e6;
     this.palette = 'classic'; this.L = null; this.kindVis = Object.fromEntries(KINDS.map((k) => [k[0], !!k[2]]));
-    this.show = { plan: true, labels: true, cores: true, minimap: true };
+    this.show = { plan: true, labels: true, cores: true, minimap: true, macroLabels: true };
+    this.marks = []; this.selMark = null; this.hotMark = null;   // macros / hard cores: {key, bb, label, sub, ci (colour slot 0-7 or -1), tip: [lines]}
     this.names = { net: new Map(), inst: new Map() };
     this.dom = {};
     const d = this.dom;
@@ -204,6 +206,11 @@ export class LayoutEngine {
     if (!P.H) throw new Error(P.err || 'pack header did not load');
     return P;
   }
+  /** macros / hard cores to outline, label, hover and select */
+  setMarks(marks) { this.marks = marks || []; this.markIdx = new Map(this.marks.map((m) => [m.key, m])); this.markVer = (this.markVer || 0) + 1; this.requestUpdate(); }
+  selectMark(key) { this.selMark = key; this.requestUpdate(); }
+  hoverMark(key) { if (this.hotMark !== key) { this.hotMark = key; this.requestUpdate(); } }
+  markAt(w) { let best = null, ba = Infinity; for (const m of this.marks) if (w[0] >= m.bb[0] && w[0] < m.bb[2] && w[1] >= m.bb[1] && w[1] < m.bb[3]) { const a = (m.bb[2] - m.bb[0]) * (m.bb[3] - m.bb[1]); if (a < ba) { ba = a; best = m; } } return best; }
   setItems(items) { this.items = items; this.miniDirty = true; this.requestUpdate(); }
   cam() { return { x: this.vs.target[0], y: this.vs.target[1], z: this.vs.zoom }; }
   setCam(x, y, z, ms) { this.vs = Object.assign({}, this.vs, { target: [x, y, 0], zoom: Math.max(this.vs.minZoom, Math.min(this.vs.maxZoom, z)), transitionDuration: ms || 0 }); this.deck.setProps({ initialViewState: Object.assign({}, this.vs) }); this.requestUpdate(); if (this.o.onView) this.o.onView(this.cam()); }
@@ -429,9 +436,20 @@ export class LayoutEngine {
       }
     }
     layers.push(new D.PathLayer({ id: 'outline', data: [{ p: [[o[0], o[1]], [o[2], o[1]], [o[2], o[3]], [o[0], o[3]], [o[0], o[1]]] }], getPath: (d) => d.p, getColor: [...fg, 255], widthUnits: 'pixels', getWidth: 1.5, coordinateSystem: C }));
-    if (this.show.cores) {
-      const cores = this.items.filter((i) => i.level === 'core' && meets(i.bb, b) && Math.sqrt((i.bb[2] - i.bb[0]) * (i.bb[3] - i.bb[1])) * ppu >= 5);
-      if (cores.length) layers.push(new D.PolygonLayer({ id: 'cores', data: cores, getPolygon: (i) => rectPoly(i.bb), filled: false, getLineColor: [...macro, 220], lineWidthUnits: 'pixels', getLineWidth: 1, coordinateSystem: C }));
+    if (this.show.cores && this.marks.length) {
+      // macros / hard cores: outline + light fill in the colour of their master, name labels once they are large enough
+      const MC = MARK_VARS.map((v) => hexRgb(cssv(v))), other = hexRgb(cssv('--c-other')), geoMode = this.mode === 'geometry';
+      const mk = this.marks.filter((m) => meets(m.bb, b) && Math.sqrt((m.bb[2] - m.bb[0]) * (m.bb[3] - m.bb[1])) * ppu >= 4);
+      const colOf = (m) => m.ci >= 0 && m.ci < MC.length ? MC[m.ci] : other;
+      layers.push(new D.PolygonLayer({ id: 'marks', data: mk, getPolygon: (m) => rectPoly(m.bb), getFillColor: (m) => [...colOf(m), geoMode ? 14 : 46], getLineColor: (m) => [...colOf(m), 240], lineWidthUnits: 'pixels', getLineWidth: 1.5, coordinateSystem: C,
+        updateTriggers: { getFillColor: [geoMode, this.markVer], getLineColor: this.markVer } }));
+      if (this.show.macroLabels) {
+        const lab = mk.filter((m) => (m.bb[2] - m.bb[0]) * ppu >= 58 && (m.bb[3] - m.bb[1]) * ppu >= 15).sort((p, q) => (q.bb[2] - q.bb[0]) * (q.bb[3] - q.bb[1]) - (p.bb[2] - p.bb[0]) * (p.bb[3] - p.bb[1])).slice(0, 300);
+        const fit = (t, m) => { const n = Math.max(3, Math.floor(((m.bb[2] - m.bb[0]) * ppu - 10) / 6.4)); return t.length > n ? '…' + t.slice(-(n - 1)) : t; };
+        layers.push(new D.TextLayer({ id: 'marklabels', data: lab, getPosition: (m) => [m.bb[0], m.bb[3]], getText: (m) => fit(m.label, m) + (m.sub && (m.bb[3] - m.bb[1]) * ppu >= 34 ? '\n' + fit(m.sub, m) : ''), getSize: 11, lineHeight: 1.15, characterSet: 'auto',
+          getColor: [...ink, 255], getTextAnchor: 'start', getAlignmentBaseline: 'top', getPixelOffset: [4, 4], background: true, getBackgroundColor: [...canvas, 215], backgroundPadding: [3, 1], fontFamily: 'ui-monospace, Menlo, monospace', coordinateSystem: C,
+          updateTriggers: { getText: [Math.round(Math.log2(ppu) * 4), this.markVer] } }));
+      }
     }
     if (this.o.overlays) { try { for (const l of this.o.overlays(D, { b, ppu, C }) || []) layers.push(l); } catch (e) { console.warn('overlay', e); } }
     if (this.show.labels && this.insts.length) {
@@ -449,6 +467,7 @@ export class LayoutEngine {
     const rings = [];
     if (this.selBox) for (const q of this.selBox) rings.push({ q: q.bb, c: hexRgb(cssv(q.strong ? '--accent' : '--select')), w: q.strong ? 3 : 1.5 });
     if (this.flash) rings.push({ q: this.flash, c: hexRgb(cssv('--accent')), w: 2.5 });
+    for (const [key, v, w] of [[this.hotMark, '--select', 2.5], [this.selMark, '--accent', 3.5]]) { const m = key != null && this.markIdx && this.markIdx.get(key); if (m) rings.push({ q: m.bb, c: hexRgb(cssv(v)), w }); }
     if (rings.length) layers.push(new D.PolygonLayer({ id: 'rings', data: rings, getPolygon: (r) => rectPoly(r.q), filled: false, getLineColor: (r) => [...r.c, 255], lineWidthUnits: 'pixels', getLineWidth: (r) => r.w, coordinateSystem: C }));
     this.deck.setProps({ layers });
   }
@@ -470,16 +489,16 @@ export class LayoutEngine {
     return best;
   }
   pickAt(w) {
-    const inst = this.insts.find((q) => w[0] >= q.bb[0] && w[0] < q.bb[2] && w[1] >= q.bb[1] && w[1] < q.bb[3]) || null;
+    const inst = this.insts.find((q) => w[0] >= q.bb[0] && w[0] < q.bb[2] && w[1] >= q.bb[1] && w[1] < q.bb[3]) || null, mark = this.show.cores ? this.markAt(w) : null;
     const under = (this.vis || []).filter((it) => w[0] >= it.bb[0] && w[0] < it.bb[2] && w[1] >= it.bb[1] && w[1] < it.bb[3]).sort((a, c) => (c.level === 'core') - (a.level === 'core'));
     const tol = 2 / (this.ppu * 0.001);
     for (const it of under) {
       if (!it.geo || !it.P || !it.P.H) continue;
       const lx = (w[0] - it.xf.ox) * 1000 * it.xf.sx, ly = (w[1] - it.xf.oy) * 1000 * it.xf.sy, s = this.pickShape(it.P, lx, ly, tol);
-      if (s) { const { p, i } = s; return { inst, item: it, local: [lx, ly], shape: { layer: p.layer[i], kind: p.kind[i], net: p.net[i], aux: p.aux[i], pin: p.pin[i], box: [p.x0[i], p.y0[i], p.x1[i], p.y1[i]] } }; }
+      if (s) { const { p, i } = s; return { inst, mark, item: it, local: [lx, ly], shape: { layer: p.layer[i], kind: p.kind[i], net: p.net[i], aux: p.aux[i], pin: p.pin[i], box: [p.x0[i], p.y0[i], p.x1[i], p.y1[i]] } }; }
     }
     const it = under[0] || null;
-    return { inst, item: it, local: it ? [(w[0] - it.xf.ox) * 1000 * it.xf.sx, (w[1] - it.xf.oy) * 1000 * it.xf.sy] : null, shape: null };
+    return { inst, mark, item: it, local: it ? [(w[0] - it.xf.ox) * 1000 * it.xf.sx, (w[1] - it.xf.oy) * 1000 * it.xf.sy] : null, shape: null };
   }
   async lookup(pack, kind, ids) {
     const m = this.names[kind], need = ids.filter((i) => !m.has(pack + '|' + i));
@@ -491,8 +510,8 @@ export class LayoutEngine {
     const w = this.worldAt(e); this.mouse = w; this.stats();
     if (this.rulerMode && this.rulerLive) { this.rulerLive.b = [w[0], w[1]]; this.requestUpdate(); }
     if (this.overlayHover) return;
-    const hit = this.pickAt(w), tip = this.dom.tip; this.hoverHit = hit.shape || hit.inst ? hit : null;
-    if (!hit.inst && !hit.shape) { tip.hidden = true; return; }
+    const hit = this.pickAt(w), tip = this.dom.tip; this.hoverHit = hit.shape || hit.inst || hit.mark ? hit : null;
+    if (!hit.inst && !hit.shape && !hit.mark) { tip.hidden = true; return; }
     const draw = (nn, cell) => {
       clear(tip);
       if (hit.shape) {
@@ -503,6 +522,7 @@ export class LayoutEngine {
         if (s.net > 0) tip.append(h('div', 'net ', h('b', nn ? nn.name : '#' + s.net), nn && nn.sig && nn.sig !== 'SIGNAL' ? ' · ' + nn.sig : ''), h('div.m', 'click to highlight the net'));
       }
       if (hit.inst) tip.append(h('div', { style: hit.shape ? { marginTop: '4px', paddingTop: '4px', borderTop: '1px solid var(--line)' } : null }, h('b', hit.inst.name), hit.item && hit.item.level === 'core' ? h('span.m', ' / ' + hit.item.cname) : null), h('div.m', hit.inst.sub || ''));
+      if (hit.mark) { const m = hit.mark; tip.append(h('div', { style: tip.childNodes.length ? { marginTop: '4px', paddingTop: '4px', borderTop: '1px solid var(--line)' } : null, dataset: { testid: 'tip-macro' } }, h('b', m.label), (m.tip || []).map((t) => h('div.m', t)))); }
       if (this.o.tipExtra) { const x = this.o.tipExtra(hit); if (x) tip.append(x); }
       if (!tip.childNodes.length) { tip.hidden = true; return; }
       tip.hidden = false; const r = this.host.getBoundingClientRect(); let X = e.clientX - r.left + 14, Y = e.clientY - r.top + 14;

@@ -22,7 +22,7 @@ export function layersTab(getEngine, { onChange, extra } = {}) {
         h('section.sec', h('h3', 'Display'),
           h('label.chk', 'Palette ', h('select.field', { style: { height: '24px', marginLeft: 'auto' }, 'aria-label': 'Layer palette', dataset: { testid: 'palette' }, onchange: (e) => { eng.setPalette(e.target.value); paint(); } },
             h('option', { value: 'classic', selected: eng.palette === 'classic' }, 'Classic'), h('option', { value: 'cvd', selected: eng.palette === 'cvd' }, 'Colour-vision safe'))),
-          [['plan', 'Plan rectangles under the wires'], ['labels', 'Partition labels'], ['cores', 'Hard-core outlines'], ['minimap', 'Minimap']].map(([k, label]) => h('label.chk', h('input', { type: 'checkbox', checked: !!eng.show[k], dataset: { testid: 'show-' + k }, onchange: (e) => { eng.show[k] = e.target.checked; eng.requestUpdate(); } }), label)),
+          [['plan', 'Plan rectangles under the wires'], ['labels', 'Partition labels'], ['cores', 'Macro and hard-core outlines'], ['macroLabels', 'Macro name labels'], ['minimap', 'Minimap']].map(([k, label]) => h('label.chk', h('input', { type: 'checkbox', checked: !!eng.show[k], dataset: { testid: 'show-' + k }, onchange: (e) => { eng.show[k] = e.target.checked; eng.requestUpdate(); } }), label)),
           extra ? extra() : null));
     };
     paint();

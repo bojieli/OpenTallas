@@ -4,6 +4,7 @@ import { h, clear, fmt, fmtCount, fmtBytes, icon, cssv, hexRgb, levelOf, dieShor
 import { LayoutEngine, packFromStore, xfCompose, xfChild, xfBox, XF0, SGN } from '../engine/layout-engine.js';
 import { PlanCanvas, drawTypePlan, coreSize } from '../engine/plan-canvas.js';
 import { layersTab } from './layers-panel.js';
+import { colourSlots, legendHud, macrosTab } from './macros.js';
 import { showBusy } from '../shell/shell.js';
 
 const ramp = (prefix, n, t) => { t = Math.max(0, Math.min(1, t)); const k = t * (n - 1), i = Math.min(n - 2, Math.floor(k)), f = k - i, a = hexRgb(cssv(prefix + (i + 1))), b = hexRgb(cssv(prefix + (i + 2))); return [0, 1, 2].map((j) => Math.round(a[j] + (b[j] - a[j]) * f)); };
@@ -35,7 +36,34 @@ export default {
     const fitBtn = h('button.btn', { type: 'button', title: 'Fit (F)', testid: 'el-fit', onclick: () => (S.mode === 'routed' ? S.eng && S.eng.scene && S.eng.fit() : S.pc && S.pc.fit()) }, icon('fit'), 'Fit');
     const rulerBtn = h('button.btn', { type: 'button', 'aria-pressed': 'false', title: 'Ruler (R): click two points', testid: 'el-ruler', onclick: () => setRuler(!(S.eng && S.eng.rulerMode)) }, icon('ruler'), 'Ruler');
     const clearBtn = h('button.btn.ghost', { type: 'button', title: 'Clear rulers and the net highlight (Esc)', testid: 'el-clear', onclick: clearAll }, 'Clear');
-    tools.append(modeSeg, jobSel, qbox, fitBtn, rulerBtn, clearBtn);
+    const labBtn = h('button.btn', { type: 'button', 'aria-pressed': 'true', title: 'Macro name labels on the canvas', testid: 'el-labels', onclick: () => { if (!S.eng) return; S.eng.show.macroLabels = !S.eng.show.macroLabels; labBtn.setAttribute('aria-pressed', String(S.eng.show.macroLabels)); ctx.setParams({ labels: S.eng.show.macroLabels ? null : '0' }); S.eng.requestUpdate(); } }, 'Labels');
+    const macroHud = h('div.hud.tl.act', { hidden: true, testid: 'macro-legend', style: { whiteSpace: 'normal', right: '204px' } }); geo.append(macroHud);
+    tools.append(modeSeg, jobSel, qbox, fitBtn, labBtn, rulerBtn, clearBtn);
+    S.macros = []; S.masters = [];
+    const selectMacro = (key, zoom) => { S.selfMacro = !zoom; store.go({ inst: key }); if (zoom) { const m = S.macros.find((x) => x.key === key); if (m && S.eng) S.eng.zoomTo(m.bb, 0.45); } };
+    const onHoverInst = (e) => { if (S.eng) S.eng.hoverMark(e.detail || null); }; window.addEventListener('otx:hover-inst', onHoverInst);
+    /** macros of the open design: from the pack header (exact placement) or, without a pack, from the plan */
+    function buildMacros(n, P, comp) {
+      const plan = (n.plan && n.plan.hard_cores) || [], out = [];
+      const core = (id) => (id && S.R.children[id]) || null;
+      if (P) {
+        const used = new Set();
+        P.H.macros.forEach((m) => {
+          const bb = m.bbox.map((v) => v / 1000), cx = (bb[0] + bb[2]) / 2, cy = (bb[1] + bb[3]) / 2;
+          let best = null, bd = 2.5;   // the plan instance at this place (the routed DB uses flattened names)
+          plan.forEach((c, i) => { if (used.has(i)) return; const [w, hh] = coreSize(c), d = Math.hypot(c[3] + w / 2 - cx, c[4] + hh / 2 - cy); if (d < bd && Math.abs(w - (bb[2] - bb[0])) < 1 && Math.abs(hh - (bb[3] - bb[1])) < 1) { bd = d; best = i; } });
+          const pc = best != null ? plan[best] : (plan.find((c) => c[0] === m.name) || null); if (best != null) used.add(best);
+          const cn = pc ? core(pc[1]) : macroCore(m);
+          out.push({ key: pc ? pc[0] : m.name, packName: m.name, master: pc ? pc[2] : m.master, coreId: cn ? cn.id : null, state: cn ? cn.status.state : null, bb, orient: m.orient, where: 'exact, from the routed database of this type' });
+        });
+      } else plan.forEach((c) => { const [w, hh] = coreSize(c), cn = core(c[1]); out.push({ key: c[0], master: c[2], coreId: cn ? cn.id : null, state: cn ? cn.status.state : null, bb: [c[3], c[4], c[3] + w, c[4] + hh], orient: c[7], where: 'plan placement (this type has no routed database yet)' }); });
+      S.macros = out; S.masters = colourSlots(out);
+      S.eng.setMarks(out.map((m) => ({ key: m.key, bb: m.bb, label: m.key, sub: shortName(m.master), ci: m.ci,
+        tip: [`master ${m.master}`, `${fmt(m.bb[2] - m.bb[0], 2)} × ${fmt(m.bb[3] - m.bb[1], 2)} µm · ${m.orient}`, m.coreId ? `hard core · ${STATE_LABEL[m.state] || m.state}` : 'generated memory macro (no design of its own)', 'click to select'] })));
+      legendHud(macroHud, S.masters, 'Macros');
+    }
+    const pinsOf = (master) => { const H = S.P && S.P.H; if (!H) return null; const mm = H.masters.find((x) => x.name === master && x.block) || H.masters.find((x) => x.block && (x.name.includes(master) || master.includes(x.name))); return mm ? mm.pins.map((q) => q.name) : null; };
+    const macroTab = (el) => macrosTab(el, { macros: S.macros, masters: S.masters, sel: store.get().sel.inst, store, hover: (k) => S.eng && S.eng.hoverMark(k), select: selectMacro, pinsOf });
     function setRuler(on) { if (!S.eng) return; S.eng.setRuler(on); rulerBtn.setAttribute('aria-pressed', String(on)); }
     function clearAll() { if (S.eng) { S.eng.clearMarks(); setRuler(false); S.eng.highlight(null, 0); } S.hlName = null; if (store.get().sel.net) store.go({ net: null }); }
     const onKey = (e) => {
@@ -76,7 +104,7 @@ export default {
           if (hit.shape && hit.shape.net > 0) {
             const pk = hit.item.pack, [nn] = await eng.lookup(pk, 'net', [hit.shape.net]); eng.highlight(pk, hit.shape.net);
             S.hlName = pk === S.node ? (nn ? nn.name : '#' + hit.shape.net) : null; store.go({ net: S.hlName });
-          } else if (hit.item && hit.item.level === 'core' && !hit.shape && eng.mode !== 'geometry') store.go({ node: hit.item.pack });
+          } else if (hit.mark) selectMacro(hit.mark.key, false);
           else { eng.highlight(null, 0); S.hlName = null; if (store.get().sel.net) store.go({ net: null }); }
         },
         overlays, overlayTip, overlayClick,
@@ -98,10 +126,6 @@ export default {
         const d = H.die.map((v) => v / 1000);
         L.push(new D.PolygonLayer({ id: 'congdim', data: [d], getPolygon: rectPoly, getFillColor: [...canvas, 205], stroked: false, coordinateSystem: C }));
         L.push(new D.BitmapLayer({ id: key, image: S.congIm.im, bounds: [d[0], d[1], d[0] + c.gx * c.bin / 1000, d[1] + c.gy * c.bin / 1000], coordinateSystem: C, textureParameters: { [10240]: 9728, [10241]: 9728 }, opacity: 0.88 }));
-      }
-      if (S.ov.macros && H.macros.length) {
-        const mc = hexRgb(cssv('--macro'));
-        L.push(new D.PolygonLayer({ id: 'macros', data: H.macros, getPolygon: (m) => rectPoly(m.bbox.map((v) => v / 1000)), getFillColor: [...mc, S.eng.mode === 'geometry' ? 10 : 36], getLineColor: [...mc, 235], lineWidthUnits: 'pixels', getLineWidth: 1.5, coordinateSystem: C, pickable: true }));
       }
       if (S.ov.clock && S.clk) {
         const k = S.clk, col = (t) => [...ramp('--arr-', 5, (t - k.lo) / Math.max(1e-6, k.hi - k.lo)), 235], ink = hexRgb(cssv('--ink'));
@@ -131,7 +155,6 @@ export default {
       else if (id === 'paths') tip.append(h('b', `path ${o.i + 1}: slack ${fmt(o.p.slack, 2)} ps`), h('div.m', `${o.p.start} → ${o.p.end}`), h('div.m', 'click to select'));
       else if (id === 'pathpins') tip.append(h('b', o[0]), h('div.m', `${o[3] || ''} · +${fmt(o[2], 2)} ps · arrival ${fmt(o[1], 2)} ps`));
       else if (id === 'lints') tip.append(h('b', `${o.f.sev} · ${o.f.title}`), h('div.m', String(o.f.reason || '').slice(0, 300)));
-      else if (id === 'macros') { const c = macroCore(o); tip.append(h('b', o.name), h('div.m', `${o.master} · ${fmt((o.bbox[2] - o.bbox[0]) / 1000, 2)} × ${fmt((o.bbox[3] - o.bbox[1]) / 1000, 2)} µm · ${o.orient}`), h('div.m', c ? 'click to open this core' : 'generated memory macro')); if (S.eng.mode === 'geometry') return false; }
       else return false;
       tip.hidden = false; const r = hostEl.getBoundingClientRect(); tip.style.left = Math.min(r.width - tip.offsetWidth - 8, info.x + 14) + 'px'; tip.style.top = Math.min(r.height - tip.offsetHeight - 8, info.y + 14) + 'px';
       return true;
@@ -139,7 +162,6 @@ export default {
     function overlayClick(info) {
       const o = info.object, id = info.layer.id;
       if (id === 'paths') { S.psel = o.i; ctx.setParams({ path: o.i || null }); S.eng.requestUpdate(); refreshTab('timing'); return true; }
-      if (id === 'macros') { const c = macroCore(o); if (c && (S.eng.mode !== 'geometry' || !S.eng.hoverHit || !S.eng.hoverHit.shape)) { store.go({ node: c.id }); return true; } }
       return false;
     }
     function macroCore(m) {
@@ -196,7 +218,7 @@ export default {
         h('table.grid', { style: { marginTop: '6px' } }, h('thead', h('tr', h('th', 'Layer'), h('th.r', 'p50 %'), h('th.r', 'p99 %'), h('th.r', 'max %'), h('th.r', '>100 %'))), h('tbody', cg.layers.map((l) => h('tr', { style: { cursor: 'default' } }, h('td.mono', l.name), h('td.r', fmt(l.p50)), h('td.r', fmt(l.p99)), h('td.r' + (l.max > 100 ? '.neg' : ''), fmt(l.max)), h('td.r', fmt(l.over100)))))),
         h('p.note', cg.basis || '')] : h('p.note', { style: { margin: 0 } }, 'No congestion map in this pack.')),
       h('section.sec', h('h3', 'Hierarchy-contract lint'), lintBody()),
-      h('section.sec', h('h3', 'Macros'), sw('macros', `Outline hard macros (${H.macros.length})`, 'checks')));
+      h('section.sec', h('h3', 'Macros'), h('p.note', { style: { margin: 0 } }, `${H.macros.length} macros in this design: see the Macros tab.`)));
     }
     function lintBody() {
       const ls = S.P.H.lint_summary || {}, L = S.lint;
@@ -210,7 +232,7 @@ export default {
     }
     function setTabs() {
       const t = [];
-      if (S.mode === 'routed' && S.info) t.push({ id: 'layers', label: 'Layers', render: layersTab(() => S.eng, { onChange: () => ctx.setParams({ hide: S.eng.hiddenLayers().join('.') || null }) }) }, { id: 'timing', label: 'Timing', render: timingTab }, { id: 'checks', label: 'Checks', render: checksTab });
+      if (S.mode === 'routed' && S.info) t.push({ id: 'layers', label: 'Layers', render: layersTab(() => S.eng, { onChange: () => ctx.setParams({ hide: S.eng.hiddenLayers().join('.') || null }) }) }, { id: 'macros', label: 'Macros', render: macroTab }, { id: 'timing', label: 'Timing', render: timingTab }, { id: 'checks', label: 'Checks', render: checksTab });
       ctx.inspector.setTabs(t);
     }
 
@@ -257,7 +279,7 @@ export default {
         const mode = st.params.mode === 'plan' && hasPlan ? 'plan' : has || hasCores ? 'routed' : 'plan';
         const nodeChanged = node !== S.node; S.R = R; S.node = node; S.mode = mode;
         modeSeg.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', String(b.dataset.mode === mode)); if (b.dataset.mode === 'routed') { b.disabled = !(has || hasCores); b.title = has ? 'Routed geometry of the newest closure' : hasCores ? 'No pack for the type itself yet: its hard cores are drawn with their routed wires at their plan placement' : 'No routed layout pack for this design yet'; } if (b.dataset.mode === 'plan') b.disabled = !hasPlan; });
-        rulerBtn.hidden = clearBtn.hidden = mode !== 'routed'; qbox.hidden = mode !== 'routed' || !has;
+        rulerBtn.hidden = clearBtn.hidden = labBtn.hidden = mode !== 'routed'; qbox.hidden = mode !== 'routed' || !has;
         S.ov = Object.assign({ macros: true }, Object.fromEntries((st.params.ov || '').split('.').filter(Boolean).map((k) => [k, true]))); S.corner = st.params.corner === 'hold' ? 'hold' : 'setup'; S.psel = +st.params.path || 0;
         if (mode === 'plan') {
           show(hasPlan ? 'plan' : 'msg'); jobSel.hidden = true; S.info = null; setTabs();
@@ -280,8 +302,8 @@ export default {
             const addCore = (key, id, xf, cname, plan) => { const cp = comp.packs[id]; if (!cp) return; packs[id] = cp; items.push({ key, pack: id, level: 'core', xf, bb: xfBox(xf, ...cp.die), name: n.name, cname, plan }); };
             if (P) P.H.macros.forEach((m, j) => { const c = macroCore(m); if (c && SGN[m.orient]) addCore('m' + j, c.id, xfCompose(XF0, m.origin, m.orient), m.name, false); });   // the type's own macros: exact placement from its pack
             else planCores.forEach((c, j) => addCore('p' + j, c[1], xfChild(XF0, c[7], c[3], c[4], c[5], c[6]), c[0], true));
-            S.nCores = items.filter((i) => i.level === 'core').length; eng.show.cores = !P;
-            eng.setScene({ outline: d, items, insts: [], packs });
+            S.nCores = items.filter((i) => i.level === 'core').length; eng.show.cores = true;
+            eng.setScene({ outline: d, items, insts: [], packs }); buildMacros(n, P, comp);
             if (st.params.hide) eng.setHidden(st.params.hide.split('.'));
             const cam = (st.params.cam || '').split(',').map(Number); if (cam.length === 3 && cam.every(Number.isFinite)) eng.setCam(cam[0], cam[1], cam[2]);
             clear(jobSel); for (const j of info.history.slice().reverse()) jobSel.append(h('option', { value: j, selected: j === info.job }, j === info.latest ? `${j} (newest)` : j)); jobSel.hidden = info.history.length < 2;
@@ -292,6 +314,13 @@ export default {
           } catch (e) { busy.remove(); show('msg'); clear(msg).append(h('div.empty', h('div', h('h3', 'The routed layout could not be opened'), h('p', e.message), hasPlan ? h('button.btn', { type: 'button', onclick: () => ctx.setParams({ mode: 'plan' }, { notify: true }) }, 'Show the plan instead') : null))); setTabs(); return; }
           busy.remove(); setTabs();
         }
+        // macro selection lives in the URL (inst=); zoom to it unless the click came from the canvas
+        const inst = st.sel.inst, mk = inst && S.macros.find((x) => x.key === inst || x.packName === inst);
+        eng.selectMark(mk ? mk.key : null);
+        if (st.params.labels === '0') { eng.show.macroLabels = false; labBtn.setAttribute('aria-pressed', 'false'); }
+        if (mk && S.lastMacro !== mk.key && !S.selfMacro && !st.params.cam) eng.zoomTo(mk.bb, 0.45);
+        if ((mk ? mk.key : null) !== S.lastMacro) { S.lastMacro = mk ? mk.key : null; if (mk) ctx.inspector.show('macros'); else if (ctx.inspector.current() === 'macros') ctx.inspector.show('macros'); }
+        S.selfMacro = false;
         if (net && net !== S.hlName) { try { const r = await api.packSearch(node, net, 'net'); const o = (r.results || []).find((x) => x.k === 'net' && x.name === net); if (o && my === S.seq) { eng.names.net.set(node + '|' + o.id, o); eng.highlight(node, o.id); S.hlName = net; } } catch (e) { /* the name stays in the URL */ } }
         if (!net && S.hlName) { eng.highlight(null, 0); S.hlName = null; }
         const s = has ? n.layout.store : null;
@@ -299,7 +328,7 @@ export default {
         else ctx.setScope(`${shortName(node)} · ${S.info.job}${S.info.job !== S.info.latest ? ' (older closure)' : ''} · ${S.info.verify && S.info.verify.verdict ? S.info.verify.verdict : s.verify || 'unverified'} · ${fmtCount(s.shapes)} shapes`);
         eng.requestUpdate();
       },
-      destroy() { document.removeEventListener('keydown', onKey); document.removeEventListener('pointerdown', offSearch); window.removeEventListener('otx:theme', onTheme); if (S.eng) S.eng.destroy(); if (S.pc) S.pc.destroy(); },
+      destroy() { window.removeEventListener('otx:hover-inst', onHoverInst); document.removeEventListener('keydown', onKey); document.removeEventListener('pointerdown', offSearch); window.removeEventListener('otx:theme', onTheme); if (S.eng) S.eng.destroy(); if (S.pc) S.pc.destroy(); },
     };
   },
 };

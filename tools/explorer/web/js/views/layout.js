@@ -3,6 +3,7 @@
 import { h, clear, fmt, fmtCount, icon, stateColor, hexRgb, levelOf, dieShort, shortName, debounce, STATE_LABEL, stateCls, fmtBytes } from '../core/dom.js';
 import { LayoutEngine, xfOf, xfCompose, xfChild, xfBox, SGN } from '../engine/layout-engine.js';
 import { layersTab } from './layers-panel.js';
+import { colourSlots, legendHud, macrosTab } from './macros.js';
 import { showBusy } from '../shell/shell.js';
 
 export default {
@@ -20,7 +21,8 @@ export default {
           const pk = hit.item.pack, [nn] = await eng.lookup(pk, 'net', [hit.shape.net]);
           eng.highlight(pk, hit.shape.net); S.selfPick = true;
           store.go({ node: hit.inst ? hit.inst.node : store.get().sel.node, inst: hit.inst ? hit.inst.name : null, net: nn ? nn.name : '#' + hit.shape.net });
-        } else if (hit.inst) { eng.highlight(null, 0); S.selfPick = true; store.go({ node: hit.inst.node, inst: hit.inst.name, net: null }); }
+        } else if (hit.mark && hit.inst) { eng.highlight(null, 0); S.selfPick = true; store.go({ node: hit.inst.node, inst: hit.mark.key, net: null }); }
+        else if (hit.inst) { eng.highlight(null, 0); S.selfPick = true; store.go({ node: hit.inst.node, inst: hit.inst.name, net: null }); }
         else { eng.highlight(null, 0); if (store.get().sel.net) store.go({ net: null }); }
       },
     });
@@ -33,7 +35,17 @@ export default {
       onclick: () => ctx.setParams({ unsigned: S.unsigned ? null : '1' }, { notify: true }) }, 'Unsigned');
     const rulerBtn = h('button.btn', { type: 'button', 'aria-pressed': 'false', title: 'Ruler (R): click two points', testid: 'layout-ruler', onclick: () => setRuler(!eng.rulerMode) }, icon('ruler'), 'Ruler');
     const clearBtn = h('button.btn.ghost', { type: 'button', title: 'Clear rulers and the net highlight (Esc)', testid: 'layout-clear', onclick: clearAll }, 'Clear');
-    tools.append(fitBtn, selBtn, unsBtn, rulerBtn, clearBtn);
+    const labBtn = h('button.btn', { type: 'button', 'aria-pressed': 'true', title: 'Hard-core name labels on the canvas', testid: 'layout-labels', onclick: () => { eng.show.macroLabels = !eng.show.macroLabels; labBtn.setAttribute('aria-pressed', String(eng.show.macroLabels)); ctx.setParams({ labels: eng.show.macroLabels ? null : '0' }); eng.requestUpdate(); } }, 'Labels');
+    const macroHud = h('div.hud.act', { hidden: true, testid: 'macro-legend', style: { whiteSpace: 'normal', left: '8px', bottom: '64px', maxWidth: '60%' } }); wrap.append(macroHud);
+    tools.append(fitBtn, selBtn, unsBtn, labBtn, rulerBtn, clearBtn);
+    S.macros = []; S.masters = [];
+    const partOf = (key) => String(key || '').split('/')[0];
+    const selectMacro = (key, zoom) => { const m = S.macros.find((x) => x.key === key); if (!m) return; S.selfPick = !zoom; store.go({ node: m.typeNode, inst: key }); if (zoom) eng.zoomTo(m.bb, 0.45); };
+    const onHoverInst = (e) => { const k = e.detail; if (!k) return eng.hoverMark(null); const st = store.get().sel, first = S.insts && S.insts.find((r) => r.node === st.node); eng.hoverMark(S.macroIdx && S.macroIdx.has(k) ? k : first ? first.name + '/' + k : null); };
+    window.addEventListener('otx:hover-inst', onHoverInst);
+    const macroTab = (el) => { const st = store.get().sel, part = partOf(st.inst), list = S.macros.filter((m) => m.partition === part); macrosTab(el, { macros: list, masters: colourSlotsOf(list), sel: st.inst, store, hover: (k) => eng.hoverMark(k), select: selectMacro,
+      note: 'Select a partition, or click a hard-core outline on the die, to list the hard cores placed in it.' }); };
+    const colourSlotsOf = (list) => { const n = new Map(); for (const m of list) n.set(m.master, (n.get(m.master) || 0) + 1); return S.masters.filter((x) => n.has(x.master)).map((x) => ({ master: x.master, ci: x.ci, count: n.get(x.master) })); };
     function setRuler(on) { eng.setRuler(on); rulerBtn.setAttribute('aria-pressed', String(on)); }
     function clearAll() { eng.clearMarks(); setRuler(false); eng.highlight(null, 0); if (store.get().sel.net) store.go({ net: null }); }
     const onKey = (e) => {
@@ -41,7 +53,7 @@ export default {
       if (e.key === 'f' || e.key === 'F') eng.fit(); else if (e.key === 'r' || e.key === 'R') setRuler(!eng.rulerMode); else if (e.key === 'Escape') clearAll();
     };
     document.addEventListener('keydown', onKey);
-    ctx.inspector.setTabs([{ id: 'layers', label: 'Layers', render: layersTab(() => eng, { onChange: () => ctx.setParams({ hide: eng.hiddenLayers().join('.') || null }) }) }]);
+    ctx.inspector.setTabs([{ id: 'layers', label: 'Layers', render: layersTab(() => eng, { onChange: () => ctx.setParams({ hide: eng.hiddenLayers().join('.') || null }) }) }, { id: 'macros', label: 'Macros', render: macroTab }]);
 
     function build() {
       const m = S.man, insts = [], items = [];
@@ -66,6 +78,11 @@ export default {
         p.cores.forEach((c, j) => { if (!c.core || !m.packs[c.core]) return; const cx = xfCompose(xf, c.origin, c.orient); items.push({ key: 'i' + ii + 'c' + j, ii, pack: c.core, level: 'core', xf: cx, bb: xfBox(cx, ...m.packs[c.core].die), name: r.name, cname: c.name, state: m.packs[c.core].state }); });
       });
       S.insts = insts; S.items = items; eng.instVer = (eng.instVer || 0) + 1;
+      // every drawn hard core is a macro with an identity: <partition>/<instance>, coloured by its core type
+      S.macros = items.filter((i) => i.level === 'core').map((i) => { const cn = S.D.nodes[i.pack]; return { key: i.name + '/' + i.cname, partition: i.name, typeNode: insts[i.ii].node, master: cn ? cn.name : shortName(i.pack), coreId: i.pack, state: i.state, bb: i.bb, orient: i.xf.sx * i.xf.sy < 0 ? 'mirrored' : 'not mirrored',
+        where: i.plan ? 'plan placement (the type has no routed database drawn)' : 'exact, from the routed database of the type' }; });
+      S.masters = colourSlots(S.macros); S.macroIdx = new Map(S.macros.map((m) => [m.key, m]));
+      S.marks = S.macros.map((m) => ({ key: m.key, bb: m.bb, label: m.key.slice(m.partition.length + 1), sub: m.master, ci: m.ci, tip: [`hard core ${m.master} · ${STATE_LABEL[m.state] || m.state}`, `in ${m.partition} · ${m.where}`, `${fmt(m.bb[2] - m.bb[0], 2)} × ${fmt(m.bb[3] - m.bb[1], 2)} µm`, 'click to select'] }));
       return { outline: [0, 0, m.outline[0] / 1000, m.outline[1] / 1000], insts, items, packs: m.packs };
     }
     function paintHead() {
@@ -81,7 +98,9 @@ export default {
     }
     function rings(st) {
       const { node, inst } = st.sel, lvl = levelOf(node), out = [];
-      if (lvl === 'type') for (const r of S.insts) if (r.node === node) out.push({ bb: r.bb, strong: r.name === inst });
+      const part = partOf(inst), mk = inst && inst.includes('/') ? S.macroIdx.get(inst) : (inst && !S.insts.some((r) => r.name === inst) ? S.macros.find((m) => m.typeNode === node && m.key.endsWith('/' + inst)) : null);
+      eng.selectMark(mk ? mk.key : null); S.selMacro = mk || null;
+      if (lvl === 'type') for (const r of S.insts) if (r.node === node) out.push({ bb: r.bb, strong: r.name === part });
       if (lvl === 'core') for (const it of S.items) if (it.level === 'core' && it.pack === node) out.push({ bb: it.bb, strong: false });
       eng.selBox = out.length ? out : null; eng.requestUpdate();
       selBtn.disabled = !out.length;
@@ -89,6 +108,7 @@ export default {
     }
     function zoomSel(force) {
       const st = store.get(), out = rings(st); if (!out.length) return;
+      if (S.selMacro) { eng.zoomTo(S.selMacro.bb, 0.45); return; }
       const strong = out.filter((q) => q.strong), set = strong.length ? strong : out.length === 1 || force ? out : null;
       if (!set) return;
       const bb = set.reduce((a, q) => [Math.min(a[0], q.bb[0]), Math.min(a[1], q.bb[1]), Math.max(a[2], q.bb[2]), Math.max(a[3], q.bb[3])], [Infinity, Infinity, -Infinity, -Infinity]);
@@ -104,20 +124,23 @@ export default {
           try { [S.man, S.D] = await Promise.all([api.compose(die), api.die(die)]); } catch (e) { busy.remove(); throw e; }
           busy.remove(); if (my !== S.seq || !eng.deck) return;
           S.die = die; S.unsigned = uns; fresh = true;
-          eng.setScene(build());
+          eng.setScene(build()); eng.setMarks(S.marks); legendHud(macroHud, S.masters, 'Hard cores');
           if (st.params.hide) eng.setHidden(st.params.hide.split('.'));
           const cam = (st.params.cam || '').split(',').map(Number);
           if (cam.length === 3 && cam.every(Number.isFinite)) eng.setCam(cam[0], cam[1], cam[2]);
           else if (inst || levelOf(node) === 'type') { rings(st); zoomSel(false); }
-        } else if (uns !== S.unsigned) { S.unsigned = uns; const sc = build(); eng.insts = sc.insts; eng.setItems(sc.items); }
+        } else if (uns !== S.unsigned) { S.unsigned = uns; const sc = build(); eng.insts = sc.insts; eng.setItems(sc.items); eng.setMarks(S.marks); legendHud(macroHud, S.masters, 'Hard cores'); }
         unsBtn.setAttribute('aria-pressed', String(S.unsigned));
         paintHead(); rings(st);
         if (!fresh && prev && (prev.sel.node !== node || prev.sel.inst !== inst) && !S.selfPick) zoomSel(false);
         S.selfPick = false;
         if (!net) eng.highlight(null, 0);
+        if (st.params.labels === '0') { eng.show.macroLabels = false; labBtn.setAttribute('aria-pressed', 'false'); }
+        if ((S.selMacro ? S.selMacro.key : null) !== S.lastMacro) { S.lastMacro = S.selMacro ? S.selMacro.key : null; if (S.selMacro) ctx.inspector.show('macros'); }
+        if (ctx.inspector.current() === 'macros') ctx.inspector.show('macros');
         ctx.setScope(`${dieShort(die)} · routed die map · plan ${S.man.plan.sha || ''}`);
       },
-      destroy() { document.removeEventListener('keydown', onKey); eng.destroy(); },
+      destroy() { window.removeEventListener('otx:hover-inst', onHoverInst); document.removeEventListener('keydown', onKey); eng.destroy(); },
     };
   },
 };
