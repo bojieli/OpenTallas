@@ -354,6 +354,20 @@ def place_mem_gb(cfg, die, item):
     return int(opt(cfg, die, "place_mem_gb"))
 
 
+def pick_charge_gb(cfg, die, item):
+    """KIT-OPS-4 11-14 (ADMIT-TUNE-1: epyc8 / epyc10 filled to 39 waiters while epyc9 / epyc2 had 190-215 GB free): GB one new launch
+    books on its picked gen host until ot-run reports it.  A launch queues PLACE (place_mem_gb) and its gen / bind / lint stages on
+    that host, so the burst charge is the larger of the place memory and the gen + bind + lint peak, times pick_charge_factor
+    (die > global option, default 1.5; 1 = old behaviour), so one tick's burst spreads once a host's headroom is used."""
+    base = max(place_mem_gb(cfg, die, item),
+               int(opt(cfg, die, "gen_mem_gb")) + int(opt(cfg, die, "bind_mem_gb")) + int(opt(cfg, die, "lint_mem_gb")))
+    try:
+        f = float(opt(cfg, die, "pick_charge_factor") or 1.5)
+    except (TypeError, ValueError):
+        f = 1.5
+    return int(round(base * max(f, 1.0)))
+
+
 def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
@@ -2123,7 +2137,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     # item builds from its own source tree (cp -al copy plus real copies of the approved files); the die src stays shared.
     item_kr = dict(d.get("kit_rtl") or {}, **(item_in.get("kit_rtl") or {})) if item_in.get("kit_rtl") else (d.get("kit_rtl") or {})
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": item_in.get("plan") or d["plan"],
-            "gen_host": pick_gen_host(cfg, die, take=place_mem_gb(cfg, die, item),
+            "gen_host": pick_gen_host(cfg, die, take=pick_charge_gb(cfg, die, item),
                                       threads=int(opt(cfg, die, "place_threads")), item=item),
             "src": item_in.get("src") or d["src"], "src_sha": item_in.get("src_sha") or d.get("src_sha", ""), "src_base": d.get("src_base", ""), "src_overlay": d.get("_src_overlay", ""), "queue_src": item_in.get("queue_src") or d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": item_kr,
