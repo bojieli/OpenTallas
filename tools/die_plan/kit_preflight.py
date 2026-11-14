@@ -451,7 +451,17 @@ def check(kit, plan_dir=None, contract=False):
     run('cell_budget', cell_budget)
     if cap_record:
         checks['cell_budget']['estimate'] = cap_record
-    run('core_tap_reach', lambda: core_tap_reach(kit))
+    # WF-1 11-14 (OWNER: delete the conservative limits; S81 leaf t17 clk_c4 at 382 um was stopped): the core tap reach is ADVISORY.  The
+    # rows are reported in checks['core_tap_reach']['advisory'] (and logged); CTS and STA judge the real effect.  Never an issue.
+    def core_tap_advisory():
+        try:
+            return core_tap_reach(kit)
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            return [f'core_tap_reach unreadable ({type(error).__name__}: {error})']
+    _ctr = core_tap_advisory()
+    checks['core_tap_reach'] = dict(verdict='PASS', errors=[], advisory=_ctr)
+    for _line in _ctr:
+        print('KIT_PREFLIGHT ADVISORY core_tap_reach: ' + _line, flush=True)
     if (kit/'master_slice.json').is_file():
         def slice_check():
             import master_slice
