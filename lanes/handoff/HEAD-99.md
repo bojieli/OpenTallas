@@ -1,0 +1,11 @@
+
+# HEAD-99 handoffs (11-14 00:2x PST)
+## -> TYPE-HDCTLN (hd_ctl_n)
+- Wave: hd_ctl_n runs on the pgcap src (kw45/src_head_rp21z_pgcap1d724b73, OT_PG_TRACK_TRUTH=1), plan rp21z5, retry key hd_ctl_n@14 in place.
+- Private proof (HEAD-98 pgtt kit, epyc8 head-98/ctl_n/gen/hd_ctl_n): DRC 0, antenna 0, TT -32.62/12 ep (passes -42), FF hold -18.32/61 ep (5 core-owned at -17.67, rest port), DRV TT slew 341 (advisory).
+- Late ECO route-keep (eco99_ctl_n_b) FAILED DRT-0206 checkConnectivity (hold cells on port nets); same failure as HE-EPC try 1. What worked on HE-EPC: eco_loop.py run --from grt --owner-override (one extra iteration COORD-approved for near misses <= -10 ps; second iteration took -3.27 -> +2.3). Tools: src .../tools/die_plan/eco_loop.py (needs physical/common_flow next to it; copy on epyc8 at head-99/src_tools). ot-run needs the python3 -I eco_loop.py run --kit K --runner RUN_KIT.sh --out NEW_DIR --from grt --mem 64 --cpus 16 --owner-override (--out must not exist).
+## -> TYPE-HDSERDES (hd_serdes)
+- The 202.449 > 200 secondary-clock radius check is NOT in the plan or the wave src: it is the private bundle head-97/serdes_primary/secondary_bundle/tools/die_plan/secondary_clock.py (spec radius_um <= 200 hard-coded) + secondary_clock_taps.tcl 'exceeds declared local bound'. The plan's hd_serdes clock.tap_radius_um=200 only feeds density taps.
+- Private pd3 kit epyc7 head-97/kitsserdespd3/g_hd_serdes/hd_serdes: kit-side spec radius_um 210 (orig .pre_h98_r210), primary overlay clk Y 20.384 (LEC proof 7bd77a1b). CTS+GRT done, in detailed route; log intel2 ~/tmp/h98_serdes_pd3_route.log (unit epyc7). If it signs off, the secondary bundle + 210 must reach the wave src (new snapshot over src_head_rp21z_pgcap1d724b73 on epyc7/intel1/epyc10 + kit_wave.json s81_head src/kit_rtl, via KIT-OPS-3); recipe = what I did for FLOW-PGCAP-1 (cp/rsync -a --link-dest snapshot, patch, rsync to gen hosts; never cp -al, results/ has a self-symlink loop).
+- BMQ provider (SerDes SC child): routed DRC 0, TT +31.79, FF -7.57 (DRV slew + io_hold advisory only), kit epyc7 head-97/serdes_primary/sc_successor/bmq_provider_prep/gen/ot_s81hd_sc_bmq_head; posted to the PROFILE-1 RE-JUDGE as candidate; follow it.
+## I keep: host_e, hd_lep0N release, mesh pregrt hold rebuild, HEAD die-level (DIE-PROTO-1).
