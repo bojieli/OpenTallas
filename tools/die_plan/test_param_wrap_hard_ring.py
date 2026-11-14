@@ -133,3 +133,41 @@ def test_signed_hard_wide_ring_keeps_replication_and_start_wires(fanout):
     assert receipt['reader_start']['ring_reset_copies_added_cycles'] == 0
     assert CAB.strap_ties(t['count_aligned'], p) == before
     param_wrap.wrap_bound(rtl, hcs)
+
+
+@pytest.mark.parametrize('fanout', [0, 8, 32])
+@pytest.mark.parametrize('write_chunk', [16, 64])
+def test_signed_hard_d8_write_chunk_keeps_exact_wrapper(fanout, write_chunk):
+    """A signed D8/chunk16 child must not become the soft default chunk64."""
+    import count_align_bind as CAB
+    from test_cland_ring_fanout import _reader_start
+    p, t = _vehicle(landing_ring_fanout_max=fanout, ring_hold=dict(write_edge='fall'))
+    _reader_start(p)
+    for row in p['ports'] + t['ports']:
+        row['width'] = 2103
+    for row in t['count_aligned']['ports'].values():
+        row['depth'] = 8
+    p['partition_types']['B']['count_straps'][0]['width'] = CAB.strap_kw(8)
+    body = B_BODY.replace('[4:0]', '[2103:0]')
+    params = dict(W=2104, DEPTH=8, STATUS_REG=1, WFALL=1, WREG=1,
+                  DSREP=8, WRITE_CHUNK=write_chunk, RSTREP=34, PLACEREP=1)
+    hcs = _hard(p, 'ot_dp_clk_landing_cas', params)
+    before = CAB.strap_ties(t['count_aligned'], p)
+    lg = Landings(p, t)
+    rtl = lg.type_rtl('B', body)
+    assert _params(rtl) == ('ot_dp_clk_landing_cas', params)
+    assert f'.WRITE_CHUNK({write_chunk})' in rtl
+    assert lg.reset_placements['B']['y']['hard_child_params'] == params
+    assert CAB.strap_ties(t['count_aligned'], p) == before
+    wrapped, receipt, sources = param_wrap.wrap_bound(rtl, hcs)
+    assert receipt[0]['cycles_changed'] == 0
+    assert param_wrap.param_text(params) in sources['b_cland_y']
+
+
+def test_signed_write_chunk_does_not_hide_freg_mismatch():
+    base, params = _signed_child()
+    params = dict(params, WRITE_CHUNK=16, FREG=1)
+    p, t = _vehicle()
+    _hard(p, base, params)
+    with pytest.raises(LandingError, match='signed hard child'):
+        Landings(p, t).type_rtl('B', B_BODY)
