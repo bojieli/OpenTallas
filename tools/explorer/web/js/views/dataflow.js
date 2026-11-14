@@ -155,7 +155,7 @@ export default {
         h('p.note', `Reach verdicts use ${m.reach} µm per cycle${m.explicit ? ' and the register stages of the record' : '; the record carries no register placement, so amber means relays are needed'}.`)));
     }
     ctx.inspector.setTabs([{ id: 'links', label: 'Links', render: linksTab }]);
-    const onKey = (e) => { if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && (e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey) pc.fit(); };
+    const onKey = (e) => { if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && e.target !== pc.cv && (e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey) pc.fit(); };
     document.addEventListener('keydown', onKey);
     const onTheme = () => pc.redraw(); window.addEventListener('otx:theme', onTheme);
 

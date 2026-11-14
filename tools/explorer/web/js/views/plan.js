@@ -81,6 +81,8 @@ export default {
     }
     ctx.inspector.setTabs([{ id: 'overlays', label: 'Overlays', render: overlaysTab }]);
     const onTheme = () => pc.redraw(); window.addEventListener('otx:theme', onTheme);
+    const onKey = (e) => { if (!/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) && e.target !== pc.cv && (e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey) pc.fit(); };   // F fits wherever the focus is
+    document.addEventListener('keydown', onKey);
 
     return {
       async update(st) {
@@ -106,7 +108,7 @@ export default {
         paintLegend(); if (ctx.inspector.current() === 'overlays') ctx.inspector.show('overlays');
         pc.redraw(); readout();
       },
-      destroy() { window.removeEventListener('otx:theme', onTheme); pc.destroy(); },
+      destroy() { document.removeEventListener('keydown', onKey); window.removeEventListener('otx:theme', onTheme); pc.destroy(); },
     };
   },
 };

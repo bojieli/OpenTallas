@@ -60,7 +60,7 @@ export function mountNavigator(host) {
     }
     if (cores.length) tree.append(...group('cores', 'Hard cores', cores.length, cores.map((n) => row(n))).flat(3).filter(Boolean));
     if (!types.length && !cores.length) tree.append(h('div.more', f ? `Nothing matches “${f}”.` : 'No designs.'));
-    const cur = tree.querySelector('[aria-current="true"]'); if (cur && S.scroll) { cur.scrollIntoView({ block: 'nearest' }); S.scroll = false; }
+    const cur = tree.querySelector('[aria-current="true"]'); if (cur && S.scroll) { cur.scrollIntoView({ block: S.node && S.node.includes('.t.') && cur.dataset.node === S.node ? 'start' : 'nearest' }); S.scroll = false; }   // a selected type goes to the top so its macros are in view
   }
   async function update(st) {
     const { die, node } = st.sel;
