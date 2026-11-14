@@ -63,6 +63,42 @@ if [ -f "$S" ] && ! grep -qF "OT_GRT_EST_FALLBACK" "$S"; then
   sed -i -E 's#^( *)log_cmd estimate_parasitics -global_routing(.*)$#\1if {[catch {log_cmd estimate_parasitics -global_routing\2} ot_est_e]} { puts "OT_GRT_EST_FALLBACK: estimate_parasitics -global_routing failed ($ot_est_e); placement parasitics, detailed route follows"; log_cmd estimate_parasitics -placement } ;\# OT_GRT_EST_FALLBACK#' "$S"
 fi
 # OT_GRT_EST_FALLBACK end
+# OT_GRT_ALLOW_CONG_HOOK begin
+# WF-1 11-14 (COORD class fix, S81-CORES-2 / a85cd525dff: -allow_congestion in GLOBAL_ROUTE_ARGS covers only the FIRST global_route; every
+# later 'global_route -end_incremental' inside repair_timing / repair_design re-parses its flags and raises GRT-0232 again, exit 2 after a
+# 0-overflow main route): whenever the kit asks for allow-congestion (config.mk mentions it, or OT_GRT_ALLOW_CONGESTION=1) the stage
+# keeps it on for every global_route and before each repair call, via a hook sourced ahead of the PRE GLOBAL_ROUTE step of the disposable
+# global_route.tcl copy.  Nothing else changes (no gate, margin or repair setting).
+if [ -f "$S" ] && ! grep -qF "OT_GRT_ALLOW_CONG_HOOK" "$S" && { grep -Eq 'allow_congestion|OT_GRT_ALLOW_CONGESTION' "$W/config.mk" 2>/dev/null || [ "${OT_GRT_ALLOW_CONGESTION:-0}" = 1 ]; }; then
+  if grep -q '^ *source_step_tcl PRE GLOBAL_ROUTE' "$S"; then
+    [ -f "$W/grt_allow_cong.tcl" ] || cat > "$W/grt_allow_cong.tcl" <<'OT_AC_TCL'
+# S81-CORES-2 11-14 (owner: remove conservative limits). bksel_q e10 run 1 and run 2: the full GRT reaches 0 overflow,
+# then the incremental reroute inside repair_timing ends at 0-1 / 1 / 39-42 overflow and raises GRT-0232. The
+# -allow_congestion given in GLOBAL_ROUTE_ARGS reaches only the first full route: every later 'global_route
+# -end_incremental' call re-parses its flags and clears it. This hook keeps allow-congestion on for the whole stage, so
+# the small residue goes to DRT. Nothing else changes (no gate, margin or repair setting).
+if {[llength [info commands ::grt::set_allow_congestion]] && ![llength [info commands ::ot_ac_gr_orig]]} {
+  rename ::global_route ::ot_ac_gr_orig
+  proc ::global_route {args} {
+    if {[lsearch -exact $args -allow_congestion] < 0} { lappend args -allow_congestion }
+    set rc [catch {uplevel 1 [list ::ot_ac_gr_orig {*}$args]} res opts]
+    ::grt::set_allow_congestion 1
+    return -options $opts $res
+  }
+  foreach c {repair_timing repair_design} {
+    if {[llength [info commands ::$c]]} {
+      rename ::$c ::ot_ac_${c}_orig
+      proc ::$c {args} [format {::grt::set_allow_congestion 1; uplevel 1 [list ::ot_ac_%s_orig {*}$args]} $c]
+    }
+  }
+  ::grt::set_allow_congestion 1
+  puts "OT_GRT_ALLOW_CONGESTION hook: global_route/repair_timing/repair_design keep allow-congestion on (S81-CORES-2)"
+}
+OT_AC_TCL
+    sed -i "s|^\( *\)source_step_tcl PRE GLOBAL_ROUTE|\1source $W/grt_allow_cong.tcl ;# OT_GRT_ALLOW_CONG_HOOK\n&|" "$S"
+  else echo "OT_GRT_ALLOW_CONG_HOOK inactive: no PRE GLOBAL_ROUTE step in $S"; fi
+fi
+# OT_GRT_ALLOW_CONG_HOOK end
 # KW-FIX-35-F2 11-08 (FLOW class F follow-up, CTS DPL-0033): CTS-stage legalization uses the kit's own 3_5 legalizer.
 # ORFS erases DETAIL_PLACEMENT_ARGS outside the place stage, so stock cts.tcl (and clk_leaf_repeat) call a bare
 # detailed_placement = the negotiation legalizer, which stalled with residual overlaps where 3_5's diamond pass was 100 %
@@ -179,8 +215,11 @@ ff_check() {   # sets gstop, prints the class line
   line=$(timeout 120 python3 -I "$FF" judge "$W" "$T0" "$W/run/failfast_state.json" 2>/dev/null | head -n 1)
   [ -n "$line" ] || return 1
   echo "$line"
-  case "$line" in OT_DRT_NO_PROGRESS*) gstop=drt_no_progress;; *) gstop=hold_structural;; esac
-  return 0
+  # WF-1 11-14 (OWNER: delete the conservative limits; gunit g2 / bksel m7 were killed with exit 21 mid-repair): a hold-structural line
+  # (hold repair over N h / stalled / buffer cap) is only LOGGED now; the stage is never stopped for it.  DRT no-progress still stops.
+  case "$line" in OT_DRT_NO_PROGRESS*) gstop=drt_no_progress; return 0;; esac
+  [ -n "${ff_hold_logged:-}" ] || { echo "OT_HOLD_STRUCTURAL_LOGGED: not a stop (no cap, WF-1 11-14); the stage continues"; ff_hold_logged=1; }
+  return 1
 }
 watch_run() {
   stall=0; gstop=""; tpost=""
