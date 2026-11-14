@@ -30,7 +30,8 @@ PCACHE = STATE / 'plan_now_plans.json'
 HUB = os.environ.get('PLAN_NOW_HUB', 'intel2')
 sys.path.insert(0, str(HERE))
 import fleet_discover
-try: HOSTS = [h['id'] for h in fleet_discover.config_hosts() if h.get('ssh')]   # MONITOR-FIX 11-06: a fixed list skipped epyc5/epyc6 kits
+_SKIP = set(filter(None, os.environ.get('PLAN_NOW_SKIP_HOSTS', '').split(',')))   # EXPLORER-U0: terminated hosts set in the service env, not a code fork
+try: HOSTS = [h['id'] for h in fleet_discover.config_hosts() if h.get('ssh') and h['id'] not in _SKIP]   # MONITOR-FIX 11-06: a fixed list skipped epyc5/epyc6 kits
 except Exception: HOSTS = ['intel1', 'intel2', 'epyc2', 'epyc4', 'epyc5', 'epyc6']
 SSH = ['ssh', '-T', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=10', '-o', 'ControlPath=none']
 TARGET = dict(s81='DeepSeek ROM', s81_head='DeepSeek ROM', qwen_compute='Qwen ROM', qwen_kvsys='Qwen ROM', hbm='HBM accelerator')
