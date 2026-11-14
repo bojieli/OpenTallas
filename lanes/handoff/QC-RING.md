@@ -1,0 +1,1 @@
+- 2026-11-14 00:25 PST QC-RING HANDOFF: waiting (bg waiter on intel0-local session) for signoff.json of 4 ring kits at epyc10 die-qc-103/rk/*/kits/*synth0 (launched by QC-103). Next: verify R-MINIMAL (DRC0, TT setup>=-42, hold>=0), run LATCHECK + qc_r8_pinned.sh check on s29q103D8c (epyc9 qc-s28-hf1c/bind), then release cbn_q00 to KIT-OPS-3 or build privately.
