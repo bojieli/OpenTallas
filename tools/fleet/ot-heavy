@@ -110,11 +110,12 @@ while :; do
       [ $_age -lt "${DIRECT_FRESH_S:-300}" ] && _pend=$(( _pend + _m ))
     done
     _avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)
-    if [ $(( _avail - _pend )) -ge $(( MEM + 32 )) ]; then
+    _dfloor=${INV_HEADROOM_GB:-32}; case "$_dfloor" in ""|*[!0-9]*) _dfloor=32;; esac; [ "$_dfloor" -lt 32 ] && _dfloor=32   # DIRECTFLOOR_1114 ADMIT-TUNE-1: --direct respects the host floor (earlyoom kills on epyc8/10)
+    if [ $(( _avail - _pend )) -ge $(( MEM + _dfloor )) ]; then
       V=OK; RES=$MEM; _short=0; WHY="DIRECT_1107 available $_avail GB, fresh earlier direct $_pend GB, past gate: $WHY"
       echo "$UNIT $MEM" > "$D/direct.$UNIT"
     else
-      V=NO; RES=$MEM; WHY="direct job: MemAvailable $_avail GB - fresh (<${DIRECT_FRESH_S:-300} s) earlier direct $_pend GB < $MEM + 32 GB"
+      V=NO; RES=$MEM; WHY="direct job: MemAvailable $_avail GB - fresh (<${DIRECT_FRESH_S:-300} s) earlier direct $_pend GB < $MEM + $_dfloor GB"
     fi
   fi
   # LOADGATE_1110 (KW-FIX-44, COORD 11-10 18:3x: epyc8 load1 507 on 96 threads, every job ~5x slow, while ot-run showed
