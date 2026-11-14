@@ -4213,7 +4213,8 @@
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
     "OT_PREGRT_FF_HOLD_AUTO": "100",
-    "OT_MAX_BUFFER_PERCENT": "100"
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -7001,7 +7002,13 @@
     "col_h9_r0_p5__t1__pvc93af856@4",
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@5",
     "ot_s81sl_leaf__t62@8",
-    "dsdv_slice_c3x_C__t1@23"
+    "dsdv_slice_c3x_C__t1@23",
+    "col_h9_r1__t1__clf32cde8d__pvee46d7b8@2",
+    "col_h9_r2__t1__cl774acf45__pvea45273b@1",
+    "col_h9_r2__t1__clc9ad8f7e__pv45d0c698@1",
+    "col_h9_r2__t1__clce45cab5__pv2f87774f@1",
+    "col_h9_r2__t1__clce45cab5__pv37074264@1",
+    "serdes__t2@27"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -21904,7 +21911,8 @@
     "OT_CORE_TAP_REACH_UM": "0",
     "OT_PREGRT_FF_HOLD_AUTO": "100",
     "OT_TAP_MAX_SINKS": "100000",
-    "OT_MAX_BUFFER_PERCENT": "100"
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -32990,7 +32998,8 @@
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
     "OT_PREGRT_FF_HOLD_AUTO": "100",
-    "OT_MAX_BUFFER_PERCENT": "100"
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -42450,7 +42459,8 @@
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
     "OT_PREGRT_FF_HOLD_AUTO": "100",
-    "OT_MAX_BUFFER_PERCENT": "100"
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0"
    },
    "item_inputs_prev_kw45_s28a": {
     "cbf_q00__cl1b5a6458": null,
@@ -60424,7 +60434,8 @@
    "die_gen_env_prev_kitops3_lb": {},
    "die_gen_env": {
     "OT_CORE_TAP_REACH_UM": "0",
-    "OT_MAX_BUFFER_PERCENT": "100"
+    "OT_MAX_BUFFER_PERCENT": "100",
+    "OT_GRT_POST_MAX_S": "0"
    },
    "src_probe": false
   }
