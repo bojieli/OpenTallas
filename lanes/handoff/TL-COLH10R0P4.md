@@ -10,3 +10,7 @@
 - 2660187bad7f (pv5b623e07) is NOT blocked on LEC: container dpkit-...-225259 (epyc9) is in 5_1_grt, openroad 108% CPU, log at extra iteration 30/30 (congestion not converging, GRT-0116 likely next). A second container dpkit-...-3888328 (epyc7, 5.7 h, 93% CPU) also runs GRT for the same item, at extra iteration 10/30; the LEC reuse-proof owner id 2563149 is not a live container (stale reference, harmless).
 - ae2abae11aa1 (pv07945c1e): a1.log last 09:47, still waiting on memory admission (epyc9 load 115/96, waiters 43). Not yet admitted; ADMIT-TUNE-1 did not free it.
 - If epyc9 GRT fails: read overflow map, apply COLH9R1 forms (UTIL 0.3-0.4, MAX_LAYER M8/M9), share with TL-COLH10R0P1.
+## 10:19 B3x2 forms
+- No B3x2 attempt exists for col_h10_r0_p4 pvs (wave launches only under old plan 4b7f1e087434; B3x2b plan f272fe26b84d contains the same pv names). So ae2abae11aa1 NOT cancelled (COORD condition unmet).
+- epyc7 -3888328: sealed ot-job col_h10_r0_p4__t1__pv5b623e07-route-loved-redfish-3822634 (started 06:33, kit copy_back intel1->epyc8, run_kit.sh route 48 8), a second route of the same old-plan kit; its ot-run client is not on intel2/intel1/epyc*.
+- Private B3x2b forms launched on intel2 (kit_wave.py run-item, specs ~/type-s81-colh10r0p4/{fa,fb,fc}, work epyc10 /srv/opentallas-scratch2/claude/tl-colh10r0p4/<k>): fa UTIL0.4 M8, fb UTIL0.3 M9, fc UTIL0.5 M9, all OT_GRT_ALLOW_CONGESTION=1.
