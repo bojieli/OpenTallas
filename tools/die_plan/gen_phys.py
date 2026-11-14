@@ -5033,6 +5033,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
            # DIE-HEAD-59 11-03: opt-in per item (kit_wave item_env reaches gen only): hold_gate.tcl stop base
            *([f"export OT_HOLD_STOP_PS = {os.environ['OT_HOLD_STOP_PS']}"] if os.environ.get("OT_HOLD_STOP_PS") else []),
+           # OWNER 11-13 R-MINIMAL / EXPERT-REVIEW-3 (B) (PROFILE-1): in-kit stops that end a build before route are ADVISORY
+           # -- the post-CTS structural FF hold stop never stops (stop base -1e6 ps: the gate still measures and logs), the
+           # failfast HOLD_STALL rule is advisory (the hold guard ends the repair, the kit goes on to DRT; internal FF hold
+           # is judged after route), and the post-GRT time cap is 12 h (was 6 h).  The early-congestion stop is kept.
+           # OT_SIGNOFF_PROFILE=legacy at gen time keeps the old stops.
+           *([] if os.environ.get("OT_SIGNOFF_PROFILE", "minimal").strip().lower() == "legacy" else
+             ([] if os.environ.get("OT_HOLD_STOP_PS") else ["export OT_HOLD_STOP_PS = -1000000"])
+             + ["export OT_HOLD_STRUCTURAL_ADVISORY = 1", "export OT_GRT_POST_MAX_S = 43200"]),
            # KW-FIX-43 11-10 LAND-RESERVE: opt-in per item (item_env OT_LAND_RESERVE=1): face_flops.tcl reserves the non-ring
            # landing windows before the station grid and landing_placement.tcl grows start / literal-reset windows
            *(["export OT_LAND_RESERVE = 1"] if os.environ.get("OT_LAND_RESERVE") == "1" else []),

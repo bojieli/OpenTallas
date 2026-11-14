@@ -25,6 +25,29 @@ import os
 
 PERIOD_PS = 833.0
 SETUP_TOL_PS = 42.0          # 5 % of 833 ps
+# R-PERIOD (OWNER 11-13 "we can accept cost in area, performance, clock frequency"; EXPERT-REVIEW-3): each die signs off
+# at P_die (default 1000 ps; COORD may raise one die, e.g. 1250).  Gate 2 = routed TT WNS at 833 ps >= -(P_die - 833) - 42.
+# Override: env OT_DIE_PERIOD_PS (all dies) or OT_DIE_PERIOD_PS_<DIE> (DIE = s81, s81_head, qwen_compute, qwen_kvsys, hbm;
+# upper case), e.g. OT_DIE_PERIOD_PS_QWEN_KVSYS=1250.
+DIE_PERIOD_DEFAULT_PS = 1000.0
+DIE_ALIAS = {"qc": "qwen_compute", "kv": "qwen_kvsys", "head": "s81_head", "results": "s81_head", "cp1": "s81"}
+
+
+def die_period_ps(die=None):
+    """P_die of a die (R-PERIOD); legacy profile: 833"""
+    if not is_minimal():
+        return PERIOD_PS
+    d = DIE_ALIAS.get(str(die or "").lower(), str(die or "").lower())
+    for k in ([f"OT_DIE_PERIOD_PS_{d.upper()}"] if d else []) + ["OT_DIE_PERIOD_PS"]:
+        v = _num(os.environ.get(k))
+        if v is not None:
+            return v
+    return DIE_PERIOD_DEFAULT_PS
+
+
+def setup_tolerance_ps(die=None):
+    """|min TT WNS at 833 ps| that still signs off: (P_die - 833) + 42"""
+    return max(0.0, die_period_ps(die) - PERIOD_PS) + SETUP_TOL_PS
 HOLD_MIN_PS = 0.0            # internal FF hold, no tolerance
 MINIMAL_GATES = ("drc", "setup_tt", "hold_ff")
 PROFILES = ("minimal", "legacy")
@@ -95,18 +118,31 @@ def achieved_period_ps(tt_wns):
     return None if tt_wns is None else round(PERIOD_PS - min(0.0, tt_wns), 2)
 
 
-def gate_verdicts(drc, tt, ff):
+def gate_verdicts(drc, tt, ff, tol=SETUP_TOL_PS):
     return dict(drc="NOT RUN" if drc is None else ("PASS" if drc == 0 else "FAIL"),
-                setup_tt="NOT RUN" if tt is None else ("PASS" if tt >= -SETUP_TOL_PS else "FAIL"),
+                setup_tt="NOT RUN" if tt is None else ("PASS" if tt >= -tol else "FAIL"),
                 hold_ff="NOT RUN" if ff is None else ("PASS" if ff >= HOLD_MIN_PS else "FAIL"))
 
 
-def judge(rec):
+def record_die(rec):
+    """the die of a record: rec['die'] (autopilot job / summary) or the kit path (.../kit-wave/<die>/... | die_plan/<die>/)"""
+    if rec.get("die"):
+        return rec["die"]
+    import re
+    k = str(((rec.get("inputs") or {}).get("kit")) or rec.get("path") or rec.get("base") or "")
+    m = re.search(r"/kit-wave/(s81_head|s81|qwen_compute|qwen_kvsys|hbm)/", k) or \
+        re.search(r"die_plan/(s81_head|s81|qwen_compute|qwen_kvsys|hbm)/", k)
+    return m.group(1) if m else None
+
+
+def judge(rec, die=None):
     """R-MINIMAL judgement of one record (does not modify it).
     -> dict(verdict SIGNED|NOT SIGNED, gates, reasons (blocking), advisories, tt_wns_ps, ff_hold_wns_ps, drc,
             achieved_period_ps, setup_within_tolerance, legacy_verdict)"""
     drc, tt, ff, src = metrics(rec)
-    gates = gate_verdicts(drc, tt, ff)
+    die = die or record_die(rec)
+    tol = setup_tolerance_ps(die)
+    gates = gate_verdicts(drc, tt, ff, tol)
     port_only = ff is not None and ff < HOLD_MIN_PS and internal_hold_port_only(rec)
     if port_only:
         gates["hold_ff"] = "PASS"          # internal reg-to-reg hold >= 0; the port-start hold is the die STA's (advisory)
@@ -114,7 +150,8 @@ def judge(rec):
     if gates["drc"] != "PASS":
         reasons.append(f"drc: {gates['drc']}" + ("" if drc is None else f" {drc}"))
     if gates["setup_tt"] != "PASS":
-        reasons.append(f"setup_tt: {gates['setup_tt']}" + ("" if tt is None else f" WNS {tt:+.2f} ps < -{SETUP_TOL_PS:g}"))
+        reasons.append(f"setup_tt: {gates['setup_tt']}" + ("" if tt is None else f" WNS {tt:+.2f} ps < -{tol:g} "
+                                                            f"(P_die {die_period_ps(die):g} ps)"))
     if gates["hold_ff"] != "PASS":
         reasons.append(f"hold_ff: {gates['hold_ff']}" + ("" if ff is None else f" WNS {ff:+.2f} ps < {HOLD_MIN_PS:g}"))
     adv = []
@@ -130,7 +167,8 @@ def judge(rec):
     return dict(verdict="SIGNED" if not reasons else "NOT SIGNED", profile="minimal", gates=gates, reasons=reasons,
                 advisories=adv + ([f"hold_ff: port-start hold {ff:+.2f} ps (io_hold_parent, die STA)"] if port_only else []),
                 drc=drc, tt_wns_ps=tt, ff_hold_wns_ps=ff, hold_source=src, hold_port_only=port_only,
-                setup_within_tolerance=tt is not None and -SETUP_TOL_PS <= tt < 0,
+                setup_within_tolerance=tt is not None and -tol <= tt < 0, die=die, die_period_ps=die_period_ps(die),
+                setup_tolerance_ps=tol,
                 achieved_period_ps=achieved_period_ps(tt), legacy_verdict=rec.get("verdict"))
 
 
@@ -144,7 +182,8 @@ def apply(rec, value=None):
     rec["legacy_verdict"], rec["legacy_reasons"] = rec.get("verdict"), list(rec.get("reasons") or [])
     rec.update(verdict=j["verdict"], reasons=j["reasons"], advisories=j["advisories"], profile="minimal",
                profile_gates=j["gates"], achieved_period_ps=j["achieved_period_ps"],
-               setup_within_tolerance=j["setup_within_tolerance"], profile_rule="R-MINIMAL (OWNER 2026-11-13)")
+               setup_within_tolerance=j["setup_within_tolerance"], die_period_ps=j["die_period_ps"],
+               profile_rule="R-MINIMAL + R-PERIOD (OWNER 2026-11-13)")
     return rec
 
 

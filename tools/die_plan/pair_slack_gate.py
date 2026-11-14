@@ -159,7 +159,8 @@ def from_related(res, profile=None):
         adv = [m for m in missing if m.endswith("kit_contract_hold (FF)") or m.endswith(": plan_landing")]
         missing = [m for m in missing if m not in adv]
     v = verdict(ws, wh, None if missing else contract, max(skews) if skews else None, unmeas, neg,
-                achieved_period_ps=res.get("achieved_period_ps"), profile=profile)
+                achieved_period_ps=(res.get("achieved_period_ps") or (_SP.die_period_ps(res.get("die"))
+                                    if _SP.is_minimal(profile) else None)), profile=profile)
     if _SP.is_minimal(profile) and adv:
         v["warnings"].append("advisory (R-MINIMAL): " + "; ".join(adv))
     if missing:
