@@ -169,12 +169,12 @@ class Select(unittest.TestCase):
     def test_selection_and_order(self):
         rows = KW.parse_owners(OWN)
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
-        self.assertEqual([p["item"] for p in picks], ["kv3_phy_v1", "kv3_hg_v1", "kv3_hub_Eo"])   # replicas desc
+        self.assertEqual([p["item"] for p in picks], ["kv3_phy_v1", "kv3_hg_v1", "kv3_hroot", "kv3_hub_Eo"])   # replicas desc (WF-1 11-14: take_states default * = every state)
         self.assertEqual(skip["live job (another lane)"], ["kv3_io_cor_v1"])
         self.assertIn("kv3_pc", skip["lane activity < 3 h (KV-KITS-W)"])
         self.assertEqual(skip["kind core not in wave"], ["qkd_hr_cdc_ci"])
         self.assertEqual(skip["not in plan of record"], ["kv3_gone"])
-        self.assertNotIn("kv3_hroot", [p["item"] for p in picks])          # KIT-PLACED not in take_states
+        self.assertIn("kv3_hroot", [p["item"] for p in picks])             # WF-1 11-14: KIT-PLACED taken (take_states default *)
 
     def test_own_queue_job_on_parent_is_not_a_claim(self):
         own = lambda lj, owner="KIT-WAVE-12": KW._own_wave_unit({"owner": owner, "item": "sle_su_l1", "live_job": lj})
@@ -386,7 +386,7 @@ class Classify(unittest.TestCase):
             ("place", "FACE_GUARD FAIL shared 7645 bits", "PLAN"),
             ("place", "[ERROR ORD-2013] instance u_m LEF master ot_sram_1r1w_32x64_m1 not found", "PLAN"),
             ("gen", "type kv3_sys_SD: local reset tap [388.8, 596.16] is blocked", "PLAN"),
-            ("gen", "Traceback (most recent call last):\n  File gen.py\nKeyError: 'x'", "FLOW"),
+            ("gen", "Traceback (most recent call last):\n  File gen.py\nKeyError: 'x'", "INFRA"),
             ("preflight", "KIT_PREFLIGHT FAIL\nmissing staged file", "FLOW"),
             ("geom", "AP_AUTO_GEOM FAIL fill .0997 channel_h 1.065", "PLAN"),
             ("cells", "512000 cells", "PLAN"),

@@ -166,12 +166,14 @@ GATE_EVENTS = {"qwen_kvsys": {"exact": ("event28w_c",)},
                "s81_head": {"exact": ("src25p", "src25q2", "src25q3", "l44", "l45", "l46", "l47", "l47k", "l47t",
                                       "l48w", "l48x", "l48y", "l48z", "l48h0", "l48h1", "l48rf", "l48tb", "l48rc", "l48tc", "l48sd", "l48se", "l48sf", "l48sg", "l48ua", "l48ub", "l48uc", "l48ud", "l48ue", "l48uf", "l48ug", "l48uh", "l48ui", "l48uj")}}
 COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (coord_enable = ruling reference)
-GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
+# WF-1 11-14 (OWNER friction removal; EXPERT-REVIEW-6 #7): g0c (a hand-written gate.g0c evidence string per event) is dropped; the
+# bind gate stays.  A config that still carries gate.g0c is ignored for it.
+GATE_KEYS = ("bind", "clock")                 # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 # SAFE-STATION-1 11-03 (OWNER TWO-STRIKES): wire-only station types take the relay-bay form (tools/die_plan/relay_bay.py)
 # right after gen: a registered relay at every <=300-um hop, extra cycles declared, per-hop table >= +10% of the period
 # or FAIL_PREBUILD before route.  Class default ON; a die opts out with "relay_bay_re": "".
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
-DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
+DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["*"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
             "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2", "epyc4"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
@@ -445,7 +447,7 @@ def minimal_profile():
 MINIMAL_RETRY = "minimal_retry"       # state ledger {die|item: failed attempt that got the one automatic retry}
 
 
-def minimal_auto_retry(state, die, ev, d, retry, plan_types=None, log=print):
+def minimal_auto_retry(state, die, ev, d, retry, plan_types=None, log=print, cfg=None):
     """R-MINIMAL one automatic retry: every FAILED wave row (design FAIL or queue FAIL; INFRA has its own resubmit) of this
     die whose item has not used its automatic retry joins the in-memory retry set; the ledger keeps the failed attempt, so a
     row still waiting to launch stays released and a second failure (a later attempt) waits for its owner.  -> new set"""
@@ -453,6 +455,21 @@ def minimal_auto_retry(state, die, ev, d, retry, plan_types=None, log=print):
         return retry
     led = state.setdefault(MINIMAL_RETRY, {})
     out = set(retry)
+    if d.get("auto_rearm", True) is not False and isinstance(d.get("src_sha"), str):       # WF-1 11-14: input-change re-arm
+        try:
+            cand = rearm_candidates(state, cfg or {}, die, d)
+            out |= set(cand)
+            kinds = {}
+            for why in cand.values():
+                for w in why:
+                    kinds[w.split("+")[0]] = kinds.get(w.split("+")[0], 0) + 1
+            sig = f"{len(cand)} " + " ".join(f"{k}={v}" for k, v in sorted(kinds.items()))
+            if (state.setdefault("rearm_logged", {})).get(die, "0 ") != sig:       # one line per die and change, never per row
+                state["rearm_logged"][die] = sig
+                log(f"KW_REARM {die}: {len(cand)} failed attempt(s) with changed inputs since the attempt are re-armed without a "
+                    f"retry key ({sig}); select() still applies holds, the plan block, the cap and the resume 'nochange' refusal")
+        except Exception as ex:                      # a re-arm failure must never stop the wave
+            log(f"KW_REARM {die} failed: {type(ex).__name__}: {ex}")
     for rec in (state.get("items") or {}).values():
         if rec.get("die") != die or not rec.get("item"):
             continue
@@ -471,6 +488,87 @@ def minimal_auto_retry(state, die, ev, d, retry, plan_types=None, log=print):
             log(f"KW_MINIMAL_RETRY {die}/{rec['item']}@{a}: one automatic retry (R-MINIMAL; R-FLOW generator defaults)")
         if led.get(k) == a:
             out.add(f"{rec['item']}@{a}")
+    return out
+
+
+# WF-1 11-14 (OWNER "remove these process frictions"; EXPERT-REVIEW-6 #2, 66 % of a night's 249 FAILs had no design content):
+# every FAIL / queue-FAIL / CANCELLED-HUNG / WAIT-FORM row re-arms by itself when an input of the die changed since THAT attempt:
+# the die src_sha, the source content hash (src overlay), the kit-tool digest of this rt tree, or a host added to the die's host
+# list.  No retry key.  The kit_resume 'nochange' refusal still stops an identical relaunch; INFRA (own resubmit), the die's
+# hold_items, the RETRY_CAP block and the plan-block filter are unchanged and still apply in select().
+REARM_LED = "rearm_tools"             # state ledger {die|item: {"a": attempt, "tools": digest at first sight}}
+REARM_CLASSES = ("HUNG", "WAIT-FORM")
+_TOOLS_DIGEST = {}
+
+
+def rt_tools_digest():
+    """stat digest (path, size, mtime_ns) of the kit tools of THIS tools tree: tools/die_plan, physical/common_flow and the
+    kit_*.py files of tools/autopilot (not kit_wave.py itself nor the scheduler: those never change a kit)"""
+    if "v" in _TOOLS_DIGEST:
+        return _TOOLS_DIGEST["v"]
+    root = Path(__file__).resolve().parents[2]
+    h = hashlib.sha1()
+    for rel in ("tools/die_plan", "physical/common_flow", "tools/autopilot"):
+        base = root / rel
+        for dp, dn, fn in os.walk(base):
+            dn[:] = sorted(x for x in dn if x not in (".git", "__pycache__"))
+            for f in sorted(fn):
+                if f.endswith((".pyc", ".orig")) or ".bak" in f:
+                    continue
+                if rel == "tools/autopilot" and (dp != str(base) or not f.startswith("kit_") or f == "kit_wave.py"):
+                    continue
+                try:
+                    s = os.lstat(os.path.join(dp, f))
+                except OSError:
+                    continue
+                h.update(f"{os.path.join(dp, f)}\0{s.st_size}\0{s.st_mtime_ns}\n".encode())
+    _TOOLS_DIGEST["v"] = h.hexdigest()
+    return _TOOLS_DIGEST["v"]
+
+
+def rearm_changes(state, cfg, die, d, rec):
+    """what changed for this failed attempt since it was generated: [] (nothing) or reasons ['src_sha', 'src_overlay', 'rt_tools',
+    'hosts+h'].  Compared against the attempt's own spec.json (src_sha, src_overlay, hosts) and the tools digest seen at the
+    first tick after the failure (the ledger)."""
+    out = []
+    try:
+        sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+    except (OSError, ValueError, KeyError, TypeError):
+        sp = {}
+    if sp.get("src_sha") and d.get("src_sha") and sp["src_sha"] != d["src_sha"]:
+        out.append("src_sha")
+    if sp.get("src_overlay") and d.get("_src_overlay") and sp["src_overlay"] != d["_src_overlay"]:
+        out.append("src_overlay")
+    added = sorted(set(opt(cfg, die, "hosts") or []) - set(sp.get("hosts") or [])) if sp.get("hosts") else []
+    if added:
+        out.append("hosts+" + ",".join(added))
+    led = state.setdefault(REARM_LED, {})
+    k, a = f"{die}|{rec.get('item')}", int(rec.get("attempt") or 0)
+    cur = rt_tools_digest()
+    seen = led.get(k)
+    if not isinstance(seen, dict) or seen.get("a") != a:
+        led[k] = {"a": a, "tools": cur}
+    elif seen.get("tools") != cur:
+        out.append("rt_tools")
+    return out
+
+
+def rearm_failed(rec):
+    """a row that ended without a verdict worth waiting on: FAIL, queue FAIL, CANCELLED-HUNG / WAIT-FORM"""
+    if rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL"):
+        return True
+    return rec.get("status") == "CANCELLED" and str(rec.get("class") or "") in REARM_CLASSES
+
+
+def rearm_candidates(state, cfg, die, d, log=None):
+    """{'item@attempt': [reasons]} of the die's failed rows whose inputs changed since that attempt"""
+    out = {}
+    for rec in (state.get("items") or {}).values():
+        if rec.get("die") != die or not rec.get("item") or not rearm_failed(rec):
+            continue
+        why = rearm_changes(state, cfg, die, d, rec)
+        if why:
+            out[f"{rec['item']}@{int(rec.get('attempt') or 0)}"] = why
     return out
 
 
@@ -1000,11 +1098,17 @@ def select(rows, cfg, die, state, plan_types=None):
     d = cfg["dies"][die]
     ev = d["event"]
     states = set(opt(cfg, die, "take_states"))
+    # WF-1 11-14 (EXPERT-REVIEW-6 #7): take_states "*" (the default) = every OWNERS state except RETIRED, so a row never drops out
+    # of selection because its state is not on a hand list (t40 rows lost on WAIT-PARENT).  An explicit list still narrows.
+    take_all = "*" in states
+    only_plan = isinstance(d.get("only_items"), str) or d.get("only_items_from_plan") is True
+    if only_plan:                                    # only_items "plan": derived = the plan's items minus hold_items, no hand list
+        d = dict(d, only_items=None)
     kinds = set(opt(cfg, die, "kinds"))
     claim_m = float(opt(cfg, die, "live_claim_h")) * 60
     generic = set(opt(cfg, die, "generic_owner_labels") or [])
     retry = set(d.get("retry") or [])                 # "item@attempt": COORD released that failed attempt
-    retry = minimal_auto_retry(state, die, ev, d, retry)   # R-MINIMAL: + one automatic retry per failed item
+    retry = minimal_auto_retry(state, die, ev, d, retry, cfg=cfg)   # R-MINIMAL: + one automatic retry per failed item
     skip = {}
     picked = []
     orphans = no_row_source(rows, d, die, plan_types)
@@ -1056,12 +1160,12 @@ def select(rows, cfg, die, state, plan_types=None):
             skip.setdefault("counted by the sign-off counter", []).append(r["item"])
             continue
         rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
-        bw = blocked_why(cfg, state, die, r["item"])
+        bw = blocked_why(cfg, state, die, r["item"], blk(r["item"]))
         if bw:
             skip.setdefault(bw.split(":", 1)[0] + ": same failure signature at the retry cap (kit_wave_blocked.tsv)", []).append(r["item"])
             continue
         only_retry = False
-        if r["state"] not in states:
+        if r["state"] not in states and not (take_all and r["state"] != "RETIRED"):
             # KW-RELAUNCH-1 11-05: the parent row of a class-split item carries the state of the wave's OWN running class
             # (ROUTING / QUEUED ...).  That hid every released retry of its sibling classes (S81 slice_station t29 / t40 /
             # t6: retry @6 / @8 / @9 set, never launched).  Such a parent still expands, but only into released retries.
@@ -1143,9 +1247,9 @@ def select(rows, cfg, die, state, plan_types=None):
                 if same:
                     skip.setdefault(HOLD_UNCHANGED, []).extend(same)
                     todo = [c for c in todo if c not in same]
-            capped = [c for c in todo if blocked_why(cfg, state, die, c)]
+            capped = [c for c in todo if blocked_why(cfg, state, die, c, blk(c))]
             for c in capped:
-                skip.setdefault(blocked_why(cfg, state, die, c).split(":", 1)[0]
+                skip.setdefault(blocked_why(cfg, state, die, c, blk(c)).split(":", 1)[0]
                                 + ": same failure signature at the retry cap (kit_wave_blocked.tsv)", []).append(c)
             todo = [c for c in todo if c not in capped]
             if cfg.get("flow_repeat_gate", True):
@@ -1397,6 +1501,11 @@ RULES = [
     ("INFRA", r"^gen(?:_lint)?$", r"docker: Error response from daemon|Error response from daemon: failed to create|"
                                   r"\brc[ =]+125\b|\bexit(?: status| code)? 125\b|returned non-zero exit status 125\b",
      "infra (docker rc 125: container not created)"),
+    # WF-1 11-14 (OWNER "remove process frictions"; EXPERT-REVIEW-6 #2): a unit stopped from outside (systemd / operator signal
+    # 15, "cancellation requested") and a host disk floor refusal have no design content: INFRA (own resubmit, never counted)
+    ("INFRA", None, r"ot-run: interrupted \(signal 15|cancellation requested on|stopped by operator|"
+                    r"below the (?:gen |scratch |root )?disk floor|scratch floor|disk floor",
+     "infra (unit stopped from outside / disk floor wait: no design result)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+1(?:25|37)\b|"
@@ -1520,6 +1629,13 @@ RULES = [
     # KIT-TRIAGE-1/G26 11-01 (KV qkd_hr_core_peer gen): a tool input path that does not exist (a cached views file /
     # recipe naming a removed lane worktree) is the flow's, and is named as such instead of a generic traceback
     ("FLOW", None, r"FileNotFoundError|No such file or directory", "tool input file missing (stale path / pruned worktree)"),
+    # WF-1 11-14 (EXPERT-REVIEW-6 #2: 43 kit_rtl AttributeError reset_tree.pin_root_copies tool skew + 42 QC gen 'plan invalid'
+    # schema = 66 % of a night's FAILs, none with design content): a Python exception (or the generator's plan-schema refusal)
+    # at kit_rtl / gen that no rule above names as PLAN / RTL is the tool or source skew, not the design.  INFRA: resubmitted on
+    # its own up to infra_attempts, never counted by RETRY_CAP, and revived by the input-change re-arm (minimal_auto_retry)
+    ("INFRA", r"^(?:kit_rtl|gen)$", r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|"
+                                    r"gen phys: ERROR plan invalid",
+     "infra (python exception / plan-schema refusal in the kit tool: tool or source skew)"),
     ("FLOW", None, r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|invalid command name|"
                    r"can't read \"|Error: .*\.tcl, \d+", "tool / Tcl error"),
 ]
@@ -3587,7 +3703,7 @@ def flow_repeat(cfg, st, die, item, rec, parent=None, kind="type"):
 # owner, never the wave lane) and is listed in BLOCKED_FILE, which COORD reads.  Released only by the die's 'unblock' list:
 # entries 'pattern' or 'pattern#tag' (fnmatch on the item); each entry releases ONE attempt (the entry is spent); a new
 # release needs a new entry (another #tag).  The same failure after the release blocks the row again at once.
-RETRY_CAP = 3
+RETRY_CAP = 3              # same-recipe small fixes only (OWNER 11-14: stays 3); a changed input digest restarts the count at 0 (WF-1)
 BLOCKED_FILE = "kit_wave_blocked.tsv"
 BLOCKED_COLS = ["die", "item", "block", "n", "owner", "owner_source", "item_default_owner", "stage", "signature", "attempts",
                 "first", "last", "last_reason", "release"]
@@ -3605,7 +3721,7 @@ def fail_signature(cls, why, stage=""):
         i = min([why.find(w) for w in HOST_GAP_WHY if w in why] or [-1])
         if i >= 0:
             why, cls = why[i:], "FLOW"
-    elif cls == "INFRA" and _TRANSIENT_INFRA.search(why):
+    elif cls == "INFRA":              # WF-1 11-14: no INFRA failure counts toward RETRY_CAP (own bounded resubmit, infra_attempts)
         return None
     head, _, rest = why.partition(" @")
     stg = (rest.split(":", 1)[0].strip() if rest else "") or str(stage or "")
@@ -3615,7 +3731,19 @@ def fail_signature(cls, why, stage=""):
     return (cls or "FLOW"), f"{cls}|{stg}|{norm}"
 
 
-def note_fail_sig(st, rec, cls, why, now=None):
+def input_digest(cfg, die):
+    """WF-1 11-14 (OWNER: a redesign resets the retry counter): digest of the die inputs a relaunch would build on, except the
+    plan block (kept apart: it is per item): plan sha, die src_sha, source content hash, kit tools digest, gen env / kit_rtl form"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    try:
+        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("_src_overlay"), rt_tools_digest(),
+                d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
+        return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
+    except (TypeError, ValueError):
+        return ""
+
+
+def note_fail_sig(st, rec, cls, why, now=None, inp=None):
     """count consecutive identical FAIL signatures per die|item (across attempts and events); -> the counter dict"""
     fs = st.setdefault("fail_sigs", {})
     key = f"{rec.get('die')}|{rec.get('item')}"
@@ -3630,6 +3758,8 @@ def note_fail_sig(st, rec, cls, why, now=None):
     c["n"] = int(c.get("n") or 0) + 1
     c["attempts"] = (list(c.get("attempts") or []) + [f"{rec.get('event')}@{rec.get('attempt')}"])[-8:]
     c.update(last=now, stage=str(rec.get("stage") or ""), reason=re.sub(r"\s+", " ", str(why or ""))[:300])
+    if inp is not None:
+        c["inp"], c["block"] = inp, rec.get("block_sha") or ""
     return c
 
 
@@ -3637,10 +3767,15 @@ def clear_fail_sig(st, rec):
     (st.get("fail_sigs") or {}).pop(f"{rec.get('die')}|{rec.get('item')}", None)
 
 
-def blocked_why(cfg, st, die, item):
+def blocked_why(cfg, st, die, item, block=None):
     """'' or the BLOCKED-<class> skip reason of an item at the retry cap that the die's unblock list does not release"""
     c = (st.get("fail_sigs") or {}).get(f"{die}|{item}")
     if not c or int(c.get("n") or 0) < RETRY_CAP:
+        return ""
+    if not c.get("inp"):                                              # a count from before the digest existed: stamp it now
+        c["inp"], c["block"] = input_digest(cfg, die), block or ""
+    if c.get("inp") and (c["inp"] != input_digest(cfg, die) or (block and c.get("block") and c["block"] != block)):
+        (st.get("fail_sigs") or {}).pop(f"{die}|{item}", None)       # WF-1: input digest changed = a redesign, attempts restart at 0
         return ""
     if unblock_entry(cfg, die, item, c):
         return ""
@@ -6137,7 +6272,7 @@ def grt_arm_launches(AP, cfg, st, notices, ap_dir, nl=0, stagger=0.0):
                 continue
             if any(fnmatch.fnmatchcase(item, pat) for pat in (d.get("hold_items") or {})):
                 continue                                  # an operator hold holds the arm too
-            if d.get("only_items") is not None and item not in d["only_items"]:
+            if isinstance(d.get("only_items"), list) and item not in d["only_items"]:
                 continue                                  # KW-FIX-45 11-11: a paused / restricted die (only_items) launches no arm
                                                           # either (QC only_items=[] still got 6 arm relaunches at 08:42)
             if load_hold(cfg, die, item, brec.get("parent_item"), core_module(item)):
@@ -6363,11 +6498,17 @@ def progress_on_fleet(AP, roots, hosts):
     return out
 
 
-def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=HUNG_CPU_S):
+HUNG_POST_MIN = 360         # WF-1 11-14 (COORD/OWNER #H): a row with a frozen log but busy CPU is never cancelled; at this age it is only posted
+HUNG_BUSY_FRAC = 0.05       # WF-1 11-14: CPU growth over the window above this fraction of ONE core counts as busy (was a flat 60 CPU-s)
+
+
+def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None):
     """-> (hung, new_watch, why).  prev = the row's hung_watch {'cpu', 't'} (CPU mark and when it was set), prog = this row's
     progress_on_fleet entry.  The CPU mark moves when the CPU grew by >= cpu_s since it (or went down: a restarted process);
     hung only when the mark is >= minutes old AND the newest stage log (fleet or hub) is >= minutes old."""
     cpu = float(prog.get("cpu") or 0)
+    if cpu_s is None:        # busy = more than HUNG_BUSY_FRAC of one core over the watch window (>= HUNG_CPU_S): ~0 CPU only
+        cpu_s = max(HUNG_CPU_S, HUNG_BUSY_FRAC * minutes * 60.0)
     w = dict(prev or {})
     if not w or cpu - float(w.get("cpu", 0)) >= cpu_s or cpu < float(w.get("cpu", 0)):
         w = {"cpu": cpu, "t": now}
@@ -6436,6 +6577,8 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
                     watch_out[key] = dict(w, containers=list(p.get("containers") or [])) if hung else w
                 if hung:
                     out.append((key, "HUNG", why))
+                elif m >= HUNG_POST_MIN and not rec.get("hung_posted"):
+                    out.append((key, "POST6H", f"unit active, log frozen {m:.0f} min but CPU busy; not cancelled (WF-1): {why}"))
                 elif m > minutes:
                     out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: {','.join(live[roots[key]][:3])}; "
                                                f"progressing ({why}) (reported only)"))
@@ -6465,6 +6608,12 @@ def reap_dead(AP, cfg, st, notices, now=None):
             AP.log(f"KIT-WAVE REAP-DEAD SILENT {key}: {why}")
             continue
         rec = st["items"][key]
+        if kind == "POST6H":                               # WF-1: post once, never kill a busy job
+            if not AP.DRY:
+                rec["hung_posted"] = time.time()
+                notices.setdefault(rec["die"], []).append(f"{rec['item']}@{rec.get('attempt')} NO-PROGRESS-6H (post only): {why[:200]}")
+                AP.log(f"KIT-WAVE HUNG-WATCH POST {key}: {why}")
+            continue
         if AP.DRY:
             AP.log(f"KIT-WAVE REAP-DEAD would reap {key} {kind}: {why}")
             continue
@@ -6640,7 +6789,7 @@ def collect(AP, cfg, st, notices):
             free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
         if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
-        c = note_fail_sig(st, rec, cls, why)
+        c = note_fail_sig(st, rec, cls, why, inp=input_digest(cfg, rec["die"]))
         if c and int(c.get("n") or 0) >= RETRY_CAP and blocked_why(cfg, st, rec["die"], rec["item"]):
             rec["blocked"] = f"BLOCKED-{c.get('cls') or cls}"
             if rec["status"] == "RETRY-INFRA":

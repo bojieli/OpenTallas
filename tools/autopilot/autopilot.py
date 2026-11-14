@@ -2961,9 +2961,17 @@ def tick(args):
     except BlockingIOError:
         print("autopilot: previous tick still running", file=sys.stderr)
         return 0
+    _t0 = time.time()
+    _ph = {}                                           # WF-1 11-14: per-phase wall seconds, one TICK-TIMES line at the end
+
+    def _mark(name, _last=[time.time()]):
+        n = time.time()
+        _ph[name] = round(n - _last[0], 1)
+        _last[0] = n
     st = load_state()
     rows = parse_queue(read_queue_text())
     geom_text = read_coord("lanes/GEOM-REVIEW.md")
+    _mark("load")
     global GEOM_TEXT
     GEOM_TEXT = geom_text
     # Resolve explicit visual verdicts before promoting pending requests to measured checks.
@@ -2971,20 +2979,25 @@ def tick(args):
     resolve_geom(rows, geom_text)
     AG.prepare(sys.modules[__name__], st, rows)
     resolve_geom(rows, geom_text)
+    _mark("geom")
     load_closure()
     apply_evac(st)
     poll_running(st)
+    _mark("poll_running")
     poll_reviews(st)
     retry_pending(st)
     retry_unversioned(st)
+    _mark("reviews_retry")
     submitted = admit_new(st, rows)
     save_state(st)
+    _mark("admit_new")
     if os.environ.get("AP_WAVE_BALANCE", "1") != "0":   # WAVE-BALANCE-1 11-11: inert unless kit_wave.json wave_balance.enabled
         try:
             WB.step(sys.modules[__name__], st)
             save_state(st)
         except Exception as e:                         # a balance pass must never stop the chain
             log(f"WAVE-BALANCE failed: {type(e).__name__}: {e}")
+    _mark("wave_balance")
     if os.environ.get("AP_KIT_WAVE", "1") != "0":      # KIT-WAVE-1 (owner 10-30 (A)); inert without autopilot/kit_wave.json
         try:
             KW.step(sys.modules[__name__])
@@ -2994,15 +3007,19 @@ def tick(args):
             admit_after_wave(st, MAX_SUBMIT_PER_TICK - submitted)
         except Exception as e:                         # the next tick admits these rows anyway
             log(f"ADMIT-AFTER-WAVE failed: {type(e).__name__}: {e}")
+    _mark("kit_wave_step+admit")
     if os.environ.get("AP_AUTO_RESIGN", "1") != "0":   # FLOW-29 owner 11-04: signed runs re-signed on the newest tag, no agent
         try:
             AR.step(sys.modules[__name__])
         except Exception as e:                         # a re-sign pass must never stop the chain
             log(f"AUTO-RESIGN failed: {type(e).__name__}: {e}")
+    _mark("auto_resign")
     try:
         write_loop_gaps(st, rows, geom_text)
     except Exception as e:                             # the gap report must never stop the chain
         log(f"LOOP-GAPS failed: {type(e).__name__}: {e}")
+    _mark("loop_gaps")
+    log("TICK-TIMES total=%.0fs " % (time.time() - _t0) + " ".join(f"{k}={v}s" for k, v in _ph.items()))
     counts = {}
     for j in st["jobs"].values():
         counts[j.get("status")] = counts.get(j.get("status"), 0) + 1
