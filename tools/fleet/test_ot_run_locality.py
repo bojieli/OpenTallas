@@ -169,7 +169,7 @@ class PlacementLocality(unittest.TestCase):
     def test_scratch_capacity_selection_still_uses_available_twin_root(self):
         out = 'OT_SCRATCH_FREE /srv/opentallas-scratch 100\nOT_SCRATCH_FREE /srv/opentallas-scratch2 800\n'
         row = self.m.scratch_disk({'disk_gb': 100}, '/srv/opentallas-scratch/claude/known-source/src/tools', out)
-        self.assertEqual(row['disk_gb'], 800)
+        self.assertEqual(row['disk_gb'], 100)       # a concrete --dir measures its own device (status/admission never borrows the twin root)
         self.assertEqual(row['disk_own_gb'], 100)
 
 

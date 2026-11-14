@@ -19,6 +19,7 @@ from test_ot_run_scratch_disk import fake_bin, load  # noqa: E402
 
 S3 = '/srv/opentallas-scratch3'
 _env = {k: v for k, v in os.environ.items() if not k.startswith('OT_RUN_ROOT_SCRATCH')}
+_env['OT_RUN_ROOT_SCRATCH_ROOTS'] = '/srv/opentallas-scratch3'   # ot-run's default is now empty (authorized roots only): these tests exercise the scratch3 path
 with mock.patch.dict(os.environ, _env, clear=True):   # ROOTSCR-INTEL 11-05: on by default, per-host root floors
     m = load()
 
@@ -38,8 +39,8 @@ class OnByDefault(unittest.TestCase):
         with mock.patch.dict(os.environ, env, clear=True):
             off = load()
         self.assertEqual(off.ROOT_SCRATCH_ROOTS, ())
-        self.assertEqual(off.SCRATCH_ROOTS, ('/srv/opentallas-scratch', '/srv/opentallas-scratch2'))
-        self.assertNotIn(S3, off.SCRATCH_ENV)
+        self.assertEqual(off.SCRATCH_ROOTS, ('/srv/opentallas-scratch', '/srv/opentallas-scratch2', S3))   # probed always; usable only when authorized
+        self.assertNotIn(' ' + S3 + ' ', off.SCRATCH_ENV.split('case')[1].split('esac')[0])   # not a second root
 
 
 class ProbeRows(unittest.TestCase):
@@ -56,7 +57,7 @@ class ProbeRows(unittest.TestCase):
         self.assertEqual(row['scratch_disk'], S3)
         self.assertEqual(row['scratch_disk_gb'], 3276 - m.ROOT_SCRATCH_FLOOR_GB)
         self.assertTrue(row['scratch_second'])
-        self.assertEqual(row['disk_gb'], 3276 - m.ROOT_SCRATCH_FLOOR_GB)
+        self.assertEqual(row['scratch_disk_gb'], 3276 - m.ROOT_SCRATCH_FLOOR_GB)   # disk_gb now measures the --dir's own device
         self.assertEqual(m.host_refusal(row), '')
 
     def test_root_floor_kept_refuses_when_both_low(self):
@@ -91,7 +92,7 @@ class PerHostFloor(unittest.TestCase):
 
     def test_intel_uses_second_root_minus_150(self):
         row = m.scratch_disk({'disk_gb': 35}, self.D, probe_out(35, 342, 24), 'localhost')
-        self.assertEqual((row['scratch_disk'], row['scratch_disk_gb'], row['disk_gb']), (S3, 192, 192))
+        self.assertEqual((row['scratch_disk'], row['scratch_disk_gb']), (S3, 192))
         self.assertEqual(m.host_refusal(row), '')
 
     def test_epyc_refuses_when_root_is_near_150(self):
@@ -134,13 +135,13 @@ class RemoteShell(unittest.TestCase):
     def test_ot_scratch_falls_back_to_second_root_only_below_floor(self):
         self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(835, 3276)).stdout.strip(), str(self.s[1]))
         self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(40, 3276)).stdout.strip(), str(self.s[2]))
-        self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(40, 515)).stdout.strip(), str(self.s[1]))   # usable 15 < second floor 20 (QUEUE-BAL-2)
-        self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(40, 520)).stdout.strip(), str(self.s[2]))   # usable 20: was refused at 50
+        self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(40, 165)).stdout.strip(), str(self.s[1]))   # usable 15 (root floor 150) < second floor 20 (QUEUE-BAL-2)
+        self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', self.env(40, 170)).stdout.strip(), str(self.s[2]))   # usable 20: was refused at 50
 
     def test_intel_shell_uses_150_floor(self):
         env = self.env(40, 230)
         self.assertEqual(self.sh(m.scratch_env('intel1') + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s[2]))
-        self.assertEqual(self.sh(m.scratch_env('epyc2') + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s[1]))
+        self.assertEqual(self.sh(m.scratch_env('epyc2') + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s[2]))   # epyc2 root floor is 150 too since 11-06
 
 class SecondFloor(unittest.TestCase):
     """QUEUE-BAL-2 (COORD 21:2x): intel2 21:2x = scratch2 29 GB, root 197 GB free, root floor 150 -> 47 GB usable on
