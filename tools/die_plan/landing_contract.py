@@ -8,6 +8,17 @@ import math
 import re
 
 
+def _tie_unused_ok(t):
+    """CLAND-TIE-2: pins a type with clock.landing_contract.tieable_children may leave without an edge: its declared tieable
+    child inputs (tied to constants at the die top, CLAND-TIE-1) and its monitor outputs (cland_up_*, fclk_out_cland_up),
+    which float on an instance outside the collector.  A type without tieable_children keeps the strict 'no absent-child ties'
+    rule."""
+    import landing_tie_children as LTC
+    lc=(t.get("clock") or {}).get("landing_contract") or {}
+    tie=LTC.tie_ports(lc.get("tieable_children"))
+    return set(tie)|{"cland_up_ready","cland_up_fault","fclk_out_cland_up"} if tie else set()
+
+
 def check(P,sidecar=None):
     """sidecar: optional compose sidecar; with it a declared START tree must equal the sidecar's (see _start_tree_check)."""
     net=P.clock.get("landing_network")
@@ -81,6 +92,7 @@ def check(P,sidecar=None):
             n=uses.get((pn,name),0)
             if (pn,name) in opened:continue          # declared open START launch output (proved in _start_tree_check)
             if st is not None and name==START_PIN_OUT and n>=1:continue   # one launch pin, fanned out at the die top
+            if n==0 and name in _tie_unused_ok(P.types[p["type"]]):continue   # CLAND-TIE-2: declared tieable child / floating monitor output
             if n!=1:errors.append(f"{pn}.{name}: infrastructure pin used {n} times (no absent-child ties)")
     obs=net.get("root_observer",{})
     if obs.get("part") not in P.parts or not all(obs.get(k) for k in ("module","fault_port","ready_port")):

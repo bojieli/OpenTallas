@@ -39,3 +39,28 @@ def test_audit_accepts_only_declared_ties():
     assert STR.audit_top_ties(wrong, man, {"bt_a": "a"}, landing_ties=lt)["verdict"] == "FAIL"   # wrong value
     other = top.replace(".cland_dn_fault_1", ".some_other_pin")
     assert STR.audit_top_ties(other, man, {"bt_a": "a"}, landing_ties=lt)["verdict"] == "FAIL"
+
+
+class _P:
+    """minimal Plan stand-in for landing_contract.check: one partition, no landing edges at all"""
+    def __init__(self, tieable):
+        pins = [dict(name=n, dir=d, kind=k, layer="M7", xy_um=[5.0, 5.0 + i], epoch=False)
+                for i, (n, d, k) in enumerate([("cland_dn_ready_0", "in", "ctl"), ("cland_dn_fault_0", "in", "ctl"),
+                                               ("cland_up_ready", "out", "ctl"), ("cland_up_fault", "out", "ctl")])]
+        lc = dict(pins=pins, **({"tieable_children": tieable} if tieable else {}))
+        self.types = {"T": {"outline_um": [100, 100], "clock": {"landing_contract": lc, "edge_clocks": []}}}
+        self.parts = {"a": {"type": "T"}}
+        self.layers = {"M7": 7}
+        self.clock = {"landing_network": {"edges": [], "root_observer": {"part": "a", "module": "m", "fault_port": "f", "ready_port": "r"}}}
+
+
+def test_check_unused_tied_landing_pins_are_no_error():
+    import landing_contract as LCO
+    res = LCO.check(_P([{"index": 0, "seam": False}]))
+    assert not [e for e in res["errors"] if "used 0 times" in e], res["errors"]
+
+
+def test_check_without_declaration_keeps_the_strict_rule():
+    import landing_contract as LCO
+    errs = [e for e in LCO.check(_P(None))["errors"] if "used 0 times" in e]
+    assert len(errs) == 4        # 2 dn inputs + 2 up outputs, all unused, nothing declared
