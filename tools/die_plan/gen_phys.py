@@ -5201,7 +5201,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # OT_SIGNOFF_PROFILE=legacy at gen time keeps the old stops.
            *([] if os.environ.get("OT_SIGNOFF_PROFILE", "minimal").strip().lower() == "legacy" else
              ([] if os.environ.get("OT_HOLD_STOP_PS") else ["export OT_HOLD_STOP_PS = -1000000"])
-             + ["export OT_HOLD_STRUCTURAL_ADVISORY = 1", "export OT_GRT_POST_MAX_S = 43200"]),
+             + ["export OT_HOLD_STRUCTURAL_ADVISORY = 1"]),
            # KW-FIX-43 11-10 LAND-RESERVE: opt-in per item (item_env OT_LAND_RESERVE=1): face_flops.tcl reserves the non-ring
            # landing windows before the station grid and landing_placement.tcl grows start / literal-reset windows
            *(["export OT_LAND_RESERVE = 1"] if os.environ.get("OT_LAND_RESERVE") == "1" else []),

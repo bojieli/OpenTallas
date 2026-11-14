@@ -1,5 +1,5 @@
 """WF-1 11-14 (OWNER 11-14: delete the GRT early congestion stop, do not loosen it): no overflow-based GRT stop remains in the tree;
-the only GRT stop is the post-route time cap OT_GRT_POST_MAX_S."""
+no GRT stop remains (the post-route time cap was deleted 11-14 too; it only logs)."""
 import re
 from pathlib import Path
 
@@ -34,12 +34,14 @@ def test_early_stop_module_is_gone():
     assert not (ROOT / "tools/autopilot/grt_early_stop.py").exists()
 
 
-def test_grt183_make_has_only_the_time_cap_stop():
+def test_grt183_make_has_no_grt_stop_at_all():
     t = (ROOT / "physical/common_flow/grt183_make.sh").read_text()
     stops = re.findall(r"gstop=(\w+)", "\n".join(code_lines(t)))
     # gstop also carries the DRT / hold-structural stops of other stages; the only GRT stop is the post-route time cap
-    assert "timecap" in stops and not [s for s in stops if "grt" in s.lower() or "overflow" in s.lower() or "congest" in s.lower()], stops
-    assert "OT_GRT_TIMECAP" in t and "OT_GRT_POST_MAX_S" in t
+    # WF-1 11-14: the post-route time cap is deleted too: GRT is never killed by the wrapper, the time is only logged
+    assert "timecap" not in stops and not [s for s in stops if "grt" in s.lower() or "overflow" in s.lower() or "congest" in s.lower()], stops
+    code = "\n".join(code_lines(t))
+    assert "OT_GRT_TIMELOG" in code and "NO CAP" in code and 'echo "OT_GRT_TIMECAP' not in code
 
 
 def test_failfast_grt_rule_is_deleted_not_disabled():

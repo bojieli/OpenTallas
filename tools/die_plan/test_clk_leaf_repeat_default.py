@@ -65,7 +65,8 @@ def test_wrapper_hooks_cts_and_grt_once(tmp_path, cfg):
     assert c[i - 1].startswith("set ::ot_clr_default 1; source /work/clk_leaf_repeat_default.tcl; unset -nocomplain ::ot_clr_default")
     assert sum("clk_leaf_repeat_default" in x for x in c) == 1
     g = (s / "global_route.tcl").read_text().splitlines()
-    j = g.index("  log_cmd estimate_parasitics -global_routing")
+    # WF-1 11-14: the first estimate is now wrapped in catch (OT_GRT_EST_FALLBACK); the clk_leaf_repeat hook still follows it
+    j = next(i for i, x in enumerate(g) if x.startswith("  if {[catch {log_cmd estimate_parasitics -global_routing}") and "OT_GRT_EST_FALLBACK" in x)
     assert g[j + 1] == ("  set ::ot_clr_stage grt; source /work/clk_leaf_repeat_default.tcl; unset -nocomplain ::ot_clr_stage "
                         ";# OT_CLK_LEAF_REPEAT grt")
     assert sum("clk_leaf_repeat_default" in x for x in g) == 1   # only after the FIRST estimate (before repair_design)
