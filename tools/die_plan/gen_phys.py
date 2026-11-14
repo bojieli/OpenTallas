@@ -2237,10 +2237,20 @@ def tap_offset_table(P, tn):
     tab = ((P.clock.get("tap_offset") or {}).get("per_port_ps") or {}).get(tn) or {}
     per = float(P.die["period_ps"]) if hasattr(P, "die") else float("inf")
     out = {}
+    # R-CLOCK-7 (FABLE-REVIEW-CLK 12:46): a CORE tap's raw offset carries its declared early delivery (insertion - common latency), so a core with
+    # insertion above ~666 ps is beyond T/2 by design.  The T/2 bound applies to the RESIDUAL (offset + insertion - common) of a core tap and to the
+    # raw offset of a glue port.
+    core = {}
+    if tab:
+        for cn, _cx, _cy, ctp in S.core_taps(P, tn):
+            core[cn] = ctp
     for n, v in tab.items():
         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
-        if row["tol"] < 0 or abs(row["TT"]) > per / 2 or abs(row["FF"]) > per / 2:
-            raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} outside tol >= 0, |o| <= T/2")
+        res = {}
+        for c in ("TT", "FF"):
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c)) if n in core else 0.0)
+        if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
+            raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row
     if out and not P.clock.get("seam_hold"):
         raise ValueError("clock.tap_offset needs clock.seam_hold (same seam contract as clock.tap_window)")
