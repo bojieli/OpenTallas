@@ -9,3 +9,9 @@
 - Private pd3 kit epyc7 head-97/kitsserdespd3/g_hd_serdes/hd_serdes: kit-side spec radius_um 210 (orig .pre_h98_r210), primary overlay clk Y 20.384 (LEC proof 7bd77a1b). CTS+GRT done, in detailed route; log intel2 ~/tmp/h98_serdes_pd3_route.log (unit epyc7). If it signs off, the secondary bundle + 210 must reach the wave src (new snapshot over src_head_rp21z_pgcap1d724b73 on epyc7/intel1/epyc10 + kit_wave.json s81_head src/kit_rtl, via KIT-OPS-3); recipe = what I did for FLOW-PGCAP-1 (cp/rsync -a --link-dest snapshot, patch, rsync to gen hosts; never cp -al, results/ has a self-symlink loop).
 - BMQ provider (SerDes SC child): routed DRC 0, TT +31.79, FF -7.57 (DRV slew + io_hold advisory only), kit epyc7 head-97/serdes_primary/sc_successor/bmq_provider_prep/gen/ot_s81hd_sc_bmq_head; posted to the PROFILE-1 RE-JUDGE as candidate; follow it.
 ## I keep: host_e, hd_lep0N release, mesh pregrt hold rebuild, HEAD die-level (DIE-PROTO-1).
+# HEAD-99 / TYPE-HDSERDES handoff (hd_serdes secondary clock)
+- Taken over from HEAD-98 by TYPE-HDSERDES 2026-11-14 00:46 PST.
+- Form A (pd3, r210, target 1000): epyc7 head-97/kitsserdespd3/g_hd_serdes/hd_serdes, ot-run unit running since 18:55; CTS PASSED (SECONDARY_CLOCK_APPLIED sinks=13524 leaves=87 max_radius 202.449 <= 210); now in GRT repair stage (DPL NegotiationLegalizer 2409 violations remain, still running, CPU growing).
+- Form B (r220, target 950 = more taps): epyc7 /srv/opentallas-scratch2/claude/type-hdserdes/r220/g_hd_serdes/hd_serdes (copy of pd3 post-place, CTS and later removed), log intel2 ~/tmp/hdserdes_r220_route.log; queued on epyc7 load gate.
+- Overlay for the wave src: lanes/overlays/HEAD-SERDES-SECONDARY (README, apply.sh, gen_phys patch).
+- When A or B passes (DRC0, TT>=-42, internal hold>=0): AUTO-RESIGN row + RESULT line.

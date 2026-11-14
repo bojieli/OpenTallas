@@ -1,0 +1,16 @@
+--- /srv/opentallas-scratch2/claude/type-hdserdes/overlay/gen_phys.py.orig	2026-11-14 08:45:41.009096577 +0000
++++ /srv/opentallas-scratch2/claude/type-hdserdes/overlay/gen_phys.py.new	2026-11-14 08:45:41.039096956 +0000
+@@ -5563,6 +5563,13 @@
+     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
+     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
+     prepare_signed_parent_source(P, tn, kd, macros, root)
++    # HEAD-SERDES-SECONDARY 11-14: OT_GEN_SECONDARY_CLOCK="<type>:<port>:<clock>:<target>:<dmax_um>:<radius_um>" installs the
++    # explicit pad-source density tree (secondary_clock.install) on that type only; unset = kit unchanged.
++    _sec = os.environ.get("OT_GEN_SECONDARY_CLOCK", "")
++    if _sec and _sec.split(":")[0] == tn:
++        import secondary_clock as _SEC
++        _f = _sec.split(":")
++        _SEC.install(kd, dict(port=_f[1], clock=_f[2], target=int(_f[3]), dmax_um=float(_f[4]), radius_um=float(_f[5])))
+     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
+     return kd
+ 
