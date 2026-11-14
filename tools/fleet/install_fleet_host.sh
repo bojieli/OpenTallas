@@ -65,7 +65,11 @@ sudo -n systemctl enable earlyoom >/dev/null 2>&1
 sudo -n systemctl restart earlyoom
 if [ ! -f /etc/ot-heavy.conf ]; then
   { echo "# ot-heavy admission factors (see ot-heavy-reconcile header); FLEET-NEW3 2026-10-24"
-    if [ "$role" = coord ]; then echo "MIN_AVAIL_FRAC=0.15"; fi; } | sudo -n tee /etc/ot-heavy.conf >/dev/null
+    if [ "$role" = coord ]; then echo "MIN_AVAIL_FRAC=0.15"; fi
+    # ADMIT-TUNE-1 11-14 (OWNER: remove conservative limits): one check, MemAvailable - 16 GB >= class measured RSS (16 GB unknown);
+    # no load gate/cap, fresh window or short pool.  Revert: SIMPLE_ADMIT=0 and delete the other lines.
+    echo "SIMPLE_ADMIT=1"; echo "INV_HEADROOM_GB=16"; echo "LOAD_GATE_FACTOR=0"; echo "LOAD_CAP_FACTOR=0"
+    echo "LOAD_FRESH_S=0"; echo "YOUNG_S=0"; echo "OT_HEAVY_SHORT_POOL=0"; } | sudo -n tee /etc/ot-heavy.conf >/dev/null
 fi
 sudo -n loginctl enable-linger "$u"
 line='*/2 * * * * /usr/local/bin/ot-heavy-reconcile >/dev/null 2>&1'
