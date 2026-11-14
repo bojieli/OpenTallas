@@ -245,3 +245,4 @@ h2.sect { font-size: var(--fs-xs); letter-spacing: .08em; text-transform: upperc
 }
 .app[data-focus="1"] .minimap { top: 56px; }
 .app[data-focus="1"] .hud.tl { right: 300px !important; }
+@media (max-width: 900px) { .top { overflow-x: auto; scrollbar-width: none; } .rail a { font-size: 9px; } }

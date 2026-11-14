@@ -102,7 +102,7 @@ export default {
         if (die !== S.die) {
           const busy = showBusy(wrap, 'Composing the die…');
           try { [S.man, S.D] = await Promise.all([api.compose(die), api.die(die)]); } catch (e) { busy.remove(); throw e; }
-          busy.remove(); if (my !== S.seq) return;
+          busy.remove(); if (my !== S.seq || !eng.deck) return;
           S.die = die; S.unsigned = uns; fresh = true;
           eng.setScene(build());
           if (st.params.hide) eng.setHidden(st.params.hide.split('.'));

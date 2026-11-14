@@ -1,6 +1,6 @@
 // Boot: load the meta, rewrite old URLs, build the shell, register the views.
 import { h, clear } from './core/dom.js';
-import { store, legacy } from './core/store.js';
+import { store, legacy, onLegacy } from './core/store.js';
 import { api } from './core/api.js';
 import { createShell } from './shell/shell.js';
 import overview from './views/overview.js';
@@ -22,14 +22,16 @@ async function boot() {
   }
   if (meta.dies.length) store.setDefaultDie(meta.dies[0].id);
   // old explorer links (#n=, #q=, #element=, #design=, ?legacy=<view>) -> the canonical scheme
-  const old = legacy(location);
-  if (old) {
+  async function fromLegacy() {
+    const old = legacy(location); if (!old) return false;
     let node = old.node || null;
     if (!node && old.q) { try { const r = await api.resolve([old.q]); const hits = r[old.q] || []; node = (old.dieHint && hits.find((x) => x.split('.')[0] === old.dieHint)) || hits[0] || null; } catch (e) { /* unresolved: land on the view */ } }
     if (!node && old.dieHint && meta.dies.some((d) => d.id === old.dieHint)) node = old.dieHint;
     history.replaceState(null, '', location.pathname);
     store.go({ view: old.view, node: node || meta.dies[0].id, net: old.net || null, tok: old.tok || null }, { replace: true });
+    return true;
   }
+  await fromLegacy(); onLegacy(fromLegacy);
   clear(root);
   const shell = createShell(root, { views: VIEWS, meta });
   window.otx = { store, api, shell };   // for tests and the console

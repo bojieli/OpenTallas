@@ -86,7 +86,12 @@ export const store = {
 };
 function notify(prev) { for (const fn of [...subs]) { try { fn(state, prev); } catch (e) { console.error('store subscriber', e); } } }
 window.addEventListener('popstate', () => store.sync());
-window.addEventListener('hashchange', () => { if (format(state) !== location.hash) store.sync(); });
+let legacyHandler = null;
+export const onLegacy = (fn) => { legacyHandler = fn; };
+window.addEventListener('hashchange', () => {
+  if (location.hash.length > 1 && !location.hash.startsWith('#/') && legacyHandler) return legacyHandler();   // an old-scheme link pasted into the open app
+  if (format(state) !== location.hash) store.sync();
+});
 
 /** old explorer URL schemes -> the canonical one.  Returns a patch or null; names that need the resolver come back as {q}. */
 export function legacy(loc) {

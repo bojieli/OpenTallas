@@ -181,6 +181,7 @@ export class LayoutEngine {
   /* ------------------------------------------------------------------ scene */
   /** scene: {outline: [x0, y0, x1, y1] um, items, insts (plan rectangles, optional), packs: {id: info}} */
   setScene(scene, keepView) {
+    if (!this.deck) return;   // destroyed while the caller was loading
     this.scene = scene; this.items = scene.items || []; this.insts = scene.insts || [];
     for (const [id, info] of Object.entries(scene.packs || {})) { const P = this.packs.get(id); if (!P) this.packs.set(id, { id, info, H: null, ob: info.objects || null }); else if (P.info.job !== info.job) this.dropPack(id, info); }
     const o = scene.outline, r = this.dom.canvas.getBoundingClientRect();

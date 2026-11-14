@@ -267,7 +267,7 @@ export default {
           return;
         }
         show('geo');
-        const eng = await engine(); if (my !== S.seq) return;
+        const eng = await engine(); if (my !== S.seq || !eng.deck) return;
         const job = st.params.job || null;
         if (nodeChanged || !S.info || S.info.node !== node || (has && (job || S.info.latest) !== S.info.job)) {
           const busy = showBusy(geo, 'Opening the routed layout…'); busy.classList.add('clear');

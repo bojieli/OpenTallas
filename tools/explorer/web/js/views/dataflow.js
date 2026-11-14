@@ -23,8 +23,8 @@ export default {
     const wrap = h('div.canvas-host'); host.append(wrap);
     const tip = h('div.tip', { hidden: true }), legend = h('div.hud.tl.act', { testid: 'df-legend', style: { whiteSpace: 'normal', right: '8px' } }), banner = h('div', { hidden: true, style: { position: 'absolute', left: '8px', right: '8px', bottom: '8px', zIndex: 6 }, testid: 'df-banner' });
     wrap.append(tip, legend, banner);
-    const modeSeg = h('div.seg', { role: 'group', 'aria-label': 'Source' }, h('button', { type: 'button', dataset: { mode: 'plan', testid: 'df-mode-plan' }, title: 'Port bundles between partitions of the current plan of record' }, 'Plan of record'),
-      h('button', { type: 'button', dataset: { mode: 'record', testid: 'df-mode-record' }, title: 'Pin-to-pin link records of earlier die revisions' }, 'Link records'));
+    const modeSeg = h('div.seg', { role: 'group', 'aria-label': 'Source' }, h('button', { type: 'button', dataset: { mode: 'plan', testid: 'df-mode-plan' }, title: 'Port bundles between partitions of the current plan of record' }, 'Partition bundles'),
+      h('button', { type: 'button', dataset: { mode: 'record', testid: 'df-mode-record' }, title: 'Pin-level link records: the current plan of record, and earlier die revisions' }, 'Pin links'));
     modeSeg.querySelectorAll('button').forEach((b) => { b.onclick = () => ctx.setParams({ src: b.dataset.mode === 'plan' ? null : 'record', cam: null }, { notify: true }); });
     const recSel = h('select.field', { hidden: true, 'aria-label': 'Link record', title: 'Die revision of the link record', style: { maxWidth: '300px' }, testid: 'df-record', onchange: (e) => ctx.setParams({ rec: e.target.value, cam: null }, { notify: true }) });
     const bitsSel = h('select.field', { 'aria-label': 'Minimum width', title: 'Hide links narrower than this', testid: 'df-minbits', onchange: (e) => { S.minBits = +e.target.value; ctx.setParams({ min: S.minBits || null }); repaint(); } },
@@ -163,21 +163,23 @@ export default {
       async update(st, prev) {
         const { die } = st.sel, my = ++S.seq, mode = st.params.src === 'record' ? 'record' : 'plan';
         S.minBits = +st.params.min || 0; bitsSel.value = String(S.minBits);
-        if (!S.index) { try { S.index = await api.dataflowIndex(); } catch (e) { S.index = { records: [] }; } }
+        if (!S.index || S.index.building || !S.index.records.some((r) => r.current)) { try { S.index = await api.get('dataflow/index', { fresh: true }); } catch (e) { S.index = S.index || { records: [] }; } }
         const dieChanged = die !== S.die;
         if (dieChanged) { const busy = showBusy(wrap, 'Loading the plan…'); try { S.D = await api.die(die); } finally { busy.remove(); } if (my !== S.seq) return; S.die = die; buildPlan(); }
-        const recs = S.index.records.filter((r) => (DESIGNS[die] || []).includes(r.design) || (r.token_designs || []).some((t) => (DESIGNS[die] || []).includes(t)));
+        const recs = S.index.records.filter((r) => r.current ? r.id === 'plan_' + die : (DESIGNS[die] || []).includes(r.design) || (r.token_designs || []).some((t) => (DESIGNS[die] || []).includes(t)) || (r.legacy_token_designs || []).some((t) => (DESIGNS[die] || []).includes(t)));
         modeSeg.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', String(b.dataset.mode === mode)); if (b.dataset.mode === 'record') { b.disabled = !recs.length; if (!recs.length) b.title = 'No link record exists for this die'; } });
         const modeChanged = mode !== S.mode || dieChanged; S.mode = mode; S.hover = null; tip.hidden = true;
         if (modeChanged) S.hide.clear();
         recSel.hidden = mode !== 'record'; banner.hidden = true;
         if (mode === 'record' && recs.length) {
-          const id = recs.some((r) => r.id === st.params.rec) ? st.params.rec : (recs.find((r) => r.role === 'canonical') || recs[0]).id;
-          clear(recSel); for (const r of recs) recSel.append(h('option', { value: r.id, selected: r.id === id }, `${r.label}${r.role === 'canonical' ? '' : ' · ' + r.role}`));
+          const id = recs.some((r) => r.id === st.params.rec) ? st.params.rec : (recs.find((r) => r.current) || recs.find((r) => r.role === 'canonical') || recs[0]).id;
+          clear(recSel); for (const r of recs) recSel.append(h('option', { value: r.id, selected: r.id === id }, r.current ? `Current: ${r.label}` : `${String(r.generated || '').slice(0, 10)} · ${r.label}${r.role ? ' · ' + r.role : ''}`));
           if (id !== S.recId) { const busy = showBusy(wrap, 'Loading the link record…'); try { await loadRecord(id); } catch (e) { busy.remove(); throw e; } busy.remove(); if (my !== S.seq) return; pc.setWorld([S.m.W, S.m.H]); }
           else if (modeChanged) pc.setWorld([S.m.W, S.m.H]);
           const r = recs.find((x) => x.id === id), gen = Date.parse(r.generated) / 1000, plan = S.D.plan;
-          banner.hidden = false; clear(banner).append(h('div.banner', h('div', h('b', 'Not the plan of record. '), `This link record describes die revision “${r.revision || r.label}”, generated ${fmtTime(gen)} (${fmtAge(Date.now() / 1000 - gen)}). The plan of record of ${dieShort(die)} is ${plan.sha} (${String(plan.date || '').slice(0, 10)}). Block names and positions differ; use “Plan of record” for today's partition links.`)));
+          banner.hidden = false;
+          if (r.current) clear(banner).append(h('div.banner.info', h('div', h('b', 'Plan of record. '), `Pin-level links of plan ${plan.sha}: partitions, hard cores and the aggregated plan ports, generated ${fmtTime(gen)} (${fmtAge(Date.now() / 1000 - gen)}) and rebuilt when the plan changes. Lengths are plan estimates; the die-level route has not run.`)));
+          else clear(banner).append(h('div.banner', h('div', h('b', 'Not the plan of record. '), `This link record describes die revision “${r.revision || r.label}”, generated ${fmtTime(gen)} (${fmtAge(Date.now() / 1000 - gen)}). The plan of record of ${dieShort(die)} is ${plan.sha} (${String(plan.date || '').slice(0, 10)}). Block names and positions differ; pick the current record for today's plan.`)));
           ctx.setScope(`${dieShort(die)} · link record ${id}`);
         } else {
           if (modeChanged) pc.setWorld(S.D.die.plan.outline);

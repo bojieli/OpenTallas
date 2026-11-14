@@ -12,7 +12,8 @@ const KEYS = [['/', 'Search'], ['1 – 7', 'Switch view'], ['[', 'Hide or show t
 
 export function createShell(root, { views, meta }) {
   const S = { meta, view: null, pop: null };
-  const app = h('div.app', { dataset: { nav: ls.get('nav.open', true) ? 'open' : 'closed', insp: ls.get('insp.open', true) ? 'open' : 'closed', focus: '0' } });
+  const narrow = innerWidth < 900;   // panels are drawers on a narrow screen: closed until asked for
+  const app = h('div.app', { dataset: { nav: !narrow && ls.get('nav.open', true) ? 'open' : 'closed', insp: !narrow && ls.get('insp.open', true) ? 'open' : 'closed', focus: '0' } });
   app.style.setProperty('--nav-w', ls.get('nav.w', NAV.def) + 'px'); app.style.setProperty('--insp-w', ls.get('insp.w', INSP.def) + 'px');
 
   /* ---------------- top bar */
@@ -67,7 +68,7 @@ export function createShell(root, { views, meta }) {
 
   /* ---------------- panels: collapse, resize */
   function setPanel(which, open) {
-    app.dataset[which] = open ? 'open' : 'closed'; ls.set(which + '.open', open); syncPanelButtons();
+    app.dataset[which] = open ? 'open' : 'closed'; if (innerWidth >= 900) ls.set(which + '.open', open); else if (open) app.dataset[which === 'nav' ? 'insp' : 'nav'] = 'closed'; syncPanelButtons();
     window.dispatchEvent(new Event('resize'));
   }
   function syncPanelButtons() {

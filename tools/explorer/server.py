@@ -16,6 +16,8 @@ HERE = pathlib.Path(__file__).resolve().parent
 FV = HERE.parent / 'fleet_viz'
 sys.path.insert(0, str(FV))
 import design_service, layout_service, coverage, die_compose   # noqa: E402  (the engines)
+sys.path.insert(0, str(HERE))
+import refresh_data   # noqa: E402
 
 WEB = HERE / 'web'
 ENGINE = FV / 'explorer' / 'element'            # lv_worker.js, lv_decode.js, vendor/deck.gl (loaded as-is)
@@ -28,7 +30,7 @@ TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=u
          '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png',
          '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.map': 'application/json'}
 STALE_S = {'design_index': 3 * 3600, 'plan_now': 3 * 3600, 'compose': 3 * 3600, 'token_map': 26 * 3600,
-           'token': 7 * 86400, 'dataflow': 7 * 86400, 'coverage': 7 * 86400, 'store': None}
+           'token': 7 * 86400, 'dataflow': None, 'coverage': 7 * 86400, 'store': None}
 LEGACY = {'/explorer': 'plan', '/explorer/': 'plan', '/explorer/design': 'plan', '/explorer/design/': 'plan',
           '/explorer/design/diemap.html': 'layout', '/explorer/element/': 'element', '/explorer/element': 'element',
           '/explorer/dataflow/': 'dataflow', '/explorer/dataflow': 'dataflow', '/explorer/token/': 'token', '/explorer/token': 'token',
@@ -185,13 +187,11 @@ def datasets():
     add('token', 'Token path records (simulator export)', tgen, 'tools/token_path_export.py', ['token'], note=tnote, missing=ti is None)
     tm = _json_file(design_service.TOKEN_MAP)
     add('token_map', 'Token class to design node map', tm and _iso(tm.get('generated')), 'token_design_map.py', ['token'], missing=tm is None)
-    di = _json_file(DATAFLOW / 'index.json')
-    dgen = None
-    if di:
-        gens = [g for g in (_iso(r.get('generated')) for r in di.get('records', [])) if g]
-        dgen = max(gens) if gens else None
-    add('dataflow', 'Data-flow link records', dgen, 'tools/fleet_viz/dataflow_links.py', ['dataflow'],
-        note='link records are generated per die revision; the revision is named in each record', missing=di is None)
+    dataflow_refresh()
+    own = (_json_file(DF_OWN / 'index.json') or {}).get('records') or []
+    gens = [g for g in (_iso(r.get('generated')) for r in own) if g]
+    add('dataflow', 'Data-flow link records of the plans of record', min(gens) if gens else None, 'tools/explorer/refresh_data.py (plan_now.plan_geometry + dataflow_links.py), rebuilt when a plan changes', ['dataflow'],
+        note='%d of %d dies have a current record; older revisions stay selectable and are labelled' % (len(own), len(idx['dies']) if idx else 0), missing=not own)
     try:
         cv = COV.version()
         add('coverage', 'Architecture coverage ledger', None if cv.get('err') else now, cv.get('source') or 'results/arch/coverage', ['closure'], note=cv.get('err'))
@@ -318,10 +318,37 @@ def token_index():
     return dict(index=ti, dates=dates, map_generated=_iso(tm.get('generated')), mapped=sorted((tm.get('designs') or {}).keys()))
 
 
+def token_map(design):
+    o = DS.token(design)
+    if o.get('error'): raise ApiError(404, 'no token map for this design', o['error'])
+    return o
+
+
+DF_OWN = OWN / 'dataflow'      # plan_<die> link records of the current plans of record (refresh_data.py)
+_DF = dict(stamp=None, thread=None, result=None)
+
+
+def dataflow_refresh():
+    """rebuild the plan_<die> link records in the background when the design index changed"""
+    idx = DS.index()
+    if idx is None or _DF['stamp'] == idx.get('generated') or (_DF['thread'] and _DF['thread'].is_alive()): return
+    _DF['stamp'] = idx.get('generated')
+
+    def run():
+        try: _DF['result'] = refresh_data.refresh(idx, DF_OWN)
+        except Exception as e: _DF['result'] = dict(error='%s: %s' % (type(e).__name__, e))
+    _DF['thread'] = threading.Thread(target=run, daemon=True); _DF['thread'].start()
+
+
 def dataflow_index():
-    di = _json_file(DATAFLOW / 'index.json')
-    if di is None: raise ApiError(404, 'no data-flow records', str(DATAFLOW))
-    return di
+    dataflow_refresh()
+    own = (_json_file(DF_OWN / 'index.json') or {}).get('records') or []
+    old = (_json_file(DATAFLOW / 'index.json') or {}).get('records') or []
+    have = {r['id'] for r in own}
+    for r in own: r['current'] = True
+    recs = own + [dict(r, role='previous' if r.get('role') == 'canonical' else r.get('role'), current=False) for r in old if r['id'] not in have]
+    if not recs: raise ApiError(404, 'no data-flow records', str(DATAFLOW))
+    return dict(schema='opentallas.dataflow.links_index.v1', records=recs, refresh=_DF['result'], building=bool(_DF['thread'] and _DF['thread'].is_alive()))
 
 
 # ---------------------------------------------------------------------------------------------- HTTP
@@ -399,11 +426,12 @@ class H(BaseHTTPRequestHandler):
         if p == 'search': return self.send(200, json.dumps(search(g('q'), g('die') or None, min(200, int(g('limit', '40') or 40)))).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p.startswith('layout/'): return LS.handle(self, p[7:], q, False)
         if p.startswith('store/'): return LS.static(self, p[6:], False)
-        if p == 'dataflow/index': return self.json('df:index', _mtime(DATAFLOW / 'index.json'), dataflow_index)
+        if p == 'dataflow/index': return self.send(200, json.dumps(dataflow_index(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-cache'),))
         if p.startswith('dataflow/record/'):
             rid = p[len('dataflow/record/'):]
             if not layout_service.valid_name(rid): raise ApiError(400, 'bad record id', rid)
-            f = DATAFLOW / (rid + '.links.json.gz')
+            f = DF_OWN / (rid + '.links.json.gz')
+            if not f.is_file(): f = DATAFLOW / (rid + '.links.json.gz')
             if not f.is_file(): raise ApiError(404, 'no such data-flow record', rid)
             return self.send(200, f.read_bytes(), 'application/json', (('Content-Encoding', 'gzip'), ('Cache-Control', 'no-cache')))
         if p == 'token/index': return self.json('tok:index', (_mtime(TOKEN / 'index.json'), _mtime(design_service.TOKEN_MAP)), token_index)
@@ -415,7 +443,7 @@ class H(BaseHTTPRequestHandler):
             return self.json('tok:rec:' + rid, _mtime(f), lambda: json.loads(f.read_text()))
         if p.startswith('token/map/'):
             k = p[len('token/map/'):]
-            return self.json('tok:map:' + k, (stamp, _mtime(design_service.TOKEN_MAP)), lambda: DS.token(k))
+            return self.json('tok:map:' + k, (stamp, _mtime(design_service.TOKEN_MAP)), lambda: token_map(k))
         if p == 'coverage':
             now = time.time(); o = dict(COV.api(), generated_at=now)
             return self.send(200, gzip.compress(json.dumps(o, separators=(',', ':')).encode(), 5), 'application/json', (('Content-Encoding', 'gzip'), ('Cache-Control', 'no-cache')))
