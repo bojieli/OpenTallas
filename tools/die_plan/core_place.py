@@ -352,6 +352,10 @@ class TypeModel:
                 if any(re.search(rx, self.inst[i]) or re.search(rx, self.C[i].get("module", "")) for i in g):
                     d[face] = max(d.get(face, 0.0), um)
             self.cclr.append(d)
+        # slot rule (--slot-clear REGEX, R-LEAF-3 / R-LEAF-3b): a facing pair with a rule cluster on either side abuts
+        # (< SLOT_ABUT) or keeps >= SLOT_STREET; no 4.32..43.2 um slot between hard cores (FABLE-REVIEW-CONG 11-14)
+        self.cslot = [any(re.search(rx, self.inst[i]) or re.search(rx, self.C[i].get("module", ""))
+                          for rx in (self.cfg.get("slot_clear") or []) for i in g) for g in self.CL]
         self.reset_state()
 
     def reset_state(self):
@@ -445,12 +449,16 @@ class TypeModel:
                     req = self.req_gap(gap, fc["W"], fj["E"])
                 if gx < req - EPS:
                     return False
+                if (self.cslot[k] or self.cslot[j]) and slot_bad(gx):
+                    return False
             elif gx < -EPS:    # stacked in y
                 if Y0 >= y + h - EPS:
                     req = self.req_gap(gap, fc["N"], fj["S"])
                 else:
                     req = self.req_gap(gap, fc["S"], fj["N"])
                 if gy < req - EPS:
+                    return False
+                if (self.cslot[k] or self.cslot[j]) and slot_bad(gy):
                     return False
             elif max(gx, gy) < self.diag_gap(gap) - EPS:
                 return False
@@ -1058,6 +1066,94 @@ def face_clear_legalise(M, log):
     return sum(1 for k in range(M.m) if tuple(M.cpos[k]) != start[k]), failed
 
 
+SLOT_ABUT, SLOT_STREET = 4.32, 43.2
+
+
+def slot_bad(g):
+    """a facing gap g that is a slot: neither abutted (< SLOT_ABUT) nor a street (>= SLOT_STREET)."""
+    return SLOT_ABUT - EPS <= g < SLOT_STREET - EPS
+
+
+def slot_pairs(M):
+    """(k, j, gap) of every facing cluster pair in a slot where either side carries the --slot-clear rule."""
+    out = []
+    for k in range(M.m):
+        (x, y), w, h = M.cpos[k], M.cbb[k, 2], M.cbb[k, 3]
+        for j in range(k + 1, M.m):
+            if not (M.cslot[k] or M.cslot[j]):
+                continue
+            (X, Y), Wj, Hj = M.cpos[j], M.cbb[j, 2], M.cbb[j, 3]
+            gx = max(X - (x + w), x - (X + Wj)); gy = max(Y - (y + h), y - (Y + Hj))
+            if gy < -EPS and slot_bad(gx):
+                out.append((k, j, float(gx)))
+            elif gx < -EPS and slot_bad(gy):
+                out.append((k, j, float(gy)))
+    return out
+
+
+def slot_clear_legalise(M, log, radius_um=129.6):
+    """--slot-clear: every rule pair in a slot gets one side moved (the movable rule cluster first, the smaller one
+    on a tie) to the nearest lattice spot (rings of G out to radius_um) where it is legal under every rule incl. the
+    slot rule against ALL clusters, and adds no link over its timing limit; the other side is tried when the first
+    has no spot.  Pairs with no such spot stay and are reported (failed).  Returns (moved, failed, left)."""
+    start = [tuple(M.cpos[k]) for k in range(M.m)]
+    failed = []
+    ring = sorted({(dx, dy) for dx in range(-int(radius_um / G), int(radius_um / G) + 1)
+                   for dy in range(-int(radius_um / G), int(radius_um / G) + 1)
+                   if (dx or dy) and math.hypot(dx, dy) * G <= radius_um + EPS}, key=lambda d: (math.hypot(*d), d))
+    for _round in range(4):
+        pairs = slot_pairs(M)
+        if not pairs:
+            break
+        progress = False
+        for k, j, g in pairs:
+            if not any(p[:2] == (k, j) for p in slot_pairs(M)):
+                continue      # an earlier move this round cleared it
+            order = [c for c in (k, j) if not M.cfix[c]]
+            order.sort(key=lambda c: (not M.cslot[c], M.cbb[c, 2] * M.cbb[c, 3]))
+            done = False
+            for c in order:
+                x, y = M.cpos[c]
+                K = sorted(set(q for i in M.CL[c] for q in M.inc[i]))
+                tv0 = M.tviol(K)
+                for dx, dy in ring:
+                    p = (snap(x + dx * G), snap(y + dy * G))
+                    if not M.legal(c, *p):
+                        continue
+                    ob = M._band_k(c) if M.bands else None
+                    M.cpos[c] = p
+                    if M.tviol(K) <= tv0:
+                        if M.bands:
+                            M.band_now += M._band_k(c) - ob
+                        done = True
+                        break
+                    M.cpos[c] = (x, y)
+                if done:
+                    break
+            if done:
+                progress = True
+        if not progress:
+            break
+    left = slot_pairs(M)
+    for k, j, g in left:
+        failed.append(dict(a=M.inst[M.CL[k][0]], b=M.inst[M.CL[j][0]], gap_um=round(g, 2)))
+    moved = [M.inst[M.CL[k][0]] for k in range(M.m) if tuple(M.cpos[k]) != start[k]]
+    log("  slot-clear: %d rule slots in the base state, %d left, %d clusters moved: %s" % (
+        len(slot_pairs_at(M, start)), len(left), len(moved), [".".join(m_.split(".")[-2:]) for m_ in moved]))
+    return len(moved), failed, len(left)
+
+
+def slot_pairs_at(M, pos):
+    cur = [tuple(M.cpos[k]) for k in range(M.m)]
+    for k in range(M.m):
+        M.cpos[k] = pos[k]
+    try:
+        return slot_pairs(M)
+    finally:
+        for k in range(M.m):
+            M.cpos[k] = cur[k]
+
+
 def apply_seed(M, seed, log):
     """hand design: set each listed core's origin/orient (clusters move by their first listed member), then
     legalise illegal clusters to the nearest legal lattice spot."""
@@ -1504,6 +1600,9 @@ def main(argv=None):
     ap.add_argument("--face-clear", action="append", default=[], metavar="FACE:UM:REGEX",
                     help="cores whose inst/module match REGEX keep >= UM from FACE (S/N/E/W); a column too near is "
                          "re-packed off the face before the search")
+    ap.add_argument("--slot-clear", action="append", default=[], metavar="REGEX",
+                    help="R-LEAF-3 slot rule: a facing core pair with a REGEX (inst or module) cluster on either side "
+                         "abuts (< 4.32 um) or keeps >= 43.2 um; base slots are legalised to the nearest timing-clean spot")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
@@ -1532,7 +1631,8 @@ def main(argv=None):
                grt_halving=a.grt_halving, fixed_re=a.fixed, rs=rs_cfg,
                flips_only=a.flips_only,
                gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
-               face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear])
+               face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
+               slot_clear=list(a.slot_clear))
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
     rows = []
@@ -1582,6 +1682,7 @@ def main(argv=None):
             if tn in seeds:
                 seeded = apply_seed(M, seeds[tn], log)
             fc_moved, fc_failed = face_clear_legalise(M, log) if cfg.get("face_clear") else (0, [])
+            sc_moved, sc_failed, sc_left = slot_clear_legalise(M, log) if cfg.get("slot_clear") else (0, [], 0)
             st = {"moves": {}}
             if not a.no_search:
                 st = search(M, Gd, cfg, log)
@@ -1721,6 +1822,8 @@ def main(argv=None):
             Q["partition_types"][tn] = tnew
         rows.append(dict(type=tn, cores=M.n, clusters=M.m, links=len(M.L), stations=len(M.stations),
                          model=M.model, intrinsic=icut, seeded=bool(tn in seeds), seed_legalised=seeded, face_clear_moved=fc_moved, face_clear_failed=fc_failed, face_clear_end=M.clear_viol(),
+                         slot_clear_moved=sc_moved if cfg.get("slot_clear") else None, slot_clear_failed=sc_failed if cfg.get("slot_clear") else None,
+                         slot_clear_end=[dict(a=M.inst[M.CL[k_][0]], b=M.inst[M.CL[j_][0]], gap_um=round(g_, 2)) for k_, j_, g_ in slot_pairs(M)] if cfg.get("slot_clear") else None,
                          timing_over=[dict(a=str(M.L[q][0]), b=str(M.L[q][1]), bits=M.L[q][2], kind=M.L[q][3],
                                            len_um=round(M.llen(q), 1), limit_um=round(M.maxlen[q], 1))
                                       for q in range(len(M.L)) if M.llen(q) > M.maxlen[q] + EPS][:40],
