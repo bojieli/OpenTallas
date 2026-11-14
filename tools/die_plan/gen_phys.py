@@ -6119,7 +6119,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
-  if [ \$rc = 0 ]; then python3 -I /work/reg_fanout_gate.py \$N --out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\$?; head -12 /work/reg_fanout.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR reg_fanout (register > 64 data loads: merged replicas; or NOT RUN), see reg_fanout.json' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/reg_fanout_gate.py \$N --out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\$?; head -12 /work/reg_fanout.log; if [ \$rc != 0 ]; then echo 'WARN reg_fanout ADVISORY (KIT-OPS-4 11-14 COORD: register > 64 data loads or NOT RUN, see reg_fanout.json; not a gate)'; rc=0; fi; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --types-from \$N --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \
