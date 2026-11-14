@@ -19,5 +19,10 @@ S81 leaf__t6 (LEAF-HOLD-1 t6p2 5_1_grt.odb): failing net u_bound.u_ft_ft0_o_5/ne
 - Kit installs via proof/install_form.sh (same lines as the repo form).
 - HEAD-98 runs ctl_n (epyc8) / host_e (intel1) with its own per-kit copy of the hook: not relaunched.
 
-## Next
-The 2 proofs run the WIDE_SPACING superset (installed before it became opt-in). Post each as a follow-up RESULT when DRT ends (DRC count, or the DRT-0255 net + census). If both route DRC 0, the opt-in may become default; a follow-up rollout goes to a Sonnet lane (COORD/OWNER). Kits in flight are untouched; the setting applies at next kit generation.
+## Proof results (both posted as RESULTs)
+- HEAD hd_spn_end (coord 1447591b32a): DRT-0255 gone; DRT 100% with DRC 3, all "Rect Only" on M7 at net rst_start_raw_5's own pin (io.tcl place_pin 318.688 887.784, 0.080 x 0.432): pin-shape class, owner HEAD-98. Sign-off NOT SIGNED: TT +39.14, FF hold -4.32 on 81 (R-CLOCK), antenna 0.
+- S81 leaf__t6 (coord 01c82eb9b6b): NOT PROVEN. Iteration 0 at 90% had 97,897 violations vs 115,082 in the reference run, then the process was killed at 5:14 h (make Error 241, intel1 load 362/112). The leaf needs its R-STREET / plan form first.
+- Both proofs ran the wide-spacing superset. The branch default is the HEAD-98 min-spacing form (ctl_n DRC 0).
+
+## Status
+ENDED (OWNER: after the proofs and READY). Nothing is running. Any rollout, the WIDE_SPACING default decision and the t6 street form go to Sonnet lanes.
