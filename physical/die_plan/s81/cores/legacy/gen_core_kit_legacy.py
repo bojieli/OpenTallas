@@ -461,7 +461,7 @@ repair_timing -hold -hold_margin 5 -max_buffer_percent 100
 detailed_placement
 check_placement -verbose
 global_route -end_incremental
-estimate_parasitics -global_routing
+if {[catch {estimate_parasitics -global_routing} ot_est_e]} { puts "OT_GRT_EST_FALLBACK: post-GRT estimate_parasitics -global_routing failed ($ot_est_e); placement parasitics"; estimate_parasitics -placement }
 """
 
 

@@ -54,6 +54,15 @@ if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
     else echo "OT_CLK_LEAF_REPEAT grt inactive: no estimate_parasitics -global_routing in $S"; fi
   fi
 fi
+# OT_GRT_EST_FALLBACK begin
+# WF-1 11-14 (COORD class fix, TYPE-KVHGI3 fC): the -allow_congestion GRT forms (S81 col / slice / leaf, KV hgi) ended GRT with a small
+# overflow (GRT-0115, 39) and then ORFS global_route.tcl's 'estimate_parasitics -global_routing' aborted with GRT-0232 'Routing
+# congestion too high' / EST-0104, so detailed route never ran.  Disposable container copy of global_route.tcl: that call is wrapped
+# in catch; on failure the stage continues with placement parasitics and detailed route (which usually clears a small overflow).
+if [ -f "$S" ] && ! grep -qF "OT_GRT_EST_FALLBACK" "$S"; then
+  sed -i -E 's#^( *)log_cmd estimate_parasitics -global_routing(.*)$#\1if {[catch {log_cmd estimate_parasitics -global_routing\2} ot_est_e]} { puts "OT_GRT_EST_FALLBACK: estimate_parasitics -global_routing failed ($ot_est_e); placement parasitics, detailed route follows"; log_cmd estimate_parasitics -placement } ;\# OT_GRT_EST_FALLBACK#' "$S"
+fi
+# OT_GRT_EST_FALLBACK end
 # KW-FIX-35-F2 11-08 (FLOW class F follow-up, CTS DPL-0033): CTS-stage legalization uses the kit's own 3_5 legalizer.
 # ORFS erases DETAIL_PLACEMENT_ARGS outside the place stage, so stock cts.tcl (and clk_leaf_repeat) call a bare
 # detailed_placement = the negotiation legalizer, which stalled with residual overlaps where 3_5's diamond pass was 100 %
@@ -145,9 +154,11 @@ gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop 
   [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
   if [ -z "$tpost" ]; then grep -q 'GRT-0303\]' "$Tl" && tpost=$(date +%s) || return 1; fi
   now=$(date +%s); last=$(grep -v '^[[:space:]]*$' "$Tl" | tail -1 | cut -c1-160)
-  if [ -z "$gstop" ] && [ "$POST_MAX" -gt 0 ] && [ $((now - tpost)) -ge "$POST_MAX" ]; then
-    echo "OT_GRT_TIMECAP stage=grt post-route repair over $((now - tpost)) s (cap $POST_MAX s) $(grt_slack "$Tl") last='$last' (KW-FIX-44) $(date -u '+%F %T')"
-    gstop=timecap
+  # WF-1 11-14 (COORD/OWNER: delete the conservative limits; kv3_sys_c b5215b6c8bc0 was killed STRUCTURAL/grt-timecap while converging):
+  # the post-route time cap no longer kills GRT.  The line is logged once past OT_GRT_POST_MAX_S (default 43200 s) and the stage goes on.
+  if [ -z "${tlogged:-}" ] && [ "$POST_MAX" -gt 0 ] && [ $((now - tpost)) -ge "$POST_MAX" ]; then
+    echo "OT_GRT_TIMELOG stage=grt post-route repair over $((now - tpost)) s (log threshold $POST_MAX s, NO CAP: GRT continues) $(grt_slack "$Tl") last='$last' $(date -u '+%F %T')"
+    tlogged=1
   fi
   [ -n "$gstop" ] || return 1
   kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null
