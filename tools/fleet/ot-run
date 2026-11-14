@@ -1419,6 +1419,17 @@ def job_wrap(cmd, spec_path):
     return [JOB_BIN, "run", "--spec-b64", b64, "--"] + list(cmd)
 
 
+def soft_pin_ok(spec_path, d=None):
+    """SOFTPIN_1114: True only for an ot-job spec whose every input names a fetch host (the job can run on any host) and a --dir that is
+    the job root, not a kit/lane directory.  Any read/parse problem -> False (hard pin)."""
+    try:
+        ins = json.load(open(spec_path)).get("inputs") or []
+        local_dir = bool(d) and not str(d).startswith("/srv/opentallas-scratch2/claude/ot-jobs")
+        return bool(ins) and all(isinstance(i, dict) and i.get("host") for i in ins) and not local_dir
+    except Exception:
+        return False
+
+
 def main():
     a = sys.argv[1:]
     if a[:1] == ["--selftest"]:
@@ -1491,6 +1502,13 @@ def main():
     first = True
     conn_tries = 0
     previously_qualified = set()
+    if job and len(hosts) == 1 and hosts[0] != "localhost" and not os.environ.get("OT_RUN_HARD_PIN") and soft_pin_ok(job, d):
+        # SOFTPIN_1114 ADMIT-TUNE-1 (COORD 11-14): a wave --job whose inputs all name a fetch host has no data locality, so its single --hosts pin
+        # is a preference: pin host first, every other build host as an alternative, so REBALANCE re-places an unstarted waiter where memory is
+        # free.  Path-only specs and kit-local --dir jobs stay hard-pinned (the 02:52-03:31 soft pin v1 moved 114 place jobs to hosts without
+        # their gen/run_kit.sh: ot-job exit 99).  OT_RUN_HARD_PIN=1 restores the hard pin.
+        _alt = [h for h in HOSTS if h not in ("localhost", "intel2", "epyc4", "epyc5", "epyc6") and h not in held and h != hosts[0]]
+        hosts = [hosts[0]] + _alt
     pinned = hosts is not HOSTS
     die = "OT_HEAVY_PRIO=die" in os.environ.get("OT_RUN_PRIO_ENV", "")
     disk = disk if disk is not None else (DIE_DISK_GB if die else 20)
