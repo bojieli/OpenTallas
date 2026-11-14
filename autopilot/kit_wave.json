@@ -31501,7 +31501,8 @@
     "hd_spn_eshim_tx": "HEAD-98 11-13: SIGNED OFF by re-sign onto rp21z4 (RESIGN RECORDED head-98/resign21z4/hd_spn_eshim_tx/rs_auto/PROVENANCE.json, tag flow-20261109-fm-head); kit RTL byte-identical in rp21z5; no rebuild.",
     "hd_st_n3_transit": "HEAD-98 11-13: SIGNED OFF by re-sign onto rp21z4 (RESIGN RECORDED head-98/resign21z4/hd_st_n3_transit/rs_auto/PROVENANCE.json, tag flow-20261109-fm-head); kit RTL byte-identical in rp21z5; no rebuild.",
     "hd_spn_wshim_tx": "HEAD-99 11-14: autopilot CLASSIFY SIGNED x3 (R-MINIMAL; port-start hold only, 486 ep -130 port); the wave kept relaunching it and refusing (resume_nochange). Signed, no rebuild.",
-    "hd_turn_b": "HEAD-99 11-14: SIGNED via extra late ECO (intel1 attempt_3 eco99_b/i1: TT +101.49 FF +2.11 DRC 0, LOCAL_PASS_NEEDS_PARENT; COUNT-DIRECT row). The wave relaunch (attempt_6) reported GEN_NO_KIT although gen wrote the kit dir (epyc7 attempt_6/gen/hd_turn_b); no rebuild needed."
+    "hd_turn_b": "HEAD-99 11-14: SIGNED via extra late ECO (intel1 attempt_3 eco99_b/i1: TT +101.49 FF +2.11 DRC 0, LOCAL_PASS_NEEDS_PARENT; COUNT-DIRECT row). The wave relaunch (attempt_6) reported GEN_NO_KIT although gen wrote the kit dir (epyc7 attempt_6/gen/hd_turn_b); no rebuild needed.",
+    "hd_spn_wshim_rx": "HEAD-99 11-14: autopilot CLASSIFY SIGNED 06:22 (R-MINIMAL; late-ECO record TT -12.5 FF -1.46, archived epyc10); wave attempt_4 relaunch not needed."
    },
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
