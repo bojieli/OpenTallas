@@ -97,7 +97,8 @@ class Reap(unittest.TestCase):
             r = st["items"]["a"]
             self.assertEqual(r["status"], "RUNNING")
             self.assertGreaterEqual(r["hung_watch"]["cpu"], 500.0)                # summed over the fleet hosts
-            self.assertTrue(any("progressing" in m for m in ap.logs))
+            # WF-1 11-14 (owner #H): a row silent 400 min with busy CPU is never cancelled; at >= 360 min it is posted once
+            self.assertTrue(any("HUNG-WATCH POST" in m for m in ap.logs))
             ap = AP(cpu=520.0)                                                 # +20 s CPU in 130 min: hung
             n = {}
             self.assertEqual(KW.reap_dead(ap, CFG, st, n, now=now + 130 * 60), 1)

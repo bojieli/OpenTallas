@@ -213,6 +213,26 @@ def nonport_score(signoff_path):
     return (None, n) if s.get("nonport_wns") is None else (float(s["nonport_wns"]), n)
 
 
+# WF-1 11-14 (OWNER "remove process frictions"; EXPERT-REVIEW-6 #9): under R-MINIMAL a routed DRC-0 record whose ONLY failing
+# gate is the internal FF hold (TT setup >= -42 ps passes) goes into the hold-buffer ECO whatever the miss size or endpoint count:
+# the legacy near-miss window (NEAR_WNS_PS / NEAR_ENDPOINTS) and the structural-advisory eligibility refusal do not apply to it
+# (kv3_phy_v1 TT -34.25 pass / FF -204 on 297 endpoints was sent to 'GEOMETRY + REDESIGN, no ECO').  The result is re-judged by
+# the same three gates (signoff_chain.signed).
+def minimal_hold_only(rec):
+    """True: R-MINIMAL profile and signoff_profile.judge() fails ONLY hold_ff (drc and setup_tt PASS)"""
+    if os.environ.get("OT_SIGNOFF_PROFILE", "minimal").strip().lower() == "legacy" or not isinstance(rec, dict):
+        return False
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("signoff_profile_eco", HERE / "signoff_profile.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        g = mod.judge(rec)["gates"]
+    except Exception:
+        return False
+    return g.get("hold_ff") == "FAIL" and g.get("drc") == "PASS" and g.get("setup_tt") == "PASS"
+
+
 def metrics(rec, signoff_path=None):
     """sign-off record -> {verdict, signed, tt, ff, drv, drc, fails}; with OT_HOLD_REPAIR_SCOPE=nonport and a readable
     FF census next to signoff_path also ff_np / ff_np_n (the non-port hold the ECO repairs), which the stop rule and the
@@ -230,6 +250,7 @@ def metrics(rec, signoff_path=None):
     out = dict(verdict=verdict, signed=bool(signed), tt=(c.get("setup_tt") or {}).get("wns_ps"),
                 ff=(c.get("hold_ff") or {}).get("wns_ps"), drv=int(drv), drc=int((c.get("drc") or {}).get("count") or 0),
                 drv_tt=int(by.get("tt", 0)), drv_ff=int(by.get("ff", 0)), fails=fails,
+                min_hold_only=minimal_hold_only(rec),
                 vclk_tt=measured_vclk((c.get("setup_tt") or {}).get("vclk_reference")),
                 vclk_ff=measured_vclk((c.get("hold_ff") or {}).get("ff_vclk_reference")))
     if signoff_path and hold_scope() in ("reg2reg", "nonport"):
@@ -255,7 +276,8 @@ def passes(kit, prev, hm):
     if hold_mm(kit):
         return ["m" + str(hm)]
     tt, ff = prev.get("tt"), prev.get("ff")
-    need_t = (tt is not None and tt < 0) or prev.get("drv_tt", 0) > 0
+    # WF-1 11-14: a record that fails only the FF hold under R-MINIMAL (TT setup within tolerance) needs no TT setup pass
+    need_t = ((tt is not None and tt < 0 and not prev.get("min_hold_only")) or prev.get("drv_tt", 0) > 0)
     need_b = (ff is not None and ff < 0) or prev.get("drv_ff", 0) > 0 or prev.get("drc", 0) > 0
     out = (["t" + str(hm)] if need_t else []) + (["b" + str(hm)] if need_b or not need_t else [])
     return out
@@ -268,6 +290,8 @@ def eligible(rec, signoff_path=None):
     m = metrics(rec)
     if m["signed"]:
         return False, "already signed"
+    if minimal_hold_only(rec):
+        return True, "ECO class: R-MINIMAL only internal FF hold fails (auto hold-buffer ECO, no near-miss window)"
     if not m["fails"]:
         return False, "no FAIL gate (NOT RUN / parent-only reasons are not an ECO case)"
     other = sorted(set(m["fails"]) - ECO_FAILS)
@@ -338,6 +362,9 @@ def near_miss(rec, signoff_path=None):
     scores hold on the endpoints sign-off leaves to the core (KW-FIX-36 R4: without input-port starts and output-port
     endpoints, core_hold); with no readable split it scores the whole number.  Same numbers as ever: one iteration,
     NEAR_WNS_PS, NEAR_ENDPOINTS of the remaining endpoints."""
+    if minimal_hold_only(rec):
+        return True, [], ["R-MINIMAL auto hold ECO (WF-1): only the internal FF hold fails; the legacy "
+                          f"{NEAR_WNS_PS:g} ps / {NEAR_ENDPOINTS} endpoint window is not applied"]
     c = rec.get("checks") or {}
     far, warn = [], []
     for key, name in (("setup_tt", "setup"), ("hold_ff", "hold")):

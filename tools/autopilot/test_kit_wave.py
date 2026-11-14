@@ -169,12 +169,12 @@ class Select(unittest.TestCase):
     def test_selection_and_order(self):
         rows = KW.parse_owners(OWN)
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
-        self.assertEqual([p["item"] for p in picks], ["kv3_phy_v1", "kv3_hg_v1", "kv3_hub_Eo"])   # replicas desc
+        self.assertEqual([p["item"] for p in picks], ["kv3_phy_v1", "kv3_hg_v1", "kv3_hroot", "kv3_hub_Eo"])   # replicas desc (WF-1 11-14: take_states default * = every state)
         self.assertEqual(skip["live job (another lane)"], ["kv3_io_cor_v1"])
         self.assertIn("kv3_pc", skip["lane activity < 3 h (KV-KITS-W)"])
         self.assertEqual(skip["kind core not in wave"], ["qkd_hr_cdc_ci"])
         self.assertEqual(skip["not in plan of record"], ["kv3_gone"])
-        self.assertNotIn("kv3_hroot", [p["item"] for p in picks])          # KIT-PLACED not in take_states
+        self.assertIn("kv3_hroot", [p["item"] for p in picks])             # WF-1 11-14: KIT-PLACED taken (take_states default *)
 
     def test_own_queue_job_on_parent_is_not_a_claim(self):
         own = lambda lj, owner="KIT-WAVE-12": KW._own_wave_unit({"owner": owner, "item": "sle_su_l1", "live_job": lj})
@@ -386,7 +386,7 @@ class Classify(unittest.TestCase):
             ("place", "FACE_GUARD FAIL shared 7645 bits", "PLAN"),
             ("place", "[ERROR ORD-2013] instance u_m LEF master ot_sram_1r1w_32x64_m1 not found", "PLAN"),
             ("gen", "type kv3_sys_SD: local reset tap [388.8, 596.16] is blocked", "PLAN"),
-            ("gen", "Traceback (most recent call last):\n  File gen.py\nKeyError: 'x'", "FLOW"),
+            ("gen", "Traceback (most recent call last):\n  File gen.py\nKeyError: 'x'", "INFRA"),
             ("preflight", "KIT_PREFLIGHT FAIL\nmissing staged file", "FLOW"),
             ("geom", "AP_AUTO_GEOM FAIL fill .0997 channel_h 1.065", "PLAN"),
             ("cells", "512000 cells", "PLAN"),
@@ -695,8 +695,11 @@ class Step(unittest.TestCase):
             self.assertEqual(len(enq), 1)
             self.assertIn("main@620077f42", enq[0])
             self.assertTrue(any(a[0] == "lanes/GEOM-REVIEW.md" for a in ap2.appends))   # 1st PASS sampled (1 in 5)
-            self.assertEqual(len(ap2.units), 1)                                 # next pick kv3_hub_Eo; failed not retried
-            self.assertIn("kv3hubEo", ap2.units[0][0])
+            # WF-1 11-14: take_states default * also takes the KIT-PLACED row kv3_hroot, so with 2 slots free the next picks are
+            # kv3_hub_Eo and kv3_hroot (owner #7: take_states = all states); the failed kv3_hg_v1 is still not retried
+            self.assertEqual(len(ap2.units), 2)
+            self.assertTrue(any("kv3hubEo" in u[0] for u in ap2.units))
+            self.assertTrue(any("kv3hroot" in u[0] for u in ap2.units))
 
     def test_canary_lifetime_cap_and_type_args(self):
         with tempfile.TemporaryDirectory() as d:
