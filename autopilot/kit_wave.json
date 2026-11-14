@@ -6732,7 +6732,8 @@
     "col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31": "KIT-OPS-2 B1 swap: kept from glob 'col_h*' (type unchanged by B1) | COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
     "col_h9_r0_p4__t1__clcb2fbfe8__pvec137455": "KIT-OPS-2 B1 swap: kept from glob 'col_h*' (type unchanged by B1) | COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
     "col_h10*": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key. | was col_h*: COORD 11-12 04:2x: col_h rows stay HELD until ready11p binds (they launched by mistake); running rows are kept",
-    "dsdv_slice_*": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key."
+    "dsdv_slice_*": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "col_h9_r2__t1__*": "KIT-OPS-3 TEMP (COORD 20:2x): REBUILD-17 slice_station restores go first; col_h9_r2 pv variants held for ONE wave pass. Lift = delete this key (KIT-OPS-3 removes it after the 8 launch). Running rows keep running."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
