@@ -2593,9 +2593,12 @@ def gen_hosts(cfg, die, item=None):
     if item:
         hs = [h for h in hs if item not in (imiss.get(h) or {}).get(die, {})
               and core_module(item) not in (imiss.get(h) or {}).get(die, {})] or hs   # WAVE-OPS-1: core_kit.item_args
-    return ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
-            or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
-            or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
+    res = ([h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {}) and die not in low.get(h, {})]
+           or [h for h in hs if lane not in marked.get(h, ()) and die not in bad.get(h, {})]
+           or [h for h in hs if lane not in marked.get(h, ())] or [d["gen_host"]])
+    # KIT-OPS-4 11-14 (COORD): the free INFRA retry of an earlyoom / signal kill leaves the host that killed it while another stays
+    av = (cfg.get("_avoid_host") or {}).get((die, item)) if item else None
+    return [h for h in res if h != av] or res if av else res
 
 
 # KW-FIX-24 11-06 (COORD 19:2x (5) stale-source class): a gen host whose copy of a die's src tree or plan dir is
@@ -6014,7 +6017,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
            # design FAILs before must still get its infra_attempts after a class fix relaunch
            "infra_base": (int(prev.get("infra_base") or 0) if prev.get("class") == "INFRA"
-                          else int(prev.get("attempt") or 0))}
+                          else int(prev.get("attempt") or 0)),
+           "kill_digest": prev.get("kill_digest"), "kill_n": prev.get("kill_n"), "kill_host": prev.get("kill_host")}
     if arm:
         rec["arm"] = {k: arm.get(k) for k in ("of", "key", "mode", "gen_host")}
     if sp.get("prov_views"):
@@ -6869,7 +6873,28 @@ def collect(AP, cfg, st, notices):
             rec["status"] = "RETRY-INFRA"
         elif cls == "INFRA":
             free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
-        if cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
+        if cls == "INFRA" and KILL_RE.search(why or "") and not NO_HOST.search(why or ""):
+            # KIT-OPS-4 11-14 (COORD class fix): an attempt killed from outside (earlyoom rc 143 / Error 241, signal) is retried ONCE,
+            # at the next tick, on another host (the killer host is avoided), charge-free and without a retry key.  A second kill on
+            # the same inputs stops here and is posted (the budget below would otherwise count every attempt number)
+            try:
+                _kh = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
+            except (OSError, ValueError, KeyError, TypeError):
+                _kh = None
+            _dg = input_digest(cfg, rec["die"])
+            if rec.get("kill_digest") == _dg and int(rec.get("kill_n") or 0) >= 1:
+                rec["blocked"] = "BLOCKED-INFRA-REPEAT"
+                AP.log(f"KIT-WAVE INFRA-REPEAT {rec['die']}/{rec['item']}@{rec.get('attempt')}: killed again on the same inputs "
+                       f"({why[:120]}); no auto retry, posted (retry key or inputs change releases it)")
+                notices.setdefault(rec["die"], []).append(f"{rec['item']} INFRA-REPEAT killed twice on the same inputs ({why[:120]}); retry key needed")
+            else:
+                rec["kill_digest"], rec["kill_n"], rec["kill_host"] = _dg, 1, _kh
+                rec["infra_base"] = int(rec.get("infra_base") or 0) + 1
+                rec["no_host_at"] = 0
+                rec["status"] = "RETRY-INFRA"
+                AP.log(f"KIT-WAVE INFRA-FREE-RETRY {rec['die']}/{rec['item']}@{rec.get('attempt')}: killed ({why[:100]}) on {_kh}; "
+                       f"one free retry on another host next tick")
+        elif cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
         c = note_fail_sig(st, rec, cls, why, inp=input_digest(cfg, rec["die"]))
         if c and int(c.get("n") or 0) >= RETRY_CAP and blocked_why(cfg, st, rec["die"], rec["item"]):
@@ -6904,6 +6929,9 @@ def cell_check_note(AP, st, rec, res, notices):
         cc.get("density"), round(max((cc["density"] / cc["density_flag"]) if cc.get("density") else 0.0,
                                      (cc["ratio"] / cc["ratio_flag"]) if cc.get("ratio") else 0.0), 3),
         "; ".join(cc["flags"]), cc.get("plan_change") or "-", "-", "-")))
+
+
+KILL_RE = re.compile(r"Error 241|exit 143|rc 143|exit 137|process terminated|earlyoom|interrupted \(signal|\bKilled\b")
 
 
 def infra_attempts(cfg, die):
@@ -8118,6 +8146,8 @@ def _step(AP, ap_dir):
             if not ensure_plan_view(AP, st, cfg["dies"].get(rec["die"])):
                 continue                                 # plan unreadable: stays RETRY-INFRA, next tick
             rec["status"] = "FAIL"
+            if rec.get("kill_host"):
+                cfg.setdefault("_avoid_host", {})[(rec["die"], rec["item"])] = rec["kill_host"]
             launch_safe(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
                                               "replicas": rec.get("replicas"), "arm": rec.get("arm")},

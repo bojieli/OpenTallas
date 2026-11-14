@@ -137,6 +137,18 @@ def kit_own_hd(KW):
                               "ap-68bf0d080dcd-a1 68bf0d080dcd; ot-run pid 324465 1105f2/kit-wave/s81_head/l48ub/items/hd_mesh_e/attempt_3/gen/hd_mesh_e (+3)"})
 
 
+class InfraKillRetry(unittest.TestCase):
+    def test_avoid_host_and_kill_pattern(self):
+        # KIT-OPS-4 11-14: an earlyoom / signal kill retries once on another host; the killer host is left out while one stays
+        c = {"dies": {"x": {"gen_host": "a", "gen_hosts": ["a", "b", "c"]}}, "_avoid_host": {("x", "it"): "a"}}
+        self.assertEqual(KW.gen_hosts(c, "x", "it"), ["b", "c"])
+        self.assertEqual(KW.gen_hosts(c, "x", "other"), ["a", "b", "c"])
+        one = {"dies": {"x": {"gen_host": "a", "gen_hosts": ["a"]}}, "_avoid_host": {("x", "it"): "a"}}
+        self.assertEqual(KW.gen_hosts(one, "x", "it"), ["a"])
+        self.assertTrue(KW.KILL_RE.search("ot-run: exit 143 (Error 241)"))
+        self.assertFalse(KW.KILL_RE.search("RTL parse error"))
+
+
 class Select(unittest.TestCase):
     def test_pilot_first_caps_unproven_class(self):
         # OWNER 12.27a: an unproven die x kit class has at most 2 kits in flight; in-flight kits count, none killed
