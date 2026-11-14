@@ -38,7 +38,8 @@ export default {
     const clearBtn = h('button.btn.ghost', { type: 'button', title: 'Clear rulers and the net highlight (Esc)', testid: 'el-clear', onclick: clearAll }, 'Clear');
     const labBtn = h('button.btn', { type: 'button', 'aria-pressed': 'true', title: 'Macro name labels on the canvas', testid: 'el-labels', onclick: () => { if (!S.eng) return; S.eng.show.macroLabels = !S.eng.show.macroLabels; labBtn.setAttribute('aria-pressed', String(S.eng.show.macroLabels)); ctx.setParams({ labels: S.eng.show.macroLabels ? null : '0' }); S.eng.requestUpdate(); } }, 'Labels');
     const macroHud = h('div.hud.tl.act', { hidden: true, testid: 'macro-legend', style: { whiteSpace: 'normal', right: '204px' } }); geo.append(macroHud);
-    tools.append(modeSeg, jobSel, qbox, fitBtn, labBtn, rulerBtn, clearBtn);
+    const unsTag = h('span.uns-tag', { hidden: true, testid: 'el-unsigned', title: 'This pack was cut from a build that is not signed off (a wave run, possibly before routing). It is shown for inspection only and is not part of the signed count.' });
+    tools.append(modeSeg, jobSel, unsTag, qbox, fitBtn, labBtn, rulerBtn, clearBtn);
     S.macros = []; S.masters = [];
     const selectMacro = (key, zoom) => { S.selfMacro = !zoom; store.go({ inst: key }); if (zoom) { const m = S.macros.find((x) => x.key === key); if (m && S.eng) S.eng.zoomTo(m.bb, 0.45); } };
     const onHoverInst = (e) => { if (S.eng) S.eng.hoverMark(e.detail || null); }; window.addEventListener('otx:hover-inst', onHoverInst);
@@ -257,7 +258,7 @@ export default {
 
     function show(which) { geo.hidden = which !== 'geo'; planHost.hidden = which !== 'plan'; msg.hidden = which !== 'msg'; }
     async function picker(die) {
-      show('msg'); clear(msg); setTabs(); modeSeg.hidden = true; jobSel.hidden = true; qbox.hidden = true; fitBtn.hidden = rulerBtn.hidden = clearBtn.hidden = true;
+      show('msg'); clear(msg); setTabs(); modeSeg.hidden = true; jobSel.hidden = true; unsTag.hidden = true; qbox.hidden = true; fitBtn.hidden = rulerBtn.hidden = clearBtn.hidden = true;
       ctx.setScope(`${dieShort(die)} · pick a type or core`);
       const D = await api.die(die), all = Object.values(D.nodes).filter((n) => n.layout && n.layout.store);
       all.sort((a, b) => STATES.indexOf(a.status.state) - STATES.indexOf(b.status.state) || a.level.localeCompare(b.level) * -1 || a.name.localeCompare(b.name, 'en', { numeric: true }));
@@ -282,7 +283,7 @@ export default {
         rulerBtn.hidden = clearBtn.hidden = labBtn.hidden = mode !== 'routed'; qbox.hidden = mode !== 'routed' || !has;
         S.ov = Object.assign({ macros: true }, Object.fromEntries((st.params.ov || '').split('.').filter(Boolean).map((k) => [k, true]))); S.corner = st.params.corner === 'hold' ? 'hold' : 'setup'; S.psel = +st.params.path || 0;
         if (mode === 'plan') {
-          show(hasPlan ? 'plan' : 'msg'); jobSel.hidden = true; S.info = null; setTabs();
+          show(hasPlan ? 'plan' : 'msg'); jobSel.hidden = true; S.info = null; setTabs(); unsTag.hidden = true;
           if (!hasPlan) { clear(msg).append(h('div.empty', h('div', h('h3', 'Nothing to draw yet'), h('p', 'This design has no routed layout pack and no plan outline. Its state and history are in the inspector.')))); ctx.setScope(shortName(node)); return; }
           const pc = planCanvas(); pc.setWorld(n.plan.outline, !nodeChanged && S.planFor === node); S.planFor = node;
           ctx.setScope(`${shortName(node)} · plan contents${has ? '' : ' · no routed pack yet'}`);
@@ -306,7 +307,7 @@ export default {
             eng.setScene({ outline: d, items, insts: [], packs }); buildMacros(n, P, comp);
             if (st.params.hide) eng.setHidden(st.params.hide.split('.'));
             const cam = (st.params.cam || '').split(',').map(Number); if (cam.length === 3 && cam.every(Number.isFinite)) eng.setCam(cam[0], cam[1], cam[2]);
-            clear(jobSel); for (const j of info.history.slice().reverse()) jobSel.append(h('option', { value: j, selected: j === info.job }, j === info.latest ? `${j} (newest)` : j)); jobSel.hidden = info.history.length < 2;
+            clear(jobSel); for (const j of info.history.slice().reverse()) jobSel.append(h('option', { value: j, selected: j === info.job }, j === info.latest ? `${j} (newest)` : j)); jobSel.hidden = info.history.length < 2; unsTag.hidden = !has || ['signed', 'pending archive'].includes((n.status || {}).state); unsTag.textContent = `Unsigned build view${info.stage ? ' · ' + info.stage : ''} · not counted`;
             const t = has ? ((n.layout.store || {}).timing || {}).object : null;
             if (t && info.job === info.latest) fetch(api.storeObject(t)).then((r) => r.ok ? r.json() : null).then((T) => { if (S.info !== info) return; S.T = T; prepClock(); eng.requestUpdate(); refreshTab('timing'); }).catch(() => { S.timingErr = 'The timing data of this pack did not load.'; });
             if (has && info.objects.lint) fetch(api.storeObject(info.objects.lint)).then((r) => r.ok ? r.json() : null).then((L) => { if (S.info === info) { S.lint = L; refreshTab('checks'); } }).catch(() => {});
