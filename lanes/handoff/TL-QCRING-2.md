@@ -1,0 +1,1 @@
+TL-QCRING-2 handoff: cores sle_cland_w2104_s_s34 sle_cland_w457_s_s9 sle_cland_w537_e_s10 sle_cland_w94_s_s3 sta_cland_w259_s_s6 (epyc10 die-qc-103/rk2/<m>/kits/<m>_synth0) sta_cland_w515_s_s10_3 (epyc2 tl-qcstav2/rk). Adopted, running. Waiter: scratchpad qcring2_wait.sh. Next: on SIGNOFF add AUTO-RESIGN rows + QC-CORES.md row update; on STALL read run_finish.log and fix.
