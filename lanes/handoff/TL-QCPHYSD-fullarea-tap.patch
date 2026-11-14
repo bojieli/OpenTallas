@@ -1,7 +1,7 @@
 From c25e7a3289d315aed6c9a5ca9880cc425fd4a389 Mon Sep 17 00:00:00 2001
 From: TL-QCPHYSD <noreply@anthropic.com>
 Date: Sat, 14 Nov 2026 15:33:33 +0000
-Subject: [PATCH] gen: bare full-area hard IP types take their single clock
+Subject: [PATCH 1/2] gen: bare full-area hard IP types take their single clock
  terminal, no R4 tap grid (QC phy_serdes/phy_serdes_b/phy_ucie_kv)
 
 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
@@ -77,6 +77,73 @@ index 0000000000..228951c889
 +    t2 = _t()
 +    t2["contents"].append(dict(t2["contents"][0], inst="v"))
 +    assert not S.full_area_hard_ip(t2)
+-- 
+2.53.0
+
+
+From 3a3336542dc00974a635205e68c2677400c45f07 Mon Sep 17 00:00:00 2001
+From: TL-QCPHYSD <noreply@anthropic.com>
+Date: Sat, 14 Nov 2026 16:00:38 +0000
+Subject: [PATCH 2/2] gen: full-area hard IP kit gets timed_face.json, zero
+ core margin, rtlmp skip; face_guard accepts epoch-from-reset on declared
+ timed buses
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ tools/die_plan/face_guard.py |  4 +++-
+ tools/die_plan/gen_phys.py   | 10 +++++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/tools/die_plan/face_guard.py b/tools/die_plan/face_guard.py
+index a542796065..c978ba4f2f 100644
+--- a/tools/die_plan/face_guard.py
++++ b/tools/die_plan/face_guard.py
+@@ -981,7 +981,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
+         return seam.get(re.sub(r"\[\d+\]$", "", str(b)), frozenset())
+ 
+     def fail(cls, b, why):
+-        if timed and cls in TIMED_CLASSES and re.sub(r"\[\d+\]$", "", str(b)) in timed:
++        if timed and re.sub(r"\[\d+\]$", "", str(b)) in timed and (
++                cls in TIMED_CLASSES or (cls == "feedthrough" and why == "buffered from port arst_n")):
++            # QC-PHY-1 11-14: a bare registered-pin hard IP drives its epoch bit with the delivered reset level (bind.py reg_hard)
+             res["timed_declared"].append(f"{b}: {cls} {why}")   # DIE-KV-61/hr: declared timed-face bit
+             return
+         if cls != "merged" and cls in seam_cls(b):
+diff --git a/tools/die_plan/gen_phys.py b/tools/die_plan/gen_phys.py
+index 7cffc85426..5329c4e2fd 100644
+--- a/tools/die_plan/gen_phys.py
++++ b/tools/die_plan/gen_phys.py
+@@ -221,7 +221,7 @@ def _gutter_block_um(budgets, tn):
+ def _macros_all_plan_fixed(t):
+     """KW-FIX-45 11-12 (COORD ruling, PHY MPL-0006): a hard-wrapper type (type.hard) has every macro placed and fixed by the plan
+     (macro_place.tcl place_macro -exact), so rtl_macro_placer is skipped (macro_skip_rtlmp.tcl).  Other types: False."""
+-    return bool(t.get("hard")) and bool(t.get("hard_cores"))
++    return bool(t.get("hard")) and (bool(t.get("hard_cores")) or S.full_area_hard_ip(t))
+ 
+ 
+ def _gutter_block_min_span_um(budgets):
+@@ -4253,6 +4253,8 @@ def kit_core_area(t):
+         # origin / spans the frozen outline, so a 4.32 um inset core can neither contain nor place it.  Every other type is
+         # unchanged; an explicit kit_core_margins_um still wins.
+         hc=[c for c in t.get("hard_cores",[]) if c.get("lef") and c.get("outline_um") and c.get("origin_um")]
++        if not hc and S.full_area_hard_ip(t):       # QC-PHY-1 11-14: bare full-area hard IP in contents[] (same rule)
++            hc=list(t["contents"])
+         if t.get("hard") and len(hc)==1:
+             (ox,oy),(mw,mh)=hc[0]["origin_um"],hc[0]["outline_um"]
+             eps=1e-6
+@@ -5594,6 +5596,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
+         (kd / "land_slots.json").write_text(json.dumps(land_slots, indent=1) + "\n")
+     port_pins = port_bind_pin_records(P, tn, pins, bump_ports)
+     (kd / "port_bind_pins.json").write_text(json.dumps(port_pins, indent=1) + "\n")
++    if S.full_area_hard_ip(t) and any(c.get("registered_pins") for c in t.get("contents", []) or []):
++        # QC-PHY-1 11-14 (COORD ruling): a bare full-area hard IP has no face flops, its registered FDI pins are the
++        # boundary registers; the macro pin is timed from its lib, so every plan bus is a declared timed face.
++        (kd / "timed_face.json").write_text(json.dumps(dict(
++            schema="opentallas.kit_timed_face.v1", buses=sorted({b["name"] for b in t.get("buses", [])}),
++            ruling="COORD 11-14 QC-PHY-1", reason="bare hard IP with registered FDI pins: no face flops, macro pin timed from its lib"), indent=1) + "\n")
+     if spare_out:                               # DIE-S81-46: declared spare-out bits (kit_rtl.json), face_guard
+         from face_guard import SPARE_SCHEMA
+         (kd / "spare_out.json").write_text(json.dumps(dict(schema=SPARE_SCHEMA, bits=list(spare_out)), indent=1) + "\n")
 -- 
 2.53.0
 
