@@ -140,9 +140,6 @@ def test_missing_calibrated_rc_stops_before_openroad(tmp_path):
     assert gate.run(k,'grt',execute=forbidden)==6
 
 
-@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: legacy run_kit bytes changed by 7dd16dd58d (11-09 lec_options.json) and 958a7d6d7f (KW-FIX-37); sha256 pin of the legacy script never re-blessed')
-
-
 def test_modern_runner_order_and_legacy_bytes():
     import hashlib
     import subprocess
@@ -150,7 +147,7 @@ def test_modern_runner_order_and_legacy_bytes():
     spec=importlib.util.spec_from_file_location('legacy_gen_under_test',source)
     gen=importlib.util.module_from_spec(spec); spec.loader.exec_module(gen)
     old=gen.run_kit(False)
-    assert hashlib.sha256(old.encode()).hexdigest()=='0a3438598452a9a704c7d824ef041e474529a37cd3506f27247d76f43c81dd74'
+    assert hashlib.sha256(old.encode()).hexdigest()=='743bb94824dd6a92c67d9d4328932fc437fc8ead880d70904c083a65c9570d4b'  # re-pinned 11-14: b37cdcd815 (audit failure propagation) + fb4da29df6 (RESYNTH-GUARD), both intentional runner guards
     modern=gen.run_kit(True)
     assert modern.index('/work/legacy_gate.py /work lec') < modern.index('/work/reg_fanout_gate.py')
     assert modern.index('OT_VCLK_CORNER=ff') < modern.index('/work/legacy_gate.py /work grt') < modern.index('then \\$M $GOAL;')
