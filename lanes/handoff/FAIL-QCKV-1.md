@@ -1,2 +1,2 @@
-# FAIL-QCKV-1 handoff (2026-11-14 01:44 PST)
-Pass 3 done 2026-11-14 02:59 PST: no new failures; A,B,C closed by others; open D,E,F. Pass 4 after 04:14 PST from 02:59; check relaunch outcomes on kv102sem, ftgrid, s29q103S.
+# FAIL-QCKV-1 handoff (2026-11-14 03:48 PST)
+QC pass done (class table in COORD-REVIEW-QUEUE). Open asks: KIT-OPS-3 relaunch view-missing items + CLAND overlay (landing_placement.tcl md5 a7d4d454); NEEDS-LANE sle_stm_v3/slw_stm_v1 (bits_q lint), sle_sc_v1/v2 (r8pad red straps). Still open from before: HEAD hd_tile/hd_serdes/hd_ctl/hd_spn_wshim_rx/hd_turn_b, KV relaunch outcomes (kv102sem, ftgrid). Pass 4 around 05:03 PST.
