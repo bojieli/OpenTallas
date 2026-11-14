@@ -30239,7 +30239,16 @@
     "intel2",
     "epyc7"
    ],
-   "item_inputs": {},
+   "item_inputs": {
+    "sle_ctl__cl372cea1c": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-qc/por/plan_qc99_s28_physqc1.json",
+     "note": "PHYS-QC 11-13 18:1x: gen FAIL ValueError unknown landing group override u_cland_collect_rst_n_t19 (stale clone group_rects_um from sle_ctl__cla4f6f12f; this type collector nodes differ). Item plan = s28 with that type group_rects_um removed (3 rects, all within 6 um of default collector sites); bind/kit_rtl unchanged. sha 87b7177948a1"
+    },
+    "sle_ctl__cl503337ff": {
+     "plan": "/srv/opentallas-scratch2/claude/phys-qc/por/plan_qc99_s28_physqc1.json",
+     "note": "PHYS-QC 11-13 18:1x: gen FAIL ValueError unknown landing group override u_cland_collect_rst_n_t19 (stale clone group_rects_um from sle_ctl__cla4f6f12f; this type collector nodes differ). Item plan = s28 with that type group_rects_um removed (3 rects, all within 6 um of default collector sites); bind/kit_rtl unchanged. sha 87b7177948a1"
+    }
+   },
    "notes_kw42": {
     "qc_overlay_0731": "src_qcsw2 on epyc7+epyc2: 11 files from 826eb4010eec + 6d92d957ea6d (base e6213574d34), gen_phys/schema/schema.json 3-way merged onto the qcsw2 versions, 0 conflicts, compile/import OK; logs kw42/overlay_qc_dq97_*.log"
    },
