@@ -51,6 +51,13 @@
 `else
 `define OT_S81SL_VP_SR_DEFAULT 0
 `endif
+// WRP (TL-LEAF42SETUP 11-14, 0 cycles): the leaf-store WRITE port is decoded before its flops (g_wr1 / ot_s81sl_vpw below)
+// instead of muxed after the pin flops.  OT_S81SL_VP_WRITEPORT sets the default 1; 0 = the netlist above exactly.
+`ifdef OT_S81SL_VP_WRITEPORT
+`define OT_S81SL_VP_WRP_DEFAULT 1
+`else
+`define OT_S81SL_VP_WRP_DEFAULT 0
+`endif
 module ot_s81sl_vp #(
     parameter integer ML = 7,
     parameter integer AL = 6,
@@ -72,7 +79,7 @@ module ot_s81sl_vp #(
     parameter integer CS_HO_GS = 0,
     parameter integer CS_H_G = 4,
     parameter integer HQX = 0,
-    parameter integer SR = `OT_S81SL_VP_SR_DEFAULT, parameter integer CFR = 0  // CFR (TYPE-SAFE-5 11-10): the SR cf row-select flops alone (0 cycles; see g_cfs)
+    parameter integer SR = `OT_S81SL_VP_SR_DEFAULT, parameter integer CFR = 0, parameter integer WRP = `OT_S81SL_VP_WRP_DEFAULT  // WRP: see g_wr1; CFR (TYPE-SAFE-5 11-10): the SR cf row-select flops alone (0 cycles; see g_cfs)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -178,6 +185,7 @@ module ot_s81sl_vp #(
     reg [1:0] wv; reg [8:0] wa [0:1]; reg [127:0] wd [0:1]; reg [127:0] wm [0:1]; reg wcol;
     reg hs_v; reg [9:0] hs_a; reg [255:0] hs_d;    // HSTORE write-back (registered from hq)
     reg [2:0] nw [0:1];
+    generate if (WRP == 0) begin : g_wr0
     always @(*) begin : b_wr
         integer i, k;
         wv = 2'b00; wcol = 1'b0;
@@ -212,6 +220,7 @@ module ot_s81sl_vp #(
         end
         wcol = (nw[0] > 3'd1) || (nw[1] > 3'd1);
     end
+    end endgenerate
     wire [127:0] rq0, rq1;
     // SR: the store pins leave flops (m_* = what the macros see); SR 0: wires
     wire m_re_e, m_re_o, m_wv0, m_wv1; wire [8:0] m_ra_e, m_ra_o, m_wa0, m_wa1; wire [127:0] m_wd0, m_wd1, m_wm0, m_wm1;
@@ -319,6 +328,7 @@ module ot_s81sl_vp #(
         if (CS_HI_GS < 0 || CS_HI_GS > CS_HI_D || CS_HO_GS < 0 || CS_HO_GS > CS_HO_D || HQX < 0)
             $fatal(1, "ot_s81sl_vp: station depths must satisfy 0 <= CS_H*_GS <= CS_H*_D, HQX >= 0");
         if (SR != 0 && SR != 1) $fatal(1, "ot_s81sl_vp: SR must be 0 or 1");
+        if (WRP != 0 && WRP != 1) $fatal(1, "ot_s81sl_vp: WRP must be 0 or 1");
     end
     wire [4095:0] hi_s, hi_g; wire [NG-1:0] hiv_g;            // lane input bundles at the glue / after the group stages
     wire [16 * 18 - 1:0] ho_l;                               // lane output bundles {fault, vo, o[31:16]} after the per-lane stages
@@ -411,6 +421,19 @@ module ot_s81sl_vp #(
     always @(posedge clk) if (cv_c && op == OP_HSTORE) hs_base <= a0;
     always @(posedge clk or negedge rs_o) if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[HA] && hqv_c;
     always @(posedge clk) begin hs_a <= hs_base + {hsi_q[HA], 1'b0}; hs_d <= hqd_c; end
+    // WRP = 1: the write port (wv / wa / wd / wm / wcol) comes from ot_s81sl_vpw's flops (writers decoded + merged before the
+    // register, hs_* are the D inputs of the hs_v / hs_a / hs_d flops above); the sw / cw / xw pin flops above and hs_* have
+    // no load and are removed by synthesis, x_wd keeps its pin flop (xwd_c).
+    generate if (WRP != 0) begin : g_wr1
+        wire [1:0] p_wv; wire [8:0] p_wa0, p_wa1; wire [127:0] p_wd0, p_wd1, p_wm0, p_wm1; wire p_wcol;
+        ot_s81sl_vpw u_w (.clk(clk), .rst_n(rs_c), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .cw_v(cw_v), .cw_a(cw_a),
+            .cw_d(cw_d), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .xwd(xwd_c), .hs_v(hsv_q[HA] && hqv_c),
+            .hs_a(hs_base + {hsi_q[HA], 1'b0}), .hs_d(hqd_c), .wv(p_wv), .wa0(p_wa0), .wa1(p_wa1), .wd0(p_wd0), .wd1(p_wd1),
+            .wm0(p_wm0), .wm1(p_wm1), .wcol(p_wcol));
+        always @(*) begin
+            wv = p_wv; wa[0] = p_wa0; wa[1] = p_wa1; wd[0] = p_wd0; wd[1] = p_wd1; wm[0] = p_wm0; wm[1] = p_wm1; wcol = p_wcol;
+        end
+    end endgenerate
 
     wire nr_done = dv && dop == OP_NORMR;          // NORMR: the hc_pre row is at q this cycle
     // SR: the command-flop outputs (NORM n_go / m_v / n_pre, SU s_v / s_d) and the pin-time fault terms wait one edge
@@ -508,3 +531,87 @@ module ot_s81sl_cst #(parameter integer W = 1, parameter integer V = 1, paramete
     end endgenerate
 endmodule
 /* verilator lint_on UNUSEDSIGNAL */
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ot_s81sl_vpw (TL-LEAF42SETUP 11-14): the registered, pre-decoded leaf-store write port of ot_s81sl_vp (WRP = 1), 0 cycles.
+// Old form: every writer's pins were flopped and muxed AFTER the flops (last writer wins a bank: sw < cw0 < cw1 < xw < hs);
+// the select cone (xwa_c[0], the masks) fanned out to 2 x 266 macro inputs, 1,066 ps of data into u_b0 wd_in at routed TT
+// (-260.6 ps on S81 ot_s81sl_leaf__t42, 185 of 220 endpoints below -42 ps at window 0; t6 the same, LEAF-HOLD-1).
+// New form: valid / address / mask (control only) and the sw / cw / hs data are decoded and merged BEFORE the register, with the
+// SAME last-writer priority and the same collision flag; the macro sees the same write in the same cycle.  Only x_wd (pin flop
+// xwd, slack 38 ps behind the vs macro) takes one AND-OR level after its flop, its two half-selects registered and replicated.
+// ---------------------------------------------------------------------------------------------------------------------
+module ot_s81sl_vpw #(parameter integer REP = 8) (
+    input  wire clk, input wire rst_n,
+    input  wire sw_v, input wire [9:0] sw_a, input wire [7:0] sw_m, input wire [255:0] sw_d,
+    input  wire [1:0] cw_v, input wire [23:0] cw_a, input wire [63:0] cw_d,
+    input  wire x_wv, input wire [9:0] x_wa, input wire [7:0] x_wm, input wire [255:0] xwd,
+    input  wire hs_v, input wire [9:0] hs_a, input wire [255:0] hs_d,
+    output wire [1:0] wv, output wire [8:0] wa0, output wire [8:0] wa1,
+    output wire [127:0] wd0, output wire [127:0] wd1, output wire [127:0] wm0, output wire [127:0] wm1, output wire wcol
+);
+    localparam integer SL = 128 / REP;
+    reg [1:0] n_wv; reg [8:0] n_wa [0:1]; reg [3:0] n_wm [0:1]; reg [127:0] n_wdo [0:1]; reg n_xl [0:1]; reg n_xh [0:1];
+    reg n_wcol;
+    always @(*) begin : b_dec
+        integer b;
+        reg bb, a_sw, a_c0, a_c1, a_xw, a_hs, hi_sw, hi_xw, hi_hs, s_sw, s_c0, s_c1, s_xw, s_hs;
+        reg [2:0] cnt;
+        n_wcol = 1'b0;
+        for (b = 0; b < 2; b = b + 1) begin
+            bb = (b == 1);
+            hi_sw = (sw_a[0] != bb); hi_xw = (x_wa[0] != bb); hi_hs = (hs_a[0] != bb);
+            a_sw = sw_v && (hi_sw ? |sw_m[7:4] : |sw_m[3:0]);       // lo row -> bank a[0], hi row -> the other bank
+            a_c0 = cw_v[0] && (cw_a[2] == bb);
+            a_c1 = cw_v[1] && (cw_a[14] == bb);
+            a_xw = x_wv && (hi_xw ? |x_wm[7:4] : |x_wm[3:0]);
+            a_hs = hs_v;
+            s_hs = a_hs;
+            s_xw = a_xw && !a_hs;
+            s_c1 = a_c1 && !a_xw && !a_hs;
+            s_c0 = a_c0 && !a_c1 && !a_xw && !a_hs;
+            s_sw = a_sw && !a_c0 && !a_c1 && !a_xw && !a_hs;
+            cnt = {2'b00, a_sw} + {2'b00, a_c0} + {2'b00, a_c1} + {2'b00, a_xw} + {2'b00, a_hs};
+            if (cnt > 3'd1) n_wcol = 1'b1;                           // two writers on one bank port: schedule violation
+            n_wv[b] = a_sw || a_c0 || a_c1 || a_xw || a_hs;
+            n_wa[b] = 9'd0; n_wm[b] = 4'd0; n_wdo[b] = 128'd0; n_xl[b] = 1'b0; n_xh[b] = 1'b0;
+            if (s_sw) begin
+                n_wa[b] = hi_sw ? sw_a[9:1] + {8'd0, sw_a[0]} : sw_a[9:1];
+                n_wdo[b] = hi_sw ? sw_d[255:128] : sw_d[127:0];
+                n_wm[b] = hi_sw ? sw_m[7:4] : sw_m[3:0];
+            end
+            if (s_c0) begin n_wa[b] = cw_a[3 +: 9]; n_wdo[b] = {4{cw_d[31:0]}}; n_wm[b][cw_a[1:0]] = 1'b1; end
+            if (s_c1) begin n_wa[b] = cw_a[15 +: 9]; n_wdo[b] = {4{cw_d[63:32]}}; n_wm[b][cw_a[13:12]] = 1'b1; end
+            if (s_xw) begin
+                n_wa[b] = hi_xw ? x_wa[9:1] + {8'd0, x_wa[0]} : x_wa[9:1];
+                n_wm[b] = hi_xw ? x_wm[7:4] : x_wm[3:0];
+                n_xl[b] = !hi_xw; n_xh[b] = hi_xw;                   // data: x_wd after its pin flop (xl_q / xh_q)
+            end
+            if (s_hs) begin n_wa[b] = hs_a[9:1]; n_wdo[b] = hi_hs ? hs_d[255:128] : hs_d[127:0]; n_wm[b] = 4'hF; end
+        end
+    end
+    reg [1:0] wv_q; reg wcol_q; reg [8:0] wa_q [0:1]; reg [3:0] wmw_q [0:1]; reg [127:0] wdo_q [0:1];
+    (* keep *) reg [REP-1:0] xl_q [0:1];                             // bank b takes xwd[127:0]
+    (* keep *) reg [REP-1:0] xh_q [0:1];                             // bank b takes xwd[255:128]
+    always @(posedge clk or negedge rst_n) if (!rst_n) begin wv_q <= 2'b00; wcol_q <= 1'b0; end
+        else begin wv_q <= n_wv; wcol_q <= n_wcol; end
+    integer k;
+    always @(posedge clk)
+        for (k = 0; k < 2; k = k + 1) begin
+            wa_q[k] <= n_wa[k]; wmw_q[k] <= n_wm[k]; wdo_q[k] <= n_wdo[k];
+            xl_q[k] <= {REP{n_xl[k]}}; xh_q[k] <= {REP{n_xh[k]}};
+        end
+    genvar gb, gr;
+    wire [127:0] wdx [0:1]; wire [127:0] wmx [0:1];
+    generate for (gb = 0; gb < 2; gb = gb + 1) begin : g_b
+        for (gr = 0; gr < REP; gr = gr + 1) begin : g_r
+            assign wdx[gb][SL * gr +: SL] = ({SL{xl_q[gb][gr]}} & xwd[SL * gr +: SL]) | ({SL{xh_q[gb][gr]}} & xwd[128 + SL * gr +: SL]) |
+                                            wdo_q[gb][SL * gr +: SL];
+        end
+        for (gr = 0; gr < 4; gr = gr + 1) begin : g_m
+            assign wmx[gb][32 * gr +: 32] = {32{wmw_q[gb][gr]}};
+        end
+    end endgenerate
+    assign wv = wv_q; assign wcol = wcol_q; assign wa0 = wa_q[0]; assign wa1 = wa_q[1];
+    assign wd0 = wdx[0]; assign wd1 = wdx[1]; assign wm0 = wmx[0]; assign wm1 = wmx[1];
+endmodule
