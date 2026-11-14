@@ -817,3 +817,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-14-1114@e07782695c (ADMIT-TUNE-1): earlyoom neutral on openroad
 - READY claude/admit-tune-15-1114@5e628ebd2e (ADMIT-TUNE-1): ot-run INPUTHOLD
 - READY claude/admit-tune-16-1114@ea28474657 (ADMIT-TUNE-1): ot-heavy-docker stops its container on TERM
+- READY claude/admit-tune-17-1114@95276ed31a (ADMIT-TUNE-1): ot-oom-age timer, oom_score_adj by age
