@@ -1,0 +1,21 @@
+{
+  "original_archive": "/srv/opentallas-scratch2/claude/hard-s81-svc-1/native_programme/out/obj/Vtb_svc_native_programme__ALL.a",
+  "original_archive_sha256": "25aa3563133d7215ba7dff70d2710fcaa15a154c359520560099e2c3ebe25f46",
+  "private_archive": "/srv/opentallas-scratch2/claude/hard-s81-svc-1/returned_p_replay/out_live/model_private.a",
+  "private_link_changes": {
+    "Vtb_svc_native_programme_vm_classes_0.o": {
+      "weakened_testbench_symbols": [
+        "_Z105Vtb_svc_native_programme_tb_svc_native_programme___eval_initial__TOP__tb_svc_native_programme__Vtiming__0P48Vtb_svc_native_programme_tb_svc_native_programme"
+      ],
+      "unchanged_text_sha256": "4fa9f4696ef77908d933fd25000d17d2a67f3f98c7505fb3b3ee85c2ab3edbc5"
+    },
+    "Vtb_svc_native_programme_vm_classes_7.o": {
+      "weakened_testbench_symbols": [
+        "main"
+      ],
+      "unchanged_text_sha256": "9fedf997e7de83d44d2fe51b9bf80f8103b2c387b69f805a54a15700d2417291"
+    }
+  },
+  "uut_machine_code_changed": false,
+  "uut_state_or_memory_backdoors": false
+}

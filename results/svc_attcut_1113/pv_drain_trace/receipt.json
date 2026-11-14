@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "scope": "Actual decoder/drain with protocol-only engine replay; no arithmetic or global timing claim",
+  "unit": "epyc7 oth-ubuntu-3145204-1794618323",
+  "nominal_memory_forms": [
+    "register Q memory",
+    "OT_SVC_ATT_MEM_MACRO Q/sw/P read memories"
+  ],
+  "phases_per_form": 2,
+  "heads_per_pass": 8,
+  "hb_cases": [
+    0,
+    1
+  ],
+  "words_per_case": 40,
+  "headers_per_case": 8,
+  "body_words_per_case": 32,
+  "checked_public_word_width_bits": 513,
+  "total_nominal_words": 160,
+  "nominal_mismatches": 0,
+  "protocol_faults": 0,
+  "expander_faults": 0,
+  "done": true,
+  "oracle_cases": [
+    "Qualified selected native raw PV: every tile head0 FP32=32, others0, flags0",
+    "Synthetic finite FP32 beat/tile/head pattern and flags to expose drain ordering and metadata"
+  ],
+  "negative_control": {
+    "scope": "private source copy only",
+    "change": "swap first and second body-tile selections",
+    "caught_body_words": 16
+  },
+  "PV_IDENTITY": 0,
+  "provenance": "zero default only; identity-enabled metadata has separate qualification",
+  "PVQ": "actual source register-array implementation; no bound PVQ SRAM capture claim",
+  "native_trace_reference": "results/svc_attcut_1113/returned_p_replay/run.log",
+  "design_source_changes": false
+}
