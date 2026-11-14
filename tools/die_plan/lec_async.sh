@@ -73,6 +73,32 @@ write_identity() {
   identity "$1" > "$1/lec_async.identity.tmp.$$"
   mv -f "$1/lec_async.identity.tmp.$$" "$1/lec_async.identity"
 }
+# WF-1 11-14 (COORD class fix: a resumed / copied kit carrying the previous attempt's lec_async.pid / owner / identity exited 11
+# "cannot migrate: [Errno 3] No such process", s81 leaf t28 a6, kv3_hroot private forms after a path move): when the kit has a
+# ready file but NO live proof (recorded watcher pid dead, no running owner container) and no finished proof of the same inputs
+# (done + identity equal to the current one), the recorded proof state is stale: warn, clear it and let the start restart the proof.
+# Never exit 11 for it.  A kit moved to another path is stale the same way (its recorded kit path differs).
+stale_state() {
+  local K=$1 DK=${2:-docker} P O c
+  [ -f "$K/lec_async.ready" ] || return 0
+  if [ -f "$K/lec_async.kit_path" ] && [ "$(cat "$K/lec_async.kit_path")" != "$(cd "$K" && pwd -P)" ]; then
+    echo "LEC_ASYNC stale proof state: kit moved from $(cat "$K/lec_async.kit_path") to $K; proof restarted" >&2
+  else
+    P=$(cat "$K/lec_async.pid" 2>/dev/null || true)
+    if [ -n "$P" ] && kill -0 "$P" 2>/dev/null; then return 0; fi
+    O=$(cat "$K/lec_async.owner" 2>/dev/null || true)
+    if [ -n "$O" ]; then
+      for c in "$O" "$O-lec"; do
+        [ "$($DK inspect -f '{{.State.Running}}' "$c" 2>/dev/null)" = true ] && return 0
+      done
+    fi
+    if [ -f "$K/lec_async.done" ] && [ -s "$K/lec_async.identity" ] && [ "$(cat "$K/lec_async.identity")" = "$(identity "$K")" ]; then
+      return 0                                   # a finished proof of the same inputs is reused by the start below
+    fi
+    echo "LEC_ASYNC stale proof state: recorded watcher pid ${P:-none} / owner ${O:-none} not alive on $(hostname); proof restarted" >&2
+  fi
+  rm -f "$K"/lec_async.{on,ready,rc,stop,abort,aborted,done,pid,mode,unit_rc,owner,identity,source_identity,migration.json,kit_path}
+}
 bootstrap() {
   python3 - "$1" "$2" "$(identity "$1" source)" <<'PYBOOT'
 import datetime,hashlib,json,os,re,shlex,subprocess,sys,time
@@ -283,6 +309,7 @@ start)
       run_start "$K" "$NAME" "$GOAL"; exit 0
     fi
   fi
+  stale_state "$K" "$DK"
   if [ -f "$K/lec_async.ready" ] && [ ! -s "$K/lec_async.identity" ]; then
     bootstrap "$K" "$DK" || exit $?
     identity "$K" source > "$K/lec_async.source_identity"
@@ -304,6 +331,7 @@ start)
   identity "$K" source > "$K/lec_async.source_identity"
   if [ "${OT_LECUNIT:-1}" != 0 ] && command -v ot-heavy > /dev/null 2>&1; then echo unit; else echo exec; fi > "$K/lec_async.mode"
   echo "$NAME" > "$K/lec_async.owner"
+  (cd "$K" && pwd -P) > "$K/lec_async.kit_path"
   touch "$K/lec_async.on"; run_start "$K" "$NAME" "$GOAL"
   setsid nohup bash "$0" watch "$K" "$NAME" "$IMAGE" "$MEM" "$CPUS" "$DK" >> "$K/lec_async.log" 2>&1 < /dev/null 9>&- &
   echo $! > "$K/lec_async.pid"
