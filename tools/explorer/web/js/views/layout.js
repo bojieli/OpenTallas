@@ -59,10 +59,10 @@ export default {
       const m = S.man, insts = [], items = [];
       m.instances.forEach((r, ii) => {
         const p = r.pack ? m.packs[r.pack] : null, drawn = !!(r.ok && p && (p.state === 'signed' || S.unsigned));
-        const what = drawn ? (r.state === 'signed' ? 'routed wires' : 'UNSIGNED, as routed') : r.ok ? 'outline only (not signed off)' : (r.why || 'no routed pack');
+        const what = drawn ? (r.state === 'signed' ? 'routed wires' : 'UNSIGNED, as routed') + (r.outline_differs ? ` · signed outline ${r.outline_differs.pack[0] / 1000} × ${r.outline_differs.pack[1] / 1000} µm, plan slot is now ${r.outline_differs.slot[0] / 1000} × ${r.outline_differs.slot[1] / 1000} µm` : '') + (r.by_identity ? ` · pack of ${shortName(r.by_identity.pack_of)} (same block ${r.by_identity.block_sha})` : '') : r.ok ? 'outline only (not signed off)' : (r.why || 'no routed pack');
         insts.push({ ii, name: r.name, node: r.node, state: r.state, orient: r.orient, bb: [r.x / 1000, r.y / 1000, (r.x + r.w) / 1000, (r.y + r.h) / 1000], col: hexRgb(stateColor(r.state)), drawn,
           label: r.name + (drawn && r.state !== 'signed' ? '  UNSIGNED' : ''), sub: `${shortName(r.node)} · ${STATE_LABEL[r.state] || r.state} · ${r.orient} · ${what}` });
-        const xf = SGN[r.orient] ? xfOf(r.orient, r.x, r.y, r.w, r.h) : null;
+        const xf = SGN[r.orient] ? xfOf(r.orient, r.x, r.y, r.pw || r.w, r.ph || r.h) : null;   // pw / ph: the pack outline when it differs from the plan slot
         if (!drawn) {   // no type pack to draw: its hard cores still have packs; draw them at their PLAN placement
           const t = S.D.nodes[r.node]; let nc = 0;
           if (xf && t) (t.plan.hard_cores || []).forEach((hc, j) => {

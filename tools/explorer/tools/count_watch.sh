@@ -8,6 +8,8 @@ STAMP=${COUNT_STAMP:-/srv/opentallas-scratch2/claude/explorer-fable-1/state/coun
 NOW=$(timeout 25 ssh -n -o BatchMode=yes -o ConnectTimeout=8 -o ControlPath=none "$HUB" \
   'stat -c "%n %Y" ~/.local/state/fleet-viz/release_tree_plan_cache.json ~/coord/lanes/COUNT-DIRECT.tsv ~/coord/lanes/AUTO-RESIGN.tsv ~/coord/RELEASE_TREE.md ~/coord/signed-store 2>/dev/null') || exit 0
 [ -n "$NOW" ] || exit 0
+NOW="$NOW
+$(stat -c '%n %Y' /srv/opentallas-scratch2/claude/explorer-fable-1/state/archive_index.json 2>/dev/null)"   # the archive gate follows the archive index too
 if [ "$NOW" != "$(cat "$STAMP" 2>/dev/null)" ]; then
   systemctl --user start --no-block "$UNIT" && printf '%s\n' "$NOW" > "$STAMP" && echo "$(date -u +%FT%TZ) count outputs changed: refresh started"
 fi

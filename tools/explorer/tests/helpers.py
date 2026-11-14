@@ -10,10 +10,10 @@ ALL_DIES = ['s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm']
 DIES = ['s81', 'hbm', 'qwen_kvsys']          # the dies the per-view tests run on
 SIGNED_TYPE = 's81.t.slice_station__t38'     # signed, placed once as instance S_INST
 S_INST = 's_0S_x05'
-S_INST_CAM = (8800.0, 9420.0, 3.6)
+S_INST_CAM = (8947.0, 9809.0, 3.6)   # inside s_0S_x05 on the wave plan (slot origin 8907.84, 9771.84)
 ROUTED_TYPE = 's81.t.slice_station__t14'     # signed, routed pack with timing paths + clock
 SMALL_CORE = 's81.c.dsfd_qbank_S'
-FAILED_TYPE = 's81.t.col_h10_r0_p4__t1'      # failed, no pack of its own, hard cores at plan placement
+FAILED_TYPE = 's81.t.col_h10_r0_p4__t1__pvc9270d09'      # failed, no pack of its own, hard cores at plan placement
 BUILDING_TYPE = 's81.t.iqf__t1'
 
 

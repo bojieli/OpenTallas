@@ -42,12 +42,12 @@ export function fmtTime(epoch) {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-export const STATES = ['signed', 'failed', 'building', 'queued', 'waiting', 'not built', 'hard ip'];
-export const STATE_LABEL = { signed: 'Signed off', failed: 'Failed', building: 'Building', queued: 'Queued', waiting: 'Waiting', 'not built': 'Not built', 'hard ip': 'Hard IP' };
-export const STATE_VAR = { signed: '--s-signed', failed: '--s-failed', building: '--s-building', queued: '--s-queued', waiting: '--s-waiting', 'not built': '--s-notbuilt', 'hard ip': '--s-hardip' };
+export const STATES = ['signed', 'pending archive', 'failed', 'building', 'queued', 'waiting', 'not built', 'hard ip'];
+export const STATE_LABEL = { 'pending archive': 'Signed, pending archive', signed: 'Signed off', failed: 'Failed', building: 'Building', queued: 'Queued', waiting: 'Waiting', 'not built': 'Not built', 'hard ip': 'Hard IP' };
+export const STATE_VAR = { 'pending archive': '--s-pending', signed: '--s-signed', failed: '--s-failed', building: '--s-building', queued: '--s-queued', waiting: '--s-waiting', 'not built': '--s-notbuilt', 'hard ip': '--s-hardip' };
 export const stateCls = (s) => 'st-' + String(s || 'not built').replace(/\s/g, '');
 export const stateColor = (s) => cssv(STATE_VAR[s] || '--s-notbuilt');
-export const badge = (state, label) => h('span.st.' + stateCls(state), { title: label || '' }, h('i.dot'), STATE_LABEL[state] || state || 'unknown');
+export const badge = (state, label, basis) => h('span.st.' + stateCls(state), { title: label || (basis ? 'counted on the ' + basis + ' gates; the kit sign-off record used the older full gate set' : '') }, h('i.dot'), (STATE_LABEL[state] || state || 'unknown') + (basis ? ` (${basis})` : ''));
 export const DIE_SHORT = { s81: 'S81', s81_head: 'HEAD', qwen_compute: 'QC', qwen_kvsys: 'KV', hbm: 'HBM' };
 export const dieShort = (d) => DIE_SHORT[d] || String(d || '').toUpperCase();
 export const dieOf = (node) => String(node || '').split('.')[0];

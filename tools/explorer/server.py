@@ -62,7 +62,7 @@ class _NoElements:
 DS = design_service.Service(log=lambda *a: None)
 LS = layout_service.Service(log=lambda *a: None)
 COV = coverage.Coverage(REPO, _NoElements(), TOKEN.parent, log=lambda *a: None)
-COMPOSE_V = 2
+COMPOSE_V = 4
 LOCK = threading.RLock()
 CACHE = {}          # key -> (stamp, raw, gz)
 
@@ -119,7 +119,8 @@ def plan_sha(path):
 
 
 def plan_ref(p):
-    return dict(path=p.get('path'), sha=plan_sha(p.get('path')), commit=(p.get('commit') or '')[:10] or None, date=p.get('date'), subject=p.get('subject'))
+    w = p.get('wave')
+    return dict(wave=w, basis='kit wave plan, as counted' if w else 'plan of record on main', path=p.get('path'), sha=plan_sha(p.get('path')), commit=(p.get('commit') or '')[:10] or None, date=p.get('date'), subject=p.get('subject'))
 
 
 def cached(key, stamp, fn):
@@ -164,6 +165,35 @@ def compose_of(die):
             p = die_compose.pack_info(nid)
             if p and p['die'][:2] == [0, 0]:
                 m['packs'][nid] = dict({k: v for k, v in p.items() if k != 'macros'}, level='core', state=n['status']['state'], cores=[]); extra += 1
+        # (1) block identity: a type without a pack under its own name takes the pack of a type with the SAME block sha (the kit
+        #     identity the wave and the count's dedup credit use), so a renamed master keeps its routed view.
+        # (2) a pack whose outline differs from the plan slot (the plan grew the slot after the sign-off) is still drawn, anchored
+        #     at the slot's lower-left, and flagged; hiding a signed layout because the slot changed would be wrong.
+        pn = _json_file(STATE / 'plan_now.json') or {}
+        sha_of = {e['element']: (e.get('kw') or {}).get('block_sha') for e in pn.get('elements') or [] if e.get('die') == die and e.get('kind') == 'type'}
+        by_sha = {}
+        for nid, n in idx['nodes'].items():
+            if n['die'] == die and n['level'] == 'type' and (n.get('layout') or {}).get('store') and sha_of.get(n['name']): by_sha.setdefault(sha_of[n['name']], nid)
+        ident = resized = 0
+        for r in m['instances']:
+            if r['ok'] or r['orient'] not in die_compose.SIGN: continue
+            src = r['node']; via = None
+            if r.get('why') == 'no pack':
+                src = by_sha.get(sha_of.get(src.split('.t.', 1)[-1])); via = 'block'
+                if not src or src == r['node']: continue
+            p = die_compose.pack_info(src)
+            if not p or p['die'][:2] != [0, 0]: continue
+            pw, ph = p['die'][2], p['die'][3]
+            if src not in m['packs']:
+                m['packs'][src] = dict({k: v for k, v in p.items() if k != 'macros'}, level='type', state=idx['nodes'][src]['status']['state'],
+                                       cores=[dict(core=('%s.c.%s' % (die, q['master'])) if ('%s.c.%s' % (die, q['master'])) in m['packs'] else None, name=q['name'], master=q['master'], origin=q['origin'], orient=q['orient'], bbox=q['bbox']) for q in p['macros']])
+            r.update(ok=True, pack=src, pw=pw, ph=ph)
+            if via: r['by_identity'] = dict(block_sha=sha_of.get(r['node'].split('.t.', 1)[-1]), pack_of=src); ident += 1
+            if [pw, ph] != [r['w'], r['h']]: r['outline_differs'] = dict(pack=[pw, ph], slot=[r['w'], r['h']]); resized += 1
+            r.pop('why', None)
+        S = m['summary']; S['by_identity'] = ident; S['outline_differs'] = resized
+        S['with_pack'] = sum(1 for r in m['instances'] if r['ok']); S['signed_with_pack'] = sum(1 for r in m['instances'] if r['ok'] and r['state'] == 'signed')
+        S['unique_block_shas'] = len(set(v for v in sha_of.values() if v)); S['types_with_block_sha'] = sum(1 for v in sha_of.values() if v)
         m['summary']['core_packs_all'] = sum(1 for p in m['packs'].values() if p['level'] == 'core')
         m['summary']['pack_bytes'] = sum(p['bytes'] or 0 for p in m['packs'].values())
         f.parent.mkdir(parents=True, exist_ok=True)
@@ -296,7 +326,7 @@ def closure(d):
     for n in idx['nodes'].values():
         if n['die'] != d or n['level'] == 'die': continue
         st = n.get('status') or {}; m = st.get('metrics') or {}; lay = n.get('layout') or {}; s = lay.get('store') or {}; v = n.get('vis') or {}; p = n.get('plan') or {}
-        rows.append(dict(id=n['id'], name=n['name'], level=n['level'], state=st.get('state'), label=st.get('label'), cls=st.get('cls'), stage=st.get('stage'),
+        rows.append(dict(id=n['id'], name=n['name'], level=n['level'], state=st.get('state'), label=st.get('label'), basis=st.get('basis'), cls=st.get('cls'), stage=st.get('stage'),
                          attempt=st.get('attempt'), reason=st.get('reason'), tt_wns=m.get('tt_wns'), ff_wns=m.get('ff_wns'),
                          drc=m.get('drt_drc') if m.get('drt_drc') is not None else m.get('drc'), grt_overflow=m.get('grt_overflow'), lec=m.get('lec'),
                          cells=m.get('cells'), verdict=m.get('verdict'), instances=p.get('instances') if n['level'] == 'type' else p.get('placements'),
@@ -724,6 +754,14 @@ class H(BaseHTTPRequestHandler):
         if p.startswith('token/map/'):
             k = p[len('token/map/'):]
             return self.json('tok:map:' + k, (stamp, _mtime(design_service.TOKEN_MAP)), lambda: token_map(k))
+        if p == 'count':   # the archive-gated count: signed = credited by the count AND archived on AGIdock; the rest is pending archive
+            def count():
+                i = index(); g = (i.get('count_overlay') or {}).get('archive_gate') or {}
+                return dict(schema='opentallas.explorer.count.v1', rule='signed = credited by the sign-off count AND database + view files + signoff.json present (non-empty) in the AGIdock archive; otherwise pending archive, not counted',
+                            generated=i.get('generated'), count_generated=(i.get('count_overlay') or {}).get('count_generated'), archive_listed=g.get('index_listed'), index_tsv=g.get('index_tsv'), error=g.get('error'),
+                            dies={d: dict(types=i['nodes'][d].get('type_count'), signed_types=v['type']['counted'], pending_archive_types=v['type']['pending'], credited_types=v['type']['before'],
+                                          signed_cores=v['core']['counted'], pending_archive_cores=v['core']['pending'], credited_cores=v['core']['before'], pending=v['pending_list']) for d, v in (g.get('dies') or {}).items()})
+            return self.json('count', stamp, count)
         if p == 'archive/summary': return self.json('archive:summary', (stamp, _mtime(ARCHIVE_INDEX), _AUDIT.get('mtime')), archive_summary)
         if p == 'fleet/probe': return self.send(200, json.dumps(fleet_probe(), separators=(',', ':')).encode(), 'application/json', (('Cache-Control', 'no-store'),))
         if p.startswith('fleet/'): return self.gz(fleet_get(p[6:]), 'no-store')

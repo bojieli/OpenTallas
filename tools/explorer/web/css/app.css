@@ -121,7 +121,7 @@ button.chip { cursor: pointer; } button.chip:hover { border-color: var(--line-st
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--s-notbuilt)); flex: none; display: inline-block; }
 .sq { width: 10px; height: 10px; border-radius: 2px; background: var(--c, var(--s-notbuilt)); flex: none; display: inline-block; }
 .st { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: var(--fs-s); white-space: nowrap; }
-.st-signed { --c: var(--s-signed); } .st-failed { --c: var(--s-failed); } .st-building { --c: var(--s-building); } .st-queued { --c: var(--s-queued); }
+.st-signed { --c: var(--s-signed); } .st-pendingarchive { --c: var(--s-pending); } .st-failed { --c: var(--s-failed); } .st-building { --c: var(--s-building); } .st-queued { --c: var(--s-queued); }
 .st-waiting { --c: var(--s-waiting); } .st-notbuilt { --c: var(--s-notbuilt); } .st-hardip { --c: var(--s-hardip); }
 .fresh-fresh { --c: var(--ok); } .fresh-stale { --c: var(--warn); } .fresh-missing { --c: var(--bad); }
 .muted { color: var(--ink-3); }

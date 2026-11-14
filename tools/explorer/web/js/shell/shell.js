@@ -221,6 +221,7 @@ export function createShell(root, { views, meta }) {
     const d = S.meta.dies.find((x) => x.id === die);
     const lvl = levelOf(node);
     crumbs.append(lvl === 'die' ? h('b', d ? d.label : die) : h('a', { href: store.href({ node: die }) }, d ? d.label : die));
+    if (d) crumbs.append(h('span.chip', { title: (d.plan.wave ? 'kit wave plan, as counted: ' + d.plan.wave.host + ':' + d.plan.wave.path : 'plan of record on main: ' + d.plan.path), dataset: { testid: 'plan-chip' }, style: { flex: 'none' } }, (d.plan.wave ? 'wave plan ' : 'plan ') + d.plan.sha));
     if (lvl !== 'die') crumbs.append(h('span.sep', '›'), h('span.muted', lvl), h('b.mono', shortName(node)));
     if (inst) crumbs.append(h('span.sep', '@'), h('span.mono', inst));
     if (net) crumbs.append(h('span.sep', '·'), h('span.muted', 'net'), h('span.mono', net));
@@ -234,7 +235,7 @@ export function createShell(root, { views, meta }) {
     const now = S.meta.service.now;
     clear(asof).append(h('span.st.fresh-' + worst, h('i.dot')), 'data as of ', h('b', oldest ? fmtTime(oldest) : 'n/a'), oldest ? ` (${fmtAge(now - oldest)})` : '');
     const die = store.get().sel.die, d = S.meta.dies.find((x) => x.id === die);
-    clear(plan); if (d) plan.append('plan ', h('b.mono', { title: `${d.plan.path}\ncommit ${d.plan.commit || '?'} · ${d.plan.date || ''}` }, d.plan.sha), d.plan.date ? ` (${String(d.plan.date).slice(0, 10)})` : '');
+    clear(plan); if (d) plan.append(d.plan.wave ? 'wave plan ' : 'plan ', h('b.mono', { title: `${d.plan.path}\ncommit ${d.plan.commit || '?'} · ${d.plan.date || ''}` }, d.plan.sha), d.plan.date ? ` (${String(d.plan.date).slice(0, 10)})` : '');
     svc.textContent = 'service ' + (S.meta.service.sha || 'dev');
   }
 
