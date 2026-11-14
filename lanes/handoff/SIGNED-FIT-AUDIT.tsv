@@ -1,0 +1,68 @@
+die	type	class	signed_outline_um	plan_outline_um	details	recommendation
+s81	slice_station__t38	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 6 ok [pack (739 tiles, 0 err)]	none
+s81	slice_station__t8	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (770 tiles, 0 err)]	none
+s81	slice_station__t41	SLOT-GREW	1442.88x1226.88	1442.88x1278.72	outline signed 1442.88x1226.88 plan 1442.88x1278.72 (d +0.00,+51.84) | N pins 51.84 um short of slot N edge | edge clock ports at plan taps: 12 ok [pack (801 tiles, 0 err)]	plan change: restore slot height to 1226.88 (the lattice of the other 31 signed slice_station types and the plan note); N-face pins sit at the signed edge, 51.84 um inside the slot N edge; edge clock taps unchanged. Usable with filler/halo meanwhile. No re-sign.
+s81	slice_station__t44	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [DEF export]	none
+s81	slice_station__t12	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 2 ok [pack (729 tiles, 0 err)]	none
+s81	slice_station__t45	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [DEF export]	none
+s81	slice_station__t14	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 5 ok [pack (692 tiles, 0 err)]	none
+s81	slice_station__t46	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 1 ok [pack (711 tiles, 0 err)]	none
+s81	slice_station__t47	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (724 tiles, 0 err)]	none
+s81	slice_station__t17	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (704 tiles, 0 err)]	none
+s81	slice_station__t48	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (688 tiles, 0 err)]	none
+s81	slice_station__t18	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 6 ok [DEF export]	none
+s81	slice_station__t20	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [pack (739 tiles, 0 err)]	none
+s81	slice_station__t21	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [pack (731 tiles, 0 err)]	none
+s81	slice_station__t22	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 6 ok [DEF export]	none
+s81	slice_station__t23	MATCH	1442.88x1226.88	1442.88x1226.88	 [pack (715 tiles, 0 err)]	none
+s81	slice_station__t25	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (747 tiles, 0 err)]	none
+s81	slice_station__t26	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (717 tiles, 0 err)]	none
+s81	slice_station__t28	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [pack (712 tiles, 0 err)]	none
+s81	slice_station__t31	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (748 tiles, 0 err)]	none
+s81	slice_station__t50__cl39451317	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 6 ok [pack (734 tiles, 0 err)]	none
+s81	slice_station__t50__cld84c9e24	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 6 ok [pack (732 tiles, 0 err)]	none
+s81	slice_station__t6__cl54a9ceeb	SLOT-GREW	1442.88x1226.88	1442.88x1278.72	outline signed 1442.88x1226.88 plan 1442.88x1278.72 (d +0.00,+51.84) | N pins 51.84 um short of slot N edge | edge clock ports at plan taps: 9 ok [pack (766 tiles, 0 err)]	plan change: restore slot height to 1226.88 (the lattice of the other 31 signed slice_station types and the plan note); N-face pins sit at the signed edge, 51.84 um inside the slot N edge; edge clock taps unchanged. Usable with filler/halo meanwhile. No re-sign.
+s81	slice_station__t7__cl362204c4	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 4 ok [pack (689 tiles, 0 err)]	none
+s81	slice_station__t7__cl945bc067	UNVERIFIED	?	1442.88x1226.88	no readable signed DB (record on epyc4)	needs a readable signed DB: no readable signed DB (record on epyc4)
+s81	slice_station__t7__cl503f4913	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [pack (688 tiles, 0 err)]	none
+s81	slice_station__t42__cl4bd1432c	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 5 ok [pack (730 tiles, 0 err)]	none
+s81	slice_station__t24__cleece78ec	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 2 ok [pack (707 tiles, 0 err)]	none
+s81	slice_station__t24__cl66b71008	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [pack (711 tiles, 0 err)]	none
+s81	slice_station__t29__cl2e5c855a	SLOT-GREW	1442.88x1226.88	1442.88x1278.72	outline signed 1442.88x1226.88 plan 1442.88x1278.72 (d +0.00,+51.84) | N pins 51.84 um short of slot N edge | edge clock ports at plan taps: 9 ok [pack (749 tiles, 0 err)]	plan change: restore slot height to 1226.88 (the lattice of the other 31 signed slice_station types and the plan note); N-face pins sit at the signed edge, 51.84 um inside the slot N edge; edge clock taps unchanged. Usable with filler/halo meanwhile. No re-sign.
+s81	slice_station__t29__clc7772371	SLOT-GREW	1442.88x1226.88	1442.88x1278.72	outline signed 1442.88x1226.88 plan 1442.88x1278.72 (d +0.00,+51.84) | N pins 51.84 um short of slot N edge | edge clock ports at plan taps: 8 ok [pack (738 tiles, 0 err)]	plan change: restore slot height to 1226.88 (the lattice of the other 31 signed slice_station types and the plan note); N-face pins sit at the signed edge, 51.84 um inside the slot N edge; edge clock taps unchanged. Usable with filler/halo meanwhile. No re-sign.
+s81	slice_station__t30__clcedefe91	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 2 ok [pack (692 tiles, 0 err)]	none
+s81	slice_station__t30__cl1653104c	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 2 ok [pack (669 tiles, 0 err)]	none
+s81	slice_station__t30__cl6a190133	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 3 ok [pack (701 tiles, 0 err)]	none
+s81	slice_station__t40__clc8fb2c8c	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 6 ok [pack (736 tiles, 0 err)]	none
+s81	slice_station__t40__cl1ea9de02	MATCH	1442.88x1226.88	1442.88x1226.88	edge clock ports at plan taps: 6 ok [pack (735 tiles, 0 err)]	none
+s81_head	hd_tile	SLOT-GREW	708.48x1036.8	717.12x1036.8	outline signed 708.48x1036.8 plan 717.12x1036.8 (d +8.64,+0.00) | E pins 8.64 um short of slot E edge | edge clock ports at plan taps: 1 ok [pack (502 tiles, 0 err)]	plan change: restore slot to 708.48 wide (264 placements; 8.64 um/instance gap otherwise). Fallback: declared fill column at E; E pins sit 8.64 um inside the slot edge. No re-sign needed.
+s81_head	hd_turn_a	MATCH	172.8x1036.8	172.8x1036.8	edge clock ports at plan taps: 1 ok [pack (310 tiles, 0 err)]	none
+s81_head	hd_turn_b	MATCH	172.8x699.84	172.8x699.84	edge clock ports at plan taps: 1 ok [pack (223 tiles, 0 err)]	none
+s81_head	hd_spn_end	MATCH	587.52x2073.6	587.52x2073.6	edge clock ports at plan taps: 7 ok [DEF export]	none
+s81_head	hd_st_turn	MATCH	1304.64x1131.84	1304.64x1131.84	edge clock ports at plan taps: 2 ok [pack (571 tiles, 0 err)]	none
+s81_head	hd_st_str	MATCH	1442.88x475.2	1442.88x475.2	edge clock ports at plan taps: 2 ok [pack (490 tiles, 0 err)]	none
+s81_head	hd_st_n4	SLOT-SHRANK/OVERLAP (+pins/taps off the slot edge)	1123.2x993.6	993.6x993.6	outline signed 1123.2x993.6 plan 993.6x993.6 (d -129.60,+0.00) | edge clock fclk_in_d1_i plan [991.456, 869.408] signed 1121.1,869.4 | edge clock fclk_in_d2_i plan [991.456, 349.728] signed 1121.1,349.7 | edge clock ports at plan taps: 2 ok [pack (576 tiles, 0 err)]	plan change: widen slot back to 1123.2 (signed pins/taps sit at x=1121, 129.6 um beyond the new E edge 993.6; signed block overlaps its E neighbour). Re-sign at 993.6 is a full re-place (outline change, routed DB resume not enough) and is not recommended.
+s81_head	hd_st_m	MATCH	1442.88x129.6	1442.88x129.6	edge clock ports at plan taps: 2 ok [pack (206 tiles, 0 err)]	none
+s81_head	hd_st_k5	MATCH	1442.88x872.64	1442.88x872.64	edge clock ports at plan taps: 4 ok [pack (421 tiles, 0 err)]	none
+s81_head	hd_st_n3_transit	MATCH	1442.88x475.2	1442.88x475.2	edge clock ports at plan taps: 2 ok [pack (484 tiles, 0 err)]	none
+s81_head	hd_st_n3_turn	MATCH	1304.64x604.8	1304.64x604.8	edge clock ports at plan taps: 2 ok [pack (504 tiles, 0 err)]	none
+s81_head	hd_spn_wshim_rx	UNVERIFIED	?	699.84x1036.8	no readable signed DB (record on epyc5)	needs a readable signed DB: no readable signed DB (record on epyc5)
+s81_head	hd_spn_wshim_tx	MATCH	699.84x1036.8	699.84x1036.8	 [pack (432 tiles, 0 err)]	none
+s81_head	hd_spn_eshim_rx	MATCH	95.04x1036.8	95.04x1036.8	edge clock ports at plan taps: 1 ok [pack (290 tiles, 0 err)]	none
+s81_head	hd_spn_eshim_tx	MATCH	95.04x1036.8	95.04x1036.8	 [pack (288 tiles, 0 err)]	none
+s81_head	hd_ctl_n	MATCH	1296.0x708.48	1296.0x708.48	edge clock ports at plan taps: 5 ok [pack (527 tiles, 0 err)]	none
+s81_head	hd_ctl_e	MATCH	855.36x103.68	855.36x103.68	edge clock ports at plan taps: 1 ok [pack (133 tiles, 0 err)]	none
+s81_head	hd_host_n	MATCH	1442.88x656.64	1442.88x656.64	edge clock ports at plan taps: 5 ok [pack (523 tiles, 0 err)]	none
+s81_head	hd_mesh_e	SLOT-GREW	838.08x86.4	838.08x423.36	outline signed 838.08x86.4 plan 838.08x423.36 (d +0.00,+336.96) | pins unchanged, grown side has no pins | edge clock ports at plan taps: 1 ok [pack (233 tiles, 0 err)]	plan change preferred: restore slot to 86.4 tall (signed). Usable as-is with filler if the extra 336.96 um of slot is a declared fill; N/S faces carry no pins; E/W pin y windows unchanged.
+qwen_compute	coll_ftm	UNVERIFIED	?	786.24x1468.8	no readable signed DB (record on epyc2)	needs a readable signed DB: no readable signed DB (record on epyc2)
+qwen_compute	coll_ftn	MATCH	786.24x691.2	786.24x691.2	edge clock ports at plan taps: 4 ok [pack (386 tiles, 0 err)]	none
+qwen_compute	coll_ft__cl78c7b300	MATCH	786.24x786.24	786.24x786.24	edge clock ports at plan taps: 6 ok [pack (522 tiles, 0 err)]	none
+qwen_compute	coll_ft__cla4a25d77	MATCH	786.24x941.76	786.24x941.76	edge clock ports at plan taps: 7 ok [pack (454 tiles, 0 err)]	none
+qwen_kvsys	kv3_io_ft	SLOT-SHRANK/OVERLAP (+pins/taps off the slot edge)	1278.72x1036.8	1200.96x1036.8	outline signed 1278.72x1036.8 plan 1200.96x1036.8 (d -77.76,+0.00) | edge clock fclk_in_ft0_i plan [1198.816, 219.232] signed 1276.6,219.2 | edge clock fclk_in_ft1_i plan [1198.816, 433.056] signed 1276.6,433.1 | edge clock ports at plan taps: 2 ok [pack (600 tiles, 0 err)]	plan change: restore slot to 1278.72 wide (signed edge clock pins at x=1276.6 vs plan taps 1198.8; signed block overhangs 77.76 um). Re-sign at 1200.96 = full re-place.
+qwen_kvsys	kv3_phy	MATCH	864.0x1520.64	864.0x1520.64	plan block gives pin names only (no faces, windows or sites): pin sites not checkable, outline only | edge clock ports at plan taps: 1 ok | ctl/strap pins excluded: N/M5 x1, N/M7 x1 [pack (651 tiles, 0 err)]	none
+qwen_kvsys	kv3_phy_v1	MATCH	864.0x1520.64	864.0x1520.64	edge clock ports at plan taps: 1 ok | ctl/strap pins excluded: S/M5 x1, S/M7 x1, N/M5 x1, N/M7 x1 [pack (655 tiles, 0 err)]	none
+qwen_kvsys	kv3_sys_SD_v1	PINS/TAPS MOVED (slot grew, taps follow new edge)	1900.8x1036.8	2004.48x1036.8	outline signed 1900.8x1036.8 plan 2004.48x1036.8 (d +103.68,+0.00) | plan block gives pin names only (no faces, windows or sites): pin sites not checkable, outline only | edge clock fclk_in_i_host_fdi plan [2002.336, 219.68] signed 1898.7,219.7 | edge clock fclk_in_i_host_link_rst_n plan [2002.336, 433.056] signed 1898.7,433.1 | edge clock clk_clk_phy plan [2002.336, 354.0] signed 1898.7,354.0 | edge clock ports at plan taps: 0 ok [pack (832 tiles, 0 err)]	plan change: restore slot to 1900.8 wide (plan E-edge clock taps moved to x=2002.3, signed at 1898.7). Plan block gives pin names only, so data pin sites cannot be compared. Re-sign only if the wider slot is wanted.
+hbm	q_mca	MATCH	4898.88x2073.6	4898.88x2073.6	plan block gives pin names only (no faces, windows or sites): pin sites not checkable, outline only [pack (1628 tiles, 0 err)]	none
+hbm	q_spb1	MATCH	1745.28x1503.36	1745.28x1503.36	ctl/strap pins excluded: E/M7 x2 [DEF export]	none
+hbm	q_spt2	UNVERIFIED	?	1779.84x1503.36	no readable signed DB (record on epyc2)	needs a readable signed DB: no readable signed DB (record on epyc2)
+hbm	vsN1	UNVERIFIED	?	1684.8x1503.36	no readable signed DB (record on epyc2)	needs a readable signed DB: no readable signed DB (record on epyc2)
