@@ -15,28 +15,28 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "kv102sem_ftgrid",
+   "event": "kvgeom4",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
     "evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL",
    "src_sha": "96f13b36a258e3b6121497ff52a7a31e9add3131",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_96f13b36a2/out",
-    "note": "KIT-OPS-3 01:44 PST KV-102 ADOPT kv102sem_1113 (semantic R8; strict bind 0, LATCHECK 2404/2404, trunk replay 128/128); bind_matches 56/56 0 stale on src_kv_96f13b36a2_pgL | KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches"
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_kvgeom4/out",
+    "note": "KIT-OPS-3 KV kvgeom4 (KV-102 READY+ADOPT 07:44: G0 0, strict bind 0, LATCHECK 2404/2404); bind_matches checked | KIT-OPS-3 01:44 PST KV-102 ADOPT kv102sem_1113 (semantic R8; strict bind 0, LATCHECK 2404/2404, trunk replay 128/128); bind_matches 56/56 0 stale on src_kv_kvgeom4_pgL | KIT-OPS-3 2026-11-13 19:40 PST"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -586,7 +586,23 @@
     "kv3_pv_v3n@6",
     "kv3_pc_v1__cl23f6a148@6",
     "kv3_pc_v1__cl4ea58a5c@6",
-    "kv3_pc_v1__cl7f648944@8"
+    "kv3_pc_v1__cl7f648944@8",
+    "kv3_hgi_v7@18",
+    "kv3_hgi_v8@8",
+    "kv3_hub_Wo@8",
+    "kv3_pc__cl254f2e73@13",
+    "kv3_pc__cl5a95b461@10",
+    "kv3_pv_v2@6",
+    "kv3_pv_v2n@8",
+    "kv3_pv_v3@6",
+    "kv3_pv_v3n@8",
+    "kv3_pv_v4@6",
+    "kv3_pv_v4n@5",
+    "kv3_pv_v5@6",
+    "kv3_pv_v5n@7",
+    "kv3_pv_v6@8",
+    "kv3_pv_v6n@8",
+    "kv3_pv_v7@6"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -769,7 +785,7 @@
     "kv3_pv_v3@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pv_v3n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pv_v4@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
-    "kv3_pv_v4n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
+    "kv3_pv_v4n@5": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
     "kv3_pv_v5@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pv_v5n@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
     "kv3_pv_v6@5": "tag o-kv: RF3S3 R2 + spine (021f8f4950e), bind_o",
@@ -794,7 +810,7 @@
     "kv3_io_cor_v1@5": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "kv3_pv_v8@7": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
     "kv3_hgi_v7@6": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
-    "kv3_pc_v1__cl4ea58a5c@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
+    "kv3_pc_v1__cl4ea58a5c@7": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
     "kv3_pv_v2n@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "kv3_pv_v3@8": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
     "kv3_pv_v4n@7": "KW-FIX-19 21:1x EP4-DISK-WAIT: unit pinned to gen host epyc4 (scratch2 8-11 GB < 100 floor) waited ~1 h; client stopped, relaunch on gen epyc5/epyc6 + src_730",
@@ -813,7 +829,7 @@
     "kv3_sys_c@4": "CODEX KV owner-approved82533/396 sysC exact reset placement reform: reviewed13longbranches around SRAM/UCIe wall,maxhop396.155um,5same-depth copies,0cycles,literal101flop proof+mutant. Newfaecd plan/source emitsfresh23branches101flops; do not reuse oldfailedbound kit.",
     "kv3_pv_v12@7": "KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc",
     "kv3_pv_v7@7": "KW-FIX-21 05:1x (COORD 04:40/04:43): src kw21/src_c926 @c92647a2155 (main: 8dc1 ot_run capture, e6ce finite Slang gen_env, busfit 7d0631b1015; delta from codex D3 src_d3c267 = 4 tool files; results/qc",
-    "kv3_pv_v12@8": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source",
+    "kv3_pv_v12@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
     "kv3_pv_v7@8": "KW-FIX-21 05:3x: src -> kw21/src_c926f @c92647a2155 = FULL tree (Codex src_2c705 base + git delta 846 files); the 05:17 batch failed kit_rtl on the sparse D3-based src_c926 (bind: preferred HDL source",
     "kv3_hgi_v8@11": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows.",
     "kv3_hub_Eo@10": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows.",
@@ -821,7 +837,7 @@
     "kv3_pv_v7@9": "KW-FIX-24 14:5x (DIE-KV-84 14:4x answer): KV bind_out -> kw23/bind_kv_q (plan_c 7da_ad + asbuilt_kv_7da, bind.py all --strict: errors 0, 160 partitions, 56 types, 2545 crossings; on epyc6 + copied to epyc5). Its verify/bound.ys step fails only because verify/lib_stubs.sv does not stub the bind-made core_splits leaves (qkd_kvs_pcc/pcf) = bind.py verify bug (class item, KW-FIX-24); verify advisory as for QC bind_qc_g (KW-FIX-22). Was kw11/bind_kv_o + kw11/asbuilt_kv_o.json. One batch of the 4 BIND_STALE rows.",
     "kv3_pc__cl254f2e73@7": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_pc__cl5a95b461@8": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
-    "kv3_pc_v1__cl23f6a148@7": "KW-FIX-25 22:5x class batch: queue row rejected, kit carries FAIL_PREFLOOR from an earlier run (many after watchdog LEC stops, now report-only by WATCHDOG.skip /lec); fresh attempt on the re-homed hosts.",
+    "kv3_pc_v1__cl23f6a148@7": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
     "kv3_hroot@5": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
     "kv3_hub_Wo@9": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
     "kv3_io_ft@6": "KW-FIX-26 23:5x one batch: new src 0290971a0fd (ROOT-MERGE-46 train: leafrep+leafopt, subtree_balance/ft_spread, type-safe-3, pose_spread, macrogap, FLOW-CLASS-25); failed on an older src",
@@ -832,7 +848,7 @@
     "kv3_io_ft_v1@12": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
     "kv3_sys_SD_v1@7": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
     "kv3_hub_Wo@11": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
-    "kv3_pc_v1__cl7f648944@10": "CODEX KV watcher 11-07: restore10 missing indirect preferred HDL inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
+    "kv3_pc_v1__cl7f648944@10": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
     "kv3_sys_SD_v1@8": "CODEX KV watcher 11-07: restore declared w521 PHY BB/LEF/TT/FF inputs at original src_7da_ad paths from intact epyc5 copy (ignore-existing; same captured source); no plan/source/RTL change",
     "kv3_hroot@7": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
     "kv3_hub_Wo@12": "DIE-KV-87 11-07 03:3x class batch: captured src_7da_ad on intel1+intel2 was 52 files of 10756 (rest pruned), epyc2 had none; kit closure dropped child modules (GEN_LINT not part of the design: ot_async_fifo, ot_qkvd_seq_m_sfifo, qkd_host_pc_slice) and the x6 PHY provider (kv_phy_slices.sv). Restored whole rtl/ + physical/die_plan + physical/qwen_missing_phy from intact epyc5, ignore-existing; no plan/source/RTL change",
@@ -881,7 +897,7 @@
     "kv3_hg_v1p4@4": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_hg_v1p5@4": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_hg_v1p6@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
-    "kv3_hgi_v6@3": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
+    "kv3_hgi_v6@3": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
     "kv3_hgi_v7@12": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
     "kv3_hub_Wo@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
     "kv3_pc_v1__cl23f6a148@2": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [cland]",
@@ -910,7 +926,23 @@
     "kv3_pv_v3n@6": "KIT-OPS-4 11-14 03:4x INFRA: ot-job exit 99 input (gen/run_kit.sh) on another gen host, no fetch host in spec / ADMIT-TUNE-1 soft-pin REBALANCE regression (fixed)",
     "kv3_pc_v1__cl23f6a148@6": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
     "kv3_pc_v1__cl4ea58a5c@6": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
-    "kv3_pc_v1__cl7f648944@8": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone."
+    "kv3_pc_v1__cl7f648944@8": "TYPE-KVPCF (READY 04:20): qkd_kvs_pcf detail view rebuilt-equivalent on epyc9/epyc10 (kvpcf-view-1114), first in prov_view_sources; epyc4 source gone.",
+    "kv3_hgi_v7@18": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_hgi_v8@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_hub_Wo@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pc__cl254f2e73@13": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pc__cl5a95b461@10": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v2@6": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v2n@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v3@6": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v3n@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v4@6": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v5@6": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v5n@7": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v6@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v6n@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pv_v7@6": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+    "kv3_pc_v3@7": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running."
    },
    "only_items": [
     "kv3_astk",
@@ -4166,7 +4198,7 @@
     "epyc7",
     "epyc2"
    ],
-   "plan_sha256": "f9abb1802590c6fefd7583cb32e8d19572a5cc07d98cb986088a22ae1d9efbc2",
+   "plan_sha256": "bc5799a6d17182e4f79f01138ee93a48fa1dc2784ab76801a8f1e4092935be61",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -4932,7 +4964,8 @@
     "kv101ns_3465fe9",
     "kv102fx_e7d0118c2c",
     "kv102sem_96f13b36a2",
-    "kv102sem_ftgrid"
+    "kv102sem_ftgrid",
+    "kvgeom4"
    ],
    "hold_items_released_kitops1_kvn2": {
     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
@@ -5343,7 +5376,33 @@
     "kv3_hgi_v4",
     "kv3_hgi_v5",
     "kv3_hroot"
-   ]
+   ],
+   "prev_kitops3_kvgeom4": {
+    "event": "kv102sem_ftgrid",
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "plan_sha256": "f9abb1802590c6fefd7583cb32e8d19572a5cc07d98cb986088a22ae1d9efbc2",
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_96f13b36a2/out",
+     "note": "KIT-OPS-3 01:44 PST KV-102 ADOPT kv102sem_1113 (semantic R8; strict bind 0, LATCHECK 2404/2404, trunk replay 128/128); bind_matches 56/56 0 stale on src_kv_96f13b36a2_pgL | KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches"
+    },
+    "gate_events_extra": [
+     "kvN2_66e6607",
+     "kv101ns_3465fe9",
+     "kv102fx_e7d0118c2c",
+     "kv102sem_96f13b36a2",
+     "kv102sem_ftgrid"
+    ]
+   },
+   "swap_note_kitops3_kvgeom4": "KIT-OPS-3 kvgeom4 type-scoped: 22 changed types keyed; revert prev_kitops3_kvgeom4."
   },
   "s81": {
    "enabled": true,
