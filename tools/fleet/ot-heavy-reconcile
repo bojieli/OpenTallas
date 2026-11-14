@@ -886,7 +886,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
-                SIMPLE_ADMIT=0.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                SIMPLE_ADMIT=0.0, SIMPLE_PEAK=0.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1171,6 +1171,52 @@ def gate(mem, argv):
         return gate_locked(mem, argv)
 
 
+def peak_history(path=None):
+    """SIMPLE_PEAK: class -> sorted peak RSS (GB) of this host's COMPLETED runs of the class (peaks.tsv status 0)"""
+    h = {}
+    for ln in rd(path or PEAKS).splitlines():
+        f = ln.split("\t")
+        if len(f) >= 7 and f[6] == "0":
+            try:
+                h.setdefault(f[2], []).append(float(f[4]))
+            except ValueError:
+                pass
+    for v in h.values():
+        v.sort()
+    return h
+
+
+def expected_peak(cls, req, hist, pct=0.9, min_n=3):
+    """expected peak RSS of a job of this class: the pct-quantile of its completed runs (>= min_n of them), never above its request
+    (MemoryMax); no history -> the request"""
+    v = hist.get(cls) or []
+    if len(v) < min_n:
+        return float(req)
+    return min(float(req), v[min(len(v) - 1, int(pct * len(v)))])
+
+
+def running_units_light():
+    """[(unit, req_gb, cls, now_gb)] for the active oth-* scopes, straight from cgroupfs (no systemctl; read_units() takes ~5 s on a
+    120-unit host).  now = scope memory.current + the unit's docker use.<unit> file (containers live outside the scope)."""
+    out = []
+    for c in glob.glob("/sys/fs/cgroup/user.slice/user-*.slice/user@*.service/*/oth-*.scope"):
+        u = os.path.basename(c)[:-6]
+        try:
+            now = int(rd(c + "/memory.current").strip() or 0) / GB + num(f"{D}/use.{u}")
+        except (ValueError, OSError):
+            continue
+        meta = rd(f"{D}/meta.{u}").split()
+        req = float(meta[0]) if meta[:1] and meta[0].replace(".", "", 1).isdigit() else 48.0
+        out.append((u, req, meta[1] if len(meta) > 1 else "?", now))
+    return out
+
+
+def peak_reserve(units, hist, frac, pct=0.9, min_n=3):
+    """SIMPLE_PEAK: GB the running jobs are still expected to take: frac x sum(max(0, expected peak - now)).  frac < 1 because their
+    peaks do not coincide (the plain sum on a 100-job host is 1-2 TB against 120 GB free and would admit nothing)"""
+    return frac * sum(max(0.0, expected_peak(c, r, hist, pct, min_n) - n) for _, r, c, n in units)
+
+
 def gate_locked(mem, argv):
     cls = classify(argv)
     table = sizes()
@@ -1178,6 +1224,26 @@ def gate_locked(mem, argv):
     res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a specific uncapped class peak may raise the charge
     total, avail = meminfo()
     if conf("SIMPLE_ADMIT"):   # SIMPLE_ADMIT_1114 ADMIT-TUNE-1 (OWNER 11-14): one check, real MemAvailable - INV_HEADROOM_GB >= class measured RSS (16 GB if unknown); no fresh/past-peak/declared charge; revert: SIMPLE_ADMIT=0 in /etc/ot-heavy.conf
+        if conf("SIMPLE_PEAK"):   # SIMPLE_PEAK_1114 ADMIT-TUNE-1 (COORD): admit on expected PEAK, not request or current RSS
+            _h = peak_history()
+            _need = math.ceil(expected_peak(cls, mem, _h, conf("PEAK_PCT"), conf("PEAK_MIN_N")))
+            _units = running_units_light()
+            _grow = peak_reserve(_units, _h, conf("PEAK_GROWTH_FRAC"), conf("PEAK_PCT"), conf("PEAK_MIN_N"))
+            _young = 0   # res files younger than SIMPLE_FRESH_S with no scope yet: whole expected peak
+            _live = {u for u, _, _, _ in _units}
+            for _f in glob.glob(f"{D}/res.*"):
+                try:
+                    if time.time() - os.path.getmtime(_f) < max(conf("SIMPLE_FRESH_S"), 1):
+                        _u, _m = open(_f).read().split()[:2]
+                        if _u not in _live:
+                            _mm = rd(f"{D}/meta.{_u}").split()
+                            _young += expected_peak(_mm[1] if len(_mm) > 1 else "?", int(_m), _h, conf("PEAK_PCT"), conf("PEAK_MIN_N"))
+                except (OSError, ValueError, IndexError):
+                    pass
+            _free = avail - conf("INV_HEADROOM_GB") - _grow - _young
+            _ok = _free >= _need
+            print(f"{'OK' if _ok else 'NO'} {_need} {cls} | SIMPLE_PEAK: MemAvailable {avail:.0f} - {conf('INV_HEADROOM_GB'):g} headroom - {_grow:.0f} expected growth of {len(_units)} running (x{conf('PEAK_GROWTH_FRAC'):g}) - {_young:.0f} unstarted = {_free:.0f} GB vs expected peak {_need} GB of class '{cls}' (p{conf('PEAK_PCT') * 100:.0f} of its completed runs, else the request), admissible {max(0, _free):.0f} GB")
+            return
         _e = table.get(cls) if cls not in ("?", "cd") else None
         _pk = _e.get("peak_gb", 0) if _e and capacity_sample_count(cls, _e) >= 1 else 0
         # SIMPLE_NEED_FACTOR (ADMIT-TUNE-1 11-14 05:xx): the class table holds the class MAXIMUM (route 80 GB, ot-job:run 72 GB); measured running
