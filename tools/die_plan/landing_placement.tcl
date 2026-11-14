@@ -410,7 +410,7 @@ proc cland_put_start {i rect tag} {
  lassign $rect ax ay bx by
  set x [expr {($ax+$bx)/2.0*$ff_dbu}]; set y [expr {($ay+$by)/2.0*$ff_dbu}]
  if {!([info exists ::env(OT_CLAND_START_GROW)] && $::env(OT_CLAND_START_GROW) eq "0") &&
-     $x > $ff_x0 && $x < $ff_x1 && $y > $ff_y0 && $y < $ff_y1} {
+     $x >= $ff_x0 && $x <= $ff_x1 && $y >= $ff_y0 && $y <= $ff_y1} {
   cland_put_grow $i $rect $tag start
  } else { cland_put $i $rect $tag }
 }
@@ -1101,13 +1101,14 @@ proc cland_place_ff {prefix rect tag} {
 # bound of what the band can hold: per band row, every free segment (length >= the narrowest body) plus one widest
 # reservation of overhang at its end (a last body fits, its reservation may run past the segment).  Bands that fit,
 # multi-row cells and bands not inside the core skip it: their placement is unchanged.
+# KV-CLAND-EDGE 11-13 (kv3_pc*, kv3_pv_v*: 25 fails "no legal ... writer-start:o_hsl_Q_N_co"): a plan window centred ON the core edge (y 1516.32 = core top, pins at the die edge) failed the strict < test, took the plain no-grow path and had no site; the grow condition is now inclusive of the core edge.
 # DIE-KV-97 11-10: the cland_put_start grow condition (same expression), for the band bound below
 proc cland_start_grows {rect} {
  global ff_x0 ff_y0 ff_x1 ff_y1 ff_dbu
  lassign $rect ax ay bx by
  set x [expr {($ax+$bx)/2.0*$ff_dbu}]; set y [expr {($ay+$by)/2.0*$ff_dbu}]
  return [expr {!([info exists ::env(OT_CLAND_START_GROW)] && $::env(OT_CLAND_START_GROW) eq "0") &&
-     $x > $ff_x0 && $x < $ff_x1 && $y > $ff_y0 && $y < $ff_y1}]
+     $x >= $ff_x0 && $x <= $ff_x1 && $y >= $ff_y0 && $y <= $ff_y1}]
 }
 # DIE-KV-97 11-10 (KV kv3_pv_v1 / kv3_pv_v1n a8..a11, v6n: 3_3 "... (writer-start:ft7_o): 3 cells reserve 1.2 um2 > band
 # upper bound 0.0 um2, checked before placement"): up to 35 reader/writer START bands share ONE 4.32-um window
