@@ -20,4 +20,4 @@ python3 $T/die_io.py plan $D/die_plan.json --out $D/die_io.json --corner-keepout
 # domain = macro + 63.64-um guard inside the serdes partition, core strip + core C4 for boundary flops / ft stations)
 python3 $R/physical/die_plan/s81/pg_domains.py $D/die_plan.json $D/die_io.json --split
 (cd $D && python3 $T/check.py die_plan.json --out $D/g0 ${PNG---png})
-python3 $R/physical/die_plan/s81/census_cov.py $D/die_plan.json $D/instance_map.json $IN/s81_lanes.tsv --out $D/census_cov.json
+python3 $R/physical/die_plan/s81/s81_census_cov.py $D/die_plan.json $D/instance_map.json $IN/s81_lanes.tsv --out $D/census_cov.json

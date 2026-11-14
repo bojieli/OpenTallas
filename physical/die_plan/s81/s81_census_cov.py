@@ -10,7 +10,7 @@ dropped = sum over group pairs of max(0, as-built bits - planned bits); clock/re
 spine + per-partition reset sync and are reported, not counted.  Rows whose endpoint maps to no partition are ERRORS
 (every instance maps to a partition).
 
-usage: census_cov.py PLAN.json INSTANCE_MAP.json CENSUS.tsv [--out OUT.json]
+usage: s81_census_cov.py PLAN.json INSTANCE_MAP.json CENSUS.tsv [--out OUT.json]
 """
 import argparse
 import os
