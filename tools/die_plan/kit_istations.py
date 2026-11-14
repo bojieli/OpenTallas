@@ -103,6 +103,135 @@ def packed_input_delay(tn,bus,txt,width,stages):
                 stage_registers=[f'{inst}.r[{j}]' for j in range(d)])
 
 
+def packed_exact_geometry(tn, bus, txt, entry, packed, width, exact):
+    """Complete per-bit sites for the existing packed data+epoch delay; never insert/change registers."""
+    banks, cell, face = exact
+    if face is not None:
+        raise ValueError(f'{tn}.{bus}: packed exact banks do not also move face registers')
+    if packed['depth'] != len(banks) or packed['depth'] != len(entry['regs_um']):
+        raise ValueError(f'{tn}.{bus}: exact packed banks require every actual stage (D{packed["depth"]})')
+    # An absent epoch is allowed only when the actual bound output has no reader or exposed port.
+    from kit_assembly import _masked_rtl
+    code = _masked_rtl(txt)
+    inst = re.escape(packed['instance'])
+    code, count = re.subn(r'\bot_dp_dly\s*#\([^;]*?\)\s+' + inst + r'\s*\([^;]*\);', '', code)
+    if count != 1:
+        raise ValueError(f'{tn}.{bus}: cannot isolate the actual packed instance for epoch proof')
+    epoch = gen_rtl.sv_id(bus) + '_eq'
+    # Only internal declarations are discarded. Ports, aliases and every other use remain readers.
+    code = re.sub(r'(?m)^\s*(?:wire|logic)\b[^;=]*;', '', code)
+    unobserved = re.search(r'\b' + re.escape(epoch) + r'\b', code) is None
+    fw, fh = cell
+    # Reserve epoch sites too: source pruning never turns its slot into capacity for another stage.
+    active = []
+    for x, y, j, bit in sorted((xy[0], xy[1], j, bit)
+                              for j, bank in enumerate(banks) for bit, xy in enumerate(bank)):
+        active = [q for q in active if q[0] + fw > x + 1e-9]
+        for ax, ay, aj, ab in active:
+            if min(y + fh, ay + fh) > max(y, ay) + 1e-9:
+                raise ValueError(f'{tn}.{bus}: overlapping packed sites {aj}/{ab} and {j}/{bit}')
+        active.append((x, y, j, bit))
+    table = ' '.join('{' + ' '.join('{%.9g %.9g}' % tuple(p) for p in bank) + '}' for bank in banks)
+    call = (f'is_packed_exact_banks {{{packed["instance"]}}} {width} {packed["depth"]} '
+            f'{{{table}}} {fw:.9g} {fh:.9g} ist:{bus} {int(unobserved)}')
+    return call, dict(exact_packed=True, payload_bits=width, epoch_bit=width,
+                      epoch_unobserved=unobserved, epoch_site_reserved=True,
+                      actual_stage_count=packed['depth'], sites_per_stage=width+1,
+                      source_instance=packed['instance'], footprint_um=cell,
+                      bound_source_sha256=__import__('hashlib').sha256(txt.encode()).hexdigest())
+
+
+PACKED_EXACT_BANK_TCL = r'''
+# Packed native receiver pads: validate ALL payload/epoch inventory/sites before moving ANY flop.
+proc is_packed_exact_banks {inst W D banks fw fh tag epoch_unobserved} {
+  global ff_blk ff_dbu ff_orient ff_sw ff_x0 ff_y0 ff_x1 ff_y1 is_n is_fh
+  if {[llength $banks] != $D} { error "exact packed bank $inst incomplete stage table" }
+  for {set j 0} {$j < $D} {incr j} {
+    if {[llength [lindex $banks $j]] != $W+1} { error "exact packed bank $inst stage $j missing epoch/site" }
+  }
+  if {![llength [info commands ff_hits_explicit]] || ![llength [info commands ff_reserve_explicit]]} {
+    error "exact packed bank requires explicit-footprint occupancy API"
+  }
+  set blocks {}
+  foreach i [$ff_blk getInsts] {
+    if {![[$i getMaster] isBlock]} continue
+    set box [$i getBBox]
+    lappend blocks [list [$box xMin] [$box yMin] [$box xMax] [$box yMax] [$i getName]]
+  }
+  set reserve {}
+  foreach bank $banks {
+    foreach xy $bank {
+      lassign $xy x y
+      set cx [expr {round($x*$ff_dbu)}]; set cy [expr {round($y*$ff_dbu)}]
+      set cw [expr {round($fw*$ff_dbu)}]; set ch [expr {round($fh*$ff_dbu)}]
+      if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw != 0} {
+        error "exact packed reserved site is not on row/site: $inst $x $y"
+      }
+      if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+$cw > $ff_x1 || $cy+$ch > $ff_y1} {
+        error "exact packed reserved footprint outside core: $inst $x $y"
+      }
+      if {[ff_hits_explicit $cx $cy $cw $ch]} {
+        error "exact packed bank overlaps existing explicit reservation: $inst $x $y"
+      }
+      foreach box $blocks {
+        lassign $box ax ay bx by name
+        if {$cx < $bx && $ax < $cx+$cw && $cy < $by && $ay < $cy+$ch} {
+          error "exact packed bank overlaps hard macro $name: $inst $x $y"
+        }
+      }
+      lappend reserve [list $cx $cy $cw $ch]
+    }
+  }
+  set seen [dict create]; set pending {}
+  foreach i [$ff_blk getInsts] {
+    set nm [string map {\\ {}} [$i getName]]
+    if {![string match "*${inst}\[./\]*" $nm]} continue
+    if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+    if {![regexp {[/.]r\[([0-9]+)\]\[([0-9]+)\]} $nm -> j bit]} {
+      error "unmapped flop in exact packed bank: $nm"
+    }
+    if {$j < 0 || $j >= $D || $bit < 0 || $bit > $W || [dict exists $seen $j $bit]} {
+      error "duplicate/out-of-range exact packed bank bit: $nm"
+    }
+    lassign [lindex [lindex $banks $j] $bit] x y
+    set cx [expr {round($x*$ff_dbu)}]; set cy [expr {round($y*$ff_dbu)}]
+    if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw != 0} {
+      error "exact packed bank site is not on row/site: $nm $x $y"
+    }
+    set m [$i getMaster]
+    if {[$m getWidth] > $fw*$ff_dbu+1 || [$m getHeight] > $fh*$ff_dbu+1} {
+      error "exact packed bank flop exceeds its footprint: $nm"
+    }
+    if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+[$m getWidth] > $ff_x1 || $cy+[$m getHeight] > $ff_y1} {
+      error "exact packed bank site outside core: $nm"
+    }
+    dict set seen $j $bit 1
+    lappend pending [list $i $cx $cy $x $y]
+  }
+  for {set j 0} {$j < $D} {incr j} {
+    for {set bit 0} {$bit < $W} {incr bit} {
+      if {![dict exists $seen $j $bit]} { error "exact packed bank $inst stage $j missing payload bit $bit" }
+    }
+    if {![dict exists $seen $j $W] && !$epoch_unobserved} {
+      error "exact packed bank $inst stage $j missing observed/unproved epoch"
+    }
+  }
+  # Commit every reservation, including a pruned epoch, only after all atomic checks succeed.
+  foreach rect $reserve { ff_reserve_explicit {*}$rect }
+  foreach p $pending {
+    lassign $p i cx cy x y
+    $i setPlacementStatus PLACED
+    $i setOrient [dict get $ff_orient $cy]
+    $i setLocation $cx $cy
+    $i setPlacementStatus FIRM
+    puts $is_fh "[$i getName]\t$tag\t$x\t$y\t-"
+    incr is_n
+  }
+  puts "OT_ISTATIONS exact packed bank $inst: $W payload bits x $D stages verified; epoch_unobserved=$epoch_unobserved"
+}
+'''
+
+
 def packed_sites(regs, depth):
     """[(register j, planned site index)] of a packed receiver delay of `depth` registers on a bus with planned
     station sites regs (face -> leaf order).  depth >= len(regs): registers 0..len-1 on the sites in order, the rest
@@ -1390,11 +1519,15 @@ def main(argv):
                              "(no exact bank / bit_route / bit sites)")
         packed=packed_input_delay(tn,b,txt,W,len(regs))
         if packed:
+            exact_meta = None
             if exact is not None:
-                raise ValueError(f'{tn}.{bus}: packed data+epoch delay requires complete packed bit sites; unsupported exact bank')
+                call, exact_meta = packed_exact_geometry(tn, bus, txt, e, packed, W, exact)
+                if PACKED_EXACT_BANK_TCL not in tcl:
+                    tcl.append(PACKED_EXACT_BANK_TCL)
+                tcl.append(call)
             sites=packed_sites(regs,packed['depth'])
             for j,k in sites:
-                if floating:
+                if floating or exact_meta is not None:
                     break
                 x,y=regs[k]
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
@@ -1402,6 +1535,8 @@ def main(argv):
             row=dict(conn=conn,planned=len(regs),bound_pads=packed['depth'],inserted=0,
                      stations=packed['stage_registers'],packed_delay=packed,
                      plan_width=b['width'],bound_width=W)
+            if exact_meta is not None:
+                row.update(exact_meta)
             if floating:
                 row.update(sites="float")
                 print(f"kit_istations: {tn} {bus}: sites=float, {packed['depth']} packed stages left to placement")
