@@ -1,0 +1,47 @@
+{
+  "source_commit": "09d4a0e99b2b5d8e8f20d4634c04921c261ad50d",
+  "input_file": "results/token_pass/measured_qwen_1019/inputs.json",
+  "input_sha256": "7ee1e4f76fe1831bb3232d850ba7824784e3a1551768f8b6adcf8e75496c8393",
+  "native_xc": [
+    {
+      "edge_w5": 3275,
+      "cmd": "00000000000000000000000008001",
+      "label": "o: XC tag 0 words 256 mode 0 dst 0"
+    },
+    {
+      "edge_w5": 5543,
+      "cmd": "00000000000000000000000008001",
+      "label": "down: XC tag 0 words 256 mode 0 dst 0"
+    }
+  ],
+  "component_programme": [
+    {
+      "msg": 0,
+      "mode": 0,
+      "words": 256,
+      "cmd_cycle": 3280,
+      "first_slot": 3281,
+      "first_out": 3822,
+      "last_out": 4077
+    },
+    {
+      "msg": 1,
+      "mode": 0,
+      "words": 256,
+      "cmd_cycle": 5548,
+      "first_slot": 5549,
+      "first_out": 6090,
+      "last_out": 6345
+    }
+  ],
+  "constructor_variant": "asbuilt",
+  "declared_contract": {
+    "LU": 53,
+    "LS": 378,
+    "cc_lane": 2,
+    "return_lane": 2,
+    "xc_cc_age": 2
+  },
+  "physical_bound_receipt": false,
+  "reason": "Selected logical compiler input contract only; current physical source/START/return-lane binding is unavailable. Priced ctlm plan XC-after-END is not the emitted native programme."
+}
