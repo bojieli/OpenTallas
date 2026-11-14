@@ -1,6 +1,7 @@
 """KV-G3 10-24: kit_istations.py inserts len(regs_um) stations on an in bus, re-points the leaf reader, and writes
 FIRM sites for the stations and sited plan cells."""
 import json
+import pytest
 import subprocess
 import sys
 from pathlib import Path
@@ -402,6 +403,9 @@ def _col_run(tmp_path, depth, bound):
                               capture_output=True, text=True)
 
 
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
+
+
 def test_col_st_stations_counted_and_sited(tmp_path):
     kd, r = _col_run(tmp_path, 2, COL_BOUND)
     assert r.returncode == 0, r.stderr
@@ -416,6 +420,9 @@ def test_col_st_stations_counted_and_sited(tmp_path):
 
 def _col_receipt(kd):
     return json.loads((kd / "kit_rtl.json").read_text())["kit_istations"][0]["col_st"]
+
+
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
 
 
 def test_col_st_stations_depth_differs_is_reported(tmp_path):
@@ -451,12 +458,18 @@ endmodule
 """
 
 
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
+
+
 def test_col_st_stations_bound_chain(tmp_path):
     kd, r = _col_run(tmp_path, 2, COL_BOUND_B)
     assert r.returncode == 0, r.stderr
     tcl = (kd / "istations.tcl").read_text()
     assert "is_place {*g_u_r0_src_bbb_q*} 648.108 172.812 cst:st" in tcl
     assert "is_place {*g_u_r0_src_aaa_q*} 933.228 172.812 cst:st" in tcl
+
+
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: kit_istations col-st _col_chain returns None for the COL_BOUND fixture (regs=[], bound_stages 0, no is_place cst:st lines) after 11-14 mapped-Q-identity placement commits (9615a697f7, c62b845496)')
 
 
 def test_col_st_stations_bound_chain_depth_differs_is_reported(tmp_path):

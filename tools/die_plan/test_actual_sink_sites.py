@@ -34,5 +34,7 @@ def test_actual_distributed_sites_fill_taps_nominal_centres_leave_empty(monkeypa
 def test_actual_bit_outside_reach_still_fails_no_nominal_fallback(monkeypatch):
     P=distributed_bank(monkeypatch)
     P.types['t']['ft_slots'][0]['bit_sites_um'][0][1]=[499.,99.]
-    with pytest.raises(ValueError,match='radius='):
-        taps.explicit_taps(P,'t')
+    # LIMIT-BIND-1 (owner: remove conservative limits): the reach radius is info, not blocking; the actual bit
+    # site is kept (still no nominal fallback) and the check no longer raises.
+    got=taps.explicit_taps(P,'t')
+    assert got

@@ -20,6 +20,17 @@ from test_lec_prefix_default import _design  # noqa: E402
 from test_lec_raw_bases import _exact  # noqa: E402
 
 
+def _have_abc():
+    try:
+        lec.abc_bin()
+        return True
+    except lec.LecError:
+        return False
+
+
+needs_abc = pytest.mark.skipif(not _have_abc(), reason="yosys-abc not installed on this host")
+
+
 def test_prove_sweep_timeout_is_undecided(tmp_path, monkeypatch):
     seen = {}
 
@@ -115,6 +126,7 @@ def test_raw_prefix_size_cap_is_deterministic_and_recorded(tmp_path, monkeypatch
     assert rep["n_raw_prefix_bounded"] == len(b) and rep["raw_prefix_ands_cap"] == 1
 
 
+@needs_abc
 def test_raw_prefix_default_cap_sweeps_small_miters(tmp_path, monkeypatch):
     for k in ("OT_LEC_RAW_BASE_STEPS", "OT_LEC_RESET_CYCLES", "OT_LEC_RAWPREFIX_ANDS"):
         monkeypatch.delenv(k, raising=False)
