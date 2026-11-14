@@ -27,3 +27,6 @@ Unowned: s81 ot_s81sl_leaf__t28 (flow-error exit 11), s81 slice_station__t27 (gr
 Failed / not built: s81 25/148, head 0/1, QC 0/4, KV 1/0. Wave launched 78 in 60 min. leaf__t28 (TYPE-S81-T29, lec_async fix live 11:50), slice_station__t27 (TYPE-SLICE-HOLD) now owned. QC/HEAD not-built unchanged (WAIT-CHILD / dsdv cores).
 New unowned: s81 serdes__t3 (attempt 24, labelled INFRA but real cause is plan: "macro u_bound.u_core.u_prx straddles PG domain phy_lk_WN0", so relaunch will not help); qwen_kvsys kv3_hgi (STRUCTURAL grt-overflow GRT-0116, recorded 11:53, no lane post in 90 min).
 slice_station__t6__cl0755c26e still unstarted; escalated 11:10 to KIT-OPS-5, no reply.
+
+## Sweep 6 (12:10 PST, final, run on COORD go-ahead)
+Failed / not built: s81 25/148, head 0/1, QC 0/4, KV 1/0 (same as sweep 5). Wave launched 78/60 min. Unowned: 0 after COORD assignment: serdes__t3 -> TL-SERDEST14, kv3_hgi -> TYPE-KVHGI2, slice_station__t6__cl0755c26e -> TYPE-SLICE-HOLD (private attempt 3 at place), serdes__t2 -> TL-SERDEST14 family. QC/HEAD not-built = WAIT-CHILD/dsdv cores owned by DIE-QC-103/TYPE lanes. Relaunched over the 6 sweeps: none (no infra kills found).
