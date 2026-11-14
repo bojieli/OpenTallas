@@ -10,3 +10,6 @@ os.environ["OT_HEAVY_CONF"] = _f.name
 
 # GATEOFF_1114: ot-run production default for OT_RUN_LOAD_GATE_FACTOR is now 0 (gate off fleet-wide); the load-gate tests exercise the 1.25 rule
 os.environ.setdefault("OT_RUN_LOAD_GATE_FACTOR", "1.25")
+
+# ROOTOWNED_1114: spill extraction runs under sudo -n tar in production; the spill tests put a fake tar first on PATH, which sudo would bypass
+os.environ.setdefault("OT_SPILL_NO_SUDO", "1")
