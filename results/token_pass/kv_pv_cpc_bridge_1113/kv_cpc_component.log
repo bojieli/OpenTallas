@@ -1,0 +1,42 @@
+ot-run: epyc7          admits   569 GB (avail 733, reserve 0, fresh 103.7, peak 27.7, headroom 0, waiters 0/0 GB) load 45/96 running 20 disk 812 GB 
+ot-run: -> epyc7
+ot-heavy: admitted on loved-redfish as oth-ubuntu-2606037-1794615534 after 0 s
+{
+  "verdict": "PASS_COMPONENT_TOOL_ONLY",
+  "checks": [
+    "actual selected D5 source/CPC+2 match",
+    "wrong_cost caught",
+    "duplicate_rule caught",
+    "bad total/double count/input-arithmetic mutation caught",
+    "bad total/double count/input-arithmetic mutation caught",
+    "bad total/double count/input-arithmetic mutation caught",
+    "actual schedule and boot F_DLY+2; PV/input/vport ages unchanged",
+    "default actual ns7 prep byte-identical: 10 files",
+    "scoped prep source-only contract F_DLY+2; no trunk/P0/P1 substitution"
+  ],
+  "pin_component": {
+    "id": "pvfin-output-pin",
+    "inst": "pvfin",
+    "module": "qkd_pv_fin_s2x8_pin_i1",
+    "cycles": 2,
+    "ports": [
+      "fault",
+      "out_beat",
+      "out_data",
+      "out_epoch",
+      "out_valid"
+    ],
+    "tsv": "/srv/opentallas-scratch2/claude/wt/die-kv-100/physical/die_plan/qwen_kvsys/hubc_pair_1113/native1/core_pin_cycles.tsv",
+    "tsv_sha256": "e8d59c0eeadd87f0cfc416351bb141f0b751fe1bd6cf42d975559fc7c9498c64",
+    "source": "/srv/opentallas-scratch2/claude/wt/die-kv-100/physical/die_plan/qwen_kvsys/hubc_pair_1113/source/qkd_pv_fin_s8_pin.sv",
+    "source_sha256": "e425d0c87057d39c95125e86112a7138385398c05c9e659c080045d9ecfb358b",
+    "proof": "/srv/opentallas-scratch2/claude/tok-verify-2/kv_cpc_bridge/proof/results/kv-pvfin-1/pin_stage_1113/impact.json",
+    "proof_sha256": "4217c95cee5a6dfe507dda3f1bef2d654308d912bf733e1f91bb16df6efaa37a"
+  },
+  "default_files": 10,
+  "F_DLY_before": 55,
+  "F_DLY_after": 57,
+  "prototype_note": "Old ns7 bind is a compatibility fixture, not current final geometry; actual trunk extension remains FAIL unsupportednode9->12. The source-only test calendar is a unit input, not a native provider or aggregate calendar.",
+  "native_programme_qualified": false
+}
+ot-run: RAN on epyc7 (unit oth-ubuntu-2606037-1794615534): exit 0

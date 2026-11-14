@@ -1,0 +1,5 @@
+ot-run: epyc7          admits   723 GB (avail 835, reserve 0, fresh 50.9, peak 28.4, headroom 0, waiters 0/0 GB) load 21/96 running 18 disk 810 GB 
+ot-run: -> epyc7
+ot-heavy: admitted on loved-redfish as oth-ubuntu-2762342-1794616248 after 0 s
+CPC_SOURCE_GUARDS PASS ['valid selected source F_DLY57', 'stale_bind caught', 'stale_source caught']
+ot-run: RAN on epyc7 (unit oth-ubuntu-2762342-1794616248): exit 0

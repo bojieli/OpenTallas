@@ -1,0 +1,13 @@
+ot-run: epyc7          admits   523 GB (avail 687, reserve 0, fresh 89.5, peak 41.9, headroom 0, waiters 0/0 GB) load 50/96 running 22 disk 813 GB 
+ot-run: -> epyc7
+ot-heavy: admitted on loved-redfish as oth-ubuntu-2507532-1794615130 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/tok-verify-2/kv_cpc_bridge/kv_pv_cpc_calendar.py", line 101, in <module>
+    a=p.parse_args();r=derive(a.plan,a.asbuilt,a.bind,a.repo_root,a.proof_root,a.prototype,a.base_calendar)
+                       ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/tok-verify-2/kv_cpc_bridge/kv_pv_cpc_calendar.py", line 77, in derive
+    trunk=mod.derive(bg);trunk_extra,_=checked_calendar(trunk)
+  File "/srv/opentallas-scratch2/claude/wt/die-kv-100/tools/qwen_kv_die/pv_landed_calendar.py", line 36, in derive
+    raise ValueError('unmapped changed PV path: ' + str((g['sink'], m)))
+ValueError: unmapped changed PV path: ('pvw_0__u_T0Q0_12_r0', {'sink_port': 'a', 'sink_bits': [[0, 257]], 'source': 'pvw_0__u_T0Q0_9_r0.b', 'source_bits': [[0, 257]], 'asbuilt_stages': 2, 'bound_stages': 5, 'landed_stages': 5, 'lane': 'L1806'})
+ot-run: RAN on epyc7 (unit oth-ubuntu-2507532-1794615130): exit 1
