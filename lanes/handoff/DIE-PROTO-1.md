@@ -9,3 +9,7 @@ COORD 11-14 ~07:4x: die GRT + die STA prototype with the REAL REGIONAL clock, QC
 - Launch from intel2: setsid nohup ot-run --crit --hosts epyc9 --mem 128 --threads 24 --dir $B --priority die -- bash $B/qc_chain.sh s3d (logs intel2 ~/dp1c/*.ot). Chains skip the kit if kit/grt/route.v exists (rerun GRT/STA only).
 ## Next
 Read CHAIN.log lines (REG_GRT/GRT ovf, REG_STA/STA proof lines + TAP-OFFSET-GATE, CA_*, STA_*), per-region overflow from grt combo logs, classify failures (plan vs type-local vs view), post RESULT per die cc owner.
+## 09:3x PST status
+- KV DONE: RESULT 08:4x (g4: GRT 0 ov, intra +447.1 / seam +545.1, CA lo/hi +189.8/+193.3, kitoffs.json 5798 ports -> folded by KV-102 into plan_final). Replies to KV-102: K/start-tree fields; kvgeom5 recipe (no region_form for fishbone KV; count_align_plan --start-tree clock --start-clean width; table write = DIE-KV-5/6 --from-ocv --parts ocv path, not verified by me); correction (511 MC viol were my default start form; clock form = 0 viol); start-skew 68/161 = ambiguous sync_values-2 edges failed closed (no numeric excess).
+- Files: epyc9 die-proto-1c/kv/g4/gate/{ca_W,bind_W,sta_W}; kv/kv_ca2.sh, kv/kv_staW.sh. Failed attempts at --table-out: bind_W2.log, bind_W_region.log.
+- QC RUNNING: qc/s3d kit in region-DME clock-tree stage since 16:11 UTC (CPU busy). Next: GRT, STA + TAP-OFFSET-GATE, CA, RESULT cc DIE-QC-103.
