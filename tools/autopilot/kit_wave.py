@@ -2959,6 +2959,59 @@ def src_incomplete(AP, cfg, run=None):
     return out
 
 
+ITEM_SYNC_MAX_MB = 300
+ITEM_SYNC_MAX_PER_TICK = 8
+_ITEM_SYNC_OK = re.compile(r"^/srv/opentallas-scratch[0-9]*/claude/[^\s'\"$;|&`]+$")
+
+
+def sync_item_inputs(AP, cfg, run=None):
+    """FIX-SELFCONT 11-14 (COORD fail class KIT_NOT_SELF_CONTAINED / 'landed_sidecar_aor3.json missing'): an item's own input
+    (type_args --clock-landing sidecar, item_env file, item plan) existed on ONE gen host (epyc7); every other host was
+    listed in cfg _item_incomplete, gens fell back to such a host (resume / all-incomplete `or hs`) and failed with
+    FileNotFoundError.  Self-heal: each missing absolute path under /srv/opentallas-scratch*/claude that a probed gen host of
+    the same die holds is copied (tar over ssh through the hub, existing files kept, <= ITEM_SYNC_MAX_MB, no delete) to
+    the hosts missing it; the next probe then lists the host whole.  Option item_sync: false turns it off.  Returns the
+    [(host, path, src_host)] copied."""
+    if cfg.get("item_sync") is False:
+        return []
+    inc = cfg.get("_item_incomplete") or {}
+    done = []
+    if not inc:
+        return done
+    if run is None:
+        def run(argv, inp=None):
+            return AP.sh(argv, timeout=900)[0]
+    ssh = ["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
+    for h in sorted(inc):
+        for die, items in sorted(inc[h].items()):
+            for item, why in sorted(items.items()):
+                for part in str(why).split("; "):
+                    p = part.split(": ")[0].replace(" missing", "").strip()
+                    if not _ITEM_SYNC_OK.match(p) or ".." in p or len(done) >= ITEM_SYNC_MAX_PER_TICK:
+                        continue
+                    src = next((g for g in sorted(inc) if g != h and g in (cfg["dies"][die].get("gen_hosts") or [])
+                                and p not in str((inc[g].get(die) or {}).get(item) or "")), None)
+                    if not src:
+                        continue
+                    q = shlex.quote(p)
+                    pipe = (f"{' '.join(ssh)} {src} 'test -e {q} && [ $(du -sm {q} | cut -f1) -le {ITEM_SYNC_MAX_MB} ] && "
+                            f"tar -C / -cf - {shlex.quote(p.lstrip('/'))}' | "
+                            f"{' '.join(ssh).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(os.path.dirname(p))} && "
+                            f"tar -C / -xf - --keep-old-files'")
+                    try:
+                        for _try in range(5):                   # sshd MaxStartups / banner timeouts are transient
+                            rc = run(["bash", "-c", "set -o pipefail; " + pipe])
+                            if rc == 0:
+                                break
+                            time.sleep(8 + 8 * _try)
+                    except Exception as e:
+                        AP.log(f"KIT-WAVE ITEM-SYNC {src}->{h} {p}: skipped: {e}")
+                        continue
+                    AP.log(f"KIT-WAVE ITEM-SYNC {die}/{item}: {p} {src}->{h} rc={rc} (item input missing on {h}; self-heal FIX-SELFCONT)")
+                    done.append((h, p, src))
+    return done
+
+
 def workroot_low(AP, cfg, run=None):
     """KW-FIX-30 11-07 (COORD 13:21): {host: {die: free GB}} for the gen hosts where the disk that really holds the
     die's work_root has less than gen_disk_min_gb free.  GEN-DISK-LOW reads ot-run's scratch disk (scratch2), but the
@@ -8023,6 +8076,10 @@ def _step(AP, ap_dir):
         for h, ds in sorted(cfg["_src_incomplete"].items()):
             for die, why in sorted(ds.items()):
                 AP.log(f"KIT-WAVE SRC-INCOMPLETE {h} {die}: {why} (not a gen host for the die until its copy is whole)")
+        try:                                    # FIX-SELFCONT: copy item inputs held by one gen host to the others
+            sync_item_inputs(AP, cfg)
+        except Exception as e:
+            AP.log(f"KIT-WAVE item sync skipped: {e}")
     except Exception as e:                      # a diagnostic probe never stops the tick
         AP.log(f"KIT-WAVE src probe skipped: {e}")
     load_counter_signed(cfg)
