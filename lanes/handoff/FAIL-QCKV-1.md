@@ -1,2 +1,2 @@
-# FAIL-QCKV-1 handoff (2026-11-14 03:48 PST)
-QC pass done (class table in COORD-REVIEW-QUEUE). Open asks: KIT-OPS-3 relaunch view-missing items + CLAND overlay (landing_placement.tcl md5 a7d4d454); NEEDS-LANE sle_stm_v3/slw_stm_v1 (bits_q lint), sle_sc_v1/v2 (r8pad red straps). Still open from before: HEAD hd_tile/hd_serdes/hd_ctl/hd_spn_wshim_rx/hd_turn_b, KV relaunch outcomes (kv102sem, ftgrid). Pass 4 around 05:03 PST.
+# FAIL-QCKV-1 handoff (2026-11-14 04:16 PST)
+Pass 4 done. Open: QC-CLAND 3 types (plan numbers posted), kv3_hgi_v6/v8 CLAND spread, cbn_q00__cldbcda913 provenance, KV pv relaunch on kv102sem, HEAD unknowns (hd_tile etc., no fails seen 01:42..04:15). Next pass ~05:31 PST (a second waiter from the QC pass also fires).
