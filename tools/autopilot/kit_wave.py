@@ -1271,6 +1271,17 @@ def dedup_step(AP, cfg, st, notices, ap_dir):
                    reason=f"DEDUP-CREDITED: kit identical to {owner}; signed record {orec.get('q_id')} credited")
         notices.setdefault(die, []).append(f"{rec['item']} DEDUP-CREDITED via {owner}")
         AP.log(f"KIT-WAVE DEDUP CREDIT {die}/{rec['item']} <- {owner} job {orec.get('q_id')} ({cid})")
+    def _enq_hash(r):                                    # hash of an enqueued member's kit on its host
+        host, _, kp = str(r.get("kit") or "").partition(":")
+        if not kp:
+            return ""
+        rc, o, _ = AP.sh(remote_argv(host, AP.HUB_NAME, f"python3 -I -c {shlex.quote(KIT_HASH_PY)} {shlex.quote(kp)} {shlex.quote(r['item'])}"), timeout=120)
+        m = re.search(r"KW_KIT_HASH ([0-9a-f]{64})", o or "")
+        return m.group(1) if m else ""
+    try:
+        dedup_enqueued(AP, cfg, st, notices, jobs, _enq_hash)
+    except Exception as e:
+        AP.log(f"KIT-WAVE DEDUP enqueued pass skipped: {type(e).__name__}: {e}")
     # in-flight legacy duplicates: running wave rows of one group, no identity file yet
     probes = 0
     groups = {}
@@ -1308,6 +1319,64 @@ def dedup_step(AP, cfg, st, notices, ap_dir):
                          reason=f"DEDUP: in-flight duplicate of {keeper['item']} (same kit identity {kh[:12]}); stopped by exact unit")
                 notices.setdefault(r["die"], []).append(f"{r['item']} DEDUP cancelled (same kit as {keeper['item']})")
                 AP.log(f"KIT-WAVE DEDUP CANCEL {r['die']}/{r['item']}@{r.get('attempt')}: same kit identity as running {keeper['item']}")
+
+
+def dedup_enqueued(AP, cfg, st, notices, jobs, hash_fn, max_probes=16):
+    """WF-1 11-14 (COORD: 11 of 12 col_h9_r0_p6 pv variants, one identity, sat as queued route jobs): ENQUEUED members of a dedup
+    group whose kit hashes like a sibling's are cancelled by the exact autopilot unit of their queue job (ap-<job>-a1: the ot-run
+    client, queued or running; the route container under the attempt root too) and marked DEDUP -> credited when the kept member
+    signs.  Kept per identity: the registry owner when it is among them, else the most advanced (running before queued, then
+    earliest).  hash_fn(rec) -> kit hash or ''.  Returns the number cancelled."""
+    items = st.get("items") or {}
+    groups = {}
+    for rec in items.values():
+        if rec.get("status") != "ENQUEUED" or rec.get("q_status") in ("SIGNED", "FAIL", "CANCELLED", "SIGNED-LINKED"):
+            continue
+        g = dedup_group(cfg, rec.get("die"), rec.get("item"))
+        if g and ((cfg.get("dies") or {}).get(rec["die"]) or {}).get("kit_dedup_cancel", True) is not False and rec.get("kit"):
+            groups.setdefault(g, []).append(rec)
+    try:
+        reg = json.loads(Path(IDENT_FILE).read_text())
+    except (OSError, ValueError):
+        reg = {}
+    n = probes = 0
+    for g, recs in groups.items():
+        if len(recs) < 2:
+            continue
+        byh = {}
+        for r in recs:
+            h = r.get("kit_hash")
+            if not h and probes < max_probes:
+                probes += 1
+                h = hash_fn(r) or ""
+                if h:
+                    r["kit_hash"] = h
+            if h:
+                byh.setdefault(h, []).append(r)
+        for h, rs in byh.items():
+            if len(rs) < 2:
+                continue
+            own = (reg.get(f"{g}|{h}") or {}).get("owner")
+            rs.sort(key=lambda r: (r.get("item") != own, r.get("q_status") != "RUNNING", float(r.get("started") or 0)))
+            keeper = rs[0]
+            for r in rs[1:]:
+                j = jobs.get(r.get("q_id")) or {}
+                units = [j.get("unit") or (f"ap-{r['q_id']}-a1" if r.get("q_id") else None)]
+                if not AP.DRY:
+                    for u in units:
+                        if u:
+                            AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+                    root = attempt_root(r)
+                    if root:
+                        WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [root])
+                r.update(status="DEDUP", dedup_owner=keeper["item"], dedup_hash=h, updated=time.time(),
+                         reason=f"DEDUP: enqueued duplicate of {keeper['item']} (same kit identity {h[:12]}); queue job "
+                                f"{r.get('q_id')} stopped by exact unit {units[0]}")
+                notices.setdefault(r["die"], []).append(f"{r['item']} DEDUP: queued route job stopped (same kit as {keeper['item']})")
+                AP.log(f"KIT-WAVE DEDUP CANCEL-ENQUEUED {r['die']}/{r['item']}@{r.get('attempt')} job {r.get('q_id')} unit {units[0]}: "
+                       f"same kit identity {h[:12]} as {keeper['item']}")
+                n += 1
+    return n
 
 
 def stop_attempt(AP, rec):
