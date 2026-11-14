@@ -62,7 +62,7 @@ class _NoElements:
 DS = design_service.Service(log=lambda *a: None)
 LS = layout_service.Service(log=lambda *a: None)
 COV = coverage.Coverage(REPO, _NoElements(), TOKEN.parent, log=lambda *a: None)
-COMPOSE_V = 2
+COMPOSE_V = 4
 LOCK = threading.RLock()
 CACHE = {}          # key -> (stamp, raw, gz)
 
@@ -165,6 +165,35 @@ def compose_of(die):
             p = die_compose.pack_info(nid)
             if p and p['die'][:2] == [0, 0]:
                 m['packs'][nid] = dict({k: v for k, v in p.items() if k != 'macros'}, level='core', state=n['status']['state'], cores=[]); extra += 1
+        # (1) block identity: a type without a pack under its own name takes the pack of a type with the SAME block sha (the kit
+        #     identity the wave and the count's dedup credit use), so a renamed master keeps its routed view.
+        # (2) a pack whose outline differs from the plan slot (the plan grew the slot after the sign-off) is still drawn, anchored
+        #     at the slot's lower-left, and flagged; hiding a signed layout because the slot changed would be wrong.
+        pn = _json_file(STATE / 'plan_now.json') or {}
+        sha_of = {e['element']: (e.get('kw') or {}).get('block_sha') for e in pn.get('elements') or [] if e.get('die') == die and e.get('kind') == 'type'}
+        by_sha = {}
+        for nid, n in idx['nodes'].items():
+            if n['die'] == die and n['level'] == 'type' and (n.get('layout') or {}).get('store') and sha_of.get(n['name']): by_sha.setdefault(sha_of[n['name']], nid)
+        ident = resized = 0
+        for r in m['instances']:
+            if r['ok'] or r['orient'] not in die_compose.SIGN: continue
+            src = r['node']; via = None
+            if r.get('why') == 'no pack':
+                src = by_sha.get(sha_of.get(src.split('.t.', 1)[-1])); via = 'block'
+                if not src or src == r['node']: continue
+            p = die_compose.pack_info(src)
+            if not p or p['die'][:2] != [0, 0]: continue
+            pw, ph = p['die'][2], p['die'][3]
+            if src not in m['packs']:
+                m['packs'][src] = dict({k: v for k, v in p.items() if k != 'macros'}, level='type', state=idx['nodes'][src]['status']['state'],
+                                       cores=[dict(core=('%s.c.%s' % (die, q['master'])) if ('%s.c.%s' % (die, q['master'])) in m['packs'] else None, name=q['name'], master=q['master'], origin=q['origin'], orient=q['orient'], bbox=q['bbox']) for q in p['macros']])
+            r.update(ok=True, pack=src, pw=pw, ph=ph)
+            if via: r['by_identity'] = dict(block_sha=sha_of.get(r['node'].split('.t.', 1)[-1]), pack_of=src); ident += 1
+            if [pw, ph] != [r['w'], r['h']]: r['outline_differs'] = dict(pack=[pw, ph], slot=[r['w'], r['h']]); resized += 1
+            r.pop('why', None)
+        S = m['summary']; S['by_identity'] = ident; S['outline_differs'] = resized
+        S['with_pack'] = sum(1 for r in m['instances'] if r['ok']); S['signed_with_pack'] = sum(1 for r in m['instances'] if r['ok'] and r['state'] == 'signed')
+        S['unique_block_shas'] = len(set(v for v in sha_of.values() if v)); S['types_with_block_sha'] = sum(1 for v in sha_of.values() if v)
         m['summary']['core_packs_all'] = sum(1 for p in m['packs'].values() if p['level'] == 'core')
         m['summary']['pack_bytes'] = sum(p['bytes'] or 0 for p in m['packs'].values())
         f.parent.mkdir(parents=True, exist_ok=True)
