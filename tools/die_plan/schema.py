@@ -1075,6 +1075,18 @@ SCHEMA = {
                                           # SDC charges an UNMEASURED type instead of the die band window_ps
                                           # (gen_phys.tap_related_pair_ps; no default: absent = window_ps)
                                           "related_pair_ps": _nonneg}},
+            # R-CLOCK-7 (FABLE-REVIEW-CLK 1b, COORD 11-14): kit tap ARRIVAL OFFSETS in place of an absolute window.  Per type and
+            # kit clock port {TT, FF, tol}: the tap's routed arrival minus the median glue tap of its partition (ps, mean over
+            # the type's instances) and the tolerance u = max(10, half the instance range); gen_phys.tap_offset_table emits
+            # set_clock_latency -source -early (o - u) / -late (o + u) per corner (TT in constraint.sdc, FF in core_taps_ff.sdc).
+            # die_sta_related --kit-offset-out writes per_port_ps.  A type without a row keeps clock.tap_window.
+            "tap_offset": {"type": "object", "additionalProperties": False, "required": ["per_port_ps"],
+                           "properties": {"per_port_ps": {"type": "object", "additionalProperties": {
+                               "type": "object", "additionalProperties": {
+                                   "type": "object", "additionalProperties": False, "required": ["TT", "FF", "tol"],
+                                   "properties": {"TT": {"type": "number"}, "FF": {"type": "number"}, "tol": _nonneg}}}},
+                                          "source": {"type": "string"}, "proof": {"type": "string"},
+                                          "note": {"type": "string"}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
