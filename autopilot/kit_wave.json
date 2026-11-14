@@ -6794,7 +6794,11 @@
     "col_h10_r0_p4__t1@17",
     "col_h9_r0_p4__t1__cl8ef405e8@20",
     "bk_sel__t2@34",
-    "svc_hi_dsdv_svc_rs__t1@11"
+    "svc_hi_dsdv_svc_rs__t1@11",
+    "svc_hi_dsdv_svc_pvso_entry__t2@10",
+    "svc_hi_dsdv_svc_rs__t5@1",
+    "svc_lo_dsdv_svc_rs__t7@4",
+    "svc_lo_dsdv_svc_rs_w__t1@3"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -7148,7 +7152,7 @@
     "svc_lo_dsdv_svc_rs__t2@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "svc_lo_dsdv_svc_rs__t3@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "svc_lo_dsdv_svc_rs__t4@6": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
-    "svc_lo_dsdv_svc_rs__t5@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
+    "svc_lo_dsdv_svc_rs__t5@5": "FAIL-S81-1 $fatal guard: kit_rtl.f points at B1/src (the bound source), so dsdv_idx_rg2.sv c362b38acbe7 now also overlaid in B1/src on epyc7/8/9/intel1/epyc10 (src_pgL had it already); relaunch.",
     "svc_lo_dsdv_svc_rs__t7@2": "FAIL-S81-1 \\$fatal fix (dsdv_idx_rg2.sv c362b38acbe7 overlaid on B1/src_pgL, ifndef SYNTHESIS around 3 sim-only \\$fatal); standing rule: tool/RTL-sim fix = file overlay at READY (COORD 00:3x).",
     "__batch_rf1_h10": "75 rows appended 204 named types: S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x)",
     "col_h10_r0_p4__t1@11": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
@@ -8029,7 +8033,12 @@
     "col_h10_r0_p4__t1@17": "KIT-OPS-4 11-14 FAIL-S81-1 4394e185693 batched retry (INFRA/superseded/cancelled/stale-path/visual never blocks; B2-HOLD items skipped)",
     "col_h9_r0_p4__t1__cl8ef405e8@20": "KIT-OPS-4 11-14 FAIL-S81-1 4394e185693 batched retry (INFRA/superseded/cancelled/stale-path/visual never blocks; B2-HOLD items skipped)",
     "bk_sel__t2@34": "KIT-OPS-4 11-14 FAIL-S81-1 4394e185693 batched retry (INFRA/superseded/cancelled/stale-path/visual never blocks; B2-HOLD items skipped)",
-    "svc_hi_dsdv_svc_rs__t1@11": "KIT-OPS-4 11-14 FAIL-S81-1 4394e185693 batched retry (INFRA/superseded/cancelled/stale-path/visual never blocks; B2-HOLD items skipped)"
+    "svc_hi_dsdv_svc_rs__t1@11": "KIT-OPS-4 11-14 FAIL-S81-1 4394e185693 batched retry (INFRA/superseded/cancelled/stale-path/visual never blocks; B2-HOLD items skipped)",
+    "svc_hi_dsdv_svc_pvso_entry__t2@10": "FAIL-S81-1 $fatal guard: kit_rtl.f points at B1/src (the bound source), so dsdv_idx_rg2.sv c362b38acbe7 now also overlaid in B1/src on epyc7/8/9/intel1/epyc10 (src_pgL had it already); relaunch.",
+    "svc_hi_dsdv_svc_rs__t5@1": "FAIL-S81-1 $fatal guard: kit_rtl.f points at B1/src (the bound source), so dsdv_idx_rg2.sv c362b38acbe7 now also overlaid in B1/src on epyc7/8/9/intel1/epyc10 (src_pgL had it already); relaunch.",
+    "svc_hi_dsdv_svc_rs__t6@2": "FAIL-S81-1 $fatal guard: kit_rtl.f points at B1/src (the bound source), so dsdv_idx_rg2.sv c362b38acbe7 now also overlaid in B1/src on epyc7/8/9/intel1/epyc10 (src_pgL had it already); relaunch.",
+    "svc_lo_dsdv_svc_rs__t7@4": "FAIL-S81-1 $fatal guard: kit_rtl.f points at B1/src (the bound source), so dsdv_idx_rg2.sv c362b38acbe7 now also overlaid in B1/src on epyc7/8/9/intel1/epyc10 (src_pgL had it already); relaunch.",
+    "svc_lo_dsdv_svc_rs_w__t1@3": "FAIL-S81-1 $fatal guard: kit_rtl.f points at B1/src (the bound source), so dsdv_idx_rg2.sv c362b38acbe7 now also overlaid in B1/src on epyc7/8/9/intel1/epyc10 (src_pgL had it already); relaunch."
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
