@@ -431,6 +431,12 @@ def test_eco_drt_pre_hook_contract():
     assert "if {!$nneg || (!$npos && ![llength $aps])}" in t
     assert 'error "OT_ECO_DRT_PRE FAIL: pin_access_idx' in t       # fail closed beyond the cleared slots
     code = "\n".join(ln for ln in t.splitlines() if not ln.lstrip().startswith("#"))
+    # bcb66d99bd (11-06): the opt-in data reroute (OT_ECO_REROUTE_DATA=1 only) rips data wires and writes one
+    # checkpoint; it is the only place allowed to write_db/dbWire, and it must stay behind the env guard
+    s0 = code.index("proc ot_eco_reroute_data")
+    s1 = code.index('if {[info exists ::env(OT_ECO_REROUTE_DATA)] && $::env(OT_ECO_REROUTE_DATA) eq "1"} {')
+    assert s0 < s1 and code[s1:].count("ot_eco_reroute_data") >= 1
+    code = code[:s0] + code[s1:]
     for forbidden in ("setLocation", "setPlacementStatus", "destroy $n", "swapMaster", "write_db", "dbWire"):
         assert forbidden not in code
 

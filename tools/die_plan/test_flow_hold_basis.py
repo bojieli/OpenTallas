@@ -94,7 +94,7 @@ def test_gen_cli_defaults_are_the_flow_defaults():
 
 def test_run_kit_binds_ff_vclk_in_ff_only_steps():
     rk = gen_phys.RUN_KIT
-    assert "OT_VCLK_CORNER=ff \\$M grt CORNER=BC CORNERS=bc" in rk
+    assert "OT_VCLK_CORNER=ff \\$MF grt CORNER=BC CORNERS=bc" in rk
     assert "OT_VCLK_FF=" in rk and "LAYER_PARASITICS_FILE=" in rk          # hold_gate.tcl env
     hg = (HERE / "hold_gate.tcl").read_text()
     assert "ot_vclk_bind ff" in hg and "LAYER_PARASITICS_FILE" in hg
