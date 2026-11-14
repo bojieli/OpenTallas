@@ -1,0 +1,78 @@
+From 1dbdd51a3cf566fa020319f2597f48b57961d1b9 Mon Sep 17 00:00:00 2001
+From: TL-QCPHYSD <noreply@anthropic.com>
+Date: Sat, 14 Nov 2026 17:32:45 +0000
+Subject: [PATCH] gen/bind: declared bump inst follows physical_inst; bind
+ local_reset_pins (hard-IP pin driven from the wrapper delivered reset, no
+ as-built crossing)
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+---
+ tools/die_plan/bind.py     | 14 ++++++++++++++
+ tools/die_plan/gen_phys.py |  4 +++-
+ tools/die_plan/schema.py   |  2 ++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/tools/die_plan/bind.py b/tools/die_plan/bind.py
+index 83ddbda61c..924013713b 100644
+--- a/tools/die_plan/bind.py
++++ b/tools/die_plan/bind.py
+@@ -1535,7 +1535,21 @@ class Binder:
+             return ("rst", "low")
+         return None
+ 
++    def _local_reset_pin(self, p, ci, pn):
++        """QC-PHY-1 11-14 (COORD): a hard-IP content entry may declare local_reset_pins [pin, ...] = pins of that core that
++        the wrapper drives from its own delivered reset (arst_n) instead of an as-built source in another partition
++        (UCIe PHY rst_n, as-built glue d2d_rom.phy_rst_n -> core.rst_n).  The as-built crossing into the pin is then
++        not a lane: the pin binds like a reset (rst low).  Absent key = unchanged."""
++        t = self.types[self.parts[p]["type"]]
++        for e in t.get("contents", []) + t.get("hard_cores", []):
++            if pn in (e.get("local_reset_pins") or []) and (not e.get("module") or self.F.cells[ci].module == e["module"]):
++                return True
++        return False
++
+     def _classify(self, p, ci, pn, i, s, cnt):
++        if self._local_reset_pin(p, ci, pn):
++            cnt["local_reset_pin"] += 1
++            return ("rst", "low")
+         por = self._por_rule(p, ci, pn, i, s, cnt)
+         if por is not None:
+             return por
+diff --git a/tools/die_plan/gen_phys.py b/tools/die_plan/gen_phys.py
+index 5329c4e2fd..fdaaab161e 100644
+--- a/tools/die_plan/gen_phys.py
++++ b/tools/die_plan/gen_phys.py
+@@ -1502,7 +1502,9 @@ def declared_bumps(P, tn):
+     out = []
+     for e in t.get("contents", []) + t.get("hard_cores", []):
+         for b in e.get("bump_ports") or []:
+-            out.append((e["inst"], e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
++            # QC-PHY-1 11-14: the bind names the logical inst, the kit places the physical one (physical_inst/_master)
++            pinst = content_physical_identity(e)[0] if e.get("physical_inst") else e["inst"]
++            out.append((pinst, e.get("module", e["inst"]), b["pin"], b["dir"], int(b["width"])))
+     return out
+ 
+ 
+diff --git a/tools/die_plan/schema.py b/tools/die_plan/schema.py
+index 6894a87e26..2143121397 100644
+--- a/tools/die_plan/schema.py
++++ b/tools/die_plan/schema.py
+@@ -810,6 +810,7 @@ SCHEMA = {
+                                        # hard core of a hard type whose registered boundary pins (lib: setup+hold on
+                                        # every input, clk->q on every output) are the partition's boundary registers
+                                        "registered_pins": {"type": "boolean"},
++                                       "local_reset_pins": {"type": "array", "items": {"type": "string"}},
+                                        # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
+                                        # obstructs M1..obs_max, default partition_signal_max when absent)
+                                        "obs_max": _layer,
+@@ -900,6 +901,7 @@ SCHEMA = {
+                                        # hard core of a hard type whose registered boundary pins (lib: setup+hold on
+                                        # every input, clk->q on every output) are the partition's boundary registers
+                                        "registered_pins": {"type": "boolean"},
++                                       "local_reset_pins": {"type": "array", "items": {"type": "string"}},
+                                        "orient": {"enum": list(ORIENTS)},
+                                        "obs_max": _layer,   # leaf blockage top layer (G2 probe; default M5)
+                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
+-- 
+2.53.0
+

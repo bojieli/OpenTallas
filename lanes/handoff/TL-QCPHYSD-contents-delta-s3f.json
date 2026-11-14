@@ -1,0 +1,343 @@
+{
+ "schema": "type-scoped-delta",
+ "note": "TL-QCPHYSD 11-14 for S3F: REPLACE contents[0] IN PLACE (S3E bug: the first delta APPENDED a 2nd content with the same bump_ports/registered_pins -> 131 bump_ports collisions). inst stays the logical bound inst; the kit's placed instance is physical_inst. Windows = macro pin ranges (N face, M5 pins -> plan layers M7,M5).",
+ "types": {
+  "phy_serdes": {
+   "contents": [
+    {
+     "inst": "u_io_serdes_1",
+     "module": "ot_qfd_serdes_112g_x12_phy_s597",
+     "status": "reuse",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "registered_pins": true,
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "outline_um": [
+      1563.57,
+      2320.056
+     ],
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "ot_qfd_serdes_112g_x12_phy_s597"
+    }
+   ],
+   "module": "ot_qfd_serdes_112g_x12_phy_s597_pw_phy_serdes",
+   "core_pg_connect": true,
+   "buses_windows": {
+    "tx_flit": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      753.01,
+      782.018
+     ]
+    },
+    "tx_v": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      752.962,
+      753.362
+     ]
+    },
+    "rx_flit": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      781.714,
+      810.722
+     ]
+    },
+    "rx_v": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      781.666,
+      782.066
+     ]
+    },
+    "tx_up": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      752.914,
+      753.314
+     ]
+    }
+   }
+  },
+  "phy_serdes_b": {
+   "contents": [
+    {
+     "inst": "u_io_serdes_2",
+     "module": "ot_qfd_serdes_112g_x12_phy_s597",
+     "status": "reuse",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "registered_pins": true,
+     "lib": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_tt.lib",
+     "lef": "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "outline_um": [
+      1563.57,
+      2320.056
+     ],
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "ot_qfd_serdes_112g_x12_phy_s597",
+     "obs_max": "M5"
+    }
+   ],
+   "module": "ot_qfd_serdes_112g_x12_phy_s597_pw_phy_serdes_b",
+   "core_pg_connect": true,
+   "buses_windows": {
+    "tx_flit": {
+     "face": "E",
+     "layers": [
+      "M6"
+     ],
+     "window_um": [
+      2268.0,
+      2312.0
+     ],
+     "owner": "COORD 11-14"
+    },
+    "tx_v": {
+     "face": "E",
+     "layers": [
+      "M6"
+     ],
+     "window_um": null,
+     "owner": "DIE-QC-103"
+    },
+    "rx_flit": {
+     "face": "E",
+     "layers": [
+      "M6"
+     ],
+     "window_um": [
+      2220.0,
+      2264.0
+     ],
+     "owner": "COORD 11-14"
+    },
+    "rx_v": {
+     "face": "E",
+     "layers": [
+      "M6"
+     ],
+     "window_um": null,
+     "owner": "DIE-QC-103"
+    },
+    "tx_up": {
+     "face": "E",
+     "layers": [
+      "M6"
+     ],
+     "window_um": null,
+     "owner": "DIE-QC-103"
+    }
+   },
+   "buses": [
+    {
+     "name": "tx_flit",
+     "dir": "in",
+     "width": 597,
+     "kind": "data",
+     "leaf": "u_io_serdes_2.tx_flit",
+     "face": "E",
+     "window_um": [
+      2268.0,
+      2312.0
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "tx_v",
+     "dir": "in",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_io_serdes_2.tx_v",
+     "face": "E",
+     "window_um": null,
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "rx_flit",
+     "dir": "out",
+     "width": 597,
+     "kind": "data",
+     "leaf": "u_io_serdes_2.rx_flit",
+     "face": "E",
+     "window_um": [
+      2220.0,
+      2264.0
+     ],
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "rx_v",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_io_serdes_2.rx_v",
+     "face": "E",
+     "window_um": null,
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "tx_up",
+     "dir": "out",
+     "width": 1,
+     "kind": "ctl",
+     "leaf": "u_io_serdes_2.tx_up",
+     "face": "E",
+     "window_um": null,
+     "layers": [
+      "M6"
+     ],
+     "order": "lsb_low"
+    }
+   ],
+   "note": "phy_serdes_b: E face, M6-only pins, tx_v/tx_up/rx_v windows (near y 2216-2317) are DIE-QC-103's; values here are the S3E ones to be replaced."
+  },
+  "phy_ucie_kv": {
+   "contents": [
+    {
+     "inst": "u_ucie_kv",
+     "module": "ot_qkvd_ucie_x64_phy",
+     "status": "reuse",
+     "note": "hard IP used as-is (die-edge PHY); COORD 10-25 11:31: bare macro, its registered FDI pins are the boundary registers (no plan stations on this side)",
+     "bump_ports": [
+      {
+       "pin": "link_v",
+       "dir": "output",
+       "width": 1
+      },
+      {
+       "pin": "link_flit",
+       "dir": "output",
+       "width": 583
+      },
+      {
+       "pin": "far_v",
+       "dir": "input",
+       "width": 1
+      },
+      {
+       "pin": "far_flit",
+       "dir": "input",
+       "width": 583
+      }
+     ],
+     "registered_pins": true,
+     "lib": "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+     "origin_um": [
+      0.0,
+      0.0
+     ],
+     "orient": "R0",
+     "outline_um": [
+      777.6,
+      777.6
+     ],
+     "lef": "physical/qwen_missing_phy/../qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "ot_qkvd_ucie_x64_phy"
+    }
+   ],
+   "module": "ot_qkvd_ucie_x64_phy_pw_phy_ucie_kv",
+   "core_pg_connect": true,
+   "buses_windows": {
+    "tx_flit": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      276.964,
+      389.108
+     ]
+    },
+    "tx_v": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      276.772,
+      277.172
+     ]
+    },
+    "rx_flit": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      389.092,
+      501.236
+     ]
+    },
+    "rx_v": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      388.9,
+      389.3
+     ]
+    },
+    "tx_up": {
+     "face": "N",
+     "layers": [
+      "M7",
+      "M5"
+     ],
+     "window_um": [
+      276.58,
+      276.98
+     ]
+    }
+   }
+  }
+ }
+}

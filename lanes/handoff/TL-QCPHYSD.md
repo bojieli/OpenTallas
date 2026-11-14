@@ -6,3 +6,4 @@
 - 08:0x: blocker = no free rows/M5 obstruction at PDN (see queue). Awaiting A/B.
 - 08:3x: HARD-IP conditions fail (5 BUFx2 per wrapper; macro pins outside plan windows). Needs DIE-QC-103 window delta + epoch-bit decision. Scripts epyc10 /tmp/qcpins2.py /tmp/qccells.sh.
 - 08:5x: waiting on S3E READY+ADOPT from DIE-QC-103 (bg waiter). Then regen + both checks + HARD-IP rows.
+- S3F files posted (contents-delta-s3f.json, c3 patch). pending: private ucie gen validation of declared_bumps change.
