@@ -15,7 +15,7 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "kv102sem_96f13b36a2",
+   "event": "kv102sem_ftgrid",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
@@ -582,7 +582,9 @@
     "kv3_hg_v1p6@4",
     "kv3_hg_v3@13",
     "kv3_hub_C@1",
-    "kv3_hgi_v8@4"
+    "kv3_hgi_v8@4",
+    "kv3_hgi_v3@7",
+    "kv3_hgi_v6@8"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -900,7 +902,9 @@
     "kv3_hg_v1p3@7": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_hg_v1p6@4": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_hg_v3@13": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
-    "kv3_hub_C@1": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep."
+    "kv3_hub_C@1": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
+    "kv3_hgi_v3@7": "KV-FTGRID (KV-102 READY 02:13): plan_c.json re-sites 16 off-grid ft5 bits in kv3_hgi_v3/v6 (G0 0 errors, bind_matches 56/56) + ft_add_station.py nearest-legal-site fallback; relaunch only these two.",
+    "kv3_hgi_v6@8": "KV-FTGRID (KV-102 READY 02:13): plan_c.json re-sites 16 off-grid ft5 bits in kv3_hgi_v3/v6 (G0 0 errors, bind_matches 56/56) + ft_add_station.py nearest-legal-site fallback; relaunch only these two."
    },
    "only_items": [
     "kv3_astk",
@@ -4110,7 +4114,7 @@
     "epyc7",
     "epyc2"
    ],
-   "plan_sha256": "1fd99da8d31abcb218fcc37d38d3a261a8f5df74e5d345c38b1248d19b05d176",
+   "plan_sha256": "f9abb1802590c6fefd7583cb32e8d19572a5cc07d98cb986088a22ae1d9efbc2",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -4873,7 +4877,8 @@
     "kvN2_66e6607",
     "kv101ns_3465fe9",
     "kv102fx_e7d0118c2c",
-    "kv102sem_96f13b36a2"
+    "kv102sem_96f13b36a2",
+    "kv102sem_ftgrid"
    ],
    "hold_items_released_kitops1_kvn2": {
     "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
@@ -5233,7 +5238,12 @@
      "kv102fx_e7d0118c2c"
     ]
    },
-   "swap_note_kitops3_kvsem": "KIT-OPS-3 KV-102 ADOPT kv102sem_96f13b36a2: src_kv_96f13b36a2_pgL = KV-102 src + train-L/LIMIT-BIND/GRT overlays (4 changed files copied over src_kv_e7d0118c2c_pgL). Revert: prev_kitops3_kvsem."
+   "swap_note_kitops3_kvsem": "KIT-OPS-3 KV-102 ADOPT kv102sem_96f13b36a2: src_kv_96f13b36a2_pgL = KV-102 src + train-L/LIMIT-BIND/GRT overlays (4 changed files copied over src_kv_e7d0118c2c_pgL). Revert: prev_kitops3_kvsem.",
+   "prev_kitops3_ftgrid": {
+    "event": "kv102sem_96f13b36a2",
+    "plan_sha256": "1fd99da8d31abcb218fcc37d38d3a261a8f5df74e5d345c38b1248d19b05d176"
+   },
+   "note_kitops3_ftgrid": "KIT-OPS-3: plan_c.json f9abb180.. + ft_add_station.py d5514171.. overlaid on src_kv_96f13b36a2_pgL (all KV gen hosts); event label kv102sem_ftgrid; only hgi_v3/v6 blocks change."
   },
   "s81": {
    "enabled": true,
