@@ -21,6 +21,6 @@ sudo -n systemctl restart earlyoom
 # kill the youngest first; root timer every 2 min.
 sudo -n install -m 755 "$(dirname "$0")/ot-oom-age" /usr/local/bin/ot-oom-age
 printf '[Unit]\nDescription=ot-oom-age\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/ot-oom-age\n' | sudo -n tee /etc/systemd/system/ot-oom-age.service >/dev/null
-printf '[Unit]\nDescription=ot-oom-age every 2 min\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=2min\nAccuracySec=10s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-oom-age.timer >/dev/null
+printf '[Unit]\nDescription=ot-oom-age every minute\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=1min\nAccuracySec=10s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-oom-age.timer >/dev/null
 sudo -n systemctl daemon-reload; sudo -n systemctl enable --now ot-oom-age.timer >/dev/null 2>&1
 echo "HOST_GUARD_OK $(hostname) earlyoom=$(systemctl is-active earlyoom) ot-heavy=$(command -v ot-heavy) $(cat /etc/ot-heavy.conf | tr '\n' ' ')"
