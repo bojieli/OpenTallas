@@ -1673,6 +1673,30 @@ class Binder:
         def affine(L, key):
             return key in laff[L["id"]]
 
+        # Opt-in split reference: preserve the original clean symbolic payload on each old lane before
+        # greedy forwarding sees the new cut graph. The default path imports nothing and keeps its old packing.
+        split_reference = self.ab.get("split_lane_reference")
+        reference_enabled = split_reference is not None and split_reference is not False
+        if reference_enabled:
+            import split_bind_routes as SBR
+            import split_source_guard as SSG
+            try:
+                if isinstance(split_reference, str):
+                    if Path(split_reference).is_absolute():
+                        raise ValueError("split_lane_reference file must be repository-relative")
+                    refpath = Path(self.base) / split_reference
+                    refpath.resolve().relative_to(Path(self.base).resolve())
+                    reference = json.loads(refpath.read_text())
+                elif isinstance(split_reference, dict):
+                    reference = split_reference
+                else:
+                    raise ValueError("split_lane_reference must be a repository-relative file or reference object")
+                self.split_route_source_guard = SSG.validate_guard(reference, self)
+                self.split_route_prefill = SBR.prefill(self, reference, allL, put, recv, holders, out_of, heapq)
+                print("SPLIT_REFERENCE_PREFILL " + json.dumps(self.split_route_prefill, sort_keys=True), flush=True)
+            except (ValueError, OSError) as exc:
+                raise BindError(f"SPLIT_LANE_REFERENCE {exc}") from exc
+
         # pass 1a: the pair's own lanes whose plan name / leaf matches the source pin (bits reserved for their bus)
         pend = []
         for (sp, dp), groups in sorted(self.cross.items()):
@@ -1710,6 +1734,8 @@ class Binder:
                             any(L["dleaf"].rpartition(".")[2] == q for r, q in sinks)
                     return s
                 rest = sorted(bits)
+                if reference_enabled:
+                    rest = [bit for bit in rest if (dp, sci, spn, bit) not in recv]
                 ranked = sorted(cand, key=lambda L: (-score(L), L["id"]))
                 for L in ranked:
                     if score(L) <= 0:
