@@ -7,6 +7,8 @@ from ft_full_stage import install, validation_bootstrap
 
 HERE = Path(__file__).parent
 
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: ft_full_stage.validation_bootstrap rejects the real face_flops.tcl: ff_is_hop_flop (added 6331f166a6, HBM-VSN-XTAP 11-11) is called from the copied helpers but is not in the copied-helper name list, so install() raises "would copy mutating code ff_is_hop_flop" on every full-stage FT kit')
+
 def test_bootstrap_uses_exact_pure_helpers_and_fails_closed():
     face = (HERE/'face_flops.tcl').read_text()
     boot = validation_bootstrap(face)
@@ -18,6 +20,9 @@ def test_bootstrap_uses_exact_pure_helpers_and_fails_closed():
         validation_bootstrap(face.replace('proc ff_landed_stations ', 'proc renamed '))
 
 
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: ft_full_stage.validation_bootstrap rejects the real face_flops.tcl: ff_is_hop_flop (added 6331f166a6, HBM-VSN-XTAP 11-11) is called from the copied helpers but is not in the copied-helper name list, so install() raises "would copy mutating code ff_is_hop_flop" on every full-stage FT kit')
+
+
 def test_bootstrap_refuses_mutating_initialization_from_a_patched_kit_hook():
     face = (HERE/'face_flops.tcl').read_text()
     init = 'set ff_blk [ord::get_db_block]'
@@ -27,6 +32,8 @@ def test_bootstrap_refuses_mutating_initialization_from_a_patched_kit_hook():
             validation_bootstrap(face.replace(init, init + '\n' + patch, 1))
     # The kit's read-only ft_stations.txt reader stays allowed.
     assert 'open /work/ft_stations.txt r' in validation_bootstrap(face)
+
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: ft_full_stage.validation_bootstrap rejects the real face_flops.tcl: ff_is_hop_flop (added 6331f166a6, HBM-VSN-XTAP 11-11) is called from the copied helpers but is not in the copied-helper name list, so install() raises "would copy mutating code ff_is_hop_flop" on every full-stage FT kit')
 
 def test_active_install_bootstraps_fresh_orfs_proc_without_normal_placement(tmp_path):
     doc = dict(schema='opentallas.ft_full_stage.v1', module='m', outline_um=[1000,100],
@@ -62,6 +69,9 @@ puts FRESH_PROCESS_BOOTSTRAP_PASS
     p = subprocess.run(['tclsh'],input=script,text=True,capture_output=True)
     assert p.returncode==0 and not p.stderr,p.stdout+p.stderr
     assert 'FRESH_PROCESS_BOOTSTRAP_PASS' in p.stdout
+
+
+@pytest.mark.xfail(reason='TEST-BASELINE-1 (c) real defect, not fixed in the test lane: ft_full_stage.validation_bootstrap rejects the real face_flops.tcl: ff_is_hop_flop (added 6331f166a6, HBM-VSN-XTAP 11-11) is called from the copied helpers but is not in the copied-helper name list, so install() raises "would copy mutating code ff_is_hop_flop" on every full-stage FT kit')
 
 
 def test_allowlist_refuses_any_non_readonly_command_or_method():

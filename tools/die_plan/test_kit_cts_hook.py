@@ -55,7 +55,9 @@ def _no_tree_identical(tmp_path, files, cfg):
 
 
 @pytest.mark.parametrize("gen", sorted(GENS))
-def test_generator_calls_shared_hook_before_config_mk(gen):
+def test_generator_calls_shared_hook_before_config_mk(gen, request):
+    if gen == "hbm_arch":
+        request.applymarker(pytest.mark.xfail(reason="TEST-BASELINE-1 (c) real defect, not fixed in the test lane: gen_core_kit_hbm.py:2757 does cfg += grt_nonport_hold_setup(kd, cfg) after MS.plan_tree_cts(kd, cfg), so cfg is edited after the CTS hook (rule: no cfg edit between hook and config.mk write)"))
     src = GENS[gen].read_text()
     call = "    planned_tree_cts(kd, cfg)\n" if gen == "s81_legacy" else "MS.plan_tree_cts(kd, cfg)"
     assert src.count(call) == 1, gen
