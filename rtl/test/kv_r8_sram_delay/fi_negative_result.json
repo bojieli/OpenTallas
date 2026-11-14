@@ -1,0 +1,14 @@
+{
+ "old_broad": {
+  "uncovered": 0,
+  "async_bits": 291,
+  "errors": []
+ },
+ "narrow": {
+  "uncovered": 291,
+  "async_bits": 0,
+  "errors": [
+   "R8_UNCOVERED hsl_EN_31.fi[0] <- host.chain_f[0]: crossing bit not in the r8 table"
+  ]
+ }
+}

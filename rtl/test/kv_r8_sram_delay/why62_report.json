@@ -1,0 +1,1315 @@
+{
+ "method": "read-only exact r8.solve, canonical invariant_split only; no fault exempt replay, no rule/cap/plan changes",
+ "witnesses": [
+  {
+   "target": {
+    "id": "slg_EN_6.x__tep[0:15]<-kvs_emb.px_tep@85",
+    "sink": "slg_EN_6",
+    "part": "pc_EN_6",
+    "type": "kv3_pc_v1__cl4ea58a5c",
+    "source": "kvs_emb.px_tep",
+    "port": "x__tep",
+    "asbuilt": 85,
+    "bound": 48,
+    "offset": -37,
+    "bus_key": [
+     "slg_EN_6",
+     "hub_Wi",
+     "kvs_emb"
+    ]
+   },
+   "class_size": 4,
+   "class_max_offset": 25,
+   "required_pad": 62,
+   "members": [
+    {
+     "id": "slg_EN_6.x__tep[0:15]<-kvs_emb.px_tep@85",
+     "sink": "slg_EN_6",
+     "part": "pc_EN_6",
+     "type": "kv3_pc_v1__cl4ea58a5c",
+     "source": "kvs_emb.px_tep",
+     "port": "x__tep",
+     "asbuilt": 85,
+     "bound": 48,
+     "offset": -37,
+     "bus_key": [
+      "slg_EN_6",
+      "hub_Wi",
+      "kvs_emb"
+     ]
+    },
+    {
+     "id": "slg_EN_6.x__tok[0:17]<-kvs_emb.px_tok@24",
+     "sink": "slg_EN_6",
+     "part": "pc_EN_6",
+     "type": "kv3_pc_v1__cl4ea58a5c",
+     "source": "kvs_emb.px_tok",
+     "port": "x__tok",
+     "asbuilt": 24,
+     "bound": 44,
+     "offset": 20,
+     "bus_key": [
+      "slg_EN_6",
+      "hub_Wi",
+      "kvs_emb"
+     ]
+    },
+    {
+     "id": "slg_WN_6.x__tep[0:15]<-kvs_emb.px_tep@23",
+     "sink": "slg_WN_6",
+     "part": "pc_WN_6",
+     "type": "kv3_pc_v1__cl4ea58a5c",
+     "source": "kvs_emb.px_tep",
+     "port": "x__tep",
+     "asbuilt": 23,
+     "bound": 48,
+     "offset": 25,
+     "bus_key": [
+      "slg_WN_6",
+      "hub_Wi",
+      "kvs_emb"
+     ]
+    },
+    {
+     "id": "slg_WN_6.x__tok[0:17]<-kvs_emb.px_tok@24",
+     "sink": "slg_WN_6",
+     "part": "pc_WN_6",
+     "type": "kv3_pc_v1__cl4ea58a5c",
+     "source": "kvs_emb.px_tok",
+     "port": "x__tok",
+     "asbuilt": 24,
+     "bound": 46,
+     "offset": 22,
+     "bus_key": [
+      "slg_WN_6",
+      "hub_Wi",
+      "kvs_emb"
+     ]
+    }
+   ],
+   "path": [
+    {
+     "from_": {
+      "id": "slg_EN_6.x__tep[0:15]<-kvs_emb.px_tep@85",
+      "sink": "slg_EN_6",
+      "part": "pc_EN_6",
+      "type": "kv3_pc_v1__cl4ea58a5c",
+      "source": "kvs_emb.px_tep",
+      "port": "x__tep",
+      "asbuilt": 85,
+      "bound": 48,
+      "offset": -37,
+      "bus_key": [
+       "slg_EN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "to": {
+      "id": "slg_EN_6.x__tok[0:17]<-kvs_emb.px_tok@24",
+      "sink": "slg_EN_6",
+      "part": "pc_EN_6",
+      "type": "kv3_pc_v1__cl4ea58a5c",
+      "source": "kvs_emb.px_tok",
+      "port": "x__tok",
+      "asbuilt": 24,
+      "bound": 44,
+      "offset": 20,
+      "bus_key": [
+       "slg_EN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "constraint": {
+      "bus_key": [
+       "slg_EN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     }
+    },
+    {
+     "from_": {
+      "id": "slg_EN_6.x__tok[0:17]<-kvs_emb.px_tok@24",
+      "sink": "slg_EN_6",
+      "part": "pc_EN_6",
+      "type": "kv3_pc_v1__cl4ea58a5c",
+      "source": "kvs_emb.px_tok",
+      "port": "x__tok",
+      "asbuilt": 24,
+      "bound": 44,
+      "offset": 20,
+      "bus_key": [
+       "slg_EN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "to": {
+      "id": "slg_WN_6.x__tok[0:17]<-kvs_emb.px_tok@24",
+      "sink": "slg_WN_6",
+      "part": "pc_WN_6",
+      "type": "kv3_pc_v1__cl4ea58a5c",
+      "source": "kvs_emb.px_tok",
+      "port": "x__tok",
+      "asbuilt": 24,
+      "bound": 46,
+      "offset": 22,
+      "bus_key": [
+       "slg_WN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "constraint": {
+      "replica": "kvs_emb.px_tok",
+      "asbuilt": 24,
+      "type": "kv3_pc_v1__cl4ea58a5c"
+     }
+    },
+    {
+     "from_": {
+      "id": "slg_WN_6.x__tok[0:17]<-kvs_emb.px_tok@24",
+      "sink": "slg_WN_6",
+      "part": "pc_WN_6",
+      "type": "kv3_pc_v1__cl4ea58a5c",
+      "source": "kvs_emb.px_tok",
+      "port": "x__tok",
+      "asbuilt": 24,
+      "bound": 46,
+      "offset": 22,
+      "bus_key": [
+       "slg_WN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "to": {
+      "id": "slg_WN_6.x__tep[0:15]<-kvs_emb.px_tep@23",
+      "sink": "slg_WN_6",
+      "part": "pc_WN_6",
+      "type": "kv3_pc_v1__cl4ea58a5c",
+      "source": "kvs_emb.px_tep",
+      "port": "x__tep",
+      "asbuilt": 23,
+      "bound": 48,
+      "offset": 25,
+      "bus_key": [
+       "slg_WN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "constraint": {
+      "bus_key": [
+       "slg_WN_6",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "target": {
+    "id": "slg_EN_7.x__tep[0:15]<-kvs_emb.px_tep@87",
+    "sink": "slg_EN_7",
+    "part": "pc_EN_7",
+    "type": "kv3_pc_v3",
+    "source": "kvs_emb.px_tep",
+    "port": "x__tep",
+    "asbuilt": 87,
+    "bound": 38,
+    "offset": -49,
+    "bus_key": [
+     "slg_EN_7",
+     "hub_Wi",
+     "kvs_emb"
+    ]
+   },
+   "class_size": 2,
+   "class_max_offset": 13,
+   "required_pad": 62,
+   "members": [
+    {
+     "id": "slg_EN_7.x__tep[0:15]<-kvs_emb.px_tep@87",
+     "sink": "slg_EN_7",
+     "part": "pc_EN_7",
+     "type": "kv3_pc_v3",
+     "source": "kvs_emb.px_tep",
+     "port": "x__tep",
+     "asbuilt": 87,
+     "bound": 38,
+     "offset": -49,
+     "bus_key": [
+      "slg_EN_7",
+      "hub_Wi",
+      "kvs_emb"
+     ]
+    },
+    {
+     "id": "slg_EN_7.x__tok[0:17]<-kvs_emb.px_tok@21",
+     "sink": "slg_EN_7",
+     "part": "pc_EN_7",
+     "type": "kv3_pc_v3",
+     "source": "kvs_emb.px_tok",
+     "port": "x__tok",
+     "asbuilt": 21,
+     "bound": 34,
+     "offset": 13,
+     "bus_key": [
+      "slg_EN_7",
+      "hub_Wi",
+      "kvs_emb"
+     ]
+    }
+   ],
+   "path": [
+    {
+     "from_": {
+      "id": "slg_EN_7.x__tep[0:15]<-kvs_emb.px_tep@87",
+      "sink": "slg_EN_7",
+      "part": "pc_EN_7",
+      "type": "kv3_pc_v3",
+      "source": "kvs_emb.px_tep",
+      "port": "x__tep",
+      "asbuilt": 87,
+      "bound": 38,
+      "offset": -49,
+      "bus_key": [
+       "slg_EN_7",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "to": {
+      "id": "slg_EN_7.x__tok[0:17]<-kvs_emb.px_tok@21",
+      "sink": "slg_EN_7",
+      "part": "pc_EN_7",
+      "type": "kv3_pc_v3",
+      "source": "kvs_emb.px_tok",
+      "port": "x__tok",
+      "asbuilt": 21,
+      "bound": 34,
+      "offset": 13,
+      "bus_key": [
+       "slg_EN_7",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     },
+     "constraint": {
+      "bus_key": [
+       "slg_EN_7",
+       "hub_Wi",
+       "kvs_emb"
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "fresh": {
+  "summary": {
+   "members": 5911,
+   "classes": 2956,
+   "replica_links": 13,
+   "padded_members": 573,
+   "padded_bits": 19876,
+   "pad_flops": 94629,
+   "max_pad": 62,
+   "max_depth_before": 106,
+   "max_depth_after": 110,
+   "max_offset_before": 102,
+   "max_offset_after": 102,
+   "binder_landed_max": 121
+  },
+  "bus_digest": "7fd840c0cd49ec14",
+  "errors": [
+   "R8 strap pad kv3_pc_v1__cl7f648944 slg_*_1.x__tep <- kvs_emb.px_tep: pad 31 > strap capacity 15"
+  ],
+  "strap_sites": [
+   {
+    "type": "kv3_hg_v1",
+    "sink": "ectl_*_5",
+    "sink_port": "cfg",
+    "sink_bits": [
+     [
+      0,
+      4
+     ]
+    ],
+    "width": 5,
+    "source": "kvs_hroot_*.o_c5",
+    "asbuilt": 33,
+    "dmax": 5,
+    "base": 2,
+    "span": 3,
+    "pads": {
+     "hg_ES_1": 5,
+     "hg_WN_1": 2
+    },
+    "used": [
+     2,
+     5
+    ],
+    "strap_counts": [
+     0,
+     3
+    ]
+   },
+   {
+    "type": "kv3_hg_v1p3",
+    "sink": "ectl_*_1",
+    "sink_port": "cfg",
+    "sink_bits": [
+     [
+      0,
+      4
+     ]
+    ],
+    "width": 5,
+    "source": "kvs_hroot_*.o_c1",
+    "asbuilt": 24,
+    "dmax": 4,
+    "base": 3,
+    "span": 1,
+    "pads": {
+     "hg_ES_3": 3,
+     "hg_WS_3": 4
+    },
+    "used": [
+     3,
+     4
+    ],
+    "strap_counts": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": "kv3_pc__cl5a95b461",
+    "sink": "slg_*_4",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 49,
+    "dmax": 4,
+    "base": 2,
+    "span": 2,
+    "pads": {
+     "pc_EN_0": 4,
+     "pc_WN_0": 2
+    },
+    "used": [
+     2,
+     4
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl4ea58a5c",
+    "sink": "slg_*_*",
+    "sink_port": "afu",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "slg_*_3.af__fault",
+    "asbuilt": 4,
+    "dmax": 1,
+    "base": 0,
+    "span": 1,
+    "pads": {
+     "pc_EN_6": 1,
+     "pc_WN_6": 0
+    },
+    "used": [
+     0,
+     1
+    ],
+    "strap_counts": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl4ea58a5c",
+    "sink": "slg_*_*",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 24,
+    "dmax": 5,
+    "base": 3,
+    "span": 2,
+    "pads": {
+     "pc_EN_6": 5,
+     "pc_WN_6": 3
+    },
+    "used": [
+     3,
+     5
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl4ea58a5c",
+    "sink": "slg_*_3",
+    "sink_port": "afu",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "slg_*_2.af__fault",
+    "asbuilt": 4,
+    "dmax": 2,
+    "base": 0,
+    "span": 2,
+    "pads": {
+     "pc_EN_5": 2,
+     "pc_ES_5": 2,
+     "pc_WN_5": 0,
+     "pc_WS_5": 2
+    },
+    "used": [
+     0,
+     2
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl4ea58a5c",
+    "sink": "slg_*_3",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 28,
+    "dmax": 4,
+    "base": 2,
+    "span": 2,
+    "pads": {
+     "pc_EN_5": 4,
+     "pc_WN_5": 2
+    },
+    "used": [
+     2,
+     4
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "afu",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "slg_*_0.af__fault",
+    "asbuilt": 4,
+    "dmax": 1,
+    "base": 0,
+    "span": 1,
+    "pads": {
+     "pc_EN_3": 1,
+     "pc_WN_3": 0
+    },
+    "used": [
+     0,
+     1
+    ],
+    "strap_counts": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "afv",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "vport_*_0.fault",
+    "asbuilt": 0,
+    "dmax": 12,
+    "base": 9,
+    "span": 3,
+    "pads": {
+     "pc_EN_3": 9,
+     "pc_ES_3": 10,
+     "pc_WN_3": 12,
+     "pc_WS_3": 12
+    },
+    "used": [
+     9,
+     10,
+     12
+    ],
+    "strap_counts": [
+     0,
+     1,
+     3
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "vport_*_0.vq1_valid",
+    "asbuilt": 4,
+    "dmax": 15,
+    "base": 12,
+    "span": 3,
+    "pads": {
+     "pc_EN_3": 12,
+     "pc_ES_3": 13,
+     "pc_WN_3": 15,
+     "pc_WS_3": 15
+    },
+    "used": [
+     12,
+     13,
+     15
+    ],
+    "strap_counts": [
+     0,
+     1,
+     3
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      1,
+      14
+     ]
+    ],
+    "width": 14,
+    "source": "vport_*_0.vq1_t",
+    "asbuilt": 4,
+    "dmax": 15,
+    "base": 12,
+    "span": 3,
+    "pads": {
+     "pc_EN_3": 12,
+     "pc_ES_3": 13,
+     "pc_WN_3": 15,
+     "pc_WS_3": 15
+    },
+    "used": [
+     12,
+     13,
+     15
+    ],
+    "strap_counts": [
+     0,
+     1,
+     3
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "width": 16,
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 72,
+    "dmax": 31,
+    "base": 30,
+    "span": 1,
+    "pads": {
+     "pc_EN_3": 30,
+     "pc_ES_3": 31
+    },
+    "used": [
+     30,
+     31
+    ],
+    "strap_counts": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_2",
+    "sink_port": "afu",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "slg_*_1.af__fault",
+    "asbuilt": 4,
+    "dmax": 2,
+    "base": 1,
+    "span": 1,
+    "pads": {
+     "pc_EN_4": 1,
+     "pc_WN_4": 2
+    },
+    "used": [
+     1,
+     2
+    ],
+    "strap_counts": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_2",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 32,
+    "dmax": 4,
+    "base": 2,
+    "span": 2,
+    "pads": {
+     "pc_EN_4": 4,
+     "pc_WN_4": 2
+    },
+    "used": [
+     2,
+     4
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v3",
+    "sink": "slg_*_7",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "vport_*_3.vq1_valid",
+    "asbuilt": 4,
+    "dmax": 4,
+    "base": 2,
+    "span": 2,
+    "pads": {
+     "pc_EN_7": 4,
+     "pc_ES_7": 2,
+     "pc_WN_7": 4,
+     "pc_WS_7": 2
+    },
+    "used": [
+     2,
+     4
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v3",
+    "sink": "slg_*_7",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      1,
+      14
+     ]
+    ],
+    "width": 14,
+    "source": "vport_*_3.vq1_t",
+    "asbuilt": 4,
+    "dmax": 4,
+    "base": 2,
+    "span": 2,
+    "pads": {
+     "pc_EN_7": 4,
+     "pc_ES_7": 2,
+     "pc_WN_7": 4,
+     "pc_WS_7": 2
+    },
+    "used": [
+     2,
+     4
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   }
+  ]
+ },
+ "canonical_invariant": {
+  "summary": {
+   "members": 5911,
+   "classes": 3056,
+   "replica_links": 13,
+   "padded_members": 456,
+   "padded_bits": 16593,
+   "pad_flops": 65446,
+   "max_pad": 15,
+   "max_depth_before": 106,
+   "max_depth_after": 106,
+   "max_offset_before": 102,
+   "max_offset_after": 102,
+   "binder_landed_max": 121
+  },
+  "bus_digest": "edd2a8b707f9d009",
+  "errors": [],
+  "strap_sites": [
+   {
+    "type": "kv3_pc__cl5a95b461",
+    "sink": "slg_*_4",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 49,
+    "dmax": 2,
+    "base": 0,
+    "span": 2,
+    "pads": {
+     "pc_EN_0": 2,
+     "pc_WN_0": 0
+    },
+    "used": [
+     0,
+     2
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl4ea58a5c",
+    "sink": "slg_*_*",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 24,
+    "dmax": 2,
+    "base": 0,
+    "span": 2,
+    "pads": {
+     "pc_EN_6": 2,
+     "pc_WN_6": 0
+    },
+    "used": [
+     0,
+     2
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl4ea58a5c",
+    "sink": "slg_*_3",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 28,
+    "dmax": 2,
+    "base": 0,
+    "span": 2,
+    "pads": {
+     "pc_EN_5": 2,
+     "pc_WN_5": 0
+    },
+    "used": [
+     0,
+     2
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "afv",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "vport_*_0.fault",
+    "asbuilt": 0,
+    "dmax": 12,
+    "base": 9,
+    "span": 3,
+    "pads": {
+     "pc_EN_3": 9,
+     "pc_ES_3": 10,
+     "pc_WN_3": 12,
+     "pc_WS_3": 12
+    },
+    "used": [
+     9,
+     10,
+     12
+    ],
+    "strap_counts": [
+     0,
+     1,
+     3
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "vport_*_0.vq1_valid",
+    "asbuilt": 4,
+    "dmax": 15,
+    "base": 12,
+    "span": 3,
+    "pads": {
+     "pc_EN_3": 12,
+     "pc_ES_3": 13,
+     "pc_WN_3": 15,
+     "pc_WS_3": 15
+    },
+    "used": [
+     12,
+     13,
+     15
+    ],
+    "strap_counts": [
+     0,
+     1,
+     3
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      1,
+      14
+     ]
+    ],
+    "width": 14,
+    "source": "vport_*_0.vq1_t",
+    "asbuilt": 4,
+    "dmax": 15,
+    "base": 12,
+    "span": 3,
+    "pads": {
+     "pc_EN_3": 12,
+     "pc_ES_3": 13,
+     "pc_WN_3": 15,
+     "pc_WS_3": 15
+    },
+    "used": [
+     12,
+     13,
+     15
+    ],
+    "strap_counts": [
+     0,
+     1,
+     3
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_1",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "width": 16,
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 72,
+    "dmax": 1,
+    "base": 0,
+    "span": 1,
+    "pads": {
+     "pc_EN_3": 0,
+     "pc_ES_3": 1
+    },
+    "used": [
+     0,
+     1
+    ],
+    "strap_counts": [
+     0,
+     1
+    ]
+   },
+   {
+    "type": "kv3_pc_v1__cl7f648944",
+    "sink": "slg_*_2",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "width": 18,
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 32,
+    "dmax": 2,
+    "base": 0,
+    "span": 2,
+    "pads": {
+     "pc_EN_4": 2,
+     "pc_WN_4": 0
+    },
+    "used": [
+     0,
+     2
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v3",
+    "sink": "slg_*_7",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      0,
+      0
+     ]
+    ],
+    "width": 1,
+    "source": "vport_*_3.vq1_valid",
+    "asbuilt": 4,
+    "dmax": 4,
+    "base": 2,
+    "span": 2,
+    "pads": {
+     "pc_EN_7": 4,
+     "pc_ES_7": 2,
+     "pc_WN_7": 4,
+     "pc_WS_7": 2
+    },
+    "used": [
+     2,
+     4
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   },
+   {
+    "type": "kv3_pc_v3",
+    "sink": "slg_*_7",
+    "sink_port": "vreq",
+    "sink_bits": [
+     [
+      1,
+      14
+     ]
+    ],
+    "width": 14,
+    "source": "vport_*_3.vq1_t",
+    "asbuilt": 4,
+    "dmax": 4,
+    "base": 2,
+    "span": 2,
+    "pads": {
+     "pc_EN_7": 4,
+     "pc_ES_7": 2,
+     "pc_WN_7": 4,
+     "pc_WS_7": 2
+    },
+    "used": [
+     2,
+     4
+    ],
+    "strap_counts": [
+     0,
+     2
+    ]
+   }
+  ],
+  "target_members": [
+   {
+    "id": "slg_EN_6.x__tep[0:15]<-kvs_emb.px_tep@85",
+    "sink": "slg_EN_6",
+    "sink_part": "pc_EN_6",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 85,
+    "bound": 48,
+    "pad": 0,
+    "landed": 48,
+    "cls": 5451,
+    "lane": "L1483"
+   },
+   {
+    "id": "slg_EN_6.x__tok[0:17]<-kvs_emb.px_tok@24",
+    "sink": "slg_EN_6",
+    "sink_part": "pc_EN_6",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 24,
+    "bound": 44,
+    "pad": 2,
+    "landed": 46,
+    "cls": 5452,
+    "lane": "L1517"
+   },
+   {
+    "id": "slg_EN_7.x__tep[0:15]<-kvs_emb.px_tep@87",
+    "sink": "slg_EN_7",
+    "sink_part": "pc_EN_7",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 87,
+    "bound": 38,
+    "pad": 0,
+    "landed": 38,
+    "cls": 5462,
+    "lane": "L1482"
+   },
+   {
+    "id": "slg_EN_7.x__tok[0:17]<-kvs_emb.px_tok@21",
+    "sink": "slg_EN_7",
+    "sink_part": "pc_EN_7",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tok",
+    "sink_bits": [
+     [
+      0,
+      17
+     ]
+    ],
+    "source": "kvs_emb.px_tok",
+    "asbuilt": 21,
+    "bound": 34,
+    "pad": 0,
+    "landed": 34,
+    "cls": 5463,
+    "lane": "L1516"
+   }
+  ]
+ },
+ "derived_landing": "/srv/opentallas-scratch2/claude/dkv100/pc_sram/src/why62/derived/qwen_kvsys_r8_landing.json",
+ "identity_comparison": {
+  "shared": 2809,
+  "old_only": 3102,
+  "new_only": 3102,
+  "shared_asbuilt_changed": 0,
+  "shared_bound_changed": 226
+ },
+ "target_old_new": {
+  "slg_EN_6.x__tep[0:15]<-kvs_emb.px_tep@85": {
+   "old": {
+    "id": "slg_EN_6.x__tep[0:15]<-kvs_emb.px_tep@85",
+    "sink": "slg_EN_6",
+    "sink_part": "pc_EN_6",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 85,
+    "bound": 48,
+    "pad": 0,
+    "landed": 48,
+    "lane": "L1483"
+   },
+   "new": {
+    "id": "slg_EN_6.x__tep[0:15]<-kvs_emb.px_tep@85",
+    "sink": "slg_EN_6",
+    "sink_part": "pc_EN_6",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 85,
+    "bound": 48,
+    "pad": 62,
+    "landed": 110,
+    "lane": "L1483"
+   }
+  },
+  "slg_EN_7.x__tep[0:15]<-kvs_emb.px_tep@87": {
+   "old": {
+    "id": "slg_EN_7.x__tep[0:15]<-kvs_emb.px_tep@87",
+    "sink": "slg_EN_7",
+    "sink_part": "pc_EN_7",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 87,
+    "bound": 38,
+    "pad": 0,
+    "landed": 38,
+    "lane": "L1482"
+   },
+   "new": {
+    "id": "slg_EN_7.x__tep[0:15]<-kvs_emb.px_tep@87",
+    "sink": "slg_EN_7",
+    "sink_part": "pc_EN_7",
+    "src_part": "hub_Wi",
+    "sink_port": "x__tep",
+    "sink_bits": [
+     [
+      0,
+      15
+     ]
+    ],
+    "source": "kvs_emb.px_tep",
+    "asbuilt": 87,
+    "bound": 38,
+    "pad": 62,
+    "landed": 100,
+    "lane": "L1482"
+   }
+  }
+ }
+}
