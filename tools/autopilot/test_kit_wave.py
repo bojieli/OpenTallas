@@ -167,6 +167,9 @@ class Select(unittest.TestCase):
         self.assertEqual(KW.pilot_key(d, "s81", "slice_station__t46"), "s81|type|station")
 
     def test_selection_and_order(self):
+        orig = KW._live_private_job          # KIT-OPS-4 11-14: a claim defers only with a live private job (here: yes)
+        self.addCleanup(setattr, KW, "_live_private_job", orig)
+        KW._live_private_job = lambda item: True
         rows = KW.parse_owners(OWN)
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
         self.assertEqual([p["item"] for p in picks], ["kv3_phy_v1", "kv3_hg_v1", "kv3_hroot", "kv3_hub_Eo"])   # replicas desc (WF-1 11-14: take_states default * = every state)
@@ -231,7 +234,24 @@ class Select(unittest.TestCase):
         picks, skip = KW.select(rows, c, "qwen_kvsys", st, plan)
         self.assertIn("kv3_st", skip["live job (another lane)"])
 
+    def test_coord_mention_alone_is_not_a_claim(self):
+        # KIT-OPS-4 11-14 (COORD/OWNER parallel forms): a fresh coord line by another lane does not defer the wave; only a live
+        # private job for the item does
+        orig = KW._live_private_job
+        self.addCleanup(setattr, KW, "_live_private_job", orig)
+        rows = KW.parse_owners(OWN)
+        KW._live_private_job = lambda item: False
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", [p["item"] for p in picks])
+        self.assertFalse(any(k.startswith("lane activity") for k in skip))
+        KW._live_private_job = lambda item: True
+        picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, PLAN)
+        self.assertIn("kv3_pc", skip["lane activity < 3 h (KV-KITS-W)"])
+
     def test_generic_owner_label_is_not_a_type_claim(self):
+        orig = KW._live_private_job
+        self.addCleanup(setattr, KW, "_live_private_job", orig)
+        KW._live_private_job = lambda item: True
         # KW-FIX-33 (COORD 11-07 22:53): the die-wide census label HBM-PLAN (fresh last_activity on every HBM type row)
         # does not claim a type row; a specific lane owner still does, and the label still claims a core row
         own = OWN.replace("kv3_pc\ttype\tNEEDS-KIT\tKV-KITS-W\tnone\t122m", "kv3_pc\ttype\tNEEDS-KIT\tHBM-PLAN\tnone\t6m")
