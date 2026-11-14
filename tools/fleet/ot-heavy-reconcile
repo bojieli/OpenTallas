@@ -1217,6 +1217,24 @@ def peak_reserve(units, hist, frac, pct=0.9, min_n=3):
     return frac * sum(max(0.0, expected_peak(c, r, hist, pct, min_n) - n) for _, r, c, n in units)
 
 
+def peak_capacity(avail, hist=None):
+    """SIMPLE_PEAK: (GB free for a new job, expected growth of running jobs, young unstarted GB) -- the same arithmetic the gate uses"""
+    _h = hist if hist is not None else peak_history()
+    _units = running_units_light()
+    _grow = peak_reserve(_units, _h, conf("PEAK_GROWTH_FRAC"), conf("PEAK_PCT"), conf("PEAK_MIN_N"))
+    _young, _live = 0.0, {u for u, _, _, _ in _units}
+    for _f in glob.glob(f"{D}/res.*"):
+        try:
+            if time.time() - os.path.getmtime(_f) < max(conf("SIMPLE_FRESH_S"), 1):
+                _u, _m = open(_f).read().split()[:2]
+                if _u not in _live:
+                    _mm = rd(f"{D}/meta.{_u}").split()
+                    _young += expected_peak(_mm[1] if len(_mm) > 1 else "?", int(_m), _h, conf("PEAK_PCT"), conf("PEAK_MIN_N"))
+        except (OSError, ValueError, IndexError):
+            pass
+    return avail - conf("INV_HEADROOM_GB") - _grow - _young, _grow, _young
+
+
 def gate_locked(mem, argv):
     cls = classify(argv)
     table = sizes()
@@ -1595,7 +1613,7 @@ def free(path):
     table = sizes()
     if conf("SIMPLE_ADMIT"):   # FREE_LIGHT_1114 ADMIT-TUNE-1: SIMPLE_ADMIT needs no per-unit books; read_units() ran one `systemctl --user show` per unit and 326 piled-up probes saturated the user manager on a loaded host (epyc10 load 200: --free > 80 s, ot-run probe timeouts)
         wait, req = waiters(table)
-        can = max(0, math.floor(avail - conf("INV_HEADROOM_GB")))
+        can = max(0, math.floor(peak_capacity(avail)[0] if conf("SIMPLE_PEAK") else avail - conf("INV_HEADROOM_GB")))   # PEAKFREE_1114: placement sees the gate's arithmetic
         try:
             v = os.statvfs(path)
             disk = v.f_bavail * v.f_frsize >> 30

@@ -51,6 +51,15 @@ class Peak(unittest.TestCase):
     def test_off_by_default_keeps_the_simple_rule(self):
         self.assertIn("SIMPLE_ADMIT:", self.gate(100, [], conf={"SIMPLE_PEAK": "0"}))
 
+    def test_free_report_uses_the_gate_arithmetic(self):
+        units = [("u%d" % i, 48.0, "route", 5.0) for i in range(10)]
+        d = tempfile.mkdtemp()
+        with patch.dict(os.environ, {"SIMPLE_ADMIT": "1", "SIMPLE_PEAK": "1", "INV_HEADROOM_GB": "16", "PEAK_GROWTH_FRAC": "0.1", "SIMPLE_FRESH_S": "0"}), \
+                patch.object(R, "D", d), patch.object(R, "running_units_light", return_value=units):
+            free, grow, young = R.peak_capacity(200.0, HIST)
+        self.assertAlmostEqual(grow, 35.0); self.assertEqual(young, 0)
+        self.assertAlmostEqual(free, 200 - 16 - 35)
+
 
 if __name__ == "__main__":
     unittest.main()
