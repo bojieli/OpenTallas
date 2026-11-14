@@ -28667,7 +28667,8 @@
     "hd_tile@1",
     "hd_mesh@2",
     "hd_serdes@3",
-    "hd_host_e@3"
+    "hd_host_e@3",
+    "hd_tile@2"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -30339,7 +30340,8 @@
    "die_gen_env_prev_kitops3_lb": {
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1"
-   }
+   },
+   "retry_note_h99_tile_1114": "HEAD-99 11-14: hd_tile GEN bootstrap failed twice (01:19, 01:33): FileNotFoundError type hd_tile macro u_core.u_b.g_cv.u_eA0 view results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv.lef missing in src_head_rp21z_pgcap1d724b73 (cleanup had removed results/head_core_clockfreeze_release, head_lep_pair_views_vE_1106, uarch/s81_head_die.json from the snapshot); restored from epyc7 wt/frame-forms-1/results on epyc7/intel1/epyc10; one retry hd_tile@2"
   },
   "qwen_compute": {
    "enabled": true,
