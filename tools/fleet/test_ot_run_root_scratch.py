@@ -168,7 +168,7 @@ class SecondFloor(unittest.TestCase):
         row = m.scratch_disk({'disk_gb': 29}, self.D2, probe_out(29, 197), host='localhost')
         self.assertEqual(m.host_refusal(row), '')
         self.assertTrue(m.dir_disk_full(row).startswith(m.DIR_FULL_NOTE))
-        with mock.patch.object(m, 'probe', side_effect=lambda h, d: (h, dict(row, ncpu=112, total_gb=1000, avail_gb=400,
+        with mock.patch.object(m, 'probe', side_effect=lambda h, d, spill_ok=False: (h, dict(row, ncpu=112, total_gb=1000, avail_gb=400,
                                                                                 admit_gb=300, free_gb=300, headroom_gb=0,
                                                                                 waiting=0, waiting_gb=0, running=1))), \
                 mock.patch.object(m, 'trigger_reaper', return_value=False), contextlib.redirect_stderr(io.StringIO()):

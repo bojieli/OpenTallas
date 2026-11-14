@@ -754,7 +754,7 @@ def reserved(h, r):
     return r
 
 
-LOAD_GATE_FACTOR = float(os.environ.get("OT_RUN_LOAD_GATE_FACTOR", "1.25"))   # = ot-heavy LOADGATE_1110 (0 = off)
+LOAD_GATE_FACTOR = float(os.environ.get("OT_RUN_LOAD_GATE_FACTOR", "0"))   # GATEOFF_1114 ADMIT-TUNE-1: the ot-heavy load gate is off fleet-wide (LOAD_GATE_FACTOR=0), so placement/--status/ot-run-sealed must not call a loaded host "capped" (every host read LOADCAP, no waiter could spill); was 1.25   # = ot-heavy LOADGATE_1110 (0 = off)
 # CRITGATE_1112: a --crit / --direct job is held by the load gate only at LOAD_GATE_CRIT_FACTOR x nproc (= ot-heavy, default 2.0;
 # ot-heavy also caps the bypassing crit jobs at CRIT_BYPASS_MAX = 4 per host, which placement cannot see)
 LOAD_GATE_CRIT_FACTOR = float(os.environ.get("OT_RUN_LOAD_GATE_CRIT_FACTOR", "2.0"))
@@ -2874,7 +2874,7 @@ def place(hosts, d, disk, mem, quiet=False):
         # .ot-run-spill-copy marker (an old LOAD SPILL copy the lane has since worked in) must not read as "no <dir>" (TL-COLH9R0P2,
         # TL-SERDEST14: NOT RUN: no host qualifies although the dir exists on epyc9).  Unpinned placement still refuses stale spill copies.
         _pin_ok = len(hosts) == 1 and hosts is not HOSTS and not os.environ.get("OT_RUN_PIN_NO_SPILL_OK")
-        res = dict(ex.map(lambda h: probe(h, d, spill_ok=_pin_ok), hosts))
+        res = dict(ex.map((lambda h: probe(h, d, spill_ok=True)) if _pin_ok else (lambda h: probe(h, d)), hosts))   # plain call when unpinned (keeps the old probe signature)
     ok = {}
     REFUSED_SRC.clear()
     for h, r in res.items():
