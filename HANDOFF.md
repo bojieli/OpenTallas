@@ -3663,3 +3663,4 @@ CODEX: Claude back17:18PST; all workers STOPNEW/safelyparked, running jobs prese
 2026-11-13 19:3x PST COORD: HEAD on rp21z5 (HEAD-99 Sonnet), S81 B1 swapped+launched (KIT-OPS-3 Sonnet), QC s29/KV binding (Opus, hand to Sonnet after adoption). Count flat because release tree pins old plans and does not see R-MINIMAL sign-offs: COUNT-FIX-1. RM63 landed E-I (main 406c3610f29).
 2026-11-13 20:3x PST COORD: three dies relaunching on new plans; QC s29 last; S81 B2/B2e bind via DIE-S81-91 (Opus); KV-102 Sonnet owns KV; train K svc lint gating.
 2026-11-13 21:3x PST COORD: train L PG-track fix landed (KIT-OPS-3 deploy + verify it reaches S81/KV/QC kits); kit_snap live on HEAD; HE-EPC signed pending re-sign; QC s29 final R8 bind.
+2026-11-13 22:3x PST COORD: OWNER removed all wave launch limits; VARIANTS-1 (Sonnet) runs 2nd-recipe builds; QC-102 and S81-91 (Opus) on final binds.
