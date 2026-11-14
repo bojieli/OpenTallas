@@ -546,3 +546,4 @@ epyc7	/srv/opentallas-scratch2/claude/hbm-cores-b/wsw_H13_eco1	2026-11-11 KW-FIX
 epyc8	/srv/opentallas-scratch2/claude/explorer-2-work	2026-11-14 EXPLORER-P0 (COORD): design explorer EXPLORER-2 runtime (state, signed-store, store packs, db, rt venv, serve-code, coordstage); deleted by 11-13 18:22 cleanup, never delete
 epyc8	/srv/opentallas-scratch2/claude/explorer-2	2026-11-14 EXPLORER-P0 (COORD): explorer-2 git checkout used by design_index (plans); keep
 epyc8	/srv/opentallas-scratch2/claude/explorer-2-work/code	2026-11-14 EXPLORER-U0 (COORD): pinned git worktree the explorer2.service runs from (sha in explorer-2-work/code.pin); children of explorer-2-work (state, store, signed-store, serve-code, u0-wt, health.sh) are protected by the parent line; never delete
+epyc8:/srv/opentallas-scratch2/claude/explorer-fable-1  # EXPLORER-FABLE-1 new explorer (COORD 11-14 02:1x)
