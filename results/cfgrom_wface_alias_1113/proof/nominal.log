@@ -1,0 +1,6 @@
+CFGROM_ALIAS mut0 addresses4096 word_checks49152 bit_checks3538944 mismatching_cycles0
+CFGROM_ALIAS_PASS
+- tb_cfgrom_alias.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 123us; walltime 0.036 s; speed 3.389 ms/s
+- Verilator: cpu 0.036 s on 1 threads; allocated 7 MB

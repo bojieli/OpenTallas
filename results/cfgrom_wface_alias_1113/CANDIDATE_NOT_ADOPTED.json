@@ -1,0 +1,161 @@
+{
+  "status": "PRIVATE_COMPILER_ABSTRACT_NOT_SIGNED",
+  "master": "ot_rom_4096x72_m8_wface_1113",
+  "source_master": "ot_rom_4096x72_m8",
+  "outline_um": [
+    38.04,
+    62.952
+  ],
+  "faces": {
+    "W": "clk,ce_in,addr_in[11:0],rd_out[71:0]",
+    "E": []
+  },
+  "moved_outputs": [
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+  ],
+  "unmoved_outputs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ],
+  "physical_source": "real views.write_lef explicit face plan; unchanged array/periphery model",
+  "internal_route_assumption": "42.168um Manhattan additional output return; no routed macro metal evidence",
+  "RTL_body_identical_after_module_rename": true,
+  "module_alias_required": true,
+  "latency_edges": 1,
+  "timing_prices": {
+    "tt": {
+      "extra_return_length_um": 42.168,
+      "extra_wire_r_kohm": 0.760563132,
+      "extra_wire_c_ff": 7.5259338,
+      "moved_bit_extra_intrinsic_ps": 5.608864632845947,
+      "moved_bit_extra_load_slope_ps_per_ff": 0.760563132,
+      "library_envelope": "latest all-output bound"
+    },
+    "ff": {
+      "extra_return_length_um": 42.168,
+      "extra_wire_r_kohm": 0.760563132,
+      "extra_wire_c_ff": 7.5259338,
+      "moved_bit_extra_intrinsic_ps": 4.562691758572441,
+      "moved_bit_extra_load_slope_ps_per_ff": 0.760563132,
+      "library_envelope": "original earliest bound; no relocation hold credit"
+    }
+  },
+  "SS_used": false,
+  "track_verification": {
+    "size_um": [
+      38.04,
+      62.952
+    ],
+    "symmetry": [
+      "X",
+      "Y"
+    ],
+    "allowed_orientations": [
+      "R0",
+      "MX",
+      "MY",
+      "R180"
+    ],
+    "signal_pins": 86,
+    "layers": {
+      "M4": {
+        "rule_mod_track_nm": {
+          "R0": [
+            0
+          ],
+          "MX": [
+            0
+          ],
+          "MY": [
+            0
+          ],
+          "R180": [
+            0
+          ]
+        },
+        "orientation_invariant": true,
+        "origin_0_legal_all_orientations": true
+      }
+    },
+    "m5_crossing_at_origin_0": {
+      "R0": {
+        "L": true
+      },
+      "MY": {
+        "L": true
+      }
+    },
+    "pass": true
+  },
+  "old_timing_tt": 513.6612374338883,
+  "claim_boundary": "abstract views from an analytical model on the measured DRC-clean ASAP7 ROM bitcell and ASAP7 standard-cell FO4; periphery dimensions and cell current are assumed; no transistor layout or SPICE of the macro; not silicon"
+}

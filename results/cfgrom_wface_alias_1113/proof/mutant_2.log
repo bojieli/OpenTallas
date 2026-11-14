@@ -1,0 +1,6 @@
+ALIAS_MISMATCH mut2 addr0 enable1 expected340f8f0f4b071ce204 got000000000000000000
+ALIAS_MISMATCH mut2 addr1 enable1 expecteda7d63724361193205e got340f8f0f4b071ce204
+CFGROM_ALIAS mut2 addresses4096 word_checks49152 bit_checks3538944 mismatching_cycles7168
+[122886000] %Fatal: tb_cfgrom_alias.sv:38: Assertion failed in tb_cfgrom_alias: alias mismatch
+%Error: tb_cfgrom_alias.sv:38: Verilog $stop
+Aborting...

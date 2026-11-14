@@ -1,0 +1,449 @@
+{
+  "analytical_model_comparison": {
+    "N7": {
+      "bandwidth_ratio_macro_over_model": 27.353542548161155,
+      "density_ratio_macro_over_model": 2.1101666949908244,
+      "macro_array_efficiency": 0.7182240096405133,
+      "macro_rom_bits_per_mm2": 123152265.02752286,
+      "macro_rom_read_bytes_s_per_mm2": 7719777563592.148,
+      "measured_asap7_rom_cell_to_sram_cell_ratio": 0.25,
+      "model_rom_array_efficiency": 0.52,
+      "model_rom_bits_per_mm2": 58361391.69472503,
+      "model_rom_cell_to_sram_cell_ratio": 0.33,
+      "model_rom_read_bytes_s_per_mm2": 282222222222.2222,
+      "model_sram_bits_per_mm2": 24074074.074074075
+    }
+  },
+  "area": {
+    "array_efficiency": 0.7182240096405133,
+    "array_height_um": 56.376,
+    "array_width_um": 31.104,
+    "cell_area_um2": 0.0058319999999999995,
+    "cell_col_pitch_um": 0.054,
+    "cell_row_pitch_um": 0.108,
+    "column_height_um": 6.35,
+    "core_height_um": 62.726,
+    "core_width_um": 37.903999999999996,
+    "data_array_area_um2": 1719.9267839999998,
+    "decoder_width_um": 6.800000000000001,
+    "density_mb_per_mm2": 123.15226502752286,
+    "macro_area_um2": 2394.6940799999998,
+    "macro_height_um": 62.952,
+    "macro_width_um": 38.04,
+    "outline": {
+      "pin_limited": false,
+      "pin_stretch_um": 0.0,
+      "pins_per_edge": 86,
+      "private_wface": true,
+      "signal_pins": 86,
+      "snap_overhead_um2": 14.02
+    },
+    "physical_array_area_um2": 1753.519104,
+    "tap_bands": 4
+  },
+  "calibration": {
+    "assumed": {
+      "column_per_mux_bit_um": {
+        "grade": "assumed",
+        "note": "one more column-mux level",
+        "value": 0.45
+      },
+      "decoder_per_row_bit_um": {
+        "grade": "assumed",
+        "note": "predecode + NOR decode + WL driver",
+        "value": 0.4
+      },
+      "drain_cap_per_cell_ff": {
+        "grade": "assumed",
+        "note": "bitline junction plus contact load one cell adds; the IHP 130 nm extraction (results/spice/ihp_sg13g2_rom_read_energy) measured 0.50 fF/row and is NOT scaled here",
+        "value": 0.045
+      },
+      "dual_port_cell_area_ratio": {
+        "grade": "assumed",
+        "note": "8T 1R1W (decoupled read stack) and 8T 2RW (two pass-gate pairs) cells relative to the measured 6T; the ASAP7 run drew only the 6T",
+        "value": {
+          "1r1w": 1.4,
+          "2rw": 2.0
+        }
+      },
+      "gate_cap_per_fin_ff": {
+        "grade": "derived",
+        "note": "INVx1 input capacitance / its 6 fins (3 n + 3 p), from the calibration liberty",
+        "value": null
+      },
+      "periphery_energy_ff_per_bit": {
+        "grade": "assumed",
+        "note": "switched capacitance of sense amplifier, output latch and IO driver per output bit",
+        "value": 1.2
+      },
+      "periphery_fo4_budget": {
+        "grade": "assumed",
+        "note": "logic depth of the periphery in ASAP7 FO4 delays at each corner",
+        "value": {
+          "clock_and_latch": 3.0,
+          "decoder_fixed": 1.5,
+          "decoder_per_address_bit": 0.55,
+          "mux_per_level": 0.5,
+          "output": 2.5,
+          "precharge": 2.0,
+          "sense": 2.0,
+          "write_driver": 3.0
+        }
+      },
+      "periphery_geometry_um": {
+        "grade": "calibrated",
+        "note": "column_fixed is solved so a 512 x 512 SRAM array with mux 4 reproduces the published 7 nm macro efficiency (Yokoyama et al., VLSI 2020); the other entries are assumed",
+        "value": {
+          "column_fixed": null,
+          "column_per_mux_bit": 0.5,
+          "control_extra": 1.5,
+          "decoder_fixed": 4.0,
+          "decoder_per_row_bit": 0.45,
+          "fuse_compare_per_spare": 0.6,
+          "rom_column_fixed": 5.0,
+          "rom_decoder_fixed": 3.2
+        }
+      },
+      "rom_cell_read_current_ua": {
+        "grade": "assumed",
+        "note": "one 1-fin NMOS pull-down (no stack) per programmed NOR-ROM cell at 0.70 V, TT",
+        "value": 25.0
+      },
+      "rom_leakage_w_per_mm2": {
+        "grade": "assumed",
+        "note": "configs/hardware/technology.json power.static_leakage_w_per_mm2.rom_array",
+        "value": null
+      },
+      "rom_sense_swing_v": {
+        "grade": "assumed",
+        "note": "single-ended bitline swing against a reference at the sense amplifier",
+        "value": 0.15
+      },
+      "sram_cell_read_current_ua": {
+        "grade": "assumed",
+        "note": "1-fin pass-gate/pull-down read stack of a 7 nm HD cell at 0.70 V, TT; published 7 nm HD cells report read currents of this order; no ASAP7 SRAM SPICE was run",
+        "value": 20.0
+      },
+      "sram_leakage_w_per_mm2": {
+        "grade": "assumed",
+        "note": "configs/hardware/technology.json power.static_leakage_w_per_mm2.sram_array",
+        "value": null
+      },
+      "sram_sense_swing_v": {
+        "grade": "assumed",
+        "note": "differential sense-amplifier input swing",
+        "value": 0.1
+      },
+      "tap_band_um": {
+        "grade": "assumed",
+        "note": "one standard-cell row of well/substrate taps every tap_every_rows rows; the IHP 130 nm ROM route found a minimum-pitch array illegal without them (results/spice/ihp_sg13g2_rom_macro/REPORT.md)",
+        "value": 0.27
+      },
+      "tap_every_rows": {
+        "grade": "assumed",
+        "note": "tap band spacing",
+        "value": 128
+      },
+      "wordline_layer": {
+        "grade": "assumed",
+        "note": "wordline strap on M2, bitline on M1",
+        "value": "M2"
+      }
+    },
+    "bitcells": {
+      "rom_via": {
+        "area_um2": 0.0058319999999999995,
+        "col_pitch_um": 0.054,
+        "drawn_x_um": 0.108,
+        "drawn_y_um": 0.054,
+        "gds_sha256": "f3452b68b398f6fc20a73eefcf87a22c8f492ae4180d182cd970e9a34c8baa84",
+        "grade": "measured",
+        "row_pitch_um": 0.108
+      },
+      "source": "results/asap7_physical/bitcell_density/bitcell_density.json",
+      "source_sha256": "8bde87086a7f97e23df4c826f28bf4e8510a3180360116ebe92655abdce13484",
+      "sram_6t": {
+        "area_um2": 0.023327999999999998,
+        "col_pitch_um": 0.216,
+        "drawn_x_um": 0.108,
+        "drawn_y_um": 0.216,
+        "gds_sha256": "a413bac3082343fff632c441f7c81d8e72a93b3e10c16bf8b55b1c7d296043de",
+        "grade": "measured",
+        "row_pitch_um": 0.108
+      }
+    },
+    "stdcell": {
+      "file": "tools/mem_compiler/asap7_calibration.json",
+      "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
+    }
+  },
+  "capacity_bits": 294912,
+  "claim_boundary": "abstract views from an analytical model on the measured DRC-clean ASAP7 ROM bitcell and ASAP7 standard-cell FO4; periphery dimensions and cell current are assumed; no transistor layout or SPICE of the macro; not silicon",
+  "content_independence": {
+    "lef": "no content in the abstract: every cell has its transistor, only the drain via differs",
+    "liberty": "characterised with every via present (heaviest bitline and largest read energy)",
+    "read_energy_depends_on_content": "only through the discharging bitlines: fixed part 83.3 fJ + 3.348 fJ per programmed cell on the accessed row (TT)"
+  },
+  "fmax_mhz": {
+    "ff": 2547.414484972279,
+    "tt": 2054.056181161215
+  },
+  "generator": "tools/mem_compiler/rom_gen.py v1.0",
+  "kind": "rom",
+  "physical": {
+    "column_interleave": "data bit b, column select s -> physical column b*mux + s",
+    "columns": 576,
+    "rows": 512,
+    "via_polarity": "via present = stored 1"
+  },
+  "read_bandwidth_bytes_s_tt": 18486505630.45094,
+  "same_face_private": {
+    "RTL_body_identical_after_module_rename": true,
+    "SS_used": false,
+    "claim_boundary": "abstract views from an analytical model on the measured DRC-clean ASAP7 ROM bitcell and ASAP7 standard-cell FO4; periphery dimensions and cell current are assumed; no transistor layout or SPICE of the macro; not silicon",
+    "faces": {
+      "E": [],
+      "W": "clk,ce_in,addr_in[11:0],rd_out[71:0]"
+    },
+    "internal_route_assumption": "42.168um Manhattan additional output return; no routed macro metal evidence",
+    "latency_edges": 1,
+    "master": "ot_rom_4096x72_m8_wface_1113",
+    "module_alias_required": true,
+    "moved_outputs": [
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+    ],
+    "old_timing_tt": 513.6612374338883,
+    "outline_um": [
+      38.04,
+      62.952
+    ],
+    "physical_source": "real views.write_lef explicit face plan; unchanged array/periphery model",
+    "source_master": "ot_rom_4096x72_m8",
+    "status": "PRIVATE_COMPILER_ABSTRACT_NOT_SIGNED",
+    "timing_prices": {
+      "ff": {
+        "extra_return_length_um": 42.168,
+        "extra_wire_c_ff": 7.5259338,
+        "extra_wire_r_kohm": 0.760563132,
+        "library_envelope": "original earliest bound; no relocation hold credit",
+        "moved_bit_extra_intrinsic_ps": 4.562691758572441,
+        "moved_bit_extra_load_slope_ps_per_ff": 0.760563132
+      },
+      "tt": {
+        "extra_return_length_um": 42.168,
+        "extra_wire_c_ff": 7.5259338,
+        "extra_wire_r_kohm": 0.760563132,
+        "library_envelope": "latest all-output bound",
+        "moved_bit_extra_intrinsic_ps": 5.608864632845947,
+        "moved_bit_extra_load_slope_ps_per_ff": 0.760563132
+      }
+    },
+    "track_verification": {
+      "allowed_orientations": [
+        "R0",
+        "MX",
+        "MY",
+        "R180"
+      ],
+      "layers": {
+        "M4": {
+          "orientation_invariant": true,
+          "origin_0_legal_all_orientations": true,
+          "rule_mod_track_nm": {
+            "MX": [
+              0
+            ],
+            "MY": [
+              0
+            ],
+            "R0": [
+              0
+            ],
+            "R180": [
+              0
+            ]
+          }
+        }
+      },
+      "m5_crossing_at_origin_0": {
+        "MY": {
+          "L": true
+        },
+        "R0": {
+          "L": true
+        }
+      },
+      "pass": true,
+      "signal_pins": 86,
+      "size_um": [
+        38.04,
+        62.952
+      ],
+      "symmetry": [
+        "X",
+        "Y"
+      ]
+    },
+    "unmoved_outputs": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28
+    ]
+  },
+  "schema": "opentallas.mem-compiler.rom.v1",
+  "spec": {
+    "bits": 72,
+    "mux": 8,
+    "name": "ot_rom_4096x72_m8_wface_1113",
+    "words": 4096
+  },
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "bitline_cap_ff": 31.88736,
+        "bitline_ps": 154.79090114377624,
+        "cell_current_ua": 30.900420920460004,
+        "column_mux_ps": 22.165861613333334,
+        "control_ps": 44.33172322666667,
+        "decode_ps": 95.31320493733334,
+        "fo4_ps": 14.777241075555557,
+        "output_ps": 36.94310268888889,
+        "precharge_ps": 36.534673116716206,
+        "private_return_intrinsic_ps": 4.562691758572441,
+        "private_return_wire_c_ff": 7.5259338,
+        "private_return_wire_r_kohm": 0.760563132,
+        "read_energy_fixed_fj": 100.76473288062721,
+        "read_energy_per_discharging_bitline_fj": 3.6829900799999997,
+        "sense_ps": 29.554482151111113,
+        "wordline_cap_ff": 64.954483968,
+        "wordline_ps": 32.029900347601966
+      },
+      "clk_cap_ff": 10.3732,
+      "clk_to_q_ps": 415.35759506623356,
+      "corner": "ff",
+      "hold_ps": 19.67222053777778,
+      "leakage_nw": 16044.450336,
+      "min_period_ps": 392.5548849232056,
+      "min_pulse_ps": 157.02195396928224,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 0.683716,
+      "read_energy_fj": 2414.0384434114876,
+      "setup_ps": 24.694771075555558,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "bitline_cap_ff": 31.88736,
+        "bitline_ps": 191.32416,
+        "cell_current_ua": 25.0,
+        "column_mux_ps": 27.39737815666667,
+        "control_ps": 54.79475631333334,
+        "decode_ps": 117.80872607366668,
+        "fo4_ps": 18.264918771111113,
+        "output_ps": 45.66229692777778,
+        "precharge_ps": 46.56854422773623,
+        "private_return_intrinsic_ps": 5.608864632845947,
+        "private_return_wire_c_ff": 7.5259338,
+        "private_return_wire_r_kohm": 0.760563132,
+        "read_energy_fixed_fj": 83.27663874432,
+        "read_energy_per_discharging_bitline_fj": 3.3481727999999995,
+        "sense_ps": 36.529837542222225,
+        "wordline_cap_ff": 64.954483968,
+        "wordline_ps": 39.81557694991678
+      },
+      "clk_cap_ff": 9.3458,
+      "clk_to_q_ps": 519.2701020667342,
+      "corner": "tt",
+      "hold_ps": 21.600259385555557,
+      "leakage_nw": 16044.450336,
+      "min_period_ps": 486.8416011068753,
+      "min_pulse_ps": 194.73664044275014,
+      "out_r_kohm": 1.216820729645615,
+      "out_slew_intrinsic_ps": 30.04795574098531,
+      "pin_cap_ff": 0.619928,
+      "read_energy_fj": 2170.3955967103198,
+      "setup_ps": 28.256178771111113,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "views": {
+    "ot_rom_4096x72_m8_wface_1113.lef": "c56965fc8ae465997662f1fff8e7f55c63716fd4eda1df99b972ed96e8d817f1",
+    "ot_rom_4096x72_m8_wface_1113.v": "b6e8cd67186b3fa6c369522f2f149b58e6dd0f278c75ab19c052484d679f8e0e",
+    "ot_rom_4096x72_m8_wface_1113_bb.v": "b3ab6f95d9386708038a70bab16ccc7d92160718cede835e228c49d3e305ab81",
+    "ot_rom_4096x72_m8_wface_1113_ff.lib": "2cc22e5d822c3c6d6a3ff50165b8402cc39ff237005c88098873074c43f320d7",
+    "ot_rom_4096x72_m8_wface_1113_tt.lib": "b4840850924fa67cf48df9709138a8bd2eab4bea70e8ab85926c08f619908789"
+  }
+}
