@@ -27,6 +27,49 @@ def dump(path, value):
     Path(path).write_text(json.dumps(clean(value), indent=1) + "\n")
 
 
+def _part_names(plan):
+    """Partition names of a raw plan (partitions is a list of {name, type, ...}); None when the plan has none."""
+    names = {q["name"] for q in plan.get("partitions") or []}
+    return names or None
+
+
+def feed_ref(feed_path, rel="feed.json", parts=None):
+    """clock.spine.feed reference for a committed feed doc: path, sha256, and the root/form/frame READ FROM the doc.
+
+    The schema requires feed.root (region_form.apply writes it the same way).  The root is never supplied by the
+    caller: it is the doc's own root, which must be the one parentless node of the feed tree and, when parts are
+    given, a partition of the plan."""
+    b = Path(feed_path).read_bytes()
+    doc = json.loads(b)
+    root = doc.get("root")
+    if not root:
+        raise ValueError(f"{feed_path}: feed doc has no root")
+    par = doc.get("parent") or {}
+    if par and (root not in par or par[root] is not None):
+        raise ValueError(f"{feed_path}: root {root} is not the parentless node of the feed tree")
+    orphans = sorted(n for n, q in par.items() if q is None and n != root)
+    if orphans:
+        raise ValueError(f"{feed_path}: feed has more than one parentless node: {[root] + orphans}")
+    if parts is not None and root not in parts:
+        raise ValueError(f"{feed_path}: feed root {root} is not a partition of the plan")
+    ref = dict(path=rel, sha256=hashlib.sha256(b).hexdigest(), root=root)
+    for k in ("form", "frame"):
+        if doc.get(k) is not None:
+            ref[k] = doc[k]
+    return ref
+
+
+def restamp_feed(plan, feed_path):
+    """Set plan clock.spine.feed from the committed feed doc; refuse when the plan names another feed (sha)."""
+    sp = plan.setdefault("clock", {}).setdefault("spine", {})
+    old = sp.get("feed") or {}
+    ref = feed_ref(feed_path, old.get("path", Path(feed_path).name), parts=_part_names(plan))
+    if old.get("sha256") and old["sha256"] != ref["sha256"]:
+        raise ValueError(f"plan feed sha {old['sha256']} != {feed_path} sha {ref['sha256']}")
+    sp["feed"] = ref
+    return ref
+
+
 def neighbor_feed(root, G, E, X, v, kind="fwd"):
     """Clock and START choose the same directed, abutting data-link tree.
 
@@ -262,7 +305,7 @@ def prepare_native_form(raw, side, scored, out):
     geometry.setdefault("clock", {}).setdefault("spine", {}).update(
         topology="link_htree",
         region_map=dict(path="regions.json", sha256=hashlib.sha256((out / "regions.json").read_bytes()).hexdigest()),
-        feed=dict(path="feed.json", sha256=hashlib.sha256((out / "feed.json").read_bytes()).hexdigest(), frame="wall_aligned"))
+        feed=feed_ref(out / "feed.json", parts=_part_names(raw)))
     dump(out / "clock_geometry_plan.json", geometry)
 
 
@@ -381,10 +424,10 @@ def compose(raw, table, source, out, oldside, band_cache=None):
         extra = result[2:]
     else:
         raise TypeError(f"unexpected compose result: {type(result)}")
-    feedb, mapb = (out / "feed.json").read_bytes(), (out / "regions.json").read_bytes()
+    mapb = (out / "regions.json").read_bytes()
     sp = plan.setdefault("clock", {}).setdefault("spine", {})
     sp.update(topology="link_htree",
-              feed=dict(path="feed.json", sha256=hashlib.sha256(feedb).hexdigest(), frame="wall_aligned"),
+              feed=feed_ref(out / "feed.json", parts=_part_names(plan)),
               region_map=dict(path="regions.json", sha256=hashlib.sha256(mapb).hexdigest()))
     import schema as S
     P = S.Plan(plan, out / "plan_c.json")
@@ -414,7 +457,23 @@ def compose(raw, table, source, out, oldside, band_cache=None):
                                        physical_qualified=False))
 
 
+def feed_ref_main(argv):
+    """feed-ref PLAN FEED OUT: rewrite clock.spine.feed of PLAN from the committed FEED doc (root from the doc)."""
+    ap = argparse.ArgumentParser(prog="kv_split_regions.py feed-ref")
+    ap.add_argument("plan")
+    ap.add_argument("feed")
+    ap.add_argument("out")
+    a = ap.parse_args(argv)
+    plan = json.loads(Path(a.plan).read_text())
+    ref = restamp_feed(plan, a.feed)
+    dump(Path(a.out), plan)
+    print(json.dumps(ref, sort_keys=True))
+    return 0
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "feed-ref":
+        return feed_ref_main(sys.argv[2:])
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("plan")
     ap.add_argument("sidecar")
