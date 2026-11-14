@@ -62626,5 +62626,6 @@
  "note_kitops3_e8all": "KIT-OPS-3 00:2x (COORD): epyc8 out of hosts/place_prefer for all dies until CLEAN-E8 posts >1 TB free; then restore from *_prev_kitops3_e8all.",
  "note_kitops3_e8back": "KIT-OPS-3 00:4x (COORD: epyc8 scratch 2.6 TB free): epyc8 restored to hosts/place_prefer/gen_hosts from *_prev_kitops3_e8all / gen_hosts_prev_kitops3_e8.",
  "note_kitops3_lb": "KIT-OPS-3 01:xx LIMIT-BIND-1 overlay deployed on die srcs; die_gen_env OT_CORE_TAP_REACH_UM=0 all dies (old in die_gen_env_prev_kitops3_lb); retry keys for tap/cap-limit failures + hd_serdes.",
- "note_kitops4_hosts": "KIT-OPS-4 11-14 05:3x COORD: epyc4 added to retired_hosts (terminated 11-13; SUBSTEP-1 and other host loops skip it, was ssh timeout every tick); hbm die src_probe false (HBM parked: no SRC-INCOMPLETE lines). No active host/gen_hosts/place_prefer list names epyc4/5/6 (only the stash_epyc4_kw46_srcloss history)."
+ "note_kitops4_hosts": "KIT-OPS-4 11-14 05:3x COORD: epyc4 added to retired_hosts (terminated 11-13; SUBSTEP-1 and other host loops skip it, was ssh timeout every tick); hbm die src_probe false (HBM parked: no SRC-INCOMPLETE lines). No active host/gen_hosts/place_prefer list names epyc4/5/6 (only the stash_epyc4_kw46_srcloss history).",
+ "restage_place_waiters": true
 }
