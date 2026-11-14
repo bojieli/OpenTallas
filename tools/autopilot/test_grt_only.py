@@ -48,5 +48,5 @@ class TestGrtOnly(Base):
         c['signoff'] = {'verdict': 'SIGNED'}
         self.assertEqual(self.ap.classify(c, {'exit': 0})[:2], ('STRUCTURAL', 'diagnostic-overrun'))
         self.assertEqual(self.ap.classify({'goal': 'grt', 'grt_odb': '/k/grt', 'grt_overflow': 7},
-                                         {'exit': 0})[:2], ('STRUCTURAL', 'grt-overflow'))
+                                         {'exit': 0})[:2], ('FAIL', 'grt-overflow'))  # LIMIT-GRT-1 (a78e4cfb6a): FAIL, not STRUCTURAL
         self.assertEqual(self.ap.classify({'goal': 'grt'}, {'exit': 0})[:2], ('CRASH', 'no-signoff'))

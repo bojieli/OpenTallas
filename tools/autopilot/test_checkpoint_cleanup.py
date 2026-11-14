@@ -28,6 +28,8 @@ def test_nonphysical_failure_never_requests_bulk_delete(monkeypatch,kind,goal):
 def test_probe_preserves_prior_checkpoint_but_fresh_dead_probe_cleanup_stays_eligible():
     # Execute the real remote probe against this test's own temporary kit, dry-run only.
     root=Path('/srv/opentallas-scratch/claude')
+    if not root.is_dir():
+        pytest.skip('no /srv/opentallas-scratch/claude on this host')
     with tempfile.TemporaryDirectory(prefix='cleanup-control-',dir=root) as td:
         kit=Path(td);(kit/'config.mk').write_text('# own fixture')
         odb=kit/'run/results/asap7/t/base/5_1_grt.odb';odb.parent.mkdir(parents=True);odb.write_text('prior checkpoint')
@@ -38,7 +40,8 @@ def test_probe_preserves_prior_checkpoint_but_fresh_dead_probe_cleanup_stays_eli
                                env=dict(os.environ,PATH=str(bins)),capture_output=True,text=True,check=True)
             return json.loads(run.stdout.removeprefix('AP_JSON '))
         old=probe(started)
-        assert old['preserved']==[str(odb)] and old['deleted']==[]
+        # the probe reports real paths; /srv/opentallas-scratch is a symlink to scratch2 on the fleet hosts
+        assert [os.path.realpath(x) for x in old['preserved']]==[os.path.realpath(odb)] and old['deleted']==[]
         assert odb.read_text()=='prior checkpoint'
         fresh=probe(started-60)
         assert 'preserved' not in fresh and fresh['deleted']

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """closure order (owner 2026-10-25 18:45, lanes/_LANE_PREAMBLE.md): path die gate (rule 1), sign-off provenance =
 src commit + flow tag (rule 3), pending plan deltas (rule 4).  No ssh / ot-run / systemd (faked as in test_autopilot)."""
+from unittest import mock
 import json
 import os
 import subprocess
@@ -201,7 +202,13 @@ class TestGates(TickBase):
         self.assertEqual(len((Path(self.tmp.name) / "unversioned.tsv").read_text().splitlines()), 2)
         self.ap.resolve_provenance = lambda src, flow="", die=None: {"src_commit": "0123456789ab" + "0" * 28,
                                                            "flow_tag": "flow-20261026-a"}
+        # WF-1 11-14 (b35cf6424f): promoting unversioned records is OFF by default (COUNT-FRICTION-1 credits them
+        # directly); the old promotion path runs only with AP_RETRY_UNVERSIONED=1
         (j,) = self.tick().values()
+        self.assertEqual(j["status"], "SIGNED-UNVERSIONED")
+        self.assertFalse((Path(self.tmp.name) / "signed.tsv").exists())
+        with mock.patch.dict(os.environ, {"AP_RETRY_UNVERSIONED": "1"}):
+            (j,) = self.tick().values()
         self.assertEqual(j["status"], "ARCHIVED")
         head, row = (Path(self.tmp.name) / "signed.tsv").read_text().splitlines()
         self.assertTrue(head.endswith("src_commit\tflow_tag"))
