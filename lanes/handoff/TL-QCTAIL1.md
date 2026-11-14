@@ -5,3 +5,4 @@ Form C: epyc9 rkb copy, client epyc7 pid 1876081, log epyc7 tl-qctail1/logs/rkb_
 11-14 06:51: forms rk/rkb FAIL face_guard (flt_* unregistered). New forms rkw (epyc9, util .5, client epyc7 pid 701752) and rkwb (epyc10, util .4, pid 701754) with pin-register wrapper; logs epyc7 tl-qctail1/logs/rkw.log rkwb.log. Old epyc9 form killed.
 11-14 10:18: rkw routed: DRC0 setup+17.9 hold-1.47(3 int). ECO1 running epyc2 eco_rkw (pid 2810283 epyc7). rkwb util.4 parallel form in route.
 11-14 10:22: ECO now on ko4copy (ko4-eco + cap_estimate.py) eco_rkw3, queued epyc2, pid 103243 epyc7. rkwb parallel.
+11-14 10:32: rkw ECO moved to intel1 (pid 3472648 epyc7); rkwb ECO epyc2 (pid 2667225). rkwb hold: 20 port (adv) + 3 internal -3.91.
