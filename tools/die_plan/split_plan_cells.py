@@ -141,7 +141,7 @@ def split(ev, T):
                 raise SplitError(f'{tn}: cross-piece epoch requires efault decomposition: {e}')
             w = width(e)
             original = copy.deepcopy(e)
-            def done(sb, db, e=e, source=source, original=original, w=w):
+            def done(sb, db, e=e, source=source, original=original, w=w, new=new):
                 new[source]['bus_drivers'].append(dict(bus=sb, drivers=[copy.deepcopy(original)]))
                 e.clear()
                 e.update(bus=db, bits=[0, w - 1])
@@ -151,6 +151,13 @@ def split(ev, T):
         for inst, c in d['cells'].items():
             if c['module'] == 'ot_dp_efault':
                 ev._split_efault(ts, bases, inst, c, new, rec, route, d['cells'])
+        # Efault decomposition places its consumer by the actual fault-output bus.
+        # Use those authoritative homes for subsequent cell-source references.
+        for inst, placement in rec['cells'].items():
+            if isinstance(placement, int):
+                homes[inst] = placement
+            elif isinstance(placement, dict) and 'fault_piece' in placement:
+                homes[inst] = placement['fault_piece']
         for inst, c in d['cells'].items():
             if c['module'] == 'ot_dp_efault' or (tn, inst) in getattr(ev, '_efault_done', set()):
                 continue

@@ -1,4 +1,5 @@
 import json
+import copy
 import tempfile
 import unittest
 from pathlib import Path
@@ -83,5 +84,47 @@ class Projection(unittest.TestCase):
         row=self.fixture();row['cells']['pc0']['conns']['y'][0]['inst']='leaf1'
         with self.assertRaisesRegex(SplitError,'cross-piece output'):
             self.run_split(self.event(row))
+
+    def test_two_families_deferred_callbacks_do_not_cross(self):
+        ev=self.event(self.fixture())
+        first=ev.ts['cohort'];second=copy.deepcopy(first)
+        second.tn='second';second.tnames=['second_s','second','second_n']
+        ev.ts['second']=second
+        path=Path(ev.ab['plan_cells']);doc=json.loads(path.read_text())
+        doc['types']['second']=copy.deepcopy(doc['types']['base'])
+        path.write_text(json.dumps(doc))
+        out=self.run_split(ev)
+        self.assertEqual(len(ev.pc_routes),8)
+        for j,route in enumerate(ev.pc_routes):
+            route[-1]('send'+str(j),'recv'+str(j))
+        first_drivers=out['types']['cohort']['bus_drivers']
+        second_drivers=out['types']['second']['bus_drivers']
+        self.assertEqual([x['bus']for x in first_drivers],['send0','send1','send2','send3'])
+        self.assertEqual([x['bus']for x in second_drivers],['send4','send5','send6','send7'])
+        self.assertEqual(out['types']['cohort_s']['cells']['pc0']['conns']['a'][0]['bus'],'recv0')
+        self.assertEqual(out['types']['second_s']['cells']['pc0']['conns']['a'][0]['bus'],'recv4')
+
+    def test_efault_actual_consumer_home_drives_later_bus(self):
+        row={'cells':{
+            'ef':{'module':'ot_dp_efault','params':{},'conns':{}},
+            'mid':{'module':'add','params':{},'conns':{'a':[{'net':'clk'}]}}},
+            'leaf_binds':[], 'bus_drivers':[{'bus':'out','drivers':[{'cell':'mid','port':'y','bits':[0,4]}]}],
+            'rewired':[]}
+        ev=self.event(row);ev.ts['cohort'].content_piece['ef']=1
+        def decompose(ts,bases,inst,c,new,rec,route,cells):
+            new[2]['cells']['mid']=copy.deepcopy(cells['mid'])
+            rec['cells']['mid']=2
+            rec['cells'][inst]={'fault_piece':2}
+            ev._efault_done={('cohort','mid')}
+        ev._split_efault=decompose
+        out=self.run_split(ev)
+        self.assertEqual(len(ev.pc_routes),1)
+        route=ev.pc_routes[0]
+        self.assertEqual((route[2],route[3]),(2,1))
+        route[-1]('send','recv')
+        self.assertEqual(out['types']['cohort_n']['bus_drivers'][0]['drivers'][0],
+                         {'cell':'mid','port':'y','bits':[0,4]})
+        self.assertEqual(out['types']['cohort']['bus_drivers'][0]['drivers'][0],
+                         {'bus':'recv','bits':[0,4]})
 
 if __name__=='__main__':unittest.main()
