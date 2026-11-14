@@ -7,10 +7,94 @@ qwen_compute	slw_hc2__cla3497502__cl16607c7a	DIE-QC-97	COORD 11-10 22:31 lineage
 qwen_compute	slw_hc2__cla3497502__cldc737267	DIE-QC-97	COORD 11-10 22:31 lineage batch
 qwen_compute	slw_stm_v1__cl05fc43f7__cl2086fa2c	DIE-QC-97	COORD 11-10 22:31 lineage batch
 qwen_compute	slw_stm_v1__cl05fc43f7__cl389df4e9	DIE-QC-97	COORD 11-10 22:31 lineage batch
-s81	dsdv_gunit_l1f_bf	DIE-S81-85	COORD 11-10 22:31
-s81	s81p_slice_station__t51_ot_s81_station_t51_native_w	DIE-S81-85	COORD 11-10 22:31
-s81	dsdv_bksel_q	DIE-S81-85	COORD 11-10 23:2x
+s81	dsdv_gunit_l1f_bf	DIE-S81-90	COORD 11-10 22:31 | KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): dead lane DIE-S81-85 -> DIE-S81-90
+s81	s81p_slice_station__t51_ot_s81_station_t51_native_w	DIE-S81-90	COORD 11-10 22:31 | KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): dead lane DIE-S81-85 -> DIE-S81-90
+s81	dsdv_bksel_q	DIE-S81-90	COORD 11-10 23:2x | KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): dead lane DIE-S81-85 -> DIE-S81-90
 hbm	PHY_NC	DIE-HBM-98	COORD 11-10 23:2x
 hbm	PHY_NE	DIE-HBM-98	COORD 11-10 23:2x
 hbm	PHY_NW	DIE-HBM-98	COORD 11-10 23:2x
 hbm	q_mcb	DIE-HBM-98	COORD 11-10 23:2x
+s81	col_h10_r0_p4__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p5__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p6__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p1__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	serdes__t3	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	serdes__t2	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	serdes__t12	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	iqf__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t49	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t36	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t37	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	dsdv_slice_lepw_mus_LP__t2	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t3	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t4	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t5	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	dsdv_slice_lepw_mu_LP__t2	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t43	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t9	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t10	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t15	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t16	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t17	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t23	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t26	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t31	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t32	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t33	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_kv_leaf__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_kv_leaf__t2	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t36	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t37	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t38	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t42	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t43	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t46	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t52	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t57	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t58	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t59	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t62	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t66	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t67	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t68	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t69	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t27	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	dsdv_slice_lepe_nh_mus_LP__t1	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t70	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t71	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	dsdv_slice_lepe_mu_LP__t2	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t52	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	bk_sel__t2	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h10_r1__t1__cl95b37463	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h10_r1__t1__cld01bb4ae	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h10_r2__t1__clac068e56	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h10_r2__t1__cl8b686b3e	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h10_r2__t1__cl99efd374	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h10_r2__t1__cl1f5d6c2a	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p2__t1__cl9f71e63d	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p2__t1__cl0045af7b	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r1__t1__cl49d7a23e	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r1__t1__clf32cde8d	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r2__t1__clc9ad8f7e	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r2__t1__clce45cab5	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r2__t1__clb8d86cd5	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r2__t1__cl87f3ff59	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r2__t1__cl774acf45	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p3__t1__cl31d0dc4b	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p3__t1__cl8ce97bcb	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p3__t1__cl0cd90c0e	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p4__t1__cl8ef405e8	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	col_h9_r0_p4__t1__clcb2fbfe8	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	serdes__t15__cla2127225	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	serdes__t1__clfe1f0815	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	serdes__t1__clb45db5be	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t6__cl0755c26e	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t42__clcf44e680	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t53__cl958451dd	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t54__cl501e5681	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t24__cl2456157b	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t24__cl81374cd8	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t25__cl55642d17	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t25__cl431c660f	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	ot_s81sl_leaf__t44__clf6cf8492	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
+s81	slice_station__t24__cl64811a5d	DIE-S81-90	KIT-OPS-2 2026-11-13 18:2x COORD (EXPERT-REVIEW-4): STALE row of dead lane KIT-WAVE-1 reassigned
