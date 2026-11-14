@@ -702,6 +702,21 @@ def _compose_rename(m, ca, cc):
     return m2
 
 
+def core_reset_port_expr(core_reset, ci, pn, kinds, exprs):
+    """KV-101/SPLIT 11-13 (owner: the plan's wavefront tap is authoritative): a hard-core reset port that the bind
+    recorded in core_reset (bind_core_resets.json) but that arrives as a BUS input (as-built: the core's rst_n is a bit of
+    a lane, e.g. hub_C u_pvfin / u_kvs_ctl rst_n on the ahub spine ri_ahub_rst_n_q[0]) is driven by that tap, so the
+    emitted wiring matches the recorded one.  Reset-kind sinks keep their own path (expr handles them).
+    -> (exprs, override or None, error or None).  Only a 1-bit active-low port (name ends rst_n) is rewired."""
+    if (ci, pn) not in core_reset or all(k == "rst" for k in kinds):
+        return exprs, None, None
+    if len(exprs) != 1 or not pn.endswith("rst_n"):
+        return exprs, None, (f"wavefront core reset port {pn}: recorded tap {core_reset[(ci, pn)]} but the port is "
+                             f"{len(exprs)} bit(s) of kind {sorted(set(kinds))} (only a 1-bit active-low rst_n bus "
+                             "input can take the tap)")
+    return [core_reset[(ci, pn)]], dict(pin=pn, tap=core_reset[(ci, pn)], replaced=exprs[0], kind=kinds[0]), None
+
+
 def core_reset_hierarchy_candidates(cells, members, target, modules):
     """Exact source hierarchy suffix inside one already-mapped partition.
 
@@ -3329,7 +3344,9 @@ class Binder:
             files.append(f)
         if getattr(self, "_bound_core_resets", None):
             (out.parent / "bind_core_resets.json").write_text(
-                json.dumps(dict(schema="opentallas.bind_core_resets.v1", types=self._bound_core_resets), indent=1) + "\n")
+                json.dumps(dict(schema="opentallas.bind_core_resets.v1", types=self._bound_core_resets,
+                                **({"bus_input_taps": self._core_reset_bus_taps}
+                                   if getattr(self, "_core_reset_bus_taps", None) else {})), indent=1) + "\n")
         if getattr(self, "_reset_consumer_changes", None):
             (out.parent / "bind_reset_consumers.json").write_text(
                 json.dumps(self._reset_consumer_changes, indent=1) + "\n")
@@ -4064,6 +4081,12 @@ class Binder:
                     conns.append((pn, drv_w[(ci, pn)]))
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
+                    e, ov, err = core_reset_port_expr(core_reset, ci, pn,
+                                                      [self.sinks[(ci, pn, i)][0] for i in range(len(bits))], e)
+                    if err:
+                        self._gap(f"wavefront core reset {tn}/{r}: {err}")
+                    if ov:
+                        self.__dict__.setdefault("_core_reset_bus_taps", {}).setdefault(tn, []).append(dict(ov, leaf=r))
                     if pn in core_gate_ports.get(c.module, ()):
                         e = [core_reset_gate(x, c, r, pn) for x in e]
                     if pn in core_input_lockup(self.plan, tn, c.module):
