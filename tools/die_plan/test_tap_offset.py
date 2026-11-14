@@ -79,3 +79,31 @@ def test_kit_offset_table():
     # median glue of a partition = 100 (clk); per instance o = 0 / -10 / +30 for both shifts: tol floor 10
     assert tab["src"]["clk_t1"]["TT"] == -10.0 and tab["src"]["clk_t2"]["TT"] == 30.0 and tab["src"]["clk"]["tol"] == 10.0
     assert tab["src"]["clk_t2"]["FF"] == 27.0
+
+
+def _taps(shift_p2=0.0, t2_extra=0.0):
+    taps = {}
+    for part, shift in (("p1", 0.0), ("p2", shift_p2)):
+        for port, a in (("clk", 100.0), ("clk_t1", 90.0), ("clk_t2", 130.0), ("clk_c0", 20.0)):
+            x = a + (t2_extra if (part == "p2" and port == "clk_t2") else 0.0) + shift
+            taps[f"t_{part}__{port}"] = {"part": part, "late_ps": x + 1, "early_ps": x - 1}
+    return taps
+
+
+def test_glue_median_excludes_core_taps():
+    arr = DSR.kit_offset_arrivals(_taps())
+    assert DSR.glue_medians(arr)["p1"] == 100.0
+
+
+def test_gate_pass_and_outlier_resign_list():
+    plan = {"partitions": [{"name": "p1", "type": "src"}, {"name": "p2", "type": "src"}],
+            "clock": {"tap_offset": {"per_port_ps": {"src": {
+                "clk": {"TT": 0, "FF": 0, "tol": 10}, "clk_t1": {"TT": -10, "FF": -10, "tol": 10},
+                "clk_t2": {"TT": 30, "FF": 30, "tol": 10}}}}}}
+    ok = DSR.tap_offset_gate({"TT": DSR.kit_offset_arrivals(_taps(shift_p2=7.0))}, plan)
+    assert ok["verdict"] == "PASS" and ok["checked"] == 6 and ok["outliers"] == []     # a common shift is the median: no offset
+    bad = DSR.tap_offset_gate({"TT": DSR.kit_offset_arrivals(_taps(t2_extra=14.0))}, plan)
+    assert bad["verdict"] == "FAIL" and bad["resign_types"] == ["src"]
+    o = bad["outliers"][0]
+    assert (o["part"], o["port"], o["excess_ps"]) == ("p2", "clk_t2", 4.0)
+    assert DSR.tap_offset_gate({"TT": {}}, {"partitions": [], "clock": {}}) is None

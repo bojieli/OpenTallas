@@ -1541,6 +1541,53 @@ def kit_offset_arrivals(taps):
     return out
 
 
+def _median(v):
+    v = sorted(v)
+    n = len(v)
+    return v[n // 2] if n % 2 else (v[n // 2 - 1] + v[n // 2]) / 2.0
+
+
+def glue_medians(arr):
+    """{part: median arrival of the partition's glue taps} of one corner's kit_offset_arrivals; a core tap (kit port clk_c*) is not
+    glue (its arrival already contains its early delivery); a partition with no glue tap uses all its taps."""
+    allp, glue = defaultdict(list), defaultdict(list)
+    for (part, port), a in arr.items():
+        allp[part].append(a)
+        if not port.startswith("clk_c"):
+            glue[part].append(a)
+    return {part: _median(glue[part] or v) for part, v in allp.items()}
+
+
+ROUND_SLACK_PS = 0.15      # the table is written to 0.1 ps (kit_offset_table): a tap on its band edge is not an outlier
+
+
+def tap_offset_gate(arr_by_corner, plan):
+    """R-CLOCK-7 die gate (FABLE-REVIEW-CLK 1b item 3): every tap of every instance of a type with a plan clock.tap_offset row must lie
+    inside [o_p - u, o_p + u] of its partition's glue median, at every corner the row names.  Outliers (the die clock moved the tap
+    out of the band the kit was timed at) are listed as STA re-sign items: that type is re-signed at the new offsets, no P&R unless
+    hold then fails.  Ports with no row are not checked (they carry the window).  Returns None when the plan has no clock.tap_offset."""
+    rows = ((plan.get("clock") or {}).get("tap_offset") or {}).get("per_port_ps")
+    if not rows:
+        return None
+    ptype = {q["name"]: q["type"] for q in plan.get("partitions", [])}
+    out, checked, types = [], 0, set()
+    for c, arr in arr_by_corner.items():
+        ref = glue_medians(arr)
+        for (part, port), a in sorted(arr.items()):
+            row = (rows.get(ptype.get(part)) or {}).get(port)
+            if not row or c not in row:
+                continue
+            checked += 1
+            o = a - ref[part]
+            u = float(row["tol"])
+            if abs(o - float(row[c])) > u + ROUND_SLACK_PS:
+                out.append(dict(type=ptype[part], part=part, port=port, corner=c, offset_ps=round(o, 1),
+                                band_ps=[round(float(row[c]) - u, 1), round(float(row[c]) + u, 1)],
+                                excess_ps=round(abs(o - float(row[c])) - u, 1)))
+                types.add(ptype[part])
+    return dict(verdict="PASS" if not out else "FAIL", checked=checked, outliers=out, resign_types=sorted(types))
+
+
 def kit_offset_table(arr_by_corner, plan, min_tol_ps=10.0):
     """R-CLOCK-7: plan clock.tap_offset.per_port_ps {type: {port: {TT, FF, tol}}}.  o_p (per corner) = the tap's routed arrival
     minus the median glue tap of its partition (a core tap's arrival already contains its early delivery), averaged over the
@@ -1548,21 +1595,14 @@ def kit_offset_table(arr_by_corner, plan, min_tol_ps=10.0):
     emits set_clock_latency -source -early (o_p - u) / -late (o_p + u) per corner from it."""
     ptype = {q["name"]: q["type"] for q in plan.get("partitions", [])}
 
-    def median(v):
-        v = sorted(v)
-        n = len(v)
-        return v[n // 2] if n % 2 else (v[n // 2 - 1] + v[n // 2]) / 2.0
-
     per = {}          # (type, port) -> {corner: [o_p per instance]}
     for c, arr in arr_by_corner.items():
-        byp = defaultdict(list)
-        for (part, _port), a in arr.items():
-            byp[part].append(a)
+        ref = glue_medians(arr)
         for (part, port), a in arr.items():
             t = ptype.get(part)
             if t is None:
                 continue
-            per.setdefault((t, port), {}).setdefault(c, []).append(a - median(byp[part]))
+            per.setdefault((t, port), {}).setdefault(c, []).append(a - ref[part])
     out = {}
     for (t, port), cc in sorted(per.items()):
         row, u = {}, min_tol_ps
@@ -2943,7 +2983,7 @@ def main(argv=None):
     ko_arr = {}
     for c in corners:
         meta, taps = load_taps(d, c)
-        if a.kit_offset_out:
+        if a.kit_offset_out or (plan.get("clock") or {}).get("tap_offset"):
             ko_arr[c] = kit_offset_arrivals(taps)
         ccell, cbasis = resolve_clock_cell(a.clock_cell, d, meta)
         if ccell != "buf":              # CLK-INV-CAL-1 record (BUFx24 records stay byte-identical)
@@ -3212,6 +3252,14 @@ def main(argv=None):
                   "- CPPR credit (+ core-tap offset), ceil 1 ps; KW-FIX-4-SDC (COORD 11-03 10:49)"), indent=1) + "\n")
         print(f"KIT-WINDOW per-port table: {len(kwt)} types, {sum(len(v) for v in kwt.values())} ports -> "
               f"{a.kit_window_out}")
+    tog = tap_offset_gate(ko_arr, plan) if ko_arr else None
+    if tog is not None:
+        res["tap_offset_gate"] = tog
+        print(f"TAP-OFFSET-GATE {tog['verdict']}: {tog['checked']} tap checks, {len(tog['outliers'])} outside [o-u, o+u]"
+              + (f"; STA re-sign types: {' '.join(tog['resign_types'])}" if tog["outliers"] else ""))
+        for o in tog["outliers"][:50]:
+            print(f"TAP-OFFSET-GATE RESIGN {o['type']} {o['part']} {o['port']} {o['corner']} offset {o['offset_ps']} band "
+                  f"{o['band_ps'][0]}..{o['band_ps'][1]} excess {o['excess_ps']}")
     if a.kit_offset_out:
         kot = kit_offset_table(ko_arr, plan)
         Path(a.kit_offset_out).write_text(json.dumps(dict(
