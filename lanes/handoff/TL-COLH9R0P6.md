@@ -4,3 +4,4 @@
 - Now a3: stages gen..kit_rtl. Waiting; no change made yet.
 - 08:20 route jobs all SIGTERMed 08:04; asked KIT-OPS-3 to resubmit; no sign-off yet.
 - COORD 08:3x: kills were deliberate dedup; keeper pv082a7609 (epyc10). Follow it only; credit all 12 on pass; relaunch only the keeper if it dies.
+- 08:40 keeper pv082a7609 died grt-overflow (106%, 36026 gcells>90%) on unsnapped B3v; asked DIE-S81-92/COL-SNAP-BUILD to move p6 to snapped plan + landing/street fix. Next: watch for p6 relaunch on new plan.
