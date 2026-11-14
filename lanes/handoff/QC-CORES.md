@@ -1,4 +1,4 @@
-# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 07:21 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
+# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 08:22 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
 columns: core | lane | form | host | unit/kit | stage | verdict | view path (signoff) | registered (AUTO-RESIGN / prov_view_sources)
 
 | core | lane | form | host | kit | stage | verdict | view path | registered |
@@ -37,14 +37,14 @@ columns: core | lane | form | host | unit/kit | stage | verdict | view path (sig
 | qfd_dv_s8_tap_bounded[b] | TL-QCTAPB | qfd_dv b util.35 | intel1 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/b/kits/qfd_dv_s8_tap_bounded_synth0 | synth | - |  | no |
 | qfd_dv_s8_tap_bounded[c] | TL-QCTAPB | qfd_dv c no keep_hier | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/c/kits/qfd_dv_s8_tap_bounded_synth0 | running | - |  | no |
 | qfd_dv_s8_tap_bounded[d] | TL-QCTAPB | qfd_dv d all-input regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/d/kits/qfd_dv_s8_tap_bounded_synth0 | running | - |  | no |
-| qfd_dv_s8_tap_bounded[e] | TL-QCTAPB | qfd_dv e (TL-QCTAPB) | epyc9 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0 | running | - |  | no |
+| qfd_dv_s8_tap_bounded[e] | TL-QCTAPB | qfd_dv e (TL-QCTAPB) | epyc9 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0 | signoff | SIGNED DRC 0 TT 15.26 FFhold 7.13 PASS | /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff | no |
 | qfd_dv_s5_ctl_repair4_leaf[a] | TL-QCREP4 | qfd_dv a util.5 | intel1 | /srv/opentallas-scratch2/claude/tl-qcrep4/a/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
 | qfd_dv_s5_ctl_repair4_leaf[b] | TL-QCREP4 | qfd_dv b util.3 | intel1 | /srv/opentallas-scratch2/claude/tl-qcrep4/b/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
 | sta_region_nb0[w] | QC-CORES-HEAD | region 5xSRAM w/ flt pin regs | epyc2 | /srv/opentallas-scratch2/claude/qc-cores-head/rk/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
 
-STATE: 25/29 signed; signoff-not-signed: none
+STATE: 26/29 signed; signoff-not-signed: none
 
-## Source notes (original hand-offs, unchanged)
+## Source notes
 
 ## DIE-QC-103 hand-off of 19 ring-child kits (2026-11-14, per COORD/OWNER: QC-CORES-HEAD owns all 29 unbuilt s29q103S hard cores). Jobs are RUNNING; the ring lanes adopt them, do not relaunch.
 RECIPE (same for all 19): plan zz_s29_qc103_s2.json (epyc9 wt/qc-s29-tree2 plan_of_record, sha f84e7f271c14) hard_cores row per module -> param_wrap.params (W, DEPTH 4, STATUS_REG 1, WFALL 1, WREG 1, DSREP 8, RSTREP n, PLACEREP 1) and outline_um and pins_file (plan_of_record/cores/{sle_ctl,st_a}/<m>_pins.json, already holds rst_xn/strap_k pins, taken as-is). Kit dir = rk2/<m>/ with <m>.sv wrapper (ot_dp_clk_landing_cas u_ring, ports clk,fclk,rst_n,t_rst_n,rst_xn[RSTREP-1:0],strap_k[5:0],d,q,ready,fault), spec.json/recipes.json/plan.json from the QC-RING D8 template (land_slots d D=DEPTH hold_mux, t_rst_n ring_start, insertion 250/202.5 tol 40, util 0.5, core_margin 1.08, max_routing_layer M5), generated with gen_core_kit_qc.py (epyc9 die-qc-103/wt_r8pin, branch claude/die-qc-103-r8pin-1113) --module <m> --recipes rk2/<m>/recipes.json --plan rk2/<m>/plan.json --out rk2/<m>/kits, rsynced to epyc10, run: ot-run --mem 40 (90 for w2104 and w1574) --threads 16 --dir <kit> --hosts epyc10 -- bash run_kit.sh <kit> finish <mem> 16 (client = epyc7 ~/.local/bin/ot-run). Generator script: epyc9 /srv/opentallas-scratch2/claude/die-qc-103/mkring2.py-equivalent (scratchpad copy of it is the 19-module loop); QC-RING precedent for the 4 earlier ring kits: epyc10 die-qc-103/rk/<m> (signed). On pass: add a row to lanes/AUTO-RESIGN.tsv (die qwen_compute, host epyc10, dir = the kit path, lane = your lane) and copy LEF/libs into tree2 qcviews_1111/views/<m>/ only if the plan needs a lef path (plan rows currently carry none; the wave finds the routed provisional source by prov_view_sources_auto.json / closed store).
