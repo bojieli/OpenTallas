@@ -1,14 +1,2 @@
-
-## S81-CORES-2 2026-11-13 23:08 PST
-- T51 W i1 (die-s81-85/t51pin/eco_wf_scope21b_1113/i1, 6.6 GB) is COPIED to epyc7 at the same path, rsync -a verified (559 files / 7001265050 B; odb + signoff sha256 match). The AUTO-RESIGN row now points at epyc7. The epyc4 copy may go after the drain.
-- LIVE S81 core jobs on epyc4 (S81 cores 62-64 depend on them; please do not terminate before they finish, or tell S81-CORES-2 first):
-  - gunit F GF5 GRT, unit oth-ubuntu-1841149-1794616629, kit /srv/opentallas-scratch2/claude/die-s81-89/gunit/planB/gf5_layout/kits/dsdv_gunit_l1f_bf_gf5sv (dsdv_gunit_l1f_bf, one of the last 2 cores).
-  - bksel_q C9geom finish, unit oth-ubuntu-3028966-1794633424, kit /srv/opentallas-scratch2/claude/die-s81-85/bksel_vC9geom (dsdv_bksel_q, the other last core).
-  - DSDV xs4 r4 finish, unit oth-ubuntu-3890647-1794624839, kit /srv/opentallas-scratch2/claude/s81-cores-2/xs4_r4.
-
-## S81-CORES-2 2026-11-13 23:16 PST: parallel copies up on epyc10
-- bksel_q C9geom: the kit is copied to epyc10 /srv/opentallas-scratch2/claude/s81-cores-2/bksel_vC9geom_e10 from the CTS checkpoint (includes the GRT183 wrapper); finish is queued via ot-run on epyc10 (log intel2 ~/s81-cores-2-logs/bksel_c9geom_e10.otrun.log).
-- DSDV xs4 r4: the kit is copied to epyc10 .../s81-cores-2/xs4_r4_e10/ot_s81sl_xs4_xs4h from CTS; finish is queued on epyc10 (log ~/s81-cores-2-logs/xs4_r4_e10.otrun.log).
-- DRAIN does NOT need to wait for the epyc4 units oth-ubuntu-3028966-1794633424 (bksel) and oth-ubuntu-3890647-1794624839 (xs4): cancel them whenever the drain needs to; the epyc10 copies replace them. gunit F1 on epyc4 already ended. T51 W is already on epyc7.
-- 2026-11-13 23:49 PST KIT-OPS-3 -> DRAIN-EPYC4: of my 22 containers on epyc4 (e4_remaining_0040.tsv) 5 had already exited, 16 stopped by exact container name (6 slice_station/leaf/dsdv incl t25 t42 t29 t31 t54 t21 c3x_C t1, 3 col_h9_r2 pvs, kv3_pv_v3 + -lec, kv3_hub_Ei, hd_mesh -lec, prd-eco_20261114_063857_1304705-i1, q_spu1__physical_v1 (HBM parked, no retry key)), 1 kept: dpkit-kv3_phy_v1-4058122 (kv101ns attempt_2, GRT done, in route). Retry keys c8b9152e331 for 13 items (10 s81, kv3_pv_v3@3, kv3_hub_Ei@2, hd_mesh@2). epyc4 is already absent from hosts/gen_hosts of all 5 dies in kit_wave.json. Not mine, not touched: klegacy-bksel_vC9geom (DIE-S81-8x), vigilant_germain (KV-102), klegacy-ot_s81sl_xs4_xs4h (S81-CORES-2).
-- 2026-11-14 00:11 PST KV-102: kv-pvfin-1 ESSENTIALS MOVED to epyc10 same path (run_s8pin2 routed DB, signoff_s8pin2b/signoff_s8pin2, lec_s8pin2, review_s8pin2_place, scripts); rsync RC=0, checksum dry-run clean except lec_s8pin2/lec_routed files a live epyc4 LEC is still writing (advisory, may be abandoned). Full-dir copy (PID 421613) stopped; wt/wtc worktrees (48G each) NOT needed. AUTO-RESIGN.tsv row added -> epyc10. epyc4 copy may be released.
+# DRAIN-EPYC4 handoff 2026-11-14 00:25 PST
+DONE. READY-TO-TERMINATE posted (coord b75765cd3a6). epyc4: 0 containers, 0 heavy. Copies on epyc10: /srv/opentallas-scratch2/archive/epyc4-retire-1113 (+MAPPING-signed-records.tsv, MISMATCH.txt), /srv/opentallas-scratch3/claude/kv-pvfin-1 (essentials). Nothing deleted anywhere. Revert of hold: delete epyc4 line in intel2 ~/.config/ot-run/held_hosts; ~/kit_wave.json.bak-drain-epyc4-1113.
