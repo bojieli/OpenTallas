@@ -5,3 +5,4 @@
 - Form A (late ECO): epyc10 /srv/opentallas-scratch2/claude/type-kvphy/eco_a (eco_loop.py run --from grt --hold-margin 20 --owner-override), log intel2 /srv/opentallas-scratch2/claude/type-kvphy/eco_a.log, ot-run waiting on epyc10 load gate.
 - Form B (pre-GRT hold rebuild): epyc10 /srv/opentallas-scratch2/claude/type-kvphy/pg/kv3_phy_v1, resume start=grt from 4_cts.odb with OT_PREGRT_FF_HOLD=1 (+guard 45, NONPORT_HOLD already 1), log intel2 /tmp/pg_kvphy.log.
 - On pass: add AUTO-RESIGN row (qwen_kvsys kv3_phy_v1 epyc10 <dir with signoff/signoff.json> - TYPE-KVPHY) and post RESULT.
+- RESULT 2026-11-14 01:48: form B passed (see queue); form A failed; done.
