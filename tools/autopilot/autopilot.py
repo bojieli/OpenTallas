@@ -2404,7 +2404,9 @@ def admit_new(st, rows, only_new=False, budget=None):
             # K/lec*.log fresh; neither is a flow job.  Any other hub process, or a fresh flow log, still holds.
             la = p.get("flow_log_age_s", la)
             procs = [x for x in procs if not place_client(x[0], r["path"])]
-        busy = (p.get("busy") is not False and not beside_proof) or (la is not None and la < 900) or bool(procs)
+        # WF-1 11-14 (COORD/OWNER friction): busy = a live container, a live ot-run / ot-job process for the kit dir (procs), or a
+        # log updated within 10 min (was 15).  A kit with none of them is not busy: the row is submitted, not held.
+        busy = (p.get("busy") is not False and not beside_proof) or (la is not None and la < 600) or bool(procs)
         if not why and busy and r["mode"] != "adopt":
             log(f"HOLD {rid} {r['die']}/{r['type']}: kit busy (container: {p.get('busy')}, logs "
                 f"{'none' if la is None else f'{la / 60:.0f} min old'}); retry next tick")
