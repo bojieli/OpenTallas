@@ -9,6 +9,7 @@ RULES (FABLE-REVIEW-CONG 11-14, sec 2; GRT-proven on t32 band / t68 slot):
            covers >= 80 % of the window span, its near edge is within one street (43.2 um) of the face, and it is not a
            column (depth <= max(along, 43.2)).  Never in a core-core slot, never beside the window.
   R-LEAF-2 FACE CLEAR: over a window of >= 16 pins no hard core is nearer the face than 43.2 um (86.4 when landed).
+  R-LEAF-2b (COORD 11-14, t21 / t75 DRT-0255): 86.4 um over any window of >= 512 pins, landed or not.
   R-LEAF-3 SLOT: two facing hard cores abut (< 4.32 um) or keep >= 43.2 um.
 
 `bands` re-sites every single-rect band that breaks R-LEAF-1 to the face strip over its window (window span clamped
@@ -30,6 +31,12 @@ import cland_band_fit as F  # noqa: E402
 from placement_obstacles import placement_boxes  # noqa: E402
 
 MARGIN, STREET, ABUT, G = 17.28, 43.2, 4.32, 2.16
+WIDE_BITS = 512          # R-LEAF-2b: a window this wide keeps 2 x STREET clear whether landed or not
+
+
+def face_need(landed, bits):
+    """R-LEAF-2 / 2b clearance of a >= 16-pin window."""
+    return 2 * STREET if (landed or bits >= WIDE_BITS) else STREET
 REACH = 405 - 2.16
 
 
@@ -98,7 +105,7 @@ def check_type(tn, t, minpins=16):
                 rows.append((tn, "L1", bus, f, "band %s cover %.0f%% face %.1f depth %.1f along %.1f (window %.1f..%.1f)"
                              % (band_rects(bands[bus]), 100 * cov, gap, dep, al, lo, hi)))
         if bits >= minpins:
-            need = 2 * STREET if landed else STREET
+            need = face_need(landed, bits)
             for n, r in mac.items():
                 a0, a1 = along(f, r)
                 if min(a1, hi) - max(a0, lo) <= 0: continue

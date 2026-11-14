@@ -284,7 +284,7 @@ class TypeModel:
             for bus, f, lo, hi, bits in LR.windows(t):
                 if bits >= 16:
                     landed = isinstance(lbands.get(bus), dict) and bool(LR.band_rects(lbands[bus]))
-                    self.WIN.append((f, lo, hi, 2 * SLOT_STREET if landed else SLOT_STREET))
+                    self.WIN.append((f, lo, hi, LR.face_need(landed, bits)))   # R-LEAF-2 / 2b
         self.bands = []
         for b in t.get("die_ft_bands") or []:
             sp = b.get("span_um")
@@ -1622,7 +1622,8 @@ def main(argv=None):
                     help="R-LEAF-3 slot rule: a facing core pair with a REGEX (inst or module) cluster on either side "
                          "abuts (< 4.32 um) or keeps >= 43.2 um; base slots are legalised to the nearest timing-clean spot")
     ap.add_argument("--window-clear", action="store_true",
-                    help="R-LEAF-2: a moved core keeps >= 43.2 um (86.4 when landed) off every >= 16-pin face window it faces")
+                    help="R-LEAF-2/2b: a moved core keeps >= 43.2 um (86.4 when landed or >= 512 pins) off every "
+                         ">= 16-pin face window it faces")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
