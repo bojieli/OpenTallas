@@ -289,6 +289,8 @@ def apply(binder, spec_path):
             p.write_text(rtl)
         binder.extra_lib.append(str(p))
     rj=out/'receipt.json'; rtxt=json.dumps(receipt,indent=2)+'\n'
-    if not rj.exists() or rj.read_text()!=rtxt:
+    if rj.exists() and rj.stat().st_size<65536 and '"opentallas.blob_pointer.v1"' in rj.read_text():
+        pass   # blob pointer (full receipt kept on its host, too large for git): never overwrite the pointer
+    elif not rj.exists() or rj.read_text()!=rtxt:
         tmp=out/'.receipt.json.tmp'; tmp.write_text(rtxt); os.replace(tmp,rj)
     binder.composition_receipt=receipt

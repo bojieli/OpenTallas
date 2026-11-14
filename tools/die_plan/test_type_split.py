@@ -66,6 +66,7 @@ def test_kv_hub_type_split(tn):
     rx = {"kv3_hub_Eo": ("ES", "EN", 2, 3), "kv3_hub_Wo": ("WS", "WN", 0, 1)}[tn]
     spec = dict(axis="y", cuts_um=[449.28, 846.72], parts=[{"suffix": "_s"}, {"suffix": ""}, {"suffix": "_n"}], keep=1,
                 fold_legs=True, station_snap_um=100.0,
+                drop_clock_keys=["landing_reader_start", "landing_writer_start", "landing_raw_branches"],
                 contents={tn: [[f"astk_{rx[0]}.*|seq__g_(fan|xs)_{rx[2]}__.*|hp_fault_{rx[2]}|u_idsrc_{rx[0]}", 0],
                                [f"astk_{rx[1]}.*|seq__g_(fan|xs)_{rx[3]}__.*|hp_fault_{rx[3]}|u_idsrc_{rx[1]}", 2],
                                ["u_efault", 1]]})

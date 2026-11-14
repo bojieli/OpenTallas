@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.kv.plan_event.v1",
+ "event": "kv101_ns_1113",
+ "date": "2026-11-13",
+ "base": "r8_invariant_1113/in (DIE-KV-100/Codex corrected non-split: canonical r8_invariant_split bus_sub prep, R8 max pad 62->15, FI 291 bits retained; strict bind 160 parts/56 types/2545 crossings/429530 bits, E7 dkv100/r8_invariant/bind1)",
+ "deltas": [
+  "census refs relocated to ../census (census_map_v35.json added)",
+  "asbuilt land_r8 -> plan_of_record/r8_ev.json",
+  "KV-KITFIX-1 U2: reach_fix.py fix --types ^kv3_phy --classes 1,2,3,4,5,6 (kv3_phy/kv3_phy_v1 clock taps only; event_fix.json)",
+  "pair image record bind/kvbind1025/pair_image_txdp.json recompiled on this bind: D2D_TXDP_K [170,160,150,3] 32h0396a0aa, XDIE_SEAM_K 91,91,89,89,89,77,77, HOST_REC_RT 156, EMB_RT 147 (run_mu833.sh; QC must bind the same image)"
+ ],
+ "files": {
+  "plan_c.json": "7ffcddc83d43e98b060b989153b37054d6d67b9749512cead4a3acb25e040516",
+  "asbuilt_vN.json": "77da65f67106a6c7f53c6c48f14bf35c58701a3c2c5b1251b4f51b75e2cc4cc0",
+  "eW_sidecar.json": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
+  "r8_ev.json": "b9e4796d537dae1d1a51ae1a23cc7ac59eb8d4bc42bd265462b2ee9bf9c3d845"
+ },
+ "known_open": [
+  "R8 table is the blanket canonical grouping: structural PASS; native PV selector/header replay needs the 30 source-explicit couplings (dkv100/r8_semantic/pc_and_pv_part, 128/128 PASS, max pad 26) -> next event",
+  "kv3_hub_C over cell cap (706641 > 517000) -> split event (KV-101/SPLIT)"
+ ]
+}

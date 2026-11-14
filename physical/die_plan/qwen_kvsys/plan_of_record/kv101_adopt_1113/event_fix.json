@@ -1,0 +1,214 @@
+{
+ "schema": "opentallas.reach_fix.v1",
+ "mode": "fix",
+ "base_plan": "physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "base_sha256": "1c8fa657dce0bf9d951d685a560a5181c32e2d1785f9b261433f17c8c966e32c",
+ "out_plan": "/tmp/kv101_plan_fix.json",
+ "out_sha256": "7ffcddc83d43e98b060b989153b37054d6d67b9749512cead4a3acb25e040516",
+ "die": "qwen_kvsys",
+ "classes": "1,2,3,4,5,6",
+ "inputs": {
+  "ref_plan": null,
+  "cap": 1200,
+  "cap_source": "DIE_CAP[qwen_kvsys]",
+  "measured": [],
+  "measured_refused": {},
+  "min_taps": {},
+  "landed_hops": null,
+  "landed_window_ps": 416.5
+ },
+ "limits": {
+  "radius_um": 200.0,
+  "cap_sinks": 1200,
+  "cap_basis": "tap cap 800: METHODOLOGY 3.3 gives ~1000-1500 sinks/tap; the QC s28 HOLD-TAP-SPLIT measured real netlists 883-1,200 per tap at the 1200 kit cap, and plan sinks are a LOWER bound of the netlist (internal registers count only with sink_bins_file); 800 plan sinks keeps the measured real load under the 1200 kit cap with the measured planner/netlist ratio (s28: planner 24,788 vs netlist 67,305 worst, 1.1-2.7x)",
+  "reach_um": 405.0,
+  "repeater_um": 450.0
+ },
+ "summary_before": {
+  "types": 2,
+  "types_viol": 2,
+  "c1_types": 2,
+  "c2_types": 0,
+  "c3_types": 0,
+  "c4_types": 0,
+  "c5_types": 0,
+  "errors": 2
+ },
+ "summary_after": {
+  "types": 2,
+  "types_viol": 0,
+  "c1_types": 0,
+  "c2_types": 0,
+  "c3_types": 0,
+  "c4_types": 0,
+  "c5_types": 0,
+  "errors": 0
+ },
+ "landed": null,
+ "applied": 2,
+ "rows": [
+  {
+   "type": "kv3_phy",
+   "applied": true,
+   "worse": [],
+   "fix": {
+    "type": "kv3_phy",
+    "taps": {
+     "mode": "grid+explicit",
+     "changes": [
+      [
+       "dropped_empty_tap",
+       "reset-resolve",
+       "clk_t1"
+      ],
+      [
+       "dropped_empty_tap",
+       "reset-resolve",
+       "clk_t1"
+      ],
+      [
+       "added_taps",
+       0,
+       [
+        [
+         855.328,
+         799.008
+        ],
+        [
+         855.328,
+         836.64
+        ]
+       ]
+      ],
+      [
+       "tap_radius_um",
+       null,
+       200.0
+      ],
+      [
+       "tap_max_sinks",
+       null,
+       1200
+      ]
+     ],
+     "legal_moves": []
+    }
+   },
+   "before": {
+    "c1": 1,
+    "c2": 0,
+    "c3": 0,
+    "c4": 0,
+    "c5": 0,
+    "c1_max_um": null,
+    "c2_max": null,
+    "c3_max_um": null,
+    "c4_max_um": 320.5
+   },
+   "after": {
+    "c1": 0,
+    "c2": 0,
+    "c3": 0,
+    "c4": 0,
+    "c5": 0,
+    "c1_max_um": 150.0,
+    "c2_max": 953.0,
+    "c3_max_um": 45.3,
+    "c4_max_um": 320.5,
+    "error": null
+   },
+   "reset_after": [],
+   "reset_hop_after": 0.0
+  },
+  {
+   "type": "kv3_phy_v1",
+   "applied": true,
+   "worse": [],
+   "fix": {
+    "type": "kv3_phy_v1",
+    "taps": {
+     "mode": "grid+explicit",
+     "changes": [
+      [
+       "dropped_empty_tap",
+       "reset-resolve",
+       "clk_t1"
+      ],
+      [
+       "dropped_empty_tap",
+       "reset-resolve",
+       "clk_t1"
+      ],
+      [
+       "sink_sites_um+",
+       0,
+       2
+      ],
+      [
+       "added_taps",
+       0,
+       [
+        [
+         855.328,
+         799.008
+        ],
+        [
+         855.328,
+         836.64
+        ],
+        [
+         431.968,
+         8.672
+        ]
+       ]
+      ],
+      [
+       "tap_radius_um",
+       null,
+       200.0
+      ],
+      [
+       "tap_max_sinks",
+       null,
+       1200
+      ]
+     ],
+     "legal_moves": []
+    }
+   },
+   "before": {
+    "c1": 1,
+    "c2": 0,
+    "c3": 0,
+    "c4": 0,
+    "c5": 0,
+    "c1_max_um": null,
+    "c2_max": null,
+    "c3_max_um": null,
+    "c4_max_um": 381.4
+   },
+   "after": {
+    "c1": 0,
+    "c2": 0,
+    "c3": 0,
+    "c4": 0,
+    "c5": 0,
+    "c1_max_um": 188.3,
+    "c2_max": 953.0,
+    "c3_max_um": 45.3,
+    "c4_max_um": 381.4,
+    "error": null
+   },
+   "reset_after": [],
+   "reset_hop_after": 0.0
+  }
+ ],
+ "fixed_cycles": {
+  "bus_deltas": {},
+  "lanes": {},
+  "rule_broken": [],
+  "latency": {},
+  "lane_cycles_added": 0
+ },
+ "cycles_added": {}
+}

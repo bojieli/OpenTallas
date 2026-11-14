@@ -2,9 +2,9 @@
  "schema": "opentallas.kv.pair_image_txdp.v1",
  "status": "CURRENT_BOUND_TRANSPORT_ONLY_FULL_PAIR_PROGRAMME_PENDING",
  "D2D_TXDP_K": [
-  169,
-  157,
-  148,
+  170,
+  160,
+  150,
   3
  ],
  "D2D_TXDP_C": [
@@ -13,15 +13,15 @@
   1,
   10
  ],
- "sv_literal": "32'h03949da9",
- "XDIE_SEAM_K": "90,90,88,88,88,77,77",
- "XDIE_DIE_STAGES": "2,2,2,3,2,2/90,90,88,88,88,77,77",
+ "sv_literal": "32'h0396a0aa",
+ "XDIE_SEAM_K": "91,91,89,89,89,77,77",
+ "XDIE_DIE_STAGES": "2,2,2,3,2,2/91,91,89,89,89,77,77",
  "source": {
-  "kv": "KV bind of record event28b bindB2 (intel1 die-kv-36-1029/bindB2; SK_TXV/SK_TXP 77, HOST_REC_RT 153): TOK-KV-4 run_mu833.sh (KST + HRT derived from the bind) -> img_bnd D2D_TXDP_K 32'h03039da9 (intel1 tok-kv-4-1029/mu833_B2)",
+  "kv": "KV-101 2026-11-13 non-split adoption bind (r8_invariant_1113 plan of record; KST 91,91,89,89,89,77,77 HRT 156 EMBRT 147): run_mu833.sh on that bind @58e351bc45 -> img_bnd D2D_TXDP_K 32'h0396a0aa (epyc7 /srv/opentallas-scratch2/claude/kv-101/adopt/mu833_bind1, unit oth-ubuntu-3580112-1794621226). QC must bind the SAME image.",
   "qc": "codex/qc-bind-1027 fresh_v3"
  },
  "formula": "KV byte0 = KS_TXS + codec2 + SK_TXP + pinreg2; byte1 = 2 + HOST_REC_RT + pinreg2 (HOST record port 2 + landed record_send_kind 86 out + record_tx_observed_v 67 back, kst.py --host-rt; TOK-KV-4 10-29); byte2 = 1 + EMB_RT + pinreg2 (embedding row port 2: landed d2d_kv.emb_tx_slot -> kvs_emb 83 out + kvs_emb row -> d2d_kv 62 back = 145; measured kvfn6-P slot 41592 -> row valid 41740 = 148, kst.py --emb-rt; KV-FN-7 10-31); byte3 unchanged",
  "note": "Transport constants only. Both dies must bind the same subsequently qualified programme; oldv7/B48 image is not authority. TOK-KV-4 10-29: byte1 was 4 (HOST assumed next to d2d_kv); the bound KV first token epoch aborted at the first HOST record capture (new_fault bit 7, record 153 edges late). The pair calendar image must be compiled with D2D_HOST_STAGES=153 (run_mu833.sh HRT). KV-024 (DIE-KV-37-RC 10-29): K0 was 170 from bind5 seams (SK_TXP 78); the bind of record has SK_TXP 77 -> K0 169. regen_kv_2350.txdp now re-derives K, XDIE_SEAM_K and HOST_REC_RT from the bind and FAILS on any difference from this record. KV-FN-7 10-31: byte2 was 3 (kvs_emb assumed next to d2d_kv); the bound KV aborted at the first embedding row header slot kv 41597 (new_fault bit 7, far emb_words 0). The pair image must be compiled with D2D_EMB_STAGES=145 (run_mu833.sh EMBRT): K port-2 slots move 145 earlier, capture/write/compute arrival unchanged (emb_fill margin 970 -> 825).",
- "HOST_REC_RT": 153,
- "EMB_RT": 145
+ "HOST_REC_RT": 156,
+ "EMB_RT": 147
 }

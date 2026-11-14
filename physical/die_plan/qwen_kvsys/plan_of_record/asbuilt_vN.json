@@ -403,7 +403,7 @@
  ],
  "land_r8_exempt": [
   "(?i)(^|_)(fault|flt)(_o|_q)?$",
-  "^(afu|afv|afk|fault_i|fi)$"
+  "^(afu|afv|afk|fault_i)$"
  ],
  "land_r8_note": "KV-BIND kv44 FINAL: r8 table regenerated on v3.8x (pass 0 kv44p0 bus_groups -> r8/r8_fault_exempt.py -> r8/r8_invariant_split.py -> tools/die_plan/r8.py pads --bus leaf --replica type; r8.py check PASS) + PV entry table re-derived on v3.8x (kv_pv_pads_plan.py/kv_pv_entry_table.py @0ec5c902d on kv44p0 -> kv_pv_entry_to_r8.py; pads/params identical to v36) + kg row pads (kv_kg_row_pads.py on pass A kv44pa; identical to v36) + PV W request-lane pads NATIVE (kv_wreq_dq44.py: kv41 boot DQ re-derived for the v3.8x RT -> kv_wreq_r8_extra.py on pass B kv44pb; 16 members, 810 flops; kv42 had 900)",
  "kv44_requests": {
@@ -5616,7 +5616,7 @@
   "kv3_pc_v1__cl7f648944",
   "kv3_pc_v3"
  ],
- "land_r8": "physical/die_plan/qwen_kvsys/plan_of_record/r8_kv95_phy3.json",
+ "land_r8": "physical/die_plan/qwen_kvsys/plan_of_record/r8_ev.json",
  "param_regen": {
   "file": "physical/die_plan/qwen_kvsys/r8/kv_pv_col_regen.py",
   "declare": {

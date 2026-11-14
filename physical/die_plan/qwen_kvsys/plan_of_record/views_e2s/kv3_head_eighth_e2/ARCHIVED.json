@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.archived.v2",
+ "writer": "tools/fleet/ot-autoclean.py",
+ "lane": "AUTOCLEAN-7",
+ "rule": "OWNER 2026-11-07 18:1x: copy signed results to the AGIdock archive (copy only; never deleted here)",
+ "archive": "/archive/opentallas-signed-1106/epyc7/srv/opentallas-scratch2/claude/kv-plan-2/views_e2s/kv3_head_eighth_e2",
+ "date": "2026-11-12 13:50:00 UTC",
+ "verify": "OK files 4 bytes 3403668 sha256 all match",
+ "nfiles": 4,
+ "bytes": 3403668,
+ "files": [
+  {
+   "path": "/srv/opentallas-scratch2/claude/kv-plan-2/views_e2s/kv3_head_eighth_e2/kv3_head_eighth_e2.lef",
+   "size": 1142982,
+   "mtime": 1794341442,
+   "sha256": "04a8f2f4c0a8d6400419e1a5645a96a08b23e42b223aa2300d14312a66e94199"
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/kv-plan-2/views_e2s/kv3_head_eighth_e2/kv3_head_eighth_e2_ff.lib",
+   "size": 1118571,
+   "mtime": 1794341036,
+   "sha256": "ab2c9aadbb6d1e96d097c92eb9ec55e5c2cc868dbce42237cd0c019052815688"
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/kv-plan-2/views_e2s/kv3_head_eighth_e2/kv3_head_eighth_e2_tt.lib",
+   "size": 1120534,
+   "mtime": 1794341037,
+   "sha256": "97cba41e66c138e92382be9fb0c146d5dd1bd10f3ae1b45126378819d83bff11"
+  },
+  {
+   "path": "/srv/opentallas-scratch2/claude/kv-plan-2/views_e2s/kv3_head_eighth_e2/signoff.json",
+   "size": 21581,
+   "mtime": 1794341515,
+   "sha256": "e2c0daeb08bde0ab34862b6ef20f13a90b9c4ad13604b0b6469991cf78801deb"
+  }
+ ]
+}
