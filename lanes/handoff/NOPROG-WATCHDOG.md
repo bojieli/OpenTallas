@@ -21,3 +21,6 @@ OWNER ORDER 11-14: "we need a no progress watchdog rather than a time limit."
 - Stop the watchdog: `systemctl --user disable --now noprog.timer` on the host.  Report only: run `ot-noprog-watchdog scan` by hand (no --act).
 - Tests: python3 -m pytest tools/autopilot/test_noprog_watchdog.py (24 pass).
 - Redeploy: tools/autopilot/install_noprog_watchdog.sh local intel1 epyc2 epyc7 epyc8 epyc9 epyc10 (copy + mv).
+
+## 11-14 18:5x update
+- First act pass cancelled 10 jobs (163.6 GB, 77 reserved cores, ~14 busy): see lanes/NOPROG.tsv.  Superseded kit dirs from kit_wave_stages matched 35 live builds, so they are listed as SUPERSEDED? and NOT auto-cancelled (COORD to confirm).  Branch head now ad0d1cad3a2.  LEC jobs still writing hyp files (serdes t2, seqhost t1, slice_iq_C t1) are alive by rule.
