@@ -785,6 +785,18 @@ def ft_hop_lockup_cell():
     return m.group(1)
 
 
+def wavefront_cells_text_only(names):
+    """canonical cell modules `names` copied verbatim (attributes included) from gen_rtl.CELLS."""
+    import gen_rtl
+    out = []
+    for name in names:
+        m = re.search(r"((?:\(\*[^\n]*\*\)\n)*module " + re.escape(name) + r"\b.*?\nendmodule\n)", gen_rtl.CELLS, re.S)
+        if not m:
+            raise BindError(f"canonical cell {name} missing from gen_rtl.CELLS")
+        out.append(m.group(1))
+    return "\n".join(out)
+
+
 def wavefront_cells_text(driver=False, lockup=False):
     """Copy physical reset cells verbatim, including their synthesis attributes.
 
@@ -3221,6 +3233,9 @@ class Binder:
                 and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         import gen_rtl
+        if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
+                and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
+            cells += "\n" + wavefront_cells_text_only(["ot_dp_rrelay"])
         if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
             cells += "\n" + gen_rtl.HOLD_CELLS
         (out / "bind_cells.sv").write_text(cells)
@@ -4117,8 +4132,17 @@ class Binder:
                    "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n") +
                 "`timescale 1ns/1ps\n`default_nettype none\n")
         pblock = (" #(\n" + ",\n".join(pdecl) + "\n)") if pdecl else ""
-        return head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
-            "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n", pnames
+        text = head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
+            "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n"
+        if t.get("reset_replicate"):
+            # S81-COLGEN-1 11-14 (FABLE-TYPES-S81-COL C2): per-region copies of a named reset / flush driver, equal latency
+            import reset_replicate
+            try:
+                text, rows = reset_replicate.apply(text, t["reset_replicate"], reset_replicate.positions_from_plan(t))
+            except reset_replicate.ReplicateError as exc:
+                raise BindError(f"reset_replicate {tn}: {exc}") from exc
+            self.__dict__.setdefault("_reset_replicate_rows", {})[tn] = rows
+        return text, pnames
 
     def default_domain(self, p):
         t = self.types[self.parts[p]["type"]]
