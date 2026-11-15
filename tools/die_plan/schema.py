@@ -1398,6 +1398,20 @@ SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
                    "pipe": {"type": "integer", "minimum": 0, "maximum": 4},
                    "pipe_except": {"type": "array", "uniqueItems": True, "items": _name},
                    "note": {"type": "string"}}}
+# KV-PVGEN 11-15: plan clock.core_link_pipe, read by bind.core_link_pipe (absent = off, byte-identical RTL): D register
+# stages (ot_dp_dly u_pc_lp_*) on named input ports of bound leaves/cores of the listed types; cycles DECLARED in
+# bind_core_input_pipe.json.
+_LP_D = {"type": "integer", "minimum": 1, "maximum": 4}
+_LP_RUN = {"type": "object", "additionalProperties": False, "required": ["D", "bits"], "properties": {
+    "D": _LP_D, "bits": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}}}}
+SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"] = {
+    "type": "object", "additionalProperties": False, "required": ["modules"],
+    "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {
+                       "type": "object", "minProperties": 1, "additionalProperties": {"anyOf": [
+                           _LP_D, _LP_RUN, {"type": "array", "minItems": 1, "items": _LP_RUN}]}}},
+                   "all": {"type": "boolean"}, "except": {"type": "array", "uniqueItems": True, "items": _name},
+                   "types": {"type": "array", "uniqueItems": True, "items": _name},
+                   "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
 SCHEMA["properties"]["clock"]["properties"]["cohort"] = {"type": "object", "required": ["id", "authority", "source"]}
