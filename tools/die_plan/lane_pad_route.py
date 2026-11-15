@@ -20,6 +20,7 @@ Each extra stage is +1 cycle on every lane through the pad (owner pre-approved l
 latency row; kit_istations adds the stages to the bound module, bind_cells counts them).  Nothing here edits latency.
 usage: lane_pad_route.py PLAN.json TYPE (--bus NAME ... | --all) [--limit 400] [--min-channel 100] [--walls-re RE]
          [--halo 1.0] [--strip-penalty 4] [--out DELTA.json] [--apply PLAN_OUT.json]
+       lane_pad_route.py tapgroup PLAN.json OUT.json TYPE_RE [BUS,BUS]   (one tap group per u_lpad_<bus> pipeline)
   DELTA = {"type": T, "entries": [{conn, index, regs_um, route_um, stages_before, stages_after, max_hop_um, ...}]}
   --apply writes PLAN_OUT with those regs_um (and a note); an entry that still fails the hop rule is an error."""
 import heapq
@@ -291,6 +292,34 @@ def run(plan, tn, buses=(), every=False, apply=False, **kw):
     return dict(type=tn, limit_um=kw.get("limit", LIMIT), entries=rows, errors=errors)
 
 
+LPAD_TAP_RE = r"(?:^|[/.])(u_lpad_[A-Za-z0-9_]+)[/.]"
+
+
+def lane_pad_tap_group(plan, type_re, buses=None):
+    """S81-COLGEN-2 (FABLE-PD-S81-2250: col_h10_r1 -361 ps hold = the 5 ranks of u_lpad_frame_int_i1 on grid taps 262 vs 597 ps):
+    set clock.tap_group.re on every matching type so that ALL ranks and bits of one lane-pad pipeline u_lpad_<bus> form one
+    tap group (clock_taps.tcl group form: the group goes whole to ONE tap, the one nearest its sink centroid, pinned
+    against the cap pass).  buses = None -> every u_lpad_* pipeline of the type, else only those bus names.
+    A type that already declares a different clock.tap_group is not touched (reported in `conflict`).
+    Returns {"set": [types], "unchanged": [types], "conflict": [types]}."""
+    key = r"u_lpad_[A-Za-z0-9_]+" if not buses else "u_lpad_(?:" + "|".join(re.escape(b) for b in sorted(buses)) + ")"
+    rx = r"(?:^|[/.])(" + key + r")[/.]"
+    out = {"set": [], "unchanged": [], "conflict": [], "re": rx}
+    for tn in sorted(plan["partition_types"]):
+        if not re.search(type_re, tn):
+            continue
+        clock = plan["partition_types"][tn].setdefault("clock", {})
+        cur = (clock.get("tap_group") or {}).get("re")
+        if cur is None:
+            clock["tap_group"] = {"re": rx}
+            out["set"].append(tn)
+        elif cur == rx:
+            out["unchanged"].append(tn)
+        else:
+            out["conflict"].append(tn)
+    return out
+
+
 def run_many(plan, type_re, buses=(), every=False, apply=False, **kw):
     """run() over every partition type whose name matches type_re (a type without the bus entry is skipped)"""
     out = []
@@ -303,6 +332,12 @@ def run_many(plan, type_re, buses=(), every=False, apply=False, **kw):
 
 
 def main(argv):
+    if len(argv) > 1 and argv[1] == "tapgroup":
+        plan = json.loads(Path(argv[2]).read_text())
+        res = lane_pad_tap_group(plan, argv[4], argv[5].split(",") if len(argv) > 5 else None)
+        Path(argv[3]).write_text(json.dumps(plan, indent=1))
+        print(f"lane_pad tap_group {res['re']}: set {len(res['set'])}, unchanged {len(res['unchanged'])}, conflict {res['conflict']}")
+        return 0
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan")

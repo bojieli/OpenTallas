@@ -5625,6 +5625,10 @@
         },
         "optional": {
          "type": "boolean"
+        },
+        "min_loads": {
+         "type": "integer",
+         "minimum": 0
         }
        }
       }

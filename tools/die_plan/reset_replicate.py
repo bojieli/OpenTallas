@@ -8,7 +8,8 @@ What: plan `partition_types[T].reset_replicate` = [{"driver": "u_d7_6_Y"        
                                                     "driver_re": "u_d\\d+_6_Y",      fullmatch regex,
                                                     "region_re": "^u_(.*?)(?:_\\d+|_sk)?$",   optional, group 1 = region
                                                     "grid_um": 300,                  optional, see below
-                                                    "optional": true}]               a type without the driver is a no-op
+                                                    "optional": true,                a type without the driver is a no-op
+                                                    "min_loads": 20}]                drivers with fewer loads are left alone
 The driver `ot_dp_dly #(.W(1), .D(n)) u_x (.clk, .d(S), .q(x))` becomes
 
     ot_dp_dly #(.W(1), .D(n-1)) u_x (.clk, .d(S), .q(x))          common part (absent when n == 1: S feeds the copies)
@@ -100,6 +101,8 @@ def _one(lines, di, m, spec, positions):
     uses = [i for i, ln in enumerate(orig) if i not in (di, di_decl) and use.search(ln)]
     if not uses:
         raise ReplicateError(f"{inst}: q wire {q} has no load")
+    if len(uses) < int(spec.get("min_loads", 0)):        # a low-fanout driver of the same name pattern is left alone
+        return lines, dict(driver=inst, depth=D, regions=0, copies=0, loads=len(uses), note=f"{len(uses)} load(s) < min_loads")
     wdecl = {}                                          # wire -> '[n:0]' of its declaration
 
     def width(x):
@@ -243,9 +246,10 @@ def main(argv):
         ap.add_argument("--grid-um", type=float)
         ap.add_argument("--region-re")
         ap.add_argument("--optional", action="store_true")
+        ap.add_argument("--min-loads", type=int)
         a = ap.parse_args(argv[1:])
         spec = {"driver_re": a.driver_re}
-        for k, v in (("grid_um", a.grid_um), ("region_re", a.region_re), ("optional", a.optional or None)):
+        for k, v in (("grid_um", a.grid_um), ("region_re", a.region_re), ("optional", a.optional or None), ("min_loads", a.min_loads)):
             if v is not None:
                 spec[k] = v
         plan = json.load(open(a.plan))

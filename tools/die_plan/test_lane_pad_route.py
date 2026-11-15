@@ -96,3 +96,19 @@ def test_all_mode_reports_unroutable_instead_of_failing():
 def test_missing_bus_is_an_error():
     with pytest.raises(L.RouteError, match="no internal_stations entry"):
         L.run({"partition_types": {"T": ptype()}}, "T", ["nope"])
+
+
+def test_tap_group_one_group_per_lane_pad_pipeline():
+    import re
+    plan = {"partition_types": {"A": ptype(), "B": dict(ptype(), clock={"tap_group": {"re": "(x)"}}), "C": ptype()}}
+    r = L.lane_pad_tap_group(plan, "^[AB]$")
+    assert r["set"] == ["A"] and r["conflict"] == ["B"] and plan["partition_types"]["C"].get("clock") is None
+    rx = plan["partition_types"]["A"]["clock"]["tap_group"]["re"]
+    assert "(" in rx and not any(c in rx for c in "#$ \t\n")            # gen_phys.tap_group_exports rules
+    names = [f"u_bound.u_lpad_frame_int_i1.r\\[{k}\\]\\[{b}\\]$_DFF_P_" for k in range(5) for b in (0, 476, 1264)]
+    assert {re.search(rx, n).group(1) for n in names} == {"u_lpad_frame_int_i1"}      # every rank + bit: one key
+    assert re.search(rx, "u_bound.u_lpad_frame_int_i0.r[0][1]").group(1) == "u_lpad_frame_int_i0"
+    assert not re.search(rx, "u_bound.u_pd7_frame_int_i1_5")
+    assert L.lane_pad_tap_group(plan, "^A$")["unchanged"] == ["A"]
+    only = L.lane_pad_tap_group({"partition_types": {"A": ptype()}}, "^A$", ["frame_int_i1"])
+    assert only["re"].count("frame_int_i1") == 1 and "u_lpad_(?:frame_int_i1)" in only["re"]

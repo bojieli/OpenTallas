@@ -206,3 +206,10 @@ def test_assign_fanout_cycle_equivalence(tmp_path):
     (tmp_path / "tb.v").write_text(tb)
     subprocess.run(["iverilog", "-o", str(tmp_path / "s"), str(tmp_path / "old.v"), str(tmp_path / "new.v"), str(tmp_path / "tb.v")], check=True)
     assert "BAD=0" in subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True, check=True).stdout
+
+
+def test_min_loads_leaves_small_drivers_alone():
+    new, rep = RR.apply(mod(7), [dict(driver="u_d7_6_Y", min_loads=50)])
+    assert new == mod(7) and rep[0]["copies"] == 0 and "min_loads" in rep[0]["note"]
+    new, rep = RR.apply(mod(7), [dict(driver="u_d7_6_Y", min_loads=3)])
+    assert rep[0]["copies"] > 1
