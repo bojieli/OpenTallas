@@ -2,6 +2,13 @@
 
 Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.tsv (R-LEAF-1/2/3). All builds private, DO_NOT_COUNT.
 
+## STATE 2026-11-14 ~19:xx PST (CURRENT; newest first)
+- B4L4 cumulative (147 types) strict bind: ONE plan job intel2 bind_leafplan_x1.sh, admitted on epyc7 (log epyc7 log/B4L4_bind.log); watcher a3.
+- B5 = B4L4 + 5 edge-ft-squeeze types (TL-LEAFT34 family): ev/B5.json 9d4bee9ea054 / side_B5.json 15f3f6c312db / LF_CS netlist cp5/lfcs_B5.v 2c3837b47ec6 (overlay ovl_l5 on epyc7+epyc8). Types t24__cl81374cd8, t44__clf4ea6d4b, t45, t4, t53__clb66fa5cb (cp5/<t>.json; compose cp5/compose_b5_leafplan.sh, pick cp5/pick.txt). 149 types (types_event_B5.txt). Cycle deltas: s_5S_L3 vni +1; s_5S_L2 u/ver/vni +1; s_0S_L3 vni +1. G0B5 running on epyc7 (log/G0B5.log); bind ONE plan job bind_leafplan_x2.sh admitted on epyc8 (log epyc8 log/B5_bind.log); watcher adopt_watch_leafplan_a4.sh.
+- Survey tool cp5/edge_squeeze_leafplan.py PLAN [TYPES]; batch cp5/one_l5_leafplan.sh (face-clear W:86.4:. + ft-resite + taps-movable + link-reg any), results cp5/leaf__*_ev.json.
+- core_place (wt, uncommitted): ft-resite re-sites only core-covered regs (base group overlaps ignored).
+- Open: t34 (SW quadrant re-floor; street x 484-553 needs vq +60 east -> 4 bus links over limit), t73/t9/t75 (ve pair), t28/t71/t13/t51/t7/t10/t74/t1 squeeze not cleared; tool cp5/ft_street_leafplan.py (re-route an N<->S ft chain up a street, count kept) ready for the t34 form.
+
 ## STATE 2026-11-14 ~17:xx PST (CURRENT; supersedes everything below)
 - Branch claude/s81-leaf-plan-1114 head 07782f9157 pushed (core_place --ft-resite / --link-reg / --taps-movable, test_core_place_b4l4.py 4/4); READY posted to ROOT-MERGE-63.
 - G0L3f (B4L3f): 296 errors, identical finding set to G0L2f (and the same count as G0ctl3).
