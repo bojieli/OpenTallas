@@ -1,0 +1,28 @@
+# HEAD-99 delta rp21z16 (current wave plan, adopted 11-14 18:54; same type blocks as rp21z4_1113 for all but hd_lep0N/hd_tile straps/...) -> rp21z20NC (raw plans). affected=yes: kit inputs change, hold/relaunch on z20NC; affected=no: kit-identical, keep building
+type	instances	affected	changes
+hd_ctl	1	yes	CA_K/depth/sched(5 ports),clock.landing_reader_start,clock.reset_tree_anchor,clock.tap_max_sinks,clock.tap_radius_um,clock.tap_target_sinks,hard_cores,internal_stations,lane_latency(11 lanes),realize_internal_stations,reset_start_raw_exports
+hd_ctl_e	1	yes	CA_K/depth/sched(1 ports),lane_latency(2 lanes)
+hd_ctl_n	1	yes	CA_K/depth/sched(5 ports),lane_latency(4 lanes)
+hd_host_e	1	yes	CA_K/depth/sched(1 ports),hard_cores,lane_latency(1 lanes),verilog_defines
+hd_host_n	1	yes	CA_K/depth/sched(5 ports),lane_latency(4 lanes)
+hd_host_w	1	yes	CA_K/depth/sched(1 ports),hard_cores,lane_latency(2 lanes)
+hd_lep0N	1	yes	CA_K/depth/sched(7 ports),clock.taps,hard_cores,lane_latency(11 lanes),reset
+hd_mesh	3	yes	CA_K/depth/sched(6 ports),hard_cores,lane_latency(7 lanes)
+hd_mesh_e	3	yes	CA_K/depth/sched(3 ports),cells,lane_latency(5 lanes)
+hd_serdes	12	yes	CA_K/depth/sched(12 ports),clock.pad_clock,hard_cores,lane_latency(10 lanes),pads,phy_pg_floor_um
+hd_spn	5	yes	CA_K/depth/sched(40 ports),lane_latency(34 lanes)
+hd_spn_end	1	yes	CA_K/depth/sched(7 ports),clock.landing_contract,lane_latency(10 lanes)
+hd_spn_eshim_rx	6	yes	CA_K/depth/sched(6 ports),lane_latency(6 lanes)
+hd_spn_eshim_tx	6	yes	lane_latency(6 lanes)
+hd_spn_wshim_rx	6	yes	CA_K/depth/sched(5 ports),lane_latency(6 lanes)
+hd_spn_wshim_tx	6	yes	lane_latency(6 lanes)
+hd_st_k5	1	yes	CA_K/depth/sched(4 ports),lane_latency(2 lanes)
+hd_st_m	3	yes	CA_K/depth/sched(6 ports),lane_latency(5 lanes)
+hd_st_n3_transit	1	yes	CA_K/depth/sched(2 ports),lane_latency(2 lanes)
+hd_st_n3_turn	1	yes	CA_K/depth/sched(2 ports),lane_latency(2 lanes)
+hd_st_n4	1	yes	CA_K/depth/sched(4 ports),lane_latency(4 lanes)
+hd_st_str	4	yes	CA_K/depth/sched(8 ports),lane_latency(4 lanes)
+hd_st_turn	4	yes	CA_K/depth/sched(8 ports),lane_latency(4 lanes)
+hd_tile	264	yes	CA_K/depth/sched(209 ports),lane_latency(24 lanes)
+hd_turn_a	12	yes	CA_K/depth/sched(11 ports)
+hd_turn_b	12	yes	CA_K/depth/sched(10 ports)
