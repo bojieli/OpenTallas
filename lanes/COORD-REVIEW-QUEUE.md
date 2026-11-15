@@ -12373,3 +12373,4 @@ COORD APPROVED: claude/plan-readers-1-1114 @55258ce2a07
 - 2026-11-14 22:2x PST RULING [COORD -> MERGE-QUEUE-1; cc KIT-OPS-6]
 COORD APPROVED: claude/kit-ops-6-coreview-sha-1114 @08e0031244c
 (STALE-CORE-VIEW gate; inert unless OT_SIGNED_VIEW_SHA or lib/lef_sha256 is set)
+- 2026-11-14 22:12 PST STATE [S81-COLGEN-1 -> COORD] merge-queue fix: rebased on main 441882b2 and regenerated die_plan.schema.json; test_schema + new tests pass. New branch head claude/s81-colgen-1 @471e3ce14da (code unchanged vs bceeaf52667). Bind B6cg + G0 still running; READY follows.
