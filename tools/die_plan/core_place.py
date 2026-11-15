@@ -1765,44 +1765,59 @@ def ft_resite(M, t_new, R, cfg, rep):
             else:
                 runs.append(cur); cur = [j]
         runs.append(cur)
-        ok_slot = True
-        for run in runs:
-            j0, j1 = run[0], run[-1]
-            prev = tuple(regs[j0 - 1]) if j0 > 0 else A
-            nxt = tuple(regs[j1 + 1]) if j1 + 1 < len(regs) else B
-            r = HR.route_station(R, prev, nxt, len(run), reach)
-            if r is not None and len(r["regs"]) == len(run):
-                newp = [list(p) for p in r["regs"]]
-            else:           # no routed form: start the nearest-free search from the old sites
-                newp = [list(regs[j]) for j in run]
-            for k_, j in enumerate(run):
-                p = newp[k_]
-                lo = tuple(newp[k_ - 1]) if k_ else prev
-                hi = tuple(newp[k_ + 1]) if k_ + 1 < len(run) else nxt
-                best = None
-                for st in range(0, 49):
-                    for ddx in range(-st, st + 1):
-                        for ddy in ((-st, st) if abs(ddx) != st else range(-st, st + 1)):
-                            q = [snap(p[0] + ddx * G), snap(p[1] + ddy * G)]
-                            if man(q, lo) > reach + EPS or man(q, hi) > reach + EPS:
-                                continue
-                            if not blocked(j, q, q[0] - regs[j][0], q[1] - regs[j][1]):
-                                best = q; break
+        attempts = [runs]
+        if cfg.get("slot_ft") and len(regs) > 2:
+            # --slot-ft: when a run cannot be re-sited between its kept neighbours, re-route the whole slot (S0 kept)
+            # with the same total count, so a station added to the slot (ft_add_station) can sit anywhere on it
+            attempts.append([list(range(1, len(regs)))])
+        snap0 = (copy.deepcopy(regs), copy.deepcopy(groups), list(allbox))
+        for ai, runs in enumerate(attempts):
+            if ai:
+                regs[:] = copy.deepcopy(snap0[0]); groups[:] = copy.deepcopy(snap0[1]); allbox[:] = list(snap0[2])
+                rep["ft_whole_slot"] = rep.get("ft_whole_slot", 0) + 1
+            ok_slot = True
+            for run in runs:
+                j0, j1 = run[0], run[-1]
+                prev = tuple(regs[j0 - 1]) if j0 > 0 else A
+                nxt = tuple(regs[j1 + 1]) if j1 + 1 < len(regs) else B
+                r = HR.route_station(R, prev, nxt, len(run), reach)
+                if r is not None and len(r["regs"]) == len(run):
+                    newp = [list(p) for p in r["regs"]]
+                else:           # no routed form: start the nearest-free search from the old sites
+                    newp = [list(regs[j]) for j in run]
+                for k_, j in enumerate(run):
+                    p = newp[k_]
+                    lo = tuple(newp[k_ - 1]) if k_ else prev
+                    hi = tuple(newp[k_ + 1]) if k_ + 1 < len(run) else nxt
+                    best = None
+                    for st in range(0, 49):
+                        for ddx in range(-st, st + 1):
+                            for ddy in ((-st, st) if abs(ddx) != st else range(-st, st + 1)):
+                                q = [snap(p[0] + ddx * G), snap(p[1] + ddy * G)]
+                                if man(q, lo) > reach + EPS or man(q, hi) > reach + EPS:
+                                    continue
+                                if not blocked(j, q, q[0] - regs[j][0], q[1] - regs[j][1]):
+                                    best = q; break
+                            if best:
+                                break
                         if best:
                             break
-                    if best:
-                        break
-                if best is None:
-                    ok_slot = False; break
-                dx, dy = best[0] - regs[j][0], best[1] - regs[j][1]
-                for gi in gof[j]:
-                    b0 = bbox(groups[gi])
-                    groups[gi] = [[round(q[0] + dx, 4), round(q[1] + dy, 4)] for q in groups[gi]]
-                    allbox[allbox.index(b0)] = bbox(groups[gi])
-                regs[j] = [round(best[0], 4), round(best[1], 4)]
-                newp[k_] = best
-                rep["ft_regs_moved"] += 1
-            if not ok_slot:
+                    if best is None:
+                        rep.setdefault("ft_failed_why", []).append(dict(slot=f.get("name"), reg=j, nregs=len(regs), at=list(p),
+                                                                         lo=list(lo), hi=list(hi), run=list(run),
+                                                                         routed=r is not None and len(r["regs"]) == len(run)))
+                        ok_slot = False; break
+                    dx, dy = best[0] - regs[j][0], best[1] - regs[j][1]
+                    for gi in gof[j]:
+                        b0 = bbox(groups[gi])
+                        groups[gi] = [[round(q[0] + dx, 4), round(q[1] + dy, 4)] for q in groups[gi]]
+                        allbox[allbox.index(b0)] = bbox(groups[gi])
+                    regs[j] = [round(best[0], 4), round(best[1], 4)]
+                    newp[k_] = best
+                    rep["ft_regs_moved"] += 1
+                if not ok_slot:
+                    break
+            if ok_slot:
                 break
         if not ok_slot:
             rep["ft_failed"] += 1; rep["ft_failed_slots"].append(f.get("name"))
