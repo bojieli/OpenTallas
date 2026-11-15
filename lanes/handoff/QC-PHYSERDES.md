@@ -1,0 +1,12 @@
+# QC-PHYSERDES handoff (2026-11-15 07:1x PST)
+Scope (COORD change, FABLE-PD-PHY-0710): the 3 QC PHY types are structural hard IP, no sign-off, leave the wave (KIT-OPS-5). Real defect = S4P plan windows not on macro pins. Fix = regenerate modeled abstracts with pins on the S4P pin sites. No plan window moved, LIB unchanged.
+Branch claude/qc-physerdes-0715 @ 62d73a3538a (worktree intel2 /srv/opentallas-scratch2/claude/wt/qc-physerdes): tools/qwen_missing/phy_plan_pins.py, tests/test_qc_phy_plan_pins.py (5 pass), tests/qc_phy_s4p_types.json (S4P sha e7aff46e6130 bus tables).
+Views: physical/qwen_missing_phy/qc_s4p_1115/{ot_qfd_serdes_112g_x12_phy_s597 (phy_serdes, N), ot_qfd_serdes_112g_x12_phy_s597_e (phy_serdes_b, E face)}, physical/qwen_kv_die_phy/qc_s4p_1115/ot_qkvd_ucie_x64_phy (phy_ucie_kv, N).
+PROOF: pin-to-plan-site offset 0.000 um on every bit of every bus (serdes 1197, serdes_b 1197, ucie 1169 pins, layer equal, inside window). Cross-check vs real Plan.port_pins on epyc9 treeA S4P (epoch bit in the spread): 2382 pins, 0 mismatch. Old views: offsets >100 um (N) and >1000 um (serdes_b), the test asserts it.
+NOT SOLVED / notes: phy_rst_i (UCIe plan bus) has no macro pin in LIB/bb.v (LIB unchanged); DIE-QC-103 declares contents local_reset_pins. Epoch bit is a wrapper pin (not on macro). serdes_b uses macro cell ot_qfd_serdes_112g_x12_phy_s597_e (same LIB text, name replaced) so one flow never holds two LEFs under one name.
+FIELDS for DIE-QC-103 next event (windows untouched):
+ phy_serdes: contents lef physical/qwen_missing_phy/qc_s4p_1115/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597.lef, lib same dir _tt.lib, origin_um [0.0, 4.05] (top edge 2324.106 = 0.054 um under the outline; row/site aligned; plan clock keepout says 4.104), orient R0 (as plan placement), physical_master ot_qfd_serdes_112g_x12_phy_s597.
+ phy_serdes_b: module + contents module + physical_master ot_qfd_serdes_112g_x12_phy_s597_e, lef/lib in .../ot_qfd_serdes_112g_x12_phy_s597_e/, origin_um [0.27, 0.0] (E edge on the 1563.84 outline), orient R0.
+ phy_ucie_kv: lef/lib physical/qwen_kv_die_phy/qc_s4p_1115/ot_qkvd_ucie_x64_phy/, origin_um [0.0, 0.0], R0, plus local_reset_pins for phy_rst_i.
+ Plan keepouts/clock tap for phy_serdes/_b unchanged by me (keepout rects follow the macro; adjust to origin).
+Pending: merge of the branch (READY posted); die-level pin-to-window check with real LEF (DIE-QC-103 fix 7); hard-IP wrapper 5 BUFx2 rows (PDN-0006/0190) unchecked. No gen/place/route run (out of scope per COORD).
