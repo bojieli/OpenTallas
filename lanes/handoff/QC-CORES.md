@@ -1,4 +1,4 @@
-# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 16:00 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
+# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 18:22 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
 columns: core | lane | form | host | unit/kit | stage | verdict | view path (signoff) | registered (AUTO-RESIGN / prov_view_sources)
 
 | core | lane | form | host | kit | stage | verdict | view path | registered |
@@ -47,8 +47,11 @@ columns: core | lane | form | host | unit/kit | stage | verdict | view path (sig
 | sta_region_nb0[rwb] | TL-QCSTAV2 | rwb util.4 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rwb/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
 | qfd_dv_s8_station_tail1[eco_rkwb1] | TL-QCTAIL1 | wb ECO (signed) | ? | /srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1 | signoff | SIGNED DRC 0 TT 28.27 FFhold -2.33 PASS | /srv/opentallas-scratch2/claude/tl-qctail1/eco_rkwb1/i1/signoff | no |
 | sta_region_nb0[eco_w] | QC-CORES-HEAD | w + late ECO (signed) | ? | /srv/opentallas-scratch2/claude/qc-cores-head/eco_w/i1 | signoff | SIGNED DRC 0 TT 15.39 FFhold 3.36 PASS | /srv/opentallas-scratch2/claude/qc-cores-head/eco_w/i1/signoff | no |
+| qfd_dv_s5_ctl_repair4_leaf[dn] | QC-CORES-HEAD | dn = d + SYNTH_ARGS=-noshare | epyc10 | /srv/opentallas-scratch2/claude/tl-qcrep4/dn/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
 
 STATE: 28/29 signed; signoff-not-signed: ['qfd_dv_s8_station_tail1[rkw]:NOT SIGNED DRC 0 TT 17.9 FFhold -1.47 FAIL', 'qfd_dv_s8_station_tail1[rkwb]:NOT SIGNED DRC 0 TT 28.12 FFhold -3.91 FAIL', 'sta_region_nb0[w]:NOT SIGNED DRC 0 TT 15.39 FFhold -3.12 FAIL']
+
+## Scope addition 19:xx PST (DIE-QC-103 CLASS C): sta_region_nb0 is 3 more masters in the bound RTL (per-type station_tail1_nb0 params): sta_region_nb0_h18_n6_s8 (slw_st_a_v2 cl9f076a5c + clf4365a62), sta_region_nb0_h18_n6_s7 (sle_st_a_v2 pv30dda31f), sta_region_nb0_h17_n6_s7 (sle_st_a_v2 pv4242de79). TL-QCSTAV2 owns them: 6 kits (forms a util .5, b util .4) at /srv/opentallas-scratch2/claude/tl-qcstav2/m{a,b}_<suffix>/sta_region_nb0_<suffix>/kits/..._synth0 on epyc10/intel1/epyc2/epyc9, none signed at 18:23. The 29-core table above is unchanged (sta_region_nb0 with HI_PAD 0 SKEW 14/14 stays signed); these 3 are tracked as 3 additional cores, so the full QC core set is 32 with 28 signed.
 
 ## Source notes
 
