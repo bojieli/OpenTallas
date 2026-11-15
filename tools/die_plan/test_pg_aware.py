@@ -210,3 +210,23 @@ def test_face_cut_windows_stop_parent_stripes_before_pin_faces(tmp_path, monkeyp
     tcl = gen_phys.pg_face_cut_tcl(cuts)
     assert "pgf_window M6 421.8600 325.8160 423.3600 326.3520" in tcl and "OT_PG_FACE_CUT windows=2" in tcl
     assert tcl.count("{") == tcl.count("}")
+
+
+def test_pin_rule_skips_signed_types_and_plan_can_force(monkeypatch):
+    monkeypatch.setattr(LC, "_SIGNED", ["hd_host_n", "slw_su_l0__cl76fb247e"])
+    for tn in ("hd_host_n", "slw_su_l0"):
+        t = {"outline_um": [319.68, 349.92], "clock": {"landing_contract": {"pins": [_lc_pin("p", 158.176, 174.9516)]}}}
+        P = SimpleNamespace(types={tn: t}, layers=_LAYERS, layer_budget={"partition_signal_max": "M7"})
+        assert LC.pg_bad_pins(P, t) == []                        # signed (or a signed variant of it): site kept
+        t["pg_pin_rule"] = True
+        assert LC.pg_bad_pins(P, t) == ["p"]
+    t = {"outline_um": [319.68, 349.92], "clock": {"landing_contract": {"pins": [_lc_pin("p", 158.176, 174.9516)]}}}
+    P = SimpleNamespace(types={"hd_host_e": t}, layers=_LAYERS, layer_budget={"partition_signal_max": "M7"})
+    assert LC.pg_bad_pins(P, t) == ["p"]                         # unsigned
+
+
+def test_off_phase_m7_stripe_is_not_a_pin_move():
+    # hd_st_turn rst_start_raw_5 (578.88, 535.68): on today's off-phase kit M7 stripe, legal on the plan phase
+    P = _lc_plan([_lc_pin("rst_start_raw_5", 578.88, 535.68)])
+    P.types["t"]["outline_um"] = [1000.0, 1000.0]
+    assert LC.pg_bad_pins(P, P.types["t"]) == []

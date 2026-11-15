@@ -333,13 +333,42 @@ def _pg_interior(t,xy):
     return m<xy[0]<w-m and m<xy[1]<h-m
 
 
+# COORD 11-14 condition: signed types keep their sites (pg_pin_rule_signed.json, from the signed INDEX.tsv); a plan can
+# force the rule on one type with partition_types.<t>.pg_pin_rule = true (or off with false).
+_SIGNED=None
+
+
+def _signed_elements():
+    global _SIGNED
+    if _SIGNED is None:
+        import json
+        from pathlib import Path
+        f=Path(__file__).with_name("pg_pin_rule_signed.json")
+        _SIGNED=[e["element"] for e in json.loads(f.read_text())["elements"]] if f.is_file() else []
+    return _SIGNED
+
+
+def pg_rule_applies(P,t):
+    if "pg_pin_rule" in t:return bool(t["pg_pin_rule"])
+    if t.get("hard"):return False
+    tn=next((k for k,v in getattr(P,"types",{}).items() if v is t),None)
+    if tn is None:return True
+    return not any(e==tn or e.startswith(tn+"__") for e in _signed_elements())
+
+
+# M7 stripe phase of the plan (pair centre 4.32 + 8.64 k, OT_PG_DIE_PHASE=1).  The off-phase kit M7 (0 + 8.64 k, today's
+# pdngen offset bug) is fixed in the generator, not by moving pins: checking it here would move pins that sit on the
+# plan's PG-free tracks (hd_tile cland_tstart_in, hd_st_turn rst_start_raw_5/7) for a stripe the fix removes.
+PLAN_PG_PHASES={"M7":(4.32,)}
+
+
 def pg_pin_ok(P,t,layer,xy):
-    """True unless an interior pin of a soft type breaks the PG access rule (pg_access.pin_ok)."""
+    """True unless an interior pin of an unsigned soft type breaks the PG access rule (pg_access.pin_ok)."""
     import pg_access as PA
-    if t.get("hard") or layer not in PA.STRIPES or not _pg_interior(t,xy):return True
+    if layer not in PA.STRIPES or not _pg_interior(t,xy) or not pg_rule_applies(P,t):return True
     tr=_pg_tracks(P);tr=dict(PA.TRACKS,**(tr or {}))
     along=PIN_H_UM if not PA.HORIZ[layer] else PIN_W_UM
-    return PA.pin_ok(layer,xy[0],xy[1],along,True,tr)
+    return PA.own_track(layer,xy[0],xy[1],PLAN_PG_PHASES) and PA.down_access(layer,xy[0],xy[1],along,tr,PLAN_PG_PHASES)
 
 
 def pg_bad_pins(P,t):
