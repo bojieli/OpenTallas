@@ -256,6 +256,11 @@ BAND_SPREAD=1.0
 # 1.0 (the bare reserve, the smallest band the placer can fill), then falls back to the mode area (recorded
 # band_use > 1, advisory). None (module default) keeps _storage_band byte-identical for direct callers.
 BAND_USE_MAX=None
+# BAND_MIN_DEPTH_UM (KV-BAND-C 11-15; compose(band_min_depth_um=), resize_undersized_bands(min_depth_um=), CLI --min-depth):
+# the depth floor of a ring band (perpendicular to its face).  Default 8.64 = one site column = byte-identical.  A ONE-column
+# band is easily taken whole by FIRM cells placed earlier (S-face pin-slot strip, grown reader-start/collector cells) or
+# cut by taps (KV kv3_hgi_v8 ring:ft20_i 8.64 x 84.24 um, 651 cells, no legal site); KV opts in to 17.28 (two columns).
+BAND_MIN_DEPTH_UM=8.64
 CA_RESERVE40=(5.36,114.0,130.0)
 CA_FLOPS=(4,72,73)
 FF_RESERVE40_UM2=0.729
@@ -460,7 +465,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
                 if k==len(steps)-1:raise
     scale=1.0 if _scale is None else _scale
     b=_bus_geom(t,bus);w,h=t["outline_um"];lo,hi=b["window_um"]
-    length=max(hi-lo,8.64);rw=64*math.ceil((width+int(has_epoch))/64)
+    length=max(hi-lo,BAND_MIN_DEPTH_UM);rw=64*math.ceil((width+int(has_epoch))/64)
     spanlo=(lo+hi-length)/2;spanhi=spanlo+length
     # Conservative physical reserve includes padded ring slots/readout, control,
     # selectors and local clock buffering, at40% fill and actualASAP7 FF area.
@@ -481,7 +486,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
     # area, so the 0.55..1.0 steps could never shrink (KV ft10/ft19/ft24 resize: 84.24-um macro-free depth at every
     # step).  An explicit band_spread target (_scale) still sets a larger band.
     if _use is not None and _use>0:area=max(r40*RING_FF_PACK/_use,reserve*scale if _scale is not None else 0.0)
-    depth=math.ceil(max(8.64,area/length)/2.16)*2.16
+    depth=math.ceil(max(BAND_MIN_DEPTH_UM,area/length)/2.16)*2.16
     obstacles=RT.blockages(t)+used
     if BAND_RESERVE=="ring_ff":
         # the die clock driver islands and die clock-tree cell sites are placement blockages in the kit (die_islands.tcl,
@@ -1011,11 +1016,18 @@ def clear_generated_landing_infra(raw):
     raw.get('clock',{}).pop('landing_network',None)
 
 
-def compose(*a,**k):
-    global BAND_USE_MAX
-    saved=BAND_USE_MAX
+def _check_min_depth(v):
+    v=float(v)
+    if not 8.64<=v<=86.4:raise ValueError(f"min depth {v} not in [8.64,86.4]")
+    return v
+
+
+def compose(*a,band_min_depth_um=None,**k):
+    global BAND_USE_MAX,BAND_MIN_DEPTH_UM
+    saved=BAND_USE_MAX;saved_md=BAND_MIN_DEPTH_UM
+    if band_min_depth_um is not None:BAND_MIN_DEPTH_UM=_check_min_depth(band_min_depth_um)
     try:return _compose(*a,**k)
-    finally:BAND_USE_MAX=saved
+    finally:BAND_USE_MAX=saved;BAND_MIN_DEPTH_UM=saved_md
 
 
 def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
@@ -1384,12 +1396,15 @@ def ring_ff_reserve_um2(width,has_epoch=True):
     return (5*rw+160)*RING_FF_RESERVE_UM2*RING_FF_PACK
 
 
-def resize_undersized_bands(plan,sidecar,types,use_max=None):
+def resize_undersized_bands(plan,sidecar,types,use_max=None,min_depth_um=None):
     """use_max (CLAND-CLASS-1 11-11, opt-in; None = byte-identical): a band is undersized also when its CA ring reserve
     use (band_use) exceeds use_max, and is re-searched with the same band-use floor as compose(band_use_max=)."""
-    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX,BAND_MIN_DEPTH_UM
     geoms=sidecar["collector"]["types"];out=copy.deepcopy(plan);report=[]
-    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING);saved_use=BAND_USE_MAX
+    saved=(BAND_RESERVE,BAND_SPREAD,BAND_RING);saved_use=BAND_USE_MAX;saved_md=BAND_MIN_DEPTH_UM
+    # KV-BAND-C 11-15 (opt-in; None = byte-identical): a ring band shallower than min_depth_um is also undersized and is
+    # re-searched with that depth floor; a band with no legal place at that depth stays byte-identical, reported (advisory).
+    if min_depth_um is not None:BAND_MIN_DEPTH_UM=_check_min_depth(min_depth_um)
     if use_max is not None and not 0.1<=float(use_max)<=1.0:raise ValueError(f"use_max {use_max} not in [0.1,1]")
     BAND_USE_MAX=None if use_max is None else float(use_max)
     global FACE_CROSSING
@@ -1416,7 +1431,8 @@ def resize_undersized_bands(plan,sidecar,types,use_max=None):
                     need=ca_ring_reserve40_um2(b["width"],ring_place=b.get("ring_place","all"))*RING_FF_PACK/float(use_max)
                 inphy=any(_rect_overlap(b["rect_um"],o) for o in phy)   # DIE-KV-42: inside a hard PHY supply region
                 inrst=any(_rect_overlap(b["rect_um"],o) for o in resets)   # FLOW-7: over a reset relay/collector site
-                if (x1-x0)*(y1-y0)+1e-6>=need and not inphy and not inrst:continue
+                shallow=min_depth_um is not None and min(x1-x0,y1-y0)+1e-6<BAND_MIN_DEPTH_UM
+                if (x1-x0)*(y1-y0)+1e-6>=need and not inphy and not inrst and not shallow:continue
                 todo[bus]=(need,inphy,inrst)
             done=set()
             for bus in sorted(todo,key=lambda k:(-int(bands[k]["width"]),k)):
@@ -1426,7 +1442,7 @@ def resize_undersized_bands(plan,sidecar,types,use_max=None):
                 BAND_RING=b.get("ring_place","all") if use_max is not None else "all"   # CLAND-CLASS-1: floor per ring form
                 try:nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
                 except ValueError as e:
-                    if use_max is None:raise
+                    if use_max is None and min_depth_um is None:raise
                     # CLAND-CLASS-1: no legal band even at use 1.0 -> the band stays byte-identical, reported (advisory)
                     report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
                                        new_rect_um=None,band_use=round(band_use(b["width"],(x1-x0)*(y1-y0),
@@ -1439,6 +1455,7 @@ def resize_undersized_bands(plan,sidecar,types,use_max=None):
                 nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
                           resize="DIE-KV-42 band overlapped a PHY supply-region hard blockage (pdn.tcl)" if inphy else
                           "FLOW-7 band overlapped a reset relay/collector site (landing_place collector box)" if inrst else
+                          f"KV-BAND-C band depth below {BAND_MIN_DEPTH_UM} um (one-column band)" if min_depth_um is not None and min(x1-x0,y1-y0)+1e-6<BAND_MIN_DEPTH_UM else
                           "DIE-KV-32 ring_ff reserve (undersized for the CA ring)" if use_max is None else
                           f"CLAND-CLASS-1 CA ring reserve use > {use_max} (band-use floor)")
                 report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
@@ -1468,7 +1485,7 @@ def resize_undersized_bands(plan,sidecar,types,use_max=None):
                                    crossing_bits=[round(dm0,1),round(dm1,1)]))
                 bands[bus]=nb
     finally:
-        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved;FACE_CROSSING=saved_fc;BAND_USE_MAX=saved_use
+        BAND_RESERVE,BAND_SPREAD,BAND_RING=saved;FACE_CROSSING=saved_fc;BAND_USE_MAX=saved_use;BAND_MIN_DEPTH_UM=saved_md
     return out,report
 
 
@@ -1641,6 +1658,7 @@ if __name__=="__main__":
     ap.add_argument("--types",help="comma list (face-home default: budgets.cland_face_home_types)");ap.add_argument("--out",required=True)
     ap.add_argument("--band-reserve",default="padded",choices=BAND_MODES,help="fill-bands: reserve mode (default padded)")
     ap.add_argument("--use-max",type=float,default=None,help="resize-bands: band-use floor (CLAND-CLASS-1, e.g. 0.5); band-use: report threshold")
+    ap.add_argument("--min-depth",type=float,default=None,help="resize-bands: ring band depth floor in um (KV-BAND-C, e.g. 17.28 = two columns; default 8.64)")
     a=ap.parse_args()
     if a.cmd=="band-use":
         rows=band_use_report(json.load(open(a.plan)),a.use_max or 0.5)
@@ -1663,7 +1681,7 @@ if __name__=="__main__":
         for r in rep:print("OT_BAND_FILL",json.dumps(r))
         print(f"OT_BAND_FILL {len(rep)} FAIL bands filled in {a.types}")
         raise SystemExit(0)
-    new,rep=resize_undersized_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","),a.use_max)
+    new,rep=resize_undersized_bands(json.load(open(a.plan)),json.load(open(a.sidecar)),a.types.split(","),a.use_max,a.min_depth)
     open(a.out,"w").write(json.dumps(new,indent=1))
     for r in rep:print("OT_BAND_RESIZE",json.dumps(r))
     kept=sum(r.get("new_rect_um") is None for r in rep)

@@ -205,6 +205,32 @@ proc cland_put_column {i ax ay bx by tag sp cur fw} {
 }
 # DIE-HEAD-13 opt-in: sp = reserve spread given by the caller (else from the tag), cur = resume the row scan at the last
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
+# KV-BAND-C 11-15: instance names of the placed cells that overlap a reserved band rect (um), for the BAND FAIL message
+# (KV kv3_hgi_v8 ring:ft20_i: 651 cells, 222 um2 of 728, "no legal site" with no hint which FIRM cells held the band).
+# At most 12 names are listed; the count is the total.  Pure report, no effect on placement.
+proc cland_band_occupants {rects self} {
+ if {[catch {cland_band_occupants_ $rects $self} msg]} { return "occupants unavailable ($msg)" }
+ return $msg
+}
+proc cland_band_occupants_ {rects self} {
+ global ff_blk ff_dbu
+ set hit {};set n 0
+ foreach r $rects {
+  lassign $r ax ay bx by
+  set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
+  set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
+  foreach j [$ff_blk getInsts] {
+   if {[$j getName] eq $self} continue
+   if {![$j isPlaced]} continue
+   set bb [$j getBBox]
+   if {[$bb xMax] > $ax && [$bb xMin] < $bx && [$bb yMax] > $ay && [$bb yMin] < $by} {
+    incr n
+    if {$n <= 12} { lappend hit "[$j getName]([$j getPlacementStatus],[[$j getMaster] getName])" }
+   }
+  }
+ }
+ return "occupants $n: [join $hit { }]"
+}
 proc cland_put {i rect tag {sp {}} {cur 0}} {
  global ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_cursor
  # multi-rect band (::cland_multi, called with its first rect): a cell with no site in the current rect goes to the
@@ -228,7 +254,7 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
    if {![string match {OT_CLAND no legal*} $err]} { return -options $opts $err }
    set cland_cursor {}; set ::cland_col_cursor {}
   }
-  error "OT_CLAND no legal nonoverlapping row/site in reserved band for [$i getName] ($tag, [llength $rects] rects)"
+  error "OT_CLAND no legal nonoverlapping row/site in reserved band for [$i getName] ($tag, [llength $rects] rects) [if {[info commands cland_band_occupants] ne {}} {cland_band_occupants $rects [$i getName]}]"
  }
  set name [$i getName]
  if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
@@ -372,7 +398,7 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
   }
  }
  }
- error "OT_CLAND no legal nonoverlapping row/site in reserved band for $name ($tag)"
+ error "OT_CLAND no legal nonoverlapping row/site in reserved band for $name ($tag) [if {[info commands cland_band_occupants] ne {}} {cland_band_occupants [list $rect] $name}]"
 }
 proc cland_drivers {n} {
  set d {}
@@ -1165,7 +1191,7 @@ proc cland_band_fit {prefix rect tag} {
  }
  if {$need > $cap} {
   set a2 [expr {double($ff_dbu)*$ff_dbu}]
-  error [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]]
+  error [string cat [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]] " " [if {[info commands cland_band_occupants] ne {}} {cland_band_occupants [list $rect] {}}]]
  }
 }
 # AUTOBUILD-PIPE-2 10-31 (S81 slice_station wave, event 95b1992a3d0: 7 of 7 place FAILs "no legal ... (collector:rst_rl_N)"):
