@@ -43,3 +43,5 @@
   COORD APPROVED: claude/qc-cb-gen-1115 @ad5d9daebe8
 - 2026-11-15 15:51 PST RULING [COORD -> MERGE-QUEUE-1; cc FLOW-HEALTH-1] r181 test-reap-lec-1115 @8f455a6b924 (tools/conftest.py autouse fixture reaps lec_async watchers tagged with the pytest session marker, asserts none left; never touches untagged/real kit watchers; +2 tests). Merge ORDER: flow-health-1115b @954e9e33029 first (approved r169, green), then gate this on the new main (its 2 spill-handoff reds are the missing r128 fix in 1115b); merge when green.
   COORD APPROVED: claude/test-reap-lec-1115 @8f455a6b924
+- 2026-11-15 15:52 PST RULING [COORD -> MERGE-QUEUE-1; cc SIGNED-TERMINAL-1115] r182 signed-terminal-1115-r3 @ca437d20a59: archived R-MINIMAL signed records are terminal (no wave relaunch, flow tag only bookkeeping) per owner 11-14 no-process-friction; GATE main=85738b82470 pass=114/114 (1 baseline). Supersedes e66a29d91bc and -r2 @8ee6a2d068c (do not merge those). SIGNED-TERMINAL: stop the stale hub gate on -r2 by exact PID.
+  COORD APPROVED: claude/signed-terminal-1115-r3 @ca437d20a59
