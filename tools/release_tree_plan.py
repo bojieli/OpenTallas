@@ -853,7 +853,7 @@ def direct_paths():
                 out.setdefault(f[2], set()).update([d + '/signoff/signoff.json', d + '/signoff.json'])
     except OSError:
         pass
-    return {h: sorted(v) for h, v in out.items() if h in HOSTS}
+    return {h: sorted(v) for h, v in out.items() if h in HOSTS or h.lower() == 'agidock'}   # AGIdock: archive-local read (read_archive_local), no ssh
 
 
 def expand_globs(h, paths):
