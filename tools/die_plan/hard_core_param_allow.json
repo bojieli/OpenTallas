@@ -96,7 +96,11 @@
     "qkd_hr_core_tx",
     "qkd_hr_ingest_eng",
     "qkd_hr_phy_adp",
-    "qkd_hr_phy_pad"
+    "qkd_hr_phy_pad",
+    "qkd_hr_cdc_hi",
+    "qkd_hr_cdc_pc",
+    "qkd_hr_core_guard",
+    "qkd_hr_core_queue"
    ],
    "reason": "no RTL instance of this module name in the bound source or root/rtl (host__* / ectl_q* cores are kit-substituted masters); no die-side parameter set to compare"
   }
