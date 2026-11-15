@@ -57,6 +57,11 @@ sudo -n python3 "$here/install_vl_jcap.py" "$here/ot-vl-jcap" >/dev/null
 sudo -n python3 "$here/install_die_protection.py" >/dev/null
 sudo -n python3 "$here/install_oomadj_999.py" >/dev/null
 
+# 2b. KIT-OPS-6 11-15 (FLOW-OTSTORE: 113 ot_store failures): ot-job imports ot_store (and signed_store) from ITS OWN directory, so the three go
+# into ~/.local/bin together (atomic install, new inode)
+mkdir -p "$HOME/.local/bin"
+for f in ot-job ot-job-docker ot_store.py signed_store.py; do install -m 0755 "$here/$f" "$HOME/.local/bin/.$f.new" && mv -f "$HOME/.local/bin/.$f.new" "$HOME/.local/bin/$f"; done
+
 # 3. host guard, config, linger, cron
 command -v earlyoom >/dev/null || sudo -n env DEBIAN_FRONTEND=noninteractive apt-get install -y -q earlyoom >/dev/null
 echo 'EARLYOOM_ARGS="-m 3,2 -s 100,100 -r 300 -n --prefer ^(verilator_bin|verilator_bin_dbg|cc1plus|cc1|g\+\+|c\+\+|clang\+\+|ld|yosys|yosys-abc)$ --avoid ^(sshd|systemd|systemd-journal|dockerd|containerd|containerd-shim.*|sudo|bash)$"' \
