@@ -30,3 +30,7 @@ Next: read G0 errors (expect ft station spacing / hops across the +129.6 band ->
   landing reader/writer stages, internal_stations) are NOT re-sited yet: fix them from the G0/bind errors.
 - epyc7 copy incomplete (rsync timed out); do not use epyc7 until re-synced.
 - On pass: package por/ = plan_c.json (plan_r3b) + sink_bins/*_hgr1.json + README, post to TYPE-KVHGI2 (all 16 column types need new kits).
+
+## 2026-11-14 18:5x PARKED re-floor; Fable GRT-only test
+- r3 gate stopped (exact unit). Re-floor parked (FABLE-HARD-KV §3 dead end). Plan r3b kept on epyc9/epyc10.
+- Live: GRT-only forms A (M7 region adj 1.0 over 16 cores, centre column open) and C (control), dirs */kv-hgi-refloor/fh/{A,C}/kit on intel1/epyc9/epyc10; logs intel2 ~/kvhgr/fh_A.log fh_C.log. Result: run/logs/asap7/*/base/5_1_grt.log final congestion report + run/reports/.../congestion.rpt; count congested gcells inside core boxes (FH_M7_BLOCK lines list boxes).
