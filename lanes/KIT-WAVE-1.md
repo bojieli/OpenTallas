@@ -275,3 +275,8 @@ cp /work/run/results/asap7/dp_kv3_hgi_v1__cl141fc26e/base/4_1_cts.odb /work/run/
 /work/grt183_make.sh: line 243: unexpected EOF while looking for matching `"'
 /work/grt183_make.sh: line 244: syntax error: unexpected end of file
  | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom4/items/kv3_hgi_v1__cl141fc26e/attempt_7/gen/kv3_hgi_v1__cl141fc26e src main@66e6607e3f0e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-14 16:32:24 PST AUTOPILOT -> KIT-WAVE-1: FAILED 16510d18bf8c qwen_kvsys/kv3_hgi (CRASH/flow-error):         753           8244 71ec9af8fd4e95a200b0
+cp /work/run/results/asap7/dp_kv3_hgi/base/4_1_cts.odb /work/run/results/asap7/dp_kv3_hgi/base/4_cts.odb
+/work/grt183_make.sh: line 252: unexpected EOF while looking for matching `"'
+/work/grt183_make.sh: line 253: syntax error: unexpected end of file
+ | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom4/items/kv3_hgi/attempt_6/gen/kv3_hgi src main@66e6607e3f0e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
