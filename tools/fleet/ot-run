@@ -1456,6 +1456,70 @@ def spec_local_inputs(spec_path):
         return []
 
 
+def needs_probe(host, paths):
+    """NEEDS_1115: {path: exists on host} (one ssh); an unreachable host holds nothing"""
+    cmd = "for p in " + " ".join(shlex.quote(x) for x in paths) + "; do if test -e \"$p\"; then echo \"1 $p\"; else echo \"0 $p\"; fi; done"
+    try:
+        r = subprocess.run(["ssh", "-o", "ConnectTimeout=20", "-o", "BatchMode=yes", host, cmd], capture_output=True, text=True, timeout=90)
+        got = {ln[2:]: ln[0] == "1" for ln in r.stdout.splitlines() if len(ln) > 2}
+    except Exception:
+        got = {}
+    return {x: got.get(x, False) for x in paths}
+
+
+def cmd_input_paths(cmd, d=None):
+    """NEEDS_1115: the host paths a command reads: absolute /srv paths of its argv (script, plan file, src tree), minus the --dir run dir and its
+    children (the run dir is created / probed by --dir itself) and minus the argument of an output option (--out*, -o)"""
+    out, toks, skip = [], list(cmd), False
+    for k, t in enumerate(toks):
+        if skip:
+            skip = False
+            continue
+        if t in ("--out", "--out-dir", "--output", "--outdir", "-o") or t.startswith(("--out=", "--output=")):
+            skip = "=" not in t
+            continue
+        for x in command_srv_paths([t]):
+            x = os.path.normpath(x.rstrip("/"))
+            if d and (x == os.path.normpath(d) or x.startswith(os.path.normpath(d) + "/")):
+                continue
+            if x not in out:
+                out.append(x)
+    return out
+
+
+def hosts_with_needs(hosts, explicit, derived, probe=None):
+    """NEEDS_1115 (COORD 11-15: HEAD G0 on epyc10, QC die STA exit 127, S81 bind on epyc2, KV p6 skew all admitted on a host without their input tree):
+    -> (kept hosts, {host: [missing path]}).  explicit (--needs) must exist on the host.  derived (the command's own /srv paths) must exist too, but
+    only those that exist on at least one candidate host: a path that exists nowhere is an output or a path made by the job and is not demanded."""
+    probe = probe or needs_probe
+    allp = list(dict.fromkeys(list(explicit) + list(derived)))
+    if not allp or len(hosts) < 1:
+        return list(hosts), {}
+    with cf.ThreadPoolExecutor(max(1, len(hosts))) as ex:
+        rows = dict(zip(hosts, ex.map(lambda h: probe(h, allp), hosts)))
+    exists_somewhere = {x for x in allp if any(r.get(x) for r in rows.values())}
+    need = [x for x in allp if x in explicit or x in exists_somewhere]
+    missing = {h: [x for x in need if not rows[h].get(x)] for h in hosts}
+    return [h for h in hosts if not missing[h]], {h: m for h, m in missing.items() if m}
+
+
+def replicate_dirs(dirs, hosts, probe=None, run=None):
+    """NEEDS_1115 --replicate DIR: rsync a small input dir from a host that has it to each candidate that lacks it (--ignore-existing); -> [(src, dst, rc)]"""
+    probe = probe or needs_probe
+    run = run or (lambda argv: subprocess.run(argv, capture_output=True, timeout=1800).returncode)
+    out = []
+    for dr in dirs:
+        has = [h for h in hosts if probe(h, [dr]).get(dr)]
+        if not has:
+            continue
+        for h in hosts:
+            if h not in has:
+                src = has[0]
+                rc = run(["bash", "-c", f"ssh -o BatchMode=yes {shlex.quote(src)} 'tar -C / -cf - {shlex.quote(dr.lstrip('/'))}' | ssh -o BatchMode=yes {shlex.quote(h)} 'tar -C / -xf - --keep-old-files'"])
+                out.append((src, h, rc))
+    return out
+
+
 def holders_of(hosts, paths, probe_fn=None):
     """INPUTHOLD_1114: the hosts (in order) on which every path exists (parallel ssh test -e); a host that cannot be reached holds nothing"""
     def has(h):
@@ -1513,6 +1577,8 @@ def main():
             _ex = {h for h in a.pop(0).split(",") if h}
             HOSTS[:] = [h for h in HOSTS if h not in _ex]
         elif o == "--pick": pick = True
+        elif o == "--needs": NEEDS.extend(x for x in a.pop(0).split(",") if x)      # NEEDS_1115: input paths the chosen host must have
+        elif o == "--replicate": REPLICATE.extend(x for x in a.pop(0).split(",") if x)   # NEEDS_1115: small input dirs rsynced to a host that lacks them
         elif o == "--no-spill": spill = False
         elif o == "--job": job = a.pop(0)
         elif o == "--stage":
@@ -1574,6 +1640,20 @@ def main():
                 hosts = _hold
             elif not _hold:
                 print(f"ot-run: WARNING: no candidate host holds the spec's path-only inputs ({_li[0]} ...); the job will end rc 99", file=sys.stderr)
+    if not job and not pick and not os.environ.get("OT_RUN_NO_NEEDS_CHECK"):
+        # NEEDS_1115: skip hosts that lack the job's input paths (--needs and the command's own /srv paths); refuse when none has them
+        if REPLICATE:
+            for _s, _dst, _rc in replicate_dirs([os.path.normpath(x) for x in REPLICATE], hosts):
+                print(f"ot-run: REPLICATE {_s} -> {_dst} rc={_rc}", file=sys.stderr)
+        _kept, _miss = hosts_with_needs(hosts, [os.path.normpath(x) for x in NEEDS], cmd_input_paths(cmd, d))
+        if _miss:
+            for _h, _m in _miss.items():
+                print(f"ot-run: NEEDS: {_h} lacks {', '.join(_m[:3])}{' ...' if len(_m) > 3 else ''}", file=sys.stderr)
+        if not _kept:
+            print("ot-run: NOT RUN: no candidate host has the job's input paths (" + "; ".join(f"{h}: {m[0]}" for h, m in _miss.items())
+                  + "); stage them with --replicate DIR or --stage, or set OT_RUN_NO_NEEDS_CHECK=1", file=sys.stderr)
+            sys.exit(78)
+        hosts = _kept
     if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0:
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
     pinned = hosts is not HOSTS
@@ -1899,6 +1979,8 @@ def load_spill_neg(root, why=None):
     return True
 
 
+NEEDS = []      # NEEDS_1115 --needs PATH[,PATH]
+REPLICATE = []  # NEEDS_1115 --replicate DIR[,DIR]
 STAGE = []   # v14 --stage: the job's exact input paths (absolute, normalised); empty = lane-root SPILL as before
 
 
