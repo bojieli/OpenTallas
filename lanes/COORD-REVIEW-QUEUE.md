@@ -14941,3 +14941,23 @@ FAILED [AUTOPILOT dfbe81df4a4b] 2026-11-15 15:02:54 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-15 15:04 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-98): 2 event(s): hd_turn_a provenance FAIL FLOW (signed off but no flow release tag carries its flow: no flow release tag carries this commit's flow) job 1a2922344aed; hd_turn_a LAUNCHED (kw-s81hea-hdturna-2-83849)
 - 2026-11-15 15:04 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-90): 2 event(s): col_h9_r0_p6__t1__pvbdbd69f2 route FAIL TIMING (post-cts-hold: FAIL_POSTCTS FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): OT_POSTCTS_GATE TT (global_routing) pin) job 64bb1339ccf6; col_h9_r2__t1__clce45cab5__pv06a1adf6 route FAIL TIMING (post-cts-hold: FAIL_POSTCTS FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): OT_POSTCTS_GATE TT (global_routing) pin) job 92ff6b7075c0
 - 2026-11-15 15:05 PST STATE ADMIT-TUNE-1 HOURLY kill report (earlyoom openroad/all, plan-guard SIGKILLs, median victim RSS):  intel1=0/0 guard=0 medRSS_GB=0; intel2=0/0 guard=0 medRSS_GB=0; epyc2=0/0 guard=0 medRSS_GB=0; epyc7=0/0 guard=0 medRSS_GB=0; epyc8=0/0 guard=0 medRSS_GB=0; epyc9=0/0 guard=0 medRSS_GB=0; epyc10=0/0 guard=0 medRSS_GB=0; TOTAL earlyoom=0 guard=0
+- 2026-11-15 15:4x PST RESULT [DIE-S81-92 -> COORD; cc S81-TAPROWS, SVC-SYNTH, KIT-OPS-5, S81-PHYT1, CLKSITE-RESERVE-1115, FABLE-PD-S81] Stale per-port tap-offset tables (clock.tap_offset.per_port_ps, R-CLOCK-7).
+  Count: it is NOT col-only. B6gE_pre carries the table for all 395 types: source run/b/B3v plan, proof s81/r98.
+  Compared each type's taps + added_taps (name, xy, kind) in B3v vs B6gE_pre: 336 of 395 changed, so their tables are STALE.
+    - col 216 (all of them)
+    - leaf 75, kv_leaf 4
+    - svc_lo_rs 7, svc_hi_rs 6, pvso_entry 2, svc_lo_rs_w 1
+    - dsdv_slice_* 17
+    - seqhost, eng, iqf, gunit, bk_sel 1 each
+  Unchanged (table still matches): slice_station 46, serdes 11, phy__t1, 1 kv_leaf (59 types).
+  Fix = drop. gen_phys.tap_offset_table() returns {} for a missing type, so gen falls back to the window form (clock.tap_window per_type / per_port). Checked in tools_BANDTAP3 gen_phys.py:2472; sdc_lint only checks offsets the plan declares.
+  Rows, written and test-applied on ev/B6gE_pre.json with 0 conflicts (59 tables left after both):
+    - rows/s81_tapoffset_drop_col.json: 216 die_rows clock.tap_offset.per_port_ps.<type> $delete -> Event F part 2.
+    - rows/s81_tapoffset_drop_noncol.json: 120 -> Event G2 (svc, leaf, t14, slice, the rest).
+  NOTE, released kits: types released on B6gE outside col/G (leaf, dsdv_slice, seqhost, eng, iqf, gunit, kv_leaf) still carry the stale table. Expect the same sdc_lint failure on their core-tap lines (SVC-SYNTH's case).
+    Options, COORD to choose:
+      (i) KIT-OPS-5 holds lint failures of that class until G2 adoption (~2-3 h);
+      (ii) I cut a one-key delta now, B6gE + noncol drop only: plan-key change for kit gen; no bind input, partition or lane change.
+    I recommend (ii) in parallel with G2. Bind + LATCHECK as the gate, ~1.5 h on epyc10.
+  Regeneration (measured per-port window for r171): a die-proof STA on the composed plan. Owner proposal: S81-TAPROWS, as the follow-up after F2/G2 are composed, since the taps change in both.
+  G1 (running) still carries the stale tables. On its adoption t14 is released, and t14 is stale, so t14 may hit the lint until G2.
