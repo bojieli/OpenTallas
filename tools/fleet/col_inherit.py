@@ -269,8 +269,7 @@ def run_lec(script, work, yosys="yosys", timeout=3600):
 
 
 def via_mask_drc(images, gds=None, cmd=None):
-    """via-mask DRC of the swapped image on the ROM macro GDS.  The repo carries LEF/Liberty abstracts only (rom_gen writes no GDS),
-    so without --rom-gds and --via-drc-cmd the result is NOT_RUN with that reason.  cmd gets env OT_ROM_GDS, OT_VIAMAP_HEX."""
+    """via-mask DRC of the swapped image on the ROM macro GDS (real DRC when --rom-gds and --via-drc-cmd are given; otherwise the CLI uses via_mask_lef_eq because rom_gen.py emits no GDS).  cmd gets env OT_ROM_GDS, OT_VIAMAP_HEX."""
     if not gds or not cmd:
         return dict(verdict="NOT_RUN", reason="no ROM macro GDS / via-mask DRC command supplied (repo has abstracts only)")
     res = []
@@ -280,6 +279,53 @@ def via_mask_drc(images, gds=None, cmd=None):
             p = subprocess.run(shlex.split(cmd), env=env, capture_output=True, text=True)
             res.append(dict(file=f["name"], rc=p.returncode, tail=(p.stdout + p.stderr)[-160:]))
     return dict(verdict="PASS" if all(r["rc"] == 0 for r in res) else "FAIL", checked=len(res), results=res[:50])
+
+
+def rom_gen_emits_gds(repo):
+    """True when tools/mem_compiler/rom_gen.py (or views.py) can write a ROM macro GDS.  Today it writes LEF, Liberty, behavioural
+    model, black box and datasheet JSON only (the 'gds_sha256' in asap7.py names the measured bitcell, it is not an output)."""
+    for f in ("rom_gen.py", "views.py"):
+        try:
+            txt = open(os.path.join(repo, "tools", "mem_compiler", f)).read().lower()
+        except OSError:
+            continue
+        if re.search(r"def\s+write_gds|gdstk|gdspy|gdsii|\.gds\b", txt):
+            return True
+    return False
+
+
+LEF_BLOCK_RE = re.compile(r"^\s*(PIN|OBS)\b(.*?)(?=^\s*(?:PIN|OBS|END\s+\w+\s*$))", re.S | re.M)
+
+
+def lef_mask_signature(lef_text):
+    """pin layers, obstruction layers and a sha of their rectangles (the geometry a via-mask change could not touch)"""
+    pins, obs, pg, og = set(), set(), [], []
+    for kind, body in LEF_BLOCK_RE.findall(lef_text):
+        layers = re.findall(r"^\s*LAYER\s+(\w+)", body, re.M)
+        rects = re.findall(r"^\s*(?:RECT|POLYGON)\b[^;]*;", body, re.M)
+        (pins if kind == "PIN" else obs).update(layers)
+        (pg if kind == "PIN" else og).append((kind, layers, rects))
+    return dict(pin_layers=sorted(pins), obs_layers=sorted(obs), pin_sha=jsha(pg), obs_sha=jsha(og))
+
+
+def via_mask_lef_eq(rep_t, sib_t, repo):
+    """VIA-MASK-LEF-EQ (COORD ruling 11-14, advisory under the academic profile): rom_gen.py cannot emit a GDS, so compare the LEF
+    pin and obstruction layers and geometry of each hard core of the sibling against the representative's (same module)."""
+    res, ok = [], True
+    rm = {h["module"]: h for h in rep_t.get("hard_cores") or []}
+    for mod in sorted({h["module"] for h in sib_t.get("hard_cores") or []}):
+        h = next(x for x in sib_t["hard_cores"] if x["module"] == mod)
+        r = rm.get(mod)
+        try:
+            a = lef_mask_signature(open(os.path.join(repo, r["lef"])).read()) if r and r.get("lef") else None
+            b = lef_mask_signature(open(os.path.join(repo, h["lef"])).read()) if h.get("lef") else None
+        except OSError:
+            a = b = None
+        same = bool(a and b and a == b and (a["pin_layers"] or a["obs_layers"]))
+        ok = ok and same
+        res.append(dict(module=mod, equal=same, pin_layers=b and b["pin_layers"], obs_layers=b and b["obs_layers"]))
+    return dict(verdict="VIA-MASK-LEF-EQ" if ok and res else "FAIL", basis="rom_gen.py emits no GDS; LEF pin/OBS layers+geometry compared with the representative's",
+                modules=res)
 
 
 # ---------------------------------------------------------------- record
@@ -330,7 +376,7 @@ def build_record(plan, rep, sib, signoff_path, repo, rom_dir, lec=None, via=None
     lec = lec or dict(verdict="NOT_RUN", reason="not requested")
     via = via or dict(verdict="NOT_RUN", reason="not requested")
     ok_l = ("EQUIVALENT",) if lec_policy == "require" else ("EQUIVALENT", "NOT_RUN", "UNPROVEN")
-    ok_v = ("PASS",) if via_policy == "require" else ("PASS", "NOT_RUN")
+    ok_v = ("PASS",) if via_policy == "require" else ("PASS", "VIA-MASK-LEF-EQ", "NOT_RUN")
     if lec["verdict"] not in ok_l:
         blockers.append("LEC %s (policy %s)" % (lec["verdict"], lec_policy))
     if via["verdict"] not in ok_v:
@@ -437,7 +483,8 @@ def main(argv=None):
                 lec = run_lec(lec_script(ns.sibling_rtl, str(work / "gate.v"), sib, ns.rep_top or ns.rep, [str(standin)], param_set(pt[sib])), str(work))
                 lec["rewritten_instances"] = n
             imgs = rom_images(pt[sib], ns.rom_dir)
-            via = via_mask_drc(imgs, ns.rom_gds, ns.via_drc_cmd)
+            via = (via_mask_drc(imgs, ns.rom_gds, ns.via_drc_cmd) if (ns.rom_gds and ns.via_drc_cmd) or rom_gen_emits_gds(ns.repo)
+                   else via_mask_lef_eq(pt[ns.rep], pt[sib], ns.repo))
             rec = build_record(plan, ns.rep, sib, ns.signoff, ns.repo, ns.rom_dir, lec, via, ns.lec_policy, ns.via_policy)
             f = write_record(rec, ns.out)
             if ns.members_tsv:

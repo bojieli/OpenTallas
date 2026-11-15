@@ -261,3 +261,38 @@ def test_yosys_lec_equivalent_and_mutant(tmp_path):
     r2 = C.run_lec(C.lec_script([str(rtl)], str(bad), "sibtop", "reptop", [str(st)], sp), str(tmp_path / "w2"))
     assert r1["verdict"] == "EQUIVALENT", r1
     assert r2["verdict"] in ("NOT_EQUIVALENT", "UNPROVEN"), r2
+
+
+LEF = "MACRO m\n  PIN a\n    PORT\n      LAYER M4 ;\n        RECT 0 0 1 1 ;\n    END\n  END a\n  OBS\n    LAYER M1 ;\n      RECT 0 0 5 5 ;\n  END\nEND m\n"
+
+
+def test_lef_mask_signature_layers_and_geometry():
+    a = C.lef_mask_signature(LEF)
+    assert a["pin_layers"] == ["M4"] and a["obs_layers"] == ["M1"]
+    assert C.lef_mask_signature(LEF.replace("0 0 5 5", "0 0 6 6"))["obs_sha"] != a["obs_sha"]
+
+
+def test_via_mask_lef_eq_equal_and_changed(env):
+    tmp, pl = env
+    repo = tmp / "repo"; (repo / "m").mkdir(exist_ok=True); (repo / "m" / "x.lef").write_text(LEF)
+    r, s = pl["partition_types"]["col_h9_r1__t1__cl11111111__pv000000"], pl["partition_types"]["col_h9_r1__t1__cl11111111__pv000001"]
+    assert C.via_mask_lef_eq(r, s, str(repo))["verdict"] == "VIA-MASK-LEF-EQ"
+    (repo / "m" / "y.lef").write_text(LEF.replace("LAYER M1", "LAYER M2"))
+    s["hard_cores"][0]["lef"] = "m/y.lef"
+    assert C.via_mask_lef_eq(r, s, str(repo))["verdict"] == "FAIL"
+
+
+def test_lef_eq_via_verdict_does_not_block_and_fail_does(env):
+    tmp, pl = env
+    sib = "col_h9_r1__t1__cl11111111__pv000001"
+    assert rec_for(tmp, pl, sib, via=dict(verdict="VIA-MASK-LEF-EQ"))["credit"]
+    assert not rec_for(tmp, pl, sib, via=dict(verdict="VIA-MASK-LEF-EQ"), via_policy="require")["credit"]
+    assert not rec_for(tmp, pl, sib, via=dict(verdict="FAIL"))["credit"]
+
+
+def test_rom_gen_emits_no_gds_probe(tmp_path):
+    d = tmp_path / "tools" / "mem_compiler"; d.mkdir(parents=True)
+    (d / "rom_gen.py").write_text("def write_lef(): pass\n")
+    assert not C.rom_gen_emits_gds(str(tmp_path))
+    (d / "views.py").write_text("def write_gds(): pass\n")
+    assert C.rom_gen_emits_gds(str(tmp_path))
