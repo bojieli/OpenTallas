@@ -62,7 +62,7 @@ Non-col options, not for the next delta:
 | option | leaf | station | serdes | cost and risk |
 |---|---|---|---|---|
 | superset at exact pin positions (unused ft slots tied, mirror allowed) | 75 -> 61 | 46 -> 33 | 11 -> 6 | 0 cycles, neighbours untouched; unused station flops; saves 32; CA band set of the superset must cover the members |
-| re-pin ft slots to a common grid, then superset | 43 | 27 | 2 | saves 81; neighbour pins move, signed leaf/station types rebuild, stations and K values change |
+| re-pin ft slots to a common grid, then superset | 43 | 27 | 2 | saves 60 (corrected from 81); neighbour pins move, signed leaf/station types rebuild, stations and K values change |
 | one universal template | 3 | 3 | 1 | not feasible: union is 19,036 ft bits against a median of 2,628; N face needs 12,136 ft pins against 5,194 allowed (1,442.88 um x 6 x 0.6) |
 
 ## 4. Top 3 rules
@@ -73,3 +73,53 @@ Non-col options, not for the next delta:
 Next S81 delta: yes for all three. They do not touch CA lanes, K values, ring depths or data latency, and they change only the col types, which are regenerated at adoption anyway (350 delta types are under PENDING-PLAN). CA matters in one way: in B6gslcf the r0 siblings differ by strap width and collector tree, so without R2 and R3a the r0 inheritance that held before CA is lost (col r0 = 28 builds instead of 9).
 
 Not checked: which of the 36 signed types are col r0 types (they would re-sign after R2/R3a); how the ROM image reaches the macro GDS per instance at die assembly.
+
+## 5. Addendum 11-15: R3a minimal form, and R1 without R3a (plan TYM1, IMPL hash `col_typemerge.layout_hash`)
+Script: epyc7 /tmp/fable_tm_c2.py, c3.py (read-only on ev/TYM1.json).
+
+### 5.1 What the 76 hashes are made of
+| step | col hashes | what changes |
+|---|---|---|
+| TYM1, IMPL hash | 76 | - |
+| drop `landing_contract.collector_children[].part` from the hash | 33 | nothing in the design: `part` is the die instance name of the child (fE0_p3_b0), not layout. Dropping `placement` alone changes nothing (76) |
+| R3a (below) | 19 | reset-tree outs of 76 of the 89 collector-form types |
+| R3b (plain tiles take the collector form) | 15 | 127 plain tiles |
+
+The 19 after R3a: 12 families + 4 plain/collector splits (h9_r1, h9_r2, h10_r1, h10_r2) + h10_r0_p1 (lane landed or not) + h9_r0_p2 (hard-core origins differ, 5 vs 5 types) + h9_r2 plain (43 vs 2 types, tap and sink sites still differ after R4).
+
+### 5.2 R1 without R3a
+R1 still works. With the IMPL hash as is: 216 -> 76 col builds (-140), S81 total 255. With the instance name removed from the hash: 216 -> 33 (-183), total 212. R3a then adds -14 (total 198). The first step is a hash fix, not a design change, and is worth three times R3a.
+
+### 5.3 R3a minimal form
+Correction to section 3: the entry sites are the `outs` of the partition reset tree (`collector_tree.outs`, node `rst_n_t<n_consumers+k>`), not a band option.
+Facts from TYM1:
+- Every tap and out is padded to the tree depth. Depth is one value per family in every variant (6, 7 or 8) with 0, 1, 2 or 3 outs (h9_r2 has a 3-out type at depth 6).
+- Outs without a monitored child already exist: h9_r0_p5 (12 types, 1 out, 0 children), h9_r2 (2 outs, 1 child). The tree hash is equal for two h9_r2 types that use different outs (ct 3c121d).
+- The remaining spread is the out set plus the tap index shift it causes (`core_resets[].tap` +1/+2).
+
+Rule: per (family, collector form), `outs` = union of the sibling out sites in one fixed order; `mask.children`, the `cland_dn_*_k` pins and the `monitor_k` band exist at site k if any sibling monitors a child there. Per instance, an unused out is left open at the parent and its monitor inputs are tied and excluded from the ready/fault aggregate (1 strap bit per site, tied at the parent).
+
+| family | union outs | types changed | outs added |
+|---|---|---|---|
+| h10_r0_p1 | 2 | 4 of 6 | 4 |
+| h10_r0_p4 | 2 | 6 of 6 | 6 |
+| h10_r1 | 2 | 1 of 2 | 1 |
+| h10_r2 | 2 | 3 of 4 | 3 |
+| h9_r0_p1 | 1 | 0 of 6 | 0 |
+| h9_r0_p2 | 2 | 12 of 12 | 17 |
+| h9_r0_p3 | 3 | 12 of 12 | 27 |
+| h9_r0_p4 | 2 | 4 of 6 | 4 |
+| h9_r0_p5 | 2 | 12 of 12 | 12 |
+| h9_r1 | 2 | 8 of 8 | 8 |
+| h9_r2 | 3 | 14 of 15 | 14 |
+| total | - | 76 of 89 | 96 |
+
+Cost: each added out is one pad chain of 6 to 8 flops (about 700 flops over the die); a monitor band (320 flops, 396.6 um2) where a site gains one. Data cycles 0. Reset release 0 cycles if the depth holds; +1 cycle on a family if the union tree goes one level deeper (inside the 64-clk rst_n hold).
+
+Proof needed:
+1. Compose: `collector_tree.depth` per family equal to TYM1; clock_landing sum 2992 and cycles sum 14021 unchanged.
+2. bind_reset: per-instance release depth equal to TYM1 for every consumer and every used child out (diff of bind_reset.json = 0 rows).
+3. LATCHECK: unchanged; no lane row is touched, run once as a regression.
+4. bind_declared_ties / tie audit: the open outs and tied monitor inputs listed, nothing else new.
+
+Not checked: that the monitor aggregate can ignore a child whose return clock is tied (the monitor ring is written on the child clock, so tying ready/fault alone is not enough; this is the strap bit above). h9_r0_p3 with 3 outs has no existing example; its depth is the one to watch.
