@@ -1,0 +1,38 @@
+--- /srv/opentallas-scratch2/claude/kw38/rt/tools/autopilot/kit_wave.py	2026-11-14 17:22:41.919481074 -0800
++++ /home/ubuntu/coord/lanes/patches/TYPE-QC-FLOWERR-1114/kit_wave.py.new	2026-11-14 18:11:06.075993315 -0800
+@@ -2791,7 +2791,7 @@
+     return f"VIEW-FALLBACK {item} {module}: missing {', '.join(missing)[:300]}; chosen {chosen}"
+ 
+ 
+-def prov_stage(sp, run, remote, fail, out, rtl=""):
++def prov_stage(sp, run, remote, fail, out, rtl="", outdir=None):
+     """run_item stage: stage prov_view.py + routed candidate files on the gen host, build the provisional views and the
+     overlay plan -> (overlay plan path, {module: source}) or (None, fail rc)"""
+     q = shlex.quote
+@@ -2862,7 +2862,7 @@
+                               f"candidate c{nxt} lef sha " + hashlib.sha256((relay / m / f"c{nxt}" / f"{m}.lef").read_bytes()).hexdigest()[:12])
+                     line = view_fallback_line(T, m, fetch_errors, chosen)
+                     print(line, flush=True)
+-                    out_fb = out / "view_fallback.txt"
++                    out_fb = Path(outdir) / "view_fallback.txt"   # TYPE-QC-FLOWERR: out is the result dict, outdir the attempt dir
+                     out_fb.write_text((out_fb.read_text() if out_fb.exists() else "") + line + "\n")
+                     if view_priority_candidate(c):
+                         (dst / "meta.json").write_text(json.dumps(staged))
+@@ -5277,7 +5277,7 @@
+     prov_first = bool(sp.get("prov_views") and not core and sp.get("prov_first_re")
+                       and re.search(sp["prov_first_re"], T))
+     if prov_first:
+-        plan, prc = prov_stage(sp, run, remote, fail, res)
++        plan, prc = prov_stage(sp, run, remote, fail, res, outdir=out)
+         if plan is None:
+             return prc
+     if core:
+@@ -5358,7 +5358,7 @@
+         # KW-PROV-1: build against PROVISIONAL child views (latest routed DRC-clean abstract, else the plan-contract
+         # abstract) through an overlay plan; the kit is marked PROVISIONAL and never counted until the STA-only re-sign.
+         # After kit RTL (bind kit-rtl reads no child view): the kit RTL is the first source of child port directions
+-        plan, prc = prov_stage(sp, run, remote, fail, res, rtl=f"{W}/rtl" if kit_rtl_arg else "")
++        plan, prc = prov_stage(sp, run, remote, fail, res, rtl=f"{W}/rtl" if kit_rtl_arg else "", outdir=out)
+         if plan is None:
+             return prc
+     plan_ov = plan                       # plan the station preparation reads (istations.tcl sites follow the overlay)
