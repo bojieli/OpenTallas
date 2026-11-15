@@ -457,7 +457,10 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
         if r["port"] not in b["ports"]:
             continue
         c = b["ports"][r["port"]]
-        if (c["src"], c["dst"]) != (r["src_region"], r["dst_region"]):
+        # KIT-OPS-6 11-15 (FABLE-PD-S81-0335 F, --start-partition-origins): the plan has one count origin per PARTITION, so the bind crossing
+        # names partitions (src == src_part), not the table's region tags; the partition pair is checked below
+        part_origin = "parts" in b and c.get("src_part") == c["src"] and c.get("dst_part") == c["dst"]
+        if not part_origin and (c["src"], c["dst"]) != (r["src_region"], r["dst_region"]):
             raise BindError(f"{r['port']}: bind regions {c['src']}->{c['dst']} != table {r['src_region']}->{r['dst_region']}")
         if "parts" in b and (c["src_part"], c["dst_part"]) != (r["src"], r["dst"]):
             raise BindError(f"{r['port']}: bind partitions {c['src_part']}->{c['dst_part']} != table {r['src']}->{r['dst']}")
