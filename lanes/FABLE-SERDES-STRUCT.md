@@ -4,6 +4,43 @@ Scope: diagnosis only. No build was launched, nothing was killed. All numbers ar
 My own read-only STA class split (ot-run, epyc9/epyc7) was never admitted (fleet memory full); I cancelled my own
 waiters. So the per-endpoint class split of the hold counts is NOT measured; where I rely on the worst paths only, I say so.
 
+## 0. Final fixes, reconciled 20:5x PST with FABLE-TYPES-HEAD section 1 and FABLE-TYPES-S81-MISC section 1
+These two paragraphs REPLACE the "ONE FIX" paragraphs in sections 2 and 3 below where they differ. The diagnosis
+sections stand. The three reviews now ask for one event per die, not three.
+
+**HEAD, FIX-HEAD-SERDES-BAND (one hd_serdes plan event, HEAD-99; TYPE-HDSERDES builds).**
+Same event as FABLE-TYPES-HEAD section 1, with one change: its step 3 is required, not conditional.
+1. Receiver in data order over the pma_rx pins (x 1400-2600): kp4_dchn to the east end, mirrored; SRAMs west of it; no
+   logic west of the macros (FABLE-TYPES-HEAD steps 1). I WITHDRAW my island position "around the port at x 1106":
+   the pins are at x 1603-2412, so the island belongs there.
+2. pma_rck / pma_tck / pma_lock entry moved to the sink centre, x about 2090 (their step 2).
+3. Raise the phy_supply_region floor from y 150 to y 400 over x 1400-2600 (kit keepout_phys.tcl / pdn.tcl rectangle), or
+   grow the outline 250 um. Reason (MEASURED rate, INFERENCE on the result): one level is 60-65 ps per about 45 um; a
+   1200 x 146 band still gives about 600 um of one-sided reach = 13 levels = about 800 ps and row-to-row leaf seams;
+   a 700 x 350 island gives about 10 levels.
+- No RTL change and no new clk taps: pd3 already balances 22 taps to 53 ps.
+- One-build proof (place + CTS, then on to sign-off): no u_syn cell at x < 1400; pma_rck insertion < 600 ps;
+  |u_chn/clk - register latency| <= 100 (now 432); pma_rck period_min < 1000 (now 3358); hold gate FF >= -150.
+
+**S81, FIX-S81-SERDES-CLKPART (one serdes event, DIE-S81-92; SERDES-TXPIPE supplies RTL and defines).**
+Same event as FABLE-TYPES-S81-MISC section 1 fix 1-4, plus two items from this review (5, 6):
+1. Recovered-clock island under the PMA W end with the rck root at the island (kitH / kitH2 geometry).
+2. u_chn on its own early tap from that root: clk at the macro pin >= 175 ps before register arrival, no delaybuf
+   chain. I WITHDRAW "macros as sinks of the nearest leaf" for u_chn (its view needs 174.59 ps of hold).
+3. clk taps assigned by pipeline group: all u_enc stages, and p_d + u_txl row 0, on one tap; delete OT_TAP_MAX_SINKS.
+   I WITHDRAW "cap 1000": the cap split is what made the t12 -157 pair.
+4. Bind defines: proven cone set + TXPIPE / RXPIPE.
+5. NEW: OT_TAP_BALANCE target for serdes types 250 -> 450 ps (contract + vclk latency follow). At 250 the balancer
+   cannot reach its target (trees are 500-790 ps): spread 302-331 on kitH / kitC2, 24 of 35 taps over. Pipeline
+   grouping fixes u_enc; the balance fixes the remaining cross-tap pairs (rs_t -> u_rm, u_rrl, -58..-288).
+6. NEW: RX row 0 (u_lrxi r[0] / u_rxf) captures on the falling rck edge. The PMA launch pin and the first row can
+   never share a leaf (macro vs register tree); mismatch measured +344 (kitH, island at the entry) to +737. Falling
+   edge opens the window to about -180..+530 (INFERENCE from clk-to-q 130 ps, half period 416). Cost <= +1 rck cycle.
+- One-build proof: t12 to CTS (as in S81-MISC; t14 if the TXPIPE kit is ready first; same reads): u_chn/clk >= 175 ps
+  before u_lpl_2_r; no u_enc pair across taps; OT_TAP_BALANCE spread <= 60; row 0 - u_prx/pma_rck inside -150..+400;
+  hold gate FF >= -150 with under 1000 endpoints (now -246 / 5024 kitH; 2,014 on t12).
+- TYPE-SERDES-T4: t4B3 finishes its route; no further density / repair-time forms for the family.
+
 ## 1. Root cause (both dies, MEASURED)
 The hold class is insertion-delay mismatch between clock subtrees that are built separately, hit by zero-logic
 register pairs (PMA face, lane rows, encoder pipeline rows). It is not hold padding debt and not distance.
