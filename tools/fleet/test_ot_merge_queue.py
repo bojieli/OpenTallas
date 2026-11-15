@@ -47,6 +47,8 @@ class Parse(unittest.TestCase):
               "- RULING [COORD -> MERGE-QUEUE-1] COORD APPROVED: claude/w-1114 @3d69f0eb0c5\n"
               "- STATE [MERGE-QUEUE-1 -> COORD] about 3d69f0eb0c5\n")
         self.assertEqual(M.lane_for(q2, "claude/w-1114", "3d69f0eb0c5"), "WAVE-RECIPE-1")
+        q3 = q2 + "- READY [MERGE-QUEUE-1 -> COORD] re-queued w 3d69f0eb0c5 after a false RED\n"
+        self.assertEqual(M.lane_for(q3, "claude/w-1114", "3d69f0eb0c5"), "WAVE-RECIPE-1")
 
     def test_next_tag_follows_newest_series(self):
         names = ["abc\trefs/tags/flow-20261113-cu-kv", "abc\trefs/tags/flow-20261113-ct-hbm", "x\trefs/tags/flow-20261112-zz-qc"]

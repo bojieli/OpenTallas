@@ -158,6 +158,12 @@ def lane_for(text, branch, sha):
     # a READY line often quotes the approval it asks for: keep it; drop only the approval rulings themselves
     lines = [l for l in reversed(text.splitlines()) if any(p in l for p in probes)
              and ("COORD APPROVED" not in l or re.search(r"\bREADY \[", l))]
+    if branch:                                    # the READY that names the branch itself beats a line that only quotes the sha
+        for line in lines:
+            if branch in line:
+                for m in LANE_RE.finditer(line):
+                    if m.group(1) not in (ME, "COORD") and m.group(0).startswith("READY"):
+                        return m.group(1)
     for want in ("READY", None):
         for line in lines:
             for m in LANE_RE.finditer(line):
