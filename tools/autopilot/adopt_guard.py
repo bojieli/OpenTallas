@@ -159,10 +159,35 @@ def guard_tree(cfg, die, hosts, check=False, run=sh, log=print):
     return not gaps
 
 
+def manifest_check(cfg, die, hosts, run=sh, log=print):
+    """SRC-TREE-1115: when the die pins src_manifest_hash, the tree must verify (hash adopted, every file, read-only, no hardlinks)
+    on EVERY gen host before the switch; checked FIRST, before anything is copied.  No pin = not judged (live trees keep working)."""
+    d = cfg["dies"][die]
+    want, src = str(d.get("src_manifest_hash") or ""), str(d.get("src") or "")
+    if not want or not src:
+        return True
+    import src_manifest as SM
+    ok = True
+    for h in hosts:
+        if h == "localhost":
+            errs, _ = SM.verify(src, expect=want, ro=True)
+            txt = "\n".join(errs)
+            rc = 1 if errs else 0
+        else:
+            rc, txt = SM.remote_verify(h, src, want, ro=True)
+        for ln in (txt.splitlines() if rc else [])[:20]:
+            log(f"ADOPT-GUARD MANIFEST {h}:{src} {ln}")
+        ok = ok and rc == 0
+    log(f"ADOPT-GUARD manifest {die}: {'OK ' + want[:12] if ok else 'FAIL closed (nothing switched)'}")
+    return ok
+
+
 def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
     import kit_wave as K
     d = cfg["dies"][die]
     hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
+    if not manifest_check(cfg, die, hosts, run, log):
+        return False
     _trees, files = K.src_inputs(cfg, die)
     files = sorted(set(files))
     miss = missing_by_host(files, hosts, run)
