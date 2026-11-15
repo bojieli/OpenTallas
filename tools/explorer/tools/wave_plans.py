@@ -146,10 +146,11 @@ def overlay(W):
                     st.update(was=dict(state=st.get('state'), label=st.get('label')), state='signed', label='signed off'); fixed[die] = fixed.get(die, 0) + 1
                 st['counted'] = True
                 if via: st['count_record'] = (via[0] if isinstance(via, list) and via else str(via))[:400]
-        ded = v.get('dedup_credited') or {}
-        for name in (ded if isinstance(ded, (dict, list)) else []):
-            n = N.get('%s.t.%s' % (die, name))
-            if n and n['status'].get('state') != 'signed': n['status'].update(was=dict(state=n['status'].get('state')), state='signed', label='signed off (dedup credit)', counted=True); fixed[die] = fixed.get(die, 0) + 1
+        for ckey, clabel in (('dedup_credited', 'signed off (dedup credit)'), ('inherit_credited', 'signed off (inherited from representative)')):
+            ded = v.get(ckey) or {}
+            for name in (ded if isinstance(ded, (dict, list)) else []):
+                n = N.get('%s.t.%s' % (die, name))
+                if n and n['status'].get('state') != 'signed': n['status'].update(was=dict(state=n['status'].get('state')), state='signed', label=clabel, counted=True); fixed[die] = fixed.get(die, 0) + 1
         dn = N[die]; dn['count'] = dict(types=v.get('types'), signed_types=len(v.get('signed_types') or []), signed_cores=len(v.get('signed_cores') or []), pending_archive_types=len(v.get('pending_archive_types') or []), pending_archive_cores=len(v.get('pending_archive_cores') or []), plan_sha=(W.get(die) or {}).get('sha') or v.get('plan_sha'), generated=c.get('generated'))
         w = W.get(die) or {}
         if w.get('rel'): dn['plan']['wave'] = dict(sha=w['sha'], host=w['host'], path=w['path'], pinned=w.get('pinned_src') or w.get('pinned'))
