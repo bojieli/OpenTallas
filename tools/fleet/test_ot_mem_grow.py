@@ -1,5 +1,5 @@
 """ot-mem-grow: raise a container cap by 50 % (max 2x its request) when it is above 85 % and the host can pay for it"""
-import importlib.machinery, importlib.util, pathlib, unittest
+import importlib.machinery, importlib.util, json, pathlib, unittest
 
 P = str(pathlib.Path(__file__).with_name("ot-mem-grow"))
 loader = importlib.machinery.SourceFileLoader("ot_mem_grow", P)
@@ -50,6 +50,37 @@ class Grow(unittest.TestCase):
         self.assertIsNone(M.refusal(32 * G, 32 * G, int(30 * G), 64, 48))              # funded: decide() raises it, nothing refused
         self.assertIsNone(M.refusal(64 * G, 32 * G, int(60 * G), 10, 48))              # already at 2x the request: not a refusal
         self.assertIsNone(M.refusal(32 * G, 32 * G, int(10 * G), 10, 48))              # below the trigger
+
+
+class Outcome(unittest.TestCase):
+    def setUp(self):
+        l = importlib.machinery.SourceFileLoader("ot_mem_grow_outcome", str(pathlib.Path(__file__).with_name("ot-mem-grow-outcome")))
+        self.O = importlib.util.module_from_spec(importlib.util.spec_from_loader("ot_mem_grow_outcome", l)); l.exec_module(self.O)
+
+    def ev(self, cid, code, name="dpkit-x-1"):
+        return {"Type": "container", "Action": "die", "id": cid, "Actor": {"ID": cid, "Attributes": {"exitCode": str(code), "name": name}}}
+
+    def test_only_raised_containers_are_logged(self):
+        raised = {"a" * 12: {"name": "dpkit-serdes__t12-884164"}}
+        self.assertIsNone(self.O.outcome_line(self.ev("b" * 64, 0), raised, False))
+        ok = self.O.outcome_line(self.ev("a" * 64, 0), raised, False)
+        self.assertIn("OUTCOME dpkit-serdes__t12-884164 " + "a" * 12 + " exit=0 finished", ok)
+
+    def test_classes(self):
+        self.assertEqual(self.O.classify(0, False), "finished")
+        self.assertEqual(self.O.classify(137, True), "oom-killed")
+        self.assertTrue(self.O.classify(143, False).startswith("signal 15"))
+        self.assertEqual(self.O.classify(2, False), "failed")
+
+    def test_note_raised_writes_the_short_id(self):
+        import tempfile, os
+        d = tempfile.mkdtemp()
+        old = M.DIR; M.DIR = d
+        try:
+            M.note_raised("c" * 64, "dpkit-y-2")
+            self.assertEqual(list(json.load(open(d + "/raised.json"))), ["c" * 12])
+        finally:
+            M.DIR = old
 
 
 if __name__ == "__main__":
