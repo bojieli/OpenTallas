@@ -165,13 +165,14 @@ class AutopilotResubmit(unittest.TestCase):
     def setUp(self):
         import autopilot as AP
         self.AP = AP
-        self.saved = {k: getattr(AP, k) for k in ('AP_DIR', 'log', 'set_status', 'submit', 'classify', 'after_class', 'launch_unit', 'stop_survivors')}
+        self.saved = {k: getattr(AP, k) for k in ('AP_DIR', 'log', 'set_status', 'submit', 'classify', 'after_class', 'launch_unit', 'stop_survivors', 'kit_lost')}
         self.t = Path(tempfile.mkdtemp())
         AP.AP_DIR = self.t
         AP.log = lambda m: None
         self.status, self.submits = [], []
         AP.set_status = lambda st, j, s, why='': self.status.append(s)
         AP.after_class = lambda st, j: None
+        AP.kit_lost = lambda j: ''          # KIT-OPS-5: the fixture kit dir does not exist on disk; kit_lost has its own tests
         AP.classify = lambda c, client: ('CRASH', 'infra-orphan', 'client lost')
         self.j = {'id': 'j1', 'die': 's81', 'type': 't18', 'started': 500.0, 'mem_gb': 8, 'path': '/srv/x/kit-wave/s81/e8c/items/t18/attempt_4/gen/t18'}
 
@@ -195,6 +196,13 @@ class AutopilotResubmit(unittest.TestCase):
         self.AP.submit = lambda st, j, note='': self.submits.append(note)
         self.AP.finish({}, self.j, {}, {'orphan': True, 'msg': 'client lost'})
         self.assertEqual(len(self.submits), 1)
+
+    def test_lost_kit_is_marked_dead_not_resubmitted(self):
+        self.state(status='ENQUEUED')
+        self.AP.kit_lost = lambda j: 'runner /x/run_kit.sh missing on the hub'
+        self.AP.submit = lambda st, j, note='': self.submits.append(note)
+        self.AP.finish({}, self.j, {}, {'orphan': True, 'msg': 'client lost'})
+        self.assertEqual((self.submits, self.status), ([], ['CRASH']))
 
     def test_resubmit_stops_survivors_first_attempt_does_not(self):
         calls = []
