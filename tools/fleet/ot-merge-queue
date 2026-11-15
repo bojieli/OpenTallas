@@ -167,7 +167,8 @@ def lane_for(text, branch, sha):
     for want in ("READY", None):
         for line in lines:
             for m in LANE_RE.finditer(line):
-                if m.group(1) not in (ME, "COORD") and (want is None or m.group(0).startswith(want)):
+                if m.group(1) not in (ME, "COORD") and (want is None or m.group(0).startswith(want)) \
+                        and (not m.group(1).startswith(ME) or ME.lower() in (branch or "")):   # the merge lane quotes shas
                     return m.group(1)
     if branch:
         b = re.sub(r"^(claude|codex)/", "", branch)
