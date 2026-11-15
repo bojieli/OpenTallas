@@ -1413,7 +1413,10 @@ foreach spec $cland_groups {
 #                            first FIRM flop or hard-core pin reached forward through BUF/INV and at most two unplaced
 #                            register ranks; none found -> left to global placement (counted, not a failure).
 # PLAN SITES (opt-in with =eq, COORD 11-15 order, key agreed with DIE-QC-103): a kit file cland_bin_sites.tcl may define
-#   set cland_bin_sites { <bus> {x y}  <bus>[<bit>] {x y} ... }   (um, type frame; the per-bit key wins over the bus key)
+#   set cland_bin_sites { <bus> {x y}  <bus>[<bit>] {x y}  <bus>:bin {x y}  <bus>:bin[<bit>] {x y} ... }
+# (um, type frame; the per-bit key wins over the bus key; <bus> = u_st site, <bus>:bin = the capture register's own site,
+# both from the DIE-QC-103 sidecar <plan stem>.cland_bin_sites.json via cland_bin_sites_tcl.py in kit gen; with no :bin key
+# the capture register takes the equal-hop point)
 # the plan site of the u_st registers (the first register rank behind the capture register).  A capture bit with a site
 # does not walk forward: its u_st loads (one register rank, BUF/INV between) are placed FIRM on the nearest free sites
 # around the plan site and the capture register takes the equal-hop point between its ring flop and that site.  Bits
@@ -1572,7 +1575,7 @@ proc cland_bin_place {} {
  if {$mode ni {1 eq}} { puts "OT_CLAND_BIN off (opt-in: OT_CLAND_BIN=1 beside the ring, =eq equal-hop)"; return {} }
  set frac [expr {[info exists ::env(OT_CLAND_BIN_FRAC)] ? double($::env(OT_CLAND_BIN_FRAC)) : 0.5}]
  set warn [expr {[info exists ::env(OT_CLAND_BIN_WARN)] && $::env(OT_CLAND_BIN_WARN) eq "1"}]
- set nunanch 0; set hmax 0.0; set nust 0; set nsited 0
+ set nunanch 0; set hmax 0.0; set nust 0; set nsited 0; set nbplan 0
  set sites {}; if {[info exists ::cland_bin_sites]} { set sites $::cland_bin_sites } elseif {[file exists /work/cland_bin_sites.tcl]} { source /work/cland_bin_sites.tcl; if {[info exists ::cland_bin_sites]} { set sites $::cland_bin_sites } }
  if {[dict size $sites]} { puts "OT_CLAND_BIN plan sites: [dict size $sites] keys" }
  set rad [expr {round(([info exists ::env(OT_CLAND_BIN_REACH)] ? $::env(OT_CLAND_BIN_REACH) : 100.0)*$ff_dbu)}]
@@ -1596,6 +1599,7 @@ proc cland_bin_place {} {
     if {$mode eq "eq"} {
      set bit ""; regexp {q\\?\[([0-9]+)\\?\]} $sn -> bit
      set psite [cland_bin_site_of $sites $bus $bit]
+     set bsite {}; if {[llength $psite]} { set bsite [cland_bin_site_of $sites "${bus}:bin" $bit] }
      if {[llength $psite]} {
       set ax [expr {[lindex $psite 0]*$ff_dbu}]; set ay [expr {[lindex $psite 1]*$ff_dbu}]
       foreach ld [cland_bin_loads $s] {
@@ -1614,7 +1618,12 @@ proc cland_bin_place {} {
       set anc [list $ax $ay 0]
      } else { set anc [cland_bin_anchor $s] }
      if {![llength $anc]} { incr nunanch; continue }
-     lassign [cland_bin_point $rx $ry [lindex $anc 0] [lindex $anc 1] $frac] tx ty
+     if {[llength $bsite]} {
+      # the plan carries the capture register's own site (DIE-QC-103 sidecar u_bin): take it, no equal-hop computation
+      set tx [expr {[lindex $bsite 0]*$ff_dbu}]; set ty [expr {[lindex $bsite 1]*$ff_dbu}]; incr nbplan
+     } else {
+      lassign [cland_bin_point $rx $ry [lindex $anc 0] [lindex $anc 1] $frac] tx ty
+     }
      set span [expr {(abs([lindex $anc 0]-$rx)+abs([lindex $anc 1]-$ry))/double($ff_dbu)}]
      set hh [expr {$span*max($frac,1.0-$frac)}]; if {$hh > $hmax} { set hmax $hh }
     }
@@ -1632,7 +1641,7 @@ proc cland_bin_place {} {
    }
   }
   if {$nfound == 0} { continue }
-  puts "OT_CLAND_BIN bus $bus placed $nplaced of $nfound (mode $mode, sited $nsited, u_st FIRM $nust, ring flops $nring, ring $prefix, max [format %.1f $dmax] um from its target, unanchored $nunanch, counters cumulative over buses)"
+  puts "OT_CLAND_BIN bus $bus placed $nplaced of $nfound (mode $mode, sited $nsited, u_bin from plan $nbplan, u_st FIRM $nust, ring flops $nring, ring $prefix, max [format %.1f $dmax] um from its target, unanchored $nunanch, counters cumulative over buses)"
   if {$nplaced < 0.95*$nfound} { lappend stat "bus $bus placed $nplaced of $nfound" }
  }
  puts "OT_CLAND_BIN total [llength $moved] capture registers FIRM (mode $mode), $nunanch without an anchored load left to global placement, longest planned hop [format %.1f $hmax] um[expr {$hmax > 405.0 ? " OVER 405 (span left to the plan)" : ""}]"
@@ -1651,6 +1660,10 @@ if {[info exists ff_landed_line] && [llength $ff_landed_line] && [llength [info 
 # AUTOBUILD-PIPE-2 (AUTOBUILD-GATE-1 handoff, S81 slice_station t14/t26 r2r 580-677 um): reset_taps.tcl re-pointed every
 # FIRM flop's reset to its nearest tap BEFORE the landed line moved stations s0..s<k-2> (eq epoch flops went ~580 um
 # from their reset leaf u_rrl_<k>).  Re-point only the moved stations again, now at their final sites.
+if {[llength $cland_bin_moved]} {
+  if {![info exists ff_landed_moved]} { set ff_landed_moved {} }
+  foreach n $cland_bin_moved { lappend ff_landed_moved $n }
+}
 if {[llength $cland_bin_moved]} {
   if {![info exists ff_landed_moved]} { set ff_landed_moved {} }
   foreach n $cland_bin_moved { lappend ff_landed_moved $n }

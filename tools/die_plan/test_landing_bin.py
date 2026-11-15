@@ -132,3 +132,8 @@ def test_plan_site_form_places_ust_and_takes_the_bit_from_the_capture_name():
     out = _run('puts [regexp {%s} {u_bound.u_bin_bc_i02/q\\[42\\]$_DFF_P_} -> b]; puts $b\n' % m.group(1))
     assert out[:2] == ["1", "42"]
     assert "cland:bin-ust:" in TCL and "/work/cland_bin_sites.tcl" in TCL
+
+
+def test_capture_register_takes_its_plan_site_when_the_sidecar_has_one():
+    assert 'cland_bin_site_of $sites "${bus}:bin" $bit' in TCL and "incr nbplan" in TCL
+    assert TCL.index("set bsite {}") < TCL.index("incr nbplan") < TCL.index("lassign [cland_bin_point")

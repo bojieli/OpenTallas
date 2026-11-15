@@ -5601,6 +5601,14 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         ft_spread_ledger = [dict(form="clump", reason=f"ft_spread error {type(ex).__name__}: {ex}")]
         print(f"[gen] {tn}: FT_SPREAD ADVISORY {type(ex).__name__}: {ex} (plan sites only)")
     (kd / "ft_bit_sites.tcl").write_text(ft_bit_sites_table(ft_kit_slots))
+    # CLAND-BIN 11-15 (FABLE-GENBUG G2, DIE-QC-103 PLAN-KEY): the plan sidecar <plan stem>.cland_bin_sites.json (u_bin and u_st
+    # sites per bc_i bus) becomes the kit file landing_placement.tcl reads when OT_CLAND_BIN=eq.  No sidecar / no entry = no file
+    # (the hook walks forward as before); a malformed sidecar fails the kit generation.
+    import cland_bin_sites_tcl
+    _cb_txt = cland_bin_sites_tcl.for_kit(getattr(P, "path", None), tn)
+    if _cb_txt:
+        (kd / "cland_bin_sites.tcl").write_text(_cb_txt)
+        print(f"[gen] {tn}: CLAND_BIN_SITES {_cb_txt.count(chr(10)) - 2} sites from {cland_bin_sites_tcl.sidecar_path(P.path).name}")
     if ft_kit_slots:
         try:                                 # advisory report only: never a gen failure
             (kd / "ft_track_use.json").write_text(json.dumps(dict(ft_spread.track_use(ft_kit_slots, ft_spread_ledger),
