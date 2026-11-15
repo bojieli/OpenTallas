@@ -76,8 +76,23 @@ def one(K):
         keep.append(r_)
     nfl = sum(1 for _ in open(v[0], errors='replace') if rx.match(_))
     print('MRGSUM\t%s\tflops %d\tinstances %d\tmodules_with_short_siblings %d\tflops_missing_in_short_siblings %d' % (t, nfl, len(paths), len(keep), sum(k[0] for k in keep)))
+    global _missing
+    _missing += sum(k[0] for k in keep)
     for lost, m, n, ns, mx, names, ex in keep[:6]:
         print('MRG\t%s\t%s\tinsts %d\tshort %d\tfull_flops %d\tmissing %d\tregs %s\te.g. %s' % (t, re.sub(r'^\$paramod\$[0-9a-f]+', '$p', m.lstrip('\\'))[:40], n, ns, mx, lost, ','.join('%s:%d' % x for x in names), ex[-50:]))
-for K in sys.argv[1:]:
+GATE = None; JSON_OUT = None; KITS = []
+_a = iter(sys.argv[1:])
+for x in _a:
+    if x == '--gate': GATE = int(next(_a))
+    elif x == '--json': JSON_OUT = next(_a)
+    else: KITS.append(x)
+_missing = 0
+for K in KITS:
     try: one(K)
     except Exception as e: print('MRG\t%s\tERR %r' % (os.path.basename(K), e))
+if JSON_OUT:
+    import json; json.dump(dict(schema='ot_merge_census/1', flops_missing=_missing, gate=GATE), open(JSON_OUT, 'w'))
+if GATE is not None:
+    # OT_MERGE_CENSUS gate: sum of flops missing in short sibling instances (merged away by Yosys) >= GATE fails the kit
+    print('OT_MERGE_CENSUS %s missing=%d gate=%d' % ('FAIL' if _missing >= GATE else 'PASS', _missing, GATE))
+    sys.exit(4 if _missing >= GATE else 0)
