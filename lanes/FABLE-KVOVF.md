@@ -305,3 +305,21 @@ form cannot give. Kit form v_hgi2 (items 1-3 edited into the kit RTL) can prove 
 - Running: v_hgi2 (placement), t_hgi2 (pre-route hold repair: FF hold -237 ps, TNS -1.89M at iteration 0), t_hg (placement),
   k_hgi2 / k_hgi2_m7 (incremental route repair; two allow-congestion reroutes passed without GRT-0232).
 - The real kv3_hgi* fix is KV-102's plan delta (dispatched by COORD 03:5x).
+
+## 14. v_hgi2 after CTS (2026-11-15 05:15 PST), PHYSICAL-ONLY, does not count
+
+MEASURED (kit CTS report, TT): setup WNS -414.2 ps, TNS -4.47k. t_hgi2: -328.7 / -47.2k. Keep only: -366.5 / -142.0k.
+Merged: -586.3 / -558.3k. Placement on v_hgi2 was -173.2 / -125.6k.
+Stationing log: 49 of 60 stations fitted, 11 reset relays on the nearest-free fallback, 18,354 flops FIRM. kp second
+stages at y 262.9 beside the e0 `u_kt` pins (y 233).
+
+MEASURED split (my listing on 4_cts.odb, `fable-kvovf/sta_v_hgi2/`; it reads -252 ps / -2.1k): 30 violating endpoints.
+- kp / kpv / gf bus: 0 (was 430). Core `rst_n` pins: 0 (was about 30). Chain: 0.
+- 7 are the new reset relay flops' own D pins (-227 to -14 ps): the long hop moved from relay -> core to
+  synchroniser -> relay. The reset tree needs two levels (one mid relay, then one per core).
+- 7 `u_cland_fstart_*` / `u_cland_tstart_o` flops from `u_cland_rst_ft0_i` (-252 to -33 ps), 4 `u_cland_origin` (-37),
+  1 `u_cland_raw_reset_o` (-13): one-bit start / reset broadcasts over 1.1-1.5 mm.
+- 6 `u_bin_i_ectl_Q_N_tN/q` (-80 ps): input register away from its ring.
+- 2 `u_headN_u_score.u_rof.q` (-52, -39); 3 asynchronous and 1 path-delay endpoint under -8 ps.
+All remaining failures are one-bit control broadcasts or a 6-bit register: each needs a relay stage (KV-102 reset / start
+tree), not a bus pipeline. The kit WNS of -414 ps is one of these (`u_cland_fstart_ft0_o`).
