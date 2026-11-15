@@ -1,2 +1,2 @@
-# TYPE-XS4 handoff (2026-11-14 00:39)
-Kits: epyc10 /srv/opentallas-scratch2/claude/type-xs4/{a,b,c}/ot_s81sl_xs4_xs4h (made by scratchpad mkform.py from xs4_r4_e10 synth results; 1_* touched newer than config so no resynth). Launch: ot-run --mem 64 --hosts epyc10 -- run_kit.sh DIR finish 64 16, logs ~/s81-cores-2-logs/typexs4_*.otrun.log. Judge: DRC0, TT>=-42, internal FF hold>=0; first pass -> AUTO-RESIGN row (host epyc10, dir signoff).
+# TYPE-XS4 handoff (2026-11-14 19:30, successor)
+Kits epyc10 /srv/opentallas-scratch2/claude/type-xs4/{a,b,c,d}/ot_s81sl_xs4_xs4h. a: GRT it12/30 live; d: GRT it2/30 live (CONGESTED_FAIL=0); c: place gp live; b: DEAD early GRT stop (old grt183_make.sh copy). Judge: DRC0, TT>=-42, internal FF hold>=0; first pass -> AUTO-RESIGN row (host epyc10, dir signoff) + export AGIdock+rtx-pro. Do not relaunch live jobs. b rerun only with current grt183_make.sh.
