@@ -3289,6 +3289,10 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
+            # FABLE-PD-QCC-0740: a plan hard-core param_wrap row must equal the instance this bind just emitted (module + params)
+            import hard_core_param
+            for _m in hard_core_param.check_bound_text(tn, f.read_text(), t.get("hard_cores")):
+                self.errors.append(f"HARD_CORE_PARAM_WRAP {_m}")
             # KV-98 11-12 (COORD): port_relays apply AFTER station materialization so a relay can name a native u_ist_* flop
             # (the kit_istations stations only exist in the file once materialize has run).
             port_relays = t.get("reset", {}).get("port_relays")
