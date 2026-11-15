@@ -72,6 +72,7 @@ def audit_reach(P, geo=None):
     period = float(P.die["period_ps"]) if "period_ps" in P.die else 833.0
     limit = hop_limit_ps(period)
     rows = []
+    first_cache, tables = {}, {}
     for lid in P.lanes:
         pts, regs, xs = geo[lid] if geo and lid in geo else CK.lane_geometry(P, lid)
         hops = CK.lane_pin_hops(P, lid, regs) or [0.0]
@@ -80,9 +81,16 @@ def audit_reach(P, geo=None):
             from die_hop_scan import pin_table, first_internal_hops
             for x in xs:
                 tn = P.parts[x["part"]]["type"]
-                slot = next((s for s in P.types[tn].get("ft_slots", []) if s["name"] == x["slot"]), None)
-                if slot is not None:
-                    first = max(first, max((d for _b, d in first_internal_hops(P, tn, slot, pins=pin_table(P, tn))), default=0.0))
+                ck = (tn, x["slot"])
+                if ck not in first_cache:             # per (type, slot), not per lane: pin_table / first hops are lane independent
+                    slot = next((s for s in P.types[tn].get("ft_slots", []) if s["name"] == x["slot"]), None)
+                    if slot is None:
+                        first_cache[ck] = 0.0
+                    else:
+                        if tn not in tables:
+                            tables[tn] = pin_table(P, tn)
+                        first_cache[ck] = max((d for _b, d in first_internal_hops(P, tn, slot, pins=tables[tn])), default=0.0)
+                first = max(first, first_cache[ck])
         except Exception:                                   # the first-hop view is best effort; the lane hops stay
             first = 0.0
         worst = max(hops + [first])
@@ -164,17 +172,23 @@ def audit_cores(P, root=None, arcs=True):
     period = float(P.die["period_ps"]) if "period_ps" in P.die else 833.0
     common = float(P.clock["insertion_ps"])
     rows, fold = [], {}
-    loaded_cache = {}
+    loaded_cache, _clk_cache = {}, {}
     for tn, t in P.types.items():
         if t.get("hard"):
             continue
         T = type_budget(P, tn)
         for core in t.get("hard_cores", []) or []:
             mod = core.get("module", core["inst"])
-            key0 = (tn, mod, core.get("lib"))
+            key0 = (mod, core.get("lib"))            # one liberty parse per core view, not per type (S81: 334 types x one lib)
             try:
+                if key0 in loaded_cache and isinstance(loaded_cache[key0], Exception):
+                    raise loaded_cache[key0]
                 if key0 not in loaded_cache:
-                    loaded_cache[key0] = CC.load(core, root, require_signed=False, plan_type=t)
+                    try:
+                        loaded_cache[key0] = CC.load(core, root, require_signed=False, plan_type=t)
+                    except (CC.ContractError, OSError, ValueError) as e0:
+                        loaded_cache[key0] = e0
+                        raise
                 loaded = loaded_cache[key0]
             except (CC.ContractError, OSError, ValueError) as exc:
                 # COORD 11-15: UNMEASURED does not fail.  Reported with the liberty-derived fallback depth (basis LIB: the lib's
@@ -182,7 +196,9 @@ def audit_cores(P, root=None, arcs=True):
                 lib_depth = None
                 try:
                     import cores as C
-                    ck = C.clock_pins(core, root)
+                    ck = _clk_cache.get(key0)
+                    if ck is None:
+                        ck = _clk_cache[key0] = C.clock_pins(core, root)
                     if ck:
                         lib_depth = max(max(v["rise"], v["fall"]) for v in ck.values())
                 except Exception:
@@ -245,8 +261,8 @@ def audit_cores(P, root=None, arcs=True):
 
 
 # ------------------------------------------------------------------------------------------------- report
-def run(P, root=None, arcs=True, geo=None):
-    reach = audit_reach(P, geo)
+def run(P, root=None, arcs=True, geo=None, reach_on=True):
+    reach = audit_reach(P, geo) if reach_on else []
     cores = audit_cores(P, root, arcs)
     bad_types = defaultdict(lambda: dict(reach=[], cores=[]))
     for r in reach:
@@ -321,9 +337,10 @@ def main(argv=None):
     ap.add_argument("--tsv")
     ap.add_argument("--json")
     ap.add_argument("--no-core-arcs", action="store_true")
+    ap.add_argument("--no-reach", action="store_true", help="skip (a); cores only (fast)")
     a = ap.parse_args(argv)
     P = S.Plan(S.load(a.plan), path=a.plan)
-    res = run(P, a.root, not a.no_core_arcs)
+    res = run(P, a.root, not a.no_core_arcs, reach_on=not a.no_reach)
     txt = tables(res, a.label)
     print(txt + json.dumps(summary(res)))
     if a.tsv:
