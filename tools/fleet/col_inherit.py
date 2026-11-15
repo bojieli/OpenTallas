@@ -35,7 +35,7 @@ import sys
 import tempfile
 
 SCHEMA = "opentallas.col_inherit.v1"
-IDENT_RE = re.compile(r"^(col_h(?:9|10)_r[12])__t1__(cl[0-9a-f]+)(?:__pv([0-9a-f]+))?$")
+IDENT_RE = re.compile(r"^(col_h(?:9|10)_r[012](?:_p\d+)?)__t1(?:__(cl[0-9a-f]+))?(?:__pv([0-9a-f]+))?$")   # r0 frames carry _p<n> and may have no clock-class label
 IMAGE_PARAM_RE = re.compile(r"^P_.*_INSTANCE$")
 PV_LABEL_RE = re.compile(r"[A-Za-z0-9_.]*__pv[0-9a-f]{6,}[A-Za-z0-9_.]*")
 # viamap names of one INSTANCE (rom_gen personalise; elem cores take <I>_0/_1, the second bank <I>b..., head bundles <I>a<n>)
@@ -110,46 +110,58 @@ def parse_identity(name):
 
 
 def groups(plan, repo=None):
-    """{(family, cl): dict(members=[names with ROM params], singletons=[names without], verdict=..., reasons=[...], keys...)}"""
+    """{(family, cl): dict(members=[names with ROM params], singletons=[names without], verdict=..., reasons=[...], keys...)}.
+    A (family, clock class) whose pv identities carry different clock / reset-collector contracts (clock key with the __pv labels
+    stripped) is split into one sub-layout per clock key, keyed (family, '<cl>/ck<8 hex>'): inheritance never crosses a clock key."""
     pt = plan_types(plan)
     raw = {}
     for n, t in pt.items():
         p = parse_identity(n)
         if p:
-            raw.setdefault((p["family"], p["clock_class"]), []).append(n)
+            raw.setdefault((p["family"], p["clock_class"] or ""), []).append(n)
     out = {}
-    for k, names in sorted(raw.items()):
-        members = [n for n in names if param_set(pt[n])]
-        singles = [n for n in names if not param_set(pt[n])]
-        g = dict(family=k[0], clock_class=k[1], members=sorted(members), singletons=sorted(singles), reasons=[])
-        sig = {jsha(hard_core_signature(pt[n])) for n in names}
-        geo = {geometry_key(pt[n]) for n in names}
-        clk = {clock_key(pt[n]) for n in names}
-        keyset = set()
-        if len(sig) != 1:
-            g["reasons"].append("hard-core signature differs across the layout (%d)" % len(sig))
-        if len(geo) != 1:
-            g["reasons"].append("geometry key differs across the layout (%d)" % len(geo))
-        if len(clk) != 1:
-            g["reasons"].append("clock key (pv labels stripped) differs across the layout (%d)" % len(clk))
-        if members:
-            names_p = [set(param_set(pt[n])) for n in members]
-            if any(s != names_p[0] for s in names_p):
-                g["reasons"].append("param key sets differ")
-            bad = sorted(x for x in names_p[0] if not IMAGE_PARAM_RE.match(x))
-            if bad:
-                g["reasons"].append("non-image parameters %s" % ",".join(bad[:5]))
-            for n in members:
-                for pk, pv in param_set(pt[n]).items():
-                    if IMAGE_PARAM_RE.match(pk) and not str(pv).strip().startswith('"'):
-                        g["reasons"].append("%s %s is not a string image selector" % (n, pk)); break
-            if len({param_set_sha(pt[n]) for n in members}) != len(members):
-                g["reasons"].append("two members carry the same parameter set (one identity?)")
-        if names:
-            g["layout_key"] = "%s|%s|%s|%s" % (k[0], k[1], next(iter(geo))[:12], next(iter(clk))[:12])
-        g["verdict"] = "OK" if not g["reasons"] else "EXCLUDED"
-        out[k] = g
+    for k0, allnames in sorted(raw.items()):
+        byclk = {}
+        for n in allnames:
+            byclk.setdefault(clock_key(pt[n]), []).append(n)
+        for ck, names in sorted(byclk.items(), key=lambda kv: min(kv[1])):
+            k = k0 if len(byclk) == 1 else (k0[0], "%s/ck%s" % (k0[1], ck[:8]))
+            members = [n for n in names if param_set(pt[n])]
+            singles = [n for n in names if not param_set(pt[n])]
+            g = dict(family=k[0], clock_class=k[1], members=sorted(members), singletons=sorted(singles), reasons=[],
+                     clock_split=len(byclk) > 1)
+            sig = {jsha(hard_core_signature(pt[n])) for n in names}
+            geo = {geometry_key(pt[n]) for n in names}
+            if len(sig) != 1:
+                g["reasons"].append("hard-core signature differs across the layout (%d)" % len(sig))
+            if len(geo) != 1:
+                g["reasons"].append("geometry key differs across the layout (%d)" % len(geo))
+            if members:
+                names_p = [set(param_set(pt[n])) for n in members]
+                if any(s != names_p[0] for s in names_p):
+                    g["reasons"].append("param key sets differ")
+                bad = sorted(x for x in names_p[0] if not IMAGE_PARAM_RE.match(x))
+                if bad:
+                    g["reasons"].append("non-image parameters %s" % ",".join(bad[:5]))
+                for n in members:
+                    for pk, pv in param_set(pt[n]).items():
+                        if IMAGE_PARAM_RE.match(pk) and not str(pv).strip().startswith('"'):
+                            g["reasons"].append("%s %s is not a string image selector" % (n, pk)); break
+                if len({param_set_sha(pt[n]) for n in members}) != len(members):
+                    g["reasons"].append("two members carry the same parameter set (one identity?)")
+            g["layout_key"] = "%s|%s|%s|%s" % (k[0], k[1], next(iter(geo))[:12], ck[:12])
+            g["verdict"] = "OK" if not g["reasons"] else "EXCLUDED"
+            out[k] = g
     return out
+
+
+def group_of(plan, *names):
+    """the layout group that holds every given identity, else None"""
+    for g in groups(plan).values():
+        allm = set(g["members"]) | set(g["singletons"])
+        if all(n in allm for n in names):
+            return g
+    return None
 
 
 def macro_views(t, repo):
@@ -289,11 +301,11 @@ def build_record(plan, rep, sib, signoff_path, repo, rom_dir, lec=None, via=None
     pr, ps = parse_identity(rep), parse_identity(sib)
     if rep not in pt or sib not in pt:
         raise KeyError("identity not in plan")
-    if not pr or not ps or (pr["family"], pr["clock_class"]) != (ps["family"], ps["clock_class"]):
-        blockers.append("sibling and representative are not in the same (family, clock class) layout")
-    g = groups(plan).get((ps["family"], ps["clock_class"])) if ps else None
-    if g is None or g["verdict"] != "OK":
-        blockers.append("layout group excluded: %s" % ("; ".join(g["reasons"]) if g else "unknown"))
+    g = group_of(plan, rep, sib)
+    if not pr or not ps or g is None:
+        blockers.append("sibling and representative are not in the same layout (family, clock class, clock key)")
+    elif g["verdict"] != "OK":
+        blockers.append("layout group excluded: %s" % "; ".join(g["reasons"]))
     tr, ts = pt[rep], pt[sib]
     sg = judge(signoff_path, repo)
     if sg["verdict"] != "SIGNED":

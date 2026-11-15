@@ -69,7 +69,24 @@ def test_group_excluded_on_hard_core_or_geometry_or_clock_difference(tmp_path):
     pl = plan(tmp_path / "repo"); pl["partition_types"][k]["buses"] = [{"name": "b"}]
     assert "geometry" in " ".join(C.groups(pl)[("col_h9_r1", "cl11111111")]["reasons"])
     pl = plan(tmp_path / "repo"); pl["partition_types"][k]["clock"]["landing_contract"]["k"] = "Y"
-    assert "clock key" in " ".join(C.groups(pl)[("col_h9_r1", "cl11111111")]["reasons"])
+    gs = C.groups(pl)                                   # a clock difference splits the layout, it never merges it
+    assert sorted(len(v["members"]) for kk, v in gs.items() if kk[1].startswith("cl11111111/ck")) == [1, 2]
+    assert C.group_of(pl, k, "col_h9_r1__t1__cl11111111__pv000000") is None
+
+
+def test_r0_identity_names_parse():
+    assert C.parse_identity("col_h9_r0_p5__t1__pv8995e794") == dict(family="col_h9_r0_p5", clock_class=None, pv="8995e794")
+    assert C.parse_identity("col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97")["family"] == "col_h10_r0_p1"
+    assert C.parse_identity("col_h9_r0_p5__t1") == dict(family="col_h9_r0_p5", clock_class=None, pv=None)
+
+
+def test_clock_split_record_blocked_across_clock_keys(tmp_path):
+    (tmp_path / "repo").mkdir()
+    pl = plan(tmp_path / "repo")
+    pl["partition_types"]["col_h9_r1__t1__cl11111111__pv000001"]["clock"]["landing_contract"]["k"] = "Y"
+    r = C.build_record(pl, "col_h9_r1__t1__cl11111111__pv000000", "col_h9_r1__t1__cl11111111__pv000001", signoff(tmp_path),
+                       str(tmp_path / "repo"), str(rom_dir(tmp_path)), dict(verdict="EQUIVALENT"), dict(verdict="PASS"))
+    assert not r["credit"] and "same layout" in r["credit_blockers"][0]
 
 
 def test_pv_label_in_clock_is_ignored(env):
