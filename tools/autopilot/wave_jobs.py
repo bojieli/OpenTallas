@@ -12,7 +12,8 @@ superseded by the other (owner: in-flight variants may finish).
 import csv, json, os, re, shlex, time
 from concurrent.futures import ThreadPoolExecutor
 
-FLEET = [h for h in os.environ.get('OT_FLEET_HOSTS', 'intel2,epyc2,intel1,epyc4').split(',') if h]
+# WAVE-TICK-PAR 11-14: epyc4 is terminated (COORD) and dropped from the default fleet list
+FLEET = [h for h in os.environ.get('OT_FLEET_HOSTS', 'intel2,epyc2,intel1').split(',') if h]
 WAVE_RX = re.compile(r'/kit-wave/([^/\s]+)/([^/\s]+)/items/([^/\s]+)(?:/attempt_(\d+))?(?=[/\s]|$)')
 LIVE = ('RUNNING', 'LAUNCHING', 'ENQUEUED')
 # WAVE-TICK-PAR 11-14: a host whose ssh CONNECT failed (epyc4 terminated: 'Connection timed out' after the 15 s ConnectTimeout) is skipped
