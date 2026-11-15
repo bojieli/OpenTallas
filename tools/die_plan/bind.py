@@ -4683,6 +4683,11 @@ def cmd_bind(a):
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
+    # HCPARAM-ALL 11-15: every hard core, built parameters vs the parameters the bound RTL really instantiates (nested + defaults)
+    import hard_core_param_all
+    B.errors.extend(hard_core_param_all.gate(B, out, fl))
+    if getattr(B, "hcparam_stats", None):
+        rep["hard_core_param_all"] = B.hcparam_stats
     strict_info = None
     if B.strict_types:
         # BIND-STRICT-SRC: bind.f inside the declared source tree, group masters listed, no unknown parameter overrides
