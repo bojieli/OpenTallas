@@ -325,6 +325,39 @@ def free_place_no_odb(rec, now=None):
     return True
 
 
+def place_log_rc0(d, tail_bytes=16384):
+    """True when the last KW_PLACE_RC line in the tail of <d>/place.log is 0"""
+    try:
+        with open(Path(d) / "place.log", "rb") as f:
+            f.seek(0, 2)
+            f.seek(max(0, f.tell() - tail_bytes))
+            t = f.read().decode("utf-8", "replace")
+    except OSError:
+        return False
+    rcs = re.findall(r"(?m)^KW_PLACE_RC=(\d+)\s*$", t)
+    return bool(rcs) and rcs[-1] == "0"
+
+
+def rejudge_place_nodb(st, now=None, max_age_h=36.0):
+    """WAVE-COPYBACK-1115 (FABLE-FLOW-1000 class 1): every tick, with the CURRENT code, re-judge each place FAIL whose log ended RC=0.  Run-items
+    keep the tool tree of their launch, so a unit launched before the fix still probes the wrong host and writes the false FAIL; the tick
+    (rt/current) turns it into an uncharged RETRY-INFRA that resumes from the odb.  One judgement per attempt (copyback_att).  -> [keys]"""
+    now = now if now is not None else time.time()
+    out = []
+    for key, rec in (st.get("items") or {}).items():
+        if rec.get("status") != "FAIL" or rec.get("stage") != "place" or not rec.get("dir"):
+            continue
+        if now - float(rec.get("updated") or 0) > max_age_h * 3600 or rec.get("copyback_att") == rec.get("attempt"):
+            continue
+        if not place_log_rc0(rec["dir"]):
+            continue
+        rec["copyback_att"] = rec.get("attempt")
+        rec.update(**{"class": "INFRA"}, reason=f"{PLACE_NO_ODB_WHY} @place: KW_PLACE_RC=0, 3_place.odb not found by the probe", reclassified=now_s())
+        if free_place_no_odb(rec):
+            out.append(key)
+    return out
+
+
 STATE_FILE = "kit_wave_state.json"
 LOAD_CAP_FACTOR = 1.5                                    # = ot-heavy LOAD_CAP_FACTOR (read here, set there)
 
@@ -9209,6 +9242,12 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE VISUAL-REJECT discard failed: {e}")
     stop_cancelled_rows(AP, stops)
     auto_rejudge(AP, cfg, st, notices)
+    try:                                                 # WAVE-COPYBACK-1115: each tick, for units launched on an older tool tree
+        _cb = rejudge_place_nodb(st)
+        if _cb:
+            AP.log(f"KIT-WAVE COPYBACK-REJUDGE {len(_cb)} false place FAIL(s) -> RETRY-INFRA uncharged: " + ", ".join(_cb[:8]))
+    except Exception as e:
+        AP.log(f"KIT-WAVE COPYBACK-REJUDGE failed: {type(e).__name__}: {e}")
     try:
         release_pending(cfg, st, parse_pending(AP.read_coord(PENDING_FILE)), _merged(AP, cfg), notices)
     except Exception as e:                               # a missing/unreadable pending file never blocks the wave
