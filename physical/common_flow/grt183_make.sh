@@ -81,6 +81,12 @@ if {[llength [info commands ::grt::set_allow_congestion]] && ![llength [info com
   rename ::global_route ::ot_ac_gr_orig
   proc ::global_route {args} {
     if {[lsearch -exact $args -allow_congestion] < 0} { lappend args -allow_congestion }
+    # FABLE-PD-KV-1450 fix 5 (r167): kits with kv3_head_eighth_* cores carry OT_GRT_CONG_ITER (gen_phys): the full route and the incremental
+    # calls inside repair_timing / repair_design get the same -congestion_iterations bound (the residue is capacity-0 cells inside the cores;
+    # the incremental call had no bound and ran 5 h 51 silent).  Absent variable = unchanged.
+    if {[info exists ::env(OT_GRT_CONG_ITER)] && $::env(OT_GRT_CONG_ITER) ne "" && [lsearch -exact $args -congestion_iterations] < 0} {
+      lappend args -congestion_iterations $::env(OT_GRT_CONG_ITER)
+    }
     set rc [catch {uplevel 1 [list ::ot_ac_gr_orig {*}$args]} res opts]
     ::grt::set_allow_congestion 1
     return -options $opts $res

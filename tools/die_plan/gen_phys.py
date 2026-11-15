@@ -2267,6 +2267,17 @@ def rflow_max_wire_um(max_wire_um, die=None):
     return max_wire_um
 
 
+def grt_cong_iter_cfg(t):
+    """FABLE-PD-KV-1450 fix 5 (COORD r167): a type with kv3_head_eighth_* hard cores gets OT_GRT_CONG_ITER = 15 in config.mk; the
+    allow-congestion hook of grt183_make.sh then bounds every global_route (full and incremental) with -congestion_iterations 15.
+    Nothing for other types (kits stay byte-equal)."""
+    for h in t.get("hard_cores") or []:
+        if any("head_eighth" in str(h.get(k) or "") for k in ("module", "physical_master", "inst", "physical_inst")):
+            return ["# FABLE-PD-KV-1450 fix 5: bound the full and incremental global_route (head_eighth cores)",
+                    "export OT_GRT_CONG_ITER = 15"]
+    return []
+
+
 def rflow_cfg(gpl_plain=False, die=None):
     """config.mk lines of the R-FLOW defaults that have no generator argument."""
     if not rflow_on(die):
@@ -5371,6 +5382,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # The first two arguments are the ORFS GLOBAL_ROUTE_ARGS default, which this variable replaces.
            *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose -allow_congestion"]
              if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else []),
+           *grt_cong_iter_cfg(t),
            # KW-FIX-8 11-04 (COORD GRT loop ruling): opt-in per row through wave item_env, off by default.  TritonCTS by
            # default sets CTS_NDR_0 on part of the clock tree (260 of 2462 clock nets on s81sl_leaf t32); GRT then drops it
            # net by net and restarts its 30 iterations each time.  CTS_ARGS replaces the ORFS argument list, so this is
