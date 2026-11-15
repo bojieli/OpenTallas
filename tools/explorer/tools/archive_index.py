@@ -67,6 +67,17 @@ def main():
                 if len(parts) >= 3: ent.setdefault((parts[0], parts[1]), {})['/'.join(parts[2:])] = int(sz or 0)
             out['agidock'] = [dict(die=d, name=n, path='%s/%s/%s' % (a.agiroot, d, n), files=fs) for (d, n), fs in sorted(ent.items())]
             out['agidock_index_tsv'] = index if index.strip() else None; out['agidock_root'] = a.agiroot; out['agidock_listed'] = time.time()
+            # records with no routed database (HARD-IP views: a PHY macro wrapper, nothing to place or route): the small signoff.json itself
+            # travels with the listing, so the hub count reads it from the archive without holding an archive key (COUNT-DIRECT host AGIdock)
+            nodb = ['%s/%s/signoff.json' % (d, n) for (d, n), fs in sorted(ent.items()) if not d.startswith('_') and 0 < fs.get('signoff.json', 0) < 65536
+                    and not any(f.endswith(('.odb', '.odb.zst')) for f in fs)]
+            out['agidock_signoffs'] = {}
+            if nodb:
+                r = subprocess.run(ssh[:1] + ssh[2:] + ["cd " + a.agiroot + " && while read -r f; do echo \"---FILE--- $f\"; cat \"$f\"; echo; done"], input=''.join(f + '\n' for f in nodb), capture_output=True, text=True, timeout=120)
+                for blk in r.stdout.split('---FILE--- ')[1:]:
+                    f, _, body = blk.partition('\n')
+                    try: out['agidock_signoffs']['%s/%s' % (a.agiroot, f.strip())] = json.loads(body)
+                    except Exception: pass
         except Exception as e:
             out['agidock_error'] = '%s: %s' % (type(e).__name__, e)
     json.dump(out, sys.stdout, separators=(',', ':'))
