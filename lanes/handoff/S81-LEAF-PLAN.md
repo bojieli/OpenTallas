@@ -2,7 +2,16 @@
 
 Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.tsv (R-LEAF-1/2/3). All builds private, DO_NOT_COUNT.
 
-## STATE 2026-11-14 ~19:xx PST (CURRENT; newest first)
+## STATE 2026-11-14 ~20:0x PST (successor; CURRENT, newest first)
+- B5 bind DIED 19:08 epyc8 ELAB yosys rc 137 (OOM kill writing asbuilt.json), like B4L4. B5 is NOT adopted; it is carried by B6s.
+- COORD signed check: B5 (and draft ev/B6.json 3fa698db24a1) re-key 35 SIGNED slice_station types (clock.landing_contract bands only). Fix: cp10/signed_keep_leafplan.py restores plan row + sidecar collector.types/parts from B3z2 92e2 / side_z2_92e2_fix (signed list ev/s81_signed_1114.txt from rtx-pro INDEX.tsv); check cp10/signed_rekey_leafplan.py. Adopt list excludes signed types.
+- core_place: --take-regs (commit 671e2ed64a, COORD take +1 register) and --slot-ft UM (FABLE-HARD-S81 rule: registers in face-to-core slot < UM masked and re-sited, same count) in wt/ + tree/ (copy+mv).
+- Trials: cp11 (take-regs + face-clear; face-clear alone leaves slot regs), cp12 (slot-ft 86.4; A = no face-clear, B = face-clear). Rule checker cp9/slot_rule_leafplan.py PLAN TYPES (B5: 172 regs in 14 types).
+- Compose: cp13/compose_b6s_leafplan.sh (B5 + cp12 picks in cp13/pick.txt -> tapleg -> publish -> bands -> densify -> signed keep -> sync -> audit -> check -> LF_CS) -> ev/B6s.json / side_B6s.json / cp13/lfcs_B6s.v.
+- M9 (ve/vs cores, FABLE-HARD-S81 sec 0/2): no per-type plan key exists (layer_budget.partition_signal_max die-wide, gen_phys clamps OT_CONS_MAX_LAYER to plan top); grant is DIE-S81-92 B6 / WAVE-RECIPE-1 (m9_grant like m8_grant.py). Posted as ASK.
+- Draft ev/B6.json (cp10) superseded by B6s (it re-keys signed types).
+
+## STATE 2026-11-14 ~19:xx PST (predecessor)
 - B4L4 cumulative (147 types) strict bind: ONE plan job intel2 bind_leafplan_x1.sh, admitted on epyc7 (log epyc7 log/B4L4_bind.log); watcher a3.
 - B5 = B4L4 + 5 edge-ft-squeeze types (TL-LEAFT34 family): ev/B5.json 9d4bee9ea054 / side_B5.json 15f3f6c312db / LF_CS netlist cp5/lfcs_B5.v 2c3837b47ec6 (overlay ovl_l5 on epyc7+epyc8). Types t24__cl81374cd8, t44__clf4ea6d4b, t45, t4, t53__clb66fa5cb (cp5/<t>.json; compose cp5/compose_b5_leafplan.sh, pick cp5/pick.txt). 149 types (types_event_B5.txt). Cycle deltas: s_5S_L3 vni +1; s_5S_L2 u/ver/vni +1; s_0S_L3 vni +1. G0B5 running on epyc7 (log/G0B5.log); bind ONE plan job bind_leafplan_x2.sh admitted on epyc8 (log epyc8 log/B5_bind.log); watcher adopt_watch_leafplan_a4.sh.
 - Survey tool cp5/edge_squeeze_leafplan.py PLAN [TYPES]; batch cp5/one_l5_leafplan.sh (face-clear W:86.4:. + ft-resite + taps-movable + link-reg any), results cp5/leaf__*_ev.json.
