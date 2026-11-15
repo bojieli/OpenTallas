@@ -152,6 +152,9 @@ class TypeModel:
                 return i
         return None
 
+    def moved_core(self, i):
+        return bool(np.abs(np.array(self.core_origin(i)) - self.org0[i]).max() > 1e-6 or self.core_orient(i) != self.ori0[i])
+
     def to_local(self, i, p):
         u, v = p[0] - self.org0[i, 0], p[1] - self.org0[i, 1]
         return xf(self.ori0[i], self.dim[i, 0], self.dim[i, 1], u, v)
@@ -180,6 +183,7 @@ class TypeModel:
                 st_pairs.add((A, bus_, str(s_.get("capture", "")).rsplit(".", 1)[0]))
         L = []   # (endA, endB, bits, kind, max_len)
         self.Lname = {}   # q -> (inst, bus, peer inst, peer bus) of a direct core link
+        self.Lbus = {}    # q -> (inst, pin, type bus) of a core pin <-> face bus link
         if cc:
             for inst, ports in cc.items():
                 if inst not in self.idx:
@@ -208,6 +212,7 @@ class TypeModel:
                             self.Lname[len(L) - 1] = (inst, bus, val, mate[0] if mate else None)
                         elif k == "bus" and val in bus_pt:
                             L.append(((i, (u, v)), (None, bus_pt[val]), bits, "bus"))
+                            self.Lbus[len(L) - 1] = (inst, bus, val)
                         elif k == "face" and val in "NSEW":
                             L.append(((i, (u, v)), (None, RS.face_point(W, H, val)), bits, "face"))
         self.stations = []
@@ -227,6 +232,17 @@ class TypeModel:
                 c = link_class(KI, inst, bus, val, mb)
                 if c and (c in allow or "any" in allow) and not depth.get(c):
                     self.lreg[q] = c
+        self.breg = {}    # --bus-reg: q -> existing source-station depth of its face bus (>= 1)
+        if self.cfg.get("bus_reg"):
+            depth, cov = collections.defaultdict(int), set()
+            for e in t.get("internal_stations") or []:
+                c = str(e.get("conn", ""))
+                if c.startswith("bus:"):
+                    depth[c[4:]] = max(depth[c[4:]], len(e.get("regs_um") or []))
+                    cov.add((c[4:], str(e.get("capture", "")))); cov.add((c[4:], str(e.get("launch", ""))))
+            for q, (inst, pin, val) in self.Lbus.items():
+                if depth.get(val, 0) >= 1 and (val, inst + "." + pin) not in cov:
+                    self.breg[q] = depth[val]
         self.inc = collections.defaultdict(list)
         for q, (a, b, w, kind) in enumerate(L):
             for e in (a, b):
@@ -607,6 +623,10 @@ class TypeModel:
                 lim = (st[q] + 1) * reach * 0.8
             elif q in self.lreg:
                 lim = 2 * reach * 0.8      # --link-reg: this direct link may take one register (+1 cycle)
+            elif q in self.breg:
+                # --bus-reg: the bus's existing stage(s) may sit on it (0 cycles); hops <= reach are enforced when the
+                # stage is sited (route_station must keep the depth), so no extra 0.8 margin here
+                lim = (self.breg[q] + 1) * reach
             else:
                 lim = DIRECT_REACH
             self.maxlen.append(max(lim, b0))
@@ -1298,6 +1318,69 @@ def walk_follow(x, fol, key=None):
     return x
 
 
+def _man(p, q):
+    return abs(p[0] - q[0]) + abs(p[1] - q[1])
+
+
+def snap_station(R, a, b, regs, reach, rmax=40):
+    """B6 (FABLE-PLAN-EVENTS A2): a station that route_station cannot re-site keeps its registers but each one that
+    now sits under a core (or its halo) moves to the nearest free 4.32 lattice point (ring search up to rmax steps)
+    not already used; accepted only if every pin-reg / reg-reg Manhattan hop stays <= reach.  None = no legal snap."""
+    G = 4.32
+    out = []
+    for r in regs:
+        x, y = float(r[0]), float(r[1])
+        if R.free(x, y) and (round(x, 2), round(y, 2)) not in out:
+            out.append((round(x, 2), round(y, 2)))
+            continue
+        i0, j0 = int(round(x / G)), int(round(y / G))
+        best = None
+        for d in range(1, rmax + 1):
+            for di in range(-d, d + 1):
+                for dj in (-(d - abs(di)), d - abs(di)):
+                    q = (round((i0 + di) * G, 2), round((j0 + dj) * G, 2))
+                    if q in out or not R.free(*q):
+                        continue
+                    if best is None or _man(q, (x, y)) < _man(best, (x, y)):
+                        best = q
+            if best is not None:
+                break
+        if best is None:
+            return None
+        out.append(best)
+    pts = [tuple(a)] + out + [tuple(b)]
+    if any(_man(p, q) > reach + 1e-6 for p, q in zip(pts, pts[1:])):
+        return None
+    return out
+
+
+def detour_fix(R, st, cfg, rep):
+    """B6 (A2, t44 station 278): a kept station whose register path is more than twice its pin distance (and longer
+    by > 100 um) is re-sited with the same register count when route_station finds a shorter legal path."""
+    import hub_repack as HR
+    rep.setdefault("detour_fixed", 0)
+    for s in st:
+        regs = s.get("regs_um") or []
+        if not regs:
+            continue
+        a, b = s["from_um"], s["to_um"]
+        pts = [tuple(a)] + [tuple(r[:2]) for r in regs] + [tuple(b)]
+        L = sum(_man(p, q) for p, q in zip(pts, pts[1:]))
+        d = _man(a, b)
+        if L <= 2 * d or L - d <= 100:
+            continue
+        r = HR.route_station(R, tuple(a), tuple(b), len(regs), cfg["reach"])
+        if r is None or len(r["regs"]) != len(regs):
+            continue
+        p2 = [tuple(a)] + [tuple(q) for q in r["regs"]] + [tuple(b)]
+        L2 = sum(_man(p, q) for p, q in zip(p2, p2[1:]))
+        if L2 >= L - 1e-6:
+            continue
+        s["regs_um"] = [list(q) for q in r["regs"]]
+        s["note"] = (s.get("note", "") + " | B6 detour fix (%.1f -> %.1f um, %d regs kept)" % (L, L2, len(regs)))
+        rep["detour_fixed"] += 1
+
+
 def write_type(M, t_new, cfg, log):
     """t_new: deepcopy of the base type; returns station report."""
     import hub_repack as HR
@@ -1384,15 +1467,55 @@ def write_type(M, t_new, cfg, log):
             rep["need_more_idx"].append(st.index(s))
             rep["regs_new"] += nold
         else:
+            sn = snap_station(R, a, b, s.get("regs_um") or [], cfg["reach"])
+            if sn is not None:
+                s["regs_um"] = [list(p) for p in sn]
+                rep["rerouted"] += 1
+                rep["snapped"] = rep.get("snapped", 0) + 1
+                rep["regs_new"] += nold
+                s["note"] = (s.get("note", "") + " | B6 snap re-sited (%d regs kept)" % nold)
+                continue
             rep["failed"] += 1
+            rep["failed_idx"] = rep.get("failed_idx", []) + [st.index(s)]
             rep["regs_new"] += nold
             if regs_free:
                 rep["kept_old_regs"] += 1
+    if cfg.get("detour_fix"):
+        detour_fix(R, st, cfg, rep)
     if cfg.get("ft_resite"):
         ft_resite(M, t_new, R, cfg, rep)
     if M.lreg:
         link_reg_write(M, t_new, R, cfg, rep)
+    if M.breg:
+        bus_reg_write(M, t_new, R, cfg, rep)
     return rep
+
+
+def bus_reg_write(M, t_new, R, cfg, rep):
+    """--bus-reg (B6, COORD 11-14): a core pin <-> face bus link that ended longer than its direct limit, on a bus whose
+    source stations already have depth d >= 1 (internal_stations bus:<b> rows), gets its own bus:<b> row with d
+    registers sited by hub_repack.route_station (the bus's existing stage(s) now sit on this pin's path).  The bus chain
+    depth (max rows) is unchanged: 0 cycles, no lane-table change.  rep["bus_reg"] = {bus: rows}."""
+    import hub_repack as HR
+    reach = cfg["reach"]
+    rep.update(bus_reg={}, bus_reg_failed=0)
+    st = t_new.setdefault("internal_stations", [])
+    for q, d in sorted(M.breg.items()):
+        if M.llen(q) <= max(DIRECT_REACH, M.base_len[q]) + EPS:
+            continue
+        inst, pin, val = M.Lbus[q]
+        a, b, w, _ = M.L[q]
+        pa, pb = M.pt(b), M.pt(a)            # face bus point -> core pin, as the existing rows
+        r = HR.route_station(R, tuple(pa), tuple(pb), d, reach)
+        if r is None or len(r["regs"]) != d:
+            rep["bus_reg_failed"] += 1
+            continue
+        st.append(dict(bits=max(1, int(round(w))), capture=inst + "." + pin, conn="bus:" + val,
+                       from_um=[round(pa[0], 4), round(pa[1], 4)], launch="face bus " + val,
+                       note="B6 bus-reg (COORD 11-14): sites the existing bus:%s stage(s) (depth %d kept, 0 cycles) on "
+                            "%s.%s, %s %s um" % (val, d, inst, pin, r["kind"], r["length_um"]),
+                       regs_um=[list(p) for p in r["regs"]], to_um=[round(pb[0], 4), round(pb[1], 4)]))
+        rep["bus_reg"][val] = rep["bus_reg"].get(val, 0) + 1
 
 
 def follow_clock_points(t, moved):
@@ -1543,7 +1666,9 @@ def ft_resite(M, t_new, R, cfg, rep):
                         return True
             return False
         # only registers a core now covers are re-sited; ft groups that already overlap in the base stay as they are
-        bad = [j for j in range(len(regs)) if blocked(j, groups_too=False)]
+        bad = [j for j in range(len(regs)) if blocked(j, groups_too=False)
+               and not (M.owner(regs[j]) is not None and not M.moved_core(M.owner(regs[j])))]
+        # (a register that already sat inside a core in the base plan, on a core that did not move, is the base form)
         if not bad:
             continue
         rep["ft_slots"] += 1
@@ -1666,7 +1791,7 @@ def eq_gate(t0, t1):
             bad.append(path)
     st0, st1 = t0.get("internal_stations") or [], t1.get("internal_stations") or []
     extra = st1[len(st0):]
-    if extra and all("B4L4 link-reg" in str(e.get("note", "")) for e in extra):
+    if extra and all(("B4L4 link-reg" in str(e.get("note", "")) or "B6 bus-reg" in str(e.get("note", ""))) for e in extra):
         t1 = dict(t1, internal_stations=st1[:len(st0)])     # --link-reg rows: declared +1-cycle additions
     rec(t0, t1, "")
     for i, (h0, h1) in enumerate(zip(t0.get("hard_cores", []), t1.get("hard_cores", []))):
@@ -1897,6 +2022,11 @@ def main(argv=None):
     ap.add_argument("--link-reg", action="append", default=[], metavar="CLASS",
                     help="B4L4: direct core links of link CLASS (kit_istations CORE_CLASSES, depth 0; 'any') may stretch to "
                          "one register's reach; a class that needs it gets +1 register on all its links (+1 cycle)")
+    ap.add_argument("--detour-fix", action="store_true",
+                    help="B6: re-site kept stations whose register path is > 2x the pin distance (same count)")
+    ap.add_argument("--bus-reg", action="store_true",
+                    help="B6: a core <-> face bus link may reach the bus's existing source-station depth (>= 1); a stretched "
+                         "one gets its own bus row with that depth (0 cycles)")
     ap.add_argument("--taps-movable", action="store_true",
                     help="B4L4: clock taps / added taps off cores do not pin cores (tapleg re-legalises them after)")
     ap.add_argument("--ft-resite", action="store_true",
@@ -1930,7 +2060,7 @@ def main(argv=None):
                flips_only=a.flips_only,
                gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
                face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
-               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable,
+               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix,
                link_reg=[c for x in a.link_reg for c in x.split(",") if c])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
@@ -2117,7 +2247,8 @@ def main(argv=None):
                                     after_orient=M.core_orient(i)) for i in range(M.n)])
             Path(Path(a.svg) / f"{tn}__view.json").write_text(json.dumps(dump))
         ok = not eqbad and nov == 0 and srep["need_more_regs"] == 0 and tviol_end == 0 and not srep.get("ft_failed") \
-            and not srep.get("link_reg_failed")
+            and not srep.get("link_reg_failed") and not srep.get("bus_reg_failed") \
+            and not srep.get("failed")
         if ok:
             Q["partition_types"][tn] = tnew
         rows.append(dict(type=tn, cores=M.n, clusters=M.m, links=len(M.L), stations=len(M.stations),

@@ -32,6 +32,14 @@ def test_eq_gate_link_reg_rows():
     assert CP.eq_gate(t0, t1) != []
 
 
+def test_eq_gate_bus_reg_rows():
+    t0 = _type()
+    t1 = copy.deepcopy(t0)
+    t1["internal_stations"].append(dict(conn="bus:leafup_o0", launch="face bus leafup_o0", capture="u_lf.u_vq.xf",
+                                        regs_um=[[5, 5]], bits=276, note="B6 bus-reg (COORD 11-14): sites ..."))
+    assert CP.eq_gate(t0, t1) == []
+
+
 def test_eq_gate_ft_coords_only():
     t0 = _type()
     t1 = copy.deepcopy(t0)
@@ -52,7 +60,7 @@ def test_ft_resite_moves_covered_reg_keeps_count():
     t = _type()
     W, H = 600.0, 300.0
     R = HR.Raster(W, H, [(180.0, 80.0, 230.0, 130.0)])     # a moved core now covers ft0 reg 0 + its bit group
-    M = types.SimpleNamespace(W=W, H=H)
+    M = types.SimpleNamespace(W=W, H=H, owner=lambda p, tol=0.6: None, moved_core=lambda i: True)
     rep = {}
     CP.ft_resite(M, t, R, dict(reach=360.0), rep)
     f = t["ft_slots"][0]
@@ -69,3 +77,20 @@ if __name__ == "__main__":
         if k.startswith("test_"):
             v()
     print("ok")
+
+
+def test_snap_station_moves_regs_off_a_core():
+    # B6 A2: a register under a core snaps to the nearest free lattice point; hops stay within reach
+    R = HR.Raster(200.0, 200.0, [(80.0, 80.0, 120.0, 120.0)])
+    out = CP.snap_station(R, (10.0, 100.0), (190.0, 100.0), [[99.36, 99.36]], 405.0)
+    assert out is not None and len(out) == 1 and R.free(*out[0])
+    assert CP.snap_station(R, (10.0, 100.0), (190.0, 100.0), [[99.36, 99.36]], 50.0) is None
+
+
+def test_detour_fix_shortens_a_kept_station():
+    R = HR.Raster(400.0, 400.0, [])
+    st = [dict(from_um=[100.0, 100.0], to_um=[200.0, 100.0], regs_um=[[100.0, 300.0]], bits=8, conn="x")]
+    rep = {}
+    CP.detour_fix(R, st, dict(reach=405.0), rep)
+    assert rep["detour_fixed"] == 1 and len(st[0]["regs_um"]) == 1
+    assert abs(st[0]["regs_um"][0][1] - 300.0) > 50
