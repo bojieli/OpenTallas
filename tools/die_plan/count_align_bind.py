@@ -465,7 +465,7 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
     tp = {r["port"] for r in t["ports"]}
     t["count_aligned"] = dict(schema=b["schema"], period_ps=b["period_ps"], root=b["root"], pad=b["pad"],
                               root_settle_cycles=root_settle_cycles,
-                              ports={pid: {k: c[k] for k in ("K", "depth", "sched_lat", "tree")}
+                              ports={pid: {k: c[k] for k in ("K", "depth", "sched_lat", "tree", "freg") if k in c}
                                      for pid, c in b["ports"].items() if pid in tp},
                               regions={k: {x: v[x] for x in ("parent", "tree_port", "edge_fall", "pad", "origin_part")
                                            if x in v}

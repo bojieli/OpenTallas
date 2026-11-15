@@ -288,3 +288,19 @@ def test_freg_ring_is_carried_through_the_bind():
             o["freg"] = 1
     b = CB.bind(p)
     assert b["ports"]["a_b"]["freg"] == 1
+
+
+def test_freg_survives_annotate_table_ports():
+    """KIT-OPS-6 11-15 (DIE-HEAD-ROUTE-1): the --parts table path built count_aligned.ports from a fixed key list (K, depth, sched_lat, tree)"""
+    rows = [row("a_b", "A", "B", 100.0, 20, 20)]
+    p = plan(rows)
+    for o in p["crossings"]:
+        o["freg"] = 1
+    b = CB.bind(p)
+    table = dict(ports=[dict(port="a_b", src="A", dst="B", src_region="A", dst_region="B")], regions=[])
+    t = CB.annotate_table(table, b)
+    assert t["count_aligned"]["ports"]["a_b"]["freg"] == 1
+    for o in p["crossings"]:
+        o.pop("freg", None)
+    t0 = CB.annotate_table(dict(ports=[dict(port="a_b", src="A", dst="B", src_region="A", dst_region="B")], regions=[]), CB.bind(p))
+    assert t0["count_aligned"]["ports"]["a_b"]["freg"] == 0
