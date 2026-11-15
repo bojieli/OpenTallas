@@ -51,3 +51,27 @@ def test_fail_closed_when_no_host_has_it_or_path_unsafe():
     assert left == {"epyc9": [F1], "epyc10": [F1]} and not log
     left = G.sync_missing({"epyc9": ["/home/x/../etc/passwd"]}, ["epyc9", "epyc10"], run, lambda s: None)
     assert left == {"epyc9": ["/home/x/../etc/passwd"]}
+
+
+def test_tree_gap_detected_and_filled():
+    """KIT-OPS-6 item 9b: epyc7 tools/ with 1 file against 17,486 and no rtl/ at all"""
+    stats = {"epyc9": {d: (n, "abc") for d, n in (("tools", 17486), ("rtl", 900), ("physical/die_plan", 300), ("physical/common_flow", 20))},
+             "epyc7": {"tools": (1, "x"), "rtl": (0, ""), "physical/die_plan": (300, "abc"), "physical/common_flow": (20, "abc")}}
+    gaps = G.tree_gaps(stats)
+    assert gaps == {"epyc7": ["tools", "rtl"]}
+    calls, out = [], []
+
+    def run(argv, timeout=900):
+        calls.append(argv[2]); return 0, ""
+    left = G.tree_fill("/srv/opentallas-scratch2/claude/src", stats, gaps, run, out.append)
+    assert left == {} and len(calls) == 2
+    assert all("--keep-old-files" in c and "epyc9" in c and "epyc7" in c for c in calls)
+    assert any("tree copy epyc9" in o and "1 -> 17486" in o for o in out)
+
+
+def test_tree_stats_parse_and_missing_dir():
+    def run(argv, timeout=900):
+        cmd = argv[-1]
+        return 0, ("17486 deadbeef0123" if "'/s/tools'" in cmd or "/s/tools" in cmd else "0 -")
+    st = G.tree_stats("epyc7", "/s", run)
+    assert st["tools"] == (17486, "deadbeef0123") and st["rtl"] == (0, "")
