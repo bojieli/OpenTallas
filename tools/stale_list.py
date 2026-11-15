@@ -322,6 +322,8 @@ def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, 
                             last_status=(last or {}).get('status', 'no kit-wave row'),
                             last_stage=(last or {}).get('stage', ''), last_class=(last or {}).get('class', ''),
                             last_time=(last or {}).get('updated', ''),
+                            superseded=bool(last and (last.get('plan_current') or '').strip().lower() == 'no'
+                                            and (last.get('status') or '') in ('SUPERSEDED', 'CANCELLED')),
                             age_h=round((now - t) / 3600, 1) if t else None,
                             owner=(ro[0] if ro else None) or (o or {}).get('owner') or lo or 'unowned',
                             owner_state=('COORD-ROUTED ' + ro[1]).strip() if ro else
@@ -331,9 +333,13 @@ def stale_items(cache, rows, own, state, text, dies, now=None, stale_h=STALE_H, 
 
 def render(stale, unreachable, src, stale_h=STALE_H, per_die_limit=None):
     """block lines: one header, one summary line per die (counts by owner), one line per item"""
-    out = ['### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= %g h: %d '
+    # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1000 class 10): the count is per CURRENT event; an item whose newest row is a SUPERSEDED / CANCELLED row of a
+    # superseded plan block (plan_current=no) is listed but not counted
+    cur = [s for s in stale if not s.get('superseded')]
+    out = ['### STALE · unsigned plan cores/types with no live job and no kit-wave row change >= %g h: %d current-event%s '
            '(live check: ps/systemd/docker on all hosts%s; wave state: %s; full list lanes/STALE.tsv)'
-           % (stale_h, len(stale), ', NOT SEEN: ' + ' '.join(unreachable) if unreachable else '', src)]
+           % (stale_h, len(cur), (' (+%d on a superseded plan block, not counted)' % (len(stale) - len(cur))) if len(cur) != len(stale) else '',
+              ', NOT SEEN: ' + ' '.join(unreachable) if unreachable else '', src)]
     by = {}
     for s in stale:
         by.setdefault(s['tag'], []).append(s)
