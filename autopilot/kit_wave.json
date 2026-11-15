@@ -7102,13 +7102,7 @@
     "ot_s81sl_leaf__t56@18"
    ],
    "take_states": [
-    "NEEDS-KIT",
-    "FIX",
-    "GEOM-REQ",
-    "KIT-PLACED",
-    "REVIEW",
-    "SIGNED",
-    "WAIT-PARENT"
+    "*"
    ],
    "geom_exceptions": [
     {
@@ -33005,7 +32999,17 @@
    "src_follow_removed_1114": {
     "root": "/srv/opentallas-scratch2/claude/source-follow",
     "by": "KIT-OPS-5 per COORD ruling relayed by CLEAN-I1"
-   }
+   },
+   "take_states_prev_s81stale1": [
+    "NEEDS-KIT",
+    "FIX",
+    "GEOM-REQ",
+    "KIT-PLACED",
+    "REVIEW",
+    "SIGNED",
+    "WAIT-PARENT"
+   ],
+   "note_s81stale1": "S81-STALE-RELAUNCH 11-14: take_states * (WF-1 default). ROUTING parent rows (col_h* base with a live class) were not in take_states, so select() only expanded released retries; 83 col_h pv classes cancelled 09:17 as superseded had no row on the current key and never relaunched."
   },
   "s81_head": {
    "enabled": true,
