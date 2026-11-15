@@ -31,3 +31,6 @@ Open: tokens for merge-queue-1 @850b1f53a81 and wave-balance-1-1114-main @7766f2
 
 ## 11-15 01:09 update
 Gen breakage 00:26 fixed (cause: refresh wrote gen_host only; replicas mixed). Per-merge refresh OFF (drop-in MQ_SRC_HOOK=, now default empty in 453f6622a8d). Daily 06:00 ot-src-refresh.timer enabled on intel2 (needs 453f6622a8d on main; until then fails harmlessly). last good sha ~/merge-queue/src-refresh-last.json = 38ef0c93cdb. Replica sync scripts: /tmp/mq1-replica_sync.sh, /tmp/mq1-replica_add.sh on epyc9/epyc7 (one-off). Open: tokens for 453f6622a8d and wave-balance-1-1114-main @7766f2431cd; KIT-OPS-5 re-key of the 32 failed items; QC gen_phys + HEAD check.py 00:24 conflicts.
+
+## 11-15 01:46 update
+READY f9028d6ecf7 (daily all-copies + identical hashes + drift timer + put). Timers enabled on intel2: ot-src-refresh (06:00), ot-src-drift (:25); both run rt/current copy (need the sha on main). Code drift 0 on 4 dies after put of postcts_gate.tcl (+8 QC epyc2 files). QC 116 physical data files differ (flag only). Open: token for f9028d6ecf7, wave-balance-1-1114-main @7766f2431cd.
