@@ -1,0 +1,6 @@
+time	host	type	stage	last_metric	kit_dir	containers	why	gb_freed	cores_reserved	cores_busy
+2026-11-14 18:33:05	intel2	eco1-i1t	5_2_route	drt_violations best 41 last 1138 rows 59 | before-window best 41, window best 540	/srv/opentallas-scratch2/claude/head-92/spe_eco_hub/eco1/i1t	prd-eco1-i1t-2546724	drt_violations best 540 vs 41 before window: < 2 % in 7.5 h	25.7	12	2.0
+2026-11-14 18:33:05	intel2	ot_s81sl_leaf__t1	5_1_grt	last meaningful line 87.9 h ago (200/395 lines)	/srv/opentallas-scratch2/claude/type-cons-4/s81/ot_s81sl_leaf__t1_vS/gen/ot_s81sl_leaf__t1	dpkit-ot_s81sl_leaf__t1-4093762	no new non-iteration log line for 87.9 h	19.7	8	1.0
+2026-11-14 18:33:05	epyc9	fabric	fabric		/srv/opentallas-scratch2/claude/hbm-forms-1/fab/B_pEv11c	trialhbm-fabric-3957235	HBM is parked	12.5	1	1.0
+2026-11-14 18:33:05	epyc9	dsdv_slice_c1x_C__t8	5_1_grt	last meaningful line 25.3 h ago (221/407 lines)	/srv/opentallas-scratch2/claude/vl3s/b/C1/dsdv_slice_c1x_C__t8	dpkit-dsdv_slice_c1x_C__t8-940855	no new non-iteration log line for 25.3 h	23.2	8	0.8
+2026-11-14 18:33:05	epyc9	ot_hbm_accel_smh_pt_w_ptwc31112_	5_1_grt		/srv/opentallas-scratch2/claude/hbm-collect-1/ptwc3/ot_hbm_accel_smh_pt_w_ptwc31112	hbmcore-ot_hbm_accel_smh_pt_w_ptwc31112_-402259	HBM is parked	10.2	8	0.9
