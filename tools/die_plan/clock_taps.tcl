@@ -233,7 +233,8 @@ if {[llength $ct_taps] >= 2} {
     set l {}
     foreach it [[lindex $tp 1] getITerms] {
       # PATH-QC-NK 10-25: a hard core's clock pin stays on the tap OT_CORE_TAPS / the split chose (never a cap move)
-      if {[info exists ::env(OT_CORE_TAPS)] && [[[$it getInst] getMaster] isBlock]} continue
+      # KV-102 11-14 (kv3_sys_c u_ucie_rom/clk moved to a tap 951 um away): a hard macro clock pin never moves in the cap pass, with or without OT_CORE_TAPS
+      if {![catch {[[$it getInst] getMaster] isBlock} ct_isb0] && $ct_isb0 eq "1"} continue
       if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it }
     }
     dict set ct_by [lindex $tp 0] $l
