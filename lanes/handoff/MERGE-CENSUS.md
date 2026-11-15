@@ -1,6 +1,6 @@
 # MERGE-CENSUS handoff (lane MERGE-CENSUS, FABLE-GENBUG brief 4.2 / G5)
 
-Status 11-15: census DONE on 347 current kits (newest kit per die x type, epyc2/7/8/9/10 + intel1, kw4x waves; tool = merged_replica_census.py @4e7f20bccb, 0 NOINPUT, 0 ERR). Generator keep + proofs: IN PROGRESS (not yet READY).
+Status 11-15: census DONE on 347 current kits (newest kit per die x type, epyc2/7/8/9/10 + intel1, kw4x waves; tool = merged_replica_census.py @4e7f20bccb, 0 NOINPUT, 0 ERR). Generator keep + proofs: READY (below).
 Raw rows: ~/coord/lanes/handoff/MERGE-CENSUS-rows.txt (MRGSUM/MRG per kit).
 
 ## Census (kits with >= 64 flops missing in a short sibling)
@@ -40,3 +40,24 @@ Before the COORD reminder I ran read-only git (git show, git status) in intel2 ~
 ## Next
 1. generator keep list derived from the RTL replica pattern (instances of one module with identical data inputs), branch + tests.
 2. proof, one kit per die: synth census then place.
+
+## QC classification (same RTL test: identical inputs = merged, distinct surviving bits = intended)
+| module / regs | verdict | evidence |
+|---|---|---|
+| qfd_dv_s8_vm8q_rp1_vwr / vrd / twc `q` (slw_su_c) | MERGE | sibling instances take the same d bits; only one copy's q survives |
+| qfd_dv_s8_station_tail1_* (orq3, nb0_orq, nb0_orq_mrep) `r`, cfg_payload0/1 (sle_st_b, slw_st_b) | MERGE | r4..r7 take the same cfg/rs/nb inputs; only r4 keeps flops |
+| qfd_dv_s8_pad `r`,`q` | MERGE | nb_c identical in all 4 instances |
+| ot_qfd_xs_leaf (+_fo32, _fo32_w) wo_d/wctl | INTENDED | last leaf of each chain has wo_d unconnected; wctl shrinks 72/54/36/18 |
+| qfd_static_ch546, ot_qkvd_llr_replay_sram_leaf (coll_core) | INTENDED | constant-tied padding bits |
+| kv3_pc ot_async_fifo mem, ot_dp_dly q | INTENDED (inspection) | HAS_SEAL / width params differ |
+Not classified: S81 ot_hdc_f12_cut / qmul / fp32_mul_f12 (ot_s81sl_kv_leaf__t5 ...), KV hub_C / hg_v3 hdc fp32 + w11_cut, HEAD hd_host_w ot_sram_oldread_b64 wdata (same family as lep wdata, no b64 synth proof). HBM skipped (parked).
+Note: kv3_hub_Eo/Wo residual `sync_q:2` is a reset synchronizer, not a data replica.
+
+## READY: generator keep (branch claude/merge-census-1115-1, intel2 clone /srv/opentallas-scratch2/claude/merge-census/wt, commits ea5c7f9261, 6f0c8e1765; NOT pushed)
+replica_keep.py derives Module:reg from the kit RTL (module instantiated >= 2 times, generate-for counts 2, unconditional port-staging regs); gen_phys.replica_keep_wires exports OT_KEEP_WIRES (OT_REPLICA_KEEP=0 opts out); ot_keep_regs.tcl takes `Module:wire` (paramod-aware). Tests: test_replica_keep.py + test_kit_keep_gpl.py, 8 passed.
+| proof kit | die | census before -> after | flops | place | LEC |
+|---|---|---|---|---|---|
+| dsdv_slice_lepw_mus_LP__t2 (epyc7) | S81 | 1,106 missing -> 0 | 41,899 -> 43,005 (+1,106 = wdata) | 3_place.odb, no FAIL | async LEC exit 0 |
+| kv3_hub_Eo (kvgeom4, epyc2) | KV | 1,142 -> 2 (sync_q) | 73,041 -> 82,251 (fan_1 copy + its dp_dly chain) | 3_place.odb, no FAIL | UNPROVEN, identical to baseline (frontend elaboration) |
+| kv3_hub_Wo (kvgeom6) | KV | 1,142 -> 2 | 76,897 -> 88,797 | FAIL OT_CLAND BAND FAIL x2 in global_place, identical in the unmodified baseline | n/a |
+Not proven: HEAD/QC die (no confirmed-merge generator target there yet), ot_sram_oldread_b64 synth census, ti_b by my own run (FABLE-KVOVF measured it; derive gives qkh_head_tstage:ti_b on kv3_hgi_v8). r_hgi2/r_hg untouched.
