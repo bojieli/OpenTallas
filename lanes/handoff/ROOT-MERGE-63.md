@@ -1,5 +1,5 @@
 # ROOT-MERGE-63 handoff (2026-11-14 08:25 PST)
-Main = 75c09f8ba5b (train CB cn). Pending: none; scan for new READY/approvals.
+Main = 2dd58b5e093 (train CC co). Pending: none; scan for new READY/approvals.
 Landed this lane (train: main sha, tags): E+F+G 157bec2e19a2 ae; H fac4c420221 + I 406c3610f29 af; J 83f2daa3323 ag; K b4c56653911 ah; L 55713eb3c46 ai; M 83fc576b530 aj; Q 5688de7798f ak; N af7bfe93a89 al (squash, 494 MB receipt = blob pointer); O+R+S 235ca3a3123 am; U afceb9cd38a an; T 1400bed52a9 ao; V 5a6b3b8efe6 ap; X fbde65d97ce aq; Y 6417913ae36 ar; Z 85b85a68f2e as; AA fd6308047a2 at; AB c54a8f2b7d1 au; AC 0467a1f3c57 av; AD 94404054ea1 aw; AE c8268117c6f ax; AJ(=AF-AI) a482236d89b ay; AK 0ff50a33851 az; AL a3ac578f4fc ba; AM 3796bb9639d bb; AN c5dc1da8688 bc; AO 5b36e2c1b62 bd; AP 35d2a30df8d be; AQ 2bd90556876 bf; AS 7f28766b82e bg.
 Next tags: bh-*.
 Pending: AT = CLAND-TIE-1 patch ~/coord/lanes/patches/CLAND-TIE-1-1114.patch (sha256 19a8fd0f2e86), epyc8 wt/at63.sh waits 240 s after AS then builds, tests, writes g63-at.done; land with rm62-land3.sh <tip> <main> ~/tmp/rm63_at.receipt (write the receipt "HEAD=<tip>\nALL_CHECKS=0" only after the gate passes).
