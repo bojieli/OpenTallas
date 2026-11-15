@@ -260,6 +260,13 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("data/fix/input.txt", g.stdout)
         self.assertNotIn("GATE main=", g.stdout)
 
+    def test_parallel_gate_commands_run_together(self):
+        procs = [subprocess.Popen([sys.executable, "-I", P, "gate", b], env=self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                  text=True) for b in ("claude/good", "claude/clash", "claude/red")]
+        outs = [p.communicate(timeout=600) for p in procs]
+        self.assertEqual([p.returncode for p in procs], [0, 0, 1], outs)
+        self.assertEqual(sum("GATE main=" in o for o, _ in outs), 2)
+
     def test_fleet_test_timeout_under_load_is_rerun_alone_once(self):
         mark = self.d / "slow.mark"
         mark.write_text("")

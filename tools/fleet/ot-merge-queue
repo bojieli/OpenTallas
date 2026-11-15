@@ -100,6 +100,25 @@ GATE_HOW = ("READY needs a gate stamp: rebase the branch on current main, run it
 PRIORITY_RE = re.compile(r"\bpriority\s*:?\s*HIGH\b", re.I)
 TAG_RE = re.compile(r"\bflow-(\d{8})-([a-z]{2})-(?:head|qc|kv|s81|hbm)\b")
 _LOCK = threading.Lock()
+GATE_PAR = int(os.environ.get("MQ_GATE_PAR", "3"))        # `gate` commands at once (11-15 14:3x: 7 lane gates queued behind 1)
+
+
+class _ClonePLock:
+    """process-wide lock on the queue clone for the short ref / worktree writes (fetch, worktree add/remove): the tick and
+    several `gate` commands share one clone; two fetches into one ref fail with 'cannot lock ref'"""
+
+    def __enter__(self):
+        MQ.mkdir(parents=True, exist_ok=True)
+        self.f = open(MQ / "clone.lock", "w")
+        fcntl.flock(self.f, fcntl.LOCK_EX)
+        return self
+
+    def __exit__(self, *a):
+        fcntl.flock(self.f, fcntl.LOCK_UN)
+        self.f.close()
+
+
+CLONE_LOCK = _ClonePLock
 _FETCH = threading.Lock()
 DRY = False
 
@@ -301,7 +320,7 @@ def select_tests(changed, all_tests, read):
 def wt_make(name, ref, extra_dirs=()):
     """a detached sparse worktree of the queue clone at ref (reused if present)"""
     p = WT / name
-    with _LOCK:
+    with _LOCK, CLONE_LOCK():
         if p.exists() and not (p / ".git").exists():
             shutil.rmtree(p)
         if not p.exists():
@@ -320,20 +339,21 @@ def wt_make(name, ref, extra_dirs=()):
 def wt_drop(name):
     p = WT / name
     if p.exists():
-        with _LOCK:
+        with _LOCK, CLONE_LOCK():
             git("worktree", "remove", "--force", str(p), check=False)
             if p.exists():
                 shutil.rmtree(p, ignore_errors=True)
 
 
 def fetch_main():
-    git("fetch", "-q", REMOTE, f"+refs/heads/{MAIN}:refs/remotes/{REMOTE}/{MAIN}", timeout=300)
+    with CLONE_LOCK():
+        git("fetch", "-q", REMOTE, f"+refs/heads/{MAIN}:refs/remotes/{REMOTE}/{MAIN}", timeout=300)
     return rev(f"{REMOTE}/{MAIN}")
 
 
 def fetch_sha(branch, sha):
     """-> full sha or '' (GitHub branch, then the hub checkout read-only); one fetch at a time per clone"""
-    with _FETCH:
+    with _FETCH, CLONE_LOCK():
         return _fetch_sha(branch, sha)
 
 
@@ -690,11 +710,22 @@ def gate_cmd(spec):
     up to 140 files, so 40 READYs went MERGE-FAIL on 11-15.  One gate at a time (flock); nothing is pushed or posted."""
     branch, _, sha = spec.partition("@")
     MQ.mkdir(parents=True, exist_ok=True)
-    lockf = open(MQ / "gate-cmd.lock", "w")
-    fcntl.flock(lockf, fcntl.LOCK_EX)
+    slots = [open(MQ / f"gate-cmd.{i}.lock", "w") for i in range(max(1, GATE_PAR))]
+    got = None
+    while got is None:                                   # first free slot; GATE_PAR gates run at once, the rest wait
+        for f in slots:
+            try:
+                fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                got = f
+                break
+            except OSError:
+                continue
+        else:
+            time.sleep(5)
     base = fetch_main()
     if not sha:
-        git("fetch", "-q", "--no-tags", REMOTE, f"+refs/heads/{branch}:refs/mq/{REMOTE}/{branch}", check=False, timeout=300)
+        with CLONE_LOCK():
+            git("fetch", "-q", "--no-tags", REMOTE, f"+refs/heads/{branch}:refs/mq/{REMOTE}/{branch}", check=False, timeout=300)
         sha = rev(f"refs/mq/{REMOTE}/{branch}")
         if not sha:
             print(f"branch {branch} not on {REMOTE} (push it to the lane mirror first: ot-lane-clone)")
