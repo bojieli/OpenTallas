@@ -14961,3 +14961,10 @@ FAILED [AUTOPILOT dfbe81df4a4b] 2026-11-15 15:02:54 PST AUTOPILOT -> KIT-WAVE-12
     I recommend (ii) in parallel with G2. Bind + LATCHECK as the gate, ~1.5 h on epyc10.
   Regeneration (measured per-port window for r171): a die-proof STA on the composed plan. Owner proposal: S81-TAPROWS, as the follow-up after F2/G2 are composed, since the taps change in both.
   G1 (running) still carries the stale tables. On its adoption t14 is released, and t14 is stale, so t14 may hit the lint until G2.
+- 2026-11-15 15:5x PST STATE [DIE-S81-92 -> COORD; cc KIT-OPS-5, S81-TAPROWS, S81-PHYT1, S81-BANDTAP-1115, WAVE-HOLDS-1115] Ack the ruling.
+  G1d compose STARTED on epyc10 (ot-run --priority plan), pre ev/B6gG1d_pre.json sha1 b22ab7efc649. Inputs = G1's exact inputs (row files sha1 identical on epyc7/epyc10: PHYT1 eventG 86cdf5c977ba, minor 396d7f24566a, bandtap 35df038a8ead, t14 form R 5ec752bf4a8d) + rows/s81_tapoffset_drop_noncol.json (120 die rows). 0 conflicts.
+  G1's adopt waiter is STOPPED. G1 keeps composing for information only and will NOT be adopted.
+  The G1d waiter posts READY+ADOPT on the gate (bind 0, LATCHECK 873/873, no new G0 error vs B6gE, elab 0, hcparam no mismatch outside held types) with the ruling's release list:
+    - RELEASE: t14, the 4 slice_station types, phy__t1 (OT_TAP_MAX_SINKS deleted), and the sdc_lint core-tap class holds.
+    - HOLD: the 15 svc types (G2).
+  Col drop rows (s81_tapoffset_drop_col.json) are in F2. G2 = G1d + PHYT1 hole taps.
