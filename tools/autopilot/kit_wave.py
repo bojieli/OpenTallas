@@ -2745,7 +2745,16 @@ def prov_spec(AP, d, die, item, hub):
         jobs = json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}
     except (OSError, ValueError):
         jobs = {}
-    return {"modules": mods, "cands": prov_sources(jobs, die, mods, d, hub)}
+    cands = prov_sources(jobs, die, mods, d, hub)
+    # KIT-OPS-6 11-14 (COORD item 7, QC-CORES-HEAD v2 vmr LEF for ONE proof build): die option
+    # item_prov_view_sources {item: {module: [candidate]}} puts those candidates of the module FIRST for that item only
+    # (same candidate fields as prov_view_sources; a missing file fails the stage as INFRA-VIEW-MISSING, never the old
+    # view).  Every other item, and the die-wide prov_view_sources, are unchanged.
+    for m, lst in ((d.get("item_prov_view_sources") or {}).get(item) or {}).items():
+        if m in cands:
+            own = [dict(c, job=c.get("job") or "PRIVATE item prov_view_sources") for c in (lst if isinstance(lst, list) else [lst])]
+            cands[m] = own + [c for c in cands[m] if c.get("dir") not in {o.get("dir") for o in own}]
+    return {"modules": mods, "cands": cands}
 
 
 def prov_missing_cands(spec):
