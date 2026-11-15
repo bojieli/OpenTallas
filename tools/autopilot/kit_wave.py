@@ -5070,6 +5070,46 @@ def geom_result_line(txt):
                  if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
+# TOOLSMOKE-1115 (FABLE-FLOW-1350 class 5, COORD r152): the flags of the tree-tool commands the wave runs FIRST on a die src tree
+# (cd SRC && python3 tools/die_plan/<script> <sub> ... : prep bind, kit-rtl, gen phys).  adopt_guard.tool_smoke checks every one
+# against the tree's own `--help` on each gen host before a switch; test_kit_wave_tree_tools.py pins these to the command lines
+# below and runs them against the oldest live tree fixtures.  Flags the wave guards itself (--cland-pinslot, --type-overlay,
+# --region-guide) are not listed.  A flag added to one of those commands MUST be added here.
+WAVE_TREE_TOOL_FLAGS = (
+    ("bind.py", "bind", ("--out", "--asbuilt", "--strict")),
+    ("bind.py", "kit-rtl", ("--out", "--asbuilt", "--type", "--src-tree", "--kit")),
+    ("gen.py", "phys", ("--out", "--types", "--rtl-root", "--kit-rtl")),
+)
+
+TREE_TOOL_SMOKE_PY = r"""
+import os, subprocess, sys
+src, tools = sys.argv[1], eval(sys.argv[2])
+bad = 0
+for script, sub, flags in tools:
+    p = os.path.join(src, "tools", "die_plan", script)
+    if not os.path.isfile(p):
+        print("TOOL_SMOKE FAIL", p, "missing"); bad += 1; continue
+    r = subprocess.run([sys.executable, "-I", p, sub, "--help"], cwd=src, capture_output=True, text=True, timeout=120)
+    txt = r.stdout + r.stderr
+    if r.returncode != 0:
+        print("TOOL_SMOKE FAIL", script, sub, "--help rc", r.returncode, txt.strip().splitlines()[-1:] ); bad += 1; continue
+    for f in flags:
+        if f not in txt:
+            print("TOOL_SMOKE FAIL", script, sub, "lacks", f, "(the wave passes it)"); bad += 1
+kt = os.path.join(src, "tools", "die_plan", "kit_topology.py")
+r = subprocess.run([sys.executable, "-I", "-m", "py_compile", kt], capture_output=True, text=True)
+if r.returncode:
+    print("TOOL_SMOKE FAIL kit_topology.py does not compile", r.stderr.strip()[-200:]); bad += 1
+print("TOOL_SMOKE", "FAIL" if bad else "OK", src)
+sys.exit(1 if bad else 0)
+"""
+
+
+def tree_tool_smoke_cmd(src):
+    """shell command (run on a gen host) that checks the tree's own tools accept the flags the wave passes"""
+    return f"python3 -I -c {shlex.quote(TREE_TOOL_SMOKE_PY)} {shlex.quote(src)} {shlex.quote(repr(WAVE_TREE_TOOL_FLAGS))}"
+
+
 SRC_MANIFEST_PY = Path(__file__).with_name("src_manifest.py")
 
 

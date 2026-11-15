@@ -182,11 +182,34 @@ def manifest_check(cfg, die, hosts, run=sh, log=print):
     return ok
 
 
+def tool_smoke(cfg, die, hosts, run=sh, log=print):
+    """TOOLSMOKE-1115 (COORD r152): the wave's first commands on the NEW tree, as a flag-level dry run on EACH gen host: bind.py bind /
+    kit-rtl and gen.py phys must accept every flag the wave passes (kit kit_wave.WAVE_TREE_TOOL_FLAGS) and kit_topology.py must
+    compile.  B6gE passed every other check and then failed 50 kit_rtl: its bind.py lacked --src-tree.  A failure refuses the switch."""
+    import kit_wave as K
+    src = str(cfg["dies"][die].get("src") or "")
+    if not src or cfg["dies"][die].get("tool_smoke") is False:
+        return True
+    cmd = K.tree_tool_smoke_cmd(src)
+    ok = True
+    for h in hosts:
+        rc, txt = run(["bash", "-c", cmd] if h == "localhost" else SSH + [h, "bash -c " + shlex.quote(cmd)], 300)
+        for ln in [l for l in (txt or "").splitlines() if l.startswith("TOOL_SMOKE FAIL")][:10]:
+            log(f"ADOPT-GUARD TOOL-SMOKE {h}:{src} {ln}")
+        if rc != 0 and "TOOL_SMOKE" not in (txt or ""):
+            log(f"ADOPT-GUARD TOOL-SMOKE {h}:{src} no verdict (rc {rc}): {(txt or '')[-200:]}")
+        ok = ok and rc == 0
+    log(f"ADOPT-GUARD tool-smoke {die}: {'OK' if ok else 'FAIL closed (nothing switched)'}")
+    return ok
+
+
 def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
     import kit_wave as K
     d = cfg["dies"][die]
     hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
     if not manifest_check(cfg, die, hosts, run, log):
+        return False
+    if not tool_smoke(cfg, die, hosts, run, log):
         return False
     _trees, files = K.src_inputs(cfg, die)
     files = sorted(set(files))
