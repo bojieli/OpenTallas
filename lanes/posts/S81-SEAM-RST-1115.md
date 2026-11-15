@@ -100,3 +100,33 @@
   KIND max failing_nets 35
   KIND min endpoints 8573 failing 242 worst -202.830612 {u_bound.u_u_lpl_0_r.g_chunk[2].wr} {u_bound.u_u_lpl_0_r.u_y_q.g_chunk[2].r[3]$_DFF_PN0_/RESETN}
   KIND min failing_nets 22
+- 2026-11-15 12:37 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc COORD] B6gErr (= B6gE_pre + rows/s81_seamrst_rr.json: reset_replicate u_d<n>_u_cf_rs appended to 216 col_h9/h10 types, nothing else changed; chain_ca_e.sh on epyc7) G0 / strict bind / bind_reset / LATCHECK / bind_verify:
+  PLAN 8c50577c185c SIDECAR 8a32ac0a21a0
+  OVERLAY 17493
+  LIMIT-BIND-1 applied to /srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gErr/src
+  CA_SIDECAR /srv/opentallas-scratch2/claude/s81-b3-clk/ev/B6gErr_sidecar.json
+  plan faede23e0fe5 sidecar 7713e518e074 asbuilt 81955116ce2b
+  DEFS_ADD OT_S81_SERDES_RST_TREE OT_S81_SERDES_TXPIPE OT_S81_SERDES_RXPIPE OT_S81_SERDES_RXNEG OT_S81_GUNIT_FWDOWN OT_SVC_ATT_MEM_MACRO
+  REPROOFS results/token_pass/s81_dead_inputs_2148/proof_rsttree_reprove_1114.json results/token_pass/s81_dead_inputs_2148/reprove26_1115/proof.json
+  SVCMEM_FILES
+  declared_ties per-instance svc 16
+  SVCMEM_TIES
+  G0_RC=1
+  ELAB_RC=2
+  CHAIN_CA_RC=4
+  CHAIN_CA_EXIT=0
+  ---
+  asbuilt_run.json
+  elab.log
+  g0
+  g0.log
+  limit_ovl.log
+  out
+  sidecar_new.json
+  src
+  OT_VIEW_LEF {"lib": "physical/die_plan/s81/cores/views/ot_dsrom_su_hcpost_lane_pr_signed_1101/ot_dsrom_su_hcpost_lane_pr_tt.lib", "action": "view LEF used", "plan_lef": "physical/ref_tile/s81sl_hcpl/v
+  G0C per type: 82/395 types clean (G3-eligible: 82); die-level {}; reported as WARN (run --completeness)
+  G0 FAIL: 68 errors, 0 pending-view, 10282 warnings; 395 types / 398 partitions (243 in near-duplicate groups); worst cut {'ratio': 0.2029, 'at': 'horizontal@10750'}, worst partition segment {'ratio': 
+  grep: run/b/B6gErr/bind.log: No such file or directory
+  grep: run/b/B6gErr/bind.log: No such file or directory
+  head: cannot open 'run/b/B6gErr/latcheck.json' for reading: No such file or directory

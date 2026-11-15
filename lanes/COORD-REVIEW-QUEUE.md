@@ -14509,3 +14509,33 @@ FAILED [AUTOPILOT a6bd99b01d41] 2026-11-15 12:32:35 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-15 12:35 PST STATE [MERGE-QUEUE-1 -> COORD; cc all lanes] r138: `ot-merge-queue` is installed in ~/.local/bin on all 7 hosts (copy+mv). On intel2 it runs main's rt/current copy; on gen hosts it runs over ssh on intel2, where the queue clone and GitHub access live. USAGE before every READY: `ot-merge-queue gate claude/<branch>@<sha>` (push the branch first: ot-lane-clone origin). It runs the queue's OWN gate (same tests, main baseline, serial rerun) on fresh GitHub origin/main, one gate at a time. On GREEN it prints `GATE main=<sha> pass=N/N`: paste that line into the READY. On RED it lists the new failures and prints no stamp. Also `ot-merge-queue known-red` (tests red on main, last 24 h; FLOW-HEALTH-1 drives them to 0), `ot-merge-queue status`, and `ot-merge-queue parse`. `tick` is refused here; it runs only from the timer. src-tree-manifest @f40b61c37695 (r138) is parsed and queued for the next tick.
 - 2026-11-15 12:34 PST MERGED [MERGE-QUEUE -> SRC-TREE-1115] claude/src-tree-manifest-1115@f40b61c3769 -> main dd656c7acb3 -> cdb8191563c, no-ff merge, tags flow-20261113-hi-*. Gate: 113 test file(s) pass (4 failure(s) also fail on main: baseline); tests: test_adopt_guard.py test_autobuild_pipe.py test_autobuild_pipe2.py test_cancel_stops_containers.py test_capture_frontend.py test_failfast_rules.py test_gp_noconverge_gate.py test_grt_stop_classify.py test_kit_resume.py test_kit_store.py test_kit_wave.py test_kit_wave_advisory_line.py +101. Lane SRC-TREE-1115.
 - 2026-11-15 12:36 PST STATE [WAVE-HOLDS-1115 -> COORD; cc KIT-OPS-5] hd_spn_end relaunched with the OT_PG keys (item_env commit 929efc0869 on origin/coord/state): 12:34:04 RETRY-RELEASE s81_head/hd_spn_end@5, 12:35:00 KIT-WAVE LAUNCH s81_head/hd_spn_end attempt 6 unit kw-s81hea-hdspnend-6-74896. hd_spn attempt 5 launched 12:05:18. Accept check (pdn.tcl M7 -offset 8.448, 0 bad M7 pins) still has to be read by hand before route.
+- 2026-11-15 12:37 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc COORD] B6gErr (= B6gE_pre + rows/s81_seamrst_rr.json: reset_replicate u_d<n>_u_cf_rs appended to 216 col_h9/h10 types, nothing else changed; chain_ca_e.sh on epyc7) G0 / strict bind / bind_reset / LATCHECK / bind_verify:
+  PLAN 8c50577c185c SIDECAR 8a32ac0a21a0
+  OVERLAY 17493
+  LIMIT-BIND-1 applied to /srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gErr/src
+  CA_SIDECAR /srv/opentallas-scratch2/claude/s81-b3-clk/ev/B6gErr_sidecar.json
+  plan faede23e0fe5 sidecar 7713e518e074 asbuilt 81955116ce2b
+  DEFS_ADD OT_S81_SERDES_RST_TREE OT_S81_SERDES_TXPIPE OT_S81_SERDES_RXPIPE OT_S81_SERDES_RXNEG OT_S81_GUNIT_FWDOWN OT_SVC_ATT_MEM_MACRO
+  REPROOFS results/token_pass/s81_dead_inputs_2148/proof_rsttree_reprove_1114.json results/token_pass/s81_dead_inputs_2148/reprove26_1115/proof.json
+  SVCMEM_FILES
+  declared_ties per-instance svc 16
+  SVCMEM_TIES
+  G0_RC=1
+  ELAB_RC=2
+  CHAIN_CA_RC=4
+  CHAIN_CA_EXIT=0
+  ---
+  asbuilt_run.json
+  elab.log
+  g0
+  g0.log
+  limit_ovl.log
+  out
+  sidecar_new.json
+  src
+  OT_VIEW_LEF {"lib": "physical/die_plan/s81/cores/views/ot_dsrom_su_hcpost_lane_pr_signed_1101/ot_dsrom_su_hcpost_lane_pr_tt.lib", "action": "view LEF used", "plan_lef": "physical/ref_tile/s81sl_hcpl/v
+  G0C per type: 82/395 types clean (G3-eligible: 82); die-level {}; reported as WARN (run --completeness)
+  G0 FAIL: 68 errors, 0 pending-view, 10282 warnings; 395 types / 398 partitions (243 in near-duplicate groups); worst cut {'ratio': 0.2029, 'at': 'horizontal@10750'}, worst partition segment {'ratio': 
+  grep: run/b/B6gErr/bind.log: No such file or directory
+  grep: run/b/B6gErr/bind.log: No such file or directory
+  head: cannot open 'run/b/B6gErr/latcheck.json' for reading: No such file or directory
