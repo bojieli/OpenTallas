@@ -92,6 +92,7 @@ def test_hook_accepts_module_scoped_names():
     tcl = (HERE.parents[1] / "physical" / "common_flow" / "ot_keep_regs.tcl").read_text()
     assert "ot_kwn_m" in tcl and "$paramod*?${ot_kwn_m}?*" in tcl and '"\\$paramod*?${ot_kwn_m}"' in tcl   # paramod name without a parameter suffix
     assert "not a wire base name" in tcl            # bare names keep their check
+    assert 'w:*.$ot_kwn_w' in tcl                   # Module:wire reaches generate-scoped regs (g_r.r)
 
 
 HDC = """
