@@ -45120,7 +45120,15 @@
      "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S3M2.json"
     ]
    },
-   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens"
+   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens",
+   "item_prov_view_sources": {
+    "slw_su_c__cl92142dac": {
+     "qfd_dv_s8x_vmr": [
+      {"host": "epyc2", "dir": "/srv/opentallas-scratch2/claude/kit-ops-6/vmr_view_su_c", "job": "COUNTED qfd_dv_s8x_vmr (same signed ODB view; libs/gates from kw32-views d7a7b7e271e8) + QC-CORES-HEAD v2 ckwin LEF 604bc938de3c, slw_su_c__cl92142dac ONLY (KIT-OPS-6 11-14, COORD item 7)"}
+     ]
+    }
+   },
+   "note_kitops6_itemview": "KIT-OPS-6 11-14 (COORD item 7): item_prov_view_sources = per-item child view first (kit_wave.py prov_spec); proof build of slw_su_c__cl92142dac only; die-wide prov_view_sources unchanged until it routes clean; backup kit_wave.json.bak-kitops6-itemview"
   },
   "hbm": {
    "enabled": true,
