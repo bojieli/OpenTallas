@@ -88,3 +88,24 @@ def test_gated_non_tap_name_rejected():
     s = GTEXT.replace("rst_n_t14", "rst_x_t14"); t["relays"][-1]["q"] = "rst_x_t14"
     with pytest.raises(ResetConsumerError):
         localize(s, [dict(ROW, new_reset="rst_x_t14")], t)
+
+
+# QC-SC-ROWS-1115: localization between gated taps needs equal published START roles.
+RGTEXT = TEXT.replace('ot_dp_rrelay a1 (.clk(clk), .d(a0), .q(rst_n_t5))', 'ot_dp_rgate a1 (.clk(clk), .d(a0), .run(ra), .q(rst_n_t5))') \
+    .replace('ot_dp_rrelay b1 (.clk(clk), .d(b0), .q(rst_n_t14))', 'ot_dp_rgate b1 (.clk(clk), .d(b0), .run(rb), .q(rst_n_t14))')
+
+def _rgtree(r5='mission', r14='mission'):
+    t = copy.deepcopy(TREE)
+    for r in t['relays']:
+        if r['q'] == 'rst_n_t5': r.update(tap=5, kind='tap')
+        if r['q'] == 'rst_n_t14': r.update(tap=14, kind='tap')
+    t['tap_roles'] = {5: r5, 14: r14}
+    return t
+
+def test_gated_taps_same_role_accepted():
+    txt, rs = localize(RGTEXT, [ROW], _rgtree())
+    assert '.rst_n(rst_n_t14)' in txt and rs[0]['cycles_added'] == 0
+
+def test_gated_taps_role_mismatch_rejected():
+    with pytest.raises(ResetConsumerError, match='tap role'):
+        localize(RGTEXT, [ROW], _rgtree(r14='bootstrap'))

@@ -140,6 +140,11 @@ def localize(text, declarations, tree, native_roles=None):
         new_node, new_depth = lineage(new, clock)
         if old_depth != new_depth:
             raise ResetConsumerError(f'{key}: reset release depth changes {old_depth}->{new_depth}')
+        # QC-SC-ROWS-1115: a gated tap carries reset AND run per START role; both taps must have the same published role
+        troles = tree.get('tap_roles') or {}
+        otap, ntap = published[old_node].get('tap'), published[new_node].get('tap')
+        if troles and (troles.get(otap, troles.get(str(otap))) != troles.get(ntap, troles.get(str(ntap)))):
+            raise ResetConsumerError(f'{key}: reset tap role differs between {old_node} and {new_node}')
         _, lo, hi = c['ports'][pin]
         # Retain whitespace around the connection; rewrite only the old identifier.
         raw = text[lo:hi]
