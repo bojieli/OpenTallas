@@ -89,3 +89,23 @@ One line per hook, same format: `OT_HOOK_COVERAGE hook=<name> touched=<N> expect
 - `merged_replica_census.py` after synth (5 above, 4.2).
 - Hook manifest: gen writes `hooks.manifest` (sha of every hook file copied into the kit, the tree sha and main's sha for the same path); the wave preflight flags a hook that is older than main or not on main (G4).
 - Wave-level: `tools/failure_breakdown.py` adds one row per die with the kits whose `OT_HOOK_COVERAGE` is below threshold, so a silent hook shows up as its own class.
+
+## 6. G1 closure record (GENBUG-IMPL, 2026-11-15)
+
+Proof of record: dsdv_slice_c1x_C__t1 (the worst kit), place goal to `3_place.odb`, FIRM sites kept, global-placement routability off (the routability-on run proof3 was cancelled while still in its GP loop), `rtl_lint` and `selrange_gate` stubbed (RTL identical to the wave kit, recorded PASS kept). Host epyc9 `genbug-impl/proof4`; measured with `fable-genbug/pq/stq_run.sh` (output epyc9 `genbug-impl/pq/c1x_fix.stq.out`). Baseline = the wave-kit `3_place.odb` (`fable-genbug/stq/dsdv_slice_c1x_C__t1.stq.out`).
+
+Hook: `OT_HOOK_COVERAGE hook=istations touched=11332 missing=0 packed_stage_unmatched=0` (wave kit: missing 7 last stages).
+
+| pad (D, planned sites) | bits | q to planned site p50 / p90 um | hop into last stage max um | previous-stage out hop max um |
+|---|---|---|---|---|
+| leafup_i0 (1) | 668 | 442 / 758 -> 14 / 28 | 2201 -> 836 | n/a |
+| leafup_i1 (2) | 668 | 705 / 1063 -> 14 / 25 | 1498 -> 778 | 1499 -> 778 |
+| leafup_i2 (1) | 668 | 825 / 1279 -> 21 / 37 | 1560 -> 247 | n/a |
+| leafup_i4 (1) | 668 | 965 / 1278 -> 25 / 51 | 1374 -> 357 | n/a |
+| ret_i0 (4) | 70 | 485 / 972 -> 4 / 7 | 1597 -> 358 | 1597 -> 421 |
+| ret_i1 (4) | 70 | 495 / 1003 -> 4 / 9 | 1973 -> 363 | 1973 -> 406 |
+| ret_i2 (4) | 70 | 612 / 1060 -> 4 / 8 | 1659 -> 366 | 1660 -> 410 |
+
+Reading: 5 of 7 pads meet q90 <= 30 um (leafup_i2 37, leafup_i4 51). The 778 um previous-stage hop of leafup_i1 is the plan spacing of its two stations (sites at y 1172.1 and 413.8). Not proven: timing and GRT (place only).
+
+Installed copy+mv (backups `.bak-genbug1`) in the S81, HEAD, QC and KV src trees on epyc2/7/8/9/10/intel1: kit_istations.py sha 1318267c76de (= claude/fable-genbug-1115-1 @8096bacdd6; the GENBUG-1 block is emitted only when the plan has a packed lane-pad station, so kits without one are byte-equal to before). Affected-kit list: `lanes/overlays/GENBUG-G1-affected-kits.tsv`.
