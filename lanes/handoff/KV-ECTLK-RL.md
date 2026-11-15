@@ -14,3 +14,14 @@ PLAN ROWS for KV-102 (per hg type, 8 types of 7m; per-type resets unchanged):
  DECISION for KV-102/COORD: krsp +5 on all hg frames (one RL for every core): q3 path (306,468)(605,543)(925,597)(925,971)(925,1300) hops 374x4,329, last <=244; q0..q2 add one station on their branch. Round trip 8+8+10 = 26, QK 37. Cores then rebuild at 37/26 = parameters only (same kits); the 36/25 builds below are the proof of the flow.
  G0 does not check these rsp_data hops (no core_conns sidecar for ectl); hops above are my pin-aware Manhattan, window centre launch (per-bit launch spread y 213..576 not read).
 Status of core builds: see COORD-REVIEW-QUEUE lines.
+
+## 11-15 COORD ruling: krsp +5 on all hg frames (RL 26, QK 37) -- ROWS FOR KV-102
+rq +3: unchanged from 7m (stations (30,1096.5)(30,731)(30,365.5); from (170,1322) to face:W (6,24)).
+krsp +5: shared trunk from face:W (123,277): S1 (306,468), S2 (306,842) [hops 374,374]; then per core, capture "<core>.rsp_data", three private stations:
+  q3 (verified): S1 (306,468) S2 (605,543) S3 (925,597) S4 (925,971) S5 (925,1300): hops 374 x4, 329; S5 -> rsp_data pins <= 244 um. (q3 leaves the shared trunk after S1, so its S2 is (605,543), not (306,842).)
+  q0: S3 (306,1216) S4 (30,1300)  + one more station on the (306,842)->(306,1216) leg e.g. S3 (306,1029), S4 (306,1216), S5 (30,1300): hops 374,374,187,187,360; S5->pin <=223
+  q1: S3 (306,1029) S4 (306,1216) S5 (306,1300): S5->pin <=224
+  q2: S3 (520,1010) S4 (605,1300) +1: S3 (450,926), S4 (560,1100)... place 3 stations between (306,842) and (605,1300) at <=405 per hop (794 um total, 4 hops of ~200-380); S5 (605,1300); S5->pin <=254
+  (q0..q2 hops all <=405 by construction; positions of the extra station are KV-102's to site on streets; q3 numbers are the binding ones.)
+Cores: 37/26 builds launched on 4 kits (kv-ectlk-rl-cores37/q0..q3, ot-run unpinned, route), branch claude/kv-ectlk-rl-1115 @19dac1359b2 (defaults and CORE_QK/CORE_RL = 37/26). 36/25 builds (kv-ectlk-rl-cores) left running as evidence.
+Miter 37/26 (kv-ectlk-rl-bench go37.log): nom columns 37/26 vs kiss_st #(37,26) RL 26 PASS 0/8580; mutant columns 37/26 vs #(36,25) FAIL 8096.
