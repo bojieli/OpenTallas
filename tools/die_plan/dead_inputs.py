@@ -153,9 +153,14 @@ class DeclaredTies:
     def __init__(self, manifest):
         self.rows = manifest.get('declared_ties', [])
         for row in self.rows:
-            if set(row) - {'note'} != set(self.KEYS) or not row['types'] or row['value'] not in ('0', '1'):
+            if set(row) - {'note', 'paths'} != set(self.KEYS) or not row['types'] or row['value'] not in ('0', '1'):
                 raise ValueError('malformed declared_ties row: ' + json.dumps(row)[:200])
 
-    def allows(self, partition_type, module, port, bit, value):
+    def allows(self, partition_type, module, port, bit, value, path=None):
+        # DIE-S81-92 11-14: optional row key 'paths' = regexes on the bound cell path; the row then ties only instances whose path matches
+        # (a row without 'paths' is module-wide, as before; a caller that passes no path never matches a per-path row)
+        import re as _re
         return any(partition_type in r['types'] and r['module'] == module and r['port'] == port
-                   and r['bits'][0] <= bit <= r['bits'][1] and r['value'] == str(value) for r in self.rows)
+                   and r['bits'][0] <= bit <= r['bits'][1] and r['value'] == str(value)
+                   and (not r.get('paths') or (path is not None and any(_re.search(x, path) for x in r['paths'])))
+                   for r in self.rows)
