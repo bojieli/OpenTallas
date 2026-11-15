@@ -496,5 +496,14 @@ dict for {g st} $rm_station {
 }
 close $rm_out; close $rm_log
 if {$rm_fit} { puts "OT_RELAY_MID_FIT fitted $rm_nfit stations, $rm_nold on the old fallback (chan [expr {$rm_chan / double($rm_dbu)}] um, hop [expr {$rm_hop / double($rm_dbu)}] um)" }
+# GENBUG-7 (11-15): coverage line for the FIT form; OT_RELAY_FALLBACK_MAX_FRAC=<f> (unset = advisory only) fails the hook when
+# more than that share of stations took the old nearest-free fallback (table proposal 0.05; 15 of 18 S81 col kits are above it today).
+if {$rm_fit} {
+  set rm_cov [expr {$rm_nfit + $rm_nold}]
+  puts "OT_HOOK_COVERAGE hook=relay_mid touched=$rm_nfit expected=$rm_cov fallback=$rm_nold advisory=[expr {![info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)]}]"
+  if {[info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)] && $rm_cov > 0 && double($rm_nold) / $rm_cov > $::env(OT_RELAY_FALLBACK_MAX_FRAC)} {
+    error "OT_HOOK_COVERAGE relay_mid: $rm_nold of $rm_cov stations on the old fallback (> $::env(OT_RELAY_FALLBACK_MAX_FRAC))"
+  }
+}
 puts "OT_RELAY_MID placed $rm_n relay flops of [dict size $rm_station] stations ([dict size $rm_grp] relay groups) FIRM on their source-sink lines"
 }
