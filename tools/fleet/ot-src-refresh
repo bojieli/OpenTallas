@@ -1,0 +1,312 @@
+#!/usr/bin/env python3
+"""ot-src-refresh: carry main's tool fixes into each die's wave source tree (MERGE-QUEUE-1, COORD order 2026-11-14 21:2x).
+
+Kit generation and plan binds read SRC/tools/die_plan (and SRC/physical/common_flow, SRC/rtl/{lib,common}) of each die's own
+source tree (kit_wave.json dies.<die>.src on dies.<die>.gen_host, plus item_inputs.*.src), never the pinned rt/current tree.
+Without this step a fix landed on main never reaches a new kit or bind.
+
+  ot-src-refresh refresh --from OLD --to NEW [--apply]     the files main changed OLD..NEW (scope below), per tree:
+        missing in the tree                       -> ADD (new file)
+        tree copy == NEW                          -> SAME
+        tree copy == OLD (or any earlier main version of the file) -> REPLACE with NEW
+        tree copy is a local edit                 -> 3-way merge (git merge-file tree OLD NEW); clean -> MERGE, else CONFLICT (kept)
+        a file that a process on the gen host has open or names in its command line -> BUSY (kept, retried on the next run)
+  ot-src-refresh catchup --since DATE [--apply]            the same for every file main changed since DATE (base = the
+        earlier main version the tree copy equals; a local edit without a known base is reported LOCAL and kept)
+Every write: backup SRC/.mq-refresh-bak/<stamp>/<path> (cp -p), new content to a temp file in the same dir, then os.replace
+(copy+mv: a running bash / Python keeps the old inode).  SRC/MQ_REFRESH.log gets one line per write.  Without --apply: report only.
+Scope: tools/ (not tools/fleet, tools/autopilot: those run from rt/current) + physical/common_flow + rtl/lib + rtl/common; no tests.
+Result TSV ~/merge-queue/src-refresh.tsv; BUSY rows in ~/merge-queue/src-refresh-pending.json are retried with main's newest content.
+"""
+import argparse
+import base64
+import datetime
+import hashlib
+import json
+import os
+import re
+import shlex
+import subprocess as S
+import sys
+from pathlib import Path
+
+HOME = Path.home()
+MQ = Path(os.environ.get("MQ_HOME", HOME / "merge-queue"))
+REPO = Path(os.environ.get("MQ_REPO", "/srv/opentallas-scratch2/claude/mq1/repo"))
+CFG = Path(os.environ.get("OT_SRC_CFG", HOME / "coord/autopilot/kit_wave.json"))
+REMOTE = os.environ.get("MQ_REMOTE", "origin")
+SCOPE = ("tools/", "physical/common_flow/", "rtl/lib/", "rtl/common/")
+EXCLUDE = ("tools/fleet/", "tools/autopilot/")
+SSH = os.environ.get("OT_SRC_SSH", "timeout 600 ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=20")
+LOCAL_HOSTS = set(os.environ.get("OT_SRC_LOCAL_HOSTS", "").split())      # tests: run these "hosts" in-process
+MAX_HIST = 400
+
+
+def now():
+    return datetime.datetime.now().astimezone()
+
+
+def log(msg):
+    MQ.mkdir(parents=True, exist_ok=True)
+    line = f"{now().strftime('%Y-%m-%d %H:%M:%S')} SRCREF {msg}"
+    print(line, flush=True)
+    with open(MQ / "log", "a") as f:
+        f.write(line + "\n")
+
+
+def git(*a, check=True, binary=False):
+    p = S.run(["git", *a], cwd=str(REPO), capture_output=True, timeout=600)
+    if check and p.returncode:
+        raise RuntimeError(f"git {' '.join(a)[:160]}: {p.stderr.decode(errors='replace').strip()[:300]}")
+    return p.stdout if binary else p.stdout.decode(errors="replace")
+
+
+def in_scope(p):
+    if not p.startswith(SCOPE) or p.startswith(EXCLUDE):
+        return False
+    b = os.path.basename(p)
+    return not (b.startswith("test_") or "/tests/" in p or b.endswith((".pyc",)))
+
+
+def blob_at(rev, path):
+    p = S.run(["git", "show", f"{rev}:{path}"], cwd=str(REPO), capture_output=True, timeout=300)
+    return p.stdout if p.returncode == 0 else None
+
+
+def history_blobs(paths, since="2026-10-01"):
+    """path -> set of blob ids main had for it (to call a tree copy 'an earlier main version')"""
+    out = {}
+    if not paths:
+        return out
+    txt = git("log", f"{REMOTE}/main", f"--since={since}", "--raw", "--no-abbrev", "--format=", "--", *paths, check=False)
+    for line in txt.splitlines():
+        f = line.split()
+        if len(f) >= 6 and line.startswith(":"):
+            out.setdefault(f[5], set()).add(f[3])
+    return out
+
+
+def targets(cfg):
+    """[(die, host, src)] of enabled dies + their item_inputs trees, de-duplicated by (host, src)"""
+    seen, out = set(), []
+    for die, d in sorted((cfg.get("dies") or {}).items()):
+        if not isinstance(d, dict) or not d.get("enabled") or not d.get("gen_host"):
+            continue
+        srcs = [d.get("src")] + [v.get("src") for v in (d.get("item_inputs") or {}).values() if isinstance(v, dict)]
+        for s in srcs:
+            if s and str(s).startswith("/") and (d["gen_host"], s) not in seen:
+                seen.add((d["gen_host"], s))
+                out.append((die, d["gen_host"], str(s)))
+    return out
+
+
+# ---------------------------------------------------------------- remote part (runs on the gen host, python3 -I, stdin = JSON)
+
+REMOTE_PY = r'''
+import base64, hashlib, json, os, shutil, subprocess, sys, tempfile
+job = json.loads(sys.stdin.read())
+src, apply_, stamp = job["src"], job["apply"], job["stamp"]
+def bid(b):
+    return hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()
+_PROC = None
+def users(path):
+    """pids that have path open, run it, or name it on their command line (one /proc scan per run)"""
+    global _PROC
+    if _PROC is None:
+        _PROC = []
+        for d in os.listdir("/proc"):
+            if not d.isdigit():
+                continue
+            try:
+                cmd = open(f"/proc/{d}/cmdline", "rb").read().replace(b"\0", b" ").decode(errors="replace")
+            except OSError:
+                continue
+            fds = set()
+            try:
+                for fd in os.listdir(f"/proc/{d}/fd"):
+                    try:
+                        fds.add(os.readlink(f"/proc/{d}/fd/{fd}"))
+                    except OSError:
+                        pass
+            except OSError:
+                pass
+            _PROC.append((int(d), cmd, fds))
+    return [pid for pid, cmd, fds in _PROC if path in cmd or path in fds]
+res = []
+if not os.path.isdir(src):
+    print(json.dumps({"error": f"no tree {src}"})); sys.exit(0)
+for f in job["files"]:
+    rel, new = f["path"], base64.b64decode(f["new"])
+    base = base64.b64decode(f["base"]) if f.get("base") is not None else None
+    hist = set(f.get("hist") or [])
+    t = os.path.join(src, rel)
+    r = {"path": rel}
+    have = None
+    if os.path.lexists(t):
+        try:
+            have = open(t, "rb").read()
+        except OSError as e:
+            r.update(status="UNREADABLE", note=str(e)); res.append(r); continue
+    if have is not None and have == new:
+        r["status"] = "SAME"; res.append(r); continue
+    if have is None:
+        out, st = new, "ADD"
+    elif (base is not None and have == base) or bid(have) in hist:
+        out, st = new, "REPLACE"
+    elif base is not None:
+        with tempfile.TemporaryDirectory() as td:
+            a, o, b = (os.path.join(td, n) for n in ("a", "o", "b"))
+            open(a, "wb").write(have); open(o, "wb").write(base); open(b, "wb").write(new)
+            p = subprocess.run(["git", "merge-file", "-q", "-p", a, o, b], capture_output=True)
+            if p.returncode != 0:
+                r.update(status="CONFLICT", note=f"{p.returncode} conflict hunk(s)"); res.append(r); continue
+            out, st = p.stdout, "MERGE"
+    else:
+        r.update(status="LOCAL", note="local edit, no known base"); res.append(r); continue
+    u = users(t) if have is not None else []
+    if u:
+        r.update(status="BUSY", note=f"pids {u[:5]}"); res.append(r); continue
+    r["status"] = st
+    if apply_:
+        try:
+            d = os.path.dirname(t)
+            os.makedirs(d, exist_ok=True)
+            mode = os.stat(t).st_mode & 0o7777 if have is not None else (0o755 if new.startswith(b"#!") else 0o644)
+            if have is not None:
+                bk = os.path.join(src, ".mq-refresh-bak", stamp, rel)
+                os.makedirs(os.path.dirname(bk), exist_ok=True)
+                shutil.copy2(t, bk)
+            fd, tmp = tempfile.mkstemp(dir=d, prefix=".mqref.")
+            with os.fdopen(fd, "wb") as o:
+                o.write(out)
+            os.chmod(tmp, mode)
+            os.replace(tmp, t)
+            with open(os.path.join(src, "MQ_REFRESH.log"), "a") as lg:
+                lg.write(f"{stamp} {st} {rel} -> main {job['to'][:11]} (blob {bid(out)[:12]}; was {bid(have)[:12] if have is not None else '-'})\n")
+            r["written"] = True
+        except OSError as e:
+            r.update(status="ERROR", note=str(e))
+    res.append(r)
+print(json.dumps({"results": res}))
+'''
+
+
+def run_remote(host, job):
+    data = json.dumps(job)
+    if host in LOCAL_HOSTS:
+        cmd = [sys.executable, "-I", "-c", REMOTE_PY]
+    else:
+        cmd = shlex.split(SSH) + [host, "python3", "-I", "-c", shlex.quote(REMOTE_PY)]
+    p = S.run(cmd, input=data, capture_output=True, text=True, timeout=900)
+    try:
+        return json.loads(p.stdout.strip().splitlines()[-1])
+    except (ValueError, IndexError):
+        return {"error": f"rc={p.returncode}: {(p.stderr or p.stdout).strip()[-300:]}"}
+
+
+# ---------------------------------------------------------------- hub part
+
+def load_pending():
+    try:
+        return json.loads((MQ / "src-refresh-pending.json").read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def save_pending(pend, dry):
+    if dry:
+        return
+    t = MQ / "src-refresh-pending.json.tmp"
+    t.write_text(json.dumps(pend, indent=1, sort_keys=True))
+    os.replace(t, MQ / "src-refresh-pending.json")
+
+
+def file_jobs(paths, old, new, hist):
+    jobs = []
+    for p in paths:
+        nb = blob_at(new, p)
+        if nb is None:                                   # deleted on main: never delete from a die tree
+            continue
+        ob = blob_at(old, p) if old else None
+        jobs.append({"path": p, "new": base64.b64encode(nb).decode(), "base": base64.b64encode(ob).decode() if ob is not None else None,
+                     "hist": sorted(hist.get(p, ()))[-MAX_HIST:]})
+    return jobs
+
+
+def refresh(paths, old, new, apply_, only=None, label=""):
+    cfg = json.loads(CFG.read_text())
+    stamp = now().strftime("%Y%m%d-%H%M%S")
+    pend = load_pending()
+    tg = [t for t in targets(cfg) if not only or t[0] in only]
+    hist = history_blobs(sorted(set(paths) | {k.split("|", 2)[2] for k in pend}))
+    rows, summary = [], []
+    for die, host, src in tg:
+        mine = sorted(set(paths) | {k.split("|", 2)[2] for k, v in pend.items() if k.startswith(f"{host}|{src}|")})
+        if not mine:
+            continue
+        jobs = []
+        for j in file_jobs(mine, old, new, hist):
+            pk = f"{host}|{src}|{j['path']}"
+            if pk in pend and j["path"] not in paths:        # retry of a BUSY file: base = the version it waited on
+                ob = blob_at(pend[pk]["base"], j["path"]) if pend[pk].get("base") else None
+                j["base"] = base64.b64encode(ob).decode() if ob is not None else None
+            jobs.append(j)
+        res = run_remote(host, {"src": src, "apply": apply_, "stamp": stamp, "to": new, "files": jobs})
+        if "error" in res:
+            summary.append(f"{die} {host}:{src}: ERROR {res['error']}")
+            continue
+        cnt = {}
+        for r in res["results"]:
+            cnt[r["status"]] = cnt.get(r["status"], 0) + 1
+            rows.append([stamp, label, die, host, src, r["path"], r["status"], r.get("note", ""), "applied" if r.get("written") else ""])
+            pk = f"{host}|{src}|{r['path']}"
+            if r["status"] == "BUSY":
+                pend[pk] = {"base": pend.get(pk, {}).get("base") or old, "since": stamp}
+            elif r["status"] in ("SAME", "ADD", "REPLACE", "MERGE") and (r.get("written") or r["status"] == "SAME"):
+                pend.pop(pk, None)
+        summary.append(f"{die} {host}:{src}: " + " ".join(f"{k}={v}" for k, v in sorted(cnt.items())))
+    MQ.mkdir(parents=True, exist_ok=True)
+    if apply_:
+        with open(MQ / "src-refresh.tsv", "a") as f:
+            for r in rows:
+                f.write("\t".join(map(str, r)) + "\n")
+    save_pending(pend, not apply_)
+    for s in summary:
+        log(f"{'APPLY' if apply_ else 'DRY'} {label} {s}")
+    return rows, summary
+
+
+def changed(old, new):
+    return [p for p in git("diff", "--name-only", "--no-renames", old, new).split("\n") if p and in_scope(p)]
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    a = sub.add_parser("refresh"); a.add_argument("--from", dest="old", required=True); a.add_argument("--to", dest="new", required=True)
+    c = sub.add_parser("catchup"); c.add_argument("--since", required=True); c.add_argument("--to", dest="new", default=f"{REMOTE}/main")
+    for p in (a, c):
+        p.add_argument("--apply", action="store_true"); p.add_argument("--dies", default=""); p.add_argument("--show", action="store_true")
+    x = ap.parse_args()
+    if x.apply and "OT_SRC_CFG" not in os.environ and "MQ_REPO" in os.environ:
+        sys.exit("refusing --apply: MQ_REPO is set (a test or side clone) but the die config is the production kit_wave.json")
+    only = set(x.dies.split(",")) - {""}
+    if x.cmd == "refresh":
+        paths = changed(x.old, x.new)
+        rows, summ = refresh(paths, x.old, x.new, x.apply, only, f"{x.old[:11]}..{x.new[:11]}")
+    else:
+        since = x.since + " 00:00" if re.fullmatch(r"\d{4}-\d\d-\d\d", x.since) else x.since   # git reads a bare date as "now on that day"
+        paths = sorted({p for p in git("log", x.new, f"--since={since}", "--name-only", "--format=").split("\n") if p and in_scope(p)})
+        rows, summ = refresh(paths, "", x.new, x.apply, only, f"catchup-since-{x.since}")
+    for s in summ:
+        print(s)
+    if x.show:
+        for r in rows:
+            if r[6] != "SAME":
+                print("\t".join(map(str, r[2:])))
+    bad = [s for s in summ if "ERROR" in s]
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
