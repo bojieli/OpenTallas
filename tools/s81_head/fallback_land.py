@@ -206,6 +206,7 @@ def cmd_compose(a):
                                band_multi_rect=getattr(a, "band_multi_rect", False),
                                band_order_by_type=_band_orders(a) or None,
                                band_use_max=getattr(a, "band_use_max", 0.5),
+                               band_clock_obstacles=getattr(a, "band_clock_obstacles", False),
                                band_use_max_by_type=dict((k, float(v)) for k, v in (x.split("=", 1) for x in (getattr(a, "band_use_type", None) or []))) or None)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
@@ -324,6 +325,8 @@ def main(argv=None):
                         "buses do not take the long macro-free strips the wide ones need")
     c.add_argument("--band-order-type", action="append", metavar="TYPE=largest_first",
                    help="S81-CA-BAND: band order of ONE base type (repeatable); overrides --band-order for it")
+    c.add_argument("--band-clock-obstacles", action="store_true",
+                   help="S81-CA-BAND: die clock islands and die clock-tree reserved sites (svc channel taps) are band obstacles in every band mode")
     c.add_argument("--band-use-max", type=float, default=0.5,
                    help="compose band_use_max (ring reserve <= this share of its band; default 0.5, 1.0 = the bare reserve)")
     c.add_argument("--band-use-type", action="append", metavar="TYPE=USE",

@@ -256,6 +256,9 @@ BAND_SPREAD=1.0
 # 1.0 (the bare reserve, the smallest band the placer can fill), then falls back to the mode area (recorded
 # band_use > 1, advisory). None (module default) keeps _storage_band byte-identical for direct callers.
 BAND_USE_MAX=None
+# S81-CA-BAND (opt-in compose(band_clock_obstacles=True); default off = byte-identical): die clock islands and die clock-tree
+# reserved sites (the svc channel taps) are band obstacles in EVERY band mode, not only ring_ff (FABLE-PD-S81-0850 lever 4c)
+BAND_CLOCK_OBST=False
 CA_RESERVE40=(5.36,114.0,130.0)
 CA_FLOPS=(4,72,73)
 FF_RESERVE40_UM2=0.729
@@ -483,7 +486,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
     if _use is not None and _use>0:area=max(r40*RING_FF_PACK/_use,reserve*scale if _scale is not None else 0.0)
     depth=math.ceil(max(8.64,area/length)/2.16)*2.16
     obstacles=RT.blockages(t)+used
-    if BAND_RESERVE=="ring_ff":
+    if BAND_RESERVE=="ring_ff" or BAND_CLOCK_OBST:
         # the die clock driver islands and die clock-tree cell sites are placement blockages in the kit (die_islands.tcl,
         # reserved_sites.tcl); a band over them loses rows the reserve counted, so ring_ff keeps the band off them
         ck=t.get("clock") or {}
@@ -575,7 +578,7 @@ def _band_reserve_um2(width,has_epoch=True):
 
 def _band_obstacles(t,used,phy=(),resets=()):
     obstacles=RT.blockages(t)+[list(o) for o in used]+[list(o) for o in phy]+[list(o) for o in resets]
-    if BAND_RESERVE=="ring_ff":
+    if BAND_RESERVE=="ring_ff" or BAND_CLOCK_OBST:
         ck=t.get("clock") or {}
         obstacles+=[list(r) for r in ck.get("die_islands_um",[])]+\
             [list(r["rect_um"]) for r in ck.get("reserved_sites_um",[]) if r.get("kind")=="die_clock_tree"]
@@ -1012,14 +1015,14 @@ def clear_generated_landing_infra(raw):
 
 
 def compose(*a,**k):
-    global BAND_USE_MAX
-    saved=BAND_USE_MAX
+    global BAND_USE_MAX,BAND_CLOCK_OBST
+    saved=(BAND_USE_MAX,BAND_CLOCK_OBST)
     try:return _compose(*a,**k)
-    finally:BAND_USE_MAX=saved
+    finally:BAND_USE_MAX,BAND_CLOCK_OBST=saved
 
 
 def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
-            forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5,band_use_max_by_type=None):
+            forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5,band_use_max_by_type=None,band_clock_obstacles=False):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
@@ -1048,7 +1051,8 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
     if band_ring not in ("all","ff") or (band_ring=="ff" and band_reserve!="ring_ff"):
         raise ValueError(f"band_ring {band_ring} must be all or ff (ff needs band_reserve=ring_ff)")
     if band_use_max is not None and not 0.1<=float(band_use_max)<=1.0:raise ValueError(f"band_use_max {band_use_max} not in [0.1,1]")
-    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX,BAND_CLOCK_OBST
+    BAND_CLOCK_OBST=bool(band_clock_obstacles)
     BAND_RESERVE=band_reserve;BAND_SPREAD=float(band_spread);BAND_RING=band_ring
     BAND_USE_MAX=None if band_use_max is None else float(band_use_max)
     if observer is not None or monitor=="reset":

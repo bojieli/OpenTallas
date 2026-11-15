@@ -69,3 +69,14 @@ def test_band_use_type_override_wired():
 def test_band_order_type_wired():
     cli = (Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py").read_text()
     assert '"--band-order-type"' in cli and "band_order_type" in cli
+
+
+def test_clock_obstacles_opt_in(monkeypatch):
+    t = {"outline_um": [400, 400], "ft_slots": [],
+         "clock": {"die_islands_um": [[100, 100, 120, 120]],
+                   "reserved_sites_um": [{"kind": "die_clock_tree", "rect_um": [200, 200, 210, 210]}]}}
+    monkeypatch.setattr(CL.RT, "blockages", lambda t, *a, **k: [])
+    assert CL.BAND_RESERVE == "padded" and CL.BAND_CLOCK_OBST is False
+    assert CL._band_obstacles(t, []) == []
+    monkeypatch.setattr(CL, "BAND_CLOCK_OBST", True)
+    assert [100, 100, 120, 120] in CL._band_obstacles(t, []) and [200, 200, 210, 210] in CL._band_obstacles(t, [])
