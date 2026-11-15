@@ -15,9 +15,9 @@ OUT_ROWS holds only the changed partition_types rows (merge with plan_merge or j
 import argparse, json, math, os, re, sys
 from pathlib import Path
 import numpy as np
-TD = os.environ.get("TD") or str(Path(__file__).resolve().parent)
-sys.path[:0] = [TD, os.path.dirname(os.path.dirname(TD))]
-import schema as S, ft_spread as FS, ft_seam_fix as SF, ft_throat_fix as T
+HERE = Path(__file__).resolve().parent
+sys.path[:0] = [str(HERE), str(HERE.parents[1])]
+import schema as S, ft_spread as FS, ft_seam_fix as SF, ft_throat_fix as T  # noqa: E402
 
 
 def in_macro(t, boxes=None):
