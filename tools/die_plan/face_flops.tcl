@@ -497,6 +497,21 @@ proc ff_hits_explicit {x y w h} {
 # landing window under it has no site for a flop that needs its 1.188 um resize footprint.  Every non-ring landing window
 # (reader/writer start, writer face, collector, literal local reset) is reserved here, so ff_put_near leaves it free and the
 # landing cells keep their sites.  Ring bands are the band planner's and stay open.  Unset = byte-identical behaviour.
+# CLAND-BIN 11-15 (COORD order, KV kv3_hub_Wo): LAND-RESERVE is the DEFAULT for a kit whose landing_placement.tcl has
+# literal-local-reset bands.  kv3_hub_Wo (original kit) failed global place with OT_CLAND BAND FAIL on two 4.32 x 4.32 um
+# literal-local-reset windows (need 0.9 um2 of 18.7 um2): the ft2 station grid had put FIRM stations over them before the
+# landing hook ran.  With the reserve the same kit places all 171,422 landing cells and passes global place.  OT_LAND_RESERVE=0
+# restores the old form; an explicit =1 behaves as before; kits without such bands are unchanged.
+proc ff_land_reserve_default {path} {
+  if {[info exists ::env(OT_LAND_RESERVE)] || ![file exists $path]} { return 0 }
+  set fh [open $path r]; set txt [read $fh]; close $fh
+  set j [string first "set cland_status" $txt]
+  if {$j < 0 || [string first "literal-local-reset" [string range $txt 0 $j]] < 0} { return 0 }
+  set ::env(OT_LAND_RESERVE) 1
+  puts "OT_LAND_RESERVE default on: literal-local-reset bands present (OT_LAND_RESERVE=0 turns it off)"
+  return 1
+}
+ff_land_reserve_default /work/landing_placement.tcl
 if {[info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} {
   set ff_lr_fh [open /work/landing_placement.tcl r]; set ff_lr_txt [read $ff_lr_fh]; close $ff_lr_fh
   set ff_lr_i [string first "set cland_groups \{\n" $ff_lr_txt]
