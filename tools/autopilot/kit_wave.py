@@ -1894,6 +1894,12 @@ GPL_PROBE_AWK = (r"""awk '/GPL-1010/{print "KW_GPL " l; print "KW_GPL " $0; l=""
 RULES = [
     # WF-1 11-14: a chosen child view that is missing everywhere is infrastructure (sync / re-export), never a design verdict
     ("INFRA", None, r"INFRA-VIEW-MISSING", "infra (INFRA-VIEW-MISSING: the die-owner / counted child view is not on any host)"),
+    # KIT-OPS-5 11-14 (COORD class fix): a job whose submit-time admission bundle predates the late-ECO scope postcondition
+    # refuses its ECO (eco_loop: "staged late-ECO hook lacks the runtime scope postcondition") before any repair.  That is a stale
+    # bundle, not a design verdict: the INFRA auto-retry re-admits the attempt, which pins the current bundle.  Before the hold_ff
+    # / timing rows, because the refusal rides in the same reason as the route FAIL it failed to repair.
+    ("INFRA", None, r"staged late-ECO hook lacks the runtime scope postcondition",
+     "infra (stale admission bundle: late-ECO hook lacks the scope postcondition; re-attempt pins the current bundle)"),
     # KIT-FIX-F 11-13 (option kit_snap): first, because the reason quotes input paths whose words later rules key on
     # (outline, blocked, ...).  A named input that no die host holds is FLOW (never the INFRA auto-retry loop).
     ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
