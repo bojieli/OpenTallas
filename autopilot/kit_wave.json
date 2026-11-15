@@ -7702,7 +7702,11 @@
     "svc_lo_dsdv_svc_rs__t5": "PENDING-PLAN 11-15 (OWNER via COORD r50): this S81 type's kit inputs change under the pending plan (DIE-S81-92-delta.tsv CHANGED): no new launch or retry until adoption, then regenerated fresh on the new plan with the tool fixes. Running attempts finish. Lift = delete this key.",
     "svc_lo_dsdv_svc_rs__t6": "PENDING-PLAN 11-15 (OWNER via COORD r50): this S81 type's kit inputs change under the pending plan (DIE-S81-92-delta.tsv CHANGED): no new launch or retry until adoption, then regenerated fresh on the new plan with the tool fixes. Running attempts finish. Lift = delete this key.",
     "svc_lo_dsdv_svc_rs__t7": "PENDING-PLAN 11-15 (OWNER via COORD r50): this S81 type's kit inputs change under the pending plan (DIE-S81-92-delta.tsv CHANGED): no new launch or retry until adoption, then regenerated fresh on the new plan with the tool fixes. Running attempts finish. Lift = delete this key.",
-    "svc_lo_dsdv_svc_rs_w__t1": "PENDING-PLAN 11-15 (OWNER via COORD r50): this S81 type's kit inputs change under the pending plan (DIE-S81-92-delta.tsv CHANGED): no new launch or retry until adoption, then regenerated fresh on the new plan with the tool fixes. Running attempts finish. Lift = delete this key."
+    "svc_lo_dsdv_svc_rs_w__t1": "PENDING-PLAN 11-15 (OWNER via COORD r50): this S81 type's kit inputs change under the pending plan (DIE-S81-92-delta.tsv CHANGED): no new launch or retry until adoption, then regenerated fresh on the new plan with the tool fixes. Running attempts finish. Lift = delete this key.",
+    "serdes__t1": "TYPES-S81-FAIL-1115 11-15: ghost parent row, no such type in plan B6gsl (successors held PENDING-PLAN in DIE-S81-92-delta); relaunch happens on the successor type keys at adoption. Lift = delete this key. Successors: serdes__t1__clb45db5be, serdes__t1__clfe1f0815",
+    "col_h9_r0_p2__t1": "TYPES-S81-FAIL-1115 11-15: ghost parent row, no such type in plan B6gsl (successors held PENDING-PLAN in DIE-S81-92-delta); relaunch happens on the successor type keys at adoption. Lift = delete this key. Successors: 12 col_h9_r0_p2__t1__cl0045af7b/cl9f71e63d pv rows",
+    "ot_s81sl_leaf__t25": "TYPES-S81-FAIL-1115 11-15: ghost parent row, no such type in plan B6gsl (successors held PENDING-PLAN in DIE-S81-92-delta); relaunch happens on the successor type keys at adoption. Lift = delete this key. Successors: ot_s81sl_leaf__t25__cl431c660f, __cl55642d17",
+    "ot_s81sl_leaf__t40": "TYPES-S81-FAIL-1115 11-15: ghost parent row, no such type in plan B6gsl (successors held PENDING-PLAN in DIE-S81-92-delta); relaunch happens on the successor type keys at adoption. Lift = delete this key. Successors: ot_s81sl_leaf__t40__cl86ea32b3(+__sid5S), __clf8bbdae1"
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -19585,7 +19589,8 @@
     "slice_station__t37": 56,
     "slice_station__t52": 56,
     "slice_station__t36": 56,
-    "slice_station__t49": 56
+    "slice_station__t49": 56,
+    "slice_station__t43": 56
    },
    "note_kw43kvl2": "KW-FIX-43 11-10: kv_leaf t2 place 64 GB + retry @12. Revert place_mem_gb_by_item <- *_prev_kw43kvl2.",
    "hold_items_prev_kw43dsdv": {
@@ -33596,7 +33601,8 @@
    "hold_items_lifted_kitops5_colh10r2": {
     "col_h10_r2__t1__cl99efd374__pv9ae398c2": "COORD 11-14 S81-COL-INHERIT lever 1: sub-layout representative, 4_cts on epyc10; glob col_h10_r2__t1__* expanded to explicit keys without it"
    },
-   "hold_items_released_kitops5_pgkeys": "ot_s81sl_leaf__t69/t25/t21/t40 families released 11-15 (COORD r36 PG keep-out rollout); glob ot_s81sl_leaf__* expanded to explicit keys for the other leaf types"
+   "hold_items_released_kitops5_pgkeys": "ot_s81sl_leaf__t69/t25/t21/t40 families released 11-15 (COORD r36 PG keep-out rollout); glob ot_s81sl_leaf__* expanded to explicit keys for the other leaf types",
+   "note_types_s81_fail_1115": "TYPES-S81-FAIL-1115 11-15: place_mem_gb_by_item slice_station__t43=56 (t36/t52/t49/t37 already 56, route SUBMIT uses it); 4 ghost parent rows (serdes__t1, col_h9_r0_p2__t1, leaf t25, leaf t40) held with reason. bak kit_wave.json.bak-types-s81-fail-1115"
   },
   "s81_head": {
    "enabled": true,
@@ -39968,7 +39974,7 @@
     "/srv/opentallas-scratch2/claude/kw27/src_02909_qc4/physical/die_plan/qwen_compute/qc_start_1106/runtime/sidecar.json"
    ],
    "hold_items_prev_kw38q": {
-    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
+    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native→collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
     "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
     "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails"
    },
@@ -42625,7 +42631,7 @@
     }
    },
    "hold_items_prev_kw43x": {
-    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
+    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native→collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
     "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
     "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
     "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
@@ -42803,7 +42809,7 @@
     "epyc7"
    ],
    "hold_items_prev_kw43tc1": {
-    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
+    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native→collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
     "slw_stm_v2__cl9beb65e6": "KW-FIX-35 2026-11-08 04:37 PST (COORD 02:17, QC-TYPES-8 02:15 (3)): CORE SPREAD G2 TT -519 inside u_stream; held for a redesign (sibling cl1ca9c415 GRT decides the family); QC-TYPES-9",
     "coll_ftc": "KW-FIX-35 2026-11-08 04:37 PST: v4s coll_ftc is the CPU-active Codex private canary (intel2 codex-qc-v4s-collftc-grt-0222.service, kit intel2 /srv/opentallas-scratch2/claude/codex-wave-0222/qc/coll_ftc/gen/coll_ftc, CTS PASS, GRT running); no duplicate. KW-FIX-35 collects it; lift this hold only if it fails",
     "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
@@ -42988,7 +42994,7 @@
     "cbn_q01__cldd6ea846": "RE-FORM KW-FIX-43 11-09 18:3x COORD types-closure-1109 (2) TWO STRIKES: a16 clock-landing band; no plain relaunch. Die owner builds the conservative form (<=150k cells, util <=0.45, registered faces, fixed relay bands) or a split; lift with that form.",
     "sle_fw_v3": "RE-FORM KW-FIX-43 11-09 19:5x COORD route (5): routed-not-signed a37, setup WNS -334.6 ps (2687 endpoints), hold FF -64.7/-110 per COORD; not a near miss, attempt count high. Revert: delete this key.",
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
-    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native\u2192collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
+    "cbf_q01": "CODEX12:09/QC root VIEWED a10: RESET/START reach,2833um native→collector collision;1263um incomingSTART. Future forms require coherent nativecollector plus incoming-origin transport/epoch pricing. Existingqueuedroute untouched; no unchanged retry.",
     "cbf_q01_s2": "KW-FIX-39 2026-11-08 22:05 PST: excluded from QC switch batch 108 (QC-TYPES-11 19:31): Codex hold with cbf_q01, form pending",
     "cbf_q00__cl1b5a6458": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
     "cbf_q00__cl870de686": "cand18 base: kit_topology native source stage/reset differs, regenerate the canonical bind/kit (DIE-QC-97). KW-FIX-43 11-10 08:0x COORD; NK is done (porous signed views live); a19/a20 failed this way at 07:5x.",
