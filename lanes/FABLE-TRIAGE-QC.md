@@ -163,3 +163,22 @@ Options, in order:
 4. Moving the `u_t23` `n_y` pins is a core change (signed tile, pins on the E face under MY); not needed.
 
 Same check for S4g: its +2 is on column corridor lanes (`c_*_01__bcf*`). Column pads can absorb a shift that is uniform per column, but look for PARAM_REGEN in the S4g bind before calling it ready.
+
+## CLAND-BIN 11-15: G2 proof on QC cbf_q01 and KV kv3_hub_Wo bands (lane CLAND-BIN)
+
+Branch claude/cland-bin-1115 @d32c8d5c7d0 (off fable-genbug-1115-1 @4e7f20bccb8). Place-only what-if on cbf_q01 (epyc9 `/srv/opentallas-scratch2/claude/cland-bin/proof/cbf_q01`), hop_census.py (hopq.py) on 3_place.odb, MEASURED:
+
+| cbf_q01 | wave kit | G2 hook |
+|---|---|---|
+| `OT_CLAND_BIN` | - | bc_i02 517/517, bc_i12 517/517, nb_i12 515/515, 1,549 capture registers FIRM, max 12.4 um from the ring flop |
+| ring -> `u_bin` hops over 405 um | 1,024 of 1,032 (max 721 um) | 0 (row gone) |
+| `u_bin` -> `u_fab_u_x_*.u_st` hops over 405 um | not in the top 10 | 1,784 of 1,792 (max 850 um) |
+| over-reach zero-logic hops, whole type | 3,583 | 4,246 (+663) |
+
+**G2 as briefed relocates the long hop, it does not remove it.** The ring is at the face and its load station is ~720-850 um away with no station between them, so one register can only move the break point; two hops would each need to be <= 405 um. The hook cannot site `u_bin` at the midpoint because the load is unplaced when the landing hook runs. This is a plan item (a station site between ring and fabric; the same family as the option-1 FIRM station on `y_o23` above), not a hook defect. Decision wanted: keep G2 default-on (it fixes the zero-logic hop FABLE-GENBUG counted, costs +663 elsewhere) or ship it opt-in (`OT_CLAND_BIN=1`) until the plan gives the ring -> load span a station. c1x_C__t1 proof running (epyc7), same census to follow.
+
+### KV kv3_hub_Wo (original kit, MERGE-CENSUS copy, epyc2 `/srv/opentallas-scratch2/claude/merge-census/proof/hub_Wo/kv3_hub_Wo`)
+G2/G6 do NOT cover these two bands. Both are `literal-local-reset` bands, `OT_CLAND BAND FAIL`, run stops at `3_2_place_iop.odb`:
+- `u_cland_raw_fs_o_idsrc_WN_y_1`, window {533.816 667.140 538.136 671.460} (4.32 x 4.32 um): 2 cells, reserve need 0.9 um2, band area 18.7 um2, ratio 0.05.
+- `u_cland_raw_fs_o_seq__g_fan_N__u_fan_kc_d1_1`: same numbers.
+Capacity is 20x the demand, so it is occupancy, not area. In the idsrc window `3_2_place_iop.odb` holds ft2 station cells (`u_ft_ft2_o_0/q[63]`, `u_ft_ft2_o_1/q[63]`, `u_ft_ft2_o_2/...` plus NOR/INV of `u_cland_ft2_i`) which `face_flops.tcl` sites FIRM (station grid, spiral) before the landing hook runs; the plain `literal-local-reset` path has no grow. This is the KW-FIX-43 LAND-RESERVE case (reserve non-ring landing windows from the station grid; also makes a literal local reset grow like local-reset). Hypothesis, not yet proven: `OT_LAND_RESERVE=1` clears both. What-if running: kv3_hub_Wo place with `OT_LAND_RESERVE=1` plus the G2 block (`~/cland-bin-logs/proof_kv3_hub_Wo.log`).
