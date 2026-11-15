@@ -132,6 +132,30 @@ jobs:
       - name: tests/sim
         run: PYTHONPATH=. python -m pytest tests/sim -q --tb=short
 
+  repo-size-guard:
+    name: Repo size guard (no new large or generated files)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Trees and commits only (blob:none); the guard reads blob sizes with cat-file --batch-check, which fetches
+      # just the changed blobs. tools/repo_size_guard.py and tools/repo_size_allowlist.txt (REPO-STATE-1 11-14).
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      # WARN-ONLY (COORD 11-14: no procedural gates): reports, never fails the build.
+      - name: New files over 5 MB / generated types outside the allowlist
+        continue-on-error: true
+        env:
+          BEFORE: ${{ github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          base="${BASE:-$BEFORE}"
+          if [ -z "$base" ] || [ "$base" = 0000000000000000000000000000000000000000 ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base=$(git rev-parse HEAD~1)
+          fi
+          python3 -I tools/repo_size_guard.py --range "$base...HEAD"   # three dots: changes since the merge base only
+
   gate-board:
     name: Gate board (informational)
     runs-on: ubuntu-latest
