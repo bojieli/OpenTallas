@@ -1,19 +1,21 @@
-# MERGE-QUEUE-1 handoff (successor, updated 2026-11-14 ~20:25 PST)
+# MERGE-QUEUE-1 handoff (successor, updated 2026-11-14 21:20 PST)
 
-Task (OWNER 11-14): automatic merge queue for sha-pinned COORD approvals + the kit wave running on a pinned main tree.
+Task (OWNER 11-14): automatic merge queue for sha-pinned COORD approvals + kit wave on a pinned main tree. DONE, in operation.
 
-## State
-- Queue LIVE on intel2: ot-merge-queue.timer (5 min) runs ~/merge-queue/bin/ot-merge-queue (bootstrap, VERSION file) until
-  rt/current/tools/fleet/ot-merge-queue exists. Log ~/merge-queue/log, state ~/merge-queue/state.json; `ot-merge-queue status|parse`.
-- First MERGED 20:10 repo-state-1 -> main 243b6b4a4d5; ot-tools-sync made rt/243b6b4a4d5c = rt/current on hub + 6 hosts.
-- MERGE-FAIL 20:10 wave-recipe-1 3d69f0eb0c5 (xdist isolation: test_m8_grant + form_wait_arm), 20:16 pg-aware-1 288ada0041 (97 test_bind).
-- Parser: only COORD/OWNER-authored lines approve (fixed 20:00 after my own STATE quote nearly self-approved; a 20:00:00 run was stopped, nothing pushed).
-- Own branch claude/merge-queue-1-1114 head 4b9ede660cd, dry-run GREEN on 243b6b4a4d5; READY posted, waiting for COORD token
-  `COORD APPROVED: claude/merge-queue-1-1114 @4b9ede660cd`. Local clone /home/ubuntu/wt/merge-queue-1-1114 (rtx-pro).
-- ASK posted: conditional approvals should use 'COORD APPROVED-IF:' (ignored by the queue) until the condition is met.
-- kw38/rt residual (mq1/tmp/resid.out): 48 live-modified files, every residual is older live text superseded by main (runtime files); only old-semantics test hunks are live-only. Safe to move the wave.
+## Live
+- Queue: intel2 ot-merge-queue.timer (5 min). The service is TEMPORARILY pinned to the bootstrap copy ~/merge-queue/bin/ot-merge-queue
+  (VERSION file), see the comment in ~/.config/systemd/user/ot-merge-queue.service. After 7fff3a1e0b1 lands, restore the ExecStart
+  to the repo form (tools/fleet/systemd/ot-merge-queue.service: rt/current copy, bootstrap fallback) and daemon-reload.
+- Log ~/merge-queue/log, state ~/merge-queue/state.json (re-queued false REDs listed under "requeued"); `ot-merge-queue status|parse`.
+- Only COORD/OWNER-authored lines approve. Conditional rulings: proposed 'COORD APPROVED-IF:' (the queue ignores it).
+- Gate: touched-path test selection under xdist; a new failure must also fail on a serial rerun of the branch and must not fail when the
+  whole file runs on main (per-item base tree, same sparse set). Sparse: tools/, physical/common_flow, rtl/lib, rtl/common.
+- Wave: autopilot.service drop-in zz-kw38-picker-runtime.conf + autopilot-aux.service run rt/current (backups ~/merge-queue/*.bak-mq1-1114).
+  First tick on rt/76537ad08a5b 21:02-21:09 ok, run-items from rt/<sha>. kw38/rt is kept only for units still running from it.
+- ot-tools-sync flips rt/current on hub + intel1 epyc2 epyc7 epyc8 epyc9 epyc10 after every push; ot-tools-drift.timer every 15 min.
+- Per-host ot-run backends still differ from main (ADMIT-TUNE-1 owns them); drift lines list them.
 
-## Next
-1. Own branch lands -> rt/current at that sha (has content rt_tools digest).
-2. Switch wave: replace (copy+mv) ~/.config/systemd/user/autopilot.service.d/zz-kw38-picker-runtime.conf ExecStart -> /srv/opentallas-scratch2/claude/rt/current/tools/autopilot/autopilot.py (fallback kw38), same for autopilot-aux.service; daemon-reload. Running units keep kw38/rt. Backups *.bak-mq1-1114.
-3. Install ot-tools-drift.service/.timer. Post RESULT.
+## Open
+- READY 7fff3a1e0b1 (whole-file baseline) waits for the COORD token.
+- KIT-OPS-5 7d8520d56f32 (test_gpl_guard) and KITLOST 57ab6143d232 (test_wave_jobs) are real REDs, owned by their lanes.
+- Local clone on rtx-pro: /home/ubuntu/wt/merge-queue-1-1114. Debug worktree intel2 mq1/wt/dbg-pga (can be removed).
