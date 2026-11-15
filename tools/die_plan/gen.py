@@ -147,6 +147,9 @@ def main(argv=None):
     a2.add_argument("--out", required=True)
     a2.add_argument("--rtl-root", help="repo root for the types' leaf `sources` (enables the leaf port-binding check)")
     a2.add_argument("--types", help="comma list of partition types (default all non-hard)")
+    a2.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
+                    help="the type's partition RTL is this bound filelist (as in gen.py phys): no plan wrapper and no leaf "
+                    "binding check; the plan buses are checked against the bound module header instead")
     a2.add_argument("--clock-landing", help="opt-in (LAND-HEAD-BIND-1): clock_landing_plan sidecar (landed_sidecar.json) of this "
                     "landed plan; emits the ot_dp_clk_landing rings + dataflow monitor into every wrapper, region clocks + "
                     "forwarded clocks + monitor wires into the die top, gates the declared observer, and writes "
@@ -274,9 +277,17 @@ def main(argv=None):
     if a.cmd == "rtl":
         import gen_rtl
         try:
+            kit = {}
+            for kv in a.kit_rtl:
+                tn, _, fl = kv.partition("=")
+                if not tn or not fl:
+                    raise gen_rtl.GenError(f"--kit-rtl wants TYPE=FILELIST, got {kv!r}")
+                p = Path(fl)
+                kit[tn] = [Path(x) for x in p.read_text().split()] if p.suffix in (".f", ".txt", ".list") else [p]
             files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None,
                                      plan_path=Path(a.plan).resolve(),
-                                     landing=load_json(a.clock_landing) if a.clock_landing else None)
+                                     landing=load_json(a.clock_landing) if a.clock_landing else None,
+                                     kit_rtl=kit or None)
         except gen_rtl.GenError as e:
             print(f"gen rtl: ERROR {e}")
             return 1

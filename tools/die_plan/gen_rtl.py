@@ -825,8 +825,35 @@ def realize_plan_stations(raw, tn, text, out):
     return wrapper.read_text()
 
 
+def check_kit_rtl_ports(P, tn, ep, filelist):
+    """kit-RTL type (gen.py rtl --kit-rtl TYPE=FILELIST; the same meaning as in gen.py phys): the type's partition RTL is
+    the bound RTL, so no plan wrapper is generated and no plan leaf binding exists to check (bind mode plans carry no
+    contents[].bind / bus.leaf: the binder takes the leaves from the as-built die).  What the plan owns is the partition
+    interface, so check it against the bound module header instead: every plan bus is a port of t['module'] with the
+    plan direction and width (+1 epoch bit when the bus carries one)."""
+    t = P.types[tn]
+    text = "\n".join(Path(f).read_text() for f in filelist)
+    ports = parse_leaf_ports(text, t["module"])
+    if ports is None:
+        raise GenError(f"type {tn}: module {t['module']} not found in its kit RTL {[str(f) for f in filelist][:3]}")
+    bad = []
+    for b in t.get("buses", []):
+        want = b["width"] + (1 if ep.get((tn, b["name"]), b.get("kind", "data") in ("data", "ctl")) else 0)
+        got = ports.get(b["name"])
+        if got is None:
+            bad.append(f"{b['name']}: no such port")
+            continue
+        d, w = got
+        m = re.fullmatch(r"\[\s*(\d+)\s*:\s*0\s*\]", w or "")
+        gw = int(m.group(1)) + 1 if m else (1 if not w else None)
+        if d != ("input" if b["dir"] == "in" else "output") or gw != want:
+            bad.append(f"{b['name']}: kit {d} {w or '[0:0]'} vs plan {b['dir']} width {want}")
+    if bad:
+        raise GenError(f"type {tn}: plan buses disagree with kit RTL module {t['module']}: " + "; ".join(bad[:6]))
+
+
 def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None, *, emit_die_top=True,
-              validate_types=None, typed_scope=False):
+              validate_types=None, typed_scope=False, kit_rtl=None):
     """landing (opt-in, LAND-HEAD-BIND-1): the clock_landing_plan sidecar of a landed plan.  The SAME emitter the
     as-built binder uses (clock_landings.Landings.type_rtl / top_rtl) is applied to every generated wrapper and to the
     generated die top, so the landed form is one complete source-bound netlist; the declared observer is checked
@@ -863,6 +890,9 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):
         if t.get("hard") or (types is not None and tn not in types):
+            continue
+        if kit_rtl and tn in kit_rtl:
+            check_kit_rtl_ports(P, tn, ep, kit_rtl[tn])
             continue
         f = out / f"{t['module']}.sv"
         text = wrapper(P, tn, ep, rtl_root)
