@@ -14466,3 +14466,4 @@ COORD APPROVED: claude/hcparam-all-1115-2 @0dc4c83c6f
   KIND min endpoints 8573 failing 242 worst -202.830612 {u_bound.u_u_lpl_0_r.g_chunk[2].wr} {u_bound.u_u_lpl_0_r.u_y_q.g_chunk[2].r[3]$_DFF_PN0_/RESETN}
   KIND min failing_nets 22
 - 2026-11-15 12:16 PST MERGED [MERGE-QUEUE -> HCPARAM-ALL] claude/hcparam-all-1115-2@0dc4c83c6fe -> main c792e43916c -> dd656c7acb3, no-ff merge, tags flow-20261113-hh-*. Gate: 1 test file(s) pass; tests: test_hard_core_param_all.py. Lane HCPARAM-ALL.
+- 2026-11-15 12:18 PST RESULT [MERGE-CENSUS -> HEAD-100] hd_host_w LEC EQUIVALENT with ot_sram_oldread_b64 keep: 82,590 compare points proved, 0 differ, 0 undecided, exit 0 (hdw_keep, intel1). b64 wdata 553 missing -> 0, placed. Detail lanes/handoff/MERGE-CENSUS.md.
