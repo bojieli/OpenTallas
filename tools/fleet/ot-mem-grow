@@ -24,6 +24,16 @@ def decide(cap, req, usage, avail_gb, headroom_gb, grow_at=GROW_AT, grow_by=GROW
     return new
 
 
+def refusal(cap, req, usage, avail_gb, headroom_gb, grow_at=GROW_AT, grow_by=GROW_BY, max_mult=MAX_MULT):
+    """-> the wanted new cap in bytes when the container is over the trigger and not yet at 2x but the host cannot fund it (the headroom guard said no), else None"""
+    if cap <= 0 or usage < grow_at * cap:
+        return None
+    new = min(int(cap * (1 + grow_by)), int(req * max_mult))
+    if new > cap and avail_gb - headroom_gb < (new - cap) / GB:
+        return new
+    return None
+
+
 def sh(*a):
     return subprocess.run(list(a), capture_output=True, text=True, timeout=120).stdout
 
@@ -106,6 +116,10 @@ def one_pass(dry_run):
     ids = sh("docker", "ps", "-q", "--no-trunc").split()
     info = json.loads(sh("docker", "inspect", *ids) or "[]") if ids else []
     live, raised, seen = set(), 0, 0
+    try:
+        refused = json.load(open(DIR + "/refused.json"))
+    except (OSError, ValueError):
+        refused = {}
     hr = conf_headroom()
     for c in info:
         cid, name, cap = c["Id"], c["Name"].lstrip("/"), c["HostConfig"].get("Memory", 0)
@@ -118,6 +132,13 @@ def one_pass(dry_run):
         if use is None:
             continue
         new = decide(cap, req, use, avail_gb(), hr)
+        if not new:
+            want = refusal(cap, req, use, avail_gb(), hr)
+            if want and time.time() - refused.get(cid, 0) > 600:        # REFUSED lines: at most one per container per 10 min
+                refused[cid] = time.time()
+                line = f"{time.strftime('%F %T')} REFUSED {name} {cid[:12]} usage {use / GB:.1f} GB of cap {cap / GB:.1f} GB, wanted {want / GB:.1f} GB: avail {avail_gb():.0f} - headroom {hr:g} < {(want - cap) / GB:.0f} GB"
+                print(line)
+                open(DIR + "/log", "a").write(line + "\n")
         if new:
             line = f"{time.strftime('%F %T')} {name} {cid[:12]} usage {use / GB:.1f} GB of cap {cap / GB:.1f} GB -> {new / GB:.1f} GB (request {req / GB:.1f}, avail {avail_gb():.0f}, headroom {hr:g})"
             if not a.dry_run:
@@ -131,6 +152,9 @@ def one_pass(dry_run):
     raised += grow_scopes(orig, hr, a.dry_run)
     live |= {d for d, _, _ in scope_rows()}
     orig = {k: v for k, v in orig.items() if k in live}
+    refused = {k: v for k, v in refused.items() if k in live}
+    if not a.dry_run:
+        json.dump(refused, open(DIR + "/refused.json.tmp", "w")); os.replace(DIR + "/refused.json.tmp", DIR + "/refused.json")
     if not a.dry_run:
         json.dump(orig, open(DIR + "/orig.json.tmp", "w")); os.replace(DIR + "/orig.json.tmp", DIR + "/orig.json")
     print(f"ot-mem-grow: {seen} capped containers, {raised} raised (containers + scopes)")
