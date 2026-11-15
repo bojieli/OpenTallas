@@ -32,6 +32,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REGISTRY = HERE / "hard_core_built_params.json"
+ALLOW = HERE / "hard_core_param_allow.json"
 LABELS = frozenset({"INSTANCE", "MB"})          # simulation labels: no hardware effect (tools/s81_dv/hard_params.py LABELS)
 OWNERS = {"s81": "DIE-S81-92", "qwen_compute": "DIE-QC-103", "qc": "DIE-QC-103", "qwen_kvsys": "KV-102", "kv": "KV-102",
           "s81_head": "HEAD-100", "head": "HEAD-100", "hbm": "HBM (no live owner lane)"}
@@ -42,31 +43,18 @@ interface endinterface modport fork join defparam supply0 supply1 tri signed uns
 
 
 # ------------------------------------------------------------------------------------------------ text helpers
+_CMT = re.compile(r'"(?:[^"\\\n]|\\.)*"|//[^\n]*|/\*.*?\*/', re.S)
+
+
 def strip_comments(t):
     """comments blanked (newlines kept so offsets stay), string literals kept"""
-    out, i, n = [], 0, len(t)
-    while i < n:
-        c = t[i]
-        if c == '"':
-            j = i + 1
-            while j < n and t[j] != '"':
-                j += 2 if t[j] == "\\" else 1
-            out.append(t[i:j + 1]); i = j + 1
-        elif t.startswith("//", i):
-            j = t.find("\n", i)
-            j = n if j < 0 else j
-            out.append(" " * (j - i)); i = j
-        elif t.startswith("/*", i):
-            j = t.find("*/", i + 2)
-            j = n if j < 0 else j + 2
-            out.append(re.sub(r"[^\n]", " ", t[i:j])); i = j
-        else:
-            out.append(c); i += 1
-    return "".join(out)
+    return _CMT.sub(lambda m: m.group(0) if m.group(0)[0] == '"' else re.sub(r"[^\n]", " ", m.group(0)), t)
 
 
 def preprocess(text, defines):
     """`ifdef/`ifndef/`elsif/`else/`endif resolved against `defines`; other directives dropped"""
+    if "`" not in text:
+        return text
     defs = {d: "1" for d in defines}
     # one-line `ifdef X a `else b `endif (a parameter default with a fallback) is resolved first
     text = re.sub(r"`ifn?def\s+(\w+)\s+([^\n`]*?(?:`\w+[^\n`]*?)*?)\s*`else\s+([^\n]*?)\s*`endif",
@@ -322,7 +310,7 @@ class Module:
         self.name, self.file, self.text, self.body = name, file, text, body
         self.header = header_params          # [(name, expr, local)] in order
         self.body_params = body_params       # [(name, expr, local)] in order
-        self._insts = None
+        self._insts = {}
         self.pnames = [p[0] for p in header_params + body_params if not p[2]]
 
     def all_params(self):
@@ -446,8 +434,8 @@ def _guards(body):
 
 def module_instances(mod, known):
     """[Inst] of every instance of a module in `known` inside mod.body (generate branches included; their guards are Inst.guards)"""
-    if mod._insts is not None:
-        return mod._insts
+    if len(known) in mod._insts:
+        return mod._insts[len(known)]
     body, out = mod.body, []
     blocks = None
     pat = re.compile(r"(?<![\w$.`])([A-Za-z_]\w*)\s*(#\s*\()?")
@@ -480,7 +468,7 @@ def module_instances(mod, known):
         blocks = _guards(body)
         for inst in out:
             inst.guards = [g for (s, e, gl) in blocks if s < inst.pos < e for g in gl]
-    mod._insts = out
+    mod._insts[len(known)] = out
     return out
 
 
@@ -621,6 +609,28 @@ class Built:
         reg = _json(registry) if registry and Path(registry).is_file() else None
         self.reg = (reg or {}).get("entries", [])
 
+    def record_shas(self, row):
+        """sha256 values the row's view dir carries (signoff/PROVENANCE routed_db_sha256, odb.sha, ...) plus the sha256 of its lib/lef:
+        a registry entry is keyed by module + signed-record sha, so a swapped or copied view dir still resolves"""
+        import hashlib
+        out = set()
+        for key in ("lib", "lef"):
+            p = self._path(row.get(key))
+            if not p or not p.is_file():
+                continue
+            d = p.parent
+            try:
+                out.add(hashlib.sha256(p.read_bytes()).hexdigest())
+            except OSError:
+                pass
+            for n in ("PROVENANCE.json", "provenance.json", "signoff.json", "freeze.json", "receipt.json"):
+                j = _json(d / n)
+                if isinstance(j, dict):
+                    out |= set(re.findall(r"\b[0-9a-f]{64}\b", json.dumps(j)))
+            if (d / "odb.sha").is_file():
+                out |= set(re.findall(r"\b[0-9a-f]{64}\b", (d / "odb.sha").read_text()))
+        return out
+
     def _path(self, rel):
         if not rel:
             return None
@@ -635,14 +645,16 @@ class Built:
         why = "no lib/lef in the row"
         if "/asap7_memory_macros" in lib:
             return None, "memory macro view (no RTL parameters)"
-        for e in self.reg:
-            if e.get("module") != mod:
-                continue
-            if e.get("die") and e["die"] != die:
-                continue
-            if e.get("lib_contains") and e["lib_contains"] not in lib:
-                continue
-            return dict(e["params"]), "registry " + e.get("source", "")
+        cand = [e for e in self.reg if e.get("module") == mod and (not e.get("die") or e["die"] == die)
+                and (not e.get("lib_contains") or e["lib_contains"] in lib)]
+        if cand:
+            shas = self.record_shas(row)
+            hit = [e for e in cand if shas & set(e.get("records") or [])]
+            if len(hit) == 1 or (hit and all(h["params"] == hit[0]["params"] for h in hit)):
+                return dict(hit[0]["params"]), "registry (record sha) " + hit[0].get("source", "")
+            if len(cand) == 1 or all(c["params"] == cand[0]["params"] for c in cand):
+                return dict(cand[0]["params"]), "registry (module) " + cand[0].get("source", "")
+            why = f"registry has {len(cand)} different parameter sets for {mod} and none matches this view's record sha"
         for key in ("lib", "lef"):
             rel = row.get(key)
             p = self._path(rel)
@@ -686,6 +698,8 @@ class Built:
 def compare(found, built):
     """-> ([(param, built, effective, kind)], n_unresolved)"""
     out, unres = [], 0
+    if not found.declared and any(p not in LABELS for p in built):
+        return [("*", dict(built), None, "NO_SOURCE")], 0
     for p, bv in sorted(built.items()):
         if p in LABELS:
             continue
@@ -747,8 +761,32 @@ def die_owner(plan):
     return "unowned"
 
 
+def load_allow(path=ALLOW):
+    """{(die, module): reason}: signed cores the check may leave unchecked, explicit per die and with a reason"""
+    j = _json(path) if path and Path(path).is_file() else None
+    out = {}
+    for e in (j or {}).get("entries", []):
+        if e.get("die") and e.get("reason"):
+            for m in e.get("modules") or [e.get("module")]:
+                if m:
+                    out[(e["die"], m)] = e["reason"]
+    return out
+
+
+def _full_index(root, idx, defines):
+    """idx + every module of root/rtl the bind.f closure does not define (the bind's own definitions win)"""
+    files = []
+    for d, subs, names in os.walk(Path(root) / "rtl"):
+        subs[:] = [x for x in subs if x not in ("tb", "test", "tests", "build", "obj_dir")]
+        files += [os.path.join(d, n) for n in names if n.endswith((".sv", ".v")) and not n.startswith("tb_") and not n.endswith("_bb.v")]
+    extra, _ = load_index(sorted(files), defines)
+    merged = dict(extra)
+    merged.update(idx)
+    return merged
+
+
 def check_plan(plan, bind_dir, root, files=None, defines=(), hard_params=None, only_types=None, registry=REGISTRY, types=None,
-               modules=None, remap=None):
+               modules=None, remap=None, allow=ALLOW):
     """-> dict(mismatches=[str], rows=[dict], stats) over every hard-core row of every type of the plan.
     types: {type: type dict} when the bind renamed/split them (Binder.types); modules: {type: bound module name}
     (bind_report.json types[].module) else the type's own `module`."""
@@ -771,8 +809,10 @@ def check_plan(plan, bind_dir, root, files=None, defines=(), hard_params=None, o
     built = Built(root, hard_params, registry)
     die = die_name(plan)
     owner = die_owner(plan)
-    res = dict(mismatches=[], rows=[], no_built=0, no_built_why={}, shared=0, not_found=0, unresolved=0, rows_checked=0, rows_total=0, no_rtl=[], owner=owner, die=die)
+    allowed = load_allow(allow) if not isinstance(allow, dict) else allow
+    res = dict(mismatches=[], rows=[], macro=0, allowed=0, no_record={}, no_built=0, no_built_why={}, shared=0, not_found=0, unresolved=0, rows_checked=0, rows_total=0, no_rtl=[], owner=owner, die=die)
     views = {}
+    full = full_reach = None
     for tn, t in sorted(types.items()):
         if only_types and tn not in only_types:
             continue
@@ -787,20 +827,43 @@ def check_plan(plan, bind_dir, root, files=None, defines=(), hard_params=None, o
         want = {h["module"] for h in rows}
         found = elaborate(idx, top, want, reach, extra=allrow) or []
         by_row = match_rows(rows, found)
+        if (any(not by_row[k] for k in by_row) or any(not f.declared for f in found)) and root and (Path(root) / "rtl").is_dir():
+            # the bind.f closure stops at the leaf cores; the module bodies below them are in the source tree: look there too
+            if full is None:
+                full = _full_index(root, idx, defines)
+                full_reach = _reach(full, allrow)
+            f2 = elaborate(full, top, want, full_reach, extra=allrow) or []
+            b2 = match_rows(rows, f2)
+            if sum(1 for k in b2 if b2[k]) >= sum(1 for k in by_row if by_row[k]):
+                found, by_row = f2, b2
         seen = set()
         for k, row in enumerate(rows):
             cands = by_row[k]
             bp, src = built.lookup(row, die)
+            if bp is None and src.startswith("memory macro"):
+                res["macro"] += 1
+                continue
             if bp is None:
                 res["no_built"] += 1
                 w = res["no_built_why"].setdefault(src.split(" /")[0].split(" in ")[0][:70], {})
                 w[row["module"]] = w.get(row["module"], 0) + 1
+                if (die, row["module"]) in allowed:
+                    res["allowed"] += 1
+                else:
+                    nr = res["no_record"].setdefault(row["module"], dict(n=0, example=f"{tn} {row.get('inst')}", why=src))
+                    nr["n"] += 1
             if len(cands) == 1 and row.get("lib") and "/asap7_memory_macros" not in row["lib"]:
                 views.setdefault(os.path.dirname(row["lib"]), []).append((tn, row, cands[0]))
             if bp is None:
                 continue
             if not cands:
                 res["not_found"] += 1
+                if (die, row["module"]) in allowed:
+                    res["allowed"] += 1
+                else:
+                    nr = res["no_record"].setdefault(row["module"], dict(n=0, example=f"{tn} {row.get('inst')}",
+                                                                      why="the die RTL has no instance of this hard-core module"))
+                    nr["n"] += 1
                 continue
             key = (row["module"], row.get("lib"), tuple(sorted(bp.items())), tuple(f.path for f in cands))
             res["rows_checked"] += 1
@@ -817,7 +880,7 @@ def check_plan(plan, bind_dir, root, files=None, defines=(), hard_params=None, o
                 for f, d in bad_all:
                     if not d:
                         continue
-                    txt = ", ".join(f"{p} die {'(no such parameter in the die module)' if kind == 'NOT_DECLARED' else e}, hardened {bv}"
+                    txt = ", ".join(f"{p} die {'(no such parameter in the die module)' if kind == 'NOT_DECLARED' else '(the bound source has no definition of the module)' if kind == 'NO_SOURCE' else e}, hardened {bv}"
                                     f" [{kind}]" for p, bv, e, kind in d)
                     res["mismatches"].append(f"type {tn} row {row.get('inst')} ({f.path}) module {row['module']}: {txt}; "
                                              f"built from {src}")
@@ -843,6 +906,12 @@ def check_plan(plan, bind_dir, root, files=None, defines=(), hard_params=None, o
                 res["rows"].append(dict(type=members[0][0], row=members[0][1].get("inst"), path=members[0][2].path,
                                         module=members[0][1]["module"], param=p, die_value=[v for v, _ in top], built_value=None,
                                         kind="VIEW_SHARED_DIFF", source=vdir, owner=owner))
+    for m, nr in sorted(res["no_record"].items()):
+        res["mismatches"].append(f"module {m}: {nr['n']} signed hard-core row(s) cannot be checked ({nr['why']}; e.g. {nr['example']}); "
+                                 f"add its built parameters to hard_core_built_params.json from the signed record, or list die {die} / "
+                                 f"{m} with a reason in hard_core_param_allow.json [NO_RECORD]")
+        res["rows"].append(dict(type=None, row=nr["example"], path=None, module=m, param=None, die_value=None, built_value=None,
+                                kind="NO_RECORD", source=nr["why"], owner=owner, n=nr["n"]))
     res["dup_modules"] = len(dups)
     return res
 
@@ -883,7 +952,10 @@ def gate(binder, out, files):
         print(f"HARD_CORE_PARAM_ALL_SKIPPED {type(exc).__name__}: {exc}", file=sys.stderr)
         binder.hcparam_stats = dict(skipped=f"{type(exc).__name__}: {exc}")
         return []
-    binder.hcparam_stats = {k: res[k] for k in ("rows_total", "rows_checked", "no_built", "not_found", "unresolved", "shared")}
+    binder.hcparam_stats = {k: res[k] for k in ("rows_total", "rows_checked", "macro", "allowed", "no_built", "not_found", "unresolved",
+                                                "shared")}
+    binder.hcparam_stats["unchecked_allowlisted"] = res["allowed"]
+    binder.hcparam_stats["unchecked_no_record_modules"] = len(res["no_record"])
     binder.hcparam_stats["mismatches"] = len(res["mismatches"])
     binder.hcparam_stats["owner"] = res["owner"]
     return ["HARD_CORE_PARAM_ALL " + m for m in res["mismatches"]]
@@ -932,7 +1004,8 @@ def main(argv=None):
     for m in res["mismatches"]:
         print("HARD_CORE_PARAM_ALL", m)
     print("HARD_CORE_PARAM_ALL_SUM", str(bd), "die", res["die"], "owner", res["owner"], "rows", res["rows_total"], "checked",
-          res["rows_checked"], "no_built_record", res["no_built"], "not_found", res["not_found"], "unresolved_values",
+          res["rows_checked"], "macro", res["macro"], "unchecked_allowlisted", res["allowed"], "no_record_modules",
+          len(res["no_record"]), "no_built_record", res["no_built"], "not_found", res["not_found"], "unresolved_values",
           res["unresolved"], "shared_view_diffs", res["shared"], "mismatches", len(res["mismatches"]))
     for why, mods in sorted(res["no_built_why"].items(), key=lambda kv: -sum(kv[1].values())):
         print("HARD_CORE_PARAM_ALL_NOBUILT", why, "rows", sum(mods.values()), "modules", len(mods),

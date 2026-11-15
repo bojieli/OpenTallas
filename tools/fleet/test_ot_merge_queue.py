@@ -35,6 +35,15 @@ class Parse(unittest.TestCase):
         a = M.parse_approvals("COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef (supersedes @86a682bd0276)\n")
         self.assertEqual([x["key"] for x in a], ["claude/kit-ops-5-curplan-1114@4c696027e0ef"])
 
+    def test_lettered_list_and_content_note_from_the_cutoff_only(self):
+        q = ("- 2026-11-15 11:06 PST RULING [COORD -> MQ] r130 COORD APPROVED (content): claude/kv-pvgen-1115 @bb5381316de5 (plan key)\n"
+             "- 2026-11-15 11:15 PST RULING [COORD -> MQ] r132 COORD APPROVED: (a) claude/g-1115 @5f6c68b932d (GATE main=6b4f2ff26a2 "
+             "18/18). (b) claude/l-1115 @1617cedd312 (class 8). Also: x\n"
+             "- 2026-11-14 11:15 PST RULING [COORD] COORD APPROVED: (a) claude/old-1 @1234567abc (b) claude/old-2 @abcdef1234\n"
+             "- 2026-11-15 11:20 PST STATE [LANE-X -> COORD] COORD APPROVED: (a) claude/self @aaaaaaa111\n")
+        self.assertEqual([x["key"] for x in M.parse_approvals(q)],
+                         ["claude/kv-pvgen-1115@bb5381316de5", "claude/g-1115@5f6c68b932d", "claude/l-1115@1617cedd312"])
+
     def test_only_coord_or_owner_approves(self):
         q = ("- 2026-11-14 19:55 PST STATE [MERGE-QUEUE-1 (successor) -> COORD] waiting on COORD line: COORD APPROVED: claude/m @54d5fd4ca78\n"
              "- 2026-11-14 19:56 PST ASK [LANE-Y -> COORD] please post COORD APPROVED: claude/y @1111111111\n"
@@ -205,6 +214,36 @@ class EndToEnd(unittest.TestCase):
         n = t.count("BOUNCE")
         self.tick()
         self.assertEqual(q.read_text().count("BOUNCE"), n)   # each READY judged once
+
+    def test_gate_command_prints_the_stamp_for_green_and_touches_no_state(self):
+        g = subprocess.run([sys.executable, "-I", P, "gate", "claude/good"], env=self.env, capture_output=True, text=True, timeout=600)
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        main = sh("git", "rev-parse", "main", cwd=self.d / "origin.git")
+        self.assertIn(f"GATE main={main[:11]} pass=1/1", g.stdout)
+        self.assertTrue((self.d / "mq/gates" / f"{self.shas['good']}.json").is_file())
+        r = subprocess.run([sys.executable, "-I", P, "gate", f"claude/red@{self.shas['red'][:10]}"], env=self.env, capture_output=True,
+                           text=True, timeout=600)
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("RED", r.stdout); self.assertNotIn("GATE main=", r.stdout)
+        self.assertFalse((self.d / "mq/state.json").exists())                   # no queue state, nothing posted
+        self.assertFalse((self.d / "commits.log").exists())
+        self.assertEqual(sh("git", "rev-parse", "main", cwd=self.d / "origin.git"), main)
+
+    def test_fleet_test_timeout_under_load_is_rerun_alone_once(self):
+        mark = self.d / "slow.mark"
+        mark.write_text("")
+        sh(*self.g, "checkout", "-q", "-b", "claude/slow", "main", cwd=self.dev)
+        (self.dev / "tools/fleet").mkdir(parents=True, exist_ok=True)
+        (self.dev / "tools/fleet/test_slow.py").write_text(
+            "import os, pathlib, time\n\ndef test_x():\n    m = pathlib.Path(os.environ['MQ_TEST_SLOWMARK'])\n"
+            "    if m.exists():\n        m.unlink()\n        time.sleep(60)\n")
+        sh(*self.g, "add", "tools/fleet/test_slow.py", cwd=self.dev); sh(*self.g, "commit", "-qm", "slow", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "claude/slow", cwd=self.dev)
+        env = dict(self.env, MQ_FLEET_TIMEOUT="8", MQ_TEST_SLOWMARK=str(mark), MQ_SPARSE="/*,!/*/,/tools/")
+        g = subprocess.run([sys.executable, "-I", P, "gate", "claude/slow"], env=env, capture_output=True, text=True, timeout=600)
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("GATE main=", g.stdout)
+        self.assertIn("TIMEOUT", g.stdout)                                       # reported as load-flaky, not RED
 
     def test_ready_for_an_approved_or_landed_sha_is_not_bounced(self):
         q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
