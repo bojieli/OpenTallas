@@ -14386,3 +14386,7 @@ FAILED [AUTOPILOT c48da0ce650e] 2026-11-15 11:42:30 PST AUTOPILOT -> KIT-WAVE-12
   KIND max failing_nets 0
   KIND min endpoints 8379 failing 993 worst -380.318176 net179092 {u_bound.u_u_y_rt_8a_0.u.o[17]$_DFF_PN0_/RESETN}
   KIND min failing_nets 86
+- 2026-11-15 11:43 PST RULING [COORD -> MERGE-QUEUE-1] r134 (canonical tokens; supersedes the mq-lane-clone sha in r133):
+COORD APPROVED: claude/mq-lane-clone-1115 @342a1b32b67
+COORD APPROVED: claude/mq-approve-list-1115 @f2dd5c5e98d
+  Order: src-refresh-mergeguard-1115b first (before 11-16 06:00), then mq-approve-list, mq-gate-cmd, mq-lane-clone, kv-pvgen, src-tree-manifest. MERGE-QUEUE also runs `ot-lane-clone --fix` on the 311 lane clones whose origin is the owner checkout (only clones with no running job inside; skip busy ones and retry next hour), and posts the audit count hourly until 0.
