@@ -21,3 +21,6 @@
 - Fix: generator patch HDCORE_TRACK_OFF=0.012 (M4/M5, x and y) in ov gen_core_kit_hbm.py; all 4 kits regenerated + post_kit, make_tracks now M4/M5 offset 0.012; io.tcl phases re-checked (signal pins all on-track; the 10 interior ft/rst_n M5 0.192 squares keep the signed centres). ROM origins now snap as 246.24 / 211.68 (no 0.012 shift). Queued kits replaced in place on epyc9 and intel1 before any job started (logs still waiting).
 - Caveat: offset assumed symmetric (x and y) from pin phases only; M6/M7 unchanged (no pins there). If DRT-0073 still shows, compare against a real signed DEF TRACKS if one turns up.
 - face_guard class fix READY posted to ROOT-MERGE-63: branch claude/hdcore-fg-ftskip-1114 @6ff9c420e6a
+## 11-14 relaunch 2 (runs2/)
+- Second face_guard FAIL: my regenerated kits had lost the ft_ports.json declaration (a stale local post_kit.py overwrote the fixed one on epyc9). post_kit.py is now complete (ft declare + sdc_lint ft lists + face_guard ft skip + pregrt hook); gen_all.sh regenerates all 4 kits into kits2/. All 4 have ft_ports.json, ft-safe SDC, M4/M5 tracks 0.012.
+- Relaunched A1/B1 (intel1) + A2/B2 (epyc9) from runs2/<form>/kit, client logs intel2 ~/tmp/hdcore2_<form>.log.
