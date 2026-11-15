@@ -186,6 +186,12 @@ if __name__ == "__main__":
     ap.add_argument("die")
     ap.add_argument("--config", default=os.path.expanduser("~/coord/autopilot/kit_wave.json"))
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--plan-only", action="store_true", help="only the declared plan_sha256 vs plan file check (fast; the pre-tick line)")
     ap.add_argument("--no-tree", action="store_true", help="skip the whole-src-tree comparison (per-top-dir counts + manifest sha)")
     a = ap.parse_args()
-    sys.exit(0 if guard(json.load(open(a.config)), a.die, a.check, no_tree=a.no_tree) else 1)
+    cfg = json.load(open(a.config))
+    if a.plan_only:
+        d = cfg["dies"][a.die]
+        hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
+        sys.exit(0 if plan_sha_check(cfg, a.die, hosts) else 1)
+    sys.exit(0 if guard(cfg, a.die, a.check, no_tree=a.no_tree) else 1)
