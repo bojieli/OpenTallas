@@ -81,3 +81,6 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 - HUB-ONLY ref (COORD: leave it, no history rewrite): claude/cores-s81-1-wave-por-1112 @896c87c3e994 (GitHub refused, file too large).
 - Lane remotes: ot-lane-fixall + hourly ot-lane-audit.timer (:07, ~/merge-queue/bin/lane-remote-audit.sh). 31 left: 3 busy (epyc7), 28 worktrees of gen-host ~/OpenTallas (moved/home__ubuntu__OpenTallas, origin hub:OpenTallas); ASK posted to fix those 4 checkouts.
 - hubpush (694 refs, kw35/repo -> mirror) still running: mq1/tmp/hubpush.out, mirror forward.log.
+
+## 2026-11-15 12:51 PST update
+- r137 done: gen-host ~/OpenTallas origin -> mirror on intel1/epyc7/epyc9; epyc8 busy, retried hourly by ~/.local/bin/ot-lane-fixhome (called from lane-remote-audit.sh). PATH line at top of ~/.bashrc on 7 hosts (MQ1-LOCALBIN, backup .bashrc.bak-mq1-1115). ot-merge-queue wrapper (gate|known-red|status|parse) in ~/.local/bin on 7 hosts. MERGED: src-tree-manifest cdb8191563c, merge-census-1115-4 33b03c8ba37.
