@@ -4905,6 +4905,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     m8g = MG.kit_grant(P, tn)        # LAYER-BUDGET-1: leftover-M8 grant (None = off, kit unchanged)
     if m8g is not None and int(top[1:]) < 8:
         top = "M8"
+    # WAVE-RECIPE-1 11-14 (OWNER ruling ~20:00 via COORD: types may use the REMAINING M8/M9; each kit imports the die's
+    # M8/M9 infra shapes as obstructions): leftover-M9 grant (layer_budget.type_m9_grant or OT_GEN_M9_GRANT=1).  An M9 kit
+    # always carries the M8 grant as well (its M9 wires reach M9 through M8); None = off, kit unchanged.
+    m9g = MG.kit_grant(P, tn, "M9")
+    if m9g is not None:
+        if m8g is None:
+            m8g = MG.kit_grant(P, tn, "M8", force=True)
+        top = "M9"
     pdn = PDN
     if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
         # face_layers raised this type to M8: keep its own M8 wiring off the die M8 PG bands (schema.PART_PG_BANDS),
@@ -4915,6 +4923,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             ln = f"M{li}"
             if ln == MG.LAYER and m8g is not None:
                 obs.append(MG.obstruction_tcl(m8g))   # die PG + die tracks from the plan grid, not the default band
+                continue
+            if ln == "M9" and m9g is not None:
+                obs.append(MG.obstruction_tcl(m9g))   # WAVE-RECIPE-1: die M9 PG straps (+ reserve / die route) per track
                 continue
             pitch, cen, half = S.PART_PG_BANDS[ln]
             horiz = P.layers[ln]["dir"] == "H"       # H layer: stripes along x -> y bands; V layer -> x bands
@@ -4955,7 +4966,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
-        (kd / "m8_grant.json").write_text(json.dumps(m8g, indent=1) + "\n")
+        # WAVE-RECIPE-1: an M9 kit's M9 grant rides in the same file (extra_grants), so the kit's existing fixlef step (run_kit
+        # .sh, unchanged) rewrites both the M8 and the M9 OBS of the abstract
+        (kd / "m8_grant.json").write_text(json.dumps(dict(m8g, extra_grants=[m9g]) if m9g is not None else m8g, indent=1) + "\n")
         shutil.copyfile(Path(__file__).with_name("m8_grant.py"), kd / "m8_grant.py")
     pg_cuts = pg_island_cuts(P, tn, root)
     if pg_cuts:

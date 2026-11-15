@@ -2042,6 +2042,21 @@ class TestCrashTriage1025(unittest.TestCase):
         c = self.classify_probe("[ERROR RSZ-0060] maximum buffer count\n")
         self.assertIn("RSZ-0060", c["orfs_error"])
 
+    def test_rsz0060_caught_by_the_hold_guard_is_not_the_end(self):
+        # WAVE-RECIPE-1 11-14 (FABLE-HARD-S81 t29): the guard catches RSZ-0060 per chunk; the host kill after it is the end
+        log = ("[ERROR RSZ-0060] Max buffer count reached.\n"
+               "OT_HOLD_GUARD_GRT chunk 3: hold ws -12.00 (+4.00) tns -90.0 viol 40, +900 buffers (cap 900), 120 s\n"
+               "make[1]: *** [Makefile:560: do-5_1_grt] Error 241\n")
+        c = self.classify_probe(log)
+        self.assertNotIn("orfs_error", c)
+        self.assertIn("RSZ-0060", c["caught_errors"][0])
+        self.assertEqual(self.ap.classify(c, {"exit": 2})[:2], ("CRASH", "infra-oom"))
+        c = self.classify_probe(log.replace("make[1]: *** [Makefile:560: do-5_1_grt] Error 241\n",
+                                            "[ERROR DRT-0255] Maze Route cannot find path\n"))
+        self.assertIn("DRT-0255", c["orfs_error"])
+        c = self.classify_probe("[ERROR RSZ-0060] Max buffer count reached.\nno guard line\n")   # uncaught: still the error
+        self.assertIn("RSZ-0060", c["orfs_error"])
+
     def test_error_247_at_mem_cap_is_infra_oom(self):
         c = self.classify_probe("[INFO PSM-0040] All shapes on net VDD are connected.\n"
                                 "make[1]: *** [Makefile:654: do-6_report] Error 247\nmake: *** [Makefile:672: do-finish] Error 2\n")

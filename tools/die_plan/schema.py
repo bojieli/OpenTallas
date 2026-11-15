@@ -268,6 +268,12 @@ SCHEMA = {
                     "type_m8_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
                         "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
                         "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
+                        "note": {"type": "string"}}},
+                    # WAVE-RECIPE-1 11-14 (OWNER ruling: types may use the remaining M8/M9, die infra shapes imported as
+                    # obstructions): the same grant on M9 (vertical tracks); an M9 kit also carries the M8 grant
+                    "type_m9_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
+                        "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
+                        "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
                         "note": {"type": "string"}}}}},
                 # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
                 # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers

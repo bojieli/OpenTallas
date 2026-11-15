@@ -669,7 +669,14 @@ for k, p in pat.items():
     if k == "orfs_error":
         # Hold repair catches bounded RSZ errors and continues. Diagnose the
         # terminal tool error rather than an earlier caught repair chunk.
-        errors = re.findall(p, runlog) or re.findall(p, txt)
+        # WAVE-RECIPE-1 11-14 (FABLE-HARD-S81: t29, serdes t13, iqf t1, slice t40 booked "RSZ-0060 buffer-cap crash"): an RSZ-0060
+        # the hold guard CAUGHT (its "OT_HOLD_GUARD_GRT chunk N:" line follows, as kit_resume.HOLD_GUARD_CAP_RE) is no error;
+        # the run's real end (Error 241 OOM kill, a later tool error, a gate FAIL) is classified instead.
+        caught_re = r"(?m)^\[ERROR RSZ-0060\][^\n]*\n(?=(?:[^\n]*\n){0,4}OT_HOLD_GUARD_GRT chunk \d+:)"
+        caught = re.findall(caught_re, runlog) or re.findall(caught_re, txt)
+        if caught:
+            out["caught_errors"] = [e.strip()[:300] for e in caught[-5:]]
+        errors = re.findall(p, re.sub(caught_re, "", runlog)) or re.findall(p, re.sub(caught_re, "", txt))
         if errors:
             out[k] = errors[-1][:300]
             # KW-FIX-43 11-09: a gate FAIL printed after the last tool error is what stopped the run

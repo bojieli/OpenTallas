@@ -558,6 +558,8 @@ def rearm_changes(state, cfg, die, d, rec):
         out.append("src_sha")
     if sp.get("src_overlay") and d.get("_src_overlay") and sp["src_overlay"] != d["_src_overlay"]:
         out.append("src_overlay")
+    if die_env_stale(d, rec.get("item"), sp):           # WAVE-RECIPE-1 FIX 5: a die flow default changed since the attempt
+        out.append("die_gen_env")
     added = sorted(set(opt(cfg, die, "hosts") or []) - set(sp.get("hosts") or [])) if sp.get("hosts") else []
     if added:
         out.append("hosts+" + ",".join(added))
@@ -570,6 +572,65 @@ def rearm_changes(state, cfg, die, d, rec):
     elif seen.get("tools") != cur:
         out.append("rt_tools")
     return out
+
+
+def die_env_stale(d, item, sp):
+    """WAVE-RECIPE-1 11-14 (FIX 5): the die_gen_env keys whose value in the attempt's spec differs from the die default now
+    (keys the item's own item_env sets are the item's, never stale) -> sorted list, [] = current"""
+    if not isinstance(sp, dict) or not isinstance(sp.get("gen_env"), dict):
+        return []
+    own = ((d.get("item_env") or {}).get(item) or {}) if isinstance(d, dict) else {}
+    ge = sp["gen_env"]
+    return sorted(k for k, v in ((d.get("die_gen_env") or {}) if isinstance(d, dict) else {}).items()
+                  if k not in own and str(ge.get(k)) != str(v))
+
+
+def flow_regen(AP, cfg, st, notices):
+    """WAVE-RECIPE-1 11-14 (FABLE-WAVE-REVIEW FIX 5, COORD-approved: kits still carry gates the owner deleted -- hold stop 28,
+    repair time cap 12 -- and miss today's die flow defaults): a RUNNING attempt of the current event whose kit is STALE (a
+    die_gen_env default changed since its spec, or the die src_sha moved on) and whose work has not started (its ot-run stage
+    never admitted, no PLACE progress) is stopped by its exact unit names and relaunched this tick as a fresh kit (RETRY-INFRA,
+    no attempt charged), like an unstarted RESTAGE.  An admitted / running stage is never touched; kits past place keep
+    their run (FIX 2's kill_pin / resume handles those).  Option flow_regen (die > global) false = off;
+    flow_regen_max_per_tick (default 400).  -> rows regenerated"""
+    cap, n = int(cfg.get("flow_regen_max_per_tick", 400)), 0
+    for die, d in sorted((cfg.get("dies") or {}).items()):
+        if not isinstance(d, dict) or not d.get("enabled") or opt_get(cfg, die, "flow_regen") is False:
+            continue
+        if stop_reason(cfg, die, cfg.get("_ap_dir")):
+            continue
+        for r in (st.get("items") or {}).values():
+            if n >= cap:
+                return n
+            if (r.get("die") != die or r.get("status") != "RUNNING" or not r.get("unit") or r.get("arm")
+                    or r.get("event") != d.get("event")):
+                continue
+            try:
+                sp = json.loads((Path(r["dir"]) / "spec.json").read_text())
+            except (OSError, ValueError, KeyError, TypeError):
+                continue
+            why = die_env_stale(d, r.get("item"), sp)
+            if sp.get("src_sha") and d.get("src_sha") and sp["src_sha"] != d["src_sha"] and not sp.get("kill_pin"):
+                why = why + [f"src_sha {str(sp['src_sha'])[:10]}->{str(d['src_sha'])[:10]}"]
+            if not why or volume_started(r) or heavy_progress(r):
+                continue
+            if any(fnmatch.fnmatchcase(r.get("item", ""), pat) for pat in (d.get("hold_items") or {})) \
+                    or counted_now(cfg, st, die, r.get("item"), r.get("block_sha")):
+                continue                                 # held / counted rows are never stopped here (no relaunch would follow)
+            if not AP.DRY:
+                AP.sh(["systemctl", "--user", "stop", r["unit"]], timeout=180)
+                try:
+                    svc = json.loads((Path(r["dir"]) / "place_service.json").read_text())
+                    AP.sh(["systemctl", "--user", "stop", svc["unit"]], timeout=180)
+                except (OSError, ValueError, KeyError):
+                    pass
+            r["infra_base"] = int(r.get("infra_base") or 0) + max(1, infra_used(r) - infra_attempts(cfg, die) + 1)
+            r.update(status="RETRY-INFRA", **{"class": "INFRA"}, updated=time.time(), no_host_at=0,
+                     reason=f"FLOW-REGEN: unstarted stale kit ({', '.join(why)[:200]}) relaunched on the current die flow (WAVE-RECIPE-1 FIX 5)")
+            notices.setdefault(die, []).append(f"{r['item']} FLOW-REGEN (stale: {', '.join(why)[:120]})")
+            AP.log(f"KIT-WAVE FLOW-REGEN {die}/{r['item']}@{r.get('attempt')} unit {r['unit']}: {', '.join(why)[:200]}")
+            n += 1
+    return n
 
 
 def rearm_failed(rec):
@@ -1620,6 +1681,8 @@ def select(rows, cfg, die, state, plan_types=None):
             pass        # KW-PROV-1: a gen-time WAIT-DEP stop (child view missing) relaunches on provisional child views
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
+        elif rec and needs_lane(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+            why = NEEDS_LANE                         # WAVE-RECIPE-1: design FAIL, same kit inputs -> a lane, not a re-key
         elif rec and cfg.get("hold_unchanged") and not minimal_profile() and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = HOLD_UNCHANGED
         elif rec and cfg.get("form_gate", True) and not minimal_profile() and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
@@ -1666,6 +1729,10 @@ def select(rows, cfg, die, state, plan_types=None):
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry
                     or (is_wait_dep(its[item_key(die, ev, c, blk(c))]) and not its[item_key(die, ev, c, blk(c))].get("provisional")
                         and prov_item(d, c)))]
+            nlh = [c for c in todo if needs_lane(cfg, state, die, c, its.get(item_key(die, ev, c, blk(c))), r["item"], r.get("kind"))]
+            if nlh:                                  # WAVE-RECIPE-1: design FAIL, same kit inputs -> a lane, not a re-key
+                skip.setdefault(NEEDS_LANE, []).extend(nlh)
+                todo = [c for c in todo if c not in nlh]
             if cfg.get("hold_unchanged"):
                 same = [c for c in todo if unchanged_fail(cfg, state, die, c, its.get(item_key(die, ev, c, blk(c))), r["item"], r.get("kind"))]
                 if same:
@@ -4012,6 +4079,110 @@ def cfg_require_render(sp):
 
 
 HOLD_UNCHANGED = "no input change since this FAIL: redesign list, no P&R retry (OWNER 11-07)"
+
+# WAVE-RECIPE-1 11-14 (OWNER via COORD, FABLE-WAVE-REVIEW section 8 "relaunching unchanged kits": slice_station types reached
+# attempt 17-19; a GRT / DRT / timing failure is deterministic and does not change on retry).  After ONE design FAIL (queue or
+# wave class ROUTING / TIMING, or a FLOW route end on a deterministic DRT error) the row is not relaunched while its next
+# launch would build the same kit inputs (input_hash of the attempt's spec.json vs the candidate spec: plan block, plan sha,
+# src sha + source content hash, kit_rtl / bind, gen env incl. die_gen_env, the launch-time GRT edge form, the LEAFSLEW form).
+# It is posted once as NEEDS-LANE (lanes/COORD-REVIEW-QUEUE.md, autopilot/kit_wave_needs_lane.tsv) instead of a blind
+# re-key; retry keys, the R-MINIMAL auto retry and the WF-1 tools re-arm do not release it.  Released: any kit input changes
+# (new plan / src / flow / env), or the die's retry_fix item@N starts with "SAME-INPUTS:" (a lane wants the identical run).
+# INFRA never enters here (own resubmit).  Option needs_lane_gate (die > global) false = off.
+NEEDS_LANE = ("NEEDS-LANE: one design FAIL (ROUTING / TIMING / deterministic DRT) and the next launch would build the same kit "
+              "inputs; no blind relaunch, posted for a lane (released by an input change or retry_fix SAME-INPUTS:)")
+NEEDS_LANE_FILE = "kit_wave_needs_lane.tsv"
+DESIGN_DRT_RE = re.compile(r"\bDRT-0(?:255|206|073)\b|maze route cannot find|checkConnectivity")
+
+
+def design_fail(rec):
+    """(class, stage, reason) when rec ended on a design FAIL that the same kit repeats, else None"""
+    if not rec:
+        return None
+    q = rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL"
+    if not (q or rec.get("status") == "FAIL"):
+        return None
+    cls = str((rec.get("q_class") if q else rec.get("class")) or "")
+    why = str((rec.get("q_reason") if q else rec.get("reason")) or "")
+    if cls in ("ROUTING", "TIMING") or (cls == "FLOW" and DESIGN_DRT_RE.search(why)):
+        return cls, str((rec.get("q_stage") if q else rec.get("stage")) or ""), why
+    return None
+
+
+def same_kit_inputs(cfg, st, die, item, rec, parent=None, kind="type"):
+    """True when the next launch of item would build the same kit inputs as rec's attempt.  Anything unreadable or not
+    measured on both sides -> False (the row is never held on a value nobody measured)."""
+    try:
+        old = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        cand = spec_for(dict(cfg, _otrun_status={}), die, item, cfg.get("_hub") or "", parent or rec.get("parent_item"),
+                        kind=kind or rec.get("kind") or "type")
+        key, form = leafslew_launch(cfg, st, die, item, rec, int(rec.get("attempt") or 0) + 1)
+        if key:                                       # released by the LEAFSLEW signature: the form changes
+            return False
+        if form:
+            cand["leafslew_form"] = form
+        if (rec.get("grt_overflow") and opt(cfg, die, "auto_grt_edge") is not False
+                and "OT_GRT_TRANSITION_MODE" not in (cand.get("gen_env") or {})):
+            cand["gen_env"] = dict(cand.get("gen_env") or {}, OT_GRT_TRANSITION_MODE="edge_outline")   # launch() adds it
+        if not cand.get("src_overlay"):
+            return False                              # source content hash not computed: treated as changed
+        if not old.get("src_overlay"):
+            old.pop("src_overlay", None)
+            cand.pop("src_overlay", None)
+        d = cfg["dies"][die]
+        return input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return False
+
+
+def needs_lane(cfg, st, die, item, rec, parent=None, kind="type"):
+    """True = hold the row as NEEDS-LANE (and note it in the state ledger for needs_lane_post)"""
+    if opt_get(cfg, die, "needs_lane_gate") is False:
+        return False
+    df = design_fail(rec)
+    if not df:
+        return False
+    rf = ((cfg.get("dies") or {}).get(die) or {}).get("retry_fix")
+    if str((rf.get(f"{item}@{rec.get('attempt')}") if isinstance(rf, dict) else "") or "").startswith("SAME-INPUTS:"):
+        return False
+    if not same_kit_inputs(cfg, st, die, item, rec, parent, kind):
+        return False
+    led = st.setdefault("needs_lane", {})
+    k = f"{die}|{item}"
+    e = led.get(k)
+    if not isinstance(e, dict) or e.get("attempt") != rec.get("attempt"):
+        led[k] = e = dict(die=die, item=item, attempt=rec.get("attempt"), cls=df[0], stage=df[1],
+                          reason=re.sub(r"\s+", " ", df[2])[:240], first=time.time(), posted=0)
+    e["last"] = time.time()
+    return True
+
+
+def needs_lane_post(AP, cfg, st, ap_dir, now=None):
+    """one ASK line per die for the rows that became NEEDS-LANE since the last post + the current list (TSV)"""
+    now = time.time() if now is None else now
+    led = st.setdefault("needs_lane", {})
+    for k in [k for k, e in led.items() if not isinstance(e, dict) or now - float(e.get("last") or 0) > 86400]:
+        del led[k]                                    # not held for a day: released or gone
+    new = {}
+    for e in led.values():
+        if not e.get("posted") and now - float(e.get("last") or 0) < 3600:
+            new.setdefault(e["die"], []).append(e)
+    for die, es in sorted(new.items()):
+        lane = ((cfg.get("dies") or {}).get(die) or {}).get("owner_lane", f"{die} owner")
+        if not AP.DRY:
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                            f"- {now_s()} ASK [KIT-WAVE -> {lane}; cc COORD] NEEDS-LANE {die}: {len(es)} row(s) ended on a design "
+                            "FAIL and their next launch would build the SAME kit inputs, so the wave does not relaunch them "
+                            "(no blind re-key; an input change releases them, or retry_fix item@N 'SAME-INPUTS: <why>'): "
+                            + "; ".join(f"{e['item']}@{e['attempt']} {e['cls']} @{e['stage']}: {e['reason'][:110]}" for e in es)[:2400])
+        for e in es:
+            e["posted"] = now
+    cols = ["die", "item", "attempt", "cls", "stage", "first", "last", "posted", "reason"]
+    rows = sorted((e for e in led.values() if now - float(e.get("last") or 0) < 3600), key=lambda e: (e["die"], e["item"]))
+    if not AP.DRY:
+        (Path(ap_dir) / NEEDS_LANE_FILE).write_text("\n".join(["\t".join(cols)] + ["\t".join(
+            str(e.get(c, "")) for c in cols) for e in rows]) + "\n")
+    return sum(len(v) for v in new.values())
 # KIT-OPS-1 11-12 (COORD): a plain ISSUES verdict (not ISSUES-ACCEPT) rejects a build like BAD: the row goes to WAIT-FORM and the type
 # relaunches only when its form fingerprint changes (before, ISSUES left the row in WAIT-VISUAL forever)
 VISUAL_REJECT = ("BAD", "ISSUES")
@@ -6473,6 +6644,48 @@ def _refused_class(attempt_dir):
     return r.get("class") if isinstance(r, dict) and r.get("stage") == "resume_nochange" else ""
 
 
+# WAVE-RECIPE-1 11-14 (FABLE-WAVE-REVIEW FIX 2, R2): a clean global route was thrown away after a host kill or a wrapper error
+# (sle_hc0 cl38badc56 a6, slw_hc0 cl4f54b7a3 a5: 5_1_grt.odb + route.guide intact, overflow 0, gate PASS, relaunched from gen).
+# killed_attempt(): the attempt ended by a kill / wrapper error, in the wave (reason) or in the route queue (q_class INFRA,
+# q_reason).  Such a relaunch (1) may resume with no input change (resume_source allow_nochange) and (2) is PINNED to the killed
+# attempt's own source inputs (kill_pin: src, src_sha, plan, kit_rtl, gen env ... as the GRT arm pin), so the regenerated kit
+# is identical and kit_resume starts at the first step the old checkpoint lacks: detail route when 5_1_grt.odb is complete.
+# A flow-only source bump in between never turns a resumable post-GRT kill into a full rebuild (FIX 5 regenerates only kits not
+# past CTS).  Die option kill_pin false = off.
+WRAPPER_END_RE = re.compile(r"PASS exit -15|postcts_gate_tt\.json|infra-stopped:|infra-oom:")
+
+
+def killed_attempt(prev):
+    """True when the attempt ended by a kill / wrapper error, not a design verdict"""
+    if not isinstance(prev, dict):
+        return False
+    q = prev.get("status") == "ENQUEUED" and prev.get("q_status") == "FAIL"
+    txt = " ".join(str(prev.get(k) or "") for k in (("q_reason", "reason") if q else ("reason",)))
+    if q and prev.get("q_class") == "INFRA":
+        return True
+    return bool(KILL_RE.search(txt) or WRAPPER_END_RE.search(txt)) and (
+        str((prev.get("q_class") if q else prev.get("class")) or "") in ("INFRA", "FLOW", "") or bool(WRAPPER_END_RE.search(txt)))
+
+
+def kill_pin(prev, sp):
+    """pin sp's source inputs to the killed attempt's spec (in place) -> '' or why not pinned (spec unreadable / incomplete)"""
+    try:
+        old = json.loads((Path(prev["dir"]) / "spec.json").read_text())
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        return f"spec unreadable ({type(e).__name__})"
+    miss = [k for k in GRT_ARM_PIN_REQUIRED if not old.get(k)]
+    if miss:
+        return f"spec lacks {','.join(miss)}"
+    for k in GRT_ARM_PIN:
+        if k in old:
+            sp[k] = old[k]
+        else:
+            sp.pop(k, None)
+    sp["gen_env"] = dict(old.get("gen_env") or {})
+    sp["kill_pin"] = {"attempt": prev.get("attempt"), "src_sha": old.get("src_sha"), "plan": old.get("plan")}
+    return ""
+
+
 def resume_source(AP, prev):
     """KW-RESUME-1: where the previous attempt's checkpoint lives.  Candidates: the attempt's kit on its gen host and,
     for a kit the autopilot routed on another host (ot-run spill), that host's copy of the same path, which holds the
@@ -6488,7 +6701,10 @@ def resume_source(AP, prev):
                              or _refused_class(jd) == "VOLUME"
                              # KIT-OPS-5 11-14 (FABLE-WAVE-REVIEW FIX 2): the attempt was KILLED (make Error 241 / PASS exit -15 / earlyoom),
                              # not failed on a design verdict: resume the same checkpoint (GRT done -> detail route) with no input change
-                             or bool(KILL_RE.search(str(prev.get("reason") or ""))) or "PASS exit -15" in str(prev.get("reason") or "")}
+                             or bool(KILL_RE.search(str(prev.get("reason") or ""))) or "PASS exit -15" in str(prev.get("reason") or "")
+                             # WAVE-RECIPE-1 11-14 (FIX 2 extended): the kill / wrapper end of the ROUTE job lives in the queue
+                             # fields (q_class / q_reason) of an ENQUEUED row, not in reason
+                             or killed_attempt(prev)}
     try:
         out["gen_end"] = (jd / "gen.log").stat().st_mtime
     except OSError:
@@ -6607,6 +6823,10 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if (opt(cfg, die, "stage_resume") is not False and prev.get("dir") and Path(prev["dir"]).is_dir()
                 and r["item"] not in (cfg["dies"][die].get("stage_resume_off") or [])):
             sp["resume_from"] = resume_source(AP, prev)
+            if not arm and opt_get(cfg, die, "kill_pin") is not False and killed_attempt(prev):
+                _pw = kill_pin(prev, sp)                # WAVE-RECIPE-1 FIX 2: same inputs -> resume at the checkpoint
+                AP.log(f"KIT-WAVE KILL-PIN {die}/{r['item']}@{attempt}: " + (f"pinned to attempt {prev.get('attempt')} inputs "
+                       f"(src_sha {str(sp.get('src_sha'))[:12]}), resumes its checkpoint" if not _pw else f"not pinned: {_pw}"))
         # FLOW-23 class D: a relaunch after an AUTO-GEOM FAIL plans soft region guides from that result (written only
         # when its r2r rule failed); die opt-out: region_guide false
         if opt(cfg, die, "region_guide") is not False:
@@ -8757,6 +8977,10 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE src probe skipped: {e}")
     load_counter_signed(cfg)
     restage_waiters(AP, cfg, st, notices)
+    try:                                                 # WAVE-RECIPE-1 FIX 5: unstarted stale kits regenerate
+        flow_regen(AP, cfg, st, notices)
+    except Exception as e:                               # a regen sweep never stops the tick
+        AP.log(f"KIT-WAVE FLOW-REGEN skipped: {type(e).__name__}: {e}")
     try:
         reap_orphan_waiters(AP, cfg)
     except Exception as e:                      # a diagnostic sweep never stops the tick
@@ -8796,6 +9020,10 @@ def _step(AP, ap_dir):
         save_state(st, ap_dir)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     res, todo = plan_dies(AP, cfg, st, owners, status, AP.HUB_NAME)
+    try:                                                 # WAVE-RECIPE-1: NEEDS-LANE rows -> one ASK per die + TSV
+        needs_lane_post(AP, cfg, st, ap_dir)
+    except Exception as e:                               # a report never stops the tick
+        AP.log(f"KIT-WAVE NEEDS-LANE post skipped: {type(e).__name__}: {e}")
     try:                                                 # KW-FIX-35-CV: export counted child views (hourly per die)
         auto_views_step(AP, cfg, st, ap_dir)
     except Exception as e:                               # an export launch never stops the wave
