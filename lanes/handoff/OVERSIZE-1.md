@@ -61,3 +61,4 @@ Correction: serdes__t1 is 72% flattened <top> logic, u_core is only 30k (9.5%); 
 - 20:17 u_pvfin: kv3_pvfin_s kit epyc9 oversize-1/kvr (generator mk_pvfin.py), slot from KV-102 kvgeom6 (1296,48) 501.12^2; waiter watch4.sh.
 - STB-EDGE-1 proof: w269 resumed from 4_cts w/ stb_edge1.tcl (epyc10); stb_proof.sh auto-resumes w257 on pass; watch5.sh signoff.
 - STB-EDGE-1: w269 SIGNED (TT +161.8, FF +3.0, DRC 0); w257 resumed 20:31 (watch5.sh).
+- 8 KV ring masters ARCHIVED-BOTH (rtx-pro arch.sh in lane scratchpad oversize1/); w257 archive on sign-off by local waiter.
