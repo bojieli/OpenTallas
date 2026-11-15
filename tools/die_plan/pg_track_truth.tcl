@@ -39,6 +39,18 @@ proc ot_pgtt_region_adj {} {
   if {[info exists ::env(OT_PG_TRACK_TRUTH_REGION_ADJ)] && $::env(OT_PG_TRACK_TRUTH_REGION_ADJ) ne ""} { return $::env(OT_PG_TRACK_TRUTH_REGION_ADJ) }
   return 1.0
 }
+# set_global_routing_region_adjustment only reaches the gcells that lie INSIDE the region: a stripe-sized region (0.288 um) holds no whole
+# gcell (0.57 um) and the call is a silent no-op (measured on sle_fe_v1: 1270 stripe-sized calls left the GRT resources table identical
+# to "off"; one die-sized call cut M6 by 99.87 %).  The region is therefore widened to whole gcells: ot_pgtt_gcell_align lo hi gc -> {lo' hi'}
+# on the gcell grid (origin 0, gc dbu: OT_PG_TRACK_TRUTH_GCELL_UM, default 0.57 = the 4.32/0.57 ASAP7 GRT tile of these kits).
+proc ot_pgtt_gcell_align {lo hi gc} {
+  return [list [expr {int(floor(double($lo) / $gc)) * $gc}] [expr {int(ceil(double($hi) / $gc)) * $gc}]]
+}
+proc ot_pgtt_gcell_dbu {dbu} {
+  set um 0.57
+  if {[info exists ::env(OT_PG_TRACK_TRUTH_GCELL_UM)] && $::env(OT_PG_TRACK_TRUTH_GCELL_UM) ne ""} { set um $::env(OT_PG_TRACK_TRUTH_GCELL_UM) }
+  return [expr {int(round($um * $dbu))}]
+}
 proc ot_pgtt_region_mode {} {
   return [expr {[info exists ::env(OT_PG_TRACK_TRUTH_MODE)] && $::env(OT_PG_TRACK_TRUTH_MODE) eq "region"}]
 }
@@ -98,7 +110,7 @@ proc ot_pgtt_add {} {
           if {[lsearch -exact [ot_pgtt_region_layers] $ln] < 0} { continue }
           set mg [ot_pgtt_region_margin]
           set die [$blk getDieArea]
-          set s0 [expr {$lo - $mg}]; set s1 [expr {$hi + $mg}]
+          lassign [ot_pgtt_gcell_align [expr {$lo - $mg}] [expr {$hi + $mg}] [ot_pgtt_gcell_dbu [$blk getDbUnitsPerMicron]]] s0 s1
           set kmin [expr {[lsearch -sorted -integer -bisect $g [expr {$lo - $hw - $sp}]] + 1}]
           set kmax [lsearch -sorted -integer -bisect $g [expr {$hi + $hw + $sp - 1}]]
           if {$dir eq "HORIZONTAL"} { set reg [list [$die xMin] $s0 [$die xMax] $s1] } else { set reg [list $s0 [$die yMin] $s1 [$die yMax]] }

@@ -65,6 +65,15 @@ def test_illegal_span_is_wire_edge_within_spacing_of_the_stripe():
     assert out == "1920 2688"
 
 
+@pytest.mark.skipif(not TCLSH, reason="tclsh")
+def test_region_is_widened_to_whole_gcells():
+    """a stripe-sized region holds no whole gcell and set_global_routing_region_adjustment ignores it (measured): widen to the gcell grid"""
+    src = _proc("pg_track_truth.tcl", "ot_pgtt_gcell_align")
+    out = _tcl(src + "\nputs [ot_pgtt_gcell_align 135744 136032 570]\nputs [ot_pgtt_gcell_align 135744 136416 570]\nputs [ot_pgtt_gcell_align 570 1140 570]")
+    # M6 stripe 135.744-136.032 -> gcell row 135.660-136.230; the pair 135.744-136.416 -> 135.660-136.800
+    assert out.split("\n") == ["135660 136230", "135660 136800", "570 1140"]
+
+
 def test_region_mode_is_default_off_and_emits_the_adjustment_not_obstructions():
     t = (HERE / "pg_track_truth.tcl").read_text()
     assert 'OT_PG_TRACK_TRUTH_MODE) eq "region"' in t
