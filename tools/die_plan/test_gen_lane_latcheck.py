@@ -120,3 +120,26 @@ def test_module_check_worktree_defs(tmp_path):
     (tmp_path / "results" / "d.sv").write_text("module m_d ();\nendmodule\n")
     d = M.worktree_defs(tmp_path)
     assert d == {"m_a": ["rtl/a.sv"], "m_b": ["rtl/a.sv"]}
+
+
+def test_nested_ternary_width_and_optional_port():
+    import port_bind_gate as P
+    assert P._width("[(RSTREP > 0 ? RSTREP : 1)-1:0]", {"RSTREP": "19"}) == 19
+    assert P._width("[(RSTREP > 0 ? RSTREP : 1)-1:0]", {"RSTREP": "0"}) == 1
+    for bad in ("[__import__(1):0]", "[a=1:0]", "[(1 ? 2):0]"):
+        try:
+            P._width(bad, {})
+            raise AssertionError(bad)
+        except ValueError:
+            pass
+    master = ("module m #(parameter int RSTREP = 0) (input wire a, input wire [(RSTREP > 0 ? RSTREP : 1)-1:0] x);\n"
+              "endmodule\n")
+    w0 = {"w.sv": "module w (input wire a);\n    m u_0 (.a(a));\nendmodule\n"}
+    w3 = {"w.sv": "module w (\n    input wire a,\n    input wire [2:0] q\n);\n    m #(.RSTREP(3)) u_3 (.a(a));\n"
+                  "    m #(.RSTREP(3)) u_4 (.a(a), .x(q));\nendmodule\n"}
+    assert P.nested_check(w0, [master])["verdict"] == "FAIL"
+    opt = [("m", "x", "RSTREP", 0)]
+    r = P.nested_check(w0, [master], optional_ports=opt)
+    assert r["verdict"] == "PASS" and r["optional_open"] == 1
+    r = P.nested_check(w3, [master], optional_ports=opt)
+    assert r["verdict"] == "FAIL" and r["unbound"] == 1 and r["width_mismatch"] == 0 and r["unresolved"] == 0
