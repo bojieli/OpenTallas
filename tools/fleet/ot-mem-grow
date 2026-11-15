@@ -34,6 +34,18 @@ def refusal(cap, req, usage, avail_gb, headroom_gb, grow_at=GROW_AT, grow_by=GRO
     return None
 
 
+def note_raised(cid, name):
+    """remember a raised container (12-char id -> name) so ot-mem-grow-outcome can log how it ended (docker --rm hides the exit status)"""
+    path = DIR + "/raised.json"
+    try:
+        d = json.load(open(path))
+    except (OSError, ValueError):
+        d = {}
+    d[cid[:12]] = {"name": name, "t": time.time()}
+    d = {k: v for k, v in d.items() if time.time() - v.get("t", 0) < 7 * 86400}
+    json.dump(d, open(path + ".tmp", "w")); os.replace(path + ".tmp", path)
+
+
 def sh(*a):
     return subprocess.run(list(a), capture_output=True, text=True, timeout=120).stdout
 
@@ -147,6 +159,7 @@ def one_pass(dry_run):
                     line += " FAILED " + r.stderr.strip()[:100]
                 else:
                     raised += 1
+                    note_raised(cid, name)
             print(line)
             open(DIR + "/log", "a").write(line + "\n")
     raised += grow_scopes(orig, hr, a.dry_run)
