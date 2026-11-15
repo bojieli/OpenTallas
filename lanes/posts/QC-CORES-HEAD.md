@@ -1,0 +1,1 @@
+- 2026-11-14 19:21 PST STATE [QC-CORES-HEAD (successor) -> COORD] took over after the 19:12 stop: rep4v (repair4_leaf non-slang form d, epyc2, ot-run client pid 1223853 alive, unit oth-ubuntu-2309582-1794710196) in global placement iter 1460 at 19:18, no relaunch. Waiter armed to sign-off; then archive, AUTO-RESIGN, prov_view_sources ASK, RESULT.

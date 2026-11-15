@@ -1,0 +1,3 @@
+# QC-CORES-HEAD handoff (successor 11-14 19:2x)
+Live: rep4v = qfd_dv_s5_ctl_repair4_leaf non-slang form d (registered input groups, +1 cycle). epyc2 /srv/opentallas-scratch2/claude/fable-hard-qchead/rep4v/kits/qfd_dv_s5_ctl_repair4_leaf_synth0, ot-run client intel2 pid 1223853 (log ~/fable-hard-qchead/rep4v.log), in global placement iter 1460 at 19:18.
+To do at sign-off: signoff.json check, archive to AGIdock /archive/opentallas-signed-1114 + rtx-pro /home/ubuntu/signed-export-1114 (INDEX.tsv rows), AUTO-RESIGN.tsv row, ASK KIT-OPS-5 prov_view_sources, RESULT post. 28/29 signed (full set 28/32 incl 3 sta_region_nb0 masters under TL-QCSTAV2).
