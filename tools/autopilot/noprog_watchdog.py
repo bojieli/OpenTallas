@@ -25,7 +25,7 @@ A log without timestamps gets line times by interpolation between the stage star
 the samples this tool took on earlier passes, and the log's mtime.  A verdict needs >= WINDOW of evidence.
 
 PASSES: a job is cancelled only after an earlier pass listed it in a report-mode table (state `reported`), so every cancel
-was on a posted table first.  Superseded kits and HBM (parked) skip the window but not that rule.  Excluded: --priority plan
+was on a posted table first.  HBM (parked) skips the window but not that rule; superseded kit dirs are only listed (SUPERSEDED?) for COORD.  Excluded: --priority plan
 jobs (bind / LATCHECK / G0 / die-proto / chain), and anything matched by a NOPROG-KEEP.tsv line.  The kit dir is never cleaned.
 
 Cancel = `ot-heavy-stop --match <kit dir>` (exact `--unit` when the match would hit another scope), nothing else is killed.
@@ -493,7 +493,9 @@ def scan(now=None, act=False, probe_s=4):
         elif is_hbm(ident):
             row.update(verdict="CANCEL-NOW", why="HBM is parked")
         elif sup:
-            row.update(verdict="CANCEL-NOW", why="superseded kit (kit_wave_stages)")
+            # 11-14 first run: 35 live col_h9/h10 and kv3_hub_Eo builds matched.  kit_wave_stages rows do not prove that the running
+            # container is stale, so this is listed for COORD and never cancelled by the watchdog.
+            row.update(verdict="SUPERSEDED?", why="kit_wave_stages lists this kit dir as superseded: COORD to confirm (not auto-cancelled)")
         elif not log:
             row.update(verdict="NO-DATA", why="no log found")
         else:
@@ -560,7 +562,7 @@ def do_cancel(unit, rs, now):
 
 
 # ---------------------------------------------------------------- hub
-ORDER = {"NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
+ORDER = {"NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "SUPERSEDED?": 1, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
 
 
 def md_table(reports):
@@ -581,16 +583,17 @@ def run_host(host, cmd, inp=None, timeout=60):
 
 
 def derive_superseded(path):
-    """kit dirs of kit_wave_stages rows that are SUPERSEDED (status or class): a survivor of those is a stale build"""
-    out = []
+    """kit dirs of kit_wave_stages whose EVERY row is SUPERSEDED (status or class).  A kit path is shared by the stages of one
+    attempt (geom / route / signoff), so a single CANCELLED-SUPERSEDED geom row must not condemn a live route job."""
+    rows = {}
     try:
         for ln in open(path):
             f = ln.rstrip("\n").split("\t")
-            if len(f) > 10 and f[0] != "die" and "SUPERSEDED" in (f[7], f[8]) and ":" in f[9]:
-                out.append(f[9].split(":", 1)[1].strip().rstrip("/"))
+            if len(f) > 10 and f[0] != "die" and ":" in f[9]:
+                rows.setdefault(f[9].split(":", 1)[1].strip().rstrip("/"), []).append("SUPERSEDED" in (f[7], f[8]))
     except OSError:
         pass
-    return sorted(p for p in set(out) if p.count("/") > 4)
+    return sorted(p for p, v in rows.items() if all(v) and p.count("/") > 4)
 
 
 def hub(now=None, post=True):

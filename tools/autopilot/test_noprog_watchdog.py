@@ -179,6 +179,8 @@ def test_derive_superseded_reads_kit_wave_stages():
     with tempfile.NamedTemporaryFile("w", suffix=".tsv", delete=False) as f:
         f.write("die\titem\tparent_item\tplan_sha\tblock_sha\tevent\tstage\tstatus\tclass\tkit\tevidence\n")
         f.write("hbm\tNE_io\t\ta\tb\td44v\tgeom\tCANCELLED\tSUPERSEDED\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/hbm/items/NE_io/attempt_16/gen/NE_io\tev\n")
+        f.write("hbm\tNE_io\t\ta\tb\td44v\troute\tBUILDING\tNONE\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/hbm/items/live/attempt_1/gen/live\tev\n")
+        f.write("hbm\tNE_io\t\ta\tb\td44v\tgeom\tCANCELLED\tSUPERSEDED\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/hbm/items/live/attempt_1/gen/live\tev\n")
         f.write("s81\tx\t\ta\tb\td\troute\tFAILED\tROUTING\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/s81/items/x/attempt_1/gen/x\tev\n")
     assert nw.derive_superseded(f.name) == ["/srv/opentallas-scratch2/claude/kw/runs/hbm/items/NE_io/attempt_16/gen/NE_io"]
 
