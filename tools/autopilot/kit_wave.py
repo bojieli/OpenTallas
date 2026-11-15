@@ -5064,6 +5064,12 @@ def geom_result_line(txt):
                  if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
+def placed_scan_line(txt):
+    """PLACED-SCAN-1115: the AP_PLACED_SCAN line of geom_check.sh (zero-logic bus hops over reach with no station on the
+    matched group), "" when the scan did not run.  Advisory: it never changes the geom verdict."""
+    return next((ln for ln in reversed((txt or "").splitlines()) if ln.startswith("AP_PLACED_SCAN ")), "")
+
+
 SRC_SKEW_ADVISORY_DIES = {"qwen_compute"}   # KIT-OPS-5 11-14 (COORD): src_skew is logged, not judged, for these dies until the queue lint is refreshed
 
 
@@ -5414,6 +5420,10 @@ def run_item(spec_path):
         rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [_gh]))
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
+        ps_line = placed_scan_line(txt)      # PLACED-SCAN-1115: advisory early-fail diagnostic, names the matched group
+        if ps_line:
+            res["placed_scan"] = ps_line[:900]
+            print(f"KW_NOTE {ps_line[:900]}", flush=True)
         if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
             # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
             return fail("geom_run", txt[-3000:], f"{kh}:{gd}")
