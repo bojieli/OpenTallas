@@ -47,3 +47,4 @@ Scripts intel2 ~/pg-aware-1/{fetch.sh,prep.py,launch_proof.sh}. Status: see RESU
 - Waiter: tmux pga1-waiter (waiter2.sh) -> ~/pg-aware-1/proof-logs/summary.tsv every 10 min, all 12 forms.
 - Launch lesson: ot-run launched with nohup inside a short ssh session died (ssh 255 / systemd scope refused at session end): launch in tmux.
 - Finding: wave su_l0 S3M2 kits still have cland_tstart_in at y 174.9516 (DRC 3 site); M7 phase bug puts 76 su_l0 face pins on M7 stripe tracks (1 with phase fix).
+- 20:30 final sha 240cf2612f (rule gated to unsigned types + plan M7 phase; plans of record move only hd_host_e raw_0/raw_2); READY posted. Proofs: intel2 ~/pg-aware-1/proof-logs/summary.tsv. Next: RESULT when the first proof routes without DRT-0255.
