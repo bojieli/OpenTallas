@@ -32,6 +32,7 @@ import sys
 DLY = re.compile(r"^(?P<ind>\s*)ot_dp_dly\s*#\(\s*\.W\((?P<W>\d+)\)\s*,\s*\.D\((?P<D>\d+)\)\s*\)\s+(?P<inst>\S+)\s*"
                  r"\(\s*\.clk\((?P<clk>[^)]*)\)\s*,\s*\.d\((?P<d>.*)\)\s*,\s*\.q\((?P<q>\w+)\)\s*\)\s*;(?P<tail>.*)$")
 HDR = re.compile(r"^\s*(?P<mod>[A-Za-z_]\w*)\s*(?:#\(.*\))?\s+(?P<inst>\\?[\w$]+)\s*\(\s*$")
+ASSIGN = re.compile(r"^\s*assign\s+(?P<lhs>\w+)\s*=\s*(?P<rhs>.*?)\s*;\s*(?://.*)?$")
 DEFAULT_REGION_RE = r"^(.*?)(?:_\d+|_sk)?$"
 CELL = "ot_dp_rrelay"
 
@@ -85,48 +86,129 @@ def _one(lines, di, m, spec, positions):
         raise ReplicateError(f"{inst}: W={W}; only a 1-bit reset / flush level is replicated")
     use = re.compile(r"\b" + re.escape(q) + r"\b")
     decl = re.compile(r"^\s*wire\s*(?:\[[^\]]*\])?\s*" + re.escape(q) + r"\s*;")
-    di_decl, cur, uses = None, None, []        # uses: (line index, enclosing instance or None)
+    di_decl, cur, encl = None, None, {}
     for i, ln in enumerate(lines):
         h = HDR.match(ln)
         if h and not ln.lstrip().startswith(("assign", "wire", "//", "ot_dp_")):
             cur = h["inst"]
         elif ln.strip().startswith(");"):
             cur = None
-        if i == di:
-            continue
-        if decl.match(ln):
+        encl[i] = None if ln.lstrip().startswith("assign") else cur
+        if i != di and decl.match(ln):
             di_decl = i
-            continue
-        if use.search(ln):
-            uses.append((i, None if ln.lstrip().startswith("assign") else cur))
+    orig = list(lines)
+    uses = [i for i, ln in enumerate(orig) if i not in (di, di_decl) and use.search(ln)]
     if not uses:
         raise ReplicateError(f"{inst}: q wire {q} has no load")
-    regions = {}
-    for i, c in uses:
-        regions.setdefault("rest" if c is None else _region_of(c, spec, positions), []).append(i)
-    if len(regions) < 2:
-        return lines, dict(driver=inst, depth=D, regions=len(regions), copies=0, loads=len(uses), note="one region: unchanged")
-    names = {r: f"{inst}_r{k}" for k, r in enumerate(sorted(regions))}
+    wdecl = {}                                          # wire -> '[n:0]' of its declaration
+
+    def width(x):
+        if x not in wdecl:
+            wdecl[x] = next((mm["w"] or "" for ln in orig for mm in [re.match(r"^\s*wire\s*(?P<w>\[[^\]]*\])?\s*" + re.escape(x) + r"\s*;", ln)] if mm), "")
+        return wdecl[x]
+
+    def loads(x, skip):
+        xu = re.compile(r"\b" + re.escape(x) + r"\b")
+        return [j for j, ln in enumerate(orig) if j != skip and j != di and xu.search(ln)
+                and not re.match(r"^\s*wire\s*(?:\[[^\]]*\])?\s*" + re.escape(x) + r"\s*;", ln)]
+
+    memo = {}
+
+    def regs(x, skip, stack=()):
+        """regions an assign-defined wire x reaches (transitively through further assigns); 'rest' = a non-instance load"""
+        if x in memo:
+            return memo[x]
+        res = set()
+        for j in loads(x, skip):
+            am = ASSIGN.match(orig[j])
+            if am and am["lhs"] != x and am["lhs"] not in stack:
+                res |= regs(am["lhs"], j, stack + (x,))
+            elif am:
+                res.add("rest")
+            else:
+                res.add("rest" if encl[j] is None else _region_of(encl[j], spec, positions))
+        memo[x] = res
+        return res
+
+    plain, top = {}, []                                 # region -> [plain load line]; top-level assign loads of q
+    for i in uses:
+        am = ASSIGN.match(orig[i])
+        if am:
+            top.append((i, am["lhs"]))
+        else:
+            plain.setdefault("rest" if encl[i] is None else _region_of(encl[i], spec, positions), []).append(i)
+    allr = set(plain)
+    dead = []
+    for i, x in top:
+        rs = regs(x, i)
+        if not rs:
+            dead.append(i)
+        allr |= rs
+    if len(allr) < 2:
+        return lines, dict(driver=inst, depth=D, regions=len(allr), copies=0, loads=len(uses), note="one region: unchanged")
+    names = {r: f"{inst}_r{k}" for k, r in enumerate(sorted(allr))}
+    wire = {r: (names[r].replace("u_", "", 1) if names[r].startswith("u_") else names[r]) for r in names}
     src = f"{q}[0]" if D > 1 else dexpr
-    new = []
-    for r in sorted(regions):
-        wn = names[r].replace("u_", "", 1) if names[r].startswith("u_") else names[r]
-        for i in regions[r]:
-            lines[i] = use.sub(wn, lines[i])
-        new.append(f"    wire [0:0] {wn};")
-        new.append(f"    {CELL} {names[r]} (.clk({clk}), .d({src}), .q({wn}[0]));  // S81-COLGEN-1 C2: region {r}"
-                   f" ({len(regions[r])} load(s)); {D} stage(s) total")
+    new, leaf, made, blank = [], {r: 0 for r in allr}, set(), set()
+
+    def clone(x, r, xr, skip):
+        """wire x is replaced by xr for region r: re-point its instance loads of r and clone its assign loads that reach r"""
+        xu = re.compile(r"\b" + re.escape(x) + r"\b")
+        for j in loads(x, skip):
+            am = ASSIGN.match(orig[j])
+            if am and am["lhs"] != x:
+                y = am["lhs"]
+                if r in regs(y, j):
+                    yr = f"{y}_{wire[r]}"
+                    if (y, r) not in made:
+                        made.add((y, r))
+                        new.append(f"    wire {width(y) + ' ' if width(y) else ''}{yr};")
+                        new.append(f"    assign {yr} = {xu.sub(xr, am['rhs'])};  // S81-COLGEN-1 C2: {y} for region {r}")
+                        clone(y, r, yr, j)
+                    if "rest" not in regs(y, j):
+                        blank.add(j)
+            elif not am and encl[j] is not None and _region_of(encl[j], spec, positions) == r:
+                lines[j] = xu.sub(xr, lines[j])
+                leaf[r] += 1
+
+    for r, js in plain.items():
+        for j in js:
+            lines[j] = use.sub(wire[r], lines[j])
+        leaf[r] += len(js)
+    for i, x in top:
+        rs = regs(x, i)
+        if not rs:
+            blank.add(i)
+            continue
+        for r in sorted(rs):
+            if r == "rest":
+                lines[i] = use.sub(wire["rest"], orig[i])
+                continue
+            xr = f"{x}_{wire[r]}"
+            new.append(f"    wire {width(x) + ' ' if width(x) else ''}{xr};")
+            new.append(f"    assign {xr} = {use.sub(wire[r], ASSIGN.match(orig[i])['rhs'])};  // S81-COLGEN-1 C2: {x} for region {r}")
+            clone(x, r, xr, i)
+        if "rest" not in rs:
+            blank.add(i)
+    for j in blank:
+        lines[j] = ""
+    cells = []
+    for r in sorted(allr):
+        cells.append(f"    wire [0:0] {wire[r]};")
+        cells.append(f"    {CELL} {names[r]} (.clk({clk}), .d({src}), .q({wire[r]}[0]));  // S81-COLGEN-1 C2: region {r}"
+                     f" ({leaf[r]} load(s)); {D} stage(s) total")
+    new = cells + new
     if D > 1:
         lines[di] = (f"{m['ind']}ot_dp_dly #(.W(1), .D({D - 1})) {inst} (.clk({clk}), .d({dexpr}), .q({q}));"
                      f"{m['tail']}  // S81-COLGEN-1: common part, last stage replicated per region")
     else:
-        lines[di] = f"{m['ind']}// S81-COLGEN-1: {inst} replaced by {len(regions)} region copies (1 stage, same d)"
+        lines[di] = f"{m['ind']}// S81-COLGEN-1: {inst} replaced by {len(allr)} region copies (1 stage, same d)"
         if di_decl is not None:
             lines[di_decl] = ""
     lines[di + 1:di + 1] = new
-    # equal latency: every load sees (D-1 common) + 1 copy = D stages
-    row = dict(driver=inst, depth=D, common_depth=D - 1, copy_depth=1, regions=len(regions), copies=len(regions),
-               loads=len(uses), region_names=sorted(regions), loads_per_region={r: len(v) for r, v in sorted(regions.items())})
+    row = dict(driver=inst, depth=D, common_depth=D - 1, copy_depth=1, regions=len(allr), copies=len(allr),
+               loads=len(uses), assign_splits=len(top) - len(dead), dead_assigns=len(dead), region_names=sorted(allr),
+               loads_per_region=dict(sorted(leaf.items())), shared_rest=("rest" in allr))
     return lines, row
 
 
