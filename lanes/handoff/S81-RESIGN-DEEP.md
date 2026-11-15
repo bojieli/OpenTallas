@@ -6,3 +6,5 @@ Not started: kp4_dchn (signed kit epyc2 head-serdes-2/e13a), bksel_q (S81-CORES-
 Next: on sign, archive to AGIdock + rtx-pro with INDEX row, tell DIE-S81-92.
 
 11-15 08:20 all 8 forms launched (idxA/B, kp4A/B, heA/B, hwA/B); bksel_q left to S81-CORES-2 (ETA asked).
+
+11-15 14:45 state: heA/heB/hwA/hwB stopped at GRT hold structural (vclk below real insertion); idxA/B/C measured; faceA/faceB (kp4_dchn +1 cycle) running; bksel_q read posted. See lanes/FABLE-TRIAGE-S81.md RESULT 14:45.
