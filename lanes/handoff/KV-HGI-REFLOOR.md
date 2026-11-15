@@ -21,3 +21,12 @@ Next: read G0 errors (expect ft station spacing / hops across the +129.6 band ->
   +1 station each (inserted mid longest hop, then re-sited) -> 68 lanes +1 cycle (lanes_r3.json); latency rows bumped (stations/cycles/natural +1).
 - r3 = plan_r3b.json (sha 0b955b9499a3) full gate queued via ONE ot-run --priority plan --hosts epyc9,epyc10 (intel2 ~/kvhgr/r3.log).
 - epyc7 staging (rsync of the whole dir) in progress; do not launch there until tree file counts match epyc9.
+## 19:1x update
+- COORD asked for kv3_hgi_v2 allow-congestion + M9 forms: NOT launched (12.1a tiles <= M7, never M8/M9); ASK posted 19:0x; launch only on an OWNER M9 exception.
+  Allow-congestion-only forms are already TYPE-KVHGI2's (planB routeB2 epyc9, fd04/fdC3/v1a intel1).
+- r3 still waiting for memory (plan queue, epyc10). Resume: read run_r3.out on epyc9/epyc10 (out_r3/g0/g0_report.json for G0 errors).
+  If G0 flags hops/stations: add the TYPE:SLOT to add_r3.txt, rerun fixhops.py (base.json plan_r1.json ledger_r1.json OUT REPORT --limit 400 --add FILE),
+  lanes_of.py for the lanes, bump latency rows (+1 stations/cycles/natural), regate. Other chains crossing the band (collector_tree relays max 380,
+  landing reader/writer stages, internal_stations) are NOT re-sited yet: fix them from the G0/bind errors.
+- epyc7 copy incomplete (rsync timed out); do not use epyc7 until re-synced.
+- On pass: package por/ = plan_c.json (plan_r3b) + sink_bins/*_hgr1.json + README, post to TYPE-KVHGI2 (all 16 column types need new kits).
