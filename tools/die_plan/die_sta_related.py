@@ -1530,12 +1530,23 @@ def kit_port(port, row):
     return port[len(pre):] if port.startswith(pre) else row.get("tap", port)
 
 
-def kit_port_needs(pair_lists, taps, rng, kit_offset=None):
+def kit_related_pairs(path):
+    """KIT-OPS-6 11-14 (FABLE-TYPES-S81-LEAF section 1 step 2): {type: {frozenset({kit port, kit port})}} from the JSON written by
+    kit_tap_related_pairs.tcl ({"related_pairs": {type: [[port_a, port_b], ...]}}): the clock tap port pairs of the type that carry
+    data (a register on one tap reaches a register on the other through combinational cells)."""
+    raw = json.loads(Path(path).read_text())
+    return {t: {frozenset(pr) for pr in prs} for t, prs in (raw.get("related_pairs") or {}).items()}
+
+
+def kit_port_needs(pair_lists, taps, rng, kit_offset=None, related=None, ptype=None):
     """KW-FIX-4-SDC (COORD RULING 2026-11-03 10:49): {(part, kit port): need_ps} = the measured window each kit clock
     port needs as the EARLY side of its cross-port pairs: max over the part's other taps q of
     late(q) - early(p) - CPPR credit at the pair's last common node (+ the early-core-tap earliness offset), exactly
     the kit-contract damage of time_class.  Same-root pairs (one cppr_node) get the region root's credit, cross-root
-    pairs (intra_cross_region) the die-root credit only.  A tap with no partner needs 0 (same-port pairs: CRPR)."""
+    pairs (intra_cross_region) the die-root credit only.  A tap with no partner needs 0 (same-port pairs: CRPR).
+    KIT-OPS-6 11-14 (FABLE-TYPES-S81-LEAF 1 step 2): with related {type: {frozenset({port, port})}} and ptype {part: type} a type
+    that has a related set takes the maximum only over tap pairs that carry data (a pair without a path cannot fail); a type
+    without a set, and related=None, are unchanged.  t69 measured: the all-pairs windows cost -201 -> -114 ps setup, TT hold 174 -> 0."""
     need = {}
     for p, r in taps.items():
         if r.get("part") is not None:
@@ -1546,6 +1557,10 @@ def kit_port_needs(pair_lists, taps, rng, kit_offset=None):
             node = pair_node(A, B)
             la, ea, lc, ec = arr4(A, B, node)
             cr = credit(rng, node, la, ea, lc, ec)
+            if related is not None and ptype is not None:
+                rel = related.get(ptype.get(A["part"]))
+                if rel is not None and kit_port(a, A) != kit_port(b, B) and frozenset((kit_port(a, A), kit_port(b, B))) not in rel:
+                    continue
             ko = (kit_offset.get(b, 0.0) - kit_offset.get(a, 0.0)) if kit_offset else 0.0
             k = (A["part"], kit_port(a, A))
             need[k] = max(need.get(k, 0.0), lc - ea - cr + ko)
@@ -2873,6 +2888,9 @@ def main(argv=None):
                     help="KW-FIX-4-SDC (opt-in): write the measured per-port kit windows {per_port_ps: {type: {port: "
                          "ps}}} (max over corners / regions of the cross-port damage with CPPR credit) for plan "
                          "clock.tap_window.per_port_ps; default = not written")
+    ap.add_argument("--kit-window-related", metavar="JSON",
+                    help="KIT-OPS-6 (opt-in): {related_pairs: {type: [[port, port], ...]}} from kit_tap_related_pairs.tcl; the "
+                         "per-port kit window of a listed type is the maximum over tap pairs that carry data only; default = all pairs")
     ap.add_argument("--kit-offset-out", metavar="JSON",
                     help="R-CLOCK-7 (opt-in): write the kit tap arrival offsets {per_port_ps: {type: {port: {TT, FF, tol}}}} "
                          "(routed arrival minus the partition's median glue tap, tol = max(10, half the instance range)) for plan "
@@ -3004,6 +3022,7 @@ def main(argv=None):
     hbrec, hbbits = {}, None
     ecm, ci_recs = None, []
     kw_needs = []
+    kw_related = kit_related_pairs(a.kit_window_related) if a.kit_window_related else None
     ko_arr = {}
     for c in corners:
         meta, taps = load_taps(d, c)
@@ -3164,7 +3183,8 @@ def main(argv=None):
                       f"{rr['worst_hi_declared']})")
         vmiss = missing_views(views, taps, plan, ecm)
         if a.kit_window_out:
-            kw_needs.append(kit_port_needs([pairs["intra"], pairs["intra_cross_region"]], taps, rng, kit_off))
+            kw_needs.append(kit_port_needs([pairs["intra"], pairs["intra_cross_region"]], taps, rng, kit_off,
+                                           related=kw_related, ptype={q["name"]: q["type"] for q in plan.get("partitions", [])}))
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, unc_s, unc_h,
