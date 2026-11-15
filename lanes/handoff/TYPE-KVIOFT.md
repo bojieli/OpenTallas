@@ -13,3 +13,8 @@ PLAN: private ECO from attempt_4 routed DB with OT_PRD_PROTECT_NETS = nets on po
 ## 2026-11-14 18:26 update 2
 - Form A (attempt_5, margin 5, route-keep) ran 51 min: scoped hold repair WORKED (251 internal endpoints, 220 hold buffers, OT_PRD_HOLD_SCOPE_VERIFIED reg2reg) but DRT died in track assignment (make Error 241, peak 17.7 GB, not OOM). Form B on attempt_4 invalid (kit signoff gone).
 - Relaunched: A2 = --from grt (full detailed route from pre-DRT GRT DB), B2 = margin 15 + --repair-rc placement. Out typekvioft/ecoA2, ecoB2 on epyc2; logs intel2 ~/typekvioft/eco{A2,B2}.log; queued for memory.
+
+## 2026-11-14 18:41 update 3 (COORD, FABLE-HARD-KV s2)
+- Build C: eco_loop --from grt --hold-margin 40 (reg2reg scope, full DRT, no route-keep), hosts epyc9,epyc10,epyc8, out typekvioft/ecoC, log intel2 ~/typekvioft/ecoC.log. A2/B3 left to finish, no further round on that recipe.
+- earlyoom evidence (journalctl -u earlyoom): epyc2 18:23:42 openroad VmRSS 15.5 GB = form A DRT crash (18:23:46); epyc10 02:35:32 openroad 12.8 GB = B2 crash. FABLE-HARD-KV says Error 241 was a tool crash; both measured crashes here coincide with earlyoom SIGTERM.
+- Bundle note: do NOT rsync with --exclude eco* (drops eco_loop.py).
