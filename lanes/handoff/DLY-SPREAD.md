@@ -13,3 +13,5 @@ What-if (place-only form: hook applied to the kit's 3_place.odb, hop_census.py b
 - col_h9_r1: over-reach 4493 -> 4242, crossing 0 -> 6. NOT the brief's cause: u_d10_6_Y is a 1-bit pipe whose last stage fans out to 1,317 loads; the 1,268 um is stage -> farthest load, not a chain hop (chain hops 302 um). See FABLE-TRIAGE-S81.md. Not fixed by a chain spreader.
 Tests: test_dly_spread.py, test_forest.py pass on epyc9.
 Next: GENBUG-IMPL to install, set budgets.r_dly_spread in QC cb / S81 plans; a full re-place of one kit to confirm DPL keeps the spread.
+
+11-15 update: branch pushed to hub:OpenTallas claude/dly-spread-1115-1 @47010b3510. Messages sent: GENBUG-IMPL (install on 4 trees after merge), DIE-QC-103 (r_dly_spread on cbf_q01 family, S4k/S4k2), DIE-S81-92 (r_dly_spread on c1x + OT_DLY_SPREAD=warn for the 58 short chains).
