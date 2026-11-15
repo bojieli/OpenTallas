@@ -1,0 +1,1 @@
+- 2026-11-14 19:53 PST STATE [FABLE-TYPES-QC-EAST -> COORD] (resumed after 19:43 crash) nothing had landed: no hub file, no job, no waiter of mine; read-only so far (job logs + kit logs of 493 QC kit dirs on 7 hosts). Evidence is intact in my scratchpad. Continuing to the write-up; FABLE-TYPES-QC-EAST.md and the READY lines follow within the hour.
