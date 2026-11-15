@@ -71,3 +71,53 @@ as QC t6 (START-TREE-1 README).
   K ties and die STA do.
   CHECK before the CA delta: 2 crossings have lat_cycles -1 and 27 have 0 (lat_hist): confirm bind.py accepts
   negative/zero lane latency or pad those 29 lanes by +1/+2.
+
+## C. Follow-up 04:45 PST: the 61 crossings with no K at DEPTH 16 (b3x2d_cag2) and --start-tree clock
+
+MEASURED (two planner probes on epyc8, same inputs as ca_g2.sh, outputs in my own dir
+/srv/opentallas-scratch2/claude/fable-pd-s81/stc; nothing of DIE-S81-92 touched; 4-5 min each, 1 core):
+
+WHY 12-19 cycles. Not station counts. With the one-model STA hull (--sta-proof) every data-crossing interval is
+wide (start edges: median 525 ps, max 1,796 ps) and rise-only (rows_without_measured_fall 2330, the proof has no
+fall arrivals), so only 10 of 397 data start-tree edges are clean (was 314 on the nominal point, 312 of them by a
+fall pick that was never measured). Every tree edge then adds 1 ambiguous cycle, so path ambiguity = tree path
+length: eng (depth 11) to svc_14 (depth 12) = 19. Equalising station counts on the start legs does not help;
+the start must leave the data crossings.
+
+EXACT ARGUMENTS (count_align_plan.py; STA = the ca_g2.sh set):
+  python3 -s count_align_plan.py $I/landed_phase_ocv.json \
+    --sta-proof $PR --sta-plan $PLAN --sta-cppr-lca --sta-clock-cell inv2 \
+    --start-tree clock --start-retime-up --start-lift --start-retime-max 16 \
+    --max-depth 16 --depth-guard-ps 833 --out $O/count_align_plan.json
+  (no --sta-clock-ocv needed under the nominal margin policy; --depth16-allow no longer needed; --tree-parent
+  must not be given.) die_chain_ca.sh has no planner pass-through: call the planner directly as ca_g2.sh does,
+  or add CA_PLAN_ARGS. The probes ran without --depth-guard-ps; add it as in cag2.
+
+RESULT                               crossings no K   depth 4/8/16     max path amb   start edges unclean   lat total vs +3
+  data tree (cag2)                   61               824/1208/237     19             387 of 397            +1,061
+  --start-tree clock                 0                1968/362/0       3              57 of 762             -438
+  + retime-up + lift + retime-max 16 0                2276/54/0        1              6 of 768              -856
+All 61 resolve: in the first probe they take depth 4 (42) / 8 (19), worst L_hi 4,020 ps, path ambiguity 0-2.
+151 retime flops on clock-tree nodes, 51 lifted, worst margins lo 104.3 / hi 105.2 ps.
+
+OPEN: 6 start edges stay unclean, so the planner exits 1 (12.16b(iv)). They are not wide: width 17-32 ps, but
+the capture clock is only 33-108 ps after the launch clock, inside the 104 ps aperture of the rise boundary:
+  st:h2000000000000000300010 (below: s_1S_L1 s_2S_C s_1S_C)      d 85.0
+  st:h1000..0010 (s_6S_L0 s_5S_L0)                                d 108.3
+  st:h5000..0010 (s_2N_L1 s_2N_C s_1N_L1)                         d 71.4
+  st:h2000..0010 (fW2_p1_b2 fW2_p1_b1 fW2_p2_b2)                  d 97.7
+  svc_8 -> phy_hbm                                                d 80.6
+  st:h5000..000 (fW5_p1_b0/b1/b2 fW5_p2_b1/b2)                    d 44.5
+  (full node names: regions[].start_from with sync_values 2 in plan_stc2.json)
+They do not cost any crossing its K (176 crossings carry 1 ambiguous cycle, all inside depth 4/8).
+FIX for the 6, in order:
+  1. Falling-edge capture (EDGE_FALL=1): the T/2 boundary is 308-383 ps away. Needs MEASURED fall arrivals:
+     add the fall arrival to tap_arrivals_<corner>.json from the existing combo GRT + OpenSTA (arr_TT/FF, no
+     re-route), then re-plan. Never rise + T/2.
+  2. If fall cannot be dumped today: a planned delay on those 6 start nets (>= d + 104 = 137-212 ps of
+     clk-to-D) declared with --start-data-delay {ports:{port:[lo,hi]}}; it must then be measured on the build.
+NOT CHECKED: physical reach of the 768 start hops (--start-max-hop-um 405 was not passed; the retime flops need
+sites and GEOM), the bind/RTL side of dedicated start ports (count_align_bind.py on plan_stc2.json was not
+run), and the B6 clock kit (this is B3x2d).
+DECISION: use the third row as the S81 CA plan form. Run count_align_bind (plain + strap) on it now with the 6
+edges listed as open; fix them by the fall dump in parallel. No plan re-floor and no station equalisation.
