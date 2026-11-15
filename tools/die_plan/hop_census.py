@@ -1,6 +1,6 @@
 # openroad -python: census of register-to-register hops with NO logic (only BUF/INV/HB between), by name class.
 # Generic long-hop / crossing-net preflight (GENBUG guard).  env ODB TAG [REACH=405]
-import os, re, odb, collections
+import os, re, sys, odb, collections
 db = odb.dbDatabase.create(); odb.read_db(db, os.environ['ODB'])
 blk = db.getChip().getBlock(); dbu = blk.getDbUnitsPerMicron(); tag = os.environ.get('TAG', ''); REACH = float(os.environ.get('REACH', '405'))
 macros = []
@@ -70,3 +70,12 @@ print('HOP\t%s\tsrc_class\tsink_class\thops\tover_%d\tcross_core\tmax_um\tsink_f
 for k, g in sorted(G.items(), key=lambda x: -x[1][1])[:int(os.environ.get('TOP', '10'))]:
     if g[1]: print('HOP\t%s\t%s\t%s\t%d\t%d\t%d\t%.0f\t%d\t%d' % (tag, k[0], k[1], g[0], g[1], g[2], g[3], g[4], g[5]))
 print('HOPSUM\t%s\tzero_logic_hops %d\tover_reach %d\tcrossing_a_core %d\tmacros %d' % (tag, tot, over, xs, len(macros)))
+
+# GENBUG-5.2 placed-database preflight gate: GATE=1 -> crossing hops <= XMAX (20) and over-reach hops <= 1 % of zero-logic hops.
+if os.environ.get('GATE', '0') == '1':
+    xmax = int(os.environ.get('XMAX', '20')); frac = float(os.environ.get('OVER_FRAC', '0.01'))
+    bad = xs > xmax or over > frac * max(tot, 1)
+    print('OT_HOP_CENSUS %s zero_logic=%d over_reach=%d crossing=%d (limits crossing<=%d over<=%.0f%%)' % ('FAIL' if bad else 'PASS', tot, over, xs, xmax, frac * 100))
+    if os.environ.get('OUT'):
+        import json; json.dump(dict(schema='ot_hop_census/1', zero_logic=tot, over_reach=over, crossing=xs, fail=bad), open(os.environ['OUT'], 'w'))
+    if bad: sys.exit(3)
