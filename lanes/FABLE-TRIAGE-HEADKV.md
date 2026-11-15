@@ -671,3 +671,53 @@ crossings at depth 4, 18 freg ports, start-skew 0 of 1,787, 1,788 origins and 0 
 
 Order: HEAD-99 deletes start_pins, sets root_settle_cycles 88, republishes all 26, reruns prep, cohort and
 LATCHECK with the patched checker. DIE-HEAD-ROUTE-1 keeps ca4 as is.
+
+## 18. HEAD clock feed hk6 (rp21z20NF), the NC intra skew, root move and the 1.15 scale (03:1x PST)
+
+Data: lanes/handoff/HEAD-CLKFEED-1.md; epyc2 head-clkfeed-1/head/{nc,p16g}; my p16r rerun (section 2a4).
+
+**18.1 Adopt hk6. Decision: yes, as rp21z20NF, after 18.2 is fixed.**
+- What it buys (MEASURED): deepest tap 8,992 -> 7,001 ps TT (7,987 -> 6,214 FF), median tap 4,723 -> 3,825,
+  feed wire -28 %, non-tree landing edges 144 -> 12. Every term the nominal gate does not carry scales with these:
+  supply-noise jitter with insertion depth (-22 % on the far regions), and the late/early spread with the unshared
+  path (415 of 427 crossings are now parent-child, so their unshared path is one hop, not up to 1,735 ps).
+- The slow-corner information line agrees: SS-INFO worst lo +21.6 ps with hk6 against -45.5 ps with the old feed,
+  slot-read fails 0 against 2 (lag fails 11 against 8; information only).
+- The 19 ps FF loss is not a cost of the feed. The four worst ports are one spine crossing group
+  (host_rx__3, m0S_rx__6, m7S_rx__5, sp_b3__0, all 132.3 ps), on the spine, which hk6 does not re-parent; the old
+  worst was the neighbouring spine group (sp_x5__0 and three more, 151.2). Their window is lopsided (lo 132 / hi
+  1,086): the planner takes the smallest latency that keeps 100 ps. One more cycle on that group would give about
+  965 / 253. Not needed at the 100 ps floor; available if wanted. Ports under 150 ps: 4 with hk6, 0 before.
+- Cost: one more bind (K changes per port, total latency 1,061 against 1,063), no type change.
+- Flag for the route lane: the die detail-route runs so far (die-head-route-1 p16g, 4,972 clock nets) use the
+  generic single-tree kit, not the regional tree with a feed (about 45 thousand clock cells). The die route gate
+  has to be run on the adopted clock kit, i.e. hk6.
+
+**18.2 NC intra skew 271.6 ps: one partition, lep0N; not the feed, not ca4, not the origins.** MEASURED
+(tap arrivals FF, nc against p16g):
+- 357 of 358 partitions have the same tap spread on NC as on rp21z16 to the decimal (tW4o0 98.8, tE5o6 97.2, ...).
+  Only lep0N differs: 271.6 ps over 195 taps on NC, 86.7 ps over 223 taps on rp21z16. Because every other local
+  tree is identical, the cause is isolated without an old-feed NC run.
+- Inside lep0N the taps fall in two groups: 98 taps at x 6,982-8,179 arrive within 0-110 ps, 97 taps at
+  x 8,222-8,838 arrive 160-272 ps later. The east half of the region's local tree is late as a block.
+  The handoff says the lep0N and mesh region roots were kept from p16r while NC moved the lep0N taps (z19 delta:
+  223 -> 195 taps). INFERENCE: the local tree was built from the old root for a tap set that moved.
+- Is it a gate? Not by name: the blocking gate is routed hold >= 0 on real views. But it is real: hd_lep0N is
+  built for a 92 ps tap window, and a 200 ps step between its halves will show up as hold and setup failures at
+  the die once lep0N has a view (the kit-contract line already counts 53,550). Fix it before either NC or NF
+  is adopted; it is the same fix for both.
+- Fix: rebuild the lep0N region local tree on the NC taps (region root at the NC tap centroid; delay-balanced
+  form). Accept when lep0N FF tap spread is at most 92 ps and the other 357 spreads are unchanged. Check the
+  mesh regions the same way (their roots were kept too; their spread is unchanged today).
+  Owner HEAD-CLKFEED-1 (cfg), DIE-HEAD-ROUTE-1 (rerun).
+
+**18.3 Root move: no. Drop the 6.0 ns target.** The root sp3 is at the die centre; the Manhattan floor from it
+is 16.7 mm = 5.8 ns, and no root position on a 17.7 x 17.6 mm die can do better than about (W + H) / 2 = 17.6 mm to
+a corner region. The 7.0 ns is the floor plus about 0.4 ns of local tree and a 1.14 detour. A root move changes
+every region's phase (a full re-bind) for no gain. Accept 7.0 ns.
+
+**18.4 The 1.15 late/early factor: keep it out of the stage-model registry and out of the gate.** The model is
+right in the mean (measured / model 1.005 TT, 0.981 FF on feed legs). 1.15 is the late-to-early ratio inside one
+corner. The count-aligned gate already uses routed late and early arrivals, so it needs no factor. Use 1.15 only
+in estimates made before a clock is built: unshared path late = 1.15 x unshared path early. Owner HEAD-CLKFEED-1
+(one line in its estimate script).
