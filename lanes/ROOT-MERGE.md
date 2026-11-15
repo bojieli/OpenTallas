@@ -829,3 +829,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-25-1114@f5b41f6120 (ADMIT-TUNE-1): ot-tmpfs-clean + timer
 - READY claude/admit-tune-24-1114@58959b84e2 (ADMIT-TUNE-1): ot-mem-grow 75 percent / 15 s / scope MemoryMax, supersedes 18869a3dac
 - READY claude/admit-tune-26-1114@dbf3ed7cd5 (ADMIT-TUNE-1): stage-aware oom-age every minute, supersedes admit-tune-19/17
+- READY claude/admit-tune-27-1114@333e42282f (ADMIT-TUNE-1): plan drain 10 min, oldest-first plan queue
