@@ -5,6 +5,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "die_plan"))
 import col_inherit as CI
 import col_typemerge as TM
 
@@ -82,3 +83,40 @@ def test_layout_hash_ignores_collector_child_instance_name():
     assert len(TM.layout_groups(new)) == 1
     new["partition_types"][names[0]]["clock"]["landing_contract"]["collector_children"][0]["xy_um"] = [9, 9]
     assert len(TM.layout_groups(new)) == 2
+
+
+def test_union_keep_outs_only_changed_types():
+    outs = {"a": [0], "b": [0, 2], "c": [2], "d": [5]}
+    ko = TM.union_keep_outs(outs, {"g1": ["a", "b", "c"], "g2": ["d"]})
+    assert ko == {"a": [0, 2], "c": [0, 2]}          # b already holds the union, d is alone
+
+
+def _sup_plan():
+    import json as _j
+    def lc(children, tree):
+        return dict(collector_children=children, collector_tree=tree, pins=[dict(name="cland_up_ready"), dict(name="cland_up_fault")]
+                    + [dict(name=n % i, dir="in") for i, _c in enumerate(children) for n in ("cland_dn_ready_%d", "cland_dn_fault_%d")],
+                    bands={})
+    ch = lambda i, x: dict(index=i, xy_um=[x, 5.0], seam=False, node="n%d" % i, part="p%d" % i)
+    pt = {}
+    for n, kids, tree in (("col_h9_r1__t1__cla__pv1", [ch(0, 10.0)], "T1"), ("col_h9_r1__t1__cla__pv2", [ch(0, 20.0)], "T2"),
+                          ("col_h9_r1__t1__cla__pv3", None, None)):
+        t = dict(clock=dict(edge_clocks=[], added_taps=[]))
+        if kids is not None:
+            t["clock"]["landing_contract"] = lc(kids, tree)
+        pt[n] = t
+    plan = dict(partition_types=pt, partitions=[], clock=dict(landing_network=dict(edges=[])))
+    side = dict(collector=dict(types={}, edges=[]))
+    return plan, side
+
+
+def test_superset_collector_only_keeps_plain_and_own_tree():
+    import cland_col_superset as SS
+    plan, side = _sup_plan()
+    SS.build(plan, side, collector_only=True, keep_tree=True)
+    pt = plan["partition_types"]
+    assert "landing_contract" not in pt["col_h9_r1__t1__cla__pv3"]["clock"]          # no R3b
+    a, b = (pt["col_h9_r1__t1__cla__pv%d" % i]["clock"]["landing_contract"] for i in (1, 2))
+    assert [c["xy_um"] for c in a["collector_children"]] == [c["xy_um"] for c in b["collector_children"]] and len(a["collector_children"]) == 2
+    assert a["collector_tree"] == "T1" and b["collector_tree"] == "T2"               # trees not copied from the template
+    assert [t["index"] for t in a["tieable_children"]] == [0, 1]
