@@ -7,3 +7,5 @@ Next: (1) MERGE-QUEUE-1 lands the branch; (2) DIE-S81-92 / S81-TAPROWS pass FACE
 
 ## Update 2 (claude/hcparam-all-1115-2 @0dc4c83c6f, stacked on -1115 @079bce7fcd)
 Registry keyed die+module+records[]; NO_RECORD/NOT_DECLARED/NO_SOURCE are errors; allowlist tools/die_plan/hard_core_param_allow.json (die, modules, reason). Harvest script (config.mk on 7 hosts) lived in the session scratchpad: find config.mk with DESIGN_NAME + VERILOG_TOP_PARAMS beside signoff/signoff.json verdict SIGNED. AGIdock not reachable: allowlisted cores need their records added to the registry by someone with /archive access.
+
+## Update 3 (claude/hcparam-all-1115-3 @fa50f72a5e): registry 71 entries from AGIdock -1106 kit config.mk + fleet; allowlist S81 19, KV 16, QC 5, HEAD 3 modules. Per-die reports posted; owners fix instance params / land tail1 strap master.
