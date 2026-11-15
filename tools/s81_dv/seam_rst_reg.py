@@ -6,7 +6,7 @@ RSREG(0) instances (one chunk, combinational e) are left unchanged.  Usage: seam
 (in place, via temp file + rename); prints the number of instances rewritten per file.  Also a library: rewrite(text)."""
 import os, re, sys
 
-PAT = re.compile(r'\bot_pl_seam_w_plr(\s*#\((?:(?!\bot_pl_seam_w_plr\b).)*?\.RSREG\(1\)\s*\))', re.S)
+PAT = re.compile(r'\bot_pl_seam_w_plr(\s*#\([^;]*?\.RSREG\(1\))')
 
 
 def rewrite(text):
