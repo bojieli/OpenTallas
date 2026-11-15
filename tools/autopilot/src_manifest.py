@@ -166,7 +166,7 @@ def report(errs):
 
 # ---- build ----------------------------------------------------------------------------------------------------------
 
-def git_archive(repo, sha, scope, out):
+def git_archive(repo, sha, scope, out, lazy=False):
     """write the scope of commit `sha` into out: ls-tree + cat-file (no .gitattributes / export filters, exact blobs).
     A missing blob (partial clone without it) is an error naming the path, never a silent skip."""
     lt = subprocess.run(["git", "-C", repo, "ls-tree", "-r", "-z", sha, "--"] + list(scope), capture_output=True)
@@ -183,14 +183,14 @@ def git_archive(repo, sha, scope, out):
     if not ents:
         raise SystemExit(f"scope {scope} is empty at {sha}")
     cf = subprocess.Popen(["git", "-C", repo, "cat-file", "--batch"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                          env=dict(os.environ, GIT_NO_LAZY_FETCH="1"))
+                          env=dict(os.environ) if lazy else dict(os.environ, GIT_NO_LAZY_FETCH="1"))
     try:
         for mode, oid, path in ents:
             cf.stdin.write(oid.encode() + b"\n")
             cf.stdin.flush()
             hdr = cf.stdout.readline().split()
             if len(hdr) != 3 or hdr[1] != b"blob":
-                raise SystemExit(f"blob {oid[:12]} of {path} not available in {repo} (partial clone: check out the scope first)")
+                raise SystemExit(f"blob {oid[:12]} of {path} not available in {repo} (partial clone: check out the scope first, or lazy=True)")
             data = cf.stdout.read(int(hdr[2]))
             cf.stdout.read(1)
             dest = os.path.join(out, path)
