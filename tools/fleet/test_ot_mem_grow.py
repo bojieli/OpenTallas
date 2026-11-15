@@ -45,5 +45,12 @@ class Grow(unittest.TestCase):
         self.assertEqual([(os.path.basename(r[0]), r[1], r[2]) for r in rows], [("oth-ubuntu-1-2.scope", 48 * G, 40 * G)])
 
 
+    def test_refusal_is_reported_only_when_the_headroom_guard_said_no(self):
+        self.assertEqual(M.refusal(32 * G, 32 * G, int(30 * G), 63, 48), 48 * G)       # wanted 16 GB, host has 15 above the headroom
+        self.assertIsNone(M.refusal(32 * G, 32 * G, int(30 * G), 64, 48))              # funded: decide() raises it, nothing refused
+        self.assertIsNone(M.refusal(64 * G, 32 * G, int(60 * G), 10, 48))              # already at 2x the request: not a refusal
+        self.assertIsNone(M.refusal(32 * G, 32 * G, int(10 * G), 10, 48))              # below the trigger
+
+
 if __name__ == "__main__":
     unittest.main()
