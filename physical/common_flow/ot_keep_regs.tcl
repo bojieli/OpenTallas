@@ -42,7 +42,8 @@ if {[info exists ::env(OT_KEEP_WIRES)] && [string trim $::env(OT_KEEP_WIRES)] ne
     # replica_keep.py: a register named q / r / wdata elsewhere is untouched); a bare name keeps its old meaning.
     if {[regexp {^([A-Za-z_][A-Za-z0-9_]*):([A-Za-z_][A-Za-z0-9_]*)$} $b -> ot_kwn_m ot_kwn_w]} {
       foreach ot_kwn_mp [list $ot_kwn_m "\$paramod*?${ot_kwn_m}" "\$paramod*?${ot_kwn_m}?*"] {
-        lappend ot_kwn_pats "$ot_kwn_mp/w:$ot_kwn_w" "$ot_kwn_mp/w:$ot_kwn_w\[\[\]*"
+        # generate-scoped registers (ot_hdc_w11_cut g_r.r) carry the block prefix in the wire name: `*.wire` too
+        lappend ot_kwn_pats "$ot_kwn_mp/w:$ot_kwn_w" "$ot_kwn_mp/w:$ot_kwn_w\[\[\]*" "$ot_kwn_mp/w:*.$ot_kwn_w" "$ot_kwn_mp/w:*.$ot_kwn_w\[\[\]*"
       }
       continue
     }

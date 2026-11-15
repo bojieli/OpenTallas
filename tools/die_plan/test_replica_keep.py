@@ -92,3 +92,68 @@ def test_hook_accepts_module_scoped_names():
     tcl = (HERE.parents[1] / "physical" / "common_flow" / "ot_keep_regs.tcl").read_text()
     assert "ot_kwn_m" in tcl and "$paramod*?${ot_kwn_m}?*" in tcl and '"\\$paramod*?${ot_kwn_m}"' in tcl   # paramod name without a parameter suffix
     assert "not a wire base name" in tcl            # bare names keep their check
+    assert 'w:*.$ot_kwn_w' in tcl                   # Module:wire reaches generate-scoped regs (g_r.r)
+
+
+HDC = """
+`ifndef OT_ARST
+  `define OT_ARST(x) or negedge x
+`endif
+module w11_cut #(parameter integer W = 1, parameter integer CUT = 0, parameter integer VB = -1) (
+    input  wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q);
+    generate if (CUT && VB < 0) begin : g_r
+        reg [W-1:0] r;
+        always @(posedge clk `OT_ARST(rst_n)) begin
+            if (!rst_n) r <= {W{1'b0}};
+            else r <= d;
+        end
+        assign q = r;
+    end else if (CUT) begin : g_rv
+        reg rv; reg [W-1:0] rd;
+        always @(posedge clk `OT_ARST(rst_n)) begin
+            if (!rst_n) rv <= 1'b0;
+            else rv <= d[VB];
+        end
+        always @(posedge clk) rd <= d;
+        assign q = rd;
+    end else begin : g_w
+        assign q = d;
+    end endgenerate
+endmodule
+module addv (input wire clk, rst_n, valid_in, output wire v);
+    reg s1_v, s2_v, cnt_v;
+    always @(posedge clk `OT_ARST(rst_n)) begin
+        if (!rst_n) s1_v <= 1'b0;
+        else s1_v <= valid_in;
+    end
+    always @(posedge clk `OT_ARST(rst_n)) begin
+        if (!rst_n) s2_v <= 1'b0;
+        else s2_v <= s1_v;
+    end
+    always @(posedge clk `OT_ARST(rst_n)) begin
+        if (!rst_n) cnt_v <= 1'b0;
+        else if (valid_in) cnt_v <= ~cnt_v;       // enable + logic: not a staging register
+    end
+    assign v = s2_v;
+endmodule
+module lanes (input wire clk, rst_n, input wire [7:0] d, output wire [7:0] q0, q1, output wire v0, v1);
+    w11_cut #(.W(8), .CUT(1)) a (.clk(clk), .rst_n(rst_n), .d(d), .q(q0));
+    w11_cut #(.W(8), .CUT(1)) b (.clk(clk), .rst_n(rst_n), .d(d), .q(q1));
+    addv x (.clk(clk), .rst_n(rst_n), .valid_in(d[0]), .v(v0));
+    addv y (.clk(clk), .rst_n(rst_n), .valid_in(d[0]), .v(v1));
+endmodule
+"""
+
+
+def test_replicated_constant_reset_and_ot_arst_block():
+    with tempfile.TemporaryDirectory() as d:
+        got = set(RK.derive(_rtl(d, HDC)))
+    assert {"w11_cut:r", "w11_cut:rv", "w11_cut:rd", "addv:s1_v", "addv:s2_v"} <= got
+    assert "addv:cnt_v" not in got                    # enable-gated toggle is not a staging register
+
+
+def test_replicated_constant_is_a_constant_not_a_data_term():
+    with tempfile.TemporaryDirectory() as d:
+        bad = HDC.replace("else r <= d;", "else r <= d ^ r;")
+        got = set(RK.derive(_rtl(d, bad)))
+    assert "w11_cut:r" not in got                     # r now depends on itself through logic
