@@ -428,13 +428,15 @@ def run_tests(wt, tests, tag):
     return fails, infra, tails
 
 
-def baseline(base, fails):
-    """the failures that also fail on main@base (by file existence + rerun) -> set"""
+def baseline(base, fails, extra=(), tag=""):
+    """the failures that also fail on main@base (by file existence + rerun) -> set.  The main tree gets the SAME sparse set as
+    the candidate (extra = the candidate's extra dirs) and is private to the item: a test that reads a file outside the sparse
+    set then fails on both sides alike (11-14 20:51: test_core_reset_io read physical/die_plan/* that a shared base tree had)."""
     if not fails:
         return set()
-    name = f"base-{base[:12]}"
+    name = f"base-{base[:12]}" + (f"-{tag}" if tag else "")
     files = {f.split("::")[0] for f in fails if not f.startswith("TIMEOUT")}
-    p = wt_make(name, base, {os.path.dirname(f) for f in files})
+    p = wt_make(name, base, set(extra) | {os.path.dirname(f) for f in files})
     ids = [f for f in fails if not f.startswith("TIMEOUT") and (p / f.split("::")[0]).is_file()]
     if not ids:
         return set()
@@ -465,12 +467,40 @@ def gate(it, wt, base):
     fails, infra, tails = run_tests(wt, tests, it["id"])
     if infra and not fails:
         return "INFRA", f"pytest rc {infra}: {' / '.join(tails)[:300]}"
-    base_f = baseline(base, fails)
+    base_f = baseline(base, fails, it.get("extra", ()), it["id"])
+    wt_drop(f"base-{base[:12]}-{it['id']}")
     new = sorted(fails - base_f)
+    flaky = []
     if new:
-        return "RED", f"{len(new)} new failure(s) (not failing on main {base[:11]}): {', '.join(new[:8])}"
-    note = f"{len(tests)} test file(s) pass" + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "")
+        # 11-14 20:4x: under parallel items x xdist, order / load dependent tests fail on the branch and pass on the main rerun
+        # (form_wait_arm, test_m8_grant env, clock tests with 5 items in flight).  A new failure counts only when it also fails
+        # when the branch reruns it on its own, one file per process, no xdist.
+        still = rerun_serial(wt, new, it["id"])
+        flaky = [f for f in new if f not in still]
+        new = [f for f in new if f in still]
+    if new:
+        return "RED", (f"{len(new)} new failure(s) (not failing on main {base[:11]}; still failing on a serial rerun of the branch): "
+                       f"{', '.join(new[:8])}" + (f"; {len(flaky)} more passed on the serial rerun (flaky)" if flaky else ""))
+    note = f"{len(tests)} test file(s) pass" + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "") + \
+        (f" ({len(flaky)} order/load-flaky failure(s) passed on a serial rerun: {', '.join(flaky[:4])})" if flaky else "")
     return "GREEN", note
+
+
+def rerun_serial(wt, ids, tag):
+    """the failures that still fail when rerun on the candidate alone: per test file, no xdist -> set"""
+    still = set()
+    for f in sorted({i.split("::")[0] for i in ids if not i.startswith("TIMEOUT")}):
+        if not (wt / f).is_file():
+            still |= {i for i in ids if i.split("::")[0] == f}
+            continue
+        sel = [i for i in ids if i.split("::")[0] == f]
+        rc, fl, _tail = pytest(wt, sel, f"{tag}-s{abs(hash(f)) % 10000}", 1)
+        if rc not in (0, 1, 5):                               # collection / infra error: keep them as failures
+            still |= set(sel)
+            continue
+        still |= {i for i in sel if i in fl or i.split("::")[0] in fl}
+    still |= {i for i in ids if i.startswith("TIMEOUT")}
+    return still
 
 
 # ---------------------------------------------------------------- state / posting
@@ -556,7 +586,8 @@ def land(it, text, st):
         cur = fetch_main()
         if cur != it["base"]:
             moved = changed_files(wt, it["base"], cur) if is_ancestor(it["base"], cur, cwd=wt) else ["<main rewritten>"]
-            wt_make(it["id"], cur, {os.path.dirname(f) for f in it.get("changed", [])})
+            it["extra"] = sorted({os.path.dirname(f) for f in it.get("changed", [])})
+            wt_make(it["id"], cur, it["extra"])
             status, detail = apply(wt, cur, it["sha_full"], it["branch"])
             if status == "ALREADY":
                 return finish(st, it, "ALREADY", f"landed meanwhile: {detail}", cur)
@@ -632,7 +663,8 @@ def prepare(it, base):
         if is_ancestor(full, base):
             return "ALREADY", f"{full[:11]} is an ancestor of main {base[:11]}"
         mb = git("merge-base", base, full).stdout.strip()
-        wt = wt_make(it["id"], base, {os.path.dirname(f) for f in changed_files(REPO, mb, full)})
+        it["extra"] = sorted({os.path.dirname(f) for f in changed_files(REPO, mb, full)})
+        wt = wt_make(it["id"], base, it["extra"])
         status, detail = apply(wt, base, full, it["branch"])
         if status != "OK":
             return status, detail
