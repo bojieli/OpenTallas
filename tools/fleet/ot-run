@@ -852,7 +852,7 @@ def choose(res, mem, threads=THREADS, die=False):
         return least_pressure(ok, roomy, threads), False
     if direct_job():    # DIRECT_1107: the host with the most real free memory; only MemAvailable >= mem + headroom counts
         fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB and not load_gated(ok[h])]
-        return (least_pressure(ok, fit, threads) if fit else max(ok, key=lambda h: ok[h].get("avail_gb", 0))), not fit
+        return max(fit or ok, key=lambda h: ok[h].get("avail_gb", 0)), not fit      # DIRECT_1107: most real free memory (FLOW-HEALTH-1 PSI choice is plan jobs only)
     if die:     # v16 MEASURED RESERVE (coordinator 10-22): a die job is admitted on MemAvailable - 64 GB (die_admit_gb)
         ok = {h: (dict(r, admit_gb=max(r.get("admit_gb", r["free_gb"]), r["die_admit_gb"])) if "die_admit_gb" in r else r)
               for h, r in ok.items()}
