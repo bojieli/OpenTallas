@@ -720,7 +720,10 @@
     "kv3_pv_v4": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
     "kv3_pv_v4n": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
     "kv3_pv_v6": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
-    "kv3_pv_v6n": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys."
+    "kv3_pv_v6n": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
+    "kv3_pc_v1__cl4ea58a5c": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
+    "kv3_io_cor": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
+    "kv3_io_cor_v1": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5649,7 +5652,12 @@
     "kv3_pv_v4n",
     "kv3_pv_v6",
     "kv3_pv_v6n"
-   ]
+   ],
+   "hold_release_on": {
+    "kv3_pc_v1__cl4ea58a5c": "event_adopt:KV pc delta",
+    "kv3_io_cor": "lane_result:DRT0255-PROOF io_cor proof route",
+    "kv3_io_cor_v1": "lane_result:DRT0255-PROOF io_cor proof route"
+   }
   },
   "s81": {
    "enabled": true,
