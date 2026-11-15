@@ -5569,7 +5569,7 @@ def run_item(spec_path):
             if rc:
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
         rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && python3 tools/die_plan/bind.py kit-rtl {q(plan)} --out {q(bind)} "
-                                               f"--asbuilt {q(a)} --type {q(T)} --kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan), gh))
+                                               f"--asbuilt {q(a)} --type {q(T)} --kit {q(W)}/rtl --src-tree {q(src)}" + kit_rtl_post_cmd(T, W, plan), gh))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:
