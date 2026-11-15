@@ -13,8 +13,8 @@ Compatibility (dozens of running lanes, autopilot, kit_wave and watchdog still a
   * dedup: a post block is "present" when its first line (trailing blanks ignored) is already in the view or in any
     lanes/archive/COORD-REVIEW-QUEUE-*.md (rotate_queue.py moves old posts there), so a lane that writes both paths
     during the transition, a rotation, or a re-run never duplicates a post;
-  * blocks: a block starts at a line whose first character is not blank; following lines that start with a blank
-    (or tab) belong to it; empty lines are dropped.  A block's time is the first stamp in its first 80 chars
+  * blocks: a block starts at a first-column line that is a bullet ("- "), a heading ("#") or carries a stamp;
+    following lines that are indented, or unstamped non-bullet first-column text (pasted logs), belong to it; empty lines are dropped.  A block's time is the first stamp in its first 80 chars
     (PST/PDT/UTC normalised to PST); a block without a stamp takes the time of the block before it in the same file.
 
 Writes: only with --apply.  The caller holds ~/coord/.coord.lock (coord-commit.sh does) or passes --lock to take it.
@@ -51,7 +51,11 @@ def blocks(text):
     for ln in text.split("\n"):
         if not ln.strip():
             continue
-        if ln[:1].isspace() and cur is not None:
+        if cur is not None and (ln[:1].isspace() or (stamp(ln) is None and not ln.startswith(("- ", "#")))):
+            # indented, or an unstamped first-column line that is not a bullet/heading (pasted log output in a
+            # legacy post): continuation. "- 2026-11-14 19:0x PST" bullets (no valid stamp) still start a block.
+            # Without this, a non-unique unstamped line becomes a block key that dedups against old posts (shadow
+            # proof 11-14: 3 lost lines, all inside one legacy post).
             cur[1].append(ln)
             continue
         cur = [ln.rstrip(), [ln], stamp(ln)]

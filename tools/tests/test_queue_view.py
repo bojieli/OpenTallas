@@ -132,5 +132,16 @@ class CommitTests(unittest.TestCase):
             self.assertEqual(v.count(f"parallel {k}\n"), 1, k)
 
 
+class UnstampedContinuation(unittest.TestCase):
+    def test_unstamped_first_column_line_stays_in_its_post(self):
+        d = Path(tempfile.mkdtemp()); (d / "lanes/posts").mkdir(parents=True); (d / "lanes/archive").mkdir(parents=True)
+        (d / Q).write_text("- 2026-11-13 10:00 PST FAILED [X -> COORD] old\n/work/a.sh: line 3: syntax error\n")
+        (d / "lanes/posts/X.md").write_text("- 2026-11-14 10:00 PST FAILED [X -> COORD] new\n"
+                                           "/work/a.sh: line 3: syntax error\n | kit k1\n")
+        self.assertEqual(QV.main(["--coord", str(d), "--apply"]), 0)
+        v = (d / Q).read_text()
+        self.assertTrue(v.endswith("- 2026-11-14 10:00 PST FAILED [X -> COORD] new\n/work/a.sh: line 3: syntax error\n | kit k1\n"), v)
+
+
 if __name__ == "__main__":
     unittest.main()
