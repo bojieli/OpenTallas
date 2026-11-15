@@ -833,3 +833,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-27-1114@13f06c8969 (ADMIT-TUNE-1): plan queue self-hold fix, supersedes 333e42282f
 - READY claude/admit-tune-27-1114@3a4d0f8cc6 (ADMIT-TUNE-1): plan early admit + admit marker, supersedes 13f06c8969
 - READY claude/admit-tune-24-1114@048230901f (ADMIT-TUNE-1): ot-mem-grow outcome logging watcher + install + test (on top of merged 222f0b0702)
+- READY claude/admit-tune-28-1114@00d8057ab2 (ADMIT-TUNE-1): ot-oom-age SIGKILL escalation + test (stacked on admit-tune-24 048230901f)
