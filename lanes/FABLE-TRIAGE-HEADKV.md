@@ -721,3 +721,35 @@ right in the mean (measured / model 1.005 TT, 0.981 FF on feed legs). 1.15 is th
 corner. The count-aligned gate already uses routed late and early arrivals, so it needs no factor. Use 1.15 only
 in estimates made before a clock is built: unshared path late = 1.15 x unshared path early. Owner HEAD-CLKFEED-1
 (one line in its estimate script).
+
+## 19. HEAD NC + hk6 gate kit: seam hold on sp5_bw_i_shim -> sp5 (03:3x PST)
+
+Data: epyc2 die-head-route-1/head/p20nc_gate/sta_dump/die_sta_related.json and proof/tap_arrivals_FF.json.
+
+**(1) The counts are a declared-budget artefact; the seam itself is tight but inside the contract.** MEASURED:
+- The "hold below 0" numbers (5,161 TT, 8,095 FF, worst -80.6 / -83.4) come from the declared-budget form: no real
+  views, zero data delay, no credit for the receiver's hold padding. In that form hold slack is simply minus the
+  clock damage, so every pair whose capture tap is later than its launch tap counts as negative.
+- The same record's contract line passes: FF window needed 80.92 ps against the plan's seam window of 90 ps
+  (clock.seam_hold.seam_ps), bound +9.08 ps, 0 negative pairs. The real-view hold gate is UNMEASURED on all 13,152
+  seam pairs (missing views: hd_spn 6,300 pairs, hd_spn_wshim_rx 4,726, hd_ctl 2,340, ...).
+- What is real: the damage on this one seam is 81 ps FF / 91 ps TT, 9 ps under the window in FF and 1.2 ps over it
+  in TT (TT is not the hold corner). Cause: in region sp5 the spine partition's 68 taps arrive on average 28 ps
+  after the west shim's 17 taps (2,282.6 against 2,254.2 ps), and spread 59.8 ps. In the other five spine rows
+  the two means differ by 3 to 12 ps. sp5 is the larger hd_spn_end type, with a deeper local tree. The ctl ->
+  ctl_estrip / ctl_nstrip rows are the same class (ctl spread 66.1 ps).
+
+**(2) Fix: two small things, no lockup, no HB4, no plan window change.**
+- Clock side (owner HEAD-CLKFEED-1): bring region sp5's two partitions to one target. Shift the sp5 partition's
+  local tree about 20 ps earlier (or the shim's later) in the region build, so the worst damage is 70 ps or less
+  in both corners. Check sp2 at the same time (spread 82.7 ps, the largest of the spine rows).
+- Receiver side (owner HEAD-99 with the hd_spn_end type lane): sp5 is hd_spn_end, which is not signed. Build it
+  with the input-min constraint on `bw_i` set for the full 90 ps window plus 10 ps, the same rule as section 9, so
+  its kit hold repair delivers what the plan promises. For ctl -> strips the receivers are the signed hd_ctl_e and
+  hd_ctl_n: the re-sign of section 9 covers hd_ctl_e; add hd_ctl_n to it (its real-view miss was -1.7 ps).
+- A latch or HB4 cell on a seam with +656 ps of setup and a 9 ps contract margin is the wrong size of tool.
+
+**(3) It does not block adopting NC or NF.** It is a follow-up delta: the clock trim goes with the lep0N local-tree
+rebuild (18.2), which is needed anyway before adoption; the receiver constraint goes into the hd_spn_end build
+that is still open. The seam becomes a gate only when hd_spn, hd_spn_end and the shims have real views; until
+then report it as "contract PASS, margin 9 ps, UNMEASURED on views", not as 8,095 violations.
