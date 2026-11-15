@@ -84,3 +84,6 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 
 ## 2026-11-15 12:51 PST update
 - r137 done: gen-host ~/OpenTallas origin -> mirror on intel1/epyc7/epyc9; epyc8 busy, retried hourly by ~/.local/bin/ot-lane-fixhome (called from lane-remote-audit.sh). PATH line at top of ~/.bashrc on 7 hosts (MQ1-LOCALBIN, backup .bashrc.bak-mq1-1115). ot-merge-queue wrapper (gate|known-red|status|parse) in ~/.local/bin on 7 hosts. MERGED: src-tree-manifest cdb8191563c, merge-census-1115-4 33b03c8ba37.
+
+## 2026-11-15 14:25 PST update
+- READY claude/mq-gate-deps-1115 @af5cfe9eb09 (gate sparse tree gets the sources the selected tests name; MISSING SOURCE -> INFRA). kv-pvgen-1115c @58c1bd939f8 regate with that code: intel2 mq1/tmp/kvpvgen-gate.out (copy omq-deps); gate-cmd runs one at a time (gate-cmd.lock).
