@@ -1932,6 +1932,9 @@ RULES = [
     ("INFRA", None, r"ot-run: interrupted \(signal 15|cancellation requested on|stopped by operator|"
                     r"below the (?:gen |scratch |root )?disk floor|scratch floor|disk floor",
      "infra (unit stopped from outside / disk floor wait: no design result)"),
+    # OOMKILL_1114 (OWNER 11-14 19:00, Fable fix 3): a host OOM victim (earlyoom SIGTERM -> make 'Error 241', SIGKILL -> 'Error 247', rc 137 / 143, 'exit -15') is booked
+    # as OOM, not as the exit 2 make prints last; class INFRA, so the free INFRA retry (KILL_RE: 'earlyoom') relaunches it on another host
+    ("INFRA", None, r"\] Error 24[17]\b|\bearlyoom\b|\brc[ =]+1(?:37|43)\b|\bexit -(?:9|15)\b|\bterminated by signal (?:9|15)\b", "OOM (host earlyoom SIGTERM/SIGKILL victim, make Error 241/247 / rc 137/143: not a design result, auto-retried as INFRA)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-job: NOT RUN: input [^\n]*not in the store, not on this host|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+1(?:25|37|43)\b|"

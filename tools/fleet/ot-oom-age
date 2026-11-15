@@ -74,6 +74,45 @@ def save_state(path, first, now):
         pass
 
 
+PLAN_DIR = "/var/tmp/ot-heavy"
+PLAN_ADJ = -1000
+PLAN_EXTRA = {"python3", "python"}      # PLANBYPASS_1114: a plan job's helper processes are protected too
+
+
+def plan_pids(d=None):
+    """launcher pids of the running plan jobs (markers plan.job.<pid> written by ot-heavy for OT_HEAVY_PRIO=plan); a marker of a dead launcher is removed"""
+    d = d or PLAN_DIR
+    out = set()
+    try:
+        names = os.listdir(d)
+    except OSError:
+        return out
+    for n in names:
+        if n.startswith("plan.job.") and n[9:].isdigit():
+            if os.path.isdir(f"/proc/{n[9:]}"):
+                out.add(n[9:])
+            else:
+                try:
+                    os.unlink(os.path.join(d, n))
+                except OSError:
+                    pass
+    return out
+
+
+def plan_key(pid, names):
+    """launcher pid of the job a process belongs to: its oth-<user>-<pid>-<t>.scope, or the otc-<pid>-<n> container it runs in; None otherwise"""
+    try:
+        cg = open(f"/proc/{pid}/cgroup").read()
+    except OSError:
+        return None
+    m = re.search(r"/oth-[^/\n]*?-(\d+)-\d+\.scope", cg)
+    if m:
+        return m.group(1)
+    cid = container_id(pid)
+    m = re.match(r"otc-(\d+)-\d+$", names.get(cid or "", ""))
+    return m.group(1) if m else None
+
+
 ESC_AFTER_S = 60
 ESC_LOG = "/var/tmp/ot-oom-age/kills.log"
 SIGLINE = re.compile(r'^(\d+(?:\.\d+)?) \S+ earlyoom\[\d+\]: sending SIGTERM to process (\d+) uid \d+ "([^"]*)":.*?cmdline "(.*)"\s*$')
@@ -149,9 +188,18 @@ def main(argv=None):
     pids = [str(p) for p in a.pid] or [p for p in os.listdir("/proc") if p.isdigit()]
     changed = seen = 0
     first, names = load_state(a.state), container_names()
+    plans = plan_pids()
     for p in pids:
         try:
             comm = open(f"/proc/{p}/comm").read().strip()
+            if plans and (comm in comms or comm in PLAN_EXTRA) and plan_key(p, names) in plans:
+                # PLANBYPASS_1114 (OWNER 11-14 19:40): plan connectivity jobs are never the earlyoom / kernel victim while any other job can die instead
+                if int(open(f"/proc/{p}/oom_score_adj").read()) != PLAN_ADJ:
+                    if not a.dry_run:
+                        open(f"/proc/{p}/oom_score_adj", "w").write(str(PLAN_ADJ))
+                    changed += 1
+                seen += 1
+                continue
             if comm not in comms:
                 continue
             cur = int(open(f"/proc/{p}/oom_score_adj").read())
