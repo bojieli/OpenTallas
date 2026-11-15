@@ -724,7 +724,7 @@
     "kv3_pc_v1__cl4ea58a5c": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
     "kv3_io_cor": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
     "kv3_io_cor_v1": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
-    "kv3_hroot": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "kv3_hroot": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key.",
     "kv3_pc_v1__cl23f6a148": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
@@ -5701,7 +5701,7 @@
     "kv3_pv_v4n": "lane_ready:KV-101",
     "kv3_pv_v6": "lane_ready:KV-101",
     "kv3_pv_v6n": "lane_ready:KV-101",
-    "kv3_hroot": "lane_ready:KITRTL-FAIL-1115",
+    "kv3_hroot": "lane_result:DRT0255-PROOF flags READY",
     "kv3_pc_v1__cl23f6a148": "lane_ready:KITRTL-FAIL-1115"
    }
   },
@@ -7688,7 +7688,8 @@
     "svc_*": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key.",
     "dsdv_slice_lepw_mu_LP__t2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
     "slice_station__t25": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slice_station__t8": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key"
+    "slice_station__t8": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "dsdv_slice_lepe_mu_LP__t2": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): released 12:29 without its new view. Running attempts finish. Lift = delete this key."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -34306,7 +34307,8 @@
     "svc_*": "lane_result:S81-SVC-SYNTH-1115 pilot PASS + event_adopt:Event G",
     "dsdv_slice_lepw_mu_LP__t2": "lane_ready:KITRTL-FAIL-1115",
     "slice_station__t25": "lane_ready:KITRTL-FAIL-1115",
-    "slice_station__t8": "lane_ready:KITRTL-FAIL-1115"
+    "slice_station__t8": "lane_ready:KITRTL-FAIL-1115",
+    "dsdv_slice_lepe_mu_LP__t2": "lane_ready:new view posted"
    },
    "item_env_deleted_tap_max_sinks_wavehold1115": [
     "dsdv_slice_lepe_mu_C__t1",
@@ -36526,7 +36528,8 @@
     "slw_st_a_v2__cl9f076a5c": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
     "slw_st_a_v2__clf4365a62": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
     "slw_su_l0__cl1a1c1f8f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slw_su_l1__cla2a78701": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key"
+    "slw_su_l1__cla2a78701": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
+    "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -46818,7 +46821,8 @@
     "slw_st_a_v2__cl9f076a5c": "lane_ready:KITRTL-FAIL-1115",
     "slw_st_a_v2__clf4365a62": "lane_ready:KITRTL-FAIL-1115",
     "slw_su_l0__cl1a1c1f8f": "lane_ready:KITRTL-FAIL-1115",
-    "slw_su_l1__cla2a78701": "lane_ready:KITRTL-FAIL-1115"
+    "slw_su_l1__cla2a78701": "lane_result:DRT0255-PROOF flags READY",
+    "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY"
    }
   },
   "hbm": {
