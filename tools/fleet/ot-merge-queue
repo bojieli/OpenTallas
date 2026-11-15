@@ -703,6 +703,19 @@ def check_ready(text, st):
         return 0
     seen = set(st.setdefault("ready_seen", []))
     main_ref, n_b = None, 0
+    # a READY whose sha is already approved by COORD, landed by the queue, or contained in main is not judged (09:08 11-15:
+    # s81-leaf-t14-1115b was bounced while the same tick merged it as 12f54cf1aec)
+    done = [a["sha"] for a in parse_approvals(text) if not a["revoked"]]
+    done += [it.get("sha_full") or it.get("sha", "") for it in st.get("items", {}).values()
+             if it.get("status") in ("MERGED", "ALREADY")]
+    def settled(sha):
+        nonlocal main_ref
+        if any(d and (d.startswith(sha) or sha.startswith(d)) for d in done):
+            return True
+        if main_ref is None:
+            main_ref = fetch_main()
+        full = rev(sha)
+        return bool(full and main_ref) and is_ancestor(full, main_ref)
     for n in range(int(st["ready_from"]), len(lines) + 1):
         line = lines[n - 1]
         m = READY_RE.match(line)
@@ -713,6 +726,9 @@ def check_ready(text, st):
             continue                                  # a READY without branch@sha is a status / result line, not a merge request
         key = f"{bm.group(1)}@{bm.group(2)}"
         if key in seen:
+            continue
+        if settled(bm.group(2)):
+            seen.add(key)
             continue
         g, why = GATE_RE.search(line), ""
         if not g:
@@ -738,7 +754,7 @@ def check_ready(text, st):
             elif not is_ancestor(gm, tip):
                 why = f"branch {bm.group(2)} is not rebased on GATE main={g.group(1)} (that main is not an ancestor of the tip)"
             else:
-                behind = int(git("rev-list", "--count", "--first-parent", f"{gm}..{main_ref}").strip() or 0)
+                behind = int(git("rev-list", "--count", "--first-parent", f"{gm}..{main_ref}").stdout.strip() or 0)
                 if behind > GATE_MAX_BEHIND:
                     why = f"GATE main={g.group(1)} is {behind} main commits old (limit {GATE_MAX_BEHIND}); rebase on current main"
         seen.add(key)

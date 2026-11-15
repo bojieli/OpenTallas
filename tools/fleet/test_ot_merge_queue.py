@@ -192,7 +192,7 @@ class EndToEnd(unittest.TestCase):
                     f"- 2026-11-15 08:01 PST READY [LANE-B -> COORD] branch claude/good @{g[:11]} GATE main={main[:11]} pass=3/4\n"
                     f"- 2026-11-15 08:02 PST READY [LANE-C -> COORD] branch claude/clash @{self.shas['clash'][:10]} "
                     f"GATE main={g[:11]} pass=2/2\n"
-                    f"- 2026-11-15 08:03 PST READY [LANE-D -> COORD] branch claude/good @{g[:9]} GATE main={main[:11]} pass=5/5\n"
+                    f"- 2026-11-15 08:03 PST READY [LANE-D -> COORD] branch claude/good @{g[:12]} GATE main={main[:11]} pass=5/5\n"
                     f"- 2026-11-15 08:04 PST READY [LANE-E -> COORD] result line without a branch sha, GATE nothing\n")
         r = self.tick()
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
@@ -201,9 +201,26 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-B]", t); self.assertIn("pass=3/4 is not all-pass", t)
         self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-C]", t); self.assertIn("is not a commit on main", t)
         self.assertNotIn("-> LANE-D]", t); self.assertNotIn("-> LANE-E]", t); self.assertNotIn("-> OLD-LANE]", t)
+        self.assertNotIn("ready gate check error", (self.d / "mq/log").read_text())   # a valid stamp is judged, not swallowed
         n = t.count("BOUNCE")
         self.tick()
         self.assertEqual(q.read_text().count("BOUNCE"), n)   # each READY judged once
+
+    def test_ready_for_an_approved_or_landed_sha_is_not_bounced(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n")
+        self.tick()                                      # rule live
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        sh(*self.g, "merge", "-q", "--ff-only", "claude/good", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        with open(q, "a") as f:
+            f.write(f"- 2026-11-15 09:00 PST READY [LANE-M -> COORD] branch claude/good @{self.shas['good'][:10]} no stamp, on main\n"
+                    f"- 2026-11-15 09:01 PST READY [LANE-R -> COORD] branch claude/red @{self.shas['red'][:10]} no stamp\n"
+                    f"COORD APPROVED: claude/red @{self.shas['red'][:10]}\n")
+        r = self.tick()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertNotIn("BOUNCE", q.read_text())
+        self.assertNotIn("ready gate check error", (self.d / "mq/log").read_text())
 
     def test_priority_high_approval_lands_first(self):
         q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
