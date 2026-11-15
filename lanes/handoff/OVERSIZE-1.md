@@ -33,15 +33,20 @@ Goal: no type >400k movable goes through the flat flow; split into hard child co
 
 Estimate: hardened ring = 25 cells/bit (measured from cat_*.jsonl). Ring cores: 0 added cycles (exact parent parameters, drop-in), W-side instances placed mirrored MY.
 
-## Cores launched (OVERSIZE-1 kits, QC gen_core_kit_qc.py recipe; lane dir /srv/opentallas-scratch2/claude/oversize-1/ on epyc8, epyc9, epyc10, same content)
-Kit: rk/<m>/kits/<m>_synth0 ; generator mkcore.py (args: name W RSTREP H(0=auto) Wd CSC WRITE_CHUNK); RTL rtl_kv/ (ot_dp_clk_landing_ca.sv 78c7d01d, ot_dp_clk_landing.sv 15ffde74, ot_meso_fifo.sv ab1a4d96 = kvgeom4 kits).
-KV pv/hg family (CSC1): kv3_cland_w1057_e_s35 (49.68x217.728, 40 inst), w259_e_s11 (40), w257_e_s11 (26), w288_e_s11, w416_e_s15, w397_e_s15, w269_e_s11, w909_e_s31, w781_e_s27, w653_e_s23, w544_e_s19, w525_e_s19, w800_e_s27, w672_e_s23.
-KV hub family (no CSC, WRITE_CHUNK16): kv3_hcland_w300_e_s11, w292_e_s11, w268_e_s11, w1119_e_s37.
-Launch: intel2 ~/tmp/oversize-1/logs/<m>*.log (ot-run --mem 32/48 --threads 16 --hosts epyc8,epyc9,epyc10 -- run_kit.sh K finish; run_kit runs signoff.py tt,ff).
-Watcher (no LLM): intel2 ~/tmp/oversize-1/watch.sh, 10-min loop -> status.tsv; adds one AUTO-RESIGN.tsv row per SIGNED (signed.done).
+## Cores (DEDUP with CLAND-MACRO-1 done 11-14 19:3x; merged set = lanes/handoff/KV-RING-CORES-MERGED.tsv, one master per exact params + face axis)
+CLAND-MACRO-1 derives the face per instance from parent pins.json (ns = d S / q N, ew = d W / q E); my first wave was E/W-only, so most of it was the wrong face.
+Stopped (dirs kept), mine: kv3_cland_w{1057_e_s35, 909_e_s31, 800_e_s27, 781_e_s27, 672_e_s23 (exit 1 FACE_GUARD land_slot), 653_e_s23 (exit 1 FACE_GUARD land_slot), 544_e_s19, 525_e_s19, 416_e_s15, 397_e_s15, 288_e_s11, 269_e_s11, 259_e_s11}, kv3_hcland_w{1119_e_s37, 300_e_s11, 268_e_s11}.
+Stopped, CLAND-MACRO-1 (mine further along): kv_cland_w257_ew_69586 -> kv3_cland_w257_e_s11 (epyc10, CTS); kv_cland_w292_ew_abd47 -> kv3_hcland_w292_e_s11 (epyc8, place). Both mine have d on E = theirs mirrored MY.
+Running, mine (OVERSIZE-1): kv3_cland_w257_e_s11, kv3_hcland_w292_e_s11, and 7 new configs nobody had, generated with CLAND-MACRO-1 mkmacro.py into /srv/opentallas-scratch2/claude/oversize-1/rk2/ (epyc8/9/10, configs.json there):
+  kv_cland_w269_ns_0fea0 (pv_v1n x6), and hub_C (PLACEREP=1 rings, differ from hub_Wo): kv_cland_w300_ew_ba263 x2, w292_ew_81b3f x2, w549_ew_bf94f, w523_ew_05742, w294_ew_a7ae4, w259_ns_a43af x8.
+Logs intel2 ~/tmp/oversize-1/logs/ (first wave) and logs2_<m>.log (rk2). Watcher intel2 ~/tmp/oversize-1/watch.sh covers logs/*.log only (first wave); rk2 builds: check signoff/signoff.json in each kit (TODO: extend watcher).
+All other KV configs: CLAND-MACRO-1 builds (their status.tsv).
+Correction: serdes__t1 is 72% flattened <top> logic, u_core is only 30k (9.5%); a u_core child alone does not fix it.
 
 ## Not yet built / next
-- KV hgi rings (w1560_s51, w1045_s35, w553/550/549/524_s19), hg extras (w1063_s35, w573/523_s19, w652_s23, w268 CSC1), hub_C W259 no-CSC / W549 / W523 / W294.
+- hg/hgi rings: all covered by CLAND-MACRO-1 masters (checked hg_v3, hg, hgi_v7 faces).
+- QC st_b: u_u_r0..7 = 8x qfd_dv_s8_station_tail1_orq3 (HI_PAD29 NB_IN_PAD11 NB_PAD13 RD_PAD13 SKEW_N6 SKEW_S7), 141k = ~17.7k each: one region master x8 + rings -> st_b ~136k. Not built yet (needs registered-port check).
+- QC hc: u_u_xl#_# 53k + rings 39k+26k; <top> 226k flattened still -> needs RTL split.
 - kv3_hub_C engine split; serdes__t1 u_core child; QC st_b region cores + hc xl core.
 - After SIGNED: export_view.py + archive to rtx-pro and AGIdock /archive (count from AGIdock).
 - Parent rebinds are the die owners' plan events (KV-102 etc.); OVERSIZE-1 supplies the signed masters.
