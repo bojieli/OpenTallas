@@ -1147,7 +1147,7 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                   reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
         used=[];phy=phy_supply_rects(P,tn);resets=_reset_sites_for_type(raw,tn,tree,base_type[pn])
         landings=sorted(ins[pn].items())
-        band_order=(band_order_by_type or {}).get(base_type[pn],"name")
+        band_order=(band_order_by_type or {}).get(base_type[pn],(band_order_by_type or {}).get("*","name"))   # "*" = every type (S81-CA-BAND)
         if band_order=="largest_first":
             landings.sort(key=lambda row:(-int(row[1]["width"]),row[0]))
             info["band_order"]=band_order
