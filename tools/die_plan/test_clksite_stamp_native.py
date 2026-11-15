@@ -50,7 +50,9 @@ class T(unittest.TestCase):
 
     def test_counts_and_consistency(self):
         self.assertEqual(self.rep["stamped"], 2)
-        self.assertEqual(len(self.nodes), 7)
+        # 7 nodes + one parity node per re-laid boundary leg whose kit-laid inverter count has the wrong parity
+        self.assertEqual(len(self.nodes), 7 + self.rep["parity_nodes"]["inserted"])
+        self.assertEqual(self.rep["parity_nodes"]["unsolved"], 0)
         self.assertEqual(len(self.out["taps"]), 4)
         for i, v in self.nodes.items():
             if v["parent"] is not None:
@@ -71,6 +73,14 @@ class T(unittest.TestCase):
                                        (W, H), P.orient(n))
                     sets.setdefault(n, set()).add((round(ob[0], 3), round(ob[1], 3)))
         self.assertEqual(sets["A"], sets["B"])
+
+    def test_parity_of_every_stamped_leg_matches(self):
+        import math
+        for i, v in self.nodes.items():
+            if v.get("stamp_leg") and v["parent"] in self.nodes:
+                p = self.nodes[v["parent"]]
+                nrep = max(0, math.ceil((abs(p["x"] - v["x"]) + abs(p["y"] - v["y"])) / 150.0) - 1)
+                self.assertEqual((nrep + 1) & 1, (v["inv_parity"] ^ p["inv_parity"]) & 1, (i, nrep))
 
     def test_taps_follow_by_name_and_top_priced(self):
         by = {(t["part"], t["tap"]): t for t in self.out["taps"]}
