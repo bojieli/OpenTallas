@@ -1645,7 +1645,9 @@ def main():
         if REPLICATE:
             for _s, _dst, _rc in replicate_dirs([os.path.normpath(x) for x in REPLICATE], hosts):
                 print(f"ot-run: REPLICATE {_s} -> {_dst} rc={_rc}", file=sys.stderr)
-        _kept, _miss = hosts_with_needs(hosts, [os.path.normpath(x) for x in NEEDS], cmd_input_paths(cmd, d))
+        # a --stage path (and anything under it) is COPIED to the chosen host by the spill: not demanded of the host here
+        _der = [x for x in cmd_input_paths(cmd, d) if not any(x == t or x.startswith(t + "/") for t in STAGE)]
+        _kept, _miss = hosts_with_needs(hosts, [os.path.normpath(x) for x in NEEDS], _der)
         if _miss:
             for _h, _m in _miss.items():
                 print(f"ot-run: NEEDS: {_h} lacks {', '.join(_m[:3])}{' ...' if len(_m) > 3 else ''}", file=sys.stderr)

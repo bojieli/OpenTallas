@@ -50,3 +50,8 @@ def test_replicate_copies_to_hosts_lacking_the_dir():
 def test_main_wires_needs_and_refusal():
     s = (Path(__file__).with_name("ot-run")).read_text()
     assert '"--needs"' in s and '"--replicate"' in s and "sys.exit(78)" in s and "OT_RUN_NO_NEEDS_CHECK" in s
+
+
+def test_staged_paths_are_not_demanded_of_the_host():
+    s = (Path(__file__).with_name('ot-run')).read_text()
+    assert 'x.startswith(t + "/") for t in STAGE' in s
