@@ -147,3 +147,24 @@ def test_unreferenced_taps_may_vanish():
     with pytest.raises(LR.RemapError):
         LR.match_taps(old, new, 50)
     assert LR.match_taps(old, new, 50, need={"a"}) == {"a": ("x", 0, 1)}
+
+
+def test_resel_keeps_pin_sites_and_fails_closed_on_far_relay():
+    def mk():
+        return {"partition_types": {"T": {"reset_start_raw_exports": [dict(port="p0", instance="a", net="n", xy_um=[0.0, 0.0])],
+                                          "clock": {"landing_contract": {"pins": [dict(name="p0", xy_um=[1.0, 1.0])]}}}}}
+    def moving(o, n, names, d):
+        e = n["partition_types"]["T"]
+        e["reset_start_raw_exports"][0].update(instance="b", xy_um=[300.0, 0.0])
+        e["clock"]["landing_contract"]["pins"][0]["xy_um"] = [301.0, 1.0]
+        return {"T": dict(exports=[["p0", "a", "b"]], raw=[], skipped=[])}
+    old, new = mk(), mk()
+    LR.remap_plan(old, new, HERE, HERE, resets="resel", resel_fn=moving)
+    t = new["partition_types"]["T"]
+    assert t["reset_start_raw_exports"][0]["xy_um"] == [0.0, 0.0] and t["reset_start_raw_exports"][0]["instance"] == "b"
+    assert t["clock"]["landing_contract"]["pins"][0]["xy_um"] == [1.0, 1.0]
+    with pytest.raises(LR.RemapError):
+        LR.remap_plan(mk(), mk(), HERE, HERE, resets="resel", resel_fn=moving, max_um=100.0)
+    moved = mk()
+    LR.remap_plan(mk(), moved, HERE, HERE, resets="resel", resel_fn=moving, keep_xy=False)
+    assert moved["partition_types"]["T"]["reset_start_raw_exports"][0]["xy_um"] == [300.0, 0.0]

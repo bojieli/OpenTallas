@@ -4,8 +4,7 @@ generated names (landing_remap.py re-maps them at prepare time).
      renumbers (coll_ib START rst_rl_60).
  (b) hd_lep0N: taps in the stack band to y 604.8, tx rows back to back mid corridor (y 529.2 / 558.36, pitch 187.2 from
      x 22.5), rx column +7.2 east -> density taps renumber (forwarded source clk_t218), relays renumber.
- (c) hd_host_e: u_epc early core tap with the pin-referenced input latency (FABLE-HARD-QCHEAD 1: L 330-400 ps, default
-     350, env Z20_EPC_L) beside the core clock pin; the PG cut is a GEN ENVIRONMENT switch, not a plan key (schema rejects
+ (c) hd_host_e: no tap change (STA what-if: no u_epc shift closes -395 ps); the PG cut is a GEN ENVIRONMENT switch, not a plan key (schema rejects
      it): OT_PG_FACE_CUT=1 for hd_host_e (PG-AWARE-1 @240cf2612f: parent PG stripes stop 1.5 um before the macro pin
      faces of u_epc, no core re-sign).
 Translations / one tap row only, no reshape.  usage: head_z20_delta.py RP21Z19.json RP21Z20.json [TOOLS_ROOT]"""
@@ -91,31 +90,15 @@ l["note"] += " | HEAD-REMAP-1 rp21z20 (b) = rp21z19 delta item 3: tx SRAM rows b
 check("hd_lep0N")
 print("hd_lep0N taps moved", nmv[0], "tx rows", k)
 
-# (c)
-sys.path.insert(0, os.path.join(ROOT, "tools/die_plan"))
-from cores import lef_pins, resolve  # noqa: E402
-from schema import tap_clear  # noqa: E402
-he = T["hd_host_e"]
-c = [h for h in he["hard_cores"] if h["inst"].endswith(".u_epc")][0]
-L = float(os.environ.get("Z20_EPC_L", "350"))
-g = lef_pins(resolve(c["lef"], ROOT), c["module"])["clk"]
-px, py = g["xy"]
-w, h_ = c["outline_um"]
-orient = c.get("orient", "R0")
-if orient in ("MY", "R180"):
-    px = w - px
-if orient in ("MX", "R180"):
-    py = h_ - py
-dx, dy = c.get("track_offset_um", [0.0, 0.0])
-taps = he["clock"]["taps"]
-xy = tap_clear(he, c["origin_um"][0] + dx + px, c["origin_um"][1] + dy + py, [t["xy"] for t in taps if t.get("xy")])
-name = c["inst"] + ".clk"
-assert not any(t.get("name") == name for t in taps)
-taps.append(dict(name=name, kind="core", xy=list(xy), insertion_ps=L, insertion_ff_ps=round(0.81 * L, 3),
-                 note="HEAD-REMAP-1 rp21z20 (c) / FABLE-HARD-QCHEAD 1: u_epc tap from the pin-referenced arcs (L 330-400 ps, not the 421 ps largest output latency)"))
-he["clock"]["core_taps"] = "early"
-he["note"] += " | HEAD-REMAP-1 rp21z20 (c): u_epc input-latency core tap (insertion %g ps) (PG cut = env OT_PG_FACE_CUT=1 at gen, PG-AWARE-1)." % L
-print("hd_host_e u_epc tap", xy, "L", L)
+# (c) hd_host_e: NO u_epc core tap.  The STA what-if on the routed ws database (HEAD-REMAP-1 11-14) showed that no u_epc
+# clock-pin shift closes -395 ps: input setup needs +395, input hold allows <= +282, output setup (-8.4 ps) allows ~0.
+# The fix is inside the core (new lane).  The PG cut is a GEN ENVIRONMENT switch (OT_PG_FACE_CUT=1 for hd_host_e,
+# PG-AWARE-1 @240cf2612f, on main); no plan key (schema rejects it).
+
+# (d) hd_serdes raw_0 (pin x 1439.3 y 17.2): NO tap added.  Checked on the re-solved tree (prepared z20, gen --trial): the
+# taps at x 1439 ('clk' and an explicit clk_t22 at (1439.3, 31.2)) are leaf taps ('gated tap ... depth 7') hanging off the
+# depth-6 relay at tap 4 (x 1691.6, 252 um away, within the 405 um reset reach); the tree builder gives no relay of its
+# own to a leaf tap, so an extra tap does not create one.  landing_remap keeps the pin site and renames the row to u_rrl_103.
 
 d["note"] = d["note"].replace("rp21z19 HEAD FINAL", "rp21z20 HEAD FINAL")
 json.dump(d, open(b, "w"), indent=1, ensure_ascii=False)
