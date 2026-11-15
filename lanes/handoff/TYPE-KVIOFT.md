@@ -3,3 +3,9 @@ CLASSIFY (attempt_4, kv102sem_ftgrid, routed 6_final.odb epyc2 .../kv102sem_ftgr
 Earlier ECO (b5, whole-design hold repair incl 4264 port paths) made FF -14 but TT -134: port hold buffering broke setup. Not a wide-outline issue: attempt_4 DIE_AREA already 1278.72.
 Wave attempt_5 (kvgeom4 plan bc5799a6d171) in flight from 09:05.
 PLAN: private ECO from attempt_4 routed DB with OT_PRD_PROTECT_NETS = nets on port-start hold paths (repair only internal), 2 forms (hold margin variants). Then sign R-MINIMAL, AUTO-RESIGN row, archive.
+
+## 2026-11-14 16:13 update
+- Split (COORD ask): FF hold = 4264 input-port + 8 output-port starts (advisory) + INTERNAL 164 reg2reg endpoints, WNS -30.64 (internal <0, so not signable as-is). Same on attempt_4 and attempt_5 (kvgeom4 plan bc5799a6d171, TT +17.64, DRC 0).
+- Wave late ECO on attempt_5 (15:45) was refused in 98 s: autopilot admission bundle 1215d1008b85 has eco_loop.py requiring ot_prd_hold_scope_assert in prd_hook.tcl, but the bundle prd_hook.tcl (and prd_run.sh) predate it (107 of 108 bundles lack it). Repo tools/die_plan/post_route_drv has the matching hook. NOT a design fault: the nonport (reg2reg) scoped ECO was never run. Fix for KIT-OPS: re-snapshot admission bundle from main.
+- Private forms (bundle copy with repo prd_hook/prd_run): A = attempt_5 kit (scratch3) hold-margin 5, out epyc2 .../typekvioft/ecoA; B = attempt_4 kit hold-margin 15, out .../typekvioft/ecoB. Logs intel2 ~/typekvioft/eco{A,B}.log. Both queued on epyc2 memory (09 min). 1 iteration each (OWNER 11-07 cap).
+- Next: on ECO signed -> RMINIMAL check (DRC0, TT>=-42, nonport FF>=0), AUTO-RESIGN row, archive AGIdock + rtx-pro NEW dir.
