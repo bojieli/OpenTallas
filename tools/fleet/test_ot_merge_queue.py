@@ -178,6 +178,43 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("MERGE-FAIL [MERGE-QUEUE -> ", t); self.assertIn("claude/ghost@deadbeef123 NOT landed", t)
         self.assertRegex(t, r"MERGED \[MERGE-QUEUE -> [^]]+\] claude/good@")
 
+    def test_ready_gate_bounces_missing_or_wrong_stamp_only_for_new_lines(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        o = self.d / "origin.git"
+        main = sh("git", "rev-parse", "main", cwd=o)
+        g = self.shas["good"]
+        q.write_text(f"- 2026-11-15 07:00 PST READY [OLD-LANE -> COORD] branch claude/red @{self.shas['red'][:10]} no stamp\n")
+        r = self.tick()                                  # rule goes live: the old READY is not judged
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertNotIn("BOUNCE", q.read_text())
+        with open(q, "a") as f:
+            f.write(f"- 2026-11-15 08:00 PST READY [LANE-A -> COORD] branch claude/good @{g[:10]} tests ok\n"
+                    f"- 2026-11-15 08:01 PST READY [LANE-B -> COORD] branch claude/good @{g[:11]} GATE main={main[:11]} pass=3/4\n"
+                    f"- 2026-11-15 08:02 PST READY [LANE-C -> COORD] branch claude/clash @{self.shas['clash'][:10]} "
+                    f"GATE main={g[:11]} pass=2/2\n"
+                    f"- 2026-11-15 08:03 PST READY [LANE-D -> COORD] branch claude/good @{g[:9]} GATE main={main[:11]} pass=5/5\n"
+                    f"- 2026-11-15 08:04 PST READY [LANE-E -> COORD] result line without a branch sha, GATE nothing\n")
+        r = self.tick()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        t = q.read_text()
+        self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-A] READY claude/good@", t); self.assertIn("no GATE stamp", t)
+        self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-B]", t); self.assertIn("pass=3/4 is not all-pass", t)
+        self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-C]", t); self.assertIn("is not a commit on main", t)
+        self.assertNotIn("-> LANE-D]", t); self.assertNotIn("-> LANE-E]", t); self.assertNotIn("-> OLD-LANE]", t)
+        n = t.count("BOUNCE")
+        self.tick()
+        self.assertEqual(q.read_text().count("BOUNCE"), n)   # each READY judged once
+
+    def test_priority_high_approval_lands_first(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text(f"- COORD APPROVED: claude/clash @{self.shas['clash'][:10]}\n"
+                     f"- COORD APPROVED: claude/good @{self.shas['good'][:10]} Merge priority HIGH.\n")
+        r = self.tick()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        t = q.read_text()
+        self.assertRegex(t, r"MERGED \[MERGE-QUEUE -> [^]]+\] claude/good@")          # good first, so clash (same file) fails
+        self.assertIn("claude/clash@", t.split("MERGED")[1])
+
 
 if __name__ == "__main__":
     unittest.main()

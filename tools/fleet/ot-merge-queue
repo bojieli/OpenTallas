@@ -78,6 +78,17 @@ QUOTE_RE = re.compile(r"\b(MERGED|MERGE-FAIL|READY) \[")      # a line that quot
 AUTHOR_RE = re.compile(r"\[\s*([^\]\s;,]+)")
 APPROVERS = ("COORD", "OWNER")
 LANE_RE = re.compile(r"\b(?:READY|STATE|ASK) \[([A-Z][A-Za-z0-9_.-]*)")
+# READY gate stamp (FABLE-FLOW-0815 item 7, COORD 11-15: 14 train fails on 11-15, 13 of them red on main): a READY naming
+# "branch X @sha" must carry "GATE main=<main sha> pass=<passed>/<run>" = the branch rebased on that main and its touched
+# test files passing there.  The queue checks every new READY at once and posts BOUNCE to the lane when the stamp is missing
+# or wrong (stamp main not on main, not an ancestor of the tip, older than GATE_MAX_BEHIND main commits, or pass < run).
+READY_RE = re.compile(r"^- .{0,40}?\bREADY \[([A-Z][A-Za-z0-9_.-]*)")
+READY_BRANCH_RE = re.compile(r"\bbranch\s+(?:(?:hub|origin)(?::OpenTallas)?\s+)?([A-Za-z0-9][\w./+-]*)\s*@\s*([0-9a-f]{7,40})\b")
+GATE_RE = re.compile(r"\bGATE\s+main=([0-9a-f]{7,40})\s+pass=(\d+)/(\d+)")
+GATE_MAX_BEHIND = int(os.environ.get("MQ_GATE_MAX_BEHIND", "30"))
+GATE_HOW = ("READY needs a gate stamp: rebase the branch on current main, run its touched test files on that base, and add "
+            "'GATE main=<that main sha> pass=<passed>/<run>' to the READY line; then post a new READY")
+PRIORITY_RE = re.compile(r"\bpriority\s*:?\s*HIGH\b", re.I)
 TAG_RE = re.compile(r"\bflow-(\d{8})-([a-z]{2})-(?:head|qc|kv|s81|hbm)\b")
 _LOCK = threading.Lock()
 _FETCH = threading.Lock()
@@ -147,7 +158,8 @@ def parse_approvals(text):
             kind, branch, sha = m.group(1), m.group(2) or "", m.group(3).lower()
             key = f"{branch or '-'}@{sha}"
             if kind == "APPROVED" and key not in seen:
-                seen[key] = {"key": key, "branch": branch, "sha": sha, "line": n, "revoked": False}
+                seen[key] = {"key": key, "branch": branch, "sha": sha, "line": n, "revoked": False,
+                             "high": bool(PRIORITY_RE.search(line))}
                 out.append(seen[key])
             elif kind == "REVOKED":
                 for a in out:                         # a revoke names the sha (prefix either way), branch optional
@@ -683,6 +695,63 @@ def prepare(it, base):
         return "INFRA", f"{type(e).__name__}: {str(e)[:300]}"
 
 
+def check_ready(text, st):
+    """bounce new READY lines (after st['ready_from']) whose gate stamp is missing or wrong; -> number bounced"""
+    lines = text.splitlines()
+    if "ready_from" not in st:                       # rule goes live: only READYs posted from now on are checked
+        st["ready_from"] = len(lines) + 1
+        return 0
+    seen = set(st.setdefault("ready_seen", []))
+    main_ref, n_b = None, 0
+    for n in range(int(st["ready_from"]), len(lines) + 1):
+        line = lines[n - 1]
+        m = READY_RE.match(line)
+        if not m or m.group(1) in (ME, "COORD", "OWNER") or m.group(1).startswith(ME):
+            continue
+        bm = READY_BRANCH_RE.search(line)
+        if not bm:
+            continue                                  # a READY without branch@sha is a status / result line, not a merge request
+        key = f"{bm.group(1)}@{bm.group(2)}"
+        if key in seen:
+            continue
+        g, why = GATE_RE.search(line), ""
+        if not g:
+            why = "no GATE stamp"
+        elif int(g.group(3)) == 0 or int(g.group(2)) != int(g.group(3)):
+            why = f"GATE pass={g.group(2)}/{g.group(3)} is not all-pass"
+        else:
+            if main_ref is None:
+                main_ref = fetch_main()
+            gm, tip = rev(g.group(1)), ""
+            try:
+                fetch_sha(bm.group(1), bm.group(2))
+            except Exception:                             # noqa: BLE001 - reported as a bounce reason
+                pass
+            tip = rev(bm.group(2))
+            if not tip:
+                if st.get("ready_wait", {}).get(key, 0) < WAIT_TICKS:
+                    st.setdefault("ready_wait", {})[key] = st.get("ready_wait", {}).get(key, 0) + 1
+                    continue                              # not pushed yet: look again next tick
+                why = f"branch sha {bm.group(2)} not found on {REMOTE} or {FALLBACK or '-'}"
+            elif not gm or not is_ancestor(gm, main_ref):
+                why = f"GATE main={g.group(1)} is not a commit on main"
+            elif not is_ancestor(gm, tip):
+                why = f"branch {bm.group(2)} is not rebased on GATE main={g.group(1)} (that main is not an ancestor of the tip)"
+            else:
+                behind = int(git("rev-list", "--count", "--first-parent", f"{gm}..{main_ref}").strip() or 0)
+                if behind > GATE_MAX_BEHIND:
+                    why = f"GATE main={g.group(1)} is {behind} main commits old (limit {GATE_MAX_BEHIND}); rebase on current main"
+        seen.add(key)
+        if why:
+            n_b += 1
+            queue_post(st, "BOUNCE", m.group(1), f"READY {key} (queue line {n}) bounced before the train: {why}. {GATE_HOW}.")
+            st.setdefault("bounced", {})[bm.group(2)] = why
+        else:
+            log(f"READY {key} line {n}: gate stamp ok ({g.group(0)})")
+    st["ready_seen"] = sorted(seen)[-2000:]
+    return n_b
+
+
 def tick(args):
     MQ.mkdir(parents=True, exist_ok=True)
     lockf = open(MQ / "lock", "w")
@@ -694,7 +763,16 @@ def tick(args):
     st = load_state()
     flush_posts(st)
     text = (COORD / QUEUE_REL).read_text(errors="replace")
+    if not args.only:
+        try:
+            nb = check_ready(text, st)
+            if nb:
+                log(f"ready gate: {nb} READY line(s) bounced")
+        except Exception as e:                            # noqa: BLE001 - the gate check never stops the train
+            log(f"ready gate check error: {e}")
+        flush_posts(st)
     apps = parse_approvals(text)
+    apps = [a for a in apps if a.get("high")] + [a for a in apps if not a.get("high")]    # priority HIGH first
     items = st.setdefault("items", {})
     todo = []
     for a in apps:
@@ -712,6 +790,7 @@ def tick(args):
             it = items[a["key"]] = {"key": a["key"], "branch": a["branch"], "sha": a["sha"], "status": "NEW",
                                     "first_seen": stamp(), "tries": 0, "line": a["line"]}
         it["id"] = re.sub(r"[^\w.-]", "_", f"{a['sha'][:12]}")
+        it["high"] = a.get("high", False)
         it["lane"] = lane_for(text, a["branch"], a["sha"])
         todo.append(it)
     if not todo:
@@ -726,7 +805,7 @@ def tick(args):
         for f in CF.as_completed(futs):
             res[futs[f]] = f.result()
     landed = ""
-    for it in todo:                                          # serial, in approval (queue) order
+    for it in todo:                                          # serial: priority HIGH approvals first, then queue order
         status, detail = res[it["key"]]
         it["tries"] = int(it.get("tries", 0)) + 1
         it["base"] = base
