@@ -165,6 +165,10 @@ TERMINAL_STATUS = {"FAIL", "CANCELLED", "SUPERSEDED", "WITHDRAWN"}
 ACTIVE_Q = {"RUNNING", "QUEUED", "WAIT-PARENT"}
 TERMINAL_Q = {"FAIL", "CANCELLED", "WITHDRAWN"}
 ALERT_HITS = ("protected", "counted", "kitwave-keep", "signed")
+# CLEAN-ALL-1115 (OWNER 11-15: "apply the aggressive cleanup automatically, do not ask me further"): a recheck hit
+# refuses THAT path (never deleted, manifest verdict ALERT) but no longer stops the run or blocks later runs behind a
+# human-removed sticky file.  OT_AUTOCLEAN_ALERT_STOPS=1 restores the old stop-all + sticky behaviour.
+ALERT_STOPS = os.environ.get("OT_AUTOCLEAN_ALERT_STOPS") == "1"
 
 
 def say(*a):
@@ -2741,7 +2745,7 @@ class Job:
             say(f"ot-autoclean: OFF switch {off or 'OT_AUTOCLEAN=0'}; nothing done")
             return 0
         alert_f = os.path.join(a.state, "ALERT")
-        if os.path.exists(alert_f):
+        if ALERT_STOPS and os.path.exists(alert_f):
             say(f"ot-autoclean: {alert_f} exists (sticky); no deletes until a human removes it")
             return 3
         self.roots = dedupe_roots(list(a.roots) + (local_extra_roots() if self.host == "localhost" else []))
@@ -2795,7 +2799,7 @@ class Job:
                 v = self.handle("a", d, files or [d], why, os.lstat(d).st_mtime)
                 if v in ("DELETED", "WOULD"):
                     gone.append(d)
-                stop = v == "ALERT"
+                stop = ALERT_STOPS and v == "ALERT"
         for cls, key in (("b", "spef"), ("c", "place")):
             if cls not in classes or stop:
                 continue
@@ -2813,7 +2817,7 @@ class Job:
                 except OSError:
                     continue
                 v = self.handle(cls, d, files, why, mt)
-                stop = v == "ALERT"
+                stop = ALERT_STOPS and v == "ALERT"
         if "d" in classes and not stop and getattr(a, "aggressive", False):
             self.prune_lane_trees(gone)
         if "s" in classes and not stop:
@@ -2847,7 +2851,7 @@ class Job:
                             verdict, why = "ERROR", str(e)[:200]
                 self.rows.append([time.strftime("%F %T"), self.host, "s", verdict, " ".join((why or note).split())[:300], unit,
                                   f"{len(cands)} files", size, int(os.lstat(unit).st_mtime)])
-                stop = verdict == "ALERT"
+                stop = ALERT_STOPS and verdict == "ALERT"
         mdir = os.path.join(a.state, "manifests")
         os.makedirs(mdir, exist_ok=True)
         mf = os.path.join(mdir, f"AUTOCLEAN-auto-{self.host}-{stamp()}.tsv")
@@ -2871,11 +2875,15 @@ class Job:
         say(f"PROTECTED/COUNTED HITS AT RECHECK: {self.recheck_hits} (must be 0)")
         say(f"MANIFEST {mf}")
         if self.alerts:
-            with open(alert_f, "w") as fh:
+            # informational unless ALERT_STOPS: ALERT-LAST is overwritten each run and never blocks the next one
+            alert_w = alert_f if ALERT_STOPS else alert_f + "-LAST"
+            with open(alert_w, "w") as fh:
                 fh.write(f"{time.strftime('%F %T %Z')} ot-autoclean ALERT on {self.host}: a protected/counted path matched "
-                         f"a delete candidate at recheck; deletes stopped.\n" + "\n".join(self.alerts) + "\n")
-            say(f"ALERT written {alert_f}")
-            return 3
+                         f"a delete candidate at recheck; that path was refused" + ("; deletes stopped" if ALERT_STOPS else "")
+                         + ".\n" + "\n".join(self.alerts) + "\n")
+            say(f"ALERT written {alert_w}")
+            if ALERT_STOPS:
+                return 3
         if a.wt_reaper:
             union = os.path.join(a.state, "protected-union.txt")
             self.write_union(union)

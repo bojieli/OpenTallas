@@ -304,10 +304,12 @@ class TestClasses(Base):
                    "current_di": {"hbm|item_indepchk": 5}}
         orig = ac.Paths._realprefix
         ac.Paths._realprefix = lambda self_, p: p          # simulate the pre-fix canon (no symlink resolution)
+        ac.ALERT_STOPS = True
         try:
             rc = self.run_job("--queuename-skip-superseded")
         finally:
             ac.Paths._realprefix = orig
+            ac.ALERT_STOPS = False
         self.assertTrue(os.path.isdir(real))
         self.assertEqual(rc, 3)
         os.unlink(os.path.join(self.state, "ALERT"))
@@ -569,7 +571,32 @@ class TestAliases(unittest.TestCase):
 
 
 class TestSafety(Base):
-    def test_alert_stop_and_sticky(self):
+    def test_alert_refuses_path_but_does_not_stop_or_stick(self):
+        # CLEAN-ALL-1115: the hit path is refused, later candidates still go, no sticky file blocks the next run
+        k1, b1 = self.kit_b("lz/a1")
+        k2, b2 = self.kit_b("lz/a2")
+        orig = ac.Job.eval_trim
+        snapf = os.path.join(self.snap, "protected.tsv")
+
+        def sneaky(job, cls, d):
+            r = orig(job, cls, d)
+            if d == b1:
+                with open(snapf, "a") as f:
+                    f.write(f"{k1}\tlate row\n")
+            return r
+        ac.Job.eval_trim = sneaky
+        try:
+            rc = self.run_job()
+        finally:
+            ac.Job.eval_trim = orig
+        self.assertEqual(rc, 0)
+        self.assertEqual(self.row(b1)[3], "ALERT")
+        self.assertTrue(os.path.exists(os.path.join(b1, "5_route.odb")))      # the hit path is never deleted
+        self.assertFalse(os.path.exists(os.path.join(self.state, "ALERT")))
+        self.assertTrue(os.path.exists(os.path.join(self.state, "ALERT-LAST")))
+        self.assertEqual(self.run_job(), 0)                                    # nothing sticky
+
+    def test_alert_stop_and_sticky_legacy_opt_in(self):
         k1, b1 = self.kit_b("lz/a1")
         k2, b2 = self.kit_b("lz/a2")
         orig = ac.Job.eval_trim
@@ -582,17 +609,23 @@ class TestSafety(Base):
                     f.write(f"{k1}\tlate row\n")
             return r
         ac.Job.eval_trim = sneaky
+        ac.ALERT_STOPS = True
         try:
             rc = self.run_job()
         finally:
             ac.Job.eval_trim = orig
+            ac.ALERT_STOPS = False
         self.assertEqual(rc, 3)
         self.assertEqual(self.row(b1)[3], "ALERT")
         self.assertIsNone(self.row(b2))            # no further rows / deletes after the ALERT
         self.assertTrue(os.path.exists(os.path.join(b1, "5_route.odb")))
         self.assertTrue(os.path.exists(os.path.join(b2, "5_route.odb")))
         self.assertTrue(os.path.exists(os.path.join(self.state, "ALERT")))
-        self.assertEqual(self.run_job(), 3)        # sticky
+        ac.ALERT_STOPS = True
+        try:
+            self.assertEqual(self.run_job(), 3)        # sticky
+        finally:
+            ac.ALERT_STOPS = False
         self.assertIn("sticky", self.out)
 
     def test_positive_control_failure_aborts(self):
