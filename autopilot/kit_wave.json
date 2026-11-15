@@ -35342,12 +35342,13 @@
     "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
     "cbf_q00__cl1b5a6458": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a24 14 h dead end on s29q103S (FABLE section 3 item 1); release when S3R3b is adopted",
     "cbf_q00__cl870de686": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a27 dead end on s29q103S2; release when S3R3b is adopted",
-    "cbf_q00_s2": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a11 dead end on s29q103S3M2; release when S3R3b is adopted (DIE-QC-103)",
+    "cbf_q00_s2": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a11 dead end on s29q103S3M2; release when S3R3b is adopted (DIE-QC-103) | COORD 21:4x: cbf_q00_s2 is released at S3R3b adoption; KIT-OPS-5 does the release (remove this hold_items entry)",
     "cbn_q11__cl5cc92dfe": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a9 dead end on s29q103S2; release when S3R3b is adopted",
     "cbn_q01__cldd6ea846": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a9 (two copies) dead end on s29q103S2; release when S3R3b is adopted",
     "cbn_q01__clab6e67f2": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a7 dead end on s29q103S; release when S3R3b is adopted",
     "sle_hc1__cl7d360508": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): launched 21:14 on old event s29q103S; release when S3R3b is adopted",
-    "slw_su_c__*": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): replicas launched 21:07 on s29q103S3R; release when S3R3b is adopted (DIE-QC-103)"
+    "slw_su_c__*": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): replicas launched 21:07 on s29q103S3R; release when S3R3b is adopted (DIE-QC-103)",
+    "sle_hc1__cl22c1ff36": "FABLE stoplist 21:4x (STOPLIST-2120, COORD ruling): a6 launched on old event s29q103S; release when S3R3b is adopted"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -37028,7 +37029,8 @@
     "epyc7",
     "epyc8",
     "epyc9",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
