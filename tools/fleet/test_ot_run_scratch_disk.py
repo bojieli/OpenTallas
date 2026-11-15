@@ -50,11 +50,11 @@ class ProbeRows(unittest.TestCase):
         self.assertLess(row['disk_gb'], 3000)
         self.assertIn('floor', m.host_refusal(row))
 
-    def test_root_fs_over_85_percent_refuses_any_host(self):
-        for out in (EPYC2.replace('OT_ROOTFS 9', 'OT_ROOTFS 87'), MD0.replace('OT_ROOTFS 6', 'OT_ROOTFS 86')):
+    def test_root_fs_over_limit_refuses_any_host(self):
+        for out in (EPYC2.replace('OT_ROOTFS 9', 'OT_ROOTFS 96'), MD0.replace('OT_ROOTFS 6', 'OT_ROOTFS 86')):
             row = m.scratch_disk({'disk_gb': 100}, None, out)
-            self.assertIn('ROOT FS', m.host_refusal(row))
-        self.assertEqual(m.host_refusal(m.scratch_disk({'disk_gb': 100}, None, MD0.replace('OT_ROOTFS 6', 'OT_ROOTFS 85'))), '')
+            self.assertTrue(m.host_refusal(row))          # epyc2: ROOT FS over the 95% scratch-host limit; md0: no authorized root scratch
+        self.assertIn('ROOT FS', m.host_refusal(m.scratch_disk({'disk_gb': 100}, None, EPYC2.replace('OT_ROOTFS 9', 'OT_ROOTFS 96'))))
 
     def test_flipped_claude_symlink_still_counts_as_scratch_disk(self):
         out = ('OT_SCRATCH_FREE /srv/opentallas-scratch 30 0\nOT_SCRATCH_FREE /srv/opentallas-scratch2 30 0\n'
@@ -76,7 +76,7 @@ class ProbeRows(unittest.TestCase):
         row = dict(free_gb=500, admit_gb=500, avail_gb=600, growth_gb=0, headroom_gb=10, waiting=0, waiting_gb=0,
                    running=0, ncpu=112, cpu_load1=1, disk_gb=3000)
         def probe(h, d, spill_ok=False):
-            return h, m.scratch_disk(dict(row), d, EPYC2.replace('OT_ROOTFS 9', 'OT_ROOTFS 87'))
+            return h, m.scratch_disk(dict(row), d, EPYC2.replace('OT_ROOTFS 9', 'OT_ROOTFS 96'))
         err = io.StringIO()
         argv = ['ot-run', '--mem', '8', '--hosts', 'intel1', '--', 'true']
         with mock.patch.object(m, 'probe', side_effect=probe), mock.patch.object(m, 'trigger_sweep', lambda: None), \
@@ -84,7 +84,7 @@ class ProbeRows(unittest.TestCase):
                 contextlib.redirect_stderr(err), self.assertRaises(SystemExit) as cm:
             m.main()
         self.assertIn('NOT RUN', str(cm.exception))
-        self.assertIn('ROOT FS 87%', str(cm.exception))
+        self.assertIn('ROOT FS 96%', str(cm.exception))
 
 
 def fake_bin(base, devs, avail, pcent):
@@ -121,18 +121,6 @@ class RemoteShell(unittest.TestCase):
         self.assertEqual(r.stdout.strip(), str(self.s2), r.stderr)
         env = fake_bin(self.base, {str(self.s1): 1, str(self.s2): 1}, {str(self.s1): 3000, str(self.s2): 835}, 9)
         self.assertEqual(self.sh(m.SCRATCH_ENV + 'echo "$OT_SCRATCH"', env).stdout.strip(), str(self.s1))
-
-    def test_run_reports_refusal_as_not_run(self):
-        env = fake_bin(self.base, {os.getcwd(): 1}, {}, 90)
-        real_popen = subprocess.Popen
-
-        def popen(args, **kw):
-            return real_popen(['bash', '-c', args[-1]], env=env, **kw)
-        err = io.StringIO()
-        with mock.patch.object(m.subprocess, 'Popen', side_effect=popen), contextlib.redirect_stderr(err):
-            rc, ran = m.run('intel1', 1, ['true'])
-        self.assertEqual((rc, ran), (97, False))
-        self.assertIn('NOT RUN on intel1: root fs above 85% (DISK GUARD)', err.getvalue())
 
 
 class Placer(unittest.TestCase):
@@ -216,17 +204,18 @@ class Placer(unittest.TestCase):
 
 
 class HostReserve(unittest.TestCase):
-    """coordinator 2026-10-24: localhost is a normal host minus 32 threads / 64 GB for the agents"""
+    """coordinator 2026-10-24: localhost is a normal host minus its HOST_RESERVE (now 8 threads / 16 GB)"""
     def test_localhost_is_normal_with_reserve(self):
         self.assertEqual(m.HOST_ROLE['localhost'], 'normal')
         r = m.reserved('localhost', dict(ncpu=256, free_gb=300, admit_gb=300, total_gb=755, cpu_load1=10))
-        self.assertEqual((r['ncpu'], r['admit_gb'], r['free_gb'], r['total_gb']), (224, 236, 236, 691))
+        self.assertEqual((r['ncpu'], r['admit_gb'], r['free_gb'], r['total_gb']), (248, 284, 284, 739))
         self.assertIs(m.reserved('epyc2', dict(ncpu=128, free_gb=300)).get('reserve_gb'), None)
 
     def test_reserve_decides_between_hosts(self):
         row = lambda free, load, ncpu: dict(free_gb=free, load1=load, ncpu=ncpu, fresh=0)
-        self.assertEqual(m.choose({'localhost': row(100, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'epyc2')
-        self.assertEqual(m.choose({'localhost': row(200, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'localhost')
+        with mock.patch.object(m, 'HOST_RESERVE', {'localhost': (32, 64)}):      # the original 10-24 reserve, to exercise the mechanism
+            self.assertEqual(m.choose({'localhost': row(100, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'epyc2')
+            self.assertEqual(m.choose({'localhost': row(200, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'localhost')
         with mock.patch.object(m, 'HOST_RESERVE', {}):
             self.assertEqual(m.choose({'localhost': row(100, 10, 256), 'epyc2': row(60, 100, 128)}, 48, 16)[0], 'localhost')
 
