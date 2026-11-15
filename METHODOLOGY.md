@@ -544,3 +544,31 @@ recorded in 12.6. Never re-impose a superseded line from 12.6 from memory or cha
      roots that leave multi-ns unshared clock on crossings STOP as release forms. Deeper buffers (D8/D16) are chosen only after
      the local form, from its computed bounds. CLK-LOCAL-EST-1 gives the per-die estimate; each die owner turns it into its plan
      event.
+
+## 13. Repository and coord state (REPO-STATE-1, OWNER order 2026-11-14)
+
+**Clones.** Do not make a full `git clone` of OpenTallas for a lane. The fresh full clone measured on intel2 on 11-14 took 18:29 min and 11 GB: a 10.7 GiB pack and 16,342 refs, of which about 14,100 are branches. The HEAD tree of main is 326k files and 50 GB. Use `tools/clone-fast.sh` from main once branch claude/repo-state-1-1114 has landed:
+- `tools/clone-fast.sh --from <existing clone on this host> DIR [--ref REF] [--preset P]` makes a worktree of that clone. It needs no network and shares the objects. Measured: preset tools 8 s / 469 MB, preset lane 71 s / 8.7 GB.
+- `tools/clone-fast.sh DIR [--ref REF] [--preset P]` makes a partial clone: `--filter=blob:none`, one branch, cone sparse checkout. Measured: preset tools 78 s / 741 MB, preset lane 315 s / 11 GB.
+- `tools/clone-fast.sh --coord DIR` makes a partial clone of coord/state only. Measured: 17 s / 366 MB.
+- Presets:
+  - `tools` = tools tests configs schemas spec docs.
+  - `lane` (default) = tools tests configs schemas spec docs rtl tb compiler runtime src plus physical/* except physical/ref_tile. physical/ref_tile alone is 25.5 GB; add the types you need with `git sparse-checkout add physical/ref_tile/<type>`.
+  - `lane-all` includes ref_tile. Measured: 17 min / 36 GB. Avoid it.
+  - `full` has no sparse checkout.
+- Never use the owner checkout /home/ubuntu/OpenTallas as `--from`; the script refuses it.
+
+**No new large files.** `tools/repo_size_guard.py --range BASE...HEAD` (or `--staged`) rejects an added or modified file in three cases, unless `tools/repo_size_allowlist.txt` matches its path:
+- it is larger than 5 MB;
+- it is a P&R or simulation database (odb, gds, oas, def, spef, sdf, vcd, fst, saif, compressed too);
+- it is JSON or Verilog larger than 1 MB.
+
+The allowlist holds build inputs only: physical/die_plan/, tools/die_plan/ and rtl/. A hard cap of 95 MB applies everywhere, allowlist or not. The CI job repo-size-guard runs the guard on every push and PR, and merge lanes run it with `--range origin/main...BRANCH` before landing. Evidence, logs, views and P&R output belong in /archive or run scratch, with a small committed manifest (path, sha256, size, host).
+
+**History.** No history rewrite and no force-push without an owner decision. The numbers are in the REPO-STATE-1 RESULT of 11-14.
+
+**Coord posts.** Each lane posts with `bash ~/coord/bin/post.sh <LANE> "TAG [LANE -> TO; cc ...] text" [own files]`. This appends the post to lanes/posts/<LANE>.md, a file only that lane writes, and commits it. In the same commit, `tools/queue_view.py` appends the post to the lanes/COORD-REVIEW-QUEUE.md view. The view is also rebuilt by queue-view.timer every 2 min on intel2.
+
+The view is append-only and dedups, so the old path still works: appending directly to the queue and then running coord-commit.sh. Readers that use offsets or line counts (k5 inbox, loopgaps, autopilot) keep working.
+
+On a push conflict, coord-commit.sh replays only the caller's own files onto origin.
