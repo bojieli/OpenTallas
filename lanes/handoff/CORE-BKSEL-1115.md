@@ -1,0 +1,3 @@
+# CORE-BKSEL-1115 handoff
+- 2026-11-15 06:5x: nsesc relaunched on epyc8 (unit oth-ubuntu-2020023-1794753982, log intel2 ~/core-bksel-1115-logs/nsesc2.otrun.log, kit /srv/opentallas-scratch2/claude/s81-cores-2/bksel_nsesc/bksel_vC9nsesc, POST_MAX=0). m7pg witness in DRT flat 162-165 (kit fable-review-cores/bksel_m7pg).
+- Next: when route finishes check run_finish.log DRC, corners TT setup/FF hold, LEC; sign-off -> archive to AGIdock /archive/opentallas-signed-1114 (INDEX.tsv append, layout of existing rows) and rtx-pro /home/ubuntu/signed-export-1114. If DRT flat again: post report paths for Fable review, no unchanged retry.
