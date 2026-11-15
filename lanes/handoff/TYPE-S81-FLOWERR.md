@@ -40,3 +40,7 @@ gunit__t1 | pipeline | FAIL | FLOW-pipeline-traceback (investigating)
 serdes__t15__cla3d02796 | gen | PENDING-DEP | PLAN (PG domain holds no macro) -> NEEDS-PLAN DIE-S81-92
 serdes__t4 | gen | PENDING-DEP | PLAN (PG domain holds no macro) -> NEEDS-PLAN DIE-S81-92
 slice_station__t28 | queue | ORPHAN | ORPHAN client gone (relaunch)
+
+## Result 18:3x
+Classes: DEDUP 32 (twin running, not failures) · FAIL FLOW tool TypeError 1 (gunit__t1) · PLAN PG-domain 2 (serdes__t4, t15) · ORPHAN-but-live private job 1 (slice_station__t28, typeslicet28 on epyc8).
+Launched: nothing (no design-class item in scope). ASKs to KIT-OPS-5 and NEEDS-PLAN to DIE-S81-92 posted in COORD-REVIEW-QUEUE.md.
