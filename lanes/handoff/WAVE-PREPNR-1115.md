@@ -1,0 +1,7 @@
+# WAVE-PREPNR-1115 handoff (11-15 08:3x PST)
+Scope: KIT-WAVE launches failing before place (classes A prov_view input, B INFRA-VIEW-MISSING, C kit_topology, D tool exception).
+Findings
+- C kit_topology FileNotFoundError (10/h, kv + qwen_compute): ALL 10 recent had kit_rtl roamed to epyc2. epyc2 scratch2/claude/kw43-wave-1109[n] (and kw45, kw43t51, s87bind) are symlinks to scratch3, so kit_rtl.json/kit_rtl.f record realpath scratch3 paths; the next roam host (epyc7...) has no such path -> localize_bound read_bytes fails. Fix 8a450d0ca207: epyc2 removed from gen_hosts of qwen_kvsys/qwen_compute/s81_head/hbm (s81 had none). Lift only when epyc2 work roots are real dirs or kit_topology tolerates moved bound paths.
+- A/B/D-qc (prov_view crash 29/70min, INFRA-VIEW-MISSING 12, LandingError feed_s29 11): last occurrences 07:23/07:14/07:03; die-qc-103/treeA plan_of_record/cores + feed_s29.json + regions_s29.json present on all 6 hosts now (checked), child view sle_cland_w517_n_s10_1 lef now on epyc10 (created 07:29 after the 07:14 rc=23 copy). Transient staging window (treeA mtime churn on epyc8 07:00; event S4P->S4Q2 plan staged 08:04). No code fault found.
+- D-kv (2 items): kv3_pc_v3 bound R8 count declaration; kv3_hub_C STALE-CORE-VIEW qkd_ahub. Held in qwen_kvsys.hold_items (same commit). Source owner KV-102 (kvgeom7j pinned R8 table).
+Open: confirm first S4Q2 qwen_compute launch passes gen; confirm no kit_topology FNF after 08:27.
