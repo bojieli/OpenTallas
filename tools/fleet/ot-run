@@ -242,6 +242,16 @@ def probe(host, d, spill_ok=False):
 # OT_RUN_ROOT_SCRATCH_ROOTS lists only those authorized roots. The default is empty.
 # Existing per-host floors still apply to explicitly authorized roots.
 ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "").split(",") if x)
+# EPYC2-S3 11-15 (COORD, FABLE-FLOW-0815 item 2): epyc2 scratch2 (880 GB nvme) sat at 100% while its 3.5 TB root disk
+# (scratch3 bind) was idle.  Per-host authorized second roots, in addition to OT_RUN_ROOT_SCRATCH_ROOTS (every host):
+# "host=root;root,host=root".  OT_RUN_ROOT_SCRATCH_ROOTS_HOSTS= (empty) turns the default off.
+_RSH = os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS_HOSTS", "epyc2=/srv/opentallas-scratch3")
+ROOT_SCRATCH_ROOTS_HOSTS = {k.strip(): tuple(r for r in v.split(";") if r) for k, _, v in (x.partition("=") for x in _RSH.split(","))
+                            if k.strip() and v.strip()}
+
+
+def second_roots(host=None):
+    return ROOT_SCRATCH_ROOTS + tuple(r for r in ROOT_SCRATCH_ROOTS_HOSTS.get(host, ()) if r not in ROOT_SCRATCH_ROOTS)
 ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "150"))   # OWNER 11-06 22:4x "use 150GB for floor decisions" (was 500)
 ROOT_SCRATCH_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
     "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150,epyc5=100,epyc6=100,epyc7=150,epyc8=150,epyc9=150").split(",")) if k.strip() and v.strip()}
@@ -323,7 +333,7 @@ def scratch_disk(row, d, out, host=None):
             extra["dir_real"] = f[1]
     # ROOTSCR_1101: second roots (root fs, named in ROOT_SCRATCH_ROOTS) count with root free - ROOT_SCRATCH_FLOOR_GB
     rfl = root_floor(host)                                    # ROOTSCR-INTEL: per-host root floor
-    second = {r: max(0, roots.pop(r) - rfl) for r in list(roots) if r in onroot and r in ROOT_SCRATCH_ROOTS}
+    second = {r: max(0, roots.pop(r) - rfl) for r in list(roots) if r in onroot and r in second_roots(host)}
     onroot -= set(second)
     # v13 SCRATCH-DISK: a root on a separate disk exists -> only those roots count (never the root fs, even if emptier)
     disk_roots = {r: v for r, v in roots.items() if r not in onroot}
@@ -1101,7 +1111,7 @@ def scratch_env(host=None):
                "test -d $r/claude || continue; o=0; [ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && o=1; "
                "f=$(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9); "
                # ROOTSCR_1101: a second root (root fs, ROOT_SCRATCH_ROOTS) is o=2 with usable free = free - root floor
-               "case ' " + " ".join(ROOT_SCRATCH_ROOTS) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
+               "case ' " + " ".join(second_roots(host)) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
                + str(root_floor(host)) + ")); };; esac; echo $o $f $r; done | "
                "awk -v fl=" + str(sfloor(host)) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
                "'{o[NR]=$1; f[NR]=$2; r[NR]=$3; if ($1==0) {d=1; if ($2>bd) bd=$2} if ($1==2 && $2>bs) {bs=$2; bsr=$3} "
@@ -1271,7 +1281,7 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun", host=None):
     arg = base64.b64encode(json.dumps(list(cmd)).encode()).decode()
     if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
-    pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(ROOT_SCRATCH_ROOTS))} '
+    pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(second_roots(host)))} '
           f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
     return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={sfloor(host)} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
             f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '

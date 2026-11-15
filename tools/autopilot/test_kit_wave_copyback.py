@@ -83,3 +83,21 @@ def test_resume_source_adds_the_ran_host():
     (d / "spec.json").write_text(json.dumps({"work": "/w", "gen_host": "epyc10"}))
     out = KW.resume_source(_AP, {"dir": str(d), "item": "t", "attempt": 14, "kind": "type", "class": "INFRA"})
     assert out["candidates"] == [["epyc10", "/w/gen/t"], ["epyc8", "/w/gen/t"]]
+
+
+def test_rejudge_place_nodb_each_tick_once_per_attempt():
+    import time
+    d = Path(tempfile.mkdtemp())
+    (d / "place.log").write_text(BANNER + LOG)
+    rec = dict(status="FAIL", stage="place", dir=str(d), attempt=9, infra_base=0, updated=time.time(),
+               **{"class": "PLAN"}, reason="plan geometry / site @place: GRTM")
+    st = {"items": {"k": rec}}
+    assert KW.rejudge_place_nodb(st) == ["k"]
+    assert rec["status"] == "RETRY-INFRA" and rec["class"] == "INFRA" and KW.infra_used(rec) == 0
+    rec["status"] = "FAIL"                                     # same attempt: not judged twice
+    assert KW.rejudge_place_nodb(st) == []
+    rec["attempt"] = 10                                        # a new attempt that false-fails again is judged again
+    assert KW.rejudge_place_nodb(st) == ["k"]
+    (d / "place.log").write_text("KW_PLACE_RC=1\n")
+    rec.update(status="FAIL", attempt=11)
+    assert KW.rejudge_place_nodb(st) == [] and rec["status"] == "FAIL"
