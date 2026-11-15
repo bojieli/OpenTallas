@@ -95,6 +95,30 @@ PDN_MACRO = """define_pdn_grid -macro -default -name {macro} -voltage_domains {C
 add_pdn_connect -grid {macro} -layers {M4 M5}
 """
 
+NS_ESCAPE_UM = 4.32  # one parent M5 strap pitch = MACRO_ROWS_HALO_Y (no rows, so no rail loses its strap)
+
+
+def _m5_ns_signal_pins(lef_text):
+    """True when the LEF has M5 SIGNAL/CLOCK pin rects on the N or S face (parallel to the parent M5 straps)."""
+    size = re.search(r"\bSIZE\s+([\d.]+)\s+BY\s+([\d.]+)", lef_text)
+    if not size:
+        return False
+    height = float(size[2])
+    for pin in re.finditer(r"\bPIN\s+(\S+)(.*?)\bEND\s+\1\b", lef_text, re.S):
+        if re.search(r"\bUSE\s+(POWER|GROUND)\b", pin[2]):
+            continue
+        layer = None
+        for line in pin[2].splitlines():
+            tok = line.split()
+            if len(tok) >= 2 and tok[0] == "LAYER":
+                layer = tok[1]
+            elif len(tok) >= 5 and tok[0] == "RECT" and layer == "M5":
+                y0, y1 = sorted((float(tok[2]), float(tok[4])))
+                if y0 <= 0.2 or y1 >= height - 0.2:
+                    return True
+    return False
+
+
 def macro_pdn(mplace, macro_dir, obs_max=None):
     """Legacy SRAM M4 PG and signed native M5 PG, from the staged LEFs.
 
@@ -105,6 +129,7 @@ def macro_pdn(mplace, macro_dir, obs_max=None):
     if not mplace:
         return PDN, None
     groups = {}
+    ns_escape = []
     for master in mplace:
         if not re.fullmatch(r"[A-Za-z_][\w$]*", master):
             raise ValueError(f"unsupported PG master identifier {master!r}")
@@ -120,6 +145,8 @@ def macro_pdn(mplace, macro_dir, obs_max=None):
         if layers[0] != layers[1]:
             raise ValueError(f"{lef}: mismatched VDD/VSS PG interfaces {layers}")
         groups.setdefault(layers[0], []).append(master)
+        if layers[0] == "M5" and _m5_ns_signal_pins(text):
+            ns_escape.append(master)
     if "M5" not in groups:
         return PDN + PDN_MACRO, None  # preserve all existing M4-only kit bytes
     if not isinstance(obs_max, str) or not re.fullmatch(r"M[6-9]", obs_max):
@@ -132,13 +159,21 @@ def macro_pdn(mplace, macro_dir, obs_max=None):
               "add_pdn_connect -grid {top} -layers {M5 M6}\n")
     out = PDN + bridge
     for layer, masters in sorted(groups.items()):
-        cells = " ".join("{^" + re.escape(m) + "$}" for m in sorted(masters))
         upper = "M5" if layer == "M4" else "M6"
-        grid = "native_pg_" + layer
-        halo = "2.0 2.0" if layer == "M4" else "0"
-        out += (f"define_pdn_grid -macro -name {{{grid}}} -cells {{{cells}}} "
-                f"-voltage_domains {{CORE}} -halo {{{halo}}} -grid_over_boundary\n"
-                f"add_pdn_connect -grid {{{grid}}} -layers {{{layer} {upper}}}\n")
+        plain = [m for m in masters if not (layer == "M5" and m in ns_escape)]
+        esc = [m for m in masters if layer == "M5" and m in ns_escape]
+        # (grid, masters, halo {left bottom right top}).  A child with M5 SIGNAL pins on its N/S faces needs the parent
+        # M5 straps (parallel to those pins, same 4.32 grid) kept one strap pitch off both faces: dsdv_bksel_q/pk2
+        # 11-14 measured 180 strap ends 0.096 um from the face = 165 DRT markers (44 shorts) and, with no macro grid,
+        # 0 M5/M6 PG vias on the child.  With this grid: 0 strap boxes in the bands, 3698 vias.
+        for grid, ms, halo in (("native_pg_" + layer, plain, "2.0 2.0" if layer == "M4" else "0"),
+                               ("native_pg_M5_nsesc", esc, f"0 {NS_ESCAPE_UM:g} 0 {NS_ESCAPE_UM:g}")):
+            if not ms:
+                continue
+            cells = " ".join("{^" + re.escape(m) + "$}" for m in sorted(ms))
+            out += (f"define_pdn_grid -macro -name {{{grid}}} -cells {{{cells}}} "
+                    f"-voltage_domains {{CORE}} -halo {{{halo}}} -grid_over_boundary\n"
+                    f"add_pdn_connect -grid {{{grid}}} -layers {{{layer} {upper}}}\n")
     info = dict(schema="opentallas.native_child_pg_interface.v1",
                 masters_by_pg_pin_layer=groups, added_pg_layers=["M6"],
                 added_signal_routing_layers=[], abstract_obstruction_min_layer="M6",
