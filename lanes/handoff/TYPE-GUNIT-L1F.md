@@ -5,3 +5,4 @@ On first pass: add AUTO-RESIGN.tsv row (die s81, name dsdv_gunit_l1f_bf, host, d
 2026-11-14 15:25 a routed DRC0, setup -250.9; F2 GRT fail; b in repair_timing
 2026-11-14 15:27 form c (FWPIPE +1 cycle, 504x201.6) launched epyc10; b and Fable g3 running
 2026-11-14 15:59 READY posted a769ba16f6; ba0/ba1 FWPIPE builds queued epyc10 (ba0_fwp, ba0_fwps2, ba1_fwp). bf: b (epyc7), c (epyc10), Fable g3. Need all of bf+ba0+ba1 signed for FWPIPE.
+2026-11-14 19:40 successor: ba0_fwp/ba0_fwps2/ba1_fwp killed by earlyoom (infra), relaunched epyc9 (logs gunit_*_r2.otrun.log). bf c died GPL-0307 READ15, congestion 2.83 vs a 1.27; c2 (right-sized READ guides, h216) proposed, waits g4 verdict.
