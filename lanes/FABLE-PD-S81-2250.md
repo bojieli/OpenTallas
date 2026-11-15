@@ -13,8 +13,8 @@ Scope note: fa/fd carry the pre-B6 wave plan (kit of 11-14 12:08), so no C1, C2 
 2. B6f as assembled does not touch that cause. Step b6f1 goes the wrong way: it replaces measured boundary-register means by the
    liberty maximum over all sinks. Correction to my 22:20 report: "gap b" of lever 2 (435 -> 476, 303 -> 336) is WITHDRAWN.
 3. Budget question: (a) 450 ps for the S81 col and leaf families, by the per-type override B6e already uses for serdes, plus
-   (c) re-sign of 4 modules. (b) stays only for the residual. The audit's 689 rows are about 11 modules, and 432 of the new FAIL
-   rows are judged against a number that is not a measurement.
+   (c) re-sign of 5 modules. (b) stays only for the residual (gb_he). The corrected 257 FAIL rows are 10 modules; 164 of them
+   pass at 450 with no tap.
 
 ## 1. Item 1: col_h10_r1 hold (forms fa / fd, epyc10 `type-colh10r1/fa`)
 
@@ -91,38 +91,45 @@ insertion is the mean latency of the core's boundary registers at each corner, m
 
 ## 3. Budget verdict (COORD added scope) and audit check
 
-Audit read: epyc7 `s81-b3-clk/ev/audit_B6e0.json` (22:46): PASS 3,894, UNMEASURED 1,033, FAIL 256. I did not find the 689 run.
+Basis: the corrected tables, hub `lanes/PLAN-TIMING-AUDIT-1115/` (TABLES.md, cores3_S81.tsv, EXPLAIN-S81-UNMEASURED.md):
+PASS 3,972, FAIL 257 rows in 247 types, UNMEASURED 954, worst 427.1 ps over (bk_sel__t2 `dsdv_idx_tx_n32`).
 
-Audit sanity (arithmetic MEASURED, cause INFERENCE):
-- UNMEASURED by module: hw 216, he 216, ve_s 79 (these three are the only early-tapped LIB-fallback modules), front_roots 216,
-  rom 216, sram 75, others 15. 216 + 216 + 79 = 511 = 1,033 - 522 exactly. So the drop is those three modules being judged, one
-  row per type; one harvested file cannot produce it. Either the fallback depth is now treated as measured, or one file is
-  applied by module name across all types. PLAN-READERS-1 should say which.
-- 689 - 256 = 433 = the 432 half rows + 1. Their depth is "LIB fallback 566.7 / 588.4 ps (library arc, not a measurement)",
-  which is even 34-35 ps above the liberty maximum (533.0 / 553.2). The rule (declared within 40 ps of measured) is applied to
-  a mean-based declaration against a maximum-based depth. For col3_c the same two bases differ by 41 ps on a core that is fine.
-- The 256 are 9 modules: dsfd_rstg 132 rows (236 ps on a grid tap), su_t_rxsb 79 (declared 269, measured 207), svc_sx_hrow 16,
-  capc5r 14, kp4_dchn 11, 4 single rows. Scale is modules, not rows.
+Audit sanity (MEASURED on `audit_B6e0.json` of 22:46 and on cores3_S81.tsv):
+- The 689 figure is explained and agrees with my own count before the correction arrived: 689 - 256 = 433 = the 216 + 216
+  element-half rows + 1, and 1,033 - 522 = 511 = hw 216 + he 216 + ve_s 79. The corrected run keeps only the 79 ve_s rows.
+- The 257 are 10 modules, not 257 problems: dsfd_rstg 132 rows (236 ps on a grid tap), dsfd_su_t_rxsb 79 (tap declares 269,
+  measured 207), dsdv_svc_sx_hrow 16 (269), ot_s81sl_capc5r 14 (271), ot_s81_kp4_dchn 11 (arcs), 3 gunit rows, dsdv_bksel_q,
+  dsdv_idx_tx_n32.
+- Still weak in the tool: (1) the LIB fallback is the liberty maximum over all sinks, while passing rows use the boundary
+  mean; on bf_col3_c the two differ by 41 ps on a correct row, so "unmeasured_lib_would_fail 222" overstates. (2) 864 of the
+  954 UNMEASURED rows are four col modules (hw, he, front_roots, ROM), so the col families are not judged at all yet. (3) hw
+  410.11 (run hw_x8) is matched by name only and he 555.02 is above its own liberty maximum 553.18: check both against the
+  plan lib sha before any plan row uses them.
 
 Options:
 
 | | die STA | hold | lane latency | work |
 |---|---|---|---|---|
-| (a) budget 450 for col + leaf (per-type `insertion_target_override`, as B6e does for serdes) | seam contract is relative: 250-types keep their views if the die tree delivers their taps 200 ps later (`clock.tap_offset`); no S81 die clock is signed yet, so nothing is redone. Corner split of the 200 ps die delay against cell delay: 10-20 ps seam skew (INFERENCE) | cores of 236-301 ps go back on grid taps; col3_c 435 and halves 465 need no early offset (inside +/- 40); the -429 early ends disappear. Deeper trees add local skew, bounded by the tap split | none: no cycle changes | plan keys + kit regen of col / leaf; none of them is signed |
-| (b) per-core early taps | 7,796 extra die landings, each with its own window; not in any die proof | every core IO becomes a cross-tap pair; cap 250 cannot serve the halves by the maximum | none | large die clock load |
+| (a) budget 450 for col + leaf (per-type `insertion_target_override`, as B6e does for serdes) | the seam contract is relative: 250-types keep their views if the die tree delivers their taps 200 ps later (`clock.tap_offset`); no S81 die clock is signed yet, so nothing is redone. Corner split of 200 ps of die delay against cell delay: 10-20 ps seam skew (INFERENCE) | cores of 236-301 ps return to grid taps and col3_c 435 needs no early offset; their -429 early ends disappear. Deeper trees add local skew, bounded by the tap split of 1.4 | none: no cycle changes | plan keys + kit regeneration of col / leaf; none of them is signed |
+| (b) per-core early taps from measured depth | 7,796 extra die landings, each with its own window, in no die proof | every core IO becomes a cross-tap pair; the 250 cap cannot serve a 555 ps core | none | large die clock load; 864 col rows have no measurement to derive from |
 | (c) re-sign deep cores | none | removes the cause for that core | none | per core |
 
-Verdict: (a) for the col and leaf families in B6f, together with the tap split of 1.4. (c) for four modules only: the two
-element halves (internal spread 191 / 154 ps and a `go_tag` pin window of 557 ps at FF, setup_falling 263 + hold_falling 294;
-no tap value fixes a spread) and `dsdv_bksel_q` / `dsdv_idx_tx_n32` (clk->q 869 / 1,014 ps, over the period). (b) only where a
-core still exceeds 450 + 40 after that, which in col is none. The die-wide common latency stays 250 until the S81 die clock is
-built; move it to 450 there if more than half the types carry the override.
+Row arithmetic for (a): 164 of the 257 FAIL rows are "depth 205-271 ps with no early tap" and pass at 450 with no tap at all;
+the 79 rxsb rows are a plan-data correction (drop the tap); 13 rows (kp4_dchn, bksel_q, idx_tx_n32) are boundary arcs and no
+budget fixes them.
+
+Verdict: (a) for the col and leaf families in B6f, together with the tap split of 1.4. (c) for five modules: `dsdv_bksel_q` and
+`dsdv_idx_tx_n32` (clk->q 869 / 1,014 ps, over the period), `ot_s81_kp4_dchn` (clk->q 450 + setup 310), and the two element
+halves (internal sink spread 191 / 154 ps and a `go_tag` pin window of 557 ps at FF: setup_falling 263 + hold_falling 294; no
+tap value fixes a spread). (b) only for what still exceeds 450 + 40 after that: in col that is gb_he if 555 is confirmed
+(early 105), 4 pins per type instead of 62. The die-wide common latency stays 250 until the S81 die clock is built; set it
+to 450 there if more than half the types carry the override.
 
 ## 4. Stop list
 
 - b6f1 as written (raise to liberty maximum, FF by ratio).
 - Any further col_h10_r1 form that changes density, top layer, max wire or congestion allowance; hold repair runs on this plan.
-- Reading the 689 count as 689 problems, and fixing half rows against the LIB fallback depth.
+- Reading audit rows as problems (257 rows = 10 modules), and fixing rows against the LIB fallback depth.
 - Lockup latches or hold padding as the lpad answer.
 - Col kit launches on B6f before grid taps are split and a col window exists: they stop at the post-CTS gate.
 - Unchanged: the 22:20 stop list, except its lever 2 gap b, which is withdrawn.
@@ -132,4 +139,4 @@ built; move it to 450 there if more than half the types carry the override.
 - No routed data: all STA here is placement RC on the post-CTS DB; GRT numbers are from the kit logs.
 - fb / fc (epyc8) not read; they share the plan and the tap set, so the cause is the same (INFERENCE).
 - TT -948.8 path not dumped; the A/B path-group report came back empty, so the A/B is whole-design TNS only.
-- The 689-row audit run itself; a 450 ps trial build; the rank-tap proof.
+- A 450 ps trial build; the rank-tap proof; the lib sha check of the hw / he measured depths.
