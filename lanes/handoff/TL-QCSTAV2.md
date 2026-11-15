@@ -3,3 +3,6 @@ CAUSE (real, not flow): sle_st_a_v2__pv30dda31f / __pv4242de79 never launch: KIT
 FIX IN PROGRESS: private child kits, built with gen_core_kit_qc.py (QC-RING recipe: D4 hold_mux land_slots), wrappers from plan param_wrap, pins from plan cores/st_a/*_pins.json. Kits: epyc9/epyc7/epyc10/intel1/epyc2 /srv/opentallas-scratch2/claude/tl-qcstav2/rk/<m>/kits/<m>_synth0 (generator scripts: scratchpad w/mk_rings.py, mk_region.py). Launched via ot-run from epyc7: 6 rings admitted (dear-crayfish) 05:00; sta_region_nb0 queued on intel1 (64 GB). Logs epyc7 tl-qcstav2/logs/<m>.log.
 NEXT: on signoff of children, add prov_view_sources for these 7 modules (ask KIT-OPS-3) or add COUNTED views; wave then launches st_a_v2 pv forms.
 11-14: rw/rwb cancelled (see queue line); region_nb0 signed by QC-CORES-HEAD.
+
+## 11-14 19:27 successor
+Live: 3 nb0 masters (h18_n6_s8,h18_n6_s7,h17_n6_s7) slang forms + KIT-OPS-5 _ns twins under /srv/opentallas-scratch2/claude/tl-qcstav2/m{a,b}_*. ma_h17 slang died in yosys (exit 2). Adopted twins. Waiter localhost ~/qcstav2-wait.log. NEXT: route -> ECO -> pincmp -> archive both -> AUTO-RESIGN.
