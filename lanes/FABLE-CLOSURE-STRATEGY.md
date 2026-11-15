@@ -223,3 +223,257 @@ t54's route box; the HEAD relay pin-list rule (HEAD-99 asked for an owner).
 8. No counting of v_hgi2 or any kit-RTL edit form.
 9. Still in force from 03:2x and FABLE-PD-QC-0300: no cycles on a subset of the four cb columns, no G2 beside the
    ring as default, no legacy half-period S81 clock numbers, no size-7 cut-out runs.
+
+# FABLE-CLOSURE-STRATEGY 2026-11-15 07:3x PST: cross-die levers, S81 delta order, stop list
+
+Read-mostly review, technical physical design only, HBM parked. Nothing launched, stopped or changed.
+New since 05:1x: FABLE-PD-S81-0335 D-H, PD-S81T-0710, PD-S81C-0730, PD-QC-0700, PD-QCC-0740, PD-PHY-0710, KVOVF 14-16,
+the queue to 07:20, `failure_breakdown.py` 07:11. No FABLE-PD-HEAD-0700 file exists.
+MEASURED = read by me today from a plan, log or report. REPORTED = from a lane or review post. INFERENCE is marked.
+My scripts (read-only plan scans): epyc7 / epyc9 / epyc2 `/tmp/fcs_scan.py`, `fcs_det.py`, `fcs_l2.py`, `fcs_drc.py`.
+Plans scanned: S81 `B6gslcf.json` (epyc7 s81-b3-clk/ev), QC `zz_s29_qc103_s4q2.json` (epyc9 die-qc-103/treeA), KV kvgeom6
+`plan_c.json` (epyc7 kw45/src_kv_kvgeom6_pgL), HEAD `gate/plan_nc/prep/source_plan.json` (epyc2 die-head-route-1; NC, not NF4).
+
+`failure_breakdown.py` 07:11, technical classes: none new. S81 134 held + 68 running, QC 64 running + 36 held + 5 waiting on
+the sta_region cores, KV 42 running + 6 placed, HEAD 6 held. Every open technical item is behind a plan event or a die gate.
+
+## 0. Five things the per-die reviews did not see
+
+1. The HEAD route-unit residue is named. It is die clock cells under partition abstracts, not pins and not PG (lever 1).
+   This is the same for all four dies.
+2. B6gslcf did not pass at 07:06 (it is not "in bind"). Two causes, both small and both in the compose (lever 2).
+3. Every one of the 216 S81 col types has two tap rows per element half with two different insertions, and neither is the
+   signed reference (lever 3).
+4. Station registers with plan sites inside hard cores: S81 36 types (not 5), QC 7 types. They sit in the G0 baseline (lever 4).
+5. Two items PD-S81T lists as missing from the CA plan are in it: the col tap window (165 ps on 216 of 216 col types, in the
+   die table `clock.tap_window.per_type_ps`) and `reset_replicate` on col_h10_r1 (12 of 12). Only the type-level key is absent.
+
+## 1. Levers, ranked
+
+| # | dies | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | HEAD now; KV, S81, QC next | Die clock cells under partition abstracts: cut the abstract, reserve the sites | the DRC gate of every die | DIE-HEAD-ROUTE-1 (proof), KIT-OPS-6 (abstract + site map) |
+| 2 | S81 | CA delta: 7 lanes at -1 and one wrong source clock port; take `--strap-window` in the same bind | 335 landed types | DIE-S81-92, KIT-OPS-6 |
+| 3 | S81, QC, KV | Core tap rows: one row per core, at the signed reference | S81 216 col types + bk_sel__t2 + eng__t1; QC 18 cb types and KV hub_C to check | DIE-S81-92; DIE-QC-103, KV-102 |
+| 4 | S81, QC | Station sites inside cores and strips over their track count: one geometry delta | S81 about 60 leaf types; QC 7 su types | S81-LEAF-PLAN + S81-LEAF-STRIP (one row owner per type), DIE-QC-103 |
+| 5 | QC, KV | Stations on one leg of a latency-matched join; frozen pad tables | QC S4v2 / S4fw adoption (about 45 types), KV 7j/7k (19 hg / hgi) | DIE-QC-103, KV-102, KIT-OPS-6 |
+| 6 | all | Hold ECO: non-port scope, 5 ps target, setup guard | t47, gunit, 6 sta_region masters, the S81 routed-not-signed rows | FLOW-LATEECO, KIT-OPS-5 |
+| 7 | QC | Skew depth of the sta_region masters as straps | 4 parents now, 3 re-hardenings per later station event | DIE-QC-103, CORE-ROWS-1115 |
+| 8 | S81 | col and phy clock: build, do not plan further | 12 col_h10_r1 (then the col family), phy__t1 | DIE-S81-92 |
+
+### Lever 1. Die route: clock cells under the partition abstracts (cross-die)
+
+Evidence (MEASURED, epyc2 `die-head-route-1/head/p20nc_gate/unitruns/probe_u201_b/drc_TT.rpt`, written 06:03, not yet
+posted by the lane; unit u201, 141 clock nets, crop form, 3 steps: 3,276 -> 2,786 -> 2,800):
+- 2,800 markers. 1,904 are an own clock net against a partition instance (`tW1b8` 1,894, `tW1b9` 10):
+  Short M1 400, M2 252, M3 252, M4 252, M5 252, M6 252, M7 244.
+- The M2-M6 markers are the same 252 points on every layer (184 distinct 1-um points over x 1654-2415, y 10869-11878),
+  so each is one via stack from M8 down to M1. At the first point the net `ck_rn1089_1` also touches the die clock
+  cell `ck_r1089_2` on M1. The stacks end on die clock cells that sit inside the partition.
+- The partition abstract (`kit/abstracts/ot_s81hd_lep0N.lef`, source "plan abstract") has OBS on M1, M2, M3 over the
+  full outline and block rectangles from M4 up.
+- Rest: M1 clock net against VDD 178 and net against net 97 (at the cells); M7 against PG 77; M8 against abstract
+  obstruction 120 short / 177 spacing, M8 against PG 67 + 7, M8 min step 83.
+- The other five running units are flat as well (u201_b at 2,611 in iteration 9).
+- Kit: 10,660 repeaters and 13,093 leaves in the HEAD tree. S81 has 91,460 die clock cells and 2,430 start stages
+  (REPORTED, 0335 H), and its types carry no reserved sites (MEASURED: no `reserved_sites_um` key on any of 395 types;
+  none on QC 130, KV 56 or HEAD 26 either).
+
+Root cause: `die_trial.SiteMap` puts die clock cells on any site inside a partition and outside hard cores. The
+abstract of that partition blocks every layer there, and the type under it never reserved the site. This corrects my
+05:1x inference (stacks to lower pin shapes of the abstract): there is no lower pin shape; the target is a die cell.
+No iteration count removes it. For a signed type the conflict is real metal, not only an abstract shape.
+
+Fix:
+1. Proof, 30-40 minutes (DIE-HEAD-ROUTE-1): cut the lep0N abstract OBS on M1-M7 over the 252 cell positions of u201
+   (cell box plus one via column), rerun the same 3 steps. Expected: the 1,904 instance markers go to 0. The M8 part
+   (about 400) stays and is then the only thing left to name.
+2. Site map from the layout, not from the outline (KIT-OPS-6): for a type with a closed view, a site is legal only
+   where the view has free rows and a free M1-M7 column; for a type without one, the plan reserves a small set of
+   rectangles (`clock.reserved_sites_um`, kind die_clock_tree) on the tree pitch (HEAD kit: repeaters 150 um, leaves
+   200 um) and the tree snaps to them. The abstract generator cuts OBS over the cells actually placed.
+3. Count before choosing per type: sites used by the die tree against free sites in each signed view. A signed type
+   keeps its record when every cell fits in free area; only the others re-key.
+4. Same change for the start-stage flops (S81 2,430 x 4.32 um, already an open note in 0335 H).
+5. M8: after step 1, split the M8 markers into pin landing against abstract obstruction (cut a window around each
+   M8 pin) and against the region PG (the `clock_entry_pg_cut` form). DIE-KV-ROUTE-1's M8 / M9 pin-against-PG scan
+   answers the PG half for KV.
+Unblocks: HEAD die DRC today's blocker; the same defect waits on KV (127 units listed, none run), S81 and QC.
+Owner: DIE-HEAD-ROUTE-1; KIT-OPS-6 for the generator and SiteMap; each die owner for the reserved rows.
+
+### Lever 2. S81 CA delta: why B6gslcf failed, and the form to rebind
+
+Evidence (MEASURED, epyc7 `s81-b3-clk/run/b/B6gslcf`, `g0/g0_report.json`, `bind.log`; compose rc 0):
+- G0: 7 errors, all schema: `latency.lanes.<lane>.clock_landing: -1 < 0` on attn / attnh / hbm between svc_5 -> svc_4,
+  svc_11 -> svc_10, svc_13 -> svc_12. This is the check 0335 section B asked for at 03:35 (2 crossings at -1 then).
+- Bind: 80 errors in the summary; the log shows 1 EMIT and 29 LF_CS_DEPTH. EMIT: `bk_sel__t2: fclk_out_tl_o0 contract
+  source_clock_port clk_t2 is not an input port of the type`. bk_sel__t2 has 7 core taps and no grid tap in the plan.
+  The 29 LF_CS_DEPTH lines (24 leaf, 5 kv_leaf) say "no bound module file": INFERENCE, they follow from the failed emit.
+- B6gshcf fails the same way.
+
+Root cause: the compose writes a negative landing when K lands before the lane's own stations, and it names a grid tap
+as the write-clock source on a type that has only core taps.
+Fix (DIE-S81-92, KIT-OPS-6 for the compose):
+1. The 7 lanes: +1 station cycle on the three svc pairs (cycles are pre-approved) and re-plan K for those ports; do
+   not relax the schema.
+2. Source clock port: take it from the ports the type has (`clk` for a type without grid taps).
+3. Rebind on the uncapped F table with `--strap-window` (REPORTED DIE-S81-92 06:38: 977 / 16, strap bind rc 0,
+   0 violations, lo 105.5 / hi 112.4, 144 of 160 depth-8 crossings back to depth 4, 243 k fewer flops). Depth is type
+   content; taking it now means the 335 types are built once. Guard 417 gives the same types 160 depth-8 buses that the
+   next delta would shrink again.
+4. Compose variant C as ruled. Its 17 -> 1 result was measured on the guard-417 table; read the band report again on
+   the strap-window table before the bind.
+Unblocks: 335 landed types. The 52 types of `types_depth_open.json` stay at risk of one depth change until the 48 long
+start hops are measured (0335 G), as already ruled.
+
+### Lever 3. Core tap rows (cross-die)
+
+Evidence (MEASURED, plan scans):
+- S81 B6gslcf, all 216 col types: each element half has two tap rows. `u_w.ck` 437.413 / 348.735 and `u_w.clk`
+  532.993 / no FF value; `u_e.ck` 476.052 / 382.22 and `u_e.clk` 553.179 / no FF value. 3,456 rows. The signed
+  reference is 465.39 / 361.26 (PD-S81C). The `.ck` rows are 28 ps late and 11 ps early of it, the `.clk` rows 67.6 and
+  87.8 ps early. The kit wrote the `.clk` value against a 250 cap (PD-S81T section 5).
+- S81 rows whose owner text is the liberty maximum: bk_sel__t2 `u_tx.ck` 829.1 (early 579.1) and eng__t1 `u_e.ck`
+  848.98 (early 599.0; "no measured mean in the view"), both over T/2 = 416.5; `eng_rr_h0` 270.23. eng__t1 is new.
+- QC S4q2: 72 core taps on 18 cb types are over T/2 early: tiles `u_tNN.ck` 733.25 and 774.38 against budget 250
+  (early 483 and 524). KV kvgeom6: kv3_hub_C `ahub.ck[0..2]` 1,003.4 (early 753). HEAD NC: none.
+
+Root cause: tap rows are written by several events from different sources (liberty maximum, placed view, routed view)
+and nothing compares a row with the frame the core was signed in. A stale pin name leaves a second row behind.
+Fix:
+1. DIE-S81-92, rows only, in the CA rebind: one row per half, 465.39 / 361.26, on the pin name of the signed LEF;
+   delete the twin. bk_sel__t2 at 450 with the idx row 722.7 / 592.8 (PD-S81C 2.3). eng__t1 `u_e`: read the signed
+   record's `io_reference_ps`; if the core has none, measure the pin-register mean on its routed view first.
+2. PLAN-READERS-1: the audit fails a core tap whose value differs from the signed `io_reference_ps`, fails two rows
+   on one core clock, and fails a row without an FF value.
+3. DIE-QC-103 and KV-102: state how the kit times a core tap more than T/2 early (cb tiles, ahub). If it is clamped,
+   as on S81 col, part of the -861 ps on cbn_q11 is this and not a data path. Not checked by me.
+Unblocks: timing truth on 216 col types before they are rebuilt on the CA plan; bk_sel__t2; eng__t1.
+
+### Lever 4. Station sites inside cores, strips over their track count
+
+Evidence (MEASURED, plan scans; my count for t14 by feed-through bit sites is 1,483, equal to PD-S81T):
+- S81 B6gslcf, `internal_stations` register sites inside a hard-core box: 36 types, 1,306 sites, 75,617 bits; only
+  71 sites are within 2.2 um of a core edge. Largest: leaf t22 29,674 bits (the vn -> lane bundle entry sits inside
+  5 lane cores), t41 23,623, t8 4,415, t37 2,354, t56 1,574, t65 1,574, t28 1,569, t72 1,558, t75 1,308, t61 1,291.
+  Also 6 col_h10_r0_p1 types with 1 site each.
+- S81 feed-through bit sites inside cores: t65 3,140, t32 1,584, t14 1,483, t38 1,016, t16 21, and
+  slice_station__t51 13,574 inside its two native children (plus 73 grid taps). t51 may be by design (child-side
+  form); it is also the last CA band failure.
+- QC S4q2: 7 su types, 208 sites, 19,918 bits (sle_su_l1 x2 3,713 each, sle_su_l0 x2 2,652, slw_su_l0 x3 2,396): the
+  `flt_su_c_i` pin chain passes through lanes 5 and 6. KV: kv3_pv_v5 / v5n, 6 sites each. HEAD: 0.
+- PD-S81T: 13 leaf types with a strip over 1.0 x its tracks, 5 with a slot under 20 um holding over 200 sites. G0
+  reports the in-core sites only when new; the old ones are in the accepted baseline.
+- Limit: I did not open a placed database. The legaliser displacement (126 um on t14) is the check for each type.
+
+Root cause: cores were moved by several events (LT2, quad staging, orient) and station sites were not re-derived.
+Fix: one leaf geometry delta (section 2), with the station re-site as a generated step after every core move; G0
+"station site inside a core" is never baselined (GENBUG-IMPL). QC: DIE-QC-103 re-sites the su pin chain in the S4fw
+event. A type on this list is not released before its row is re-sited.
+
+### Lever 5. Stations on one leg of a matched join (QC and KV, same class)
+
+Evidence (REPORTED): QC S4x does not bind because +2 on st_b moves regions 4-7 past region 0 (PD-QC-0700 2.1); the
+cb16 pad table was keyed to the old bound depth, three rounds lost (1.3). KV 7a-7f at 07:09: PARAM_REGEN "ECTL: K
+round trips differ per frame [18, 24]", because the hg stations sit on the request / response buses of one frame
+only; KV also had to pin 91 pad members. QC-FWST has S4fw on S4q2 with levers 3-6 in gates.
+Root cause: a station event changes one leg of a latency-matched pair; tables derived once are not re-derived.
+Fix:
+1. KV-102: the equal-depth form (the same +N on krq / krs of every frame) is the structural one. 7j / 7k drop the
+   stations and leave the hg krsp hop at -568 ps; adopt one of them only as a step.
+2. KIT-OPS-6: the derive replay as a pre-bind step on both dies (the QC replay predicted 24,672 stale bits exactly,
+   in minutes), and every pad table regenerated in the bind chain.
+3. Stations enter a plan per matched group, not per bus.
+
+### Lever 6. Hold ECO scope
+
+Evidence (REPORTED): kv3_phy_v1 late ECO TT -34 -> -248 while fixing port hold; t47 -0.54 ps on one output port,
+alternating between two bits at target 0; gunit_l1f_bf 15 reg-to-reg at -4.82; sta_region masters -3 to -7 on at most
+19 endpoints, sibling closed in one pass. FLOW-LATEECO READY @d63e3dc5a1d (core-only default), no real-kit run yet.
+Fix: merge it; add a 5 ps target and a stop when TT setup falls under -42; first real run = t47 from its i2 database
+(3 h). Then the S81 routed-not-signed rows (25 since 11-06, 19 slice_station, not opened by anyone) in one batch.
+
+### Lever 7. QC sta_region skew depth as straps
+
+Evidence (REPORTED, PD-QCC-0740; GENBUG-IMPL 07:11): 4 types, 32 parameters differ between plan and bound RTL on S4p
+and again on S4q2; KV, S81 and HEAD have 0 `param_wrap` rows (QC S4q2 has 188). 12 kits for both parameter sets run.
+Fix: as PD-QCC R1: SKEW_N / SKEW_S as strap inputs of one master in the next QC event; the bind check merges now.
+S4v2 and S4fw move the cb column again, so without straps the masters are rebuilt a third time.
+
+### Lever 8. S81 col and phy clock
+
+Evidence (MEASURED on B6gslcf): col types have `tap_max_sinks` 1500, budget 450, per-type window 165 on 216 of 216,
+`reset_replicate` on 144 of 216 including all 12 col_h10_r1. phy__t1 has 0 taps and no `tap_max_sinks`.
+Fix: no more col plan work before one col_h10_r1 build to CTS on the CA plan with the lever-3 rows (pass: PD-S81-2250
+gate). phy__t1: grid taps along the strip in the same rows-only change (PD-S81T section 6).
+
+## 2. S81 queued row deltas on B6gslcf: conflicts and order
+
+Type overlap of the queued sets (MEASURED from the lists in 0335 D, PD-S81T, the 07:10 posts and my scan):
+
+| type | collector (D2) | orient (D3) | strip | slot / in-core ft | in-core istation | CA band failure |
+|---|---|---|---|---|---|---|
+| leaf t8 | x | | x | | 4,415 | 2 |
+| leaf t72 | x | | x | | 1,558 | 2 |
+| leaf t33 | x | x | x | | | |
+| leaf t52 | x | | x | | 273 | |
+| leaf t58 | | x | | slot 1,342 sites | | |
+| leaf t68 | x | | | slot 403 sites | | |
+| leaf t65 | | | | slot 263 sites, in-core 3,140 | 1,574 | |
+| leaf t28, t75, t13, t43, t10, t71, t74 | | | x | | 262-1,569 | |
+| leaf t37 | | x | | | 2,354 | |
+| kv_leaf t3 | x | x | | | | |
+
+Conflicts:
+1. Two lanes own rows of the same type: S81-LEAF-STRIP (13 strip types) and S81-LEAF-PLAN (orient 13, t14, slots).
+   t33 is in both. One owner per type row; S81-LEAF-STRIP takes every type in the table above.
+2. Order inside a type matters: a core move changes station sites, collector taps and landing bands. A collector
+   reattach or a band placed before the move is wrong after it.
+3. The CA compose rebases 21,010 pins and places bands against the cores. Any leaf row change after it invalidates
+   the bands of that type. The compose must be the last step of every S81 event from now on.
+4. `--strap-window` and the capped start tree change depth (160 -> 16 depth-8, or 205 + 13 depth-16 with the 48 long
+   hops open). Variant C was proven on the guard-417 table only.
+5. FABLE-S81-TYPEMERGE R2 (strap width = group maximum) edits what the compose writes; as a row patch it is
+   overwritten by the next compose. R3a (monitor entry union) moves col landing pins and must come before a compose.
+6. The clock rows (lever 3, col reset copies, phy__t1 taps) touch col, bk_sel, eng and phy only: no overlap with the
+   leaf sets.
+
+Merge order:
+- E1, now: B6gsl + rows-only clock changes (lever 3 S81 rows, phy__t1 taps) + compose (F table, `--strap-window`,
+  variant C, the two compose fixes) -> bind + LATCHECK. Release: col, slice, svc, serdes and the leaf types not in E2.
+- E2, leaf geometry, one delta: orient -> core moves (strip re-path, slot, t14) -> station re-site (ft and
+  internal) -> collector reattach -> compose again. About 60 leaf types; proof = place + GRT 0 overflow on t75, t14,
+  t22 and t8 before the bind. These types are held out of E1's release.
+- E3, die level: capped start tree with the measured long hops, TYPEMERGE R2 inside the compose and R3a before it.
+  Re-keys only the types whose depth or strap width changes.
+- R1 of TYPEMERGE (sign-off key = layout hash) is no plan change and can apply at E1's release: it cuts the col
+  builds from 216 to about 14-20 and is the largest single saving on S81.
+
+## 3. Stop list (technical dead ends)
+
+1. No more iterations, unit volume or KV unit runs on the current abstracts: 1,904 of 2,800 markers are fixed
+   geometry. No full-die run either.
+2. No reading of the unit residue as pin-against-PG until the abstract cut is proven; the PG part is under 330.
+3. No rebind of the CA delta with the schema relaxed for negative landings.
+4. No guard-417 CA release if the strap-window table binds: it builds 144 depth-8 buses that the next delta removes.
+5. No further shallow-tree forms of gb_he / gb_hw, no idxD, no kit vclk below the typed reference (PD-S81C).
+6. No col_h10_r1 form on the B3t block and no new col plan fields before one CTS build on the CA plan.
+7. No leaf row change after a compose without a compose rerun; no second owner on a leaf type row.
+8. No release of a type whose station sites lie inside a core, and no baseline for that G0 class.
+9. No KV or QC station event on one leg of a matched join; no S4r4 / S4r5 sign tests; no S4x as built.
+10. No n6_s7 / n6_s8 sta_region views registered as S4p or S4q2 children.
+11. No port-scope hold ECO on a type; no zero-target ECO pass.
+12. No wave attempts on the three QC PHY types; no plan-window move to the PHY macro pins.
+13. No phy__t1 split and no relaunch before it has taps; no t75 retry as INFRA; no t14 launch on its current row.
+14. Still in force: the 05:1x list items 5-9.
+
+## 4. Not verified
+
+- Lever 1: no rerun with a cut abstract; the M1-M7 claim rests on the marker geometry and the lep0N LEF. I did not
+  confirm the master of `tW1b8`; the marker field (760 x 1,010 um) fits inside lep0N (1,892 x 1,227).
+- Lever 2: the 29 LF_CS_DEPTH lines as a follow-on of the emit error; the band fit on the strap-window table.
+- Lever 3: which of `.ck` / `.clk` is the pin of the signed LEF; how QC and KV kits handle a tap over T/2 early.
+- Lever 4: plan reads only, boxes as origin + outline; no placed database opened; whether t51 and the QC su lanes are
+  true hard cores for placement (they are `hard_cores` rows in the plan).
+- HEAD was scanned on the NC source plan, not NF4 / NF5. The route gate must be rerun on the adopted kit.
+- No what-if was run in this review.
