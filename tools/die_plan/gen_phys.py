@@ -997,13 +997,14 @@ def _snap_tap(P, x, y, pg_legal=True):
 
 
 
-def clock_legal_axes(P, tn, clear=S.TAP_CLEAR_UM):
+def clock_legal_axes(P, tn, clear=None):
     """PG-safe track centres for local clock pins, inside the existing outline clearance.
 
     The axes use exactly _snap_tap's layers, four-decimal track coordinates,
     and both PG stripe phases. A mathematical zero-width street therefore
     contributes a clock site only if an actual consumed track exists there.
     """
+    clear = S.type_tap_clear(P.types[tn]) if clear is None else clear
     top = P.layer_budget['partition_signal_max']
     below = f'M{int(top[1:]) - 1}'
     layers = (top, below) if P.layers[top]['dir'] == 'V' else (below, top)

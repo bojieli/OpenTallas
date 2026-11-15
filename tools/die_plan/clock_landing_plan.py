@@ -575,6 +575,7 @@ def _band_reserve_um2(width,has_epoch=True):
 
 def _band_obstacles(t,used,phy=(),resets=()):
     obstacles=RT.blockages(t)+[list(o) for o in used]+[list(o) for o in phy]+[list(o) for o in resets]
+    obstacles+=[list(r) for r in (t.get("clock") or {}).get("tap_reserved_um",[])]   # S81-PHYT1: explicit channel taps
     if BAND_RESERVE=="ring_ff":
         ck=t.get("clock") or {}
         obstacles+=[list(r) for r in ck.get("die_islands_um",[])]+\
