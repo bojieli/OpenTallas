@@ -108,3 +108,15 @@ def test_head_gen_cohort(tmp_path):
     (prep / "published" / "m_a.sv").write_text("module m_a (input wire y);\nendmodule\n")
     rep = C.compare(prep, gen)
     assert rep["verdict"] == "FAIL" and rep["rows"][0]["verdict"] == "DIFF"
+
+
+def test_module_check_worktree_defs(tmp_path):
+    sys.path.insert(0, str(HERE.parent / "s81_head"))
+    import head_module_check as M
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "results").mkdir()
+    (tmp_path / "rtl" / "a.sv").write_text("(* keep *) module m_a (input x);\nendmodule\nmodule m_b ();\nendmodule\n")
+    (tmp_path / "rtl" / "c_bb.v").write_text("module m_c ();\nendmodule\n")
+    (tmp_path / "results" / "d.sv").write_text("module m_d ();\nendmodule\n")
+    d = M.worktree_defs(tmp_path)
+    assert d == {"m_a": ["rtl/a.sv"], "m_b": ["rtl/a.sv"]}

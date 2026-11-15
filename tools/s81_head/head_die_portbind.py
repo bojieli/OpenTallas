@@ -33,6 +33,7 @@ HEAD-BIND-4 (10-27, COORD ruling on HEAD-CORE-R13 ASK4):
    partition pins, so an open leaf pin inside a wrapper (hd_serdes u_phy .rx/.tx only, 10-26) passed it silently.
 HEAD-BIND-1 (11-14): --clock-landing SIDECAR passes the landed plan's sidecar to gen.py rtl (the landed wrappers =
    the kit cohort: rings, collectors, landing relays); without it the die top is the unlanded composition (as before).
+   The nested check reads the landing closure too (its cells are the landed wrappers' masters).
 Exit 0 iff module check 0 missing AND die_port_bind PASS AND tie audit PASS AND nested check PASS."""
 import argparse, json, re, subprocess, sys
 from pathlib import Path
@@ -122,7 +123,7 @@ r = subprocess.run([sys.executable, 'tools/die_port_bind.py', str(top), '--top',
 (out / 'port_bind_strict.txt').write_text(r.stdout + r.stderr)
 print(r.stdout[-3000:], r.stderr[-1000:])
 nest = PBG.nested_check({p.name: p.read_text() for p in sorted(gen.glob('*.sv')) if p.name != 's81_head_top.sv'},
-                        [Path(x).read_text(errors='replace') for x in src + extra])
+                        [Path(x).read_text(errors='replace') for x in src + extra + land])
 (out / 'nested_portbind.json').write_text(json.dumps(nest, indent=1) + '\n')
 print('PORT_BIND_NESTED', nest['verdict'], json.dumps({k: v for k, v in nest.items() if k != 'examples'}))
 for k, v in nest.get('examples', {}).items():
