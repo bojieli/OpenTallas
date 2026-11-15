@@ -197,8 +197,9 @@ def cmd_compose(a):
                                observer=observer, monitor=a.monitor, band_reserve=a.band_reserve,
                                band_spread=a.band_spread, band_ring=a.band_ring,
                                band_multi_rect=a.band_multi_rect,
-                               band_order_by_type={"*": a.band_order} if a.band_order != "name" else None,
-                               band_use_max=a.band_use_max)
+                               band_order_by_type=({"*": a.band_order} if a.band_order != "name" else {}) | dict(x.split("=", 1) for x in (a.band_order_type or [])) or None,
+                               band_use_max=a.band_use_max,
+                               band_use_max_by_type=dict((k, float(v)) for k, v in (x.split("=", 1) for x in (a.band_use_type or [])))or None)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -314,8 +315,13 @@ def main(argv=None):
     c.add_argument("--band-order", default="name", choices=["name", "largest_first"],
                    help="S81-CA-BAND: ring bands of a type are placed in bus-name order (default) or widest bus first, so small "
                         "buses do not take the long macro-free strips the wide ones need")
+    c.add_argument("--band-order-type", action="append", metavar="TYPE=largest_first",
+                   help="S81-CA-BAND: band order of ONE base type (repeatable); overrides --band-order for it")
     c.add_argument("--band-use-max", type=float, default=0.5,
                    help="compose band_use_max (ring reserve <= this share of its band; default 0.5, 1.0 = the bare reserve)")
+    c.add_argument("--band-use-type", action="append", metavar="TYPE=USE",
+                   help="S81-CA-BAND: band use floor of ONE composed type (repeatable), e.g. svc_hi_dsdv_svc_rs__t3=1.0; "
+                        "every other type keeps --band-use-max")
     c.add_argument("--band-ring", default="all", choices=["all", "ff"],
                    help="ring_ff only: ff = place only the ring flops FIRM in bit-major order, ring logic to GPL (DIE-HEAD-13)")
     c.add_argument("--band-reserve", default="padded", choices=["padded", "live", "ring_ff"],

@@ -51,9 +51,21 @@ def test_staged_rects_fit_a_two_bit_band_when_single_band_does_not(blocked):
 def test_cli_band_order_and_use_max_reach_compose():
     src = (Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py").read_text()
     assert '"--band-order"' in src and '"--band-use-max"' in src
-    assert 'band_order_by_type={"*": a.band_order} if a.band_order != "name" else None' in src and "band_use_max=a.band_use_max" in src
+    assert '{"*": a.band_order} if a.band_order != "name" else {}' in src and "band_use_max=a.band_use_max" in src
 
 
 def test_band_order_star_applies_to_every_type():
     src = Path(CL.__file__).read_text()
     assert '(band_order_by_type or {}).get("*","name")' in src
+
+
+def test_band_use_type_override_wired():
+    src = Path(CL.__file__).read_text()
+    assert "band_use_max_by_type" in src and "use_global=BAND_USE_MAX" in src
+    cli = (Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py").read_text()
+    assert '"--band-use-type"' in cli and "band_use_max_by_type=" in cli
+
+
+def test_band_order_type_wired():
+    cli = (Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py").read_text()
+    assert '"--band-order-type"' in cli and "a.band_order_type" in cli

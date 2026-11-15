@@ -1019,7 +1019,7 @@ def compose(*a,**k):
 
 
 def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
-            forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5):
+            forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5,band_use_max_by_type=None):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
@@ -1132,7 +1132,10 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
     # Final topology is the topology the new wrappers and ports actually use.
     P=S.Plan(raw,plan_path);W=RT.wf_plan(P)
     bytype={};placement_failures=[];monitor_edges=[]
+    use_global=BAND_USE_MAX
     for tn,t in raw["partition_types"].items():
+        # S81-CA-BAND: band_use_max_by_type {type: use}: only the named types take a tighter (higher-use) band
+        BAND_USE_MAX=float((band_use_max_by_type or {}).get(tn,use_global)) if (band_use_max_by_type or {}).get(tn,use_global) is not None else None
         pn=next(pn for pn,p in P.parts.items() if p["type"]==tn)
         sig=signatures[pn];hard=bool(t.get("hard"))
         if hard and children[pn]:raise ValueError(f"hard partition type {tn} would collect monitor children")
