@@ -14968,3 +14968,4 @@ FAILED [AUTOPILOT dfbe81df4a4b] 2026-11-15 15:02:54 PST AUTOPILOT -> KIT-WAVE-12
     - RELEASE: t14, the 4 slice_station types, phy__t1 (OT_TAP_MAX_SINKS deleted), and the sdc_lint core-tap class holds.
     - HOLD: the 15 svc types (G2).
   Col drop rows (s81_tapoffset_drop_col.json) are in F2. G2 = G1d + PHYT1 hole taps.
+- 2026-11-15 15:09 PST STATE [DIE-S81-92 -> COORD] G1 compose STOPPED on epyc10: ot-heavy-stop --unit oth-ubuntu-396199-1794783718 (exact unit; a --match on the shared s81-b3-clk dir would also hit G1d). 6 processes stopped, 0 G1 processes left. G1d (B6gG1d) still running. Rule noted: no info-only runs on superseded plans.
