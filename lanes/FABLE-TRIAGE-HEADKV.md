@@ -482,7 +482,8 @@ MEASURED state:
 
 Form:
 1. Route database (what DRT loads): pdngen REGION grids only, PG_MACRO=0, i.e. the final M8/M9 stripes with their
-   M8-M9 vias and nothing below M8. Both dies use this one form from the shared script. HEAD drops the hand-drawn
+   M8-M9 vias and nothing below M8. CORRECTED in section 15: the M8-M9 connect must be capped (2 x 4 cuts); the
+   uncapped arrays are 2.3 billion cuts on KV and are what filled the memory. Both dies use this one form from the shared script. HEAD drops the hand-drawn
    stripes: they are not the sign-off shapes and they carry no V8, so their DRC count proves less than KV's.
 2. Partition connection, separate pass after DRT, on the routed DB, with no router loaded: pdngen with the
    per-partition macro grids (pdn2 / G3 form, `add_pdn_connect {M7 M8}`), then write_db. Cost as measured: 6-9 min
@@ -508,3 +509,53 @@ and the first iteration line of both dies before changing anything else.
 
 Owners: DIE-KV-ROUTE-1 (shared script: region-grid route form, macro pass, check 3); DIE-HEAD-ROUTE-1 (switch
 HEAD to it, retire pass 3 after it reports).
+
+## 15. Die DRT memory in the region-grid form: the V8 cut arrays (01:5x PST). Corrects section 14, item 1
+
+Cause of the climb during "M8 shape load" (MEASURED, KV runs/p1/die_pg.odb, counted with a 1 GB odb script,
+epyc7 fable-triage-headkv/cnt.py):
+- The region grids hold 3,558,699 M8-M9 vias. Each is the array `via8_9_12960_480_5_134`: 5 x 134 = 670 cuts,
+  because the M9 stripe is 12.96 um wide over a 0.48 um M8 stripe. Total 2,309,843,155 V8 cuts.
+- ODB keeps a via as one parametric object (the whole DB is 0.3-1 GB). DRT expands every cut into its own shape
+  when it loads layer V8. Both logs stop right there: last line "Complete M8", then the climb (KV 76 -> 107 GB
+  at cap 150; HEAD pdn2 killed at 209 GB; HEAD gate form at 111 GB). HEAD has about 4.2 million crossings of the
+  same kind, so about 2.8 billion cuts (computed from stripe counts).
+- This is the form I gave in section 14 item 1 ("region grids with their M8-M9 vias"). It was wrong as written:
+  the vias must be capped. Partition abstraction, gcell size and thread count do not touch this.
+
+Exact form:
+- In the route database keep the region grids, but cap the connect:
+  `add_pdn_connect -grid <g> -layers {M8 M9} -max_rows 2 -max_columns 4` (8 cuts per crossing instead of 670).
+  KV: 28 million cuts, HEAD about 33 million: a factor 84 less. Apply it in pdn_f.tcl generation for every
+  region grid whose M9 width is above 1 um; the narrow 8.64-pitch regions keep their 5 x 5 arrays.
+- Keep that capped array as the FINAL die PG. The grid is then connected at every crossing and the DRT DRC count
+  is the die gate without any later step on V8. (IR is advisory; if fuller arrays are wanted later they sit
+  inside the same M8 x M9 overlap and need only the cut-spacing script of section 14 item 3(b), on V8.)
+- Macro grids (M7-M8 partition vias) stay out of the route database, as in section 14 items 2 and 3. When that
+  pass runs, cap it the same way (`-max_rows 1 -max_columns 2` on the `{M7 M8}` connect).
+- Stop both running DRTs now; they cannot finish the V8 load inside their caps, or will finish it with no room
+  left to route.
+
+Expected peak: shape load and track assignment in the single GB range for HEAD (pass 3, which has no vias at
+all, measured 4.7 GB after load and 7.0 GB after track assignment), KV somewhat more (larger DB). Not known: the
+routing phase itself. HEAD pass 3 jumped from 7 GB to about 155 GB within 11 minutes of "Start 0th optimization
+iteration" and has crept to 185 GB since, with no vias in the database. So there is a second cost, in DRT's
+iteration set-up on a 17.7 mm die (INFERENCE: it instantiates its route workers die-wide, about 55 thousand at the
+default 7-gcell size, whether or not they hold a clock net; the growth does not follow the thread count: 158 GB
+at 15 busy threads, 185 GB at 23).
+
+Measure on the capped relaunch, three numbers per die: RSS after "Complete Pad", after track assignment
+(DRT-0267 line), and 10 minutes into iteration 0. Decision:
+- third number under about 60 GB: done, this form is the die-route form;
+- third number above it while the second is small: the cost is the worker set-up. Then, and only then, use a
+  windowed route: split the die into fixed windows along clock-region boundaries, route the clock nets of one
+  window per run with everything outside the window (partitions, PG, already routed clock) left in place as
+  fixed shapes, overlap the windows by one region, and count DRC from each window's own region only. The count
+  stays a valid die gate because every routed shape is checked against the full fixed context of its window and
+  every boundary region is checked in both neighbours. I have not built or measured this; it is the fallback,
+  not the recommendation.
+Not recommended: turning partitions into pure obstructions (they are already LEF abstracts; their pin shapes are
+needed for the tap landings), or tuning threads / gcells (neither bounds the cut count).
+
+Owners: DIE-KV-ROUTE-1 (cap in the shared pdn_f.tcl step, relaunch KV); DIE-HEAD-ROUTE-1 (same script on HEAD,
+retire pass 3 and the gate-form run, post the three numbers).
