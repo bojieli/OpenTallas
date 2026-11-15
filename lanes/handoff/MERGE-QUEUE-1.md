@@ -75,3 +75,9 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 - Hub-only claude/* refs: 694 refs (commits not on GitHub) pushing from the independent clone kw35/repo through the mirror (mq1/tmp/hubpush.sh, out hubpush.out, forward.log in the mirror; per-ref after the batch failed, ~10 s each). 1669 more names point at shas already on GitHub (not pushed). 65 DIFFER names: report only.
 - Not on the queue yet: record check (READY stamp must match ~/merge-queue/gates/<sha>.json) after gate-cmd lands; auto front-of-train for flow fixes.
 - Worktrees on rtx-pro: /home/ubuntu/wt/merge-queue-1-1114 (main clone), /home/ubuntu/wt/mq1-krst, /home/ubuntu/wt/mq1-e2s3 (both can be removed).
+
+## 2026-11-15 12:12 PST update
+- MERGED: src-refresh-mergeguard 5f7b1e7f56a, gate-cmd 7b0539de126, lane-clone 94682f1a447, approve-list c792e43916c. RED (lane-owned): kv-pvgen bb5381316de5, src-tree-manifest 4b3df8d01a8a.
+- HUB-ONLY ref (COORD: leave it, no history rewrite): claude/cores-s81-1-wave-por-1112 @896c87c3e994 (GitHub refused, file too large).
+- Lane remotes: ot-lane-fixall + hourly ot-lane-audit.timer (:07, ~/merge-queue/bin/lane-remote-audit.sh). 31 left: 3 busy (epyc7), 28 worktrees of gen-host ~/OpenTallas (moved/home__ubuntu__OpenTallas, origin hub:OpenTallas); ASK posted to fix those 4 checkouts.
+- hubpush (694 refs, kw35/repo -> mirror) still running: mq1/tmp/hubpush.out, mirror forward.log.
