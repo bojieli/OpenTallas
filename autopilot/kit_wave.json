@@ -643,15 +643,6 @@
    "die_max_inflight": 100000,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
-   "src_follow": {
-    "enabled": false,
-    "root": "/srv/opentallas-scratch2/claude/source-follow-kv64-pv2",
-    "note": "KW-FIX-6 03:5x: follow PAUSED until DIE-KV-66's KV plan event (COORD 01:2x: no KV exporter builds on root-clk senders between FWDCLK merge and event); re-enable or set src at the event | KW-FIX-4 14:1x: 98e13b8bfec merged on main -> follow re-enabled (root source-follow-kv64, rebases from pvrec/bind_pv). | KW-FIX-4 14:0x: follow PAUSED until claude/kw-fix-4-kvnote-1103@98e13b8bfec merges (main 88f2e7ecac1/4b0a73deb5f plan_c has budgets.cland_note_kv64_1103 -> schema \"unknown key\" -> every KV gen phys \"plan invalid\"); following main now would re-adopt the broken plan; re-enable on merge. | KW-FIX-4 13:5x: follow rebases from the DIE-KV-64 pvrec recipe + bind_pv; fresh root source-follow-kv64 so no snapshot reuses a bind copied from the pre-pvrec 54c3 recipe (old root snapshots 88f2e7ecac18/4b0a73deb5f9 lack kv3_pv_pair map). | DIE-KV-61 fresh ELAB+strict0 at 54c3c7c9f adopted (cached efa elab refused: group_r2c_native.sv changed). Fresh canonical efa actual ELAB+strict0 adopted; exact parser full/lib readset guard active on future snapshots, opaque parent BUILD reuse never grants child physical qualification.",
-    "snapshot_kind": "bind",
-    "snapshot_bind": "/srv/opentallas-scratch2/claude/die-kv-64/bind_pv2",
-    "snapshot_asbuilt": "/srv/opentallas-scratch2/claude/die-kv-64/pvrec/asbuilt.json",
-    "critical": true
-   },
    "hold_items": {},
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5477,6 +5468,10 @@
       "job": "SIGNED dkv73/ahub_l"
      }
     ]
+   },
+   "src_follow_removed_1114": {
+    "root": "/srv/opentallas-scratch2/claude/source-follow-kv64-pv2",
+    "by": "KIT-OPS-5 per COORD ruling relayed by CLEAN-I1"
    }
   },
   "s81": {
@@ -7152,11 +7147,6 @@
    "pilot_classes": [],
    "only_items_dropped_note": "KIT-WAVE-12 04:1x PST (OWNER 11-01 batches + COORD: relaunch every kit whose last FAIL is on a superseded event in ONE batch): only_items allowlist (180 items) removed, so every S81 NEEDS-KIT/FIX/KIT-PLACED type on the current plan is eligible (pilot gate 12.27a still caps unproven classes).",
    "pilot_mode": "queue",
-   "src_follow": {
-    "enabled": false,
-    "root": "/srv/opentallas-scratch2/claude/source-follow",
-    "note": "Manual immutable785 source/explicitlanding adopted; automatic source prep remains serialized. Two exact SVC canaries owned G0C and held until terminal closure."
-   },
    "bind_mem_gb": 48,
    "hold_items": {
     "ot_s81sl_xrt1": "COORD 20:09: no rebuild; key moved only because plan now points at the signed view",
@@ -33008,7 +32998,11 @@
    },
    "swap_note_kitops3_b3x2": "KIT-OPS-3 B3x2 type-scoped: 182 types changed vs B3t (0 added to only_items), 37 COL-SNAP/awaiting holds lifted; new block keys relaunch them, rest digest-keep. Revert prev_kitops3_b3x2.",
    "prev_kitops5_serdes_plan_sha256": "f272fe26b84d8e20164dff1ff3edaa643c357296704235fd108bab9ed6090071",
-   "note_kitops5_serdes_plan": "KIT-OPS-5 11-14 (TL-SERDEST14 ASK 13:52, plan change pre-approved): B3x2b plan_h2_2249.json die.pg.domains phy_lk_WN0 rect_um -> [6022.08, 25433, 8757.84, 26421.12], bumps.rect_um -> [6085.72, 25496.64, 8694.2, 26421.12] (as WN1/WN2); only those two values differ (checked); installed on epyc7/8/9/10/intel1 (.bak-serdes-1114); bind_matches stays True; sha f272fe26b84d -> 2aab0d3f1493."
+   "note_kitops5_serdes_plan": "KIT-OPS-5 11-14 (TL-SERDEST14 ASK 13:52, plan change pre-approved): B3x2b plan_h2_2249.json die.pg.domains phy_lk_WN0 rect_um -> [6022.08, 25433, 8757.84, 26421.12], bumps.rect_um -> [6085.72, 25496.64, 8694.2, 26421.12] (as WN1/WN2); only those two values differ (checked); installed on epyc7/8/9/10/intel1 (.bak-serdes-1114); bind_matches stays True; sha f272fe26b84d -> 2aab0d3f1493.",
+   "src_follow_removed_1114": {
+    "root": "/srv/opentallas-scratch2/claude/source-follow",
+    "by": "KIT-OPS-5 per COORD ruling relayed by CLEAN-I1"
+   }
   },
   "s81_head": {
    "enabled": true,
