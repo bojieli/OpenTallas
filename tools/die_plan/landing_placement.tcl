@@ -558,6 +558,9 @@ foreach spec $cland_optional_groups {
 # (DIE-HEAD-12 probe B, hd_tile): ring FIRM in netlist order 676,805 GRT overflow, flops-only FIRM -97 %.
 set cland_ff_fill 0.90
 set cland_cursor {}
+# WAVE-COPYBACK-1115 (FABLE-PD-PLACE-0830 class B): cland_ring_place / cland_column_select read $cland_col_cursor through `global`;
+# it was set only inside other procs, so a ring band that came first after the reader-start grow died with 'no such variable'
+set cland_col_cursor {}
 # DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
 # band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
 proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {wcw 0}} {
