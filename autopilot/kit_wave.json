@@ -7665,10 +7665,10 @@
     "svc_hi_dsdv_svc_rs__t5": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt.",
     "svc_lo_dsdv_svc_rs__t7": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt.",
     "svc_hi_dsdv_svc_rs__t6": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt.",
-    "slice_station__t49": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): grown outline, taps on old outline (sec1 e). Running attempts finish. Lift = delete this key on Event G adopt.",
+    "slice_station__t49": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): grown outline, taps on old outline (sec1 e). Running attempts finish. Lift = delete this key on Event G adopt. | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "slice_station__t24__cl64811a5d": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): grown outline, taps on old outline (sec1 e). Running attempts finish. Lift = delete this key on Event G adopt.",
     "slice_station__t50__cl39451317": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): grown outline, taps on old outline (sec1 e). Running attempts finish. Lift = delete this key on Event G adopt.",
-    "slice_station__t24__cl66b71008": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): grown outline, taps on old outline (sec1 e). Running attempts finish. Lift = delete this key on Event G adopt.",
+    "slice_station__t24__cl66b71008": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): grown outline, taps on old outline (sec1 e). Running attempts finish. Lift = delete this key on Event G adopt. | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t65": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): y-slot/x-slot over core, kit inputs unchanged; t14 needs form R (sec2). Running attempts finish. Lift = delete this key on Event G adopt.",
     "ot_s81sl_leaf__t56": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): y-slot/x-slot over core, kit inputs unchanged; t14 needs form R (sec2). Running attempts finish. Lift = delete this key on Event G adopt.",
     "ot_s81sl_leaf__t34": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): y-slot/x-slot over core, kit inputs unchanged; t14 needs form R (sec2). Running attempts finish. Lift = delete this key on Event G adopt.",
@@ -7688,8 +7688,20 @@
     "svc_*": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key.",
     "dsdv_slice_lepw_mu_LP__t2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
     "slice_station__t25": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slice_station__t8": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "dsdv_slice_lepe_mu_LP__t2": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): released 12:29 without its new view. Running attempts finish. Lift = delete this key."
+    "slice_station__t8": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "dsdv_slice_lepe_mu_LP__t2": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): released 12:29 without its new view. Running attempts finish. Lift = delete this key.",
+    "*": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): die-level hold on FRESH S81 launches: wave passes --src-tree to a tree bind.py that does not know it (110 S81 fails in the 14:01 tick). Until claude/kitrtl-fail-1115 merges and a smoke kit_rtl passes on the B6gE tree. Running attempts finish. Lift = delete this key.",
+    "slice_station__t22": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t24__cleece78ec": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t26": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t27": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t30__cl1653104c": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t40__cl1ea9de02": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t40__clc8fb2c8c": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t42__cl4bd1432c": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t42__clcf44e680": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t6__cl0755c26e": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slice_station__t6__cl54a9ceeb": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -34308,7 +34320,19 @@
     "dsdv_slice_lepw_mu_LP__t2": "lane_ready:KITRTL-FAIL-1115",
     "slice_station__t25": "lane_ready:KITRTL-FAIL-1115",
     "slice_station__t8": "lane_ready:KITRTL-FAIL-1115",
-    "dsdv_slice_lepe_mu_LP__t2": "lane_ready:new view posted"
+    "dsdv_slice_lepe_mu_LP__t2": "lane_ready:new view posted",
+    "*": "merge:claude/kitrtl-fail-1115 + lane_result:smoke kit_rtl pass on the B6gE tree",
+    "slice_station__t22": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t24__cleece78ec": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t26": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t27": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t30__cl1653104c": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t40__cl1ea9de02": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t40__clc8fb2c8c": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t42__cl4bd1432c": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t42__clcf44e680": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t6__cl0755c26e": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slice_station__t6__cl54a9ceeb": "lane_ready:SIGNED-TERMINAL-1115 posts"
    },
    "item_env_deleted_tap_max_sinks_wavehold1115": [
     "dsdv_slice_lepe_mu_C__t1",
@@ -34529,7 +34553,10 @@
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
    "hold_items": {
     "hd_spn_eshim_rx": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
-    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns"
+    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
+    "hd_mesh_e": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "hd_st_n4": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "hd_tile": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key."
    },
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
@@ -36410,7 +36437,10 @@
    },
    "hold_release_on": {
     "hd_spn_eshim_rx": "lane_ready:HEAD-99 count",
-    "hd_ctl_n": "lane_result:DRT0255-PROOF"
+    "hd_ctl_n": "lane_result:DRT0255-PROOF",
+    "hd_mesh_e": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "hd_st_n4": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "hd_tile": "lane_ready:SIGNED-TERMINAL-1115 posts"
    }
   },
   "qwen_compute": {
@@ -36527,9 +36557,12 @@
     "slw_sc_v2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
     "slw_st_a_v2__cl9f076a5c": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
     "slw_st_a_v2__clf4365a62": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slw_su_l0__cl1a1c1f8f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "slw_su_l0__cl1a1c1f8f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "slw_su_l1__cla2a78701": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
-    "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key."
+    "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
+    "*": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): die-level hold on FRESH QC S4Q3C launches (9 src-tree kit_rtl fails since 13:30; KITRTL tree install not verified). Until claude/kitrtl-fail-1115 merges and a smoke kit_rtl passes on the S4Q3C tree. Running attempts finish. Lift = delete this key.",
+    "sle_su_l0__cl086d85ba": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "slw_su_l0__cl1e5219ea": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -46822,7 +46855,10 @@
     "slw_st_a_v2__clf4365a62": "lane_ready:KITRTL-FAIL-1115",
     "slw_su_l0__cl1a1c1f8f": "lane_ready:KITRTL-FAIL-1115",
     "slw_su_l1__cla2a78701": "lane_result:DRT0255-PROOF flags READY",
-    "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY"
+    "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY",
+    "*": "merge:claude/kitrtl-fail-1115 + lane_result:smoke kit_rtl pass on the B6gE tree",
+    "sle_su_l0__cl086d85ba": "lane_ready:SIGNED-TERMINAL-1115 posts",
+    "slw_su_l0__cl1e5219ea": "lane_ready:SIGNED-TERMINAL-1115 posts"
    }
   },
   "hbm": {
