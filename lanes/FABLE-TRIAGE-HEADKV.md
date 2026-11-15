@@ -267,3 +267,8 @@ module, the folding is per instance. Fix: drop keep rows for g_pad instances fro
   u_a.y[*]); B1/B2 KEEP FAIL 172/52669 (8 of 150 declared kept regs merged / folded). lec_async stops the flow
   container on exit 1. Action taken: B1r / B2r copies with LEC advisory, route resumed from 5_1_grt. Question: real
   RTL / synth difference or keypoint matching? Inputs runs2/{A2,B1,B2}/kit/lec/lec.json. -> answered in 5.2.
+
+## 7. CORES-NOROW-1 2026-11-15 02:5x PST: elemA A2 post after the pins.json fix
+- pin_audit now passes (island rows at io.tcl centres; kit A2p pins.json, original pins.json.pre_cn1). SIGNOFF GOAL=post on A2p (epyc9, routed 6_final.odb): NOT SIGNED. TT setup +207.83, FF hold -6.51 ps (58 endpoints, hold_ff FAIL; blocking gate hold>=0), DRC 0, ant 0, pair skew TT/FF 98.7/87.8, sdc_lint+face_guard PASS, drv FAIL (TT slew 4.0, FF slew 1.0, cap 0).
+- Question for Fable: hold -6.51 on 58 endpoints at the core boundary: ECO hold repair on the routed DB (head_post_route_eco flow as the old signed elemA) or margin change and re-route? drv slew 4.0/1.0 violations: real or advisory under the academic profile? Evidence: epyc9 runs2/A2p/kit signoff log in ~/tmp/cn1_A2p_post.log (intel2).
+- A1p (epyc10) post launched with the same pins fix; LEC edges=12 reruns A1x/A2x/B1x/B2x running.
