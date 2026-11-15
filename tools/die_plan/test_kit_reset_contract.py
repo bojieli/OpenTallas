@@ -265,3 +265,19 @@ def test_audit_and_restage_cover_a_partition_type_kit(tmp_path, monkeypatch):
     core.mkdir()
     (core / "config.mk").write_text("export DESIGN_NAME = new_type_part\nexport VERILOG_FILES = a.v\n")
     assert K.audit(core)["entry"] is None                                    # core kits: list rule unchanged
+
+
+def test_head_cores_listed_in_s81_head_contract_and_generator_stages_it(tmp_path):
+    """CORE-ELEMAB-1115: elemA/elemB were LEC-ed at the 4-edge default (SPLIT9 no-reset registers, 107/172 differs)."""
+    src = K.DIE_CONTRACT["s81_head"]
+    mods = json.loads(src.read_text())["modules"]
+    for m in ("ot_s81hd_elemA_cv", "ot_s81hd_elemB_cv"):
+        assert m in mods
+        kd = tmp_path / m
+        kd.mkdir()
+        st = K.stage(kd, m, src)
+        assert st and st["edges"] == 64 and (kd / "reset_contract.json").is_file()
+    txt = GENERATORS["hbm"].read_text()
+    call = 'kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["s81_head"], required_source=True)'
+    assert call in txt
+    assert txt.index(call) < txt.index("kit_hash=kit_hash(kd)")
