@@ -350,3 +350,34 @@ Read in `tools/die_plan/clock_landings.py` (not run):
 Consumers that need a branch on kv3_hgi_v2 (v_hgi2 CTS): `fstart:ft3_o` (-252 ps), `fstart:ft0_o` (-249),
 `fstart:o_head_Q_N_N__u_fts_s_b` (-107), `fstart:o_hst_Q_N_N_sN_s_b` (-106), `fstart:ft1_o` (-71).
 Not checked: whether the kv3_hgi* plan entries already carry `landing_raw_branches`.
+
+## 16. Why `kv_start_corridor_event.py raw` found no corridor (diagnosis for KV-102, 2026-11-15 06:55 PST)
+
+Run on the kvgeom7f plan and its strict bind RTL (epyc7 `kv-102/kvgeom7/out_kvgeom7f/bind/out/rtl`), tool tree
+`kw45/kv102t18_kvgeom7f`, on a private copy; nothing was written to KV-102's directories.
+
+Cause 1, MEASURED (all 11 kv3_hgi* failures and most of kv3_hg*): `raw_type` builds the reset chain only from
+`ot_dp_rrelay` lines that carry a `// ... depth N @ (x, y)` comment (`REL`). On a type without a START plan
+`cland_start_raw` is the default ring reset relay `u_cland_rst_<bus>` (`.q(cland_reset_ft0_i)`), which the emitter writes
+without that comment. The chain is `[raw]`, the base loop `range(len(chain) - 2, -1, -1)` is empty, and every consumer
+fails. The message prints `fails[:4]`, sorted, so `origin` always showed first. Not the 405-um limit, not the span.
+
+Cause 2, MEASURED: consumer targets inside a keepout. The origin target is (cland_tstart_in.x, 12); on kv3_hgi_v2 that
+is under head core e0, and the pin itself is interior at (159.3, 324.0). FSTART pins on the S face at y = 2.656 under a
+bottom head core fail the same way (`START endpoint inside keepout or outside outline`): kv3_hgi_v3 (7 consumers), v6 (2),
+v7 (2), v8 (1), and `o_kvs_hroot_Q_o_cN` on kv3_hg_v1, v1p2..p6, v3. `_free_point` does not help there: it can return a
+point outside the outline (y = -4.32).
+
+Rule (three parts, in `raw_type`):
+1. a raw relay without a depth comment takes depth = driver depth + 1 and the driver's site (it is never a base);
+2. an origin row inside a keepout falls back to the `cland_tstart_in` pin;
+3. any consumer target inside a keepout or outside the core area uses the nearest free point INSIDE the core area.
+
+Evidence:
+- Parts 1 + 2: `fable-kvovf/bin/raw_fix_patch.py` (epyc7; rewrites a copy of the tool; sha256 of the patched copy starts
+  d4fbd559b682, 16 changed lines). Per type, `fable-kvovf/rawfix/{log,rep,plan}_<type>.*`: PASS on 8 of 19: kv3_hg
+  (18 branches, 63 copies), kv3_hgi (7, 21), hgi_v1 x2 (6, 18 each), hgi_v2 x2 (7, 29 each), hgi_v4 (28, 77), hgi_v5
+  (29, 88); 108 consumers, longest hop 404.9 um. Still failing: the 11 types of cause 2.
+- Part 3, probed only (`fable-kvovf/bin/raw_dbg.py`, function `bfree`, not in the patch): all 13 consumers tested on
+  kv3_hgi_v3 / v6 / v7 / v8 and kv3_hg_v1 then find a corridor, with the target moved 4 to 27 um.
+Not done: the generator and a bind on the resulting plans (KV-102 gates), and a tool test.
