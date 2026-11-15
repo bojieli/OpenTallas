@@ -88,3 +88,13 @@ def test_roamargv_rewrites_hosts():
     a = R.RoamArgv(["ot-run", "--dir", "W", "--hosts", "epyc9", "--", "bash"])
     a.set_hosts(["epyc9", "epyc2"])
     assert a[a.index("--hosts") + 1] == "epyc9,epyc2" and isinstance(a, list)
+
+
+def test_roam_note_is_never_the_decisive_line():
+    # KITRTL-FAIL-1115: the copy-back note must not replace the stage error as the classified reason
+    import kit_wave as K
+    txt = ("usage: bind.py [-h]\nbind.py: error: unrecognized arguments: --src-tree /x/y\n"
+           "ot-run: RAN on intel1 (unit u): exit 2\n\nKW_ROAM kit_rtl: ran on intel1, outputs copied back to epyc9\n")
+    cls, why = K.classify("kit_rtl", txt)
+    assert "unrecognized arguments" in why and "KW_ROAM" not in why
+    assert K.classify("kit_rtl", txt)[1] == K.classify("kit_rtl", txt.replace("intel1", "epyc8"))[1]
