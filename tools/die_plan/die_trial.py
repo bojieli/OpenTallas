@@ -274,6 +274,13 @@ ISLAND_GRID_UM = (0.054, 0.27)    # site width / row height (ASAP7 7.5T)
 ISLAND_PG_CUT = ("M7",)           # abstract PG pin layers cut at a window (the pin stack's M7 riser runs there)
 
 
+def reserved_windows(P, tn):
+    """CLKSITE-RESERVE-1115: type-frame die_clock_tree rects of clock.reserved_sites_um that carry route_layers (opt-in).
+    These are the windows cut out of the abstract (plan abstract M1-M3 + M7 PG, closed view M1-M7 + implants + M7 PG)."""
+    return [tuple(r["rect_um"]) for r in (P.types[tn].get("clock") or {}).get("reserved_sites_um", [])
+            if r.get("kind") == "die_clock_tree" and r.get("route_layers")]
+
+
 def load_island_sites(paths):
     """[(xy, source)] die-frame island sites from: a die_tree_plan.json (lattice.nodes + lattice.gate.
     leg_repeater_sites), an ot_clock_sites/1 file (sites[] of kind partition), or a die_clock_mesh build mesh.json
@@ -5309,6 +5316,9 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                        sites_outside_partitions=sum(1 for r in irec if not r["parts"]))
         (out / "island_windows.json").write_text(json.dumps(dict(schema="ot_island_windows/1", meta=meta_iw,
                                                                  windows=iw, sites=irec), indent=1) + "\n")
+    rsv = {tn: reserved_windows(P, tn) for tn in P.types}
+    rsv = {k: v for k, v in rsv.items() if v}
+    iw = {tn: sorted(set(list(iw.get(tn, [])) + rsv.get(tn, []))) for tn in set(iw) | set(rsv)}
     _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
                                                    reset_infra=reset_infra)))
                   for tn, t in sorted(P.types.items())
@@ -5318,13 +5328,17 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
         v = Path(views) / tn / f"{t['module']}.lef" if views else None
         if v and v.is_file():
             txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
+            if iw.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
+                import abstract_cutout
+                txt, cst = abstract_cutout.cut_lef_text(txt, iw[tn])
+                ab[tn] = dict(closed_view_cut=cst)
             if landing_infra:
                 expected = {p['name'] for p in t.get('clock',{}).get('landing_contract',{}).get('pins',[])}
                 found = set(re.findall(r'^\s*PIN\s+(\S+)',txt,re.M))
                 if expected-found:
                     raise ValueError(f'{tn}: closed view omits landing pins: {sorted(expected-found)[:8]}')
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
-            ab[tn] = dict(source="closed view", path=str(v))
+            ab.setdefault(tn, {}).update(source="closed view", path=str(v))
         else:
             txt, st = _abs[tn]
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)

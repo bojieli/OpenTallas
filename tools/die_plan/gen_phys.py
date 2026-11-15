@@ -3783,6 +3783,27 @@ def die_islands_tcl(P, tn):
 RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank")
 
 
+def route_layer_names(spec):
+    """'M1-M7' | ['M1','M2'] -> ['M1', ..., 'M7']"""
+    if isinstance(spec, str) and "-" in spec:
+        a, b = spec.split("-")
+        return [f"M{i}" for i in range(int(a[1:]), int(b[1:]) + 1)]
+    return [spec] if isinstance(spec, str) else list(spec)
+
+
+def route_obstruction_lines(items):
+    """CLKSITE-RESERVE-1115: M1-M7 routing obstructions over the reserved die clock-tree cell sites, so the type's own
+    routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])]."""
+    out = []
+    for (x0, y0, x1, y1), lays in items:
+        q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+        for ln in lays:
+            out.append(f"odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer {ln}] {q}")
+    if items:
+        out.append(f'puts "OT_RESERVED_SITES route_obstructions={sum(len(l) for _, l in items)}"')
+    return out
+
+
 def reserved_sites_tcl(P, tn):
     """Opt-in clock.reserved_sites_um (FALLBACK-HEAD-2): per-type reserved site rectangles, type frame.
 
@@ -3798,7 +3819,7 @@ def reserved_sites_tcl(P, tn):
     if not rows:
         return "", "", ""
     w, h = t["outline_um"]
-    hard, bank = [], []
+    hard, bank, hard_route = [], [], []
     for r in rows:
         x0, y0, x1, y1 = r["rect_um"]
         if r.get("kind") not in RESERVED_KINDS:
@@ -3806,6 +3827,8 @@ def reserved_sites_tcl(P, tn):
         if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
             raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
         (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
+        if r["kind"] == "die_clock_tree" and r.get("route_layers"):   # CLKSITE-RESERVE-1115 opt-in
+            hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"])))
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
     # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
     def create(rects, var):
@@ -3821,6 +3844,7 @@ def reserved_sites_tcl(P, tn):
         pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
                           *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
                           "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
+                          *route_obstruction_lines(hard_route),
                           # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
                           "set ::cland_avoid_rects $rs_rects",
                           f'puts "OT_RESERVED_SITES kind=die_clock_tree rects={len(hard)} area_um2={sum((c-a)*(d-b) for a,b,c,d in hard):.3f}"',
