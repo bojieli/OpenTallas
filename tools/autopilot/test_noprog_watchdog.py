@@ -175,14 +175,24 @@ def test_keep_list():
     assert not nw.keep_match(keep, "a /srv/y")
 
 
-def test_derive_superseded_reads_kit_wave_stages():
+def test_derive_superseded_is_plan_sha_not_live():
+    hdr = "die\titem\tparent\tplan_sha\tblock\tevent\tstage\tstatus\tclass\tkit\tevidence\tupdated\tplan_current\treason\n"
+    def r(die, sha, kit, cur):
+        return f"{die}\tx\t\t{sha}\tb\te\troute\tBUILDING\tNONE\tepyc7:{kit}\tev\tt\t{cur}\t\n"
+    live = "/srv/opentallas-scratch2/claude/kw/runs/s81/items/live/attempt_1/gen/live"
+    old = "/srv/opentallas-scratch2/claude/kw/runs/s81/items/old/attempt_1/gen/old"
+    mixed = "/srv/opentallas-scratch2/claude/kw/runs/s81/items/mix/attempt_1/gen/mix"
     with tempfile.NamedTemporaryFile("w", suffix=".tsv", delete=False) as f:
-        f.write("die\titem\tparent_item\tplan_sha\tblock_sha\tevent\tstage\tstatus\tclass\tkit\tevidence\n")
-        f.write("hbm\tNE_io\t\ta\tb\td44v\tgeom\tCANCELLED\tSUPERSEDED\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/hbm/items/NE_io/attempt_16/gen/NE_io\tev\n")
-        f.write("hbm\tNE_io\t\ta\tb\td44v\troute\tBUILDING\tNONE\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/hbm/items/live/attempt_1/gen/live\tev\n")
-        f.write("hbm\tNE_io\t\ta\tb\td44v\tgeom\tCANCELLED\tSUPERSEDED\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/hbm/items/live/attempt_1/gen/live\tev\n")
-        f.write("s81\tx\t\ta\tb\td\troute\tFAILED\tROUTING\tepyc7:/srv/opentallas-scratch2/claude/kw/runs/s81/items/x/attempt_1/gen/x\tev\n")
-    assert nw.derive_superseded(f.name) == ["/srv/opentallas-scratch2/claude/kw/runs/hbm/items/NE_io/attempt_16/gen/NE_io"]
+        f.write(hdr + r("s81", "AAA", live, "yes") + r("s81", "OLD", old, "no") + r("s81", "OLD", mixed, "no") + r("s81", "AAA", mixed, "yes"))
+    assert nw.derive_superseded(f.name) == [old]
+
+
+def test_route_done(tmp_path):
+    w = tmp_path / "run/results/asap7/dp_x/base"
+    w.mkdir(parents=True)
+    assert not nw.route_done(str(tmp_path))
+    (w / "5_route.odb").write_text("x")
+    assert nw.route_done(str(tmp_path))
 
 
 # ---------------------------------------------------------------- cancel decision
