@@ -384,3 +384,10 @@ artefact as 2(a4), use the sta_ca_fz2 result.
   spN_be_i_shim / spN_xe_o_shim, and mesh7N -> mesh7N_estrip): pass the plan of record's launch-tap selection
   (its start_pins) or allow these 12 after GEOM; (2) the bind needs the partition-keyed table, not ca3's region
   table. Owners: DIE-HEAD-ROUTE-1 (chain), HEAD-99 (re-bind of all 427 and the 18 freg ports from that output).
+
+## GENBUG-IMPL 2026-11-15 01:3x PST: G3 die pdngen result (KV kvgeom6 plan_c, branch die_trial.py psm_pdn_tcl, abstracts kit)
+Run: epyc9 /srv/opentallas-scratch2/claude/genbug-impl/g3/kit/psm (pdn_only2.tcl = psm.tcl cut after pdngen; logs pdn_only2.log, pdn_only3.log).
+- G3 itself WORKS: `OT_HOOK_COVERAGE hook=die_pg_parts touched=160 expected=160`, 160 `parts_ot_pg_N` macro grids inserted, no per-partition PDN-0232.
+- The die pdngen still FAILS (exit 1, PDN-0232 then PDN-0233) on a different, older item: grid `ot_pg_9` (Core domain) "does not contain any shapes or vias". ot_pg_9 is a 6.48 um x 972 um sliver region (x 11173.68..11180.16, y 26064.72..27036.72, M8 only, pitch 4.32 / offset 2.16 / spacing 1.68) emitted by pg_regions.pdn_tcl; no partition in it (OT_PG_PARTS ot_pg_9 0). It is not touched by G3.
+- With that one grid removed from a COPY of pdn.tcl (pdn_no9.tcl): pdngen exit 0, 160/160, no warnings, 351 s.
+DESIGN QUESTION for FABLE-TRIAGE KV/HEAD (not guessed): is the ot_pg_9 sliver a plan item (region too narrow to hold its stripe spec: drop it or widen the stripe offset) or should pg_regions skip regions that cannot hold one stripe? Same check needed on HEAD, QC and S81 plans that carry PG region domains. G3 is NOT installed in the die srcs until this is answered (rule: install after one die pdngen passes).
