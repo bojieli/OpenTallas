@@ -1622,6 +1622,17 @@ def near_count_args(near, die, *names):
     return ["--priority", "die", "--crit"] if near and near_count_match(near, die, *names) else []
 
 
+def kit_lost(j):
+    """'' = the job's kit is present on the hub (a resubmit can run); else why not: ot-run stages the kit from the hub, so a
+    missing runner file / kit dir can only die with rc 127 (epyc4 kits whose gen dir is gone)."""
+    runner, kit = j.get("runner") or "", j.get("path") or ""
+    if runner and not os.path.isfile(runner):
+        return f"runner {runner} missing on the hub"
+    if kit and not os.path.isdir(kit):
+        return f"kit dir {kit} missing on the hub"
+    return ""
+
+
 def wave_superseded(j):
     """why the kit-wave no longer wants this job ('' = it does, or no wave row): a resubmit would only restart it on the
     same kit (HUNG-1103: cancelled rows came back as a second container 5 min to 3 h after the cancel)"""
@@ -2791,6 +2802,15 @@ def finish(st, j, c, client):
             j["mem_gb"] = min(512, int(j["mem_gb"] * 1.5 + 0.999))
             submit(st, j, f"(resubmit {j['oom_retries']}/{MAX_OOM_RESUBMITS} after infra-oom; resumes the run dir; "
                           f"--mem {j['mem_gb']})")
+            return
+        lost = kit_lost(j)
+        if lost:
+            # KIT-OPS-5 11-14 (COORD): the gen dir / runner is gone (epyc4 kits): a resubmit can only die with rc 127 and keeps
+            # the family "attempted" on the old src.  Mark the attempt dead (infra-lost) so the wave builds a new attempt.
+            log(f"KIT-LOST {j['id']} {j['die']}/{j['type']}: {lost}: not resubmitted, attempt dead (the wave generates a new attempt from the current src)")
+            set_status(st, j, "CRASH", f"infra-lost: kit lost, {lost}"[:200])
+            after_class(st, j)
+            released_cleanup()
             return
         if not notrun and kind != "infra-oom" and not j.get("infra_retry"):
             j["infra_retry"] = True
