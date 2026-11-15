@@ -11,7 +11,8 @@ R = Path(__file__).resolve().parents[2]
 SRC = [R / "rtl/test/kv_bootage_1019/tb_kvba_vport.sv", R / "rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv",
        R / "rtl/qwen_sys/kv_bootage_20261019/qkd_pv16_vport_b.sv"]
 NCYC = 800        # random-phase cycles (bench default 4000): the fault / landing / flag / invalid-age phases do not depend on it
-pytestmark = pytest.mark.skipif(shutil.which("iverilog") is None, reason="iverilog missing")
+pytestmark = pytest.mark.skipif(shutil.which("iverilog") is None or not all(f.is_file() for f in SRC),
+                                reason="iverilog or the bench sources missing (sparse tree)")
 
 
 def run(tmp_path, defines, mut=0):
