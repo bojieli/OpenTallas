@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-15 11:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-15 11:15 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 2, 'CANCEL-NOW': 1, 'YOUNG': 26, 'NO-DATA': 3, 'KEEP': 4, 'EXCLUDED': 70, 'PROGRESS': 12}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 2, 'CANCEL-NOW': 1, 'YOUNG': 28, 'NO-DATA': 2, 'KEEP': 3, 'EXCLUDED': 73, 'PROGRESS': 12}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -18,12 +18,13 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 2, 'CA
 | epyc2 | dpkit-kv3_hgi_v2__cl2862d491-706931 | kv3_hgi_v2 | 5_1_grt | 12.0 | repair_TNS best 259713 last 259713 rows 8 | YOUNG: series started inside the last 6 h |  |
 | epyc2 | kvcore-q1_-1077405 | kvcore-q1_ | 5_3_fillcell | 0.7 | last meaningful line -0.0 h ago (5/5 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | epyc2 | kvcore-q2_-1081059 | kvcore-q2_ | 5_2_route | 0.7 | drt_violations best 18 last 18 rows 4 | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | ap-ageom-kw-sle-su-l1--cl5ea486db-grt-3756832 | sle-su-l1--cl5ea486db-grt | - | 0.1 |  | NO-DATA: no log found |  |
-| epyc7 | dpkit-cbf_q01-2355986 | cbf_q01 | 3_3_place_gp | 0.4 | last meaningful line 0.1 h ago (23/23 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v1n-4072175 | kv3_pv_v1n | 1_synth | 0.0 | last meaningful line 0.0 h ago (13/13 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| epyc7 | dpkit-kv3_pv_v5n-2844960 | kv3_pv_v5n | 3_5_place_dp | 4.0 | last meaningful line 0.3 h ago (111/111 lines) | YOUNG: evidence 0.5 h < 7.5 h |  |
-| epyc7 | dpkit-ot_s81sl_leaf__t14-2488980 | ot_s81sl_leaf__t14 | 3_3_place_gp | 0.3 | overflow best 0.099 last 0.099 rows 47 | YOUNG: evidence 0.3 h < 7.5 h |  |
-| epyc7 | dpkit-ot_s81sl_leaf__t21-4174146 | ot_s81sl_leaf__t21 | 5_1_grt | 3.3 | repair_Remaining best 64656 last 64656 rows 62 | YOUNG: evidence 2.7 h < 7.5 h |  |
+| epyc7 | dpkit-cbf_q01-2355986 | cbf_q01 | 3_3_place_gp | 0.6 | overflow best 0.442 last 0.442 rows 21 | YOUNG: evidence 0.4 h < 7.5 h |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pv8241ebb8-579347 | col_h9_r0_p6__t1 | 3_3_place_gp | 0.1 | last meaningful line -0.0 h ago (9/9 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pvea45abf3-593045 | col_h9_r0_p6__t1 | 3_3_place_gp | 0.1 | last meaningful line -0.0 h ago (34/34 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v1n-4072175 | kv3_pv_v1n | 2_1_floorplan | 0.3 | last meaningful line 0.2 h ago (83/83 lines) | YOUNG: evidence 0.2 h < 7.5 h |  |
+| epyc7 | dpkit-kv3_pv_v1n-4072175-lec | kv3_pv_v1n | lec | 0.2 | LEC last write 0.1 h ago | YOUNG: evidence 0.2 h < 6 h |  |
+| epyc7 | dpkit-ot_s81sl_leaf__t14-2488980 | ot_s81sl_leaf__t14 | 4_1_cts | 0.6 | last meaningful line 0.0 h ago (4074/4074 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
+| epyc7 | dpkit-ot_s81sl_leaf__t21-4174146 | ot_s81sl_leaf__t21 | 5_1_grt | 3.5 | repair_Remaining best 64656 last 64656 rows 62 | YOUNG: evidence 3.0 h < 7.5 h |  |
 | intel1 | dpkit-hd_host_w-873076-lec | hd_host_w | lec | 3.5 | LEC last write 0.0 h ago | YOUNG: evidence 3.5 h < 6 h |  |
 | intel1 | dpkit-hd_host_w-873333-lec | hd_host_w | lec | 3.5 | LEC last write 0.0 h ago | YOUNG: evidence 3.5 h < 6 h |  |
 | intel1 | dpkit-kit-2544581 | kit | 5_1_grt | 16.9 | repair_TNS best 496537 last 496537 rows 4 | YOUNG: series started inside the last 7.5 h |  |
@@ -47,53 +48,55 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 2, 'CA
 | epyc2 | dpkit-kv3_pv_v8-1381363 | kv3_pv_v8 | pregrt_ff_hold | 8.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-kv3_pv_v8-2902549 | kv3_pv_v8 | 5_1_grt | 16.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-phy__t1-746475 | phy__t1 | pregrt_ff_hold | 9.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-cbn_q11__cl49ae4555-2688009 | cbn_q11 | 5_1_grt | 9.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h10_r1__t1__cl95b37463__pv799da6f8-4147164 | col_h10_r1__t1 | 5_1_grt | 12.5 |  | KEEP: col_h10_r1__t1__cl95b37463__pv799da6f8	S81-COL-INHERIT	representative (COORD 11- |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pv0012ba28-2836986 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pv082a7609-2909432 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pv6398a5b7-2859683 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pv7808008f-2851059 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pv9da72aa7-2894787 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pvb38a9d6c-2854597 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pvbdbd69f2-3186520 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r0_p6__t1__pvea45abf3-3166870 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r1__t1__clf32cde8d__pv48cfde67-2246910 | col_h9_r1__t1 | 5_1_grt | 37.6 |  | KEEP: col_h9_r1__t1__clf32cde8d__pv48cfde67	S81-COL-INHERIT	representative (COORD 11-1 |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv06a1adf6-2446603 | col_h9_r2__t1 | 5_1_grt | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv09b9967e-3197073 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv14626557-682201 | col_h9_r2__t1 | 5_1_grt | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv1aac64f0-681410 | col_h9_r2__t1 | 5_1_grt | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv22267ca0-3759134 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv2833ee2b-231764 | col_h9_r2__t1 | 5_1_grt | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv2f87774f-3761876 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | KEEP: col_h9_r2__t1__clce45cab5__pv2f87774f	S81-COL-INHERIT	representative (COORD 11-1 |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv31e47bd5-3771777 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv37074264-226688 | col_h9_r2__t1 | 5_1_grt | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv40e9fb5a-3235695 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv467913cc-3245969 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv4754d912-3236269 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv6827937d-3263179 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv7a260fc0-221373 | col_h9_r2__t1 | 5_1_grt | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv7b8853b5-3240906 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv7c30fd4e-3259321 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv843b0fff-900692 | col_h9_r2__t1 | 5_1_grt | 0.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv8b5a5980-3254820 | col_h9_r2__t1 | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv9a22736e-3771624 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv9cc104a8-3807745 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pva119e808-3827300 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvb11188eb-3787429 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvb3258867-3880087 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvd60e699f-3830064 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvf57acd2b-3883707 | col_h9_r2__t1 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-dsdv_slice_c1x_C__t1-1733650 | dsdv_slice_c1x_C__t1 | pregrt_ff_hold | 4.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-dsdv_slice_c1x_C__t3-3385105 | dsdv_slice_c1x_C__t3 | pregrt_ff_hold | 4.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-dsdv_slice_c1x_C__t4-1703897 | dsdv_slice_c1x_C__t4 | pregrt_ff_hold | 4.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-dsdv_slice_c1x_C__t5-1711603 | dsdv_slice_c1x_C__t5 | pregrt_ff_hold | 4.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-hd_ctl-2770424 | hd_ctl | 4_1_cts | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-hd_spn_end-2767194 | hd_spn_end | pregrt_ff_hold | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-kv3_io_cor-2777284 | kv3_io_cor | 4_1_cts | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-kv3_io_cor_v1-2734966 | kv3_io_cor_v1 | 4_1_cts | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-kv3_pc_v1__cl7f648944-2717932 | kv3_pc_v1 | 2_1_floorplan | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-ot_s81sl_leaf__t30-908103 | ot_s81sl_leaf__t30 | 5_1_grt | 0.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc7 | dpkit-slw_hc0__cl1bc59e1c-2796113 | slw_hc0 | 4_1_cts | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-cbn_q11__cl49ae4555-2688009 | cbn_q11 | 5_1_grt | 10.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h10_r1__t1__cl95b37463__pv799da6f8-4147164 | col_h10_r1__t1 | 5_1_grt | 12.8 |  | KEEP: col_h10_r1__t1__cl95b37463__pv799da6f8	S81-COL-INHERIT	representative (COORD 11- |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pv0012ba28-2836986 | col_h9_r0_p6__t1 | 5_1_grt | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pv082a7609-2909432 | col_h9_r0_p6__t1 | 5_1_grt | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pv6398a5b7-2859683 | col_h9_r0_p6__t1 | 5_1_grt | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pv7808008f-2851059 | col_h9_r0_p6__t1 | 5_1_grt | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pv9da72aa7-2894787 | col_h9_r0_p6__t1 | 5_1_grt | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pvb38a9d6c-2854597 | col_h9_r0_p6__t1 | 5_1_grt | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pvbdbd69f2-3186520 | col_h9_r0_p6__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r0_p6__t1__pvea45abf3-3166870 | col_h9_r0_p6__t1 | 5_1_grt | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv06a1adf6-2446603 | col_h9_r2__t1 | 5_1_grt | 1.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv09b9967e-3197073 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv14626557-682201 | col_h9_r2__t1 | 5_1_grt | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv1aac64f0-681410 | col_h9_r2__t1 | 5_1_grt | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv22267ca0-3759134 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv2833ee2b-231764 | col_h9_r2__t1 | 5_1_grt | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv2f87774f-3761876 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | KEEP: col_h9_r2__t1__clce45cab5__pv2f87774f	S81-COL-INHERIT	representative (COORD 11-1 |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv31e47bd5-3771777 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv37074264-226688 | col_h9_r2__t1 | 5_1_grt | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv40e9fb5a-3235695 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv467913cc-3245969 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv4754d912-3236269 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv6827937d-3263179 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv7a260fc0-221373 | col_h9_r2__t1 | 5_1_grt | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv7b8853b5-3240906 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv7c30fd4e-3259321 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv843b0fff-900692 | col_h9_r2__t1 | 5_1_grt | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv8b5a5980-3254820 | col_h9_r2__t1 | pregrt_ff_hold | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv9a22736e-3771624 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pv9cc104a8-3807745 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pva119e808-3827300 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvb11188eb-3787429 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvb3258867-3880087 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvd60e699f-3830064 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-col_h9_r2__t1__clce45cab5__pvf57acd2b-3883707 | col_h9_r2__t1 | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-dsdv_slice_c1x_C__t1-1733650 | dsdv_slice_c1x_C__t1 | pregrt_ff_hold | 4.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-dsdv_slice_c1x_C__t3-3385105 | dsdv_slice_c1x_C__t3 | pregrt_ff_hold | 5.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-dsdv_slice_c1x_C__t4-1703897 | dsdv_slice_c1x_C__t4 | pregrt_ff_hold | 4.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-dsdv_slice_c1x_C__t5-1711603 | dsdv_slice_c1x_C__t5 | pregrt_ff_hold | 4.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-hd_ctl-2770424 | hd_ctl | pregrt_ff_hold | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-hd_spn_end-2767194 | hd_spn_end | postcts_gate_TT | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-kv3_io_cor-2777284 | kv3_io_cor | pregrt_ff_hold | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-kv3_io_cor_v1-2734966 | kv3_io_cor_v1 | pregrt_ff_hold | 0.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-kv3_pc_v1__cl7f648944-2717932 | kv3_pc_v1 | 3_1_place_gp_skip_io | 0.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-ot_s81sl_leaf__t30-908103 | ot_s81sl_leaf__t30 | 5_1_grt | 0.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-ot_s81sl_leaf__t42-335381 | ot_s81sl_leaf__t42 | pregrt_ff_hold | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-phy__t1-267889 | phy__t1 | 4_1_cts | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-serdes__t12-369872 | serdes__t12 | 4_1_cts | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc7 | dpkit-slw_hc0__cl1bc59e1c-2796113 | slw_hc0 | 4_1_cts | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-dsdv_slice_c1x_C__t9-383004 | dsdv_slice_c1x_C__t9 | pregrt_ff_hold | 3.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-dsdv_slice_lepw_mu_C__t1-3745700 | dsdv_slice_lepw_mu_C__t1 | selrange | 1.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-dsdv_slice_lepw_mus_C__t1-3745069 | dsdv_slice_lepw_mus_C__t1 | selrange | 1.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -117,8 +120,8 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 2, 'CA
 | epyc2 | dpkit-col_h9_r0_p1__t1__pvf9acce4c-600402 | col_h9_r0_p1__t1 | 5_1_grt | 15.5 | last meaningful line 0.0 h ago (1339/1339 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-kv3_pc__cl254f2e73-3316517-lec | kv3_pc | lec | 12.8 | LEC last write 0.1 h ago | PROGRESS: LEC still writing |  |
 | epyc2 | kvcore-q3_-1083749 | kvcore-q3_ | 5_1_grt | 0.7 | repair_TNS best 0 last 0 rows 116 | PROGRESS: repair_TNS reached 0 |  |
-| epyc7 | m7hgg-749463 | m7hgg | 5_1_grt | 12.5 | repair_Violations best 0 last 0 rows 15 | PROGRESS: repair_Violations reached 0 |  |
-| epyc7 | prd-eco_gunit_m1-i1-1173086 | eco_gunit_m1-i1 | 5_1_grt | 0.6 | repair_Violations best 0 last 0 rows 3 | PROGRESS: repair_Violations reached 0 |  |
-| epyc7 | prd-eco_gunit_m2-i1-1173088 | eco_gunit_m2-i1 | 5_1_grt | 0.6 | repair_Violations best 0 last 0 rows 3 | PROGRESS: repair_Violations reached 0 |  |
+| epyc7 | m7hgg-749463 | m7hgg | 5_1_grt | 12.7 | repair_Violations best 0 last 0 rows 15 | PROGRESS: repair_Violations reached 0 |  |
+| epyc7 | prd-eco_gunit_m1-i1-1173086 | eco_gunit_m1-i1 | 5_1_grt | 0.8 | repair_Violations best 0 last 0 rows 3 | PROGRESS: repair_Violations reached 0 |  |
+| epyc7 | prd-eco_gunit_m2-i1-1173088 | eco_gunit_m2-i1 | 5_1_grt | 0.8 | repair_Violations best 0 last 0 rows 3 | PROGRESS: repair_Violations reached 0 |  |
 | intel1 | dpkit-kit-2538957 | kit | 5_1_grt | 16.9 | last meaningful line 0.1 h ago (879/879 lines) | PROGRESS: log still growing |  |
 | intel1 | dpkit-kit-2546869 | kit | 5_1_grt | 16.9 | last meaningful line 0.1 h ago (1037/1037 lines) | PROGRESS: log still growing |  |
