@@ -2343,6 +2343,12 @@ def _ft_delay_lines(kind, ports, base, spl, fmt):
 SEAM_HOLD_MIN_PS = 25.0
 
 
+def grt_congestion_iters_arg():
+    """' -congestion_iterations N' for the allow-congestion GLOBAL_ROUTE_ARGS (env OT_GRT_CONGESTION_ITERS, default 15; 0/off/'' = none)."""
+    v = os.environ.get("OT_GRT_CONGESTION_ITERS", "15").strip().lower()
+    return "" if v in ("", "0", "off") else f" -congestion_iterations {int(v)}"
+
+
 def seam_hold(P):
     """{in_min_ps, out_min_ps, seam_ps, basis}: the kit min input / output delays vs vclk (ps) of the seam hold contract."""
     sh = P.clock.get("seam_hold")
@@ -5293,7 +5299,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # KW-FIX-8 11-04 (COORD 16:5x, S81 GRT-0116 near misses): opt-in per row through wave item_env, off by default.
            # GRT overflow is not a sign-off gate; with this flag the kit continues to detail route and routed DRC decides.
            # The first two arguments are the ORFS GLOBAL_ROUTE_ARGS default, which this variable replaces.
-           *(["export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose -allow_congestion"]
+           # KIT-OPS-5 11-14 (FABLE-ROUTE lever 1): the extra congestion iterations stop at OT_GRT_CONGESTION_ITERS (default 15; the ORFS
+           # default 30 is overridden because GLOBAL_ROUTE_ARGS comes after it): col_h9_r1 went 5,730 -> 75 -> 11 -> 4 congested gcells by
+           # iteration 20 and the last 1.6 h of a 3 h 22 min GRT changed nothing.  0 / "off" keeps the ORFS default.
+           *([f"export GLOBAL_ROUTE_ARGS = -congestion_report_iter_step 5 -verbose -allow_congestion{grt_congestion_iters_arg()}"]
              if os.environ.get("OT_GRT_ALLOW_CONGESTION") == "1" else []),
            # KW-FIX-8 11-04 (COORD GRT loop ruling): opt-in per row through wave item_env, off by default.  TritonCTS by
            # default sets CTS_NDR_0 on part of the clock tree (260 of 2462 clock nets on s81sl_leaf t32); GRT then drops it
