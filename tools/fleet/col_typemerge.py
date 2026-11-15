@@ -176,6 +176,43 @@ def sites_report(plan):
     return rep
 
 
+# ------------------------------------------------------------------ R3a reset side
+def union_keep_outs(types_outs, groups):
+    """types_outs {type: [out site idx]} (reset_tree wf_solve outs), groups {key: [types]} -> {type: union list} for every type
+    whose group union is larger than its own outs.  Sibling types share geometry, so one site index is one physical site."""
+    res = {}
+    for names in groups.values():
+        u = sorted(set().union(*[set(types_outs.get(n, [])) for n in names]))
+        for n in names:
+            if sorted(types_outs.get(n, [])) != u:
+                res[n] = u
+    return res
+
+
+def cmd_keepouts(a):
+    sys.path[:0] = [os.path.join(HERE, "..", "die_plan")]
+    import schema as S
+    import reset_tree as RT
+    plan = json.load(open(a.plan))
+    P = S.Plan(plan, a.plan)
+    outs = RT.wf_solve(P)["outs"]
+    groups = sibling_groups(plan)
+    if a.form_plan:      # (family, collector form): split each sibling group by "has collector children" in a composed plan
+        fp = CI.plan_types(json.load(open(a.form_plan)))
+        form = lambda n: ((fp.get(n, {}).get("clock") or {}).get("landing_contract") or {}).get("collector_children") is not None
+        g2 = collections.defaultdict(list)
+        for k, names in groups.items():
+            for n in names:
+                g2[(k, form(n))].append(n)
+        groups = {k: v for k, v in g2.items() if k[1]}      # only collector-form types get a union; plain tiles keep their tree
+    ko = union_keep_outs(outs, groups)
+    plan.setdefault("reset", {}).setdefault("keep_outs", {}).update(ko)
+    open(a.out, "w").write(json.dumps(plan, indent=1) + "\n")
+    print(json.dumps(dict(types_changed=len(ko), added_outs=sum(len(v) - len(outs.get(k, [])) for k, v in ko.items()),
+                          max_union=max([len(v) for v in ko.values()] or [0])), indent=1))
+    return 0
+
+
 def cmd_groups(a):
     plan = json.load(open(a.plan))
     sg, lg = sibling_groups(plan), layout_groups(plan)
@@ -200,10 +237,13 @@ def main(argv=None):
     g = sp.add_parser("groups"); g.add_argument("plan"); g.set_defaults(fn=cmd_groups)
     d = sp.add_parser("depth"); d.add_argument("plan"); d.add_argument("table"); d.add_argument("out")
     t = sp.add_parser("taps"); t.add_argument("plan"); t.add_argument("out")
+    k = sp.add_parser("keepouts"); k.add_argument("plan"); k.add_argument("out"); k.add_argument("--form-plan")
     s = sp.add_parser("sites"); s.add_argument("plan")
     a = ap.parse_args(argv)
     if a.cmd == "groups":
         return cmd_groups(a)
+    if a.cmd == "keepouts":
+        return cmd_keepouts(a)
     plan = json.load(open(a.plan))
     if a.cmd == "depth":
         new, rep = depth_unify(plan, json.load(open(a.table)))

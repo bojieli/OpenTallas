@@ -63,6 +63,13 @@ if [ -n "$GPID" ]; then
   wait "$GPID"; echo "AP_AUTO_GEOM_GRT rc $? ($GMIN-$GMAX adj $GADJ, $GITER it)"
 fi
 [ $rc = 0 ] || { echo "AP_AUTO_GEOM_ERROR dump rc $rc"; exit $rc; }
+# PLACED-SCAN-1115: early-fail diagnostic (advisory, never a gate): zero-logic bus hops over the plan reach / one-cycle
+# reach with no station on the matched group.  Names the group; its AP_PLACED_SCAN line is read by kit_wave.  Missing
+# script or any error = skipped.  OT_PLACED_SCAN=0 turns it off.
+if [ "${OT_PLACED_SCAN:-1}" = 1 ] && [ -f "$TOOLS/placed_scan.py" ]; then
+  timeout 600 python3 -I "$TOOLS/placed_scan.py" "$OUT/geom.tsv" --kit "$KIT" --out "$OUT" --top 0 2>&1 | head -2 | cut -c1-900 \
+    || echo "AP_PLACED_SCAN_ERROR"
+fi
 mapfile -t RA < <(python3 -I -c 'import json,sys;[print(a) for a in json.load(open(sys.argv[1])).get("rules_args",[])]' "$OUT/check.json")
 GA=(); [ "$GRT" = true ] && GA=(--grt-log "$OUT/grt.log")
 # Actual kit models classify synchronous memory boundaries; never infer them from names.
