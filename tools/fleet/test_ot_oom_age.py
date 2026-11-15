@@ -34,11 +34,11 @@ class Age(unittest.TestCase):
             # raising own children above their current adj needs no privilege; lowering does, so start both at 800 and age one
             for p in (a, b):
                 open(f"/proc/{p.pid}/oom_score_adj", "w").write("800")
-            M.main(["--pid", str(a.pid), "--comm", "openroad", "--now-offset", "7200"])    # a looks 2 h old -> 600 (needs CAP_SYS_RESOURCE)
-            M.main(["--pid", str(b.pid), "--comm", "openroad"])                              # b is new -> stays 800
+            M.main(["--pid", str(a.pid), "--comm", "openroad", "--now-offset", "14400"])   # a looks 4 h old -> 400 (needs CAP_SYS_RESOURCE)
+            M.main(["--pid", str(b.pid), "--comm", "openroad"])                              # b is new -> young band 520 + 10 per GB
             ja, jb = int(open(f"/proc/{a.pid}/oom_score_adj").read()), int(open(f"/proc/{b.pid}/oom_score_adj").read())
-            self.assertEqual(jb, 800)
-            self.assertEqual(ja, 600)
+            self.assertGreaterEqual(jb, 520)
+            self.assertEqual(ja, 400)
             self.assertGreater(int(open(f"/proc/{b.pid}/oom_score").read()), int(open(f"/proc/{a.pid}/oom_score").read()))
         finally:
             a.kill(); b.kill()
@@ -155,6 +155,29 @@ class PlanBypass(unittest.TestCase):
             self.assertEqual(int(open(f"/proc/{p.pid}/oom_score_adj").read()), -1000)
         finally:
             p.kill()
+
+
+class Victim(unittest.TestCase):
+    GP = "openroad -exit /flow/scripts/global_place.tcl"
+    GRT = "openroad -exit /flow/scripts/global_route.tcl"
+    DRT = "openroad -exit /flow/scripts/detail_route.tcl"
+
+    def test_young_early_jobs_rank_by_rss_and_small_ones_go_last(self):
+        a = lambda gb: M.victim_adj(self.GP, 600, gb)
+        self.assertLess(a(4.4), a(8.0)); self.assertLess(a(8.0), a(20.0)); self.assertLess(a(20.0), a(40.0))
+        self.assertLessEqual(a(7.9), 599)                       # under ~8 GB: below every larger young job
+        self.assertEqual(a(500.0), 799)                          # capped
+
+    def test_young_beats_old_and_late_stages_keep_stage_protection(self):
+        self.assertGreater(M.victim_adj(self.GP, 600, 1.0), M.victim_adj(self.GP, 4 * 3600, 60.0))   # any young before any old
+        self.assertLessEqual(M.victim_adj(self.GP, 20 * 3600, 60.0), 0 + 0)
+        self.assertEqual(M.victim_adj(self.DRT, 60, 30.0), 0)                                         # DRT / post-GRT: lowest
+        self.assertEqual(M.victim_adj(self.GRT, 60, 30.0), 300)                                       # GRT: scaled, as STAGEADJ
+
+    def test_stage_adj_is_back(self):
+        self.assertEqual(M.stage_adj(self.DRT, 800), 0)
+        self.assertEqual(M.stage_adj(self.GRT, 400), 150)
+        self.assertEqual(M.stage_adj(self.GP, 700), 700)
 
 
 if __name__ == "__main__":
