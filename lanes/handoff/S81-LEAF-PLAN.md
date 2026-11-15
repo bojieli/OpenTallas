@@ -5,6 +5,7 @@ Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.ts
 ## STATE 2026-11-14 ~17:xx PST (CURRENT; supersedes everything below)
 - Branch claude/s81-leaf-plan-1114 head 07782f9157 pushed (core_place --ft-resite / --link-reg / --taps-movable, test_core_place_b4l4.py 4/4); READY posted to ROOT-MERGE-63.
 - G0L3f (B4L3f): 296 errors, identical finding set to G0L2f (and the same count as G0ctl3).
+- CUMULATIVE (COORD 11-14): B4L4 = Lb+L2+L3+L4 (stacked events). Type list types_event_B4L4.txt = 147 = all types changed vs B3z2 92e2. The separate B4Lb/B4L2/B4L3 binds are cancelled (6 clients, races r1b/r2b, watcher a1 killed by exact PID). Only the twin pair B4L4/B4L48 + race r3b + watcher a2 remain.
 - B4L4 = ev/B4L4.json 58f4d1f24d2e / side_B4L4.json f97909118cca, 1 type: ot_s81sl_leaf__t21 (partition s_2S_L2).
   - Form: vsw (86.4,302.4), rxsb (319.68,224.64), --window-clear --ft-resite --link-reg swr,rar. Gives R-LEAF-2 0 (was 2, ft2_o/ft3_o under vsw); 2 ft regs re-sited, count kept; 0 timing over; eq OK.
   - CYCLE DELTA: t21 link class rar (u_rxsb.o_f/o_r/o_v -> u_vs ra_fi/ra_ri/ra_vi, return path) CS_RAR_D 0 -> 1 = +1 cycle inside leaf s_2S_L2. That is 5 internal_stations rows (note "B4L4 link-reg"). No die lane changes in the plan latency table; LATCHECK on the bind confirms it.
