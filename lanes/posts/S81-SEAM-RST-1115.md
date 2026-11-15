@@ -84,3 +84,19 @@
   KIND max failing_nets 35
   KIND min endpoints 8573 failing 242 worst -202.830612 {u_bound.u_u_lpl_0_r.g_chunk[2].wr} {u_bound.u_u_lpl_0_r.u_y_q.g_chunk[2].r[3]$_DFF_PN0_/RESETN}
   KIND min failing_nets 22
+- 2026-11-15 12:33 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc COORD, FABLE-CLOSURE-STRATEGY] col_h9_r0_p6 4_cts async STA (ac5). pc2 reference: recovery 0 fails, removal 579 worst -238. pg = pc2 + last reset stage CK moved to its sinks majority tap (tap_reset_affinity.tcl, OT_TAP_RESET_AFFINITY=1); pg2 = copies grouped per sink clock tap (111 copies; tap map from pc2 CTS) + same affinity; ph = pc2 with the d14 replicas as negedge release stage (ot_dp_rrelay_nl):
+  == pc
+  KIND max endpoints 8401 failing 423 worst -327.906250 net146618 {u_bound.u_u_y_rt_0a_4.u.o[45]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 37
+  KIND min endpoints 8401 failing 352 worst -180.178040 {u_bound.d14_u_cf_rs_r62[0]} {u_bound.u_u_y_rt_6b_0.u.g_rsreg.rq$_DFF_PN0_/RESETN}
+  KIND min failing_nets 33
+  == pc2
+  KIND max endpoints 8422 failing 0 worst 103.754448 net172146 {u_bound.u_u_lpl_9_w.u_y_w.g_chunk[9].r[15]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 0
+  KIND min endpoints 8422 failing 579 worst -237.905197 {u_bound.d14_u_cf_rs_r77[0]} {u_bound.u_u_y_rt_2b_1.u.g_rsreg.rq$_DFF_PN0_/RESETN}
+  KIND min failing_nets 35
+  == pd
+  KIND max endpoints 8573 failing 170 worst -599.784912 net146657 {u_bound.u_u_y_rt_0a_2.u.g_rsslice.g_s[1].u_rq/q$_DFF_PN0_/RESETN}
+  KIND max failing_nets 35
+  KIND min endpoints 8573 failing 242 worst -202.830612 {u_bound.u_u_lpl_0_r.g_chunk[2].wr} {u_bound.u_u_lpl_0_r.u_y_q.g_chunk[2].r[3]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 22
