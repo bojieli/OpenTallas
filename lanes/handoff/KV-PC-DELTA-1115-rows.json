@@ -1,0 +1,534 @@
+{
+ "lane": "KV-PC-DELTA-1115",
+ "base_plan": "kvgeom7u b7156937f334 (7v pin recipe rerun pending)",
+ "measured_on": "kvgeom6 kv3_pc_v1__cl4ea58a5c attempt_17 3_place.odb (geom.tsv + openroad pin dump)",
+ "tool_branch": "claude/kv-pc-delta-1115@a04418f0c8e",
+ "rows_per_type": {
+  "kv3_pc_v1__cl23f6a148": {
+   "clock.reserved_sites_um(append)": [
+    {
+     "rect_um": [
+      483.0,
+      246.0,
+      552.0,
+      514.0
+     ],
+     "kind": "channel_keepout",
+     "ref": "gap between kvpc0 and kvpc1 (pcc 189-482.9 | 552.6-846)"
+    },
+    {
+     "rect_um": [
+      483.0,
+      1006.0,
+      552.0,
+      1274.0
+     ],
+     "kind": "channel_keepout",
+     "ref": "gap between kvpc3 and kvpc2"
+    }
+   ],
+   "clock.tap_skip_macro": true,
+   "clock.tap_spill_um": 600,
+   "clock.tap_max_sinks": 1200
+  },
+  "kv3_pc_v1__cl7f648944": {
+   "clock.reserved_sites_um(append)": [
+    {
+     "rect_um": [
+      483.0,
+      246.0,
+      552.0,
+      514.0
+     ],
+     "kind": "channel_keepout",
+     "ref": "gap between kvpc0 and kvpc1 (pcc 189-482.9 | 552.6-846)"
+    },
+    {
+     "rect_um": [
+      483.0,
+      1006.0,
+      552.0,
+      1274.0
+     ],
+     "kind": "channel_keepout",
+     "ref": "gap between kvpc3 and kvpc2"
+    }
+   ],
+   "clock.tap_skip_macro": true,
+   "clock.tap_spill_um": 600,
+   "clock.tap_max_sinks": 1200
+  },
+  "kv3_pc_v1__cl4ea58a5c": {
+   "clock.reserved_sites_um(append)": [
+    {
+     "rect_um": [
+      483.0,
+      246.0,
+      552.0,
+      514.0
+     ],
+     "kind": "channel_keepout",
+     "ref": "gap between kvpc0 and kvpc1 (pcc 189-482.9 | 552.6-846)"
+    },
+    {
+     "rect_um": [
+      483.0,
+      1006.0,
+      552.0,
+      1274.0
+     ],
+     "kind": "channel_keepout",
+     "ref": "gap between kvpc3 and kvpc2"
+    }
+   ],
+   "clock.tap_skip_macro": true,
+   "clock.tap_spill_um": 600,
+   "clock.tap_max_sinks": 1200
+  }
+ },
+ "ring_to_bin_stations_FORM_OPEN": {
+  "note": "straight ring-centroid -> bin-centroid stations at <=405 um hops, from the attempt_17 placed DB; ring bank sits in the east strip x 916-1015 (y 20-1500) while the bins sit at the face pins; KV-102/TYPES-KV-FAIL to confirm the internal_stations conn form for ring->bin before adopting (not piloted)",
+  "rows": [
+   {
+    "bus": "i_slg_Q_N_af__fault",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     870.7,
+     49.1
+    ],
+    "to_um": [
+     39.4,
+     654.1
+    ],
+    "manhattan_um": 1436,
+    "stations": 3,
+    "regs_um": [
+     [
+      662.9,
+      200.4
+     ],
+     [
+      455.1,
+      351.6
+     ],
+     [
+      247.2,
+      502.8
+     ]
+    ]
+   },
+   {
+    "bus": "i_kvpc_Q_N_pc__fo",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     953.7,
+     126.9
+    ],
+    "to_um": [
+     39.1,
+     132.2
+    ],
+    "manhattan_um": 920,
+    "stations": 2,
+    "regs_um": [
+     [
+      648.8,
+      128.7
+     ],
+     [
+      344.0,
+      130.4
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_bgo",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     957.1,
+     1463.9
+    ],
+    "to_um": [
+     716.8,
+     809.1
+    ],
+    "manhattan_um": 895,
+    "stations": 2,
+    "regs_um": [
+     [
+      877.0,
+      1245.6
+     ],
+     [
+      796.9,
+      1027.4
+     ]
+    ]
+   },
+   {
+    "bus": "i_kvs_emb_px_tok",
+    "ring_n": 189,
+    "bin_n": 19,
+    "from_um": [
+     976.3,
+     1497.6
+    ],
+    "to_um": [
+     532.4,
+     1053.0
+    ],
+    "manhattan_um": 888,
+    "stations": 2,
+    "regs_um": [
+     [
+      828.3,
+      1349.4
+     ],
+     [
+      680.4,
+      1201.2
+     ]
+    ]
+   },
+   {
+    "bus": "i_ectl_Q_N_kf",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     953.7,
+     116.1
+    ],
+    "to_um": [
+     647.9,
+     603.6
+    ],
+    "manhattan_um": 793,
+    "stations": 1,
+    "regs_um": [
+     [
+      800.8,
+      359.8
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_ao",
+    "ring_n": 259,
+    "bin_n": 33,
+    "from_um": [
+     966.8,
+     31.2
+    ],
+    "to_um": [
+     995.0,
+     715.4
+    ],
+    "manhattan_um": 712,
+    "stations": 1,
+    "regs_um": [
+     [
+      980.9,
+      373.3
+     ]
+    ]
+   },
+   {
+    "bus": "i_slg_Q_N_o_dn",
+    "ring_n": 1655,
+    "bin_n": 272,
+    "from_um": [
+     887.5,
+     1401.6
+    ],
+    "to_um": [
+     901.9,
+     715.8
+    ],
+    "manhattan_um": 700,
+    "stations": 1,
+    "regs_um": [
+     [
+      894.7,
+      1058.7
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_co",
+    "ring_n": 259,
+    "bin_n": 33,
+    "from_um": [
+     967.4,
+     42.0
+    ],
+    "to_um": [
+     989.8,
+     715.4
+    ],
+    "manhattan_um": 696,
+    "stations": 1,
+    "regs_um": [
+     [
+      978.6,
+      378.7
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_fault_o",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     870.7,
+     38.9
+    ],
+    "to_um": [
+     856.4,
+     718.9
+    ],
+    "manhattan_um": 694,
+    "stations": 1,
+    "regs_um": [
+     [
+      863.5,
+      378.9
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_sko",
+    "ring_n": 259,
+    "bin_n": 33,
+    "from_um": [
+     966.8,
+     51.2
+    ],
+    "to_um": [
+     977.4,
+     714.1
+    ],
+    "manhattan_um": 674,
+    "stations": 1,
+    "regs_um": [
+     [
+      972.1,
+      382.7
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_soo",
+    "ring_n": 259,
+    "bin_n": 33,
+    "from_um": [
+     1012.5,
+     95.2
+    ],
+    "to_um": [
+     1011.6,
+     717.1
+    ],
+    "manhattan_um": 623,
+    "stations": 1,
+    "regs_um": [
+     [
+      1012.0,
+      406.1
+     ]
+    ]
+   },
+   {
+    "bus": "i_host_host_rst_n",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     957.1,
+     1474.7
+    ],
+    "to_um": [
+     860.2,
+     949.5
+    ],
+    "manhattan_um": 622,
+    "stations": 1,
+    "regs_um": [
+     [
+      908.6,
+      1212.1
+     ]
+    ]
+   },
+   {
+    "bus": "i_host_hbm_rst_n",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     957.1,
+     1485.5
+    ],
+    "to_um": [
+     885.4,
+     949.2
+    ],
+    "manhattan_um": 608,
+    "stations": 1,
+    "regs_um": [
+     [
+      921.3,
+      1217.4
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_sdo",
+    "ring_n": 259,
+    "bin_n": 33,
+    "from_um": [
+     1002.6,
+     134.1
+    ],
+    "to_um": [
+     1003.6,
+     707.5
+    ],
+    "manhattan_um": 574,
+    "stations": 1,
+    "regs_um": [
+     [
+      1003.1,
+      420.8
+     ]
+    ]
+   },
+   {
+    "bus": "i_ectl_Q_N_rq",
+    "ring_n": 289,
+    "bin_n": 39,
+    "from_um": [
+     963.1,
+     20.5
+    ],
+    "to_um": [
+     934.0,
+     505.6
+    ],
+    "manhattan_um": 514,
+    "stations": 1,
+    "regs_um": [
+     [
+      948.6,
+      263.0
+     ]
+    ]
+   },
+   {
+    "bus": "i_kvs_emb_px_tep",
+    "ring_n": 179,
+    "bin_n": 17,
+    "from_um": [
+     1014.1,
+     1436.1
+    ],
+    "to_um": [
+     828.8,
+     1132.9
+    ],
+    "manhattan_um": 489,
+    "stations": 1,
+    "regs_um": [
+     [
+      921.5,
+      1284.5
+     ]
+    ]
+   },
+   {
+    "bus": "i_vport_Q_N_f",
+    "ring_n": 104,
+    "bin_n": 2,
+    "from_um": [
+     953.7,
+     137.7
+    ],
+    "to_um": [
+     931.0,
+     603.3
+    ],
+    "manhattan_um": 488,
+    "stations": 1,
+    "regs_um": [
+     [
+      942.4,
+      370.5
+     ]
+    ]
+   },
+   {
+    "bus": "i_idpc_Q_N_y",
+    "ring_n": 254,
+    "bin_n": 32,
+    "from_um": [
+     956.2,
+     62.0
+    ],
+    "to_um": [
+     914.6,
+     493.7
+    ],
+    "manhattan_um": 473,
+    "stations": 1,
+    "regs_um": [
+     [
+      935.4,
+      277.8
+     ]
+    ]
+   },
+   {
+    "bus": "i_hsl_Q_N_sfo",
+    "ring_n": 259,
+    "bin_n": 33,
+    "from_um": [
+     1005.7,
+     237.7
+    ],
+    "to_um": [
+     1006.7,
+     706.9
+    ],
+    "manhattan_um": 470,
+    "stations": 1,
+    "regs_um": [
+     [
+      1006.2,
+      472.3
+     ]
+    ]
+   },
+   {
+    "bus": "i_embgw_est",
+    "ring_n": 164,
+    "bin_n": 14,
+    "from_um": [
+     1005.2,
+     1434.0
+    ],
+    "to_um": [
+     853.3,
+     1133.2
+    ],
+    "manhattan_um": 453,
+    "stations": 1,
+    "regs_um": [
+     [
+      929.2,
+      1283.6
+     ]
+    ]
+   }
+  ]
+ }
+}
