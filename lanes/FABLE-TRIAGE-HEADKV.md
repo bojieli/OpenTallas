@@ -208,3 +208,62 @@ MEASURED (epyc2 kv-102/ctscan2, kv3_pc cl254f2e73, CTS still running at 00:45):
 - KV-102: tap cap 3,000 and the x 518 half-pitch taps; 55 ps on the pcf core taps; sys_c guard merge.
 - S81-RESIGN-DEEP: kp4_dchn face register + DD 56, one re-sign.
 - HEAD-EPC-RTL-1: check slice flop placement, add the u_epc tap, rebase on rp21z20.
+
+## 5. HEAD cores elemA / elemB (questions opened in this file by CORES-NOROW-1, 00:55 PST)
+
+This file was first created by CORES-NOROW-1 (commit aeeb1d6633a). Its two items are kept in section 6 and answered here.
+Kits: `/srv/opentallas-scratch2/claude/type-hdcore-elemab/runs2/` (A2, B2 read on epyc9).
+
+### 5.1 elemA A2 pin_audit, 10 pins wrong_place: the PINS ARE RIGHT, the kit's pins.json is wrong
+
+MEASURED: the 10 pins (ft_ck0_i/o, ft_ck1_i/o, ft_mesh_i/o, ft_mstrap_i, ft_rst_i/o, rst_n) are M5 0.192 um squares
+at the core centre. All 10 rectangles in the routed A2 DB are identical, to the nanometre, to the rectangles in the
+macro LEF that the parent uses (epyc7 head-99/kits21z16/g_hd_tile/hd_tile/macros/ot_s81hd_elemA_cv.lef; for example
+ft_ck0_i 157.584 163.344 157.776 163.536 in both). They also equal the kit's own io.tcl. Only pins.json disagrees:
+it lists them on the N / S / E face (ft_ck0_i at y 319.68). face_guard.json already skips exactly these 10 names.
+- Verdict: do not move the pins. A face position would break the bind to hd_tile, which is built on the interior LEF.
+- Do not add a blanket ft exemption either. `pin_audit_core.py` already checks interior pins at their exact (x, y)
+  when the row's face is not N/E/S/W. Fix the generator so pins.json writes these rows as face "island" with the
+  io.tcl centre; the audit then checks them strictly and passes. Its INTERIOR name pattern covers ft_ck / ft_rst but
+  not ft_mesh_*, ft_mstrap_i or rst_n: the generated rows are the place to fix that, not the pattern.
+- Tonight: the audit result is 456 of 466 on the face rows plus 10 of 10 equal to the parent LEF. That is a pass on
+  substance; run signoff GOAL=post on A2 / A1 with pin_audit advisory for these 10 names. Same for elemB.
+- Owner: CORES-NOROW-1 (signoff now); KIT-OPS-6 (pins.json generator for hard cores with centre ft squares).
+
+### 5.2 elemB B1/B2 "KEEP FAIL" and elemA A2 "NOT EQUIVALENT": two different things
+
+**(i) The 8 kept bits (B only): keep-list artefact.** MEASURED: 8 of 150 declared kept bits are missing, all
+`g_t[6]` and `g_t[7]` `.g_pad.u_a.g_cy_copy.cyq[0..3]`. `cyq` is `(* keep = 1 *)` in ot_v41_fadd.sv line 197, so every
+adder instance declares it. g_t[6] and g_t[7] are pad adders; the other 142 bits are present. The keep list is per
+module, the folding is per instance. Fix: drop keep rows for g_pad instances from the declared list (or mark them
+"may fold"). No RTL or synthesis change.
+
+**(ii) The 107 (A2) / 168 (B2) differing points: most likely a LEC window limit, not a design difference.** MEASURED:
+- Same points in both cores: `u_a.y[*]`, `u_a.err[*]`, `g_s9.man_q[*]` in four adder instances
+  (g_ch[0].g_s[0], g_ch[1].g_s[0], g_t[*].g_pair, u_pair / g_join). Every failing cone is unmatched on the gold side
+  only: `g_s9.byp_q`, `g_s9.exo_q[*]`, `g_s9.er_q[*]`, `u_c8.g_r.r[*]`. In the netlist exo_q and byp_q occur 0 times.
+- g_s9 is the SPLIT9 pipeline stage of the adder: plain registers without reset, the ninth stage after u_c0..u_c8.
+- The LEC accepts no-reset registers that settle to a constant, but only for OT_LEC_RELEASE_EDGES = 8 edges
+  (lec.py line 4923). Its release list for these same four instances stops exactly there: u_c5 at edge 5, u_c6 at 6,
+  u_c7 at 7, u_c8 at 8. g_s9 settles at edge 9 and y at edge 10: one and two edges past the window.
+- INFERENCE: synthesis folded the constant bits of the ninth stage (correct for these constant-operand instances),
+  the LEC cannot see them as constant, calls them "removed although not constant", and y differs through them.
+  This also explains why the earlier signed elemA / elemB passed (no SPLIT9 stage).
+- Deciding test (about 1.7 h, 48 GB, no build): rerun lec.py on A2 and B2 with OT_LEC_RELEASE_EDGES=12. Expected:
+  A2 EQUIVALENT; B2 down to the 8 keep rows of (i). If points still differ, it is real and the adder goes to an RTL
+  lane with the first differing y cone.
+- Until the test is back: letting B1r / B2r route with LEC advisory is acceptable (the checkpoint is reusable), but
+  neither core counts as signed on an open LEC. LEC is not one of the advisory gates when points differ.
+- Owner: CORES-NOROW-1 (rerun); KIT-OPS-6 (default window = longest no-reset pipeline depth + 2, taken from the kit).
+
+## 6. Original items from CORES-NOROW-1 (commit aeeb1d6633a, restored)
+
+- 2026-11-15 00:55 PST HDCORE elemA_cv pin_audit: 10 interior ft/rst_n pins read as wrong_place. Evidence: epyc9
+  runs2/A2/kit/pin_audit.json (routed 6_final.odb exists, 06:33 UTC): PIN_AUDIT FAIL 456/466 missing 0 wrong_layer 0
+  wrong_place 10 extra 0. The audit expects them on the die face; the kit places the M5 0.192 squares inside the core
+  (y 156-163, x 157-160). Question: exempt interior ft squares as face_guard does, or must they sit on the face?
+  Not done by CORES-NOROW-1: no audit / kit edit. -> answered in 5.1.
+- 2026-11-15 00:55 PST HDCORE pre-route LEC stops the flow. A2 NOT EQUIVALENT 107/58130 (u_core.u_m.g_ch[0].g_s[0].
+  u_a.y[*]); B1/B2 KEEP FAIL 172/52669 (8 of 150 declared kept regs merged / folded). lec_async stops the flow
+  container on exit 1. Action taken: B1r / B2r copies with LEC advisory, route resumed from 5_1_grt. Question: real
+  RTL / synth difference or keypoint matching? Inputs runs2/{A2,B1,B2}/kit/lec/lec.json. -> answered in 5.2.
