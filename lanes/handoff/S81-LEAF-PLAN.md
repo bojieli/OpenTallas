@@ -9,6 +9,9 @@ Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.ts
 - Trials: cp11 (take-regs + face-clear; face-clear alone leaves slot regs), cp12 (slot-ft 86.4; A = no face-clear, B = face-clear). Rule checker cp9/slot_rule_leafplan.py PLAN TYPES (B5: 172 regs in 14 types).
 - Compose: cp13/compose_b6s_leafplan.sh (B5 + cp12 picks in cp13/pick.txt -> tapleg -> publish -> bands -> densify -> signed keep -> sync -> audit -> check -> LF_CS) -> ev/B6s.json / side_B6s.json / cp13/lfcs_B6s.v.
 - M9 (ve/vs cores, FABLE-HARD-S81 sec 0/2): no per-type plan key exists (layer_budget.partition_signal_max die-wide, gen_phys clamps OT_CONS_MAX_LAYER to plan top); grant is DIE-S81-92 B6 / WAVE-RECIPE-1 (m9_grant like m8_grant.py). Posted as ASK.
+- B6s = ev/B6s.json aa2aa99e499a / side_B6s.json 18941025a5f8 / LF_CS e64c0106d0f3 (overlay ovl_l6s, on epyc7/8/9), picks cp13/pick.txt (t24A t44A t4A t45A t51A t73A t9A from cp12; t53d cp10; t34s4 cp9), 114 types (ev/types_event_B6s.txt, signed excluded). ONE plan job intel2 ~/s81-leaf-plan/bind_leafplan_x3.sh admitted epyc8 (log epyc8 log/B6s_bind.log); G0 epyc7 log/G0B6s.log (compare with 296); watcher intel2 adopt_watch_leafplan_a5.sh (READY+ADOPT to KIT-OPS-5).
+- Open (posted ASK DIE-S81-92 20:3x): ft slots in < 86.4 slot not re-sitable at same count (t34 ft1/3/4, t28, t75, t13, t71, t7, t53) -> +1 ft register = die lane change, or M9 grant for ve/vs class (no per-type plan key; DIE-S81-92 B6 / WAVE-RECIPE-1).
+- core_place --slot-ft pushed on claude/s81-leaf-plan-1114 (needs READY to merge after B6s passes).
 - Draft ev/B6.json (cp10) superseded by B6s (it re-keys signed types).
 
 ## STATE 2026-11-14 ~19:xx PST (predecessor)
