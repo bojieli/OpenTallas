@@ -1107,7 +1107,10 @@ module dsdv_bk_sel_vmtx #(
     wire [V-1:0] sel_vo_n; wire sel_f;
     dsdv_bk_sel #(.V(V), .MUT(MUT)) u_sel (.clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek),
         .uid(uid), .eg_n(eg_n), .vi_s(vi_m), .vo_n(sel_vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(sel_f));
-    dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT)) u_tx (
+    dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT),
+        // S81-TAPROWS 11-15 (COORD r104): the die instance carries the parameters of the SIGNED vb core (kl_dsdv_idx_tx_n32_vb,
+        // s81-idx-b5 eco_vg/i1): FACE 2 (+1 edge in, +2 edges out), RDL/WDL/WDC/SCS/RIL/RHP/PDC 1; SPLIT stays 0.
+        .RDL(1), .WDL(1), .WDC(1), .SCS(1), .RIL(1), .RHP(1), .FACE(2), .PDC(1)) u_tx (
         .ck(clk), .rst(rst_n), .vi(vi_m), .vo(vo_s), .lo(tl_o), .st(tx_st));
     generate if (SELE != 0) begin : g_sel
         wire [V-1:0] eo; wire ef;
