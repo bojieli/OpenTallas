@@ -50,3 +50,11 @@ Correction: serdes__t1 is 72% flattened <top> logic, u_core is only 30k (9.5%); 
 - kv3_hub_C engine split; serdes__t1 u_core child; QC st_b region cores + hc xl core.
 - After SIGNED: export_view.py + archive to rtx-pro and AGIdock /archive (count from AGIdock).
 - Parent rebinds are the die owners' plan events (KV-102 etc.); OVERSIZE-1 supplies the signed masters.
+
+## Successor state (2026-11-14 ~20:20 PST)
+- Waiters (intel2 ~/tmp/oversize-1, no LLM): watch.sh (first wave, final), watch2.sh (rk2), watch_sig.sh (rk2 w292_ew_81b3f/w300_ew_ba263/w523_ew_05742: intel2 clients died 19:57, units alive on epyc10; polls signoff.json), watch3.sh (QC st_b region kits, logs3/).
+- KV rings SIGNED (AUTO-RESIGN rows in): kv3_hcland_w292_e_s11, kv_cland_w259_ns_a43af, w294_ew_a7ae4, w549_ew_bf94f. FAILED HOLD_STRUCTURAL: kv3_cland_w257_e_s11, kv_cland_w269_ns_0fea0 = OT_STB latest-sink target chasing ~1% fclk outliers (p99 ~530 ps) -> +~295 delay bufs -> hold -303/-316. ASKed Fable/KIT-OPS-5 review; A/B = resume from 4_cts with OT_STB_EST=placement. Not relaunched.
+- QC st_b: ports registered except flt_*_i (face flop wrapper = sta_region_nb0 form w). 4 regions/type (r4..r7), 34.7k each. Built+queued epyc9: stb_region_orq3_h29_n6_s7, stb_region_orq3_h29_nb2_rd1_s8 (qcr/<m>/kits/<m>_synth0; generator oversize-1/mk_stb_region.py; plan rows qcr/<m>/plan_rows_<type>.json sent to DIE-QC-103). 5 other region classes pending these two.
+- Corrected size attributions (anon ABC cells by net vote, attr.py): hub_C u_pvfin 267k (54%); serdes__t1 u_dec 172k + u_enc 68k (RTL split exists: OT_S81_RCK_REFORM); sle_hc0 xh0 56k + 8x xl0 27-31k. PLAN-ASKs posted to KV-102 (u_pvfin plan row needed before kit), DIE-QC-103 (hc lane masters), DIE-S81-92 (adopt RCK_REFORM + RCK core lane).
+- QC stm/fw: per FABLE-TYPES-QC-EAST cause B, re-measure after relay_bay.py fix before any split.
+- On SIGNED: export_view.py + archive AGIdock /archive/opentallas-signed-1114 + rtx-pro /home/ubuntu/signed-export-1114 (not done yet for the 4 KV rings).
