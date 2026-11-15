@@ -47,7 +47,7 @@ def hook_parts():
 
 
 class Scope(unittest.TestCase):
-    def run_tcl(self, scope=None, two_mode=False, drift="", old_shared=False, synced=1, stage="4_cts.sdc"):
+    def run_tcl(self, scope=None, two_mode=False, drift="", old_shared=False, synced=1, stage="4_cts.sdc", off=False):
         proc, dispatch = hook_parts()
         with tempfile.TemporaryDirectory() as d:
             s = pathlib.Path(d) / "t.tcl"
@@ -65,20 +65,37 @@ class Scope(unittest.TestCase):
             env.pop("OT_HOLD_REPAIR_SCOPE", None)
             if scope:
                 env["OT_HOLD_REPAIR_SCOPE"] = scope
+            env.pop("OT_HOLD_PORT_SCOPE_OFF", None)
+            if off:
+                env["OT_HOLD_PORT_SCOPE_OFF"] = "1"
             r = subprocess.run(["tclsh", str(s)], capture_output=True, text=True, timeout=60, env=env)
             self.assertEqual(r.returncode, 0, r.stderr)
             lines = r.stdout.splitlines()
             return [x[4:] for x in lines if x.startswith("LOG ")] + [x for x in lines if x.startswith("FILES=")]
 
-    def test_default_single_mode_unchanged(self):
-        out = self.run_tcl()
+    def test_opt_out_single_mode_unchanged(self):
+        out = self.run_tcl(off=True)
         self.assertEqual([x for x in out if not x.startswith("FILES")],
                          ["repair_timing -hold -hold_margin 0 -max_buffer_percent 40 -allow_setup_violations exc=0"])
 
-    def test_default_two_mode_unchanged(self):
-        out = self.run_tcl(two_mode=True)
+    def test_opt_out_two_mode_unchanged(self):
+        out = self.run_tcl(two_mode=True, off=True)
         self.assertEqual(out[:2], ["rc_cal", "guarded -hold_margin 0 -max_buffer_percent 40 -allow_setup_violations exc=0"])
         self.assertNotIn("shared_scope", out)
+
+    def test_default_single_mode_is_reg2reg(self):
+        # FLOW-LATEECO 11-15: no env -> port hold is the parent's; same sequence as an explicit reg2reg
+        self.assertEqual(self.run_tcl(), self.run_tcl(scope="reg2reg"))
+        self.assertIn("set_false_path -hold -from a b", self.run_tcl())
+
+    def test_default_two_mode_uses_shared_scope(self):
+        out = self.run_tcl(two_mode=True)
+        self.assertEqual(out[:2], ["rc_cal", "shared_scope"])
+
+    def test_default_two_mode_unsynced_session_stays_unscoped_not_refused(self):
+        out = self.run_tcl(two_mode=True, synced=0)
+        self.assertNotIn("shared_scope", out)
+        self.assertFalse([x for x in out if x.startswith("ERROR")], out)
 
     def test_other_value_is_default(self):
         self.assertNotIn("set_false_path", " ".join(self.run_tcl(scope="all")))

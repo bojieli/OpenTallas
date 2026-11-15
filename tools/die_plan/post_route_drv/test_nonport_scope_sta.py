@@ -90,7 +90,7 @@ def production_helper(mm):
 
 @unittest.skipUnless(OPENROAD, "OpenROAD required for functional STA fixture")
 class NonportSTA(unittest.TestCase):
-    def run_graph(self, scope, mm=False, body_error=False):
+    def run_graph(self, scope, mm=False, body_error=False, extra_env=None):
         with tempfile.TemporaryDirectory(prefix="nonport-sta-") as td:
             d = Path(td)
             (d / "fixture.lib").write_text(LIB)
@@ -118,6 +118,8 @@ set_output_delay -clock clk -max 0.100 [all_outputs]
             script += production_helper(mm)
             if scope:
                 script += f"\nset ::env(OT_HOLD_REPAIR_SCOPE) {scope}\n"
+            if extra_env:
+                script += "\nset ::env(%s) %s\n" % tuple(extra_env.split(None, 1))
             script += f"\nset ::env(RESULTS_DIR) {{{d}}}\nset ::env(OT_HOLD_SCOPE_KEEP_SDC) 1\n"
             script += "proc snapshot {path} {\n"
             if mm:
@@ -172,10 +174,22 @@ set_output_delay -clock clk -max 0.100 [all_outputs]
         self.assertNotRegex(during, r"Endpoint: R2O\b")
         self.assertRegex(during, r"Startpoint: u_macro\b")
 
-    def test_default_keeps_all_paths(self):
-        before, during, _ = self.run_graph(None)
-        self.assertEqual(before, during)
+    def test_default_is_core_only_ports_are_the_parents(self):
+        # FLOW-LATEECO 11-15: OT_HOLD_REPAIR_SCOPE unset -> reg2reg: the port-start (DIN) and port-end (R2O) hold
+        # paths are hidden from the repair; the internal macro path (u_macro -> u_macro_capture) is still repaired.
+        for mm in (False, True):
+            before, during, _ = self.run_graph(None, mm=mm)
+            self.assertRegex(before, r"Startpoint: DIN\b")
+            self.assertNotRegex(during, r"Startpoint: DIN\b")
+            self.assertNotRegex(during, r"Endpoint: R2O\b")
+            self.assertRegex(during, r"Startpoint: u_macro\b")
+            self.assertRegex(during, r"Endpoint: u_macro_capture\b")
 
+    def test_opt_out_env_keeps_all_paths(self):
+        for env in ("OT_HOLD_PORT_SCOPE_OFF 1", "OT_HOLD_REPAIR_SCOPE all", "OT_HOLD_REPAIR_SCOPE {}"):
+            for mm in (False, True):
+                before, during, _ = self.run_graph(None, mm=mm, extra_env=env)
+                self.assertEqual(before, during, env)
 
 if __name__ == "__main__":
     unittest.main()
