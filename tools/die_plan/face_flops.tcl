@@ -864,7 +864,7 @@ proc ot_gpl_sparse_util {blk} {
  return [expr {$mov/$free}]
 }
 proc ot_gpl_sparse {} {
- set thr 0.10 ; # KIT-OPS-5 11-14 FABLE-TYPES-S81-MISC item 5 (lepw_mu_C 15 h in GPL at 3.5 %)
+ set thr 0.05
  if {[info exists ::env(OT_GPL_SPARSE_UTIL)] && $::env(OT_GPL_SPARSE_UTIL) ne ""} { set thr $::env(OT_GPL_SPARSE_UTIL) }
  if {$thr <= 0} { puts "OT_GPL_SPARSE off (OT_GPL_SPARSE_UTIL=$thr)"; return 0 }
  set u [ot_gpl_sparse_util [ord::get_db_block]]
