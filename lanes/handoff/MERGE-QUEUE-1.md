@@ -51,3 +51,12 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 - The 03:46 dry daily with the main tool failed the staged smoke on all 4 dies. Fix: branch claude/src-refresh-deps-1115 @33dde953101 (READY posted 04:0x): missing_deps() ADDs imported main modules; smoke allows odb/openroad. The dry run with the fix passes on every host.
 - If it is not landed by 06:00, the daily swaps nothing (safe). After it lands, run it by hand: systemctl --user start ot-src-refresh.service on intel2 (only between waves).
 - Die trees vs main list: intel2:/srv/opentallas-scratch2/claude/mq1/tmp/vsmain-0400.out (script vsmain.py beside it).
+
+## 2026-11-15 06:1x
+- put fix landed: claude/src-refresh-put-main-1115 @5dece1db8e7 -> main 782b88c3322. put reports gen host copy vs main; put --from-main writes main's version to the gen host and every replica. Cause of the KV gen_phys "SAME": put syncs the gen host copy and never read main.
+- 06:00 daily APPLIED 38ef0c93cdb..782b88c3322 to every replica, identical after swap, smoke ok, no rollback:
+  - QC: 6 hosts, ADD 4, MERGE 3, REPLACE 15.
+  - KV: 6 hosts, ADD 6, MERGE 2, REPLACE 16 (+2 deps).
+  - S81: 5 hosts, ADD 5, MERGE 3, REPLACE 16 (+1 dep).
+  - HEAD: 3 hosts, ADD 11, MERGE 2, REPLACE 17 (+7 deps).
+- Next daily: 11-16 06:00 (base 782b88c3322 in src-refresh-last.json). Drift check hourly at :25.
