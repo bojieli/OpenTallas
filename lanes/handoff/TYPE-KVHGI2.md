@@ -6,3 +6,6 @@ Forms (private, intel1 /srv/opentallas-scratch2/claude/type-kvhgi2/<form>/kit, l
 Outline +20 pct (a)/(c): NOT launchable privately: outline is baked in plan_c.json (outline_um, ft_slots regs_um on E/W faces, 4327 pin slots, 16 hard_cores origins, clock taps). Requested shape for KV-102: 1401.12 x 1666.08 (1946x2314 grid of 0.72 = +20.1 pct area), macros keep origins, growth on N/E with E/N face pins and ft regs shifted.
 Next: wait for fd04/fd03 (intel1 queued for memory), then check 5_1_grt.log overflow; on pass add AUTO-RESIGN row.
 - 2026-11-14 15:09 PST noted COORD FYI: wave hgi_v2 98fdd4a34144 (14:54) and kv3_hgi_v4 aabb4b84963d (15:02) also GRT-overflow in my family. On the first form that passes DRT I ask KIT-OPS-5 for one batch applying the winning settings (incl. the OT_GRT_EST_FALLBACK allow_congestion path) to every hgi variant incl v4. Live forms: fd04/fdC3/v1a (intel1), planB9 route (epyc9), epyc2 v1b/v0 a-c.
+
+## 2026-11-14 19:31 successor (absorbs TYPE-KVHGI3)
+Re-floor dead end. Waiting on Fable test fh2 A/C (intel1, logs ~/kvhgr/fh2_{A,C}.log). Act on verdict: A passes GRT (0 over-core congestion) -> port M7-over-core adjustment into gen_phys kit hook for hgi types (v2,v3,v4,hg) via KIT-OPS-5 ASK + private forms; A fails -> Fable review.
