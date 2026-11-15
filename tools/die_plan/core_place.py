@@ -1371,7 +1371,12 @@ def detour_fix(R, st, cfg, rep):
             continue
         r = HR.route_station(R, tuple(a), tuple(b), len(regs), cfg["reach"])
         if r is None or len(r["regs"]) != len(regs):
-            continue
+            # pins on facing cores: the a-b box is all core, so snap the registers from the pin midpoint instead
+            mid = [round((a[0] + b[0]) / 2, 2), round((a[1] + b[1]) / 2, 2)]
+            q = snap_station(R, a, b, [mid] * len(regs), cfg["reach"], rmax=60)
+            if q is None:
+                continue
+            r = dict(regs=q)
         p2 = [tuple(a)] + [tuple(q) for q in r["regs"]] + [tuple(b)]
         L2 = sum(_man(p, q) for p, q in zip(p2, p2[1:]))
         if L2 >= L - 1e-6:
@@ -1468,6 +1473,9 @@ def write_type(M, t_new, cfg, log):
             rep["regs_new"] += nold
         else:
             sn = snap_station(R, a, b, s.get("regs_um") or [], cfg["reach"])
+            if sn is None:
+                mid = [round((a[0] + b[0]) / 2, 2), round((a[1] + b[1]) / 2, 2)]
+                sn = snap_station(R, a, b, [mid] * nold, cfg["reach"], rmax=60)
             if sn is not None:
                 s["regs_um"] = [list(p) for p in sn]
                 rep["rerouted"] += 1
@@ -1477,6 +1485,9 @@ def write_type(M, t_new, cfg, log):
                 continue
             rep["failed"] += 1
             rep["failed_idx"] = rep.get("failed_idx", []) + [st.index(s)]
+            rep.setdefault("failed_why", []).append(dict(idx=st.index(s), a=list(a), b=list(b), regs=s.get("regs_um"),
+                                                         free=[R.free(*q[:2]) for q in s.get("regs_um") or []],
+                                                         route=None if r is None else len(r["regs"])))
             rep["regs_new"] += nold
             if regs_free:
                 rep["kept_old_regs"] += 1
