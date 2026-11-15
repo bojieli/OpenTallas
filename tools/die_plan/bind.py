@@ -936,6 +936,10 @@ class Binder:
             if r["new_unconnected_ports"]:
                 self.errors.append(f"PARENT_VARIANT_NEW {r['inst']} -> {r['variant']}: ports not in the as-built "
                                    f"instance: {r['new_unconnected_ports'][:8]}")
+        # FABLE-PD-QCC-0740: a plan hard-core param_wrap row must equal the bound instance (module + parameters)
+        import hard_core_param
+        for _m in hard_core_param.mismatches(plan, self.F.cells, self.R.part_of, self.R.local_of, self.param_defaults):
+            self.errors.append(f"HARD_CORE_PARAM_WRAP {_m}")
         if self.ab.get("reducers_keep_plan_contents"):
             # asbuilt.reducers_keep_plan_contents: a reducer instance (fault OR ...) that the plan lists in its
             # partition type's `contents` stays a leaf there instead of being dissolved and re-emitted per sink
