@@ -4769,6 +4769,40 @@ def psm_tcl(P, lefs, power, bumps):
     return "\n".join(t) + "\n"
 
 
+PARTS_BY_REGION_TCL = r"""# macro (instance) grids per PG region domain: instances whose centre lies in the region box
+set ot_assigned {}; set ot_blocks 0
+foreach ot_i [$b getInsts] { if {[[$ot_i getMaster] getType] eq "BLOCK"} { incr ot_blocks } }
+foreach ot_r [$b getRegions] {
+  set ot_n [$ot_r getName]; if {![string match ot_pg_* $ot_n]} continue
+  set ot_l {}
+  foreach ot_bd [$ot_r getBoundaries] {
+    foreach ot_i [$b getInsts] {
+      if {[[$ot_i getMaster] getType] ne "BLOCK"} continue
+      set ot_bb [$ot_i getBBox]
+      set ot_cx [expr {([$ot_bb xMin]+[$ot_bb xMax])/2}]; set ot_cy [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
+      if {$ot_cx >= [$ot_bd xMin] && $ot_cx < [$ot_bd xMax] && $ot_cy >= [$ot_bd yMin] && $ot_cy < [$ot_bd yMax]} {
+        lappend ot_l [$ot_i getName]
+      }
+    }
+  }
+  set ot_l [lsort -unique $ot_l]
+  puts "OT_PG_PARTS $ot_n [llength $ot_l]"
+  if {[llength $ot_l] == 0} continue
+  lappend ot_assigned {*}$ot_l
+  define_pdn_grid -name parts_$ot_n -voltage_domains $ot_n -macro -instances $ot_l -orient {R0 R180 MX MY} -halo {0 0 0 0}
+  add_pdn_connect -grid parts_$ot_n -layers {M7 @L0@}
+}
+set ot_assigned [lsort -unique $ot_assigned]
+puts "OT_HOOK_COVERAGE hook=die_pg_parts touched=[llength $ot_assigned] expected=$ot_blocks"
+if {[llength $ot_assigned] != $ot_blocks} {
+  if {[info exists ::env(OT_HOOK_COVERAGE)] && $::env(OT_HOOK_COVERAGE) eq "warn"} {
+    puts "OT_HOOK_COVERAGE WARN die_pg_parts: [expr {$ot_blocks - [llength $ot_assigned]}] hard instances in no PG region"
+  } else {
+    error "OT_HOOK_COVERAGE die_pg_parts: [llength $ot_assigned] of $ot_blocks hard instances have a PG region grid"
+  }
+}"""
+
+
 def psm_pdn_tcl(P):
     """die-trial PDN from the plan's PG rows (ONE PDN RULE, COORD 10-26 13:13): explicit offset + parity from the die
     lattice (pg_regions.row_spec); a plan with die.pg.domains (PHY windows) builds its VDDPHY regions exactly as
@@ -4782,7 +4816,12 @@ def psm_pdn_tcl(P):
         phy = sorted({d["nets"][0] for d in die["pg"]["domains"]} - {"VDD"})
         lines += [f"add_global_connection -net {{{n}}} -inst_pattern {{.*}} -pin_pattern {{^{n}$}} -power" for n in phy]
         lines += [pg_regions.pdn_tcl(die).rstrip("\n")]
-        dom = "Core"
+        # GENBUG-3 11-15 (COORD; proven by DIE-KV-ROUTE-1 pdn2.py, KV kvgeom5 160/160 partitions, pdngen clean): with
+        # PG region domains the stripes live in the ot_pg_* domains, the default Core domain has none, so ONE {parts}
+        # macro grid in Core came out empty for every partition (PDN-0233).  One macro grid per region domain, a
+        # partition belongs to the region that holds its centre; every hard instance must be assigned (fail closed).
+        lines += [PARTS_BY_REGION_TCL.replace("@L0@", g[0]['layer'])]
+        return "\n".join(lines) + "\n"
     else:
         lines += ["global_connect", "set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}",
                   "define_pdn_grid -name {top} -voltage_domains {CORE}"]
