@@ -493,7 +493,7 @@ def early_rows(P, tn):
         if 'min_early_ps' not in tp:
             continue
         check_min_early(f"{tn}.{tp['name']}", tp)
-        have = S.core_tap_early_ps(P, tp, 'TT')
+        have = S.core_tap_early_ps(P, tp, 'TT', P.types[tn])
         if have + 1e-9 < float(tp['min_early_ps']):
             raise ValueError(f"{tn}.{tp['name']}: early core tap delivers {have:.1f} ps early (insertion_ps - die common latency), "
                              f"min_early_ps asks {tp['min_early_ps']}")

@@ -3706,12 +3706,12 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         dme_early = {}
         for n, p in P.parts.items():
             for port, _, _, tp in S.core_taps(P, p["type"]):
-                e = S.core_tap_early_ps(P, tp, "TT")
+                e = S.core_tap_early_ps(P, tp, "TT", P.types[p["type"]])
                 if e > 0:
                     dme_early[(n, port)] = e / float(region_dme_early)
                     if region_dme_early_ff:   # DIE-QC-9 opt-in: corner-averaged target (TT and FF in model ps)
                         dme_early[(n, port)] = 0.5 * (dme_early[(n, port)]
-                                                      + S.core_tap_early_ps(P, tp, "FF") / float(region_dme_early_ff))
+                                                      + S.core_tap_early_ps(P, tp, "FF", P.types[p["type"]]) / float(region_dme_early_ff))
     if slice_spine and tree_form != "htree":
         raise ValueError("--slice-spine and --tree-form %s are exclusive opt-ins" % tree_form)
     site = None

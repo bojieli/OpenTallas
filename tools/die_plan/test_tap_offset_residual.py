@@ -16,7 +16,7 @@ class FakeP:
 def _patch(monkeypatch, core_ins):
     monkeypatch.setattr(G.S, "core_taps", lambda P, tn: [(n, 0, 0, {"name": n, "ins": v}) for n, v in core_ins.items()])
     monkeypatch.setattr(G.S, "core_tap_insertion_ps", lambda tp, corner="TT": tp["ins"][0 if corner == "TT" else 1])
-    monkeypatch.setattr(G.S, "common_latency_ps", lambda P, corner="TT": 250.0 if corner == "TT" else 200.0)
+    monkeypatch.setattr(G.S, "common_latency_ps", lambda P, corner="TT", t=None: 250.0 if corner == "TT" else 200.0)
 
 
 def test_core_tap_beyond_half_period_raw_ok_when_residual_small(monkeypatch):

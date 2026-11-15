@@ -1271,15 +1271,15 @@ def bound_core_clock_pins(P, tn, inst, pin):
     return {p: float(ck[p]["rise"]) for p in sel}
 
 
-def view_core_tap_values(P, tp, view_tt_ps, corner="TT"):
+def view_core_tap_values(P, tp, view_tt_ps, corner="TT", t=None):
     """(early, insertion) of a re-bound tap from the current view.  early = min(view insertion - common latency, what
     the tap can deliver); a tap arrives at the clock root at best, so it can be at most the common latency early.  The
     FF insertion uses the plan's FF/TT ratio on the view number, as a tap with no FF value does."""
     if view_tt_ps <= 0:          # a view with the pin but no tree arc (LEF only): the pin binds, the plan values stand
-        return S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)
+        return S.core_tap_early_ps(P, tp, corner, t), S.core_tap_insertion_ps(tp, corner)
     c = "FF" if str(corner).upper().startswith("F") else "TT"
     ins = view_tt_ps if c == "TT" else round(S.FF_TT_INSERTION_RATIO * view_tt_ps, 3)
-    lat = S.common_latency_ps(P, c)
+    lat = S.common_latency_ps(P, c, t)
     return max(0.0, min(ins - lat, lat)), ins
 
 
@@ -1294,11 +1294,11 @@ def core_tap_view_report(P, tn):
                 continue
             plan_pin = tp["name"][len(c) + 1:]
             for pin, tt in (bound_core_clock_pins(P, tn, c, plan_pin) or {}).items():
-                early, ins = view_core_tap_values(P, tp, tt)
+                early, ins = view_core_tap_values(P, tp, tt, t=P.types[tn])
                 out.append(dict(port=n, inst=c, plan_pin=plan_pin, view_pin=pin,
                                 plan_insertion_ps=S.core_tap_insertion_ps(tp), view_insertion_ps=ins,
-                                plan_early_ps=S.core_tap_early_ps(P, tp), early_ps=early,
-                                clamped=ins - S.common_latency_ps(P, "TT") > early))
+                                plan_early_ps=S.core_tap_early_ps(P, tp, 'TT', P.types[tn]), early_ps=early,
+                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) > early))
             break
     return out
 
@@ -1334,7 +1334,7 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
         if "core_group" in tp:
-            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner))
+            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner, P.types[tn]), S.core_tap_insertion_ps(tp, corner))
                        for m in tp["core_group"]["members"])
             continue
         nm = tp["name"]
@@ -1351,14 +1351,14 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
         if tp.get("merged_clock_ports"):
             import merged_core_clocks as MC
             for pin in MC.pins_or_pending(P, tn, tp, hit[0], pending):
-                out.append((n, hit[0], pin, S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
+                out.append((n, hit[0], pin, S.core_tap_early_ps(P, tp, corner, P.types[tn]), S.core_tap_insertion_ps(tp, corner)))
         else:
             rebound = bound_core_clock_pins(P, tn, hit[0], hit[1])
             if rebound:
                 # only a tap that was EMPTY in every earlier kit: a pin the view has keeps its plan values
-                out.extend((n, hit[0], pin, *view_core_tap_values(P, tp, tt, corner)) for pin, tt in rebound.items())
+                out.extend((n, hit[0], pin, *view_core_tap_values(P, tp, tt, corner, P.types[tn])) for pin, tt in rebound.items())
             else:
-                out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
+                out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner, P.types[tn]), S.core_tap_insertion_ps(tp, corner)))
     physical = {c["inst"]: content_physical_identity(c)[0] for c in P.types[tn].get("hard_cores", [])
                 if "physical_inst" in c or "physical_master" in c}
     return [(n, physical.get(inst, inst), pin, early, insertion) for n, inst, pin, early, insertion in out]
@@ -2486,7 +2486,7 @@ def tap_offset_table(P, tn):
         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
         res = {}
         for c in ("TT", "FF"):
-            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c)) if n in core else 0.0)
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, getattr(P, "types", {}).get(tn))) if n in core else 0.0)
         if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
             raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row
