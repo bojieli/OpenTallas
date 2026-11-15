@@ -26,3 +26,5 @@
 - Relaunched A1/B1 (intel1) + A2/B2 (epyc9) from runs2/<form>/kit, client logs intel2 ~/tmp/hdcore2_<form>.log.
 ## 11-14 19:25 successor
 - A1/B1 intel1, A2/B2 epyc9 (runs2) alive, waiting memory in ot-heavy. Waiter ~/tmp/hdcore2_waiter.sh logs ~/tmp/hdcore2_waiter.log. Next: on finish pin-match, signoff, archive, AUTO-RESIGN.
+## 11-14 20:03 resubmit --mem 24
+- logs ~/tmp/hdcore3_<form>.log (intel2); A1/B1 running intel1, A2/B2 queued epyc9; OOM -> retry 40 GB.
