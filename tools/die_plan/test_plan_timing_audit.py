@@ -173,3 +173,17 @@ def test_shared_directory_measurement_is_not_attributed(tmp_path):
         PTA._shared_dir_guard(one)
     (tmp_path / "b_tt.lib").unlink()
     PTA._shared_dir_guard(one)
+
+
+def test_early_tap_credits_the_boundary_arc(monkeypatch, tmp_path):
+    lib = tmp_path / "c.lib"
+    lib.write_text(LIB)                                     # clk->q 480.5 + setup 346: headroom 6.5 without a tap
+    fake_load(monkeypatch, 533.0)
+    p = core_plan(lib=lib, tap=dict(insertion_ps=533.0))
+    common = float(p.clock["insertion_ps"])
+    (r,) = rows_for(p)
+    assert r["tap"] == "early" and r["verdict"] == "PASS"
+    assert abs(r["arc_headroom_ps"] - (833.0 - (common + 480.5 - 533.0) - 346.0)) < 0.2 and r["arc_headroom_ps"] > 150
+    fake_load(monkeypatch, 100.0)                           # no tap: the old form (6.5) still fails
+    (n,) = rows_for(core_plan(lib=lib))
+    assert n["verdict"] == "FAIL" and n["arc_headroom_ps"] == 6.5

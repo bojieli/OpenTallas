@@ -16,7 +16,8 @@
                         does not match the measured core.  Deliverability of the early arrival (spine arrival) is not checkable
                         from the plan and is listed as a note, never assumed.
       - boundary arcs:  clk->q max + setup max of the core's liberty (zero wire, timing_type rising_edge / setup_rising) against
-                        the cycle: headroom = period - clkq - setup; FAIL when headroom < MARGIN_PS.
+                        the cycle: headroom = period - clkq - setup; with an early tap clkq is credited by the tap: eff = common + clkq - tap insertion
+                        (the liberty arc includes the core insertion); FAIL when headroom < MARGIN_PS.
       - no measurement: UNMEASURED (COORD 11-15: does NOT fail): the core has no clock contract / signoff / insertion.json;
                         reported with the liberty-derived fallback depth (basis LIB) and counted per die.
 Output: per-die table of failing types with the numbers (tsv / json).  G0: check.py --timing-audit {off,warn,error}.
@@ -255,9 +256,12 @@ def audit_cores(P, root=None, arcs=True):
                         reasons.append(f"early tap declares {ti:.0f} ps, measured depth {I:.0f} ps (|d| {abs(I - ti):.0f} > tol {tol:.0f})")
                 head = None
                 if clkq is not None and setup is not None and (clkq or setup):
-                    head = period - clkq - setup
+                    # an early tap delivers the core clock earlier than the die common latency, and the liberty arc carries the
+                    # core's own insertion (QC-CORES-HEAD 11-15): credit it.  eff clk->q = common + clk->q - tap insertion.
+                    eff = clkq if tp is None else common + clkq - float(tp.get("insertion_ps", common))
+                    head = period - eff - setup
                     if head < MARGIN_PS - EPS:
-                        reasons.append(f"boundary arcs clk->q {clkq:.0f} + setup {setup:.0f} = {clkq + setup:.0f} ps leave {head:.0f} ps "
+                        reasons.append(f"boundary arcs clk->q {eff:.0f} (lib {clkq:.0f}) + setup {setup:.0f} = {eff + setup:.0f} ps leave {head:.0f} ps "
                                        f"of {period:.0f} for wire (< {MARGIN_PS:.0f})")
                 k = (tn, mod, pin, kind, round(I, 1), tuple(reasons))
                 if k in fold:
@@ -270,7 +274,6 @@ def audit_cores(P, root=None, arcs=True):
                                arc_headroom_ps=None if head is None else round(head, 1),
                                verdict="FAIL" if reasons else "PASS", reasons=reasons)
     rows = list(fold.values())
-    del common
     return rows
 
 
