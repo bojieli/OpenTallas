@@ -251,14 +251,34 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("source dir(s) the tests name: data/fix", g.stdout)    # ran with the file, not masked as a main baseline
         self.assertNotIn("also fail on main", g.stdout)
 
-    def test_source_missing_from_the_gate_tree_is_reported_as_such(self):
+    def test_source_missing_from_the_gate_tree_is_added_and_rerun(self):
         # a path the scan cannot see (built at run time) and the tree lacks: MISSING SOURCE, not RED and not a timeout
         g = self._dep_branch("claude/dyn", "import pathlib, mod\nR = pathlib.Path(__file__).resolve().parents[2]\n\n"
                                            "def test_dep():\n    assert (R / ('da' + 'ta') / 'fix' / 'input.txt').read_text()\n")
-        self.assertEqual(g.returncode, 1, g.stdout + g.stderr)
-        self.assertIn("MISSING SOURCE", g.stdout)
-        self.assertIn("data/fix/input.txt", g.stdout)
-        self.assertNotIn("GATE main=", g.stdout)
+        # the run reported data/fix/input.txt missing: the gate adds data/fix and reruns once -> GREEN, dir listed
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("source dir(s) the tests name: data/fix", g.stdout)
+        self.assertIn("GATE main=", g.stdout)
+
+    def test_tick_lands_on_a_green_gate_record_without_a_second_test_run(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n")
+        g = subprocess.run([sys.executable, "-I", P, "gate", "claude/good"], env=self.env, capture_output=True, text=True, timeout=600)
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        with open(q, "a") as f:
+            f.write(f"- 2026-11-15 09:00 PST [COORD] COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        r = self.tick()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        log = (self.d / "mq/log").read_text()
+        self.assertIn("gate record from hub", log)
+        self.assertIn("MERGED", q.read_text())
+
+    def test_parallel_gate_commands_run_together(self):
+        procs = [subprocess.Popen([sys.executable, "-I", P, "gate", b], env=self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                  text=True) for b in ("claude/good", "claude/clash", "claude/red")]
+        outs = [p.communicate(timeout=600) for p in procs]
+        self.assertEqual([p.returncode for p in procs], [0, 0, 1], outs)
+        self.assertEqual(sum("GATE main=" in o for o, _ in outs), 2)
 
     def test_fleet_test_timeout_under_load_is_rerun_alone_once(self):
         mark = self.d / "slow.mark"
