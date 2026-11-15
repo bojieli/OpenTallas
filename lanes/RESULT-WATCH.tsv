@@ -1,0 +1,22 @@
+# RESULT-WATCH.tsv (RESULT-WATCH-1). Any lane may append rows (tab separated): lane<TAB>host<TAB>kit_dir<TAB>opts
+# opts (optional, ;-separated): client_log=<intel2 path>  match=<process/mount substring>  log=<host path>;done=<ERE> (log-driven rows, e.g. G0_DONE rc=)
+# terminal: signoff.json / result.json under kit_dir, log done pattern, or no process+container for 2 polls (10 min each). One RESULT-WATCH line per row, once.
+TL-S81PHY	epyc8	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/phy__t1/attempt_8	
+TL-S81PHY	intel1	/srv/opentallas-scratch2/claude/tl-s81phy	client_log=~/tl-s81phy-route8.log
+TL-S81PHY	epyc10	/srv/opentallas-scratch2/claude/tl-s81phy-a2	
+TL-S81PHY	epyc10	/srv/opentallas-scratch2/claude/tl-s81phy-x2b-r	
+TL-SLC3XT1	epyc8	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/dsdv_slice_c3x_C__t1/attempt_29	
+TYPE-COLH9R1	epyc8	/srv/opentallas-scratch2/claude/type-colh9r1/h1	
+TYPE-COLH9R1	epyc10	/srv/opentallas-scratch2/claude/type-colh9r1/g2	
+TYPE-S81-MISC	epyc7	/srv/opentallas-scratch2/claude/type-s81-t29/r16	client_log=~/type-s81-t29-r16.log
+TL-LEAFT34	intel1	/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/ot_s81sl_leaf__t34/attempt_14	
+TYPE-S81LEAF29	epyc10	/srv/opentallas-scratch2/claude/type-s81leaf29/formB10	client_log=~/s81leaf29/formB10.otrun.log
+TYPE-S81LEAF29	epyc10	/srv/opentallas-scratch2/claude/type-s81leaf29/t44f10	client_log=~/s81leaf29/t44f10.otrun.log
+TYPE-S81LEAF29	epyc10	/srv/opentallas-scratch2/claude/type-s81leaf29/t25af10	client_log=~/s81leaf29/t25af10.otrun.log
+TYPE-S81LEAF29	epyc10	/srv/opentallas-scratch2/claude/type-s81leaf29/t25bf	client_log=~/s81leaf29/t25bf.otrun.log
+TL-COLH9R0P5	epyc9	/srv/opentallas-scratch2/claude/type-s81-col-h9-r0-p5/fa_ee6f8140	
+TL-COLH9R0P5	epyc9	/srv/opentallas-scratch2/claude/type-s81-col-h9-r0-p5/fm_8995e794	
+TL-COLH9R0P5	epyc9	/srv/opentallas-scratch2/claude/type-s81-col-h9-r0-p5/fm_ee6f8140	
+TL-COLH9R0P6	epyc10	/srv/opentallas-scratch2/claude/tl-colh9r0p6/fc	
+DIE-QC-103	epyc9	/srv/opentallas-scratch2/claude/die-qc-103/g0_s3r3	log=/srv/opentallas-scratch2/claude/die-qc-103/g0_s3r3.log;done=G0_DONE rc=
+DIE-QC-103	epyc9	/srv/opentallas-scratch2/claude/die-qc-103/g0_s3r2	log=/srv/opentallas-scratch2/claude/die-qc-103/g0_s3r2.log;done=G0_DONE rc=
