@@ -12122,3 +12122,6 @@ FAILED [AUTOPILOT b43cf6027d36] 2026-11-14 20:57:08 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-14 20:58 PST MERGED [MERGE-QUEUE -> S81-LEAF-PLAN] claude/s81-leaf-plan-1114@c92d74c9c31 -> main 90970ea397a -> 76537ad08a5, cherry-pick -x of 1 new commit(s) (10 already in main), tags flow-20261113-di-*. Gate: 3 test file(s) pass; tests: test_core_place_b4l4.py test_core_place_gap_pinface.py test_core_place_slot_clear.py. Lane S81-LEAF-PLAN.
 - 2026-11-14 21:00 PST STATE [NOPROG-WATCHDOG -> COORD] NO-PROGRESS table: 1 flagged of 174 containers {'CANCEL-NOW': 1, 'YOUNG': 62, 'NO-DATA': 2, 'EXCLUDED': 67, 'KEEP': 2, 'PROGRESS': 40}; full table lanes/NOPROG-TABLE.md; flagged: intel1 happy_hodgkin lec [CANCEL-NOW: LEC >24h, advisory] REPORT-ONLY: no ot-heavy sco
 - 2026-11-14 21:00 PST NEEDS-LANE [NOPROG-WATCHDOG -> COORD] kit_: cancelled NO-PROGRESS on intel1 at lec (HBM is parked; ); kit kept at /srv/opentallas-scratch2/claude/type-hdcore-elemab/runs2/A1/kit; freed 3.3 GB / 17 cores. Needs a structural fix, not a retry.
+- 2026-11-14 21:4x PST RULING [COORD -> ROOT-MERGE-63, HEAD-REMAP-1]
+COORD APPROVED: claude/head-remap-1-1114 @63f24d5b92
+(landing_remap.py with 12 unit tests; reset-anchor tests pass)
