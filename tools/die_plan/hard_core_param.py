@@ -10,6 +10,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import param_wrap  # noqa: E402
+
 _PARAM = re.compile(r"\.(\w+)\s*\(\s*([^()]*?)\s*\)")
 
 
@@ -32,7 +35,8 @@ def check_bound_text(tn, text, hard_cores):
         if not inst or "." in inst:
             out.append(f"{where}: physical_inst must be u_bound.<local> (got {hc.get('physical_inst')})")
             continue
-        pat = re.compile(r"^([ \t]+)(\w+)[ \t]+(#\([^\n]*?\))[ \t]+" + re.escape(inst) + r"[ \t]*\(", re.M)
+        straps = pw.get("straps")
+        pat = re.compile(r"^([ \t]+)(\w+)(?:[ \t]+(#\([^\n]*?\)))" + ("?" if straps else "") + r"[ \t]+" + re.escape(inst) + r"[ \t]*\(", re.M)
         hits = list(pat.finditer(text))
         if len(hits) != 1:
             out.append(f"{where}: expected one bound instance {inst}, found {len(hits)}")
@@ -41,8 +45,16 @@ def check_bound_text(tn, text, hard_cores):
         if h.group(2) != pw["base"]:
             out.append(f"{where} ({inst}): bound module {h.group(2)}, plan param_wrap base {pw['base']}")
             continue
-        have = {k: v for k, v in _PARAM.findall(h.group(3))}
+        have = {k: v for k, v in _PARAM.findall(h.group(3) or "")}
+        if straps:
+            # STRAP-MASTER-1115: the strap pins carry SKEW_N / SKEW_S; the bound instance must hold the same values
+            for k, v in straps.items():
+                got = param_wrap.bound_strap_value(pw["base"], have, k)
+                if got is None or got != int(v):
+                    out.append(f"{where} ({inst}): strap {k} ties {v}, bound {param_wrap.strap_param(k)} is {got}")
         for k, v in pw["params"].items():
+            if straps and k in param_wrap.SKEW_KEYS:
+                continue
             got = have.get(k)
             if got is None or _int(got) != int(v):
                 out.append(f"{where} ({inst}): parameter {k} bound {got}, plan param_wrap {v}")

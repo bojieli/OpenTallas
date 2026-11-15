@@ -31,3 +31,26 @@ def test_wrong_module_missing_param_and_missing_instance():
 def test_row_without_param_wrap_is_not_checked():
     row = {k: v for k, v in ROW.items() if k != "param_wrap"}
     assert H.check_bound_text("T", _bound(9, 9), [row]) == []
+
+
+# ---- STRAP-MASTER-1115: SKEW_N / SKEW_S carried by strap pins ----
+NB0 = "qfd_dv_s8_station_tail1_nb0"
+SROW = dict(inst="u_r0", module="sta_region_strap_s1", physical_master="sta_region_strap_s1", physical_inst="u_bound.u_u_r0",
+            param_wrap=dict(base=NB0, params={"HI_PAD": 18}, straps={"strap_skew_n": 8, "strap_skew_s": 9}))
+
+
+def _nb0(txt):
+    return f"module t(input ck);\n    {NB0} {txt} u_u_r0 (\n        .ck(ck), .rst_n(rst_n));\nendmodule\n"
+
+
+def test_strap_row_equal_skew_passes_and_defaults_are_14():
+    assert H.check_bound_text("T", _nb0("#(.HI_PAD(18), .SKEW_N(8), .SKEW_S(9))"), [SROW]) == []
+    row = dict(SROW, param_wrap=dict(SROW["param_wrap"], straps={"strap_skew_n": 14, "strap_skew_s": 14}))
+    assert H.check_bound_text("T", _nb0("#(.HI_PAD(18))"), [row]) == []            # module default SKEW 14
+
+
+def test_strap_value_differing_from_bound_skew_is_error():
+    r = H.check_bound_text("T", _nb0("#(.HI_PAD(18), .SKEW_N(9), .SKEW_S(10))"), [SROW])
+    assert len(r) == 2 and "strap strap_skew_n ties 8, bound SKEW_N is 9" in r[0] and "strap_skew_s ties 9, bound SKEW_S is 10" in r[1]
+    r = H.check_bound_text("T", _nb0("#(.HI_PAD(17), .SKEW_N(8), .SKEW_S(9))"), [SROW])
+    assert len(r) == 1 and "HI_PAD bound 17, plan param_wrap 18" in r[0]
