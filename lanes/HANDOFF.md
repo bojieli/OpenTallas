@@ -1,0 +1,1 @@
+- 2026-11-15 00:40 COORD hourly: 320 signed (no change); limit stop recovered; ot_store fixed; Fable triage lanes per die started (owner rule: Fable diagnoses, Sonnet implements)
