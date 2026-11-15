@@ -834,3 +834,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-27-1114@3a4d0f8cc6 (ADMIT-TUNE-1): plan early admit + admit marker, supersedes 13f06c8969
 - READY claude/admit-tune-24-1114@048230901f (ADMIT-TUNE-1): ot-mem-grow outcome logging watcher + install + test (on top of merged 222f0b0702)
 - READY claude/admit-tune-28-1114@00d8057ab2 (ADMIT-TUNE-1): ot-oom-age SIGKILL escalation + test (stacked on admit-tune-24 048230901f)
+- READY claude/admit-tune-29-1114@ed5743d1ad (ADMIT-TUNE-1): test-only fix for Escalate::test_survivor_gets_one_sigkill_with_guards (python script named openroad that ignores SIGTERM, no coreutils multicall dependence; guards now exercised) + root-only oom_score_adj test skipped when not root; based on 00d8057ab2, touches only tools/fleet/test_ot_oom_age.py
