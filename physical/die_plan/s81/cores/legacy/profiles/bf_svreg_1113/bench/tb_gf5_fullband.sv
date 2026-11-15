@@ -43,6 +43,13 @@ module tb_gf5_fullband;
       cyc=cyc+1;
       if(!rst_n) age=0;else age=age+1;
       #1;
+`ifdef OT_TB_ZERO
+      // zero-cycle forms (gf4 + FWDOWN): the DUT equals the gold at the SAME edge, not one later
+      vfprev={u_gold.vf_hi,u_gold.vf_lo};sfprev=u_gold.sf0;
+      svprev={u_gold.sv_hi,u_gold.sv_lo,u_gold.ctl_hi,u_gold.ctl_lo};
+      aprev={u_gold.sf0[0],2'b00,u_gold.s1b,u_gold.s1a,u_gold.s0b,u_gold.s0a};
+      prev={gv,gf,gl,gg,gflt,gd};
+`endif
       if(age>24) begin
         checks=checks+1;
         if({u_dut.sv_hi,u_dut.sv_lo,u_dut.ctl_hi,u_dut.ctl_lo}!==`TBD(svprev)) mismatch("SV_CTL");
