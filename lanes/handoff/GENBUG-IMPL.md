@@ -25,3 +25,10 @@ Turn flags on after one proof each: pick one cheap kit (e.g. S81 leaf t11 and a 
 
 ## G7 / G9
 G7 and G9 fix = coverage line + optional gate, implemented advisory (above). G7 true gate (fail at > 5 % fallback) not turned on: 15 of 18 S81 col kits sit above it, needs FABLE-TRIAGE-S81 decision. G9 advisory only, per table.
+
+## UPDATE 01:4x PST (end of lane run)
+- GitHub: claude/fable-genbug-1115-1 @4e7f20bccb and claude/genbug-impl-1115-1 @99185a0ba8 pushed (from localhost; fleet hosts have no GitHub access).
+- G3: die pdngen KV kvgeom6: 160/160 partition grids OK, but PDN-0233 on region grid ot_pg_9 (6.48 um sliver, independent of G3); posted to FABLE-TRIAGE-HEADKV.md. Not installed. Logs epyc9 genbug-impl/g3/kit/psm/pdn_only{2,3}.log.
+- G1 NEXT STEP when c1x passes (epyc8 .../proof/dsdv_slice_c1x_C__t1, still 3_3 global place at 01:4x, run_place.log): judge with fable-genbug/pq/stq_run.sh (copy 3_3_place_gp.odb as pq/in/<name>/3_place.odb with the wave kit's original istations.tcl). Install: intel2 ~/genbug-impl/inst_g1.sh + kit_istations_g1.py (= 4e7f20bccb version, sha256 prefix 3364e1a84f67e18c); on each host: scp kit_istations_g1.py to /tmp/ then `bash -s < inst_g1.sh` (copy+mv, .bak-genbug1, hash printed per tree; HEAD tree only on epyc7/10/intel1). Tree kit_istations.py == main today, so a plain replace is exact. Then re-key S81 297 / QC 26 / KV 4 under kit_wave.lock (backup kit_wave.json first), tell KIT-OPS-5 to generate those kits first.
+- DLY-SPREAD r53 (claude/dly-spread-1115-1 @47010b3510): install after merge with G1. CAUTION: the die trees' gen_phys.py (S81 +267/-108 vs main, QC/KV/HEAD differ too) and schema.py (S81 +49/-71) carry die-local lines: do a 3-way merge (git merge-file tree base main) per tree, not a plain copy; dly_spread.tcl and forest_recluster.tcl are plain copies if the tree copies equal main.
+- Guards flags (OT_MERGE_CENSUS, OT_HOP_CENSUS) still off; turn on after one proof each (leaf t11 kit on OT_HOP_CENSUS=1, a KV hgi kit on OT_MERGE_CENSUS=1). Wave-preflight call of hook_manifest.py check not wired.
