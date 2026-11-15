@@ -251,14 +251,14 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("source dir(s) the tests name: data/fix", g.stdout)    # ran with the file, not masked as a main baseline
         self.assertNotIn("also fail on main", g.stdout)
 
-    def test_source_missing_from_the_gate_tree_is_reported_as_such(self):
+    def test_source_missing_from_the_gate_tree_is_added_and_rerun(self):
         # a path the scan cannot see (built at run time) and the tree lacks: MISSING SOURCE, not RED and not a timeout
         g = self._dep_branch("claude/dyn", "import pathlib, mod\nR = pathlib.Path(__file__).resolve().parents[2]\n\n"
                                            "def test_dep():\n    assert (R / ('da' + 'ta') / 'fix' / 'input.txt').read_text()\n")
-        self.assertEqual(g.returncode, 1, g.stdout + g.stderr)
-        self.assertIn("MISSING SOURCE", g.stdout)
-        self.assertIn("data/fix/input.txt", g.stdout)
-        self.assertNotIn("GATE main=", g.stdout)
+        # the run reported data/fix/input.txt missing: the gate adds data/fix and reruns once -> GREEN, dir listed
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("source dir(s) the tests name: data/fix", g.stdout)
+        self.assertIn("GATE main=", g.stdout)
 
     def test_tick_lands_on_a_green_gate_record_without_a_second_test_run(self):
         q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
