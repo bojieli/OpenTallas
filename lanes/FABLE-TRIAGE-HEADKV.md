@@ -410,3 +410,53 @@ MEASURED in the plan-of-record sidecar (epyc7 head-99/prep21z16e/prep/source_sid
 - Do: DIE-HEAD-ROUTE-1 drops the 1400 um bound and the tap JSONs, adds `--start-leaf-origins` (hop bound 405),
   runs bind with the partition-keyed table, the 18 freg ports, start_stage_emit and the count-aligned STA. HEAD-99
   takes count_aligned whole from that output (it then carries start_ports, start_pins, parts, frame_clock_regions).
+
+## 12. KV die PG: grid ot_pg_9 fails pdngen (question from GENBUG-IMPL, 01:3x PST)
+
+GENBUG-IMPL's item (its commit 241397267d4 to this file, restored here; my later commits had replaced it): G3
+works (die_pg_parts touched 160 of 160, 160 macro grids), but die pdngen on kvgeom6 plan_c fails PDN-0232 / PDN-0233
+on `ot_pg_9`, a 6.48 x 972 um region (x 11173.68-11180.16, y 26064.72-27036.72), M8 only, 0 partitions. With that
+grid removed from a copy, pdngen exits 0 in 351 s. Question: plan item, or should pg_regions skip such regions?
+
+Answer: it is an emit-rule defect in `pg_regions.pdn_tcl`, not a region-split bug and not a plan item.
+- MEASURED (epyc9 genbug-impl/g3/kit/psm/pdn.tcl): 12 regions. Six carry the die default spec and hold 0
+  partitions: ot_pg_1, 3, 11 (6.48 um high bands), ot_pg_4 and ot_pg_9 (6.48 um wide columns), ot_pg_10
+  (7,469 x 183.6). The 6.48 um pieces are the die margin around the top-row domains (partitions end at x 11173.68,
+  die at 11180.16; the same frame exists on the west and the top). The split is consistent.
+- The generator already knows that no M9 stripe (pitch 39.96) fits in a 6.48 um wide column: it emits ot_pg_4 and
+  ot_pg_9 with M8 only, yet still emits the grid and `add_pdn_connect -layers {M8 M9}`. A one-layer grid has no
+  via, pdngen removes the floating M8 stubs, the grid is empty, PDN-0233. ot_pg_4 is the same class and passes only
+  by position; treat it the same.
+- EXACT RULE, per region, from the stripe spec and the region box (no fixed width threshold):
+  for each stripe layer L with width w, pitch p, offset o: stripes inside = 0 if span < o + w, else
+  floor((span - o - w) / p) + 1, where span is the region size across the stripe direction (M8 horizontal: height;
+  M9 vertical: width).
+  1. If the region has at least one horizontal-layer stripe AND at least one vertical-layer stripe: emit the grid.
+  2. Otherwise, if it holds 0 partition instances (the die_pg_parts centre-in-box test) and no bump: do not emit a
+     region, domain or grid for it; print `OT_PG_REGION_SKIP <name> <w> <h> no_crossing`.
+  3. Otherwise (it holds a partition but cannot form a crossing): fail closed at generation, plan error.
+  On kvgeom6 this skips exactly ot_pg_4 and ot_pg_9 and keeps ot_pg_1, 3, 10, 11 (each has M8 and M9 stripes and
+  builds today). Do not skip on "0 partitions" alone: ot_pg_10 and the bands carry the die grid between domains and
+  the die-top clock cells.
+- DIE-KV-ROUTE-1's interim filter (drop regions under 40 um, 5 dropped) is wider than needed; replace it with
+  this rule in the shared script so both lanes build the same PG.
+- HEAD: its die pdngen already passes with 358 of 358 macro grids (2a1); run the same rule there, it should skip
+  nothing. QC and S81: run the rule in report mode once before installing G3.
+- Owner: GENBUG-IMPL (rule in pg_regions + one test with a 6.48 um column); then install G3 after the KV die
+  pdngen passes unmodified.
+
+## 13. elemA A2p after the pins.json fix (question from CORES-NOROW-1, 02:5x PST)
+
+CORES-NOROW-1's item (its commit ddf6a081fd4 to this file, restored here): pin_audit now passes with island rows.
+Signoff GOAL=post on A2p: TT setup +207.83, FF hold -6.51 ps on 58 endpoints, DRC 0, antenna 0, drv FAIL (TT slew
+4, FF slew 1). Question: hold ECO on the routed DB or margin change and re-route; are the slew violations real?
+
+Answer (rule-based; I did not open the A2p reports):
+- Hold: ECO on the routed DB. Hold >= 0 is a blocking gate, the miss is 6.5 ps on 58 endpoints against +208 ps of
+  setup, so one delay cell per endpoint closes it; this is the small local case the owner allows as an ECO, and the
+  old signed elemA used the same head_post_route_eco flow. Re-check setup, DRC and antenna after it. Do not change
+  the margin and re-route for 6.5 ps.
+- Slew: advisory under the academic profile (blocking gates are DRC 0, setup, hold, bind and lane latency), with
+  one exception to check: if any of the 5 violating nets is a clock or an ft clock pass-through (ft_ck0/1,
+  ft_mesh), fix it in the same ECO by sizing the driver, because the die clock STA propagates through those arcs.
+- The core does not count as signed until the LEC rerun (5.2) is back.
