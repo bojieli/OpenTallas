@@ -629,14 +629,14 @@ def _storage_rects(t,bus,width,used,*,branch=3,depth=2,**kw):
     """S81-BANDTAP-1115 band defrag: the greedy carve (_storage_rects_one) cuts a channel at every reserved tap site and
     its first picks decide the piece count (svc_hi t6 attnh_i0 9 -> 16 rects once the 8.64-um tap sites were obstacles).
     Re-run the same legal carve with the first `depth` picks taken from the `branch` best distinct free rects and keep the
-    result with the FEWEST rects (then the smaller max pin hop); picks=() is the old greedy, so the result never has more
+    result with the FEWEST rects (a tie keeps the plain greedy result); picks=() is the old greedy, so the result never has more
     pieces than before.  Every piece has the same legality (margin, reach, obstacles incl. tap sites)."""
     import itertools
     best=None;err=None
     for picks in itertools.product(range(branch),repeat=depth):
         try:b=_storage_rects_one(t,bus,width,used,picks=picks,**kw)
         except ValueError as e:err=e;continue
-        key=(len(b.get("rects_um") or [1]),b["max_pin_to_band_hop_um"])
+        key=(len(b.get("rects_um") or [1]),)               # strictly fewer pieces only: a tie keeps the greedy rects (no churn)
         if best is None or key<best[0]:best=(key,b)
         if key[0]<=1:break
     if best is None:raise err
@@ -644,7 +644,7 @@ def _storage_rects(t,bus,width,used,*,branch=3,depth=2,**kw):
 
 
 def _storage_rects_one(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=24,g=1.08,margin=17.28,reach=405-2.16,
-                   min_w=4,min_h=2,picks=()):
+                   min_w=4,min_h=2,picks=(),reach_k=1.0):
     import numpy as np
     w,h=t["outline_um"];px,py=_bus_xy(t,bus);rw=64*math.ceil((width+int(has_epoch))/64)
     reserve=_band_reserve_um2(width,has_epoch);obstacles=_band_obstacles(t,used,phy,resets)
@@ -659,7 +659,7 @@ def _storage_rects_one(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_re
     dx=np.maximum(np.abs(xs[:-1]-px),np.abs(xs[1:]-px));dy=np.maximum(np.abs(ys[:-1]-py),np.abs(ys[1:]-py))
     free&=(dx[:,None]+dy[None,:])<=reach+1e-9
     tr=_tap_reach(t)
-    if tr:free&=_reach_mask(free.shape,g,tr)               # S81-BANDTAP-1115: band points a legal tap site reaches
+    if tr:free&=_reach_mask(free.shape,g,(tr[0]*reach_k,tr[1]))               # S81-BANDTAP-1115: band points a legal tap site reaches
     rects=[];left=reserve
     while left>1e-6:
         if len(rects)>=max_rects:break
@@ -1221,8 +1221,11 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                 band=copy.deepcopy(fx)
             try:
                 if band is None and _tap_reach(t) and band_multi_rect:      # S81-BANDTAP-1115: tap-reach types take the reach-masked search first
-                    try:band=_storage_rects_staged(t,bus,int(r["width"]),used,phy=phy,resets=resets);used+=band.get("rects_um") or [band["rect_um"]]
-                    except ValueError:band=None
+                    for k in (1.0,1.5,2.0):                     # widest reach last; none = the plain search below
+                        try:
+                            band=_storage_rects_staged(t,bus,int(r["width"]),used,phy=phy,resets=resets,reach_k=k)
+                            band["tap_reach_um"]=round(_tap_reach(t)[0]*k,3);used+=band.get("rects_um") or [band["rect_um"]];break
+                        except ValueError:band=None
                 if band is None:band=_storage_band(t,bus,int(r["width"]),used,phy=phy,resets=resets);used.append(band["rect_um"])
             except ValueError as e:
                 band=None
@@ -1272,7 +1275,10 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                         note="reverse monitor forwarded clock; 2bit landed ring, boot-only cost"))
                 if c["seam"]:
                     monbus=f"cland_dn_ready_{i}"
-                    try:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
+                    fxm=((t.get("clock") or {}).get("band_fixed_um") or {}).get(f"monitor_{i}")   # frozen (S81-BANDTAP-1115)
+                    try:
+                        if fxm and fxm.get("rect_um"):band=copy.deepcopy(fxm)
+                        else:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
                     except ValueError as e:
                         placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
                     band["instance"]=f"u_cland_monitor_{i}"
