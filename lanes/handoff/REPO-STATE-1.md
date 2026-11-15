@@ -1,14 +1,15 @@
-# REPO-STATE-1 handoff (successor, 2026-11-14 19:3x PST)
+# REPO-STATE-1 handoff (successor, updated 2026-11-14 20:1x PST) -- DONE, waiting on merge + owner decision
 
-Owner order 11-14: ITEM 3 slim repo (measure, stop growth, fast clones), ITEM 4 per-lane posts. History rewrite = owner decision only (propose, never do).
+Owner order 11-14: ITEM 3 slim repo, ITEM 4 per-lane posts. A history rewrite is an owner decision only (options A/B/C are in the RESULT post; default A = no rewrite).
 
-Work dir: intel2 /srv/opentallas-scratch2/claude/repo-state-1 (full/ = full clone, partial/ = blob:none clone, measure.json, cands.json, proof/ = shadow proof, pc-*/wt-tools = clone-fast timing trees; all deletable when this lane closes).
-
-## ITEM 4 (live since 18:54)
-- bin/post.sh, tools/queue_view.py (+tests), bin/coord-commit.sh own-files replay; queue-view.timer (2 min, intel2 user systemd).
-- Shadow proof: proof/ 62 min from 18:55 -> proof/shadow_result.json (lost/extra must be 0).
-
-## ITEM 3
-- Measured (fresh clone intel2 19:05): full clone 18:29 wall, 10.7 GiB pack, 16,342 refs; partial blob:none 1:29.
-- clone-fast.sh timings: --from worktree 8.1 s; partial preset tools 78 s / 741 MB; preset lane (see RESULT).
-- Next: guard branch (tools/repo_size_guard.py + test + allowlist + CI step), clone-fast.sh branch, METHODOLOGY section, RESULT + owner-decision numbers.
+- ITEM 4: live. bin/post.sh, tools/queue_view.py (fix 0ceab44ffbf), tools/tests/test_queue_view.py (6 pass), coord-commit.sh replay, queue-view.timer (intel2 user systemd, 2 min). Shadow proof: lost 0 / extra 0 after the fix (intel2 /srv/opentallas-scratch2/claude/repo-state-1/proof, proof/reshadow).
+- ITEM 3: branch claude/repo-state-1-1114@892fe1e318a is READY to MERGE-QUEUE-1/ROOT-MERGE-63 (guard + allowlist + test + CI job + clone-fast.sh). METHODOLOGY section 13 is in coord 5ca9ffe879b.
+- Open:
+  - after the merge, MERGE-QUEUE-1 runs `repo_size_guard.py --range origin/main...BRANCH`;
+  - COORD rules on the die-plan policy proposal;
+  - the owner decides A/B/C.
+- Work dir: intel2 /srv/opentallas-scratch2/claude/repo-state-1, ~70 GB. It holds:
+  - the clones full/ (branch worktree full/br) and partial/;
+  - the timing trees pc-tools, pc-lane (36 G), pc-lane2, pc-coord, wt-tools, wt-lane;
+  - g/ (backups: METHODOLOGY.md.bak, queue_view.py.bak).
+  - Delete the timing trees freely. Keep full/ until the branch has merged.
