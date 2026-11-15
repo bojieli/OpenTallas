@@ -831,3 +831,4 @@ CODEX: 2026-11-01 20:41 PST MERGED+pushed daf8730843b (HEAD==origin/main): measu
 - READY claude/admit-tune-26-1114@dbf3ed7cd5 (ADMIT-TUNE-1): stage-aware oom-age every minute, supersedes admit-tune-19/17
 - READY claude/admit-tune-27-1114@333e42282f (ADMIT-TUNE-1): plan drain 10 min, oldest-first plan queue
 - READY claude/admit-tune-27-1114@13f06c8969 (ADMIT-TUNE-1): plan queue self-hold fix, supersedes 333e42282f
+- READY claude/admit-tune-27-1114@3a4d0f8cc6 (ADMIT-TUNE-1): plan early admit + admit marker, supersedes 13f06c8969
