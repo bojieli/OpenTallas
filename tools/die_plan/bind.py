@@ -776,6 +776,59 @@ def core_input_pipe(plan, tn, module, port=None):
     return int(cfg.get("pipe") or 0)
 
 
+def core_link_pipe_spec(plan, tn, module, port):
+    """KV-PVGEN 11-15 (OWNER pre-approved added cycles): the plan's register stages on the named INPUT port of a bound
+    leaf/core of type tn, as a list of (D, lo, hi) bit runs (hi None = to the top bit); [] = none.  This is the
+    generator stage for core<->core hops the plan cannot station (KV kv3_pv_v1n pair -> join, join -> T relay): each run is
+    ONE ot_dp_dly #(W, D) u_pc_lp_<leaf>_<port>_<k> on the fabric clock, without the NK lockup latch; every stage is a
+    named flop of the type, so the plan can FIRM it (R-RTL-6).  The added cycles are DECLARED per bit in the same
+    bind_core_input_pipe.json as the NK pipe, so bind_verify, LATCHECK and the compiler/TOK see them.
+    Plan clock.core_link_pipe (absent = off, byte-identical RTL):
+      {"types": [type, ...] | "all": true, "except": [type, ...],
+       "modules": {"<leaf module>": {"<input port>": D | {"D": D, "bits": [lo, hi]} | [{"D": D, "bits": [lo, hi]}, ...]}}}
+    D in 1..4.  A port that mixes lane-timed bits with other nets (a relay y word carrying the epoch bit) names the bit
+    ranges it delays; bits outside every run are untouched."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_link_pipe")
+    if not cfg:
+        return []
+    if cfg.get("all"):
+        if tn in set(cfg.get("except") or []):
+            return []
+    elif tn not in set(cfg.get("types") or []):
+        return []
+    v = ((cfg.get("modules") or {}).get(module) or {}).get(port)
+    if not v:
+        return []
+    rows = v if isinstance(v, list) else [v]
+    out = []
+    for r in rows:
+        if isinstance(r, int):
+            out.append((int(r), 0, None))
+        else:
+            lo, hi = (r.get("bits") or [0, None])
+            out.append((int(r["D"]), int(lo), None if hi is None else int(hi)))
+    return out
+
+
+def core_link_pipe(plan, tn, module, port):
+    """Deepest declared link pipe D on that port (0 = none); see core_link_pipe_spec."""
+    return max((d for d, _, _ in core_link_pipe_spec(plan, tn, module, port)), default=0)
+
+
+def core_link_pipe_bits(plan, tn, module, port, width):
+    """Per-bit link pipe depth list (len width); overlapping runs are an error."""
+    d = [0] * width
+    for depth, lo, hi in core_link_pipe_spec(plan, tn, module, port):
+        hi = width - 1 if hi is None else hi
+        if lo < 0 or hi >= width or lo > hi:
+            raise BindError(f"core_link_pipe {tn}/{module}.{port}: bits [{lo},{hi}] outside width {width}")
+        for b in range(lo, hi + 1):
+            if d[b]:
+                raise BindError(f"core_link_pipe {tn}/{module}.{port}: bit {b} listed twice")
+            d[b] = depth
+    return d
+
+
 def ft_hop_lockup_cell():
     """gen_rtl's ot_dp_lk module text, verbatim (keep attributes included)."""
     import gen_rtl
@@ -849,7 +902,7 @@ def instance_path_params(cells, defaults, rules):
 
 
 class Binder:
-    def declare_core_input_pipe(self, tn, p, ci, pn, npipe):
+    def declare_core_input_pipe(self, tn, p, ci, pn, npipe, bit=None):
         """Record the declared +npipe core-input cycles of leaf ci / port pn for EVERY die instance of type tn.
 
         emit_type writes a type's module once, from its first partition p, and every partition of the type instantiates
@@ -864,7 +917,7 @@ class Binder:
             if len(hit) != 1:
                 raise BindError(f"core_input_lockup pipe {tn}: leaf {r} found {len(hit)}x in partition {q} "
                                 f"(type members must match its first partition {p})")
-            rec[f"{self.F.cells[hit[0]].path}.{pn}"] = npipe
+            rec[f"{self.F.cells[hit[0]].path}.{pn}" + ("" if bit is None else f"[{bit}]")] = npipe
 
     def sub_core_leaf_of(self, hc):
         """The bound leaf holding plan sub-core hc, or None (not a sub-core, or not in asbuilt.sub_core_leaf)."""
@@ -4049,6 +4102,22 @@ class Binder:
                         body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
                                     f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
                         e = [lk]
+                    lpd = core_link_pipe_bits(self.plan, tn, c.module, pn, len(bits)) \
+                        if core_link_pipe(self.plan, tn, c.module, pn) else None
+                    if lpd and any(lpd):
+                        e = list(e)
+                        for k_, depth in enumerate(sorted(set(lpd) - {0})):
+                            idx = [i_ for i_, x_ in enumerate(lpd) if x_ == depth]
+                            lp = short_id(f"lp_{sv_id(r)}_{pn}_{k_}", 100)
+                            decl.append(f"    wire [{len(idx) - 1}:0] {lp};")
+                            body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
+                                        f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
+                                        f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
+                                        f"// core_link_pipe: +{depth} DECLARED cycle(s) on bits {idx[0]}..{idx[-1]}")
+                            for j_, i_ in enumerate(idx):
+                                e[i_] = f"{lp}[{j_}]"
+                                self.declare_core_input_pipe(tn, p, ci, pn, depth + int(core_input_pipe(
+                                    self.plan, tn, c.module, pn) or 0), bit=i_)
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
