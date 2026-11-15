@@ -199,6 +199,10 @@ the script does not separate that. Not followed up.
 - Three-stage chains on spans over 1,140 um (COORD 03:2x, FABLE-CLOSURE-STRATEGY lever 7): chain depth is
   ceil(span / 380 um); head 3 of kv3_hgi_v2 needs 4 stages.
 
+- Keep-only forms on kv3_hg (k_hg, k_hg_m7; stopped 04:2x on COORD order). MEASURED: CTS -739 / -723 ps against -753 ps
+  merged; pre-route hold repair sat at iteration 0 for 2 h 10 min (FF hold -290 ps, TNS -1.29M). kv3_hg needs plan
+  stations on nine bus families (section 11.2); no kit setting closes it.
+
 ## 9. Update 2026-11-15 01:55 PST
 
 - Keep only: kv3_hgi_v2 CTS -366 ps / -142k (merged -586 / -558k); after pre-route hold repair -431 ps, FF hold +3.7 ps
@@ -292,3 +296,12 @@ Class fix for kv3_hgi* (KV-102, as-built generator + plan):
 4. a stage on `u_cland_rst_ft0_i -> fstart`, and the `u_bin_i_ectl_Q_N_tN` register next to its ring.
 Items 2-4 change lane latency or the reset tree; they need the RTL owner's functional check and the bind, which a kit
 form cannot give. Kit form v_hgi2 (items 1-3 edited into the kit RTL) can prove the physical side only.
+
+## 13. Update 2026-11-15 04:25 PST
+- v_hgi2 (PHYSICAL-ONLY proof, COORD approved, does not count): t_hgi2 kit + two register stages on every kp / kpv / gf
+  input of `u_headN_e0/u_kt` (14 source-core groups) + one reset relay flop per head core (16), `fable-kvovf/bin/v_edit.py`,
+  `OT_KEEP_WIRES = ti_b kvq`. Launched 03:58 from synth, running on epyc10 (copies on epyc2/7/9); passed the pre-floorplan
+  gates. Not functionally checked: kp path +2 cycles, core reset release +1 cycle.
+- Running: v_hgi2 (placement), t_hgi2 (pre-route hold repair: FF hold -237 ps, TNS -1.89M at iteration 0), t_hg (placement),
+  k_hgi2 / k_hgi2_m7 (incremental route repair; two allow-congestion reroutes passed without GRT-0232).
+- The real kv3_hgi* fix is KV-102's plan delta (dispatched by COORD 03:5x).
