@@ -27,3 +27,20 @@ make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_kv3_hgi_v3/base/5_1_grt.odb] Error 2
 COORD 10:2x: fC/fD moved to epyc10 (kits epyc10:/srv/opentallas-scratch2/claude/type-kvhgi3/f{C,D}/kit, ot-run --hosts epyc10, logs ~/typekv3/f{C,D}.log); fA/fB stay on intel1. The two "WAITER fC/fD ... ended" blocks above (10:16) are SPURIOUS (I killed the queued intel1 ot-run clients, PIDs 4001342/4001989, cmdline checked, nothing had started; the block shows the old attempt log). Live waiters: waiter.sh (fA/fB intel1), waiter3.sh (fC/fD epyc10), results appended as WAITER/WAITER3 blocks.
 RESULT fC (epyc10, -allow_congestion, 30 it): FAIL. Initial GRT passed with congestion warning (GRT-0115, total overflow 39, 7540 s) but estimate_parasitics -global_routing then died GRT-0232 Routing congestion too high -> EST-0104 -> do-5_1_grt rc 2. -allow_congestion does NOT get a kit past 5_1_grt on this design. fA (80 it) / fB (120 it, seed 5) on intel1 and fD (80 it + head3_e2 M7/M8 keep-out) on epyc10 are RUNNING (launch needed run_kit.sh beside kit/ and --dir = fX parent; fixed). Harness waiter armed.
+
+WAITER3 fC epyc10 Sat Nov 14 19:58:03 PST 2026 ended
+[INFO GRT-0096] Final congestion report:
+Total        221726484       23265141           10.49%             3 /  4 / 39
+ls: cannot access '/srv/opentallas-scratch2/claude/type-kvhgi3/fC/kit/signoff.json': No such file or directory
+Elapsed time: 2:57:55.29[h:]min:sec. CPU time: user 14932.17 sys 187.88 (141%). Peak memory: 29302832KB.
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_kv3_hgi_v3/base/5_1_grt.odb] Error 2
+
+WAITER3 fD epyc10 Sat Nov 14 19:58:03 PST 2026 ended
+Total        221726484       23265252           10.49%             3 /  4 / 41
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+Error: global_route.tcl, 194 GRT-0116
+ls: cannot access '/srv/opentallas-scratch2/claude/type-kvhgi3/fD/kit/signoff.json': No such file or directory
+[INFO GRT-9104] OT transition layer M5: stock 2268064 tiles, edge 52667 tiles (2459 from macro pins), interior freed 2215397.
+[INFO GRT-9104] OT transition layer M6: stock 2269572 tiles, edge 54154 tiles (2438 from macro pins), interior freed 2215418.
+[INFO GRT-9104] OT transition layer M7: stock 226600 tiles, edge 4382 tiles (0 from macro pins), interior freed 222218.

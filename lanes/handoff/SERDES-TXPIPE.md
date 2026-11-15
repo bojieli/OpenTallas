@@ -30,3 +30,9 @@
 
 ## Status
 - (updated below)
+
+## Successor 11-14 19:3x PST
+- FOUND: t14 kit lacked TXPIPE RTL (kit-rtl dedup col.sv comes from asbuilt B3s original, not overlay; kit_rtl.json defines lack TXPIPE/RXPIPE, only config.mk has them). Fix: epyc8 serdes-txpipe/t14regen.sh (patch dedup col.sv with txpipe_col.patch, regen gen phys). Log intel2 ~/serdes-txpipe-t14regen.log.
+- Bench rerun (tx/rx/both/mutants, 2-die col, rst_tree) queued on epyc10 via ot-run, log intel2 ~/serdes-txpipe-bench-rerun2.log. eq 3362/3362 PASS already.
+- NEXT: after regen GEN_DONE and grep count>0: route kit with run_kit.sh (hosts epyc7,epyc8,epyc9,epyc10), compare u_core/u_txl->u_ptx/d setup vs -454.9; then READY+defines message to DIE-S81-92 (need col.sv in bound src + DEFS_ADD).
+- 19:5x resumed: latency bench PASS 88/89/89/90 (+1 per stage). Rerun of OOM-killed mutant/col/tree runs: ~/serdes-txpipe-bench-rerun3.log. No-LLM waiter ~/serdes-txpipe-waiter.sh (regen GEN_DONE -> route, log ~/serdes-txpipe-t14-route.log). On route end: compare u_txl->u_ptx/d setup vs -454.9, then RESULT + defines to DIE-S81-92 (col.sv into bound src + DEFS_ADD).

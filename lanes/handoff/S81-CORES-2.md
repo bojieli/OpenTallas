@@ -148,3 +148,6 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## 2026-11-14 19:25 successor
 - Live: bksel m7pg (epyc8), gunit g4 (epyc10). Waiter succ_waiter.sh. See queue STATE 19:25.
+
+## 2026-11-14 20:35
+- bksel nsesc form queued epyc8 (log bksel_nsesc.otrun.log); m7pg running; g4 running.
