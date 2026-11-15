@@ -1,3 +1,227 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-15 09:3x PST: eight levers, RESETN seam class, stop list
+
+Read-only review by FABLE-CLOSURE-0910. Technical physical design only. HBM parked. Nothing launched, stopped or changed.
+Read: the 07:3x strategy (kept below), FABLE-PD-S81-0850, PD-PLACE-0830, PD-S81C-0730 sections 7-8, PD-HEAD-0700, PD-KV-0800,
+PD-QC-SUC-0800, PD-QC-0700, FABLE-S81-TYPEMERGE, `failure_breakdown.py` (09:11), `KIT-WAVE FAIL` 07:10-09:04, the handoffs,
+the queue to line 13995, and the seam RTL (`rtl/common/landed_parent/ot_pl_seam.sv`, main).
+MEASURED = read by me today. REPORTED = from a lane or review file. INFERENCE is marked. I ran no STA and no what-if.
+
+`failure_breakdown.py` 09:11, technical rows only: S81 types 36/394 (69 running, 3 route held, 3 held for the event, 1 RTL
+lint); HEAD 19/26 (7 running); QC 3/127 (50 held for the event, 31 running, 11 route held, 5 place error); KV 5/56
+(28 running, 14 held, 2 global place, 1 place). No congestion, DRC or post-route timing class is listed on any of the four dies.
+Wave failures 07:10-09:04, design classes only: ring band blocked 4 (KV hgi_v6, hub_Wo), `cland_col_cursor` 6 (KV), LEC 1
+(QC slw_hc3), GEN_LINT `defparam LOCAL` in `ot_dp_clk_landing.sv` 9 S81 slice_station types + lepe_nh_mus_LP. The rest
+(STALE-CORE-VIEW 58, bootstrap gen 22, place RC 0 on another host 16 + 18 quoted as "plan geometry") are tool classes.
+
+## 0. What changed since 07:3x
+
+1. Three dies are about to rebuild nearly all their types (S81 B6gE about 13:00, QC S4q3, KV 7u). None of those kits
+   reserves the sites of the die clock cells. If the types sign first, the HEAD result (lever 1) repeats on each die
+   and every type re-keys once more. The reservation belongs in these three events, not after them.
+2. The col RESETN at -183 ps is a family item: every col family carries the seam writer that makes it (lever 3).
+3. KV 7j is adopted (08:47). HEAD NF6 is adopted. The p6 M8 grant reaches 0 overflow at GRT (was 106 %).
+4. Two one-line or one-step fixes named at 08:30 and 07:30 have not moved (section 2).
+
+## 1. Levers, ranked by types or dies unblocked
+
+| # | dies | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | HEAD, KV now; S81, QC before their events sign | Die clock cells under partitions: reserve the sites in the type, cut the abstract, drop the GRT-only obstructions | the die DRC gate of all four dies; avoids a second re-key of about 500 types | DIE-ROUTE-ABS-1 (tool), HEAD-100, KV-102, DIE-S81-92, DIE-QC-103 |
+| 2 | S81 | One stacked event B6gE with one compose last; sign-off key = layout hash | 350 held types; 395 builds down to about 212, then 198 | DIE-S81-92, S81-TAPROWS, S81-PHYT1, S81-CA-BAND, S81-TYPEMERGE-IMPL, S81-LEAF-PLAN |
+| 3 | S81 | Seam writer async clear (RESETN): site the reset leaf at the station; registered per-chunk clear if needed | all 216 col types (12 families) | TL-COLH9R0P6 (STA + pilot), new lane S81-SEAM-RST (generator), DIE-S81-92 (event) |
+| 4 | QC, KV | Buses that cross a type in one cycle: station rows per matched group, and a placed-dump scan on every type | QC su_c 3, fw / st_b about 45; KV pv 11, hg / hgi 19 | QC-FWST, DIE-QC-103, KV-102, KV-PVGEN, KV-ECTLK-RL; scan = new lane |
+| 5 | KV, S81 | Clock landing ring bands: two-column floor, band order, tap sites as obstacles | KV 19 hg / hgi + hub_Wo + io types; S81 11 band-less types (7 svc, leaf t8 / t72, t51) | KV-102 (7t), S81-CA-BAND, S81-PHYT1, TYPES-KV-FAIL (cursor line) |
+| 6 | QC, KV | Latency literals and pad tables tied to a lane depth: regenerate in the bind chain, straps in hard cores | QC S4q3 / S4v2 / S4fw adoption, 4 sta_region parents; KV krsp +5 | DIE-QC-103, HCPARAM-ALL, KV-ECTLK-RL, KV-102 |
+| 7 | S81 | col p5 / p6 frame channel: M8 E-W grant as a die key | 24 col types (12 p6, 12 p5) | TL-COLH9R0P6, DIE-S81-92 |
+| 8 | S81, KV | Core clock reference: one tap row per core at the signed value; macro clock pins ahead of their registers | bksel_q then bk_sel__t2; 216 col types; kv3_hub_C | CORE-BKSEL-1115, S81-TAPROWS, KV-102 (7q) |
+
+### Lever 1. Die clock cells under the partitions (cross-die)
+
+Evidence:
+- REPORTED (FABLE-PD-HEAD-0700, epyc2 `die-head-route-1/head/p20nc_gate/unitruns/probe_u201_b/drc_TT.rpt`): 2,800 markers,
+  2,788 within 0.5 um of a die clock inverter, on 250 sites; 600 of 606 clock cells of the unit lie inside a tile. What-if on
+  u201: as built 3,276 / 2,786 / 2,800 / 2,679; windows at the cells 621 / 96 / 96 / 74; windows plus no GRT-only obstructions
+  340 / 44 / 44 / 21 (19 of the 21 are M8 min step on the clock wire itself). 0 was not reached in 4 steps.
+- MEASURED (epyc2 `die-route-abs-1/r_cut2`, the lane's own cut database): iteration 0 at 80 % shows 481 violations, against
+  3,276 as built. It agrees with the what-if.
+- REPORTED (DIE-ROUTE-ABS-1 handoff): cells under a partition: HEAD 44,519 of 44,547; KV 32,280 of 32,280; QC 127,101 of
+  127,106; S81 no kit tree found (the B6gsh clock kit has 91,460 die clock cells, 0335 H). Tool `abstract_cutout.py` and the
+  kit flag `--cut-abstracts-under-clock` are on a branch. "Per-type site reservation not started. M8 step unassigned."
+- REPORTED: HEAD declares 63 islands per tile in one row; 3 of 600 cells are in one. KV: 437 of 32,856 in a declared island.
+
+Root cause: `die_trial.SiteMap` allows a die clock cell anywhere in a partition outside hard cores. The type under it never
+kept that site free, so on a signed type the conflict is real metal, and the abstract cut alone hides it. The M8 / M9
+residue is `grt/obs.tcl` (clock track reservations and PG copies) left in the route database.
+
+Fix, in this order:
+1. DIE-ROUTE-ABS-1: finish r_cut2, then one u201 run of 12 steps with the cut and with the `obs.tcl` obstructions removed
+   in `unit_prep.py`. That is the one-unit-at-0 proof. Assign the `obs.tcl` removal to this lane now; it has no owner.
+2. HEAD-100: one clock site template per type (mirror the R0 tree for MY / MX / R180), written as `clock.die_islands_um`,
+   kit built with `--island-sites`, windows cut on M1-M7. hd_tile is one type for about 300 instances: rebuild it once with
+   the islands as placement and M1-M7 routing blockages. Check first whether the signed hd_tile is empty at the sites.
+3. DIE-S81-92, DIE-QC-103, KV-102: run the `abstract_cutout.py` dry run on the current die clock kit, take the per-type
+   window list, and put it into B6gE, S4q3 and 7u as type blockages. Cost per type is small (HEAD: 5,511 um2 of 6.6 mm2).
+   If the die tree is not final, reserve the windows of the current tree and make the tree snap to reserved sites later.
+   S81 start-stage flops (2,430) take the same rule.
+4. Measure memory on the real fix before unit volume: the what-ifs peaked at 83 and 99 GB against 9.4 GB as built.
+Unblocks: HEAD die DRC (about 12-14 h of unit passes after item 1), KV die DRC, and one avoided rebuild on S81 and QC.
+
+### Lever 2. S81 stacked event B6gE
+
+Evidence (REPORTED, FABLE-PD-S81-0850; DIE-S81-92 handoff 09:03):
+- B6gslswrp compose: 0 band failures of 1,255 (was 17); lane sums equal B6gslsw. B6gslcf / B6gshcf failed and are closed.
+- Risks measured: 22 bands with a pin hop of 401 um or more against the 402.84 limit, 4 bands with a 2.16 um side; strap
+  window margin 105.5 / 106.0 ps against 100; E2 as built sat on a composed plan (withdrawn 09:02, now rows).
+- Type merge: 395 types hold 187 physical problems. Layout hash without the child instance name: col 216 -> 33 builds.
+- svc: with `tap_clear_um` 4.32 no sink is farther than 26.3 um from a tap site (was up to 624 um).
+
+Fix: as ordered in 0850 section 3: adopt the first candidate that binds; then one event on `B6gsl_or13_rp` with rows only
+(tr4 + idx, PHYT1 with svc `tap_clear_um` and reserved tap sites, TYM keep_outs + R2, R4 re-run, E2 by rows_merge), one
+compose last, then G0, bind, LATCHECK, bind_reset diff. Add to the same event, because the col and svc types regenerate there:
+- the clock site windows of lever 1;
+- the seam reset siting of lever 3;
+- `die.layer_budget.type_m8_grant` for the 24 p5 / p6 types (lever 7): confirm the key is in the B6gE base, it is in B6c4;
+- R1 with `collector_children[].part` out of the hash (TYPEMERGE 5.1). It is no design change and is worth 183 builds.
+Pilot before the svc wave: GPL + CTS on svc_hi t6 and t3 (S81-CA-BAND). Re-plan the strap table after any die clock re-route.
+
+### Lever 3. S81 seam writer async clear (the RESETN class)
+
+Evidence:
+- REPORTED (TL-COLH9R0P6, queue line 13981, form fd GRT repair): worst RESETN -603 ps at iteration 0, -183 ps at iteration
+  250. Sink: 24 `DFFASRHQNx1` of `u_u_lpl_6_w.u_y_w` on net `clr_n[0]`, driven by one NOR2x1. Netlist read only, no path report.
+- MEASURED (`ot_pl_seam.sv` 201-244): `ot_pl_seam_w_plr` drives `ot_pl_seam_cq` with `clr_n = rsi & {CHUNKS{e}}`. `rsi` is an
+  input port (one reset leaf per 24-bit chunk); `e` is a local flop `rq` (async clear by `rse`, D = `rse`). The gate is
+  combinational and sits on an async pin, so the recovery path is: last stage of the reset delay chain -> wire -> NOR -> 24 pins.
+- MEASURED: `ot_pl_seam_r_plq` also uses `ot_pl_seam_cq`, but its clear is the local registered `wq`: a short path. Not this class.
+
+Answers to COORD:
+1. Count. The module is referenced only from the S81 col frame generators (`rtl/dsrom_sys/s81_dv/frame_lp`, `tools/s81_dv`).
+   Frame RTL: 20 writers in col_h9, 22 in col_h10. Bound kit RTL on epyc7 (wave runs 7073a6b4a59 / 3fa87b84b18): every col
+   family read has it: h9_r0_p1..p6 about 4-5 each, h9_r1 about 6-7, h9_r2 about 2-3, h10_r0_p4 about 2-3, h10_r2 about 4-5
+   (grep hits; h10_r0_p1 and h10_r1 had no kit RTL on that host). So 12 families = all 216 col types, 14-33 builds after the
+   merge. Other dies: 0 instances in `rtl/` and `tools/` on main; HEAD, QC and KV do not use the seam station.
+   The neighbouring class on other dies is reset relay reach (KV pv: relay to RESETN 650-1,070 um, -411 ps), a different cause.
+2. Fix. The registered per-chunk clear is the right structure, but take the cheaper step first, in this order:
+   a. TL-COLH9R0P6: `report_checks` to one RESETN pin on fd `4_cts.odb` (10 minutes). It splits the -603 into launch clock,
+      wire from the `d14` last stage, the NOR, and the fan-out. INFERENCE: -603 at iteration 0 is about 1.1 mm of wire at
+      1.24 ps/um, so the last stage of the 14-stage `ot_dp_dly` is not at the station.
+   b. Siting, no RTL change: put the last `d14` stage of `rsi` and `rse`, the `rq` flop and the NOR into the station's
+      `relay_mid` group, and spread the other 13 stages along the route (the `dly_spread` hook QC already uses on
+      `ot_dp_dly` pipes). The recovery path is then local. No LEC, no latency change.
+   c. If (b) leaves it negative (one NOR2x1 on 24 clears spread along the seam): registered clear per chunk, cycle-neutral:
+      tap the chain one stage early (D = 13), `rq2 <= rse13`, `c[k] <= rsi13[k] & rq2`, and `clr_n[k] = c[k]` straight from
+      the flop. Release is the same cycle as today. Assertion can differ by one cycle while `rse` falls, so run the
+      `tb_ot_pl_seam` miter and bind_reset before use. It also removes the gate from the async pin.
+   Do not make the station flops synchronous-clear: that puts a gate back on the D pin of a relay-placed station.
+   Timing repair cannot close it (350 ps gained in 250 iterations, still -183).
+3. Owner. TL-COLH9R0P6 keeps (a) and the pilot on fd. The generator change (b) in `frame_seam_pipe.py` / `relay_mid.tcl`
+   is a new Sonnet lane, S81-SEAM-RST, reporting to DIE-S81-92, landed with B6gE. (c) needs the RTL owner and the miter.
+   Gate: recovery and removal >= 0 at CTS on one h9 and one h10 type before the col wave.
+
+### Lever 4. Buses that cross a type in one cycle (QC and KV)
+
+Evidence (REPORTED):
+- QC su_c (PD-QC-SUC-0800): slw_su_c has 7,037 zero-logic bits over 405 um, 3,453 over 580 um; one source register feeds
+  both side faces 1,207 um apart. sle_su_c with 4 stations still has CTS WNS -487 ps. 3 types, 12 instances.
+- QC fw (PD-QC-0700): sle_fw_v2 `x_fe_p1_i` 818 pairs over 405 um, -467.6 ps placed; S4x mirrored 117 rows onto the wrong face.
+- KV pv_v1n (PD-KV-0800): 389,907 cells at 2.9 % utilisation; setup -1,573 ps on 17,239 endpoints, 310 k repair buffers,
+  register-to-register up to 3,009 um, clock skew 439-493 ps. The split fixes none of it.
+- KV hg: krsp fan-out to four ectl cores spans 915 um; ruling krsp +5 on all frames, round trip 26, QK 37.
+- G0 does not see glue sources: S4q2 G0 reports 2 hops on slw_su_c where the placed dump has 636 groups.
+
+Fix:
+1. QC-FWST: su_c rows of PD-QC-SUC section 3 (8 lanes, about 15 banks per type, `u_twb` at x about 570) on the S4fw4b line,
+   with the `qc_fabric_transport` replay before the bind. DIE-QC-103 adopts.
+2. KV-102 / KV-PVGEN: pv stations per matched group on all 11 pv types (7r), from the family listing on the attempt_7
+   `4_cts.odb`; clock sinks off the macros. KV-ECTLK-RL: the four cores at 37 / 26 in the same event as krsp +5.
+3. New lane: the placed-dump scan (`zl.py`, 580 um, non-strap groups, 20 s) as a post-place check on every type of the four
+   dies. It would have stopped su_c, pv_v1n and hg at placement. Run it now on the held placed hg_v1 / v1p3 / v1p4 databases.
+
+### Lever 5. Clock landing ring bands
+
+Evidence: KV hgi_v8 ring ft20_i is 8.64 x 84.24 um, needs 222.5 of 727.8 um2, and finds no legal site (PD-PLACE-0830 C).
+KV-BAND-C widened 259 of 360 hg / hgi bands to 17.28 um (7t, in gates). MEASURED in the wave log: kv3_hub_Wo fails the same
+way at 08:36 on a `literal-local-reset` band, which is outside the 19 types 7t covers. S81: 22 form J bands at 401-402.8 um.
+Root cause: one-column bands, filled after firm cells that already sit in them.
+Fix: KV-102 extends the two-column floor to every KV type with a ring or local-reset band (hub_Wo, io_cor, io_ft) in 7u.
+S81-CA-BAND keeps reserved tap sites as band obstacles and runs the svc pilot. TYPES-KV-FAIL installs the one-line
+`set cland_col_cursor {}` (section 2).
+
+### Lever 6. Depth literals and pad tables
+
+Evidence (REPORTED): QC `cb16_pads_hbm_codex.json` keyed to the old bound depth drops 48 members = 24,672 bits (replay
+predicted the exact count); S4x needs +2 on both st_a return lanes; 4 sta_region parents differ in 32 parameters from the
+bound RTL; 3 sta_region masters (n6_s7, n6_s8) have no kit row at 09:11. KV: qkd_ectlk_q0..q3 hold RESPONSE_LAT / QK as
+literals. QC slw_hc3: LEC fails on 51 of 112,450 points, async-reset registers 367 against 365, after 9.8 h.
+Fix: DIE-QC-103 regenerates the pad table in `bind_chain.sh` for every variant, and reads the 2 lost async-reset registers
+of slw_hc3 from the bound against the gate netlist (xl3 l3 path) before any rebuild. HCPARAM-ALL makes SKEW_N / SKEW_S and
+the ectl depths strap inputs, so the next station event rebuilds no hard core. No second depth change on KV after 37 / 26.
+
+### Lever 7. col p5 / p6 M8 grant
+
+Evidence (REPORTED, TL-COLH9R0P6 09:10): form fd with the M8 E-W grant: GRT 0 overflow on M2-M8 in 15 extra iterations,
+M8 use 3.12 %. Before: 832-850 overflow units (fa), 106 % and 36,026 gcells over 90 % (keeper).
+Fix: the grant is a die key; DIE-S81-92 carries it in B6gE for the 12 p6 and 12 p5 types. Then lever 3 is what is left on p6.
+
+### Lever 8. Core clock reference
+
+Evidence (REPORTED, PD-S81C sections 7-8): bksel b1c pin-register mean 790.1 TT / 635.0 FF, real spread 83 ps; FF hold
+3,501 of 3,888 endpoints are macro pins (pk2 clk lands 48 ps after its registers, lib hold 125). The stage SDC still had
+975 until patched. col types carry two tap rows per half (437 / 533 and 476 / 553) against the signed 465.39. KV hub_C
+`kvs_ctl.ck` is 603.2 against a signed 283.5.
+Fix: CORE-BKSEL-1115 finishes b1o / b1g with every ETM clock pin at least 100 ps TT ahead of its registers, none negative.
+S81-TAPROWS: one row per core at the signed value in B6gE (the tr4 step). KV-102: 7q with kvs_ctl and both views attached.
+QC cb tile taps over T/2: answered by DIE-QC-103 08:45 (fixed in main `tap_offset_table`); closed.
+
+## 2. Items from earlier reviews that are not moving
+
+| item | since | state at 09:3x | action |
+|---|---|---|---|
+| `set cland_col_cursor {}` in `landing_placement.tcl` | 08:30 | KV io_ft_v1 failed again at 09:03; 6 failures since 07:10 | TYPES-KV-FAIL, this hour |
+| Remove `grt/obs.tcl` obstructions before DRT | 08:1x | handoff says "unassigned" | DIE-ROUTE-ABS-1 |
+| Per-type clock site reservation | 07:3x | "not started"; three dies regenerate today | lever 1 item 3 |
+| Placed-dump zero-logic scan as a gate | 07:4x | no owner | new lane |
+| Hold ECO: non-port scope, 5 ps target | 07:3x | no real-kit run found in my reads (not verified further) | FLOW-LATEECO first run on t47 |
+| sta_region n6_s7 / n6_s8 masters | 07:3x | "no kit-wave row" for 3 cores | HCPARAM-ALL |
+| Family listing on held placed hg_v1 / v1p3 / v1p4 | 07:55 | no post found | TYPES-KV-FAIL |
+| 45 S81 lanes over 405 um after LT2; 48 long start hops | 05:1x | ruling given for the start stage 08:55; lanes have no owner | DIE-S81-92 after B6gE |
+| GEN_LINT `defparam LOCAL` in `ot_dp_clk_landing.sv` | 08:53 | 10 S81 types fail at gen; cause not read by me | DIE-S81-92 names an owner |
+
+Place results lost when the job ran on another host (14 of 18 "place failures", PD-PLACE-0830) are a tool class, owner
+WAVE-COPYBACK-1115. They matter here only because they hide the real place classes above.
+
+## 3. Stop list (technical dead ends)
+
+1. No more DRT iterations, unit volume or KV units on the current abstracts; no full-die single-process detail route.
+2. No abstract cut used as a result on a signed type that is not empty at the sites.
+3. No regenerating abstracts with "pin shape on the plan layer only": no abstract pin is in any marker.
+4. No timing repair or relaunch for the col RESETN; no synchronous-clear seam station.
+5. No builds on B6gslcf / B6gshcf / B6gshcfrp / TYM1-3 / TYM3J; no row patch on a composed plan; one compose, last.
+6. No release of the 11 band-less S81 types from B6gslsw; no svc wave before the t6 / t3 pilot.
+7. No kv3_pv_v1n split, no 7g, no L2359 work; no adoption of 7m or of 7n as built.
+8. No routing of the held kvgeom5 hg builds; no unchanged relaunch of hg / hgi, su_c, fw or pv types: they are -450 to
+   -1,570 ps at placement by plan.
+9. No second ECTL depth change; no tap row from the unsigned ahub eco1 record.
+10. No S4r4 / S4r5 sign tests, no S4x as built, no station on one leg of a matched join.
+11. No bksel kit at vclk 975, no B2, no 700 ps gate; no `b1g_class.tcl` counts (no parasitics).
+12. No tuning of kvgeom6 ring bands; judge on 7t / 7u kits.
+13. No slw_hc3 rebuild before the 2 async-reset registers are explained.
+14. No allow-congestion form on col p6 (fc); the grant form replaces it.
+15. Still in force: 07:3x items 5, 6, 8, 10-13 and the 05:1x items 5-9.
+
+## 4. Not verified
+
+- Lever 1: 0 violations on a unit; whether signed hd_tile is empty at the sites; the S81 and QC window lists.
+- Lever 3: no STA path report exists. The wire-length reading of -603 is inference. The instance counts are grep hits in
+  bound kit RTL of one type per family. The one-cycle assertion difference of form (c) is not simulated.
+- Lever 5: the occupant of the hub_Wo band. Lever 6: the slw_hc3 register names.
+- Bind and LATCHECK of B6gslsw / B6gslswrp, S4q3, S4fw4b, 7q-7t were running; every adoption above is conditional on them.
+- I did not check that `type_m8_grant` is in the B6gE base plan.
+
+---
+
+# PREVIOUS VERSION (07:24 file, sections dated 05:1x and 07:3x), kept unchanged
+
 # FABLE-CLOSURE-STRATEGY 2026-11-15 05:1x PST: technical closure levers for S81, HEAD, QC, KV
 
 Read-only review. Technical physical design only. HBM is parked. No job, plan or kit was touched.
