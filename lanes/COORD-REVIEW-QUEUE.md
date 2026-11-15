@@ -13744,3 +13744,5 @@ COORD APPROVED: claude/s81-taprows-1115 @9e89878e8e (carries its base claude/pla
 COORD APPROVED: claude/s81-pinreg-fold-1115 @227bf7284f (pinreg_measure.tcl fold only in-range fallback; 2 tests).
 RULING early-tap clamp: price early against the TYPE budget for override types (code change; add insertion_ff_ps, 450 TT -> 364.5 FF), do not accept the 250 clamp. S81-TAPROWS implements on the same branch line, re-runs G0 + audit on B6gslsw _tr2, then hands to DIE-S81-92. bksel_q FF 640.0 (0.81x) is provisional; replace with CORE-BKSEL B1g measured FF.
 ORDER idx: trace the die SPLIT parameter for dsdv_idx_l20s; export the signed vb lib/lef (area 130299.9) into the plan in place of the closed import.
+- 2026-11-15 10:4x PST RELAY [COORD; from CORE-ROWS-1115]
+PUBLISHED: view packs for qwen_compute.c.sta_region_nb0_{h17_n6_s7,h18_n6_s8,h18_n6_s7} verified IDENTICAL vs DB; in rtx-pro signed-export-1114/_view-packs and AGIdock /archive/opentallas-signed-1114/_view-packs; INDEX pack column filled (431 lines both copies). Note: lane edited its own 3 rows in place (size/sha swap) - INDEX.tsv is append-only; future corrections are appended as new rows.
