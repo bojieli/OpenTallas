@@ -467,10 +467,37 @@ def gate(it, wt, base):
         return "INFRA", f"pytest rc {infra}: {' / '.join(tails)[:300]}"
     base_f = baseline(base, fails)
     new = sorted(fails - base_f)
+    flaky = []
     if new:
-        return "RED", f"{len(new)} new failure(s) (not failing on main {base[:11]}): {', '.join(new[:8])}"
-    note = f"{len(tests)} test file(s) pass" + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "")
+        # 11-14 20:4x: under parallel items x xdist, order / load dependent tests fail on the branch and pass on the main rerun
+        # (form_wait_arm, test_m8_grant env, clock tests with 5 items in flight).  A new failure counts only when it also fails
+        # when the branch reruns it on its own, one file per process, no xdist.
+        still = rerun_serial(wt, new, it["id"])
+        flaky = [f for f in new if f not in still]
+        new = [f for f in new if f in still]
+    if new:
+        return "RED", (f"{len(new)} new failure(s) (not failing on main {base[:11]}; still failing on a serial rerun of the branch): "
+                       f"{', '.join(new[:8])}" + (f"; {len(flaky)} more passed on the serial rerun (flaky)" if flaky else ""))
+    note = f"{len(tests)} test file(s) pass" + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "") + \
+        (f" ({len(flaky)} order/load-flaky failure(s) passed on a serial rerun: {', '.join(flaky[:4])})" if flaky else "")
     return "GREEN", note
+
+
+def rerun_serial(wt, ids, tag):
+    """the failures that still fail when rerun on the candidate alone: per test file, no xdist -> set"""
+    still = set()
+    for f in sorted({i.split("::")[0] for i in ids if not i.startswith("TIMEOUT")}):
+        if not (wt / f).is_file():
+            still |= {i for i in ids if i.split("::")[0] == f}
+            continue
+        sel = [i for i in ids if i.split("::")[0] == f]
+        rc, fl, _tail = pytest(wt, sel, f"{tag}-s{abs(hash(f)) % 10000}", 1)
+        if rc not in (0, 1, 5):                               # collection / infra error: keep them as failures
+            still |= set(sel)
+            continue
+        still |= {i for i in sel if i in fl or i.split("::")[0] in fl}
+    still |= {i for i in ids if i.startswith("TIMEOUT")}
+    return still
 
 
 # ---------------------------------------------------------------- state / posting
