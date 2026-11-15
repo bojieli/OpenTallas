@@ -387,7 +387,59 @@ def load_config(text):
     except ValueError as e:
         return {"error": f"kit_wave.json unreadable: {e}", "dies": {}}
     cfg.setdefault("dies", {})
+    apply_hold_release_on(cfg)
     return cfg
+
+
+def _hold_term_met(term, die_cfg, is_merged):
+    """one typed release_on term -> True / False.  Auto-checkable types: event_adopt:<name> (the die's current event, or the
+    plan file name, carries <name> as a whole token; names of 1-2 characters, e.g. 'Event F', are not checkable), merge:<ref>
+    (<ref> is an ancestor of origin/main).  lane_ready / lane_result / anything else is a human post: never auto-released."""
+    kind, _, val = str(term).strip().partition(":")
+    kind, val = kind.strip(), val.strip()
+    if kind == "event_adopt":
+        name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
+        if len(name) < 3 or " " in name:
+            return False
+        hay = [str(die_cfg.get("event") or "").lower(), os.path.basename(str(die_cfg.get("plan") or "")).lower()]
+        pat = re.compile(r"(?<![a-z0-9])" + re.escape(name) + r"(?![a-z0-9])")
+        return any(pat.search(h) for h in hay)
+    if kind == "merge":
+        ref = val.split()[0] if val else ""
+        try:
+            return bool(ref) and bool(is_merged(ref))
+        except Exception:
+            return False
+    return False
+
+
+def _git_is_merged(ref):
+    here = os.path.dirname(os.path.abspath(__file__))
+    return subprocess.run(["git", "-C", here, "merge-base", "--is-ancestor", ref, "origin/main"],
+                          capture_output=True, timeout=20).returncode == 0
+
+
+def apply_hold_release_on(cfg, is_merged=None):
+    """HOLD-RELEASE-ON 11-15 (COORD r152): a die's hold_release_on maps a hold_items key to a typed release condition, 'term + term'
+    (every term must be met).  When all terms are auto-checkable and met, the key is dropped from hold_items in memory (the file is
+    not edited) and listed in cfg['_hold_auto_released'] as (die, key, release_on).  A key without an entry, an unknown type, or a
+    lane_ready / lane_result term stays held."""
+    is_merged = is_merged or _git_is_merged
+    out = []
+    for die, d in (cfg.get("dies") or {}).items():
+        ro, hold = d.get("hold_release_on"), d.get("hold_items")
+        if not isinstance(ro, dict) or not isinstance(hold, dict):
+            continue
+        for key, cond in list(ro.items()):
+            if key not in hold:
+                continue
+            terms = [t for t in str(cond).split(" + ") if t.strip()]
+            if terms and all(_hold_term_met(t, d, is_merged) for t in terms):
+                del hold[key]
+                out.append((die, key, str(cond)))
+    if out:
+        cfg["_hold_auto_released"] = out
+    return out
 
 
 def opt(cfg, die, key):
@@ -9275,6 +9327,8 @@ def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    for _die, _key, _cond in cfg.get("_hold_auto_released") or []:
+        AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release_on met ({_cond})")
     WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
     merge_auto_views(cfg, ap_dir, AP.log)                # KW-FIX-35-CV: counted child views overlay (hub sidecar)
     merge_src_overlay(cfg, AP.HUB_NAME, AP.log)          # KW-FIX-44: spec field for in-place source overlays
