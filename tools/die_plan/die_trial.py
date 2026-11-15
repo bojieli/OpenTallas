@@ -4815,7 +4815,8 @@ def psm_pdn_tcl(P):
     if die.get("pg", {}).get("domains"):
         phy = sorted({d["nets"][0] for d in die["pg"]["domains"]} - {"VDD"})
         lines += [f"add_global_connection -net {{{n}}} -inst_pattern {{.*}} -pin_pattern {{^{n}$}} -power" for n in phy]
-        lines += [pg_regions.pdn_tcl(die).rstrip("\n")]
+        _pr = [P.rect(n) for n in P.parts] if getattr(P, "parts", None) else None
+        lines += [pg_regions.pdn_tcl(die, parts=_pr).rstrip("\n")] if _pr is not None else [pg_regions.pdn_tcl(die).rstrip("\n")]
         # GENBUG-3 11-15 (COORD; proven by DIE-KV-ROUTE-1 pdn2.py, KV kvgeom5 160/160 partitions, pdngen clean): with
         # PG region domains the stripes live in the ot_pg_* domains, the default Core domain has none, so ONE {parts}
         # macro grid in Core came out empty for every partition (PDN-0233).  One macro grid per region domain, a
