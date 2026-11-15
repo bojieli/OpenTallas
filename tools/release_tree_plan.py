@@ -634,6 +634,13 @@ def counts_signed(d):
     v = d.get('verdict')
     if v == 'SIGNED': return True
     if v == 'LOCAL_PASS_NEEDS_PARENT' and d.get('local_verdict') == 'SIGNED' and all(str(r).startswith('io_hold_parent') for r in (d.get('reasons') or [])): return True
+    # EXPLORER-FABLE-1 11-14 (COORD): a HARD-IP view (opentallas.hard_ip_view.v1: a full-area PHY macro in a thin wrapper, nothing to place
+    # or route) counts on a clean bind, port bind and face guard.  It credits a type only where the counted plan lists that type as a
+    # countable type, so a plan that is not adopted yet (or that keeps the type structurally hard-IP, out of both totals) gives no credit.
+    if v == 'HARD-IP':
+        ch = d.get('checks') or {}
+        return (d.get('schema') == 'opentallas.hard_ip_view.v1' and (ch.get('bind') or {}).get('errors') == 0
+                and ch.get('port_bind') == 'PASS' and not ch.get('face_guard_fails'))
     return rminimal(d)
 def _fin(x):
     try: x = float(x)
@@ -895,7 +902,24 @@ def dedup_credit(die, st, tm, rows):
     return done
 
 
+def read_archive_local(paths):
+    """COUNT-DIRECT host AGIdock: the record is read from the archive listing the archive host pushes every 15 min
+    (agidock_archive_index.json, key agidock_signoffs: the signoff.json of every archive entry that has no routed database).
+    The hub holds no archive key, so there is no ssh; a path the listing does not carry is simply not read."""
+    A = json.loads((CACHE.parent / 'agidock_archive_index.json').read_text())
+    S = A.get('agidock_signoffs') or {}
+    out = []
+    for p in sorted(paths):
+        d = S.get(p)
+        if not isinstance(d, dict) or not _PROV_NS['counts_signed'](d): continue
+        fg = d.get('face_guard') if isinstance(d.get('face_guard'), dict) else {}
+        out.append(dict(path=p, name=d.get('name'), top=fg.get('top'), generated=d.get('generated'), host='AGIdock', pins_path=None,
+                        versioned=False, scan_host='AGIdock', direct=True, hard_ip=d.get('verdict') == 'HARD-IP'))
+    return out
+
+
 def read_direct(h, paths):
+    if h.lower() == 'agidock': return read_archive_local(paths)
     cmd = ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, scan_cmd(roots=' ')]
     if h == 'local': cmd = ['bash', '-c', scan_cmd(roots=' ')]
     paths = expand_globs(h, paths)
