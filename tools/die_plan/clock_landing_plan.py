@@ -1208,7 +1208,12 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                     monbus=f"cland_dn_ready_{i}"
                     try:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
                     except ValueError as e:
-                        placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
+                        band=None
+                        if band_multi_rect:        # S81-CA-BAND: the 2-bit monitor ring takes the same notched band as a landing
+                            try:band=_storage_rects_staged(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used+=band.get("rects_um") or [band["rect_um"]]
+                            except ValueError:band=None
+                        if band is None:
+                            placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
                     band["instance"]=f"u_cland_monitor_{i}"
                     info["bands"][f"monitor_{i}"]=band
                 info["children"].append(row)

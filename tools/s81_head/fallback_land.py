@@ -195,7 +195,8 @@ def cmd_compose(a):
     try:
         raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer,
                                observer=observer, monitor=a.monitor, band_reserve=a.band_reserve,
-                               band_spread=a.band_spread, band_ring=a.band_ring)
+                               band_spread=a.band_spread, band_ring=a.band_ring,
+                               band_multi_rect=a.band_multi_rect)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -305,6 +306,9 @@ def main(argv=None):
     c.add_argument("--observer-spec", help="JSON actual {module,instance_suffix,fault_port,ready_port}; binding is checked by clock_landings, default stays OPEN")
     c.add_argument("--band-spread", type=float, default=1.0,
                    help="ring_ff only: band area = spread x reserve, ring spread over the whole band (DIE-HEAD-12; 2.0 = ~0.5 density)")
+    c.add_argument("--band-multi-rect", action="store_true",
+                   help="S81-CA-BAND: a ring (or monitor) band with no legal single rect takes a notched multi-rect band "
+                        "(clock_landing_plan._storage_rects_staged, DIE-S81-47); default off = byte-identical")
     c.add_argument("--band-ring", default="all", choices=["all", "ff"],
                    help="ring_ff only: ff = place only the ring flops FIRM in bit-major order, ring logic to GPL (DIE-HEAD-13)")
     c.add_argument("--band-reserve", default="padded", choices=["padded", "live", "ring_ff"],
