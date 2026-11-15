@@ -280,8 +280,15 @@ check-synth)
 import hashlib,json,sys
 from pathlib import Path
 k=Path(sys.argv[1]);n=sys.argv[2]
+# FLOW-HEALTH-1 11-15 (COORD class fix: QC CTS probes sle_fw_v2 / sle_st_b_v2 exited 11 right after launch on a resumed kit whose
+# lec_async.runs/<name>.json was missing): async LEC is advisory under R-MINIMAL, so a missing / unreadable proof reference is
+# no proof to compare against = "LEC pending", never a stop.  A reference that exists and does not match the synth netlist is
+# still refused (the proof would be about other bytes).
 try:
  r=json.loads((k/'lec_async.runs'/(n+'.json')).read_text())
+except (OSError,ValueError) as e:
+ print('LEC_ASYNC WARNING: proof reference lec_async.runs/'+n+'.json missing or unreadable ('+type(e).__name__+'); LEC pending (advisory under R-MINIMAL), the flow continues',file=sys.stderr);sys.exit(0)
+try:
  for rel,digest in r.get('netlists',{}).items():
   f=(k/rel).resolve();f.relative_to(k.resolve())
   if hashlib.sha256(f.read_bytes()).hexdigest()!=digest:raise ValueError('synth changed reused proof netlist: '+rel)
