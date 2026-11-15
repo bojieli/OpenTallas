@@ -9809,7 +9809,11 @@
     "slice_station__t36": {
      "OT_NATIVE_RESET_SCOPE": "selected",
      "OT_GRT_TRANSITION_MODE": "edge_outline",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t37": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9872,7 +9876,11 @@
     },
     "slice_station__t49": {
      "OT_NATIVE_RESET_SCOPE": "selected",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_CONS_KIT": "1",
+     "OT_CONS_UTIL": "0.35",
+     "OT_CONS_MAX_LAYER": "M9",
+     "OT_GRT_ALLOW_CONGESTION": "1"
     },
     "slice_station__t50__cl39451317": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -19006,7 +19014,9 @@
     "slice_station__t27": 56,
     "slice_station__t28": 56,
     "slice_station__t37": 56,
-    "slice_station__t52": 56
+    "slice_station__t52": 56,
+    "slice_station__t36": 56,
+    "slice_station__t49": 56
    },
    "note_kw43kvl2": "KW-FIX-43 11-10: kv_leaf t2 place 64 GB + retry @12. Revert place_mem_gb_by_item <- *_prev_kw43kvl2.",
    "hold_items_prev_kw43dsdv": {
