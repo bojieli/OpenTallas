@@ -7206,7 +7206,8 @@
     "ot_s81sl_vsw": "KW-FIX-42 2026-11-09 06:52 PST S81 final switch (TYPE-SAFE-5 SWITCH.tsv HOLD): counted core, key moves only; stays counted, no rebuild",
     "s81p_slice_station__t51_ot_s81_station_t51_native_e": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
     "s81p_slice_station__t51_ot_s81_station_t51_native_w": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
-    "dsdv_slice_kv512_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key."
+    "dsdv_slice_kv512_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
+    "col_h10_r2__t1__*": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch from the take_states * change. Lift = delete this key."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
