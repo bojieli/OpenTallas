@@ -912,6 +912,28 @@ def fail(st, it, text, status, detail, base):
 
 # ---------------------------------------------------------------- tick
 
+def gate_record(full, base, it):
+    """a GREEN `gate` record (~/merge-queue/gates/<sha>.json, written by `ot-merge-queue gate` here or by ot-gate-remote on a
+    build host) is the item's gate when it ran on this main, or on an older main whose later commits touch none of the
+    branch's files and none of its tests -> note, or '' (gate it here)"""
+    try:
+        r = json.loads((MQ / "gates" / f"{full}.json").read_text())
+    except (OSError, ValueError):
+        return ""
+    m = r.get("main", "")
+    if not m or not rev(m) or not is_ancestor(m, base):
+        return ""
+    if m != base:
+        mb = git("merge-base", base, full).stdout.strip()
+        mine = set(changed_files(REPO, mb, full)) | set(r.get("tests", []))
+        moved = set(changed_files(REPO, m, base))
+        if mine & moved or len(moved) > 400:
+            return ""
+    it["tests"] = r.get("tests", [])
+    return (f"gate record from {r.get('host', 'hub')} {r.get('at', '')} on main {m[:11]}"
+            + ("" if m == base else f" (main since: no overlap)") + f": {r.get('note', '')}")
+
+
 def prepare(it, base):
     """fetch + apply + gate in the item's own worktree (parallel part)"""
     try:
@@ -932,6 +954,9 @@ def prepare(it, base):
         if status != "OK":
             return status, detail
         it["mode"] = detail
+        rec = gate_record(full, base, it)
+        if rec:
+            return "GREEN", rec
         res, note = gate(it, wt, base)
         it["note"] = note
         return res, note

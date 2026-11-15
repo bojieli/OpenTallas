@@ -1,0 +1,49 @@
+#!/bin/bash
+# ot-gate-remote (MERGE-QUEUE-1, COORD 11-15 15:1x): the queue's own gate (`ot-merge-queue gate`, main's rt/current code) on a
+# BUILD host, in its own blobless clone of the lane mirror, so gates run in parallel instead of one at a time on the hub.
+# usage (on the build host, normally via ot-run): ot-gate-remote claude/<branch>@<sha> [threads]
+# Prints the gate output; GREEN ends with `GATE main=<sha> pass=N/N`.  Clone slots: /srv/opentallas-scratch2/claude/mq-gate/slot<i>.
+set -u
+cd /
+B=/srv/opentallas-scratch2/claude/mq-gate
+M=intel2:/srv/opentallas-scratch2/git/OpenTallas.git
+[ "$(hostname -s)" = intel2 ] && M=/srv/opentallas-scratch2/git/OpenTallas.git
+T=${2:-16}
+mkdir -p $B
+if [ ! -x $B/venv/bin/python ]; then
+  ( flock 9; [ -x $B/venv/bin/python ] || { python3 -m venv --system-site-packages $B/venv && $B/venv/bin/python -m pip -q install pytest pytest-xdist; } ) 9>$B/venv.lock
+fi
+S=""
+while [ -z "$S" ]; do
+  for i in 0 1 2 3 4 5 6 7; do
+    exec {fd}>$B/slot$i.lock
+    if flock -n $fd; then S=$B/slot$i; break; fi
+    exec {fd}>&-
+  done
+  [ -z "$S" ] && sleep 10
+done
+mkdir -p $S
+if [ ! -d $S/repo/.git ]; then
+  rm -rf $S/repo
+  git clone -q --filter=blob:none --no-checkout "$M" $S/repo || { echo "INFRA clone of $M failed"; exit 3; }
+fi
+git -C $S/repo remote set-url origin "$M"
+git -C $S/repo config user.name "MERGE-QUEUE gate"; git -C $S/repo config user.email "merge-queue@opentallas.invalid"
+git -C $S/repo config extensions.worktreeConfig true
+F=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-merge-queue
+echo "ot-gate-remote: $(hostname -s) slot ${S##*/} code $(readlink -f /srv/opentallas-scratch2/claude/rt/current | sed 's#.*/##')"
+MQ_HOME=$S/mq MQ_REPO=$S/repo MQ_WT=$S/wt MQ_COORD=$S/coord MQ_PYTHON=$B/venv/bin/python MQ_FALLBACK_REMOTE= MQ_XDIST=$T \
+  MQ_GATE_PAR=1 /usr/bin/python3 -I "$F" gate "$1"
+rc=$?
+# GREEN: hand the record to the hub queue (~/merge-queue/gates/<sha>.json), so the tick lands it without a second test run
+if [ $rc -eq 0 ]; then
+  r=$(ls -t $S/mq/gates/*.json 2>/dev/null | head -1)
+  if [ -n "$r" ]; then
+    python3 -I - "$r" "$(hostname -s)" <<'PY' > $r.tmp && mv $r.tmp $r
+import json, sys
+d = json.load(open(sys.argv[1])); d["host"] = sys.argv[2]; print(json.dumps(d, indent=1))
+PY
+    if [ "$(hostname -s)" = intel2 ]; then cp $r ~/merge-queue/gates/; else scp -q -o BatchMode=yes $r intel2:merge-queue/gates/ && echo "record -> intel2:~/merge-queue/gates/${r##*/}"; fi
+  fi
+fi
+exit $rc

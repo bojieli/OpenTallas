@@ -260,6 +260,19 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("data/fix/input.txt", g.stdout)
         self.assertNotIn("GATE main=", g.stdout)
 
+    def test_tick_lands_on_a_green_gate_record_without_a_second_test_run(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n")
+        g = subprocess.run([sys.executable, "-I", P, "gate", "claude/good"], env=self.env, capture_output=True, text=True, timeout=600)
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        with open(q, "a") as f:
+            f.write(f"- 2026-11-15 09:00 PST [COORD] COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        r = self.tick()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        log = (self.d / "mq/log").read_text()
+        self.assertIn("gate record from hub", log)
+        self.assertIn("MERGED", q.read_text())
+
     def test_parallel_gate_commands_run_together(self):
         procs = [subprocess.Popen([sys.executable, "-I", P, "gate", b], env=self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                   text=True) for b in ("claude/good", "claude/clash", "claude/red")]
