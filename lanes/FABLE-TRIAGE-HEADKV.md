@@ -460,3 +460,51 @@ Answer (rule-based; I did not open the A2p reports):
   one exception to check: if any of the 5 violating nets is a clock or an ft clock pass-through (ft_ck0/1,
   ft_mesh), fix it in the same ECO by sizing the driver, because the die clock STA propagates through those arcs.
 - The core does not count as signed until the LEC rerun (5.2) is back.
+
+## 14. Die PG form for the route gate and for sign-off (COORD question, 01:3x PST)
+
+MEASURED state:
+- HEAD pass 3 (p16g/drt3_clk_TT) draws M8 and M9 stripes by hand as special wires (4,064 + 4,063 M8, 512 + 512 M9).
+  It has NO vias at all: no M8-M9 vias and no vias to the partitions' M7 PG pins. Its M9 spec (12.96 wide, pitch
+  34.56) is typed in the script. It is a routing obstacle set, not a power grid.
+- HEAD pdn2 run (p16g/drt4_pdn2_TT, region grids + 358 partition macro grids with M7-M8 connect): pdngen itself is
+  cheap (498 s, about 7 GB resident during pdngen). The run was killed (signal 9, exit 137) at 209 GB after
+  39 min, while DRT was reading the M8 shapes into its region query. The via mesh is what does not fit in DRT.
+- The stripes-only form is not cheap either on HEAD: pass 3 sits at 155-175 GB and has been in detail-route
+  iteration 0 for over 70 min (20 threads busy, no iteration line). So "stripes only" removes the kill, but the
+  HEAD detail route is still unproven.
+- KV with macro grids: pdngen 335-367 s, whole process 11 GB through GRT; its DRT never ran. KV relaunch now uses
+  PG_MACRO=0 (region grids with M8-M9 connect, no partition vias), 10 regions kept, 2 skipped.
+- Tech (asap7 tech LEF): M8 spacing 0.04, V8 cut spacing 0.057, V7 cut spacing 0.046, M7 spacing 0.032. Cut
+  spacing is larger than metal spacing, so metal-clean does not by itself prove cut-clean.
+- Size of the mesh on HEAD: 8,127 M8 stripes x 1,024 M9 stripes give about 4.2 million same-net M8-M9 crossings
+  (computed from the stripe counts); the M7-M8 partition vias are several times more (INFERENCE, not counted).
+
+Form:
+1. Route database (what DRT loads): pdngen REGION grids only, PG_MACRO=0, i.e. the final M8/M9 stripes with their
+   M8-M9 vias and nothing below M8. Both dies use this one form from the shared script. HEAD drops the hand-drawn
+   stripes: they are not the sign-off shapes and they carry no V8, so their DRC count proves less than KV's.
+2. Partition connection, separate pass after DRT, on the routed DB, with no router loaded: pdngen with the
+   per-partition macro grids (pdn2 / G3 form, `add_pdn_connect {M7 M8}`), then write_db. Cost as measured: 6-9 min
+   and about 7-11 GB. This pass adds only V7 cuts and enclosures that lie inside metal already present (the
+   partition's M7 PG pin and the M8 stripe).
+3. Check after pass 2, no rip-up: (a) every partition PG pin has at least one via to its stripe net (count per
+   instance; 358 of 358 on HEAD, 160 of 160 on KV); (b) V7 cut spacing 0.046 between each die-net V7 cut (clock
+   landings on the M7 tap pins) and the nearest PG V7 cut, by a small odb script over the die-net vias (a few
+   tens of thousands of vias, minutes, under 10 GB). A hit is fixed by deleting that one PG via, not by re-routing.
+
+Is the stripes-only DRC count valid as the die gate? Yes, as the ROUTE gate, on two conditions: the stripes in the
+route database are the pdngen region grids of the final PG (not hand-drawn ones), and check 3(b) reports 0. The
+die gate is then "DRT DRC 0 with region grids" plus "3(a) complete, 3(b) 0". A count from HEAD pass 3 as it stands
+does not qualify (no V8, different M9 spec); use it only to learn whether the clock route converges.
+
+Not needed for the academic profile: IR / EM analysis of the grid (advisory). Do not load the macro vias into DRT
+to get there; that is the 209 GB path.
+
+Open: if KV's PG_MACRO=0 detail route also grows past about 150 GB, the cost is DRT on a die-wide database (real
+M1-M3 tracks, die-long stripes in every worker box), not the PG, and the next lever is on the route side (route
+the clock tree per region window, or restrict the real M1-M3 tracks to the clock-cell sites). Post the DRT peak
+and the first iteration line of both dies before changing anything else.
+
+Owners: DIE-KV-ROUTE-1 (shared script: region-grid route form, macro pass, check 3); DIE-HEAD-ROUTE-1 (switch
+HEAD to it, retire pass 3 after it reports).
