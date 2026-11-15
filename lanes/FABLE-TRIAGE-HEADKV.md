@@ -559,3 +559,60 @@ needed for the tap landings), or tuning threads / gcells (neither bounds the cut
 
 Owners: DIE-KV-ROUTE-1 (cap in the shared pdn_f.tcl step, relaunch KV); DIE-HEAD-ROUTE-1 (same script on HEAD,
 retire pass 3 and the gate-form run, post the three numbers).
+
+## 16. The iteration-0 cost of the die DRT: worker size, set by the 10.8 um gcell (02:0x PST)
+
+Diagnosis (MEASURED unless marked):
+- DRT's own lines on the capped HEAD gate run (p16g/drt6_gate_TT/drt_TT.log): after pin access 7.4 GB
+  (84,333 pins), 164,794 guides, after track assignment 10.2 GB (peak 31.8 GB; 8.5 min, 45 CPU-min). Nothing
+  die-wide is large: guides, pins, shapes and the capped vias all fit in 10 GB.
+- Then "Start 0th optimization iteration" and 144 GB, flat since (143.9 -> 144.3 GiB over 12 min, 15-16 threads
+  busy). Pass 3 (no vias): 158 GB at 15 busy threads, 185 GB at 23. That is 8.0-10.5 GB per busy thread on top of
+  a 10 GB base, in three readings on two databases. The cost is per route worker, not per die.
+- Why a worker is that big: the route's gcell grid is `GCELLGRID ... STEP 10800`, i.e. 10.8 um (1,640 x 1,625
+  gcells on the 17.7 mm die; chosen for die GRT). DRT's iteration 0 works in boxes of 7 x 7 gcells = 75.6 um.
+  The real ASAP7 tracks are 0.036 um on M1-M4 (make_tracks.tcl in the flow image), so one box is 2,100 M1 tracks
+  per side; with the M5-M9 track offsets about 4,500 distinct coordinates per axis, times 10 layers: about 200
+  million grid nodes per worker (INFERENCE from the pitches; at 9.6 GB that is about 48 bytes per node). A normal
+  ASAP7 block uses 0.54 um gcells: its worker is 3.8 um, 105 tracks per side, 400 times fewer nodes.
+- Time follows the same number: pass 3 has run iteration 0 for 110 min on 24 threads without reaching the first
+  "10 %" line, so iteration 0 alone is at least 18 h there.
+- So: not guides, not M1 pin access data, not the die-wide database, not the PG. And NOT fixable by windows:
+  a clock-region window still routes in 75.6 um workers, 9.6 GB each. I withdraw the windowed fallback of
+  section 15.
+
+Decision:
+- Do not switch to the windowed form.
+- Stop pass 3 now (no vias, wrong PG; it holds 185 GB and cannot become the gate).
+- Let drt6_gate_TT run on only as the baseline (it is the valid PG form, 144 GB flat under a 240 cap), and stop
+  it as soon as the small-worker run below prints its first progress line. Never raise its thread count: about
+  9.6 GB per thread, 24 threads is the cap.
+- Build the small-worker form now, in parallel, on both dies.
+
+Exact form (same database, same PG, same guides; only DRT's worker size changes):
+1. `detailed_route ... -single_step_dr` in place of the plain call (the flag exists in this image; it runs pin
+   access, guide processing and track assignment, then stops before the first iteration).
+2. Drive the iterations with `drt::step_dr`, nine positional arguments = FlexDR's SearchRepairArgs
+   (size, offset, mazeEndIter, workerDRCCost, workerMarkerCost, workerFixedShapeCost, workerMarkerDecay,
+   ripupMode, followGuide). Use the stock iteration table of this OpenROAD version unchanged, except the first
+   two numbers: size 2 instead of 7, and every stock offset scaled as round(offset x 2 / 7), kept non-zero where
+   the stock one is non-zero. A 2 x 2 gcell box is 21.6 um = 600 M1 tracks per side, still 5.7 times a normal
+   ASAP7 worker, so route quality is not reduced.
+3. `drt::step_end`, then write_db and the DRC report as today.
+4. First run it on one cut-out to check the argument table: 5 iterations on a 2 x 2 mm corner; compare its
+   violation count with the stock call on the same cut-out.
+Expected peak: about 16 million nodes per worker, 0.8 GB per thread; 15 threads plus the 10 GB base and the
+32 GB track-assignment peak = under 40 GB (INFERENCE from the per-node figure; to be measured). Worker count per
+iteration rises from 55 thousand to 666 thousand; each is 12 times smaller.
+
+Why the DRC count stays the die gate: nothing is hidden or abstracted. It is the same full-die database, the
+same fixed shapes, and DRT's own end-of-iteration DRC over the whole die; only the box in which the maze router
+works is smaller, with DRT's normal overlap between boxes. No per-window counting is involved.
+
+KV: same gcell (the shared kit), same cost; apply the same form in shared/tail.tcl.
+Structural note for the kit owner: a die-level kit that will be detail-routed should carry a DRT worker size
+with its gcell size (size = round(75 um / gcell / 20), at least 1); 10.8 um gcells and stock size 7 never fit.
+
+Not verified by me: the exact stock numbers of the iteration table in this build (take them from the FlexDR
+source of the image's OpenROAD commit), and the small-worker run itself.
+Owners: DIE-HEAD-ROUTE-1 (cut-out check, then HEAD), DIE-KV-ROUTE-1 (shared script, KV).
