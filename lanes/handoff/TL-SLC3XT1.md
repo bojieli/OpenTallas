@@ -7,3 +7,5 @@ Action: asked KIT-OPS-3 to delete hold_items key; same src/plan (freeze-safe), r
 Update 06:4x: hold lifted; a23 launched 04:58 and failed 06:36 INFRA @gen_lint: yosys rc 143 (SIGTERM) on epyc8 (MemAvailable 58 GB, disk-tight host; kill from outside, not an RTL error). Needs retry key @23 and gen_lint off epyc8. Waiter re-armed.
 
 Update 14:5x: a24 (06:39), a25 (12:17), a26 (13:26) relaunched by wave (restaged epyc9->epyc7). a26 FAIL FLOW @lec_tools 14:56: ValueError runner template differs from pinned scheduler snapshot (scheduler/tool pin mismatch, not RTL or route). Still no GRT/DRT result.
+
+Successor 19:3x PST 11-14: lec_tools pin fixed by KIT-OPS-5 (15:10). Attempts a27 (epyc8 fail), a28 (epyc10), a29 (epyc8, gen_lint/gen live at 19:31, admitted via ot-heavy). Still no GRT/DRT result for this type. Not relaunching: a29 is live. Waiter: ~/coord/lanes/handoff/TL-SLC3XT1.watch.log (no LLM).
