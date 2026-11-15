@@ -159,9 +159,9 @@ running on epyc7.
   one slice the two stages have 1,097 + 833 = 1,930 ps for about 1,610: about +160 ps per stage if the slice flops
   sit midway on the 552 um run. If the placer keeps them at the SRAM, the second stage is about -85. Check the
   placed position of isl_d0 / isl_d1 before route.
-- Open: the u_epc OUTPUT side (-85 ps, 19 endpoints with the signed lib) is not touched by form B. With the input
-  side at +160, a u_epc tap 45-60 ps earlier closes it (outputs to about -25..-40, inside the -42 gate; FF output
-  hold stays at or above +5). Put that tap in the same build.
+- Open: the u_epc OUTPUT side (-85 ps, 19 endpoints with the signed lib) is not touched by form B. WITHDRAWN: my
+  first text proposed a u_epc tap 45-60 ps earlier. That is not buildable (the pin is already 20 ps after its die
+  tap) and not needed; see section 8.
 - Base: the kit is built on rp21z16e. Rebase on rp21z20 before it counts.
 
 ### (e) KV canary 2 CTS warnings: REAL, but the 1,200 cap is the wrong lever
@@ -201,13 +201,13 @@ MEASURED (epyc2 kv-102/ctscan2, kv3_pc cl254f2e73, CTS still running at 00:45):
 
 - DIE-HEAD-ROUTE-1: fix the proof path in both_ca.sh; report DRC for drt4_pdn2 by layer and location; remove the stale
   routed DBs; rerun on rp21z20 once it is bound.
-- HEAD-99 + HEAD-REMAP-1: freg sidecar fix; one re-bind of 427 ports from ca3; u_chn early tap (-200 ps) and u_epc
-  tap (-45..-60 ps) in the next event; strip-tap fix for M8.
+- HEAD-99 + HEAD-REMAP-1: one re-bind of 427 ports in the partition-origin form (section 11), 18 freg ports;
+  u_chn early branch (-200 ps, section 8), no u_epc tap; re-sign hd_mesh_e and hd_ctl_e for the strip seams (section 9).
 - KIT-OPS-6: die_chain_ca.sh proof path; landed class in die_sta.py; GEOM-FAIL label and advisory rule (M1).
 - DIE-KV-ROUTE-1: run route, CA and seamchk where runs/p1 lives; port the M1-M3 track block; seamchk on signed views.
 - KV-102: tap cap 3,000 and the x 518 half-pitch taps; 55 ps on the pcf core taps; sys_c guard merge.
 - S81-RESIGN-DEEP: kp4_dchn face register + DD 56, one re-sign.
-- HEAD-EPC-RTL-1: check slice flop placement, add the u_epc tap, rebase on rp21z20.
+- HEAD-EPC-RTL-1: check slice flop placement, read the output side on the signed lib, rebase on rp21z20.
 
 ## 5. HEAD cores elemA / elemB (questions opened in this file by CORES-NOROW-1, 00:55 PST)
 
@@ -268,7 +268,119 @@ module, the folding is per instance. Fix: drop keep rows for g_pad instances fro
   container on exit 1. Action taken: B1r / B2r copies with LEC advisory, route resumed from 5_1_grt. Question: real
   RTL / synth difference or keypoint matching? Inputs runs2/{A2,B1,B2}/kit/lec/lec.json. -> answered in 5.2.
 
-## 7. CORES-NOROW-1 2026-11-15 02:5x PST: elemA A2 post after the pins.json fix
-- pin_audit now passes (island rows at io.tcl centres; kit A2p pins.json, original pins.json.pre_cn1). SIGNOFF GOAL=post on A2p (epyc9, routed 6_final.odb): NOT SIGNED. TT setup +207.83, FF hold -6.51 ps (58 endpoints, hold_ff FAIL; blocking gate hold>=0), DRC 0, ant 0, pair skew TT/FF 98.7/87.8, sdc_lint+face_guard PASS, drv FAIL (TT slew 4.0, FF slew 1.0, cap 0).
-- Question for Fable: hold -6.51 on 58 endpoints at the core boundary: ECO hold repair on the routed DB (head_post_route_eco flow as the old signed elemA) or margin change and re-route? drv slew 4.0/1.0 violations: real or advisory under the academic profile? Evidence: epyc9 runs2/A2p/kit signoff log in ~/tmp/cn1_A2p_post.log (intel2).
-- A1p (epyc10) post launched with the same pins fix; LEC edges=12 reruns A1x/A2x/B1x/B2x running.
+## 7. KV count-aligned bind and start-skew (kvgeom5 plan_c, epyc7 die-kv-route-1/runs/p1/gate), 01:1x PST
+
+Two different sets fail, with one cause: KV still uses the data-port start tree.
+
+**7.1 Bind simulation, 32 of 500 samples, minimum -208.9 ps: REAL, 14 ambiguous start edges.** MEASURED (ca.json,
+bind.json): 159 start-tree edges, 145 clean, 14 `tree_ambiguous` (sync_values 2: the reset-release sample can land in
+either of two cycles). The worst simulated port, L1102_3 (pc_WS_5 -> pc_WS_4), is one of the 14.
+- 10 edges have a root-to-root phase of 500-660 ps: pc and phy `_5 -> _4` and `_1 -> _0` in the N/S/E/W quadrants
+  (L1099_3/_7, L1101_3/_7, L1102_3, L668_3, L678_7, L689_3, L699_3) and hub_Wo -> hroot_WN (L1133_0). The TT-to-FF
+  hull of that phase is 480-490 ps wide (L1102_3: sample window 341.1 to 832.0 ps), wider than half a period, so
+  neither the rise nor the fall edge can sample it cleanly. Cause: feed delay between the two region roots.
+- 4 edges pc_* -> phy_* (L1145_0, L1275_0, L1283_0, L1308_0) have phase near 0 (window -117 to +111 ps). The fall
+  edge would be clean, but these crossings are among the 320 with no STA tap pair and no measured fall arrival, so
+  the planner cannot use it.
+- The planner absorbs the ambiguity downstream (458 ports carry 1 ambiguous cycle, 32 carry 2, 12 carry 3; 14 ports
+  go to depth 8) but gives the 14 tree ports themselves 0 ambiguous cycles at depth 4. The simulation, which
+  resolves the metastable sample both ways, breaks exactly there. Not K, not OCV spread on the rings: the plan's
+  own Monte Carlo (0 of 300) does not model the two-way resolution.
+
+**7.2 Start-skew 34 of 155 in TT (0 in FF): mostly the model, not these 14 pairs.** MEASURED (sta_fixed): every
+failing row is a clean edge (sync_values 1) with source "model-coroute": skew is taken as the TT clk->q range
+78.2-109.6 ps and fails when 109.6 exceeds the per-edge limit (79.0-108.8). The same rows pass the direct test on
+the STA interval in 33 of 34 cases (sync distance 51.6-361 ps against the 26.5 ps aperture); one is really thin
+(L2085_1 hgi_EN_6, 25.8 ps), two more are under 60 (L689_4 51.6, L133_0 54.7). The 10 ambiguous rows that STA can
+see are reported ok, because the direct test is skipped for sync_values 2. So the 34 and the 32 are different
+sets: the STA flags a conservative margin on clean edges and is blind to the edges that actually break.
+
+**7.3 Fix: give KV the clock-form start tree that HEAD uses.** MEASURED, my run on the same inputs with
+`count_align_plan --start-tree clock` (epyc7 /srv/opentallas-scratch2/claude/fable-triage-headkv/ca_clk.json,
+bind_clk.json): 193 start edges, 193 clean, 0 ambiguous cycles anywhere, 3,915 of 3,915 crossings at depth 4 (0 at
+depth 8), worst margin +109.4 / +765.1 ps, bind simulation 0 of 500 violations (minimum +109.4). It needs 32 retime
+flops on clock-tree nodes and one start port per clock-tree edge.
+- The count-aligned STA on that bind was still running when this was written (same directory, sta_clk); the
+  start-skew count for the clock form is therefore not yet measured.
+- Owner: KV-102 (plan event: start form clock, start ports and retime stages via start_stage_emit; the plan
+  already carries start_i / start_o ports); DIE-KV-ROUTE-1 switches ca_p1.sh to `--start-tree clock` and reruns.
+- Not recommended: shortening the 10 feeds or padding per edge; it treats 14 rows and leaves the form.
+- Tool items (KIT-OPS-6): die_sta_related must fail sync_values 2 start rows instead of passing them, and
+  count_align_plan must count the ambiguity of a tree port on that port.
+
+## 8. HEAD: early taps for u_epc and kp4_dchn (HEAD-99 question, 03:45 post)
+
+Signed numbers (rtx-pro signed-export-1114 signoff.json and DEF):
+
+| core | insertion TT min / mean / max | FF min / mean / max | clk pin (core frame) | in the type (z18 placement) |
+|---|---|---|---|---|
+| ot_s81hd_he_epc (u_epc) | 351 / 428 / 488 | 269 / 338 / 387 | M4, W face, (0.096, 223.992) | hd_host_e (423.456, 284.472) |
+| ot_s81_kp4_dchn (u_chn) | 273 / 287 / 315 | 214 / 228 / 255 | M5, core centre, (138.36, 69.12) | hd_serdes (1106.04, 75.07); after the MY move x = origin + 138.12 |
+
+- **u_epc: no tap, and I withdraw my "45-60 ps earlier" line in 2(d).** The pin already hangs on one buffer 20 ps
+  after clk_t6 (TYPE-HDEPC), and 20 + 428 = 448 against registers at 442: the core is already aligned to within
+  6 ps. An earlier pin would have to arrive before the die tap, which no in-type form can do. The -85 ps output
+  side was measured on a DB placed against the stale lib. With the signed lib in the kit (form B build) the placer
+  sees it. If it is still under -42 after that build, register the 19 output endpoints at the u_epc face
+  (same slice form as B), not a tap.
+- **kp4_dchn: no core_taps = early, no new kit port, no renumber.** u_chn is on pma_rck (kit sdc: its own clock
+  port), not on the density taps. Use the form hd_host_e already has for u_epc: the core pin on its own buffer
+  branch straight from the clock entry, and the registers on the tree. Target: pin 200 ps before the pma_rck
+  registers (window 127-263). With the pin about 30 ps after the entry, the island's register latency must be
+  160-290 ps; above that, add the difference as buffers on the u_chn branch. FABLE-SERDES-STRUCT item 2 is the
+  same construction. If the kit generator can only make that branch through core_taps, the missing piece is a
+  generator option "core branch from a named clock port", owner KIT-OPS-6; do not accept the renumber.
+- After the face-register re-sign (M6) the target becomes "pin earlier by the new core insertion".
+
+## 9. HEAD: the seven seam holds (15-view STA, FF)
+
+| seam | FF hold | what it is | form |
+|---|---|---|---|
+| mesh0S -> mesh0S_estrip m_rx_ft_i (65 bits) | -52.7 | synchronous ft seam, tap offset 79.6 ps | receiver padding in the type, below |
+| mesh7N -> mesh7N_estrip m_rx_ft_i | -14.0 | same type, same seam | same re-sign |
+| ctl -> ctl_estrip n_tx_ft_i | -11.4 | synchronous ft seam, offset 27 ps | receiver padding in hd_ctl_e |
+| tE3b3 -> tE3b4 arst_n / start_i | -61.3 | region crossing (offset 148.5 ps) | none |
+| tE5o7 -> tE4b8, tE4o0 -> tE3b1, tW3o10 -> turnW3a (arst_n / start_i) | -27.4, -26.4, -3.4 | region crossings | none |
+
+- The four reset / start rows need no hold form and no hd_tile re-sign. arst_n ends in the reset synchroniser
+  (reset is held at least 64 cycles: false path). start_i between two tiles is a start-tree crossing; it is judged
+  by the count-aligned start check, which passes on both edges (0 of 1,556, minimum sync distance 149 ps). In the
+  15-view run hd_tile was also still a stand-in view. Exclude `*/arst_n` and `*/start_i` from the ilm seam gate.
+- The three ft seams are inside the plan's own 90 ps seam window (offsets 27-80 ps), so the die-wide seam_hold is
+  not too small; the receiving types do not deliver the padding it promises. Fix in the type, no plan key: re-sign
+  hd_mesh_e (covers both mesh strips) and hd_ctl_e with the input-min constraint on the `*_ft_i` ports set for the
+  full 90 ps window plus 10 ps, so the kit's hold repair inserts the delay cells (+0 cycles, no RTL). Both types are
+  small (2-4k cells) and signed, so this is two short re-signs. Owner HEAD-99.
+- Not ft_hop_lockup (a latch for 53 ps costs setup on a +680 ps seam for nothing), not core_input_lockup (no core),
+  not a wider seam_hold (it would hit every seam).
+- HOLD_SLACK_MARGIN 10 in the hd_host_e kits does not touch any of the seven; none is a host_e seam.
+- Limit: the sender side of the two mesh seams (hd_mesh) is a stand-in view. Re-read after hd_mesh has a real view.
+
+## 10. HEAD: 18 or 12 freg ports
+
+18 is right, and both lanes now agree. `p16r/ca3/out/bind_fz.json` ends with 18 marked ports after 19 bind
+iterations: chE0..5_t__0 and chW0..5_t__0 (hd_turn_a.t_i), coll_WN1_d__0, coll_WN1_u__1, coll_WN2_d__0,
+coll_WN2_u__3 (hd_st_n4), coll_WN3_d__0, coll_WN3_u__0 (hd_ctl_n). The "12" was read from `regions_ca_fz.json`,
+which carries no freg key at all (the bind's table writer drops it; DIE-HEAD-ROUTE-1's local patch covers only
+bind_fz.json). HEAD-99's plan rule gives the same 18. Tool fix: count_align_bind must write freg into the table
+output. Note `freg_fix.sh` line 32 still times against the old proof; its "start-skew 1556/1556" line is the same
+artefact as 2(a4), use the sta_ca_fz2 result.
+
+## 11. HEAD: rp21z20NC does not prep, TYPE_SPLIT on hd_spn and hd_spn_wshim_rx
+
+- Trigger (MEASURED): the start ORIGIN FORM of the ca3 sidecar. The plan of record has one count origin per
+  partition (1,609 origins, 0 relays, with frame_clock_regions and start_pins). The ca3 sidecar has one origin per
+  clock region (1,557 origins + 31 relays, neither key), because `head_current_ca.py` calls the planner without
+  `--start-native-clocks --start-partition-origins`. In the spine the planner chose the origin unevenly: sp1 and
+  sp2 are origins themselves; in sp0, sp3, sp4, sp5 the origin is spN_bw_i_shim and hd_spn is a relay. In strap form
+  the type signature is (count-aligned input buses, is-relay, is-origin-with-relays), so the copies differ exactly
+  as reported. K and latency are not involved.
+- Decision: do not split the two types, do not change the ring form, do not force origin_part by hand (a uniform
+  region origin puts relay pins on hd_spn and the four shim types, three of them signed, and moves K again).
+  Re-plan in the plan-of-record form.
+- My run with the two flags (epyc2 fable-triage-headkv/po): 427 crossings at depth 4, fail 0, worst margin
+  113.3 ps, 2,000 chips 0 violations, 1,564 start edges all clean by width, 358 partition origins, 0 relays.
+  Two mechanical items remain: (1) 12 start hops exceed the 405 um reach bound (sp -> its east shims
+  spN_be_i_shim / spN_xe_o_shim, and mesh7N -> mesh7N_estrip): pass the plan of record's launch-tap selection
+  (its start_pins) or allow these 12 after GEOM; (2) the bind needs the partition-keyed table, not ca3's region
+  table. Owners: DIE-HEAD-ROUTE-1 (chain), HEAD-99 (re-bind of all 427 and the 18 freg ports from that output).
