@@ -5076,6 +5076,8 @@ SRC_MANIFEST_PY = Path(__file__).with_name("src_manifest.py")
 def src_manifest_cmd(sp):
     """SRC-TREE-1115: shell command (on the gen host) verifying the die src tree against its manifest; None = off.
     The verifier is shipped inline (python3 -I -c), so the gen host needs no copy of it."""
+    if "src_manifest" not in sp:                         # a spec written before SRC-TREE-1115 (old worker spec): unchanged
+        return None
     mode = str(sp.get("src_manifest") or "verify")
     if mode == "off" or not str(sp.get("src") or "").startswith("/"):
         return None

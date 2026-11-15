@@ -180,6 +180,9 @@ class KitWave(Base):
         self.assertIn("--ro", c)
         self.assertIn("--expect " + "ab" * 32, c)
 
+    def test_old_spec_without_key_is_not_checked(self):
+        self.assertIsNone(KW.src_manifest_cmd({"src": self.out}))
+
     def test_refusal_names_drifted_file(self):
         self.build()
         os.chmod(self.out + "/tools/die_plan/a.py", 0o644)
