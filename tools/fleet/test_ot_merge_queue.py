@@ -260,6 +260,14 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("source dir(s) the tests name: data/fix", g.stdout)
         self.assertIn("GATE main=", g.stdout)
 
+    def test_last_missing_source_round_adds_the_whole_allowed_top_dir(self):
+        self.env = dict(self.env, MQ_GATE_MISS_ROUNDS="0", MQ_GATE_WHOLE_TOPS="data")
+        g = self._dep_branch("claude/dyn2", "import pathlib, mod\nR = pathlib.Path(__file__).resolve().parents[2]\n\n"
+                                            "def test_dep():\n    assert (R / ('da' + 'ta') / 'fix' / 'input.txt').read_text()\n")
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("source dir(s) the tests name: data", g.stdout)
+        self.assertIn("GATE main=", g.stdout)
+
     def test_tick_lands_on_a_green_gate_record_without_a_second_test_run(self):
         q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
         q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n")
