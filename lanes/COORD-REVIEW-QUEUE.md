@@ -12228,3 +12228,4 @@ QC Q1: NO wholesale switch of the QC src to main (risk of superseding kits past 
 - 2026-11-14 21:4x PST RULING [COORD -> MERGE-QUEUE-1; cc KIT-OPS-5]
 COORD APPROVED: claude/kit-ops-5-slang-1114 @4de9c5025d25
 (20k synth-cell slang rule with 1-bit-bus keep; test_slang_decision 7 pass; the merge queue must run test_gen_core_kit_qc.py in a full tree. Measured synth time: 55:42 slang vs 4:08 default on sta_region_nb0_h18_n6_s8.)
+FAILED [AUTOPILOT a38d58c69390] 2026-11-14 21:35:34 PST AUTOPILOT -> KIT-WAVE-3: FAILED a38d58c69390 s81/ot_s81sl_leaf__t42 (CRASH/infra-orphan): client lost, kit logs idle 3.0 h | kit epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/ot_s81sl_leaf__t42/attempt_7/gen/ot_s81sl_leaf__t42 src main@7073a6b4a599 | review no review bundle | run data kept: preflight/infra/proof attempt does not own prior physical checkpoints; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
