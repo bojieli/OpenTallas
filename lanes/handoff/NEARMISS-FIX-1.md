@@ -25,3 +25,9 @@ Task: all 5 NEARMISS-ECO runs since 20:28 failed with prd_result.json passes [] 
 - NOT re-queue unchanged: sle cl086d85ba (DRT-1231 pin access; needs its own look: pin access of u_bound cland_x_su_c_p1_i, try OT_PRD_REPAIR_RC=placement / full route).
 - coll_ft cla4a25d77 control is already a PASS (ingest + archive pending, FABLE-TYPES-QC-EAST F).
 - Salvage idea (not done): the 4 SIGPIPE pass dirs are routed with count 0; a finish + sign-off + LEC only (OT_PRD_FINAL_ONLY) would save ~2 h each.
+
+## COORD follow-up (21:5x PST): approved @966e3722ec6
+- Re-queued from the patched bundle (ot-heavy --mem 48, nmfix_job.sh, --from route --owner-override, out <root>/eco_fix1, logs <scratch>/claude/nearmiss-eco/logs/<name>.log):
+  slw_cl76fb247e + slw_cl1a1c1f8f (epyc2), sle_cl7a55c676 (epyc8), collft_cl78c7b300 (intel1, waiting for memory in ot-heavy at 21:45). Control ctl_collft_cla4a25d77 (epyc2) still running. Private bundle copies: epyc2 scratch3, epyc8 + intel1 scratch2 claude/nmfix1-bundle.
+- SIGPIPE fix (prd_run.sh only, sha256 of main file d9ca727a... -> patched) installed by cp+chmod+mv, backup prd_run.sh.bak-nmfix1-1114, into wt/qc-s29-tree2 on intel1, epyc2, epyc7, epyc8, epyc9, epyc10 (scratch/scratch2 are one tree). No live prd_run.sh in those trees at the time; files that did not match the main sha would have been skipped (none). Other wt/* and kit trees were NOT touched (frozen source ids). eco_loop.py in tree2 not patched (the prd_run.sh trap is the actual fix; the eco_loop change only adds ABORTED classing + log file).
+- sle cl086d85ba (DRT-1231) posted to PG-AWARE-1.
