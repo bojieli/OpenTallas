@@ -14686,3 +14686,19 @@ FAILED [AUTOPILOT 9e8bbd68037a] 2026-11-15 13:59:47 PST AUTOPILOT -> KIT-WAVE-1:
   $(cat /tmp/claude-1000/tab_pg_fmt.txt)
   CAUSE (measured): in 13 of 14 nets driver and sink are in the SAME relay or station (rq or e flop -> the data flops it clears, 0-80 um apart) but on different taps: launch 6-165 ps vs capture 241-399 ps, tap difference 76-370 ps. The driver sits on ONE tap, its 24-536 data flops are spread over several taps, so no single placement of the driver can share every sink's tap. Moving the driver CK (pg/pg2) fixes only the majority; the minority-tap flops (198 pins) keep -229 worst. Delay cells cannot close it: recovery slack is +61 ps, removal needs +230. Falling-edge capture is the ph form (recovery -233).
   CLOSING FORM (not a plan row; generator code in the kit tcl): one copy of the driver flop per SINK TAP, made after clock tap assignment: for each reset driver flop whose async sinks sit on several taps, clone the flop per extra tap (same D, same reset input, CK on that tap), hang that tap's sinks on the clone (INV parity preserved). Every async pin then has launch and capture on one tap. It also removes the sizing problem of a 536-load rq. Building it now in tap_reset_affinity.tcl (clone ECO) as pilot pg4 on col_h9_r0_p6; tcl is on branch claude/s81-seam-rst-1115 (cc: no rows possible until it passes all 14 nets).
+- 2026-11-15 14:00 PST RESULT-TABLE [S81-SEAM-RST-1115 -> DIE-S81-92] (the per-net table was missing from the line above) pg removal nets, col_h9_r0_p6:
+  net_driver | sink rq/flop | dist_um | launch_clk_ps | capture_clk_ps | slack_ps
+  u_d14_u_cf_rs_r77 | u_u_y_rt_2b_1.u.g_rsreg.rq$_DFF_PN0_ | 54 | 92.4 | 370.8 | -229
+  u_d14_u_cf_rs_r100 | u_u_y_rt_8a_3.u.g_rsreg.rq$_DFF_PN0_ | 26 | 27.5 | 275.2 | -221
+  u_u_lpl_9_w.e$_DFF_PN0_ | u_u_lpl_9_w.u_y_w.g_chunk[12].r[7]$_DFF_PN | NA | 21.4 | 392.9 | -202
+  u_u_y_rt_4a_4.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_rt_4a_4.u.o[35]$_DFF_PN0_ | NA | 91.1 | 377.8 | -192
+  u_u_y_rt_8a_3.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_rt_8a_3.u.o[24]$_DFF_PN0_ | NA | 58.0 | 279.3 | -188
+  u_u_y_rt_0b_4.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_rt_0b_4.u.o[53]$_DFF_PN0_ | NA | 62.1 | 269.0 | -171
+  u_u_y_rt_0b_1.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_rt_0b_1.u.o[34]$_DFF_PN0_ | NA | 43.0 | 274.6 | -132
+  u_u_y_rt_0b_3.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_rt_0b_3.u.o[37]$_DFF_PN0_ | NA | 45.7 | 261.0 | -121
+  u_u_y_rt_0b_4.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_rt_0b_4.u.o[42]$_DFF_PN0_ | NA | 62.1 | 269.3 | -99
+  u_u_y_x2_1_0.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_x2_1_0.u.o[107]$_DFF_PN0_ | NA | 105.4 | 256.4 | -41
+  u_u_y_rt_6a_1.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_rt_6a_1.u.o[49]$_DFF_PN0_ | NA | 133.1 | 273.7 | -40
+  u_d14_u_cf_rs_r37 | u_u_lpl_9_w.e$_DFF_PN0_ | 23 | 164.5 | 241.2 | -33
+  u_u_lpl_1_r.wq$_DFF_P_ | u_u_lpl_1_r.u_y_q.q$_DFF_PN0_ | 78 | 294.2 | 399.1 | -23
+  u_u_y_xb_1_0.u.g_rsreg.rq$_DFF_PN0_ | u_u_y_xb_1_0.u.o[194]$_DFF_PN0_ | NA | 6.7 | 267.6 | -9
