@@ -52,6 +52,15 @@ MAX_HIST = 400
 LOCAL_ROOTS = dict(kv.split("=", 1) for kv in os.environ.get("OT_SRC_LOCAL_ROOTS", "").split() if "=" in kv)   # tests: host=/root
 COORD = Path(os.environ.get("MQ_COORD", HOME / "coord"))
 COMMIT = os.environ.get("MQ_COMMIT", str(COORD / "bin/coord-commit.sh"))
+MAN_ROOTS = ("tools", "physical")
+MAN_SKIP_DIRS = ("__pycache__", ".mq-stage", ".mq-refresh-bak", ".git", ".pytest_cache")
+MAN_SKIP_FILES = ("*.pyc", "*.bak*", "MQ_REFRESH.log", ".mqref.*", "ARCHIVED.json")   # ARCHIVED.json: per-host cleanup marker
+CODE_EXT = (".py", ".tcl", ".sh", ".mk", ".sdc")
+
+
+def hard(rel):
+    """a difference here makes the copies unsafe to gen from (refuses the daily refresh); other physical/ data is only flagged"""
+    return rel.startswith(("tools/", "physical/common_flow/")) or rel.endswith(CODE_EXT)
 ENTRY = ("gen_phys", "bind", "check", "schema", "kit_topology", "kit_preflight", "core_view_sha", "gen")
 
 
@@ -192,7 +201,9 @@ for f in job["files"]:
             r.update(status="UNREADABLE", note=str(e)); res.append(r); continue
     if have is not None and have == new:
         r["status"] = "SAME"; res.append(r); continue
-    if have is None:
+    if mode == "force":
+        out, st = new, ("REPLACE" if have is not None else "ADD")
+    elif have is None:
         out, st = new, "ADD"
     elif (base is not None and have == base) or bid(have) in hist:
         out, st = new, "REPLACE"
@@ -220,7 +231,7 @@ for f in job["files"]:
             r["staged"] = True
         except OSError as e:
             r.update(status="ERROR", note=str(e))
-    elif apply_:
+    elif apply_ or mode == "force":
         try:
             if have is not None:
                 bk = os.path.join(src, ".mq-refresh-bak", stamp, rel)
@@ -275,6 +286,109 @@ if p.returncode:
     bad.append("entry import: " + (p.stderr.strip().splitlines() or ["?"])[-1][:300])
 print(json.dumps({"bad": bad}))
 '''
+
+
+MANIFEST_PY = r'''
+import fnmatch, hashlib, json, os, sys
+job = json.loads(sys.stdin.read())
+src, ov = job["src"], job.get("overlay") or ""
+skip_d, skip_f, depth = set(job["skip_dirs"]), job["skip_files"], job.get("depth", 3)
+want = tuple(job.get("files_under") or ())
+cf = os.path.expanduser("~/.cache/mq1-manifest/" + hashlib.md5(src.encode()).hexdigest() + ".json")
+try:
+    cache = json.load(open(cf))
+except (OSError, ValueError):
+    cache = {}
+new_cache, files, dirs = {}, {}, {}
+def h(path, rel):
+    st = os.stat(path)
+    k = [st.st_size, st.st_mtime_ns]
+    c = cache.get(path)
+    if c and c[:2] == k:
+        dg = c[2]
+    else:
+        x = hashlib.sha1()
+        with open(path, "rb") as f:
+            for b in iter(lambda: f.read(1 << 20), b""):
+                x.update(b)
+        dg = x.hexdigest()
+    new_cache[path] = k + [dg]
+    return dg, st.st_mtime
+def walk(base, rel):
+    try:
+        it = sorted(os.scandir(base), key=lambda e: e.name)
+    except OSError:
+        return
+    for e in it:
+        r = f"{rel}/{e.name}" if rel else e.name
+        if e.is_dir(follow_symlinks=False):
+            if e.name not in skip_d:
+                walk(e.path, r)
+        elif e.is_file(follow_symlinks=False) and not any(fnmatch.fnmatch(e.name, g) for g in skip_f):
+            files[r] = h(e.path, r)
+for root in job["roots"]:
+    walk(os.path.join(src, root), root)
+if ov and os.path.isdir(ov):                       # staged overlay: its files replace the tree's
+    for root in job["roots"]:
+        save = dict(files); files.clear(); walk(os.path.join(ov, root), root); staged = dict(files); files.clear()
+        files.update(save); files.update(staged)
+for r, (dg, mt) in files.items():
+    k = "/".join(r.split("/")[:depth])
+    dirs.setdefault(k, hashlib.sha1())
+    dirs[k].update(f"{r}\0{dg}\n".encode())
+try:
+    os.makedirs(os.path.dirname(cf), exist_ok=True)
+    tmp = cf + ".tmp"; json.dump(new_cache, open(tmp, "w")); os.replace(tmp, cf)
+except OSError:
+    pass
+out = {"n": len(files), "digest": hashlib.sha1("".join(f"{r}\0{d}\n" for r, (d, m) in sorted(files.items())).encode()).hexdigest(),
+       "dirs": {k: v.hexdigest() for k, v in dirs.items()}}
+if want:
+    out["files"] = {r: [d, int(m)] for r, (d, m) in files.items() if r.startswith(want)}
+print(json.dumps(out))
+'''
+
+
+def manifest(host, src, overlay="", files_under=()):
+    job = {"src": _root(host, src), "overlay": _root(host, overlay) if overlay else "", "roots": list(MAN_ROOTS),
+           "skip_dirs": list(MAN_SKIP_DIRS), "skip_files": list(MAN_SKIP_FILES), "files_under": list(files_under)}
+    p = S.run(_cmd(host, MANIFEST_PY), input=json.dumps(job), capture_output=True, text=True, timeout=3600)
+    try:
+        return json.loads(p.stdout.strip().splitlines()[-1])
+    except (ValueError, IndexError):
+        return {"error": f"rc={p.returncode} {(p.stderr or p.stdout).strip()[-200:]}"}
+
+
+def compare(hosts, src, overlay=""):
+    """-> (problems, diffs) diffs = {rel: {host: (sha1|None, mtime)}} where the hosts' trees differ (hosts[0] = reference)"""
+    man, problems = {}, []
+    for h in hosts:
+        m = manifest(h, src, overlay)
+        if "error" in m:
+            problems.append(f"{h}: manifest {m['error']}")
+        else:
+            man[h] = m
+    if len(man) < 2 or len({m["digest"] for m in man.values()}) == 1:
+        return problems, {}
+    keys = set().union(*(m["dirs"] for m in man.values()))
+    bad = sorted(k for k in keys if len({m["dirs"].get(k) for m in man.values()}) > 1)
+    full = {h: manifest(h, src, overlay, files_under=bad) for h in man}
+    diffs = {}
+    for r in sorted(set().union(*(f.get("files", {}) for f in full.values()))):
+        v = {h: tuple(full[h].get("files", {}).get(r, (None, 0))) for h in full}
+        if len({x[0] for x in v.values()}) > 1:
+            diffs[r] = v
+    return problems, diffs
+
+
+def fmt_diffs(diffs, ref, n=12):
+    out = []
+    for r, v in list(diffs.items())[:n]:
+        newest = max(v, key=lambda h: v[h][1])
+        odd = [h for h in v if v[h][0] != v[ref][0]]
+        out.append(f"{r} (differs on {','.join(odd)} vs {ref}; newest {newest} "
+                   f"{datetime.datetime.fromtimestamp(v[newest][1]).strftime('%m-%d %H:%M') if v[newest][1] else '-'})")
+    return out + ([f"... +{len(diffs) - n} more"] if len(diffs) > n else [])
 
 
 def _cmd(host, py):
@@ -446,47 +560,77 @@ def daily(new, apply_, only):
             last[die] = new
             continue
         src, (gen, reps) = d["src"], die_hosts(cfg, die)
+        hosts = [gen] + [h for h in reps if "error" not in run_remote(h, {"src": src, "apply": False, "mode": "dry", "stamp": stamp,
+                                                                            "to": new, "files": []})]
+        # 0. the replicas must already be identical (tools/ + physical/): a lane that copied a file to some of them shows here
+        pb, diffs = compare(hosts, src)
+        hd = {r: v for r, v in diffs.items() if hard(r)}
+        if pb or hd:
+            out_lines.append(f"{die}: REPLICA DRIFT before the refresh, nothing staged ({len(hd)} code file(s); {'; '.join(pb)}): "
+                             + "; ".join(fmt_diffs(hd, gen)))
+            continue
+        if diffs:
+            out_lines.append(f"{die}: note {len(diffs)} plan/data file(s) under physical/ differ across copies (flagged, not blocking): "
+                             + "; ".join(fmt_diffs(diffs, gen, 4)))
+        # 1. stage on the gen host (merge), then the gen host's exact result staged on every replica
         jobs = file_jobs(paths, old, new, history_blobs(paths))
         st = run_remote(gen, {"src": src, "apply": False, "mode": "stage", "stamp": stamp, "to": new, "files": jobs, "want_out": True})
         if "error" in st:
             out_lines.append(f"{die}: gen host {gen} ERROR {st['error']}"); continue
-        res = {r["path"]: r for r in st["results"]}
         todo = [r for r in st["results"] if r.get("staged")]
         held = [f"{r['path']} {r['status']}" for r in st["results"] if r["status"] in ("CONFLICT", "BUSY", "LOCAL", "ERROR", "UNREADABLE")]
+        gjobs = [{"path": r["path"], "new": r["out"], "base": r.get("have"), "hist": []} for r in todo]
         ovl = f"{src}/.mq-stage/{stamp}"
-        bad = smoke(gen, src, [r["path"] for r in todo], overlay=ovl)
-        S.run(_cmd(gen, f"import shutil; shutil.rmtree({_root(gen, ovl)!r}, ignore_errors=True)"), capture_output=True, timeout=300)
+        for h in hosts[1:]:
+            run_remote(h, {"src": src, "apply": False, "mode": "stage", "stamp": stamp, "to": new, "files": gjobs})
+
+        def unstage():
+            for h in hosts:
+                S.run(_cmd(h, f"import shutil; shutil.rmtree({_root(h, ovl)!r}, ignore_errors=True)"), capture_output=True, timeout=300)
+        # 2. every host's tree + its stage must hash identical, then the staged smoke on every host
+        pb, diffs = compare(hosts, src, overlay=ovl)
+        diffs = {r: v for r, v in diffs.items() if hard(r)}
+        bad = pb + ([f"staged trees differ: {'; '.join(fmt_diffs(diffs, gen))}"] if diffs else [])
+        if not bad:
+            for h in hosts:
+                b = smoke(h, src, [r["path"] for r in todo], overlay=ovl)
+                if b:
+                    bad.append(f"{h}: {'; '.join(b)[:400]}"); break
+        unstage()
         if bad:
-            out_lines.append(f"{die}: STAGED SMOKE FAILED on {gen}, nothing swapped: {'; '.join(bad)[:500]}")
+            out_lines.append(f"{die}: STAGED CHECK FAILED, nothing swapped: {' | '.join(bad)[:700]}")
             continue
         if not apply_:
-            out_lines.append(f"{die}: dry {len(todo)} file(s) would change, staged smoke ok; held {held[:8]}")
+            out_lines.append(f"{die}: dry {len(todo)} file(s) would change on {len(hosts)} host(s), identical + staged smoke ok; held {held[:8]}")
             continue
-        # swap: gen host (its staged result) then every replica (gen host's exact content)
-        gjobs = [{"path": r["path"], "new": r["out"], "base": r.get("have"), "hist": []} for r in todo]
+        # 3. swap on every host (one step, copy+mv, backups), verify identical, smoke each; any failure -> roll back all hosts
         hosts_done, fail = [], []
-        for h in [gen] + reps:
+        for h in hosts:
             rr = run_remote(h, {"src": src, "apply": True, "mode": "apply", "stamp": stamp, "to": new, "files": gjobs})
-            if "error" in rr:
-                if "no tree" in rr["error"] and h != gen:
-                    continue
-                fail.append(f"{h}: {rr['error']}"); hosts_done.append(h); break
             hosts_done.append(h)
+            if "error" in rr:
+                fail.append(f"{h}: {rr['error']}"); break
             for r in rr["results"]:
                 rows.append([stamp, "daily", die, h, src, r["path"], r["status"], r.get("note", ""), "applied" if r.get("written") else ""])
-            b = smoke(h, src, [j["path"] for j in gjobs])
-            if b:
-                fail.append(f"{h}: {'; '.join(b)[:400]}"); break
+        if not fail:
+            pb, diffs = compare(hosts, src)
+            diffs = {r: v for r, v in diffs.items() if hard(r)}
+            fail += pb + ([f"trees differ after swap: {'; '.join(fmt_diffs(diffs, gen))}"] if diffs else [])
+        if not fail:
+            for h in hosts:
+                b = smoke(h, src, [j["path"] for j in gjobs])
+                if b:
+                    fail.append(f"{h}: {'; '.join(b)[:400]}"); break
         if fail:
             for h in hosts_done:
                 run_remote(h, {"src": src, "apply": True, "mode": "rollback", "stamp": stamp, "to": new, "files": []})
-            out_lines.append(f"{die}: SMOKE FAILED after swap ({' | '.join(fail)}); ROLLED BACK on {', '.join(hosts_done)}")
+            out_lines.append(f"{die}: CHECK FAILED after swap ({' | '.join(fail)[:600]}); ROLLED BACK on {', '.join(hosts_done)}")
             continue
         last[die] = new
         cnt = {}
         for r in todo:
             cnt[r["status"]] = cnt.get(r["status"], 0) + 1
-        out_lines.append(f"{die}: {old[:11]}..{new[:11]} on {gen}+{len(reps)} replica(s): "
+        out_lines.append(f"{die}: {old[:11]}..{new[:11]} on {len(hosts)} host(s), identical after swap: "
                          + " ".join(f"{k}={v}" for k, v in sorted(cnt.items())) + (f"; kept {held[:10]}" if held else ""))
     MQ.mkdir(parents=True, exist_ok=True)
     if apply_:
@@ -502,6 +646,72 @@ def daily(new, apply_, only):
     return out_lines
 
 
+def drift(only, post_new):
+    """flag replica skew: per die, files whose content differs between the gen_hosts copies (tools/ + physical/)"""
+    cfg = json.loads(CFG.read_text())
+    sf = MQ / "src-drift-flagged.json"
+    try:
+        seen = json.loads(sf.read_text())
+    except (OSError, ValueError):
+        seen = {}
+    lines, now_seen = [], {}
+    for die in sorted(cfg.get("dies") or {}):
+        d = cfg["dies"][die]
+        if (only and die not in only) or not isinstance(d, dict) or not d.get("enabled") or not d.get("src"):
+            continue
+        gen, reps = die_hosts(cfg, die)
+        pb, diffs = compare([gen] + reps, d["src"])
+        now_seen[die] = sorted(diffs)
+        hd = {r: v for r, v in diffs.items() if hard(r)}
+        fresh = [r for r in hd if r not in set(seen.get(die, []))]
+        if pb:
+            lines.append(f"{die}: {'; '.join(pb)}")
+        if hd:
+            lines.append(f"{die}: {len(hd)} CODE file(s) differ across {len(reps) + 1} copies ({len(fresh)} new): "
+                         + "; ".join(fmt_diffs({r: hd[r] for r in (fresh or hd)}, gen)))
+        if len(diffs) > len(hd):
+            lines.append(f"{die}: {len(diffs) - len(hd)} plan/data file(s) under physical/ differ (flag only)")
+    MQ.mkdir(parents=True, exist_ok=True)
+    t = sf.with_suffix(".tmp"); t.write_text(json.dumps(now_seen, indent=1)); os.replace(t, sf)
+    for l in lines:
+        log(f"DRIFT {l}")
+    if post_new and any("CODE file(s)" in l and "(0 new)" not in l for l in lines):
+        post("STATE", "REPLICA DRIFT (a file copied to only some of a die's gen_hosts copies; the wave gens on any of them). "
+             "Copy to all copies with: ot-src-refresh put --die <die> <path>...  " + " ;; ".join(lines))
+    return lines
+
+
+def put(die, rels, apply_):
+    """the sanctioned way to change a die tree by hand: copy files from the gen host's tree to EVERY gen_hosts copy, then verify"""
+    cfg = json.loads(CFG.read_text())
+    d = cfg["dies"][die]
+    gen, reps = die_hosts(cfg, die)
+    stamp = now().strftime("%Y%m%d-%H%M%S")
+    code = ("import base64, json, os, sys\nsrc = %r\nout = {}\nfor r in %r:\n    p = os.path.join(src, r)\n"
+            "    out[r] = base64.b64encode(open(p, 'rb').read()).decode() if os.path.isfile(p) else None\nprint(json.dumps(out))\n"
+            % (_root(gen, d["src"]), list(rels)))
+    p = S.run(_cmd(gen, code), capture_output=True, text=True, timeout=600)
+    got = json.loads(p.stdout.strip().splitlines()[-1])
+    miss = [r for r, v in got.items() if v is None]
+    if miss:
+        return [f"not in the gen host tree {gen}:{d['src']}: {miss}"]
+    jobs = [{"path": r, "new": v, "base": None, "hist": []} for r, v in got.items()]
+    lines = []
+    for h in reps:
+        rr = run_remote(h, {"src": d["src"], "apply": apply_, "mode": "force" if apply_ else "dry", "stamp": stamp, "to": "put", "files": jobs})
+        lines.append(f"{h}: " + ("ERROR " + rr["error"] if "error" in rr else
+                                 " ".join(f"{x['path']}={x['status']}" for x in rr["results"])))
+    pb, diffs = compare([gen] + reps, d["src"])
+    left = {r: v for r, v in diffs.items() if r in set(rels)}
+    other = {r: v for r, v in diffs.items() if hard(r) and r not in left}
+    lines.append("copies identical" if not (pb or left) else f"still differ: {'; '.join(pb + fmt_diffs(left, gen))}")
+    if other:
+        lines.insert(-1, f"other code drift on {die} (not part of this put): " + "; ".join(fmt_diffs(other, gen, 6)))
+    for l in lines:
+        log(f"PUT {die} {l}")
+    return lines
+
+
 def changed(old, new):
     return [p for p in git("diff", "--name-only", "--no-renames", old, new).split("\n") if p and in_scope(p)]
 
@@ -512,12 +722,24 @@ def main():
     a = sub.add_parser("refresh"); a.add_argument("--from", dest="old", required=True); a.add_argument("--to", dest="new", required=True)
     c = sub.add_parser("catchup"); c.add_argument("--since", required=True); c.add_argument("--to", dest="new", default=f"{REMOTE}/main")
     dl = sub.add_parser("daily"); dl.add_argument("--to", dest="new", default=f"{REMOTE}/main")
+    dr = sub.add_parser("drift"); dr.add_argument("--post", action="store_true"); dr.add_argument("--dies", default="")
+    pu = sub.add_parser("put"); pu.add_argument("--die", required=True); pu.add_argument("paths", nargs="+"); pu.add_argument("--apply", action="store_true")
     for p in (a, c, dl):
         p.add_argument("--apply", action="store_true"); p.add_argument("--dies", default=""); p.add_argument("--show", action="store_true")
     x = ap.parse_args()
-    if x.apply and "OT_SRC_CFG" not in os.environ and "MQ_REPO" in os.environ:
+    if getattr(x, "apply", False) and "OT_SRC_CFG" not in os.environ and "MQ_REPO" in os.environ:
         sys.exit("refusing --apply: MQ_REPO is set (a test or side clone) but the die config is the production kit_wave.json")
-    only = set(x.dies.split(",")) - {""}
+    only = set(getattr(x, "dies", "").split(",")) - {""}
+    if x.cmd == "drift":
+        lines = drift(only, x.post)
+        for l in lines:
+            print(l)
+        return 0
+    if x.cmd == "put":
+        lines = put(x.die, x.paths, x.apply)
+        for l in lines:
+            print(l)
+        return 0 if lines and lines[-1] == "copies identical" else 1
     if x.cmd == "daily":
         git("fetch", "-q", REMOTE, "main", check=False)
         lines = daily(x.new, x.apply, only)

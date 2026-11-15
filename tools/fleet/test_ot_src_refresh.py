@@ -128,7 +128,6 @@ class Daily(unittest.TestCase):
             t = pathlib.Path(str(root) + str(self.src)) / "tools/die_plan"
             t.mkdir(parents=True)
             (t / "a.py").write_text("A = 1\n")
-        (self.src / "tools/die_plan/helper.py").write_text("H = 1\n")   # die-local module only the gen host has
         sh("git", "clone", "-q", str(d / "origin.git"), str(d / "repo"))
         cfg = d / "kit_wave.json"
         cfg.write_text(json.dumps({"dies": {"qc": {"enabled": True, "gen_host": "hostg", "gen_hosts": ["hostg", "hostr"],
@@ -172,21 +171,45 @@ class Daily(unittest.TestCase):
         (self.dev / "tools/die_plan/a.py").write_text("import no_such_module_xyz\nA = 2\n")
         self.commit("v2")
         r = self.daily()
-        self.assertIn("STAGED SMOKE FAILED", r.stdout + r.stderr)
+        self.assertIn("STAGED CHECK FAILED", r.stdout + r.stderr)
         self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
         self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 1\n")
         self.assertEqual(self.last(), self.v1)
 
-    def test_replica_smoke_failure_rolls_back_every_host(self):
-        (self.dev / "tools/die_plan/a.py").write_text("import helper\nA = 2\n")    # the replica lacks helper.py
-        (self.dev / "tools/die_plan/c.py").write_text("C = 1\n")
+    def test_replica_drift_refuses_then_put_heals(self):
+        (self.src / "tools/die_plan/helper.py").write_text("H = 1\n")   # a lane copied a file to the gen host copy only
+        (self.dev / "tools/die_plan/a.py").write_text("A = 2\n")
         self.commit("v2")
         r = self.daily()
+        self.assertIn("REPLICA DRIFT", r.stdout + r.stderr)
+        self.assertIn("tools/die_plan/helper.py", r.stdout)
+        self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
+        self.assertEqual(self.last(), self.v1)
+        e = subprocess.run([sys.executable, "-I", P, "drift", "--post"], env=self.env, capture_output=True, text=True, timeout=300)
+        self.assertIn("helper.py", e.stdout)
+        self.assertIn("REPLICA DRIFT", (self.d / "coord/lanes/COORD-REVIEW-QUEUE.md").read_text())
+        u = subprocess.run([sys.executable, "-I", P, "put", "--die", "qc", "tools/die_plan/helper.py", "--apply"], env=self.env,
+                           capture_output=True, text=True, timeout=300)
+        self.assertEqual(u.returncode, 0, u.stdout + u.stderr)
+        self.assertEqual(self.rep("tools/die_plan/helper.py").read_text(), "H = 1\n")
+        r = self.daily()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 2\n")
+
+    def test_swap_failure_on_one_host_rolls_back_every_host(self):
+        (self.dev / "tools/die_plan/a.py").write_text("A = 2\n")
+        (self.dev / "tools/die_plan/c.py").write_text("C = 1\n")
+        self.commit("v2")
+        rd = self.rep("tools/die_plan")
+        os.chmod(rd, 0o555)                                            # the replica cannot take the swap
+        try:
+            r = self.daily()
+        finally:
+            os.chmod(rd, 0o755)
         self.assertIn("ROLLED BACK", r.stdout + r.stderr)
         self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
-        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 1\n")
         self.assertFalse((self.src / "tools/die_plan/c.py").exists())
-        self.assertFalse(self.rep("tools/die_plan/c.py").exists())
+        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 1\n")
         self.assertEqual(self.last(), self.v1)
 
 
