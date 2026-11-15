@@ -295,3 +295,40 @@ only the 60 unlanded types now and hold the rest for CA.
   Band failures: 13 of the 17 are depth-4 buses, so depth is not their cause. The compose re-places bands
   that the +3 plan already holds at the same 5 flops per bit; keep the existing band rectangles for depth-4
   buses. The 2 true depth-8 buses (svc_hi_rs t2 attnh_i0, svc_lo_rs t7 hbmrd_i0) need a notched band.
+
+## H. Start-stage placement and the +307 latency, 08:55 PST
+
+RULING: option (2) in its smallest form, and it needs no new keep-out and no type change.
+  The premise "no die-level row because partitions abut" does not hold in the tool. die_trial.SiteMap, the
+  rule that places the 91,460 die clock cells, makes a site legal when it is INSIDE a partition and outside
+  hard cores (+2.16 um halo) and PHY domains. Start-stage flops are die-level cells of the same class and
+  sit on the same sites.
+  The stop at (18760.2, 12590.961) is a search limit in start_stage_emit.place_stage: it only tries the
+  segment directly right or left of the node cell, on rows within +-40 rows (10.8 um). That node sits in a
+  slot between two cores: the node site is legal, the 4.32 um segment right of it runs into a core halo,
+  left is a core. The nearest legal 4-flop segment is 44.0 um away, at (18759.12, 12633.89).
+  Sample of 300 of the 2,627 stage nodes of ca_cap (SiteMap only, occupancy by other clock cells not
+  counted): 297 have a legal segment beside the cell, 2 need more than 50 um (max 114.5 um), 1 has none
+  within 120 um. So about 1 % of the stages are affected.
+  FIX (S81-START-CAP, tool only): in place_stage, when the beside-the-cell search fails, take the nearest
+  free legal 4-flop row segment in 2-D (grow the radius to 150 um, row and site steps), keep the stage tap
+  pin at the flop clock pin so the die clock run measures the extra leg, and print per stage the distance
+  from its node cell. A stage with nothing in 150 um is listed, not fatal: its edge keeps the model delay.
+  Not option 1: partition-owned stage flops put die clock-tree position into type content, and one type is
+  instanced under different tree nodes, so it forces type splits across most landed types.
+  Not option 3 alone: estimated routes cannot close the 48 long hops; they are the edges that need a
+  measured delay.
+  NOTE, not new and not blocking: S81 types carry no clock.reserved_sites_um (kind die_clock_tree), so die
+  clock cells over partitions are not reserved in the type kits today. The start stages add 2,430 x 4.32 um
+  of row to that same open item; when S81 adopts reserved sites, the stage rectangles join the list.
+
+LATENCY. +307 is acceptable (latency is not a gate, cycles are pre-approved) but it is not the number to
+plan on: it is the guard-417 form with the 48 long edges still ambiguous under an assumed delay model.
+Measured with --strap-window on the capped tree (my probes, epyc7 fable-pd-s81/sw, guard 0):
+                                         depth 4/8/16     lane latency total   vs fixed +3 (2,979)
+  guard 417, 48 long edges ambiguous     663/293/37       3,286                +307
+  strap window, 48 long edges ambiguous  775/205/13       2,690                -289
+  strap window, no delay model           960/33/0         2,406                -573
+So --strap-window turns +307 into -289 before the 48 are fixed, and to about -573 once they are measured
+clean. Take --strap-window into the capped delta. The planner exits 1 in both probes because the 48-49
+long edges fail reach; that is the open item of section G, unchanged. NOT RUN: strap bind on these two plans.
