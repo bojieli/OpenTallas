@@ -1,0 +1,27 @@
+--- /srv/opentallas-scratch2/claude/die-qc-103/treeA/tools/die_plan/reset_consumers.py	2026-11-13 21:28:24.046269736 +0000
++++ /srv/opentallas-scratch2/claude/qc-sc-rows-1115/tree/tools/die_plan/reset_consumers.py	2026-11-15 21:52:17.535304052 +0000
+@@ -81,7 +81,11 @@
+             visited.add(net)
+             r = published[net]
+             c = calls.get(r.get('name'))
+-            if not c or c['module'] not in ('ot_dp_rrelay', 'ot_dp_rrelay_nl'):
++            # QC-SC-ROWS-1115: a published START-broadcast tap is an ot_dp_rgate (registered reset AND run) on the same
++            # clock; it is a legal localization node only as the FIRST node (the tap itself), with a run pin.
++            gated_tap = bool(c) and c['module'] == 'ot_dp_rgate' and r.get('kind') == 'tap' and net == first \
++                and 'run' in c['ports']
++            if not c or (c['module'] not in ('ot_dp_rrelay', 'ot_dp_rrelay_nl') and not gated_tap):
+                 raise ResetConsumerError(f'{net}: not an actual registered reset relay')
+             ps = c['ports']
+             if any(k not in ps for k in ('clk', 'd', 'q')) or ps['clk'][0] != clock:
+@@ -136,6 +140,11 @@
+         new_node, new_depth = lineage(new, clock)
+         if old_depth != new_depth:
+             raise ResetConsumerError(f'{key}: reset release depth changes {old_depth}->{new_depth}')
++        troles = tree.get('tap_roles') or {}
++        otap, ntap = published[old_node].get('tap'), published[new_node].get('tap')
++        if (troles.get(otap, troles.get(str(otap))) != troles.get(ntap, troles.get(str(ntap)))
++                or published[old_node].get('kind') != published[new_node].get('kind')):
++            raise ResetConsumerError(f'{key}: reset tap role/kind differs between {old_node} and {new_node}')
+         _, lo, hi = c['ports'][pin]
+         # Retain whitespace around the connection; rewrite only the old identifier.
+         raw = text[lo:hi]
