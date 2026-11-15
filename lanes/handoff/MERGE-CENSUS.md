@@ -61,3 +61,10 @@ replica_keep.py derives Module:reg from the kit RTL (module instantiated >= 2 ti
 | kv3_hub_Eo (kvgeom4, epyc2) | KV | 1,142 -> 2 (sync_q) | 73,041 -> 82,251 (fan_1 copy + its dp_dly chain) | 3_place.odb, no FAIL | UNPROVEN, identical to baseline (frontend elaboration) |
 | kv3_hub_Wo (kvgeom6) | KV | 1,142 -> 2 | 76,897 -> 88,797 | FAIL OT_CLAND BAND FAIL x2 in global_place, identical in the unmodified baseline | n/a |
 Not proven: HEAD/QC die (no confirmed-merge generator target there yet), ot_sram_oldread_b64 synth census, ti_b by my own run (FABLE-KVOVF measured it; derive gives qkh_head_tstage:ti_b on kv3_hgi_v8). r_hgi2/r_hg untouched.
+
+## Round 2 proofs (HEAD, QC, b64) 11-15 -- branch claude/merge-census-1115-1 pushed @6f0c8e1765 (COORD approved)
+| proof kit | die | census before -> after | flops | place | LEC |
+|---|---|---|---|---|---|
+| hd_host_w (hdw_base vs hdw_keep, intel1) | HEAD | ot_sram_oldread_b64 wdata 553 missing -> 0 (short siblings 1 -> 0) | 30,175 -> 30,760 (+585) | 3_place.odb, no FAIL | not read |
+| slw_su_c__cl19bb38ef (epyc8) | QC | 3,574 missing in 4 modules (vm8q vwr 2,084, twc 1,088, vrd 400, dp_dly 2) -> 2 (dp_dly r:2) | 41,720 -> 46,239 (+4,519) | 3_place.odb, no FAIL | EQUIVALENT, 100,672 compare points proved, 0 differ, exit 0 |
+ot_sram_oldread_b64 is now proven at synth+place (same derivation as ot_sram_oldread_wreg). Residual QC dp_dly r:2 (1 of 354 instances) is not a data replica. Remaining unproven: ti_b by my own run, S81 ot_hdc_* / KV hub_C leftovers unclassified.
