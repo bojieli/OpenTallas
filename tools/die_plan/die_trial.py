@@ -3727,7 +3727,7 @@ def load_stamped_tree(path, site=None, rep_um=150.0):
     nodes = {int(k): dict(v) for k, v in T["nodes"].items()}
     by = {}
     for t in T["taps"]:
-        by.setdefault(t["node"], []).append((t["part"], t["port"], t["xy"][0], t["xy"][1]))
+        by.setdefault(t["node"], []).append((t["part"], t["tap"], t["xy"][0], t["xy"][1]))
     for i, v in nodes.items():
         v["taps"] = by.get(i, [])
         v["kids"] = list(v.get("kids", []))
@@ -3736,7 +3736,7 @@ def load_stamped_tree(path, site=None, rep_um=150.0):
         import clksite_stamp_native as _csn
         st["parity"] = _csn.fix_parity(nodes, rep_um, site)["stats"]
     print("STAMPED-TREE", json.dumps(st))
-    return nodes, [(t["part"], t["port"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
+    return nodes, [(t["part"], t["tap"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
 
 
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
