@@ -2,3 +2,4 @@
 - 2026-11-14 20:10 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] tl-s81phy-a2 on epyc10: process gone (no signoff.json/result.json)
 - 2026-11-14 20:11 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] tl-s81phy-x2b-r on epyc10: process gone (no signoff.json/result.json)
 - 2026-11-14 20:11 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-LEAFT34] kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/ot_s81sl_leaf__t34/attempt_14 on intel1: process gone (no signoff.json/result.json)
+- 2026-11-14 20:20 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/phy__t1/attempt_8 on epyc8: process gone (no signoff.json/result.json)
