@@ -92,3 +92,17 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 - Remote gates: /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote on epyc2+epyc9 (venv mq-gate/venv, clone slots slot0-7 of the lane mirror), driver intel2 mq1/tmp/rg.sh, outputs mq1/tmp/rg/*.out; GREEN records copied to ~/merge-queue/gates/. Usage: ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --dir /srv/opentallas-scratch2/claude/mq-gate -- bash /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote claude/<b>@<sha> 16
 - Needs tokens: claude/mq-gate-deps-1115 @55adcc5c3f2 (gate-record landing, MQ_GATE_PAR, ot-gate-remote, missing-source rerun; drt0255 regates after it), claude/kitrtl-fail-1115 @cf4e05a04fc (GREEN, COORD pre-approved).
 - Still running remote: kv-pvgen-1115c @58c1bd939f8, flow-health-1115b @954e9e33029 (both approved/queued). Hub tick 15:13 gating hold-release-on, qc-cb-gen @0784de12b28, noprog-grt, flow-health @954e, m8-grant.
+
+## 2026-11-15 15:5x update (successor, r177/r178)
+- MERGED kitrtl-fail @cf4e05a04fc -> 3813f569afe (15:35, landed first). MERGED mq-gate-deps @55adcc5c3f2 -> 85738b82470 (15:40).
+  Gate record trust and the missing-source rerun are live on rt/current.
+- The 15:41 tick took flow-health @954e (GREEN 15:53, landing), m8-grant, clksite-r4, s81-seam-rst-1115-2, drt0255 and pg-cell-keepout-tap.
+  pg-cell-keepout-tap has a remote GREEN record (main e57480d51f6, 2/2).
+- READY claude/mq-gate-deps-1115b @39560175da1 (not approved yet): up to 3 missing-source rounds, then the whole rtl/. ot-gate-remote takes OT_GATE_CODE.
+  Remote copy of that code: epyc2 and epyc9 mq-gate/ot-merge-queue.bef8ec0a177.
+  drt0255 is regating on the remote runner with it (mq1/tmp/rg/drt0255-pg-rows-1115-1.out).
+- FABLE-FLOW-1600 rules (r178), not yet in code:
+  - gate branches named in a hold release_on first;
+  - one gate per sha (skip remote when the tick has a worktree for that sha);
+  - gate a READY without a stamp yourself, never bounce it.
+- Force-first script: mq1/tmp/first2.sh pattern (stop timer + service, tick --only, trap restarts timer).
