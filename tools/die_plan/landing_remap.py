@@ -157,6 +157,30 @@ def adopt_by_key(old_t, new_t):
     return out
 
 
+def _xy_snapshot(t):
+    ck = t.get("clock") or {}
+    return dict(exports={e.get("port"): list(e["xy_um"]) for e in t.get("reset_start_raw_exports") or [] if e.get("xy_um")},
+                pins={p.get("name"): list(p["xy_um"]) for p in (ck.get("landing_contract") or {}).get("pins") or [] if p.get("xy_um")})
+
+
+def _xy_restore(t, snap, max_um):
+    """reset_resel moves an export row and its landing pin onto the re-selected relay; HEAD pins are fixed interface sites
+    (face / core pins): put the recorded xy back (rename only) and return the rows whose relay is farther than max_um"""
+    far = []
+    for e in t.get("reset_start_raw_exports") or []:
+        o = snap["exports"].get(e.get("port"))
+        if o is not None and e.get("xy_um"):
+            d = _d(o, e["xy_um"])
+            if d > max_um:
+                far.append(f"{e['port']} relay {e.get('instance')} {d:.0f} um")
+            e["xy_um"] = o
+    for p in ((t.get("clock") or {}).get("landing_contract") or {}).get("pins") or []:
+        o = snap["pins"].get(p.get("name"))
+        if o is not None:
+            p["xy_um"] = o
+    return far
+
+
 def resel_resets(old_raw, new_raw, names, plan_dir):
     """default reset step: street_rule.reset_resel (exports, pin sources, START stages, local resets by role + depth +
     nearest old site).  -> {type: record}; mutates new_raw."""
@@ -165,7 +189,7 @@ def resel_resets(old_raw, new_raw, names, plan_dir):
 
 
 def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, tree_fn=None, groups_fn=None, tol_um=None,
-               ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True):
+               ported_fn=RA.ported, resets="resel", resel_fn=None, adopt=True, keep_xy=True, max_um=405.0):
     """rewrite new_raw in place.  resets: 'resel' (street_rule.reset_resel: raw exports, pin sources, START stages, local
     resets) or 'anchor' (reset_anchor record on the OLD tree + resolve on the NEW tree: START stages / local resets only).
     tree_fn(raw, tn) -> reset tree (anchor mode), groups_fn(raw, tn) -> tap groups, resel_fn(old, new, names, dir):
@@ -203,7 +227,13 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
             rec["taps"].append(dict(type=tn, remaps=rows))
     if resets == "resel":
         fn = resel_fn or resel_resets
+        keep = {tn: _xy_snapshot(new_raw["partition_types"][tn]) for tn in names} if keep_xy else {}
         out = fn(old_raw, new_raw, [tn for tn in names], plan_dir)
+        for tn in names:
+            if keep_xy:
+                far = _xy_restore(new_raw["partition_types"][tn], keep[tn], max_um)
+                if far:
+                    raise RemapError(f"{tn}: kept pin site is farther than {max_um:g} um from its re-selected relay: " + "; ".join(far[:5]))
         for tn, r in sorted(out.items()):
             if r.get("error"):
                 raise RemapError(f"{tn}: reset_resel: {r['error']}")
@@ -243,13 +273,14 @@ def main(argv):
     ap.add_argument("--root", default=str(Path(__file__).resolve().parents[2]))
     ap.add_argument("--receipt")
     ap.add_argument("--keep-anchor", action="store_true")
+    ap.add_argument("--move-pins", action="store_true", help="let reset_resel move export rows / landing pins onto the relay (default: rename only, pin sites kept)")
     ap.add_argument("--no-adopt", action="store_true", help="do not take stale compose names from OLD by key first")
     ap.add_argument("--resets", choices=["resel", "anchor"], default="resel")
     a = ap.parse_args(argv[1:])
     old = json.loads(Path(a.old).read_text())
     new = json.loads(Path(a.new).read_text())
     rec = remap_plan(old, new, a.root, Path(a.new).parent, set(filter(None, a.types.split(","))), a.keep_anchor,
-                     resets=a.resets, adopt=not a.no_adopt)
+                     resets=a.resets, adopt=not a.no_adopt, keep_xy=not a.move_pins)
     Path(a.out).write_text(json.dumps(new, indent=1, ensure_ascii=False) + "\n")
     if a.receipt:
         Path(a.receipt).write_text(json.dumps(rec, indent=1) + "\n")
