@@ -88,3 +88,10 @@ def test_early_is_priced_against_the_type_budget_for_override_types():
     assert S.common_latency_ps(P, "FF", ov_noff) == 364.5 and S.common_latency_ps(P, "FF") == 202.5
     assert abs(S.core_tap_early_ps(P, dict(insertion_ps=465.39, insertion_ff_ps=361.26), "TT", ov) - 15.39) < 1e-6
     assert S.core_tap_early_ps(P, dict(insertion_ps=300.0), "TT", dict(ov, clock=dict(ov["clock"], insertion_target_override={}))) == 50.0
+
+
+def test_idx_view_swaps_the_core_lef_and_lib(tmp_path):
+    p = plan(tmp_path)
+    rep = TR.apply(p, REFS, root=str(tmp_path), idx_view=dict(lef="v/idx.lef", lib="v/idx_tt.lib"))
+    (c,) = [c for c in p["partition_types"]["bk_sel__t2"]["hard_cores"] if c["module"] == "dsdv_idx_tx_n32"]
+    assert (c["lef"], c["lib"]) == ("v/idx.lef", "v/idx_tt.lib") and len(rep["idx_view"]) == 1

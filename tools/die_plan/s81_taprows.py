@@ -39,7 +39,7 @@ def _row_of(taps, inst):
     return [tp for tp in taps if tp.get("kind") == "core" and (tp["name"] == inst or tp["name"].startswith(inst + "."))]
 
 
-def apply(plan, refs, root=None, type_name="bk_sel__t2", idx_module="dsdv_idx_tx_n32", budget=BUDGET, bksel=None, bksel_module="dsdv_bksel_q"):
+def apply(plan, refs, root=None, type_name="bk_sel__t2", idx_module="dsdv_idx_tx_n32", budget=BUDGET, bksel=None, bksel_module="dsdv_bksel_q", idx_view=None):
     """edit the plan dict in place; returns the report dict.  One row per half core, on the clock pin name of the core's view
     (LEF / liberty), at the signed reference; the twin rows left by older events (stale pin name, liberty max) are deleted."""
     import cores as C
@@ -116,6 +116,14 @@ def apply(plan, refs, root=None, type_name="bk_sel__t2", idx_module="dsdv_idx_tx
                 rep["bksel_q"].append((tp["name"], old))
         if not rep["bksel_q"]:
             raise SystemExit("no bksel_q rows")
+    rep["idx_view"] = []
+    if idx_view:                               # COORD r104: the SIGNED vb lib / lef replace the closed import in the plan core
+        for c in t.get("hard_cores", []):
+            if c.get("module") == idx_module:
+                rep["idx_view"].append((c["inst"], c.get("lef"), c.get("lib")))
+                c["lef"], c["lib"] = idx_view["lef"], idx_view["lib"]
+        if not rep["idx_view"]:
+            raise SystemExit(f"no {idx_module} core in {type_name}")
     if not rep["idx"] or not rep["halves"]["he"] or not rep["halves"]["hw"]:
         raise SystemExit(f"nothing to edit: {rep}")
     plan["note"] = plan.get("note", "") + (f" | S81-TAPROWS: {rep['halves']['he']} he + {rep['halves']['hw']} hw half rows at the signed "
@@ -133,12 +141,14 @@ def main(argv=None):
     ap.add_argument("--root", default=".", help="repo root the view paths resolve against")
     ap.add_argument("--bksel-tt", type=float)
     ap.add_argument("--bksel-ff", type=float)
+    ap.add_argument("--idx-lef")
+    ap.add_argument("--idx-lib")
     ap.add_argument("--report")
     a = ap.parse_args(argv)
     refs = {"he": _ref(a.he_record), "hw": _ref(a.hw_record), "idx": _ref(a.idx_record)}
     plan = json.loads(Path(a.base).read_text())
     bk = dict(tt=a.bksel_tt, ff=a.bksel_ff, basis="TT mean read; FF given") if a.bksel_tt and a.bksel_ff else None
-    rep = apply(plan, refs, a.root, bksel=bk)
+    rep = apply(plan, refs, a.root, bksel=bk, idx_view=dict(lef=a.idx_lef, lib=a.idx_lib) if a.idx_lef and a.idx_lib else None)
     Path(a.out).write_text(json.dumps(plan, indent=1))
     rep["refs"] = refs
     if a.report:
