@@ -5423,6 +5423,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export POST_CTS_TCL = /work/cts_post.tcl",
            # KW-FIX-45 11-12: OT_LEAF_AFF_ASYNC=1 in the gen env -> leaf_affinity.tcl also groups reset-release flops
            # with the registers they release (async pins), one leaf per group; unset = unchanged
+           *(["export OT_HOOK_COVERAGE = warn"] if os.environ.get("OT_HOOK_COVERAGE", "").strip() == "warn" else []),
            *(["export OT_LEAF_AFF_ASYNC = 1"] if os.environ.get("OT_LEAF_AFF_ASYNC", "").strip() == "1" else []),
            # DIE-HEAD-17 reg_spine: the plan balances the spine taps and sizes the core early-tap branches, so the
            # flow tap_balance pass (incl. its core re-hang pass) only reports
@@ -5942,6 +5943,17 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
     # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
     shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
+    # GENBUG-5 (11-15): merged-replica census after synth, placed-database hop census before CTS; both OFF unless the
+    # generator env OT_MERGE_CENSUS / OT_HOP_CENSUS is 1 (fail) or warn (log only).  The flag file is read by run_kit.sh.
+    # (kits without an opt-in key stay byte-equal: the helpers are copied only with their flag)
+    _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
+    if _mc in ("1", "warn"):
+        shutil.copyfile(Path(__file__).with_name("merged_replica_census.py"), kd / "merged_replica_census.py")
+        (kd / "merge_census.on").write_text(("64" if _mc == "1" else "999999999") + "\n")
+    _hc = os.environ.get("OT_HOP_CENSUS", "0").strip()
+    if _hc in ("1", "warn"):
+        shutil.copyfile(Path(__file__).with_name("hop_census.py"), kd / "hop_census.py")
+        (kd / "hop_census.on").write_text(_hc + "\n")
     for helper in ("port_bind_gate.py", "hold_gate.tcl"):
         shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
@@ -6041,6 +6053,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
     prepare_signed_parent_source(P, tn, kd, macros, root)
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
+    if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
+        import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
+        hook_manifest.write(kd, Path(__file__).resolve().parent)
     return kd
 
 
@@ -6523,6 +6538,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/reg_fanout_gate.py \$N --out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\$?; head -12 /work/reg_fanout.log; if [ \$rc != 0 ]; then echo 'WARN reg_fanout ADVISORY (KIT-OPS-4 11-14 COORD: register > 64 data loads or NOT RUN, see reg_fanout.json; not a gate)'; rc=0; fi; fi; \
+  if [ \$rc = 0 ] && [ -f /work/merge_census.on ] && [ -f /work/merged_replica_census.py ]; then python3 -I /work/merged_replica_census.py /work --gate \$(head -1 /work/merge_census.on) --json /work/merge_census.json > /work/merge_census.log 2>&1; mc=\$?; grep -h -E '^OT_MERGE_CENSUS|^MRG' /work/merge_census.log | head -8; if [ \$mc != 0 ]; then echo 'FAIL_PREFLOOR merge_census (GENBUG-5: flops merged away by Yosys in short sibling instances, see merge_census.log)' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --types-from \$N --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \
@@ -6531,6 +6547,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then if [ -f /work/lec_preplace.off ]; then printf '1\\necho LEC_PREPLACE_DROPPED R-MINIMAL\\n' > /work/lec_async.ready; else printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; fi; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_preplace.off ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
+  if [ \$rc = 0 ] && [ -f /work/hop_census.on ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M place; rc=\$?; \
+    if [ \$rc = 0 ]; then PO=\$(ls /work/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1); GATE=1 ODB=\$PO TAG='$NAME' OUT=/work/hop_census.json openroad -python -exit /work/hop_census.py > /work/hop_census.log 2>&1; hc=\$?; grep -h -E '^HOPSUM|^OT_HOP_CENSUS' /work/hop_census.log; \
+      if [ \$hc != 0 ] && ! grep -q warn /work/hop_census.on; then echo 'FAIL_POSTPLACE hop census (GENBUG-5.2: zero-logic hops over reach / across a hard core, see hop_census.log)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
     if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then TB=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); [ -z \"\$TB\" ] || cp -p \"\$TB\" /work/4_cts_pretapbal.odb; \

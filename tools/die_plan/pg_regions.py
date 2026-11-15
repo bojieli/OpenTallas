@@ -233,9 +233,44 @@ def region_model(regs, core):
     return out
 
 
-def pdn_tcl(die,loads=()):
-    """Emit top meshes and optional (instance, power_net) abstract M7 connections."""
+def region_class(die, parts=None, grid=None):
+    """GENBUG-3 (FABLE-TRIAGE-HEADKV s12): per region (name, rect_dbu, n_parts, has_H, has_V, verdict).  A region forms a
+    crossing when its own stripe specs hold >= 1 horizontal and >= 1 vertical stripe (row_spec is None when none fits).
+    verdict: 'emit' (crossing), 'skip' (no crossing, 0 partition centres in the box), 'fail' (no crossing, holds a partition).
+    parts = [(x0, y0, x1, y1) um] of every partition instance; None = no partition info -> every region 'emit'."""
+    out = []
+    for name, rect, nets, specs, layers in plan_regions(die, grid):
+        hv = {True: False, False: False}
+        for sp in specs:
+            if sp:
+                hv[sp['V']] = True
+        n = None
+        if parts is not None:
+            n = 0
+            for p in parts:
+                cx, cy = _d((p[0] + p[2]) / 2), _d((p[1] + p[3]) / 2)
+                if rect[0] <= cx < rect[2] and rect[1] <= cy < rect[3]:
+                    n += 1
+        ok = hv[True] and hv[False]
+        verdict = 'emit' if (ok or n is None) else ('skip' if n == 0 else 'fail')
+        out.append((name, rect, n, hv[False], hv[True], verdict))
+    return out
+
+
+def pdn_tcl(die,loads=(),parts=None):
+    """Emit top meshes and optional (instance, power_net) abstract M7 connections.  parts = partition rects (um): regions
+    that cannot hold an H and a V stripe are skipped when they hold no partition (OT_PG_REGION_SKIP) and are a plan error
+    when they do (GENBUG-3)."""
     rs=regions(die)
+    skip=set()
+    if parts is not None:
+        for name,rect,n,h,v,verdict in region_class(die,parts):
+            if verdict=='fail':
+                raise ValueError(f"PG region {name} {rect} holds {n} partition(s) but cannot form an H and V stripe crossing")
+            if verdict=='skip':
+                skip.add(name)
+                import sys
+                print(f"OT_PG_REGION_SKIP {name} {(rect[2]-rect[0])/DBU:g} {(rect[3]-rect[1])/DBU:g} no_crossing",file=sys.stderr)
     loads=[q if isinstance(q,dict) else dict(inst=q[0],net=q[1],pin='VDD',rects=[[q[2][0],q[2][1],q[2][0]+1e-6,q[2][1]+1e-6]]) for q in loads]
     t=['set b [ord::get_db_block]', 'set dbu [[ord::get_db_tech] getDbUnitsPerMicron]']
     for net in sorted({n for r in rs for n in r['nets']}):
@@ -249,6 +284,8 @@ def pdn_tcl(die,loads=()):
     t += ['global_connect', 'set_voltage_domain -name Core -power VDD -ground VSS'+(' -secondary_power {'+' '.join(secondary)+'}' if secondary else '')]
     # ONE PDN RULE: exact dbu region boxes, per-row offset + parity from the die lattice (plan_regions / row_spec)
     for name,rect,(p,g),specs,layers in plan_regions(die):
+        if name in skip:
+            t.append(f'# OT_PG_REGION_SKIP {name} no_crossing'); continue
         t += [f'set region [odb::dbRegion_create $b {name}]',f'odb::dbBox_create $region '+' '.join(f'[expr {{round({_u(x)}*$dbu)}}]' for x in rect),f'set_voltage_domain -name {name} -region {name} -power {p} -ground {g}',f'define_pdn_grid -name {name} -voltage_domains {{{name}}}']
         t += [stripe_tcl(name,sp) for sp in specs if sp]
         for a,b in zip(layers,layers[1:]):t.append(f"add_pdn_connect -grid {name} -layers {{{a} {b}}}")
