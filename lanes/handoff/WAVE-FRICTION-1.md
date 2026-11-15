@@ -516,3 +516,11 @@ Tests: test_kit_wave / allowlist / class_retry / no_row_source keep the same pas
              ("geom", "AP_AUTO_GEOM FAIL fill .0997 channel_h 1.065", "PLAN"),
              ("cells", "512000 cells", "PLAN"),
 ```
+
+## Final 11-14 16:25 (stand-down)
+- Branch claude/wave-friction-1-1114 (~/wt/wf1 on intel2): a896dabc59 merged in train BS (main 6ba63f0aea6); 55b022475c2 and 8b08d679efb to be confirmed in main. 33a9d01b340 is on main as 77724998a08.
+- Cleanup of my sweeps: owner checkout clean; rt tree grt183_make.sh restored (hook comes from main); sealed ot-jobs restored (284 restored, 0 failed); foreign git checkout backups restored (90 files).
+- 7 files in git checkouts NOT restored (edited after my patch; owners diff against the .bak-wf1-1114* beside each): epyc8 kit-snap-1, intel1 fix-relaypoly/wt, profile-1, kit-fix-f, flow-pgcap-1/wt, and kit-fix-f canary kv3_pv_v8 attempt_1 gen (grt183_make.sh in each). Backups still in 2-8 foreign checkouts per host; no further sweeps.
+- Re-key list: lanes/handoff/WF1-EXIT21-REKEY.tsv (ASK to KIT-OPS-5, approved by COORD).
+- Open, not done: hd_spn ECO rerun verdict (epyc2 eco_wf1_proof2/eco_loop.json), DEDUP credit-row check (dedup_members.tsv), auto-resign deploy confirmation, rebase if main moves.
+- Rule kept: no in-place patch touches a git checkout, sealed inputs, future_lec pins or the owner checkout (inplace_patch_guard.is_patchable_here).
