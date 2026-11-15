@@ -72,6 +72,15 @@ TERMINAL = {"MERGED", "ALREADY", "FAIL", "REVOKED"}
 
 APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:branch\s+)?(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
 # ("branch " before the name is accepted: COORD wrote 'COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef' 11-15)
+# 11-15 r130/r132 were written "COORD APPROVED (content): claude/x @sha" and "COORD APPROVED: (a) claude/x @sha ... (b) claude/y
+# @sha"; the queue saw neither.  Those forms count only on lines stamped from APPROVE_EXT_FROM on, so older lines in that
+# shape (superseded shas) never turn into new approvals.
+APPROVE_EXT_RE = re.compile(r"COORD (APPROVED|REVOKED)(?:\s*\([^)]{0,40}\))?:\s*(?:\([a-z0-9]\)\s*)?(?:branch\s+)?"
+                            r"(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
+APPROVE_HEAD_RE = re.compile(r"COORD (APPROVED|REVOKED)(?:\s*\([^)]{0,40}\))?:")
+LIST_ITEM_RE = re.compile(r"\(([a-z])\)\s*(?:branch\s+)?(claude/[\w./+-]+)\s*@\s*([0-9a-f]{7,40})\b")
+APPROVE_EXT_FROM = os.environ.get("MQ_APPROVE_EXT_FROM", "2026-11-15 11:00")
+LINE_TS_RE = re.compile(r"^- (\d{4}-\d\d-\d\d \d\d:\d\d)")
 QUOTE_RE = re.compile(r"\b(MERGED|MERGE-FAIL|READY) \[")      # a line that quotes an approval is not one
 # MERGE-QUEUE-1 11-14 20:00: only COORD (or OWNER) approves.  A line whose first [author] tag before the approval is any other
 # lane (a STATE / ASK quoting the line it asks for) is not an approval; a bare line without an author tag is a COORD ruling.
@@ -146,16 +155,30 @@ def parse_approvals(text):
     """-> ordered list of {'key','branch','sha','line','revoked'} (first approval of a key wins; REVOKED after it marks it)"""
     out, seen = [], {}
     for n, line in enumerate(text.splitlines(), 1):
-        if "COORD APPROVED:" not in line and "COORD REVOKED:" not in line:
+        ts = LINE_TS_RE.match(line)
+        ext = bool(ts) and ts.group(1) >= APPROVE_EXT_FROM
+        heads = list((APPROVE_HEAD_RE if ext else re.compile(r"COORD (APPROVED|REVOKED):")).finditer(line))
+        if not heads:
             continue
         if QUOTE_RE.search(line):
             continue
-        cut = min(i for i in (line.find("COORD APPROVED:"), line.find("COORD REVOKED:")) if i >= 0)
-        au = AUTHOR_RE.search(line[:cut])
+        au = AUTHOR_RE.search(line[:heads[0].start()])
         if au and au.group(1) not in APPROVERS:
             continue
-        for m in APPROVE_RE.finditer(line):
-            kind, branch, sha = m.group(1), m.group(2) or "", m.group(3).lower()
+        found = [(m.group(1), m.group(2) or "", m.group(3).lower()) for m in (APPROVE_EXT_RE if ext else APPROVE_RE).finditer(line)]
+        if ext:
+            # "(a) x @s ... (b) y @t" after an APPROVED header: every lettered item up to the next header
+            for i, h in enumerate(heads):
+                if h.group(1) != "APPROVED":
+                    continue
+                seg = line[h.end():heads[i + 1].start() if i + 1 < len(heads) else len(line)]
+                if not re.match(r"\s*\([a-z]\)", seg):
+                    continue
+                for li in LIST_ITEM_RE.finditer(seg):
+                    t = ("APPROVED", li.group(2), li.group(3).lower())
+                    if t not in found:
+                        found.append(t)
+        for kind, branch, sha in found:
             key = f"{branch or '-'}@{sha}"
             if kind == "APPROVED" and key not in seen:
                 seen[key] = {"key": key, "branch": branch, "sha": sha, "line": n, "revoked": False,

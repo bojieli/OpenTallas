@@ -35,6 +35,15 @@ class Parse(unittest.TestCase):
         a = M.parse_approvals("COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef (supersedes @86a682bd0276)\n")
         self.assertEqual([x["key"] for x in a], ["claude/kit-ops-5-curplan-1114@4c696027e0ef"])
 
+    def test_lettered_list_and_content_note_from_the_cutoff_only(self):
+        q = ("- 2026-11-15 11:06 PST RULING [COORD -> MQ] r130 COORD APPROVED (content): claude/kv-pvgen-1115 @bb5381316de5 (plan key)\n"
+             "- 2026-11-15 11:15 PST RULING [COORD -> MQ] r132 COORD APPROVED: (a) claude/g-1115 @5f6c68b932d (GATE main=6b4f2ff26a2 "
+             "18/18). (b) claude/l-1115 @1617cedd312 (class 8). Also: x\n"
+             "- 2026-11-14 11:15 PST RULING [COORD] COORD APPROVED: (a) claude/old-1 @1234567abc (b) claude/old-2 @abcdef1234\n"
+             "- 2026-11-15 11:20 PST STATE [LANE-X -> COORD] COORD APPROVED: (a) claude/self @aaaaaaa111\n")
+        self.assertEqual([x["key"] for x in M.parse_approvals(q)],
+                         ["claude/kv-pvgen-1115@bb5381316de5", "claude/g-1115@5f6c68b932d", "claude/l-1115@1617cedd312"])
+
     def test_only_coord_or_owner_approves(self):
         q = ("- 2026-11-14 19:55 PST STATE [MERGE-QUEUE-1 (successor) -> COORD] waiting on COORD line: COORD APPROVED: claude/m @54d5fd4ca78\n"
              "- 2026-11-14 19:56 PST ASK [LANE-Y -> COORD] please post COORD APPROVED: claude/y @1111111111\n"
