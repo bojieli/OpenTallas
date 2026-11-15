@@ -130,7 +130,7 @@ Judge: (1) placement / CTS setup WNS against -556 / -753 ps; (2) GRT markers; (3
 
 ## 6. Results
 
-State 2026-11-15 00:45 PST. Nothing has reached detail route yet; no form is proven.
+State 2026-11-15 00:45 PST (later results in section 9). Nothing has reached detail route yet; no form is proven.
 
 | form | stage reached | setup WNS / TNS | note |
 |---|---|---|---|
@@ -185,3 +185,22 @@ the script does not separate that. Not followed up.
 - hgi re-floor, density / routability forms, soft blockages (fd03, fd04, fdC2, fdC3, planB, v0, v1): all on the merged netlist.
 - Any form without OT_KEEP_WIRES: setup stays near -500 ps.
 - Counting the per-layer "total congestion" as the blocker: only the 2D markers gate.
+- Per-core last-stage copy only (forms r_hgi2, r_hg; stopped 01:5x on COORD order). MEASURED r_hgi2: the copies sit at
+  their cores, but the two stages before them stay at the ring (y about 993), so the long hop moves one stage upstream
+  (755 um in head 2, about 1,000 um in head 3). CTS setup -365 ps / TNS -277k against -366 ps / -142k for keep only.
+
+## 9. Update 2026-11-15 01:55 PST
+
+- Keep only: kv3_hgi_v2 CTS -366 ps / -142k (merged -586 / -558k); after pre-route hold repair -431 ps, FF hold +3.7 ps
+  with 36,635 hold cells. kv3_hg CTS -739 ps / -694k (k_hg) and -723 ps / -709k (k_hg_m7) against -753 ps / -969k merged:
+  the merge is not the main limiter on kv3_hg. Worst paths of kv3_hg not read yet (its CTS report has no path list).
+- Why placement leaves the stages at the ring: a two-pin register chain has the same wirelength wherever the middle
+  register sits, so global placement has no force toward the midpoint.
+- Forms c_hgi2 / c_hg (launched 01:45 from synth, running on epyc7, copies on epyc2/9/10): each front core gets a private
+  three-stage chain from ring to core (`fable-kvovf/bin/rep_chain.py`, 24 stage copies per type, originals removed), and
+  the kit's relay_mid.tcl is pointed at them (`OT_RELAY_MID_RE = ^(.*[.]u_[A-Za-z0-9_]+r_e[0-9]+)[.]`, `OT_RELAY_MID_FIT = 1`)
+  so each stage is fixed on the ring-to-core line. kv3_hgi_v2 grows to 133,919 standard cells (105,305 before).
+  Open: relay_mid stations a chain only when its source is a fixed flop; not yet confirmed in the log.
+- m7a (TYPE-KVHGI2, merged netlist + M7 close): first global route total congestion 234 (M5 2 / M6 1 / M7 231) against 624
+  in the control; the first incremental route passed without GRT-0232.
+- Running: k_hgi2, k_hgi2_m7 (global route), k_hg, k_hg_m7 (CTS), c_hgi2, c_hg.
