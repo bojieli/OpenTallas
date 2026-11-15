@@ -694,12 +694,22 @@ proc ot_hold_scope_read {path} {
   try { return [read $fh] } finally { close $fh }
 }
 set ::ot_hold_scope_supported_modes {reg2reg nonport}
+# FLOW-LATEECO 11-15 (R-MINIMAL: hold >= 0 applies to non-port paths only; port hold is the parent's).  kv3_phy_v1 paid
+# TT setup -34 -> -248 ps for a port-start hold of -204 ps that belongs to the parent.  With OT_HOLD_REPAIR_SCOPE UNSET the
+# in-flow FF hold repair (CTS, GRT, post-route ECO sessions of every two-mode kit) now defaults to reg2reg: input starts
+# and output endpoints are excluded, exactly as the late ECO already does.  Opt-out keeps the old all-path repair:
+# OT_HOLD_PORT_SCOPE_OFF=1, or an explicit OT_HOLD_REPAIR_SCOPE (any value, including empty / all).
+proc ot_hold_scope_default {} {
+  if {[info exists ::env(OT_HOLD_REPAIR_SCOPE)]} { return $::env(OT_HOLD_REPAIR_SCOPE) }
+  if {[info exists ::env(OT_HOLD_PORT_SCOPE_OFF)] && $::env(OT_HOLD_PORT_SCOPE_OFF) eq "1"} { return "" }
+  return reg2reg
+}
 proc ot_hold_repair_scope {body} {
-  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ni {reg2reg nonport} ||
+  set scope [ot_hold_scope_default]
+  if {$scope ni {reg2reg nonport} ||
       ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
     return [uplevel 1 $body]
   }
-  set scope $::env(OT_HOLD_REPAIR_SCOPE)
   set entry [sta::cmd_mode_name]
   set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
   set stem [file join $dir ot_hold_scope_[pid]_[clock clicks]]
