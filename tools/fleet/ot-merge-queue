@@ -448,6 +448,10 @@ def pytest(wt, items, tag, n):
     tail = " | ".join(l for l in out.strip().splitlines()[-2:])[:300]
     if p.returncode == 124:
         fails.add(f"TIMEOUT({timeout}s):{' '.join(items)[:120]}")
+    if fails:
+        miss = missing_src(wt, out)
+        if miss:
+            fails.add("MISSING-SOURCE:" + " ".join(miss[:6]))
     shutil.rmtree(bt, ignore_errors=True)
     return p.returncode, fails, tail
 
@@ -492,6 +496,92 @@ def baseline(base, fails, extra=(), tag=""):
     return {f for f in fails if f in on_main or f.split("::")[0] in on_main}
 
 
+_TOPS = {}
+
+
+def _tops(rev_):
+    if rev_ not in _TOPS:
+        _TOPS[rev_] = sorted(git("ls-tree", "--name-only", "-d", rev_).stdout.split())
+    return _TOPS[rev_]
+
+
+def _path_lit_re(rev_, quoted=True):
+    alt = "|".join(map(re.escape, _tops(rev_))) or "rtl"
+    return re.compile((r"""["']/?((?:%s)/[\w.+-][\w./+-]*?)/?["']""" if quoted else r"""(?<![\w.-])((?:%s)/[\w.+-][\w./+-]*[\w+-])""") % alt)
+
+
+def _tree_types(rev_, paths, cwd=REPO):
+    """{path: 'blob'|'tree'} of the paths that exist at rev_ (one cat-file --batch-check)"""
+    paths = sorted(set(paths))
+    if not paths:
+        return {}
+    p = S.run(["git", "cat-file", "--batch-check"], cwd=str(cwd), input="".join(f"{rev_}:{x}\n" for x in paths),
+              capture_output=True, text=True, timeout=300)
+    out = {}
+    for x, line in zip(paths, p.stdout.splitlines()):
+        f = line.split()
+        if len(f) == 3 and f[1] in ("blob", "tree"):
+            out[x] = f[1]
+    return out
+
+
+def test_deps(wt, base, tests):
+    """dirs the selected tests need beyond the sparse set: repo paths named as string literals in each test, its conftest.py
+    files and the local modules it imports (11-15 kv-pvgen: test_pvgen_vport_selrep compiles rtl/test/kv_bootage_1019/*.sv
+    and rtl/qwen_sys/... that the branch does not touch; the sparse gate tree lacked them and the sims timed out at 2400 s)"""
+    files = set(tests)
+    for t in tests:
+        d = os.path.dirname(t)
+        while d:
+            files.add(f"{d}/conftest.py")
+            d = os.path.dirname(d)
+        try:
+            txt = (wt / t).read_text(errors="replace")
+        except OSError:
+            continue
+        for m in re.finditer(r"^\s*(?:from\s+([\w.]+)\s+import|import\s+([\w.]+))", txt, re.M):
+            mod = (m.group(1) or m.group(2)).split(".")[0]
+            for c in (f"{os.path.dirname(t)}/{mod}.py", f"tools/die_plan/{mod}.py", f"tools/{mod}.py"):
+                files.add(c)
+    lit, paths = _path_lit_re(base), set()
+    for f in files:
+        try:
+            txt = (wt / f).read_text(errors="replace")
+        except OSError:
+            continue
+        paths |= {m.group(1) for m in lit.finditer(txt)}
+    dirs = set()
+    for x, kind in _tree_types(base, paths).items():
+        if kind == "blob":
+            dirs.add(os.path.dirname(x))
+        elif x.count("/") >= 1:                  # a named directory, never a whole top-level dir (rtl/, physical/)
+            dirs.add(x)
+    return {d for d in dirs if d}
+
+
+def _covered(d, pats):
+    d = "/" + d.strip("/") + "/"
+    return any(not p.startswith("!") and p.endswith("/") and p != "/" and d.startswith(p) for p in pats)
+
+
+MISSING_MARK_RE = re.compile(r"No such file|FileNotFoundError|ENOENT|[Cc]an'?not (?:open|find|read)|[Cc]an't (?:open|find|read)|"
+                             r"[Uu]nable to (?:open|find)|does not exist|not found|[Mm]issing (?:file|source)")
+
+
+def missing_src(wt, out):
+    """repo paths an output names that exist in the gate tree's commit but are absent from its sparse checkout"""
+    out = "\n".join(l for l in (out or "").splitlines() if MISSING_MARK_RE.search(l))
+    if not out:
+        return []
+    try:
+        cand = {m.group(1) for m in _path_lit_re(rev("HEAD", cwd=wt) or "HEAD", quoted=False).finditer(out or "")}
+    except Exception:                                  # noqa: BLE001 - detection only
+        return []
+    cand = {c.rstrip(".") for c in cand}
+    have = _tree_types("HEAD", cand, cwd=wt)
+    return sorted(x for x in have if not (wt / x).exists())
+
+
 def gate(it, wt, base):
     """compile + tests of the candidate at wt HEAD against base -> it updated with result"""
     tip = rev("HEAD", cwd=wt)
@@ -505,7 +595,17 @@ def gate(it, wt, base):
     it["tests"] = tests
     if not tests:
         return "GREEN", f"no tests select for {len(ch)} changed file(s); static check only"
+    pats = list(SPARSE) + ["/" + d.strip("/") + "/" for d in it.get("extra", ())]
+    need = sorted(d for d in test_deps(wt, base, tests) if not _covered(d, pats))
+    if need:
+        git("sparse-checkout", "add", *["/" + d + "/" for d in need], cwd=wt, timeout=1800)
+        it["extra"] = sorted(set(it.get("extra", ())) | set(need))      # the main baseline tree gets the same dirs
+        it["deps"] = need
     fails, infra, tails = run_tests(wt, tests, it["id"])
+    miss = sorted({f for f in fails if f.startswith("MISSING-SOURCE:")})
+    if miss:
+        return "INFRA", (f"MISSING SOURCE in the gate's sparse tree (queue defect, not the branch): "
+                         f"{' '.join(m.split(':', 1)[1] for m in miss)[:300]}")
     if infra and not fails:
         return "INFRA", f"pytest rc {infra}: {' / '.join(tails)[:300]}"
     base_f = baseline(base, fails, it.get("extra", ()), it["id"])
@@ -545,7 +645,8 @@ def gate(it, wt, base):
     if new:
         return "RED", (f"{len(new)} new failure(s) (not failing on main {base[:11]}; still failing on a serial rerun of the branch): "
                        f"{', '.join(new[:8])}" + (f"; {len(flaky)} more passed on the serial rerun (flaky)" if flaky else ""))
-    note = f"{len(tests)} test file(s) pass" + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "") + \
+    note = f"{len(tests)} test file(s) pass" + (f" (+{len(it['deps'])} source dir(s) the tests name: {' '.join(it['deps'][:4])})"
+                                                if it.get("deps") else "") + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "") + \
         (f" ({len(flaky)} order/load-flaky failure(s) passed on a serial rerun: {', '.join(flaky[:4])})" if flaky else "")
     return "GREEN", note
 

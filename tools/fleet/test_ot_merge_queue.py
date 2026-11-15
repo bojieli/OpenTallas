@@ -229,6 +229,37 @@ class EndToEnd(unittest.TestCase):
         self.assertFalse((self.d / "commits.log").exists())
         self.assertEqual(sh("git", "rev-parse", "main", cwd=self.d / "origin.git"), main)
 
+    def _dep_branch(self, name, test_body):
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        (self.dev / "data/fix").mkdir(parents=True, exist_ok=True)
+        (self.dev / "data/fix/input.txt").write_text("42\n")
+        (self.dev / "tools/x/test_mod_dep.py").write_text(test_body)
+        sh(*self.g, "add", "data/fix/input.txt", "tools/x/test_mod_dep.py", cwd=self.dev)
+        sh(*self.g, "commit", "-qm", "dep test", cwd=self.dev); sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        sh(*self.g, "checkout", "-q", "-b", name, "main", cwd=self.dev)
+        (self.dev / "tools/x/mod.py").write_text("def f():\n    return 5\n")
+        sh(*self.g, "commit", "-qam", name, cwd=self.dev); sh(*self.g, "push", "-q", "origin", name, cwd=self.dev)
+        return subprocess.run([sys.executable, "-I", P, "gate", name], env=self.env, capture_output=True, text=True, timeout=600)
+
+    def test_gate_tree_gets_the_sources_a_selected_test_names(self):
+        # the branch touches tools/x/mod.py only; the selected test reads data/fix/input.txt (outside the sparse set)
+        g = self._dep_branch("claude/dep", "import os, pathlib, mod\nR = pathlib.Path(__file__).resolve().parents[2]\n\n"
+                                           "def test_dep():\n    assert (R / \"data/fix/input.txt\").read_text() == \"42\\n\"\n"
+                                           "    assert mod.f() >= 1\n")
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("GATE main=", g.stdout)
+        self.assertIn("source dir(s) the tests name: data/fix", g.stdout)    # ran with the file, not masked as a main baseline
+        self.assertNotIn("also fail on main", g.stdout)
+
+    def test_source_missing_from_the_gate_tree_is_reported_as_such(self):
+        # a path the scan cannot see (built at run time) and the tree lacks: MISSING SOURCE, not RED and not a timeout
+        g = self._dep_branch("claude/dyn", "import pathlib, mod\nR = pathlib.Path(__file__).resolve().parents[2]\n\n"
+                                           "def test_dep():\n    assert (R / ('da' + 'ta') / 'fix' / 'input.txt').read_text()\n")
+        self.assertEqual(g.returncode, 1, g.stdout + g.stderr)
+        self.assertIn("MISSING SOURCE", g.stdout)
+        self.assertIn("data/fix/input.txt", g.stdout)
+        self.assertNotIn("GATE main=", g.stdout)
+
     def test_fleet_test_timeout_under_load_is_rerun_alone_once(self):
         mark = self.d / "slow.mark"
         mark.write_text("")
