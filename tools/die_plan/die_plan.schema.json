@@ -1907,7 +1907,8 @@
           "kind": {
            "enum": [
             "die_clock_tree",
-            "landing_ring_bank"
+            "landing_ring_bank",
+            "channel_keepout"
            ]
           },
           "ref": {
@@ -2162,6 +2163,13 @@
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
+       },
+       "tap_spill_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "tap_skip_macro": {
+        "type": "boolean"
        },
        "reach_fix_sinks": {
         "type": "array",

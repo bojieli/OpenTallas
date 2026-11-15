@@ -90,7 +90,10 @@ if [ -f "$KIT/land_slots.json" ] || [ -f "$KIT/face_guard.json" ]; then
 fi
 # Kit spare_out.json (DIE-HBM-100 11-11): constant-tied spare output bits are not "unregistered" pins.
 [ -f "$KIT/spare_out.json" ] && GA+=(--spare-out "$KIT/spare_out.json")
-python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${RA[@]}"
+# KV-PC-DELTA-1115: the nearest-tap split in the metric applies the kit's own tap cap / reach / macro rule, as clock_taps.tcl does
+TK=(); v=$(kv OT_TAP_MAX_SINKS); [ -n "$v" ] && TK+=(--tap-max-sinks "$v"); v=$(kv OT_TAP_PITCH_UM); [ -n "$v" ] && TK+=(--tap-pitch-um "$v")
+v=$(kv OT_TAP_SPILL_UM); [ -n "$v" ] && TK+=(--tap-spill-um "$v"); [ "$(kv OT_TAP_SKIP_MACRO)" = 1 ] && TK+=(--tap-skip-macro)
+python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${TK[@]}" "${RA[@]}"
 vrc=$?
 PA=(); [ "$GRT" = true ] && PA=(--cong "$OUT/cong.rpt")
 python3 -E "$TOOLS/geom_png.py" "$OUT/geom.tsv" "$OUT/auto_geom.json" "$OUT/auto_geom.png" "${PA[@]}" \

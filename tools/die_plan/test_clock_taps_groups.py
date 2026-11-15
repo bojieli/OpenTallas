@@ -216,3 +216,33 @@ def test_core_tap_finds_escaped_generate_instance(tmp_path):
     assert 'missing' not in out, out
     assert 'core tap clk_c0 <- u_core.u.g_pp[0].u_pair/clk: 1 clock pin(s)' in out, out
     assert 'NET ckp' not in out or 'NET ckp nc0' in out
+
+
+SKIPMAC = r'''
+# KV-PC-DELTA-1115: a hard macro covers the clk_t1 port (x=1000, y=0)
+proc blkm {m} {if {$m eq "isBlock"} {return 1}; return PHY}
+proc macbox {m} {switch $m {xMin {return 900} xMax {return 1100} yMin {return -10} yMax {return 10}}}
+lappend INSTS u_mac
+proc u_mac {m args} {switch $m {getName {return u_mac} getMaster {return blkm} getBBox {return macbox} getITerms {return {}}}}
+'''
+
+
+def test_tap_over_macro_takes_no_sink_when_opted_in(tmp_path):
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    p = run(tmp_path, SKIPMAC + fill, env='set ::env(OT_TAP_PITCH_UM) 2400\nset ::env(OT_TAP_SKIP_MACRO) 1')
+    assert p.returncode == 0, p.stderr
+    assert 'skip tap clk_t1 over macro u_mac' in p.stdout, p.stdout
+    assert 'NET ck_f100 nclk' in p.stdout
+    off = run(tmp_path, SKIPMAC + fill, env='set ::env(OT_TAP_PITCH_UM) 2400')
+    assert 'NET ck_f100 nt1' in off.stdout, off.stdout        # default unchanged
+
+
+def test_cap_spill_reach_is_opt_in(tmp_path):
+    fill = ''.join(f'mkflop f{i} 0\n' for i in range(100))
+    env = 'set ::env(OT_TAP_PITCH_UM) 600\nset ::env(OT_TAP_MAX_SINKS) 40'
+    p = run(tmp_path, fill, env=env)
+    assert p.returncode == 0, p.stderr
+    assert 'WARN clk keeps 100 sinks > cap 40' in p.stdout, p.stdout       # half-pitch reach 300 < 1000: stuck (as before)
+    q = run(tmp_path, fill, env=env + '\nset ::env(OT_TAP_SPILL_UM) 1500')
+    assert q.returncode == 0, q.stderr
+    assert 'spill reach 1500 um' in q.stdout, q.stdout
