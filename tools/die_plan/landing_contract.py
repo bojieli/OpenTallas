@@ -314,8 +314,73 @@ def _site_clear(a,b):
     return abs(a[0]-b[0])>=.08+.04 or abs(a[1]-b[1])>=.432+.04
 
 
+# PG-AWARE-1 11-14 (FABLE-HARD-QCHEAD section 2, the 630-kit scan rule): a landing pin inside the core must keep a via
+# path off the partition PG grid.  QC su_l0 cland_tstart_in (M7, 0.080 x 0.432 at y 174.952) lies wholly over the M6 pair
+# 174.624-175.296: no M6 track under it is legal, the router leaves along M7 with a 0.032 wire = Rect Only DRC 3 on every
+# build (same: HEAD hd_spn_end rst_start_raw_5, hd_host_e rst_start_raw_0/2).  pg_access.pin_ok: an interior pin on a
+# vertical layer holds an M6 (M7) / M5 (M6) track >= 0.072 um from every PG stripe inside its extent, and its own crossing
+# track is off the stripes.  Hard types keep their LEF sites (the core owner fixes the view).
+PIN_W_UM,PIN_H_UM=.08,.432   # io_tcl -pin_size
+
+
+def _pg_tracks(P):
+    L=getattr(P,"layers",{}) or {}
+    return {ln:(v["pitch_um"],v["offset_um"]) for ln,v in L.items() if v.get("pitch_um")} or None
+
+
+def _pg_interior(t,xy):
+    w,h=t["outline_um"];m=4.32   # gen_phys.CORE_MARGIN_UM: the partition M5/M6 stripes stop at the core
+    return m<xy[0]<w-m and m<xy[1]<h-m
+
+
+# COORD 11-14 condition: signed types keep their sites (pg_pin_rule_signed.json, from the signed INDEX.tsv); a plan can
+# force the rule on one type with partition_types.<t>.pg_pin_rule = true (or off with false).
+_SIGNED=None
+
+
+def _signed_elements():
+    global _SIGNED
+    if _SIGNED is None:
+        import json
+        from pathlib import Path
+        f=Path(__file__).with_name("pg_pin_rule_signed.json")
+        _SIGNED=[e["element"] for e in json.loads(f.read_text())["elements"]] if f.is_file() else []
+    return _SIGNED
+
+
+def pg_rule_applies(P,t):
+    if "pg_pin_rule" in t:return bool(t["pg_pin_rule"])
+    if t.get("hard"):return False
+    tn=next((k for k,v in getattr(P,"types",{}).items() if v is t),None)
+    if tn is None:return True
+    return not any(e==tn or e.startswith(tn+"__") for e in _signed_elements())
+
+
+# M7 stripe phase of the plan (pair centre 4.32 + 8.64 k, OT_PG_DIE_PHASE=1).  The off-phase kit M7 (0 + 8.64 k, today's
+# pdngen offset bug) is fixed in the generator, not by moving pins: checking it here would move pins that sit on the
+# plan's PG-free tracks (hd_tile cland_tstart_in, hd_st_turn rst_start_raw_5/7) for a stripe the fix removes.
+PLAN_PG_PHASES={"M7":(4.32,)}
+
+
+def pg_pin_ok(P,t,layer,xy):
+    """True unless an interior pin of an unsigned soft type breaks the PG access rule (pg_access.pin_ok)."""
+    import pg_access as PA
+    if layer not in PA.STRIPES or not _pg_interior(t,xy) or not pg_rule_applies(P,t):return True
+    tr=_pg_tracks(P);tr=dict(PA.TRACKS,**(tr or {}))
+    along=PIN_H_UM if not PA.HORIZ[layer] else PIN_W_UM
+    return PA.own_track(layer,xy[0],xy[1],PLAN_PG_PHASES) and PA.down_access(layer,xy[0],xy[1],along,tr,PLAN_PG_PHASES)
+
+
+def pg_bad_pins(P,t):
+    """[pin names] of t whose plan site breaks the PG access rule."""
+    pins=t.get("clock",{}).get("landing_contract",{}).get("pins",[])
+    return [p["name"] for p in pins if p.get("layer") and p.get("xy_um")
+            and not pg_pin_ok(P,t,p["layer"],on_track(P,p["layer"],*p["xy_um"]))]
+
+
 def overlapping_pins(P,t):
-    """[pin names] that must leave their site, in keep order: clock inputs, clocks, then name order keep theirs."""
+    """[pin names] that must leave their site, in keep order: clock inputs, clocks, then name order keep theirs;
+    then (PG-AWARE-1) every interior pin whose site has no PG-legal via path."""
     edge={e["port"] for e in t.get("clock",{}).get("edge_clocks",[])}
     pins=t.get("clock",{}).get("landing_contract",{}).get("pins",[])
     kept,out=[],[]
@@ -324,7 +389,7 @@ def overlapping_pins(P,t):
         xy=on_track(P,p["layer"],*p["xy_um"])
         if any(l==p["layer"] and _rects_overlap(xy,q) for l,q in kept):out.append(p["name"])
         else:kept.append((p["layer"],xy))
-    return out
+    return out+[n for n in pg_bad_pins(P,t) if n not in out]
 
 
 def separate_pins(P,tn):
@@ -347,6 +412,10 @@ def separate_pins(P,tn):
     for name in move:
         layer=pins[name]["layer"];x0,y0=on_track(P,layer,*pins[name]["xy_um"])
         along_x=min(y0,h-y0)<=min(x0,w-x0)    # nearest face S/N: slide in x; E/W: slide in y
+        if not pg_pin_ok(P,t,layer,(x0,y0)):
+            # PG-AWARE-1: slide along the pin's own layer (a vertical pin moves in y onto legal tracks of the layer
+            # below); 2.16 = half the M5/M6 pair pitch, never a multiple of 4.32 (FABLE-HARD-QCHEAD dead end)
+            along_x=bool(P.layers.get(layer,{}).get("dir")=="H") if getattr(P,"layers",None) else False
         sites=[]
         # DIE-QC-68: a corner pin is nearest to the face it does not sit on (KV kv3_hub_C y 0.416 from N, x 2.144 from W), and
         # its other coordinate can already be inside the edge margin: try both faces, cross coordinate held inside the margin.
@@ -358,7 +427,7 @@ def separate_pins(P,tn):
                     if not (.432<=q[0]<=w-.432 and .432<=q[1]<=h-.432):continue
                     q=GP._snap_tap(P,*q,pg_legal=not t.get("hard"))
                     xy=on_track(P,layer,*q)
-                    if all(l!=layer or _site_clear(xy,b) for l,b in taken):sites.append(q)
+                    if all(l!=layer or _site_clear(xy,b) for l,b in taken) and pg_pin_ok(P,t,layer,xy):sites.append(q)
                 if sites:break
             if sites:break
         if not sites:

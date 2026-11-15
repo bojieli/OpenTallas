@@ -1823,6 +1823,42 @@ add_pdn_connect -grid {top} -layers {M6 M7}
 """
 
 
+# PG-AWARE-1 11-14 (FABLE-WAVE-REVIEW fix 6 S2(a), DRT-0255 on QC sle_st_b_v2 x_fw_ctl_p2_i[464], S81 slice_station t49
+# ft2_i[324], KV kv3_io_cor o_serdes_W_tx_up_d1[1]): pdngen measures -offset from CORE_AREA, but PDN's offsets are TYPE
+# frame values (schema.PART_PG_BANDS, mock_lef, the face-pin band policy all put the M7 pair centre at 4.32 + 8.64 k).
+# With the default 4.32 um core margin M5 / M6 (pitch 4.32) land where the plan says, M7 (pitch 8.64) lands half a pitch
+# off: on the plan's PG-free tracks, where pin_positions puts face pins.  A pin at the face then has its own M7 track
+# taken by the stripe 4.3 um inside, M8 die reserve above and the face pin band beside it: no access path.
+# pdn_die_phase rewrites each partition-grid stripe offset of PDN to (type-frame offset - core origin) mod pitch, so every
+# stripe sits at its plan position whatever the core margin.  M5 / M6 at margin 4.32 and all layers at margin 0 keep
+# their bytes.  Gen environment OT_PG_DIE_PHASE=1 turns it on (default off until the rollout proof, PG-AWARE-1).
+PG_DIE_PHASE_STRIPES = {"M5": (False, "0.12", "0.072", 4.32), "M6": (True, "0.288", "0.096", 4.32),
+                        "M7": (False, "0.288", "0.096", 8.64)}      # layer: (horizontal, width, spacing, pitch)
+
+
+def pg_die_phase_on():
+    return os.environ.get("OT_PG_DIE_PHASE", "").strip() == "1"
+
+
+def pdn_die_phase(pdn, core_area):
+    """pdn text with every PDN-template partition stripe (layer, width, spacing, pitch of PDN) re-offset from the core
+    origin core_area[0] (vertical) / core_area[1] (horizontal) to its type-frame position."""
+    out = []
+    for ln in pdn.split("\n"):
+        m = re.match(r"(add_pdn_stripe -grid \{[^}]+\} -layer \{(M\d)\} -width \{([\d.]+)\} -spacing \{([\d.]+)\} "
+                     r"-pitch \{([\d.]+)\} -offset \{)([\d.]+)(\}.*)$", ln)
+        if m and m.group(2) in PG_DIE_PHASE_STRIPES:
+            horiz, wd, sp, pitch = PG_DIE_PHASE_STRIPES[m.group(2)]
+            if (m.group(3), m.group(4)) == (wd, sp) and abs(float(m.group(5)) - pitch) < 1e-9:
+                o = float(core_area[1] if horiz else core_area[0])
+                v = round((float(m.group(6)) - o) % pitch, 4)
+                if abs(v - pitch) < 1e-6:
+                    v = 0.0
+                ln = f"{m.group(1)}{v:g}{m.group(7)}"
+        out.append(ln)
+    return "\n".join(out)
+
+
 # DIE-HEAD-5 PGCUT (DRT-TRIAL-1 10-28, opt-in plan partition_types.<t>.pg_island_cut): the kit M6 PG straps of PDN
 # (VDD offset 1.968, VSS one width + spacing after it, pitch 4.32, width 0.288; horizontal) run over the hard cores.
 # A signed core's in-core island pins (interior M5 signal/clock pins, e.g. the elemA/elemB centre rst_n) can only be
@@ -1957,6 +1993,143 @@ def pg_island_cut_tcl(cuts):
     return "\n".join(L) + "\n"
 
 
+# PG-AWARE-1 11-14 (FABLE-HARD-QCHEAD section 3 fix 2, HEAD hd_host_e u_epc): DRC 64 flat for 25 DRT iterations, all at
+# the west M6 pin face of u_epc (x 423.2-423.5): the core's M6 pins have 0.36 um pitch, so every twelfth (ft[60], [72],
+# ...) lies inside a parent M6 VSS stripe that runs to 48 nm from the pin.  Stop the parent stripes of a layer
+# FACE_CUT_UM before every macro face that carries pins on that layer (M6 horizontal stripes at W/E faces, M5/M7 vertical
+# stripes at N/S faces) over the face's pin span; the strap stays connected through its other vias.  Generator env
+# OT_PG_FACE_CUT=1 or plan partition_types.<t>.pg_face_cut turns it on (rollout switch); no core re-sign.
+FACE_CUT_UM = 1.5
+FACE_PIN_TOL_UM = 0.5                         # a face pin starts within this of the macro edge
+FACE_CUT_LAYERS = {"M5": "NS", "M6": "WE", "M7": "NS"}   # layer: faces its partition stripes run into
+
+
+def pg_face_cut_on(t):
+    return bool(t.get("pg_face_cut")) or os.environ.get("OT_PG_FACE_CUT", "").strip() == "1"
+
+
+def lef_face_pins(path, layers=tuple(FACE_CUT_LAYERS), tol=FACE_PIN_TOL_UM):
+    """([(layer, (x0, y0, x1, y1))], (w, h)): macro-frame rects of SIGNAL/CLOCK pins on `layers` within tol of an edge.
+    Line scan (a 6 MB tile LEF took 94 s with the PIN ... END <pin> regex)."""
+    w = h = None
+    out, pin, use, layer, rects = [], None, "SIGNAL", None, []
+    for line in Path(path).read_text(errors="replace").splitlines():
+        tok = line.split()
+        if not tok:
+            continue
+        k = tok[0]
+        if k == "SIZE" and w is None and len(tok) >= 4:
+            w, h = float(tok[1]), float(tok[3])
+        elif k == "PIN" and pin is None and len(tok) >= 2:
+            pin, use, layer, rects = tok[1], "SIGNAL", None, []
+        elif pin is None:
+            continue
+        elif "USE" in tok[:-1]:
+            use = tok[tok.index("USE") + 1].rstrip(";")
+        elif k == "LAYER" and len(tok) >= 2:
+            layer = tok[1].rstrip(";")
+        elif k == "RECT" and layer in layers and len(tok) >= 5:
+            rects.append((layer, tuple(float(v) for v in tok[1:5])))
+        elif k == "END" and len(tok) >= 2 and tok[1] == pin:
+            if use in ("SIGNAL", "CLOCK"):
+                out += rects
+            pin = None
+    out = [(ln, r) for ln, r in out if min(r[0], r[1], w - r[2], h - r[3]) < tol]
+    return out, (w, h)
+
+
+def pg_face_cuts(P, tn, root=None):
+    """[(inst, layer, face, (x0, y0, x1, y1))] type-frame windows: for every placed macro face with pins on a layer whose
+    partition stripes run into that face, the FACE_CUT_UM strip outside the face over the pin span (+ M6 spacing)."""
+    t = P.types[tn]
+    if not pg_face_cut_on(t):
+        return []
+    import cores as C
+    sp = PG_CUT_SPACE_UM
+    cuts = []
+    for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+        pins, (w, h) = lef_face_pins(C.resolve(lef, root))
+        faces = {}
+        for ln, r in pins:
+            x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
+            for face, hit in (("W", x0 < FACE_PIN_TOL_UM), ("E", x1 > w - FACE_PIN_TOL_UM),
+                              ("S", y0 < FACE_PIN_TOL_UM), ("N", y1 > h - FACE_PIN_TOL_UM)):
+                if hit and face in FACE_CUT_LAYERS[ln]:
+                    lo, hi = (y0, y1) if face in "WE" else (x0, x1)
+                    a = faces.setdefault((ln, face), [lo, hi])
+                    a[0], a[1] = min(a[0], lo), max(a[1], hi)
+        for (ln, face), (lo, hi) in sorted(faces.items()):
+            if face == "W":
+                r = (ox - FACE_CUT_UM, oy + lo - sp, ox, oy + hi + sp)
+            elif face == "E":
+                r = (ox + w, oy + lo - sp, ox + w + FACE_CUT_UM, oy + hi + sp)
+            elif face == "S":
+                r = (ox + lo - sp, oy - FACE_CUT_UM, ox + hi + sp, oy)
+            else:
+                r = (ox + lo - sp, oy + h, ox + hi + sp, oy + h + FACE_CUT_UM)
+            cuts.append((inst, ln, face, tuple(round(v, 4) for v in r)))
+    return cuts
+
+
+def pg_face_cut_tcl(cuts):
+    """POST_PDN_TCL: every VDD/VSS stripe sbox of the window's layer that overlaps the window is split around it (the
+    stripe's run direction: x for M6, y for M5/M7), then the PG vias with that layer inside a cut are removed."""
+    L = ["# GENERATED by tools/die_plan/gen.py phys (PG-AWARE-1 FACECUT): parent PG stripes stop before macro pin faces",
+         "# (gen_phys.pg_face_cuts).  Runs after pdngen (POST_PDN_TCL).",
+         "uplevel #0 {",
+         "set pgf_b [ord::get_db_block]", "set pgf_u [$pgf_b getDbUnitsPerMicron]",
+         "set pgf_cuts {}; set pgf_via 0",
+         "proc pgf_layers {s} {",
+         "  foreach v [list [$s getTechVia] [$s getBlockVia]] {",
+         '    if {$v ne "NULL" && $v ne ""} { return [list [[$v getTopLayer] getName] [[$v getBottomLayer] getName]] }',
+         "  }",
+         "  return {}",
+         "}",
+         "proc pgf_window {ln wx0 wy0 wx1 wy1} {",
+         "  global pgf_b pgf_u pgf_cuts",
+         "  set X0 [expr {round($wx0*$pgf_u)}]; set Y0 [expr {round($wy0*$pgf_u)}]",
+         "  set X1 [expr {round($wx1*$pgf_u)}]; set Y1 [expr {round($wy1*$pgf_u)}]",
+         '  set horiz [expr {$ln eq "M6"}]',
+         "  foreach net {VDD VSS} {",
+         "    set n [$pgf_b findNet $net]",
+         '    if {$n eq "NULL" || $n eq ""} continue',
+         "    foreach sw [$n getSWires] {",
+         "      foreach s [$sw getWires] {",
+         "        if {[$s isVia]} continue",
+         "        if {[[$s getTechLayer] getName] ne $ln} continue",
+         "        if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
+         "        set lay [$s getTechLayer]; set st [$s getWireShapeType]",
+         "        set a [$s xMin]; set b [$s yMin]; set c [$s xMax]; set d [$s yMax]",
+         "        odb::dbSBox_destroy $s",
+         "        if {$horiz} {",
+         "          if {$a < $X0} { odb::dbSBox_create $sw $lay $a $b $X0 $d $st }",
+         "          if {$c > $X1} { odb::dbSBox_create $sw $lay $X1 $b $c $d $st }",
+         "          lappend pgf_cuts [list $net $ln [expr {max($a,$X0)}] $b [expr {min($c,$X1)}] $d]",
+         "        } else {",
+         "          if {$b < $Y0} { odb::dbSBox_create $sw $lay $a $b $c $Y0 $st }",
+         "          if {$d > $Y1} { odb::dbSBox_create $sw $lay $a $Y1 $c $d $st }",
+         "          lappend pgf_cuts [list $net $ln $a [expr {max($b,$Y0)}] $c [expr {min($d,$Y1)}]]",
+         "        }",
+         "      }",
+         "    }",
+         "  }",
+         "}"]
+    for inst, ln, face, (x0, y0, x1, y1) in cuts:
+        L.append(f"pgf_window {ln} {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f}   ;# {inst} {face} face")
+    L += ["foreach cut $pgf_cuts {",
+          "  lassign $cut net ln X0 Y0 X1 Y1",
+          "  foreach sw [[$pgf_b findNet $net] getSWires] {",
+          "    foreach s [$sw getWires] {",
+          "      if {![$s isVia]} continue",
+          "      if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
+          "      if {$ln in [pgf_layers $s]} { odb::dbSBox_destroy $s; incr pgf_via }",
+          "    }",
+          "  }",
+          "}",
+          'puts "OT_PG_FACE_CUT windows=%d strap_cuts=[llength $pgf_cuts] vias_removed=$pgf_via"' % len(cuts), "}"]
+    return "\n".join(L) + "\n"
+
+
 # ASAP7 liberty units (asap7sc7p5t_*.lib: time_unit "1ps", capacitive_load_unit (1,fF)): every SDC value below is in
 # ps / fF.  Until 10-23 12:17 the SDCs wrote ns values (period 0.833 = a 0.833-PS clock; KV-P3b), which voided every
 # earlier plan-kit / CP1 timing and repair number.
@@ -2008,9 +2181,13 @@ SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the lim
 #                              (column inside an M7 pair) had GRT capacity with 0..1 legal tracks (t6: 547 M6 + 178 M7
 #                              guides on 0-legal rows).  pg_track_truth.tcl (grt_pre.tcl) blocks the spacing-illegal tracks
 #                              at GRT only; grt_post.tcl removes the obstructions before 5_1_grt.odb (DRT/PG unchanged).
+#   pg_cell_keepout            PG-AWARE-1 11-14 (FABLE-WAVE-REVIEW fix 6): placement blockages over every M5 x M6 PG
+#                              crossing + detailed_placement at the start of GRT (pg_cell_keepout.tcl), removed before
+#                              5_1_grt.odb; opt-in (gen env OT_PG_CELL_KEEPOUT=1) until the rollout proof.
 # CTS is unchanged (BUFx24 root and sink buffers, clusters of <= ~42 sinks; 0 clock pins among the violators).
 RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_PCT), "gpl_keep_overflow": 0.25, "place_max_fanout": 32,
-         "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1}
+         "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1,
+         "pg_cell_keepout": 0}
 # Kit classes (die plans) that take the defaults, each with its proof kit (old vs new settings on one synthesized
 # netlist, through route and sign-off; epyc7 rules-flow-1/ab).  A die plan not listed keeps its old kit until its own
 # proof exists: HBM is parked and passes explicit margins.
@@ -2052,7 +2229,15 @@ def rflow_cfg(gpl_plain=False, die=None):
             *([] if gpl_plain else [f"export GPL_KEEP_OVERFLOW = {RFLOW['gpl_keep_overflow']:g}"]),
             f"export OT_HOLD_BUDGET_PCT = {RFLOW['hold_budget_pct']:g}",
             "# FLOW-PGCAP-1: GRT capacity = DRT-legal tracks at PG stripes (pg_track_truth.tcl, GRT only)",
-            f"export OT_PG_TRACK_TRUTH = {RFLOW['pg_track_truth']:d}"]
+            f"export OT_PG_TRACK_TRUTH = {RFLOW['pg_track_truth']:d}",
+            "# PG-AWARE-1: no standard cell under an M5 x M6 PG crossing from GRT on (pg_cell_keepout.tcl, GRT only)",
+            f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
+
+
+def pg_cell_keepout_value():
+    """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
+    v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
+    return int(v) if v in ("0", "1") else int(RFLOW["pg_cell_keepout"])
 FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
 # COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
 # keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
@@ -4964,6 +5149,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                   strict=_core_pg_strict(P, tn), published=set(pg_pub))
         if bad:
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
+    if pg_die_phase_on():
+        pdn = pdn_die_phase(pdn, kit_core_area(t))
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
         # WAVE-RECIPE-1: an M9 kit's M9 grant rides in the same file (extra_grants), so the kit's existing fixlef step (run_kit
@@ -4974,6 +5161,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if pg_cuts:
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     post_pdn = ["/work/pg_island_cut.tcl"] if pg_cuts else []
+    face_cuts = pg_face_cuts(P, tn, root)
+    if face_cuts:
+        (kd / "pg_face_cut.tcl").write_text(pg_face_cut_tcl(face_cuts))
+        post_pdn.append("/work/pg_face_cut.tcl")
     entry_pg = clock_entry_pg_cuts(P, tn)
     if entry_pg:
         from clock_entry_pg import render as render_entry_pg
@@ -5349,7 +5540,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
