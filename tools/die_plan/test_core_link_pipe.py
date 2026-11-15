@@ -53,6 +53,20 @@ class CoreLinkPipe(unittest.TestCase):
         with self.assertRaises(bind.BindError):
             bind.core_link_pipe_bits(dup, "t", "m", "y", 8)
 
+    def test_source_side_depth(self):
+        """family 4: depth follows the DRIVER module/port/bit, applied at each sink; port-level specs are independent"""
+        p = {"clock": {"core_link_pipe": {"types": ["t"], "sources": {"qkd_pv16_vport_b": {
+            "out_v_lo": [{"D": 3, "bits": [0, 255]}], "out_v_hi": 2}}}}}
+        self.assertEqual(bind.core_link_src_depth(p, "t", "qkd_pv16_vport_b", "out_v_lo", 0), 3)
+        self.assertEqual(bind.core_link_src_depth(p, "t", "qkd_pv16_vport_b", "out_v_lo", 255), 3)
+        self.assertEqual(bind.core_link_src_depth(p, "t", "qkd_pv16_vport_b", "out_v_lo", 256), 0)
+        self.assertEqual(bind.core_link_src_depth(p, "t", "qkd_pv16_vport_b", "out_v_hi", 511), 2)
+        self.assertEqual(bind.core_link_src_depth(p, "t", "qkd_pv16_vport_b", "out_t", 0), 0)
+        self.assertEqual(bind.core_link_src_depth(p, "u", "qkd_pv16_vport_b", "out_v_lo", 0), 0)
+        self.assertEqual(bind.core_link_pipe(p, "t", "qkd_pv16_vport_b", "out_v_lo"), 0)   # not a port-level pipe
+        import jsonschema, schema
+        jsonschema.validate(p["clock"]["core_link_pipe"], schema.SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"])
+
     def test_schema_validates_forms(self):
         import jsonschema, schema
         node = schema.SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"]
