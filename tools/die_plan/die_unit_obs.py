@@ -45,17 +45,36 @@ def drop_grt_obstructions(block, rects, destroy):
 _TAP = re.compile(r"^t_.+__clk(_t\d+)?$")
 
 
-def snap_pin_rect(rect, dbu=1000, pitch_um=0.08, offset_um=0.04):
-    """move a pin rectangle (dbu) so its centre lies on the M9 x / M8 y track grid (offset 0.04, pitch 0.08 um); size kept"""
+RAIL_M8 = (2.16, 0.24, 0.06)    # die M8 PG rails: centres every 2.16 um (VDD/VSS alternate), half width 0.24, wire clearance 0.06
+
+
+def snap_pin_rect(rect, dbu=1000, pitch_um=0.08, offset_um=0.04, rails=RAIL_M8):
+    """move a pin rectangle (dbu) so its centre lies on the M9 x / M8 y track grid (offset 0.04, pitch 0.08 um); size kept.
+    y additionally avoids the die M8 PG rails (rails = (rail pitch, rail half width, clearance) um; None = off): the
+    nearest M8 track whose centre is at least half width + clearance from every rail centre."""
     p, o = int(round(pitch_um * dbu)), int(round(offset_um * dbu))
     x0, y0, x1, y1 = rect
-    def one(lo, hi):
+
+    def ok_y(t):
+        if not rails:
+            return True
+        rp, rh, rc = (int(round(v * dbu)) for v in rails)
+        d = abs(t - round(t / rp) * rp)
+        return d >= rh + rc
+
+    def one(lo, hi, is_y):
         c2 = lo + hi                                   # twice the centre, keeps integers
-        t = int(round(((c2 / 2.0) - o) / p)) * p + o
+        k = int(round(((c2 / 2.0) - o) / p))
+        t = k * p + o
+        if is_y:
+            n = 0
+            while not ok_y(t) and n < 400:
+                n += 1
+                t = (k + ((n + 1) // 2) * (1 if n % 2 else -1)) * p + o
         d = t * 2 - c2
         return lo + d // 2, hi + d // 2
-    nx0, nx1 = one(x0, x1)
-    ny0, ny1 = one(y0, y1)
+    nx0, nx1 = one(x0, x1, False)
+    ny0, ny1 = one(y0, y1, True)
     return nx0, ny0, nx1, ny1
 
 

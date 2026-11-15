@@ -489,6 +489,20 @@ def snap_track(v, pitch=0.08, offset=0.04):
     return round((v - offset) / pitch) * pitch + offset
 
 
+def snap_track_y(v, rails=(2.16, 0.24, 0.06)):
+    """M8 y track nearest to v whose centre is >= rail half width + clearance from every die M8 PG rail centre
+    (rails every 2.16 um, 0.48 wide, VDD/VSS alternate; kit psm/pdn.tcl ot_pg grids).  rails=None: plain snap_track"""
+    t = snap_track(v)
+    if not rails:
+        return t
+    rp, rh, rc = rails
+    k, n = round((t - 0.04) / 0.08), 0
+    while abs(t - round(t / rp) * rp) < rh + rc - 1e-9 and n < 400:
+        n += 1
+        t = (k + ((n + 1) // 2) * (1 if n % 2 else -1)) * 0.08 + 0.04
+    return t
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -3888,7 +3902,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     tcl.append(f"place_pin -pin_name root -layer M9 -location {{{root['x']:.3f} {root['y']:.3f}}} -pin_size {sz9}")
     for tp, x, y, *_ in tap_ports:
         if TAP_PIN_SNAP:      # DIE-ROUTE-ABS-1: on-track terminal (M9 x track, M8 y track) -> no off-track M8 jog / min step
-            x, y = snap_track(x), snap_track(y)
+            x, y = snap_track(x), snap_track_y(y)
         tcl.append(f"place_pin -pin_name {tp} -layer M9 -location {{{x:.3f} {y:.3f}}} -pin_size {sz9}")
     for inst, x, y in place:
         tcl.append(f"place_inst -name {inst} -location {{{max(0.0, x):.3f} {max(0.0, y):.3f}}} -status PLACED")
