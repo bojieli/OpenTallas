@@ -264,3 +264,31 @@ INFERRED: the same holds for kv3_hg_v1p* / hg_v3 (same floorplan family); not me
 u_hgi2: chain depth = ceil(span / 380 um) (4 stages on head 3). Caveat to settle with KV-102 before it counts: a fourth
 stage adds one cycle on that chain, so either every chain of the type gets the same depth (+1 cycle of lane latency for
 the type, a plan change) or the bind latency check fails. The kit form can prove timing first.
+
+## 12. t_hgi2 after CTS (2026-11-15 03:50 PST): the chain class is closed; three other families remain
+
+MEASURED (kit CTS report): setup WNS -328.7 ps, TNS -47.2k. Keep only: -366.5 / -142.0k. Merged: -586.3 / -558.3k.
+MEASURED (my endpoint listing on t_hgi2 4_cts.odb, TT, placement parasitics, `fable-kvovf/sta_t_hgi2/`; it reads
+-412 ps / -80.9k because it does not apply the kit's later corrections, so use it for the split, not the totals):
+466 violating endpoints, all in group clk. None is a chain endpoint: no `q_data_in`, no stage `ti_b` D pin. The
+520-um stage hops close, so u_hgi2 (depth rule) is not needed for this type.
+
+| family | endpoints | worst | from -> to, straight distance |
+|---|---|---|---|
+| core-to-core `kp` / `kpv` / `gf` bus into `u_headN_e0/u_kt__*` | 430 (both heads) | -412 ps | e7 901-1081 um (-412), e6 780 um (-232), e5 602-782 um (-143), e4 480-520 um (-13 to -39); e1-e3 meet |
+| reset relay `u_rs_ri_head2_u_score_rst_n` -> core `rst_n` pins | about 30 | -319 ps | 785 to 1336 um, one relay for all cores of both heads |
+| `u_cland_rst_ft0_i` -> `u_cland_fstart_*` flops | 5 | -244 ps | 1090 to 1486 um |
+| landing ring -> `u_bin_i_ectl_Q_N_tN/q` | 5 | -113 ps | 598 to 852 um |
+
+The `kp` outputs leave their core 456-489 ps into the cycle, and e0 captures on the early tap, so a direct hop closes
+only up to about 480 um. Budget from the numbers above: core output -> a register about 650 ps; register -> e0 pin
+about 250 ps (about 260 um). e7 at 1081 um needs two registers; latency must be equal on all 16 `t` inputs of the kt
+tree, so every `kp` / `kpv` / `gf` input gets the same depth.
+
+Class fix for kv3_hgi* (KV-102, as-built generator + plan):
+1. keep (`OT_KEEP_WIRES = ti_b`) + private ti chain per front core + stationing with the last stage at the pins (proved here at CTS);
+2. two register stages on every `kp` / `kpv` / `gf` input of `u_kt` (uniform, +2 cycles on the kt path), stationed the same way;
+3. one reset relay per core (or per core pair) instead of one for both heads;
+4. a stage on `u_cland_rst_ft0_i -> fstart`, and the `u_bin_i_ectl_Q_N_tN` register next to its ring.
+Items 2-4 change lane latency or the reset tree; they need the RTL owner's functional check and the bind, which a kit
+form cannot give. Kit form v_hgi2 (items 1-3 edited into the kit RTL) can prove the physical side only.
