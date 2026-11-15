@@ -130,6 +130,25 @@ class PlanPrio(unittest.TestCase):
         self.assertFalse(R.older_plan_waiting(100.0, []))
 
 
+    def test_waiter_pid_climbs_past_the_timeout_wrapper(self):
+        # gate process 500 -> `timeout 30` 400 -> waiting ot-heavy bash 300 -> ssh session 200 (the self-hold bug: getppid() was 400, age 0)
+        stat = {500: "500 (python3) S 400 ", 400: "400 (timeout) S 300 ", 300: "300 (bash) S 200 ", 200: "200 (sshd) S 1 "}
+        cmd = {400: "timeout\0" "30\0" "x\0" "y\0", 300: "/bin/bash\0/usr/local/bin/ot-heavy\0--mem\0" "60\0--tag\0t\0--\0true\0", 200: "sshd\0"}
+        def fake_rd(path):
+            pid = int(path.split("/")[2])
+            return stat.get(pid, "") if path.endswith("/stat") else cmd.get(pid, "")
+        with patch.object(R, "rd", side_effect=fake_rd):
+            self.assertEqual(R.waiter_pid(500), 300)
+        # the command substitution forks a subshell with the SAME command line: the topmost match (the real waiter) must win
+        stat2 = {500: "500 (python3) S 450 ", 450: "450 (timeout) S 310 ", 310: "310 (bash) S 300 ", 300: "300 (bash) S 200 ", 200: "200 (sshd) S 1 "}
+        olh = "/bin/bash\0/usr/local/bin/ot-heavy\0--mem\0" "60\0--tag\0t\0--\0true\0"
+        cmd2 = {450: "timeout\0" "30\0" "x\0" "y\0", 310: olh, 300: olh, 200: "sshd\0"}
+        with patch.object(R, "rd", side_effect=lambda path: (stat2 if path.endswith("/stat") else cmd2).get(int(path.split("/")[2]), "")):
+            self.assertEqual(R.waiter_pid(500), 300)
+        with patch.object(R, "rd", return_value=""):
+            self.assertEqual(R.waiter_pid(500), 0)
+
+
 class Fallback(unittest.TestCase):
     def test_no_history_uses_a_share_of_the_request_only_for_running_jobs(self):
         self.assertEqual(R.expected_peak("never", 48, HIST), 48.0)                       # a NEW job without history is charged its request

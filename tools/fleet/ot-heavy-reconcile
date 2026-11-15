@@ -1284,6 +1284,36 @@ def older_plan_waiting(my_age, waits, margin=30.0):
     return any(w > my_age + margin for w in waits)
 
 
+def waiter_pid(start=None):
+    """WAITERPID (fix of PLAN-QUEUE): the gate runs as `timeout 30 ot-heavy-reconcile --gate` under the waiting ot-heavy bash, so os.getppid() is the timeout
+    process (age 0) and the caller counted ITSELF as an older plan waiter: every plan job was held by itself.  Climb the parents to the ot-heavy launcher."""
+    pid = start or os.getpid()
+    for _ in range(8):
+        try:
+            st = rd(f"/proc/{pid}/stat")
+            pid = int(st.rsplit(")", 1)[1].split()[1])
+            a = rd(f"/proc/{pid}/cmdline").split("\0")[:-1]
+        except (ValueError, IndexError, OSError):
+            return 0
+        if len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8]:
+            # WAITERPID2: `GATE=$(...)` forks a SUBSHELL with the same command line (age 0); the real waiter is its parent: take the topmost match
+            top = pid
+            for _ in range(4):
+                try:
+                    par = int(rd(f"/proc/{top}/stat").rsplit(")", 1)[1].split()[1])
+                    pa = rd(f"/proc/{par}/cmdline").split("\0")[:-1]
+                except (ValueError, IndexError, OSError):
+                    break
+                if len(pa) > 3 and pa[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in pa[:8]:
+                    top = par
+                else:
+                    break
+            return top
+        if pid <= 1:
+            break
+    return 0
+
+
 def gate_locked(mem, argv):
     cls = classify(argv)
     table = sizes()
@@ -1294,13 +1324,16 @@ def gate_locked(mem, argv):
         if conf("PLAN_PRIO"):   # PLAN_PRIO_1114: plan jobs first, ignoring the growth reserve, at most PLAN_MAX_RUNNING per host
             _env = [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []
             _me_plan = plan_like(argv, os.getcwd(), _env)
-            _prun, _pwait = plan_census(os.getppid())
+            _wpid = waiter_pid()
+            _prun, _pwait = plan_census(_wpid)
             if _me_plan:
                 try:        # PLAN-QUEUE (ADMIT-TUNE-1): plan jobs go oldest first: a younger plan job above SMALL_JOB_GB does not slip in ahead of an older plan waiter that does not fit yet
                     _hz = os.sysconf("SC_CLK_TCK")
-                    _my_age = float(rd("/proc/uptime").split()[0]) - int(rd(f"/proc/{os.getppid()}/stat").rsplit(")", 1)[1].split()[19]) / _hz
+                    _my_age = float(rd("/proc/uptime").split()[0]) - int(rd(f"/proc/{_wpid}/stat").rsplit(")", 1)[1].split()[19]) / _hz
                 except (ValueError, IndexError, OSError):
                     _my_age = None
+                if not _wpid:
+                    _my_age = None          # launcher not found: no queue rule
                 if _my_age is not None and mem > conf("SMALL_JOB_GB") and older_plan_waiting(_my_age, _pwait):
                     print(f"NO {mem} {cls} | PLAN-QUEUE: an older plan job (waiting {max(_pwait):.0f} s, this one {_my_age:.0f} s) goes first")
                     return
