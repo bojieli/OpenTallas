@@ -62,6 +62,9 @@ def main(argv=None):
     plan = json.load(open(argv[0]))
     if len(argv) == 3:                  # the bind manifest (asbuilt section), as `bind.py bind PLAN --manifest M`
         plan["asbuilt"] = json.load(open(argv[2]))
+        mf = plan["asbuilt"].get("map_file")
+        if mf and not Path(mf).is_absolute():
+            plan["asbuilt"]["map_file"] = str((Path(argv[2]).parent / mf).resolve())
     yjs = bind.load_asbuilt_netlist(Path(argv[1]))
     ab = plan["asbuilt"]
     F = E.flatten(yjs, ab["top"], ab.get("substitute_parent", []))
