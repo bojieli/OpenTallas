@@ -138,7 +138,7 @@ def bind(plan, T=None, parts=None):
     for o in xs:
         u, v = o["src"], o["dst"]
         ports[o["port"]] = dict(src=u, dst=v, K=int(o["rtl"]["K"]), depth=int(o["rtl"]["DEPTH"]),
-                                sched_lat=int(o["lat_cycles"]), tree=o["port"] in tree_ports, kind=o["kind"],
+                                sched_lat=int(o["lat_cycles"]), freg=int(o.get("freg", 0)), tree=o["port"] in tree_ports, kind=o["kind"],
                                 # TRUE derated lag bounds incl. wander (no aperture), and the plan's derated phase
                                 # d = dst clock - src clock, so die_sta_related --count-align re-derives L from its own
                                 # arrivals: L_sta = L_plan + (d_sta - d_plan)
