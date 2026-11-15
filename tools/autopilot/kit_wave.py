@@ -9326,6 +9326,49 @@ def _step_locked(AP, ap_dir):
         lk.close()
 
 
+CFG_REL = "autopilot/kit_wave.json"
+
+
+def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=None):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-0815 item 5): the working kit_wave.json is what this wave runs on, origin/coord/state is what the
+    coordinator and the other hosts see.  A working copy that differs from origin for more than one tick is unpushed config (a failed
+    coord-commit): one ALERT per drifting content, a RESOLVED line when it matches again.  Returns the drift state or None."""
+    now = time.time() if now is None else now
+    g = FG.fg_state(st)
+    dr = g.setdefault("drift", {})
+    coord = Path(getattr(AP, "COORD", "") or "")
+    try:
+        work = (coord / CFG_REL).read_bytes()
+        if read_origin is not None:
+            orig = read_origin()
+        else:
+            p = subprocess.run(["git", "-C", str(coord), "show", f"{origin_ref}:{CFG_REL}"], capture_output=True, timeout=30)
+            orig = p.stdout if p.returncode == 0 else None
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if orig is None:
+        return None                                   # no origin ref to compare with: unknown, no alert
+    if work == orig:
+        if dr.get("alerted"):
+            AP.log(f"KIT-WAVE CONFIG-DRIFT resolved: {CFG_REL} matches {origin_ref} again")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} RESOLVED [FLOW-HEALTH-1 -> COORD] kit_wave.json drift: working copy matches {origin_ref} again")
+        dr.clear()
+        return None
+    sha = hashlib.sha1(work).hexdigest()[:12]
+    if dr.get("sha") != sha:
+        dr.clear()
+        dr.update(sha=sha, first=now, ticks=0)
+    dr["ticks"] = dr.get("ticks", 0) + 1
+    if dr["ticks"] > 1 and not dr.get("alerted"):
+        dr["alerted"] = now
+        age = int((now - dr["first"]) / 60)
+        AP.log(f"KIT-WAVE CONFIG-DRIFT {CFG_REL} differs from {origin_ref} for {dr['ticks']} ticks ({age} min), content {sha}")
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [FLOW-HEALTH-1 -> COORD] kit_wave.json DRIFT: the working {CFG_REL} (sha1 {sha}) differs from "
+                        f"{origin_ref} for {dr['ticks']} ticks ({age} min): the edit is unpushed (failed coord-commit?) and invisible to everything that reads origin. "
+                        f"Fix: bash ~/coord/bin/coord-commit.sh \"kit_wave.json\" {CFG_REL}")
+    return dr
+
+
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
@@ -9336,6 +9379,10 @@ def _step(AP, ap_dir):
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
+    try:
+        config_drift(AP, st)
+    except Exception as e:
+        AP.log(f"KIT-WAVE config drift check skipped: {type(e).__name__}: {e}")
     import source_follow
     source_follow.step(AP, cfg, st)
     st.setdefault("items", {})
