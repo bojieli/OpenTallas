@@ -13,3 +13,11 @@ DESIGN (form R1): BOTH hgi columns grow +129.6 um (W col x0 3179.52, die cut 325
  - Tool: refloor.py (self-checks: every type point of every instance lands at f(old); row gaps preserved; N/S windows stay in their partitions).
 Runs: r1 = plan_r1.json, run_gate.sh r1 via ot-run --priority plan (launched from intel2 ~/kvhgr/r1.log), output run_r1.out / out_r1/.
 Next: read G0 errors (expect ft station spacing / hops across the +129.6 band -> add stations where len/stations > 405), iterate, then package por/ (plan_c.json + sink_bins) and post to TYPE-KVHGI2.
+## 18:5x update
+- r1/r2g cancelled (exact PIDs) before they ran: superseded. Fleet memory-bound; plan queue on epyc9/10.
+- fixhops.py (station re-site): every ft slot whose station chain crosses the +129.6 band: exact DP over per-station x offsets in [0,129.6]
+  (2.16 grid, bit sites move with their station, macro-free), else equal-arc re-site; 102 slots re-sited with NO cycle change.
+  45 slots (hub_Ei 13, hgi_v8 7, hgi_v2 x2 types 4+4, hgi_v3 4, hub_Wi 3, kv3_hgi 3, ...) have no slack (path/stations > 405 um after +129.6):
+  +1 station each (inserted mid longest hop, then re-sited) -> 68 lanes +1 cycle (lanes_r3.json); latency rows bumped (stations/cycles/natural +1).
+- r3 = plan_r3b.json (sha 0b955b9499a3) full gate queued via ONE ot-run --priority plan --hosts epyc9,epyc10 (intel2 ~/kvhgr/r3.log).
+- epyc7 staging (rsync of the whole dir) in progress; do not launch there until tree file counts match epyc9.
