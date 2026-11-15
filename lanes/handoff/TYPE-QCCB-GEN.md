@@ -1,6 +1,8 @@
-# TYPE-QCCB-GEN handoff (2026-11-15)
-- branch claude/type-qccb-gen-1114 @348d28d3ff1 (hub); wt intel2 /srv/opentallas-scratch2/claude/type-qccb-gen/wt
-- proofs: intel2 ~/type-qccb-gen/{q00,q11,q01}.log; dirs epyc2 /srv/opentallas-scratch3/claude/type-qccb-gen/{q00,q11}, epyc8 .../q01; hooks in hooks/
-- compare vs as-is: crossing nets 421/414/635, GRT 102780 (5it) / 33959 / n.a., hold residue q11 1099, OT_NK_ANCHOR pipe_regs 0
-- TODO: pass -> install by copy+mv with backups into QC trees (kit_wave.json), ask KIT-OPS-5 for retry keys cbn/cbx/cbf; xstn is a plan item (bout hop >405)
-- tap 483->568 withdrawn; no mirror
+# TYPE-QCCB-GEN handoff (2026-11-15 07:15)
+## A. cb head-hop generator fix (COORD priority) - READY posted 07:20
+- branch claude/type-qccb-gen-1114 @348d28d3ff1 (hub); tests 10 pass; proof q00 crossing 421->0 non-port, q11 414->24 (xstn plan item). Proof kits epyc2 /srv/opentallas-scratch3/claude/type-qccb-gen/{q00,q11}; test copy t2/.
+- TODO after MERGE-QUEUE merges: copy+mv core_input_chain.tcl + cross_nets_check.py (and main core_input_anchor.tcl if the tree copy is older) into wt/qc-s29-tree2 on all QC gen hosts (epyc2/7/8/9/10, intel1; backups *.bak-qccbgen), then post INSTALLED + tell KIT-OPS-5 to relaunch cbn_q00 x3, cbn_q01 x2, cbn_q11 cl5cc92dfe, cbx_q10 x4, cbf_q00.
+## B. cbn_q11 nb_i pad chain + d-chain spread (FABLE-PD-QC-0650 lever 8)
+- CAUSE (measured): NOT generator, NOT plan spacing. dly_spread.tcl (merged, installed in QC tree) is opt-in via budgets.r_dly_spread and the QC plans S4p/S4r2/S4v2 do not set it (S4n only had the list [cbf_q01, cbf_q01_s2]). Hook run on the S3R cbn_q11 cl49ae4555 post-GPL db (epyc2 .../type-qccb-gen/diag1, log in /tmp diag1.log): zero-logic hops over 405 3804 -> 1539; ALL u_lpad_nb_i / u_lpad_na_i / u_d*_n_y / u_d*_t_out families go to 0; left = ring->u_bin 917 + u_bin->tap_d 552 (cb crossing class, DIE-QC-103) + 60 + 10.
+- ASK DIE-QC-103: set budgets.r_dly_spread = true in the next delta (gate mode passed fail 0 on this kit).
+- PROOF kit running: spec ~/type-qccb-gen/spec_s4pdly (S4p + r_dly_spread true, plan copy epyc9 .../type-qccb-gen/s4pdly/plan), place started 06:58 PST, work epyc9 .../s4pdly/run/cbn_q11__cl49ae4555. On place done: hop census (geom.tsv, census.py in epyc9 fable-pd-qc-0650) -> expect no u_lpad_nb_i / u_d* hop > 405; post READY/RESULT.
