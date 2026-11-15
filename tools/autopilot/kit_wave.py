@@ -2084,6 +2084,8 @@ def place_rc0_no_odb(text):
 
 
 RULES = [
+    # KITRTL-FAIL-1115: a die src tree's own (older) bind.py lacks a flag the wave passes: tool skew, one stable reason
+    ("FLOW", r"^kit_rtl$", r"bind\.py: error: unrecognized arguments", "kit_rtl tool skew (the die src tree's bind.py predates a wave flag; the wave falls back to the scheduler's bind.py)"),
     ("INFRA", r"^place$", place_rc0_no_odb, PLACE_NO_ODB_WHY),
     # WF-1 11-14: a chosen child view that is missing everywhere is infrastructure (sync / re-export), never a design verdict
     # KIT-OPS-5 11-15 (FABLE-TRIAGE-QC, FLOW-OTSTORE): a kit whose python cannot import ot_store died of the host / sync, not of the design
@@ -2333,7 +2335,11 @@ ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b
                        # KW-FIX-8 11-04: the kill of the pre-route LEC beside a stopped flow; its exit 137 read as INFRA and
                        # relaunched 9 KV rows on the same PDN-0006 / OT_CLAND error.  The flow's own error decides.
                        # KW-FIX-24 11-06: a pre-route LEC killed by a signal (docker stop / OOM) is no verdict either
-                       r"LEC_ASYNC \S+ \S+ aborted (?:with its flow|by signal)\b)")
+                       r"LEC_ASYNC \S+ \S+ aborted (?:with its flow|by signal)\b|"
+                       # KITRTL-FAIL-1115: the roam copy-back note ('KW_ROAM kit_rtl: ran on X, outputs copied back to Y') is appended
+                       # after the stage output; as the last line it became the 'decisive' line of 17 kit_rtl FAILs and hid the real
+                       # error (alternating reason text also evaded the repeat gates).  KW_ROAM_PULLBACK_FAIL stays a real error.
+                       r"KW_ROAM \w+: (?:ran on|pinned to|\S+ dropped)\b)")
 EXC_LINE = re.compile(r"^\s*(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt)(?::|$)|bind: ERROR|ERROR\b|Error:|"
                       r"[A-Z][A-Z0-9_]+ FAIL\b|FAIL_PREFLOOR\b)")
 ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")
@@ -5814,7 +5820,34 @@ def run_item(spec_path):
             rc, txt = run("bind", otrun(sp["bind_mem_gb"], 4, sp["root"], prep, gh))
             if rc:
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
-        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && python3 tools/die_plan/bind.py kit-rtl {q(plan)} --out {q(bind)} "
+        # KITRTL-FAIL-1115: kit-rtl runs the die tree's own bind.py when it knows --src-tree; a tree that predates the flag (bind.py
+        # 'unrecognized arguments', 35 QC/S81/KV FAILs in 1 h) runs the SCHEDULER's bind.py on the tree's data instead: a staged
+        # W/kit_tools repo root = the tree's own tools/die_plan (its overlays win: the S81 tree's taps.py is newer than main's) plus
+        # main's modules the tree lacks plus main's bind.py, and symlinks to the tree's other top-level entries.
+        kt = f"{W}/kit_tools"
+        probe = f"cd {q(src)} && python3 -I tools/die_plan/bind.py kit-rtl -h 2>&1 | grep -q -e --src-tree"
+        rcp, _tp = run("kit_rtl_probe", remote(probe), idempotent=True)
+        kbind = "tools/die_plan/bind.py"
+        if rcp:
+            rc, txt = run("kit_tools_dir", remote(f"mkdir -p {q(kt)}/main_dp"), idempotent=True)
+            if rc:
+                return fail("kit_rtl", txt)
+            dest = f"{kt}/main_dp/" if G in ("localhost", hub) else f"{G}:{kt}/main_dp/"
+            rc, txt = run("kit_tools_copy", ["rsync", "-a", "--delete", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
+                                             str(Path(__file__).resolve().parents[1] / "die_plan") + "/", dest], idempotent=True)
+            if rc:
+                return fail("kit_rtl", txt)
+            farm = (f"rm -rf {q(kt)}/tools && mkdir -p {q(kt)}/tools && cp -a {q(src)}/tools/die_plan {q(kt)}/tools/die_plan && "
+                    f"rsync -a --ignore-existing {q(kt)}/main_dp/ {q(kt)}/tools/die_plan/ && cp -f {q(kt)}/main_dp/bind.py {q(kt)}/tools/die_plan/bind.py && "
+                    f"cd {q(src)} && for e in * .[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools ] && continue; "
+                    f"ln -sfn {q(src)}/\"$e\" {q(kt)}/\"$e\"; done; "
+                    f"for e in tools/* tools/.[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools/die_plan ] && continue; "
+                    f"ln -sfn {q(src)}/\"$e\" {q(kt)}/\"$e\"; done; echo KW_KITRTL_SCHED_BIND {q(kt)}")
+            rc, txt = run("kit_tools_farm", remote(farm), idempotent=True)
+            if rc:
+                return fail("kit_rtl", txt)
+            kbind = f"{kt}/tools/die_plan/bind.py"
+        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && python3 {q(kbind)} kit-rtl {q(plan)} --out {q(bind)} "
                                                f"--asbuilt {q(a)} --type {q(T)} --src-tree {q(src)} --kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan), gh))
         if rc:
             return fail("kit_rtl", txt)
