@@ -607,7 +607,7 @@ SCHEMA = {
                         # FALLBACK-HEAD-2 (opt-in): reserved site rectangles in the type frame (gen_phys
                         # reserved_sites_tcl): die_clock_tree = hard, landing_ring_bank = GPL-only after the rings
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
-                            "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank"]},
+                            "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank", "channel_keepout"]},
                                            "ref": {"type": "string"},
                                            "route_layers": {"type": "string"}}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
@@ -684,6 +684,10 @@ SCHEMA = {
                         # merges whole into its nearest tap within tap_radius_um (clock_taps.tcl POST_MIN).
                         "tap_post_merge_min_sinks": {"type": "integer", "minimum": 1, "maximum": 1200},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        # KV-PC-DELTA-1115 (opt-in): second cap-pass reach (um) of clock_taps.tcl for a tap with no room within
+                        # half a pitch; and no grid tap over a hard macro (the tap takes no sink, is dropped when empty)
+                        "tap_spill_um": {"type": "number", "exclusiveMinimum": 0},
+                        "tap_skip_macro": {"type": "boolean"},
                         # REACH-FIX-1 11-12 (reach_fix.py): the subset of sink_sites_um the tool added (kit flops the
                         # tap planner does not list: landing rings, ring reads, relays), so its check counts them once
                         "reach_fix_sinks": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,

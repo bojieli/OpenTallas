@@ -22,6 +22,19 @@ foreach bt [$ct_blk getBTerms] {
   # pins OT_CORE_TAPS hangs on it; it is no grid tap, so the nearest-tap split and the cap pass never move a flop onto it
   # (a register sharing a tap with a core is balanced by CTS to core pin + ETM insertion: nk_r4 ck_t28 396 ps).
   if {[info exists ::env(OT_CORE_ONLY_TAPS)] && $n in $::env(OT_CORE_ONLY_TAPS)} { puts "OT_CLOCK_TAPS core-only tap $n"; continue }
+  # KV-PC-DELTA-1115 (opt-in OT_TAP_SKIP_MACRO=1, plan clock.tap_skip_macro): a grid tap whose port sits over a hard macro
+  # takes no sink (CTS cannot root a tree over a macro: kv3_pc_v1 cl4ea58a5c had 8); like a core-only tap it stays in the plan
+  # pins and is dropped with the empty taps below.
+  set ct_x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set ct_y [expr {([$bb yMin] + [$bb yMax]) / 2}]
+  if {[info exists ::env(OT_TAP_SKIP_MACRO)] && $::env(OT_TAP_SKIP_MACRO) eq "1"} {
+    set ct_onmac 0
+    foreach ct_i [$ct_blk getInsts] {
+      if {[catch {[$ct_i getMaster] isBlock} ct_ib] || $ct_ib ne "1"} continue
+      set ct_mb [$ct_i getBBox]
+      if {$ct_x > [$ct_mb xMin] && $ct_x < [$ct_mb xMax] && $ct_y > [$ct_mb yMin] && $ct_y < [$ct_mb yMax]} { set ct_onmac 1; break }
+    }
+    if {$ct_onmac} { puts "OT_CLOCK_TAPS skip tap $n over macro [$ct_i getName]"; continue }
+  }
   lappend ct_taps [list $n $net [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
 # CP2 (COORD 10-23): EARLY core taps (gen.py phys core_taps.txt, env OT_CORE_TAPS; plan clock.taps[] kind 'core' with
@@ -241,6 +254,8 @@ if {[llength $ct_taps] >= 2} {
   }
   set ct_moves 0
   set ct_stuck {}
+  set ct_spilled {}
+  set ct_spill [expr {[info exists ::env(OT_TAP_SPILL_UM)] ? $::env(OT_TAP_SPILL_UM) * $ct_dbu : 0}]
   for {set pass 0} {$pass < 8 * [llength $ct_taps]} {incr pass} {
     set over ""
     foreach tp $ct_taps {
@@ -248,6 +263,8 @@ if {[llength $ct_taps] >= 2} {
     }
     if {$over eq ""} break
     set on [lindex $over 0]
+    # KV-PC-DELTA-1115: opt-in OT_TAP_SPILL_UM: a tap that found no room within half a pitch retries with this reach
+    set ct_lim [expr {$on in $ct_spilled ? $ct_spill : $ct_maxx}]
     set excess [expr {[llength [dict get $ct_by $on]] - $ct_cap}]
     # extra distance of each sink to every other tap with room
     set cand {}
@@ -259,10 +276,10 @@ if {[llength $ct_taps] >= 2} {
       foreach tp $ct_taps {
         if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] >= $ct_cap} continue
         set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
-        if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_maxx} continue
+        if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_lim} continue
         if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
       }
-      if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
+      if {$best ne "" && $bd <= $ct_lim} { lappend cand [list $bd $it $best] }
     }
     if {![llength $cand] && [info exists ct_grp]} {
       # CLOCK-RESET 10-25: over-full tap of pinned groups -> move the WHOLE group (with its followers' sinks staying
@@ -298,6 +315,11 @@ if {[llength $ct_taps] >= 2} {
         incr ct_moves [llength [dict get $ct_grp $gbest]]
         continue
       }
+    }
+    if {![llength $cand] && $ct_spill > $ct_maxx && $on ni $ct_spilled} {
+      lappend ct_spilled $on
+      puts "OT_CLOCK_TAPS $on over cap with no room within half a pitch: spill reach [format %.0f [expr {$ct_spill / $ct_dbu}]] um"
+      continue
     }
     if {![llength $cand]} {
       # COORD 10-23 19:55: sinks per tap are guidance (WARN), not a gate

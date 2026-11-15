@@ -3780,7 +3780,9 @@ def die_islands_tcl(P, tn):
     return "\n".join(lines) + "\n"
 
 
-RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank")
+# KV-PC-DELTA-1115: channel_keepout = a hard placement blockage over a routing channel between hard cores (no std cell
+# or repeater there; the pins on the channel edge are reached from outside it), same mechanism as die_clock_tree
+RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank", "channel_keepout")
 
 
 def route_layer_names(spec):
@@ -3826,7 +3828,7 @@ def reserved_sites_tcl(P, tn):
             raise ValueError(f"{tn}: reserved site kind {r.get('kind')} not in {RESERVED_KINDS}")
         if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
             raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
-        (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
+        (hard if r["kind"] in ("die_clock_tree", "channel_keepout") else bank).append((x0, y0, x1, y1))
         if r["kind"] == "die_clock_tree" and r.get("route_layers"):   # CLKSITE-RESERVE-1115 opt-in
             hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"])))
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
@@ -5489,6 +5491,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
+           # KV-PC-DELTA-1115 (opt-in plan keys, default absent = unchanged kit): clock_taps.tcl spill reach for a tap over
+           # the cap, and no grid tap over a hard macro
+           *([f"export OT_TAP_SPILL_UM = {float(t['clock']['tap_spill_um']):g}"] if t.get("clock", {}).get("tap_spill_um") else []),
+           *(["export OT_TAP_SKIP_MACRO = 1"] if t.get("clock", {}).get("tap_skip_macro") else []),
            *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_tap_cfg(P, tn)}"] if _hop_latch_tap_cfg(P, tn) else []),
            *([f"export OT_HOP_LATCH_FRAC_MAP = {_hop_latch_frac_cfg(P, tn)}"] if _hop_latch_frac_cfg(P, tn) else []),
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
