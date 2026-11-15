@@ -2,6 +2,26 @@
 
 Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.tsv (R-LEAF-1/2/3). All builds private, DO_NOT_COUNT.
 
+## FILES FOR DIE-S81-92 MERGED B6 (READY 2026-11-14, newest)
+- B6s leaf part for the single merged S81 B6 (not for separate adoption). Files (identical on epyc7, epyc8, epyc9): plan epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/ev/B6s.json (aa2aa99e499a)
+- sidecar epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/ev/side_B6s.json (18941025a5f8)
+- LF_CS netlist epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/cp13/lfcs_B6s.v (e64c0106d0f3
+- overlay copy /srv/opentallas-scratch2/claude/s81-leaf-plan/ovl_l6s/physical/die_plan/s81/bind/inputs/die_b178_lfcs.v
+- re-stage on the merged plan with tools/die_plan/stage_lfcs_netlist.py)
+- compose script epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/cp13/compose_b6s_leafplan.sh (picks cp13/pick.txt, form outputs cp12/ cp10/t53d cp9/t34s4, signed keep cp10/signed_keep_leafplan.py)
+- delta package epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/ev/B6s_leaf_delta.json (6e5d167d041f: 114 type rows vs 92e2, 113 sidecar collector.types, signed list)
+- type list epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/ev/types_event_B6s.txt (114). Signed restore: 35 signed slice_station rows stay on 92e2 (re-key 0), consistent with FABLE-PLAN-B6A F1 (signed t41, t6 cl54a9ceeb, t29 cl2e5c855a/clc7772371 station rows stay at 1226.88 with the declared 51.84-um jumper channel). +1 feed-through list (COORD approved
+- B6t, in progress, delta follows): ot_s81sl_leaf__t34 ft1/ft3/ft4
+- t28 ft2/ft3/ft4/ft5/ft6/ft7/ft10/ft11
+- t75 ft0/ft1/ft2/ft4/ft5
+- t13 ft0/ft1/ft2/ft3
+- t71 ft0/ft1/ft2/ft4/ft5
+- t7 ft3
+- t53__clb66fa5cb ft0 (27 slots
+- latency.lanes +1 per crossed slot on 24 lanes, x_W4_in/x_W4_out/up_s_1N_L4 +2
+- chained ft_add_station plan epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/ev/B6t_ft.json, ledger cp13/ft_take_ledger.jsonl). M9 per-type grant list (layer_budget.type_m9_grant), in order: ot_s81sl_leaf__t34, t9, t73, t75, then t28, t13, t7, t71. core_place: branch claude/s81-leaf-plan-1114 a7c4842c82 (+ whole-slot ft re-route fallback, uncommitted, for B6t).
+
+
 ## STATE 2026-11-14 ~20:0x PST (successor; CURRENT, newest first)
 - B5 bind DIED 19:08 epyc8 ELAB yosys rc 137 (OOM kill writing asbuilt.json), like B4L4. B5 is NOT adopted; it is carried by B6s.
 - COORD signed check: B5 (and draft ev/B6.json 3fa698db24a1) re-key 35 SIGNED slice_station types (clock.landing_contract bands only). Fix: cp10/signed_keep_leafplan.py restores plan row + sidecar collector.types/parts from B3z2 92e2 / side_z2_92e2_fix (signed list ev/s81_signed_1114.txt from rtx-pro INDEX.tsv); check cp10/signed_rekey_leafplan.py. Adopt list excludes signed types.
