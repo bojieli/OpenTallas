@@ -30,3 +30,12 @@ def test_current_unheld_row_passes():
 def test_missing_event_never_blocks():
     assert KW.enqueue_skip_reason(CFG, {"die": "qwen_compute", "item": "x"}) is None
     assert KW.enqueue_skip_reason({"dies": {}}, row("x")) is None
+
+
+def test_old_event_with_unchanged_plan_block_is_not_skipped(monkeypatch):
+    monkeypatch.setattr(KW, "_plan_current", lambda cfg, st, rec: True)
+    assert KW.enqueue_skip_reason(CFG, row("sle_fw_v1__clf58b4dfb", event="s29q103S3R"), {}) is None
+    monkeypatch.setattr(KW, "_plan_current", lambda cfg, st, rec: False)
+    assert KW.enqueue_skip_reason(CFG, row("sle_fw_v1__clf58b4dfb", event="s29q103S3R"), {})[0] == "SKIP-OLDPLAN"
+    monkeypatch.setattr(KW, "_plan_current", lambda cfg, st, rec: None)
+    assert KW.enqueue_skip_reason(CFG, row("sle_fw_v1__clf58b4dfb", event="s29q103S3R"), {})[0] == "SKIP-OLDPLAN"

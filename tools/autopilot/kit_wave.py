@@ -8325,7 +8325,7 @@ def enqueue_src(AP, pinned, d):
     return f"{label}@{sha}"
 
 
-def enqueue_skip_reason(cfg, rec):
+def enqueue_skip_reason(cfg, rec, st=None):
     """KIT-OPS-5 11-15 (OWNER via COORD: stop old-plan kits from relaunching): -> (tag, text) when the row must not be enqueued for route,
     else None.  SKIP-HELD: the item matches a die hold_items pattern (a hold only gated new picks, so a row already past gen / geom was
     enqueued anyway: cbn_q11 cl49ae4555 on 11-15 01:04).  SKIP-OLDPLAN: the row's plan event is not the die's current one.  Rows already
@@ -8337,6 +8337,8 @@ def enqueue_skip_reason(cfg, rec):
             return "SKIP-HELD", f"item held ({pat}): {str(why)[:160]}"
     ev, cur = rec.get("event"), d.get("event")
     if ev and cur and str(ev) != str(cur):
+        if st is not None and _plan_current(cfg, st, rec) is True:
+            return None      # COORD 11-15 (FABLE-PD-KV-0800): the row key is its plan block sha; an unchanged block of an older event is current
         return "SKIP-OLDPLAN", f"attempt of plan event {ev}, the die's current plan event is {cur}"
     return None
 
@@ -8345,7 +8347,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     # An already submitted row is immutable here, even if a hold is added later.
     if rec.get("status") == "ENQUEUED":
         return
-    skip = enqueue_skip_reason(cfg, rec)
+    skip = enqueue_skip_reason(cfg, rec, st)
     if skip:
         tag, text = skip
         if rec.get("status") != "ROUTE-HELD" or rec.get("route_hold") != f"{tag}: {text}":
