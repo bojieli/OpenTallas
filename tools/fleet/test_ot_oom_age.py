@@ -120,5 +120,42 @@ class Escalate(unittest.TestCase):
                 p.kill()
 
 
+class PlanBypass(unittest.TestCase):
+    def test_markers_of_live_launchers_only(self):
+        d = tempfile.mkdtemp()
+        for n in (str(os.getpid()), "999999999"):
+            open(f"{d}/plan.job.{n}", "w").close()
+        open(f"{d}/other.file", "w").close()
+        self.assertEqual(M.plan_pids(d), {str(os.getpid())})
+        self.assertFalse(os.path.exists(f"{d}/plan.job.999999999"))        # dead launcher: marker removed
+
+    def test_plan_key_from_the_scope_or_the_container_name(self):
+        self.assertIsNone(M.plan_key(999999999, {}))
+        import builtins
+        real = builtins.open
+        def fake(path, *a, **k):
+            if str(path) == "/proc/4242/cgroup":
+                import io
+                return io.StringIO("0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-840192-1794698885.scope\n")
+            return real(path, *a, **k)
+        builtins.open = fake
+        try:
+            self.assertEqual(M.plan_key(4242, {}), "840192")
+        finally:
+            builtins.open = real
+
+    @unittest.skipIf(os.geteuid() != 0, "-1000 needs root")
+    def test_marked_job_process_is_set_to_minus_1000(self):
+        p, d = spawn_openroad()
+        try:
+            open(f"{d}/x", "w").close()
+            from unittest.mock import patch
+            with patch.object(M, "plan_pids", lambda d=None: {"1"}), patch.object(M, "plan_key", lambda pid, names: "1"):
+                M.main(["--pid", str(p.pid), "--comm", "openroad"])
+            self.assertEqual(int(open(f"/proc/{p.pid}/oom_score_adj").read()), -1000)
+        finally:
+            p.kill()
+
+
 if __name__ == "__main__":
     unittest.main()

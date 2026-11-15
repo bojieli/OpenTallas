@@ -886,7 +886,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
-                SIMPLE_ADMIT=0.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=1.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1211,6 +1211,57 @@ def running_units_light():
     return out
 
 
+STAGE_TABLE = f"{D}/stage-peaks.json"
+STAGE_ORDER = ["floorplan.tcl", "tapcell.tcl", "pdn.tcl", "global_place_skip_io.tcl", "io_placement.tcl", "global_place.tcl", "resize.tcl",
+               "detail_place.tcl", "cts.tcl", "global_route.tcl", "detail_route.tcl", "fillcell.tcl", "final_report.tcl"]
+STAGE_COMMS = {"openroad", "yosys", "yosys-abc", "klayout", "cc1plus", "verilator_bin", "verilator_bin_dbg"}
+
+
+def stage_of(cmdline):
+    """build stage of an openroad/yosys process = the flow .tcl script on its command line ('' when none)"""
+    m = re.findall(r"([A-Za-z0-9_.\-]+\.tcl)", cmdline)
+    return m[0] if m else ""
+
+
+def stage_peak(table, stage, rss, look):
+    """STAGE_PEAK_1114 (OWNER 11-14 19:00, Fable fix 3): GB a build process is charged = max(its RSS now, table peak of its current stage and the next `look`
+    stages of the flow order); a script outside the flow order is charged its own table peak (else its RSS)"""
+    if stage in STAGE_ORDER:
+        i = STAGE_ORDER.index(stage)
+        pk = max(table.get(x, 0.0) for x in STAGE_ORDER[i:i + 1 + int(look)])
+    else:
+        pk = table.get(stage, 0.0)
+    return max(rss, pk)
+
+
+def stage_growth(table, look, frac=1.0, procs=None):
+    """STAGE_PEAK_1114: GB the running build processes are still charged beyond their RSS now = frac x sum(max(0, stage_peak - rss)).  procs: [(comm, cmdline, rss_gb)]
+    (tests); default scans /proc"""
+    if procs is None:
+        procs = []
+        for p in os.listdir("/proc"):
+            if not p.isdigit():
+                continue
+            try:
+                comm = rd(f"/proc/{p}/comm").strip()
+                if comm not in STAGE_COMMS:
+                    continue
+                m = re.search(r"VmRSS:\s+(\d+)", rd(f"/proc/{p}/status"))
+                procs.append((comm, rd(f"/proc/{p}/cmdline").replace("\0", " "), int(m.group(1)) / 1048576 if m else 0.0))
+            except (OSError, ValueError):
+                continue
+    g = sum(max(0.0, stage_peak(table, stage_of(cmd), rss, look) - rss) for _c, cmd, rss in procs)
+    return frac * g, len(procs)
+
+
+def load_stage_table(path=None):
+    try:
+        return {k: float(v) for k, v in json.loads(rd(path or STAGE_TABLE) or "{}").items()}
+    except (ValueError, TypeError):
+        return {}
+
+
+
 def peak_reserve(units, hist, frac, pct=0.9, min_n=3, fallback=1.0):
     """SIMPLE_PEAK: GB the running jobs are still expected to take: frac x sum(max(0, expected peak - now)).  frac < 1 because their
     peaks do not coincide (the plain sum on a 100-job host is 1-2 TB against 120 GB free and would admit nothing)"""
@@ -1333,6 +1384,10 @@ def gate_locked(mem, argv):
     a = admit_size(mem, cls, table, argv)
     res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a specific uncapped class peak may raise the charge
     total, avail = meminfo()
+    if conf("PLAN_BYPASS") and plan_like(argv, os.getcwd(), [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []):
+        # PLANBYPASS_1114 (OWNER 11-14 19:40): plan connectivity jobs (die-plan bind, LATCHECK, G0) are admitted at once: no headroom, growth reserve, peak table, drain wait or PLAN_MAX_RUNNING cap
+        print(f"OK {mem} {cls} | PLAN_BYPASS: plan job admitted immediately (MemAvailable {avail:.0f} GB, no headroom / reserve / cap); revert: PLAN_BYPASS=0 in /etc/ot-heavy.conf")
+        return
     if conf("SIMPLE_ADMIT"):   # SIMPLE_ADMIT_1114 ADMIT-TUNE-1 (OWNER 11-14): one check, real MemAvailable - INV_HEADROOM_GB >= class measured RSS (16 GB if unknown); no fresh/past-peak/declared charge; revert: SIMPLE_ADMIT=0 in /etc/ot-heavy.conf
         if conf("PLAN_PRIO"):   # PLAN_PRIO_1114: plan jobs first, ignoring the growth reserve, at most PLAN_MAX_RUNNING per host
             _env = [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []
@@ -1397,9 +1452,11 @@ def gate_locked(mem, argv):
                             _young += expected_peak(_mm[1] if len(_mm) > 1 else "?", int(_m), _h, conf("PEAK_PCT"), conf("PEAK_MIN_N"))
                 except (OSError, ValueError, IndexError):
                     pass
+            _sg, _sn = (stage_growth(load_stage_table(), conf("STAGE_LOOKAHEAD"), conf("STAGE_PEAK_FRAC")) if conf("STAGE_PEAK") else (0.0, 0))
+            _grow += _sg    # STAGE_PEAK_1114: every running build is charged its measured stage peak (current + next stage), not its RSS now
             _free = avail - conf("INV_HEADROOM_GB") - _grow - _young
             _ok = _free >= _need
-            print(f"{'OK' if _ok else 'NO'} {_need} {cls} | SIMPLE_PEAK: MemAvailable {avail:.0f} - {conf('INV_HEADROOM_GB'):g} headroom - {_grow:.0f} expected growth of {len(_units)} running (x{conf('PEAK_GROWTH_FRAC'):g}) - {_young:.0f} unstarted = {_free:.0f} GB vs expected peak {_need} GB of class '{cls}' (p{conf('PEAK_PCT') * 100:.0f} of its completed runs, else the request), admissible {max(0, _free):.0f} GB")
+            print(f"{'OK' if _ok else 'NO'} {_need} {cls} | SIMPLE_PEAK: MemAvailable {avail:.0f} - {conf('INV_HEADROOM_GB'):g} headroom - {_grow:.0f} expected growth of {len(_units)} running [stage peaks {_sg:.0f} GB over {_sn} build procs] (x{conf('PEAK_GROWTH_FRAC'):g}) - {_young:.0f} unstarted = {_free:.0f} GB vs expected peak {_need} GB of class '{cls}' (p{conf('PEAK_PCT') * 100:.0f} of its completed runs, else the request), admissible {max(0, _free):.0f} GB")
             return
         _e = table.get(cls) if cls not in ("?", "cd") else None
         _pk = _e.get("peak_gb", 0) if _e and capacity_sample_count(cls, _e) >= 1 else 0
@@ -2116,6 +2173,9 @@ if __name__ == "__main__":
     # DIE_WATCHDOG_1021: classifier query only; no reconciliation or admission changes.
     if sys.argv[1:2] == ["--is-die"]:
         sys.exit(0 if os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(sys.argv[3:], os.getcwd()) else 1)
+    if sys.argv[1:2] == ["--is-plan"]:     # PLANBYPASS_1114: classifier query for ot-heavy
+        _e = [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []
+        sys.exit(0 if plan_like(sys.argv[3:], os.getcwd(), _e) else 1)
     if sys.argv[1:2] == ["--exit-report"]:
         sys.exit(exit_report(*sys.argv[2:7]))
     if sys.argv[1:2] == ["--admit"]:
