@@ -188,7 +188,9 @@ proc is_packed_exact_banks {inst W D banks fw fh tag epoch_unobserved} {
     if {![string match "*${inst}\[./\]*" $nm]} continue
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
     if {![regexp {[/.]r\[([0-9]+)\]\[([0-9]+)\]} $nm -> j bit]} {
-      error "unmapped flop in exact packed bank: $nm"
+      # GENBUG-1: Yosys names the last stage after the output port, <inst>.q[bit]
+      if {![regexp {[/.]q\[([0-9]+)\]} $nm -> bit]} { error "unmapped flop in exact packed bank: $nm" }
+      set j [expr {$D - 1}]
     }
     if {$j < 0 || $j >= $D || $bit < 0 || $bit > $W || [dict exists $seen $j $bit]} {
       error "duplicate/out-of-range exact packed bank bit: $nm"
@@ -305,6 +307,39 @@ proc is_place {pat x y tag} {
     incr is_n; incr hit
   }
   if {!$hit} { lappend is_miss $pat }
+}
+# GENBUG-1 11-15: Yosys names the LAST register of an ot_dp_dly after its output port (<inst>.q[b]), never
+# <inst>.r[D-1][b], so the r[D-1] glob of a packed receiver delay matched nothing and the last planned station of
+# every lane pad was left to GPL (S81 297 of 343 wave kits; c1x_C__t1: 2,882 flops, q50 442-965 um off their site).
+# is_place_alt tries the stage glob, then the output-port alias.  A packed station that matches neither is a
+# generator/netlist disagreement (the generator proved the instance in the bound RTL): it is listed in is_hard and
+# fails the hook (OT_HOOK_COVERAGE=warn only reports).  `any` is the glob of the whole pad instance.
+set is_hard {}
+proc is_place_alt {pat alt any x y tag} {
+  global is_miss is_hard ff_blk
+  set n0 [llength $is_miss]
+  is_place $pat $x $y $tag
+  if {[llength $is_miss] == $n0 || [lindex $is_miss end] ne $pat} return
+  set is_miss [lrange $is_miss 0 end-1]
+  is_place $alt $x $y $tag
+  if {[llength $is_miss] > $n0 && [lindex $is_miss end] eq $alt} {
+    set is_miss [lreplace $is_miss end end $pat]
+    # a pad that synthesis removed whole (dead bus, e.g. KV kv3_sys_c i_host_die_rst_n) is a plain miss; a pad that
+    # still has registers but none for this planned stage is the hard class
+    foreach i [$ff_blk getInsts] {
+      if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+      if {[string match $any [string map {\\\\ {}} [$i getName]]]} { lappend is_hard $pat; break }
+    }
+  }
+}
+proc is_coverage_gate {} {
+  global is_n is_miss is_hard
+  puts "OT_HOOK_COVERAGE hook=istations touched=$is_n missing=[llength $is_miss] packed_stage_unmatched=[llength $is_hard]"
+  if {![llength $is_hard]} return
+  if {[info exists ::env(OT_HOOK_COVERAGE)] && $::env(OT_HOOK_COVERAGE) eq "warn"} {
+    puts "OT_HOOK_COVERAGE WARN istations: packed stations without a register: $is_hard"; return
+  }
+  error "OT_HOOK_COVERAGE istations: [llength $is_hard] planned packed stations matched no register: $is_hard"
 }
 # HEAD-SPINE2 10-25 per-bit station sites (plan internal_stations[].bit_route = "per_bit"): bit b of station k sits on
 # ITS OWN L route between the planned leaf point (leaf_um) and its face pin <bus>[b] (epoch flop eq -> pin [W]); the
@@ -997,7 +1032,7 @@ def relay_sites_only_tcl(tn, t):
     rs = relay_sites_lines(tn, t)
     if not rs:
         return None
-    return "\n".join([TCL_HEAD] + rs + macro_cross_lines(tn, t) + ["close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\""]) + "\n"
+    return "\n".join([TCL_HEAD] + rs + macro_cross_lines(tn, t) + ["close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"\nis_coverage_gate"]) + "\n"
 
 
 def soft_plan_cells(tn, t):
@@ -1554,7 +1589,13 @@ def main(argv):
                     break
                 x,y=regs[k]
                 pattern='*'+packed['instance']+f'[./]r\\[{j}\\]\\[*'
-                tcl.append(f'is_place {{{pattern}}} {x} {y} ist:{bus}')
+                anyg='*'+packed['instance']+'[./]*'
+                if j == packed['depth'] - 1:
+                    # the last stage drives the output port: Yosys calls it <inst>.q[b] (GENBUG-1)
+                    alias='*'+packed['instance']+'[./]q\\[*'
+                    tcl.append(f'is_place_alt {{{pattern}}} {{{alias}}} {{{anyg}}} {x} {y} ist:{bus}')
+                else:
+                    tcl.append(f'is_place_alt {{{pattern}}} {{{pattern}}} {{{anyg}}} {x} {y} ist:{bus}')
             row=dict(conn=conn,planned=len(regs),bound_pads=packed['depth'],inserted=0,
                      stations=packed['stage_registers'],packed_delay=packed,
                      plan_width=b['width'],bound_width=W)
@@ -1693,7 +1734,7 @@ def main(argv):
         tcl.extend(rs)
         man["kit_relay_sites"] = len(t["relay_sites"])       # not a station entry: receipts list stations only
     tcl += macro_cross_lines(tn, t)
-    tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"")
+    tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"\nis_coverage_gate")
     from kit_epoch_observability import inspect as epoch_inspect
     epochs = {}
     for index, line in enumerate(tcl):
