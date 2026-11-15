@@ -314,8 +314,44 @@ def _site_clear(a,b):
     return abs(a[0]-b[0])>=.08+.04 or abs(a[1]-b[1])>=.432+.04
 
 
+# PG-AWARE-1 11-14 (FABLE-HARD-QCHEAD section 2, the 630-kit scan rule): a landing pin inside the core must keep a via
+# path off the partition PG grid.  QC su_l0 cland_tstart_in (M7, 0.080 x 0.432 at y 174.952) lies wholly over the M6 pair
+# 174.624-175.296: no M6 track under it is legal, the router leaves along M7 with a 0.032 wire = Rect Only DRC 3 on every
+# build (same: HEAD hd_spn_end rst_start_raw_5, hd_host_e rst_start_raw_0/2).  pg_access.pin_ok: an interior pin on a
+# vertical layer holds an M6 (M7) / M5 (M6) track >= 0.072 um from every PG stripe inside its extent, and its own crossing
+# track is off the stripes.  Hard types keep their LEF sites (the core owner fixes the view).
+PIN_W_UM,PIN_H_UM=.08,.432   # io_tcl -pin_size
+
+
+def _pg_tracks(P):
+    L=getattr(P,"layers",{}) or {}
+    return {ln:(v["pitch_um"],v["offset_um"]) for ln,v in L.items() if v.get("pitch_um")} or None
+
+
+def _pg_interior(t,xy):
+    w,h=t["outline_um"];m=4.32   # gen_phys.CORE_MARGIN_UM: the partition M5/M6 stripes stop at the core
+    return m<xy[0]<w-m and m<xy[1]<h-m
+
+
+def pg_pin_ok(P,t,layer,xy):
+    """True unless an interior pin of a soft type breaks the PG access rule (pg_access.pin_ok)."""
+    import pg_access as PA
+    if t.get("hard") or layer not in PA.STRIPES or not _pg_interior(t,xy):return True
+    tr=_pg_tracks(P);tr=dict(PA.TRACKS,**(tr or {}))
+    along=PIN_H_UM if not PA.HORIZ[layer] else PIN_W_UM
+    return PA.pin_ok(layer,xy[0],xy[1],along,True,tr)
+
+
+def pg_bad_pins(P,t):
+    """[pin names] of t whose plan site breaks the PG access rule."""
+    pins=t.get("clock",{}).get("landing_contract",{}).get("pins",[])
+    return [p["name"] for p in pins if p.get("layer") and p.get("xy_um")
+            and not pg_pin_ok(P,t,p["layer"],on_track(P,p["layer"],*p["xy_um"]))]
+
+
 def overlapping_pins(P,t):
-    """[pin names] that must leave their site, in keep order: clock inputs, clocks, then name order keep theirs."""
+    """[pin names] that must leave their site, in keep order: clock inputs, clocks, then name order keep theirs;
+    then (PG-AWARE-1) every interior pin whose site has no PG-legal via path."""
     edge={e["port"] for e in t.get("clock",{}).get("edge_clocks",[])}
     pins=t.get("clock",{}).get("landing_contract",{}).get("pins",[])
     kept,out=[],[]
@@ -324,7 +360,7 @@ def overlapping_pins(P,t):
         xy=on_track(P,p["layer"],*p["xy_um"])
         if any(l==p["layer"] and _rects_overlap(xy,q) for l,q in kept):out.append(p["name"])
         else:kept.append((p["layer"],xy))
-    return out
+    return out+[n for n in pg_bad_pins(P,t) if n not in out]
 
 
 def separate_pins(P,tn):
@@ -347,6 +383,10 @@ def separate_pins(P,tn):
     for name in move:
         layer=pins[name]["layer"];x0,y0=on_track(P,layer,*pins[name]["xy_um"])
         along_x=min(y0,h-y0)<=min(x0,w-x0)    # nearest face S/N: slide in x; E/W: slide in y
+        if not pg_pin_ok(P,t,layer,(x0,y0)):
+            # PG-AWARE-1: slide along the pin's own layer (a vertical pin moves in y onto legal tracks of the layer
+            # below); 2.16 = half the M5/M6 pair pitch, never a multiple of 4.32 (FABLE-HARD-QCHEAD dead end)
+            along_x=bool(P.layers.get(layer,{}).get("dir")=="H") if getattr(P,"layers",None) else False
         sites=[]
         # DIE-QC-68: a corner pin is nearest to the face it does not sit on (KV kv3_hub_C y 0.416 from N, x 2.144 from W), and
         # its other coordinate can already be inside the edge margin: try both faces, cross coordinate held inside the margin.
@@ -358,7 +398,7 @@ def separate_pins(P,tn):
                     if not (.432<=q[0]<=w-.432 and .432<=q[1]<=h-.432):continue
                     q=GP._snap_tap(P,*q,pg_legal=not t.get("hard"))
                     xy=on_track(P,layer,*q)
-                    if all(l!=layer or _site_clear(xy,b) for l,b in taken):sites.append(q)
+                    if all(l!=layer or _site_clear(xy,b) for l,b in taken) and pg_pin_ok(P,t,layer,xy):sites.append(q)
                 if sites:break
             if sites:break
         if not sites:

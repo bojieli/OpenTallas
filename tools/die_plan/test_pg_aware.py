@@ -19,7 +19,7 @@ TINY = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
 
 @pytest.fixture(autouse=True)
 def _clean_env(monkeypatch):
-    for k in ("OT_RFLOW", "OT_PG_DIE_PHASE", "OT_PG_CELL_KEEPOUT", "OT_GEN_M8_GRANT"):
+    for k in ("OT_RFLOW", "OT_PG_DIE_PHASE", "OT_PG_CELL_KEEPOUT", "OT_PG_FACE_CUT", "OT_GEN_M8_GRANT"):
         monkeypatch.delenv(k, raising=False)
 
 
@@ -102,3 +102,111 @@ def test_keepout_hooks_are_grt_only():
     kr = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(kr)
     assert kr.VAR_STAGE["OT_PG_CELL_KEEPOUT"] == "grt"
+
+
+# ---- PG-AWARE-1 pin rule (FABLE-HARD-QCHEAD section 2, the 630-kit scan rule) and macro-face PG cut (section 3)
+import landing_contract as LC  # noqa: E402
+import pg_access as PA  # noqa: E402
+from types import SimpleNamespace  # noqa: E402
+
+_LAYERS = {"M7": {"dir": "V", "pitch_um": 0.064, "offset_um": 0.032}, "M6": {"dir": "H", "pitch_um": 0.064, "offset_um": 0.032}}
+
+
+def _lc_plan(pins, hard=False):
+    t = {"outline_um": [319.68, 349.92], "clock": {"landing_contract": {"pins": pins}, "edge_clocks": []}}
+    if hard:
+        t["hard"] = True
+    return SimpleNamespace(types={"t": t}, layers=_LAYERS, layer_budget={"partition_signal_max": "M7"})
+
+
+def _lc_pin(name, x, y):
+    return dict(name=name, dir="in", kind="ctl", layer="M7", xy_um=[x, y], epoch=False)
+
+
+@pytest.mark.parametrize("x,y,ok", [(158.176, 174.9516, False),   # QC su_l0 cland_tstart_in (Rect Only DRC 3)
+                                    (158.176, 167.392, True),     # QC S3R2 sites
+                                    (158.176, 228.949, True),
+                                    (100.032, 896.424, False),    # HEAD hd_spn_end rst_start_raw_5 after the 8.64 move
+                                    (100.032, 887.784, False),    # ... and before it
+                                    (100.032, 889.944, True),     # the 2.16 move
+                                    (170.528, 554.880, False),    # HEAD hd_host_e rst_start_raw_0
+                                    (289.952, 19.200, False)])    # HEAD hd_host_e rst_start_raw_2
+def test_fable_scan_rule_flags_exactly_the_measured_pins(x, y, ok):
+    assert PA.pin_ok("M7", x, y, 0.432) is ok
+
+
+def test_landing_pin_over_m6_pair_moves_half_a_pair_pitch_in_y():
+    P = _lc_plan([_lc_pin("cland_tstart_in", 158.176, 174.9516), _lc_pin("ok", 158.176, 167.392)])
+    assert LC.pg_bad_pins(P, P.types["t"]) == ["cland_tstart_in"]
+    t = LC.separate_pins(P, "t")
+    xy = {p["name"]: p["xy_um"] for p in t["clock"]["landing_contract"]["pins"]}
+    assert xy["ok"] == [158.176, 167.392]
+    nx, ny = xy["cland_tstart_in"]
+    assert nx == 158.176 and abs(ny - 174.9516) < 4.32 and abs(abs(ny - 174.9516) % 4.32) > 1.0
+    assert LC.pg_pin_ok(P, t, "M7", (nx, ny)) and not LC.pg_bad_pins(P, t)
+
+
+def test_pin_rule_keeps_hard_types_and_face_pins():
+    assert LC.pg_bad_pins(_lc_plan([_lc_pin("a", 158.176, 174.9516)], hard=True), _lc_plan([], hard=True).types["t"]) == []
+    P = _lc_plan([_lc_pin("face", 158.176, 0.216)])          # in the core margin: no partition M5/M6 stripe there
+    assert LC.pg_bad_pins(P, P.types["t"]) == [] and LC.separate_pins(P, "t") is None
+
+
+_LEF = """MACRO epc
+  SIZE 40.0 BY 30.0 ;
+  PIN ft[60]
+    DIRECTION INPUT ; USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT 0.000 12.544 0.300 12.576 ;
+    END
+  END ft[60]
+  PIN ft[61]
+    DIRECTION INPUT ; USE SIGNAL ;
+    PORT
+      LAYER M6 ;
+        RECT 0.000 12.904 0.300 12.936 ;
+    END
+  END ft[61]
+  PIN o_n
+    DIRECTION OUTPUT ; USE SIGNAL ;
+    PORT
+      LAYER M7 ;
+        RECT 10.000 29.700 10.064 30.000 ;
+    END
+  END o_n
+  PIN mid
+    DIRECTION INPUT ; USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 20.000 15.000 20.024 15.300 ;
+    END
+  END mid
+  PIN VDD
+    DIRECTION INOUT ; USE POWER ;
+    PORT
+      LAYER M6 ;
+        RECT 0.000 1.000 0.300 1.288 ;
+    END
+  END VDD
+END epc
+"""
+
+
+def test_face_cut_windows_stop_parent_stripes_before_pin_faces(tmp_path, monkeypatch):
+    lef = tmp_path / "epc.lef"
+    lef.write_text(_LEF)
+    pins, size = gen_phys.lef_face_pins(lef)
+    assert size == (40.0, 30.0) and sorted(ln for ln, _ in pins) == ["M6", "M6", "M7"]   # no PG, no interior pin
+    P = SimpleNamespace(types={"hd": {}})
+    monkeypatch.setattr(gen_phys, "type_macros", lambda P, tn: [("u_epc", "epc", str(lef), None, 423.36, 313.344, "R0")])
+    import cores
+    monkeypatch.setattr(cores, "resolve", lambda p, root=None: p)
+    assert gen_phys.pg_face_cuts(P, "hd") == []                                       # opt-in
+    monkeypatch.setenv("OT_PG_FACE_CUT", "1")
+    cuts = gen_phys.pg_face_cuts(P, "hd")
+    assert cuts == [("u_epc", "M6", "W", (421.86, 325.816, 423.36, 326.352)),
+                    ("u_epc", "M7", "N", (433.288, 343.344, 433.496, 344.844))]
+    tcl = gen_phys.pg_face_cut_tcl(cuts)
+    assert "pgf_window M6 421.8600 325.8160 423.3600 326.3520" in tcl and "OT_PG_FACE_CUT windows=2" in tcl
+    assert tcl.count("{") == tcl.count("}")
