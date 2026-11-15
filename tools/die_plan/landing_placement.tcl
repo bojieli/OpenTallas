@@ -1599,7 +1599,7 @@ proc cland_bin_place {} {
     if {$mode eq "eq"} {
      set bit ""; regexp {q\\?\[([0-9]+)\\?\]} $sn -> bit
      set psite [cland_bin_site_of $sites $bus $bit]
-     set bsite {}; if {[llength $psite]} { set bsite [cland_bin_site_of $sites "${bus}:bin" $bit] }
+     set bsite [cland_bin_site_of $sites "${bus}:bin" $bit]
      if {[llength $psite]} {
       set ax [expr {[lindex $psite 0]*$ff_dbu}]; set ay [expr {[lindex $psite 1]*$ff_dbu}]
       foreach ld [cland_bin_loads $s] {
@@ -1616,6 +1616,9 @@ proc cland_bin_place {} {
       }
       incr nsited
       set anc [list $ax $ay 0]
+     } elseif {[llength $bsite]} {
+      # u_bin-only entry (fw / st_b input buses, FABLE-PD-QC-0700): no u_st site, the capture register goes on its own site
+      set anc [list [expr {[lindex $bsite 0]*$ff_dbu}] [expr {[lindex $bsite 1]*$ff_dbu}] 0]
      } else { set anc [cland_bin_anchor $s] }
      if {![llength $anc]} { incr nunanch; continue }
      if {[llength $bsite]} {
@@ -1660,6 +1663,10 @@ if {[info exists ff_landed_line] && [llength $ff_landed_line] && [llength [info 
 # AUTOBUILD-PIPE-2 (AUTOBUILD-GATE-1 handoff, S81 slice_station t14/t26 r2r 580-677 um): reset_taps.tcl re-pointed every
 # FIRM flop's reset to its nearest tap BEFORE the landed line moved stations s0..s<k-2> (eq epoch flops went ~580 um
 # from their reset leaf u_rrl_<k>).  Re-point only the moved stations again, now at their final sites.
+if {[llength $cland_bin_moved]} {
+  if {![info exists ff_landed_moved]} { set ff_landed_moved {} }
+  foreach n $cland_bin_moved { lappend ff_landed_moved $n }
+}
 if {[llength $cland_bin_moved]} {
   if {![info exists ff_landed_moved]} { set ff_landed_moved {} }
   foreach n $cland_bin_moved { lappend ff_landed_moved $n }

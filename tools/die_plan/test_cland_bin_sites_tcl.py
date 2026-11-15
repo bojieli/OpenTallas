@@ -41,3 +41,9 @@ def test_sidecar_path_and_for_kit(tmp_path):
 def test_tcl_reads_it_back():
     body = C.table(DOC, "cbf_q01") + "puts [dict get $cland_bin_sites bc_i02:bin]\nputs [dict size $cland_bin_sites]\n"
     assert subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split("\n")[:2] == ["43.200 233.280", "4"]
+
+
+def test_u_bin_only_bus_gives_only_the_bin_key():
+    doc = {"schema": C.SCHEMA, "types": {"slw_fw_v2": {"fw_i00": {"u_bin": [10.0, 20.5]}}}}
+    t = C.table(doc, "slw_fw_v2")
+    assert " fw_i00:bin {10.000 20.500}" in t and "fw_i00 {" not in t

@@ -137,3 +137,9 @@ def test_plan_site_form_places_ust_and_takes_the_bit_from_the_capture_name():
 def test_capture_register_takes_its_plan_site_when_the_sidecar_has_one():
     assert 'cland_bin_site_of $sites "${bus}:bin" $bit' in TCL and "incr nbplan" in TCL
     assert TCL.index("set bsite {}") < TCL.index("incr nbplan") < TCL.index("lassign [cland_bin_point")
+
+
+def test_u_bin_only_plan_entry_is_taken_without_a_u_st_site():
+    assert 'set bsite [cland_bin_site_of $sites "${bus}:bin" $bit]' in TCL
+    assert "u_bin-only entry" in TCL
+    assert TCL.index("set bsite [cland_bin_site_of") < TCL.index("u_bin-only entry") < TCL.index("incr nbplan")
