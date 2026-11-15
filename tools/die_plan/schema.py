@@ -1407,6 +1407,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "cdc": {"enum": ["synchronized"]}, "cdc_evidence": _name,
                 "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
+# S81-COLGEN-1 11-14 (FABLE-TYPES-S81-COL C2): per-region replication of a reset / flush fan-out driver (reset_replicate.py)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False,
+        "properties": {"driver": {"type": "string"}, "driver_re": {"type": "string"}, "region_re": {"type": "string"},
+                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
