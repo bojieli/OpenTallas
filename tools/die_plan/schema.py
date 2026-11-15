@@ -314,6 +314,10 @@ SCHEMA = {
                                    "ports": {"type": "array", "items": _name}}}},
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
+                    # GENBUG (FABLE-PD-HEAD-1115 s3): origins (um, from the type frame) of the PG stripe bands the face-pin spreader keeps
+                    # pins off; absent = [0] (the type-frame phase PART_PG_BANDS is written for).  A kit whose pdn.tcl puts the M7 pair at
+                    # the core-edge offset (CORE_MARGIN_UM 4.32 from the frame) needs [0, 4.32]: pins then avoid both phases.
+                    "pin_band_origins_um": {"type": "array", "minItems": 1, "items": {"type": "number"}},
                     "bumps": {"type": "object", "additionalProperties": False,
                               "properties": {"pitch_um": _pos, "pad_um": _nonneg, "edge_margin_um": _nonneg,
                                              # QC-PG-5 (OWNER 10-28): opt-in fine-pitch power-bump fields (die_trial._field_bumps)
@@ -2059,6 +2063,9 @@ class Plan:
         self.rep_um = float(d.get("rep_um", 450.0))
         self.grid = float(d.get("grid_um", GRID_UM))
         self.layers = {L["name"]: L for L in d.get("layers", ASAP7_LAYERS)}
+        _org = (d.get("pg") or {}).get("pin_band_origins_um")
+        if _org:        # GENBUG: opt-in extra stripe-band phases for the face-pin spreader (copy: ASAP7_LAYERS is shared)
+            self.layers = {n: (dict(L, pg_origins=tuple(float(o) for o in _org)) if n in PART_PG_BANDS else L) for n, L in self.layers.items()}
         self.layer_budget = dict(DEFAULT_LAYER_BUDGET, **d.get("layer_budget", {}))
         self.types = raw["partition_types"]
         self.parts = {p["name"]: p for p in raw["partitions"]}
@@ -2820,6 +2827,15 @@ def pg_blocked(ln, c):
     return min(d, pitch - d) < half - 1e-9
 
 
+def pg_blocked_any(L, ln, c):
+    """pg_blocked for a layer dict that may carry pg_origins (die.pg.pin_band_origins_um, set by Plan): the track c is blocked when
+    ANY stripe-band phase blocks it.  A layer without pg_origins = the single type-frame phase (byte-identical to pg_blocked)."""
+    org = L.get("pg_origins") if isinstance(L, dict) else None
+    if not org:
+        return pg_blocked(ln, c)
+    return any(pg_blocked(ln, c - o) for o in org)
+
+
 def spread(A, n, lo, hi):
     """n of the usable tracks A (sorted, track units), UNIFORM in coordinate over the window [lo, hi]: pin j goes to
     the usable track nearest its cell centre lo + (j + 0.5) (hi - lo) / n, so any sub-window holds the window's average
@@ -2877,7 +2893,7 @@ def usable_tracks(L, ln, lo, hi, pg_free=False):
     p, off = L["pitch_um"], L["offset_um"]
     k0 = math.ceil((lo - off) / p - 1e-9)
     k1 = math.floor((hi - off) / p + 1e-9)
-    return sum(1 for k in range(k0, k1 + 1) if pg_free or not pg_blocked(ln, off + k * p))
+    return sum(1 for k in range(k0, k1 + 1) if pg_free or not pg_blocked_any(L, ln, off + k * p))
 
 
 def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6, pg_free=False):
@@ -2947,7 +2963,7 @@ def _window_pins(port, layers, window, pins):
         k1 = math.floor((hi - off) / p + 1e-9)
         # usable tracks: in the window and off the partition PG stripe bands (PART_PG_BANDS)
         pgf = bool(port.get("pg_free"))     # QC-PHY-1 11-14 (COORD): full-area hard IP pins sit on the macro's own pins
-        A = [k for k in range(k0, k1 + 1) if pgf or not pg_blocked(ln, off + k * p)]
+        A = [k for k in range(k0, k1 + 1) if pgf or not pg_blocked_any(L, ln, off + k * p)]
         m = len(A)
         if m < n:
             raise ValueError(f"port {port['id']}: {n} bits on {ln} need {n} tracks, window has {m} off the PG "
