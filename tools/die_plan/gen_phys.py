@@ -2191,8 +2191,8 @@ RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_P
 # Kit classes (die plans) that take the defaults, each with its proof kit (old vs new settings on one synthesized
 # netlist, through route and sign-off; epyc7 rules-flow-1/ab).  A die plan not listed keeps its old kit until its own
 # proof exists: HBM is parked and passes explicit margins.
-RFLOW_DIES = {"s81": "slice_station__t21", "s81_head": "hd_turn_b", "qwen_kvsys": "kv3_sys_SD_v1",
-              "qwen_compute": "coll_ftc"}
+RFLOW_DIES = {"s81": "slice_station__t21", "qwen_kvsys": "kv3_sys_SD_v1",
+              "qwen_compute": "coll_ftc"}   # s81_head removed KIT-OPS-5 11-14 (COORD, FABLE-TYPES-HEAD: 50/20/120 caused hd_ctl_n DRT-0255); proof kit hd_turn_b
 
 
 def rflow_on(die=None):
