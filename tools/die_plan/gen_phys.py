@@ -1823,6 +1823,42 @@ add_pdn_connect -grid {top} -layers {M6 M7}
 """
 
 
+# PG-AWARE-1 11-14 (FABLE-WAVE-REVIEW fix 6 S2(a), DRT-0255 on QC sle_st_b_v2 x_fw_ctl_p2_i[464], S81 slice_station t49
+# ft2_i[324], KV kv3_io_cor o_serdes_W_tx_up_d1[1]): pdngen measures -offset from CORE_AREA, but PDN's offsets are TYPE
+# frame values (schema.PART_PG_BANDS, mock_lef, the face-pin band policy all put the M7 pair centre at 4.32 + 8.64 k).
+# With the default 4.32 um core margin M5 / M6 (pitch 4.32) land where the plan says, M7 (pitch 8.64) lands half a pitch
+# off: on the plan's PG-free tracks, where pin_positions puts face pins.  A pin at the face then has its own M7 track
+# taken by the stripe 4.3 um inside, M8 die reserve above and the face pin band beside it: no access path.
+# pdn_die_phase rewrites each partition-grid stripe offset of PDN to (type-frame offset - core origin) mod pitch, so every
+# stripe sits at its plan position whatever the core margin.  M5 / M6 at margin 4.32 and all layers at margin 0 keep
+# their bytes.  Gen environment OT_PG_DIE_PHASE=1 turns it on (default off until the rollout proof, PG-AWARE-1).
+PG_DIE_PHASE_STRIPES = {"M5": (False, "0.12", "0.072", 4.32), "M6": (True, "0.288", "0.096", 4.32),
+                        "M7": (False, "0.288", "0.096", 8.64)}      # layer: (horizontal, width, spacing, pitch)
+
+
+def pg_die_phase_on():
+    return os.environ.get("OT_PG_DIE_PHASE", "").strip() == "1"
+
+
+def pdn_die_phase(pdn, core_area):
+    """pdn text with every PDN-template partition stripe (layer, width, spacing, pitch of PDN) re-offset from the core
+    origin core_area[0] (vertical) / core_area[1] (horizontal) to its type-frame position."""
+    out = []
+    for ln in pdn.split("\n"):
+        m = re.match(r"(add_pdn_stripe -grid \{[^}]+\} -layer \{(M\d)\} -width \{([\d.]+)\} -spacing \{([\d.]+)\} "
+                     r"-pitch \{([\d.]+)\} -offset \{)([\d.]+)(\}.*)$", ln)
+        if m and m.group(2) in PG_DIE_PHASE_STRIPES:
+            horiz, wd, sp, pitch = PG_DIE_PHASE_STRIPES[m.group(2)]
+            if (m.group(3), m.group(4)) == (wd, sp) and abs(float(m.group(5)) - pitch) < 1e-9:
+                o = float(core_area[1] if horiz else core_area[0])
+                v = round((float(m.group(6)) - o) % pitch, 4)
+                if abs(v - pitch) < 1e-6:
+                    v = 0.0
+                ln = f"{m.group(1)}{v:g}{m.group(7)}"
+        out.append(ln)
+    return "\n".join(out)
+
+
 # DIE-HEAD-5 PGCUT (DRT-TRIAL-1 10-28, opt-in plan partition_types.<t>.pg_island_cut): the kit M6 PG straps of PDN
 # (VDD offset 1.968, VSS one width + spacing after it, pitch 4.32, width 0.288; horizontal) run over the hard cores.
 # A signed core's in-core island pins (interior M5 signal/clock pins, e.g. the elemA/elemB centre rst_n) can only be
@@ -2008,9 +2044,13 @@ SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the lim
 #                              (column inside an M7 pair) had GRT capacity with 0..1 legal tracks (t6: 547 M6 + 178 M7
 #                              guides on 0-legal rows).  pg_track_truth.tcl (grt_pre.tcl) blocks the spacing-illegal tracks
 #                              at GRT only; grt_post.tcl removes the obstructions before 5_1_grt.odb (DRT/PG unchanged).
+#   pg_cell_keepout            PG-AWARE-1 11-14 (FABLE-WAVE-REVIEW fix 6): placement blockages over every M5 x M6 PG
+#                              crossing + detailed_placement at the start of GRT (pg_cell_keepout.tcl), removed before
+#                              5_1_grt.odb; opt-in (gen env OT_PG_CELL_KEEPOUT=1) until the rollout proof.
 # CTS is unchanged (BUFx24 root and sink buffers, clusters of <= ~42 sinks; 0 clock pins among the violators).
 RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_PCT), "gpl_keep_overflow": 0.25, "place_max_fanout": 32,
-         "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1}
+         "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1,
+         "pg_cell_keepout": 0}
 # Kit classes (die plans) that take the defaults, each with its proof kit (old vs new settings on one synthesized
 # netlist, through route and sign-off; epyc7 rules-flow-1/ab).  A die plan not listed keeps its old kit until its own
 # proof exists: HBM is parked and passes explicit margins.
@@ -2052,7 +2092,15 @@ def rflow_cfg(gpl_plain=False, die=None):
             *([] if gpl_plain else [f"export GPL_KEEP_OVERFLOW = {RFLOW['gpl_keep_overflow']:g}"]),
             f"export OT_HOLD_BUDGET_PCT = {RFLOW['hold_budget_pct']:g}",
             "# FLOW-PGCAP-1: GRT capacity = DRT-legal tracks at PG stripes (pg_track_truth.tcl, GRT only)",
-            f"export OT_PG_TRACK_TRUTH = {RFLOW['pg_track_truth']:d}"]
+            f"export OT_PG_TRACK_TRUTH = {RFLOW['pg_track_truth']:d}",
+            "# PG-AWARE-1: no standard cell under an M5 x M6 PG crossing from GRT on (pg_cell_keepout.tcl, GRT only)",
+            f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
+
+
+def pg_cell_keepout_value():
+    """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
+    v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
+    return int(v) if v in ("0", "1") else int(RFLOW["pg_cell_keepout"])
 FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
 # COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
 # keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
@@ -4953,6 +5001,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                   strict=_core_pg_strict(P, tn), published=set(pg_pub))
         if bad:
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
+    if pg_die_phase_on():
+        pdn = pdn_die_phase(pdn, kit_core_area(t))
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
         (kd / "m8_grant.json").write_text(json.dumps(m8g, indent=1) + "\n")
@@ -5336,7 +5386,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
