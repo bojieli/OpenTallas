@@ -714,7 +714,13 @@
     "kv3_pv_v5": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_pv_v5n": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_pv_v7": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v8": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key."
+    "kv3_pv_v8": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
+    "kv3_pv_v2": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
+    "kv3_pv_v2n": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
+    "kv3_pv_v4": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
+    "kv3_pv_v4n": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
+    "kv3_pv_v6": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
+    "kv3_pv_v6n": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5635,7 +5641,15 @@
     "kv3_pc__cl5a95b461": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
     "kv3_pc_v1__cl7f648944": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441"
    },
-   "plan_sha256_prev_kitops5": "8301f154d3b223af3a44ce573276b8356091ea8d81fd0812a7e31dd5ee2a4f10"
+   "plan_sha256_prev_kitops5": "8301f154d3b223af3a44ce573276b8356091ea8d81fd0812a7e31dd5ee2a4f10",
+   "hold_items_added_wavehold1115_stop": [
+    "kv3_pv_v2",
+    "kv3_pv_v2n",
+    "kv3_pv_v4",
+    "kv3_pv_v4n",
+    "kv3_pv_v6",
+    "kv3_pv_v6n"
+   ]
   },
   "s81": {
    "enabled": true,
