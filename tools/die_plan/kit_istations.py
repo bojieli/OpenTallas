@@ -286,6 +286,7 @@ proc rs_place_all {sites} {
   set miss [expr {[dict size $sites] - [dict size $hit]}]
   if {$miss} { lappend is_miss "relay_sites:$miss" }
   puts "OT_RELAY_SITES placed $n flops FIRM (plan keys unmatched: $miss of [dict size $sites])"
+  puts "OT_HOOK_COVERAGE hook=relay_sites touched=[dict size $hit] expected=[dict size $sites] advisory=1"
 }
 """
 
