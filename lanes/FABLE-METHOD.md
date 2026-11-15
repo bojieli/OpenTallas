@@ -141,7 +141,7 @@ it is cheaper to learn that now, with 36 + 4 + 5 signed, than at 300.
   Leaving port hold out is the one part that is wrong for an abutted design: there are no die-level cells, so a
   port hold failure can only be fixed inside a type, which means re-signing it.
 - The post-CTS gate checks only that the mean pin-flop insertion is within 20 ps of the bound. It printed PASS on
-  every one of the 115 records, including setup_est -443 and hold_est -312. A kit with a zero-logic path at -440
+  every one of the 109 records, including setup_est -443 and hold_est -312. A kit with a zero-logic path at -440
   after CTS cannot close in route; it then spends 8-14 h and a host slot. The early stops were deleted on 11-13/14
   as conservative limits. FABLE-WAVE-REVIEW measured the result: the same builds fail later and cost more. I am
   not asking for the old limits back. I am asking that a post-CTS result that no router can fix is sent to the
