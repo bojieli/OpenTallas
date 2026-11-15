@@ -35,6 +35,21 @@ def test_stb_inverted_sink_is_measured_on_the_same_source_edge():
 
 
 def test_harness_files_exist():
-    for f in ("stb_known.tcl", "stb_known.v", "run_openroad.sh"):
+    for f in ("stb_known.tcl", "stb_known.v", "ps_known.tcl", "ps_known.v", "run_openroad.sh"):
         assert (HERE / f).is_file()
     assert "source /tools/subtree_balance.tcl" in (HERE / "stb_known.tcl").read_text()
+
+
+@needs_or
+def test_pair_skew_raw_pair_matches_the_measured_clock_arrival_difference():
+    """pair_skew.tcl: launch flop on tap n0, capture flop two buffers later.  The related pair (ff_l -> ff_c) is found (2 regs, 1 pair, no
+    missing clock arrival) and its raw hold damage (capture late - launch early) is the CK arrival difference n1 - n0 within 1.5 ps; the raw setup
+    damage has the opposite sign (late capture does not hurt setup)."""
+    out = run("ps_known.tcl")
+    assert "PS_COUNTS regs=2 pairs=1 inter=0 data=2 noarr=0" in out, out[-600:]
+    pair = re.search(r"PS_PAIR ff_l ff_c ff_c/D (\S+) (\S+) ff_c", out)
+    arr = re.search(r"PS_ARR launch (\S+) capture (\S+) diff (\S+)", out)
+    assert pair and arr, out[-600:]
+    setup, hold, diff = float(pair.group(1)), float(pair.group(2)), float(arr.group(3))
+    assert 15.0 < diff < 40.0
+    assert abs(hold - diff) <= 1.5 and setup < 0 and abs(setup + hold) <= 3.0
