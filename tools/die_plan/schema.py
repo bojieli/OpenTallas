@@ -803,8 +803,13 @@ SCHEMA = {
                                        # QC-SLECTL-B 11-05: one paramod instance of the bound module hardened as a named
                                        # wrapper master (param_wrap.py: kit-only rename, exact params, no logic)
                                        "param_wrap": {"type": "object", "required": ["base", "params"], "additionalProperties": False,
-                                                      "properties": {"base": _name, "params": {"type": "object", "minProperties": 1,
-                                                                     "additionalProperties": {"type": "integer"}}}},
+                                                      "properties": {"base": _name, "params": {"type": "object", "minProperties": 0,
+                                                                     "additionalProperties": {"type": "integer"}},
+                                                                     # STRAP-MASTER-1115: parameters the master takes as strap pins
+                                                                     # (param_wrap.py: tied at the parent, SKEW* not matched)
+                                                                     "straps": {"type": "object", "minProperties": 1,
+                                                                                "additionalProperties": {"type": "integer", "minimum": 0}},
+                                                                     "wrapper": {"type": "boolean"}}},
                                        # QC-SLECTL-B 11-05: the core reset pin keeps its bound net (e.g. cland_start, rst_n);
                                        # not a wavefront reset target (no relay, no RTL rewire)
                                        "reset_net": _name,
